@@ -1,1 +1,1 @@
-require_relative "discourse/oneboxer"
+require_relative "oneboxer"

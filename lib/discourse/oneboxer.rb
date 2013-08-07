@@ -2,7 +2,7 @@ require "open-uri"
 require "multi_json"
 require "nokogiri"
 require "mustache"
-require "discourse/oneboxer/version"
+require "oneboxer/version"
 require_relative "preview"
 
 require_relative "oneboxer/base"
@@ -49,204 +49,203 @@ require_relative "oneboxer/yfrog_onebox"
 
 
 
-module Discourse
-  module Oneboxer
-	  extend Oneboxer::Base
+module Oneboxer
+  extend Oneboxer::Base
 
-	  # keep reloaders happy
-	  unless defined? Oneboxer::Result
-	    Result = Struct.new(:doc, :changed) do
-	      def to_html
-	        doc.to_html
-	      end
+  # keep reloaders happy
+  unless defined? Oneboxer::Result
+    Result = Struct.new(:doc, :changed) do
+      def to_html
+        doc.to_html
+      end
 
-	      def changed?
-	        changed
-	      end
-	    end
-	  end
+      def changed?
+        changed
+      end
+    end
+  end
 
-	  # lazy add oneboxing
-	  add_onebox AmazonOnebox
-		add_onebox AndroidAppStoreOnebox
-		add_onebox AppleAppOnebox
-		add_onebox BaseOnebox
-		add_onebox BliptvOnebox
-		add_onebox ClikthroughOnebox
-		add_onebox CollegeHumorOnebox
-		add_onebox DailymotionOnebox
-		add_onebox DiscourseLocalOnebox
-		add_onebox DotsubOnebox
-		add_onebox FlickrOnebox
-		add_onebox FunnyOrDieOnebox
-		add_onebox GistOnebox
-		add_onebox GithubBlobOnebox
-		add_onebox GithubCommitOnebox
-		add_onebox GithubPullrequestOnebox
-		add_onebox HandlebarsOnebox
-		add_onebox HuluOnebox
-		add_onebox ImageOnebox
-		add_onebox ImgurOnebox
-		add_onebox KinomapOnebox
-		add_onebox NfbOnebox
-		add_onebox OembedOnebox
-		add_onebox OpenGraphOnebox
-		add_onebox QikOnebox
-		add_onebox RevisionOnebox
-		add_onebox RottentomatoesOnebox
-		add_onebox SlideshareOnebox
-		add_onebox SmugmugOnebox
-		add_onebox SoundcloudOnebox
-		add_onebox StackExchangeOnebox
-		add_onebox TedOnebox
-		add_onebox TwitterOnebox
-		add_onebox ViddlerOnebox
-		add_onebox VideoOnebox
-		add_onebox VimeoOnebox
-		add_onebox WikipediaOnebox
-		add_onebox YfrogOnebox
+  # lazy add oneboxing
+  add_onebox AmazonOnebox
+	add_onebox AndroidAppStoreOnebox
+	add_onebox AppleAppOnebox
+	add_onebox BaseOnebox
+	add_onebox BliptvOnebox
+	add_onebox ClikthroughOnebox
+	add_onebox CollegeHumorOnebox
+	add_onebox DailymotionOnebox
+	add_onebox DiscourseLocalOnebox
+	add_onebox DotsubOnebox
+	add_onebox FlickrOnebox
+	add_onebox FunnyOrDieOnebox
+	add_onebox GistOnebox
+	add_onebox GithubBlobOnebox
+	add_onebox GithubCommitOnebox
+	add_onebox GithubPullrequestOnebox
+	add_onebox HandlebarsOnebox
+	add_onebox HuluOnebox
+	add_onebox ImageOnebox
+	add_onebox ImgurOnebox
+	add_onebox KinomapOnebox
+	add_onebox NfbOnebox
+	add_onebox OembedOnebox
+	add_onebox OpenGraphOnebox
+	add_onebox QikOnebox
+	add_onebox RevisionOnebox
+	add_onebox RottentomatoesOnebox
+	add_onebox SlideshareOnebox
+	add_onebox SmugmugOnebox
+	add_onebox SoundcloudOnebox
+	add_onebox StackExchangeOnebox
+	add_onebox TedOnebox
+	add_onebox TwitterOnebox
+	add_onebox ViddlerOnebox
+	add_onebox VideoOnebox
+	add_onebox VimeoOnebox
+	add_onebox WikipediaOnebox
+	add_onebox YfrogOnebox
 
-	  def self.default_expiry
-	    1.day
-	  end
+  def self.default_expiry
+    1.day
+  end
 
-	  # Return a oneboxer for a given URL
-	  def self.onebox_for_url(url)
-	    matchers.each do |matcher|
-	      regexp = matcher.regexp
-	      klass = matcher.klass
+  # Return a oneboxer for a given URL
+  def self.onebox_for_url(url)
+    matchers.each do |matcher|
+      regexp = matcher.regexp
+      klass = matcher.klass
 
-	      regexp = regexp.call if regexp.class == Proc
-	      return klass.new(url) if url =~ regexp
-	    end
-	    nil
-	  end
+      regexp = regexp.call if regexp.class == Proc
+      return klass.new(url) if url =~ regexp
+    end
+    nil
+  end
 
-	  # Retrieve the onebox for a url without caching
-	  def self.onebox_nocache(url)
-	    oneboxer = onebox_for_url(url)
-	    return oneboxer.onebox unless oneboxer.nil?
+  # Retrieve the onebox for a url without caching
+  def self.onebox_nocache(url)
+    oneboxer = onebox_for_url(url)
+    return oneboxer.onebox unless oneboxer.nil?
 
-	    whitelist_entry = Whitelist.entry_for_url(url)
+    whitelist_entry = Whitelist.entry_for_url(url)
 
-	    if whitelist_entry.present?
-	      # TODO - only download HEAD section
-	      # TODO - sane timeout
-	      # TODO - FAIL if for any reason you are downloading more that 5000 bytes
-	      page_html = open(url).read
-	      if page_html.present?
-	        doc = Nokogiri::HTML(page_html)
+    if whitelist_entry.present?
+      # TODO - only download HEAD section
+      # TODO - sane timeout
+      # TODO - FAIL if for any reason you are downloading more that 5000 bytes
+      page_html = open(url).read
+      if page_html.present?
+        doc = Nokogiri::HTML(page_html)
 
-	        if whitelist_entry.allows_oembed?
-	          # See if if it has an oembed thing we can use
-	          (doc/"link[@type='application/json+oembed']").each do |oembed|
-	            return OembedOnebox.new(oembed[:href]).onebox
-	          end
-	          (doc/"link[@type='text/json+oembed']").each do |oembed|
-	            return OembedOnebox.new(oembed[:href]).onebox
-	          end
-	        end
+        if whitelist_entry.allows_oembed?
+          # See if if it has an oembed thing we can use
+          (doc/"link[@type='application/json+oembed']").each do |oembed|
+            return OembedOnebox.new(oembed[:href]).onebox
+          end
+          (doc/"link[@type='text/json+oembed']").each do |oembed|
+            return OembedOnebox.new(oembed[:href]).onebox
+          end
+        end
 
-	        # Check for opengraph
-	        open_graph = Oneboxer.parse_open_graph(doc)
-	        return OpenGraphOnebox.new(url, open_graph).onebox if open_graph.present?
-	      end
-	    end
+        # Check for opengraph
+        open_graph = Oneboxer.parse_open_graph(doc)
+        return OpenGraphOnebox.new(url, open_graph).onebox if open_graph.present?
+      end
+    end
 
-	    nil
-	  rescue OpenURI::HTTPError
-	    nil
-	  end
+    nil
+  rescue OpenURI::HTTPError
+    nil
+  end
 
-	  # Parse URLs out of HTML, returning the document when finished.
-	  def self.each_onebox_link(string_or_doc)
-	    doc = string_or_doc
-	    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
+  # Parse URLs out of HTML, returning the document when finished.
+  def self.each_onebox_link(string_or_doc)
+    doc = string_or_doc
+    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
 
-	    onebox_links = doc.search("a.onebox")
-	    if onebox_links.nil? || onebox_links.empty?
-	      onebox_links.each do |link|
-	        if link['href'].present?
-	          yield link['href'], link
-	        end
-	      end
-	    end
+    onebox_links = doc.search("a.onebox")
+    if onebox_links.nil? || onebox_links.empty?
+      onebox_links.each do |link|
+        if link['href'].present?
+          yield link['href'], link
+        end
+      end
+    end
 
-	    doc
-	  end
+    doc
+  end
 
-	  def self.apply(string_or_doc)
-	    doc = string_or_doc
-	    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
-	    changed = false
+  def self.apply(string_or_doc)
+    doc = string_or_doc
+    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
+    changed = false
 
-	    Oneboxer.each_onebox_link(doc) do |url, element|
-	      onebox, preview = yield(url,element)
-	      if onebox
-	        parsed_onebox = Nokogiri::HTML::fragment(onebox)
-	        next unless parsed_onebox.children.count > 0
+    Oneboxer.each_onebox_link(doc) do |url, element|
+      onebox, preview = yield(url,element)
+      if onebox
+        parsed_onebox = Nokogiri::HTML::fragment(onebox)
+        next unless parsed_onebox.children.count > 0
 
-	        # special logic to strip empty p elements
-	        if  element.parent &&
-	            element.parent.node_name.downcase == "p" &&
-	            element.parent.children.count == 1 &&
-	            parsed_onebox.children.first.name.downcase == "div"
-	          element = element.parent
-	        end
-	        changed = true
-	        element.swap parsed_onebox.to_html
-	      end
-	    end
+        # special logic to strip empty p elements
+        if  element.parent &&
+            element.parent.node_name.downcase == "p" &&
+            element.parent.children.count == 1 &&
+            parsed_onebox.children.first.name.downcase == "div"
+          element = element.parent
+        end
+        changed = true
+        element.swap parsed_onebox.to_html
+      end
+    end
 
-	    Result.new(doc, changed)
-	  end
+    Result.new(doc, changed)
+  end
 
-	  def self.cache_key_for(url)
-	    "onebox:#{Digest::SHA1.hexdigest(url)}"
-	  end
+  def self.cache_key_for(url)
+    "onebox:#{Digest::SHA1.hexdigest(url)}"
+  end
 
-	  def self.preview_cache_key_for(url)
-	    "onebox:preview:#{Digest::SHA1.hexdigest(url)}"
-	  end
+  def self.preview_cache_key_for(url)
+    "onebox:preview:#{Digest::SHA1.hexdigest(url)}"
+  end
 
-	  def self.render_from_cache(url)
-	    Rails.cache.read(cache_key_for(url))
-	  end
+  def self.render_from_cache(url)
+    Rails.cache.read(cache_key_for(url))
+  end
 
-	  # Cache results from a onebox call
-	  def self.fetch_and_cache(url, args)
-	    contents, preview = onebox_nocache(url)
-	    return nil if contents.blank?
+  # Cache results from a onebox call
+  def self.fetch_and_cache(url, args)
+    contents, preview = onebox_nocache(url)
+    return nil if contents.blank?
 
-	    Rails.cache.write(cache_key_for(url), contents, expires_in: default_expiry)
-	    if preview.present?
-	      Rails.cache.write(preview_cache_key_for(url), preview, expires_in: default_expiry)
-	    end
+    Rails.cache.write(cache_key_for(url), contents, expires_in: default_expiry)
+    if preview.present?
+      Rails.cache.write(preview_cache_key_for(url), preview, expires_in: default_expiry)
+    end
 
-	    [contents, preview]
-	  end
+    [contents, preview]
+  end
 
-	  def self.invalidate(url)
-	    Rails.cache.delete(cache_key_for(url))
-	  end
+  def self.invalidate(url)
+    Rails.cache.delete(cache_key_for(url))
+  end
 
-	  def self.preview(url, args={})
-	  	Preview.new(url, args)
-	  end
+  def self.preview(url, args={})
+  	Preview.new(url, args)
+  end
 
-	  # Return the cooked content for a url, caching the result for performance
-	  def self.onebox(url, args={})
+  # Return the cooked content for a url, caching the result for performance
+  def self.onebox(url, args={})
 
-	    if args[:invalidate_oneboxes]
-	      # Remove the onebox from the cache
-	      Oneboxer.invalidate(url)
-	    else
-	      contents = render_from_cache(url)
-	      return contents unless contents.nil?
-	    end
+    if args[:invalidate_oneboxes]
+      # Remove the onebox from the cache
+      Oneboxer.invalidate(url)
+    else
+      contents = render_from_cache(url)
+      return contents unless contents.nil?
+    end
 
-	    fetch_and_cache(url, args)
-	  end
+    fetch_and_cache(url, args)
+  end
 
-	end
 end
+
