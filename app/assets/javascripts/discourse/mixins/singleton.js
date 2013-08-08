@@ -2,6 +2,49 @@
   This mixin allows a class to return a singleton, as well as a method to quickly
   read/write attributes on the singleton.
 
+
+  Example usage:
+
+  ```javascript
+
+    // Define your class and apply the Mixin
+    User = Ember.Object.extend({});
+    User.reopenClass(Discourse.Singleton);
+
+    // Retrieve the current instance:
+    var instance = User.current();
+
+  ```
+
+  Commonly you want to read or write a property on the singleton. There's a
+  helper method which is a little nicer than `.current().get()`:
+
+  ```javascript
+
+    // Sets the age to 34
+    User.currentProp('age', 34);
+
+    console.log(User.currentProp('age')); // 34
+
+  ```
+
+  If you want to customize how the singleton is created, redefine the `createCurrent`
+  method:
+
+  ```javascript
+
+    // Define your class and apply the Mixin
+    Foot = Ember.Object.extend({});
+    Foot.reopenClass(Discourse.Singleton, {
+      createCurrent: function() {
+        return Foot.create({toes: 5});
+      }
+    });
+
+    console.log(Foot.currentProp('toes')); // 5
+
+  ```
+
   @class Discourse.Singleton
   @extends Ember.Mixin
   @namespace Discourse
