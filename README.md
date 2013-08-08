@@ -1,11 +1,11 @@
-discourse-onebox
+onebox
 ----------
 
   - TODO: register to rubygems.org
-  - [![Code Climate](https://codeclimate.com/github/dysania/discourse-onebox.png)](https://codeclimate.com/github/dysania/discourse-onebox)
-  - [![Build Status](https://travis-ci.org/dysania/discourse-onebox.png)](https://travis-ci.org/dysania/discourse-onebox)
-  - [![Dependency Status](https://gemnasium.com/dysania/discourse-onebox.png)](https://gemnasium.com/dysania/discourse-onebox)
-  - [![Coverage Status](https://coveralls.io/repos/dysania/discourse-onebox/badge.png)](https://coveralls.io/r/dysania/discourse-onebox)
+  - [![Code Climate](https://codeclimate.com/github/dysania/onebox.png)](https://codeclimate.com/github/dysania/onebox)
+  - [![Build Status](https://travis-ci.org/dysania/onebox.png)](https://travis-ci.org/dysania/onebox)
+  - [![Dependency Status](https://gemnasium.com/dysania/onebox.png)](https://gemnasium.com/dysania/onebox)
+  - [![Coverage Status](https://coveralls.io/repos/dysania/onebox/badge.png)](https://coveralls.io/r/dysania/onebox)
 
 
 Onebox is a library for turning media URLs into previews.
@@ -44,13 +44,13 @@ Onebox currently has support for page, image, and video URLs from these sites:
 - yFrog
 
 
-Using discourse-onebox
+Using onebox
 ===============
 
-You can include discourse-onebox modules into a class like so:
+You can include onebox modules into a class like so:
 
 ``` ruby
-require "discourse-onebox"
+require "onebox"
 ```
 TODO: write example
 
@@ -62,16 +62,16 @@ The `Gemfile` file would look like this:
 # source/Gemfile
 source "https://rubygems.org"
 
-gem "discourse-onebox", "~> <%= version %>"
+gem "onebox", "~> <%= version %>"
 ```
 
 
-Installing discourse-onebox
+Installing onebox
 ==================
 
 Add this line to your application's Gemfile:
 
-    gem 'discourse-onebox'
+    gem 'onebox'
 
 And then execute:
 
@@ -79,7 +79,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install discourse-onebox
+    $ gem install onebox
 
 
 Contributing
