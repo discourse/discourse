@@ -336,7 +336,7 @@ de:
       xaxis: "Tag"
       yaxis: "Zahl der Mails"
     user_to_user_private_messages:
-      title: "Beutzer-zu-Benutzer"
+      title: "Benutzer-zu-Benutzer"
       xaxis: "Tag"
       yaxis: "Zahl der privaten Nachrichten"
     system_private_messages:
@@ -592,8 +592,8 @@ de:
     min_body_similar_length: "Minimale Länge eines Beitragstextes, bevor nach ähnlichen Themen gesucht wird."
 
     category_colors: "Eine durch senkrechte Striche getrennte Liste hexadezimaler Farbwerte, die als Kategoriefarben erlaubt sind."
-    max_image_size_kb: "Maximale Größe in Kilobytes (kB), die von Benutzer hochgeladene Bilder groß sein dürfen. Stelle sicher, dass dieser Wert auch in nginx (client_max_body_size) / apache und Proxies konfiguriert ist."
-    max_similar_results: "Zahl der Themen, die ein Nutzer sieht während sei ein neues Thema erstellen."
+    max_image_size_kb: "Maximale Größe in Kilobytes (kB), die von Benutzern hochgeladene Bilder groß sein dürfen. Stelle sicher, dass dieser Wert auch in nginx (client_max_body_size) / apache und Proxies konfiguriert ist."
+    max_similar_results: "Anzahl ähnlicher Themen, die ein Nutzer sieht, während er ein neues Thema erstellen."
 
     title_prettify: "Verhindert gängige Fehler im Titel, wie reine Grossschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende, etc."
 
