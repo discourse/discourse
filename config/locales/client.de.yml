@@ -73,7 +73,7 @@ de:
           one: "vor einer Minute"
           other: "vor %{count} Minuten"
         x_hours:
-          one: "vor eienr Stunde"
+          one: "vor einer Stunde"
           other: "vor %{count} Stunden"
         x_days:
           one: "vor einem Tag"
@@ -161,8 +161,8 @@ de:
       sent_by_you: "Gesendet von <a href='{{userUrl}}'>dir</a>"
 
     user_action_groups:
-      "1": "„Gefällt mir“ erhalten"
-      "2": "„Gefällt mir“ gegeben"
+      "1": "„Gefällt mir“ gegeben"
+      "2": "„Gefällt mir“ erhalten"
       "3": "Lesezeichen"
       "4": "Themen"
       "5": "Rückmeldungen"
@@ -255,7 +255,7 @@ de:
         title: "Schicke eine Mail mit Neuigkeiten, wenn ich die Seite länger nicht besuche"
         daily: "täglich"
         weekly: "wöchentlich"
-        bi_weekly: "all zwei Wochen"
+        bi_weekly: "alle zwei Wochen"
 
       email_direct: "Schicke eine Mail, wenn jemand mich zitiert, auf meine Beiträge antwortet oder meinen @Namen erwähnt."
       email_private_messages: "Schicke eine Mail, wenn jemand mir eine private Nachricht sendet."
@@ -271,7 +271,7 @@ de:
           other: "sie in den letzten {{count}} Tagen erstellt wurden"
         after_n_weeks:
           one: "sie letzte Woche erstellt wurden"
-          other: "they die letzten {{count}} Wochen erstellt wurden"
+          other: "sie in den letzten {{count}} Wochen erstellt wurden"
 
       auto_track_topics: "Automatisch Themen folgen, die ich erstellt habe"
       auto_track_options:
@@ -339,10 +339,10 @@ de:
     last_post: Letzter Beitrag
 
     best_of:
-      title: "Top Beiträge"
-      enabled_description: Du siehst gerade die Top Beiträge dieses Themas.
+      title: "Top-Beiträge"
+      enabled_description: Du siehst gerade die Top-Beiträge dieses Themas.
       description: "Es gibt <b>{{count}}</b> Beiträge zu diesem Thema. Das sind eine Menge! Möchtest Du Zeit sparen und nur die Beiträge mit den meisten Antworten und Nutzerreaktionen betrachten?"
-      enable: 'Nur die Top Beiträge anzeigen'
+      enable: 'Nur die Top-Beiträge anzeigen'
       disable: 'Alle Beiträge anzeigen'
 
     private_message_info:
@@ -435,7 +435,7 @@ de:
 
       users_placeholder: "Nutzer hinzufügen"
       title_placeholder: "Gib hier den Titel ein. In einem Satz: Worum geht es?"
-      reply_placeholder: "Gib hier deine Antwort ein. Benutze Markdown oder BBCode zur Textformatierung. Um ein Bild einzufügen ziehe es hierhin oder füge es per Tastenkombination ein."
+      reply_placeholder: "Gib hier deinen Text ein. Benutze Markdown oder BBCode zur Textformatierung. Um ein Bild einzufügen ziehe es hierhin oder füge es per Tastenkombination ein."
       view_new_post: "Betrachte deinen neuen Beitrag."
       saving: "Speichert..."
       saved: "Gespeichert!"
@@ -470,8 +470,8 @@ de:
       help: "Hilfe zu Markdown"
       toggler: "Verstecke oder Zeige den Editor"
 
-      admin_options_title: "Optionale Admin Einstellungen für das Thema"
-      auto_close_label: "Schlisse das Thema automatisch nach:"
+      admin_options_title: "Optionale Admin-Einstellungen für das Thema"
+      auto_close_label: "Schließe das Thema automatisch nach:"
       auto_close_units: "Tage"
 
     notifications:
@@ -836,11 +836,11 @@ de:
             one: "Du und eine weitere Person haben diesem Benutzer eine private Nachricht gesendet"
             other: "Du und {{count}} weitere Personen haben diesem Benutzer eine private Nachricht gesendet"
           bookmark:
-            one: "Du und eine weitere Person haben bei diesen Beitrag ein Lesezeichen gesetzt"
-            other: "Du und {{count}} weitere Personen haben bei diesen Beitrag ein Lesezeichen gesetzt"
+            one: "Du und eine weitere Person haben bei diesem Beitrag ein Lesezeichen gesetzt"
+            other: "Du und {{count}} weitere Personen haben bei diesem Beitrag ein Lesezeichen gesetzt"
           like:
-            one: "Dir und einer weitere Person gefällt dieser Beitrag"
-            other: "Dir und {{count}} weitere Personen haben gefällt dieser Beitrag"
+            one: "Dir und einer weiteren Person gefällt dieser Beitrag"
+            other: "Dir und {{count}} weiteren Personen gefällt dieser Beitrag"
           vote:
             one: "Du und eine weitere Person haben für diesen Beitrag gestimmt"
             other: "Du und {{count}} weitere Personen haben für diesen Beitrag gestimmt"
@@ -933,7 +933,7 @@ de:
       title: "Zusammenfassung des Themas"
       links_shown: "Zeige alle {{totalLinks}} Links..."
       clicks: "Klicks"
-      topic_link: "Themen Links"
+      topic_link: "Themenlinks"
 
     topic_statuses:
       locked:
@@ -1098,11 +1098,11 @@ de:
 
       api:
         title: "API"
-        long_title: "API Information"
+        long_title: "API-Information"
         key: "Schlüssel"
-        generate: "API Schlüssel generieren"
-        regenerate: "API Schlüssel neu generieren"
-        info_html: "Dein API Schlüssel erlaubt Dir das Erstellen und Bearbeiten von Themen via JSON aufrufen."
+        generate: "API-Schlüssel generieren"
+        regenerate: "API-Schlüssel neu generieren"
+        info_html: "Dein API-Schlüssel erlaubt Dir das Erstellen und Bearbeiten von Themen via JSON aufrufen."
         note_html: "Behalte deinen <strong>Schlüssel</strong> geheim, jeder Benutzer mit diesem Schlüssel kann beliebige Beiträge unter jedem Benutzer im Forum erstellen."
 
       customize:
