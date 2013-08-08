@@ -698,19 +698,6 @@ table {
 
 .blocked-emails {
   width: 900px;
-  margin-left: 5px;
-  border-bottom: dotted 1px #ddd;
-  .heading-container {
-    width: 100%;
-    background-color: #e4e4e4;
-  }
-  .heading {
-    font-weight: bold;
-  }
-  .col {
-    display: inline-block;
-    padding-top: 6px;
-  }
   .email {
     width: 400px;
     margin-left: 5px;
@@ -719,18 +706,22 @@ table {
     width: 110px;
     text-align: center;
   }
-  .ember-list-item-view {
-    width: 100%;
-    border-top: solid 1px #ddd;
-  }
 }
 
 .staff-actions {
+  width: 100%;
   .action {
     width: 120px;
+    margin-left: 5px;
   }
-  .staff_user, .target_user, .created_at {
-    white-space: nowrap;
+  .staff_user, .target_user {
+    width: 100px;
+  }
+  .created_at {
+    width: 50px;
+  }
+  .context {
+    width: 200px;
   }
   .created_at {
     text-align: center;
@@ -739,6 +730,9 @@ table {
     width: 400px;
     a {
       text-decoration: underline;
+    }
+    &.value {
+      height: 70px;
     }
   }
 }
@@ -752,4 +746,30 @@ table {
 }
 .ember-list-item-view {
   position: absolute;
+}
+
+.blocked-emails, .staff-actions {
+  margin-left: 5px;
+  border-bottom: dotted 1px #ddd;
+
+  .heading-container {
+    width: 100%;
+    background-color: #e4e4e4;
+  }
+  .col.heading {
+    font-weight: bold;
+    padding: 4px 0;
+  }
+  .col {
+    display: inline-block;
+    padding-top: 6px;
+    vertical-align: top;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .ember-list-item-view {
+    width: 100%;
+    border-top: solid 1px #ddd;
+  }
 }

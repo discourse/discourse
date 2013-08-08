@@ -2,48 +2,19 @@
   <div class='admin-loading'>{{i18n loading}}</div>
 {{else}}
   {{#if model.length}}
-    <table class='table staff-actions'>
-      <thead>
-        <th class="action">{{i18n admin.logs.action}}</th>
-        <th class="staff_user">{{i18n admin.logs.staff_actions.staff_user}}</th>
-        <th class="target_user">{{i18n admin.logs.staff_actions.target_user}}</th>
-        <th class="created_at">{{i18n admin.logs.staff_actions.when}}</th>
-        <th class="context">{{i18n admin.logs.staff_actions.context}}</th>
-        <th class="details">{{i18n admin.logs.staff_actions.details}}</th>
-      </thead>
+    <div class='table staff-actions'>
+      <div class="heading-container">
+        <div class="col heading action">{{i18n admin.logs.action}}</div>
+        <div class="col heading staff_user">{{i18n admin.logs.staff_actions.staff_user}}</div>
+        <div class="col heading target_user">{{i18n admin.logs.staff_actions.target_user}}</div>
+        <div class="col heading created_at">{{i18n admin.logs.staff_actions.when}}</div>
+        <div class="col heading context">{{i18n admin.logs.staff_actions.context}}</div>
+        <div class="col heading details">{{i18n admin.logs.staff_actions.details}}</div>
+        <div class="clearfix"></div>
+      </div>
 
-      <tbody>
-        {{#each model}}
-          <tr>
-            <td class="action">{{actionName}}</td>
-            <td class="staff_user">
-              {{#linkTo 'adminUser' staff_user}}{{avatar staff_user imageSize="tiny"}}{{/linkTo}}
-              {{#linkTo 'adminUser' staff_user}}{{staff_user.username}}{{/linkTo}}
-            </td>
-            <td class="target_user">
-              {{#if target_user}}
-                {{#linkTo 'adminUser' target_user}}{{avatar target_user imageSize="tiny"}}{{/linkTo}}
-                {{#linkTo 'adminUser' target_user}}{{target_user.username}}{{/linkTo}}
-              {{else}}
-                &mdash;
-              {{/if}}
-            </td>
-            <td class="created_at">{{unboundAgeWithTooltip created_at}}</td>
-            <td class="context">{{context}}</td>
-            <td class="details">
-              {{{formattedDetails}}}
-              {{#if showFullDetails}}
-                {{details}}
-                <br/>
-                <a {{action toggleFullDetails this}}>{{i18n less}}</a>
-              {{else}}
-                <a {{action toggleFullDetails this}}>{{i18n more}}</a>
-              {{/if}}
-            </td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
+      {{view Discourse.StaffActionLogsListView contentBinding="controller"}}
+    </div>
   {{else}}
     {{i18n search.no_results}}
   {{/if}}
