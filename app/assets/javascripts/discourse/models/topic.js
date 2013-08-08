@@ -130,7 +130,7 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('views'),
 
   archetypeObject: function() {
-    return Discourse.Site.instance().get('archetypes').findProperty('id', this.get('archetype'));
+    return Discourse.Site.currentProp('archetypes').findProperty('id', this.get('archetype'));
   }.property('archetype'),
   isPrivateMessage: Em.computed.equal('archetype', 'private_message'),
 

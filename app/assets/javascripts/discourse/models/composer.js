@@ -22,7 +22,7 @@ var CLOSED = 'closed',
 Discourse.Composer = Discourse.Model.extend({
 
   archetypes: function() {
-    return Discourse.Site.instance().get('archetypes');
+    return Discourse.Site.currentProp('archetypes');
   }.property(),
 
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
@@ -254,7 +254,7 @@ Discourse.Composer = Discourse.Model.extend({
     this._super();
     var val = Discourse.KeyValueStore.get('composer.showPreview') || 'true';
     this.set('showPreview', val === 'true');
-    this.set('archetypeId', Discourse.Site.instance().get('default_archetype'));
+    this.set('archetypeId', Discourse.Site.currentProp('default_archetype'));
   },
 
   /**
@@ -329,7 +329,7 @@ Discourse.Composer = Discourse.Model.extend({
 
     this.setProperties({
       categoryName: opts.categoryName || this.get('topic.category.name'),
-      archetypeId: opts.archetypeId || Discourse.Site.instance().get('default_archetype'),
+      archetypeId: opts.archetypeId || Discourse.Site.currentProp('default_archetype'),
       metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
       reply: opts.reply || this.get("reply") || ""
     });
@@ -453,7 +453,7 @@ Discourse.Composer = Discourse.Model.extend({
       user_id: currentUser.get('id'),
       metaData: this.get('metaData'),
       archetype: this.get('archetypeId'),
-      post_type: Discourse.Site.instance().get('post_types.regular'),
+      post_type: Discourse.Site.currentProp('post_types.regular'),
       target_usernames: this.get('targetUsernames'),
       actions_summary: Em.A(),
       moderator: currentUser.get('moderator'),

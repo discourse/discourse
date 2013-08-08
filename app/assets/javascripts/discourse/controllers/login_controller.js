@@ -13,7 +13,7 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
   loggingIn: false,
 
   site: function() {
-    return Discourse.Site.instance();
+    return Discourse.Site.current();
   }.property(),
 
   /**

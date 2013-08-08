@@ -67,7 +67,7 @@ Discourse.AdminUser = Discourse.User.extend({
   },
 
   trustLevels: function() {
-    return Discourse.Site.instance().get('trustLevels');
+    return Discourse.Site.currentProp('trustLevels');
   }.property(),
 
   dirty: Discourse.computed.propertyNotEqual('originalTrustLevel', 'trustLevel.id'),

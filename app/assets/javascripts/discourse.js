@@ -198,7 +198,7 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       }), user.notification_channel_position);
 
       bus.subscribe("/categories", function(data){
-        var site = Discourse.Site.instance();
+        var site = Discourse.Site.current();
         _.each(data.categories,function(c){
           site.updateCategory(c);
         });

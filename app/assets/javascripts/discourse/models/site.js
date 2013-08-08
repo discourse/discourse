@@ -32,12 +32,16 @@ Discourse.Site = Discourse.Model.extend({
   }
 });
 
-Discourse.Site.reopenClass({
+Discourse.Site.reopenClass(Discourse.Singleton, {
 
-  instance: function() {
-    if ( this._site ) return this._site;
-    this._site = Discourse.Site.create(PreloadStore.get('site'));
-    return this._site;
+  /**
+    The current singleton will retrieve its attributes from the `PreloadStore`.
+
+    @method createCurrent
+    @returns {Discourse.Site} the site
+  **/
+  createCurrent: function() {
+    return Discourse.Site.create(PreloadStore.get('site'));
   },
 
   create: function(obj) {

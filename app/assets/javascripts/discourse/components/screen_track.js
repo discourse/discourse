@@ -165,23 +165,13 @@ Discourse.ScreenTrack = Ember.Object.extend({
 });
 
 
-Discourse.ScreenTrack.reopenClass({
+Discourse.ScreenTrack.reopenClass(Discourse.Singleton, {
 
   // Don't send events if we haven't scrolled in a long time
   PAUSE_UNLESS_SCROLLED: 1000 * 60 * 3,
 
   // After 6 minutes stop tracking read position on post
-  MAX_TRACKING_TIME: 1000 * 60 * 6,
-
-
-  /**
-    Returns a Screen Tracking singleton
-  **/
-  instance: function() {
-    if (this.screenTrack) { return this.screenTrack; }
-    this.screenTrack = Discourse.ScreenTrack.create();
-    return this.screenTrack;
-  }
+  MAX_TRACKING_TIME: 1000 * 60 * 6
 
 });
 

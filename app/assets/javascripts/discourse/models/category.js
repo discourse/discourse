@@ -125,7 +125,7 @@ Discourse.Category.reopenClass({
   },
 
   list: function() {
-    return Discourse.Site.instance().get('categories');
+    return Discourse.Site.currentProp('categories');
   },
 
   findBySlugOrId: function(slugOrId) {
