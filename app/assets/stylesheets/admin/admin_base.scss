@@ -694,11 +694,34 @@ table {
   }
 }
 
-/* Logs */
+// Logs
 
 .blocked-emails {
-  .match_count, .last_match_at, .created_at {
+  width: 900px;
+  margin-left: 5px;
+  border-bottom: dotted 1px #ddd;
+  .heading-container {
+    width: 100%;
+    background-color: #e4e4e4;
+  }
+  .heading {
+    font-weight: bold;
+  }
+  .col {
+    display: inline-block;
+    padding-top: 6px;
+  }
+  .email {
+    width: 400px;
+    margin-left: 5px;
+  }
+  .action, .match_count, .last_match_at, .created_at {
+    width: 110px;
     text-align: center;
+  }
+  .ember-list-item-view {
+    width: 100%;
+    border-top: solid 1px #ddd;
   }
 }
 
@@ -718,4 +741,15 @@ table {
       text-decoration: underline;
     }
   }
+}
+
+// Ember.ListView
+
+.ember-list-view {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+.ember-list-item-view {
+  position: absolute;
 }

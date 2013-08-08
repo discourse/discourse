@@ -2,27 +2,20 @@
   <div class='admin-loading'>{{i18n loading}}</div>
 {{else}}
   {{#if model.length}}
-    <table class='table blocked-emails'>
-      <thead>
-        <th class="email">{{i18n admin.logs.blocked_emails.email}}</th>
-        <th class="action">{{i18n admin.logs.action}}</th>
-        <th class="match_count">{{i18n admin.logs.blocked_emails.match_count}}</th>
-        <th class="last_match_at">{{i18n admin.logs.blocked_emails.last_match_at}}</th>
-        <th class="created_at">{{i18n admin.logs.created_at}}</th>
-      </thead>
 
-      <tbody>
-        {{#each model}}
-          <tr>
-            <td class="email">{{email}}</td>
-            <td class="action">{{actionName}}</td>
-            <td class="match_count">{{match_count}}</td>
-            <td class="last_match_at">{{unboundAgeWithTooltip last_match_at}}</td>
-            <td class="created_at">{{unboundAgeWithTooltip created_at}}</td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
+    <div class='table blocked-emails'>
+      <div class="heading-container">
+        <div class="col heading email">{{i18n admin.logs.blocked_emails.email}}</div>
+        <div class="col heading action">{{i18n admin.logs.action}}</div>
+        <div class="col heading match_count">{{i18n admin.logs.blocked_emails.match_count}}</div>
+        <div class="col heading last_match_at">{{i18n admin.logs.blocked_emails.last_match_at}}</div>
+        <div class="col heading created_at">{{i18n admin.logs.created_at}}</div>
+        <div class="clearfix"></div>
+      </div>
+
+      {{view Discourse.BlockedEmailsListView contentBinding="controller"}}
+    </div>
+
   {{else}}
     {{i18n search.no_results}}
   {{/if}}
