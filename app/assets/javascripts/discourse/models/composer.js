@@ -48,7 +48,7 @@ Discourse.Composer = Discourse.Model.extend({
   canCategorize: Em.computed.and('canEditTitle', 'notCreatingPrivateMessage'),
 
   showAdminOptions: function() {
-    if (this.get('creatingTopic') && Discourse.User.current('staff')) return true;
+    if (this.get('creatingTopic') && Discourse.User.currentProp('staff')) return true;
     return false;
   }.property('canEditTitle'),
 
@@ -551,7 +551,7 @@ Discourse.Composer = Discourse.Model.extend({
 
   flashDraftStatusForNewUser: function() {
     var $draftStatus = $('#draft-status');
-    if (Discourse.User.current('trust_level') === 0) {
+    if (Discourse.User.currentProp('trust_level') === 0) {
       $draftStatus.toggleClass('flash', true);
       setTimeout(function() { $draftStatus.removeClass('flash'); }, 250);
     }

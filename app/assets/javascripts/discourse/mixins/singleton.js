@@ -17,10 +17,24 @@ Discourse.Singleton = Em.Mixin.create({
   **/
   current: function() {
     if (!this._current) {
-      this._current = this.create({});
+      this._current = this.createCurrent();
     }
 
     return this._current;
+  },
+
+
+  /**
+    How the singleton instance is created. This can be overridden
+    with logic for creating (or even returning null) your instance.
+
+    By default it just calls `create` with an empty object.
+
+    @method createCurrent
+    @returns {Ember.Object} the instance that will be your singleton
+  **/
+  createCurrent: function() {
+    return this.create({});
   },
 
   /**
@@ -32,11 +46,14 @@ Discourse.Singleton = Em.Mixin.create({
     @returns the value of the property
   **/
   currentProp: function(property, value) {
+    var instance = this.current();
+    if (!instance) { return; }
+
     if (typeof(value) !== "undefined") {
-      this.current().set(property, value);
+      instance.set(property, value);
       return value;
     } else {
-      return this.current().get(property);
+      return instance.get(property);
     }
   }
 

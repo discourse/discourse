@@ -85,12 +85,12 @@ var badgeClickCount = function(id, expected) {
 };
 
 test("does not update badge clicks on my own link", function() {
-  this.stub(Discourse.User, 'current').returns(314);
+  this.stub(Discourse.User, 'currentProp').withArgs('id').returns(314);
   badgeClickCount('with-badge', 1);
 });
 
 test("does not update badge clicks in my own post", function() {
-  this.stub(Discourse.User, 'current').returns(3141);
+  this.stub(Discourse.User, 'currentProp').withArgs('id').returns(3141);
   badgeClickCount('with-badge-but-not-mine', 1);
 });
 
@@ -167,7 +167,7 @@ test("does not track via AJAX for attachments", function() {
 
 test("tracks custom urls when opening in another window", function() {
   var clickEvent = generateClickEventOn('a');
-  this.stub(Discourse.User, "current").returns(true);
+  this.stub(Discourse.User, "currentProp").withArgs('external_links_in_new_tab').returns(true);
   ok(!track(clickEvent));
   ok(this.windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42', '_blank'));
 });

@@ -62,7 +62,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   }.property('post_actions.@each.name_key'),
 
   canDeleteAsSpammer: function() {
-    return (Discourse.User.current('staff') && this.get('flaggedForSpam') && this.get('user.can_delete_all_posts') && this.get('user.can_be_deleted'));
+    return (Discourse.User.currentProp('staff') && this.get('flaggedForSpam') && this.get('user.can_delete_all_posts') && this.get('user.can_be_deleted'));
   }.property('flaggedForSpam'),
 
   deletePost: function() {

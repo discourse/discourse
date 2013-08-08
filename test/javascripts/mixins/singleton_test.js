@@ -35,3 +35,27 @@ test("currentProp writing", function() {
   DummyModel.currentProp('adventure', null);
   equal(DummyModel.currentProp('adventure'), null, 'we can set the value to null');
 });
+
+test("createCurrent", function() {
+  var Shoe = Ember.Object.extend({});
+  Shoe.reopenClass(Discourse.Singleton, {
+    createCurrent: function() {
+      return Shoe.create({toes: 5});
+    }
+  });
+
+  equal(Shoe.currentProp('toes'), 5, 'it created the class using `createCurrent`');
+});
+
+
+test("createCurrent that returns null", function() {
+  var Missing = Ember.Object.extend({});
+  Missing.reopenClass(Discourse.Singleton, {
+    createCurrent: function() {
+      return null;
+    }
+  });
+
+  blank(Missing.current(), "it doesn't return an instance");
+  blank(Missing.currentProp('madeup'), "it won't raise an error asking for a property. Will just return null.");
+});

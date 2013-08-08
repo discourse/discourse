@@ -24,7 +24,7 @@ test("uploading one file", function() {
 
 test("new user cannot upload images", function() {
   Discourse.SiteSettings.newuser_max_images = 0;
-  this.stub(Discourse.User, 'current').withArgs("trust_level").returns(0);
+  this.stub(Discourse.User, 'currentProp').withArgs("trust_level").returns(0);
   this.stub(bootbox, "alert");
 
   ok(!validUpload([{name: "image.png"}]));
@@ -33,7 +33,7 @@ test("new user cannot upload images", function() {
 
 test("new user cannot upload attachments", function() {
   Discourse.SiteSettings.newuser_max_attachments = 0;
-  this.stub(Discourse.User, 'current').withArgs("trust_level").returns(0);
+  this.stub(Discourse.User, 'currentProp').withArgs("trust_level").returns(0);
   this.stub(bootbox, "alert");
 
   ok(!validUpload([{name: "roman.txt"}]));
