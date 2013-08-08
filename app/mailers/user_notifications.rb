@@ -100,7 +100,6 @@ class UserNotifications < ActionMailer::Base
   end
 
   def notification_email(user, opts)
-
     return unless @notification = opts[:notification]
     return unless @post = opts[:post]
 

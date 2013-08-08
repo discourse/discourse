@@ -45,7 +45,7 @@ Discourse.TopicList = Discourse.Model.extend({
           });
 
           topicList.set('more_topics_url', result.topic_list.more_topics_url);
-          Discourse.Session.current('topicList', topicList);
+          Discourse.Session.currentProp('topicList', topicList);
           topicList.set('loadingMore', false);
 
           return result.topic_list.more_topics_url;
@@ -75,7 +75,7 @@ Discourse.TopicList = Discourse.Model.extend({
           t.set('highlight', true);
           topics.insertAt(0,t);
         });
-        Discourse.Session.current('topicList', topicList);
+        Discourse.Session.currentProp('topicList', topicList);
       });
   }
 });

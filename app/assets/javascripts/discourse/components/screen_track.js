@@ -98,7 +98,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
       highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
     });
 
-    var highestSeenByTopic = Discourse.Session.current('highestSeenByTopic');
+    var highestSeenByTopic = Discourse.Session.currentProp('highestSeenByTopic');
     if ((highestSeenByTopic[topicId] || 0) < highestSeen) {
       highestSeenByTopic[topicId] = highestSeen;
       Discourse.TopicTrackingState.current().updateSeen(topicId, highestSeen);

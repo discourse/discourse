@@ -71,7 +71,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     this._super();
 
     var topic = this.modelFor('topic');
-    Discourse.Session.current('lastTopicIdViewed', parseInt(topic.get('id'), 10));
+    Discourse.Session.currentProp('lastTopicIdViewed', parseInt(topic.get('id'), 10));
     this.controllerFor('search').set('searchContext', topic.get('searchContext'));
   },
 
