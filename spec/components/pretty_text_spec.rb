@@ -4,15 +4,6 @@ require 'pretty_text'
 describe PrettyText do
 
   describe "Cooking" do
-    it "should support github style code blocks" do
-      PrettyText.cook("```
-test
-```").should match_html "<pre><code class=\"lang-auto\">test  \n</code></pre>"
-    end
-
-    it "should support quoting [] " do
-      PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"][sam][/quote]").should =~ /\[sam\]/
-    end
 
     describe "with avatar" do
 
@@ -23,15 +14,15 @@ test
       end
 
       it "produces a quote even with new lines in it" do
-        PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]").should match_html "<p></p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">\n  EvilTrout said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p></p>"
+        PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]").should match_html "<p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">\nEvilTrout said:</div>\n<blockquote>ddd\n</blockquote></aside></p>"
       end
 
       it "should produce a quote" do
-        PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]").should match_html "<p></p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">\n  EvilTrout said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p></p>"
+        PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]").should match_html "<p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">\nEvilTrout said:</div>\n<blockquote>ddd</blockquote></aside></p>"
       end
 
       it "trims spaces on quote params" do
-        PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]").should match_html "<p></p><aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">\n  EvilTrout said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p></p>"
+        PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]").should match_html "<p><aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">\nEvilTrout said:</div>\n<blockquote>ddd</blockquote></aside></p>"
       end
 
     end
@@ -40,34 +31,8 @@ test
       PrettyText.cook('@hello @hello @hello').should match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
     end
 
-    it "should not do weird @ mention stuff inside a pre block" do
-
-      PrettyText.cook("```
-a @test
-```").should match_html "<pre><code class=\"lang-auto\">a @test  \n</code></pre>"
-
-    end
-
     it "should sanitize the html" do
       PrettyText.cook("<script>alert(42)</script>").should match_html "alert(42)"
-    end
-
-    it "should escape html within the code block" do
-
-      PrettyText.cook("```text
-<header>hello</header>
-```").should match_html "<pre><code class=\"text\">&lt;header&gt;hello&lt;/header&gt;  \n</code></pre>"
-    end
-
-    it "should support language choices" do
-
-      PrettyText.cook("```ruby
-test
-```").should match_html "<pre><code class=\"ruby\">test  \n</code></pre>"
-    end
-
-    it 'should decorate @mentions' do
-      PrettyText.cook("Hello @eviltrout").should match_html "<p>Hello <span class=\"mention\">@eviltrout</span></p>"
     end
 
     it 'should allow for @mentions to have punctuation' do
@@ -77,11 +42,6 @@ test
 
     it 'should add spoiler tags' do
       PrettyText.cook("[spoiler]hello[/spoiler]").should match_html "<p><span class=\"spoiler\">hello</span></p>"
-    end
-
-    it "should only detect ``` at the begining of lines" do
-      PrettyText.cook("    ```\n    hello\n    ```")
-        .should match_html "<pre><code>```\nhello\n```\n</code></pre>"
     end
   end
 

@@ -221,7 +221,7 @@ Discourse.Composer = Discourse.Model.extend({
   **/
   replyLength: function() {
     var reply = this.get('reply') || "";
-    while (Discourse.BBCode.QUOTE_REGEXP.test(reply)) { reply = reply.replace(Discourse.BBCode.QUOTE_REGEXP, ""); }
+    while (Discourse.Quote.REGEXP.test(reply)) { reply = reply.replace(Discourse.Quote.REGEXP, ""); }
     return reply.replace(/\s+/img, " ").trim().length;
   }.property('reply'),
 
@@ -279,7 +279,7 @@ Discourse.Composer = Discourse.Model.extend({
       this.set('loading', true);
       var composer = this;
       return Discourse.Post.load(postId).then(function(post) {
-        composer.appendText(Discourse.BBCode.buildQuoteBBCode(post, post.get('raw')));
+        composer.appendText(Discourse.Quote.build(post, post.get('raw')));
         composer.set('loading', false);
       });
     }

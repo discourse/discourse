@@ -7,13 +7,14 @@ var format = function(input, expected, text) {
 };
 
 test('basic bbcode', function() {
-  format("[b]strong[/b]", "<span class='bbcode-b'>strong</span>", "bolds text");
-  format("[i]emphasis[/i]", "<span class='bbcode-i'>emphasis</span>", "italics text");
-  format("[u]underlined[/u]", "<span class='bbcode-u'>underlined</span>", "underlines text");
-  format("[s]strikethrough[/s]", "<span class='bbcode-s'>strikethrough</span>", "strikes-through text");
-  format("[code]\nx++\n[/code]", "<pre>\nx++ <br>\n</pre>", "makes code into pre");
+  format("[b]strong[/b]", "<span class=\"bbcode-b\">strong</span>", "bolds text");
+  format("[i]emphasis[/i]", "<span class=\"bbcode-i\">emphasis</span>", "italics text");
+  format("[u]underlined[/u]", "<span class=\"bbcode-u\">underlined</span>", "underlines text");
+  format("[s]strikethrough[/s]", "<span class=\"bbcode-s\">strikethrough</span>", "strikes-through text");
+  format("[code]\nx++\n[/code]", "<pre>\nx++<br/>\n</pre>", "makes code into pre");
+  format("[code]\nx++\ny++\nz++\n[/code]", "<pre>\nx++<br/>\ny++<br/>\nz++<br/>\n</pre>", "makes code into pre");
   format("[spoiler]it's a sled[/spoiler]", "<span class=\"spoiler\">it's a sled</span>", "supports spoiler tags");
-  format("[img]http://eviltrout.com/eviltrout.png[/img]", "<img src=\"http://eviltrout.com/eviltrout.png\">", "links images");
+  format("[img]http://eviltrout.com/eviltrout.png[/img]", "<img src=\"http://eviltrout.com/eviltrout.png\"/>", "links images");
   format("[url]http://bettercallsaul.com[/url]", "<a href=\"http://bettercallsaul.com\">http://bettercallsaul.com</a>", "supports [url] without a title");
   format("[email]eviltrout@mailinator.com[/email]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports [email] without a title");
 });
@@ -31,11 +32,11 @@ test('color', function() {
 });
 
 test('tags with arguments', function() {
-  format("[size=35]BIG[/size]", "<span class=\"bbcode-size-35\">BIG</span>", "supports [size=]");
+  format("[size=35]BIG [b]whoop[/b][/size]", "<span class=\"bbcode-size-35\">BIG <span class=\"bbcode-b\">whoop</span></span>", "supports [size=]");
   format("[url=http://bettercallsaul.com]better call![/url]", "<a href=\"http://bettercallsaul.com\">better call!</a>", "supports [url] with a title");
   format("[email=eviltrout@mailinator.com]evil trout[/email]", "<a href=\"mailto:eviltrout@mailinator.com\">evil trout</a>", "supports [email] with a title");
-  format("[u][i]abc[/i][/u]", "<span class='bbcode-u'><span class='bbcode-i'>abc</span></span>", "can nest tags");
-  format("[b]first[/b] [b]second[/b]", "<span class='bbcode-b'>first</span> <span class='bbcode-b'>second</span>", "can bold two things on the same line");
+  format("[u][i]abc[/i][/u]", "<span class=\"bbcode-u\"><span class=\"bbcode-i\">abc</span></span>", "can nest tags");
+  format("[b]first[/b] [b]second[/b]", "<span class=\"bbcode-b\">first</span> <span class=\"bbcode-b\">second</span>", "can bold two things on the same line");
 });
 
 
@@ -49,7 +50,7 @@ test("quotes", function() {
   });
 
   var formatQuote = function(val, expected, text) {
-    equal(Discourse.BBCode.buildQuoteBBCode(post, val), expected, text);
+    equal(Discourse.Quote.build(post, val), expected, text);
   };
 
   formatQuote(undefined, "", "empty string for undefined content");
@@ -57,6 +58,7 @@ test("quotes", function() {
   formatQuote("", "", "empty string for empty string content");
 
   formatQuote("lorem", "[quote=\"eviltrout, post:1, topic:2\"]\nlorem\n[/quote]\n\n", "correctly formats quotes");
+
 
   formatQuote("  lorem \t  ",
               "[quote=\"eviltrout, post:1, topic:2\"]\nlorem\n[/quote]\n\n",
@@ -74,34 +76,27 @@ test("quotes", function() {
 
 test("quote formatting", function() {
 
-  // TODO: This HTML matching is quite ugly.
+  format("[quote=\"EvilTrout, post:123, topic:456, full:true\"][sam][/quote]",
+          "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">" +
+          "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote>[sam]</blockquote></aside>",
+          "it allows quotes with [] inside");
+
   format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]",
-         "</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    " +
-         "<div class='quote-controls'></div>\n  \n  eviltrout said:\n  </div>\n  <blockquote>abc</blockquote>\n</aside>\n<p>",
+         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
+         "</div><blockquote>abc</blockquote></aside>",
          "renders quotes properly");
 
-  format("[quote=\"eviltrout, post:1, topic:1\"]abc[quote=\"eviltrout, post:2, topic:2\"]nested[/quote][/quote]",
-         "</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>" +
-         "\n  \n  eviltrout said:\n  </div>\n  <blockquote>abc1fe072ca2fadbb4f3dfca9ee8bedef19</blockquote>\n</aside>\n<p>  ",
-         "can nest quotes");
+  format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]\nhello",
+         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
+         "</div><blockquote>abc</blockquote></aside><br/>\nhello",
+         "handles new lines properly");
 
   format("before[quote=\"eviltrout, post:1, topic:1\"]first[/quote]middle[quote=\"eviltrout, post:2, topic:2\"]second[/quote]after",
-         "before</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'>" +
-         "</div>\n  \n  eviltrout said:\n  </div>\n  <blockquote>first</blockquote>\n</aside>\n<p></p>\n\n<p>middle</p><aside class='quote'" +
-         " data-post=\"2\" data-topic=\"2\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n  \n  eviltrout said:\n  " +
-         "</div>\n  <blockquote>second</blockquote>\n</aside>\n<p> <br>\nafter",
+         "before<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:</div><blockquote>" +
+         "first</blockquote></aside><br/>middle<aside class=\"quote\" data-post=\"2\" data-topic=\"2\"><div class=\"title\"><div class=\"quote-controls\"></div>" +
+         "eviltrout said:</div><blockquote>second</blockquote></aside><br/>after",
          "can handle more than one quote");
 
 });
 
-
-test("extract quotes", function() {
-
-  var q = "[quote=\"eviltrout, post:1, topic:2\"]hello[/quote]";
-  var result = Discourse.BBCode.extractQuotes(q + " world");
-
-  equal(result.text, md5(q) + "\n world");
-  present(result.template);
-
-});
 
