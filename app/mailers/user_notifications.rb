@@ -110,6 +110,7 @@ class UserNotifications < ActionMailer::Base
     context = ""
     context_posts = Post.where(topic_id: @post.topic_id)
                         .where("post_number < ?", @post.post_number)
+                        .where(user_deleted: false)
                         .order('created_at desc')
                         .limit(SiteSetting.email_posts_context)
 
