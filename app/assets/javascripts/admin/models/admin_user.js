@@ -202,12 +202,12 @@ Discourse.AdminUser = Discourse.User.extend({
   },
 
   deleteForbidden: function() {
-    return (this.get('post_count') > 0);
+    return (!this.get('can_be_deleted') || this.get('post_count') > 0);
   }.property('post_count'),
 
   deleteButtonTitle: function() {
     if (this.get('deleteForbidden')) {
-      return I18n.t('admin.user.delete_forbidden');
+      return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_age});
     } else {
       return null;
     }

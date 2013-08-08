@@ -236,7 +236,7 @@ class SiteSetting < ActiveRecord::Base
 
   client_setting(:relative_date_duration, 14)
 
-  setting(:delete_user_max_age, 7)
+  client_setting(:delete_user_max_age, 7)
   setting(:delete_all_posts_max, 10)
 
 
