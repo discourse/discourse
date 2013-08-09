@@ -200,7 +200,7 @@ class Topic < ActiveRecord::Base
       .created_since(since)
       .listable_topics
       .order(:percent_rank)
-      .limit(5)
+      .limit(100)
   end
 
   def update_meta_data(data)

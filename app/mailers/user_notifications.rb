@@ -39,11 +39,13 @@ class UserNotifications < ActionMailer::Base
     @last_seen_at = I18n.l(@user.last_seen_at || @user.created_at, format: :short)
 
     # A list of topics to show the user
-    @new_topics = Topic.for_digest(user, min_date)
-    @markdown_linker = MarkdownLinker.new(Discourse.base_url)
+    @featured_topics = Topic.for_digest(user, min_date).to_a
 
     # Don't send email unless there is content in it
-    if @new_topics.present?
+    if @featured_topics.present?
+      @featured_topics, @new_topics = @featured_topics[0..4], @featured_topics[5..-1]
+      @markdown_linker = MarkdownLinker.new(Discourse.base_url)
+
       build_email user.email,
                   from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
                   subject: I18n.t('user_notifications.digest.subject_template',

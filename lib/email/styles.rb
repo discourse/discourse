@@ -53,6 +53,7 @@ module Email
       style('ul', 'margin: 0 0 0 10px; padding: 0 0 0 20px;')
       style('li', 'padding-bottom: 10px')
       style('div.digest-post', 'margin-left: 15px; margin-top: 20px; max-width: 694px;')
+      style('div.digest-post h1', 'font-size: 20px;')
 
       @fragment.css('pre').each do |pre|
         pre.replace(pre.text)
