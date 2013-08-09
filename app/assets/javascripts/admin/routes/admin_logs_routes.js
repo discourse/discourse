@@ -43,7 +43,18 @@ Discourse.AdminLogsStaffActionLogsRoute = Discourse.Route.extend({
     this.render('admin/templates/logs/staff_action_logs', {into: 'adminLogs'});
   },
 
-  setupController: function() {
-    return this.controllerFor('adminLogsStaffActionLogs').show();
+  setupController: function(controller) {
+    var queryParams = Discourse.URL.get('queryParams');
+    if (queryParams) {
+      controller.set('filters', queryParams);
+    }
+    return controller.show();
+  },
+
+  deactivate: function() {
+    this._super();
+
+    // Clear any filters when we leave the route
+    Discourse.URL.set('queryParams', null);
   }
 });

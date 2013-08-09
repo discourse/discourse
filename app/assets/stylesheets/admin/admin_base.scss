@@ -739,6 +739,31 @@ table {
   }
 }
 
+.staff-action-logs-controls {
+  margin: 0 0 20px 6px;
+  a.filter {
+    display: inline-block;
+    background-color: #ddd;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-left: 5px;
+    color: #444;
+    &:hover {
+      color: $link-color-hover;
+    }
+    .label {
+      font-weight: bold;
+    }
+    i {
+      margin-left: 6px;
+    }
+  }
+}
+
+.staff-action-logs-instructions {
+  margin: 50px 0 0 10px;
+}
+
 // Ember.ListView
 
 .ember-list-view {

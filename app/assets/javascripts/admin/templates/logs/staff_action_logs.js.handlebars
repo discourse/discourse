@@ -1,8 +1,26 @@
-
-<p>
-  <a {{action clearFilters}} {{bindAttr class="clearFiltersClass"}}>{{i18n admin.logs.staff_actions.clear_filters}}</a>
-</p>
-
+<div class="staff-action-logs-controls">
+  <a {{action clearAllFilters}} {{bindAttr class=":clear-filters :filter filtersExists::invisible"}}>
+    <span class="label">{{i18n admin.logs.staff_actions.clear_filters}}</span>
+  </a>
+  {{#if actionFilter}}
+    <a {{action clearFilter "action_name"}} class="filter">
+      <span class="label">{{i18n admin.logs.action}}</span>: {{actionFilter}}
+      <i class="icon icon-remove-sign"></i>
+    </a>
+  {{/if}}
+  {{#if filters.staff_user}}
+    <a {{action clearFilter "staff_user"}} class="filter">
+      <span class="label">{{i18n admin.logs.staff_actions.staff_user}}</span>: {{filters.staff_user}}
+      <i class="icon icon-remove-sign"></i>
+    </a>
+  {{/if}}
+  {{#if filters.target_user}}
+    <a {{action clearFilter "target_user"}} class="filter">
+      <span class="label">{{i18n admin.logs.staff_actions.target_user}}</span>: {{filters.target_user}}
+      <i class="icon icon-remove-sign"></i>
+    </a>
+  {{/if}}
+</div>
 
 <div class='table staff-actions'>
   <div class="heading-container">
@@ -26,3 +44,9 @@
     {{/if}}
   {{/if}}
 </div>
+
+{{#unless loading}}
+  <div class="staff-action-logs-instructions">
+    {{i18n admin.logs.staff_actions.instructions}}
+  </div>
+{{/unless}}

@@ -1177,7 +1177,8 @@ en:
             do_nothing: "do nothing"
         staff_actions:
           title: "Staff Actions"
-          clear_filters: "Show All"
+          instructions: "Click usernames and actions to filter the list. Click avatars to go to user pages."
+          clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
           when: "When"
