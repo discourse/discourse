@@ -16,7 +16,14 @@ describe Onebox::Preview::Amazon do
 
     it "returns the product description" do 
       amazon = described_class.new(response("amazon.response"), link)
-      expect(amazon.to_html).to include("Using only the finest natural materials and ecologically sound manufacturing processes, Japanese designer Eisaku Noro has been producing some of the most extraordinary and popular yarns in the world for over 30 years. Hand colored in vivid combinations of painterly hues, Noro yarns are as striking to behold as they are easy to work with. This follow-up to Knit Noro features 32 small projects knitters can complete in a weekend, including Leg Warmers, Cabled Mittens, a Lace Flap Hat, and even an iPad cover.")
+      expect(amazon.to_html).to include("Using only the finest natural materials and ecologically sound " +
+                                        "manufacturing processes, Japanese designer Eisaku Noro has been " +
+                                        "producing some of the most extraordinary and popular yarns in the " +
+                                        "world for over 30 years. Hand colored in vivid combinations of " +
+                                        "painterly hues, Noro yarns are as striking to behold as they are " +
+                                        "easy to work with. This follow-up to Knit Noro features 32 small " +
+                                        "projects knitters can complete in a weekend, including Leg Warmers, " +
+                                        "Cabled Mittens, a Lace Flap Hat, and even an iPad cover.")
     end
 
     it "returns the product price" do 
