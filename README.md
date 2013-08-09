@@ -10,6 +10,8 @@ Whenever you need ...
 
 ... consider Discourse.
 
+To learn more about the philosophy and goals of the project, [visit discourse.org](http://www.discourse.org).
+
 ## Getting Started
 
 1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. This beginner's guide is also adequate for developers ready to sink their teeth quickly; it's the easiest way to hack on Discourse!
