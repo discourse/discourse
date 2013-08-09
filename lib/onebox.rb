@@ -6,9 +6,8 @@ require "mustache"
 require_relative "onebox/version"
 require_relative "onebox/preview"
 
-
 module Onebox
   def self.preview(url, args={})
-  	Preview.new(url, args)
+    Preview.new(url, args)
   end
 end
