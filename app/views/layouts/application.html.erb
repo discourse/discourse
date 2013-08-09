@@ -28,6 +28,9 @@
   </head>
 
   <body>
+
+    <%= render partial: "shared/tag_manager" %>
+    
     <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
 
     <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
