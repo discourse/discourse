@@ -704,7 +704,6 @@ table {
   width: 900px;
   .email {
     width: 400px;
-    margin-left: 5px;
   }
   .action, .match_count, .last_match_at, .created_at {
     width: 110px;
@@ -716,7 +715,6 @@ table {
   width: 100%;
   .action {
     width: 120px;
-    margin-left: 5px;
   }
   .staff_user, .target_user {
     width: 100px;
@@ -770,6 +768,9 @@ table {
     vertical-align: top;
     overflow-y: auto;
     overflow-x: hidden;
+  }
+  .col.first {
+    margin-left: 5px;
   }
 
   .ember-list-item-view {
