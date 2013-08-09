@@ -82,3 +82,10 @@ pre {
     opacity: 0.5;
   }
 }
+
+p > code {
+  margin: 0px 2px;
+  padding: 2px 5px;
+  background-color: #f1f1ff;
+  border-radius: 3px 3px 3px 3px;
+}
