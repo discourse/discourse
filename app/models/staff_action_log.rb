@@ -11,6 +11,14 @@ class StaffActionLog < ActiveRecord::Base
   def self.actions
     @actions ||= Enum.new(:delete_user, :change_trust_level)
   end
+
+  def self.with_filters(filters)
+    query = self
+    if filters[:action_name] and action_id = StaffActionLog.actions[filters[:action_name].to_sym]
+      query = query.where('action = ?', action_id)
+    end
+    query
+  end
 end
 
 # == Schema Information

@@ -1168,6 +1168,7 @@ en:
         created_at: "Created"
         blocked_emails:
           title: "Blocked Emails"
+          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
           email: "Email Address"
           last_match_at: "Last Matched"
           match_count: "Matches"
@@ -1176,6 +1177,7 @@ en:
             do_nothing: "do nothing"
         staff_actions:
           title: "Staff Actions"
+          clear_filters: "Show All"
           staff_user: "Staff User"
           target_user: "Target User"
           when: "When"

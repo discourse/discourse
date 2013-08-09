@@ -1,4 +1,6 @@
-<div class="col value action">{{actionName}}</div>
+<div class="col value action">
+  <a {{action filterByAction action_name}}>{{actionName}}</a>
+</div>
 <div class="col value staff_user">
   {{#linkTo 'adminUser' staff_user}}{{avatar staff_user imageSize="tiny"}}{{/linkTo}}
   {{#linkTo 'adminUser' staff_user}}{{staff_user.username}}{{/linkTo}}
