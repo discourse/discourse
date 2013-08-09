@@ -23,7 +23,7 @@ Discourse.NavItem = Discourse.Model.extend({
   categorySlug: function() {
     var split = this.get('name').split('/');
     if (split[0] === 'category' && split[1]) {
-      var cat = Discourse.Site.instance().categories.findProperty('name', split[1]);
+      var cat = Discourse.Site.current().categories.findProperty('name', split[1]);
       return cat ? Discourse.Category.slugFor(cat) : null;
     }
     return null;

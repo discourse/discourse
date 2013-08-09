@@ -202,7 +202,7 @@ Discourse.Utilities = {
     }
 
     // ensures that new users can upload a file
-    if (Discourse.User.current('trust_level') === 0 && Discourse.SiteSettings['newuser_max_' + type + 's'] === 0) {
+    if (Discourse.User.currentProp('trust_level') === 0 && Discourse.SiteSettings['newuser_max_' + type + 's'] === 0) {
       bootbox.alert(I18n.t('post.errors.' + type + '_upload_not_allowed_for_new_user'));
       return false;
     }

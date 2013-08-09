@@ -1144,7 +1144,7 @@ pseudo:
         %{respond_instructions}
          ]]
     user_posted:
-      subject_template: '[[ [%{site_name}] %{username} ƿóšťéď íɳ ''%{topic_title}''
+      subject_template: '[[ [%{site_name}] %{subject_prefix}%{username} ƿóšťéď íɳ ''%{topic_title}''
         ]]'
       text_body_template: |-
         [[ %{username} ƿóšťéď íɳ '%{topic_title}' óɳ %{site_name}:
@@ -1167,17 +1167,7 @@ pseudo:
       click_here: '[[ čłíčǩ ĥéřé ]]'
       from: '[[ %{site_name} ďíǧéšť ]]'
       read_more: '[[ Řéáď Ϻóřé ]]'
-    private_message:
-      subject_template: '[[ [%{site_name}] %{subject_prefix}%{topic_title} ]]'
-      text_body_template: |-
-        [[ %{private_message_from} ʲůšť šéɳť ýóů á ƿříνáťé ɱéššáǧé
 
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
-         ]]
     forgot_password:
       subject_template: '[[ [%{site_name}] Рáššŵóřď řéšéť ]]'
       text_body_template: |-

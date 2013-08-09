@@ -16,7 +16,7 @@ Discourse.PostView = Discourse.GroupedView.extend({
   postBinding: 'content',
 
   postTypeClass: function() {
-    return this.get('post.post_type') === Discourse.Site.instance().get('post_types.moderator_action') ? 'moderator' : 'regular';
+    return this.get('post.post_type') === Discourse.Site.currentProp('post_types.moderator_action') ? 'moderator' : 'regular';
   }.property('post.post_type'),
 
   // If the cooked content changed, add the quote controls
@@ -153,7 +153,7 @@ Discourse.PostView = Discourse.GroupedView.extend({
   },
 
   willDestroyElement: function() {
-    Discourse.ScreenTrack.instance().stopTracking(this.$().prop('id'));
+    Discourse.ScreenTrack.current().stopTracking(this.$().prop('id'));
   },
 
   didInsertElement: function() {
@@ -162,7 +162,7 @@ Discourse.PostView = Discourse.GroupedView.extend({
     this.showLinkCounts();
 
     // Track this post
-    Discourse.ScreenTrack.instance().track(this.$().prop('id'), this.get('post.post_number'));
+    Discourse.ScreenTrack.current().track(this.$().prop('id'), this.get('post.post_number'));
 
     // Add syntax highlighting
     Discourse.SyntaxHighlighting.apply($post);

@@ -47,8 +47,8 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     return model.save().then(function() {
       // model was saved
       preferencesController.set('saving', false);
-      if (Discourse.User.current('id') === model.get('id')) {
-        Discourse.User.current().set('name', model.get('name'));
+      if (Discourse.User.currentProp('id') === model.get('id')) {
+        Discourse.User.currentProp('name', model.get('name'));
       }
 
       preferencesController.set('bio_cooked',

@@ -17786,6 +17786,7 @@ Ember.View = Ember.CoreView.extend(
 
     if (priorState && priorState.exit) { priorState.exit(this); }
     if (currentState.enter) { currentState.enter(this); }
+    if (state === 'inDOM') { delete Ember.meta(this).cache.element; }
 
     if (children !== false) {
       this.forEachChildView(function(view) {

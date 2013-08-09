@@ -35,7 +35,7 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
   canTakeAction: function() {
     // We can only take actions on non-custom flags
     if (this.get('selected.is_custom_flag')) return false;
-    return Discourse.User.current('staff');
+    return Discourse.User.currentProp('staff');
   }.property('selected.is_custom_flag'),
 
   submitText: function(){
@@ -66,7 +66,7 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
   },
 
   canDeleteSpammer: function() {
-    if (Discourse.User.current('staff') && this.get('selected.name_key') === 'spam') {
+    if (Discourse.User.currentProp('staff') && this.get('selected.name_key') === 'spam') {
       return this.get('userDetails.can_be_deleted') && this.get('userDetails.can_delete_all_posts');
     } else {
       return false;
@@ -84,7 +84,7 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
   }.observes('username'),
 
   fetchUserDetails: function() {
-    if( Discourse.User.current('staff') && this.get('username') ) {
+    if( Discourse.User.currentProp('staff') && this.get('username') ) {
       var flagController = this;
       Discourse.AdminUser.find(this.get('username').toLowerCase()).then(function(user){
         flagController.set('userDetails', user);

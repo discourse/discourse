@@ -193,7 +193,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   throttledPositionUpdate: Discourse.debounce(function() {
-    Discourse.ScreenTrack.instance().scrolled();
+    Discourse.ScreenTrack.current().scrolled();
     var model = this.get('controller.model');
     if (model && this.get('nextPositionUpdate')) {
       this.set('controller.currentPost', this.get('nextPositionUpdate'));

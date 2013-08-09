@@ -974,7 +974,7 @@ nl:
         %{respond_instructions}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} nieuw bericht in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} nieuw bericht in '%{topic_title}'"
       text_body_template: |
         %{username} schreef een bericht in '%{topic_title}' op %{site_name}:
 
@@ -993,17 +993,6 @@ nl:
       unsubscribe: "Deze samenvatting wordt door %{site_link} verstuurd als we je 7 dagen hebben gemist op onze site.\nMocht je dit uit willen zetten, of je e-mailvoorkeur willen veranderen, %{unsubscribe_link}."
       click_here: klik hier
       from: "%{site_name} Digest"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{from} heeft je net een privé-bericht gestuurd
-
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
 
     forgot_password:
       subject_template: "[%{site_name}] Wachtwoord herstellen"

@@ -104,6 +104,8 @@ en:
     or: "or"
     now: "just now"
     read_more: 'read more'
+    more: "More"
+    less: "Less"
 
     in_n_seconds:
       one: "in 1 second"
@@ -1166,6 +1168,29 @@ en:
         last_seen_user: "Last Seen User:"
         reply_key: "Reply Key"
 
+      logs:
+        title: "Logs"
+        action: "Action"
+        created_at: "Created"
+        blocked_emails:
+          title: "Blocked Emails"
+          email: "Email Address"
+          last_match_at: "Last Matched"
+          match_count: "Matches"
+          actions:
+            block: "block"
+            do_nothing: "do nothing"
+        staff_actions:
+          title: "Staff Actions"
+          staff_user: "Staff User"
+          target_user: "Target User"
+          when: "When"
+          context: "Context"
+          details: "Details"
+          actions:
+            delete_user: "delete user"
+            change_trust_level: "change trust level"
+
       impersonate:
         title: "Impersonate User"
         username_or_email: "Username or Email of User"
@@ -1246,7 +1271,9 @@ en:
           and notified."
         time_read: "Read Time"
         delete: "Delete User"
-        delete_forbidden: "This user can't be deleted because there are posts. Delete all this user's posts first."
+        delete_forbidden:
+          one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
+          other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
         delete_confirm: "Are you SURE you want to permanently delete this user from the site? This action is permanent!"
         delete_and_block: "<b>Yes</b>, and <b>block</b> signups with the same email address"
         delete_dont_block: "<b>Yes</b>, and <b>allow</b> signups with the same email address"

@@ -62,6 +62,11 @@ Discourse::Application.routes.draw do
       end
     end
 
+    scope '/logs' do
+      resources :blocked_emails,    only: [:index, :create, :update, :destroy]
+      resources :staff_action_logs, only: [:index, :create, :update, :destroy]
+    end
+
     get 'customize' => 'site_customizations#index', constraints: AdminConstraint.new
     get 'flags' => 'flags#index'
     get 'flags/:filter' => 'flags#index'

@@ -125,7 +125,7 @@ Discourse.Post = Discourse.Model.extend({
 
   flagsAvailable: function() {
     var post = this,
-        flags = Discourse.Site.instance().get('flagTypes').filter(function(item) {
+        flags = Discourse.Site.currentProp('flagTypes').filter(function(item) {
       return post.get("actionByName." + (item.get('name_key')) + ".can_act");
     });
     return flags;
@@ -155,7 +155,7 @@ Discourse.Post = Discourse.Model.extend({
       }).then(function(result) {
         // If we received a category update, update it
         self.set('version', result.post.version);
-        if (result.category) Discourse.Site.instance().updateCategory(result.category);
+        if (result.category) Discourse.Site.current().updateCategory(result.category);
         if (complete) complete(Discourse.Post.create(result.post));
       }, function(result) {
         // Post failed to update
@@ -295,7 +295,7 @@ Discourse.Post = Discourse.Model.extend({
       _.each(obj.actions_summary,function(a) {
         var actionSummary;
         a.post = post;
-        a.actionType = Discourse.Site.instance().postActionTypeById(a.id);
+        a.actionType = Discourse.Site.current().postActionTypeById(a.id);
         actionSummary = Discourse.ActionSummary.create(a);
         post.get('actions_summary').pushObject(actionSummary);
         lookup.set(a.actionType.get('name_key'), actionSummary);
@@ -354,7 +354,7 @@ Discourse.Post.reopenClass({
       var lookup = Em.Object.create();
       result.actions_summary = result.actions_summary.map(function(a) {
         a.post = result;
-        a.actionType = Discourse.Site.instance().postActionTypeById(a.id);
+        a.actionType = Discourse.Site.current().postActionTypeById(a.id);
         var actionSummary = Discourse.ActionSummary.create(a);
         lookup.set(a.actionType.get('name_key'), actionSummary);
         return actionSummary;

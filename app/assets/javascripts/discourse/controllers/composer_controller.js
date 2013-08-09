@@ -140,7 +140,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
     if (this.get('model.editingPost')) return;
 
     // If creating a topic, use topic_count, otherwise post_count
-    var count = this.get('model.creatingTopic') ? Discourse.User.current('topic_count') : Discourse.User.current('reply_count');
+    var count = this.get('model.creatingTopic') ? Discourse.User.currentProp('topic_count') : Discourse.User.currentProp('reply_count');
     if (count >= Discourse.SiteSettings.educate_until_posts) {
       this.set('educationClosed', true);
       this.set('educationContents', '');

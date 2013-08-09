@@ -693,3 +693,29 @@ table {
     width: 600px;
   }
 }
+
+/* Logs */
+
+.blocked-emails {
+  .match_count, .last_match_at, .created_at {
+    text-align: center;
+  }
+}
+
+.staff-actions {
+  .action {
+    width: 120px;
+  }
+  .staff_user, .target_user, .created_at {
+    white-space: nowrap;
+  }
+  .created_at {
+    text-align: center;
+  }
+  .details {
+    width: 400px;
+    a {
+      text-decoration: underline;
+    }
+  }
+}

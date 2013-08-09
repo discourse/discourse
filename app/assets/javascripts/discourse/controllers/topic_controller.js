@@ -222,7 +222,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   resetRead: function() {
-    Discourse.ScreenTrack.instance().reset();
+    Discourse.ScreenTrack.current().reset();
     this.unsubscribe();
 
     var topicController = this;

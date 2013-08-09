@@ -57,15 +57,19 @@ For details on how to reduce the monthly cost of your application, see [Advanced
 
         heroku addons:add scheduler:standard
 
-5. Generate a secret token in the terminal.
+5. Run bundler
+
+        bundle install
+
+6. Generate a secret token in the terminal.
 
         rake secret
 
-6. Push the secret to the stored heroku environment variables, this will now be available to your app globally.
+7. Push the secret to the stored heroku environment variables, this will now be available to your app globally.
 
         heroku config:add SECRET_TOKEN=<generated secret>
 
-7. Precompile assets.
+8. Precompile assets.
 
     There are two options for precompilation. Either precompile locally, **before each deploy** or enable [Heroku's experimental user-env-compile](https://devcenter.heroku.com/articles/labs-user-env-compile) feature and Heroku will precompile your assets for you.
 
@@ -109,11 +113,11 @@ For details on how to reduce the monthly cost of your application, see [Advanced
             git add public/assets        
             git push heroku heroku:master
 
-8. Push your heroku branch to Heroku.
+9. Push your heroku branch to Heroku.
 
         git push heroku heroku:master
 
-9. Migrate and seed the database.
+10. Migrate and seed the database.
 
         heroku run rake db:migrate db:seed_fu
 

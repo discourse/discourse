@@ -1,7 +1,7 @@
 module("Discourse.NavItem", {
   setup: function() {
-    this.site = Discourse.Site.instance();
-    this.originalCategories = Discourse.Site.instance().get('categories') || [];
+    this.site = Discourse.Site.current();
+    this.originalCategories = Discourse.Site.currentProp('categories') || [];
     this.site.set('categories', this.originalCategories.concat( [Discourse.Category.create({name: '确实是这样', id: 343434})] ));
   },
 

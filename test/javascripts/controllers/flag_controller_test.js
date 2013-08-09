@@ -17,7 +17,7 @@ module("Discourse.FlagController canDeleteSpammer");
 
 test("canDeleteSpammer not staff", function(){
   var flagController = controllerFor('flag', buildPost());
-  this.stub(Discourse.User, 'current').returns(false); // Discourse.User.current('staff') returns false
+  this.stub(Discourse.User, 'currentProp').withArgs('staff').returns(false);
   flagController.set('selected', Discourse.PostActionType.create({name_key: 'spam'}));
   equal(flagController.get('canDeleteSpammer'), false, 'false if current user is not staff');
 });
@@ -28,7 +28,7 @@ var canDeleteSpammer = function(test, postActionType, expected, testName) {
 };
 
 test("canDeleteSpammer spam not selected", function(){
-  this.stub(Discourse.User, 'current').returns(true); // Discourse.User.current('staff') returns true
+  this.stub(Discourse.User, 'currentProp').withArgs('staff').returns(true);
   this.flagController = controllerFor('flag', buildPost());
   this.flagController.set('userDetails', buildAdminUser({can_delete_all_posts: true, can_be_deleted: true}));
   canDeleteSpammer(this, 'off_topic', false, 'false if current user is staff, but selected is off_topic');
@@ -38,7 +38,7 @@ test("canDeleteSpammer spam not selected", function(){
 });
 
 test("canDeleteSpammer spam selected", function(){
-  this.stub(Discourse.User, 'current').returns(true);
+  this.stub(Discourse.User, 'currentProp').withArgs('staff').returns(true);
   this.flagController = controllerFor('flag', buildPost());
 
   this.flagController.set('userDetails', buildAdminUser({can_delete_all_posts: true, can_be_deleted: true}));

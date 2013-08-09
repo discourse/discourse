@@ -2,7 +2,7 @@ module("Discourse.Site");
 
 test('instance', function(){
 
-  var site = Discourse.Site.instance();
+  var site = Discourse.Site.current();
 
   present(site, "We have a current site singleton");
   present(site.get('categories'), "The instance has a list of categories");

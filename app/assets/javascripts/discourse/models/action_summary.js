@@ -120,7 +120,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
       var users = Em.A();
       actionSummary.set('users', users);
       _.each(result,function(user) {
-        if (user.id === Discourse.User.current('id')) {
+        if (user.id === Discourse.User.currentProp('id')) {
           users.pushObject(Discourse.User.current());
         } else {
           users.pushObject(Discourse.User.create(user));

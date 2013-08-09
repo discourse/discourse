@@ -61,7 +61,7 @@
 
 #user-info {
   width: 240px;
-  margin-right: 30px;
+  margin-right: 20px;
   float: left;
   .summary {
     height: 50px;
@@ -186,7 +186,7 @@
     padding: 6px;
     @include border-radius-all(4px);
     float: left;
-    width: 946px;
+    width: 936px;
     height: 57px;
     margin-left: 150px;
     background-color: white;
@@ -219,12 +219,12 @@
   }
   @include medium-width {
     .about-me {
-      width: 831px;
+      width: 821px;
     }
   }
   @include small-width {
     .about-me {
-      width: 786px;
+      width: 776px;
     }
   }
 }

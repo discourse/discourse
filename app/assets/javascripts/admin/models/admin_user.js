@@ -67,7 +67,7 @@ Discourse.AdminUser = Discourse.User.extend({
   },
 
   trustLevels: function() {
-    return Discourse.Site.instance().get('trustLevels');
+    return Discourse.Site.currentProp('trustLevels');
   }.property(),
 
   dirty: Discourse.computed.propertyNotEqual('originalTrustLevel', 'trustLevel.id'),
@@ -202,12 +202,12 @@ Discourse.AdminUser = Discourse.User.extend({
   },
 
   deleteForbidden: function() {
-    return (this.get('post_count') > 0);
+    return (!this.get('can_be_deleted') || this.get('post_count') > 0);
   }.property('post_count'),
 
   deleteButtonTitle: function() {
     if (this.get('deleteForbidden')) {
-      return I18n.t('admin.user.delete_forbidden');
+      return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_age});
     } else {
       return null;
     }
@@ -277,7 +277,7 @@ Discourse.AdminUser = Discourse.User.extend({
       "callback": function() {
         Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
           type: 'DELETE',
-          data: {delete_posts: true, block_email: true}
+          data: {delete_posts: true, block_email: true, context: window.location.pathname}
         }).then(function(data) {
           if (data.deleted) {
             bootbox.alert(I18n.t("admin.user.deleted"), function() {

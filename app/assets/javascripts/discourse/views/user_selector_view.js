@@ -15,7 +15,7 @@ Discourse.UserSelector = Discourse.TextField.extend({
       dataSource: function(term) {
         var exclude = selected;
         if (userSelectorView.get('excludeCurrentUser')){
-          exclude = exclude.concat([Discourse.User.current('username')]);
+          exclude = exclude.concat([Discourse.User.currentProp('username')]);
         }
         return Discourse.UserSearch.search({
           term: term,

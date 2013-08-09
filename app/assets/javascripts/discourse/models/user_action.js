@@ -91,11 +91,11 @@ Discourse.UserAction = Discourse.Model.extend({
   }.property('descriptionKey'),
 
   sameUser: function() {
-    return this.get('username') === Discourse.User.current('username');
+    return this.get('username') === Discourse.User.currentProp('username');
   }.property('username'),
 
   targetUser: function() {
-    return this.get('target_username') === Discourse.User.current('username');
+    return this.get('target_username') === Discourse.User.currentProp('username');
   }.property('target_username'),
 
   targetUserUrl: Discourse.computed.url('target_username', '/users/%@'),

@@ -857,7 +857,7 @@ zh_CN:
         请访问 %{base_url}%{url} 来回复。
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主题发表了帖子"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} 在 '%{topic_title}' 主题发表了帖子"
       text_body_template: |
         %{username} 在 %{site_name} 的 '%{topic_title}' 主题中发表了帖子：
 
@@ -875,17 +875,6 @@ zh_CN:
       unsubscribe: "这封来自 %{site_link} 的汇总邮件是当我们有一段时间没有见到你之后，作为一个礼貌的通知发送给你的。\n如果你希望关闭它或者修改你的邮件设置，请访问 %{unsubscribe_link}。"
       click_here: "点击此处"
       from: "%{site_name} 摘要"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{private_message_from} 刚刚发送了一条私信给你
-
-        ---
-        %{message}
-
-        ---
-        请访问 %{base_url}%{url} 来回复。
 
     forgot_password:
       subject_template: "[%{site_name}] 密码重置"

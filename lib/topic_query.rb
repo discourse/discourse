@@ -237,19 +237,17 @@ class TopicQuery
     end
 
     def new_results(options={})
-      TopicQuery.new_filter(default_results(options), @user.treat_as_new_topic_start_date)
+      result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)),
+                                     @user.treat_as_new_topic_start_date)
+
+      suggested_ordering(result, options)
     end
 
     def unread_results(options={})
       result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
                          .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
-      # Prefer unread in the same category
-      if options[:topic] && options[:topic].category_id
-        result = result.order("CASE WHEN topics.category_id = #{options[:topic].category_id.to_i} THEN 0 ELSE 1 END")
-      end
-
-      result.order(TopicQuery.order_nocategory_with_pinned_sql)
+      suggested_ordering(result, options)
     end
 
     def random_suggested(topic, count)
@@ -263,4 +261,12 @@ class TopicQuery
       result.order("RANDOM()")
     end
 
+    def suggested_ordering(result, options)
+      # Prefer unread in the same category
+      if options[:topic] && options[:topic].category_id
+        result = result.order("CASE WHEN topics.category_id = #{options[:topic].category_id.to_i} THEN 0 ELSE 1 END")
+      end
+
+      result.order(TopicQuery.order_nocategory_with_pinned_sql)
+    end
 end

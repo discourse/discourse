@@ -87,7 +87,7 @@ Discourse.Topic = Discourse.Model.extend({
   // So take what the browser has seen into consideration.
   displayNewPosts: function() {
     var delta, highestSeen, result;
-    if (highestSeen = Discourse.Session.current('highestSeenByTopic')[this.get('id')]) {
+    if (highestSeen = Discourse.Session.currentProp('highestSeenByTopic')[this.get('id')]) {
       delta = highestSeen - this.get('last_read_post_number');
       if (delta > 0) {
         result = this.get('new_posts') - delta;
@@ -130,7 +130,7 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('views'),
 
   archetypeObject: function() {
-    return Discourse.Site.instance().get('archetypes').findProperty('id', this.get('archetype'));
+    return Discourse.Site.currentProp('archetypes').findProperty('id', this.get('archetype'));
   }.property('archetype'),
   isPrivateMessage: Em.computed.equal('archetype', 'private_message'),
 

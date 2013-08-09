@@ -714,7 +714,7 @@ da:
         Klik her for at svare: %{base_url}%{url}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} skrev et indlæg i emnet '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} skrev et indlæg i emnet '%{topic_title}'"
       text_body_template: |
         %{username} skrev et indlæg i emnet '%{topic_title}' på %{site_name}:
 
@@ -732,17 +732,6 @@ da:
       unsubscribe: "Denne opsummering sendes som en høflig notifikation fra %{site_link} når vi ikke har set dig et stykke tid.\nHvis du ønsker at slå den fra, eller ændre dine e-mail-indstillinger, %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} opsummering"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{private_message_from} har sendt dig en privat besked
-
-        ---
-        %{message}
-
-        ---
-        Klik her for at svare: %{base_url}%{url}
 
     forgot_password:
       subject_template: "[%{site_name}] Nulstil kodeord"
