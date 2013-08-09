@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en"
+      data-cast-api-enabled="true"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://opengraphprotocol.org/schema/"
+      xmlns:fb="http://www.facebook.com/2008/fbml"
+      xml:lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Blue Shark Bites Diver's Arm - Discovery Sharks    </title>
+    
+    <script src="/ui/global/js/jquery/jquery-1.8.1.min.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="alternate" type="application/rss+xml" title="Discovery Sharks (default MRSS feed)" href="/discoverysharks/feed/mp4-large" />
+    <meta property="og:type" content="video.episode" />
+    <meta property="og:url" content="http://revision3.com/discoverysharks/blue-sharks" />
+    <meta property="og:image" content="https://revision3-pc-ssl-1.bitgravity.com/revision3/images/shows/discoverysharks/0029/discoverysharks--0029--blue-sharks--medium.thumb.jpg" />
+    <meta property="og:title" content="Blue Shark Bites Diver&apos;s Arm" />
+    <meta property="og:description" content="Blue Sharks swimming and eating in the open ocean. One tries to eat a diver&apos;s arm when it gets too close to her mouth." />
+    <meta property="video:release_date" content="2013-07-19T08:45:00-07:00" />
+    <meta property="video:duration" content="120" />
+    <meta property="video:series" content="http://revision3.com/discoverysharks" />
+    <meta property="video:tag" content="shark, sharks, blue shark, animal, ocean, predator, diver, chain mail, Discovery Channel, sharknado, shark week, shark bait, Scuba, Diving, animals" />
+    <meta property="medium" content="video" />
+    <meta property="og:video" content="https://revision3.com/player-v22668" />
+    <meta property="og:video:type" content="video/mp4" />
+    <meta property="og:video:height" content="225" />
+    <meta property="og:video:width" content="400" />
+    <meta property="publish-date" content="Fri, 19 Jul 2013 15:45:00 GMT" />
+    <meta name="twitter:card" content="player" />
+    <meta name="twitter:site" content="@revision3" />
+    <meta name="twitter:creator" content="@revision3" />
+    <meta name="twitter:domain" content="https://revision3.com" />
+    <meta name="twitter:url" content="https://revision3.com/discoverysharks/blue-sharks" />
+    <meta name="twitter:title" content="Blue Shark Bites Diver&apos;s Arm" />
+    <meta name="twitter:description" content="Blue Sharks swimming and eating in the open ocean. One tries to eat a diver&apos;s arm when it gets too close to her mouth." />
+    <meta name="twitter:image" content="https://revision3-pc-ssl-1.bitgravity.com/revision3/images/shows/discoverysharks/0029/discoverysharks--0029--blue-sharks--marge.thumb.jpg" />
+    <meta name="twitter:player" content="https://revision3.com/html5player-v22668?width=640&height=360&autoplay=false" />
+    <meta name="twitter:player:width" content="640" />
+    <meta name="twitter:player:height" content="360" />
+    <link rel="image_src" href="http://videos.revision3.com/revision3/images/shows/discoverysharks/0029/discoverysharks--0029--blue-sharks--small.thumb.jpg" />
+    <meta name="category" content="Animals" />
+    <meta name="description" content="Discovery Sharks: Blue Shark Bites Diver&apos;s Arm - Blue Sharks swimming and eating in the open ocean. One tries to eat a diver&apos;s arm when it gets too close to her mouth." />
+    <meta name="keywords" content="shark, sharks, blue shark, animal, ocean, predator, diver, chain mail, Discovery Channel, sharknado, shark week, shark bait, Scuba, Diving, animals, Discovery Sharks, Blue Shark Bites Diver's Arm, episode 29, aquarium, bait, coral reef, danger, divers, eating, feeding, fin, fish, fish bait, great white, jaws, Predators, sea, shark cage, shark fin, shark teeth, summer, swim, swimming" />
+    <meta property="og:site_name" content="Revision3" />
+    <meta property="fb:app_id" content="122518927766274" />
+
+    <link rel="shortcut icon" href="http://statics.revision3.com/ui/r3/images/favicon@2x.ico" type="image/vnd.microsoft.icon" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://statics.revision3.com/ui/r3/images/icons/touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://statics.revision3.com/ui/r3/images/icons/touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://statics.revision3.com/ui/r3/images/icons/touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="http://statics.revision3.com/ui/r3/images/icons/touch-icon-57-precomposed.png">
+    
+    <script src="http://statics.revision3.com/ui/r3/compressed/js/shiv-1375389033042.min.js"></script>
+    
+            <link type="text/css" href="http://statics.revision3.com/ui/r3/compressed/css/core-1375389033042.css" rel="stylesheet" media="all">
+        <link type="text/css" href="http://statics.revision3.com/ui/r3/compressed/css/responsive-1375389033042.css" rel="stylesheet" media="all">
+        <link type="text/css" href="http://statics.revision3.com/ui/r3/compressed/css/video-1375389033042.css" rel="stylesheet" media="all">
+    
+    <link rel="stylesheet" type="text/css" href="http://statics.revision3.com/ui/global/modules/html5/r3/mediaelementplayer.min.css?v=33" media="all" />
+    <link rel="stylesheet" type="text/css" href="http://statics.revision3.com/ui/global/modules/html5/r3/r3html5player.min.css?v=33" media="all" />
+
+    <!--[if IE]>
+          <link type="text/css" href="http://statics.revision3.com/ui/r3/compressed/css/ie-overrides-1375389033042.css" rel="stylesheet" media="all">
+    <![endif]-->    
+
+
+    <script>
+      // Global namespace
+      var rev3 = {};
+
+      var BANNER_RAND = (Math.floor(Math.random() * 100000) + 10000).toString();
+      var BANNER_SECTION = 'discoverysharks';
+      function getBannerRand() {
+          return BANNER_RAND;
+      }
+      function getBannerSection() {
+          return BANNER_SECTION;
+      }
+      var userMessagesOffset = -34;
+
+      (function() {
+        var amst = document.createElement('script'); amst.type = 'text/javascript';
+        amst.src = ('https:' == document.location.protocol ? 'https://m.v' : 'http://adm') +
+                   '.fwmrm.net/p/release/latest-JS/adm/prd/AdManager.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(amst, s);
+      })();
+      
+      (function() {
+        var cx = '007627718316979070961:-e0h8vqekly';
+        var gcse = document.createElement('script'); gcse.type = 'text/javascript'; gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+                   '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(gcse, s);
+      })();
+    </script>
+        <script src="http://m2.fwmrm.net/g/lib/1.1/js/fwjslib.js?version=1.1"></script>
+    <script src="http://apis.google.com/js/plusone.js"></script>
+    <script src="http://platform.twitter.com/widgets.js"></script>
+  </head>
+
+  <body id="www-revision3-com" class="Video">
+<header class="Header">
+  <div id="topDiscovery" class="ParentGrid internal">
+    <a class="logo" href="http://revision3.com/" title="Revision3 Home"><img src="http://statics.revision3.com/ui/r3/images/logos/logo-header.png" /></a>
+    <div id="userLinks">
+      <a href="http://revision3.com/login#register-form" class="primary-button register">Register</a>
+      <a href="http://revision3.com/login" class="secondary-button login">Log In</a>
+    </div>
+    <div id="leaderboard">
+      <span id="header_728_90" class="_fwph">
+    <form id="_fw_form_header_728_90" style="display:none">
+        <input type="hidden" name="_fw_input_header_728_90" id="_fw_input_header_728_90" value="slid=header_728_90&slau=Leaderboard|Leaderboard_Expandable&csid=discoverysharks&w=728&h=90" />
+    </form>
+    <span id="_fw_container_header_728_90" class="_fwac"></span>
+</span>    </div>
+  </div>
+  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+    <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+  </a>
+  <nav class="navBackground internal">
+    <div class="navToggle"></div>
+    <ul class="nav ParentGrid">
+      <li class="item navLogo hidden"><a class="link" href="http://revision3.com/"><img class="logo" src="http://statics.revision3.com/ui/r3/images/logos/logo-header-simple.png" /><span class="title">Home</span></a></li>
+      <li class="item navShows" data-elem="shows">
+        <a class="link" href="http://revision3.com/shows">Shows</a>
+        <ul class="dropDown categories" data-nav="shows"><li class="category technology-and-gadgets"><a class="name">Technology &amp; Gadgets</a><div class="grouping"><div class="Heading5 title">Technology &amp; Gadgets</div><ul class="list"><li class="show"><a href="http://revision3.com/amplified">Amplified</a></li><li class="show"><a href="http://revision3.com/androidauthority">Android Authority</a></li><li class="show"><a href="http://revision3.com/downloaded">downLOADED</a></li><li class="show"><a href="http://revision3.com/driven">Driven</a></li><li class="show"><a href="http://revision3.com/factorfictional">Fact or Fictional</a></li><li class="show"><a href="http://revision3.com/geekbeattv">GeekBeat.TV</a></li><li class="show"><a href="http://revision3.com/gizmoslip">GizmoSlip</a></li><li class="show"><a href="http://revision3.com/hak5">Hak5</a></li><li class="show"><a href="http://revision3.com/hdnation">HD Nation</a></li><li class="show"><a href="http://revision3.com/mobilegeeks">MobileGeeks</a></li><li class="show"><a href="http://revision3.com/ratedrr">RatedRR</a></li><li class="show"><a href="http://revision3.com/oneoff">Revision3 One Offs</a></li><li class="show"><a href="http://revision3.com/sgnlbysony">SGNL by Sony</a></li><li class="show"><a href="http://revision3.com/soldierknowsbest">SoldierKnowsBest</a></li><li class="show"><a href="http://revision3.com/techassassinreloaded">Tech Assassin - Reloaded</a></li><li class="show"><a href="http://revision3.com/techbattlefield">Tech Battlefield</a></li><li class="show"><a href="http://revision3.com/techfeednews">Tech Feed News</a></li><li class="show"><a href="http://revision3.com/technobuffalo">TechnoBuffalo</a></li><li class="show"><a href="http://revision3.com/tekzilla">Tekzilla</a></li><li class="show"><a href="http://revision3.com/tbhs">The Ben Heck Show</a></li><li class="show"><a href="http://revision3.com/philipdefranco">The Philip DeFranco Show</a></li><li class="show"><a href="http://revision3.com/threatwire">Threat Wire</a></li><li class="show"><a href="http://revision3.com/tysihelp">Ty&apos;s iHelp</a></li></ul></div></li><li class="category video-games"><a class="name">Video Games</a><div class="grouping"><div class="Heading5 title">Video Games</div><ul class="list"><li class="show"><a href="http://revision3.com/addressthesess">Address the Sess</a></li><li class="show"><a href="http://revision3.com/casualfriday">Casual Friday</a></li><li class="show"><a href="http://revision3.com/deathbattle">Death Battle!</a></li><li class="show"><a href="http://revision3.com/destructoid">Destructoid</a></li><li class="show"><a href="http://revision3.com/screwattackhardnews">Hard News</a></li><li class="show"><a href="http://revision3.com/studyhall">Max Scoville&apos;s Study Hall</a></li><li class="show"><a href="http://revision3.com/rev3gamesoriginals">Rev3Games Originals</a></li><li class="show"><a href="http://revision3.com/rev3gamespreviews">Rev3Games Previews</a></li><li class="show"><a href="http://revision3.com/rev3gamesreviews">Rev3Games Reviews</a></li><li class="show"><a href="http://revision3.com/sesslerssomething">Sessler&apos;s ...Something</a></li><li class="show"><a href="http://revision3.com/sidescrollers">SideScrollers</a></li><li class="show"><a href="http://revision3.com/spoiledgames">Spoiled Games</a></li><li class="show"><a href="http://revision3.com/variant">Variant</a></li></ul></div></li><li class="category comedy"><a class="name">Comedy</a><div class="grouping"><div class="Heading5 title">Comedy</div><ul class="list"><li class="show"><a href="http://revision3.com/anniesbits">Annie&apos;s Bits</a></li><li class="show"><a href="http://revision3.com/catherinereitman">Breakin&apos; It Down</a></li><li class="show"><a href="http://revision3.com/deathbattle">Death Battle!</a></li><li class="show"><a href="http://revision3.com/filmriot">Film Riot</a></li><li class="show"><a href="http://revision3.com/filmstate">Film State</a></li><li class="show"><a href="http://revision3.com/goremy">GoRemy</a></li><li class="show"><a href="http://revision3.com/philipdefranco">The Philip DeFranco Show</a></li><li class="show"><a href="http://revision3.com/toddssketches">Todd&apos;s Sketches</a></li></ul></div></li><li class="category how-to-and-diy"><a class="name">How-To &amp; DIY</a><div class="grouping"><div class="Heading5 title">How-To &amp; DIY</div><ul class="list"><li class="show"><a href="http://revision3.com/amplified">Amplified</a></li><li class="show"><a href="http://revision3.com/filmriot">Film Riot</a></li><li class="show"><a href="http://revision3.com/hak5">Hak5</a></li><li class="show"><a href="http://revision3.com/technobuffalo">TechnoBuffalo</a></li><li class="show"><a href="http://revision3.com/tekzilla">Tekzilla</a></li><li class="show"><a href="http://revision3.com/tbhs">The Ben Heck Show</a></li><li class="show"><a href="http://revision3.com/invisiblemanpresents">The Invisible Man Presents</a></li><li class="show"><a href="http://revision3.com/tysihelp">Ty&apos;s iHelp</a></li></ul></div></li><li class="category news-and-politics"><a class="name">News &amp; Politics</a><div class="grouping"><div class="Heading5 title">News &amp; Politics</div><ul class="list"><li class="show"><a href="http://revision3.com/anniesbits">Annie&apos;s Bits</a></li><li class="show"><a href="http://revision3.com/filmstate">Film State</a></li><li class="show"><a href="http://revision3.com/goremy">GoRemy</a></li><li class="show"><a href="http://revision3.com/techfeednews">Tech Feed News</a></li><li class="show"><a href="http://revision3.com/philipdefranco">The Philip DeFranco Show</a></li></ul></div></li><li class="category movies-and-media"><a class="name">Movies &amp; Media</a><div class="grouping"><div class="Heading5 title">Movies &amp; Media</div><ul class="list"><li class="show"><a href="http://revision3.com/catherinereitman">Breakin&apos; It Down</a></li><li class="show"><a href="http://revision3.com/filmriot">Film Riot</a></li><li class="show"><a href="http://revision3.com/filmstate">Film State</a></li><li class="show"><a href="http://revision3.com/hdnation">HD Nation</a></li><li class="show"><a href="http://revision3.com/variant">Variant</a></li></ul></div></li><li class="category animals"><a class="name">Animals</a><div class="grouping"><div class="Heading5 title">Animals</div><ul class="list"><li class="show"><a href="http://revision3.com/bigcatrescue">Big Cat Rescue</a></li><li class="show"><a href="http://revision3.com/discoverysharks">Discovery Sharks</a></li><li class="show"><a href="http://revision3.com/lilbub">Lil Bub</a></li><li class="show"><a href="http://revision3.com/petsami">Petsami</a></li></ul></div></li><li class="category news"><a class="name">News</a><div class="grouping"><div class="Heading5 title">News</div><ul class="list"><li class="show"><a href="http://revision3.com/downloaded">downLOADED</a></li></ul></div></li><li class="category art-and-music"><a class="name">Art &amp; Music</a><div class="grouping"><div class="Heading5 title">Art &amp; Music</div><ul class="list"><li class="show"><a href="http://revision3.com/variant">Variant</a></li></ul></div></li><li class="category more"><a class="name">More</a><div class="grouping"><div class="Heading5 title">More</div><ul class="list"><li class="show"><a href="http://revision3.com/where">Where to Watch</a></li><li class="show"><a href="http://revision3.com/bestof">Best Of Revision3</a></li><li class="show"><a href="http://revision3.com/schedule">Release Schedule</a></li><li class="show"><a href="http://revision3.com/shows/archive">Archived Shows</a></li></ul></div></ul>      </li>
+      <li class="item navNetworks" data-elem="networks">
+        <a class="link" href="http://revision3.com/networks">Networks</a>
+        <ul class="dropDown networks" data-nav="networks">
+          <li class="network"><a class="navLink" href="http://revision3.com/makerfaire2013">Maker Faire</a></li><li class="network"><a class="navLink" href="http://revision3.com/animals">Rev3Animals</a></li><li class="network"><a class="navLink" href="http://revision3.com/games">Rev3Games</a></li><li class="network"><a class="navLink" href="http://revision3.com/tech">Rev3Tech</a></li><li class="network"><a class="navLink" href="http://revision3.com/ces2013">Revision3 at CES 2013</a></li><li class="network"><a class="navLink" href="http://revision3.com/sharkweek">Shark Week 2013</a></li><li class="network"><a class="navLink" href="http://revision3.com/xboxvsps4">Xbox One Vs. PS4</a></li>        </ul>
+      </li>
+      <li class="item navEpisodes" data-elem="episodes">
+        <a class="link" href="http://revision3.com/episodes">Episodes</a>
+      </li>
+      <li class="item navHosts" data-elem="hosts">
+        <a class="link" href="http://revision3.com/hosts">Hosts</a>
+      </li>
+      <li class="item navWatch" data-elem="watch">
+        <a class="link" href="http://revision3.com/where">Where to Watch</a>
+      </li>
+      <li class="item navStores" data-elem="stores">
+        <a class="link" href="http://revision3.com/deals">Stores &amp; Deals</a>
+      </li>
+        <li class="item navUser loggedOut hidden" data-elem="login">
+          <a class="link register" href="http://revision3.com/register">Register</a>
+          <a class="link login" href="http://revision3.com/login">Login</a>
+          <form class="dropDown form" action="http://revision3.com/login/auth" method="post" data-nav="login">
+            <label class="label" for="email">Username / email:</label>
+            <input type="text" id="email" class="field" name="email" />
+            <label class="label" for="password">Password:</label>
+            <input type="password" id="password" class="field" name="password" />
+            <input type="checkbox" id="rememberMeTop" name="rememberMe" />
+            <label for="rememberMeTop" style="margin-right: 5px">Remember Me</label>
+            <input class="link login" type="submit" value="Login" />
+            <a class="forgot" href="/login#reset-form">Darn, I forgot my password</a>
+            <div class="alternate">
+              <span class="separator"> or </span>
+              <a class="primary-button fbLogin">Login with Facebook</a>
+            </div>
+          </form>
+        </li>
+      <li class="item mobileLogin">
+        <a class="link" href="/login">login or register</a>
+      </li>
+            <li class="item navSearch">
+        <div id="topSearch"><gcse:search></gcse:search></div>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<section class="Content"><div id="userMessages" style="display: none;">
+  <div class="template rev3message"><div class="messageBox"><span class="notifyIcon"></span>
+  <span class="content"></span><span class="closeLink">click to close</span></div></div>
+</div>
+<div id="userErrors" style="display: none;">
+  <div class="template rev3error"><div class="messageBox">
+<span class="content"></span><span class="closeLink">x</span></div></div>
+</div>
+  
+  <div class="ParentGrid show-info discoverysharks clear">
+    <img class="albumArt" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/discoverysharks_200x200.jpg" />
+    <div class="show-summary Col8">
+      <h1 class="Heading2">Discovery Sharks</h1>
+      <p class="small"></p>
+      <p class="small">Dive into the deep depths of the ocean with Discovery Sharks, a glimpse into the world of the ocean's deadliest predator.&nbsp;&nbsp;<a class="detailsLink" href="#about-show">More Details</a></p>
+    </div>
+    <div class="show-subscribe-social">
+      <div id="favoritesButton" class="primary-button">
+  <a href="/login" >
+    <span>Subscribe</span>
+  </a>
+</div>
+          </div>
+  </div>
+
+  <div id="ShowMainContainer" class="clear">
+    <div id="viewport-container">
+            <nav class="ParentGrid show-callout-tabs">
+      <a href="discoverysharks/episodes" class="link" onclick="return trackEvent('Show Page', 'Nav - All Episodes', '');">All Episodes</a>        </nav>
+            <div id="episode-wrapper" class="ParentGrid">
+  <div class="play-control-bar">
+    <div class="play-control favorite"></div>
+        <div class="play-control prev" onclick="document.location = '/discoverysharks/whale-feast'"></div>
+            <div class="play-control next" onclick="document.location = '/discoverysharks/whale-sharks'"></div>
+        <div class="play-control fullscreen" onclick="popupPlayer('640', '360');"></div>
+    <div class="play-control share" onclick="$('#ShareTabLink').click();"></div>
+  </div>
+  <div class="video-stage-wrapper">
+    <div id="video-embed">
+      <span id="rev3PlayerStart" class="anchor"></span>
+      <video width="100%" height="420" id="rev3-player" class="mejs-rev3" controls="controls" preload="none"></video>
+<script type="text/javascript">playerVideoTypes = new Array(); 
+ playerVideoTypes[0] = 'video/mp4'; 
+ playerVideoTypes[1] = 'video/webm'; 
+ playerVideoTypes[2] = 'video/ogg'; 
+ 
+playerVideoFeatures = new Array(); 
+ playerVideoFeatures[0] = 'playpause'; 
+ playerVideoFeatures[1] = 'progress'; 
+ playerVideoFeatures[2] = 'current'; 
+ playerVideoFeatures[3] = 'duration'; 
+ playerVideoFeatures[4] = 'volume'; 
+ playerVideoFeatures[5] = 'rev3core'; 
+ playerVideoFeatures[6] = 'embedcode'; 
+ playerVideoFeatures[7] = 'share'; 
+ playerVideoFeatures[8] = 'related'; 
+ playerVideoFeatures[9] = 'contextmenu'; 
+ playerVideoFeatures[10] = 'segments'; 
+ playerVideoFeatures[11] = 'fallbackerrorwindow'; 
+ playerVideoFeatures[12] = 'castdevices'; 
+ playerVideoFeatures[13] = 'continuous'; 
+ playerVideoFeatures[14] = 'fullscreen'; 
+ playerVideoFeatures[15] = 'quality'; 
+ 
+  var r3player;
+     $(function($) {
+         if (rev3.supportsHtml5Player) {
+             r3player = new MediaElementPlayer('#rev3-player',{
+                 pluginPath: '/ui/r3/html5/',
+                 fwNetworkId: 10265, 
+                 type: playerVideoTypes,
+                 features: playerVideoFeatures,
+                 success: function(media, node, player) {
+                     player.rev3Quality = 'high';
+                     player.isAutoplay = true;
+                     player.rev3TurnContinuousOn();
+                     
+                     player.loadRevision3Item('video_id', 22668);
+                     if (typeof playerLoaded === 'function') { playerLoaded(player); }
+                     if (typeof rev3_watcher !== 'undefined' && typeof rev3_watcher.playerReady === 'function') { rev3_watcher.playerReady(media, player); }
+                 },
+                 fallback: function() {
+                 }
+             });
+         } else {
+             var flashvars = { scanPage: "true", showRev3: "true", allowFavoriting: "false", autoStart: "true"};
+             var params = { allowFullScreen: "true", quality: "high", allowScriptAccess: "always", wmode: "transparent" };
+             var attributes = { "class": "rev3PlayerEmbed" };
+             swfobject.embedSWF("http://revision3.com/player-v22668", "rev3-player", "100%", "420", "10.0.0", false, flashvars, params, attributes);
+         }
+     });
+</script>      <div class="info">
+        <h2>Blue Shark Bites Diver&apos;s Arm</h2>
+        <div class="subtext">
+          Friday, July 19th, 2013 &#150; running time 02:00        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+
+      <div class="companion-ad-wrapper">
+        <span id="mpu_300_60" class="_fwph">
+    <form id="_fw_form_mpu_300_60" style="display:none">
+        <input type="hidden" name="_fw_input_mpu_300_60" id="_fw_input_mpu_300_60" value="slid=mpu_300_60&csid=discoverysharks&w=300&h=60" />
+    </form>
+    <span id="_fw_container_mpu_300_60" class="_fwac"></span>
+</span>      </div>
+
+      <div class="moreEpisodes">
+        <h3>More episodes:</h3>
+        <ul class="sidebarEpisodes">
+          <li class="sidebarItem">
+  <a class="playlistPlay clear" data-video-id="22390" href="/discoverysharks/blue-sharks">
+    <div class="thumb"><img src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0029/discoverysharks--0029--blue-sharks--small.thumb.jpg"/></div>
+    <div class="meta">
+      <div class="title">Blue Shark Bites Diver's Arm</div>
+          </div>
+  </a>
+</li><li class="sidebarItem">
+  <a class="playlistPlay clear" data-video-id="22387" href="/discoverysharks/whale-feast">
+    <div class="thumb"><img src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0028/discoverysharks--0028--whale-feast--small.thumb.jpg"/></div>
+    <div class="meta">
+      <div class="title">Great White Sharks Devour a WHALE</div>
+          </div>
+  </a>
+</li><li class="sidebarItem">
+  <a class="playlistPlay clear" data-video-id="22383" href="/discoverysharks/weird-sharks">
+    <div class="thumb"><img src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0027/discoverysharks--0027--weird-sharks--small.thumb.jpg"/></div>
+    <div class="meta">
+      <div class="title">Sharks You've Never Heard Of</div>
+          </div>
+  </a>
+</li><li class="sidebarItem">
+  <a class="playlistPlay clear" data-video-id="22381" href="/discoverysharks/hungry-sharks">
+    <div class="thumb"><img src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0026/discoverysharks--0026--hungry-sharks--small.thumb.jpg"/></div>
+    <div class="meta">
+      <div class="title">Hungry Great White Shark Eats a Wading Bird</div>
+          </div>
+  </a>
+</li><li class="sidebarItem">
+  <a class="playlistPlay clear" data-video-id="22378" href="/discoverysharks/sharks-up-close">
+    <div class="thumb"><img src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0025/discoverysharks--0025--sharks-up-close--small.thumb.jpg"/></div>
+    <div class="meta">
+      <div class="title">Sharks Get Up and Close and Personal</div>
+          </div>
+  </a>
+</li>        </ul>
+      </div>
+
+          </div>
+
+    <div class="episode-tabs">
+      <nav class="tabs clear" data-element="tabs">
+        <a href="#details" class="tab active" data-tab="#episode-details">Episode Details</a>
+        <a href="#comments" class="tab" data-tab="#episode-comments">Comments</a>
+        <a id="ShareTabLink" href="#share" class="tab" data-tab="#episode-share">Share</a>
+        <a href="#embed" class="tab" data-tab="#episode-embed">Embed</a>
+        <a href="#permalink" class="tab" data-tab="#episode-permalink">Permalink</a>
+        <a href="#feeds" class="tab" data-tab="#episode-feeds">RSS Feeds</a>
+        <a href="#broadcast" class="tab" data-tab="#episode-broadcast">Broadcast</a>
+      </nav>
+    </div>
+  </div><!-- .video-stage-wrapper -->
+</div><!--  #episode-wrapper -->
+    </div>
+
+    <div id="HiddenDescription" class="episode-details"></div>
+    <div class="episode-details ParentGrid">
+  <div class="episode-tabs-container">
+    <div id="episode-details" class="tab" data-element="tab">
+            <div class="summary"><p>Blue Sharks swimming and eating in the open ocean. One tries to eat a diver&apos;s arm when it gets too close to her mouth.</p></div>
+            <div class="description"><p> Blue Sharks look friendly and harmless with their big eyes, sleek bodies and smiling mouth shapes. But don't be fooled. When they are hungry, they will devour anything in their reach as one diver found out when putting their chain-mail suited arm too close to the shark's mouth. A few Blue Sharks create a sharknado of their own when they funnel krill into a red bait ball and go in for a feast. </p></div>
+            <div class="partnerVideoLinks">
+      <a href="http://youtube.com/watch?v=ZFsZfWD5H0s" target="_PARTNER"><img src="http://statics.revision3.com/ui/r3/images/logos/youtube-logo.png" class="videoPartner" /><div class="g-ytsubscribe" data-channel="thediscoverysharks"></div></a><div class="watch youtube">Watch this video on YouTube: <a href="http://youtube.com/watch?v=ZFsZfWD5H0s" target="_PARTNER"><b>Blue Shark Bites Diver&apos;s Arm</b> (shark, sharks, blue shark)</a></div>      </div>
+              <div class="outro"><p>Watch an entire sharks playlist here:<br />
+<a href="http://www.youtube.com/watch?v=krgXYhbgDM8&list=PLmz4TBi01YRhBzzDliV2zJRVjJUsc5VUk&index=1" target="_blank">http://www.youtube.com/watch?v=krgXYhbgDM8&list=PLmz4TBi01YRhBzzDliV2zJRVjJUsc5VUk&index=1</a></p>
+
+<p>Subscribe For More Sharks Videos: <br />
+<a href="http://www.youtube.com/subscription_center?add_user=thediscoverysharks" target="_blank">http://www.youtube.com/subscription_center?add_user=thediscoverysharks</a></p></div>
+          </div>
+
+    <div id="episode-comments" class="tab hidden" data-element="tab">
+            <div id="disqus_thread"></div>
+      <script>
+              var disqus_config = function() {
+            this.page.remote_auth_s3 = 'e30= e66da13a114d41f05fabaf41284adbcb943c9ba0 1375419577';
+            this.page.api_key = 'NWapw26pGvQbFvceY3tgvkay09lQeae9cg0ZzQvo2Gsddk0pjBJGS5Uo98sXW98N';
+            this.sso = {
+                name: 'Revision3',
+                button: 'http://revision3.com/ui/global/images/social/disqus_login_button.png',
+                icon: 'http://revision3.com/ui/global/images/social/disqus_revision3_icon.png',
+                url:  'http://revision3.com/login',
+                logout: 'http://revision3.com/logout',
+                width: '670',
+                height: '660'
+            };
+        }
+              // var disqus_developer = 1; // developer mode only (i.e. inaccessible from outside)
+        var disqus_shortname = 'revision3'; // required: replace example with your forum shortname
+        var disqus_identifier = 'discoverysharks/blue-sharks';
+        var disqus_url = 'http://revision3.com/discoverysharks/blue-sharks';
+        var disqus_title = 'Episode 29 - Blue Shark Bites Diver&apos;s Arm';
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    <div id="episode-share" class="tab hidden" data-element="tab">
+      <h2>Share this video</h2>
+      <div class="shares clear">
+        <div class="facebook-share Grid25p">
+          <div class="content">
+            <div class="fb-like" data-href="http://revision3.com/discoverysharks/blue-sharks" data-send="false" data-layout="button_count" data-show-faces="false" data-width="225"></div>
+          </div>
+        </div>
+        <div class="twitter-share Grid25p">
+          <div class="content">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-dnt="true" data-text="I'm watching Discovery Sharks - Blue Shark Bites Diver's Arm on @Revision3 - check it out:" data-url="http://rev3.cc/e/22390" data-counturl="http://revision3.com/discoverysharks/blue-sharks">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          </div>
+        </div>
+        <div class="google-share Grid25p">
+          <div class="content">
+            <!-- Place this tag where you want the +1 button to render. -->
+            <div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300"></div>
+
+            <!-- Place this tag after the last +1 button tag. -->
+            <script type="text/javascript">
+              (function() {
+                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                po.src = 'https://apis.google.com/js/plusone.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+              })();
+            </script>
+          </div>
+        </div>
+        <div class="facebook-watch Grid25p">
+          <div class="content">
+            <div id="fb_watches">
+  </div>          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="episode-embed" class="tab hidden" data-element="tab">
+      <h2>Embed this video</h2>
+      <textarea style="height: 60px; width: 600px;" onmouseup="this.select();"><iframe src="http://revision3.com/html5player-v22668?external=true&width=555&height=312" width="555" height="312" frameborder="0" allowFullScreen mozAllowFullscreen webkitAllowFullScreen oallowfullscreen msallowfullscreen></iframe></textarea>    </div>
+
+    <div id="episode-permalink" class="tab hidden" data-element="tab">
+      <h2>Link to this video</h2>
+      <input style="width: 90%;" onmouseup="this.select();" value="http://revision3.com/discoverysharks/blue-sharks">    </div>
+
+    <div id="episode-feeds" class="tab hidden" data-element="tab">
+            <div class="panel-list-item">
+        <div class="subscribe_rss">
+          <h2>RSS FEEDS<img src="http://statics.revision3.com/ui/r3/images/darth/rss.gif" style="margin-left: 5px;"></h2>
+
+          <ul>
+            <li><a href="/discoverysharks/feed/mp4-hd30">MP4 HD</a></li>
+            <li><a href="/discoverysharks/feed/mp4-large">MP4 Large</a></li>
+            <li><a href="/discoverysharks/feed/mp4-small">MP4 Small</a></li>
+          </ul>
+        </div>
+      </div>
+          </div>
+
+    <div id="episode-broadcast" class="tab hidden" data-element="tab">
+      <h2>Broadcast Discovery Sharks</h2>
+      <p>Want the most recent episode of this show on your website?  Use this self-updating embed code!</p>
+      <div class="field">
+        <textarea style="width: 500px; height: 60px" id="show-embed" type="text" onmouseup="this.select(); trackEvent('Show Page', 'Embed Code Selected', 'discoverysharks'); return false;" class="ui-input-text">&lt;iframe src=&quot;http://revision3.com/html5player-s274?external=true&amp;width=555&amp;height=312&quot; width=&quot;555&quot; height=&quot;312&quot; frameborder=&quot;0&quot; allowFullScreen mozAllowFullscreen webkitAllowFullScreen oallowfullscreen msallowfullscreen&gt;&lt;/iframe&gt;</textarea>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+
+  
+  <div class="ParentGrid">
+    <div class="Slider Cards">
+  <div class="fadedUnderlay"></div>
+  <div class="content">
+    <nav class="Col10 tabs" data-element="tabs">
+      <span class="sectionTitle">Episodes</span>
+                <a href="#Most-Recent" class="tab active" data-tab="#Most-Recent">Most Recent</a> |                  <a href="#Featured" class="tab " data-tab="#Featured">Featured</a>            </nav>
+
+   
+      <div id="Most-Recent" class="Col12 tab" data-element="tab">
+                <ul class="clear list" total="3000" data-element="slide-container" data-url="/discoverysharks/episodePage?type=recent&columns=0&">
+                        <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/whale-sharks">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0030/discoverysharks--0030--whale-sharks--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0030/discoverysharks--0030--whale-sharks--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    30 | <time datetime="07/19/2013">07/19/2013</time> | 2:15                    <p>
+                      <strong>The LARGEST Fish in the World Happens to be a SHARK</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/blue-sharks">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0029/discoverysharks--0029--blue-sharks--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0029/discoverysharks--0029--blue-sharks--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    29 | <time datetime="07/19/2013">07/19/2013</time> | 2:00                    <p>
+                      <strong>Blue Shark Bites Diver's Arm</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/whale-feast">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0028/discoverysharks--0028--whale-feast--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0028/discoverysharks--0028--whale-feast--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    28 | <time datetime="07/19/2013">07/19/2013</time> | 2:18                    <p>
+                      <strong>Great White Sharks Devour a WHALE</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/weird-sharks">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0027/discoverysharks--0027--weird-sharks--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0027/discoverysharks--0027--weird-sharks--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    27 | <time datetime="07/19/2013">07/19/2013</time> | 2:30                    <p>
+                      <strong>Sharks You've Never Heard Of</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/hungry-sharks">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0026/discoverysharks--0026--hungry-sharks--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0026/discoverysharks--0026--hungry-sharks--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    26 | <time datetime="07/19/2013">07/19/2013</time> | 2:00                    <p>
+                      <strong>Hungry Great White Shark Eats a Wading Bird</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/sharks-up-close">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0025/discoverysharks--0025--sharks-up-close--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0025/discoverysharks--0025--sharks-up-close--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    25 | <time datetime="07/19/2013">07/19/2013</time> | 1:58                    <p>
+                      <strong>Sharks Get Up and Close and Personal</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/tiger-sharks">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0024/discoverysharks--0024--tiger-sharks--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0024/discoverysharks--0024--tiger-sharks--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    24 | <time datetime="07/19/2013">07/19/2013</time> | 2:03                    <p>
+                      <strong>Do Tiger Sharks Have Stripes?</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/great-whites-below">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0023/discoverysharks--0023--great-whites-below--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0023/discoverysharks--0023--great-whites-below--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    23 | <time datetime="07/19/2013">07/19/2013</time> | 2:04                    <p>
+                      <strong>Great White Sharks Lurking Below the Surface!</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/slow-mo-sharks">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0022/discoverysharks--0022--slow-mo-sharks--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0022/discoverysharks--0022--slow-mo-sharks--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    22 | <time datetime="07/19/2013">07/19/2013</time> | 2:10                    <p>
+                      <strong>Sharks Attacking in SLOW MOTION</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/palau-reef-sharks">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0021/discoverysharks--0021--palau-reef-sharks--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0021/discoverysharks--0021--palau-reef-sharks--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    21 | <time datetime="07/19/2013">07/19/2013</time> | 2:17                    <p>
+                      <strong>Nuclear Sharks?</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/shark-school">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0020/discoverysharks--0020--shark-school--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0020/discoverysharks--0020--shark-school--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    20 | <time datetime="07/19/2013">07/19/2013</time> | 2:09                    <p>
+                      <strong>Sharks Feasting on Bait</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/feeding-sharks">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0019/discoverysharks--0019--feeding-sharks--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0019/discoverysharks--0019--feeding-sharks--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    19 | <time datetime="07/19/2013">07/19/2013</time> | 2:07                    <p>
+                      <strong>Feeding Sharks BY HAND</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                    </ul>
+        <a href="#" class="next" data-element="next"></a>
+        <a href="#" class="prev" data-element="prev"></a>
+      </div>
+     
+      <div id="Featured" class="Col12 tab hidden" data-element="tab">
+                <ul class="clear list" total="3000" data-element="slide-container" data-url="/discoverysharks/episodePage?type=featured&columns=0&">
+                        <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/sharks-up-close">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0025/discoverysharks--0025--sharks-up-close--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0025/discoverysharks--0025--sharks-up-close--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    25 | <time datetime="07/19/2013">07/19/2013</time> | 1:58                    <p>
+                      <strong>Sharks Get Up and Close and Personal</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/shark-takes-bait">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0015/discoverysharks--0015--shark-takes-bait--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0015/discoverysharks--0015--shark-takes-bait--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    15 | <time datetime="07/19/2013">07/19/2013</time> | 2:21                    <p>
+                      <strong>Tuna Gets DEVOURED By Great White Shark</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/megalodon">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0011/discoverysharks--0011--megalodon--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0011/discoverysharks--0011--megalodon--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    11 | <time datetime="07/19/2013">07/19/2013</time> | 1:58                    <p>
+                      <strong>Megalodon: Gigantic Prehistoric Shark</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                          <li class="Grid3 Card" data-element="slide">
+                <a href="/discoverysharks/jumping-sharks">
+                  <img class="thumbnail" src="http://videos.revision3.com/revision3/images/shows/discoverysharks/0006/discoverysharks--0006--jumping-sharks--medium.thumb.jpg" data-retina="http://videos.revision3.com/revision3/images/shows/discoverysharks/0006/discoverysharks--0006--jumping-sharks--large.thumb.jpg" alt="">
+                  <div class="meta">
+                    6 | <time datetime="07/19/2013">07/19/2013</time> | 2:06                    <p>
+                      <strong>See Sharks FLY!</strong>
+                      Discovery Sharks                                          </p>
+                  </div>
+                </a>
+              </li>
+                    </ul>
+        <a href="#" class="next" data-element="next"></a>
+        <a href="#" class="prev" data-element="prev"></a>
+      </div>
+      </div>
+</div>
+  </div>
+
+
+
+  <div id="about-show-container" class="ParentGrid">
+    <span class="anchor" id="about-show"></span>
+    <div class="fadedUnderlay"></div>
+    <div class="Col12 inner clear">
+      <h3>About the Show</h3>
+      <div class="Col2 logo"><img src="http://videos.revision3.com/revision3/images/shows/discoverysharks/discoverysharks_160x160.jpg" /></div>
+      <div class="Col6 details">
+        <div class="detail-line">
+          <b>Details</b>
+        </div>
+        <div class="detail-line">
+          <div class="Col3 detail-heading">Show Title:</div>
+          <div class="Col9 detail-value last">Discovery Sharks</div>
+        </div>
+        <div class="detail-line">
+          <div class="Col3 detail-heading">Description:</div>
+          <div class="Col9 detail-value last">They're the apex predator of the ocean and one of the world's most feared sea dwellers, however, sharks are also one of the most fascinating creatures under water. Explore the world of Discovery Sharks and swim amongst sharks of all types. From the prehistoric monster, the Megalodon devouring its prey to the Blacktip scouring the reef, peek into the life of one of the world's deadliest and possibly most misunderstood animals.</div>
+        </div>
+        <div class="detail-line">
+          <div class="Col3 detail-heading">Categories:</div>
+          <div class="Col9 detail-value last">Animals</div>
+        </div>
+        <div class="detail-line">
+          <div class="Col3 detail-heading">Launch Date:</div>
+          <div class="Col9 detail-value last">Jul 19, 2013</div>
+        </div>
+        <div class="detail-line">
+          <div class="Col3 detail-heading">Episodes:</div>
+          <div class="Col9 detail-value last"><a href="/discoverysharks/episodes/">30</a></div>
+        </div>
+      </div>
+            </div>
+    </div>
+  </div>
+
+</section>
+
+<script type="text/javascript">
+  var _showID = '274';
+  var _isFavorite = 'false';
+  var _userTwitter = '';
+</script>
+</section><footer class="Footer">
+  <nav class="navBackground">
+    <ul class="nav ParentGrid">
+      <li class="item"><a class="link" href="http://revision3.com/" title="Revision3 Home"><img src="http://statics.revision3.com/ui/r3/images/nav/logo-secondary-nav.png" class="logo retinable"></a></li>
+                  <li class="item link-item"><a class="link" href="http://revision3.com/advertise">Advertise</a></li>
+              <li class="item link-item"><a class="link" href="http://revision3.com/blog/category/announcements/press-releases">Media & Press</a></li>
+              <li class="item link-item"><a class="link" href="http://revision3.com/company">Our Company</a></li>
+              <li class="item link-item"><a class="link" href="http://revision3.com/help">Support & FAQ</a></li>
+              <li class="item link-item"><a class="link" href="http://revision3.com/forum">Forum</a></li>
+              <li class="item link-item"><a class="link" href="http://revision3.com/blog">Blog</a></li>
+            <li class="item phone-nav">
+        <select onChange="window.location = this.value">
+          <option value="" selected="selected">Jump to&hellip;</option>
+                  <option value="http://revision3.com/advertise">Advertise</option>
+                  <option value="http://revision3.com/blog/category/announcements/press-releases">Media & Press</option>
+                  <option value="http://revision3.com/company">Our Company</option>
+                  <option value="http://revision3.com/help">Support & FAQ</option>
+                  <option value="http://revision3.com/forum">Forum</option>
+                  <option value="http://revision3.com/blog">Blog</option>
+                </select>
+      </li>
+      </ul>
+  </nav>
+  <div class="social">
+    <div class="ParentGrid wrapper clear">
+                      <div class="Col3 tweetBox">
+          <div class="icon">Twitter</div>
+          <div class="message">Follow us on Twitter</div>
+          <a href="http://twitter.com/revision3" class="twitter-follow-button" data-show-count="false">Follow @revision3</a>
+        </div>
+            <div class="Col3 faceBox">
+        <div class="icon">Facebook</div>
+        <div class="message">Follow us on Facebook</div>
+        <div class="links">
+          <div class="fb-like" data-send="false" data-width="175" data-href="http://revision3.com" data-layout="button_count" data-show-faces="false" data-colorscheme="dark"></div>
+        </div>
+      </div>
+      <ul class="Col3 socialLinks clear">
+                <li class="socialnetwork youtube"><a target="_blank" href="http://youtube.com/revision3">YouTube</a></li>
+                        <li class="socialnetwork twitter"><a target="_blank" href="http://twitter.com/revision3">Twitter</a></li>
+                        <li class="socialnetwork tumblr"><a target="_blank" href="http://revision3.tumblr.com/">Tumblr</a></li>
+                        <li class="socialnetwork gplus"><a target="_blank" href="https://plus.google.com/+Revision3/posts" rel="publisher">Google+</a></li>
+                        <li class="socialnetwork flickr"><a target="_blank" href="http://flickr.com/revision3">Flickr</a></li>
+                        <li class="socialnetwork instagram"><a target="_blank" href="http://instagram.com/revision3">Instagram</a></li>
+                        <li class="socialnetwork itunes"><a target="_blank" href="http://itunes.com/revision3">iTunes</a></li>
+                        <li class="socialnetwork pinterest"><a target="_blank" href="http://pinterest.com/revision3">Pinterest</a></li>
+              </ul>
+          <div class="Col3 newsletterBox">
+        <div class="icon">Revision3 Newsletter Signup</div>
+        <div class="message">Sign up for breaking news, announcements, and delivery of your favorite shows!</div>
+        <div class="links">
+          <form action="/welcome/subscribe" method="post">
+            <input type="text" name="data[Recipient][email]" placeholder="Enter email address" />
+            <input type="submit" class="primary-button" value="Sign Up" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ParentGrid">
+    <div class="mapBg clear">
+      <div class="Col12 map">
+                                    <div class="Col2 list">
+            <h4>Explore Revision3</h4>
+            <ul>
+                                              <li><a href="/shows">Shows</a></li>
+                                                            <li><a href="/episodes">Episodes</a></li>
+                                                            <li><a href="/hosts">Hosts</a></li>
+                                                            <li><a href="/deals">Stores & Deals</a></li>
+                                                      </ul>
+          </div>
+                                      <div class="Col2 list">
+            <h4>More Revision3</h4>
+            <ul>
+                                              <li><a href="/advertise">Advertise</a></li>
+                                                            <li><a href="/blog/category/announcements/press-releases/">Media & Press</a></li>
+                                                            <li><a href="/company">Company</a></li>
+                                                            <li><a href="/contact">Contact Us</a></li>
+                                                            <li><a href="/help">Help & FAQ</a></li>
+                                                            <li><a href="/forum">Forum</a></li>
+                                                            <li><a href="/blog">Blog</a></li>
+                                                      </ul>
+          </div>
+                                              <div class="Col2 list">
+            <h4>Our Sites</h4>
+            <ul>
+                                              <li><a href="http://animal.discovery.com/" target="_BLANK">Animal Planet</a></li>
+                                                            <li><a href="http://america.discovery.com/" target="_BLANK">Destination America</a></li>
+                                                            <li><a href="http://dsc.discovery.com/" target="_BLANK">Discovery Channel</a></li>
+                                                            <li><a href="http://www.tudiscovery.com/" target="_BLANK">Discovery en Español</a></li>
+                                                            <li><a href="http://tv.discoveryfamilia.com/" target="_BLANK">Discovery Familia</a></li>
+                                                            <li><a href="http://kids.discovery.com/" target="_BLANK">Discovery Kids</a></li>
+                                                            <li><a href="http://health.discovery.com/" target="_BLANK">Discovery Fit & Health</a></li>
+                                                            <li><a href="http://www.hubworld.com/" target="_BLANK">HUB</a></li>
+                                                            <li><a href="http://investigation.discovery.com/" target="_BLANK">Investigation Discovery</a></li>
+                                                            <li><a href="http://military.discovery.com/" target="_BLANK">Military Channel</a></li>
+                                                            <li><a href="http://www.oprah.com/own" target="_BLANK">Oprah Winfrey Network</a></li>
+                                                            <li><a href="http://science.discovery.com/" target="_BLANK">Science Channel</a></li>
+                                                            <li><a href="http://www.tlc.com/" target="_BLANK">TLC</a></li>
+                                                            <li><a href="http://velocity.discovery.com/" target="_BLANK">Velocity</a></li>
+                                                            <li><a href="http://www.3net.com/" target="_BLANK">3net</a></li>
+                                                        </ul>
+          </div>
+          <div class="Col2 list noDivider">
+            <h4>&nbsp;</h4>
+            <ul>
+                                                            <li><a href="http://www.apl.tv/" target="_BLANK">Animal Planet Live</a></li>
+                                                            <li><a href="http://news.discovery.com/" target="_BLANK">Discovery News</a></li>
+                                                            <li><a href="http://www.howstuffworks.com/" target="_BLANK">HowStuffWorks</a></li>
+                                                            <li><a href="http://www.petfinder.com/" target="_BLANK">Petfinder</a></li>
+                                                            <li><a href="http://revision3.com/" target="_BLANK">Revision3</a></li>
+                                                            <li><a href="http://testtube.com/" target="_BLANK">TestTube</a></li>
+                                                            <li><a href="http://www.discoveryeducation.com/" target="_BLANK">Discovery Education</a></li>
+                                                            <li><a href="http://www.discoverymusicsource.com/" target="_BLANK">Discovery Music Source</a></li>
+                                                            <li><a href="http://www.discoveryaccess.com" target="_BLANK">Discovery Access</a></li>
+                                        </ul>
+          </div>
+                            <div class="Col2 list">
+            <h4>Shop</h4>
+            <ul>
+                                              <li><a href="http://store.discovery.com/" target="_BLANK">Discovery Store</a></li>
+                                                            <li><a href="http://store.discovery.com/?v=discovery_dvds-books" target="_BLANK">DVDs & Books</a></li>
+                                                            <li><a href="http://www.discoveryadventures.com" target="_BLANK">Discovery Adventures</a></li>
+                                                            <li><a href="http://discoveryretreats.com/" target="_BLANK">Discovery Retreats</a></li>
+                                                            <li><a href="http://discoverystudentadventures.com/" target="_BLANK">Student Adventures</a></li>
+                                                            <li><a href="http://corporate.discovery.com/contact/advertising/" target="_BLANK">Discovery Advertising Sales</a></li>
+                                        </ul>
+          </div>
+                            <div class="Col2 list">
+            <h4>Corporate</h4>
+            <ul>
+                                              <li><a href="http://corporate.discovery.com" target="_BLANK">Discovery Communications, LLC</a></li>
+                                                            <li><a href="http://corporate.discovery.com/contact/viewer-relations/" target="_BLANK">Viewer Relations</a></li>
+                                                            <li><a href="http://corporate.discovery.com/contact/advertising/" target="_BLANK">Advertising</a></li>
+                                                            <li><a href="http://careers.discovery.com/" target="_BLANK">Careers @ Discovery</a></li>
+                                                            <li><a href="http://corporate.discovery.com/privacy-policy/" target="_BLANK">Privacy Policy</a></li>
+                                                            <li><a href="http://corporate.discovery.com/online-closed-captioning/" target="_BLANK">Online Closed Captioning</a></li>
+                                                            <li><a href="http://corporate.discovery.com/visitor-agreement/" target="_BLANK">Visitor Agreement</a></li>
+                                        </ul>
+          </div>
+                <div class="copyright">
+          <p>Copyright &copy; 2013 Discovery Communications, LLC. The World's #1 Nonfiction Media Company.</p>
+        </div>
+  <div class="ad728"><span id="footer_728_90" class="_fwph">
+    <form id="_fw_form_footer_728_90" style="display:none">
+        <input type="hidden" name="_fw_input_footer_728_90" id="_fw_input_footer_728_90" value="slid=footer_728_90&slau=Leaderboard&csid=discoverysharks&w=728&h=90" />
+    </form>
+    <span id="_fw_container_footer_728_90" class="_fwac"></span>
+</span></div>          </div>
+      </div>
+    </div>
+  </div>
+
+        <script src="http://statics.revision3.com/ui/r3/compressed/js/core-1375389033042.min.js"></script>
+<!--[if IE]>
+    <script src="http://statics.revision3.com/ui/r3/compressed/js/ie-overrides-1375389033042.min.js"></script>
+<![endif]-->
+    <script src="http://statics.revision3.com/ui/r3/compressed/js/video-1375389033042.min.js"></script>
+
+
+<!-- Google Analytics async -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2551516-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Quantcast -->
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js"></script>
+<script type="text/javascript">_qacct="p-f1cWfevXAyEIA";quantserve();</script>
+<noscript>
+<a href="http://www.quantcast.com/p-f1cWfevXAyEIA" target="_blank"><img src="http://pixel.quantserve.com/pixel/p-f1cWfevXAyEIA.gif" style="display: none;" border="0" height="1" width="1" alt="Quantcast" /></a>
+</noscript>
+
+<div class="myModalData" style="display:none;">
+  <form id="facebookConfirmation" name="facebookConfirmation" method="post">
+    <h4 class="Heading4 heading">Join Revision3 Using Facebook</h4>
+    <p class="slug">Oh hi there, Facebook user! We make it super easy to link your Facebook account with us and enjoy all the perks of being a Revision3 user.</p>
+    <button type="button" class="fbLogin ui-form-button primary-button" tabindex="10"><span class="icon">Link Facebook Account</span></button> 
+    <button type="button" class="cancel ui-form-button secondary-button" tabindex="11" onclick="setCookie('facebookSkip',true,10);facebookModal.close();">Skip Facebook Login</button>
+  </form>
+</div>
+
+<div id="fbModalTemplate" data-width="410" data-height="155" data-modal-name="fbModal">
+  <div class="content"></div>
+</div>
+<!-- Facebook -->
+<div id="fb-root"></div>
+<script>
+  var _rev3user = '';
+  var facebookModal = new Modalla();
+  var myModalData = $('.myModalData').html();
+
+  window.fbAsyncInit = function() {
+    FB.init({appId: '122518927766274', status: true, cookie: true, xfbml: true});
+
+    
+    var fbLogin = function() {
+      FB.login(function(response){
+        if(response.authResponse) {
+          window.location = '/login/facebook';
+        }
+      },{scope: 'email,user_about_me,user_location,user_website'});
+    }
+
+    var checkLoginStatus = function() {
+      FB.getLoginStatus(function(response){
+        if (response.status === 'connected' && !_rev3user) {
+          window.location = '/login/facebook';
+        } else {
+          fbLogin();
+        }
+      });
+    };
+
+    var fbModal = function() {
+      facebookModal.open('#fbModalTemplate');
+      $('.ModallaFrame .content').html(myModalData);
+      $('.fbLink').click(function() {
+        window.location = '/login/facebook';
+      });
+    }
+    
+    FB.getLoginStatus(function(response){
+      var _notAuthorized = response.status === 'not_authorized' && !_rev3user && document.cookie.indexOf("facebookSkip") === -1;
+      var _connected = response.status === 'connected' && !_rev3user && document.cookie.indexOf("facebookSkip") === -1;
+      var _pathname = window.location.pathname;
+
+      if (_pathname.indexOf('login') == -1) {
+        if (_notAuthorized || _connected) {
+          // the user is logged in to Facebook, 
+          // but has not authenticated your app
+          fbModal();
+        }
+      }
+    });
+
+    $(document).on('click', '.fbLogin', function() {
+      checkLoginStatus();
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/all.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+</script>
+
+<!-- Twitter -->
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+  
+  <script type="text/javascript" src="http://statics.revision3.com/ui/global/modules/html5/r3/mediaelement-and-player.min.js?v=33"></script>
+  <script type="text/javascript" src="http://statics.revision3.com/ui/global/modules/html5/r3/mediaelement-and-player-rev3.min.js?v=33"></script>
+
+  <script>
+  state.following = {};
+  state.uid = false;
+  state.pid = false;
+
+  $(function() {
+      if (rev3.supportsHtml5Player) {
+          jQuery.getScript("http://statics.revision3.com/ui/global/js/html5player.js?v=1.3");
+      } else {
+          jQuery.getScript("http://statics.revision3.com/ui/global/js/player.js?v=1.1");
+      }
+  });
+  var _sf_startpt=(new Date()).getTime();
+
+  $(function() {
+    $('a.playlistPlay').live('click', function() {
+        playerPlay($(this).attr('value'), this);
+    });
+
+    $('a.playlistPrevious').live('click', function() {
+        playerPrevious(this);
+    });
+
+    $('a.playlistNext').live('click', function() {
+        playerNext(this);
+    });
+  });
+  </script>
+</footer>
+
+</body>
+</html>

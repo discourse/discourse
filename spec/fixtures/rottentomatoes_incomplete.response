@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/">
+<head prefix="og: http://ogp.me/ns# flixstertomatoes: http://ogp.me/ns/apps/flixstertomatoes#">
+    <meta property="fb:app_id" content="326803741017" />
+	<meta property="og:title" content="Planes" />
+	<meta property="og:type" content="video.movie" />
+	<meta property="og:image" content="http://content6.flixster.com/movie/11/17/18/11171824_800.jpg" />
+    <meta property="og:image:width" content="800" />
+    <meta property="og:image:height" content="1200" />
+	<meta property="og:url" content="http://www.rottentomatoes.com/m/planes/" />
+	<meta property="og:description" content="Cars gets a spin-off with this Disney Toon Studios film starring the voice of Dane Cook as a vertically-challenged plane with high hopes of becoming an air racer. ~ Jeremy Wheeler, Rovi" />
+    <meta name="twitter:card" content="product">
+    <meta name="twitter:site" content="@rottentomatoes">
+    <meta name="twitter:title" content="Planes">
+    <meta name="twitter:description" content="Cars gets a spin-off with this Disney Toon Studios film starring the voice of Dane Cook as a vertically-challenged plane with high hopes of becoming an air racer. ~ Jeremy Wheeler, Rovi">
+    <meta name="twitter:image:src" content="http://content6.flixster.com/movie/11/17/18/11171824_800.jpg">
+            <meta name="twitter:data1" content="No Reviews Yet&hellip;">
+    <meta name="twitter:label1" content="TOMATOMETER">
+            <meta name="twitter:data2" content="91% of users want to see it">
+    <meta name="twitter:label2" content="AUDIENCE">
+	<meta property="video:release_date" content="2013-08-09" />
+	<meta property="video:duration" content="92" />
+		<meta property="video:director" content="http://www.rottentomatoes.com/celebrity/klay_hall/" />  
+		<meta property="video:actor" content="http://www.rottentomatoes.com/celebrity/dane_cook/" />
+		<meta property="video:actor" content="http://www.rottentomatoes.com/celebrity/julia_louisdreyfus/" />
+		<meta property="video:actor" content="http://www.rottentomatoes.com/celebrity/brad_garrett/" />
+		<meta property="video:actor" content="http://www.rottentomatoes.com/celebrity/stacy_keach/" />
+		<meta property="video:actor" content="http://www.rottentomatoes.com/celebrity/teri_hatcher/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Planes - Rotten Tomatoes</title>
+	<link rel="canonical" href="http://www.rottentomatoes.com/m/planes/" itemprop="url"/>
+	<meta name="description" content="Review: Cars gets a spin-off with this Disney Toon Studios film starring the voice of Dane Cook as a vertically-challenged plane with high hopes of becoming..."/>
+<link rel="apple-touch-icon" href="http://images.rottentomatoescdn.com/images/icons/apple-touch-icon.png"/>
+<link rel="shortcut icon" href="http://images.rottentomatoescdn.com/images/icons/favicon.ico" type="image/x-icon"/>
+		<link rel="stylesheet" href="//images.rottentomatoescdn.com/assets/v/prod20130801/styles/?f=/styles/rt_global.css&f=/styles/comp/Autocomplete.css&f=/styles/comp/MovieList.css&f=/styles/comp/Rating.css&f=/styles/jqueryui/rt-theme/jquery-ui-1.8.13.custom-dialog.css"" type="text/css"/>
+		<link rel="stylesheet" href="//images.rottentomatoescdn.com/assets/v/prod20130801/styles/?f=/styles/movie/movie.css&f=/styles/movie/quotes.css&f=/styles/comp/MovieList.css&f=/styles/lightbox.css" type="text/css"/>
+<style></style>											
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type='text/javascript'>
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+(function() {
+var gads = document.createElement('script');
+gads.async = true;
+gads.type = 'text/javascript';
+var useSSL = 'https:' == document.location.protocol;
+gads.src = (useSSL ? 'https:' : 'http:') + 
+'//www.googletagservices.com/tag/js/gpt.js';
+var node = document.getElementsByTagName('script')[0];
+node.parentNode.insertBefore(gads, node);
+})();
+</script>
+	<script src="//assets.insnw.net/instart/js/instart.js" type="text/javascript"></script>	
+<script>
+	// Log document.ready
+	$(document).ready(function(){ console.log("document.ready");});
+	// Swallow console.log in IE8 to prevent JS error.
+	if (typeof console === "undefined" || typeof console.log === "undefined") {
+		console={};
+		console.log = function(msg){};
+		console.error = function(msg){};
+	}	
+	RT = window.RT || {};
+	RT.getCookie = function(c) {
+		var d = document.cookie.indexOf(c + "=");
+		var a = d + c.length + 1;
+		if ((!d) && (c != document.cookie.substring(0, c.length))) {
+			return null
+		}
+		if (d == -1) {
+			return null
+		}
+		var b = document.cookie.indexOf(";", a);
+		if (b == -1) {
+			b = document.cookie.length
+		}
+		return unescape(document.cookie.substring(a, b))
+	};
+	window.getCookie = RT.getCookie;
+	/* RT.setCookie(key, value, expires_days, path, domain, secure) */
+	RT.setCookie = function(c, e, a, h, d, g) {
+		var b = new Date();
+		b.setTime(b.getTime());
+		if (a) {
+			a = a * 1000 * 60 * 60 * 24
+		}
+		var f = new Date(b.getTime() + (a));
+		document.cookie = c + "=" + encodeURIComponent(e)
+				+ ((a) ? ";expires=" + f.toGMTString() : "")
+				+ ((h) ? ";path=" + h : "") + ((d) ? ";domain=" + d : "")
+				+ ((g) ? ";secure" : "")
+	}
+	window.setCookie = RT.setCookie;
+	RT.deleteCookie = function(a, c, b) {
+		if (getCookie(a)) {
+			document.cookie = a + "=" + ((c) ? ";path=" + c : "")
+					+ ((b) ? ";domain=" + b : "")
+					+ ";expires=Thu, 01-Jan-1970 00:00:01 GMT"
+		}
+	}
+	window.deleteCookie = RT.deleteCookie;
+	RT.cookieHas = function(sKey) { 
+		return (new RegExp("(?:^|;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\$&") + "\\s*\\=")).test(document.cookie); 
+	}
+	/* Setup interstitial deferred (resolves if interstitial shown) */
+	RT.interstitialShown = $.Deferred();
+	RT.social_init = new $.Deferred(); // See http://trac.flixsterqa.com/wiki/Dev/header for detailed explanation of these 4 deferreds 
+	RT.fb_ready = new $.Deferred();    
+	RT.fb_connected = new $.Deferred(); 
+	RT.ads=[];
+	/* Bring out legacy global vars */
+	window.social_init = RT.social_init;
+	window.fb_ready = RT.fb_ready;
+	window.fb_connected = RT.fb_connected;
+	RT.StaticHost = 'http://images.rottentomatoescdn.com';
+	RT.Host = 'http://www.rottentomatoes.com';
+	/* Backbone Views and Models */
+	RT.Backbone = {};
+	RT.Backbone.Views={};
+	RT.Backbone.Models={};
+	RT.Backbone.Routers={};
+	/* Global actions to be taken after document.ready */
+	$(function(){
+	    // Activate component framework unless specifically disabled
+	});
+</script>
+<script type="text/javascript">
+	var _qevents = _qevents || [];
+	_qevents.push( { qacct:"p-0fuRlG_jy3lfA"} );
+	var qcsegments = decodeURIComponent(RT.getCookie("qcsegments"));
+	function qc_results(result) {
+		var qcsegments = "";
+		var quantSegs="";
+		for (var i = 0; i < result.segments.length; i++) {
+			quantSegs += result.segments[i].id; 
+			qcsegments += "qcs=" + result.segments[i].id;
+			if (i<result.segments.length-1) { 
+				quantSegs += ',';
+				qcsegments += ";";
+			}
+		}	
+		setCookie("qcs",quantSegs,90,"/");
+		setCookie("qcsegments",qcsegments,90,"/");
+	}
+</script>
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js" defer> </script> 
+<script type="text/javascript" src="http://pixel.quantserve.com/api/segments.json?a=p-0fuRlG_jy3lfA&callback=qc_results" defer></script>
+<script type="text/javascript">
+var _gaq = _gaq || [['_setAccount', 'UA-2265251-1']];
+(function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+_gaq.push(['_setDomainName', 'www.rottentomatoes.com'],
+        ['_setAllowHash', false],  
+        ['_setCampaignCookieTimeout', 2592000000]); 
+		_gaq.push(['_setCustomVar', 5, 'Session Pools', 'beta', 2]);
+</script>
+<script type="text/javascript">
+		console.log("Session Type: Anon");
+		_gaq.push(['_setCustomVar', 1, 'Session Type', 'Anon', 2]);
+		_gaq.push(['_trackEvent', 'Session Type', 'Anon', undefined, undefined, true]);
+		RT.social_init.done(function(){
+			//console.log("[sharedSessionTracking] Login Platform Code:" + RT.LoginStatusModel.get("loginPlatformCode"));
+			//console.log("[sharedSessionTracking] Tracking Session Type:" + RT.LoginStatusModel.get("trackingSessionType"));
+			//console.log("[sharedSessionTracking] Email Status ID:" + RT.LoginStatusModel.get("emailStatusId"));
+			var loginPlatform = RT.LoginStatusModel.get("loginPlatformCode");
+			var debugText = "Anon>" + loginPlatform +  ": SP=" + RT.LoginStatusModel.get("sourcePlatformCode") + ", ST=" + RT.LoginStatusModel.get("userSourceTypeCode") + ", PL=" + RT.LoginStatusModel.get("userPlatformCode");
+			var sessionType = RT.LoginStatusModel.get("trackingSessionType");
+			if (sessionType == 'Unset') {
+				debugText = debugText + ', info=' + RT.LoginStatusModel.get("trackingSessionInfo");
+			}
+			var emailStatus = "Init";
+			var emailStatusId = RT.LoginStatusModel.get("emailStatusId");
+			if ($.isNumeric(emailStatusId)) {
+				if (parseInt(emailStatusId) <= 1) {
+					emailStatus = "No Email"; 
+				}
+				else {
+					emailStatus = "Email"; 
+				}
+			}
+			else {
+				emailStatus = "Error";
+			}
+			var customVarText = sessionType + ' - ' + loginPlatform + ' (' + emailStatus + ')';
+			console.log('Session Type: ' + customVarText + " || " + debugText);
+			_gaq.push(['_setCustomVar', 1, 'Session Type', customVarText, 2]);
+			_gaq.push(['_trackEvent', 'Session Type', customVarText, debugText, undefined, true]);
+		});	
+</script>
+<script>
+</script>
+<script async="" defer="" src="//survey.g.doubleclick.net/async_survey?site=5r2wqufyt4bx6"></script>
+<script>
+</script>
+</head>
+<body class="body" id="" itemscope itemtype="http://www.schema.org/Movie" itemid="/m/planes/" >
+<div id="emptyPlaceholder"></div> 
+<div id="overlay_oop" style="height:0px;">
+<script type='text/javascript'>
+RT.ads.push("overlay_oop");
+googletag.cmd.push(function() {
+	var slot=googletag.defineOutOfPageSlot('/6327/rt.movie/prestitial', 'overlay_oop')
+		.addService(googletag.pubads())
+		.setTargeting("unit", "overlay")	
+        .setTargeting("movieid", "771312196")
+        .setTargeting("url", "/m/planes/");
+});
+</script>
+</div>
+<style>#skin_ad { height:0px !important; }</style>
+<div id="skin_ad"> 
+<script type='text/javascript'>
+RT.ads.push("skin_ad");
+googletag.cmd.push(function() {
+	var slot=googletag.defineSlot('/6327/rt.movie/skin', [[1,1],[1,2]], 'skin_ad')
+		.addService(googletag.pubads())
+		.setTargeting("unit", "skin")	
+        .setTargeting("movieid", "771312196")
+        .setTargeting("url", "/m/planes/");
+    slot.oldRenderEnded = slot.renderEnded;
+    slot.renderEnded = function(){
+    	slot.oldRenderEnded();
+    	var wrapper = $("#skin_ad");
+    	wrapper.css("height","").css("width","");
+    	if(!$("#skin_ad").is(":visible")){$("body").removeAttr("style");}
+    };
+});
+</script>
+</div>
+<div id="fb-root"></div>
+<script>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: '326803741017',
+            status: true,
+            cookie: true,
+            xfbml: true,
+            oauth: true,
+            channelUrl: "http://www.rottentomatoes.com/facebook/channel.html"
+        });
+        // FB scripts ready. (Does not imply logged in)
+        fb_ready.resolve();
+        FB.Event.subscribe('auth.statusChange', function(response) {
+            //console.log("auth.statusChange status=" + JSON.stringify(response));
+            if(response.status == "connected"){
+                // *** NOTE: - Workaround for BCK-1119 ***
+                // Talk to Peter or Mike before changing. We must ensure the first AJAX call after auth.statusChange is completed by
+                // itself before more calls are sent. This allows FB token-exchange (if required) to occur uninterrupted.
+                // Permanent fix is to ensure token-exchange is locked (backend ticket)
+                $.ajax( {
+                    url : '/api/private/v1.0/users/current/status/', dataType : "json"
+                }).success( function(flx_response, status) {
+                	$(function(){ // DOM ready required for backbone 
+                		RT.LoginStatusModel.set(flx_response); 
+                        RT.social_init.resolve();
+                        RT.fb_connected.resolve();
+                    });
+                });
+            }
+        });
+    };
+    // Async loading of FB JS SDK
+    (function(d, debug){
+        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement('script'); js.id = id; js.async = true;
+        js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+        ref.parentNode.insertBefore(js, ref);
+    }(document, /*debug*/ false));
+</script>
+<script>
+    // Async loading of Twitter
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+</script>
+<script>
+// Async loading of plusone.js
+(function(){
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+}());
+</script>
+<script>
+(function (w, d, load) {
+ var script,
+ first = d.getElementsByTagName('SCRIPT')[0],
+ n = load.length,
+ i = 0,
+ go = function () {
+   for (i = 0; i < n; i = i + 1) {
+     script = d.createElement('SCRIPT');
+     script.type = 'text/javascript';
+     script.async = true;
+     script.src = load[i];
+     first.parentNode.insertBefore(script, first);
+   }
+ }
+ if (w.attachEvent) {
+   w.attachEvent('onload', go);
+ } else {
+   w.addEventListener('load', go, false);
+ }
+}(window, document,
+ ['//assets.pinterest.com/js/pinit.js']
+));
+</script>
+<script>
+var _comscore = _comscore || [];    
+_comscore.push({ c1: "2", c2: "3000013" });
+(function() {   
+  var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;    
+  s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";    
+  el.parentNode.insertBefore(s, el);    
+})();
+</script>
+<noscript><img src="http://b.scorecardresearch.com/p?c1=2&c2=3000013&cv=2.0&cj=1" /></noscript>
+		<div class="head" id="head">
+	<div class="headerbackground"></div>
+	<div id="top_header_bar" class="clearfix">
+		<div id="wtsBar">
+		</div>    
+		<div id="header-first-times" style="display:none;">
+			<span>We're using Facebook to personalize your experience.</span><a class="learnmore_href" href="#">Learn More</a>
+		</div>
+		<div id="header-login-block" class="clearfix"> 			
+			<a id="header-login-link" href="/login/" style="margin-right:10px;">RT Login</a>
+			<a class="fb_button fb_button_medium rt_fblogin" href="javascript:void(0);"><span class="fb_button_text">Log In</span></a>
+        </div>
+		<ul id="header-user-dropdown" class="secondary_nav clearfix drop_menu" style="display:none;">
+		    <li class="no-js">
+                <ul class="subnav media_block">
+                    <li class="media_block_content subnav_items">
+                        <ul>
+                            <li><a id="header-profile-link" href="#">Profile</a></li> 
+                            <li><a id="header-community-link" href="/community/">Community</a></li>      
+                            <li><a id="header-account-link" href="#">Account</a></li> 
+                            <li><a id="header-existing-link" href="/logout/">Existing RT Member?</a></li>
+                            <li><a id="header-logout-link" href="/logout/">Logout</a></li> 
+                            <li><a id="header-disable-link" href="#">Disable</a></li>               
+                        </ul>
+                    </li>
+                </ul>
+                <div class="menu_label clearfix">                                                                                           
+                    <a id="header-user-link" href="#">
+                        <img class="user-icon" src="" width="20" height="20"  />
+                        <span class="user-name"></span>
+                        <span class="icon dropdown_arrows"></span>                        
+                    </a>                 
+                </div>
+	       </li>
+        </ul>
+	</div>
+	<script>
+	$(function(){
+	    var header = $("#top_header_bar");
+	    var headerView = new RT.Backbone.Views.PageHeader({el : header, model : RT.LoginStatusModel });
+	    header.data("view", headerView);
+	});
+	RT.social_init.done(function(){
+		$.get("/home/wtsbar/").done(function(data){
+			$("#wtsBar").html(data);
+		});
+	});
+	</script>
+	<div class="header_main">
+		<a class="rt-logo " href="/">Rotten Tomatoes</a>
+<div id="searchBar">
+    <form style="position:relative;" id="searchformnew" name="searchformnew" method="get" action="/search/">
+        <fieldset comp="Autocomplete" tabindex="-1">
+            <div class="searchBox" sub="searchBox">
+            	<input sub="input" type="text" name="search" onblur="this.parentNode.parentNode.className='';" onfocus="this.parentNode.parentNode.className='selected'; if (value == 'ZIP Code or City, State' || value == 'Search movies, actors, critics') { value ='' }" id="mini_searchbox" value="Search movies, actors, critics" defaulttext="Search movies, actors, critics"  name="search" gtbfieldid="27" autocomplete="off" />
+            	<button sub="submitbutton" type="submit"><span class="icon magnify"></span></button>
+            </div>
+            <ul sub="result" class="autocomplete subnav"></ul>
+            <input type="hidden" value="rt" name="sitesearch"/>
+        </fieldset>
+    </form>
+    <div id="searchBar_right"></div>
+</div>
+		<ul id="nav_primary" class="drop_menu">
+	        <li class="no-js">
+	        	<ul class="subnav movies">
+        			<li>
+			        	<ul class="subnav_items">
+				        	<li><a href="/movie/box-office/">Box Office</a></li>
+				        	<li><a href="/movie/in-theaters/">In Theaters</a></li>
+				        	<li><a href="/movie/upcoming/">Upcoming</a></li>
+							<li><a href="/top/">Top Movies</a></li>
+				        	<li><a href="/movie/certified-fresh/">Certified Fresh</a></li>
+				        	<li><a href="/movie_times/">Showtimes</a></li>
+				        	<li><a href="/trailers/">Trailers</a></li>
+				        	<li><a href="/movie/photos/">Photos</a></li>
+			       		</ul>
+	       			</li>
+		       		<li class="subnav_extra">
+		       			<h4>Opening this week</h4>
+		       			<ul>
+			       				<li class="center">
+<a target="_top" href="/m/2_guns/" title="2 Guns" class="" >
+		<img src="http://content9.flixster.com/movie/11/17/07/11170775_tmb.jpg" width="51" height="81" alt="" title=""  />
+</a><p>
+<a target="_top" href="/m/2_guns/"  class="" >2 Guns</a></p>
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">60%</span>
+	</span></li>
+			       				<li class="center">
+<a target="_top" href="/m/the_smurfs_2/" title="The Smurfs 2" class="" >
+		<img src="http://content8.flixster.com/movie/11/16/74/11167458_tmb.jpg" width="54" height="80" alt="" title=""  />
+</a><p>
+<a target="_top" href="/m/the_smurfs_2/"  class="" >The Smurfs 2</a></p>
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">14%</span>
+	</span></li>
+			       				<li class="center">
+<a target="_top" href="/m/the_spectacular_now/" title="The Spectacular Now" class="" >
+		<img src="http://content6.flixster.com/movie/11/17/20/11172008_tmb.jpg" width="54" height="80" alt="" title=""  />
+</a><p>
+<a target="_top" href="/m/the_spectacular_now/"  class="" >The Spectacular Now</a></p>
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">91%</span>
+	</span></li>
+		       			</ul>
+		       		</li>
+	       		</ul>
+	       		<h2 class="menu_label"><a href="/">Movies <span class="icon dropdown_arrows"></span></a></h2>
+	        </li>
+	        <li class="no-js">	        
+	        	<ul class="subnav dvd">
+	        		<li>
+			        	<ul class="subnav_items">
+							<li><a href="/dvd/top_rentals.php" >Top Rentals</a></li>
+							<li><a href="/dvd/new_releases.php" >New Releases</a></li>
+							<li><a href="/dvd/netflix/" >Netflix Streaming</a></li>
+							<li><a href="/dvd/current_releases.php" >Current Releases</a></li>
+							<li><a href="/dvd/upcoming.php" >Upcoming</a></li>							
+							<li><a href="/dvd/certified_fresh.php" >Certified Fresh</a></li>
+						</ul>
+					</li>
+		       		<li class="subnav_extra">
+		       			<h4>New on DVD</h4>
+		       			<ul>
+		       					<li class="center">
+<a target="_top" href="/m/gi_joe_retaliation/" title="G.I. Joe: Retaliation" class="" >
+		<img src="http://content7.flixster.com/movie/11/17/18/11171817_tmb.jpg" width="54" height="81" alt="" title=""  />
+</a><p>
+<a target="_top" href="/m/gi_joe_retaliation/"  class="" >G.I. Joe: Retaliation</a></p>
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">28%</span>
+	</span></li>
+		       					<li class="center">
+<a target="_top" href="/m/filly_brown_2012/" title="Filly Brown" class="" >
+		<img src="http://content8.flixster.com/movie/11/16/86/11168634_tmb.jpg" width="54" height="80" alt="" title=""  />
+</a><p>
+<a target="_top" href="/m/filly_brown_2012/"  class="" >Filly Brown</a></p>
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">45%</span>
+	</span></li>
+		       					<li class="center">
+<a target="_top" href="/m/the_place_beyond_the_pines_2012/" title="The Place Beyond The Pines" class="" >
+		<img src="http://content7.flixster.com/movie/11/17/19/11171965_tmb.jpg" width="54" height="81" alt="" title=""  />
+</a><p>
+<a target="_top" href="/m/the_place_beyond_the_pines_2012/"  class="" >The Place Beyond The Pines</a></p>
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">82%</span>
+	</span></li>
+		       			</ul>
+		       		</li>					
+				</ul>
+				<h2 class="menu_label"><a href="/dvd/">DVD <span class="icon dropdown_arrows"></span></a></h2>
+	        </li>
+	        <li class="no-js">
+	        	<ul class="subnav celebrities">
+	        		<li>
+			        	<ul class="subnav_items">
+							<li><a href="/celebrity/">View All</a></li>
+			        	</ul>
+			     	</li>
+		       		<li class="subnav_extra">
+		       			<h4>Who's In Theaters This Weekend?</h4>
+		       			<ul>											
+			       				<li class="center">
+<a class="" href="/celebrity/denzel_washington/"  title="Denzel Washington">
+<img class="" alt="Denzel Washington" src="http://content7.flixster.com/site/10/25/82/10258277_tmb.jpg" width="80" height="64"  /> 
+									</a>
+			       					<p>
+<a class="" href="/celebrity/denzel_washington/" >
+			       							Denzel Washington
+			       						</a>
+			       					</p>
+			       				</li>		       				
+			       				<li class="center">
+<a class="" href="/celebrity/markymark/"  title="Mark Wahlberg">
+<img class="" alt="Mark Wahlberg" src="http://content8.flixster.com/site/10/25/82/10258278_tmb.jpg" width="80" height="64"  /> 
+									</a>
+			       					<p>
+<a class="" href="/celebrity/markymark/" >
+			       							Mark Wahlberg
+			       						</a>
+			       					</p>
+			       				</li>		       				
+			       				<li class="center">
+<a class="" href="/celebrity/bill_paxton/"  title="Bill Paxton">
+<img class="" alt="Bill Paxton" src="http://content9.flixster.com/site/10/25/82/10258279_tmb.jpg" width="80" height="64"  /> 
+									</a>
+			       					<p>
+<a class="" href="/celebrity/bill_paxton/" >
+			       							Bill Paxton
+			       						</a>
+			       					</p>
+			       				</li>		       				
+		       			</ul>
+		       		</li>				        
+				</ul>
+	        	<h2 class="menu_label"><a href="/celebrity/">Celebrities <span class="icon dropdown_arrows"></span></a></h2>
+	        </li>  
+	        <li class="no-js">
+	        	<ul class="subnav news">
+	        		<li>
+			        	<ul class="subnav_items">
+							<li><a href="/features/">Features</a></li>
+							<li><a href="/guides/">Guides</a></li>
+							<li><a href="/news/">News</a></li>
+							<li class="smaller">&nbsp;</li>
+							<li class="smaller">COLUMNS:</li>
+							<li><a href="/news/columns/24_frames">24 Frames</a></li>
+							<li><a href="/news/columns/box_office">Box Office Guru</a></li>
+							<li><a href="/news/columns/critics_consensus">Critics Consensus</a></li>
+							<li><a href="/news/columns/digital_multiplex">Digital Multiplex</a></li>
+							<li><a href="/news/columns/five_favorite_films">Five Favorite Films</a></li>
+							<li><a href="/news/columns/parental_guidance">Parental Guidance</a></li>
+							<li><a href="/news/columns/red_carpet_round_up">Red Carpet Roundup</a></li>
+							<li><a href="/news/columns/rt_on_dvd">RT on DVD</a></li>
+							<li><a href="/news/columns/total_recall">Total Recall</a></li>
+							<li><a href="/news/columns/video_interviews">Video Interviews</a></li>
+							<li><a href="/news/columns/weekly_ketchup">Weekly Ketchup</a></li>							
+			        	</ul>
+			     	</li>
+		       		<li class="subnav_extra">
+		       			<h4>What's Hot on Rotten Tomatoes</h4>
+		       			<ul>
+								<li class="center">
+										<a href="/m/2_guns/news/1928038/critics_consensus_2_guns_shoots_wildly_but_its_stars_connect/">
+<img class="" alt="Critics Consensus" src="http://content8.flixster.com/site/10/25/83/10258350_tmb.jpg" width="80" height="80"  />
+										</a>
+									<p><a href="/m/2_guns/news/1928038/critics_consensus_2_guns_shoots_wildly_but_its_stars_connect/">Critics Consensus</a></p>			
+								</li>
+								<li class="center">
+										<a href="/m/2_guns/news/1928020/bill_paxtons_best_movies/">
+<img class="" alt="Total Recall" src="http://content9.flixster.com/site/10/25/83/10258327_tmb.jpg" width="80" height="80"  />
+										</a>
+									<p><a href="/m/2_guns/news/1928020/bill_paxtons_best_movies/">Total Recall</a></p>			
+								</li>
+		       			</ul>
+		       		</li>				        
+				</ul>
+				<h2 class="menu_label"><a href="/news/">News <span class="icon dropdown_arrows"></span></a></h2>
+	        </li>
+	        <li class="no-js">
+	        	<ul class="subnav critics">
+	        		<li>
+			        	<ul class="subnav_items">
+							<li><a href="/critics/authors.php">Critics List</a></li>
+							<li><a href="/critics/sources.php">Publications List</a></li>
+							<li><a href="/critics/latest_reviews.php">Latest Reviews</a></li>
+							<li><a href="/findyourcritic/">Find Your Critic</a></li>
+			        	</ul>
+			     	</li>
+		       		<li class="subnav_extra">
+		       			<h4>Spotlight</h4>
+		       			<ul>		       			
+								<li class="center">
+<a href="/critic/binh-ngo/" class="" ><img src="http://content8.flixster.com/critic/20/2098_tmb.jpg" width="72" height="72" alt="Binh Ngo"  /></a>
+									<p>
+<a href="/critic/binh-ngo/" class="" >Binh Ngo</a>
+</p>			
+								</li>
+		       			</ul>
+		       			</li>				        
+					</ul>
+	        	<h2 class="menu_label"><a href="/critics/">Critics <span class="icon dropdown_arrows"></span></a></h2>
+	        </li> 
+        </ul>
+	</div>
+</div>
+<script>
+(function() {
+  var li = document.createElement('script'); li.type = 'text/javascript'; li.async = true;
+  li.src = 'https://platform.stumbleupon.com/1/widgets.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(li, s);
+})();
+</script>	
+<div id="leaderboard_top_ad" class="page_ad leaderboard" style="height:90px;">
+<script type='text/javascript'>
+RT.ads.push("leaderboard_top_ad");
+googletag.cmd.push(function() {
+	var slot=googletag.defineSlot('/6327/rt.movie/movie_page', [[728,90],[1010,500],[1010,250],[1010,150],[1010,95],[1010,66]], 'leaderboard_top_ad')
+		.addService(googletag.pubads())
+		.setTargeting("unit", "leaderboard_top")	
+		.setTargeting("pos", "top")	
+        .setTargeting("movieid", "771312196")
+        .setTargeting("url", "/m/planes/");
+    slot.oldRenderEnded = slot.renderEnded;
+    slot.renderEnded = function(){
+    	slot.oldRenderEnded();
+    	var wrapper = $("#leaderboard_top_ad");
+    	wrapper.css("height","").css("width","");
+    };
+});
+</script>
+</div>
+<div class="body_main " >
+		<div id="movieListColumn" class="col col_267 col_first" >
+<div class="content_box " id="movies_sidebar"  style="padding:0px;">
+	<div class="content_header clearfix">
+	</div>
+	<div class="content_body clearfix">
+		<ul class="nav nav-tabs">
+		  <li class="in-theaters-tab active"  style="width:50%;"><a href="#in-theaters" data-toggle="tab"><span class="movies-tab-icon in-theaters"></span>In Theaters</a></li>
+		  <li class="on-dvd-tab " style="width:50%;"><a href="#on-dvd" data-toggle="tab"><span class="movies-tab-icon dvd"></span>On DVD</a></li>
+		</ul>
+		<div class="tab-content" style="height:790px;">
+			<div class="tab-pane fade active in" id="in-theaters">
+   <h4>Opening</h4>                    
+   <table class="movie_list opening">                      
+       <tr data-movie-id="771310388" data-movie-json='{&#034;id&#034;:771310388,&#034;title&#034;:&#034;2 Guns&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 49 min.&#034;,&#034;synopsis&#034;:&#034;Formulaic and often jarringly violent, 2 Guns rests its old-school appeal on the interplay between its charismatic, well-matched stars.&#034;,&#034;thumbnail&#034;:&#034;http://content9.flixster.com/movie/11/17/07/11170775_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Mark Wahlberg&#034;,&#034;id&#034;:&#034;162653181&#034;},{&#034;name&#034;:&#034;Denzel Washington&#034;,&#034;id&#034;:&#034;162661439&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">60%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/2_guns/"  class=""  sub="hover">2 Guns</a>
+           </td>
+           <td class="right_col right">Aug 02</td>
+       </tr>
+       <tr data-movie-id="771251238" data-movie-json='{&#034;id&#034;:771251238,&#034;title&#034;:&#034;The Smurfs 2&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG&#034;,&#034;runtime&#034;:&#034;1 hr. 45 min.&#034;,&#034;synopsis&#034;:&#034;Like its predecessor, Smurfs 2 may amuse small children, but it&amp;#039;s largely an unambitious, charm-free collection of slapstick gags and one-liners.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/16/74/11167458_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Hank Azaria&#034;,&#034;id&#034;:&#034;162695372&#034;},{&#034;name&#034;:&#034;Neil Patrick Harris&#034;,&#034;id&#034;:&#034;351527581&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">14%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/the_smurfs_2/"  class=""  sub="hover">The Smurfs 2</a>
+           </td>
+           <td class="right_col right">Jul 31</td>
+       </tr>
+       <tr data-movie-id="771323738" data-movie-json='{&#034;id&#034;:771323738,&#034;title&#034;:&#034;The Spectacular Now&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 35 min.&#034;,&#034;synopsis&#034;:&#034;The Spectacular Now is an adroit, sensitive film that avoids typical coming-of-age story trappings.&#034;,&#034;thumbnail&#034;:&#034;http://content6.flixster.com/movie/11/17/20/11172008_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Miles Teller&#034;,&#034;id&#034;:&#034;771077409&#034;},{&#034;name&#034;:&#034;Shailene Woodley&#034;,&#034;id&#034;:&#034;770676364&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">91%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/the_spectacular_now/"  class=""  sub="hover">The Spectacular Now</a>
+           </td>
+           <td class="right_col right">Aug 02</td>
+       </tr>
+       <tr data-movie-id="771350422" data-movie-json='{&#034;id&#034;:771350422,&#034;title&#034;:&#034;Europa Report&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;1 hr. 30 min.&#034;,&#034;synopsis&#034;:&#034;While perhaps never as gripping or daring as it should be, Europa Report still manages to take one small step forward for the found-footage genre.&#034;,&#034;thumbnail&#034;:&#034;http://content9.flixster.com/movie/11/17/12/11171259_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Sharlto Copley&#034;,&#034;id&#034;:&#034;770674319&#034;},{&#034;name&#034;:&#034;Michael Nyqvist&#034;,&#034;id&#034;:&#034;291428358&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">72%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/europa_report/"  class=""  sub="hover">Europa Report</a>
+           </td>
+           <td class="right_col right">Aug 02</td>
+       </tr>
+       <tr data-movie-id="771312795" data-movie-json='{&#034;id&#034;:771312795,&#034;title&#034;:&#034;Cockneys vs Zombies&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;Unrated&#034;,&#034;runtime&#034;:&#034;1 hr. 28 min.&#034;,&#034;synopsis&#034;:&#034;If you&amp;#039;re interested in watching a battle between cockneys and zombies, this is the movie for you.&#034;,&#034;thumbnail&#034;:&#034;http://content9.flixster.com/movie/11/17/11/11171103_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Harry Treadaway&#034;,&#034;id&#034;:&#034;770688679&#034;},{&#034;name&#034;:&#034;Rasmus Hardiker&#034;,&#034;id&#034;:&#034;770695758&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">68%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/cockneys_vs_zombies/"  class=""  sub="hover">Cockneys vs Zombies</a>
+           </td>
+           <td class="right_col right">Aug 02</td>
+       </tr>
+       <tr data-movie-id="771270034" data-movie-json='{&#034;id&#034;:771270034,&#034;title&#034;:&#034;Top Cat: The Movie&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG&#034;,&#034;runtime&#034;:&#034;1 hr. 30 min.&#034;,&#034;synopsis&#034;:&#034;A new police chief (Schneider) wants to automate the police force includingOfficer Dibble&amp;#039;s job, whos job is to keep an eye on Topcat. Topcat...&#034;,&#034;thumbnail&#034;:&#034;http://content7.flixster.com/movie/11/17/22/11172277_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Jason Harris&#034;,&#034;id&#034;:&#034;770736918&#034;},{&#034;name&#034;:&#034;Melissa Disney&#034;,&#034;id&#034;:&#034;770728211&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">14%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/top_cat_the_movie/"  class=""  sub="hover">Top Cat: The Movie</a>
+           </td>
+           <td class="right_col right">Aug 02</td>
+       </tr>
+       <tr data-movie-id="771317808" data-movie-json='{&#034;id&#034;:771317808,&#034;title&#034;:&#034;Drift&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 53 min.&#034;,&#034;synopsis&#034;:&#034;Australia, 1970s. The Kelly brothers, Andy (28) and Jimmy (22), have one great passion: riding big waves. As kids, their mother escaped from Sydney to...&#034;,&#034;thumbnail&#034;:&#034;http://content6.flixster.com/movie/11/17/15/11171584_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Myles Pollard&#034;,&#034;id&#034;:&#034;770715445&#034;},{&#034;name&#034;:&#034;Xavier Samuel&#034;,&#034;id&#034;:&#034;770690974&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">29%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/drift_2013/"  class=""  sub="hover">Drift</a>
+           </td>
+           <td class="right_col right">Aug 02</td>
+       </tr>
+       <tr data-movie-id="771307327" data-movie-json='{&#034;id&#034;:771307327,&#034;title&#034;:&#034;Our Children&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;Unrated&#034;,&#034;runtime&#034;:&#034;1 hr. 51 min.&#034;,&#034;synopsis&#034;:&#034;A wrenching, quietly violent psychodrama, Our Children has the courage to ask difficult questions, and the strength to leave the answers to the viewer.&#034;,&#034;thumbnail&#034;:&#034;http://content7.flixster.com/movie/11/17/21/11172161_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Niels Arestrup&#034;,&#034;id&#034;:&#034;266555632&#034;},{&#034;name&#034;:&#034;Émilie Dequenne&#034;,&#034;id&#034;:&#034;162731346&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">94%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/our_children_2012/"  class=""  sub="hover">Our Children</a>
+           </td>
+           <td class="right_col right">Aug 02</td>
+       </tr>
+   </table>                                        
+   <div class="movie-list-more"><a href="/movie/in-theaters/">More...</a></div> 
+   <div style="margin:0px 8px;">       
+<div id="box_office_buzz_ad" style="height:0px; line-height:0px;">
+<script type='text/javascript'>
+RT.ads.push("box_office_buzz_ad");
+googletag.cmd.push(function() {
+	var slot=googletag.defineSlot('/6327/rt.movie/box_office_buzz', [[250,40]], 'box_office_buzz_ad')
+		.addService(googletag.pubads())
+		.setTargeting("unit", "box_office_buzz")	
+        .setTargeting("movieid", "771267278")
+        .setTargeting("url", "/m/room_237_2012/");
+    slot.oldRenderEnded = slot.renderEnded;
+    slot.renderEnded = function(){
+    	slot.oldRenderEnded();
+    	var wrapper = $("#box_office_buzz_ad");
+    	wrapper.css("height","").css("width","");
+    };
+});
+</script>
+</div>
+   </div>
+   <h4>Top Box Office</h4>                  
+   <table class="movie_list top_box_office">
+       <tr data-movie-id="771193517" data-movie-json='{&#034;id&#034;:771193517,&#034;title&#034;:&#034;The Wolverine&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;2 hr. 16 min.&#034;,&#034;synopsis&#034;:&#034;Although its final act succumbs to the usual cartoonish antics, The Wolverine is one superhero movie that manages to stay true to the comics while keeping casual viewers entertained.&#034;,&#034;thumbnail&#034;:&#034;http://content6.flixster.com/movie/11/17/25/11172568_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Hugh Jackman&#034;,&#034;id&#034;:&#034;162661503&#034;},{&#034;name&#034;:&#034;Tao Okamoto&#034;,&#034;id&#034;:&#034;771414513&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">67%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/the_wolverine_2012/"  class=""  sub="hover">The Wolverine</a>                            
+           </td>
+           <td class="right_col right">$53.1M</td>
+       </tr>
+       <tr data-movie-id="771312656" data-movie-json='{&#034;id&#034;:771312656,&#034;title&#034;:&#034;The Conjuring&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 52 min.&#034;,&#034;synopsis&#034;:&#034;Extremely well-crafted and gleefully creepy, The Conjuring ratchets up the dread with a series of smartly delivered, terribly effective old-school scares.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/17/07/11170746_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Vera Farmiga&#034;,&#034;id&#034;:&#034;162655572&#034;},{&#034;name&#034;:&#034;Patrick Wilson&#034;,&#034;id&#034;:&#034;162659104&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">86%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/the_conjuring/"  class=""  sub="hover">The Conjuring</a>                            
+           </td>
+           <td class="right_col right">$22.2M</td>
+       </tr>
+       <tr data-movie-id="771245727" data-movie-json='{&#034;id&#034;:771245727,&#034;title&#034;:&#034;Despicable Me 2&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG&#034;,&#034;runtime&#034;:&#034;1 hr. 38 min.&#034;,&#034;synopsis&#034;:&#034;It may not be as inspired as its predecessor, but Despicable Me 2 offers plenty of eye-popping visual inventiveness and a number of big laughs.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/17/21/11172174_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Steve Carell&#034;,&#034;id&#034;:&#034;162652665&#034;},{&#034;name&#034;:&#034;Kristen Wiig&#034;,&#034;id&#034;:&#034;770670481&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">75%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/despicable_me_2/"  class=""  sub="hover">Despicable Me 2</a>                            
+           </td>
+           <td class="right_col right">$16.4M</td>
+       </tr>
+       <tr data-movie-id="771235150" data-movie-json='{&#034;id&#034;:771235150,&#034;title&#034;:&#034;Turbo&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG&#034;,&#034;runtime&#034;:&#034;1 hr. 36 min.&#034;,&#034;synopsis&#034;:&#034;It&amp;#039;s nowhere near as inventive as its off-the-wall premise might suggest, but Turbo boasts just enough colorful visual thrills and sharp voice acting to recommend as undemanding family-friendly fare.&#034;,&#034;thumbnail&#034;:&#034;http://content9.flixster.com/movie/11/17/23/11172391_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Ryan Reynolds&#034;,&#034;id&#034;:&#034;162652367&#034;},{&#034;name&#034;:&#034;Paul Giamatti&#034;,&#034;id&#034;:&#034;162683649&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">64%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/turbo_2013/"  class=""  sub="hover">Turbo</a>                            
+           </td>
+           <td class="right_col right">$13.7M</td>
+       </tr>
+       <tr data-movie-id="771267074" data-movie-json='{&#034;id&#034;:771267074,&#034;title&#034;:&#034;Grown Ups 2&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;1 hr. 41 min.&#034;,&#034;synopsis&#034;:&#034;While it&amp;#039;s almost certainly the movie event of the year for filmgoers passionate about deer urine humor, Grown Ups 2 will bore, annoy, and disgust audiences of nearly every other persuasion.&#034;,&#034;thumbnail&#034;:&#034;http://content9.flixster.com/movie/11/17/19/11171923_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Adam Sandler&#034;,&#034;id&#034;:&#034;162652550&#034;},{&#034;name&#034;:&#034;Kevin James&#034;,&#034;id&#034;:&#034;326298578&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">7%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/grown_ups_2/"  class=""  sub="hover">Grown Ups 2</a>                            
+           </td>
+           <td class="right_col right">$11.6M</td>
+       </tr>
+       <tr data-movie-id="771259543" data-movie-json='{&#034;id&#034;:771259543,&#034;title&#034;:&#034;Red 2&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;1 hr. 56 min.&#034;,&#034;synopsis&#034;:&#034;While it&amp;#039;s still hard to argue with its impeccable cast or the fun they often seem to be having, Red 2 replaces much of the goofy fun of its predecessor with empty, over-the-top bombast.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/17/13/11171362_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Bruce Willis&#034;,&#034;id&#034;:&#034;162652509&#034;},{&#034;name&#034;:&#034;John Malkovich&#034;,&#034;id&#034;:&#034;162655610&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">41%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/red_2/"  class=""  sub="hover">Red 2</a>                            
+           </td>
+           <td class="right_col right">$9.3M</td>
+       </tr>
+       <tr data-movie-id="771235120" data-movie-json='{&#034;id&#034;:771235120,&#034;title&#034;:&#034;Pacific Rim&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;2 hr. 11 min.&#034;,&#034;synopsis&#034;:&#034;It may sport more style than substance, but Pacific Rim is a solid modern creature feature bolstered by fantastical imagery and an irresistible sense of fun.&#034;,&#034;thumbnail&#034;:&#034;http://content6.flixster.com/movie/11/17/22/11172244_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Charlie Hunnam&#034;,&#034;id&#034;:&#034;162653833&#034;},{&#034;name&#034;:&#034;Diego Klattenhoff&#034;,&#034;id&#034;:&#034;770752941&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">71%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/pacific_rim_2013/"  class=""  sub="hover">Pacific Rim</a>                            
+           </td>
+           <td class="right_col right">$7.7M</td>
+       </tr>
+       <tr data-movie-id="771308691" data-movie-json='{&#034;id&#034;:771308691,&#034;title&#034;:&#034;The Heat&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 57 min.&#034;,&#034;synopsis&#034;:&#034;The Heat is predictable, but Melissa McCarthy is reliably funny and Sandra Bullock proves a capable foil.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/17/16/11171690_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Sandra Bullock&#034;,&#034;id&#034;:&#034;162652205&#034;},{&#034;name&#034;:&#034;Melissa McCarthy&#034;,&#034;id&#034;:&#034;528361348&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">66%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/the_heat/"  class=""  sub="hover">The Heat</a>                            
+           </td>
+           <td class="right_col right">$6.9M</td>
+       </tr>
+       <tr data-movie-id="771246669" data-movie-json='{&#034;id&#034;:771246669,&#034;title&#034;:&#034;R.I.P.D.&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;1 hr. 36 min.&#034;,&#034;synopsis&#034;:&#034;It has its moments -- most of them courtesy of Jeff Bridges&amp;#039; rootin&amp;#039; tootin&amp;#039; performance as an undead Wild West sheriff -- but R.I.P.D. is ultimately too dim-witted and formulaic to satisfy.&#034;,&#034;thumbnail&#034;:&#034;http://content9.flixster.com/movie/11/17/23/11172307_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Jeff Bridges&#034;,&#034;id&#034;:&#034;162655890&#034;},{&#034;name&#034;:&#034;Ryan Reynolds&#034;,&#034;id&#034;:&#034;162652367&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">12%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/ripd/"  class=""  sub="hover">R.I.P.D.</a>                            
+           </td>
+           <td class="right_col right">$6.1M</td>
+       </tr>
+       <tr data-movie-id="771324998" data-movie-json='{&#034;id&#034;:771324998,&#034;title&#034;:&#034;Fruitvale Station&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 24 min.&#034;,&#034;synopsis&#034;:&#034;Passionate and powerfully acted, Fruitvale Station serves as a celebration of life, a condemnation of death, and a triumph for star Michael B. Jordan.&#034;,&#034;thumbnail&#034;:&#034;http://content9.flixster.com/movie/11/17/19/11171959_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Michael B. Jordan&#034;,&#034;id&#034;:&#034;770683889&#034;},{&#034;name&#034;:&#034;Octavia L. Spencer&#034;,&#034;id&#034;:&#034;770906299&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">94%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/fruitvale_station/"  class=""  sub="hover">Fruitvale Station</a>                            
+           </td>
+           <td class="right_col right">$4.6M</td>
+       </tr>
+    </table>
+    <div class="movie-list-more"><a href="/movie/box-office/">More...</a></div>
+<h4>Coming Soon</h4>
+<table class="movie_list coming_soon">
+    <tbody>
+       <tr data-movie-id="771257656" data-movie-json='{&#034;id&#034;:771257656,&#034;title&#034;:&#034;Percy Jackson: Sea of Monsters&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG&#034;,&#034;runtime&#034;:&#034;1 hr. 50 min.&#034;,&#034;synopsis&#034;:&#034;Percy Jackson, the son of Poseidon, continues his epic journey to fulfill his destiny, as he teams with his demigod friends to retrieve the Golden...&#034;,&#034;thumbnail&#034;:&#034;http://content9.flixster.com/movie/11/17/18/11171843_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Logan Lerman&#034;,&#034;id&#034;:&#034;341816559&#034;},{&#034;name&#034;:&#034;Alexandra Daddario&#034;,&#034;id&#034;:&#034;770777867&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+		<span class="greyline right">&mdash;&mdash;</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/percy_jackson_sea_of_monsters/"  class=""  sub="hover">Percy Jackson: Sea of Monsters</a>
+           </td>
+           <td class="right_col right">Aug 07</td>
+        </tr>
+       <tr data-movie-id="771318592" data-movie-json='{&#034;id&#034;:771318592,&#034;title&#034;:&#034;We&amp;#039;re The Millers&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 40 min.&#034;,&#034;synopsis&#034;:&#034;David Burke (Jason Sudeikis) is a small-time pot dealer whose clientele includes chefs and soccer moms, but no kids-after all, he has his scruples. So...&#034;,&#034;thumbnail&#034;:&#034;http://content7.flixster.com/movie/11/17/15/11171565_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Mark L. Young&#034;,&#034;id&#034;:&#034;770723485&#034;},{&#034;name&#034;:&#034;Jennifer Aniston&#034;,&#034;id&#034;:&#034;162655148&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+		<span class="greyline right">&mdash;&mdash;</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/were_the_millers/"  class=""  sub="hover">We're The Millers</a>
+           </td>
+           <td class="right_col right">Aug 07</td>
+        </tr>
+       <tr data-movie-id="771235149" data-movie-json='{&#034;id&#034;:771235149,&#034;title&#034;:&#034;Elysium&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 37 min.&#034;,&#034;synopsis&#034;:&#034;In the year 2154, two classes of people exist: the very wealthy, who live on a pristine man-made space station called Elysium, and the rest, who live...&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/17/07/11170790_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Matt Damon&#034;,&#034;id&#034;:&#034;162653499&#034;},{&#034;name&#034;:&#034;Jodie Foster&#034;,&#034;id&#034;:&#034;162654080&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">80%</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/elysium_2013/"  class=""  sub="hover">Elysium</a>
+           </td>
+           <td class="right_col right">Aug 09</td>
+        </tr>
+       <tr data-movie-id="771312196" data-movie-json='{&#034;id&#034;:771312196,&#034;title&#034;:&#034;Planes&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG&#034;,&#034;runtime&#034;:&#034;1 hr. 32 min.&#034;,&#034;synopsis&#034;:&#034;Cars gets a spin-off with this Disney Toon Studios film starring the voice of Dane Cook as a vertically-challenged plane with high hopes of becoming...&#034;,&#034;thumbnail&#034;:&#034;http://content6.flixster.com/movie/11/17/18/11171824_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Dane Cook&#034;,&#034;id&#034;:&#034;338671161&#034;},{&#034;name&#034;:&#034;Julia Louis-Dreyfus&#034;,&#034;id&#034;:&#034;364622432&#034;}]}'>
+           <td class="left_col">
+<span class="tMeterIcon tiny" >
+		<span class="greyline right">&mdash;&mdash;</span>
+	</span></td>
+           <td class="middle_col">
+<a target="_top" href="/m/planes/"  class=""  sub="hover">Planes</a>
+           </td>
+           <td class="right_col right">Aug 09</td>
+        </tr>
+    </tbody>
+</table>
+<div class="movie-list-more"><a href="/movie/upcoming/">More...</a></div>
+			</div>
+			<div class="tab-pane fade " id="on-dvd">
+<h4>Top Rentals</h4>
+<table class="movie_list top_rentals">
+    <tr data-movie-id="771211175" data-movie-json='{&#034;id&#034;:771211175,&#034;title&#034;:&#034;Oz the Great and Powerful&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG&#034;,&#034;runtime&#034;:&#034;2 hr. 7 min.&#034;,&#034;synopsis&#034;:&#034;It suffers from some tonal inconsistency and a deflated sense of wonder, but Oz the Great and Powerful still packs enough visual dazzle and clever wit to be entertaining in its own right.&#034;,&#034;thumbnail&#034;:&#034;http://content7.flixster.com/movie/11/16/82/11168213_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;James Franco&#034;,&#034;id&#034;:&#034;162653202&#034;},{&#034;name&#034;:&#034;Mila Kunis&#034;,&#034;id&#034;:&#034;364629418&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">59%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/oz_the_great_and_powerful/"  class=""  sub="hover">Oz the Great and Powerful</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771241227" data-movie-json='{&#034;id&#034;:771241227,&#034;title&#034;:&#034;G.I. Joe: Retaliation&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;1 hr. 30 min.&#034;,&#034;synopsis&#034;:&#034;Though arguably superior to its predecessor, G.I. Joe: Retaliation is overwhelmed by its nonstop action and too nonsensical and vapid to leave a lasting impression.&#034;,&#034;thumbnail&#034;:&#034;http://content7.flixster.com/movie/11/17/18/11171817_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;D.J. Cotrona&#034;,&#034;id&#034;:&#034;162653947&#034;},{&#034;name&#034;:&#034;Byung-hun Lee&#034;,&#034;id&#034;:&#034;285359670&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">28%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/gi_joe_retaliation/"  class=""  sub="hover">G.I. Joe: Retaliation</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771270981" data-movie-json='{&#034;id&#034;:771270981,&#034;title&#034;:&#034;Identity Thief&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 52 min.&#034;,&#034;synopsis&#034;:&#034;Identity Thief&amp;#039;s few laughs are attributable to Melissa McCarthy and Jason Bateman, who labor mightily to create a framework for the movie&amp;#039;s undisciplined plotline.&#034;,&#034;thumbnail&#034;:&#034;http://content6.flixster.com/movie/11/17/09/11170920_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Jason Bateman&#034;,&#034;id&#034;:&#034;326298973&#034;},{&#034;name&#034;:&#034;Melissa McCarthy&#034;,&#034;id&#034;:&#034;528361348&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">20%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/identity_thief/"  class=""  sub="hover">Identity Thief</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771257607" data-movie-json='{&#034;id&#034;:771257607,&#034;title&#034;:&#034;A Good Day To Die Hard&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 37 min.&#034;,&#034;synopsis&#034;:&#034;A Good Day to Die Hard is the weakest entry in a storied franchise, and not even Bruce Willis&amp;#039; smirking demeanor can enliven a cliched, uninspired script.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/17/12/11171258_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Bruce Willis&#034;,&#034;id&#034;:&#034;162652509&#034;},{&#034;name&#034;:&#034;Jai Courtney&#034;,&#034;id&#034;:&#034;771383833&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">14%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/a_good_day_to_die_hard/"  class=""  sub="hover">A Good Day To Die Hard</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771238285" data-movie-json='{&#034;id&#034;:771238285,&#034;title&#034;:&#034;Warm Bodies&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;1 hr. 37 min.&#034;,&#034;synopsis&#034;:&#034;Warm Bodies offers a sweet, well-acted spin on a genre that all too often lives down to its brain-dead protagonists.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/17/14/11171434_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Nicholas Hoult&#034;,&#034;id&#034;:&#034;162654938&#034;},{&#034;name&#034;:&#034;Teresa Palmer&#034;,&#034;id&#034;:&#034;347990464&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">81%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/warm_bodies/"  class=""  sub="hover">Warm Bodies</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771305747" data-movie-json='{&#034;id&#034;:771305747,&#034;title&#034;:&#034;42&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;2 hr. 8 min.&#034;,&#034;synopsis&#034;:&#034;42 is an earnest, inspirational, and respectfully told biography of an influential American sports icon, though it might be a little too safe and old-fashioned for some.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/17/18/11171806_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Chadwick Boseman&#034;,&#034;id&#034;:&#034;771363198&#034;},{&#034;name&#034;:&#034;Harrison Ford&#034;,&#034;id&#034;:&#034;162661579&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">77%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/42_2013/"  class=""  sub="hover">42</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771225176" data-movie-json='{&#034;id&#034;:771225176,&#034;title&#034;:&#034;Hansel and Gretel: Witch Hunters&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 27 min.&#034;,&#034;synopsis&#034;:&#034;Alternately bloody and silly, Hansel and Gretel: Witch Hunters fails as both a fantasy adventure and as a parody of same.&#034;,&#034;thumbnail&#034;:&#034;http://content6.flixster.com/movie/11/17/20/11172036_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Jeremy Renner&#034;,&#034;id&#034;:&#034;309973652&#034;},{&#034;name&#034;:&#034;Gemma Arterton&#034;,&#034;id&#034;:&#034;770692644&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">15%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/hansel_and_gretel_witch_hunters/"  class=""  sub="hover">Hansel and Gretel: Witch Hunters</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771189410" data-movie-json='{&#034;id&#034;:771189410,&#034;title&#034;:&#034;Jack the Giant Slayer&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;1 hr. 54 min.&#034;,&#034;synopsis&#034;:&#034;It&amp;#039;s enthusiastically acted and reasonably fun, but Jack the Giant Slayer is also overwhelmed by digital effects and a bland, impersonal story.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/16/98/11169862_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Nicholas Hoult&#034;,&#034;id&#034;:&#034;162654938&#034;},{&#034;name&#034;:&#034;Eleanor Tomlinson&#034;,&#034;id&#034;:&#034;770707131&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">52%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/jack_the_giant_slayer/"  class=""  sub="hover">Jack the Giant Slayer</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771318588" data-movie-json='{&#034;id&#034;:771318588,&#034;title&#034;:&#034;The Incredible Burt Wonderstone&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;1 hr. 40 min.&#034;,&#034;synopsis&#034;:&#034;The Incredible Burt Wonderstone serves up some goofy laughs, but given its outrageous conceit, it&amp;#039;s surprisingly safe and predictable.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/17/20/11172014_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Steve Carell&#034;,&#034;id&#034;:&#034;162652665&#034;},{&#034;name&#034;:&#034;Steve Buscemi&#034;,&#034;id&#034;:&#034;162652875&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">36%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/the_incredible_burt_wonderstone/"  class=""  sub="hover">The Incredible Burt Wonderstone</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771304584" data-movie-json='{&#034;id&#034;:771304584,&#034;title&#034;:&#034;21 And Over&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 33 min.&#034;,&#034;synopsis&#034;:&#034;Though it strives to mimic The Hangover, 21 and Over is too predictable, too unabashedly profane, and too inconsistently funny to carry the torch.&#034;,&#034;thumbnail&#034;:&#034;http://content7.flixster.com/movie/11/17/21/11172177_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Miles Teller&#034;,&#034;id&#034;:&#034;771077409&#034;},{&#034;name&#034;:&#034;Skylar Astin&#034;,&#034;id&#034;:&#034;770797712&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">26%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/21_and_over/"  class=""  sub="hover">21 And Over</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771316320" data-movie-json='{&#034;id&#034;:771316320,&#034;title&#034;:&#034;Snitch&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;PG-13&#034;,&#034;runtime&#034;:&#034;1 hr. 52 min.&#034;,&#034;synopsis&#034;:&#034;Though it features one of Dwayne Johnson&amp;#039;s more thoughtful performances, the presentation of Snitch&amp;#039;s underlying message is muddled by lackluster storytelling and some tonal inconsistencies.&#034;,&#034;thumbnail&#034;:&#034;http://content9.flixster.com/movie/11/17/19/11171943_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Dwayne &amp;#034;The Rock&amp;#034; Johnson&#034;,&#034;id&#034;:&#034;770893686&#034;},{&#034;name&#034;:&#034;Barry Pepper&#034;,&#034;id&#034;:&#034;162671262&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">55%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/snitch_2013/"  class=""  sub="hover">Snitch</a>
+        </td>
+    </tr>
+    <tr data-movie-id="771272420" data-movie-json='{&#034;id&#034;:771272420,&#034;title&#034;:&#034;The Place Beyond The Pines&#034;,&#034;year&#034;:2012,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;2 hr. 21 min.&#034;,&#034;synopsis&#034;:&#034;Ambitious to a fault, The Place Beyond the Pines finds writer/director Derek Cianfrance reaching for -- and often grasping -- thorny themes of family, fatherhood, and fate.&#034;,&#034;thumbnail&#034;:&#034;http://content7.flixster.com/movie/11/17/19/11171965_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Ryan Gosling&#034;,&#034;id&#034;:&#034;162654751&#034;},{&#034;name&#034;:&#034;Bradley Cooper&#034;,&#034;id&#034;:&#034;351525448&#034;}]}'>                   <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">82%</span>
+	</span></td>
+        <td class="middle_col">
+<a target="_top" href="/m/the_place_beyond_the_pines_2012/"  class=""  sub="hover">The Place Beyond The Pines</a>
+        </td>
+    </tr>
+</table>
+<div class="movie-list-more"><a href="/dvd/top-rentals/">More...</a></div>
+<h4>New On DVD This Week</h4>
+<table class="movie_list new_dvd">
+    <tbody>
+        <tr data-movie-id="771267247" data-movie-json='{&#034;id&#034;:771267247,&#034;title&#034;:&#034;Filly Brown&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 40 min.&#034;,&#034;synopsis&#034;:&#034;FILLY BROWN is an inspiring and gritty portrait of a young artist&amp;#039;s striving to find her voice and seize her dreams without compromise. Majo Tonorio,...&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/16/86/11168634_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Gina Rodriguez&#034;,&#034;id&#034;:&#034;770871575&#034;},{&#034;name&#034;:&#034;Jenni Rivera&#034;,&#034;id&#034;:&#034;770771569&#034;}]}'>
+            <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">45%</span>
+	</span></td>
+            <td class="middle_col">
+<a target="_top" href="/m/filly_brown_2012/"  class=""  sub="hover">Filly Brown</a>
+            </td>
+        </tr>
+        <tr data-movie-id="771266053" data-movie-json='{&#034;id&#034;:771266053,&#034;title&#034;:&#034;Black Rock&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 19 min.&#034;,&#034;synopsis&#034;:&#034;It springs from smarter ideas than your average chase thriller, but ultimately, Black Rock falls back on disappointingly familiar ingredients.&#034;,&#034;thumbnail&#034;:&#034;http://content8.flixster.com/movie/11/16/99/11169946_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Kate Bosworth&#034;,&#034;id&#034;:&#034;162655190&#034;},{&#034;name&#034;:&#034;Lake Bell&#034;,&#034;id&#034;:&#034;770686992&#034;}]}'>
+            <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">48%</span>
+	</span></td>
+            <td class="middle_col">
+<a target="_top" href="/m/black_rock_2011/"  class=""  sub="hover">Black Rock</a>
+            </td>
+        </tr>
+        <tr data-movie-id="771353902" data-movie-json='{&#034;id&#034;:771353902,&#034;title&#034;:&#034;Assault On Wall Street&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 37 min.&#034;,&#034;synopsis&#034;:&#034;A security guard for an armored truck, Jim (Dominic Purcell) is a blue-collar New Yorker who works hard to earn a living. His wages support himself...&#034;,&#034;thumbnail&#034;:&#034;http://content9.flixster.com/movie/11/17/09/11170947_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Dominic Purcell&#034;,&#034;id&#034;:&#034;162717664&#034;},{&#034;name&#034;:&#034;Erin Karpluk&#034;,&#034;id&#034;:&#034;770692103&#034;}]}'>
+            <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">14%</span>
+	</span></td>
+            <td class="middle_col">
+<a target="_top" href="/m/assault_on_wall_street_2013/"  class=""  sub="hover">Assault On Wall Street</a>
+            </td>
+        </tr>
+        <tr data-movie-id="771357196" data-movie-json='{&#034;id&#034;:771357196,&#034;title&#034;:&#034;Teen Beach Movie&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;Unrated&#034;,&#034;runtime&#034;:&#034;1 hr. 31 min.&#034;,&#034;synopsis&#034;:&#034;Teen surfing sweethearts Brady and McKenzie are swept into the movie musical &amp;#034;Wet Side Story&amp;#034; when they crash beneath a wave. In the film, bikers and...&#034;,&#034;thumbnail&#034;:&#034;http://images.rottentomatoescdn.com/images/redesign/poster_default.gif&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Ross Lynch&#034;,&#034;id&#034;:&#034;771414381&#034;},{&#034;name&#034;:&#034;Maia Mitchell&#034;,&#034;id&#034;:&#034;771451801&#034;}]}'>
+            <td class="left_col">
+<span class="tMeterIcon tiny" >
+		<span class="greyline right">&mdash;&mdash;</span>
+	</span></td>
+            <td class="middle_col">
+<a target="_top" href="/m/teen_beach_movie/"  class=""  sub="hover">Teen Beach Movie</a>
+            </td>
+        </tr>
+        <tr data-movie-id="771307321" data-movie-json='{&#034;id&#034;:771307321,&#034;title&#034;:&#034;Night Across the Street&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;Unrated&#034;,&#034;runtime&#034;:&#034;1 hr. 41 min.&#034;,&#034;synopsis&#034;:&#034;On the verge of a forced retirement, Don Celso, an elderly office worker begins to relive both real and imagined memories from his life - a trip to...&#034;,&#034;thumbnail&#034;:&#034;http://content6.flixster.com/movie/11/16/89/11168920_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Christian Vadim&#034;,&#034;id&#034;:&#034;770689233&#034;},{&#034;name&#034;:&#034;Sergio Hernández&#034;,&#034;id&#034;:&#034;341817544&#034;}]}'>
+            <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Fresh" class="icon 
+tiny fresh"></span><span class="tMeterScore">92%</span>
+	</span></td>
+            <td class="middle_col">
+<a target="_top" href="/m/night_across_the_street/"  class=""  sub="hover">Night Across the Street</a>
+            </td>
+        </tr>
+        <tr data-movie-id="771312909" data-movie-json='{&#034;id&#034;:771312909,&#034;title&#034;:&#034;Under the Bed&#034;,&#034;year&#034;:2013,&#034;mpaa&#034;:&#034;R&#034;,&#034;runtime&#034;:&#034;1 hr. 27 min.&#034;,&#034;synopsis&#034;:&#034;Every child knows about the monster under the bed-Neal Hausman&amp;#039;s mistake was trying to fight it. Neal (Jonny Weston, Chasing Mavericks) has returned...&#034;,&#034;thumbnail&#034;:&#034;http://content7.flixster.com/movie/11/17/20/11172065_mob.jpg&#034;,&#034;cast&#034;:[{&#034;name&#034;:&#034;Jonny Weston&#034;,&#034;id&#034;:&#034;771403662&#034;},{&#034;name&#034;:&#034;Gattlin Griffith&#034;,&#034;id&#034;:&#034;770819198&#034;}]}'>
+            <td class="left_col">
+<span class="tMeterIcon tiny" >
+			<span title="Rotten" class="icon 
+tiny rotten"></span><span class="tMeterScore">38%</span>
+	</span></td>
+            <td class="middle_col">
+<a target="_top" href="/m/under_the_bed_2012/"  class=""  sub="hover">Under the Bed</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="movie-list-more"><a href="/dvd/new-releases/">More...</a></div>
+			</div>
+		</div>
+        <script class="hoverBubbleTmpl" type="text/html">
+            <div class="hoverBubble fade in" data-movie-id="{{ id }}">
+    <div class="bubbleContent">
+        <div class="media_block">
+            <img class="media_block_image" src="{{ thumbnail }}" />
+            <div class="media_block_content">
+                <div class="title">{{ title }}</div>
+                <div class="cast">
+                {% $.each(cast, function(idx, val){ %}
+                    <span>{{ val.name }}</span>{{ idx < cast.length -1 ? "," : "" }} 
+                {% }); %}               
+                </div>               
+                <div class="mpaa">{{ mpaa }}, {{ runtime }}</div>
+                <div class="mpaa"><a href="{{ url }}trailer/" class="trailer_play_action_button">Trailer</a> - <a href="{{ url }}movie_times/">Showtimes</a></div>
+            </div>
+        </div>
+        <div class="synopsis">{{ synopsis }}</div>
+        <div class="rating_widget" comp="Rating" movieId="{{ id }}" data-event-action="Hover Bubble" data-facepile="true" data-source="RTS" data-hidewtsifrated="true">
+            <div class="clearfix ratings_container">
+                <div class="rating_buttons">
+                    <a href="javascript:void(0);" class="wts" sub="wts"></a><a href="javascript:void(0);" class="ni" sub="ni"></a>                      
+                </div>
+                <div class="facepile" sub="facepile"></div>
+            </div>
+        </div>
+    </div>
+</div>
+        </script>
+	</div>
+	<div class="content_footer clearfix">
+	</div>
+</div>
+<script>
+$("#movies_sidebar")
+   .on("mousedown", ".opening tr", function(){ _gaq.push(['_trackEvent', 'mob', 'Movies Tab', 'Opening']);})
+   .on("mousedown", ".top_box_office tr", function(){ _gaq.push(['_trackEvent', 'mob', 'Movies Tab', 'Top Box Office']);})
+   .on("mousedown", ".coming_soon tr", function(){ _gaq.push(['_trackEvent', 'mob', 'Movies Tab', 'Coming Soon']);})
+   .on("mousedown", ".top_rentals tr", function(){ _gaq.push(['_trackEvent', 'mob', 'DVD Tab', 'Top Rentals']);})
+   .on("mousedown", ".new_dvd tr", function(){ _gaq.push(['_trackEvent', 'mob', 'DVD Tab', 'New on DVD']);})
+   .on("mousedown", ".in-theaters-tab", function(){ _gaq.push(['_trackEvent', 'mob', 'Movies Tab', 'Tab Click']);})
+   .on("mousedown", ".on-dvd-tab", function(){ _gaq.push(['_trackEvent', 'mob', 'DVD Tab', 'Tab Click']);});     
+</script>
+		</div>
+        <div id="mainColumn" class="col col_728 col_last">
+            <div id="mobPanel" style="background:white; position:relative;">
+                <div class="content in">
+<script>
+document.title = "Planes - Rotten Tomatoes";
+_gaq.push(['_setCustomVar', 4, 'Affiliates', '-NflxDQ']);
+_gaq.push(['_trackPageview', '/MOB-Upcoming']);
+$(function(){
+	$("[comp=HoverTip]").comp();
+});
+</script>
+<div comp="HashLoader" data-url="/m/planes/theater?id=" data-param="theater" data-domtype="append"></div>
+<div class="content_box media_block main_movie_area"  >
+	<div class="content_header clearfix">
+	</div>
+	<div class="content_body clearfix">
+    <div class="media_block_image movie_poster_area">    
+            <a class="trailer_play_action_button" href="/m/planes/trailer/" data-video-id="11176520">
+		<img src="http://instart0.flixster.com/movie/11/17/18/11171824_det.jpg" width="142" alt="Planes" title="Planes"  itemprop="image" />
+                <span class="play_button_big"></span>
+            </a>
+            <a id="trailer_play_button" class="trailer_action_button trailer_play_action_button" href="/m/planes/trailer/" data-video-id="11176520">Play Trailer</a>
+    </div>
+    <div class="media_block_content movie_content_area">
+        <h1 class="movie_title"><span itemprop="name">Planes (2013)</span></h1>
+<div class="meter_box left_door">
+	<div class="meter_box right_door" comp="HoverTip">
+		<div class="meter_critics critic_side">
+			<p class="help tomatometer_bar_help" sub="hover" tip="The percentage of Approved Tomatometer Critics who have given this movie a positive review"><span>tomatometer</span></p>
+			<ul class="critic_links" id="critic-links">
+				<li><a reviewtype="tMeter" href="#all-critics-numbers" id="all-critics-link" class="active">All Critics</a></li>
+				<li><a reviewtype="allTopCritics" href="#top-critics-numbers" id="top-critics-link">Top Critics</a></li>
+			</ul>
+			<div id="all-critics-numbers" class="critic_side_container" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+						<div class="tomato_numbers noReviews">
+<style>
+					            div.movie_content_area div.meter_critics { height:104px; }
+</style>
+							<span id="all-critics-meter" class="meter noReviews">No Reviews Yet...</span>
+								<p class="critic_stats"><span class="label">Release Date:</span> <span class="content"><span>Aug 9, 2013 Wide</span></span></p>
+						</div>
+			</div>
+			<div id="top-critics-numbers" class="critic_side_container">
+						<div class="tomato_numbers noReviews">
+<style>
+					            div.movie_content_area div.meter_critics { height:104px; }
+</style>
+							<span id="all-critics-meter" class="meter noReviews">No Reviews Yet...</span>
+								<p class="critic_stats"><span class="label">Release Date:</span> <span class="content"><span>Aug 9, 2013 Wide</span></span></p>
+						</div>
+			</div>
+		</div>
+		<a class="fan_side" style="display:block;" href="#audience_reviews">
+			<p sub="hover" class="help tomatometer_bar_help" tip="The percentage of Rotten Tomatoes users who want to see this movie"><span>audience</span></p>
+				<span class="meter wts numeric ">91</span>
+				<p class="critic_stats">
+					<span class="subText want_to_see" >want to see</span><br/>
+					User Ratings: 21,277
+				</p>
+		</a>
+		<div class="clearfix"></div>
+	</div>
+</div>
+<div class="meter_box_bottom left_side">
+	<div class="meter_box_bottom right_side">
+		<div class="critic_side"></div>
+	</div>
+</div>
+<div class="share-tools  " >
+<div class="fbContainer">
+<script type="text/javascript">
+</script>
+	<div class="fb-like" data-send="false" data-layout="button_count" data-width="120" data-show-faces="false" data-href="http://www.rottentomatoes.com/m/planes/" ></div>
+</div>
+<div class="twitterContainer" >
+	<a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.rottentomatoes.com/m/planes/" data-count="horizontal" data-text="Planes - Rotten Tomatoes" data-via="RottenTomatoes"></a>
+</div>
+<div class="pinterestContainer" >
+	<a href="http://pinterest.com/pin/create/button/?url=http%3A%2F%2Fwww.rottentomatoes.com%2Fm%2Fplanes%2F&media=http%3A%2F%2Fcontent6.flixster.com%2Fmovie%2F11%2F17%2F18%2F11171824_ori.jpg&description=Planes+-+Rotten+Tomatoes" class="pin-it-button" count-layout="horizontal">
+	<img border="0" src="//assets.pinterest.com/images/PinExt.png" title="Pin It" /></a>
+</div>
+<div class="gPlusOneContainer" >
+	<g:plusone size="medium" count="true" href="http://www.rottentomatoes.com/m/planes/"></g:plusone>
+	<script type="text/javascript"> if(typeof gapi != 'undefined') gapi.plusone.go("gPlusOne"); </script>
+</div>
+<!-- Place this tag where you want the su badge to render -->
+<div class="stumbleUponContainer" >
+	<su:badge  layout="1" location="http://www.rottentomatoes.com/m/planes/"></su:badge>
+</div>
+</div>
+<script type="text/javascript">
+	$(function() {
+		var allCriticsTab = $('#all-critics');
+		var allCriticsLink = $('#all-critics-link');
+		var allCriticsNumbers = $('#all-critics-numbers');
+		var topCriticsTab = $('#top-critics');
+		var topCriticsLink = $('#top-critics-link');
+		var topCriticsNumbers = $('#top-critics-numbers');
+		allCriticsLink.click(function(e) {
+			e.preventDefault();
+			topCriticsLink.removeClass();
+			topCriticsNumbers.hide();
+			allCriticsLink.addClass('active');
+			allCriticsNumbers.show();
+			allCriticsTab.click();
+		});
+		topCriticsLink.click(function(e) {
+			e.preventDefault();
+			allCriticsLink.removeClass();
+			allCriticsNumbers.hide();
+			topCriticsLink.addClass('active');
+			topCriticsNumbers.show();
+			topCriticsTab.click();
+		});
+	});
+</script>
+<div style="overflow:hidden;">
+    <h4 class="lineHeader"><span class="fl">My Rating</span></h4>
+</div>
+<div id="mob_rating_widget" class="rating_widget large_rating_widget media_block" comp="SocialRating" movieId="771312196" data-event-action="MOB (Upcoming)">
+<a href=""  class="media_block_image">
+	<img src="http://images.rottentomatoescdn.com/images/redesign/user.none.tmb.jpg" width="50"   sub="img" class="fl" alt="" />
+    </a>
+	<div class="media_block_content" id="userProfile" style="position:relative;">
+        <div class="fr">
+            <a href="javascript:void(0);" sub="edit" class="text_button subtle smaller" style="display:none;">Edit</a>
+        </div>
+		<div class="clearfix">
+			<a href="javascript:void(0);" sub="wts" class="wts"></a> 
+			<a href="javascript:void(0);" sub="ni" class="ni"></a>
+			<a href="javascript:void(0);" sub="star" class="stars"></a>
+		</div>
+		<textarea id="reviewText" class="review clearfix" name="review" comp="ExpandableTextInput" sub="review" placeholder="Add a Review (Optional)"></textarea>
+		<div class="clearfix" style="height:20px;">
+			<div class="fr">
+				<a id="fbShareOn" sub="fbShare" class="share_button fb" href="javascript:void(0);" style="vertical-align:middle;"></a>
+				<a id="twShareOn" sub="twShare" class="share_button tw" href="javascript:void(0);" style="vertical-align:middle;"></a>
+			</div>
+			<div class="fr like_status small subtle" sub="likeStatus" style="display:none;">
+				<span sub="graphMessage"></span>					
+			</div>
+			<div class="fl">
+				<a href="javascript:void(0);" sub="submit" class="post_button"></a>
+				<span sub="wait" class="status" style="vertical-align:middle;"></span>
+			</div>
+		</div>		
+	</div>
+</div>
+<script> 
+$(function(){
+	$("#mob_rating_widget").comp(); 
+});
+</script>
+    </div>
+	</div>
+	<div class="content_footer clearfix">
+	</div>
+</div>
+<div class="clearfix">
+    <div class="col_p col_423">
+<style>
+	div.movie_content_area div.movie_info p.movie_synopsis { margin-bottom:16px; }
+</style>
+<div class="content_box "  >
+	<div class="content_header clearfix">
+				<h3>Movie Info</h3>	
+	</div>
+	<div class="content_body clearfix">
+	<div class="movie_info clearfix">
+		<p id="movieSynopsis" class="movie_synopsis" itemprop="description">
+			Cars gets a spin-off with this Disney Toon Studios film starring the voice of Dane Cook as a vertically-challenged plane with high hopes of becoming an air racer. ~ Jeremy Wheeler, Rovi
+		</p>
+		<div class="left_col">
+			<p>
+				<span comp="HoverTip">
+					<a href="javascript:void(0);" sub="hover" tip="for some mild action and rude humor"><span itemprop="contentRating">PG</span></a>, 
+				</span>
+				<time itemprop="duration" datetime="P92M">1 hr. 32 min.</time>
+			</p>
+			<p>
+				<span>
+						<a href="/movie/browser.php?movietype=1&genre=2"><span itemprop="genre">Animation</span></a>, 
+						<a href="/movie/browser.php?movietype=1&genre=11"><span itemprop="genre">Kids & Family</span></a>, 
+						<a href="/movie/browser.php?movietype=1&genre=6"><span itemprop="genre">Comedy</span></a>
+				</span>
+			</p>
+				<p itemprop="director" itemscope itemtype="http://schema.org/Person">
+					<label class="subtle">Directed By:</label>
+					<span>
+<a class="" href="/celebrity/klay_hall/"  itemprop="url"><span itemprop="name">Klay Hall</span></a>
+					</span>
+				</p>
+		</div>
+		<div class="right_col">
+			<p><label class="subtle">In Theaters:</label> <span><span itemprop="datePublished" content="2013-08-09">Aug 9, 2013 Wide</span></span></p>
+			<p>
+			<span itemprop="productionCompany">Walt Disney Pictures</span>
+			 - <a href="http://www.disney.com/planes" target="_blank">Official Site 
+<img src="http://images.rottentomatoescdn.com/images/icons/offsite.gif"  title="External Icon" height="8" alt="External Icon" width="10" border="0"/></a>
+            </p>
+		</div>
+	</div>
+	</div>
+	<div class="content_footer clearfix">
+	</div>
+</div>
+<div class="content_box " id="cast-info" >
+	<div class="content_header clearfix">
+				<h3>Cast</h3>	
+	</div>
+	<div class="content_body clearfix">
+        <div class="moreContainer">
+            <div class="more-list" style="height:180px;">
+			<ul class="clearfix">
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/dane_cook/" >
+		<img src="http://instart0.flixster.com/rtactor/40/75/40756_tmb.jpg" width="50" alt="Dane Cook"  itemprop="image" alt="Dane Cook" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/dane_cook/"  itemprop="url"><span itemprop="name">Dane Cook</span></a>
+							<span class="characters"><br/>Dusty</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/julia_louisdreyfus/" >
+		<img src="http://instart2.flixster.com/rtactor/39/97/39970_tmb.jpg" width="50" alt="Julia Louis-Dreyfus"  itemprop="image" alt="Julia Louis-Dreyfus" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/julia_louisdreyfus/"  itemprop="url"><span itemprop="name">Julia Louis-Dreyfus</span></a>
+							<span class="characters"><br/>Rochelle</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/brad_garrett/" >
+		<img src="http://instart0.flixster.com/rtactor/37/18/37184_tmb.jpg" width="50" alt="Brad Garrett"  itemprop="image" alt="Brad Garrett" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/brad_garrett/"  itemprop="url"><span itemprop="name">Brad Garrett</span></a>
+							<span class="characters"><br/>Chug</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/stacy_keach/" >
+<img src="http://content9.flixster.com/photo/72/49/21/7249219_tmb.jpg" width="50" alt="Stacy Keach"  id="mainImage" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/stacy_keach/"  itemprop="url"><span itemprop="name">Stacy Keach</span></a>
+							<span class="characters"><br/>Skipper Rile</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/teri_hatcher/" >
+		<img src="http://instart3.flixster.com/rtactor/40/37/40379_tmb.jpg" width="50" alt="Teri Hatcher"  itemprop="image" alt="Teri Hatcher" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/teri_hatcher/"  itemprop="url"><span itemprop="name">Teri Hatcher</span></a>
+							<span class="characters"><br/>Dottie</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/john_cleese/" >
+		<img src="http://instart0.flixster.com/rtactor/14/52/14528_tmb.jpg" width="50" alt="John Cleese"  itemprop="image" alt="John Cleese" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/john_cleese/"  itemprop="url"><span itemprop="name">John Cleese</span></a>
+							<span class="characters"><br/>Bulldog</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/val_kilmer/" >
+		<img src="http://instart1.flixster.com/rtactor/41/02/41029_tmb.jpg" width="50" alt="Val Kilmer"  itemprop="image" alt="Val Kilmer" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/val_kilmer/"  itemprop="url"><span itemprop="name">Val Kilmer</span></a>
+							<span class="characters"><br/>Bravo</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/anthony_edwards/" >
+		<img src="http://instart2.flixster.com/rtactor/43/4394_tmb.jpg" width="50" alt="Anthony Edwards"  itemprop="image" alt="Anthony Edwards" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/anthony_edwards/"  itemprop="url"><span itemprop="name">Anthony Edwards</span></a>
+							<span class="characters"><br/>Echo</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/colin_cowherd/" >
+		<img src="http://images.rottentomatoescdn.com/images/redesign/actor.default.tmb.gif" width="50" alt="Colin Cowherd"  itemprop="image" alt="Colin Cowherd" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/colin_cowherd/"  itemprop="url"><span itemprop="name">Colin Cowherd</span></a>
+							<span class="characters"><br/>Colin Cowling</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/cedric_the_entertainer/" >
+<img src="http://content8.flixster.com/photo/34/93/42/3493422_tmb.jpg" width="50" alt="Cedric the Entertainer"  id="mainImage" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/cedric_the_entertainer/"  itemprop="url"><span itemprop="name">Cedric the Entertainer</span></a>
+							<span class="characters"><br/>Leadbottom</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/1179042-gabriel_iglesias/" >
+<img src="http://content8.flixster.com/photo/12/67/19/12671938_tmb.jpg" width="50" alt="Gabriel Iglesias"  id="mainImage" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/1179042-gabriel_iglesias/"  itemprop="url"><span itemprop="name">Gabriel Iglesias</span></a>
+							<span class="characters"><br/>Ned/Zed</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/carlos_alazraqui/" >
+<img src="http://content7.flixster.com/photo/11/15/23/11152301_tmb.jpg" width="50" alt="Carlos Alazraqui"  id="mainImage" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/carlos_alazraqui/"  itemprop="url"><span itemprop="name">Carlos Alazraqui</span></a>
+							<span class="characters"><br/>El Chupacabra</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/priyanka_chopra/" >
+<img src="http://content9.flixster.com/photo/11/96/93/11969315_tmb.jpg" width="50" alt="Priyanka Chopra"  id="mainImage" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/priyanka_chopra/"  itemprop="url"><span itemprop="name">Priyanka Chopra</span></a>
+							<span class="characters"><br/>Ishani</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/sinbad/" >
+<img src="http://content6.flixster.com/photo/45/38/77/4538772_tmb.jpg" width="50" alt="Sinbad"  id="mainImage" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/sinbad/"  itemprop="url"><span itemprop="name">Sinbad</span></a>
+							<span class="characters"><br/>Roper</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/roger_craig_smith/" >
+		<img src="http://images.rottentomatoescdn.com/images/redesign/actor.default.tmb.gif" width="50" alt="Roger Craig Smith"  itemprop="image" alt="Roger Craig Smith" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/roger_craig_smith/"  itemprop="url"><span itemprop="name">Roger Craig Smith</span></a>
+							<span class="characters"><br/>Ripslinger</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/oliver_kalkofe/" >
+<img src="http://content6.flixster.com/photo/10/98/23/10982372_tmb.jpg" width="50" alt="Oliver Kalkofe"  id="mainImage" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/oliver_kalkofe/"  itemprop="url"><span itemprop="name">Oliver Kalkofe</span></a>
+							<span class="characters"><br/>Franz/Fliegenhosen</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/brent_musberger/" >
+		<img src="http://images.rottentomatoescdn.com/images/redesign/actor.default.tmb.gif" width="50" alt="Brent Musberger"  itemprop="image" alt="Brent Musberger" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/brent_musberger/"  itemprop="url"><span itemprop="name">Brent Musberger</span></a>
+							<span class="characters"><br/>Brent Mustangburger</span>
+						</div>
+					</li>
+					<li class="media_block left_column"  itemprop="actors" itemscope itemtype="http://schema.org/Person" >
+<a class="media_block_image" href="/celebrity/jon_cryer/" >
+<img src="http://content7.flixster.com/photo/10/94/03/10940385_tmb.jpg" width="50" alt="Jon Cryer"  id="mainImage" class="actorThumb medium" />
+						</a>
+						<div class="media_block_content">
+<a class="" href="/celebrity/jon_cryer/"  itemprop="url"><span itemprop="name">Jon Cryer</span></a>
+							<span class="characters"><br/></span>
+						</div>
+					</li>
+			</ul>
+			</div>
+		</div>
+		<script> 
+	        $(function(){
+	            $("#cast-info .moreContainer").moreList();
+	        });
+		</script>
+	</div>
+	<div class="content_footer clearfix">
+	</div>
+</div>
+    </div>
+    <div class="col_p col_300">
+        <p class="center subtle small" style="margin-top:10px;">ADVERTISEMENT</p>
+        <div class="medrec_top_wrapper">
+<div id="medrec_top_ad" class="page_ad" style="height:250px;">
+<script type='text/javascript'>
+RT.ads.push("medrec_top_ad");
+googletag.cmd.push(function() {
+	var slot=googletag.defineSlot('/6327/rt.movie/movie_page', [[300,250],[300,600]], 'medrec_top_ad')
+		.addService(googletag.pubads())
+		.setTargeting("unit", "medrec_top")	
+		.setTargeting("pos", "top")	
+        .setTargeting("movieid", "771312196")
+        .setTargeting("url", "/m/planes/");
+    slot.oldRenderEnded = slot.renderEnded;
+    slot.renderEnded = function(){
+    	slot.oldRenderEnded();
+    	var wrapper = $("#medrec_top_ad");
+    	wrapper.css("height","").css("width","");
+    };
+});
+</script>
+</div>
+        </div>
+        <div class="medrec_middle_wrapper">
+<div id="medrec_middle_ad" class="page_ad" style="height:250px;">
+<script type='text/javascript'>
+RT.ads.push("medrec_middle_ad");
+googletag.cmd.push(function() {
+	var slot=googletag.defineSlot('/6327/rt.movie/movie_page', [[300,250],[300,600]], 'medrec_middle_ad')
+		.addService(googletag.pubads())
+		.setTargeting("unit", "medrec_middle")	
+		.setTargeting("pos", "middle")	
+        .setTargeting("movieid", "771312196")
+        .setTargeting("url", "/m/planes/");
+    slot.oldRenderEnded = slot.renderEnded;
+    slot.renderEnded = function(){
+    	slot.oldRenderEnded();
+    	var wrapper = $("#medrec_middle_ad");
+    	wrapper.css("height","").css("width","");
+    };
+});
+</script>
+</div>
+        </div>
+    </div>
+</div>
+<div class="content_box " id="photos_videos" >
+	<div class="content_header clearfix">
+				<h3><a href="/m/planes/trailers/">Planes Trailer</a> &amp; Photos</h3>	
+	</div>
+	<div class="content_body clearfix">
+		<div>
+			<ul class="movie_pictures clearfix">
+				<li>
+<a href="/m/planes/pictures/"  class="" >
+							<img class="movie_thumbnail" src="http://instart0.flixster.com/rtmovie/10/40/104004_tmb.jpg" />
+				</a>
+</li>
+				<li>
+<a href="/m/planes/pictures/"  class="" >
+							<img class="movie_thumbnail" src="http://instart3.flixster.com/rtmovie/10/40/104003_tmb.jpg" />
+				</a>
+</li>
+				<li>
+<a href="/m/planes/pictures/"  class="" >
+							<img class="movie_thumbnail" src="http://instart2.flixster.com/rtmovie/10/40/104002_tmb.jpg" />
+				</a>
+</li>
+				<li>
+<a href="/m/planes/pictures/"  class="" >
+							<img class="movie_thumbnail" src="http://instart1.flixster.com/rtmovie/10/40/104001_tmb.jpg" />
+				</a>
+</li>
+				<li>
+<a href="/m/planes/pictures/"  class="" >
+							<img class="movie_thumbnail" src="http://instart1.flixster.com/rtmovie/10/36/103645_tmb.jpg" />
+				</a>
+</li>
+				<li>
+<a href="/m/planes/pictures/"  class="" >
+							<img class="movie_thumbnail" src="http://instart0.flixster.com/rtmovie/10/36/103644_tmb.jpg" />
+				</a>
+</li>
+				<li>
+<a href="/m/planes/pictures/"  class="" >
+							<img class="movie_thumbnail" src="http://instart3.flixster.com/rtmovie/99/99/99999_tmb.jpg" />
+				</a>
+</li>
+			</ul>
+			<p><a class="see_all_link" href="/m/planes/pictures/">View all photos (7)</a></p>
+		</div>
+		<div>			
+			<ul class="movie_clips clearfix">
+				<li class="poster_box">
+                    <a href="/m/planes/trailer/" class="poster_content trailer_play_action_button" data-video-id="11178760" data-playlist-type="related">
+<img src="http://content.internetvideoarchive.com/content/photos/8345/555820_024.jpg" alt="Planes Take Flight"   />
+                    </a>
+					<div class="poster_caption media_block">
+                        <span class="play_button media_block_image"></span>
+                        <a href="/m/planes/trailer/" class="media_block_content trailer_play_action_button" data-video-id="11178760" data-playlist-type="related">Planes: Take Flight</a>
+					</div>
+				</li>
+				<li class="poster_box">
+                    <a href="/m/planes/trailer/" class="poster_content trailer_play_action_button" data-video-id="11181146" data-playlist-type="related">
+<img src="http://content.internetvideoarchive.com/content/photos/8430/472732_059.jpg" alt="Planes Uk Trailer 3"   />
+                    </a>
+					<div class="poster_caption media_block">
+                        <span class="play_button media_block_image"></span>
+                        <a href="/m/planes/trailer/" class="media_block_content trailer_play_action_button" data-video-id="11181146" data-playlist-type="related">Planes (Uk Trailer 3)</a>
+					</div>
+				</li>
+				<li class="poster_box">
+                    <a href="/m/planes/trailer/" class="poster_content trailer_play_action_button" data-video-id="11181147" data-playlist-type="related">
+<img src="http://content.internetvideoarchive.com/content/photos/8430/851568_049.jpg" alt="Planes Uk Trailer 1"   />
+                    </a>
+					<div class="poster_caption media_block">
+                        <span class="play_button media_block_image"></span>
+                        <a href="/m/planes/trailer/" class="media_block_content trailer_play_action_button" data-video-id="11181147" data-playlist-type="related">Planes (Uk Trailer 1)</a>
+					</div>
+				</li>
+				<li class="poster_box">
+                    <a href="/m/planes/trailer/" class="poster_content trailer_play_action_button" data-video-id="11179134" data-playlist-type="related">
+<img src="http://content.internetvideoarchive.com/content/photos/8214/627452_039.jpg" alt="Planes Trailer 1"   />
+                    </a>
+					<div class="poster_caption media_block">
+                        <span class="play_button media_block_image"></span>
+                        <a href="/m/planes/trailer/" class="media_block_content trailer_play_action_button" data-video-id="11179134" data-playlist-type="related">Planes (Trailer 1)</a>
+					</div>
+				</li>
+			</ul>
+			<p><a class="see-all_link" href="/m/planes/trailers/">View all videos (11)</a></p>
+		</div>
+	</div>
+	<div class="content_footer clearfix">
+	</div>
+</div>
+<style>
+.cl { clear: left; }
+.cr { clear: right; }
+#reviews {
+	width: 100%;s
+	overflow: hidden;
+}
+</style>
+<div class="content_box " id="contentReviews" >
+	<div class="content_header clearfix">
+				<h3>
+<a href="/m/planes/reviews/" >Critic Reviews for Planes</a>
+</h3>	
+	</div>
+	<div class="content_body clearfix">
+	<div id="reviews" comp="HoverTip">
+		There are no critic reviews yet for Planes. Keep checking Rotten Tomatoes for updates!
+	</div>
+	</div>
+	<div class="content_footer clearfix">
+	</div>
+</div>
+<div class="content_box " id="audience_reviews" >
+	<div class="content_header clearfix">
+				<h3>Audience Reviews for Planes</h3>	
+	</div>
+	<div class="content_body clearfix">
+<div class="quote_bubble  fl cl" >
+	<div class="review_quote_top"></div>
+	<div id="quoteBubble901146707_771312196" class="review_quote_stretch audience_contents clearfix">
+		<div class="scoreWrapper"><span class="rating small on ni"></span></div>
+		<div class="comment">
+		Apparently &quot;Cars&quot; & &quot;Cars 2&quot; weren&#39;t bad enough.
+		</div>
+	</div>
+	<div class="review_quote_bottom">
+		<span class="small fr subtle date">May 22, 2013</span>
+	</div>
+	<div class="review_source media_block">
+	<img src="http://content7.flixster.com/user/41/19/81/41198185_tmb.jpg" width="50"   class="media_block_image critic_thumb" alt="Frisby2007" />
+		<div class="media_block_content">
+			<div class="bold">
+Frisby 2007
+			</div>
+			<p class="superreviewer"><span class="icon profile superreviewer"></span>Super Reviewer</p>
+		</div>		 
+	</div>
+</div>
+<script>
+$(function(){
+    $(".quote_bubble .comment").moreLess();
+});
+</script>
+<div class="quote_bubble  fr cr" >
+	<div class="review_quote_top"></div>
+	<div id="quoteBubble905846747_771312196" class="review_quote_stretch audience_contents clearfix">
+		<div class="scoreWrapper"><span class="rating small on ni"></span></div>
+		<div class="comment">
+		Like I could handle Cars and those poorly done mockbusters. This is not a Pixar film, right? Is Disney Toons really in charge of this? What is going on!?!
+		</div>
+	</div>
+	<div class="review_quote_bottom">
+		<span class="small fr subtle date">March 6, 2013</span>
+	</div>
+	<div class="review_source media_block">
+	<img src="//graph.facebook.com/100001786722043/picture" width="50"   class="media_block_image critic_thumb" alt="Noah Nemeroff" />
+		<div class="media_block_content">
+			<div class="bold">
+<a href="/user/id/905846747/" >
+Noah Nemeroff</a>
+			</div>
+			<p class="superreviewer"><span class="icon profile superreviewer"></span>Super Reviewer</p>
+		</div>		 
+	</div>
+</div>
+<script>
+$(function(){
+    $(".quote_bubble .comment").moreLess();
+});
+</script>
+	</div>
+	<div class="content_footer clearfix">
+		<div class="float_right">
+<a href="/m/planes/reviews/?type=user" >View all audience reviews</a>
+</div>
+	</div>
+</div>
+<div class="content_box " id="quotesList" >
+	<div class="content_header clearfix">
+				<h3>
+<a href="/m/planes/quotes/" >Planes Quotes</a></h3>	
+	</div>
+	<div class="content_body clearfix">
+    <ul class="quoteList">
+    </ul>
+    <div class="empty">     
+        No quotes approved yet for Planes.  Logged in users can submit quotes.
+    </div>
+	</div>
+	<div class="content_footer clearfix">
+		<div class="float_right">
+<a href="/m/planes/quotes/" >View all quotes (0)</a></div>
+	</div>
+</div>
+<div class="content_box " id="discussionForum" >
+	<div class="content_header clearfix">
+				<h3>Discussion Forum</h3>	
+	</div>
+	<div class="content_body clearfix">
+	<tbody>
+		<table class="comments_tbl">
+		<thead><tr>
+			<th class="title">Topic</th>
+			<th class="lastPostDate">Last Post</th>
+			<th class="replies">Replies</th>
+		</tr></thead>
+			<tr>
+				<td class="title"><a href="/m/planes//forum/?threadid=328156800">Stop Making these movies</a></td>
+				<td class="lastPostDate">2 hours ago</td>
+				<td class="replies">45</td>								
+			</tr> 
+			<tr>
+				<td class="title"><a href="/m/planes//forum/?threadid=328156826">Up Next: BOATS!</a></td>
+				<td class="lastPostDate">4 hours ago</td>
+				<td class="replies">20</td>								
+			</tr> 
+			<tr>
+				<td class="title"><a href="/m/planes//forum/?threadid=328191359">guess the tomatometer</a></td>
+				<td class="lastPostDate">7 hours ago</td>
+				<td class="replies">17</td>								
+			</tr> 
+			<tr>
+				<td class="title"><a href="/m/planes//forum/?threadid=328189762">How about Incredibles 2??</a></td>
+				<td class="lastPostDate">2 days ago</td>
+				<td class="replies">5</td>								
+			</tr> 
+			<tr>
+				<td class="title"><a href="/m/planes//forum/?threadid=328157324">Mediocre looking</a></td>
+				<td class="lastPostDate">2 days ago</td>
+				<td class="replies">4</td>								
+			</tr> 
+		</tbody>
+		</table>
+	</div>
+	<div class="content_footer clearfix">
+		<div class="float_right"><a href="/m/planes/forum/">View all posts (102)</a></div>
+	</div>
+</div>
+<div class="clearfix">
+<div class="content_box " id="features_sidebar" >
+	<div class="content_header clearfix">
+				<h3>What's Hot On RT</h3>	
+	</div>
+	<div class="content_body clearfix">
+    <div class="center">
+		<div class="center poster_box" pi="2180" style="width:130px;">
+				<a href="/m/2_guns/news/1928038/critics_consensus_2_guns_shoots_wildly_but_its_stars_connect/">
+<img class="" alt="Critics Consensus" src="http://content8.flixster.com/site/10/25/83/10258350_ori.jpg" width="115" height="115"  />
+				</a>
+			<div>
+				<a href="/m/2_guns/news/1928038/critics_consensus_2_guns_shoots_wildly_but_its_stars_connect/">Critics Consensus</a>
+				<p><em>2 Guns</em> is Wild, but Stars Connect</p>
+			</div>
+		</div>
+		<div class="center poster_box" pi="2164" style="width:130px;">
+				<a href="/m/2_guns/news/1928020/bill_paxtons_best_movies/">
+<img class="" alt="Total Recall" src="http://content9.flixster.com/site/10/25/83/10258327_ori.jpg" width="115" height="115"  />
+				</a>
+			<div>
+				<a href="/m/2_guns/news/1928020/bill_paxtons_best_movies/">Total Recall</a>
+				<p>Bill Paxton's Best Movies</p>
+			</div>
+		</div>
+		<div class="center poster_box" pi="2165" style="width:130px;">
+				<a href="http://www.rottentomatoes.com/m/the_secret_life_of_walter_mitty_2013/trailers/">
+<img class="" alt="Walter Mitty" src="http://content6.flixster.com/site/10/25/83/10258332_ori.jpg" width="115" height="115"  />
+				</a>
+			<div>
+				<a href="http://www.rottentomatoes.com/m/the_secret_life_of_walter_mitty_2013/trailers/">Walter Mitty</a>
+				<p><em>The Secret Life</em> trailer</p>
+			</div>
+		</div>
+		<div class="center poster_box" pi="2151" style="width:130px;">
+				<a href="http://www.rottentomatoes.com/gallery/24-frames-certified-fresh-animated-movies/">
+<img class="" alt="24 Frames" src="http://content6.flixster.com/site/10/25/83/10258316_ori.jpg" width="115" height="115"  />
+				</a>
+			<div>
+				<a href="http://www.rottentomatoes.com/gallery/24-frames-certified-fresh-animated-movies/">24 Frames</a>
+				<p>Certified Fresh animated movies</p>
+			</div>
+		</div>
+		<div class="center poster_box" pi="2148" style="width:130px;">
+				<a href="http://www.rottentomatoes.com/m/gravity_2012/trailers">
+<img class="" alt="Gravity Trailer" src="http://content9.flixster.com/site/10/25/83/10258323_ori.jpg" width="115" height="115"  />
+				</a>
+			<div>
+				<a href="http://www.rottentomatoes.com/m/gravity_2012/trailers">Gravity Trailer</a>
+				<p>Clooney, Bullock are lost in space</p>
+			</div>
+		</div>
+	</div>
+	</div>
+	<div class="content_footer clearfix">
+	</div>
+</div>
+</div>
+<div class="clearfix">
+    <div class="col_p col_423">
+        <style>
+            #contentNews h5 { margin-bottom: 0px;}
+            #contentNews .newsRow { margin-bottom: 10px;}
+        </style>
+<div class="content_box " id="contentNews" >
+	<div class="content_header clearfix">
+				<h3>Latest News on Planes</h3>	
+	</div>
+	<div class="content_body clearfix">
+					<div class="newsRow">
+						<h5>July 15, 2013:</h5>
+		<a href="/m/planes/news/1927863/american_airlines_plans_major_tie-in_with_disneys_planes/" title="Source: Variety" target="_blank"  class="icon">American Airlines Plans Major Tie-In with Disney's <i>Planes</i></a>
+<br />
+						The deal, which includes exclusive early broadcasting rights for the airline, will also give...
+					</div>
+	</div>
+	<div class="content_footer clearfix">
+	</div>
+</div>
+<div class="content_box freshlinks_sidebar" id="freshlinks_sidebar" >
+	<div class="content_header clearfix">
+				<h3>Fresh Links</h3>	
+	</div>
+	<div class="content_body clearfix">
+		<h4 id="freshlinks_featured_header">Featured</h4>
+		<div class="featured">
+		 <p>Movie:	ID: 771312196
+	Title: Planes
+	Release Date: 2013-08-09 00:00:00.0
+	MPAA: 2
+	Status: 1
+</p>
+		<div class="media_block" pi="2178">
+			<a class="media_block_image" href="http://www.buzzsugar.com/Common-Actor-Director-Collaborations-28862874" target="_blank" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://www.buzzsugar.com/Common-Actor-Director-Collaborations-28862874']);">
+<img class="" alt="Director/Actor Collaborations" src="http://content7.flixster.com/site/10/25/83/10258337_ori.jpg" width="55" height="55"  />
+			</a>
+			<div class="media_block_content">
+				<a target="_blank" href="http://www.buzzsugar.com/Common-Actor-Director-Collaborations-28862874" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://www.buzzsugar.com/Common-Actor-Director-Collaborations-28862874']);">
+					<h5>Director/Actor Collaborations 
+<img src="http://images.rottentomatoescdn.com/images/icons/offsite.gif"  title="External Link" alt="External Link"/></h5>
+				</a>
+				BuzzSugar profiles some notable directors and the stars they love working with.
+			</div>
+		</div>
+		<div class="media_block" pi="2176">
+			<a class="media_block_image" href="http://news.moviefone.com/2013/07/30/beloved-cartoons-that-deserve-their-own-movie/" target="_blank" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://news.moviefone.com/2013/07/30/beloved-cartoons-that-deserve-their-own-movie/']);">
+<img class="" alt="Cartoons That Should Get Movies" src="http://content8.flixster.com/site/10/25/83/10258334_ori.jpg" width="55" height="55"  />
+			</a>
+			<div class="media_block_content">
+				<a target="_blank" href="http://news.moviefone.com/2013/07/30/beloved-cartoons-that-deserve-their-own-movie/" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://news.moviefone.com/2013/07/30/beloved-cartoons-that-deserve-their-own-movie/']);">
+					<h5>Cartoons That Should Get Movies 
+<img src="http://images.rottentomatoescdn.com/images/icons/offsite.gif"  title="External Link" alt="External Link"/></h5>
+				</a>
+				Moviefone wants to revisit its childhood on the big screen with these 8 animated shows.
+			</div>
+		</div>
+		<div class="media_block" pi="2173">
+			<a class="media_block_image" href="http://www.hitfix.com/news/24-films-that-may-make-2015-the-greatest-movie-year-ever" target="_blank" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://www.hitfix.com/news/24-films-that-may-make-2015-the-greatest-movie-year-ever']);">
+<img class="" alt="2015: Greatest Movie Year Ever?" src="http://content7.flixster.com/site/10/25/83/10258321_ori.jpg" width="55" height="55"  />
+			</a>
+			<div class="media_block_content">
+				<a target="_blank" href="http://www.hitfix.com/news/24-films-that-may-make-2015-the-greatest-movie-year-ever" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://www.hitfix.com/news/24-films-that-may-make-2015-the-greatest-movie-year-ever']);">
+					<h5>2015: Greatest Movie Year Ever? 
+<img src="http://images.rottentomatoescdn.com/images/icons/offsite.gif"  title="External Link" alt="External Link"/></h5>
+				</a>
+				HitFix lists 23 films that might make 2015 an incredible year.
+			</div>
+		</div>
+		<div class="media_block" pi="2168">
+			<a class="media_block_image" href="http://www.rollingstone.com/movies/pictures/wolverine-through-the-years-20130726" target="_blank" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://www.rollingstone.com/movies/pictures/wolverine-through-the-years-20130726']);">
+<img class="" alt="Wolverine Through the Years" src="http://content9.flixster.com/site/10/25/82/10258267_ori.jpg" width="55" height="55"  />
+			</a>
+			<div class="media_block_content">
+				<a target="_blank" href="http://www.rollingstone.com/movies/pictures/wolverine-through-the-years-20130726" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://www.rollingstone.com/movies/pictures/wolverine-through-the-years-20130726']);">
+					<h5>Wolverine Through the Years 
+<img src="http://images.rottentomatoescdn.com/images/icons/offsite.gif"  title="External Link" alt="External Link"/></h5>
+				</a>
+				Rolling Stone takes a look at the history of the popular Marvel mutant.
+			</div>
+		</div>
+		<div class="media_block" pi="2122">
+			<a class="media_block_image" href="http://www.timeout.com/newyork/film/50-american-films-50-states-one-iconic-movie-for-each-state" target="_blank" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://www.timeout.com/newyork/film/50-american-films-50-states-one-iconic-movie-for-each-state']);">
+<img class="" alt="50 States, 50 Movies" src="http://content7.flixster.com/site/10/25/78/10257885_ori.jpg" width="55" height="55"  />
+			</a>
+			<div class="media_block_content">
+				<a target="_blank" href="http://www.timeout.com/newyork/film/50-american-films-50-states-one-iconic-movie-for-each-state" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://www.timeout.com/newyork/film/50-american-films-50-states-one-iconic-movie-for-each-state']);">
+					<h5>50 States, 50 Movies 
+<img src="http://images.rottentomatoescdn.com/images/icons/offsite.gif"  title="External Link" alt="External Link"/></h5>
+				</a>
+				For July 4th, TimeOut has compiled 50 state-specific movie choices.
+			</div>
+		</div>
+		</div>
+<div id="fresh_links_ad" style="height:0px;">
+<script type='text/javascript'>
+RT.ads.push("fresh_links_ad");
+googletag.cmd.push(function() {
+	var slot=googletag.defineSlot('/6327/rt.movie/fresh_links', [[245,65]], 'fresh_links_ad')
+		.addService(googletag.pubads())
+		.setTargeting("unit", "fresh_links")	
+        .setTargeting("movieid", "771312196")
+        .setTargeting("url", "/m/planes/");
+    slot.oldRenderEnded = slot.renderEnded;
+    slot.renderEnded = function(){
+    	slot.oldRenderEnded();
+    	var wrapper = $("#fresh_links_ad");
+    	wrapper.css("height","").css("width","");
+    };
+});
+</script>
+</div>
+		<h4 id="freshlinks_promos_header">Promos</h4>
+		<div class="promos">
+		<div class="media_block" pi="8">
+			<a class="media_block_image" href="http://twitter.com/RottenTomatoes" target="_blank" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://twitter.com/RottenTomatoes']);">
+<img class="" alt="Follow RT on Twitter!" src="http://content7.flixster.com/site/10/23/48/10234829_ori.jpg" width="55" height="55"  />
+			</a>
+			<div class="media_block_content">
+				<a target="_blank" href="http://twitter.com/RottenTomatoes" onclick="_gaq.push(['_trackEvent', 'Exit Links', 'Click', 'http://twitter.com/RottenTomatoes']);">
+					<h5>Follow RT on Twitter! 
+<img src="http://images.rottentomatoescdn.com/images/icons/offsite.gif"  title="External Link" alt="External Link"/></h5>
+				</a>
+				Spice up your feed with hourly Tomatometer updates!
+			</div>
+		</div>
+		</div>
+	</div>
+	<div class="content_footer clearfix">
+	</div>
+</div>
+    </div>
+    <div class="col_p col_300">
+<style>
+	#homepagenews ul {margin-bottom: 5px;}
+	#homepagenews .newslink { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:inline-block; width:240px;}	
+</style>
+<div class="content_box " id="homepagenews" >
+	<div class="content_header clearfix">
+				<h3><a href="/news/">Movie News</a></h3>	
+	</div>
+	<div class="content_body clearfix">
+		<h4 class="fl">Featured on RT</h4>
+		<div class="fr">Comments</div>
+		<ul class="cleardiv bullets">
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/2_guns/news/1928038/critics_consensus_2_guns_shoots_wildly_but_its_stars_connect/" title="Source: Rotten Tomatoes"   >Critics Consensus: <em>2 Guns</em> Shoots Wildly, But Its Stars Connect</a>
+				</span>
+				<span class="fr">
+		<a href="/m/2_guns/news/1928038/critics_consensus_2_guns_shoots_wildly_but_its_stars_connect/" title="20 Comments" class="comments">20</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/marvels_the_avengers/news/1928040/box_office_lexicon_is_hollywood_today_really_driven_by_comic_book_fans/" title="Source: Rotten Tomatoes"   >Box Office Lexicon: Is Hollywood Today Really Driven By Comic Book Fans?</a>
+				</span>
+				<span class="fr">
+		<a href="/m/marvels_the_avengers/news/1928040/box_office_lexicon_is_hollywood_today_really_driven_by_comic_book_fans/" title="1 Comments" class="comments">1</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/the_spectacular_now/news/1928039/video_interview__cast_of_the_spectacular_now/" title="Source: Rotten Tomatoes"   >Video Interview:  Cast of <em>The Spectacular Now</em></a>
+				</span>
+				<span class="fr">
+		<a href="/m/the_spectacular_now/news/1928039/video_interview__cast_of_the_spectacular_now/" title="1 Comments" class="comments">1</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/the_smurfs_2/news/1928036/parental_guidance_the_smurfs_2_and_europa_report/" title="Source: Rotten Tomatoes"   >Parental Guidance: <em>The Smurfs 2</em> and <em>Europa Report</em></a>
+				</span>
+				<span class="fr">
+		<a href="/m/the_smurfs_2/news/1928036/parental_guidance_the_smurfs_2_and_europa_report/" title="2 Comments" class="comments">2</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/2_guns/news/1928020/bill_paxtons_best_movies/" title="Source: Rotten Tomatoes"   >Bill Paxton's Best Movies</a>
+				</span>
+				<span class="fr">
+		<a href="/m/2_guns/news/1928020/bill_paxtons_best_movies/" title="43 Comments" class="comments">43</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/west_of_memphis/news/1927988/digital_multiplex_west_of_memphis_and_transformers_dark_of_the_moon/" title="Source: Rotten Tomatoes"   >Digital Multiplex: <em>West of Memphis</em> and <em>Transformers: Dark of the Moon</em></a>
+				</span>
+				<span class="fr">
+		<a href="/m/west_of_memphis/news/1927988/digital_multiplex_west_of_memphis_and_transformers_dark_of_the_moon/" title="10 Comments" class="comments">10</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/the_spectacular_now/news/1928004/video_confession__shailene_woodley__miles_teller_of_the_spectacular_now/" title="Source: Rotten Tomatoes"   >Video Confession:  Shailene Woodley & Miles Teller of <em>The Spectacular Now</em></a>
+				</span>
+				<span class="fr">
+		<a href="/m/the_spectacular_now/news/1928004/video_confession__shailene_woodley__miles_teller_of_the_spectacular_now/" title="3 Comments" class="comments">3</a>
+				</span>
+			</li>
+		</ul>
+		<h4 class="cleardiv">Top Headlines</h4>		
+		<ul class="bullets">
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/pacific_rim_2013/news/1928035/pacific_rim_chinese_grosses_boost_chances_for_a_sequel/" title="Source: Deadline Hollywood Daily" target="_blank"  ><i>Pacific Rim</i> Chinese Grosses Boost Chances for a Sequel <img src="http://images.rottentomatoes.com/images/icons/offsite.gif" alt="Deadline Hollywood Daily in new window" width="10" height="8" border="0" /></a>
+				</span>
+				<span class="fr">
+		<a href="/m/pacific_rim_2013/news/1928035/comments/pacific_rim_chinese_grosses_boost_chances_for_a_sequel/" title="3 Comments" class="comments">3</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/warcraft/news/1928034/possible_warcraft_details_emerge/" title="Source: Collider.com" target="_blank"  >Possible <i>Warcraft</i> Details Emerge <img src="http://images.rottentomatoes.com/images/icons/offsite.gif" alt="Collider.com in new window" width="10" height="8" border="0" /></a>
+				</span>
+				<span class="fr">
+		<a href="/m/warcraft/news/1928034/comments/possible_warcraft_details_emerge/" title="2 Comments" class="comments">2</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/fast_and_furious_7/news/1928033/denzel_washington_turned_down_a_role_in_fast_and_furious_7/" title="Source: ScreenCrush" target="_blank"  >Denzel Washington Turned Down a Role in <i>Fast and Furious 7</i> <img src="http://images.rottentomatoes.com/images/icons/offsite.gif" alt="ScreenCrush in new window" width="10" height="8" border="0" /></a>
+				</span>
+				<span class="fr">
+		<a href="/m/fast_and_furious_7/news/1928033/comments/denzel_washington_turned_down_a_role_in_fast_and_furious_7/" title="1 Comments" class="comments">1</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/the_man_from_uncle/news/1928032/the_long_quest_to_find_the_man_from_uncle/" title="Source: Variety" target="_blank"  >The Long Quest to Find <i>The Man from U.N.C.L.E.</i> <img src="http://images.rottentomatoes.com/images/icons/offsite.gif" alt="Variety in new window" width="10" height="8" border="0" /></a>
+				</span>
+				<span class="fr">
+		<a href="/m/the_man_from_uncle/news/1928032/comments/the_long_quest_to_find_the_man_from_uncle/" title="1 Comments" class="comments">1</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/turbo_2013/news/1928031/jeffrey_katzenberg_offers_turbo_postmortem/" title="Source: Variety" target="_blank"  >Jeffrey Katzenberg Offers <i>Turbo</i> Postmortem <img src="http://images.rottentomatoes.com/images/icons/offsite.gif" alt="Variety in new window" width="10" height="8" border="0" /></a>
+				</span>
+				<span class="fr">
+		<a href="/m/turbo_2013/news/1928031/comments/jeffrey_katzenberg_offers_turbo_postmortem/" title="1 Comments" class="comments">1</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/1018323-scarface/news/1928030/david_yates_in_talks_to_direct_new_scarface/" title="Source: Deadline Hollywood Daily" target="_blank"  >David Yates in Talks to Direct New <i>Scarface</i> <img src="http://images.rottentomatoes.com/images/icons/offsite.gif" alt="Deadline Hollywood Daily in new window" width="10" height="8" border="0" /></a>
+				</span>
+				<span class="fr">
+		<a href="/m/1018323-scarface/news/1928030/comments/david_yates_in_talks_to_direct_new_scarface/" title="1 Comments" class="comments">1</a>
+				</span>
+			</li>
+			<li class="columned">
+				<span class="newslink">
+		<a href="/m/the_judge_2014/news/1928029/robert_downey_jrs_the_judge_set_for_october_2014_release/" title="Source: Variety" target="_blank"  >Robert Downey, Jr.'s <i>The Judge</i> Set for October 2014 Release <img src="http://images.rottentomatoes.com/images/icons/offsite.gif" alt="Variety in new window" width="10" height="8" border="0" /></a>
+				</span>
+				<span class="fr">
+		<a href="/m/the_judge_2014/news/1928029/comments/robert_downey_jrs_the_judge_set_for_october_2014_release/" title="1 Comments" class="comments">1</a>
+				</span>
+			</li>
+		</ul>
+	</div>
+	<div class="content_footer clearfix">
+		<div class="float_right"><a href="/news/">View all movie news</a></div>
+	</div>
+</div>
+<div class="content_box "  >
+	<div class="content_header clearfix">
+				<h3>Foreign Titles</h3>	
+	</div>
+	<div class="content_body clearfix">
+	<ul class="bullets">
+			<li>Aviones (ES)</li>
+	</ul>
+	</div>
+	<div class="content_footer clearfix">
+	</div>
+</div>
+<div id="medrec_bottom_ad" class="page_ad" style="height:250px;">
+<script type='text/javascript'>
+RT.ads.push("medrec_bottom_ad");
+googletag.cmd.push(function() {
+	var slot=googletag.defineSlot('/6327/rt.movie/movie_page', [[300,250],[300,600]], 'medrec_bottom_ad')
+		.addService(googletag.pubads())
+		.setTargeting("unit", "medrec_bottom")	
+		.setTargeting("pos", "bottom")	
+        .setTargeting("movieid", "771312196")
+        .setTargeting("url", "/m/planes/");
+    slot.oldRenderEnded = slot.renderEnded;
+    slot.renderEnded = function(){
+    	slot.oldRenderEnded();
+    	var wrapper = $("#medrec_bottom_ad");
+    	wrapper.css("height","").css("width","");
+    };
+});
+</script>
+</div>
+    </div>
+</div>
+        <img src="http://segs.btrll.com/v1/tpix/-/-/-/-/-/sid.6548936" height="1" width="1" />
+                </div>
+                <div class="veil" style="display:none;">
+				    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+<div id="leaderboard_bottom_ad" class="page_ad leaderboard" style="height:90px;">
+<script type='text/javascript'>
+RT.ads.push("leaderboard_bottom_ad");
+googletag.cmd.push(function() {
+	var slot=googletag.defineSlot('/6327/rt.movie/movie_page', [[728,90]], 'leaderboard_bottom_ad')
+		.addService(googletag.pubads())
+		.setTargeting("unit", "leaderboard_bottom")	
+		.setTargeting("pos", "bottom")	
+        .setTargeting("movieid", "771312196")
+        .setTargeting("url", "/m/planes/");
+    slot.oldRenderEnded = slot.renderEnded;
+    slot.renderEnded = function(){
+    	slot.oldRenderEnded();
+    	var wrapper = $("#leaderboard_bottom_ad");
+    	wrapper.css("height","").css("width","");
+    };
+});
+</script>
+</div>
+    <div id="trailerModalContainer" style="width:760px; height:538px; display:none;">
+    <iframe id="trailerModal" src="about:blank" width="760px;" height="100%" style="overflow-x:hidden; margin:0px; display:block;"></iframe>
+    <div id="trailerSpinner" class="spinner" style="top: 200px; left:332px; position:absolute;"> 
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+            <div class="bar4"></div>
+            <div class="bar5"></div>
+            <div class="bar6"></div>
+            <div class="bar7"></div>
+            <div class="bar8"></div>
+            <div class="bar9"></div>
+            <div class="bar10"></div>
+            <div class="bar11"></div>
+            <div class="bar12"></div>
+    </div>
+</div>
+<script>
+     $(document).on('click', '.trailer_play_action_button', function(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+    	var container = $('#trailerModalContainer');        
+        _gaq.push(['_trackEvent', 'Movie Details', 'Play Trailer Modal', 'Play Trailer Modal']);
+        container.trigger("bax:modal", {el:container, closeButton:true, closeOnClick:true});
+        $('#trailerSpinner').show();
+        container.show();
+        var trailerModalUrl = $(evt.currentTarget).attr("href");
+        var videoId = $(this).data("videoId");
+        if (videoId) {
+            trailerModalUrl = trailerModalUrl + videoId;
+        }
+        var playlistType = $(this).data("playlistType");
+        if (playlistType === 'related') {
+            trailerModalUrl = trailerModalUrl + '?moreMovie=true';
+        }
+        $('#trailerModal').attr('src', trailerModalUrl);
+        $('#trailerModal').on('load', function(event) {
+            $('#trailerModalContainer').height(this.contentWindow.document.body.offsetHeight);
+            $('#trailerModalContainer').trigger("bax:recenter", {});
+            $('#trailerSpinner').hide();
+        });
+        $('#trailerModalContainer').on('bax:close', function(event) {
+            $('#trailerModal').attr('src', "about:blank");
+            $('#trailerModal').off('load');
+        });
+    });
+    $(document).on('heightchanged', function(event, height) {
+        $('#trailerModalContainer').height(height);
+        $('#trailerModalContainer').trigger("bax:recenter", {});
+    });
+</script>
+    <script>
+    $(document).ready(function() {
+    	// Initialize search
+    	$("[comp=Autocomplete]").comp();
+    	// Instantiate model
+        mobModel = new Backbone.Model({ movieVanity : "planes"});
+    	// Instantiate router        
+        var mobRouter = new RT.Backbone.Routers.MOBRouter({model : mobModel}); 
+    	// Activate sticky left column
+        //$('.stickem-container').stickem();        
+        var movieList = $("#movies_sidebar");
+        var movieListView = new RT.Backbone.Views.MovieList({el : movieList, model : mobModel });
+        var hoverBubbleView = new RT.Backbone.Views.HoverBubble({el : movieList });
+        var mobPanel = $("#mobPanel");
+	    var mobView = new RT.Backbone.Views.MOB({el : mobPanel, model : mobModel });
+    });
+    </script>
+<div class="foot">
+	<div class="foot_nav">
+	 <a href="/help_desk/">Help</a> | <a href="http://www.flixster.com/about/" target="_blank">About</a> | <a href="http://www.flixster.com/careers/" target="_blank">Jobs</a> | <a href="/help_desk/critics.php">Critics Submission</a> | <a href="/press.php">Press</a> | <a href="http://developer.rottentomatoes.com">API</a> | <a href="/help_desk/licensing.php">Licensing</a> | <a href="/mobile/info/" >Mobile</a> 
+	</div>
+	<div class="copyright">
+		<span class="easteregg">Copyright &copy;</span> Flixster, Inc. All rights reserved.
+		<script>
+		$(".easteregg").click(function(){
+			var str="http://www.rottentomatoes.com/m/planes/\n /movies/movie.jsp\n web83.flixster.com (us)\n GA:empty\n release: prod20130801\n rt-git-desc:RTRELEASE.2013-08-01.19-28-56 4de1816\n flixster-git-desc:RTRELEASE.2013-08-01.19-28-56 238d343";
+			alert(str);
+		});
+		</script>		 
+		<a href="/copyright">Copyright Policy</a> 
+		| <a href="/privacy">Privacy Policy</a>
+		| <a href="/terms">Terms of Service</a>
+		| <a href="/privacy#thirdparty">Ad Choices</a>
+	</div>
+</div>
+<div id="hover-tip" class="hover_tip"><span sub="tip"></span></div>
+<script>
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+googletag.cmd.push(function() {
+	googletag.pubads()
+	.setTargeting("qcs", [])
+	.setTargeting("gender", "")
+	.setTargeting("age", "")
+	.setTargeting("env", "prod")
+	.setTargeting("usergenres", [])
+		.setTargeting("genre", ["animation","kids-family","comedy"])
+	;
+	googletag.pubads().collapseEmptyDivs();
+	googletag.pubads().enableSingleRequest();
+	googletag.enableServices();	
+});
+$.each(RT.ads, function(idx, val){
+	googletag.cmd.push(function() { googletag.display(val); });	
+});
+</script>
+<!-- START Nielsen Online SiteCensus V6.0 -->
+<!-- COPYRIGHT 2010 Nielsen Online -->
+<script type="text/javascript" src="//secure-us.imrworldwide.com/v60.js"></script>
+<script type="text/javascript">
+ var pvar = { cid: "us-203323h", content: "0", server: "secure-us" };
+ var trac = nol_t(pvar);
+ trac.record().post();
+</script>
+<noscript><div> <img src="//secure-us.imrworldwide.com/cgi-bin/m?ci=us-203323h&amp;cg=0&amp;cc=1&amp;ts=noscript" width="1" height="1" alt="" /> </div></noscript>
+<!-- END Nielsen Online SiteCensus V6.0 --> 
+<noscript>
+<div style="display: none;"><img src="http://pixel.quantserve.com/pixel/p-0fuRlG_jy3lfA.gif" height="1" width="1" alt="Quantcast"/></div>
+</noscript>
+<script>console.log("Bottom of body tag reached.")</script>
+		<script type="text/javascript" src="//images.rottentomatoescdn.com/assets/v/prod20130801/scripts/?f=/js/backbone/underscore-min.js&f=/js/backbone/backbone-min.js&f=/js/globals.js&f=/js/lib/json2.js&f=/js/jquery/ui/jquery-ui-1.10.0.custom.min.js&f=/js/jquery/plugins/jquery.flixster.js&f=/js/jquery/plugins/jquery.rt_showMoreLink.js&f=/js/jquery/plugins/jquery.tmpl.js&f=/js/comp/Autocomplete.js&f=/js/comp/HoverTip.js&f=/js/comp/JumpList.js&f=/js/comp/Rating.js&f=/js/app/GAEvents.js&f=/js/comp/Rating.js&f=/js/app/views/PageHeader.js&f=/js/bootstrap/bootstrap-transition.js&f=/js/bootstrap/bootstrap-tab.js"></script>
+		<script type="text/javascript" src="//images.rottentomatoescdn.com/assets/v/prod20130801/scripts/?f=/js/jquery/plugins/jquery.tooltip.min.js&f=/js/jquery/plugins/jquery.moreless.js&f=/js/jquery/plugins/jquery.morelist.js&f=/js/comp/HashLoader.js&f=/js/comp/ExpandableTextInput.js&f=/js/comp/AddToList.js&f=/js/app/ui/lightbox.js&f=/js/app/ui/LongModal.js&f=/js/app/views/MovieList.js&f=/js/app/views/HoverBubble.js&f=/js/app/views/MOB.js&f=/js/app/routers/MOBRouter.js"></script>
+				<script type="text/javascript" src="http://jsapi.netflix.com/us/api/js/api.js" ></script> 
+</body>
+</html>

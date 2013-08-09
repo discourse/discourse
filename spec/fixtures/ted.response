@@ -1,0 +1,1341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<script type="text/javascript">var NREUMQ=NREUMQ||[];NREUMQ.push(["mark","firstbyte",new Date().getTime()]);</script><script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-40781755-2', 'ted.com');
+ga('send', 'pageview');
+</script>
+
+<link rel="shortcut icon" href="http://assets.tedcdn.com/favicon.ico">
+
+<meta name="title" content="Eli Beer: The fastest ambulance? A motorcycle | Video on TED.com" />
+<meta name="description" content="As a young EMT on a Jerusalem ambulance, Eli Beer realized that, stuck in brutal urban traffic, they often arrived too late to help. So he organized a group of volunteer EMTs -- many on foot -- ready to drop everything and dash to save lives in their neighborhood. Today, United Hatzlah uses a smartphone app and a fleet of “ambucycles” to help nearby patients until an ambulance arrives. With an average response time of 3 minutes, last year, they treated 207,000 people in Israel. And the idea is going global." />
+<meta name="keywords" content="TED,Talks,health,health care,medicine,peace" />
+<meta name="medium" content="video" />
+<meta name="apple-itunes-app" content="app-id=376183339,app-argument=http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" />
+<meta name="robots" content="index, follow" />
+<title>Eli Beer: The fastest ambulance? A motorcycle | Video on TED.com</title>
+<link rel="stylesheet" type="text/css" media="screen" href="//assets.tedcdn.com/css/global.css?de8e579a-prod" />
+<link rel="stylesheet" type="text/css" media="screen" href="//assets.tedcdn.com/css/interior.css?6d5c43aa-prod" />
+<link rel="stylesheet" type="text/css" media="screen" href="//assets.tedcdn.com/css/jquery/jquery-ui-custom.css?ae4a8c29-prod" />
+<link rel="stylesheet" type="text/css" media="screen" href="//assets.tedcdn.com/css/view-template.css?158862c7-prod" />
+<link rel="stylesheet" type="text/css" media="screen" href="//assets.tedcdn.com/css/talks.css?6adaabeb-prod" />
+<meta property="og:title" content="Eli Beer: The fastest ambulance? A motorcycle | Video on TED.com" />
+<meta property="og:description" content="As a young EMT on a Jerusalem ambulance, Eli Beer realized that, stuck in brutal urban traffic, they often arrived too late to help. So he organized a group of volunteer EMTs -- many on foot -- ready to drop everything and dash to save lives in their neighborhood. Today, United Hatzlah uses a smartphone app and a fleet of “ambucycles” to help nearby patients until an ambulance arrives. With an average response time of 3 minutes, last year, they treated 207,000 people in Israel. And the idea is going global." />
+<meta property="og:image" content="http://images.ted.com/images/ted/aa8d0403aec3466d031e3e1c1605637d84d6a07d_389x292.jpg" />
+<meta property="og:url" content="http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" />
+<meta property="og:type" content="video.other" />
+<meta property="video:tag" content="TED" />
+<meta property="video:tag" content="Talks" />
+<meta property="video:tag" content="health" />
+<meta property="video:tag" content="health care" />
+<meta property="video:tag" content="medicine" />
+<meta property="video:tag" content="peace" />
+<meta property="video:duration" content="644" />
+<meta property="video:release_date" content="1375196581" />
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:site" content="@tedtalks" />
+<meta property="twitter:title" content="Eli Beer: The fastest ambulance? A motorcycle | Video on TED.com" />
+<meta property="twitter:description" content="As a young EMT on a Jerusalem ambulance, Eli Beer realized that, stuck in brutal urban traffic, they often arrived too late to help. So he organized a group of volunteer EMTs -- many on foot -- ready to drop everything and dash to save lives in their neighborhood. Today, United Hatzlah uses a smartphone app and a fleet of “ambucycles” to help nearby patients until an ambulance arrives. With an average response time of 3 minutes, last year, they treated 207,000 people in Israel. And the idea is going global." />
+<meta property="twitter:image:src" content="http://images.ted.com/images/ted/aa8d0403aec3466d031e3e1c1605637d84d6a07d_389x292.jpg" />
+<meta property="twitter:app:name:iphone" content="TED Talks" />
+<meta property="twitter:app:id:iphone" content="376183339" />
+<meta property="twitter:app:url:iphone" content="http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" />
+<meta property="twitter:app:name:ipad" content="TED Talks" />
+<meta property="twitter:app:id:ipad" content="376183339" />
+<meta property="twitter:app:url:ipad" content="http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" />
+<meta property="fb:app_id" content="201021956610141" />
+
+<!--[if lt IE 7]>
+	<link rel="stylesheet" type="text/css" media="screen" href="//assets.tedcdn.com/css/ie.css?9a486566-prod" />
+<![endif]-->
+
+<script type="text/javascript">
+
+ted = window.ted = window.ted || {};
+ted.baseUrl   = (window.location.protocol === "https:" ? "" : "//assets.tedcdn.com");
+ted.loggedIn  = false;
+
+</script>
+<script type="text/javascript">//<![CDATA[
+var djConfig = {
+	isDebug: false,
+	baseRelativePath: '/js/dojo/'
+};
+//]]></script>
+<script type="text/javascript" src="//assets.tedcdn.com/js/core.min.js?c0cec9b7-prod"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+<script type="text/javascript" src="//assets.tedcdn.com/js/library.min.js?f3c8bd1a-prod"></script>
+<script type="text/javascript" src="//assets.tedcdn.com/js/talks.min.js?ec9b872d-prod"></script>
+<link rel="image_src" href="http://images.ted.com/images/ted/aa8d0403aec3466d031e3e1c1605637d84d6a07d_389x292.jpg" /><link rel="alternate" type="application/json+oembed" href="http://www.ted.com/talks/oembed.json?url=http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" title="oEmbed Profile" />
+<link rel="alternate" type="application/xml+oembed"	href="http://www.ted.com/talks/oembed.xml?url=http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" title="oEmbed Profile" />
+
+<link rel="canonical" href="http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" />
+<link rel="alternate" href="http://feeds.feedburner.com/tedtalks_video" type="application/rss+xml" title="TEDTalks (Video)" /><script type="text/javascript">//<![CDATA[
+
+var _gaq = _gaq || [];
+var pluginUrl =
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+_gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+_gaq.push(['_setAccount', 'UA-170299-1']);
+_gaq.push(['_setDomainName', '.ted.com']);
+
+
+_gaq.push(['_trackPageview']);
+
+chain.wait(function () {
+	_gaq.push(['_setCustomVar', 2, 'views_per_session', viewCounter.getViews(), 2]);
+});
+//]]></script>
+</head>
+<body id="pagetype" class="signed-out">
+
+  <div id="fb-root"></div>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '201021956610141',
+        channelUrl : '//www.ted.com/channel.html',
+        status     : true,
+        cookie     : true,
+        xfbml      : true
+      });
+    };
+
+    // Load FB's JS SDK
+    (function(d, debug){
+      var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement('script'); js.id = id; js.async = true;
+      js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+      ref.parentNode.insertBefore(js, ref);
+    }(document, /*debug*/ false));
+  </script>
+
+<div id="epidermis">
+	<div id="container">
+		
+		<div id="header" role="banner">
+			<div id="auth_nav" class="message_layer clearfix">
+	<div class="notices clearfix">
+		<ul class="account">
+			<li><a target="_self" id="sign-in-top" href="https://auth.ted.com/session/new">Sign In</a></li>
+<li class="last"><a target="_self" id="register-top" href="https://auth.ted.com/users/new?referer=http://www.ted.com/profiles/edit">Register</a></li>		</ul>
+		<script>
+		chain.wait(function () {
+			jQuery('#sign-in-top').GA_trackEvent(
+				'click', 'session', 'sign-in', 'top_nav'
+			);
+			jQuery('#register-top').GA_trackEvent(
+				'click', 'session', 'register', 'top_nav'
+			);
+		});
+		</script>
+
+	</div>
+</div>
+						<div class="nav clearfix">
+				<a id="logo" href="/"><img src="http://assets.tedcdn.com/images/ted_logo.gif" alt="Ted Logo" height="53" width="280" /></a>				<div class="main-nav" role="navigation">
+	<ul>
+		<li><a class="selected" href="/talks">Talks</a></li>
+		<li><a href="/registration">TED Conferences</a></li>
+		<li><a href="/conversations">TED Conversations</a></li>
+		<li><a href="/pages/about">About TED</a></li>
+
+		<li><a href="/speakers">Speakers</a></li>
+		<li><a href="/tedx">TEDx Events</a></li>
+		<li><a href="/profiles">TED Community</a></li>
+		<li><a href="http://blog.ted.com/">TED Blog</a></li>
+
+		<li><a href="/playlists">Playlists <img class="new" alt="(New feature)" src="http://assets.tedcdn.com/images/new.gif"/></a></li>
+		<li><a href="/prize">TED Prize</a></li>
+		<li>
+			<a href="http://ed.ted.com/" target="_blank">TED-Ed
+				<img class="ext" alt="(Opens in new window)" src="http://assets.tedcdn.com/images/icon_external_link_sm.gif" />
+			</a>
+		</li>
+		<li><a href="/initiatives">TED Initiatives</a></li>
+
+		<li><a href="/OpenTranslationProject">Translations</a></li>
+		<li><a href="/fellows">TED Fellows</a></li>
+	</ul>
+</div>					<div id="search">
+		<form action="/search" method="get" role="search">
+			<input type="hidden" name="cat" value="ss_all" /> 
+			<input class="text translate" type="text translate" data-default-value="Search" value="" name="q" />
+			<input class="button" type="submit" value="submit" />
+		</form>
+	</div>
+				</div>
+					</div>
+
+		<div class="" role="main">
+			
+		<script type="text/javascript">//<![CDATA[
+		// This is a wrapper method which the player/DFP calls so that we can trigger an event.
+		// triggers sponsor_popover or sponsor_ad_error
+		function onPageAd(data) {
+			$(document).trigger(data.event, data.data)
+		}
+		$(document).bind('sponsor_popover', function(event, payload) {
+			$('#adSpace').sponsor_popover({payload: payload});
+		});
+		// this happens because the trafficked ad is not json.  Assume it's HTML and deliver it on-page.
+		$(document).bind('sponsor_ad_error', function(event, payload) {
+			$('#adSpace').html(payload.response);
+		});
+	//]]></script>
+
+	
+	<div id="body" class="viewTemplate viewTalks">
+		<div class="subscribe-banner" id="subscribe-banner">
+	<div class="subscribe-banner__intro">New <strong>TED Talks</strong> are released every weekday. Be the first to know!</div>
+
+	<form action="/newsletter/signup" class="subscribe-banner__form" method="post" novalidate>
+		<input type="email" name="newsletterSignup[email_address]" value="" class="subscribe-banner__input" data-default-value="Enter your email for TED updates" id="newsletterSignup_email_address" /><ul class="checkbox_list"><li><input name="newsletterSignup[subscription_list][]" type="checkbox" value="daily" id="newsletterSignup_subscription_list_daily" checked="checked" />&nbsp;<label for="newsletterSignup_subscription_list_daily">Daily</label></li>
+<li><input name="newsletterSignup[subscription_list][]" type="checkbox" value="weekly" id="newsletterSignup_subscription_list_weekly" />&nbsp;<label for="newsletterSignup_subscription_list_weekly">Weekly</label></li></ul>
+		<input type="image" class="subscribe hover" value="Subscribe" src="http://assets.tedcdn.com/images/blank.gif">
+	</form>
+
+	<div class="subscribe-banner__message subscribe-banner__message--suggest">
+		Did you mean <span class="subscribe-banner__message--suggest__email"></span>?
+	</div>
+
+	<div class="subscribe-banner__message subscribe-banner__message--error">
+		Please check your email address and try again.
+	</div>
+
+	<div class="subscribe-banner__message subscribe-banner__message--list_error">
+		Please select either daily, weekly, or both and try again.
+	</div>
+
+	<div class="subscribe-banner__message subscribe-banner__message--success">
+		Thank you for signing up for <strong>TED Talks</strong>
+		updates! Please check your inbox for more details.
+	</div>
+
+	<div class="subscribe-banner__links">
+		<a class="subscribe subscribe-banner__link" href="http://www.ted.com/pages/198" target="_blank" id="takeover_rss">
+			<img alt="RSS feeds" src="http://assets.tedcdn.com/images/reboot/icon-rss.png">
+		</a>
+		<a class="subscribe subscribe-banner__link" href="http://twitter.com/tedtalks" target="_blank" id="takeover_twitter">
+			<img alt="Twitter" src="http://assets.tedcdn.com/images/reboot/icon-twitter.png">
+		</a>
+		<a class="subscribe subscribe-banner__link" href="http://www.facebook.com/TED" target="_blank" id="takeover_facebook">
+			<img alt="Facebook" src="http://assets.tedcdn.com/images/reboot/icon-facebook.png">
+		</a>
+		<span class="subscribe-banner__link">Follow TED</span>
+	</div>
+
+	<a class="subscribe-banner__dismiss" id="takeove_dismiss" href="#">Dismiss this message</a>
+</div>
+
+
+<script type="text/javascript">
+	$('#takeover_rss').GA_trackEvent('click', 'subscribe', 'rss', 'talks_takeover');
+	$('#takeover_twitter').GA_trackEvent('click', 'subscribe', 'twitter', 'talks_takeover');
+	$('#takeover_facebook').GA_trackEvent('click', 'subscribe', 'facebook', 'talks_takeover');
+	$('#takeover_dismiss').GA_trackEvent('click', 'takeover', 'dismiss', 'email_sub_campaign');
+</script>
+
+		<h2 class="crumbs"><a class="grey" href="/talks">Talks</a>							 | <span id="talklabel" class="partnerTalk useColor">TED Partner Series</span>
+					</h2>
+		<h1 lang="en">
+			<span id="altHeadline"  class="notranslate">Eli Beer: The fastest ambulance? A motorcycle</span>
+		</h1>
+		
+		<div class="talk-meta"><span><strong>Filmed</strong> Apr 2013 &bull; <strong>Posted</strong> Jul 2013</span> &bull; <span class="event-name">TEDMED 2013</span></div>
+
+				<img src="http://images.ted.com/images/ted/aa8d0403aec3466d031e3e1c1605637d84d6a07d_389x292.jpg" alt="TEDMED 2013" width="389" height="292" style="left:-389px;opacity:0;position:absolute;top:-292px;">
+
+		<div id="maincontent" class="clearfix">
+			<div class="leftColumn">
+				
+
+<div id="videoHolder" class="screenSizeStandardToggle">
+	<div id="videoPlayer">
+		<noscript id="noScriptRegion">
+			<div id="unableToPlayReasons">
+				<p>
+					<strong>It appears that we are unable to play this video in your browser
+					for one of the following reasons:</strong>
+					<ul>
+						<li>you have JavaScript disabled</li>
+						<li>your device does not support HTML5 video</li>
+						<li>
+							you have an old version of the Adobe Flash Player.
+							<a id="flash-player-download" href="http://get.adobe.com/flashplayer/">Download the latest Flash player</a>
+							to view this video.
+						</li>
+					</ul>
+				</p><br />
+				<p>
+					If you are on a mobile device, you may be able to directly
+					<a id="no-flash-video-download" href="http://download.ted.com/talks/EliBeer_2013P.mp4?apikey=TEDDOWNLOAD">download the video</a> to play.
+				</p>
+			</div>
+		</noscript>
+			</div>
+</div>
+
+<script type="text/javascript">var talkDetails = {"id":1799,"isMobile":false,"isAutoplay":true,"isViewthrough":false,"newPreroll":null,"currentLanguageCode":"en","currentLanguageName":"English","nativeLanguageCode":"en","absoluteUrl":"http:\/\/www.ted.com\/talks\/eli_beer_the_fastest_ambulance_a_motorcycle.html","posterUrl":"http:\/\/images.ted.com\/images\/ted\/aa8d0403aec3466d031e3e1c1605637d84d6a07d_800x600.jpg","htmlStreams":[{"id":"standard","file":"http:\/\/download.ted.com\/talks\/EliBeer_2013P.mp4?apikey=TEDHTML5"},{"id":"high","file":"http:\/\/download.ted.com\/talks\/EliBeer_2013P-480p.mp4?apikey=TEDHTML5"}],"analyticsCategory":"videoplayer","playerVersion":"20130724_debug","flashVars":{"playerZone":"%7B%22adSite%22%3A%22tconf.ted%22%2C%22adZone%22%3A%22talk%22%2C%22adSize%22%3A%228x8%22%2C%22adPartner%22%3A%22%22%2C%22ignoreCompanionAd%22%3Afalse%2C%22openLinksInNewWindow%22%3Afalse%2C%22analyticsCategory%22%3A%22videoplayer%22%2C%22metricsApiKey%22%3A%22talk_page%22%2C%22metricsServiceName%22%3A%22playlist%22%7D","serviceHost":"http:\/\/www.ted.com","language":"%7B%22LanguageCode%22%3A%22en%22%2C%22OldLanguageCode%22%3A%22eng%22%2C%22Name%22%3A%22English%22%2C%22Description%22%3Anull%2C%22CommunityUrl%22%3Anull%2C%22TranslationCount%22%3A2189%2C%22DotsubOnly%22%3Afalse%2C%22CreatedAt%22%3A%222009-05-12+22%3A17%3A26%22%2C%22UpdatedAt%22%3A%222013-08-02+05%3A00%3A10%22%2C%22IsRtl%22%3Afalse%2C%22Iso6391%22%3A%22en%22%2C%22Iso6393%22%3A%22eng%22%2C%22HostnamePrefix%22%3Anull%2C%22AppleLocale%22%3Anull%7D","screenSizes":"%5B%7B%22width%22%3A560%2C%22height%22%3A315%2C%22analyticsLabel%22%3A%22small%22%2C%22cssClass%22%3A%22screenSizeStandardToggle%22%7D%2C%7B%22width%22%3Anull%2C%22height%22%3Anull%2C%22analyticsLabel%22%3A%22full%22%2C%22cssClass%22%3A%22screenSizeFullToggle%22%7D%5D","playlist":"%7B%22id%22%3A0%2C%22talks%22%3A%5B%7B%22talkId%22%3A1799%2C%22thumbnails%22%3A%5B%7B%22size%22%3A%2274x56%22%2C%22url%22%3A%22http%3A%5C%2F%5C%2Fimages.ted.com%5C%2Fimages%5C%2Fted%5C%2Faa8d0403aec3466d031e3e1c1605637d84d6a07d_74x56.jpg%22%7D%2C%7B%22size%22%3A%22113x85%22%2C%22url%22%3A%22http%3A%5C%2F%5C%2Fimages.ted.com%5C%2Fimages%5C%2Fted%5C%2Faa8d0403aec3466d031e3e1c1605637d84d6a07d_113x85.jpg%22%7D%5D%2C%22title%22%3A%22Eli+Beer%3A+The+fastest+ambulance%3F+A+motorcycle%22%2C%22nativeLanguage%22%3A%22en%22%2C%22isSubtitleRequired%22%3Afalse%2C%22adURL%22%3A%22http%3A%5C%2F%5C%2Fad.doubleclick.net%5C%2Fpfadx%5C%2Ftconf.ted%5C%2Ftalk%3Bsz%3D8x8%3Btalk%3Deli_beer_the_fastest_ambulance_a_motorcycle%3Byear%3D2013%3Btag%3Dhealth%2Chealth%2Bcare%2Cmedicine%2Cpeace%3Bevent%3DTEDMED%2B2013%3Bdcmt%3Dtext%5C%2Fxml%22%2C%22duration%22%3A644%2C%22introDuration%22%3A11.82%2C%22adDuration%22%3A%223.33%22%2C%22streamer%22%3A%22rtmp%3A%5C%2F%5C%2Ftedfs.fplive.net%5C%2Fted%22%2C%22resource%22%3A%5B%7B%22bitrate%22%3A1500%2C%22file%22%3A%22mp4%3Atalk%5C%2Fstream%5C%2F2013P%5C%2FBlank%5C%2FEliBeer_2013P-1500k.mp4%22%2C%22name%22%3A%221500k%22%2C%22width%22%3A1280%2C%22height%22%3A720%7D%2C%7B%22bitrate%22%3A950%2C%22file%22%3A%22mp4%3Atalk%5C%2Fstream%5C%2F2013P%5C%2FBlank%5C%2FEliBeer_2013P-950k.mp4%22%2C%22name%22%3A%22950k%22%2C%22width%22%3A854%2C%22height%22%3A480%7D%2C%7B%22bitrate%22%3A600%2C%22file%22%3A%22mp4%3Atalk%5C%2Fstream%5C%2F2013P%5C%2FBlank%5C%2FEliBeer_2013P-600k.mp4%22%2C%22name%22%3A%22600k%22%2C%22width%22%3A640%2C%22height%22%3A360%7D%2C%7B%22bitrate%22%3A450%2C%22file%22%3A%22mp4%3Atalk%5C%2Fstream%5C%2F2013P%5C%2FBlank%5C%2FEliBeer_2013P-450k.mp4%22%2C%22name%22%3A%22450k%22%2C%22width%22%3A512%2C%22height%22%3A288%7D%2C%7B%22bitrate%22%3A320%2C%22file%22%3A%22mp4%3Atalk%5C%2Fstream%5C%2F2013P%5C%2FBlank%5C%2FEliBeer_2013P-320k.mp4%22%2C%22name%22%3A%22320k%22%2C%22width%22%3A512%2C%22height%22%3A288%7D%2C%7B%22bitrate%22%3A180%2C%22file%22%3A%22mp4%3Atalk%5C%2Fstream%5C%2F2013P%5C%2FBlank%5C%2FEliBeer_2013P-180k.mp4%22%2C%22name%22%3A%22180k%22%2C%22width%22%3A512%2C%22height%22%3A288%7D%2C%7B%22bitrate%22%3A64%2C%22file%22%3A%22mp4%3Atalk%5C%2Fstream%5C%2F2013P%5C%2FBlank%5C%2FEliBeer_2013P-64k.mp4%22%2C%22name%22%3A%2264k%22%2C%22width%22%3A398%2C%22height%22%3A224%7D%5D%7D%5D%7D"},"duration":644,"mediaSlug":"EliBeer_2013P","mediaPad":11.82}</script>
+
+					
+				
+				<div class="talk-wrapper">
+						<div class="talk-tools clearfix">
+							<ul>
+																<li><a class="talk-tool-btn embed" href="" id="embed_button"><span class="talk-tool-icon"></span><span>Embed</span></a></li>
+																								<li><a class="talk-tool-btn download" href="" id="downloadTalk"><span class="talk-tool-icon"></span><span>Download</span></a></li>
+																<li>	<a id="toggle_favorite_button" class="talk-tool-btn favorite" title="Favorite" ><span class="talk-tool-icon"></span><span id="favoriteWord">Favorite</span><span id="favoritedWord">Favorited</span></a>
+			<script type="text/javascript">
+			jQuery(document).ready(function() {
+					jQuery('#toggle_favorite_button').favorite_button({
+						favorited: false, 
+						post_data: {
+							id:1799, 
+							type:'talks'
+						}
+					});
+			});
+		</script>
+	</li>
+								<li><a class="talk-tool-btn rate" href="" id="ratings_button"><span class="talk-tool-icon"></span><span>Rate</span></a></li>
+							</ul>
+															<select name="languageCode" id="languageCode"><option value="">Show transcript</option>
+<option value="en">English</option>
+</select>																					</div>
+											</div>
+
+											<div id="transcript" style="display:none" data-languagecode="en" class="notranslate">
+							<p class="transcript-instruction">
+															</p>
+						</div>
+						<div id="panel-transcript" style="display: none;">
+							<div id="panel-transcript-inset">
+								<div class="transcript-info">
+									<p id="transcriptAttribution" style="display:none">
+										<span id="transcriptAttributionText"></span>
+										<a id="transcriptTranslator" href=""></a> &nbsp;&bull;&nbsp;
+										Reviewed by <a id="transcriptReviewer" href=""></a>
+									</p>
+									<p>Click on any phrase to play the video at that point.</p>
+									<a id="transcript-close" class="transcript-close" href="">Close</a>
+								</div>
+								<div class="transcript-container">
+									<img id="loadingTranscriptAnim" src="http://assets.tedcdn.com/images/ajax-loader.gif" alt="Loading..." />
+									<div id="transcriptText">
+										<div class="notranslate">
+	<p>
+			</p><p>		<a href="#396" class="transcriptLink" rel="nofollow">This is an ambucycle.</a>
+					<a href="#3373" class="transcriptLink" rel="nofollow">This is the fastest way to reach any medical emergency.</a>
+					<a href="#8412" class="transcriptLink" rel="nofollow">It has everything an ambulance has except for a bed.</a>
+					<a href="#12914" class="transcriptLink" rel="nofollow">You see the defibrillator. You see the equipment.</a>
+			</p><p>		<a href="#16670" class="transcriptLink" rel="nofollow">We all saw the tragedy that happened in Boston.</a>
+					<a href="#19836" class="transcriptLink" rel="nofollow">When I was looking at these pictures,</a>
+					<a href="#21916" class="transcriptLink" rel="nofollow">it brought me back many years to my past</a>
+					<a href="#24906" class="transcriptLink" rel="nofollow">when I was a child.</a>
+					<a href="#26476" class="transcriptLink" rel="nofollow">I grew up in a small neighborhood in Jerusalem.</a>
+					<a href="#29554" class="transcriptLink" rel="nofollow">When I was six years old, I was walking back from school</a>
+					<a href="#33645" class="transcriptLink" rel="nofollow">on a Friday afternoon with my older brother.</a>
+					<a href="#37380" class="transcriptLink" rel="nofollow">We were passing by a bus stop.</a>
+					<a href="#39632" class="transcriptLink" rel="nofollow">We saw a bus blow up in front of our eyes.</a>
+					<a href="#43675" class="transcriptLink" rel="nofollow">The bus was on fire, and many people were hurt and killed.</a>
+					<a href="#48720" class="transcriptLink" rel="nofollow">I remembered an old man</a>
+					<a href="#50652" class="transcriptLink" rel="nofollow">yelling to us and crying to help us get him up.</a>
+					<a href="#54120" class="transcriptLink" rel="nofollow">He just needed someone helping him.</a>
+					<a href="#56583" class="transcriptLink" rel="nofollow">We were so scared and we just ran away.</a>
+			</p><p>		<a href="#60117" class="transcriptLink" rel="nofollow">Growing up, I decided I wanted to become a doctor and save lives.</a>
+					<a href="#63907" class="transcriptLink" rel="nofollow">Maybe that was because of what I saw when I was a child.</a>
+					<a href="#66908" class="transcriptLink" rel="nofollow">When I was 15, I took an EMT course,</a>
+					<a href="#70200" class="transcriptLink" rel="nofollow">and I went to volunteer on an ambulance.</a>
+					<a href="#73260" class="transcriptLink" rel="nofollow">For two years, I volunteered on an ambulance in Jerusalem.</a>
+					<a href="#76677" class="transcriptLink" rel="nofollow">I helped many people,</a>
+					<a href="#78529" class="transcriptLink" rel="nofollow">but whenever someone really needed help,</a>
+					<a href="#81444" class="transcriptLink" rel="nofollow">I never got there in time. We never got there.</a>
+					<a href="#83786" class="transcriptLink" rel="nofollow">The traffic is so bad. The distance, and everything.</a>
+					<a href="#86295" class="transcriptLink" rel="nofollow">We never got there when somebody really needed us.</a>
+			</p><p>		<a href="#89120" class="transcriptLink" rel="nofollow">One day, we received a call about a seven-year-old child</a>
+					<a href="#91676" class="transcriptLink" rel="nofollow">choking from a hot dog.</a>
+					<a href="#93394" class="transcriptLink" rel="nofollow">Traffic was horrific, and we were coming from</a>
+					<a href="#95471" class="transcriptLink" rel="nofollow">the other side of town in the north part of Jerusalem.</a>
+					<a href="#99172" class="transcriptLink" rel="nofollow">When we got there, 20 minutes later,</a>
+					<a href="#101458" class="transcriptLink" rel="nofollow">we started CPR on the kid.</a>
+					<a href="#103976" class="transcriptLink" rel="nofollow">A doctor comes in from a block away,</a>
+					<a href="#107460" class="transcriptLink" rel="nofollow">stop us, checks the kid, and tells us to stop CPR.</a>
+					<a href="#112656" class="transcriptLink" rel="nofollow">That second he declared this child dead.</a>
+			</p><p>		<a href="#116413" class="transcriptLink" rel="nofollow">At that moment, I understood</a>
+					<a href="#119410" class="transcriptLink" rel="nofollow">that this child died for nothing.</a>
+					<a href="#122281" class="transcriptLink" rel="nofollow">If this doctor, who lived one block away from there,</a>
+					<a href="#125836" class="transcriptLink" rel="nofollow">would have come 20 minutes earlier,</a>
+					<a href="#127524" class="transcriptLink" rel="nofollow">not have to wait until that siren he heard before</a>
+					<a href="#130553" class="transcriptLink" rel="nofollow">coming from the ambulance,</a>
+					<a href="#131839" class="transcriptLink" rel="nofollow">if he would have heard about it way before,</a>
+					<a href="#134773" class="transcriptLink" rel="nofollow">he would have saved this child.</a>
+					<a href="#136506" class="transcriptLink" rel="nofollow">He could have run from a block away.</a>
+					<a href="#138637" class="transcriptLink" rel="nofollow">He could have saved this child.</a>
+			</p><p>		<a href="#140324" class="transcriptLink" rel="nofollow">I said to myself, there must be a better way.</a>
+					<a href="#143009" class="transcriptLink" rel="nofollow">Together with 15 of my friends --</a>
+					<a href="#144958" class="transcriptLink" rel="nofollow">we were all EMTs —</a>
+					<a href="#146729" class="transcriptLink" rel="nofollow">we decided, let's protect our neighborhood,</a>
+					<a href="#148623" class="transcriptLink" rel="nofollow">so when something like that happens again,</a>
+					<a href="#150401" class="transcriptLink" rel="nofollow">we will be there running to the scene a lot before the ambulance.</a>
+					<a href="#154239" class="transcriptLink" rel="nofollow">So I went over to the manager of the ambulance company</a>
+					<a href="#157212" class="transcriptLink" rel="nofollow">and I told him, "Please, whenever you have a call</a>
+					<a href="#159396" class="transcriptLink" rel="nofollow">coming into our neighborhood,</a>
+					<a href="#161231" class="transcriptLink" rel="nofollow">we have 15 great guys who are willing</a>
+					<a href="#163136" class="transcriptLink" rel="nofollow">to stop everything they're doing and run and save lives.</a>
+					<a href="#165274" class="transcriptLink" rel="nofollow">Just alert us by beeper.</a>
+					<a href="#167255" class="transcriptLink" rel="nofollow">We'll buy these beepers, just tell your dispatch</a>
+					<a href="#169596" class="transcriptLink" rel="nofollow">to send us the beeper, and we will run and save lives."</a>
+			</p><p>		<a href="#173507" class="transcriptLink" rel="nofollow">Well, he was laughing. I was 17 years old. I was a kid.</a>
+					<a href="#180484" class="transcriptLink" rel="nofollow">And he said to me — I remember this like yesterday —</a>
+					<a href="#183870" class="transcriptLink" rel="nofollow">he was a great guy, but he said to me,</a>
+					<a href="#186227" class="transcriptLink" rel="nofollow">"Kid, go to school, or go open a falafel stand.</a>
+					<a href="#190663" class="transcriptLink" rel="nofollow">We're not really interested in these kinds of new adventures.</a>
+					<a href="#194664" class="transcriptLink" rel="nofollow">We're not interested in your help." And he threw me out of the room.</a>
+					<a href="#198279" class="transcriptLink" rel="nofollow">"I don't need your help," he said.</a>
+			</p><p>		<a href="#200938" class="transcriptLink" rel="nofollow">I was a very stubborn kid.</a>
+					<a href="#204517" class="transcriptLink" rel="nofollow">As you see now, I'm walking around like crazy, meshugenah.</a>
+			</p><p>		<a href="#207935" class="transcriptLink" rel="nofollow">(Laughter) (Applause)</a>
+			</p><p>		<a href="#212907" class="transcriptLink" rel="nofollow">So I decided to use the Israeli very famous technique</a>
+					<a href="#216960" class="transcriptLink" rel="nofollow">you've probably all heard of, chutzpah. (Laughter)</a>
+					<a href="#220615" class="transcriptLink" rel="nofollow">And the next day, I went and I bought two police scanners,</a>
+					<a href="#225299" class="transcriptLink" rel="nofollow">and I said, "The hell with you, if you don't want</a>
+					<a href="#226913" class="transcriptLink" rel="nofollow">to give me information, I'll get the information myself."</a>
+					<a href="#229864" class="transcriptLink" rel="nofollow">And we did turns, who's going to listen to the radio scanners.</a>
+			</p><p>		<a href="#233129" class="transcriptLink" rel="nofollow">The next day, while I was listening to the scanners,</a>
+					<a href="#235898" class="transcriptLink" rel="nofollow">I heard about a call coming in of a 70-year-old man</a>
+					<a href="#239214" class="transcriptLink" rel="nofollow">hurt by a car only one block away from me</a>
+					<a href="#242824" class="transcriptLink" rel="nofollow">on the main street of my neighborhood.</a>
+					<a href="#245515" class="transcriptLink" rel="nofollow">I ran there by foot. I had no medical equipment.</a>
+					<a href="#248218" class="transcriptLink" rel="nofollow">When I got there, the 70-year-old man</a>
+					<a href="#251168" class="transcriptLink" rel="nofollow">was lying on the floor, blood was gushing out of his neck.</a>
+					<a href="#254082" class="transcriptLink" rel="nofollow">He was on Coumadin.</a>
+					<a href="#255295" class="transcriptLink" rel="nofollow">I knew I had to stop his bleeding or else he would die.</a>
+					<a href="#260289" class="transcriptLink" rel="nofollow">I took off my yarmulke, because I had no medical equipment,</a>
+					<a href="#263232" class="transcriptLink" rel="nofollow">and with a lot of pressure, I stopped his bleeding.</a>
+					<a href="#265626" class="transcriptLink" rel="nofollow">He was bleeding from his neck.</a>
+					<a href="#267200" class="transcriptLink" rel="nofollow">When the ambulance arrived 15 minutes later,</a>
+					<a href="#270657" class="transcriptLink" rel="nofollow">I gave them over a patient who was alive.</a>
+			</p><p>		<a href="#273244" class="transcriptLink" rel="nofollow">(Applause)</a>
+			</p><p>		<a href="#281224" class="transcriptLink" rel="nofollow">When I went to visit him two days later,</a>
+					<a href="#283386" class="transcriptLink" rel="nofollow">he gave me a hug and was crying</a>
+					<a href="#285721" class="transcriptLink" rel="nofollow">and thanking me for saving his life.</a>
+					<a href="#288743" class="transcriptLink" rel="nofollow">At that moment, when I realized this is the first person</a>
+					<a href="#291764" class="transcriptLink" rel="nofollow">I ever saved in my life after two years volunteering in an ambulance,</a>
+					<a href="#294952" class="transcriptLink" rel="nofollow">I knew this is my life's mission.</a>
+			</p><p>		<a href="#297766" class="transcriptLink" rel="nofollow">So today, 22 years later, we have United Hatzalah.</a>
+			</p><p>		<a href="#301931" class="transcriptLink" rel="nofollow">(Applause)</a>
+			</p><p>		<a href="#308321" class="transcriptLink" rel="nofollow">"Hatzalah" means "rescue," for all of you who don't know Hebrew.</a>
+					<a href="#311234" class="transcriptLink" rel="nofollow">I forgot I'm not in Israel.</a>
+					<a href="#313345" class="transcriptLink" rel="nofollow">So we have thousands of volunteers</a>
+					<a href="#316280" class="transcriptLink" rel="nofollow">who are passionate about saving lives,</a>
+					<a href="#319199" class="transcriptLink" rel="nofollow">and they're spread all around, so whenever a call comes in,</a>
+					<a href="#321407" class="transcriptLink" rel="nofollow">they just stop everything and go and run and save a life.</a>
+					<a href="#326429" class="transcriptLink" rel="nofollow">Our average response time today</a>
+					<a href="#328986" class="transcriptLink" rel="nofollow">went down to less than three minutes in Israel.</a>
+			</p><p>		<a href="#332700" class="transcriptLink" rel="nofollow">(Applause)</a>
+			</p><p>		<a href="#336346" class="transcriptLink" rel="nofollow">I'm talking about heart attacks,</a>
+					<a href="#337832" class="transcriptLink" rel="nofollow">I'm talking about car accidents,</a>
+					<a href="#339526" class="transcriptLink" rel="nofollow">God forbid bomb attacks, shootings, whatever it is,</a>
+					<a href="#342400" class="transcriptLink" rel="nofollow">even a woman 3 o'clock in the morning</a>
+					<a href="#344339" class="transcriptLink" rel="nofollow">falling in her home and needs someone to help her.</a>
+					<a href="#346711" class="transcriptLink" rel="nofollow">Three minutes, we'll have a guy with his pajamas</a>
+					<a href="#349108" class="transcriptLink" rel="nofollow">running to her house and helping her get up.</a>
+			</p><p>		<a href="#352757" class="transcriptLink" rel="nofollow">The reasons why we're so successful are because of three things.</a>
+			</p><p>		<a href="#355673" class="transcriptLink" rel="nofollow">Thousands of passionate volunteers</a>
+					<a href="#357651" class="transcriptLink" rel="nofollow">who will leave everything they do</a>
+					<a href="#359371" class="transcriptLink" rel="nofollow">and run to help people they don't even know.</a>
+					<a href="#362282" class="transcriptLink" rel="nofollow">We're not there to replace ambulances.</a>
+					<a href="#364625" class="transcriptLink" rel="nofollow">We're just there</a>
+					<a href="#366229" class="transcriptLink" rel="nofollow">to get the gap between the ambulance call until they arrive.</a>
+					<a href="#372279" class="transcriptLink" rel="nofollow">And we save people that otherwise would not be saved.</a>
+			</p><p>		<a href="#377166" class="transcriptLink" rel="nofollow">The second reason is because of our technology.</a>
+					<a href="#380525" class="transcriptLink" rel="nofollow">You know, Israelis are good in technology.</a>
+					<a href="#382485" class="transcriptLink" rel="nofollow">Every one of us has on his phone, no matter what kind of phone,</a>
+					<a href="#385782" class="transcriptLink" rel="nofollow">a GPS technology done by NowForce,</a>
+					<a href="#388858" class="transcriptLink" rel="nofollow">and whenever a call comes in,</a>
+					<a href="#390305" class="transcriptLink" rel="nofollow">the closest five volunteers get the call,</a>
+					<a href="#392480" class="transcriptLink" rel="nofollow">and they actually get there really quick,</a>
+					<a href="#395378" class="transcriptLink" rel="nofollow">and navigated by a traffic navigator to get there and not waste time.</a>
+					<a href="#399102" class="transcriptLink" rel="nofollow">And this is a great technology we use all over the country</a>
+					<a href="#401301" class="transcriptLink" rel="nofollow">and reduce the response time.</a>
+			</p><p>		<a href="#402891" class="transcriptLink" rel="nofollow">And the third thing are these ambucycles.</a>
+					<a href="#405027" class="transcriptLink" rel="nofollow">These ambucycles are an ambulance on two wheels.</a>
+					<a href="#408336" class="transcriptLink" rel="nofollow">We don't transfer people, but we stabilize them,</a>
+					<a href="#410357" class="transcriptLink" rel="nofollow">and we save their lives.</a>
+					<a href="#411887" class="transcriptLink" rel="nofollow">They never get stuck in traffic. They could even go on a sidewalk.</a>
+					<a href="#414664" class="transcriptLink" rel="nofollow">They never, literally, get stuck in traffic.</a>
+					<a href="#417419" class="transcriptLink" rel="nofollow">That's why we get there so fast.</a>
+			</p><p>		<a href="#419224" class="transcriptLink" rel="nofollow">A few years after I started this organization,</a>
+					<a href="#421706" class="transcriptLink" rel="nofollow">in a Jewish community,</a>
+					<a href="#423451" class="transcriptLink" rel="nofollow">two Muslims from east Jerusalem called me up.</a>
+					<a href="#426254" class="transcriptLink" rel="nofollow">They ask me to meet. They wanted to meet with me.</a>
+					<a href="#428952" class="transcriptLink" rel="nofollow">Muhammad Asli and Murad Alyan.</a>
+					<a href="#431443" class="transcriptLink" rel="nofollow">When Muhammad told me his personal story,</a>
+					<a href="#433025" class="transcriptLink" rel="nofollow">how his father, 55 years old, collapsed at home,</a>
+					<a href="#436275" class="transcriptLink" rel="nofollow">had a cardiac arrest,</a>
+					<a href="#437531" class="transcriptLink" rel="nofollow">and it took over an hour for an ambulance arrive,</a>
+					<a href="#439951" class="transcriptLink" rel="nofollow">and he saw his father die in front of his eyes,</a>
+					<a href="#441734" class="transcriptLink" rel="nofollow">he asked me, "Please start this in east Jerusalem."</a>
+			</p><p>		<a href="#445009" class="transcriptLink" rel="nofollow">I said to myself, I saw so much tragedy, so much hate,</a>
+					<a href="#448834" class="transcriptLink" rel="nofollow">and it's not about saving Jews. It's not about saving Muslims.</a>
+					<a href="#452118" class="transcriptLink" rel="nofollow">It's not about saving Christians. It's about saving people.</a>
+					<a href="#455690" class="transcriptLink" rel="nofollow">So I went ahead, full force --</a>
+					<a href="#458103" class="transcriptLink" rel="nofollow">(Applause) —</a>
+					<a href="#462694" class="transcriptLink" rel="nofollow">and I started United Hatzalah in east Jerusalem,</a>
+					<a href="#466361" class="transcriptLink" rel="nofollow">and that's why the names United</a>
+					<a href="#468180" class="transcriptLink" rel="nofollow">and Hatzalah match so well.</a>
+					<a href="#470260" class="transcriptLink" rel="nofollow">We started hand in hand saving Jews and Arabs.</a>
+					<a href="#474112" class="transcriptLink" rel="nofollow">Arabs were saving Jews. Jews were saving Arabs.</a>
+					<a href="#476229" class="transcriptLink" rel="nofollow">Something special happened.</a>
+					<a href="#478376" class="transcriptLink" rel="nofollow">Arabs and Jews, they don't always get along together,</a>
+					<a href="#481041" class="transcriptLink" rel="nofollow">but here in this situation,</a>
+					<a href="#482252" class="transcriptLink" rel="nofollow">the communities, literally,</a>
+					<a href="#484144" class="transcriptLink" rel="nofollow">it's an unbelievable situation that happened,</a>
+					<a href="#486225" class="transcriptLink" rel="nofollow">the diversities, all of a sudden they had a common interest:</a>
+					<a href="#488819" class="transcriptLink" rel="nofollow">Let's save lives together.</a>
+					<a href="#490347" class="transcriptLink" rel="nofollow">Settlers were saving Arabs and Arabs were saving settlers.</a>
+					<a href="#493045" class="transcriptLink" rel="nofollow">It's an unbelievable concept that could work</a>
+					<a href="#494855" class="transcriptLink" rel="nofollow">only when you have such a great cause.</a>
+					<a href="#498008" class="transcriptLink" rel="nofollow">And these are all volunteers.</a>
+					<a href="#499881" class="transcriptLink" rel="nofollow">No one is getting money.</a>
+					<a href="#501000" class="transcriptLink" rel="nofollow">They're all doing it for the purpose of saving lives.</a>
+			</p><p>		<a href="#504876" class="transcriptLink" rel="nofollow">When my own father collapsed a few years ago</a>
+					<a href="#507161" class="transcriptLink" rel="nofollow">from a cardiac arrest, one of the first volunteers</a>
+					<a href="#509298" class="transcriptLink" rel="nofollow">to arrive to save my father</a>
+					<a href="#511331" class="transcriptLink" rel="nofollow">was one of these Muslim volunteers from east Jerusalem</a>
+					<a href="#513581" class="transcriptLink" rel="nofollow">who was in the first course to join Hatzalah.</a>
+					<a href="#517473" class="transcriptLink" rel="nofollow">And he saved my father.</a>
+					<a href="#518549" class="transcriptLink" rel="nofollow">Could you imagine how I felt in that moment?</a>
+			</p><p>		<a href="#523056" class="transcriptLink" rel="nofollow">When I started this organization, I was 17 years old.</a>
+					<a href="#526165" class="transcriptLink" rel="nofollow">I never imagined that one day I'd be speaking at TEDMED.</a>
+					<a href="#529575" class="transcriptLink" rel="nofollow">I never even knew what TEDMED was then.</a>
+					<a href="#531374" class="transcriptLink" rel="nofollow">I don't think it existed, but I never imagined,</a>
+					<a href="#534601" class="transcriptLink" rel="nofollow">I never imagined that it's going to go all around,</a>
+					<a href="#536676" class="transcriptLink" rel="nofollow">it's going to spread around,</a>
+					<a href="#537758" class="transcriptLink" rel="nofollow">and this last year we started in Panama and Brazil.</a>
+					<a href="#541156" class="transcriptLink" rel="nofollow">All I need is a partner who is a little meshugenah like me,</a>
+					<a href="#544538" class="transcriptLink" rel="nofollow">passionate about saving lives, and willing to do it.</a>
+					<a href="#547928" class="transcriptLink" rel="nofollow">And I'm actually starting it in India very soon</a>
+					<a href="#551437" class="transcriptLink" rel="nofollow">with a friend who I met in Harvard just a while back.</a>
+					<a href="#555090" class="transcriptLink" rel="nofollow">Hatzalah actually started in Brooklyn by a Hasidic Jew</a>
+					<a href="#558958" class="transcriptLink" rel="nofollow">years before us in Williamsburg,</a>
+					<a href="#561236" class="transcriptLink" rel="nofollow">and now it's all over the Jewish community in New York,</a>
+					<a href="#563959" class="transcriptLink" rel="nofollow">even Australia and Mexico and many other Jewish communities.</a>
+					<a href="#567219" class="transcriptLink" rel="nofollow">But it could spread everywhere.</a>
+					<a href="#568813" class="transcriptLink" rel="nofollow">It's very easy to adopt.</a>
+					<a href="#571369" class="transcriptLink" rel="nofollow">You even saw these volunteers in New York</a>
+					<a href="#573645" class="transcriptLink" rel="nofollow">saving lives in the World Trade Center.</a>
+					<a href="#576761" class="transcriptLink" rel="nofollow">Last year alone, we treated in Israel 207,000 people.</a>
+					<a href="#580306" class="transcriptLink" rel="nofollow">Forty-two thousand of them were life-threatening situations.</a>
+					<a href="#585029" class="transcriptLink" rel="nofollow">And we made a difference.</a>
+					<a href="#587206" class="transcriptLink" rel="nofollow">I guess you could call this a lifesaving flash mob,</a>
+					<a href="#589954" class="transcriptLink" rel="nofollow">and it works.</a>
+			</p><p>		<a href="#592377" class="transcriptLink" rel="nofollow">When I look all around here,</a>
+					<a href="#594824" class="transcriptLink" rel="nofollow">I see lots of people who would go an extra mile,</a>
+					<a href="#598215" class="transcriptLink" rel="nofollow">run an extra mile to save other people,</a>
+					<a href="#600936" class="transcriptLink" rel="nofollow">no matter who they are, no matter what religion,</a>
+					<a href="#603673" class="transcriptLink" rel="nofollow">no matter who, where they come from.</a>
+					<a href="#606589" class="transcriptLink" rel="nofollow">We all want to be heroes.</a>
+					<a href="#608374" class="transcriptLink" rel="nofollow">We just need a good idea, motivation</a>
+					<a href="#611760" class="transcriptLink" rel="nofollow">and lots of chutzpah,</a>
+					<a href="#613595" class="transcriptLink" rel="nofollow">and we could save millions of people</a>
+					<a href="#615760" class="transcriptLink" rel="nofollow">that otherwise would not be saved.</a>
+			</p><p>		<a href="#617932" class="transcriptLink" rel="nofollow">Thank you very much.</a>
+			</p><p>		<a href="#619617" class="transcriptLink" rel="nofollow">(Applause)</a>
+		</p>
+</div>
+																			</div>
+								</div>
+							</div>
+						</div>
+					
+
+
+
+					<div id="share_and_save" class="share-data share-tools abtest test1 clearfix" data-id="1799" data-model="talks" data-title="Eli Beer: The fastest ambulance? A motorcycle" data-url="http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" data-slug="eli_beer_the_fastest_ambulance_a_motorcycle">
+	
+	<span class="inst">Share this talk</span>
+
+	<ul class="share-icons" id="share_talk_tools">
+		<li><a class="share-facebook" href="" data-service="facebook" title="Facebook">Facebook</a></li>
+		<li><a class="share-twitter"  href="" data-service="twitter" title="Twitter">Twitter</a></li>
+		<li><a class="share-linkedin" href="" data-service="linkedin" title="LinkedIn">LinkedIn</a></li>
+		<li><a class="share-email" href="" data-service="email" title="Email">Email</a></li>
+		<li><a class="share-more" href=""><span>More</span></a></li>
+	</ul>
+
+
+	<div id="share_drop" style="display: none;">
+		<div class="share-drop-inset">
+			<ul class="share-icons">
+				<li><a class="share-stumbleupon" href="" data-service="stumbleupon" title="Stumbleupon">Stumbleupon</a></li>
+				<li><a class="share-delicious" href="" data-service="delicious" title="Delicious">Delicious</a></li>
+				<li><a class="share-googleplus" href="" data-service="googleplus" title="Google +1">Google +1</a></li>
+				<li><a class="share-reddit" href="" data-service="reddit" title="Reddit">Reddit</a></li>
+			</ul>
+			<div class="clearfix"></div>
+
+						<div class="rule">
+				<h4>URL</h4>
+				<input type="text" value="http://on.ted.com/Ambucycle" readonly="readonly" />
+			</div>
+					</div>
+	</div>
+</div>
+
+
+					<style>
+#embed_dialog {
+	display:none;
+}
+#embed_dialog p {
+	width:450px;
+}
+#embed_dialog p label {
+	font-weight: bold;
+	float: left;
+	width: 120px;
+}
+#embed_dialog p input[type="text"] {
+    width: 300px;
+}
+#video_options {
+	margin-bottom: 5px;
+}
+.video-size-picker {
+	background-color: #f2f2f2;
+	color: #666666;
+	float: left;
+	text-align: center;
+	margin-right: 5px;
+	cursor: pointer;
+}
+.video-size-picker:hover {
+	background-color: #CCCCCC;
+}
+.video-size-picker.selected {
+	border: 1px black dashed;
+}
+.video-size-picker.regular {
+	height: 50px;
+	width: 89px;
+	line-height: 50px;
+}
+.video-size-picker.medium {
+	height: 60px;
+	width: 106px;
+	line-height: 60px;
+}
+.video-size-picker.large {
+	height: 70px;
+	width: 124px;
+	line-height: 70px;
+}
+#subtitle_options {
+	padding-top: 10px;
+	clear: both;
+}
+</style>
+<div id="embed_dialog" title="Embed">
+	<div style="margin:auto">
+		<p>You can share this video by copying this HTML to your clipboard and pasting into your blog or web page.<span id="embedSubtitle" style="display:none"> This video will play with <span id="embedSubtitleLanguage"></span> subtitles.</span></p>
+				<p><label>Embed this video</label><input id="embedthisvideo" type="text" value="&lt;iframe src=&quot;http://embed.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html&quot; width=&quot;560&quot; height=&quot;315&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot; webkitAllowFullScreen mozallowfullscreen allowFullScreen&gt;&lt;/iframe&gt;" readonly="readonly" size="40" /></p>
+		<p><label>WordPress</label><input id="wordpresscom" type="text" value="[ted id=1799]" readonly="readonly" size="40" /></p>
+				<p><label>Link to this talk</label><input id="linktothistalk" type="text" value="http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" readonly="readonly" size="40" />
+		<div id="video_options">
+			<div class="video-size-picker regular" data-width="560" data-height="315">560 x 315</div>
+			<div class="video-size-picker medium" data-width="640" data-height="360">640 x 360</div>
+			<div class="video-size-picker large" data-width="853" data-height="480">853 x 480</div>
+							<div id="subtitle_options">
+					<strong>Subtitles:</strong>
+					<select name="subtitles_language_select" id="subtitles_language_select"><option value="">None</option>
+<option value="en" selected="selected">English</option>
+</select>				</div>
+					</div>
+
+	</div>
+</div>
+
+					<div id="download_dialog" title="Download this talk!">Loading &hellip;</div>
+
+								
+						<div id="rating_dialog">
+		<div id="talkRatingDiv">
+			<p>You either have JavaScript turned off or have an old version of the Adobe Flash Player. To view this rating widget you
+			need to <a href="http://get.adobe.com/flashplayer/">get the latest Flash player</a>.
+			<br />
+			If your browser allows only "trusted sites" to execute Javascript, you should add the "googleapis.com" domain to your whitelist to allow our Flash detection to work properly.
+			</p>
+		</div>
+	</div>
+				
+				<div id="conversations" class="start">
+	<h2>TED Conversations</h2>
+		<p>Got an idea, question, or debate inspired by this talk? <a href="/conversations/new?talk=eli_beer_the_fastest_ambulance_a_motorcycle">Start a TED Conversation.</a></p>
+
+	
+</div>
+				<div id="conversation">
+		<div id="discussion" class="silverBorderPanel">
+								<div class="clearfix">
+				<div class="clearfix" style="background:url('http://assets.tedcdn.com/images/border_dotted.gif') repeat-x scroll left bottom transparent; margin-bottom:10px; padding-bottom:10px;">
+					<h3>Comment on this Talk</h3>
+					<span style="float:right; font-size:12px;">
+						<span class="notranslate nostyle">73</span>
+						total comments					</span>
+				</div>
+				<div class="commentAddForm clearfix secondary">
+	<div class="formItemLine signed-out">
+		<p class="signin">
+			<a class="auth_status" data-width="920" data-height="600" href="https://auth.ted.com/session/new?referer=http://www.ted.com/session/approved">Sign in to add comments</a>			or
+			<a class="auth_status" data-width="920" data-height="600" href="https://auth.ted.com/users/new?referer=http://www.ted.com/session/approved">Join (It's free and fast!)</a>		</p>
+	</div>
+	<div class="signed-in">
+		<label class="formItemLabel"></label>
+				<p><span class="attributed">This comment will be attributed to <a href="#" class="username-profile-link notranslate"></a>.</span> <em>Not <span class="username-profile-link notranslate"></span>? <a title="Sign Out" href="https://auth.ted.com/session/logout">Sign Out</a>.</em></p>
+		<form method="post" action="">
+
+	<textarea name="newComment" cols="" rows=""></textarea>
+
+	<span class="button primary">
+		<span>
+			<input class="submit" type="submit" name="submit" value="Submit"/>
+		</span>
+	</span>
+
+	
+	<p class="charactersUsed">Characters remaining: <em>2000</em></p>
+
+	
+	</form>
+	</div>
+</div>			</div>
+									<div class="clearfix">
+			<label for="sort-comments" class="info">Sort By:</label>
+			<select name="sort-comments" id="sort-comments" class="sort-comments"><option value="newest" selected="selected">Newest first</option>
+<option value="original">Oldest first</option>
+<option value="rated">Top rated</option>
+<option value="activity">Recently updated</option>
+<option value="replies">Most replies</option>
+</select>			<img class="sortLoader" src="http://assets.tedcdn.com/images/ajax-loader.gif" alt="progress indicator" />
+		</div>
+				<div class="comment-container">
+					</div>
+								<script type="text/javascript">//<![CDATA[
+			jQuery(function($) {
+				var conversation = $('#conversation');
+				conversation.ted_comment_loader({
+					forum: 21521,
+					preloaded: 0,
+										up_vote: 'Great contribution!'
+				});
+				$('.closingForm').ted_comment_editor({ajax: false});
+			});
+		//]]></script>
+		<div class="commentAddForm clearfix secondary">
+	<div class="formItemLine signed-out">
+		<p class="signin">
+			<a class="auth_status" data-width="920" data-height="600" href="https://auth.ted.com/session/new?referer=http://www.ted.com/session/approved">Sign in to add comments</a>			or
+			<a class="auth_status" data-width="920" data-height="600" href="https://auth.ted.com/users/new?referer=http://www.ted.com/session/approved">Join (It's free and fast!)</a>		</p>
+	</div>
+	<div class="signed-in">
+		<label class="formItemLabel"></label>
+				<p><span class="attributed">This comment will be attributed to <a href="#" class="username-profile-link notranslate"></a>.</span> <em>Not <span class="username-profile-link notranslate"></span>? <a title="Sign Out" href="https://auth.ted.com/session/logout">Sign Out</a>.</em></p>
+		<form method="post" action="">
+
+	<textarea name="newComment" cols="" rows=""></textarea>
+
+	<span class="button primary">
+		<span>
+			<input class="submit" type="submit" name="submit" value="Submit"/>
+		</span>
+	</span>
+
+	
+	<p class="charactersUsed">Characters remaining: <em>2000</em></p>
+
+	
+	</form>
+	</div>
+</div>	</div>
+</div>
+
+			</div> <!-- end left column -->
+
+			<div class="about">
+
+
+								<div id="facebookLike" class="fb-like" data-href="http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html?source=facebook-like" data-send="false" data-layout="button_count" data-width="90" data-show-faces="false"></div>
+				<div id="viewCounter" style="padding-left: 8px;">
+											<span style="font-size: 14px; font-weight: bold;"><a id="viewsHelp" title="This number represents video views on TED.com and in the TED embed player. Across all platforms (YouTube, downloads, etc.), total views typically double that number."><span class="notranslate nostyle">65,855</span> Views</a></span>
+															</div>
+
+
+				<div class="talk-intro">
+					<p id="tagline"  lang="en" class="notranslate">
+						As a young EMT on a Jerusalem ambulance, Eli Beer realized that, stuck in brutal urban traffic, they often arrived too late to help. So he organized a group of volunteer EMTs -- many on foot -- ready to drop everything and dash to save lives in their neighborhood. Today, United Hatzlah uses a smartphone app and a fleet of “ambucycles” to help nearby patients until an ambulance arrives. With an average response time of 3 minutes, last year, they treated 207,000 people in Israel. And the idea is going global.					</p>
+											<p>
+							Eli Beer, the founder and president of United Hatzalah, has re-imagined first response by training EMT volunteers to respond to local calls and keep people alive until official help arrives.  <a target="_blank" title="Eli Beer's bio" href="/speakers/eli_beer.html">Full bio »</a>						</p>
+										<div id="attributionText">
+											
+										</div>
+				</div>
+
+				<div id="adSpace"></div>
+
+				
+				
+				<style type="text/css">
+	.contentPod.debatePod .content {
+		padding: 5px 0 0 0;
+	}
+	.contentPod.debatePod .content .talkMedallion {
+		font-size: 10px;
+	}
+
+	.contentPod.debatePod .debateLinks {
+		padding: 8px;
+	}
+
+	.contentPod.wtdnPod .content {
+		padding: 5px 0 0 0;
+	}
+
+	.contentPod.wtdnPod .content .talkMedallion {
+		font-size: 11px;
+		height: 115px;
+	}
+
+	.contentPod.wtdnPod .content .tallWtdn {
+		font-size: 11px;
+		height: 130px;
+	}
+
+	.wtdntext {
+		padding: 10px;
+	}
+
+</style>
+
+
+				<div class="contentPod">
+	<div class="header">
+		<h3>Related playlists <span class="badge-new">New</span>
+			<span class="more-link"><a href="/playlists">View more &raquo;</a></span>
+		</h3>
+	</div>
+	<div class="content relatedPlaylists">
+
+		<ul class="playlist-medallion">
+			<li>
+  <div class="playlist-item">
+	  <div class="thumb">
+	  	<a onclick="$.GA_trackEvent('talk page', 'related playlists click', 'position=1|playlist id=70|title=What doctors worry about')" href="/playlists/70/what_doctors_worry_about.html"><img alt="What doctors worry about" src="http://assets.tedcdn.com/images/playlists/what_doctors_worry_about_146x146.jpg" /></a>	    <span class="icon-badge notranslate" title="8 talks">
+	    	<em>8</em>
+	    </span>
+	  </div>
+	  <div class="info">
+	    <h5>
+	    <a onclick="$.GA_trackEvent('talk page', 'related playlists click', 'position=1|playlist id=70|title=What doctors worry about')" href="/playlists/70/what_doctors_worry_about.html">What doctors worry about</a>	    </h5>
+	    <span class="attrib">
+	      	Curated by TED		  </span>
+	      <span class="desc">
+			We worry about what our doctors will tell us -- and so do they. Doctors, scientists and medical researchers weigh in on health care and better...	      </span>
+	      
+	    
+	  </div>
+  </div>
+</li><li>
+  <div class="playlist-item">
+	  <div class="thumb">
+	  	<a onclick="$.GA_trackEvent('talk page', 'related playlists click', 'position=2|playlist id=69|title=War stories')" href="/playlists/69/war_stories.html"><img alt="War stories" src="http://assets.tedcdn.com/images/playlists/war_stories_146x146.jpg" /></a>	    <span class="icon-badge notranslate" title="11 talks">
+	    	<em>11</em>
+	    </span>
+	  </div>
+	  <div class="info">
+	    <h5>
+	    <a onclick="$.GA_trackEvent('talk page', 'related playlists click', 'position=2|playlist id=69|title=War stories')" href="/playlists/69/war_stories.html">War stories</a>	    </h5>
+	    <span class="attrib">
+	      	Curated by TED		  </span>
+	      <span class="desc">
+			We need to talk about war. These powerful, crucial talks come from soldiers, politicians, journalists and others who've seen the reality of war...	      </span>
+	      
+	    
+	  </div>
+  </div>
+</li><li>
+  <div class="playlist-item">
+	  <div class="thumb">
+	  	<a onclick="$.GA_trackEvent('talk page', 'related playlists click', 'position=3|playlist id=55|title=The joy of eating')" href="/playlists/55/the_joy_of_eating.html"><img alt="The joy of eating" src="http://assets.tedcdn.com/images/playlists/the_joy_of_eating_146x146.jpg" /></a>	    <span class="icon-badge notranslate" title="5 talks">
+	    	<em>5</em>
+	    </span>
+	  </div>
+	  <div class="info">
+	    <h5>
+	    <a onclick="$.GA_trackEvent('talk page', 'related playlists click', 'position=3|playlist id=55|title=The joy of eating')" href="/playlists/55/the_joy_of_eating.html">The joy of eating</a>	    </h5>
+	    <span class="attrib">
+	      	Curated by TED		  </span>
+	      <span class="desc">
+			What can compare to the pleasures of the palate? These talks from chefs, cookbook writers and passionate foodies celebrate all things edible.	      </span>
+	      
+	    
+	  </div>
+  </div>
+</li>		</ul>
+
+	</div>
+</div>
+
+				<div class="contentPod">
+	<div class="header">
+		<h3>What to Watch Next</h3>
+	</div>
+	<div class="content relatedTalks">
+		<dl class="talkMedallion mini clearfix">
+		<dt class="thumbnail">
+			<a title="Daniel Kraft: Medicine's future? There's an app for that" class="image position-1" style="background:url(http://images.ted.com/images/ted/c95178fd819125c136730ce0403b140181f4eb82_113x85.jpg) no-repeat;height:85px;width:113px;display:block;" href="/talks/daniel_kraft_medicine_s_future.html"><img class="play_icon" src="//assets.tedcdn.com/images/play_icon.gif" alt="Play_icon" /></a>		</dt>
+		<dd>
+			<h4 class="notranslate">
+			<a title="Daniel Kraft: Medicine's future? There's an app for that" class="position-1" href="/talks/daniel_kraft_medicine_s_future.html">Daniel Kraft: Medicine's future? There's an app for that</a>			</h4>
+			<p class="metadata timings"><span class="notranslate">18:21</span> Posted: Jun 2011</p>
+							<p class="metadata">Views <strong class="notranslate">583,949</strong> | Comments <strong class="notranslate">110</strong></p>
+					</dd>
+	</dl>
+	<dl class="talkMedallion mini clearfix">
+		<dt class="thumbnail">
+			<a title="Chris Gerdes: The future race car -- 150mph, and no driver" class="image position-2" style="background:url(http://images.ted.com/images/ted/15e9b94b9856ac969692bfc5515bd7754e26977b_113x85.jpg) no-repeat;height:85px;width:113px;display:block;" href="/talks/chris_gerdes_the_future_race_car_150mph_and_no_driver.html"><img class="play_icon" src="//assets.tedcdn.com/images/play_icon.gif" alt="Play_icon" /></a>		</dt>
+		<dd>
+			<h4 class="notranslate">
+			<a title="Chris Gerdes: The future race car -- 150mph, and no driver" class="position-2" href="/talks/chris_gerdes_the_future_race_car_150mph_and_no_driver.html">Chris Gerdes: The future race car -- 150mph, and no driver</a>			</h4>
+			<p class="metadata timings"><span class="notranslate">10:47</span> Posted: Jul 2012</p>
+							<p class="metadata">Views <strong class="notranslate">305,860</strong> | Comments <strong class="notranslate">97</strong></p>
+					</dd>
+	</dl>
+	<dl class="talkMedallion mini clearfix">
+		<dt class="thumbnail">
+			<a title="Ronny Edry: Israel and Iran: A love story?" class="image position-3" style="background:url(http://images.ted.com/images/ted/1cd8ab3b6e94be6d86ee94b2fa52c271abd140a9_113x85.jpg) no-repeat;height:85px;width:113px;display:block;" href="/talks/israel_and_iran_a_love_story.html"><img class="play_icon" src="//assets.tedcdn.com/images/play_icon.gif" alt="Play_icon" /></a>		</dt>
+		<dd>
+			<h4 class="notranslate">
+			<a title="Ronny Edry: Israel and Iran: A love story?" class="position-3" href="/talks/israel_and_iran_a_love_story.html">Ronny Edry: Israel and Iran: A love story?</a>			</h4>
+			<p class="metadata timings"><span class="notranslate">14:57</span> Posted: Dec 2012</p>
+							<p class="metadata">Views <strong class="notranslate">1,286,359</strong> | Comments <strong class="notranslate">718</strong></p>
+					</dd>
+	</dl>
+<script type="text/javascript">//<![CDATA[
+jQuery(function($) {
+	var category = 'WTWN Clicks';
+	$('dl.talkMedallion dt a, dl.talkMedallion h4 a').click(function(event) {
+		var anchor = $(this);
+		var position = anchor.attr('class').split('-')[1];
+		var is_image = anchor.hasClass('image');
+		var action   = 'WTWN:Pos ' +  position + ':' + (
+			is_image ? 'Play' : 'Text'
+		);
+		var label = ('WTWN:' + anchor.attr('title')).replace(/"/, '');
+		$.GA_trackEvent(category, action, label);
+	});
+});
+//]]></script>
+	</div>
+</div>
+				<div id="subscriptions" class="subscribe contentPod">
+	<div class="header">
+		<h3>Stay updated</h3>
+	</div>
+	<div class="content">
+		<form method="post" data-service="newsletter"
+			action="/newsletter/signup"
+			id="talks-newsletter-signup">
+			<p>Be the first to know about new TEDTalks.</p>
+
+			<div class="subscribe-input clearfix">
+				<input type="text" name="newsletterSignup[email_address]" value="" class="formTextInput email" data-default-value="Enter email address for TED updates" id="newsletterSignup_email_address" />			</div>
+
+			<div class="subscribe-controls clearfix">
+				<input type="image" class="subscribe hover translate" value="Subscribe" src="http://assets.tedcdn.com/images/blank.gif">
+				<script>
+					$('#newsletterSignup_email_address').clear_field();				</script>
+				<ul class="checkbox_list"><li><input name="newsletterSignup[subscription_list][]" type="checkbox" value="daily" id="newsletterSignup_subscription_list_daily" checked="checked" />&nbsp;<label for="newsletterSignup_subscription_list_daily">Daily</label></li>
+<li><input name="newsletterSignup[subscription_list][]" type="checkbox" value="weekly" id="newsletterSignup_subscription_list_weekly" />&nbsp;<label for="newsletterSignup_subscription_list_weekly">Weekly</label></li></ul>			</div>
+		</form>
+
+		<h4 class="follow-subhead" style="margin: 0 0 .3em">Follow TED</h4>
+		<div class="follow-links clearfix">
+			<a class="subscribe" data-service="facebook" title="TED on Facebook" href="http://www.facebook.com/TED" target="_blank">
+				<img alt="TED on Facebook" src="http://assets.tedcdn.com/images/reboot/icon-facebook.png" />
+			</a>
+			<a class="subscribe" data-service="twitter" title="TED on Twitter" href="https://twitter.com/#!/tedtalks" target="_blank">
+				<img alt="TED on Twitter" src="http://assets.tedcdn.com/images/reboot/icon-twitter.png" />
+			</a>
+			<a class="subscribe" data-service="rss" title="TED RSS feeds" href="http://www.ted.com/pages/198"  target="_blank">
+				<img alt="TED video RSS" src="http://assets.tedcdn.com/images/reboot/icon-rss.png" />
+			</a>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">//<![CDATA[
+	jQuery(function($) {
+		var form = $('#talks-newsletter-signup');
+		form.find('input.email').clear_field();
+
+		form.submit(trackSubscription);
+		$('#subscriptions .subscribe').click(trackSubscription);
+		function trackSubscription(event) {
+			$.GA_trackEvent('subscribe', $(this).data('service'), 'talks');
+		}
+	});
+//]]></script>
+
+				<div style="background: #F7F5F3; padding: 7px; margin-bottom: 10px">
+					<script type="text/javascript" language="JavaScript">//<![CDATA[
+if (typeof dc_ord=='undefined') {dc_ord=Math.random()*100000000000000000;}
+document.write('<scr' + 'ipt language="JavaScript" src="//ad.doubleclick.net/adj/tconf.ted/sidebar;sz=304x243;tile=1;ord=' + dc_ord + '?" type="text/javascript"></scr' + 'ipt>');
+//]]></script>				</div>
+
+				
+				<div class="contentPod">
+	<div class="header">
+		<h3>What Your Friends are Watching</h3>
+	</div>
+	<div class="content content-fbActivity">
+		<iframe src="//www.facebook.com/plugins/activity.php?href=http%3A%2F%2Fwww.ted.com&app_id=201021956610141&appId=201021956610141&action=like&filter=%2Ftalks&width=324&height=300&header=false&colorscheme=light&linktarget=_blank&border_color=%23f7f5f3&font=arial&recommendations=false&ref=talk" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+	</div>
+</div>
+				<div class="contentPod">
+					<div class="header">
+						<h3>Related Topics</h3>
+					</div>
+					<div class="related content">
+						<dl>
+							<dd class="clearfix tags notranslate">
+<ul><li><a href="/topics/health">Health</a></li><li><a href="/topics/health+care">Health care</a></li></ul><ul><li><a href="/topics/medicine">Medicine</a></li><li><a href="/topics/peace">Peace</a></li></ul></dd>
+<script type="text/javascript">//<![CDATA[
+jQuery(function($) {
+	$('dd.tags li a').click(function(event) {
+		$.GA_trackEvent('Talk Page', 'related tags click', $(this).html().toLowerCase());
+	});
+});
+//]]></script>
+						</dl>
+					</div>
+				</div>
+				
+
+				<!-- Creative Commons  -->
+				<div class="contentPod">
+					<div class="content creativeCommons">
+	<img src="http://assets.tedcdn.com/images/icon_cc.gif" alt="Creative Commons"/>
+	<h3>We want you to share our Talks!</h3>
+	<p>Just follow the <a title="guidelines" href="/pages/talk_usage_policy">guidelines</a> outlined under our Creative Commons <a title="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">license</a>.</p>
+</div>
+				</div>
+
+			</div>  <!-- end right column -->
+
+		</div>
+
+	</div>
+<div id="utility"></div><!-- for tooltips and AJAX sign-in -->
+
+			</div>
+	</div>
+</div>
+
+
+<div id="footer">
+	<div id="footer-inner">
+		<div id="footer-copy">
+			<a title="TED.com" id="footer-logo" href="/">TED</a>			<p role="contentinfo">&copy; TED Conferences, LLC</p>
+			 
+		</div>
+
+		<ul id="footer-links" role="navigation">
+			<li><a href="http://support.ted.com">Help</a></li>
+			<li><a href="http://partners.ted.com">Advertising/partnership</a></li>
+			<li><a href="/pages/jobs">Jobs</a></li>
+			<li><a href="/termsofuse">Terms of Use</a></li>
+			<li><a href="/privacy">Privacy Policy</a></li>
+			<li><a href="http://support.ted.com/customer/portal/emails/new">Contact</a></li>
+		</ul>
+
+				<div id="subscribe">
+			<form action="/newsletter/signup" method="post" name="form_newsletter_signup" id="form_newsletter_signup">
+				<p>
+					<input type="text" name="newsletterSignup[email_address]" value="" data-default-value="Sign up for TED email updates" id="newsletterSignup_email_address" />
+					<input id="newsletterSignup_submit" type="submit" value="Subscribe" class="translate" onclick="$.GA_trackEvent('subscribe', 'newsletter', 'talks');">
+
+					<script>chain.wait(function () {
+						$('#newsletterSignup_email_address').clear_field();					})</script>
+				</p>
+				<p>
+					<ul class="checkbox_list"><li><input name="newsletterSignup[subscription_list][]" type="checkbox" value="daily" id="newsletterSignup_subscription_list_daily" checked="checked" />&nbsp;<label for="newsletterSignup_subscription_list_daily">Daily</label></li>
+<li><input name="newsletterSignup[subscription_list][]" type="checkbox" value="weekly" id="newsletterSignup_subscription_list_weekly" />&nbsp;<label for="newsletterSignup_subscription_list_weekly">Weekly</label></li></ul>				</p>
+			</form>
+		</div>
+		
+		 
+	</div>
+</div><!-- /#footer -->
+
+	<script type="text/javascript">//<![CDATA[
+var _sf_async_config={uid:11161,domain:"ted.com"};
+
+(function(){
+	function loadChartbeat() {
+		window._sf_endpt=(new Date()).getTime();
+		var e = document.createElement('script');
+		e.setAttribute('language', 'javascript');
+		e.setAttribute('type', 'text/javascript');
+		e.setAttribute('src',
+		(("https:" == document.location.protocol) ? "https://s3.amazonaws.com/" : "http://") +
+		"static.chartbeat.com/js/chartbeat.js");
+		document.body.appendChild(e);
+	}
+	var oldonload = window.onload;
+	window.onload = (typeof window.onload != 'function') ?
+	loadChartbeat : function() { oldonload(); loadChartbeat(); };
+})();
+//]]></script><!-- START Nielsen Online SiteCensus V6.0 -->
+<!-- COPYRIGHT 2010 Nielsen Online -->
+<script type="text/javascript">//<![CDATA[
+	(function () {
+		var d = new Image(1, 1);
+		d.onerror = d.onload = function () {
+			d.onerror = d.onload = null;
+		};
+		d.src = [
+			"//secure-us.imrworldwide.com/cgi-bin/m?ci=us-703652h&amp;cg=0&amp;cc=1&amp;si=",
+			escape(window.location.href),
+			"&rp=", escape(document.referrer), "&amp;ts=compact&amp;rnd=",
+			(new Date()).getTime()
+		].join('');
+	})();
+//]]></script>
+<noscript>
+	<div><img src="https://secure-us.imrworldwide.com/cgi-bin/m?ci=us-703652h&amp;cg=0&amp;cc=1&amp;ts=noscript"
+	width="1" height="1" alt="" /></div>
+</noscript>
+<!-- END Nielsen Online SiteCensus V6.0 -->
+<!-- Begin comScore Tag -->
+<script type="text/javascript">
+	var _comscore = _comscore || [];
+	_comscore.push({ c1: "2", c2: "7341760" });
+	(function() {
+		var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+		s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+		el.parentNode.insertBefore(s, el);
+	})();
+	function comscoreVideoView(id) {
+		COMSCORE.beacon({ c1: "1", c2: "7341760", c5:"02", c6:id });
+	}
+	function comscorePostrollView() {
+		COMSCORE.beacon({ c1: "1", c2: "7341760", c5:"10" });
+	}
+</script>
+<noscript><img src="https://sb.scorecardresearch.com/p?c1=2&amp;c2=7341760&amp;cv=2.0&amp;cj=1" /></noscript>
+<!-- End comScore Tag --><script type="text/javascript">//<![CDATA[
+(function() {
+	var ga = document.createElement('script');
+	ga.type = 'text/javascript';
+	ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/u/ga.js';
+	var s = document.getElementsByTagName('script')[0];
+	s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+<script type="text/javascript">//<![CDATA[
+			$(function() {
+		// prepare the page for ajax_login
+		$(document).ajax_login({
+			profileID: 0,
+			login_uri: 'https://auth.ted.com/session/new?referer=http://www.ted.com/session/approved',
+			sign_up_uri: 'https://auth.ted.com/users/new?referer=http://www.ted.com/session/approved',
+			height: '600',
+			width: '920'
+		});
+
+		$("a.auth_status").click(function(e) {
+			$(document).ajax_login('show_window', $(this).attr("href"), $(this).attr('data-width'), $(this).attr('data-height'));
+			e.stopPropagation();
+			return false;
+		});
+	});		$(function() {
+					});
+							talks.initPlayback();
+													talks.initPlaybackFlash();
+																				talks.initTranscript();
+																			$(function() {
+												$('div p a.transcriptLink').live('click', function(e) {
+													e.preventDefault();
+													var timecode = $(this).attr('href').replace(/#/, '');
+													transcriptSeek(timecode, "Eli Beer: The fastest ambulance? A motorcycle");
+												});
+											});
+												$(function() {
+		$.setupSharing({
+			container: $('#share_and_save')
+		});
+		$(document).on('shareURL', function(event, url) {
+			$('#share_and_save').data('url', url);
+		});
+		$.loadAsyncScript('http://s7.addthis.com/js/250/addthis_widget.js#pub=tedtalks');
+
+		//setup twitter box
+		$('#share_field')
+			[window.location.href.match(/qtwh=true/) ? 'hide' : 'clear_field']()
+			// .clear_field()
+			.change(function(event) {
+				$(this).closest('.share-data').data('twitter-text', this.value);
+			});
+		$('#twitter-post').submit(function(event) {
+			event.preventDefault();
+			$('#share_and_save .twitter').click();
+		});
+
+		$('#share_and_save .share-email').click(function() {
+			$.post('/talks/addemailed', {id: 1799}, function() {}, 'json');
+		});
+
+		if (window.FB) {
+			slug = $('#share_and_save').data('slug');
+			FB.Event.subscribe('edge.create', function(targetUrl) {
+				_gaq.push(['_trackSocial', 'facebook', 'like', slug]);
+			});
+		}
+	});
+	$('.share-more').bind('click',function(event) {
+		event.preventDefault();
+
+		// position it
+		pos = $('#share_talk_tools').position();
+		$('#share_drop').css({'left':pos.left+20,'top':pos.top+36}).toggle().find('input').selectall_field();
+
+		// toggle class
+		$(this).toggleClass('open');
+	});
+		var selectedVideoSize;
+	$(function() {
+		selectedVideoSize = $('.video-size-picker.regular');
+		selectedVideoSize.addClass('selected');
+
+		var embed_dialog = $('#embed_dialog').ted_dialog({
+			width: 500,
+			height: 350
+		});
+		var embed_button = $('#embed_button').click(function(event) {
+			event.preventDefault();
+			event.stopPropagation();
+			embed_dialog.dialog('open');
+			updateShareCodes();
+		});
+		embed_dialog.find('input[type=text]').selectall_field();
+
+		$('.video-size-picker').click(function(event) {
+			selectedVideoSize = $(this);
+			$('.video-size-picker.selected').removeClass('selected');
+			selectedVideoSize.addClass('selected');
+			updateShareCodes();
+		});
+
+		$('#subtitles_language_select').change(function(event) {
+			currentLanguageCode = $(this).val();
+			currentLanguageName = $(this).find('option:selected').text();
+			updateShareCodes();
+		});
+	});
+
+	function updateShareCodes() {
+		var embedCode = $('#embedthisvideo').val();
+		if ('undefined' != typeof embedCode) {
+			embedCode = embedCode.replace( /width="\d*"/, 'width="' + selectedVideoSize.data('width') + '"');
+			embedCode = embedCode.replace( /height="\d*"/, 'height="' + selectedVideoSize.data('height') + '"');
+			if ('undefined' != typeof currentLanguageCode) {
+				var shareURL = $('#linktothistalk').val();
+				var langPattern = /\/talks(\/lang\/[a-z]{2,3}(-[a-z]{2,4})?)?/;
+				var replacement = '/talks';
+				if ( ('' == currentLanguageCode) || (nativeLanguageCode == currentLanguageCode) ) {
+					$('#wordpresscom').val('[ted id=1799]');
+					$('#linktothistalk').val(shareURL.replace(langPattern, replacement));
+					$('#embedthisvideo').val(embedCode.replace(langPattern, replacement));
+					$('#embedSubtitle').hide();
+				} else {
+					replacement += '/lang/'+currentLanguageCode;
+					$('#wordpresscom').val('[ted id=1799 lang='+currentLanguageCode+']');
+					$('#linktothistalk').val(shareURL.replace(langPattern, replacement));
+					$('#embedthisvideo').val(embedCode.replace(langPattern, replacement));
+					$('#embedSubtitleLanguage').html(currentLanguageName);
+					$('#embedSubtitle').show();
+				}
+			}
+		}
+	}
+		$(function() {
+			$('#rating_dialog').ted_dialog({title: 'Rate this Talk!', height: 347});
+			$('#ratings_button').click(function(event) {
+				if (!$('#rating_dialog').data('initialized')) {
+					startRatings();
+				}
+				$('#rating_dialog').dialog('open');
+				return false;
+			});
+		});
+		function startRatings() {
+			var flashVars = {
+				ti:"1799",
+				sh:"http://www.ted.com"
+			};
+			var params = {
+				wmode:"opaque",
+				scale:"noscale",
+				align:"middle",
+				allowScriptAccess:"always",
+				bgColor:"#fefefe"
+			};
+			var attributes = {
+				id:"talkRatingSWF",
+				name:"talkRatingSWF"
+			};
+			swfobject.embedSWF("http://video.ted.com/assets/player/swf/TalkRater.swf", "talkRatingDiv", "415", "260", "9.0.124", "/swf/playerProductInstall.swf", flashVars, params,attributes);
+			jQuery('#rating_dialog').data('initialized', true);
+		}
+					$('#ratings_button').click(function(event) {
+					$.GA_trackEvent('videoplayer', 'Rating - View', '');
+				});
+				$('#ratings_save_button').click(function(event) {
+					$.GA_trackEvent('videoplayer', 'Rating - Save', '');
+				});
+					$(function() {
+		// prepare the page for ajax_login
+		$(document).ajax_login({
+			profileID: 0,
+			login_uri: 'https://auth.ted.com/session/new?referer=http://www.ted.com/session/approved',
+			sign_up_uri: 'https://auth.ted.com/users/new?referer=http://www.ted.com/session/approved',
+			height: '600',
+			width: '920'
+		});
+
+		$("a.auth_status").click(function(e) {
+			$(document).ajax_login('show_window', $(this).attr("href"), $(this).attr('data-width'), $(this).attr('data-height'));
+			e.stopPropagation();
+			return false;
+		});
+	});							$(function() {
+								$("#viewsHelp").tooltip({
+									showURL: false,
+									extraClass: "tip"
+								});
+							});
+								talks.initMedia();
+	//]]></script>
+<script type="text/javascript">if(!NREUMQ.f){NREUMQ.f=function(){NREUMQ.push(["load",new Date().getTime()]);var e=document.createElement("script");e.type="text/javascript";e.src=(("http:"===document.location.protocol)?"http:":"https:")+"//"+"rpm-images.newrelic.com/42/eum/rum.js";document.body.appendChild(e);if(NREUMQ.a)NREUMQ.a();};NREUMQ.a=window.onload;window.onload=NREUMQ.f;};NREUMQ.push(["nrfj","beacon-3.newrelic.com","ae33628222","1155844","NVxSNxYEDEUEAUBfXwwWZRENSgtYAQdMGEAKSQ==",0,388,new Date().getTime(),"","","","",""]);</script></body>
+</html>
