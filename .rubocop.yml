@@ -12,7 +12,7 @@ Encoding:
 # Limit lines to 79 characters.
 LineLength:
   Enabled: true
-  Max: 160
+  Max: 180
 
 # Avoid methods longer than 10 lines of code
 MethodLength:
@@ -163,7 +163,7 @@ FavorUntilOverNegatedWhile:
 
 # Use spaces around the = operator when assigning default values in def params.
 SpaceAroundEqualsInParameterDefault:
-  Enabled: true
+  Enabled: false
 
 # Use the new lambda literal syntax for single-line blocks.
 Lambda:
@@ -314,7 +314,7 @@ LineContinuation:
 # predicated methods by default.
 TrivialAccessors:
   Enabled: true
-  ExactNameMatch: false
+  ExactNameMatch: true # this is not the best way, but currently rubocop does not support something better https://github.com/bbatsov/rubocop/issues/421
   AllowPredicates: false
 
 # Comments should start with a space.
@@ -363,7 +363,7 @@ CaseEquality:
 
 # Document classes and non-namespace modules.
 Documentation:
-  Enabled: true
+  Enabled: false
 
 # Do not use parentheses for method calls with no arguments.
 MethodCallParentheses:
