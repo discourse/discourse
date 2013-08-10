@@ -6,7 +6,7 @@ module Onebox
     def initialize(link)
       @url = link
       @resource = open(@url)
-      @document = Nokogiri.HTML(@resource)
+      @document = Nokogiri::HTML(@resource)
     end
 
     def to_s

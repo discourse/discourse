@@ -12,7 +12,6 @@ module HTMLSpecHelper
   end
 
   def response(file)
-    Nokogiri.HTML(File.read(File.join("spec", "fixtures", file)))
+    Nokogiri::HTML(File.read(File.join("spec", "fixtures", file)))
   end
 end
-
