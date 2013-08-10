@@ -3,10 +3,10 @@
       site_link: site_link,
       last_seen_at: @last_seen_at) %>
 
-<%- if @new_topics.present? %>
+<%- if @featured_topics.present? %>
 ### <%=t 'user_notifications.digest.top_topics' %>
 
-<%- @new_topics.each do |t| %>
+<%- @featured_topics.each do |t| %>
 <%= raw(@markdown_linker.create(t.title, t.relative_url)) %>
 
 <%- if t.best_post.present? %>
@@ -21,6 +21,17 @@
 
 <%- end %>
 <%- end %>
+
+<%- if @new_topics.present? %>
+**<%=t 'user_notifications.digest.other_new_topics' %>**
+
+<%- @new_topics.each do |t| %>
+* <%= raw(@markdown_linker.create(t.title, t.relative_url)) %> <%- if t.category %>[<%= t.category.name %>]<%- end %>
+<%- end -%>
+
+<%- end -%>
+
+
 
 <%= raw(@markdown_linker.references) %>
 

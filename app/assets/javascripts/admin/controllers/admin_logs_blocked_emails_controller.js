@@ -8,6 +8,7 @@
 **/
 Discourse.AdminLogsBlockedEmailsController = Ember.ArrayController.extend(Discourse.Presence, {
   loading: false,
+  content: [],
 
   show: function() {
     var self = this;

@@ -220,7 +220,8 @@ class User < ActiveRecord::Base
   end
 
   def saw_notification_id(notification_id)
-    User.where(["seen_notification_id < ?", notification_id]).update_all ["seen_notification_id = ?", notification_id]
+    User.where(["id = ? and seen_notification_id < ?", id, notification_id])
+        .update_all ["seen_notification_id = ?", notification_id]
   end
 
   def publish_notifications_state

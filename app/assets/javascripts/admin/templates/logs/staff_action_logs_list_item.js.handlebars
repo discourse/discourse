@@ -1,0 +1,27 @@
+<div class="col value first staff_user">
+  {{#linkTo 'adminUser' staff_user}}{{avatar staff_user imageSize="tiny"}}{{/linkTo}}
+  <a {{action filterByStaffUser staff_user}}>{{staff_user.username}}</a>
+</div>
+<div class="col value action">
+  <a {{action filterByAction action_name}}>{{actionName}}</a>
+</div>
+<div class="col value target_user">
+  {{#if target_user}}
+    {{#linkTo 'adminUser' target_user}}{{avatar target_user imageSize="tiny"}}{{/linkTo}}
+    <a {{action filterByTargetUser target_user}}>{{target_user.username}}</a>
+  {{else}}
+    &mdash;
+  {{/if}}
+</div>
+<div class="col value created_at">{{unboundAgeWithTooltip created_at}}</div>
+<div class="col value context">{{context}}</div>
+<div class="col value details">
+  {{{formattedDetails}}}
+  {{#if showFullDetails}}
+    <a {{action toggleFullDetails this}}>{{i18n less}}</a><br/>
+    {{details}}
+  {{else}}
+    <a {{action toggleFullDetails this}}>{{i18n more}}</a>
+  {{/if}}
+</div>
+<div class="clearfix"></div>
