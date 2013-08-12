@@ -1,5 +1,9 @@
 class UploadsController < ApplicationController
   before_filter :ensure_logged_in
+  
+  # Nope! This might be using the iframe transport
+  skip_before_filter :verify_authenticity_token
+  skip_before_filter :check_xhr
 
   def create
     file = params[:file] || params[:files].first
@@ -17,8 +21,13 @@ class UploadsController < ApplicationController
     return render status: 413, text: I18n.t("upload.#{type}s.too_large", max_size_kb: max_size_kb) if filesize > max_size_kb
 
     upload = Upload.create_for(current_user.id, file, filesize)
-
-    render_serialized(upload, UploadSerializer, root: false)
+    
+    if request.xhr?
+      render_serialized(upload, UploadSerializer, root: false)
+    else
+      json = MultiJson.dump(serialize_data(upload, UploadSerializer, root: false))
+      render text: "<html><body><textarea data-type=\"application/json\">#{json}</textarea></body></html>"
+    end
 
   rescue FastImage::ImageFetchFailure
     render status: 422, text: I18n.t("upload.images.fetch_failure")
