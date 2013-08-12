@@ -673,7 +673,7 @@ de:
       must_begin_with_alphanumeric: "muss mit einer Zahl oder einem Buchstaben anfangen"
     email:
       not_allowed: "ist für diesen Mailprovider nicht erlaubt. Bitte verwende eine andere Mailadresse."
-      change: "Ändern"
+    change: "Ändern"
 
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} lädt Dich ein, an einer Diskussion auf %{site_name} teilzunehmen"
