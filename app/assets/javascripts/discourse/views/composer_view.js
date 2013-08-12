@@ -269,7 +269,7 @@ Discourse.ComposerView = Discourse.View.extend({
       // hide the "file selector" modal
       composerView.get('controller').send('closeModal');
       // cf. https://github.com/blueimp/jQuery-File-Upload/wiki/API#how-to-cancel-an-upload
-      var jqXHR = data.xhr();
+      var jqXHR = data.xhr && data.xhr();
       // need to wait for the link to show up in the DOM
       Em.run.schedule('afterRender', function() {
         // bind on the click event on the cancel link
