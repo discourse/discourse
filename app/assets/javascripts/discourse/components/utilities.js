@@ -184,7 +184,7 @@ Discourse.Utilities = {
     var upload = files[0];
 
     // CHROME ONLY: if the image was pasted, sets its name to a default one
-    if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
+    if ((typeof(Blob) !== "undefined") && upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
 
     return Discourse.Utilities.validateUploadedFile(upload, Discourse.Utilities.isAnImage(upload.name) ? 'image' : 'attachment');
   },
