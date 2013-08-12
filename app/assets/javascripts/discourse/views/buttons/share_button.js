@@ -13,7 +13,7 @@ Discourse.ShareButton = Discourse.ButtonView.extend({
   topic: Em.computed.alias('controller.model'),
 
   renderIcon: function(buffer) {
-    buffer.push("<i class='icon icon-share'></i>");
+    buffer.push("<i class='icon icon-link'></i>");
   }
 });
 

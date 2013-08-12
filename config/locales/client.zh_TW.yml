@@ -84,6 +84,7 @@ zh_TW:
     yes_value: "是"
     of_value: "之于"
     generic_error: "抱歉，發生了一個錯誤。"
+    generic_error_with_reason: "抱歉，發生了一個錯誤: %{error}"
     log_in: "登錄"
     age: "壽命"
     last_post: "最後一帖"
@@ -92,10 +93,13 @@ zh_TW:
     show_more: "顯示更多"
     links: 鏈接
     faq: "常見問答（FAQ）"
+    privacy_policy: "私隱政策"
     you: "你"
     or: "或"
     now: "剛剛"
     read_more: '閱讀更多'
+    more: "更多"
+    less: "更少"
 
     in_n_seconds:
       one: "一秒內"
@@ -152,8 +156,8 @@ zh_TW:
       sent_by_you: "發送人 <a href='{{userUrl}}'>你</a>"
 
     user_action_groups:
-      "1": "給出的贊"
-      "2": "收到的贊"
+      "1": "發出的讚"
+      "2": "收到的讚"
       "3": "書簽"
       "4": "主題"
       "5": "回複"
@@ -162,25 +166,28 @@ zh_TW:
       "9": "引用"
       "10": "喜愛"
       "11": "編輯"
-      "12": "發送條目"
+      "12": "發送項目"
       "13": "收件箱"
 
     user:
+      said: "{{username}} 說:"
       profile: 介紹信息
       title: "用戶"
       mute: 防打擾
       edit: 修改參數
       download_archive: "下載我的帖子的存檔"
-      private_message: "私信"
+      private_message: "私人信息"
       private_messages: "消息"
       activity_stream: "活動"
       preferences: "設置"
-      bio: "關于我"
+      bio: "關於我"
       invited_by: "邀請者爲"
       trust_level: "用戶級別"
+      notifications: "通知"
+      dynamic_favicon: "在圖標顯示消息通知"
       external_links_in_new_tab: "始終在新的標簽頁打開外部鏈接"
       enable_quoting: "在高亮選擇文字時啓用引用回複"
-
+      change: "更改"
       moderator: "{{user}} 是版主"
       admin: "{{user}} 是管理員"
 
@@ -189,6 +196,9 @@ zh_TW:
         success: "（電子郵件已發送）"
         in_progress: "（正在發送電子郵件）"
         error: "（錯誤）"
+      
+      change_about:
+        title: "更改關於我"
 
       change_username:
         action: "修改"
@@ -234,7 +244,7 @@ zh_TW:
         title: "請再次輸入密碼"
 
       last_posted: "最後一帖"
-      last_emailed: "最後一次郵寄"
+      last_emailed: "最後一次電郵"
       last_seen: "最後一次見到"
       created: "創建時間"
       log_out: "登出"
@@ -297,7 +307,7 @@ zh_TW:
         title: "最後使用的IP地址"
       avatar:
         title: "頭像"
-        instructions: "我們目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 來基于你的郵箱生成頭像"
+        instructions: "我們目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 來基於你的郵箱生成頭像"
 
       filters:
         all: "全部"
@@ -305,7 +315,7 @@ zh_TW:
       stream:
         posted_by: "發帖人"
         sent_by: "發送時間"
-        private_message: "私信"
+        private_message: "私人信息"
         the_topic: "本主題"
 
     loading: "載入中……"
@@ -374,10 +384,10 @@ zh_TW:
         message: "使用谷歌（Google）帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
       twitter:
         title: "使用推特帳號登錄"
-        message: "使用推特（Twitter）帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
+        message: "使用推特(Twitter)帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
       facebook:
-        title: "使用臉書帳號登錄"
-        message: "使用臉書（Facebook）帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
+        title: "使用Facebook帳號登錄"
+        message: "使用Facebook帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
       yahoo:
         title: "使用雅虎帳號登錄"
         message: "使用雅虎（Yahoo）帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
@@ -482,6 +492,10 @@ zh_TW:
       placeholder: "在此輸入你的搜索條件"
       no_results: "沒有找到結果。"
       searching: "搜索中……"
+      
+      prefer:
+        user: "搜索會優先列出@{{username}}的結果"
+        category: "搜索會優先列出{{category}}的結果"
 
     site_map: "去另一個主題列表或分類"
     go_back: '返回'
@@ -541,8 +555,8 @@ zh_TW:
       new_posts: "從你最近一次閱讀此主題後，又有 {{new_posts}} 個新帖子發表"
 
       likes:
-        one: "此主題得到了一個贊"
-        other: "此主題得到了 {{count}} 個贊"
+        one: "此主題得到了一個讚"
+        other: "此主題得到了 {{count}} 個讚"
       back_to_list: "返回主題列表"
       options: "主題選項"
       show_links: "顯示此主題中的鏈接"
@@ -712,7 +726,10 @@ zh_TW:
         upload: "抱歉，在上傳文件時發生了錯誤。請重試。"
         image_too_large: "抱歉，你上傳的文件太大了（最大不能超過 {{max_size_kb}}kb），請調整文件大小後重新上傳。"
         too_many_uploads: "抱歉, 你只能一次上傳一張圖片。"
-
+        upload_not_authorized: "抱歉, 你上傳的文件並不允許 (authorized extension: {{authorized_extensions}})."
+        image_upload_not_allowed_for_new_user: "抱歉, 新用戶不能上傳圖片。"
+        attachment_upload_not_allowed_for_new_user: "抱歉, 新用戶不能上傳附件。"
+      
       abandon: "你確定要丟棄你的帖子嗎？"
 
       archetypes:
@@ -739,7 +756,7 @@ zh_TW:
           inappropriate: "也投訴"
           custom_flag: "也投訴"
           bookmark: "也做書簽"
-          like: "也贊它"
+          like: "也讚它"
           vote: "也對它投票"
         undo:
           off_topic: "撤銷投訴"
@@ -868,7 +885,11 @@ zh_TW:
     flagging:
       title: '爲何要給投訴本帖？'
       action: '投訴帖子'
+      take_action: "採取行動"
       notify_action: '通知'
+      delete_spammer: "刪除濫發者"
+      delete_confirm: "你將會從這用戶刪除 <b>%{posts}</b> 帖子及 <b>%{topics}</b> 主題, 刪除戶口, 及新增其電郵 <b>%{email}</b> 到永久封鎖列表. 你確定這用戶是濫發者?"
+      yes_delete_spammer: "確定, 刪除濫發者"
       cant: "抱歉，當前你不能投訴本帖。"
       custom_placeholder_notify_user: "爲何你要私下聯系該用戶？"
       custom_placeholder_notify_moderators: "爲何本帖需要論壇版主的關注？爲何本帖需要論壇版主的關注？"
@@ -947,8 +968,12 @@ zh_TW:
           other: "{{categoryName}}（{{count}}）"
         help: "在 {{categoryName}} 分類中熱門的主題"
 
-    browser_update: '抱歉, <a href="http://www.iteriter.com/faq/#browser">你的浏覽器版本太低，推薦使用Chrome</a>. 請 <a href="http://www.google.com/chrome/">升級你的浏覽器</a>。'
-
+    browser_update: '抱歉, <a href="http://www.iteriter.com/faq/#browser">你的瀏覽器版本太低，推薦使用Google Chrome</a>. 請 <a href="http://www.google.com/chrome/">升級你的浏覽器</a>。'
+    
+    permission_types:
+      full: "創建 / 回復 / 觀看"
+      create_post: "回復 / 觀看"
+      readonly: "觀看"
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "輸入過濾條件……"
@@ -964,6 +989,8 @@ zh_TW:
         critical_available: "有一個關鍵更新可用。"
         updates_available: "目前有可用更新。"
         please_upgrade: "請升級！"
+        no_check_performed: "沒有檢查更新. 請確定 clockwork 及 sidekiq 正在運行."
+        stale_data: "A check for updates has not been performed lately. Ensure clockwork and sidekiq are running."
         installed_version: "已安裝"
         latest_version: "最新版本"
         problems_found: "你安裝的論壇目前有以下問題："
@@ -972,6 +999,8 @@ zh_TW:
         no_problems: "找不到問題."
         moderators: '版主：'
         admins: '管理員：'
+        blocked: '已封鎖:'
+        banned: '已禁止:'
         private_messages_short: "私信"
         private_messages_title: "私密信息"
 
@@ -995,22 +1024,53 @@ zh_TW:
         title: "投訴"
         old: "過去的"
         active: "活躍的"
+        agree_hide: "同意 (隱藏回復 + 發短消息)"
+        agree_hide_title: "隱藏帖子及自動發短消息給該用戶, 使他編輯帖子"
+        defer: "延遲"
+        defer_title: "現時無須採取行動, 無限期延遲任何行動"
         clear: "清除投訴"
         clear_title: "撤銷本帖的所有投訴（已隱藏的帖子將會被取消隱藏）"
         delete: "刪除帖子"
         delete_title: "刪除帖子（如果它是主題第一帖，那麽將刪除主題）"
+        disagree_unhide: "不同意 (取消隱藏帖子)"
+        disagree_unhide_title: "刪除任何標記, 重新開放帖子"
+        disagree: "不同意"
+        disagree_title: "不同意投訴, 刪除帖子的任何標記"
+        delete_spammer_title: "刪除濫發用戶及其所有帖子."
+
+
         flagged_by: "投訴者爲"
         error: "出錯了"
         view_message: "查看消息"
+        no_results: "沒有任何投訴"
+      
+      summary:
+          action_type_3:
+            one: "離題"
+            other: "離題 x{{count}}"
+          action_type_4:
+            one: "不恰當"
+            other: "不恰當 x{{count}}"
+          action_type_6:
+            one: "自定"
+            other: "自定 x{{count}}"
+          action_type_7:
+            one: "自定"
+            other: "自定 x{{count}}"
+          action_type_8:
+            one: "濫發"
+            other: "濫發 x{{count}}"
 
       groups:
         title: "群組"
         edit: "編輯群組"
         selector_placeholder: "添加用戶"
         name_placeholder: "組名，不能含有空格，與用戶名規則一致"
+        about: "編輯群組成員及名稱"
+        can_not_edit_automatic: "自動群組成員為自動決定, 管理用戶設定角色及級別"
         delete: "刪除"
-        delete_confirm: "删除这个小组吗？"
-        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_confirm: "删除這個小組嗎？"
+        delete_failed: "不能删除這個小組, 如是自動群組, 不能被删除"
 
       api:
         title: "應用開發接口（API）"
@@ -1022,11 +1082,11 @@ zh_TW:
         note_html: "請<strong>安全的</strong>保管好本密鑰，任何擁有該密鑰的用戶可以使用它以論壇任何用戶的名義來發帖。"
 
       customize:
-        title: "定制"
-        long_title: "站點定制"
+        title: "自定"
+        long_title: "站點自定"
         header: "頭部"
         css: "層疊樣式表（CSS）"
-        override_default: "覆蓋缺省值？"
+        override_default: "覆蓋預設值？"
         enabled: "啓用？"
         preview: "預覽"
         undo_preview: "撤銷預覽"
@@ -1034,7 +1094,7 @@ zh_TW:
         new: "新建"
         new_style: "新樣式"
         delete: "刪除"
-        delete_confirm: "刪除本定制內容？"
+        delete_confirm: "刪除本自定內容？"
         about: "站點定制允許你修改樣式表和站點頭部。選擇或者添加一個來開始編輯。"
 
       email:
@@ -1045,6 +1105,41 @@ zh_TW:
         test_email_address: "測試電子郵件地址"
         send_test: "發送測試電子郵件"
         sent_test: "已發送！"
+        delivery_method: "發送方法"
+        preview_digest: "前一個信息"
+        preview_digest_desc: "這是一個能預覽從你的討論區發出的信息電子郵件內容的工具"
+        refresh: "重新整理"
+        format: "格式"
+        html: "html"
+        text: "文字"
+        last_seen_user: "最後看見用戶:"
+        reply_key: "回複金鑰"
+        
+        logs:
+        title: "記錄"
+        action: "行動"
+        created_at: "創立"
+        blocked_emails:
+          title: "已封鎖的電郵"
+          description: "當有人創建新用戶, 以下的電郵會被對比及封鎖註冊, 或採取其他行動."
+          email: "電郵地址"
+          last_match_at: "最後符合"
+          match_count: "個符合"
+          actions:
+            block: "封鎖"
+            do_nothing: "不做任何動作"
+        staff_actions:
+          title: "員工動作"
+          instructions: "點擊用戶名及行動去過濾列表. 點擊頭像到用戶頁."
+          clear_filters: "顥示所有"
+          staff_user: "員工用戶"
+          target_user: "目標用戶"
+          when: "當"
+          context: "內容"
+          details: "詳細內容"
+          actions:
+            delete_user: "刪除用戶"
+            change_trust_level: "更改級別"
 
       impersonate:
         title: "假冒用戶"
@@ -1063,6 +1158,10 @@ zh_TW:
           active: "活躍"
           new: "新建"
           pending: "待定"
+          admins: '管理員'
+          moderators: '版主'
+          banned: '已禁止'
+          blocked: '已封鎖'
         approved: "已批准？"
         approved_selected:
           one: "批准用戶"
@@ -1075,9 +1174,11 @@ zh_TW:
           basic: '信用等級爲1的用戶（基本用戶）'
           regular: '信用等級爲2的用戶（常訪問用戶）'
           leader: '信用等級爲3的用戶（高級用戶）'
-          elder: '信用等級爲4的用戶（骨灰用戶）'
+          elder: '信用等級爲4的用戶（年長用戶）'
           admins: '管理員'
           moderators: '版主'
+          banned: '已禁止的用戶'
+          blocked: '已封鎖的用戶'
 
       user:
         ban_failed: "禁止此用戶時發生了錯誤 {{error}}"
@@ -1122,6 +1223,12 @@ zh_TW:
         activate_failed: "在激活用戶帳號時發生了錯誤。"
         deactivate_account: "停用帳號"
         deactivate_failed: "在停用用戶帳號時發生了錯誤。"
+        unblock_failed: '在取消停用用戶帳號時發生了錯誤。'
+        block_failed: '在封鎖用戶帳號時發生了錯誤。'
+        deactivate_explanation: "停用用戶必須重新認證電郵"
+        banned_explanation: "被停用用戶帳號不能登入"
+        block_explanation: "被封鎖用戶帳號不能發言"
+        trust_level_change_failed: "在更改用戶級別時發生了錯誤。"
 
       site_content:
         none: "選擇內容類型以開始編輯。"
@@ -1129,6 +1236,7 @@ zh_TW:
         edit: "編輯站點內容"
 
       site_settings:
-        show_overriden: '只顯示被覆蓋了缺省值的'
+        show_overriden: '只顯示被覆蓋了預設值的'
         title: '設置'
-        reset: '重置爲缺省值'
+        reset: '重置爲預設值'
+        none: '沒有'
