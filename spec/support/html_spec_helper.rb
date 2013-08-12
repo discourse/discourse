@@ -15,4 +15,3 @@ module HTMLSpecHelper
     Nokogiri::HTML(File.read(File.join("spec", "fixtures", file)))
   end
 end
- 

@@ -1,7 +1,6 @@
 require_relative "preview/example"
 require_relative "preview/amazon"
 
-
 module Onebox
   class Preview
     def initialize(link)
@@ -12,8 +11,8 @@ module Onebox
 
     def to_s
       case @url
-        when /example\.com/ then Example
-        when /amazon\.com/ then Amazon
+      when /example\.com/ then Example
+      when /amazon\.com/ then Amazon
       end.new(@document, @url).to_html
     end
 
