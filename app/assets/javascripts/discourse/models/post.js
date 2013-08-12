@@ -343,7 +343,11 @@ Discourse.Post = Discourse.Model.extend({
     topic = this.get('topic');
     return !topic.isReplyDirectlyBelow(this);
 
-  }.property('reply_count')
+  }.property('reply_count'),
+
+  canViewEditHistory: function() {
+    return (Discourse.SiteSettings.edit_history_visible_to_public || (Discourse.User.current() && Discourse.User.current().get('staff')));
+  }.property()
 
 });
 

@@ -390,7 +390,7 @@
       display: inline-block;
       margin-right: 12px;
       &.edits {
-        a, a:visited {
+        a, a:visited, span {
           color: #aaa;
         }
       }

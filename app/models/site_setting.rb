@@ -87,6 +87,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:apple_touch_icon_url, '/assets/default-apple-touch-icon.png')
 
   setting(:ninja_edit_window, 5.minutes.to_i)
+  client_setting(:edit_history_visible_to_public, true)
   client_setting(:delete_removed_posts_after, 24) # hours
   setting(:post_undo_action_window_mins, 10)
   setting(:system_username, '')
