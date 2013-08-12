@@ -240,6 +240,8 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:delete_user_max_age, 7)
   setting(:delete_all_posts_max, 10)
 
+  setting(:username_change_period, 3) # days
+
 
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)

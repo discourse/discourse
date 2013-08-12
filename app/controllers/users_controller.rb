@@ -75,7 +75,7 @@ class UsersController < ApplicationController
     params.require(:new_username)
 
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
+    guardian.ensure_can_edit_username!(user)
 
     result = user.change_username(params[:new_username])
     raise Discourse::InvalidParameters.new(:new_username) unless result

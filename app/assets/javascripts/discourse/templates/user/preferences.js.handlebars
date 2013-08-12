@@ -4,7 +4,9 @@
     <label class="control-label">{{i18n user.username.title}}</label>
     <div class="controls">
       <span class='static'>{{username}}</span>
-      {{#linkTo "preferences.username" class="btn pad-left"}}{{i18n user.change}}{{/linkTo}}
+      {{#if can_edit_username}}
+        {{#linkTo "preferences.username" class="btn pad-left"}}{{i18n user.change}}{{/linkTo}}
+      {{/if}}
     </div>
     <div class='instructions'>
       {{{i18n user.username.short_instructions username="username"}}}

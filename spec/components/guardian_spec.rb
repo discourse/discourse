@@ -1125,5 +1125,48 @@ describe Guardian do
     end
   end
 
+  describe "can_edit_username?" do
+    it "is false without a logged in user" do
+      Guardian.new(nil).can_edit_username?(build(:user, created_at: 1.minute.ago)).should be_false
+    end
+
+    it "is false for regular users to edit another user's username" do
+      Guardian.new(build(:user)).can_edit_username?(build(:user, created_at: 1.minute.ago)).should be_false
+    end
+
+    shared_examples "staff can always change usernames" do
+      it "is true for moderators" do
+        Guardian.new(moderator).can_edit_username?(user).should be_true
+      end
+
+      it "is true for admins" do
+        Guardian.new(admin).can_edit_username?(user).should be_true
+      end
+    end
+
+    context 'for a new user' do
+      let(:target_user) { build(:user, created_at: 1.minute.ago) }
+      include_examples "staff can always change usernames"
+
+      it "is true for the user to change his own username" do
+        Guardian.new(target_user).can_edit_username?(target_user).should be_true
+      end
+    end
+
+    context 'for an old user' do
+      before do
+        SiteSetting.stubs(:username_change_period).returns(3)
+      end
+
+      let(:target_user) { build(:user, created_at: 4.days.ago) }
+
+      include_examples "staff can always change usernames"
+
+      it "is false for the user to change his own username" do
+        Guardian.new(target_user).can_edit_username?(target_user).should be_false
+      end
+    end
+  end
+
 end
 
