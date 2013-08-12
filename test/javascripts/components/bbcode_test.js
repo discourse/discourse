@@ -2,8 +2,9 @@
 module("Discourse.BBCode");
 
 var format = function(input, expected, text) {
-  // testing 1 2 3
-  equal(Discourse.BBCode.format(input, {lookupAvatar: false}), expected, text);
+
+  var cooked = Discourse.Markdown.cook(input, {lookupAvatar: false});
+  equal(cooked, "<p>" + expected + "</p>", text);
 };
 
 test('basic bbcode', function() {
@@ -11,7 +12,7 @@ test('basic bbcode', function() {
   format("[i]emphasis[/i]", "<span class='bbcode-i'>emphasis</span>", "italics text");
   format("[u]underlined[/u]", "<span class='bbcode-u'>underlined</span>", "underlines text");
   format("[s]strikethrough[/s]", "<span class='bbcode-s'>strikethrough</span>", "strikes-through text");
-  format("[code]\nx++\n[/code]", "<pre>\nx++\n</pre>", "makes code into pre");
+  format("[code]\nx++\n[/code]", "<pre>\nx++ <br>\n</pre>", "makes code into pre");
   format("[spoiler]it's a sled[/spoiler]", "<span class=\"spoiler\">it's a sled</span>", "supports spoiler tags");
   format("[img]http://eviltrout.com/eviltrout.png[/img]", "<img src=\"http://eviltrout.com/eviltrout.png\">", "links images");
   format("[url]http://bettercallsaul.com[/url]", "<a href=\"http://bettercallsaul.com\">http://bettercallsaul.com</a>", "supports [url] without a title");
@@ -81,17 +82,15 @@ test("quote formatting", function() {
          "renders quotes properly");
 
   format("[quote=\"eviltrout, post:1, topic:1\"]abc[quote=\"eviltrout, post:2, topic:2\"]nested[/quote][/quote]",
-         "</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div " +
-         "class='quote-controls'></div>\n  \n  eviltrout said:\n  </div>\n  <blockquote>abc</p><aside " +
-         "class='quote' data-post=\"2\" data-topic=\"2\" >\n  <div class='title'>\n    <div class='quote-" +
-         "controls'></div>\n  \n  eviltrout said:\n  </div>\n  <blockquote>nested</blockquote>\n</aside>\n<p></blockquote>\n</aside>\n<p>",
+         "</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>" +
+         "\n  \n  eviltrout said:\n  </div>\n  <blockquote>abc1fe072ca2fadbb4f3dfca9ee8bedef19</blockquote>\n</aside>\n<p>  ",
          "can nest quotes");
 
   format("before[quote=\"eviltrout, post:1, topic:1\"]first[/quote]middle[quote=\"eviltrout, post:2, topic:2\"]second[/quote]after",
-         "before</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div class='quote-cont" +
-         "rols'></div>\n  \n  eviltrout said:\n  </div>\n  <blockquote>first</blockquote>\n</aside>\n<p>middle</p><aside cla" +
-         "ss='quote' data-post=\"2\" data-topic=\"2\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n  \n  " +
-         "eviltrout said:\n  </div>\n  <blockquote>second</blockquote>\n</aside>\n<p>after",
+         "before</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'>" +
+         "</div>\n  \n  eviltrout said:\n  </div>\n  <blockquote>first</blockquote>\n</aside>\n<p></p>\n\n<p>middle</p><aside class='quote'" +
+         " data-post=\"2\" data-topic=\"2\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n  \n  eviltrout said:\n  " +
+         "</div>\n  <blockquote>second</blockquote>\n</aside>\n<p> <br>\nafter",
          "can handle more than one quote");
 
 });
