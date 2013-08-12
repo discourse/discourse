@@ -11,7 +11,7 @@ ru:
   dates:
     short_date_no_year: D MMM
     short_date: D MMM YYYY
-    long_date: DD.MM.YYYY HH:MM
+    long_date: DD.MM.YYYY HH:mm
   time:
     formats:
       short: '%d.%m.%Y'
@@ -700,15 +700,15 @@ ru:
   frequent_poster: Частый автор
   move_posts:
     new_topic_moderator_post:
-      one: 'Я переместил сообщение в новую тему: %{topic_link}'
-      other: 'Я переместил %{count} сообщений в новую тему: %{topic_link}'
-      few: 'Я переместил %{count} сообщение в новую тему: %{topic_link}'
-      many: 'Я переместил %{count} сообщений в новую тему: %{topic_link}'
+      one: 'Я переместил(а) сообщение в новую тему: %{topic_link}'
+      other: 'Я переместил(а) часть сообщений (%{count}) в новую тему: %{topic_link}'
+      few: 'Я переместил(а) часть сообщений (%{count})  в новую тему: %{topic_link}'
+      many: 'Я переместил(а) часть сообщений (%{count}) в новую тему: %{topic_link}'
     existing_topic_moderator_post:
-      one: 'Я переместил сообщение в тему: %{topic_link}'
-      other: 'Я переместил %{count} сообщений в тему: %{topic_link}'
-      few: 'Я переместил %{count} сообщение в тему: %{topic_link}'
-      many: 'Я переместил %{count} сообщений в тему: %{topic_link}'
+      one: 'Я переместил(а) сообщение в тему: %{topic_link}'
+      other: 'Я переместил(а) часть сообщений (%{count}) в тему: %{topic_link}'
+      few: 'Я переместил(а) часть сообщений (%{count})в тему: %{topic_link}'
+      many: 'Я переместил(а) часть сообщений (%{count}) сообщений в тему: %{topic_link}'
   topic_statuses:
     archived_enabled: Эта тема отправлена в Архив. Она заморожена и не может быть изменена.
     archived_disabled: Эта тема разархивирована. Она более не заморожена, и может быть изменена.
@@ -984,7 +984,7 @@ ru:
         %{respond_instructions}
 
     user_posted:
-      subject_template: "[%{site_name}] %{subject_prefix}новое сообщение в теме '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix} новое сообщение в '%{topic_title}'"
       text_body_template: |
         %{message}
 
@@ -998,6 +998,7 @@ ru:
       subject_template: '[Активность %{site_name}] на %{date}'
       new_activity: 'Новая активность в ваших темах и сообщениях:'
       top_topics: 'Последние темы, которые были оценены пользователями форума:'
+      other_new_topics: 'Другие новые темы:'
       unsubscribe: |
         Данное сообщение отправлено как напоминание с сайта %{site_link} потому что вы давно не заходили к нам.
 
@@ -1005,7 +1006,6 @@ ru:
       click_here: нажмите здесь
       from: 'Cводка новостей сайта %{site_name}'
       read_more: Читать еще
-
     forgot_password:
       subject_template: '[%{site_name}] Сброс пароля'
       text_body_template: |
