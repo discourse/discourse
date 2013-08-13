@@ -38,7 +38,6 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
             }
             iconsHtml += Discourse.Utilities.avatarImg({
               size: 'small',
-              username: u.get('username'),
               avatarTemplate: u.get('avatar_template'),
               title: u.get('username')
             });

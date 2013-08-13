@@ -2,7 +2,6 @@
 module("Discourse.BBCode");
 
 var format = function(input, expected, text) {
-
   var cooked = Discourse.Markdown.cook(input, {lookupAvatar: false});
   equal(cooked, "<p>" + expected + "</p>", text);
 };

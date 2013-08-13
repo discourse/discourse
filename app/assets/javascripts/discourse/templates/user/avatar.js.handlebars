@@ -1,0 +1,39 @@
+<form class="form-horizontal">
+
+  <div class="control-group">
+    <div class="controls">
+      <h3>{{i18n user.change_avatar.title}}</h3>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">{{i18n user.avatar.title}}</label>
+    <div class="controls">
+      <label class="radio">
+        <input type="radio" name="avatar" value="gravatar" {{action toggleUseUploadedAvatar false}}> {{avatar this imageSize="large" template="gravatar_template"}} {{i18n user.change_avatar.gravatar}} <a href="//gravatar.com/emails/" target="_blank" class="btn pad-left" title="{{i18n user.change_avatar.gravatar_title}}">{{i18n user.change}}</a>
+      </label>
+      {{#if has_uploaded_avatar}}
+        <label class="radio">
+          <input type="radio" name="avatar" value="uploaded_avatar" {{action toggleUseUploadedAvatar true}}> {{boundUploadedAvatar this imageSize="large"}} {{i18n user.change_avatar.uploaded_avatar}}
+        </label>
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="instructions">{{i18n user.change_avatar.upload_instructions}}</div>
+    <div class="controls">
+      <div>
+        <input type="file" id="avatar-input" accept="image/*">
+      </div>
+      <button {{action uploadAvatar}} {{bindAttr disabled="uploadDisabled"}} class="btn btn-primary">
+        <span class="add-upload"><i class="icon-picture"></i><i class="icon-plus"></i></span>
+        {{uploadButtonText}}
+      </button>
+      {{#if uploading}}
+        <span>{{i18n upload_selector.uploading}} {{uploadProgress}}%</span>
+      {{/if}}
+    </div>
+  </div>
+
+</form>

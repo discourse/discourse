@@ -30,7 +30,7 @@
       {{#unless showExtraInfo}}
         <div class='current-username'>
           {{#if currentUser}}
-          <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.name}}</a></span>
+            <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.name}}</a></span>
           {{else}}
             <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/if}}
@@ -85,7 +85,7 @@
         </li>
         <li class='current-user'>
           {{#if currentUser}}
-            {{#linkTo 'userActivity.index' currentUser titleKey="current_user" class="icon"}}{{avatar currentUser imageSize="medium" }}{{/linkTo}}
+            {{#linkTo 'userActivity.index' currentUser titleKey="current_user" class="icon"}}{{boundAvatar currentUser imageSize="medium" }}{{/linkTo}}
           {{else}}
             <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='icon-user'></i></div>
           {{/if}}

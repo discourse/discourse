@@ -4,34 +4,60 @@ require 'open-uri'
 class S3Store
 
   def store_upload(file, upload)
-    extension = File.extname(file.original_filename)
-    remote_filename = "#{upload.id}#{upload.sha1}#{extension}"
+    # <id><sha1><extension>
+    path = "#{upload.id}#{upload.sha1}#{upload.extension}"
 
     # if this fails, it will throw an exception
-    upload(file.tempfile, remote_filename, file.content_type)
+    upload(file.tempfile, path, file.content_type)
 
     # returns the url of the uploaded file
-    "#{absolute_base_url}/#{remote_filename}"
+    "#{absolute_base_url}/#{path}"
   end
 
   def store_optimized_image(file, optimized_image)
-    extension = File.extname(file.path)
-    remote_filename = [
+    # <id><sha1>_<width>x<height><extension>
+    path = [
       optimized_image.id,
       optimized_image.sha1,
       "_#{optimized_image.width}x#{optimized_image.height}",
-      extension
+      optimized_image.extension
     ].join
 
     # if this fails, it will throw an exception
-    upload(file, remote_filename)
+    upload(file, path)
 
     # returns the url of the uploaded file
-    "#{absolute_base_url}/#{remote_filename}"
+    "#{absolute_base_url}/#{path}"
+  end
+
+  def store_avatar(file, upload, size)
+    # /avatars/<sha1>/200.jpg
+    path = File.join(
+      "avatars",
+      upload.sha1,
+      "#{size}#{upload.extension}"
+    )
+
+    # if this fails, it will throw an exception
+    upload(file, path)
+
+    # returns the url of the avatar
+    "#{absolute_base_url}/#{path}"
+  end
+
+  def remove_upload(upload)
+    remove_file(upload.url)
+  end
+
+  def remove_optimized_image(optimized_image)
+    remove_file(optimized_image.url)
+  end
+
+  def remove_avatars(upload)
+
   end
 
   def remove_file(url)
-    check_missing_site_settings
     return unless has_been_uploaded?(url)
     name = File.basename(url)
     remove(name)

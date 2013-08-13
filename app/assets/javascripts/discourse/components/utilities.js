@@ -16,6 +16,7 @@ Discourse.Utilities = {
       case 'small': return 25;
       case 'medium': return 32;
       case 'large': return 45;
+      case 'huge': return 120;
     }
     return size;
   },
@@ -50,18 +51,20 @@ Discourse.Utilities = {
     return result + "style=\"background-color: #" + color + "; color: #" + textColor + ";\">" + name + "</a>";
   },
 
-  avatarUrl: function(username, size, template) {
-    if (!username) return "";
-    var rawSize = (Discourse.Utilities.translateSize(size) * (window.devicePixelRatio || 1)).toFixed();
+  avatarUrl: function(template, size) {
+    if (!template) { return ""; }
+    var rawSize = Discourse.Utilities.getRawSize(Discourse.Utilities.translateSize(size));
+    return template.replace(/\{size\}/g, rawSize);
+  },
 
-    if (username.match(/[^A-Za-z0-9_]/)) { return ""; }
-    if (template) return template.replace(/\{size\}/g, rawSize);
-    return Discourse.getURL("/users/") + username.toLowerCase() + "/avatar/" + rawSize + "?__ws=" + encodeURIComponent(Discourse.BaseUrl || "");
+  getRawSize: function(size) {
+    var pixelRatio = window.devicePixelRatio || 1;
+    return pixelRatio >= 1.5 ? size * 2 : size;
   },
 
   avatarImg: function(options) {
     var size = Discourse.Utilities.translateSize(options.size);
-    var url = Discourse.Utilities.avatarUrl(options.username, options.size, options.avatarTemplate);
+    var url = Discourse.Utilities.avatarUrl(options.avatarTemplate, size);
 
     // We won't render an invalid url
     if (!url || url.length === 0) { return ""; }
@@ -71,8 +74,8 @@ Discourse.Utilities = {
     return "<img width='" + size + "' height='" + size + "' src='" + url + "' class='" + classes + "'" + title + ">";
   },
 
-  tinyAvatar: function(username) {
-    return Discourse.Utilities.avatarImg({ username: username, size: 'tiny' });
+  tinyAvatar: function(avatarTemplate) {
+    return Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny' });
   },
 
   postUrl: function(slug, topicId, postNumber) {
@@ -266,6 +269,28 @@ Discourse.Utilities = {
 
   authorizedExtensions: function() {
     return Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
+  },
+
+  displayErrorForUpload: function(data) {
+    // deal with meaningful errors first
+    if (data.jqXHR) {
+      switch (data.jqXHR.status) {
+        // cancel from the user
+        case 0: return;
+        // entity too large, usually returned from the web server
+        case 413:
+          var maxSizeKB = Discourse.SiteSettings.max_image_size_kb;
+          bootbox.alert(I18n.t('post.errors.image_too_large', { max_size_kb: maxSizeKB }));
+          return;
+        // the error message is provided by the server
+        case 415: // media type not authorized
+        case 422: // there has been an error on the server (mostly due to FastImage)
+          bootbox.alert(data.jqXHR.responseText);
+          return;
+      }
+    }
+    // otherwise, display a generic error message
+    bootbox.alert(I18n.t('post.errors.upload'));
   }
 
 };

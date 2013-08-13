@@ -628,7 +628,7 @@ describe Guardian do
       Guardian.new(nil).can_see_flags?(post).should be_false
     end
 
-    it "allow regular uses to see flags" do
+    it "allow regular users to see flags" do
       Guardian.new(user).can_see_flags?(post).should be_false
     end
 
