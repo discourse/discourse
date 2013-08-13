@@ -3,7 +3,7 @@ require 'boost_trust_level'
 
 describe BoostTrustLevel do
 
-  let(:user) { Fabricate(:user) }
+  let(:user) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
   let(:logger) { StaffActionLogger.new(Fabricate(:admin)) }
 
 
@@ -14,13 +14,12 @@ describe BoostTrustLevel do
   end
 
   it "should log the action" do
-    StaffActionLogger.any_instance.expects(:log_trust_level_change).with(user, TrustLevel.levels[:basic]).once
+    StaffActionLogger.any_instance.expects(:log_trust_level_change).with(user, TrustLevel.levels[:newuser], TrustLevel.levels[:basic]).once
     boostr = BoostTrustLevel.new(user: user, level: TrustLevel.levels[:basic], logger: logger)
     boostr.save!
   end
 
   describe "demotions" do
-    before { user.update_attributes(trust_level: TrustLevel.levels[:newuser]) }
 
     context "for a user that has not done the requisite things to attain their trust level" do
 
@@ -30,7 +29,7 @@ describe BoostTrustLevel do
       end
 
       it "should demote the user and log the action" do
-        StaffActionLogger.any_instance.expects(:log_trust_level_change).with(user, TrustLevel.levels[:newuser]).once
+        StaffActionLogger.any_instance.expects(:log_trust_level_change).with(user, TrustLevel.levels[:basic], TrustLevel.levels[:newuser]).once
         boostr = BoostTrustLevel.new(user: user, level: TrustLevel.levels[:newuser], logger: logger)
         boostr.save!.should be_true
         user.trust_level.should == TrustLevel.levels[:newuser]
@@ -48,7 +47,7 @@ describe BoostTrustLevel do
       end
 
       it "should not demote the user and not log the action" do
-        StaffActionLogger.any_instance.expects(:log_trust_level_change).with(user, TrustLevel.levels[:newuser]).never
+        StaffActionLogger.any_instance.expects(:log_trust_level_change).never
         boostr = BoostTrustLevel.new(user: user, level: TrustLevel.levels[:newuser], logger: logger)
         expect { boostr.save! }.to raise_error(Discourse::InvalidAccess, "You attempted to demote #{user.name} to 'newuser'. However their trust level is already 'basic'. #{user.name} will remain at 'basic'")
         user.trust_level.should == TrustLevel.levels[:basic]

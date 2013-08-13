@@ -18,14 +18,15 @@ class StaffActionLogger
     )
   end
 
-  def log_trust_level_change(user, new_trust_level, opts={})
+  def log_trust_level_change(user, old_trust_level, new_trust_level, opts={})
     raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
+    raise Discourse::InvalidParameters.new('old trust level is invalid') unless TrustLevel.levels.values.include? old_trust_level
     raise Discourse::InvalidParameters.new('new trust level is invalid') unless TrustLevel.levels.values.include? new_trust_level
     StaffActionLog.create!(
       action: StaffActionLog.actions[:change_trust_level],
       staff_user_id: @admin.id,
       target_user_id: user.id,
-      details: [:id, :username, :name, :created_at, :trust_level, :last_seen_at, :last_emailed_at].map { |x| "#{x}: #{user.send(x)}" }.join(', ') + ", new trust level: #{new_trust_level}"
+      details: "old trust level: #{old_trust_level}, new trust level: #{new_trust_level}"
     )
   end
 end
