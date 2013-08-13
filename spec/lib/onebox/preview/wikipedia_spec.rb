@@ -16,7 +16,7 @@ describe Onebox::Preview::Wikipedia do
 
     it "returns the article img src" do
       wikipedia = described_class.new(response("wikipedia.response"),link)
-      expect(wikipedia.to_html).to include("http://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Kevin_Bacon_Comic-Con_2012.jpg/225px-Kevin_Bacon_Comic-Con_2012.jpg")
+      expect(wikipedia.to_html).to include("//upload.wikimedia.org/wikipedia/commons/thumb/7/78/Kevin_Bacon_Comic-Con_2012.jpg/225px-Kevin_Bacon_Comic-Con_2012.jpg")
     end
 
     it "returns the article summary" do
