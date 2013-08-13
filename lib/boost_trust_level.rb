@@ -11,12 +11,13 @@ class BoostTrustLevel
   end
 
   def save!
+    previous_level = @user.trust_level
     success = if @level < @user.trust_level
                 demote!
               else
                 @user.update_attributes!(trust_level: @level)
               end
-    @logger.log_trust_level_change(@user, @level)
+    @logger.log_trust_level_change(@user, previous_level, @level)
     success
   end
 

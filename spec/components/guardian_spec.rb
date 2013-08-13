@@ -1045,12 +1045,14 @@ describe Guardian do
     end
 
     shared_examples "can_delete_all_posts examples" do
-      it "is true if user is newer than 7 days old" do
-        Guardian.new(actor).can_delete_all_posts?(Fabricate.build(:user, created_at: 6.days.ago)).should be_true
+      it "is true if user is newer than delete_user_max_age days old" do
+        SiteSetting.expects(:delete_user_max_age).returns(10)
+        Guardian.new(actor).can_delete_all_posts?(Fabricate.build(:user, created_at: 9.days.ago)).should be_true
       end
 
-      it "is false if user is older than 7 days old" do
-        Guardian.new(actor).can_delete_all_posts?(Fabricate.build(:user, created_at: 8.days.ago)).should be_false
+      it "is false if user is older than delete_user_max_age days old" do
+        SiteSetting.expects(:delete_user_max_age).returns(10)
+        Guardian.new(actor).can_delete_all_posts?(Fabricate.build(:user, created_at: 11.days.ago)).should be_false
       end
 
       it "is false if user is an admin" do

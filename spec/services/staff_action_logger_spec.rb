@@ -35,22 +35,24 @@ describe StaffActionLogger do
   describe 'log_trust_level_change' do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
+    let(:old_trust_level) { TrustLevel.levels[:newuser] }
     let(:new_trust_level) { TrustLevel.levels[:basic] }
 
-    subject(:log_trust_level_change) { described_class.new(admin).log_trust_level_change(user, new_trust_level) }
+    subject(:log_trust_level_change) { described_class.new(admin).log_trust_level_change(user, old_trust_level, new_trust_level) }
 
     it 'raises an error when user or trust level is nil' do
-      expect { described_class.new(admin).log_trust_level_change(nil, new_trust_level) }.to raise_error(Discourse::InvalidParameters)
-      expect { described_class.new(admin).log_trust_level_change(user, nil) }.to raise_error(Discourse::InvalidParameters)
+      expect { described_class.new(admin).log_trust_level_change(nil, old_trust_level, new_trust_level) }.to raise_error(Discourse::InvalidParameters)
+      expect { described_class.new(admin).log_trust_level_change(user, nil, new_trust_level) }.to raise_error(Discourse::InvalidParameters)
+      expect { described_class.new(admin).log_trust_level_change(user, old_trust_level, nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
     it 'raises an error when user is not a User' do
-      expect { described_class.new(admin).log_trust_level_change(1, new_trust_level) }.to raise_error(Discourse::InvalidParameters)
+      expect { described_class.new(admin).log_trust_level_change(1, old_trust_level, new_trust_level) }.to raise_error(Discourse::InvalidParameters)
     end
 
     it 'raises an error when new trust level is not a Trust Level' do
       max_level = TrustLevel.levels.values.max
-      expect { described_class.new(admin).log_trust_level_change(user, max_level + 1) }.to raise_error(Discourse::InvalidParameters)
+      expect { described_class.new(admin).log_trust_level_change(user, old_trust_level, max_level + 1) }.to raise_error(Discourse::InvalidParameters)
     end
 
     it 'creates a new StaffActionLog record' do
