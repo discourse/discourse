@@ -6,7 +6,7 @@
 //
 //  https://github.com/eviltrout/ember-renderspeed
 //
-if ((typeof console !== 'undefined') && console.groupCollapsed) {
+if ((typeof console !== 'undefined') && console.groupCollapsed && !window.QUnit) {
 
   (function () {
 
