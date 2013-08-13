@@ -20,7 +20,7 @@ module Onebox
         {
           url: @url,
           name: @body.css("html body h1").inner_text,
-          image: @body.css("html body img")[1]["src"],
+          image: @body.css(".infobox .image img").first["src"],
           description: @body.css("html body p").inner_text
         }
       end
