@@ -26,25 +26,6 @@ Discourse.User = Discourse.Model.extend({
   **/
   staff: Em.computed.or('admin', 'moderator'),
 
-  /**
-    Large version of this user's avatar.
-
-    @property avatarLarge
-    @type {String}
-  **/
-  avatarLarge: function() {
-    return Discourse.Utilities.avatarUrl(this.get('username'), 'large', this.get('avatar_template'));
-  }.property('username'),
-
-  /**
-    Small version of this user's avatar.
-
-    @property avatarSmall
-    @type {String}
-  **/
-  avatarSmall: function() {
-    return Discourse.Utilities.avatarUrl(this.get('username'), 'small', this.get('avatar_template'));
-  }.property('username'),
 
   searchContext: function() {
     return ({ type: 'user', id: this.get('username_lower'), user: this });

@@ -20,7 +20,6 @@ if defined?(Rack::MiniProfiler)
     (env['PATH_INFO'] !~ /topics\/timings/) &&
     (env['PATH_INFO'] !~ /assets/) &&
     (env['PATH_INFO'] !~ /qunit/) &&
-    (env['PATH_INFO'] !~ /users\/.*\/avatar/) &&
     (env['PATH_INFO'] !~ /srv\/status/) &&
     (env['PATH_INFO'] !~ /commits-widget/)
   end
