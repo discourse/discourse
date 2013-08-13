@@ -44,6 +44,7 @@ end
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  rank        :integer          default(0), not null
+#  id          :integer          not null, primary key
 #
 # Indexes
 #

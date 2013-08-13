@@ -33,3 +33,22 @@ class BlockedEmail < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: blocked_emails
+#
+#  id            :integer          not null, primary key
+#  email         :string(255)      not null
+#  action_type   :integer          not null
+#  match_count   :integer          default(0), not null
+#  last_match_at :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+# Indexes
+#
+#  index_blocked_emails_on_email          (email) UNIQUE
+#  index_blocked_emails_on_last_match_at  (last_match_at)
+#
+

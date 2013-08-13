@@ -106,6 +106,8 @@ end
 #
 # Indexes
 #
-#  incoming_index  (topic_id,post_number)
+#  incoming_index                                  (topic_id,post_number)
+#  index_incoming_links_on_created_at_and_domain   (created_at,domain)
+#  index_incoming_links_on_created_at_and_user_id  (created_at,user_id)
 #
 

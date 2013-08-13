@@ -259,6 +259,7 @@ end
 #  total_msecs_viewed       :integer          default(0), not null
 #  cleared_pinned_at        :datetime
 #  unstarred_at             :datetime
+#  id                       :integer          not null, primary key
 #
 # Indexes
 #

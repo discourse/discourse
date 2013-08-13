@@ -43,7 +43,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def destroy
     OptimizedImage.transaction do
-      Discourse.store.remove_file(url)
+      Discourse.store.remove_optimized_image(self)
       super
     end
   end
@@ -60,6 +60,7 @@ end
 #  width     :integer          not null
 #  height    :integer          not null
 #  upload_id :integer          not null
+#  url       :string(255)      not null
 #
 # Indexes
 #
