@@ -278,6 +278,10 @@ class Guardian
     !topic.archived && (is_staff? || is_my_own?(topic))
   end
 
+  def can_edit_username?(user)
+    is_staff? || (is_me?(user) && user.created_at > SiteSetting.username_change_period.days.ago)
+  end
+
   # Deleting Methods
   def can_delete_post?(post)
     # Can't delete the first post
