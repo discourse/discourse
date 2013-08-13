@@ -468,8 +468,8 @@ en:
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
-    edit_history_visible_to_public: "Allow everyone to see past versions of an edited post. If disabled, staff members are the only ones able to view edit history."
-    delete_removed_posts_after: "Number of hours after which a post that was removed by its author will be deleted."
+    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view edit history."
+    delete_removed_posts_after: "Number of hours after which posts removed by the author will be deleted."
     max_image_width: "Maximum allowed width of images in a post"
     category_featured_topics: "Number of topics displayed per category in the /categories page"
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
@@ -503,7 +503,7 @@ en:
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
 
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
-    cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit the post that was hidden due to flagging"
+    cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via flagging"
     num_flags_to_block_new_user: "If a new user's posts get this many spam flags from (n) different users, hide all their posts and prevent future posting. 0 disables this feature."
     num_users_to_block_new_user: "If a new user's posts get (x) spam flags from this many different users, hide all their posts and prevent future posting. 0 disables this feature."
 
@@ -513,14 +513,14 @@ en:
     must_approve_users: "Admins must approve all users before they gain access"
     ga_tracking_code: "Google analytics tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics domain name, eg: mysite.com; see http://google.com/analytics"
-    enable_escaped_fragments: "Enable workaround solution to help old crawlers to index your site. WARNING: enable it only if you really have to do it."
-    enable_noscript_support: "Enable supporting &lt;noscript&gt; tag"
+    enable_escaped_fragments: "Enable workaround solution to help older search engine webcrawlers index your site. WARNING: enable only if you have to."
+    enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    topics_per_page: "How many topics are loaded by default on the topics list page"
-    posts_per_page: "How many posts are returned on a topic page"
+    topics_per_page: "How many topics loaded by default on the topics list page"
+    posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
     system_username: "Username for the author of automated private messages sent by the forum"
     send_welcome_message: "Do new users get a welcome private message?"
     suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
@@ -542,8 +542,8 @@ en:
 
     login_required: "Require authentication to read posts"
 
-    enable_local_logins: "Enable local authentication"
-    enable_local_account_create: "Enable local account creation"
+    enable_local_logins: "Enable traditional, local username and password authentication"
+    enable_local_account_create: "Enable creating new local accounts"
     enable_google_logins: "Enable Google authentication"
     enable_yahoo_logins: "Enable Yahoo authentication"
 
@@ -571,11 +571,11 @@ en:
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
 
     uncategorized_name: "The default category for topics that have no category in the /categories page"
-    uncategorized_color: "The background color of the badge for the category with topics that have no category"
-    uncategorized_text_color: "The text color of the badge for the category with topics that have no category"
+    uncategorized_color: "The background color of the uncategorized topics category"
+    uncategorized_text_color: "The text color of the uncategorized topics category"
 
-    rate_limit_create_topic: "How many seconds, after creating a topic, before you can create another topic"
-    rate_limit_create_post: "How many seconds, after creating a post, before you can create another post"
+    rate_limit_create_topic: "After creating a topic, users must wait this many seconds before they can create another topic"
+    rate_limit_create_post: "After posting, users must wait this many seconds before they can create another post"
 
     max_likes_per_day: "Maximum number of likes per user per day"
     max_flags_per_day: "Maximum number of flags per user per day"
@@ -585,7 +585,7 @@ en:
     max_topics_per_day: "Maximum number of topics a user can create per day"
     max_private_messages_per_day: "The maximum amount of private messages users can create per day"
 
-    suggested_topics: "The number of suggested topics shown at the bottom of a topic"
+    suggested_topics: "Number of suggested topics shown at the bottom of a topic"
 
     enable_s3_uploads: "Place uploads on Amazon S3"
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase (cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)"
@@ -593,7 +593,7 @@ en:
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images"
     s3_region: "The Amazon S3 region name that will be used to upload images"
 
-    enable_flash_video_onebox: "Enable embedding of swf and flv links in oneboxes (may introduce a security risk, caution advised)"
+    enable_flash_video_onebox: "Enable embedding of swf and flv links in oneboxes. WARNING: may introduce a security risk"
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users"
     default_trust_level: "Default trust level (0-4) for users"
@@ -618,8 +618,8 @@ en:
 
     create_thumbnails: "Create thumbnails for lightboxed images"
 
-    email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first"
-    email_posts_context: "How many posts to include in emails to show context"
+    email_time_window_mins: "How many minutes we wait before sending reply notification emails, to give users a chance to edit and finalize their posts"
+    email_posts_context: "How many prior replies to include as context in notification emails"
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
     max_word_length: "The maximum allowed word length, in characters, in a topic title"
     title_min_entropy: "The minimum allowed entropy (unique characters, non-english count for more) required for a topic title"
@@ -631,8 +631,8 @@ en:
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
 
     category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
-    max_image_size_kb: "The maximum size of images we allow users to upload in kB - be sure to configure the limit in nginx (client_max_body_size) / apache or proxy as well."
-    max_attachment_size_kb: "The maximum size of files we allow users to upload in kB - be sure to configure the limit in nginx (client_max_body_size) / apache or proxy as well."
+    max_image_size_kb: "The maximum size of images we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
+    max_attachment_size_kb: "The maximum size of files we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
     authorized_extensions: "A pipe (|) separated list of file extensions allowed for upload"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
 
@@ -649,10 +649,10 @@ en:
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
     staff_like_weight: "Extra weighting factor given to likes when performed by staff."
 
-    reply_by_email_enabled: "Whether this forum supports reply by email"
+    reply_by_email_enabled: "Enable replying to topics via email"
     reply_by_email_address: "Template for reply by email address in form, for example: %{reply_key}@reply.myforum.com"
 
-    pop3s_polling_enabled: "Whether to poll via POP3S for reply by email"
+    pop3s_polling_enabled: "Poll via POP3S for email replies"
     pop3s_polling_port: "The port to poll a POP3S account on"
     pop3s_polling_host: "The host to poll for email via POP3S"
     pop3s_polling_username: "The username for the POP3S account to poll for email"
@@ -663,7 +663,7 @@ en:
     relative_date_duration: "Number of days after posting where post dates will be shown as relative instead of absolute. Examples: relative date: 7d, absolute date: 20 Feb"
     delete_user_max_age: "The maximum age of a user, in days, which can be deleted by an admin."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
-    username_change_period: "The number of days after registration that someone can change their own username."
+    username_change_period: "The number of days after registration that accounts can change their username."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
