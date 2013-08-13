@@ -1271,9 +1271,9 @@ en:
         delete_forbidden:
           one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
           other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
-        delete_confirm: "Are you SURE you want to permanently delete this user from the site? This action is permanent!"
-        delete_and_block: "<b>Yes</b>, and <b>block</b> signups with the same email address"
-        delete_dont_block: "<b>Yes</b>, and <b>allow</b> signups with the same email address"
+        delete_confirm: "Are you SURE you want to delete this user? This action is permanent!"
+        delete_and_block: "<b>Yes</b>, and <b>block</b> any future signup attempts with this email address"
+        delete_dont_block: "<b>Yes</b>, but <b>allow</b> future signups with this email address"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"
