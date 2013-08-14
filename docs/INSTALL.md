@@ -34,12 +34,11 @@ Alternately, you can try the [unofficial Heroku install guide][2], or the [BitNa
   - Prepackage all assets using rake
   - Run the Rails database migrations
   - Run a sidekiq process for background jobs
-  - Run a clockwork process for enqueing scheduled jobs
   - Run several Rails processes, preferably behind a proxy like Nginx.
 
 ### Low memory (less than 2 GB)
 
-Remember you *will* need swap enabled (enough for a total of 4 GB, so 2 GB swap with 2 GB RAM, and 3 GB swap with 1 GB ram, etc) and working! To reduce memory footprint, clockwork can run inside your web server. If you launch the your web server with `EMBED_CLOCKWORK=1`, clockwork will run in a backgroud thread. As clockwork itself only performs scheduling, it will have very little impact on performance.
+Remember you *will* need swap enabled (enough for a total of 4 GB, so 2 GB swap with 2 GB RAM, and 3 GB swap with 1 GB ram, etc) and working!
 
 [1]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md
 [2]: https://github.com/discourse/discourse/blob/master/docs/HEROKU.md

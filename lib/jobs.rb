@@ -34,8 +34,8 @@ module Jobs
       raise "Overwrite me!"
     end
 
-    def perform(opts={})
-      opts = opts.with_indifferent_access
+    def perform(*args)
+      opts = args.extract_options!.with_indifferent_access
 
       if SiteSetting.queue_jobs?
         Sidekiq.redis do |r|
@@ -75,10 +75,12 @@ module Jobs
 
   end
 
-  def self.enqueue(job_name, opts={})
+  class Scheduled < Base
+    include Sidetiq::Schedulable
+  end
 
-    klass_name = "Jobs::#{job_name.to_s.camelcase}"
-    klass = klass_name.constantize
+  def self.enqueue(job_name, opts={})
+    klass = "Jobs::#{job_name.to_s.camelcase}".constantize
 
     # Unless we want to work on all sites
     unless opts.delete(:all_sites)
@@ -90,7 +92,7 @@ module Jobs
       if opts[:delay_for].present?
         klass.delay_for(opts.delete(:delay_for)).delayed_perform(opts)
       else
-        Sidekiq::Client.enqueue(klass_name.constantize, opts)
+        Sidekiq::Client.enqueue(klass, opts)
       end
     else
       # Otherwise execute the job right away

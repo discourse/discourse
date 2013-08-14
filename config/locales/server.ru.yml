@@ -451,7 +451,6 @@ ru:
     rails_env_warning: 'Ваш сервер работает в режиме %{env}.'
     host_names_warning: Ваш файл config/database.yml использует локальное имя хоста по умолчанию. Поменяйте его на имя хоста вашего сайта.
     gc_warning: 'Ваш сервер использует параметры ruby garbage collection по умолчанию, что ведет не к лучшей производительности. Прочитайте эту тему про настройку производительности: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
-    clockwork_warning: 'Clockwork не запущен. Убедитесь, что процесс clockwork всегда работает, чтобы распланировать выполнение важных задач. <a href="https://github.com/tomykaira/clockwork">Узнайте больше о clockwork здесь</a>.'
     sidekiq_warning: 'Sidekiq не запущен. Сейчас многие задачи, такие как отправка электронных писем, выполняются асинхронно.  Пожалуйста, убедитесь, что хотя бы один процесс sidekiq запущен. <a href="https://github.com/mperham/sidekiq">Узнайте больше о  Sidekiq здесь</a>.'
     queue_size_warning: 'Количество задач в очереди достигло большого размера %{queue_size}. Это может привести к проблемам с процессом(ами) Sidekiq, или вам придется добавить больше Sidekiq workers.'
     memory_warning: Общее количество памяти, используемое вашим сервером, составляет менее 1 GB. Рекомендовано использовать минимум 1 GB.

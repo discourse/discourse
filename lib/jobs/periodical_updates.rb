@@ -4,7 +4,8 @@ module Jobs
 
   # This job will run on a regular basis to update statistics and denormalized data.
   # If it does not run, the site will not function properly.
-  class PeriodicalUpdates < Jobs::Base
+  class PeriodicalUpdates < Jobs::Scheduled
+    recurrence { hourly.minute_of_hour(0, 10, 20, 30, 40, 50) }
 
     def execute(args)
 

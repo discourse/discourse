@@ -24,7 +24,7 @@ class AdminDashboardData
     [ rails_env_check,
       host_names_check,
       gc_checks,
-      sidekiq_check || queue_size_check || clockwork_check,
+      sidekiq_check || queue_size_check,
       ram_check,
       facebook_config_check,
       twitter_config_check,
@@ -72,7 +72,7 @@ class AdminDashboardData
   end
 
   def self.recalculate_interval
-    # Could be configurable, but clockwork + multisite need to support it.
+    # Could be configurable, multisite need to support it.
     30 # minutes
   end
 
@@ -91,10 +91,6 @@ class AdminDashboardData
   def sidekiq_check
     last_job_performed_at = Jobs.last_job_performed_at
     I18n.t('dashboard.sidekiq_warning') if Jobs.queued > 0 and (last_job_performed_at.nil? or last_job_performed_at < 2.minutes.ago)
-  end
-
-  def clockwork_check
-    I18n.t('dashboard.clockwork_warning') unless Jobs::ClockworkHeartbeat.is_clockwork_running?
   end
 
   def queue_size_check

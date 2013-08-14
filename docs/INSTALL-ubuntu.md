@@ -50,7 +50,7 @@ Install necessary packages:
     # Run these commands as your normal login (e.g. "michael")
     sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev libpq-dev gawk curl pngcrush python-software-properties
 
-## Caching: Redis 
+## Caching: Redis
 
 Redis is a networked, in memory key-value store cache. Without the Redis caching layer, we'd have to go to the database a lot more often for common information and the site would be slower as a result.
 
@@ -140,10 +140,10 @@ Continue with Discourse installation
 
     # Build and install ruby
     rvm install 2.0.0
-    
+
     # Use installed ruby as default
     rvm use 2.0.0 --default
-    
+
     # Install bundler
     gem install bundler
 
@@ -151,7 +151,7 @@ Continue with Discourse installation
     git clone git://github.com/discourse/discourse.git /var/www/discourse
     cd /var/www/discourse
     git checkout master
-    
+
     # To run on the most recent numbered release instead of bleeding-edge:
     #git checkout latest-release
 
@@ -185,7 +185,6 @@ Edit /var/www/discourse/config/discourse.pill
 - change application name from 'discourse' if necessary
 - Ensure appropriate Bluepill.application line is uncommented
 - search for "host to run on" and change to current hostname
-- note: clockwork should run on only one host
 
 Edit /var/www/discourse/config/initializers/secret_token.rb
 
@@ -216,7 +215,7 @@ Not english? Set the default language as appropriate:
 
     # Not sure if your locale is supported? Check at the rails console:
     LocaleSiteSetting.values
-     => ["cs", "da", "de", "en", "es", "fr", "id", "it", "nb_NO", "nl", "pseudo", "pt", "ru", "sv", "zh_CN", "zh_TW"] 
+     => ["cs", "da", "de", "en", "es", "fr", "id", "it", "nb_NO", "nl", "pseudo", "pt", "ru", "sv", "zh_CN", "zh_TW"]
 
 ## nginx setup
 

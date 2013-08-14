@@ -2,7 +2,8 @@ require_dependency 'discourse_hub'
 require_dependency 'discourse_updates'
 
 module Jobs
-  class VersionCheck < Jobs::Base
+  class VersionCheck < Jobs::Scheduled
+    recurrence { daily }
 
     def execute(args)
       if SiteSetting.version_checks? and (DiscourseUpdates.updated_at.nil? or DiscourseUpdates.updated_at < 1.minute.ago)

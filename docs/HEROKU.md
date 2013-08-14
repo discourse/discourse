@@ -53,23 +53,19 @@ For details on how to reduce the monthly cost of your application, see [Advanced
         heroku config:get OPENREDIS_URL
         heroku config:set REDIS_PROVIDER_URL=<result of above command>
 
-4. Add the [Heroku Scheduler](https://addons.heroku.com/scheduler) add-on, this saves us from running a separate clock process, reducing the cost of the app.
-
-        heroku addons:add scheduler:standard
-
-5. Run bundler
+4. Run bundler
 
         bundle install
 
-6. Generate a secret token in the terminal.
+5. Generate a secret token in the terminal.
 
         rake secret
 
-7. Push the secret to the stored heroku environment variables, this will now be available to your app globally.
+6. Push the secret to the stored heroku environment variables, this will now be available to your app globally.
 
         heroku config:add SECRET_TOKEN=<generated secret>
 
-8. Precompile assets.
+. Precompile assets.
 
     There are two options for precompilation. Either precompile locally, **before each deploy** or enable [Heroku's experimental user-env-compile](https://devcenter.heroku.com/articles/labs-user-env-compile) feature and Heroku will precompile your assets for you.
 
@@ -101,7 +97,7 @@ For details on how to reduce the monthly cost of your application, see [Advanced
             unset SECRET_TOKEN
 
         When precompiling locally make sure to alter the .gitignore file to allow the public/assets folder into version control.
-        
+
         *.gitignore*
 
         ```diff
@@ -110,14 +106,14 @@ For details on how to reduce the monthly cost of your application, see [Advanced
         ```
 
         Also, you'll need to add a commit to get the precompiled assets onto Heroku.
-            git add public/assets        
+            git add public/assets
             git push heroku heroku:master
 
-9. Push your heroku branch to Heroku.
+8. Push your heroku branch to Heroku.
 
         git push heroku heroku:master
 
-10. Migrate and seed the database.
+9. Migrate and seed the database.
 
         heroku run rake db:migrate db:seed_fu
 
@@ -142,33 +138,15 @@ For details on how to reduce the monthly cost of your application, see [Advanced
 4. In Discourse admin settings, set `force_hostname` to your applications Heroku domain.
 
     This step is required for Discourse to properly form links sent with account confirmation emails and password resets. The auto detected application url would point to an Amazon AWS instance.
-    
+
     Since you can't log in yet, you can set `force_hostname` in the console.
 ```ruby
    SiteSetting.create(:name => 'force_hostname', :data_type =>1, :value=>'yourappnamehere.herokuapp.com')
 ```
 
-5. Provision the Heroku Scheduler.
+5. Start Sidekiq.
 
-  This will allow Heroku Scheduler to cue up tasks rather than running a separate clock process.
-  In the [Heroku dashboard](https://dashboard.heroku.com/apps), select your app, then click on **Heroku Scheduler Standard** under your Add-ons.
-
-    Next, add a Job for each of the following:
-
-        TASK                        FREQUENCY         NEXT RUN
-        ------------------------------------------------------
-
-        rake enqueue_digest_emails  Daily                06:00
-
-        rake category_stats         Daily                04:00
-
-        rake periodical_updates     Every 10 minutes     --:--
-
-        rake version_check          Daily                01:00
-
-6. Start Sidekiq.
-
-    In the [Heroku dashboard](https://dashboard.heroku.com/apps), select your app and you will see the separate processes that have been created for your application under Resources. You will only need to start the sidekiq process for your application to run properly. The clock process is covered by Heroku Scheduler, and you can even remove this from the Procfile before deploying if you so wish. The worker process has been generated as a Rails default and can be ignored. As you can see **the Sidekiq process costs $34 monthly** to run. If you want to reduce this cost, check out [Advanced Heroku deployment](#advanced-heroku-deployment).
+    In the [Heroku dashboard](https://dashboard.heroku.com/apps), select your app and you will see the separate processes that have been created for your application under Resources. You will only need to start the sidekiq process for your application to run properly. The worker process has been generated as a Rails default and can be ignored. As you can see **the Sidekiq process costs $34 monthly** to run. If you want to reduce this cost, check out [Advanced Heroku deployment](#advanced-heroku-deployment).
 
     Click on the check-box next to the Sidekiq process and click Apply Changes
 
@@ -200,11 +178,11 @@ Create a .env file from the sample.
 ##### Use Rails console, with pry
 
     foreman run rails console
-    
+
 ##### Prepare the test database
 
     foreman run rake db:test:prepare
-    
+
 ##### Run tests
 
     foreman run rake autospec
@@ -257,8 +235,8 @@ You can now run basic load tests against your instalation. Here's an example que
 
         heroku addons:add loaderio:test
 
-loader.io is still in beta, so you mileage may vary, but the tests are free for now. 
-They currently require you verify your domain. A simple way to do this is to add a hard coded static route to `config.routes.rb` using the loaderio verification key. You'll see the key the first time you try to run a load test. 
+loader.io is still in beta, so you mileage may vary, but the tests are free for now.
+They currently require you verify your domain. A simple way to do this is to add a hard coded static route to `config.routes.rb` using the loaderio verification key. You'll see the key the first time you try to run a load test.
 
 *config/routes.rb*
 
@@ -273,60 +251,60 @@ end
 
 ## Autoscaler
 
-Adding the [Autoscaler Gem](https://github.com/JustinLove/autoscaler) can help you better manage the running cost of your application by scaling down the Sidekiq worker process when not in use. This could save up to $34 per month depending on your usage levels. 
+Adding the [Autoscaler Gem](https://github.com/JustinLove/autoscaler) can help you better manage the running cost of your application by scaling down the Sidekiq worker process when not in use. This could save up to $34 per month depending on your usage levels.
 
 ##### Whilst this Gem has the potential to save you money, it in no way guarantees it. Use of this Gem should be combined with careful monitoring of your applications processes and usage alerts where necessary.
 
 1. Push your Heroku API key and app name to Heroku.
-    
+
         heroku config:add HEROKU_API_KEY=<get your API key from acct settings> HEROKU_APP=<your app name>
 
 2. Add the Autoscaler Gem to the Gemfile.
 
     *Gemfile*
-    
+
     ```ruby
     gem 'autoscaler', require: false
     ```
-3. Modify the Sidekiq config file to use the Autoscaler middleware in production. 
+3. Modify the Sidekiq config file to use the Autoscaler middleware in production.
 
 
     *config/initializers/sidekiq.rb*
-    
+
     ```ruby
     sidekiq_redis = { url: $redis.url, namespace: 'sidekiq' }
 
-    if Rails.env.production? 
-    
+    if Rails.env.production?
+
       require 'autoscaler/sidekiq'
       require 'autoscaler/heroku_scaler'
-    
-        Sidekiq.configure_server do |config| 
+
+        Sidekiq.configure_server do |config|
           config.redis = sidekiq_redis
           config.server_middleware do |chain|
             chain.add(Autoscaler::Sidekiq::Server, Autoscaler::HerokuScaler.new('sidekiq'), 60)
           end
         end
-    
-    
-        Sidekiq.configure_client do |config| 
+
+
+        Sidekiq.configure_client do |config|
           config.redis = sidekiq_redis
           config.client_middleware do |chain|
             chain.add Autoscaler::Sidekiq::Client, 'default' => Autoscaler::HerokuScaler.new('sidekiq')
           end
         end
-    
+
     else
-    
+
       Sidekiq.configure_server { |config| config.redis = sidekiq_redis }
       Sidekiq.configure_client { |config| config.redis = sidekiq_redis }
-    
+
     end
-        
+
     ```
-    
+
 ## S3 CDN
-    
+
 Heroku Cedar stack does not support Nginx as a caching layer, so you may want to host your static assets in a CDN so you're not hitting your rails app for every asset request.
 
 This can be done simply using the [Asset Sync](https://github.com/rumblelabs/asset_sync) gem.
@@ -336,7 +314,7 @@ You'll need an Amazon S3 account set up with a bucket configured with your app n
 **Caveat:** This example relies on the app being deployed using the `heroku labs:enable user-env-compile` method detailed above. For instructions on manual compilation, please refer to the [Asset Sync](https://github.com/rumblelabs/asset_sync) gem readme.
 
 1. Add the Asset Sync Gem to the Gemfile under assets.
-    
+
     *Gemfile*
 
     ```diff
@@ -358,11 +336,11 @@ You'll need an Amazon S3 account set up with a bucket configured with your app n
 3. Get the access keys that were created for the new user and push the S3 configs to Heroku.
 
         heroku config:set FOG_PROVIDER=AWS AWS_ACCESS_KEY_ID=xxx AWS_SECRET_ACCESS_KEY=yyy FOG_DIRECTORY=appname-assets
-        
+
 4. Push the Gzip config setting to Heroku. This tells asset sync to upload Gzipped files where available.
 
         heroku config:add ASSET_SYNC_GZIP_COMPRESSION=true
 
 Now commit your changes to Git and push to Heroku.
 
-If you open Chrome's Inspector, click on Network and refresh the page, your assets should now be showing an amazonaws.com url. Please refer to the [Asset Sync](https://github.com/rumblelabs/asset_sync) gem readme for more configuration options, or to use another CDN such as AWS CloudFront for better performance. 
+If you open Chrome's Inspector, click on Network and refresh the page, your assets should now be showing an amazonaws.com url. Please refer to the [Asset Sync](https://github.com/rumblelabs/asset_sync) gem readme for more configuration options, or to use another CDN such as AWS CloudFront for better performance.
