@@ -1247,6 +1247,7 @@ en:
         unban_failed: "Something went wrong unbanning this user {{error}}"
         ban_duration: "How long would you like to ban the user for? (days)"
         delete_all_posts: "Delete all posts"
+        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
         ban: "Ban"
         unban: "Unban"
         banned: "Banned?"
