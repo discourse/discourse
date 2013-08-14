@@ -299,7 +299,7 @@ class User < ActiveRecord::Base
 
   def self.avatar_template(email)
     user = User.select([:email, :use_uploaded_avatar, :uploaded_avatar_template, :uploaded_avatar_id])
-               .where(email: email.downcase)
+               .where(['lower(email) = lower(?)', email])
                .first
     user.avatar_template if user.present?
   end
