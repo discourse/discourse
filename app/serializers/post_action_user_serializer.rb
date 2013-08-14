@@ -1,8 +1,20 @@
 class PostActionUserSerializer < BasicUserSerializer
-  attributes :post_url
+  attributes :id, :username, :avatar_template, :post_url
 
-  # reserved
-  def post_url
-    object.post_url
+  def id
+    object.user.id
   end
+
+  def username
+    object.user.username
+  end
+
+  def avatar_template
+    object.user.avatar_template
+  end
+
+  def post_url
+    object.related_post_id
+  end
+
 end
