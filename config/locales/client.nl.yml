@@ -9,7 +9,6 @@
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
-
 nl:
   js:
     number:
@@ -41,7 +40,7 @@ nl:
           other: "%{count}m"
         about_x_hours:
           one:   1h
-          other: "%{count}h"
+          other: "%{count}u"
         x_days:
           one:   1d
           other: "%{count}d"
@@ -103,6 +102,8 @@ nl:
     or: of
     now: zonet
     read_more: lees verder
+    more: Meer
+    less: Minder
 
     in_n_seconds:
       one: "over 1 seconde"
@@ -173,6 +174,7 @@ nl:
       "13": "Inbox"
 
     user:
+      said: "{{username}} zei:"
       profile: Profiel
       mute: Negeer
       edit: Wijzig voorkeuren
@@ -188,25 +190,26 @@ nl:
       dynamic_favicon: Laat notificatie voor nieuw bericht zien in favicon
       external_links_in_new_tab: Open alle externe links in een nieuw tabblad
       enable_quoting: Activeer antwoord-met-citaat voor geselecteerde tekst
-
+      change: verander
       moderator: "{{user}} is een moderator"
       admin: "{{user}} is een admin"
 
       change_password:
-        action: wijzig
         success: (e-mail verzonden)
         in_progress: (e-mail wordt verzonden)
         error: (fout)
 
+      change_about:
+        title: Wijzig bio
+
       change_username:
-        action: wijzig
         title: Wijzig gebruikersnaam
         confirm: Het wijzigen van je gebruikersnaam kan consequenties hebben. Weet je zeker dat je dit wil doen?
         taken: "Sorry, maar die gebruikersnaam is al in gebruik."
         error: Het veranderen van je gebruikersnaam is mislukt.
         invalid: Die gebruikersnaam is ongeldig. Gebruik alleen nummers en letters.
+
       change_email:
-        action: wijzig
         title: Wijzig e-mail
         taken: 'Sorry, dat e-mailadres is niet beschikbaar.'
         error: "Het veranderen van je e-mailadres is mislukt. Wellicht is deze al in gebruik?"
@@ -488,15 +491,22 @@ nl:
       total_flagged: aantal gemarkeerde berichten
 
     upload_selector:
-      title: Voeg afbeelding toe
+      title: Voeg een afbeelding toe
+      title_with_attachments: Voeg een afbeelding of bestand toe
       from_my_computer: Vanaf mijn apparaat
       from_the_web: Vanaf het web
       add_title: Voeg afbeelding toe
+      add_title_with_attachments: Voeg afbeelding of bestand toe
       remote_title: externe afbeelding
+      remote_title_with_attachments: externe afbeelding of bestand
       remote_tip: "vul een internetadres in van een afbeelding in deze vorm: http://example.com/image.jpg"
+      remote_tip_with_attachments: "vul een internetadres in van een afbeelding of bestand in deze vorm: http://example.com/bestand.ext (toegestane extensies: {{authorized_extensions}})."
       local_title: lokale afbeelding
+      local_title_with_attachments: lokale afbeelding of bestand
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
+      local_tip_with_attachments: "klik om een afbeelding of bestand vanaf je apparaat te selecteren (toegestane extensies: {{authorized_extensions}})."
       upload_title: Uploaden
+      upload_title_with_attachments: Uploaden
       uploading: Afbeelding uploaden
 
     search:
@@ -581,7 +591,7 @@ nl:
       read_more: "Wil je meer lezen? {{catLink}} of {{latestLink}}."
 
       # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
-      read_more_MF: "There {
+      read_more_MF: "Er {
         UNREAD, plural,
         =0 {}
         one {
@@ -645,10 +655,11 @@ nl:
           description: "je zal geen notificaties krijgen voor deze topic en het zal ook niet verschijnen in je 'ongelezen'-tab."
 
       actions:
+        recover: Herstel topic
         delete: Verwijder topic
         open: Open topic
         close: Sluit topic
-        auto_close: "Automatisch sluiten"
+        auto_close: Automatisch sluiten
         unpin: Ontpin topic
         pin: Pin topic
         unarchive: De-archiveer topic
@@ -737,16 +748,19 @@ nl:
           other: "Je hebt <b>{{count}}</b> berichten geselecteerd."
 
     post:
-      reply: "Je reageert nu op {{link}} door {{replyAvatar}} {{username}}"
+      reply: "Reageren op {{link}} door {{replyAvatar}} {{username}}"
       reply_topic: "Reageer op {{link}}"
       quote_reply: citeer
-      edit: "Bewerk {{link}} door {{replyAvatar}} {{username}}"
+      edit: "Bewerken van {{link}} door {{replyAvatar}} {{username}}"
       post_number: "bericht {{number}}"
       in_reply_to: in reactie op
+      last_edited_on: bericht gewijzig op
       reply_as_new_topic: Reageer in een nieuwe topic
       continue_discussion: "Voortzetting van de discussie {{postLink}}:"
       follow_quote: ga naar het geciteerde bericht
-      deleted_by_author: "(bericht verwijderd door de schrijver)"
+      deleted_by_author:
+        one: "(bericht ingetrokken door de schrijver), wordt automatisch verwijderd over %{count} uur, tenzij gemarkeerd."
+        other: "(berichten ingetrokken door de schrijver), worden automatisch verwijderd over %{count} uur, tenzij gemarkeerd."
       deleted_by: verwijderd door
       expand_collapse: "uit-/invouwen"
 
@@ -758,10 +772,12 @@ nl:
         create: "Sorry, er is iets misgegaan bij het plaatsen van je bericht. Probeer het nog eens."
         edit: "Sorry, er is iets misgegaan bij het bewerken van je bericht. Probeer het nog eens."
         upload: "Sorry, er is iets misgegaan bij het uploaden van je bestand. Probeer het nog eens."
-        image_too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is {{max_size_kb}}kb), verklein het bestand en probeer het opnieuw."
+        attachment_too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is {{max_size_kb}}kb)."
+        image_too_large: "Sorry, de afbeelding je wil uploaden is te groot (maximum grootte is {{max_size_kb}}kb), verklein de afbeelding en probeer het opnieuw."
         too_many_uploads: "Sorry, je kan maar één afbeelding tegelijk uploaden."
         upload_not_authorized: "Sorry, je mag dat type bestand niet uploaden (toegestane extensies: {{authorized_extensions}})."
-        upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen afbeeldingen uploaden."
+        image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen afbeeldingen uploaden."
+        attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen bestanden uploaden."
 
       abandon: Weet je zeker dat je het schrijven van dit bericht wil afbreken?
 
@@ -880,6 +896,7 @@ nl:
           other: Weet je zeker dat je al deze berichten wil verwijderen?
 
     category:
+      can: 'can&hellip; '
       none: (geen categorie)
       edit: bewerk
       edit_long: Bewerk categorie
@@ -908,18 +925,19 @@ nl:
       change_in_category_topic: Wijzig omschrijving
       hotness: Populariteit
       already_used: Deze kleur is al in gebruik door een andere categorie
-      is_secure: "Categorie beveiligen?"
-      add_group: "Voeg groep toe"
-      security: "Beveiliging"
-      allowed_groups: "Toegestane groepen:"
+      security: Beveiliging
       auto_close_label: "Sluit topics automatisch na:"
-
+      edit_permissions: Wijzig permissies
+      add_permission: Nieuwe permissie
 
     flagging:
-      title: Waarom meld je dit bericht voor moderatie?
+      title: Waarom meld je dit bericht?
       action: Meld bericht
       take_action: Onderneem actie
       notify_action: Meld
+      delete_spammer: Verwijder spammer
+      delete_confirm: "Je gaat nu <b>%{posts}</b> berichten en <b>%{topics}</b> van deze gebruiker verwijderen, hun account verwijderen en hun e-mailadres <b>%{email}</b> op een permanente blokkeerlijst zetten. Weet je zeker dat dit een spammer is?"
+      yes_delete_spammer: "Ja, verwijder spammer"
       cant: "Sorry, je kan dit bericht momenteel niet melden."
       custom_placeholder_notify_user: "Wat maakt dat je de schrijver persoonlijk iets wil melden? Wees specifiek, constructief en altijd aardig."
       custom_placeholder_notify_moderators: "Waarom heeft dit bericht aandacht van een moderator nodig? Laat ons specifiek weten waar je je zorgen om maakt en stuur relevante links mee waar mogelijk."
@@ -1001,6 +1019,11 @@ nl:
 
     browser_update: 'Helaas <a href="http://www.discourse.org/faq/#browser">is je browser te oud om te kunnen werken met dit forum</a>. <a href="http://browsehappy.com">Upgrade je browser</a>.'
 
+    permission_types:
+      full: "Maak topic / Reageer / Bekijk"
+      create_post: "Reageer / Bekijk"
+      readonly: "Bekijk"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: typ om te filteren...
@@ -1011,6 +1034,7 @@ nl:
 
       dashboard:
         title: Dashboard
+        last_updated: "Dashboard laatst bijgewerkt:"
         version: versie
         up_to_date: Je bent up to date!
         critical_available: Er is een belangrijke update beschikbaar
@@ -1062,6 +1086,7 @@ nl:
         disagree_unhide_title: "Verwijder elke markering van dit bericht en maak het weer zichtbaar"
         disagree: "Niet mee eens"
         disagree_title: "Niet eens met de markering, verwijder elke markering van dit bericht"
+        delete_spammer_title: Verwijder de gebruiker en al hun berichten en topics.
 
         flagged_by: Gemarkeerd door
         error: Er ging iets mis
@@ -1140,7 +1165,33 @@ nl:
         html: "html"
         text: "text"
         last_seen_user: "Laatste gebruiker:"
-        reply_key: "Reply Key"
+        reply_key: Reply key
+
+      logs:
+        title: Logs
+        action: Actie
+        created_at: Gemaakt
+        blocked_emails:
+          title: Geblokkeerde e-mails
+          description: "Als iemand een nieuw account probeert te maken zijn deze mailadressen niet toegestaan. De registratie zal worden tegengehouden."
+          email: E-mailadres
+          last_match_at: Laatst gematched
+          match_count: Matches
+          actions:
+            block: blokkeeer
+            do_nothing: doe niets
+        staff_actions:
+          title: Stafacties
+          instructions: "Klik op gebruikersnamen en acties om te filteren. Klik op avatars om naar de gebruikerspagina te gaan."
+          clear_filters: Bekijk alles
+          staff_user: Staflid
+          target_user: Selecteer gebruiker
+          when: Wanneer
+          context: Context
+          details: Details
+          actions:
+            delete_user: verwijder gebruiker
+            change_trust_level: verander trust level
 
       impersonate:
         title: Log in als gebruiker
@@ -1220,8 +1271,12 @@ nl:
         approve_bulk_success: Alle geselecteerde gebruikers zijn geaccepteerd en een e-mail met instructies voor activering is verstuurd.
         time_read: Tijd gelezen
         delete: Verwijder gebruiker
-        delete_forbidden: Deze gebruiker kan niet verwijderd worden omdat er berichten zijn. Verwijder eerst alle berichten van deze gebruiker.
+        delete_forbidden:
+          one: "Gebruikers kunnen niet worden verwijders als ze zich meer dan %{count} dag geleden registreerden of als ze berichten geplaatst hebben. Verwijder alle berichten voordat je een gebruiker probeert te verwijderen."
+          other: "Gebruikers kunnen niet worden verwijders als ze zich meer dan %{count} dagen geleden registreerden of als ze berichten geplaatst hebben. Verwijder alle berichten voordat je een gebruiker probeert te verwijderen."
         delete_confirm: Weet je zeker dat je deze gebruiker definitief wil verwijderen? Deze handeling is permanant!
+        delete_and_block: "<b>Ja</b>, en <b>blokkeer</b> registraties met datzelfde e-mailadres"
+        delete_dont_block: "<b>Ja</b>, maar <b>sta nieuwe registraties toe</b> met datzelfde e-mailadres"
         deleted: De gebruiker is verwijderd.
         delete_failed: Er ging iets mis bij het verwijderen van deze gebruiker. Zorg er voor dat alle berichten van deze gebruiker eerst verwijderd zijn.
         send_activation_email: Verstuur activatiemail
