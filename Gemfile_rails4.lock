@@ -187,9 +187,6 @@ GEM
     celluloid (0.14.1)
       timers (>= 1.0.0)
     certified (0.1.1)
-    clockwork (0.5.3)
-      activesupport (~> 4.0.0)
-      tzinfo (~> 0.3.35)
     coderay (1.0.9)
     connection_pool (1.1.0)
     daemons (1.1.9)
@@ -254,6 +251,7 @@ GEM
     hiredis (0.4.5)
     httpauth (0.2.0)
     i18n (0.6.4)
+    ice_cube (0.11.0)
     image_optim (0.8.1)
       fspath (~> 2.0.3)
       image_size (~> 1.1.2)
@@ -370,7 +368,7 @@ GEM
       ffi (>= 0.5.0)
     redcarpet (3.0.0)
     redis (3.0.4)
-    redis-namespace (1.3.0)
+    redis-namespace (1.3.1)
       redis (~> 3.0.0)
     redis-store (1.1.2)
       redis (>= 2.2.0)
@@ -419,6 +417,9 @@ GEM
       redis-namespace
     sidekiq-failures (0.2.1)
       sidekiq (>= 2.2.1)
+    sidetiq (0.3.6)
+      ice_cube (~> 0.11.0)
+      sidekiq (~> 2.13.0)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
@@ -481,7 +482,6 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   certified
-  clockwork
   diffy (>= 3.0)
   discourse_emoji!
   discourse_plugin!
@@ -550,6 +550,7 @@ DEPENDENCIES
   shoulda
   sidekiq
   sidekiq-failures
+  sidetiq (>= 0.3.6)
   simple_handlebars_rails!
   simplecov
   sinatra

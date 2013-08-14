@@ -1,6 +1,8 @@
 module Jobs
   # various consistency checks
-  class EnsureDbConsistency < Jobs::Base
+  class EnsureDbConsistency < Jobs::Scheduled
+    recurrence { daily.hour_of_day(2) }
+
     def execute(args)
       TopicUser.ensure_consistency!
       UserVisit.ensure_consistency!
