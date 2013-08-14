@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Admin::BlockedEmailsController do
+describe Admin::ScreenedEmailsController do
   it "is a subclass of AdminController" do
-    (Admin::BlockedEmailsController < Admin::AdminController).should be_true
+    (Admin::ScreenedEmailsController < Admin::AdminController).should be_true
   end
 
   let!(:user) { log_in(:admin) }

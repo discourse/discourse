@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BlockedEmail do
+describe ScreenedEmail do
 
   let(:email) { 'block@spamfromhome.org' }
 
@@ -34,7 +34,7 @@ describe BlockedEmail do
     end
 
     context 'email is already being blocked' do
-      let!(:existing) { Fabricate(:blocked_email, email: email) }
+      let!(:existing) { Fabricate(:screened_email, email: email) }
 
       it "doesn't create a new record" do
         expect { described_class.block(email) }.to_not change { described_class.count }
@@ -53,25 +53,25 @@ describe BlockedEmail do
       subject.should be_false
     end
 
-    shared_examples "when a BlockedEmail record matches" do
+    shared_examples "when a ScreenedEmail record matches" do
       it "updates statistics" do
         Timecop.freeze(Time.zone.now) do
-          expect { subject }.to change { blocked_email.reload.match_count }.by(1)
-          blocked_email.last_match_at.should be_within_one_second_of(Time.zone.now)
+          expect { subject }.to change { screened_email.reload.match_count }.by(1)
+          screened_email.last_match_at.should be_within_one_second_of(Time.zone.now)
         end
       end
     end
 
     context "action_type is :block" do
-      let!(:blocked_email) { Fabricate(:blocked_email, email: email, action_type: BlockedEmail.actions[:block]) }
+      let!(:screened_email) { Fabricate(:screened_email, email: email, action_type: described_class.actions[:block]) }
       it { should be_true }
-      include_examples "when a BlockedEmail record matches"
+      include_examples "when a ScreenedEmail record matches"
     end
 
     context "action_type is :do_nothing" do
-      let!(:blocked_email) { Fabricate(:blocked_email, email: email, action_type: BlockedEmail.actions[:do_nothing]) }
+      let!(:screened_email) { Fabricate(:screened_email, email: email, action_type: described_class.actions[:do_nothing]) }
       it { should be_false }
-      include_examples "when a BlockedEmail record matches"
+      include_examples "when a ScreenedEmail record matches"
     end
   end
 

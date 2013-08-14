@@ -63,7 +63,7 @@ Discourse::Application.routes.draw do
     end
 
     scope '/logs' do
-      resources :blocked_emails,    only: [:index, :create, :update, :destroy]
+      resources :screened_emails,   only: [:index, :create, :update, :destroy]
       resources :staff_action_logs, only: [:index, :create, :update, :destroy]
     end
 
