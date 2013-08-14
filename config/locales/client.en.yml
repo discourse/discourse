@@ -132,6 +132,10 @@ en:
     saving: "Saving..."
     saved: "Saved!"
 
+    upload: "Upload"
+    uploading: "Uploading..."
+    uploaded: "Uploaded!"
+
     choose_topic:
       none_found: "No topics found."
       title:
@@ -210,6 +214,15 @@ en:
         taken: "Sorry, that email is not available."
         error: "There was an error changing your email. Perhaps that address is already in use?"
         success: "We've sent an email to that address. Please follow the confirmation instructions."
+
+      change_avatar:
+        title: "Change your avatar"
+        upload_instructions: "Or you could upload an image"
+        upload: "Upload a picture"
+        uploading: "Uploading the picture..."
+        gravatar: "Gravatar"
+        gravatar_title: "Change your avatar on Gravatar's website"
+        uploaded_avatar: "Uploaded picture"
 
       email:
         title: "Email"
@@ -304,7 +317,9 @@ en:
         title: "Last IP Address"
       avatar:
         title: "Avatar"
-        instructions: "We use <a href='https://gravatar.com' target='_blank'>Gravatar</a> for avatars based on your email"
+        instructions:
+          gravatar: "We use <a href='//gravatar.com/emails' target='_blank'>Gravatar</a> for avatars based on your email:"
+          uploaded_avatar: "We use the avatar you uploaded."
       title:
         title: "Title"
 

@@ -191,7 +191,8 @@ sv:
         title: "Senaste IP-adress"
       avatar:
         title: "Profilbild"
-        instructions: "Vi använder <a href='https://gravatar.com' target='_blank'>Gravatar</a> för profilbilder baserat på din e-post"
+        instructions:
+          gravatar: "Vi använder <a href='https://gravatar.com' target='_blank'>Gravatar</a> för profilbilder baserat på din e-post"
 
       filters:
         all: "Alla"

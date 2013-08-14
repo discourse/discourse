@@ -31,9 +31,13 @@ class Upload < ActiveRecord::Base
 
   def destroy
     Upload.transaction do
-      Discourse.store.remove_file(url)
+      Discourse.store.remove_upload(self)
       super
     end
+  end
+
+  def extension
+    File.extname(original_filename)
   end
 
   def self.create_for(user_id, file, filesize)

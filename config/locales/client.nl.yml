@@ -305,7 +305,8 @@ nl:
         title: Laatste IP-adres
       avatar:
         title: Profielfoto
-        instructions: "Wij gebruiken <a href='https://gravatar.com' target='_blank'>Gravatar</a> voor profielfoto's die aan je e-mailadres gekoppeld zijn"
+        instructions:
+          gravatar: "Wij gebruiken <a href='https://gravatar.com' target='_blank'>Gravatar</a> voor profielfoto's die aan je e-mailadres gekoppeld zijn"
       title:
         title: Titel
 

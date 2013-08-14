@@ -19,7 +19,7 @@ describe OptimizedImage do
         oi.extension.should == ".jpg"
         oi.width.should == 100
         oi.height.should == 200
-        oi.url.should == "/uploads/default/_optimized/da3/9a3/ee5e6b4b0d3_100x200.jpg"
+        oi.url.should == "/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_100x200.jpg"
       end
 
     end

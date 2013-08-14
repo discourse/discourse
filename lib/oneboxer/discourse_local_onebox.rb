@@ -23,7 +23,7 @@ module Oneboxer
 
         return @url unless Guardian.new.can_see?(user)
 
-        args.merge! avatar: PrettyText.avatar_img(user.username, 'tiny'), username: user.username
+        args.merge! avatar: PrettyText.avatar_img(user.avatar_template, 'tiny'), username: user.username
         args[:bio] = user.bio_cooked if user.bio_cooked.present?
 
         @template = 'user'
@@ -58,7 +58,7 @@ module Oneboxer
 
           posters = topic.posters_summary.map do |p|
             {username: p[:user][:username],
-             avatar: PrettyText.avatar_img(p[:user][:username], 'tiny'),
+             avatar: PrettyText.avatar_img(p[:user][:avatar_template], 'tiny'),
              description: p[:description],
              extras: p[:extras]}
           end

@@ -40,6 +40,7 @@ describe S3Store do
 
     it "returns a relative url" do
       upload.stubs(:id).returns(42)
+      upload.stubs(:extension).returns(".png")
       store.store_upload(uploaded_file, upload).should == "//s3_upload_bucket.s3.amazonaws.com/42e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98.png"
     end
 
@@ -54,17 +55,29 @@ describe S3Store do
 
   end
 
-  describe "remove_file" do
+  describe "remove_upload" do
 
-    it "does not delete any file" do
+    it "does not delete non uploaded file" do
       store.expects(:remove).never
-      store.remove_file("//other_bucket.s3.amazonaws.com/42.png")
+      upload = Upload.new
+      upload.stubs(:url).returns("//other_bucket.s3.amazonaws.com/42.png")
+      store.remove_upload(upload)
     end
 
     it "deletes the file on s3" do
       store.expects(:remove)
-      store.remove_file("//s3_upload_bucket.s3.amazonaws.com/42.png")
+      upload = Upload.new
+      upload.stubs(:url).returns("//s3_upload_bucket.s3.amazonaws.com/42.png")
+      store.remove_upload(upload)
     end
+
+  end
+
+  describe "remove_optimized_image" do
+
+  end
+
+  describe "remove_avatar" do
 
   end
 

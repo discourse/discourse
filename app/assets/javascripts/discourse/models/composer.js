@@ -70,14 +70,14 @@ Discourse.Composer = Discourse.Model.extend({
     if (post) {
       postDescription = I18n.t('post.' +  this.get('action'), {
         link: postLink,
-        replyAvatar: Discourse.Utilities.tinyAvatar(post.get('username')),
+        replyAvatar: Discourse.Utilities.tinyAvatar(post.get('avatar_template')),
         username: this.get('post.username')
       });
 
       var replyUsername = post.get('reply_to_user.username');
-      if (replyUsername && this.get('action') === EDIT) {
-        postDescription += " " + I18n.t("post.in_reply_to") + " " +
-                           Discourse.Utilities.tinyAvatar(replyUsername) + " " + replyUsername;
+      var replyAvatarTemplate = post.get('reply_to_user.avatar_template');
+      if (replyUsername && replyAvatarTemplate && this.get('action') === EDIT) {
+        postDescription += " " + I18n.t("post.in_reply_to") + " " + Discourse.Utilities.tinyAvatar(replyAvatarTemplate) + " " + replyUsername;
       }
     }
 
