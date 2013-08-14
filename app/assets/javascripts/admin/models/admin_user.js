@@ -248,13 +248,13 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": I18n.t('admin.user.delete_dont_block'),
+      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t('admin.user.delete_dont_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(false);
       }
     }, {
-      "label": I18n.t('admin.user.delete_and_block'),
+      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t('admin.user.delete_and_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(true);
@@ -272,7 +272,7 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": I18n.t("flagging.yes_delete_spammer"),
+      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t("flagging.yes_delete_spammer"),
       "class": "btn btn-danger",
       "callback": function() {
         Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
