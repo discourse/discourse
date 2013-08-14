@@ -20,5 +20,10 @@ describe Onebox::Preview::Qik do
     it "returns the video URL" do
       expect(qik).to include(link)
     end
+
+    it "returns the video embed code" do
+      pending
+      expect(qik).to include("clsid:d27cdb6e-ae6d-11cf-96b8-444553540000")
+    end
   end
 end
