@@ -130,7 +130,6 @@ class TopicQuery
   end
 
   def list_topics_by(user)
-    Rails.logger.info ">>> #{user.id}"
     create_list(:user_topics) do |topics|
       topics.where(user_id: user.id)
     end

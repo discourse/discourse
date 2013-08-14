@@ -12,7 +12,9 @@ class AvatarLookup
   private
 
   def users
-    @users ||= User.where(:id => @user_ids).select([:id, :email, :username]).inject({}) do |hash, user|
+    @users ||= User.where(:id => @user_ids)
+                   .select([:id, :email, :username, :use_uploaded_avatar, :uploaded_avatar_template, :uploaded_avatar_id])
+                   .inject({}) do |hash, user|
       hash.merge({user.id => user})
     end
   end
