@@ -765,7 +765,7 @@ de:
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
         image_too_large: "Entschuldige, das Bild, das du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}}kb), bitte reduziere die Dateigröße und versuche es nochmal."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
-        attachment_too_large: "Entschuldige, dadie Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}}kb)."
+        attachment_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}}kb)."
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
         upload_not_authorized: "Entschuldige, die Datei, die du hochladen wolltest, ist nicht erlaubt (erlaubte Endungen: {{authorized_extensions}})."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
