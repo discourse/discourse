@@ -313,7 +313,7 @@ class UsersController < ApplicationController
 
     results = UserSearch.search term, topic_id
 
-    render json: { users: results.as_json(only: [ :username, :name ],
+    render json: { users: results.as_json(only: [ :username, :name, :use_uploaded_avatar, :upload_avatar_template, :uploaded_avatar_id],
                                           methods: :avatar_template) }
   end
 
