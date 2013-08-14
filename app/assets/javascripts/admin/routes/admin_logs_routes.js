@@ -15,18 +15,18 @@ Discourse.AdminLogsIndexRoute = Discourse.Route.extend({
 /**
   The route that lists blocked email addresses.
 
-  @class AdminLogsBlockedEmailsRoute
+  @class AdminLogsScreenedEmailsRoute
   @extends Discourse.Route
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminLogsBlockedEmailsRoute = Discourse.Route.extend({
+Discourse.AdminLogsScreenedEmailsRoute = Discourse.Route.extend({
   renderTemplate: function() {
-    this.render('admin/templates/logs/blocked_emails', {into: 'adminLogs'});
+    this.render('admin/templates/logs/screened_emails', {into: 'adminLogs'});
   },
 
   setupController: function() {
-    return this.controllerFor('adminLogsBlockedEmails').show();
+    return this.controllerFor('adminLogsScreenedEmails').show();
   }
 });
 

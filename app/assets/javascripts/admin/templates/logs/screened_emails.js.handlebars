@@ -1,4 +1,4 @@
-<p>{{i18n admin.logs.blocked_emails.description}}</p>
+<p>{{i18n admin.logs.screened_emails.description}}</p>
 
 {{#if loading}}
   <div class='admin-loading'>{{i18n loading}}</div>
@@ -7,15 +7,15 @@
 
     <div class='table blocked-emails'>
       <div class="heading-container">
-        <div class="col heading first email">{{i18n admin.logs.blocked_emails.email}}</div>
+        <div class="col heading first email">{{i18n admin.logs.screened_emails.email}}</div>
         <div class="col heading action">{{i18n admin.logs.action}}</div>
-        <div class="col heading match_count">{{i18n admin.logs.blocked_emails.match_count}}</div>
-        <div class="col heading last_match_at">{{i18n admin.logs.blocked_emails.last_match_at}}</div>
+        <div class="col heading match_count">{{i18n admin.logs.screened_emails.match_count}}</div>
+        <div class="col heading last_match_at">{{i18n admin.logs.screened_emails.last_match_at}}</div>
         <div class="col heading created_at">{{i18n admin.logs.created_at}}</div>
         <div class="clearfix"></div>
       </div>
 
-      {{view Discourse.BlockedEmailsListView contentBinding="controller"}}
+      {{view Discourse.ScreenedEmailsListView contentBinding="controller"}}
     </div>
 
   {{else}}
