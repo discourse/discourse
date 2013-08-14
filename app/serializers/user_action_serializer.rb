@@ -23,17 +23,26 @@ class UserActionSerializer < ApplicationSerializer
              :hidden,
              :moderator_action
 
-
   def excerpt
     PrettyText.excerpt(object.cooked,300) if object.cooked
   end
 
   def avatar_template
-    User.avatar_template(object.email)
+    user = User.new
+    user[:email] = object.email
+    user[:use_uploaded_avatar] = object.use_uploaded_avatar
+    user[:uploaded_avatar_template] = object.uploaded_avatar_template
+    user[:uploaded_avatar_id] = object.uploaded_avatar_id
+    user.avatar_template
   end
 
   def acting_avatar_template
-    User.avatar_template(object.acting_email)
+    acting_user = User.new
+    acting_user[:email] = object.acting_email
+    acting_user[:use_uploaded_avatar] = object.acting_use_uploaded_avatar
+    acting_user[:uploaded_avatar_template] = object.acting_uploaded_avatar_template
+    acting_user[:uploaded_avatar_id] = object.acting_uploaded_avatar_id
+    acting_user.avatar_template
   end
 
   def slug
