@@ -22,7 +22,7 @@ module Jobs
           temp_file = Tempfile.new(["discourse-avatar", File.extname(original_path)])
           temp_path = temp_file.path
           #
-          Discourse.store.store_avatar(temp_file, upload, size) if ImageSorcery.new(original_path).convert(temp_path, gravity: "center", thumbnail: "#{size}x#{size}^", extent: "#{size}x#{size}")
+          Discourse.store.store_avatar(temp_file, upload, size) if ImageSorcery.new(original_path).convert(temp_path, gravity: "center", thumbnail: "#{size}x#{size}^", extent: "#{size}x#{size}", background: "transparent")
           # close && remove temp file
           temp_file.close!
         end
