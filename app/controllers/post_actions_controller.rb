@@ -28,7 +28,15 @@ class PostActionsController < ApplicationController
   def users
     guardian.ensure_can_see_post_actors!(@post.topic, @post_action_type_id)
 
-    users = User.select(['null as post_url','users.id', 'users.username', 'users.username_lower', 'users.email','post_actions.related_post_id'])
+    users = User.select(['null as post_url',
+                         'users.id',
+                         'users.username',
+                         'users.username_lower',
+                         'users.email',
+                         'users.use_uploaded_avatar',
+                         'users.uploaded_avatar_id',
+                         'users.uploaded_avatar_template',
+                         'post_actions.related_post_id'])
                 .joins(:post_actions)
                 .where(['post_actions.post_id = ? and post_actions.post_action_type_id = ? and post_actions.deleted_at IS NULL', @post.id, @post_action_type_id])
                 .to_a
