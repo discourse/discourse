@@ -14,13 +14,14 @@ class TopicView
     @guardian = Guardian.new(@user)
     check_and_raise_exceptions
 
-    @post_number, @page = options[:post_number], options[:page].to_i
-    @page = 1 if @page == 0
+    options.each do |key, value|
+        self.instance_variable_set("@#{key}".to_sym, value)
+    end
 
-    @limit = options[:limit] || SiteSetting.posts_per_page;
-    @username_filters = options[:username_filters]
-    @best = options[:best]
-    @filter = options[:filter]
+    @page = @page.to_i
+    @page = 1 if @page.zero?
+    @limit ||= SiteSetting.posts_per_page
+
     setup_filtered_posts
 
     @initial_load = true
@@ -112,34 +113,11 @@ class TopicView
   # Filter to all posts near a particular post number
   def filter_posts_near(post_number)
 
-    # Find the closest number we have
-    closest_post_id = @filtered_posts.order("@(post_number - #{post_number})").first.try(:id)
-    return nil if closest_post_id.blank?
-
-    closest_index = filtered_post_ids.index(closest_post_id)
-    return nil if closest_index.blank?
-
-    # Make sure to get at least one post before, even with rounding
-    posts_before = (SiteSetting.posts_per_page.to_f / 4).floor
-    posts_before = 1 if posts_before == 0
-
-    min_idx = closest_index - posts_before
-    min_idx = 0 if min_idx < 0
-    max_idx = min_idx + (SiteSetting.posts_per_page - 1)
-
-    # Get a full page even if at the end
-    upper_limit = (filtered_post_ids.length - 1)
-    if max_idx >= upper_limit
-      max_idx = upper_limit
-      min_idx = (upper_limit - SiteSetting.posts_per_page) + 1
-    end
+    min_idx, max_idx = get_minmax_ids(post_number)
 
     filter_posts_in_range(min_idx, max_idx)
   end
 
-  def filtered_post_ids
-    @filtered_post_ids ||= @filtered_posts.order(:sort_order).pluck(:id)
-  end
 
   def filter_posts_paged(page)
     page = [page, 1].max
@@ -148,7 +126,6 @@ class TopicView
 
     filter_posts_in_range(min, max)
   end
-
 
   def filter_best(max, opts={})
     filter = FilterBestPosts.new(@topic, @filtered_posts, max, opts)
@@ -224,6 +201,10 @@ class TopicView
     end
   end
 
+  def filtered_post_ids
+    @filtered_post_ids ||= filter_post_ids_by(:sort_order)
+  end
+
   protected
 
   def read_posts_set
@@ -291,6 +272,44 @@ class TopicView
       raise Discourse::NotLoggedIn.new
     end
     guardian.ensure_can_see!(@topic)
+  end
+
+
+  def filter_post_ids_by(sort_order)
+    @filtered_posts.order(sort_order).pluck(:id)
+  end
+
+  def get_minmax_ids(post_number)
+    # Find the closest number we have
+    closest_index = closest_post_to(post_number)
+    return nil if closest_index.nil?
+
+    # Make sure to get at least one post before, even with rounding
+    posts_before = (SiteSetting.posts_per_page.to_f / 4).floor
+    posts_before = 1 if posts_before.zero?
+
+    min_idx = closest_index - posts_before
+    min_idx = 0 if min_idx < 0
+    max_idx = min_idx + (SiteSetting.posts_per_page - 1)
+
+    # Get a full page even if at the end
+    ensure_full_page(min_idx, max_idx)
+  end
+
+  def ensure_full_page(min, max)
+    upper_limit = (filtered_post_ids.length - 1)
+    if max >= upper_limit
+      return (upper_limit - SiteSetting.posts_per_page) + 1, upper_limit
+    else
+      return min, max
+    end
+  end
+
+  def closest_post_to(post_number)
+    closest_posts = filter_post_ids_by("@(post_number - #{post_number})")
+    return nil if closest_posts.empty?
+
+    filtered_post_ids.index(closest_posts.first)
   end
 
 end
