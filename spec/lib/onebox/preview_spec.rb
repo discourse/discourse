@@ -11,4 +11,11 @@ describe Onebox::Preview do
     it "returns an empty string if the resource fails to load"
     it "returns an empty string if the url is not valid"
   end
+
+  describe "#engine" do
+    it "returns an engine" do
+      preview = described_class.new("http://www.example.com")
+      expect(preview.send(:engine)).to be_a(Onebox::Engine)
+    end
+  end
 end
