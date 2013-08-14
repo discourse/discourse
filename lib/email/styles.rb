@@ -20,7 +20,7 @@ module Email
           img['style'] = "max-width: 694px;"
         end
 
-        if img['src'][0] == "/"
+        if img['src'] =~ /^\/[^\/]/
           img['src'] = "#{Discourse.base_url}#{img['src']}"
         end
       end
