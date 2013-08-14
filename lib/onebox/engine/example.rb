@@ -1,6 +1,8 @@
 module Onebox
-  class Preview
+  module Engine
     class Example
+      include Engine
+
       TEMPLATE = %|<div class="onebox">{{{header}}}</div>|
 
       def initialize(document, link)
@@ -8,10 +10,6 @@ module Onebox
         @body = document
         @data = extracted_data
         @view = Mustache.render(TEMPLATE, @data)
-      end
-
-      def to_html
-        @view
       end
 
       private
