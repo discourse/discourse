@@ -320,7 +320,8 @@ class UsersController < ApplicationController
   # [LEGACY] avatars in quotes/oneboxes might still be pointing to this route
   # fixing it requires a rebake of all the posts
   def avatar
-    user = User.select(:email).where(username_lower: params[:username].downcase).first
+    user = User.select([:email, :use_uploaded_avatar, :uploaded_avatar_template, :uploaded_avatar_id])
+               .where(username_lower: params[:username].downcase).first
     if user.present?
       size = determine_avatar_size(params[:size])
       url = user.avatar_template.gsub("{size}", size.to_s)
