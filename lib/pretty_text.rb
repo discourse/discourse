@@ -64,7 +64,7 @@ module PrettyText
       return "" unless username
 
       user = User.where(username_lower: username.downcase).first
-      if user
+      if user.present?
         user.avatar_template
       end
     end
@@ -139,7 +139,7 @@ module PrettyText
       v8['opts'] = opts || {}
       v8['raw'] = text
       v8.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
-      v8.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({username: p, size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
+      v8.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
       baked = v8.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
@@ -149,15 +149,15 @@ module PrettyText
   end
 
   # leaving this here, cause it invokes v8, don't want to implement twice
-  def self.avatar_img(username, size)
+  def self.avatar_img(avatar_template, size)
     r = nil
     @mutex.synchronize do
-      v8['username'] = username
+      v8['avatarTemplate'] = avatar_template
       v8['size'] = size
       v8.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
       v8.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
       v8.eval("Discourse.BaseUrl = '#{RailsMultisite::ConnectionManagement.current_hostname}';")
-      r = v8.eval("Discourse.Utilities.avatarImg({ username: username, size: size });")
+      r = v8.eval("Discourse.Utilities.avatarImg({ avatarTemplate: avatarTemplate, size: size });")
     end
     r
   end

@@ -328,7 +328,8 @@ ru:
         title: Последний IP адрес
       avatar:
         title: Аватар
-        instructions: "Сервис <a href='https://ru.gravatar.com/' target='_blank'>Gravatar</a> позволяет создать аватар для вашего адреса электронной почты"
+        instructions:
+          gravatar: "Сервис <a href='https://ru.gravatar.com/' target='_blank'>Gravatar</a> позволяет создать аватар для вашего адреса электронной почты"
       title:
         title: Заголовок
       filters:

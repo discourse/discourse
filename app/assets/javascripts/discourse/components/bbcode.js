@@ -252,12 +252,22 @@ Discourse.BBCode = {
       // remove leading <br>s
       var content = matches[2].trim();
 
+      var avatarImg;
+      if (opts.lookupAvatarByPostNumber) {
+        // client-side, we can retrieve the avatar from the post
+        var postNumber = parseInt(_.find(params, { 'key' : 'post' }).value, 10);
+        avatarImg = opts.lookupAvatarByPostNumber(postNumber);
+      } else if (opts.lookupAvatar) {
+        // server-side, we need to lookup the avatar from the username
+        avatarImg = opts.lookupAvatar(username);
+      }
+
       // Arguments for formatting
       args = {
-        username: I18n.t('user.said',{username: username}),
+        username: I18n.t('user.said', {username: username}),
         params: params,
         quote: content,
-        avatarImg: opts.lookupAvatar ? opts.lookupAvatar(username) : void 0
+        avatarImg: avatarImg
       };
 
       // Name of the template

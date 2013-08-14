@@ -308,7 +308,8 @@ de:
         title: "Letzte IP-Adresse"
       avatar:
         title: "Avatar"
-        instructions: "Wir nutzen <a href='https://gravatar.com' target='_blank'>Gravatar</a> zur Darstellung von Avataren basierend auf deiner Mailadresse:"
+        instructions:
+          gravatar: "Wir nutzen <a href='https://gravatar.com' target='_blank'>Gravatar</a> zur Darstellung von Avataren basierend auf deiner Mailadresse:"
 
       title:
         title: "Title"

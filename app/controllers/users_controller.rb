@@ -3,8 +3,7 @@ require_dependency 'user_name_suggester'
 
 class UsersController < ApplicationController
 
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :avatar, :authorize_email, :user_preferences_redirect]
-  skip_before_filter :authorize_mini_profiler, only: [:avatar]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect]
 
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect]
 
@@ -220,25 +219,6 @@ class UsersController < ApplicationController
     render json: {value: honeypot_value, challenge: challenge_value}
   end
 
-  # all avatars are funneled through here
-  def avatar
-
-    # TEMP to catch all missing spots
-    # raise ActiveRecord::RecordNotFound
-
-    user = User.select(:email).where(username_lower: params[:username].downcase).first
-    if user.present?
-      # for now we only support gravatar in square (redirect cached for a day),
-      # later we can use x-sendfile and/or a cdn to serve local
-      size = determine_avatar_size(params[:size])
-      url = user.avatar_template.gsub("{size}", size.to_s)
-      expires_in 1.day
-      redirect_to url
-    else
-      raise ActiveRecord::RecordNotFound
-    end
-  end
-
   def password_reset
     expires_now()
 
@@ -336,6 +316,46 @@ class UsersController < ApplicationController
                                           methods: :avatar_template) }
   end
 
+  def avatar
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    file = params[:file] || params[:files].first
+
+    # check the file size (note: this might also be done in the web server)
+    filesize = File.size(file.tempfile)
+    max_size_kb = SiteSetting.max_image_size_kb * 1024
+    return render status: 413, text: I18n.t("upload.images.too_large", max_size_kb: max_size_kb) if filesize > max_size_kb
+
+    upload = Upload.create_for(user.id, file, filesize)
+
+    user.uploaded_avatar = upload
+    user.use_uploaded_avatar = true
+    user.save!
+
+    Jobs.enqueue(:generate_avatars, upload_id: upload.id)
+
+    render json: { url: upload.url }
+
+  rescue FastImage::ImageFetchFailure
+    render status: 422, text: I18n.t("upload.images.fetch_failure")
+  rescue FastImage::UnknownImageType
+    render status: 422, text: I18n.t("upload.images.unknown_image_type")
+  rescue FastImage::SizeNotFound
+    render status: 422, text: I18n.t("upload.images.size_not_found")
+  end
+
+  def toggle_avatar
+    params.require(:use_uploaded_avatar)
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    user.use_uploaded_avatar = params[:use_uploaded_avatar]
+    user.save!
+
+    render json: { avatar_template: user.avatar_template }
+  end
+
   private
 
     def honeypot_value
@@ -404,13 +424,5 @@ class UsersController < ApplicationController
     def github_auth?(auth)
       auth[:github_user_id] && auth[:github_screen_name] &&
       GithubUserInfo.find_by_github_user_id(auth[:github_user_id]).nil?
-    end
-
-    def determine_avatar_size(size)
-      size = size.to_i
-      size = 64 if size == 0
-      size = 10 if size < 10
-      size = 128 if size > 128
-      size
     end
 end

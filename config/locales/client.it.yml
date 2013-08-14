@@ -247,7 +247,8 @@ it:
         title: "Ultimo indirizzo IP"
       avatar:
         title: "Avatar"
-        instructions: "Usiamo <a href='https://gravatar.com' target='_blank'>Gravatar</a> per gli avatar basandoci sulla tua email"
+        instructions:
+          gravatar: "Usiamo <a href='https://gravatar.com' target='_blank'>Gravatar</a> per gli avatar basandoci sulla tua email"
 
       filters:
         all: "Tutti"

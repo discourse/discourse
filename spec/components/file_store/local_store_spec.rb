@@ -35,24 +35,37 @@ describe LocalStore do
 
     it "returns a relative url" do
       store.expects(:copy_file)
-      store.store_optimized_image({}, optimized_image).should == "/uploads/default/_optimized/86f/7e4/37faa5a7fce_100x200.png"
+      store.store_optimized_image({}, optimized_image).should == "/uploads/default/_optimized/86f/7e4/37faa5a7fc_100x200.png"
     end
 
   end
 
-  describe "remove_file" do
+  describe "remove_upload" do
 
-    it "does not delete any file" do
+    it "does not delete non uploaded" do
       File.expects(:delete).never
-      store.remove_file("/path/to/file")
+      upload = Upload.new
+      upload.stubs(:url).returns("/path/to/file")
+      store.remove_upload(upload)
     end
 
     it "deletes the file locally" do
       File.expects(:delete)
-      store.remove_file("/uploads/default/42/253dc8edf9d4ada1.png")
+      upload = Upload.new
+      upload.stubs(:url).returns("/uploads/default/42/253dc8edf9d4ada1.png")
+      store.remove_upload(upload)
     end
 
   end
+
+  describe "remove_optimized_image" do
+
+  end
+
+  describe "remove_avatar" do
+
+  end
+
 
   describe "has_been_uploaded?" do
 

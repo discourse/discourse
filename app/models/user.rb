@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
   has_many :user_visits
   has_many :invites
   has_many :topic_links
+  has_many :uploads
 
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
@@ -40,6 +41,8 @@ class User < ActiveRecord::Base
   has_many :secure_categories, through: :groups, source: :categories
 
   has_one :user_search_data
+
+  belongs_to :uploaded_avatar, class_name: 'Upload', dependent: :destroy
 
   validates_presence_of :username
   validate :username_validator
@@ -295,23 +298,37 @@ class User < ActiveRecord::Base
   end
 
   def self.avatar_template(email)
+    user = User.select([:email, :use_uploaded_avatar, :uploaded_avatar_template, :uploaded_avatar_id])
+               .where(email: email.downcase)
+               .first
+    if user.present?
+      if SiteSetting.allow_uploaded_avatars? && user.use_uploaded_avatar
+        # the avatars might take a while to generate
+        # so return the url of the original image in the meantime
+        user.uploaded_avatar_template.present? ? user.uploaded_avatar_template : user.uploaded_avatar.url
+      else
+        User.gravatar_template(email)
+      end
+    end
+  end
+
+  def self.gravatar_template(email)
     email_hash = self.email_hash(email)
-    # robohash was possibly causing caching issues
-    # robohash = CGI.escape("http://robohash.org/size_") << "{size}x{size}" << CGI.escape("/#{email_hash}.png")
-    "https://www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
+    "//www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
   end
 
   # Don't pass this up to the client - it's meant for server side use
-  # The only spot this is now used is for self oneboxes in open graph data
+  # This is used in
+  #   - self oneboxes in open graph data
+  #   - emails
   def small_avatar_url
-    "https://www.gravatar.com/avatar/#{email_hash}.png?s=60&r=pg&d=identicon"
+    template = User.avatar_template(email)
+    template.gsub(/\{size\}/, "60")
   end
 
-  # return null for local avatars, a template for gravatar
   def avatar_template
     User.avatar_template(email)
   end
-
 
   # Updates the denormalized view counts for all users
   def self.update_view_counts
@@ -506,6 +523,9 @@ class User < ActiveRecord::Base
     end
   end
 
+  def has_uploaded_avatar
+    uploaded_avatar.present?
+  end
 
   protected
 
@@ -528,7 +548,6 @@ class User < ActiveRecord::Base
                             auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]])
     end
   end
-
 
   def create_email_token
     email_tokens.create(email: email)
@@ -571,13 +590,13 @@ class User < ActiveRecord::Base
     end
   end
 
-    def send_approval_email
-      Jobs.enqueue(:user_email,
-        type: :signup_after_approval,
-        user_id: id,
-        email_token: email_tokens.first.token
-      )
-    end
+  def send_approval_email
+    Jobs.enqueue(:user_email,
+      type: :signup_after_approval,
+      user_id: id,
+      email_token: email_tokens.first.token
+    )
+  end
 
   private
 
@@ -647,6 +666,9 @@ end
 #  blocked                       :boolean          default(FALSE)
 #  dynamic_favicon               :boolean          default(FALSE), not null
 #  title                         :string(255)
+#  use_uploaded_avatar           :boolean          default(FALSE)
+#  uploaded_avatar_template      :string(255)
+#  uploaded_avatar_id            :integer
 #
 # Indexes
 #

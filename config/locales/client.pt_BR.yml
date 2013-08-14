@@ -268,7 +268,8 @@ pt_BR:
         title: "Último endereço IP"
       avatar:
         title: "Avatar"
-        instructions: "Nós utilizamos <a href='https://gravatar.com' target='_blank'>Gravatar</a> para os avatares baseados no seu email"
+        instructions:
+          gravatar: "Nós utilizamos <a href='https://gravatar.com' target='_blank'>Gravatar</a> para os avatares baseados no seu email"
       title:
         title: "Título"
       filters:

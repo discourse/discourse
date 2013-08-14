@@ -116,16 +116,22 @@ Handlebars.registerHelper('lower', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('avatar', function(user, options) {
-
   if (typeof user === 'string') {
     user = Ember.Handlebars.get(this, user, options);
   }
 
-  if( user ) {
+  if (user) {
     var username = Em.get(user, 'username');
     if (!username) username = Em.get(user, options.hash.usernamePath);
 
-    var avatarTemplate = Ember.get(user, 'avatar_template');
+    var avatarTemplate;
+    var template = options.hash.template;
+    if (template && template !== 'avatar_template') {
+      avatarTemplate = Em.get(user, template);
+      if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.' + template);
+    }
+
+    if (!avatarTemplate) avatarTemplate = Em.get(user, 'avatar_template');
     if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.avatar_template');
 
     var title;
@@ -147,7 +153,6 @@ Handlebars.registerHelper('avatar', function(user, options) {
     return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
       size: options.hash.imageSize,
       extraClasses: Em.get(user, 'extras') || options.hash.extraClasses,
-      username: username,
       title: title || username,
       avatarTemplate: avatarTemplate
     }));
@@ -158,18 +163,32 @@ Handlebars.registerHelper('avatar', function(user, options) {
 
 /**
   Bound avatar helper.
+  Will rerender whenever the "avatar_template" changes.
 
   @method boundAvatar
   @for Handlebars
 **/
 Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
-  var username = Em.get(user, 'username');
   return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
     size: options.hash.imageSize,
-    username: username,
-    avatarTemplate: Ember.get(user, 'avatar_template')
+    avatarTemplate: Em.get(user, 'avatar_template')
   }));
-});
+}, 'avatar_template');
+
+/**
+  Bound avatar helper.
+  Will rerender whenever the "uploaded_avatar_template" changes.
+  Only available for the current user.
+
+  @method boundUploadedAvatar
+  @for Handlebars
+**/
+Ember.Handlebars.registerBoundHelper('boundUploadedAvatar', function(user, options) {
+  return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
+    size: options.hash.imageSize,
+    avatarTemplate: Em.get(user, 'uploaded_avatar_template')
+  }));
+}, 'uploaded_avatar_template');
 
 /**
   Nicely format a date without a binding since the date doesn't need to change.

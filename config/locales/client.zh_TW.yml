@@ -196,7 +196,7 @@ zh_TW:
         success: "（電子郵件已發送）"
         in_progress: "（正在發送電子郵件）"
         error: "（錯誤）"
-      
+
       change_about:
         title: "更改關於我"
 
@@ -307,7 +307,8 @@ zh_TW:
         title: "最後使用的IP地址"
       avatar:
         title: "頭像"
-        instructions: "我們目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 來基於你的郵箱生成頭像"
+        instructions:
+          gravatar: "我們目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 來基於你的郵箱生成頭像"
 
       filters:
         all: "全部"
@@ -492,7 +493,7 @@ zh_TW:
       placeholder: "在此輸入你的搜索條件"
       no_results: "沒有找到結果。"
       searching: "搜索中……"
-      
+
       prefer:
         user: "搜索會優先列出@{{username}}的結果"
         category: "搜索會優先列出{{category}}的結果"
@@ -729,7 +730,7 @@ zh_TW:
         upload_not_authorized: "抱歉, 你上傳的文件並不允許 (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "抱歉, 新用戶不能上傳圖片。"
         attachment_upload_not_allowed_for_new_user: "抱歉, 新用戶不能上傳附件。"
-      
+
       abandon: "你確定要丟棄你的帖子嗎？"
 
       archetypes:
@@ -969,7 +970,7 @@ zh_TW:
         help: "在 {{categoryName}} 分類中熱門的主題"
 
     browser_update: '抱歉, <a href="http://www.iteriter.com/faq/#browser">你的瀏覽器版本太低，推薦使用Google Chrome</a>. 請 <a href="http://www.google.com/chrome/">升級你的浏覽器</a>。'
-    
+
     permission_types:
       full: "創建 / 回復 / 觀看"
       create_post: "回復 / 觀看"
@@ -1043,7 +1044,7 @@ zh_TW:
         error: "出錯了"
         view_message: "查看消息"
         no_results: "沒有任何投訴"
-      
+
       summary:
           action_type_3:
             one: "離題"
@@ -1114,7 +1115,7 @@ zh_TW:
         text: "文字"
         last_seen_user: "最後看見用戶:"
         reply_key: "回複金鑰"
-        
+
         logs:
         title: "記錄"
         action: "行動"
