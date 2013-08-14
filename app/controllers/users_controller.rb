@@ -3,7 +3,8 @@ require_dependency 'user_name_suggester'
 
 class UsersController < ApplicationController
 
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect]
+  skip_before_filter :authorize_mini_profiler, only: [:avatar]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect, :avatar]
 
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect]
 
@@ -316,7 +317,29 @@ class UsersController < ApplicationController
                                           methods: :avatar_template) }
   end
 
+  # [LEGACY] avatars in quotes/oneboxes might still be pointing to this route
+  # fixing it requires a rebake of all the posts
   def avatar
+    user = User.select(:email).where(username_lower: params[:username].downcase).first
+    if user.present?
+      size = determine_avatar_size(params[:size])
+      url = user.avatar_template.gsub("{size}", size.to_s)
+      expires_in 1.day
+      redirect_to url
+    else
+      raise ActiveRecord::RecordNotFound
+    end
+  end
+
+  def determine_avatar_size(size)
+    size = size.to_i
+    size = 64 if size == 0
+    size = 10 if size < 10
+    size = 128 if size > 128
+    size
+  end
+
+  def upload_avatar
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
