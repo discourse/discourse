@@ -9,11 +9,26 @@
 Discourse.AdminUser = Discourse.User.extend({
 
   deleteAllPosts: function() {
-    var user = this;
     this.set('can_delete_all_posts', false);
-    Discourse.ajax("/admin/users/" + (this.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
-      user.set('post_count', 0);
-    });
+    var user = this;
+    var message = I18n.t('admin.user.delete_all_posts_confirm', {posts: user.get('post_count'), topics: user.get('topic_count')});
+    var buttons = [{
+      "label": I18n.t("composer.cancel"),
+      "class": "cancel",
+      "link":  true,
+      "callback": function() {
+        user.set('can_delete_all_posts', true);
+      }
+    }, {
+      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t("admin.user.delete_all_posts"),
+      "class": "btn btn-danger",
+      "callback": function() {
+        Discourse.ajax("/admin/users/" + (user.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
+          user.set('post_count', 0);
+        });
+      }
+    }];
+    bootbox.dialog(message, buttons, {"classes": "delete-all-posts"});
   },
 
   // Revoke the user's admin access
