@@ -138,6 +138,10 @@ fr:
     saving: "Sauvegarde en cours..."
     saved: "Sauvegardé !"
 
+    save: "Envoyer"
+    saving: "Envois en cours..."
+    saved: "Envoyé !"
+
     choose_topic:
       none_found: "Aucune discussion trouvée."
       title:
@@ -214,6 +218,14 @@ fr:
         taken: "Désolé, cette adresse email est indisponible."
         error: "Il y a eu une erreur lors du changement d'email. Cette adresse est peut-être déjà utilisée ?"
         success: "Nous vous avons envoyé un mail à cette adresse. Merci de suivre les instructions."
+
+      change_avatar:
+        title: "Changez votre avatar"
+        upload_instructions: "Ou vous pourriez envoyer une image"
+        upload: "Envoyer une image"
+        uploading: "Image en cours d'envois..."
+        gravatar: "Gravatar"
+        uploaded_avatar: "Image envoyée"
 
       email:
         title: "Email"
@@ -309,8 +321,10 @@ fr:
         title: "Dernières adresses IP"
       avatar:
         title: "Avatar"
-        instructions: "Nous utilisons <a href='https://gravatar.com' target='_blank'>Gravatar</a> pour associer votre avatar avec votre adresse email."
-
+        instructions:
+          gravatar: "Nous utilisons <a href='https://gravatar.com' target='_blank'>Gravatar</a> pour associer votre avatar avec votre adresse email :"
+          uploaded_avatar: "Nous utilisons l'avatar que vous avez envoyé."
+          upload: "Ou vous pouvez envoyer une image"
       filters:
         all: "Tout"
 

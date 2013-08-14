@@ -613,6 +613,8 @@ fr:
 
     minimum_topics_similar: "Combien de topics ont besoin d'exister dans la base de données avant que des topics similaires soit présentés."
 
+    allow_uploaded_avatars: "Permet aux utilisateurs d'uploader leur propre avatar"
+
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
     liked: "%{display_username} a aimé votre message dans %{link}"

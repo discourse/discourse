@@ -181,7 +181,7 @@ pt:
         title: "Último endereço IP"
       avatar:
         title: "Avatar"
-        instructions: "Nós utilizamos <a href='https://gravatar.com' target='_blank'>Gravatar</a> para os avatares baseados no teu email"
+        instructions_gravatar: "Nós utilizamos <a href='https://gravatar.com' target='_blank'>Gravatar</a> para os avatares baseados no teu email"
 
       filters:
         all: "Todos"

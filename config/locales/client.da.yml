@@ -187,7 +187,8 @@ da:
         title: "Sidste IP-adresse"
       avatar:
         title: "Brugerbillede"
-        instructions: "Vi bruger <a href='https://gravatar.com' target='_blank'>Gravatar</a> for brugerbilleder baseret på e-mail-adresse"
+        instructions:
+          gravatar: "Vi bruger <a href='https://gravatar.com' target='_blank'>Gravatar</a> for brugerbilleder baseret på e-mail-adresse"
 
       filters:
         all: "Alle"

@@ -191,8 +191,11 @@ Discourse.ComposerView = Discourse.View.extend({
     });
 
     this.editor = editor = Discourse.Markdown.createEditor({
-      lookupAvatar: function(username) {
-        return Discourse.Utilities.avatarImg({ username: username, size: 'tiny' });
+      lookupAvatarByPostNumber: function(postNumber) {
+        var quotedPost = composerView.get('controller.controllers.topic.postStream.posts').findProperty("post_number", postNumber);
+        if (quotedPost) {
+          return Discourse.Utilities.tinyAvatar(quotedPost.get("avatar_template"));
+        }
       }
     });
 
@@ -295,27 +298,8 @@ Discourse.ComposerView = Discourse.View.extend({
     $uploadTarget.on('fileuploadfail', function (e, data) {
       // hide upload status
       composerView.set('isUploading', false);
-      // deal with meaningful errors first
-      if (data.jqXHR) {
-        switch (data.jqXHR.status) {
-          // 0 == cancel from the user
-          case 0: return;
-          // 413 == entity too large, usually returned from the web server
-          case 413:
-            var type = Discourse.Utilities.isAnImage(data.files[0].name) ? "image" : "attachment";
-            var maxSizeKB = Discourse.SiteSettings['max_' + type + '_size_kb'];
-            bootbox.alert(I18n.t('post.errors.' + type + '_too_large', { max_size_kb: maxSizeKB }));
-            return;
-          // 415 == media type not authorized
-          case 415:
-          // 422 == there has been an error on the server (mostly due to FastImage)
-          case 422:
-            bootbox.alert(data.jqXHR.responseText);
-            return;
-        }
-      }
-      // otherwise, display a generic error message
-      bootbox.alert(I18n.t('post.errors.upload'));
+      // display an error message
+      Discourse.Utilities.displayErrorForUpload(data);
     });
 
     // I hate to use Em.run.later, but I don't think there's a way of waiting for a CSS transition
@@ -323,11 +307,7 @@ Discourse.ComposerView = Discourse.View.extend({
     return Em.run.later(jQuery, (function() {
       var replyTitle = $('#reply-title');
       composerView.resize();
-      if (replyTitle.length) {
-        return replyTitle.putCursorAtEnd();
-      } else {
-        return $wmdInput.putCursorAtEnd();
-      }
+      return replyTitle.length ? replyTitle.putCursorAtEnd() : $wmdInput.putCursorAtEnd();
     }), 300);
   },
 

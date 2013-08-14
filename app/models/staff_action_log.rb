@@ -37,5 +37,14 @@ end
 #  details        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  context        :string(255)
+#  ip_address     :string(255)
+#  email          :string(255)
+#
+# Indexes
+#
+#  index_staff_action_logs_on_action_and_id          (action,id)
+#  index_staff_action_logs_on_staff_user_id_and_id   (staff_user_id,id)
+#  index_staff_action_logs_on_target_user_id_and_id  (target_user_id,id)
 #
 

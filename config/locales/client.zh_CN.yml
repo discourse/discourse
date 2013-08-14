@@ -311,7 +311,8 @@ zh_CN:
         title: "最后使用的IP地址"
       avatar:
         title: "头像"
-        instructions: "我们目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 来基于你的邮箱生成头像"
+        instructions:
+          gravatar: "我们目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 来基于你的邮箱生成头像"
       title:
         title: "头衔"
 

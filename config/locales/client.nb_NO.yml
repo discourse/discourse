@@ -247,7 +247,8 @@ nb_NO:
         title: "Siste IP Addresse"
       avatar:
         title: "Profilbilde"
-        instructions: "Vi bruker <a href='https://gravatar.com' target='_blank'>Gravatar</a> basert på din email for profilbilder."
+        instructions:
+          gravatar: "Vi bruker <a href='https://gravatar.com' target='_blank'>Gravatar</a> basert på din email for profilbilder."
 
       filters:
         all: "Alle"
