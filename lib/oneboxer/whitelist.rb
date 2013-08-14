@@ -88,7 +88,14 @@ module Oneboxer
        Entry.new(/^https?:\/\/(?:www\.)?tumblr\.com\/.+/, false),
        Entry.new(/^https?:\/\/(?:www\.)?howtogeek\.com\/.+/, false),
        Entry.new(/\/\d{4}\/\d{2}\/\d{2}\//, false),   # wordpress
-       Entry.new(/^https?:\/\/[^\/]+\/t\/[^\/]+\/\d+(\/\d+)?(\?.*)?$/)
+       Entry.new(/^https?:\/\/[^\/]+\/t\/[^\/]+\/\d+(\/\d+)?(\?.*)?$/),
+
+       # Online learning resources
+       Entry.new(/^https?:\/\/(?:www\.)?coursera\.org\/.+/, false),
+       Entry.new(/^https?:\/\/(?:www\.)?khanacademy\.org\/.+/, false),
+       Entry.new(/^https?:\/\/(?:www\.)?ted\.com\/talks\/.+/, false), # only /talks have meta info
+       Entry.new(/^https?:\/\/(?:www\.)?wikihow\.com\/.+/, false),
+       Entry.new(/^https?:\/\/(?:\w+\.)?wonderhowto\.com\/.+/, false)
       ]
     end
 
