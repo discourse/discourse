@@ -108,12 +108,14 @@ begin
   home_page = bench("/")
   topic_page = bench("/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69")
 
-  puts "Your Results:"
+  puts "Your Results: (note for timings- percentile is first, duration is second in millisecs)"
 
   puts({
     "home_page" => home_page,
     "topic_page" => topic_page,
-    "timings" => @timings
+    "timings" => @timings,
+    "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
+    "rails4?" => ENV["RAILS4"] == "1"
   }.to_yaml)
 
 ensure
