@@ -64,8 +64,9 @@ Discourse::Application.routes.draw do
     end
 
     scope '/logs' do
-      resources :screened_emails,   only: [:index, :create, :update, :destroy]
-      resources :staff_action_logs, only: [:index, :create, :update, :destroy]
+      resources :staff_action_logs, only: [:index]
+      resources :screened_emails,   only: [:index]
+      resources :screened_urls,     only: [:index]
     end
 
     get 'customize' => 'site_customizations#index', constraints: AdminConstraint.new

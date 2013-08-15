@@ -9,7 +9,7 @@
 **/
 Discourse.ScreenedEmail = Discourse.Model.extend({
   actionName: function() {
-    return I18n.t("admin.logs.screened_emails.actions." + this.get('action'));
+    return I18n.t("admin.logs.screened_actions." + this.get('action'));
   }.property('action')
 });
 

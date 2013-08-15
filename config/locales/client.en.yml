@@ -1181,15 +1181,11 @@ en:
         title: "Logs"
         action: "Action"
         created_at: "Created"
-        screened_emails:
-          title: "Screened Emails"
-          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
-          email: "Email Address"
-          last_match_at: "Last Matched"
-          match_count: "Matches"
-          actions:
-            block: "block"
-            do_nothing: "do nothing"
+        last_match_at: "Last Matched"
+        match_count: "Matches"
+        screened_actions:
+          block: "block"
+          do_nothing: "do nothing"
         staff_actions:
           title: "Staff Actions"
           instructions: "Click usernames and actions to filter the list. Click avatars to go to user pages."
@@ -1202,6 +1198,14 @@ en:
           actions:
             delete_user: "delete user"
             change_trust_level: "change trust level"
+        screened_emails:
+          title: "Screened Emails"
+          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
+          email: "Email Address"
+        screened_urls:
+          title: "Screened URLs"
+          description: "The URLs listed here were used in posts by users who have been identified as spammers."
+          url: "URL"
 
       impersonate:
         title: "Impersonate User"

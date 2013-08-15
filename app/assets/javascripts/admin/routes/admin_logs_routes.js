@@ -13,24 +13,6 @@ Discourse.AdminLogsIndexRoute = Discourse.Route.extend({
 });
 
 /**
-  The route that lists blocked email addresses.
-
-  @class AdminLogsScreenedEmailsRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.AdminLogsScreenedEmailsRoute = Discourse.Route.extend({
-  renderTemplate: function() {
-    this.render('admin/templates/logs/screened_emails', {into: 'adminLogs'});
-  },
-
-  setupController: function() {
-    return this.controllerFor('adminLogsScreenedEmails').show();
-  }
-});
-
-/**
   The route that lists staff actions that were logged.
 
   @class AdminLogsStaffActionLogsRoute
@@ -56,5 +38,41 @@ Discourse.AdminLogsStaffActionLogsRoute = Discourse.Route.extend({
 
     // Clear any filters when we leave the route
     Discourse.URL.set('queryParams', null);
+  }
+});
+
+/**
+  The route that lists blocked email addresses.
+
+  @class AdminLogsScreenedEmailsRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.AdminLogsScreenedEmailsRoute = Discourse.Route.extend({
+  renderTemplate: function() {
+    this.render('admin/templates/logs/screened_emails', {into: 'adminLogs'});
+  },
+
+  setupController: function() {
+    return this.controllerFor('adminLogsScreenedEmails').show();
+  }
+});
+
+/**
+  The route that lists screened URLs.
+
+  @class AdminLogsScreenedUrlsRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.AdminLogsScreenedUrlsRoute = Discourse.Route.extend({
+  renderTemplate: function() {
+    this.render('admin/templates/logs/screened_urls', {into: 'adminLogs'});
+  },
+
+  setupController: function() {
+    return this.controllerFor('adminLogsScreenedUrls').show();
   }
 });
