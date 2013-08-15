@@ -322,7 +322,7 @@ class User < ActiveRecord::Base
     if SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
       # the avatars might take a while to generate
       # so return the url of the original image in the meantime
-      uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.url
+      uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
     else
       User.gravatar_template(email)
     end
