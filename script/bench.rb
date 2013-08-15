@@ -1,8 +1,15 @@
 require "socket"
 require "csv"
 
+def run(command)
+  system(command, out: $stdout, err: :out)
+end
+
 puts "Running bundle"
-`bundle`
+if !run("bundle")
+  puts "Quitting, some of the gems did not install"
+  exit
+end
 
 puts "Ensuring config is setup"
 
