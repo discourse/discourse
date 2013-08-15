@@ -249,7 +249,8 @@ class Autospec::Runner
 
   def process_spec(spec)
     last_failed = false
-    if run_spec(spec) == 0
+    result = run_spec(spec)
+    if result == 0
       @queue.pop
     else
       last_failed = true
@@ -349,7 +350,7 @@ class Autospec::Runner
 
   def stop_spork
     pid = File.read(spork_pid_file).to_i
-    Process.kill("SIGHUP",pid)
+    Process.kill("SIGTERM",pid)
   end
 
   def start_spork
