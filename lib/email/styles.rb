@@ -49,12 +49,12 @@ module Email
 
       style('h3', 'margin: 15px 0 20px 0; border-bottom: 1px solid #ddd;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
-      style('a',' text-decoration: none; font-weight: bold; font-size: 15px; color: #006699;')
+      style('a',' text-decoration: none; font-weight: bold; color: #006699;')
       style('ul', 'margin: 0 0 0 10px; padding: 0 0 0 20px;')
       style('li', 'padding-bottom: 10px')
       style('div.digest-post', 'margin-left: 15px; margin-top: 20px; max-width: 694px;')
       style('div.digest-post h1', 'font-size: 20px;')
-      style('div.footer-notice', 'color:#666;')
+      style('div.footer-notice', 'color:#666; font-size:80%')
 
       @fragment.css('pre').each do |pre|
         pre.replace(pre.text)
