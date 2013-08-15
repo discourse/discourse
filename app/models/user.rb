@@ -297,13 +297,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.avatar_template(email)
-    user = User.select([:email, :use_uploaded_avatar, :uploaded_avatar_template, :uploaded_avatar_id])
-               .where(email: Email.downcase(email))
-               .first
-    user.avatar_template if user.present?
-  end
-
   def self.gravatar_template(email)
     email_hash = self.email_hash(email)
     "//www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
@@ -314,7 +307,7 @@ class User < ActiveRecord::Base
   #   - self oneboxes in open graph data
   #   - emails
   def small_avatar_url
-    template = User.avatar_template(email)
+    template = avatar_template
     template.gsub("{size}", "60")
   end
 
