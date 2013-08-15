@@ -20,9 +20,6 @@ zh_CN:
             mb: MB
             tb: TB
     dates:
-      short_date_no_year: "D MMM"
-      short_date: "D MMM, YYYY"
-      long_date: "MMMM D, YYYY h:mma"
       tiny:
         half_a_minute: "刚刚"
         less_than_x_seconds:
@@ -43,12 +40,6 @@ zh_CN:
         x_days:
           one:   "1天"
           other: "%{count}天"
-        about_x_months:
-          one:   "1个月"
-          other: "%{count}个月"
-        x_months:
-          one:   "1个月"
-          other: "%{count}个月"
         about_x_years:
           one:   "1年"
           other: "%{count}年"
@@ -91,14 +82,14 @@ zh_CN:
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
     no_value: "否"
     yes_value: "是"
-    of_value: "之于"
+    of_value: "/"
     generic_error: "抱歉，发生了一个错误。"
     generic_error_with_reason: "发生一个错误：%{error}"
     log_in: "登录"
     age: "寿命"
     last_post: "最后一帖"
     admin_title: "管理员"
-    flags_title: "投诉"
+    flags_title: "报告"
     show_more: "显示更多"
     links: 链接
     faq: "常见问答（FAQ）"
@@ -107,6 +98,8 @@ zh_CN:
     or: "或"
     now: "刚刚"
     read_more: '阅读更多'
+    more: "更多"
+    less: "更少"
 
     in_n_seconds:
       one: "一秒内"
@@ -179,7 +172,6 @@ zh_CN:
     user:
       said: "{{username}} 说："
       profile: 介绍信息
-      title: "用户"
       mute: 防打扰
       edit: 修改参数
       download_archive: "下载我的帖子的存档"
@@ -194,25 +186,26 @@ zh_CN:
       dynamic_favicon: "在标签页图标上动态显示未读消息提醒"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
       enable_quoting: "在高亮选择文字时启用引用回复"
-
+      change: "修改"
       moderator: "{{user}} 是版主"
       admin: "{{user}} 是管理员"
 
       change_password:
-        action: "修改"
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
         error: "（错误）"
 
+      change_about:
+        title: "更改个人简介"
+
       change_username:
-        action: "修改"
         title: "修改用户名"
         confirm: "修改你的用户名可能会导致一些相关后果，你真的确定要这么做么？"
         taken: "抱歉此用户名已经有人使用了。"
         error: "在修改你的用户名时发生了错误。"
         invalid: "此用户名不合法，用户名只能包含字母和数字"
+
       change_email:
-        action: '修改'
         title: "修改电子邮箱"
         taken: "抱歉此电子邮箱不可用。"
         error: "抱歉在修改你的电子邮箱时发生了错误，可能此邮箱已经被使用了？"
@@ -311,8 +304,7 @@ zh_CN:
         title: "最后使用的IP地址"
       avatar:
         title: "头像"
-        instructions:
-          gravatar: "我们目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 来基于你的邮箱生成头像"
+        instructions: "我们目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 来基于你的邮箱生成头像"
       title:
         title: "头衔"
 
@@ -491,18 +483,25 @@ zh_CN:
       invited_to_private_message: "{{username}} 邀请你进行私下交流：{{link}}"
       invitee_accepted: "<i title='已接受你的邀请' class='icon icon-signin'></i> {{username}} 已接受你的邀请"
       moved_post: "<i title='移动帖子' class='icon icon-arrow-right'></i> {{username}} 已将帖子移动到 {{link}}"
-      total_flagged: "被投诉帖子的总数"
+      total_flagged: "被报告帖子的总数"
 
     upload_selector:
       title: "插入图片"
+      title_with_attachments: "上传图片或文件"
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
       add_title: "添加图片"
+      add_title_with_attachments: "添加图片或文件"
       remote_title: "网络图片"
-      remote_tip: "输入图片网络，格式为：http://example.com/image.jpg"
+      remote_title_with_attachments: "网络图片或文件"
+      remote_tip: "输入图片的网址，格式为：http://example.com/image.jpg"
+      remote_tip_with_attachments: "输入图片或文件的网址，格式为：http://example.com/file.ext （支持的格式： {{authorized_extensions}}）。"
       local_title: "本地图片"
+      local_title_with_attachments: "本地图片或文件"
       local_tip: "点击从你的设备中选择一张图片。"
+      local_tip_with_attachments: "点击从你的设备中选择图片或文件（支持的格式： {{authorized_extensions}}）。"
       upload_title: "上传"
+      upload_title_with_attachments: "上传图片或文件"
       uploading: "上传图片中"
 
     search:
@@ -602,7 +601,6 @@ zh_CN:
             other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
         } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}} "
 
-
       browse_all_categories: 浏览所有分类
 
       view_latest_topics: 浏览热门主题
@@ -698,7 +696,7 @@ zh_CN:
         success: "谢谢！我们已发送一个邀请邮件到<b>{{email}}</b>。当他们确认的时候我们会通知你。你也可以在你的用户页面的邀请选项卡下查看邀请状态。"
         error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"
 
-      login_reply: '登录来回复'
+      login_reply: '登录后回复'
 
       filters:
         user: "你在浏览 {{n_posts}} {{by_n_users}}."
@@ -751,10 +749,13 @@ zh_CN:
       edit: "编辑 {{link}}"
       post_number: "帖子 {{number}}"
       in_reply_to: "回复给"
+      last_edited_on: "最后修改于"
       reply_as_new_topic: "回复为新主题"
       continue_discussion: "从 {{postLink}} 继续讨论："
       follow_quote: "跳转至所引用的帖子"
-      deleted_by_author: "（作者删除了帖子）"
+      deleted_by_author: 
+        one: "(该帖已被作者撤销，如无报告则将在 %{count} 小时后自动被删除。)"
+        other: "(该帖已被作者撤销，如无报告则将在 %{count} 小时后自动被删除。)"
       deleted_by: "删除者为"
       expand_collapse: "展开/收缩"
 
@@ -766,10 +767,12 @@ zh_CN:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
         upload: "抱歉，在上传文件时发生了错误。请重试。"
-        image_too_large: "抱歉，你上传的文件太大了（最大不能超过 {{max_size_kb}}kb），请调整文件大小后重新上传。"
+        attachment_too_large: "抱歉，你上传的附件太大了（最大不能超过 {{max_size_kb}}kb）。"
+        image_too_large: "抱歉，你上传的图片太大了（最大不能超过 {{max_size_kb}}kb），请调整文件大小后重新上传。"
         too_many_uploads: "抱歉, 你只能一次上传一张图片。"
-        upload_not_authorized: "抱歉, 你不能上传此类型文件(可上传的文件类型有: {{authorized_extensions}})。"
-        upload_not_allowed_for_new_user: "抱歉，新用户不能上传图片。"
+        upload_not_authorized: "抱歉, 你不能上传此类型文件（可上传的文件类型有: {{authorized_extensions}}）。"
+        image_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传图片。"
+        attachment_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传附件。"
 
       abandon: "你确定要丢弃你的帖子吗？"
 
@@ -780,37 +783,37 @@ zh_CN:
         reply: "开始给本帖撰写回复"
         like: "赞本帖"
         edit: "编辑本帖"
-        flag: "投诉本帖以提醒论坛版主"
+        flag: "报告本帖以提醒论坛版主"
         delete: "删除本帖"
         undelete: "恢复本帖"
         share: "分享一个到本帖的链接"
         more: "更多"
 
       actions:
-        flag: '投诉'
+        flag: '报告'
         clear_flags:
-          one: "清除投诉"
-          other: "清除投诉"
+          one: "清除报告"
+          other: "清除报告"
         it_too:
-          off_topic: "也投诉"
-          spam: "也投诉"
-          inappropriate: "也投诉"
-          custom_flag: "也投诉"
+          off_topic: "也报告"
+          spam: "也报告"
+          inappropriate: "也报告"
+          custom_flag: "也报告"
           bookmark: "也做书签"
           like: "也赞它"
           vote: "也对它投票"
         undo:
-          off_topic: "撤销投诉"
-          spam: "撤销投诉"
-          inappropriate: "撤销投诉"
+          off_topic: "撤销报告"
+          spam: "撤销报告"
+          inappropriate: "撤销报告"
           bookmark: "撤销书签"
           like: "撤销赞"
           vote: "撤销投票"
         people:
-          off_topic: "{{icons}} 投诉它偏离主题"
-          spam: "{{icons}} 投诉它为垃圾信息"
-          inappropriate: "{{icons}} 投诉它为不当内容"
-          notify_moderators: "{{icons}} 向版主投诉它"
+          off_topic: "{{icons}} 报告它偏离主题"
+          spam: "{{icons}} 报告它为垃圾信息"
+          inappropriate: "{{icons}} 报告它为不当内容"
+          notify_moderators: "{{icons}} 向版主报告它"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>通知了版主</a>"
           notify_user: "{{icons}} 发起了一个私下交流"
           notify_user_with_url: "{{icons}} 发送了一条<a href='{{postUrl}}'>私有消息</a>"
@@ -818,27 +821,27 @@ zh_CN:
           like: "{{icons}} 赞了它"
           vote: "{{icons}} 对它投票"
         by_you:
-          off_topic: "你投诉它偏离主题"
-          spam: "你投诉它为垃圾信息"
-          inappropriate: "你投诉它为不当内容"
-          notify_moderators: "你向版主投诉了它"
+          off_topic: "你报告它偏离主题"
+          spam: "你报告它为垃圾信息"
+          inappropriate: "你报告它为不当内容"
+          notify_moderators: "你向版主报告了它"
           notify_user: "你对该用户发起了一个私下交流"
           bookmark: "你对该帖做了书签"
           like: "你赞了它"
           vote: "你对该帖投了票"
         by_you_and_others:
           off_topic:
-            one: "你和另一个用户投诉它偏离主题"
-            other: "你和其他 {{count}} 个用户投诉它偏离主题"
+            one: "你和另一个用户报告它偏离主题"
+            other: "你和其他 {{count}} 个用户报告它偏离主题"
           spam:
-            one: "你和另一个用户投诉它为垃圾信息"
-            other: "你和其他 {{count}} 个用户投诉它为垃圾信息"
+            one: "你和另一个用户报告它为垃圾信息"
+            other: "你和其他 {{count}} 个用户报告它为垃圾信息"
           inappropriate:
-            one: "你和另一个用户投诉它为不当内容"
-            other: "你和其他 {{count}} 个用户投诉它为不当内容"
+            one: "你和另一个用户报告它为不当内容"
+            other: "你和其他 {{count}} 个用户报告它为不当内容"
           notify_moderators:
-            one: "你和另一个用户向版主投诉了它"
-            other: "你和其他 {{count}} 个用户向版主投诉了它"
+            one: "你和另一个用户向版主报告了它"
+            other: "你和其他 {{count}} 个用户向版主报告了它"
           notify_user:
             one: "你和另一个用户对该用户发起了一个私下交流"
             other: "你和其他 {{count}} 个用户对该用户发起了一个私下交流"
@@ -853,17 +856,17 @@ zh_CN:
             other: "你和其他 {{count}} 个用户对该帖投了票"
         by_others:
           off_topic:
-            one: "一个用户投诉它偏离主题"
-            other: "{{count}} 个用户投诉它偏离主题"
+            one: "一个用户报告它偏离主题"
+            other: "{{count}} 个用户报告它偏离主题"
           spam:
-            one: "一个用户投诉它为垃圾信息"
-            other: "{{count}} 个用户投诉它为垃圾信息"
+            one: "一个用户报告它为垃圾信息"
+            other: "{{count}} 个用户报告它为垃圾信息"
           inappropriate:
-            one: "一个用户投诉它为不当内容"
-            other: "{{count}} 个用户投诉它为不当内容"
+            one: "一个用户报告它为不当内容"
+            other: "{{count}} 个用户报告它为不当内容"
           notify_moderators:
-            one: "一个用户向版主投诉了它"
-            other: "{{count}} 个用户向版主投诉了它"
+            one: "一个用户向版主报告了它"
+            other: "{{count}} 个用户向版主报告了它"
           notify_user:
             one: "一个用户对该用户发起了一个私下交流"
             other: "{{count}} 个用户对该用户发起了一个私下交流"
@@ -888,6 +891,7 @@ zh_CN:
           other: "你确定要删除这些帖子吗？"
 
     category:
+      can: 'can&hellip; '
       none: '（未分类）'
       edit: '编辑'
       edit_long: "编辑分类"
@@ -916,19 +920,20 @@ zh_CN:
       change_in_category_topic: "访问分类主题来编辑描述信息"
       hotness: "热度"
       already_used: '此色彩已经被另一个分类使用'
-      is_secure: "安全类型？"
-      add_group: "添加分组"
       security: "安全"
-      allowed_groups: "授权的分组："
       auto_close_label: "自动关闭主题，过："
-
+      edit_permissions: "编辑权限"
+      add_permission: "添加权限"
 
     flagging:
-      title: '为何要给投诉本帖？'
-      action: '投诉帖子'
+      title: '为何要报告本帖？'
+      action: '报告帖子'
       take_action: "立即执行"
       notify_action: '通知'
-      cant: "抱歉，当前你不能投诉本帖。"
+      delete_spammer: "删除垃圾发布者"
+      delete_confirm: "你将删除该用户的 <b>%{posts}</b> 个帖子和 <b>%{topics}</b> 个主题，删除该账户，并将其邮件地址 <b>%{email}</b> 加入黑名单。确定吗？"
+      yes_delete_spammer: "确定"
+      cant: "抱歉，当前你不能报告本帖。"
       custom_placeholder_notify_user: "为何你要私下联系该用户？"
       custom_placeholder_notify_moderators: "为何本帖需要论坛版主的关注？为何本帖需要论坛版主的关注？"
       custom_message:
@@ -1024,13 +1029,14 @@ zh_CN:
 
       dashboard:
         title: "管理面板"
+        last_updated: "最近更新于："
         version: "安装的版本"
         up_to_date: "你正在运行最新的论坛版本。"
         critical_available: "有一个关键更新可用。"
         updates_available: "目前有可用更新。"
         please_upgrade: "请升级！"
         no_check_performed: "检测未执行"
-        stale_data: "最近一次检查更新未执行，请确保 clockwork 和 sidekiq 在正常运行"
+        stale_data: "最近一次检查更新未执行，请确保 sidekiq 在正常运行。"
         installed_version: "已安装"
         latest_version: "最新版本"
         problems_found: "你安装的论坛目前有以下问题："
@@ -1040,7 +1046,7 @@ zh_CN:
         moderators: '版主：'
         admins: '管理员：'
         blocked: '禁止参与讨论:'
-        banned: "禁止登陆"
+        banned: "禁止登录"
         private_messages_short: "私信"
         private_messages_title: "私密信息"
 
@@ -1061,30 +1067,26 @@ zh_CN:
         by: "来自"
 
       flags:
-        title: "投诉"
+        title: "报告"
         old: "过去的"
         active: "活跃的"
 
-        agree_hide: "批准(隐藏并发送私信)"
+        agree_hide: "批准（隐藏并发送私信）"
         agree_hide_title: "隐藏帖子并自动发送私信给作者使其修改"
         defer: "推迟"
-        defer_title: "现在不执行任何操作，对此帖子投诉的操作推迟到晚些时候甚至永远"
+        defer_title: "现在不执行任何操作，对此帖子报告的操作推迟到晚些时候甚至永远"
         delete_post: "删除帖子"
         delete_post_title: "删除此帖，如果这是这个主题内的第一篇帖子则删除主题"
         disagree_unhide: "不批准（不隐藏）"
-        disagree_unhide_title: "清除此帖的任何投诉，并使其重新可见"
+        disagree_unhide_title: "清除此帖的任何报告，并使其重新可见"
         disagree: "不批准"
-        disagree_title: "不批准此帖的投诉，并清除此贴的任何投诉"
+        disagree_title: "不批准此帖的报告，并清除此贴的任何报告"
+        delete_spammer_title: "删除该用户及其所有帖子和主题。"
 
-        clear: "清除投诉"
-        clear_title: "撤销本帖的所有投诉（已隐藏的帖子将会被取消隐藏）"
-        delete: "删除帖子"
-        delete_title: "删除帖子（如果它是主题第一帖，那么将删除主题）"
-
-        flagged_by: "投诉者为"
+        flagged_by: "报告者为"
         error: "出错了"
         view_message: "查看消息"
-        no_results: "没有投诉"
+        no_results: "没有报告"
 
         summary:
           action_type_3:
@@ -1112,7 +1114,7 @@ zh_CN:
         can_not_edit_automatic: "这是一个自动划分的群组，管理员用来分配角色和管理用户等级"
         delete: "删除"
         delete_confirm: "删除这个小组吗？"
-        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_failed: "无法删除小组。如果该小组是自动生成的，则不可删除。"
 
       api:
         title: "应用开发接口（API）"
@@ -1141,10 +1143,10 @@ zh_CN:
 
       email:
         title: "电子邮件"
-        user: "用户"
         settings: "设置"
         logs: "日志"
         sent_at: "发送时间"
+        user: "用户"
         email_type: "邮件类型"
         to_address: "目的地址"
         test_email_address: "测试电子邮件地址"
@@ -1152,12 +1154,39 @@ zh_CN:
         sent_test: "已发送！"
         delivery_method: "发送方式"
         preview_digest: "预览"
+        preview_digest_desc: "以下是摘要邮件内容的预览。"
         refresh: "刷新"
         format: "格式"
         html: "html"
         text: "text"
         last_seen_user: "用户最后登录时间:"
         reply_key: "回复关键字"
+
+      logs:
+        title: "日志"
+        action: "操作"
+        created_at: "创建"
+        screened_emails:
+          title: "被屏蔽的邮件地址"
+          description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
+          email: "邮件地址"
+          last_match_at: "最近匹配"
+          match_count: "匹配"
+          actions:
+            block: "阻挡"
+            do_nothing: "无操作"
+        staff_actions:
+          title: "管理人员操作"
+          instructions: "点击用户名和操作可以过滤列表。点击头像可以访问用户个人页面。"
+          clear_filters: "显示全部"
+          staff_user: "管理人员"
+          target_user: "目标用户"
+          when: "时间"
+          context: "环境"
+          details: "详情"
+          actions:
+            delete_user: "删除用户"
+            change_trust_level: "更改信任等级"
 
       impersonate:
         title: "假冒用户"
@@ -1178,7 +1207,7 @@ zh_CN:
           pending: "待定"
           admins: "管理员"
           moderators: "版主"
-          banned: "禁止登陆"
+          banned: "禁止登录"
           blocked: "禁止参与讨论"
         approved: "已批准？"
         approved_selected:
@@ -1229,16 +1258,20 @@ zh_CN:
         posts_read_count: 已阅帖子数量
         post_count: 创建的帖子数量
         topics_entered: 进入的主题数量
-        flags_given_count: 所做投诉数量
-        flags_received_count: 收到投诉数量
+        flags_given_count: 所做报告数量
+        flags_received_count: 收到报告数量
         approve: '批准'
         approved_by: "批准人"
         approve_success: "用户已被批准， 激活邮件已发送。"
         approve_bulk_success: "成功！所有选定的用户已批准并通知。"
         time_read: "阅读次数"
         delete: "删除用户"
-        delete_forbidden: "此用户还无法删除，因为他/她还有帖子。请先删除该用户的所有帖子。"
-        delete_confirm: "你 确定 你要永久的从本站删除此用户？该操作无法撤销！"
+        delete_forbidden: 
+          one: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
+          other: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
+        delete_confirm: "你确定要永久地从本站删除此用户？该操作无法撤销！"
+        delete_and_block: "<b>确定</b>，并<b>阻止</b>该邮件地址再次注册。"
+        delete_dont_block: "<b>确定</b>，但<b>允许</b>该邮件地址再次注册。"
         deleted: "该用户已被删除。"
         delete_failed: "在删除用户时发生了错误。请确保删除该用户前删除了该用户的所有帖子。"
         send_activation_email: "发送激活邮件"
