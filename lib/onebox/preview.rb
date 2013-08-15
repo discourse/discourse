@@ -1,5 +1,6 @@
 require_relative "preview/example"
 require_relative "preview/amazon"
+require_relative "preview/stackexchange"
 
 module Onebox
   class Preview
@@ -13,6 +14,7 @@ module Onebox
       case @url
       when /example\.com/ then Example
       when /amazon\.com/ then Amazon
+      when /stackexchange\.com/ then StackExchange
       end.new(@document, @url).to_html
     end
 
