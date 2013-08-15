@@ -47,7 +47,7 @@
             });
           }
 
-          var options = []
+          var options = [];
           var i;
           for (i=0; i < emoji.length; i++) {
             if (emoji[i].indexOf(term) === 0) {
