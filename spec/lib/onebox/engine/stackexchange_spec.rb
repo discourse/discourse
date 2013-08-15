@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Onebox::Preview::StackExchange do
+describe Onebox::Engine::StackExchange do
   describe "#to_html" do
     let(:link) { "http://stackexchange.com" }
 

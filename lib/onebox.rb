@@ -5,6 +5,8 @@ require "mustache"
 
 require_relative "onebox/version"
 require_relative "onebox/preview"
+require_relative "onebox/matcher"
+require_relative "onebox/engine"
 
 module Onebox
   def self.preview(url, args={})
