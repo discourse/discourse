@@ -76,11 +76,13 @@ puts "Ensuring profiling DB exists and is migrated"
 puts `bundle exec rake db:create`
 `bundle exec rake db:migrate`
 
-puts "Loading Rails"
+puts "Timing loading Rails"
 measure("load_rails") do
   `bundle exec rake middleware`
 end
 
+puts "Populating Profile DB"
+run("bundle exec ruby script/profile_db_generator.rb")
 
 begin
   pid = spawn("bundle exec thin start -p #{port}")
