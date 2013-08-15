@@ -235,15 +235,6 @@ GEM
     fspath (2.0.4)
     given_core (3.0.0)
       sorcerer (>= 0.3.7)
-    guard (1.8.1)
-      formatador (>= 0.2.4)
-      listen (>= 1.0.0)
-      lumberjack (>= 1.0.2)
-      pry (>= 0.9.10)
-      thor (>= 0.14.6)
-    guard-rspec (3.0.2)
-      guard (>= 1.8)
-      rspec (~> 2.13)
     handlebars-source (1.0.12)
     hashie (2.0.5)
     highline (1.6.19)
@@ -273,7 +264,6 @@ GEM
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
     lru_redux (0.0.6)
-    lumberjack (1.0.4)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -444,7 +434,6 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     temple (0.6.5)
-    terminal-notifier-guard (1.5.3)
     therubyracer (0.11.4)
       libv8 (~> 3.11.8.12)
       ref
@@ -497,7 +486,6 @@ DEPENDENCIES
   fast_xs
   fastimage
   fog
-  guard-rspec
   handlebars-source (= 1.0.12)
   highline
   hiredis
@@ -556,7 +544,6 @@ DEPENDENCIES
   sinatra
   slim
   spork-rails!
-  terminal-notifier-guard
   therubyracer
   thin
   timecop
