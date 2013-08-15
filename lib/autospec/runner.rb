@@ -236,16 +236,7 @@ class Autospec::Runner
       last_failed = false
       current = @queue.last
       if current
-        result = run_spec(current[1])
-        if result == 0
-          @queue.pop
-        else
-          last_failed = true
-          if result.to_i > 0
-            focus_on_failed_tests
-            ensure_all_specs_will_run
-          end
-        end
+        last_failed = process_spec(current[1])
       end
       wait = @queue.length == 0 || last_failed
       @signal.wait(@mutex) if wait
@@ -254,6 +245,21 @@ class Autospec::Runner
     p "DISASTA PASTA"
     puts e
     puts e.backtrace
+  end
+
+  def process_spec(spec)
+    last_failed = false
+    if run_spec(spec) == 0
+      @queue.pop
+    else
+      last_failed = true
+      if result.to_i > 0
+        focus_on_failed_tests
+        ensure_all_specs_will_run
+      end
+    end
+
+    last_failed
   end
 
   def start_service_queue
