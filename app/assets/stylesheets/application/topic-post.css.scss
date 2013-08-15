@@ -563,6 +563,9 @@
             margin: 0 0 5px 0;
           }
         }
+        &.highlighted {
+          background-color: $highlight;
+        }
       }
       .contents.bottom-round {
         overflow: hidden;
