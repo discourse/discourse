@@ -149,8 +149,7 @@ class PostAction < ActiveRecord::Base
 
   def remove_act!(user)
     trash!(user)
-    update_counters
-    enforce_rules
+    run_callbacks(:save)
   end
 
   def is_bookmark?
