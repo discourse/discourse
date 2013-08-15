@@ -1,8 +1,17 @@
 require "socket"
 require "csv"
+require "yaml"
+
+@timings = {}
 
 def run(command)
   system(command, out: $stdout, err: :out)
+end
+
+def measure(name)
+  start = Time.now
+  yield
+  @timings[name] = ((Time.now - start) * 1000).to_i
 end
 
 def prereqs
@@ -41,7 +50,13 @@ unless File.exists?("config/redis.yml")
   `cp config/redis.yml.sample config/redis.yml`
 end
 
+# Github settings
 ENV["RAILS_ENV"] = "profile"
+ENV["RUBY_GC_MALLOC_LIMIT"] = "1000000000"
+ENV["RUBY_HEAP_SLOTS_GROWTH_FACTOR"] = "1.25"
+ENV["RUBY_HEAP_MIN_SLOTS"] = "800000"
+ENV["RUBY_FREE_MIN"] = "600000"
+
 
 def port_available? port
   server = TCPServer.open port
@@ -62,17 +77,13 @@ puts `bundle exec rake db:create`
 `bundle exec rake db:migrate`
 
 puts "Loading Rails"
-require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+measure("load_rails") do
+  `bundle exec rake middleware`
+end
 
 
 begin
-  unless pid = fork
-    require "rack"
-    Rack::Server.start(:config => "config.ru",
-                       :AccessLog => [],
-                       :Port => port)
-    exit
-  end
+  pid = spawn("bundle exec thin start -p #{port}")
 
   while port_available? port
     sleep 1
@@ -91,7 +102,8 @@ begin
   puts "Your Results:"
 
   puts({
-    "home_page" => percentiles
+    "home_page" => percentiles,
+    "timings" => @timings
   }.to_yaml)
 
 ensure
