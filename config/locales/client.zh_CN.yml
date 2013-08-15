@@ -1114,7 +1114,7 @@ zh_CN:
         can_not_edit_automatic: "这是一个自动划分的群组，管理员用来分配角色和管理用户等级"
         delete: "删除"
         delete_confirm: "删除这个小组吗？"
-        delete_failed: "无法删除小组。"
+        delete_failed: "无法删除小组。如果该小组是自动生成的，则不可删除。"
 
       api:
         title: "应用开发接口（API）"
