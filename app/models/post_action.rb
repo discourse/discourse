@@ -17,6 +17,9 @@ class PostAction < ActiveRecord::Base
 
   scope :spam_flags, -> { where(post_action_type_id: PostActionType.types[:spam]) }
 
+  after_save :update_counters
+  after_save :enforce_rules
+
   def self.update_flagged_posts_count
     posts_flagged_count = PostAction.joins(post: :topic)
                                     .where('defer = false or defer IS NULL')
@@ -140,14 +143,14 @@ class PostAction < ActiveRecord::Base
                       user_id: user.id,
                       post_action_type_id:
                       post_action_type_id).first
-      action.trash!(user)
-      action.run_callbacks(:save)
+      action.remove_act!(user)
     end
   end
 
   def remove_act!(user)
     trash!(user)
-    run_callbacks(:save)
+    update_counters
+    enforce_rules
   end
 
   def is_bookmark?
@@ -214,14 +217,18 @@ class PostAction < ActiveRecord::Base
     [flag_counts['old_flags'].to_i, flag_counts['new_flags'].to_i]
   end
 
-  after_save do
+  def post_action_type_key
+    PostActionType.types[post_action_type_id]
+  end
+
+
+  def update_counters
     # Update denormalized counts
-    post_action_type = PostActionType.types[post_action_type_id]
-    column = "#{post_action_type.to_s}_count"
+    column = "#{post_action_type_key.to_s}_count"
     delta = deleted_at.nil? ? 1 : -1
 
     # We probably want to refactor this method to something cleaner.
-    case post_action_type
+    case post_action_type_key
     when :vote
       # Voting also changes the sort_order
       Post.where(id: post_id).update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)",
@@ -243,9 +250,11 @@ class PostAction < ActiveRecord::Base
       PostAction.update_flagged_posts_count
     end
 
-    PostAction.auto_hide_if_needed(post, post_action_type)
+  end
 
-    SpamRulesEnforcer.enforce!(post.user) if post_action_type == :spam
+  def enforce_rules
+    PostAction.auto_hide_if_needed(post, post_action_type_key)
+    SpamRulesEnforcer.enforce!(post.user) if post_action_type_key == :spam
   end
 
   def self.auto_hide_if_needed(post, post_action_type)
