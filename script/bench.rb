@@ -5,9 +5,22 @@ def run(command)
   system(command, out: $stdout, err: :out)
 end
 
+def prereqs
+  puts "Be sure to following packages are installed:
+
+sudo tasksel install postgresql-server
+sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev libpq-dev gawk curl pngcrush python-software-properties
+
+sudo apt-add-repository -y ppa:rwky/redis
+sudo apt-get update
+sudo apt-get install redis-server
+  "
+end
+
 puts "Running bundle"
 if !run("bundle")
   puts "Quitting, some of the gems did not install"
+  prereqs
   exit
 end
 
