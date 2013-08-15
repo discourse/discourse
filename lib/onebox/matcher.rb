@@ -6,8 +6,8 @@ module Onebox
 
     def oneboxed
       case @url
-        when /example\.com/ then Engine::Example
-        when /amazon\.com/ then Engine::Amazon
+      when /example\.com/ then Engine::Example
+      when /amazon\.com/ then Engine::Amazon
       end
     end
   end
