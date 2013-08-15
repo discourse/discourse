@@ -35,9 +35,9 @@
 
 <%= raw(@markdown_linker.references) %>
 
-<%=raw(t :'user_notifications.digest.unsubscribe',
+<div class='footer-notice'><%=raw(t :'user_notifications.digest.unsubscribe',
      site_link: site_link,
-     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), email_unsubscribe_path(key: @user.temporary_key))))  %>
+     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), email_unsubscribe_path(key: @user.temporary_key))))  %></div>
 
 <%= raw(@markdown_linker.references) %>
 

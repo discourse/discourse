@@ -54,6 +54,7 @@ module Email
       style('li', 'padding-bottom: 10px')
       style('div.digest-post', 'margin-left: 15px; margin-top: 20px; max-width: 694px;')
       style('div.digest-post h1', 'font-size: 20px;')
+      style('div.footer-notice', 'color:#666;')
 
       @fragment.css('pre').each do |pre|
         pre.replace(pre.text)
