@@ -2,7 +2,7 @@ module Trashable
   extend ActiveSupport::Concern
 
   included do
-    default_scope where(with_deleted_scope_sql)
+    default_scope { where(with_deleted_scope_sql) }
 
     # scope unscoped does not work
     belongs_to :deleted_by, class_name: 'User'
