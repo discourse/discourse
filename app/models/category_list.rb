@@ -103,7 +103,8 @@ class CategoryList
         @categories.insert(insert_at || @categories.size, uncategorized)
       end
 
-      if @all_topics.present? && uncategorized.present?
+      if uncategorized.present?
+        @all_topics ||= []
         uncategorized.displayable_topics = uncategorized_topics
         @all_topics << uncategorized_topics
         @all_topics.flatten!
