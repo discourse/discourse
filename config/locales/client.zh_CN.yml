@@ -82,7 +82,7 @@ zh_CN:
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
     no_value: "否"
     yes_value: "是"
-    of_value: "之于"
+    of_value: "/"
     generic_error: "抱歉，发生了一个错误。"
     generic_error_with_reason: "发生一个错误：%{error}"
     log_in: "登录"
@@ -186,7 +186,7 @@ zh_CN:
       dynamic_favicon: "在标签页图标上动态显示未读消息提醒"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
       enable_quoting: "在高亮选择文字时启用引用回复"
-      change: "更改"
+      change: "修改"
       moderator: "{{user}} 是版主"
       admin: "{{user}} 是管理员"
 
