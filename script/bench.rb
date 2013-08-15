@@ -66,10 +66,10 @@ rescue Errno::EADDRINUSE
   false
 end
 
-port = 60079
+@port = 60079
 
-while !port_available? port
-  port += 1
+while !port_available? @port
+  @port += 1
 end
 
 puts "Ensuring profiling DB exists and is migrated"
@@ -84,27 +84,35 @@ end
 puts "Populating Profile DB"
 run("bundle exec ruby script/profile_db_generator.rb")
 
-begin
-  pid = spawn("bundle exec thin start -p #{port}")
-
-  while port_available? port
-    sleep 1
-  end
-
+def bench(path)
   puts "Running apache bench warmup"
-  `ab -n 100 http://localhost:#{port}/`
-  puts "Benchmarking front page"
-  `ab -n 100 -e tmp/ab.csv http://localhost:#{port}/`
+  `ab -n 100 http://localhost:#{@port}#{path}`
+  puts "Benchmarking #{path}"
+  `ab -n 100 -e tmp/ab.csv http://localhost:#{@port}#{path}`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
   CSV.foreach("tmp/ab.csv") do |percent, time|
     percentiles[percent.to_i] = time.to_i if percentiles.key? percent.to_i
   end
 
+  percentiles
+end
+
+begin
+  pid = spawn("bundle exec thin start -p #{@port}")
+
+  while port_available? @port
+    sleep 1
+  end
+
+  home_page = bench("/")
+  topic_page = bench("/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69")
+
   puts "Your Results:"
 
   puts({
-    "home_page" => percentiles,
+    "home_page" => home_page,
+    "topic_page" => topic_page,
     "timings" => @timings
   }.to_yaml)
 
