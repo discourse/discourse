@@ -198,6 +198,7 @@ en:
         success: "(email sent)"
         in_progress: "(sending email)"
         error: "(error)"
+        action: "Send Password Reset Email"
 
       change_about:
         title: "Change About Me"
