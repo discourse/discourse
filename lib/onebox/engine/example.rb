@@ -5,9 +5,9 @@ module Onebox
 
       TEMPLATE = %|<div class="onebox">{{{header}}}</div>|
 
-      def initialize(document, link)
+      def initialize(link)
         @url = link
-        @body = document
+        @body = read
         @data = extracted_data
         @view = Mustache.render(TEMPLATE, @data)
       end
@@ -18,6 +18,10 @@ module Onebox
         {
           header: @body.css("html body h1")
         }
+      end
+
+      def read
+        Nokogiri::HTML(open(@url))
       end
     end
   end

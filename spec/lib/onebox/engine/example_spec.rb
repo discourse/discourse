@@ -2,9 +2,15 @@ require "spec_helper"
 
 describe Onebox::Engine::Example do
   describe "#to_html" do
+    let(:link) { "http://example.com" }
+    let(:example) { described_class.new(link).to_html }
+
+    before do
+      fake(link, response("example.response"))
+    end
+
     it "returns template if given valid data" do
-      example = described_class.new(response("example.response"), "http://www.example.com")
-      expect(example.to_html).to include(onebox_view("<h1>Example Domain 1</h1>"))
+      expect(example).to include(onebox_view("<h1>Example Domain 1</h1>"))
     end
   end
 end
