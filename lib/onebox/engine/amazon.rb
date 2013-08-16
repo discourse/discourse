@@ -3,15 +3,6 @@ module Onebox
     class Amazon
       include Engine
 
-      TEMPLATE = File.read(File.join("templates", "amazon.handlebars"))
-
-      def initialize(link)
-        @url = link
-        @body = read
-        @data = extracted_data
-        @view = Mustache.render(TEMPLATE, @data)
-      end
-
       private
 
       def extracted_data
@@ -22,10 +13,6 @@ module Onebox
           description: @body.css("html body #postBodyPS").inner_text,
           price: @body.css("html body .priceLarge").inner_text
         }
-      end
-
-      def read
-        Nokogiri::HTML(open(@url))
       end
     end
   end

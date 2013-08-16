@@ -3,15 +3,6 @@ module Onebox
     class Example
       include Engine
 
-      TEMPLATE = %|<div class="onebox">{{{header}}}</div>|
-
-      def initialize(link)
-        @url = link
-        @body = read
-        @data = extracted_data
-        @view = Mustache.render(TEMPLATE, @data)
-      end
-
       private
 
       def extracted_data
@@ -20,8 +11,8 @@ module Onebox
         }
       end
 
-      def read
-        Nokogiri::HTML(open(@url))
+      def template
+        %|<div class="onebox">{{{header}}}</div>|
       end
     end
   end

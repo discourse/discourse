@@ -6,8 +6,26 @@ require_relative "engine/wikipedia"
 
 module Onebox
   module Engine
+    def initialize(link)
+      @url = link
+      @body = read
+      @data = extracted_data
+    end
+
     def to_html
-      @view
+      Mustache.render(template, @data)
+    end
+
+    def read
+      Nokogiri::HTML(open(@url))
+    end
+
+    def template
+      File.read(File.join("templates", "#{template_name}.handlebars"))
+    end
+
+    def template_name
+      self.class.name.split("::").last.downcase
     end
   end
 end
