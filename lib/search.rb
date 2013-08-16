@@ -118,9 +118,7 @@ class Search
                            .order("topics_month DESC")
                            .secured(@guardian)
                            .limit(@limit)
-      if rails4?
-        categories = categories.references(:category_search_data)
-      end
+                           .references(:category_search_data)
 
       categories.each do |c|
         @results.add_result(SearchResult.from_category(c))
@@ -133,9 +131,7 @@ class Search
                   .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
                   .order("last_posted_at DESC")
                   .limit(@limit)
-      if rails4?
-        users = users.references(:user_search_data)
-      end
+                  .references(:user_search_data)
 
       users.each do |u|
         @results.add_result(SearchResult.from_user(u))
@@ -148,10 +144,7 @@ class Search
                   .where("topics.deleted_at" => nil)
                   .where("topics.visible")
                   .where("topics.archetype <> ?", Archetype.private_message)
-
-      if rails4?
-        posts = posts.references(:post_search_data, {:topic => :category})
-      end
+                  .references(:post_search_data, {:topic => :category})
 
       # If we have a search context, prioritize those posts first
       if @search_context.present?
