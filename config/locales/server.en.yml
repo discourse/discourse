@@ -529,6 +529,7 @@ en:
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users may register with. WARNING: Users with email domains other than those listed will not be allowed."
     version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
+    new_version_emails: "Send an email to the contact_email address when a new version is available."
 
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
@@ -793,6 +794,17 @@ en:
       ----
 
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
+
+  new_version_mailer:
+    subject_template: "[%{site_name}] Updates Are Available"
+    text_body_template: |
+      A new version of Discourse is available.
+
+      **New version: %{new_version}**
+
+      Your version: %{installed_version}
+
+      Please upgrade as soon as possible to get the latest fixes and new features.
 
   system_messages:
     post_hidden:
