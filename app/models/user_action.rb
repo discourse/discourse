@@ -172,6 +172,8 @@ ORDER BY p.created_at desc
     transaction(requires_new: true) do
       begin
 
+        # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
+
         # protect against dupes, for some reason this is failing in some cases
         action = self.where(hash.select{|k,v| required_parameters.include?(k)}).first
         return action if action
