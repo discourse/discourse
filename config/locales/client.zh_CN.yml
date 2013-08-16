@@ -23,51 +23,51 @@ zh_CN:
       tiny:
         half_a_minute: "刚刚"
         less_than_x_seconds:
-          one: "< 1秒"
+          one:   "< 1秒"
           other: "< %{count}秒"
         x_seconds:
-          one: "1秒"
+          one:   "1秒"
           other: "%{count}秒"
         less_than_x_minutes:
-          one: "< 1分钟"
+          one:   "< 1分钟"
           other: "< %{count}分钟"
         x_minutes:
-          one: "1分钟"
+          one:   "1分钟"
           other: "%{count}分钟"
         about_x_hours:
-          one: "1小时"
+          one:   "1小时"
           other: "%{count}小时"
         x_days:
-          one: "1天"
+          one:   "1天"
           other: "%{count}天"
         about_x_years:
-          one: "1年"
+          one:   "1年"
           other: "%{count}年"
         over_x_years:
-          one: "> 1年"
+          one:   "> 1年"
           other: "> %{count}年"
         almost_x_years:
-          one: "1年"
+          one:   "1年"
           other: "%{count}年"
       medium:
         x_minutes:
-          one: "1分钟"
+          one:   "1分钟"
           other: "%{count}分钟"
         x_hours:
-          one: "1小时"
+          one:   "1小时"
           other: "%{count}小时"
         x_days:
-          one: "1天"
+          one:   "1天"
           other: "%{count}天"
       medium_with_ago:
         x_minutes:
-          one: "1分钟前"
+          one:   "1分钟前"
           other: "%{count}分钟前"
         x_hours:
-          one: "1小时之前"
+          one:   "1小时之前"
           other: "%{count}小时之前"
         x_days:
-          one: "1天前"
+          one:   "1天前"
           other: "%{count}天前"
     share:
       topic: '分享一个到本主题的链接'
