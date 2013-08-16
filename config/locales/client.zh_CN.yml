@@ -86,7 +86,7 @@ zh_CN:
     generic_error: "抱歉，发生了一个错误。"
     generic_error_with_reason: "发生一个错误：%{error}"
     log_in: "登录"
-    age: "寿命"
+    age: "时间"
     last_post: "最后一帖"
     admin_title: "管理员"
     flags_title: "报告"
@@ -132,9 +132,9 @@ zh_CN:
     saving: "保存中……"
     saved: "已保存！"
 
-    upload: "Upload"
-    uploading: "Uploading..."
-    uploaded: "Uploaded!"
+    upload: "上传"
+    uploading: "上传中……"
+    uploaded: "上传完成！"
 
     choose_topic:
       none_found: "没有找到主题"
