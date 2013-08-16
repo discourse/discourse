@@ -308,7 +308,7 @@ class User < ActiveRecord::Base
   #   - emails
   def small_avatar_url
     template = avatar_template
-    template.gsub("{size}", "60")
+    template.gsub("{size}", "45")
   end
 
   def avatar_template
