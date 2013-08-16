@@ -323,3 +323,18 @@
     width: 680px;
   }
 }
+
+.avatar-selector {
+  label {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  #avatar-input {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+  .avatar {
+    margin: 5px 10px 5px 0;
+  }
+}

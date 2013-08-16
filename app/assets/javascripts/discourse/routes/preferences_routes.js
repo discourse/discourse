@@ -13,6 +13,13 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
 
   renderTemplate: function() {
     this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
+  },
+
+  events: {
+    showAvatarSelector: function() {
+      Discourse.Route.showModal(this, 'avatarSelector');
+      this.controllerFor("avatarSelector").init();
+    }
   }
 });
 
@@ -115,34 +122,5 @@ Discourse.PreferencesUsernameRoute = Discourse.RestrictedUserRoute.extend({
 
   setupController: function(controller, user) {
     controller.setProperties({ model: user, newUsername: user.get('username') });
-  }
-});
-
-
-/**
-  The route for updating a user's avatar
-
-  @class PreferencesAvatarRoute
-  @extends Discourse.RestrictedUserRoute
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.PreferencesAvatarRoute = Discourse.RestrictedUserRoute.extend({
-  model: function() {
-    return this.modelFor('user');
-  },
-
-  renderTemplate: function() {
-    return this.render({ into: 'user', outlet: 'userOutlet' });
-  },
-
-  // A bit odd, but if we leave to /preferences we need to re-render that outlet
-  exit: function() {
-    this._super();
-    this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
-  },
-
-  setupController: function(controller, user) {
-    controller.setProperties({ model: user });
   }
 });
