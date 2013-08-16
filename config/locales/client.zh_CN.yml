@@ -51,23 +51,23 @@ zh_CN:
           other: "%{count}年"
       medium:
         x_minutes:
-          one: "1分钟"
+          one:   "1分钟"
           other: "%{count}分钟"
         x_hours:
-          one: "1小时"
+          one:   "1小时"
           other: "%{count}小时"
         x_days:
-          one: "1天"
+          one:   "1天"
           other: "%{count}天"
       medium_with_ago:
         x_minutes:
-          one: "1分钟前"
+          one:   "1分钟前"
           other: "%{count}分钟前"
         x_hours:
-          one: "1小时之前"
+          one:   "1小时之前"
           other: "%{count}小时之前"
         x_days:
-          one: "1天前"
+          one:   "1天前"
           other: "%{count}天前"
     share:
       topic: '分享一个到本主题的链接'
@@ -86,7 +86,7 @@ zh_CN:
     generic_error: "抱歉，发生了一个错误。"
     generic_error_with_reason: "发生一个错误：%{error}"
     log_in: "登录"
-    age: "寿命"
+    age: "时间"
     last_post: "最后一帖"
     admin_title: "管理员"
     flags_title: "报告"
@@ -131,6 +131,10 @@ zh_CN:
     save: "保存修改"
     saving: "保存中……"
     saved: "已保存！"
+
+    upload: "上传"
+    uploading: "上传中……"
+    uploaded: "上传完成！"
 
     choose_topic:
       none_found: "没有找到主题"
@@ -210,6 +214,15 @@ zh_CN:
         taken: "抱歉此电子邮箱不可用。"
         error: "抱歉在修改你的电子邮箱时发生了错误，可能此邮箱已经被使用了？"
         success: "我们发送了一封确认信到此邮箱地址，请按照邮箱内指示完成确认。"
+
+      change_avatar:
+        title: "修改头像"
+        upload_instructions: "也可上传头像"
+        upload: "上传图片"
+        uploading: "正在上传图片……"
+        gravatar: "Gravatar"
+        gravatar_title: "修改你在Gravatar的头像"
+        uploaded_avatar: "已上传图片"
 
       email:
         title: "电子邮箱"
@@ -304,7 +317,9 @@ zh_CN:
         title: "最后使用的IP地址"
       avatar:
         title: "头像"
-        instructions: "我们目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 来基于你的邮箱生成头像"
+        instructions:
+          gravatar:  "正在使用<a href='https://gravatar.com' target='_blank'>Gravatar</a>头像"
+          uploaded_avatar: "正在使用上传的头像"
       title:
         title: "头衔"
 
@@ -753,7 +768,7 @@ zh_CN:
       reply_as_new_topic: "回复为新主题"
       continue_discussion: "从 {{postLink}} 继续讨论："
       follow_quote: "跳转至所引用的帖子"
-      deleted_by_author: 
+      deleted_by_author:
         one: "(该帖已被作者撤销，如无报告则将在 %{count} 小时后自动被删除。)"
         other: "(该帖已被作者撤销，如无报告则将在 %{count} 小时后自动被删除。)"
       deleted_by: "删除者为"
@@ -1166,15 +1181,11 @@ zh_CN:
         title: "日志"
         action: "操作"
         created_at: "创建"
-        screened_emails:
-          title: "被屏蔽的邮件地址"
-          description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
-          email: "邮件地址"
-          last_match_at: "最近匹配"
-          match_count: "匹配"
-          actions:
-            block: "阻挡"
-            do_nothing: "无操作"
+        last_match_at: "最近匹配"
+        match_count: "匹配"
+        screened_actions:
+          block: "阻挡"
+          do_nothing: "无操作"
         staff_actions:
           title: "管理人员操作"
           instructions: "点击用户名和操作可以过滤列表。点击头像可以访问用户个人页面。"
@@ -1187,6 +1198,14 @@ zh_CN:
           actions:
             delete_user: "删除用户"
             change_trust_level: "更改信任等级"
+        screened_emails:
+          title: "被屏蔽的邮件地址"
+          description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
+          email: "邮件地址"
+        screened_urls:
+          title: "被屏蔽的URL"
+          description: "The URLs listed here were used in posts by users who have been identified as spammers."
+          url: "URL"
 
       impersonate:
         title: "假冒用户"
@@ -1232,6 +1251,7 @@ zh_CN:
         unban_failed: "解禁此用户时发生了错误 {{error}}"
         ban_duration: "你计划禁止该用户多久？（天）"
         delete_all_posts: "删除所有帖子"
+        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
         ban: "禁止"
         unban: "解禁"
         banned: "已禁止？"
@@ -1266,7 +1286,7 @@ zh_CN:
         approve_bulk_success: "成功！所有选定的用户已批准并通知。"
         time_read: "阅读次数"
         delete: "删除用户"
-        delete_forbidden: 
+        delete_forbidden:
           one: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
           other: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
         delete_confirm: "你确定要永久地从本站删除此用户？该操作无法撤销！"
