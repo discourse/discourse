@@ -7,7 +7,7 @@ module Onebox
 
       def initialize(link)
         @url = link
-        @body = read(@url)
+        @body = read
         @data = extracted_data
         @view = Mustache.render(TEMPLATE, @data)
       end
