@@ -32,7 +32,7 @@ class Search
 
     def self.from_user(u)
       SearchResult.new(type: :user, id: u.username_lower, title: u.username, url: "/users/#{u.username_lower}").tap do |r|
-        r.avatar_template = User.avatar_template(u.email)
+        r.avatar_template = u.avatar_template
       end
     end
 
@@ -43,7 +43,7 @@ class Search
     def self.from_post(p)
       if p.post_number == 1
         # we want the topic link when it's the OP
-        SearchResult.from_topic(p.topic) 
+        SearchResult.from_topic(p.topic)
       else
         SearchResult.new(type: :topic, id: p.topic.id, title: p.topic.title, url: p.url)
       end
