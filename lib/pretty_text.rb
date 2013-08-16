@@ -128,6 +128,7 @@ module PrettyText
   end
 
   def self.v8
+
     return @ctx if @ctx
 
     # ensure we only init one of these
@@ -145,15 +146,16 @@ module PrettyText
     baked = nil
 
     @mutex.synchronize do
+      context = v8
       # we need to do this to work in a multi site environment, many sites, many settings
-      v8.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
-      v8.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
-      v8.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
-      v8['opts'] = opts || {}
-      v8['raw'] = text
-      v8.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
-      v8.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
-      baked = v8.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
+      context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
+      context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
+      context.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
+      context['opts'] = opts || {}
+      context['raw'] = text
+      context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
+      context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
+      baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
     # we need some minimal server side stuff, apply CDN and TODO filter disallowed markup
