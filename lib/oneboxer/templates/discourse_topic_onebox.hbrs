@@ -1,23 +1,20 @@
 <aside class='quote' data-post="1" data-topic="{{topic}}">
   <div class='title'>
     <div class='quote-controls'></div>
-  {{{avatar}}}
-    <a href="{{original_url}}">{{title}}</a> {{{category}}} </div>
-  <blockquote>{{{quote}}}
-  <div class='topic-info'>
-  <div class='info-line'>
-  {{posts_count}} posts, last post {{last_post}}, created {{age}}, {{views}} views
-  </div>
-  <div class='posters'>
-  {{#posters}}
     {{{avatar}}}
-  {{/posters}}
+    <a href="{{original_url}}">{{title}}</a> {{{category}}}
   </div>
-  <div class='clearfix'>
-  </div>
-  </div>
+  <blockquote>{{{quote}}}
+    <div class='topic-info'>
+      <div class='info-line'>
+        {{posts_count}} posts, last post {{last_post}}, created {{age}}, {{views}} views
+      </div>
+      <div class='posters'>
+        {{#posters}}
+          {{{avatar}}}
+        {{/posters}}
+      </div>
+      <div class='clearfix'></div>
+    </div>
   </blockquote>
 </aside>
-
-    
-
