@@ -20,6 +20,7 @@
 {{#if hasSelection}}
   <div id='selected-controls'>
     <button {{action approveUsers}} class='btn'>{{countI18n admin.users.approved_selected countBinding="selectedCount"}}</button>
+    <button {{action rejectUsers}}  class='btn btn-danger'>{{countI18n admin.users.reject_selected countBinding="selectedCount"}}</button>
   </div>
 {{/if}}
 

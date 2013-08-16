@@ -1233,6 +1233,9 @@ en:
         approved_selected:
           one: "approve user"
           other: "approve users ({{count}})"
+        reject_selected:
+          one: "reject user"
+          other: "reject users ({{count}})"
         titles:
           active: 'Active Users'
           new: 'New Users'
@@ -1246,6 +1249,12 @@ en:
           moderators: 'Moderators'
           blocked: 'Blocked Users'
           banned: 'Banned Users'
+        reject_successful:
+          one: "Successfully rejected 1 user."
+          other: "Successfully rejected %{count} users."
+        reject_failures:
+          one: "Failed to reject 1 user."
+          other: "Failed to reject %{count} users."
 
       user:
         ban_failed: "Something went wrong banning this user {{error}}"
