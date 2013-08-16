@@ -5,9 +5,9 @@ module Onebox
 
       TEMPLATE = File.read(File.join("templates", "amazon.handlebars"))
 
-      def initialize(document, link)
+      def initialize(link)
         @url = link
-        @body = document
+        @body = read
         @data = extracted_data
         @view = Mustache.render(TEMPLATE, @data)
       end
@@ -22,6 +22,10 @@ module Onebox
           description: @body.css("html body #postBodyPS").inner_text,
           price: @body.css("html body .priceLarge").inner_text
         }
+      end
+
+      def read
+        Nokogiri::HTML(open(@url))
       end
     end
   end

@@ -5,9 +5,9 @@ module Onebox
 
       TEMPLATE = File.read(File.join("templates", "qik.handlebars"))
 
-      def initialize(document, link)
+      def initialize(link)
         @url = link
-        @body = document
+        @body = read
         @data = extracted_data
         @view = Mustache.render(TEMPLATE, @data)
       end
@@ -20,6 +20,10 @@ module Onebox
           title: @body.css(".info h2").inner_text,
           image: @body.css(".userphoto").first["src"]
         }
+      end
+
+      def read
+        Nokogiri::HTML(open(@url))
       end
     end
   end
