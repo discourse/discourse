@@ -77,6 +77,7 @@ module PrettyText
   end
 
   @mutex = Mutex.new
+  @ctx_init = Mutex.new
 
   def self.mention_matcher
     Regexp.new("(\@[a-zA-Z0-9_]{#{User.username_length.begin},#{User.username_length.end}})")
@@ -86,14 +87,13 @@ module PrettyText
     Rails.root
   end
 
-  def self.v8
-    return @ctx unless @ctx.nil?
+  def self.create_new_context
+    ctx = V8::Context.new
 
-    @ctx = V8::Context.new
+    ctx["helpers"] = Helpers.new
 
-    @ctx["helpers"] = Helpers.new
-
-    ctx_load( "app/assets/javascripts/external/md5.js",
+    ctx_load(ctx,
+             "app/assets/javascripts/external/md5.js",
               "app/assets/javascripts/external/lodash.js",
               "app/assets/javascripts/external/Markdown.Converter.js",
               "app/assets/javascripts/external/twitter-text-1.5.0.js",
@@ -101,27 +101,41 @@ module PrettyText
               "app/assets/javascripts/external/rsvp.js",
               Rails.configuration.ember.handlebars_location)
 
-    @ctx.eval("var Discourse = {}; Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
-    @ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
-    @ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
+    ctx.eval("var Discourse = {}; Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
+    ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
+    ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
 
-    ctx_load( "app/assets/javascripts/discourse/components/bbcode.js",
+    ctx_load(ctx,
+              "app/assets/javascripts/discourse/components/bbcode.js",
               "app/assets/javascripts/discourse/components/utilities.js",
               "app/assets/javascripts/discourse/components/markdown.js")
 
     # Load server side javascripts
     if DiscoursePluginRegistry.server_side_javascripts.present?
       DiscoursePluginRegistry.server_side_javascripts.each do |ssjs|
-        @ctx.load(ssjs)
+        ctx.load(ssjs)
       end
     end
 
-    @ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.js.shbrs') {|f| f.read}
-    @ctx['quoteEmailTemplate'] = File.open(app_root + 'lib/assets/quote_email.js.shbrs') {|f| f.read}
-    @ctx.eval("HANDLEBARS_TEMPLATES = {
+    ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.js.shbrs') {|f| f.read}
+    ctx['quoteEmailTemplate'] = File.open(app_root + 'lib/assets/quote_email.js.shbrs') {|f| f.read}
+    ctx.eval("HANDLEBARS_TEMPLATES = {
       'quote': Handlebars.compile(quoteTemplate),
       'quote_email': Handlebars.compile(quoteEmailTemplate),
      };")
+
+    ctx
+  end
+
+  def self.v8
+
+    return @ctx if @ctx
+
+    # ensure we only init one of these
+    @ctx_init.synchronize do
+      return @ctx if @ctx
+      @ctx = create_new_context
+    end
     @ctx
   end
 
@@ -132,15 +146,16 @@ module PrettyText
     baked = nil
 
     @mutex.synchronize do
+      context = v8
       # we need to do this to work in a multi site environment, many sites, many settings
-      v8.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
-      v8.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
-      v8.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
-      v8['opts'] = opts || {}
-      v8['raw'] = text
-      v8.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
-      v8.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
-      baked = v8.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
+      context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
+      context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
+      context.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
+      context['opts'] = opts || {}
+      context['raw'] = text
+      context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
+      context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
+      baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
     # we need some minimal server side stuff, apply CDN and TODO filter disallowed markup
@@ -263,9 +278,9 @@ module PrettyText
 
   protected
 
-  def self.ctx_load(*files)
+  def self.ctx_load(ctx, *files)
     files.each do |file|
-      @ctx.load(app_root + file)
+      ctx.load(app_root + file)
     end
   end
 

@@ -74,13 +74,13 @@ describe UserDestroyer do
 
     shared_examples "email block list" do
       it "doesn't add email to block list by default" do
-        BlockedEmail.expects(:block).never
+        ScreenedEmail.expects(:block).never
         destroy
       end
 
       it "adds email to block list if block_email is true" do
-        b = Fabricate.build(:blocked_email, email: @user.email)
-        BlockedEmail.expects(:block).with(@user.email).returns(b)
+        b = Fabricate.build(:screened_email, email: @user.email)
+        ScreenedEmail.expects(:block).with(@user.email).returns(b)
         b.expects(:record_match!).once.returns(true)
         UserDestroyer.new(@admin).destroy(@user, destroy_opts.merge({block_email: true}))
       end
@@ -161,6 +161,50 @@ describe UserDestroyer do
         it 'should not unregister the user at the discourse hub' do
           DiscourseHub.expects(:unregister_nickname).never
           destroy rescue nil
+        end
+      end
+    end
+
+    context 'user has posts with links' do
+      context 'external links' do
+        before do
+          @post = Fabricate(:post_with_external_links, user: @user)
+          TopicLink.extract_from(@post)
+        end
+
+        it "doesn't add ScreenedUrl records by default" do
+          ScreenedUrl.expects(:watch).never
+          UserDestroyer.new(@admin).destroy(@user, {delete_posts: true})
+        end
+
+        it "adds ScreenedUrl records when :block_urls is true" do
+          ScreenedUrl.expects(:watch).at_least_once
+          UserDestroyer.new(@admin).destroy(@user, {delete_posts: true, block_urls: true})
+        end
+      end
+
+      context 'internal links' do
+        before do
+          @post = Fabricate(:post_with_external_links, user: @user)
+          TopicLink.extract_from(@post)
+          TopicLink.any_instance.stubs(:internal).returns(true)
+        end
+
+        it "doesn't add ScreenedUrl records" do
+          ScreenedUrl.expects(:watch).never
+          UserDestroyer.new(@admin).destroy(@user, {delete_posts: true, block_urls: true})
+        end
+      end
+
+      context 'with oneboxed links' do
+        before do
+          @post = Fabricate(:post_with_youtube, user: @user)
+          TopicLink.extract_from(@post)
+        end
+
+        it "doesn't add ScreenedUrl records" do
+          ScreenedUrl.expects(:watch).never
+          UserDestroyer.new(@admin).destroy(@user, {delete_posts: true, block_urls: true})
         end
       end
     end

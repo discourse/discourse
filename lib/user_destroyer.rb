@@ -17,6 +17,13 @@ class UserDestroyer
     User.transaction do
       if opts[:delete_posts]
         user.posts.each do |post|
+          if opts[:block_urls]
+            post.topic_links.each do |link|
+              unless link.internal or Oneboxer.oneboxer_exists_for_url?(link.url)
+                ScreenedUrl.watch(link.url, link.domain).try(:record_match!)
+              end
+            end
+          end
           PostDestroyer.new(@staff, post).destroy
         end
         raise PostsExistError if user.reload.post_count != 0
@@ -24,7 +31,7 @@ class UserDestroyer
       user.destroy.tap do |u|
         if u
           if opts[:block_email]
-            b = BlockedEmail.block(u.email)
+            b = ScreenedEmail.block(u.email)
             b.record_match! if b
           end
           Post.with_deleted.where(user_id: user.id).update_all("nuked_user = true")

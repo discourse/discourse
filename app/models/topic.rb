@@ -469,25 +469,8 @@ class Topic < ActiveRecord::Base
   # Chooses which topic users to feature
   def feature_topic_users(args={})
     reload unless rails4?
-
-    # Don't include the OP or the last poster
-    to_feature = posts.where('user_id NOT IN (?, ?)', user_id, last_post_user_id)
-
-    # Exclude a given post if supplied (in the case of deletes)
-    to_feature = to_feature.where("id <> ?", args[:except_post_id]) if args[:except_post_id].present?
-
-    # Clear the featured users by default
-    Topic.featured_users_count.times do |i|
-      send("featured_user#{i+1}_id=", nil)
-    end
-
-    # Assign the featured_user{x} columns
-    to_feature = to_feature.group(:user_id).order('count_all desc').limit(Topic.featured_users_count)
-
-    to_feature.count.keys.each_with_index do |user_id, i|
-      send("featured_user#{i+1}_id=", user_id)
-    end
-
+    clear_featured_users
+    update_featured_users featured_user_keys(args)
     save
   end
 
@@ -638,6 +621,31 @@ class Topic < ActiveRecord::Base
     def update_category_topic_count_by(num)
       if category_id.present?
         Category.where(['id = ?', category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+      end
+    end
+
+    def featured_user_keys(args)
+      # Don't include the OP or the last poster
+      to_feature = posts.where('user_id NOT IN (?, ?)', user_id, last_post_user_id)
+
+      # Exclude a given post if supplied (in the case of deletes)
+      to_feature = to_feature.where("id <> ?", args[:except_post_id]) if args[:except_post_id].present?
+
+
+      # Assign the featured_user{x} columns
+      to_feature.group(:user_id).order('count_all desc').limit(Topic.featured_users_count).count.keys
+    end
+
+
+    def clear_featured_users
+      Topic.featured_users_count.times do |i|
+        send("featured_user#{i+1}_id=", nil)
+      end
+    end
+
+    def update_featured_users(user_keys)
+      user_keys.each_with_index do |user_id, i|
+        send("featured_user#{i+1}_id=", user_id)
       end
     end
 end

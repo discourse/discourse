@@ -196,6 +196,57 @@ describe Admin::UsersController do
       end
     end
 
+    context '.reject_bulk' do
+      let(:reject_me)     { Fabricate(:user) }
+      let(:reject_me_too) { Fabricate(:user) }
+
+      it 'does nothing without users' do
+        UserDestroyer.any_instance.expects(:destroy).never
+        xhr :delete, :reject_bulk
+      end
+
+      it "won't delete users if not allowed" do
+        Guardian.any_instance.stubs(:can_delete_user?).returns(false)
+        UserDestroyer.any_instance.expects(:destroy).never
+        xhr :delete, :reject_bulk, users: [reject_me.id]
+      end
+
+      it "reports successes" do
+        Guardian.any_instance.stubs(:can_delete_user?).returns(true)
+        UserDestroyer.any_instance.stubs(:destroy).returns(true)
+        xhr :delete, :reject_bulk, users: [reject_me.id, reject_me_too.id]
+        response.should be_success
+        json = ::JSON.parse(response.body)
+        json['success'].to_i.should == 2
+        json['failed'].to_i.should == 0
+      end
+
+      context 'failures' do
+        before do
+          Guardian.any_instance.stubs(:can_delete_user?).returns(true)
+        end
+
+        it 'can handle some successes and some failures' do
+          UserDestroyer.any_instance.stubs(:destroy).with(reject_me, anything).returns(false)
+          UserDestroyer.any_instance.stubs(:destroy).with(reject_me_too, anything).returns(true)
+          xhr :delete, :reject_bulk, users: [reject_me.id, reject_me_too.id]
+          response.should be_success
+          json = ::JSON.parse(response.body)
+          json['success'].to_i.should == 1
+          json['failed'].to_i.should == 1
+        end
+
+        it 'reports failure due to a user still having posts' do
+          UserDestroyer.any_instance.expects(:destroy).with(reject_me, anything).raises(UserDestroyer::PostsExistError)
+          xhr :delete, :reject_bulk, users: [reject_me.id]
+          response.should be_success
+          json = ::JSON.parse(response.body)
+          json['success'].to_i.should == 0
+          json['failed'].to_i.should == 1
+        end
+      end
+    end
+
     context '.destroy' do
       before do
         @delete_me = Fabricate(:user)

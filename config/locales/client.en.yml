@@ -204,6 +204,7 @@ en:
         success: "(email sent)"
         in_progress: "(sending email)"
         error: "(error)"
+        action: "Send Password Reset Email"
 
       change_about:
         title: "Change About Me"
@@ -223,12 +224,11 @@ en:
 
       change_avatar:
         title: "Change your avatar"
-        upload_instructions: "Or you could upload an image"
-        upload: "Upload a picture"
-        uploading: "Uploading the picture..."
-        gravatar: "Gravatar"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         gravatar_title: "Change your avatar on Gravatar's website"
-        uploaded_avatar: "Uploaded picture"
+        uploaded_avatar: "Custom picture"
+        uploaded_avatar_empty: "Add a custom picture"
+        upload_title: "Upload your picture"
 
       email:
         title: "Email"
@@ -1187,15 +1187,11 @@ en:
         title: "Logs"
         action: "Action"
         created_at: "Created"
-        blocked_emails:
-          title: "Blocked Emails"
-          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
-          email: "Email Address"
-          last_match_at: "Last Matched"
-          match_count: "Matches"
-          actions:
-            block: "block"
-            do_nothing: "do nothing"
+        last_match_at: "Last Matched"
+        match_count: "Matches"
+        screened_actions:
+          block: "block"
+          do_nothing: "do nothing"
         staff_actions:
           title: "Staff Actions"
           instructions: "Click usernames and actions to filter the list. Click avatars to go to user pages."
@@ -1208,6 +1204,14 @@ en:
           actions:
             delete_user: "delete user"
             change_trust_level: "change trust level"
+        screened_emails:
+          title: "Screened Emails"
+          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
+          email: "Email Address"
+        screened_urls:
+          title: "Screened URLs"
+          description: "The URLs listed here were used in posts by users who have been identified as spammers."
+          url: "URL"
 
       impersonate:
         title: "Impersonate User"
@@ -1234,6 +1238,9 @@ en:
         approved_selected:
           one: "approve user"
           other: "approve users ({{count}})"
+        reject_selected:
+          one: "reject user"
+          other: "reject users ({{count}})"
         titles:
           active: 'Active Users'
           new: 'New Users'
@@ -1247,12 +1254,19 @@ en:
           moderators: 'Moderators'
           blocked: 'Blocked Users'
           banned: 'Banned Users'
+        reject_successful:
+          one: "Successfully rejected 1 user."
+          other: "Successfully rejected %{count} users."
+        reject_failures:
+          one: "Failed to reject 1 user."
+          other: "Failed to reject %{count} users."
 
       user:
         ban_failed: "Something went wrong banning this user {{error}}"
         unban_failed: "Something went wrong unbanning this user {{error}}"
         ban_duration: "How long would you like to ban the user for? (days)"
         delete_all_posts: "Delete all posts"
+        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
         ban: "Ban"
         unban: "Unban"
         banned: "Banned?"

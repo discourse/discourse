@@ -461,7 +461,7 @@
           background-color: transparent;
           @include box-shadow(none);
           h5 {
-            margin-top: 1px;
+            margin-top: 5px;
             font-size: 11px;
             line-height: 13px;
           }
@@ -562,6 +562,9 @@
             font-size: 12px;
             margin: 0 0 5px 0;
           }
+        }
+        &.highlighted {
+          background-color: $highlight;
         }
       }
       .contents.bottom-round {

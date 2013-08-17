@@ -171,24 +171,9 @@ Handlebars.registerHelper('avatar', function(user, options) {
 Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
   return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
     size: options.hash.imageSize,
-    avatarTemplate: Em.get(user, 'avatar_template')
+    avatarTemplate: Em.get(user, options.hash.template || 'avatar_template')
   }));
-}, 'avatar_template');
-
-/**
-  Bound avatar helper.
-  Will rerender whenever the "uploaded_avatar_template" changes.
-  Only available for the current user.
-
-  @method boundUploadedAvatar
-  @for Handlebars
-**/
-Ember.Handlebars.registerBoundHelper('boundUploadedAvatar', function(user, options) {
-  return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
-    size: options.hash.imageSize,
-    avatarTemplate: Em.get(user, 'uploaded_avatar_template')
-  }));
-}, 'uploaded_avatar_template');
+}, 'avatar_template', 'uploaded_avatar_template', 'gravatar_template');
 
 /**
   Nicely format a date without a binding since the date doesn't need to change.

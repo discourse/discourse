@@ -297,21 +297,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.avatar_template(email)
-    user = User.select([:email, :use_uploaded_avatar, :uploaded_avatar_template, :uploaded_avatar_id])
-               .where(email: email.downcase)
-               .first
-    if user.present?
-      if SiteSetting.allow_uploaded_avatars? && user.use_uploaded_avatar
-        # the avatars might take a while to generate
-        # so return the url of the original image in the meantime
-        user.uploaded_avatar_template.present? ? user.uploaded_avatar_template : user.uploaded_avatar.url
-      else
-        User.gravatar_template(email)
-      end
-    end
-  end
-
   def self.gravatar_template(email)
     email_hash = self.email_hash(email)
     "//www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
@@ -322,12 +307,18 @@ class User < ActiveRecord::Base
   #   - self oneboxes in open graph data
   #   - emails
   def small_avatar_url
-    template = User.avatar_template(email)
-    template.gsub(/\{size\}/, "60")
+    template = avatar_template
+    template.gsub("{size}", "45")
   end
 
   def avatar_template
-    User.avatar_template(email)
+    if SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
+      # the avatars might take a while to generate
+      # so return the url of the original image in the meantime
+      uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
+    else
+      User.gravatar_template(email)
+    end
   end
 
   # Updates the denormalized view counts for all users

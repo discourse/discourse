@@ -413,9 +413,11 @@ Discourse.TopicView.reopenClass({
 
           $contents.data("orig-color", origColor);
           $contents
-            .css({ backgroundColor: "#ffffcc" })
+            .addClass('highlighted')
             .stop()
-            .animate({ backgroundColor: origColor }, 2500);
+            .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
+              $contents.removeClass('highlighted');
+            });
         }
       }
     });

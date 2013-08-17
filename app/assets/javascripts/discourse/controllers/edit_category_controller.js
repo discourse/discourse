@@ -13,7 +13,11 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
   settingsSelected: Ember.computed.equal('selectedTab', 'settings'),
   foregroundColors: ['FFFFFF', '000000'],
 
-  descriptionChanged: function() {
+  onShow: function() {
+    this.changeSize();
+  },
+
+  changeSize: function() {
     if (this.present('description')) {
       this.set('controllers.modal.modalClass', 'edit-category-modal full');
     } else {

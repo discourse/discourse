@@ -700,9 +700,9 @@ table {
 
 // Logs
 
-.blocked-emails {
+.screened-emails, .screened-urls {
   width: 900px;
-  .email {
+  .email, .url {
     width: 400px;
   }
   .action, .match_count, .last_match_at, .created_at {
@@ -775,7 +775,7 @@ table {
   position: absolute;
 }
 
-.blocked-emails, .staff-actions {
+.staff-actions, .screened-emails, .screened-urls {
   margin-left: 5px;
   border-bottom: dotted 1px #ddd;
 

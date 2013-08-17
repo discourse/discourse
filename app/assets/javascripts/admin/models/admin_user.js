@@ -9,11 +9,26 @@
 Discourse.AdminUser = Discourse.User.extend({
 
   deleteAllPosts: function() {
-    var user = this;
     this.set('can_delete_all_posts', false);
-    Discourse.ajax("/admin/users/" + (this.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
-      user.set('post_count', 0);
-    });
+    var user = this;
+    var message = I18n.t('admin.user.delete_all_posts_confirm', {posts: user.get('post_count'), topics: user.get('topic_count')});
+    var buttons = [{
+      "label": I18n.t("composer.cancel"),
+      "class": "cancel",
+      "link":  true,
+      "callback": function() {
+        user.set('can_delete_all_posts', true);
+      }
+    }, {
+      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t("admin.user.delete_all_posts"),
+      "class": "btn btn-danger",
+      "callback": function() {
+        Discourse.ajax("/admin/users/" + (user.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
+          user.set('post_count', 0);
+        });
+      }
+    }];
+    bootbox.dialog(message, buttons, {"classes": "delete-all-posts"});
   },
 
   // Revoke the user's admin access
@@ -220,6 +235,7 @@ Discourse.AdminUser = Discourse.User.extend({
       var formData = { context: window.location.pathname };
       if (block) {
         formData["block_email"] = true;
+        formData["block_urls"] = true;
       }
       Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
         type: 'DELETE',
@@ -248,13 +264,13 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": I18n.t('admin.user.delete_dont_block'),
+      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t('admin.user.delete_dont_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(false);
       }
     }, {
-      "label": I18n.t('admin.user.delete_and_block'),
+      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t('admin.user.delete_and_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(true);
@@ -272,12 +288,12 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": I18n.t("flagging.yes_delete_spammer"),
+      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t("flagging.yes_delete_spammer"),
       "class": "btn btn-danger",
       "callback": function() {
         Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
           type: 'DELETE',
-          data: {delete_posts: true, block_email: true, context: window.location.pathname}
+          data: {delete_posts: true, block_email: true, block_urls: true, context: window.location.pathname}
         }).then(function(data) {
           if (data.deleted) {
             bootbox.alert(I18n.t("admin.user.deleted"), function() {
@@ -323,6 +339,21 @@ Discourse.AdminUser.reopenClass({
         users: users.map(function(u) {
           return u.id;
         })
+      }
+    });
+  },
+
+  bulkReject: function(users) {
+    _.each(users, function(user){
+      user.set('can_approve', false);
+      user.set('selected', false);
+    });
+
+    return Discourse.ajax("/admin/users/reject-bulk", {
+      type: 'DELETE',
+      data: {
+        users: users.map(function(u) { return u.id; }),
+        context: window.location.pathname
       }
     });
   },

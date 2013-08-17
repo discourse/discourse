@@ -19,7 +19,7 @@ class Autospec::Runner
   watch(%r{^app/(.*)(\.erb|\.haml)$})                 { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
   watch(%r{^app/controllers/(.+)_(controller)\.rb$})  { |m| "spec/#{m[2]}s/#{m[1]}_#{m[2]}_spec.rb" }
   watch(%r{^spec/support/(.+)\.rb$})                  { "spec" }
-  watch('app/controllers/application_controller.rb')  { "spec/controllers" }
+  watch("app/controllers/application_controller.rb")  { "spec/controllers" }
 
   # Capybara request specs
   watch(%r{^app/views/(.+)/.*\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
@@ -85,27 +85,7 @@ class Autospec::Runner
     end
 
     while spork_running
-
-      STDIN.gets
-
-      if @queue.length == 0
-        @queue << ['spec', 'spec']
-        @signal.signal
-      else
-        specs = failed_specs(:delete => false)
-        puts
-        puts
-        if specs.length == 0
-          puts "No specs have failed yet!"
-          puts
-        else
-          puts "The following specs have failed: "
-          specs.each do |s|
-            puts s
-          end
-          puts
-        end
-      end
+      process_queue
     end
 
     puts "Spork has been terminated, exiting"
@@ -114,6 +94,29 @@ class Autospec::Runner
     puts e
     puts e.backtrace
     stop_spork
+  end
+
+  def process_queue
+    STDIN.gets
+
+    if @queue.length == 0
+      @queue << ['spec', 'spec']
+      @signal.signal
+    else
+      specs = failed_specs(:delete => false)
+      puts
+      puts
+      if specs.length == 0
+        puts "No specs have failed yet!"
+        puts
+      else
+        puts "The following specs have failed: "
+        specs.each do |s|
+          puts s
+        end
+        puts
+      end
+    end
   end
 
   def wait_for(timeout_milliseconds)
@@ -233,16 +236,7 @@ class Autospec::Runner
       last_failed = false
       current = @queue.last
       if current
-        result = run_spec(current[1])
-        if result == 0
-          @queue.pop
-        else
-          last_failed = true
-          if result.to_i > 0
-            focus_on_failed_tests
-            ensure_all_specs_will_run
-          end
-        end
+        last_failed = process_spec(current[1])
       end
       wait = @queue.length == 0 || last_failed
       @signal.wait(@mutex) if wait
@@ -251,6 +245,22 @@ class Autospec::Runner
     p "DISASTA PASTA"
     puts e
     puts e.backtrace
+  end
+
+  def process_spec(spec)
+    last_failed = false
+    result = run_spec(spec)
+    if result == 0
+      @queue.pop
+    else
+      last_failed = true
+      if result.to_i > 0
+        focus_on_failed_tests
+        ensure_all_specs_will_run
+      end
+    end
+
+    last_failed
   end
 
   def start_service_queue
@@ -340,7 +350,7 @@ class Autospec::Runner
 
   def stop_spork
     pid = File.read(spork_pid_file).to_i
-    Process.kill("SIGHUP",pid)
+    Process.kill("SIGTERM",pid)
   end
 
   def start_spork

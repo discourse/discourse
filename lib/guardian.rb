@@ -46,18 +46,12 @@ class Guardian
 
   # Can the user edit the obj
   def can_edit?(obj)
-    if obj && authenticated?
-      edit_method = method_name_for :edit, obj
-      return (edit_method ? send(edit_method, obj) : true)
-    end
+    can_do?(:edit, obj)
   end
 
   # Can we delete the object
   def can_delete?(obj)
-    if obj && authenticated?
-      delete_method = method_name_for :delete, obj
-      return (delete_method ? send(delete_method, obj) : true)
-    end
+    can_do?(:delete, obj)
   end
 
   def can_moderate?(obj)
@@ -426,6 +420,13 @@ class Guardian
   def method_name_for(action, obj)
     method_name = :"can_#{action}_#{obj.class.name.underscore}?"
     return method_name if respond_to?(method_name)
+  end
+
+  def can_do?(action, obj)
+    if obj && authenticated?
+      action_method = method_name_for action, obj
+      return (action_method ? send(action_method, obj) : true)
+    end
   end
 
 end

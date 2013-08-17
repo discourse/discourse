@@ -85,7 +85,7 @@ class LocalStore
   end
 
   def get_path_for_avatar(file, upload, size)
-    relative_avatar_template(upload).gsub(/\{size\}/, size.to_s)
+    relative_avatar_template(upload).gsub("{size}", size.to_s)
   end
 
   def relative_avatar_template(upload)

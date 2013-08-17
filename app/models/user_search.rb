@@ -1,7 +1,7 @@
 class UserSearch
   def self.search term, topic_id = nil
     sql = User.sql_builder(
-"select id, username, name, email from users u
+"select id, username, name, email, use_uploaded_avatar, uploaded_avatar_template, uploaded_avatar_id from users u
 /*left_join*/
 /*where*/
 /*order_by*/")

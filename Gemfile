@@ -38,7 +38,6 @@ if rails4?
   gem 'rails-observers'
   gem 'actionpack-action_caching'
   gem 'seed-fu' , github: 'mbleigh/seed-fu'
-  gem 'spork-rails', :github => 'sporkrb/spork-rails'
 else
   # we had pain with the 3.2.13 upgrade so monkey patch the security fix
   # next time around we hope to upgrade
@@ -51,10 +50,6 @@ else
   gem 'seed-fu'
   gem 'activerecord-postgres-hstore'
   gem 'active_attr'
-
-  # not compatible, but we don't really use guard much anymore anyway
-  # instead we use bundle exec rake autospec
-  gem 'guard-spork', require: false
 end
 
 gem 'redis'
@@ -78,7 +73,7 @@ gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
 gem 'redcarpet', require: false
 gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
-gem 'clockwork', require: false
+gem 'sidetiq', '>= 0.3.6'
 gem 'eventmachine'
 gem 'fast_xs'
 gem 'fast_xor', git: 'https://github.com/CodeMonkeySteve/fast_xor.git'
@@ -159,18 +154,17 @@ group :test, :development do
     gem 'fabrication', require: false
   end
   gem 'qunit-rails'
-  gem 'guard-rspec', require: false
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
   gem 'rspec-rails', require: false
   gem 'shoulda', require: false
   gem 'simplecov', require: false
-  gem 'terminal-notifier-guard', require: false
   gem 'timecop'
   gem 'rspec-given'
   gem 'pry-rails'
   gem 'pry-nav'
+  gem 'spork-rails', :github => 'sporkrb/spork-rails'
 end
 
 group :development do

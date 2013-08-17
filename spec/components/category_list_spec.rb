@@ -22,6 +22,7 @@ describe CategoryList do
         category.slug.should == SiteSetting.uncategorized_name
         category.topics_week.should == 1
         category.featured_topics.should == [topic]
+        category.displayable_topics.should == [topic] # CategoryDetailedSerializer needs this attribute
       end
 
       it 'does not return an invisible topic' do

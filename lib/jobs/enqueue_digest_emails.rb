@@ -1,7 +1,8 @@
 module Jobs
 
   # A daily job that will enqueue digest emails to be sent to users
-  class EnqueueDigestEmails < Jobs::Base
+  class EnqueueDigestEmails < Jobs::Scheduled
+    recurrence { daily.hour_of_day(6) }
 
     def execute(args)
       target_users.each do |u|

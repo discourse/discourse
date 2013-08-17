@@ -1,5 +1,16 @@
 # can be used to generate a mock db for profiling purposes
 
+# we want our script to generate a consistent output, to do so
+#  we monkey patch array sample so it always uses the same rng
+class Array
+  RNG = Random.new(1098109928029800)
+
+  def sample
+    self[RNG.rand(size)]
+  end
+end
+
+
 # based on https://gist.github.com/zaius/2643079
 def unbundled_require(gem)
   if defined?(::Bundler)
@@ -21,8 +32,9 @@ require 'optparse'
 begin
   unbundled_require 'gabbler'
 rescue LoadError
-  puts "please run: gem install gabller"
-  exit
+  puts "installing gabbler gem"
+  puts `gem install gabbler`
+  unbundled_require 'gabbler'
 end
 
 user_id = nil

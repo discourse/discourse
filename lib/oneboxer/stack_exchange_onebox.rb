@@ -35,10 +35,12 @@ module Oneboxer
     def parse(data)
       result = JSON.parse(data)['items'].first
 
-      result['creation_date'] =
-        Time.at(result['creation_date'].to_i).strftime("%I:%M%p - %d %b %y")
+      if result
+        result['creation_date'] =
+          Time.at(result['creation_date'].to_i).strftime("%I:%M%p - %d %b %y")
 
-      result['tags'] = result['tags'].take(4).join(', ')
+        result['tags'] = result['tags'].take(4).join(', ')
+      end
 
       result
     end

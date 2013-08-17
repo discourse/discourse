@@ -6,7 +6,7 @@
 ###
 
 # This specifies how many of each task to run
-concurrency: web=2,sidekiq=1,clockwork=1
+concurrency: web=2,sidekiq=1
 
 # Define the port range to use, must be in multiples of 1000
 port: 3000

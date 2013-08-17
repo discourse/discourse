@@ -145,7 +145,7 @@ describe Search do
     end
 
     context "search for a topic by id" do
-      let(:result) { first_of_type(Search.new(topic.id, type_filter: 'topic').execute, 'topic') }
+      let(:result) { first_of_type(Search.new(topic.id, type_filter: 'topic', min_search_term_length: 1).execute, 'topic') }
 
       it 'returns the topic' do
         result.should be_present

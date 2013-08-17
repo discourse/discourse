@@ -114,11 +114,20 @@ class Admin::UsersController < Admin::AdminController
     render nothing: true
   end
 
+  def reject_bulk
+    d = UserDestroyer.new(current_user)
+    success_count = 0
+    User.where(id: params[:users]).each do |u|
+      success_count += 1 if guardian.can_delete_user?(u) and d.destroy(u, params.slice(:context)) rescue UserDestroyer::PostsExistError
+    end
+    render json: {success: success_count, failed: (params[:users].try(:size) || 0) - success_count}
+  end
+
   def destroy
     user = User.where(id: params[:id]).first
     guardian.ensure_can_delete_user!(user)
     begin
-      if UserDestroyer.new(current_user).destroy(user, params.slice(:delete_posts, :block_email, :context))
+      if UserDestroyer.new(current_user).destroy(user, params.slice(:delete_posts, :block_email, :block_urls, :context))
         render json: {deleted: true}
       else
         render json: {deleted: false, user: AdminDetailedUserSerializer.new(user, root: false).as_json}
