@@ -183,6 +183,12 @@
       content: "]";
     }
   }
+  &.vkontakte {
+    background: $vkontakte;
+    &:before {
+      content: "V";
+    }
+  }
 }
 
 // Button Sizes

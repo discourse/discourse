@@ -110,6 +110,10 @@ class AdminDashboardData
     I18n.t('dashboard.twitter_config_warning') if SiteSetting.enable_twitter_logins and (SiteSetting.twitter_consumer_key.blank? or SiteSetting.twitter_consumer_secret.blank?)
   end
 
+  def vkontakte_config_check
+    I18n.t('dashboard.vkontakte_config_warning') if SiteSetting.enable_vkontakte_logins and (SiteSetting.vkontakte_consumer_key.blank? or SiteSetting.vkontakte_consumer_secret.blank?)
+  end
+
   def github_config_check
     I18n.t('dashboard.github_config_warning') if SiteSetting.enable_github_logins and (SiteSetting.github_client_id.blank? or SiteSetting.github_client_secret.blank?)
   end

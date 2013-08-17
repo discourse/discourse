@@ -38,6 +38,13 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            },
            :scope => "email"
 
+  provider :vkontakte,
+           :setup => lambda { |env|
+              strategy = env['omniauth.strategy']
+              strategy.options[:client_id] = SiteSetting.vkontakte_app_id
+              strategy.options[:client_secret] = SiteSetting.vkontakte_app_secret
+           }
+
   provider :twitter,
            :setup => lambda { |env|
               strategy = env["omniauth.strategy"]

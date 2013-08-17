@@ -9,7 +9,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   layout false
 
   def self.types
-    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
+    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas, :vkontakte)
   end
 
   # need to be able to call this
@@ -132,6 +132,54 @@ class Users::OmniauthCallbacksController < ApplicationController
         user.toggle(:active).save unless user.active?
         log_on_user(user)
         @data[:authenticated] = true
+      end
+    end
+
+  end
+
+  def create_or_sign_on_user_using_vkontakte(auth_token)
+
+    data = auth_token[:info]
+    raw_info = auth_token["extra"]["raw_info"]
+    name = data["name"]
+    vk_uid = auth_token["uid"]
+
+    username = UserNameSuggester.suggest(data['nickname']||name)
+
+    session[:authentication] = {
+      vkontakte: {
+        vkontakte_user_id: vk_uid,
+        link: data["urls"].try(:values).try(:first),
+        first_name: raw_info["first_name"],
+        last_name: raw_info["last_name"],
+        username: data['nickname']||name,
+        name: name
+      }
+    }
+
+    user_info = VkontakteUserInfo.where(uid: vk_uid).first
+
+    @data = {
+      username: username,
+      name: name,
+      auth_provider: "VKontakte"
+    }
+
+    if user_info
+      user = user_info.user
+      if user
+        unless user.active
+          user.active = true
+          user.save
+        end
+
+        # If we have to approve users
+        if Guardian.new(user).can_access_forum?
+          log_on_user(user)
+          @data[:authenticated] = true
+        else
+          @data[:awaiting_approval] = true
+        end
       end
     end
 
