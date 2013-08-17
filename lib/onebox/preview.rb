@@ -2,8 +2,6 @@ module Onebox
   class Preview
     def initialize(link)
       @url = link
-      @resource = open(@url)
-      @document = Nokogiri::HTML(@resource)
       @engine = Matcher.new(@url).oneboxed
     end
 
@@ -14,7 +12,7 @@ module Onebox
     private
 
     def engine
-      @engine.new(@document, @url)
+      @engine.new(@url)
     end
 
     class InvalidURI < StandardError

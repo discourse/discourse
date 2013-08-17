@@ -3,7 +3,11 @@ require "spec_helper"
 describe Onebox::Engine::Qik do
   describe "#to_html" do
     let(:link) { "http://qik.com" }
-    let(:qik) { described_class.new(response("qik.response"), link).to_html }
+    let(:qik) { described_class.new(link).to_html }
+
+    before do
+      fake(link, response("qik.response"))
+    end
 
     it "returns the video title" do
       expect(qik).to include("20910")
