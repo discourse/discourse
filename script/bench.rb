@@ -57,9 +57,8 @@ ENV["RUBY_HEAP_SLOTS_GROWTH_FACTOR"] = "1.25"
 ENV["RUBY_HEAP_MIN_SLOTS"] = "800000"
 ENV["RUBY_FREE_MIN"] = "600000"
 
-
 def port_available? port
-  server = TCPServer.open port
+  server = TCPServer.open("0.0.0.0", port)
   server.close
   true
 rescue Errno::EADDRINUSE
@@ -86,9 +85,9 @@ run("bundle exec ruby script/profile_db_generator.rb")
 
 def bench(path)
   puts "Running apache bench warmup"
-  `ab -n 100 http://localhost:#{@port}#{path}`
+  `ab -n 100 http://127.0.0.1:#{@port}#{path}`
   puts "Benchmarking #{path}"
-  `ab -n 100 -e tmp/ab.csv http://localhost:#{@port}#{path}`
+  `ab -n 100 -e tmp/ab.csv http://127.0.0.1:#{@port}#{path}`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
   CSV.foreach("tmp/ab.csv") do |percent, time|
@@ -104,6 +103,8 @@ begin
   while port_available? @port
     sleep 1
   end
+
+  puts "Starting benchmark..."
 
   home_page = bench("/")
   topic_page = bench("/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69")
