@@ -1,6 +1,6 @@
 module Onebox
   module Engine
-    class Amazon
+    class AmazonOnebox
       include Engine
 
       private
