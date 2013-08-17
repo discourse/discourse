@@ -218,12 +218,11 @@ en:
 
       change_avatar:
         title: "Change your avatar"
-        upload_instructions: "Or you could upload an image"
-        upload: "Upload a picture"
-        uploading: "Uploading the picture..."
-        gravatar: "Gravatar"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         gravatar_title: "Change your avatar on Gravatar's website"
-        uploaded_avatar: "Uploaded picture"
+        uploaded_avatar: "Custom picture"
+        uploaded_avatar_empty: "Add a custom picture"
+        upload_title: "Upload your picture"
 
       email:
         title: "Email"
