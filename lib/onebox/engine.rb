@@ -27,7 +27,7 @@ module Onebox
     end
 
     def template_name
-      self.class.name.split("::").last.downcase
+      self.class.name.split("::").last.downcase.gsub(/onebox/, "")
     end
   end
 end
