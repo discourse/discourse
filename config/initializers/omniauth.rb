@@ -25,6 +25,14 @@ Rails.application.config.middleware.use OmniAuth::Builder do
         :store => OpenID::Store::Redis.new($redis),
         :require => "omniauth-openid"
       }.merge(p.options)
+    elsif p.type == :oauth2
+      provider :oauth2,
+               p.options[:client_id],
+               p.options[:client_secret],
+               {
+                 :name => p.name,
+                 :require => "omniauth-oauth2"
+               }.merge(p.options)
     end
   end
 
