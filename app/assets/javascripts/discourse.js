@@ -1,5 +1,6 @@
 /*global Modernizr:true*/
 /*global assetPath:true*/
+/*global Favcount:true*/
 
 /**
   The main Discourse Application
