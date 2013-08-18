@@ -432,6 +432,16 @@ class UsersController < ApplicationController
           github_user_id: auth[:github_user_id]
         )
       end
+
+      if oauth2_auth?(auth)
+        Oauth2UserInfo.create(
+          uid: auth[:oauth2][:uid],
+          provider: auth[:oauth2][:provider],
+          name: auth[:name],
+          email: auth[:email],
+          user_id: user.id
+        )
+      end
     end
 
     def twitter_auth?(auth)
@@ -447,5 +457,10 @@ class UsersController < ApplicationController
     def github_auth?(auth)
       auth[:github_user_id] && auth[:github_screen_name] &&
       GithubUserInfo.find_by_github_user_id(auth[:github_user_id]).nil?
+    end
+
+    def oauth2_auth?(auth)
+      auth[:oauth2].is_a?(Hash) && auth[:oauth2][:provider] && auth[:oauth2][:uid] &&
+      Oauth2UserInfo.where(provider: auth[:oauth2][:provider], uid: auth[:oauth2][:uid]).empty?
     end
 end
