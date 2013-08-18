@@ -1,5 +1,6 @@
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
+require_dependency 'user_activator'
 
 class UsersController < ApplicationController
 
@@ -160,33 +161,16 @@ class UsersController < ApplicationController
     return fake_success_response if suspicious? params
 
     user = User.new_from_params(params)
-
-    auth = session[:authentication]
-    if valid_session_authentication?(auth, params[:email])
-      user.active = true
-    end
-    user.password_required! unless auth
+    auth = authenticate_user(user, params)
 
     if user.valid? && SiteSetting.call_discourse_hub?
       DiscourseHub.register_nickname(user.username, user.email)
     end
 
-    if user.save
-      if SiteSetting.must_approve_users?
-        message = I18n.t("login.wait_approval")
-      elsif !user.active?
-        message = I18n.t("login.activate_email", email: user.email)
-        Jobs.enqueue(:user_email,
-          type: :signup,
-          user_id: user.id,
-          email_token: user.email_tokens.first.token
-        )
-      else
-        message = I18n.t("login.active")
-        log_on_user(user)
-        user.enqueue_welcome_message('welcome_user')
-      end
 
+    if user.save
+      activator = UserActivator.new(user, session, cookies)
+      message = activator.activation_message
       create_third_party_auth_records(user, auth) if auth.present?
 
       # Clear authentication session.
@@ -210,10 +194,20 @@ class UsersController < ApplicationController
         errors:I18n.t(
           "login.not_available", suggestion: UserNameSuggester.suggest(params[:username])
         )
-      )
+    )
     }
   rescue RestClient::Forbidden
     render json: { errors: [I18n.t("discourse_hub.access_token_problem")] }
+  end
+
+  def authenticate_user(user, params)
+    auth = session[:authentication]
+    if valid_session_authentication?(auth, params[:email])
+      user.active = true
+    end
+    user.password_required! unless auth
+
+    auth
   end
 
   def get_honeypot_value
