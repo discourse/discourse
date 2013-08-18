@@ -1,9 +1,17 @@
 class Category < ActiveRecord::Base
   belongs_to :topic, dependent: :destroy
-  belongs_to :topic_only_relative_url,
+  if rails4?
+    belongs_to :topic_only_relative_url,
+    -> { select "id, title, slug" },
+    class_name: "Topic",
+    foreign_key: "topic_id"
+  else
+    belongs_to :topic_only_relative_url,
     select: "id, title, slug",
     class_name: "Topic",
     foreign_key: "topic_id"
+  end
+
   belongs_to :user
 
   has_many :topics

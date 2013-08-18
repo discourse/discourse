@@ -212,23 +212,23 @@ class TopicQuery
       end
 
       result = result.listable_topics.includes(category: :topic_only_relative_url)
-      result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]) if options[:exclude_category]
-      result = result.where('categories.name = ?', options[:only_category]) if options[:only_category]
+      result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
+      result = result.where('categories.name = ?', options[:only_category]).references(:categories) if options[:only_category]
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
-      result = result.where('topics.id <> ?', options[:except_topic_id]) if options[:except_topic_id]
+      result = result.where('topics.id <> ?', options[:except_topic_id]).references(:topics) if options[:except_topic_id]
       result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
 
       if options[:topic_ids]
-        result = result.where('topics.id in (?)', options[:topic_ids])
+        result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
       end
 
       unless @user && @user.moderator?
         category_ids = @user.secure_category_ids if @user
         if category_ids.present?
-          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ? OR categories.id IN (?)', false, category_ids)
+          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ? OR categories.id IN (?)', false, category_ids).references(:categories)
         else
-          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ?', false)
+          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ?', false).references(:categories)
         end
       end
 
