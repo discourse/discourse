@@ -376,7 +376,7 @@ class UsersController < ApplicationController
     user.use_uploaded_avatar = params[:use_uploaded_avatar]
     user.save!
 
-    render json: { avatar_template: user.avatar_template }
+    render nothing: true
   end
 
   private

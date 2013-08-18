@@ -198,6 +198,7 @@ en:
         success: "(email sent)"
         in_progress: "(sending email)"
         error: "(error)"
+        action: "Send Password Reset Email"
 
       change_about:
         title: "Change About Me"
@@ -217,12 +218,11 @@ en:
 
       change_avatar:
         title: "Change your avatar"
-        upload_instructions: "Or you could upload an image"
-        upload: "Upload a picture"
-        uploading: "Uploading the picture..."
-        gravatar: "Gravatar"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         gravatar_title: "Change your avatar on Gravatar's website"
-        uploaded_avatar: "Uploaded picture"
+        uploaded_avatar: "Custom picture"
+        uploaded_avatar_empty: "Add a custom picture"
+        upload_title: "Upload your picture"
 
       email:
         title: "Email"
@@ -1232,6 +1232,9 @@ en:
         approved_selected:
           one: "approve user"
           other: "approve users ({{count}})"
+        reject_selected:
+          one: "reject user"
+          other: "reject users ({{count}})"
         titles:
           active: 'Active Users'
           new: 'New Users'
@@ -1245,6 +1248,12 @@ en:
           moderators: 'Moderators'
           blocked: 'Blocked Users'
           banned: 'Banned Users'
+        reject_successful:
+          one: "Successfully rejected 1 user."
+          other: "Successfully rejected %{count} users."
+        reject_failures:
+          one: "Failed to reject 1 user."
+          other: "Failed to reject %{count} users."
 
       user:
         ban_failed: "Something went wrong banning this user {{error}}"

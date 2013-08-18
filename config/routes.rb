@@ -36,6 +36,7 @@ Discourse::Application.routes.draw do
       collection do
         get 'list/:query' => 'users#index'
         put 'approve-bulk' => 'users#approve_bulk'
+        delete 'reject-bulk' => 'users#reject_bulk'
       end
       put 'ban'
       put 'delete_all_posts'

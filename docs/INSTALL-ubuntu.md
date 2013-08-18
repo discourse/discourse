@@ -50,6 +50,9 @@ Install necessary packages:
     # Run these commands as your normal login (e.g. "michael")
     sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev libpq-dev gawk curl pngcrush python-software-properties
 
+    # If you're on Ubuntu >= 12.10, change:
+    # python-software-properties to software-properties-common
+
 ## Caching: Redis
 
 Redis is a networked, in memory key-value store cache. Without the Redis caching layer, we'd have to go to the database a lot more often for common information and the site would be slower as a result.

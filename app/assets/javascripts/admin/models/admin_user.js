@@ -343,6 +343,21 @@ Discourse.AdminUser.reopenClass({
     });
   },
 
+  bulkReject: function(users) {
+    _.each(users, function(user){
+      user.set('can_approve', false);
+      user.set('selected', false);
+    });
+
+    return Discourse.ajax("/admin/users/reject-bulk", {
+      type: 'DELETE',
+      data: {
+        users: users.map(function(u) { return u.id; }),
+        context: window.location.pathname
+      }
+    });
+  },
+
   find: function(username) {
     return Discourse.ajax("/admin/users/" + username).then(function (result) {
       result.loadedDetails = true;

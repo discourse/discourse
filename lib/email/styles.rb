@@ -24,8 +24,6 @@ module Email
           img['src'] = "#{Discourse.base_url}#{img['src']}"
         end
       end
-
-      style('div.post-indent',' margin-left: 15px; margin-top: 20px; max-width: 694px;')
     end
 
     def format_notification
@@ -54,7 +52,7 @@ module Email
       style('li', 'padding-bottom: 10px')
       style('div.digest-post', 'margin-left: 15px; margin-top: 20px; max-width: 694px;')
       style('div.digest-post h1', 'font-size: 20px;')
-      style('div.footer-notice', 'color:#666; font-size:80%')
+      style('span.footer-notice', 'color:#666; font-size:80%')
 
       @fragment.css('pre').each do |pre|
         pre.replace(pre.text)

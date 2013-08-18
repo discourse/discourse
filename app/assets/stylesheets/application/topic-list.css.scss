@@ -59,6 +59,9 @@
         color: $nav-pills-border-color-active;
       }
     }
+    &.highlighted {
+      background-color: $highlight;
+    }
   }
   th,
   td {

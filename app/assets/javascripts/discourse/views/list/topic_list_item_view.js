@@ -17,11 +17,12 @@ Discourse.TopicListItemView = Discourse.GroupedView.extend({
   highlight: function() {
     var $topic = this.$();
     var originalCol = $topic.css('backgroundColor');
-    $topic.css({
-      backgroundColor: "#ffffcc"
-    }).animate({
-      backgroundColor: originalCol
-    }, 2500);
+    $topic
+      .addClass('highlighted')
+      .stop()
+      .animate({ backgroundColor: originalCol }, 2500, 'swing', function(){
+        $topic.removeClass('highlighted');
+      });
   },
 
   didInsertElement: function() {
