@@ -9,7 +9,7 @@ class StaffActionLog < ActiveRecord::Base
   validates_presence_of :action
 
   def self.actions
-    @actions ||= Enum.new(:delete_user, :change_trust_level)
+    @actions ||= Enum.new(:delete_user, :change_trust_level, :change_site_setting)
   end
 
   def self.with_filters(filters)

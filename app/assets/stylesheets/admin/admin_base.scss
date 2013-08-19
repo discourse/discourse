@@ -716,8 +716,11 @@ table {
   .action {
     width: 120px;
   }
-  .staff_user, .target_user {
+  .staff_user {
     width: 100px;
+  }
+  .subject {
+    width: 200px;
   }
   .created_at {
     width: 50px;
@@ -729,7 +732,7 @@ table {
     text-align: center;
   }
   .details {
-    width: 400px;
+    width: 300px;
     a {
       text-decoration: underline;
     }

@@ -38,6 +38,13 @@ describe Admin::SiteSettingsController do
         SiteSetting.expects(:'test_setting=').with('').once
         xhr :put, :update, id: 'test_setting', value: ''
       end
+
+      it 'logs the change' do
+        SiteSetting.stubs(:test_setting).returns('previous')
+        SiteSetting.expects(:'test_setting=').with('hello').once
+        StaffActionLogger.any_instance.expects(:log_site_setting_change).with('test_setting', 'previous', 'hello')
+        xhr :put, :update, id: 'test_setting', value: 'hello'
+      end
     end
 
   end

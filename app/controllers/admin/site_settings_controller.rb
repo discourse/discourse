@@ -8,6 +8,7 @@ class Admin::SiteSettingsController < Admin::AdminController
 
   def update
     raise ActionController::ParameterMissing.new(:value) unless params.has_key?(:value)
+    StaffActionLogger.new(current_user).log_site_setting_change(params[:id], SiteSetting.send("#{params[:id]}"), params[:value]) if SiteSetting.respond_to?(params[:id])
     SiteSetting.send("#{params[:id]}=", params[:value])
     render nothing: true
   end

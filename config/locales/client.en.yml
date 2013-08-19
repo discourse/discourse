@@ -1192,12 +1192,17 @@ en:
           clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
+          subject: "Subject"
           when: "When"
           context: "Context"
           details: "Details"
+          ip_address: "IP"
+          previous_value: "Previous"
+          new_value: "New"
           actions:
             delete_user: "delete user"
             change_trust_level: "change trust level"
+            change_site_setting: "change site setting"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

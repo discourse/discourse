@@ -4,7 +4,10 @@ class StaffActionLogSerializer < ApplicationSerializer
              :context,
              :ip_address,
              :email,
-             :created_at
+             :created_at,
+             :subject,
+             :previous_value,
+             :new_value
 
   has_one :staff_user,  serializer: BasicUserSerializer, embed: :objects
   has_one :target_user, serializer: BasicUserSerializer, embed: :objects
