@@ -141,6 +141,9 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
       var topic = this.get('model');
 
+      // Topic title hasn't been sanitized yet, so the template shouldn't trust it.
+      this.set('topicSaving', true);
+
       // manually update the titles & category
       topic.setProperties({
         title: this.get('newTitle'),
@@ -157,9 +160,10 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
           title: title,
           fancy_title: fancy_title
         });
-
+        topicController.set('topicSaving', false);
       }, function(error) {
         topicController.set('editingTopic', true);
+        topicController.set('topicSaving', false);
         if (error && error.responseText) {
           bootbox.alert($.parseJSON(error.responseText).errors[0]);
         } else {

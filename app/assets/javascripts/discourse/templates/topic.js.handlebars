@@ -19,7 +19,13 @@
             <h1>
               {{#if details.loaded}}
                 {{topicStatus topic=model}}
-                <a href='{{unbound url}}'>{{{fancy_title}}}</a>
+                <a href='{{unbound url}}'>
+                  {{#if topicSaving}}
+                    {{fancy_title}}
+                  {{else}}
+                    {{{fancy_title}}}
+                  {{/if}}
+                </a>
               {{/if}}
               {{boundCategoryLink category}}
 
