@@ -14,6 +14,11 @@ Discourse.ScreenTrack = Ember.Object.extend({
   },
 
   start: function(topicId) {
+    var currentTopicId = this.get('topicId');
+    if (currentTopicId && (currentTopicId !== topicId)) {
+      this.tick();
+      this.flush();
+    }
 
     this.reset();
 
@@ -25,11 +30,6 @@ Discourse.ScreenTrack = Ember.Object.extend({
       }, 1000));
     }
 
-    var currentTopicId = this.get('topicId');
-    if (currentTopicId && (currentTopicId !== topicId)) {
-      this.flush();
-      this.reset();
-    }
     this.set('topicId', topicId);
   },
 
