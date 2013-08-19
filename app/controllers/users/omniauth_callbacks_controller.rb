@@ -29,6 +29,10 @@ class Users::OmniauthCallbacksController < ApplicationController
         create_or_sign_on_user_using_openid request.env["omniauth.auth"]
         found = true
         break
+      elsif p.name == provider && p.type == :oauth2
+        create_or_sign_on_user_using_oauth2 request.env["omniauth.auth"]
+        found = true
+        break
       end
     end
 
@@ -192,6 +196,58 @@ class Users::OmniauthCallbacksController < ApplicationController
       end
     end
 
+  end
+
+  def create_or_sign_on_user_using_oauth2(auth_token)
+    oauth2_provider = auth_token[:provider]
+    oauth2_uid = auth_token[:uid]
+    data = auth_token[:info]
+    email = data[:email]
+    name = data[:name]
+
+    oauth2_user_info = Oauth2UserInfo.where(uid: oauth2_uid, provider: oauth2_provider).first
+
+    if oauth2_user_info.blank? && user = User.find_by_email(email)
+      # TODO is only safe if we trust our oauth2 provider to return an email
+      # legitimately owned by our user
+      oauth2_user_info = Oauth2UserInfo.create(uid: oauth2_uid,
+                                               provider: oauth2_provider,
+                                               name: name,
+                                               email: name,
+                                               user: user)
+    end
+
+    authenticated = oauth2_user_info.present?
+
+    if authenticated
+      user = oauth2_user_info.user
+
+      # If we have to approve users
+      if Guardian.new(user).can_access_forum?
+        log_on_user(user)
+        @data = {authenticated: true}
+      else
+        @data = {awaiting_approval: true}
+      end
+    else
+      @data = {
+        email: email,
+        name: User.suggest_name(name),
+        username: UserNameSuggester.suggest(email),
+        email_valid: true ,
+        auth_provider: oauth2_provider
+      }
+
+      session[:authentication] = {
+        oauth2: {
+          provider: oauth2_provider,
+          uid: oauth2_uid,
+        },
+        name: name,
+        email: @data[:email],
+        email_valid: @data[:email_valid]
+      }
+    end
   end
 
 

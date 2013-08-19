@@ -497,6 +497,7 @@ DEPENDENCIES
   omniauth-cas
   omniauth-facebook
   omniauth-github
+  omniauth-oauth2
   omniauth-openid
   omniauth-twitter
   openid-redis-store

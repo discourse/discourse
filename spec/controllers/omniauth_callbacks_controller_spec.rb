@@ -164,4 +164,25 @@ describe Users::OmniauthCallbacksController do
 
   end
 
+  describe 'oauth2' do
+    before do
+      Discourse.stubs(:auth_providers).returns([stub(name: 'my_oauth2_provider', type: :oauth2)])
+      request.env["omniauth.auth"] = { uid: 'my-uid', provider: 'my-oauth-provider-domain.net', info: {email: 'eviltrout@made.up.email', name: 'Chatanooga'}}
+    end
+
+    describe "#create_or_sign_on_user_using_oauth2" do
+      context "User already exists" do
+        before do
+          User.stubs(:find_by_email).returns(Fabricate(:user))
+        end
+
+        it "should create an OauthUserInfo" do
+          expect {
+            post :complete, provider: 'my_oauth2_provider'
+          }.to change { Oauth2UserInfo.count }.by(1)
+        end
+      end
+    end
+  end
+
 end
