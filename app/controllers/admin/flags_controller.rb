@@ -1,8 +1,10 @@
+require 'flag_query'
+
 class Admin::FlagsController < Admin::AdminController
   def index
     # we may get out of sync, fix it here
     PostAction.update_flagged_posts_count
-    posts, users = PostAction.flagged_posts_report(params[:filter])
+    posts, users = FlagQuery.flagged_posts_report(params[:filter], params[:offset].to_i, 10)
 
     if posts.blank?
       render json: {users: [], posts: []}

@@ -25,6 +25,7 @@ Discourse.Route.buildRoutes(function() {
     this.resource('adminReports', { path: '/reports/:type' });
 
     this.resource('adminFlags', { path: '/flags' }, function() {
+      this.route('index', { path: '/' });
       this.route('active', { path: '/active' });
       this.route('old', { path: '/old' });
     });

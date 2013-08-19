@@ -91,51 +91,52 @@ class PostAction < ActiveRecord::Base
     update_flagged_posts_count
   end
 
-  def self.act(user, post, post_action_type_id, opts={})
-    begin
-      title, target_usernames, target_group_names, subtype, body = nil
+  def self.create_message_for_post_action(user, post, post_action_type_id, opts)
+    post_action_type = PostActionType.types[post_action_type_id]
 
-      if opts[:message]
-        [:notify_moderators, :notify_user].each do |k|
-          if post_action_type_id == PostActionType.types[k]
-            if k == :notify_moderators
-              target_group_names = target_moderators
-            else
-              target_usernames = post.user.username
-            end
-            title = I18n.t("post_action_types.#{k}.email_title",
-                            title: post.topic.title)
-            body = I18n.t("post_action_types.#{k}.email_body",
-                          message: opts[:message],
-                          link: "#{Discourse.base_url}#{post.url}")
-            subtype = k == :notify_moderators ? TopicSubtype.notify_moderators : TopicSubtype.notify_user
-          end
-        end
-      end
+    return unless opts[:message] && [:notify_moderators, :notify_user].include?(post_action_type)
 
-      related_post_id = nil
-      if target_usernames.present? || target_group_names.present?
-        related_post_id = PostCreator.new(user,
-                              target_usernames: target_usernames,
-                              target_group_names: target_group_names,
-                              archetype: Archetype.private_message,
-                              subtype: subtype,
-                              title: title,
-                              raw: body
-                       ).create.id
-      end
+    target_group_names, target_usernames = nil
 
-      create( post_id: post.id,
-              user_id: user.id,
-              post_action_type_id: post_action_type_id,
-              message: opts[:message],
-              staff_took_action: opts[:take_action] || false,
-              related_post_id: related_post_id )
-    rescue ActiveRecord::RecordNotUnique
-      # can happen despite being .create
-      # since already bookmarked
-      true
+    if post_action_type == :notify_moderators
+      target_group_names = target_moderators
+    else
+      target_usernames = post.user.username
     end
+    title = I18n.t("post_action_types.#{post_action_type}.email_title",
+                    title: post.topic.title)
+    body = I18n.t("post_action_types.#{post_action_type}.email_body",
+                  message: opts[:message],
+                  link: "#{Discourse.base_url}#{post.url}")
+
+    subtype = post_action_type == :notify_moderators ? TopicSubtype.notify_moderators : TopicSubtype.notify_user
+
+    if target_usernames.present? || target_group_names.present?
+      PostCreator.new(user,
+              target_usernames: target_usernames,
+              target_group_names: target_group_names,
+              archetype: Archetype.private_message,
+              subtype: subtype,
+              title: title,
+              raw: body
+       ).create.id
+    end
+  end
+
+  def self.act(user, post, post_action_type_id, opts={})
+
+    related_post_id = create_message_for_post_action(user,post,post_action_type_id,opts)
+
+    create( post_id: post.id,
+            user_id: user.id,
+            post_action_type_id: post_action_type_id,
+            message: opts[:message],
+            staff_took_action: opts[:take_action] || false,
+            related_post_id: related_post_id )
+  rescue ActiveRecord::RecordNotUnique
+    # can happen despite being .create
+    # since already bookmarked
+    true
   end
 
   def self.remove_act(user, post, post_action_type_id)
@@ -298,89 +299,7 @@ class PostAction < ActiveRecord::Base
       Post.hidden_reasons[:flag_threshold_reached]
   end
 
-  def self.flagged_posts_report(filter)
-
-    actions = flagged_post_actions(filter)
-
-    post_ids = actions.limit(300).pluck(:post_id).uniq
-    return nil if post_ids.blank?
-
-    posts = SqlBuilder.new("SELECT p.id, t.title, p.cooked, p.user_id,
-      p.topic_id, p.post_number, p.hidden, t.visible topic_visible,
-      p.deleted_at, t.deleted_at topic_deleted_at
-      FROM posts p
-      JOIN topics t ON t.id = p.topic_id
-      WHERE p.id in (:post_ids)").map_exec(OpenStruct, post_ids: post_ids)
-
-    post_lookup = {}
-    users = Set.new
-
-    posts.each do |p|
-      users << p.user_id
-      p.excerpt = Post.excerpt(p.cooked)
-      p.topic_slug = Slug.for(p.title)
-      post_lookup[p.id] = p
-    end
-
-    # maintain order
-    posts = post_ids.map{|id| post_lookup[id]}
-
-    post_actions = actions.where(:post_id => post_ids)
-    # TODO this is so far from optimal, it should not be
-    # selecting all the columns but the includes stops working
-    # with the code below
-    #
-                          # .select('post_actions.id,
-                          #          post_actions.user_id,
-                          #          post_action_type_id,
-                          #          post_actions.created_at,
-                          #          post_actions.post_id,
-                          #          post_actions.message')
-                          # .to_a
-
-    post_actions.each do |pa|
-      post = post_lookup[pa.post_id]
-      post.post_actions ||= []
-      action = pa.attributes
-      action[:name_key] = PostActionType.types.key(pa.post_action_type_id)
-      if (pa.related_post && pa.related_post.topic)
-        action.merge!(topic_id: pa.related_post.topic_id,
-                     slug: pa.related_post.topic.slug,
-                     permalink: pa.related_post.topic.url)
-      end
-      post.post_actions << action
-      users << pa.user_id
-    end
-
-    # TODO add serializer so we can skip this
-    posts.map!(&:marshal_dump)
-    [posts, User.where(id: users.to_a).to_a]
-  end
-
   protected
-
-  def self.flagged_post_actions(filter)
-    post_actions = PostAction
-                      .includes({:related_post => :topic})
-                      .where(post_action_type_id: PostActionType.notify_flag_type_ids)
-                      .joins(:post => :topic)
-                      .order('post_actions.created_at DESC')
-
-    if filter == 'old'
-      post_actions
-        .with_deleted
-        .where('post_actions.deleted_at IS NOT NULL OR
-                defer = true OR
-                topics.deleted_at IS NOT NULL OR
-                posts.deleted_at IS NOT NULL')
-    else
-      post_actions
-        .where('defer IS NULL OR
-                defer = false')
-        .where('posts.deleted_at IS NULL AND
-                topics.deleted_at IS NULL')
-    end
-  end
 
   def self.target_moderators
     Group[:moderators].name

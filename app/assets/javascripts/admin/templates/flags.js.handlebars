@@ -85,6 +85,10 @@
 
       </tbody>
     </table>
+    {{#if view.loading}}
+      <div class='admin-loading'>{{i18n loading}}</div>
+    {{/if}}
+
   {{else}}
     <p>{{i18n admin.flags.no_results}}</p>
   {{/if}}

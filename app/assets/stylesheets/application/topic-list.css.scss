@@ -272,22 +272,23 @@
 
 #topic-list-bottom {
   margin: 20px 0;
-  .topics-loading {
-    width: 200px;
-    margin: 0 auto;
-    padding: 10px 0 10px 43px;
-    color: $white;
-    font-size: 18px;
-    line-height: 25px;
-    background: {
-      color: $black;
-      image: image-url("spinner_96_w.gif");
-      repeat: no-repeat;
-      position: 10px 50%;
-      size: 25px;
-    };
-    @include border-radius-all(12px);
-  }
+}
+
+.topics-loading {
+  width: 200px;
+  margin: 0 auto;
+  padding: 10px 0 10px 43px;
+  color: $white;
+  font-size: 18px;
+  line-height: 25px;
+  background: {
+    color: $black;
+    image: image-url("spinner_96_w.gif");
+    repeat: no-repeat;
+    position: 10px 50%;
+    size: 25px;
+  };
+  @include border-radius-all(12px);
 }
 
 // Misc. stuff
