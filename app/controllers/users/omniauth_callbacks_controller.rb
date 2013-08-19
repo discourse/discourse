@@ -213,7 +213,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       oauth2_user_info = Oauth2UserInfo.create(uid: oauth2_uid,
                                                provider: oauth2_provider,
                                                name: name,
-                                               email: name,
+                                               email: email,
                                                user: user)
     end
 
