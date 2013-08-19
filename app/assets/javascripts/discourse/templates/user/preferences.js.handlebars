@@ -45,7 +45,7 @@
     <label class="control-label">{{i18n user.avatar.title}}</label>
     <div class="controls">
       {{boundAvatar model imageSize="large"}}
-      <button {{action showAvatarSelector}} class="btn pad-left">{{i18n user.change}}</button>
+      <button {{action showAvatarSelector}} class="btn pad-left"><i class="icon-pencil"></i></button>
     </div>
     <div class='instructions'>
     {{#if Discourse.SiteSettings.allow_uploaded_avatars}}
@@ -56,7 +56,7 @@
       {{/if}}
     {{else}}
       {{{i18n user.avatar.instructions.gravatar}}} {{email}}
-      <a href="//gravatar.com/emails/" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn pad-left">{{i18n user.change}}</a>
+      <a href="//gravatar.com/emails/" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn pad-left"><i class="icon-pencil"></i></a>
     {{/if}}
     </div>
   </div>
