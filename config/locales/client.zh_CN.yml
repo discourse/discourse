@@ -139,7 +139,7 @@ zh_CN:
     choose_topic:
       none_found: "没有找到主题"
       title:
-        search: "通过名称、url或者id，搜索主题："
+        search: "通过名称、URL或者ID，搜索主题："
         placeholder: "在此输入主题标题"
 
     user_action:
@@ -198,6 +198,7 @@ zh_CN:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
         error: "（错误）"
+        action: "发送密码重置邮件"
 
       change_about:
         title: "更改个人简介"
@@ -217,12 +218,11 @@ zh_CN:
 
       change_avatar:
         title: "修改头像"
-        upload_instructions: "也可上传头像"
-        upload: "上传图片"
-        uploading: "正在上传图片……"
-        gravatar: "Gravatar"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>头像，基于："
         gravatar_title: "修改你在Gravatar的头像"
-        uploaded_avatar: "已上传图片"
+        uploaded_avatar: "自定义图片"
+        uploaded_avatar_empty: "添加自定义图片"
+        upload_title: "上传图片"
 
       email:
         title: "电子邮箱"
@@ -318,7 +318,7 @@ zh_CN:
       avatar:
         title: "头像"
         instructions:
-          gravatar:  "正在使用<a href='https://gravatar.com' target='_blank'>Gravatar</a>头像"
+          gravatar:  "正在使用基于此邮件地址的<a href='https://gravatar.com' target='_blank'>Gravatar</a>头像："
           uploaded_avatar: "正在使用上传的头像"
       title:
         title: "头衔"
@@ -394,20 +394,20 @@ zh_CN:
       resend_activation_email: "点击此处来重新发送激活邮件。"
       sent_activation_email_again: "我们在<b>{{currentEmail}}</b>又发送了一封激活邮件给你，邮件送达可能需要几分钟，有的电子邮箱服务商可能会认为此邮件为垃圾邮件，请检查一下你邮箱的垃圾邮件文件夹。"
       google:
-        title: "使用谷歌帐号登录"
-        message: "使用谷歌（Google）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
+        title: "使用Google帐号登录"
+        message: "使用Google帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       twitter:
-        title: "使用推特帐号登录"
-        message: "使用推特（Twitter）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
+        title: "使用Twitter帐号登录"
+        message: "使用Twitter帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       facebook:
-        title: "使用脸书帐号登录"
-        message: "使用脸书（Facebook）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
+        title: "使用Facebook帐号登录"
+        message: "使用Facebook帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       cas:
         title: "使用CAS登录"
         message: "使用CAS（单点登录）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       yahoo:
-        title: "使用雅虎帐号登录"
-        message: "使用雅虎（Yahoo）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
+        title: "使用Yahoo帐号登录"
+        message: "使用Yahoo帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       github:
         title: "使用 GitHub 帐号登录"
         message: "使用 GitHub 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
@@ -1204,7 +1204,7 @@ zh_CN:
           email: "邮件地址"
         screened_urls:
           title: "被屏蔽的URL"
-          description: "The URLs listed here were used in posts by users who have been identified as spammers."
+          description: "以下是垃圾信息发布者使用过的URL。"
           url: "URL"
 
       impersonate:
@@ -1232,6 +1232,9 @@ zh_CN:
         approved_selected:
           one: "批准用户"
           other: "批准用户（{{count}}）"
+        reject_selected:
+          one: "拒绝用户"
+          other: "拒绝用户 ({{count}})"
         titles:
           active: '活动用户'
           new: '新用户'
@@ -1251,7 +1254,7 @@ zh_CN:
         unban_failed: "解禁此用户时发生了错误 {{error}}"
         ban_duration: "你计划禁止该用户多久？（天）"
         delete_all_posts: "删除所有帖子"
-        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
+        delete_all_posts_confirm: "你将删除 %{posts} 个帖子和 %{topics} 个主题，确认吗？"
         ban: "禁止"
         unban: "解禁"
         banned: "已禁止？"
