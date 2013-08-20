@@ -228,16 +228,22 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     var info = Discourse.Eyeline.analyze(rows);
     if(!info) { return; }
 
-    // are we scrolling upwards?
-    if(info.top === 0 || info.onScreen[0] === 0 || info.bottom === 0) {
-      var $body = $('body');
-      var $elem = $(rows[0]);
-      var distToElement = $body.scrollTop() - $elem.position().top;
-      this.get('postStream').prependMore().then(function() {
-        Em.run.next(function () {
-          $('html, body').scrollTop($elem.position().top + distToElement);
+
+    // We disable scrolling of the topic while performing initial positioning
+    // This code needs to be refactored, the pipline for positioning posts is wack
+    // Be sure to test on safari as well when playing with this
+    if(!Discourse.TopicView.disableScroll) {
+      // are we scrolling upwards?
+      if(info.top === 0 || info.onScreen[0] === 0 || info.bottom === 0) {
+        var $body = $('body');
+        var $elem = $(rows[0]);
+        var distToElement = $body.scrollTop() - $elem.position().top;
+        this.get('postStream').prependMore().then(function() {
+          Em.run.next(function () {
+            $('html, body').scrollTop($elem.position().top + distToElement);
+          });
         });
-      });
+      }
     }
 
     // are we scrolling down?
@@ -246,6 +252,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       currentPost = this.postSeen($(rows[info.bottom]));
       this.get('postStream').appendMore();
     }
+
 
     // update dock
     this.updateDock(Ember.View.views[rows[info.bottom].id]);
@@ -352,6 +359,7 @@ Discourse.TopicView.reopenClass({
 
   // Scroll to a given post, if in the DOM. Returns whether it was in the DOM or not.
   jumpToPost: function(topicId, postNumber, avoidScrollIfPossible) {
+    this.disableScroll = true;
     Em.run.scheduleOnce('afterRender', function() {
       var rows = $('.topic-post.ready');
 
@@ -428,6 +436,8 @@ Discourse.TopicView.reopenClass({
               $contents.removeClass('highlighted');
             });
         }
+
+        setTimeout(function(){Discourse.TopicView.disableScroll = false;}, 500);
       }
     });
   }
