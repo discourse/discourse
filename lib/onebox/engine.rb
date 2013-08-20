@@ -1,8 +1,10 @@
+require_relative "engine/open_graph"
 require_relative "engine/example"
 require_relative "engine/amazon"
 require_relative "engine/qik"
 require_relative "engine/stackexchange"
 require_relative "engine/wikipedia"
+require_relative "engine/flickr"
 
 module Onebox
   module Engine
