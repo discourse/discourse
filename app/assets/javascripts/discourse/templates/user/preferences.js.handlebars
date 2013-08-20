@@ -47,18 +47,6 @@
       {{boundAvatar model imageSize="large"}}
       <button {{action showAvatarSelector}} class="btn pad-left"><i class="icon-pencil"></i></button>
     </div>
-    <div class='instructions'>
-    {{#if Discourse.SiteSettings.allow_uploaded_avatars}}
-      {{#if use_uploaded_avatar}}
-        {{{i18n user.avatar.instructions.uploaded_avatar}}}
-      {{else}}
-        {{{i18n user.avatar.instructions.gravatar}}} {{email}}
-      {{/if}}
-    {{else}}
-      {{{i18n user.avatar.instructions.gravatar}}} {{email}}
-      <a href="//gravatar.com/emails/" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn pad-left"><i class="icon-pencil"></i></a>
-    {{/if}}
-    </div>
   </div>
 
   <div class="control-group">

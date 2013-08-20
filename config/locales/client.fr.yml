@@ -321,10 +321,6 @@ fr:
         title: "Dernières adresses IP"
       avatar:
         title: "Avatar"
-        instructions:
-          gravatar: "Nous utilisons <a href='https://gravatar.com' target='_blank'>Gravatar</a> pour associer votre avatar avec votre adresse email :"
-          uploaded_avatar: "Nous utilisons l'avatar que vous avez envoyé."
-          upload: "Ou vous pouvez envoyer une image"
       filters:
         all: "Tout"
 
