@@ -1,6 +1,6 @@
 module Onebox
   module Engine
-    class Flickr
+    class FlickrOnebox
       include OpenGraph
 
       private
