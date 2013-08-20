@@ -39,7 +39,9 @@ describe Post do
 
     describe '#by_newest' do
       it 'returns posts ordered by created_at desc' do
-        2.times { Fabricate(:post) }
+        2.times do |t|
+          Fabricate(:post, created_at: t.seconds.from_now)
+        end
         Post.by_newest.first.created_at.should > Post.by_newest.last.created_at
       end
     end
