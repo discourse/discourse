@@ -30,6 +30,8 @@ Discourse.ShareView = Discourse.View.extend({
       window.setTimeout(function() {
         $linkInput.select().focus();
       }, 160);
+    } else {
+      $('#share-link').css('top', 0);
     }
   }.observes('controller.link'),
 
@@ -53,7 +55,17 @@ Discourse.ShareView = Discourse.View.extend({
       if (url.indexOf("/") === 0) {
         url = window.location.protocol + "//" + window.location.host + url;
       }
-      shareView.get('controller').shareLink(e, url);
+
+      var x = e.pageX - 150;
+      if (x < 25) {
+        x = 25;
+      }
+
+      $('#share-link').css({
+        left: "" + x + "px",
+        top: "" + (e.pageY - 100) + "px"
+      });
+      shareView.set('controller.link', url);
       return false;
     });
 
