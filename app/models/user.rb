@@ -324,24 +324,36 @@ class User < ActiveRecord::Base
 
   # Updates the denormalized view counts for all users
   def self.update_view_counts
+
+    # NOTE: we only update the counts for users we have seen in the last hour
+    #  this avoids a very expensive query that may run on the entire user base
+    #  we also ensure we only touch the table if data changes
+
     # Update denormalized topics_entered
-    exec_sql "UPDATE users SET topics_entered = x.c
+    exec_sql "UPDATE users SET topics_entered = X.c
              FROM
             (SELECT v.user_id,
                     COUNT(DISTINCT parent_id) AS c
              FROM views AS v
              WHERE parent_type = 'Topic'
              GROUP BY v.user_id) AS X
-            WHERE x.user_id = users.id"
+            WHERE
+                    X.user_id = users.id AND
+                    X.c <> topics_entered AND
+                    users.last_seen_at > :seen_at
+    ", seen_at: 1.hour.ago
 
     # Update denormalzied posts_read_count
-    exec_sql "UPDATE users SET posts_read_count = x.c
+    exec_sql "UPDATE users SET posts_read_count = X.c
               FROM
               (SELECT pt.user_id,
                       COUNT(*) AS c
                FROM post_timings AS pt
                GROUP BY pt.user_id) AS X
-               WHERE x.user_id = users.id"
+               WHERE X.user_id = users.id AND
+                     X.c <> posts_read_count AND
+                     users.last_seen_at > :seen_at
+    ", seen_at: 1.hour.ago
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
