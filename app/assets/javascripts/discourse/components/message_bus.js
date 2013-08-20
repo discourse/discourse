@@ -70,7 +70,7 @@ Discourse.MessageBus = (function() {
         }
         data = {};
         _.each(callbacks, function(callback) {
-          data[callback.channel] = callback.last_id === void 0 ? -1 : callback.last_id;
+          data[callback.channel] = callback.last_id;
         });
         gotData = false;
         _this.longPoll = $.ajax(Discourse.getURL("/message-bus/") + clientId + "/poll?" + (!shouldLongPoll() || !_this.enableLongPolling ? "dlp=t" : ""), {
@@ -91,7 +91,7 @@ Discourse.MessageBus = (function() {
                   callback.func(message.data);
                 }
                 if (message.channel === "/__status") {
-                  if (message.data[callback.channel] !== void 0) {
+                  if (message.data[callback.channel] !== undefined) {
                     callback.last_id = message.data[callback.channel];
                   }
                 }
@@ -125,6 +125,9 @@ Discourse.MessageBus = (function() {
 
     // Subscribe to a channel
     subscribe: function(channel, func, lastId) {
+      if (typeof(lastId) !== "number" || lastId < -1){
+        lastId = -1;
+      }
       callbacks.push({
         channel: channel,
         func: func,
