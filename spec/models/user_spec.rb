@@ -36,6 +36,10 @@ describe User do
         let(:topic) { Fabricate(:topic) }
         let!(:view) { View.create_for(topic, '127.0.0.1', user) }
 
+        before do
+          user.update_column :last_seen_at, 1.second.ago
+        end
+
         it "adds one to the topics entered" do
           User.update_view_counts
           user.reload
@@ -63,6 +67,10 @@ describe User do
         let!(:post) { Fabricate(:post) }
         let!(:post_timings) do
           PostTiming.record_timing(msecs: 1234, topic_id: post.topic_id, user_id: user.id, post_number: post.post_number)
+        end
+
+        before do
+          user.update_column :last_seen_at, 1.second.ago
         end
 
         it "increases posts_read_count" do
