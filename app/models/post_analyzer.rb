@@ -9,11 +9,18 @@ class PostAnalyzer
   def cook(*args)
     cooked = PrettyText.cook(*args)
 
-    # If we have any of the oneboxes in the cache, throw them in right away, don't
-    # wait for the post processor.
+    # cook all oneboxes, in the past we used to defer this
+    #  for some reason we decided to do this inline now
+    # TODO: discuss on http://meta.discourse.org what the correct thing is to do
+    #  keep in mind some oneboxes may take a long time to build
     result = Oneboxer.apply(cooked) do |url, elem|
       Oneboxer.invalidate(url) if args.last[:invalidate_oneboxes]
-      Oneboxer.onebox url
+      begin
+        Oneboxer.onebox url
+      rescue => e
+        Rails.logger.warn("Failed to cook onebox: #{e.message} #{e.backtrace}")
+        nil
+      end
     end
 
     cooked = result.to_html if result.changed?
