@@ -4,7 +4,7 @@ require_relative "engine/amazon_onebox"
 require_relative "engine/qik_onebox"
 require_relative "engine/stack_exchange_onebox"
 require_relative "engine/wikipedia_onebox"
-require_relative "engine/flickr"
+require_relative "engine/flickr_onebox"
 
 module Onebox
   module Engine
