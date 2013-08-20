@@ -16,6 +16,10 @@ describe Onebox::Engine::FlickrOnebox do
     expect(html).to include("6038315155_2875860c4b_z.jpg")
   end
 
+  it "returns photo description" do
+    expect(html).to include("The view from the Griffith Observatory, Los Angeles; July 2011")
+  end
+
   it "returns URL" do
     expect(html).to include(link)
   end
