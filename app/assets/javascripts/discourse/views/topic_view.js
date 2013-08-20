@@ -25,10 +25,19 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   }.observes('controller.streamPercentage'),
 
   updateProgressBar: function() {
-    var $topicProgress = $('#topic-progress');
-    if (!$topicProgress.length) return;
+    var $topicProgress = this.topicProgress;
 
-    var totalWidth = $topicProgress.width();
+    // cache lookup
+    if (!$topicProgress) {
+      $topicProgress = $('#topic-progress');
+      if (!$topicProgress.length) {
+        return;
+      }
+      this.topicProgress = $topicProgress;
+    }
+
+    // speeds up stuff, bypass jquery slowness and extra checks
+    var totalWidth = $topicProgress[0].offsetWidth;
     var progressWidth = this.get('controller.streamPercentage') * totalWidth;
 
     $topicProgress.find('.bg')
