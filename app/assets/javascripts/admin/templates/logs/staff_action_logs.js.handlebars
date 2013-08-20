@@ -20,6 +20,12 @@
       <i class="icon icon-remove-sign"></i>
     </a>
   {{/if}}
+  {{#if filters.subject}}
+    <a {{action clearFilter "subject"}} class="filter">
+      <span class="label">{{i18n admin.logs.staff_actions.subject}}</span>: {{filters.subject}}
+      <i class="icon icon-remove-sign"></i>
+    </a>
+  {{/if}}
 </div>
 
 <div class='table staff-actions'>

@@ -22,6 +22,7 @@ class StaffActionLog < ActiveRecord::Base
         query = query.where("#{key.to_s}_id = ?", obj_id)
       end
     end
+    query = query.where("subject = ?", filters[:subject]) if filters[:subject]
     query
   end
 end

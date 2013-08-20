@@ -18,7 +18,7 @@ Discourse.AdminLogsStaffActionLogsController = Ember.ArrayController.extend(Disc
       self.set('content', result);
       self.set('loading', false);
     });
-  }.observes('filters.action_name', 'filters.staff_user', 'filters.target_user'),
+  }.observes('filters.action_name', 'filters.staff_user', 'filters.target_user', 'filters.subject'),
 
   toggleFullDetails: function(target) {
     target.set('showFullDetails', !target.get('showFullDetails'));
@@ -26,7 +26,7 @@ Discourse.AdminLogsStaffActionLogsController = Ember.ArrayController.extend(Disc
 
   filtersExists: function() {
     return (_.size(this.get('filters')) > 0);
-  }.property('filters.action_name', 'filters.staff_user', 'filters.target_user'),
+  }.property('filters.action_name', 'filters.staff_user', 'filters.target_user', 'filters.subject'),
 
   clearFilter: function(key) {
     delete this.get('filters')[key];
@@ -55,5 +55,9 @@ Discourse.AdminLogsStaffActionLogsController = Ember.ArrayController.extend(Disc
 
   filterByTargetUser: function(target_user) {
     this.set('filters.target_user', target_user.username);
+  },
+
+  filterBySubject: function(subject) {
+    this.set('filters.subject', subject);
   }
 });
