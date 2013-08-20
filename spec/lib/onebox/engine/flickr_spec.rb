@@ -12,7 +12,11 @@ describe Onebox::Engine::FlickrOnebox do
     expect(html).to include("Los Angeles View 2011")
   end
 
-  it "returns product URL" do
+  it "returns photo" do
+    expect(html).to include("6038315155_2875860c4b_z.jpg")
+  end
+
+  it "returns URL" do
     expect(html).to include(link)
   end
 end
