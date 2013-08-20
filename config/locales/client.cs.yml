@@ -327,8 +327,6 @@ cs:
         title: "Poslední IP adresa"
       avatar:
         title: "Avatar"
-        instructions:
-          gravatar: "Používáme službu <a href='https://gravatar.com' target='_blank'>Gravatar</a> pro zobrazení avataru podle vaší emailové adresy"
       title:
         title: "Nadpis"
 

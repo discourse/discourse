@@ -317,9 +317,6 @@ zh_CN:
         title: "最后使用的IP地址"
       avatar:
         title: "头像"
-        instructions:
-          gravatar:  "正在使用基于此邮件地址的<a href='https://gravatar.com' target='_blank'>Gravatar</a>头像："
-          uploaded_avatar: "正在使用上传的头像"
       title:
         title: "头衔"
 

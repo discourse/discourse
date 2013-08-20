@@ -307,9 +307,6 @@ zh_TW:
         title: "最後使用的IP地址"
       avatar:
         title: "頭像"
-        instructions:
-          gravatar: "我們目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 來基於你的郵箱生成頭像"
-
       filters:
         all: "全部"
 

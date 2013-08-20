@@ -317,9 +317,6 @@ en:
         title: "Last IP Address"
       avatar:
         title: "Avatar"
-        instructions:
-          gravatar: "We use <a href='//gravatar.com/emails' target='_blank'>Gravatar</a> for avatars based on your email:"
-          uploaded_avatar: "We use the avatar you uploaded."
       title:
         title: "Title"
 

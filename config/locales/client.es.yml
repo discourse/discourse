@@ -263,9 +263,6 @@ es:
         title: "Última Dirección IP"
       avatar:
         title: "Avatar"
-        instructions:
-          gravatar: "Usamos <a href='https://gravatar.com' target='_blank'>Gravatar</a> para obtener tu avatar basado en tu dirección de email."
-
       filters:
         all: "Todos"
 

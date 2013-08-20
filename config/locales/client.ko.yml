@@ -213,9 +213,6 @@ ko:
         title: "마지막 IP 주소"
       avatar:
         title: "아바타"
-        instructions:
-          gravatar: "포럼에서는 당신의 Email을 기바능로 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 아바타 서비스를 기본적으로 사용합니다"
-
       filters:
         all: "All"
 
