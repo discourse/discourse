@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Onebox::Engine::StackExchange do
+describe Onebox::Engine::StackExchangeOnebox do
   describe "#to_html" do
     let(:link) { "http://stackexchange.com" }
     let(:html) { described_class.new(link).to_html }
@@ -22,3 +22,4 @@ describe Onebox::Engine::StackExchange do
     end
   end
 end
+

@@ -6,11 +6,11 @@ module Onebox
 
     def oneboxed
       case @url
-      when /example\.com/ then Engine::Example
-      when /amazon\.com/ then Engine::Amazon
-      when /qik\.com/ then Engine::Qik
-      when /stackexchange\.com/ then Engine::StackExchange
-      when /wikipedia\.com/ then Engine::Wikipedia
+      when /example\.com/ then Engine::ExampleOnebox
+      when /amazon\.com/ then Engine::AmazonOnebox
+      when /qik\.com/ then Engine::QikOnebox
+      when /stackexchange\.com/ then Engine::StackExchangeOnebox
+      when /wikipedia\.com/ then Engine::WikipediaOnebox
       end
     end
   end

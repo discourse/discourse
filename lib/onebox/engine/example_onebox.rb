@@ -1,6 +1,6 @@
 module Onebox
   module Engine
-    class Example
+    class ExampleOnebox
       include Engine
 
       private

@@ -1,6 +1,6 @@
 module Onebox
   module Engine
-    class StackExchange
+    class QikOnebox
       include Engine
 
       private
@@ -8,8 +8,8 @@ module Onebox
       def extracted_data
         {
           url: @url,
-          title: @body.css(".question-hyperlink").inner_text,
-          question: @body.css(".question .post-text p").first.inner_text
+          title: @body.css(".info h2").inner_text,
+          image: @body.css(".userphoto").first["src"]
         }
       end
     end

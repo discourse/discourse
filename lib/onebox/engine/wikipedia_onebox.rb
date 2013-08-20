@@ -1,6 +1,6 @@
 module Onebox
   module Engine
-    class Wikipedia
+    class WikipediaOnebox
       include Engine
 
       private

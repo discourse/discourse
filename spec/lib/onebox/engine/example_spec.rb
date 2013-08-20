@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Onebox::Engine::Example do
+describe Onebox::Engine::ExampleOnebox do
   describe "#to_html" do
     let(:link) { "http://example.com" }
     let(:html) { described_class.new(link).to_html }

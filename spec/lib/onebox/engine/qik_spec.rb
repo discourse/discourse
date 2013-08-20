@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Onebox::Engine::Qik do
+describe Onebox::Engine::QikOnebox do
   describe "#to_html" do
     let(:link) { "http://qik.com" }
     let(:html) { described_class.new(link).to_html }
