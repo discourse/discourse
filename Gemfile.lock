@@ -161,8 +161,6 @@ GEM
     debug_inspector (0.0.2)
     diff-lcs (1.2.4)
     diffy (3.0.1)
-    em-redis (0.3.0)
-      eventmachine
     ember-rails (0.10.0)
       active_model_serializers
       barber
@@ -464,7 +462,6 @@ DEPENDENCIES
   diffy (>= 3.0)
   discourse_emoji!
   discourse_plugin!
-  em-redis
   email_reply_parser!
   ember-rails
   ember-source (= 1.0.0.rc6.2)
