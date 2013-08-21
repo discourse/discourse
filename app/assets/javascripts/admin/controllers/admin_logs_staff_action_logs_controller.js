@@ -20,10 +20,6 @@ Discourse.AdminLogsStaffActionLogsController = Ember.ArrayController.extend(Disc
     });
   }.observes('filters.action_name', 'filters.staff_user', 'filters.target_user', 'filters.subject'),
 
-  toggleFullDetails: function(target) {
-    target.set('showFullDetails', !target.get('showFullDetails'));
-  },
-
   filtersExists: function() {
     return (_.size(this.get('filters')) > 0);
   }.property('filters.action_name', 'filters.staff_user', 'filters.target_user', 'filters.subject'),
