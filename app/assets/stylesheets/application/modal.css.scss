@@ -253,6 +253,13 @@
   }
 }
 
+.tabbed-modal {
+  .modal-body {
+    position: relative;
+    height: 350px;
+  }
+}
+
 .modal-tab {
   position: absolute;
 }

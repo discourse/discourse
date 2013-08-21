@@ -73,4 +73,31 @@ describe StaffActionLogger do
       expect { logger.log_site_setting_change('title', 'Discourse', 'My Site') }.to change { StaffActionLog.count }.by(1)
     end
   end
+
+  describe "log_site_customization_change" do
+    let(:valid_params) { {name: 'Cool Theme', stylesheet: "body {\n  background-color: blue;\n}\n", header: "h1 {color: white;}"} }
+
+    it "raises an error when params are invalid" do
+      expect { logger.log_site_customization_change(nil, nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "logs new site customizations" do
+      log_record = logger.log_site_customization_change(nil, valid_params)
+      log_record.subject.should == valid_params[:name]
+      log_record.previous_value.should be_nil
+      log_record.new_value.should be_present
+      json = ::JSON.parse(log_record.new_value)
+      json['stylesheet'].should be_present
+      json['header'].should be_present
+    end
+
+    it "logs updated site customizations" do
+      existing = SiteCustomization.new(name: 'Banana', stylesheet: "body {color: yellow;}", header: "h1 {color: brown;}")
+      log_record = logger.log_site_customization_change(existing, valid_params)
+      log_record.previous_value.should be_present
+      json = ::JSON.parse(log_record.previous_value)
+      json['stylesheet'].should == existing.stylesheet
+      json['header'].should == existing.header
+    end
+  end
 end

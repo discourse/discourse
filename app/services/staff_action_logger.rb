@@ -37,6 +37,17 @@ class StaffActionLogger
     }))
   end
 
+  def log_site_customization_change(old_record, site_customization_params, opts={})
+    raise Discourse::InvalidParameters.new('site_customization_params is nil') unless site_customization_params
+    logged_attrs = ['stylesheet', 'header', 'position', 'enabled', 'key', 'override_default_style']
+    StaffActionLog.create( params(opts).merge({
+      action: StaffActionLog.actions[:change_site_customization],
+      subject: site_customization_params[:name],
+      previous_value: old_record ? old_record.attributes.slice(*logged_attrs).to_json : nil,
+      new_value: site_customization_params.slice(*(logged_attrs.map(&:to_sym))).to_json
+    }))
+  end
+
   private
 
   def params(opts)

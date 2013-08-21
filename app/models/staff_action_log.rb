@@ -9,7 +9,7 @@ class StaffActionLog < ActiveRecord::Base
   validates_presence_of :action
 
   def self.actions
-    @actions ||= Enum.new(:delete_user, :change_trust_level, :change_site_setting)
+    @actions ||= Enum.new(:delete_user, :change_trust_level, :change_site_setting, :change_site_customization)
   end
 
   def self.with_filters(filters)
@@ -24,6 +24,14 @@ class StaffActionLog < ActiveRecord::Base
     end
     query = query.where("subject = ?", filters[:subject]) if filters[:subject]
     query
+  end
+
+  def new_value_is_json?
+    action == StaffActionLog.actions[:change_site_customization]
+  end
+
+  def previous_value_is_json?
+    new_value_is_json?
   end
 end
 

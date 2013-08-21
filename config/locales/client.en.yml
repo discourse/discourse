@@ -100,6 +100,9 @@ en:
     read_more: 'read more'
     more: "More"
     less: "Less"
+    character_count:
+      one: "{{count}} character"
+      other: "{{count}} characters"
 
     in_n_seconds:
       one: "in 1 second"
@@ -1196,10 +1199,15 @@ en:
           ip_address: "IP"
           previous_value: "Previous"
           new_value: "New"
+          diff: "Diff"
+          show: "Show"
+          modal_title: "Details"
+          no_previous: "There is no previous value."
           actions:
             delete_user: "delete user"
             change_trust_level: "change trust level"
             change_site_setting: "change site setting"
+            change_site_customization: "change site customization"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
