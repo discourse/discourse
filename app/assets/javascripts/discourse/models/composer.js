@@ -334,6 +334,10 @@ Discourse.Composer = Discourse.Model.extend({
       reply: opts.reply || this.get("reply") || ""
     });
 
+    if (!this.get('categoryName') && !Discourse.SiteSettings.allow_uncategorized_topics && Discourse.Category.list().length > 0) {
+      this.set('categoryName', Discourse.Category.list()[0].get('name'));
+    }
+
     if (opts.postId) {
       this.set('loading', true);
       Discourse.Post.load(opts.postId).then(function(result) {
