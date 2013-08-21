@@ -3,6 +3,10 @@ module Onebox
     class FlickrOnebox
       include OpenGraph
 
+      matches
+        /^https?\:\/\/.*\.flickr\.com\/.*$/
+      end
+
       private
 
       def extracted_data

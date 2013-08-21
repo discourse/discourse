@@ -3,6 +3,10 @@ module Onebox
     class WikipediaOnebox
       include Engine
 
+      matches do
+        /^https?:\/\/.*wikipedia\.(com|org)\/.*$/
+      end
+
       private
 
       def extracted_data
