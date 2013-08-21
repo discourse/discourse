@@ -18,7 +18,6 @@ The following Ruby Gems are used in Discourse:
 * [fastimage](https://rubygems.org/gems/fastimage)
 * [seed-fu](https://rubygems.org/gems/seed-fu)
 * [sanitize](https://rubygems.org/gems/sanitize)
-* [clockwork](https://rubygems.org/gems/clockwork)
 * [i18n-js](https://rubygems.org/gems/i18n-js)
 * [pbkdf2](https://rubygems.org/gems/pbkdf2)
 * [fast_xs](https://rubygems.org/gems/fast_xs)
