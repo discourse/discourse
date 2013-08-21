@@ -12,6 +12,12 @@ module Onebox
       object.extend(ClassMethods)
     end
 
+    def self.engines
+      constants.select do |constant|
+        constant.to_s =~ /Onebox$/
+      end.map(&method(:const_get))
+    end
+
     def initialize(link)
       @url = link
       @body = read
@@ -43,6 +49,10 @@ module Onebox
         else
           super
         end
+      end
+
+      def matches(&block)
+        class_variable_set :@@matcher, VerEx.new(&block)
       end
     end
   end
