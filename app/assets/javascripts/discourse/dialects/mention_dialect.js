@@ -28,6 +28,7 @@ Discourse.Dialect.on("register", function(event) {
         mentionLookup = dialect.options.mentionLookup || Discourse.Mention.lookupCache;
 
     if (block.match(/^ {3}/)) { return; }
+    if (block.match(/^\>/)) { return; }
 
     var pushIt = function(p) { result.push(p) };
 
@@ -53,6 +54,7 @@ Discourse.Dialect.on("register", function(event) {
 
       if (remaining && remaining.match(/\n/)) {
         next.unshift(MD.mk_block(remaining));
+        return [result];
       }
     }
 
@@ -60,7 +62,6 @@ Discourse.Dialect.on("register", function(event) {
       if (remaining.length) {
         this.processInline(remaining).forEach(pushIt);
       }
-
       return [result];
     }
   };

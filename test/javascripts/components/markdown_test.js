@@ -112,6 +112,14 @@ test("Mentions", function() {
          "deals correctly with multiple <code> blocks");
   cooked("```\na @test\n```", "<p><pre><code class=\"lang-auto\">a @test</code></pre></p>", "should not do mentions within a code block.");
 
+  cooked("> foo bar baz @eviltrout",
+         "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span></p></blockquote>",
+         "handles mentions in simple quotes");
+
+  cooked("> foo bar baz @eviltrout ohmagerd\nlook at this",
+         "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span></p><p> ohmagerd\nlook at this</p></blockquote>",
+         "does mentions properly with trailing text within a simple quote");
+
 });
 
 test("Oneboxing", function() {
