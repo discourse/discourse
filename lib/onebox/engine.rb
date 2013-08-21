@@ -8,6 +8,10 @@ require_relative "engine/flickr_onebox"
 
 module Onebox
   module Engine
+    def self.included(object)
+      object.extend(ClassMethods)
+    end
+
     def initialize(link)
       @url = link
       @body = read
@@ -17,6 +21,8 @@ module Onebox
     def to_html
       Mustache.render(template, @data)
     end
+
+    private
 
     def read
       Nokogiri::HTML(open(@url))
@@ -28,6 +34,16 @@ module Onebox
 
     def template_name
       self.class.name.split("::").last.downcase.gsub(/onebox/, "")
+    end
+
+    module ClassMethods
+      def ===(object)
+        if object.kind_of?(String)
+          !!(object =~ class_variable_get(:@@matcher))
+        else
+          super
+        end
+      end
     end
   end
 end
