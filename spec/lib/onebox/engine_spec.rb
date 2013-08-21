@@ -2,7 +2,6 @@ require "spec_helper"
 
 class Onebox::Engine::Foo
   include Onebox::Engine
-  @@matcher = /example/
 end
 
 describe Onebox::Engine do
@@ -10,11 +9,28 @@ describe Onebox::Engine do
     it "returns formatted html"
   end
 
-  describe "#===" do
+  describe ".===" do
     it "returns true if argument matches the matcher" do
-      onebox = Onebox::Engine::Foo
-      result = onebox.===("http://www.example.com/product/5?var=foo&bar=5")
+      class Onebox::Engine::Foo
+        include Onebox::Engine
+        @@matcher = /example/
+      end
+      result = Onebox::Engine::Foo === "http://www.example.com/product/5?var=foo&bar=5"
       expect(result).to eq(true)
+    end
+  end
+
+  describe ".matches" do
+    it "sets @@matcher to a regular expression" do
+      class Onebox::Engine::Far
+        include Onebox::Engine
+
+        matches do
+          find "foo.com"
+        end
+      end
+      regex = Onebox::Engine::Far.class_variable_get(:@@matcher)
+      expect(regex).to eq(/(?:foo\.com)/i)
     end
   end
 end
