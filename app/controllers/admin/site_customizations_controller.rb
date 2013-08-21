@@ -38,9 +38,8 @@ class Admin::SiteCustomizationsController < Admin::AdminController
 
   def destroy
     @site_customization = SiteCustomization.find(params[:id])
+    StaffActionLogger.new(current_user).log_site_customization_destroy(@site_customization)
     @site_customization.destroy
-
-    # TODO: log this
 
     respond_to do |format|
       format.json { head :no_content }

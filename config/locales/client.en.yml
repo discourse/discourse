@@ -1203,11 +1203,13 @@ en:
           show: "Show"
           modal_title: "Details"
           no_previous: "There is no previous value."
+          deleted: "No new value. The record was deleted."
           actions:
             delete_user: "delete user"
             change_trust_level: "change trust level"
             change_site_setting: "change site setting"
             change_site_customization: "change site customization"
+            delete_site_customization: "delete site customization"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

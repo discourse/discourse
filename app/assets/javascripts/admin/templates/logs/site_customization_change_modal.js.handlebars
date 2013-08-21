@@ -9,9 +9,13 @@
   </ul>
   <div class="modal-body">
     <div {{bindAttr class=":modal-tab :new-tab newSelected::invisible"}}>
-      {{#with new_value}}
-        {{partial "admin/templates/logs/site_customization_change_details"}}
-      {{/with}}
+      {{#if new_value}}
+        {{#with new_value}}
+          {{partial "admin/templates/logs/site_customization_change_details"}}
+        {{/with}}
+      {{else}}
+        {{i18n admin.logs.staff_actions.deleted}}
+      {{/if}}
     </div>
     <div {{bindAttr class=":modal-tab :previous-tab previousSelected::invisible"}}>
       {{#if previous_value}}

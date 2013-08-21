@@ -1,5 +1,6 @@
 /**
-  The modal for viewing the details of a staff action log record.
+  The modal for viewing the details of a staff action log record
+  for when a site customization is created or changed.
 
   @class ChangeSiteCustomizationDetailsController
   @extends Discourse.Controller

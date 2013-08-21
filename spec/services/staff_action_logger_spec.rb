@@ -100,4 +100,20 @@ describe StaffActionLogger do
       json['header'].should == existing.header
     end
   end
+
+  describe "log_site_customization_destroy" do
+    it "raises an error when params are invalid" do
+      expect { logger.log_site_customization_destroy(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new StaffActionLog record" do
+      site_customization = SiteCustomization.new(name: 'Banana', stylesheet: "body {color: yellow;}", header: "h1 {color: brown;}")
+      log_record = logger.log_site_customization_destroy(site_customization)
+      log_record.previous_value.should be_present
+      log_record.new_value.should be_nil
+      json = ::JSON.parse(log_record.previous_value)
+      json['stylesheet'].should == site_customization.stylesheet
+      json['header'].should == site_customization.header
+    end
+  end
 end
