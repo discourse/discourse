@@ -68,6 +68,7 @@ class User < ActiveRecord::Base
 
   scope :blocked, -> { where(blocked: true) } # no index
   scope :banned, -> { where('banned_till IS NOT NULL AND banned_till > ?', Time.zone.now) } # no index
+  scope :not_banned, -> { where('banned_till IS NULL') }
 
   module NewTopicDuration
     ALWAYS = -1
