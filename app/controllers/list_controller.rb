@@ -111,8 +111,8 @@ class ListController < ApplicationController
   private
 
   def set_category
-    category_slug = params.fetch(:category)
-    @category = Category.where("slug = ? or id = ?", category_slug, category_slug.to_i).includes(:featured_users).first
+    slug = params.fetch(:category)
+    @category = Category.where("slug = ?", slug).includes(:featured_users).first || Category.where("id = ?", slug.to_i).includes(:featured_users).first
   end
 
   def request_is_for_uncategorized?
