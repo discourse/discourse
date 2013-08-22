@@ -115,7 +115,7 @@ class CategoryList
     def prune_empty
       unless @guardian.can_create?(Category)
         # Remove categories with no featured topics unless we have the ability to edit one
-        @categories.delete_if { |c| c.displayable_topics.blank? }
+        @categories.delete_if { |c| c.displayable_topics.blank? && c.description.nil? }
       end
     end
 

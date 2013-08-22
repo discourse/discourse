@@ -61,8 +61,14 @@ describe CategoryList do
         category_list.categories.should be_blank
       end
 
-      it "returns empty the empty for those who can create them" do
+      it "returns empty categories for those who can create them" do
         Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
+        category_list.categories.should_not be_blank
+      end
+
+      it "returns empty categories with descriptions" do
+        Fabricate(:category, description: 'The category description.')
+        Guardian.any_instance.expects(:can_create?).with(Category).returns(false)
         category_list.categories.should_not be_blank
       end
 
