@@ -14,51 +14,32 @@ Discourse.Dialect.on("register", function(event) {
     Parses out links from HTML.
 
     @method autoLink
-    @param {Markdown.Block} block the block to examine
-    @param {Array} next the next blocks in the sequence
-    @return {Array} the JsonML containing the markup or undefined if nothing changed.
+    @param {String} text the text match
+    @param {Array} match the match found
+    @param {Array} prev the previous jsonML
+    @return {Array} an array containing how many chars we've replaced and the jsonML content for it.
     @namespace Discourse.Dialect
   **/
-  dialect.block['autolink'] = function autoLink(block, next) {
+  dialect.inline['http'] = dialect.inline['www'] = function autoLink(text, match, prev) {
+
+    // We only care about links on boundaries
+    if (prev && (prev.length > 0)) {
+      var last = prev[prev.length - 1];
+      if (typeof last === "string" && (!last.match(/\s$/))) { return; }
+    }
+
     var pattern = /(^|\s)((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/gm,
-        result,
-        remaining = block,
-        m;
+        m = pattern.exec(text);
 
-    var pushIt = function(p) { result.push(p) };
-
-    while (m = pattern.exec(remaining)) {
-      result = result || ['p'];
-
+    if (m) {
       var url = m[2],
-          urlIndex = remaining.indexOf(url),
-          before = remaining.slice(0, urlIndex);
+          displayUrl = m[2];
 
-      if (before.match(/\[\d+\]/)) { return; }
-
-      pattern.lastIndex = 0;
-      remaining = remaining.slice(urlIndex + url.length);
-
-      if (before) {
-        this.processInline(before).forEach(pushIt);
-      }
-
-      var displayUrl = url;
       if (url.match(/^www/)) { url = "http://" + url; }
-      result.push(['a', {href: url}, displayUrl]);
-
-      if (remaining && remaining.match(/\n/)) {
-        next.unshift(MD.mk_block(remaining));
-        remaining = [];
-      }
+      return [m[0].length, ['a', {href: url}, displayUrl]];
     }
 
-    if (result) {
-      if (remaining.length) {
-        this.processInline(remaining).forEach(pushIt);
-      }
-      return [result];
-    }
   };
+
 
 });

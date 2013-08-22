@@ -38,6 +38,10 @@ test("Line Breaks", function() {
 
 test("Links", function() {
 
+  cooked("EvilTrout: http://eviltrout.com",
+         '<p>EvilTrout: <a href="http://eviltrout.com">http://eviltrout.com</a></p>',
+         "autolinks a URL");
+
   cooked("Youtube: http://www.youtube.com/watch?v=1MrpeBRkM5A",
          '<p>Youtube: <a href="http://www.youtube.com/watch?v=1MrpeBRkM5A">http://www.youtube.com/watch?v=1MrpeBRkM5A</a></p>',
          "allows links to contain query params");
@@ -58,10 +62,6 @@ test("Links", function() {
          '<p>Atwood: <a href="http://www.codinghorror.com">http://www.codinghorror.com</a></p>',
          "autolinks a URL with http://www");
 
-  cooked("EvilTrout: http://eviltrout.com",
-         '<p>EvilTrout: <a href="http://eviltrout.com">http://eviltrout.com</a></p>',
-         "autolinks a URL");
-
   cooked("EvilTrout: http://eviltrout.com hello",
          '<p>EvilTrout: <a href="http://eviltrout.com">http://eviltrout.com</a> hello</p>',
          "autolinks with trailing text");
@@ -77,6 +77,11 @@ test("Links", function() {
   cooked("Here's a tweet:\nhttps://twitter.com/evil_trout/status/345954894420787200",
          "<p>Here's a tweet:<br><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\">https://twitter.com/evil_trout/status/345954894420787200</a></p>",
          "It doesn't strip the new line.");
+
+  cooked("1. View @eviltrout's profile here: http://meta.discourse.org/users/eviltrout/activity\nnext line.",
+        "<ol><li>View <span class=\"mention\">@eviltrout</span>'s profile here: <a href=\"http://meta.discourse.org/users/eviltrout/activity\">http://meta.discourse.org/users/eviltrout/activity</a><br>next line.</li></ol>",
+        "allows autolinking within a list without inserting a paragraph.");
+
 
   cooked("[3]: http://eviltrout.com", "", "It doesn't autolink markdown link references");
 
