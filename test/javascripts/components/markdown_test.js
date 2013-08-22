@@ -168,6 +168,10 @@ test("Oneboxing", function() {
 
 test("Code Blocks", function() {
 
+  cooked("```\na\nb\nc\n\nd\n```",
+         "<p><pre><code class=\"lang-auto\">a\nb\nc\n\nd</code></pre></p>",
+         "it treats new lines properly");
+
   cooked("```\ntest\n```",
          "<p><pre><code class=\"lang-auto\">test</code></pre></p>",
          "it supports basic code blocks");

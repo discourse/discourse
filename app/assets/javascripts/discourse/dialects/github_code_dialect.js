@@ -42,15 +42,19 @@ Discourse.Dialect.on("register", function(event) {
 
       if (m[2]) { next.unshift(MD.mk_block(m[2], null, lineNumber + 1)); }
 
+      lineNumber++;
       while (next.length > 0) {
         var b = next.shift(),
-            n = b.match(/([^`]*)```([^`]*)/m),
-            diff = ((typeof b.lineNumber === "undefined") ? lineNumber : b.lineNumber) - lineNumber;
+            blockLine = b.lineNumber,
+            diff = ((typeof blockLine === "undefined") ? lineNumber : blockLine) - lineNumber;
 
-        lineNumber = b.lineNumber;
+        b = b.replace(/ {2}\n/g, "\n");
+        var n = b.match(/([^`]*)```([^`]*)/m);
+
         for (var i=1; i<diff; i++) {
           codeContents.push("");
         }
+        lineNumber = blockLine + b.split("\n").length - 1;
 
         if (n) {
           if (n[2]) {
@@ -63,6 +67,7 @@ Discourse.Dialect.on("register", function(event) {
           codeContents.push(b);
         }
       }
+
       result.push(['p', ['pre', ['code', {'class': m[1] || 'lang-auto'}, codeContents.join("\n") ]]]);
       return result;
     }
