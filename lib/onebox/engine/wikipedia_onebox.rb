@@ -4,7 +4,8 @@ module Onebox
       include Engine
 
       matches do
-        /^https?:\/\/.*wikipedia\.(com|org)\/.*$/
+        # /^https?:\/\/.*wikipedia\.(com|org)\/.*$/
+        find "wikipedia.com"
       end
 
       private
