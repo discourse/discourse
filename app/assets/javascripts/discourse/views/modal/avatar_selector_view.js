@@ -12,7 +12,9 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
   title: I18n.t('user.change_avatar.title'),
   uploading: false,
   uploadProgress: 0,
-  uploadedAvatarDisabled: Em.computed.not("controller.has_uploaded_avatar"),
+  useGravatar: Em.computed.not("controller.use_uploaded_avatar"),
+  canSaveAvatarSelection: Em.computed.or("useGravatar", "controller.has_uploaded_avatar"),
+  saveDisabled: Em.computed.not("canSaveAvatarSelection"),
 
   didInsertElement: function() {
     var view = this;

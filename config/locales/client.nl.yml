@@ -1038,8 +1038,8 @@ nl:
         critical_available: Er is een belangrijke update beschikbaar
         updates_available: Er zijn updates beschikbaar
         please_upgrade: Werk de software bij alsjeblieft
-        no_check_performed: Er is nog niet op updates gecontroleerd. Zorg dat clockwork en sidekiq draaien."
-        stale_data: Er is al een tijdje niet op updates gecontroleerd. Zorg dat clockwork en sidekiq draaien."
+        no_check_performed: Er is nog niet op updates gecontroleerd. Zorgen sidekiq loopt."
+        stale_data: Er is al een tijdje niet op updates gecontroleerd. Zorgen sidekiq loopt."
         installed_version: Geïnstalleerd
         latest_version: Recent
         problems_found: 'Er zijn een aantal problemen gevonden met je Discourse installatie:'

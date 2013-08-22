@@ -394,7 +394,7 @@ Discourse.Post.reopenClass({
   loadQuote: function(postId) {
     return Discourse.ajax("/posts/" + postId + ".json").then(function(result) {
       var post = Discourse.Post.create(result);
-      return Discourse.BBCode.buildQuoteBBCode(post, post.get('raw'));
+      return Discourse.Quote.build(post, post.get('raw'));
     });
   },
 

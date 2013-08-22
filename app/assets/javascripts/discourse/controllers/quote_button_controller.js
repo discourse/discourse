@@ -117,7 +117,7 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     }
 
     var buffer = this.get('buffer');
-    var quotedText = Discourse.BBCode.buildQuoteBBCode(post, buffer);
+    var quotedText = Discourse.Quote.build(post, buffer);
     if (composerController.get('content.replyDirty')) {
       composerController.appendText(quotedText);
     } else {
