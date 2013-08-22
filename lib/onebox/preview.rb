@@ -1,12 +1,20 @@
 module Onebox
   class Preview
-    def initialize(link, options = {})
+    attr_reader :cache
+
+    def initialize(link, parameters = {})
       @url = link
+      @options = parameters
+      @cache = options.cache
       @engine = Matcher.new(@url).oneboxed
     end
 
     def to_s
       engine.to_html
+    end
+
+    def options
+      OpenStruct.new(@options)
     end
 
     private
