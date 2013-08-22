@@ -88,14 +88,8 @@ test("quote formatting", function() {
 
   format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]\nhello",
          "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
-         "</div><blockquote>abc</blockquote></aside><br/>\nhello",
+         "</div><blockquote>abc</blockquote></aside></p>\n\n<p>\nhello",
          "handles new lines properly");
-
-  format("before[quote=\"eviltrout, post:1, topic:1\"]first[/quote]middle[quote=\"eviltrout, post:2, topic:2\"]second[/quote]after",
-         "before<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:</div><blockquote>" +
-         "first</blockquote></aside><br/>middle<aside class=\"quote\" data-post=\"2\" data-topic=\"2\"><div class=\"title\"><div class=\"quote-controls\"></div>" +
-         "eviltrout said:</div><blockquote>second</blockquote></aside><br/>after",
-         "can handle more than one quote");
 
 });
 

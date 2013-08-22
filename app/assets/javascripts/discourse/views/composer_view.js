@@ -192,9 +192,12 @@ Discourse.ComposerView = Discourse.View.extend({
 
     this.editor = editor = Discourse.Markdown.createEditor({
       lookupAvatarByPostNumber: function(postNumber) {
-        var quotedPost = composerView.get('controller.controllers.topic.postStream.posts').findProperty("post_number", postNumber);
-        if (quotedPost) {
-          return Discourse.Utilities.tinyAvatar(quotedPost.get("avatar_template"));
+        var posts = composerView.get('controller.controllers.topic.postStream.posts');
+        if (posts) {
+          var quotedPost = posts.findProperty("post_number", postNumber);
+          if (quotedPost) {
+            return Discourse.Utilities.tinyAvatar(quotedPost.get("avatar_template"));
+          }
         }
       }
     });
