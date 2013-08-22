@@ -3,6 +3,10 @@ module Onebox
     class ExampleOnebox
       include Engine
 
+      matches do
+        find "example.com"
+      end
+
       private
 
       def extracted_data

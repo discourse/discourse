@@ -3,6 +3,11 @@ module Onebox
     class StackExchangeOnebox
       include Engine
 
+      matches do
+        # /^http:\/\/(?:(?:(?<subsubdomain>\w*)\.)?(?<subdomain>\w*)\.)?(?<domain>#{DOMAINS.join('|')})\.com\/(?:questions|q)\/(?<question>\d*)/
+        find "stackexchange.com"
+      end
+
       private
 
       def extracted_data

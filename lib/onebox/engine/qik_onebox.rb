@@ -3,6 +3,11 @@ module Onebox
     class QikOnebox
       include Engine
 
+      matches do
+        # /^https?\:\/\/qik\.com\/video\/.*$/
+        find "qik.com"
+      end
+
       private
 
       def extracted_data

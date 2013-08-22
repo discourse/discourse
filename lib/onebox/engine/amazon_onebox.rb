@@ -3,6 +3,11 @@ module Onebox
     class AmazonOnebox
       include Engine
 
+      matches do
+        #/^https?:\/\/(?:www\.)?amazon.(com|ca)\/.*$/
+        find "amazon.com"
+      end
+
       private
 
       def extracted_data
