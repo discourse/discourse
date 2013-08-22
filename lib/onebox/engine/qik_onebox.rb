@@ -4,7 +4,8 @@ module Onebox
       include Engine
 
       matches do
-        /^https?\:\/\/qik\.com\/video\/.*$/
+        # /^https?\:\/\/qik\.com\/video\/.*$/
+        find "qik.com"
       end
 
       private
