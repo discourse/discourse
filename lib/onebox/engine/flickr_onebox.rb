@@ -1,10 +1,12 @@
 module Onebox
   module Engine
     class FlickrOnebox
+      include Engine
       include OpenGraph
 
-      matches
-        /^https?\:\/\/.*\.flickr\.com\/.*$/
+      matches do
+        # /^https?\:\/\/.*\.flickr\.com\/.*$/
+        find "flickr.com"
       end
 
       private
