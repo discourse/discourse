@@ -58,6 +58,9 @@ Discourse.Dialect.on("register", function(event) {
           remaining = remaining.slice(nextMention);
           this.processInline(before).forEach(pushIt);
           continue;
+        } else {
+          before = before + remaining;
+          remaining = "";
         }
 
       } else {

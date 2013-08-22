@@ -148,6 +148,10 @@ test("Mentions", function() {
          "<p>Yes <code>@this</code> should be code <span class=\"mention\">@eviltrout</span></p>",
          "Does not mention in an inline code block");
 
+  cooked("@eviltrout and `@eviltrout`",
+         "<p><span class=\"mention\">@eviltrout</span> and <code>@eviltrout</code></p>",
+         "you can have a mention in an inline code block following a real mention.");
+
 });
 
 test("Oneboxing", function() {
