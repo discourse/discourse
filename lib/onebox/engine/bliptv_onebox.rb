@@ -1,10 +1,12 @@
 module Onebox
   module Engine
     class BliptvOnebox
+      include Engine
       include OpenGraph
 
-      def matches
+      matches do
         # /^https?:\/\/blip.tv\/.+$/
+        find "blip.tv"
       end
 
       private
