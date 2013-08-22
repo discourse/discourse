@@ -4,6 +4,7 @@ require_dependency 'discourse'
 require_dependency 'custom_renderer'
 require 'archetype'
 require_dependency 'rate_limiter'
+require 'omniauth-sso-cookie'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
@@ -34,6 +35,7 @@ class ApplicationController < ActionController::Base
   before_filter :check_xhr
   before_filter :set_locale
   before_filter :redirect_to_login_if_required
+  before_filter :synchronize_with_sso_cookie
 
   rescue_from Exception do |exception|
     unless [ ActiveRecord::RecordNotFound, ActionController::RoutingError,
@@ -280,6 +282,23 @@ class ApplicationController < ActionController::Base
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.gsub!('-',' ')
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
+    end
+
+    def synchronize_with_sso_cookie
+      return unless SiteSetting.enable_ssocookie_logins
+      auth_cookie = request.cookies[SiteSetting.sso_cookie_name]
+      return if auth_cookie.nil?
+      begin
+        auth_cookie = OmniAuth::Strategies::SsoCookie
+          .decrypt_cookie(auth_cookie, SiteSetting.sso_encryption_key, SiteSetting.sso_hmac_key)
+      rescue
+        return
+      end
+
+      return if current_user.use_uploaded_avatar && auth_cookie['avatar_url'] == current_user.uploaded_avatar_template
+      current_user.uploaded_avatar_template = auth_cookie['avatar_url']
+      current_user.use_uploaded_avatar = true
+      current_user.save()
     end
 
   protected
