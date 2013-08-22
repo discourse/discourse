@@ -129,7 +129,7 @@ test("Mentions", function() {
          "handles mentions in simple quotes");
 
   cooked("> foo bar baz @eviltrout ohmagerd\nlook at this",
-         "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span></p><p> ohmagerd\nlook at this</p></blockquote>",
+         "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span> ohmagerd\nlook at this</p></blockquote>",
          "does mentions properly with trailing text within a simple quote");
 
   cooked("`code` is okay before @mention",
@@ -151,6 +151,10 @@ test("Mentions", function() {
   cooked("@eviltrout and `@eviltrout`",
          "<p><span class=\"mention\">@eviltrout</span> and <code>@eviltrout</code></p>",
          "you can have a mention in an inline code block following a real mention.");
+
+  cooked("1. this is  a list\n\n2. this is an @eviltrout mention\n",
+         "<ol><li><p>this is  a list</p></li><li><p>this is an <span class=\"mention\">@eviltrout</span> mention  </p></li></ol>",
+         "it mentions properly in a list.");
 
 });
 
