@@ -17,8 +17,10 @@ Discourse.StaffActionLog = Discourse.Model.extend({
     var formatted = "";
     formatted += this.format('email', 'email');
     formatted += this.format('admin.logs.staff_actions.ip_address', 'ip_address');
-    formatted += this.format('admin.logs.staff_actions.new_value', 'new_value');
-    formatted += this.format('admin.logs.staff_actions.previous_value', 'previous_value');
+    if (!this.get('useCustomModalForDetails')) {
+      formatted += this.format('admin.logs.staff_actions.new_value', 'new_value');
+      formatted += this.format('admin.logs.staff_actions.previous_value', 'previous_value');
+    }
     return formatted;
   }.property('ip_address', 'email'),
 
@@ -28,7 +30,15 @@ Discourse.StaffActionLog = Discourse.Model.extend({
     } else {
       return '';
     }
-  }
+  },
+
+  useModalForDetails: function() {
+    return (this.get('details') && this.get('details').length > 0);
+  }.property('action_name'),
+
+  useCustomModalForDetails: function() {
+    return _.contains(['change_site_customization', 'delete_site_customization'], this.get('action_name'));
+  }.property('action_name')
 });
 
 Discourse.StaffActionLog.reopenClass({

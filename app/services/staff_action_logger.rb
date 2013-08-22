@@ -37,9 +37,31 @@ class StaffActionLogger
     }))
   end
 
+  SITE_CUSTOMIZATION_LOGGED_ATTRS = ['stylesheet', 'header', 'position', 'enabled', 'key', 'override_default_style']
+
+  def log_site_customization_change(old_record, site_customization_params, opts={})
+    raise Discourse::InvalidParameters.new('site_customization_params is nil') unless site_customization_params
+    StaffActionLog.create( params(opts).merge({
+      action: StaffActionLog.actions[:change_site_customization],
+      subject: site_customization_params[:name],
+      previous_value: old_record ? old_record.attributes.slice(*SITE_CUSTOMIZATION_LOGGED_ATTRS).to_json : nil,
+      new_value: site_customization_params.slice(*(SITE_CUSTOMIZATION_LOGGED_ATTRS.map(&:to_sym))).to_json
+    }))
+  end
+
+  def log_site_customization_destroy(site_customization, opts={})
+    raise Discourse::InvalidParameters.new('site_customization is nil') unless site_customization
+    StaffActionLog.create( params(opts).merge({
+      action: StaffActionLog.actions[:delete_site_customization],
+      subject: site_customization.name,
+      previous_value: site_customization.attributes.slice(*SITE_CUSTOMIZATION_LOGGED_ATTRS).to_json
+    }))
+  end
+
   private
 
   def params(opts)
     {staff_user_id: @admin.id, context: opts[:context]}
   end
+
 end

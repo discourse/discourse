@@ -28,6 +28,8 @@
 //= require ./discourse/routes/discourse_route
 //= require ./discourse/routes/discourse_restricted_user_route
 
+//= require ./discourse/dialects/dialect
+//= require_tree ./discourse/dialects
 //= require_tree ./discourse/controllers
 //= require_tree ./discourse/components
 //= require_tree ./discourse/models

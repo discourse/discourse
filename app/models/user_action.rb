@@ -301,8 +301,8 @@ SQL
       builder.where("p.deleted_at is null and p2.deleted_at is null and t.deleted_at is null")
     end
 
-    unless guardian.user && guardian.user.id == user_id
-      builder.where("a.action_type not in (#{BOOKMARK})")
+    unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
+      builder.where("a.action_type not in (#{BOOKMARK},#{STAR})")
     end
 
     if !guardian.can_see_private_messages?(user_id) || ignore_private_messages

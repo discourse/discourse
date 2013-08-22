@@ -18,7 +18,7 @@ class MarkdownLinker
   def references
     result = ""
     (@rendered..@index-1).each do |i|
-      result << "  [#{i}]: #{@markdown_links[i]}\n"
+      result << "[#{i}]: #{@markdown_links[i]}\n"
     end
     @rendered = @index
     result

@@ -323,7 +323,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   replyToPost: function(post) {
     var composerController = this.get('controllers.composer');
     var quoteController = this.get('controllers.quoteButton');
-    var quotedText = Discourse.BBCode.buildQuoteBBCode(quoteController.get('post'), quoteController.get('buffer'));
+    var quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer'));
 
     var topic = post ? post.get('topic') : this.get('model');
 

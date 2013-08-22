@@ -88,6 +88,7 @@ class PostAnalyzer
 
   # Returns an array of all links in a post excluding mentions
   def raw_links
+
     return [] unless @raw.present?
 
     return @raw_links if @raw_links.present?
