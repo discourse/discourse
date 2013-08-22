@@ -1183,6 +1183,7 @@ en:
         created_at: "Created"
         last_match_at: "Last Matched"
         match_count: "Matches"
+        ip_address: "IP"
         screened_actions:
           block: "block"
           do_nothing: "do nothing"
@@ -1196,7 +1197,6 @@ en:
           when: "When"
           context: "Context"
           details: "Details"
-          ip_address: "IP"
           previous_value: "Previous"
           new_value: "New"
           diff: "Diff"

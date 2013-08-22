@@ -21,6 +21,6 @@ class ScreenedUrl < ActiveRecord::Base
   end
 
   def self.watch(url, domain, opts={})
-    find_by_url(url) || create(opts.slice(:action_type).merge(url: url, domain: domain))
+    find_by_url(url) || create(opts.slice(:action_type, :ip_address).merge(url: url, domain: domain))
   end
 end
