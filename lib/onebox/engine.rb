@@ -22,8 +22,16 @@ module Onebox
 
     private
 
+    def fetch
+      if cache
+        cache.read(@url)
+      else
+        cache.store(@url, open(@url))
+      end
+    end
+
     def read
-      Nokogiri::HTML(open(@url))
+      Nokogiri::HTML(fetch)
     end
 
     def template
