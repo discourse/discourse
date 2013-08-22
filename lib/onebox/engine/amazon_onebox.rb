@@ -4,7 +4,8 @@ module Onebox
       include Engine
 
       matches do
-        /^https?:\/\/(?:www\.)?amazon.(com|ca)\/.*$/
+        #/^https?:\/\/(?:www\.)?amazon.(com|ca)\/.*$/
+        find "amazon.com"
       end
 
       private
