@@ -8,7 +8,11 @@ class ListController < ApplicationController
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     define_method(filter) do
       list_opts = build_topic_list_options
-      list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
+      user = current_user
+      if params[:user_id] && guardian.is_staff?
+        user = User.find(params[:user_id].to_i)
+      end
+      list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = url_for(self.public_send "#{filter}_path".to_sym, list_opts.merge(format: 'json', page: next_page))
 
       respond(list)

@@ -34,6 +34,11 @@ describe Admin::SiteCustomizationsController do
         xhr :post, :create, site_customization: {name: 'my test name'}
         ::JSON.parse(response.body).should be_present
       end
+
+      it 'logs the change' do
+        StaffActionLogger.any_instance.expects(:log_site_customization_change).once
+        xhr :post, :create, site_customization: {name: 'my test name'}
+      end
     end
 
   end

@@ -1,10 +1,12 @@
 <div class="modal-body">
   <div>
-    <input type="radio" id="avatar" name="avatar" value="gravatar" {{action toggleUseUploadedAvatar false}}>
-    <label class="radio" for="avatar">{{avatar controller imageSize="large" template="gravatar_template"}} {{{i18n user.change_avatar.gravatar}}} {{currentUser.email}}</label>
-    <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn"><i class="icon-pencil"></i></a>
     <div>
-      <input type="radio" id="uploaded_avatar" name="avatar" value="uploaded_avatar" {{action toggleUseUploadedAvatar true}} {{bindAttr disabled="view.uploadedAvatarDisabled" }}>
+      <input type="radio" id="avatar" name="avatar" value="gravatar" {{action toggleUseUploadedAvatar false}}>
+      <label class="radio" for="avatar">{{avatar controller imageSize="large" template="gravatar_template"}} {{{i18n user.change_avatar.gravatar}}} {{currentUser.email}}</label>
+      <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn"><i class="icon-pencil"></i></a>
+    </div>
+    <div>
+      <input type="radio" id="uploaded_avatar" name="avatar" value="uploaded_avatar" {{action toggleUseUploadedAvatar true}}>
       <label class="radio" for="uploaded_avatar">
         {{#if has_uploaded_avatar}}
           {{boundAvatar controller imageSize="large" template="uploaded_avatar_template"}} {{i18n user.change_avatar.uploaded_avatar}}
@@ -24,6 +26,6 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" {{action saveAvatarSelection}} data-dismiss="modal">{{i18n save}}</button>
+  <button class="btn btn-primary" {{action saveAvatarSelection}} data-dismiss="modal" {{bindAttr disabled="view.saveDisabled"}}>{{i18n save}}</button>
   <a data-dismiss="modal">{{i18n cancel}}</a>
 </div>

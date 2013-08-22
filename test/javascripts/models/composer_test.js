@@ -176,3 +176,15 @@ test('clearState', function() {
   blank(composer.get('title'));
 
 });
+
+test('initial category when uncategorized is allowed', function() {
+  Discourse.SiteSettings.allow_uncategorized_topics = true;
+  var composer = Discourse.Composer.open({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
+  equal(composer.get('categoryName'),undefined,"Uncategorized by default");
+});
+
+test('initial category when uncategorized is not allowed', function() {
+  Discourse.SiteSettings.allow_uncategorized_topics = false;
+  var composer = Discourse.Composer.open({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
+  ok(composer.get('categoryName') !== undefined, "Not uncategorized by default");
+});
