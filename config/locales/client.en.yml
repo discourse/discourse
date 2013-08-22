@@ -414,6 +414,9 @@ en:
       persona:
         title: "with Persona"
         message: "Authenticating with Mozilla Persona (make sure pop up blockers are not enabled)"
+      ssocookie:
+        title: "with Single Sign-On"
+        message: "Authenticating with Shared Single Sign-On Cookie (make sure pop up blockers are not enabled)"
 
     composer:
       posting_not_on_topic: "Which topic do you want to reply to?"

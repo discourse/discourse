@@ -36,7 +36,8 @@ Discourse.LoginMethod.reopenClass({
       "twitter",
       "yahoo",
       "github",
-      "persona"
+      "persona",
+      "ssocookie",
     ].forEach(function(name){
       if(Discourse.SiteSettings["enable_" + name + "_logins"]){
 

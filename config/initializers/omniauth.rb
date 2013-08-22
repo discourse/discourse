@@ -67,4 +67,12 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :cas,
            :host => SiteSetting.cas_hostname
 
+  provider :ssocookie,
+           :setup => lambda { |env|
+              strategy = env["omniauth.strategy"]
+              strategy.options[:cookie_name] = SiteSetting.sso_cookie_name
+              strategy.options[:encryption_key] = SiteSetting.sso_encryption_key
+              strategy.options[:hmac_key] = SiteSetting.sso_hmac_key
+              strategy.options[:login_url] = SiteSetting.sso_login_url
+           }
 end

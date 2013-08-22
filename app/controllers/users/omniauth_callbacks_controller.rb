@@ -9,7 +9,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   layout false
 
   def self.types
-    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
+    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas, :ssocookie)
   end
 
   # need to be able to call this
@@ -369,6 +369,32 @@ class Users::OmniauthCallbacksController < ApplicationController
       }
     end
 
+  end
+
+  def create_or_sign_on_user_using_ssocookie(auth_token)
+    user_info = SsoCookieUserInfo.where(sso_id: auth_token.info.account_key).first
+    email = "#{auth_token.info.account_key}@udacityu.appspot.com"
+
+    session[:authentication] = {
+      email: email,
+      email_valid: true
+    }
+
+    if !user_info && user = User.find_by_email(email)
+      user_info = SsoCookieUserInfo.create(
+          user_id: user.id,
+          sso_id: auth_token.info.uid,
+      )
+    end
+
+    @data = {
+      username: auth_token.info.nickname,
+      auth_provider: 'SsoCookie',
+      email: email,
+      email_valid: true,
+    }
+
+    process_user_info(user_info, auth_token.info.nickname)
   end
 
   private
