@@ -1,6 +1,6 @@
 module Onebox
   class Preview
-    def initialize(link)
+    def initialize(link, options = {})
       @url = link
       @engine = Matcher.new(@url).oneboxed
     end

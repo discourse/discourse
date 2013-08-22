@@ -11,7 +11,7 @@ require_relative "onebox/matcher"
 require_relative "onebox/engine"
 
 module Onebox
-  def self.preview(url, args={})
-    Preview.new(url, args)
+  def self.preview(url, options = {})
+    Preview.new(url, options)
   end
 end
