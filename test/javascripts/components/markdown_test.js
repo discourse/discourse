@@ -132,6 +132,18 @@ test("Mentions", function() {
          "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span></p><p> ohmagerd\nlook at this</p></blockquote>",
          "does mentions properly with trailing text within a simple quote");
 
+  cooked("`code` is okay before @mention",
+         "<p><code>code</code> is okay before <span class=\"mention\">@mention</span></p>",
+         "Does not mention in an inline code block");
+
+  cooked("@mention is okay before `code`",
+         "<p><span class=\"mention\">@mention</span> is okay before <code>code</code></p>",
+         "Does not mention in an inline code block");
+
+  cooked("don't `@mention`",
+         "<p>don't <code>@mention</code></p>",
+         "Does not mention in an inline code block");
+
 });
 
 test("Oneboxing", function() {

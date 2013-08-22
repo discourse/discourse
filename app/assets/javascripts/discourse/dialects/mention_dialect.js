@@ -39,6 +39,10 @@ Discourse.Dialect.on("register", function(event) {
           usernameIndex = remaining.indexOf(username),
           before = remaining.slice(0, usernameIndex);
 
+      // Break out if there is an uneven amount of backticks before
+      var backtickCount = before.split('`').length - 1;
+      if ((backtickCount % 2) === 1) { return; }
+
       pattern.lastIndex = 0;
       remaining = remaining.slice(usernameIndex + username.length);
 
