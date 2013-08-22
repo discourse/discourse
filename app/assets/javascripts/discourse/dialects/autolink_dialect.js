@@ -49,6 +49,7 @@ Discourse.Dialect.on("register", function(event) {
 
       if (remaining && remaining.match(/\n/)) {
         next.unshift(MD.mk_block(remaining));
+        remaining = [];
       }
     }
 

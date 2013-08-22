@@ -62,6 +62,10 @@ test("Links", function() {
          '<p>EvilTrout: <a href="http://eviltrout.com">http://eviltrout.com</a></p>',
          "autolinks a URL");
 
+  cooked("EvilTrout: http://eviltrout.com hello",
+         '<p>EvilTrout: <a href="http://eviltrout.com">http://eviltrout.com</a> hello</p>',
+         "autolinks with trailing text");
+
   cooked("here is [an example](http://twitter.com)",
          '<p>here is <a href="http://twitter.com">an example</a></p>',
          "supports markdown style links");
