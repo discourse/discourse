@@ -144,6 +144,10 @@ test("Mentions", function() {
          "<p>don't <code>@mention</code></p>",
          "Does not mention in an inline code block");
 
+  cooked("Yes `@this` should be code @eviltrout",
+         "<p>Yes <code>@this</code> should be code <span class=\"mention\">@eviltrout</span></p>",
+         "Does not mention in an inline code block");
+
 });
 
 test("Oneboxing", function() {

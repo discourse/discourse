@@ -30,30 +30,51 @@ Discourse.Dialect.on("register", function(event) {
     if (block.match(/^ {3}/)) { return; }
     if (block.match(/^\>/)) { return; }
 
-    var pushIt = function(p) { result.push(p) };
+    var pushIt = function(p) { result.push(p) },
+        backtickCount = 0,
+        dirty = false;
 
     while (m = pattern.exec(remaining)) {
       result = result || ['p'];
 
       var username = m[2],
           usernameIndex = remaining.indexOf(username),
-          before = remaining.slice(0, usernameIndex);
+          before = remaining.slice(0, usernameIndex),
+          prevBacktickCount = backtickCount;
 
-      // Break out if there is an uneven amount of backticks before
-      var backtickCount = before.split('`').length - 1;
-      if ((backtickCount % 2) === 1) { return; }
 
       pattern.lastIndex = 0;
-      remaining = remaining.slice(usernameIndex + username.length);
+      backtickCount = prevBacktickCount + (before.split('`').length - 1);
+      var dontMention = ((backtickCount % 2) === 1);
+
+      if (dontMention) {
+        before = before + username;
+        remaining = remaining.slice(usernameIndex + username.length);
+
+        var nextMention = remaining.indexOf("@");
+        if (nextMention !== -1) {
+          before = before + remaining.slice(0, nextMention);
+          backtickCount = prevBacktickCount + (before.split('`').length - 1);
+          remaining = remaining.slice(nextMention);
+          this.processInline(before).forEach(pushIt);
+          continue;
+        }
+
+      } else {
+        remaining = remaining.slice(usernameIndex + username.length);
+      }
 
       if (before) {
         this.processInline(before).forEach(pushIt);
       }
 
-      if (mentionLookup(username.substr(1))) {
-        result.push(['a', {'class': 'mention', href: Discourse.getURL("/users/") + username.substr(1).toLowerCase()}, username]);
-      } else {
-        result.push(['span', {'class': 'mention'}, username]);
+      if (!dontMention) {
+        if (mentionLookup(username.substr(1))) {
+          result.push(['a', {'class': 'mention', href: Discourse.getURL("/users/") + username.substr(1).toLowerCase()}, username]);
+        } else {
+          result.push(['span', {'class': 'mention'}, username]);
+        }
+        dirty = true;
       }
 
       if (remaining && remaining.match(/\n/)) {
@@ -62,7 +83,7 @@ Discourse.Dialect.on("register", function(event) {
       }
     }
 
-    if (result) {
+    if (dirty && result) {
       if (remaining.length) {
         this.processInline(remaining).forEach(pushIt);
       }
