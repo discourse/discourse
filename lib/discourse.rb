@@ -1,4 +1,5 @@
 require 'cache'
+require_dependency 'plugin/instance'
 
 module Discourse
 
@@ -24,7 +25,7 @@ module Discourse
   class CSRF < Exception; end
 
   def self.activate_plugins!
-    @plugins = Plugin.find_all("#{Rails.root}/plugins")
+    @plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
     @plugins.each do |plugin|
       plugin.activate!
     end

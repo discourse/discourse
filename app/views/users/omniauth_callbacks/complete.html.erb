@@ -2,7 +2,7 @@
   <head></head>
   <body>
     <script type="text/javascript">
-      window.opener.Discourse.authenticationComplete(<%=@data.to_json.html_safe%>);
+      window.opener.Discourse.authenticationComplete(<%=@data.to_client_hash.to_json.html_safe%>);
       window.close();
     </script>
   </body>

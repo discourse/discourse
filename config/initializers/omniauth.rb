@@ -33,6 +33,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
                  :name => p.name,
                  :require => "omniauth-oauth2"
                }.merge(p.options)
+    else
+      provider p.type, *p.options
     end
   end
 
