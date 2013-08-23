@@ -266,7 +266,7 @@ ko:
 
   flagging:
     you_must_edit: '<p>Your post reached the flagging threshold. Please see your private messages.</p>'
-    user_must_edit: '<p>Flagged content hidden.</p>'
+    user_must_edit: '<p>Flagged content temporarily hidden.</p>'
 
   archetypes:
     regular:
