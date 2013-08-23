@@ -448,58 +448,12 @@ class UsersController < ApplicationController
     end
 
     def create_third_party_auth_records(user, auth)
-      return unless auth.present?
+      return unless auth && auth[:authenticator_name]
 
-      if twitter_auth?(auth)
-        TwitterUserInfo.create(
-          user_id: user.id,
-          screen_name: auth[:twitter_screen_name],
-          twitter_user_id: auth[:twitter_user_id]
-        )
-      end
-
-      if facebook_auth?(auth)
-        FacebookUserInfo.create!(auth[:facebook].merge(user_id: user.id))
-      end
-
-      if github_auth?(auth)
-        GithubUserInfo.create(
-          user_id: user.id,
-          screen_name: auth[:github_screen_name],
-          github_user_id: auth[:github_user_id]
-        )
-      end
-
-      if oauth2_auth?(auth)
-        Oauth2UserInfo.create(
-          uid: auth[:oauth2][:uid],
-          provider: auth[:oauth2][:provider],
-          name: auth[:name],
-          email: auth[:email],
-          user_id: user.id
-        )
-      end
+      authenticator = Users::OmniauthCallbacksController.find_authenticator(auth[:authenticator_name])
+      authenticator.after_create_account(user, auth)
     end
 
-    def twitter_auth?(auth)
-      auth[:twitter_user_id] && auth[:twitter_screen_name] &&
-      TwitterUserInfo.find_by_twitter_user_id(auth[:twitter_user_id]).nil?
-    end
-
-    def facebook_auth?(auth)
-      auth[:facebook].present? &&
-      FacebookUserInfo.find_by_facebook_user_id(auth[:facebook][:facebook_user_id]).nil?
-    end
-
-    def github_auth?(auth)
-      auth[:github_user_id] && auth[:github_screen_name] &&
-      GithubUserInfo.find_by_github_user_id(auth[:github_user_id]).nil?
-    end
-
-    def oauth2_auth?(auth)
-      auth[:oauth2].is_a?(Hash) && auth[:oauth2][:provider] && auth[:oauth2][:uid] &&
-      Oauth2UserInfo.where(provider: auth[:oauth2][:provider], uid: auth[:oauth2][:uid]).empty?
-    end
 
     def register_nickname(user)
       if user.valid? && SiteSetting.call_discourse_hub?
