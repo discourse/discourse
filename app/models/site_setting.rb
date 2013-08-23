@@ -154,11 +154,11 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:enable_google_logins, true)
   client_setting(:enable_yahoo_logins, true)
 
-  client_setting(:enable_twitter_logins, true)
+  client_setting(:enable_twitter_logins, false)
   setting(:twitter_consumer_key, '')
   setting(:twitter_consumer_secret, '')
 
-  client_setting(:enable_facebook_logins, true)
+  client_setting(:enable_facebook_logins, false)
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
 
