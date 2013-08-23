@@ -128,23 +128,18 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_username_or_email(username_or_email)
-    lower_user = username_or_email.downcase
-    lower_email = Email.downcase(username_or_email)
-
-    users =
-      if username_or_email.include?('@')
-        User.where(email: lower_email)
-      else
-        User.where(username_lower: lower_user)
-      end
-        .to_a
-
-    if users.count > 1
-      raise Discourse::TooManyMatches
-    elsif users.count == 1
-      users[0]
+    conditions = if username_or_email.include?('@')
+      { email: Email.downcase(username_or_email) }
     else
-      nil
+      { username_lower: username_or_email.downcase }
+    end
+
+    users = User.where(conditions).all
+
+    if users.size > 1
+      raise Discourse::TooManyMatches
+    else
+      users.first
     end
   end
 
