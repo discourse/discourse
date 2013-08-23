@@ -305,11 +305,11 @@ class Users::OmniauthCallbacksController < ApplicationController
   alias_method :create_or_sign_on_user_using_google, :create_or_sign_on_user_using_openid
 
   def create_or_sign_on_user_using_github(auth_token)
-
     data = auth_token[:info]
     screen_name = data["nickname"]
     email = data["email"]
     github_user_id = auth_token["uid"]
+    access_token = auth_token[:credentials][:token]
 
     session[:authentication] = {
       github_user_id: github_user_id,
@@ -318,25 +318,29 @@ class Users::OmniauthCallbacksController < ApplicationController
       email_valid: true
     }
 
-    user_info = GithubUserInfo.where(github_user_id: github_user_id).first
+    if is_valid_github_organization_member?(access_token)
+      user_info = GithubUserInfo.where(github_user_id: github_user_id).first
 
-    if !user_info && user = User.find_by_email(email)
-      # we trust so do an email lookup
-      user_info = GithubUserInfo.create(
-          user_id: user.id,
-          screen_name: screen_name,
-          github_user_id: github_user_id
-      )
+      if !user_info && user = User.find_by_email(email)
+        # we trust so do an email lookup
+        user_info = GithubUserInfo.create(
+            user_id: user.id,
+            screen_name: screen_name,
+            github_user_id: github_user_id
+        )
+      end
+
+      @data = {
+        username: screen_name,
+        auth_provider: "Github",
+        email: email,
+        email_valid: true
+      }
+
+      process_user_info(user_info, screen_name)
+    else
+      raise Discourse::NotLoggedIn.new
     end
-
-    @data = {
-      username: screen_name,
-      auth_provider: "Github",
-      email: email,
-      email_valid: true
-    }
-
-    process_user_info(user_info, screen_name)
   end
 
   def create_or_sign_on_user_using_persona(auth_token)
@@ -372,6 +376,11 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   private
+
+  def is_valid_github_organization_member?(access_token)
+    authenticator = ::GithubOrganizationMemberAuthenticator.new(access_token)
+    authenticator.authenticate
+  end
 
   def process_user_info(user_info, screen_name)
     if user_info
