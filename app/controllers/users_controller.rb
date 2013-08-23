@@ -162,11 +162,7 @@ class UsersController < ApplicationController
 
     user = User.new_from_params(params)
     auth = authenticate_user(user, params)
-
-    if user.valid? && SiteSetting.call_discourse_hub?
-      DiscourseHub.register_nickname(user.username, user.email)
-    end
-
+    register_nickname(user)
 
     if user.save
       activator = UserActivator.new(user, session, cookies)
@@ -456,5 +452,11 @@ class UsersController < ApplicationController
     def oauth2_auth?(auth)
       auth[:oauth2].is_a?(Hash) && auth[:oauth2][:provider] && auth[:oauth2][:uid] &&
       Oauth2UserInfo.where(provider: auth[:oauth2][:provider], uid: auth[:oauth2][:uid]).empty?
+    end
+
+    def register_nickname(user)
+      if user.valid? && SiteSetting.call_discourse_hub?
+        DiscourseHub.register_nickname(user.username, user.email)
+      end
     end
 end
