@@ -51,11 +51,17 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
 
     // when the upload is successful
     $upload.on("fileuploaddone", function (e, data) {
-      // set some properties
+      // indicates the users is using an uploaded avatar
       view.get("controller").setProperties({
         has_uploaded_avatar: true,
-        use_uploaded_avatar: true,
-        uploaded_avatar_template: data.result.url
+        use_uploaded_avatar: true
+      });
+      // in order to be as much responsive as possible, we're cheating a bit here
+      // indeed, the server gives us back the url to the file we've just uploaded
+      // often, this file is not a square, so we need to crop it properly
+      // this will also capture the first frame of animated avatars when they're not allowed
+      Discourse.Utilities.cropAvatar(data.result.url, data.files[0].type).then(function(avatarTemplate) {
+        view.get("controller").set("uploaded_avatar_template", avatarTemplate);
       });
     });
 

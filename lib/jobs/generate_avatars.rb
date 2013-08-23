@@ -15,6 +15,10 @@ module Jobs
         Discourse.store.path_for(upload)
       end
 
+      # we'll extract the first frame when it's a gif
+      source = original_path
+      source << "[0]" unless SiteSetting.allow_animated_avatars
+
       [120, 45, 32, 25, 20].each do |s|
         # handle retina too
         [s, s * 2].each do |size|
@@ -22,7 +26,7 @@ module Jobs
           temp_file = Tempfile.new(["discourse-avatar", File.extname(original_path)])
           temp_path = temp_file.path
           # create a centered square thumbnail
-          if ImageSorcery.new(original_path).convert(temp_path, gravity: "center", thumbnail: "#{size}x#{size}^", extent: "#{size}x#{size}", background: "transparent")
+          if ImageSorcery.new(source).convert(temp_path, gravity: "center", thumbnail: "#{size}x#{size}^", extent: "#{size}x#{size}", background: "transparent")
             Discourse.store.store_avatar(temp_file, upload, size)
           end
           # close && remove temp file

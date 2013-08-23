@@ -291,6 +291,54 @@ Discourse.Utilities = {
     }
     // otherwise, display a generic error message
     bootbox.alert(I18n.t('post.errors.upload'));
+  },
+
+  /**
+    Crop an image to be used as avatar.
+    Simulate the "centered square thumbnail" generation done server-side.
+    Uses only the first frame of animated gifs when they are disabled.
+
+    @method cropAvatar
+    @param {String} url The url of the avatar
+    @param {String} fileType The file type of the uploaded file
+    @returns {Ember.Deferred} a promise that will eventually be the cropped avatar.
+  **/
+  cropAvatar: function(url, fileType) {
+    if (Discourse.SiteSettings.allow_animated_avatars && fileType === "image/gif") {
+      // can't crop animated gifs... let the browser stretch the gif
+      return Ember.RSVP.resolve(url);
+    } else {
+      return Ember.Deferred.promise(function(promise) {
+        var image = document.createElement("img");
+        // this event will be fired as soon as the image is loaded
+        image.onload = function(e) {
+          var img = e.target;
+          // computes the dimension & position (x, y) of the largest square we can fit in the image
+          var width = img.width, height = img.height, dimension, center, x, y;
+          if (width <= height) {
+            dimension = width;
+            center = height / 2;
+            x = 0;
+            y = center - (dimension / 2);
+          } else {
+            dimension = height;
+            center = width / 2;
+            x = center - (dimension / 2);
+            y = 0;
+          }
+          // set the size of the canvas to the maximum available size for avatars (browser will take care of downsizing the image)
+          var canvas = document.createElement("canvas");
+          var size = Discourse.Utilities.getRawSize(Discourse.Utilities.translateSize("huge"));
+          canvas.height = canvas.width = size;
+          // draw the image into the canvas
+          canvas.getContext("2d").drawImage(img, x, y, dimension, dimension, 0, 0, size, size);
+          // retrieve the image from the canvas
+          promise.resolve(canvas.toDataURL(fileType));
+        };
+        // launch the onload event
+        image.src = url;
+      });
+    }
   }
 
 };
