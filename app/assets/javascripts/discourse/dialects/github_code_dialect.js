@@ -18,7 +18,8 @@ Discourse.Dialect.on("register", function(event) {
     @return {Array} the JsonML containing the markup or undefined if nothing changed.
     @namespace Discourse.Dialect
   **/
-  dialect.block['github_code'] = function githubCode(block, next) {
+  dialect.block.github_code = function githubCode(block, next) {
+
     var m = /^`{3}([^\n]+)?\n?([\s\S]*)?/gm.exec(block);
 
     if (m) {
