@@ -29,10 +29,22 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
 
     result.user = user_open_id.try(:user)
     result.extra_data = {
-      openid_url: identity_url
+      openid_url: identity_url,
+      # note email may change by the time after_create_account runs
+      email: email
     }
     result.email_valid = @opts[:trusted]
 
     result
+  end
+
+  def after_create_account(user, auth)
+    data = auth[:extra_data]
+    UserOpenId.create(
+      user_id: user.id,
+      url: data[:openid_url],
+      email: data[:email],
+      active: true
+    )
   end
 end
