@@ -415,7 +415,13 @@ class UsersController < ApplicationController
     end
 
     def challenge_value
-      '3019774c067cc2b'
+      challenge = $redis.get('SECRET_CHALLENGE')
+      unless challenge && challenge.length == 16*2
+        challenge = SecureRandom.hex(16)
+        $redis.set('SECRET_CHALLENGE',challenge)
+      end
+
+      challenge
     end
 
     def suspicious?(params)
