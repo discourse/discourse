@@ -667,6 +667,7 @@ en:
 
     allow_uploaded_avatars: "Allow users to upload their custom avatars"
     allow_animated_avatars: "Allow users to use animated gif for avatars"
+    default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

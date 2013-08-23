@@ -115,6 +115,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:email_time_window_mins, 10)
   setting(:email_posts_context, 5)
+  setting(:default_digest_email_frequency, '7', enum: 'DigestEmailSiteSetting')
 
   # How many characters we can import into a onebox
   setting(:onebox_max_chars, 5000)

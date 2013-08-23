@@ -264,13 +264,28 @@ describe User do
     it { should_not be_approved }
     its(:approved_at) { should be_blank }
     its(:approved_by_id) { should be_blank }
-    its(:email_digests) { should be_true }
     its(:email_private_messages) { should be_true }
     its(:email_direct ) { should be_true }
     its(:time_read) { should == 0}
 
-    # Default to digests after one week
-    its(:digest_after_days) { should == 7 }
+    context 'digest emails' do
+      it 'defaults to digests every week' do
+        subject.email_digests.should be_true
+        subject.digest_after_days.should == 7
+      end
+
+      it 'uses default_digest_email_frequency' do
+        SiteSetting.stubs(:default_digest_email_frequency).returns(1)
+        subject.email_digests.should be_true
+        subject.digest_after_days.should == 1
+      end
+
+      it 'disables digests by default if site setting says so' do
+        SiteSetting.stubs(:default_digest_email_frequency).returns('')
+        subject.email_digests.should be_false
+      end
+    end
+
 
     context 'after_save' do
       before do

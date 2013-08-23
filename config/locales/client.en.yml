@@ -100,6 +100,10 @@ en:
     read_more: 'read more'
     more: "More"
     less: "Less"
+    never: "never"
+    daily: "daily"
+    weekly: "weekly"
+    every_two_weeks: "every two weeks"
     character_count:
       one: "{{count}} character"
       other: "{{count}} characters"
@@ -1341,4 +1345,5 @@ en:
         title: 'Settings'
         reset: 'reset to default'
         none: 'none'
+
 

@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
   after_initialize :add_trust_level
+  after_initialize :set_default_email_digest
 
   after_save :update_tracked_topics
 
@@ -596,6 +597,17 @@ class User < ActiveRecord::Base
       user_id: id,
       email_token: email_tokens.first.token
     )
+  end
+
+  def set_default_email_digest
+    if has_attribute?(:email_digests) && self.email_digests.nil?
+      if SiteSetting.default_digest_email_frequency.blank?
+        self.email_digests = false
+      else
+        self.email_digests = true
+        self.digest_after_days ||= SiteSetting.default_digest_email_frequency.to_i if has_attribute?(:digest_after_days)
+      end
+    end
   end
 
   private

@@ -134,6 +134,7 @@ describe SiteSettingExtension do
   describe 'enum setting' do
     before do
       @enum_class = Enum.new(:test)
+      @enum_class.stubs(:translate_names?).returns(false)
       settings.setting(:test_enum, 'en', enum: @enum_class)
       settings.refresh!
     end
