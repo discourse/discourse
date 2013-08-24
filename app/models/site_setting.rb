@@ -238,7 +238,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:minimum_topics_similar, 50)
 
-  client_setting(:relative_date_duration, 14)
+  client_setting(:relative_date_duration, 30)
 
   client_setting(:delete_user_max_age, 14)
   setting(:delete_all_posts_max, 10)
