@@ -16,9 +16,9 @@ describe Onebox::Engine::NFBOnebox do
     expect(html).to include("With school, tennis lessons, swimming lessons, art classes,")
   end
 
-  # it "returns video URL" do
-  #   expect(html).to include("moogaloop.1.0.31.swf?clip_id=6830834&amp;use_node_id=true&amp;og=1&amp;auto=true")
-  # end
+  it "returns video URL" do
+    expect(html).to include("http://www.nfb.ca/film/overdose_en/")
+  end
 
   it "returns the video embed code" do
     pending
