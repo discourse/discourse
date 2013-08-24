@@ -12,9 +12,9 @@ describe Onebox::Engine::CollegeHumorOnebox do
     expect(html).to include("Mitt Romney Style (Gangnam Style Parody)")
   end
 
-  # it "returns photo" do
-  #   expect(html).to include("http://ib3.huluim.com/video/60245466?region=US&amp;size=600x400")
-  # end
+  it "returns video image" do
+    expect(html).to include("a9febe641d5beb264bbab0de49272e5a-mitt-romney-style-gangnam-style-parody.jpg")
+  end
 
   # it "returns video description" do
   #   expect(html).to include("After Mr. Awesome decides to retire and disband The Awesomes")
