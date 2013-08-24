@@ -15,6 +15,7 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
   useGravatar: Em.computed.not("controller.use_uploaded_avatar"),
   canSaveAvatarSelection: Em.computed.or("useGravatar", "controller.has_uploaded_avatar"),
   saveDisabled: Em.computed.not("canSaveAvatarSelection"),
+  imageIsNotASquare : false,
 
   didInsertElement: function() {
     var view = this;
@@ -40,7 +41,10 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
 
     // when a file has been selected
     $upload.on("fileuploadadd", function (e, data) {
-      view.set("uploading", true);
+      view.setProperties({
+        uploading: true,
+        imageIsNotASquare: false
+      });
     });
 
     // when there is a progression for the upload
@@ -56,6 +60,8 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
         has_uploaded_avatar: true,
         use_uploaded_avatar: true
       });
+      // display a warning whenever the image is not a square
+      view.set("imageIsNotASquare", data.result.width !== data.result.height);
       // in order to be as much responsive as possible, we're cheating a bit here
       // indeed, the server gives us back the url to the file we've just uploaded
       // often, this file is not a square, so we need to crop it properly

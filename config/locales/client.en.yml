@@ -230,6 +230,7 @@ en:
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
+        image_is_not_a_square: "Warning: we've cropped your image as it's not a square."
 
       email:
         title: "Email"
