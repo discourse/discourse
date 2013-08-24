@@ -61,7 +61,7 @@ Discourse.Dialect.on("register", function(event) {
             next.unshift(MD.mk_block(n[2]));
           }
 
-          codeContents.push(n[1].trim());
+          codeContents.push(n[1].replace(/\s+$/, ""));
           break;
         } else {
           codeContents.push(b);

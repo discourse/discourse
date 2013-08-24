@@ -217,6 +217,10 @@ test("Code Blocks", function() {
   cooked("    ```\n    hello\n    ```",
          "<pre><code>&#x60;&#x60;&#x60;\nhello\n&#x60;&#x60;&#x60;</code></pre>",
          "only detect ``` at the begining of lines");
+
+  cooked("```ruby\ndef self.parse(text)\n\n  text\nend\n```",
+         "<p><pre><code class=\"ruby\">def self.parse(text)\n\n  text\nend</code></pre></p>",
+         "it allows leading spaces on lines in a code block.");
 });
 
 test("SanitizeHTML", function() {
