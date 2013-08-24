@@ -17,6 +17,7 @@ var cookedOptions = function(input, opts, expected, text) {
 
 test("basic cooking", function() {
   cooked("hello", "<p>hello</p>", "surrounds text with paragraphs");
+  cooked("***hello***", "<p><strong><em>hello</em></strong></p>", "it can do bold and italics at once.");
 });
 
 test("Line Breaks", function() {
