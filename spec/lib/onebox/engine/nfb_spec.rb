@@ -8,9 +8,9 @@ describe Onebox::Engine::NFBOnebox do
     fake(link, response("nfb.response"))
   end
 
-  # it "returns video title" do
-  #   expect(html).to include("Mitt Romney Style (Gangnam Style Parody)")
-  # end
+  it "returns video title" do
+    expect(html).to include("Overdose")
+  end
 
   # it "returns video image" do
   #   expect(html).to include("a9febe641d5beb264bbab0de49272e5a-mitt-romney-style-gangnam-style-parody.jpg")
