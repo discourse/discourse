@@ -7,13 +7,15 @@
         MD = event.MD;
 
     dialect.inline[":"] = function(text, orig_match) {
-      var m = /\:([a-z\_\+\-0-9]+)\:/.exec(text);
+      var m = /^\:([a-z\_\+\-0-9]+)\:/.exec(text);
+
       if (m && (emoji.indexOf(m[1]) !== -1)) {
         var url = Discourse.getURL('/assets/emoji/' + m[1] + '.png');
         return [m[0].length, ['img', {href: url, title: ':' + m[1] + ':', 'class': 'emoji', alt: m[1]}] ];
       }
     };
   });
+
 
   if (Discourse && Discourse.ComposerView) {
     Discourse.ComposerView.on("initWmdEditor", function(event){
