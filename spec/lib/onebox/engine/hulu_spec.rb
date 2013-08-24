@@ -12,9 +12,9 @@ describe Onebox::Engine::HuluOnebox do
     expect(html).to include("The Awesomes: Pilot, Part 1")
   end
 
-  # it "returns photo" do
-  #   expect(html).to include("6038315155_2875860c4b_z.jpg")
-  # end
+  it "returns photo" do
+    expect(html).to include("http://ib3.huluim.com/video/60245466?region=US&amp;size=600x400")
+  end
 
   # it "returns video description" do
   #   expect(html).to include("After Mr. Awesome decides to retire and disband The Awesomes")
