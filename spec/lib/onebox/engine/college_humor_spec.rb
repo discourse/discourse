@@ -8,9 +8,9 @@ describe Onebox::Engine::CollegeHumorOnebox do
     fake(link, response("collegehumor.response"))
   end
 
-  # it "returns video title" do
-  #   expect(html).to include("The Awesomes: Pilot, Part 1")
-  # end
+  it "returns video title" do
+    expect(html).to include("Mitt Romney Style (Gangnam Style Parody)")
+  end
 
   # it "returns photo" do
   #   expect(html).to include("http://ib3.huluim.com/video/60245466?region=US&amp;size=600x400")
