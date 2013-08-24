@@ -457,7 +457,7 @@ id:
         title: 'Invite Friends to Reply'
         action: 'Email Invite'
         help: 'send invitations to friends so they can reply to this topic with a single click'
-        email: "We'll send your friend a brief email allowing them to reply to this topic by clicking a link."
+        email: "We'll send your friend a brief email allowing them to immediately reply to this topic by clicking a link, no login required."
         email_placeholder: 'email address'
         success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
         error: "Sorry we couldn't invite that person. Perhaps they are already a user?"
