@@ -20,9 +20,9 @@ describe Onebox::Engine::CollegeHumorOnebox do
     expect(html).to include("Heyyy wealthy ladies!&quot;Mitt Romney Style&quot; is now available on iTunes")
   end
 
-  # it "returns video URL" do
-  #   expect(html).to include("https://secure.hulu.com/embed/0-us7uHJgevua5TeiGwCxQ")
-  # end
+  it "returns video URL" do
+    expect(html).to include("moogaloop.1.0.31.swf?clip_id=6830834&amp;use_node_id=true&amp;og=1&amp;auto=true")
+  end
 
   it "returns URL" do
     expect(html).to include(link)
