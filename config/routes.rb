@@ -216,6 +216,8 @@ Discourse::Application.routes.draw do
   post 'topics/timings'
   get 'topics/similar_to'
   get 'topics/created-by/:username' => 'list#topics_by', as: 'topics_by', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'topics/private-messages/:username' => 'list#private_messages', as: 'topics_private_messages', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'topics/private-messages-sent/:username' => 'list#private_messages_sent', as: 'topics_private_messages_sent', constraints: {username: USERNAME_ROUTE_FORMAT}
 
   # Topic routes
   get 't/:slug/:topic_id/wordpress' => 'topics#wordpress', constraints: {topic_id: /\d+/}

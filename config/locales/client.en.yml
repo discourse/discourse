@@ -188,6 +188,7 @@ en:
       download_archive: "download archive of my posts"
       private_message: "Private Message"
       private_messages: "Messages"
+      private_messages_sent: "Sent Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
       bio: "About me"
