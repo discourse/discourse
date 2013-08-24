@@ -109,7 +109,7 @@ describe Notification do
   describe '@mention' do
 
     it "calls email_user_mentioned on creating a notification" do
-      UserEmailObserver.any_instance.expects(:email_user_mentioned).with(instance_of(Notification))
+      UserEmailObserver.any_instance.expects(:after_commit).with(instance_of(Notification))
       Fabricate(:notification)
     end
 
@@ -117,7 +117,7 @@ describe Notification do
 
   describe '@mention' do
     it "calls email_user_quoted on creating a quote notification" do
-      UserEmailObserver.any_instance.expects(:email_user_quoted).with(instance_of(Notification))
+      UserEmailObserver.any_instance.expects(:after_commit).with(instance_of(Notification))
       Fabricate(:quote_notification)
     end
   end
