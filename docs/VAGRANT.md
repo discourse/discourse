@@ -31,7 +31,7 @@ If you would like to download a smaller VM (574MB instead of 935MB), or if you a
 - Download this file: http://www.discourse.org/vms/discourse-0.8.4.box.7z using your favorite web browser/download tool.
 - If you don't have 7z available, you can still get the larger image from http://www.discourse.org/vms/discourse-0.8.4.box
 - Extract it using 7z: `7z e discourse-0.8.4.box.7z`
-- Add it to vagrant: `vagrant box add discourse-0.8.4 /path/to/the/downloaded/discourse-0.8.4.box virtualbox`.
+- Add it to vagrant: `vagrant box add discourse-0.8.4 /path/to/the/downloaded/discourse-0.8.4.box`.
 
 **Note to Linux users**: Your Discourse directory cannot be on an ecryptfs mount or you will receive an error: `exportfs: /home/your/path/to/discourse does not support NFS export`
 

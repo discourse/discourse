@@ -172,6 +172,8 @@ ORDER BY p.created_at desc
     transaction(requires_new: true) do
       begin
 
+        # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
+
         # protect against dupes, for some reason this is failing in some cases
         action = self.where(hash.select{|k,v| required_parameters.include?(k)}).first
         return action if action
@@ -299,8 +301,8 @@ SQL
       builder.where("p.deleted_at is null and p2.deleted_at is null and t.deleted_at is null")
     end
 
-    unless guardian.user && guardian.user.id == user_id
-      builder.where("a.action_type not in (#{BOOKMARK})")
+    unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
+      builder.where("a.action_type not in (#{BOOKMARK},#{STAR})")
     end
 
     if !guardian.can_see_private_messages?(user_id) || ignore_private_messages

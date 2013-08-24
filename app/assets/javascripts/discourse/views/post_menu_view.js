@@ -166,7 +166,7 @@ Discourse.PostMenuView = Discourse.View.extend({
   // Share button
   renderShare: function(post, buffer) {
     buffer.push("<button title=\"" +
-                 (I18n.t("post.controls.share")) +
+                 I18n.t("post.controls.share") +
                  "\" data-share-url=\"" + post.get('shareUrl') + "\" class='share'><i class=\"icon-link\"></i></button>");
   },
 

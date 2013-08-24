@@ -92,7 +92,7 @@ Atlassan has a free GIT client for OS X called [SourceTree](http://www.sourcetre
 
 OS X ships with Postgres 9.1.5, but you're better off going with the latest from Homebrew or [Postgres.App](http://postgresapp.com).
 
-### Using Postgress.app
+### Using Postgres.app
 
 [Instructions pending]
 

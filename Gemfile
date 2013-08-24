@@ -52,9 +52,8 @@ else
   gem 'active_attr'
 end
 
-gem 'redis'
 gem 'hiredis'
-gem 'em-redis'
+gem 'redis', :require => ["redis", "redis/connection/hiredis"]
 
 gem 'active_model_serializers'
 
@@ -97,6 +96,7 @@ gem 'openid-redis-store'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-github'
+gem 'omniauth-oauth2', require: false
 gem 'omniauth-browserid', git: 'https://github.com/callahad/omniauth-browserid.git', branch: 'observer_api'
 gem 'omniauth-cas'
 gem 'oj'
@@ -188,7 +188,7 @@ gem 'lru_redux'
 # IMPORTANT: mini profiler monkey patches, so it better be required last
 #  If you want to amend mini profiler to do the monkey patches in the railstie
 #  we are open to it. by deferring require to the initializer we can configure disourse installs without it
-gem 'rack-mini-profiler', '0.1.28', require: false  # require: false #, git: 'git://github.com/SamSaffron/MiniProfiler'
+gem 'rack-mini-profiler', '0.1.29', require: false  # require: false #, git: 'git://github.com/SamSaffron/MiniProfiler'
 
 # used for caching, optional
 # redis-rack-cache is missing a sane expiry policy, it hogs redis

@@ -36,6 +36,10 @@ describe User do
         let(:topic) { Fabricate(:topic) }
         let!(:view) { View.create_for(topic, '127.0.0.1', user) }
 
+        before do
+          user.update_column :last_seen_at, 1.second.ago
+        end
+
         it "adds one to the topics entered" do
           User.update_view_counts
           user.reload
@@ -63,6 +67,10 @@ describe User do
         let!(:post) { Fabricate(:post) }
         let!(:post_timings) do
           PostTiming.record_timing(msecs: 1234, topic_id: post.topic_id, user_id: user.id, post_number: post.post_number)
+        end
+
+        before do
+          user.update_column :last_seen_at, 1.second.ago
         end
 
         it "increases posts_read_count" do
@@ -256,13 +264,28 @@ describe User do
     it { should_not be_approved }
     its(:approved_at) { should be_blank }
     its(:approved_by_id) { should be_blank }
-    its(:email_digests) { should be_true }
     its(:email_private_messages) { should be_true }
     its(:email_direct ) { should be_true }
     its(:time_read) { should == 0}
 
-    # Default to digests after one week
-    its(:digest_after_days) { should == 7 }
+    context 'digest emails' do
+      it 'defaults to digests every week' do
+        subject.email_digests.should be_true
+        subject.digest_after_days.should == 7
+      end
+
+      it 'uses default_digest_email_frequency' do
+        SiteSetting.stubs(:default_digest_email_frequency).returns(1)
+        subject.email_digests.should be_true
+        subject.digest_after_days.should == 1
+      end
+
+      it 'disables digests by default if site setting says so' do
+        SiteSetting.stubs(:default_digest_email_frequency).returns('')
+        subject.email_digests.should be_false
+      end
+    end
+
 
     context 'after_save' do
       before do
@@ -842,19 +865,59 @@ describe User do
     end
   end
 
-  describe '#find_by_username_or_email' do
-    it 'works correctly' do
-      bob = Fabricate(:user, username: 'bob', name: 'bobs', email: 'bob@bob.com')
-      bob2 = Fabricate(:user, username: 'bob2', name: 'bobs', email: 'bob2@bob.com')
+  describe '.find_by_username_or_email' do
+    it 'finds user by username' do
+      bob = Fabricate(:user, username: 'bob')
 
-      expect(User.find_by_username_or_email('bob22@bob.com')).to eq(nil)
-      expect(User.find_by_username_or_email('bobs')).to eq(nil)
+      found_user = User.find_by_username_or_email('bob')
 
-      expect(User.find_by_username_or_email('bob2')).to eq(bob2)
-      expect(User.find_by_username_or_email('bob2@BOB.com')).to eq(bob2)
+      expect(found_user).to eq bob
+    end
 
-      expect(User.find_by_username_or_email('bob')).to eq(bob)
-      expect(User.find_by_username_or_email('bob@BOB.com')).to eq(bob)
+    it 'finds user by email' do
+      bob = Fabricate(:user, email: 'bob@example.com')
+
+      found_user = User.find_by_username_or_email('bob@example.com')
+
+      expect(found_user).to eq bob
+    end
+
+    context 'when user does not exist' do
+      it 'returns nil' do
+        found_user = User.find_by_username_or_email('doesnotexist@example.com') ||
+          User.find_by_username_or_email('doesnotexist')
+
+        expect(found_user).to be_nil
+      end
+    end
+
+    context 'when username case does not match' do
+      it 'finds user' do
+        bob = Fabricate(:user, username: 'bob')
+
+        found_user = User.find_by_username_or_email('Bob')
+
+        expect(found_user).to eq bob
+      end
+    end
+
+    context 'when email domain case does not match' do
+      it 'finds user' do
+        bob = Fabricate(:user, email: 'bob@example.com')
+
+        found_user = User.find_by_username_or_email('bob@Example.com')
+
+        expect(found_user).to eq bob
+      end
+    end
+
+    context 'when multiple users are found' do
+      it 'raises an exception' do
+        user_query = stub(all: [stub, stub])
+        User.stubs(:where).with(username_lower: 'bob').returns(user_query)
+
+        expect { User.find_by_username_or_email('bob') }.to raise_error(Discourse::TooManyMatches)
+      end
     end
   end
 end

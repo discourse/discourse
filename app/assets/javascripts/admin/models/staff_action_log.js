@@ -15,14 +15,30 @@ Discourse.StaffActionLog = Discourse.Model.extend({
 
   formattedDetails: function() {
     var formatted = "";
-    if (this.get('email')) {
-      formatted += "<b>" + I18n.t("email") + ":</b> " + this.get('email') + "<br/>";
-    }
-    if (this.get('ip_address')) {
-      formatted += "<b>IP:</b> " + this.get('ip_address') + "<br/>";
+    formatted += this.format('email', 'email');
+    formatted += this.format('admin.logs.ip_address', 'ip_address');
+    if (!this.get('useCustomModalForDetails')) {
+      formatted += this.format('admin.logs.staff_actions.new_value', 'new_value');
+      formatted += this.format('admin.logs.staff_actions.previous_value', 'previous_value');
     }
     return formatted;
-  }.property('ip_address', 'email')
+  }.property('ip_address', 'email'),
+
+  format: function(label, propertyName) {
+    if (this.get(propertyName)) {
+      return ('<b>' + I18n.t(label) + ':</b> ' + this.get(propertyName) + '<br/>');
+    } else {
+      return '';
+    }
+  },
+
+  useModalForDetails: function() {
+    return (this.get('details') && this.get('details').length > 0);
+  }.property('action_name'),
+
+  useCustomModalForDetails: function() {
+    return _.contains(['change_site_customization', 'delete_site_customization'], this.get('action_name'));
+  }.property('action_name')
 });
 
 Discourse.StaffActionLog.reopenClass({

@@ -63,6 +63,21 @@ describe ListController do
         it { should respond_with(:success) }
       end
 
+      context 'another category exists with a number at the beginning of its name' do
+        # One category has another category's id at the beginning of its name
+        let!(:other_category) { Fabricate(:category, name: "#{category.id} name") }
+
+        before do
+          xhr :get, :category, category: other_category.slug
+        end
+
+        it { should respond_with(:success) }
+
+        it 'uses the correct category' do
+          assigns(:category).should == other_category
+        end
+      end
+
       describe 'feed' do
         it 'renders RSS' do
           get :category_feed, category: category.slug, format: :rss

@@ -32,7 +32,7 @@ Handlebars.registerHelper('topicLink', function(property, options) {
   var title, topic;
   topic = Ember.Handlebars.get(this, property, options);
   title = topic.get('fancy_title') || topic.get('title');
-  return "<a href='" + (topic.get('lastReadUrl')) + "' class='title'>" + title + "</a>";
+  return "<a href='" + (topic.get('lastUnreadUrl')) + "' class='title'>" + title + "</a>";
 });
 
 /**

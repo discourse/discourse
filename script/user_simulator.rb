@@ -35,7 +35,7 @@ end
 
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 
-unless Rails.env.development?
+unless ["profile", "development"].include? Rails.env
   puts "Bad idea to run a script that inserts random posts in any non development environment"
   exit
 end

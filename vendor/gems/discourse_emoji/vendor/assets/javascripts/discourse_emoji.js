@@ -6,17 +6,17 @@
     emoji.push("popaul");
     emoji.push("utrollin");
 
-  // Regiest a before cook event
-  Discourse.Markdown.on("beforeCook", function(event) {
-    var text = this.textResult || event.detail;
-    var opts = event.opts;
+  Discourse.Dialect.on("register", function(event) {
+    var dialect = event.dialect,
+        MD = event.MD;
 
-    this.textResult = text.replace(/&([a-z\_\+\-0-9]+)&/g, function (m1, m2) {
-      var url = Discourse.getURL('/assets/emoji/' + m2 + '.png');
-      return (emoji.indexOf(m2) !== -1) ?
-             '<img alt="' + m2 + '" title=":' + m2 + ':" src="' + url + '" class="emoji"/>' :
-             m1;
-    });
+    dialect.inline[":"] = function(text, orig_match) {
+      var m = /^&([a-z\_\+\-0-9]+)&/.exec(text);
+      if (m && (emoji.indexOf(m[1]) !== -1)) {
+        var url = Discourse.getURL('/assets/emoji/' + m[1] + '.png');
+        return [m[0].length, ['img', {href: url, title: ':' + m[1] + ':', 'class': 'emoji', alt: m[1]}] ];
+      }
+    };
   });
 
 

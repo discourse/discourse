@@ -128,6 +128,12 @@ describe SpamRulesEnforcer do
         end
         subject.punish_user
       end
+
+      it "doesn't send a pm to moderators if notify_mods_when_user_blocked is false" do
+        SiteSetting.stubs(:notify_mods_when_user_blocked).returns(false)
+        GroupMessage.expects(:create).never
+        subject.punish_user
+      end
     end
 
     context 'user is already blocked' do

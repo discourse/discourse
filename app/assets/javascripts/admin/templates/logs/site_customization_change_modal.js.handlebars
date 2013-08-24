@@ -1,0 +1,33 @@
+<div>
+  <ul class="nav nav-pills">
+    <li {{bindAttr class="newSelected:active"}}>
+      <a href="#" {{action selectNew}}>{{i18n admin.logs.staff_actions.new_value}}</a>
+    </li>
+    <li {{bindAttr class="previousSelected:active"}}>
+      <a href="#" {{action selectPrevious}}>{{i18n admin.logs.staff_actions.previous_value}}</a>
+    </li>
+  </ul>
+  <div class="modal-body">
+    <div {{bindAttr class=":modal-tab :new-tab newSelected::invisible"}}>
+      {{#if new_value}}
+        {{#with new_value}}
+          {{partial "admin/templates/logs/site_customization_change_details"}}
+        {{/with}}
+      {{else}}
+        {{i18n admin.logs.staff_actions.deleted}}
+      {{/if}}
+    </div>
+    <div {{bindAttr class=":modal-tab :previous-tab previousSelected::invisible"}}>
+      {{#if previous_value}}
+        {{#with previous_value}}
+          {{partial "admin/templates/logs/site_customization_change_details"}}
+        {{/with}}
+      {{else}}
+        {{i18n admin.logs.staff_actions.no_previous}}
+      {{/if}}
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class='btn btn-primary' {{action closeModal}}>{{i18n close}}</button>
+  </div>
+</div>

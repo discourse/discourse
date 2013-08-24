@@ -135,6 +135,17 @@ class TopicQuery
     end
   end
 
+  def list_private_messages(user)
+    list = private_messages_for(user)
+    TopicList.new(:private_messages, user, list)
+  end
+
+  def list_private_messages_sent(user)
+    list = private_messages_for(user)
+    list = list.where(user_id: user.id)
+    TopicList.new(:private_messages, user, list)
+  end
+
 
   def list_uncategorized
     create_list(:uncategorized, unordered: true) do |list|
@@ -190,6 +201,22 @@ class TopicQuery
       TopicList.new(filter, @user, topics)
     end
 
+    def private_messages_for(user)
+      options = @options
+      options.reverse_merge!(per_page: SiteSetting.topics_per_page)
+
+      # Start with a list of all topics
+      result = Topic.where(id: TopicAllowedUser.where(user_id: user.id).pluck(:topic_id))
+      result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
+      result = result.order(TopicQuery.order_nocategory_basic_bumped)
+      result = result.private_messages
+
+      result = result.limit(options[:per_page]) unless options[:limit] == false
+      result = result.visible if options[:visible] || @user.nil? || @user.regular?
+      result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
+      result
+    end
+
     # Create results based on a bunch of default options
     def default_results(options={})
       options.reverse_merge!(@options)
@@ -212,23 +239,23 @@ class TopicQuery
       end
 
       result = result.listable_topics.includes(category: :topic_only_relative_url)
-      result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]) if options[:exclude_category]
-      result = result.where('categories.name = ?', options[:only_category]) if options[:only_category]
+      result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
+      result = result.where('categories.name = ?', options[:only_category]).references(:categories) if options[:only_category]
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
-      result = result.where('topics.id <> ?', options[:except_topic_id]) if options[:except_topic_id]
+      result = result.where('topics.id <> ?', options[:except_topic_id]).references(:topics) if options[:except_topic_id]
       result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
 
       if options[:topic_ids]
-        result = result.where('topics.id in (?)', options[:topic_ids])
+        result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
       end
 
       unless @user && @user.moderator?
         category_ids = @user.secure_category_ids if @user
         if category_ids.present?
-          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ? OR categories.id IN (?)', false, category_ids)
+          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ? OR categories.id IN (?)', false, category_ids).references(:categories)
         else
-          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ?', false)
+          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ?', false).references(:categories)
         end
       end
 

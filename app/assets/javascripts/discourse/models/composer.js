@@ -221,7 +221,7 @@ Discourse.Composer = Discourse.Model.extend({
   **/
   replyLength: function() {
     var reply = this.get('reply') || "";
-    while (Discourse.BBCode.QUOTE_REGEXP.test(reply)) { reply = reply.replace(Discourse.BBCode.QUOTE_REGEXP, ""); }
+    while (Discourse.Quote.REGEXP.test(reply)) { reply = reply.replace(Discourse.Quote.REGEXP, ""); }
     return reply.replace(/\s+/img, " ").trim().length;
   }.property('reply'),
 
@@ -279,7 +279,7 @@ Discourse.Composer = Discourse.Model.extend({
       this.set('loading', true);
       var composer = this;
       return Discourse.Post.load(postId).then(function(post) {
-        composer.appendText(Discourse.BBCode.buildQuoteBBCode(post, post.get('raw')));
+        composer.appendText(Discourse.Quote.build(post, post.get('raw')));
         composer.set('loading', false);
       });
     }
@@ -333,6 +333,10 @@ Discourse.Composer = Discourse.Model.extend({
       metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
       reply: opts.reply || this.get("reply") || ""
     });
+
+    if (!this.get('categoryName') && !Discourse.SiteSettings.allow_uncategorized_topics && Discourse.Category.list().length > 0) {
+      this.set('categoryName', Discourse.Category.list()[0].get('name'));
+    }
 
     if (opts.postId) {
       this.set('loading', true);

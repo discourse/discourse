@@ -189,12 +189,6 @@ Edit /var/www/discourse/config/discourse.pill
 - Ensure appropriate Bluepill.application line is uncommented
 - search for "host to run on" and change to current hostname
 
-Edit /var/www/discourse/config/initializers/secret_token.rb
-
-- uncomment secret_token line
-- replace SET_SECRET_HERE with the output from 'RAILS_ENV=production rake secret' command run from the discourse directory (`/var/www/discourse`)
-- delete the lines below as per instructions in the file
-
 Edit /var/www/discourse/config/environments/production.rb
 - browse througn all the settings
 - be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))

@@ -2,7 +2,7 @@ module Trashable
   extend ActiveSupport::Concern
 
   included do
-    default_scope where(with_deleted_scope_sql)
+    default_scope { where(with_deleted_scope_sql) }
 
     # scope unscoped does not work
     belongs_to :deleted_by, class_name: 'User'
@@ -15,11 +15,8 @@ module Trashable
       #
       # with this in place Post.limit(10).with_deleted, will work as expected
       #
-      if rails4?
-        scope = self.all.with_default_scope
-      else
-        scope = self.scoped.with_default_scope
-      end
+      scope = rails4? ? self.all.with_default_scope : self.scoped.with_default_scope
+
       scope.where_values.delete(with_deleted_scope_sql)
       scope
     end

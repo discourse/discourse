@@ -1,5 +1,6 @@
 /*global Modernizr:true*/
 /*global assetPath:true*/
+/*global Favcount:true*/
 
 /**
   The main Discourse Application
@@ -50,8 +51,8 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
   faviconChanged: function() {
     if(Discourse.User.currentProp('dynamic_favicon')) {
-      $.faviconNotify(
-        Discourse.SiteSettings.favicon_url, this.get('notifyCount')
+      new Favcount(Discourse.SiteSettings.favicon_url).set(
+        this.get('notifyCount')
       );
     }
   }.observes('notifyCount'),

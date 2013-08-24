@@ -50,6 +50,16 @@ stripped from my reply?")
     end
   end
 
+  describe "via" do
+    let(:wrote) { File.read("#{Rails.root}/spec/fixtures/emails/via_line.eml") }
+    let(:receiver) { Email::Receiver.new(wrote) }
+
+    it "removes via lines if we know them" do
+      receiver.process
+      expect(receiver.body).to eq("Hello this email has content!")
+    end
+  end
+
   describe "if wrote is on a second line" do
     let(:wrote) { File.read("#{Rails.root}/spec/fixtures/emails/multiline_wrote.eml") }
     let(:receiver) { Email::Receiver.new(wrote) }

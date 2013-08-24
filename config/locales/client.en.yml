@@ -106,6 +106,13 @@ en:
     read_more: 'read more'
     more: "More"
     less: "Less"
+    never: "never"
+    daily: "daily"
+    weekly: "weekly"
+    every_two_weeks: "every two weeks"
+    character_count:
+      one: "{{count}} character"
+      other: "{{count}} characters"
 
     in_n_seconds:
       one: "in 1 second"
@@ -187,6 +194,7 @@ en:
       download_archive: "download archive of my posts"
       private_message: "Private Message"
       private_messages: "Messages"
+      private_messages_sent: "Sent Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
       bio: "About me"
@@ -323,9 +331,6 @@ en:
         title: "Last IP Address"
       avatar:
         title: "Avatar"
-        instructions:
-          gravatar: "We use <a href='//gravatar.com/emails' target='_blank'>Gravatar</a> for avatars based on your email:"
-          uploaded_avatar: "We use the avatar you uploaded."
       title:
         title: "Title"
 
@@ -712,7 +717,7 @@ en:
         title: 'Invite Friends to Reply'
         action: 'Email Invite'
         help: 'send invitations to friends so they can reply to this topic with a single click'
-        email: "We'll send your friend a brief email allowing them to reply to this topic by clicking a link."
+        email: "We'll send your friend a brief email allowing them to immediately reply to this topic by clicking a link, no login required."
         email_placeholder: 'email address'
         success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
         error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
@@ -1056,8 +1061,8 @@ en:
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_upgrade: "Please upgrade!"
-        no_check_performed: "A check for updates has not been performed. Ensure clockwork and sidekiq are running."
-        stale_data: "A check for updates has not been performed lately. Ensure clockwork and sidekiq are running."
+        no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
+        stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some problems have been found with your installation of Discourse:"
@@ -1189,6 +1194,7 @@ en:
         created_at: "Created"
         last_match_at: "Last Matched"
         match_count: "Matches"
+        ip_address: "IP"
         screened_actions:
           block: "block"
           do_nothing: "do nothing"
@@ -1198,12 +1204,23 @@ en:
           clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
+          subject: "Subject"
           when: "When"
           context: "Context"
           details: "Details"
+          previous_value: "Previous"
+          new_value: "New"
+          diff: "Diff"
+          show: "Show"
+          modal_title: "Details"
+          no_previous: "There is no previous value."
+          deleted: "No new value. The record was deleted."
           actions:
             delete_user: "delete user"
             change_trust_level: "change trust level"
+            change_site_setting: "change site setting"
+            change_site_customization: "change site customization"
+            delete_site_customization: "delete site customization"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -1335,4 +1352,5 @@ en:
         title: 'Settings'
         reset: 'reset to default'
         none: 'none'
+
 

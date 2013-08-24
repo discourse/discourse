@@ -12,21 +12,6 @@ describe PostAction do
   let(:post) { Fabricate(:post) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
-  describe "flagged_posts_report" do
-    it "operates correctly" do
-      post = create_post
-      PostAction.act(codinghorror, post, PostActionType.types[:spam])
-      mod_message = PostAction.act(Fabricate(:user), post, PostActionType.types[:notify_moderators], message: "this is a 10")
-
-      posts, users = PostAction.flagged_posts_report("")
-      posts.count.should == 1
-      first = posts.first
-
-      users.count.should == 3
-      first[:post_actions].count.should == 2
-      first[:post_actions].first[:permalink].should == mod_message.related_post.topic.url
-    end
-  end
 
   describe "messaging" do
 

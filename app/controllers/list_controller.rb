@@ -8,7 +8,11 @@ class ListController < ApplicationController
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     define_method(filter) do
       list_opts = build_topic_list_options
-      list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
+      user = current_user
+      if params[:user_id] && guardian.is_staff?
+        user = User.find(params[:user_id].to_i)
+      end
+      list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = url_for(self.public_send "#{filter}_path".to_sym, list_opts.merge(format: 'json', page: next_page))
 
       respond(list)
@@ -32,6 +36,22 @@ class ListController < ApplicationController
     list_opts = build_topic_list_options
     list = TopicQuery.new(current_user, list_opts).list_topics_by(fetch_user_from_params)
     list.more_topics_url = url_for(topics_by_path(list_opts.merge(format: 'json', page: next_page)))
+
+    respond(list)
+  end
+
+  def private_messages
+    list_opts = build_topic_list_options
+    list = TopicQuery.new(current_user, list_opts).list_private_messages(fetch_user_from_params)
+    list.more_topics_url = url_for(topics_private_messages_path(list_opts.merge(format: 'json', page: next_page)))
+
+    respond(list)
+  end
+
+  def private_messages_sent
+    list_opts = build_topic_list_options
+    list = TopicQuery.new(current_user, list_opts).list_private_messages_sent(fetch_user_from_params)
+    list.more_topics_url = url_for(topics_private_messages_sent_path(list_opts.merge(format: 'json', page: next_page)))
 
     respond(list)
   end
@@ -107,8 +127,8 @@ class ListController < ApplicationController
   private
 
   def set_category
-    category_slug = params.fetch(:category)
-    @category = Category.where("slug = ? or id = ?", category_slug, category_slug.to_i).includes(:featured_users).first
+    slug = params.fetch(:category)
+    @category = Category.where("slug = ?", slug).includes(:featured_users).first || Category.where("id = ?", slug.to_i).includes(:featured_users).first
   end
 
   def request_is_for_uncategorized?

@@ -67,6 +67,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:num_flags_to_block_new_user, 3)
   setting(:num_users_to_block_new_user, 3)
+  setting(:notify_mods_when_user_blocked, true)
 
   # used mainly for dev, force hostname for Discourse.base_url
   # You would usually use multisite for this
@@ -114,6 +115,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:email_time_window_mins, 10)
   setting(:email_posts_context, 5)
+  setting(:default_digest_email_frequency, '7', enum: 'DigestEmailSiteSetting')
 
   # How many characters we can import into a onebox
   setting(:onebox_max_chars, 5000)
@@ -236,7 +238,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:minimum_topics_similar, 50)
 
-  client_setting(:relative_date_duration, 14)
+  client_setting(:relative_date_duration, 30)
 
   client_setting(:delete_user_max_age, 14)
   setting(:delete_all_posts_max, 10)
@@ -244,6 +246,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:username_change_period, 3) # days
 
   client_setting(:allow_uploaded_avatars, true)
+  client_setting(:allow_animated_avatars, false)
 
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
