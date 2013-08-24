@@ -20,6 +20,10 @@ describe Onebox::Engine::HuluOnebox do
     expect(html).to include("After Mr. Awesome decides to retire and disband The Awesomes")
   end
 
+  it "returns video URL" do
+    expect(html).to include("https://secure.hulu.com/embed/0-us7uHJgevua5TeiGwCxQ")
+  end
+
   it "returns URL" do
     expect(html).to include(link)
   end
