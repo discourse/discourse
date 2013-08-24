@@ -1,17 +1,18 @@
 # Discourse Advanced Developer Install Guide
 
-This guide is aimed at advanced Rails developers who have installed their own Rails apps before. If you are new
-to rails, you are likely much better off with our **[Discourse Vagrant Developer Guide](VAGRANT.md)**.
+This guide is aimed at advanced Rails developers who have installed their own Rails apps before. If you are new to Rails, you are likely much better off with our **[Discourse Vagrant Developer Guide](VAGRANT.md)**.
+
+Note: If you are developing on a Mac, you will probably want to look at [these instructions](DEVELOPMENT-OSX-NATIVE.md) as well.
 
 ## First Steps
 
 1. Install and configure PostgreSQL 9.1+. Make sure that the server's messages language is English; this is [required](https://github.com/rails/rails/blob/3006c59bc7a50c925f6b744447f1d94533a64241/activerecord/lib/active_record/connection_adapters/postgresql_adapter.rb#L1140) by the ActiveRecord Postgres adapter.
-2. Install and configure Redis 2+
+2. Install and configure Redis 2+.
 3. Install libxml2, g++, and make.
 4. Install Ruby 1.9.3 and Bundler.
 5. Clone the project and bundle.
-6. Create development and test databases in postgres.
-7. Copy `config/database.yml.development-sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
+6. Copy `config/database.yml.development-sample` to `config/database.yml`. Copy `config/redis.yml.sample` to `config/redis.yml`. Edit the files to point to your postgres and redis instances.
+7. Create the "vagrant" user and the development and test databases in postgres. See the postgres section in "Building your own Vagrant VM", below.
 8. Install the seed data to set up an admin account and meta topic: `psql DATABASE_NAME < pg_dumps/production-image.sql`
 
 
@@ -24,7 +25,7 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 5. Try running the specs: `bundle exec rake autospec`
 6. `bundle exec rails server`
 
-You should now be able to connect to rails on http://localhost:3000 - try it out! The seed data includes a pinned topic that explains how to get an admin account, so start there! Happy hacking!
+You should now be able to connect to rails on [http://localhost:3000](http://localhost:3000) - try it out! The seed data includes a pinned topic that explains how to get an admin account, so start there! Happy hacking!
 
 
 # Building your own Vagrant VM
