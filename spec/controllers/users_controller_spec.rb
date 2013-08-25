@@ -938,4 +938,90 @@ describe UsersController do
     end
   end
 
+  describe '.upload_avatar' do
+
+    it 'raises an error when not logged in' do
+      lambda { xhr :put, :upload_avatar, username: 'asdf' }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'while logged in' do
+
+      let!(:user) { log_in }
+
+      let(:avatar) do
+        ActionDispatch::Http::UploadedFile.new({
+          filename: 'logo.png',
+          tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo.png")
+        })
+      end
+
+      it 'raises an error when you don\'t have permission to upload an avatar' do
+        Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
+        xhr :post, :upload_avatar, username: user.username
+        response.should be_forbidden
+      end
+
+      it 'rejects large images' do
+        SiteSetting.stubs(:max_image_size_kb).returns(1)
+        xhr :post, :upload_avatar, username: user.username, file: avatar
+        response.status.should eq 413
+      end
+
+      it 'is successful' do
+        upload = Fabricate(:upload)
+        Upload.expects(:create_for).returns(upload)
+        # enqueues the avatar generator job
+        Jobs.expects(:enqueue).with(:generate_avatars, { upload_id: upload.id })
+        xhr :post, :upload_avatar, username: user.username, file: avatar
+        user.reload
+        # erase the previous template
+        user.uploaded_avatar_template.should == nil
+        # link to the right upload
+        user.uploaded_avatar.id.should == upload.id
+        # automatically set "use_uploaded_avatar"
+        user.use_uploaded_avatar.should == true
+      end
+
+      it 'returns the url, width and height of the uploaded image' do
+        xhr :post, :upload_avatar, username: user.username, file: avatar
+        json = JSON.parse(response.body)
+        json['url'].should_not be_nil
+        json['width'].should == 244
+        json['height'].should == 66
+      end
+
+    end
+
+  end
+
+  describe '.toggle_avatar' do
+
+    it 'raises an error when not logged in' do
+      lambda { xhr :put, :toggle_avatar, username: 'asdf' }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'while logged in' do
+
+      let!(:user) { log_in }
+
+      it 'raises an error without a use_uploaded_avatar param' do
+        lambda { xhr :put, :toggle_avatar, username: user.username }.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it 'raises an error when you don\'t have permission to toggle the avatar' do
+        Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
+        xhr :put, :toggle_avatar, username: user.username, use_uploaded_avatar: "true"
+        response.should be_forbidden
+      end
+
+      it 'it successful' do
+        xhr :put, :toggle_avatar, username: user.username, use_uploaded_avatar: "false"
+        user.reload.use_uploaded_avatar.should == false
+        response.should be_success
+      end
+
+    end
+
+  end
+
 end

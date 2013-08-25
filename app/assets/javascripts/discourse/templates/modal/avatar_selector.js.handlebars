@@ -21,6 +21,9 @@
       {{#if view.uploading}}
         <span>{{i18n upload_selector.uploading}} {{view.uploadProgress}}%</span>
       {{/if}}
+      {{#if view.imageIsNotASquare}}
+        <div class="warning">{{i18n user.change_avatar.image_is_not_a_square}}</div>
+      {{/if}}
     </div>
   </div>
 </div>
