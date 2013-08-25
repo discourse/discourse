@@ -8,10 +8,7 @@ class ListController < ApplicationController
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     define_method(filter) do
       list_opts = build_topic_list_options
-      user = current_user
-      if params[:user_id] && guardian.is_staff?
-        user = User.find(params[:user_id].to_i)
-      end
+      user = list_target_user
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = url_for(self.public_send "#{filter}_path".to_sym, list_opts.merge(format: 'json', page: next_page))
 
@@ -148,5 +145,13 @@ class ListController < ApplicationController
       topic_ids: param_to_integer_list(:topic_ids),
       exclude_category: (params[:exclude_category] || menu_item.try(:filter))
     }
+  end
+
+  def list_target_user
+    if params[:user_id] && guardian.is_staff?
+      User.find(params[:user_id].to_i)
+    else
+      current_user
+    end
   end
 end
