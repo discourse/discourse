@@ -18,7 +18,35 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
   events: {
     showAvatarSelector: function() {
       Discourse.Route.showModal(this, 'avatarSelector');
-      this.controllerFor("avatarSelector").init();
+      var user = this.modelFor("user");
+      console.log(user);
+      this.controllerFor("avatarSelector").setProperties(user.getProperties(
+        "username",
+        "email",
+        "has_uploaded_avatar",
+        "use_uploaded_avatar",
+        "gravatar_template",
+        "uploaded_avatar_template"
+      ));
+    },
+
+    saveAvatarSelection: function() {
+      var user = this.modelFor("user");
+      var avatar = this.controllerFor("avatarSelector");
+      // sends the information to the server if it has changed
+      if (avatar.get("use_uploaded_avatar") !== user.get("use_uploaded_avatar")) { user.toggleAvatarSelection(); }
+      // saves the data back
+      user.setProperties(avatar.getProperties(
+        "has_uploaded_avatar",
+        "use_uploaded_avatar",
+        "gravatar_template",
+        "uploaded_avatar_template"
+      ));
+      if (avatar.get("use_uploaded_avatar")) {
+        user.set("avatar_template", avatar.get("uploaded_avatar_template"));
+      } else {
+        user.set("avatar_template", avatar.get("gravatar_template"));
+      }
     }
   }
 });
