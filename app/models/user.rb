@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
       { username_lower: username_or_email.downcase }
     end
 
-    users = User.where(conditions).all
+    users = User.where(conditions).to_a
 
     if users.size > 1
       raise Discourse::TooManyMatches
@@ -504,7 +504,7 @@ class User < ActiveRecord::Base
   end
 
   def secure_category_ids
-    cats = self.staff? ? Category.select(:id).where(read_restricted: true) : secure_categories.select('categories.id')
+    cats = self.staff? ? Category.select(:id).where(read_restricted: true) : secure_categories.select('categories.id').references(:categories)
     cats.map { |c| c.id }.sort
   end
 
