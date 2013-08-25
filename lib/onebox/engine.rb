@@ -53,6 +53,7 @@ end
 require_relative "engine/open_graph"
 require_relative "engine/example_onebox"
 require_relative "engine/amazon_onebox"
+require_relative "engine/nfb_onebox"
 require_relative "engine/qik_onebox"
 require_relative "engine/stack_exchange_onebox"
 require_relative "engine/wikipedia_onebox"
