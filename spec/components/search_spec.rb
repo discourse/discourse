@@ -279,7 +279,7 @@ describe Search do
       # should find topic in searched category first
       Then          { first_of_type(search_cat, 'topic')[:id].should == topic.id }
       # results should also include topic without category
-      And          { result_ids_for_type(search_cat, 'topic').should include topic_no_cat.id } 
+      And          { result_ids_for_type(search_cat, 'topic').should include topic_no_cat.id }
 
     end
 
