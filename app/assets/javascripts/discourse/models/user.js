@@ -139,7 +139,7 @@ Discourse.User = Discourse.Model.extend({
   **/
   save: function() {
     var user = this;
-    return Discourse.ajax("/users/" + this.get('username').toLowerCase(), {
+    return Discourse.ajax("/users/" + this.get('username_lower'), {
       data: this.getProperties('auto_track_topics_after_msecs',
                                'bio_raw',
                                'website',
@@ -260,6 +260,17 @@ Discourse.User = Discourse.Model.extend({
       user.setProperties(json.user);
       return user;
     });
+  },
+
+  /*
+    Change avatar selection
+
+    @method toggleAvatarSelection
+    @returns {Promise} the result of the toggle avatar selection
+  */
+  toggleAvatarSelection: function() {
+    var data = { use_uploaded_avatar: this.get("use_uploaded_avatar") };
+    return Discourse.ajax("/users/" + this.get("username") + "/preferences/avatar/toggle", { type: 'PUT', data: data });
   }
 
 });

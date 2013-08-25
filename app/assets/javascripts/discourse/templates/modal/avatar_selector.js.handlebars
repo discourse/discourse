@@ -2,7 +2,7 @@
   <div>
     <div>
       <input type="radio" id="avatar" name="avatar" value="gravatar" {{action toggleUseUploadedAvatar false}}>
-      <label class="radio" for="avatar">{{avatar controller imageSize="large" template="gravatar_template"}} {{{i18n user.change_avatar.gravatar}}} {{currentUser.email}}</label>
+      <label class="radio" for="avatar">{{avatar controller imageSize="large" template="gravatar_template"}} {{{i18n user.change_avatar.gravatar}}} {{email}}</label>
       <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn"><i class="icon-pencil"></i></a>
     </div>
     <div>
