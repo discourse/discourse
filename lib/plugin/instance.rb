@@ -176,7 +176,7 @@ class Plugin::Instance
     unless File.exists? spec_file
       command = "gem install #{name} -v #{version} -i #{gems_path} --no-rdoc --no-ri"
       puts command
-      puts `command`
+      puts `#{command}`
     end
     if File.exists? spec_file
       spec = Gem::Specification.load spec_file

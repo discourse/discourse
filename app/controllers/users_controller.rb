@@ -454,7 +454,6 @@ class UsersController < ApplicationController
       authenticator.after_create_account(user, auth)
     end
 
-
     def register_nickname(user)
       if user.valid? && SiteSetting.call_discourse_hub?
         DiscourseHub.register_nickname(user.username, user.email)
