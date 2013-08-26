@@ -231,6 +231,10 @@ test("Code Blocks", function() {
   cooked("```ruby\ndef self.parse(text)\n\n  text\nend\n```",
          "<p><pre><code class=\"ruby\">def self.parse(text)\n\n  text\nend</code></pre></p>",
          "it allows leading spaces on lines in a code block.");
+
+  cooked("```ruby\nhello `eviltrout`\n```",
+         "<p><pre><code class=\"ruby\">hello &#x60;eviltrout&#x60;</code></pre></p>",
+         "it allows code with backticks in it");
 });
 
 test("SanitizeHTML", function() {

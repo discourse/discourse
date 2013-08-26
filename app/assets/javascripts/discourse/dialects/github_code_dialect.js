@@ -49,25 +49,27 @@ Discourse.Dialect.on("register", function(event) {
             blockLine = b.lineNumber,
             diff = ((typeof blockLine === "undefined") ? lineNumber : blockLine) - lineNumber;
 
-        b = b.replace(/ {2}\n/g, "\n");
-        var n = b.match(/([^`]*)```([^`]*)/m);
+        var endFound = b.indexOf('```'),
+            leadingCode = b.slice(0, endFound),
+            trailingCode = b.slice(endFound+3);
 
         for (var i=1; i<diff; i++) {
           codeContents.push("");
         }
         lineNumber = blockLine + b.split("\n").length - 1;
 
-        if (n) {
-          if (n[2]) {
-            next.unshift(MD.mk_block(n[2]));
+        if (endFound !== -1) {
+          if (trailingCode) {
+            next.unshift(MD.mk_block(trailingCode));
           }
 
-          codeContents.push(n[1].replace(/\s+$/, ""));
+          codeContents.push(leadingCode.replace(/\s+$/, ""));
           break;
         } else {
           codeContents.push(b);
         }
       }
+
 
       result.push(['p', ['pre', ['code', {'class': m[1] || 'lang-auto'}, codeContents.join("\n") ]]]);
       return result;
