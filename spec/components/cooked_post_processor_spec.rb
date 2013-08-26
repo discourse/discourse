@@ -123,6 +123,7 @@ describe CookedPostProcessor do
       let(:cpp) { CookedPostProcessor.new(post) }
 
       before do
+        SiteSetting.stubs(:max_image_height).returns(2000)
         SiteSetting.stubs(:create_thumbnails?).returns(true)
         Upload.expects(:get_from_url).returns(upload)
         cpp.stubs(:associate_to_post)
