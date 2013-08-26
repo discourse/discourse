@@ -952,6 +952,15 @@ en:
 
         You can now create new replies and topics again.
 
+    pending_users_reminder:
+      subject_template:
+        one: "There is 1 unapproved user"
+        other: "There are %{count} unapproved users"
+      text_body_template: |
+        There are new users waiting to be approved.
+
+        [Please review them in the admin section](/admin/users/list/pending).
+
   unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
 
   user_notifications:
