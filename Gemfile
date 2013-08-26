@@ -99,6 +99,7 @@ gem 'omniauth-github'
 gem 'omniauth-oauth2', require: false
 gem 'omniauth-browserid', git: 'https://github.com/callahad/omniauth-browserid.git', branch: 'observer_api'
 gem 'omniauth-cas'
+gem 'omniauth-sso-cookie', git: 'https://github.com/cdman/omniauth-sso-cookie.git'
 gem 'oj'
 gem 'pg'
 gem 'rake'

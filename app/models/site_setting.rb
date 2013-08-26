@@ -175,6 +175,12 @@ class SiteSetting < ActiveRecord::Base
 
   client_setting(:enable_persona_logins, false)
 
+  client_setting(:enable_ssocookie_logins, false)
+  setting(:sso_cookie_name, '')
+  setting(:sso_encryption_key, '')
+  setting(:sso_hmac_key, '')
+  setting(:sso_login_url, '')
+
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
 

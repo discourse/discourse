@@ -129,5 +129,8 @@ module Discourse
     config.after_initialize do
       OpenID::Util.logger = Rails.logger
     end
+
+    require 'middleware/sso_cookie_sessionkiller'
+    config.middleware.insert_after ActionDispatch::RemoteIp, Middleware::SsoCookieSessionkiller
   end
 end

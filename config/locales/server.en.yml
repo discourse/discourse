@@ -566,6 +566,12 @@ en:
 
     enable_persona_logins: "Enable email-based authentication with Mozilla Persona"
 
+    enable_ssocookie_logins: "Enable SSO login using a shared, encrypted cookie"
+    sso_cookie_name: "Name of the SSO cookie"
+    sso_encryption_key: "SSO cookie encryption key"
+    sso_hmac_key: "SSO cookie HMAC key"
+    sso_login_url: "URL which sets the SSO cookie and redirects back"
+
     allow_import: "Allow import, which can replace ALL site data; leave false unless you plan to do data imports"
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"

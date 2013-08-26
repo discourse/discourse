@@ -11,7 +11,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", trusted: true),
     Auth::GithubAuthenticator.new,
     Auth::TwitterAuthenticator.new,
-    Auth::PersonaAuthenticator.new
+    Auth::PersonaAuthenticator.new,
   ]
 
   skip_before_filter :redirect_to_login_if_required
