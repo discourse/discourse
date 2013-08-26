@@ -167,7 +167,7 @@ class UsersController < ApplicationController
     if user.save
       activator = UserActivator.new(user, session, cookies)
       message = activator.activation_message
-      create_third_party_auth_records(user, auth) if auth.present?
+      create_third_party_auth_records(user, auth)
 
       # Clear authentication session.
       session[:authentication] = nil
@@ -408,6 +408,8 @@ class UsersController < ApplicationController
     end
 
     def create_third_party_auth_records(user, auth)
+      return unless auth.present?
+
       if twitter_auth?(auth)
         TwitterUserInfo.create(
           user_id: user.id,

@@ -490,6 +490,21 @@ describe UsersController do
       include_examples 'failed signup'
     end
 
+    context 'when nickname is unavailable in DiscourseHub' do
+      before do
+        SiteSetting.stubs(:call_discourse_hub?).returns(true)
+        DiscourseHub.stubs(:register_nickname).raises(DiscourseHub::NicknameUnavailable)
+      end
+      let(:create_params) {{
+        name: @user.name,
+        username: @user.username,
+        password: 'strongpassword',
+        email: @user.email
+      }}
+
+      include_examples 'failed signup'
+    end
+
     context 'when an Exception is raised' do
 
       [ ActiveRecord::StatementInvalid,
