@@ -30,18 +30,16 @@ Discourse.ShareView = Discourse.View.extend({
       window.setTimeout(function() {
         $linkInput.select().focus();
       }, 160);
-    } else {
-      $('#share-link').css('top', 0);
     }
   }.observes('controller.link'),
 
   didInsertElement: function() {
-
     var shareView = this;
     $('html').on('mousedown.outside-share-link', function(e) {
       // Use mousedown instead of click so this event is handled before routing occurs when a
       // link is clicked (which is a click event) while the share dialog is showing.
       if (shareView.$().has(e.target).length !== 0) { return; }
+
       shareView.get('controller').close();
       return true;
     });

@@ -6,16 +6,15 @@
 #share-link {
   position: absolute;
   left: 20px;
-  top: 0;
   z-index: 990;
   @include border-radius-all(3px);
   @include box-shadow(1px 1px 5px $darkish_gray);
   background-color: $light_gray;
   padding: 3px 7px 6px 7px;
   width: 300px;
-  @include fades-in(0.15s);
+  display: none;
   &.visible {
-    @include visible;
+    display: block;
   }
   input[type=text] {
     width: 96%;
