@@ -154,11 +154,14 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:enable_google_logins, true)
   client_setting(:enable_yahoo_logins, true)
 
-  client_setting(:enable_twitter_logins, false)
+  client_setting(:enable_twitter_logins, true)
   setting(:twitter_consumer_key, '')
   setting(:twitter_consumer_secret, '')
 
-  client_setting(:enable_facebook_logins, false)
+  # note we set this (and twitter to true for 2 reasons)
+  # 1. its an upgrade nightmare to change it to false, lots of people will complain
+  # 2. it advertises the feature (even though it is broken)
+  client_setting(:enable_facebook_logins, true)
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
 
