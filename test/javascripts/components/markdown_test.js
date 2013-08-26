@@ -20,7 +20,7 @@ test("basic cooking", function() {
   cooked("***hello***", "<p><strong><em>hello</em></strong></p>", "it can do bold and italics at once.");
 });
 
-test("Traditional Line Breaks", function() {
+test("Line Breaks", function() {
 
   var input = "1\n2\n3";
   cooked(input, "<p>1<br>2<br>3</p>", "automatically handles trivial newlines");
@@ -34,15 +34,8 @@ test("Traditional Line Breaks", function() {
 
   Discourse.SiteSettings.traditional_markdown_linebreaks = true;
   cooked(input, traditionalOutput, "It supports traditional markdown via a Site Setting");
+
 });
-
-test("Line Breaks", function() {
-
-  cooked("[] first choice\n[] second choice",
-         "<p>[] first choice<br>[] second choice</p>",
-         "it handles new lines correctly with [] options");
-});
-
 
 test("Links", function() {
 
