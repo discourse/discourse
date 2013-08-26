@@ -15,9 +15,13 @@
 
   <ul class='action-list nav-stacked side-nav'>
     {{#if privateMessageView}}
-      {{#each stat in statsPmsOnly}}
-        {{activityFilter content=stat user=model}}
-      {{/each}}
+      <li {{bindAttr class=":noGlyph privateMessagesActive:active"}}>
+        {{#linkTo 'userPrivateMessages.index' model}}{{i18n user.private_messages}}{{/linkTo}}
+      </li>
+      <li {{bindAttr class=":noGlyph privateMessagesSentActive:active"}}>
+        {{#linkTo 'userPrivateMessages.sent' model}}{{i18n user.private_messages_sent}}{{/linkTo}}
+      </li>
+
     {{else}}
       {{activityFilter count=statsCountNonPM user=model}}
       {{#each stat in statsExcludingPms}}

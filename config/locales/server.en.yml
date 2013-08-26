@@ -289,7 +289,7 @@ en:
 
   flagging:
     you_must_edit: '<p>Your post was flagged by the community. Please see your private messages.</p>'
-    user_must_edit: '<p>Flagged content hidden.</p>'
+    user_must_edit: '<p>Flagged content temporarily hidden.</p>'
 
   archetypes:
     regular:
@@ -452,7 +452,7 @@ en:
     max_topic_title_length: "Maximum topic title length in characters"
     min_private_message_title_length: "Minimum title length for a private message in characters"
     min_search_term_length: "Minimum search term length in characters"
-    allow_uncategorized_topics: "Allow topics to be created without a category"
+    allow_uncategorized_topics: "Allow topics to be created without a category. NOTE: After changing this setting, all clients will need to reload their browsers for the change to take effect."
     allow_duplicate_topic_titles: "Allow topics with identical titles"
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     enforce_global_nicknames: "Enforce global nickname uniqueness (WARNING: only change this during initial setup)"
@@ -470,6 +470,7 @@ en:
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view edit history."
     delete_removed_posts_after: "Number of hours after which posts removed by the author will be deleted."
     max_image_width: "Maximum allowed width of images in a post"
+    max_image_height: "Maximum allowed height of images in a post"
     category_featured_topics: "Number of topics displayed per category in the /categories page"
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
@@ -671,7 +672,9 @@ en:
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     username_change_period: "The number of days after registration that accounts can change their username."
 
-    allow_uploaded_avatars: "Allow support for uploaded avatars"
+    allow_uploaded_avatars: "Allow users to upload their custom avatars"
+    allow_animated_avatars: "Allow users to use animated gif for avatars"
+    default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
@@ -1021,7 +1024,7 @@ en:
       new_activity: "New activity on your topics and posts:"
       top_topics: "Recent posts the community enjoyed:"
       other_new_topics: "Other New Topics:"
-      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while.\nTo turn it off or change your email preferences, %{unsubscribe_link}."
+      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while.\nTo unsubscribe or change your email preferences, %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"

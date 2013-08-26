@@ -1,0 +1,9 @@
+
+.btn-social.ssocookie {
+  background: #354b59;
+}
+
+.btn-social.ssocookie:before {
+  content: "U";
+}
+

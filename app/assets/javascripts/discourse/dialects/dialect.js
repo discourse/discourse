@@ -5,7 +5,7 @@
 
   To extend the dialect, you can register a handler, and you will receive an `event` object
   with a handle to the markdown `Dialect` from Markdown.js that we are defining. Here's
-  a sample dialect that replaces all occurances of "evil trout" with a link that says
+  a sample dialect that replaces all occurrences of "evil trout" with a link that says
   "EVIL TROUT IS AWESOME":
 
   ```javascript

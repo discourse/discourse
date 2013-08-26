@@ -1,44 +1,27 @@
 require 'spec_helper'
-require_dependency 'plugin'
+require_dependency 'plugin/instance'
 
-describe Plugin do
-  context "parse" do
-    it "correctly parses plugin info" do
-      plugin = Plugin.parse <<TEXT
-# name: plugin-name
-# about: about: my plugin
-# version: 0.1
-# authors: Frank Zappa
-
-some_ruby
-TEXT
-
-      plugin.name.should == "plugin-name"
-      plugin.about.should == "about: my plugin"
-      plugin.version.should == "0.1"
-      plugin.authors.should == "Frank Zappa"
-    end
-  end
+describe Plugin::Instance do
 
   context "find_all" do
     it "can find plugins correctly" do
-      plugins = Plugin.find_all("#{Rails.root}/spec/fixtures/plugins")
+      plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
       plugins.count.should == 1
-      plugin = plugins[0]
+      plugin =plugins[0]
 
       plugin.name.should == "plugin-name"
       plugin.path.should == "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
     end
 
     it "does not blow up on missing directory" do
-      plugins = Plugin.find_all("#{Rails.root}/frank_zappa")
+      plugins = Plugin::Instance.find_all("#{Rails.root}/frank_zappa")
       plugins.count.should == 0
     end
   end
 
   context "activate!" do
     it "can activate plugins correctly" do
-      plugin = Plugin.new
+      plugin = Plugin::Instance.new
       plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
       junk_file = "#{plugin.auto_generated_path}/junk"
 
@@ -48,8 +31,7 @@ TEXT
 
       plugin.auth_providers.count.should == 1
       auth_provider = plugin.auth_providers[0]
-      auth_provider.options.should == {:identifier => 'https://zappa.com'}
-      auth_provider.type.should == :open_id
+      auth_provider.authenticator.name.should == 'ubuntu'
 
       # calls ensure_assets! make sure they are there
       plugin.assets.count.should == 2

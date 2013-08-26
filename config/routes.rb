@@ -138,11 +138,9 @@ Discourse::Application.routes.draw do
   get 'users/:username/preferences/about-me' => 'users#preferences', constraints: {username: USERNAME_ROUTE_FORMAT}
   get 'users/:username/preferences/username' => 'users#preferences', constraints: {username: USERNAME_ROUTE_FORMAT}
   put 'users/:username/preferences/username' => 'users#username', constraints: {username: USERNAME_ROUTE_FORMAT}
-  # LEGACY ROUTE
-  get 'users/:username/avatar(/:size)' => 'users#avatar', constraints: {username: USERNAME_ROUTE_FORMAT}
-  get 'users/:username/preferences/avatar' => 'users#preferences', constraints: {username: USERNAME_ROUTE_FORMAT}
-  put 'users/:username/preferences/avatar/toggle' => 'users#toggle_avatar', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'users/:username/avatar(/:size)' => 'users#avatar', constraints: {username: USERNAME_ROUTE_FORMAT} # LEGACY ROUTE
   post 'users/:username/preferences/avatar' => 'users#upload_avatar', constraints: {username: USERNAME_ROUTE_FORMAT}
+  put 'users/:username/preferences/avatar/toggle' => 'users#toggle_avatar', constraints: {username: USERNAME_ROUTE_FORMAT}
   get 'users/:username/invited' => 'users#invited', constraints: {username: USERNAME_ROUTE_FORMAT}
   post 'users/:username/send_activation_email' => 'users#send_activation_email', constraints: {username: USERNAME_ROUTE_FORMAT}
   get 'users/:username/activity' => 'users#show', constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -216,6 +214,8 @@ Discourse::Application.routes.draw do
   post 'topics/timings'
   get 'topics/similar_to'
   get 'topics/created-by/:username' => 'list#topics_by', as: 'topics_by', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'topics/private-messages/:username' => 'list#private_messages', as: 'topics_private_messages', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'topics/private-messages-sent/:username' => 'list#private_messages_sent', as: 'topics_private_messages_sent', constraints: {username: USERNAME_ROUTE_FORMAT}
 
   # Topic routes
   get 't/:slug/:topic_id/wordpress' => 'topics#wordpress', constraints: {topic_id: /\d+/}

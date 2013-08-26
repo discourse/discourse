@@ -1162,10 +1162,19 @@ describe Guardian do
 
       let(:target_user) { build(:user, created_at: 4.days.ago) }
 
-      include_examples "staff can always change usernames"
+      context 'with no posts' do
+        include_examples "staff can always change usernames"
+        it "is true for the user to change his own username" do
+          Guardian.new(target_user).can_edit_username?(target_user).should be_true
+        end
+      end
 
-      it "is false for the user to change his own username" do
-        Guardian.new(target_user).can_edit_username?(target_user).should be_false
+      context 'with posts' do
+        before { target_user.stubs(:post_count).returns(1) }
+        include_examples "staff can always change usernames"
+        it "is false for the user to change his own username" do
+          Guardian.new(target_user).can_edit_username?(target_user).should be_false
+        end
       end
     end
   end
