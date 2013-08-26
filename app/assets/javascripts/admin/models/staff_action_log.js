@@ -16,7 +16,7 @@ Discourse.StaffActionLog = Discourse.Model.extend({
   formattedDetails: function() {
     var formatted = "";
     formatted += this.format('email', 'email');
-    formatted += this.format('admin.logs.staff_actions.ip_address', 'ip_address');
+    formatted += this.format('admin.logs.ip_address', 'ip_address');
     if (!this.get('useCustomModalForDetails')) {
       formatted += this.format('admin.logs.staff_actions.new_value', 'new_value');
       formatted += this.format('admin.logs.staff_actions.previous_value', 'previous_value');

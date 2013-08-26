@@ -46,6 +46,14 @@ describe AdminUserIndexQuery do
       expect(query.find_users.count).to eq(1)
     end
 
+    context 'and a banned pending user' do
+      let!(:banned_user) { Fabricate(:user, approved: false, banned_at: 1.hour.ago, banned_till: 20.years.from_now) }
+      it "doesn't return the banned user" do
+        query = ::AdminUserIndexQuery.new({ query: 'pending' })
+        expect(query.find_users.count).to eq(1)
+      end
+    end
+
   end
 
   describe "with an admin user" do

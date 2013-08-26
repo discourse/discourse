@@ -1,0 +1,2 @@
+(function(){Discourse.LoginMethod.register(Discourse.LoginMethod.create({name: 'ssocookie', titleOverride: 'with Udacity', messageOverride: 'Authenticating with Udacity (make sure pop up blockers are not enabled)', frameWidth: '1000', frameHeight: '800'}));
+})();

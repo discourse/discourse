@@ -2,7 +2,7 @@
   <div>
     <div>
       <input type="radio" id="avatar" name="avatar" value="gravatar" {{action toggleUseUploadedAvatar false}}>
-      <label class="radio" for="avatar">{{avatar controller imageSize="large" template="gravatar_template"}} {{{i18n user.change_avatar.gravatar}}} {{currentUser.email}}</label>
+      <label class="radio" for="avatar">{{avatar controller imageSize="large" template="gravatar_template"}} {{{i18n user.change_avatar.gravatar}}} {{email}}</label>
       <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn"><i class="icon-pencil"></i></a>
     </div>
     <div>
@@ -20,6 +20,9 @@
       <input type="file" id="avatar-input" accept="image/*" style="display:none">
       {{#if view.uploading}}
         <span>{{i18n upload_selector.uploading}} {{view.uploadProgress}}%</span>
+      {{/if}}
+      {{#if view.imageIsNotASquare}}
+        <div class="warning">{{i18n user.change_avatar.image_is_not_a_square}}</div>
       {{/if}}
     </div>
   </div>

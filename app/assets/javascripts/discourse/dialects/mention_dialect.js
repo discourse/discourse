@@ -12,58 +12,37 @@ Discourse.Dialect.on("register", function(event) {
       MD = event.MD;
 
   /**
-    Support for github style code blocks
+    Parses out @username mentions.
 
-    @method mentionSupport
-    @param {Markdown.Block} block the block to examine
-    @param {Array} next the next blocks in the sequence
-    @return {Array} the JsonML containing the markup or undefined if nothing changed.
+    @method parseMentions
+    @param {String} text the text match
+    @param {Array} match the match found
+    @param {Array} prev the previous jsonML
+    @return {Array} an array containing how many chars we've replaced and the jsonML content for it.
     @namespace Discourse.Dialect
   **/
-  dialect.block['mentions'] = function mentionSupport(block, next) {
-    var pattern = /(\W|^)(@[A-Za-z0-9][A-Za-z0-9_]{2,14})(?=(\W|$))/gm,
-        result,
-        remaining = block,
-        m,
-        mentionLookup = dialect.options.mentionLookup || Discourse.Mention.lookupCache;
+  dialect.inline['@'] = function parseMentions(text, match, prev) {
 
-    if (block.match(/^ {3}/)) { return; }
-    if (block.match(/^\>/)) { return; }
+    // We only care about mentions on word boundaries
+    if (prev && (prev.length > 0)) {
+      var last = prev[prev.length - 1];
+      if (typeof last === "string" && (!last.match(/\W$/))) { return; }
+    }
 
-    var pushIt = function(p) { result.push(p) };
+    var pattern = /^(@[A-Za-z0-9][A-Za-z0-9_]{2,14})(?=(\W|$))/m,
+        m = pattern.exec(text);
 
-    while (m = pattern.exec(remaining)) {
-      result = result || ['p'];
-
-      var username = m[2],
-          usernameIndex = remaining.indexOf(username),
-          before = remaining.slice(0, usernameIndex);
-
-      pattern.lastIndex = 0;
-      remaining = remaining.slice(usernameIndex + username.length);
-
-      if (before) {
-        this.processInline(before).forEach(pushIt);
-      }
+    if (m) {
+      var username = m[1],
+          mentionLookup = dialect.options.mentionLookup || Discourse.Mention.lookupCache;
 
       if (mentionLookup(username.substr(1))) {
-        result.push(['a', {'class': 'mention', href: Discourse.getURL("/users/") + username.substr(1).toLowerCase()}, username]);
+        return [username.length, ['a', {'class': 'mention', href: Discourse.getURL("/users/") + username.substr(1).toLowerCase()}, username]];
       } else {
-        result.push(['span', {'class': 'mention'}, username]);
-      }
-
-      if (remaining && remaining.match(/\n/)) {
-        next.unshift(MD.mk_block(remaining));
-        return [result];
+        return [username.length, ['span', {'class': 'mention'}, username]];
       }
     }
 
-    if (result) {
-      if (remaining.length) {
-        this.processInline(remaining).forEach(pushIt);
-      }
-      return [result];
-    }
   };
 
 });

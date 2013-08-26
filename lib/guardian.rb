@@ -273,7 +273,7 @@ class Guardian
   end
 
   def can_edit_username?(user)
-    is_staff? || (is_me?(user) && user.created_at > SiteSetting.username_change_period.days.ago)
+    is_staff? || (is_me?(user) && (user.post_count == 0 || user.created_at > SiteSetting.username_change_period.days.ago))
   end
 
   # Deleting Methods

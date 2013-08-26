@@ -81,10 +81,17 @@ Discourse.SiteSetting = Discourse.Model.extend({
   },
 
   validValues: function() {
-    var vals;
+    var vals, setting;
     vals = Em.A();
+    setting = this;
     _.each(this.get('valid_values'), function(v) {
-      if(v.length > 0) vals.addObject({ name: v, value: v });
+      if (v.name && v.name.length > 0) {
+        if (setting.translate_names) {
+          vals.addObject({name: I18n.t(v.name), value: v.value});
+        } else {
+          vals.addObject(v);
+        }
+      }
     });
     return vals;
   }.property('valid_values'),

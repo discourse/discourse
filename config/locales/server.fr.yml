@@ -446,6 +446,7 @@ fr:
     crawl_images: "permettre la récupération des images provenant de sources tierces"
     ninja_edit_window: "temps d'édition avant de sauvegarder une nouvelle version, en secondes."
     max_image_width: "largeur maximale des images d'un message"
+    max_image_height: "hauteur maximale des images d'un message"
     category_featured_topics: "nombre de discussions affichées dans la liste par catégories"
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents) Modifier ceci requiert une mise à jour de tout votre markdown (<code>rake posts:rebake</code>)"
     exclude_rel_nofollow_domains: "Une liste séparée par des virgules contenant les noms de domaines de premier niveau pour lesquels il faut ajouter un attribut nofollow (exemple.com va automatiquement fonctionner aussi avec sous.domaine.exemple.com)"

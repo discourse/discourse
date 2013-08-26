@@ -49,6 +49,9 @@ Discourse.Dialect.on("parseNode", function(event) {
     return;
   }
 
+  // We don't onebox mentions
+  if (node[1]['class'] === 'mention') { return; }
+
   // Don't onebox links within a list
   for (var i=0; i<path.length; i++) {
     if (path[i][0] === 'li') { return; }

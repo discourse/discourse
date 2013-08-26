@@ -43,9 +43,9 @@ class Category < ActiveRecord::Base
   scope :secured, ->(guardian = nil) {
     ids = guardian.secure_category_ids if guardian
     if ids.present?
-      where("NOT categories.read_restricted or categories.id in (:cats)", cats: ids)
+      where("NOT categories.read_restricted or categories.id in (:cats)", cats: ids).references(:categories)
     else
-      where("NOT categories.read_restricted")
+      where("NOT categories.read_restricted").references(:categories)
     end
   }
 
@@ -65,7 +65,7 @@ class Category < ActiveRecord::Base
 
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian && guardian.is_staff?
-      scoped
+      rails4? ? all : scoped
     else
       permission_types = permission_types.map{ |permission_type|
         CategoryGroup.permission_types[permission_type]

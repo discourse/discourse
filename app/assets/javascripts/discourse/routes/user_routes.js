@@ -159,13 +159,6 @@ Discourse.UserActivityStreamRoute = Discourse.Route.extend({
   });
 });
 
-Discourse.UserPrivateMessagesIndexRoute = Discourse.UserActivityStreamRoute.extend({
-  userActionType: Discourse.UserAction.TYPES.messages_received
-});
-Discourse.UserPrivateMessagesSentRoute = Discourse.UserActivityStreamRoute.extend({
-  userActionType: Discourse.UserAction.TYPES.messages_sent
-});
-
 Discourse.UserTopicListRoute = Discourse.Route.extend({
 
   renderTemplate: function() {
@@ -178,12 +171,41 @@ Discourse.UserTopicListRoute = Discourse.Route.extend({
   }
 });
 
+Discourse.UserPrivateMessagesIndexRoute = Discourse.UserTopicListRoute.extend({
+  userActionType: Discourse.UserAction.TYPES.messages_received,
+
+  model: function() {
+    return Discourse.TopicList.find('topics/private-messages/' + this.modelFor('user').get('username_lower'));
+  },
+
+  setupController: function(controller, model) {
+    this._super(controller, model);
+    controller.set('hideCategories', true);
+    this.controllerFor('userActivity').set('pmView', 'index');
+  }
+
+});
+Discourse.UserPrivateMessagesSentRoute = Discourse.UserTopicListRoute.extend({
+  userActionType: Discourse.UserAction.TYPES.messages_sent,
+
+  model: function() {
+    return Discourse.TopicList.find('topics/private-messages-sent/' + this.modelFor('user').get('username_lower'));
+  },
+
+  setupController: function(controller, model) {
+    this._super(controller, model);
+    controller.set('hideCategories', true);
+    this.controllerFor('userActivity').set('pmView', 'sent');
+  }
+});
+
 Discourse.UserActivityTopicsRoute = Discourse.UserTopicListRoute.extend({
   userActionType: Discourse.UserAction.TYPES.topics,
 
   model: function() {
     return Discourse.TopicList.find('topics/created-by/' + this.modelFor('user').get('username_lower'));
   }
+
 });
 
 Discourse.UserActivityFavoritesRoute = Discourse.UserTopicListRoute.extend({

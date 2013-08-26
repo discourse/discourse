@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
   after_initialize :add_trust_level
+  after_initialize :set_default_email_digest
 
   after_save :update_tracked_topics
 
@@ -68,6 +69,7 @@ class User < ActiveRecord::Base
 
   scope :blocked, -> { where(blocked: true) } # no index
   scope :banned, -> { where('banned_till IS NOT NULL AND banned_till > ?', Time.zone.now) } # no index
+  scope :not_banned, -> { where('banned_till IS NULL') }
 
   module NewTopicDuration
     ALWAYS = -1
@@ -127,23 +129,18 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_username_or_email(username_or_email)
-    lower_user = username_or_email.downcase
-    lower_email = Email.downcase(username_or_email)
-
-    users =
-      if username_or_email.include?('@')
-        User.where(email: lower_email)
-      else
-        User.where(username_lower: lower_user)
-      end
-        .to_a
-
-    if users.count > 1
-      raise Discourse::TooManyMatches
-    elsif users.count == 1
-      users[0]
+    conditions = if username_or_email.include?('@')
+      { email: Email.downcase(username_or_email) }
     else
-      nil
+      { username_lower: username_or_email.downcase }
+    end
+
+    users = User.where(conditions).to_a
+
+    if users.size > 1
+      raise Discourse::TooManyMatches
+    else
+      users.first
     end
   end
 
@@ -507,7 +504,7 @@ class User < ActiveRecord::Base
   end
 
   def secure_category_ids
-    cats = self.staff? ? Category.select(:id).where(read_restricted: true) : secure_categories.select('categories.id')
+    cats = self.staff? ? Category.select(:id).where(read_restricted: true) : secure_categories.select('categories.id').references(:categories)
     cats.map { |c| c.id }.sort
   end
 
@@ -600,6 +597,17 @@ class User < ActiveRecord::Base
       user_id: id,
       email_token: email_tokens.first.token
     )
+  end
+
+  def set_default_email_digest
+    if has_attribute?(:email_digests) && self.email_digests.nil?
+      if SiteSetting.default_digest_email_frequency.blank?
+        self.email_digests = false
+      else
+        self.email_digests = true
+        self.digest_after_days ||= SiteSetting.default_digest_email_frequency.to_i if has_attribute?(:digest_after_days)
+      end
+    end
   end
 
   private
