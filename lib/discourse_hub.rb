@@ -3,7 +3,24 @@ require_dependency 'version'
 
 module DiscourseHub
 
-  class NicknameUnavailable < RuntimeError; end
+  class NicknameUnavailable < RuntimeError
+    def initialize(nickname)
+      @nickname = nickname
+    end
+
+    def response_message
+      {
+        success: false,
+        message: I18n.t(
+          "login.errors",
+          errors:I18n.t(
+            "login.not_available", suggestion: UserNameSuggester.suggest(@nickname)
+          )
+        )
+      }
+    end 
+
+  end
 
   def self.nickname_available?(nickname)
     json = get('/users/nickname_available', {nickname: nickname})
@@ -20,7 +37,7 @@ module DiscourseHub
     if json.has_key?('success')
       true
     else
-      raise NicknameUnavailable  # TODO: report ALL the errors
+      raise NicknameUnavailable.new(nickname)  # TODO: report ALL the errors
     end
   end
 
@@ -34,7 +51,7 @@ module DiscourseHub
     if json.has_key?('success')
       true
     else
-      raise NicknameUnavailable  # TODO: report ALL the errors
+      raise NicknameUnavailable.new(new_nickname)  # TODO: report ALL the errors
     end
   end
 

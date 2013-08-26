@@ -1,65 +1,41 @@
 require "spec_helper"
 
+require "auth/authenticator"
+require_dependency "auth/result"
+
 describe "users/omniauth_callbacks/complete.html.erb" do
-  it "renders facebook data " do
-    assign(:data, {username: "username", :auth_provider=> "Facebook", :awaiting_activation=>true})
+
+  let :rendered_data do
+    returned = JSON.parse(rendered.match(/window.opener.Discourse.authenticationComplete\((.*)\)/)[1])
+  end
+
+  it "renders auth info" do
+    result = Auth::Result.new
+    result.user = User.new
+
+    assign(:data, result)
 
     render
 
-    rendered_data = JSON.parse(rendered.match(/window.opener.Discourse.authenticationComplete\((.*)\)/)[1])
-
-    rendered_data["username"].should eq("username")
-    rendered_data["auth_provider"].should eq("Facebook")
-    rendered_data["awaiting_activation"].should eq(true)
+    rendered_data["authenticated"].should eq(false)
+    rendered_data["awaiting_activation"].should eq(false)
+    rendered_data["awaiting_approval"].should eq(false)
   end
 
   it "renders cas data " do
-    assign(:data, {username: "username", :auth_provider=> "CAS", :awaiting_activation=>true})
+    result = Auth::Result.new
+
+    result.email = "xxx@xxx.com"
+    result.authenticator_name = "CAS"
+
+    assign(:data, result)
 
     render
 
-    rendered_data = JSON.parse(rendered.match(/window.opener.Discourse.authenticationComplete\((.*)\)/)[1])
-
-    rendered_data["username"].should eq("username")
-    rendered_data["auth_provider"].should eq("CAS")
-    rendered_data["awaiting_activation"].should eq(true)
-  end
-
-  it "renders twitter data " do
-    assign(:data, {username: "username", :auth_provider=>"Twitter", :awaiting_activation=>true})
-
-    render
-
-    rendered_data = JSON.parse(rendered.match(/window.opener.Discourse.authenticationComplete\((.*)\)/)[1])
-
-    rendered_data["username"].should eq("username")
-    rendered_data["auth_provider"].should eq("Twitter")
-    rendered_data["awaiting_activation"].should eq(true)
-  end
-
-
-  it "renders openid data " do
-    assign(:data, {username: "username", :auth_provider=>"OpenId", :awaiting_activation=>true})
-
-    render
-
-    rendered_data = JSON.parse(rendered.match(/window.opener.Discourse.authenticationComplete\((.*)\)/)[1])
-
-    rendered_data["username"].should eq("username")
-    rendered_data["auth_provider"].should eq("OpenId")
-    rendered_data["awaiting_activation"].should eq(true)
-  end
-
-  it "renders github data " do
-    assign(:data, {username: "username", :auth_provider=>"Github", :awaiting_activation=>true})
-
-    render
-
-    rendered_data = JSON.parse(rendered.match(/window.opener.Discourse.authenticationComplete\((.*)\)/)[1])
-
-    rendered_data["username"].should eq("username")
-    rendered_data["auth_provider"].should eq("Github")
-    rendered_data["awaiting_activation"].should eq(true)
+    rendered_data["email"].should eq(result.email)
+    # TODO this is a bit weird, the upcasing is confusing,
+    #  clean it up throughout
+    rendered_data["auth_provider"].should eq("Cas")
   end
 
 end

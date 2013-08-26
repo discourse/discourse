@@ -8,6 +8,12 @@ describe UserEmailObserver do
     let!(:notification) { Fabricate(:notification, user: user) }
 
     it "enqueues a job for the email" do
+      Jobs.expects(:enqueue_in).with(0, :user_email, type: :user_mentioned, user_id: notification.user_id, notification_id: notification.id)
+      UserEmailObserver.send(:new).after_commit(notification)
+    end
+
+    it "enqueue a delayed job for users that are online" do
+      user.last_seen_at = 1.minute.ago
       Jobs.expects(:enqueue_in).with(SiteSetting.email_time_window_mins.minutes, :user_email, type: :user_mentioned, user_id: notification.user_id, notification_id: notification.id)
       UserEmailObserver.send(:new).after_commit(notification)
     end
@@ -26,7 +32,7 @@ describe UserEmailObserver do
     let!(:notification) { Fabricate(:notification, user: user, notification_type: 9) }
 
     it "enqueues a job for the email" do
-      Jobs.expects(:enqueue_in).with(SiteSetting.email_time_window_mins.minutes, :user_email, type: :user_posted, user_id: notification.user_id, notification_id: notification.id)
+      Jobs.expects(:enqueue_in).with(0, :user_email, type: :user_posted, user_id: notification.user_id, notification_id: notification.id)
       UserEmailObserver.send(:new).after_commit(notification)
     end
 
@@ -44,7 +50,7 @@ describe UserEmailObserver do
     let!(:notification) { Fabricate(:notification, user: user, notification_type: 2) }
 
     it "enqueues a job for the email" do
-      Jobs.expects(:enqueue_in).with(SiteSetting.email_time_window_mins.minutes, :user_email, type: :user_replied, user_id: notification.user_id, notification_id: notification.id)
+      Jobs.expects(:enqueue_in).with(0, :user_email, type: :user_replied, user_id: notification.user_id, notification_id: notification.id)
       UserEmailObserver.send(:new).after_commit(notification)
     end
 
@@ -62,13 +68,13 @@ describe UserEmailObserver do
     let!(:notification) { Fabricate(:notification, user: user, notification_type: 3) }
 
     it "enqueues a job for the email" do
-      Jobs.expects(:enqueue_in).with(SiteSetting.email_time_window_mins.minutes, :user_email, type: :user_quoted, user_id: notification.user_id, notification_id: notification.id)
+      Jobs.expects(:enqueue_in).with(0, :user_email, type: :user_quoted, user_id: notification.user_id, notification_id: notification.id)
       UserEmailObserver.send(:new).after_commit(notification)
     end
 
     it "doesn't enqueue an email if the user has mention emails disabled" do
       user.expects(:email_direct?).returns(false)
-      Jobs.expects(:enqueue_in).with(SiteSetting.email_time_window_mins.minutes, :user_email, has_entry(type: :user_quoted)).never
+      Jobs.expects(:enqueue_in).with(0, :user_email, has_entry(type: :user_quoted)).never
       UserEmailObserver.send(:new).after_commit(notification)
     end
 
@@ -80,13 +86,13 @@ describe UserEmailObserver do
     let!(:notification) { Fabricate(:notification, user: user, notification_type: 7) }
 
     it "enqueues a job for the email" do
-      Jobs.expects(:enqueue_in).with(SiteSetting.email_time_window_mins.minutes, :user_email, type: :user_invited_to_private_message, user_id: notification.user_id, notification_id: notification.id)
+      Jobs.expects(:enqueue_in).with(0, :user_email, type: :user_invited_to_private_message, user_id: notification.user_id, notification_id: notification.id)
       UserEmailObserver.send(:new).after_commit(notification)
     end
 
     it "doesn't enqueue an email if the user has mention emails disabled" do
       user.expects(:email_direct?).returns(false)
-      Jobs.expects(:enqueue_in).with(SiteSetting.email_time_window_mins.minutes, :user_email, has_entry(type: :user_invited_to_private_message)).never
+      Jobs.expects(:enqueue_in).with(0, :user_email, has_entry(type: :user_invited_to_private_message)).never
       UserEmailObserver.send(:new).after_commit(notification)
     end
 

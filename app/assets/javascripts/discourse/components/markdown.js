@@ -100,7 +100,7 @@ Discourse.Markdown = {
         // Linebreaks
         var linebreaks = opts.traditional_markdown_linebreaks || Discourse.SiteSettings.traditional_markdown_linebreaks;
         if (!linebreaks) {
-          text = text.replace(/(^[\w<][^\n]*\n+)/gim, function(t) {
+          text = text.replace(/(^[\w<\[][^\n]*\n+)/gim, function(t) {
             if (t.match(/\n{2}/gim)) return t;
             return t.replace("\n", "  \n");
           });

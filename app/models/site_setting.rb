@@ -158,6 +158,9 @@ class SiteSetting < ActiveRecord::Base
   setting(:twitter_consumer_key, '')
   setting(:twitter_consumer_secret, '')
 
+  # note we set this (and twitter to true for 2 reasons)
+  # 1. its an upgrade nightmare to change it to false, lots of people will complain
+  # 2. it advertises the feature (even though it is broken)
   client_setting(:enable_facebook_logins, true)
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
