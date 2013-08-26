@@ -6,6 +6,7 @@
 #share-link {
   position: absolute;
   left: 20px;
+  top: 0;
   z-index: 990;
   @include border-radius-all(3px);
   @include box-shadow(1px 1px 5px $darkish_gray);
