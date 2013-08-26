@@ -14,10 +14,6 @@ class Auth::Authenticator
     # not required
   end
 
-  def lookup_user(user_info, email)
-    user_info.try(:user) || User.where(email: email).first
-  end
-
   # hook used for registering omniauth middleware,
   #  without this we can not authenticate
   def register_middleware(omniauth)
