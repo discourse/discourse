@@ -115,10 +115,10 @@ class Search
     def category_search
       categories = Category.includes(:category_search_data)
                            .where("category_search_data.search_data @@ #{ts_query}")
+                           .references(:category_search_data)
                            .order("topics_month DESC")
                            .secured(@guardian)
                            .limit(@limit)
-                           .references(:category_search_data)
 
       categories.each do |c|
         @results.add_result(SearchResult.from_category(c))
@@ -164,9 +164,9 @@ class Search
                    .order("topics.bumped_at DESC")
 
       if secure_category_ids.present?
-        posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids)
+        posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids).references(:categories)
       else
-        posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)")
+        posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
       end
       posts.limit(limit)
     end

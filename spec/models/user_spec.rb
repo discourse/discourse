@@ -913,7 +913,7 @@ describe User do
 
     context 'when multiple users are found' do
       it 'raises an exception' do
-        user_query = stub(all: [stub, stub])
+        user_query = stub(to_a: [stub, stub])
         User.stubs(:where).with(username_lower: 'bob').returns(user_query)
 
         expect { User.find_by_username_or_email('bob') }.to raise_error(Discourse::TooManyMatches)
