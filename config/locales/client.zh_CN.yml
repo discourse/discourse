@@ -1047,7 +1047,7 @@ zh_CN:
         critical_available: "有一个关键更新可用。"
         updates_available: "目前有可用更新。"
         please_upgrade: "请升级！"
-        no_check_performed: "检测未执行"
+        no_check_performed: "检测更新未执行，请确保 sidekiq 在正常运行。"
         stale_data: "最近一次检查更新未执行，请确保 sidekiq 在正常运行。"
         installed_version: "已安装"
         latest_version: "最新版本"
@@ -1180,6 +1180,7 @@ zh_CN:
         created_at: "创建"
         last_match_at: "最近匹配"
         match_count: "匹配"
+        ip_address: "IP"
         screened_actions:
           block: "阻挡"
           do_nothing: "无操作"
@@ -1189,12 +1190,23 @@ zh_CN:
           clear_filters: "显示全部"
           staff_user: "管理人员"
           target_user: "目标用户"
+          subject: "主题"
           when: "时间"
           context: "环境"
           details: "详情"
+          previous_value: "之前"
+          new_value: "新建"
+          diff: "差别"
+          show: "显示"
+          modal_title: "详情"
+          no_previous: "没有之前的值。"
+          deleted: "没有新的值。记录被删除。"
           actions:
             delete_user: "删除用户"
             change_trust_level: "更改信任等级"
+            change_site_setting: "更改站点设置"
+            change_site_customization: "更改站点自定义"
+            delete_site_customization: "删除站点自定义"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -1245,6 +1257,12 @@ zh_CN:
           moderators: '版主'
           blocked: '被封用户'
           banned: '被禁用户'
+        reject_successful:
+          one: "1名用户已被拒绝。"
+          other: "%{count}名用户已被拒绝。"
+        reject_failures:
+          one: "1名用户拒绝失败。"
+          other: "%{count}名用户决绝失败。"
 
       user:
         ban_failed: "禁止此用户时发生了错误 {{error}}"

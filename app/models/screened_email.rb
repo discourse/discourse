@@ -13,7 +13,7 @@ class ScreenedEmail < ActiveRecord::Base
   validates :email, presence: true, uniqueness: true
 
   def self.block(email, opts={})
-    find_by_email(email) || create(opts.slice(:action_type).merge({email: email}))
+    find_by_email(email) || create(opts.slice(:action_type, :ip_address).merge({email: email}))
   end
 
   def self.should_block?(email)

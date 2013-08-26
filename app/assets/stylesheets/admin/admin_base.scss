@@ -703,9 +703,9 @@ table {
 .screened-emails, .screened-urls {
   width: 900px;
   .email, .url {
-    width: 400px;
+    width: 300px;
   }
-  .action, .match_count, .last_match_at, .created_at {
+  .action, .match_count, .last_match_at, .created_at, .ip_address {
     width: 110px;
     text-align: center;
   }

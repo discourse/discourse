@@ -69,7 +69,6 @@
     <footer id='bottom'></footer>
 
     <%= render :partial => "common/discourse_javascript" %>
-    <%= render :partial => "common/persona_javascript" if !current_user && SiteSetting.enable_persona_logins %>
     <%= render_google_analytics_code %>
 
     <!-- Discourse Version: <%= Discourse::VERSION::STRING %> -->

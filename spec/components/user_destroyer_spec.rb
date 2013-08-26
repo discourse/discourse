@@ -80,7 +80,7 @@ describe UserDestroyer do
 
       it "adds email to block list if block_email is true" do
         b = Fabricate.build(:screened_email, email: @user.email)
-        ScreenedEmail.expects(:block).with(@user.email).returns(b)
+        ScreenedEmail.expects(:block).with(@user.email, has_key(:ip_address)).returns(b)
         b.expects(:record_match!).once.returns(true)
         UserDestroyer.new(@admin).destroy(@user, destroy_opts.merge({block_email: true}))
       end
@@ -178,7 +178,7 @@ describe UserDestroyer do
         end
 
         it "adds ScreenedUrl records when :block_urls is true" do
-          ScreenedUrl.expects(:watch).at_least_once
+          ScreenedUrl.expects(:watch).with(anything, anything, has_key(:ip_address)).at_least_once
           UserDestroyer.new(@admin).destroy(@user, {delete_posts: true, block_urls: true})
         end
       end

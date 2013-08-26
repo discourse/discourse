@@ -119,8 +119,9 @@ module Discourse
     # attr_accessible.
     config.active_record.whitelist_attributes = false
 
+    require 'plugin'
+    require 'auth'
     unless Rails.env.test?
-      require 'plugin'
       Discourse.activate_plugins!
     end
 
@@ -128,5 +129,8 @@ module Discourse
     config.after_initialize do
       OpenID::Util.logger = Rails.logger
     end
+
+    require 'middleware/sso_cookie_sessionkiller'
+    config.middleware.insert_after ActionDispatch::RemoteIp, Middleware::SsoCookieSessionkiller
   end
 end

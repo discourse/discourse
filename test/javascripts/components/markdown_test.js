@@ -17,6 +17,7 @@ var cookedOptions = function(input, opts, expected, text) {
 
 test("basic cooking", function() {
   cooked("hello", "<p>hello</p>", "surrounds text with paragraphs");
+  cooked("***hello***", "<p><strong><em>hello</em></strong></p>", "it can do bold and italics at once.");
 });
 
 test("Line Breaks", function() {
@@ -38,6 +39,10 @@ test("Line Breaks", function() {
 
 test("Links", function() {
 
+  cooked("EvilTrout: http://eviltrout.com",
+         '<p>EvilTrout: <a href="http://eviltrout.com">http://eviltrout.com</a></p>',
+         "autolinks a URL");
+
   cooked("Youtube: http://www.youtube.com/watch?v=1MrpeBRkM5A",
          '<p>Youtube: <a href="http://www.youtube.com/watch?v=1MrpeBRkM5A">http://www.youtube.com/watch?v=1MrpeBRkM5A</a></p>',
          "allows links to contain query params");
@@ -58,10 +63,6 @@ test("Links", function() {
          '<p>Atwood: <a href="http://www.codinghorror.com">http://www.codinghorror.com</a></p>',
          "autolinks a URL with http://www");
 
-  cooked("EvilTrout: http://eviltrout.com",
-         '<p>EvilTrout: <a href="http://eviltrout.com">http://eviltrout.com</a></p>',
-         "autolinks a URL");
-
   cooked("EvilTrout: http://eviltrout.com hello",
          '<p>EvilTrout: <a href="http://eviltrout.com">http://eviltrout.com</a> hello</p>',
          "autolinks with trailing text");
@@ -77,6 +78,11 @@ test("Links", function() {
   cooked("Here's a tweet:\nhttps://twitter.com/evil_trout/status/345954894420787200",
          "<p>Here's a tweet:<br><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\">https://twitter.com/evil_trout/status/345954894420787200</a></p>",
          "It doesn't strip the new line.");
+
+  cooked("1. View @eviltrout's profile here: http://meta.discourse.org/users/eviltrout/activity\nnext line.",
+        "<ol><li>View <span class=\"mention\">@eviltrout</span>'s profile here: <a href=\"http://meta.discourse.org/users/eviltrout/activity\">http://meta.discourse.org/users/eviltrout/activity</a><br>next line.</li></ol>",
+        "allows autolinking within a list without inserting a paragraph.");
+
 
   cooked("[3]: http://eviltrout.com", "", "It doesn't autolink markdown link references");
 
@@ -110,7 +116,10 @@ test("Quotes", function() {
 });
 
 test("Mentions", function() {
-  cookedOptions("Hello @sam", { mentionLookup: (function() { return true; }) },
+
+  var alwaysTrue = { mentionLookup: (function() { return true; }) };
+
+  cookedOptions("Hello @sam", alwaysTrue,
                 "<p>Hello <a class=\"mention\" href=\"/users/sam\">@sam</a></p>",
                 "translates mentions to links");
 
@@ -129,8 +138,36 @@ test("Mentions", function() {
          "handles mentions in simple quotes");
 
   cooked("> foo bar baz @eviltrout ohmagerd\nlook at this",
-         "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span></p><p> ohmagerd\nlook at this</p></blockquote>",
+         "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span> ohmagerd\nlook at this</p></blockquote>",
          "does mentions properly with trailing text within a simple quote");
+
+  cooked("`code` is okay before @mention",
+         "<p><code>code</code> is okay before <span class=\"mention\">@mention</span></p>",
+         "Does not mention in an inline code block");
+
+  cooked("@mention is okay before `code`",
+         "<p><span class=\"mention\">@mention</span> is okay before <code>code</code></p>",
+         "Does not mention in an inline code block");
+
+  cooked("don't `@mention`",
+         "<p>don't <code>@mention</code></p>",
+         "Does not mention in an inline code block");
+
+  cooked("Yes `@this` should be code @eviltrout",
+         "<p>Yes <code>@this</code> should be code <span class=\"mention\">@eviltrout</span></p>",
+         "Does not mention in an inline code block");
+
+  cooked("@eviltrout and `@eviltrout`",
+         "<p><span class=\"mention\">@eviltrout</span> and <code>@eviltrout</code></p>",
+         "you can have a mention in an inline code block following a real mention.");
+
+  cooked("1. this is  a list\n\n2. this is an @eviltrout mention\n",
+         "<ol><li><p>this is  a list</p></li><li><p>this is an <span class=\"mention\">@eviltrout</span> mention  </p></li></ol>",
+         "it mentions properly in a list.");
+
+  cookedOptions("@eviltrout", alwaysTrue,
+                "<p><a class=\"mention\" href=\"/users/eviltrout\">@eviltrout</a></p>",
+                "it doesn't onebox mentions");
 
 });
 
@@ -155,6 +192,10 @@ test("Oneboxing", function() {
 });
 
 test("Code Blocks", function() {
+
+  cooked("```\na\nb\nc\n\nd\n```",
+         "<p><pre><code class=\"lang-auto\">a\nb\nc\n\nd</code></pre></p>",
+         "it treats new lines properly");
 
   cooked("```\ntest\n```",
          "<p><pre><code class=\"lang-auto\">test</code></pre></p>",
@@ -183,6 +224,10 @@ test("Code Blocks", function() {
   cooked("    ```\n    hello\n    ```",
          "<pre><code>&#x60;&#x60;&#x60;\nhello\n&#x60;&#x60;&#x60;</code></pre>",
          "only detect ``` at the begining of lines");
+
+  cooked("```ruby\ndef self.parse(text)\n\n  text\nend\n```",
+         "<p><pre><code class=\"ruby\">def self.parse(text)\n\n  text\nend</code></pre></p>",
+         "it allows leading spaces on lines in a code block.");
 });
 
 test("SanitizeHTML", function() {

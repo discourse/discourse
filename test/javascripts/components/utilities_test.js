@@ -132,3 +132,16 @@ test("avatarImg", function() {
   blank(Discourse.Utilities.avatarImg({avatarTemplate: "", size: 'tiny'}),
         "it doesn't render avatars for invalid avatar template");
 });
+
+module("Discourse.Utilities.cropAvatar with animated avatars", {
+  setup: function() { Discourse.SiteSettings.allow_animated_avatars = true; }
+});
+
+asyncTestDiscourse("cropAvatar", function() {
+  expect(1);
+
+  Discourse.Utilities.cropAvatar("/path/to/avatar.gif", "image/gif").then(function(avatarTemplate) {
+    equal(avatarTemplate, "/path/to/avatar.gif", "returns the url to the gif when animated gif are enabled");
+    start();
+  });
+});

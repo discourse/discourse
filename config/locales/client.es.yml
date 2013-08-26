@@ -79,6 +79,16 @@ es:
     ok: "Hecho"
     or: "o"
     now: "ahora mismo"
+    read_more: 'leer más'
+    more: "Más"
+    less: "Menos"
+    never: "nunca"
+    daily: "cada día"
+    weekly: "cada semana"
+    every_two_weeks: "cada dos semanas"
+    character_count:
+      one: "{{count}} caracter"
+      other: "{{count}} caracteres"
 
     suggested_topics:
       title: "Temas Sugeridos"

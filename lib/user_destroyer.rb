@@ -20,7 +20,7 @@ class UserDestroyer
           if opts[:block_urls]
             post.topic_links.each do |link|
               unless link.internal or Oneboxer.oneboxer_exists_for_url?(link.url)
-                ScreenedUrl.watch(link.url, link.domain).try(:record_match!)
+                ScreenedUrl.watch(link.url, link.domain, ip_address: user.ip_address).try(:record_match!)
               end
             end
           end
@@ -31,7 +31,7 @@ class UserDestroyer
       user.destroy.tap do |u|
         if u
           if opts[:block_email]
-            b = ScreenedEmail.block(u.email)
+            b = ScreenedEmail.block(u.email, ip_address: u.ip_address)
             b.record_match! if b
           end
           Post.with_deleted.where(user_id: user.id).update_all("nuked_user = true")

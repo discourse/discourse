@@ -18,7 +18,8 @@ Discourse.Dialect.on("register", function(event) {
     @return {Array} the JsonML containing the markup or undefined if nothing changed.
     @namespace Discourse.Dialect
   **/
-  dialect.block['github_code'] = function githubCode(block, next) {
+  dialect.block.github_code = function githubCode(block, next) {
+
     var m = /^`{3}([^\n]+)?\n?([\s\S]*)?/gm.exec(block);
 
     if (m) {
@@ -42,27 +43,32 @@ Discourse.Dialect.on("register", function(event) {
 
       if (m[2]) { next.unshift(MD.mk_block(m[2], null, lineNumber + 1)); }
 
+      lineNumber++;
       while (next.length > 0) {
         var b = next.shift(),
-            n = b.match(/([^`]*)```([^`]*)/m),
-            diff = ((typeof b.lineNumber === "undefined") ? lineNumber : b.lineNumber) - lineNumber;
+            blockLine = b.lineNumber,
+            diff = ((typeof blockLine === "undefined") ? lineNumber : blockLine) - lineNumber;
 
-        lineNumber = b.lineNumber;
+        b = b.replace(/ {2}\n/g, "\n");
+        var n = b.match(/([^`]*)```([^`]*)/m);
+
         for (var i=1; i<diff; i++) {
           codeContents.push("");
         }
+        lineNumber = blockLine + b.split("\n").length - 1;
 
         if (n) {
           if (n[2]) {
             next.unshift(MD.mk_block(n[2]));
           }
 
-          codeContents.push(n[1].trim());
+          codeContents.push(n[1].replace(/\s+$/, ""));
           break;
         } else {
           codeContents.push(b);
         }
       }
+
       result.push(['p', ['pre', ['code', {'class': m[1] || 'lang-auto'}, codeContents.join("\n") ]]]);
       return result;
     }
