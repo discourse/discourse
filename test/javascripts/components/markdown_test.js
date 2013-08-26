@@ -20,8 +20,7 @@ test("basic cooking", function() {
   cooked("***hello***", "<p><strong><em>hello</em></strong></p>", "it can do bold and italics at once.");
 });
 
-test("Line Breaks", function() {
-
+test("Traditional Line Breaks", function() {
   var input = "1\n2\n3";
   cooked(input, "<p>1<br>2<br>3</p>", "automatically handles trivial newlines");
 
@@ -34,7 +33,12 @@ test("Line Breaks", function() {
 
   Discourse.SiteSettings.traditional_markdown_linebreaks = true;
   cooked(input, traditionalOutput, "It supports traditional markdown via a Site Setting");
+});
 
+test("Line Breaks", function() {
+  cooked("[] first choice\n[] second choice",
+         "<p>[] first choice<br>[] second choice</p>",
+         "it handles new lines correctly with [] options");
 });
 
 test("Links", function() {
@@ -79,10 +83,9 @@ test("Links", function() {
          "<p>Here's a tweet:<br><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\">https://twitter.com/evil_trout/status/345954894420787200</a></p>",
          "It doesn't strip the new line.");
 
-  cooked("1. View @eviltrout's profile here: http://meta.discourse.org/users/eviltrout/activity\nnext line.",
+  cooked("1. View @eviltrout's profile here: http://meta.discourse.org/users/eviltrout/activity<br>next line.",
         "<ol><li>View <span class=\"mention\">@eviltrout</span>'s profile here: <a href=\"http://meta.discourse.org/users/eviltrout/activity\">http://meta.discourse.org/users/eviltrout/activity</a><br>next line.</li></ol>",
         "allows autolinking within a list without inserting a paragraph.");
-
 
   cooked("[3]: http://eviltrout.com", "", "It doesn't autolink markdown link references");
 
@@ -98,13 +101,13 @@ test("Quotes", function() {
 
   cookedOptions("[quote=\"eviltrout, post: 1\"]\na quote\n\nsecond line\n[/quote]",
                 { topicId: 2 },
-                "<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:</div><blockquote>\n" +
+                "<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:</div><blockquote>" +
                 "a quote<br/><br/>second line<br/></blockquote></aside></p>",
                 "works with multiple lines");
 
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",
                 { topicId: 2, lookupAvatar: function(name) { return "" + name; } },
-                "<p>1</p>\n\n<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob\n" +
+                "<p>1</p>\n\n<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob" +
                 "bob said:</div><blockquote>my quote</blockquote></aside></p>\n\n<p>2</p>",
                 "handles quotes properly");
 
@@ -138,7 +141,7 @@ test("Mentions", function() {
          "handles mentions in simple quotes");
 
   cooked("> foo bar baz @eviltrout ohmagerd\nlook at this",
-         "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span> ohmagerd\nlook at this</p></blockquote>",
+         "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span> ohmagerd<br>look at this</p></blockquote>",
          "does mentions properly with trailing text within a simple quote");
 
   cooked("`code` is okay before @mention",
@@ -162,7 +165,7 @@ test("Mentions", function() {
          "you can have a mention in an inline code block following a real mention.");
 
   cooked("1. this is  a list\n\n2. this is an @eviltrout mention\n",
-         "<ol><li><p>this is  a list</p></li><li><p>this is an <span class=\"mention\">@eviltrout</span> mention  </p></li></ol>",
+         "<ol><li><p>this is  a list</p></li><li><p>this is an <span class=\"mention\">@eviltrout</span> mention</p></li></ol>",
          "it mentions properly in a list.");
 
   cookedOptions("@eviltrout", alwaysTrue,
@@ -202,7 +205,7 @@ test("Code Blocks", function() {
          "it supports basic code blocks");
 
   cooked("```json\n{hello: 'world'}\n```\ntrailing",
-         "<p><pre><code class=\"json\">{hello: &#x27;world&#x27;}</code></pre></p>\n\n<p>\ntrailing</p>",
+         "<p><pre><code class=\"json\">{hello: &#x27;world&#x27;}</code></pre></p>\n\n<p>trailing</p>",
          "It does not truncate text after a code block.");
 
   cooked("```json\nline 1\n\nline 2\n\n\nline3\n```",

@@ -88,7 +88,7 @@ test("quote formatting", function() {
 
   format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]\nhello",
          "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
-         "</div><blockquote>abc</blockquote></aside></p>\n\n<p>\nhello",
+         "</div><blockquote>abc</blockquote></aside></p>\n\n<p>hello",
          "handles new lines properly");
 
 });
