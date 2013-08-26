@@ -31,7 +31,7 @@ describe Plugin::Instance do
 
       plugin.auth_providers.count.should == 1
       auth_provider = plugin.auth_providers[0]
-      auth_provider.type.should == :open_id
+      auth_provider.authenticator.name.should == 'ubuntu'
 
       # calls ensure_assets! make sure they are there
       plugin.assets.count.should == 2
