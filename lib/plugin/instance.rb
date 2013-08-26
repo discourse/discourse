@@ -5,7 +5,8 @@ require_dependency 'plugin/auth_provider'
 
 class Plugin::Instance
 
-  attr_reader :auth_providers, :assets, :path
+  attr_reader :auth_providers, :assets
+  attr_accessor :path, :metadata
 
   def self.find_all(parent_path)
     [].tap { |plugins|
@@ -17,10 +18,14 @@ class Plugin::Instance
     }
   end
 
-  def initialize(metadata, path)
+  def initialize(metadata=nil, path=nil)
     @metadata = metadata
     @path = path
     @assets = []
+  end
+
+  def name
+    metadata.name
   end
 
   # will make sure all the assets this plugin needs are registered
@@ -152,13 +157,10 @@ class Plugin::Instance
     @auth_providers ||= []
     provider = Plugin::AuthProvider.new
     provider.type = type
-    [:name, :glyph, :background_color, :title, :message, :frame_width, :frame_height, :callback].each do |sym|
+    [:name, :glyph, :background_color, :title, :message, :frame_width, :frame_height, :authenticator].each do |sym|
       provider.send "#{sym}=", opts.delete(sym)
     end
     provider.name ||= type.to_s
-    provider.options = opts[:middleware_options] || opts
-    # prepare for splatting
-    provider.options = [provider.options] if provider.options.is_a? Hash
     @auth_providers << provider
   end
 

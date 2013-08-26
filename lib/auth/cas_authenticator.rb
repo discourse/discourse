@@ -39,4 +39,9 @@ class Auth::CasAuthenticator < Auth::Authenticator
 
     result
   end
+
+  def register_middleware(omniauth)
+    omniauth.provider :cas,
+           :host => SiteSetting.cas_hostname
+  end
 end

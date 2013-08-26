@@ -45,4 +45,15 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       github_user_id: data[:github_user_id]
     )
   end
+
+
+  def register_middleware(omniauth)
+    omniauth.provider :github,
+           :setup => lambda { |env|
+              strategy = env["omniauth.strategy"]
+              strategy.options[:client_id] = SiteSetting.github_client_id
+              strategy.options[:client_secret] = SiteSetting.github_client_secret
+           },
+           :scope => "user:email"
+  end
 end

@@ -1,9 +1,5 @@
 # this class is used by the user and omniauth controllers, it controls how
-#  an authentication system interacts with our database
-
-module Auth; end
-
-require 'auth/result'
+#  an authentication system interacts with our database and middleware
 
 class Auth::Authenticator
   def after_authenticate(auth_options)
@@ -20,5 +16,11 @@ class Auth::Authenticator
 
   def lookup_user(user_info, email)
     user_info.try(:user) || User.where(email: email).first
+  end
+
+  # hook used for registering omniauth middleware,
+  #  without this we can not authenticate
+  def register_middleware(omniauth)
+    raise NotImplementedError
   end
 end

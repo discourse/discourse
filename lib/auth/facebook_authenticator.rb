@@ -30,6 +30,16 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
     FacebookUserInfo.create({user_id: user.id}.merge(data))
   end
 
+  def register_middleware(omniauth)
+    omniauth.provider :facebook,
+           :setup => lambda { |env|
+              strategy = env["omniauth.strategy"]
+              strategy.options[:client_id] = SiteSetting.facebook_app_id
+              strategy.options[:client_secret] = SiteSetting.facebook_app_secret
+           },
+           :scope => "email"
+  end
+
   protected
 
   def parse_auth_token(auth_token)
@@ -53,4 +63,6 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
     }
 
   end
+
+
 end

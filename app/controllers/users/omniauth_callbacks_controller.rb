@@ -2,19 +2,13 @@
 require_dependency 'email'
 require_dependency 'enum'
 require_dependency 'user_name_suggester'
-require_dependency 'auth/authenticator'
-require_dependency 'auth/facebook_authenticator'
-require_dependency 'auth/open_id_authenticator'
-require_dependency 'auth/github_authenticator'
-require_dependency 'auth/twitter_authenticator'
-require_dependency 'auth/persona_authenticator'
 
 class Users::OmniauthCallbacksController < ApplicationController
 
   BUILTIN_AUTH = [
     Auth::FacebookAuthenticator.new,
-    Auth::OpenIdAuthenticator.new("google", trusted: true),
-    Auth::OpenIdAuthenticator.new("yahoo", trusted: true),
+    Auth::OpenIdAuthenticator.new("google", "https://www.google.com/accounts/o8/id", trusted: true),
+    Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", trusted: true),
     Auth::GithubAuthenticator.new,
     Auth::TwitterAuthenticator.new,
     Auth::PersonaAuthenticator.new

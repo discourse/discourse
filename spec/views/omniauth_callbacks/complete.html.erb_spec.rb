@@ -1,4 +1,6 @@
 require "spec_helper"
+
+require "auth/authenticator"
 require_dependency "auth/result"
 
 describe "users/omniauth_callbacks/complete.html.erb" do
@@ -24,14 +26,16 @@ describe "users/omniauth_callbacks/complete.html.erb" do
     result = Auth::Result.new
 
     result.email = "xxx@xxx.com"
-    result.auth_provider = "CAS"
+    result.authenticator_name = "CAS"
 
     assign(:data, result)
 
     render
 
-    rendered_data["email"].should result.email
-    rendered_data["auth_provider"].should eq("CAS")
+    rendered_data["email"].should eq(result.email)
+    # TODO this is a bit weird, the upcasing is confusing,
+    #  clean it up throughout
+    rendered_data["auth_provider"].should eq("Cas")
   end
 
 end

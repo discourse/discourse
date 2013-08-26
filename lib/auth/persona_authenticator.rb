@@ -15,4 +15,11 @@ class Auth::PersonaAuthenticator < Auth::Authenticator
     result.user = User.find_by_email(email)
     result
   end
+
+  def register_middleware(omniauth)
+    omniauth.provider :browser_id,
+           :name => "persona"
+  end
 end
+
+

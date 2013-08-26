@@ -1,12 +1,11 @@
 class Auth::OpenIdAuthenticator < Auth::Authenticator
 
-  def initialize(name, opts = {})
-    @name = name
-    @opts = opts
-  end
+  attr_reader :name, :identifier
 
-  def name
-    @name
+  def initialize(name, identifier, opts = {})
+    @name = name
+    @identifier = identifier
+    @opts = opts
   end
 
   def after_authenticate(auth_token)
@@ -46,5 +45,14 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
       email: data[:email],
       active: true
     )
+  end
+
+
+  def register_middleware(omniauth)
+    omniauth.provider :open_id,
+           :store => OpenID::Store::Redis.new($redis),
+           :name => name,
+           :identifier => identifier,
+           :require => "omniauth-openid"
   end
 end

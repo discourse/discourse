@@ -3,9 +3,25 @@ require_dependency 'plugin/instance'
 
 describe Plugin::Instance do
 
+  context "find_all" do
+    it "can find plugins correctly" do
+      plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
+      plugins.count.should == 1
+      plugin =plugins[0]
+
+      plugin.name.should == "plugin-name"
+      plugin.path.should == "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+    end
+
+    it "does not blow up on missing directory" do
+      plugins = Plugin::Instance.find_all("#{Rails.root}/frank_zappa")
+      plugins.count.should == 0
+    end
+  end
+
   context "activate!" do
     it "can activate plugins correctly" do
-      plugin = Plugin.new
+      plugin = Plugin::Instance.new
       plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
       junk_file = "#{plugin.auto_generated_path}/junk"
 

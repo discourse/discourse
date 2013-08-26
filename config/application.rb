@@ -121,6 +121,7 @@ module Discourse
 
     unless Rails.env.test?
       require 'plugin'
+      require_dependency 'auth'
       Discourse.activate_plugins!
     end
 
