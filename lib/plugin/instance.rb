@@ -153,14 +153,12 @@ class Plugin::Instance
     end
   end
 
-  def auth_provider(type, opts)
+  def auth_provider(opts)
     @auth_providers ||= []
     provider = Plugin::AuthProvider.new
-    provider.type = type
-    [:name, :glyph, :background_color, :title, :message, :frame_width, :frame_height, :authenticator].each do |sym|
+    [:glyph, :background_color, :title, :message, :frame_width, :frame_height, :authenticator].each do |sym|
       provider.send "#{sym}=", opts.delete(sym)
     end
-    provider.name ||= type.to_s
     @auth_providers << provider
   end
 

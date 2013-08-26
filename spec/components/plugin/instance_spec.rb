@@ -31,7 +31,6 @@ describe Plugin::Instance do
 
       plugin.auth_providers.count.should == 1
       auth_provider = plugin.auth_providers[0]
-      auth_provider.options.should == {:identifier => 'https://zappa.com'}
       auth_provider.type.should == :open_id
 
       # calls ensure_assets! make sure they are there

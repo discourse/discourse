@@ -1,5 +1,9 @@
 class Plugin::AuthProvider
-  attr_accessor :type, :glyph, :background_color, :name, :title,
+  attr_accessor :glyph, :background_color, :title,
                 :message, :frame_width, :frame_height, :authenticator
+
+  def name
+    authenticator.name
+  end
 
 end
