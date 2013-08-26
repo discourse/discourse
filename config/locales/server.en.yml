@@ -470,6 +470,7 @@ en:
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view edit history."
     delete_removed_posts_after: "Number of hours after which posts removed by the author will be deleted."
     max_image_width: "Maximum allowed width of images in a post"
+    max_image_height: "Maximum allowed height of images in a post"
     category_featured_topics: "Number of topics displayed per category in the /categories page"
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"

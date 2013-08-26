@@ -117,7 +117,8 @@ class CookedPostProcessor
     original_width, original_height = get_size(src)
 
     return if original_width.to_i <= width && original_height.to_i <= height
-    return if original_width.to_i <= SiteSetting.max_image_width
+    return if original_width.to_i <= SiteSetting.max_image_width && original_height.to_i <= SiteSetting.max_image_height
+
     return if is_a_hyperlink(img)
 
     if upload
