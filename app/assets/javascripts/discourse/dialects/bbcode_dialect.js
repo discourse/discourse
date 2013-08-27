@@ -1,75 +1,111 @@
 /**
-  Regsiter all functionality for supporting BBCode in Discourse.
+  Create a simple BBCode tag handler
 
-  @event register
-  @namespace Discourse.Dialect
+  @method replaceBBCode
+  @param {tag} tag the tag we want to match
+  @param {function} emitter the function that creates JsonML for the tag
 **/
+function replaceBBCode(tag, emitter) {
+  Discourse.Dialect.inlineReplace({
+    start: "[" + tag + "]",
+    stop: "[/" + tag + "]",
+    emitter: emitter
+  });
+}
+
+/**
+  Creates a BBCode handler that accepts parameters. Passes them to the emitter.
+
+  @method replaceBBCodeParamsRaw
+  @param {tag} tag the tag we want to match
+  @param {function} emitter the function that creates JsonML for the tag
+**/
+function replaceBBCodeParamsRaw(tag, emitter) {
+  Discourse.Dialect.inlineReplace({
+    start: "[" + tag + "=",
+    stop: "[/" + tag + "]",
+    rawContents: true,
+    emitter: function(contents) {
+      var regexp = /^([^\]]+)\](.*)$/,
+          m = regexp.exec(contents);
+
+      if (m) { return emitter.call(this, m[1], m[2]); }
+    }
+  });
+}
+
+/**
+  Creates a BBCode handler that accepts parameters. Passes them to the emitter.
+  Processes the inside recursively so it can be nested.
+
+  @method replaceBBCodeParams
+  @param {tag} tag the tag we want to match
+  @param {function} emitter the function that creates JsonML for the tag
+**/
+function replaceBBCodeParams(tag, emitter) {
+  replaceBBCodeParamsRaw(tag, function (param, contents) {
+    return emitter(param, this.processInline(contents));
+  });
+}
+
+replaceBBCode('b', function(contents) { return ['span', {'class': 'bbcode-b'}].concat(contents); });
+replaceBBCode('i', function(contents) { return ['span', {'class': 'bbcode-i'}].concat(contents); });
+replaceBBCode('u', function(contents) { return ['span', {'class': 'bbcode-u'}].concat(contents); });
+replaceBBCode('s', function(contents) { return ['span', {'class': 'bbcode-s'}].concat(contents); });
+
+replaceBBCode('ul', function(contents) { return ['ul'].concat(contents); });
+replaceBBCode('ol', function(contents) { return ['ol'].concat(contents); });
+replaceBBCode('li', function(contents) { return ['li'].concat(contents); });
+
+replaceBBCode('spoiler', function(contents) { return ['span', {'class': 'spoiler'}].concat(contents); });
+
+Discourse.Dialect.inlineReplace({
+  start: '[img]',
+  stop: '[/img]',
+  rawContents: true,
+  emitter: function(contents) { return ['img', {href: contents}]; }
+});
+
+Discourse.Dialect.inlineReplace({
+  start: '[email]',
+  stop: '[/email]',
+  rawContents: true,
+  emitter: function(contents) { return ['a', {href: "mailto:" + contents, 'data-bbcode': true}, contents]; }
+});
+
+Discourse.Dialect.inlineReplace({
+  start: '[url]',
+  stop: '[/url]',
+  rawContents: true,
+  emitter: function(contents) { return ['a', {href: contents, 'data-bbcode': true}, contents]; }
+});
+
+
+replaceBBCodeParamsRaw("url", function(param, contents) {
+  return ['a', {href: param, 'data-bbcode': true}, contents];
+});
+
+replaceBBCodeParamsRaw("email", function(param, contents) {
+  return ['a', {href: "mailto:" + param, 'data-bbcode': true}, contents];
+});
+
+replaceBBCodeParams("size", function(param, contents) {
+  return ['span', {'class': "bbcode-size-" + param}].concat(contents);
+});
+
+replaceBBCodeParams("color", function(param, contents) {
+  // Only allow valid HTML colors.
+  if (/^(\#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?)|(aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow)$/.test(param)) {
+    return ['span', {style: "color: " + param}].concat(contents);
+  } else {
+    return ['span'].concat(contents);
+  }
+});
+
 Discourse.Dialect.on("register", function(event) {
 
   var dialect = event.dialect,
       MD = event.MD;
-
-  var createBBCode = function(tag, builder, hasArgs) {
-    return function(text, orig_match) {
-      var bbcodePattern = new RegExp("\\[" + tag + "=?([^\\[\\]]+)?\\]([\\s\\S]*?)\\[\\/" + tag + "\\]", "igm");
-      var m = bbcodePattern.exec(text);
-      if (m && m[0]) {
-        return [m[0].length, builder(m, this)];
-      }
-    };
-  };
-
-  var bbcodes = {'b': ['span', {'class': 'bbcode-b'}],
-                  'i': ['span', {'class': 'bbcode-i'}],
-                  'u': ['span', {'class': 'bbcode-u'}],
-                  's': ['span', {'class': 'bbcode-s'}],
-                  'spoiler': ['span', {'class': 'spoiler'}],
-                  'li': ['li'],
-                  'ul': ['ul'],
-                  'ol': ['ol']};
-
-  Object.keys(bbcodes).forEach(function(tag) {
-    var element = bbcodes[tag];
-    dialect.inline["[" + tag + "]"] = createBBCode(tag, function(m, self) {
-      return element.concat(self.processInline(m[2]));
-    });
-  });
-
-  dialect.inline["[img]"] = createBBCode('img', function(m) {
-    return ['img', {href: m[2]}];
-  });
-
-  dialect.inline["[email]"] = createBBCode('email', function(m) {
-    return ['a', {href: "mailto:" + m[2], 'data-bbcode': true}, m[2]];
-  });
-
-  dialect.inline["[url]"] = createBBCode('url', function(m) {
-    return ['a', {href: m[2], 'data-bbcode': true}, m[2]];
-  });
-
-  dialect.inline["[url="] = createBBCode('url', function(m, self) {
-    return ['a', {href: m[1], 'data-bbcode': true}].concat(self.processInline(m[2]));
-  });
-
-  dialect.inline["[email="] = createBBCode('email', function(m, self) {
-    return ['a', {href: "mailto:" + m[1], 'data-bbcode': true}].concat(self.processInline(m[2]));
-  });
-
-  dialect.inline["[size="] = createBBCode('size', function(m, self) {
-    return ['span', {'class': "bbcode-size-" + m[1]}].concat(self.processInline(m[2]));
-  });
-
-  dialect.inline["[color="] = function(text, orig_match) {
-    var bbcodePattern = new RegExp("\\[color=?([^\\[\\]]+)?\\]([\\s\\S]*?)\\[\\/color\\]", "igm"),
-        m = bbcodePattern.exec(text);
-
-    if (m && m[0]) {
-      if (!/^(\#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?)|(aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow)$/.test(m[1])) {
-        return [m[0].length].concat(this.processInline(m[2]));
-      }
-      return [m[0].length, ['span', {style: "color: " + m[1]}].concat(this.processInline(m[2]))];
-    }
-  };
 
   /**
     Support BBCode [code] blocks

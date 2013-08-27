@@ -17,6 +17,9 @@ test('basic bbcode', function() {
   format("[img]http://eviltrout.com/eviltrout.png[/img]", "<img src=\"http://eviltrout.com/eviltrout.png\"/>", "links images");
   format("[url]http://bettercallsaul.com[/url]", "<a href=\"http://bettercallsaul.com\">http://bettercallsaul.com</a>", "supports [url] without a title");
   format("[email]eviltrout@mailinator.com[/email]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports [email] without a title");
+  format("[b]evil [i]trout[/i][/b]",
+         "<span class=\"bbcode-b\">evil <span class=\"bbcode-i\">trout</span></span>",
+         "allows embedding of tags");
 });
 
 test('lists', function() {
@@ -28,7 +31,7 @@ test('color', function() {
   format("[color=#00f]blue[/color]", "<span style=\"color: #00f\">blue</span>", "supports [color=] with a short hex value");
   format("[color=#ffff00]yellow[/color]", "<span style=\"color: #ffff00\">yellow</span>", "supports [color=] with a long hex value");
   format("[color=red]red[/color]", "<span style=\"color: red\">red</span>", "supports [color=] with an html color");
-  format("[color=javascript:alert('wat')]noop[/color]", "noop", "it performs a noop on invalid input");
+  format("[color=javascript:alert('wat')]noop[/color]", "<span>noop</span>", "it performs a noop on invalid input");
 });
 
 test('tags with arguments', function() {
