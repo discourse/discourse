@@ -9,6 +9,19 @@ describe Onebox::Engine do
     it "returns formatted html"
   end
 
+  describe "#fetch" do
+    it "returns cache value for given url if cache exists" do
+      cache = { "http://example.com" => "foo" }
+      result = Onebox::Engine::Foo.new("http://example.com", cache).fetch
+      expect(result).to eq("foo")
+    end
+
+    it "stores cache value for given url if cache doesn't exist"
+
+    it "is too old monetta"
+  end
+
+
   describe ".===" do
     it "returns true if argument matches the matcher" do
       class Onebox::Engine::Foo

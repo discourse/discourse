@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Onebox::Engine::AmazonOnebox do
   describe "#to_html" do
-    let(:link) { "http://example.com" }
+    let(:link) { "http://amazon.com" }
     let(:html) { described_class.new(link).to_html }
 
     before do

@@ -10,8 +10,11 @@ module Onebox
       end.map(&method(:const_get))
     end
 
-    def initialize(link)
+    attr_reader :cache
+
+    def initialize(link, cache = Hash.new)
       @url = link
+      @cache = cache
       @body = read
       @data = extracted_data
     end
@@ -22,13 +25,13 @@ module Onebox
 
     private
 
-    def fetch
-      if cache
-        cache.read(@url)
-      else
-        cache.store(@url, open(@url))
-      end
-    end
+    # def fetch
+    #   if cache.has_key?(@url)
+    #     cache.fetch(@url)
+    #   else
+    #     cache.store(@url, open(@url))
+    #   end
+    # end
 
     def read
       Nokogiri::HTML(fetch)

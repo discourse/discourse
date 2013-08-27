@@ -8,6 +8,5 @@ describe Onebox do
       cache = preview.cache
       expect(cache).to be_kind_of(Hash)
     end
-
   end
 end
