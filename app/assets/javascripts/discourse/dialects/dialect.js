@@ -32,8 +32,7 @@
 
   ```javascript
     Discourse.Dialect.on("parseNode", function(event) {
-      var node = event.node,
-          path = event.path;
+      var node = event.node;
 
       if (node[0] === 'code') {
         node[node.length-1] = "EVIL TROUT HACKED YOUR CODE";
@@ -68,16 +67,22 @@ var parser = window.BetterMarkdown,
       @method parseTree
       @param {Array} tree the JsonML tree to parse
       @param {Array} path the path of ancestors to the current node in the tree. Can be used for matching.
+      @param {Object} insideCounts counts what tags we're inside
       @returns {Array} the parsed tree
     **/
-    parseTree = function parseTree(tree, path) {
+    parseTree = function parseTree(tree, path, insideCounts) {
       if (tree instanceof Array) {
-        Discourse.Dialect.trigger('parseNode', {node: tree, path: path});
+        Discourse.Dialect.trigger('parseNode', {node: tree, path: path, dialect: dialect, insideCounts: insideCounts || {}});
 
         path = path || [];
+        insideCounts = insideCounts || {};
+
         path.push(tree);
         tree.slice(1).forEach(function (n) {
-          parseTree(n, path);
+          var tagName = n[0];
+          insideCounts[tagName] = (insideCounts[tagName] || 0) + 1;
+          parseTree(n, path, insideCounts);
+          insideCounts[tagName] = insideCounts[tagName] - 1;
         });
         path.pop();
       }
@@ -103,7 +108,8 @@ Discourse.Dialect = {
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
     dialect.options = opts;
-    return parser.renderJsonML(parseTree(parser.toHTMLTree(text, 'Discourse')));
+    var tree = parser.toHTMLTree(text, 'Discourse');
+    return parser.renderJsonML(parseTree(tree));
   }
 };
 

@@ -33,7 +33,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 58cd859caa49ba36cff382522c51e4ed85009017
+  revision: e36692a7466011ab51393ac8ca6dfffcb9d79ec0
   branch: 4-0-stable
   specs:
     actionmailer (4.0.0)
@@ -173,7 +173,7 @@ GEM
       activesupport
       builder
     arel (4.0.0)
-    atomic (1.1.10)
+    atomic (1.1.13)
     barber (0.4.2)
       ember-source
       execjs
@@ -239,7 +239,7 @@ GEM
     hike (1.2.3)
     hiredis (0.4.5)
     httpauth (0.2.0)
-    i18n (0.6.4)
+    i18n (0.6.5)
     ice_cube (0.11.0)
     image_optim (0.8.1)
       fspath (~> 2.0.3)
@@ -267,13 +267,13 @@ GEM
       treetop (~> 1.4.8)
     metaclass (0.0.1)
     method_source (0.8.1)
-    mime-types (1.23)
+    mime-types (1.24)
     mini_portile (0.5.1)
     minitest (4.7.5)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
     mock_redis (0.8.1)
-    multi_json (1.7.7)
+    multi_json (1.7.9)
     multipart-post (1.2.0)
     mustache (0.99.4)
     net-scp (1.1.2)
@@ -445,7 +445,7 @@ GEM
     tilt (1.4.1)
     timecop (0.6.2.2)
     timers (1.1.0)
-    treetop (1.4.14)
+    treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.37)

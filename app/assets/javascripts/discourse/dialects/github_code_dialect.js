@@ -49,25 +49,27 @@ Discourse.Dialect.on("register", function(event) {
             blockLine = b.lineNumber,
             diff = ((typeof blockLine === "undefined") ? lineNumber : blockLine) - lineNumber;
 
-        b = b.replace(/ {2}\n/g, "\n");
-        var n = b.match(/([^`]*)```([^`]*)/m);
+        var endFound = b.indexOf('```'),
+            leadingCode = b.slice(0, endFound),
+            trailingCode = b.slice(endFound+3);
 
         for (var i=1; i<diff; i++) {
           codeContents.push("");
         }
         lineNumber = blockLine + b.split("\n").length - 1;
 
-        if (n) {
-          if (n[2]) {
-            next.unshift(MD.mk_block(n[2]));
+        if (endFound !== -1) {
+          if (trailingCode) {
+            next.unshift(MD.mk_block(trailingCode));
           }
 
-          codeContents.push(n[1].replace(/\s+$/, ""));
+          codeContents.push(leadingCode.replace(/\s+$/, ""));
           break;
         } else {
           codeContents.push(b);
         }
       }
+
 
       result.push(['p', ['pre', ['code', {'class': m[1] || 'lang-auto'}, codeContents.join("\n") ]]]);
       return result;
@@ -84,10 +86,48 @@ Discourse.Dialect.on("register", function(event) {
   @namespace Discourse.Dialect
 **/
 Discourse.Dialect.on("parseNode", function(event) {
-  var node = event.node,
-      path = event.path;
+  var node = event.node;
 
   if (node[0] === 'code') {
     node[node.length-1] = Handlebars.Utils.escapeExpression(node[node.length-1]);
+  }
+});
+
+
+Discourse.Dialect.on("parseNode", function(event) {
+
+  var node = event.node,
+      opts = event.dialect.options,
+      insideCounts = event.insideCounts,
+      linebreaks = opts.traditional_markdown_linebreaks || Discourse.SiteSettings.traditional_markdown_linebreaks;
+
+  if (!linebreaks) {
+    // We don't add line breaks inside a pre
+    if (insideCounts.pre > 0) { return; }
+
+    if (node.length > 1) {
+      for (var j=1; j<node.length; j++) {
+        var textContent = node[j];
+
+        if (typeof textContent === "string") {
+
+          if (textContent === "\n") {
+            node[j] = ['br'];
+          } else {
+            var split = textContent.split(/\n+/);
+            if (split.length) {
+              var spliceInstructions = [j, 1];
+              for (var i=0; i<split.length; i++) {
+                if (split[i].length > 0) {
+                  spliceInstructions.push(split[i]);
+                  if (i !== split.length-1) { spliceInstructions.push(['br']); }
+                }
+              }
+              node.splice.apply(node, spliceInstructions);
+            }
+          }
+        }
+      }
+    }
   }
 });

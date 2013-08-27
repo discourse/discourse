@@ -83,6 +83,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     # log on any account that is active with forum access
     if Guardian.new(user).can_access_forum? && user.active
       log_on_user(user)
+      # don't carry around old auth info, perhaps move elsewhere
+      session[:authentication] = nil
       @data.authenticated = true
     else
       if SiteSetting.invite_only?
