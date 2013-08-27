@@ -92,6 +92,10 @@ describe Search do
     Search.new('foo :!$);}]>@\#\"\'').execute.should be_blank # There are at least three levels of sanitation for Search.query!
   end
 
+  it "doesn't raise an error when single quotes are present" do
+    Search.new("'hello' world").execute.should be_blank # There are at least three levels of sanitation for Search.query!
+  end
+
   it 'works when given two terms with spaces' do
     lambda { Search.new('evil trout').execute }.should_not raise_error
   end

@@ -97,17 +97,7 @@ Discourse.Markdown = {
     return {
       makeHtml: function(text) {
 
-        // Linebreaks
-        var linebreaks = opts.traditional_markdown_linebreaks || Discourse.SiteSettings.traditional_markdown_linebreaks;
-        if (!linebreaks) {
-          text = text.replace(/(^[\w<][^\n]*\n+)/gim, function(t) {
-            if (t.match(/\n{2}/gim)) return t;
-            return t.replace("\n", "  \n");
-          });
-        }
-
         text = Discourse.Dialect.cook(text, opts);
-
         if (!text) return "";
 
         if (opts.sanitize) {

@@ -182,9 +182,9 @@ en:
 
     user:
       said: "{{username}} said:"
-      profile: Profile
-      mute: Mute
-      edit: Edit Preferences
+      profile: "Profile"
+      mute: "Mute"
+      edit: "Edit Preferences"
       download_archive: "download archive of my posts"
       private_message: "Private Message"
       private_messages: "Messages"

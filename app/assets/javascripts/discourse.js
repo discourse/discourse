@@ -132,13 +132,11 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     });
 
     // Add a CSRF token to all AJAX requests
-    var csrfToken = $('meta[name=csrf-token]').attr('content');
+    Discourse.csrfToken = $('meta[name=csrf-token]').attr('content');
 
     $.ajaxPrefilter(function(options, originalOptions, xhr) {
       if (!options.crossDomain) {
-        // This may be delay set
-        csrfToken = csrfToken || $('meta[name=csrf-token]').attr('content');
-        xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+        xhr.setRequestHeader('X-CSRF-Token', Discourse.csrfToken);
       }
     });
 

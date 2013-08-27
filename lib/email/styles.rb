@@ -20,8 +20,14 @@ module Email
           img['style'] = "max-width: 694px;"
         end
 
+        # ensure all urls are absolute
         if img['src'] =~ /^\/[^\/]/
           img['src'] = "#{Discourse.base_url}#{img['src']}"
+        end
+
+        # ensure no schemaless urls
+        if img['src'].starts_with?("//")
+          img['src'] = "http:" + img['src']
         end
       end
     end
@@ -42,9 +48,7 @@ module Email
       reset_tables
     end
 
-
     def format_html
-
       style('h3', 'margin: 15px 0 20px 0; border-bottom: 1px solid #ddd;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('a',' text-decoration: none; font-weight: bold; color: #006699;')
@@ -57,7 +61,6 @@ module Email
       @fragment.css('pre').each do |pre|
         pre.replace(pre.text)
       end
-
 
     end
 
