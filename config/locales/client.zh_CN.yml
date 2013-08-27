@@ -100,6 +100,13 @@ zh_CN:
     read_more: '阅读更多'
     more: "更多"
     less: "更少"
+    never: "从未"
+    daily: "每天"
+    weekly: "每周"
+    every_two_weeks: "每两周"
+    character_count:
+      one: "{{count}} 个字符"
+      other: "{{count}} 个字符"
 
     in_n_seconds:
       one: "一秒内"
@@ -175,12 +182,13 @@ zh_CN:
 
     user:
       said: "{{username}} 说："
-      profile: 介绍信息
-      mute: 防打扰
-      edit: 修改参数
+      profile: "介绍信息"
+      mute: "防打扰"
+      edit: "修改参数"
       download_archive: "下载我的帖子的存档"
       private_message: "私信"
       private_messages: "消息"
+      private_messages_sent: "已发送消息"
       activity_stream: "活动"
       preferences: "设置"
       bio: "关于我"
@@ -223,6 +231,7 @@ zh_CN:
         uploaded_avatar: "自定义图片"
         uploaded_avatar_empty: "添加自定义图片"
         upload_title: "上传图片"
+        image_is_not_a_square: "注意：你的图片将被剪裁为正方形。"
 
       email:
         title: "电子邮箱"
@@ -703,7 +712,7 @@ zh_CN:
         title: '邀请朋友来回复'
         action: '邮件邀请'
         help: '向你的朋友发送邀请，他们只需要一个点击就能回复这个主题'
-        email: "我们会给你的朋友发送一封邮件，他们只需要点击其中的一个链接就可以回复这个主题了。"
+        email: "我们会给你的朋友发送一封邮件，他们只需点击其中的一个链接，就可以无需登录直接回复这个主题。"
         email_placeholder: '电子邮箱地址'
         success: "谢谢！我们已发送一个邀请邮件到<b>{{email}}</b>。当他们确认的时候我们会通知你。你也可以在你的用户页面的邀请选项卡下查看邀请状态。"
         error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"

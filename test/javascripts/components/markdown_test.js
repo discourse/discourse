@@ -17,7 +17,13 @@ var cookedOptions = function(input, opts, expected, text) {
 
 test("basic cooking", function() {
   cooked("hello", "<p>hello</p>", "surrounds text with paragraphs");
+  cooked("**evil**", "<p><strong>evil</strong></p>", "it bolds text.");
+  cooked("*trout*", "<p><em>trout</em></p>", "it italicizes text.");
+  cooked("_trout_", "<p><em>trout</em></p>", "it italicizes text.");
   cooked("***hello***", "<p><strong><em>hello</em></strong></p>", "it can do bold and italics at once.");
+  cooked("word_with_underscores", "<p>word_with_underscores</p>", "it doesn't do intraword italics");
+  cooked("hello \\*evil\\*", "<p>hello *evil*</p>", "it supports escaping of asterisks");
+  cooked("hello \\_evil\\_", "<p>hello _evil_</p>", "it supports escaping of italics");
 });
 
 test("Traditional Line Breaks", function() {
