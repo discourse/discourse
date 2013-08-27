@@ -25,13 +25,13 @@ module Onebox
 
     private
 
-    # def fetch
-    #   if cache.has_key?(@url)
-    #     cache.fetch(@url)
-    #   else
-    #     cache.store(@url, open(@url))
-    #   end
-    # end
+    def fetch
+      if cache.has_key?(@url)
+        cache.fetch(@url)
+      else
+        cache.store(@url, open(@url))
+      end
+    end
 
     def read
       Nokogiri::HTML(fetch)
@@ -43,6 +43,10 @@ module Onebox
 
     def template_name
       self.class.name.split("::").last.downcase.gsub(/onebox/, "")
+    end
+
+    def extracted_data
+      raise NoMethodError, "Engines need this method defined"
     end
 
     module ClassMethods

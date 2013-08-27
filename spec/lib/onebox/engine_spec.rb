@@ -2,6 +2,10 @@ require "spec_helper"
 
 class Onebox::Engine::Foo
   include Onebox::Engine
+
+  def extracted_data
+    "bah"
+  end
 end
 
 describe Onebox::Engine do
@@ -12,7 +16,7 @@ describe Onebox::Engine do
   describe "#fetch" do
     it "returns cache value for given url if cache exists" do
       cache = { "http://example.com" => "foo" }
-      result = Onebox::Engine::Foo.new("http://example.com", cache).fetch
+      result = Onebox::Engine::Foo.new("http://example.com", cache).send(:fetch)
       expect(result).to eq("foo")
     end
 
