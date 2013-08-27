@@ -217,15 +217,8 @@ class UsersController < ApplicationController
     end
   rescue ActiveRecord::StatementInvalid
     render json: { success: false, message: I18n.t("login.something_already_taken") }
-  rescue DiscourseHub::NicknameUnavailable
-    render json: { success: false,
-      message: I18n.t(
-        "login.errors",
-        errors:I18n.t(
-          "login.not_available", suggestion: UserNameSuggester.suggest(params[:username])
-        )
-    )
-    }
+  rescue DiscourseHub::NicknameUnavailable=> e
+    render json: e.response_message
   rescue RestClient::Forbidden
     render json: { errors: [I18n.t("discourse_hub.access_token_problem")] }
   end

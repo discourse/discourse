@@ -477,7 +477,7 @@ describe UsersController do
     context 'when nickname is unavailable in DiscourseHub' do
       before do
         SiteSetting.stubs(:call_discourse_hub?).returns(true)
-        DiscourseHub.stubs(:register_nickname).raises(DiscourseHub::NicknameUnavailable)
+        DiscourseHub.stubs(:register_nickname).raises(DiscourseHub::NicknameUnavailable.new(@user.name))
       end
       let(:create_params) {{
         name: @user.name,

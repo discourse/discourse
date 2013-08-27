@@ -177,8 +177,8 @@ class Search
 
     def ts_query
       @ts_query ||= begin
-        escaped_term = PG::Connection.escape_string(@term.gsub(/[:()&!]/,''))
-        query = Post.sanitize(escaped_term.split.map {|t| "#{t}:*"}.join(" & "))
+        all_terms = @term.gsub(/[:()&!'"]/,'').split
+        query = Post.sanitize(all_terms.map {|t| "#{PG::Connection.escape_string(t)}:*"}.join(" & "))
         "TO_TSQUERY(#{query_locale}, #{query})"
       end
     end

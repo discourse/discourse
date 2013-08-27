@@ -50,7 +50,10 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
 
   def register_middleware(omniauth)
     omniauth.provider :open_id,
-           :store => OpenID::Store::Redis.new($redis),
+           :setup => lambda { |env|
+              strategy = env["omniauth.strategy"]
+              strategy.options[:store] = OpenID::Store::Redis.new($redis)
+           },
            :name => name,
            :identifier => identifier,
            :require => "omniauth-openid"
