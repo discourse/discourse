@@ -55,13 +55,7 @@ class UserEmailObserver < ActiveRecord::Observer
     end
 
     def delay
-      mins = SiteSetting.email_time_window_mins.minutes
-      if  notification.user &&
-          (!notification.user.last_seen_at || notification.user.last_seen_at < mins.ago)
-        0
-      else
-        mins
-      end
+      SiteSetting.email_time_window_mins.minutes
     end
   end
 

@@ -174,7 +174,7 @@ Discourse.Dialect.on("register", function(event) {
       result.push(['p', ['aside', params,
                    ['div', {'class': 'title'},
                      ['div', {'class': 'quote-controls'}],
-                     avatarImg ? avatarImg + "\n" : "",
+                     avatarImg ? avatarImg : "",
                      I18n.t('user.said',{username: username})
                    ],
                    contents
