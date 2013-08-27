@@ -56,6 +56,12 @@ Discourse.Ajax = Em.Mixin.create({
       var oldError = args.error;
       args.error = function(xhr) {
 
+        // note: for bad CSRF we don't loop an extra request right away.
+        //  this allows us to eliminate the possibility of having a loop.
+        if (xhr.status === 403 && xhr.responseText == "['BAD CSRF']") {
+          Discourse.csrfToken = null;
+        }
+
         // If it's a parseerror, don't reject
         if (xhr.status === 200) return args.success(xhr);
 
@@ -73,12 +79,11 @@ Discourse.Ajax = Em.Mixin.create({
 
     // For cached pages we strip out CSRF tokens, need to round trip to server prior to sending the
     //  request (bypass for GET, not needed)
-    var csrfToken = $('meta[name=csrf-token]').attr('content');
-    if(args.type && args.type !== 'GET' && !csrfToken){
+    if(args.type && args.type !== 'GET' && !Discourse.csrfToken){
       return Ember.Deferred.promise(function(promise){
         $.ajax(Discourse.getURL('/session/csrf'))
            .success(function(result){
-              $('head').append('<meta name="csrf-token" content="' + result.csrf + '">');
+              Discourse.csrfToken = result.csrf;
               performAjax(promise);
            });
       });
