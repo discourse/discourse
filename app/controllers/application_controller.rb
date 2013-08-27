@@ -26,6 +26,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_filter :set_mobile_view
   before_filter :inject_preview_style
   before_filter :block_if_maintenance_mode
   before_filter :authorize_mini_profiler
@@ -115,6 +116,10 @@ class ApplicationController < ActionController::Base
       preload_current_user_data
       current_user.sync_notification_channel_position
     end
+  end
+
+  def set_mobile_view
+    session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
 
