@@ -231,7 +231,7 @@ zh_CN:
         uploaded_avatar: "自定义图片"
         uploaded_avatar_empty: "添加自定义图片"
         upload_title: "上传图片"
-        image_is_not_a_square: "注意：您的图片将被剪裁为正方形。"
+        image_is_not_a_square: "注意：你的图片将被剪裁为正方形。"
 
       email:
         title: "电子邮箱"
