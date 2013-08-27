@@ -16,6 +16,15 @@ Discourse.Resolver = Ember.DefaultResolver.extend({
     @returns {Template} the template (if found)
   **/
   resolveTemplate: function(parsedName) {
+    if (Discourse.get('mobile')) {
+      var mobileParsedName = this.parseName(parsedName.fullName.replace("template:", "template:mobile/"));
+      var mobileTemplate = this.findTemplate(mobileParsedName);
+      if (mobileTemplate) return mobileTemplate;
+    }
+    return this.findTemplate(parsedName) || Ember.TEMPLATES.not_found;
+  },
+
+  findTemplate: function(parsedName) {
     var resolvedTemplate = this._super(parsedName);
     if (resolvedTemplate) { return resolvedTemplate; }
 
@@ -36,7 +45,6 @@ Discourse.Resolver = Ember.DefaultResolver.extend({
       resolvedTemplate = Ember.TEMPLATES[decamelized];
       if (resolvedTemplate) { return resolvedTemplate; }
     }
-    return Ember.TEMPLATES.not_found;
   }
 
 });
