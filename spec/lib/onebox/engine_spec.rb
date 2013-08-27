@@ -20,7 +20,11 @@ describe Onebox::Engine do
       expect(result).to eq("foo")
     end
 
-    it "stores cache value for given url if cache doesn't exist"
+    it "stores cache value for given url if cache key doesn't exist" do
+      cache = {}
+      result = Onebox::Engine::Foo.new("http://example.com", cache).send(:fetch)
+      expect(cache).to have_key("http://example.com")
+    end
 
     it "is too old monetta"
   end
