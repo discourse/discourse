@@ -58,7 +58,7 @@ Discourse.Ajax = Em.Mixin.create({
 
         // note: for bad CSRF we don't loop an extra request right away.
         //  this allows us to eliminate the possibility of having a loop.
-        if (xhr.status === 403 && xhr.responseText == "['BAD CSRF']") {
+        if (xhr.status === 403 && xhr.responseText === "['BAD CSRF']") {
           Discourse.csrfToken = null;
         }
 
