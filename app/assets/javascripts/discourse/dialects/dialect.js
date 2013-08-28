@@ -163,7 +163,7 @@ Discourse.Dialect = {
 
       var contents = args.emitter.call(this, between);
       if (contents) {
-        return [endPos + startLength + 1, contents];
+        return [endPos+stop.length, contents];
       }
     };
 
