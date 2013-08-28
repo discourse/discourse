@@ -11,7 +11,7 @@ require 'sidekiq/capistrano'
 
 # Repo Settings
 # You should change this to your fork of discourse
-set :repository, 'git@github.com:discourse/discourse.git'
+set :repository, 'git@github.com:cloud66-samples/discourse.git'
 set :deploy_via, :remote_cache
 set :branch, fetch(:branch, 'master')
 set :scm, :git
