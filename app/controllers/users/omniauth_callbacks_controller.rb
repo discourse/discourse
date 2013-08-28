@@ -37,9 +37,13 @@ class Users::OmniauthCallbacksController < ApplicationController
     @data = authenticator.after_authenticate(auth)
     @data.authenticator_name = authenticator.name
 
-    user_found(@data.user) if @data.user
-
-    session[:authentication] = @data.session_data
+    if @data.user
+      user_found(@data.user)
+    elsif SiteSetting.invite_only?
+      @data.requires_invite = true
+    else
+      session[:authentication] = @data.session_data
+    end
 
     respond_to do |format|
       format.html
@@ -87,7 +91,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       session[:authentication] = nil
       @data.authenticated = true
     else
-      if SiteSetting.invite_only?
+      if SiteSetting.must_approve_users? && !user.approved?
         @data.awaiting_approval = true
       else
         @data.awaiting_activation = true
