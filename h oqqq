@@ -1,0 +1,2451 @@
+[33mcommit eafaf2fd7e8cc2f67d52b8266074772d6182a5a6[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:51:22 2013 -0700
+
+    add ted video description. fixes #81
+
+[33mcommit 6f510c64408b412d2d6391d9dfee96f83a4b9930[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:49:41 2013 -0700
+
+    add ted video photo #81
+
+[33mcommit 5706f044c09e1df095ab7817c864d157836e396a[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:48:14 2013 -0700
+
+    add ted video title #81
+
+[33mcommit eefc740660dfa9c561b5bd880a4e9f2d0613e4bd[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:46:05 2013 -0700
+
+    create ted onebox/spec #81
+
+[33mcommit 1bda195d17889cfc9824bb54d44eca8db95cc2ea[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:34:49 2013 -0700
+
+    add vimeo video url. fixes #93
+
+[33mcommit 4db4a6f75f9e4384a2a7f78b155100a7c104c579[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:31:13 2013 -0700
+
+    add vimeo video photo #93
+
+[33mcommit 913d6b6acabce8f301651061782da04c2d825300[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:30:04 2013 -0700
+
+    add vimeo video description #93
+
+[33mcommit e301fa04e4d976de51c2b0bcf72f4e8c1fc762c3[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:28:20 2013 -0700
+
+    add vimeo video title #93
+
+[33mcommit 63d2b83999c110e894f494b7646b5e0a1bd4e157[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:24:15 2013 -0700
+
+    create vimeo onebox/spec #93
+
+[33mcommit f41c29c077a30ae3392e002e719edd5bdc82df23[m
+Merge: a12731a 6b11919
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Tue Aug 27 23:18:20 2013 -0700
+
+    Merge pull request #100 from dysania/add-funny-or-die-onebox
+    
+    Create Funny Or Die onebox
+
+[33mcommit 6b119190ddecb73b3cc1a4c04582bfd586e23b55[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:17:38 2013 -0700
+
+    add funny or die video url. fixes #65
+
+[33mcommit 5ebab3635bd7a9d67b13806703b173dada581e00[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:11:55 2013 -0700
+
+    add funny or die video photo #65
+
+[33mcommit c67ba65d1f0a6889c4331f2d0647c1dd810e8cc9[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:09:12 2013 -0700
+
+    add video description #65
+
+[33mcommit f3068bc2775d6f285d26dbfd81109b0f55e7169f[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:08:11 2013 -0700
+
+    add video title #65
+
+[33mcommit fb01914936f3b0a43986c188acfe3eccca63e0d8[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 27 23:06:18 2013 -0700
+
+    create funny or die onebox/spec #65
+
+[33mcommit a12731a42686de5e3075710936e5760d35da2587[m
+Merge: 3ec3607 8bc4216
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Aug 26 11:15:02 2013 -0700
+
+    Merge pull request #98 from dysania/add-collegehumor-onebox
+    
+    Create CollegeHumor onebox
+
+[33mcommit 3ec360718f338de460dbbe4c11e05c773f25a822[m
+Merge: f1883ab 116dda1
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Aug 26 11:14:10 2013 -0700
+
+    Merge pull request #56 from dysania/hulu-onebox
+    
+    Create Hulu onebox
+
+[33mcommit 8bc4216b6876a755072ad6fa462c8c08c846dfee[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 16:00:20 2013 -0700
+
+    add video url. fixes #62
+
+[33mcommit ab66f49675be9af15e639a298694474597600748[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 15:56:51 2013 -0700
+
+    add video description #62
+
+[33mcommit 5b1b06960692ceacd38d9f35ce280e7d22b0f3e2[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 15:49:51 2013 -0700
+
+    add video image
+
+[33mcommit 0d3984337e699cbf1c6832aa44f17ae14912699e[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 15:46:47 2013 -0700
+
+    add video title #62
+
+[33mcommit 6b9ba1b2e72a8ddbafb429f5f3688317349b7979[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 15:41:00 2013 -0700
+
+    create collegehumor engine/spec #62
+
+[33mcommit 116dda1b65b18b0010149421d15a5ac7626b8e63[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 15:25:01 2013 -0700
+
+    add hulu video url
+
+[33mcommit dd1220b16fdc7bed710243a0e17248d418865b01[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 15:05:50 2013 -0700
+
+    add hulu video description
+
+[33mcommit d37d9b421734f3186c931c95981fb27a2c7c1740[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 15:03:35 2013 -0700
+
+    add hulu onebox image
+
+[33mcommit ee5c9eb34d1e59bd6e560593c6122211a4335e2e[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 12:10:43 2013 -0700
+
+    require hulu in engine.rb, add matches block to hulu onebox
+
+[33mcommit 1ec7ac820f45350ab709d77e0a69b8f309fa2cc6[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 20 20:19:22 2013 -0700
+
+    create hulu onebox/spec, add video title
+
+[33mcommit f1883ab4ff0d70d849a3f14e18de39547a33d848[m
+Merge: 06830a5 ec47204
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Sat Aug 24 23:17:22 2013 -0700
+
+    Merge pull request #99 from dysania/add-nfb-onebox
+    
+    Create NFB (National Film Board of Canada) onebox
+
+[33mcommit ec4720445e7f512db3185b19e8eba93e82671718[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 16:56:04 2013 -0700
+
+    add video url. fixes #74
+
+[33mcommit bb3a4b8a8d0f606fa30c9c1100a4a6f23b3f5f8c[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 16:53:33 2013 -0700
+
+    add video description #74
+
+[33mcommit 0efdbb6a80fcf2e5dbeb0314ce1f9cbb63f27207[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 16:47:26 2013 -0700
+
+    add video title #74
+
+[33mcommit f58fc215f0ffa6b3e106bdf9adbda3bfcb64b739[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 24 16:25:59 2013 -0700
+
+    create nfb onebox/spec #74
+
+[33mcommit 06830a5091f643294b8f88ca00d34ef8634200c0[m
+Merge: 02d5d33 156fdd0
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Wed Aug 21 21:59:40 2013 -0700
+
+    Merge pull request #96 from dysania/bliptv-onebox
+    
+    Require bliptv onebox in engine.rb
+
+[33mcommit 156fdd00df0934ec7132be76dd92021f453ed282[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Aug 21 21:52:38 2013 -0700
+
+    require bliptv onebox fixes #59
+
+[33mcommit 02d5d336920f169f8b6a33636e9f253a18b45c38[m
+Merge: dd133e8 100b745
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Wed Aug 21 21:42:50 2013 -0700
+
+    Merge pull request #95 from dysania/bliptv-onebox
+    
+    Create Bliptv Onebox
+
+[33mcommit 100b74517e1aed9611526f2743772f3da116c96b[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Aug 21 21:28:31 2013 -0700
+
+    create bliptv onebox using opengraph and bliptv spec #59
+
+[33mcommit dd133e884de1e7020e126008e395510a5c143812[m
+Merge: 17b341e a39b0cb
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Wed Aug 21 21:39:49 2013 -0700
+
+    Merge pull request #85 from dysania/verbal-expressions
+    
+    Using Verbal Expressions with new matcher DSL
+
+[33mcommit a39b0cb0e61a9124dbde9a89e2a0e65781aa4851[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 21 21:35:21 2013 -0700
+
+    need to include Engine module in all opengraph oneboxes to get Engine singletons
+
+[33mcommit 2c2a3b082e4cf8fefa5bc4b50fc92bc83ae855ab[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 21 21:33:15 2013 -0700
+
+    add verbal expression block for wikipedia
+
+[33mcommit fb5c4b777680c5fab7b2d383a1b3d85eedb583ce[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 21 21:32:58 2013 -0700
+
+    add verbal expression block for stackexchange
+
+[33mcommit 9e00e37fa24fcf9a8b311d8129cbdf8987faf342[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 21 21:32:38 2013 -0700
+
+    add verbal expression block for qik
+
+[33mcommit b348358f83dbad3e5da487f4a49afbe1286f20c5[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 21 21:31:44 2013 -0700
+
+    add verbal expression block for flickr
+
+[33mcommit 38acd878f0fb883808efa732a2750307cb97852a[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 21 21:30:56 2013 -0700
+
+    add verbal expression block for example
+
+[33mcommit e4575fc5d2307f3855473862f4654bc0ae290207[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 21 21:30:20 2013 -0700
+
+    add verbal expression block for amazon
+
+[33mcommit 3e0e7a0de122d125fd91f25191f37ed062c6f29a[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 21 21:28:12 2013 -0700
+
+    move onebox requires to the bottom for load order
+
+[33mcommit c34dcea3de11c068f078ed1a710783f8727db9d1[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 20 22:22:20 2013 -0700
+
+    we wanted the old matches from the discourse repo #84
+
+[33mcommit 49cc69e60425bde88b366441a1e24df9b636558b[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 20 22:11:43 2013 -0700
+
+    create test for matches
+
+[33mcommit 39aa9c66a76e4eeb7abe1403e51f6353f3b4d2b2[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 20 22:06:37 2013 -0700
+
+    define matches method, create engines array from constants, alter oneboxed to use === instead of explicit regex matching #84
+
+[33mcommit 352da365196835c0d10e5dcc3853b236f402596f[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 20 21:12:58 2013 -0700
+
+    create classmethods module, def === method #84
+
+[33mcommit b50faa50d4f86618fc411e3bac8f63c3f8877d2d[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 20 20:41:45 2013 -0700
+
+    require verbal expressions gem
+
+[33mcommit 17b341e09cc71001af910b15dcfdb6184f89ba5d[m
+Merge: 9be43b8 84efa0b
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Aug 19 22:11:39 2013 -0700
+
+    Merge pull request #53 from dysania/add-flickr-to-matcher-spec
+    
+    Add Flickr to Matcher
+
+[33mcommit 84efa0b18d567399d3bebaf2a156e45b12484fa9[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 19 22:07:37 2013 -0700
+
+    add flickr to matcher
+
+[33mcommit 9be43b810d79c1f5fbfb071828b903730c4ed5bd[m
+Merge: ab44346 326844c
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Aug 19 21:56:53 2013 -0700
+
+    Merge pull request #52 from dysania/flickr-engine
+    
+    Refine Flickr onebox
+
+[33mcommit 326844c6b35a72f9eee55d8b0f8f529a829b7282[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 19 21:50:40 2013 -0700
+
+    add photo description
+
+[33mcommit 54c62f787a26aef469fb2fdd46a6ca706d4e5410[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 19 21:45:31 2013 -0700
+
+    add flickr photo
+
+[33mcommit ab44346a101d22aa08c6df4f38d59de941f43ee4[m
+Merge: 7136f5f dc1d11e
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Mon Aug 19 21:05:44 2013 -0700
+
+    Merge pull request #51 from dysania/cleanup-rename-merge
+    
+    Cleanup rename merge from stackexchange
+
+[33mcommit dc1d11e18e7d7b4c94d1723716ed7528d4b8d5d0[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 19 21:00:14 2013 -0700
+
+    remove additional onebox left over from merge conflict
+
+[33mcommit fe0116015d7e15f37505cda30744bbc35c8c61be[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 19 20:59:30 2013 -0700
+
+    rename flickr to flickr onebox
+
+[33mcommit 7136f5f219a6ecd3867908788eaef081f4d62c87[m
+Merge: d2c3aad b949fd0
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Mon Aug 19 20:53:53 2013 -0700
+
+    Merge pull request #48 from dysania/rename-engines
+    
+    Rename engines to include onebox in the name
+
+[33mcommit b949fd0a156fdb53cf550992413c4dbc8324be8f[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 19 20:52:27 2013 -0700
+
+    snakecase stackexchange
+
+[33mcommit 0ad4830d02ddac74a2de54bee5f6ebec6fa2d044[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:27:01 2013 -0700
+
+    snakecase stack_exchange files
+
+[33mcommit f8a9af775ada6ca19024716b424d3c9ee6198454[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:24:51 2013 -0700
+
+    renamespace onebox classes in matcher.rb and matcher spec
+
+[33mcommit dd68285e95e74d377ae8e4527ec74ab5a50c6ad4[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:23:05 2013 -0700
+
+    remove onebox from expected template name b/c template files don't have onebox in name
+
+[33mcommit 78cba105e2e2225c175a10fa606424fd1f2147ce[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:17:47 2013 -0700
+
+    rename onebox class in wikipedia spec
+
+[33mcommit 3d1a8bf627a903d0a1b5b6288d1784a5865e5904[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:16:11 2013 -0700
+
+    rename onebox class in stack exchange spec
+
+[33mcommit 0985df9aecd7302c2803cb0a7484b6b4aa771c05[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:12:41 2013 -0700
+
+    rename onebox class in qik spec
+
+[33mcommit a1e832d738722e098e04f7c43161b74d5e675251[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:11:42 2013 -0700
+
+    rename onebox class in example spec
+
+[33mcommit 7215da816a05194c895a8eddf3c76410eb19c79b[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:10:29 2013 -0700
+
+    rename onebox class in amazon spec
+
+[33mcommit ca5e51d6543bd73ee06164ef1876702a1a2156fc[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:08:33 2013 -0700
+
+    update file names for require relative
+
+[33mcommit c4d50ddb7e2fe686b0fe35f566a89b570bf0e34a[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:07:08 2013 -0700
+
+    append onebox to file and class name of oneboxes
+
+[33mcommit d2c3aadebac6d979b1949a0ef0353a71a5c2fe85[m
+Merge: b5ef723 d3b93b5
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Aug 19 20:42:06 2013 -0700
+
+    Merge pull request #50 from dysania/open-graph-module
+    
+    Create OpenGraph module
+
+[33mcommit b5ef723cc7cf309c72ed3e1d025aa05fd0e51b09[m
+Merge: ca1a143 c184882
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Mon Aug 19 20:40:58 2013 -0700
+
+    Merge pull request #49 from dysania/cleanup-specs
+    
+    Dry specs
+
+[33mcommit d3b93b5e050d3ac9f6e721691889cbaea62fd69e[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 17 16:53:35 2013 -0700
+
+    create Flickr engine and specs to help fix OpenGraph module
+
+[33mcommit 9f56dea13834bc069f159cf78e36348417869bfb[m
+Author: jzeta <holla@jzeta.com>
+Date:   Sat Aug 17 16:52:30 2013 -0700
+
+    create OpenGraph module which includes Engine module
+
+[33mcommit c184882aa14d01a031ec8f35d61f945a8181a8db[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Sat Aug 17 16:42:21 2013 -0700
+
+    dry specs, use same name for let assignment in all onebox specs
+
+[33mcommit ca1a1435266e28857caee00053b9941ae64ff5a8[m
+Merge: 4aa688c 970dd48
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Sat Aug 17 16:18:30 2013 -0700
+
+    Merge pull request #47 from dysania/parse-opengraph
+    
+    DRYing Engine Code
+
+[33mcommit 970dd480528929893c743eb96b464625500bc7c8[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 23:17:51 2013 -0700
+
+    move duplicate behavior to engine module
+
+[33mcommit 007aadca027f5cae5c75ee85fc34e4d58282b190[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 23:02:22 2013 -0700
+
+    fix specs for amazon, qik, and stackexchange oneboxes b/c changed engine
+
+[33mcommit cf43d40f70d4459ff5eee97ab9020f92ce6dc6e0[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 22:58:59 2013 -0700
+
+    use read method for amazon, qik, and stackexchange oneboxes
+
+[33mcommit 681fdea151f9731f0303b9c847b084ade3e375f8[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 22:50:39 2013 -0700
+
+    change example engine and rspec to use read method
+
+[33mcommit 7b47790e66e1cdca7f4fc4397ec27e86360aac2c[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 22:42:58 2013 -0700
+
+    fix wikipedia spec b/c changed engine
+
+[33mcommit cdaab203e5959df4f9c4994f280d7162e51a0e99[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 22:33:16 2013 -0700
+
+    create read method for using nokogiri or opengraph
+
+[33mcommit 4aa688c6d66f7c1afc4ea25944b2827d1683f3dc[m
+Merge: d91e51c 4c43379
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Thu Aug 15 22:13:45 2013 -0700
+
+    Merge pull request #46 from dysania/require-opengraph-gem
+    
+    Require opengraph_parser gem
+
+[33mcommit 4c43379c5301f99a982b03783e8731c6cc4e973f[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 15 22:04:35 2013 -0700
+
+    require opengraph_parser in onebox.rb #44
+
+[33mcommit 622e03cfb0cc53a44165ffa4802078ee470a4dd4[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 15 21:59:11 2013 -0700
+
+    require opengraph_parser instead of opengraph b/c it sucks #44
+
+[33mcommit d91e51c8a5e93ead2a5835eaddaa5e82f1300d49[m
+Merge: a71a769 cc1ab84
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Thu Aug 15 21:57:47 2013 -0700
+
+    Merge pull request #45 from dysania/setting-pessimistic-versions
+    
+    Setting pessimistic versions
+
+[33mcommit cc1ab84ff6571d75deb8a88380a566de1bdefb05[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 21:55:46 2013 -0700
+
+    change version number for nokogiri because ruby uses diff
+
+[33mcommit 52064b0895eae822e849259dc048c870aa289c9c[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 21:53:14 2013 -0700
+
+    fix rake version number in gemspec
+
+[33mcommit 6d2934f18123285aaea670934af7e3929ec0c943[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 21:46:16 2013 -0700
+
+    added pessimistic version numbers for all gems
+
+[33mcommit cf92ee56a3f1dc466117be811ed051f48d6c7469[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 21:03:59 2013 -0700
+
+    add opengraph runtime dependency to gemspec
+
+[33mcommit 05aaf594059c051754cc48a9c3dceddc00c6e30c[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 15 19:00:08 2013 -0700
+
+    require opengraph gem #44
+
+[33mcommit a71a7693f10efd83703e822f034a2a1e94cf3dd9[m
+Merge: d6904ac 6937e73
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Wed Aug 14 22:43:44 2013 -0700
+
+    Merge pull request #33 from dysania/wikipedia-onebox
+    
+    Add Wikipedia onebox
+
+[33mcommit 6937e7316597cf5caf87df3b02e0973f88e08dd0[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Aug 14 22:42:35 2013 -0700
+
+    move wikipedia to engine dir, delete preview dir
+
+[33mcommit 790552c4acbabfb9b67c339ed654668d77d8805b[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Aug 14 22:41:30 2013 -0700
+
+    renamespace wikipedia to engine
+
+[33mcommit 22fcea1871372219a7f1f90484c94ed10dba9860[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 13 20:47:27 2013 -0700
+
+    fix style issues
+
+[33mcommit 354813694e86f2e4163be0bdec7034ef97fb20d0[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 12 20:24:42 2013 -0700
+
+    remove http protocol from expected url in test to match wikipedia response
+
+[33mcommit f4a8168a547d6b3346a3152d851500504aed7100[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 12 20:21:12 2013 -0700
+
+    change nokogiri selector to specific image class
+
+[33mcommit e8d6896ed9092196d1554c3fdabd89d8e9df738f[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 12 13:08:16 2013 -0700
+
+    remove protocol in wikipedia template
+
+[33mcommit 7ae3c7b7dcfd716f9a833a89f7a091520d997013[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Aug 7 22:42:04 2013 -0700
+
+    template for wikipedia onebox
+
+[33mcommit d20e992a4b866766b86ced831f701b52aed0a46e[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Aug 7 22:41:42 2013 -0700
+
+    add wikipedia onebox spec
+
+[33mcommit a6e3a5d736d83dda6032ea56cf0a4ad4882d3ab9[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Aug 7 22:41:09 2013 -0700
+
+    add wikipedia onebox
+
+[33mcommit d6904ac3e4cd7bd46c325b75a16e81316ee121af[m
+Merge: ae7fabd ba947f6
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Wed Aug 14 22:31:16 2013 -0700
+
+    Merge pull request #38 from dysania/create-qik-onebox
+    
+    Add Qik onebox
+
+[33mcommit ba947f6eb292388c099b7ad4cba834dc6654d632[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 14 22:30:50 2013 -0700
+
+    move qik to engine dir, delete preview dir
+
+[33mcommit 62d74ecf59ef6416cd117fa1fb26691a0f87635d[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 14 22:30:12 2013 -0700
+
+    renamespace qik to engine, require in engine, add to matcher
+
+[33mcommit e883acdd0ff500c11e4ff327145f60c590992b97[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 13 20:49:12 2013 -0700
+
+    add test for video embed, pending for now b/c don't know how to grab video embed code yet
+
+[33mcommit eed71d5846494ea7833561507084b5e2f74b1b55[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 13 20:47:56 2013 -0700
+
+    get rid of duplicate onebox instancing
+
+[33mcommit aca2ab5b39b86e96a788b05afee618c22dd3c64d[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 13 00:08:57 2013 -0700
+
+    create qik handlebars template
+
+[33mcommit 8dc4f82d4104a253564815cb6c2625ceb2e382cc[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 13 00:08:44 2013 -0700
+
+    create qik onebox spec
+
+[33mcommit 1b42c6a5db92adf30cff31361a4d4db76de4cb03[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 13 00:08:25 2013 -0700
+
+    create qik onebox
+
+[33mcommit ae7fabde3ee769de43e031412183865b63f19f5c[m
+Merge: 92ee5c2 e76f7c9
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Wed Aug 14 22:13:33 2013 -0700
+
+    Merge pull request #42 from dysania/matcher-object
+    
+    Create Matcher object
+
+[33mcommit e76f7c9e1945461f4a5564872f162f6c2e9735d8[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 14 22:12:11 2013 -0700
+
+    move stackexchange files to engine folder, redelete preview dir
+
+[33mcommit 5df7e92a95fc94229fd80bf2c8b4bc16d1a7d5f1[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 14 22:10:54 2013 -0700
+
+    renamespace stackexchange to engine
+
+[33mcommit 653808ae4a0731babf5bac14a72ddccf7664f3eb[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 14 22:09:55 2013 -0700
+
+    add stackexchange matching
+
+[33mcommit 1012e66e8a5fe0a160920e1ded28b2dee2a3d1e9[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 14 21:58:06 2013 -0700
+
+    indent when as deep as case
+
+[33mcommit 6b3433710f1b76a94570678fdaa4d125a966c28a[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 13 22:10:56 2013 -0700
+
+    We want to match complex urls to oneboxes. fix #41
+
+[33mcommit e19b97921739ed939a71d884f6bc5b7ca4b0d9b7[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 13 22:10:32 2013 -0700
+
+    Refactoring old onebox objects into the engine namespace.
+
+[33mcommit 92ee5c2e39d3026747fa692f02ef422144bdebf1[m
+Merge: afe6a0c 899f0ec
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Wed Aug 14 21:57:31 2013 -0700
+
+    Merge pull request #36 from dysania/create-stackexchange-onebox
+    
+    Add StackExchange onebox
+
+[33mcommit 899f0ec3ed0d35723c7e8ffd519e5095dd799cb1[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 12 23:17:48 2013 -0700
+
+    create stackexchange handlebars template
+
+[33mcommit 097ccb3fe1c0f581244706eeb9531a217347659f[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 12 23:17:27 2013 -0700
+
+    create stackexchange onebox spec
+
+[33mcommit 207f558cee3dd3cd4a539417cb7cf8ee003e9283[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 12 23:17:04 2013 -0700
+
+    create stackexchange onebox
+
+[33mcommit 150f64f781ab06282a43ceb0a5b1de3a1cfa2dbd[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 12 23:16:35 2013 -0700
+
+    require stackexchange, match stackexchange.com to stackexchange
+
+[33mcommit afe6a0c93e97103152b4ade3f230ffc063118380[m
+Merge: ebe07ef cf9509f
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Aug 12 13:15:39 2013 -0700
+
+    Merge pull request #35 from markijbema/rubocop
+    
+    Rubocop
+
+[33mcommit cf9509f8f37871ebc35d554723cb7e6839d937a4[m
+Author: Mark IJbema <markijbema@gmail.com>
+Date:   Sat Aug 10 16:19:10 2013 +0200
+
+    Reverted Nokogiri::HTML method call change
+    
+    this is fixed in the latest rubocop (head), so the
+    current version might still give errors about this.
+    
+    For more information: https://github.com/bbatsov/rubocop/issues/425
+
+[33mcommit b5cf068e151f1eeb4e8b5696cfc8aa89711fd9a1[m
+Author: Mark IJbema <markijbema@gmail.com>
+Date:   Fri Aug 9 12:54:16 2013 +0200
+
+    Fix spacing
+    
+    Removed extraneous whitelines
+    replaced tabs by spaces
+    removed trailing whitespace
+
+[33mcommit e41085fd89263019ab63690044d248dca0bf207e[m
+Author: Mark IJbema <markijbema@gmail.com>
+Date:   Fri Aug 9 12:53:47 2013 +0200
+
+    Indent case as deep as when
+
+[33mcommit f6467c78c3c418d07da25439085fad75e85b1aea[m
+Author: Mark IJbema <markijbema@gmail.com>
+Date:   Fri Aug 9 12:53:17 2013 +0200
+
+    Don't invoke methods using ::
+
+[33mcommit ffeeb173a3f50a2e1d9a0150d1a10c14ce59c974[m
+Author: Mark IJbema <markijbema@gmail.com>
+Date:   Fri Aug 9 12:50:18 2013 +0200
+
+    Split extremely long line over multiple lines
+    
+    I feel this test can be written in another way,
+    but I didn't want to change functionality in this branch
+
+[33mcommit b87653a99b704ae5bbfe742f6388f6fd56e1c9e6[m
+Author: Mark IJbema <markijbema@gmail.com>
+Date:   Fri Aug 9 12:49:25 2013 +0200
+
+    Be a bit less strict with rubocop
+    
+    This way most of the codebase passes, and the things it catches
+    are actually real issues, also compared to the rest of the codebase
+
+[33mcommit eb9358f0630599359fb2a42cbc161451756a94b8[m
+Merge: 5edd1f0 ebe07ef
+Author: Mark IJbema <markijbema@gmail.com>
+Date:   Fri Aug 9 12:37:30 2013 +0200
+
+    Merge branch 'master' into rubocop
+
+[33mcommit 5edd1f0f94fca5c0d8a11baea4553c250a51f85b[m
+Author: Mark IJbema <markijbema@gmail.com>
+Date:   Fri Aug 9 12:27:32 2013 +0200
+
+    Added rubocop with some sane default settings
+
+[33mcommit ebe07ef26b9679df66d68c9d14367b03cc2ea7cc[m
+Merge: fbc6341 b3627ae
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Wed Aug 7 21:10:35 2013 -0700
+
+    Merge pull request #32 from dysania/readme-after-onebox-rename
+    
+    Update README after renaming to onebox
+
+[33mcommit b3627ae1170bfab162ae3afe671b0936d42bae3c[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Aug 7 18:02:34 2013 -0700
+
+    change discourse-oneboxer to onebox
+
+[33mcommit fbc63410e59ca37e4463787f5d54f4d06d2302b2[m
+Merge: a7590b6 41ca81f
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Tue Aug 6 22:30:21 2013 -0700
+
+    Merge pull request #31 from dysania/remove-discourse-namespacing
+    
+    Remove discourse namespacing
+
+[33mcommit 41ca81fd0d9a77994c4741b13bbd0bcd62d547f7[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 22:29:22 2013 -0700
+
+    change gem name to onebox because its prettier
+
+[33mcommit c553081ca2b9ee0b5072d2ab5f42156ddff1de18[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 22:18:51 2013 -0700
+
+    we want to renamespace to Onebox
+
+[33mcommit 07890c4dbc0e487f8b284eb41aa4b6b709dd8cbc[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 22:15:04 2013 -0700
+
+    we wanted to finish renamespacing to Oneboxer
+
+[33mcommit 39203f3edf6aad493124b76d5be55eac0f5f4b1d[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:45:30 2013 -0700
+
+    remove Discourse namespacing from spec helper
+
+[33mcommit f61e5cd82df33f1ee2dab7b16fc300f0913b14e6[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:44:41 2013 -0700
+
+    remove Discourse namespacing from preview spec
+
+[33mcommit 909aa1cc8f1b4991762947af5f6b67cba11a31af[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:44:04 2013 -0700
+
+    remove Discourse namespacing from example spec
+
+[33mcommit 1d546c668f00a2fa3550fb8f047ab00871cbbeb8[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:43:31 2013 -0700
+
+    remove Discourse namespacing from amazon spec
+
+[33mcommit cb2b86dc6b56f75ba98fa51a7a3e942f782199e0[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:39:19 2013 -0700
+
+    remove Discourse namespacing from preview, oneboxer, and discourse-oneboxer
+
+[33mcommit 49d56565f2767aebd5cd5a78edfbbf07a80f0bff[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:33:49 2013 -0700
+
+    remove Discourse namespace from oneboxers
+
+[33mcommit ec26897177c6d9ddb9d21fc34287059bf6b9579c[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:55:15 2013 -0700
+
+    remove Discourse namespacing
+
+[33mcommit c5448c1775bb2ea4a78adc4e47f4638b57f48fed[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:54:35 2013 -0700
+
+    remove Discourse namespace from gemspec and rename it
+
+[33mcommit a7590b6d2b04f70d6e8ed501e4441d51130aed1d[m
+Merge: 5fa6340 8218cdd
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Tue Aug 6 21:50:29 2013 -0700
+
+    Merge pull request #30 from dysania/remove-non-dysania-files-lib
+    
+    Remove non dysania files lib
+
+[33mcommit 5fa634041346fd21942fb848027b604bb914844b[m
+Merge: cf99f59 2692077
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:50:12 2013 -0700
+
+    Merge pull request #29 from dysania/remove-non-dysania-files-spec
+    
+    Remove files in spec/ we didn't write
+
+[33mcommit 2692077ad8d3b2208bdb11ad8390ef7948a577ae[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 6 21:26:38 2013 -0700
+
+    delete discourse images
+
+[33mcommit 779d689c92580f08b46e528d4c6f369608cb02a7[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 6 21:22:37 2013 -0700
+
+    delete discourse oneboxer spec
+
+[33mcommit 90d426c66a375187844ff2b7e434c36faa9e0f96[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 6 21:20:23 2013 -0700
+
+    delete discourse onebox specs
+
+[33mcommit 8218cdd898a813fa277bb531a2812ca15ef69277[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:20:22 2013 -0700
+
+    remove all oneboxers we did not write
+
+[33mcommit 1e5089d618c08c6d7d3fba8b22bfd347f8c53854[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 6 21:19:14 2013 -0700
+
+    delete discourse email fixtures
+
+[33mcommit 40cdb88376cb6d8bedc7e74175a533c0ec98500d[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Aug 6 21:17:19 2013 -0700
+
+    delete discourse fixtures
+
+[33mcommit 59898999ffa9cfae04ffdb2f4ca4535abf216dac[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Aug 6 21:16:43 2013 -0700
+
+    remove all handlebars templates
+
+[33mcommit cf99f59f3aab8abcff9e4eeb5af696914473bfc9[m
+Merge: 93c4401 cd14fd1
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Tue Aug 6 20:05:20 2013 -0700
+
+    Merge pull request #25 from dysania/preview-refactor
+    
+    Preview refactor
+
+[33mcommit 93c44018c83a0cc7c58c761b138351828e8e23db[m
+Merge: b1988a4 91c6e05
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Tue Aug 6 19:52:49 2013 -0700
+
+    Merge pull request #28 from markijbema/improve-imgur-translate-url
+    
+    Improved robustness of translate_url method
+
+[33mcommit b1988a498400f094091184c6d63499d083249ddc[m
+Merge: e4f3ca9 94ed541
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Tue Aug 6 19:51:59 2013 -0700
+
+    Merge pull request #26 from eviltrout/fix_oembed
+    
+    FIX: `original_url` wasn't being set properly. I fixed this in Discourse...
+
+[33mcommit 91c6e05dee30b4d239e8020521ecf16e8c9a99b5[m
+Author: Mark IJbema <markijbema@gmail.com>
+Date:   Tue Aug 6 22:43:51 2013 +0200
+
+    Improved robustness of translate_url method
+    
+    Make sure we don't create images for pages like help
+    Also brought this object under test
+
+[33mcommit cd14fd1973781b36922347859169e8700abec4f4[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 5 22:37:48 2013 -0700
+
+    fix preview spec to use example fixture
+
+[33mcommit e974dabc603dfc9d6f736489d14a0f6a1c225c85[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 5 22:23:46 2013 -0700
+
+    edit preview spec to make sure it's using fixture not web
+
+[33mcommit 045891b163fd70bea82144e4aad412f90a098014[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 5 22:23:07 2013 -0700
+
+    use response function in amazon and example specs
+
+[33mcommit 963116907ffb92990ebd29f2b6480ba9e3db5490[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 5 22:21:26 2013 -0700
+
+    create response function so we don't repeat code in tests
+
+[33mcommit 3467beac287172ab9cb15d46dd1f55ba05fbf819[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 5 22:20:38 2013 -0700
+
+    format amazon handlebars better
+
+[33mcommit acece43cc028abc455708913275017d5b20443c5[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 5 22:04:54 2013 -0700
+
+    make amazon url test pass
+
+[33mcommit 13dd187ec38ca0784e83c335a1379b7727badf54[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 5 21:41:39 2013 -0700
+
+    create test for amazon product url
+
+[33mcommit 047381967273aaae96cd1984a94bd4ad14981aa1[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 5 21:30:35 2013 -0700
+
+    make amazon product price test pass
+
+[33mcommit a032ed40c439e12608bd0719ca360a82b56e5d3e[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 5 21:28:05 2013 -0700
+
+    create test for amazon product price
+
+[33mcommit 5587f4c108e4aefe5f7f4b87173a97881b345e32[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 5 21:26:16 2013 -0700
+
+    make amazon product description test pass
+
+[33mcommit a796ddcec930469438c229066e208ff45e098f6b[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 5 21:23:19 2013 -0700
+
+    create test for amazon product description
+
+[33mcommit adb1ee8b007e17abb47cafdd197d07776ad57afc[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Aug 5 21:20:20 2013 -0700
+
+    make amazon image test pass
+
+[33mcommit 8b9cbe7ced8c08da162f6518547609a56f927642[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Aug 5 21:03:22 2013 -0700
+
+    test for amazon image
+
+[33mcommit 94ed54158ba57cd124da57e917cbdfd6302c1c73[m
+Author: Robin Ward <robin.ward@gmail.com>
+Date:   Mon Aug 5 16:25:36 2013 -0400
+
+    FIX: `original_url` wasn't being set properly. I fixed this in Discourse and wanted to make
+    sure the fix got over here too :)
+
+[33mcommit be5fc62451bf4d37073423217c0487b8479709ed[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:53:58 2013 -0700
+
+    create android fixture
+
+[33mcommit 2bcd134b44c35bbc2fdafb5fa10ec3b625e130b8[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:52:51 2013 -0700
+
+    comment out amazon expectation - bad test, rewrite later
+
+[33mcommit 3e1a56afaa6855f788d9148ce2f07a73beaf43e0[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:52:15 2013 -0700
+
+    use nokogiri inner_text method to get data w/o html tags
+
+[33mcommit 3296c2013e2803f6ed39296ff7df1d50c4a1927e[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:38:42 2013 -0700
+
+    Revert "delete original fixtures"
+    
+    This reverts commit 9ab55a3c2e93e9a1a8d312606ad132bb2778a885.
+
+[33mcommit 8659df551ea6f6f39e8a333cfeec62a737635c89[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 22:35:43 2013 -0700
+
+    rm copy of hulu fixture
+
+[33mcommit 6eb5b51d7e62c37a8ce1c2f754b1179713d29f53[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 22:33:29 2013 -0700
+
+    move hulu fixture to the right place
+
+[33mcommit 517916b456861c2b16768d8a5bec6813fe7ad514[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 22:29:32 2013 -0700
+
+    create fixture for hulu
+
+[33mcommit 9ab55a3c2e93e9a1a8d312606ad132bb2778a885[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:26:48 2013 -0700
+
+    delete original fixtures
+
+[33mcommit 037654734b9dcb8f0b4ae4bb4feaef58fb0ac68d[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:24:29 2013 -0700
+
+    create github blob fixture
+
+[33mcommit 1fb8f6d189e7ea14f9c86dcff9d37cf5f9a2aa87[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 22:24:56 2013 -0700
+
+    create fixture for qik
+
+[33mcommit 120302679e30c4128d74a3dc054dc0315d9c3157[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 22:20:16 2013 -0700
+
+    create fixture for ted talk
+
+[33mcommit 6c4db8cd3dbff565faa28476e93029f02960dc6f[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:17:49 2013 -0700
+
+    create wikipedia redirected fixture
+
+[33mcommit acac79e74a9769ce753dc3d2c10476f5f9fb80fe[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 22:17:36 2013 -0700
+
+    create fixture for twitter status
+
+[33mcommit 8256062d907900943f2849122c77fd26f5c1901e[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:15:26 2013 -0700
+
+    create image fixture
+
+[33mcommit db1bf8421799909cb8290492fcd1b6d2019dc00a[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:12:39 2013 -0700
+
+    create stack exchange fixture
+
+[33mcommit ee186289ac82778f083cf47281ef30fe3abbc3b8[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:09:39 2013 -0700
+
+    create soundcloud fixture
+
+[33mcommit 1063126e46597526d1d6979cb2789eee442efd30[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 22:09:18 2013 -0700
+
+    create fixture for viddler
+
+[33mcommit ed1d78d6dbf3759c642b3cf9790fa91d7ed4ca92[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 22:04:15 2013 -0700
+
+    create slideshare fixture
+
+[33mcommit 7210de38733ca27ef1946d6d625e6c61bc813635[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 22:03:01 2013 -0700
+
+    create fixture for an ogg video
+
+[33mcommit a060cd4af624a45f4b8f3f47a1079874899f42ec[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 21:52:34 2013 -0700
+
+    create fixture for vimeo
+
+[33mcommit af1e9602e642fc624725f6e5429aa2fe05e1deea[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:59:55 2013 -0700
+
+    create revision3 fixture
+
+[33mcommit bb628193b457134012d2eb295d9404a707541ef0[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:55:59 2013 -0700
+
+    create open graph fixture - facebook page
+
+[33mcommit f1a15d398713ad45c73133bc40c54f39fb25ec9b[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:52:04 2013 -0700
+
+    create national film board fixture
+
+[33mcommit 16f0e274206aea321f46b5067ce002b309b9a5c7[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 21:43:22 2013 -0700
+
+    create fixture file for yfrog
+
+[33mcommit ab85478aea9afa1cabaf8d80b4848f3cf9185da8[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:41:11 2013 -0700
+
+    create kinomap fixture
+
+[33mcommit b8bb31bf0924d97bb5e24fec896cbf1e699873e3[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:35:58 2013 -0700
+
+    create imgur fixture
+
+[33mcommit 71abc6d353f34a447f5df4805e07e1f8340da275[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 21:29:32 2013 -0700
+
+    remove whitespace from funnyordie fixture
+
+[33mcommit 0e6c313c5d1f137014e913631cc8820bb5e4e6e4[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 21:26:24 2013 -0700
+
+    remove whitespace from dotsub fixture
+
+[33mcommit f3b86356494beb0a377d61dcaa50768eb781dfac[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:25:42 2013 -0700
+
+    create github pull request fixture
+
+[33mcommit 10fcd06c55c242544bcba22ceaf28bbef7f80e2e[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 21:25:06 2013 -0700
+
+    remove whitespace from daulymotion fixture
+
+[33mcommit 257f94e7269be469ca1818aa7cbb6b6b7693d6f8[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 21:22:38 2013 -0700
+
+    remove whitespace from collegehumor fixture
+
+[33mcommit 207354445d3b370baa44637f0f43581a96591097[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:22:34 2013 -0700
+
+    create gist fixture
+
+[33mcommit 8cc68d3ebcce6bf70615e53045add6c5685ea023[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:21:21 2013 -0700
+
+    create funny or die fixture
+
+[33mcommit b9d40c09bd6043542a6bc3041b86e7b7d08e0699[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:19:17 2013 -0700
+
+    create dotsub fixture
+
+[33mcommit 9d73c958316e3ccbfdf772d6ccf414f4e9f2ea75[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:16:41 2013 -0700
+
+    create dailymotion fixture
+
+[33mcommit 305811b3052770a90d39d0c17388ee53ff204fb8[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:11:17 2013 -0700
+
+    create clickthrough fixture
+
+[33mcommit d50926036585a081735027d2959ee9a637f897f4[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 21:09:55 2013 -0700
+
+    remove whitespace from bliptv fixture
+
+[33mcommit 12be80ba3574ea0deea0e25213c714cdddeece6b[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:08:30 2013 -0700
+
+    create blip.tv fixture
+
+[33mcommit 2d35157ddbcd98a7e8533b3623fc4fbbde434acb[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 21:06:20 2013 -0700
+
+    create college humor fixture
+
+[33mcommit a22da256c522b7273304fbdac1f80a54e81578a0[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 21:01:00 2013 -0700
+
+    remove all four lines of whitespace from wikipedia fixture
+
+[33mcommit 829341436a8a780c656eeee9c8616360d6508d36[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 20:52:17 2013 -0700
+
+    remove whitespace from rottentomates fixtures
+
+[33mcommit a8b9113fe8e9ff7462e30e00373f226173a047ac[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 20:48:28 2013 -0700
+
+    create wikipedia fixture
+
+[33mcommit b778e49264a4081e14a513cc0c4eb92ab3dd317d[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 20:46:23 2013 -0700
+
+    create rotten tomatoes rotten fixture
+
+[33mcommit 954686e56645888a965dd3a95c91825dfed1c78c[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 20:45:58 2013 -0700
+
+    create rotten tomatoes incomplete fixture
+
+[33mcommit 16aab711fd41de99d6dba8b67b81364c9164b2d9[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 20:45:33 2013 -0700
+
+    create rotten tomatoes fresh fixture
+
+[33mcommit 31bef0212b648d0034cc07125cc9b65f583a5f92[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 20:46:28 2013 -0700
+
+    remove whitespace from github commit fixture
+
+[33mcommit a12c72c71d8af6811b579c6a0c7b388597a7b9ce[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 20:43:23 2013 -0700
+
+    remove whitespace from apple fixture
+
+[33mcommit 8b29f49effaae90b7c2c5aebf913bceceb0baad5[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 20:41:46 2013 -0700
+
+    create github commit fixture
+
+[33mcommit bd36eff4338bc0083cd95113add761a63c9669bf[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 20:38:16 2013 -0700
+
+    create apple fixture
+
+[33mcommit 1bce8d4cd565139048db990da2af0d49ec2291f7[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 20:33:43 2013 -0700
+
+    remove whitespace from flickr fixture
+
+[33mcommit 063f8823c22bd41c7f654c80f692d46e8b099439[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 19:54:17 2013 -0700
+
+    create flixkr fixture
+
+[33mcommit 5a5913aa9b72f345acd9841a5249220935365108[m
+Author: jzeta <holla@jzeta.com>
+Date:   Thu Aug 1 19:53:37 2013 -0700
+
+    fixed example fixture
+
+[33mcommit d35c46ef8adc03f75e98d11fe9bf5c643a213209[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Thu Aug 1 00:27:00 2013 -0700
+
+    remove white space and css from amazon fixture
+
+[33mcommit 0885d25374a13240ec6b831278f8b3c0cdc0cf8b[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 31 21:46:48 2013 -0700
+
+    change amazon spec to check for product title
+
+[33mcommit dd20ce75fa05f6e9ea40a55f87a0a53f20be1bbf[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 31 21:05:42 2013 -0700
+
+    make preview and amazon specs pass, amazon and example fixtures
+
+[33mcommit 018eff56bc8a171750206b7e8c623ad1540e87e6[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 31 20:32:37 2013 -0700
+
+    add amazon spec
+
+[33mcommit fd21237cca8821c7c9a5b80c7542d18aa250add7[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 30 22:17:13 2013 -0700
+
+    create amazon handlebars and class
+
+[33mcommit 0e0898995a060cff0d7f417d695fb60a3177330f[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 30 21:50:16 2013 -0700
+
+    add expectation for amazon preview
+
+[33mcommit 8bc693b7f824605adf4e85b1253557b3a362865b[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 30 21:26:30 2013 -0700
+
+    make test pass - Preview outputs extracted html using Example
+
+[33mcommit d0d9f4064896c3ca77ee58fac2ebb3ba53428e0c[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 30 21:09:19 2013 -0700
+
+    make test pass add triple mustaches to prevent escaping
+
+[33mcommit dbe5912e88af2ea79a098826dbb95969c8620ea0[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Tue Jul 30 18:17:41 2013 -0700
+
+    The first preview oneboxer
+
+[33mcommit b323b9518a8f2429b280ba8db1cfd7d03f54e30c[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Tue Jul 30 18:16:57 2013 -0700
+
+    Initial work on the preview object
+
+[33mcommit e4f3ca966b3bad8bb21e61995a47450c23d9adef[m
+Merge: fc87427 49d2269
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Sun Jul 28 17:08:25 2013 -0700
+
+    Merge pull request #6 from dysania/readme
+    
+    editing README
+
+[33mcommit 49d226902d837fd313fc898adbd7d0b33b330435[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Thu Jul 25 21:14:18 2013 -0700
+
+    change comment to TODO for register at rubygems.org b/c can't comment in md
+
+[33mcommit 274451316c56157c765dd9cb381ad86425fa43e7[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Thu Jul 25 21:07:31 2013 -0700
+
+    comment out rubygems.org badge and link because we have not registered gem yet
+
+[33mcommit fca48d40a1d7d0f09b1432fa826fadbf82b466e2[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Thu Jul 25 21:05:28 2013 -0700
+
+    point Code Climate badge and link to dysania/discourse-oneboxer
+
+[33mcommit d9a64bc94948c84f2a8d6a4762ebd884407ed78a[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Thu Jul 25 21:01:54 2013 -0700
+
+    point Travis CI badge and link to dysania/discourse-oneboxer
+
+[33mcommit 03b2bd7849d928feefa7ba96eb5c0cf87ccd2cb4[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Thu Jul 25 20:57:25 2013 -0700
+
+    remove include modules example, add TODO
+
+[33mcommit 1789ed5047411c61eebbc0c634f189b385ccc700[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Thu Jul 25 20:51:46 2013 -0700
+
+    remove sinatra style example because will not be framework specific
+
+[33mcommit f5f764915970c36c372283a6d391e6018fdb5b76[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Thu Jul 25 20:48:00 2013 -0700
+
+    include gem discourse-oneboxer
+
+[33mcommit fc87427d2960d31f4e44d33dce373cda182af93e[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Wed Jul 24 22:28:51 2013 -0700
+
+    Making travis use right ruby.
+
+[33mcommit e75175f3c53e44c8f5eef6186704dd49665633e2[m
+Merge: 87638d4 a3658d6
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Wed Jul 24 22:18:45 2013 -0700
+
+    Merge pull request #23 from dysania/replace-present-with-nil
+    
+    Replace Present with Nil
+
+[33mcommit 87638d422e4bd817c87bee0356adef221a2104cd[m
+Merge: c2843d1 8c86600
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Wed Jul 24 22:18:26 2013 -0700
+
+    Merge pull request #24 from dysania/pending-oneboxer-spec
+    
+    Add pending message for oneboxer-spec
+
+[33mcommit 8c86600eb3ba001a94b60b8b81463f8b285d255f[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 24 22:17:02 2013 -0700
+
+    add pending message for method we don't understand yet
+
+[33mcommit a3658d685106a5365e14390946f94e5492f34c69[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 22:14:23 2013 -0700
+
+    change present to nil b/c not using ActiveRecord
+
+[33mcommit c2843d19fbbc17292008bcf11e35138076db885a[m
+Merge: ac3c591 33dba40
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Wed Jul 24 22:08:11 2013 -0700
+
+    Merge pull request #22 from dysania/present-to-nil
+    
+    Replacing ActiveSupport method in oneboxer.rb
+
+[33mcommit 33dba4060894825e70b361fd710d134780565816[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 24 22:07:03 2013 -0700
+
+    changing present? to nil? b/c not using ActiveSupport
+
+[33mcommit ac3c59197496b6b2ad3d5fa3bb653baf854641b9[m
+Merge: c115834 501867c
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Wed Jul 24 22:02:40 2013 -0700
+
+    Merge pull request #21 from dysania/requiring-mocha
+    
+    Require Mocha
+
+[33mcommit 501867c9c293478eb3264cd1268183da8af92867[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:58:13 2013 -0700
+
+    require mocha
+
+[33mcommit c115834a879492b245523b723b124e654ee51ce6[m
+Merge: e3717b5 3325cbf
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Wed Jul 24 21:55:11 2013 -0700
+
+    Merge pull request #20 from dysania/pending-methods-we-dont-understand-yet
+    
+    Add Pending Message to Apply Method Tests
+
+[33mcommit e3717b504bb1a579db1f49d342afb560dc1170a4[m
+Merge: f2ed499 90a8f7f
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Wed Jul 24 21:54:57 2013 -0700
+
+    Merge pull request #18 from dysania/adding-mocha
+    
+    Add Mocha Runtime Dependency
+
+[33mcommit f2ed49944abf772b4c400d8f5e966606a1d58b2e[m
+Merge: 80c1f99 2c073d5
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Wed Jul 24 21:54:35 2013 -0700
+
+    Merge pull request #17 from dysania/pending-unfixable-tests
+    
+    Pending unfixable tests
+
+[33mcommit 3325cbff950c0c516689b71dec6aa47a4560d072[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:51:19 2013 -0700
+
+    fix spelling error
+
+[33mcommit a81ecb17978dd9b000540080a823fb8ed149d4bb[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:49:20 2013 -0700
+
+    save pending msg
+
+[33mcommit 91e794d4a42b261b15c579bc1b010d592149a85e[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:47:34 2013 -0700
+
+    add pending message to apply method we do not understand yet
+
+[33mcommit 90a8f7f44d3e7ff885b02629d57ada446b512864[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:38:07 2013 -0700
+
+    add mocha runtime dependency
+
+[33mcommit 2c073d5498bc82c7873294f4c2dbf48bea8df004[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 24 21:36:36 2013 -0700
+
+    pending onebox_for_url
+
+[33mcommit 9257322a3f147918c9d658498b0542974e88cf86[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 24 21:35:42 2013 -0700
+
+    pending onebox_for_url
+
+[33mcommit 161d1072017eda183f31ac781b169cdb086b2dc8[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 24 21:34:32 2013 -0700
+
+    pending expects and onebox methods
+
+[33mcommit a987a7ada90c6d7ba7b82e24a9faf7c47e125306[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:33:34 2013 -0700
+
+    add pending msg to Oneboxer.expects
+
+[33mcommit a7375a5924e1dc52062164ddde146b1bf854e092[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 24 21:32:29 2013 -0700
+
+    pending expects
+
+[33mcommit 85f3a9b0210cace93cfeba16b600bcc331a70097[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:32:27 2013 -0700
+
+    add pending msg to Oneboxer.expects
+
+[33mcommit 6c465a978788f840519cdc68d40843d2c4faf397[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 24 21:31:42 2013 -0700
+
+    pending expects
+
+[33mcommit 9e5314177cd81733cdfabe4bca8563b00ad55bbb[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:30:54 2013 -0700
+
+    add pending msg to Oneboxer.expects
+
+[33mcommit a2e585b07c724fc4f9f15bdfa8c7fb04a3b797b4[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:27:48 2013 -0700
+
+    add pending msg to matchers.should be_present
+
+[33mcommit 0e737cf4d5bccb2c77ea4ff64468deaf9620a03b[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 24 21:26:58 2013 -0700
+
+    pending onebox_for_url
+
+[33mcommit a77e9c8582b70ac9c22e838eb90cb708ea8f4ecb[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:23:36 2013 -0700
+
+    add pending msg to test
+
+[33mcommit 80c1f9925858b7fb40d76bc9648478b346f11179[m
+Merge: 480337f f1a476f
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Wed Jul 24 21:15:05 2013 -0700
+
+    Merge pull request #16 from dysania/replacing_base_url_call
+    
+    We don't want to depend on discourse for base url.
+
+[33mcommit f1a476fa55dd372f541d39b9305d3c0817430fa9[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Wed Jul 24 21:14:12 2013 -0700
+
+    We don't want to depend on discourse for base url.
+
+[33mcommit 480337fb60c7c4ea24f7f5f6348930dc92684d27[m
+Merge: 9862467 4a2594f
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Wed Jul 24 20:46:24 2013 -0700
+
+    Merge pull request #15 from dysania/onebox-spec-fix
+    
+    Fix Onebox Spec
+
+[33mcommit 4a2594f6829109022808395a17ad198daaa050d5[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 23 23:56:14 2013 -0700
+
+    fix or statement
+
+[33mcommit c63712a2cb0704e592b8b8e015c8ae540585fd4f[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 23 23:53:35 2013 -0700
+
+    change present to nil or empty
+
+[33mcommit 986246725a1d2bf63eecb5806db4cf7296f796f4[m
+Merge: 10b3dc3 3c7d904
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Mon Jul 22 21:19:16 2013 -0700
+
+    Merge pull request #14 from dysania/rottentomatoes-onebox-spec-fix
+    
+    Rottentomatoes onebox spec fix
+
+[33mcommit 3c7d904a94ad93dbeaecebbc5d52233e005a886a[m
+Merge: a57b2e2 10b3dc3
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Jul 22 21:18:35 2013 -0700
+
+    Merge remote-tracking branch 'origin/master' into rottentomatoes-onebox-spec-fix
+
+[33mcommit 10b3dc366610260597dc1211c37fa08d0a300e77[m
+Merge: 97213d2 6841120
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Mon Jul 22 21:17:22 2013 -0700
+
+    Merge pull request #13 from dysania/wikipedia-spec-fix
+    
+    Fix Wikipedia Spec
+
+[33mcommit a57b2e2069b82a0a05f248fc7522d0f6c8d729f5[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Jul 22 21:12:26 2013 -0700
+
+    remove second favicon from expected result
+
+[33mcommit 9f331a159d838e9f8e1de76e473e31199e6ba244[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Jul 22 21:09:00 2013 -0700
+
+    remove favicon from expected result
+
+[33mcommit 68411202f0db08bc8e2c2f6544059e3697092194[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Jul 22 21:05:28 2013 -0700
+
+    match expected result
+
+[33mcommit 97213d227bbf4d74998b0989d21891df67e3267f[m
+Merge: d5d2c43 c9ddb08
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Mon Jul 22 20:56:06 2013 -0700
+
+    Merge pull request #12 from dysania/rottentomatoes-spec-fix
+    
+    Fix rottentomatoes spec
+
+[33mcommit c9ddb084b1452938a6fbff0f3bb063242f552e67[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Jul 22 20:39:47 2013 -0700
+
+    close a tag
+
+[33mcommit 6cf9b6537aee4c7a4022c03275c2294c13cbf121[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Jul 22 20:35:19 2013 -0700
+
+    remove favicon from expected result
+
+[33mcommit d5d2c43578862d08f96f711e2f4305ee857f9a07[m
+Merge: 72082ba 406cda8
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Tue Jul 16 22:24:28 2013 -0700
+
+    Merge pull request #10 from dysania/fixing-json-errors-with-multijson
+    
+    Switching to multijson for json parsing.
+
+[33mcommit 72082ba15d52fb3cacfb6e9f466c96ecfdb816ed[m
+Merge: 5b68807 6a04f26
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Tue Jul 16 22:22:17 2013 -0700
+
+    Merge pull request #11 from dysania/fixing-tests
+    
+    Fixing failing tests
+
+[33mcommit 6a04f26c9e25e973b4f19b70154113278852bc46[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 16 22:06:04 2013 -0700
+
+    check if value is both nil and empty
+
+[33mcommit a990fd4752a929b58e2f5195c53a4f147337f0c2[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 16 22:04:42 2013 -0700
+
+    check if result is both nil and empty
+
+[33mcommit 79654e012256f4afb2329fe2ca244a56900ea607[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 16 22:03:14 2013 -0700
+
+    check if result is both nil and empty
+
+[33mcommit a250b996daef3efcfed2b8aeae2a0a4260a479b0[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 16 21:52:10 2013 -0700
+
+    remove favicon from expected result
+
+[33mcommit 9d3c53368d785a84bdfd6c0f8236dcb71d948dec[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 16 21:51:05 2013 -0700
+
+    replace squish with gsub, squish is a Rails method
+
+[33mcommit ce4c48612e68897ea7047eb2b3592264aafccad6[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 16 21:49:00 2013 -0700
+
+    change m.present? to m.to_a.any? more accurate use for MatchData Object
+
+[33mcommit e686b6c4df7fbbbce1263b23be92ec70bc4b3d8e[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 16 21:45:26 2013 -0700
+
+    replace blank with empty to fix tests that were failing because it was a Rails method
+
+[33mcommit ce12cfb5581ef6d047e1669ec8850cb29f035f6c[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 16 21:35:58 2013 -0700
+
+    replace Rails-specific methods, blank with empty, present with nil
+
+[33mcommit 32078fe4996d3618d50b224570c152458d323591[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 16 21:29:14 2013 -0700
+
+    swap blank? for empty? blank is rails method
+
+[33mcommit 59e657298a5b7dd9d004d921ab899a2314af4e98[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 16 21:26:24 2013 -0700
+
+    remove favicon from expected result
+
+[33mcommit 406cda84b77b51307862c9cd9ae44f0b1e56902d[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Tue Jul 16 21:03:25 2013 -0700
+
+    Switching to multijson for json parsing.
+
+[33mcommit 5b68807b0693e93b2328598ce310a7676d1d6237[m
+Merge: 116d504 e2d5bdf
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Tue Jul 16 20:50:17 2013 -0700
+
+    Merge pull request #9 from dysania/porting-discourse-spec-functionality
+    
+    We're missing some functionality from main project.
+
+[33mcommit e2d5bdfa11f0503b804f48d290b7b3b96a656e4b[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Tue Jul 16 20:49:51 2013 -0700
+
+    We're missing some functionality from main project
+
+[33mcommit 116d50429212dd38c953d0f2d513f71a6bba4fa0[m
+Merge: 1a82008 ce83ce2
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Tue Jul 16 17:41:14 2013 -0700
+
+    Merge pull request #8 from dysania/fixing-tests
+    
+    Fixing a few simple problems in the tests
+
+[33mcommit 1a82008a767ad911264f509c680af960c0b6009a[m
+Merge: 1aff0c9 0626259
+Author: Joanna Zeta <holla@jzeta.com>
+Date:   Tue Jul 16 17:40:51 2013 -0700
+
+    Merge pull request #7 from dysania/setting-up-rspec
+    
+    RSpec Setup
+
+[33mcommit ce83ce2f365fdad110ff032e8112ee401e4ea0c2[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 23:00:20 2013 -0700
+
+    We can't rely on the favicon appearing right now
+
+[33mcommit 194931e447553602ef11dc9e5bb1d209e98359f5[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:58:28 2013 -0700
+
+    Fixing namespacing issues
+
+[33mcommit 0ed30ce5a02e4c8a9a54d7ee51d256377a65ee7e[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:57:25 2013 -0700
+
+    This is a really bad idea, it causes exceptions to go silent
+
+[33mcommit 88425feeca77aa9ea5394899690c817d651a2d94[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:57:07 2013 -0700
+
+    We don't have access to Rails constant
+
+[33mcommit 22baf3d95fb6050d6a61d6f4e56ce3b05efb5b59[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:56:45 2013 -0700
+
+    Present method is only in activesupport
+
+[33mcommit 47856a134f8855cbfaea1a8066844ef232c1c7c1[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:55:40 2013 -0700
+
+    We need theses gems to function
+
+[33mcommit 0626259f434ca2bac63289fac27c964e982256a4[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:54:40 2013 -0700
+
+    We want to have fixtures for web calls to read from
+
+[33mcommit 02a658e7ce40c94ed0c111ca320638d7eb240a62[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:54:20 2013 -0700
+
+    We want color for our rspec
+
+[33mcommit e806a6583ece32cc19a4df974260916e67c1269f[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:54:10 2013 -0700
+
+    Wasn't namespaced correctly
+
+[33mcommit 56e2b834a3e288921987e6b905de59cc7c1c7dc3[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:53:52 2013 -0700
+
+    The requires were messed up and we fixed them
+
+[33mcommit d68239ce53353cdf4bb4f27877fd1bc77fcd22ba[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:49:54 2013 -0700
+
+    We need to hook into rake so we can easily use travis
+
+[33mcommit 3cce805a8941e0b860cb83a091d972bef4db1249[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:46:48 2013 -0700
+
+    We need a spec helper to jump start rspec
+
+[33mcommit eb40e0fec864844427da8a839dec3a5c195f56a2[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:46:27 2013 -0700
+
+    We need to rely on some development gems
+
+[33mcommit 954cc51665b0022de8a2c06ab2a6358182d30b5f[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Mon Jul 15 22:45:48 2013 -0700
+
+    Making the patch level ambigious because we don't care
+
+[33mcommit 5c384cd4ab498e3ecad83fa01e841ea7b6ec5aa2[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Jul 15 21:46:27 2013 -0700
+
+    add sublist for github onebox options
+
+[33mcommit d56e126d69d092b49ca1b631349d9384946d848d[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Jul 15 21:44:17 2013 -0700
+
+    update list markdown
+
+[33mcommit 08e945ca91215de0b1249c5cc0cbca5ada5fd8c7[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Jul 15 21:39:37 2013 -0700
+
+    actually fix coveralls badge
+
+[33mcommit e344cb5d2a3de9d49e7cd2dcaa851086caa25a38[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Jul 15 21:37:17 2013 -0700
+
+    fix coveralls badge
+
+[33mcommit 4ec9a996ea2607468123db45159c4c45cc28916e[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Jul 15 21:32:31 2013 -0700
+
+    update coverage link
+
+[33mcommit 538fd070f108149fedb1f0dc4ed97f8eda28a9c4[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Jul 15 21:24:39 2013 -0700
+
+    update gemnasium link
+
+[33mcommit e1a10da53b0869e248365651d0895518691b5fbf[m
+Author: Vyki Englert <vyki.englert@gmail.com>
+Date:   Mon Jul 15 21:02:10 2013 -0700
+
+    change oneboxer to discourse-oneboxer
+
+[33mcommit a12d8f5ab540e60be67f72208e4f65eae1b4e479[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Jul 15 20:36:50 2013 -0700
+
+    first README
+
+[33mcommit 1aff0c93a1fb493a7463edfa5f92798cf792fc15[m
+Merge: b6810d8 deeb3df
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Wed Jul 10 21:06:24 2013 -0700
+
+    Merge pull request #5 from dysania/lazy-add-oneboxes
+    
+    Removing Dynamically Loaded Oneboxes
+
+[33mcommit deeb3df0b797665a99122f44650086bcb593cd4b[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 10 21:02:50 2013 -0700
+
+    dynamically loading onebox modules is dangerously deceptive
+
+[33mcommit b6810d85cbf126a69ffd31b42e3f710555179d86[m
+Author: Kurtis Rainbolt-Greene <me@kurtisrainboltgreene.name>
+Date:   Wed Jul 10 20:39:34 2013 -0700
+
+    Adding project tools for ruby version and gemset management.
+
+[33mcommit ce1b39144f7149a6ee610490079402db7de70a99[m
+Merge: c2e8cc4 cdb6068
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Wed Jul 10 20:32:23 2013 -0700
+
+    Merge pull request #4 from dysania/remove-requires-in-modules
+    
+    Removing requires in onebox modules
+
+[33mcommit cdb60683f8561e4a95a9a52ef176e7065ca19f51[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 10 20:29:43 2013 -0700
+
+    Revert "comment out add_onebox loop for now"
+    
+    This reverts commit efcbbb540901fbb1efa11ce3925bc4ee81b0a152.
+
+[33mcommit efcbbb540901fbb1efa11ce3925bc4ee81b0a152[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 10 13:15:25 2013 -0700
+
+    comment out add_onebox loop for now
+
+[33mcommit ab9a37538f233115616bb5a0ce03339a133e6f65[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 10 12:30:09 2013 -0700
+
+    don't need to require oneboxer templates directory
+
+[33mcommit 63ef2d7bbee493756addd2bf660f5fdb9152cc41[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 10 12:28:11 2013 -0700
+
+    comment out require for rails4 patch and include of DateHelper for now
+
+[33mcommit 5d62fc07f8e2e6a7874a91599d29f26a3a49a7b0[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 10 12:25:26 2013 -0700
+
+    move parent onebox modules up in require list to load first
+
+[33mcommit 2fd092418c6d6afb0940fb7325e578ca16fff587[m
+Author: jzeta <holla@jzeta.com>
+Date:   Wed Jul 10 12:12:46 2013 -0700
+
+    delete onebox requires in modules b/c not needed, require open-uri for module access
+
+[33mcommit c2e8cc4d9a5ded2ec0f8385ba94e6749e27b94c5[m
+Merge: 45180d2 a392573
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Tue Jul 9 21:21:44 2013 -0700
+
+    Merge pull request #3 from dysania/need-root-require
+    
+    We need a root require for loading the rest of the lib
+
+[33mcommit a3925736823ec76834c0dcc47505d7803db77e6d[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 9 21:20:04 2013 -0700
+
+    We need a root require for loading the rest of the lib
+
+[33mcommit 45180d20d6dfb7be6f96b0e89707e66094fe7536[m
+Merge: fc70c76 f0481e2
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Tue Jul 9 20:39:54 2013 -0700
+
+    Merge pull request #2 from dysania/explicit-requires-for-oneboxer-modules
+    
+    Requiring all oneboxer modules
+
+[33mcommit f0481e298b32cb3e5e19248f1e5f27703899e90f[m
+Author: jzeta <holla@jzeta.com>
+Date:   Tue Jul 9 20:37:19 2013 -0700
+
+    we need to require all of these modules to use them
+
+[33mcommit fc70c765a713b8d46340ce65c80b9cc6edb3eab5[m
+Merge: f8f2add 8c7c26b
+Author: Kurtis Rainbolt-Greene <me+github@kurtisrainboltgreene.name>
+Date:   Tue Jul 9 20:11:06 2013 -0700
+
+    Merge pull request #1 from dysania/renamespacing-to-discourse
+    
+    namespacing modules to discourse
+
+[33mcommit 8c7c26ba5ce4f589d7f116669846de7570a17e84[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:49:59 2013 -0700
+
+    namespacing0 yfrog oneboxer
+
+[33mcommit 75279ebedaa550fe31689d2031bee21461148e41[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:49:35 2013 -0700
+
+    namespacing0 wikipedia oneboxer
+
+[33mcommit 6d9158620a51f161d60a1e5e451530cb653194ff[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:49:00 2013 -0700
+
+    namespacing whitelist
+
+[33mcommit d16c4427c427cd6d4cdeca7095c3f0c852672412[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:48:28 2013 -0700
+
+    namespacing vimeo oneboxer
+
+[33mcommit 819eec10ec6d149b4afee33d0d65d0d39452e201[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:48:05 2013 -0700
+
+    namespacing video oneboxer
+
+[33mcommit c462bb8a0e1331b54ed387be6d288ec38ba14a95[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:47:43 2013 -0700
+
+    namespacing viddler oneboxer
+
+[33mcommit 33e782f44ed8fd7428e712bea3e4d2cf3a017ad9[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:47:02 2013 -0700
+
+    namespacing twitter oneboxer
+
+[33mcommit cb83e523ad473174bed411eb4eb8cd836824b25b[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:46:29 2013 -0700
+
+    namespacing ted oneboxer
+
+[33mcommit 17d6ce6211c697a36bb9bc6fee098f6aa4d1493e[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:46:02 2013 -0700
+
+    namespacing stack overflow oneboxer
+
+[33mcommit 5277e6963249058502ac71878e2ebfacb684a4b2[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:45:25 2013 -0700
+
+    namespacing soundcloud oneboxer
+
+[33mcommit 8315384b72480f2927fc958e1e5e069865f6adc8[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:44:55 2013 -0700
+
+    namespacing smugmug oneboxer
+
+[33mcommit 9d39b664000abdaf61846ba87b24978d5b4b0058[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:43:03 2013 -0700
+
+    namespacing slideshare oneboxer
+
+[33mcommit 1edaed2f1a9fcc6b264b62a1e644f22f31332793[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:42:25 2013 -0700
+
+    namespacing rotten tomates oneboxer
+
+[33mcommit e7f27804b1deac96514e9a420f902ceedd7bf163[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:41:59 2013 -0700
+
+    namespacing revision oneboxer
+
+[33mcommit 01a15901bda5ae46262948e5c873d10d3b5cd72c[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:41:33 2013 -0700
+
+    namespacing qik oneboxer
+
+[33mcommit ccec2bde113a6e8b283a581a1517931ea08a91ad[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:41:09 2013 -0700
+
+    namespacing open graph oneboxer
+
+[33mcommit 45066593c779470f6dce86b44cc88e67d203c89d[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:40:46 2013 -0700
+
+    namespacing oembed oneboxer
+
+[33mcommit 114771f74828f3bfdb113fb8e0c16c0432c27dff[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:40:21 2013 -0700
+
+    namespacing nfb oneboxer
+
+[33mcommit ef4288e05cd5d7ceae3f368faa771976d87d2dfc[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:39:30 2013 -0700
+
+    namespacing kinomap oneboxer
+
+[33mcommit ed7a26d879638da430ff1fbb35e7ea28ca8c4660[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:39:00 2013 -0700
+
+    namespacing imgur oneboxer
+
+[33mcommit 66b16dc48db509be60ae62d5b5c9b30c018b7b7f[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:38:36 2013 -0700
+
+    namespacing image oneboxer
+
+[33mcommit 0a655554545ad4a05c5605ba07c210582a7a47a6[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:38:09 2013 -0700
+
+    namespacing hulu oneboxer
+
+[33mcommit 7d24273fb457f8a305a9ffe66f9ba00ecff2ec39[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:35:31 2013 -0700
+
+    namespacing handlebars oneboxer
+
+[33mcommit 83ad85c50f6da4ff3885d4ad92cada45cd37fbaf[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:34:27 2013 -0700
+
+    namespacing github pullrequest oneboxer
+
+[33mcommit 6f5514a2e8281b2e13db8627121cd49e9de9372e[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:33:45 2013 -0700
+
+    namespacing commit oneboxer
+
+[33mcommit 1c08a5daac4cabde3aa7ff92217c792c9ae2e0d7[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:33:08 2013 -0700
+
+    namespacing github blog oneboxer
+
+[33mcommit 87a313c77e3c73a24ac932ecaf577ff149477082[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:32:37 2013 -0700
+
+    namespacing gist oneboxer
+
+[33mcommit 62396eaee1944510819a810f8f645778354644b9[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:32:08 2013 -0700
+
+    namespacing funny or die oneboxer
+
+[33mcommit c71fc6f18978e9664cfa86f4f8813d729bb408c0[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:31:33 2013 -0700
+
+    namespacing flickr oneboxer
+
+[33mcommit eba4bcd4893f7081c54759628fc37a43945dec01[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:31:04 2013 -0700
+
+    namespacing dot sub oneboxer
+
+[33mcommit 573ca43f0d75a1dd05f05b32f132ee5d74dbe2fd[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:29:18 2013 -0700
+
+    namespacing discourse local  oneboxer
+
+[33mcommit 4b9786c2b1f370b92031cce93bf9e0ce1d60e76d[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:28:02 2013 -0700
+
+    namespacing daily motion oneboxer
+
+[33mcommit 2e64af584f6cd7232479fb630ea7d32e48c2b92d[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:27:34 2013 -0700
+
+    namespacing college humor oneboxer
+
+[33mcommit 0a29bca48554f4d564d5bd664df08aa60a2a3328[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:26:54 2013 -0700
+
+    namespacing clickthrough oneboxer
+
+[33mcommit 3f01c87bfe770d892a0ba19993a5296d1b47673f[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:26:13 2013 -0700
+
+    namespacing bliptv oneboxer
+
+[33mcommit ea6a127332b36167d099d08ca242c3dba35eb3d9[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:25:34 2013 -0700
+
+    namespacing base oneboxer
+
+[33mcommit 4ef05202f8acdea8cde8faeb78a5936ec8123493[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:13:23 2013 -0700
+
+    namespacing base oneboxer
+
+[33mcommit 2be7bdfa669be0b9cdbd3d7dbf4a98515a2584ce[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:12:14 2013 -0700
+
+    namespacing apple app oneboxer
+
+[33mcommit 6d117719b20a09f2277c006feb5ecb1241315117[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Tue Jul 9 01:01:45 2013 -0700
+
+    namespacing android app store
+
+[33mcommit 9f0e98f116f41253c4cf869f8ff6c4c2c4a73a71[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Jul 8 22:46:03 2013 -0700
+
+    renamespacing amazon oneboxer
+
+[33mcommit f8f2add3541063e2dd68ddd67533fc74680343b3[m
+Author: vykster <vyki.englert@gmail.com>
+Date:   Mon Jul 8 22:40:01 2013 -0700
+
+    inital test files from discourse
+
+[33mcommit 3d51281d8ed4cd140b2098babeca8aa451d1ba3e[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Jul 8 22:35:43 2013 -0700
+
+    copy onebox files from discourse
+
+[33mcommit f0be2ec1ebd8b46315bf7c9c94c6d0e9bafaf810[m
+Author: jzeta <holla@jzeta.com>
+Date:   Mon Jul 8 21:44:08 2013 -0700
+
+    initial commit
