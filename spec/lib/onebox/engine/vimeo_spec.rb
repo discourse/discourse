@@ -12,9 +12,9 @@ describe Onebox::Engine::VimeoOnebox do
     expect(html).to include("108 years of Herman Miller in 108 seconds")
   end
 
-  # it "returns video photo" do
-  #   expect(html).to include("c480x270_18.jpg")
-  # end
+  it "returns video photo" do
+    expect(html).to include("443673159_1280.jpg")
+  end
 
   it "returns video description" do
     expect(html).to include("To mark the launch of a new website for Hermann Miller furniture")
