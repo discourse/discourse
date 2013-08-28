@@ -103,6 +103,10 @@ test("Links", function() {
          "<a href=\"http://www.imdb.com/name/nm2225369\">http://www.imdb.com/name/nm2225369</a></p>",
          'allows multiple links on one line');
 
+  cooked("* [Evil Trout][1]\n  [1]: http://eviltrout.com",
+         "<ul><li><a href=\"http://eviltrout.com\">Evil Trout</a><br></li></ul>",
+         "allows markdown link references in a list");
+
 });
 
 test("Quotes", function() {
