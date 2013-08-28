@@ -4,7 +4,7 @@
 **/
 
 // Support for simultaneous bold and italics
-Discourse.Dialect.inlineReplace({
+Discourse.Dialect.inlineBetween({
   between: '***',
   wordBoundary: true,
   emitter: function(contents) { return ['strong', ['em'].concat(contents)]; }
@@ -12,7 +12,7 @@ Discourse.Dialect.inlineReplace({
 
 // Builds a common markdown replacer
 var replaceMarkdown = function(match, tag) {
-  Discourse.Dialect.inlineReplace({
+  Discourse.Dialect.inlineBetween({
     between: match,
     wordBoundary: true,
     emitter: function(contents) { return [tag].concat(contents) }

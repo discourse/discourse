@@ -129,6 +129,25 @@ Discourse.Dialect = {
   },
 
   /**
+    The simplest kind of replacement possible. Replace a stirng token with JsonML.
+
+    For example to replace all occurrances of :) with a smile image:
+
+     ```javascript
+      Discourse.Dialect.inlineReplace(':)', ['img', {src: '/images/smile.gif'}])
+    ```
+
+    @method inlineReplace
+    @param {String} token The token we want to replace
+    @param {Array} jsonml The JsonML to replace it with.
+  **/
+  inlineReplace: function(token, jsonml) {
+    dialect.inline[token] = function(text, match, prev) {
+      return [token.length, jsonml];
+    };
+  },
+
+  /**
     Matches inline using a regular expression. The emitter function is passed
     the matches from the regular expression.
 
@@ -146,7 +165,7 @@ Discourse.Dialect = {
       });
     ```
 
-    @method inlineReplace
+    @method inlineRegexp
     @param {Object} args Our replacement options
       @param {Function} [opts.emitter] The function that will be called with the contents and regular expresison match and returns JsonML.
       @param {String} [opts.start] The starting token we want to find
@@ -178,7 +197,7 @@ Discourse.Dialect = {
 
     ```javascript
 
-      Discourse.Dialect.inlineReplace({
+      Discourse.Dialect.inlineBetween({
         between: '**',
         wordBoundary: true.
         emitter: function(contents) {
@@ -187,7 +206,7 @@ Discourse.Dialect = {
       });
     ```
 
-    @method inlineReplace
+    @method inlineBetween
     @param {Object} args Our replacement options
       @param {Function} [opts.emitter] The function that will be called with the contents and returns JsonML.
       @param {String} [opts.start] The starting token we want to find
@@ -197,7 +216,7 @@ Discourse.Dialect = {
       @param {Boolean} [opts.wordBoundary] If true, the match must be on a word boundary
       @param {Boolean} [opts.spaceBoundary] If true, the match must be on a sppace boundary
   **/
-  inlineReplace: function(args) {
+  inlineBetween: function(args) {
     var start = args.start || args.between,
         stop = args.stop || args.between,
         startLength = start.length;

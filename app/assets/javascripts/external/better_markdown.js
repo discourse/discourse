@@ -1057,7 +1057,7 @@ Markdown.buildInlinePatterns = function(d) {
   for ( var i in d ) {
     // __foo__ is reserved and not a pattern
     if ( i.match( /^__.*__$/) ) continue;
-    var l = i.replace( /([\\.*+?|()\[\]{}])/g, "\\$1" )
+    var l = i.replace( /([\\.*+?$|()\[\]{}])/g, "\\$1" )
              .replace( /\n/, "\\n" );
     patterns.push( i.length == 1 ? l : "(?:" + l + ")" );
   }
