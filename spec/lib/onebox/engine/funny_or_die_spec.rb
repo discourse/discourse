@@ -12,9 +12,9 @@ describe Onebox::Engine::FunnyOrDieOnebox do
     expect(html).to include("The Landlord")
   end
 
-  # it "returns photo" do
-  #   expect(html).to include("http://ib3.huluim.com/video/60245466?region=US&amp;size=600x400")
-  # end
+  it "returns video photo" do
+    expect(html).to include("c480x270_18.jpg")
+  end
 
   it "returns video description" do
     expect(html).to include("Will Ferrell meets his landlord.")
