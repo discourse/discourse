@@ -20,9 +20,9 @@ describe Onebox::Engine::VimeoOnebox do
     expect(html).to include("To mark the launch of a new website for Hermann Miller furniture")
   end
 
-  # it "returns video URL" do
-  #   expect(html).to include("http://www.funnyordie.com/videos/74/the-landlord-from-will-ferrell-and-adam-ghost-panther-mckay")
-  # end
+  it "returns video URL" do
+    expect(html).to include("http://vimeo.com/moogaloop.swf?clip_id=70437049")
+  end
 
   it "returns URL" do
     expect(html).to include(link)
