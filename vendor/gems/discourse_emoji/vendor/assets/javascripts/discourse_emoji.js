@@ -24,8 +24,10 @@
     ":$"   : 'blush'
   };
 
-  Object.keys(translations).forEach(function (code) {
-    Discourse.Dialect.inlineReplace(code, imageFor(translations[code]));
+  Discourse.Dialect.on('register', function() {
+    Object.keys(translations).forEach(function (code) {
+      Discourse.Dialect.inlineReplace(code, imageFor(translations[code]));
+    });
   });
 
   Discourse.Dialect.inlineBetween({
