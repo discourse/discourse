@@ -1,0 +1,26 @@
+module Onebox
+  module Engine
+    class TedOnebox
+      include Engine
+      include OpenGraph
+
+      matches do
+        # /^https?\:\/\/(www\.)?ted\.com\/talks\/.*$/
+        find "ted.com"
+      end
+
+      private
+
+      def extracted_data
+        {
+          url: @url,
+          # title: @body.title,
+          # image: @body.images[0],
+          # description: @body.description,
+          # video: @body.metadata[:video][0][:_value]
+        }
+      end
+    end
+  end
+end
+
