@@ -16,9 +16,9 @@ describe Onebox::Engine::VimeoOnebox do
   #   expect(html).to include("c480x270_18.jpg")
   # end
 
-  # it "returns video description" do
-  #   expect(html).to include("Will Ferrell meets his landlord.")
-  # end
+  it "returns video description" do
+    expect(html).to include("To mark the launch of a new website for Hermann Miller furniture")
+  end
 
   # it "returns video URL" do
   #   expect(html).to include("http://www.funnyordie.com/videos/74/the-landlord-from-will-ferrell-and-adam-ghost-panther-mckay")
