@@ -1,7 +1,7 @@
 // base styles for every modal popup used in Discourse
 
-@import "foundation/variables";
-@import "foundation/mixins";
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
 
 .modal-open {
   .dropdown-menu {

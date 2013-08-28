@@ -1,7 +1,7 @@
 // these are the styles associated with the Discourse admin section
-@import "foundation/variables";
-@import "foundation/mixins";
-@import "foundation/helpers";
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+@import "common/foundation/helpers";
 
 
 .content-list li a span.count {

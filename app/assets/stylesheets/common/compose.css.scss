@@ -1,7 +1,7 @@
 // styles that apply to the reply pane that slides up to compose replies
 
-@import "foundation/variables";
-@import "foundation/mixins";
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
 
 // hack, this needs to be done cleaner
 .private-message input.span8 {

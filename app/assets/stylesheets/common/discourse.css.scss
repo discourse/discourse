@@ -2,9 +2,9 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
-@import "foundation/variables";
-@import "foundation/mixins";
-@import "foundation/helpers";
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+@import "common/foundation/helpers";
 
 body {
   min-width: $large-width;
