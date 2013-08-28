@@ -128,6 +128,32 @@ Discourse.Dialect = {
     return parser.renderJsonML(parseTree(tree));
   },
 
+  /**
+    Matches inline using a regular expression. The emitter function is passed
+    the matches from the regular expression.
+
+    For example, this auto links URLs:
+
+    ```javascript
+      Discourse.Dialect.inlineRegexp({
+        matcher: /((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/gm,
+        spaceBoundary: true,
+
+        emitter: function(matches) {
+          var url = matches[1];
+          return ['a', {href: url}, url];
+        }
+      });
+    ```
+
+    @method inlineReplace
+    @param {Object} args Our replacement options
+      @param {Function} [opts.emitter] The function that will be called with the contents and regular expresison match and returns JsonML.
+      @param {String} [opts.start] The starting token we want to find
+      @param {String} [opts.matcher] The regular expression to match
+      @param {Boolean} [opts.wordBoundary] If true, the match must be on a word boundary
+      @param {Boolean} [opts.spaceBoundary] If true, the match must be on a sppace boundary
+  **/
   inlineRegexp: function(args) {
     dialect.inline[args.start] = function(text, match, prev) {
       if (invalidBoundary(args, prev)) { return; }
@@ -143,6 +169,34 @@ Discourse.Dialect = {
     };
   },
 
+  /**
+    Handles inline replacements surrounded by tokens.
+
+    For example, to handle markdown style bold. Note we use `concat` on the array because
+    the contents are JsonML too since we didn't pass `rawContents` as true. This supports
+    recursive markup.
+
+    ```javascript
+
+      Discourse.Dialect.inlineReplace({
+        between: '**',
+        wordBoundary: true.
+        emitter: function(contents) {
+          return ['strong'].concat(contents);
+        }
+      });
+    ```
+
+    @method inlineReplace
+    @param {Object} args Our replacement options
+      @param {Function} [opts.emitter] The function that will be called with the contents and returns JsonML.
+      @param {String} [opts.start] The starting token we want to find
+      @param {String} [opts.stop] The ending token we want to find
+      @param {String} [opts.between] A shortcut for when the `start` and `stop` are the same.
+      @param {Boolean} [opts.rawContents] If true, the contents between the tokens will not be parsed.
+      @param {Boolean} [opts.wordBoundary] If true, the match must be on a word boundary
+      @param {Boolean} [opts.spaceBoundary] If true, the match must be on a sppace boundary
+  **/
   inlineReplace: function(args) {
     var start = args.start || args.between,
         stop = args.stop || args.between,

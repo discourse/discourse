@@ -3,11 +3,11 @@
   a hrefs for them.
 **/
 var urlReplacerArgs = {
-  matcher: /(^|\s)((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/gm,
+  matcher: /^((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/gm,
   spaceBoundary: true,
 
   emitter: function(matches) {
-    var url = matches[2],
+    var url = matches[1],
         displayUrl = url;
 
     if (url.match(/^www/)) { url = "http://" + url; }
