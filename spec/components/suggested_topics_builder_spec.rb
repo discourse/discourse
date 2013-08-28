@@ -3,12 +3,40 @@ require 'suggested_topics_builder'
 
 describe SuggestedTopicsBuilder do
 
-  let!(:topic) { Fabricate(:topic) }
-
-  let!(:builder) { SuggestedTopicsBuilder.new(topic) }
+  let(:topic) { Fabricate(:topic) }
+  let(:builder) { SuggestedTopicsBuilder.new(topic) }
 
   before do
     SiteSetting.stubs(:suggested_topics).returns(5)
+  end
+
+  context "splicing category results" do
+
+    def fake_topic(topic_id, category_id)
+      build(:topic, id: topic_id, category_id: category_id)
+    end
+
+    let(:builder) do
+      SuggestedTopicsBuilder.new(fake_topic(1,1))
+    end
+
+    it "prioritizes category correctly" do
+      builder.splice_results([fake_topic(2,2)], :high)
+      builder.splice_results([fake_topic(3,1)], :high)
+      builder.splice_results([fake_topic(4,1)], :high)
+
+      builder.results.map(&:id).should == [3,4,2]
+
+      # we have 2 items in category 1
+      builder.category_results_left.should == 3
+    end
+
+    it "inserts using default approach for non high priority" do
+      builder.splice_results([fake_topic(2,2)], :high)
+      builder.splice_results([fake_topic(3,1)], :low)
+
+      builder.results.map(&:id).should == [2,3]
+    end
   end
 
   it "has the correct defaults" do
