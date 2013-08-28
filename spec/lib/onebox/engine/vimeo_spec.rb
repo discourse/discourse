@@ -8,9 +8,9 @@ describe Onebox::Engine::VimeoOnebox do
     fake(link, response("vimeo.response"))
   end
 
-  # it "returns video title" do
-  #   expect(html).to include("The Landlord")
-  # end
+  it "returns video title" do
+    expect(html).to include("108 years of Herman Miller in 108 seconds")
+  end
 
   # it "returns video photo" do
   #   expect(html).to include("c480x270_18.jpg")
