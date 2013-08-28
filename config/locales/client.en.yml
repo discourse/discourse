@@ -504,7 +504,7 @@ en:
       private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved to {{link}}"
+      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved {{link}}"
       total_flagged: "total flagged posts"
 
     upload_selector:
