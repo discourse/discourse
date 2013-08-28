@@ -20,9 +20,9 @@ describe Onebox::Engine::FunnyOrDieOnebox do
     expect(html).to include("Will Ferrell meets his landlord.")
   end
 
-  # it "returns video URL" do
-  #   expect(html).to include("https://secure.hulu.com/embed/0-us7uHJgevua5TeiGwCxQ")
-  # end
+  it "returns video URL" do
+    expect(html).to include("http://www.funnyordie.com/videos/74/the-landlord-from-will-ferrell-and-adam-ghost-panther-mckay")
+  end
 
   it "returns URL" do
     expect(html).to include(link)
