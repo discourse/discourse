@@ -8,9 +8,9 @@ describe Onebox::Engine::TedOnebox do
     fake(link, response("ted.response"))
   end
 
-  # it "returns video title" do
-  #   expect(html).to include("108 years of Herman Miller in 108 seconds")
-  # end
+  it "returns video title" do
+    expect(html).to include("Eli Beer: The fastest ambulance? A motorcycle")
+  end
 
   # it "returns video photo" do
   #   expect(html).to include("443673159_1280.jpg")
