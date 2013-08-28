@@ -3,43 +3,6 @@
   Discourse uses the Markdown.js as its main parser. `Discourse.Dialect` is the framework
   for extending it with additional formatting.
 
-  To extend the dialect, you can register a handler, and you will receive an `event` object
-  with a handle to the markdown `Dialect` from Markdown.js that we are defining. Here's
-  a sample dialect that replaces all occurrences of "evil trout" with a link that says
-  "EVIL TROUT IS AWESOME":
-
-  ```javascript
-
-    Discourse.Dialect.on("register", function(event) {
-      var dialect = event.dialect;
-
-      // To see how this works, review one of our samples or the Markdown.js code:
-      dialect.inline["evil trout"] = function(text) {
-        return ["evil trout".length, ['a', {href: "http://eviltrout.com"}, "EVIL TROUT IS AWESOME"] ];
-      };
-
-    });
-  ```
-
-  You can also manipulate the JsonML tree that is produced by the parser before it converted to HTML.
-  This is useful if the markup you want needs a certain structure of HTML elements. Rather than
-  writing regular expressions to match HTML, consider parsing the tree instead! We use this for
-  making sure a onebox is on one line, as an example.
-
-  This example changes the content of any `<code>` tags.
-
-  The `event.path` attribute contains the current path to the node.
-
-  ```javascript
-    Discourse.Dialect.on("parseNode", function(event) {
-      var node = event.node;
-
-      if (node[0] === 'code') {
-        node[node.length-1] = "EVIL TROUT HACKED YOUR CODE";
-      }
-    });
-  ```
-
 **/
 var parser = window.BetterMarkdown,
     MD = parser.Markdown,
@@ -239,7 +202,75 @@ Discourse.Dialect = {
         return [endPos+stop.length, contents];
       }
     };
+  },
 
+  /**
+    After the parser has been executed, post process any text nodes in the HTML document.
+    This is useful if you want to apply a transformation to the text.
+
+    If you are generating HTML from the text, it is preferable to use the replacer
+    functions and do it in the parsing part of the pipeline. This function is best for
+    simple transformations or transformations that have to happen after all earlier
+    processing is done.
+
+    For example, to convert all text to upper case:
+
+    ```javascript
+
+      Discourse.Dialect.postProcessText(function (text) {
+        return text.toUpperCase();
+      });
+
+    ```
+
+    @method postProcessText
+    @param {Function} emitter The function to call with the text. It returns JsonML to modify the tree.
+  **/
+  postProcessText: function(emitter) {
+    Discourse.Dialect.on("parseNode", function(event) {
+      var node = event.node;
+      if (node.length < 2) { return; }
+
+      for (var j=1; j<node.length; j++) {
+        var textContent = node[j];
+        if (typeof textContent === "string") {
+          var result = emitter(textContent, event);
+          if (result) {
+            if (result instanceof Array) {
+              node.splice.apply(node, [j, 1].concat(result));
+            } else {
+              node[j] = result;
+            }
+
+          }
+        }
+      }
+    });
+  },
+
+  /**
+    After the parser has been executed, change the contents of a HTML tag.
+
+    Let's say you want to replace the contents of all code tags to prepend
+    "EVIL TROUT HACKED YOUR CODE!":
+
+    ```javascript
+      Discourse.Dialect.postProcessTag('code', function (contents) {
+        return "EVIL TROUT HACKED YOUR CODE!\n\n" + contents;
+      });
+    ```
+
+    @method postProcessTag
+    @param {String} tag The HTML tag you want to match on
+    @param {Function} emitter The function to call with the text. It returns JsonML to modify the tree.
+  **/
+  postProcessTag: function(tag, emitter) {
+    Discourse.Dialect.on('parseNode', function (event) {
+      var node = event.node;
+      if (node[0] === tag) {
+        node[node.length-1] = emitter(node[node.length-1]);
+      }
+    });
   }
 
 };
