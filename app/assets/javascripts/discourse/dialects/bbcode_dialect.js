@@ -6,7 +6,7 @@
   @param {function} emitter the function that creates JsonML for the tag
 **/
 function replaceBBCode(tag, emitter) {
-  Discourse.Dialect.inlineReplace({
+  Discourse.Dialect.inlineBetween({
     start: "[" + tag + "]",
     stop: "[/" + tag + "]",
     emitter: emitter
@@ -21,7 +21,7 @@ function replaceBBCode(tag, emitter) {
   @param {function} emitter the function that creates JsonML for the tag
 **/
 function replaceBBCodeParamsRaw(tag, emitter) {
-  Discourse.Dialect.inlineReplace({
+  Discourse.Dialect.inlineBetween({
     start: "[" + tag + "=",
     stop: "[/" + tag + "]",
     rawContents: true,
@@ -61,21 +61,21 @@ replaceBBCode('spoiler', function(contents) { return ['span', {'class': 'spoiler
 replaceBBCode('smartass', function(contents) { return ['span', {'class': 'smartass'}].concat(contents); });
 replaceBBCode('humanism', function(contents) { return ['span', {'class': 'humanism'}].concat(contents); });
 
-Discourse.Dialect.inlineReplace({
+Discourse.Dialect.inlineBetween({
   start: '[img]',
   stop: '[/img]',
   rawContents: true,
   emitter: function(contents) { return ['img', {href: contents}]; }
 });
 
-Discourse.Dialect.inlineReplace({
+Discourse.Dialect.inlineBetween({
   start: '[email]',
   stop: '[/email]',
   rawContents: true,
   emitter: function(contents) { return ['a', {href: "mailto:" + contents, 'data-bbcode': true}, contents]; }
 });
 
-Discourse.Dialect.inlineReplace({
+Discourse.Dialect.inlineBetween({
   start: '[url]',
   stop: '[/url]',
   rawContents: true,

@@ -61,8 +61,8 @@
         key: emoji_prefix,
         transformComplete: function(v){ return v + emoji_prefix; },
         dataSource: function(term){
-
           var full = emoji_prefix + term;
+          var full = ":" + term;
           term = term.toLowerCase();
 
           if (term === "") {

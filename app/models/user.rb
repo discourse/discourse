@@ -96,23 +96,6 @@ class User < ActiveRecord::Base
     user
   end
 
-  def self.create_for_email(email, opts={})
-    username = UserNameSuggester.suggest(email)
-
-    discourse_hub_nickname_operation do
-      match, available, suggestion = DiscourseHub.nickname_match?(username, email)
-      username = suggestion unless match || available
-    end
-
-    user = User.new(email: email, username: username, name: username)
-    user.trust_level = opts[:trust_level] if opts[:trust_level].present?
-    user.save!
-
-    discourse_hub_nickname_operation { DiscourseHub.register_nickname(username, email) }
-
-    user
-  end
-
   def self.suggest_name(email)
     return "" unless email
     name = email.split(/[@\+]/)[0]
@@ -154,7 +137,7 @@ class User < ActiveRecord::Base
     self.username = new_username
 
     if current_username.downcase != new_username.downcase && valid?
-      User.discourse_hub_nickname_operation { DiscourseHub.change_nickname(current_username, new_username) }
+      DiscourseHub.nickname_operation { DiscourseHub.change_nickname(current_username, new_username) }
     end
 
     save
@@ -612,17 +595,6 @@ class User < ActiveRecord::Base
 
   private
 
-  def self.discourse_hub_nickname_operation
-    if SiteSetting.call_discourse_hub?
-      begin
-        yield
-      rescue DiscourseHub::NicknameUnavailable
-        false
-      rescue => e
-        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
-      end
-    end
-  end
 end
 
 # == Schema Information
