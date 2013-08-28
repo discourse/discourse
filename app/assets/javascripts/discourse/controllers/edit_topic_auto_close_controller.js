@@ -11,9 +11,10 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
 
   setDays: function() {
     if( this.get('details.auto_close_at') ) {
+      console.log( this.get('details.auto_close_at') );
       var closeTime = new Date( this.get('details.auto_close_at') );
       if (closeTime > new Date()) {
-        this.set('auto_close_days', closeTime.daysSince());
+        this.set('auto_close_days', Math.round(moment(closeTime).diff(new Date(), 'days', true)));
       }
     } else {
       this.set('details.auto_close_days', '');
