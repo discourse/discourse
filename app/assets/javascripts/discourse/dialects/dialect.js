@@ -43,51 +43,67 @@
 **/
 var parser = window.BetterMarkdown,
     MD = parser.Markdown,
-
-    // Our dialect
     dialect = MD.dialects.Discourse = MD.subclassDialect( MD.dialects.Gruber ),
+    initialized = false;
 
-    initialized = false,
+/**
+  Initialize our dialects for processing.
 
-    /**
-      Initialize our dialects for processing.
+  @method initializeDialects
+**/
+function initializeDialects() {
+  Discourse.Dialect.trigger('register', {dialect: dialect, MD: MD});
+  MD.buildBlockOrder(dialect.block);
+  MD.buildInlinePatterns(dialect.inline);
+  initialized = true;
+}
 
-      @method initializeDialects
-    **/
-    initializeDialects = function() {
-      Discourse.Dialect.trigger('register', {dialect: dialect, MD: MD});
-      MD.buildBlockOrder(dialect.block);
-      MD.buildInlinePatterns(dialect.inline);
-      initialized = true;
-    },
+/**
+  Parse a JSON ML tree, using registered handlers to adjust it if necessary.
 
-    /**
-      Parse a JSON ML tree, using registered handlers to adjust it if necessary.
+  @method parseTree
+  @param {Array} tree the JsonML tree to parse
+  @param {Array} path the path of ancestors to the current node in the tree. Can be used for matching.
+  @param {Object} insideCounts counts what tags we're inside
+  @returns {Array} the parsed tree
+**/
+function parseTree(tree, path, insideCounts) {
+  if (tree instanceof Array) {
+    Discourse.Dialect.trigger('parseNode', {node: tree, path: path, dialect: dialect, insideCounts: insideCounts || {}});
 
-      @method parseTree
-      @param {Array} tree the JsonML tree to parse
-      @param {Array} path the path of ancestors to the current node in the tree. Can be used for matching.
-      @param {Object} insideCounts counts what tags we're inside
-      @returns {Array} the parsed tree
-    **/
-    parseTree = function parseTree(tree, path, insideCounts) {
-      if (tree instanceof Array) {
-        Discourse.Dialect.trigger('parseNode', {node: tree, path: path, dialect: dialect, insideCounts: insideCounts || {}});
+    path = path || [];
+    insideCounts = insideCounts || {};
 
-        path = path || [];
-        insideCounts = insideCounts || {};
+    path.push(tree);
+    tree.slice(1).forEach(function (n) {
+      var tagName = n[0];
+      insideCounts[tagName] = (insideCounts[tagName] || 0) + 1;
+      parseTree(n, path, insideCounts);
+      insideCounts[tagName] = insideCounts[tagName] - 1;
+    });
+    path.pop();
+  }
+  return tree;
+}
 
-        path.push(tree);
-        tree.slice(1).forEach(function (n) {
-          var tagName = n[0];
-          insideCounts[tagName] = (insideCounts[tagName] || 0) + 1;
-          parseTree(n, path, insideCounts);
-          insideCounts[tagName] = insideCounts[tagName] - 1;
-        });
-        path.pop();
-      }
-      return tree;
-    };
+/**
+  Returns true if there's an invalid word boundary for a match.
+
+  @method invalidBoundary
+  @param {Object} args our arguments, including whether we care about boundaries
+  @param {Array} prev the previous content, if exists
+  @returns {Boolean} whether there is an invalid word boundary
+**/
+function invalidBoundary(args, prev) {
+
+  if (!args.wordBoundary && !args.spaceBoundary) { return; }
+
+  var last = prev[prev.length - 1];
+  if (typeof last !== "string") { return; }
+
+  if (args.wordBoundary && (!last.match(/\W$/))) { return true; }
+  if (args.spaceBoundary && (!last.match(/\s$/))) { return true; }
+}
 
 /**
   An object used for rendering our dialects.
@@ -110,7 +126,51 @@ Discourse.Dialect = {
     dialect.options = opts;
     var tree = parser.toHTMLTree(text, 'Discourse');
     return parser.renderJsonML(parseTree(tree));
+  },
+
+  inlineRegexp: function(args) {
+    dialect.inline[args.start] = function(text, match, prev) {
+      if (invalidBoundary(args, prev)) { return; }
+
+      args.matcher.lastIndex = 0;
+      var m = args.matcher.exec(text);
+      if (m) {
+        var result = args.emitter.call(this, m);
+        if (result) {
+          return [m[0].length, result];
+        }
+      }
+    };
+  },
+
+  inlineReplace: function(args) {
+    var start = args.start || args.between,
+        stop = args.stop || args.between,
+        startLength = start.length;
+
+    dialect.inline[start] = function(text, match, prev) {
+      if (invalidBoundary(args, prev)) { return; }
+
+      var endPos = text.indexOf(stop, startLength);
+      if (endPos === -1) { return; }
+
+      var between = text.slice(startLength, endPos);
+
+      // If rawcontents is set, don't process inline
+      if (!args.rawContents) {
+        between = this.processInline(between);
+      }
+
+      var contents = args.emitter.call(this, between);
+      if (contents) {
+        return [endPos + startLength + 1, contents];
+      }
+    };
+
   }
+
 };
 
 RSVP.EventTarget.mixin(Discourse.Dialect);
+
+

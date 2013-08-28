@@ -105,7 +105,7 @@ module PrettyText
     ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
 
     ctx_load(ctx,
-              "app/assets/javascripts/external/markdown.js",
+              "app/assets/javascripts/external/better_markdown.js",
               "app/assets/javascripts/discourse/dialects/dialect.js",
               "app/assets/javascripts/discourse/components/utilities.js",
               "app/assets/javascripts/discourse/components/markdown.js")

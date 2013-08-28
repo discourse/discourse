@@ -647,7 +647,7 @@ end
 #  website                       :string(255)
 #  admin                         :boolean          default(FALSE), not null
 #  last_emailed_at               :datetime
-#  email_digests                 :boolean          default(TRUE), not null
+#  email_digests                 :boolean          not null
 #  trust_level                   :integer          not null
 #  bio_cooked                    :text
 #  email_private_messages        :boolean          default(TRUE)
@@ -657,7 +657,7 @@ end
 #  approved_at                   :datetime
 #  topics_entered                :integer          default(0), not null
 #  posts_read_count              :integer          default(0), not null
-#  digest_after_days             :integer          default(7), not null
+#  digest_after_days             :integer
 #  previous_visit_at             :datetime
 #  banned_at                     :datetime
 #  banned_till                   :datetime
@@ -690,3 +690,4 @@ end
 #  index_users_on_username        (username) UNIQUE
 #  index_users_on_username_lower  (username_lower) UNIQUE
 #
+
