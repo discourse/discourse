@@ -9,7 +9,7 @@ describe Onebox::Engine::ClickThroughOnebox do
   end
 
   it "returns video title" do
-    expect(html).to include("Keri Hilson - Knock You down")
+    expect(html).to include("Keri Hilson - Knock You Down")
   end
 
   it "returns video description" do
