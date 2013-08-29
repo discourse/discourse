@@ -26,7 +26,7 @@ describe Onebox::Engine do
       expect(cache).to have_key("http://example.com")
     end
 
-    it "is too old monetta"
+    it "refetches if cache is expired"
   end
 
 
