@@ -20,7 +20,7 @@ module ApplicationHelper
   end
 
   def html_classes
-    mobile_view? ? 'mobile' : ''
+    "#{mobile_view? ? 'mobile-view' : ''} #{mobile_device? ? 'mobile-device' : ''}"
   end
 
   def escape_unicode(javascript)
@@ -109,7 +109,11 @@ module ApplicationHelper
     if session[:mobile_view]
       session[:mobile_view] == '1'
     else
-      request.user_agent =~ /Mobile|webOS/
+      mobile_device?
     end
+  end
+
+  def mobile_device?
+    request.user_agent =~ /Mobile|webOS/
   end
 end

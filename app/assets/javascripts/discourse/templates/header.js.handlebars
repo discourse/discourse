@@ -123,6 +123,17 @@
           {{#titledLinkTo "list.latest" titleKey="filters.latest.help"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
         </li>
         <li>{{faqLink}}</li>
+        {{#if mobileDevice}}
+          <li>
+            <a href="#" {{action toggleMobileView}}>
+              {{#if mobileView}}
+                {{i18n desktop_view}}
+              {{else}}
+                {{i18n mobile_view}}
+              {{/if}}
+            </a>
+          </li>
+        {{/if}}
       </ul>
 
       {{#if categories}}
