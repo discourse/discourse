@@ -97,7 +97,10 @@ Discourse.Dialect = {
     For example to replace all occurrances of :) with a smile image:
 
     ```javascript
-      Discourse.Dialect.inlineReplace(':)', ['img', {src: '/images/smile.gif'}])
+      Discourse.Dialect.inlineReplace(':)', function (text) {
+        return ['img', {src: '/images/smile.png'}];
+      });
+
     ```
 
     @method inlineReplace
@@ -204,6 +207,31 @@ Discourse.Dialect = {
     };
   },
 
+  /**
+    Replaces a block of text between a start and stop. As opposed to inline, these
+    might span multiple lines.
+
+    Here's an example that takes the content between `[code]` ... `[/code]` and
+    puts them inside a `pre` tag:
+
+    ```javascript
+      Discourse.Dialect.replaceBlock({
+        start: /(\[code\])([\s\S]*)/igm,
+        stop: '[/code]',
+
+        emitter: function(blockContents) {
+          return ['p', ['pre'].concat(blockContents)];
+        }
+      });
+    ```
+
+    @method replaceBlock
+    @param {Object} args Our replacement options
+      @param {String} [opts.start] The starting regexp we want to find
+      @param {String} [opts.stop] The ending token we want to find
+      @param {Function} [opts.emitter] The emitting function to transform the contents of the block into jsonML
+
+  **/
   replaceBlock: function(args) {
     dialect.block[args.start.toString()] = function(block, next) {
       args.start.lastIndex = 0;
