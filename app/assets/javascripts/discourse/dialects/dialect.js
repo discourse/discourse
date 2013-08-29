@@ -255,7 +255,10 @@ Discourse.Dialect = {
 
         result.push(para);
       }
-      if (m[2]) { next.unshift(MD.mk_block(m[2], null, lineNumber + 1)); }
+
+      if (m[2]) {
+        next.unshift(MD.mk_block(m[2], null, lineNumber + 1));
+      }
 
       lineNumber++;
       while (next.length > 0) {
