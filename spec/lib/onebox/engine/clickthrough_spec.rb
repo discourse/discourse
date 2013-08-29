@@ -9,12 +9,7 @@ describe Onebox::Engine::ClickThroughOnebox do
   end
 
   it "returns video title" do
-    expect(html).to include("Keri Hilson - Knock You Down")
-  end
-
-# clickthrough.response has og tag for image but attr is blank
-  it "returns video image" do
-    expect(html).to include("")
+    expect(html).to include("Keri Hilson - Knock You down")
   end
 
   it "returns video description" do
