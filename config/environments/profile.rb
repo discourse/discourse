@@ -37,7 +37,7 @@ Discourse::Application.configure do
   config.handlebars.precompile = true
 
   # this setting enable rack_cache so it caches various requests in redis
-  # config.enable_rack_cache = true
+  config.enable_rack_cache = false
 
   # allows users to use mini profiler
   config.enable_mini_profiler = false
