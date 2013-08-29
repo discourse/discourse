@@ -62,7 +62,6 @@ test("quotes", function() {
 
   formatQuote("lorem", "[quote=\"eviltrout, post:1, topic:2\"]\nlorem\n[/quote]\n\n", "correctly formats quotes");
 
-
   formatQuote("  lorem \t  ",
               "[quote=\"eviltrout, post:1, topic:2\"]\nlorem\n[/quote]\n\n",
               "trims white spaces before & after the quoted contents");
@@ -75,6 +74,9 @@ test("quotes", function() {
               "[quote=\"eviltrout, post:1, topic:2, full:true\"]\n**lorem** ipsum\n[/quote]\n\n",
                "keeps BBCode formatting");
 
+  formatQuote("this is <not> a bug",
+              "[quote=\"eviltrout, post:1, topic:2\"]\nthis is &lt;not&gt; a bug\n[/quote]\n\n",
+              "it escapes the contents of the quote");
 });
 
 test("quote formatting", function() {
