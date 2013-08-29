@@ -4,7 +4,7 @@ class Onebox::Engine::Foo
   include Onebox::Engine
 
   def extracted_data
-    "bah"
+    Hash.new
   end
 end
 
