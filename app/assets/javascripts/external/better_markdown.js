@@ -10,6 +10,8 @@
 
   * We fixed a bug where references can be created directly following a list.
 
+  * Fix to blockquote to handle spaces in front and when nested.
+
   * Note the name BetterMarkdown doesn't mean it's *better* than markdown-js, it refers
     to it being better than our previous markdown parser!
 
@@ -750,7 +752,7 @@ Markdown.dialects.Gruber = {
       }
 
       // Strip off the leading "> " and re-process as a block.
-      var input = block.replace( /^> ?/gm, "" ),
+      var input = block.replace( /^> */gm, "" ),
           old_tree = this.tree,
           processedBlock = this.toTree( input, [ "blockquote" ] ),
           attr = extract_attr( processedBlock );

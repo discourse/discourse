@@ -109,6 +109,17 @@ test("Links", function() {
 
 });
 
+test("simple quotes", function() {
+  cooked("> nice!", "<blockquote><p>nice!</p></blockquote>", "it supports simple quotes");
+  cooked(" > nice!", "<blockquote><p>nice!</p></blockquote>", "it allows quotes with preceeding spaces");
+  cooked("> level 1\n> > level 2",
+         "<blockquote><p>level 1</p><blockquote><p>level 2</p></blockquote></blockquote>",
+         "it allows nesting of blockquotes");
+  cooked("> level 1\n>  > level 2",
+         "<blockquote><p>level 1</p><blockquote><p>level 2</p></blockquote></blockquote>",
+         "it allows nesting of blockquotes with spaces");
+});
+
 test("Quotes", function() {
 
   cookedOptions("[quote=\"eviltrout, post: 1\"]\na quote\n\nsecond line\n[/quote]",
