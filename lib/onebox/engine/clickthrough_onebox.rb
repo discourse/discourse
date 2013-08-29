@@ -12,8 +12,6 @@ module Onebox
       private
 
       def extracted_data
-        require "pry"
-        binding.pry
         {
           url: @url,
           title: @body.title,
