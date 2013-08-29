@@ -13,7 +13,17 @@ require_relative "onebox/matcher"
 require_relative "onebox/engine"
 
 module Onebox
-  def self.preview(url, options = { cache: Moneta.new(:Memory) })
+  DEFAULTS = {
+    cache: Moneta.new(:Memory, expires: true)
+  }
+
+  @@defaults = DEFAULTS
+
+  def self.preview(url, options = @@defaults)
     Preview.new(url, options)
+  end
+
+  def self.defaults=(options)
+    @@defaults = DEFAULTS.merge(options)
   end
 end
