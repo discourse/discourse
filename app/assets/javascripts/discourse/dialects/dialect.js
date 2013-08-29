@@ -96,17 +96,17 @@ Discourse.Dialect = {
 
     For example to replace all occurrances of :) with a smile image:
 
-     ```javascript
+    ```javascript
       Discourse.Dialect.inlineReplace(':)', ['img', {src: '/images/smile.gif'}])
     ```
 
     @method inlineReplace
     @param {String} token The token we want to replace
-    @param {Array} jsonml The JsonML to replace it with.
+    @param {Function} emitter A function that emits the JsonML for the replacement.
   **/
-  inlineReplace: function(token, jsonml) {
+  inlineReplace: function(token, emitter) {
     dialect.inline[token] = function(text, match, prev) {
-      return [token.length, jsonml];
+      return [token.length, emitter.call(this, token)];
     };
   },
 
