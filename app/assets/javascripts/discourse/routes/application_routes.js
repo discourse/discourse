@@ -10,7 +10,7 @@ Discourse.Route.buildRoutes(function() {
   // Topic routes
   this.resource('topic', { path: '/t/:slug/:id' }, function() {
     this.route('fromParams', { path: '/' });
-    this.route('fromParams', { path: '/:nearPost' });
+    this.route('fromParamsNear', { path: '/:nearPost' });
   });
 
   // Generate static page routes
