@@ -114,7 +114,7 @@ test("Quotes", function() {
   cookedOptions("[quote=\"eviltrout, post: 1\"]\na quote\n\nsecond line\n[/quote]",
                 { topicId: 2 },
                 "<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:</div><blockquote>" +
-                "a quote<br/><br/>second line<br/></blockquote></aside></p>",
+                "a quote<br/><br/>second line</blockquote></aside></p>",
                 "works with multiple lines");
 
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",

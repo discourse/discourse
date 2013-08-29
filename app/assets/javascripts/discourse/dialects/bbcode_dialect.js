@@ -102,128 +102,61 @@ replaceBBCodeParams("color", function(param, contents) {
   }
 });
 
-Discourse.Dialect.on("register", function(event) {
+// Handles `[code] ... [/code]` blocks
+Discourse.Dialect.replaceBlock({
+  start: /(\[code\])([\s\S]*)/igm,
+  stop: '[/code]',
 
-  var dialect = event.dialect,
-      MD = event.MD;
+  emitter: function(blockContents) {
+    return ['p', ['pre'].concat(blockContents)];
+  }
+});
 
-  /**
-    Support BBCode [code] blocks
+// Support BBCode [quote] blocks
+Discourse.Dialect.replaceBlock({
+  start: new RegExp("\\[quote=?([^\\[\\]]+)?\\]([\\s\\S]*)", "igm"),
+  stop: '[/quote]',
+  emitter: function(blockContents, matches, options) {
 
-    @method bbcodeCode
-    @param {Markdown.Block} block the block to examine
-    @param {Array} next the next blocks in the sequence
-    @return {Array} the JsonML containing the markup or undefined if nothing changed.
-    @namespace Discourse.Dialect
-  **/
-  dialect.inline["[code]"] = function bbcodeCode(text, orig_match) {
-    var bbcodePattern = new RegExp("\\[code\\]([\\s\\S]*?)\\[\\/code\\]", "igm"),
-        m = bbcodePattern.exec(text);
+    var paramsString = matches[1].replace(/\"/g, ''),
+        params = {'class': 'quote'},
+        paramsSplit = paramsString.split(/\, */),
+        username = paramsSplit[0];
 
-    if (m) {
-      var contents = m[1].trim().split("\n");
+    paramsSplit.forEach(function(p,i) {
+      if (i > 0) {
+        var assignment = p.split(':');
+        if (assignment[0] && assignment[1]) {
+          params['data-' + assignment[0]] = assignment[1].trim();
+        }
+      }
+    });
 
-      var html = ['pre', "\n"];
-      contents.forEach(function (n) {
-        html.push(n.trim());
-        html.push(["br"]);
-        html.push("\n");
-      });
-
-      return [m[0].length, html];
+    var avatarImg;
+    if (options.lookupAvatarByPostNumber) {
+      // client-side, we can retrieve the avatar from the post
+      var postNumber = parseInt(params['data-post'], 10);
+      avatarImg = options.lookupAvatarByPostNumber(postNumber);
+    } else if (options.lookupAvatar) {
+      // server-side, we need to lookup the avatar from the username
+      avatarImg = options.lookupAvatar(username);
     }
-  };
 
-  /**
-    Support BBCode [quote] blocks
+    var contents = this.processInline(blockContents.join("  \n  \n"));
+    contents.unshift('blockquote');
 
-    @method bbcodeQuote
-    @param {Markdown.Block} block the block to examine
-    @param {Array} next the next blocks in the sequence
-    @return {Array} the JsonML containing the markup or undefined if nothing changed.
-    @namespace Discourse.Dialect
-  **/
-  dialect.block['quote'] = function bbcodeQuote(block, next) {
-    var m = new RegExp("\\[quote=?([^\\[\\]]+)?\\]([\\s\\S]*)", "igm").exec(block);
-    if (m) {
-      var paramsString = m[1].replace(/\"/g, ''),
-          params = {'class': 'quote'},
-          paramsSplit = paramsString.split(/\, */),
-          username = paramsSplit[0],
-          opts = dialect.options,
-          startPos = block.indexOf(m[0]),
-          leading,
-          quoteContents = [],
-          result = [];
-
-      if (startPos > 0) {
-        leading = block.slice(0, startPos);
-
-        var para = ['p'];
-        this.processInline(leading).forEach(function (l) {
-          para.push(l);
-        });
-
-        result.push(para);
-      }
-
-      paramsSplit.forEach(function(p,i) {
-        if (i > 0) {
-          var assignment = p.split(':');
-          if (assignment[0] && assignment[1]) {
-            params['data-' + assignment[0]] = assignment[1].trim();
-          }
-        }
-      });
-
-      var avatarImg;
-      if (opts.lookupAvatarByPostNumber) {
-        // client-side, we can retrieve the avatar from the post
-        var postNumber = parseInt(params['data-post'], 10);
-        avatarImg = opts.lookupAvatarByPostNumber(postNumber);
-      } else if (opts.lookupAvatar) {
-        // server-side, we need to lookup the avatar from the username
-        avatarImg = opts.lookupAvatar(username);
-      }
-
-      if (m[2]) { next.unshift(MD.mk_block(m[2])); }
-
-      while (next.length > 0) {
-        var b = next.shift(),
-            n = b.match(/([\s\S]*)\[\/quote\]([\s\S]*)/m);
-
-        if (n) {
-          if (n[2]) {
-            next.unshift(MD.mk_block(n[2]));
-          }
-          quoteContents.push(n[1]);
-          break;
-        } else {
-          quoteContents.push(b);
-        }
-      }
-
-      var contents = this.processInline(quoteContents.join("  \n  \n"));
-      contents.unshift('blockquote');
-
-
-      result.push(['p', ['aside', params,
+    return ['p', ['aside', params,
                    ['div', {'class': 'title'},
                      ['div', {'class': 'quote-controls'}],
                      avatarImg ? avatarImg : "",
-                     I18n.t('user.said',{username: username})
+                     I18n.t('user.said', {username: username})
                    ],
                    contents
-                ]]);
-      return result;
-    }
-  };
-
+                ]];
+  }
 });
 
-
 Discourse.Dialect.on("parseNode", function(event) {
-
   var node = event.node,
       path = event.path;
 

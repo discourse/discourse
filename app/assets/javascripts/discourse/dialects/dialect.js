@@ -204,6 +204,64 @@ Discourse.Dialect = {
     };
   },
 
+  replaceBlock: function(args) {
+    dialect.block[args.start.toString()] = function(block, next) {
+      args.start.lastIndex = 0;
+      var m = (args.start).exec(block);
+      if (!m) { return; }
+
+      var startPos = block.indexOf(m[0]),
+          leading,
+          blockContents = [],
+          result = [],
+          lineNumber = block.lineNumber;
+
+      if (startPos > 0) {
+        leading = block.slice(0, startPos);
+        lineNumber += (leading.split("\n").length - 1);
+
+        var para = ['p'];
+        this.processInline(leading).forEach(function (l) {
+          para.push(l);
+        });
+
+        result.push(para);
+      }
+      if (m[2]) { next.unshift(MD.mk_block(m[2], null, lineNumber + 1)); }
+
+      lineNumber++;
+      while (next.length > 0) {
+        var b = next.shift(),
+            blockLine = b.lineNumber,
+            diff = ((typeof blockLine === "undefined") ? lineNumber : blockLine) - lineNumber;
+
+        var endFound = b.indexOf(args.stop),
+            leadingContents = b.slice(0, endFound),
+            trailingContents = b.slice(endFound+args.stop.length);
+
+        for (var i=1; i<diff; i++) {
+          blockContents.push("");
+        }
+        lineNumber = blockLine + b.split("\n").length - 1;
+
+        if (endFound !== -1) {
+          if (trailingContents) {
+            next.unshift(MD.mk_block(trailingContents));
+          }
+
+          blockContents.push(leadingContents.replace(/\s+$/, ""));
+          break;
+        } else {
+          blockContents.push(b);
+        }
+      }
+
+      var test = args.emitter.call(this, blockContents, m, dialect.options);
+      result.push(test);
+      return result;
+    };
+  },
+
   /**
     After the parser has been executed, post process any text nodes in the HTML document.
     This is useful if you want to apply a transformation to the text.
