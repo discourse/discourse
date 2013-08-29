@@ -122,13 +122,21 @@ begin
 
   puts "Your Results: (note for timings- percentile is first, duration is second in millisecs)"
 
+  facts = Facter.to_hash
+
+  facts.delete_if{|k,v|
+    !["operatingsystem","architecture","kernelversion",
+    "memorysize", "physicalprocessorcount", "processor0",
+    "virtual"].include?(k)
+  }
+
   puts({
     "home_page" => home_page,
     "topic_page" => topic_page,
     "timings" => @timings,
     "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
     "rails4?" => ENV["RAILS4"] == "1"
-  }.to_yaml)
+  }.merge(facts).to_yaml)
 
   # TODO include Facter.to_hash ... for all facts
 
