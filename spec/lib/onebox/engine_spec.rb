@@ -4,7 +4,7 @@ class Onebox::Engine::Foo
   include Onebox::Engine
 
   def extracted_data
-    Hash.new
+    Moneta.new(:Memory)
   end
 end
 

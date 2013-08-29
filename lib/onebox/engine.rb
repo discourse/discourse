@@ -12,7 +12,7 @@ module Onebox
 
     attr_reader :cache
 
-    def initialize(link, cache = Hash.new)
+    def initialize(link, cache = Moneta.new(:Memory))
       @url = link
       @cache = cache
       @body = read
