@@ -5,7 +5,7 @@ describe Onebox::Engine::ClickThroughOnebox do
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(link, response("clickthough.response"))
+    fake(link, response("clickthrough.response"))
   end
 
   it "returns video title" do
