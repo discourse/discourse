@@ -15,8 +15,8 @@ module Onebox
         {
           url: @url,
           title: @body.title,
-          image: @body.images[0],
-          description: @body.description,
+          image: @body.images.first,
+          description: @body.description
         }
       end
     end
