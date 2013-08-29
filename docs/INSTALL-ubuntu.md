@@ -187,7 +187,6 @@ Edit /var/www/discourse/config/discourse.pill
 
 - change application name from 'discourse' if necessary
 - Ensure appropriate Bluepill.application line is uncommented
-- search for "host to run on" and change to current hostname
 
 Edit /var/www/discourse/config/environments/production.rb
 - browse througn all the settings
