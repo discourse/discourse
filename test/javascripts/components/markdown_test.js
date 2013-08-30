@@ -109,6 +109,17 @@ test("Links", function() {
 
 });
 
+test("simple quotes", function() {
+  cooked("> nice!", "<blockquote><p>nice!</p></blockquote>", "it supports simple quotes");
+  cooked(" > nice!", "<blockquote><p>nice!</p></blockquote>", "it allows quotes with preceeding spaces");
+  cooked("> level 1\n> > level 2",
+         "<blockquote><p>level 1</p><blockquote><p>level 2</p></blockquote></blockquote>",
+         "it allows nesting of blockquotes");
+  cooked("> level 1\n>  > level 2",
+         "<blockquote><p>level 1</p><blockquote><p>level 2</p></blockquote></blockquote>",
+         "it allows nesting of blockquotes with spaces");
+});
+
 test("Quotes", function() {
 
   cookedOptions("[quote=\"eviltrout, post: 1\"]\na quote\n\nsecond line\n[/quote]",
@@ -247,6 +258,12 @@ test("Code Blocks", function() {
   cooked("```ruby\nhello `eviltrout`\n```",
          "<p><pre><code class=\"ruby\">hello &#x60;eviltrout&#x60;</code></pre></p>",
          "it allows code with backticks in it");
+
+
+  cooked("```[quote=\"sam, post:1, topic:9441, full:true\"]This is `<not>` a bug.[/quote]```",
+         "<p><pre><code class=\"lang-auto\">[quote=&quot;sam, post:1, topic:9441, full:true&quot;]This is &#x60;&lt;not&gt;&#x60; a bug.[/quote]</code></pre></p>",
+         "it allows code with backticks in it");
+
 });
 
 test("SanitizeHTML", function() {

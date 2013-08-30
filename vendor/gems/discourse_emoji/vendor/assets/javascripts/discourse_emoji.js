@@ -30,7 +30,11 @@
   };
 
   Object.keys(translations).forEach(function (code) {
-    Discourse.Dialect.inlineReplace(code, imageFor(translations[code]));
+
+    var replacement = translations[code];
+    Discourse.Dialect.inlineReplace(code, function (code) {
+      return imageFor(replacement);
+    });
   });
 
   Discourse.Dialect.inlineBetween({

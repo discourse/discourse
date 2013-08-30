@@ -96,17 +96,20 @@ Discourse.Dialect = {
 
     For example to replace all occurrances of :) with a smile image:
 
-     ```javascript
-      Discourse.Dialect.inlineReplace(':)', ['img', {src: '/images/smile.gif'}])
+    ```javascript
+      Discourse.Dialect.inlineReplace(':)', function (text) {
+        return ['img', {src: '/images/smile.png'}];
+      });
+
     ```
 
     @method inlineReplace
     @param {String} token The token we want to replace
-    @param {Array} jsonml The JsonML to replace it with.
+    @param {Function} emitter A function that emits the JsonML for the replacement.
   **/
-  inlineReplace: function(token, jsonml) {
+  inlineReplace: function(token, emitter) {
     dialect.inline[token] = function(text, match, prev) {
-      return [token.length, jsonml];
+      return [token.length, emitter.call(this, token)];
     };
   },
 
@@ -204,6 +207,31 @@ Discourse.Dialect = {
     };
   },
 
+  /**
+    Replaces a block of text between a start and stop. As opposed to inline, these
+    might span multiple lines.
+
+    Here's an example that takes the content between `[code]` ... `[/code]` and
+    puts them inside a `pre` tag:
+
+    ```javascript
+      Discourse.Dialect.replaceBlock({
+        start: /(\[code\])([\s\S]*)/igm,
+        stop: '[/code]',
+
+        emitter: function(blockContents) {
+          return ['p', ['pre'].concat(blockContents)];
+        }
+      });
+    ```
+
+    @method replaceBlock
+    @param {Object} args Our replacement options
+      @param {String} [opts.start] The starting regexp we want to find
+      @param {String} [opts.stop] The ending token we want to find
+      @param {Function} [opts.emitter] The emitting function to transform the contents of the block into jsonML
+
+  **/
   replaceBlock: function(args) {
     dialect.block[args.start.toString()] = function(block, next) {
       args.start.lastIndex = 0;
@@ -227,7 +255,10 @@ Discourse.Dialect = {
 
         result.push(para);
       }
-      if (m[2]) { next.unshift(MD.mk_block(m[2], null, lineNumber + 1)); }
+
+      if (m[2]) {
+        next.unshift(MD.mk_block(m[2], null, lineNumber + 1));
+      }
 
       lineNumber++;
       while (next.length > 0) {

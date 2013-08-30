@@ -23,6 +23,10 @@ Discourse.Quote = {
     sansQuotes = contents.replace(this.REGEXP, '').trim();
     if (sansQuotes.length === 0) return "";
 
+    // Escape the content of the quote
+    sansQuotes = sansQuotes.replace(/</g, "&lt;")
+                           .replace(/>/g, "&gt;");
+
     result = "[quote=\"" + post.get('username') + ", post:" + post.get('post_number') + ", topic:" + post.get('topic_id');
 
     /* Strip the HTML from cooked */

@@ -104,6 +104,8 @@ module PrettyText
     ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
     ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
 
+    decorate_context(ctx)
+
     ctx_load(ctx,
               "app/assets/javascripts/external/better_markdown.js",
               "app/assets/javascripts/discourse/dialects/dialect.js",
@@ -145,6 +147,13 @@ module PrettyText
     @ctx
   end
 
+  def self.decorate_context(context)
+    context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
+    context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
+    context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
+    context.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
+  end
+
   def self.markdown(text, opts=nil)
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
@@ -154,9 +163,7 @@ module PrettyText
     @mutex.synchronize do
       context = v8
       # we need to do this to work in a multi site environment, many sites, many settings
-      context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
-      context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
-      context.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
+      decorate_context(context)
       context['opts'] = opts || {}
       context['raw'] = text
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
@@ -175,9 +182,7 @@ module PrettyText
     @mutex.synchronize do
       v8['avatarTemplate'] = avatar_template
       v8['size'] = size
-      v8.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
-      v8.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
-      v8.eval("Discourse.BaseUrl = '#{RailsMultisite::ConnectionManagement.current_hostname}';")
+      decorate_context(v8)
       r = v8.eval("Discourse.Utilities.avatarImg({ avatarTemplate: avatarTemplate, size: size });")
     end
     r

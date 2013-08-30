@@ -6,7 +6,7 @@
   @namespace Discourse.Dialect
 **/
 Discourse.Dialect.replaceBlock({
-  start: /^`{3}([^\n]+)?\n?([\s\S]*)?/gm,
+  start: /^`{3}([^\n\[\]]+)?\n?([\s\S]*)?/gm,
   stop: '```',
   emitter: function(blockContents, matches) {
     return ['p', ['pre', ['code', {'class': matches[1] || 'lang-auto'}, blockContents.join("\n") ]]];
