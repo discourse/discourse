@@ -14,7 +14,7 @@ require_relative "onebox/engine"
 
 module Onebox
   DEFAULTS = {
-    cache: Moneta.new(:Memory, expires: true)
+    cache: Moneta.new(:Memory, expires: true, serializer: :json)
   }
 
   @@defaults = DEFAULTS

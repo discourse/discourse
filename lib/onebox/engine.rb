@@ -29,7 +29,7 @@ module Onebox
       if cache.key?(@url)
         cache.fetch(@url)
       else
-        cache.store(@url, extracted_data, options = {} )
+        cache.store(@url, extracted_data)
       end
     end
 
