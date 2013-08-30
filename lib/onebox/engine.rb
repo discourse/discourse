@@ -29,12 +29,12 @@ module Onebox
       if cache.key?(@url)
         cache.fetch(@url)
       else
-        cache.store(@url, open(@url))
+        cache.store(@url, extracted_data, options = {} )
       end
     end
 
     def read
-      Nokogiri::HTML(fetch)
+      Nokogiri::HTML(open(@url))
     end
 
     def template
