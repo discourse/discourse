@@ -188,7 +188,6 @@ en:
       download_archive: "download archive of my posts"
       private_message: "Private Message"
       private_messages: "Messages"
-      private_messages_sent: "Sent Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
       bio: "About me"
@@ -201,6 +200,11 @@ en:
       change: "change"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} is an admin"
+
+      messages:
+        all: "All"
+        mine: "Mine"
+        unread: "Unread"
 
       change_password:
         success: "(email sent)"
