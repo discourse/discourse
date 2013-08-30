@@ -26,7 +26,7 @@ module Onebox
     private
 
     def fetch
-      if cache.has_key?(@url)
+      if cache.key?(@url)
         cache.fetch(@url)
       else
         cache.store(@url, open(@url))
