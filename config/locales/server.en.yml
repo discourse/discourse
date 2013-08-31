@@ -937,9 +937,9 @@ en:
         Please [review the flags](/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{user_url}).
 
     spam_post_blocked:
-      subject_template: "Spam was detected in a post by %{username}"
+      subject_template: "New user %{username} is posting repeated links"
       text_body_template: |
-        This is an automated message to inform you that [%{username}](%{user_url}) tried to make a post with links, but it was stopped as spam based on the newuser_spam_host_threshold site setting.
+        This is an automated message to inform you that the new user [%{username}](%{user_url}) tried to create multiple posts with links to the same domain, but they were blocked based on the newuser_spam_host_threshold site setting.
 
         Please [review the user](%{user_url}).
 
