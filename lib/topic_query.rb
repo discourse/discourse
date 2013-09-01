@@ -146,6 +146,11 @@ class TopicQuery
     TopicList.new(:private_messages, user, list)
   end
 
+  def list_private_messages_unread(user)
+    list = private_messages_for(user)
+    list = TopicQuery.unread_filter(list)
+    TopicList.new(:private_messages, user, list)
+  end
 
   def list_uncategorized
     create_list(:uncategorized, unordered: true) do |list|

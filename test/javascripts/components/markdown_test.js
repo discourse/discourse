@@ -23,6 +23,7 @@ test("basic cooking", function() {
   cooked("_trout_", "<p><em>trout</em></p>", "it italicizes text.");
   cooked("***hello***", "<p><strong><em>hello</em></strong></p>", "it can do bold and italics at once.");
   cooked("word_with_underscores", "<p>word_with_underscores</p>", "it doesn't do intraword italics");
+  cooked("common/_special_font_face.html.erb", "<p>common/_special_font_face.html.erb</p>", "it doesn't intraword with a slash");
   cooked("hello \\*evil\\*", "<p>hello *evil*</p>", "it supports escaping of asterisks");
   cooked("hello \\_evil\\_", "<p>hello _evil_</p>", "it supports escaping of italics");
   cooked("brussel sproutes are *awful*.", "<p>brussel sproutes are <em>awful</em>.</p>", "it doesn't swallow periods.");

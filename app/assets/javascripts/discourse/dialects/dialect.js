@@ -64,7 +64,7 @@ function invalidBoundary(args, prev) {
   var last = prev[prev.length - 1];
   if (typeof last !== "string") { return; }
 
-  if (args.wordBoundary && (!last.match(/\W$/))) { return true; }
+  if (args.wordBoundary && (last.match(/(\w|\/)$/))) { return true; }
   if (args.spaceBoundary && (!last.match(/\s$/))) { return true; }
 }
 
