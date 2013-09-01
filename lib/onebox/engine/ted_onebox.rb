@@ -1,12 +1,12 @@
 module Onebox
   module Engine
-    class FunnyOrDieOnebox
+    class TedOnebox
       include Engine
       include OpenGraph
 
       matches do
-        # /^https?\:\/\/(www\.)?funnyordie\.com\/videos\/.*$/$/
-        find "funnyordie.com"
+        # /^https?\:\/\/(www\.)?ted\.com\/talks\/.*$/
+        find "ted.com"
       end
 
       private
@@ -16,8 +16,7 @@ module Onebox
           url: @url,
           title: @body.title,
           image: @body.images.first,
-          description: @body.description,
-          video: @body.metadata[:video].first[:url].first[:_value]
+          description: @body.description
         }
       end
     end
