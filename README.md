@@ -90,6 +90,36 @@ end
 
 2. Create new onebox spec
 
+``` ruby
+# in spec/lib/onebox/engine/name_spec.rb
+require "spec_helper"
+
+describe Onebox::Engine::NameOnebox do
+  let(:link) { "http://yoursitename.com" }
+  let(:html) { described_class.new(link).to_html }
+
+  before do
+    fake(link, response("name.response"))
+  end
+
+  it "returns video title" do
+    expect(html).to include("title")
+  end
+
+  it "returns video photo" do
+    expect(html).to include("photo.jpg")
+  end
+
+  it "returns video description" do
+    expect(html).to include("description")
+  end
+
+  it "returns URL" do
+    expect(html).to include(link)
+  end
+end
+```
+
 3. Create new handlebars template
 
 ``` html
@@ -97,7 +127,7 @@ end
 <div class="onebox">
   <a href="{{url}}">
     <h1>{{name}}</h1>
-    <h2 class="host">name.com</h2>
+    <h2 class="host">yoursitename.com</h2>
     <img src="{{image}}" />
     <p>{{description}}</p>
   </a>
