@@ -13,11 +13,11 @@ module Onebox
 
       def extracted_data
         {
-          url: @url,
+          url: @body.metadata[:url].first[:_value],
           title: @body.title,
           image: @body.images.first,
           description: @body.description,
-          video: @body.video
+          video: @body.metadata[:video].first[:_value]
         }
       end
     end
