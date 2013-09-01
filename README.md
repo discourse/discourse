@@ -117,22 +117,6 @@ curl --output spec/fixtures/name.response -L -X -GET http://yoursitename.com
 require_relative "engine/name_onebox"
 ```
 
-6. Add to Matcher module
-
-``` ruby
-# in lib/onebox/matcher.rb
-def oneboxed
-  case @url
-  when /example\.com/ then Engine::ExampleOnebox
-  when /amazon\.com/ then Engine::AmazonOnebox
-  .
-  .
-  .
-  when /sitename\.com/ then Engine::NameOnebox
-  end
-end
-```
-
 
 Installing onebox
 ==================
