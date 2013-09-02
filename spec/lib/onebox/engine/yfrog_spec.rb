@@ -12,6 +12,10 @@ describe Onebox::Engine::YfrogOnebox do
     expect(html).to include("Celebrating @questlove Cook4Quest w/WyattCenac")
   end
 
+  it "returns photo" do
+    expect(html).to include("jjdob.jpg")
+  end
+
   it "returns URL" do
     expect(html).to include(link)
   end
