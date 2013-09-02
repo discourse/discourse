@@ -50,7 +50,8 @@ Discourse.Route.buildRoutes(function() {
     });
 
     this.resource('userPrivateMessages', { path: '/private-messages' }, function() {
-      this.route('sent', {path: '/messages-sent'});
+      this.route('mine', {path: '/mine'});
+      this.route('unread', {path: '/unread'});
     });
 
     this.resource('preferences', { path: '/preferences' }, function() {

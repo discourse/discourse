@@ -53,6 +53,14 @@ class ListController < ApplicationController
     respond(list)
   end
 
+  def private_messages_unread
+    list_opts = build_topic_list_options
+    list = TopicQuery.new(current_user, list_opts).list_private_messages_unread(fetch_user_from_params)
+    list.more_topics_url = url_for(topics_private_messages_unread_path(list_opts.merge(format: 'json', page: next_page)))
+
+    respond(list)
+  end
+
   def category
     query = TopicQuery.new(current_user, page: params[:page])
 

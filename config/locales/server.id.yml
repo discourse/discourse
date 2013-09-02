@@ -725,7 +725,7 @@ id:
       subject_template: "[%{site_name}] Forum Activity for %{date}"
       new_activity: "New activity on your topics and posts:"
       new_topics: "New topics:"
-      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while.\nTo unsubscribe or change your email preferences, %{unsubscribe_link}."
+      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe or change your email preferences, %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"
 

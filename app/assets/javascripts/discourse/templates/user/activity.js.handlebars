@@ -16,10 +16,13 @@
   <ul class='action-list nav-stacked side-nav'>
     {{#if privateMessageView}}
       <li {{bindAttr class=":noGlyph privateMessagesActive:active"}}>
-        {{#linkTo 'userPrivateMessages.index' model}}{{i18n user.private_messages}}{{/linkTo}}
+        {{#linkTo 'userPrivateMessages.index' model}}{{i18n user.messages.all}}{{/linkTo}}
       </li>
-      <li {{bindAttr class=":noGlyph privateMessagesSentActive:active"}}>
-        {{#linkTo 'userPrivateMessages.sent' model}}{{i18n user.private_messages_sent}}{{/linkTo}}
+      <li {{bindAttr class=":noGlyph privateMessagesMineActive:active"}}>
+        {{#linkTo 'userPrivateMessages.mine' model}}{{i18n user.messages.mine}}{{/linkTo}}
+      </li>
+      <li {{bindAttr class=":noGlyph privateMessagesUnreadActive:active"}}>
+        {{#linkTo 'userPrivateMessages.unread' model}}{{i18n user.messages.unread}}{{/linkTo}}
       </li>
 
     {{else}}

@@ -937,9 +937,9 @@ en:
         Please [review the flags](/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{user_url}).
 
     spam_post_blocked:
-      subject_template: "Spam was detected in a post by %{username}"
+      subject_template: "New user %{username} is posting repeated links"
       text_body_template: |
-        This is an automated message to inform you that [%{username}](%{user_url}) tried to make a post with links, but it was stopped as spam based on the newuser_spam_host_threshold site setting.
+        This is an automated message to inform you that the new user [%{username}](%{user_url}) tried to create multiple posts with links to the same domain, but they were blocked based on the newuser_spam_host_threshold site setting.
 
         Please [review the user](%{user_url}).
 
@@ -1027,7 +1027,7 @@ en:
       new_activity: "New activity on your topics and posts:"
       top_topics: "Recent posts the community enjoyed:"
       other_new_topics: "Other New Topics:"
-      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while.\nTo unsubscribe or change your email preferences, %{unsubscribe_link}."
+      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe or change your email preferences, %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"
