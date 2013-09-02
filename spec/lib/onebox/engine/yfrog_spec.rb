@@ -16,6 +16,10 @@ describe Onebox::Engine::YfrogOnebox do
     expect(html).to include("jjdob.jpg")
   end
 
+  it "returns photo description" do
+    expect(html).to include("Click on the photo to comment, share or view other great photos")
+  end
+
   it "returns URL" do
     expect(html).to include(link)
   end
