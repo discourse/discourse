@@ -4,7 +4,7 @@ task :kill_postgres_connections => :environment do
 	sh = <<EOF
 ps xa \
   | grep postgres: \
-  | grep #{discourse_prod} \
+  | grep discourse_prod \
   | grep -v grep \
   | awk '{print $1}' \
   | sudo xargs kill
