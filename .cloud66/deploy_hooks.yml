@@ -3,7 +3,7 @@ production:
       - source: /.cloud66/scripts/bundle.sh
         destination: ~/bundle.sh
         target: rails
-        apply_during: all
+        apply_during: build_only
         execute: true
         sudo: true
 staging:
@@ -11,7 +11,7 @@ staging:
       - source: /.cloud66/scripts/bundle.sh
         destination: ~/bundle.sh
         target: rails
-        apply_during: all
+        apply_during: build_only
         execute: true
         sudo: true
 development:
@@ -19,6 +19,6 @@ development:
       - source: /.cloud66/scripts/bundle.sh
         destination: ~/bundle.sh
         target: rails
-        apply_during: all
+        apply_during: build_only
         execute: true
         sudo: true
