@@ -8,6 +8,10 @@ describe Onebox::Engine::YfrogOnebox do
     fake(link, response("yfrog.response"))
   end
 
+  it "returns photo title" do
+    expect(html).to include("Celebrating @questlove Cook4Quest w/WyattCenac")
+  end
+
   it "returns URL" do
     expect(html).to include(link)
   end

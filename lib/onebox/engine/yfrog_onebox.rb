@@ -13,7 +13,8 @@ module Onebox
 
       def extracted_data
         {
-          url: @url
+          url: @url,
+          title: @body.title
         }
       end
     end
