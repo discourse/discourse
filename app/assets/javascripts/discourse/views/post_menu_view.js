@@ -175,8 +175,8 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (!this.get('controller.model.details.can_create_post')) return;
     buffer.push("<button title=\"" +
                  (I18n.t("post.controls.reply")) +
-                 "\" class='create' data-action=\"reply\"><i class='icon-reply'></i>" +
-                 (I18n.t("topic.reply.title")) + "</button>");
+                 "\" class='create' data-action=\"reply\"><i class='icon-reply'></i><span class='btn-text'>" +
+                 (I18n.t("topic.reply.title")) + "</span></button>");
   },
 
   clickReply: function() {
