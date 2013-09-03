@@ -20,6 +20,10 @@ describe Onebox::Engine::DailymotionOnebox do
     expect(html).to include("Vibrez au son de l&#39;electro-pop des Irlandais de Two Door Cinema Club,")
   end
 
+  it "returns video URL" do
+    expect(html).to include("http://www.dailymotion.com/swf/video/x12h020?autoPlay=1")
+  end
+
   it "returns URL" do
     expect(html).to include(link)
   end

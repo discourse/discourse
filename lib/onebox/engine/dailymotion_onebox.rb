@@ -16,7 +16,8 @@ module Onebox
           url: @url,
           title: @body.title,
           image: @body.images.first,
-          description: @body.description
+          description: @body.description,
+          video: @body.metadata[:video][1][:_value]
         }
       end
     end
