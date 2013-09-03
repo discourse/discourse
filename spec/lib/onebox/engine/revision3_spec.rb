@@ -24,6 +24,8 @@ describe Onebox::Engine::Revision3Onebox do
     expect(html).to include("https://revision3.com/player-v22668")
   end
 
+  it "returns video embed code"
+
   it "returns URL" do
     expect(html).to include(link)
   end
