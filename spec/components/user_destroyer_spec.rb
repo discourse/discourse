@@ -121,25 +121,26 @@ describe UserDestroyer do
         it "deletes the posts" do
           destroy
           post.reload.deleted_at.should_not be_nil
-          post.nuked_user.should be_true
+          post.user_id.should be_nil
         end
+      end
+    end
+
+    context 'user has deleted posts' do
+      let!(:deleted_post) { Fabricate(:post, user: @user, deleted_at: 1.hour.ago) }
+      it "should mark the user's deleted posts as belonging to a nuked user" do
+        expect { UserDestroyer.new(@admin).destroy(@user) }.to change { User.count }.by(-1)
+        deleted_post.reload.user_id.should be_nil
       end
     end
 
     context 'user has no posts' do
       context 'and destroy succeeds' do
-
         let(:destroy_opts) { {} }
         subject(:destroy) { UserDestroyer.new(@admin).destroy(@user) }
 
         include_examples "successfully destroy a user"
         include_examples "email block list"
-
-        it "should mark the user's deleted posts as belonging to a nuked user" do
-          post = Fabricate(:post, user: @user, deleted_at: 1.hour.ago)
-          expect { destroy }.to change { User.count }.by(-1)
-          post.reload.nuked_user.should be_true
-        end
       end
 
       context 'and destroy fails' do
