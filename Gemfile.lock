@@ -180,7 +180,7 @@ GEM
     fast_blank (0.0.1)
       rake
       rake-compiler
-    fast_stack (0.0.3)
+    fast_stack (0.0.4)
       rake
       rake-compiler
     fast_xs (0.8.0)
