@@ -20,6 +20,10 @@ describe Onebox::Engine::Revision3Onebox do
     expect(html).to include("Blue Sharks swimming and eating in the open ocean.")
   end
 
+  it "returns video URL" do
+    expect(html).to include("https://revision3.com/player-v22668")
+  end
+
   it "returns URL" do
     expect(html).to include(link)
   end
