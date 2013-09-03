@@ -611,6 +611,8 @@ en:
     regular_requires_likes_given: "How many likes a basic user must cast before promotion to regular (2) trust level"
     regular_requires_topic_reply_count: "How many topics a basic user must reply to before promotion to regular (2) trust level"
 
+    min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+
     newuser_max_links: "How many links a new user can add to a post"
     newuser_max_images: "How many images a new user can add to a post"
     newuser_max_attachments: "How many attachments a new user can add to a post"
