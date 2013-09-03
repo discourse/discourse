@@ -2,7 +2,7 @@
 module Plugin; end
 
 class Plugin::Metadata
-  FIELDS = [:name, :about, :version, :authors]
+  FIELDS ||= [:name, :about, :version, :authors]
   attr_accessor *FIELDS
 
   def self.parse(text)
