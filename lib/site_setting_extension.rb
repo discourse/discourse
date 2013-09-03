@@ -240,9 +240,7 @@ module SiteSettingExtension
     end
 
     define_singleton_method :#{clean_name}? do
-      c = @@containers[provider.current_site]
-      c = c[name] if c
-      c
+      #{clean_name}
     end
 
     define_singleton_method :#{clean_name}= do |val|
