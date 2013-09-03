@@ -14,7 +14,8 @@ module Onebox
       def extracted_data
         {
           url: @url,
-          title: @body.title
+          title: @body.title,
+          image: @body.images.first
         }
       end
     end

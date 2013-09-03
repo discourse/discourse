@@ -12,6 +12,10 @@ describe Onebox::Engine::DailymotionOnebox do
     expect(html).to include("Two Door Cinema Club - Les Vielles Charrues 2013.")
   end
 
+  it "returns video image" do
+    expect(html).to include("526x297-bxE.jpg")
+  end
+
   it "returns URL" do
     expect(html).to include(link)
   end
