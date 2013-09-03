@@ -24,6 +24,8 @@ describe Onebox::Engine::DailymotionOnebox do
     expect(html).to include("http://www.dailymotion.com/swf/video/x12h020?autoPlay=1")
   end
 
+  it "returns video embed code"
+
   it "returns URL" do
     expect(html).to include(link)
   end
