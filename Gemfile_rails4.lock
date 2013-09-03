@@ -33,7 +33,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 78624ffedbf98c49743a60e00aa1351c9a48f54b
+  revision: 8487692903c05e7ba94b7b02c19e96589be091d4
   branch: 4-0-stable
   specs:
     actionmailer (4.0.0)
@@ -272,7 +272,7 @@ GEM
       treetop (~> 1.4.8)
     metaclass (0.0.1)
     method_source (0.8.1)
-    mime-types (1.24)
+    mime-types (1.25)
     mini_portile (0.5.1)
     minitest (4.7.5)
     mocha (0.14.0)
