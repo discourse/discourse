@@ -1,158 +1,442 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>
-		Viddler is Video Hosting for Business
-	 </title>
-<meta property="v:type" content="v=bdce8c7:vf=7281005f4321dad5584804983373a496:p=Unknown,0.0,d:b=Unknown,0.0,d,d:d=Unknown:e=0" />
+  
+  <title>"Viddler Demo" - Videos - Viddler</title>
 
-	<meta name="description"
-		content="Viddler is Video Hosting for Business" />
-	<meta property="og:image"
-		content="http://thumbs.cdn-ec.viddler.com/thumbnail_2_bdce8c7_v6.jpg" />
-	<meta property="og:url"
-		content="" />
-	<meta property="og:video:type" content="application/x-shockwave-flash" />
-	<meta property="og:video:width"
-		content="640" />
-	<meta property="og:video:height"
-		content="360" />
-	<meta property="og:video:type" content="application/x-shockwave-flash" />
-	
-		<script type="text/javascript"
-			src="http://static.cdn-ec.viddler.com/vjsp/js/core.js?ts=15"></script>
-		<script type="text/javascript"
-			src="http://static.cdn-ec.viddler.com/vjsp/js/classes.js?ts=15"></script>
-		<script type="text/javascript"
-			src="http://static.cdn-ec.viddler.com/vjsp/js/utilities.js?ts=15"></script>
-		<script type="text/javascript"
-			src="http://static.cdn-ec.viddler.com/vjsp/js/skin.js?ts=15"></script>
-		<script type="text/javascript"
-			src="http://static.cdn-ec.viddler.com/vjsp/js/skin.default.js?ts=15"></script>
-		<script type="text/javascript"
-			src="http://static.cdn-ec.viddler.com/vjsp/js/video-monitor.js?ts=15"></script>
-		<link type="text/css" rel="stylesheet"
-			href="http://static.cdn-ec.viddler.com/vjsp/css/vjsp.css?ts=15" />
-		<link type="text/css" rel="stylesheet"
-			href="http://static.cdn-ec.viddler.com/vjsp/css/vjsp.default.css?ts=15" />
-	
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Get familiar with your Viddler account. Check out a full walk through of the Viddler platform led by one of our Video Specialists. " />
+  <meta name="keywords" content="Viddler, Video Sharing, Business Video Hosting" />
+
+  <meta content="authenticity_token" name="csrf-param" />
+<meta content="Sq7Xp75JkXehxU3F5nQB16SwTe/Lj31kOYsB0Y1CwgA=" name="csrf-token" />
+
+  <link rel="pingback" href="http://www.viddler.com/xmlrpc" />
+  <link rel="icon" type="image/vnd.microsoft.icon" href="//www.viddler.com/favicon.ico?v=245" />
+  <link href="//www.viddler.com/favicon.ico?v=245" rel="SHORTCUT ICON" />
+  <!--[if lt IE 9]>
+  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="//static8.cdn-ec.viddler.com/rails/assets/application-8a4f8574a74ac79bfb63201ef619cb0e.css" media="screen" rel="stylesheet" type="text/css" />
+  <script src="//static4.cdn-ec.viddler.com/rails/assets/application-cda06eab1d2b5a4a64ebc26f6f79cf90.js" type="text/javascript"></script>
+  
+  
 
 
-	
-	
 
-<link rel="stylesheet" type="text/css"
-	href="http://static.cdn-ec.viddler.com/css/embed.css?ts=2011042801"></link>
-
-	
-	<script type="text/javascript">
-var ejs = {
-	vid: 'viddler_bdce8c7',
-	hid: {visibility:'hidden'},
-	vis: {visibility:''},
-	dim: function(el) { return [el.clientWidth||el.offsetWidth, el.clientHeight||el.offsetWidth]; },
-	id: function(id) { return document.getElementById(id); },
-	listen: function(source, event, listener) { if (window['addEventListener']) { source.addEventListener(event, listener, false); } else { source.attachEvent('on'+event,listener); } },
-	flash: function() { try { var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash'); if (fo) { return true; } } catch(e){ return navigator.mimeTypes["application/x-shockwave-flash"] != undefined; } return false; },
-	css: function(id, styles) { for (var style in styles) { ejs.id(id).style[style]=styles[style]; } }
-};
-var flashLoaded=false;
-function onSkinReady() { ejs.css('embed-content', ejs.vis); ejs.css(ejs.vid, ejs.hid); ejs.css(ejs.vid, ejs.vis); }
-function handleSkinLoad() { flashLoaded=true; ejs.id('viddler_bdce8c7').addEventListener('onSkinReady', 'onSkinReady'); }
-
-var ra=0, flashLoaded=false, flashFallback='<video class="viddler-video" id="viddler_bdce8c7" src="http://www.viddler.com/file/bdce8c7/html5/" width="100%" height="100%" type="video/mp4" preload="none" poster="http://thumbs.cdn-ec.viddler.com/thumbnail_2_bdce8c7_v6.jpg" controls="controls" x-webkit-airplay="allow"></video>';
-function resizeBg() {
-  var pdim=ejs.dim(ejs.id('embed-bg').parentElement);
-  pdim[1]=pdim[1]-42;
-  var h = parseInt((pdim[0]*1.0)/ra);
-  if (h>pdim[1]) { h=pdim[1]; }
-  var w=parseInt(h*ra);
-  ejs.css('embed-bg',{width:w+'px',height:h+'px',left:parseInt((pdim[0]-w)/2)+'px'});
-}
-function handleFlashFallback() {
-	if (!flashLoaded) {
-	    if (true || false) {
-		Vjsp.embed({
-		    width : Vjsp.windowWidth(),
-		    height : Vjsp.windowHeight(),
-		    fullWindow : true,
-		    id : 'embed-holder',
-		    thumbnail : 'http://thumbs.cdn-ec.viddler.com/thumbnail_2_bdce8c7_v6.jpg',
-			sources : {
-			    'http://viddler.a.ec.viddler.com/viddler_1469aoxaqpwmsjp39k9na0osx1vbf8.mp4?fd9f2a1c14aadf1069f046c160f41e2b22cf4a2edc6735ebdbbd80a2a9446cf01d666bce78bc20e850dbaef14c18821243623c4d428915c66622a26e8c908198e49c67e85ae13720d7' : 'video/mp4'
-			},
-			
-		    brandingInfo : {
-				logo : 'viddler_e6c3ff85.png',
-				logoURL : '',
-				logoVisible : true,
-				logoAlign : 'br',
-				logoOffsetX : 10,
-				logoOffsetY : 10
-			},
-			
-			
-			disableinplay: false,
-			
-	        googleAnalytics: {
-	          	
-	          	enabled : false
-	        },
-	        viddlerAnalytics: {
-				
-					url : 'http://stats.viddler.com/?{video-id}={events}&h={host}',
-					reportDelay : '5',
-				
-    			enabled : true
-	        },
-			videoKey: 'bdce8c7',
-			authorName: 'viddler',
-			title: 'Viddler is Video Hosting for Business',
-			duration: 109.07
-		});
-	    } else {
-			ejs.id('embed-holder').innerHTML = flashFallback;
-	    }
-	}
-}
-ejs.listen(window, 'load', function() {
-	if (!ejs.flash()) {
-		handleFlashFallback();
-		onViddlerPlayerReady();
-	} else {
-		var bgdim=ejs.dim(ejs.id('embed-bg')); ra=bgdim[0]/bgdim[1];
-		ejs.listen(window,'resize', resizeBg); resizeBg();
-		ejs.css('embed-content', ejs.hid);
-		setTimeout('handleFlashFallback()', 10000);
-	}
-});
+    <script type="text/javascript">
+      //<![CDATA[
+      window.wmodeFixNeeded = true;
+      //]]>
+    </script>
 
 
-function onViddlerPlayerReady() { handleSkinLoad(); }
-function playerReady() { setTimeout('onSkinReady()', 2000); }
-
-  </script>
+    <script src="//cdn.static.viddler.com/js/vapi.js" type="text/javascript"></script>
 
 
+    <meta content="movie" property="og:type" />
+<meta content="Viddler Demo" property="og:title" />
+<meta content="Get familiar with your Viddler account. Check out a full walk through of the Viddler platform led by one of our Video Specialists. " property="og:description" />
+<meta content="http://thumbs.cdn-ec.viddler.com/thumbnail_2_7164f749_v2.jpg" property="og:image" />
+<meta content="https://thumbs.cdn-ec.viddler.com/thumbnail_2_7164f749_v2.jpg" property="og:image:secure_url" />
+<meta content="http://www.viddler.com/v/7164f749" property="og:url" />
+<meta content="http://www.viddler.com/player/7164f749" property="og:video" />
+<meta content="https://www.viddler.com/player/7164f749" property="og:video:secure_url" />
+<meta content="application/x-shockwave-flash" property="og:video:type" />
+<meta content="640" property="og:video:width" />
+<meta content="360" property="og:video:height" />
+    <meta href="http://www.viddler.com/oembed/?format=json&amp;url=http%3A%2F%2Fwww.viddler.com%2Fv%2F7164f749" rel="alternate" title="Viddler Demo" type="application/json+oembed" />
+    <meta href="http://www.viddler.com/oembed/?format=xml&amp;url=http%3A%2F%2Fwww.viddler.com%2Fv%2F7164f749" rel="alternate" title="Viddler Demo" type="text/xml+oembed" />
+
+  
 </head>
-<body>
-	<div id="embed-holder">
-		
-		
-			
-			
-				
-				
-					
-<img id="embed-bg" class="full" src="http://thumbs.cdn-ec.viddler.com/thumbnail_2_bdce8c7_v6.jpg" alt="Poster" /><div id="embed-content">
 
-<embed class="viddler-video" src="http://www.viddler.com/player/bdce8c7/" width="100%" height="100%" type="application/x-shockwave-flash" allowScriptAccess="always" allowFullScreen="true" allowNetworking="all" id="viddler_bdce8c7" flashVars="f=1&iframe=t&autoplay=f&disablebranding=f&ref=&enablejsapi=t&enablecallbacks=t&playerapiid=viddler_bdce8c7&f=1" wmode="direct"></embed>
+<body class="" id="body-single">
+  
+  <script type="text/javascript">
+//<![CDATA[
 
+  match = navigator.userAgent.match(/MSIE [0-9\.]+/);
+  if (match) version = match[0].match(/[^a-z ]+/i)[0];
+  if (match && version) {
+    version = parseFloat(version);
+    if (version < 8) {
+      document.write("<div id=\"upgrade-ie\"><h3>We currently only support <b>Internet Explorer 8</b> and higher</h3><p>We have chosen to do this to increase functionality and security for our users.<br />Please <b><a href=\"http://windows.microsoft.com/en-US/internet\">upgrade your version of Internet Explorer</a></b> in order to take advantage<br />of all the functionality Viddler has to offer.</p></div>");
+	}
+	//document.getElementById('upgrade-ie').style.display = 'block';
+  }
+
+//]]>
+</script>
+  
+
+  <div id="container">
+          <header id="header">
+  <h1 id="viddler-logo"><a href="http://www.viddler.com/">Viddler</a></h1>
+
+    <!-- <div id="header-login">
+      <form accept-charset="UTF-8" action="https://www.viddler.com/sessions" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="ZNig3DOsquYDwGIBmlY8Ti4i3KJlmrSMcKJ7wiLtUHI=" /></div>
+        <input id="login_username" name="login[username]" placeholder="Username" type="text" />
+        <input id="login_password" name="login[password]" placeholder="Password" type="password" />
+        <input name="commit" type="submit" value="Login" />
+
+        <div class="etc">
+          <a href="http://www.viddler.com/password_reset/new" class="quiet">Forgot password?</a>
+          <input id="return_to" name="return_to" type="hidden" />
+          <input name="login[rememberme]" type="hidden" value="0" /><input id="login_rememberme" name="login[rememberme]" type="checkbox" value="1" />
+          <label for="login_rememberme">Remember me</label>
+        </div>
+</form>    </div> -->
+  
+  <nav id="main-nav">
+    <ul>
+          <li id="test-nav" class="top-level">
+            <a href="http://www.viddler.com/about" class="top-level-link top-level-link-">About</a>
+            <ul>
+                <li id="partners-nav" class="sub-level">
+                  <a href="http://www.viddler.com/about/partners" class="sub-level-link sub-level-link-">Partners</a>
+                </li>
+                <li id="customers-nav" class="sub-level">
+                  <a href="http://www.viddler.com/about/customers" class="sub-level-link sub-level-link-">Customers</a>
+                </li>
+            </ul>
+          </li>
+          <li id="test-nav" class="top-level">
+            <a href="http://www.viddler.com/features" class="top-level-link top-level-link-">Features</a>
+            <ul>
+                <li id="video-player-customization-and-branding-nav" class="sub-level">
+                  <a href="http://www.viddler.com/features/video-player-customization-and-branding" class="sub-level-link sub-level-link-">Player Customization</a>
+                </li>
+                <li id="online-video-delivery-and-security-nav" class="sub-level">
+                  <a href="http://www.viddler.com/features/online-video-delivery-and-security" class="sub-level-link sub-level-link-">Secure Delivery</a>
+                </li>
+                <li id="video-recording-uploading-and-encoding-nav" class="sub-level">
+                  <a href="http://www.viddler.com/features/video-recording-uploading-and-encoding" class="sub-level-link sub-level-link-">Upload and Encode</a>
+                </li>
+                <li id="online-video-privacy-and-restricted-access-nav" class="sub-level">
+                  <a href="http://www.viddler.com/features/online-video-privacy-and-restricted-access" class="sub-level-link sub-level-link-">Video Privacy</a>
+                </li>
+                <li id="online-video-management-nav" class="sub-level">
+                  <a href="http://www.viddler.com/features/online-video-management" class="sub-level-link sub-level-link-">Video Management</a>
+                </li>
+                <li id="online-video-analytics-nav" class="sub-level">
+                  <a href="http://www.viddler.com/features/online-video-analytics" class="sub-level-link sub-level-link-">Analytics</a>
+                </li>
+                <li id="api-nav" class="sub-level">
+                  <a href="http://www.viddler.com/features/api" class="sub-level-link sub-level-link-">API</a>
+                </li>
+            </ul>
+          </li>
+          <li id="test-nav" class="top-level">
+            <a href="http://www.viddler.com/professional-video-services" class="top-level-link top-level-link-">Professional Services</a>
+          </li>
+          <li id="add-ons-nav" class="top-level">
+            <a href="http://www.viddler.com/addons" class="top-level-link top-level-link-">Add-ons</a>
+            <ul>
+                <li id="subscriptions-monetize-online-video-nav" class="sub-level">
+                  <a href="http://www.viddler.com/addons/subscriptions-monetize-online-video" class="sub-level-link sub-level-link-">Subscriptions</a>
+                </li>
+                <li id="geography-based-video-filtering-nav" class="sub-level">
+                  <a href="http://www.viddler.com/addons/geography-based-video-filtering" class="sub-level-link sub-level-link-">Geo-filtering</a>
+                </li>
+                <li id="online-video-analytics-integration-nav" class="sub-level">
+                  <a href="http://www.viddler.com/addons/online-video-analytics-integration" class="sub-level-link sub-level-link-">Analytics</a>
+                </li>
+                <li id="online-video-mobile-SSL-nav" class="sub-level">
+                  <a href="http://www.viddler.com/addons/online-video-mobile-SSL" class="sub-level-link sub-level-link-">Mobile SSL</a>
+                </li>
+                <li id="online-video-IP-whitelisting-blocking-nav" class="sub-level">
+                  <a href="http://www.viddler.com/addons/online-video-IP-whitelisting-blocking" class="sub-level-link sub-level-link-">IP Whitelisting</a>
+                </li>
+                <li id="online-video-api-nav" class="sub-level">
+                  <a href="http://www.viddler.com/addons/online-video-api" class="sub-level-link sub-level-link-">API</a>
+                </li>
+                <li id="online-video-contest-manager-nav" class="sub-level">
+                  <a href="http://www.viddler.com/addons/online-video-contest-manager" class="sub-level-link sub-level-link-">Contests</a>
+                </li>
+                <li id="multi-user-permissions-nav" class="sub-level">
+                  <a href="http://www.viddler.com/addons/multi-user-permissions" class="sub-level-link sub-level-link-">Multi-users</a>
+                </li>
+                <li id="sub-accounts-nav" class="sub-level">
+                  <a href="http://www.viddler.com/addons/sub-accounts" class="sub-level-link sub-level-link-">Sub-Accounts</a>
+                </li>
+                <li id="online-video-advertising-nav" class="sub-level">
+                  <a href="http://www.viddler.com/addons/online-video-advertising" class="sub-level-link sub-level-link-">Advertising</a>
+                </li>
+            </ul>
+          </li>
+          <li id="test-nav" class="top-level">
+            <a href="http://www.viddler.com/learning" class="top-level-link top-level-link-">Learning</a>
+          </li>
+          <li id="pricing-nav" class="top-level">
+            <a href="http://www.viddler.com/plans" class="top-level-link top-level-link-">Pricing</a>
+          </li>
+          <li class="top-level separator">|</li>
+          <li id="login-nav" class="top-level">
+            <a href="http://www.viddler.com/login" class="top-level-link top-level-link-">Login</a>
+          </li>
+      </ul>
+  </nav>
+
+</header>
+
+
+          <div class="o-hai">
+      <a href="/" class="call-to-action blue-cta small-cta">Learn more about Viddler for business</a>
+      <p title="I am Viddler and so can you!">Hey! <b>Viddler</b> is using <b>Viddler</b> for online video, and so can you!</p>
+      <a href="#" class="xbutton" title="Hide this">Hide this</a>
+    </div>
+
+
+      <div class="" id="content">
+        
+
+          
+
+
+<div id="single-video-container">
+  <div id="single-video" style="width: 980px; height: 551px">
+    <iframe id="viddler-7164f749" src="//www.viddler.com/embed/7164f749/?action=show&autoplay=1&controller=single_video%2Fvideo&enablejsapi=1&f=1&video_id=7164f749&viewToken=MzA6MTM3ODE2OTg5NzIwMjoyY2QwNDVmNDdkNTFiMjYyZmUyOGJhY2JlNjg0ZmJkODE1OTEyOWJm" width="980" height="551" frameborder="0" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+  </div>
 </div>
-				
-			
-		
-	</div>
+
+<div class="layout la" id="single-header">
+  <div class="column-a">
+    <h2 id="single-title">Viddler Demo</h2>
+
+    <p id="single-stats">
+      <span>Uploaded on <b>Mar 05, 2012</b> /</span>
+      <span><b>444 </b> views /</span>
+      <span><b>551 </b> impressions /</span>
+    <span><b><span class="comment-count">0 </span></b> comments</span>
+    </p>
+
+    <div id="single-actions" class="section">
+        <button class="edit-video-lightbox id-7164f749" data-view-button="false" data-tab="embed">Embed</button>
+        <button class="edit-video-lightbox id-7164f749" data-view-button="false" data-tab="download">Download</button>
+    </div>
+
+  </div>
+
+  <div class="column-b">
+    <div id="single-author" class="section">
+      <div class="user-avatar">
+  <img alt="viddler" height="56" src="http://static.cdn-ec.viddler.com/avatars/bigbg_42e50c00.png" width="56" />
+</div>
+
+
+      <h3 class="shim h5">viddler</h3>
+      <a href="/channel/viddler">More from this user</a>
+    </div>
+  </div>
+</div>
+
+  <div class="layout lb" id="single-meta">
+      <div class="column-a">
+        <div id="single-description">
+          <h3>Description</h3>
+            <p>Get familiar with your Viddler account. Check out a full walk through of the Viddler platform led by one of our Video Specialists. </p>
+        </div>
+      </div>
+      <div class="column-b">
+        <div id="single-tags">
+  <h3>Tags</h3>
+  <ul>
+      <li>
+        <span class="tag-text">sub_title:17-minute tutorial covering the basics </span>
+      </li>
+      <li>
+        <span class="tag-text">title:Viddler 101</span>
+      </li>
+      <li>
+        <span class="tag-text">Settings</span>
+            <span class="tag-time" data-video-jump-to="768380">12:48</span>
+      </li>
+      <li>
+        <span class="tag-text">Webcam</span>
+            <span class="tag-time" data-video-jump-to="151680">2:31</span>
+      </li>
+      <li>
+        <span class="tag-text">Help</span>
+            <span class="tag-time" data-video-jump-to="713490">11:53</span>
+      </li>
+      <li>
+        <span class="tag-text">Vidgets</span>
+            <span class="tag-time" data-video-jump-to="176090">2:56</span>
+      </li>
+      <li>
+        <span class="tag-text">Upload</span>
+            <span class="tag-time" data-video-jump-to="70280">1:10</span>
+      </li>
+      <li>
+        <span class="tag-text">Add-ons</span>
+            <span class="tag-time" data-video-jump-to="668690">11:08</span>
+      </li>
+      <li>
+        <span class="tag-text">Analytics</span>
+            <span class="tag-time" data-video-jump-to="544510">9:04</span>
+      </li>
+      <li>
+        <span class="tag-text">Videos</span>
+            <span class="tag-time" data-video-jump-to="253480">4:13</span>
+      </li>
+      <li>
+        <span class="tag-text">Embed</span>
+            <span class="tag-time" data-video-jump-to="404070">6:44</span>
+      </li>
+      <li>
+        <span class="tag-text">record</span>
+            <span class="tag-time" data-video-jump-to="151680">2:31</span>
+      </li>
+      <li>
+        <span class="tag-text">Dashboard</span>
+            <span class="tag-time" data-video-jump-to="26320">0:26</span>
+      </li>
+      <li>
+        <span class="tag-text">Privacy</span>
+            <span class="tag-time" data-video-jump-to="316570">5:16</span>
+      </li>
+  </ul>
+</div>
+
+      </div>
+  </div>
+
+
+
+      </div>
+
+      <footer id="footer">
+  <nav id="footer-nav">
+    <ul>
+      <li>
+        <h2>Company</h2>
+        <ul>
+          <li><a href="http://www.viddler.com/about">About</a></li>
+          <li><a href="http://blog.viddler.com">Blog</a></li>
+          <li><a href="http://blog.viddler.com/category/jobs/">Jobs</a></li>
+          <li><a href="http://www.viddler.com/partners">Partners</a></li>
+        </ul>
+      </li>
+        <li>
+          <h2>Add-ons</h2>
+          <ul>
+            <li><a href="http://www.viddler.com/addons/subscriptions">Subscriptions</a></li>
+            <li><a href="http://www.viddler.com/addons/contests">Contest manager</a></li>
+            <li><a href="http://www.viddler.com/addons/advertising">Advertising</a></li>
+            <li><a href="http://www.viddler.com/addons/comscore">comScore</a></li>
+            <li><a href="http://www.viddler.com/addons/multiple-accounts">Multi-Accounts</a></li>
+          </ul>
+        </li>
+      <li>
+        <h2>Developers</h2>
+        <ul>
+          <li><a href="http://developers.viddler.com/api">API explorer</a></li>
+          <li><a href="http://developers.viddler.com/documentation">Documentation</a></li>
+        </ul>
+      </li>
+        <li>
+          <h2>Help</h2>
+          <ul>
+            <li><a href="/help/zendesk?no_login_required=true">Support center</a></li>
+          </ul>
+        </li>
+      <li>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="http://www.viddler.com/terms-of-use">Terms of use</a></li>
+          <li><a href="http://www.viddler.com/privacy-policy">Privacy</a></li>
+        </ul>
+      </li>
+    </ul>
+
+  </nav>
+
+  <div id="finis">
+    <p>&copy; 2006&ndash;2013 Viddler, Inc.</p>
+    <p>100 million served and counting</p>
+    <ul class="social">
+      <li><a href="http://www.facebook.com/viddler" target="_blank"><img alt="Facebook" src="//static8.cdn-ec.viddler.com/rails/assets/icons/facebook-ce5bb1b216dbee12427a5cbc9399f9a7.png" /></a></li>
+      <li><a href="https://twitter.com/viddler" target="_blank"><img alt="Twitter" src="//static2.cdn-ec.viddler.com/rails/assets/icons/twitter-1fb7f5e8f1310dbc279bf63c66f02db2.png" /></a></li>
+      <li><a href="https://plus.google.com/u/0/104361041185384525860" target="_blank"><img alt="Google Plus" src="//static1.cdn-ec.viddler.com/rails/assets/icons/googlePlus-54b43c35e32a822b0fe5b093bcc32dd0.png" /></a></li>
+    </ul>
+  </div>
+</footer>
+
+  </div>
+
+
+    <!-- Google Analytics -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-971344-2']);
+  _gaq.push(['_setDomainName', '.viddler.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
+        'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+<!-- Google Analytics End -->
+
+    <!-- Start Quantcast tag -->
+<script type="text/javascript">_qoptions={qacct:"p-3ea1dOmGdnYEs"};</script>
+<script type="text/javascript" src="//edge.quantserve.com/quant.js"></script>
+<noscript><a href="//www.quantcast.com/p-3ea1dOmGdnYEs" target="_blank"><img src="//pixel.quantserve.com/pixel/p-3ea1dOmGdnYEs.gif" style="display: none;" border="0" height="1" width="1" alt="Quantcast"/></a></noscript>
+<!-- End Quantcast tag -->
+
+    
+    <!-- Begin Mongoose Metrics Tracking Code -->
+<script type="text/javascript">
+var mm_c = 'b4b9a4c475922b53011ae63f97758955';
+var mm_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+document.write(unescape("%3Cscript src='" + mm_protocol + "www.mongoosemetrics.com/jsfiles/js-correlation/mm-getvar.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+/* Custom Parameters */
+/* MANDATORY default_number Setup Parameter DO NOT REMOVE */
+var default_number='8884441119'; /* 10 Digits Only i.e. 8881234567 */
+/* Custom Parameters */
+</script>
+<script type="text/javascript">
+document.write(unescape("%3Cscript src='" + mm_protocol + "www.mongoosemetrics.com/jsfiles/js-correlation/mm-control.php%3F" + mm_variables + "' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<!-- End Mongoose Metrics Tracking Code -->
+
+
+
+      <!-- Woopra Code Start -->
+<script type="text/javascript" src="//static.woopra.com/js/woopra.v2.js"></script>
+<script type="text/javascript">
+woopraTracker.track();
+</script>
+<!-- Woopra Code End -->
+
+
+    
+    <!-- Start Google Remarketing tag -->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 1006886010;
+var google_conversion_label = "o6GjCLadzwQQ-riP4AM";
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+  <div style="display:inline;">
+  <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1006886010/?value=0&amp;label=o6GjCLadzwQQ-riP4AM&amp;guid=ON&amp;script=0"/>
+  </div>
+  </noscript>
+<!-- End Google Remarketing tag -->
+
+  
 </body>
 </html>
