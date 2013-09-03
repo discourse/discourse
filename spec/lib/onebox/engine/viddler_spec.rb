@@ -12,6 +12,10 @@ describe Onebox::Engine::ViddlerOnebox do
     expect(html).to include("Viddler Demo")
   end
 
+  it "returns video image" do
+    expect(html).to include("thumbnail_2_7164f749_v2.jpg")
+  end
+
   it "returns URL" do
     expect(html).to include(link)
   end
