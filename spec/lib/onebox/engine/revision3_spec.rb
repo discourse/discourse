@@ -16,6 +16,10 @@ describe Onebox::Engine::Revision3Onebox do
     expect(html).to include("discoverysharks--0029--blue-sharks--medium.thumb.jpg")
   end
 
+  it "returns video description" do
+    expect(html).to include("Blue Sharks swimming and eating in the open ocean.")
+  end
+
   it "returns URL" do
     expect(html).to include(link)
   end
