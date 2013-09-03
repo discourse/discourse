@@ -1,7 +1,7 @@
 production:
   adapter: postgresql
-  database: discourse_prod
-  username: postgresql
+  database: discourse
+  username: postgres
   # password: itisagooddaytovi	# if using username/password auth
   # host: dbhost		# if not localhost
   pool: 5 	# size of DB connection pool *per process*
@@ -15,8 +15,8 @@ production:
 
 test:
   adapter: postgresql
-  database: discourse_test
-  username: postgresql
+  database: discourse
+  username: postgres
   # password: 123123123123
   min_messages: warning
   host: localhost
@@ -27,8 +27,8 @@ test:
 
 development:
   adapter: postgresql
-  database: discourse_development
-  username: postgresql
+  database: discourse
+  username: postgres
   min_messages: warning
   host: localhost
   pool: 5

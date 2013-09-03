@@ -1,23 +1,80 @@
 production:
     after_rails:
-      - source: /.cloud66/scripts/bundle.sh
-        destination: ~/bundle.sh
+      - source: /.cloud66/scripts/first.sh
+        destination: ~/first.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
+    after_rails:
+      - source: /pg_dumps/production-image.sql
+        destination: ~/dump.sh
+        target: postgresql
+        apply_during: build_only
+    after_rails:
+      - source: /.cloud66/scripts/dump.sh
+        destination: ~/dump.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
+    after_rails:
+      - source: /.cloud66/scripts/third.sh
+        destination: ~/third.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
 staging:
     after_rails:
-      - source: /.cloud66/scripts/bundle.sh
-        destination: ~/bundle.sh
+      - source: /.cloud66/scripts/first.sh
+        destination: ~/first.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
+    after_rails:
+      - source: /pg_dumps/production-image.sql
+        destination: ~/dump.sh
+        target: postgresql
+        apply_during: build_only
+    after_rails:
+      - source: /.cloud66/scripts/dump.sh
+        destination: ~/dump.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
+    after_rails:
+      - source: /.cloud66/scripts/third.sh
+        destination: ~/third.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
 development:
     after_rails:
-      - source: /.cloud66/scripts/bundle.sh
-        destination: ~/bundle.sh
+      - source: /.cloud66/scripts/first.sh
+        destination: ~/first.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
+    after_rails:
+      - source: /pg_dumps/production-image.sql
+        destination: ~/dump.sh
+        target: postgresql
+        apply_during: build_only
+    after_rails:
+      - source: /.cloud66/scripts/dump.sh
+        destination: ~/dump.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
+    after_rails:
+      - source: /.cloud66/scripts/third.sh
+        destination: ~/third.sh
         target: rails
         apply_during: build_only
         execute: true
