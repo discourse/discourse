@@ -24,6 +24,8 @@ describe Onebox::Engine::ViddlerOnebox do
     expect(html).to include("http://www.viddler.com/player/7164f749")
   end
 
+  it "returns video embed code"
+
   it "returns URL" do
     expect(html).to include(link)
   end
