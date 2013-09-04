@@ -13,16 +13,16 @@ describe Onebox::Engine do
     it "returns formatted html"
   end
 
-  describe "#fetch" do
+  describe "#record" do
     it "returns cache value for given url if cache exists" do
       cache = { "http://example.com" => "foo" }
-      result = Onebox::Engine::Foo.new("http://example.com", cache).send(:fetch)
+      result = Onebox::Engine::Foo.new("http://example.com", cache).send(:record)
       expect(result).to eq("foo")
     end
 
     it "stores cache value for given url if cache key doesn't exist" do
       cache = { "http://example.com1" => "foo" }
-      result = Onebox::Engine::Foo.new("http://example.com").send(:fetch)
+      result = Onebox::Engine::Foo.new("http://example.com").send(:record)
       expect(result).to eq("foo")
     end
   end
