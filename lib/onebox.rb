@@ -23,6 +23,10 @@ module Onebox
     Preview.new(url, options)
   end
 
+  def self.defaults
+    @@defaults
+  end
+
   def self.defaults=(options)
     @@defaults = DEFAULTS.merge(options)
   end
