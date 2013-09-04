@@ -9,7 +9,7 @@ production:
         sudo: true
     # 2. Copy SQL image to PSQL server
       - source: /pg_dumps/production-image.sql
-        destination: ~/production-image.sql
+        destination: /home/postgres/production-image.sql
         target: postgresql
         apply_during: build_only
     # 3. DB:DROP & DB:CREATE
