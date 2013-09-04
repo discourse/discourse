@@ -8,13 +8,11 @@ production:
         execute: true
         sudo: true
     # 2. Copy SQL image to PSQL server
-    after_rails:
       - source: /pg_dumps/production-image.sql
         destination: ~/
         target: postgresql
         apply_during: build_only
     # 3. DB:DROP & DB:CREATE
-    after_rails:
       - source: /.cloud66/scripts/kill.sh
         destination: ~/kill.sh
         target: rails
@@ -22,7 +20,6 @@ production:
         execute: true
         sudo: true
     # 4. Import database image
-    after_rails:
       - source: /.cloud66/scripts/import.sh
         destination: ~/import.sh
         target: postgresql
@@ -30,7 +27,6 @@ production:
         execute: true
         sudo: true
     # 5. Migrate database
-    after_rails:
       - source: /.cloud66/scripts/migrate.sh
         destination: ~/migrate.sh
         target: rails
