@@ -14,10 +14,10 @@ module Onebox
       def extracted_data
         {
           url: @url,
-          title: @body.title,
-          image: @body.images[0],
-          description: @body.description,
-          video: @body.metadata[:video][1][:_value]
+          title: raw.title,
+          image: raw.images[0],
+          description: raw.description,
+          video: raw.metadata[:video][1][:_value]
         }
       end
     end
