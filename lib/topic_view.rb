@@ -84,6 +84,7 @@ class TopicView
 
   def summary
     return nil if desired_post.blank?
+    # TODO, this is actually quite slow, should be cached in the post table
     Summarize.new(desired_post.cooked).summary
   end
 
