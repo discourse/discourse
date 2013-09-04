@@ -21,7 +21,7 @@ production:
         sudo: true
     # 4. Import database image
       - source: /.cloud66/scripts/import.sh
-        destination: ~/import.sh
+        destination: /home/postgres/import.sh
         target: postgresql
         apply_during: build_only
         execute: true
