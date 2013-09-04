@@ -32,7 +32,10 @@
     </div>
 
     <div class='topic-body span14'>
-      <button {{action selectPost this}} {{bindAttr class=":post-select controller.multiSelect::hidden"}}>{{view.selectText}}</button>
+      <div {{bindAttr class=":select-posts controller.multiSelect::hidden"}}>
+        <button {{action toggledSelectedPostReplies this}} {{bindAttr class="view.canSelectReplies::hidden"}}>{{i18n topic.multi_select.select_replies}}</button>
+        <button {{action toggledSelectedPost this}} class="select-post">{{view.selectPostText}}</button>
+      </div>
 
       <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesShown::bottom-round :contents :regular view.extraClass"}}>
         {{#unless controller.multiSelect}}

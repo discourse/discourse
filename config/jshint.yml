@@ -92,6 +92,7 @@ predef:
   - find
   - sinon
   - controllerFor
+  - testController
   - Favcount
 
 browser:  true      # true if the standard browser globals should be predefined

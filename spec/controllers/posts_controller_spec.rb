@@ -163,10 +163,10 @@ describe PostsController do
 
       let!(:poster) { log_in(:moderator) }
       let!(:post1) { Fabricate(:post, user: poster, post_number: 2) }
-      let!(:post2) { Fabricate(:post, topic_id: post1.topic_id, user: poster, post_number: 3) }
+      let!(:post2) { Fabricate(:post, topic_id: post1.topic_id, user: poster, post_number: 3, reply_to_post_number: post1.post_number) }
 
       it "raises invalid parameters no post_ids" do
-	lambda { xhr :delete, :destroy_many }.should raise_error(ActionController::ParameterMissing)
+        lambda { xhr :delete, :destroy_many }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises invalid parameters with missing ids" do
@@ -187,6 +187,19 @@ describe PostsController do
       it "updates the highest read data for the forum" do
         Topic.expects(:reset_highest)
         xhr :delete, :destroy_many, post_ids: [post1.id, post2.id]
+      end
+
+      describe "can delete replies" do
+
+        before do
+          PostReply.create(post_id: post1.id, reply_id: post2.id)
+        end
+
+        it "deletes the post and the reply to it" do
+          Post.any_instance.expects(:destroy).twice
+          xhr :delete, :destroy_many, post_ids: [post1.id], reply_post_ids: [post1.id]
+        end
+
       end
 
     end

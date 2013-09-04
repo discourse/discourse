@@ -328,8 +328,7 @@ Discourse.Post = Discourse.Model.extend({
 
   // Whether to show replies directly below
   showRepliesBelow: function() {
-    var reply_count, topic;
-    reply_count = this.get('reply_count');
+    var reply_count = this.get('reply_count');
 
     // We don't show replies if there aren't any
     if (reply_count === 0) return false;
@@ -341,7 +340,7 @@ Discourse.Post = Discourse.Model.extend({
     if (reply_count > 1) return true;
 
     // If we have *exactly* one reply, we have to consider if it's directly below us
-    topic = this.get('topic');
+    var topic = this.get('topic');
     return !topic.isReplyDirectlyBelow(this);
 
   }.property('reply_count'),
@@ -377,11 +376,12 @@ Discourse.Post.reopenClass({
     return result;
   },
 
-  deleteMany: function(posts) {
+  deleteMany: function(selectedPosts, selectedReplies) {
     return Discourse.ajax("/posts/destroy_many", {
       type: 'DELETE',
       data: {
-        post_ids: posts.map(function(p) { return p.get('id'); })
+        post_ids: selectedPosts.map(function(p) { return p.get('id'); }),
+        reply_post_ids: selectedReplies.map(function(p) { return p.get('id'); })
       }
     });
   },

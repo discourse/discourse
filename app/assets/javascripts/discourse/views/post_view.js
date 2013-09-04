@@ -29,17 +29,20 @@ Discourse.PostView = Discourse.GroupedView.extend({
 
   mouseUp: function(e) {
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {
-      this.get('controller').selectPost(this.get('post'));
+      this.get('controller').toggledSelectedPost(this.get('post'));
     }
   },
 
   selected: function() {
-    var selectedPosts = this.get('controller.selectedPosts');
-    if (!selectedPosts) return false;
-    return selectedPosts.contains(this.get('post'));
+    return this.get('controller').postSelected(this.get('post'));
   }.property('controller.selectedPostsCount'),
 
-  selectText: function() {
+  canSelectReplies: function() {
+    if (this.get('post.reply_count') === 0) { return false; }
+    return !this.get('selected');
+  }.property('post.reply_count', 'selected'),
+
+  selectPostText: function() {
     return this.get('selected') ? I18n.t('topic.multi_select.selected', { count: this.get('controller.selectedPostsCount') }) : I18n.t('topic.multi_select.select');
   }.property('selected', 'controller.selectedPostsCount'),
 
