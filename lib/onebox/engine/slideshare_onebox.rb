@@ -14,9 +14,9 @@ module Onebox
       def record
         {
           url: @url,
-          title: @body.title,
-          image: @body.images.first,
-          description: @body.description
+          title: raw.title,
+          image: raw.images.first,
+          description: raw.description
         }
       end
     end

@@ -13,11 +13,11 @@ module Onebox
 
       def record
         {
-          url: @body.metadata[:url].first[:_value],
-          title: @body.title,
-          image: @body.images.first,
-          description: @body.description,
-          video: @body.metadata[:video].first[:_value]
+          url: raw.metadata[:url].first[:_value],
+          title: raw.title,
+          image: raw.images.first,
+          description: raw.description,
+          video: raw.metadata[:video].first[:_value]
         }
       end
     end

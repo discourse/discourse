@@ -14,10 +14,10 @@ module Onebox
       def record
         {
           url: @url,
-          title: @body.title,
-          image: @body.images.first,
-          description: @body.description,
-          video: @body.metadata[:video].first[:_value]
+          title: raw.title,
+          image: raw.images.first,
+          description: raw.description,
+          video: raw.metadata[:video].first[:_value]
         }
       end
     end
