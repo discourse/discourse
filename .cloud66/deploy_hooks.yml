@@ -1,30 +1,44 @@
 production:
+    # 1. Set environment variables and allow PSQL user to access them
     after_rails:
-      - source: /.cloud66/scripts/first.sh
-        destination: ~/first.sh
+      - source: /.cloud66/scripts/env_vars.sh
+        destination: ~/env_vars.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
+    # 2. Copy SQL image to PSQL server
     after_rails:
       - source: /pg_dumps/production-image.sql
-        destination: ~/dump.sh
+        destination: ~/
         target: postgresql
         apply_during: build_only
+    # 3. DB:DROP & DB:CREATE
     after_rails:
-      - source: /.cloud66/scripts/dump.sh
-        destination: ~/dump.sh
-        target: postgresql
-        apply_during: build_only
-        execute: true
-        sudo: true
-    after_rails:
-      - source: /.cloud66/scripts/third.sh
-        destination: ~/third.sh
+      - source: /.cloud66/scripts/kill.sh
+        destination: ~/kill.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
+    # 4. Import database image
+    after_rails:
+      - source: /.cloud66/scripts/import.sh
+        destination: ~/import.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
+    # 5. Migrate database
+    after_rails:
+      - source: /.cloud66/scripts/migrate.sh
+        destination: ~/migrate.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
+
+########
 staging:
     after_rails:
       - source: /.cloud66/scripts/first.sh
