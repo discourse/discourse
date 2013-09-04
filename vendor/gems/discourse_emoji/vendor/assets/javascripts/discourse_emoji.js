@@ -32,7 +32,7 @@
     ";-P"   : 'stuck_out_tongue_winking_eye',
     ';)'   : 'wink',
     ';-)'   : 'wink',
-    ":$"   : 'blush'
+    ":$"   : 'blush',
     ":-$"   : 'blush'
   };
 
