@@ -9,7 +9,7 @@ module Onebox
 
       private
 
-      def extracted_data
+      def record
         {
           header: raw.css("html body h1")
         }

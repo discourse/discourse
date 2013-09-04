@@ -11,7 +11,7 @@ module Onebox
 
       private
 
-      def extracted_data
+      def record
         {
           url: @body.metadata[:url].first[:_value],
           title: @body.title,

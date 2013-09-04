@@ -10,7 +10,7 @@ module Onebox
 
       private
 
-      def extracted_data
+      def record
         {
           url: @url,
           name: raw.css("html body h1").inner_text,

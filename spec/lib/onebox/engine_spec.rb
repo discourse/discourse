@@ -3,7 +3,7 @@ require "spec_helper"
 class Onebox::Engine::Foo
   include Onebox::Engine
 
-  def extracted_data
+  def record
     "foo"
   end
 end
