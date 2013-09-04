@@ -1,4 +1,2 @@
 #!/bin/bash
-su - postgres
-psql -d discourse < production-image.sql
-exit
+psql -d discourse < /tmp/production-image.sql
