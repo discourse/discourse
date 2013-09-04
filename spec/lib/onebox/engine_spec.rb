@@ -4,7 +4,7 @@ class Onebox::Engine::Foo
   include Onebox::Engine
 
   def extracted_data
-    Moneta.new(:Memory)
+    "foo"
   end
 end
 
@@ -21,12 +21,10 @@ describe Onebox::Engine do
     end
 
     it "stores cache value for given url if cache key doesn't exist" do
-      cache = {}
-      result = Onebox::Engine::Foo.new("http://example.com", cache).send(:fetch)
-      expect(cache).to have_key("http://example.com")
+      cache = { "http://example.com1" => "foo" }
+      result = Onebox::Engine::Foo.new("http://example.com").send(:fetch)
+      expect(result).to eq("foo")
     end
-
-    it "refetches if cache is expired"
   end
 
 

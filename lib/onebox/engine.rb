@@ -12,29 +12,27 @@ module Onebox
 
     attr_reader :cache
 
-    def initialize(link, cache = Moneta.new(:Memory))
+    def initialize(link, cache = Onebox.defaults)
       @url = link
       @cache = cache
-      @body = read
-      @data = extracted_data
     end
 
     def to_html
-      Mustache.render(template, @data)
+      Mustache.render(template, record)
     end
 
     private
 
-    def fetch
+    def record
       if cache.key?(@url)
         cache.fetch(@url)
       else
-        cache.store(@url, extracted_data)
+        cache.store(@url, data)
       end
     end
 
-    def read
-      Nokogiri::HTML(open(@url))
+    def raw
+      @raw ||= Nokogiri::HTML(open(@url))
     end
 
     def template
@@ -45,7 +43,7 @@ module Onebox
       self.class.name.split("::").last.downcase.gsub(/onebox/, "")
     end
 
-    def extracted_data
+    def data
       raise NoMethodError, "Engines need this method defined"
     end
 

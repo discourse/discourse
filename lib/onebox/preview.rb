@@ -20,7 +20,7 @@ module Onebox
     private
 
     def engine
-      @engine.new(@url)
+      @engine.new(@url, cache)
     end
 
     class InvalidURI < StandardError

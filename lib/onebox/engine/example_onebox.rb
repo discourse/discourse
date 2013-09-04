@@ -11,7 +11,7 @@ module Onebox
 
       def extracted_data
         {
-          header: @body.css("html body h1")
+          header: raw.css("html body h1")
         }
       end
 
