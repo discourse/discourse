@@ -117,6 +117,8 @@ begin
 
   puts "Starting benchmark..."
 
+  # asset precompilation is a dog, wget to force it
+  run "wget http://127.0.0.1:#{@port}/ -o tmp/test.html"
   home_page = bench("/")
   topic_page = bench("/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69")
 

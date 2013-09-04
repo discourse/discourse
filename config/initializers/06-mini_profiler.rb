@@ -1,6 +1,7 @@
 # If Mini Profiler is included via gem
 if Rails.configuration.respond_to?(:enable_mini_profiler) && Rails.configuration.enable_mini_profiler
   require 'rack-mini-profiler'
+  require 'flamegraph'
   # initialization is skipped so trigger it
   Rack::MiniProfilerRails.initialize!(Rails.application)
 end

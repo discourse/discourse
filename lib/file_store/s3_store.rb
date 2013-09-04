@@ -2,13 +2,14 @@ require 'digest/sha1'
 require 'open-uri'
 
 class S3Store
+  @fog_loaded ||= require 'fog'
 
   def store_upload(file, upload)
     # <id><sha1><extension>
     path = "#{upload.id}#{upload.sha1}#{upload.extension}"
 
     # if this fails, it will throw an exception
-    upload(file.tempfile, path, file.content_type)
+    upload(file.tempfile, path, upload.original_filename, file.content_type)
 
     # returns the url of the uploaded file
     "#{absolute_base_url}/#{path}"
@@ -58,9 +59,7 @@ class S3Store
   end
 
   def remove_file(url)
-    return unless has_been_uploaded?(url)
-    name = File.basename(url)
-    remove(name)
+    remove File.basename(url) if has_been_uploaded?(url)
   end
 
   def has_been_uploaded?(url)
@@ -102,19 +101,17 @@ class S3Store
     raise Discourse::SiteSettingMissing.new("s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
   end
 
-  def get_or_create_directory(name)
+  def get_or_create_directory(bucket)
     check_missing_site_settings
 
-    @fog_loaded ||= require 'fog'
+    fog = Fog::Storage.new s3_options
 
-    fog = Fog::Storage.new generate_options
-
-    directory = fog.directories.get(name)
-    directory = fog.directories.create(key: name) unless directory
+    directory = fog.directories.get(bucket)
+    directory = fog.directories.create(key: bucket) unless directory
     directory
   end
 
-  def generate_options
+  def s3_options
     options = {
       provider: 'AWS',
       aws_access_key_id: SiteSetting.s3_access_key_id,
@@ -124,22 +121,21 @@ class S3Store
     options
   end
 
-  def upload(file, name, content_type=nil)
+  def upload(file, unique_filename, filename=nil, content_type=nil)
     args = {
-      key: name,
+      key: unique_filename,
       public: true,
-      body: file,
+      body: file
     }
+    args[:content_disposition] = "attachment; filename=\"#{filename}\"" if filename
     args[:content_type] = content_type if content_type
-    directory.files.create(args)
+
+    get_or_create_directory(s3_bucket).files.create(args)
   end
 
-  def remove(name)
-    directory.files.destroy(key: name)
-  end
-
-  def directory
-    get_or_create_directory(s3_bucket)
+  def remove(unique_filename)
+    fog = Fog::Storage.new s3_options
+    fog.delete_object(s3_bucket, unique_filename)
   end
 
 end

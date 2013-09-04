@@ -205,6 +205,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:regular_requires_likes_given, 1)
   setting(:regular_requires_topic_reply_count, 3)
 
+  setting(:min_trust_to_create_topic, 0, enum: 'MinTrustToCreateTopicSetting')
+
   # Reply by Email Settings
   setting(:reply_by_email_enabled, false)
   setting(:reply_by_email_address, '')
