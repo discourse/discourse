@@ -25,6 +25,9 @@ class UserDestroyer
             end
           end
           PostDestroyer.new(@staff, post).destroy
+          if post.topic and post.post_number == 1
+            Topic.unscoped.where(id: post.topic.id).update_all(user_id: nil)
+          end
         end
         raise PostsExistError if user.reload.post_count != 0
       end
