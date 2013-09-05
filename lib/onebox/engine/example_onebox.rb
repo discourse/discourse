@@ -9,14 +9,14 @@ module Onebox
 
       private
 
-      def record
+      def data
         {
-          header: raw.css("html body h1")
+          header: raw.css("h1").inner_text
         }
       end
 
       def template
-        %|<div class="onebox">{{{header}}}</div>|
+        %|<div class="onebox">{{header}}</div>|
       end
     end
   end
