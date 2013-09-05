@@ -114,6 +114,8 @@ module ApplicationHelper
   end
 
   def mobile_device?
-    request.user_agent =~ /Mobile|webOS/
+    # For now, don't show mobile view unless you put ?mobile_view=1 in the URL.
+    # request.user_agent =~ /Mobile|webOS/
+    false
   end
 end
