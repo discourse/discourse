@@ -286,6 +286,7 @@ class ApplicationController < ActionController::Base
 
     def synchronize_with_sso_cookie
       return unless SiteSetting.enable_ssocookie_logins
+      return unless current_user
       auth_cookie = request.cookies[SiteSetting.sso_cookie_name]
       return if auth_cookie.nil?
       begin
