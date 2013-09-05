@@ -1,0 +1,17 @@
+.category-combobox {
+  .badge-category {
+    display: inline-block;
+  }
+  .topic-count {
+    font-size: 11px;
+    color: #666;
+    display: inline-block;
+  }
+  .highlighted .topic-count {
+    color: white;
+  }
+  .category-desc {
+    margin: 6px 0px 0px 3px;
+    font-size: 12px;
+  }
+}
