@@ -10,7 +10,7 @@ describe Onebox::Engine::ExampleOnebox do
     end
 
     it "returns template if given valid data" do
-      expect(html).to include(onebox_view("<h1>Example Domain 1</h1>"))
+      expect(html).to include(onebox_view("Example Domain 1"))
     end
   end
 end
