@@ -1,15 +1,9 @@
 development:
-  <<: *defaults
 
 profile:
-  <<: *defaults
 
 test:
-  <<: *defaults
-  db: 1
 
 staging:
-  <<: *defaults
 
 production:
-  <<: *defaults
