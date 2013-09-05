@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::SoundCloudOnebox do
-  let(:link) { "http://dailymotion.com" }
+  let(:link) { "http://soundcloud.com" }
 
   it_behaves_like "engines"
 

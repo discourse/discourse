@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::DotsubOnebox do
-  let(:link) { "http://funnyordie.com" }
+  let(:link) { "http://dotsub.com" }
 
   it_behaves_like "engines"
 

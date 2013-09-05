@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::Revision3Onebox do
-  let(:link) { "http://collegehumor.com" }
+  let(:link) { "http://revision3.com" }
 
   it_behaves_like "engines"
 

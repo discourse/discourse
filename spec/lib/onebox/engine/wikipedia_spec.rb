@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::WikipediaOnebox do
-  let(:link) { "http://example.com" }
+  let(:link) { "http://wikipedia.com" }
 
   it_behaves_like "engines"
 
