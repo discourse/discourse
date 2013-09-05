@@ -2,15 +2,14 @@ require "spec_helper"
 
 describe Onebox::Engine::TedOnebox do
   let(:link) { "http://ted.com" }
+  before do
+    fake(link, response("ted.response"))
+  end
 
   it_behaves_like "engines"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
-
-    before do
-      fake(link, response("ted.response"))
-    end
 
     it "returns video title" do
       expect(html).to include("Eli Beer: The fastest ambulance? A motorcycle")

@@ -2,15 +2,14 @@ require "spec_helper"
 
 describe Onebox::Engine::Revision3Onebox do
   let(:link) { "http://revision3.com" }
+  before do
+    fake(link, response("revision3.response"))
+  end
 
   it_behaves_like "engines"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
-
-    before do
-      fake(link, response("revision3.response"))
-    end
 
     it "returns video title" do
       expect(html).to include("Blue Shark Bites Diver&#39;s Arm")

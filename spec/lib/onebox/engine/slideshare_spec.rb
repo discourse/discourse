@@ -2,15 +2,14 @@ require "spec_helper"
 
 describe Onebox::Engine::SlideshareOnebox do
   let(:link) { "http://slideshare.net" }
+  before do
+    fake(link, response("slideshare.response"))
+  end
 
   it_behaves_like "engines"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
-
-    before do
-      fake(link, response("slideshare.response"))
-    end
 
     it "returns presentation title" do
       expect(html).to include("12 Local Traditions That")

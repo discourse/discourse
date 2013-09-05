@@ -2,15 +2,14 @@ require "spec_helper"
 
 describe Onebox::Engine::FlickrOnebox do
   let(:link) { "http://flickr.com" }
+  before do
+    fake(link, response("flickr.response"))
+  end
 
   it_behaves_like "engines"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
-
-    before do
-      fake(link, response("flickr.response"))
-    end
 
     it "returns photo title" do
       expect(html).to include("Los Angeles View 2011")

@@ -2,15 +2,14 @@ require "spec_helper"
 
 describe Onebox::Engine::AmazonOnebox do
   let(:link) { "http://amazon.com" }
+  before do
+    fake(link, response("amazon.response"))
+  end
 
   it_behaves_like "engines"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
-
-    before do
-      fake(link, response("amazon.response"))
-    end
 
     it "returns the product title" do
       expect(html).to include("Knit Noro: Accessories: 30 Colorful Little Knits [Hardcover]")

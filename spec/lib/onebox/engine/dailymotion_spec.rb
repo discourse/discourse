@@ -2,15 +2,14 @@ require "spec_helper"
 
 describe Onebox::Engine::DailymotionOnebox do
   let(:link) { "http://dailymotion.com" }
+  before do
+    fake(link, response("dailymotion.response"))
+  end
 
   it_behaves_like "engines"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
-
-    before do
-      fake(link, response("dailymotion.response"))
-    end
 
     it "returns video title" do
       expect(html).to include("Two Door Cinema Club - Les Vielles Charrues 2013.")
