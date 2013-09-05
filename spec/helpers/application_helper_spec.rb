@@ -18,9 +18,12 @@ describe ApplicationHelper do
       helper.mobile_view?.should be_false
     end
 
-    it "is true if mobile_view is not set and user agent is mobile" do
+    #it "is true if mobile_view is not set and user agent is mobile" do
+    it "is always false, even if user agent is for mobile device... for now..." do
       controller.request.stubs(:user_agent).returns('Mozilla/5.0 (iPhone; U; ru; CPU iPhone OS 4_2_1 like Mac OS X; ru) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8C148a Safari/6533.18.5')
-      helper.mobile_view?.should be_true
+      #helper.mobile_view?.should be_true
+      # TODO: It's always false for now
+      helper.mobile_view?.should be_false
     end
   end
 
