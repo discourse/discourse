@@ -12,7 +12,7 @@
  * no longer required.
  */
 
- @import "common/foundation/mixins";
+ @import "foundation/mixins";
 
 a:focus {
   outline: thin dotted #333;

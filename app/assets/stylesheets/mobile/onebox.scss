@@ -1,0 +1,85 @@
+@import "../common/foundation/variables";
+@import "../common/foundation/mixins";
+
+a.loading-onebox {
+  background: {
+    image: image-url("spinner_96.gif");
+    position: 0;
+    size: 20px;
+    height: 25px;
+    repeat: no-repeat;
+  };
+  padding-left: 25px;
+}
+
+.onebox-result {
+  font-size: 14px;
+  > .source {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding: 10px 0;
+    display: block;
+    color: $black;
+    position: relative;
+    border-bottom: 1px solid $inner_border;
+    .info {
+      a {
+        color: black;
+        text-decoration: none;
+      }
+      background-color: $white;
+      position: absolute;
+      font-size: 14px;
+      img.favicon {
+        margin-right: 3px;
+      }
+    }
+  }
+  .onebox-result-body {
+    padding-top: 5px;
+    font-family: Georgia, Times, "Times New Roman", serif;
+    img {
+      max-width:200px;
+    }
+    h3, h4 {
+      margin: 0px !important;
+    }
+    img.thumbnail {
+      max-width: 25%;
+      height: auto;
+    }
+    code {
+      max-height: 400px;
+    }
+    img {
+      max-width: 30%;
+      max-height: 80%;
+      float: left;
+      margin-right: 10px;
+    }
+    .metrics {
+      clear: both;
+      padding-bottom: 25px;
+      .metric {
+        display: inline-block;
+        padding-left: 33px;
+        float: left;
+      }
+    }
+  }
+}
+
+// RottenTomatoes Onebox
+.onebox-result {
+  .onebox-result-body {
+    img.verdict { 
+      float: none; 
+      margin-right: 7px;
+    }
+    img.popcorn {
+      float: none;
+      margin-left: 20px;
+      margin-right: 5px;
+    }
+  }
+}

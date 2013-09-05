@@ -1,0 +1,32 @@
+// Styles for the topic admin menu
+
+@import "../common/foundation/variables";
+@import "../common/foundation/mixins";
+
+#show-topic-admin {
+  position: fixed;
+  top: 70px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.topic-admin-menu {
+  background-color: $white;
+  width: 205px;
+  padding: 10px;
+  border: 1px solid $gray;
+  position: fixed;
+  top: 70px;
+  right: 10px;
+  z-index: 1000;
+
+  ul {
+    list-style: none;
+    margin: 10px 0 0 0;
+  }
+
+  button {
+    width: 200px;
+    margin-bottom: 5px;
+  }
+}
