@@ -24,5 +24,6 @@ Discourse.UserActivityController = Discourse.ObjectController.extend({
   },
 
   privateMessagesActive: Em.computed.equal('pmView', 'index'),
-  privateMessagesSentActive: Em.computed.equal('pmView', 'sent')
+  privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
+  privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread')
 });

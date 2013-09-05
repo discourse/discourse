@@ -220,7 +220,6 @@ ru:
       download_archive: скачать архив ваших сообщений
       private_message: Личное сообщение
       private_messages: Личные сообщения
-      private_messages_sent: Отправленные сообщения
       activity_stream: Активность
       preferences: Настройки
       bio: Обо мне
@@ -233,6 +232,10 @@ ru:
       change: изменить
       moderator: '{{user}} - модератор'
       admin: '{{user}} - админ'
+      messages:
+        all: Все
+        mine: Мои
+        unread: Непрочитанные
       change_password:
         success: (письмо отправлено)
         in_progress: (отправка письма)
@@ -258,6 +261,7 @@ ru:
         uploaded_avatar: Собственный аватар
         uploaded_avatar_empty: Добавить собственный аватар
         upload_title: Загрузка собственного аватара
+        image_is_not_a_square: 'Внимание: изображение было кадрировано, т.к. оно не квадратное.'
       email:
         title: Email
         instructions: Ваш адрес электронной почты всегда скрыт.
@@ -407,6 +411,7 @@ ru:
       authenticating: Проверка...
       awaiting_confirmation: Ваша учетная запись требует активации. Для того чтобы получить активационное письмо повторно, воспользуйтесь опцией сброса пароля.
       awaiting_approval: Ваша учетная запись еще не одобрена. Вы получите письмо, когда это случится.
+      requires_invite: К сожалению, доступ к форуму только по приглашениям.
       not_activated: 'Прежде чем вы сможете воспользоваться новой учетной записью, вам необходимо ее активировать. Мы отправили вам на почту <b>{{sentTo}}</b> подробные инструкции, как это cделать.'
       resend_activation_email: Щелкните здесь, чтобы мы повторно выслали вам письмо для активации учетной записи.
       sent_activation_email_again: 'По адресу <b>{{currentEmail}}</b> повторно отправлено письмо с кодом активации. Доставка сообщения может занять несколько минут. Имейте в виду, что иногда по ошибке письмо может попасть в папку Спам.'
@@ -506,7 +511,7 @@ ru:
       private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='принятое приглашение' class='icon icon-signin'></i> {{username}} принял ваше приглашение"
-      moved_post: "<i title='перенесенное сообщение' class='icon icon-arrow-right'></i> {{username}} перенес сообщение в {{link}}"
+      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} переместил сообщение в {{link}}"
       total_flagged: всего сообщений с жалобами
     upload_selector:
       title: Загрузить изображение

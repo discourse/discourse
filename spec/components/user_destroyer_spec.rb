@@ -87,7 +87,10 @@ describe UserDestroyer do
     end
 
     context 'user has posts' do
-      let!(:post) { Fabricate(:post, user: @user) }
+      let!(:topic_starter) { Fabricate(:user) }
+      let!(:topic) { Fabricate(:topic, user: topic_starter) }
+      let!(:first_post) { Fabricate(:post, user: topic_starter, topic: topic) }
+      let!(:post) { Fabricate(:post, user: @user, topic: topic) }
 
       context "delete_posts is false" do
         subject(:destroy) { UserDestroyer.new(@admin).destroy(@user) }
@@ -121,25 +124,40 @@ describe UserDestroyer do
         it "deletes the posts" do
           destroy
           post.reload.deleted_at.should_not be_nil
-          post.nuked_user.should be_true
+          post.user_id.should be_nil
         end
+
+        it "does not delete topics started by others in which the user has replies" do
+          destroy
+          topic.reload.deleted_at.should be_nil
+          topic.user_id.should_not be_nil
+        end
+
+        it "deletes topics started by the deleted user" do
+          spammer_topic = Fabricate(:topic, user: @user)
+          spammer_post = Fabricate(:post, user: @user, topic: spammer_topic)
+          destroy
+          spammer_topic.reload.deleted_at.should_not be_nil
+          spammer_topic.user_id.should be_nil
+        end
+      end
+    end
+
+    context 'user has deleted posts' do
+      let!(:deleted_post) { Fabricate(:post, user: @user, deleted_at: 1.hour.ago) }
+      it "should mark the user's deleted posts as belonging to a nuked user" do
+        expect { UserDestroyer.new(@admin).destroy(@user) }.to change { User.count }.by(-1)
+        deleted_post.reload.user_id.should be_nil
       end
     end
 
     context 'user has no posts' do
       context 'and destroy succeeds' do
-
         let(:destroy_opts) { {} }
         subject(:destroy) { UserDestroyer.new(@admin).destroy(@user) }
 
         include_examples "successfully destroy a user"
         include_examples "email block list"
-
-        it "should mark the user's deleted posts as belonging to a nuked user" do
-          post = Fabricate(:post, user: @user, deleted_at: 1.hour.ago)
-          expect { destroy }.to change { User.count }.by(-1)
-          post.reload.nuked_user.should be_true
-        end
       end
 
       context 'and destroy fails' do

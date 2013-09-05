@@ -19,11 +19,9 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 ## Before you start Rails
 
 1. `bundle install`
-2. `bundle exec rake db:migrate`
-3. `bundle exec rake db:test:prepare`
-4. `bundle exec rake db:seed_fu`
-5. Try running the specs: `bundle exec rake autospec`
-6. `bundle exec rails server`
+2. `bundle exec rake db:migrate db:test:prepare db:seed_fu`
+4. Try running the specs: `bundle exec rake autospec`
+5. `bundle exec rails server`
 
 You should now be able to connect to rails on [http://localhost:3000](http://localhost:3000) - try it out! The seed data includes a pinned topic that explains how to get an admin account, so start there! Happy hacking!
 

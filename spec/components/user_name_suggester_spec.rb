@@ -10,6 +10,9 @@ describe UserNameSuggester do
   end
 
   describe '.suggest' do
+    before do
+      User.stubs(:username_length).returns(3..15)
+    end
 
     it "doesn't raise an error on nil username" do
       UserNameSuggester.suggest(nil).should be_nil

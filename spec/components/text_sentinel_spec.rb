@@ -90,12 +90,38 @@ describe TextSentinel do
       TextSentinel.new("jfewjfoejwfojeojfoejofjeo3" * 5, max_word_length: 30).should_not be_valid
     end
 
-    it "doesn't except junk symbols as a string" do
+    it "doesn't accept junk symbols as a string" do
       TextSentinel.new("[[[").should_not be_valid
       TextSentinel.new("<<<").should_not be_valid
       TextSentinel.new("{{$!").should_not be_valid
     end
 
+  end
+
+  context 'title_sentinel' do
+
+    it "uses a sensible min entropy value when min title length is less than title_min_entropy" do
+      SiteSetting.stubs(:min_topic_title_length).returns(3)
+      SiteSetting.stubs(:title_min_entropy).returns(10)
+      TextSentinel.title_sentinel('Hey').should be_valid
+    end
+
+  end
+
+  context 'body_sentinel' do
+
+    it "uses a sensible min entropy value when min body length is less than min entropy" do
+      SiteSetting.stubs(:min_post_length).returns(3)
+      SiteSetting.stubs(:body_min_entropy).returns(7)
+      TextSentinel.body_sentinel('Yup').should be_valid
+    end
+
+    it "uses a sensible min entropy value when min pm body length is less than min entropy" do
+      SiteSetting.stubs(:min_post_length).returns(5)
+      SiteSetting.stubs(:min_private_message_post_length).returns(3)
+      SiteSetting.stubs(:body_min_entropy).returns(7)
+      TextSentinel.body_sentinel('Lol', private_message: true).should be_valid
+    end
   end
 
 end

@@ -87,10 +87,10 @@ class TopicQuery
 
     # When logged in we start with different results
     if @user
-      builder.add_results(unread_results(topic: topic, per_page: builder.results_left))
-      builder.add_results(new_results(per_page: builder.results_left)) unless builder.full?
+      builder.add_results(unread_results(topic: topic, per_page: builder.results_left), :high)
+      builder.add_results(new_results(topic: topic, per_page: builder.category_results_left), :high) unless builder.category_full?
     end
-    builder.add_results(random_suggested(topic, builder.results_left)) unless builder.full?
+    builder.add_results(random_suggested(topic, builder.results_left), :low) unless builder.full?
 
     create_list(:suggested, {}, builder.results)
   end
@@ -146,6 +146,11 @@ class TopicQuery
     TopicList.new(:private_messages, user, list)
   end
 
+  def list_private_messages_unread(user)
+    list = private_messages_for(user)
+    list = TopicQuery.unread_filter(list)
+    TopicList.new(:private_messages, user, list)
+  end
 
   def list_uncategorized
     create_list(:uncategorized, unordered: true) do |list|

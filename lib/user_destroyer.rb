@@ -25,6 +25,9 @@ class UserDestroyer
             end
           end
           PostDestroyer.new(@staff, post).destroy
+          if post.topic and post.post_number == 1
+            Topic.unscoped.where(id: post.topic.id).update_all(user_id: nil)
+          end
         end
         raise PostsExistError if user.reload.post_count != 0
       end
@@ -34,7 +37,7 @@ class UserDestroyer
             b = ScreenedEmail.block(u.email, ip_address: u.ip_address)
             b.record_match! if b
           end
-          Post.with_deleted.where(user_id: user.id).update_all("nuked_user = true")
+          Post.with_deleted.where(user_id: user.id).update_all("user_id = NULL")
           StaffActionLogger.new(@staff).log_user_deletion(user, opts.slice(:context))
           DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
