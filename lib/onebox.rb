@@ -19,7 +19,7 @@ module Onebox
 
   @@defaults = DEFAULTS
 
-  def self.preview(url, options = @@defaults)
+  def self.preview(url, options = Onebox.defaults)
     Preview.new(url, options)
   end
 
