@@ -146,6 +146,11 @@ def create_post(args={})
   PostCreator.create(user, args)
 end
 
+def generate_username(length=10)
+  range = [*'a'..'z']
+  Array.new(length){range.sample}.join
+end
+
 module MessageBus::DiagnosticsHelper
   def publish(channel, data, opts = nil)
     id = super(channel, data, opts)
