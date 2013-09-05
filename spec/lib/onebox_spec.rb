@@ -12,6 +12,7 @@ describe Onebox do
     it "stores the value in cache if it doesn't exist" do
       url = "http://www.example.com"
       preview = Onebox.preview(url)
+      preview.to_s
       cache = preview.cache
       expect(cache.key?(url)).to eq(true)
     end
