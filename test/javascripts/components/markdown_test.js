@@ -119,6 +119,12 @@ test("simple quotes", function() {
   cooked("> level 1\n>  > level 2",
          "<blockquote><p>level 1</p><blockquote><p>level 2</p></blockquote></blockquote>",
          "it allows nesting of blockquotes with spaces");
+
+  cooked("- hello\n\n  > world\n  > eviltrout",
+         "<ul><li>hello</li></ul>\n\n<blockquote><p>world<br>eviltrout</p></blockquote>",
+         "it allows quotes within a list.");
+  cooked("  > indent 1\n  > indent 2", "<blockquote><p>indent 1<br>indent 2</p></blockquote>", "allow multiple spaces to indent");
+
 });
 
 test("Quotes", function() {
