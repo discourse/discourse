@@ -171,33 +171,26 @@ Discourse.UserTopicListRoute = Discourse.Route.extend({
   }
 });
 
-Discourse.UserPrivateMessagesIndexRoute = Discourse.UserTopicListRoute.extend({
-  userActionType: Discourse.UserAction.TYPES.messages_received,
+function createPMRoute(viewName, path, type) {
+  return Discourse.UserTopicListRoute.extend({
+    userActionType: Discourse.UserAction.TYPES.messages_received,
 
-  model: function() {
-    return Discourse.TopicList.find('topics/private-messages/' + this.modelFor('user').get('username_lower'));
-  },
+    model: function() {
+      return Discourse.TopicList.find('topics/' + path + '/' + this.modelFor('user').get('username_lower'));
+    },
 
-  setupController: function(controller, model) {
-    this._super(controller, model);
-    controller.set('hideCategories', true);
-    this.controllerFor('userActivity').set('pmView', 'index');
-  }
+    setupController: function(controller, model) {
+      this._super(controller, model);
+      controller.set('hideCategories', true);
+      this.controllerFor('userActivity').set('pmView', viewName);
+    }
+  });
+}
 
-});
-Discourse.UserPrivateMessagesSentRoute = Discourse.UserTopicListRoute.extend({
-  userActionType: Discourse.UserAction.TYPES.messages_sent,
+Discourse.UserPrivateMessagesIndexRoute = createPMRoute('index', 'private-messages');
+Discourse.UserPrivateMessagesMineRoute = createPMRoute('mine', 'private-messages-sent');
+Discourse.UserPrivateMessagesUnreadRoute = createPMRoute('unread', 'private-messages-unread');
 
-  model: function() {
-    return Discourse.TopicList.find('topics/private-messages-sent/' + this.modelFor('user').get('username_lower'));
-  },
-
-  setupController: function(controller, model) {
-    this._super(controller, model);
-    controller.set('hideCategories', true);
-    this.controllerFor('userActivity').set('pmView', 'sent');
-  }
-});
 
 Discourse.UserActivityTopicsRoute = Discourse.UserTopicListRoute.extend({
   userActionType: Discourse.UserAction.TYPES.topics,
@@ -205,7 +198,6 @@ Discourse.UserActivityTopicsRoute = Discourse.UserTopicListRoute.extend({
   model: function() {
     return Discourse.TopicList.find('topics/created-by/' + this.modelFor('user').get('username_lower'));
   }
-
 });
 
 Discourse.UserActivityFavoritesRoute = Discourse.UserTopicListRoute.extend({

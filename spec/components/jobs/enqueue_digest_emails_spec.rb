@@ -10,33 +10,33 @@ describe Jobs::EnqueueDigestEmails do
       let!(:user_no_digests) { Fabricate(:active_user, email_digests: false, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
 
       it "doesn't return users with email disabled" do
-        Jobs::EnqueueDigestEmails.new.target_users.include?(user_no_digests).should be_false
+        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_no_digests.id).should be_false
       end
     end
 
     context 'unapproved users' do
       Given!(:unapproved_user) { Fabricate(:active_user, approved: false, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
       When { SiteSetting.stubs(:must_approve_users?).returns(true) }
-      Then { expect(Jobs::EnqueueDigestEmails.new.target_users.include?(unapproved_user)).to eq(false) }
+      Then { expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(false) }
 
       # As a moderator
       And { unapproved_user.update_column(:moderator, true) }
-      And { expect(Jobs::EnqueueDigestEmails.new.target_users.include?(unapproved_user)).to eq(true) }
+      And { expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true) }
 
       # As an admin
       And { unapproved_user.update_attributes(admin: true, moderator: false) }
-      And { expect(Jobs::EnqueueDigestEmails.new.target_users.include?(unapproved_user)).to eq(true) }
+      And { expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true) }
 
       # As an approved user
       And { unapproved_user.update_attributes(admin: false, moderator: false, approved: true ) }
-      And { expect(Jobs::EnqueueDigestEmails.new.target_users.include?(unapproved_user)).to eq(true) }
+      And { expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true) }
     end
 
     context 'recently emailed' do
       let!(:user_emailed_recently) { Fabricate(:active_user, last_emailed_at: 6.days.ago) }
 
       it "doesn't return users who have been emailed recently" do
-        Jobs::EnqueueDigestEmails.new.target_users.include?(user_emailed_recently).should be_false
+        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_emailed_recently.id).should be_false
       end
     end
 
@@ -44,7 +44,7 @@ describe Jobs::EnqueueDigestEmails do
       let!(:inactive_user) { Fabricate(:user) }
 
       it "doesn't return users who have been emailed recently" do
-        Jobs::EnqueueDigestEmails.new.target_users.include?(inactive_user).should be_false
+        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(inactive_user.id).should be_false
       end
     end
 
@@ -53,7 +53,7 @@ describe Jobs::EnqueueDigestEmails do
       let!(:user_visited_today) { Fabricate(:active_user, last_seen_at: 6.days.ago) }
 
       it "doesn't return users who have been emailed recently" do
-        Jobs::EnqueueDigestEmails.new.target_users.include?(user_visited_today).should be_false
+        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_visited_today.id).should be_false
       end
     end
 
@@ -62,7 +62,7 @@ describe Jobs::EnqueueDigestEmails do
       let!(:user) { Fabricate(:active_user) }
 
       it "returns the user" do
-        Jobs::EnqueueDigestEmails.new.target_users.should == [user]
+        Jobs::EnqueueDigestEmails.new.target_user_ids.should == [user.id]
       end
     end
 
@@ -73,7 +73,7 @@ describe Jobs::EnqueueDigestEmails do
     let(:user) { Fabricate(:user) }
 
     before do
-      Jobs::EnqueueDigestEmails.any_instance.expects(:target_users).returns([user])
+      Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).returns([user.id])
     end
 
     it "enqueues the digest email job" do

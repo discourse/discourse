@@ -24,3 +24,24 @@ class ScreenedUrl < ActiveRecord::Base
     find_by_url(url) || create(opts.slice(:action_type, :ip_address).merge(url: url, domain: domain))
   end
 end
+
+# == Schema Information
+#
+# Table name: screened_urls
+#
+#  id            :integer          not null, primary key
+#  url           :string(255)      not null
+#  domain        :string(255)      not null
+#  action_type   :integer          not null
+#  match_count   :integer          default(0), not null
+#  last_match_at :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  ip_address    :string
+#
+# Indexes
+#
+#  index_screened_urls_on_last_match_at  (last_match_at)
+#  index_screened_urls_on_url            (url) UNIQUE
+#
+

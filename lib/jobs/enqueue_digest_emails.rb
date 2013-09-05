@@ -5,15 +5,14 @@ module Jobs
     recurrence { daily.hour_of_day(6) }
 
     def execute(args)
-      target_users.each do |u|
-        Jobs.enqueue(:user_email, type: :digest, user_id: u.id)
+      target_user_ids.each do |user_id|
+        Jobs.enqueue(:user_email, type: :digest, user_id: user_id)
       end
     end
 
-    def target_users
+    def target_user_ids
       # Users who want to receive emails and haven't been emailed in the last day
-      query = User.select(:id)
-                  .where(email_digests: true, active: true)
+      query = User.where(email_digests: true, active: true)
                   .where("COALESCE(last_emailed_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)")
                   .where("COALESCE(last_seen_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)")
 
@@ -22,7 +21,7 @@ module Jobs
         query = query.where("approved OR moderator OR admin")
       end
 
-      query
+      query.pluck(:id)
     end
 
   end

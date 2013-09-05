@@ -216,6 +216,7 @@ describe TopicView do
     # Create the posts in a different order than the sort_order
     let!(:p5) { Fabricate(:post, topic: topic, user: coding_horror)}
     let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror)}
+    let!(:p6) { Fabricate(:post, topic: topic, user: Fabricate(:user), deleted_at: Time.now)}
     let!(:p4) { Fabricate(:post, topic: topic, user: coding_horror, deleted_at: Time.now)}
     let!(:p1) { Fabricate(:post, topic: topic, user: first_poster)}
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster)}
@@ -224,10 +225,12 @@ describe TopicView do
       SiteSetting.stubs(:posts_per_page).returns(3)
 
       # Update them to the sort order we're checking for
-      [p1, p2, p3, p4, p5].each_with_index do |p, idx|
+      [p1, p2, p3, p4, p5, p6].each_with_index do |p, idx|
         p.sort_order = idx + 1
         p.save
       end
+      p6.user_id = nil # user got nuked
+      p6.save!
     end
 
     describe '#filter_posts_paged' do
@@ -236,6 +239,7 @@ describe TopicView do
       it 'returns correct posts for all pages' do
         topic_view.filter_posts_paged(1).should == [p1, p2]
         topic_view.filter_posts_paged(2).should == [p3, p5]
+        topic_view.filter_posts_paged(3).should == []
         topic_view.filter_posts_paged(100).should == []
       end
     end
@@ -271,12 +275,25 @@ describe TopicView do
         near_view.posts.should == [p2, p3, p4]
       end
 
+      it "returns deleted posts by nuked users to an admin" do
+        coding_horror.admin = true
+        near_view = topic_view_near(p5)
+        near_view.desired_post.should == p5
+        near_view.posts.should == [p4, p5, p6]
+      end
+
       context "when 'posts per page' exceeds the number of posts" do
         before { SiteSetting.stubs(:posts_per_page).returns(100) }
 
         it 'returns all the posts' do
           near_view = topic_view_near(p5)
           near_view.posts.should == [p1, p2, p3, p5]
+        end
+
+        it 'returns deleted posts to admins' do
+          coding_horror.admin = true
+          near_view = topic_view_near(p5)
+          near_view.posts.should == [p1, p2, p3, p4, p5, p6]
         end
       end
     end

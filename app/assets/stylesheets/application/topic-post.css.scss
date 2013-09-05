@@ -355,6 +355,10 @@
         font-size: 13px;
         line-height: 18px;
       }
+      .deleted-user-avatar {
+        font-size: 36px;
+        line-height: 36px;
+      }
 
       .staff a {
         @include border-radius-all(3px);

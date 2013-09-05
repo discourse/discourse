@@ -8,6 +8,10 @@
 
   * We don't escape the contents of HTML as we prefer to use a whitelist.
 
+  * We fixed a bug where references can be created directly following a list.
+
+  * Fix to blockquote to handle spaces in front and when nested.
+
   * Note the name BetterMarkdown doesn't mean it's *better* than markdown-js, it refers
     to it being better than our previous markdown parser!
 
@@ -204,6 +208,35 @@ Markdown.prototype.split_blocks = function splitBlocks( input, startLine ) {
 
   return blocks;
 };
+
+function create_attrs() {
+  if ( !extract_attr( this.tree ) ) {
+    this.tree.splice( 1, 0, {} );
+  }
+
+  var attrs = extract_attr( this.tree );
+
+  // make a references hash if it doesn't exist
+  if ( attrs.references === undefined ) {
+    attrs.references = {};
+  }
+
+  return attrs;
+}
+
+function create_reference(attrs, m) {
+  if ( m[2] && m[2][0] == "<" && m[2][m[2].length-1] == ">" )
+    m[2] = m[2].substring( 1, m[2].length - 1 );
+
+  var ref = attrs.references[ m[1].toLowerCase() ] = {
+    href: m[2]
+  };
+
+  if ( m[4] !== undefined )
+    ref.title = m[4];
+  else if ( m[5] !== undefined )
+    ref.title = m[5];
+}
 
 /**
  *  Markdown#processBlock( block, next ) -> undefined | [ JsonML, ... ]
@@ -531,6 +564,7 @@ Markdown.dialects.Gruber = {
 
       // The matcher function
       return function( block, next ) {
+
         var m = block.match( is_list_re );
         if ( !m ) return undefined;
 
@@ -682,6 +716,7 @@ Markdown.dialects.Gruber = {
     })(),
 
     blockquote: function blockquote( block, next ) {
+
       if ( !block.match( /^>/m ) )
         return undefined;
 
@@ -717,7 +752,7 @@ Markdown.dialects.Gruber = {
       }
 
       // Strip off the leading "> " and re-process as a block.
-      var input = block.replace( /^> ?/gm, "" ),
+      var input = block.replace( /^> */gm, "" ),
           old_tree = this.tree,
           processedBlock = this.toTree( input, [ "blockquote" ] ),
           attr = extract_attr( processedBlock );
@@ -736,39 +771,18 @@ Markdown.dialects.Gruber = {
     },
 
     referenceDefn: function referenceDefn( block, next) {
+
       var re = /^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*?)\3|\((.*?)\)))?\n?/;
       // interesting matches are [ , ref_id, url, , title, title ]
 
       if ( !block.match(re) )
         return undefined;
 
-      // make an attribute node if it doesn't exist
-      if ( !extract_attr( this.tree ) ) {
-        this.tree.splice( 1, 0, {} );
-      }
-
-      var attrs = extract_attr( this.tree );
-
-      // make a references hash if it doesn't exist
-      if ( attrs.references === undefined ) {
-        attrs.references = {};
-      }
+      var attrs = create_attrs.call(this);
 
       var b = this.loop_re_over_block(re, block, function( m ) {
-
-        if ( m[2] && m[2][0] == "<" && m[2][m[2].length-1] == ">" )
-          m[2] = m[2].substring( 1, m[2].length - 1 );
-
-        var ref = attrs.references[ m[1].toLowerCase() ] = {
-          href: m[2]
-        };
-
-        if ( m[4] !== undefined )
-          ref.title = m[4];
-        else if ( m[5] !== undefined )
-          ref.title = m[5];
-
-      } );
+        create_reference(attrs, m);
+      });
 
       if ( b.length )
         next.unshift( mk_block( b, block.trailing ) );
@@ -891,6 +905,7 @@ Markdown.dialects.Gruber.inline = {
     "[": function link( text ) {
 
       var orig = String(text);
+
       // Inline content is possible inside `link text`
       var res = Markdown.DialectHelpers.inline_until_char.call( this, text.substr(1), "]" );
 
@@ -954,7 +969,6 @@ Markdown.dialects.Gruber.inline = {
       m = text.match( /^\s*\[(.*?)\]/ );
 
       if ( m ) {
-
         consumed += m[ 0 ].length;
 
         // [links][] uses links as its reference
@@ -966,6 +980,15 @@ Markdown.dialects.Gruber.inline = {
         // found till after. Check it in md tree->hmtl tree conversion.
         // Store the original so that conversion can revert if the ref isn't found.
         return [ consumed, link ];
+      }
+
+      m = orig.match(/^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*?)\3|\((.*?)\)))?\n?/);
+      if (m) {
+
+        var attrs = create_attrs.call(this);
+        create_reference(attrs, m);
+
+        return [ m[0].length ]
       }
 
       // [id]
@@ -1036,7 +1059,7 @@ Markdown.buildInlinePatterns = function(d) {
   for ( var i in d ) {
     // __foo__ is reserved and not a pattern
     if ( i.match( /^__.*__$/) ) continue;
-    var l = i.replace( /([\\.*+?|()\[\]{}])/g, "\\$1" )
+    var l = i.replace( /([\\.*+?$|()\[\]{}])/g, "\\$1" )
              .replace( /\n/, "\\n" );
     patterns.push( i.length == 1 ? l : "(?:" + l + ")" );
   }

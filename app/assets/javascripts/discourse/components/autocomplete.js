@@ -3,6 +3,49 @@
 
   @module $.fn.autocomplete
 **/
+
+var shiftMap = [];
+shiftMap[192] = "~";
+shiftMap[49] = "!";
+shiftMap[50] = "@";
+shiftMap[51] = "#";
+shiftMap[52] = "$";
+shiftMap[53] = "%";
+shiftMap[54] = "^";
+shiftMap[55] = "&";
+shiftMap[56] = "*";
+shiftMap[57] = "(";
+shiftMap[48] = ")";
+shiftMap[109] = "_";
+shiftMap[107] = "+";
+shiftMap[219] = "{";
+shiftMap[221] = "}";
+shiftMap[220] = "|";
+shiftMap[59] = ":";
+shiftMap[222] = "\"";
+shiftMap[188] = "<";
+shiftMap[190] = ">";
+shiftMap[191] = "?";
+shiftMap[32] = " ";
+
+function mapKeyPressToActualCharacter(isShiftKey, characterCode) {
+  if ( characterCode === 27 || characterCode === 8 || characterCode === 9 || characterCode === 20 || characterCode === 16 || characterCode === 17 || characterCode === 91 || characterCode === 13 || characterCode === 92 || characterCode === 18 ) { return false; }
+
+  if (isShiftKey) {
+    if ( characterCode >= 65 && characterCode <= 90 ) {
+      return String.fromCharCode(characterCode);
+    } else {
+      return shiftMap[characterCode];
+    }
+  } else {
+    if ( characterCode >= 65 && characterCode <= 90 ) {
+      return String.fromCharCode(characterCode).toLowerCase();
+    } else {
+      return String.fromCharCode(characterCode);
+    }
+  }
+}
+
 $.fn.autocomplete = function(options) {
 
   var autocompletePlugin = this;
@@ -338,11 +381,15 @@ $.fn.autocomplete = function(options) {
           }
           term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
           if (e.which >= 48 && e.which <= 90) {
-            term += String.fromCharCode(e.which);
+            term += mapKeyPressToActualCharacter(e.shiftKey, e.which);
           } else if (e.which === 187) {
             term += "+";
           } else if (e.which === 189) {
             term += (e.shiftKey) ? "_" : "-";
+          } else if (e.which === 220) {
+            term += (e.shiftKey) ? "|" : "]";
+          } else if (e.which === 222) {
+            term += (e.shiftKey) ? "\"" : "'";
           } else {
             if (e.which !== 8) {
               term += ",";

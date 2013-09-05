@@ -28,7 +28,11 @@ Discourse.User = Discourse.Model.extend({
 
 
   searchContext: function() {
-    return ({ type: 'user', id: this.get('username_lower'), user: this });
+    return {
+      type: 'user',
+      id: this.get('username_lower'),
+      user: this
+    };
   }.property('username_lower'),
 
   /**
@@ -101,7 +105,7 @@ Discourse.User = Discourse.Model.extend({
     @returns Result of ajax call
   **/
   changeUsername: function(newUsername) {
-    return Discourse.ajax("/users/" + (this.get('username_lower')) + "/preferences/username", {
+    return Discourse.ajax("/users/" + this.get('username_lower') + "/preferences/username", {
       type: 'PUT',
       data: { new_username: newUsername }
     });
@@ -115,7 +119,7 @@ Discourse.User = Discourse.Model.extend({
     @returns Result of ajax call
   **/
   changeEmail: function(email) {
-    return Discourse.ajax("/users/" + (this.get('username_lower')) + "/preferences/email", {
+    return Discourse.ajax("/users/" + this.get('username_lower') + "/preferences/email", {
       type: 'PUT',
       data: { email: email }
     });
@@ -173,9 +177,7 @@ Discourse.User = Discourse.Model.extend({
   changePassword: function() {
     return Discourse.ajax("/session/forgot_password", {
       dataType: 'json',
-      data: {
-        login: this.get('username')
-      },
+      data: { login: this.get('username') },
       type: 'POST'
     });
   },
@@ -266,11 +268,14 @@ Discourse.User = Discourse.Model.extend({
     Change avatar selection
 
     @method toggleAvatarSelection
+    @param {Boolean} useUploadedAvatar true if the user is using the uploaded avatar
     @returns {Promise} the result of the toggle avatar selection
   */
-  toggleAvatarSelection: function() {
-    var data = { use_uploaded_avatar: this.get("use_uploaded_avatar") };
-    return Discourse.ajax("/users/" + this.get("username") + "/preferences/avatar/toggle", { type: 'PUT', data: data });
+  toggleAvatarSelection: function(useUploadedAvatar) {
+    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/toggle", {
+      type: 'PUT',
+      data: { use_uploaded_avatar: useUploadedAvatar }
+    });
   }
 
 });

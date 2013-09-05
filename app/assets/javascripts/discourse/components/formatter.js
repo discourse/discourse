@@ -13,13 +13,29 @@ Discourse.Formatter = (function(){
 
     var firstPart = string.substr(0, maxLength);
 
-    var betterSplit = firstPart.substr(1).search(/[^a-z]/);
-    if (betterSplit >= 0) {
-      var offset = 1;
-      if(string[betterSplit+1] === "_") {
-        offset = 2;
+    // work backward to split stuff like ABPoop to AB Poop
+    var i;
+    for(i=firstPart.length-1;i>0;i--){
+      if(firstPart[i].match(/[A-Z]/)){
+        break;
       }
-      return string.substr(0, betterSplit + offset) + " " + string.substring(betterSplit + offset);
+    }
+
+    // work forwards to split stuff like ab111 to ab 111
+    if(i===0) {
+      for(i=1;i<firstPart.length;i++){
+        if(firstPart[i].match(/[^a-z]/)){
+          break;
+        }
+      }
+    }
+
+    if (i > 0 && i < firstPart.length) {
+      var offset = 0;
+      if(string[i] === "_") {
+        offset = 1;
+      }
+      return string.substr(0, i + offset) + " " + string.substring(i + offset);
     } else {
       return firstPart + " " + string.substr(maxLength);
     }
