@@ -295,7 +295,10 @@ class ApplicationController < ActionController::Base
         return
       end
 
-      return if current_user.use_uploaded_avatar && auth_cookie['avatar_url'] == current_user.uploaded_avatar_template
+      return if current_user.use_uploaded_avatar \
+        && auth_cookie['avatar_url'] == current_user.uploaded_avatar_template \
+        && current_user.use_uploaded_avatar
+
       current_user.uploaded_avatar_template = auth_cookie['avatar_url']
       current_user.use_uploaded_avatar = true
       current_user.save()
