@@ -465,7 +465,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     if (user.get('staff') && replyCount > 0) {
       bootbox.dialog(I18n.t("post.controls.delete_replies.confirm", {count: replyCount}), [
         {label: I18n.t("cancel"),
-         'class': 'btn-danger right'},
+         'class': 'btn-danger rightg'},
         {label: I18n.t("post.controls.delete_replies.no_value"),
           callback: function() {
             post.destroy(user);
@@ -481,7 +481,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
               }
             });
           }
-        },
+        }
       ]);
     } else {
       post.destroy(user);
