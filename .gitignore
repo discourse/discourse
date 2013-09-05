@@ -31,7 +31,7 @@ dump.rdb
 /db/*.sqlite3
 /dbs/*.sql
 /dbs/*.sql.gz
-#/db/structure.sql
+/db/structure.sql
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
