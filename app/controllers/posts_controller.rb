@@ -159,8 +159,7 @@ class PostsController < ApplicationController
 
     Post.transaction do
       topic_id = posts.first.topic_id
-      posts.each {|p| p.destroy }
-      Topic.reset_highest(topic_id)
+      posts.each {|p| PostDestroyer.new(current_user, p).destroy }
     end
 
     render nothing: true

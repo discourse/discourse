@@ -104,7 +104,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   postSelected: function(post) {
     if (this.get('allPostsSelected')) { return true; }
     if (this.get('selectedPosts').contains(post)) { return true; }
-
     if (this.get('selectedReplies').findProperty('post_number', post.get('reply_to_post_number'))) { return true; }
 
     return false;
@@ -458,7 +457,33 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   deletePost: function(post) {
-    post.destroy(Discourse.User.current());
+    var user = Discourse.User.current(),
+        replyCount = post.get('reply_count'),
+        self = this;
+
+    // If the user is staff and the post has replies, ask if they want to delete replies too.
+    if (user.get('staff') && replyCount > 0) {
+      bootbox.confirm(I18n.t("post.controls.delete_replies.confirm", {count: replyCount}),
+                      I18n.t("post.controls.delete_replies.no_value"),
+                      I18n.t("post.controls.delete_replies.yes_value"),
+                      function(result) {
+
+        // If the user wants to delete replies, do that, otherwise delete the post as normal.
+        if (result) {
+          Discourse.Post.deleteMany([post], [post]);
+          self.get('postStream.posts').forEach(function (p) {
+            if (p === post || p.get('reply_to_post_number') === post.get('post_number')) {
+              p.setDeletedState(user);
+            }
+          });
+        } else {
+          post.destroy(user);
+        }
+
+      });
+    } else {
+      post.destroy(user);
+    }
   },
 
   removeAllowedUser: function(username) {

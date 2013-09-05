@@ -225,17 +225,18 @@ Discourse.Post = Discourse.Model.extend({
   },
 
   /**
-    Deletes a post
+    Changes the state of the post to be deleted. Does not call the server, that should be
+    done elsewhere.
 
-    @method destroy
-    @param {Discourse.User} deleted_by The user deleting the post
+    @method setDeletedState
+    @param {Discourse.User} deletedBy The user deleting the post
   **/
-  destroy: function(deleted_by) {
+  setDeletedState: function(deletedBy) {
     // Moderators can delete posts. Regular users can only trigger a deleted at message.
-    if (deleted_by.get('staff')) {
+    if (deletedBy.get('staff')) {
       this.setProperties({
         deleted_at: new Date(),
-        deleted_by: deleted_by,
+        deleted_by: deletedBy,
         can_delete: false
       });
     } else {
@@ -248,7 +249,16 @@ Discourse.Post = Discourse.Model.extend({
         user_deleted: true
       });
     }
+  },
 
+  /**
+    Deletes a post
+
+    @method destroy
+    @param {Discourse.User} deletedBy The user deleting the post
+  **/
+  destroy: function(deletedBy) {
+    this.setDeletedState(deletedBy);
     return Discourse.ajax("/posts/" + (this.get('id')), { type: 'DELETE' });
   },
 

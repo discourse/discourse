@@ -180,12 +180,12 @@ describe PostsController do
       end
 
       it "deletes the post" do
-        Post.any_instance.expects(:destroy).twice
+        PostDestroyer.any_instance.expects(:destroy).twice
         xhr :delete, :destroy_many, post_ids: [post1.id, post2.id]
       end
 
       it "updates the highest read data for the forum" do
-        Topic.expects(:reset_highest)
+        Topic.expects(:reset_highest).twice
         xhr :delete, :destroy_many, post_ids: [post1.id, post2.id]
       end
 
@@ -196,7 +196,7 @@ describe PostsController do
         end
 
         it "deletes the post and the reply to it" do
-          Post.any_instance.expects(:destroy).twice
+          PostDestroyer.any_instance.expects(:destroy).twice
           xhr :delete, :destroy_many, post_ids: [post1.id], reply_post_ids: [post1.id]
         end
 

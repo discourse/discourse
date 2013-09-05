@@ -816,6 +816,12 @@ en:
         undelete: "undelete this post"
         share: "share a link to this post"
         more: "More"
+        delete_replies:
+          confirm:
+            one: "Do you also want to delete the direct reply to this post?"
+            other: "Do you also want to delete the {{count}} direct replies to this post?"
+          yes_value: "Yes, delete the replies too"
+          no_value: "No, just this post"
 
       actions:
         flag: 'Flag'
