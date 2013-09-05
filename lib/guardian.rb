@@ -9,6 +9,7 @@ class Guardian
     def secure_category_ids; []; end
     def topic_create_allowed_category_ids; []; end
     def has_trust_level?(level); false; end
+    def email; nil; end
   end
 
   def initialize(user=nil)
@@ -34,6 +35,13 @@ class Guardian
 
   def is_staff?
     @user.staff?
+  end
+
+  def is_developer?
+    @user &&
+    is_admin? &&
+    Rails.configuration.respond_to?(:developer_emails) &&
+    Rails.configuration.developer_emails.include?(@user.email)
   end
 
   # Can the user see the object?
@@ -89,8 +97,8 @@ class Guardian
     # You must be an admin to impersonate
     is_admin? &&
 
-    # You may not impersonate other admins
-    not(target.admin?)
+    # You may not impersonate other admins unless you are a dev
+    (!target.admin? || is_developer?)
 
     # Additionally, you may not impersonate yourself;
     # but the two tests for different admin statuses
