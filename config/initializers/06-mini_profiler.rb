@@ -1,6 +1,7 @@
 # If Mini Profiler is included via gem
 if Rails.configuration.respond_to?(:enable_mini_profiler) && Rails.configuration.enable_mini_profiler
   require 'rack-mini-profiler'
+  require 'flamegraph'
   # initialization is skipped so trigger it
   Rack::MiniProfilerRails.initialize!(Rails.application)
 end
@@ -41,6 +42,9 @@ if defined?(Rack::MiniProfiler)
   Rack::MiniProfiler.config.backtrace_ignores << /config\/initializers\/silence_logger/
   Rack::MiniProfiler.config.backtrace_ignores << /config\/initializers\/quiet_logger/
 
+
+  # Rack::MiniProfiler.counter_method(ActiveRecord::QueryMethods, 'build_arel')
+  # Rack::MiniProfiler.counter_method(Array, 'uniq')
   # require "#{Rails.root}/vendor/backports/notification"
 
   # inst = Class.new

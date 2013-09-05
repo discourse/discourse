@@ -2,6 +2,10 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 require 'redis-store' # HACK
 
+# HACK - needed because of incompatible changes
+# https://github.com/discourse/discourse/issues/1390
+Redis::Factory = Redis::Store::Factory
+
 # Plugin related stuff
 require_relative '../lib/discourse_plugin_registry'
 
@@ -119,8 +123,9 @@ module Discourse
     # attr_accessible.
     config.active_record.whitelist_attributes = false
 
+    require 'plugin'
+    require 'auth'
     unless Rails.env.test?
-      require 'plugin'
       Discourse.activate_plugins!
     end
 

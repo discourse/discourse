@@ -92,6 +92,10 @@ describe Search do
     Search.new('foo :!$);}]>@\#\"\'').execute.should be_blank # There are at least three levels of sanitation for Search.query!
   end
 
+  it "doesn't raise an error when single quotes are present" do
+    Search.new("'hello' world").execute.should be_blank # There are at least three levels of sanitation for Search.query!
+  end
+
   it 'works when given two terms with spaces' do
     lambda { Search.new('evil trout').execute }.should_not raise_error
   end
@@ -279,7 +283,7 @@ describe Search do
       # should find topic in searched category first
       Then          { first_of_type(search_cat, 'topic')[:id].should == topic.id }
       # results should also include topic without category
-      And          { result_ids_for_type(search_cat, 'topic').should include topic_no_cat.id } 
+      And          { result_ids_for_type(search_cat, 'topic').should include topic_no_cat.id }
 
     end
 

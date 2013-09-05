@@ -56,7 +56,6 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
         $hidden_login_form.find('input[name=username]').val(loginController.get('loginName'));
         $hidden_login_form.find('input[name=password]').val(loginController.get('loginPassword'));
         $hidden_login_form.find('input[name=redirect]').val(window.location.href);
-        $hidden_login_form.find('input[name=authenticity_token]').val($('meta[name=csrf-token]').attr('content'));
         $hidden_login_form.submit();
       }
 
@@ -96,6 +95,11 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
   },
 
   authenticationComplete: function(options) {
+    if (options.requires_invite) {
+      this.flash(I18n.t('login.requires_invite'), 'success');
+      this.set('authenticate', null);
+      return;
+    }
     if (options.awaiting_approval) {
       this.flash(I18n.t('login.awaiting_approval'), 'success');
       this.set('authenticate', null);

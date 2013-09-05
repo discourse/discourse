@@ -60,12 +60,49 @@ def profile(name, &block)
 end
 
 
-# User.limit(10).to_a
+
+def stuff
+  u = User.first
+  r = TopicQuery.new(u, {}).list_latest
+  r.topics.to_a
+end
+
+stuff
+profile_allocations "stuff" do
+  stuff
+end
+
+
+# Benchmark.bmbm do |x|
+# 
+#   x.report("find") do
+#     100.times{stuff}
+#   end
+# 
+# end
+# 
+#   x.report("grab 10 users id") do
+#     100.times{User.limit(10).select(:id).to_a}
+#   end
+# 
+#   x.report("grab 10 users") do
+#     100.times{User.limit(10).to_a}
+#   end
+# 
+# profile("topic query") do
+# r = TopicQuery.new(u, {}).list_latest
+# r.topics.to_a
+# end
+
+# 
 # RubyProf.start
-# User.limit(10).to_a
+# 
+# r = TopicQuery.new(u, {}).list_latest
+# r.topics.to_a
+# 
 # result = RubyProf.stop
-# # printer = RubyProf::GraphPrinter.new(result)
-# printer = RubyProf::FlatPrinter.new(result)
+# printer = RubyProf::GraphPrinter.new(result)
+# # printer = RubyProf::FlatPrinter.new(result)
 # printer.print(STDOUT, :min_percent => 2)
 # 
 # exit
@@ -81,40 +118,40 @@ end
 # User.limit(10).to_a
 # exit
 #
-User.select('id, 2 bob').first
-Benchmark.bmbm do |x|
-
-  x.report("find") do
-    100.times{User.find(1)}
-  end
-
-  x.report("grab 10 users created_at") do
-    100.times{User.limit(10).select(:created_at).to_a}
-  end
-
-  x.report("grab 10 users id") do
-    100.times{User.limit(10).select(:id).to_a}
-  end
-
-  x.report("grab 10 users") do
-    100.times{User.limit(10).to_a}
-  end
-
-
-  x.report("pg direct grab 10 users") do
-    100.times do
-      r = ActiveRecord::Base.connection.raw_connection.async_exec("select * from users limit 10")
-      r.fields.each_with_index do |f,i|
-        r.ftype(i)
-      end
-      r.each_row do |x|
-        x
-      end
-    end
-  end
-
-end
-
+# User.select('id, 2 bob').first
+# Benchmark.bmbm do |x|
+# 
+#   x.report("find") do
+#     100.times{User.find(1)}
+#   end
+# 
+#   x.report("grab 10 users created_at") do
+#     100.times{User.limit(10).select(:created_at).to_a}
+#   end
+# 
+#   x.report("grab 10 users id") do
+#     100.times{User.limit(10).select(:id).to_a}
+#   end
+# 
+#   x.report("grab 10 users") do
+#     100.times{User.limit(10).to_a}
+#   end
+# 
+# 
+#   x.report("pg direct grab 10 users") do
+#     100.times do
+#       r = ActiveRecord::Base.connection.raw_connection.async_exec("select * from users limit 10")
+#       r.fields.each_with_index do |f,i|
+#         r.ftype(i)
+#       end
+#       r.each_row do |x|
+#         x
+#       end
+#     end
+#   end
+# 
+# end
+# 
 
 # profile("find") do
 #   User.find(1)

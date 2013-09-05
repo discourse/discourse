@@ -14,11 +14,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :external_links_in_new_tab,
              :dynamic_favicon,
              :trust_level,
-             :can_edit,
-             :use_uploaded_avatar,
-             :has_uploaded_avatar,
-             :gravatar_template,
-             :uploaded_avatar_template
+             :can_edit
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -38,10 +34,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_edit
     true
-  end
-
-  def gravatar_template
-    User.gravatar_template(object.email)
   end
 
 end

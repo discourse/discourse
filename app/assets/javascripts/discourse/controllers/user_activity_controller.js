@@ -21,5 +21,9 @@ Discourse.UserActivityController = Discourse.ObjectController.extend({
       archetypeId: 'private_message',
       draftKey: 'new_private_message'
     });
-  }
+  },
+
+  privateMessagesActive: Em.computed.equal('pmView', 'index'),
+  privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
+  privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread')
 });

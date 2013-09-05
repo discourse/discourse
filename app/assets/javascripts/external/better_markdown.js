@@ -1,3 +1,22 @@
+/*
+  This is a fork of markdown-js with a few changes to support discourse:
+
+  * We have replaced the strong/em handlers because we prefer them only to work on word
+    boundaries.
+
+  * We removed the maraku support as we don't use it.
+
+  * We don't escape the contents of HTML as we prefer to use a whitelist.
+
+  * We fixed a bug where references can be created directly following a list.
+
+  * Fix to blockquote to handle spaces in front and when nested.
+
+  * Note the name BetterMarkdown doesn't mean it's *better* than markdown-js, it refers
+    to it being better than our previous markdown parser!
+
+*/
+
 // Released under MIT license
 // Copyright (c) 2009-2010 Dominic Baggott
 // Copyright (c) 2009-2010 Ash Berlin
@@ -189,6 +208,35 @@ Markdown.prototype.split_blocks = function splitBlocks( input, startLine ) {
 
   return blocks;
 };
+
+function create_attrs() {
+  if ( !extract_attr( this.tree ) ) {
+    this.tree.splice( 1, 0, {} );
+  }
+
+  var attrs = extract_attr( this.tree );
+
+  // make a references hash if it doesn't exist
+  if ( attrs.references === undefined ) {
+    attrs.references = {};
+  }
+
+  return attrs;
+}
+
+function create_reference(attrs, m) {
+  if ( m[2] && m[2][0] == "<" && m[2][m[2].length-1] == ">" )
+    m[2] = m[2].substring( 1, m[2].length - 1 );
+
+  var ref = attrs.references[ m[1].toLowerCase() ] = {
+    href: m[2]
+  };
+
+  if ( m[4] !== undefined )
+    ref.title = m[4];
+  else if ( m[5] !== undefined )
+    ref.title = m[5];
+}
 
 /**
  *  Markdown#processBlock( block, next ) -> undefined | [ JsonML, ... ]
@@ -516,6 +564,7 @@ Markdown.dialects.Gruber = {
 
       // The matcher function
       return function( block, next ) {
+
         var m = block.match( is_list_re );
         if ( !m ) return undefined;
 
@@ -667,6 +716,7 @@ Markdown.dialects.Gruber = {
     })(),
 
     blockquote: function blockquote( block, next ) {
+
       if ( !block.match( /^>/m ) )
         return undefined;
 
@@ -702,7 +752,7 @@ Markdown.dialects.Gruber = {
       }
 
       // Strip off the leading "> " and re-process as a block.
-      var input = block.replace( /^> ?/gm, "" ),
+      var input = block.replace( /^> */gm, "" ),
           old_tree = this.tree,
           processedBlock = this.toTree( input, [ "blockquote" ] ),
           attr = extract_attr( processedBlock );
@@ -721,39 +771,18 @@ Markdown.dialects.Gruber = {
     },
 
     referenceDefn: function referenceDefn( block, next) {
+
       var re = /^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*?)\3|\((.*?)\)))?\n?/;
       // interesting matches are [ , ref_id, url, , title, title ]
 
       if ( !block.match(re) )
         return undefined;
 
-      // make an attribute node if it doesn't exist
-      if ( !extract_attr( this.tree ) ) {
-        this.tree.splice( 1, 0, {} );
-      }
-
-      var attrs = extract_attr( this.tree );
-
-      // make a references hash if it doesn't exist
-      if ( attrs.references === undefined ) {
-        attrs.references = {};
-      }
+      var attrs = create_attrs.call(this);
 
       var b = this.loop_re_over_block(re, block, function( m ) {
-
-        if ( m[2] && m[2][0] == "<" && m[2][m[2].length-1] == ">" )
-          m[2] = m[2].substring( 1, m[2].length - 1 );
-
-        var ref = attrs.references[ m[1].toLowerCase() ] = {
-          href: m[2]
-        };
-
-        if ( m[4] !== undefined )
-          ref.title = m[4];
-        else if ( m[5] !== undefined )
-          ref.title = m[5];
-
-      } );
+        create_reference(attrs, m);
+      });
 
       if ( b.length )
         next.unshift( mk_block( b, block.trailing ) );
@@ -876,6 +905,7 @@ Markdown.dialects.Gruber.inline = {
     "[": function link( text ) {
 
       var orig = String(text);
+
       // Inline content is possible inside `link text`
       var res = Markdown.DialectHelpers.inline_until_char.call( this, text.substr(1), "]" );
 
@@ -939,7 +969,6 @@ Markdown.dialects.Gruber.inline = {
       m = text.match( /^\s*\[(.*?)\]/ );
 
       if ( m ) {
-
         consumed += m[ 0 ].length;
 
         // [links][] uses links as its reference
@@ -951,6 +980,15 @@ Markdown.dialects.Gruber.inline = {
         // found till after. Check it in md tree->hmtl tree conversion.
         // Store the original so that conversion can revert if the ref isn't found.
         return [ consumed, link ];
+      }
+
+      m = orig.match(/^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*?)\3|\((.*?)\)))?\n?/);
+      if (m) {
+
+        var attrs = create_attrs.call(this);
+        create_reference(attrs, m);
+
+        return [ m[0].length ]
       }
 
       // [id]
@@ -1004,69 +1042,6 @@ Markdown.dialects.Gruber.inline = {
 
 };
 
-// Meta Helper/generator method for em and strong handling
-function strong_em( tag, md ) {
-
-  var state_slot = tag + "_state",
-      other_slot = tag == "strong" ? "em_state" : "strong_state";
-
-  function CloseTag(len) {
-    this.len_after = len;
-    this.name = "close_" + md;
-  }
-
-  return function ( text, orig_match ) {
-
-    if ( this[state_slot][0] == md ) {
-      // Most recent em is of this type
-      //D:this.debug("closing", md);
-      this[state_slot].shift();
-
-      // "Consume" everything to go back to the recrusion in the else-block below
-      return[ text.length, new CloseTag(text.length-md.length) ];
-    }
-    else {
-      // Store a clone of the em/strong states
-      var other = this[other_slot].slice(),
-          state = this[state_slot].slice();
-
-      this[state_slot].unshift(md);
-
-      //D:this.debug_indent += "  ";
-
-      // Recurse
-      var res = this.processInline( text.substr( md.length ) );
-      //D:this.debug_indent = this.debug_indent.substr(2);
-
-      var last = res[res.length - 1];
-
-      //D:this.debug("processInline from", tag + ": ", uneval( res ) );
-
-      var check = this[state_slot].shift();
-      if ( last instanceof CloseTag ) {
-        res.pop();
-        // We matched! Huzzah.
-        var consumed = text.length - last.len_after;
-        return [ consumed, [ tag ].concat(res) ];
-      }
-      else {
-        // Restore the state of the other kind. We might have mistakenly closed it.
-        this[other_slot] = other;
-        this[state_slot] = state;
-
-        // We can't reuse the processed result as it could have wrong parsing contexts in it.
-        return [ md.length, md ];
-      }
-    }
-  }; // End returned function
-}
-
-Markdown.dialects.Gruber.inline["**"] = strong_em("strong", "**");
-Markdown.dialects.Gruber.inline["__"] = strong_em("strong", "__");
-Markdown.dialects.Gruber.inline["*"]  = strong_em("em", "*");
-Markdown.dialects.Gruber.inline["_"]  = strong_em("em", "_");
-
-
 // Build default order from insertion order.
 Markdown.buildBlockOrder = function(d) {
   var ord = [];
@@ -1084,7 +1059,7 @@ Markdown.buildInlinePatterns = function(d) {
   for ( var i in d ) {
     // __foo__ is reserved and not a pattern
     if ( i.match( /^__.*__$/) ) continue;
-    var l = i.replace( /([\\.*+?|()\[\]{}])/g, "\\$1" )
+    var l = i.replace( /([\\.*+?$|()\[\]{}])/g, "\\$1" )
              .replace( /\n/, "\\n" );
     patterns.push( i.length == 1 ? l : "(?:" + l + ")" );
   }

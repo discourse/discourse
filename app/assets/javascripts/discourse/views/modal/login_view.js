@@ -16,6 +16,31 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     this.set('controller.lastY', e.screenY);
   },
 
+  initPersona: function(){
+    var readyCalled = false;
+    navigator.id.watch({
+      onlogin: function(assertion) {
+        if (readyCalled) {
+          Discourse.ajax('/auth/persona/callback', {
+            type: 'POST',
+            data: { 'assertion': assertion },
+            dataType: 'json'
+          }).then(function(data) {
+            Discourse.authenticationComplete(data);
+          });
+        }
+      },
+      onlogout: function() {
+        if (readyCalled) {
+          Discourse.logout();
+        }
+      },
+      onready: function() {
+        readyCalled = true;
+      }
+    });
+  },
+
   didInsertElement: function(e) {
 
     this._super();
@@ -35,6 +60,12 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
         }
       });
     });
+
+    var view = this;
+    // load persona if needed
+    if(Discourse.SiteSettings.enable_persona_logins) {
+      $LAB.script("https://login.persona.org/include.js").wait(view.initPersona);
+    }
   }
 
 });

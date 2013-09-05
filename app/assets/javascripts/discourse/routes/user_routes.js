@@ -159,13 +159,6 @@ Discourse.UserActivityStreamRoute = Discourse.Route.extend({
   });
 });
 
-Discourse.UserPrivateMessagesIndexRoute = Discourse.UserActivityStreamRoute.extend({
-  userActionType: Discourse.UserAction.TYPES.messages_received
-});
-Discourse.UserPrivateMessagesSentRoute = Discourse.UserActivityStreamRoute.extend({
-  userActionType: Discourse.UserAction.TYPES.messages_sent
-});
-
 Discourse.UserTopicListRoute = Discourse.Route.extend({
 
   renderTemplate: function() {
@@ -177,6 +170,27 @@ Discourse.UserTopicListRoute = Discourse.Route.extend({
     controller.set('model', model);
   }
 });
+
+function createPMRoute(viewName, path, type) {
+  return Discourse.UserTopicListRoute.extend({
+    userActionType: Discourse.UserAction.TYPES.messages_received,
+
+    model: function() {
+      return Discourse.TopicList.find('topics/' + path + '/' + this.modelFor('user').get('username_lower'));
+    },
+
+    setupController: function(controller, model) {
+      this._super(controller, model);
+      controller.set('hideCategories', true);
+      this.controllerFor('userActivity').set('pmView', viewName);
+    }
+  });
+}
+
+Discourse.UserPrivateMessagesIndexRoute = createPMRoute('index', 'private-messages');
+Discourse.UserPrivateMessagesMineRoute = createPMRoute('mine', 'private-messages-sent');
+Discourse.UserPrivateMessagesUnreadRoute = createPMRoute('unread', 'private-messages-unread');
+
 
 Discourse.UserActivityTopicsRoute = Discourse.UserTopicListRoute.extend({
   userActionType: Discourse.UserAction.TYPES.topics,

@@ -20,21 +20,24 @@ class UserDestroyer
           if opts[:block_urls]
             post.topic_links.each do |link|
               unless link.internal or Oneboxer.oneboxer_exists_for_url?(link.url)
-                ScreenedUrl.watch(link.url, link.domain).try(:record_match!)
+                ScreenedUrl.watch(link.url, link.domain, ip_address: user.ip_address).try(:record_match!)
               end
             end
           end
           PostDestroyer.new(@staff, post).destroy
+          if post.topic and post.post_number == 1
+            Topic.unscoped.where(id: post.topic.id).update_all(user_id: nil)
+          end
         end
         raise PostsExistError if user.reload.post_count != 0
       end
       user.destroy.tap do |u|
         if u
           if opts[:block_email]
-            b = ScreenedEmail.block(u.email)
+            b = ScreenedEmail.block(u.email, ip_address: u.ip_address)
             b.record_match! if b
           end
-          Post.with_deleted.where(user_id: user.id).update_all("nuked_user = true")
+          Post.with_deleted.where(user_id: user.id).update_all("user_id = NULL")
           StaffActionLogger.new(@staff).log_user_deletion(user, opts.slice(:context))
           DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]

@@ -28,7 +28,11 @@ Discourse.User = Discourse.Model.extend({
 
 
   searchContext: function() {
-    return ({ type: 'user', id: this.get('username_lower'), user: this });
+    return {
+      type: 'user',
+      id: this.get('username_lower'),
+      user: this
+    };
   }.property('username_lower'),
 
   /**
@@ -101,7 +105,7 @@ Discourse.User = Discourse.Model.extend({
     @returns Result of ajax call
   **/
   changeUsername: function(newUsername) {
-    return Discourse.ajax("/users/" + (this.get('username_lower')) + "/preferences/username", {
+    return Discourse.ajax("/users/" + this.get('username_lower') + "/preferences/username", {
       type: 'PUT',
       data: { new_username: newUsername }
     });
@@ -115,7 +119,7 @@ Discourse.User = Discourse.Model.extend({
     @returns Result of ajax call
   **/
   changeEmail: function(email) {
-    return Discourse.ajax("/users/" + (this.get('username_lower')) + "/preferences/email", {
+    return Discourse.ajax("/users/" + this.get('username_lower') + "/preferences/email", {
       type: 'PUT',
       data: { email: email }
     });
@@ -139,7 +143,7 @@ Discourse.User = Discourse.Model.extend({
   **/
   save: function() {
     var user = this;
-    return Discourse.ajax("/users/" + this.get('username').toLowerCase(), {
+    return Discourse.ajax("/users/" + this.get('username_lower'), {
       data: this.getProperties('auto_track_topics_after_msecs',
                                'bio_raw',
                                'website',
@@ -173,9 +177,7 @@ Discourse.User = Discourse.Model.extend({
   changePassword: function() {
     return Discourse.ajax("/session/forgot_password", {
       dataType: 'json',
-      data: {
-        login: this.get('username')
-      },
+      data: { login: this.get('username') },
       type: 'POST'
     });
   },
@@ -259,6 +261,20 @@ Discourse.User = Discourse.Model.extend({
 
       user.setProperties(json.user);
       return user;
+    });
+  },
+
+  /*
+    Change avatar selection
+
+    @method toggleAvatarSelection
+    @param {Boolean} useUploadedAvatar true if the user is using the uploaded avatar
+    @returns {Promise} the result of the toggle avatar selection
+  */
+  toggleAvatarSelection: function(useUploadedAvatar) {
+    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/toggle", {
+      type: 'PUT',
+      data: { use_uploaded_avatar: useUploadedAvatar }
     });
   }
 

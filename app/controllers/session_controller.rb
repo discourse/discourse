@@ -67,7 +67,7 @@ class SessionController < ApplicationController
   end
 
   def destroy
-    session[:current_user_id] = nil
+    reset_session
     cookies[:_t] = nil
     render nothing: true
   end

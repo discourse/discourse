@@ -4,6 +4,8 @@ Discourse::Application.configure do
   # Code is not reloaded between requests
   config.cache_classes = true
 
+  config.log_level = :info
+
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
@@ -37,7 +39,7 @@ Discourse::Application.configure do
   config.handlebars.precompile = true
 
   # this setting enable rack_cache so it caches various requests in redis
-  # config.enable_rack_cache = true
+  config.enable_rack_cache = false
 
   # allows users to use mini profiler
   config.enable_mini_profiler = false

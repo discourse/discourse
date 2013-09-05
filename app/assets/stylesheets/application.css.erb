@@ -9,6 +9,8 @@
 //= require_tree ./application
 //= require ./foundation/helpers
 <%
+  # TODO this is very tricky, we want to add a dependency here on files that may not yet exist
+  #  otherwise in dev we are often stuck nuking the tmp/cache directory
   DiscoursePluginRegistry.stylesheets.each do |css|
     require_asset(css)
   end

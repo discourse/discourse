@@ -226,6 +226,7 @@ fr:
         uploading: "Image en cours d'envois..."
         gravatar: "Gravatar"
         uploaded_avatar: "Image envoyée"
+        image_is_not_a_square: "Attention : nous avons coupé l'image pour en faire un carré."
 
       email:
         title: "Email"

@@ -18,7 +18,29 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
   events: {
     showAvatarSelector: function() {
       Discourse.Route.showModal(this, 'avatarSelector');
-      this.controllerFor("avatarSelector").init();
+      // all the properties needed for displaying the avatar selector modal
+      var avatarSelector = this.modelFor('user').getProperties(
+        'username', 'email',
+        'has_uploaded_avatar', 'use_uploaded_avatar',
+        'gravatar_template', 'uploaded_avatar_template');
+      this.controllerFor('avatarSelector').setProperties(avatarSelector);
+    },
+
+    saveAvatarSelection: function() {
+      var user = this.modelFor('user');
+      var avatarSelector = this.controllerFor('avatarSelector');
+      // sends the information to the server if it has changed
+      if (avatarSelector.get('use_uploaded_avatar') !== user.get('use_uploaded_avatar')) {
+        user.toggleAvatarSelection(avatarSelector.get('use_uploaded_avatar'));
+      }
+      // saves the data back
+      user.setProperties(avatarSelector.getProperties(
+        'has_uploaded_avatar',
+        'use_uploaded_avatar',
+        'gravatar_template',
+        'uploaded_avatar_template'
+      ));
+      user.set('avatar_template', avatarSelector.get('avatarTemplate'));
     }
   }
 });

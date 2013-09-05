@@ -84,12 +84,13 @@ class TopicView
 
   def summary
     return nil if desired_post.blank?
+    # TODO, this is actually quite slow, should be cached in the post table
     Summarize.new(desired_post.cooked).summary
   end
 
   def image_url
     return nil if desired_post.blank?
-    desired_post.user.small_avatar_url
+    desired_post.user.try(:small_avatar_url)
   end
 
   def filter_posts(opts = {})
@@ -256,7 +257,7 @@ class TopicView
 
   def setup_filtered_posts
     @filtered_posts = @topic.posts
-    @filtered_posts = @filtered_posts.with_deleted.without_nuked_users if @user.try(:staff?)
+    @filtered_posts = @filtered_posts.with_deleted if @user.try(:staff?)
     @filtered_posts = @filtered_posts.best_of if @filter == 'best_of'
     @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action]) if @best.present?
     return unless @username_filters.present?

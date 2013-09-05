@@ -87,10 +87,10 @@ class TopicQuery
 
     # When logged in we start with different results
     if @user
-      builder.add_results(unread_results(topic: topic, per_page: builder.results_left))
-      builder.add_results(new_results(per_page: builder.results_left)) unless builder.full?
+      builder.add_results(unread_results(topic: topic, per_page: builder.results_left), :high)
+      builder.add_results(new_results(topic: topic, per_page: builder.category_results_left), :high) unless builder.category_full?
     end
-    builder.add_results(random_suggested(topic, builder.results_left)) unless builder.full?
+    builder.add_results(random_suggested(topic, builder.results_left), :low) unless builder.full?
 
     create_list(:suggested, {}, builder.results)
   end
@@ -135,6 +135,22 @@ class TopicQuery
     end
   end
 
+  def list_private_messages(user)
+    list = private_messages_for(user)
+    TopicList.new(:private_messages, user, list)
+  end
+
+  def list_private_messages_sent(user)
+    list = private_messages_for(user)
+    list = list.where(user_id: user.id)
+    TopicList.new(:private_messages, user, list)
+  end
+
+  def list_private_messages_unread(user)
+    list = private_messages_for(user)
+    list = TopicQuery.unread_filter(list)
+    TopicList.new(:private_messages, user, list)
+  end
 
   def list_uncategorized
     create_list(:uncategorized, unordered: true) do |list|
@@ -188,6 +204,22 @@ class TopicQuery
       topics ||= default_results(options)
       topics = yield(topics) if block_given?
       TopicList.new(filter, @user, topics)
+    end
+
+    def private_messages_for(user)
+      options = @options
+      options.reverse_merge!(per_page: SiteSetting.topics_per_page)
+
+      # Start with a list of all topics
+      result = Topic.where(id: TopicAllowedUser.where(user_id: user.id).pluck(:topic_id))
+      result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
+      result = result.order(TopicQuery.order_nocategory_basic_bumped)
+      result = result.private_messages
+
+      result = result.limit(options[:per_page]) unless options[:limit] == false
+      result = result.visible if options[:visible] || @user.nil? || @user.regular?
+      result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
+      result
     end
 
     # Create results based on a bunch of default options

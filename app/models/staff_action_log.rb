@@ -53,11 +53,15 @@ end
 #  context        :string(255)
 #  ip_address     :string(255)
 #  email          :string(255)
+#  subject        :text
+#  previous_value :text
+#  new_value      :text
 #
 # Indexes
 #
 #  index_staff_action_logs_on_action_and_id          (action,id)
 #  index_staff_action_logs_on_staff_user_id_and_id   (staff_user_id,id)
+#  index_staff_action_logs_on_subject_and_id         (subject,id)
 #  index_staff_action_logs_on_target_user_id_and_id  (target_user_id,id)
 #
 

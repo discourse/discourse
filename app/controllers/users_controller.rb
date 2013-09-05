@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect, :avatar]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect]
+  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_avatar, :toggle_avatar]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
   #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
@@ -100,61 +100,95 @@ class UsersController < ApplicationController
     render json: {valid: r.length == 1}
   end
 
+  def render_available_true
+    render(json: { available: true })
+  end
+
+  def changing_case_of_own_username(target_user, username)
+    target_user and username.downcase == target_user.username.downcase
+  end
+
+  # Used for checking availability of a username and will return suggestions
+  # if the username is not available.
   def check_username
     params.require(:username)
+    username = params[:username]
 
-    target_user = params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
+    target_user = user_from_params_or_current_user
 
     # The special case where someone is changing the case of their own username
-    return render(json: {available: true}) if target_user and params[:username].downcase == target_user.username.downcase
+    return render_available_true if changing_case_of_own_username(target_user, username)
 
-    validator = UsernameValidator.new(params[:username])
+    validator = UsernameValidator.new(username)
     if !validator.valid_format?
       render json: {errors: validator.errors}
     elsif !SiteSetting.call_discourse_hub?
-      if User.username_available?(params[:username])
-        render json: {available: true}
-      else
-        render json: {available: false, suggestion: UserNameSuggester.suggest(params[:username])}
-      end
+      check_username_locally(username)
     else
-
-      # Contact the Discourse Hub server
-      email_given = (params[:email].present? || target_user.present?)
-      available_locally = User.username_available?(params[:username])
-      global_match = false
-      available_globally, suggestion_from_discourse_hub = begin
-        if email_given
-          global_match, available, suggestion = DiscourseHub.nickname_match?( params[:username], params[:email] || target_user.email )
-          [available || global_match, suggestion]
-        else
-          DiscourseHub.nickname_available?(params[:username])
-        end
-      end
-
-      if available_globally && available_locally
-        render json: {available: true, global_match: (global_match ? true : false)}
-      elsif available_locally && !available_globally
-        if email_given
-          # Nickname and email do not match what's registered on the discourse hub.
-          render json: {available: false, global_match: false, suggestion: suggestion_from_discourse_hub}
-        else
-          # The nickname is available locally, but is registered on the discourse hub.
-          # We need an email to see if the nickname belongs to this person.
-          # Don't give a suggestion until we get the email and try to match it with on the discourse hub.
-          render json: {available: false}
-        end
-      elsif available_globally && !available_locally
-        # Already registered on this site with the matching nickname and email address. Why are you signing up again?
-        render json: {available: false, suggestion: UserNameSuggester.suggest(params[:username])}
-      else
-        # Not available anywhere.
-        render json: {available: false, suggestion: suggestion_from_discourse_hub}
-      end
-
+      check_username_with_hub_server(target_user, username)
     end
   rescue RestClient::Forbidden
     render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
+  end
+
+  def check_username_locally(username)
+    if User.username_available?(username)
+      render_available_true
+    else
+      render_unavailable_with_suggestion(UserNameSuggester.suggest(username))
+    end
+  end
+
+  def user_from_params_or_current_user
+    params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
+  end
+
+  def available_globally_and_suggestion_from_hub(target_user, username, email_given)
+    if email_given
+      global_match, available, suggestion =
+        DiscourseHub.nickname_match?(username, params[:email] || target_user.email)
+      { available_globally:            available || global_match,
+        suggestion_from_discourse_hub: suggestion,
+        global_match:                  global_match }
+    else
+      args = DiscourseHub.nickname_available?(username)
+      { available_globally:            args[0],
+        suggestion_from_discourse_hub: args[1],
+        global_match:                  false }
+    end
+  end
+
+  # Contact the Discourse Hub server
+  def check_username_with_hub_server(target_user, username)
+    email_given                   = (params[:email].present? || target_user.present?)
+    available_locally             = User.username_available?(username)
+    info                          = available_globally_and_suggestion_from_hub(target_user, username, email_given)
+    available_globally            = info[:available_globally]
+    suggestion_from_discourse_hub = info[:suggestion_from_discourse_hub]
+    global_match                  = info[:global_match]
+    if available_globally && available_locally
+      render json: { available: true, global_match: (global_match ? true : false) }
+    elsif available_locally && !available_globally
+      if email_given
+        # Nickname and email do not match what's registered on the discourse hub.
+        render json: { available: false, global_match: false, suggestion: suggestion_from_discourse_hub }
+      else
+        # The nickname is available locally, but is registered on the discourse hub.
+        # We need an email to see if the nickname belongs to this person.
+        # Don't give a suggestion until we get the email and try to match it with on the discourse hub.
+        render json: { available: false }
+      end
+    elsif available_globally && !available_locally
+      # Already registered on this site with the matching nickname and email address. Why are you signing up again?
+      render json: { available: false, suggestion: UserNameSuggester.suggest(username) }
+    else
+      # Not available anywhere.
+      render_unavailable_with_suggestion(suggestion_from_discourse_hub)
+    end
+  end
+
+  def render_unavailable_with_suggestion(suggestion)
+    render json: { available: false, suggestion: suggestion }
   end
 
   def create
@@ -162,16 +196,12 @@ class UsersController < ApplicationController
 
     user = User.new_from_params(params)
     auth = authenticate_user(user, params)
-
-    if user.valid? && SiteSetting.call_discourse_hub?
-      DiscourseHub.register_nickname(user.username, user.email)
-    end
-
+    register_nickname(user)
 
     if user.save
       activator = UserActivator.new(user, session, cookies)
       message = activator.activation_message
-      create_third_party_auth_records(user, auth) if auth.present?
+      create_third_party_auth_records(user, auth)
 
       # Clear authentication session.
       session[:authentication] = nil
@@ -187,15 +217,8 @@ class UsersController < ApplicationController
     end
   rescue ActiveRecord::StatementInvalid
     render json: { success: false, message: I18n.t("login.something_already_taken") }
-  rescue DiscourseHub::NicknameUnavailable
-    render json: { success: false,
-      message: I18n.t(
-        "login.errors",
-        errors:I18n.t(
-          "login.not_available", suggestion: UserNameSuggester.suggest(params[:username])
-        )
-    )
-    }
+  rescue DiscourseHub::NicknameUnavailable=> e
+    render json: e.response_message
   rescue RestClient::Forbidden
     render json: { errors: [I18n.t("discourse_hub.access_token_problem")] }
   end
@@ -346,13 +369,18 @@ class UsersController < ApplicationController
 
     upload = Upload.create_for(user.id, file, filesize)
 
+    user.uploaded_avatar_template = nil
     user.uploaded_avatar = upload
     user.use_uploaded_avatar = true
     user.save!
 
     Jobs.enqueue(:generate_avatars, upload_id: upload.id)
 
-    render json: { url: upload.url }
+    render json: {
+      url: upload.url,
+      width: upload.width,
+      height: upload.height,
+    }
 
   rescue FastImage::ImageFetchFailure
     render status: 422, text: I18n.t("upload.images.fetch_failure")
@@ -380,7 +408,13 @@ class UsersController < ApplicationController
     end
 
     def challenge_value
-      '3019774c067cc2b'
+      challenge = $redis.get('SECRET_CHALLENGE')
+      unless challenge && challenge.length == 16*2
+        challenge = SecureRandom.hex(16)
+        $redis.set('SECRET_CHALLENGE',challenge)
+      end
+
+      challenge
     end
 
     def suspicious?(params)
@@ -407,54 +441,15 @@ class UsersController < ApplicationController
     end
 
     def create_third_party_auth_records(user, auth)
-      if twitter_auth?(auth)
-        TwitterUserInfo.create(
-          user_id: user.id,
-          screen_name: auth[:twitter_screen_name],
-          twitter_user_id: auth[:twitter_user_id]
-        )
-      end
+      return unless auth && auth[:authenticator_name]
 
-      if facebook_auth?(auth)
-        FacebookUserInfo.create!(auth[:facebook].merge(user_id: user.id))
-      end
-
-      if github_auth?(auth)
-        GithubUserInfo.create(
-          user_id: user.id,
-          screen_name: auth[:github_screen_name],
-          github_user_id: auth[:github_user_id]
-        )
-      end
-
-      if oauth2_auth?(auth)
-        Oauth2UserInfo.create(
-          uid: auth[:oauth2][:uid],
-          provider: auth[:oauth2][:provider],
-          name: auth[:name],
-          email: auth[:email],
-          user_id: user.id
-        )
-      end
+      authenticator = Users::OmniauthCallbacksController.find_authenticator(auth[:authenticator_name])
+      authenticator.after_create_account(user, auth)
     end
 
-    def twitter_auth?(auth)
-      auth[:twitter_user_id] && auth[:twitter_screen_name] &&
-      TwitterUserInfo.find_by_twitter_user_id(auth[:twitter_user_id]).nil?
-    end
-
-    def facebook_auth?(auth)
-      auth[:facebook].present? &&
-      FacebookUserInfo.find_by_facebook_user_id(auth[:facebook][:facebook_user_id]).nil?
-    end
-
-    def github_auth?(auth)
-      auth[:github_user_id] && auth[:github_screen_name] &&
-      GithubUserInfo.find_by_github_user_id(auth[:github_user_id]).nil?
-    end
-
-    def oauth2_auth?(auth)
-      auth[:oauth2].is_a?(Hash) && auth[:oauth2][:provider] && auth[:oauth2][:uid] &&
-      Oauth2UserInfo.where(provider: auth[:oauth2][:provider], uid: auth[:oauth2][:uid]).empty?
+    def register_nickname(user)
+      if user.valid? && SiteSetting.call_discourse_hub?
+        DiscourseHub.register_nickname(user.username, user.email)
+      end
     end
 end

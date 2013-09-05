@@ -94,13 +94,13 @@ en:
       For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
 
     'new-reply': |
-      Welcome to %{site_name} &mdash; **thanks for contributing to the conversation!**
+      Welcome to %{site_name} &mdash; **thanks for contributing!**
 
       - Does your reply improve the conversation in some way?
 
       - Be kind to your fellow community members.
 
-      - Constructive criticism is welcome, but remember to criticize *ideas*, not people.
+      - Constructive criticism is welcome, but criticize *ideas*, not people.
 
       For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
 
@@ -289,7 +289,7 @@ en:
 
   flagging:
     you_must_edit: '<p>Your post was flagged by the community. Please see your private messages.</p>'
-    user_must_edit: '<p>Flagged content hidden.</p>'
+    user_must_edit: '<p>Flagged content temporarily hidden.</p>'
 
   archetypes:
     regular:
@@ -452,7 +452,7 @@ en:
     max_topic_title_length: "Maximum topic title length in characters"
     min_private_message_title_length: "Minimum title length for a private message in characters"
     min_search_term_length: "Minimum search term length in characters"
-    allow_uncategorized_topics: "Allow topics to be created without a category"
+    allow_uncategorized_topics: "Allow topics to be created without a category. NOTE: After changing this setting, all clients will need to reload their browsers for the change to take effect."
     allow_duplicate_topic_titles: "Allow topics with identical titles"
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     enforce_global_nicknames: "Enforce global nickname uniqueness (WARNING: only change this during initial setup)"
@@ -470,6 +470,7 @@ en:
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view edit history."
     delete_removed_posts_after: "Number of hours after which posts removed by the author will be deleted."
     max_image_width: "Maximum allowed width of images in a post"
+    max_image_height: "Maximum allowed height of images in a post"
     category_featured_topics: "Number of topics displayed per category in the /categories page"
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
@@ -616,6 +617,8 @@ en:
     regular_requires_likes_given: "How many likes a basic user must cast before promotion to regular (2) trust level"
     regular_requires_topic_reply_count: "How many topics a basic user must reply to before promotion to regular (2) trust level"
 
+    min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+
     newuser_max_links: "How many links a new user can add to a post"
     newuser_max_images: "How many images a new user can add to a post"
     newuser_max_attachments: "How many attachments a new user can add to a post"
@@ -671,7 +674,9 @@ en:
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     username_change_period: "The number of days after registration that accounts can change their username."
 
-    allow_uploaded_avatars: "Allow support for uploaded avatars"
+    allow_uploaded_avatars: "Allow users to upload their custom avatars"
+    allow_animated_avatars: "Allow users to use animated gif for avatars"
+    default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
@@ -940,9 +945,9 @@ en:
         Please [review the flags](/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{user_url}).
 
     spam_post_blocked:
-      subject_template: "Spam was detected in a post by %{username}"
+      subject_template: "New user %{username} is posting repeated links"
       text_body_template: |
-        This is an automated message to inform you that [%{username}](%{user_url}) tried to make a post with links, but it was stopped as spam based on the newuser_spam_host_threshold site setting.
+        This is an automated message to inform you that the new user [%{username}](%{user_url}) tried to create multiple posts with links to the same domain, but they were blocked based on the newuser_spam_host_threshold site setting.
 
         Please [review the user](%{user_url}).
 
@@ -954,6 +959,15 @@ en:
         This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
 
         You can now create new replies and topics again.
+
+    pending_users_reminder:
+      subject_template:
+        one: "There is 1 unapproved user"
+        other: "There are %{count} unapproved users"
+      text_body_template: |
+        There are new users waiting to be approved.
+
+        [Please review them in the admin section](/admin/users/list/pending).
 
   unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
 
@@ -1021,7 +1035,7 @@ en:
       new_activity: "New activity on your topics and posts:"
       top_topics: "Recent posts the community enjoyed:"
       other_new_topics: "Other New Topics:"
-      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while.\nTo turn it off or change your email preferences, %{unsubscribe_link}."
+      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe or change your email preferences, %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"

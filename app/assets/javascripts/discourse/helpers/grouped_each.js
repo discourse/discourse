@@ -78,8 +78,6 @@ DiscourseGroupedEach.prototype = {
         template = this.template;
 
     data.insideEach = true;
-    data.insideGroup = true;
-
     for (var i = 0; i < contentLength; i++) {
       template(content.objectAt(i), { data: data });
     }
@@ -124,5 +122,6 @@ Ember.Handlebars.registerHelper('groupedEach', function(path, options) {
   }
 
   options.hash.dataSourceBinding = path;
+  options.data.insideGroup = true;
   new DiscourseGroupedEach(this, path, options).render();
 });

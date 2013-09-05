@@ -13,8 +13,11 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def presence(post)
-    [:raw,:user_id,:topic_id].each do |attr_name|
+    [:raw,:topic_id].each do |attr_name|
        post.errors.add(attr_name, :blank, options) if post.send(attr_name).blank?
+    end
+    if post.new_record? and post.user_id.nil?
+      post.errors.add(:user_id, :blank, options)
     end
   end
 

@@ -13,22 +13,22 @@ class User < ActiveRecord::Base
   include Roleable
 
   has_many :posts
-  has_many :notifications
-  has_many :topic_users
+  has_many :notifications, dependent: :destroy
+  has_many :topic_users, dependent: :destroy
   has_many :topics
   has_many :user_open_ids, dependent: :destroy
-  has_many :user_actions
-  has_many :post_actions
-  has_many :email_logs
+  has_many :user_actions, dependent: :destroy
+  has_many :post_actions, dependent: :destroy
+  has_many :email_logs, dependent: :destroy
   has_many :post_timings
-  has_many :topic_allowed_users
+  has_many :topic_allowed_users, dependent: :destroy
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
-  has_many :email_tokens
+  has_many :email_tokens, dependent: :destroy
   has_many :views
-  has_many :user_visits
-  has_many :invites
-  has_many :topic_links
-  has_many :uploads
+  has_many :user_visits, dependent: :destroy
+  has_many :invites, dependent: :destroy
+  has_many :topic_links, dependent: :destroy
+  has_many :uploads, dependent: :destroy
 
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
@@ -37,11 +37,11 @@ class User < ActiveRecord::Base
   has_one :oauth2_user_info, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
 
-  has_many :group_users
+  has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users
   has_many :secure_categories, through: :groups, source: :categories
 
-  has_one :user_search_data
+  has_one :user_search_data, dependent: :destroy
 
   belongs_to :uploaded_avatar, class_name: 'Upload', dependent: :destroy
 
@@ -55,10 +55,17 @@ class User < ActiveRecord::Base
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
   after_initialize :add_trust_level
+  after_initialize :set_default_email_digest
 
   after_save :update_tracked_topics
 
   after_create :create_email_token
+
+  before_destroy do
+    # These tables don't have primary keys, so destroying them with activerecord is tricky:
+    PostTiming.delete_all(user_id: self.id)
+    View.delete_all(user_id: self.id)
+  end
 
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
@@ -68,6 +75,7 @@ class User < ActiveRecord::Base
 
   scope :blocked, -> { where(blocked: true) } # no index
   scope :banned, -> { where('banned_till IS NOT NULL AND banned_till > ?', Time.zone.now) } # no index
+  scope :not_banned, -> { where('banned_till IS NULL') }
 
   module NewTopicDuration
     ALWAYS = -1
@@ -94,23 +102,6 @@ class User < ActiveRecord::Base
     user
   end
 
-  def self.create_for_email(email, opts={})
-    username = UserNameSuggester.suggest(email)
-
-    discourse_hub_nickname_operation do
-      match, available, suggestion = DiscourseHub.nickname_match?(username, email)
-      username = suggestion unless match || available
-    end
-
-    user = User.new(email: email, username: username, name: username)
-    user.trust_level = opts[:trust_level] if opts[:trust_level].present?
-    user.save!
-
-    discourse_hub_nickname_operation { DiscourseHub.register_nickname(username, email) }
-
-    user
-  end
-
   def self.suggest_name(email)
     return "" unless email
     name = email.split(/[@\+]/)[0]
@@ -127,23 +118,18 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_username_or_email(username_or_email)
-    lower_user = username_or_email.downcase
-    lower_email = Email.downcase(username_or_email)
-
-    users =
-      if username_or_email.include?('@')
-        User.where(email: lower_email)
-      else
-        User.where(username_lower: lower_user)
-      end
-        .to_a
-
-    if users.count > 1
-      raise Discourse::TooManyMatches
-    elsif users.count == 1
-      users[0]
+    conditions = if username_or_email.include?('@')
+      { email: Email.downcase(username_or_email) }
     else
-      nil
+      { username_lower: username_or_email.downcase }
+    end
+
+    users = User.where(conditions).to_a
+
+    if users.size > 1
+      raise Discourse::TooManyMatches
+    else
+      users.first
     end
   end
 
@@ -157,7 +143,7 @@ class User < ActiveRecord::Base
     self.username = new_username
 
     if current_username.downcase != new_username.downcase && valid?
-      User.discourse_hub_nickname_operation { DiscourseHub.change_nickname(current_username, new_username) }
+      DiscourseHub.nickname_operation { DiscourseHub.change_nickname(current_username, new_username) }
     end
 
     save
@@ -507,7 +493,7 @@ class User < ActiveRecord::Base
   end
 
   def secure_category_ids
-    cats = self.staff? ? Category.select(:id).where(read_restricted: true) : secure_categories.select('categories.id')
+    cats = self.staff? ? Category.select(:id).where(read_restricted: true) : secure_categories.select('categories.id').references(:categories)
     cats.map { |c| c.id }.sort
   end
 
@@ -602,19 +588,19 @@ class User < ActiveRecord::Base
     )
   end
 
-  private
-
-  def self.discourse_hub_nickname_operation
-    if SiteSetting.call_discourse_hub?
-      begin
-        yield
-      rescue DiscourseHub::NicknameUnavailable
-        false
-      rescue => e
-        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
+  def set_default_email_digest
+    if has_attribute?(:email_digests) && self.email_digests.nil?
+      if SiteSetting.default_digest_email_frequency.blank?
+        self.email_digests = false
+      else
+        self.email_digests = true
+        self.digest_after_days ||= SiteSetting.default_digest_email_frequency.to_i if has_attribute?(:digest_after_days)
       end
     end
   end
+
+  private
+
 end
 
 # == Schema Information
@@ -639,7 +625,7 @@ end
 #  website                       :string(255)
 #  admin                         :boolean          default(FALSE), not null
 #  last_emailed_at               :datetime
-#  email_digests                 :boolean          default(TRUE), not null
+#  email_digests                 :boolean          not null
 #  trust_level                   :integer          not null
 #  bio_cooked                    :text
 #  email_private_messages        :boolean          default(TRUE)
@@ -649,7 +635,7 @@ end
 #  approved_at                   :datetime
 #  topics_entered                :integer          default(0), not null
 #  posts_read_count              :integer          default(0), not null
-#  digest_after_days             :integer          default(7), not null
+#  digest_after_days             :integer
 #  previous_visit_at             :datetime
 #  banned_at                     :datetime
 #  banned_till                   :datetime
@@ -682,3 +668,4 @@ end
 #  index_users_on_username        (username) UNIQUE
 #  index_users_on_username_lower  (username_lower) UNIQUE
 #
+
