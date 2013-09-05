@@ -1,10 +1,4 @@
 defaults: &defaults
-  uri: <%= uri = URI.parse(ENV['REDIS_PROVIDER_URL']) %>
-  host: <%= uri.host %>
-  port: <%= uri.port %>
-  password: <%= uri.password %>
-  db: 0
-  cache_db: 2
 
 development:
   <<: *defaults
