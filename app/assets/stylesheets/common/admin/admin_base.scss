@@ -1,0 +1,814 @@
+// these are the styles associated with the Discourse admin section
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+@import "common/foundation/helpers";
+
+
+.content-list li a span.count {
+  font-size: 12px;
+  float: right;
+  margin-right: 10px;
+  background-color: #eee;
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: #555;
+}
+
+.admin-content {
+  margin-bottom: 50px;
+  .admin-contents {
+    padding: 8px;
+
+    p {
+      margin-left: 6px;
+    }
+  }
+
+  table.report {
+    tr {
+      th:nth-of-type(1) {
+        width: 20%;
+      }
+    }
+
+    .bar-container {
+      float: left;
+      width: 300px;
+      margin-right: 15px;
+      margin-bottom: 5px;
+      display: inline-block;
+
+      .bar {
+        margin-top: 5px;
+        background-color: $blue;
+        display: inline-block;
+        text-align: right;
+        padding-right: 8px;
+        color: $white;
+      }
+    }
+  }
+}
+
+.admin-loading {
+  width: 100px;
+  margin: 0 auto 30px auto;
+  background-color: $black;
+  @include border-radius-all(10px);
+  padding: 10px 10px 10px 30px;
+  font-size: 15px;
+  line-height: 23px;
+  text-align: center;
+  color: $white;
+  background: {
+    image: image-url("spinner_96_w.gif");
+    repeat: no-repeat;
+    position: 10px 8px;
+    size: 25px;
+  };
+}
+
+.admin-controls {
+  @include border-radius-all(5px);
+  background-color: darken($white, 5%);
+  border: 1px solid darken($white, 10%);
+  padding: 5px 10px 3px 0px;
+  margin-bottom: 20px;
+  height: 35px;
+  .nav.nav-pills {
+    li.active {
+      a {
+        border-color: darken($dark_gray, 10%);
+        background-color: $dark_gray;
+        &:hover {
+          background-color: $dark_gray;
+        }
+      }
+    }
+  }
+  h1 {
+    font-size: 20px;
+    line-height: 25px;
+    color: $darkish_gray;
+  }
+  .controls {
+    padding-top: 3px;
+  }
+  button {
+    float: left;
+    margin-right: 5px;
+  }
+  .result-message {
+    display: inline-block;
+    padding-left: 10px;
+    padding-top: 5px;
+  }
+  .username {
+    input[type=text] {
+      width: 240px;
+    }
+  }
+  .search {
+    float: right;
+    margin-left: 10px;
+    label {
+      margin-top: 5px;
+    }
+  }
+  .toggle {
+    margin-top: 8px;
+    float: right;
+
+    span {
+      font-weight: bold;
+    }
+  }
+  label {
+    display: inline-block;
+    margin-right: 5px;
+  }
+}
+
+.settings {
+  .setting {
+    padding-bottom: 20px;
+    .desc {
+      padding-top: 3px;
+      color: darken($white, 40%);
+    }
+
+    h3 {
+      font-size: 13px;
+      font-weight: normal;
+    }
+  }
+
+  .setting.overridden {
+    input[type=text] {
+      background-color: lighten($yellow, 40%);
+    }
+
+    h3 {
+      color: darken($yellow, 20%);
+    }
+  }
+}
+
+section.details {
+  h1 {
+    font-size: 15px;
+    background-color: $gray;
+    color: $white;
+    padding: 0 10px;
+    margin: 0px 0 5px 0;
+  }
+}
+
+#selected-controls {
+  background-color: lighten($blue, 50%);
+  padding: 8px;
+  min-height: 27px;
+  position: fixed;
+  bottom: 0;
+  width: 1075px;
+  border: 1px solid lighten($blue, 45%);
+}
+
+table {
+  tr.selected {
+    background-color: lighten($blue, 58%);
+  }
+}
+
+.display-row {
+  height: 30px;
+  line-height: 30px;
+  padding: 5px;
+  &:nth-of-type(1) {
+    border-top: 0;
+  }
+  border-top: 1px solid #dddddd;
+  &:before, &:after {
+    display: table;
+    content: "";
+  }
+  &:after {
+    clear: both;
+  }
+  .field {
+    font-weight: bold;
+    width: 196px;
+    float: left;
+    margin-left: 12px;
+  }
+  .value {
+    width: 250px;
+    float: left;
+    margin-left: 12px;
+  }
+  .controls {
+    .btn {
+      margin-right: 5px;
+    }
+  }
+}
+
+// Customise area
+.customize {
+  .nav.nav-pills {
+    margin-left: 10px;
+  }
+  .content-list, .current-style {
+    float: left;
+  }
+  .content-list ul {
+    margin-bottom: 10px;
+  }
+  .current-style {
+    .delete-link {
+      margin-left: 15px;
+      margin-top: 5px;
+    }
+    .preview-link {
+      margin-left: 30px;
+    }
+    padding-left: 10px;
+    width: 65%;
+    .style-name {
+      width: 600px;
+      height: 25px;
+      font-size: 20px;
+    }
+    .ace-wrapper {
+      position: relative;
+      height: 400px;
+      width: 100%;
+    }
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+    .status-actions {
+      float: right;
+      margin-top: 7px;
+      span {
+        margin-right: 20px;
+      }
+    }
+    .buttons {
+      float: left;
+      width: 200px;
+      .saving {
+        padding: 5px 0 0 0;
+        margin-left: 10px;
+        width: 80px;
+        color: $dark_gray;
+      }
+    }
+  }
+}
+
+
+.admin-flags {
+
+  tr.hidden-post td.excerpt { opacity: 0.4;  }
+  tr.deleted td.excerpt { opacity: 0.8; background-color: #ffcece; }
+  td.message {
+    padding: 4px 0;
+    background-color: #f8f8e0;
+  }
+  td { vertical-align: top; }
+  th { text-align: left; }
+  .user { width: 40px; }
+  .excerpt {
+    max-width: 740px;
+    width: 740px;
+    padding: 0 10px 10px 0;
+    word-wrap: break-word;
+    .icon,h3 { display: inline-block; }
+
+  }
+  .flaggers {
+    font-size: 11px;
+    td {
+      vertical-align: middle;
+      padding: 3px;
+    }
+  }
+  .action {
+     button { margin: 4px; }
+     text-align: right;
+     padding-bottom: 20px;
+  }
+}
+
+/* Dashboard */
+
+.dashboard-left {
+  float: left;
+  width: 500px;
+  margin-top: 10px;
+}
+.dashboard-right {
+  float: right;
+  width: 500px;
+  margin-top: 10px;
+  margin-right: 15px;
+
+  @include medium-width {
+    width: 430px;
+  }
+  @include small-width {
+    width: 390px;
+  }
+
+  .dashboard-stats {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.version-check {
+  .version-number {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .face {
+    width: 20px;
+  }
+
+  .version-notes .icon {
+    vertical-align: bottom;
+  }
+
+  &.critical .version-notes .normal-note {
+    display: none;
+  }
+  &.normal .version-notes .critical-note {
+    display: none;
+  }
+
+  .icon {
+    font-size: 26px;
+  }
+
+  .update-to-date {
+    color: green;
+  }
+  .updates-available {
+    color: #FF9500;
+  }
+  .critical-updates-available {
+    color: red;
+  }
+}
+
+.update-nag {
+  i.icon {
+    font-size: 20px;
+  }
+}
+
+.dashboard-stats {
+  margin-bottom: 30px;
+  width: 460px;
+  margin-left: 30px;
+
+  h4 {
+    font-weight: normal;
+    margin-bottom: 8px;
+  }
+
+  table {
+    width: 100%;
+
+    .title {
+      i.icon {
+        color: #444;
+      }
+    }
+
+    th {
+      font-weight: normal;
+      text-align: center;
+      background-color: #e4e4e4;
+    }
+    th.title {
+      text-align: left;
+    }
+    thead {
+      tr:hover > td {
+        background-color: $white;
+      }
+      tr:hover > th {
+        background-color: #e4e4e4;
+      }
+    }
+
+    td.value {
+      font-weight: bold;
+      text-align: center;
+
+      i {
+        display: none;
+      }
+
+      &.trending-up {
+        color: green;
+        i.up {
+          display: inline;
+        }
+      }
+      &.trending-down {
+        color: red;
+        i.down {
+          display: inline;
+        }
+      }
+      &.no-change {
+        i.down {
+          display: inline;
+          visibility: hidden;
+        }
+      }
+    }
+  }
+
+  &.detected-problems {
+    @include border-radius-all(5px);
+    background-color: #eee;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    box-shadow: inset 0 0 10px #bbb;
+
+    .look-here {
+      float: left;
+      margin: 20px 20px 0 20px;
+
+      .icon {
+        font-size: 32px;
+        vertical-align: middle;
+        color: $darkish_gray;
+      }
+    }
+
+    .problem-messages {
+      float: left;
+      width: 355px;
+      a {
+        text-decoration: underline;
+      }
+      .actions {
+        text-align: right;
+      }
+    }
+  }
+
+  &.totals {
+    table {
+      width: auto;
+    }
+    margin-top: 12px;
+    padding-left: 5px;
+    .value {
+      text-align: left;
+      font-weight: bold;
+      padding-left: 8px;
+      padding-right: 30px;
+    }
+  }
+
+  &.trust-levels {
+    margin-bottom: 0px;
+    table {
+      margin-bottom: 0px;
+    }
+    td.value {
+      width: 45px;
+    }
+  }
+
+  .referred-topic-title {
+    width: 410px;
+    @include medium-width { width: 360px; }
+    @include small-width  { width: 320px; }
+  }
+}
+
+
+.commits-widget {
+  border: solid 1px #ccc;
+  width: 500px;
+  height: 180px;
+  margin-bottom: 36px;
+
+  @include medium-width {
+    width: 430px;
+  }
+  @include small-width {
+    width: 390px;
+  }
+
+  ul, li {
+    margin: 0;
+    padding: 0;
+  }
+  ul {
+    list-style: none;
+  }
+  a {
+    color: #222;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .header {
+    color: #222;
+    font-weight: bold;
+    height: 30px;
+    border-bottom: solid 1px #ccc;
+    @include linear-gradient(#f1f1f1, #e1e1e1);
+    cursor: pointer;
+
+    h1 {
+      font-size: 18px;
+      margin: 5px 0 0 8px;
+      display: inline-block;
+      line-height: 1.0em;
+    }
+  }
+
+  .header:hover h1 {
+    color: $link-color-hover;
+  }
+
+  .commits-list {
+    height: 149px;
+    overflow-y:auto;
+
+    li {
+      @extend .clearfix;
+      line-height: 1.0em;
+      padding: 6px 8px;
+      border-bottom: solid 1px #ccc;
+      @include linear-gradient(#f6f6f6, #eee);
+
+      .left {
+        float: left;
+      }
+      .right {
+        margin-left: 52px;
+      }
+
+      img {
+        margin-top: 2px;
+        border: solid 1px #ccc;
+        padding: 2px;
+        background-color: white;
+      }
+
+      .commit-message {
+        color: #222;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .commit-meta {
+        color: #555;
+        font-size: 12px;
+      }
+
+      .committer-name {
+        font-weight: bold;
+        color: #333;
+      }
+    }
+    li:last-child {
+      border: none;
+    }
+  }
+
+  // Always show the scrollbar:
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    -webkit-border-radius: 3px;
+  }
+  ::-webkit-scrollbar-track {
+    border-left: solid 1px #ddd;
+  }
+}
+
+.content-list {
+
+  h3 {
+    color: $darkish_gray;
+    font-size: 15px;
+    padding-left: 5px;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+
+    li {
+      border-bottom: 1px solid #ddd;
+    }
+
+    li a {
+      display: block;
+      padding: 10px;
+      color: $dark_gray;
+
+      &:hover {
+        background-color: #eee;
+        color: $dark_gray;
+      }
+
+      &.active {
+        font-weight: bold;
+        color: $black;
+      }
+    }
+  }
+}
+
+.content-editor {
+  min-height: 500px;
+
+  float: left;
+  width: 760px;
+  @include medium-width { width: 650px; }
+  @include small-width { width: 600px; }
+  margin-left: 20px;
+
+  p.description {
+    color: $dark_gray;
+  }
+
+  .controls {
+    margin-top: 10px;
+  }
+
+  #pagedown-editor {
+    width: 98%;
+  }
+
+  textarea.plain {
+    width: 98%;
+    height: 200px;
+  }
+
+  #wmd-input {
+    width: 98%;
+    height: 200px;
+  }
+
+  .ace-wrapper {
+    position: relative;
+    height: 600px;
+    width: 100%;
+  }
+  .ace_editor {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+
+}
+
+.row.groups {
+  input[type='text'] {
+    width: 500px;
+  }
+  input#group-users {
+    width: 600px;
+  }
+}
+
+// Logs
+
+.screened-emails, .screened-urls {
+  width: 900px;
+  .email, .url {
+    width: 300px;
+  }
+  .action, .match_count, .last_match_at, .created_at, .ip_address {
+    width: 110px;
+    text-align: center;
+  }
+}
+
+.staff-actions {
+  width: 100%;
+  .action {
+    width: 120px;
+  }
+  .staff_user {
+    width: 100px;
+  }
+  .subject {
+    width: 200px;
+  }
+  .created_at {
+    width: 50px;
+  }
+  .context {
+    width: 200px;
+  }
+  .created_at {
+    text-align: center;
+  }
+  .details {
+    width: 300px;
+    a {
+      text-decoration: underline;
+    }
+    &.value {
+      height: 70px;
+    }
+  }
+}
+
+.staff-action-logs-controls {
+  margin: 0 0 20px 6px;
+  a.filter {
+    display: inline-block;
+    background-color: #ddd;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-left: 5px;
+    color: #444;
+    &:hover {
+      color: $link-color-hover;
+    }
+    .label {
+      font-weight: bold;
+    }
+    i {
+      margin-left: 6px;
+    }
+  }
+}
+
+.staff-action-logs-instructions {
+  margin: 50px 0 0 10px;
+}
+
+// Ember.ListView
+
+.ember-list-view {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+.ember-list-item-view {
+  position: absolute;
+}
+
+.staff-actions, .screened-emails, .screened-urls {
+  margin-left: 5px;
+  border-bottom: dotted 1px #ddd;
+
+  .heading-container {
+    width: 100%;
+    background-color: #e4e4e4;
+  }
+  .col.heading {
+    font-weight: bold;
+    padding: 4px 0;
+  }
+  .col {
+    display: inline-block;
+    padding-top: 6px;
+    vertical-align: top;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .col.first {
+    margin-left: 5px;
+  }
+
+  .ember-list-item-view {
+    width: 100%;
+    border-top: solid 1px #ddd;
+  }
+}
+
+.log-details-modal {
+  .modal-tab {
+    width: 95%;
+  }
+}

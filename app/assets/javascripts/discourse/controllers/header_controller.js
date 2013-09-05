@@ -22,7 +22,19 @@ Discourse.HeaderController = Discourse.Controller.extend({
 
   showFavoriteButton: function() {
     return Discourse.User.current() && !this.get('topic.isPrivateMessage');
-  }.property('topic.isPrivateMessage')
+  }.property('topic.isPrivateMessage'),
+
+  mobileDevice: function() {
+    return Discourse.Session.currentProp('mobileDevice');
+  }.property(),
+
+  mobileView: function() {
+    return Discourse.Session.currentProp('mobileView');
+  }.property(),
+
+  toggleMobileView: function() {
+    window.location.assign(window.location.pathname + '?mobile_view=' + (Discourse.Session.currentProp('mobileView') ? '0' : '1'));
+  }
 
 });
 

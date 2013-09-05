@@ -19,6 +19,10 @@ module ApplicationHelper
     end
   end
 
+  def html_classes
+    "#{mobile_view? ? 'mobile-view' : ''} #{mobile_device? ? 'mobile-device' : ''}"
+  end
+
   def escape_unicode(javascript)
     if javascript
       javascript.gsub(/\342\200\250/u, '&#x2028;').gsub(/(<\/)/u, '\u003C/').html_safe
@@ -99,5 +103,19 @@ module ApplicationHelper
 
   def login_path
     return "#{Discourse::base_uri}/login"
+  end
+
+  def mobile_view?
+    if session[:mobile_view]
+      session[:mobile_view] == '1'
+    else
+      mobile_device?
+    end
+  end
+
+  def mobile_device?
+    # For now, don't show mobile view unless you put ?mobile_view=1 in the URL.
+    # request.user_agent =~ /Mobile|webOS/
+    false
   end
 end
