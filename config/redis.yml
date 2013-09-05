@@ -1,9 +1,12 @@
-development:
+defaults: &DEFAULTS
+  database: discourse
+  username: discourse
 
-profile:
+development:
+  <<: *DEFAULTS
 
 test:
-
-staging:
+  <<: *DEFAULTS
 
 production:
+  <<: *DEFAULTS
