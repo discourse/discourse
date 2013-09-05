@@ -231,28 +231,23 @@ module SiteSettingExtension
 
     # trivial multi db support, we can optimize this later
     current[name] = current_value
+    clean_name = name.to_s.sub("?", "")
 
-    setter = ("#{name}=").sub("?","")
-
-    eval "define_singleton_method :#{name} do
+    eval "define_singleton_method :#{clean_name} do
       c = @@containers[provider.current_site]
       c = c[name] if c
       c
     end
 
-    define_singleton_method :#{setter} do |val|
+    define_singleton_method :#{clean_name}? do
+      #{clean_name}
+    end
+
+    define_singleton_method :#{clean_name}= do |val|
       add_override!(:#{name}, val)
       refresh!
     end
     "
-  end
-
-  def method_missing(method, *args, &block)
-    as_question = method.to_s.gsub(/\?$/, '')
-    if respond_to?(as_question)
-      return send(as_question, *args, &block)
-    end
-    super(method, *args, &block)
   end
 
   def enum_class(name)

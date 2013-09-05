@@ -1,7 +1,8 @@
 class Auth::Result
   attr_accessor :user, :name, :username, :email, :user,
                 :email_valid, :extra_data, :awaiting_activation,
-                :awaiting_approval, :authenticated, :authenticator_name
+                :awaiting_approval, :authenticated, :authenticator_name,
+                :requires_invite
 
   def session_data
     {
@@ -15,7 +16,9 @@ class Auth::Result
   end
 
   def to_client_hash
-    if user
+    if requires_invite
+      { requires_invite: true }
+    elsif user
       {
         authenticated: !!authenticated,
         awaiting_activation: !!awaiting_activation,

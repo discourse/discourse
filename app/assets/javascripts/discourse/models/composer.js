@@ -442,6 +442,7 @@ Discourse.Composer = Discourse.Model.extend({
         postStream = this.get('topic.postStream'),
         addedToStream = false;
 
+
     // Build the post object
     var createdPost = Discourse.Post.create({
       raw: this.get('reply'),
@@ -482,6 +483,8 @@ Discourse.Composer = Discourse.Model.extend({
 
     var composer = this;
     return Ember.Deferred.promise(function(promise) {
+
+      composer.set('composeState', SAVING);
       createdPost.save(function(result) {
         var addedPost = false,
             saving = true;
@@ -515,8 +518,16 @@ Discourse.Composer = Discourse.Model.extend({
         if (postStream) {
           postStream.undoPost(createdPost);
         }
-        promise.reject($.parseJSON(error.responseText).errors[0]);
         composer.set('composeState', OPEN);
+        // TODO extract error handling code
+        var parsedError;
+        try {
+          parsedError = $.parseJSON(error.responseText).errors[0];
+        }
+        catch(ex) {
+          parsedError = "Unknown error saving post, try again. Error: " + error.status + " " + error.statusText;
+        }
+        promise.reject(parsedError);
       });
     });
   },

@@ -11,12 +11,15 @@ test('basic bbcode', function() {
   format("[i]emphasis[/i]", "<span class=\"bbcode-i\">emphasis</span>", "italics text");
   format("[u]underlined[/u]", "<span class=\"bbcode-u\">underlined</span>", "underlines text");
   format("[s]strikethrough[/s]", "<span class=\"bbcode-s\">strikethrough</span>", "strikes-through text");
-  format("[code]\nx++\n[/code]", "<pre>\nx++<br/>\n</pre>", "makes code into pre");
-  format("[code]\nx++\ny++\nz++\n[/code]", "<pre>\nx++<br/>\ny++<br/>\nz++<br/>\n</pre>", "makes code into pre");
+  format("[code]\nx++\n[/code]", "<pre>\nx++</pre>", "makes code into pre");
+  format("[code]\nx++\ny++\nz++\n[/code]", "<pre>\nx++\ny++\nz++</pre>", "makes code into pre");
   format("[spoiler]it's a sled[/spoiler]", "<span class=\"spoiler\">it's a sled</span>", "supports spoiler tags");
   format("[img]http://eviltrout.com/eviltrout.png[/img]", "<img src=\"http://eviltrout.com/eviltrout.png\"/>", "links images");
   format("[url]http://bettercallsaul.com[/url]", "<a href=\"http://bettercallsaul.com\">http://bettercallsaul.com</a>", "supports [url] without a title");
   format("[email]eviltrout@mailinator.com[/email]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports [email] without a title");
+  format("[b]evil [i]trout[/i][/b]",
+         "<span class=\"bbcode-b\">evil <span class=\"bbcode-i\">trout</span></span>",
+         "allows embedding of tags");
 });
 
 test('lists', function() {
@@ -28,7 +31,7 @@ test('color', function() {
   format("[color=#00f]blue[/color]", "<span style=\"color: #00f\">blue</span>", "supports [color=] with a short hex value");
   format("[color=#ffff00]yellow[/color]", "<span style=\"color: #ffff00\">yellow</span>", "supports [color=] with a long hex value");
   format("[color=red]red[/color]", "<span style=\"color: red\">red</span>", "supports [color=] with an html color");
-  format("[color=javascript:alert('wat')]noop[/color]", "noop", "it performs a noop on invalid input");
+  format("[color=javascript:alert('wat')]noop[/color]", "<span>noop</span>", "it performs a noop on invalid input");
 });
 
 test('tags with arguments', function() {
@@ -59,7 +62,6 @@ test("quotes", function() {
 
   formatQuote("lorem", "[quote=\"eviltrout, post:1, topic:2\"]\nlorem\n[/quote]\n\n", "correctly formats quotes");
 
-
   formatQuote("  lorem \t  ",
               "[quote=\"eviltrout, post:1, topic:2\"]\nlorem\n[/quote]\n\n",
               "trims white spaces before & after the quoted contents");
@@ -72,6 +74,9 @@ test("quotes", function() {
               "[quote=\"eviltrout, post:1, topic:2, full:true\"]\n**lorem** ipsum\n[/quote]\n\n",
                "keeps BBCode formatting");
 
+  formatQuote("this is <not> a bug",
+              "[quote=\"eviltrout, post:1, topic:2\"]\nthis is &lt;not&gt; a bug\n[/quote]\n\n",
+              "it escapes the contents of the quote");
 });
 
 test("quote formatting", function() {

@@ -1,12 +1,12 @@
 <div class="modal-body">
   <div>
     <div>
-      <input type="radio" id="avatar" name="avatar" value="gravatar" {{action toggleUseUploadedAvatar false}}>
+      <input type="radio" id="avatar" name="avatar" value="gravatar" {{action useGravatar}}>
       <label class="radio" for="avatar">{{avatar controller imageSize="large" template="gravatar_template"}} {{{i18n user.change_avatar.gravatar}}} {{email}}</label>
       <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn"><i class="icon-pencil"></i></a>
     </div>
     <div>
-      <input type="radio" id="uploaded_avatar" name="avatar" value="uploaded_avatar" {{action toggleUseUploadedAvatar true}}>
+      <input type="radio" id="uploaded_avatar" name="avatar" value="uploaded_avatar" {{action useUploadedAvatar}}>
       <label class="radio" for="uploaded_avatar">
         {{#if has_uploaded_avatar}}
           {{boundAvatar controller imageSize="large" template="uploaded_avatar_template"}} {{i18n user.change_avatar.uploaded_avatar}}

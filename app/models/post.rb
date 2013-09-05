@@ -45,7 +45,6 @@ class Post < ActiveRecord::Base
   scope :public_posts, -> { joins(:topic).where('topics.archetype <> ?', Archetype.private_message) }
   scope :private_posts, -> { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
-  scope :without_nuked_users, -> { where(nuked_user: false) }
 
   def self.hidden_reasons
     @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again, :new_user_spam_threshold_reached)
@@ -383,7 +382,7 @@ end
 # Table name: posts
 #
 #  id                      :integer          not null, primary key
-#  user_id                 :integer          not null
+#  user_id                 :integer
 #  topic_id                :integer          not null
 #  post_number             :integer          not null
 #  raw                     :text             not null
@@ -419,7 +418,6 @@ end
 #  notify_user_count       :integer          default(0), not null
 #  like_score              :integer          default(0), not null
 #  deleted_by_id           :integer
-#  nuked_user              :boolean          default(FALSE)
 #
 # Indexes
 #
