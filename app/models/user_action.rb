@@ -196,10 +196,13 @@ ORDER BY p.created_at desc
           group_ids = topic.category.groups.pluck("groups.id")
         end
 
-        MessageBus.publish("/users/#{action.user.username.downcase}",
-                              action.id,
-                              user_ids: [user_id],
-                              group_ids: group_ids )
+        if action.user
+          MessageBus.publish("/users/#{action.user.username.downcase}",
+                                action.id,
+                                user_ids: [user_id],
+                                group_ids: group_ids )
+        end
+
         action
 
       rescue ActiveRecord::RecordNotUnique

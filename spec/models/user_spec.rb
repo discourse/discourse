@@ -731,15 +731,6 @@ describe User do
     end
   end
 
-  describe '#create_for_email' do
-    let(:subject) { User.create_for_email('walter.white@email.com') }
-    it { should be_present }
-    its(:username) { should == 'walter_white' }
-    its(:name) { should == 'walter_white'}
-    it { should_not be_active }
-    its(:email) { should == 'walter.white@email.com' }
-  end
-
   describe 'email_confirmed?' do
     let(:user) { Fabricate(:user) }
 

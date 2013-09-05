@@ -175,6 +175,9 @@ describe Guardian do
       Guardian.new(admin).can_impersonate?(another_admin).should be_false
       Guardian.new(admin).can_impersonate?(user).should be_true
       Guardian.new(admin).can_impersonate?(moderator).should be_true
+
+      Rails.configuration.stubs(:developer_emails).returns([admin.email])
+      Guardian.new(admin).can_impersonate?(another_admin).should be_true
     end
   end
 
@@ -282,6 +285,21 @@ describe Guardian do
         category.set_permissions(:everyone => :create_post)
         category.save
         Guardian.new(user).can_create?(Topic,category).should be_false
+      end
+
+      it "is true for new users by default" do
+        Guardian.new(user).can_create?(Topic,Fabricate(:category)).should be_true
+      end
+
+      it "is false if user has not met minimum trust level" do
+        SiteSetting.stubs(:min_trust_to_create_topic).returns(1)
+        Guardian.new(build(:user, trust_level: 0)).can_create?(Topic,Fabricate(:category)).should be_false
+      end
+
+      it "is true if user has met or exceeded the minimum trust level" do
+        SiteSetting.stubs(:min_trust_to_create_topic).returns(1)
+        Guardian.new(build(:user, trust_level: 1)).can_create?(Topic,Fabricate(:category)).should be_true
+        Guardian.new(build(:user, trust_level: 2)).can_create?(Topic,Fabricate(:category)).should be_true
       end
     end
 

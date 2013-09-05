@@ -17,15 +17,25 @@
     {{/if}}
 
     <div class='topic-meta-data span2'>
-      <div {{bindAttr class=":contents byTopicCreator:topic-creator"}}>
-        <a href='{{unbound usernameUrl}}'>{{avatar this imageSize="large"}}</a>
-        <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h3>
-        {{#if user_title}}<div class="user-title">{{user_title}}</div>{{/if}}
-      </div>
+      {{#unless userDeleted}}
+        <div {{bindAttr class=":contents byTopicCreator:topic-creator"}}>
+          <a href='{{unbound usernameUrl}}'>{{avatar this imageSize="large"}}</a>
+          <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h3>
+          {{#if user_title}}<div class="user-title">{{user_title}}</div>{{/if}}
+        </div>
+      {{else}}
+        <div class="contents">
+          <i class="icon icon-trash deleted-user-avatar"></i>
+          <h3 class="deleted-username">{{i18n user.deleted}}</h3>
+        </div>
+      {{/unless}}
     </div>
 
     <div class='topic-body span14'>
-      <button {{action selectPost this}} {{bindAttr class=":post-select controller.multiSelect::hidden"}}>{{view.selectText}}</button>
+      <div {{bindAttr class=":select-posts controller.multiSelect::hidden"}}>
+        <button {{action toggledSelectedPostReplies this}} {{bindAttr class="view.canSelectReplies::hidden"}}>{{i18n topic.multi_select.select_replies}}</button>
+        <button {{action toggledSelectedPost this}} class="select-post">{{view.selectPostText}}</button>
+      </div>
 
       <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesShown::bottom-round :contents :regular view.extraClass"}}>
         {{#unless controller.multiSelect}}

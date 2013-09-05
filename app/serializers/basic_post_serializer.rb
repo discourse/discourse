@@ -8,15 +8,15 @@ class BasicPostSerializer < ApplicationSerializer
              :cooked
 
   def name
-    object.user.name
+    object.user.try(:name)
   end
 
   def username
-    object.user.username
+    object.user.try(:username)
   end
 
   def avatar_template
-    object.user.avatar_template
+    object.user.try(:avatar_template)
   end
 
   def cooked

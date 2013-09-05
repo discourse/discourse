@@ -58,9 +58,11 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
 
     if (opts) params = $.extend(params, opts);
 
+    $('#discourse-modal').modal('hide');
     postAction.act(params).then(function() {
       flagController.send('closeModal');
     }, function(errors) {
+      $('#discourse-modal').modal('show');
       flagController.displayErrors(errors);
     });
   },

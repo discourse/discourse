@@ -13,6 +13,12 @@
     <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
     <%= javascript_include_tag "preload_store" %>
 
+    <%= javascript_include_tag "locales/#{I18n.locale}" %>
+    <%= javascript_include_tag "application" %>
+    <%- if staff? %>
+      <%= javascript_include_tag "admin"%>
+    <%- end %>
+
     <%= render :partial => "common/special_font_face" %>
     <%= render :partial => "common/discourse_stylesheet" %>
 
@@ -26,24 +32,6 @@
 
     <%=SiteCustomization.custom_header(session[:preview_style])%>
     <section id='main'>
-      <noscript data-path="<%= request.env['PATH_INFO'] %>">
-        <header class="d-header">
-          <div class="container">
-            <div class="contents">
-              <div class="row">
-                <div class="title span13">
-                  <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
-        <div id="main-outlet" class="container">
-          <!-- preload-content: -->
-          <%= yield %>
-          <!-- :preload-content -->
-        </div>
-      </noscript>
     </section>
 
     <% unless current_user %>
@@ -70,6 +58,24 @@
     <%= render :partial => "common/discourse_javascript" %>
     <%= render_google_analytics_code %>
 
+    <noscript data-path="<%= request.env['PATH_INFO'] %>">
+      <header class="d-header">
+        <div class="container">
+          <div class="contents">
+            <div class="row">
+              <div class="title span13">
+                <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div id="main-outlet" class="container">
+        <!-- preload-content: -->
+        <%= yield %>
+        <!-- :preload-content -->
+      </div>
+    </noscript>
     <!-- Discourse Version: <%= Discourse::VERSION::STRING %> -->
     <!-- Git Version: <%= Discourse.git_version %> -->
   </body>

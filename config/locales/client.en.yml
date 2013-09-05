@@ -190,7 +190,6 @@ en:
       download_archive: "download archive of my posts"
       private_message: "Private Message"
       private_messages: "Messages"
-      private_messages_sent: "Sent Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
       bio: "About me"
@@ -203,6 +202,12 @@ en:
       change: "change"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} is an admin"
+      deleted: "User Was Deleted"
+
+      messages:
+        all: "All"
+        mine: "Mine"
+        unread: "Unread"
 
       change_password:
         success: "(email sent)"
@@ -398,6 +403,7 @@ en:
       authenticating: "Authenticating..."
       awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
       awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
+      requires_invite: "Sorry, access to this forum is by invite only."
       not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
       resend_activation_email: "Click here to send the activation email again."
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
@@ -505,7 +511,7 @@ en:
       private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved to {{link}}"
+      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved {{link}}"
       total_flagged: "total flagged posts"
 
     upload_selector:
@@ -759,6 +765,7 @@ en:
       multi_select:
         select: 'select'
         selected: 'selected ({{count}})'
+        select_replies: 'select +replies'
         delete: delete selected
         cancel: cancel selecting
         description:
@@ -811,6 +818,12 @@ en:
         undelete: "undelete this post"
         share: "share a link to this post"
         more: "More"
+        delete_replies:
+          confirm:
+            one: "Do you also want to delete the direct reply to this post?"
+            other: "Do you also want to delete the {{count}} direct replies to this post?"
+          yes_value: "Yes, delete the replies too"
+          no_value: "No, just this post"
 
       actions:
         flag: 'Flag'

@@ -355,6 +355,10 @@
         font-size: 13px;
         line-height: 18px;
       }
+      .deleted-user-avatar {
+        font-size: 36px;
+        line-height: 36px;
+      }
 
       .staff a {
         @include border-radius-all(3px);
@@ -496,9 +500,11 @@
   }
   &.selected {
     article.boxed {
-      .post-select {
-        background-color: $blue;
-        color: $white;
+      .select-posts {
+        button.select-post {
+          background-color: $blue;
+          color: $white;
+        }
       }
       .topic-body {
         .contents {
@@ -515,20 +521,23 @@
     font-size: 16px;
     line-height: 20px;
 
-    .post-select {
-      @include border-radius-all(4px);
-      background-color: $light_gray;
-      border-top: 1px solid $white;
-      border-left: 1px solid $white;
-      border-bottom: 1px solid $gray;
-      border-right: 1px solid $gray;
-      color: $darkish_gray;
-      top: 4px;
+    .select-posts {
       position: absolute;
       right: 5px;
-      font-size: 12px;
-      padding: 2px 5px;
       z-index: 490;
+      top: 4px;
+
+      button {
+        @include border-radius-all(4px);
+        background-color: $light_gray;
+        border-top: 1px solid $white;
+        border-left: 1px solid $white;
+        border-bottom: 1px solid $gray;
+        border-right: 1px solid $gray;
+        color: $darkish_gray;
+        font-size: 12px;
+        padding: 2px 5px;
+      }
     }
 
     img {

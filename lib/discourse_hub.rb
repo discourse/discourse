@@ -110,4 +110,16 @@ module DiscourseHub
   def self.accepts
     [:json, 'application/vnd.discoursehub.v1']
   end
+
+  def self.nickname_operation
+    if SiteSetting.call_discourse_hub?
+      begin
+        yield
+      rescue DiscourseHub::NicknameUnavailable
+        false
+      rescue => e
+        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
+      end
+    end
+  end
 end

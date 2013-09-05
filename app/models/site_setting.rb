@@ -67,7 +67,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:num_flags_to_block_new_user, 3)
   setting(:num_users_to_block_new_user, 3)
-  setting(:notify_mods_when_user_blocked, true)
+  setting(:notify_mods_when_user_blocked, false)
 
   # used mainly for dev, force hostname for Discourse.base_url
   # You would usually use multisite for this
@@ -204,6 +204,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:regular_requires_likes_received, 1)
   setting(:regular_requires_likes_given, 1)
   setting(:regular_requires_topic_reply_count, 3)
+
+  setting(:min_trust_to_create_topic, 0, enum: 'MinTrustToCreateTopicSetting')
 
   # Reply by Email Settings
   setting(:reply_by_email_enabled, false)
