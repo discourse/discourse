@@ -1,8 +1,11 @@
 require "spec_helper"
 
 describe Onebox::Engine::WikipediaOnebox do
-  describe "to_html" do
-    let(:link) { "http://example.com" }
+  let(:link) { "http://example.com" }
+
+  it_behaves_like "engines"
+
+  describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
 
     before do

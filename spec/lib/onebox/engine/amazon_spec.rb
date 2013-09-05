@@ -1,8 +1,11 @@
 require "spec_helper"
 
 describe Onebox::Engine::AmazonOnebox do
+  let(:link) { "http://amazon.com" }
+
+  it_behaves_like "engines"
+
   describe "#to_html" do
-    let(:link) { "http://amazon.com" }
     let(:html) { described_class.new(link).to_html }
 
     before do
@@ -28,6 +31,5 @@ describe Onebox::Engine::AmazonOnebox do
     it "returns the product URL" do
       expect(html).to include(link)
     end
-
   end
 end

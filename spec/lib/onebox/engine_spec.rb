@@ -27,7 +27,6 @@ describe Onebox::Engine do
     end
   end
 
-
   describe ".===" do
     it "returns true if argument matches the matcher" do
       class Onebox::Engine::Foo

@@ -1,8 +1,11 @@
 require "spec_helper"
 
 describe Onebox::Engine::QikOnebox do
+  let(:link) { "http://qik.com" }
+
+  it_behaves_like "engines"
+
   describe "#to_html" do
-    let(:link) { "http://qik.com" }
     let(:html) { described_class.new(link).to_html }
 
     before do
