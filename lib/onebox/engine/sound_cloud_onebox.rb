@@ -11,7 +11,7 @@ module Onebox
 
       private
 
-      def extracted_data
+      def data
         {
           url: @url,
           title: @body.title,
