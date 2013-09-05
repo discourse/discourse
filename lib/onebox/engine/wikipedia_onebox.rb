@@ -10,7 +10,7 @@ module Onebox
 
       private
 
-      def record
+      def data
         {
           url: @url,
           name: raw.css("html body h1").inner_text,

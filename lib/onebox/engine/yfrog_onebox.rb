@@ -11,7 +11,7 @@ module Onebox
 
       private
 
-      def record
+      def data
         {
           url: @url,
           title: raw.title,

@@ -11,7 +11,7 @@ module Onebox
 
       private
 
-      def record
+      def data
         {
           url: raw.metadata[:url].first[:_value],
           title: raw.title,

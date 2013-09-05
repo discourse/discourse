@@ -10,7 +10,7 @@ module Onebox
 
       private
 
-      def record
+      def data
         {
           url: @url,
           title: raw.css(".question-hyperlink").inner_text,
