@@ -463,24 +463,26 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
     // If the user is staff and the post has replies, ask if they want to delete replies too.
     if (user.get('staff') && replyCount > 0) {
-      bootbox.confirm(I18n.t("post.controls.delete_replies.confirm", {count: replyCount}),
-                      I18n.t("post.controls.delete_replies.no_value"),
-                      I18n.t("post.controls.delete_replies.yes_value"),
-                      function(result) {
-
-        // If the user wants to delete replies, do that, otherwise delete the post as normal.
-        if (result) {
-          Discourse.Post.deleteMany([post], [post]);
-          self.get('postStream.posts').forEach(function (p) {
-            if (p === post || p.get('reply_to_post_number') === post.get('post_number')) {
-              p.setDeletedState(user);
-            }
-          });
-        } else {
-          post.destroy(user);
-        }
-
-      });
+      bootbox.dialog(I18n.t("post.controls.delete_replies.confirm", {count: replyCount}), [
+        {label: I18n.t("cancel"),
+         'class': 'btn-danger right'},
+        {label: I18n.t("post.controls.delete_replies.no_value"),
+          callback: function() {
+            post.destroy(user);
+          }
+        },
+        {label: I18n.t("post.controls.delete_replies.yes_value"),
+         'class': 'btn-primary',
+          callback: function() {
+            Discourse.Post.deleteMany([post], [post]);
+            self.get('postStream.posts').forEach(function (p) {
+              if (p === post || p.get('reply_to_post_number') === post.get('post_number')) {
+                p.setDeletedState(user);
+              }
+            });
+          }
+        },
+      ]);
     } else {
       post.destroy(user);
     }
