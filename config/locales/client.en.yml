@@ -202,7 +202,7 @@ en:
       change: "change"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} is an admin"
-      deleted: "User Was Deleted"
+      deleted: "(deleted)"
 
       messages:
         all: "All"
