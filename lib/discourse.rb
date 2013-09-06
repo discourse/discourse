@@ -131,8 +131,7 @@ module Discourse
   # Either returns the system_username user or the first admin.
   def self.system_user
     user = User.where(username_lower: SiteSetting.system_username).first if SiteSetting.system_username.present?
-    user = User.admins.order(:id).first if user.blank?
-    user
+    user ||= User.admins.real.order(:id).first
   end
 
   def self.store

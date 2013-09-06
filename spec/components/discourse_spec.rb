@@ -47,7 +47,6 @@ describe Discourse do
     end
   end
 
-
   context '#system_user' do
 
     let!(:admin) { Fabricate(:admin) }

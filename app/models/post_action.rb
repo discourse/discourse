@@ -96,10 +96,10 @@ class PostAction < ActiveRecord::Base
 
     return unless opts[:message] && [:notify_moderators, :notify_user].include?(post_action_type)
 
-    target_group_names, target_usernames = nil
+    target_usernames = nil
 
     if post_action_type == :notify_moderators
-      target_group_names = target_moderators
+      target_usernames = "community"
     else
       target_usernames = post.user.username
     end
@@ -111,10 +111,9 @@ class PostAction < ActiveRecord::Base
 
     subtype = post_action_type == :notify_moderators ? TopicSubtype.notify_moderators : TopicSubtype.notify_user
 
-    if target_usernames.present? || target_group_names.present?
+    if target_usernames.present?
       PostCreator.new(user,
               target_usernames: target_usernames,
-              target_group_names: target_group_names,
               archetype: Archetype.private_message,
               subtype: subtype,
               title: title,
