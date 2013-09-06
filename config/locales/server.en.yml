@@ -956,10 +956,10 @@ en:
 
     pending_users_reminder:
       subject_template:
-        one: "There is 1 unapproved user"
-        other: "There are %{count} unapproved users"
+        one: "1 user waiting for approval"
+        other: "%{count} users waiting for approval"
       text_body_template: |
-        There are new users waiting to be approved.
+        There are new user signups waiting to be approved (or rejected) before they can access this forum.
 
         [Please review them in the admin section](/admin/users/list/pending).
 
