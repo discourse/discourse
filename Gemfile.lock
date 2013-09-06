@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/SamSaffron/seed-fu.git
+  revision: 502c8b8514df3bf028c9231cc3a6ea3cff4f37f0
+  specs:
+    seed-fu (2.2.0)
+      activerecord (>= 3.1, < 4.1)
+      activesupport (>= 3.1, < 4.1)
+
+GIT
   remote: git://github.com/sporkrb/spork-rails.git
   revision: 3224f84d8c31fcb0894e9a43f6c3ac67e3aa0d71
   specs:
@@ -387,9 +395,6 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    seed-fu (2.2.0)
-      activerecord (~> 3.1)
-      activesupport (~> 3.1)
     shoulda (3.4.0)
       shoulda-context (~> 1.0, >= 1.0.1)
       shoulda-matchers (~> 1.0, >= 1.4.1)
@@ -530,7 +535,7 @@ DEPENDENCIES
   sanitize
   sass
   sass-rails
-  seed-fu
+  seed-fu!
   shoulda
   sidekiq
   sidekiq-failures
