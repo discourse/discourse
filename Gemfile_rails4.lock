@@ -18,8 +18,8 @@ GIT
       redis-store (~> 1.1.0)
 
 GIT
-  remote: git://github.com/mbleigh/seed-fu.git
-  revision: f89ea306472c500ec7911c7be111a4aad9c1bc78
+  remote: git://github.com/SamSaffron/seed-fu.git
+  revision: 502c8b8514df3bf028c9231cc3a6ea3cff4f37f0
   specs:
     seed-fu (2.2.0)
       activerecord (>= 3.1, < 4.1)

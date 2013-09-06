@@ -470,7 +470,7 @@ zh_TW:
     track_external_right_clicks: "追蹤外部鏈接的右鍵點擊（例如：在浏覽器新標簽打開），缺省是禁用的，因爲它會重寫URL"
     topics_per_page: "在主題列表頁面，缺省載入多少個主題"
     posts_per_page: "在主題頁面，返回多少個帖子"
-    system_username: "論壇給用戶發送自動私信時使用的用戶名"
+    site_contact_username: "論壇給用戶發送自動私信時使用的用戶名"
     send_welcome_message: "給新用戶發送歡迎私信？"
     suppress_reply_directly_below: "當一個帖子只有一個回複時，不顯示帖子回複數量"
     allow_index_in_robots_txt: "允許搜索引擎索引站點內容（更新 robots.txt）"

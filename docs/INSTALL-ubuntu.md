@@ -286,7 +286,7 @@ and create an account by logging in normally, then run the commands:
 
     # Mark yourself as the 'system user':
     # (in rails console)
-    > SiteSetting.system_username = me.username
+    > SiteSetting.site_contact_username = me.username
 
 At this point we recommend you start going through the various items in the
 [Discourse Admin Quick Start Guide](https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide)

@@ -470,7 +470,7 @@ it:
     track_external_right_clicks: "Traccia i link esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché viene fatto il rewrite delle URL"
     topics_per_page: "Quanti topic vengono caricati di default nella pagina di lista topic"
     posts_per_page: "Quanti post vengono restituiti in una pagina di un topic"
-    system_username: "Username dell'autore dei messaggi privati automatizzati spediti dal forum"
+    site_contact_username: "Username dell'autore dei messaggi privati automatizzati spediti dal forum"
     send_welcome_message: "I nuovi utenti ricevono un messaggio di benvenuto?"
     suppress_reply_directly_below: "Non mostrare il numero di risposte ad un post quando c'è una singola risposta appena sotto"
     allow_index_in_robots_txt: "Il sito è indicizzabile dai motori di ricerta (aggiorna robots.txt)"

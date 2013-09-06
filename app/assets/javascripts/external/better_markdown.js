@@ -691,7 +691,8 @@ Markdown.dialects.Gruber = {
 
           var next_block = next[0] && next[0].valueOf() || "";
 
-          if ( next_block.match(is_list_re) || next_block.match( /^ / ) ) {
+
+          if ( next_block.match(is_list_re) || (next_block.match(/^ /) && (!next_block.match(/^ *\>/))) ) {
             block = next.shift();
 
             // Check for an HR following a list: features/lists/hr_abutting
@@ -710,6 +711,7 @@ Markdown.dialects.Gruber = {
           }
           break;
         } // loose_search
+
 
         return ret;
       };

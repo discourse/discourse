@@ -47,20 +47,19 @@ describe Discourse do
     end
   end
 
-
-  context '#system_user' do
+  context '#site_contact_user' do
 
     let!(:admin) { Fabricate(:admin) }
     let!(:another_admin) { Fabricate(:admin) }
 
-    it 'returns the user specified by the site setting system_username' do
-      SiteSetting.stubs(:system_username).returns(another_admin.username)
-      Discourse.system_user.should == another_admin
+    it 'returns the user specified by the site setting site_contact_username' do
+      SiteSetting.stubs(:site_contact_username).returns(another_admin.username)
+      Discourse.site_contact_user.should == another_admin
     end
 
     it 'returns the first admin user otherwise' do
-      SiteSetting.stubs(:system_username).returns(nil)
-      Discourse.system_user.should == admin
+      SiteSetting.stubs(:site_contact_username).returns(nil)
+      Discourse.site_contact_user.should == admin
     end
 
   end

@@ -26,6 +26,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_filter :set_mobile_view
   before_filter :inject_preview_style
   before_filter :block_if_maintenance_mode
   before_filter :authorize_mini_profiler
@@ -117,6 +118,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def set_mobile_view
+    session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
+  end
+
 
   def inject_preview_style
     style = request['preview-style']
@@ -189,6 +194,16 @@ class ApplicationController < ActionController::Base
 
     guardian.ensure_can_see!(user)
     user
+  end
+
+  def post_ids_including_replies
+    post_ids = params[:post_ids].map {|p| p.to_i}
+    if params[:reply_post_ids]
+      post_ids << PostReply.where(post_id: params[:reply_post_ids].map {|p| p.to_i}).pluck(:reply_id)
+      post_ids.flatten!
+      post_ids.uniq!
+    end
+    post_ids
   end
 
   private

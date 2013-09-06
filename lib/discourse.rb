@@ -128,11 +128,14 @@ module Discourse
     end
   end
 
-  # Either returns the system_username user or the first admin.
+  # Either returns the site_contact_username user or the first admin.
+  def self.site_contact_user
+    user = User.where(username_lower: SiteSetting.site_contact_username).first if SiteSetting.site_contact_username.present?
+    user ||= User.admins.real.order(:id).first
+  end
+
   def self.system_user
-    user = User.where(username_lower: SiteSetting.system_username).first if SiteSetting.system_username.present?
-    user = User.admins.order(:id).first if user.blank?
-    user
+    User.where(id: -1).first
   end
 
   def self.store

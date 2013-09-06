@@ -12,6 +12,7 @@ Discourse.SplitTopicController = Discourse.ObjectController.extend(Discourse.Sel
 
   topicController: Em.computed.alias('controllers.topic'),
   selectedPosts: Em.computed.alias('topicController.selectedPosts'),
+  selectedReplies: Em.computed.alias('topicController.selectedReplies'),
 
   buttonDisabled: function() {
     if (this.get('saving')) return true;
@@ -30,21 +31,23 @@ Discourse.SplitTopicController = Discourse.ObjectController.extend(Discourse.Sel
   movePostsToNewTopic: function() {
     this.set('saving', true);
 
-    var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); });
-    var splitTopicController = this;
+    var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); }),
+        replyPostIds = this.get('selectedReplies').map(function(p) { return p.get('id'); }),
+        self = this;
 
     Discourse.Topic.movePosts(this.get('id'), {
       title: this.get('topicName'),
-      post_ids: postIds
+      post_ids: postIds,
+      reply_post_ids: replyPostIds
     }).then(function(result) {
       // Posts moved
-      splitTopicController.send('closeModal');
-      splitTopicController.get('topicController').toggleMultiSelect();
+      self.send('closeModal');
+      self.get('topicController').toggleMultiSelect();
       Em.run.next(function() { Discourse.URL.routeTo(result.url); });
     }, function() {
       // Error moving posts
-      splitTopicController.flash(I18n.t('topic.split_topic.error'));
-      splitTopicController.set('saving', false);
+      self.flash(I18n.t('topic.split_topic.error'));
+      self.set('saving', false);
     });
     return false;
   }

@@ -122,6 +122,7 @@ describe SpamRulesEnforcer do
       end
 
       it 'sends private message to moderators' do
+        SiteSetting.stubs(:notify_mods_when_user_blocked).returns(true)
         moderator = Fabricate(:moderator)
         GroupMessage.expects(:create).with do |group, msg_type, params|
           group == Group[:moderators].name and msg_type == :user_automatically_blocked and params[:user].id == user.id

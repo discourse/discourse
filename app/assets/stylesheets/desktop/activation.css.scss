@@ -1,0 +1,13 @@
+// Styles used before the user is logged into discourse. For example, activating their
+// account or changing their email.
+
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
+#simple-container {
+  @include border-radius-all(10px);
+  background-color: white;
+  padding: 20px;
+  width: 550px;
+  margin: 0 auto;
+}

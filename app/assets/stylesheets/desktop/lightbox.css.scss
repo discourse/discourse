@@ -1,0 +1,58 @@
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
+.lightbox {
+  position: relative;
+  display: inline-block;
+
+  &:hover .meta {
+    background: rgba(0, 0, 0, .5);
+    opacity: 1;
+    @include transition(opacity .5s);
+  }
+}
+
+.meta {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  background: black;
+  opacity: 0;
+  @include transition(opacity .2s);
+
+  span {
+    float: left;
+  }
+
+  .filename {
+    margin: 5px;
+    &:before {
+      font-family: "FontAwesome";
+      content: "\F03E";
+      margin-right: 5px;
+    }
+  }
+
+  .informations {
+    margin: 6px;
+    padding-right: 20px;
+    color: $dark_gray;
+    font-size: 14px;
+  }
+
+  .expand {
+    position: absolute;
+    bottom: 4px;
+    right: 7px;
+    &:before {
+      font-family: "FontAwesome";
+      content: "\F065";
+    }
+  }
+}
+
+// this should be removed once all the posts have been rebaked with the new lightboxes overlays
+.lightbox > span {
+  display: none;
+}

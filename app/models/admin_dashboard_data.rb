@@ -37,7 +37,7 @@ class AdminDashboardData
       send_consumer_email_check,
       title_check,
       access_password_removal,
-      system_username_check,
+      site_contact_username_check,
       notification_email_check ].compact
   end
 
@@ -148,8 +148,8 @@ class AdminDashboardData
     I18n.t('dashboard.consumer_email_warning') if Rails.env == 'production' and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
   end
 
-  def system_username_check
-    I18n.t('dashboard.system_username_warning') if SiteSetting.system_username.blank?
+  def site_contact_username_check
+    I18n.t('dashboard.site_contact_username_warning') if SiteSetting.site_contact_username.blank?
   end
 
   def notification_email_check
