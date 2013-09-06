@@ -189,7 +189,7 @@ gem 'lru_redux'
 #  we are open to it. by deferring require to the initializer we can configure disourse installs without it
 
 # gem 'rack-mini-profiler', '0.1.30', require: false
-gem 'flamegraph', require: false
+# gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
 
 # used for caching, optional
