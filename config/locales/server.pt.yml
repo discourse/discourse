@@ -290,7 +290,7 @@ pt:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default cause it has to re-write urls, hurting usability"
     topics_per_page: "How many topics to show on the topics list page."
     posts_per_page: "How many posts are returned on a topic page"
-    system_username: "Username that sends system messages"
+    site_contact_username: "Username that sends system messages"
     send_welcome_message: "Do new users get a welcome private message?"
     suppress_reply_directly_below: "Don't show replies button below a post when the reply is directly below"
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"

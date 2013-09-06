@@ -489,7 +489,7 @@ fr:
     track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écrite de toutes les urls et nuit à l'accessibilité"
     topics_per_page: "Nombre de discussions à afficher sur la page de liste des discussions."
     posts_per_page: "Nombre de messages retournés sur une page de discussion"
-    system_username: "Pseudo qui envoie les messages automatiques"
+    site_contact_username: "Pseudo qui envoie les messages automatiques"
     send_welcome_message: "Les nouveaux utilisateurs reçoivent-ils un message privé de bienvenue ?"
     suppress_reply_directly_below: "Ne pas afficher les boutons de réponse sous un message lorsque la réponse est juste en dessous"
     allow_index_in_robots_txt: "Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)"

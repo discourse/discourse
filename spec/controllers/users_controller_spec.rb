@@ -637,7 +637,7 @@ describe UsersController do
 
       context 'is too long' do
         before do
-          xhr :get, :check_username, username: 'abcdefghijklmnop'
+          xhr :get, :check_username, username: generate_username(User.username_length.last + 1)
         end
         include_examples 'checking an invalid username'
 

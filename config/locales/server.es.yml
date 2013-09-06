@@ -337,7 +337,7 @@ es:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "Cuantos topics son cargados por defecto en la página de lista de topics"
     posts_per_page: "Cuantos posts son devueltos en una página de topic"
-    system_username: "Nombre de usuario para el autor de mensajes privados enviados por el foro"
+    site_contact_username: "Nombre de usuario para el autor de mensajes privados enviados por el foro"
     send_welcome_message: "¿Reciben los nuevos usuarios un mensaje privado de bienvenida?"
     suppress_reply_directly_below: "No mostrar el contador de respuestas en un pot cuando una única respuesta directamente debajo"
     allow_index_in_robots_txt: "Permitir que el sitio sea indexado por motores de búsqueda (sobreescribe robots.txt)"

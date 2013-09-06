@@ -12,7 +12,8 @@ module Jobs
 
     def target_user_ids
       # Users who want to receive emails and haven't been emailed in the last day
-      query = User.where(email_digests: true, active: true)
+      query = User.real
+                  .where(email_digests: true, active: true)
                   .where("COALESCE(last_emailed_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)")
                   .where("COALESCE(last_seen_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)")
 

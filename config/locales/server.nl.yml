@@ -407,7 +407,7 @@ nl:
     title_nag: "Je hebt nog geen title ingesteld voor je site. Geef een titel voor je site op in de <a href='/admin/site_settings'>Instellingen</a>."
     consumer_email_warning: "Je site is ingesteld om Gmail te gebruiken voor het versturen van mails. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail heeft limieten voor het aantal mails dat je kan versturen</a>. Overweeg om een andere e-mailprovider te gebruiken om er zeker van te zijn dat mails aankomen."
     access_password_removal: "Je site gebruikte een toegangswachtwoord (access_password) setting, maar die optie is uit Discourse verwijderd. De login_required en must_approve_users instellingen zijn er voor in de plaats gekomen. Je kan ze in <a href='/admin/site_settings'>de Instellingen</a> aanpassen. Zorg er voor dat je <a href='/admin/users/list/pending'>gebruikers op de wachtlijst accepteert</a>. (Dit bericht verdwijnt na twee dagen.)"
-    system_username_warning: "De instelling system_username is leeg. Werk deze bij in <a href='/admin/site_settings'>de Instellingen</a>. Stel het in op de gebruikersnaam van een admin die als afzender van de systeemberichten zal worden wordt gebruikt."
+    site_contact_username_warning: "De instelling site_contact_username is leeg. Werk deze bij in <a href='/admin/site_settings'>de Instellingen</a>. Stel het in op de gebruikersnaam van een admin die als afzender van de systeemberichten zal worden wordt gebruikt."
     notification_email_warning: "De instelling notification_email is leeg. Werk deze bij in <a href='/admin/site_settings'>de Instellingen</a>."
 
   content_types:
@@ -522,7 +522,7 @@ nl:
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
     topics_per_page: "Hoeveel topics er standaard worden weergegeven in de topiclijst."
     posts_per_page: "Hoeveel berichten er worden weergeven op een topic-pagina"
-    system_username: "Vanuit welke gebruikersnaam systeemberichten worden verstuurd"
+    site_contact_username: "Vanuit welke gebruikersnaam systeemberichten worden verstuurd"
     send_welcome_message: "Krijgen nieuwe leden een welkomst-privé-bericht?"
     suppress_reply_directly_below: "Laat geen reactieteller zien bij een bericht als er maar één reactie onder staat"
     suppress_reply_directly_above: "Laat geen 'in antwoord op' zien bij een bericht als er maar één reactie boven staat"

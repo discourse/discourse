@@ -370,7 +370,7 @@ pt_BR:
     title_nag: "A configuração do título nas Configurações do Site ainda estão no valor padrão. Por favor atualize com título do seu site em <a href='/admin/site_settings'>Configurações do Site</a>."
     consumer_email_warning: "Seu site está configurado para usar Gmail (ou outro serviço de email para pessoas). <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita a quantidade de emails que você pode enviar</a>. Considere o uso de um serviço de envio de emails como mandrill.com para assegurar a entregabilidade dos emails enviados."
     access_password_removal: "Seu site estava usando a definição access_password, que foi removida. As definições login_required e must_approve_users foram ativadas e devem ser usadas em substituição. Você pode alterá-las em <a href='/admin/site_settings'>Configurações do Site</a>. Certifique-se de <a href='/admin/users/list/pending'>aprovar os usuários na lista de Usuários Pendentes</a>. (Esta mensagem desaparecerá depois de 2 dias.)"
-    system_username_warning: "A definição system_username está em branco. Por favor atualize-a nas <a href='/admin/site_settings'>Configurações do Site</a>. Coloque um nome de usuário de um usuário administrador o qual será o remetente das mensagens do sistema."
+    site_contact_username_warning: "A definição site_contact_username está em branco. Por favor atualize-a nas <a href='/admin/site_settings'>Configurações do Site</a>. Coloque um nome de usuário de um usuário administrador o qual será o remetente das mensagens do sistema."
     notification_email_warning: "A definição notification_email está em branco. Por favor atualize-a nas <a href='/admin/site_settings'>Configurações do Site</a>."
   content_types:
     education_new_reply:
@@ -473,7 +473,7 @@ pt_BR:
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
     topics_per_page: "Quantos tópicos exibir na página de listagem dos tópicos."
     posts_per_page: "Quantas postagens são requisitados numa página de tópico"
-    system_username: "Nome do Usuário que envia as mensagens do sistema"
+    site_contact_username: "Nome do Usuário que envia as mensagens do sistema"
     send_welcome_message: "Novos usuários recebem mensagem particular de boas-vindas?"
     suppress_reply_directly_below: "Não exibir contagem do número de respostas na postagem quando houver apenas uma resposta diretamente abaixo"
     suppress_reply_directly_above: "Não exibir \"em resposta a\" numa postagem quando houver apenas uma resposta diretamente a seguir"

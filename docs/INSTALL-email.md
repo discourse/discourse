@@ -128,7 +128,7 @@ Login to Discourse, go to the Admin page and select 'Settings'.
 
 Filter with the string 'system'.
 
-* Ensure that `system_username` is set to an email address for an appropriate "owner" of the forum
+* Ensure that `site_contact_username` is set to an email address for an appropriate "owner" of the forum
 * Set `notification_email` to 'noreply@', 'nobody@' as appropriate.
 
 Filter with the string 'contact_email'

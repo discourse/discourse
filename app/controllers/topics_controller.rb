@@ -244,7 +244,7 @@ class TopicsController < ApplicationController
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_move_posts!(topic)
 
-    dest_topic = move_post_to_destination(topic)
+    dest_topic = move_posts_to_destination(topic)
     render_topic_changes(dest_topic)
   end
 
@@ -333,12 +333,12 @@ class TopicsController < ApplicationController
 
   private
 
-  def move_post_to_destination(topic)
+  def move_posts_to_destination(topic)
     args = {}
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
 
-    topic.move_posts(current_user, params[:post_ids].map {|p| p.to_i}, args)
+    topic.move_posts(current_user, post_ids_including_replies, args)
   end
 
 end

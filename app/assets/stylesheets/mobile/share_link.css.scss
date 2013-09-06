@@ -1,0 +1,39 @@
+// styles that apply to the "share" popup when sharing a link to a post or topic
+
+@import "../common/foundation/variables";
+@import "../common/foundation/mixins";
+
+#share-link {
+  position: absolute;
+  left: 20px;
+  z-index: 990;
+  @include border-radius-all(3px);
+  @include box-shadow(1px 1px 5px $darkish_gray);
+  background-color: $light_gray;
+  padding: 3px 7px 6px 7px;
+  width: 300px;
+  display: none;
+  &.visible {
+    display: block;
+  }
+  input[type=text] {
+    width: 96%;
+  }
+  h3 {
+    font-size: 13px;
+  }
+  .social-link {
+    margin-left: 2px;
+    margin-right: 8px;
+    float: left;
+    font-size: 22px;
+  }
+  .link {
+    margin-right: 2px;
+    float: right;
+    font-size: 20px;
+    a {
+      color: $black;
+    }
+  }
+}
