@@ -17,7 +17,7 @@ describe PostCreator do
     let(:image_sizes) { {'http://an.image.host/image.jpg' => {"width" => 111, "height" => 222}} }
 
     let(:creator) { PostCreator.new(user, basic_topic_params) }
-    let(:creator_with_category) { PostCreator.new(user, basic_topic_params.merge(category: category.id )) }
+    let(:creator_with_category) { PostCreator.new(user, basic_topic_params.merge(category: category.name )) }
     let(:creator_with_meta_data) { PostCreator.new(user, basic_topic_params.merge(meta_data: {hello: "world"} )) }
     let(:creator_with_image_sizes) { PostCreator.new(user, basic_topic_params.merge(image_sizes: image_sizes)) }
 
@@ -75,7 +75,7 @@ describe PostCreator do
         reply = nil
 
         messages = MessageBus.track_publish do
-          created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.id)).create
+          created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.name)).create
           reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
 
