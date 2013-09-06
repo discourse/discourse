@@ -44,6 +44,8 @@ module Onebox
       self.class.name.split("::").last.downcase.gsub(/onebox/, "")
     end
 
+    # raises error if data method isn't defined in onebox engine
+    # in each onebox, returns hash of desired onebox content
     def data
       raise NoMethodError, "Engines need this method defined"
     end
