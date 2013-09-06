@@ -10,6 +10,9 @@ var urlReplacerArgs = {
     var url = matches[1],
         displayUrl = url;
 
+    // If we improperly caught a markdown link abort
+    if (url.match(/\(http/)) { return; }
+
     if (url.match(/^www/)) { url = "http://" + url; }
     return ['a', {href: url}, displayUrl];
   }
