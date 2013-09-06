@@ -76,6 +76,8 @@ class User < ActiveRecord::Base
   scope :blocked, -> { where(blocked: true) } # no index
   scope :banned, -> { where('banned_till IS NOT NULL AND banned_till > ?', Time.zone.now) } # no index
   scope :not_banned, -> { where('banned_till IS NULL') }
+  # excluding fake users like the community user
+  scope :real, -> { where('id > 0') }
 
   module NewTopicDuration
     ALWAYS = -1
@@ -473,10 +475,6 @@ class User < ActiveRecord::Base
 
   def self.count_by_signup_date(sinceDaysAgo=30)
     where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
-  end
-
-  def self.counts_by_trust_level
-    group('trust_level').count
   end
 
   def update_topic_reply_count

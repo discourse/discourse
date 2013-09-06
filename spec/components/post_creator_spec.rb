@@ -310,6 +310,14 @@ describe PostCreator do
       # does not notify an unrelated user
       unrelated.notifications.count.should == 0
       post.topic.subtype.should == TopicSubtype.user_to_user
+
+      # if a mod replies they should be added to the allowed user list
+      mod = Fabricate(:moderator)
+      PostCreator.create(mod, raw: 'hi there welcome topic, I am a mod',
+                         topic_id: post.topic_id)
+
+      post.topic.reload
+      post.topic.topic_allowed_users.where(user_id: mod.id).count.should == 1
     end
   end
 

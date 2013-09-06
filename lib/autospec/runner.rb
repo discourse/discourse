@@ -34,6 +34,7 @@ class Autospec::Runner
 
   watch_reload('spec/spec_helper.rb')
   watch_reload('config/(.*).rb')
+  watch_reload(%r{app/helpers/(.*).rb})
 
   def self.run(opts={})
     self.new.run(opts)

@@ -1,0 +1,29 @@
+// styles for the 'hotness control'
+
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
+.hotness-control {
+  margin-bottom: 5px;
+
+  button {
+    @include border-radius-all(5px);
+    margin-right: 3px;
+    background-color: lighten($gray, 10%);
+    border: 0;
+    width: 25px;
+    text-align: center;
+
+    &:hover {
+      background-color: $gray;
+    }
+  }
+
+  button.selected {
+    background-color: lighten($red, 25%);
+    color: $white;
+    font-weight: bold;
+  }
+
+
+}

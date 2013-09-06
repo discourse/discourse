@@ -53,6 +53,6 @@ end
 #
 # Indexes
 #
-#  by_link  (topic_link_id)
+#  index_forum_thread_link_clicks_on_forum_thread_link_id  (topic_link_id)
 #
 

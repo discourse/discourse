@@ -349,7 +349,7 @@ da:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics are loaded by default on the topics list page"
     posts_per_page: "How many posts are returned on a topic page"
-    system_username: "Username for the author of automated private messages sent by the forum"
+    site_contact_username: "Username for the author of automated private messages sent by the forum"
     send_welcome_message: "Do new users get a welcome private message?"
     suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"

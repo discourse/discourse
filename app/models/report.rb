@@ -38,7 +38,7 @@ class Report
   end
 
   def self.report_signups(report)
-    report_about report, User, :count_by_signup_date
+    report_about report, User.real, :count_by_signup_date
   end
 
   def self.report_topics(report)
@@ -76,7 +76,7 @@ class Report
 
   def self.report_users_by_trust_level(report)
     report.data = []
-    User.counts_by_trust_level.each do |level, count|
+    User.real.group('trust_level').count.each do |level, count|
       report.data << {x: level.to_i, y: count}
     end
   end

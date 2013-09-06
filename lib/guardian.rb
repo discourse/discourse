@@ -40,8 +40,12 @@ class Guardian
   def is_developer?
     @user &&
     is_admin? &&
-    Rails.configuration.respond_to?(:developer_emails) &&
-    Rails.configuration.developer_emails.include?(@user.email)
+    (Rails.env.development? ||
+      (
+        Rails.configuration.respond_to?(:developer_emails) &&
+        Rails.configuration.developer_emails.include?(@user.email)
+      )
+    )
   end
 
   # Can the user see the object?
@@ -348,8 +352,12 @@ class Guardian
       # not secure, or I can see it
       (not(topic.read_restricted_category?) || can_see_category?(topic.category)) &&
 
-      # not private, or I am allowed (or an admin)
-      (not(topic.private_message?) || authenticated? && (topic.all_allowed_users.where(id: @user.id).exists? || is_admin?))
+      # NOTE
+      # At the moment staff can see PMs, there is some talk of restricting this, however
+      # we still need to allow staff to join PMs for the case of flagging ones
+
+      # not private, or I am allowed (or is staff)
+      (not(topic.private_message?) || authenticated? && (topic.all_allowed_users.where(id: @user.id).exists? || is_staff?))
     end
   end
 

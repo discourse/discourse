@@ -404,7 +404,7 @@ de:
     title_nag: "Der Titel der Seite wurde noch nicht angepasst. Bitte bearbeite diesen in den <a href='/admin/site_settings'>Einstellungen</a>."
     consumer_email_warning: "Deine Seite verwendet Gmail um Mails zu senden. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail hat eine Limite zum Senden von Mails</a>. Um die Mail-Zustellung zu gewährleisten, solltest du einen anderen Mail Service in Erwägung ziehen."
     access_password_removal: "Deine Seite hat die Einstellung access_password verwendet, welche entfernt wurde. Die Einstellungen login_required und must_approve_users wurden eingeschalten und werden sofort verwendet. Du kannst diese in <a href='/admin/site_settings'>den Einstellungen</a> wechseln. Stelle sicher, <a href='/admin/users/list/pending'>dass die Benutzer in der Warteliste</a> aktiviert werden. (Diese Meldung wird in 2 Tagen nicht mehr angezeigt.)"
-    system_username_warning: "Die Einstellung system_username ist leer. Bitte ändere diese in <a href='/admin/site_settings'>den Einstellungen</a>. Setzte einen Benutzernamen eines Administrators, welcher als Sender der Systemnachrichten verwendet werden soll."
+    site_contact_username_warning: "Die Einstellung site_contact_username ist leer. Bitte ändere diese in <a href='/admin/site_settings'>den Einstellungen</a>. Setzte einen Benutzernamen eines Administrators, welcher als Sender der Systemnachrichten verwendet werden soll."
     notification_email_warning: "Die Einstellung notification_email ist leer. Bitte ändere diese in <a href='/admin/site_settings'>den Einstellungen</a>."
 
   content_types:
@@ -521,7 +521,7 @@ de:
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     topics_per_page: "Zahl der Themen, die standardmäßig auf die Themenübersichtsseite geladen werden."
     posts_per_page: "Zahl der Beiträge, die auf einer Themenseite gezeigt werden."
-    system_username: "Benutzername des Autors für automatisch vom Forum versendete private Nachrichten."
+    site_contact_username: "Benutzername des Autors für automatisch vom Forum versendete private Nachrichten."
     send_welcome_message: "Bekommen neue Nutzer eine Willkommensnachricht?"
     suppress_reply_directly_below: "Zeige die Zahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Zeige 'In Antwort auf' nicht, falls der Beitrag direkt über der einzigen Antwort folgt."

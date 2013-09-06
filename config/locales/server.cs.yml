@@ -435,7 +435,7 @@ cs:
     title_nag: "Název webu je nastaven na výchozí hodnotu. Prosím, změňte název webu na skutečný název v <a href='/admin/site_settings'>Nastavení webu</a>."
     consumer_email_warning: "Váš web je nastaven, aby používal Gmail (nebo jinou uživatelskou emailovou službu) k odesílání emailů. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limituje počet emailů, které můžete odeslat</a>. Zvažte použití jiného emailového poskytovatele, jako je třeba mandrill.com k zajištění doručitelnosti emailů."
     access_password_removal: "Váš web používá nastavení access_password, které je již odstraněno. Nová nastavení login_required a must_approve_users by měla být použita místo toho. Nastavení můžete změnit v<a href='/admin/site_settings'>Nastavení webu</a>. Nezapomeňte <a href='/admin/users/list/pending'>schválit uživatele v seznamu čekajících uživatelůt</a>. (Tato zpráva zmizí za 2 dny.)"
-    system_username_warning: "Nastavení system_username je prázdné. Prosím, napravte to v <a href='/admin/site_settings'>Nastavení webu</a>. Nastavte ho na uživatelské jméno administrátora, která má být odesilatelem systémových zpráv."
+    site_contact_username_warning: "Nastavení site_contact_username je prázdné. Prosím, napravte to v <a href='/admin/site_settings'>Nastavení webu</a>. Nastavte ho na uživatelské jméno administrátora, která má být odesilatelem systémových zpráv."
     notification_email_warning: "Nastavení notification_email je prázdné. Prosím, napravte to v <a href='/admin/site_settings'>Nastavení webu</a>."
 
   content_types:
@@ -548,7 +548,7 @@ cs:
     track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
     topics_per_page: "Kolik témat je načteno do seznamu témat"
     posts_per_page: "Kolik příspěvků je zobrazeno ve stránce tématu"
-    system_username: "Uživatelské jméno, za které se zasílají automatické soukromé zprávy"
+    site_contact_username: "Uživatelské jméno, za které se zasílají automatické soukromé zprávy"
     send_welcome_message: "Mají noví uživatelé obdržet uvítací soukromou zprávu?"
     suppress_reply_directly_below: "Nezobrazovat počet odpovědí, pokud existuje jen jediná odpověď hned pod příspěvkem"
     suppress_reply_directly_above: "Nezobrazovat informaci 'je odpověď na' u příspěvku, jehož odpověď je přímo nad ním"

@@ -2,9 +2,18 @@
 #
 require 'objspace'
 require 'benchmark'
-require 'ruby-prof'
+# require 'ruby-prof'
 
-require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+require 'memory_profiler'
+
+
+result = MemoryProfiler.report do
+  require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+  # require 'ruby-prof'
+end
+result.pretty_print
+
+exit
 
 
 def profile_allocations(name)

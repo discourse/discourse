@@ -91,7 +91,6 @@ Discourse.HeaderView = Discourse.View.extend({
     });
 
   },
-
   /**
     Display the correct logo in the header, showing a custom small icon if it exists.
     In case the logo_url setting is empty, shows the site title as the logo.
@@ -99,7 +98,7 @@ Discourse.HeaderView = Discourse.View.extend({
   **/
   logoHTML: function() {
     var result = "<div class='title'><a href='" + Discourse.getURL("/") + "'>";
-    if (this.get('controller.showExtraInfo')) {
+    if (!Discourse.Session.currentProp('mobileView') && this.get('controller.showExtraInfo')) {
       var logoSmall = Discourse.SiteSettings.logo_small_url;
       if (logoSmall && logoSmall.length > 1) {
         result += "<img class='logo-small' src='" + logoSmall + "' width='33' height='33'>";

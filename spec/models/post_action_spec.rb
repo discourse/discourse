@@ -41,10 +41,9 @@ describe PostAction do
     describe 'notify_moderators' do
       before do
         PostAction.stubs(:create)
-        PostAction.expects(:target_moderators).returns("moderators")
       end
 
-      it "sends an email to all moderators if selected" do
+      it "creates a pm if selected" do
         post = build(:post, id: 1000)
         PostCreator.any_instance.expects(:create).returns(post)
         PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], message: "this is my special message");

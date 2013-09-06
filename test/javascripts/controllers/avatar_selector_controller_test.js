@@ -7,7 +7,7 @@ var avatarSelector = Em.Object.create({
 module("Discourse.AvatarSelectorController");
 
 test("avatarTemplate", function() {
-  var avatarSelectorController = controllerFor("avatarSelector");
+  var avatarSelectorController = testController(Discourse.AvatarSelectorController);
   avatarSelectorController.setProperties(avatarSelector);
 
   equal(avatarSelectorController.get("avatarTemplate"),

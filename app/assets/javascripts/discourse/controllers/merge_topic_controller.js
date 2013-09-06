@@ -12,6 +12,7 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
 
   topicController: Em.computed.alias('controllers.topic'),
   selectedPosts: Em.computed.alias('topicController.selectedPosts'),
+  selectedReplies: Em.computed.alias('topicController.selectedReplies'),
   allPostsSelected: Em.computed.alias('topicController.allPostsSelected'),
 
   buttonDisabled: function() {
@@ -31,10 +32,13 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
     if (this.get('allPostsSelected')) {
       promise = Discourse.Topic.mergeTopic(this.get('id'), this.get('selectedTopicId'));
     } else {
-      var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); });
+      var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); }),
+          replyPostIds = this.get('selectedReplies').map(function(p) { return p.get('id'); });
+
       promise = Discourse.Topic.movePosts(this.get('id'), {
         destination_topic_id: this.get('selectedTopicId'),
-        post_ids: postIds
+        post_ids: postIds,
+        reply_post_ids: replyPostIds
       });
     }
 

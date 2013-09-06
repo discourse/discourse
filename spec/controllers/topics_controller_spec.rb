@@ -93,6 +93,27 @@ describe TopicsController do
       end
     end
 
+    describe "moving replied posts" do
+      let!(:user) { log_in(:moderator) }
+      let!(:p1) { Fabricate(:post, user: user) }
+      let!(:topic) { p1.topic }
+      let!(:p2) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: p1.post_number ) }
+
+      context 'success' do
+
+        before do
+          PostReply.create(post_id: p1.id, reply_id: p2.id)
+        end
+
+        it "moves the child posts too" do
+          Topic.any_instance.expects(:move_posts).with(user, [p1.id, p2.id], title: 'blah').returns(topic)
+          xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p1.id], reply_post_ids: [p1.id]
+        end
+      end
+
+    end
+
+
     describe 'moving to an existing topic' do
       let!(:user) { log_in(:moderator) }
       let(:p1) { Fabricate(:post, user: user) }

@@ -1,0 +1,149 @@
+// styles that apply to the PageDown editor
+// http://code.google.com/p/pagedown/
+
+@import "common/foundation/mixins";
+
+.wmd-panel {
+  margin-left: 25%;
+  margin-right: 25%;
+  width: 50%;
+  min-width: 500px;
+}
+
+.wmd-button-bar {
+  width: 100%;
+}
+
+.wmd-button-row {
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  margin-top: 10px;
+  padding: 0px;
+  height: 20px;
+}
+
+.wmd-spacer {
+  width: 1px;
+  height: 20px;
+  margin-right: 8px;
+  margin-left: 5px;
+  background-color: silver;
+  display: inline-block;
+  float: left;
+}
+
+.wmd-button {
+  width: 20px;
+  height: 20px;
+  padding-left: 2px;
+  padding-right: 3px;
+  margin-right: 5px;
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  border: 0px;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  border: 0;
+  float: left;
+
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  display: inline;
+  width: auto;
+  height: auto;
+  line-height: normal;
+  vertical-align: baseline;
+  background-image: none !important;
+  background-position: 0% 0%;
+  background-repeat: repeat;
+  background-color: white;
+  padding: 4px;
+}
+
+.wmd-button:hover {
+  background-color: #99c0fa;
+}
+
+
+#wmd-bold-button:before {
+  content: "\f032";
+}
+
+
+#wmd-italic-button:before {
+  content: "\f033";
+}
+
+#wmd-link-button:before {
+  content: "\f0c1";
+}
+
+#wmd-quote-button:before {
+  content: "\f10e";
+}
+
+#wmd-code-button:before {
+  content: "\f121";
+}
+
+#wmd-image-button:before {
+  content: "\f093";
+}
+
+#wmd-olist-button:before {
+  content: "\f0cb";
+}
+
+#wmd-ulist-button:before {
+  content: "\f0ca";
+}
+
+#wmd-heading-button:before {
+  content:  "\f031";
+}
+
+#wmd-hr-button:before {
+  content:  "\f068";
+}
+
+#wmd-undo-button:before {
+  content:  "\f0e2";
+}
+
+#wmd-redo-button:before {
+  content:  "\f01e";
+}
+
+#wmd-quote-post:before {
+  content:  "\f0e5";
+}
+
+.wmd-prompt-background {
+  background-color: black;
+}
+
+.wmd-prompt-dialog {
+  border: 1px solid #999999;
+  background-color: whitesmoke;
+}
+
+.wmd-prompt-dialog > div {
+  font-size: 0.8em;
+  font-family: arial, helvetica, sans-serif;
+}
+
+.wmd-prompt-dialog > form > input[type="text"] {
+  border: 1px solid #999999;
+  color: black;
+}
+
+.wmd-prompt-dialog > form > input[type="button"] {
+  border: 1px solid #888888;
+  font-family: trebuchet MS, helvetica, sans-serif;
+  font-size: 0.8em;
+  font-weight: bold;
+}

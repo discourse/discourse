@@ -1,0 +1,61 @@
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+@import "common/foundation/helpers";
+
+// --------------------------------------------------
+// FAQs
+// --------------------------------------------------
+
+// Base
+// --------------------------------------------------
+
+.body-page {
+
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 22px;
+
+  // Consistent vertical spacing
+  blockquote,
+  h1,
+  h2,
+  h3,
+  hr,
+  p,
+  pre,
+  ul,
+  ol,
+  li,
+  table {
+    margin: 0 0 20px;
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  li {
+     margin-bottom: 8px;
+  }
+
+  ul,
+  ol {
+    margin-left: 40px;
+  }
+
+}
+
+.body-page {
+
+  .container {
+    @extend .clearfix;
+    width: 960px;
+    margin: 0 auto;
+    padding: 20px 10px;
+    margin-top: -60px;
+  }
+
+}
+
+.nav-pills {
+  margin-left:0px !important;
+  font: 13px/18px "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
