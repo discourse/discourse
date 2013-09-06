@@ -30,6 +30,7 @@ Discourse.Post = Discourse.Model.extend({
   deletedViaTopic: Em.computed.and('firstPost', 'topic.deleted_at'),
   deleted: Em.computed.or('deleted_at', 'deletedViaTopic'),
   notDeleted: Em.computed.not('deleted'),
+  userDeleted: Em.computed.empty('user_id'),
 
   postDeletedBy: function() {
     if (this.get('firstPost')) { return this.get('topic.deleted_by'); }

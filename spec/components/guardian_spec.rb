@@ -175,6 +175,9 @@ describe Guardian do
       Guardian.new(admin).can_impersonate?(another_admin).should be_false
       Guardian.new(admin).can_impersonate?(user).should be_true
       Guardian.new(admin).can_impersonate?(moderator).should be_true
+
+      Rails.configuration.stubs(:developer_emails).returns([admin.email])
+      Guardian.new(admin).can_impersonate?(another_admin).should be_true
     end
   end
 
