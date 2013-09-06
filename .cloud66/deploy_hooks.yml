@@ -23,10 +23,11 @@ production:
         sudo: true
     # 4. Import database image
       - source: /.cloud66/scripts/import.sh
-        destination: /tmp/import.sh
+        destination: /tmp/scripts/import.sh
         target: postgresql
         apply_during: build_only
         execute: true
+        owner: postgres
         run_as: postgres
     # 5. Migrate database
       - source: /.cloud66/scripts/migrate.sh
