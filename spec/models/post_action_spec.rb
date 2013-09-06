@@ -43,7 +43,7 @@ describe PostAction do
         PostAction.stubs(:create)
       end
 
-      it "sends an email to community if selected" do
+      it "creates a pm if selected" do
         post = build(:post, id: 1000)
         PostCreator.any_instance.expects(:create).returns(post)
         PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], message: "this is my special message");
