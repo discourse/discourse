@@ -252,8 +252,7 @@ Discourse.ComposerView = Discourse.View.extend({
 
     $uploadTarget.fileupload({
         url: Discourse.getURL('/uploads'),
-        dataType: 'json',
-        timeout: 20000
+        dataType: 'json'
     });
 
     // submit - this event is triggered for each upload
