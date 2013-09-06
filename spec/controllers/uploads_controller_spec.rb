@@ -2,17 +2,15 @@ require 'spec_helper'
 
 describe UploadsController do
 
-  it 'requires you to be logged in' do
-    -> { xhr :post, :create }.should raise_error(Discourse::NotLoggedIn)
-  end
+  context '.create' do
 
-  context 'logged in' do
-
-    before do
-      @user = log_in :user
+    it 'requires you to be logged in' do
+      -> { xhr :post, :create }.should raise_error(Discourse::NotLoggedIn)
     end
 
-    context '.create' do
+    context 'logged in' do
+
+      before { @user = log_in :user }
 
       let(:logo) do
         ActionDispatch::Http::UploadedFile.new({
@@ -93,6 +91,31 @@ describe UploadsController do
 
       end
 
+    end
+
+  end
+
+  context '.show' do
+
+    it "returns 404 when using external storage" do
+      store = stub(internal?: false)
+      Discourse.stubs(:store).returns(store)
+      Upload.expects(:where).never
+      get :show, site: "default", id: 1, sha: "1234567890abcdef", extension: "pdf"
+      response.response_code.should == 404
+    end
+
+    it "returns 404 when the upload doens't exist" do
+      Upload.expects(:where).with(id: 2, url: "/uploads/default/2/1234567890abcdef.pdf").returns [nil]
+      get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
+      response.response_code.should == 404
+    end
+
+    it 'uses send_file' do
+      Fabricate(:attachment)
+      controller.stubs(:render)
+      controller.expects(:send_file)
+      get :show, site: "default", id: 42, sha: "66b3ed1503efc936", extension: "zip"
     end
 
   end
