@@ -1,6 +1,6 @@
 production:
     # 1. Copy SQL image to PSQL server
-    first_thing:
+    after_postgresql:
       - source: /pg_dumps/production-image.sql
         destination: /tmp/images/production-image.sql
         target: postgresql
