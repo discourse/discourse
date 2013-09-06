@@ -615,7 +615,7 @@ end
 #  updated_at              :datetime         not null
 #  views                   :integer          default(0), not null
 #  posts_count             :integer          default(0), not null
-#  user_id                 :integer          not null
+#  user_id                 :integer
 #  last_post_user_id       :integer          not null
 #  reply_count             :integer          default(0), not null
 #  featured_user1_id       :integer
