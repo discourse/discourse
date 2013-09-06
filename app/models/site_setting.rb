@@ -93,7 +93,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:edit_history_visible_to_public, true)
   client_setting(:delete_removed_posts_after, 24) # hours
   setting(:post_undo_action_window_mins, 10)
-  setting(:system_username, '')
+  setting(:site_contact_username, '')
   setting(:max_mentions_per_post, 10)
   setting(:newuser_max_mentions_per_post, 2)
 

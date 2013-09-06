@@ -69,7 +69,7 @@ describe Topic do
         end
 
         context 'topic was created by a non-staff user' do
-          Given!(:system_user) { Fabricate(:admin) }
+          Given!(:system_user) { Discourse.system_user }
           Given { Discourse.stubs(:system_user).returns(system_user) }
           Given(:regular_user) { Fabricate(:user) }
           Given(:regular_user_topic) { Fabricate(:topic, user: regular_user, category: category) }

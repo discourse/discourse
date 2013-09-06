@@ -1,17 +1,18 @@
-user = User.where("id <> -1 and username_lower = 'community'").first
+user = User.where("id <> -1 and username_lower = 'system'").first
 if user
-  user.username = UserNameSuggester.suggest('community')
+  user.username = UserNameSuggester.suggest("system")
   user.save
 end
 
 User.seed do |u|
   u.id = -1
-  u.name = 'Community'
-  u.username = 'community'
-  u.username_lower = 'community'
-  u.email = 'no_email'
+  u.name = "system"
+  u.username = "system"
+  u.username_lower = "system"
+  u.email = "no_email"
   u.password = SecureRandom.hex
-  u.bio_raw = 'I am a community user, I clean up the forum and make sure it runs well.'
+  # TODO localize this, its going to require a series of hacks
+  u.bio_raw = "Not a real person. A global user for system notifications and other system tasks."
   u.active = true
   u.admin = true
   u.moderator = true

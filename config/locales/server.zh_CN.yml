@@ -487,7 +487,7 @@ zh_CN:
     track_external_right_clicks: "追踪外部链接的右键点击（例如：在浏览器新标签打开），缺省是禁用的，因为它会重写URL"
     topics_per_page: "在主题列表页面，缺省载入多少个主题"
     posts_per_page: "在主题页面，返回多少个帖子"
-    system_username: "论坛给用户发送自动私信时使用的用户名"
+    site_contact_username: "论坛给用户发送自动私信时使用的用户名"
     send_welcome_message: "给新用户发送欢迎私信？"
     suppress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量"
     allow_index_in_robots_txt: "允许搜索引擎索引站点内容（更新 robots.txt）"
