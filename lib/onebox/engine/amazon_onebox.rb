@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class AmazonOnebox
       include Engine
+      include HTML
 
       matches do
         #/^https?:\/\/(?:www\.)?amazon.(com|ca)\/.*$/

@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class QikOnebox
       include Engine
+      include HTML
 
       matches do
         # /^https?\:\/\/qik\.com\/video\/.*$/

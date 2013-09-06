@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class ExampleOnebox
       include Engine
+      include HTML
 
       matches do
         find "example.com"

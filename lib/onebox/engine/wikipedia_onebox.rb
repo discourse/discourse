@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class WikipediaOnebox
       include Engine
+      include HTML
 
       matches do
         # /^https?:\/\/.*wikipedia\.(com|org)\/.*$/

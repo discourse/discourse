@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class StackExchangeOnebox
       include Engine
+      include HTML
 
       matches do
         # /^http:\/\/(?:(?:(?<subsubdomain>\w*)\.)?(?<subdomain>\w*)\.)?(?<domain>#{DOMAINS.join('|')})\.com\/(?:questions|q)\/(?<question>\d*)/
