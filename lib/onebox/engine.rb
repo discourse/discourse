@@ -39,6 +39,7 @@ module Onebox
       File.read(File.join("templates", "#{template_name}.handlebars"))
     end
 
+    # calculates handlebars template name for onebox using name of engine
     def template_name
       self.class.name.split("::").last.downcase.gsub(/onebox/, "")
     end
