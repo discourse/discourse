@@ -58,6 +58,7 @@ class Validators::PostValidator < ActiveModel::Validator
   # Stop us from posting the same thing too quickly
   def unique_post_validator(post)
     return if SiteSetting.unique_posts_mins == 0
+    return if post.skip_unique_check
     return if post.acting_user.admin? || post.acting_user.moderator?
 
     # If the post is empty, default to the validates_presence_of
