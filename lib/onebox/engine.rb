@@ -32,7 +32,7 @@ module Onebox
     end
 
     def raw
-      @raw ||= Nokogiri::HTML(open(@url))
+      raise NoMethodError, "Engines need to implement this method"
     end
 
     def template
