@@ -31,6 +31,8 @@ module Onebox
       end
     end
 
+    # raises error if not defined in onebox engine
+    # in each onebox, uses either Nokogiri or OpenGraph to get raw HTML from url
     def raw
       raise NoMethodError, "Engines need to implement this method"
     end
@@ -44,7 +46,7 @@ module Onebox
       self.class.name.split("::").last.downcase.gsub(/onebox/, "")
     end
 
-    # raises error if data method isn't defined in onebox engine
+    # raises error if not defined in onebox engine
     # in each onebox, returns hash of desired onebox content
     def data
       raise NoMethodError, "Engines need this method defined"
