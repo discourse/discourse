@@ -194,7 +194,8 @@ Discourse.Utilities = {
 
     @method validateUploadedFile
     @param {File} file The file to be uploaded
-    @param {string} type The type of the file
+    @param {string} type The type of the upload (image, attachment)
+    @returns true whenever the upload is valid
   **/
   validateUploadedFile: function(file, type) {
     // check that the uploaded file is authorized
@@ -205,7 +206,7 @@ Discourse.Utilities = {
     }
 
     // ensures that new users can upload a file
-    if (Discourse.User.currentProp('trust_level') === 0 && Discourse.SiteSettings['newuser_max_' + type + 's'] === 0) {
+    if (!Discourse.User.current().isAllowedToUploadAFile(type)) {
       bootbox.alert(I18n.t('post.errors.' + type + '_upload_not_allowed_for_new_user'));
       return false;
     }

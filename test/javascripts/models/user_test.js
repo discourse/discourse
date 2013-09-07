@@ -17,3 +17,11 @@ test('searchContext', function() {
 
   deepEqual(user.get('searchContext'), {type: 'user', id: 'eviltrout', user: user}, "has a search context");
 });
+
+test("isAllowedToUploadAFile", function() {
+  var user = Discourse.User.create({ trust_level: 0, admin: true });
+  ok(user.isAllowedToUploadAFile("image"), "admin can always upload a file");
+
+  user.setProperties({ admin: false, moderator: true });
+  ok(user.isAllowedToUploadAFile("image"), "moderator can always upload a file");
+});
