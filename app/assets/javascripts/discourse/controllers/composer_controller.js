@@ -98,7 +98,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       opts = opts || {};
       composerController.close();
 
-      var currentUser = Discourse.User.current();
+      var currentUser = this.get('currentUser');
       if (composer.get('creatingTopic')) {
         currentUser.set('topic_count', currentUser.get('topic_count') + 1);
       } else {
