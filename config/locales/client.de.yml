@@ -94,6 +94,8 @@ de:
     links: Links
     faq: "FAQ"
     privacy_policy: "Datenschutzrichtlinie"
+    mobile_view: "Mobilansicht"
+    desktop_view: "Desktopansicht"
     you: "Du"
     or: "oder"
     now: "gerade eben"
@@ -202,6 +204,12 @@ de:
       change: "ändern"
       moderator: "{{user}} ist Moderator"
       admin: "{{user}} ist Administrator"
+      deleted: "(gelöscht)"
+
+      messages:
+        all: "Alle"
+        mine: "Meine"
+        unread: "Ungelesen"
 
       change_password:
         success: "(Mail gesendet)"
@@ -811,6 +819,12 @@ de:
         undelete: "Diesen Beitrag wiederherstellen"
         share: "Link zu diesem Beitrag teilen"
         more: "Mehr"
+        delete_replies:
+          confirm:
+            one: "Willst du diese Direktantwort löschen?"
+            other: "Willst du die {{count}} Direktantworten auch löschen?"
+          yes_value: "Ja, auch die Antworten löschen"
+          no_value: "Nein, nur diesen Beitrag löschen"
 
       actions:
         flag: 'Melden'
