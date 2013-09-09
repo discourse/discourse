@@ -9,13 +9,9 @@
 Discourse.UserController = Discourse.ObjectController.extend({
 
   viewingSelf: function() {
-    return this.get('content.username') === Discourse.User.currentProp('username');
-  }.property('content.username'),
+    return this.get('content.username') === this.get('currentUser.username');
+  }.property('content.username', 'currentUser.username'),
 
-  canSeePrivateMessages: function() {
-    return this.get('viewingSelf') || Discourse.User.currentProp('staff');
-  }.property('viewingSelf')
+  canSeePrivateMessages: Ember.computed.or('viewingSelf', 'currentUser.staff')
 
 });
-
-

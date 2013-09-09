@@ -41,7 +41,7 @@ Discourse.FilteredListRoute = Discourse.Route.extend({
       listController.set('canCreateTopic', topicList.get('can_create_topic'));
       listTopicsController.set('model', topicList);
 
-      var scrollPos = Discourse.Session.currentProp('topicListScrollPosition');
+      var scrollPos = this.get('session.topicListScrollPosition');
       if (scrollPos) {
         Em.run.next(function() {
           $('html, body').scrollTop(scrollPos);
