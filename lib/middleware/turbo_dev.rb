@@ -6,8 +6,11 @@ module Middleware
       @app = app
     end
     def call(env)
+
+      is_asset = (env['REQUEST_PATH'] =~ /^\/assets\//)
+
       # hack to bypass all middleware if serving assets, a lot faster 4.5 seconds -> 1.5 seconds
-      if (etag = env['HTTP_IF_NONE_MATCH']) && env['REQUEST_PATH'] =~ /^\/assets\//
+      if (etag = env['HTTP_IF_NONE_MATCH']) && is_asset
         name = $'
         etag = etag.gsub "\"", ""
         asset = Rails.application.assets.find_asset(name)
@@ -16,7 +19,9 @@ module Middleware
         end
       end
 
-      @app.call(env)
+      status, headers, response = @app.call(env)
+      headers['Cache-Control'] = 'no-cache' if is_asset
+      [status, headers, response]
     end
   end
 end
