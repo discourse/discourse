@@ -305,3 +305,22 @@ Discourse.initializer({
     }
   }
 });
+
+Discourse.initializer({
+  name: 'session',
+
+  initialize: function(container) {
+    container.register('session:current', Discourse.Session.current(), { instantiate: false });
+  }
+});
+
+Discourse.initializer({
+  name: 'injectSession',
+
+  initialize: function(container) {
+    if (container.lookup('session:current')) {
+      container.injection('controller', 'session', 'session:current');
+      container.injection('route', 'session', 'session:current');
+    }
+  }
+});

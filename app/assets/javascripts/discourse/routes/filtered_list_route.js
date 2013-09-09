@@ -46,7 +46,7 @@ Discourse.FilteredListRoute = Discourse.Route.extend({
         Em.run.next(function() {
           $('html, body').scrollTop(scrollPos);
         });
-        Discourse.Session.current().set('topicListScrollPosition', null);
+        this.set('session.topicListScrollPosition', null);
       }
     });
   }
