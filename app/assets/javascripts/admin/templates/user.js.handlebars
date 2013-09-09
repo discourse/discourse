@@ -64,32 +64,34 @@
 <section class='details'>
   <h1>{{i18n admin.user.permissions}}</h1>
 
-  <div class='display-row'>
-    <div class='field'>{{i18n admin.users.approved}}</div>
-    <div class='value'>
-      {{#if approved}}
-        {{i18n admin.user.approved_by}}
+  {{#if showApproval}}
+    <div class='display-row'>
+      <div class='field'>{{i18n admin.users.approved}}</div>
+      <div class='value'>
+        {{#if approved}}
+          {{i18n admin.user.approved_by}}
 
-        {{#linkTo 'adminUser' approved_by}}{{avatar approved_by imageSize="small"}}{{/linkTo}}
-        {{#linkTo 'adminUser' approved_by}}{{approved_by.username}}{{/linkTo}}
-      {{else}}
-        {{i18n no_value}}
-      {{/if}}
-
-    </div>
-    <div class='controls'>
-      {{#if approved}}
-        {{i18n admin.user.approve_success}}
-      {{else}}
-        {{#if can_approve}}
-          <button class='btn' {{action approve target="content"}}>
-            <i class='icon icon-ok'></i>
-            {{i18n admin.user.approve}}
-          </button>
+          {{#linkTo 'adminUser' approved_by}}{{avatar approved_by imageSize="small"}}{{/linkTo}}
+          {{#linkTo 'adminUser' approved_by}}{{approved_by.username}}{{/linkTo}}
+        {{else}}
+          {{i18n no_value}}
         {{/if}}
-      {{/if}}
+
+      </div>
+      <div class='controls'>
+        {{#if approved}}
+          {{i18n admin.user.approve_success}}
+        {{else}}
+          {{#if can_approve}}
+            <button class='btn' {{action approve target="content"}}>
+              <i class='icon icon-ok'></i>
+              {{i18n admin.user.approve}}
+            </button>
+          {{/if}}
+        {{/if}}
+      </div>
     </div>
-  </div>
+  {{/if}}
 
   <div class='display-row'>
     <div class='field'>{{i18n admin.users.active}}</div>
