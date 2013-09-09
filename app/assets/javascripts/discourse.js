@@ -267,3 +267,22 @@ Discourse.initializer({
     }
   }
 });
+
+Discourse.initializer({
+  name: 'screenTrack',
+
+  initialize: function(container) {
+    container.register('screen_track:current', Discourse.ScreenTrack.current(), { instantiate: false });
+  }
+});
+
+Discourse.initializer({
+  name: 'injectScreenTrack',
+
+  initialize: function(container) {
+    if (container.lookup('screen_track:current')) {
+      container.injection('controller', 'screenTrack', 'screen_track:current');
+      container.injection('route', 'screenTrack', 'screen_track:current');
+    }
+  }
+});
