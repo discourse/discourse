@@ -248,3 +248,22 @@ Discourse.initializer({
     }
   }
 });
+
+Discourse.initializer({
+  name: 'trackingState',
+
+  initialize: function(container) {
+    container.register('tracking_state:current', Discourse.TopicTrackingState.current(), { instantiate: false });
+  }
+});
+
+Discourse.initializer({
+  name: 'injectTrackingState',
+
+  initialize: function(container) {
+    if (container.lookup('tracking_state:current')) {
+      container.injection('controller', 'trackingState', 'tracking_state:current');
+      container.injection('route', 'trackingState', 'tracking_state:current');
+    }
+  }
+});

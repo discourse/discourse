@@ -111,7 +111,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
       showExtraInfo: false
     });
     this.controllerFor('composer').set('topic', model);
-    Discourse.TopicTrackingState.current().trackIncoming('all');
+    this.get('trackingState').trackIncoming('all');
     controller.subscribe();
 
     // We reset screen tracking every time a topic is entered
