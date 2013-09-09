@@ -6,6 +6,7 @@
 //= require ./discourse/helpers/i18n_helpers
 //= require ./discourse/mixins/ajax
 //= require ./discourse
+//= require ./discourse/initializers
 
 // Pagedown customizations
 //= require ./pagedown_custom.js
