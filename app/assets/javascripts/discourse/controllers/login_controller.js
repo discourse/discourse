@@ -12,10 +12,6 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
   authenticate: null,
   loggingIn: false,
 
-  site: function() {
-    return Discourse.Site.current();
-  }.property(),
-
   /**
    Determines whether at least one login button is enabled
   **/

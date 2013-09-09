@@ -286,3 +286,22 @@ Discourse.initializer({
     }
   }
 });
+
+Discourse.initializer({
+  name: 'site',
+
+  initialize: function(container) {
+    container.register('site:current', Discourse.Site.current(), { instantiate: false });
+  }
+});
+
+Discourse.initializer({
+  name: 'injectSite',
+
+  initialize: function(container) {
+    if (container.lookup('site:current')) {
+      container.injection('controller', 'site', 'site:current');
+      container.injection('route', 'site', 'site:current');
+    }
+  }
+});
