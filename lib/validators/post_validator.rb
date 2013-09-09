@@ -64,7 +64,7 @@ class Validators::PostValidator < ActiveModel::Validator
     # If the post is empty, default to the validates_presence_of
     return if post.raw.blank?
 
-    if $redis.exists(post.unique_post_key)
+    if post.matches_recent_post?
       post.errors.add(:raw, I18n.t(:just_posted_that))
     end
   end

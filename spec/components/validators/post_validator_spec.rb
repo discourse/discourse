@@ -38,7 +38,7 @@ describe Validators::PostValidator do
 
     context "post is unique" do
       before do
-        $redis.stubs(:exists).with(post.unique_post_key).returns(nil)
+        post.stubs(:matches_recent_post?).returns(false)
       end
 
       it "should not add an error" do
@@ -49,7 +49,7 @@ describe Validators::PostValidator do
 
     context "post is not unique" do
       before do
-        $redis.stubs(:exists).with(post.unique_post_key).returns('1')
+        post.stubs(:matches_recent_post?).returns(true)
       end
 
       it "should add an error" do

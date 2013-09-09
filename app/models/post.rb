@@ -70,6 +70,16 @@ class Post < ActiveRecord::Base
     "post-#{user_id}:#{raw_hash}"
   end
 
+  def store_unique_post_key
+    if SiteSetting.unique_posts_mins > 0
+      $redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, "1")
+    end
+  end
+
+  def matches_recent_post?
+    $redis.exists(unique_post_key)
+  end
+
   def raw_hash
     return if raw.blank?
     Digest::SHA1.hexdigest(raw.gsub(/\s+/, ""))

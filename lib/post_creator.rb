@@ -220,9 +220,7 @@ class PostCreator
   end
 
   def store_unique_post_key
-    if SiteSetting.unique_posts_mins > 0
-      $redis.setex(@post.unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, "1")
-    end
+    @post.store_unique_post_key
   end
 
   def consider_clearing_flags
