@@ -13,7 +13,7 @@ Discourse.ListController = Discourse.Controller.extend({
   needs: ['composer', 'modal', 'listTopics'],
 
   availableNavItems: function() {
-    var loggedOn = !!Discourse.User.current();
+    var loggedOn = !!this.get('currentUser');
 
     return Discourse.SiteSettings.top_menu.split("|").map(function(i) {
       return Discourse.NavItem.fromText(i, {
@@ -22,7 +22,7 @@ Discourse.ListController = Discourse.Controller.extend({
     }).filter(function(i) {
       return i !== null;
     });
-  }.property(),
+  }.property('currentUser'),
 
   createTopicText: function() {
     if (this.get('category.name')) {
@@ -125,12 +125,12 @@ Discourse.ListController = Discourse.Controller.extend({
 
   canEditCategory: function() {
     if( this.present('category') ) {
-      var u = Discourse.User.current();
+      var u = this.get('currentUser');
       return u && u.staff;
     } else {
       return false;
     }
-  }.property('category')
+  }.property('currentUser', 'category')
 
 });
 
