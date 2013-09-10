@@ -92,6 +92,9 @@ end
 puts "Populating Profile DB"
 run("bundle exec ruby script/profile_db_generator.rb")
 
+puts "Getting api key"
+api_key = `bundle exec rake api_key:get`
+
 def bench(path)
   puts "Running apache bench warmup"
   `ab -n 100 http://127.0.0.1:#{@port}#{path}`
@@ -107,8 +110,10 @@ def bench(path)
 end
 
 begin
-  # critical cause cache may be incompatible or something
-  `rm -fr tmp/cache`
+  # critical cause cache may be incompatible
+  puts "precompiling assets"
+  run("bundle exec rake assets:precompile")
+
   pid = spawn("bundle exec thin start -p #{@port}")
 
   while port_available? @port
@@ -122,6 +127,10 @@ begin
   home_page = bench("/")
   topic_page = bench("/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69")
 
+  append = "?api_key=#{api_key}&api_username=admin1"
+  home_page_admin = bench("/#{append}")
+  topic_page_admin = bench("/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69#{append}")
+
   puts "Your Results: (note for timings- percentile is first, duration is second in millisecs)"
 
   facts = Facter.to_hash
@@ -132,16 +141,20 @@ begin
     "virtual"].include?(k)
   }
 
+  run("RAILS_ENV=profile bundle exec rake assets:clean")
+
   puts({
     "home_page" => home_page,
     "topic_page" => topic_page,
+    "home_page_admin" => home_page_admin,
+    "topic_page_admin" => topic_page_admin,
     "timings" => @timings,
     "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
     "rails4?" => ENV["RAILS4"] == "1"
   }.merge(facts).to_yaml)
 
-  # TODO include Facter.to_hash ... for all facts
 
+  # TODO include Facter.to_hash ... for all facts
 ensure
   Process.kill "KILL", pid
 end
