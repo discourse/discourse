@@ -13,7 +13,7 @@ module Onebox
 
       def data
         {
-          url: raw.metadata[:url].first[:_value],
+          url: @url,
           title: raw.title,
           image: raw.images.first,
           description: raw.description,
