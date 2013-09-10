@@ -145,7 +145,7 @@ class PostAlertObserver < ActiveRecord::Observer
         end
 
         query.each do |user|
-          create_notification(user, Notification.types[:posted], post) unless exclude_user_ids.include?(user.id)
+          create_notification(user, Notification.types[:new_topic], post) unless exclude_user_ids.include?(user.id)
         end
       end
     end

@@ -16,6 +16,10 @@ class UserEmailObserver < ActiveRecord::Observer
       enqueue :user_posted
     end
 
+    def new_topic
+      enqueue :new_topic
+    end
+
     def quoted
       enqueue :user_quoted
     end
