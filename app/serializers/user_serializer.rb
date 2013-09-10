@@ -50,6 +50,7 @@ class UserSerializer < BasicUserSerializer
                      :email_new_topics,
                      :email_digest_though_present,
                      :email_notification_though_present,
+                     :default_watch,
                      :digest_after_days,
                      :auto_track_topics_after_msecs,
                      :new_topic_duration_minutes,

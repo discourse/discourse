@@ -52,6 +52,7 @@ class UsersController < ApplicationController
       u.bio_raw = params[:bio_raw] || u.bio_raw
       u.name = params[:name] || u.name
       u.website = website || u.website
+      u.default_watch = params[:default_watch] if ["watching", "tracking", ""].include? params[:default_watch] || u.default_watch
       u.digest_after_days = params[:digest_after_days] || u.digest_after_days
       u.auto_track_topics_after_msecs = params[:auto_track_topics_after_msecs].to_i if params[:auto_track_topics_after_msecs]
       u.new_topic_duration_minutes = params[:new_topic_duration_minutes].to_i if params[:new_topic_duration_minutes]

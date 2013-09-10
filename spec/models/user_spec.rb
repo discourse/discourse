@@ -270,6 +270,7 @@ describe User do
     its(:email_digest_though_present) { should be_false }
     its(:email_notification_though_present) { should be_false }
     its(:email_direct ) { should be_true }
+    its(:default_watch ) { should be_blank }
     its(:time_read) { should == 0}
 
     context 'digest emails' do

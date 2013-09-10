@@ -289,6 +289,7 @@ en:
       email_digest_though_present: "Send me digest emails even if I am present on the site"
       email_notification_though_present: "Send me notification emails even if I am present on the site "
 
+      default_watch: "And set watch level per default to:"
       other_settings: "Other"
 
       new_topic_duration:
