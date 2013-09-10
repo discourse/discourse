@@ -29,6 +29,6 @@ Discourse.ComposerMessagesView = Ember.CollectionView.extend({
       var replyControl = $('#reply-control');
       this.$().css('bottom', (replyControl.height() || 0) + "px").slideDown('fast');
     }
-  }),
+  })
 });
 
