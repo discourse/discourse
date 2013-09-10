@@ -1,53 +1,77 @@
 require "spec_helper"
 
-class Onebox::Engine::Foo
+class OneboxEngineExample
   include Onebox::Engine
 
-  def record
-    "foo"
+  def data
+    { foo: raw[:key], url: @url }
+  end
+
+  def raw
+    { key: "value" }
+  end
+
+  def template
+    %|<div class="onebox"><a href="{{url}}"></a></div>|
   end
 end
 
 describe Onebox::Engine do
   describe "#to_html" do
-    it "returns formatted html"
+    it "returns the onebox wrapper" do
+      html = OneboxEngineExample.new("foo").to_html
+      expect(html).to include(%|class="onebox"|)
+    end
+
+    it "doesn't allow XSS injection" do
+      html = OneboxEngineExample.new(%|http://foo.com" onscript="alert('foo')|).to_html
+      expect(html).not_to include(%|onscript="alert('foo')|)
+    end
   end
 
   describe "#record" do
-    it "returns cache value for given url if cache exists" do
-      cache = { "http://example.com" => "foo" }
-      result = Onebox::Engine::Foo.new("http://example.com", cache).send(:record)
-      expect(result).to eq("foo")
+    class OneboxEngineBar
+      include Onebox::Engine
+
+      def data
+        "new content"
+      end
+    end
+
+    it "returns cached value for given url if its url is already in cache" do
+      cache = { "http://example.com" => "old content" }
+      result = OneboxEngineBar.new("http://example.com", cache).send(:record)
+      expect(result).to eq("old content")
     end
 
     it "stores cache value for given url if cache key doesn't exist" do
-      cache = { "http://example.com1" => "foo" }
-      result = Onebox::Engine::Foo.new("http://example.com").send(:record)
-      expect(result).to eq("foo")
+      cache = { "http://example.com1" => "old content" }
+      result = OneboxEngineBar.new("http://example.com", cache).send(:record)
+      expect(result).to eq("new content")
     end
   end
 
   describe ".===" do
     it "returns true if argument matches the matcher" do
-      class Onebox::Engine::Foo
+      class OneboxEngineFoo
         include Onebox::Engine
         @@matcher = /example/
       end
-      result = Onebox::Engine::Foo === "http://www.example.com/product/5?var=foo&bar=5"
+      result = OneboxEngineFoo === "http://www.example.com/product/5?var=foo&bar=5"
       expect(result).to eq(true)
     end
   end
 
   describe ".matches" do
     it "sets @@matcher to a regular expression" do
-      class Onebox::Engine::Far
+      class OneboxEngineFar
         include Onebox::Engine
 
         matches do
           find "foo.com"
         end
       end
-      regex = Onebox::Engine::Far.class_variable_get(:@@matcher)
+      regex = OneboxEngineFar.class_variable_get(:@@matcher)
       expect(regex).to eq(/(?:foo\.com)/i)
     end
   end
