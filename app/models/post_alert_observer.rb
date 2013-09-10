@@ -145,7 +145,20 @@ class PostAlertObserver < ActiveRecord::Observer
         end
 
         query.each do |user|
-          create_notification(user, Notification.types[:new_topic], post) unless exclude_user_ids.include?(user.id)
+          next if exclude_user_ids.include?(user.id)
+
+          if user.default_watch
+            notify_level = TopicUser.notification_levels[:watching]
+            if user.default_watch == "tracking"
+              notify_level = TopicUser.notification_levels[:tracking]
+            end
+
+            TopicUser.change(user.id, post.topic_id,
+                  notifications_reason_id: TopicUser.notification_reasons[:default_tracking],
+                  notification_level: notify_level)
+          end
+
+          create_notification(user, Notification.types[:new_topic], post)
         end
       end
     end
