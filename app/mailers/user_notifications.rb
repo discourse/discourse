@@ -32,7 +32,7 @@ class UserNotifications < ActionMailer::Base
     @user = user
     @base_url = Discourse.base_url
 
-    min_date = opts[:since] || @user.last_emailed_at || @user.last_seen_at || 1.month.ago
+    min_date = opts[:since] || @user.last_emailed_at || (@user.last_seen_at if !@user.email_digest_though_present) || 1.month.ago
 
     @site_name = SiteSetting.title
 
