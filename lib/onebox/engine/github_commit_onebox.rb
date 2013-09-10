@@ -11,8 +11,9 @@ module Onebox
 
       private
 
-      def extracted_data
+      def data
         {
+          binding.pry
           url: @url,
           title: @body.title,
           image: @body.images.first,
