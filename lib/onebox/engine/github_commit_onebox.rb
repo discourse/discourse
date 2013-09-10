@@ -13,12 +13,9 @@ module Onebox
 
       def data
         {
-          binding.pry
           url: @url,
-          title: @body.title,
-          image: @body.images.first,
-          description: @body.description,
-          video: @body.metadata[:video].first[:url].first[:_value]
+          title: raw.title,
+          image: raw.images[1],
         }
       end
     end

@@ -15,7 +15,7 @@ describe Onebox::Engine::GithubCommitOnebox do
       expect(html).to include("discourse")
     end
 
-    it "returns user gravatar" do
+    it "returns user image aka gravatar" do
       expect(html).to include("gravatar-user-420.png")
     end
 
