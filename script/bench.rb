@@ -93,13 +93,13 @@ puts "Populating Profile DB"
 run("bundle exec ruby script/profile_db_generator.rb")
 
 puts "Getting api key"
-api_key = `bundle exec rake api_key:get`
+api_key = `bundle exec rake api_key:get`.split("\n")[-1]
 
 def bench(path)
   puts "Running apache bench warmup"
-  `ab -n 100 http://127.0.0.1:#{@port}#{path}`
+  `ab -n 100 "http://127.0.0.1:#{@port}#{path}"`
   puts "Benchmarking #{path}"
-  `ab -n 100 -e tmp/ab.csv http://127.0.0.1:#{@port}#{path}`
+  `ab -n 100 -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
   CSV.foreach("tmp/ab.csv") do |percent, time|
@@ -128,6 +128,7 @@ begin
   topic_page = bench("/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69")
 
   append = "?api_key=#{api_key}&api_username=admin1"
+
   home_page_admin = bench("/#{append}")
   topic_page_admin = bench("/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69#{append}")
 
