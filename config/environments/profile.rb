@@ -17,7 +17,7 @@ Discourse::Application.configure do
   config.assets.compress = true
 
   # stuff should be pre-compiled, allow compilation to make life easier
-  config.assets.compile = true
+  config.assets.compile = false
 
   # Generate digests for assets URLs
   config.assets.digest = true
