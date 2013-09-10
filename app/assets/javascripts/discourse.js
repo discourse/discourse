@@ -143,8 +143,7 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     bootbox.animate(false);
     bootbox.backdrop(true); // clicking outside a bootbox modal closes it
 
-    Discourse.Session.currentProp('mobileDevice', $html.hasClass('mobile-device'));
-    Discourse.Session.currentProp('mobileView', $html.hasClass('mobile-view'));
+    Discourse.Mobile.init();
 
     setInterval(function(){
       Discourse.Formatter.updateRelativeAge($('.relative-date'));

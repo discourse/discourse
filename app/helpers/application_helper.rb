@@ -117,8 +117,7 @@ module ApplicationHelper
   end
 
   def mobile_device?
-    # For now, don't show mobile view unless you put ?mobile_view=1 in the URL.
-    # request.user_agent =~ /Mobile|webOS/
-    false
+    # TODO: this is dumb. user agent matching is a doomed approach. a better solution is coming.
+    request.user_agent =~ /Mobile|webOS/ and !(request.user_agent =~ /iPad/)
   end
 end

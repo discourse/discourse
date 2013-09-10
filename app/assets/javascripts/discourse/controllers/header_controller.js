@@ -25,15 +25,15 @@ Discourse.HeaderController = Discourse.Controller.extend({
   }.property('currentUser', 'topic.isPrivateMessage'),
 
   mobileDevice: function() {
-    return Discourse.Session.currentProp('mobileDevice');
+    return Discourse.Mobile.isMobileDevice;
   }.property(),
 
   mobileView: function() {
-    return Discourse.Session.currentProp('mobileView');
+    return Discourse.Mobile.mobileView;
   }.property(),
 
   toggleMobileView: function() {
-    window.location.assign(window.location.pathname + '?mobile_view=' + (Discourse.Session.currentProp('mobileView') ? '0' : '1'));
+    Discourse.Mobile.toggleMobileView();
   }
 
 });
