@@ -308,24 +308,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     this.get('content').toggleStar();
   },
 
-  /**
-    Toggle the replies this post is a reply to
-
-    @method showReplyHistory
-  **/
-  toggleReplyHistory: function(post) {
-    var replyHistory = post.get('replyHistory'),
-        topicController = this;
-
-    if (replyHistory.length > 0) {
-      replyHistory.clear();
-    } else {
-      post.set('loadingReplyHistory', true);
-      topicController.get('postStream').findReplyHistory(post).then(function () {
-        post.set('loadingReplyHistory', false);
-      });
-    }
-  },
 
   /**
     Clears the pin from a topic for the currently logged in user
