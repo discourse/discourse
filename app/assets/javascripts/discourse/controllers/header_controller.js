@@ -24,16 +24,11 @@ Discourse.HeaderController = Discourse.Controller.extend({
     return this.get('currentUser') && !this.get('topic.isPrivateMessage');
   }.property('currentUser', 'topic.isPrivateMessage'),
 
-  mobileDevice: function() {
-    return Discourse.Session.currentProp('mobileDevice');
-  }.property(),
-
-  mobileView: function() {
-    return Discourse.Session.currentProp('mobileView');
-  }.property(),
+  mobileDevice: Ember.computed.alias('session.mobileDevice'),
+  mobileView: Ember.computed.alias('session.mobileView'),
 
   toggleMobileView: function() {
-    window.location.assign(window.location.pathname + '?mobile_view=' + (Discourse.Session.currentProp('mobileView') ? '0' : '1'));
+    window.location.assign(window.location.pathname + '?mobile_view=' + (this.get('session.mobileView') ? '0' : '1'));
   }
 
 });

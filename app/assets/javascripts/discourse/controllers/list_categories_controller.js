@@ -24,9 +24,7 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
     });
   }.property('categories.@each'),
 
-  canEdit: function() {
-    return Discourse.User.currentProp('staff');
-  }.property(),
+  canEdit: Ember.computed.alias('currentUser.staff'),
 
   // clear a pinned topic
   clearPin: function(topic) {

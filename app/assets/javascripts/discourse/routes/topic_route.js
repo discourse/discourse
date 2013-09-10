@@ -71,7 +71,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     this._super();
 
     var topic = this.modelFor('topic');
-    Discourse.Session.currentProp('lastTopicIdViewed', parseInt(topic.get('id'), 10));
+    this.set('session.lastTopicIdViewed', parseInt(topic.get('id'), 10));
     this.controllerFor('search').set('searchContext', topic.get('searchContext'));
   },
 
@@ -88,7 +88,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     topicController.set('multiSelect', false);
     topicController.unsubscribe();
     this.controllerFor('composer').set('topic', null);
-    Discourse.ScreenTrack.current().stop();
+    this.get('screenTrack').stop();
 
     var headerController;
     if (headerController = this.controllerFor('header')) {
@@ -111,11 +111,11 @@ Discourse.TopicRoute = Discourse.Route.extend({
       showExtraInfo: false
     });
     this.controllerFor('composer').set('topic', model);
-    Discourse.TopicTrackingState.current().trackIncoming('all');
+    this.get('trackingState').trackIncoming('all');
     controller.subscribe();
 
     // We reset screen tracking every time a topic is entered
-    Discourse.ScreenTrack.current().start(model.get('id'));
+    this.get('screenTrack').start(model.get('id'));
   }
 
 });

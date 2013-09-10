@@ -58,7 +58,7 @@ Discourse.ListController = Discourse.Controller.extend({
     var listController = this;
     this.set('loading', true);
 
-    var trackingState = Discourse.TopicTrackingState.current();
+    var trackingState = this.get('trackingState');
 
     if (filterMode === 'categories') {
       return Discourse.CategoryList.list(filterMode).then(function(items) {

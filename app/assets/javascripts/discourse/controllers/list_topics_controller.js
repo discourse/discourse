@@ -47,7 +47,7 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
 
   // Show newly inserted topics
   showInserted: function(e) {
-    var tracker = Discourse.TopicTrackingState.current();
+    var tracker = this.get('trackingState');
 
     // Move inserted into topics
     this.get('content').loadBefore(tracker.get('newIncoming'));
