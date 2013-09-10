@@ -15,7 +15,7 @@ module Jobs
       user = User.where(id: args[:user_id]).first
       return if !user || user.is_banned?
 
-      seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
+      seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago) if  !user.email_notification_though_present 
 
       email_args = {}
 
