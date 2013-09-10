@@ -109,13 +109,16 @@ class UserNotifications < ActionMailer::Base
     notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
     context = ""
-    context_posts = Post.where(topic_id: @post.topic_id)
+    context_posts = nil
+    if user.email_include_context
+      context_posts = Post.where(topic_id: @post.topic_id)
                         .where("post_number < ?", @post.post_number)
                         .where(user_deleted: false)
                         .order('created_at desc')
                         .limit(SiteSetting.email_posts_context)
+    end
 
-    if context_posts.present?
+    if context_posts and context_posts.present?
       context << "---\n*#{I18n.t('user_notifications.previous_discussion')}*\n"
       context_posts.each do |cp|
         context << email_post_markdown(cp)
