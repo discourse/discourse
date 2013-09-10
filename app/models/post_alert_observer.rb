@@ -135,6 +135,17 @@ class PostAlertObserver < ActiveRecord::Observer
         TopicUser.where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching]).includes(:user).each do |tu|
           create_notification(tu.user, Notification.types[:posted], post) unless exclude_user_ids.include?(tu.user_id)
         end
+      else
+        # Users who want to receive emails about every post
+        query = User.real.where(email_new_topics: true, active: true)
+        # If the site requires approval, make sure the user is approved
+        if SiteSetting.must_approve_users?
+          query = query.where("approved OR moderator OR admin")
+        end
+
+        query.each do |user|
+          create_notification(user, Notification.types[:new_topic], post) unless exclude_user_ids.include?(user.id)
+        end
       end
     end
 end
