@@ -21,6 +21,10 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
                       { name: I18n.t('user.email_digests.weekly'), value: 7 },
                       { name: I18n.t('user.email_digests.bi_weekly'), value: 14 }],
 
+  newTopicsAutowatch: [{ name: I18n.t('topic.notifications.regular.title'), value: "" },
+                      { name: I18n.t('topic.notifications.tracking.title'), value: "tracking" },
+                      { name: I18n.t('topic.notifications.watching.title'), value: "watching" }],
+
   autoTrackDurations: [{ name: I18n.t('user.auto_track_options.never'), value: -1 },
                        { name: I18n.t('user.auto_track_options.always'), value: 0 },
                        { name: I18n.t('user.auto_track_options.after_n_seconds', { count: 30 }), value: 30000 },

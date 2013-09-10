@@ -151,6 +151,8 @@ Discourse.User = Discourse.Model.extend({
                                'email_digests',
                                'email_direct',
                                'email_private_messages',
+                               'email_new_topics',
+                               'default_watch',
                                'dynamic_favicon',
                                'digest_after_days',
                                'new_topic_duration_minutes',
