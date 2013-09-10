@@ -1,13 +1,15 @@
 require "spec_helper"
 
 describe Onebox::Engine::StackExchangeOnebox do
-  describe "#to_html" do
-    let(:link) { "http://stackexchange.com" }
-    let(:html) { described_class.new(link).to_html }
+  let(:link) { "http://stackexchange.com" }
+  before do
+    fake(link, response("stackexchange.response"))
+  end
 
-    before do
-      fake(link, response("stackexchange.response"))
-    end
+  it_behaves_like "engines"
+
+  describe "#to_html" do
+    let(:html) { described_class.new(link).to_html }
 
     it "returns the question title" do
       expect(html).to include("Concept behind these 4 lines of tricky C++ code")

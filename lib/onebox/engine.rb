@@ -10,28 +10,46 @@ module Onebox
       end.map(&method(:const_get))
     end
 
-    def initialize(link)
+    attr_reader :cache
+
+    def initialize(link, cache = Onebox.defaults)
       @url = link
-      @body = read
-      @data = extracted_data
+      @cache = cache
     end
 
     def to_html
-      Mustache.render(template, @data)
+      Mustache.render(template, record)
     end
 
     private
 
-    def read
-      Nokogiri::HTML(open(@url))
+    def record
+      if cache.key?(@url)
+        cache.fetch(@url)
+      else
+        cache.store(@url, data)
+      end
+    end
+
+    # raises error if not defined in onebox engine
+    # in each onebox, uses either Nokogiri or OpenGraph to get raw HTML from url
+    def raw
+      raise NoMethodError, "Engines need to implement this method"
     end
 
     def template
       File.read(File.join("templates", "#{template_name}.handlebars"))
     end
 
+    # calculates handlebars template name for onebox using name of engine
     def template_name
       self.class.name.split("::").last.downcase.gsub(/onebox/, "")
+    end
+
+    # raises error if not defined in onebox engine
+    # in each onebox, returns hash of desired onebox content
+    def data
+      raise NoMethodError, "Engines need this method defined"
     end
 
     module ClassMethods
@@ -51,6 +69,7 @@ module Onebox
 end
 
 require_relative "engine/open_graph"
+require_relative "engine/html"
 require_relative "engine/example_onebox"
 require_relative "engine/amazon_onebox"
 require_relative "engine/bliptv_onebox"

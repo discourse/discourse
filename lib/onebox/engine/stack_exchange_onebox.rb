@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class StackExchangeOnebox
       include Engine
+      include HTML
 
       matches do
         # /^http:\/\/(?:(?:(?<subsubdomain>\w*)\.)?(?<subdomain>\w*)\.)?(?<domain>#{DOMAINS.join('|')})\.com\/(?:questions|q)\/(?<question>\d*)/
@@ -10,11 +11,11 @@ module Onebox
 
       private
 
-      def extracted_data
+      def data
         {
           url: @url,
-          title: @body.css(".question-hyperlink").inner_text,
-          question: @body.css(".question .post-text p").first.inner_text
+          title: raw.css(".question-hyperlink").inner_text,
+          question: raw.css(".question .post-text p").first.inner_text
         }
       end
     end

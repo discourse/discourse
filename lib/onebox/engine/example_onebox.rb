@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class ExampleOnebox
       include Engine
+      include HTML
 
       matches do
         find "example.com"
@@ -9,14 +10,14 @@ module Onebox
 
       private
 
-      def extracted_data
+      def data
         {
-          header: @body.css("html body h1")
+          header: raw.css("h1").inner_text
         }
       end
 
       def template
-        %|<div class="onebox">{{{header}}}</div>|
+        %|<div class="onebox">{{header}}</div>|
       end
     end
   end

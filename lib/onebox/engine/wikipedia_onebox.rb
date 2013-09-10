@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class WikipediaOnebox
       include Engine
+      include HTML
 
       matches do
         # /^https?:\/\/.*wikipedia\.(com|org)\/.*$/
@@ -10,12 +11,12 @@ module Onebox
 
       private
 
-      def extracted_data
+      def data
         {
           url: @url,
-          name: @body.css("html body h1").inner_text,
-          image: @body.css(".infobox .image img").first["src"],
-          description: @body.css("html body p").inner_text
+          name: raw.css("html body h1").inner_text,
+          image: raw.css(".infobox .image img").first["src"],
+          description: raw.css("html body p").inner_text
         }
       end
     end

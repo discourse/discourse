@@ -1,10 +1,10 @@
 module Onebox
   module Engine
-    module OpenGraph
+    module HTML
       private
 
       def raw
-        @raw ||= ::OpenGraph.new(@url)
+        @raw ||= Nokogiri::HTML(open(@url))
       end
     end
   end

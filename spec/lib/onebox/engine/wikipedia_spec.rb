@@ -1,13 +1,15 @@
 require "spec_helper"
 
 describe Onebox::Engine::WikipediaOnebox do
-  describe "to_html" do
-    let(:link) { "http://example.com" }
-    let(:html) { described_class.new(link).to_html }
+  let(:link) { "http://wikipedia.com" }
+  before do
+    fake(link, response("wikipedia.response"))
+  end
 
-    before do
-      fake(link, response("wikipedia.response"))
-    end
+  it_behaves_like "engines"
+
+  describe "#to_html" do
+    let(:html) { described_class.new(link).to_html }
 
     it "returns the product URL" do
       expect(html).to include(link)

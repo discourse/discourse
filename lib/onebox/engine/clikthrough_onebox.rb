@@ -11,11 +11,11 @@ module Onebox
 
       private
 
-      def extracted_data
+      def data
         {
           url: @url,
-          title: @body.title,
-          description: @body.description
+          title: raw.title,
+          description: raw.description
         }
       end
     end

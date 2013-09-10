@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class QikOnebox
       include Engine
+      include HTML
 
       matches do
         # /^https?\:\/\/qik\.com\/video\/.*$/
@@ -10,11 +11,11 @@ module Onebox
 
       private
 
-      def extracted_data
+      def data
         {
           url: @url,
-          title: @body.css(".info h2").inner_text,
-          image: @body.css(".userphoto").first["src"]
+          title: raw.css(".info h2").inner_text,
+          image: raw.css(".userphoto").first["src"]
         }
       end
     end

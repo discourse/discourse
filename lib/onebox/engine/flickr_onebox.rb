@@ -11,12 +11,12 @@ module Onebox
 
       private
 
-      def extracted_data
+      def data
         {
           url: @url,
-          title: @body.title,
-          image: @body.images[0],
-          description: @body.description
+          title: raw.title,
+          image: raw.images.first,
+          description: raw.description
         }
       end
     end

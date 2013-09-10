@@ -1,7 +1,11 @@
 module Onebox
   class Preview
-    def initialize(link)
+    attr_reader :cache
+
+    def initialize(link, parameters = Onebox.defaults)
       @url = link
+      @options = parameters
+      @cache = options.cache
       @engine = Matcher.new(@url).oneboxed
     end
 
@@ -9,10 +13,14 @@ module Onebox
       engine.to_html
     end
 
+    def options
+      OpenStruct.new(@options)
+    end
+
     private
 
     def engine
-      @engine.new(@url)
+      @engine.new(@url, cache)
     end
 
     class InvalidURI < StandardError
