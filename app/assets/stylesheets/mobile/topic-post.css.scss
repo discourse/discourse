@@ -99,7 +99,7 @@ button {
 }
 
 .post-actions {
-  margin-left: 20px; 
+  margin-left: 10px; 
   margin-top: 2px;
 }
 
@@ -133,7 +133,7 @@ a.star {
   } 
 
   border-radius: 5px;
-  margin: 15px 20px 20px 20px;
+  margin: 15px 10px 20px 10px;
   border: 1px solid #ddd;
    
   h3 {
@@ -246,16 +246,16 @@ a.star {
 
 #topic-footer-buttons {
   border-top: 1px solid #ddd;
-  padding: 20px 20px 0 20px;
+  padding: 20px 10px 0 10px;
 }
 
 #suggested-topics {
   float: left;
   clear: left;
   margin-top: 10px;
-  padding: 0 20px 0 20px;
+  padding: 0 10px 0 10px;
 
-    th.views, td.views, td.activity, th.activity {
+    th.views, td.views, td.activity, th.activity, th.likes, td.likes {
     display: none;
     }
 
@@ -289,7 +289,7 @@ span.post-count {
   z-index: 1000;
   background: #eee;
   margin: 0 0 0 0 !important;
-  padding: 15px 20px 15px 20px;
+  padding: 15px 10px 15px 10px;
 }
 
 .topic-post article.boxed img {
