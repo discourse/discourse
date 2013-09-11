@@ -22,6 +22,11 @@ test('basic bbcode', function() {
          "allows embedding of tags");
 });
 
+test('invalid bbcode', function() {
+  var cooked = Discourse.Markdown.cook("[code]I am not closed\n\nThis text exists.", {lookupAvatar: false});
+  equal(cooked, "<p>[code]I am not closed</p>\n\n<p>This text exists.</p>", "does not raise an error with an open bbcode tag.");
+});
+
 test('lists', function() {
   format("[ul][li]option one[/li][/ul]", "<ul><li>option one</li></ul>", "creates an ul");
   format("[ol][li]option one[/li][/ol]", "<ol><li>option one</li></ol>", "creates an ol");

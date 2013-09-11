@@ -77,4 +77,3 @@ Discourse.Dialect.on("parseNode", function(event) {
   }
 });
 
-Discourse.Markdown.whiteListClass("onebox", "onebox-result", "onebox-result-body", "source", "clearfix", "thumbnail", "info");

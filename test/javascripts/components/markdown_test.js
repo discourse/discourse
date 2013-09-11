@@ -8,6 +8,12 @@ module("Discourse.Markdown", {
 
 var cooked = function(input, expected, text) {
   var result = Discourse.Markdown.cook(input, {mentionLookup: false, sanitize: true});
+
+  if (result !== expected) {
+    console.log(JSON.stringify(result));
+    console.log(JSON.stringify(expected));
+  }
+
   equal(result, expected, text);
 };
 
@@ -31,7 +37,7 @@ test("basic cooking", function() {
 
 test("Traditional Line Breaks", function() {
   var input = "1\n2\n3";
-  cooked(input, "<p>1<br>2<br>3</p>", "automatically handles trivial newlines");
+  cooked(input, "<p>1<br/>2<br/>3</p>", "automatically handles trivial newlines");
 
   var traditionalOutput = "<p>1\n2\n3</p>";
 
@@ -46,7 +52,7 @@ test("Traditional Line Breaks", function() {
 
 test("Line Breaks", function() {
   cooked("[] first choice\n[] second choice",
-         "<p>[] first choice<br>[] second choice</p>",
+         "<p>[] first choice<br/>[] second choice</p>",
          "it handles new lines correctly with [] options");
 });
 
@@ -89,10 +95,10 @@ test("Links", function() {
          "autolinks a URL with parentheses (like Wikipedia)");
 
   cooked("Here's a tweet:\nhttps://twitter.com/evil_trout/status/345954894420787200",
-         "<p>Here's a tweet:<br><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\">https://twitter.com/evil_trout/status/345954894420787200</a></p>",
+         "<p>Here's a tweet:<br/><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\" target=\"_blank\">https://twitter.com/evil_trout/status/345954894420787200</a></p>",
          "It doesn't strip the new line.");
 
-  cooked("1. View @eviltrout's profile here: http://meta.discourse.org/users/eviltrout/activity<br>next line.",
+  cooked("1. View @eviltrout's profile here: http://meta.discourse.org/users/eviltrout/activity<br/>next line.",
         "<ol><li>View <span class=\"mention\">@eviltrout</span>'s profile here: <a href=\"http://meta.discourse.org/users/eviltrout/activity\">http://meta.discourse.org/users/eviltrout/activity</a><br>next line.</li></ol>",
         "allows autolinking within a list without inserting a paragraph.");
 
@@ -105,7 +111,7 @@ test("Links", function() {
          'allows multiple links on one line');
 
   cooked("* [Evil Trout][1]\n  [1]: http://eviltrout.com",
-         "<ul><li><a href=\"http://eviltrout.com\">Evil Trout</a><br></li></ul>",
+         "<ul><li><a href=\"http://eviltrout.com\">Evil Trout</a></li></ul>",
          "allows markdown link references in a list");
 
 });
@@ -121,9 +127,9 @@ test("simple quotes", function() {
          "it allows nesting of blockquotes with spaces");
 
   cooked("- hello\n\n  > world\n  > eviltrout",
-         "<ul><li>hello</li></ul>\n\n<blockquote><p>world<br>eviltrout</p></blockquote>",
+         "<ul><li>hello</li></ul>\n\n<blockquote><p>world<br/>eviltrout</p></blockquote>",
          "it allows quotes within a list.");
-  cooked("  > indent 1\n  > indent 2", "<blockquote><p>indent 1<br>indent 2</p></blockquote>", "allow multiple spaces to indent");
+  cooked("  > indent 1\n  > indent 2", "<blockquote><p>indent 1<br/>indent 2</p></blockquote>", "allow multiple spaces to indent");
 
 });
 
@@ -136,7 +142,7 @@ test("Quotes", function() {
                 "works with multiple lines");
 
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",
-                { topicId: 2, lookupAvatar: function(name) { return "" + name; } },
+                { topicId: 2, lookupAvatar: function(name) { return "" + name; }, sanitize: true },
                 "<p>1</p>\n\n<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob" +
                 "bob said:</div><blockquote><p>my quote</p></blockquote></aside></p>\n\n<p>2</p>",
                 "handles quotes properly");
@@ -160,7 +166,7 @@ test("Mentions", function() {
   cooked("robin@email.host", "<p>robin@email.host</p>", "won't add mention class to an email address");
   cooked("hanzo55@yahoo.com", "<p>hanzo55@yahoo.com</p>", "won't be affected by email addresses that have a number before the @ symbol");
   cooked("@EvilTrout yo", "<p><span class=\"mention\">@EvilTrout</span> yo</p>", "it handles mentions at the beginning of a string");
-  cooked("yo\n@EvilTrout", "<p>yo<br><span class=\"mention\">@EvilTrout</span></p>", "it handles mentions at the beginning of a new line");
+  cooked("yo\n@EvilTrout", "<p>yo<br/><span class=\"mention\">@EvilTrout</span></p>", "it handles mentions at the beginning of a new line");
   cooked("`evil` @EvilTrout `trout`",
          "<p><code>evil</code> <span class=\"mention\">@EvilTrout</span> <code>trout</code></p>",
          "deals correctly with multiple <code> blocks");
@@ -171,7 +177,7 @@ test("Mentions", function() {
          "handles mentions in simple quotes");
 
   cooked("> foo bar baz @eviltrout ohmagerd\nlook at this",
-         "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span> ohmagerd<br>look at this</p></blockquote>",
+         "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span> ohmagerd<br/>look at this</p></blockquote>",
          "does mentions properly with trailing text within a simple quote");
 
   cooked("`code` is okay before @mention",
@@ -224,7 +230,7 @@ test("Oneboxing", function() {
 
   cooked("http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street",
          "<p><a href=\"http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street\" class=\"onebox\"" +
-         ">http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street</a></p>",
+         " target=\"_blank\">http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street</a></p>",
          "works with links that have underscores in them");
 
 });
@@ -248,7 +254,7 @@ test("Code Blocks", function() {
          "it maintains new lines inside a code block.");
 
   cooked("hello\nworld\n```json\nline 1\n\nline 2\n\n\nline3\n```",
-         "<p>hello<br>world<br></p>\n\n<p><pre><code class=\"json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
+         "<p>hello<br/>world<br/></p>\n\n<p><pre><code class=\"json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
          "it maintains new lines inside a code block with leading content.");
 
   cooked("```text\n<header>hello</header>\n```",
@@ -287,7 +293,7 @@ test("sanitize", function() {
   cooked("hello<script>alert(42)</script>", "<p>hello</p>", "it sanitizes while cooking");
 
   cooked("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>",
-         "<p><a href=\"http://disneyland.disney.go.com/\">disney</a> <a href=\"http://reddit.com\">reddit</a></p>",
+         "<a href=\"http://disneyland.disney.go.com/\">disney</a> <a href=\"http://reddit.com\">reddit</a>",
          "we can embed proper links");
 
 });
@@ -295,7 +301,7 @@ test("sanitize", function() {
 test("URLs in BBCode tags", function() {
 
   cooked("[img]http://eviltrout.com/eviltrout.png[/img][img]http://samsaffron.com/samsaffron.png[/img]",
-         "<p><img src=\"http://eviltrout.com/eviltrout.png\"><img src=\"http://samsaffron.com/samsaffron.png\"></p>",
+         "<p><img src=\"http://eviltrout.com/eviltrout.png\"/><img src=\"http://samsaffron.com/samsaffron.png\"/></p>",
          "images are properly parsed");
 
   cooked("[url]http://discourse.org[/url]",

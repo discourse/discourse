@@ -125,6 +125,7 @@ Discourse.Markdown = {
     if (Discourse.Markdown.validClasses[val]) { return val; }
   },
 
+
   /**
     Sanitize text using the sanitizer
 
@@ -151,10 +152,6 @@ Discourse.Markdown = {
 
         text = Discourse.Dialect.cook(text, opts);
         if (!text) return "";
-
-        if (opts.sanitize) {
-          text = Discourse.Markdown.sanitize(text);
-        }
 
         return text;
       }

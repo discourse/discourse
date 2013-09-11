@@ -4,16 +4,10 @@
   * We have replaced the strong/em handlers because we prefer them only to work on word
     boundaries.
 
-  * We removed the maraku support as we don't use it.
+  // Fix code within attrs
+  if (prev && (typeof prev[0] === "string") && prev[0].match(/<[^>]+$/)) { return; }
 
-  * We don't escape the contents of HTML as we prefer to use a whitelist.
-
-  * We fixed a bug where references can be created directly following a list.
-
-  * Fix to blockquote to handle spaces in front and when nested.
-
-  * Note the name BetterMarkdown doesn't mean it's *better* than markdown-js, it refers
-    to it being better than our previous markdown parser!
+  // __RAW__
 
 */
 
@@ -260,27 +254,26 @@ function create_reference(attrs, m) {
  * the block processing.
  */
 Markdown.prototype.processBlock = function processBlock( block, next ) {
-  var cbs = this.dialect.block,
-      ord = cbs.__order__;
+    var cbs = this.dialect.block,
+        ord = cbs.__order__;
 
-  if ( "__call__" in cbs ) {
-    return cbs.__call__.call(this, block, next);
-  }
+    if ( "__call__" in cbs )
+      return cbs.__call__.call(this, block, next);
 
-  for ( var i = 0; i < ord.length; i++ ) {
-    //D:this.debug( "Testing", ord[i] );
-    var res = cbs[ ord[i] ].call( this, block, next );
-    if ( res ) {
-      //D:this.debug("  matched");
-      if ( !isArray(res) || ( res.length > 0 && !( isArray(res[0]) ) ) )
-        this.debug(ord[i], "didn't return a proper array");
-      //D:this.debug( "" );
-      return res;
+    for ( var i = 0; i < ord.length; i++ ) {
+      //D:this.debug( "Testing", ord[i] );
+      var res = cbs[ ord[i] ].call( this, block, next );
+      if ( res ) {
+        //D:this.debug("  matched");
+        if ( !isArray(res) || ( res.length > 0 && !( isArray(res[0]) ) && ( typeof res[0] !== "string")) )
+          this.debug(ord[i], "didn't return a proper array");
+        //D:this.debug( "" );
+        return res;
+      }
     }
-  }
 
-  // Uhoh! no match! Should we throw an error?
-  return [];
+    // Uhoh! no match! Should we throw an error?
+    return [];
 };
 
 Markdown.prototype.processInline = function processInline( block ) {
@@ -551,6 +544,7 @@ Markdown.dialects.Gruber = {
         if ( last_li[1] instanceof Array && last_li[1][0] == "para" ) {
           return;
         }
+
         if ( i + 1 == stack.length ) {
           // Last stack frame
           // Keep the same array, but replace the contents
@@ -558,6 +552,7 @@ Markdown.dialects.Gruber = {
         }
         else {
           var sublist = last_li.pop();
+
           last_li.push( ["para"].concat( last_li.splice(1, last_li.length - 1) ), sublist );
         }
       }
@@ -671,7 +666,13 @@ Markdown.dialects.Gruber = {
           } // tight_search
 
           if ( li_accumulate.length ) {
+
             add( last_li, loose, this.processInline( li_accumulate ), nl );
+
+            if(last_li[last_li.length-1] === "\n") {
+              last_li.pop();
+            }
+
             // Loose mode will have been dealt with. Reset it
             loose = false;
             li_accumulate = "";
@@ -693,6 +694,7 @@ Markdown.dialects.Gruber = {
 
 
           if ( next_block.match(is_list_re) || (next_block.match(/^ /) && (!next_block.match(/^ *\>/))) ) {
+
             block = next.shift();
 
             // Check for an HR following a list: features/lists/hr_abutting
@@ -703,15 +705,16 @@ Markdown.dialects.Gruber = {
               break;
             }
 
-            // Make sure all listitems up the stack are paragraphs
-            forEach( stack, paragraphify, this);
+            // Add paragraphs if the indentation level stays the same
+            if (stack[stack.length-1].indent === block.match(/^\s*/)[0]) {
+              forEach( stack, paragraphify, this);
+            }
 
             loose = true;
             continue loose_search;
           }
           break;
         } // loose_search
-
 
         return ret;
       };
@@ -781,7 +784,7 @@ Markdown.dialects.Gruber = {
 
     referenceDefn: function referenceDefn( block, next) {
 
-      var re = /^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*?)\3|\((.*?)\)))?\n?/;
+      var re = /^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*)\3|\((.*?)\)))?\n?/;
       // interesting matches are [ , ref_id, url, , title, title ]
 
       if ( !block.match(re) )
@@ -864,7 +867,7 @@ Markdown.dialects.Gruber.inline = {
     "]": function () {},
     "}": function () {},
 
-    __escape__ : /^\\[\\`\*_{}\[\]()#\+.!\-]/,
+    __escape__ : /^\\[\\`\*_\<\>{}\[\]()#\+.!\-]/,
 
     "\\": function escaped( text ) {
       // [ length of input processed, node/children to add... ]
@@ -883,7 +886,11 @@ Markdown.dialects.Gruber.inline = {
 
       // ![Alt text](/path/to/img.jpg "Optional title")
       //      1          2            3       4         <--- captures
-      var m = text.match( /^!\[(.*?)\][ \t]*\([ \t]*([^")]*?)(?:[ \t]+(["'])(.*?)\3)?[ \t]*\)/ );
+      //
+      // First attempt to use a strong URL regexp to catch things like parentheses. If it misses, use the
+      // old one.
+      var m = text.match( /^!\[(.*?)][ \t]*\(((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))\)([ \t])*(["'].*["'])?/ ) ||
+              text.match( /^!\[(.*?)\][ \t]*\([ \t]*([^")]*?)(?:[ \t]+(["'])(.*?)\3)?[ \t]*\)/ );
 
       if ( m ) {
         if ( m[2] && m[2][0] == "<" && m[2][m[2].length-1] == ">" )
@@ -938,7 +945,7 @@ Markdown.dialects.Gruber.inline = {
       // The parens have to be balanced
       var m = text.match( /^\s*\([ \t]*([^"']*)(?:[ \t]+(["'])(.*?)\2)?[ \t]*\)/ );
       if ( m ) {
-        var url = m[1];
+        var url = m[1].replace(/ +$/, '');
         consumed += m[0].length;
 
         if ( url && url[0] == "<" && url[url.length-1] == ">" )
@@ -991,7 +998,7 @@ Markdown.dialects.Gruber.inline = {
         return [ consumed, link ];
       }
 
-      m = orig.match(/^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*?)\3|\((.*?)\)))?\n?/);
+      m = orig.match(/^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*?)\3|\((.*?)\)))?\n?/m);
       if (m) {
 
         var attrs = create_attrs.call(this);
@@ -1004,7 +1011,8 @@ Markdown.dialects.Gruber.inline = {
       // Only if id is plain (no formatting.)
       if ( children.length == 1 && typeof children[0] == "string" ) {
 
-        attrs = { ref: children[0].toLowerCase(),  original: orig.substr( 0, consumed ) };
+        var normalized = children[0].toLowerCase().replace(/\n/, " ").replace(/\s+/, ' ');
+        attrs = { ref: normalized,  original: orig.substr( 0, consumed ) };
         link = [ "link_ref", attrs, children[0] ];
         return [ consumed, link ];
       }
@@ -1032,7 +1040,11 @@ Markdown.dialects.Gruber.inline = {
       return [ 1, "<" ];
     },
 
-    "`": function inlineCode( text ) {
+    "`": function inlineCode( text, match, prev ) {
+
+      // If we're in a tag, don't do it.
+      if (prev && (typeof prev[0] === "string") && prev[0].match(/<[^>]+$/)) { return; }
+
       // Inline code block. as many backticks as you like to start it
       // Always skip over the opening ticks.
       var m = text.match( /(`+)(([\s\S]*?)\1)/ );
@@ -1217,6 +1229,10 @@ function render_tree( jsonml ) {
     return jsonml;
   }
 
+  if ( jsonml[0] == "__RAW" ) {
+    return jsonml[1];
+  }
+
   var tag = jsonml.shift(),
       attributes = {},
       content = [];
@@ -1230,6 +1246,13 @@ function render_tree( jsonml ) {
   }
 
   var tag_attrs = "";
+
+  // MDTest has src attributes first
+  if (typeof attributes.src !== 'undefined') {
+    tag_attrs += ' src="' + escapeHTML( attributes.src ) + '"';
+    delete attributes.src;
+  }
+
   for ( var a in attributes ) {
     tag_attrs += " " + a + '="' + escapeHTML( attributes[ a ] ) + '"';
   }

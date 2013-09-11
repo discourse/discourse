@@ -32,7 +32,7 @@ describe PrettyText do
     end
 
     it "should sanitize the html" do
-      PrettyText.cook("<script>alert(42)</script>").should match_html "<p></p>"
+      PrettyText.cook("<script>alert(42)</script>").should match_html ""
     end
 
     it 'should allow for @mentions to have punctuation' do

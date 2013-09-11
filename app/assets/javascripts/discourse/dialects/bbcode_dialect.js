@@ -103,8 +103,3 @@ Discourse.Dialect.replaceBlock({
   }
 });
 
-Discourse.Markdown.whiteListClass("bbcode-b", "bbcode-i", "bbcode-u", "bbcode-s", "spoiler");
-
-for(var i=1; i<=40; i++) {
-  Discourse.Markdown.whiteListClass("bbcode-size-" + i);
-}

@@ -376,7 +376,7 @@ describe Post do
       end
 
       it "ignores code" do
-        post = Fabricate.build(:post, post_args.merge(raw: "@Jake <code>@Finn</code>"))
+        post = Fabricate.build(:post, post_args.merge(raw: "@Jake `@Finn`"))
         post.raw_mentions.should == ['jake']
       end
 

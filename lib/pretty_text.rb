@@ -5,47 +5,6 @@ require_dependency 'post'
 
 module PrettyText
 
-  def self.whitelist
-    {
-      elements: %w[
-        a abbr aside b bdo blockquote br caption cite code col colgroup dd div del dfn dl
-        dt em hr figcaption figure h1 h2 h3 h4 h5 h6 hgroup i img ins kbd li mark
-        ol p pre q rp rt ruby s samp small span strike strong sub sup table tbody td
-        tfoot th thead time tr u ul var wbr
-      ],
-
-      attributes: {
-        :all         => ['dir', 'lang', 'title', 'class'],
-        'aside'      => ['data-post', 'data-full', 'data-topic'],
-        'a'          => ['href'],
-        'blockquote' => ['cite'],
-        'col'        => ['span', 'width'],
-        'colgroup'   => ['span', 'width'],
-        'del'        => ['cite', 'datetime'],
-        'img'        => ['align', 'alt', 'height', 'src', 'width'],
-        'ins'        => ['cite', 'datetime'],
-        'ol'         => ['start', 'reversed', 'type'],
-        'q'          => ['cite'],
-        'span'       => ['style'],
-        'table'      => ['summary', 'width', 'style', 'cellpadding', 'cellspacing'],
-        'td'         => ['abbr', 'axis', 'colspan', 'rowspan', 'width', 'style'],
-        'th'         => ['abbr', 'axis', 'colspan', 'rowspan', 'scope', 'width', 'style'],
-        'time'       => ['datetime', 'pubdate'],
-        'ul'         => ['type']
-      },
-
-      protocols: {
-        'a'          => {'href' => ['ftp', 'http', 'https', 'mailto', :relative]},
-        'blockquote' => {'cite' => ['http', 'https', :relative]},
-        'del'        => {'cite' => ['http', 'https', :relative]},
-        'img'        => {'src'  => ['http', 'https', :relative]},
-        'ins'        => {'cite' => ['http', 'https', :relative]},
-        'q'          => {'cite' => ['http', 'https', :relative]}
-      }
-    }
-  end
-
-
   class Helpers
 
     def t(key, opts)
@@ -226,7 +185,7 @@ module PrettyText
     cloned = opts.dup
     # we have a minor inconsistency
     cloned[:topicId] = opts[:topic_id]
-    sanitized = Sanitize.clean(markdown(text.dup, cloned), PrettyText.whitelist)
+    sanitized = markdown(text.dup, cloned)
     if SiteSetting.add_rel_nofollow_to_user_content
       sanitized = add_rel_nofollow_to_user_content(sanitized)
     end

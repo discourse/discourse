@@ -10,6 +10,12 @@ Discourse.Dialect.inlineBetween({
   emitter: function(contents) { return ['strong', ['em'].concat(contents)]; }
 });
 
+Discourse.Dialect.inlineBetween({
+  between: '___',
+  wordBoundary: true,
+  emitter: function(contents) { return ['strong', ['em'].concat(contents)]; }
+});
+
 // Builds a common markdown replacer
 var replaceMarkdown = function(match, tag) {
   Discourse.Dialect.inlineBetween({

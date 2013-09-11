@@ -44,7 +44,7 @@ Discourse.Dialect.replaceBlock({
     return ['p', ['aside', params,
                    ['div', {'class': 'title'},
                      ['div', {'class': 'quote-controls'}],
-                     avatarImg ? avatarImg : "",
+                     avatarImg ? ['__RAW', avatarImg] : "",
                      I18n.t('user.said', {username: username})
                    ],
                    contents
@@ -69,4 +69,3 @@ Discourse.Dialect.on("parseNode", function(event) {
 
 });
 
-Discourse.Markdown.whiteListClass("quote", "title", "quote-controls", "avatar");
