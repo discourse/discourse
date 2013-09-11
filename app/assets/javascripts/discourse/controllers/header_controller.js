@@ -21,8 +21,8 @@ Discourse.HeaderController = Discourse.Controller.extend({
   }.property(),
 
   showFavoriteButton: function() {
-    return this.get('currentUser') && !this.get('topic.isPrivateMessage');
-  }.property('currentUser', 'topic.isPrivateMessage'),
+    return Discourse.User.current() && !this.get('topic.isPrivateMessage');
+  }.property('topic.isPrivateMessage'),
 
   mobileDevice: function() {
     return Discourse.Mobile.isMobileDevice;
