@@ -198,6 +198,9 @@ Discourse.ComposerController = Discourse.Controller.extend({
   open: function(opts) {
     if (!opts) opts = {};
 
+    var composerMessages = this.get('controllers.composerMessages');
+    composerMessages.reset();
+
     var promise = opts.promise || Ember.Deferred.create();
     opts.promise = promise;
     this.set('typedReply', false);
