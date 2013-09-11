@@ -254,6 +254,9 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:allow_uploaded_avatars, true)
   client_setting(:allow_animated_avatars, false)
 
+  setting(:detect_custom_avatars, false)
+  setting(:max_daily_gravatar_crawls, 500)
+
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
   end
