@@ -459,6 +459,7 @@ en:
     discourse_org_access_key: "The access key used to access the Discourse Hub nickname registry at discourse.org"
     educate_until_posts: "Show pop-up composer education panel until the user has made this many posts"
     title: "Title of this site, will be used in the title tag and elsewhere"
+    site_description: "Describe this forum in one sentence. This description will be used in the meta description tag."
     contact_email: "The email address of someone who can be contacted about the site. Important notices from Discourse.org regarding critical updates may be sent to this address."
     company_full_name: "The full name of the company that runs this site, used in legal documents like the /tos"
     company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"

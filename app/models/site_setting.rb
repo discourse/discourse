@@ -8,6 +8,7 @@ class SiteSetting < ActiveRecord::Base
 
   # settings available in javascript under Discourse.SiteSettings
   client_setting(:title, "Discourse")
+  setting(:site_description, '')
   client_setting(:logo_url, '/assets/d-logo-sketch.png')
   client_setting(:logo_small_url, '/assets/d-logo-sketch-small.png')
   setting(:contact_email, '')
