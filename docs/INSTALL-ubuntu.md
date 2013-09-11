@@ -10,7 +10,7 @@ With 2 GB of memory and dual cores, you can run two instances of the thin server
 
 1 GB of memory, 3 GB of swap and a single core CPU are the minimums for a steady state, running Discourse forum &ndash; but it's simpler to just throw a bit more hardware at the problem if you can, particularly during the install.
 
-## Install Ubuntu Server 12.04 LTS with the package groups:
+## Install Ubuntu Server 12.04 LTS (or later) with the package groups:
 
 Yes, you can in theory pick the distro of your choice, but to keep this guide sane, we're picking one, and it's Ubuntu. Feel free to substitute the distro of your choice, the steps are mostly the same.
 
@@ -78,12 +78,8 @@ shiny). To install on Ubuntu:
     # Remove any existing versions of nginx
     sudo apt-get remove '^nginx.*$'
 
-    # Add nginx repo to sources.list
-    cat <<'EOF' | sudo tee -a /etc/apt/sources.list
-
-    deb http://nginx.org/packages/ubuntu/ precise nginx
-    deb-src http://nginx.org/packages/ubuntu/ precise nginx
-    EOF
+    # Setup a sources.list.d file for the nginx repository
+    echo "deb http://nginx.org/packages/ubuntu/ precise nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
 
     # Add nginx key
     curl http://nginx.org/keys/nginx_signing.key | sudo apt-key add -
@@ -122,7 +118,7 @@ Install RVM
 
     # As 'discourse'
     # Install RVM
-    \curl -s -S -L https://get.rvm.io | bash -s stable
+    curl -s -S -L https://get.rvm.io | bash -s stable
     . ~/.bash_profile
 
     # rvm added shell initialization code to ~/.bash_profile,
@@ -153,7 +149,6 @@ Continue with Discourse installation
     # Pull down the latest code
     git clone git://github.com/discourse/discourse.git /var/www/discourse
     cd /var/www/discourse
-    git checkout master
 
     # To run on the most recent numbered release instead of bleeding-edge:
     #git checkout latest-release
@@ -177,7 +172,7 @@ Edit /var/www/discourse/config/database.yml
 - change production database name if appropriate
 - change database username/password if appropriate
 - if you are hosting multiple Discourse forums on the same server (multisite), set `db_id`
-- change `host_names` to the name you'll use to access the discourse site, e.g. "forum.example.com"
+- change `host_names` to the name you'll use to access the Discourse site, e.g. "forum.example.com"
 
 Edit /var/www/discourse/config/redis.yml
 
@@ -218,11 +213,7 @@ Not english? Set the default language as appropriate:
     # Run these commands as your normal login (e.g. "michael")
     sudo cp /var/www/discourse/config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
 
-Edit /etc/nginx/nginx.conf:
-
-- add: `server_names_hash_bucket_size 64;` to the `http` section
-
-If discourse will be the only site served by nginx, disable the nginx default
+If Discourse will be the only site served by nginx, disable the nginx default
 site:
 
 - `sudo mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.disabled`
@@ -230,9 +221,10 @@ site:
 
 Edit /etc/nginx/conf.d/discourse.conf
 
+- add: `server_names_hash_bucket_size 64;` at the beginning
 - edit `server_name`. Example: `server_name cain.discourse.org test.cain.discourse.org;`
-- change socket paths if discourse is installed to a different location
-- modify root location if discourse is installed to a different location
+- change socket paths if Discourse is installed to a different location
+- modify root location if Discourse is installed to a different location
 
 Reload nginx by running
 
@@ -277,7 +269,7 @@ Congratulations! You've got Discourse installed and running!
 
 ## Administrator account
 
-Now make yourself an administrator account. Browse to your discourse instance
+Now make yourself an administrator account. Browse to your Discourse instance
 and create an account by logging in normally, then run the commands:
 
     # Run these commands as the discourse user
