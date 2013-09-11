@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :cas_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
+  has_one :user_stat, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
 
   has_many :group_users, dependent: :destroy
@@ -60,6 +61,7 @@ class User < ActiveRecord::Base
   after_save :update_tracked_topics
 
   after_create :create_email_token
+  after_create :create_user_stat
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -536,6 +538,12 @@ class User < ActiveRecord::Base
       TopicUser.where(where_conditions).update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
                             auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]])
     end
+  end
+
+  def create_user_stat
+    stat = UserStat.new
+    stat.user_id = self.id
+    stat.save!
   end
 
   def create_email_token
