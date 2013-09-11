@@ -40,7 +40,8 @@ config/discourse.pill
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
-/plugins
+#/plugins
+/plugins/*/auto_generated
 /logfile
 log/
 
