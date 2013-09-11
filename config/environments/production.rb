@@ -37,8 +37,8 @@ Discourse::Application.configure do
       address:              GlobalSetting.smtp_address,
       port:                 GlobalSetting.smtp_port,
       domain:               GlobalSetting.smtp_domain,
-      user_name:            GlobalSetting.smtp_user_name,
-      password:             GlobalSetting.smtp_password,
+      :user_name =>      ENV['MANDRILL_USERNAME'],
+      :password =>       ENV['MANDRILL_APIKEY'],
       authentication:       GlobalSetting.smtp_authentication,
       enable_starttls_auto: GlobalSetting.smtp_enable_start_tls
     }
@@ -61,6 +61,9 @@ Discourse::Application.configure do
   # Discourse strongly recommend you use a CDN.
   # For origin pull cdns all you need to do is register an account and configure
   config.action_controller.asset_host = GlobalSetting.cdn_url
+
+  # this setting enables rack_cache so it caches various requests in redis
+  config.enable_rack_cache = true
 
   # a comma delimited list of emails your devs have
   # developers have god like rights and may impersonate anyone in the system
