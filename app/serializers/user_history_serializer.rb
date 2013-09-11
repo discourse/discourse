@@ -1,4 +1,4 @@
-class StaffActionLogSerializer < ApplicationSerializer
+class UserHistorySerializer < ApplicationSerializer
   attributes :action_name,
              :details,
              :context,
@@ -9,11 +9,11 @@ class StaffActionLogSerializer < ApplicationSerializer
              :previous_value,
              :new_value
 
-  has_one :staff_user,  serializer: BasicUserSerializer, embed: :objects
+  has_one :acting_user, serializer: BasicUserSerializer, embed: :objects
   has_one :target_user, serializer: BasicUserSerializer, embed: :objects
 
   def action_name
-    StaffActionLog.actions.key(object.action).to_s
+    UserHistory.actions.key(object.action).to_s
   end
 
   def new_value

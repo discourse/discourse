@@ -29,8 +29,8 @@ describe StaffActionLogger do
     end
 
     it 'creates a new StaffActionLog record' do
-      expect { log_user_deletion }.to change { StaffActionLog.count }.by(1)
-      StaffActionLog.last.target_user_id.should == deleted_user.id
+      expect { log_user_deletion }.to change { UserHistory.count }.by(1)
+      UserHistory.last.target_user_id.should == deleted_user.id
     end
   end
 
@@ -57,8 +57,8 @@ describe StaffActionLogger do
     end
 
     it 'creates a new StaffActionLog record' do
-      expect { log_trust_level_change }.to change { StaffActionLog.count }.by(1)
-      StaffActionLog.last.details.should include "new trust level: #{new_trust_level}"
+      expect { log_trust_level_change }.to change { UserHistory.count }.by(1)
+      UserHistory.last.details.should include "new trust level: #{new_trust_level}"
     end
   end
 
@@ -70,7 +70,7 @@ describe StaffActionLogger do
     end
 
     it "creates a new StaffActionLog record" do
-      expect { logger.log_site_setting_change('title', 'Discourse', 'My Site') }.to change { StaffActionLog.count }.by(1)
+      expect { logger.log_site_setting_change('title', 'Discourse', 'My Site') }.to change { UserHistory.count }.by(1)
     end
   end
 
