@@ -284,7 +284,7 @@ en:
 
       email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
       email_private_messages: "Receive an email when someone sends you a private message"
-
+      email_new_topics: "Send me an email as soon as a new topic is created" 
       default_watch: "And set watch level per default to:"
       other_settings: "Other"
 
