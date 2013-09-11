@@ -125,7 +125,6 @@ Install RVM
     # As 'discourse'
     # Install RVM
      \curl -s -S -L https://get.rvm.io | bash -s stable
-
     # Refresh your profile
     . ~/.rvm/scripts/rvm
 
@@ -231,6 +230,7 @@ site:
 
 Edit /etc/nginx/conf.d/discourse.conf
 
+- add: `server_names_hash_bucket_size 64;` at the beginning
 - edit `server_name`. Example: `server_name cain.discourse.org test.cain.discourse.org;`
 - change socket count depending on your NUM_WEB count
 - change socket paths if Discourse is installed to a different location
