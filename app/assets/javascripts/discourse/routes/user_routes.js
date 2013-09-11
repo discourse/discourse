@@ -12,7 +12,7 @@ Discourse.UserRoute = Discourse.Route.extend({
 
     // If we're viewing the currently logged in user, return that object
     // instead.
-    var currentUser = this.get('currentUser');
+    var currentUser = Discourse.User.current();
     if (currentUser && (params.username.toLowerCase() === currentUser.get('username_lower'))) {
       return currentUser;
     }
@@ -95,7 +95,7 @@ Discourse.UserActivityRoute = Discourse.Route.extend({
 
     var composerController = this.controllerFor('composer');
     controller.set('model', user);
-    if (this.get('currentUser')) {
+    if (Discourse.User.current()) {
       Discourse.Draft.get('new_private_message').then(function(data) {
         if (data.draft) {
           composerController.open({

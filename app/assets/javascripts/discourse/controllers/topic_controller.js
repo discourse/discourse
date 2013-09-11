@@ -260,8 +260,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   showFavoriteButton: function() {
-    return this.get('currentUser') && !this.get('isPrivateMessage');
-  }.property('currentUser', 'isPrivateMessage'),
+    return Discourse.User.current() && !this.get('isPrivateMessage');
+  }.property('isPrivateMessage'),
 
   recoverTopic: function() {
     this.get('content').recover();
@@ -269,7 +269,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   deleteTopic: function() {
     this.unsubscribe();
-    this.get('content').destroy(this.get('currentUser'));
+    this.get('content').destroy(Discourse.User.current());
   },
 
   resetRead: function() {
@@ -417,7 +417,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   toggleBookmark: function(post) {
-    if (!this.get('currentUser')) {
+    if (!Discourse.User.current()) {
       alert(I18n.t("bookmarks.not_bookmarked"));
       return;
     }
@@ -439,7 +439,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   deletePost: function(post) {
-    var user = this.get('currentUser'),
+    var user = Discourse.User.current(),
         replyCount = post.get('reply_count'),
         self = this;
 
