@@ -67,24 +67,6 @@ Discourse.ComposerView = Discourse.View.extend({
     });
   }.observes('model.reply', 'model.hidePreview'),
 
-  newUserEducationVisibilityChanged: function() {
-    var $panel = $('#new-user-education');
-    if (this.get('controller.newUserEducationVisible')) {
-      $panel.slideDown('fast');
-    } else {
-      $panel.slideUp('fast');
-    }
-  }.observes('controller.newUserEducationVisible'),
-
-  similarVisibilityChanged: function() {
-    var $panel = $('#similar-topics');
-    if (this.get('controller.similarVisible')) {
-      $panel.slideDown('fast');
-    } else {
-      $panel.slideUp('fast');
-    }
-  }.observes('controller.similarVisible'),
-
   movePanels: function(sizePx) {
     $('.composer-popup').css('bottom', sizePx);
   },

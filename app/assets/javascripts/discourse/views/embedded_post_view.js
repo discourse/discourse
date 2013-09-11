@@ -11,7 +11,8 @@ Discourse.EmbeddedPostView = Discourse.GroupedView.extend({
   classNames: ['reply'],
 
   didInsertElement: function() {
-    Discourse.ScreenTrack.current().track(this.get('elementId'), this.get('post.post_number'));
+    var post = this.get('content');
+    Discourse.ScreenTrack.current().track(this.get('elementId'), post.get('post_number'));
   },
 
   willDestroyElement: function() {

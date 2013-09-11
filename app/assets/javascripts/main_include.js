@@ -15,6 +15,7 @@
 //= require_tree ./discourse/mixins
 //= require ./discourse/components/computed
 //= require ./discourse/views/view
+//= require ./discourse/views/container_view
 //= require ./discourse/components/debounce
 //= require ./discourse/models/model
 //= require ./discourse/models/user_action

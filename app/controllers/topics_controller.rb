@@ -329,8 +329,6 @@ class TopicsController < ApplicationController
     end
   end
 
-  private
-
   def move_posts_to_destination(topic)
     args = {}
     args[:title] = params[:title] if params[:title].present?

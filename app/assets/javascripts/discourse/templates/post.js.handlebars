@@ -5,7 +5,7 @@
 <article class='boxed' {{bindAttr id="postElementId"}} {{bindAttr data-post-id="id"}} data-user-id="{{unbound user_id}}">
   <div class='row'>
     {{#if showUserReplyTab}}
-      <a href='#' {{action toggleReplyHistory this}} class='reply-to-tab'>
+      <a href='#' {{action toggleReplyHistory this target="view"}} class='reply-to-tab'>
         {{#if loadingReplyHistory}}
           {{i18n loading}}
         {{else}}

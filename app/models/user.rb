@@ -300,14 +300,15 @@ class User < ActiveRecord::Base
     template.gsub("{size}", "45")
   end
 
+  # the avatars might take a while to generate
+  # so return the url of the original image in the meantime
+  def uploaded_avatar_path
+    return unless SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
+    uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
+  end
+
   def avatar_template
-    if SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
-      # the avatars might take a while to generate
-      # so return the url of the original image in the meantime
-      uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
-    else
-      User.gravatar_template(email)
-    end
+    uploaded_avatar_path || User.gravatar_template(email)
   end
 
   # Updates the denormalized view counts for all users

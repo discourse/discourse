@@ -1,0 +1,8 @@
+<a href='#' {{action closeMessage this}} class='close'><i class='icon icon-remove-sign'></i></a>
+<h3>{{i18n composer.similar_topics}}<h3>
+
+<ul class='topics'>
+  {{#each similarTopics}}
+    <li>{{{topicLink this}}} <span class='posts-count'>({{{i18n topic.filters.n_posts count="posts_count"}}})</span></li>
+  {{/each}}
+</ul>
