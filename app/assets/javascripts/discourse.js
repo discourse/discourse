@@ -229,21 +229,3 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
 Discourse.Router = Discourse.Router.reopen({ location: 'discourse_location' });
 
-Discourse.initializer({
-  name: 'currentUser',
-
-  initialize: function(container) {
-    container.register('user:current', Discourse.User.current(), { instantiate: false });
-  }
-});
-
-Discourse.initializer({
-  name: 'injectCurrentUser',
-
-  initialize: function(container) {
-    if (container.lookup('user:current')) {
-      container.injection('controller', 'currentUser', 'user:current');
-      container.injection('route', 'currentUser', 'user:current');
-    }
-  }
-});

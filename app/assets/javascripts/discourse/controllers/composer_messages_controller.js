@@ -26,6 +26,11 @@ Discourse.ComposerMessagesController = Ember.ArrayController.extend({
 
   closeMessage: function(message) {
     this.removeObject(message);
+  },
+
+  reset: function() {
+    this.clear();
+    this.set('messagesByTemplate', {});
   }
 
 });

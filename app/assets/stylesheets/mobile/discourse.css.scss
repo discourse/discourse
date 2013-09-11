@@ -83,7 +83,7 @@ body {
     height: 100%;
     @include border-radius-all(5px);
     .contents {
-      padding: 10px 20px 10px 20px;
+      padding: 10px 10px 10px 10px;
     }
     &.white {
       background-color: $white;

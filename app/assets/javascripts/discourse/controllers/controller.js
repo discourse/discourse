@@ -7,4 +7,4 @@
   @uses Discourse.Presence
   @module Discourse
 **/
-Discourse.Controller = Ember.Controller.extend(Discourse.Presence);
+Discourse.Controller = Ember.Controller.extend(Discourse.Presence, Discourse.HasCurrentUser);
