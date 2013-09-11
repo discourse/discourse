@@ -1,7 +1,7 @@
 <div id='main'>
 <%= render :partial => 'email/post', :locals => {:post => post} %>
 
-<% if context_posts.present? %>
+<% if context_posts and context_posts.present? %>
   <div class='footer'>
     %{respond_instructions}
   </div>

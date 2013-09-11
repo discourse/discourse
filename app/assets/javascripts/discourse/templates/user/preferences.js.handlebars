@@ -73,11 +73,29 @@
         <div class='control-indent'>
           {{combobox valueAttribute="value" content=digestFrequencies value=digest_after_days}}
         </div>
+        <div class='control-indent'>    
+          <label>{{view Ember.Checkbox checkedBinding="email_digest_though_present"}}
+          {{i18n user.email_digest_though_present}}</label>
+        </div>
       {{/if}}
       <label>{{view Ember.Checkbox checkedBinding="email_private_messages"}}
       {{i18n user.email_private_messages}}</label>
       <label>{{view Ember.Checkbox checkedBinding="email_direct"}}
       {{i18n user.email_direct}}</label>
+
+      <label>{{view Ember.Checkbox checkedBinding="email_include_context"}}
+      {{i18n user.email_include_context}}</label>
+      <label>{{view Ember.Checkbox checkedBinding="email_notification_though_present"}}
+      {{i18n user.email_notification_though_present}}</label>
+      <label>{{view Ember.Checkbox checkedBinding="email_new_topics"}}
+      {{i18n user.email_new_topics}}</label>
+
+      {{#if email_new_topics}}
+        <div class='control-indent'>
+          <label>{{i18n user.default_watch}}</label>
+          {{combobox valueAttribute="value" content=newTopicsAutowatch value=default_watch}}
+        </div>
+      {{/if}}
     </div>
     <div class='instructions'>
       {{i18n user.email.frequency}}

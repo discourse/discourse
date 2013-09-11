@@ -284,7 +284,12 @@ en:
 
       email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
       email_private_messages: "Receive an email when someone sends you a private message"
+      email_include_context: "Include previous posts as context in notification emails"
+      email_new_topics: "Send me an email as soon as a new topic is created"
+      email_digest_though_present: "Send me digest emails even if I am present on the site"
+      email_notification_though_present: "Send me notification emails even if I am present on the site "
 
+      default_watch: "And set watch level per default to:"
       other_settings: "Other"
 
       new_topic_duration:
@@ -508,6 +513,7 @@ en:
       posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
+      new_topic: "<i title='replied' class='icon icon-edit'></i> {{username}} {{link}}"
       private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
@@ -655,9 +661,11 @@ en:
       notifications:
         title: ''
         reasons:
+          "3_5": 'You will receive notifications because you <a href="/users/{{username}}/preferences">automatically watch new topics</a>.'
           "3_2": 'You will receive notifications because you are watching this topic.'
           "3_1": 'You will receive notifications because you created this topic.'
           "3": 'You will receive notifications because you are watching this topic.'
+          "2_5": 'You will receive notifications because you <a href="/users/{{username}}/preferences">automatically track new topics</a>.'
           "2_4": 'You will receive notifications because you posted a reply to this topic.'
           "2_2": 'You will receive notifications because you are tracking this topic.'
           "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
