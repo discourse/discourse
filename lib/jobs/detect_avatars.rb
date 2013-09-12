@@ -17,6 +17,10 @@ module Jobs
       if user_stats.present?
         user_stats.each do |us|
           us.update_column(:has_custom_avatar, true) if AvatarDetector.new(us.user).has_custom_avatar?
+          UserHistory.create!(
+            action: UserHistory.actions[:checked_for_custom_avatar],
+            target_user_id: us.user_id
+          )
         end
       end
     end

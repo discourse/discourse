@@ -5,7 +5,6 @@ class UserHistory < ActiveRecord::Base
   belongs_to :acting_user, class_name: 'User'
   belongs_to :target_user, class_name: 'User'
 
-  validates_presence_of :acting_user_id
   validates_presence_of :action
 
   scope :only_staff_actions, ->{ where("action IN (?)", UserHistory.staff_action_ids) }
@@ -15,7 +14,9 @@ class UserHistory < ActiveRecord::Base
                            :change_trust_level,
                            :change_site_setting,
                            :change_site_customization,
-                           :delete_site_customization)
+                           :delete_site_customization,
+                           :checked_for_custom_avatar,
+                           :notified_about_avatar)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
