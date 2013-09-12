@@ -194,7 +194,7 @@ GEM
     fast_xs (0.8.0)
     fastimage (1.3.0)
     ffi (1.8.1)
-    flamegraph (0.0.2)
+    flamegraph (0.0.3)
       fast_stack
     fog (1.14.0)
       builder
