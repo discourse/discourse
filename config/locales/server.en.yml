@@ -949,6 +949,8 @@ en:
       text_body_template: |
         This is an automated message to inform you that the new user [%{username}](%{user_url}) tried to create multiple posts with links to the same domain, but they were blocked based on the newuser_spam_host_threshold site setting.
 
+        Domain(s) included in %{username}'s posts: %{domains}
+
         Please [review the user](%{user_url}).
 
     unblocked:

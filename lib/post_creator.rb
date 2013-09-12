@@ -75,7 +75,11 @@ class PostCreator
     end
 
     if @spam
-      GroupMessage.create( Group[:moderators].name, :spam_post_blocked, {user: @user, limit_once_per: 24.hours} )
+      GroupMessage.create( Group[:moderators].name,
+                           :spam_post_blocked,
+                           { user: @user,
+                             limit_once_per: 24.hours,
+                             message_params: {domains: @post.linked_hosts.keys.join(', ')} } )
     end
 
     enqueue_jobs
