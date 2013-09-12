@@ -9,6 +9,11 @@ var $buo = function() {
   if (window.ie === "new" || (window.history && window.history.pushState)) {
       return;
   }
+  
+  // IE9 does not have document.body.insertBefore [yet?]
+  if (!(document && document.body && document.body.insertBefore)) {
+    return;
+  }
 
   // retrieve localized browser upgrade text
   var t = I18n.t('js.browser_update');
