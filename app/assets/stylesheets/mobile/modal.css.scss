@@ -122,8 +122,10 @@
 .modal-footer:after {
   clear: both;
 }
-.modal-footer .btn + .btn {
-  margin-left: 5px;
+// an ember metamorph is inserted between btn's sometimes, breaking this rule, but only on mobile for some reason:
+// .modal-footer .btn + .btn {
+.modal-footer .btn {
+  margin-right: 5px;
   margin-bottom: 0;
 }
 .modal-footer .btn-group .btn + .btn {
