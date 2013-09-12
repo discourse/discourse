@@ -46,6 +46,10 @@ class UserHistory < ActiveRecord::Base
     query
   end
 
+  def self.exists_for_user?(user, action_type)
+    self.where(target_user_id: user.id, action: UserHistory.actions[action_type]).exists?
+  end
+
   def new_value_is_json?
     [UserHistory.actions[:change_site_customization], UserHistory.actions[:delete_site_customization]].include?(action)
   end

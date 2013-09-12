@@ -10,7 +10,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
   needs: ['modal', 'topic', 'composerMessages'],
 
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY),
-
+  checkedMessages: false,
 
   init: function() {
     this._super();
@@ -117,33 +117,18 @@ Discourse.ComposerController = Discourse.Controller.extend({
     });
   },
 
-  _considerNewUserEducation: function() {
+  /**
+    Checks to see if a reply has been typed. This is signaled by a keyUp
+    event in a view.
 
-    // We don't show education when editing a post.
-    if (this.get('model.editingPost')) return;
-
-    // If creating a topic, use topic_count, otherwise post_count
-    var count = this.get('model.creatingTopic') ? Discourse.User.currentProp('topic_count') : Discourse.User.currentProp('reply_count');
-    if (count >= Discourse.SiteSettings.educate_until_posts) { return; }
-
-    // The user must have typed a reply
-    if (!this.get('typedReply')) return;
-
-    // If visible update the text
-    var educationKey = this.get('model.creatingTopic') ? 'new-topic' : 'new-reply',
-        messageController = this.get('controllers.composerMessages');
-
-    Discourse.ajax("/education/" + educationKey, {dataType: 'html'}).then(function(result) {
-      messageController.popup({
-        templateName: 'composer/education',
-        body: result
-      });
-    });
-
-  }.observes('typedReply', 'model.creatingTopic', 'currentUser.reply_count'),
-
+    @method checkReplyLength
+  **/
   checkReplyLength: function() {
-    this.set('typedReply', this.present('model.reply'));
+    if (this.present('model.reply')) {
+      // Notify the composer messages controller that a reply has been typed. Some
+      // messages only appear after typing.
+      this.get('controllers.composerMessages').typedReply()
+    }
   },
 
   /**
@@ -171,11 +156,11 @@ Discourse.ComposerController = Discourse.Controller.extend({
       similarTopics.clear();
       similarTopics.pushObjects(newTopics);
 
-      messageController.popup({
+      messageController.popup(Discourse.ComposerMessage.create({
         templateName: 'composer/similar_topics',
         similarTopics: similarTopics,
         extraClass: 'similar-topics'
-      });
+      }));
     });
 
   },
@@ -203,7 +188,6 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
     var promise = opts.promise || Ember.Deferred.create();
     opts.promise = promise;
-    this.set('typedReply', false);
 
     if (!opts.draftKey) {
       alert("composer was opened without a draft key");
@@ -272,8 +256,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
     composer = composer || Discourse.Composer.create();
     composer.open(opts);
+
     this.set('model', composer);
     composer.set('composeState', Discourse.Composer.OPEN);
+    composerMessages.queryFor(this.get('model'));
     promise.resolve();
     return promise;
   },

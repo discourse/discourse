@@ -104,6 +104,15 @@ en:
 
       For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
 
+    avatar: |
+      ### How about a new picture for your account?
+
+      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
+
+      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
+
+      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
+
 
   activerecord:
     attributes:

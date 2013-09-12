@@ -160,6 +160,9 @@ class User < ActiveRecord::Base
     key
   end
 
+  def created_topic_count
+    topics.count
+  end
 
   # tricky, we need our bus to be subscribed from the right spot
   def sync_notification_channel_position
@@ -501,6 +504,7 @@ class User < ActiveRecord::Base
   def topic_create_allowed_category_ids
     Category.topic_create_allowed(self.id).select(:id)
   end
+
 
   # Flag all posts from a user as spam
   def flag_linked_posts_as_spam
