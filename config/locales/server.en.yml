@@ -938,20 +938,22 @@ en:
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 
     user_automatically_blocked:
-      subject_template: "New user %{username} was automatically blocked"
+      subject_template: "New user %{username} blocked via flags"
       text_body_template: |
         This is an automated message to inform you that the new user [%{username}](%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
 
         Please [review the flags](/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{user_url}).
 
-    spam_post_blocked:
-      subject_template: "New user %{username} is posting repeated links"
-      text_body_template: |
-        This is an automated message to inform you that the new user [%{username}](%{user_url}) tried to create multiple posts with links to the same domain, but they were blocked based on the newuser_spam_host_threshold site setting.
+        This threshold can be changed via the `block_new_user` site settings.
 
-        Domain(s) included in %{username}'s posts: %{domains}
+    spam_post_blocked:
+      subject_template: "New user %{username} blocked for repeated links"
+      text_body_template: |
+        This is an automated message to inform you that the new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but they were blocked from further posting to avoid spam.
 
         Please [review the user](%{user_url}).
+
+        This threshold can be changed via the `newuser_spam_host_threshold` site setting.
 
     unblocked:
       subject_template: "Account unblocked"
