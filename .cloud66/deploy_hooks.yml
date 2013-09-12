@@ -28,6 +28,7 @@ production:
         apply_during: build_only
         execute: true
         owner: postgres
+        run_as: postgres
     # 5. Migrate database
       - source: /.cloud66/scripts/migrate.sh
         destination: /tmp/migrate.sh
