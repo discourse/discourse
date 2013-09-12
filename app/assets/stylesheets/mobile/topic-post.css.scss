@@ -1,3 +1,4 @@
+@import "common/foundation/variables";
 
 .topic-post { 
   border-top: 1px solid #ddd; 
@@ -75,9 +76,11 @@ button {
             }
           }
           &.last-read {
+            color: $red;
           }
           &.bookmarked {
             &:before {
+              color: $bookmarkColor;
             }
           }
         }
