@@ -1,4 +1,4 @@
-unless Rails.version =~ /^4/
+unless rails4?
   module HTML
     class WhiteListSanitizer
         # Sanitizes a block of css code. Used by #sanitize when it comes across a style attribute
