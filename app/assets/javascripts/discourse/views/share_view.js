@@ -13,7 +13,12 @@ Discourse.ShareView = Discourse.View.extend({
 
   title: function() {
     if (this.get('controller.type') === 'topic') return I18n.t('share.topic');
-    return I18n.t('share.post', {postNumber: this.get('controller.postNumber')});
+    var postNumber = this.get('controller.postNumber');
+    if (postNumber) {
+      return I18n.t('share.post', {postNumber: this.get('controller.postNumber')});
+    } else {
+      return I18n.t('share.topic');
+    }
   }.property('controller.type', 'controller.postNumber'),
 
   hasLink: function() {
