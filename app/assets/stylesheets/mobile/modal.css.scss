@@ -44,7 +44,7 @@
   height:100%;
 }
 .modal-middle-container {
-margin-top: 10%;
+  margin-top: 10%;
 }
 .modal-inner-container {
   max-width: 710px;
@@ -137,14 +137,12 @@ margin-top: 10%;
   }
   .close {
     float: right;
-    font-size: 20px;
-    margin: 0 15px 0 0;
+    font-size: 24px;
+    padding: 15px; // more pixels to touch
+    margin: -15px 0 0 0;
     text-decoration: none;
     color: $modal-close-button-color;
     cursor: pointer;
-    &:hover {
-      color: darken($modal-close-button-color,20);
-    }
   }
 }
 
@@ -243,9 +241,6 @@ margin-top: 10%;
         a {
           color: #888;
           cursor: pointer;
-        }
-        a:hover {
-          color: $black;
         }
       }
     }
