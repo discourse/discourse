@@ -36,7 +36,13 @@ production:
         apply_during: build_only
         execute: true
         sudo: true
-
+    # 6. Curl script
+      - source: /.cloud66/scripts/curl.sh
+        destination: /tmp/curl.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
 ########
 staging:
     after_rails:
