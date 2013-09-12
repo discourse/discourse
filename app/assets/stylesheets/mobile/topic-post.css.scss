@@ -415,28 +415,6 @@ iframe {
 
 span.btn-text {display: none;}
 
-  
-
-.read-icon {
-    &:before {
-    font-family: "FontAwesome";
-    content: "\f02e";
-    }
-    &.unseen {
-    &:before {
-      content: "\f097";
-    }
-    }
-    &.last-read {
-    color: #770000;
-    }
-    &.bookmarked {
-    &:before {
-      color: #0088CC;
-    }
-    }
-}
-
 blockquote {
   margin: 0;
 }
