@@ -42,13 +42,13 @@ module Onebox
     end
 
     def template_path
-      File.join("templates", "#{template_name}.handlebars")
+      File.join(root, "templates", "#{template_name}.handlebars")
     end
 
     # returns the gem root directory
-    # def root
-    #   Gem::Specification.find_by_name("onebox").gem_dir
-    # end
+    def root
+      Gem::Specification.find_by_name("onebox").gem_dir
+    end
 
     # calculates handlebars template name for onebox using name of engine
     def template_name
