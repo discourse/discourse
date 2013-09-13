@@ -7,7 +7,8 @@ class ComposerMessagesFinder
 
   def find
     check_education_message ||
-    check_avatar_notification
+    check_avatar_notification ||
+    check_sequential_replies
   end
 
   # Determines whether to show the user education text
@@ -47,6 +48,40 @@ class ComposerMessagesFinder
 
     # Return the message
     {templateName: 'composer/education', body: PrettyText.cook(I18n.t('education.avatar', profile_path: "/users/#{@user.username_lower}")) }
+  end
+
+  # Is a user replying too much in succession?
+  def check_sequential_replies
+
+    # We only care about replies to topics
+    return unless replying? && @details[:topic_id] &&
+
+                  # For users who are not new
+                  @user.has_trust_level?(:basic) &&
+
+                  # And who have posted enough topics
+                  (@user.topic_reply_count > SiteSetting.educate_until_posts) &&
+
+                  # And who haven't been notified about sequential replies already
+                  (!UserHistory.exists_for_user?(@user, :notified_about_sequential_replies))
+
+    # Count the topics made by this user in the last day
+    recent_posts_user_ids = Post.where(topic_id: @details[:topic_id])
+                                .where("created_at > ?", 1.day.ago)
+                                .order('created_at desc')
+                                .limit(SiteSetting.sequential_replies_threshold)
+                                .pluck(:user_id)
+
+    # Did we get back as many posts as we asked for, and are they all by the current user?
+    return if recent_posts_user_ids.size != SiteSetting.sequential_replies_threshold ||
+              recent_posts_user_ids.detect {|u| u != @user.id }
+
+    # If we got this far, log that we've nagged them about the sequential replies
+    UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies], target_user_id: @user.id )
+
+    {templateName: 'composer/education',
+     wait_for_typing: true,
+     body: PrettyText.cook(I18n.t('education.sequential_replies')) }
   end
 
   private

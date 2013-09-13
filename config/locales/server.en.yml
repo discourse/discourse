@@ -113,6 +113,13 @@ en:
 
       It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
 
+    sequential_replies: |
+      ### Consider replying to several posts at once
+
+      Rather than many sequential replies to a topic, please consider a single reply that includes quotes or @name references to previous posts.
+
+      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
+
 
   activerecord:
     attributes:
@@ -686,6 +693,7 @@ en:
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars"
     max_daily_gravatar_crawls: "The maximum amount of times Discourse will check gravatar for custom avatars in a day"
 
+    sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

@@ -258,6 +258,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:detect_custom_avatars, false)
   setting(:max_daily_gravatar_crawls, 500)
 
+  setting(:sequential_replies_threshold, 2)
+
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
   end

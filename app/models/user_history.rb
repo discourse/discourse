@@ -16,7 +16,8 @@ class UserHistory < ActiveRecord::Base
                            :change_site_customization,
                            :delete_site_customization,
                            :checked_for_custom_avatar,
-                           :notified_about_avatar)
+                           :notified_about_avatar,
+                           :notified_about_sequential_replies)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
