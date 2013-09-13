@@ -1,20 +1,28 @@
 production:
+    first_thing:
+    # 1. Permissions on postgres box
+      - source: /.cloud66/scripts/permissions.sh
+        destination: /tmp/scripts/permissions.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
     after_postgresql:
-    # 1. Copy SQL image to PSQL server
+    # 2. Copy SQL image to PSQL server
       - source: /pg_dumps/production-image.sql
         destination: /tmp/images/production-image.sql
         target: postgresql
         apply_during: build_only
         owner: postgres
     after_rails:
-    # 2. Set environment variables and allow PSQL user to access them
+    # 3. Set environment variables and allow PSQL user to access them
       - source: /.cloud66/scripts/env_vars.sh
         destination: /tmp/env_vars.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 3. DB:DROP & DB:CREATE
+    # 4. DB:DROP & DB:CREATE
       - source: /.cloud66/scripts/kill.sh
         destination: /tmp/kill.sh
         target: rails
@@ -22,13 +30,6 @@ production:
         execute: true
         sudo: true
     last_thing:
-    # 4. Permissions on postgres box
-      - source: /.cloud66/scripts/permissions.sh
-        destination: /tmp/scripts/permissions.sh
-        target: postgresql
-        apply_during: build_only
-        execute: true
-        sudo: true
     # 5. Import database image
       - source: /.cloud66/scripts/import.sh
         destination: /tmp/scripts/import.sh
