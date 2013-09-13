@@ -1,4 +1,4 @@
-unless Rails.version =~ /^4/
+unless rails4?
   module ActiveRecord
     class Relation
       # Patch Rails 3 ActiveRecord::Relation to noop on Rails 4 references

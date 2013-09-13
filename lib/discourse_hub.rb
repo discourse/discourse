@@ -18,7 +18,7 @@ module DiscourseHub
           )
         )
       }
-    end 
+    end
 
   end
 
@@ -60,6 +60,7 @@ module DiscourseHub
     get('/version_check', {
       installed_version: Discourse::VERSION::STRING,
       forum_title: SiteSetting.title,
+      forum_description: SiteSetting.site_description,
       forum_url: Discourse.base_url,
       contact_email: SiteSetting.contact_email,
       topic_count: Topic.listable_topics.count,

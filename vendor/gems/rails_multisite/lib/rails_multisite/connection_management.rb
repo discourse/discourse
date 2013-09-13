@@ -97,7 +97,7 @@ module RailsMultisite
       # see: https://github.com/rails/rails/issues/8344#issuecomment-10800848
       #
       @@default_connection_handler = ActiveRecord::Base.connection_handler
-      ActiveRecord::Base.send :include, NewConnectionHandler
+      ActiveRecord::Base.send :include, NewConnectionHandler if ActiveRecord::VERSION::MAJOR == 3
       ActiveRecord::Base.connection_handler = @@default_connection_handler
       @@connection_handlers = {}
     end

@@ -71,7 +71,7 @@ zh_CN:
           other: "%{count}天前"
     share:
       topic: '分享一个到本主题的链接'
-      post: '分享一个到本帖的链接'
+      post: '分享一个到#%{postNumber}帖的链接'
       close: '关闭'
       twitter: '分享这个链接到 Twitter'
       facebook: '分享这个链接到 Facebook'
@@ -94,6 +94,8 @@ zh_CN:
     links: 链接
     faq: "常见问答（FAQ）"
     privacy_policy: "隐私政策"
+    mobile_view: "移动视图"
+    desktop_view: "桌面视图"
     you: "你"
     or: "或"
     now: "刚刚"
@@ -200,6 +202,7 @@ zh_CN:
       change: "修改"
       moderator: "{{user}} 是版主"
       admin: "{{user}} 是管理员"
+      deleted: "（已删除）"
       
       messages:
         all: "所有"
@@ -762,6 +765,7 @@ zh_CN:
       multi_select:
         select: '选择'
         selected: '已选择（{{count}}）'
+        select_replies: '选择并回复'
         delete: 删除所选
         cancel: 取消选择
         description:
@@ -814,6 +818,12 @@ zh_CN:
         undelete: "恢复本帖"
         share: "分享一个到本帖的链接"
         more: "更多"
+        delete_replies:
+          confirm:
+            one: "是否同时删除该帖的1条回复？"
+            other: "是否同时删除该帖的{{count}}条回复？"
+          yes_value: "是，删除回复"
+          no_value: "否，仅删除该帖"
 
       actions:
         flag: '报告'
@@ -917,7 +927,7 @@ zh_CN:
           other: "你确定要删除这些帖子吗？"
 
     category:
-      can: 'can&hellip; '
+      can: '能够'
       none: '（未分类）'
       edit: '编辑'
       edit_long: "编辑分类"

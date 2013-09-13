@@ -9,12 +9,12 @@ class DraftController < ApplicationController
 
   def update
     Draft.set(current_user, params[:draft_key], params[:sequence].to_i, params[:data])
-    render text: 'ok'
+    render json: success_json
   end
 
   def destroy
     Draft.clear(current_user, params[:draft_key], params[:sequence].to_i)
-    render text: 'ok'
+    render json: success_json
   end
 
 end

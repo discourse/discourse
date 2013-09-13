@@ -404,6 +404,12 @@ class Guardian
     @secure_category_ids ||= @user.secure_category_ids
   end
 
+  # all allowed category ids
+  def allowed_category_ids
+    unrestricted = Category.where(read_restricted: false).pluck(:id)
+    unrestricted.concat(secure_category_ids)
+  end
+
   def topic_create_allowed_category_ids
     @topic_create_allowed_category_ids ||= @user.topic_create_allowed_category_ids
   end

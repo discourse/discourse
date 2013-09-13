@@ -13,6 +13,7 @@ Discourse.ShareController = Discourse.Controller.extend({
   // Close the share controller
   close: function() {
     this.set('link', '');
+    this.set('postNumber', '');
     return false;
   },
 
