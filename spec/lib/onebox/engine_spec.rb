@@ -51,6 +51,16 @@ describe Onebox::Engine do
     end
   end
 
+  describe "#template_path" do
+    it "returns file path for onebox template" do
+      class OneboxEngineVoo
+        include Onebox::Engine
+      end
+      result = OneboxEngineVoo.new("http://amazon.com").send(:template_path)
+      expect(result).to eq("/home/jzeta/Projects/rgsoc/onebox/templates/enginevoo.handlebars")
+    end
+  end
+
   describe ".===" do
     it "returns true if argument matches the matcher" do
       class OneboxEngineFoo
