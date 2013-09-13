@@ -17,16 +17,16 @@ module Oneboxer
 
       # Figure out what kind of onebox to show based on the URL
       case route[:controller]
-      when 'users'
-        user = User.where(username_lower: route[:username].downcase).first
-        return nil unless user
+      # when 'users'
+      #   user = User.where(username_lower: route[:username].downcase).first
+      #   return nil unless user
 
-        return @url unless Guardian.new.can_see?(user)
+      #   return @url unless Guardian.new.can_see?(user)
 
-        args.merge! avatar: PrettyText.avatar_img(user.avatar_template, 'tiny'), username: user.username
-        args[:bio] = user.bio_cooked if user.bio_cooked.present?
+      #   args.merge! avatar: PrettyText.avatar_img(user.avatar_template, 'tiny'), username: user.username
+      #   args[:bio] = user.bio_cooked if user.bio_cooked.present?
 
-        @template = 'user'
+      #   @template = 'user'
       when 'topics'
 
         linked = "<a href='#{@url}'>#{@url}</a>"
