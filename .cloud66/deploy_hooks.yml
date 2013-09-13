@@ -1,13 +1,13 @@
 production:
-    # 1. Copy SQL image to PSQL server
     after_postgresql:
+    # 1. Copy SQL image to PSQL server
       - source: /pg_dumps/production-image.sql
         destination: /tmp/images/production-image.sql
         target: postgresql
         apply_during: build_only
         owner: postgres
-    # 2. Set environment variables and allow PSQL user to access them
     after_rails:
+    # 2. Set environment variables and allow PSQL user to access them
       - source: /.cloud66/scripts/env_vars.sh
         destination: /tmp/env_vars.sh
         target: rails
@@ -21,6 +21,7 @@ production:
         apply_during: build_only
         execute: true
         sudo: true
+    last_thing:
     # 4. Import database image
       - source: /.cloud66/scripts/import.sh
         destination: /tmp/scripts/import.sh
