@@ -7,17 +7,9 @@ class SessionController < ApplicationController
   end
 
   def create
-    params.require(:login)
     params.require(:password)
 
-    login = params[:login].strip
-    login = login[1..-1] if login[0] == "@"
-
-    if login =~ /@/
-      @user = User.where(email: Email.downcase(login)).first
-    else
-      @user = User.where(username_lower: login.downcase).first
-    end
+    @user = find_user_by_login
 
     if @user.present?
 
@@ -55,9 +47,7 @@ class SessionController < ApplicationController
   end
 
   def forgot_password
-    params.require(:login)
-
-    user = User.where('username_lower = :username or email = :email', username: params[:login].downcase, email: Email.downcase(params[:login])).first
+    user = find_user_by_login
     if user.present?
       email_token = user.email_tokens.create(email: user.email)
       Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
@@ -70,6 +60,14 @@ class SessionController < ApplicationController
     reset_session
     cookies[:_t] = nil
     render nothing: true
+  end
+
+  private
+
+  def find_user_by_login
+    login = params.require(:login).strip
+    login.sub!('@', '') if login.start_with?('@')
+    User.find_by_username_or_email(login)
   end
 
 end
