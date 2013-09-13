@@ -56,7 +56,7 @@
               </div>
             {{/if}}
             <div class='post-info'>
-              <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{unboundAgeWithTooltip created_at}}</a>
+              <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}} {{bindAttr data-post-number="post_number"}}>{{unboundAgeWithTooltip created_at}}</a>
             </div>
           </div>
         {{/unless}}
