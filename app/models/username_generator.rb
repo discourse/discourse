@@ -1,8 +1,8 @@
 module UsernameGenerator
 
-	extend self
+  extend self
 
-	def generate(email)
+  def generate(email)
     root = email.match(/\A(\w+?)\W/)[1] rescue ''
     nums = 5.times.map{ |n| random_number }
     names = [root] + nums.map{ |n| "#{root}#{n}" } + nums.map{ |n| "User#{n}" }

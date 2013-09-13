@@ -8,8 +8,8 @@ worker_processes Integer(ENV["WEB_CONCURRENCY"] || 3)
 
 working_directory discourse_path
 
-# nuke workers after 30 seconds instead of 60 seconds (the default)
-timeout 30
+# nuke workers after 30 seconds
+timeout Integer(ENV["WEB_TIMEOUT"] || 30)
 
 # important for Ruby 2.0
 preload_app true

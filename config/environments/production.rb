@@ -60,13 +60,21 @@ Discourse::Application.configure do
   # allows Cross-origin resource sharing (CORS) for API access in JavaScript (default to false for security).
   # See the initializer and https://github.com/cyu/rack-cors for configuration documentation.
   #
+<<<<<<< HEAD
   # config.enable_rack_cors = false
   # config.rack_cors_origins = ['*']
   # config.rack_cors_resource = ['*', { :headers => :any, :methods => [:get, :post, :options] }]
+=======
+  # Set in config/application.rb
+  # config.enable_rack_cors = true
+  # config.rack_cors_origins = [ENV['HOSTNAME']]
+  # config.rack_cors_resource = ['/assets/*', { :headers => :any, :methods => [:get, :head, :options] }]
+>>>>>>> a436c0f... Properly set CORs headers for fonts
 
   # Discourse strongly recommend you use a CDN.
   # For origin pull cdns all you need to do is register an account and configure
   # config.action_controller.asset_host = "http://YOUR_CDN_HERE"
   config.action_controller.asset_host = ENV['CDN_SUMO_URL']
 
+  config.font_assets.origin = ENV['HOSTNAME'] || "https://discussion.heroku.com"
 end
