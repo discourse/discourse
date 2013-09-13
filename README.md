@@ -1,7 +1,7 @@
 onebox
 ----------
 
-  - TODO: register to rubygems.org
+  - [![Gem Version](https://badge.fury.io/rb/onebox.png)](https://rubygems.org/gems/onebox)
   - [![Code Climate](https://codeclimate.com/github/dysania/onebox.png)](https://codeclimate.com/github/dysania/onebox)
   - [![Build Status](https://travis-ci.org/dysania/onebox.png)](https://travis-ci.org/dysania/onebox)
   - [![Dependency Status](https://gemnasium.com/dysania/onebox.png)](https://gemnasium.com/dysania/onebox)
@@ -11,149 +11,190 @@ onebox
 Onebox is a library for turning media URLs into previews.
 
 Onebox currently has support for page, image, and video URLs from these sites:
-- Amazon
-- Android App Store
-- Apple Store
-- BlipTV
-- Clikthrough
-- College Humor
-- Dailymotion
-- Dotsub
-- Flickr
-- Funny or Die
-- Gist
-- Github
+
+  - Amazon
+  - Android App Store
+  - Apple Store
+  - BlipTV
+  - Clikthrough
+  - College Humor
+  - Dailymotion
+  - Dotsub
+  - Flickr
+  - Funny or Die
+  - Gist
+  - Github
     - Blob
     - Commit
     - Pull Request
-- Hulu
-- Imgur
-- Kinomap
-- NFB
-- Open Graph
-- Qik
-- Revision
-- Rotten Tomatoes
-- Slideshare
-- Smugmug
-- Soundcloud
-- Stack Exchange
-- TED
-- Twitter
-- Wikipedia
-- yFrog
+  - Hulu
+  - Imgur
+  - Kinomap
+  - NFB
+  - Open Graph
+  - Qik
+  - Revision
+  - Rotten Tomatoes
+  - Slideshare
+  - Smugmug
+  - Soundcloud
+  - Stack Exchange
+  - TED
+  - Twitter
+  - Wikipedia
+  - yFrog
 
 
-Using onebox
-===============
+Usage
+=====
+
+Using onebox is fairly simple!
+First make sure the library is required:
 
 ``` ruby
 require "onebox"
 ```
 
-The `Gemfile` file would look like this:
+Then pass a link to the library's interface:
 
 ``` ruby
-# source/Gemfile
-source "https://rubygems.org"
+require "onebox"
 
-gem "onebox", "~> 1.0"
+url = "http://www.amazon.com/gp/product/B005T3GRNW/ref=s9_simh_gw_p147_d0_i2"
+preview = Onebox.preview(url)
 ```
 
-How to create a new onebox
-===========================
-
-1. Create new onebox engine
+This will contain a simple Onebox::Preview object that handles all the transformation.
+From here you either call `Onebox::Preview#to_s` or just pass the object to a string:
 
 ``` ruby
-# in lib/onebox/engine/name_onebox.rb
+require "onebox"
 
-module Onebox
-  module Engine
-    class NameOnebox
-      include Engine
+url = "http://www.amazon.com/gp/product/B005T3GRNW/ref=s9_simh_gw_p147_d0_i2"
+preview = Onebox.preview(url)
+"#{preview}" == preview.to_s #=> true
+```
 
-      private
+Onebox has it's own caching system but you can also provide (or turn off) your own system:
 
-      def extracted_data
-        {
-          url: @url,
-          name: @body.css("h1").inner_text,
-          image: @body.css("#main-image").first["src"],
-          description: @body.css("#postBodyPS").inner_text
-        }
+``` ruby
+require "onebox"
+
+url = "http://www.amazon.com/gp/product/B005T3GRNW/ref=s9_simh_gw_p147_d0_i2"
+preview = Onebox.preview(url, cache: Rails.cache)
+"#{preview}" == preview.to_s #=> true
+```
+
+In addition you can set your own defaults with this handy interface:
+
+``` ruby
+require "onebox"
+
+Onebox.defaults = {
+  cache: Rails.cache
+}
+
+url = "http://www.amazon.com/gp/product/B005T3GRNW/ref=s9_simh_gw_p147_d0_i2"
+preview = Onebox.preview(url)
+"#{preview}" == preview.to_s #=> true
+```
+
+
+Setup
+=====
+
+  1. Create new onebox engine
+
+    ``` ruby
+    # in lib/onebox/engine/name_onebox.rb
+
+    module Onebox
+      module Engine
+        class NameOnebox
+          include Engine
+          include HTML
+
+          private
+
+          def data
+            {
+              url: @url,
+              name: raw.css("h1").inner_text,
+              image: raw.css("#main-image").first["src"],
+              description: raw.css("#postBodyPS").inner_text
+            }
+          end
+        end
       end
     end
-  end
-end
-```
+    ```
 
-2. Create new onebox spec
+  2. Create new onebox spec
 
-``` ruby
-# in spec/lib/onebox/engine/name_spec.rb
-require "spec_helper"
+    ``` ruby
+    # in spec/lib/onebox/engine/name_spec.rb
+    require "spec_helper"
 
-describe Onebox::Engine::NameOnebox do
-  let(:link) { "http://yoursitename.com" }
-  let(:html) { described_class.new(link).to_html }
+    describe Onebox::Engine::NameOnebox do
+      let(:link) { "http://yoursitename.com" }
+      let(:html) { described_class.new(link).to_html }
 
-  before do
-    fake(link, response("name.response"))
-  end
+      before do
+        fake(link, response("name.response"))
+      end
 
-  it "returns video title" do
-    expect(html).to include("title")
-  end
+      it "has the video's title" do
+        expect(html).to include("title")
+      end
 
-  it "returns video photo" do
-    expect(html).to include("photo.jpg")
-  end
+      it "has the video's still shot" do
+        expect(html).to include("photo.jpg")
+      end
 
-  it "returns video description" do
-    expect(html).to include("description")
-  end
+      it "has the video's description" do
+        expect(html).to include("description")
+      end
 
-  it "returns URL" do
-    expect(html).to include(link)
-  end
-end
-```
+      it "has the URL to the resource" do
+        expect(html).to include(link)
+      end
+    end
+    ```
 
-3. Create new handlebars template
+  3. Create new handlebars template
 
-``` html
-# in templates/name.handlebars
-<div class="onebox">
-  <a href="{{url}}">
-    <h1>{{name}}</h1>
-    <h2 class="host">yoursitename.com</h2>
-    <img src="{{image}}" />
-    <p>{{description}}</p>
-  </a>
-</div>
-```
+    ``` html
+    # in templates/name.handlebars
+    <div class="onebox">
+      <a href="{{url}}">
+        <h1>{{name}}</h1>
+        <h2 class="host">yoursitename.com</h2>
+        <img src="{{image}}" />
+        <p>{{description}}</p>
+      </a>
+    </div>
+    ```
 
-4. Create new fixture from HTML response
+  4. Create new fixture from HTML response
 
-``` bash
-curl --output spec/fixtures/name.response -L -X -GET http://yoursitename.com
-```
+    ``` bash
+    curl --output spec/fixtures/oneboxname.response -L -X -GET http://yoursitename.com
+    ```
 
-5. Require in Engine module
+  5. Require in Engine module
 
-``` ruby
-# in lib/onebox/engine/engine.rb
-require_relative "engine/name_onebox"
-```
+    ``` ruby
+    # in lib/onebox/engine/engine.rb
+    require_relative "engine/name_onebox"
+    ```
 
 
-Installing onebox
-==================
+Installing
+==========
 
 Add this line to your application's Gemfile:
 
-    gem 'onebox'
+    gem "onebox". "~> 1.0"
 
 And then execute:
 
