@@ -22,7 +22,14 @@ production:
         execute: true
         sudo: true
     last_thing:
-    # 4. Import database image
+    # 4. Permissions on postgres box
+      - source: /.cloud66/scripts/permissions.sh
+        destination: /tmp/scripts/permissions.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
+    # 5. Import database image
       - source: /.cloud66/scripts/import.sh
         destination: /tmp/scripts/import.sh
         target: postgresql
@@ -30,14 +37,14 @@ production:
         execute: true
         owner: postgres
         run_as: postgres
-    # 5. Migrate database
+    # 6. Migrate database
       - source: /.cloud66/scripts/migrate.sh
         destination: /tmp/migrate.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 6. Curl script
+    # 7. Curl script
       - source: /.cloud66/scripts/curl.sh
         destination: /tmp/curl.sh
         target: rails
