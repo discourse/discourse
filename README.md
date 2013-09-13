@@ -8,41 +8,7 @@ onebox
   - [![Coverage Status](https://coveralls.io/repos/dysania/onebox/badge.png)](https://coveralls.io/r/dysania/onebox)
 
 
-Onebox is a library for turning media URLs into previews.
-
-Onebox currently has support for page, image, and video URLs from these sites:
-
-  - Amazon
-  - Android App Store
-  - Apple Store
-  - BlipTV
-  - Clikthrough
-  - College Humor
-  - Dailymotion
-  - Dotsub
-  - Flickr
-  - Funny or Die
-  - Gist
-  - Github
-    - Blob
-    - Commit
-    - Pull Request
-  - Hulu
-  - Imgur
-  - Kinomap
-  - NFB
-  - Open Graph
-  - Qik
-  - Revision
-  - Rotten Tomatoes
-  - Slideshare
-  - Smugmug
-  - Soundcloud
-  - Stack Exchange
-  - TED
-  - Twitter
-  - Wikipedia
-  - yFrog
+Onebox is a library for turning media URLs into simple HTML previews of the resource.
 
 
 Usage
@@ -187,6 +153,40 @@ Setup
     # in lib/onebox/engine/engine.rb
     require_relative "engine/name_onebox"
     ```
+    
+Onebox currently has support for page, image, and video URLs from these sites:
+
+  - Amazon
+  - Android App Store
+  - Apple Store
+  - BlipTV
+  - Clikthrough
+  - College Humor
+  - Dailymotion
+  - Dotsub
+  - Flickr
+  - Funny or Die
+  - Gist
+  - Github
+    - Blob
+    - Commit
+    - Pull Request
+  - Hulu
+  - Imgur
+  - Kinomap
+  - NFB
+  - Open Graph
+  - Qik
+  - Revision
+  - Rotten Tomatoes
+  - Slideshare
+  - Smugmug
+  - Soundcloud
+  - Stack Exchange
+  - TED
+  - Twitter
+  - Wikipedia
+  - yFrog
 
 
 Installing
