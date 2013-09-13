@@ -20,7 +20,7 @@ module ApplicationHelper
   end
 
   def html_classes
-    "#{mobile_view? ? 'mobile-view' : ''} #{mobile_device? ? 'mobile-device' : ''}"
+    "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'}"
   end
 
   def escape_unicode(javascript)
