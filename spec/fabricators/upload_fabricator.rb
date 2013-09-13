@@ -9,8 +9,9 @@ Fabricator(:upload) do
 end
 
 Fabricator(:attachment, from: :upload) do
+  id 42
   user
   original_filename "archive.zip"
   filesize 1234
-  url  "/uploads/default/186/66b3ed1503efc936.zip"
+  url  "/uploads/default/42/66b3ed1503efc936.zip"
 end

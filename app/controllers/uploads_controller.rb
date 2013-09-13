@@ -1,5 +1,6 @@
 class UploadsController < ApplicationController
-  before_filter :ensure_logged_in
+  before_filter :ensure_logged_in, except: [:show]
+  skip_before_filter :check_xhr, only: [:show]
 
   def create
     file = params[:file] || params[:files].first
@@ -26,6 +27,20 @@ class UploadsController < ApplicationController
     render status: 422, text: I18n.t("upload.images.unknown_image_type")
   rescue FastImage::SizeNotFound
     render status: 422, text: I18n.t("upload.images.size_not_found")
+  end
+
+  def show
+    return render nothing: true, status: 404 unless Discourse.store.internal?
+
+    id = params[:id].to_i
+    url = request.fullpath
+
+    # the "url" parameter is here to prevent people from scanning the uploads using the id
+    upload = Upload.where(id: id, url: url).first
+
+    return render nothing: true, status: 404 unless upload
+
+    send_file(Discourse.store.path_for(upload), filename: upload.original_filename)
   end
 
 end

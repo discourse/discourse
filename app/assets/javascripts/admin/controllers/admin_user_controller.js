@@ -22,5 +22,9 @@ Discourse.AdminUserController = Discourse.ObjectController.extend({
     });
 
     this.toggleTitleEdit();
-  }
+  },
+
+  showApproval: function() {
+    return Discourse.SiteSettings.must_approve_users;
+  }.property()
 });

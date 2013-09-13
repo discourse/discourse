@@ -217,6 +217,11 @@ test("Oneboxing", function() {
   ok(matches("http://test.com\nhttp://test2.com", /onebox[\s\S]+onebox/m), "supports multiple links");
   ok(!matches("http://test.com bob", /onebox/), "doesn't onebox links that have trailing text");
 
+  ok(!matches("[Tom Cruise](http://www.tomcruise.com/)", "onebox"), "Markdown links with labels are not oneboxed");
+  ok(matches("[http://www.tomcruise.com/](http://www.tomcruise.com/)",
+    "onebox"),
+    "Markdown links where the label is the same as the url are oneboxed");
+
   cooked("http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street",
          "<p><a href=\"http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street\" class=\"onebox\"" +
          ">http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street</a></p>",

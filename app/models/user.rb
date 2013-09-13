@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :cas_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
+  has_one :user_stat, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
 
   has_many :group_users, dependent: :destroy
@@ -60,6 +61,7 @@ class User < ActiveRecord::Base
   after_save :update_tracked_topics
 
   after_create :create_email_token
+  after_create :create_user_stat
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -300,14 +302,15 @@ class User < ActiveRecord::Base
     template.gsub("{size}", "45")
   end
 
+  # the avatars might take a while to generate
+  # so return the url of the original image in the meantime
+  def uploaded_avatar_path
+    return unless SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
+    uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
+  end
+
   def avatar_template
-    if SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
-      # the avatars might take a while to generate
-      # so return the url of the original image in the meantime
-      uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
-    else
-      User.gravatar_template(email)
-    end
+    uploaded_avatar_path || User.gravatar_template(email)
   end
 
   # Updates the denormalized view counts for all users
@@ -491,8 +494,8 @@ class User < ActiveRecord::Base
   end
 
   def secure_category_ids
-    cats = self.staff? ? Category.select(:id).where(read_restricted: true) : secure_categories.select('categories.id').references(:categories)
-    cats.map { |c| c.id }.sort
+    cats = self.staff? ? Category.where(read_restricted: true) : secure_categories.references(:categories)
+    cats.pluck('categories.id').sort
   end
 
   def topic_create_allowed_category_ids
@@ -535,6 +538,12 @@ class User < ActiveRecord::Base
       TopicUser.where(where_conditions).update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
                             auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]])
     end
+  end
+
+  def create_user_stat
+    stat = UserStat.new
+    stat.user_id = self.id
+    stat.save!
   end
 
   def create_email_token

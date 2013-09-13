@@ -75,7 +75,11 @@ class PostCreator
     end
 
     if @spam
-      GroupMessage.create( Group[:moderators].name, :spam_post_blocked, {user: @user, limit_once_per: 24.hours} )
+      GroupMessage.create( Group[:moderators].name,
+                           :spam_post_blocked,
+                           { user: @user,
+                             limit_once_per: 24.hours,
+                             message_params: {domains: @post.linked_hosts.keys.join(', ')} } )
     end
 
     enqueue_jobs
@@ -220,9 +224,7 @@ class PostCreator
   end
 
   def store_unique_post_key
-    if SiteSetting.unique_posts_mins > 0
-      $redis.setex(@post.unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, "1")
-    end
+    @post.store_unique_post_key
   end
 
   def consider_clearing_flags

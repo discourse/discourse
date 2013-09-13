@@ -1,6 +1,8 @@
 Discourse::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  config.eager_load = true if rails4?
+
   # Code is not reloaded between requests
   config.cache_classes = true
 
@@ -17,7 +19,7 @@ Discourse::Application.configure do
   config.assets.compress = true
 
   # stuff should be pre-compiled, allow compilation to make life easier
-  config.assets.compile = true
+  config.assets.compile = false
 
   # Generate digests for assets URLs
   config.assets.digest = true

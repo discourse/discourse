@@ -276,6 +276,19 @@ Discourse.User = Discourse.Model.extend({
       type: 'PUT',
       data: { use_uploaded_avatar: useUploadedAvatar }
     });
+  },
+
+  /**
+    Determines whether the current user is allowed to upload a file.
+
+    @method isAllowedToUploadAFile
+    @param {string} type The type of the upload (image, attachment)
+    @returns true if the current user is allowed to upload a file
+  **/
+  isAllowedToUploadAFile: function(type) {
+    return this.get('staff') ||
+           this.get('trust_level') > 0 ||
+           Discourse.SiteSettings['newuser_max_' + type + 's'] > 0;
   }
 
 });
@@ -345,7 +358,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     var result = Em.A();
     result.pushObjects(stats.rejectProperty('isResponse'));
 
-    var insertAt = 1;
+    var insertAt = 0;
     result.forEach(function(item, index){
      if(item.action_type === Discourse.UserAction.TYPES.topics || item.action_type === Discourse.UserAction.TYPES.posts){
        insertAt = index + 1;

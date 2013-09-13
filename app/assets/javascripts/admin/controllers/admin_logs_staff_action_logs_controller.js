@@ -18,11 +18,11 @@ Discourse.AdminLogsStaffActionLogsController = Ember.ArrayController.extend(Disc
       self.set('content', result);
       self.set('loading', false);
     });
-  }.observes('filters.action_name', 'filters.staff_user', 'filters.target_user', 'filters.subject'),
+  }.observes('filters.action_name', 'filters.acting_user', 'filters.target_user', 'filters.subject'),
 
   filtersExists: function() {
     return (_.size(this.get('filters')) > 0);
-  }.property('filters.action_name', 'filters.staff_user', 'filters.target_user', 'filters.subject'),
+  }.property('filters.action_name', 'filters.acting_user', 'filters.target_user', 'filters.subject'),
 
   clearFilter: function(key) {
     delete this.get('filters')[key];
@@ -45,8 +45,8 @@ Discourse.AdminLogsStaffActionLogsController = Ember.ArrayController.extend(Disc
     }
   }.property('filters.action_name'),
 
-  filterByStaffUser: function(staff_user) {
-    this.set('filters.staff_user', staff_user.username);
+  filterByStaffUser: function(acting_user) {
+    this.set('filters.acting_user', acting_user.username);
   },
 
   filterByTargetUser: function(target_user) {

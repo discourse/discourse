@@ -8,6 +8,7 @@ class SiteSetting < ActiveRecord::Base
 
   # settings available in javascript under Discourse.SiteSettings
   client_setting(:title, "Discourse")
+  setting(:site_description, '')
   client_setting(:logo_url, '/assets/d-logo-sketch.png')
   client_setting(:logo_small_url, '/assets/d-logo-sketch-small.png')
   setting(:contact_email, '')
@@ -259,6 +260,9 @@ class SiteSetting < ActiveRecord::Base
 
   client_setting(:allow_uploaded_avatars, true)
   client_setting(:allow_animated_avatars, false)
+
+  setting(:detect_custom_avatars, false)
+  setting(:max_daily_gravatar_crawls, 500)
 
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
