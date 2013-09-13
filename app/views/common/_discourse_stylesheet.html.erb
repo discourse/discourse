@@ -10,4 +10,6 @@
   <%= stylesheet_link_tag "admin"%>
 <%-end%>
 
-<%=SiteCustomization.custom_stylesheet(session[:preview_style])%>
+<% unless mobile_view? %>
+  <%= SiteCustomization.custom_stylesheet(session[:preview_style]) %>
+<% end %>
