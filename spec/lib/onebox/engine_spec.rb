@@ -57,7 +57,7 @@ describe Onebox::Engine do
         include Onebox::Engine
       end
       result = OneboxEngineVoo.new("http://amazon.com").send(:template_path)
-      expect(result).to eq("/home/jzeta/Projects/rgsoc/onebox/templates/enginevoo.handlebars")
+      expect(result).to eq(File.join(Dir.pwd, "templates", "enginevoo.handlebars"))
     end
   end
 
