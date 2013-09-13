@@ -47,14 +47,9 @@ Onebox currently has support for page, image, and video URLs from these sites:
 Using onebox
 ===============
 
-You can include onebox modules into a class like so:
-
 ``` ruby
 require "onebox"
 ```
-TODO: write example
-
-
 
 The `Gemfile` file would look like this:
 
@@ -62,7 +57,94 @@ The `Gemfile` file would look like this:
 # source/Gemfile
 source "https://rubygems.org"
 
-gem "onebox", "~> <%= version %>"
+gem "onebox", "~> 1.0"
+```
+
+How to create a new onebox
+===========================
+
+1. Create new onebox engine
+
+``` ruby
+# in lib/onebox/engine/name_onebox.rb
+
+module Onebox
+  module Engine
+    class NameOnebox
+      include Engine
+
+      private
+
+      def extracted_data
+        {
+          url: @url,
+          name: @body.css("h1").inner_text,
+          image: @body.css("#main-image").first["src"],
+          description: @body.css("#postBodyPS").inner_text
+        }
+      end
+    end
+  end
+end
+```
+
+2. Create new onebox spec
+
+``` ruby
+# in spec/lib/onebox/engine/name_spec.rb
+require "spec_helper"
+
+describe Onebox::Engine::NameOnebox do
+  let(:link) { "http://yoursitename.com" }
+  let(:html) { described_class.new(link).to_html }
+
+  before do
+    fake(link, response("name.response"))
+  end
+
+  it "returns video title" do
+    expect(html).to include("title")
+  end
+
+  it "returns video photo" do
+    expect(html).to include("photo.jpg")
+  end
+
+  it "returns video description" do
+    expect(html).to include("description")
+  end
+
+  it "returns URL" do
+    expect(html).to include(link)
+  end
+end
+```
+
+3. Create new handlebars template
+
+``` html
+# in templates/name.handlebars
+<div class="onebox">
+  <a href="{{url}}">
+    <h1>{{name}}</h1>
+    <h2 class="host">yoursitename.com</h2>
+    <img src="{{image}}" />
+    <p>{{description}}</p>
+  </a>
+</div>
+```
+
+4. Create new fixture from HTML response
+
+``` bash
+curl --output spec/fixtures/name.response -L -X -GET http://yoursitename.com
+```
+
+5. Require in Engine module
+
+``` ruby
+# in lib/onebox/engine/engine.rb
+require_relative "engine/name_onebox"
 ```
 
 
