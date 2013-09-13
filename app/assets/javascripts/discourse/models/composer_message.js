@@ -22,8 +22,8 @@ Discourse.ComposerMessage.reopenClass({
         topicId = composer.get('topic.id'),
         postId = composer.get('post.id');
 
-    if (topicId) { data.topic_id = topicId };
-    if (postId)  { data.post_id = postId };
+    if (topicId) { data.topic_id = topicId; }
+    if (postId)  { data.post_id = postId; }
 
     return Discourse.ajax('/composer-messages', { data: data }).then(function (messages) {
       return messages.map(function (message) {
@@ -32,4 +32,4 @@ Discourse.ComposerMessage.reopenClass({
     });
   }
 
-})
+});

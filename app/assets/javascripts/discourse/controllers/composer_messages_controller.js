@@ -69,7 +69,7 @@ Discourse.ComposerMessagesController = Ember.ArrayController.extend({
     var self = this;
     this.get('queuedForTyping').forEach(function (msg) {
       self.popup(msg);
-    })
+    });
   },
 
   /**

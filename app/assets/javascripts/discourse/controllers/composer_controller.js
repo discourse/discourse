@@ -127,7 +127,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
     if (this.present('model.reply')) {
       // Notify the composer messages controller that a reply has been typed. Some
       // messages only appear after typing.
-      this.get('controllers.composerMessages').typedReply()
+      this.get('controllers.composerMessages').typedReply();
     }
   },
 
