@@ -57,7 +57,7 @@ The `Gemfile` file would look like this:
 # source/Gemfile
 source "https://rubygems.org"
 
-gem "onebox", "~> <%= version %>"
+gem "onebox", "~> 1.0"
 ```
 
 How to create a new onebox
