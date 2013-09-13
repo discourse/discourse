@@ -53,4 +53,18 @@ production:
         execute: true
         sudo: true
 staging:
+      after_rails:
+      - source: /.cloud66/scripts/migrate.sh
+        destination: /tmp/migrate.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
 development:
+      after_rails:
+      - source: /.cloud66/scripts/migrate.sh
+        destination: /tmp/migrate.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
