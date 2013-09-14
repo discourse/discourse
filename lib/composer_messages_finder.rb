@@ -17,7 +17,7 @@ class ComposerMessagesFinder
       count = @user.created_topic_count
       education_key = :education_new_topic
     else
-      count = @user.topic_reply_count
+      count = @user.post_count
       education_key = :education_new_reply
     end
 
@@ -59,8 +59,8 @@ class ComposerMessagesFinder
                   # For users who are not new
                   @user.has_trust_level?(:basic) &&
 
-                  # And who have posted enough topics
-                  (@user.topic_reply_count > SiteSetting.educate_until_posts) &&
+                  # And who have posted enough
+                  (@user.post_count > SiteSetting.educate_until_posts) &&
 
                   # And who haven't been notified about sequential replies already
                   (!UserHistory.exists_for_user?(@user, :notified_about_sequential_replies))

@@ -46,12 +46,12 @@ describe ComposerMessagesFinder do
       end
 
       it "returns a message for a user who has not posted any topics" do
-        user.expects(:topic_reply_count).returns(10)
+        user.expects(:post_count).returns(10)
         finder.check_education_message.should be_present
       end
 
       it "returns no message when the user has posted enough topics" do
-        user.expects(:topic_reply_count).returns(11)
+        user.expects(:post_count).returns(11)
         finder.check_education_message.should be_blank
       end
     end
@@ -109,7 +109,7 @@ describe ComposerMessagesFinder do
 
     before do
       SiteSetting.stubs(:educate_until_posts).returns(10)
-      user.topic_reply_count = 11
+      user.stubs(:post_count).returns(11)
 
       Fabricate(:post, topic: topic, user: user)
       Fabricate(:post, topic: topic, user: user)
@@ -135,7 +135,7 @@ describe ComposerMessagesFinder do
       end
 
       it "does not give a message to users who are still in the 'education' phase" do
-        user.topic_reply_count = 10
+        user.stubs(:post_count).returns(10)
         finder.check_sequential_replies.should be_blank
       end
 
