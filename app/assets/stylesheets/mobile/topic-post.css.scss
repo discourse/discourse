@@ -1,10 +1,10 @@
 @import "common/foundation/variables";
 
-.topic-post { 
-  border-top: 1px solid #ddd; 
-  padding: 20px 0 10px 0;
+.topic-post {
+  border-top: 1px solid #ddd;
+  padding: 10px 0 10px 0;
   &:first-of-type {
-    border-top: none; 
+    border-top: none;
   }
 }
 
@@ -22,7 +22,7 @@ span.badge-posts {
   margin-right: 5px;
 }
 
-.show-replies { 
+.show-replies {
   display: none;
   i {
     margin-left: 5px;
@@ -30,17 +30,17 @@ span.badge-posts {
 }
 
 button.create {
-  float: right !important; 
-  border: 1px solid #888; 
+  float: right !important;
+  border: 1px solid #888;
   margin-right: 0;
   color: #888;
-} 
+}
  	.like {
     border-right: 1px solid #ddd;
 }
 
 .create i {
-  margin-right: 5px; 
+  margin-right: 5px;
 }
 
 
@@ -90,7 +90,7 @@ button {
 
 
 .embedded-posts {
-      
+
   .topic-meta-data h5 a {
     margin-left: 10px;
   }
@@ -102,7 +102,7 @@ button {
 }
 
 .post-actions {
-  margin-left: 10px; 
+  margin-left: 10px;
   margin-top: 2px;
 }
 
@@ -111,9 +111,9 @@ a.reply-to-tab {
 }
 
 a.star {
-  display: inline-block; 
+  display: inline-block;
   float: left;
-  font-size: 1.4em !important; 
+  font-size: 1.4em !important;
   margin-top: 3px;
 }
 
@@ -126,25 +126,25 @@ a.star {
 }
 
 .topic-summary {
-  
+
   .btn {
     border-radius: 0 4px 0 4px;
   }
 
-  .topic-links li { 
-    word-wrap: break-word; 
-  } 
+  .topic-links li {
+    word-wrap: break-word;
+  }
 
   border-radius: 5px;
   margin: 15px 10px 20px 10px;
   border: 1px solid #ddd;
-   
+
   h3 {
     margin-bottom: 4px;
     color: #323232;
     line-height: 23px;
   }
-  
+
   h4 {
     margin: 0 0 3px 0;
     color: #6c7376;
@@ -152,17 +152,17 @@ a.star {
     font-size: 12px;
     line-height: 15px;
   }
-  
+
   p,
   .participants {
     margin: 0 0 7px;
   }
-  
+
   ul {
     margin: 0;
     list-style: none;
   }
-  
+
   .avatars {
     > div {
       float: left;
@@ -179,7 +179,7 @@ a.star {
       line-height: 14px;
           }
   }
-  
+
   .avatar {
     float: left;
     margin-right: 4px;
@@ -233,7 +233,8 @@ a.star {
       background: #ddd;
       &:hover {
         background: #ccc;
-        color: #444;      border-bottom: 1px solid #ccc;
+        color: #444;
+        border-bottom: 1px solid #ccc;
 
       }
       &.collapsed {
@@ -257,7 +258,6 @@ a.star {
   clear: left;
   margin-top: 10px;
   padding: 0 10px 0 10px;
-
     th.views, td.views, td.activity, th.activity, th.likes, td.likes {
     display: none;
     }
@@ -269,20 +269,21 @@ a.star {
    .title {
     font-size: 14px; line-height: 8px;
   }
+
 }
 
 
 
 span.post-count {
-  background: #000; 
-  color: #fff; 
+  background: #000;
+  color: #fff;
   opacity: .8;
 }
 
 
 #topic-footer-buttons {
   .btn {
-    margin-bottom: 5px; 
+    margin-bottom: 5px;
     margin-right: 10px;
     .icon-star {margin-right: 5px;}
   }
@@ -302,14 +303,14 @@ span.post-count {
 .quote-button {
   display: none;
   position: absolute;
-  background-color: #666; 
+  background-color: #666;
   color: #fff;
   padding: 10px;
   width: 90px;
 
   &:hover {
     background-color: #999;
-    cursor: pointer; 
+    cursor: pointer;
   }
 }
 
@@ -334,16 +335,16 @@ iframe {
 }
 
 .dropdown-menu li  {
-  margin: 5px 0; 
+  margin: 5px 0;
 }
 
 .btn-group {
-  margin-top: 50px; 
+  margin-top: 50px;
   position: relative;
 }
 
 .dropdown-toggle {
-  float: left; 
+  float: left;
   position: relative;
 }
 
@@ -353,21 +354,21 @@ iframe {
 
 .modal-body {
   input[type=text] {
-    font-size: 16px; 
-    display: block; 
+    font-size: 16px;
+    display: block;
     margin-top: 10px;
-  } 
+  }
 }
 
 
-#share-link {  
+#share-link {
   width: 265px;
   margin-left: -4px;
-  
+
     h3 {
       margin: 5px 0;
     }
-  
+
     input[type=text] {
       font-size: 16px;
       width: 92%;
@@ -375,16 +376,16 @@ iframe {
     }
 }
 
-#selected-posts { 
-  padding-left: 20px; 
+#selected-posts {
+  padding-left: 20px;
   .btn {
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
   }
 }
 
 .post-select {
-  float: right; 
-  margin-right: 20px; 
+  float: right;
+  margin-right: 20px;
   margin-top: -20px;
 }
 
@@ -397,11 +398,11 @@ iframe {
 }
 
 #show-topic-admin {
-  color: #7b7b7b; 
-  right: 0px; 
-  border-right: 0;  
-  padding-right: 4px; 
-  padding-left: 5px; 
+  color: #7b7b7b;
+  right: 0px;
+  border-right: 0;
+  padding-right: 4px;
+  padding-left: 5px;
   border-radius: 4px 0 0 4px;
 }
 
@@ -409,9 +410,17 @@ iframe {
   font-size: 36px;
 }
 
-.staff a {border-radius: 4px; padding: 4px; margin: -4px 0 0 -4px; background-color: lighten(yellow, 35%);}
+.staff a {
+  border-radius: 4px;
+  padding: 4px;
+  margin: -4px 0 0 -4px;
+  background-color: lighten(yellow, 35%);}
 
-.user-title {margin-left: 8px; display: inline-block; color: #aaa;}
+.user-title {
+  margin-left: 8px;
+  display: inline-block;
+  color: #aaa;
+}
 
 span.btn-text {display: none;}
 
@@ -425,7 +434,6 @@ blockquote {
   a {
   margin: 0;
   }
-
     .back:before,
     .quote-other-topic:before {
     display: inline-block;
@@ -443,8 +451,11 @@ blockquote {
 
 
 .quote .title {
-border-left: 5px solid #bebebe;
-background-color: #f1f1f1;
-padding: 10px 10px 0 12px;
-  .avatar {margin-right: 7px;}
+  border-left: 5px solid #bebebe;
+  background-color: #f1f1f1;
+  padding: 10px 10px 0 12px;
+  .avatar { margin-right: 7px; }
 }
+
+.gutter { display: none; }
+

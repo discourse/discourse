@@ -5,7 +5,7 @@
 h3 a {margin-left: 10px;}
 
 }
-.topic-meta-data  a {float: left; 
+.topic-meta-data  a {float: left;
 
 
 
@@ -14,16 +14,15 @@ h3 a {margin-left: 10px;}
 
 
 
-.post-info  {float: right; margin-top: -28px; margin-right: 15px; 
+.post-info  {float: right; margin-top: -28px; margin-right: 15px;
 
 
 }
 .edits {margin-right: 60px;}
 
 
-#topic-progress-wrapper {display: none;}
 
-#topic-title {margin-bottom: 20px; 
+#topic-title {margin-bottom: 20px;
 margin: 0 60px 10px 20px;
 line-height: 1.7em;
 
@@ -40,4 +39,85 @@ a.edit-topic {font-size: 15px;}
 
 #topic-closing-info {
   margin-left: 10px;
+}
+
+.docked #topic-progress {
+	  box-shadow: 0 0 3px #aaa;
+}
+
+#topic-progress-wrapper {
+  position: fixed;
+  width: 0;
+  right: 0;
+  bottom: 0px;
+  z-index: 500;
+  margin-right: 140px;
+  outline: 1px solid transparent;
+
+
+}
+
+
+
+
+#topic-progress {
+
+	  box-shadow: 0 0 3px #000;
+
+  position: relative;
+  &.hidden {
+    display: none;
+  }
+  border: none;
+  background-color: #ddd;
+  color: #666;
+  width: 130px;
+  height: 34px;
+  .nums {
+    position: relative;
+    top: 9px;
+    width: 100%;
+    text-align: center;
+    z-index: 1;
+  }
+  button {
+    padding: 0 1px;
+    cursor: pointer;
+    z-index: 1000;
+    position: absolute;
+    top: 8px;
+    left: 4px;
+    border: 0;
+    background: none;
+  color: #666;
+    i {
+      font-size: 18px;
+    }
+    &:nth-of-type(2) {
+      right: 4px;
+      left: auto;
+    }
+
+
+    &:disabled {
+
+      cursor: default;
+  color: #666;
+    }
+  }
+  h4 {
+    display: inline;
+    font-size: 18px;
+    line-height: 15px;
+  }
+  .bg {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    width: 0px;
+    border-right: 1px solid #ccc;
+    // background-color: #d4eaf4;
+    // background-color: #C5E8F7;
+    background-color: #C6F3B6;
+  }
 }
