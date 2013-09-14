@@ -1,7 +1,7 @@
 
 .topic-post { 
   border-top: 1px solid #ddd; 
-  padding: 20px 0 10px 0;
+  padding: 10px 0 10px 0;
   &:first-of-type {
     border-top: none; 
   }
@@ -230,7 +230,8 @@ a.star {
       background: #ddd;
       &:hover {
         background: #ccc;
-        color: #444;      border-bottom: 1px solid #ccc;
+        color: #444;      
+        border-bottom: 1px solid #ccc;
 
       }
       &.collapsed {
@@ -254,7 +255,6 @@ a.star {
   clear: left;
   margin-top: 10px;
   padding: 0 10px 0 10px;
-
     th.views, td.views, td.activity, th.activity, th.likes, td.likes {
     display: none;
     }
@@ -266,6 +266,7 @@ a.star {
    .title {
     font-size: 14px; line-height: 8px;
   }
+
 }
 
 
@@ -406,9 +407,17 @@ iframe {
   font-size: 36px;
 }
 
-.staff a {border-radius: 4px; padding: 4px; margin: -4px 0 0 -4px; background-color: lighten(yellow, 35%);}
+.staff a {
+  border-radius: 4px; 
+  padding: 4px; 
+  margin: -4px 0 0 -4px; 
+  background-color: lighten(yellow, 35%);}
 
-.user-title {margin-left: 8px; display: inline-block; color: #aaa;}
+.user-title {
+  margin-left: 8px; 
+  display: inline-block; 
+  color: #aaa;
+}
 
 span.btn-text {display: none;}
 
@@ -444,7 +453,6 @@ blockquote {
   a {
   margin: 0;
   }
-
     .back:before,
     .quote-other-topic:before {
     display: inline-block;
@@ -462,8 +470,12 @@ blockquote {
 
 
 .quote .title {
-border-left: 5px solid #bebebe;
-background-color: #f1f1f1;
-padding: 10px 10px 0 12px;
-  .avatar {margin-right: 7px;}
+  border-left: 5px solid #bebebe;
+  background-color: #f1f1f1;
+  padding: 10px 10px 0 12px;
+  .avatar { margin-right: 7px; }
 }
+
+.gutter { display: none; }
+
+
