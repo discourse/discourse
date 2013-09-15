@@ -6,8 +6,8 @@
 
 .modal.history-modal {
   .modal-inner-container {
-    min-width: 960px;
-    min-height: 500px;
+    min-width: 100%;
+    min-height: 100%;
   }
 
   ins {
@@ -18,7 +18,9 @@
   }
   .modal-header {
     height: 42px;
+    padding-bottom: 10px;
   }
+  .modal-body {padding-top: 0px;}
   .history-loading {
     margin: 25px 0;
     width: 120px;
@@ -34,5 +36,11 @@
   select {
     height: auto;
 	width: auto;
+  font-size: 16px;
+  position: fixed;
+  margin-top: -45px;
+  background-color: #fff;
   }
 }
+
+.offset1 {display: none;}
