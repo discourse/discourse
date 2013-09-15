@@ -31,7 +31,14 @@ before_fork do |server, worker|
 		ActiveRecord::Base.connection.disconnect!
 end
 
+#after_fork do |server, worker|
+#	defined?(ActiveRecord::Base) and
+#		ActiveRecord::Base.establish_connection
+#end
+
 after_fork do |server, worker|
-	defined?(ActiveRecord::Base) and
-		ActiveRecord::Base.establish_connection
+	ActiveRecord::Base.establish_connection
+	$redis.client.reconnect
+	MessageBus.reliable_pub_sub.pub_redis.client.reconnect
+	Rails.cache.reconnect
 end
