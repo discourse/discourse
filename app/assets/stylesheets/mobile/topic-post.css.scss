@@ -16,7 +16,9 @@ nav.post-controls {
   button {color: #aaa;
   border-radius: 4px;
   margin-right: 2px;
+
 }
+
 
 span.badge-posts {
   margin-right: 5px;
@@ -34,6 +36,7 @@ button.create {
   border: 1px solid #888;
   margin-right: 0;
   color: #888;
+  padding-right: 7px;
 }
  	.like {
     border-right: 1px solid #ddd;
@@ -459,3 +462,5 @@ blockquote {
 
 .gutter { display: none; }
 
+.posts-wrapper {  position: relative;
+}
