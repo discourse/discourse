@@ -45,9 +45,11 @@
 }
 .modal-middle-container {
   margin-top: 10%;
+    max-width: 100%;
+
 }
 .modal-inner-container {
-  max-width: 710px;
+  max-width: 100%;
   margin: 0 auto;
   background-color: #ffffff;
   border: 1px solid #999;
