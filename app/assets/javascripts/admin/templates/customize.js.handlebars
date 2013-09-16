@@ -12,24 +12,37 @@
 
 {{#if selectedItem}}
 <div class='current-style'>
-  <div class='admin-controls'>
-    <ul class="nav nav-pills">
-      <li {{bindAttr class="view.stylesheetActive:active"}}>
-        <a {{action selectStylesheet href="true" target="view"}}>{{i18n admin.customize.css}}</a>
-      </li>
-      <li {{bindAttr class="view.headerActive:active"}}>
-        <a {{action selectHeader href="true" target="view"}}>{{i18n admin.customize.header}}</a>
-      </li>
-    </ul>
-  </div>
-
   {{#with selectedItem}}
     {{textField class="style-name" value=name}}
+
+    <div class='admin-controls'>
+      <ul class="nav nav-pills">
+        <li {{bindAttr class="view.stylesheetActive:active"}}>
+          <a {{action selectStylesheet href="true" target="view"}}>{{i18n admin.customize.css}}</a>
+        </li>
+        <li {{bindAttr class="view.headerActive:active"}}>
+          <a {{action selectHeader href="true" target="view"}}>{{i18n admin.customize.header}}</a>
+        </li>
+        <li {{bindAttr class="view.mobileStylesheetActive:active"}}>
+          <a {{action selectMobileStylesheet href="true" target="view"}}>{{i18n admin.customize.mobile_css}}</a>
+        </li>
+        <li {{bindAttr class="view.mobileHeaderActive:active"}}>
+          <a {{action selectMobileHeader href="true" target="view"}}>{{i18n admin.customize.mobile_header}}</a>
+        </li>
+      </ul>
+    </div>
+
     {{#if view.headerActive}}
       {{aceEditor content=header mode="html"}}
     {{/if}}
     {{#if view.stylesheetActive}}
       {{aceEditor content=stylesheet mode="scss"}}
+    {{/if}}
+    {{#if view.mobileHeaderActive}}
+      {{aceEditor content=mobile_header mode="html"}}
+    {{/if}}
+    {{#if view.mobileStylesheetActive}}
+      {{aceEditor content=mobile_stylesheet mode="scss"}}
     {{/if}}
   {{/with}}
   <br>

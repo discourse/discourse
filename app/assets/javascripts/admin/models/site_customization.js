@@ -7,7 +7,7 @@
   @module Discourse
 **/
 Discourse.SiteCustomization = Discourse.Model.extend({
-  trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'override_default_style'],
+  trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'mobile_stylesheet', 'mobile_header', 'override_default_style'],
 
   init: function() {
     this._super();
@@ -33,7 +33,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 
     return changed;
 
-  }.property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'originals'),
+  }.property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'mobile_stylesheet', 'mobile_header', 'originals'),
 
   startTrackingChanges: function() {
     var _this = this;
@@ -62,6 +62,8 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       enabled: this.enabled,
       stylesheet: this.stylesheet,
       header: this.header,
+      mobile_stylesheet: this.mobile_stylesheet,
+      mobile_header: this.mobile_header,
       override_default_style: this.override_default_style
     };
 

@@ -30,9 +30,7 @@
   <body>
     <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
 
-    <% unless mobile_view? %>
-      <%= SiteCustomization.custom_header(session[:preview_style]) %>
-    <% end %>
+    <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
     <section id='main'>
     </section>
 
