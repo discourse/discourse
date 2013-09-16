@@ -39,6 +39,7 @@ Note: Setting environment variables is done during step five, before you click '
 3. SMTP_DOMAIN = the domain you will be sending emails from
 4. SMTP_USERNAME = your SMTP username
 5. SMTP_PASSWORD = your SMTP password
+6. HOST_NAME = the domain hosting your site
 
 ## Vision
 
