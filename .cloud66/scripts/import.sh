@@ -1,2 +1,2 @@
 #!/bin/bash
-psql discourse < /tmp/images/production-image.sql
+psql discourse < /tmp/images/development-image.sql

@@ -87,7 +87,7 @@ development:
         sudo: true
     after_postgresql:
     # 2. Copy SQL image to PSQL server
-      - source: /pg_dumps/production-image.sql
+      - source: /pg_dumps/development-image.sql
         destination: /tmp/images/development-image.sql
         target: postgresql
         apply_during: build_only
