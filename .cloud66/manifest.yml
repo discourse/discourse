@@ -1,0 +1,6 @@
+development:
+    rails:
+        server:
+            unique_name: frontend
+        configuration:
+            use_asset_pipeline: false
