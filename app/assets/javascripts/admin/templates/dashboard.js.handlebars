@@ -13,7 +13,7 @@
         </p>
         <p class="actions">
           <small>{{i18n admin.dashboard.last_checked}}: {{problemsTimestamp}}</small>
-          <button {{action loadProblems}} class="btn btn-small"><i class="icon icon-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
+          <button {{action refreshProblems}} class="btn btn-small"><i class="icon icon-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
         </p>
       </div>
       <div class="clearfix"></div>
@@ -25,7 +25,7 @@
         <div class="problem-messages">
           <p>
             {{i18n admin.dashboard.no_problems}}
-            <button {{action loadProblems}} class="btn btn-small"><i class="icon icon-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
+            <button {{action refreshProblems}} class="btn btn-small"><i class="icon icon-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
           </p>
         </div>
         <div class="clearfix"></div>
@@ -121,15 +121,15 @@
     <table>
       <tr>
         <td class="title"><i class='icon icon-trophy'></i> {{i18n admin.dashboard.admins}}</td>
-        <td class="value">{{#linkTo 'adminUsersList.admins'}}{{admins}}{{/linkTo}}</td>
+        <td class="value">{{#link-to 'adminUsersList.admins'}}{{admins}}{{/link-to}}</td>
         <td class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.banned}}</td>
-        <td class="value">{{#linkTo 'adminUsersList.banned'}}{{banned}}{{/linkTo}}</td>
+        <td class="value">{{#link-to 'adminUsersList.banned'}}{{banned}}{{/link-to}}</td>
       </tr>
       <tr>
         <td class="title"><i class='icon icon-magic'></i> {{i18n admin.dashboard.moderators}}</td>
-        <td class="value">{{#linkTo 'adminUsersList.moderators'}}{{moderators}}{{/linkTo}}</td>
+        <td class="value">{{#link-to 'adminUsersList.moderators'}}{{moderators}}{{/link-to}}</td>
         <td class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.blocked}}</td>
-        <td class="value">{{#linkTo 'adminUsersList.blocked'}}{{blocked}}{{/linkTo}}</td>
+        <td class="value">{{#link-to 'adminUsersList.blocked'}}{{blocked}}{{/link-to}}</td>
       </tr>
     </table>
   </div>
@@ -265,7 +265,7 @@
         {{#each top_referrers.data}}
           <tbody>
             <tr>
-              <td class="title">{{#linkTo 'adminUser' this}}{{unbound username}}{{/linkTo}}</td>
+              <td class="title">{{#link-to 'adminUser' this}}{{unbound username}}{{/link-to}}</td>
               <td class="value">{{num_clicks}}</td>
               <td class="value">{{num_topics}}</td>
             </tr>

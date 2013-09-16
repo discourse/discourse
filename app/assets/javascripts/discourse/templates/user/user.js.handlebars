@@ -12,19 +12,19 @@
         {{/if}}
         <ul class="nav nav-pills">
           <li>
-            {{#linkTo 'userActivity'}}{{i18n user.activity_stream}}{{/linkTo}}
+            {{#link-to 'userActivity'}}{{i18n user.activity_stream}}{{/link-to}}
           </li>
           {{#if canSeePrivateMessages}}
             <li>
-              {{#linkTo 'userPrivateMessages'}}{{i18n user.private_messages}}{{/linkTo}}
+              {{#link-to 'userPrivateMessages'}}{{i18n user.private_messages}}{{/link-to}}
             </li>
           {{/if}}
           <li>
-            {{#linkTo 'user.invited'}}{{i18n user.invited.title}}{{/linkTo}}
+            {{#link-to 'user.invited'}}{{i18n user.invited.title}}{{/link-to}}
           </li>
           {{#if can_edit}}
             <li>
-              {{#linkTo 'preferences'}}{{i18n user.preferences}}{{/linkTo}}
+              {{#link-to 'preferences'}}{{i18n user.preferences}}{{/link-to}}
             </li>
           {{/if}}
         </ul>

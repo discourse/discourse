@@ -15,8 +15,8 @@
         <td>{{date created_at}}</td>
         <td>
           {{#if user}}
-            {{#linkTo 'adminUser' user}}{{avatar user imageSize="tiny"}}{{/linkTo}}
-            {{#linkTo 'adminUser' user}}{{user.username}}{{/linkTo}}
+            {{#link-to 'adminUser' user}}{{avatar user imageSize="tiny"}}{{/link-to}}
+            {{#link-to 'adminUser' user}}{{user.username}}{{/link-to}}
           {{else}}
             &mdash;
           {{/if}}

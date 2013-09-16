@@ -1,3 +1,6 @@
+// Last commit: 1f0c355 (2013-09-18 11:01:11 -0400)
+
+
 (function() {
 var get = Ember.get, set = Ember.set;
 
@@ -18,7 +21,7 @@ function positionElement() {
     // TODO: avoid needing this by avoiding unnecessary
     // calls to this method in the first place
     if (samePosition(position, _position)) { return; }
-    this._parentView.applyTransform(element, position);
+    this._parentView.applyTransform(element, position.x, position.y);
 
     this._position = position;
   }, this);
@@ -186,23 +189,54 @@ Ember.ReusableListItemView = Ember.View.extend(Ember.ListItemViewMixin, {
 
 
 (function() {
+var el = document.createElement('div'), style = el.style;
+
+var propPrefixes = ['Webkit', 'Moz', 'O', 'ms'];
+
+function testProp(prop) {
+  if (prop in style) return prop;
+  var uppercaseProp = prop.charAt(0).toUpperCase() + prop.slice(1);
+  for (var i=0; i<propPrefixes.length; i++) {
+    var prefixedProp = propPrefixes[i] + uppercaseProp;
+    if (prefixedProp in style) {
+      return prefixedProp;
+    }
+  }
+  return null;
+}
+
+var transformProp = testProp('transform');
+var perspectiveProp = testProp('perspective');
+
+var supports2D = transformProp !== null;
+var supports3D = perspectiveProp !== null;
+
 Ember.ListViewHelper = {
+  transformProp: transformProp,
   applyTransform: (function(){
-    var element = document.createElement('div');
-
-    if ('webkitTransform' in element.style){
-      return function(element, position){
-        var x = position.x,
-            y = position.y;
-
-        element.style.webkitTransform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+    if (supports2D) {
+      return function(element, x, y){
+        element.style[transformProp] = 'translate(' + x + 'px, ' + y + 'px)';
       };
-    }else{
-      return function(element, position){
-        var x = position.x,
-            y = position.y;
-
-        element.style.top =  y + 'px';
+    } else {
+      return function(element, x, y){
+        element.style.top  = y + 'px';
+        element.style.left = x + 'px';
+      };
+    }
+  })(),
+  apply3DTransform: (function(){
+    if (supports3D) {
+      return function(element, x, y){
+        element.style[transformProp] = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+      };
+    } else if (supports2D) {
+      return function(element, x, y){
+        element.style[transformProp] = 'translate(' + x + 'px, ' + y + 'px)';
+      };
+    } else {
+      return function(element, x, y){
+        element.style.top  = y + 'px';
         element.style.left = x + 'px';
       };
     }
@@ -237,10 +271,6 @@ function syncChildViews(){
 
 function sortByContentIndex (viewOne, viewTwo){
   return get(viewOne, 'contentIndex') - get(viewTwo, 'contentIndex');
-}
-
-function detectListItemViews(childView) {
-  return Ember.ListItemViewMixin.detect(childView);
 }
 
 function notifyMutationListeners() {
@@ -296,6 +326,7 @@ function enableProfilingOutput() {
 */
 Ember.ListViewMixin = Ember.Mixin.create({
   itemViewClass: Ember.ListItemView,
+  emptyViewClass: Ember.View,
   classNames: ['ember-list-view'],
   attributeBindings: ['style'],
   domManager: domManager,
@@ -315,12 +346,15 @@ Ember.ListViewMixin = Ember.Mixin.create({
   */
   init: function() {
     this._super();
-    enableProfilingOutput();
-    addContentArrayObserver.call(this);
-    this._syncChildViews();
-    this.columnCountDidChange();
     this.on('didInsertElement', syncListContainerWidth);
+    this.columnCountDidChange();
+    this._syncChildViews();
+    this._addContentArrayObserver();
   },
+
+  _addContentArrayObserver: Ember.beforeObserver(function() {
+    addContentArrayObserver.call(this);
+  }, 'content'),
 
   /**
     Called on your view when it should push strings of HTML into a
@@ -599,7 +633,7 @@ Ember.ListViewMixin = Ember.Mixin.create({
   maxScrollTop: Ember.computed('height', 'totalHeight', function(){
     var totalHeight, viewportHeight;
 
-    totalHeight = get(this, 'totalHeight'),
+    totalHeight = get(this, 'totalHeight');
     viewportHeight = get(this, 'height');
 
     return max(0, totalHeight - viewportHeight);
@@ -665,7 +699,7 @@ Ember.ListViewMixin = Ember.Mixin.create({
     }
   }, 'content'),
 
-  /**
+  /**),
     @private
     @event contentDidChange
   */
@@ -768,7 +802,7 @@ Ember.ListViewMixin = Ember.Mixin.create({
     scrollTop = get(this, 'scrollTop');
     contentLength = get(this, 'content.length');
     maxContentIndex = max(contentLength - 1, 0);
-    childViews = get(this, 'listItemViews');
+    childViews = this._childViews;
     childViewsLength =  childViews.length;
 
     startingIndex = this._startingIndex();
@@ -788,22 +822,10 @@ Ember.ListViewMixin = Ember.Mixin.create({
 
   /**
     @private
-
-    Returns an array of current ListItemView views in the visible area
-    when you start to scroll.
-
-    @property {Ember.ComputedProperty} listItemViews
-  */
-  listItemViews: Ember.computed('[]', function(){
-    return this.filter(detectListItemViews);
-  }),
-
-  /**
-    @private
     @method positionOrderedChildViews
   */
   positionOrderedChildViews: function() {
-    return get(this, 'listItemViews').sort(sortByContentIndex);
+    return this._childViews.sort(sortByContentIndex);
   },
 
   arrayWillChange: Ember.K,
@@ -944,13 +966,7 @@ Ember.ListView = Ember.ContainerView.extend(Ember.ListViewMixin, {
     'overflow-scrolling': 'touch'
   },
 
-  applyTransform: function(element, position){
-    var x = position.x,
-        y = position.y;
-
-    element.style.top =  y + 'px';
-    element.style.left = x + 'px';
-  },
+  applyTransform: Ember.ListViewHelper.applyTransform,
 
   _scrollTo: function(scrollTop) {
     var element = get(this, 'element');
@@ -1007,6 +1023,148 @@ Ember.ListView = Ember.ContainerView.extend(Ember.ListViewMixin, {
 
 
 (function() {
+var fieldRegex = /input|textarea|select/i,
+  hasTouch = ('ontouchstart' in window) || window.DocumentTouch && document instanceof window.DocumentTouch,
+  handleStart, handleMove, handleEnd, handleCancel,
+  startEvent, moveEvent, endEvent, cancelEvent;
+if (hasTouch) {
+  startEvent = 'touchstart';
+  handleStart = function (e) {
+    var touch = e.touches[0],
+      target = touch && touch.target;
+    // avoid e.preventDefault() on fields
+    if (target && fieldRegex.test(target.tagName)) {
+      return;
+    }
+    bindWindow(this.scrollerEventHandlers);
+    this.willBeginScroll(e.touches, e.timeStamp);
+    e.preventDefault();
+  };
+  moveEvent = 'touchmove';
+  handleMove = function (e) {
+    this.continueScroll(e.touches, e.timeStamp);
+  };
+  endEvent = 'touchend';
+  handleEnd = function (e) {
+    // if we didn't end up scrolling we need to
+    // synthesize click since we did e.preventDefault()
+    // on touchstart
+    if (!this._isScrolling) {
+      synthesizeClick(e);
+    }
+    unbindWindow(this.scrollerEventHandlers);
+    this.endScroll(e.timeStamp);
+  };
+  cancelEvent = 'touchcancel';
+  handleCancel = function (e) {
+    unbindWindow(this.scrollerEventHandlers);
+    this.endScroll(e.timeStamp);
+  };
+} else {
+  startEvent = 'mousedown';
+  handleStart = function (e) {
+    if (e.which !== 1) return;
+    var target = e.target;
+    // avoid e.preventDefault() on fields
+    if (target && fieldRegex.test(target.tagName)) {
+      return;
+    }
+    bindWindow(this.scrollerEventHandlers);
+    this.willBeginScroll([e], e.timeStamp);
+    e.preventDefault();
+  };
+  moveEvent = 'mousemove';
+  handleMove = function (e) {
+    this.continueScroll([e], e.timeStamp);
+  };
+  endEvent = 'mouseup';
+  handleEnd = function (e) {
+    unbindWindow(this.scrollerEventHandlers);
+    this.endScroll(e.timeStamp);
+  };
+  cancelEvent = 'mouseout';
+  handleCancel = function (e) {
+    if (e.relatedTarget) return;
+    unbindWindow(this.scrollerEventHandlers);
+    this.endScroll(e.timeStamp);
+  };
+}
+
+function handleWheel(e) {
+  this.mouseWheel(e);
+  e.preventDefault();
+}
+
+function bindElement(el, handlers) {
+  el.addEventListener(startEvent, handlers.start, false);
+  el.addEventListener('mousewheel', handlers.wheel, false);
+}
+
+function unbindElement(el, handlers) {
+  el.removeEventListener(startEvent, handlers.start, false);
+  el.removeEventListener('mousewheel', handlers.wheel, false);
+}
+
+function bindWindow(handlers) {
+  window.addEventListener(moveEvent, handlers.move, true);
+  window.addEventListener(endEvent, handlers.end, true);
+  window.addEventListener(cancelEvent, handlers.cancel, true);
+}
+
+function unbindWindow(handlers) {
+  window.removeEventListener(moveEvent, handlers.move, true);
+  window.removeEventListener(endEvent, handlers.end, true);
+  window.removeEventListener(cancelEvent, handlers.cancel, true);
+}
+
+Ember.VirtualListScrollerEvents = Ember.Mixin.create({
+  init: function() {
+    this.on('didInsertElement', this, 'bindScrollerEvents');
+    this.on('willDestroyElement', this, 'unbindScrollerEvents');
+    this.scrollerEventHandlers = {
+      start: bind(this, handleStart),
+      move: bind(this, handleMove),
+      end: bind(this, handleEnd),
+      cancel: bind(this, handleCancel),
+      wheel: bind(this, handleWheel)
+    };
+    return this._super();
+  },
+  bindScrollerEvents: function() {
+    var el = this.get('element'),
+      handlers = this.scrollerEventHandlers;
+    bindElement(el, handlers);
+  },
+  unbindScrollerEvents: function() {
+    var el = this.get('element'),
+      handlers = this.scrollerEventHandlers;
+    unbindElement(el, handlers);
+    unbindWindow(handlers);
+  }
+});
+
+function bind(view, handler) {
+  return function (evt) {
+    handler.call(view, evt);
+  };
+}
+
+function synthesizeClick(e) {
+  var point = e.changedTouches[0],
+    target = point.target,
+    ev;
+  if (target && fieldRegex.test(target.tagName)) {
+    ev = document.createEvent('MouseEvents');
+    ev.initMouseEvent('click', true, true, e.view, 1, point.screenX, point.screenY, point.clientX, point.clientY, e.ctrlKey, e.altKey, e.shiftKey, e.metaKey, 0, null);
+    return target.dispatchEvent(ev);
+  }
+}
+
+})();
+
+
+
+(function() {
 /*global Scroller*/
 var max = Math.max, get = Ember.get, set = Ember.set;
 
@@ -1029,8 +1187,9 @@ function updateScrollerDimensions(target) {
   @class VirtualListView
   @namespace Ember
 */
-Ember.VirtualListView = Ember.ContainerView.extend(Ember.ListViewMixin, {
+Ember.VirtualListView = Ember.ContainerView.extend(Ember.ListViewMixin, Ember.VirtualListScrollerEvents, {
   _isScrolling: false,
+  _mouseWheel: null,
   css: {
     position: 'relative',
     overflow: 'hidden'
@@ -1041,7 +1200,7 @@ Ember.VirtualListView = Ember.ContainerView.extend(Ember.ListViewMixin, {
     this.setupScroller();
   },
   _scrollerTop: 0,
-  applyTransform: Ember.ListViewHelper.applyTransform,
+  applyTransform: Ember.ListViewHelper.apply3DTransform,
 
   setupScroller: function(){
     var view, y;
@@ -1052,7 +1211,7 @@ Ember.VirtualListView = Ember.ContainerView.extend(Ember.ListViewMixin, {
       if (view.state !== 'inDOM') { return; }
 
       if (view.listContainerElement) {
-        view.applyTransform(view.listContainerElement, {x: 0, y: -top});
+        view.applyTransform(view.listContainerElement, 0, -top);
         view._scrollerTop = top;
         view._scrollContentTo(top);
       }
@@ -1072,17 +1231,7 @@ Ember.VirtualListView = Ember.ContainerView.extend(Ember.ListViewMixin, {
   }, 'width', 'height', 'totalHeight'),
 
   didInsertElement: function() {
-    var that, listContainerElement;
-
-    that = this;
     this.listContainerElement = this.$('> .ember-list-container')[0];
-
-    this._mouseWheel = function(e) { that.mouseWheel(e); };
-    this.$().on('mousewheel', this._mouseWheel);
-  },
-
-  willDestroyElement: function() {
-    this.$().off('mousewheel', this._mouseWheel);
   },
 
   willBeginScroll: function(touches, timeStamp) {
@@ -1113,6 +1262,10 @@ Ember.VirtualListView = Ember.ContainerView.extend(Ember.ListViewMixin, {
     }
   },
 
+  endScroll: function(timeStamp) {
+    this.scroller.doTouchEnd(timeStamp);
+  },
+
   // api
   scrollTo: function(y, animate) {
     if (animate === undefined) {
@@ -1135,48 +1288,6 @@ Ember.VirtualListView = Ember.ContainerView.extend(Ember.ListViewMixin, {
     }
 
     return false;
-  },
-
-  endScroll: function(timeStamp) {
-    this.scroller.doTouchEnd(timeStamp);
-  },
-
-  touchStart: function(e){
-    e = e.originalEvent || e;
-    this.willBeginScroll(e.touches, e.timeStamp);
-    return false;
-  },
-
-  touchMove: function(e){
-    e = e.originalEvent || e;
-    this.continueScroll(e.touches, e.timeStamp);
-    return false;
-  },
-
-  touchEnd: function(e){
-    e = e.originalEvent || e;
-    this.endScroll(e.timeStamp);
-    return false;
-  },
-
-  mouseDown: function(e){
-    this.willBeginScroll([e], e.timeStamp);
-    return false;
-  },
-
-  mouseMove: function(e){
-    this.continueScroll([e], e.timeStamp);
-    return false;
-  },
-
-  mouseUp: function(e){
-    this.endScroll(e.timeStamp);
-    return false;
-  },
-
-  mouseLeave: function(e){
-    this.endScroll(e.timeStamp);
-    return false;
   }
 });
 
@@ -1187,3 +1298,4 @@ Ember.VirtualListView = Ember.ContainerView.extend(Ember.ListViewMixin, {
 (function() {
 
 })();
+

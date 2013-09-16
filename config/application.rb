@@ -113,8 +113,8 @@ module Discourse
 
     # ember stuff only used for asset precompliation, production variant plays up
     config.ember.variant = :development
-    config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external_production/ember.js"
-    config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars.js"
+    config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
+    config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
     # Since we are using strong_parameters, we can disable and remove
     # attr_accessible.

@@ -4,10 +4,10 @@
     <div class='field'>{{i18n user.username.title}}</div>
     <div class='value'>{{username}}</div>
     <div class='controls'>
-      {{#linkTo 'userActivity' class="btn"}}
+      {{#link-to 'userActivity' class="btn"}}
         <i class='icon icon-user'></i>
         {{i18n admin.user.show_public_profile}}
-      {{/linkTo}}
+      {{/link-to}}
       {{#if can_impersonate}}
           <button class='btn' {{action impersonate target="content"}}>
             <i class='icon icon-screenshot'></i>
@@ -71,8 +71,8 @@
         {{#if approved}}
           {{i18n admin.user.approved_by}}
 
-          {{#linkTo 'adminUser' approved_by}}{{avatar approved_by imageSize="small"}}{{/linkTo}}
-          {{#linkTo 'adminUser' approved_by}}{{approved_by.username}}{{/linkTo}}
+          {{#link-to 'adminUser' approved_by}}{{avatar approved_by imageSize="small"}}{{/link-to}}
+          {{#link-to 'adminUser' approved_by}}{{approved_by.username}}{{/link-to}}
         {{else}}
           {{i18n no_value}}
         {{/if}}

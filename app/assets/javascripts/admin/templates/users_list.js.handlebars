@@ -1,15 +1,15 @@
 <div class='admin-controls'>
   <div class='span15'>
     <ul class="nav nav-pills">
-      <li>{{#linkTo 'adminUsersList.active'}}{{i18n admin.users.nav.active}}{{/linkTo}}</li>
-      <li>{{#linkTo 'adminUsersList.new'}}{{i18n admin.users.nav.new}}{{/linkTo}}</li>
+      <li>{{#link-to 'adminUsersList.active'}}{{i18n admin.users.nav.active}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.new'}}{{i18n admin.users.nav.new}}{{/link-to}}</li>
       {{#if Discourse.SiteSettings.must_approve_users}}
-        <li>{{#linkTo 'adminUsersList.pending'}}{{i18n admin.users.nav.pending}}{{/linkTo}}</li>
+        <li>{{#link-to 'adminUsersList.pending'}}{{i18n admin.users.nav.pending}}{{/link-to}}</li>
       {{/if}}
-      <li>{{#linkTo 'adminUsersList.admins'}}{{i18n admin.users.nav.admins}}{{/linkTo}}</li>
-      <li>{{#linkTo 'adminUsersList.moderators'}}{{i18n admin.users.nav.moderators}}{{/linkTo}}</li>
-      <li>{{#linkTo 'adminUsersList.banned'}}{{i18n admin.users.nav.banned}}{{/linkTo}}</li>
-      <li>{{#linkTo 'adminUsersList.blocked'}}{{i18n admin.users.nav.blocked}}{{/linkTo}}</li>
+      <li>{{#link-to 'adminUsersList.admins'}}{{i18n admin.users.nav.admins}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.moderators'}}{{i18n admin.users.nav.moderators}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.banned'}}{{i18n admin.users.nav.banned}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.blocked'}}{{i18n admin.users.nav.blocked}}{{/link-to}}</li>
     </ul>
   </div>
   <div class='span5 username controls'>
@@ -61,8 +61,8 @@
               {{/if}}
             </td>
           {{/if}}
-          <td>{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}}{{/linkTo}}</td>
-          <td>{{#linkTo 'adminUser' this}}{{unbound username}}{{/linkTo}}</td>
+          <td>{{#link-to 'adminUser' this}}{{avatar this imageSize="small"}}{{/link-to}}</td>
+          <td>{{#link-to 'adminUser' this}}{{unbound username}}{{/link-to}}</td>
           <td>{{shorten email}}</td>
           <td>{{{unbound last_emailed_age}}}</td>
           <td>{{{unbound last_seen_age}}}</td>

@@ -93,11 +93,11 @@ module PrettyText
     ctx["helpers"] = Helpers.new
 
     ctx_load(ctx,
-             "app/assets/javascripts/external/md5.js",
-              "app/assets/javascripts/external/lodash.js",
-              "app/assets/javascripts/external/Markdown.Converter.js",
+             "vendor/assets/javascripts/md5.js",
+              "vendor/assets/javascripts/lodash.js",
+              "vendor/assets/javascripts/Markdown.Converter.js",
               "lib/headless-ember.js",
-              "app/assets/javascripts/external/rsvp.js",
+              "vendor/assets/javascripts/rsvp.js",
               Rails.configuration.ember.handlebars_location)
 
     ctx.eval("var Discourse = {}; Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
@@ -107,7 +107,7 @@ module PrettyText
     decorate_context(ctx)
 
     ctx_load(ctx,
-              "app/assets/javascripts/external/better_markdown.js",
+              "vendor/assets/javascripts/better_markdown.js",
               "app/assets/javascripts/discourse/dialects/dialect.js",
               "app/assets/javascripts/discourse/components/utilities.js",
               "app/assets/javascripts/discourse/components/markdown.js")

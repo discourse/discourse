@@ -1,5 +1,5 @@
 <div class="col value first staff_user">
-  {{#linkTo 'adminUser' acting_user}}{{avatar acting_user imageSize="tiny"}}{{/linkTo}}
+  {{#link-to 'adminUser' acting_user}}{{avatar acting_user imageSize="tiny"}}{{/link-to}}
   <a {{action filterByStaffUser acting_user}}>{{acting_user.username}}</a>
 </div>
 <div class="col value action">
@@ -7,7 +7,7 @@
 </div>
 <div class="col value subject">
   {{#if target_user}}
-    {{#linkTo 'adminUser' target_user}}{{avatar target_user imageSize="tiny"}}{{/linkTo}}
+    {{#link-to 'adminUser' target_user}}{{avatar target_user imageSize="tiny"}}{{/link-to}}
     <a {{action filterByTargetUser target_user}}>{{target_user.username}}</a>
   {{/if}}
   {{#if subject}}

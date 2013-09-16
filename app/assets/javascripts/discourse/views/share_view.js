@@ -45,7 +45,7 @@ Discourse.ShareView = Discourse.View.extend({
       // link is clicked (which is a click event) while the share dialog is showing.
       if (shareView.$().has(e.target).length !== 0) { return; }
 
-      shareView.get('controller').close();
+      shareView.get('controller').send('close');
       return true;
     });
 
@@ -76,7 +76,7 @@ Discourse.ShareView = Discourse.View.extend({
 
     $('html').on('keydown.share-view', function(e){
       if (e.keyCode === 27) {
-        shareView.get('controller').close();
+        shareView.get('controller').send('close');
       }
     });
   },

@@ -8,7 +8,7 @@
 **/
 Discourse.ApplicationRoute = Em.Route.extend({
 
-  events: {
+  actions: {
     showLogin: function() {
       Discourse.Route.showModal(this, 'login');
     },

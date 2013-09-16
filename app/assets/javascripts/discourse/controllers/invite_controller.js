@@ -25,22 +25,25 @@ Discourse.InviteController = Discourse.ObjectController.extend(Discourse.ModalFu
     return I18n.t('topic.invite_reply.success', { email: this.get('email') });
   }.property('email'),
 
-  createInvite: function() {
-    if (this.get('disabled')) return;
+  actions: {
+    createInvite: function() {
+      if (this.get('disabled')) return;
 
-    var inviteController = this;
-    this.set('saving', true);
-    this.set('error', false);
-    this.get('model').inviteUser(this.get('email')).then(function() {
-      // Success
-      inviteController.set('saving', false);
-      return inviteController.set('finished', true);
-    }, function() {
-      // Failure
-      inviteController.set('error', true);
-      return inviteController.set('saving', false);
-    });
-    return false;
+      var inviteController = this;
+      this.set('saving', true);
+      this.set('error', false);
+      this.get('model').inviteUser(this.get('email')).then(function() {
+        // Success
+        inviteController.set('saving', false);
+        return inviteController.set('finished', true);
+      }, function() {
+        // Failure
+        inviteController.set('error', true);
+        return inviteController.set('saving', false);
+      });
+      return false;
+    }
   }
+
 
 });

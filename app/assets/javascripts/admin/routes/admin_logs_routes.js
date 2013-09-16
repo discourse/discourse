@@ -33,7 +33,7 @@ Discourse.AdminLogsStaffActionLogsRoute = Discourse.Route.extend({
     return controller.show();
   },
 
-  events: {
+  actions: {
     showDetailsModal: function(logRecord) {
       Discourse.Route.showModal(this, 'admin_staff_action_log_details', logRecord);
       this.controllerFor('modal').set('modalClass', 'log-details-modal');

@@ -11,8 +11,10 @@ Discourse.UploadSelectorController = Discourse.Controller.extend(Discourse.Modal
   localSelected: true,
   remoteSelected: Em.computed.not('localSelected'),
 
-  selectLocal: function() { this.set('localSelected', true); },
-  selectRemote: function() { this.set('localSelected', false); },
+  actions: {
+    selectLocal: function() { this.set('localSelected', true); },
+    selectRemote: function() { this.set('localSelected', false); }
+  },
 
   localTitle: function() { return Discourse.UploadSelectorController.translate("local_title"); }.property(),
   remoteTitle: function() { return Discourse.UploadSelectorController.translate("remote_title"); }.property(),

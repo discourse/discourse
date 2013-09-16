@@ -20,12 +20,14 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
     }
   }.observes('details.auto_close_at'),
 
-  saveAutoClose: function() {
-    this.setAutoClose( parseFloat(this.get('auto_close_days')) );
-  },
+  actions: {
+    saveAutoClose: function() {
+      this.setAutoClose( parseFloat(this.get('auto_close_days')) );
+    },
 
-  removeAutoClose: function() {
-    this.setAutoClose(null);
+    removeAutoClose: function() {
+      this.setAutoClose(null);
+    }
   },
 
   setAutoClose: function(days) {

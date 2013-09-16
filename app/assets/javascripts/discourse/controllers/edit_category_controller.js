@@ -39,18 +39,6 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     this.set('controllers.modal.title', this.get('title'));
   }.observes('title'),
 
-  selectGeneral: function() {
-    this.set('selectedTab', 'general');
-  },
-
-  selectSecurity: function() {
-    this.set('selectedTab', 'security');
-  },
-
-  selectSettings: function() {
-    this.set('selectedTab', 'settings');
-  },
-
   disabled: function() {
     if (this.get('saving') || this.get('deleting')) return true;
     if (!this.get('name')) return true;
@@ -103,83 +91,97 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     return I18n.t('category.delete');
   }.property(),
 
-  showCategoryTopic: function() {
-    this.send('closeModal');
-    Discourse.URL.routeTo(this.get('topic_url'));
-    return false;
-  },
+  actions: {
 
-  editPermissions: function(){
-    this.set('editingPermissions', true);
-  },
+    selectGeneral: function() {
+      this.set('selectedTab', 'general');
+    },
 
-  addPermission: function(group, permission_id){
-    this.get('model').addPermission({group_name: group + "", permission: Discourse.PermissionType.create({id: permission_id})});
-  },
+    selectSecurity: function() {
+      this.set('selectedTab', 'security');
+    },
 
-  removePermission: function(permission){
-    this.get('model').removePermission(permission);
-  },
+    selectSettings: function() {
+      this.set('selectedTab', 'settings');
+    },
 
-  saveCategory: function() {
-    var categoryController = this;
-    this.set('saving', true);
+    showCategoryTopic: function() {
+      this.send('closeModal');
+      Discourse.URL.routeTo(this.get('topic_url'));
+      return false;
+    },
+
+    editPermissions: function(){
+      this.set('editingPermissions', true);
+    },
+
+    addPermission: function(group, permission_id){
+      this.get('model').addPermission({group_name: group + "", permission: Discourse.PermissionType.create({id: permission_id})});
+    },
+
+    removePermission: function(permission){
+      this.get('model').removePermission(permission);
+    },
+
+    saveCategory: function() {
+      var categoryController = this;
+      this.set('saving', true);
 
 
-    if( this.get('isUncategorized') ) {
-      $.when(
-        Discourse.SiteSetting.update('uncategorized_color', this.get('color')),
-        Discourse.SiteSetting.update('uncategorized_text_color', this.get('text_color')),
-        Discourse.SiteSetting.update('uncategorized_name', this.get('name'))
-      ).then(function(result) {
-        // success
-        categoryController.send('closeModal');
-        // We can't redirect to the uncategorized category on save because the slug
-        // might have changed.
-        Discourse.URL.redirectTo("/categories");
-      }, function(errors) {
-        // errors
-        if(errors.length === 0) errors.push(I18n.t("category.save_error"));
-        categoryController.displayErrors(errors);
-        categoryController.set('saving', false);
-      });
-    } else {
-      this.get('model').save().then(function(result) {
-        // success
-        categoryController.send('closeModal');
-        Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(result.category));
-      }, function(errors) {
-        // errors
-        if(errors.length === 0) errors.push(I18n.t("category.creation_error"));
-        categoryController.displayErrors(errors);
-        categoryController.set('saving', false);
-      });
-    }
-  },
-
-  deleteCategory: function() {
-    var categoryController = this;
-    this.set('deleting', true);
-
-    $('#discourse-modal').modal('hide');
-    bootbox.confirm(I18n.t("category.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
-      if (result) {
-        categoryController.get('model').destroy().then(function(){
+      if( this.get('isUncategorized') ) {
+        $.when(
+          Discourse.SiteSetting.update('uncategorized_color', this.get('color')),
+          Discourse.SiteSetting.update('uncategorized_text_color', this.get('text_color')),
+          Discourse.SiteSetting.update('uncategorized_name', this.get('name'))
+        ).then(function(result) {
           // success
           categoryController.send('closeModal');
+          // We can't redirect to the uncategorized category on save because the slug
+          // might have changed.
           Discourse.URL.redirectTo("/categories");
-        }, function(jqXHR){
-          // error
-          $('#discourse-modal').modal('show');
-          categoryController.displayErrors([I18n.t("category.delete_error")]);
-          categoryController.set('deleting', false);
+        }, function(errors) {
+          // errors
+          if(errors.length === 0) errors.push(I18n.t("category.save_error"));
+          categoryController.displayErrors(errors);
+          categoryController.set('saving', false);
         });
       } else {
-        $('#discourse-modal').modal('show');
-        categoryController.set('deleting', false);
+        this.get('model').save().then(function(result) {
+          // success
+          categoryController.send('closeModal');
+          Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(result.category));
+        }, function(errors) {
+          // errors
+          if(errors.length === 0) errors.push(I18n.t("category.creation_error"));
+          categoryController.displayErrors(errors);
+          categoryController.set('saving', false);
+        });
       }
-    });
-  }
+    },
 
+    deleteCategory: function() {
+      var categoryController = this;
+      this.set('deleting', true);
+
+      $('#discourse-modal').modal('hide');
+      bootbox.confirm(I18n.t("category.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
+        if (result) {
+          categoryController.get('model').destroy().then(function(){
+            // success
+            categoryController.send('closeModal');
+            Discourse.URL.redirectTo("/categories");
+          }, function(jqXHR){
+            // error
+            $('#discourse-modal').modal('show');
+            categoryController.displayErrors([I18n.t("category.delete_error")]);
+            categoryController.set('deleting', false);
+          });
+        } else {
+          $('#discourse-modal').modal('show');
+          categoryController.set('deleting', false);
+        }
+      });
+    }
+  }
 
 });

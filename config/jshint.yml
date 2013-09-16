@@ -13,9 +13,6 @@ paths:
   - test/javascripts/**/*.js
 
 exclude_paths:
-  - app/assets/javascripts/external/*
-  - app/assets/javascripts/external_production/*
-  - app/assets/javascripts/external_development/*
   - app/assets/javascripts/defer/*
   - app/assets/javascripts/locales/i18n.js
 

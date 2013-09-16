@@ -9,10 +9,10 @@
 //= require ../../app/assets/javascripts/discourse/components/probes.js
 
 // Externals we need to load first
-//= require ../../app/assets/javascripts/external_development/jquery-2.0.3.js
-//= require ../../app/assets/javascripts/external/jquery.ui.widget.js
-//= require ../../app/assets/javascripts/external/handlebars.js
-//= require ../../app/assets/javascripts/external_development/ember.js
+//= require development/jquery-2.0.3.js
+//= require jquery.ui.widget.js
+//= require handlebars.js
+//= require development/ember.js
 
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
@@ -21,8 +21,36 @@
 // Pagedown customizations
 //= require ../../app/assets/javascripts/pagedown_custom.js
 
-// The rest of the externals
-//= require_tree ../../app/assets/javascripts/external
+// The rest of the vendored JS
+//= require LAB.js
+//= require Markdown.Converter.js
+//= require Markdown.Editor.js
+//= require Markdown.Sanitizer.js
+//= require better_markdown.js
+//= require bootbox.js
+//= require bootstrap-alert.js
+//= require bootstrap-button.js
+//= require bootstrap-dropdown.js
+//= require bootstrap-modal.js
+//= require bootstrap-transition.js
+//= require browser-update.js
+//= require chosen.jquery.js
+//= require ember-renderspeed.js
+//= require favcount.js
+//= require jquery.ba-replacetext.js
+//= require jquery.ba-resize.min.js
+//= require jquery.color.js
+//= require jquery.cookie.js
+//= require jquery.fileupload.js
+//= require jquery.iframe-transport.js
+//= require jquery.putcursoratend.js
+//= require jquery.tagsinput.js
+//= require lodash.js
+//= require md5.js
+//= require modernizr.custom.95264.js
+//= require mousetrap.js
+//= require rsvp.js
+//= require show-html.js
 
 // Stuff we need to load first
 //= require main_include

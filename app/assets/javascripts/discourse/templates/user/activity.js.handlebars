@@ -1,7 +1,7 @@
 <div id='user-info'>
   <nav class='buttons'>
     {{#if can_edit}}
-      {{#linkTo "preferences" class="btn"}}{{i18n user.edit}}{{/linkTo}}
+      {{#link-to "preferences" class="btn"}}{{i18n user.edit}}{{/link-to}}
     {{/if}}
     <br/>
     {{#if can_send_private_message_to_user}}
@@ -16,13 +16,13 @@
   <ul class='action-list nav-stacked side-nav'>
     {{#if privateMessageView}}
       <li {{bindAttr class=":noGlyph privateMessagesActive:active"}}>
-        {{#linkTo 'userPrivateMessages.index' model}}{{i18n user.messages.all}}{{/linkTo}}
+        {{#link-to 'userPrivateMessages.index' model}}{{i18n user.messages.all}}{{/link-to}}
       </li>
       <li {{bindAttr class=":noGlyph privateMessagesMineActive:active"}}>
-        {{#linkTo 'userPrivateMessages.mine' model}}{{i18n user.messages.mine}}{{/linkTo}}
+        {{#link-to 'userPrivateMessages.mine' model}}{{i18n user.messages.mine}}{{/link-to}}
       </li>
       <li {{bindAttr class=":noGlyph privateMessagesUnreadActive:active"}}>
-        {{#linkTo 'userPrivateMessages.unread' model}}{{i18n user.messages.unread}}{{/linkTo}}
+        {{#link-to 'userPrivateMessages.unread' model}}{{i18n user.messages.unread}}{{/link-to}}
       </li>
 
     {{else}}
@@ -48,7 +48,7 @@
       <dt>{{i18n user.last_seen}}:</dt><dd>{{date last_seen_at}}</dd>
     {{/if}}
     {{#if invited_by}}
-      <dt>{{i18n user.invited_by}}:</dt><dd>{{#linkTo 'userActivity' invited_by}}{{invited_by.username}}{{/linkTo}}</dd>
+      <dt>{{i18n user.invited_by}}:</dt><dd>{{#link-to 'userActivity' invited_by}}{{invited_by.username}}{{/link-to}}</dd>
     {{/if}}
     {{#if email}}
       <dt>{{i18n user.email.title}}:</dt><dd {{bindAttr title="email"}}>{{email}}</dd>

@@ -7,10 +7,14 @@
   @module Discourse
 **/
 Discourse.UserInvitedController = Discourse.ObjectController.extend({
-  rescind: function(invite) {
-    invite.rescind();
-    return false;
+
+  actions: {
+    rescind: function(invite) {
+      invite.rescind();
+      return false;
+    }
   }
+
 });
 
 

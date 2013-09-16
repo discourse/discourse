@@ -1,8 +1,8 @@
 <div class='admin-controls'>
   <div class='span15'>
     <ul class="nav nav-pills">
-      <li>{{#linkTo 'adminFlags.active'}}{{i18n admin.flags.active}}{{/linkTo}}</li>
-      <li>{{#linkTo 'adminFlags.old'}}{{i18n admin.flags.old}}{{/linkTo}}</li>
+      <li>{{#link-to 'adminFlags.active'}}{{i18n admin.flags.active}}{{/link-to}}</li>
+      <li>{{#link-to 'adminFlags.old'}}{{i18n admin.flags.old}}{{/link-to}}</li>
     </ul>
   </div>
 </div>
@@ -25,7 +25,7 @@
         {{#each flaggedPost in content}}
         <tr {{bindAttr class="flaggedPost.extraClasses"}}>
 
-          <td class='user'>{{#if flaggedPost.user}}{{#linkTo 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="small"}}{{/linkTo}}{{/if}}</td>
+          <td class='user'>{{#if flaggedPost.user}}{{#link-to 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="small"}}{{/link-to}}{{/if}}</td>
 
           <td class='excerpt'>{{#if flaggedPost.topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound flaggedPost.url}}'>{{flaggedPost.title}}</a></h3><br>{{{flaggedPost.excerpt}}}
           </td>
@@ -35,7 +35,7 @@
               {{#each flaggedPost.flaggers}}
               <tr>
                 <td>
-                  {{#linkTo 'adminUser' this.user}}{{avatar this.user imageSize="small"}} {{/linkTo}}
+                  {{#link-to 'adminUser' this.user}}{{avatar this.user imageSize="small"}} {{/link-to}}
                 </td>
                 <td>
                   {{date this.flaggedAt}}
@@ -54,7 +54,7 @@
             <tr>
               <td></td>
               <td class='message'>
-                <div>{{#linkTo 'adminUser' user}}{{avatar user imageSize="small"}}{{/linkTo}} {{message}} <a href="{{unbound permalink}}"><button class='btn'><i class="icon-reply"></i> {{i18n admin.flags.view_message}}</button></a></div>
+                <div>{{#link-to 'adminUser' user}}{{avatar user imageSize="small"}}{{/link-to}} {{message}} <a href="{{unbound permalink}}"><button class='btn'><i class="icon-reply"></i> {{i18n admin.flags.view_message}}</button></a></div>
               </td>
               <td></td>
               <td></td>

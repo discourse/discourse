@@ -13,18 +13,18 @@
 
 <%
 if Rails.env.development?
-  require_asset ("./external_development/jquery-2.0.3.js")
+  require_asset ("development/jquery-2.0.3.js")
 else
-  require_asset ("./external_production/jquery-2.0.3.min.js")
+  require_asset ("production/jquery-2.0.3.min.js")
 end
 
-require_asset ("./external/jquery.ui.widget.js")
-require_asset ("./external/handlebars.js")
+require_asset ("jquery.ui.widget.js")
+require_asset ("handlebars.js")
 
 if Rails.env.development?
-  require_asset ("./external_development/ember.js")
+  require_asset ("development/ember.js")
 else
-  require_asset ("./external_production/ember.js")
+  require_asset ("production/ember.js")
 end
 
 require_asset ("./main_include.js")

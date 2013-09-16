@@ -46,7 +46,7 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
     promise.then(function(result) {
       // Posts moved
       mergeTopicController.send('closeModal');
-      mergeTopicController.get('topicController').toggleMultiSelect();
+      mergeTopicController.get('topicController').send('toggleMultiSelect');
       Em.run.next(function() { Discourse.URL.routeTo(result.url); });
     }, function() {
       // Error moving posts

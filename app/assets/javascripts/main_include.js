@@ -1,7 +1,37 @@
 //= require_tree ./discourse/ember
 
-// The rest of the externals
-//= require_tree ./external
+// The Vendored JS
+//= require LAB.js
+//= require Markdown.Converter.js
+//= require Markdown.Editor.js
+//= require Markdown.Sanitizer.js
+//= require better_markdown.js
+//= require bootbox.js
+//= require bootstrap-alert.js
+//= require bootstrap-button.js
+//= require bootstrap-dropdown.js
+//= require bootstrap-modal.js
+//= require bootstrap-transition.js
+//= require browser-update.js
+//= require chosen.jquery.js
+//= require ember-renderspeed.js
+//= require favcount.js
+//= require handlebars.js
+//= require jquery.ba-replacetext.js
+//= require jquery.ba-resize.min.js
+//= require jquery.color.js
+//= require jquery.cookie.js
+//= require jquery.fileupload.js
+//= require jquery.iframe-transport.js
+//= require jquery.putcursoratend.js
+//= require jquery.tagsinput.js
+//= require jquery.ui.widget.js
+//= require lodash.js
+//= require md5.js
+//= require modernizr.custom.95264.js
+//= require mousetrap.js
+//= require rsvp.js
+//= require show-html.js
 
 //= require ./discourse/helpers/i18n_helpers
 //= require ./discourse/mixins/ajax
@@ -39,4 +69,4 @@
 //= require_tree ./discourse/templates
 //= require_tree ./discourse/routes
 
-//= require ./external/browser-update.js
+//= require browser-update.js

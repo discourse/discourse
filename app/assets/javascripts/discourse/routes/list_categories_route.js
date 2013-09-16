@@ -10,7 +10,7 @@ Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
-  events: {
+  actions: {
     createCategory: function() {
       Discourse.Route.showModal(this, 'editCategory', Discourse.Category.create({
         color: 'AB9364', text_color: 'FFFFFF', hotness: 5, group_permissions: [{group_name: "everyone", permission_type: 1}],

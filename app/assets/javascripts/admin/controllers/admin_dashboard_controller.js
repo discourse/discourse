@@ -46,5 +46,12 @@ Discourse.AdminDashboardController = Ember.Controller.extend({
 
   updatedTimestamp: function() {
     return moment(this.get('updated_at')).format('LLL');
-  }.property('updated_at')
+  }.property('updated_at'),
+
+  actions: {
+    refreshProblems: function() {
+      this.loadProblems();
+    }
+  }
+
 });

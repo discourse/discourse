@@ -184,7 +184,5 @@ var jsHintOpts = {
 <%= jshint("#{Rails.root}/app/assets/javascripts/**/*.js",
            "/app/assets/javascripts/",
            [/external\//,
-            /external_development\//,
-            /external_production\//,
             /defer\//,
             /locales\//]) %>

@@ -11,10 +11,12 @@ Discourse.ShareController = Discourse.Controller.extend({
   needs: ['topic'],
 
   // Close the share controller
-  close: function() {
-    this.set('link', '');
-    this.set('postNumber', '');
-    return false;
+  actions: {
+    close: function() {
+      this.set('link', '');
+      this.set('postNumber', '');
+      return false;
+    }
   },
 
   shareLinks: function() {

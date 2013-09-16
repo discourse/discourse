@@ -3,21 +3,21 @@
     <div class="full-width">
 
       <ul class="nav nav-pills">
-        <li>{{#linkTo 'admin.dashboard'}}{{i18n admin.dashboard.title}}{{/linkTo}}</li>
+        <li>{{#link-to 'admin.dashboard'}}{{i18n admin.dashboard.title}}{{/link-to}}</li>
         {{#if currentUser.admin}}
-          <li>{{#linkTo 'admin.site_settings'}}{{i18n admin.site_settings.title}}{{/linkTo}}</li>
-          <li>{{#linkTo 'adminSiteContents'}}{{i18n admin.site_content.title}}{{/linkTo}}</li>
+          <li>{{#link-to 'admin.site_settings'}}{{i18n admin.site_settings.title}}{{/link-to}}</li>
+          <li>{{#link-to 'adminSiteContents'}}{{i18n admin.site_content.title}}{{/link-to}}</li>
         {{/if}}
-        <li>{{#linkTo 'adminUsersList'}}{{i18n admin.users.title}}{{/linkTo}}</li>
+        <li>{{#link-to 'adminUsersList'}}{{i18n admin.users.title}}{{/link-to}}</li>
         {{#if currentUser.admin}}
-          <li>{{#linkTo 'admin.groups'}}{{i18n admin.groups.title}}{{/linkTo}}</li>
+          <li>{{#link-to 'admin.groups'}}{{i18n admin.groups.title}}{{/link-to}}</li>
         {{/if}}
-        <li>{{#linkTo 'adminEmail'}}{{i18n admin.email.title}}{{/linkTo}}</li>
-        <li>{{#linkTo 'adminFlags'}}{{i18n admin.flags.title}}{{/linkTo}}</li>
-        <li>{{#linkTo 'adminLogs'}}{{i18n admin.logs.title}}{{/linkTo}}</li>
+        <li>{{#link-to 'adminEmail'}}{{i18n admin.email.title}}{{/link-to}}</li>
+        <li>{{#link-to 'adminFlags'}}{{i18n admin.flags.title}}{{/link-to}}</li>
+        <li>{{#link-to 'adminLogs'}}{{i18n admin.logs.title}}{{/link-to}}</li>
         {{#if currentUser.admin}}
-          <li>{{#linkTo 'admin.customize'}}{{i18n admin.customize.title}}{{/linkTo}}</li>
-          <li>{{#linkTo 'admin.api'}}{{i18n admin.api.title}}{{/linkTo}}</li>
+          <li>{{#link-to 'admin.customize'}}{{i18n admin.customize.title}}{{/link-to}}</li>
+          <li>{{#link-to 'admin.api'}}{{i18n admin.api.title}}{{/link-to}}</li>
         {{/if}}
       </ul>
 

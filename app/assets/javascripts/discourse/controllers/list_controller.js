@@ -113,14 +113,16 @@ Discourse.ListController = Discourse.Controller.extend({
   }.observes('filterMode', 'category'),
 
   // Create topic button
-  createTopic: function() {
-    this.get('controllers.composer').open({
-      categoryId: this.get('category.id'),
-      action: Discourse.Composer.CREATE_TOPIC,
-      draft: this.get('draft'),
-      draftKey: this.get('draft_key'),
-      draftSequence: this.get('draft_sequence')
-    });
+  actions: {
+    createTopic: function() {
+      this.get('controllers.composer').open({
+        categoryId: this.get('category.id'),
+        action: Discourse.Composer.CREATE_TOPIC,
+        draft: this.get('draft'),
+        draftKey: this.get('draft_key'),
+        draftSequence: this.get('draft_sequence')
+      });
+    }
   },
 
   canEditCategory: function() {

@@ -42,7 +42,7 @@ Discourse.SplitTopicController = Discourse.ObjectController.extend(Discourse.Sel
     }).then(function(result) {
       // Posts moved
       self.send('closeModal');
-      self.get('topicController').toggleMultiSelect();
+      self.get('topicController').send('toggleMultiSelect');
       Em.run.next(function() { Discourse.URL.routeTo(result.url); });
     }, function() {
       // Error moving posts
