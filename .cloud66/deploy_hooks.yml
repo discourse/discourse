@@ -39,8 +39,8 @@ production:
         parse: true
     last_thing:
     # 6. Import database image
-      - source: /.cloud66/scripts/import.sh
-        destination: /tmp/scripts/import.sh
+      - source: /.cloud66/scripts/import_prod.sh
+        destination: /tmp/scripts/import_prod.sh
         target: postgresql
         apply_during: build_only
         execute: true
@@ -117,8 +117,8 @@ development:
         parse: true
     last_thing:
     # 6. Import database image
-      - source: /.cloud66/scripts/import.sh
-        destination: /tmp/scripts/import.sh
+      - source: /.cloud66/scripts/import_dev.sh
+        destination: /tmp/scripts/import_dev.sh
         target: postgresql
         apply_during: build_only
         execute: true

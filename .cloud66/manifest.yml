@@ -1,3 +1,9 @@
+production:
+    rails:
+        server:
+            unique_name: frontend
+        configuration:
+            use_asset_pipeline: true
 development:
     rails:
         server:
