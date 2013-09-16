@@ -129,5 +129,11 @@ module Discourse
     config.after_initialize do
       OpenID::Util.logger = Rails.logger
     end
+
+    # This is not really required per-se, but we do not want to support
+    # XML params, we see errors in our logs about malformed XML and there
+    # absolutly no spot in our app were we use XML as opposed to JSON endpoints
+    ActionDispatch::ParamsParser::DEFAULT_PARSERS.delete(Mime::XML)
+
   end
 end
