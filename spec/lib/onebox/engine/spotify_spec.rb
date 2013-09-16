@@ -12,12 +12,12 @@ describe Onebox::Engine::SpotifyOnebox do
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
 
-    it "returns presentation title" do
+    it "returns album title" do
       title = "Keep Moving Forward EP"
       expect(html).to include(title)
     end
 
-    it "returns presentation description" do
+    it "returns album description" do
       description = "Keep Moving Forward EP, an album by Bubble on Spotify"
       expect(html).to include(description)
     end
