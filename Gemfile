@@ -113,7 +113,7 @@ gem 'sidekiq-failures'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 gem 'therubyracer', require: 'v8'
-gem 'thin', require: false
+gem 'thin'
 gem 'diffy', '>= 3.0', require: false
 gem 'highline', require: false
 
