@@ -7,7 +7,7 @@ describe SiteCustomization do
   end
 
   let :customization_params do
-    {name: 'my name', user_id: user.id, header: "my awesome header", stylesheet: "my awesome css", mobile_stylesheet: '', mobile_header: ''}
+    {name: 'my name', user_id: user.id, header: "my awesome header", stylesheet: "my awesome css", mobile_stylesheet: nil, mobile_header: nil}
   end
 
   let :customization do

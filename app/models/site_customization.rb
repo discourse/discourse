@@ -87,7 +87,7 @@ class SiteCustomization < ActiveRecord::Base
   def self.custom_header(preview_style, target=:desktop)
     preview_style ||= enabled_style_key
     style = lookup_style(preview_style)
-    if style && ((target == :mobile && style.mobile_header) || style.header)
+    if style && ((target != :mobile && style.header) || (target == :mobile && style.mobile_header))
       target == :mobile ? style.mobile_header.html_safe : style.header.html_safe
     else
       ""
