@@ -102,7 +102,7 @@ gem 'omniauth-cas'
 gem 'oj'
 gem 'pg'
 gem 'rake'
-gem 'thin'
+
 
 gem 'rest-client'
 gem 'rinku'
@@ -136,13 +136,11 @@ group :assets do
   # Sam: disabling for now, having issues with our jenkins build
   # gem 'turbo-sprockets-rails3'
   gem 'uglifier'
-  gem 'thin'
 end
 
 group :test do
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
-  gem 'thin'
 end
 
 group :test, :development do
@@ -166,7 +164,6 @@ group :test, :development do
   gem 'pry-rails'
   gem 'pry-nav'
   gem 'spork-rails', :github => 'sporkrb/spork-rails'
-  gem 'thin'
 end
 
 group :development do
@@ -175,7 +172,6 @@ group :development do
   gem 'librarian', '>= 0.0.25', require: false
   # https://github.com/ctran/annotate_models/pull/106
   gem 'annotate', :git => 'https://github.com/SamSaffron/annotate_models.git'
-  gem 'thin'
 end
 
 
