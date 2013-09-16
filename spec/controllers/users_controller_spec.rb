@@ -181,8 +181,8 @@ describe UsersController do
         lambda { xhr :put, :change_email, username: user.username }.should raise_error(ActionController::ParameterMissing)
       end
 
-      it "raises an error if you can't edit the user" do
-        Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
+      it "raises an error if you can't edit the user's email" do
+        Guardian.any_instance.expects(:can_edit_email?).with(user).returns(false)
         xhr :put, :change_email, username: user.username, email: new_email
         response.should be_forbidden
       end

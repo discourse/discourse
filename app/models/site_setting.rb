@@ -251,6 +251,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:delete_all_posts_max, 10)
 
   setting(:username_change_period, 3) # days
+  setting(:email_editable, true)
 
   client_setting(:allow_uploaded_avatars, true)
   client_setting(:allow_animated_avatars, false)
