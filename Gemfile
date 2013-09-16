@@ -102,7 +102,7 @@ gem 'omniauth-cas'
 gem 'oj'
 gem 'pg'
 gem 'rake'
-
+gem 'thin'
 
 gem 'rest-client'
 gem 'rinku'
@@ -136,11 +136,13 @@ group :assets do
   # Sam: disabling for now, having issues with our jenkins build
   # gem 'turbo-sprockets-rails3'
   gem 'uglifier'
+  gem 'thin'
 end
 
 group :test do
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
+  gem 'thin'
 end
 
 group :test, :development do
