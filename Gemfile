@@ -164,6 +164,7 @@ group :test, :development do
   gem 'pry-rails'
   gem 'pry-nav'
   gem 'spork-rails', :github => 'sporkrb/spork-rails'
+  gem 'thin'
 end
 
 group :development do
@@ -172,6 +173,7 @@ group :development do
   gem 'librarian', '>= 0.0.25', require: false
   # https://github.com/ctran/annotate_models/pull/106
   gem 'annotate', :git => 'https://github.com/SamSaffron/annotate_models.git'
+  gem 'thin'
 end
 
 
