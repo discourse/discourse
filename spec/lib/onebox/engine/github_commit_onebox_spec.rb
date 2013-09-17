@@ -11,7 +11,11 @@ describe Onebox::Engine::GithubCommitOnebox do
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
 
-    it "has repo title" do
+    it "has repo owner" do
+      expect(html).to include("discourse")
+    end
+
+    it "has repo name" do
       expect(html).to include("discourse")
     end
 
@@ -20,6 +24,7 @@ describe Onebox::Engine::GithubCommitOnebox do
     end
 
     it "has tag" do
+      pending
       expect(html).to include("v0.9.6.3")
     end
 
@@ -28,11 +33,15 @@ describe Onebox::Engine::GithubCommitOnebox do
     end
 
     it "has commit author gravatar" do
-      expect(html).to include("2F7d3010c11d08cf990b7614d2c2ca9098.png")
+      expect(html).to include("gravatar-user-420.png")
     end
 
     it "has commit message" do
-      expect(html).to include("Fixed Github auth")
+      expect(html).to include("Fixed GitHub auth")
+    end
+
+    it "has commit description" do
+      expect(html).to include("matically")
     end
 
     it "has commit author" do
