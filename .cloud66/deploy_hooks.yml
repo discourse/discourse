@@ -37,7 +37,6 @@ production:
         execute: true
         sudo: true
         parse: true
-    last_thing:
     # 6. Import database image
       - source: /.cloud66/scripts/import_prod.sh
         destination: /tmp/scripts/import_prod.sh
@@ -53,6 +52,7 @@ production:
         apply_during: build_only
         execute: true
         sudo: true
+    last_thing:
     # 8. Curl script
       - source: /.cloud66/scripts/curl.sh
         destination: /tmp/curl.sh
