@@ -1,3 +1,4 @@
+production:
 development:
     rails:
         server:
