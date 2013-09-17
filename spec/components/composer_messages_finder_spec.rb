@@ -28,12 +28,12 @@ describe ComposerMessagesFinder do
       end
 
       it "returns a message for a user who has not posted any topics" do
-        user.expects(:created_topic_count).returns(10)
+        user.expects(:created_topic_count).returns(9)
         finder.check_education_message.should be_present
       end
 
       it "returns no message when the user has posted enough topics" do
-        user.expects(:created_topic_count).returns(11)
+        user.expects(:created_topic_count).returns(10)
         finder.check_education_message.should be_blank
       end
     end
@@ -46,12 +46,12 @@ describe ComposerMessagesFinder do
       end
 
       it "returns a message for a user who has not posted any topics" do
-        user.expects(:post_count).returns(10)
+        user.expects(:post_count).returns(9)
         finder.check_education_message.should be_present
       end
 
       it "returns no message when the user has posted enough topics" do
-        user.expects(:post_count).returns(11)
+        user.expects(:post_count).returns(10)
         finder.check_education_message.should be_blank
       end
     end
@@ -129,13 +129,9 @@ describe ComposerMessagesFinder do
     context "reply" do
       let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'reply', topic_id: topic.id) }
 
-      it "does not give a message to new users" do
-        user.trust_level = TrustLevel.levels[:newuser]
-        finder.check_sequential_replies.should be_blank
-      end
 
       it "does not give a message to users who are still in the 'education' phase" do
-        user.stubs(:post_count).returns(10)
+        user.stubs(:post_count).returns(9)
         finder.check_sequential_replies.should be_blank
       end
 

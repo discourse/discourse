@@ -21,7 +21,7 @@ class ComposerMessagesFinder
       education_key = :education_new_reply
     end
 
-    if count <= SiteSetting.educate_until_posts
+    if count < SiteSetting.educate_until_posts
       education_posts_text = I18n.t('education.until_posts', count: SiteSetting.educate_until_posts)
       return {templateName: 'composer/education',
               wait_for_typing: true,
@@ -56,11 +56,8 @@ class ComposerMessagesFinder
     # We only care about replies to topics
     return unless replying? && @details[:topic_id] &&
 
-                  # For users who are not new
-                  @user.has_trust_level?(:basic) &&
-
                   # And who have posted enough
-                  (@user.post_count > SiteSetting.educate_until_posts) &&
+                  (@user.post_count >= SiteSetting.educate_until_posts) &&
 
                   # And who haven't been notified about sequential replies already
                   (!UserHistory.exists_for_user?(@user, :notified_about_sequential_replies))
