@@ -3,7 +3,7 @@ production:
   database: discourse
   username: postgres
   # password: itisagooddaytovi	# if using username/password auth
-  # host: dbhost		# if not localhost
+  host: <%= ENV['POSTGRESQL_ADDRESS'] %>		# if not localhost
   pool: 5 	# size of DB connection pool *per process*
   timeout: 5000
   # db_id: 0	# database ID if hosting multiple sites
@@ -11,7 +11,7 @@ production:
     ### If you change this setting you will need to
     ###   - restart sidekiq if you change this setting
     ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
-    - <%= ENV['POSTGRESQL_ADDRESS'] %> # Update this to be the domain of your production site
+    - <%= ENV['HOST_NAME'] %> # Update this to be the domain of your production site
 
 test:
   adapter: postgresql
