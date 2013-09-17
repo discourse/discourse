@@ -16,7 +16,7 @@ Discourse.Resolver = Ember.DefaultResolver.extend({
     @returns {Template} the template (if found)
   **/
   resolveTemplate: function(parsedName) {
-    if (Discourse.Session.currentProp('mobileView')) {
+    if (Discourse.Mobile.mobileView) {
       var mobileParsedName = this.parseName(parsedName.fullName.replace("template:", "template:mobile/"));
       var mobileTemplate = this.findTemplate(mobileParsedName);
       if (mobileTemplate) return mobileTemplate;
