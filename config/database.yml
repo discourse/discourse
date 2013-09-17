@@ -3,7 +3,7 @@ production:
   database: discourse
   username: postgres
   # password: itisagooddaytovi	# if using username/password auth
-  host: <%= ENV['POSTGRESQL_ADDRESS'] %>		# if not localhost
+  # host: <%= ENV['POSTGRESQL_ADDRESS'] %>		# if not localhost
   pool: 5 	# size of DB connection pool *per process*
   timeout: 5000
   # db_id: 0	# database ID if hosting multiple sites
