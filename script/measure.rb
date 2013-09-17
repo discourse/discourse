@@ -1,20 +1,16 @@
 # using this script to try figure out why Rails 2 is slower that 1.9
 #
-require 'objspace'
-require 'benchmark'
-# require 'ruby-prof'
 
 require 'memory_profiler'
 
-
 result = MemoryProfiler.report do
-  require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
-  # require 'ruby-prof'
+  require File.expand_path("../../config/environment", __FILE__)
 end
 result.pretty_print
 
 exit
 
+require 'benchmark'
 
 def profile_allocations(name)
   GC.disable
