@@ -21,6 +21,14 @@ describe ScreenedUrl do
         described_class.create(valid_params.merge(url: url.gsub('http://', prefix))).url.should == url.gsub('http://', '')
       end
     end
+
+    it "strips trailing slash" do
+      described_class.create(valid_params.merge(url: 'silverbullet.in/')).url.should == 'silverbullet.in'
+    end
+
+    it "strips trailing slashes" do
+      described_class.create(valid_params.merge(url: 'silverbullet.in/buy///')).url.should == 'silverbullet.in/buy'
+    end
   end
 
   describe '#watch' do
