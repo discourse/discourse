@@ -121,10 +121,10 @@ Discourse.Composer = Discourse.Model.extend({
     // reply is always required
     if (this.get('missingReplyCharacters') > 0) return true;
 
-    if (this.get('canCategorize') && !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('categoryName')) return true;
+    if (this.get('canCategorize') && !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('categoryId')) return true;
 
     return false;
-  }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryName', 'missingReplyCharacters'),
+  }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
 
   /**
     Is the title's length valid?
@@ -328,14 +328,14 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     this.setProperties({
-      categoryName: opts.categoryName || this.get('topic.category.name'),
+      categoryId: opts.categoryId || this.get('topic.category.id'),
       archetypeId: opts.archetypeId || Discourse.Site.currentProp('default_archetype'),
       metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
       reply: opts.reply || this.get("reply") || ""
     });
 
-    if (!this.get('categoryName') && !Discourse.SiteSettings.allow_uncategorized_topics && Discourse.Category.list().length > 0) {
-      this.set('categoryName', Discourse.Category.list()[0].get('name'));
+    if (!this.get('categoryId') && !Discourse.SiteSettings.allow_uncategorized_topics && Discourse.Category.list().length > 0) {
+      this.set('categoryId', Discourse.Category.list()[0].get('id'));
     }
 
     if (opts.postId) {
@@ -398,16 +398,9 @@ Discourse.Composer = Discourse.Model.extend({
       var topic = this.get('topic');
       topic.setProperties({
         title: this.get('title'),
-        fancy_title: this.get('title')
+        fancy_title: this.get('title'),
+        category_id: parseInt(this.get('categoryId'), 10)
       });
-
-      var category = Discourse.Category.list().findProperty('name', this.get('categoryName'));
-      if (category) {
-        topic.setProperties({
-          categoryName: category.get('name'),
-          category_id: category.get('id')
-        });
-      }
       topic.save();
     }
 
@@ -447,7 +440,7 @@ Discourse.Composer = Discourse.Model.extend({
     var createdPost = Discourse.Post.create({
       raw: this.get('reply'),
       title: this.get('title'),
-      category: this.get('categoryName'),
+      category: this.get('categoryId'),
       topic_id: this.get('topic.id'),
       reply_to_post_number: post ? post.get('post_number') : null,
       imageSizes: opts.imageSizes,
@@ -544,7 +537,7 @@ Discourse.Composer = Discourse.Model.extend({
       reply: this.get('reply'),
       action: this.get('action'),
       title: this.get('title'),
-      categoryName: this.get('categoryName'),
+      categoryId: this.get('categoryId'),
       postId: this.get('post.id'),
       archetypeId: this.get('archetypeId'),
       metaData: this.get('metaData'),
@@ -599,7 +592,7 @@ Discourse.Composer.reopenClass({
         topic: topic,
         action: draft.action,
         title: draft.title,
-        categoryName: draft.categoryName,
+        categoryId: draft.categoryId,
         postId: draft.postId,
         archetypeId: draft.archetypeId,
         reply: draft.reply,
