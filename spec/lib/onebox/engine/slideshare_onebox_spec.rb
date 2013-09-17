@@ -6,7 +6,7 @@ describe Onebox::Engine::SlideshareOnebox do
     fake(link, response("slideshare"))
   end
 
-  it_behaves_like "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
