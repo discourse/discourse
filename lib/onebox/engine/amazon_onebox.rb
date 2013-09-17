@@ -5,8 +5,10 @@ module Onebox
       include HTML
 
       matches do
-        #/^https?:\/\/(?:www\.)?amazon.(com|ca)\/.*$/
-        find "amazon.com"
+        http
+        maybe("www.")
+        domain("amazon")
+        has(".").either("com", "ca").maybe("/")
       end
 
       private

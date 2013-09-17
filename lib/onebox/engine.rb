@@ -71,7 +71,7 @@ module Onebox
       end
 
       def matches(&block)
-        class_variable_set :@@matcher, VerEx.new(&block)
+        class_variable_set :@@matcher, Hexpress.new(&block).to_r
       end
     end
   end
