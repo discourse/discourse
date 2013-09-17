@@ -32,14 +32,14 @@ Deploying and maintaining a Discourse setup through Cloud 66 is extremely easy. 
 the environment variables below to have your own fully functioning Discourse installation up and running. 
 
 Note: Setting environment variables is done during step five, before you click 'deploy':
-![Environment variables](https://raw.github.com/cloud66-samples/discourse/master/docs/environment_variables.png)
+![Environment variables](https://raw.github.com/cloud66-samples/diaspora/master/docs/environment_variables.png)
 
-1. SMTP_ADDRESS = your SMTP host
-2. SMTP_PORT = the port on your SMTP host
-3. SMTP_DOMAIN = the domain you will be sending emails from
-4. SMTP_USERNAME = your SMTP username
-5. SMTP_PASSWORD = your SMTP password
-6. HOST_NAME = the domain hosting your site
+1. SMTP_HOST = your SMTP host
+2. SMTP_USERNAME = your SMTP username
+3. SMTP_PASSWORD = your SMTP password
+4. SMTP_DOMAIN = your SMTP domain
+5. MAILER_SENDER = the email address used to send emails
+6. SMTP_PORT = your SMTP host port
 
 ## Vision
 
