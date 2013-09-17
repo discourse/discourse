@@ -1,5 +1,11 @@
 # using this script to try figure out why Rails 2 is slower that 1.9
 #
+require 'flamegraph'
+
+Flamegraph.generate('test.html', fidelity: 2) do
+  require File.expand_path("../../config/environment", __FILE__)
+end
+exit
 
 require 'memory_profiler'
 
