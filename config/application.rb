@@ -125,9 +125,12 @@ module Discourse
       Discourse.activate_plugins!
     end
 
-    # So open id logs somewhere sane
     config.after_initialize do
+      # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger
+      if plugins = Discourse.plugins
+        plugins.each{|plugin| plugin.notify_after_initialize}
+      end
     end
 
     # This is not really required per-se, but we do not want to support
