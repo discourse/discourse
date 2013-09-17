@@ -43,7 +43,6 @@ production:
         apply_during: build_only
         execute: true
         sudo: true
-        parse: true
     # 7. Import database image
       - source: /.cloud66/scripts/import_prod.sh
         destination: /tmp/scripts/import_prod.sh
