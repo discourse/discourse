@@ -120,6 +120,12 @@ en:
 
       It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
 
+    dominating_topic: |
+      ### Let others join the conversation
+
+      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
+
+      Are you sure you're providing adequate time for other people to share their points of view, too?
 
   activerecord:
     attributes:
@@ -697,6 +703,8 @@ en:
     sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
 
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
+
+    dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before we consider it dominating."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

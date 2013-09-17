@@ -263,6 +263,8 @@ class SiteSetting < ActiveRecord::Base
 
   client_setting(:enable_mobile_theme, true)
 
+  setting(:dominating_topic_minimum_percent, 20)
+
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
   end
