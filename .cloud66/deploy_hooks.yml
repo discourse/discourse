@@ -22,14 +22,21 @@ production:
         apply_during: build_only
         execute: true
         sudo: true
-    # 4. DB:DROP & DB:CREATE
-      - source: /.cloud66/scripts/kill.sh
-        destination: /tmp/kill.sh
+    # 4. KILL DB
+      - source: /.cloud66/scripts/kill_db.sh
+        destination: /tmp/kill_db.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
+    # 5. DB:DROP & DB:CREATE
+      - source: /.cloud66/scripts/drop_create.sh
+        destination: /tmp/drop_create.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 5. Thin configurations
+    # 6. Thin configurations
       - source: /.cloud66/scripts/thin.sh
         destination: /tmp/scripts/thin.sh
         target: rails
@@ -37,7 +44,7 @@ production:
         execute: true
         sudo: true
         parse: true
-    # 6. Import database image
+    # 7. Import database image
       - source: /.cloud66/scripts/import_prod.sh
         destination: /tmp/scripts/import_prod.sh
         target: postgresql
@@ -45,7 +52,7 @@ production:
         execute: true
         owner: postgres
         run_as: postgres
-    # 7. Migrate database
+    # 8. Migrate database
       - source: /.cloud66/scripts/migrate.sh
         destination: /tmp/migrate.sh
         target: rails
@@ -53,7 +60,7 @@ production:
         execute: true
         sudo: true
     last_thing:
-    # 8. Curl script
+    # 9. Curl script
       - source: /.cloud66/scripts/curl.sh
         destination: /tmp/curl.sh
         target: rails
