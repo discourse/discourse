@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::AmazonOnebox do
-  let(:link) { "http://www.amazon.de/Knit-Noro-Accessories-Colorful-Little/dp/193609620X" }
+  let(:link) { "http://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X" }
 
   before do
     fake(link, response("amazon"))
