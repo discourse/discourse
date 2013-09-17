@@ -41,7 +41,7 @@ preview = Onebox.preview(url)
 "#{preview}" == preview.to_s #=> true
 ```
 
-Onebox has it's own caching system but you can also provide (or turn off) your own system:
+Onebox has its own caching system but you can also provide (or turn off) your own system:
 
 ``` ruby
 require "onebox"
