@@ -122,19 +122,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_username_or_email(username_or_email)
-    conditions = if username_or_email.include?('@')
-      { email: Email.downcase(username_or_email) }
-    else
-      { username_lower: username_or_email.downcase }
-    end
-
-    users = User.where(conditions).to_a
-
-    if users.size > 1
-      raise Discourse::TooManyMatches
-    else
-      users.first
-    end
+    User.where('username_lower = lower(?) OR email = lower(?)', username_or_email, username_or_email).first
   end
 
   def enqueue_welcome_message(message_type)
