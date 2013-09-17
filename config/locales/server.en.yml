@@ -696,6 +696,8 @@ en:
 
     sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
 
+    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
+
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"

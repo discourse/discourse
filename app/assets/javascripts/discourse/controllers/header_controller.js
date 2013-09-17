@@ -32,6 +32,10 @@ Discourse.HeaderController = Discourse.Controller.extend({
     return Discourse.Mobile.mobileView;
   }.property(),
 
+  showMobileToggle: function() {
+    return Discourse.SiteSettings.enable_mobile_theme;
+  }.property(),
+
   toggleMobileView: function() {
     Discourse.Mobile.toggleMobileView();
   }

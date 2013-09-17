@@ -261,6 +261,8 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:sequential_replies_threshold, 2)
 
+  client_setting(:enable_mobile_theme, true)
+
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
   end

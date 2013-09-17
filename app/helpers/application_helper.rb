@@ -109,6 +109,7 @@ module ApplicationHelper
   end
 
   def mobile_view?
+    return false unless SiteSetting.enable_mobile_theme
     if session[:mobile_view]
       session[:mobile_view] == '1'
     else
