@@ -1,0 +1,65 @@
+{{#unless loading}}
+  {{#if loaded}}
+    <div class='contents'>
+      {{#if view.showTable}}
+
+      {{#if canViewRankDetails}}
+        <button class='btn' {{action toggleRankDetails}} style='margin-bottom: 10px'>
+          <i class='icon icon-beaker'></i>
+          {{i18n rank_details.toggle}}
+        </button>
+      {{/if}}
+
+      <table id='topic-list'>
+        <thead>
+        <tr>
+          <th class='main-link'>
+            {{i18n topic.title}}
+          </th>
+          <th class='category'>{{i18n category_title}}</th>
+          <th class='num posts'>{{i18n posts}}</th>
+        </tr>
+        </thead>
+
+        {{#if view.topicTrackingState.hasIncoming}}
+          <tbody>
+            <tr>
+              <td colspan="3">
+                <div class='alert alert-info'>
+                  {{countI18n new_topics_inserted countBinding="view.topicTrackingState.incomingCount"}}
+                  <a href='#' {{action showInserted}}>{{i18n show_new_topics}}</a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        {{/if}}
+
+        {{collection contentBinding="topics" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
+
+      </table>
+      {{/if}}
+    </div>
+
+    <div class="full-width">
+      <footer id='topic-list-bottom'>
+        {{#if loadingMore}}
+          <div class='topics-loading'>{{i18n topic.loading_more}}</div>
+        {{/if}}
+
+        <h3>
+          {{footerMessage}}
+          {{#if allLoaded}}
+            {{#if latest}}
+              {{#if canCreateTopic}}
+                <a href='#' {{action createTopic}}>{{i18n topic.suggest_create_topic}}</a>
+              {{/if}}
+            {{else}}
+              {{#linkTo 'list.categories'}}{{i18n topic.browse_all_categories}}{{/linkTo}} {{i18n or}} {{#linkTo 'list.latest'}}{{i18n topic.view_latest_topics}}{{/linkTo}}
+            {{/if}}
+          {{/if}}
+        </h3>
+      </footer>
+    </div>
+
+  {{/if}}
+{{/unless}}
