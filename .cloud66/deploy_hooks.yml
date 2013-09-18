@@ -17,21 +17,22 @@ production:
     after_rails:
     # 3. Set environment variables and allow PSQL user to access them
       - source: /.cloud66/scripts/env_vars.sh
-        destination: /tmp/env_vars.sh
+        destination: /tmp/scripts/env_vars.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
+    before_agent:
     # 4. KILL DB
-      - source: /.cloud66/scripts/kill_db.sh
-        destination: /tmp/kill_db.sh
+      - source: /.cloud66/scripts/kill_db.sh ## NOT BEING SENT TO POSTGRES
+        destination: /tmp/scripts/kill_db.sh
         target: postgresql
         apply_during: build_only
         execute: true
         sudo: true
     # 5. DB:DROP & DB:CREATE
       - source: /.cloud66/scripts/drop_create.sh
-        destination: /tmp/drop_create.sh
+        destination: /tmp/scripts/drop_create.sh
         target: rails
         apply_during: build_only
         execute: true
@@ -43,9 +44,10 @@ production:
         apply_during: build_only
         execute: true
         sudo: true
+    after_agent:
     # 7. Import database image
       - source: /.cloud66/scripts/import_prod.sh
-        destination: /tmp/scripts/import_prod.sh
+        destination: /tmp/scripts/import_prod.sh ## NOT BEING COPIED TO POSTGRES
         target: postgresql
         apply_during: build_only
         execute: true
