@@ -67,21 +67,73 @@ production:
         execute: true
         sudo: true
 staging:
-      after_rails:
-      - source: /.cloud66/scripts/migrate.sh
-        destination: /tmp/migrate.sh
+    first_thing:
+    # 1. Permissions on postgres box
+      - source: /.cloud66/scripts/permissions.sh
+        destination: /tmp/scripts/permissions.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
+    after_postgresql:
+    # 2. Copy SQL image to PSQL server
+      - source: /pg_dumps/production-image.sql
+        destination: /tmp/images/production-image.sql
+        target: postgresql
+        apply_during: build_only
+        owner: postgres
+    after_rails:
+    # 3. Set environment variables and allow PSQL user to access them
+      - source: /.cloud66/scripts/env_vars.sh
+        destination: /tmp/scripts/env_vars.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 5. Thin configurations
+    last_thing:
+    # 4. KILL DB
+      - source: /.cloud66/scripts/kill_db.sh ## NOT BEING SENT TO POSTGRES
+        destination: /tmp/scripts/kill_db.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
+    # 5. DB:DROP & DB:CREATE
+      - source: /.cloud66/scripts/drop_create.sh
+        destination: /tmp/scripts/drop_create.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
+    # 6. Thin configurations
       - source: /.cloud66/scripts/thin.sh
         destination: /tmp/scripts/thin.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-        parse: true
+    # 7. Import database image
+      - source: /.cloud66/scripts/import_prod.sh
+        destination: /tmp/scripts/import_prod.sh ## NOT BEING COPIED TO POSTGRES
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        owner: postgres
+        run_as: postgres
+    # 8. Migrate database
+      - source: /.cloud66/scripts/migrate.sh
+        destination: /tmp/migrate.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
+    # 9. Curl script
+      - source: /.cloud66/scripts/curl.sh
+        destination: /tmp/curl.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
 development:
     first_thing:
     # 1. Permissions on postgres box
@@ -101,28 +153,34 @@ development:
     after_rails:
     # 3. Set environment variables and allow PSQL user to access them
       - source: /.cloud66/scripts/env_vars.sh
-        destination: /tmp/env_vars.sh
+        destination: /tmp/scripts/env_vars.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 4. DB:DROP & DB:CREATE
-      - source: /.cloud66/scripts/kill.sh
-        destination: /tmp/kill.sh
+    last_thing:
+    # 4. KILL DB
+      - source: /.cloud66/scripts/kill_db.sh
+        destination: /tmp/scripts/kill_db.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
+    # 5. DB:DROP & DB:CREATE
+      - source: /.cloud66/scripts/drop_create.sh
+        destination: /tmp/scripts/drop_create.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 5. Thin configurations
+    # 6. Thin configurations
       - source: /.cloud66/scripts/thin.sh
         destination: /tmp/scripts/thin.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-        parse: true
-    last_thing:
-    # 6. Import database image
+    # 7. Import database image
       - source: /.cloud66/scripts/import_dev.sh
         destination: /tmp/scripts/import_dev.sh
         target: postgresql
@@ -130,14 +188,14 @@ development:
         execute: true
         owner: postgres
         run_as: postgres
-    # 7. Migrate database
+    # 8. Migrate database
       - source: /.cloud66/scripts/migrate.sh
         destination: /tmp/migrate.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 8. Curl script
+    # 9. Curl script
       - source: /.cloud66/scripts/curl.sh
         destination: /tmp/curl.sh
         target: rails
