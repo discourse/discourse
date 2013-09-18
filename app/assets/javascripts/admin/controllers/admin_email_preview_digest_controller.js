@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminEmailPreviewDigestController = Discourse.ObjectController.extend(Discourse.Presence, {
+Discourse.AdminEmailPreviewDigestController = Discourse.ObjectController.extend({
 
   refresh: function() {
     var model = this.get('model');
