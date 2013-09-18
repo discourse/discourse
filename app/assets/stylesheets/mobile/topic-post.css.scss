@@ -2,7 +2,7 @@
 
 .topic-post {
   border-top: 1px solid #ddd;
-  padding: 10px 0 10px 0;
+  padding: 6px 0 3px 0;
   &:first-of-type {
     border-top: none;
   }
@@ -270,7 +270,7 @@ a.star {
     }
 
    .title {
-    font-size: 14px; line-height: 8px;
+    font-size: 14px; line-height: 8px; 
   }
 
 }
@@ -419,10 +419,17 @@ iframe {
   margin: -4px 0 0 -4px;
   background-color: lighten(yellow, 35%);}
 
+.topic-meta-data {
+white-space: nowrap; 
+float: left;
+}
+
 .user-title {
-  margin-left: 8px;
-  display: inline-block;
   color: #aaa;
+  padding-top: 2px;
+  padding-left: 8px;
+  overflow: hidden;
+  margin-right: 50px;
 }
 
 span.btn-text {display: none;}
