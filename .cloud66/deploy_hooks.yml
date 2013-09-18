@@ -22,7 +22,7 @@ production:
         apply_during: build_only
         execute: true
         sudo: true
-    before_agent:
+    last_thing:
     # 4. KILL DB
       - source: /.cloud66/scripts/kill_db.sh ## NOT BEING SENT TO POSTGRES
         destination: /tmp/scripts/kill_db.sh
@@ -44,7 +44,6 @@ production:
         apply_during: build_only
         execute: true
         sudo: true
-    after_agent:
     # 7. Import database image
       - source: /.cloud66/scripts/import_prod.sh
         destination: /tmp/scripts/import_prod.sh ## NOT BEING COPIED TO POSTGRES
@@ -60,7 +59,6 @@ production:
         apply_during: build_only
         execute: true
         sudo: true
-    last_thing:
     # 9. Curl script
       - source: /.cloud66/scripts/curl.sh
         destination: /tmp/curl.sh
