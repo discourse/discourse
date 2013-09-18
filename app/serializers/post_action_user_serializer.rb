@@ -14,7 +14,7 @@ class PostActionUserSerializer < BasicUserSerializer
   end
 
   def post_url
-    object.related_post_id
+    object.related_post.url if object.related_post_id && object.related_post
   end
 
 end

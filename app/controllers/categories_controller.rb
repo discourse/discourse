@@ -7,6 +7,8 @@ class CategoriesController < ApplicationController
   skip_before_filter :check_xhr, only: [:index]
 
   def index
+    @description = SiteSetting.site_description
+
     @list = CategoryList.new(guardian)
 
     @list.draft_key = Draft::NEW_TOPIC

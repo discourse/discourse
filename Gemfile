@@ -189,9 +189,8 @@ gem 'lru_redux'
 #  If you want to amend mini profiler to do the monkey patches in the railstie
 #  we are open to it. by deferring require to the initializer we can configure disourse installs without it
 
-# gem 'rack-mini-profiler', '0.1.30', require: false
 gem 'flamegraph', require: false
-gem 'rack-mini-profiler', require: false
+gem 'rack-mini-profiler',  git: 'https://github.com/MiniProfiler/rack-mini-profiler.git', require: false
 
 # used for caching, optional
 # redis-rack-cache is missing a sane expiry policy, it hogs redis

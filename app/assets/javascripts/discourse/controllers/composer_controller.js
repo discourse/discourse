@@ -7,9 +7,15 @@
   @module Discourse
 **/
 Discourse.ComposerController = Discourse.Controller.extend({
-  needs: ['modal', 'topic'],
+  needs: ['modal', 'topic', 'composerMessages'],
 
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY),
+  checkedMessages: false,
+
+  init: function() {
+    this._super();
+    this.set('similarTopics', Em.A());
+  },
 
   togglePreview: function() {
     this.get('model').togglePreview();
@@ -94,7 +100,6 @@ Discourse.ComposerController = Discourse.Controller.extend({
         composerController.destroyDraft();
       }
 
-
       opts = opts || {};
       composerController.close();
 
@@ -112,57 +117,18 @@ Discourse.ComposerController = Discourse.Controller.extend({
     });
   },
 
-  closeEducation: function() {
-    this.set('educationClosed', true);
-  },
+  /**
+    Checks to see if a reply has been typed. This is signaled by a keyUp
+    event in a view.
 
-  closeSimilar: function() {
-    this.set('similarClosed', true);
-  },
-
-  similarVisible: function() {
-    if (this.get('similarClosed')) return false;
-    if (this.get('model.composeState') !== Discourse.Composer.OPEN) return false;
-    return (this.get('similarTopics.length') || 0) > 0;
-  }.property('similarTopics.length', 'similarClosed', 'model.composeState'),
-
-  newUserEducationVisible: function() {
-    if (!this.get('educationContents')) return false;
-    if (this.get('model.composeState') !== Discourse.Composer.OPEN) return false;
-    if (!this.present('model.reply')) return false;
-    if (this.get('educationClosed')) return false;
-    return true;
-  }.property('model.composeState', 'model.reply', 'educationClosed', 'educationContents'),
-
-  fetchNewUserEducation: function() {
-
-    // We don't show education when editing a post.
-    if (this.get('model.editingPost')) return;
-
-    // If creating a topic, use topic_count, otherwise post_count
-    var count = this.get('model.creatingTopic') ? Discourse.User.currentProp('topic_count') : Discourse.User.currentProp('reply_count');
-    if (count >= Discourse.SiteSettings.educate_until_posts) {
-      this.set('educationClosed', true);
-      this.set('educationContents', '');
-      return;
-    }
-
-    // The user must have typed a reply
-    if (!this.get('typedReply')) return;
-
-    this.set('educationClosed', false);
-
-    // If visible update the text
-    var educationKey = this.get('model.creatingTopic') ? 'new-topic' : 'new-reply';
-    var composerController = this;
-    Discourse.ajax("/education/" + educationKey, {dataType: 'html'}).then(function(result) {
-      composerController.set('educationContents', result);
-    });
-
-  }.observes('typedReply', 'model.creatingTopic', 'currentUser.reply_count'),
-
+    @method checkReplyLength
+  **/
   checkReplyLength: function() {
-    this.set('typedReply', this.present('model.reply'));
+    if (this.present('model.reply')) {
+      // Notify the composer messages controller that a reply has been typed. Some
+      // messages only appear after typing.
+      this.get('controllers.composerMessages').typedReply();
+    }
   },
 
   /**
@@ -176,16 +142,25 @@ Discourse.ComposerController = Discourse.Controller.extend({
     // We don't care about similar topics unless creating a topic
     if (!this.get('model.creatingTopic')) return;
 
-    var body = this.get('model.reply');
-    var title = this.get('model.title');
+    var body = this.get('model.reply'),
+        title = this.get('model.title');
 
     // Ensure the fields are of the minimum length
     if (body.length < Discourse.SiteSettings.min_body_similar_length) return;
     if (title.length < Discourse.SiteSettings.min_title_similar_length) return;
 
-    var composerController = this;
-    Discourse.Topic.findSimilarTo(title, body).then(function (topics) {
-      composerController.set('similarTopics', topics);
+    var messageController = this.get('controllers.composerMessages'),
+        similarTopics = this.get('similarTopics');
+
+    Discourse.Topic.findSimilarTo(title, body).then(function (newTopics) {
+      similarTopics.clear();
+      similarTopics.pushObjects(newTopics);
+
+      messageController.popup(Discourse.ComposerMessage.create({
+        templateName: 'composer/similar_topics',
+        similarTopics: similarTopics,
+        extraClass: 'similar-topics'
+      }));
     });
 
   },
@@ -208,11 +183,11 @@ Discourse.ComposerController = Discourse.Controller.extend({
   open: function(opts) {
     if (!opts) opts = {};
 
+    var composerMessages = this.get('controllers.composerMessages');
+    composerMessages.reset();
+
     var promise = opts.promise || Ember.Deferred.create();
     opts.promise = promise;
-    this.set('typedReply', false);
-    this.set('similarTopics', null);
-    this.set('similarClosed', false);
 
     if (!opts.draftKey) {
       alert("composer was opened without a draft key");
@@ -281,8 +256,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
     composer = composer || Discourse.Composer.create();
     composer.open(opts);
+
     this.set('model', composer);
     composer.set('composeState', Discourse.Composer.OPEN);
+    composerMessages.queryFor(this.get('model'));
     promise.resolve();
     return promise;
   },

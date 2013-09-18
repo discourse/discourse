@@ -11,13 +11,16 @@ class ScreenedUrl < ActiveRecord::Base
 
   default_action :do_nothing
 
-  before_validation :strip_http
+  before_validation :normalize
 
   validates :url, presence: true, uniqueness: true
   validates :domain, presence: true
 
-  def strip_http
-    self.url.gsub!(/http(s?):\/\//i, '')
+  def normalize
+    if self.url
+      self.url.gsub!(/http(s?):\/\//i, '')
+      self.url.gsub!(/(\/)+$/, '') # trim trailing slashes
+    end
   end
 
   def self.watch(url, domain, opts={})

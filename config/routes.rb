@@ -105,6 +105,7 @@ Discourse::Application.routes.draw do
   end
 
   get 'session/csrf' => 'session#csrf'
+  get 'composer-messages' => 'composer_messages#index'
 
   resources :users, except: [:show, :update] do
     collection do
@@ -146,7 +147,8 @@ Discourse::Application.routes.draw do
   get 'users/:username/activity' => 'users#show', constraints: {username: USERNAME_ROUTE_FORMAT}
   get 'users/:username/activity/:filter' => 'users#show', constraints: {username: USERNAME_ROUTE_FORMAT}
 
-  resources :uploads
+  get 'uploads/:site/:id/:sha.:extension' => 'uploads#show', constraints: {site: /\w+/, id: /\d+/, sha: /[a-z0-9]{15,16}/i, extension: /\w{2,}/}
+  post 'uploads' => 'uploads#create'
 
   get 'posts/by_number/:topic_id/:post_number' => 'posts#by_number'
   get 'posts/:id/reply-history' => 'posts#reply_history'
@@ -182,7 +184,6 @@ Discourse::Application.routes.draw do
     end
   end
   resources :user_actions
-  resources :education
 
   resources :categories, :except => :show
   get 'category/:id/show' => 'categories#show'

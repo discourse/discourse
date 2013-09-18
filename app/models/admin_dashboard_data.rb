@@ -36,6 +36,7 @@ class AdminDashboardData
       contact_email_check,
       send_consumer_email_check,
       title_check,
+      site_description_check,
       access_password_removal,
       site_contact_username_check,
       notification_email_check ].compact
@@ -142,6 +143,10 @@ class AdminDashboardData
 
   def title_check
     I18n.t('dashboard.title_nag') if SiteSetting.title == SiteSetting.defaults[:title]
+  end
+
+  def site_description_check
+    return I18n.t('dashboard.site_description_missing') if !SiteSetting.site_description.present?
   end
 
   def send_consumer_email_check

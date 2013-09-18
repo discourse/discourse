@@ -255,12 +255,13 @@ class TopicQuery
         result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
       end
 
-      unless @user && @user.moderator?
-        category_ids = @user.secure_category_ids if @user
-        if category_ids.present?
-          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ? OR categories.id IN (?)', false, category_ids).references(:categories)
+      guardian = Guardian.new(@user)
+      unless guardian.is_staff?
+        allowed_ids = guardian.allowed_category_ids
+        if allowed_ids.length > 0
+          result = result.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
         else
-          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ?', false).references(:categories)
+          result = result.where('topics.category_id IS NULL')
         end
       end
 

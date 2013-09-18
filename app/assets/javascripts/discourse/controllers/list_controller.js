@@ -115,7 +115,7 @@ Discourse.ListController = Discourse.Controller.extend({
   // Create topic button
   createTopic: function() {
     this.get('controllers.composer').open({
-      categoryName: this.get('category.name'),
+      categoryId: this.get('category.id'),
       action: Discourse.Composer.CREATE_TOPIC,
       draft: this.get('draft'),
       draftKey: this.get('draft_key'),

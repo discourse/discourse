@@ -57,7 +57,12 @@ Discourse.Dialect.on("parseNode", function(event) {
     if (path[i][0] === 'li') { return; }
   }
 
+  // If the link has a different label text than the link itself, don't onebox it.
+  var label = node[node.length-1];
+  if (label !== node[1]['href']) { return; }
+
   if (isOnOneLine(node, parent)) {
+
     node[1]['class'] = 'onebox';
     node[1].target = '_blank';
 

@@ -2,10 +2,14 @@ require_dependency 'oneboxer/handlebars_onebox'
 
 module Oneboxer
   class TwitterOnebox < HandlebarsOnebox
-    BASE_URL = 'https://api.twitter.com'.freeze
 
-    REGEX =
-      /^https?:\/\/(?:www\.)?twitter.com\/(?<user>[^\/]+)\/status\/(?<id>\d+)$/
+    unless defined? BASE_URL
+      BASE_URL = 'https://api.twitter.com'.freeze
+    end
+
+    unless defined? REGEX
+      REGEX = /^https?:\/\/(?:www\.)?twitter.com\/(?<user>[^\/]+)\/status\/(?<id>\d+)$/
+    end
 
     matcher REGEX
 

@@ -285,7 +285,15 @@ class Guardian
   end
 
   def can_edit_username?(user)
-    is_staff? || (is_me?(user) && (user.post_count == 0 || user.created_at > SiteSetting.username_change_period.days.ago))
+    return true if is_staff?
+    return false if SiteSetting.username_change_period <= 0
+    is_me?(user) && (user.post_count == 0 || user.created_at > SiteSetting.username_change_period.days.ago)
+  end
+
+  def can_edit_email?(user)
+    return true if is_staff?
+    return false unless SiteSetting.email_editable?
+    can_edit?(user)
   end
 
   # Deleting Methods
@@ -402,6 +410,12 @@ class Guardian
 
   def secure_category_ids
     @secure_category_ids ||= @user.secure_category_ids
+  end
+
+  # all allowed category ids
+  def allowed_category_ids
+    unrestricted = Category.where(read_restricted: false).pluck(:id)
+    unrestricted.concat(secure_category_ids)
   end
 
   def topic_create_allowed_category_ids

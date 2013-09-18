@@ -77,7 +77,7 @@ en:
           other: "%{count} days ago"
     share:
       topic: 'share a link to this topic'
-      post: 'share a link to this post'
+      post: 'share a link to post #%{postNumber}'
       close: 'close'
       twitter: 'share this link on Twitter'
       facebook: 'share this link on Facebook'
@@ -1172,6 +1172,8 @@ en:
         long_title: "Site Customizations"
         header: "Header"
         css: "Stylesheet"
+        mobile_header: "Mobile Header"
+        mobile_css: "Mobile Stylesheet"
         override_default: "Do not include standard style sheet"
         enabled: "Enabled?"
         preview: "preview"

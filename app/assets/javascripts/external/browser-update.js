@@ -43,6 +43,8 @@ var $buo = function() {
 
 };
 
-$bu=$buo();
+$(function() {
+  $bu=$buo();
+});
 
 })(this);

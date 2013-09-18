@@ -94,28 +94,28 @@ describe PostDestroyer do
 
   describe 'basic destroying' do
 
-    context "as the creator of the post" do
-      before do
-        @orig = post.cooked
-        PostDestroyer.new(post.user, post).destroy
-        post.reload
-      end
+    it "as the creator of the post, doesn't delete the post" do
+      SiteSetting.stubs(:unique_posts_mins).returns(5)
+      SiteSetting.stubs(:delete_removed_posts_after).returns(24)
 
-      it "doesn't delete the post" do
-        SiteSetting.stubs(:delete_removed_posts_after).returns(24)
-        post.deleted_at.should be_blank
-        post.deleted_by.should be_blank
-        post.user_deleted.should be_true
-        post.raw.should == I18n.t('js.post.deleted_by_author', {count: 24})
-        post.version.should == 2
+      post2 = create_post # Create it here instead of with "let" so unique_posts_mins can do its thing
 
-        # lets try to recover
-        PostDestroyer.new(post.user, post).recover
-        post.reload
-        post.version.should == 3
-        post.user_deleted.should be_false
-        post.cooked.should == @orig
-      end
+      @orig = post2.cooked
+      PostDestroyer.new(post2.user, post2).destroy
+      post2.reload
+
+      post2.deleted_at.should be_blank
+      post2.deleted_by.should be_blank
+      post2.user_deleted.should be_true
+      post2.raw.should == I18n.t('js.post.deleted_by_author', {count: 24})
+      post2.version.should == 2
+
+      # lets try to recover
+      PostDestroyer.new(post2.user, post2).recover
+      post2.reload
+      post2.version.should == 3
+      post2.user_deleted.should be_false
+      post2.cooked.should == @orig
     end
 
     context "as a moderator" do

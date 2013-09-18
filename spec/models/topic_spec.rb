@@ -688,6 +688,10 @@ describe Topic do
       topic.moderator_posts_count.should == 0
     end
 
+    it "its user has a topics_count of 1" do
+      topic.user.created_topic_count.should == 1
+    end
+
     context 'post' do
       let(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 

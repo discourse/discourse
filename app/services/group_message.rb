@@ -43,7 +43,7 @@ class GroupMessage
 
   def message_params
     @message_params ||= begin
-      h = @opts[:message_params]||{}
+      h = {base_url: Discourse.base_url}.merge(@opts[:message_params]||{})
       if @opts[:user]
         h.merge!({
           username: @opts[:user].username,

@@ -11,11 +11,28 @@ class AvatarLookup
 
   private
 
+  def self.lookup_columns
+    @lookup_columns ||= [:id,
+                            :email,
+                            :username,
+                            :use_uploaded_avatar,
+                            :uploaded_avatar_template,
+                            :uploaded_avatar_id]
+  end
+
   def users
-    @users ||= User.where(:id => @user_ids)
-                   .select([:id, :email, :username, :use_uploaded_avatar, :uploaded_avatar_template, :uploaded_avatar_id])
-                   .inject({}) do |hash, user|
-      hash.merge({user.id => user})
-    end
+    @users ||= user_lookup_hash
+  end
+
+  def user_lookup_hash
+    # adding tap here is a personal taste thing
+    hash = {}
+    User
+      .where(:id => @user_ids)
+      .select(AvatarLookup.lookup_columns)
+      .each{|user|
+        hash[user.id] = user
+      }
+    hash
   end
 end

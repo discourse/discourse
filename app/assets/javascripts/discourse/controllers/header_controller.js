@@ -25,15 +25,19 @@ Discourse.HeaderController = Discourse.Controller.extend({
   }.property('topic.isPrivateMessage'),
 
   mobileDevice: function() {
-    return Discourse.Session.currentProp('mobileDevice');
+    return Discourse.Mobile.isMobileDevice;
   }.property(),
 
   mobileView: function() {
-    return Discourse.Session.currentProp('mobileView');
+    return Discourse.Mobile.mobileView;
+  }.property(),
+
+  showMobileToggle: function() {
+    return Discourse.SiteSettings.enable_mobile_theme;
   }.property(),
 
   toggleMobileView: function() {
-    window.location.assign(window.location.pathname + '?mobile_view=' + (Discourse.Session.currentProp('mobileView') ? '0' : '1'));
+    Discourse.Mobile.toggleMobileView();
   }
 
 });

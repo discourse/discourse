@@ -10,6 +10,7 @@ class UserSerializer < BasicUserSerializer
              :website,
              :can_edit,
              :can_edit_username,
+             :can_edit_email,
              :stats,
              :can_send_private_message_to_user,
              :bio_excerpt,
@@ -76,6 +77,10 @@ class UserSerializer < BasicUserSerializer
 
   def can_edit_username
     scope.can_edit_username?(object)
+  end
+
+  def can_edit_email
+    scope.can_edit_email?(object)
   end
 
   def stats

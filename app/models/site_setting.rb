@@ -8,6 +8,7 @@ class SiteSetting < ActiveRecord::Base
 
   # settings available in javascript under Discourse.SiteSettings
   client_setting(:title, "Discourse")
+  setting(:site_description, '')
   client_setting(:logo_url, '/assets/d-logo-sketch.png')
   client_setting(:logo_small_url, '/assets/d-logo-sketch-small.png')
   setting(:contact_email, '')
@@ -250,9 +251,19 @@ class SiteSetting < ActiveRecord::Base
   setting(:delete_all_posts_max, 10)
 
   setting(:username_change_period, 3) # days
+  setting(:email_editable, true)
 
   client_setting(:allow_uploaded_avatars, true)
   client_setting(:allow_animated_avatars, false)
+
+  setting(:detect_custom_avatars, false)
+  setting(:max_daily_gravatar_crawls, 500)
+
+  setting(:sequential_replies_threshold, 2)
+
+  client_setting(:enable_mobile_theme, true)
+
+  setting(:dominating_topic_minimum_percent, 20)
 
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)

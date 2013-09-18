@@ -67,6 +67,19 @@ class Plugin::Instance
     File.dirname(path) << "/auto_generated"
   end
 
+  def after_initialize(&block)
+    @after_initialize ||= []
+    @after_initialize << block
+  end
+
+  def notify_after_initialize
+    if @after_initialize
+      @after_initialize.each do |callback|
+        callback.call
+      end
+    end
+  end
+
   def register_css(style)
     @styles ||= []
     @styles << style
@@ -128,7 +141,7 @@ class Plugin::Instance
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
-    self.instance_eval File.read(path)
+    self.instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
       assets.concat auto_assets
     end

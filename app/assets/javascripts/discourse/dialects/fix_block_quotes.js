@@ -4,7 +4,7 @@ Discourse.Dialect.on("register", function(event) {
   var dialect = event.dialect,
       MD = event.MD;
 
-  dialect.block["fix_simple_quotes"] = function(block, next) {
+  dialect.block["fix_block_quotes"] = function(block, next) {
     var m = /(^|\n) +(\>[\s\S]*)/.exec(block);
     if (m && m[2] && m[2].length) {
       var blockContents = block.replace(/(^|\n) +\>/, "$1>");

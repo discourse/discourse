@@ -119,77 +119,17 @@ class UsersController < ApplicationController
     # The special case where someone is changing the case of their own username
     return render_available_true if changing_case_of_own_username(target_user, username)
 
-    validator = UsernameValidator.new(username)
-    if !validator.valid_format?
-      render json: {errors: validator.errors}
-    elsif !SiteSetting.call_discourse_hub?
-      check_username_locally(username)
-    else
-      check_username_with_hub_server(target_user, username)
-    end
+    checker = UsernameCheckerService.new
+    email = params[:email] || target_user.try(:email)
+    render(json: checker.check_username(username, email))
   rescue RestClient::Forbidden
     render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
-  end
-
-  def check_username_locally(username)
-    if User.username_available?(username)
-      render_available_true
-    else
-      render_unavailable_with_suggestion(UserNameSuggester.suggest(username))
-    end
   end
 
   def user_from_params_or_current_user
     params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
   end
 
-  def available_globally_and_suggestion_from_hub(target_user, username, email_given)
-    if email_given
-      global_match, available, suggestion =
-        DiscourseHub.nickname_match?(username, params[:email] || target_user.email)
-      { available_globally:            available || global_match,
-        suggestion_from_discourse_hub: suggestion,
-        global_match:                  global_match }
-    else
-      args = DiscourseHub.nickname_available?(username)
-      { available_globally:            args[0],
-        suggestion_from_discourse_hub: args[1],
-        global_match:                  false }
-    end
-  end
-
-  # Contact the Discourse Hub server
-  def check_username_with_hub_server(target_user, username)
-    email_given                   = (params[:email].present? || target_user.present?)
-    available_locally             = User.username_available?(username)
-    info                          = available_globally_and_suggestion_from_hub(target_user, username, email_given)
-    available_globally            = info[:available_globally]
-    suggestion_from_discourse_hub = info[:suggestion_from_discourse_hub]
-    global_match                  = info[:global_match]
-    if available_globally && available_locally
-      render json: { available: true, global_match: (global_match ? true : false) }
-    elsif available_locally && !available_globally
-      if email_given
-        # Nickname and email do not match what's registered on the discourse hub.
-        render json: { available: false, global_match: false, suggestion: suggestion_from_discourse_hub }
-      else
-        # The nickname is available locally, but is registered on the discourse hub.
-        # We need an email to see if the nickname belongs to this person.
-        # Don't give a suggestion until we get the email and try to match it with on the discourse hub.
-        render json: { available: false }
-      end
-    elsif available_globally && !available_locally
-      # Already registered on this site with the matching nickname and email address. Why are you signing up again?
-      render json: { available: false, suggestion: UserNameSuggester.suggest(username) }
-    else
-      # Not available anywhere.
-      render_unavailable_with_suggestion(suggestion_from_discourse_hub)
-    end
-  end
-
-  def render_unavailable_with_suggestion(suggestion)
-    render json: { available: false, suggestion: suggestion }
-  end
 
   def create
     return fake_success_response if suspicious? params
@@ -265,7 +205,7 @@ class UsersController < ApplicationController
   def change_email
     params.require(:email)
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
+    guardian.ensure_can_edit_email!(user)
     lower_email = Email.downcase(params[:email]).strip
 
     # Raise an error if the email is already in use

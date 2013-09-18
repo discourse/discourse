@@ -135,6 +135,39 @@ Discourse.PostView = Discourse.GroupedView.extend({
     }
   },
 
+  /**
+    Toggle the replies this post is a reply to
+
+    @method showReplyHistory
+  **/
+  toggleReplyHistory: function(post) {
+
+    var replyHistory = post.get('replyHistory'),
+        topicController = this.get('controller'),
+        origScrollTop = $(window).scrollTop();
+
+
+    if (replyHistory.length > 0) {
+      var origHeight = this.$('.embedded-posts.top').height();
+
+      replyHistory.clear();
+      Em.run.next(function() {
+        $(window).scrollTop(origScrollTop - origHeight);
+      });
+    } else {
+      post.set('loadingReplyHistory', true);
+
+      var self = this;
+      topicController.get('postStream').findReplyHistory(post).then(function () {
+        post.set('loadingReplyHistory', false);
+
+        Em.run.next(function() {
+          $(window).scrollTop(origScrollTop + self.$('.embedded-posts.top').height());
+        });
+      });
+    }
+  },
+
   // Add the quote controls to a post
   insertQuoteControls: function() {
     var postView = this;

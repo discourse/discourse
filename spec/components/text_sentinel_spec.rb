@@ -96,6 +96,14 @@ describe TextSentinel do
       TextSentinel.new("{{$!").should_not be_valid
     end
 
+    it "does allow a long alphanumeric string joined with slashes" do
+      TextSentinel.new("gdfgdfgdfg/fgdfgdfgdg/dfgdfgdfgd/dfgdfgdfgf", max_word_length: 30).should be_valid
+    end
+
+    it "does allow a long alphanumeric string joined with dashes" do
+      TextSentinel.new("gdfgdfgdfg-fgdfgdfgdg-dfgdfgdfgd-dfgdfgdfgf", max_word_length: 30).should be_valid
+    end
+
   end
 
   context 'title_sentinel' do

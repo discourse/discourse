@@ -35,7 +35,7 @@ class Post < ActiveRecord::Base
   validates_with ::Validators::PostValidator
 
   # We can pass several creating options to a post via attributes
-  attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options
+  attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check
 
   SHORT_POST_CHARS = 1200
 
@@ -68,6 +68,16 @@ class Post < ActiveRecord::Base
   # The key we use in redis to ensure unique posts
   def unique_post_key
     "post-#{user_id}:#{raw_hash}"
+  end
+
+  def store_unique_post_key
+    if SiteSetting.unique_posts_mins > 0
+      $redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, "1")
+    end
+  end
+
+  def matches_recent_post?
+    $redis.exists(unique_post_key)
   end
 
   def raw_hash

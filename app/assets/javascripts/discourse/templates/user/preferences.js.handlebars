@@ -27,7 +27,9 @@
     <label class="control-label">{{i18n user.email.title}}</label>
     <div class="controls">
       <span class='static'>{{email}}</span>
-      {{#linkTo "preferences.email" class="btn pad-left"}}<i class="icon-pencil"></i>{{/linkTo}}
+      {{#if can_edit_email}}
+        {{#linkTo "preferences.email" class="btn pad-left"}}<i class="icon-pencil"></i>{{/linkTo}}
+      {{/if}}
     </div>
     <div class='instructions'>
       {{i18n user.email.instructions}}

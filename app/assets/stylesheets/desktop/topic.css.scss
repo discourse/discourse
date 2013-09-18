@@ -171,6 +171,7 @@
   span.spoiler {
     background-color: $black;
     color: $black;
+    padding: 2px;
     @include hover {
       color: $white;
     }
