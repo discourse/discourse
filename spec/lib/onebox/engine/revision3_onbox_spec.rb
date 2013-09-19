@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::Revision3Onebox do
   let(:link) { "http://revision3.com" }
   before do
-    fake(link, response("revision3.response"))
+    fake(link, response("revision3"))
   end
 
   it_behaves_like "engines"

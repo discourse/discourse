@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::BliptvOnebox do
   let(:link) { "http://blip.tv" }
   before do
-    fake(link, response("bliptv.response"))
+    fake(link, response("bliptv"))
   end
 
   it_behaves_like "engines"

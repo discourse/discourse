@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::FlickrOnebox do
   let(:link) { "http://flickr.com" }
   before do
-    fake(link, response("flickr.response"))
+    fake(link, response("flickr"))
   end
 
   it_behaves_like "engines"

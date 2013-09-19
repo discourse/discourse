@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::VimeoOnebox do
   let(:link) { "http://vimeo.com" }
   before do
-    fake(link, response("vimeo.response"))
+    fake(link, response("vimeo"))
   end
 
   it_behaves_like "engines"

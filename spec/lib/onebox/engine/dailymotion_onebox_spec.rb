@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::DailymotionOnebox do
   let(:link) { "http://dailymotion.com" }
   before do
-    fake(link, response("dailymotion.response"))
+    fake(link, response("dailymotion"))
   end
 
   it_behaves_like "engines"

@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::QikOnebox do
   let(:link) { "http://qik.com" }
   before do
-    fake(link, response("qik.response"))
+    fake(link, response("qik"))
   end
 
   it_behaves_like "engines"
