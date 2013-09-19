@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe Onebox::Engine::ClikThroughOnebox do
   let(:link) { "http://www.clikthrough.com/theater/video/49/en-US" }
+
   before do
     fake(link, response("clikthrough"))
   end
