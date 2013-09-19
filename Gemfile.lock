@@ -38,6 +38,13 @@ GIT
       rake (>= 0.8.7)
 
 GIT
+  remote: https://github.com/SamSaffron/flamegraph.git
+  revision: 07bd0ffdfd352e2fceb4edaf281990ba99156355
+  specs:
+    flamegraph (0.0.5)
+      fast_stack
+
+GIT
   remote: https://github.com/SamSaffron/message_bus
   revision: c357cbfea34eec3cca8f00754eb9d5bd2be98594
   specs:
@@ -201,8 +208,6 @@ GEM
     fast_xs (0.8.0)
     fastimage (1.3.0)
     ffi (1.8.1)
-    flamegraph (0.0.4)
-      fast_stack
     fog (1.14.0)
       builder
       excon (~> 0.25.0)
@@ -489,7 +494,7 @@ DEPENDENCIES
   fast_xor!
   fast_xs
   fastimage
-  flamegraph
+  flamegraph!
   fog
   handlebars-source (= 1.0.12)
   highline
