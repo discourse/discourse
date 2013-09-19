@@ -13,7 +13,9 @@ module Onebox
 
       def data
         {
-          url: @url
+          url: @url,
+          content: raw["files"].first[1]["content"],
+          author: raw["user"]["login"]
         }
       end
     end
