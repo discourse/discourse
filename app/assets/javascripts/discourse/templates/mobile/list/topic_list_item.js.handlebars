@@ -42,7 +42,7 @@
   </div>
 
   <div class="pull-right">
-    <div class='num posts'><a href="{{lastUnreadUrl}}"><i class="icon icon-comments"></i> {{number posts_count numberKey="posts_long"}}</a></div>
+    <div class='num posts'><a href="{{lastUnreadUrl}}">{{number posts_count numberKey="posts_long"}}</a></div>
 
     {{#if like_count}}
       <div class='num likes'><a href='{{url}}{{#if has_best_of}}?filter=best_of{{/if}}' title='{{i18n topic.likes count="like_count"}}'><i class='icon-heart'></i> {{number like_count numberKey="likes_long"}}</a></div>
