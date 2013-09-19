@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::ClikThroughOnebox do
-  let(:link) { "http://www.clickthough.com"}
+  let(:link) { "http://www.clikthrough.com"}
   before do
     fake(link, response("clikthrough"))
   end
