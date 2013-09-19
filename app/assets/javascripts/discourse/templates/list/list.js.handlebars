@@ -9,7 +9,7 @@
     {{/if}}
 
     {{#if canEditCategory}}
-      <button class='btn btn-default' {{action editCategory category}}>{{i18n category.edit_long}}</button>
+      <button class='btn btn-default' {{action editCategory category}}><i class="icon icon-wrench"></i> {{i18n category.edit_long}}</button>
     {{/if}}
 
     {{#if canCreateCategory}}
