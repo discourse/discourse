@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::SlideshareOnebox do
   let(:link) { "http://slideshare.net" }
   before do
-    fake(link, response("slideshare.response"))
+    fake(link, response("slideshare"))
   end
 
   it_behaves_like "engines"

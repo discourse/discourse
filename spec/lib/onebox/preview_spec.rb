@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Preview do
   describe "#to_s" do
     it "returns some html if given a valid url" do
-      fake("http://www.example.com", response("example.response"))
+      fake("http://www.example.com", response("example"))
       preview = described_class.new("http://www.example.com")
       expect(preview.to_s).to include("Example Domain 1")
     end

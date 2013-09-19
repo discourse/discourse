@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::OpenGraph do
   let(:link) { "http://flickr.com"}
   before do
-    fake(link, response("flickr.response"))
+    fake(link, response("flickr"))
   end
 
   describe "#raw" do

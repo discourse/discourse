@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::WikipediaOnebox do
   let(:link) { "http://wikipedia.com" }
   before do
-    fake(link, response("wikipedia.response"))
+    fake(link, response("wikipedia"))
   end
 
   it_behaves_like "engines"

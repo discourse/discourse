@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::GithubCommitOnebox do
   let(:link) { "http://github.com" }
   before do
-    fake(link, response("github_commit.response"))
+    fake(link, response("github_commit"))
   end
 
   it_behaves_like "engines"

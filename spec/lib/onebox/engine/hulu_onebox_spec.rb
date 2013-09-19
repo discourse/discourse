@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::HuluOnebox do
   let(:link) { "http://hulu.com" }
   before do
-    fake(link, response("hulu.response"))
+    fake(link, response("hulu"))
   end
 
   it_behaves_like "engines"
