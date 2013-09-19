@@ -71,7 +71,7 @@ Discourse.injectTestHelpers();
 Discourse.bindDOMEvents();
 
 Discourse.Router.map(function() {
-  return Discourse.routeBuilder.call(this);
+  Discourse.routeBuilder.call(this);
 });
 
 
