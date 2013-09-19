@@ -2,41 +2,31 @@
   {{#if loaded}}
     <div class='contents'>
       {{#if view.showTable}}
-
-      {{#if canViewRankDetails}}
-        <button class='btn' {{action toggleRankDetails}} style='margin-bottom: 10px'>
-          <i class='icon icon-beaker'></i>
-          {{i18n rank_details.toggle}}
-        </button>
-      {{/if}}
-
-      <table id='topic-list'>
-        <thead>
-        <tr>
-          <th class='main-link'>
-            {{i18n topic.title}}
-          </th>
-          <th class='category'>{{i18n category_title}}</th>
-          <th class='num posts'>{{i18n posts}}</th>
-        </tr>
-        </thead>
-
-        {{#if view.topicTrackingState.hasIncoming}}
-          <tbody>
-            <tr>
-              <td colspan="3">
-                <div class='alert alert-info'>
-                  {{countI18n new_topics_inserted countBinding="view.topicTrackingState.incomingCount"}}
-                  <a href='#' {{action showInserted}}>{{i18n show_new_topics}}</a>
-                </div>
-              </td>
-            </tr>
-          </tbody>
+        {{#if canViewRankDetails}}
+          <button class='btn' {{action toggleRankDetails}} style='margin-bottom: 10px'>
+            <i class='icon icon-beaker'></i>
+            {{i18n rank_details.toggle}}
+          </button>
         {{/if}}
 
-        {{collection contentBinding="topics" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
+        <table id='topic-list'>
 
-      </table>
+          {{#if view.topicTrackingState.hasIncoming}}
+            <tbody>
+              <tr>
+                <td>
+                  <div class='alert alert-info'>
+                    {{countI18n new_topics_inserted countBinding="view.topicTrackingState.incomingCount"}}
+                    <a href='#' {{action showInserted}}>{{i18n show_new_topics}}</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          {{/if}}
+
+          {{collection contentBinding="topics" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
+
+        </table>
       {{/if}}
     </div>
 

@@ -1,4 +1,5 @@
-<td class='main-link clearfix'>
+<td>
+<div class='main-link clearfix'>
 
   {{#if controller.rankDetailsVisible}}
     <div class='rank-details'>
@@ -33,10 +34,34 @@
       {{/if}}
     </div>
   {{/if}}
-</td>
+</div>
 
-<td class='category'>
-  {{categoryLink category}}
-</td>
+<div class="topic-item-stats clearfix">
+  <div class='category'>
+    {{categoryLink category}}
+  </div>
 
-<td class='num posts'><a href="{{lastUnreadUrl}}" class='badge-posts'>{{number posts_count numberKey="posts_long"}}</a></td>
+  <div class="pull-right">
+    <div class='num posts'><a href="{{lastUnreadUrl}}"><i class="icon icon-comments"></i> {{number posts_count numberKey="posts_long"}}</a></div>
+
+    {{#if like_count}}
+      <div class='num likes'><a href='{{url}}{{#if has_best_of}}?filter=best_of{{/if}}' title='{{i18n topic.likes count="like_count"}}'><i class='icon-heart'></i> {{number like_count numberKey="likes_long"}}</a></div>
+    {{/if}}
+
+    <div class='last-poster'>
+      <i class="icon icon-user"></i> {{last_poster_username}}
+    </div>
+
+    {{#if bumped}}
+      <div class='num activity last'>
+        <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
+      </div>
+    {{else}}
+      <div class='num activity last'>
+        <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{unboundAge created_at}}</a>
+      </div>
+    {{/if}}
+  </div>
+  <div class="clearfix"></div>
+</div>
+</td>
