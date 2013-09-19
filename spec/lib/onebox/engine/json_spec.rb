@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::JSON do
   let(:link) { "http://gist.github.com"}
   before do
-    fake(link, response("github_gist.response"))
+    fake(link, response("github_gist"))
   end
 
   describe "#raw" do
@@ -15,9 +15,9 @@ describe Onebox::Engine::JSON do
       end
     end
 
-    it "returns a JSON object that has a parse method" do
+    it "returns a hash" do
       object = OneboxEngineDee.new("http://gist.github.com").send(:raw)
-      expect(object).to respond_to(:parse)
+      expect(object).to be_a(Hash)
     end
   end
 end
