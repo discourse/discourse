@@ -8,7 +8,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ComposerView = Discourse.View.extend({
+Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   templateName: 'composer',
   elementId: 'reply-control',
   classNameBindings: ['model.creatingPrivateMessage:private-message',
@@ -49,18 +49,17 @@ Discourse.ComposerView = Discourse.View.extend({
   }.property('model.createdPost'),
 
   observeReplyChanges: function() {
-    var composerView = this;
+    var self = this;
     if (this.get('model.hidePreview')) return;
-    Ember.run.next(null, function() {
-      var $wmdPreview, caretPosition;
-      if (composerView.editor) {
-        composerView.editor.refreshPreview();
+    Ember.run.next(function() {
+      if (self.editor) {
+        self.editor.refreshPreview();
         // if the caret is on the last line ensure preview scrolled to bottom
-        caretPosition = Discourse.Utilities.caretPosition(composerView.wmdInput[0]);
-        if (!composerView.wmdInput.val().substring(caretPosition).match(/\n/)) {
-          $wmdPreview = $('#wmd-preview');
+        var caretPosition = Discourse.Utilities.caretPosition(self.wmdInput[0]);
+        if (!self.wmdInput.val().substring(caretPosition).match(/\n/)) {
+          var $wmdPreview = $('#wmd-preview');
           if ($wmdPreview.is(':visible')) {
-            return $wmdPreview.scrollTop($wmdPreview[0].scrollHeight);
+            $wmdPreview.scrollTop($wmdPreview[0].scrollHeight);
           }
         }
       }
@@ -129,8 +128,8 @@ Discourse.ComposerView = Discourse.View.extend({
 
     Discourse.SyntaxHighlighting.apply($wmdPreview);
 
-    var post = this.get('model.post');
-    var refresh = false;
+    var post = this.get('model.post'),
+        refresh = false;
 
     // If we are editing a post, we'll refresh its contents once. This is a feature that
     // allows a user to refresh its contents once.
@@ -146,6 +145,8 @@ Discourse.ComposerView = Discourse.View.extend({
     $('span.mention', $wmdPreview).each(function(i, e) {
       Discourse.Mention.load(e, refresh);
     });
+
+    this.trigger('previewRefreshed', $wmdPreview);
   }, 100),
 
   initEditor: function() {

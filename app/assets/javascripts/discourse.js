@@ -209,6 +209,17 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   },
 
   /**
+    Add an initializer hook for after the Discourse Application starts up.
+
+    @method addInitializer
+    @param {Function} init the initializer to add.
+  **/
+  addInitializer: function(init) {
+    Discourse.initializers = Discourse.initializers || [];
+    Discourse.initializers.push(init);
+  },
+
+  /**
     Start up the Discourse application.
 
     @method start
@@ -223,6 +234,12 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     // Developer specific functions
     Discourse.Development.observeLiveChanges();
     Discourse.subscribeUserToNotifications();
+
+    if (Discourse.initializers) {
+      Discourse.initializers.forEach(function (init) {
+        init.call(this);
+      });
+    }
   }
 
 });
