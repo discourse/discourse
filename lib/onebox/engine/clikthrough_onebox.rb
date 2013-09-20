@@ -6,7 +6,10 @@ module Onebox
 
       matches do
         # /^https?:\/\/(?:www.)?clikthrough.com\/theater\/video\/\d+$/
-        find "clikthrough.com"
+        http
+        maybe("www.")
+        domain("clikthrough")
+        has(".com").either("/theater", "/video").maybe("/")
       end
 
       private
