@@ -31,6 +31,10 @@ Discourse.ApplicationRoute = Em.Route.extend({
       this.controllerFor('uploadSelector').setProperties({ composerView: composerView });
     },
 
+    showKeyboardShortcutsHelp: function() {
+      Discourse.Route.showModal(this, 'keyboardShortcutsHelp');
+    },
+
 
     /**
       Close the current modal, and destroy its state.

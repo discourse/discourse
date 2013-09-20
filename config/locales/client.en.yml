@@ -244,7 +244,7 @@ en:
 
       change_username:
         title: "Change Username"
-        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
+        confirm: "I you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
         error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
@@ -1468,3 +1468,42 @@ en:
 
     lightbox:
       download: "download"
+
+    keyboard_shortcuts_help:
+      title: 'Keyboard Shortcuts'
+      jump_to:
+        title: 'Jump To'
+        home: '<b>g</b> then <b>h</b> Home (Latest)'
+        latest: '<b>g</b> then <b>l</b> Latest'
+        new: '<b>g</b> then <b>n</b> New'
+        unread: '<b>g</b> then <b>u</b> Unread'
+        favorited: '<b>g</b> then <b>f</b> Favorited'
+        categories: '<b>g</b> then <b>c</b> Categories'
+      navigation:
+        title: 'Navigation'
+        back: '<b>u</b> Back'
+        up_down: '<b>k</b>/<b>j</b> Move selection up/down'
+        open: '<b>o</b> or <b>Enter</b> Open selected topic'
+        next_prev: '<b>`</b>/<b>~</b> Next/previous section'
+      application:
+        title: 'Application'
+        create: '<b>c</b> Create a new topic'
+        notifications: '<b>n</b> Open notifications'
+        search: '<b>/</b> Search'
+        help: '<b>?</b> Open keyboard shortcuts help'
+      actions:
+        title: 'Actions'
+        favorite: '<b>f</b> Favorite topic'
+        share_topic: '<b>s</b> Share topic'
+        share_post: '<b>shift s</b> Share post'
+        reply_topic: '<b>r</b> Reply to topic'
+        reply_post: '<b>shift r</b> Reply to post'
+        like: '<b>l</b> Like post'
+        flag: '<b>!</b> Flag post'
+        bookmark: '<b>b</b> Bookmark post'
+        edit: '<b>e</b> Edit post'
+        delete: '<b>d</b> Delete post'
+        mark_muted: '<b>m</b> then <b>m</b> Mark topic as muted'
+        mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
+        mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
+        mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'

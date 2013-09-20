@@ -7,6 +7,7 @@
   @module Discourse
 **/
 Discourse.ShareButton = Discourse.ButtonView.extend({
+  classNames: ['share'],
   textKey: 'topic.share.title',
   helpKey: 'topic.share.help',
   'data-share-url': Em.computed.alias('topic.shareUrl'),

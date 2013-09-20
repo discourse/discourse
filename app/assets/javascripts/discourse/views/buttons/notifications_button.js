@@ -7,6 +7,7 @@
   @module Discourse
 **/
 Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
+  classNames: ['notification-options'],
   title: I18n.t('topic.notifications.title'),
   longDescriptionBinding: 'topic.details.notificationReasonText',
   topic: Em.computed.alias('controller.model'),
