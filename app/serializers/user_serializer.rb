@@ -47,6 +47,8 @@ class UserSerializer < BasicUserSerializer
                      :email_digests,
                      :email_private_messages,
                      :email_direct,
+                     :email_new_topics,
+                     :default_watch,
                      :digest_after_days,
                      :auto_track_topics_after_msecs,
                      :new_topic_duration_minutes,

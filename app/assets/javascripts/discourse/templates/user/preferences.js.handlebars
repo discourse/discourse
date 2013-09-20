@@ -80,6 +80,15 @@
       {{i18n user.email_private_messages}}</label>
       <label>{{view Ember.Checkbox checkedBinding="email_direct"}}
       {{i18n user.email_direct}}</label>
+      <label>{{view Ember.Checkbox checkedBinding="email_new_topics"}}
+      {{i18n user.email_new_topics}}</label>
+
+      {{#if email_new_topics}}
+        <div class='control-indent'>
+          <label>{{i18n user.default_watch}}</label>
+          {{combobox valueAttribute="value" content=newTopicsAutowatch value=default_watch}}
+        </div>
+      {{/if}}
     </div>
     <div class='instructions'>
       {{i18n user.email.frequency}}

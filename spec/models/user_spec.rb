@@ -266,6 +266,7 @@ describe User do
     its(:approved_by_id) { should be_blank }
     its(:email_private_messages) { should be_true }
     its(:email_direct ) { should be_true }
+    its(:default_watch ) { should be_blank }
     its(:time_read) { should == 0}
 
     context 'digest emails' do

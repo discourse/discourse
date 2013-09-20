@@ -713,6 +713,7 @@ en:
     quoted: "%{display_username} quoted your post in %{link}"
     edited: "%{display_username} edited your post in %{link}"
     posted: "%{display_username} posted in %{link}"
+    new_topic: "%{display_username} created new topic %{link}"
     moved_post: "%{display_username} moved your post to %{link}"
     private_message: "%{display_username} sent you a private message: %{link}"
     invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
@@ -1053,6 +1054,16 @@ en:
 
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix}new post in '%{topic_title}'"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+
+    user_new_topic:
+      subject_template: "[%{site_name}] %{subject_prefix} new topic '%{topic_title}' by %{username}"
       text_body_template: |
         %{message}
 

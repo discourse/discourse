@@ -78,6 +78,12 @@ class UserNotifications < ActionMailer::Base
     notification_email(user, opts)
   end
 
+  def new_topic(user, opts)
+    opts[:allow_reply_by_email] = true
+    notification_email(user, opts)
+  end
+
+
   def user_private_message(user, opts)
     opts[:allow_reply_by_email] = true
 
