@@ -6,7 +6,9 @@ module Onebox
 
       matches do
         # /^https?:\/\/www.collegehumor.com\/video\/.*$/
-        find "collegehumor.com"
+        http
+        domain("collegehumor")
+        has(".com").maybe("/video").maybe("/")
       end
 
       private
