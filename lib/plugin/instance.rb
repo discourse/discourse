@@ -47,6 +47,8 @@ class Plugin::Instance
   end
 
   def delete_extra_automatic_assets(good_paths)
+    return unless Dir.exists? auto_generated_path
+
     filenames = good_paths.map{|f| File.basename(f)}
     # nuke old files
     Dir.foreach(auto_generated_path) do |p|
