@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class ImgurOnebox
       include Engine
+      include HTML
 
       matches do
         # /^https?\:\/\/imgur\.com\/.*$/
@@ -10,7 +11,7 @@ module Onebox
 
       private
 
-      def extracted_data
+      def data
         {
           url: @url
         }
