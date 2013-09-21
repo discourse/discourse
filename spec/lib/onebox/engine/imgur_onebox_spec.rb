@@ -11,6 +11,10 @@ describe Onebox::Engine::ImgurOnebox do
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
 
+    it "returns the image title" do
+      expect(html).to include("Do she got a booty?")
+    end
+
     it "returns URL" do
       expect(html).to include(link)
     end

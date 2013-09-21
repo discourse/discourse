@@ -13,7 +13,8 @@ module Onebox
 
       def data
         {
-          url: @url
+          url: @url,
+          title: raw.css("h2#image-title").inner_text
         }
       end
     end
