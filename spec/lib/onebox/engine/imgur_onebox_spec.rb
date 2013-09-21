@@ -15,6 +15,10 @@ describe Onebox::Engine::ImgurOnebox do
       expect(html).to include("My dog likes to hug me")
     end
 
+    it "returns the image" do
+      expect(html).to include("twoDTCU.jpg")
+    end
+
     it "returns URL" do
       expect(html).to include(link)
     end
