@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminEmailIndexController = Discourse.Controller.extend(Discourse.Presence, {
+Discourse.AdminEmailIndexController = Discourse.Controller.extend({
 
   /**
     Is the "send test email" button disabled?

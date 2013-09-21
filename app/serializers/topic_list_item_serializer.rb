@@ -5,7 +5,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :starred,
              :has_best_of,
              :archetype,
-             :rank_details
+             :rank_details,
+             :last_poster_username
 
   has_one :category, serializer: BasicCategorySerializer
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
@@ -42,6 +43,10 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def posters
     object.posters || []
+  end
+
+  def last_poster_username
+    object.posters.find { |poster| poster.user.id == object.last_post_user_id }.try(:user).try(:username)
   end
 
 end

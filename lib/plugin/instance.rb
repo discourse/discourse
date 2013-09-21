@@ -47,6 +47,8 @@ class Plugin::Instance
   end
 
   def delete_extra_automatic_assets(good_paths)
+    return unless Dir.exists? auto_generated_path
+
     filenames = good_paths.map{|f| File.basename(f)}
     # nuke old files
     Dir.foreach(auto_generated_path) do |p|
@@ -102,7 +104,7 @@ class Plugin::Instance
 
   def automatic_assets
     css = ""
-    js = "(function(){"
+    js = ""
 
     css = @styles.join("\n") if @styles
     js = @javascripts.join("\n") if @javascripts
@@ -127,10 +129,14 @@ class Plugin::Instance
       end
     end
 
-    js << "})();"
+    # Generate an IIFE for the JS
+    js = "(function(){#{js}})();" if js.present?
 
-    # TODO don't serve blank assets
-    [[css,"css"],[js,"js"]].map do |asset, extension|
+    result = []
+    result << [css, 'css'] if css.present?
+    result << [js, 'js'] if js.present?
+
+    result.map do |asset, extension|
       hash = Digest::SHA1.hexdigest asset
       ["#{auto_generated_path}/plugin_#{hash}.#{extension}", asset]
     end

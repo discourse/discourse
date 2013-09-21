@@ -24,7 +24,7 @@ GIT
 
 GIT
   remote: https://github.com/MiniProfiler/rack-mini-profiler.git
-  revision: 292cb226b37ab58200f06aaa3cbe165dc25e7cc9
+  revision: e08b751091a41f0066a1b28bd4e2b9b3480a1c1b
   specs:
     rack-mini-profiler (0.1.31)
       rack (>= 1.1.3)
@@ -36,6 +36,13 @@ GIT
     annotate (2.6.0.beta1)
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
+
+GIT
+  remote: https://github.com/SamSaffron/flamegraph.git
+  revision: 07bd0ffdfd352e2fceb4edaf281990ba99156355
+  specs:
+    flamegraph (0.0.5)
+      fast_stack
 
 GIT
   remote: https://github.com/SamSaffron/message_bus
@@ -206,8 +213,6 @@ GEM
     fast_xs (0.8.0)
     fastimage (1.3.0)
     ffi (1.8.1)
-    flamegraph (0.0.4)
-      fast_stack
     fog (1.14.0)
       builder
       excon (~> 0.25.0)
@@ -496,7 +501,7 @@ DEPENDENCIES
   fast_xor!
   fast_xs
   fastimage
-  flamegraph
+  flamegraph!
   fog
   handlebars-source (= 1.0.12)
   highline
