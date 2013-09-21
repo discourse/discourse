@@ -7,10 +7,6 @@ class PostCreator
 
   attr_reader :errors, :opts
 
-  def self.create(user,opts)
-    self.new(user,opts).create
-  end
-
   # Acceptable options:
   #
   #   raw                     - raw text of post
