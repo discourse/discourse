@@ -63,8 +63,8 @@ class DiscourseRedis
       puts "Check your redis.yml and make sure it has configuration for the environment you're trying to use.", ''
       raise 'Redis config not found'
     end
-    redis_store = ActiveSupport::Cache::RedisStore.new "redis://#{(':' + redis_config['password'] + '@') if redis_config['password']}#{redis_config['host']}:#{redis_config['port']}/#{redis_config['cache_db']}"
-    redis_store.options[:namespace] = -> { DiscourseRedis.namespace }
+    redis_store = ActiveSupport::Cache::RedisStore.new "redis://#{(':' + redis_config['password'] + '@') if redis_config['password']}#{redis_config['host']}:#{redis_config['port']}/#{redis_config['db']}"
+    redis_store.options[:namespace] = -> { DiscourseRedis.namespace + ":cache" }
     redis_store
   end
 
