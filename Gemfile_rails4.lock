@@ -90,6 +90,13 @@ GIT
       rake-compiler
 
 GIT
+  remote: https://github.com/MiniProfiler/rack-mini-profiler.git
+  revision: e08b751091a41f0066a1b28bd4e2b9b3480a1c1b
+  specs:
+    rack-mini-profiler (0.1.31)
+      rack (>= 1.1.3)
+
+GIT
   remote: https://github.com/SamSaffron/annotate_models.git
   revision: ebe4ba7e3f6ceeb43e4e40078da2b261a1bb71b2
   specs:
@@ -145,12 +152,6 @@ GIT
     vestal_versions (1.2.2)
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
-
-PATH
-  remote: /Users/sam/Source/rack-mini-profiler
-  specs:
-    rack-mini-profiler (0.1.31)
-      rack (>= 1.1.3)
 
 PATH
   remote: vendor/gems/discourse_emoji

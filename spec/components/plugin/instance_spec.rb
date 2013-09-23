@@ -34,7 +34,7 @@ describe Plugin::Instance do
       auth_provider.authenticator.name.should == 'ubuntu'
 
       # calls ensure_assets! make sure they are there
-      plugin.assets.count.should == 2
+      plugin.assets.count.should == 1
       plugin.assets.each do |a|
         File.exists?(a).should be_true
       end

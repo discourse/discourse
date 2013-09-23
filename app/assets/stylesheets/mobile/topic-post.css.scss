@@ -31,6 +31,8 @@ span.badge-posts {
   }
 }
 
+
+
 button.create {
   float: right !important;
   border: 1px solid #888;
@@ -449,6 +451,8 @@ blockquote {
     margin-left: 8px;
     color: #323232;
     font-family: "FontAwesome";
+    position: relative;
+    z-index: 20;
     }
     .back:before {
     content: "\f062";

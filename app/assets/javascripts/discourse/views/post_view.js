@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.PostView = Discourse.GroupedView.extend({
+Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   classNames: ['topic-post', 'clearfix'],
   templateName: 'post',
   classNameBindings: ['postTypeClass',
@@ -193,8 +193,9 @@ Discourse.PostView = Discourse.GroupedView.extend({
   },
 
   didInsertElement: function() {
-    var $post = this.$();
-    var post = this.get('post');
+    var $post = this.$(),
+        post = this.get('post');
+
     this.showLinkCounts();
 
     // Track this post
@@ -203,6 +204,8 @@ Discourse.PostView = Discourse.GroupedView.extend({
     // Add syntax highlighting
     Discourse.SyntaxHighlighting.apply($post);
     Discourse.Lightbox.apply($post);
+
+    this.trigger('postViewInserted', $post);
 
     // Find all the quotes
     this.insertQuoteControls();
