@@ -48,7 +48,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @data }
+      format.json { render json: @data.to_client_hash }
     end
   end
 
