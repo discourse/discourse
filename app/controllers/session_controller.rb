@@ -24,7 +24,7 @@ class SessionController < ApplicationController
       
       # Look up the user using their Active Directory email
       entry = ldap.search(filter: Net::LDAP::Filter.eq("sAMAccountName", login)).first
-      email = Email.downcase(entry.mail.first)
+      email = entry.mail.first.downcase
       @user = User.where(email: email).first
       
       # Create a Discourse user if the CPH user doesn't exist
