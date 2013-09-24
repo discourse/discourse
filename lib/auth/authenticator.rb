@@ -6,7 +6,7 @@ class Auth::Authenticator
     raise NotImplementedError
   end
 
-  # can be used to hook in afete the authentication process
+  # can be used to hook in after the authentication process
   #  to ensure records exist for the provider in the db
   #  this MUST be implemented for authenticators that do not
   #  trust email
