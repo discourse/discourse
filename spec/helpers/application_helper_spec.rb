@@ -34,9 +34,14 @@ describe ApplicationHelper do
           helper.mobile_view?.should be_false
         end
 
-        it "is false for Android tablet" do
-          controller.request.stubs(:user_agent).returns("Mozilla/5.0 (Linux; Android 4.1.2; Nexus 7 Build/JZ054K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19")
+        it "is false for Nexus 10 tablet" do
+          controller.request.stubs(:user_agent).returns("Mozilla/5.0 (Linux; Android 4.2.1; Nexus 10 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19")
           helper.mobile_view?.should be_false
+        end
+
+        it "is true for Nexus 7 tablet" do
+          controller.request.stubs(:user_agent).returns("Mozilla/5.0 (Linux; Android 4.1.2; Nexus 7 Build/JZ054K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19")
+          helper.mobile_view?.should be_true
         end
       end
     end

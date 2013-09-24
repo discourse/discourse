@@ -119,6 +119,6 @@ module ApplicationHelper
 
   def mobile_device?
     # TODO: this is dumb. user agent matching is a doomed approach. a better solution is coming.
-    request.user_agent =~ /Mobile|webOS/ and !(request.user_agent =~ /iPad/)
+    request.user_agent =~ /Mobile|webOS|Nexus 7/ and !(request.user_agent =~ /iPad/)
   end
 end
