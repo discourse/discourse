@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::NFBOnebox do
-  let(:link) { "http://nfb.ca" }
+  let(:link) { "http://www.nfb.ca/film/overdose" }
   before do
     fake(link, response("nfb"))
   end
