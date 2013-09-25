@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::QikOnebox do
-  let(:link) { "http://qik.com" }
+  let(:link) { "http://qik.com/video/13430626" }
   before do
     fake(link, response("qik"))
   end
