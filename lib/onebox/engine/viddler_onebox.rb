@@ -5,8 +5,10 @@ module Onebox
       include OpenGraph
 
       matches do
-        # /^https?:\/\/(?:www\.)?viddler\.com\/.+$/
-        find "viddler.com"
+        http
+        maybe("www.")
+        domain("viddler")
+        tld("com")
       end
 
       private
