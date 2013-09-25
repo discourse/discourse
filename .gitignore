@@ -89,3 +89,6 @@ config/version.rb
 .ruby-version
 .ruby-gemset
 .rbenv
+
+# ignore plugin auto-generated files
+plugins/*/auto_generated
