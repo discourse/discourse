@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::HuluOnebox do
-  let(:link) { "http://hulu.com" }
+  let(:link) { "http://www.hulu.com/watch/515146" }
   before do
     fake(link, response("hulu"))
   end
