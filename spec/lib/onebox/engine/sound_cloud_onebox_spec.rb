@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::SoundCloudOnebox do
-  let(:link) { "http://soundcloud.com" }
+  let(:link) { "https://soundcloud.com/rac/penguin-prison-worse-it-gets-rac-mix" }
   before do
     fake(link, response("soundcloud"))
   end
