@@ -18,7 +18,7 @@ module Onebox
     end
 
     def to_html
-      to_layout(to_view)
+      Layout.new(template_name, record).to_html
     end
 
     private
@@ -35,39 +35,6 @@ module Onebox
     # in each onebox, uses either Nokogiri or OpenGraph to get raw HTML from url
     def raw
       raise NoMethodError, "Engines need to implement this method"
-    end
-
-    def render(mustache, options = {})
-      Mustache.render(mustache, options)
-    end
-
-    def template
-      File.read(template_path)
-    end
-
-    def template_path
-      File.join(root, "templates", "#{template_name}.handlebars")
-    end
-
-    def to_layout(view)
-      render(layout, onebox: view, url: @url)
-    end
-
-    def to_view
-      render(template, record)
-    end
-
-    def layout
-      File.read(layout_path)
-    end
-
-    def layout_path
-      File.join(root, "templates", "_layout.handlebars")
-    end
-
-    # returns the gem root directory
-    def root
-      Gem::Specification.find_by_name("onebox").gem_dir
     end
 
     # calculates handlebars template name for onebox using name of engine
