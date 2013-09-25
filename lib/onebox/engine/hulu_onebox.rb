@@ -5,7 +5,6 @@ module Onebox
       include OpenGraph
 
       matches do
-        #/^https?\:\/\/www\.hulu\.com\/watch\/.*$/
         http
         maybe("www.")
         domain("hulu")

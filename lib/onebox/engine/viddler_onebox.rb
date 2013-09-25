@@ -1,4 +1,4 @@
-module Onebox
+ module Onebox
   module Engine
     class ViddlerOnebox
       include Engine
