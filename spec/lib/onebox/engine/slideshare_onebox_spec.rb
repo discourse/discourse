@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::SlideshareOnebox do
-  let(:link) { "http://slideshare.net" }
+  let(:link) { "http://www.slideshare.net/TravelWorldPassport/12-local-traditions" }
   before do
     fake(link, response("slideshare"))
   end
