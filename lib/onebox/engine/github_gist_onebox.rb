@@ -5,8 +5,10 @@ module Onebox
       include JSON
 
       matches do
-        # /^https?:\/\/(?:www\.)?github\.com\/[^\/]+\/[^\/]+\/commit\/.+/
-        find "gist.github.com"
+        http
+        with("gist.")
+        domain("github")
+        tld("com")
       end
 
       private
