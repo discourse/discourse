@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::ViddlerOnebox do
-  let(:link) { "http://viddler.com" }
+  let(:link) { "http://www.viddler.com/v/7164f749" }
   before do
     fake(link, response("viddler"))
   end
