@@ -6,7 +6,11 @@ module Onebox
 
       matches do
         # /^https?:\/\/(?:www\.)?nfb\.ca\/film\/[-\w]+\/?/
-        find "nfb.ca"
+        http
+        maybe("www.")
+        domain("nfb")
+        tld("ca")
+        with("/film")
       end
 
       private
