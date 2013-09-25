@@ -5,8 +5,10 @@ module Onebox
       include HTML
 
       matches do
-        # /^https?:\/\/.*wikipedia\.(com|org)\/.*$/
-        find "wikipedia.com"
+        http
+        anything
+        domain("wikipedia")
+        either(".com", ".org")
       end
 
       private
