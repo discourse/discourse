@@ -1,12 +1,12 @@
 require "spec_helper"
 
 describe Onebox::Engine::SlideshareOnebox do
-  let(:link) { "http://slideshare.net" }
+  let(:link) { "http://www.slideshare.net/TravelWorldPassport/12-local-traditions" }
   before do
     fake(link, response("slideshare"))
   end
 
-  it_behaves_like "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }

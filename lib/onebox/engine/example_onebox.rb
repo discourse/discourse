@@ -5,7 +5,10 @@ module Onebox
       include HTML
 
       matches do
-        find "example.com"
+        http
+        maybe("www.")
+        domain("example")
+        has(".com").maybe("/")
       end
 
       private

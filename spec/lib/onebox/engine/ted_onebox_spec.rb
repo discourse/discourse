@@ -1,12 +1,12 @@
 require "spec_helper"
 
 describe Onebox::Engine::TedOnebox do
-  let(:link) { "http://ted.com" }
+  let(:link) { "http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" }
   before do
     fake(link, response("ted"))
   end
 
-  it_behaves_like "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }

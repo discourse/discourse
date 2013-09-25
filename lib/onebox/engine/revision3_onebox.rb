@@ -5,8 +5,9 @@ module Onebox
       include OpenGraph
 
       matches do
-        # /^http\:\/\/(.*\.)?revision3\.com\/.*$/
-        find "revision3.com"
+        http
+        domain("revision3")
+        tld("com")
       end
 
       private

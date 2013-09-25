@@ -1,3 +1,7 @@
 language: ruby
 rvm:
   - 2.0.0
+notifications:
+  email:
+    on_success: change
+    on_failure: change

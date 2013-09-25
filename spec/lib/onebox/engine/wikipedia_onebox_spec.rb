@@ -1,12 +1,12 @@
 require "spec_helper"
 
 describe Onebox::Engine::WikipediaOnebox do
-  let(:link) { "http://wikipedia.com" }
+  let(:link) { "http://en.wikipedia.org/wiki/Kevin_Bacon" }
   before do
     fake(link, response("wikipedia"))
   end
 
-  it_behaves_like "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }

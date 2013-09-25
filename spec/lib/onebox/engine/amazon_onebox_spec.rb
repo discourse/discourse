@@ -1,12 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::AmazonOnebox do
-  let(:link) { "http://amazon.com" }
+  let(:link) { "http://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X" }
+
   before do
     fake(link, response("amazon"))
   end
 
-  it_behaves_like "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }

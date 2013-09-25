@@ -5,8 +5,10 @@ module Onebox
       include OpenGraph
 
       matches do
-        # /^https?\:\/\/(www\.)?funnyordie\.com\/videos\/.*$/$/
-        find "funnyordie.com"
+        http
+        maybe("www.")
+        domain("funnyordie")
+        has(".com").maybe("/videos").maybe("/")
       end
 
       private

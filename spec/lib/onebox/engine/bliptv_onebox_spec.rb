@@ -6,7 +6,7 @@ describe Onebox::Engine::BliptvOnebox do
     fake(link, response("bliptv"))
   end
 
-  it_behaves_like "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }

@@ -1,12 +1,12 @@
 require "spec_helper"
 
 describe Onebox::Engine::GithubGistOnebox do
-  let(:link) { "http://gist.github.com" }
+  let(:link) { "https://gist.github.com/anikalindtner/153044e9bea3331cc103" }
   before do
     fake(link, response("github_gist"))
   end
 
-  it_behaves_like "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }

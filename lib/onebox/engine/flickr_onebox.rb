@@ -5,8 +5,9 @@ module Onebox
       include OpenGraph
 
       matches do
-        # /^https?\:\/\/.*\.flickr\.com\/.*$/
-        find "flickr.com"
+        http
+        domain("flickr")
+        has(".com").maybe("/")
       end
 
       private

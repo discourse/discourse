@@ -5,8 +5,10 @@ module Onebox
       include HTML
 
       matches do
-        # /^https?\:\/\/qik\.com\/video\/.*$/
-        find "qik.com"
+        http
+        domain("qik")
+        tld("com")
+        with("/video")
       end
 
       private

@@ -1,12 +1,12 @@
 require "spec_helper"
 
 describe Onebox::Engine::NFBOnebox do
-  let(:link) { "http://nfb.ca" }
+  let(:link) { "http://www.nfb.ca/film/overdose" }
   before do
     fake(link, response("nfb"))
   end
 
-  it_behaves_like "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }

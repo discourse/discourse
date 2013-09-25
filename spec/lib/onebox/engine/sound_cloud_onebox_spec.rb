@@ -1,12 +1,12 @@
 require "spec_helper"
 
 describe Onebox::Engine::SoundCloudOnebox do
-  let(:link) { "http://soundcloud.com" }
+  let(:link) { "https://soundcloud.com/rac/penguin-prison-worse-it-gets-rac-mix" }
   before do
     fake(link, response("soundcloud"))
   end
 
-  it_behaves_like "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }

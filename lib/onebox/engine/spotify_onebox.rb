@@ -5,7 +5,10 @@ module Onebox
       include OpenGraph
 
       matches do
-        find "open.spotify.com"
+        http
+        with("open.")
+        domain("spotify")
+        tld("com")
       end
 
       private

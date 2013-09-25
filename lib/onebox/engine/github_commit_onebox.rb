@@ -5,8 +5,12 @@ module Onebox
       include HTML
 
       matches do
-        # /^https?:\/\/(?:www\.)?github\.com\/[^\/]+\/[^\/]+\/commit\/.+/
-        find "github.com"
+        http
+        maybe("www.")
+        domain("github")
+        tld("com")
+        anything
+        with("/commit/")
       end
 
       private

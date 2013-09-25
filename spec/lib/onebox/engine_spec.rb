@@ -82,7 +82,7 @@ describe Onebox::Engine do
         end
       end
       regex = OneboxEngineFar.class_variable_get(:@@matcher)
-      expect(regex).to eq(/(?:foo\.com)/i)
+      expect(regex).to be_a(Regexp)
     end
   end
 end

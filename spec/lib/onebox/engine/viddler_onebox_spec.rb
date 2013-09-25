@@ -1,12 +1,12 @@
 require "spec_helper"
 
 describe Onebox::Engine::ViddlerOnebox do
-  let(:link) { "http://viddler.com" }
+  let(:link) { "http://www.viddler.com/v/7164f749" }
   before do
     fake(link, response("viddler"))
   end
 
-  it_behaves_like "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }

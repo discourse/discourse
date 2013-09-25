@@ -5,8 +5,11 @@ module Onebox
       include OpenGraph
 
       matches do
-        # /^https?:\/\/(?:www\.)?yfrog\.(com|ru|com\.tr|it|fr|co\.il|co\.uk|com\.pl|pl|eu|us)\/[a-zA-Z0-9]+/
-        find "yfrog.com"
+        http
+        maybe("www.")
+        maybe("twitter.")
+        domain("yfrog")
+        either(".com", ".ru", ".tr", ".it", ".fr", ".co", ".uk", ".pl", ".eu", ".us")
       end
 
       private

@@ -5,8 +5,9 @@ module Onebox
       include OpenGraph
 
       matches do
-        # /^https?\:\/\/vimeo\.com\/.*$/
-        find "vimeo.com"
+        http
+        domain("vimeo")
+        tld("com")
       end
 
       private
