@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::WikipediaOnebox do
-  let(:link) { "http://wikipedia.com" }
+  let(:link) { "http://en.wikipedia.org/wiki/Kevin_Bacon" }
   before do
     fake(link, response("wikipedia"))
   end
