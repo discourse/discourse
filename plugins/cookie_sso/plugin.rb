@@ -18,7 +18,7 @@ register_css <<CSS
 }
 
 .btn-social.ssocookie:before {
-  content: "U";
+  content: url("/assets/favicons/udacity.png");
 }
 
 CSS
