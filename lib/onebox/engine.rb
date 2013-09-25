@@ -18,7 +18,7 @@ module Onebox
     end
 
     def to_html
-      Mustache.render(template, record)
+      to_layout(to_view)
     end
 
     private
@@ -37,12 +37,32 @@ module Onebox
       raise NoMethodError, "Engines need to implement this method"
     end
 
+    def render(mustache, options = {})
+      Mustache.render(mustache, options)
+    end
+
     def template
       File.read(template_path)
     end
 
     def template_path
       File.join(root, "templates", "#{template_name}.handlebars")
+    end
+
+    def to_layout(view)
+      render(layout, onebox: view, url: @url)
+    end
+
+    def to_view
+      render(template, record)
+    end
+
+    def layout
+      File.read(layout_path)
+    end
+
+    def layout_path
+      File.join(root, "templates", "_layout.handlebars")
     end
 
     # returns the gem root directory
