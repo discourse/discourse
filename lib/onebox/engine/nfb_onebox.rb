@@ -5,7 +5,6 @@ module Onebox
       include OpenGraph
 
       matches do
-        # /^https?:\/\/(?:www\.)?nfb\.ca\/film\/[-\w]+\/?/
         http
         maybe("www.")
         domain("nfb")
