@@ -5,8 +5,10 @@ module Onebox
       include HTML
 
       matches do
-        # /^http:\/\/(?:(?:(?<subsubdomain>\w*)\.)?(?<subdomain>\w*)\.)?(?<domain>#{DOMAINS.join('|')})\.com\/(?:questions|q)\/(?<question>\d*)/
-        find "stackexchange.com"
+        http
+        domain("stackoverflow")
+        tld("com")
+        with("/questions/")
       end
 
       private
