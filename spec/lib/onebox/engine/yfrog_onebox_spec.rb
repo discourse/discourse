@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Onebox::Engine::YfrogOnebox do
-  let(:link) { "http://yfrog.com" }
+  let(:link) { "http://twitter.yfrog.com/h0jjdobj?sa=0" }
   before do
     fake(link, response("yfrog"))
   end
