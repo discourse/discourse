@@ -1166,6 +1166,8 @@ zh_CN:
         long_title: "站点定制"
         header: "头部"
         css: "层叠样式表（CSS）"
+        mobile_header: "移动版Header"
+        mobile_css: "移动版样式表"
         override_default: "覆盖缺省值？"
         enabled: "启用？"
         preview: "预览"
