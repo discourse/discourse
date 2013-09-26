@@ -104,6 +104,7 @@ Create Discourse user:
     # Run these commands as your normal login (e.g. "michael")
     sudo adduser --shell /bin/bash --gecos 'Discourse application' discourse
     sudo install -d -m 755 -o discourse -g discourse /var/www/discourse
+    sudo adduser discourse sudo
 
 Give Postgres database rights to the `discourse` user:
 
@@ -199,8 +200,8 @@ Initialize the database:
     # The database name here should match the production one in database.yml
     cd /var/www/discourse
     createdb discourse_prod
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake db:migrate
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake assets:precompile
 
 Not english? Set the default language as appropriate:
 
@@ -231,6 +232,7 @@ site:
 Edit /etc/nginx/conf.d/discourse.conf
 
 - edit `server_name`. Example: `server_name cain.discourse.org test.cain.discourse.org;`
+- change socket count depending on your NUM_WEB count
 - change socket paths if discourse is installed to a different location
 - modify root location if discourse is installed to a different location
 
@@ -334,8 +336,8 @@ The corresponding site setting is:
     # "Check sample configuration files for new settings"
     #
     bundle install --without test --deployment
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake db:migrate
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake assets:precompile
     # restart bluepill
     crontab -l
     # Here, run the command to start bluepill.
