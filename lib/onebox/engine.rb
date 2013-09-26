@@ -18,7 +18,7 @@ module Onebox
     end
 
     def to_html
-      Layout.new(template_name, record).to_html
+      View.new(template_name, record).to_html
     end
 
     private
