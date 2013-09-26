@@ -104,6 +104,7 @@ Create Discourse user:
     # Run these commands as your normal login (e.g. "michael")
     sudo adduser --shell /bin/bash --gecos 'Discourse application' discourse
     sudo install -d -m 755 -o discourse -g discourse /var/www/discourse
+    sudo adduser discourse sudo
 
 Give Postgres database rights to the `discourse` user:
 
@@ -231,6 +232,7 @@ site:
 Edit /etc/nginx/conf.d/discourse.conf
 
 - edit `server_name`. Example: `server_name cain.discourse.org test.cain.discourse.org;`
+- change socket count depending on your NUM_WEB count
 - change socket paths if discourse is installed to a different location
 - modify root location if discourse is installed to a different location
 
