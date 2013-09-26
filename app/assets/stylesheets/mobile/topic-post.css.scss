@@ -109,6 +109,15 @@ button {
 .post-actions {
   margin-left: 10px;
   margin-top: 2px;
+  a:first-of-type:before {
+    font-family: "FontAwesome";
+    content: "\F004";
+    margin-right: 5px;
+    font-size: 11px;
+
+  }
+
+
 }
 
 a.reply-to-tab {
@@ -471,7 +480,21 @@ blockquote {
   .avatar { margin-right: 7px; }
 }
 
-.gutter { display: none; }
+.gutter {
+
+.post-links {
+
+  list-style-type: none;
+  margin-left: 10px;
+  margin-top: 5px;
+  a i {margin-right: 5px;}
+
+
+}
+
+}
+
+
 
 .posts-wrapper {  position: relative;
 }
