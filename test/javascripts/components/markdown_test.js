@@ -129,22 +129,22 @@ test("simple quotes", function() {
 
 test("Quotes", function() {
 
-  cookedOptions("[quote=\"eviltrout, post: 1\"]\na quote\n\nsecond line\n[/quote]",
+  cookedOptions("[quote=\"eviltrout, post: 1\"]\na quote\n\nsecond line\n\nthird line[/quote]",
                 { topicId: 2 },
                 "<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:</div><blockquote>" +
-                "a quote<br/><br/>second line</blockquote></aside></p>",
+                "<p>a quote</p><p>second line</p><p>third line</p></blockquote></aside></p>",
                 "works with multiple lines");
 
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",
                 { topicId: 2, lookupAvatar: function(name) { return "" + name; } },
                 "<p>1</p>\n\n<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob" +
-                "bob said:</div><blockquote>my quote</blockquote></aside></p>\n\n<p>2</p>",
+                "bob said:</div><blockquote><p>my quote</p></blockquote></aside></p>\n\n<p>2</p>",
                 "handles quotes properly");
 
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",
                 { topicId: 2, lookupAvatar: function(name) { } },
                 "<p>1</p>\n\n<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob said:" +
-                "</div><blockquote>my quote</blockquote></aside></p>\n\n<p>2</p>",
+                "</div><blockquote><p>my quote</p></blockquote></aside></p>\n\n<p>2</p>",
                 "includes no avatar if none is found");
 });
 

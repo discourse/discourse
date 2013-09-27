@@ -83,17 +83,17 @@ test("quote formatting", function() {
 
   format("[quote=\"EvilTrout, post:123, topic:456, full:true\"][sam][/quote]",
           "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">" +
-          "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote>[sam]</blockquote></aside>",
+          "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote><p>[sam]</p></blockquote></aside>",
           "it allows quotes with [] inside");
 
   format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]",
          "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
-         "</div><blockquote>abc</blockquote></aside>",
+         "</div><blockquote><p>abc</p></blockquote></aside>",
          "renders quotes properly");
 
   format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]\nhello",
          "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
-         "</div><blockquote>abc</blockquote></aside></p>\n\n<p>hello",
+         "</div><blockquote><p>abc</p></blockquote></aside></p>\n\n<p>hello",
          "handles new lines properly");
 
 });

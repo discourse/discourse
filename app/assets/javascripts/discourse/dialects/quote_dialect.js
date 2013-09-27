@@ -30,8 +30,16 @@ Discourse.Dialect.replaceBlock({
       avatarImg = options.lookupAvatar(username);
     }
 
-    var contents = this.processInline(blockContents.join("  \n  \n"));
-    contents.unshift('blockquote');
+    var contents = ['blockquote'];
+    if (blockContents.length) {
+      var self = this;
+      blockContents.forEach(function (bc) {
+        var processed = self.processInline(bc);
+        if (processed.length) {
+          contents.push(['p'].concat(processed));
+        }
+      });
+    }
 
     return ['p', ['aside', params,
                    ['div', {'class': 'title'},
