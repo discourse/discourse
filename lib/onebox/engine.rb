@@ -11,14 +11,16 @@ module Onebox
     end
 
     attr_reader :cache
+    attr_reader :view
 
     def initialize(link, cache = Onebox.defaults)
       @url = link
       @cache = cache
+      @view = View.new(template_name, true)
     end
 
     def to_html
-      View.new(template_name, record, true).to_html
+      view.to_html(record)
     end
 
     private
