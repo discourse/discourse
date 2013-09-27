@@ -15,34 +15,34 @@ en:
       short_no_year: "%B %-d"
       date_only: "%b %-d, %Y"
 
-  title: "Discourse"
-  topics: "Topics"
+  title: "Razgovori"
+  topics: "Teme"
   posts: "posts"
   loading: "Loading"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  powered_by_html: 'Podrška od strane <a href="http://www.discourse.org">Discourse</a>. Stranica najbolje funkcionira kada je omogućene skripte programskog jezika Java'
 
   via: "%{username} via %{site_name}"
-  is_reserved: "is reserved"
+  is_reserved: "je već rezervisano!"
 
-  site_under_maintenance: 'Site is currently undergoing maintenance.'
-  operation_already_running: "An %{operation} is currently running. Can't start a new %{operation} job right now."
+  site_under_maintenance: 'Stranica se trenutno servisira.'
+  operation_already_running: "%{procesi} u toku. Ne možete otpočeti nove %{procese} trenutno."
 
   too_many_mentions:
-    zero: "Sorry, you can't mention other users."
-    one: "Sorry, you can only mention one other user in a post."
-    other: "Sorry, you can only mention %{count} users in a post."
+    zero: "Oprostite, ali ne možete spominjati ostale korisnike."
+    one: "Oprostite, ali jedan post može samo da se odnosi na samo jednog drugog korisnika."
+    other: "Oprostite, ali možete u posti spomenuti samo %{count} korisnika."
   too_many_mentions_newuser:
-    zero: "Sorry, new users can't mention other users."
-    one: "Sorry, new users can only mention one other user in a post."
-    other: "Sorry, new users can only mention %{count} users in a post."
+    zero: "Oprostite, ali novi korisnici ne mogu spominjati ostale korisnike."
+    one: "Oprostite, ali novi korisnici u svome postu mogu samo spomenuti jednog drugog korisnika"
+    other: "Oprostite, novi korisnici mogu spomenuti samo %{count} korisnika."
   too_many_images:
-    zero: "Sorry, new users can't put images in posts."
-    one: "Sorry, new users can only put one image in a post."
-    other: "Sorry, new users can only put %{count} images in a post."
+    zero: "Oprostite, novi korisnici ne mogu postavljati slike u post."
+    one: "Oprostite, novi korisnici mogu postaviti samo jednu sliku u post."
+    other: "Oprostite, novi korisnici mogu u post postaviti samo %{count} slika."
   too_many_attachments:
-    zero: "Sorry, new users can't put attachments in posts."
-    one: "Sorry, new users can only put one attachment in a post."
-    other: "Sorry, new users can only put %{count} attachments in a post."
+    zero: "Oprostite, novi korisnici ne mogu stavljati priloge (attachmente) u post"
+    one: "Oprostite, novi korisnici u jedan post mogu postaviti samo jedan prilog (attachment)."
+    other: "Oprostite, novi korisnici mogu postaviti samo %{count} priloga (attachmenta) u post."
   too_many_links:
     zero: "Sorry, new users can't put links in posts."
     one: "Sorry, new users can only put one link in a post."
