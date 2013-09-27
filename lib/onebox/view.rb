@@ -2,18 +2,17 @@ module Onebox
   class View < Mustache
     self.template_path = File.join(Gem::Specification.find_by_name("onebox").gem_dir, "templates")
 
-    def initialize(name, record, layout = false)
+    def initialize(name, layout = false)
       @layout = layout
       self.template_name = unless @layout then name else "_layout" end
-      @record = record
-      @view = View.new(name, record) if @layout
+      @view = View.new(name) if @layout
     end
 
-    def to_html
+    def to_html(record)
       if @layout
-        render(url: @record[:url], view: @view.to_html)
+        render(url: record[:url], view: @view.to_html(record))
       else
-        render(@record)
+        render(record)
       end
     end
   end
