@@ -19,6 +19,56 @@ it:
             kb: KB
             mb: MB
             tb: TB
+    dates:
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   "1s"
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   "1m"
+          other: "%{count}m"
+        about_x_hours:
+          one:   "1o"
+          other: "%{count}o"
+        x_days:
+          one:   "1g"
+          other: "%{count}g"
+        about_x_years:
+          one:   "1a"
+          other: "%{count}a"
+        over_x_years:
+          one:   "> 1a"
+          other: "> %{count}a"
+        almost_x_years:
+          one:   "1a"
+          other: "%{count}a"
+      medium:
+        x_minutes:
+          one: "1 minuto"
+          other: "%{count} minuti"
+        x_hours:
+          one: "1 ora"
+          other: "%{count} ore"
+        x_days:
+          one: "1 giorno"
+          other: "%{count} giorni"
+      medium_with_ago:
+        x_minutes:
+          one: "1 minuto fa"
+          other: "%{count} minuti fa"
+        x_hours:
+          one: "1 ora fa"
+          other: "%{count} ore fa"
+        x_days:
+          one: "1 giorno fa"
+          other: "%{count} giorni fa"
     share:
       topic: 'condividi un link a questo topic'
       post: 'condividi un link a questo post'
@@ -34,6 +84,7 @@ it:
     yes_value: "Si"
     of_value: "di"
     generic_error: "Spiacenti, si è verificato un errore."
+    generic_error_with_reason: "Si è verificato un errore: %{error}"
     log_in: "Log In"
     age: "Età"
     last_post: "Ultimo Post"
@@ -42,10 +93,22 @@ it:
     show_more: "mostra tutto"
     links: Link
     faq: "FAQ"
+    privacy_policy: "Policy sulla privacy"
+    mobile_view: "Visualizzazione mobile"
+    desktop_view: "Visualizzazione desktop"
     you: "Tu"
     or: "o"
     now: "adesso"
     read_more: 'continua a leggere'
+    more: "Più"
+    less: "Meno"
+    never: "mai"
+    daily: "ogni giorno"
+    weekly: "ogni settimana"
+    every_two_weeks: "ogni due settimane"
+    character_count:
+      one: "{{count}} carattere"
+      other: "{{count}} caratteri"
 
     in_n_seconds:
       one: "in 1 secondo"
@@ -77,6 +140,10 @@ it:
     save: "Salva Modifiche"
     saving: "Salvataggio..."
     saved: "Salvato!"
+
+    upload: "Carica"
+    uploading: "Caricando..."
+    uploaded: "Caricato!"
 
     choose_topic:
       none_found: "Nessun topic trovato."
@@ -116,8 +183,8 @@ it:
       "13": "Inbox"
 
     user:
+      said: "{{username}} ha detto:"
       profile: Profilo
-      title: "Utente"
       mute: Ignora
       edit: Modifica Preferenze
       download_archive: "scarica archivio dei miei post"
@@ -128,31 +195,50 @@ it:
       bio: "Su di me"
       invited_by: "Invitato Da"
       trust_level: "Trust Level"
+      notifications: "Notifiche"
+      dynamic_favicon: "Mostra le notifiche dei messaggi in arrivo nella favicon"
       external_links_in_new_tab: "Apri tutti i link esterni in una nuova tab"
       enable_quoting: "Abilita risposta con citazione su testo selezionato"
-
+      change: "cambia"
       moderator: "{{user}} è un moderatore"
       admin: "{{user}} è un amministratore"
+      deleted: "(cancellato)"
+
+      messages:
+        all: "Tutti"
+        mine: "Miei"
+        unread: "Non letti"
 
       change_password:
-        action: "cambia"
         success: "(email inviata)"
         in_progress: "(invio email)"
         error: "(errore)"
+        action: "Invia una email per il reset della password"
+
+      change_about:
+        title: "Modifica le informazioni su di me"
 
       change_username:
-        action: "cambia"
         title: "Cambia Username"
         confirm: "Possono esserci consequenze modificando il tuo username. Sei veramente sicuro di volerlo fare?"
         taken: "Spiacenti, questo username è già utilizzato."
         error: "Si è verificato un errore modificando il tuo username."
         invalid: "Questo username non è valido. Deve contenere solo lettere e numeri."
+
       change_email:
-        action: 'cambia'
         title: "Cambia Email"
         taken: "Spiacenti, questa email non è disponibile."
         error: "Si è verificato un errore modificando la tua email. Forse l'indirizzo è già utilizzato?"
         success: "Abbiamo inviato una email a questo indirizzo. Segui le istruzioni per confermare la modifica."
+
+      change_avatar:
+        title: "Cambia il tuo avatar"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
+        gravatar_title: "Cambia il tuo avatar su Gravatar"
+        uploaded_avatar: "Immagine personalizzata"
+        uploaded_avatar_empty: "Aggiungi un'immagine personalizzata"
+        upload_title: "Carica la tua immagine"
+        image_is_not_a_square: "Attenzione: abbiamo tagliato la tua immagine perché non è quadrata."
 
       email:
         title: "Email"
@@ -247,6 +333,9 @@ it:
         title: "Ultimo indirizzo IP"
       avatar:
         title: "Avatar"
+      title:
+        title: "Titolo"
+
       filters:
         all: "Tutti"
 
@@ -314,6 +403,7 @@ it:
       authenticating: "Autenticazione in corso..."
       awaiting_confirmation: "Il tuo account è in attesa di attivazione, usa il link Password Dimenticata per ricevere una nuova mail di attivazione."
       awaiting_approval: "Il tuo account non è ancora stato approvato da un moderatore. Riceverai un'email non appena verrà approvato."
+      requires_invite: "Mi dispiace, l'accesso a questi forum è solo per invito."
       not_activated: "Non puoi ancora effettuare il log in. Ti abbiamo mandato un'email con il link di attivazione all'indirizzo <b>{{sentTo}}</b>. Per favore segui le istruzioni in quell'email per attivare il tuo account."
       resend_activation_email: "Clicca qui per ricevere nuovamente la mail di attivazione."
       sent_activation_email_again: "Ti abbiamo mandato un altro link di attivazione all'indirizzo<b>{{currentEmail}}</b>. Potrebbe volerci qualche minuto prima che arrivi; controlla anche fra lo spam."
@@ -326,6 +416,9 @@ it:
       facebook:
         title: "con Facebook"
         message: "Autenticazione con Facebook (l'apertura di pop up deve essere permessa dal browser)"
+      cas:
+        title: "con CAS"
+        message: "Autenticazione con CAS (l'apertura di pop up deve essere permessa dal browser)"
       yahoo:
         title: "con Yahoo"
         message: "Autenticazione con Yahoo (l'apertura di pop up deve essere permessa dal browser)"
@@ -348,6 +441,14 @@ it:
         need_more_for_title: "ancora {{n}} caratteri per il titolo"
         need_more_for_reply: "ancora {{n}} caratteri per il post"
 
+      error:
+        title_missing: "Il titolo è obbligatorio."
+        title_too_short: "Il titolo deve essere di almeno {{min}} caratteri."
+        title_too_long: "Il titolo deve essere di al più {{max}} caratteri."
+        post_missing: "Il messaggio non può essere vuoto."
+        post_length: "Il messaggio deve essere di almeno {{min}} caratteri."
+        category_missing: "Devi scegliere una categoria."
+
       save_edit: "Salva Modifica"
       reply_original: "Rispondi al topic originale"
       reply_here: "Rispondi Qui"
@@ -363,7 +464,7 @@ it:
       saving: "Salvataggio..."
       saved: "Salvato!"
       saved_draft: "Hai una bozza di un post in corso. Clicca questo box per riprendere la scrittura."
-      uploading: "Uploading..."
+      uploading: "Caricamento..."
       show_preview: 'mostra anteprima &raquo;'
       hide_preview: '&laquo; nascondi anteprima'
 
@@ -414,22 +515,33 @@ it:
       total_flagged: "totale post segnalati"
 
     upload_selector:
-      title: "Inserisci Immagine"
+      title: "Carica un'immagine"
+      title_with_attachments: "Carica un'immagine od un file"
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal Web"
-      add_title: "Aggiungi Immagine"
+      add_title: "Aggiungi immagine"
+      add_title_with_attachments: "Aggiugni immagine o file"
       remote_title: "immagine remota"
+      remote_title_with_attachments: "immagine o file remoto"
       remote_tip: "inserisci l'indirizzo dell'immagine (es. http://example.com/image.jpg)"
+      remote_tip_with_attachments: "inserisci l'indirizzo di un'immagine o di un file nel form http://esempio.com/file.ext (estensioni supportate: {{authorized_extensions}})."
       local_title: "immagine locale"
+      local_title_with_attachments: "immagine o file locale"
       local_tip: "clicca per selezionare un'immagine dal tuo dispositivo."
+      local_tip_with_attachments: "click per selezionare un'immagine od un file dal tuo dispositivo (estensioni supportate: {{authorized_extensions}})"
       upload_title: "Upload"
-      uploading: "Carico l'immagine"
+      upload_title_with_attachments: "Carica immagine o file"
+      uploading: "Caricamento"
 
     search:
       title: "cerca topic, post, utenti o categorie"
       placeholder: "scrivi i termini di ricerca"
       no_results: "Nessun risultato."
       searching: "Cerco ..."
+
+      prefer:
+        user: "la ricerca mostrerà prima i risultati di @{{username}}"
+        category: "la ricerca mostrerà prima i risultati in {{category}}"
 
     site_map: "vai in un'altra lista topic o categoria"
     go_back: 'torna indietro'
