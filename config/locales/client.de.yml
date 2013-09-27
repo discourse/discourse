@@ -557,7 +557,7 @@ de:
 
     topics:
       none:
-        favorited: "Du hast noch keine Themen favorisierst. Um ein Thema zu favorisieren, klicke auf den Stern neben dem Titel."
+        favorited: "Du hast noch keine Themen favorisiert. Um ein Thema zu favorisieren, klicke auf den Stern neben dem Titel."
         unread: "Du hast alle Themen gelesen."
         new: "Es gibt für dich keine neuen Themen."
         read: "Du hast bislang keine Themen gelesen."
