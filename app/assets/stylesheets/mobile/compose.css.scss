@@ -245,9 +245,6 @@ display: none;
     }
     #wmd-input, #wmd-preview {
       color: $black;
-      img {
-        max-width: 100%;
-      }
 
       video {
         max-width: 100%;
@@ -455,7 +452,7 @@ div.ac-wrap {
 }
 
 .control-row.reply-area {
-  
+
 }
 
 @media screen and (min-width: 1550px) {

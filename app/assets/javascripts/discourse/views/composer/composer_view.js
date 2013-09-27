@@ -115,6 +115,15 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     var $replyControl = $('#reply-control');
     $replyControl.DivResizer({ resize: this.resize, onDrag: this.movePanels });
     Discourse.TransitionHelper.after($replyControl, this.resize);
+    this.ensureMaximumDimensionForImagesInPreview();
+  },
+
+  ensureMaximumDimensionForImagesInPreview: function() {
+    $('<style>#wmd-preview img, .cooked img {' +
+      'max-width:' + Discourse.SiteSettings.max_image_width + 'px;' +
+      'max-height:' + Discourse.SiteSettings.max_image_height + 'px;' +
+      '}</style>'
+     ).appendTo('head');
   },
 
   click: function() {

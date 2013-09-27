@@ -89,11 +89,6 @@ describe CookedPostProcessor do
 
       before { FastImage.stubs(:size).returns([150, 250]) }
 
-      it "doesn't call image_dimensions because it knows the size" do
-        cpp.expects(:image_dimensions).never
-        cpp.post_process_images
-      end
-
       it "adds the width from the image sizes provided" do
         cpp.post_process_images
         cpp.html.should =~ /width=\"111\"/
@@ -136,7 +131,7 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        cpp.html.should match_html '<div><a href="http://test.localhost/uploads/default/1/1234567890123456.jpg" class="lightbox"><img src="http://test.localhost/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_100x200.jpg" width="690" height="1380"><div class="meta">
+        cpp.html.should match_html '<div><a href="http://test.localhost/uploads/default/1/1234567890123456.jpg" class="lightbox"><img src="http://test.localhost/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.jpg" width="690" height="1380"><div class="meta">
 <span class="filename">uploaded.jpg</span><span class="informations">1000x2000 1.21 KB</span><span class="expand"></span>
 </div></a></div>'
         cpp.should be_dirty
@@ -198,24 +193,6 @@ describe CookedPostProcessor do
     it "returns a generic name for pasted images" do
       upload = build(:upload, { original_filename: "blob.png" })
       cpp.get_filename(upload, "http://domain.com/image.png").should == I18n.t('upload.pasted_image_filename')
-    end
-
-  end
-
-  context "image_dimensions" do
-
-    let(:post) { build(:post) }
-    let(:cpp) { CookedPostProcessor.new(post) }
-
-    it "calls the resizer" do
-      SiteSetting.stubs(:max_image_width).returns(200)
-      cpp.expects(:get_size).returns([1000, 2000])
-      cpp.image_dimensions("http://foo.bar/image.png").should == [200, 400]
-    end
-
-    it "doesn't call the resizer when there is no size" do
-      cpp.expects(:get_size).returns(nil)
-      cpp.image_dimensions("http://foo.bar/image.png").should == nil
     end
 
   end

@@ -14,19 +14,26 @@ class Upload < ActiveRecord::Base
   validates_presence_of :filesize
   validates_presence_of :original_filename
 
-  def thumbnail
+  def thumbnail(width = nil, height = nil)
+    width ||= self.width
+    height ||= self.height
     optimized_images.where(width: width, height: height).first
   end
 
-  def has_thumbnail?
-    thumbnail.present?
+  def has_thumbnail?(width = nil, height = nil)
+    thumbnail(width, height).present?
   end
 
-  def create_thumbnail!
+  def create_thumbnail!(width, height)
     return unless SiteSetting.create_thumbnails?
-    return if has_thumbnail?
+    return if has_thumbnail?(width, height)
     thumbnail = OptimizedImage.create_for(self, width, height)
-    optimized_images << thumbnail if thumbnail
+    if thumbnail
+      optimized_images << thumbnail
+      self.width = width
+      self.height = height
+      save!
+    end
   end
 
   def destroy

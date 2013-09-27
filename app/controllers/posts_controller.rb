@@ -229,7 +229,6 @@ class PostsController < ApplicationController
         :category,
         :target_usernames,
         :reply_to_post_number,
-        :image_sizes,
         :auto_close_days,
         :auto_track
       ]
@@ -245,6 +244,7 @@ class PostsController < ApplicationController
 
       params.require(:raw)
       params.permit(*permitted).tap do |whitelisted|
+          whitelisted[:image_sizes] = params[:image_sizes]
           # TODO this does not feel right, we should name what meta_data is allowed
           whitelisted[:meta_data] = params[:meta_data]
       end

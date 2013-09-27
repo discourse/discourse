@@ -85,15 +85,14 @@ class CookedPostProcessor
   end
 
   def update_dimensions!(img)
-    return if img['width'].present? && img['height'].present?
-
-    w, h = get_size_from_image_sizes(img['src'], @opts[:image_sizes]) || image_dimensions(img['src'])
-
-    if w && h
-      img['width'] = w
-      img['height'] = h
-      @dirty = true
-    end
+    w, h = get_size_from_image_sizes(img['src'], @opts[:image_sizes]) || get_size(img['src'])
+    # make sure we limit the size of the thumbnail
+    w, h = ImageSizer.resize(w, h)
+    # check whether the dimensions have changed
+    @dirty = (img['width'].to_i != w) || (img['height'].to_i != h)
+    # update the dimensions
+    img['width'] = w
+    img['height'] = h
   end
 
   def associate_to_post(upload)
@@ -123,7 +122,7 @@ class CookedPostProcessor
 
     if upload
       # create a thumbnail
-      upload.create_thumbnail!
+      upload.create_thumbnail!(width, height)
       # optimize image
       # TODO: optimize_image!(img)
     end
@@ -156,7 +155,9 @@ class CookedPostProcessor
     a.add_child(img)
 
     # replace the image by its thumbnail
-    img['src'] = relative_to_absolute(upload.thumbnail.url) if upload && upload.has_thumbnail?
+    w = img["width"]
+    h = img["height"]
+    img['src'] = relative_to_absolute(upload.thumbnail(w, h).url) if upload && upload.has_thumbnail?(w, h)
 
     # then, some overlay informations
     meta = Nokogiri::XML::Node.new("div", @doc)
@@ -193,23 +194,13 @@ class CookedPostProcessor
   end
 
   def get_size_from_image_sizes(src, image_sizes)
-    if image_sizes.present?
-      if dim = image_sizes[src]
-        ImageSizer.resize(dim['width'], dim['height'])
-      end
-    end
-  end
-
-  # Retrieve the image dimensions for a url
-  def image_dimensions(url)
-    w, h = get_size(url)
-    ImageSizer.resize(w, h) if w && h
+    [image_sizes[src]["width"], image_sizes[src]["height"]] if image_sizes.present? && image_sizes[src].present?
   end
 
   def get_size(url)
     uri = url
     # make sure urls have a scheme (otherwise, FastImage will fail)
-    uri = (SiteSetting.use_ssl? ? "https:" : "http:") + url if url.start_with?("//")
+    uri = (SiteSetting.use_ssl? ? "https:" : "http:") + url if url && url.start_with?("//")
     return unless is_valid_image_uri?(uri)
     # we can *always* crawl our own images
     return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)

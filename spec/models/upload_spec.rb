@@ -43,14 +43,14 @@ describe Upload do
     it "does not create a thumbnail when disabled" do
       SiteSetting.stubs(:create_thumbnails?).returns(false)
       OptimizedImage.expects(:create_for).never
-      upload.create_thumbnail!
+      upload.create_thumbnail!(100, 100)
     end
 
     it "does not create another thumbnail" do
       SiteSetting.expects(:create_thumbnails?).returns(true)
       upload.expects(:has_thumbnail?).returns(true)
       OptimizedImage.expects(:create_for).never
-      upload.create_thumbnail!
+      upload.create_thumbnail!(100, 100)
     end
 
     it "creates a thumbnail" do
@@ -59,7 +59,7 @@ describe Upload do
       SiteSetting.expects(:create_thumbnails?).returns(true)
       upload.expects(:has_thumbnail?).returns(false)
       OptimizedImage.expects(:create_for).returns(thumbnail)
-      upload.create_thumbnail!
+      upload.create_thumbnail!(100, 100)
       upload.reload
       upload.optimized_images.count.should == 1
     end
