@@ -4,7 +4,7 @@ module Onebox
       private
 
       def raw
-        @raw ||= ::OpenGraph.new(@url)
+        @raw ||= ::OpenGraph.new(url)
       end
     end
   end
