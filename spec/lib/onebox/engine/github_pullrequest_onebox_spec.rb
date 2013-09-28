@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Onebox::Engine::GithubGistOnebox do
+describe Onebox::Engine::GithubPullRequestOnebox do
   let(:link) { "https://github.com/discourse/discourse/pull/1253/" }
   before do
     fake(link, response("github_pullrequest"))
@@ -15,12 +15,16 @@ describe Onebox::Engine::GithubGistOnebox do
       expect(html).to include("jamesaanderson")
     end
 
+    it "has pull request title" do
+      expect(html).to include("Add audio onebox")
+    end
+
     it "has repo name" do
       expect(html).to include("discourse")
     end
 
     it "has commit author gravatar" do
-      expect(html).to include("gravatar-user-420.png")
+      expect(html).to include("b3e9977094ce189bbb493cf7f9adea21")
     end
 
     it "has commit description" do
@@ -28,7 +32,7 @@ describe Onebox::Engine::GithubGistOnebox do
     end
 
     it "has commit time and date" do
-      expect(html).to include("2013-07-26 02:05:00")
+      expect(html).to include("2013-07-26T02:05:53Z")
     end
 
     it "has number of commits" do
