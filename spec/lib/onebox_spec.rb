@@ -26,7 +26,7 @@ describe Onebox do
   end
 
   describe "templates" do
-    let(:templates) { Dir["templates/*.handlebars"] }
+    let(:templates) { Dir["templates/*.mustache"] - ["templates/_layout.mustache"] }
 
     def expect_templates_to_not_match(text)
       templates.each do |template|

@@ -11,8 +11,10 @@ class OneboxEngineExample
     { key: "value" }
   end
 
-  def template
-    %|<div class="onebox"><a href="{{url}}"></a></div>|
+  def view
+    @view.tap do |layout|
+      layout.view.template = %|<div class="onebox"><a href="{{url}}"></a></div>|
+    end
   end
 end
 
@@ -48,16 +50,6 @@ describe Onebox::Engine do
       cache = { "http://example.com1" => "old content" }
       result = OneboxEngineBar.new("http://example.com", cache).send(:record)
       expect(result).to eq("new content")
-    end
-  end
-
-  describe "#template_path" do
-    it "returns file path for onebox template" do
-      class OneboxEngineVoo
-        include Onebox::Engine
-      end
-      result = OneboxEngineVoo.new("http://amazon.com").send(:template_path)
-      expect(result).to eq(File.join(Dir.pwd, "templates", "enginevoo.handlebars"))
     end
   end
 

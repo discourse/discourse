@@ -12,6 +12,7 @@ require_relative "onebox/version"
 require_relative "onebox/preview"
 require_relative "onebox/matcher"
 require_relative "onebox/engine"
+require_relative "onebox/view"
 
 module Onebox
   DEFAULTS = {

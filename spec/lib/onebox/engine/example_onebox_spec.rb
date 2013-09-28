@@ -12,7 +12,7 @@ describe Onebox::Engine::ExampleOnebox do
     let(:html) { described_class.new(link).to_html }
 
     it "returns template if given valid data" do
-      expect(html).to include(onebox_view("Example Domain 1"))
+      expect(html).to include("Example Domain 1")
     end
   end
 end
