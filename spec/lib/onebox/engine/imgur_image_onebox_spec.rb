@@ -4,7 +4,7 @@ describe Onebox::Engine::ImgurImageOnebox do
   let(:link) { "http://imgur.com/gallery/twoDTCU" }
 
   before do
-    fake(link, response("imgur_photo"))
+    fake(link, response("imgur_image"))
   end
 
   it_behaves_like "an engine"
