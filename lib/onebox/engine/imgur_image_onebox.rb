@@ -1,6 +1,6 @@
 module Onebox
   module Engine
-    class ImgurOnebox
+    class ImgurImageOnebox
       include Engine
       include HTML
 
