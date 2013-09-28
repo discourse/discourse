@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::WikipediaOnebox do
-  let(:link) { "http://en.wikipedia.org/wiki/Kevin_Bacon" }
-  before do
-    fake(link, response("wikipedia"))
+  before(:all) do
+    @link = "http://en.wikipedia.org/wiki/Kevin_Bacon"
+    fake(@link, response("wikipedia"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

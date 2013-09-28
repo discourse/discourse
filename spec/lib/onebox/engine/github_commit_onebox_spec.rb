@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::GithubCommitOnebox do
-  let(:link) { "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919" }
-  before do
-    fake(link, response("github_commit"))
+  before(:all) do
+    @link = "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
+    fake(@link, response("github_commit"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

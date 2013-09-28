@@ -1,11 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::ClikThroughOnebox do
-  let(:link) { "http://www.clikthrough.com/theater/video/49/en-US" }
-
-  before do
-    fake(link, response("clikthrough"))
+  before(:all) do
+    @link = "http://www.clikthrough.com/theater/video/49/en-US"
+    fake(@link, response("clikthrough"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

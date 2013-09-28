@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::HuluOnebox do
-  let(:link) { "http://www.hulu.com/watch/515146" }
-  before do
-    fake(link, response("hulu"))
+  before(:all) do
+    @link = "http://www.hulu.com/watch/515146"
+    fake(@link, response("hulu"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

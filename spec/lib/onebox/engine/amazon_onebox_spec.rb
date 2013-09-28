@@ -1,11 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::AmazonOnebox do
-  let(:link) { "http://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X" }
-
-  before do
-    fake(link, response("amazon"))
+  before(:all) do
+    @link = "http://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X"
+    fake(@link, response("amazon"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

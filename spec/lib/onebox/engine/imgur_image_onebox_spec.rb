@@ -1,11 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::ImgurImageOnebox do
-  let(:link) { "http://imgur.com/gallery/twoDTCU" }
-
-  before do
-    fake(link, response("imgur_image"))
+  before(:all) do
+    @link = "http://imgur.com/gallery/twoDTCU"
+    fake(@link, response("imgur_image"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

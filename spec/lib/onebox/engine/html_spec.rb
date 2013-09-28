@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::HTML do
-  let(:link) { "http://example.com"}
-  before do
-    fake(link, response("example"))
+  before(:all) do
+    @link = "http://example.com"
+    fake(@link, response("example"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   describe "#raw" do
     class OneboxEngineFoo

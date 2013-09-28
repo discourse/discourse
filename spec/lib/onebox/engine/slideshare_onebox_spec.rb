@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::SlideshareOnebox do
-  let(:link) { "http://www.slideshare.net/TravelWorldPassport/12-local-traditions" }
-  before do
-    fake(link, response("slideshare"))
+  before(:all) do
+    @link = "http://www.slideshare.net/TravelWorldPassport/12-local-traditions"
+    fake(@link, response("slideshare"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

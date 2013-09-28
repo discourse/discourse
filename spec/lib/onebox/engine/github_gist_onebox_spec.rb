@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::GithubGistOnebox do
-  let(:link) { "https://gist.github.com/anikalindtner/153044e9bea3331cc103" }
-  before do
-    fake(link, response("github_gist"))
+  before(:all) do
+    @link = "https://gist.github.com/anikalindtner/153044e9bea3331cc103"
+    fake(@link, response("github_gist"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

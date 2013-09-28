@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::BliptvOnebox do
-  let(:link) { "http://blip.tv" }
-  before do
-    fake(link, response("bliptv"))
+  before(:all) do
+    @link = "http://blip.tv"
+    fake(@link, response("bliptv"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

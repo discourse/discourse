@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::FlickrOnebox do
-  let(:link) { "http://flickr.com" }
-  before do
-    fake(link, response("flickr"))
+  before(:all) do
+    @link = "http://flickr.com"
+    fake(@link, response("flickr"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

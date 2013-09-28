@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe Onebox::Preview do
+  before(:each) { Onebox.defaults.cache.clear }
+
   describe "#to_s" do
     it "returns some html if given a valid url" do
       fake("http://www.example.com", response("example"))
