@@ -22,6 +22,8 @@ dump.rdb
 
 /public/assets/*
 
+/vendor
+
 config/database.yml
 config/redis.yml
 config/discourse.pill

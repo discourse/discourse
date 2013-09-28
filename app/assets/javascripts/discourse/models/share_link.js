@@ -27,7 +27,7 @@ Discourse.ShareLink = Discourse.Model.extend({
 
 Discourse.ShareLink.reopenClass({
 
-  supportedTargets: ['twitter', 'facebook', 'google+', 'email'],
+  supportedTargets: ['twitter', 'facebook', 'google+', 'email', 'vk'],
 
   urlFor: function(target,link,title) {
     switch(target) {
@@ -39,6 +39,8 @@ Discourse.ShareLink.reopenClass({
         return this.googlePlusUrl(link);
       case 'email':
         return this.emailUrl(link,title);
+      case 'vk':
+        return this.vkUrl(link,title);
     }
   },
 
@@ -58,17 +60,23 @@ Discourse.ShareLink.reopenClass({
     return ("mailto:?to=&subject=" + encodeURIComponent('[' + Discourse.SiteSettings.title + '] ' + title) + "&body=" + encodeURIComponent(link));
   },
 
+  vkUrl: function(link, title) {
+    return ("http://vk.com/share.php?url=" + encodeURIComponent(link) + '&title=' + encodeURIComponent(title));
+  },
+
   iconClasses: {
     twitter: 'icon-twitter',
     facebook: 'icon-facebook-sign',
     'google+': 'icon-google-plus',
-    email: 'icon-envelope'
+    email: 'icon-envelope',
+    vk: 'icon-vk'
   },
 
   popupHeights: {
     twitter: 265,
     facebook: 315,
-    'google+': 600
+    'google+': 600,
+    vk: 400
   },
 
   popupHeight: function(target) {

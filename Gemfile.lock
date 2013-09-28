@@ -177,6 +177,8 @@ GEM
     celluloid (0.14.1)
       timers (>= 1.0.0)
     certified (0.1.1)
+    clockworkd (0.2.5)
+      tzinfo (>= 0.3.23)
     coderay (1.0.9)
     connection_pool (1.1.0)
     daemons (1.1.9)
@@ -481,6 +483,8 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   certified
+  clockworkd
+  daemons
   diffy (>= 3.0)
   discourse_emoji!
   discourse_plugin!

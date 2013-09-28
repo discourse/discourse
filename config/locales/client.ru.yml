@@ -112,6 +112,7 @@ ru:
       facebook: поделиться ссылкой через Facebook
       google+: поделиться ссылкой через Google+
       email: поделиться ссылкой по email
+      vk: поделиться ссылкой через VKontakte
     edit: отредактировать название и категорию темы
     not_implemented: Извините, эта функция еще не реализована!
     no_value: нет
@@ -611,8 +612,27 @@ ru:
       options: Опции темы
       show_links: показать ссылки в теме
       toggle_information: скрыть / показать подробную информацию о теме
-      read_more_in_category: 'Хотите почитать что-нибудь еще? Просмотрите темы в {{catLink}} или {{latestLink}}.'
-      read_more: 'Хотите почитать что-нибудь еще? {{catLink}} or {{latestLink}}.'
+      read_more_in_category: 'Хотите почитать что-нибудь еще? Можете просмотреть темы категории {{catLink}} или {{latestLink}}.'
+      read_more: 'Хотите почитать что-нибудь еще? Можете {{catLink}} или {{latestLink}}.'
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_MF: "Ещё {
+        UNREAD, plural,
+        =0 {}
+        one {
+          <a href='/unread'>1 не прочитано</a>
+        } other {
+          <a href='/unread'># не прочитано</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{and } false {} other{}} <a href='/new'>1 новая</a> тема}
+            two { {BOTH, select, true{and } false {} other{}} <a href='/new'># новых</a> темы}
+            few { {BOTH, select, true{and } false {} other{}} <a href='/new'># новых</a> темы}
+            other { {BOTH, select, true{and } false {} other{}} <a href='/new'># новых</a> тем}
+        }. {CATEGORY, select, true {{catLink}} false {{latestLink}} other {}} "
+
       browse_all_categories: Просмотреть все категории
       view_latest_topics: посмотреть последние темы
       suggest_create_topic: Почему бы вам не создать новую тему?
