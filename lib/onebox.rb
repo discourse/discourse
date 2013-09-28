@@ -16,7 +16,8 @@ require_relative "onebox/view"
 
 module Onebox
   DEFAULTS = {
-    cache: Moneta.new(:Memory, expires: true, serializer: :json)
+    cache: Moneta.new(:Memory, expires: true, serializer: :json),
+    timeout: 10
   }
 
   @@defaults = DEFAULTS

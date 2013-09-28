@@ -10,13 +10,15 @@ module Onebox
       end.map(&method(:const_get))
     end
 
+    attr_reader :url
     attr_reader :cache
+    attr_reader :timeout
     attr_reader :view
 
-    def initialize(link, cache = Onebox.defaults.cache)
+    def initialize(link, cache = nil, timeout = nil)
       @url = link
-      @cache = cache
-      @view = View.new(template_name, true)
+      @cache = cache || Onebox.defaults.cache
+      @timeout = timeout || Onebox.defaults.timeout
     end
 
     def to_html
