@@ -26,7 +26,7 @@ module Onebox
   end
 
   def self.defaults
-    @@defaults
+    OpenStruct.new(@@defaults)
   end
 
   def self.defaults=(options)
