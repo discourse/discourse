@@ -5,8 +5,10 @@ module Onebox
       include HTML
 
       matches do
-        # /^https?\:\/\/imgur\.com\/.*$/
-        find "imgur.com"
+        http
+        domain("imgur")
+        tld("com")
+        with("/gallery")
       end
 
       private
