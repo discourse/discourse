@@ -28,10 +28,10 @@ module Onebox
     private
 
     def record
-      if cache.key?(@url)
-        cache.fetch(@url)
+      if cache.key?(url)
+        cache.fetch(url)
       else
-        cache.store(@url, data)
+        cache.store(url, data)
       end
     end
 
