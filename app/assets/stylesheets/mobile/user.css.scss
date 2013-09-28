@@ -60,7 +60,6 @@
 }
 
 #user-info {
-  width: 240px;
   margin-right: 20px;
   float: left;
   .summary {
@@ -122,8 +121,20 @@
       height: 150px;
     }
   }
+  .nav-stacked {
+    > li {
+      display: inline-block;
+      > a {
+        padding: 7px;
+      }
+    }
+    .icon-chevron-right {
+      padding-left: 7px;
+    }
+  }
   .side-nav {
-    margin-top: 5px;
+    margin: 0 5px;
+    max-width: 100%;
   }
 }
 
@@ -151,10 +162,10 @@
   span {
     font-size: 18px;
     color: #676b6c;
-    margin-left: 15px;
     font-weight: lighter;
     position: relative;
-    top: -4px;
+    top: 5px;
+    display: block;
     .icon {
       margin-left: 5px;
       font-size: 14px;
@@ -173,8 +184,8 @@
   margin-bottom: 10px;
   position: relative;
   .nav {
-    float: right;
-    margin: 5px 0 14px 5px;
+    float: left;
+    margin: 5px 0 10px 147px;
   }
 }
 
@@ -186,9 +197,7 @@
     padding: 6px;
     @include border-radius-all(4px);
     float: left;
-    width: 936px;
-    height: 57px;
-    margin-left: 150px;
+    margin: 0 5px 0 20px;
     background-color: white;
     @include box-shadow((0 1px 2px rgba($black, 0.07), inset 0 -4px 4px -4px rgba($black, 0.14)));
     &:before,
@@ -217,16 +226,6 @@
       color: lighten(#000, 70%);
     }
   }
-  @include medium-width {
-    .about-me {
-      width: 821px;
-    }
-  }
-  @include small-width {
-    .about-me {
-      width: 776px;
-    }
-  }
 }
 
 .user-heading {
@@ -238,7 +237,6 @@
 }
 
 #user-activity {
-  width: 840px;
   float: left;
   margin-bottom: 50px;
 
@@ -310,17 +308,6 @@
   .avatar-link {
     margin-right: 3px;
 
-  }
-}
-
-@include medium-width {
-  #user-activity {
-    width: 725px;
-  }
-}
-@include small-width {
-  #user-activity {
-    width: 680px;
   }
 }
 
