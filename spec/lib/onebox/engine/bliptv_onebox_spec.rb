@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::BliptvOnebox do
   before(:all) do
     @link = "http://blip.tv"
-    fake(@link, response("bliptv"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

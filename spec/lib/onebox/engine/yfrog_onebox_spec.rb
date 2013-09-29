@@ -4,7 +4,7 @@ describe Onebox::Engine::YfrogOnebox do
   before(:each) { Onebox.defaults.cache.clear }
   before(:all) do
     @link = "http://twitter.yfrog.com/h0jjdobj?sa=0"
-    fake(@link, response("yfrog"))
+    fake(@link, response(described_class.template_name))
   end
 
   let(:link) { @link }

@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::StackExchangeOnebox do
   before(:all) do
     @link = "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code"
-    fake(@link, response("stackexchange"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::AmazonOnebox do
   before(:all) do
     @link = "http://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X"
-    fake(@link, response("amazon"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

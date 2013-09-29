@@ -10,7 +10,7 @@ describe Onebox::Engine::OpenGraph do
   let(:link) { @link }
 
   describe "#raw" do
-    class OneboxEngineCar
+    class OneboxEngineOpenGraph
       include Onebox::Engine::OpenGraph
 
       def initialize(link)
@@ -19,7 +19,7 @@ describe Onebox::Engine::OpenGraph do
     end
 
     it "returns a OpenGraph object that has a metadata method" do
-      object = OneboxEngineCar.new("http://flickr.com").send(:raw)
+      object = OneboxEngineOpenGraph.new("http://flickr.com").send(:raw)
       expect(object).to respond_to(:metadata)
     end
   end

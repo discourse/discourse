@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::DailymotionOnebox do
   before(:all) do
     @link = "http://dailymotion.com"
-    fake(@link, response("dailymotion"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::SlideshareOnebox do
   before(:all) do
     @link = "http://www.slideshare.net/TravelWorldPassport/12-local-traditions"
-    fake(@link, response("slideshare"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

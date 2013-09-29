@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::ImgurImageOnebox do
   before(:all) do
     @link = "http://imgur.com/gallery/twoDTCU"
-    fake(@link, response("imgur_image"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

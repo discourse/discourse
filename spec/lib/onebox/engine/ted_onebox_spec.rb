@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::TedOnebox do
   before(:all) do
     @link = "http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html"
-    fake(@link, response("ted"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

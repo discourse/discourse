@@ -10,7 +10,7 @@ describe Onebox::Engine::HTML do
   let(:link) { @link }
 
   describe "#raw" do
-    class OneboxEngineFoo
+    class OneboxEngineHTML
       include Onebox::Engine::HTML
 
       def initialize(link)
@@ -19,7 +19,7 @@ describe Onebox::Engine::HTML do
     end
 
     it "returns a Nokogiri object that has a css method" do
-      object = OneboxEngineFoo.new("http://example.com").send(:raw)
+      object = OneboxEngineHTML.new("http://example.com").send(:raw)
       expect(object).to respond_to(:css)
     end
   end
