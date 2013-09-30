@@ -72,6 +72,9 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
       process.gid = group
       process.daemonize = false
       process.stdout = process.stderr = "#{rails_root}/log/thin#{i}.log"
+      # Thanks to: http://www.garrensmith.com/2012/09/24/Staying-up-with-Unicorn-Upstart-Bluepill.html
+      # If the amount of memory is exceeded 3 times out of 5, restart
+      process.checks :mem_usage, :every => 1.minutes, :below => 750.megabytes, :times => [3, 5]
     end
   end
 
