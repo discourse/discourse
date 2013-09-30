@@ -72,7 +72,8 @@ unless Rails.env == "profile"
   exit
 end
 
-unless User.count == 0
+# by default, Discourse has a "system" account
+if User.count > 0
   puts "Only run this script against an empty DB"
   exit
 end
