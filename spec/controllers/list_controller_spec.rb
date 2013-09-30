@@ -119,6 +119,54 @@ describe ListController do
 
   end
 
+  context "private_messages" do
+    let!(:user) { log_in }
+
+    it "raises an error when can_see_private_messages? is false " do
+      Guardian.any_instance.expects(:can_see_private_messages?).returns(false)
+      xhr :get, :private_messages, username: @user.username
+      response.should be_forbidden
+    end
+
+    it "succeeds when can_see_private_messages? is false " do
+      Guardian.any_instance.expects(:can_see_private_messages?).returns(true)
+      xhr :get, :private_messages, username: @user.username
+      response.should be_success
+    end
+  end
+
+  context "private_messages_sent" do
+    let!(:user) { log_in }
+
+    it "raises an error when can_see_private_messages? is false " do
+      Guardian.any_instance.expects(:can_see_private_messages?).returns(false)
+      xhr :get, :private_messages_sent, username: @user.username
+      response.should be_forbidden
+    end
+
+    it "succeeds when can_see_private_messages? is false " do
+      Guardian.any_instance.expects(:can_see_private_messages?).returns(true)
+      xhr :get, :private_messages_sent, username: @user.username
+      response.should be_success
+    end
+  end
+
+  context "private_messages_unread" do
+    let!(:user) { log_in }
+
+    it "raises an error when can_see_private_messages? is false " do
+      Guardian.any_instance.expects(:can_see_private_messages?).returns(false)
+      xhr :get, :private_messages_unread, username: @user.username
+      response.should be_forbidden
+    end
+
+    it "succeeds when can_see_private_messages? is false " do
+      Guardian.any_instance.expects(:can_see_private_messages?).returns(true)
+      xhr :get, :private_messages_unread, username: @user.username
+      response.should be_success
+    end
+  end
+
   context 'hot' do
     before do
       xhr :get, :hot

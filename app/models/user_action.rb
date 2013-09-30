@@ -128,44 +128,6 @@ LEFT JOIN categories c on c.id = t.category_id
     builder.map_exec(UserActionRow)
   end
 
-  # slightly different to standard stream, it collapses replies
-  def self.private_message_stream(action_type, opts)
-
-    user_id = opts[:user_id]
-    return [] unless opts[:guardian].can_see_private_messages?(user_id)
-
-    builder = SqlBuilder.new("
-SELECT
-  t.title, :action_type action_type, p.created_at, t.id topic_id,
-  :user_id AS target_user_id, au.name AS target_name, au.username AS target_username,
-  coalesce(p.post_number, 1) post_number,
-  p.reply_to_post_number,
-  pu.email, pu.username, pu.name, pu.id user_id,
-  pu.use_uploaded_avatar, pu.uploaded_avatar_template, pu.uploaded_avatar_id,
-  pu.email acting_email, pu.username acting_username, pu.name acting_name, pu.id acting_user_id,
-  pu.use_uploaded_avatar acting_use_uploaded_avatar, pu.uploaded_avatar_template acting_uploaded_avatar_template, pu.uploaded_avatar_id acting_uploaded_avatar_id,
-  p.cooked,
-  CASE WHEN coalesce(p.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
-  p.hidden,
-  p.post_type
-FROM topics t
-JOIN posts p ON p.topic_id =  t.id and p.post_number = t.highest_post_number
-JOIN users pu ON pu.id = p.user_id
-JOIN users au ON au.id = :user_id
-WHERE archetype = 'private_message' and EXISTS (
-   select 1 from user_actions a where a.user_id = :user_id and a.target_topic_id = t.id and action_type = :action_type)
-ORDER BY p.created_at desc
-
-/*offset*/
-/*limit*/
-")
-
-    builder
-      .offset((opts[:offset] || 0).to_i)
-      .limit((opts[:limit] || 60).to_i)
-      .map_exec(UserActionRow, user_id: user_id, action_type: action_type)
-  end
-
   def self.log_action!(hash)
     required_parameters = [:action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id]
     require_parameters(hash, *required_parameters)

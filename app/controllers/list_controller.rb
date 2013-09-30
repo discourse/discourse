@@ -40,7 +40,10 @@ class ListController < ApplicationController
 
   def private_messages
     list_opts = build_topic_list_options
-    list = TopicQuery.new(current_user, list_opts).list_private_messages(fetch_user_from_params)
+    target_user = fetch_user_from_params
+    guardian.ensure_can_see_private_messages!(target_user.id)
+
+    list = TopicQuery.new(current_user, list_opts).list_private_messages(target_user)
     list.more_topics_url = url_for(topics_private_messages_path(list_opts.merge(format: 'json', page: next_page)))
 
     respond(list)
@@ -48,7 +51,10 @@ class ListController < ApplicationController
 
   def private_messages_sent
     list_opts = build_topic_list_options
-    list = TopicQuery.new(current_user, list_opts).list_private_messages_sent(fetch_user_from_params)
+    target_user = fetch_user_from_params
+    guardian.ensure_can_see_private_messages!(target_user.id)
+
+    list = TopicQuery.new(current_user, list_opts).list_private_messages_sent(target_user)
     list.more_topics_url = url_for(topics_private_messages_sent_path(list_opts.merge(format: 'json', page: next_page)))
 
     respond(list)
@@ -56,7 +62,10 @@ class ListController < ApplicationController
 
   def private_messages_unread
     list_opts = build_topic_list_options
-    list = TopicQuery.new(current_user, list_opts).list_private_messages_unread(fetch_user_from_params)
+    target_user = fetch_user_from_params
+    guardian.ensure_can_see_private_messages!(target_user.id)
+
+    list = TopicQuery.new(current_user, list_opts).list_private_messages_unread(target_user)
     list.more_topics_url = url_for(topics_private_messages_unread_path(list_opts.merge(format: 'json', page: next_page)))
 
     respond(list)
