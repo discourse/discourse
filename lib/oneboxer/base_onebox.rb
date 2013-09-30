@@ -29,7 +29,7 @@ module Oneboxer
       end
 
       def uriencode(val)
-        return URI.escape(val, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+        URI.escape(val, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
       end
 
     end

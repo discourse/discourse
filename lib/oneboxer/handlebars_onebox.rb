@@ -39,9 +39,10 @@ module Oneboxer
       html = fetch_html
       args = parse(html)
       return default_url unless args.present?
+
       args[:original_url] = @url
       args[:lang] = @lang || ""
-      args[:favicon] = ActionController::Base.helpers.image_path(self.class.favicon_file) if self.class.favicon_file.present?
+      args[:favicon] = ActionController::Base.helpers.asset_path(self.class.favicon_file, digest: false) if self.class.favicon_file.present?
       args[:host] = nice_host
 
       HandlebarsOnebox.generate_onebox(template,args)
@@ -51,7 +52,7 @@ module Oneboxer
       default_url
     end
 
-    def self.generate_onebox(template, args)
+    def self.generate_onebox(template, args={})
       Mustache.render(File.read(template), args)
     end
 
