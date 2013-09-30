@@ -14,24 +14,11 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
 
     @method mergeAttributes
     @param {Object} attrs The attributes we want to merge with
-    @param {Object} builders Optional builders to use when merging attributes
   **/
-  mergeAttributes: function(attrs, builders) {
+  mergeAttributes: function(attrs) {
     var _this = this;
     _.each(attrs, function(v,k) {
-      // If they're in a builder we use that
-      var builder, col;
-      if (typeof v === 'object' && builders && (builder = builders[k])) {
-        if (!_this.get(k)) {
-          _this.set(k, Em.A());
-        }
-        col = _this.get(k);
-        _.each(v,function(obj) {
-          col.pushObject(builder.create(obj));
-        });
-      } else {
-        _this.set(k, v);
-      }
+      _this.set(k, v);
     });
   }
 
