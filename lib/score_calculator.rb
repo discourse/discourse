@@ -27,7 +27,8 @@ class ScoreCalculator
               FROM (SELECT id, percent_rank()
                     OVER (PARTITION BY topic_id ORDER BY SCORE DESC) as percent_rank
                     FROM posts) AS x
-              WHERE x.id = posts.id")
+              WHERE x.id = posts.id AND
+               (posts.percent_rank IS NULL OR x.percent_rank <> posts.percent_rank)")
 
 
     # Update the topics
@@ -41,7 +42,16 @@ class ScoreCalculator
                            AVG(p.score) AS avg_score
                     FROM posts AS p
                     GROUP BY p.topic_id) AS x
-              WHERE x.topic_id = t.id",
+              WHERE x.topic_id = t.id AND
+                        (
+                          (t.score <> x.avg_score OR t.score IS NULL) OR
+                          (t.has_best_of IS NULL OR t.has_best_of <> (
+                            t.like_count >= :likes_required AND
+                            t.posts_count >= :posts_required AND
+                            x.max_score >= :score_required
+                          ))
+                        )
+  ",
               likes_required: SiteSetting.best_of_likes_required,
               posts_required: SiteSetting.best_of_posts_required,
               score_required: SiteSetting.best_of_score_threshold
@@ -51,7 +61,7 @@ class ScoreCalculator
           FROM (SELECT id, percent_rank()
                 OVER (ORDER BY SCORE DESC) as percent_rank
                 FROM topics) AS x
-          WHERE x.id = topics.id")
+          WHERE x.id = topics.id AND (topics.percent_rank <> x.percent_rank OR topics.percent_rank IS NULL)")
   end
 
 
