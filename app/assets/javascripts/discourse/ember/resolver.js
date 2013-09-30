@@ -16,34 +16,36 @@ Discourse.Resolver = Ember.DefaultResolver.extend({
     @returns {Template} the template (if found)
   **/
   resolveTemplate: function(parsedName) {
+    return this.findMobileTemplate(parsedName) || this.findTemplate(parsedName) || Ember.TEMPLATES.not_found;
+  },
+
+  findMobileTemplate: function(parsedName) {
     if (Discourse.Mobile.mobileView) {
       var mobileParsedName = this.parseName(parsedName.fullName.replace("template:", "template:mobile/"));
-      var mobileTemplate = this.findTemplate(mobileParsedName);
-      if (mobileTemplate) return mobileTemplate;
+      return this.findTemplate(mobileParsedName);
     }
-    return this.findTemplate(parsedName) || Ember.TEMPLATES.not_found;
   },
 
   findTemplate: function(parsedName) {
-    var resolvedTemplate = this._super(parsedName);
-    if (resolvedTemplate) { return resolvedTemplate; }
+    return this._super(parsedName) || this.findSlashedTemplate(parsedName) || this.findAdminTemplate(parsedName);
+  },
 
+  // Try to find a template with slash instead of first underscore, e.g. foo_bar_baz => foo/bar_baz
+  findSlashedTemplate: function(parsedName) {
     var decamelized = parsedName.fullNameWithoutType.decamelize();
-
-    // See if we can find it with slashes instead of underscores
     var slashed = decamelized.replace("_", "/");
-    resolvedTemplate = Ember.TEMPLATES[slashed];
-    if (resolvedTemplate) { return resolvedTemplate; }
+    return Ember.TEMPLATES[slashed];
+  },
 
-    // If we can't find a template, check to see if it's similar to how discourse
-    // lays out templates like: adminEmail => admin/templates/email
-    if (parsedName.fullNameWithoutType.indexOf('admin') === 0) {
+  // Try to find a template within a special admin namespace, e.g. adminEmail => admin/templates/email
+  // (similar to how discourse lays out templates)
+  findAdminTemplate: function(parsedName) {
+    var decamelized = parsedName.fullNameWithoutType.decamelize();
+    if (decamelized.indexOf('admin') === 0) {
       decamelized = decamelized.replace(/^admin\_/, 'admin/templates/');
       decamelized = decamelized.replace(/^admin\./, 'admin/templates/');
       decamelized = decamelized.replace(/\./, '_');
-
-      resolvedTemplate = Ember.TEMPLATES[decamelized];
-      if (resolvedTemplate) { return resolvedTemplate; }
+      return Ember.TEMPLATES[decamelized];
     }
   }
 
