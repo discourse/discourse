@@ -16,7 +16,34 @@ module Jobs
   end
 
   class Base
+
+    class Instrumenter
+
+      def self.stats
+        Thread.current[:db_stats] ||= Stats.new
+      end
+
+      class Stats
+        attr_accessor :query_count, :duration_ms
+
+        def initialize
+          @query_count = 0
+          @duration_ms = 0
+        end
+      end
+
+      def call(name, start, finish, message_id, values)
+        stats = Instrumenter.stats
+        stats.query_count += 1
+        stats.duration_ms += (((finish - start).to_f) * 1000).to_i
+      end
+    end
+
     include Sidekiq::Worker
+
+    def initialize
+      @db_duration = 0
+    end
 
     def log(*args)
       puts args
@@ -34,7 +61,19 @@ module Jobs
       raise "Overwrite me!"
     end
 
+    def last_db_duration
+      @db_duration || 0
+    end
+
+    def ensure_db_instrumented
+      @@instrumented ||= begin
+        ActiveSupport::Notifications.subscribe('sql.active_record', Instrumenter.new)
+        true
+      end
+    end
+
     def perform(*args)
+      ensure_db_instrumented
       opts = args.extract_options!.with_indifferent_access
 
       if SiteSetting.queue_jobs?
@@ -59,6 +98,7 @@ module Jobs
           RailsMultisite::ConnectionManagement.all_dbs
         end
 
+      total_db_time = 0
       dbs.each do |db|
         begin
           thread_exception = nil
@@ -90,6 +130,7 @@ module Jobs
               thread_exception = e
             ensure
               ActiveRecord::Base.connection_handler.clear_active_connections!
+              total_db_time += Instrumenter.stats.duration_ms
             end
           end
           t.join
@@ -100,6 +141,7 @@ module Jobs
 
     ensure
       ActiveRecord::Base.connection_handler.clear_active_connections!
+      @db_duration = total_db_time
     end
 
   end
