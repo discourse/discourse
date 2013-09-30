@@ -79,7 +79,10 @@ shiny). To install on Ubuntu:
     sudo apt-get remove '^nginx.*$'
 
     # Setup a sources.list.d file for the nginx repository
-    echo "deb http://nginx.org/packages/ubuntu/ precise nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+    cat << 'EOF' | sudo tee /etc/apt/sources.list.d/nginx.list
+    deb http://nginx.org/packages/ubuntu/ precise nginx
+    deb-src http://nginx.org/packages/ubuntu/ precise nginx
+    EOF
 
     # Add nginx key
     curl http://nginx.org/keys/nginx_signing.key | sudo apt-key add -
@@ -118,7 +121,7 @@ Install RVM
 
     # As 'discourse'
     # Install RVM
-    curl -s -S -L https://get.rvm.io | bash -s stable
+    \curl -s -S -L https://get.rvm.io | bash -s stable
     . ~/.bash_profile
 
     # rvm added shell initialization code to ~/.bash_profile,
@@ -211,6 +214,7 @@ Not english? Set the default language as appropriate:
 ## nginx setup
 
     # Run these commands as your normal login (e.g. "michael")
+    sudo cp /var/www/discourse/config/nginx.global.conf /etc/nginx/conf.d/local-server.conf
     sudo cp /var/www/discourse/config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
 
 If Discourse will be the only site served by nginx, disable the nginx default
@@ -221,7 +225,6 @@ site:
 
 Edit /etc/nginx/conf.d/discourse.conf
 
-- add: `server_names_hash_bucket_size 64;` at the beginning
 - edit `server_name`. Example: `server_name cain.discourse.org test.cain.discourse.org;`
 - change socket paths if Discourse is installed to a different location
 - modify root location if Discourse is installed to a different location
