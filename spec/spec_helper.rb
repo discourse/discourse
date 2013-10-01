@@ -24,7 +24,6 @@ shared_examples_for "an engine" do
     expect { described_class.new(link).send(:data) }.not_to raise_error
   end
 
-
   it "correctly matches the url" do
     onebox = Onebox::Matcher.new(link).oneboxed
     expect(onebox).to be(described_class)

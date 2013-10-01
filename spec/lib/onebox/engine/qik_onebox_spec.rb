@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::QikOnebox do
-  let(:link) { "http://qik.com/video/13430626" }
-  before do
-    fake(link, response("qik"))
+  before(:all) do
+    @link = "http://qik.com/video/13430626"
+    fake(@link, response("qik"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::VimeoOnebox do
-  let(:link) { "http://vimeo.com/70437049" }
-  before do
-    fake(link, response("vimeo"))
+  before(:all) do
+    @link = "http://vimeo.com/70437049"
+    fake(@link, response("vimeo"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

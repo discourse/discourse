@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::JSON do
-  let(:link) { "http://gist.github.com"}
-  before do
-    fake(link, response("github_gist"))
+  before(:all) do
+    @link = "http://gist.github.com"
+    fake(@link, response("github_gist"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   describe "#raw" do
     class OneboxEngineDee

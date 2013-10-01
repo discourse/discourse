@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::SpotifyOnebox do
-  let(:link) { "http://open.spotify.com/album/3eEtlM70GU40OyHMotY15N" }
-  before do
-    fake(link, response("spotify"))
+  before(:all) do
+    @link = "http://open.spotify.com/album/3eEtlM70GU40OyHMotY15N"
+    fake(@link, response("spotify"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

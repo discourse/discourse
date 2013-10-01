@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::TedOnebox do
-  let(:link) { "http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html" }
-  before do
-    fake(link, response("ted"))
+  before(:all) do
+    @link = "http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html"
+    fake(@link, response("ted"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

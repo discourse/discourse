@@ -13,7 +13,7 @@ module Onebox
     attr_reader :cache
     attr_reader :view
 
-    def initialize(link, cache = Onebox.defaults)
+    def initialize(link, cache = Onebox.defaults.cache)
       @url = link
       @cache = cache
       @view = View.new(template_name, true)

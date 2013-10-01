@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::DotsubOnebox do
-  let(:link) { "http://dotsub.com/view/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78" }
-  before do
-    fake(link, response("dotsub"))
+  before(:all) do
+    @link = "http://dotsub.com/view/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78"
+    fake(@link, response("dotsub"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

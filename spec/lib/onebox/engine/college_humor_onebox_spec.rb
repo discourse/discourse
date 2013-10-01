@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::CollegeHumorOnebox do
-  let(:link) { "http://collegehumor.com" }
-  before do
-    fake(link, response("collegehumor"))
+  before(:all) do
+    @link = "http://collegehumor.com"
+    fake(@link, response("collegehumor"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::StackExchangeOnebox do
-  let(:link) { "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code" }
-  before do
-    fake(link, response("stackexchange"))
+  before(:all) do
+    @link = "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code"
+    fake(@link, response("stackexchange"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 

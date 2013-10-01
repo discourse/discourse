@@ -1,10 +1,13 @@
 require "spec_helper"
 
 describe Onebox::Engine::SoundCloudOnebox do
-  let(:link) { "https://soundcloud.com/rac/penguin-prison-worse-it-gets-rac-mix" }
-  before do
-    fake(link, response("soundcloud"))
+  before(:all) do
+    @link = "https://soundcloud.com/rac/penguin-prison-worse-it-gets-rac-mix"
+    fake(@link, response("soundcloud"))
   end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:link) { @link }
 
   it_behaves_like "an engine"
 
