@@ -22,7 +22,6 @@ class ScoreCalculator
     exec_sql(post_score_sql, @weightings)
 
     # Update the percent rankings of the posts
-
     exec_sql("UPDATE posts SET percent_rank = x.percent_rank
               FROM (SELECT id, percent_rank()
                     OVER (PARTITION BY topic_id ORDER BY SCORE DESC) as percent_rank
@@ -73,12 +72,12 @@ class ScoreCalculator
 
     # Generate a SQL statement to update the scores of all posts
     def post_score_sql
-      "UPDATE posts SET score = ".tap do |sql|
-        components = []
-        @weightings.keys.each do |k|
-          components << "COALESCE(#{k.to_s}, 0) * :#{k.to_s}"
-        end
-        sql << components.join(" + ")
-      end
+      components = []
+      @weightings.keys.each { |k| components << "COALESCE(#{k.to_s}, 0) * :#{k.to_s}" }
+      components = components.join(" + ")
+
+      "UPDATE posts SET score = x.score
+       FROM (SELECT id, #{components} as score FROM posts) AS x
+       WHERE x.id = posts.id AND (posts.score IS NULL OR x.score <> posts.score)"
     end
 end
