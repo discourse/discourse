@@ -49,6 +49,19 @@ Discourse.TopicDetails = Discourse.Model.extend({
       type: 'POST',
       data: { notification_level: v }
     });
-  }
+  },
 
+  removeAllowedUser: function(username) {
+    var users = this.get('allowed_users');
+    Discourse.ajax("/t/" + this.get('topic.id') + "/remove-allowed-user", {
+      type: 'PUT',
+      data: { username: username }
+    }).then(function(res) {
+      users.forEach(function(user, i) {
+        if (user.username === username) {
+          users.removeAt(i);
+        }
+      });
+    });
+  }
 });

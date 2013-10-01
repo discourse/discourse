@@ -473,6 +473,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   removeAllowedUser: function(username) {
     this.get('details').removeAllowedUser(username);
   }
+
 });
 
 
