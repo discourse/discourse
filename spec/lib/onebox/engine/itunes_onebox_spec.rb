@@ -19,11 +19,11 @@ describe Onebox::Engine::ItunesOnebox do
     end
 
     it "returns the product image" do
-      expect(html).to include("bxerxqln.175x175-75.jpg")
+      expect(html).to include("bxerxqln.png")
     end
 
     it "returns the product description" do
-      expect(html).to include("Minecraft — Pocket Edition is a Universal App!")
+      expect(html).to include("Get Minecraft – Pocket Edition on the App Store.")
     end
   end
 end

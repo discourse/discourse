@@ -16,7 +16,6 @@ module Onebox
       private
 
       def data
-        binding.pry
         {
           url: @url,
           title: raw.title,
