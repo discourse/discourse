@@ -4,7 +4,7 @@ module Onebox
       private
 
       def raw
-        @raw ||= ::MultiJson.load(open(@url))
+        @raw ||= ::MultiJson.load(open(url, read_timeout: timeout))
       end
     end
   end

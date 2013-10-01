@@ -10,12 +10,15 @@ module Onebox
       end.map(&method(:const_get))
     end
 
+    attr_reader :url
     attr_reader :cache
+    attr_reader :timeout
     attr_reader :view
 
-    def initialize(link, cache = Onebox.defaults.cache)
+    def initialize(link, cache = nil, timeout = nil)
       @url = link
-      @cache = cache
+      @cache = cache || Onebox.defaults.cache
+      @timeout = timeout || Onebox.defaults.timeout
       @view = View.new(template_name, true)
     end
 
@@ -26,10 +29,10 @@ module Onebox
     private
 
     def record
-      if cache.key?(@url)
-        cache.fetch(@url)
+      if cache.key?(url)
+        cache.fetch(url)
       else
-        cache.store(@url, data)
+        cache.store(url, data)
       end
     end
 

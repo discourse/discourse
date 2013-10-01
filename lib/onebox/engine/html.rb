@@ -4,7 +4,7 @@ module Onebox
       private
 
       def raw
-        @raw ||= Nokogiri::HTML(open(@url))
+        @raw ||= Nokogiri::HTML(open(url, read_timeout: timeout))
       end
     end
   end

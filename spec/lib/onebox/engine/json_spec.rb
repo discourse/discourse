@@ -10,7 +10,8 @@ describe Onebox::Engine::JSON do
   let(:link) { @link }
 
   describe "#raw" do
-    class OneboxEngineDee
+    class OneboxEngineJSON
+      include Onebox::Engine
       include Onebox::Engine::JSON
 
       def initialize(link)
@@ -19,7 +20,7 @@ describe Onebox::Engine::JSON do
     end
 
     it "returns a hash" do
-      object = OneboxEngineDee.new("http://gist.github.com").send(:raw)
+      object = OneboxEngineJSON.new("http://gist.github.com").send(:raw)
       expect(object).to be_a(Hash)
     end
   end
