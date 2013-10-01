@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::GithubPullRequestOnebox do
   let(:link) { "https://github.com/discourse/discourse/pull/1253/" }
   before do
-    fake(link, response("github_pullrequest"))
+    fake(link, response("githubpullrequest"))
   end
 
   it_behaves_like "an engine"

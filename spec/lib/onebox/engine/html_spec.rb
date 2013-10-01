@@ -11,6 +11,7 @@ describe Onebox::Engine::HTML do
 
   describe "#raw" do
     class OneboxEngineHTML
+      include Onebox::Engine
       include Onebox::Engine::HTML
 
       def initialize(link)
