@@ -32,7 +32,7 @@ describe Onebox::Engine do
   end
 
   describe "#record" do
-    class OneboxEngineBar
+    class OneboxEngineRecord
       include Onebox::Engine
 
       def data
@@ -42,39 +42,58 @@ describe Onebox::Engine do
 
     it "returns cached value for given url if its url is already in cache" do
       cache = { "http://example.com" => "old content" }
-      result = OneboxEngineBar.new("http://example.com", cache).send(:record)
+      result = OneboxEngineRecord.new("http://example.com", cache).send(:record)
       expect(result).to eq("old content")
     end
 
     it "stores cache value for given url if cache key doesn't exist" do
       cache = { "http://example.com1" => "old content" }
-      result = OneboxEngineBar.new("http://example.com", cache).send(:record)
+      result = OneboxEngineRecord.new("http://example.com", cache).send(:record)
       expect(result).to eq("new content")
     end
   end
 
   describe ".===" do
+    class OneboxEngineTripleEqual
+      include Onebox::Engine
+      @@matcher = /example/
+    end
     it "returns true if argument matches the matcher" do
-      class OneboxEngineFoo
-        include Onebox::Engine
-        @@matcher = /example/
-      end
-      result = OneboxEngineFoo === "http://www.example.com/product/5?var=foo&bar=5"
+      result = OneboxEngineTripleEqual === "http://www.example.com/product/5?var=foo&bar=5"
       expect(result).to eq(true)
     end
   end
 
   describe ".matches" do
-    it "sets @@matcher to a regular expression" do
-      class OneboxEngineFar
-        include Onebox::Engine
+    class OneboxEngineMatches
+      include Onebox::Engine
 
-        matches do
-          find "foo.com"
-        end
+      matches do
+        find "foo.com"
       end
-      regex = OneboxEngineFar.class_variable_get(:@@matcher)
+    end
+
+    it "sets @@matcher to a regular expression" do
+      regex = OneboxEngineMatches.class_variable_get(:@@matcher)
       expect(regex).to be_a(Regexp)
+    end
+  end
+
+  describe ".template_name" do
+    module ScopeForTemplateName
+      class TemplateNameOnebox
+        include Onebox::Engine
+      end
+    end
+
+    let(:template_name) { ScopeForTemplateName::TemplateNameOnebox.template_name }
+
+    it "should not include the scope" do
+      expect(template_name).not_to include("ScopeForTemplateName", "scopefortemplatename")
+    end
+
+    it "should not include the word Onebox" do
+      expect(template_name).not_to include("onebox", "Onebox")
     end
   end
 end

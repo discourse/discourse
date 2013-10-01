@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::ClikThroughOnebox do
   before(:all) do
     @link = "http://www.clikthrough.com/theater/video/49/en-US"
-    fake(@link, response("clikthrough"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

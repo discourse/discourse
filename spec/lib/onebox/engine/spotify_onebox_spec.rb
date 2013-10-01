@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::SpotifyOnebox do
   before(:all) do
     @link = "http://open.spotify.com/album/3eEtlM70GU40OyHMotY15N"
-    fake(@link, response("spotify"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

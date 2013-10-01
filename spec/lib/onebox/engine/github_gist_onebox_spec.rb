@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::GithubGistOnebox do
   before(:all) do
     @link = "https://gist.github.com/anikalindtner/153044e9bea3331cc103"
-    fake(@link, response("github_gist"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

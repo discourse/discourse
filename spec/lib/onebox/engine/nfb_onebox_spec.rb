@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::NFBOnebox do
   before(:all) do
     @link = "http://www.nfb.ca/film/overdose"
-    fake(@link, response("nfb"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

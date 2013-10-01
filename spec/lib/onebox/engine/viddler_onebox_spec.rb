@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::ViddlerOnebox do
   before(:all) do
     @link = "http://www.viddler.com/v/7164f749"
-    fake(@link, response("viddler"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

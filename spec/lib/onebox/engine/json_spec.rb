@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::JSON do
   before(:all) do
     @link = "http://gist.github.com"
-    fake(@link, response("github_gist"))
+    fake(@link, response("githubgist"))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

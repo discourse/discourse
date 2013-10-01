@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::HuluOnebox do
   before(:all) do
     @link = "http://www.hulu.com/watch/515146"
-    fake(@link, response("hulu"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

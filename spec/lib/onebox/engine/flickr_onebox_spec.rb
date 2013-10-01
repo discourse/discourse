@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::FlickrOnebox do
   before(:all) do
     @link = "http://flickr.com"
-    fake(@link, response("flickr"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

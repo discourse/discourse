@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::VimeoOnebox do
   before(:all) do
     @link = "http://vimeo.com/70437049"
-    fake(@link, response("vimeo"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

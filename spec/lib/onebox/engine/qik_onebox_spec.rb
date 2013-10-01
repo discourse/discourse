@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::QikOnebox do
   before(:all) do
     @link = "http://qik.com/video/13430626"
-    fake(@link, response("qik"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

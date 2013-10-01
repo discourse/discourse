@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::WikipediaOnebox do
   before(:all) do
     @link = "http://en.wikipedia.org/wiki/Kevin_Bacon"
-    fake(@link, response("wikipedia"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 

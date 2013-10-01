@@ -19,7 +19,7 @@ module Onebox
       @url = link
       @cache = cache || Onebox.defaults.cache
       @timeout = timeout || Onebox.defaults.timeout
-      @view = View.new(template_name, true)
+      @view = View.new(self.class.template_name, true)
     end
 
     def to_html
@@ -42,11 +42,6 @@ module Onebox
       raise NoMethodError, "Engines need to implement this method"
     end
 
-    # calculates handlebars template name for onebox using name of engine
-    def template_name
-      self.class.name.split("::").last.downcase.gsub(/onebox/, "")
-    end
-
     # raises error if not defined in onebox engine
     # in each onebox, returns hash of desired onebox content
     def data
@@ -64,6 +59,11 @@ module Onebox
 
       def matches(&block)
         class_variable_set :@@matcher, Hexpress.new(&block).to_r
+      end
+
+      # calculates handlebars template name for onebox using name of engine
+      def template_name
+        name.split("::").last.downcase.gsub(/onebox/, "")
       end
     end
   end

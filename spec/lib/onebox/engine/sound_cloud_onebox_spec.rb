@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::SoundCloudOnebox do
   before(:all) do
     @link = "https://soundcloud.com/rac/penguin-prison-worse-it-gets-rac-mix"
-    fake(@link, response("soundcloud"))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 
