@@ -1,13 +1,14 @@
 module Onebox
   module Engine
-    class AmazonOnebox
+    class ItunesOnebox
       include Engine
-      include HTML
+      include OpenGraph
 
       matches do
         # matcher /^https?:\/\/itunes.apple.com\/.+$/
         http
         domain("itunes")
+        has(".")
         domain("apple")
         tld("com")
       end
@@ -15,11 +16,12 @@ module Onebox
       private
 
       def data
+        binding.pry
         {
           url: @url,
-          title: raw.css("h1").inner_text,
-          image: raw.css("#artwork").first["src"],
-          description: raw.css("#product-review" "p").first.inner_text,
+          title: raw.title,
+          image: raw.images.first,
+          description: raw.description,
         }
       end
     end
