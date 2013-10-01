@@ -719,6 +719,13 @@ Markdown.dialects.Gruber = {
 
     blockquote: function blockquote( block, next ) {
 
+      var m = /(^|\n) +(\>[\s\S]*)/.exec(block);
+      if (m && m[2] && m[2].length) {
+        var blockContents = block.replace(/(^|\n) +\>/, "$1>");
+        next.unshift(blockContents);
+        return [];
+      }
+
       if ( !block.match( /^>/m ) )
         return undefined;
 
