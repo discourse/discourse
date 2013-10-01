@@ -236,8 +236,11 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     Discourse.subscribeUserToNotifications();
 
     if (Discourse.initializers) {
-      Discourse.initializers.forEach(function (init) {
-        init.call(this);
+      var self = this;
+      Em.run.next(function() {
+        Discourse.initializers.forEach(function (init) {
+          init.call(self);
+        });
       });
     }
   }
