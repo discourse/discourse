@@ -27,13 +27,18 @@ Discourse.Composer = Discourse.Model.extend({
 
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
+  notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
+
+  privateMessage: function(){
+    return this.get('creatingPrivateMessage') || this.get('topic.archetype') === 'private_message';
+  }.property('creatingPrivateMessage', 'topic'),
+
   editingPost: Em.computed.equal('action', EDIT),
   replyingToTopic: Em.computed.equal('action', REPLY),
 
   viewOpen: Em.computed.equal('composeState', OPEN),
   viewDraft: Em.computed.equal('composeState', DRAFT),
 
-  notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
 
   archetype: function() {
     return this.get('archetypes').findProperty('id', this.get('archetypeId'));
@@ -175,12 +180,12 @@ Discourse.Composer = Discourse.Model.extend({
     @property minimumTitleLength
   **/
   minimumTitleLength: function() {
-    if (this.get('creatingPrivateMessage')) {
+    if (this.get('privateMessage')) {
       return Discourse.SiteSettings.min_private_message_title_length;
     } else {
       return Discourse.SiteSettings.min_topic_title_length;
     }
-  }.property('creatingPrivateMessage'),
+  }.property('privateMessage'),
 
   /**
     Number of missing characters in the reply until valid.
@@ -197,12 +202,12 @@ Discourse.Composer = Discourse.Model.extend({
     @property minimumPostLength
   **/
   minimumPostLength: function() {
-    if( this.get('creatingPrivateMessage') ) {
+    if( this.get('privateMessage') ) {
       return Discourse.SiteSettings.min_private_message_post_length;
     } else {
       return Discourse.SiteSettings.min_post_length;
     }
-  }.property('creatingPrivateMessage'),
+  }.property('privateMessage'),
 
   /**
     Computes the length of the title minus non-significant whitespaces

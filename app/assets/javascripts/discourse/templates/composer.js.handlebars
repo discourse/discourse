@@ -28,7 +28,7 @@
               {{popupInputTip validation=view.titleValidation shownAt=view.showTitleTip}}
             </div>
 
-            {{#unless model.creatingPrivateMessage}}
+            {{#unless model.privateMessage}}
               <div class="category-input">
                 {{categoryChooser valueAttribute="id" value=model.categoryId}}
                 {{popupInputTip validation=view.categoryValidation shownAt=view.showCategoryTip}}
