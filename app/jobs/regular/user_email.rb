@@ -16,6 +16,7 @@ module Jobs
       return if !user || user.is_banned?
 
       seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
+      seen_recently = false if user.email_always
 
       email_args = {}
 

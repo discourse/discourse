@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'jobs/process_post'
+require 'jobs/regular/process_post'
 
 describe Jobs::ProcessPost do
 

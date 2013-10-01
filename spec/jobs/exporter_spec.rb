@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_dependency 'jobs/base'
 
 describe Jobs::Exporter do
   before do

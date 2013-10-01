@@ -15,7 +15,8 @@ module Jobs
       query = User.real
                   .where(email_digests: true, active: true)
                   .where("COALESCE(last_emailed_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)")
-                  .where("COALESCE(last_seen_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)")
+                  .where("(COALESCE(last_seen_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)) OR
+                          email_always")
 
       # If the site requires approval, make sure the user is approved
       if SiteSetting.must_approve_users?

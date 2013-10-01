@@ -1,4 +1,4 @@
-require_dependency 'jobs'
+require_dependency 'jobs/base'
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'

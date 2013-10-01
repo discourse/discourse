@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'jobs'
+require_dependency 'jobs/base'
 
 describe Jobs::UserEmail do
 
@@ -43,7 +43,13 @@ describe Jobs::UserEmail do
     it "doesn't send an email to a user that's been recently seen" do
       user.update_column(:last_seen_at, 9.minutes.ago)
       Email::Sender.any_instance.expects(:send).never
-      Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
+      Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
+    end
+
+    it "does send an email to a user that's been recently seen but has email_always set" do
+      user.update_attributes(last_seen_at: 9.minutes.ago, email_always: true)
+      Email::Sender.any_instance.expects(:send)
+      Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
     end
   end
 

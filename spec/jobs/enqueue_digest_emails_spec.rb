@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'jobs'
+require_dependency 'jobs/base'
 
 describe Jobs::EnqueueDigestEmails do
 
@@ -38,6 +38,7 @@ describe Jobs::EnqueueDigestEmails do
       it "doesn't return users who have been emailed recently" do
         Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_emailed_recently.id).should be_false
       end
+
     end
 
     context "inactive user" do
@@ -48,15 +49,20 @@ describe Jobs::EnqueueDigestEmails do
       end
     end
 
-
-    context 'visited the site today' do
-      let!(:user_visited_today) { Fabricate(:active_user, last_seen_at: 6.days.ago) }
+    context 'visited the site this week' do
+      let(:user_visited_this_week) { Fabricate(:active_user, last_seen_at: 6.days.ago) }
+      let(:user_visited_this_week_email_always) { Fabricate(:active_user, last_seen_at: 6.days.ago, email_always: true) }
 
       it "doesn't return users who have been emailed recently" do
-        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_visited_today.id).should be_false
+        user = user_visited_this_week
+        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id).should be_false
+      end
+
+      it "does return users who have been emailed recently but have email_always set" do
+        user = user_visited_this_week_email_always
+        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id).should be_true
       end
     end
-
 
     context 'regular users' do
       let!(:user) { Fabricate(:active_user) }

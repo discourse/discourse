@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'jobs/periodical_updates'
+require_dependency 'jobs/scheduled/periodical_updates'
 
 describe Jobs::PeriodicalUpdates do
 

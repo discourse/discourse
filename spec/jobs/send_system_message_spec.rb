@@ -1,6 +1,5 @@
 require 'spec_helper'
-
-require 'jobs/send_system_message'
+require 'jobs/regular/send_system_message'
 
 describe Jobs::SendSystemMessage do
 

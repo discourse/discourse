@@ -1,5 +1,6 @@
 require 'spec_helper'
-require 'jobs/process_post'
+require_dependency 'jobs/base'
+require_dependency 'jobs/regular/process_post'
 
 describe Jobs::NotifyMovedPosts do
 

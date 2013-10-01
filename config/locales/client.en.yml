@@ -284,6 +284,7 @@ en:
 
       email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
       email_private_messages: "Receive an email when someone sends you a private message"
+      email_always: "Receive email notifications and email digests even if I am active on the forum"
 
       other_settings: "Other"
 

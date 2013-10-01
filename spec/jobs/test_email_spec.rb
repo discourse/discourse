@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'jobs'
+require_dependency 'jobs/base'
 
 describe Jobs::TestEmail do
 

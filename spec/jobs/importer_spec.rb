@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_dependency 'jobs/base'
 
 describe Jobs::Importer do
   def stub_schema_changes

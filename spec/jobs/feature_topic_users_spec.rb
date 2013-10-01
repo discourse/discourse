@@ -1,5 +1,6 @@
 require 'spec_helper'
-require 'jobs/process_post'
+require_dependency 'jobs/base'
+require 'jobs/regular/process_post'
 
 describe Jobs::FeatureTopicUsers do
 

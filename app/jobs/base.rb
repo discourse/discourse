@@ -215,4 +215,5 @@ module Jobs
 end
 
 # Require all jobs
-Dir["#{Rails.root}/lib/jobs/*"].each {|file| require_dependency file }
+Dir["#{Rails.root}/app/jobs/regular/*.rb"].each {|file| require_dependency file }
+Dir["#{Rails.root}/app/jobs/scheduled/*.rb"].each {|file| require_dependency file }
