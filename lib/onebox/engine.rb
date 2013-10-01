@@ -19,6 +19,7 @@ module Onebox
       @url = link
       @cache = cache || Onebox.defaults.cache
       @timeout = timeout || Onebox.defaults.timeout
+      @view = View.new(template_name, true)
     end
 
     def to_html
