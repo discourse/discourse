@@ -41,6 +41,10 @@ Note: Setting environment variables is done during step five, before you click '
 5. SMTP_PASSWORD = your SMTP password
 6. HOST_NAME = the domain hosting your site
 
+<a href="http://www.cloud66.com">
+<img src="http://cdn.cloud66.com/images/deploy-with-cloud66.png"/>
+</a>
+
 ## Vision
 
 We think of Discourse as a **Civilized Discourse Construction Kit**, an open-source discussion platform that acts as a free, flexible, fundamental building block for online communities of any size, tiny to huge.
