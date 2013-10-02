@@ -57,11 +57,7 @@ Discourse.TopicDetails = Discourse.Model.extend({
       type: 'PUT',
       data: { username: username }
     }).then(function(res) {
-      users.forEach(function(user, i) {
-        if (user.username === username) {
-          users.removeAt(i);
-        }
-      });
+      users.removeObject(users.findProperty('username', username));
     });
   }
 });
