@@ -11,6 +11,20 @@ class ActiveRecord::Base
     exec_sql(*args).cmd_tuples
   end
 
+  # note: update_attributes still spins up a transaction this can cause contention
+  # this method performs the raw update sidestepping AR
+  def update_columns(hash)
+    sql = "UPDATE #{ self.class.table_name } SET "
+
+    sql << hash.map do |k,v|
+      "#{k} = :#{k}"
+    end.join(",")
+
+    sql << " WHERE id = :id"
+
+    exec_sql(sql, hash.merge(id: self.id))
+  end
+
   def exec_sql(*args)
     ActiveRecord::Base.exec_sql(*args)
   end
