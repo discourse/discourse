@@ -109,7 +109,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
             "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + this.get('model.topic.title') + "</div>",
             "class": "btn-primary btn-reply-on-original",
             "callback": function(){
-              composerController.save(true);
+              composerController._actions.save.apply(composerController, [true]);
             }
           });
 
