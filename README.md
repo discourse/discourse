@@ -1,3 +1,9 @@
+<a href="http://blog.cloud66.com/post/62900887610/introducing-cloud-66-easydeploy">
+<img src="https://raw.github.com/cloud66-samples/discourse/master/doc/easy-deploy.png"/>
+</a>
+
+This is a Cloud 66 EasyDeploy repository.
+
 <a href="http://www.discourse.org/">![Logo](images/discourse.png)</a>
 
 Discourse is the 100% open source, next-generation discussion platform built for the next decade of the Internet.
@@ -27,8 +33,11 @@ Before you get started, ensure you have the following minimum versions: [Ruby 1.
 If you're not here to hack on the open source code, but rather looking to set up a Discourse forum in a production environment, see our [**Discourse Install Guide**](/docs/INSTALL-ubuntu.md). Be warned, however, that Discourse is still very much beta, and you will probably need a background as a developer or system administrator to set it up successfully.
 
 ## Deploying with Cloud 66
-Deploying and maintaining a Discourse setup through Cloud 66 is extremely easy. Simply follow
-7 steps on [building your stack](https://www.cloud66.com/help/first_stack), sign up for a Sendgrid account (for sending emails) and set 
+Deploying and maintaining a Gitlab setup through Cloud 66 is extremely easy. 
+Click the badge and follow the instructions below to deploy!
+
+#### Deploying on Cloud 66
+Simply follow 7 steps on [building your stack](https://www.cloud66.com/help/first_stack), sign up for a Sendgrid account (for sending emails) and set 
 the environment variables below to have your own fully functioning Discourse installation up and running. 
 
 Note: Setting environment variables is done during step five, before you click 'deploy':
