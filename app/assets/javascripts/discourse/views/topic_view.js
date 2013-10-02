@@ -37,8 +37,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     }
 
     // speeds up stuff, bypass jquery slowness and extra checks
-    var totalWidth = $topicProgress[0].offsetWidth;
-    var progressWidth = this.get('controller.streamPercentage') * totalWidth;
+    var totalWidth = $topicProgress[0].offsetWidth,
+        progressWidth = this.get('controller.streamPercentage') * totalWidth;
 
     $topicProgress.find('.bg')
                   .css("border-right-width", (progressWidth === totalWidth) ? "0px" : "1px")
@@ -106,6 +106,11 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
         topicView.updatePosition();
       });
     });
+
+    // This get seems counter intuitive, but it's to trigger the observer on
+    // the streamPercentage for this view. Otherwise the process bar does not
+    // update.
+    this.get('controller.streamPercentage');
 
     this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
       if ($(e.target).hasClass('mention')) { return false; }
