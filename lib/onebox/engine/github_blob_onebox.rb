@@ -1,6 +1,6 @@
 module Onebox
   module Engine
-    class GithubGistOnebox
+    class GithubBlobOnebox
       include Engine
 
       matches do
@@ -16,7 +16,7 @@ module Onebox
 
       def data
         {
-          url: @url,
+          url: @url
         }
       end
     end
