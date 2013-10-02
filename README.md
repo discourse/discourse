@@ -33,7 +33,7 @@ Before you get started, ensure you have the following minimum versions: [Ruby 1.
 If you're not here to hack on the open source code, but rather looking to set up a Discourse forum in a production environment, see our [**Discourse Install Guide**](/docs/INSTALL-ubuntu.md). Be warned, however, that Discourse is still very much beta, and you will probably need a background as a developer or system administrator to set it up successfully.
 
 ## Deploying with Cloud 66
-Deploying and maintaining a Gitlab setup through Cloud 66 is extremely easy. 
+Deploying and maintaining a Discourse setup through Cloud 66 is extremely easy. 
 Click the badge and follow the instructions below to deploy!
 
 #### Deploying on Cloud 66
