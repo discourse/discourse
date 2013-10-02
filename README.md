@@ -1,5 +1,5 @@
 <a href="http://blog.cloud66.com/post/62900887610/introducing-cloud-66-easydeploy">
-<img src="https://raw.github.com/cloud66-samples/discourse/master/doc/easy-deploy.png"/>
+<img src="https://raw.github.com/cloud66-samples/discourse/master/docs/easy-deploy.png"/>
 </a>
 
 This is a Cloud 66 EasyDeploy repository.
