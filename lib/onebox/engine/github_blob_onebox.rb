@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class GithubBlobOnebox
       include Engine
+      include HTML
 
       matches do
         http
@@ -16,7 +17,10 @@ module Onebox
 
       def data
         {
-          url: @url
+          url: @url,
+          filename: raw.css(".final-path").inner_text,
+          lines: raw.css("#files .file .info .mode + span").inner_text,
+          file: raw.css("#files .file .blob-wrapper").inner_text
         }
       end
     end
