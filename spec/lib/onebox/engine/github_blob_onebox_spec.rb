@@ -19,7 +19,9 @@ describe Onebox::Engine::GithubBlobOnebox do
       expect(html).to include("50")
     end
 
-    it "has specific line"
+    it "has blob contents" do
+      expect(html).to include("module Oneboxer")
+    end
 
     it "has URL" do
       expect(html).to include(link)
