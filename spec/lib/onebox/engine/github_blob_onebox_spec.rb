@@ -1,9 +1,9 @@
 require "spec_helper"
 
 describe Onebox::Engine::GithubBlobOnebox do
-  let(:link) { "https://github.com/discourse/discourse/blob/964809f73be42d049347aca352760a6f018bbaf9/lib/plugin/instance.rb" }
+  let(:link) { "https://github.com/discourse/discourse/blob/master/lib/oneboxer/github_blob_onebox.rb" }
   before do
-    fake(link, response("github_blob"))
+    fake(link, response("githubblob"))
   end
 
   it_behaves_like "an engine"
@@ -11,44 +11,8 @@ describe Onebox::Engine::GithubBlobOnebox do
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
 
-    it "has blob author" do
-      expect(html).to include("jamesaanderson")
-    end
-
-    it "has blob title" do
-      expect(html).to include("Add audio onebox")
-    end
-
-    it "has repo name" do
-      expect(html).to include("discourse")
-    end
-
-    it "has commit author gravatar" do
-      expect(html).to include("b3e9977094ce189bbb493cf7f9adea21")
-    end
-
-    it "has commit description" do
-      expect(html).to include("8168")
-    end
-
-    it "has commit time and date" do
-      expect(html).to include("2013-07-26T02:05:53Z")
-    end
-
-    it "has number of commits" do
-      expect(html).to include("1")
-    end
-
-    it "has number of files changed" do
-      expect(html).to include("4")
-    end
-
-    it "has number of additions" do
-      expect(html).to include("19")
-    end
-
-    it "has number of deletions" do
-      expect(html).to include("1")
+    it "has raw data" do
+      expect(html).to include("oneboxer/handlebars_onebox")
     end
 
     it "has URL" do
