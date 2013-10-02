@@ -231,7 +231,7 @@ describe PostsController do
         update_params.delete(:post)
         lambda {
           xhr :put, :update, update_params
-	}.should raise_error(ActionController::ParameterMissing)
+        }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have permission to see the post" do

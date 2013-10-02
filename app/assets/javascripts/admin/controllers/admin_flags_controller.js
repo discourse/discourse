@@ -46,12 +46,12 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
       Deletes a post
 
       @method deletePost
-      @param {Discourse.FlaggedPost} item The post to delete
+      @param {Discourse.FlaggedPost} post The post to delete
     **/
-    deletePost: function(item) {
+    deletePost: function(post) {
       var adminFlagsController = this;
-      item.deletePost().then((function() {
-        adminFlagsController.removeObject(item);
+      post.deletePost().then((function() {
+        adminFlagsController.removeObject(post);
       }), function() {
         bootbox.alert(I18n.t("admin.flags.error"));
       });

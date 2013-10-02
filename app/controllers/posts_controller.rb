@@ -154,7 +154,6 @@ class PostsController < ApplicationController
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
 
     # Make sure we can delete the posts
-
     posts.each {|p| guardian.ensure_can_delete!(p) }
 
     Post.transaction do

@@ -75,7 +75,7 @@ Discourse.PostMenuView = Discourse.View.extend({
 
     if (post.get('post_number') === 1) {
 
-      // If if it's the first post, the delete/undo actions are related to the topic
+      // If it's the first post, the delete/undo actions are related to the topic
       var topic = post.get('topic');
       if (topic.get('deleted_at')) {
         if (!topic.get('details.can_recover')) { return; }
