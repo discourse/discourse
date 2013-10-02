@@ -12,17 +12,9 @@ class ActiveRecord::Base
   end
 
   # note: update_attributes still spins up a transaction this can cause contention
-  # this method performs the raw update sidestepping AR
+  # this method performs the raw update sidestepping the locking
   def update_columns(hash)
-    sql = "UPDATE #{ self.class.table_name } SET "
-
-    sql << hash.map do |k,v|
-      "#{k} = :#{k}"
-    end.join(",")
-
-    sql << " WHERE id = :id"
-
-    exec_sql(sql, hash.merge(id: self.id))
+    self.class.update_all(hash, self.class.primary_key => self.id)
   end
 
   def exec_sql(*args)
