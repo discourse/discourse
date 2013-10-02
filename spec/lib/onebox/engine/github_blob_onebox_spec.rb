@@ -11,9 +11,15 @@ describe Onebox::Engine::GithubBlobOnebox do
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
 
-    it "has raw data" do
-      expect(html).to include("oneboxer/handlebars_onebox")
+    it "has file name" do
+      expect(html).to include("github_blob_onebox.rb")
     end
+
+    it "has number of lines" do
+      expect(html).to include("50")
+    end
+
+    it "has specific line"
 
     it "has URL" do
       expect(html).to include(link)
