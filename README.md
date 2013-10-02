@@ -15,7 +15,7 @@ Usage
 =====
 
 Using onebox is fairly simple!
-First make sure the library is required:
+First, make sure the library is required:
 
 ``` ruby
 require "onebox"
@@ -102,7 +102,7 @@ Setup
     require "spec_helper"
 
     describe Onebox::Engine::NameOnebox do
-      let(:link) { "http://yoursitename.com" }
+      let(:link) { "http://example.com" }
       let(:html) { described_class.new(link).to_html }
 
       before do
@@ -134,7 +134,7 @@ Setup
     <div class="onebox">
       <a href="{{url}}">
         <h1>{{name}}</h1>
-        <h2 class="host">yoursitename.com</h2>
+        <h2 class="host">example.com</h2>
         <img src="{{image}}" />
         <p>{{description}}</p>
       </a>
@@ -144,7 +144,7 @@ Setup
   4. Create new fixture from HTML response
 
     ``` bash
-    curl --output spec/fixtures/oneboxname.response -L -X -GET http://yoursitename.com
+    curl --output spec/fixtures/oneboxname.response -L -X -GET http://example.com
     ```
 
   5. Require in Engine module
@@ -166,10 +166,10 @@ Onebox currently has support for page, image, and video URLs from these sites:
   - Dotsub
   - Flickr
   - Funny or Die
-  - Gist
-  - Github
+  - GitHub
     - Blob
     - Commit
+    - Gist
     - Pull Request
   - Hulu
   - Imgur
@@ -180,8 +180,8 @@ Onebox currently has support for page, image, and video URLs from these sites:
   - Revision
   - Rotten Tomatoes
   - Slideshare
-  - Smugmug
-  - Soundcloud
+  - SmugMug
+  - SoundCloud
   - Stack Exchange
   - TED
   - Twitter
