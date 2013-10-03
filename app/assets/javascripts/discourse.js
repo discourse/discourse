@@ -105,19 +105,20 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     $('#main').on('click.discourse', 'a', function(e) {
       if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) { return; }
 
-      var $currentTarget = $(e.currentTarget);
-      var href = $currentTarget.attr('href');
-      if (!href) { return; }
-      if (href === '#') { return; }
-      if ($currentTarget.attr('target')) { return; }
-      if ($currentTarget.data('auto-route')) { return; }
+      var $currentTarget = $(e.currentTarget),
+          href = $currentTarget.attr('href');
 
-      // If it's an ember #link-to skip it
-      if ($currentTarget.hasClass('ember-view')) { return; }
-
-      if ($currentTarget.hasClass('lightbox')) { return; }
-      if (href.indexOf("mailto:") === 0) { return; }
-      if (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i"))) { return; }
+      if (!href ||
+          href === '#' ||
+          $currentTarget.attr('target') ||
+          $currentTarget.data('ember-action') ||
+          $currentTarget.data('auto-route') ||
+          $currentTarget.hasClass('ember-view') ||
+          $currentTarget.hasClass('lightbox') ||
+          href.indexOf("mailto:") === 0 ||
+          (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i")))) {
+         return;
+      }
 
       e.preventDefault();
       Discourse.URL.routeTo(href);

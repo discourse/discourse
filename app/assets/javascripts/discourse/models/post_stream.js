@@ -133,7 +133,6 @@ Discourse.PostStream = Em.Object.extend({
 
   hasNoFilters: Em.computed.empty('filterDesc'),
 
-
   /**
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
     This is the collection we'll ask for when scrolling upwards.

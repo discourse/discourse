@@ -1,0 +1,18 @@
+{{#if model}}
+  {{avatar model imageSize="huge"}}
+
+  <h1>{{username}}</h1>
+  <h2>{{name}}</h2>
+  <h3>{{i18n last_post}}: {{unboundDate last_posted_at}}</h3>
+
+  <div class='bottom'>
+    {{#if bio_cooked}}<div class='bio'>{{{bio_cooked}}}</div>{{/if}}
+
+    <button class='btn'><i class='icon icon-envelope'></i>{{i18n user.private_message}}</button>
+
+    {{#link-to 'user' model class="btn"}}<i class='icon icon-user'></i>{{i18n user.profile}}{{/link-to}}
+
+    <button class='btn' {{action togglePosts this}}><i class='icon icon-filter'></i>{{i18n topic.filter_to username="username"}}</button>
+  </div>
+
+{{/if}}

@@ -19,9 +19,9 @@
     <div class='topic-meta-data span2'>
       {{#unless userDeleted}}
         <div {{bindAttr class=":contents byTopicCreator:topic-creator"}}>
-          <a href='{{unbound usernameUrl}}'>{{avatar this imageSize="large"}}</a>
-          <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h3>
-          {{#if user_title}}<div class="user-title">{{user_title}}</div>{{/if}}
+          <a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{avatar this imageSize="large"}}</a>
+          <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp username}}</a></h3>
+          {{#if user_title}}<div class="user-title" {{action showPosterExpansion this}}>{{user_title}}</div>{{/if}}
         </div>
       {{else}}
         <div class="contents">

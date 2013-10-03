@@ -581,6 +581,7 @@ en:
       title: Topic Rank Details
 
     topic:
+      filter_to: "Toggle only posts by {{username}} in this topic"
       create_in: 'Create {{categoryName}} Topic'
       create: 'Create Topic'
       create_long: 'Create a new Topic'

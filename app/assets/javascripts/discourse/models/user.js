@@ -259,7 +259,6 @@ Discourse.User = Discourse.Model.extend({
         json.user.invited_by = Discourse.User.create(json.user.invited_by);
       }
 
-
       user.setProperties(json.user);
       return user;
     });
@@ -298,6 +297,17 @@ Discourse.User.reopenClass(Discourse.Singleton, {
 
 
   /**
+    Find a `Discourse.User` for a given username.
+
+    @method findByUsername
+    @returns {Promise} a promise that resolves to a `Discourse.User`
+  **/
+  findByUsername: function(username) {
+    var user = Discourse.User.create({username: username});
+    return user.findDetails();
+  },
+
+  /**
     The current singleton will retrieve its attributes from the `PreloadStore`
     if it exists. Otherwise, no instance is created.
 
@@ -324,7 +334,6 @@ Discourse.User.reopenClass(Discourse.Singleton, {
       discourseUserClass.currentUser = null;
     });
   },
-
 
   /**
     Checks if given username is valid for this email address

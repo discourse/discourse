@@ -25,3 +25,15 @@ test("isAllowedToUploadAFile", function() {
   user.setProperties({ admin: false, moderator: true });
   ok(user.isAllowedToUploadAFile("image"), "moderator can always upload a file");
 });
+
+
+asyncTestDiscourse("findByUsername", function() {
+  expect(3);
+
+  Discourse.User.findByUsername('eviltrout').then(function (user) {
+    present(user);
+    equal(user.get('username'), 'eviltrout', 'it has the correct username');
+    equal(user.get('name'), 'Robin Ward', 'it has the full name since it has details');
+    start();
+  });
+});
