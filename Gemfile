@@ -113,7 +113,7 @@ gem 'sidekiq-failures'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 gem 'therubyracer', require: 'v8'
-gem 'thin', require: false
+gem 'thin'
 gem 'diffy', '>= 3.0', require: false
 gem 'highline', require: false
 
@@ -195,7 +195,7 @@ gem 'rack-mini-profiler', '0.1.29', require: false  # require: false #, git: 'gi
 gem 'redis-rack-cache', git: 'https://github.com/SamSaffron/redis-rack-cache.git', require: false
 gem 'rack-cache', require: false
 gem 'rack-cors', require: false
-gem 'unicorn', require: false
+#gem 'unicorn', require: false
 
 # perftools only works on 1.9 atm
 group :profile do
