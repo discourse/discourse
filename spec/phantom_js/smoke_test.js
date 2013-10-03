@@ -113,6 +113,10 @@ page.runTests = function(){
     // for whatever reason the clicks do not respond at the begining
     //  defering
     Em.run.later(function(){
+
+      // Remove the popup action for testing
+      $('.topic-meta-data a:first').data('ember-action', '');
+
       $('.topic-meta-data a:first').focus().click();
     },500);
   });
