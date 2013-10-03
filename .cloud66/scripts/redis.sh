@@ -6,7 +6,7 @@ then
 	echo "File $FILE exists..."
 else
 	source /var/.cloud66_env
-    cd $RAILS_STACK_PATH
+    cd $RAILS_STACK_PATH/config
     mv redis.yml.sample redis.yml
     touch /tmp/redis_done
 fi
