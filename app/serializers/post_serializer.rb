@@ -7,6 +7,7 @@ class PostSerializer < BasicPostSerializer
   attr_accessor :add_raw
   attr_accessor :single_post_link_counts
   attr_accessor :draft_sequence
+  attr_accessor :post_actions
 
   attributes :post_number,
              :post_type,
@@ -152,8 +153,8 @@ class PostSerializer < BasicPostSerializer
         action_summary[:can_undo] = scope.can_delete?(post_actions[id])
       end
 
-      # anonymize flags
-      if !scope.is_staff? && PostActionType.flag_types.values.include?(id)
+      # only show public data
+      unless scope.is_staff? || PostActionType.public_types.values.include?(id)
         action_summary[:count] = action_summary[:acted] ? 1 : 0
       end
 
