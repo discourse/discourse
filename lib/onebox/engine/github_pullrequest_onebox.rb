@@ -13,7 +13,15 @@ module Onebox
         with("/pull/")
       end
 
+      def url
+        "https://api.github.com/repos/#{match[:owner]}/#{match[:repo]}/pulls/#{match[:number]}"
+      end
+
       private
+
+      def match
+        @url.match(/github\.com\/(?<owner>[^\/]+)\/(?<repo>[^\/]+)\/pull\/(?<number>[^\/]+)/)
+      end
 
       def data
         {
