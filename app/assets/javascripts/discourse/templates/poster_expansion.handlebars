@@ -3,7 +3,7 @@
 
   <h1>{{username}}</h1>
   <h2>{{name}}</h2>
-  <h3>{{i18n last_post}}: {{unboundDate last_posted_at}}</h3>
+  <h3>{{i18n last_post}}: {{date path="last_posted_at" leaveAgo="true"}}</h3>
 
   <div class='bottom'>
     {{#if bio_cooked}}<div class='bio'>{{{bio_cooked}}}</div>{{/if}}
