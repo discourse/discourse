@@ -21,6 +21,14 @@ Discourse.TopicRoute = Discourse.Route.extend({
       });
     },
 
+    composePrivateMessage: function(user) {
+      var self = this;
+
+      Discourse.URL.routeTo("/users/" + user.get('username_lower') + "/private-messages").then(function () {
+        self.controllerFor('userActivity').send('composePrivateMessage')
+      });
+    },
+
     showFlags: function(post) {
       Discourse.Route.showModal(this, 'flag', post);
       this.controllerFor('flag').setProperties({ selected: null });

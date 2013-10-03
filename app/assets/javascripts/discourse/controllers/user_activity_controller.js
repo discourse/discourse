@@ -14,13 +14,15 @@ Discourse.UserActivityController = Discourse.ObjectController.extend({
            (this.get('userActionType') === Discourse.UserAction.TYPES.messages_received);
   }.property('userActionType'),
 
-  composePrivateMessage: function() {
-    return this.get('controllers.composer').open({
-      action: Discourse.Composer.PRIVATE_MESSAGE,
-      usernames: this.get('model.username'),
-      archetypeId: 'private_message',
-      draftKey: 'new_private_message'
-    });
+  actions: {
+    composePrivateMessage: function() {
+      return this.get('controllers.composer').open({
+        action: Discourse.Composer.PRIVATE_MESSAGE,
+        usernames: this.get('model.username'),
+        archetypeId: 'private_message',
+        draftKey: 'new_private_message'
+      });
+    }
   },
 
   privateMessagesActive: Em.computed.equal('pmView', 'index'),

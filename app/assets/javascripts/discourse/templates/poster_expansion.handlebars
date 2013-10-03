@@ -8,7 +8,7 @@
   <div class='bottom'>
     {{#if bio_cooked}}<div class='bio'>{{{bio_cooked}}}</div>{{/if}}
 
-    <button class='btn'><i class='icon icon-envelope'></i>{{i18n user.private_message}}</button>
+    <button class='btn' {{action composePrivateMessage model}}><i class='icon icon-envelope'></i>{{i18n user.private_message}}</button>
 
     {{#link-to 'user' model class="btn"}}<i class='icon icon-user'></i>{{i18n user.profile}}{{/link-to}}
 
