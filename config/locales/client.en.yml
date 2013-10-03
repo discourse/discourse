@@ -372,6 +372,7 @@ en:
     private_message_info:
       title: "Private Message"
       invite: "Invite Others..."
+      remove_allowed_user: "Do you really want to remove {{name}} from this private message?"
 
     email: 'Email'
     username: 'Username'
