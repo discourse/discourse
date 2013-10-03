@@ -22,29 +22,36 @@ production:
         apply_during: build_only
         execute: true
         sudo: true
+    # 4. Rename redis.yml.sample file
+      - source: /.cloud66/scripts/redis.sh
+        destination: /tmp/scripts/redis.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
     last_thing:
-    # 4. KILL DB
+    # 5. KILL DB
       - source: /.cloud66/scripts/kill_db.sh ## NOT BEING SENT TO POSTGRES
         destination: /tmp/scripts/kill_db.sh
         target: postgresql
         apply_during: build_only
         execute: true
         sudo: true
-    # 5. DB:DROP & DB:CREATE
+    # 6. DB:DROP & DB:CREATE
       - source: /.cloud66/scripts/drop_create.sh
         destination: /tmp/scripts/drop_create.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 6. Thin configurations
+    # 7. Thin configurations
       - source: /.cloud66/scripts/thin.sh
         destination: /tmp/scripts/thin.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 7. Import database image
+    # 8. Import database image
       - source: /.cloud66/scripts/import_prod.sh
         destination: /tmp/scripts/import_prod.sh ## NOT BEING COPIED TO POSTGRES
         target: postgresql
@@ -52,14 +59,14 @@ production:
         execute: true
         owner: postgres
         run_as: postgres
-    # 8. Migrate database
+    # 9. Migrate database
       - source: /.cloud66/scripts/migrate.sh
         destination: /tmp/migrate.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 9. Curl script
+    # 10. Curl script
       - source: /.cloud66/scripts/curl.sh
         destination: /tmp/curl.sh
         target: rails
@@ -90,29 +97,36 @@ staging:
         apply_during: build_only
         execute: true
         sudo: true
+    # 4. Rename redis.yml.sample file
+      - source: /.cloud66/scripts/redis.sh
+        destination: /tmp/scripts/redis.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
     last_thing:
-    # 4. KILL DB
+    # 5. KILL DB
       - source: /.cloud66/scripts/kill_db.sh ## NOT BEING SENT TO POSTGRES
         destination: /tmp/scripts/kill_db.sh
         target: postgresql
         apply_during: build_only
         execute: true
         sudo: true
-    # 5. DB:DROP & DB:CREATE
+    # 6. DB:DROP & DB:CREATE
       - source: /.cloud66/scripts/drop_create.sh
         destination: /tmp/scripts/drop_create.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 6. Thin configurations
+    # 7. Thin configurations
       - source: /.cloud66/scripts/thin.sh
         destination: /tmp/scripts/thin.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 7. Import database image
+    # 8. Import database image
       - source: /.cloud66/scripts/import_prod.sh
         destination: /tmp/scripts/import_prod.sh ## NOT BEING COPIED TO POSTGRES
         target: postgresql
@@ -120,14 +134,14 @@ staging:
         execute: true
         owner: postgres
         run_as: postgres
-    # 8. Migrate database
+    # 9. Migrate database
       - source: /.cloud66/scripts/migrate.sh
         destination: /tmp/migrate.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 9. Curl script
+    # 10. Curl script
       - source: /.cloud66/scripts/curl.sh
         destination: /tmp/curl.sh
         target: rails
@@ -158,29 +172,36 @@ development:
         apply_during: build_only
         execute: true
         sudo: true
+    # 4. Rename redis.yml.sample file
+      - source: /.cloud66/scripts/redis.sh
+        destination: /tmp/scripts/redis.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
     last_thing:
-    # 4. KILL DB
+    # 5. KILL DB
       - source: /.cloud66/scripts/kill_db.sh
         destination: /tmp/scripts/kill_db.sh
         target: postgresql
         apply_during: build_only
         execute: true
         sudo: true
-    # 5. DB:DROP & DB:CREATE
+    # 6. DB:DROP & DB:CREATE
       - source: /.cloud66/scripts/drop_create.sh
         destination: /tmp/scripts/drop_create.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 6. Thin configurations
+    # 7. Thin configurations
       - source: /.cloud66/scripts/thin.sh
         destination: /tmp/scripts/thin.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 7. Import database image
+    # 8. Import database image
       - source: /.cloud66/scripts/import_dev.sh
         destination: /tmp/scripts/import_dev.sh
         target: postgresql
@@ -188,14 +209,14 @@ development:
         execute: true
         owner: postgres
         run_as: postgres
-    # 8. Migrate database
+    # 9. Migrate database
       - source: /.cloud66/scripts/migrate.sh
         destination: /tmp/migrate.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 9. Curl script
+    # 10. Curl script
       - source: /.cloud66/scripts/curl.sh
         destination: /tmp/curl.sh
         target: rails
