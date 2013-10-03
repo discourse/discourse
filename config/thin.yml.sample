@@ -1,4 +1,4 @@
-----
+---
 chdir: /var/www/discourse/current
 environment: production
 address: 0.0.0.0
