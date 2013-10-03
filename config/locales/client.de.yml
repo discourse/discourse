@@ -373,6 +373,7 @@ de:
     private_message_info:
       title: "Privates Gespräch"
       invite: "Andere einladen..."
+      remove_allowed_user: "Willst du {{name}} wirklich aus diesem Gespräch entfernen?"
 
     email: 'Mail'
     username: 'Benutzername'

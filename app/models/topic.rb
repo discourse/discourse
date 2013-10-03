@@ -382,7 +382,12 @@ class Topic < ActiveRecord::Base
   def remove_allowed_user(username)
     user = User.where(username: username).first
     if user
-      topic_allowed_users.where(user_id: user.id).first.destroy
+      topic_user = topic_allowed_users.where(user_id: user.id).first
+      if topic_user
+        topic_user.destroy
+      else
+        false
+      end
     end
   end
 
