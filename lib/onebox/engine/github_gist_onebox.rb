@@ -11,7 +11,15 @@ module Onebox
         tld("com")
       end
 
+      def url
+        "https://api.github.com/gists/#{match[:number]}"
+      end
+
       private
+
+      def match
+        @url.match(/gist\.github\.com\/([^\/]+\/)?(?<number>[0-9a-f]+)/)
+      end
 
       def data
         {
