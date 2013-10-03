@@ -431,12 +431,15 @@ kbd {
     border: 0;
     background: none;
     color: $darkish_gray;
+    width: 60px;
+    text-align: left;
     i {
       font-size: 18px;
     }
     &:nth-of-type(2) {
       right: 4px;
       left: auto;
+      text-align: right;
     }
     @include hover {
       color: darken($darkish_gray, 10%);
