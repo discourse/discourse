@@ -3,11 +3,11 @@ production:
         server:
             unique_name: frontend
         configuration:
-            ignore_missing_schema: true
+            ignore_missing_schema: false
 development:
     rails:
         server:
             unique_name: frontend
         configuration:
             use_asset_pipeline: false
-            ignore_missing_schema: true
+            ignore_missing_schema: false
