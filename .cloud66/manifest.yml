@@ -4,6 +4,12 @@ production:
             unique_name: frontend
         configuration:
             ignore_missing_schema: true
+staging:
+    rails:
+        server:
+            unique_name: frontend
+        configuration:
+            ignore_missing_schema: true
 development:
     rails:
         server:
