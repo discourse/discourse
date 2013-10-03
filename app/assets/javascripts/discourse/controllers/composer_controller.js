@@ -17,41 +17,11 @@ Discourse.ComposerController = Discourse.Controller.extend({
     this.set('similarTopics', Em.A());
   },
 
-  updateDraftStatus: function() {
-    this.get('model').updateDraftStatus();
-  },
-
-  appendText: function(text) {
-    var c = this.get('model');
-    if (c) { c.appendText(text); }
-  },
-
-  categories: function() {
-    return Discourse.Category.list();
-  }.property(),
-
   actions: {
-
     // Toggle the reply view
     toggle: function() {
-      this.closeAutocomplete();
-      switch (this.get('model.composeState')) {
-        case Discourse.Composer.OPEN:
-          if (this.blank('model.reply') && this.blank('model.title')) {
-            this.close();
-          } else {
-            this.shrink();
-          }
-          break;
-        case Discourse.Composer.DRAFT:
-          this.set('model.composeState', Discourse.Composer.OPEN);
-          break;
-        case Discourse.Composer.SAVING:
-          this.close();
-      }
-      return false;
+      this.toggle();
     },
-
 
     togglePreview: function() {
       this.get('model').togglePreview();
@@ -66,85 +36,121 @@ Discourse.ComposerController = Discourse.Controller.extend({
       this.cancelComposer();
     },
 
-    save: function(force) {
-      var composer = this.get('model'),
-          composerController = this;
-
-      if( composer.get('cantSubmitPost') ) {
-        this.set('view.showTitleTip', Date.now());
-        this.set('view.showCategoryTip', Date.now());
-        this.set('view.showReplyTip', Date.now());
-        return;
-      }
-
-      composer.set('disableDrafts', true);
-
-      // for now handle a very narrow use case
-      // if we are replying to a topic AND not on the topic pop the window up
-      if(!force && composer.get('replyingToTopic')) {
-        var topic = this.get('topic');
-        if (!topic || topic.get('id') !== composer.get('topic.id'))
-        {
-          var message = I18n.t("composer.posting_not_on_topic", {title: this.get('model.topic.title')});
-
-          var buttons = [{
-            "label": I18n.t("composer.cancel"),
-            "class": "cancel",
-            "link": true
-          }];
-
-          if(topic) {
-            buttons.push({
-              "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + topic.get('title') + "</div>",
-              "class": "btn btn-reply-here",
-              "callback": function(){
-                composer.set('topic', topic);
-                composer.set('post', null);
-                composerController.save(true);
-              }
-            });
-          }
-
-          buttons.push({
-            "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + this.get('model.topic.title') + "</div>",
-            "class": "btn-primary btn-reply-on-original",
-            "callback": function(){
-              composerController._actions.save.apply(composerController, [true]);
-            }
-          });
-
-          bootbox.dialog(message, buttons, {"classes": "reply-where-modal"});
-          return;
-        }
-      }
-
-      return composer.save({
-        imageSizes: this.get('view').imageSizes()
-      }).then(function(opts) {
-
-        // If we replied as a new topic successfully, remove the draft.
-        if (composerController.get('replyAsNewTopicDraft')) {
-          composerController.destroyDraft();
-        }
-
-        opts = opts || {};
-        composerController.close();
-
-        var currentUser = Discourse.User.current();
-        if (composer.get('creatingTopic')) {
-          currentUser.set('topic_count', currentUser.get('topic_count') + 1);
-        } else {
-          currentUser.set('reply_count', currentUser.get('reply_count') + 1);
-        }
-        Discourse.URL.routeTo(opts.post.get('url'));
-
-      }, function(error) {
-        composer.set('disableDrafts', false);
-        bootbox.alert(error);
-      });
+    save: function() {
+      this.save();
     }
   },
 
+  updateDraftStatus: function() {
+    this.get('model').updateDraftStatus();
+  },
+
+  appendText: function(text) {
+    var c = this.get('model');
+    if (c) { c.appendText(text); }
+  },
+
+  categories: function() {
+    return Discourse.Category.list();
+  }.property(),
+
+
+  toggle: function() {
+    this.closeAutocomplete();
+    switch (this.get('model.composeState')) {
+      case Discourse.Composer.OPEN:
+        if (this.blank('model.reply') && this.blank('model.title')) {
+          this.close();
+        } else {
+          this.shrink();
+        }
+        break;
+      case Discourse.Composer.DRAFT:
+        this.set('model.composeState', Discourse.Composer.OPEN);
+        break;
+      case Discourse.Composer.SAVING:
+        this.close();
+    }
+    return false;
+  },
+
+  save: function(force) {
+    var composer = this.get('model'),
+        composerController = this;
+
+    if( composer.get('cantSubmitPost') ) {
+      this.set('view.showTitleTip', Date.now());
+      this.set('view.showCategoryTip', Date.now());
+      this.set('view.showReplyTip', Date.now());
+      return;
+    }
+
+    composer.set('disableDrafts', true);
+
+    // for now handle a very narrow use case
+    // if we are replying to a topic AND not on the topic pop the window up
+    if(!force && composer.get('replyingToTopic')) {
+      var topic = this.get('topic');
+      if (!topic || topic.get('id') !== composer.get('topic.id'))
+      {
+        var message = I18n.t("composer.posting_not_on_topic", {title: this.get('model.topic.title')});
+
+        var buttons = [{
+          "label": I18n.t("composer.cancel"),
+          "class": "cancel",
+          "link": true
+        }];
+
+        if(topic) {
+          buttons.push({
+            "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + topic.get('title') + "</div>",
+            "class": "btn btn-reply-here",
+            "callback": function(){
+              composer.set('topic', topic);
+              composer.set('post', null);
+              composerController.save(true);
+            }
+          });
+        }
+
+        buttons.push({
+          "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + this.get('model.topic.title') + "</div>",
+          "class": "btn-primary btn-reply-on-original",
+          "callback": function(){
+            composerController.save(true);
+          }
+        });
+
+        bootbox.dialog(message, buttons, {"classes": "reply-where-modal"});
+        return;
+      }
+    }
+
+    return composer.save({
+      imageSizes: this.get('view').imageSizes()
+    }).then(function(opts) {
+
+      // If we replied as a new topic successfully, remove the draft.
+      if (composerController.get('replyAsNewTopicDraft')) {
+        composerController.destroyDraft();
+      }
+
+      opts = opts || {};
+      composerController.close();
+
+      var currentUser = Discourse.User.current();
+      if (composer.get('creatingTopic')) {
+        currentUser.set('topic_count', currentUser.get('topic_count') + 1);
+      } else {
+        currentUser.set('reply_count', currentUser.get('reply_count') + 1);
+      }
+      Discourse.URL.routeTo(opts.post.get('url'));
+
+    }, function(error) {
+      composer.set('disableDrafts', false);
+      bootbox.alert(error);
+    });
+  },
 
   /**
     Checks to see if a reply has been typed. This is signaled by a keyUp
