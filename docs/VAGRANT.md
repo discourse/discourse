@@ -118,10 +118,9 @@ rake db:test:prepare
 
 If you change your mind and want to use the test data again, just execute the above but using `pg_dumps/development-image.sql` instead.
 
-### Guard + Rspec
+### Tests
 
-If you're actively working on Discourse, we recommend that you run [Guard](https://github.com/guard/guard). It'll automatically run our unit tests over and over, and includes support
-for live CSS reloading.
+If you're actively working on Discourse, we recommend that you run rake autospec, which will run the specs.  It’s very, very smart. It’ll abort very long test runs. So if it starts running all of the specs and then you just start editing a spec file and save it, it knows that it’s time to interrupt the spec suite, run this one spec for you, then it’ll keep running these specs until they pass as well. If you fail a spec by saving it and then go and start editing around the project to try and fix that spec, it’ll detect that and run that one failing spec, not a hundred of them.
 
 To use it, follow all the above steps. Once rails is running, open a new terminal window or tab, and then do this:
 
@@ -129,11 +128,10 @@ To use it, follow all the above steps. Once rails is running, open a new termina
 vagrant ssh
 cd /vagrant
 bundle exec rake db:test:prepare
-bundle exec guard -p
+bundle exec rake autospec
 ```
 
-Wait a minute while it runs all our unit tests. Once it has completed, live reloading should start working. Simply save a file locally, wait a couple of seconds and you'll see it change in your browser. No reloading of pages should be necessary for the most part, although if something doesn't update you should refresh to confirm.
-
+For more insight into testing Discourse, see [this discussion](http://rubyrogues.com/117-rr-discourse-part-2-with-sam-saffron-and-robin-ward/) with the Ruby Rogues.
 
 ### Sending Email
 
