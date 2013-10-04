@@ -427,7 +427,7 @@ class Guardian
   def is_my_own?(obj)
 
     unless anonymous?
-      return obj.user_id == @user.id if obj.respond_to?(:user_id)
+      return obj.user_id == @user.id if obj.respond_to?(:user_id) && obj.user_id && @user.id
       return obj.user == @user if obj.respond_to?(:user)
     end
 

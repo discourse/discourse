@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe TopicsController do
 
-
-
   context 'wordpress' do
     let!(:user) { log_in(:moderator) }
     let(:p1) { Fabricate(:post, user: user) }
@@ -527,7 +525,7 @@ describe TopicsController do
 
     it 'tracks a visit for all html requests' do
       current_user = log_in(:coding_horror)
-      TopicUser.expects(:track_visit!).with(topic, current_user)
+      TopicUser.expects(:track_visit!).with(topic.id, current_user.id)
       get :show, topic_id: topic.id, slug: topic.slug
     end
 
