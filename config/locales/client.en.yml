@@ -185,6 +185,7 @@ en:
     user:
       said: "{{username}} said:"
       profile: "Profile"
+      show_profile: "Show Profile"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive: "download archive of my posts"
@@ -581,7 +582,7 @@ en:
       title: Topic Rank Details
 
     topic:
-      filter_to: "Toggle only posts by {{username}} in this topic"
+      filter_to: "Show only posts by {{username}} in this topic"
       create_in: 'Create {{categoryName}} Topic'
       create: 'Create Topic'
       create_long: 'Create a new Topic'

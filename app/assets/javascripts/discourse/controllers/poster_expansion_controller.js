@@ -11,6 +11,8 @@ Discourse.PosterExpansionController = Discourse.ObjectController.extend({
   visible: false,
   user: null,
 
+  showFilter: Em.computed.alias('controllers.topic.postStream.hasNoFilters'),
+
   show: function(post) {
 
     var currentUsername = this.get('username');
