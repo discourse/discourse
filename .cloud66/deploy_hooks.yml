@@ -2,7 +2,7 @@ production:
     first_thing:
     # 1. Permissions on postgres box
       - source: /.cloud66/scripts/permissions.sh
-        destination: /tmp/scripts/permissions.sh
+        destination: /tmp/scripts/permission.sh
         target: postgresql
         apply_during: build_only
         execute: true
