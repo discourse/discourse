@@ -1,0 +1,15 @@
+---
+chdir: /var/www/discourse/current
+environment: production
+address: 0.0.0.0
+port: 3000
+timeout: 30
+log: /var/www/discourse/shared/log/thin.log
+pid: /var/www/discourse/shared/pids/thin.pid
+socket: /var/www/discourse/tmp/thin.sock
+max_conns: 1024
+max_persistent_conns: 100
+require: []
+wait: 30
+servers: 4
+daemonize: true
