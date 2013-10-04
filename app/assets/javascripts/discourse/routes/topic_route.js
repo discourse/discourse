@@ -14,11 +14,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     // Modals that can pop up within a topic
 
     showPosterExpansion: function(post) {
-      var self = this;
-
-      Discourse.User.findByUsername(post.get('username')).then(function (user) {
-        self.controllerFor('posterExpansion').show(user, post);
-      });
+      this.controllerFor('posterExpansion').show(post);
     },
 
     composePrivateMessage: function(user) {

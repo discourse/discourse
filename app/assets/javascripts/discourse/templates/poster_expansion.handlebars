@@ -1,20 +1,25 @@
 {{#if model}}
-  {{avatar model imageSize="huge"}}
+  {{boundAvatar model imageSize="huge"}}
 
   <h1>{{username}}</h1>
   <h2>{{name}}</h2>
-  <h3>{{i18n last_post}}: {{date path="last_posted_at" leaveAgo="true"}}</h3>
 
-  <div class='bottom'>
-    {{#if bio_cooked}}<div class='bio'>{{{bio_cooked}}}</div>{{/if}}
+  {{#if user}}
+    <h3>{{i18n last_post}}: {{date path="user.last_posted_at" leaveAgo="true"}}</h3>
 
-    {{#if can_send_private_message_to_user}}
-      <button class='btn' {{action composePrivateMessage model}}><i class='icon icon-envelope'></i>{{i18n user.private_message}}</button>
-    {{/if}}
+    <div class='bottom'>
+      {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}
 
-    {{#link-to 'user' model class="btn"}}<i class='icon icon-user'></i>{{i18n user.profile}}{{/link-to}}
+      {{#if user.can_send_private_message_to_user}}
+        <button class='btn' {{action composePrivateMessage user}}><i class='icon icon-envelope'></i>{{i18n user.private_message}}</button>
+      {{/if}}
 
-    <button class='btn' {{action togglePosts this}}><i class='icon icon-filter'></i>{{i18n topic.filter_to username="username"}}</button>
-  </div>
+      {{#link-to 'user' user class="btn"}}<i class='icon icon-user'></i>{{i18n user.profile}}{{/link-to}}
+
+      <button class='btn' {{action togglePosts user}}><i class='icon icon-filter'></i>{{i18n topic.filter_to username="username"}}</button>
+    </div>
+  {{else}}
+    <p class='loading'>{{i18n loading}}</p>
+  {{/if}}
 
 {{/if}}
