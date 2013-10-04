@@ -203,16 +203,12 @@ development:
         execute: true
         sudo: true
     ########## TESTING ################
-    # 5. Rename production.rb.sample file
-      - source: /.cloud66/files/production.rb
-        destination: <%= ENV['RAILS_STACK_PATH'] %>/config/environments/production.rb
-        target: rails
-    # 6. Move thin config to server
+    # 5. Move thin config to server
       - source: /.cloud66/files/thin.yml
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/thin.yml
         target: rails
     after_rails:
-    # 7. Set environment variables and allow PSQL user to access them
+    # 6. Set environment variables and allow PSQL user to access them
       - source: /.cloud66/scripts/env_vars.sh
         destination: /tmp/scripts/env_vars.sh
         target: rails
@@ -220,21 +216,21 @@ development:
         execute: true
         sudo: true
     last_thing:
-    # 8. KILL DB
+    # 7. KILL DB
       - source: /.cloud66/scripts/kill_db.sh
         destination: /tmp/scripts/kill_db.sh
         target: postgresql
         apply_during: build_only
         execute: true
         sudo: true
-    # 9. DB:DROP & DB:CREATE
+    # 8. DB:DROP & DB:CREATE
       - source: /.cloud66/scripts/drop_create.sh
         destination: /tmp/scripts/drop_create.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 10. Import database image
+    # 9. Import database image
       - source: /.cloud66/scripts/import_dev.sh
         destination: /tmp/scripts/import_dev.sh
         target: postgresql
@@ -242,14 +238,14 @@ development:
         execute: true
         owner: postgres
         run_as: postgres
-    # 11. Migrate database
+    # 10. Migrate database
       - source: /.cloud66/scripts/migrate.sh
         destination: /tmp/migrate.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 12. Curl script
+    # 11. Curl script
       - source: /.cloud66/scripts/curl.sh
         destination: /tmp/curl.sh
         target: rails
