@@ -24,6 +24,14 @@ production:
       - source: /.cloud66/files/redis.yml
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/redis.yml
         target: rails
+    ########## TESTING ################
+      - source: /.cloud66/scripts/permissions.sh
+        destination: /tmp/scripts/permissions.sh
+        target: postgresql
+        apply_during: build_only
+        execute: true
+        sudo: true
+    ########## TESTING ################
     # 5. Rename production.rb.sample file
       - source: /.cloud66/files/production.rb
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/environments/production.rb
