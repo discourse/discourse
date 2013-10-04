@@ -21,19 +21,13 @@ production:
         target: rails
     ###################################### DURING CAP DEPLOY ###################################################
     # 4. Rename redis.yml.sample file
-      - source: /.cloud66/scripts/redis.sh
-        destination: /tmp/scripts/redis.sh
+      - source: /.cloud66/files/redis.yml
+        destination: <%= ENV['RAILS_STACK_PATH'] %>/config/redis.yml
         target: rails
-        apply_during: build_only
-        execute: true
-        sudo: true
     # 5. Rename production.rb.sample file
-      - source: /.cloud66/scripts/production_rename.sh
-        destination: /tmp/scripts/production_rename.sh
+      - source: /.cloud66/files/production.rb
+        destination: <%= ENV['RAILS_STACK_PATH'] %>/config/environments/production.rb
         target: rails
-        apply_during: build_only
-        execute: true
-        sudo: true
     ###################################### DURING CAP DEPLOY ###################################################
     after_rails:
     # 6. Set environment variables and allow PSQL user to access them
@@ -110,19 +104,13 @@ staging:
         target: rails
     ###################################### DURING CAP DEPLOY ###################################################
     # 4. Rename redis.yml.sample file
-      - source: /.cloud66/scripts/redis.sh
-        destination: /tmp/scripts/redis.sh
+      - source: /.cloud66/files/redis.yml
+        destination: <%= ENV['RAILS_STACK_PATH'] %>/config/redis.yml
         target: rails
-        apply_during: build_only
-        execute: true
-        sudo: true
     # 5. Rename production.rb.sample file
-      - source: /.cloud66/scripts/production_rename.sh
-        destination: /tmp/scripts/production_rename.sh
+      - source: /.cloud66/files/production.rb
+        destination: <%= ENV['RAILS_STACK_PATH'] %>/config/environments/production.rb
         target: rails
-        apply_during: build_only
-        execute: true
-        sudo: true
     ###################################### DURING CAP DEPLOY ###################################################
     after_rails:
     # 6. Set environment variables and allow PSQL user to access them
@@ -199,12 +187,9 @@ development:
         target: rails
     ###################################### DURING CAP DEPLOY ###################################################
     # 4. Rename redis.yml.sample file
-      - source: /.cloud66/scripts/redis.sh
-        destination: /tmp/scripts/redis.sh
+      - source: /.cloud66/files/redis.yml
+        destination: <%= ENV['RAILS_STACK_PATH'] %>/config/redis.yml
         target: rails
-        apply_during: build_only
-        execute: true
-        sudo: true
     ###################################### DURING CAP DEPLOY ###################################################
     after_rails:
     # 5. Set environment variables and allow PSQL user to access them
