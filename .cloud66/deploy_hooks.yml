@@ -32,6 +32,13 @@ production:
         execute: true
         sudo: true
     ########## TESTING ################
+      - source: /.cloud66/scripts/permissions.sh
+        destination: /tmp/scripts/permissions.sh
+        target: rails
+        apply_during: deploy_only
+        execute: true
+        sudo: true
+    ########## TESTING ################
     # 5. Rename production.rb.sample file
       - source: /.cloud66/files/production.rb
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/environments/production.rb
