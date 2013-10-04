@@ -663,7 +663,9 @@ end
 #
 # Indexes
 #
-#  idx_topics_user_id_deleted_at     (user_id)
-#  index_forum_threads_on_bumped_at  (bumped_at)
+#  idx_topics_user_id_deleted_at                                (user_id)
+#  index_forum_threads_on_bumped_at                             (bumped_at)
+#  index_topics_on_deleted_at_and_visible_and_archetype_and_id  (deleted_at,visible,archetype,id)
+#  index_topics_on_id_and_deleted_at                            (id,deleted_at)
 #
 

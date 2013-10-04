@@ -61,7 +61,7 @@ class PostTiming < ActiveRecord::Base
 
 
   def self.process_timings(current_user, topic_id, topic_time, timings)
-    current_user.update_time_read!
+    current_user.user_stat.update_time_read!
 
     highest_seen = 1
     timings.each do |post_number, time|

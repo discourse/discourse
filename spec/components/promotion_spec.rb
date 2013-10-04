@@ -27,9 +27,10 @@ describe Promotion do
     context "that has done the requisite things" do
 
       before do
-        user.topics_entered = SiteSetting.basic_requires_topics_entered
-        user.posts_read_count = SiteSetting.basic_requires_read_posts
-        user.time_read = SiteSetting.basic_requires_time_spent_mins * 60
+        stat = user.user_stat
+        stat.topics_entered = SiteSetting.basic_requires_topics_entered
+        stat.posts_read_count = SiteSetting.basic_requires_read_posts
+        stat.time_read = SiteSetting.basic_requires_time_spent_mins * 60
         @result = promotion.review
       end
 
@@ -64,13 +65,14 @@ describe Promotion do
     context "that has done the requisite things" do
 
       before do
-        user.topics_entered = SiteSetting.regular_requires_topics_entered
-        user.posts_read_count = SiteSetting.regular_requires_read_posts
-        user.time_read = SiteSetting.regular_requires_time_spent_mins * 60
-        user.days_visited = SiteSetting.regular_requires_days_visited * 60
-        user.likes_received = SiteSetting.regular_requires_likes_received
-        user.likes_given = SiteSetting.regular_requires_likes_given
-        user.topic_reply_count = SiteSetting.regular_requires_topic_reply_count
+        stat = user.user_stat
+        stat.topics_entered = SiteSetting.regular_requires_topics_entered
+        stat.posts_read_count = SiteSetting.regular_requires_read_posts
+        stat.time_read = SiteSetting.regular_requires_time_spent_mins * 60
+        stat.days_visited = SiteSetting.regular_requires_days_visited * 60
+        stat.likes_received = SiteSetting.regular_requires_likes_received
+        stat.likes_given = SiteSetting.regular_requires_likes_given
+        stat.topic_reply_count = SiteSetting.regular_requires_topic_reply_count
 
         @result = promotion.review
       end

@@ -39,9 +39,10 @@ describe BoostTrustLevel do
     context "for a user that has done the requisite things to attain their trust level" do
 
       before do
-        user.topics_entered = SiteSetting.basic_requires_topics_entered + 1
-        user.posts_read_count = SiteSetting.basic_requires_read_posts + 1
-        user.time_read = SiteSetting.basic_requires_time_spent_mins * 60
+        stat = user.user_stat
+        stat.topics_entered = SiteSetting.basic_requires_topics_entered + 1
+        stat.posts_read_count = SiteSetting.basic_requires_read_posts + 1
+        stat.time_read = SiteSetting.basic_requires_time_spent_mins * 60
         user.save!
         user.update_attributes(trust_level: TrustLevel.levels[:basic])
       end

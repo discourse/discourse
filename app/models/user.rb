@@ -259,7 +259,7 @@ class User < ActiveRecord::Base
 
   def update_visit_record!(date)
     unless has_visit_record?(date)
-      update_column(:days_visited, days_visited + 1)
+      user_stat.update_column(:days_visited, user_stat.days_visited + 1)
       user_visits.create!(visited_at: date)
     end
   end
@@ -316,42 +316,6 @@ class User < ActiveRecord::Base
     uploaded_avatar_path || User.gravatar_template(email)
   end
 
-  # Updates the denormalized view counts for all users
-  def self.update_view_counts
-
-    # NOTE: we only update the counts for users we have seen in the last hour
-    #  this avoids a very expensive query that may run on the entire user base
-    #  we also ensure we only touch the table if data changes
-
-    # Update denormalized topics_entered
-    exec_sql "UPDATE users SET topics_entered = X.c
-             FROM
-            (SELECT v.user_id,
-                    COUNT(DISTINCT parent_id) AS c
-             FROM views AS v
-             WHERE parent_type = 'Topic' AND v.user_id IN (
-                SELECT u1.id FROM users u1 where u1.last_seen_at > :seen_at
-             )
-             GROUP BY v.user_id) AS X
-            WHERE
-                    X.user_id = users.id AND
-                    X.c <> topics_entered
-    ", seen_at: 1.hour.ago
-
-    # Update denormalzied posts_read_count
-    exec_sql "UPDATE users SET posts_read_count = X.c
-              FROM
-              (SELECT pt.user_id,
-                      COUNT(*) AS c
-               FROM post_timings AS pt
-               WHERE pt.user_id IN (
-                  SELECT u1.id FROM users u1 where u1.last_seen_at > :seen_at
-               )
-               GROUP BY pt.user_id) AS X
-               WHERE X.user_id = users.id AND
-                     X.c <> posts_read_count
-    ", seen_at: 1.hour.ago
-  end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
   # They might need to be denormalized
@@ -458,20 +422,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  MAX_TIME_READ_DIFF = 100
-  # attempt to add total read time to user based on previous time this was called
-  def update_time_read!
-    last_seen_key = "user-last-seen:#{id}"
-    last_seen = $redis.get(last_seen_key)
-    if last_seen.present?
-      diff = (Time.now.to_f - last_seen.to_f).round
-      if diff > 0 && diff < MAX_TIME_READ_DIFF
-        User.where(id: id, time_read: time_read).update_all ["time_read = time_read + ?", diff]
-      end
-    end
-    $redis.set(last_seen_key, Time.now.to_f)
-  end
-
   def readable_name
     return "#{name} (#{username})" if name.present? && name != username
     username
@@ -486,18 +436,6 @@ class User < ActiveRecord::Base
     where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
   end
 
-  def update_topic_reply_count
-    self.topic_reply_count =
-        Topic
-        .where(['id in (
-              SELECT topic_id FROM posts p
-              JOIN topics t2 ON t2.id = p.topic_id
-              WHERE p.deleted_at IS NULL AND
-                t2.user_id <> p.user_id AND
-                p.user_id = ?
-              )', self.id])
-        .count
-  end
 
   def secure_category_ids
     cats = self.staff? ? Category.where(read_restricted: true) : secure_categories.references(:categories)
@@ -549,7 +487,7 @@ class User < ActiveRecord::Base
 
   def create_user_stat
     stat = UserStat.new
-    stat.user_id = self.id
+    stat.user_id = id
     stat.save!
   end
 
@@ -647,8 +585,6 @@ end
 #  approved                      :boolean          default(FALSE), not null
 #  approved_by_id                :integer
 #  approved_at                   :datetime
-#  topics_entered                :integer          default(0), not null
-#  posts_read_count              :integer          default(0), not null
 #  digest_after_days             :integer
 #  previous_visit_at             :datetime
 #  banned_at                     :datetime
@@ -657,22 +593,18 @@ end
 #  auto_track_topics_after_msecs :integer
 #  views                         :integer          default(0), not null
 #  flag_level                    :integer          default(0), not null
-#  time_read                     :integer          default(0), not null
-#  days_visited                  :integer          default(0), not null
 #  ip_address                    :string
 #  new_topic_duration_minutes    :integer
 #  external_links_in_new_tab     :boolean          default(FALSE), not null
 #  enable_quoting                :boolean          default(TRUE), not null
 #  moderator                     :boolean          default(FALSE)
-#  likes_given                   :integer          default(0), not null
-#  likes_received                :integer          default(0), not null
-#  topic_reply_count             :integer          default(0), not null
 #  blocked                       :boolean          default(FALSE)
 #  dynamic_favicon               :boolean          default(FALSE), not null
 #  title                         :string(255)
 #  use_uploaded_avatar           :boolean          default(FALSE)
 #  uploaded_avatar_template      :string(255)
 #  uploaded_avatar_id            :integer
+#  email_always                  :boolean          default(FALSE), not null
 #
 # Indexes
 #

@@ -25,7 +25,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def reply_count
-    object.topic_reply_count
+    object.user_stat.topic_reply_count
   end
 
   def site_flagged_posts_count

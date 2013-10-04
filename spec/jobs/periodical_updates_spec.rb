@@ -20,7 +20,7 @@ describe Jobs::PeriodicalUpdates do
   end
 
   it "updates view counts" do
-    User.expects(:update_view_counts).once
+    UserStat.expects(:update_view_counts).once
   end
 
   it "calculates scores" do

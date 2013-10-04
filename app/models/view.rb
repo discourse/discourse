@@ -43,6 +43,7 @@ end
 #
 # Indexes
 #
-#  index_views_on_parent_id_and_parent_type  (parent_id,parent_type)
+#  index_views_on_parent_id_and_parent_type              (parent_id,parent_type)
+#  index_views_on_user_id_and_parent_type_and_parent_id  (user_id,parent_type,parent_id)
 #
 

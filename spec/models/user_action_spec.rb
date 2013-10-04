@@ -123,12 +123,12 @@ describe UserAction do
       it 'should result in correct data assignment' do
         @liker_action.should_not be_nil
         @likee_action.should_not be_nil
-        likee.reload.likes_received.should == 1
-        liker.reload.likes_given.should == 1
+        likee.user_stat.reload.likes_received.should == 1
+        liker.user_stat.reload.likes_given.should == 1
 
         PostAction.remove_act(liker, post, PostActionType.types[:like])
-        likee.reload.likes_received.should == 0
-        liker.reload.likes_given.should == 0
+        likee.user_stat.reload.likes_received.should == 0
+        liker.user_stat.reload.likes_given.should == 0
       end
 
     end

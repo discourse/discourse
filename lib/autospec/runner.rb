@@ -116,6 +116,7 @@ class Autospec::Runner
           puts s
         end
         puts
+        queue_specs(specs.zip specs)
       end
     end
   end

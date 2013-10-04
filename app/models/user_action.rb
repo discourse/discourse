@@ -254,9 +254,9 @@ SQL
 
   def self.update_like_count(user_id, action_type, delta)
     if action_type == LIKE
-      User.where(id: user_id).update_all("likes_given = likes_given + #{delta.to_i}")
+      UserStat.where(user_id: user_id).update_all("likes_given = likes_given + #{delta.to_i}")
     elsif action_type == WAS_LIKED
-      User.where(id: user_id).update_all("likes_received = likes_received + #{delta.to_i}")
+      UserStat.where(user_id: user_id).update_all("likes_received = likes_received + #{delta.to_i}")
     end
   end
 

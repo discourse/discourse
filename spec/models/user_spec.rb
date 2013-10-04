@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_dependency 'user'
 
 describe User do
 
@@ -21,66 +22,6 @@ describe User do
   it { should validate_presence_of :username }
   it { should validate_presence_of :email }
 
-  context '#update_view_counts' do
-
-    let(:user) { Fabricate(:user) }
-
-    context 'topics_entered' do
-      context 'without any views' do
-        it "doesn't increase the user's topics_entered" do
-          lambda { User.update_view_counts; user.reload }.should_not change(user, :topics_entered)
-        end
-      end
-
-      context 'with a view' do
-        let(:topic) { Fabricate(:topic) }
-        let!(:view) { View.create_for(topic, '127.0.0.1', user) }
-
-        before do
-          user.update_column :last_seen_at, 1.second.ago
-        end
-
-        it "adds one to the topics entered" do
-          User.update_view_counts
-          user.reload
-          user.topics_entered.should == 1
-        end
-
-        it "won't record a second view as a different topic" do
-          View.create_for(topic, '127.0.0.1', user)
-          User.update_view_counts
-          user.reload
-          user.topics_entered.should == 1
-        end
-
-      end
-    end
-
-    context 'posts_read_count' do
-      context 'without any post timings' do
-        it "doesn't increase the user's posts_read_count" do
-          lambda { User.update_view_counts; user.reload }.should_not change(user, :posts_read_count)
-        end
-      end
-
-      context 'with a post timing' do
-        let!(:post) { Fabricate(:post) }
-        let!(:post_timings) do
-          PostTiming.record_timing(msecs: 1234, topic_id: post.topic_id, user_id: user.id, post_number: post.post_number)
-        end
-
-        before do
-          user.update_column :last_seen_at, 1.second.ago
-        end
-
-        it "increases posts_read_count" do
-          User.update_view_counts
-          user.reload
-          user.posts_read_count.should == 1
-        end
-      end
-    end
-  end
 
   context '.enqueue_welcome_message' do
     let(:user) { Fabricate(:user) }
@@ -266,7 +207,6 @@ describe User do
     its(:approved_by_id) { should be_blank }
     its(:email_private_messages) { should be_true }
     its(:email_direct ) { should be_true }
-    its(:time_read) { should == 0}
 
     context 'digest emails' do
       it 'defaults to digests every week' do
@@ -295,8 +235,6 @@ describe User do
       its(:email_tokens) { should be_present }
       its(:bio_cooked) { should be_present }
       its(:bio_summary) { should be_present }
-      its(:topics_entered) { should == 0 }
-      its(:posts_read_count) { should == 0 }
     end
   end
 
@@ -664,7 +602,7 @@ describe User do
     end
 
     it "should have 0 for days_visited" do
-      user.days_visited.should == 0
+      user.user_stat.days_visited.should == 0
     end
 
     describe 'with no previous values' do
@@ -685,7 +623,7 @@ describe User do
 
       it "should have 0 for days_visited" do
         user.reload
-        user.days_visited.should == 1
+        user.user_stat.days_visited.should == 1
       end
 
       it "should log a user_visit with the date" do
@@ -706,7 +644,7 @@ describe User do
         end
 
         it "doesn't increase days_visited twice" do
-          user.days_visited.should == 1
+          user.user_stat.days_visited.should == 1
         end
 
       end
@@ -807,33 +745,6 @@ describe User do
         expect(user.bio_excerpt).to eq("im sissy and i love http://ponycorns.com")
         expect(user.bio_processed).to eq("<p>im sissy and i love http://ponycorns.com</p>")
       end
-    end
-
-  end
-
-  describe 'update_time_read!' do
-    let(:user) { Fabricate(:user) }
-
-    it 'makes no changes if nothing is cached' do
-      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(nil)
-      user.update_time_read!
-      user.reload
-      user.time_read.should == 0
-    end
-
-    it 'makes a change if time read is below threshold' do
-      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(Time.now - 10.0)
-      user.update_time_read!
-      user.reload
-      user.time_read.should == 10
-    end
-
-    it 'makes no change if time read is above threshold' do
-      t = Time.now - 1 - User::MAX_TIME_READ_DIFF
-      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(t)
-      user.update_time_read!
-      user.reload
-      user.time_read.should == 0
     end
 
   end

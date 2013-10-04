@@ -1,3 +1,6 @@
+Fabricator(:user_stat) do
+end
+
 Fabricator(:user) do
   name 'Bruce Wayne'
   username { sequence(:username) { |i| "bruce#{i}" } }

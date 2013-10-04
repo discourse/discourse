@@ -145,10 +145,11 @@ describe Admin::UsersController do
 
       it "raises an error when demoting a user below their current trust level" do
         StaffActionLogger.any_instance.expects(:log_trust_level_change).never
-        @another_user.topics_entered = SiteSetting.basic_requires_topics_entered + 1
-        @another_user.posts_read_count = SiteSetting.basic_requires_read_posts + 1
-        @another_user.time_read = SiteSetting.basic_requires_time_spent_mins * 60
-        @another_user.save!
+        stat = @another_user.user_stat
+        stat.topics_entered = SiteSetting.basic_requires_topics_entered + 1
+        stat.posts_read_count = SiteSetting.basic_requires_read_posts + 1
+        stat.time_read = SiteSetting.basic_requires_time_spent_mins * 60
+        stat.save!
         @another_user.update_attributes(trust_level: TrustLevel.levels[:basic])
         xhr :put, :trust_level, user_id: @another_user.id, level: TrustLevel.levels[:newuser]
         response.should be_forbidden
