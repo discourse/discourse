@@ -185,7 +185,7 @@ en:
     user:
       said: "{{username}} said:"
       profile: "Profile"
-      show_profile: "Show Profile"
+      show_profile: "Visit Profile"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive: "download archive of my posts"
