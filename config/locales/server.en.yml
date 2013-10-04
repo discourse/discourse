@@ -284,7 +284,7 @@ en:
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'Inappropriate'
-      description: 'This post contains content that a reasonable person would consider offensive, abusive, or hate speech.'
+      description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/faq">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
       title: 'Notify {{username}}'
