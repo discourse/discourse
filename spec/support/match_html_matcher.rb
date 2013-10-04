@@ -1,9 +1,9 @@
 require 'nokogiri/xml/parse_options'
 RSpec::Matchers.define :match_html do |expected|
   match do |actual|
-    a = make_canonical_html(expected).to_html.gsub("\r\n", "\n")
-    b = make_canonical_html(actual).to_html.gsub("\r\n", "\n")
-    a == b
+    a = make_canonical_html(expected).to_html.gsub(/\s+/, " ").strip
+    b = make_canonical_html(actual).to_html.gsub(/\s+/, " ").strip
+    a.eql? b
   end
 
   failure_message_for_should do |actual|
