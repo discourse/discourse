@@ -28,7 +28,7 @@ module Oneboxer
       result[:title] = html_doc.at("h1")
       result[:title] = result[:title].inner_html if result[:title].present?
 
-      image = html_doc.at(".main-image img")
+      image = html_doc.at(".a-image-wrapper img")
       result[:image] = image['src'] if image
 
       result[:by_info] = html_doc.at("#by-line")
