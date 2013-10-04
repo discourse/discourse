@@ -27,7 +27,7 @@ production:
     ########## TESTING ################
       - source: /.cloud66/scripts/permissions.sh
         destination: /tmp/scripts/permissions.sh
-        target: postgresql
+        target: rails
         apply_during: build_only
         execute: true
         sudo: true
