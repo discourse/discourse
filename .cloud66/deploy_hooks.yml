@@ -19,17 +19,26 @@ production:
       - source: /.cloud66/files/Procfile
         destination: <%= ENV['RAILS_STACK_PATH'] %>/Procfile
         target: rails
-    after_rails:
-    # 4. Set environment variables and allow PSQL user to access them
-      - source: /.cloud66/scripts/env_vars.sh
-        destination: /tmp/scripts/env_vars.sh
+    ###################################### DURING CAP DEPLOY ###################################################
+    # 4. Rename redis.yml.sample file
+      - source: /.cloud66/scripts/redis.sh
+        destination: /tmp/scripts/redis.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 5. Rename redis.yml.sample file
-      - source: /.cloud66/scripts/redis.sh
-        destination: /tmp/scripts/redis.sh
+    # 5. Rename production.rb.sample file
+      - source: /.cloud66/scripts/production_rename.sh
+        destination: /tmp/scripts/production_rename.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
+    ###################################### DURING CAP DEPLOY ###################################################
+    after_rails:
+    # 6. Set environment variables and allow PSQL user to access them
+      - source: /.cloud66/scripts/env_vars.sh
+        destination: /tmp/scripts/env_vars.sh
         target: rails
         apply_during: build_only
         execute: true
@@ -99,44 +108,53 @@ staging:
       - source: /.cloud66/files/Procfile
         destination: <%= ENV['RAILS_STACK_PATH'] %>/Procfile
         target: rails
-    after_rails:
-    # 4. Set environment variables and allow PSQL user to access them
-      - source: /.cloud66/scripts/env_vars.sh
-        destination: /tmp/scripts/env_vars.sh
-        target: rails
-        apply_during: build_only
-        execute: true
-        sudo: true
-    # 5. Rename redis.yml.sample file
+    ###################################### DURING CAP DEPLOY ###################################################
+    # 4. Rename redis.yml.sample file
       - source: /.cloud66/scripts/redis.sh
         destination: /tmp/scripts/redis.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
+    # 5. Rename production.rb.sample file
+      - source: /.cloud66/scripts/production_rename.sh
+        destination: /tmp/scripts/production_rename.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
+    ###################################### DURING CAP DEPLOY ###################################################
+    after_rails:
+    # 6. Set environment variables and allow PSQL user to access them
+      - source: /.cloud66/scripts/env_vars.sh
+        destination: /tmp/scripts/env_vars.sh
+        target: rails
+        apply_during: build_only
+        execute: true
+        sudo: true
     last_thing:
-    # 6. KILL DB
+    # 7. KILL DB
       - source: /.cloud66/scripts/kill_db.sh ## NOT BEING SENT TO POSTGRES
         destination: /tmp/scripts/kill_db.sh
         target: postgresql
         apply_during: build_only
         execute: true
         sudo: true
-    # 7. DB:DROP & DB:CREATE
+    # 8. DB:DROP & DB:CREATE
       - source: /.cloud66/scripts/drop_create.sh
         destination: /tmp/scripts/drop_create.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 8. Thin configurations
+    # 9. Thin configurations
       - source: /.cloud66/scripts/thin.sh
         destination: /tmp/scripts/thin.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 9. Import database image
+    # 10. Import database image
       - source: /.cloud66/scripts/import_prod.sh
         destination: /tmp/scripts/import_prod.sh ## NOT BEING COPIED TO POSTGRES
         target: postgresql
@@ -144,14 +162,14 @@ staging:
         execute: true
         owner: postgres
         run_as: postgres
-    # 10. Migrate database
+    # 11. Migrate database
       - source: /.cloud66/scripts/migrate.sh
         destination: /tmp/migrate.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 11. Curl script
+    # 12. Curl script
       - source: /.cloud66/scripts/curl.sh
         destination: /tmp/curl.sh
         target: rails
@@ -179,17 +197,19 @@ development:
       - source: /.cloud66/files/Procfile
         destination: <%= ENV['RAILS_STACK_PATH'] %>/Procfile
         target: rails
-    after_rails:
-    # 4. Set environment variables and allow PSQL user to access them
-      - source: /.cloud66/scripts/env_vars.sh
-        destination: /tmp/scripts/env_vars.sh
+    ###################################### DURING CAP DEPLOY ###################################################
+    # 4. Rename redis.yml.sample file
+      - source: /.cloud66/scripts/redis.sh
+        destination: /tmp/scripts/redis.sh
         target: rails
         apply_during: build_only
         execute: true
         sudo: true
-    # 5. Rename redis.yml.sample file
-      - source: /.cloud66/scripts/redis.sh
-        destination: /tmp/scripts/redis.sh
+    ###################################### DURING CAP DEPLOY ###################################################
+    after_rails:
+    # 5. Set environment variables and allow PSQL user to access them
+      - source: /.cloud66/scripts/env_vars.sh
+        destination: /tmp/scripts/env_vars.sh
         target: rails
         apply_during: build_only
         execute: true
