@@ -91,7 +91,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     // Clear the search context
     this.controllerFor('search').set('searchContext', null);
-    this.controllerFor('posterExpansion').set('model', null);
+    this.controllerFor('posterExpansion').set('visible', false);
 
     var topicController = this.controllerFor('topic'),
         postStream = topicController.get('postStream');
