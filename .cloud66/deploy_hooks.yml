@@ -19,7 +19,7 @@ production:
       - source: /.cloud66/files/Procfile
         destination: <%= ENV['RAILS_STACK_PATH'] %>/Procfile
         target: rails
-    # 4. Rename redis.yml.sample file
+    # 4. Copy redis settings
       - source: /.cloud66/files/redis.yml
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/redis.yml
         target: rails
@@ -31,7 +31,7 @@ production:
         execute: true
         sudo: true
     ########## TESTING ################
-    # 5. Rename production.rb.sample file
+    # 5. Copy production.rb file
       - source: /.cloud66/files/production.rb
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/environments/production.rb
         target: rails
