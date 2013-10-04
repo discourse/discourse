@@ -104,7 +104,6 @@ Create Discourse user:
     # Run these commands as your normal login (e.g. "michael")
     sudo adduser --shell /bin/bash --gecos 'Discourse application' discourse
     sudo install -d -m 755 -o discourse -g discourse /var/www/discourse
-    sudo adduser discourse sudo
 
 Give Postgres database rights to the `discourse` user:
 
@@ -135,10 +134,11 @@ Install RVM
     # you've given discourse sudo permissions, which is *not* the default)
     # rvm requirements
 
-    # If discourse does not have sudo permissions (likely the case), run:
+    # NOTE: rvm will tell you which packages you (or your sysadmin) need
+    # to install during this step. As discourse does not have sudo 
+    # permissions (likely the case), run:
     rvm --autolibs=read-fail requirements
-    # and rvm will tell you which packages you (or your sysadmin) need
-    # to install before it can proceed. Do that and then resume next:
+    # repeat untill it fully executes 
 
 Continue with Discourse installation
 
