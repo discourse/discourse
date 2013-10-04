@@ -13,7 +13,7 @@ module PostStreamSerializerMixin
     return @posts if @posts.present?
     @posts = []
     @highest_number_in_posts = 0
-    if object.posts.present?
+    if object.posts
       object.posts.each_with_index do |p, idx|
         @highest_number_in_posts = p.post_number if p.post_number > @highest_number_in_posts
         ps = PostSerializer.new(p, scope: scope, root: false)

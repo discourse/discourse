@@ -8,8 +8,19 @@ class InvitedUserSerializer < BasicUserSerializer
              :days_since_created
 
   def time_read
-    return nil if object.time_read.blank?
-    AgeWords.age_words(object.time_read)
+    AgeWords.age_words(object.user_stat.time_read)
+  end
+
+  def days_visited
+    object.user_stat.days_visited
+  end
+
+  def topics_entered
+    object.user_stat.topics_entered
+  end
+
+  def posts_read_count
+    object.user_stat.posts_read_count
   end
 
   def days_since_created

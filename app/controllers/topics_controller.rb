@@ -315,7 +315,7 @@ class TopicsController < ApplicationController
   end
 
   def should_track_visit_to_topic?
-    (!request.xhr? || params[:track_visit]) && current_user
+    !!((!request.xhr? || params[:track_visit]) && current_user)
   end
 
   def perform_show_response

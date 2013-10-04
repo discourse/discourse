@@ -11,7 +11,7 @@ class InvitedList
     @by_user = user
 
     invited = Invite.where(invited_by_id: @by_user.id)
-                    .includes(:user)
+                    .includes(:user => :user_stat)
                     .order(:redeemed_at)
     invited.each do |i|
       if i.redeemed?

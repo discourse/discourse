@@ -8,7 +8,7 @@ class MoveColumnsToUserStats < ActiveRecord::Migration
     add_column :user_stats, :likes_received, :integer, default: 0, null: false
     add_column :user_stats, :topic_reply_count, :integer, default: 0, null: false
 
-    execute 'UPDATE user_stats
+    execute 'UPDATE user_stats s
               SET topics_entered = u.topics_entered,
                   time_read = u.time_read,
                   days_visited = u.days_visited,
@@ -16,8 +16,7 @@ class MoveColumnsToUserStats < ActiveRecord::Migration
                   likes_given = u.likes_given,
                   likes_received = u.likes_received,
                   topic_reply_count = u.topic_reply_count
-              FROM user_stats s
-              JOIN users u on u.id = s.user_id
+              FROM users u WHERE u.id = s.user_id
     '
 
     remove_column :users, :topics_entered
@@ -38,7 +37,7 @@ class MoveColumnsToUserStats < ActiveRecord::Migration
     add_column :users, :likes_received, :integer
     add_column :users, :topic_reply_count, :integer
 
-    execute 'UPDATE users
+    execute 'UPDATE users s
               SET topics_entered = u.topics_entered,
                   time_read = u.time_read,
                   days_visited = u.days_visited,
@@ -46,8 +45,7 @@ class MoveColumnsToUserStats < ActiveRecord::Migration
                   likes_given = u.likes_given,
                   likes_received = u.likes_received,
                   topic_reply_count = u.topic_reply_count
-              FROM users s
-              JOIN user_stats u on s.id = u.user_id
+              FROM user_stats u WHERE s.id = u.user_id
     '
 
     remove_column :user_stats, :topics_entered
