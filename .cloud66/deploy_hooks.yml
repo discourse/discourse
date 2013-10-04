@@ -41,7 +41,7 @@ production:
       - source: /.cloud66/scripts/thin.sh
         destination: /tmp/scripts/thin.sh
         target: rails
-        apply_during: build_only
+        apply_during: all
         execute: true
         sudo: true
     # 7. Import database image
@@ -109,7 +109,7 @@ staging:
       - source: /.cloud66/scripts/thin.sh
         destination: /tmp/scripts/thin.sh
         target: rails
-        apply_during: build_only
+        apply_during: all
         execute: true
         sudo: true
     # 7. Import database image
@@ -177,7 +177,7 @@ development:
       - source: /.cloud66/scripts/thin.sh
         destination: /tmp/scripts/thin.sh
         target: rails
-        apply_during: build_only
+        apply_during: all
         execute: true
         sudo: true
     # 7. Import database image
