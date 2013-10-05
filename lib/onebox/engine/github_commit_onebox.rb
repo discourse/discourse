@@ -2,7 +2,7 @@ module Onebox
   module Engine
     class GithubCommitOnebox
       include Engine
-      include HTML
+      include JSON
 
       matches do
         http
@@ -13,7 +13,15 @@ module Onebox
         with("/commit/")
       end
 
+      def url
+        "https://api.github.com/repos/#{match[:owner]}/#{match[:repo]}/commits/#{match[:number]}"
+      end
+
       private
+
+      def match
+        @url.match(/github\.com\/(?<owner>[^\/]+)\/(?<repo>[^\/]+)\/pull\/(?<number>[^\/]+)/)
+      end
 
       def data
         {
