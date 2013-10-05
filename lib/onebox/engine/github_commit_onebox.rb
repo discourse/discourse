@@ -20,7 +20,7 @@ module Onebox
       private
 
       def match
-        @url.match(/github\.com\/(?<owner>[^\/]+)\/(?<repo>[^\/]+)\/pull\/(?<number>[^\/]+)/)
+        @url.match(/github\.com\/(?<owner>[^\/]+)\/(?<repo>[^\/]+)\/commit\/(?<number>[^\/]+)/)
       end
 
       def data
