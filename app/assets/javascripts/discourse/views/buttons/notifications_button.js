@@ -21,7 +21,7 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
 
   text: function() {
     var key = (function() {
-      switch (this.get('topic.details.notification_level')) {
+      switch (this.get('topic.details.notification_level') || 1) {
         case Discourse.Topic.NotificationLevel.WATCHING: return 'watching';
         case Discourse.Topic.NotificationLevel.TRACKING: return 'tracking';
         case Discourse.Topic.NotificationLevel.REGULAR: return 'regular';
