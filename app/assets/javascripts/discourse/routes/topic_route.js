@@ -113,6 +113,13 @@ Discourse.TopicRoute = Discourse.Route.extend({
   },
 
   setupController: function(controller, model) {
+    if (Discourse.Mobile.mobileView) {
+      // close the dropdowns on mobile
+      $('.d-dropdown').hide();
+      $('header ul.icons li').removeClass('active');
+      $('[data-toggle="dropdown"]').parent().removeClass('open');
+    }
+
     controller.setProperties({
       model: model,
       editingTopic: false

@@ -9,7 +9,10 @@
 Discourse.Route = Em.Route.extend({
 
   /**
-    Called every time we enter a route on Discourse.
+    NOT called every time we enter a route on Discourse.
+    Only called the FIRST time we enter a route.
+    So, when going from one topic to another, activate will only be called on the
+    TopicRoute for the first topic.
 
     @method activate
   **/
