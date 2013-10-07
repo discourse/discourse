@@ -181,8 +181,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
         title = this.get('model.title');
 
     // Ensure the fields are of the minimum length
-    if (body.length < Discourse.SiteSettings.min_body_similar_length) return;
-    if (title.length < Discourse.SiteSettings.min_title_similar_length) return;
+    if (body.length < Discourse.SiteSettings.min_body_similar_length ||
+        title.length < Discourse.SiteSettings.min_title_similar_length) { return; }
 
     var messageController = this.get('controllers.composerMessages'),
         similarTopics = this.get('similarTopics');
@@ -191,11 +191,13 @@ Discourse.ComposerController = Discourse.Controller.extend({
       similarTopics.clear();
       similarTopics.pushObjects(newTopics);
 
-      messageController.popup(Discourse.ComposerMessage.create({
-        templateName: 'composer/similar_topics',
-        similarTopics: similarTopics,
-        extraClass: 'similar-topics'
-      }));
+      if (similarTopics.get('length') > 0) {
+        messageController.popup(Discourse.ComposerMessage.create({
+          templateName: 'composer/similar_topics',
+          similarTopics: similarTopics,
+          extraClass: 'similar-topics'
+        }));
+      }
     });
 
   },
