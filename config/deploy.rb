@@ -79,7 +79,7 @@ after "deploy:finalize_update", "deploy:symlink_config"
 namespace :db do
   desc 'Seed your database for the first time'
   task :seed do
-    run "cd #{current_path} && psql -d discourse_production < pg_dumps/production-image.sql"
+    run "cd #{current_path} && psql -d hackinmad < pg_dumps/production-image.sql"
   end
 end
 
