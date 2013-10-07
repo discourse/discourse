@@ -11,7 +11,7 @@
 .post-info a {color: #aaa;}
 
 .topic-meta-data-inside {
-  float: right; 
+  float: right;
   margin-top: -38px;
   margin-right: 5px;
 }
@@ -29,7 +29,7 @@ margin: 0 60px 10px 20px;
 line-height: 1.7em;
 
 h1 {
-  font-size: 1.5em;   
+  font-size: 1.5em;
   margin:0;
 
 a.edit-topic {font-size: 15px;}
@@ -91,13 +91,17 @@ a.edit-topic {font-size: 15px;}
     left: 4px;
     border: 0;
     background: none;
-  color: #666;
+    color: #666;
+
+    width: 60px;
+    text-align: left;
     i {
       font-size: 18px;
     }
     &:nth-of-type(2) {
       right: 4px;
       left: auto;
+      text-align: right;
     }
 
 
