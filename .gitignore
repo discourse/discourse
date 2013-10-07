@@ -91,3 +91,5 @@ config/version.rb
 .ruby-gemset
 .rbenv
 bundler_stubs/*
+
+config/initializers/secret_token.rb

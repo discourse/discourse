@@ -32,6 +32,11 @@ if rails4?
   end
 end
 
+##propias
+gem 'capistrano', require: nil
+gem 'capistrano-rbenv', require: nil
+##fin propias
+
 gem 'seed-fu' , github: 'SamSaffron/seed-fu'
 
 if rails4?
