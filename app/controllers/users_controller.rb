@@ -302,6 +302,17 @@ class UsersController < ApplicationController
     render status: 422, text: I18n.t("upload.images.size_not_found")
   end
 
+  def avatar_file_size(file)
+    file_size = File.size(file.tempfile)
+    max_size_kb = SiteSetting.max_image_size_kb * 1024
+    return I18n.t("upload.images.too_large", max_size_kb: max_size_kb) if file_size > max_size_kb
+    file_size
+  end
+
+  def file_from_params
+    params[:file] || params[:files].first
+  end
+
   def toggle_avatar
     params.require(:use_uploaded_avatar)
     user = fetch_user_from_params
