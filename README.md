@@ -1,10 +1,6 @@
 <a href="http://blog.cloud66.com/post/62900887610/introducing-cloud-66-easydeploy">
-<img src="https://raw.github.com/cloud66-samples/discourse/master/docs/easy-deploy.png"/>
+![Logo](http://cdn.cloud66.com/images/easy-deploy.png)
 </a>
-
-This is a Cloud 66 EasyDeploy repository.
-
-<a href="http://www.discourse.org/">![Logo](http://cdn.cloud66.com/images/easy-deploy.png)</a>
 
 Discourse is the 100% open source, next-generation discussion platform built for the next decade of the Internet.
 
