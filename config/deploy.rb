@@ -20,9 +20,9 @@ set :use_sudo, false
 set :rails_env, :production
 set :rbenv_ruby_version, '2.0.0-p247'
 
-role :app, 'hackinmad.com', primary: true
-role :db,  'hackinmad.com', primary: true
-role :web, 'hackinmad.com', primary: true
+role :app, '162.243.10.54', primary: true
+role :db,  '162.243.10.54', primary: true
+role :web, '162.243.10.54', primary: true
 
 # Application Settings
 set :application, 'discourse'
