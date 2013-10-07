@@ -2,6 +2,8 @@
 ![Logo](http://cdn.cloud66.com/images/easy-deploy.png)
 </a>
 
+<a href="http://www.discourse.org/">![Logo](images/discourse.png)</a>
+
 Discourse is the 100% open source, next-generation discussion platform built for the next decade of the Internet.
 
 Whenever you need ...
