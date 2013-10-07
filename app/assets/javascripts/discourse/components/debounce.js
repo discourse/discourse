@@ -49,9 +49,10 @@ Discourse.debounce = function(func, wait) {
 Discourse.debouncePromise = function(func, wait) {
   var timeout = null;
   var args = null;
+  var context = null;
 
   return function() {
-    var context = this;
+    context = this;
     var promise = Ember.Deferred.create();
     args = arguments;
 
