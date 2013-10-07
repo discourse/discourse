@@ -473,9 +473,9 @@ class User < ActiveRecord::Base
     created_at > 1.day.ago
   end
 
-  def update_avatar(upload)
+  def upload_avatar(avatar)
     self.uploaded_avatar_template = nil
-    self.uploaded_avatar = upload
+    self.uploaded_avatar = avatar
     self.use_uploaded_avatar = true
     self.save!
   end
@@ -573,7 +573,6 @@ class User < ActiveRecord::Base
       end
     end
   end
-
 
   private
 
