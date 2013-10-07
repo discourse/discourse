@@ -15,6 +15,12 @@ Discourse.PosterExpansionController = Discourse.ObjectController.extend({
 
   show: function(post) {
 
+    // Don't show on mobile
+    if (Discourse.Mobile.mobileView) {
+      Discourse.URL.routeTo(post.get('usernameUrl'));
+      return;
+    }
+
     var currentUsername = this.get('username');
     this.setProperties({model: post, visible: true});
 
