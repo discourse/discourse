@@ -4,7 +4,7 @@ require 'bundler/capistrano'
 require 'sidekiq/capistrano'
 
 # Repository settings, forked to an outside copy
-set :repository, 'git@github.com:goodbrews/forums.git'
+set :repository, 'git@github.com:davguij/hackinmad.git'
 set :deploy_via, :remote_cache
 set :branch, fetch(:branch, 'master')
 set :scm, :git
@@ -15,14 +15,14 @@ set :deploy_type, :deploy
 default_run_options[:pty] = true
 
 # Server Settings
-set :user, 'goodbrews'
+set :user, 'madhacker'
 set :use_sudo, false
 set :rails_env, :production
-set :rbenv_ruby_version, '2.0.0-p195'
+set :rbenv_ruby_version, '2.0.0-p247'
 
-role :app, 'forums.goodbre.ws', primary: true
-role :db,  'forums.goodbre.ws', primary: true
-role :web, 'forums.goodbre.ws', primary: true
+role :app, 'hackinmad.com', primary: true
+role :db,  'hackinmad.com', primary: true
+role :web, 'hackinmad.com', primary: true
 
 # Application Settings
 set :application, 'discourse'
