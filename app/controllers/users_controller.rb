@@ -40,36 +40,10 @@ class UsersController < ApplicationController
   end
 
   def update
-    user = User.where(username_lower: params[:username].downcase).first
+    user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
-    json_result(user, serializer: UserSerializer) do |u|
-
-      website = params[:website]
-      if website
-        website = "http://" + website unless website =~ /^http/
-      end
-
-      u.bio_raw = params[:bio_raw] || u.bio_raw
-      u.name = params[:name] || u.name
-      u.website = website || u.website
-      u.digest_after_days = params[:digest_after_days] || u.digest_after_days
-      u.auto_track_topics_after_msecs = params[:auto_track_topics_after_msecs].to_i if params[:auto_track_topics_after_msecs]
-      u.new_topic_duration_minutes = params[:new_topic_duration_minutes].to_i if params[:new_topic_duration_minutes]
-      u.title = params[:title] || u.title if guardian.can_grant_title?(u)
-
-      [:email_digests, :email_always, :email_direct, :email_private_messages,
-       :external_links_in_new_tab, :enable_quoting, :dynamic_favicon].each do |i|
-        if params[i].present?
-          u.send("#{i.to_s}=", params[i] == 'true')
-        end
-      end
-
-      if u.save
-        u
-      else
-        nil
-      end
-    end
+    json_result(user, serializer: UserSerializer) { |u| u.update_with_params(params) }
+    user.save
   end
 
   def username
@@ -138,29 +112,30 @@ class UsersController < ApplicationController
     auth = authenticate_user(user, params)
     register_nickname(user)
 
-    if user.save
-      activator = UserActivator.new(user, session, cookies)
-      message = activator.activation_message
-      create_third_party_auth_records(user, auth)
+    render json: save_and_activate_user(user, session, cookies, auth)
 
-      # Clear authentication session.
-      session[:authentication] = nil
-
-      render json: { success: true, active: user.active?, message: message }
-    else
-      render json: {
-        success: false,
-        message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n")),
-        errors: user.errors.to_hash,
-        values: user.attributes.slice("name", "username", "email")
-      }
-    end
   rescue ActiveRecord::StatementInvalid
     render json: { success: false, message: I18n.t("login.something_already_taken") }
   rescue DiscourseHub::NicknameUnavailable=> e
     render json: e.response_message
   rescue RestClient::Forbidden
     render json: { errors: [I18n.t("discourse_hub.access_token_problem")] }
+  end
+
+  def save_and_activate_user(user, session, cookies, auth)
+    if user.save
+      message = UserActivator.new(user, session, cookies).activation_message
+      create_third_party_auth_records(user, auth)
+
+      session[:authentication] = nil
+      return { success: true, active: user.active?, message: message }
+    end
+    return {
+        success: false,
+        message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n")),
+        errors: user.errors.to_hash,
+        values: user.attributes.slice("name", "username", "email")
+      }
   end
 
   def authenticate_user(user, params)
@@ -184,22 +159,26 @@ class UsersController < ApplicationController
     if @user.blank?
       flash[:error] = I18n.t('password_reset.no_token')
     else
-      if request.put? && params[:password].present?
-        @user.password = params[:password]
-        if @user.save
-
-          if Guardian.new(@user).can_access_forum?
-            # Log in the user
-            log_on_user(@user)
-            flash[:success] = I18n.t('password_reset.success')
-          else
-            @requires_approval = true
-            flash[:success] = I18n.t('password_reset.success_unapproved')
-          end
-        end
-      end
+      raise Discourse::InvalidParameters.new(:password) unless good_reset_request_format
+      @user.password = params[:password]
+      logon_after_password_reset if @user.save
     end
     render layout: 'no_js'
+  end
+
+  def good_reset_request_format
+    request.put? && params[:password].present?
+  end
+
+  def logon_after_password_reset
+    if Guardian.new(@user).can_access_forum?
+      # Log in the user
+      log_on_user(@user)
+      flash[:success] = I18n.t('password_reset.success')
+    else
+      @requires_approval = true
+      flash[:success] = I18n.t('password_reset.success_unapproved')
+    end
   end
 
   def change_email
@@ -256,11 +235,13 @@ class UsersController < ApplicationController
   def send_activation_email
     @user = fetch_user_from_params
     @email_token = @user.email_tokens.unconfirmed.active.first
-    if @user
-      @email_token ||= @user.email_tokens.create(email: @user.email)
-      Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
-    end
+    enqueue_activation_email if @user
     render nothing: true
+  end
+
+  def enqueue_activation_email
+    @email_token ||= @user.email_tokens.create(email: @user.email)
+    Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
   end
 
   def search_users
@@ -300,21 +281,12 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    file = params[:file] || params[:files].first
-
+    file = file_from_params
     # check the file size (note: this might also be done in the web server)
-    filesize = File.size(file.tempfile)
-    max_size_kb = SiteSetting.max_image_size_kb * 1024
-    return render status: 413, text: I18n.t("upload.images.too_large", max_size_kb: max_size_kb) if filesize > max_size_kb
+    filesize = avatar_file_size(file)
+    return render status: 413, text: filesize unless filesize.is_a? Fixnum
 
-    upload = Upload.create_for(user.id, file, filesize)
-
-    user.uploaded_avatar_template = nil
-    user.uploaded_avatar = upload
-    user.use_uploaded_avatar = true
-    user.save!
-
-    Jobs.enqueue(:generate_avatars, upload_id: upload.id)
+    upload = user.upload_user_avatar(file, filesize)
 
     render json: {
       url: upload.url,
@@ -328,6 +300,17 @@ class UsersController < ApplicationController
     render status: 422, text: I18n.t("upload.images.unknown_image_type")
   rescue FastImage::SizeNotFound
     render status: 422, text: I18n.t("upload.images.size_not_found")
+  end
+
+  def avatar_file_size(file)
+    file_size = File.size(file.tempfile)
+    max_size_kb = SiteSetting.max_image_size_kb * 1024
+    return I18n.t("upload.images.too_large", max_size_kb: max_size_kb) if file_size > max_size_kb
+    file_size
+  end
+
+  def file_from_params
+    params[:file] || params[:files].first
   end
 
   def toggle_avatar

@@ -463,6 +463,36 @@ class User < ActiveRecord::Base
     uploaded_avatar.present?
   end
 
+  def update_with_params(parameters)
+    website = "http://" + parameters[:website] unless website =~ /^http/ if parameters[:website]
+    self.bio_raw = parameters[:bio_raw] || self.bio_raw
+    self.name = parameters[:name] || self.name
+    self.website = website || self.website
+    self.digest_after_days = parameters[:digest_after_days] || self.digest_after_days
+    self.auto_track_topics_after_msecs = parameters[:auto_track_topics_after_msecs].to_i if parameters[:auto_track_topics_after_msecs]
+    self.new_topic_duration_minutes = parameters[:new_topic_duration_minutes].to_i if parameters[:new_topic_duration_minutes]
+    self.title = parameters[:title] || self.title if guardian.can_grant_title?(self)
+
+    [:email_digests, :email_always, :email_direct, :email_private_messages,
+     :external_links_in_new_tab, :enable_quoting, :dynamic_favicon].each do |i|
+      if parameters[i].present?
+        self.send("#{i.to_s}=", parameters[i] == 'true')
+      end
+    end
+  end
+
+  def upload_user_avatar(file, filesize)
+    upload = Upload.create_for(self.id, file, filesize)
+
+    self.uploaded_avatar_template = nil
+    self.uploaded_avatar = upload
+    self.use_uploaded_avatar = true
+    self.save!
+
+    Jobs.enqueue(:generate_avatars, upload_id: upload.id)
+    upload
+  end
+
   protected
 
   def cook

@@ -249,7 +249,7 @@ describe UsersController do
     context 'valid token' do
       before do
         EmailToken.expects(:confirm).with('asdfasdf').returns(user)
-        get :password_reset, token: 'asdfasdf'
+        put :password_reset, token: 'asdfasdf', password: 'newpassword'
       end
 
       it 'returns success' do
