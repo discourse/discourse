@@ -18,7 +18,7 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
   imageIsNotASquare : false,
 
   didInsertElement: function() {
-    var view = this;
+    var self = this;
     var $upload = $("#avatar-input");
 
     this._super();
@@ -35,13 +35,12 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
     $upload.fileupload({
       url: Discourse.getURL("/users/" + this.get("controller.username") + "/preferences/avatar"),
       dataType: "json",
-      timeout: 20000,
       fileInput: $upload
     });
 
     // when a file has been selected
     $upload.on("fileuploadadd", function (e, data) {
-      view.setProperties({
+      self.setProperties({
         uploading: true,
         imageIsNotASquare: false
       });
@@ -50,24 +49,24 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
     // when there is a progression for the upload
     $upload.on("fileuploadprogressall", function (e, data) {
       var progress = parseInt(data.loaded / data.total * 100, 10);
-      view.set("uploadProgress", progress);
+      self.set("uploadProgress", progress);
     });
 
     // when the upload is successful
     $upload.on("fileuploaddone", function (e, data) {
       // indicates the users is using an uploaded avatar
-      view.get("controller").setProperties({
+      self.get("controller").setProperties({
         has_uploaded_avatar: true,
         use_uploaded_avatar: true
       });
       // display a warning whenever the image is not a square
-      view.set("imageIsNotASquare", data.result.width !== data.result.height);
+      self.set("imageIsNotASquare", data.result.width !== data.result.height);
       // in order to be as much responsive as possible, we're cheating a bit here
       // indeed, the server gives us back the url to the file we've just uploaded
       // often, this file is not a square, so we need to crop it properly
       // this will also capture the first frame of animated avatars when they're not allowed
       Discourse.Utilities.cropAvatar(data.result.url, data.files[0].type).then(function(avatarTemplate) {
-        view.get("controller").set("uploaded_avatar_template", avatarTemplate);
+        self.get("controller").set("uploaded_avatar_template", avatarTemplate);
       });
     });
 
@@ -78,7 +77,7 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
 
     // when the upload is done
     $upload.on("fileuploadalways", function (e, data) {
-      view.setProperties({ uploading: false, uploadProgress: 0 });
+      self.setProperties({ uploading: false, uploadProgress: 0 });
     });
   },
 
@@ -89,10 +88,10 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
 
   // *HACK* used to select the proper radio button
   selectedChanged: function() {
-    var view = this;
+    var self = this;
     Em.run.next(function() {
-      var value = view.get('controller.use_uploaded_avatar') ? 'uploaded_avatar' : 'gravatar';
-      view.$('input:radio[name="avatar"]').val([value]);
+      var value = self.get('controller.use_uploaded_avatar') ? 'uploaded_avatar' : 'gravatar';
+      $('input:radio[name="avatar"]').val([value]);
     });
   }.observes('controller.use_uploaded_avatar'),
 

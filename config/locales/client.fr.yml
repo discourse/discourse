@@ -504,18 +504,10 @@ fr:
       title_with_attachments: "Insérer une image ou un fichier"
       from_my_computer: "Depuis mon ordinateur"
       from_the_web: "Depuis le Web"
-      add_title: "Ajouter l'image"
-      add_title_with_attachments: "Ajouter le fichier"
-      remote_title: "Image distante"
-      remote_title_with_attachments: "Fichier distant"
       remote_tip: "saisissez l'url de l'image - par exemple : http://monsite.com/image.jpg (extensions autorisées : {{authorized_extensions}})."
       remote_tip_with_attachments: "saisissez l'url du fichier - par exemple : http://monsite.com/fichier.txt (extensions autorisées : {{authorized_extensions}})."
-      local_title: "Image locale"
-      local_title_with_attachments: "Fichier local"
       local_tip: "Cliquez pour sélectionner une image depuis votre ordinateur (extensions autorisées : {{authorized_extensions}})."
       local_tip_with_attachments: "Cliquez pour sélectionner un fichier depuis votre ordinateur (extensions autorisées : {{authorized_extensions}})."
-      upload_title: "Envoyer l'image"
-      upload_title_with_attachments: "Envoyer le fichier"
       uploading: "Fichier en cours d'envoi..."
 
     search:

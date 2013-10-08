@@ -302,10 +302,8 @@ pt:
     upload_selector:
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da internet"
-      add_title: "Adicionar Imagem"
       remote_tip: "insere o endereço de uma imagem no formato http://example.com/image.jpg"
       local_tip: "clica para selecionar uma imagem no teu dispositivo."
-      upload_title: "Enviar"
       uploading: "A enviar imagem"
 
     search:

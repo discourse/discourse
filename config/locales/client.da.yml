@@ -348,10 +348,8 @@ da:
       title: "Indsæt billede"
       from_my_computer: "Fra min computer"
       from_the_web: "Fra nettet"
-      add_title: "Indsæt billede"
       remote_tip: "skriv adressen på et billede i formen http://example.com/billede.jpg"
       local_tip: "klik for at vælge et billede fra din computer."
-      upload_title: "Upload"
       uploading: "Uploader billede"
 
     search:

@@ -518,22 +518,14 @@ en:
       total_flagged: "total flagged posts"
 
     upload_selector:
-      title: "Upload an image"
-      title_with_attachments: "Upload an image or a file"
-      from_my_computer: "From My Device"
-      from_the_web: "From The Web"
-      add_title: "Add image"
-      add_title_with_attachments: "Add image or file"
-      remote_title: "remote image"
-      remote_title_with_attachments: "remote image or file"
+      title: "Add an image"
+      title_with_attachments: "Add an image or a file"
+      from_my_computer: "From my device"
+      from_the_web: "From the web"
       remote_tip: "enter address of an image in the form http://example.com/image.jpg"
       remote_tip_with_attachments: "enter address of an image or a file in the form http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
-      local_title: "local image"
-      local_title_with_attachments: "local image or file"
       local_tip: "click to select an image from your device"
       local_tip_with_attachments: "click to select an image or a file from your device (allowed extensions: {{authorized_extensions}})"
-      upload_title: "Upload image"
-      upload_title_with_attachments: "Upload image or file"
       uploading: "Uploading"
 
     search:

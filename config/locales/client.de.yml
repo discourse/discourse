@@ -522,18 +522,10 @@ de:
       title_with_attachments: "Bild oder Datei hochladen"
       from_my_computer: "Von meinem Gerät"
       from_the_web: "Aus dem Web"
-      add_title: "Bild hinzufügen"
-      add_title_with_attachments: "Bild oder Datei hinzufügen"
-      remote_title: "Entferntes Bild"
-      remote_title_with_attachments: "Entferntes Bild oder Datei"
       remote_tip: "Gib die Adresse eines Bildes wie folgt ein: http://example.com/image.jpg"
       remote_tip_with_attachments: "Gib die Adresse eines Bildes oder Datei wie folgt ein http://example.com/file.ext (Erlaubte Dateiendungen: {{authorized_extensions}})."
-      local_title: "Lokales Bild"
-      local_title_with_attachments: "Lokales Bild oder Datei"
       local_tip: "Klicke hier, um ein Bild von deinem Gerät zu wählen."
       local_tip_with_attachments: "Klicke hier, um ein Bild oder eine Datei von deinem Gerät zu wählen (Erlaubte Dateiendungen: {{authorized_extensions}})"
-      upload_title: "Bild hochladen"
-      upload_title_with_attachments: "Bild oder Datei hochladen"
       uploading: "Hochgeladen..."
 
     search:

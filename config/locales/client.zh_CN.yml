@@ -204,7 +204,7 @@ zh_CN:
       moderator: "{{user}} 是版主"
       admin: "{{user}} 是管理员"
       deleted: "（已删除）"
-      
+
       messages:
         all: "所有"
         mine: "我的"
@@ -522,18 +522,10 @@ zh_CN:
       title_with_attachments: "上传图片或文件"
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
-      add_title: "添加图片"
-      add_title_with_attachments: "添加图片或文件"
-      remote_title: "网络图片"
-      remote_title_with_attachments: "网络图片或文件"
       remote_tip: "输入图片的网址，格式为：http://example.com/image.jpg"
       remote_tip_with_attachments: "输入图片或文件的网址，格式为：http://example.com/file.ext （支持的格式： {{authorized_extensions}}）。"
-      local_title: "本地图片"
-      local_title_with_attachments: "本地图片或文件"
       local_tip: "点击从你的设备中选择一张图片。"
       local_tip_with_attachments: "点击从你的设备中选择图片或文件（支持的格式： {{authorized_extensions}}）。"
-      upload_title: "上传"
-      upload_title_with_attachments: "上传图片或文件"
       uploading: "上传图片中"
 
     search:

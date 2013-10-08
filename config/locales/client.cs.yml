@@ -512,18 +512,10 @@ cs:
       title_with_attachments: "Nahrát obrázek nebo soubor"
       from_my_computer: "Z mého zařízení"
       from_the_web: "Z webu"
-      add_title: "Přidat obrázek"
-      add_title_with_attachments: "Přidat obrázek nebo soubor"
-      remote_title: "obrázek ze vzdáleného úložistě"
-      remote_title_with_attachments: "obrázek nebo soubor ze vzdáleného úložistě"
       remote_tip: "zadejte adresu obrázku ve formátu http://example.com/image.jpg"
       remote_tip_with_attachments: "zadejte adresu obrázku nebo souboru ve formátu http://example.com/file.ext"
-      local_title: "obrázek z lokálního úložiště"
-      local_title_with_attachments: "obrázek nebo soubor z lokálního úložiště"
       local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení."
       local_tip_with_attachments: "klikněte sem pro výběr obrázku nebo souboru z vašeho zařízení."
-      upload_title: "Nahrát obrázek"
-      upload_title_with_attachments: "Nahrát obrázek nebo soubor"
       uploading: "Nahrávám"
 
     search:

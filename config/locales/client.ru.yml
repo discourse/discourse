@@ -521,18 +521,10 @@ ru:
       title_with_attachments: Загрузить изображение или файл
       from_my_computer: С устройства
       from_the_web: Из интернета
-      add_title: Добавить изображение
-      add_title_with_attachments: Добавить изображение или файл
-      remote_title: изображение из интернета
-      remote_title_with_attachments: изображение или файл из интернета
       remote_tip: введите адрес изображения в формате http://example.com/image.jpg
       remote_tip_with_attachments: 'Введите адрес изображения или файла в формате http://example.com/file.ext (список доступных расширений: {{authorized_extensions}}).'
-      local_title: локальное изображение
-      local_title_with_attachments: локальное изображение или файл
       local_tip: кликните для выбора изображения с вашего устройства
       local_tip_with_attachments: 'кликните для выбора изображения с вашего устройства (доступные расширения: {{authorized_extensions}})'
-      upload_title: Загрузить изображение
-      upload_title_with_attachments: Загрузить изображение или файл
       uploading: Загрузка
     search:
       title: поиск по темам, сообщениям, пользователям или категориям

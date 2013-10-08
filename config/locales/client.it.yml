@@ -519,18 +519,10 @@ it:
       title_with_attachments: "Carica un'immagine od un file"
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal Web"
-      add_title: "Aggiungi immagine"
-      add_title_with_attachments: "Aggiugni immagine o file"
-      remote_title: "immagine remota"
-      remote_title_with_attachments: "immagine o file remoto"
       remote_tip: "inserisci l'indirizzo dell'immagine (es. http://example.com/image.jpg)"
       remote_tip_with_attachments: "inserisci l'indirizzo di un'immagine o di un file nel form http://esempio.com/file.ext (estensioni supportate: {{authorized_extensions}})."
-      local_title: "immagine locale"
-      local_title_with_attachments: "immagine o file locale"
       local_tip: "clicca per selezionare un'immagine dal tuo dispositivo."
       local_tip_with_attachments: "click per selezionare un'immagine od un file dal tuo dispositivo (estensioni supportate: {{authorized_extensions}})"
-      upload_title: "Upload"
-      upload_title_with_attachments: "Carica immagine o file"
       uploading: "Caricamento"
 
     search:

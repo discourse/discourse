@@ -434,10 +434,8 @@ es:
       title: "Insertar Imagen"
       from_my_computer: "Desde Mí Dispositivo"
       from_the_web: "Desde La Web"
-      add_title: "Agregar Imagen"
       remote_tip: "ingrese una dirección de una imagen en la siguiente forma http://ejemplo.com/imagen.jpg"
       local_tip: "click para seleccionar la imagen desde su dispositivo."
-      upload_title: "Subir"
       uploading: "Subiendo imagen"
 
     search:
