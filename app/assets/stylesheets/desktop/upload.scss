@@ -17,19 +17,22 @@
     display: inline-block;
     padding-left: 10px;
   }
-  .inputs {
-    float: right;
-    width: 75%;
-    input {
-      width: 90%;
-      margin: 0 0 5px 0;
-    }
-    input[type="file"] {
-      font-size: 14px;
-      line-height: 18px;
-    }
-    .description {
-      color: #9a9ea0;
+  .radios {
+    margin: 0 0 25px 0;
+    .inputs {
+      float: right;
+      width: 75%;
+      input {
+        width: 90%;
+        margin: 0 0 5px 0;
+      }
+      input[type="file"] {
+        font-size: 14px;
+        line-height: 18px;
+      }
+      .description {
+        color: #9a9ea0;
+      }
     }
   }
 }
