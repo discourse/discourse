@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 # monkey patching to support dual booting
 module Bundler::SharedHelpers
@@ -31,6 +31,11 @@ if rails4?
     end
   end
 end
+
+##propias
+gem 'capistrano', require: nil
+gem 'capistrano-rbenv', require: nil
+##fin propias
 
 gem 'seed-fu' , github: 'SamSaffron/seed-fu'
 
