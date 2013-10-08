@@ -6,6 +6,6 @@ then
 	echo "File $FILE exists..."
 else
 	cd $RAILS_STACK_PATH
-    rake db:drop db:create
+    bundle exec rake db:drop db:create
     touch /tmp/drop_create_done
 fi
