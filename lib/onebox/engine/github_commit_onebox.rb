@@ -26,16 +26,16 @@ module Onebox
       def data
         {
           url: @url,
-          owner: raw.css(".entry-title .author .url").inner_text,
-          repo: raw.css(".entry-title .js-current-repository").inner_text,
-          sha: raw.css(".sha").inner_text,
-          branch: raw.css(".commit-branches .branches-list .branch a").inner_text,
-          gravatar: raw.css(".gravatar").first["src"],
-          message: raw.css(".commit-title").inner_text,
-          description: raw.css(".commit-desc").inner_text,
-          author: raw.css(".author-name a").inner_text,
-          time_date: raw.css(".js-relative-date").first["title"],
-          diff_stats: raw.css(".details-collapse .explain").inner_text
+          owner: match[:owner],
+          repo: match[:repo],
+          sha: raw["sha"],
+          gravatar: raw["author"]["avatar_url"],
+          message: raw["commit"]["message"],
+          author: raw["author"]["login"],
+          time_date: raw["commit"]["committer"]["date"],
+          files_changed: raw["files"].length,
+          additions: raw["stats"]["additions"],
+          deletions: raw["stats"]["deletions"]
         }
       end
     end
