@@ -432,12 +432,8 @@ pt_BR:
       title: "Enviar arquivo"
       from_my_computer: "Do Meu Dispositivo"
       from_the_web: "Da Internet"
-      add_title: "Adicionar Arquivo"
-      remote_title: "arquivo remoto"
       remote_tip: "digite o endereço de um arquivo na forma http://exemplo.com/imagem.jpg"
-      local_title: "arquivo local"
       local_tip: "clique para selecionar um arquivo do seu dispositivo"
-      upload_title: "Enviar"
       uploading: "Enviando"
     search:
       title: "procurar por tópicos, posts, usuários, ou categorias"

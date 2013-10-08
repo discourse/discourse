@@ -493,18 +493,10 @@ nl:
       title_with_attachments: Voeg een afbeelding of bestand toe
       from_my_computer: Vanaf mijn apparaat
       from_the_web: Vanaf het web
-      add_title: Voeg afbeelding toe
-      add_title_with_attachments: Voeg afbeelding of bestand toe
-      remote_title: externe afbeelding
-      remote_title_with_attachments: externe afbeelding of bestand
       remote_tip: "vul een internetadres in van een afbeelding in deze vorm: http://example.com/image.jpg"
       remote_tip_with_attachments: "vul een internetadres in van een afbeelding of bestand in deze vorm: http://example.com/bestand.ext (toegestane extensies: {{authorized_extensions}})."
-      local_title: lokale afbeelding
-      local_title_with_attachments: lokale afbeelding of bestand
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
       local_tip_with_attachments: "klik om een afbeelding of bestand vanaf je apparaat te selecteren (toegestane extensies: {{authorized_extensions}})."
-      upload_title: Uploaden
-      upload_title_with_attachments: Uploaden
       uploading: Afbeelding uploaden
 
     search:

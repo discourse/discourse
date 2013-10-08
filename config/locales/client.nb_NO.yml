@@ -428,12 +428,8 @@ nb_NO:
       title: "Legg til Bilde"
       from_my_computer: "Fra Min Enhet"
       from_the_web: "Fra Nettet"
-      add_title: "Legg til Bilde"
-      remote_title: "eksternt bilde"
       remote_tip: "skriv inn addressen til et bilde, f.eks. http://example.com/image.jpg"
-      local_title: "lokalt bilde"
       local_tip: "klikk for å velge et bilde fra din enhet."
-      upload_title: "Last opp"
       uploading: "Laster opp bilde"
 
     search:

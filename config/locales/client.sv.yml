@@ -354,10 +354,8 @@ sv:
       title: "Infoga Bild"
       from_my_computer: "Från Min Enhet"
       from_the_web: "Från Internet"
-      add_title: "Lägg Till Bild"
       remote_tip: "skriv in en adress till en bild i formen http://exempel.se/bild.jpg"
       local_tip: "klicka för att välja en bild från din enhet."
-      upload_title: "Ladda Upp"
       uploading: "Laddar upp bild"
 
     search:

@@ -10,13 +10,8 @@
 Discourse.AvatarSelectorController = Discourse.Controller.extend(Discourse.ModalFunctionality, {
 
   actions: {
-    useUploadedAvatar: function() {
-      this.set("use_uploaded_avatar", true);
-    },
-
-    useGravatar: function() {
-      this.set("use_uploaded_avatar", false);
-    }
+    useUploadedAvatar: function() { this.set("use_uploaded_avatar", true); },
+    useGravatar: function() { this.set("use_uploaded_avatar", false); }
   },
 
   avatarTemplate: function() {

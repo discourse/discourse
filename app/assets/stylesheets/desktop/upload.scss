@@ -13,14 +13,23 @@
 }
 
 .upload-selector {
-  input[type="text"]{
-    width: 520px;
+  label {
+    display: inline-block;
+    padding-left: 10px;
   }
-  input[type="file"] {
-    font-size: 14px;
-    line-height: 18px;
-  }
-  .description {
-    color: #9a9ea0;
+  .inputs {
+    float: right;
+    width: 75%;
+    input {
+      width: 90%;
+      margin: 0 0 5px 0;
+    }
+    input[type="file"] {
+      font-size: 14px;
+      line-height: 18px;
+    }
+    .description {
+      color: #9a9ea0;
+    }
   }
 }

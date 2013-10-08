@@ -1,36 +1,24 @@
-<ul class="nav nav-pills">
-  <li {{bindAttr title="localTitle" class="localSelected:active"}}>
-    <a href="#" {{action selectLocal}}>{{i18n upload_selector.from_my_computer}}</a>
-  </li>
-  <li {{bindAttr title="remoteTitle" class="remoteSelected:active"}}>
-    <a href="#" {{action selectRemote}}>{{i18n upload_selector.from_the_web}}</a>
-  </li>
-</ul>
+<div class="modal-body">
+  <input type="radio" id="local" value="local" name="upload" {{action useLocal}}>
+  <label class="radio" for="local">{{i18n upload_selector.from_my_computer}}</label>
+  <div class="inputs">
+    {{#if controller.local}}
+      <input type="file" id="filename-input">
+    {{else}}
+      <input type="text" id="fileurl-input">
+    {{/if}}
+    <br>
+    <span class="description">{{view.tip}}</span>
+  </div>
+  <br>
+  <input type="radio" id="remote" value="remote" name="upload" {{action useRemote}}>
+  <label class="radio" for="remote">{{i18n upload_selector.from_the_web}}</label>
+</div>
 
-{{#if localSelected}}
-  <div class='modal-body'>
-    <form>
-      <input type="file" name="file" id="filename-input" value="browse"><br>
-      <span class='description'>{{localTip}}</span> <br>
-    </form>
-  </div>
-  <div class='modal-footer'>
-    <button class='btn btn-large btn-primary' {{action upload target="view"}}>
-      <span class='add-upload'><i {{bindAttr class="addUploadIcon"}}></i><i class='icon-plus'></i></span>
-      {{uploadTitle}}
-    </button>
-  </div>
-{{else}}
-  <div class='modal-body'>
-    <form>
-      <input type="text" name="text" id="fileurl-input" autofocus><br>
-      <span class='description'>{{remoteTip}}</span> <br>
-    </form>
-  </div>
-  <div class='modal-footer'>
-    <button class='btn btn-large btn-primary' {{action add target="view"}}>
-      <span class='add-upload'><i {{bindAttr class="addUploadIcon"}}></i><i class='icon-plus'></i></span>
-      {{addTitle}}
-    </button>
-  </div>
-{{/if}}
+<div class="modal-footer">
+  <button class="btn btn-primary" data-dismiss="modal" {{action upload target="view"}}>
+    <span class='add-upload'><i {{bindAttr class="view.uploadIcon"}}></i><i class='icon-plus'></i></span>
+    {{i18n upload}}
+  </button>
+  <a data-dismiss="modal">{{i18n cancel}}</a>
+</div>

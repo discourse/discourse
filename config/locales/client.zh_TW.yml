@@ -477,12 +477,8 @@ zh_TW:
       title: "插入圖片"
       from_my_computer: "來自我的設備"
       from_the_web: "來自網絡"
-      add_title: "添加圖片"
-      remote_title: "網絡圖片"
       remote_tip: "輸入圖片網絡，格式爲：http://example.com/image.jpg"
-      local_title: "本地圖片"
       local_tip: "點擊從你的設備中選擇一張圖片。"
-      upload_title: "上傳"
       uploading: "上傳圖片中"
 
     search:
