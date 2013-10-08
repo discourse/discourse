@@ -14,10 +14,6 @@ describe Onebox::Engine::TwitterOnebox do
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
 
-    it "has tweet id" do
-      expect(html).to include("363116819147538433")
-    end
-
     it "has tweet text" do
       expect(html).to include("I\'m a sucker for pledges.")
     end
