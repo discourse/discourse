@@ -21,7 +21,11 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   },
 
   none: function() {
-    if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('showUncategorized')) return 'category.none';
+    if (!Discourse.SiteSettings.allow_uncategorized_topics) {
+      return 'category.choose';
+    } else if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('showUncategorized')) {
+      return 'category.none';
+    }
   }.property('showUncategorized'),
 
   template: function(text, templateData) {

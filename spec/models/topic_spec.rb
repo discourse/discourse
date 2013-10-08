@@ -175,6 +175,38 @@ describe Topic do
 
   end
 
+  context 'category validation' do
+    context 'allow_uncategorized_topics is false' do
+      before do
+        SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
+      end
+
+      it "does not allow nil category" do
+        topic = Fabricate(:topic, category: nil)
+        topic.should_not be_valid
+        topic.errors[:category_id].should be_present
+      end
+
+      it 'passes for topics with a category' do
+        Fabricate.build(:topic, category: Fabricate(:category)).should be_valid
+      end
+    end
+
+    context 'allow_uncategorized_topics is true' do
+      before do
+        SiteSetting.stubs(:allow_uncategorized_topics).returns(true)
+      end
+
+      it "passes for topics with nil category" do
+        Fabricate.build(:topic, category: nil).should be_valid
+      end
+
+      it 'passes for topics with a category' do
+        Fabricate.build(:topic, category: Fabricate(:category)).should be_valid
+      end
+    end
+  end
+
 
   context 'similar_to' do
 
@@ -825,7 +857,18 @@ describe Topic do
         it "should lower the original category's topic count" do
           @category.topic_count.should == 0
         end
+      end
 
+      context 'when allow_uncategorized_topics is false' do
+        before do
+          SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
+        end
+
+        let!(:topic) { Fabricate(:topic, category: Fabricate(:category)) }
+
+        it 'returns false' do
+          topic.change_category('').should eq(false) # don't use "be_false" here because it would also match nil
+        end
       end
 
       describe 'when the category exists' do
@@ -838,7 +881,6 @@ describe Topic do
           @topic.category_id.should be_blank
           @category.topic_count.should == 0
         end
-
       end
 
     end

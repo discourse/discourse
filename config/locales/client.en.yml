@@ -925,6 +925,7 @@ en:
     category:
       can: 'can&hellip; '
       none: '(no category)'
+      choose: 'Select a category&hellip;'
       edit: 'edit'
       edit_long: "Edit Category"
       edit_uncategorized: "Edit Uncategorized"

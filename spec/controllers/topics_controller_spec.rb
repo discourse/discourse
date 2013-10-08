@@ -637,13 +637,31 @@ describe TopicsController do
         end
 
         it 'triggers a change of category' do
-          Topic.any_instance.expects(:change_category).with('incredible')
+          Topic.any_instance.expects(:change_category).with('incredible').returns(true)
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category: 'incredible'
         end
 
         it "returns errors with invalid titles" do
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'asdf'
           expect(response).not_to be_success
+        end
+
+        it "returns errors with invalid categories" do
+          Topic.any_instance.expects(:change_category).returns(false)
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category: ''
+          expect(response).not_to be_success
+        end
+
+        context "allow_uncategorized_topics is false" do
+          before do
+            SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
+          end
+
+          it "can add a category to an uncategorized topic" do
+            Topic.any_instance.expects(:change_category).with('incredible').returns(true)
+            xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category: 'incredible'
+            response.should be_success
+          end
         end
 
       end

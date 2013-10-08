@@ -56,6 +56,12 @@ class Topic < ActiveRecord::Base
                                         :case_sensitive => false,
                                         :collection => Proc.new{ Topic.listable_topics } }
 
+  # The allow_uncategorized_topics site setting can be changed at any time, so there may be
+  # existing topics with nil category. We'll allow that, but when someone tries to make a new
+  # topic or change a topic's category, perform validation.
+  attr_accessor :do_category_validation
+  validates :category_id, :presence => { :if => Proc.new { @do_category_validation && !SiteSetting.allow_uncategorized_topics } }
+
   before_validation do
     self.sanitize_title
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
@@ -135,6 +141,7 @@ class Topic < ActiveRecord::Base
   before_create do
     self.bumped_at ||= Time.now
     self.last_post_user_id ||= user_id
+    self.do_category_validation = true
     if !@ignore_category_auto_close and self.category and self.category.auto_close_days and self.auto_close_at.nil?
       set_auto_close(self.category.auto_close_days)
     end
@@ -316,8 +323,8 @@ class Topic < ActiveRecord::Base
 
   def changed_to_category(cat)
 
-    return if cat.blank?
-    return if Category.where(topic_id: id).first.present?
+    return true if cat.blank?
+    return true if Category.where(topic_id: id).first.present?
 
     Topic.transaction do
       old_category = category
@@ -327,12 +334,15 @@ class Topic < ActiveRecord::Base
       end
 
       self.category_id = cat.id
-      save
-
-      CategoryFeaturedTopic.feature_topics_for(old_category)
-      Category.where(id: cat.id).update_all 'topic_count = topic_count + 1'
-      CategoryFeaturedTopic.feature_topics_for(cat) unless old_category.try(:id) == cat.try(:id)
+      if save
+        CategoryFeaturedTopic.feature_topics_for(old_category)
+        Category.where(id: cat.id).update_all 'topic_count = topic_count + 1'
+        CategoryFeaturedTopic.feature_topics_for(cat) unless old_category.try(:id) == cat.try(:id)
+      else
+        return false
+      end
     end
+    true
   end
 
   def add_moderator_post(user, text, opts={})
@@ -362,6 +372,8 @@ class Topic < ActiveRecord::Base
 
   # Changes the category to a new name
   def change_category(name)
+    self.do_category_validation = true
+
     # If the category name is blank, reset the attribute
     if name.blank?
       if category_id.present?
@@ -369,12 +381,11 @@ class Topic < ActiveRecord::Base
         Category.where(id: category_id).update_all 'topic_count = topic_count - 1'
       end
       self.category_id = nil
-      save
-      return
+      return save
     end
 
     cat = Category.where(name: name).first
-    return if cat == category
+    return true if cat == category
     changed_to_category(cat)
   end
 

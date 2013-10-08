@@ -108,7 +108,7 @@ class TopicsController < ApplicationController
     success = false
     Topic.transaction do
       success = topic.save
-      topic.change_category(params[:category]) if success
+      success = topic.change_category(params[:category]) if success
     end
 
     # this is used to return the title to the client as it may have been
