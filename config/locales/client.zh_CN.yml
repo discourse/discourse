@@ -184,7 +184,8 @@ zh_CN:
 
     user:
       said: "{{username}} 说："
-      profile: "介绍信息"
+      profile: "个人简介"
+      show_profile: "访问个人简介"
       mute: "防打扰"
       edit: "修改参数"
       download_archive: "下载我的帖子的存档"
@@ -284,6 +285,7 @@ zh_CN:
 
       email_direct: "当有人引用你、回复你或提及你 @username 时发送一封邮件给你"
       email_private_messages: "当有人给你发私信时发送一封邮件给你"
+      email_always: "即使在论坛中是活跃状态也接收电子邮件提醒和摘要"
 
       other_settings: "其它"
 
@@ -371,6 +373,7 @@ zh_CN:
     private_message_info:
       title: "私下交流"
       invite: "邀请其他人……"
+      remove_allowed_user: "是否将{{name}}从本条私信中移除？"
 
     email: '电子邮箱'
     username: '用户名'
@@ -579,6 +582,7 @@ zh_CN:
       title: 主题排名详细
 
     topic:
+      filter_to: "只显示{{username}}发表的帖子"
       create_in: '创建一个 {{categoryName}} 分类的主题'
       create: '创建主题'
       create_long: '创建一个新主题'
