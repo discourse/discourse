@@ -15,7 +15,7 @@ describe Onebox::Engine::TwitterOnebox do
     let(:html) { described_class.new(link).to_html }
 
     it "has tweet text" do
-      expect(html).to include("I\'m a sucker for pledges.")
+      expect(html).to include("I&#39;m a sucker for pledges.")
     end
 
     it "has tweet time and date" do
