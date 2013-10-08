@@ -23,6 +23,7 @@ production:
       - source: /.cloud66/files/redis.yml
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/redis.yml
         target: rails
+        parse: false
     # 5. Copy production.rb file
       - source: /.cloud66/files/production.rb
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/environments/production.rb
@@ -101,6 +102,7 @@ staging:
       - source: /.cloud66/files/redis.yml
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/redis.yml
         target: rails
+        parse: false
     # 5. Rename production.rb.sample file
       - source: /.cloud66/files/production.rb
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/environments/production.rb
@@ -179,6 +181,7 @@ development:
       - source: /.cloud66/files/redis.yml
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/redis.yml
         target: rails
+        parse: false
     # 5. Move thin config to server
       - source: /.cloud66/files/thin.yml
         destination: <%= ENV['RAILS_STACK_PATH'] %>/config/thin.yml
