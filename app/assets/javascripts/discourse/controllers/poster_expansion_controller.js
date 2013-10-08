@@ -12,6 +12,7 @@ Discourse.PosterExpansionController = Discourse.ObjectController.extend({
   user: null,
 
   showFilter: Em.computed.alias('controllers.topic.postStream.hasNoFilters'),
+  showName: Discourse.computed.propertyNotEqual('user.name', 'user.username'),
 
   show: function(post) {
 
