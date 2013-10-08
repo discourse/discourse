@@ -25,12 +25,10 @@ function controllerFor(controller, model) {
 }
 
 function asyncTestDiscourse(text, func) {
-
   asyncTest(text, function () {
-
-    var qunitContext = this;
+    var self = this;
     Ember.run(function () {
-      func.call(qunitContext);
+      func.call(self);
     });
   });
 }
