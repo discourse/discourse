@@ -134,10 +134,11 @@ Install RVM
     # you've given discourse sudo permissions, which is *not* the default)
     # rvm requirements
 
-    # If discourse does not have sudo permissions (likely the case), run:
+    # NOTE: rvm will tell you which packages you (or your sysadmin) need
+    # to install during this step. As discourse does not have sudo 
+    # permissions (likely the case), run:
     rvm --autolibs=read-fail requirements
-    # and rvm will tell you which packages you (or your sysadmin) need
-    # to install before it can proceed. Do that and then resume next:
+    # repeat untill it fully executes 
 
 Continue with Discourse installation
 
@@ -231,6 +232,7 @@ site:
 Edit /etc/nginx/conf.d/discourse.conf
 
 - edit `server_name`. Example: `server_name cain.discourse.org test.cain.discourse.org;`
+- change socket count depending on your NUM_WEB count
 - change socket paths if discourse is installed to a different location
 - modify root location if discourse is installed to a different location
 
