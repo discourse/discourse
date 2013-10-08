@@ -364,10 +364,10 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   }.property('model.titleLength', 'model.missingTitleCharacters', 'model.minimumTitleLength'),
 
   categoryValidation: function() {
-    if( !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('model.categoryName')) {
+    if( !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('model.categoryId')) {
       return Discourse.InputValidation.create({ failed: true, reason: I18n.t('composer.error.category_missing') });
     }
-  }.property('model.categoryName'),
+  }.property('model.categoryId'),
 
   replyValidation: function() {
     var replyLength = this.get('model.replyLength'),
