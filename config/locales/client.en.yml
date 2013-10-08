@@ -574,7 +574,7 @@ en:
       title: Topic Rank Details
 
     topic:
-      filter_to: "Show only posts by {{username}} in this topic"
+      filter_to: "Show only the {{post_count}} posts by {{username}} in this topic"
       create_in: 'Create {{categoryName}} Topic'
       create: 'Create Topic'
       create_long: 'Create a new Topic'
