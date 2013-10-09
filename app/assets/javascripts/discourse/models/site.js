@@ -45,7 +45,6 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
   },
 
   create: function(obj) {
-    var _this = this;
     var result = this._super(obj);
 
     if (result.categories) {
