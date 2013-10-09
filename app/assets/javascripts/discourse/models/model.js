@@ -16,12 +16,11 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
     @param {Object} attrs The attributes we want to merge with
   **/
   mergeAttributes: function(attrs) {
-    var _this = this;
-    _.each(attrs, function(v,k) {
-      _this.set(k, v);
+    var self = this;
+    _.each(attrs, function(v, k) {
+      self.set(k, v);
     });
   }
-
 });
 
 Discourse.Model.reopenClass({
@@ -31,16 +30,13 @@ Discourse.Model.reopenClass({
 
     @method extractByKey
     @param {Object} collection The collection of values
-    @param {Object} klass Optional The class to instantiate
+    @param {Object} klass The class to instantiate
   **/
   extractByKey: function(collection, klass) {
     var retval = {};
-    if (!collection) return retval;
-    _.each(collection,function(c) {
-      retval[c.id] = klass.create(c);
+    _.each(collection, function(item) {
+      retval[item.id] = klass.create(item);
     });
     return retval;
   }
 });
-
-
