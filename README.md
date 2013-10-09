@@ -1,7 +1,3 @@
-<a href="http://blog.cloud66.com/post/62900887610/introducing-cloud-66-easydeploy">
-![Logo](http://cdn.cloud66.com/images/easy-deploy.png)
-</a>
-
 <a href="http://www.discourse.org/">![Logo](images/discourse.png)</a>
 
 Discourse is the 100% open source, next-generation discussion platform built for the next decade of the Internet.
@@ -31,6 +27,10 @@ Before you get started, ensure you have the following minimum versions: [Ruby 1.
 If you're not here to hack on the open source code, but rather looking to set up a Discourse forum in a production environment, see our [**Discourse Install Guide**](/docs/INSTALL-ubuntu.md). Be warned, however, that Discourse is still very much beta, and you will probably need a background as a developer or system administrator to set it up successfully.
 
 ## Deploying with Cloud 66
+<a href="http://blog.cloud66.com/post/62900887610/introducing-cloud-66-easydeploy">
+![Logo](http://cdn.cloud66.com/images/easy-deploy.png)
+</a>
+
 Deploying and maintaining a Discourse setup through Cloud 66 is extremely easy. 
 Click the badge and follow the instructions below to deploy!
 
