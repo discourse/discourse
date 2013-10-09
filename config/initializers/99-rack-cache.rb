@@ -13,12 +13,19 @@ if Rails.configuration.respond_to?(:enable_rack_cache) && Rails.configuration.en
       @app = app
       super
     end
+
     def call(env)
-      if CurrentUser.has_auth_cookie?(env)
+      status, headers, body = if CurrentUser.has_auth_cookie?(env)
         @app.call(env)
       else
         super
       end
+
+      %w[Date Expires Cache-Control ETag Last-Modified].each do |header|
+        headers.delete header
+      end
+
+      [status, headers, body]
     end
   end
 
