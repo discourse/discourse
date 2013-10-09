@@ -26,16 +26,6 @@ describe Onebox::Engine::GithubCommitOnebox do
       expect(html).to include("803d023e2307309f8b776ab3b8b7e38ba91c0919")
     end
 
-    it "has tag" do
-      pending
-      expect(html).to include("v0.9.6.3")
-    end
-
-    it "has branch" do
-      pending
-      expect(html).to include("master")
-    end
-
     it "has commit author gravatar" do
       expect(html).to include("2F7d3010c11d08cf990b7614d2c2ca9098.png")
     end
