@@ -1,10 +1,12 @@
 # Responsible for dealing with different activation processes when a user is created
 class UserActivator
-  attr_reader :user, :session, :cookies
-  def initialize(user, session, cookies)
+  attr_reader :user, :request, :session, :cookies
+
+  def initialize(user, request, session, cookies)
     @user = user
     @session = session
     @cookies = cookies
+    @request = request
   end
 
   def activation_message
@@ -14,7 +16,7 @@ class UserActivator
   private
 
   def activator
-    factory.new(user, session, cookies)
+    factory.new(user, request, session, cookies)
   end
 
   def factory

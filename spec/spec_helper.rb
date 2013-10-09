@@ -63,8 +63,22 @@ Spork.prefork do
       end
     end
 
+    class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
+      def log_on_user(user,session,cookies)
+        session[:current_user_id] = user.id
+        super
+      end
+
+      def log_off_user(session,cookies)
+        session[:current_user_id] = nil
+        super
+      end
+    end
+
     config.before(:all) do
       DiscoursePluginRegistry.clear
+      Discourse.current_user_provider = TestCurrentUserProvider
+
       require_dependency 'site_settings/local_process_provider'
       SiteSetting.provider = SiteSettings::LocalProcessProvider.new
     end

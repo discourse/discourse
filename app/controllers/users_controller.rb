@@ -139,7 +139,7 @@ class UsersController < ApplicationController
     register_nickname(user)
 
     if user.save
-      activator = UserActivator.new(user, session, cookies)
+      activator = UserActivator.new(user, request, session, cookies)
       message = activator.activation_message
       create_third_party_auth_records(user, auth)
 

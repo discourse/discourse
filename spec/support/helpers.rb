@@ -10,7 +10,8 @@ module Helpers
   end
 
   def log_in_user(user)
-    session[:current_user_id] = user.id
+    provider = Discourse.current_user_provider.new(request.env)
+    provider.log_on_user(user,session,cookies)
   end
 
   def fixture_file(filename)

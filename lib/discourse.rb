@@ -1,5 +1,6 @@
 require 'cache'
 require_dependency 'plugin/instance'
+require_dependency 'auth/default_current_user_provider'
 
 module Discourse
 
@@ -146,6 +147,14 @@ module Discourse
       @local_store_loaded ||= require 'file_store/local_store'
       LocalStore.new
     end
+  end
+
+  def self.current_user_provider
+    @current_user_provider || Auth::DefaultCurrentUserProvider
+  end
+
+  def self.current_user_provider=(val)
+    @current_user_provider = val
   end
 
 private
