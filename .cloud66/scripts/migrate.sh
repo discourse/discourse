@@ -6,6 +6,6 @@ then
 	echo "File $FILE exists..."
 else
 	cd $RAILS_STACK_PATH
-    rake db:migrate db:seed_fu
+    bundle exec rake db:migrate db:seed_fu
     touch /tmp/migrate_done
 fi

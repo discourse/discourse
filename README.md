@@ -1,8 +1,6 @@
 <a href="http://blog.cloud66.com/post/62900887610/introducing-cloud-66-easydeploy">
-<img src="https://raw.github.com/cloud66-samples/discourse/master/docs/easy-deploy.png"/>
+![Logo](http://cdn.cloud66.com/images/easy-deploy.png)
 </a>
-
-This is a Cloud 66 EasyDeploy repository.
 
 <a href="http://www.discourse.org/">![Logo](images/discourse.png)</a>
 
@@ -41,7 +39,7 @@ Simply follow 7 steps on [building your stack](https://www.cloud66.com/help/firs
 the environment variables below to have your own fully functioning Discourse installation up and running. 
 
 Note: Setting environment variables is done during step five, before you click 'deploy':
-![Environment variables](https://raw.github.com/cloud66-samples/discourse/master/docs/environment_variables.png)
+![Environment variables](http://cdn.cloud66.com/images/environment_variables.png)
 
 1. SMTP_ADDRESS = your SMTP host
 2. SMTP_PORT = the port on your SMTP host

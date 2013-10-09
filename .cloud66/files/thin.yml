@@ -8,3 +8,6 @@ max_persistent_conns: 100
 require: []
 wait: 30
 daemonize: true
+chdir: $STACK_PATH
+environment: $RAILS_ENV
+log: $STACK_PATH/log/thin.log

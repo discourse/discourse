@@ -5,6 +5,6 @@ if [ -f $FILE ]
 then
 	echo "File $FILE exists..."
 else
-	psql discourse < /tmp/images/production-image.sql
+	psql $POSTGRESQL_DATABASE < /tmp/images/production-image.sql
     touch /tmp/import_prod_done
 fi
