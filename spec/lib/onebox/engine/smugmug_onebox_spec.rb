@@ -22,6 +22,10 @@ describe Onebox::Engine::SmugMugOnebox do
       expect(html).to include("Tail feather from drake mallard")
     end
 
+    it "returns the image URL" do
+      expect(html).to include("Mallard_HAH1062-M.jpg")
+    end
+
     it "returns the product URL" do
       expect(html).to include(link)
     end
