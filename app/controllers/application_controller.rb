@@ -1,4 +1,4 @@
-require_dependency 'current_user'
+require 'current_user'
 require_dependency 'canonical_url'
 require_dependency 'discourse'
 require_dependency 'custom_renderer'
