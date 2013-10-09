@@ -565,10 +565,9 @@ describe Topic do
     shared_examples_for "adding a star to a topic" do
       it 'triggers a forum topic user change with true' do
         # otherwise no chance the mock will work
-        freeze_time do
-          TopicUser.expects(:change).with(@user, @topic.id, starred: true, starred_at: DateTime.now, unstarred_at: nil)
-          @topic.toggle_star(@user, true)
-        end
+        freeze_time
+        TopicUser.expects(:change).with(@user, @topic.id, starred: true, starred_at: DateTime.now, unstarred_at: nil)
+        @topic.toggle_star(@user, true)
       end
 
       it 'increases the star_count of the forum topic' do
@@ -603,10 +602,9 @@ describe Topic do
       end
 
       it 'triggers a forum topic user change with false' do
-        freeze_time do
-          TopicUser.expects(:change).with(@user, @topic.id, starred: false, unstarred_at: DateTime.now)
-          @topic.toggle_star(@user, false)
-        end
+        freeze_time
+        TopicUser.expects(:change).with(@user, @topic.id, starred: false, unstarred_at: DateTime.now)
+        @topic.toggle_star(@user, false)
       end
 
       it 'reduces the star_count' do
@@ -1180,5 +1178,33 @@ describe Topic do
         expect { topic.recover! }.to_not change { category.reload.topic_count }
       end
     end
+  end
+
+  it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
+    SiteSetting.stubs(:max_topics_in_first_day).returns(1)
+    SiteSetting.stubs(:max_replies_in_first_day).returns(1)
+    RateLimiter.stubs(:disabled?).returns(false)
+    SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
+
+    start = Time.now.tomorrow.beginning_of_day
+
+    freeze_time(start)
+
+    user = Fabricate(:user)
+    topic_id = create_post(user: user).topic_id
+
+    freeze_time(start + 10.minutes)
+    lambda {
+      create_post(user: user)
+    }.should raise_exception
+
+    freeze_time(start + 20.minutes)
+    create_post(user: user, topic_id: topic_id)
+
+    freeze_time(start + 30.minutes)
+
+    lambda {
+      create_post(user: user, topic_id: topic_id)
+    }.should raise_exception
   end
 end

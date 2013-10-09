@@ -66,6 +66,9 @@ class SiteSetting < ActiveRecord::Base
   setting(:flags_required_to_hide_post, 3)
   setting(:cooldown_minutes_after_hiding_posts, 10)
 
+  setting(:max_topics_in_first_day, 5)
+  setting(:max_replies_in_first_day, 10)
+
   setting(:num_flags_to_block_new_user, 3)
   setting(:num_users_to_block_new_user, 3)
   setting(:notify_mods_when_user_blocked, false)

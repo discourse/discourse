@@ -183,6 +183,9 @@ class Topic < ActiveRecord::Base
   # Additional rate limits on topics: per day and private messages per day
   def limit_topics_per_day
     RateLimiter.new(user, "topics-per-day:#{Date.today.to_s}", SiteSetting.max_topics_per_day, 1.day.to_i)
+    if user.created_at > 1.day.ago
+      RateLimiter.new(user, "first-day-topics-per-day:#{Date.today.to_s}", SiteSetting.max_topics_in_first_day, 1.day.to_i)
+    end
   end
 
   def limit_private_messages_per_day

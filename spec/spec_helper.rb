@@ -85,26 +85,9 @@ Spork.prefork do
 
   end
 
-  class DateTime
-    class << self
-      alias_method :old_now, :now
-      def now
-        @now || old_now
-      end
-      def now=(v)
-        @now = v
-      end
-    end
-  end
-
-  def freeze_time(d=nil)
-    begin
-      d ||= DateTime.now
-      DateTime.now = d
-      yield
-    ensure
-      DateTime.now = nil
-    end
+  def freeze_time(now=Time.now)
+    DateTime.stubs(:now).returns(DateTime.parse(now.to_s))
+    Time.stubs(:now).returns(Time.parse(now.to_s))
   end
 
 end

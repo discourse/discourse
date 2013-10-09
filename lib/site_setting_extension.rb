@@ -67,8 +67,12 @@ module SiteSettingExtension
 
   def client_settings_json
     Rails.cache.fetch(SiteSettingExtension.client_settings_cache_key, expires_in: 30.minutes) do
-      MultiJson.dump(Hash[*@@client_settings.map{|n| [n, self.send(n)]}.flatten])
+      client_settings_json_uncached
     end
+  end
+
+  def client_settings_json_uncached
+    MultiJson.dump(Hash[*@@client_settings.map{|n| [n, self.send(n)]}.flatten])
   end
 
   # Retrieve all settings
