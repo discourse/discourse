@@ -2,14 +2,16 @@
 
 @import "../common/foundation/variables";
 @import "../common/foundation/mixins";
-.btn-social {width: 48%; float: left;
-font-size: 13px;
+
+.btn-social {
+  width: 95%;
+  font-size: 16px;
 }
 
 #login-buttons {
+  text-align: center;
   button {
-    margin: 0 5px 5px 0;
-    
+    margin: 0 0 5px 0;
   }
   margin-top: 10px;
   margin-bottom: 20px;
@@ -20,16 +22,8 @@ font-size: 13px;
     color: $dark_gray;
     cursor: pointer;
   }
-
-
-label {float: left; display: block;}
-
-textarea, input, select {font-size: 16px; clear: left;}
-
-
-
-
-
+  label {float: left; display: block;}
+  textarea, input, select {font-size: 16px; clear: left;}
 }
 
 // Create account
@@ -38,9 +32,8 @@ textarea, input, select {font-size: 16px; clear: left;}
 	cursor: pointer;
 }
 
-  a#forgot-password-link {clear: left; float: left; }
-.btn-primary {margin-bottom: 10px; font-size: 15; clear: left; float: left;
+a#forgot-password-link {clear: left; float: left; }
 
-}
+.btn-primary {margin-bottom: 10px; font-size: 15; clear: left; float: left;}
 
-a#new-account-link {float: left; margin-left: 7px;}
+a#new-account-link {margin-left: 7px;}

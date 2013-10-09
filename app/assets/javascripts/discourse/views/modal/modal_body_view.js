@@ -19,10 +19,12 @@ Discourse.ModalBodyView = Discourse.View.extend({
 
     $('#modal-alert').hide();
 
-    var modalBodyView = this;
-    Em.run.schedule('afterRender', function() {
-      modalBodyView.$('input:first').focus();
-    });
+    if (!Discourse.Mobile.mobileView) {
+      var modalBodyView = this;
+      Em.run.schedule('afterRender', function() {
+        modalBodyView.$('input:first').focus();
+      });
+    }
 
     var title = this.get('title');
     if (title) {

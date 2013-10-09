@@ -5,6 +5,7 @@
         <button class="btn btn-social {{unbound name}}" {{action externalLogin this}}>{{unbound title}}</button>
       {{/each}}
     </div>
+    <div class="clearfix"></div>
   {{/if}}
   {{#if Discourse.SiteSettings.enable_local_logins}}
     {{#if hasAtLeastOneLoginButton}}
@@ -18,9 +19,8 @@
               <label for='login-account-name'>{{i18n login.username}}&nbsp;</label>
             </td>
             <td>
-              {{textField value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
+              {{textField value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off"}}
             </td>
-            <td></td>
           </tr>
           <tr>
             <td>
@@ -29,6 +29,9 @@
             <td>
                 {{textField value=loginPassword type="password" id="login-account-password"}} &nbsp;
             </td>
+          </tr>
+          <tr>
+            <td></td>
             <td>
               <a id="forgot-password-link" {{action showForgotPassword}}>{{i18n forgot_password.action}}</a>
             </td>
