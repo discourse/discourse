@@ -1,7 +1,7 @@
 #******************************************************************************#
 #                                                                              #
 # Oneboxer already supports most sites using OpenGraph via the OpenGraphOnebox #
-# class. If the site you want to create a onebox for supports OpenGraph,       # 
+# class. If the site you want to create a onebox for supports OpenGraph,       #
 # please try adding the site to the whitelist below before creating a custom   #
 # parser or template.                                                          #
 #                                                                              #
@@ -18,8 +18,6 @@ module Oneboxer
        Entry.new(/^https?:\/\/(?:www\.)?cnn\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?washingtonpost\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?funnyordie\.com\/.+/),
-       Entry.new(/^https?:\/\/(?:www\.)?youtube\.com\/.+/),
-       Entry.new(/^https?:\/\/(?:www\.)?youtu\.be\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?500px\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?scribd\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?photobucket\.com\/.+/),
