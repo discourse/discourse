@@ -54,7 +54,7 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
 
 
     Em.run.schedule('afterRender', function() {
-      $('#login-account-password').keydown(function(e) {
+      $('#login-account-password, #login-account-name').keydown(function(e) {
         if (e.keyCode === 13) {
           loginController.login();
         }
