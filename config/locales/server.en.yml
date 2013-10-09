@@ -979,7 +979,7 @@ en:
     spam_post_blocked:
       subject_template: "New user %{username} blocked for repeated links"
       text_body_template: |
-        This is an automated message to inform you that the new user [%{username}](%{base_url}%{user_url}) tried to create multiple posts with links to %{domains}, but they were blocked from further posting to avoid spam.
+        This is an automated message to inform you that the new user [%{username}](%{base_url}%{user_url}) tried to create multiple posts with links to %{domains}, but the posts were blocked to avoid spam. The user is still able to make posts without those links.
 
         Please [review the user](%{base_url}%{user_url}).
 
