@@ -99,7 +99,9 @@ class Demon::Base
   def monitor_parent
     Thread.new do
       while true
-        exit unless alive?(@parent_pid)
+        unless alive?(@parent_pid)
+          Process.kill "QUIT", Process.pid
+        end
         sleep 1
       end
     end

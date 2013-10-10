@@ -97,6 +97,10 @@ module Discourse
     # rake assets:precompile also fails
     config.threadsafe! unless rails4? || $PROGRAM_NAME =~ /spork|rake/
 
+    # rack lock is nothing but trouble, get rid of it
+    # for some reason still seeing it in Rails 4
+    config.middleware.delete Rack::Lock
+
     # route all exceptions via our router
     config.exceptions_app = self.routes
 
@@ -119,6 +123,7 @@ module Discourse
     # Since we are using strong_parameters, we can disable and remove
     # attr_accessible.
     config.active_record.whitelist_attributes = false
+
 
     require 'plugin'
     require 'auth'
