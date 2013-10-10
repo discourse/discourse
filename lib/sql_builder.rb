@@ -61,7 +61,11 @@ class SqlBuilder
     if @klass
       @klass.find_by_sql(ActiveRecord::Base.send(:sanitize_sql_array, [sql, @args]))
     else
-      ActiveRecord::Base.exec_sql(sql,@args)
+      if @args == {}
+        ActiveRecord::Base.exec_sql(sql)
+      else
+        ActiveRecord::Base.exec_sql(sql,@args)
+      end
     end
   end
 
