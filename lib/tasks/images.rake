@@ -71,13 +71,15 @@ task "images:pull_hotlinked" => :environment do
             # if we have downloaded a file
             if upload_urls[src].present?
               src_for_regexp = src.gsub("?", "\\?").gsub(".", "\\.").gsub("+", "\\+")
-              # there are 4 ways to insert an image in a post
+              # there are 5 ways to insert an image in a post
               # HTML tag - <img src="http://...">
               post.raw.gsub!(/src=["']#{src_for_regexp}["']/i, "src='#{upload_urls[src]}'")
               # BBCode tag - [img]http://...[/img]
               post.raw.gsub!(/\[img\]#{src_for_regexp}\[\/img\]/i, "[img]#{upload_urls[src]}[/img]")
-              # Markdown - ![alt](http://...)
+              # Markdown inline - ![alt](http://...)
               post.raw.gsub!(/!\[([^\]]*)\]\(#{src_for_regexp}\)/) { "![#{$1}](#{upload_urls[src]})" }
+              # Markdown reference - [x]: http://
+              post.raw.gsub!(/\[(\d+)\]: #{src_for_regexp}/) { "[#{$1}]: #{upload_urls[src]}" }
               # Direct link
               post.raw.gsub!(src, "<img src='#{upload_urls[src]}'>")
               # mark the post as changed
