@@ -65,7 +65,7 @@ For details on how to reduce the monthly cost of your application, see [Advanced
 
         heroku config:add SECRET_TOKEN=<generated secret>
 
-. Precompile assets.
+7. Precompile assets.
 
     There are two options for precompilation. Either precompile locally, **before each deploy** or enable [Heroku's experimental user-env-compile](https://devcenter.heroku.com/articles/labs-user-env-compile) feature and Heroku will precompile your assets for you.
 
