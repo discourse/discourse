@@ -11,10 +11,13 @@ module Onebox
         tld("com")
       end
 
+      def url
+        "https://api.smugmug.com/services/oembed/?url=#{CGI.escape(@url)}&format=json"
+      end
+
       private
 
       def data
-        binding.pry
         {
           url: @url,
           photographer: raw["author_name"],
