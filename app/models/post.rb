@@ -6,6 +6,7 @@ require_dependency 'enum'
 require_dependency 'trashable'
 require_dependency 'post_analyzer'
 require_dependency 'validators/post_validator'
+require_dependency 'plugin/filter'
 
 require 'archetype'
 require 'digest/sha1'
@@ -108,7 +109,7 @@ class Post < ActiveRecord::Base
   end
 
   def cook(*args)
-    post_analyzer.cook(*args)
+    Plugin::Filter.apply(:after_post_cook, self, post_analyzer.cook(*args))
   end
 
 
