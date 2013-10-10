@@ -24,11 +24,14 @@ Discourse.PosterExpansionController = Discourse.ObjectController.extend({
       return;
     }
 
-    var currentUsername = this.get('username');
+    var currentPostId = this.get('id');
     this.setProperties({model: post, visible: true});
 
     // If we're showing the same user we showed last time, just keep it
-    if (post.get('username') === currentUsername) { return; }
+    if (post.get('id') === currentPostId) {
+      this.setProperties({ visible: false, model: null });
+      return;
+    }
 
     this.set('participant', null);
 
