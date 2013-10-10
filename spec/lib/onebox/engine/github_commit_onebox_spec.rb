@@ -3,7 +3,8 @@ require "spec_helper"
 describe Onebox::Engine::GithubCommitOnebox do
   before(:all) do
     @link = "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
-    fake(@link, response(described_class.template_name))
+    api = "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
+    fake(api, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 
