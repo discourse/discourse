@@ -40,9 +40,9 @@ Discourse.computed = {
     var args = Array.prototype.slice.call(arguments, 0);
     var format = args.pop();
     var computed = Ember.computed(function() {
-      var context = this;
+      var self = this;
       return I18n.t(format.fmt.apply(format, args.map(function (a) {
-        return context.get(a);
+        return self.get(a);
       })));
     });
     return computed.property.apply(computed, args);
@@ -61,9 +61,9 @@ Discourse.computed = {
     var args = Array.prototype.slice.call(arguments, 0);
     var format = args.pop();
     var computed = Ember.computed(function() {
-      var context = this;
+      var self = this;
       return format.fmt.apply(format, args.map(function (a) {
-        return context.get(a);
+        return self.get(a);
       }));
     });
     return computed.property.apply(computed, args);
@@ -82,9 +82,9 @@ Discourse.computed = {
     var args = Array.prototype.slice.call(arguments, 0);
     var format = args.pop();
     var computed = Ember.computed(function() {
-      var context = this;
+      var self = this;
       return Discourse.getURL(format.fmt.apply(format, args.map(function (a) {
-        return context.get(a);
+        return self.get(a);
       })));
     });
     return computed.property.apply(computed, args);
