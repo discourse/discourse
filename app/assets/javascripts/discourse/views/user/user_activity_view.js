@@ -7,7 +7,6 @@
   @module Discourse
 **/
 Discourse.UserActivityView = Discourse.View.extend({
-  templateName: 'user/activity',
   userBinding: 'controller.content',
 
   didInsertElement: function() {

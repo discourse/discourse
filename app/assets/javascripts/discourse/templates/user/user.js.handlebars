@@ -1,47 +1,102 @@
 {{#unless loading}}
-  <div class="user-heading">
-    <div class="container">
-      <div class="full-width" id='user-menu'>
-        <h1>{{name}}<span>{{username}}{{{statusIcon}}}</span></h1>
+  <div class="container">
 
-        {{#if viewingSelf}}
-          <button {{action "logout" target="Discourse"}} class='btn'>{{i18n user.log_out}}</button>
-        {{/if}}
-        {{#if currentUser.staff}}
-          <a {{bindAttr href="adminPath"}} class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
-        {{/if}}
-        <ul class="nav nav-pills">
-          <li>
-            {{#link-to 'userActivity'}}{{i18n user.activity_stream}}{{/link-to}}
+    <section class='user-navigation'>
+
+      <ul class='action-list nav-stacked'>
+        {{activityFilter count=statsCountNonPM user=model}}
+        {{#each stat in statsExcludingPms}}
+          {{activityFilter content=stat user=model}}
+        {{/each}}
+      </ul>
+
+      {{#if viewingSelf}}
+        <h3><i class='icon icon-envelope'></i> {{i18n user.private_messages}}</h3>
+        <ul class='action-list nav-stacked'>
+          <li {{bindAttr class=":noGlyph privateMessagesActive:active"}}>
+            {{#link-to 'userPrivateMessages.index' model}}{{i18n user.messages.all}}<span class='icon-chevron-right'></span>{{/link-to}}
           </li>
-          {{#if canSeePrivateMessages}}
-            <li>
-              {{#link-to 'userPrivateMessages'}}{{i18n user.private_messages}}{{/link-to}}
-            </li>
-          {{/if}}
-          <li>
-            {{#link-to 'user.invited'}}{{i18n user.invited.title}}{{/link-to}}
+          <li {{bindAttr class=":noGlyph privateMessagesMineActive:active"}}>
+            {{#link-to 'userPrivateMessages.mine' model}}{{i18n user.messages.mine}}<span class='icon-chevron-right'></span>{{/link-to}}
           </li>
-          {{#if can_edit}}
-            <li>
-              {{#link-to 'preferences'}}{{i18n user.preferences}}{{/link-to}}
-            </li>
-          {{/if}}
+          <li {{bindAttr class=":noGlyph privateMessagesUnreadActive:active"}}>
+            {{#link-to 'userPrivateMessages.unread' model}}{{i18n user.messages.unread}}<span class='icon-chevron-right'></span>{{/link-to}}
+          </li>
         </ul>
-        <div class='avatar-wrapper'>
-          {{boundAvatar model imageSize="huge"}}
+      {{/if}}
+
+      {{#if can_edit}}
+        <div style='margin-top: 10px'>
+          <button class='btn' data-not-implemented='true' disabled title="{{i18n not_implemented}}"><i class='icon icon-download-alt'></i>{{i18n user.download_archive}}</button>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="container">
-    <div class='user-info clearfix'>
-      <div class='about-me'>
-        {{{bio_excerpt}}}
-      </div>
-    </div>
-  </div>
-  <div class="container">
-    {{outlet userOutlet}}
+      {{/if}}
+    </section>
+
+    <section class='user-main'>
+      <section class='about'>
+        <div class='details'>
+          <div class='primary'>
+          {{boundAvatar model imageSize="huge"}}
+          <h1>{{username}} {{{statusIcon}}}</h1>
+          <h2>{{name}}</h2>
+
+          <div class='bio'>{{{bio_excerpt}}}</div>
+          </div>
+
+          <div class='secondary'>
+            <dl>
+              {{#if websiteName}}
+                <dt>{{i18n user.website}}</dt><dd><a {{bindAttr href="website"}} target="_blank">{{websiteName}}</a></dd>
+              {{/if}}
+              {{#if created_at}}
+                <dt>{{i18n user.created}}</dt><dd>{{date created_at}}</dd>
+              {{/if}}
+              {{#if last_posted_at}}
+                <dt>{{i18n user.last_posted}}</dt><dd>{{date last_posted_at}}</dd>
+              {{/if}}
+              {{#if last_seen_at}}
+                <dt>{{i18n user.last_seen}}</dt><dd>{{date last_seen_at}}</dd>
+              {{/if}}
+              {{#if invited_by}}
+                <dt>{{i18n user.invited_by}}</dt><dd>{{#link-to 'userActivity' invited_by}}{{invited_by.username}}{{/link-to}}</dd>
+              {{/if}}
+              {{#if email}}
+                <dt>{{i18n user.email.title}}</dt><dd {{bindAttr title="email"}}>{{email}}</dd>
+              {{/if}}
+              <dt>{{i18n user.trust_level}}</dt><dd>{{trustLevel.name}}</dd>
+            </dl>
+          </div>
+
+          <div style='clear: both'></div>
+        </div>
+
+        <section class='controls'>
+          {{#if can_send_private_message_to_user}}
+            <button class='btn btn-primary right' {{action composePrivateMessage}}>
+              <i class='icon icon-envelope'></i>
+              {{i18n user.private_message}}
+            </button>
+          {{/if}}
+
+          {{#if viewingSelf}}
+            <button {{action "logout"}} class='btn btn-danger right'><i class='icon icon-signout'></i>{{i18n user.log_out}}</button>
+          {{/if}}
+
+          {{#if currentUser.staff}}
+            <a {{bindAttr href="adminPath"}} class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
+          {{/if}}
+
+          {{#if can_edit}}
+            {{#link-to 'preferences' class="btn"}}<i class='icon icon-cog'></i>{{i18n user.preferences}}{{/link-to}}
+          {{/if}}
+
+          {{#link-to 'user.invited' class="btn"}}<i class='icon icon-envelope-alt'></i>{{i18n user.invited.title}}{{/link-to}}
+
+        </section>
+      </section>
+
+      {{outlet userOutlet}}
+    </section>
+
   </div>
 {{/unless}}

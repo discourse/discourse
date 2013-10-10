@@ -1,127 +1,130 @@
-<form class="form-horizontal">
+<section class='user-content'>
 
-  <div class="control-group">
-    <label class="control-label">{{i18n user.username.title}}</label>
-    <div class="controls">
-      <span class='static'>{{username}}</span>
-      {{#if can_edit_username}}
-        {{#link-to "preferences.username" class="btn pad-left"}}<i class="icon-pencil"></i>{{/link-to}}
-      {{/if}}
-    </div>
-    <div class='instructions'>
-      {{{i18n user.username.short_instructions username="username"}}}
-    </div>
-  </div>
+  <form class="form-horizontal">
 
-  <div class="control-group">
-    <label class="control-label">{{i18n user.name.title}}</label>
-    <div class="controls">
-      {{textField value=name classNames="input-xxlarge"}}
-    </div>
-    <div class='instructions'>
-      {{i18n user.name.instructions}}
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">{{i18n user.email.title}}</label>
-    <div class="controls">
-      <span class='static'>{{email}}</span>
-      {{#if can_edit_email}}
-        {{#link-to "preferences.email" class="btn pad-left"}}<i class="icon-pencil"></i>{{/link-to}}
-      {{/if}}
-    </div>
-    <div class='instructions'>
-      {{i18n user.email.instructions}}
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">{{i18n user.password.title}}</label>
-    <div class="controls">
-      <a href="#" {{action changePassword}} class='btn'><i class="icon icon-envelope"></i>{{i18n user.change_password.action}}</a> {{passwordProgress}}
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">{{i18n user.avatar.title}}</label>
-    <div class="controls">
-      {{boundAvatar model imageSize="large"}}
-      <button {{action showAvatarSelector}} class="btn pad-left"><i class="icon-pencil"></i></button>
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">{{i18n user.bio}}</label>
-    <div class="controls">
-      {{pagedown value=bio_raw}}
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">{{i18n user.website}}</label>
-    <div class="controls">
-      {{textField value=website classNames="input-xxlarge"}}
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">{{i18n user.email_settings}}</label>
-    <div class="controls">
-      <label>{{view Ember.Checkbox checkedBinding="email_digests"}}
-      {{i18n user.email_digests.title}}</label>
-
-      {{#if email_digests}}
-        <div class='control-indent'>
-          {{combobox valueAttribute="value" content=digestFrequencies value=digest_after_days}}
-        </div>
-      {{/if}}
-      <label>{{view Ember.Checkbox checkedBinding="email_private_messages"}}
-      {{i18n user.email_private_messages}}</label>
-      <label>{{view Ember.Checkbox checkedBinding="email_direct"}}
-      {{i18n user.email_direct}}</label>
-      <label>{{view Ember.Checkbox checkedBinding="email_always"}}
-      {{i18n user.email_always}}</label>
-    </div>
-    <div class='instructions'>
-      {{i18n user.email.frequency}}
-    </div>
-  </div>
-
-  <div class="control-group other">
-
-    <label class="control-label">{{i18n user.other_settings}}</label>
-    <div class="controls">
-      <label>{{i18n user.auto_track_topics}}</label>
-      {{combobox valueAttribute="value" content=autoTrackDurations value=auto_track_topics_after_msecs}}
+    <div class="control-group">
+      <label class="control-label">{{i18n user.username.title}}</label>
+      <div class="controls">
+        <span class='static'>{{username}}</span>
+        {{#if can_edit_username}}
+          {{#link-to "preferences.username" class="btn pad-left"}}<i class="icon-pencil"></i>{{/link-to}}
+        {{/if}}
+      </div>
+      <div class='instructions'>
+        {{{i18n user.username.short_instructions username="username"}}}
+      </div>
     </div>
 
-    <div class="controls">
-      <label>{{i18n user.new_topic_duration.label}}</label>
-      {{combobox valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
+    <div class="control-group">
+      <label class="control-label">{{i18n user.name.title}}</label>
+      <div class="controls">
+        {{textField value=name classNames="input-xxlarge"}}
+      </div>
+      <div class='instructions'>
+        {{i18n user.name.instructions}}
+      </div>
     </div>
 
-    <div class="controls">
-      <label>{{view Ember.Checkbox checkedBinding="external_links_in_new_tab"}}
-      {{i18n user.external_links_in_new_tab}}</label>
-      <label>{{view Ember.Checkbox checkedBinding="enable_quoting"}}
-      {{i18n user.enable_quoting}}</label>
+    <div class="control-group">
+      <label class="control-label">{{i18n user.email.title}}</label>
+      <div class="controls">
+        <span class='static'>{{email}}</span>
+        {{#if can_edit_email}}
+          {{#link-to "preferences.email" class="btn pad-left"}}<i class="icon-pencil"></i>{{/link-to}}
+        {{/if}}
+      </div>
+      <div class='instructions'>
+        {{i18n user.email.instructions}}
+      </div>
     </div>
 
-    <div class="controls">
-      <label>
-        {{view Ember.Checkbox checkedBinding="dynamic_favicon"}}
-        {{i18n user.dynamic_favicon}}
-      </label>
+    <div class="control-group">
+      <label class="control-label">{{i18n user.password.title}}</label>
+      <div class="controls">
+        <a href="#" {{action changePassword}} class='btn'><i class="icon icon-envelope"></i>{{i18n user.change_password.action}}</a> {{passwordProgress}}
+      </div>
     </div>
 
-  </div>
-
-  <div class="control-group">
-    <div class="controls">
-        <button {{action save}} {{bindAttr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
-        {{#if saved}}{{i18n saved}}{{/if}}
+    <div class="control-group">
+      <label class="control-label">{{i18n user.avatar.title}}</label>
+      <div class="controls">
+        {{boundAvatar model imageSize="large"}}
+        <button {{action showAvatarSelector}} class="btn pad-left"><i class="icon-pencil"></i></button>
+      </div>
     </div>
-  </div>
 
-</form>
+    <div class="control-group">
+      <label class="control-label">{{i18n user.bio}}</label>
+      <div class="controls">
+        {{pagedown value=bio_raw}}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">{{i18n user.website}}</label>
+      <div class="controls">
+        {{textField value=website classNames="input-xxlarge"}}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">{{i18n user.email_settings}}</label>
+      <div class="controls">
+        <label>{{view Ember.Checkbox checkedBinding="email_digests"}}
+        {{i18n user.email_digests.title}}</label>
+
+        {{#if email_digests}}
+          <div class='control-indent'>
+            {{combobox valueAttribute="value" content=digestFrequencies value=digest_after_days}}
+          </div>
+        {{/if}}
+        <label>{{view Ember.Checkbox checkedBinding="email_private_messages"}}
+        {{i18n user.email_private_messages}}</label>
+        <label>{{view Ember.Checkbox checkedBinding="email_direct"}}
+        {{i18n user.email_direct}}</label>
+        <label>{{view Ember.Checkbox checkedBinding="email_always"}}
+        {{i18n user.email_always}}</label>
+      </div>
+      <div class='instructions'>
+        {{i18n user.email.frequency}}
+      </div>
+    </div>
+
+    <div class="control-group other">
+
+      <label class="control-label">{{i18n user.other_settings}}</label>
+      <div class="controls">
+        <label>{{i18n user.auto_track_topics}}</label>
+        {{combobox valueAttribute="value" content=autoTrackDurations value=auto_track_topics_after_msecs}}
+      </div>
+
+      <div class="controls">
+        <label>{{i18n user.new_topic_duration.label}}</label>
+        {{combobox valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
+      </div>
+
+      <div class="controls">
+        <label>{{view Ember.Checkbox checkedBinding="external_links_in_new_tab"}}
+        {{i18n user.external_links_in_new_tab}}</label>
+        <label>{{view Ember.Checkbox checkedBinding="enable_quoting"}}
+        {{i18n user.enable_quoting}}</label>
+      </div>
+
+      <div class="controls">
+        <label>
+          {{view Ember.Checkbox checkedBinding="dynamic_favicon"}}
+          {{i18n user.dynamic_favicon}}
+        </label>
+      </div>
+
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+          <button {{action save}} {{bindAttr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
+          {{#if saved}}{{i18n saved}}{{/if}}
+      </div>
+    </div>
+
+  </form>
+</section>
