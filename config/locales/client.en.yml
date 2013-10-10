@@ -526,6 +526,8 @@ en:
       remote_tip_with_attachments: "enter address of an image or a file in the form http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
       local_tip: "click to select an image from your device"
       local_tip_with_attachments: "click to select an image or a file from your device (allowed extensions: {{authorized_extensions}})"
+      hint: "(you can also drag & drop into the editor to upload them)"
+      hint_for_chrome: "(you can also drag and drop or paste images into the editor to upload them)"
       uploading: "Uploading"
 
     search:

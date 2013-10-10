@@ -19,6 +19,16 @@ Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
     return Discourse.UploadSelectorController.translate(source + "_tip", opts);
   }.property("controller.local"),
 
+  hint: function() {
+    // chrome is the only browser that support copy & paste of images.
+    return I18n.t("upload_selector.hint" + (this.get("isChrome") ? "_for_chrome" : ""));
+  }.property(),
+
+  isChrome: function() {
+    // cf. http://stackoverflow.com/a/9851769/11983
+    return !!window.chrome && !(!!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0);
+  }.property(),
+
   didInsertElement: function() {
     this._super();
     this.selectedChanged();

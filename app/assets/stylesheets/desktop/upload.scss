@@ -30,8 +30,12 @@
         font-size: 14px;
         line-height: 18px;
       }
-      .description {
+      .description, .hint {
         color: #9a9ea0;
+      }
+      .hint {
+        font-style: italic;
+        margin: 5px 0 0 0;
       }
     }
   }
