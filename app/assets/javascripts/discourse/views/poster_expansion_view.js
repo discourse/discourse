@@ -5,6 +5,9 @@
   @namespace Discourse
   @module Discourse
 **/
+
+var clickOutsideEventName = "mousedown.outside-poster-expansion";
+
 Discourse.PosterExpansionView = Discourse.View.extend({
   elementId: 'poster-expansion',
   classNameBindings: ['controller.visible::hidden'],
@@ -29,7 +32,7 @@ Discourse.PosterExpansionView = Discourse.View.extend({
 
   didInsertElement: function() {
     var self = this;
-    $('html').on('mousedown.outside-poster-expansion', function(e) {
+    $('html').off(clickOutsideEventName).on(clickOutsideEventName, function(e) {
 
       if (self.get('controller.visible')) {
         var $target = $(e.target);
@@ -44,7 +47,7 @@ Discourse.PosterExpansionView = Discourse.View.extend({
   },
 
   willDestroyElement: function() {
-    $('html').off('mousedown.outside-poster-expansion');
+    $('html').off(clickOutsideEventName);
   }
 
 });
