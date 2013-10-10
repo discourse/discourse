@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::SmugMugOnebox do
   before(:all) do
     @link = "http://heyserphoto.smugmug.com/Feathers/Duck-feathers/18516485_5xM7Bj#!i=1179402985&k=kS5HMdV"
-    api = "https://api.smugmug.com/services/oembed/?url=http%3A%2F%2Fheyserphoto.smugmug.com%2FFeathers%2FDuck-feathers%2F18516485_5xM7Bj%23!i%3D1179402985%26k%3DkS5HMdV&format=json"
+    api = "https://api.smugmug.com/services/oembed/?url=http%3A%2F%2Fheyserphoto.smugmug.com%2FFeathers%2FDuck-feathers%2F18516485_5xM7Bj%23%21i%3D1179402985%26k%3DkS5HMdV&format=json"
     fake(api, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
@@ -16,7 +16,7 @@ describe Onebox::Engine::SmugMugOnebox do
     let(:html) { described_class.new(link).to_html }
 
     it "returns the photographer name" do
-      expect(html).to include("Holly Heyser")
+      expect(html).to include("Holly  Heyser")
     end
 
     it "returns the photo caption" do
@@ -27,7 +27,7 @@ describe Onebox::Engine::SmugMugOnebox do
       expect(html).to include("Mallard_HAH1062-M.jpg")
     end
 
-    it "returns the product URL" do
+    it "returns the URL" do
       expect(html).to include(link)
     end
   end
