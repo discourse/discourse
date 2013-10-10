@@ -1,0 +1,23 @@
+defaults: &defaults
+  uri: <%= uri = URI.parse( ENV['REDIS_ADDRESS'].nil? ? ENV['REDIS_PROVIDER_URL'] || "redis://localhost:6379" : "redis://#{ENV['REDIS_ADDRESS']}:6379") %>
+  host: <%= uri.host %>
+  port: <%= uri.port %>
+  password: <%= uri.password %>
+  db: 0
+  cache_db: 2
+
+development:
+  <<: *defaults
+
+profile:
+  <<: *defaults
+
+test:
+  <<: *defaults
+  db: 1
+
+staging:
+  <<: *defaults
+
+production:
+  <<: *defaults

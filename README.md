@@ -26,6 +26,28 @@ Before you get started, ensure you have the following minimum versions: [Ruby 1.
 
 If you're not here to hack on the open source code, but rather looking to set up a Discourse forum in a production environment, see our [**Discourse Install Guide**](/docs/INSTALL-ubuntu.md). Be warned, however, that Discourse is still very much beta, and you will probably need a background as a developer or system administrator to set it up successfully.
 
+## Deploying with Cloud 66
+<a href="http://blog.cloud66.com/post/62900887610/introducing-cloud-66-easydeploy">
+![Logo](http://cdn.cloud66.com/images/easy-deploy.png)
+</a>
+
+Deploying and maintaining a Discourse setup through Cloud 66 is extremely easy. 
+Click the badge and follow the instructions below to deploy!
+
+#### Deploying on Cloud 66
+Simply follow 7 steps on [building your stack](https://www.cloud66.com/help/first_stack), sign up for a Sendgrid account (for sending emails) and set 
+the environment variables below to have your own fully functioning Discourse installation up and running. 
+
+Note: Setting environment variables is done during step five, before you click 'deploy':
+![Environment variables](http://cdn.cloud66.com/images/environment_variables.png)
+
+1. SMTP_ADDRESS = your SMTP host
+2. SMTP_PORT = the port on your SMTP host
+3. SMTP_DOMAIN = the domain you will be sending emails from
+4. SMTP_USERNAME = your SMTP username
+5. SMTP_PASSWORD = your SMTP password
+6. HOST_NAME = the domain hosting your site
+
 ## Vision
 
 We think of Discourse as a **Civilized Discourse Construction Kit**, an open-source discussion platform that acts as a free, flexible, fundamental building block for online communities of any size, tiny to huge.
