@@ -21,11 +21,11 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
 
   text: function() {
     var key = (function() {
-      switch (this.get('topic.details.notification_level') || 1) {
+      switch (this.get('topic.details.notification_level')) {
         case Discourse.Topic.NotificationLevel.WATCHING: return 'watching';
         case Discourse.Topic.NotificationLevel.TRACKING: return 'tracking';
-        case Discourse.Topic.NotificationLevel.REGULAR: return 'regular';
         case Discourse.Topic.NotificationLevel.MUTE: return 'muted';
+        default: return 'regular';
       }
     }).call(this);
 
@@ -33,8 +33,8 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
       switch (key) {
         case 'watching': return '<i class="icon-circle heatmap-high"></i>&nbsp;';
         case 'tracking': return '<i class="icon-circle heatmap-low"></i>&nbsp;';
-        case 'regular': return '';
         case 'muted': return '<i class="icon-remove-sign"></i>&nbsp;';
+        default: return '';
       }
     })();
     return icon + (I18n.t("topic.notifications." + key + ".title")) + "<span class='caret'></span>";
