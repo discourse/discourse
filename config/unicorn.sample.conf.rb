@@ -42,8 +42,13 @@ before_fork do |server, worker|
     # get rid of rubbish so we don't share it
     GC.start
 
-    require 'demon/sidekiq'
-    Demon::Sidekiq.start(1)
+    Thread.new do
+      # sleep a bit, on startup unicorn kills all its children
+      # so sidestep it
+      sleep 10
+      require 'demon/sidekiq'
+      Demon::Sidekiq.start(1)
+    end
   end
 
   ActiveRecord::Base.connection.disconnect!
