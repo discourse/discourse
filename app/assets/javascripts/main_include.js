@@ -4,7 +4,6 @@
 //= require LAB.js
 //= require Markdown.Converter.js
 //= require Markdown.Editor.js
-//= require Markdown.Sanitizer.js
 //= require better_markdown.js
 //= require bootbox.js
 //= require bootstrap-alert.js
@@ -43,6 +42,7 @@
 // Stuff we need to load first
 //= require ./discourse/mixins/scrolling
 //= require_tree ./discourse/mixins
+//= require ./discourse/components/markdown
 //= require ./discourse/components/computed
 //= require ./discourse/views/view
 //= require ./discourse/views/container_view

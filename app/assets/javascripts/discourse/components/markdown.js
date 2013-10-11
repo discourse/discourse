@@ -9,6 +9,23 @@
 **/
 Discourse.Markdown = {
 
+  validClasses: {},
+
+  /**
+    Whitelists classes for sanitization
+
+    @method whiteListClass
+    @param {String} val The value to whitelist. Can supply more than one argument
+  **/
+  whiteListClass: function() {
+    var args = Array.prototype.slice.call(arguments),
+        validClasses = Discourse.Markdown.validClasses;
+
+    args.forEach(function (a) {
+      validClasses[a] = true;
+    });
+  },
+
   /**
     Convert a raw string to a cooked markdown string.
 
@@ -86,6 +103,41 @@ Discourse.Markdown = {
   },
 
   /**
+    Checks to see if a URL is allowed in the cooked content
+
+    @method urlAllowed
+    @param {String} url Url to check
+    @return {String} url to insert in the cooked content
+  **/
+  urlAllowed: function (url) {
+    if(/^https?:\/\//.test(url)) { return url; }
+    if(/^\/\/?[\w\.\-]+/.test(url)) { return url; }
+  },
+
+  /**
+    Checks to see if a name, class or id is allowed in the cooked content
+
+    @method nameIdClassAllowed
+    @param {String} val The name, class or id to check
+    @return {String} val the transformed name class or id
+  **/
+  nameIdClassAllowed: function(val) {
+    if (Discourse.Markdown.validClasses[val]) { return val; }
+  },
+
+  /**
+    Sanitize text using the sanitizer
+
+    @method sanitize
+    @param {String} text The text to sanitize
+    @return {String} text The sanitized text
+  **/
+  sanitize: function(text) {
+    if (!window.html_sanitize) return "";
+    return window.html_sanitize(text, Discourse.Markdown.urlAllowed, Discourse.Markdown.nameIdClassAllowed);
+  },
+
+  /**
     Creates a Markdown.Converter that we we can use for formatting
 
     @method markdownConverter
@@ -101,8 +153,7 @@ Discourse.Markdown = {
         if (!text) return "";
 
         if (opts.sanitize) {
-          if (!window.sanitizeHtml) return "";
-          text = window.sanitizeHtml(text);
+          text = Discourse.Markdown.sanitize(text);
         }
 
         return text;
@@ -112,3 +163,5 @@ Discourse.Markdown = {
 
 };
 RSVP.EventTarget.mixin(Discourse.Markdown);
+
+Discourse.Markdown.whiteListClass("attachment");

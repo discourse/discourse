@@ -1,6 +1,7 @@
 require 'v8'
 require 'nokogiri'
 require_dependency 'excerpt_parser'
+require 'post'
 
 module PrettyText
 
@@ -108,6 +109,7 @@ module PrettyText
 
     ctx_load(ctx,
               "vendor/assets/javascripts/better_markdown.js",
+              "app/assets/javascripts/defer/html-sanitizer-bundle.js",
               "app/assets/javascripts/discourse/dialects/dialect.js",
               "app/assets/javascripts/discourse/components/utilities.js",
               "app/assets/javascripts/discourse/components/markdown.js")
@@ -164,8 +166,19 @@ module PrettyText
       context = v8
       # we need to do this to work in a multi site environment, many sites, many settings
       decorate_context(context)
-      context['opts'] = opts || {}
+
+      context_opts = opts || {}
+      context_opts[:sanitize] ||= true
+      context['opts'] = context_opts
+
       context['raw'] = text
+
+      if Post.white_listed_image_classes.present?
+        Post.white_listed_image_classes.each do |klass|
+          context.eval("Discourse.Markdown.whiteListClass('#{klass}')")
+        end
+      end
+
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')

@@ -25,7 +25,6 @@
 //= require LAB.js
 //= require Markdown.Converter.js
 //= require Markdown.Editor.js
-//= require Markdown.Sanitizer.js
 //= require better_markdown.js
 //= require bootbox.js
 //= require bootstrap-alert.js

@@ -19,3 +19,5 @@ Discourse.Dialect.inlineRegexp({
     }
   }
 });
+
+Discourse.Markdown.whiteListClass('mention');
