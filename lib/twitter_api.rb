@@ -1,6 +1,4 @@
 # lightweight Twitter api calls
-require_dependency 'rinku'
-
 class TwitterApi
 
   class << self
