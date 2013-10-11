@@ -19,7 +19,7 @@ describe Oneboxer::TwitterOnebox do
       it 'wraps eack url in a link' do
         expect(subject.parse(data)['text']).to eq([
           "Twitter ",
-          "<a href='http://twitter.com' target='_blank'>",
+          '<a href="http://twitter.com" target="_blank">',
             "http://twitter.com",
           "</a>"
         ].join)
