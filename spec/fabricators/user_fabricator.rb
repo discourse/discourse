@@ -8,6 +8,7 @@ Fabricator(:user) do
   password 'myawesomepassword'
   trust_level TrustLevel.levels[:basic]
   bio_raw "I'm batman!"
+  ip_address { sequence(:ip_address) { |i| "99.232.23.#{i%254}"} }
 end
 
 Fabricator(:coding_horror, from: :user) do

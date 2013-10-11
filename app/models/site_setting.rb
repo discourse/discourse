@@ -73,6 +73,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:num_users_to_block_new_user, 3)
   setting(:notify_mods_when_user_blocked, false)
 
+  setting(:flag_sockpuppets, true)
+
   # used mainly for dev, force hostname for Discourse.base_url
   # You would usually use multisite for this
   setting(:force_hostname, '')

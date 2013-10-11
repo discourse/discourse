@@ -537,6 +537,7 @@ en:
     num_flags_to_block_new_user: "If a new user's posts get this many spam flags from (n) different users, hide all their posts and prevent future posting. 0 disables this feature."
     num_users_to_block_new_user: "If a new user's posts get (x) spam flags from this many different users, hide all their posts and prevent future posting. 0 disables this feature."
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
+    flag_sockpuppets: "If a new user (i.e., registered in the last 24 hours) who started a topic and a new user who replies in that topic are at the same IP address, both their posts will automatically be flagged as spam."
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
     post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"

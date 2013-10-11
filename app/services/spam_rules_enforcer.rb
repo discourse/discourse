@@ -4,27 +4,55 @@ class SpamRulesEnforcer
 
   include Rails.application.routes.url_helpers
 
-  # The exclamation point means that this method may make big changes to posts and the user.
-  def self.enforce!(user)
-    SpamRulesEnforcer.new(user).enforce!
+  # The exclamation point means that this method may make big changes to posts and users.
+  def self.enforce!(arg)
+    SpamRulesEnforcer.new(arg).enforce!
   end
 
+  def initialize(arg)
+    @user = arg if arg.is_a?(User)
+    @post = arg if arg.is_a?(Post)
+  end
+
+  def enforce!
+    # TODO: once rules are in their own classes, invoke them from here in priority order
+    if @user
+      block_user if block?
+    end
+    if @post
+      flag_sockpuppet_users if SiteSetting.flag_sockpuppets and reply_is_from_sockpuppet?
+    end
+    true
+  end
+
+  # TODO: move this sockpuppet code to its own class. We should be able to add more rules, like ActiveModel validators.
+  def reply_is_from_sockpuppet?
+    return false if @post.post_number and @post.post_number == 1
+
+    first_post = @post.topic.posts.by_post_number.first
+    return false if first_post.user.nil?
+
+    !first_post.user.staff? and !@post.user.staff? and
+      @post.user != first_post.user and
+      @post.user.ip_address == first_post.user.ip_address and
+      @post.user.new_user?
+  end
+
+  def flag_sockpuppet_users
+    system_user = Discourse.system_user
+    PostAction.act(system_user, @post, PostActionType.types[:spam]) rescue PostAction::AlreadyActed
+    if (first_post = @post.topic.posts.by_post_number.first).try(:user).try(:new_user?)
+      PostAction.act(system_user, first_post, PostActionType.types[:spam]) rescue PostAction::AlreadyActed
+    end
+  end
+
+  # TODO: move all this auto-block code to another class:
   def self.block?(user)
     SpamRulesEnforcer.new(user).block?
   end
 
   def self.punish!(user)
-    SpamRulesEnforcer.new(user).punish_user
-  end
-
-
-  def initialize(user)
-    @user = user
-  end
-
-  def enforce!
-    punish_user if block?
-    true
+    SpamRulesEnforcer.new(user).block_user
   end
 
   def block?
@@ -46,7 +74,7 @@ class SpamRulesEnforcer
     PostAction.spam_flags.where(post_id: post_ids).uniq.pluck(:user_id).size
   end
 
-  def punish_user
+  def block_user
     Post.transaction do
       if UserBlocker.block(@user, nil, {message: :too_many_spam_flags}) and SiteSetting.notify_mods_when_user_blocked
         GroupMessage.create(Group[:moderators].name, :user_automatically_blocked, {user: @user, limit_once_per: false})

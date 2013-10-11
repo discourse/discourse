@@ -249,6 +249,10 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password, salt)
   end
 
+  def new_user?
+    created_at >= 24.hours.ago || trust_level == TrustLevel.levels[:newuser]
+  end
+
   def seen_before?
     last_seen_at.present?
   end
