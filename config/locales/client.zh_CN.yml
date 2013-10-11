@@ -522,18 +522,12 @@ zh_CN:
       title_with_attachments: "上传图片或文件"
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
-      add_title: "添加图片"
-      add_title_with_attachments: "添加图片或文件"
-      remote_title: "网络图片"
-      remote_title_with_attachments: "网络图片或文件"
       remote_tip: "输入图片的网址，格式为：http://example.com/image.jpg"
       remote_tip_with_attachments: "输入图片或文件的网址，格式为：http://example.com/file.ext （支持的格式： {{authorized_extensions}}）。"
-      local_title: "本地图片"
-      local_title_with_attachments: "本地图片或文件"
       local_tip: "点击从你的设备中选择一张图片。"
       local_tip_with_attachments: "点击从你的设备中选择图片或文件（支持的格式： {{authorized_extensions}}）。"
-      upload_title: "上传"
-      upload_title_with_attachments: "上传图片或文件"
+      hint: "（你也可以通过拖放至编辑器的方式来上传）" 
+      hint_for_chrome: "（你也可以通过拖放或复制粘帖至编辑器的方式来上传）"
       uploading: "上传图片中"
 
     search:
@@ -582,7 +576,7 @@ zh_CN:
       title: 主题排名详细
 
     topic:
-      filter_to: "只显示{{username}}发表的帖子"
+      filter_to: "只显示本主题中由{{username}}发表的{{post_count}}个帖子"
       create_in: '创建一个 {{categoryName}} 分类的主题'
       create: '创建主题'
       create_long: '创建一个新主题'
@@ -933,6 +927,7 @@ zh_CN:
     category:
       can: '能够'
       none: '（未分类）'
+      choose: '选择分类……'
       edit: '编辑'
       edit_long: "编辑分类"
       edit_uncategorized: "编辑未分类的"
