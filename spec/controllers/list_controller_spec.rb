@@ -36,6 +36,20 @@ describe ListController do
 
   end
 
+  describe 'RSS feeds' do
+
+    [:latest, :hot].each do |filter|
+
+      it 'renders RSS' do
+        get "#{filter}_feed", format: :rss
+        response.should be_success
+        response.content_type.should == 'application/rss+xml'
+      end
+
+    end
+
+  end
+
   context 'category' do
 
     context 'in a category' do

@@ -11,7 +11,10 @@ class ListController < ApplicationController
       user = list_target_user
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = url_for(self.public_send "#{filter}_path".to_sym, list_opts.merge(format: 'json', page: next_page))
-      @description = SiteSetting.site_description if [:latest, :hot].include?(filter)
+      if [:latest, :hot].include?(filter)
+        @description = SiteSetting.site_description
+        @rss = filter
+      end
 
       respond(list)
     end
