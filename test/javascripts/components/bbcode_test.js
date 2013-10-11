@@ -27,13 +27,6 @@ test('lists', function() {
   format("[ol][li]option one[/li][/ol]", "<ol><li>option one</li></ol>", "creates an ol");
 });
 
-test('color', function() {
-  format("[color=#00f]blue[/color]", "<span style=\"color: #00f\">blue</span>", "supports [color=] with a short hex value");
-  format("[color=#ffff00]yellow[/color]", "<span style=\"color: #ffff00\">yellow</span>", "supports [color=] with a long hex value");
-  format("[color=red]red[/color]", "<span style=\"color: red\">red</span>", "supports [color=] with an html color");
-  format("[color=javascript:alert('wat')]noop[/color]", "<span>noop</span>", "it performs a noop on invalid input");
-});
-
 test('tags with arguments', function() {
   format("[size=35]BIG [b]whoop[/b][/size]", "<span class=\"bbcode-size-35\">BIG <span class=\"bbcode-b\">whoop</span></span>", "supports [size=]");
   format("[url=http://bettercallsaul.com]better call![/url]", "<a href=\"http://bettercallsaul.com\">better call!</a>", "supports [url] with a title");
@@ -41,7 +34,6 @@ test('tags with arguments', function() {
   format("[u][i]abc[/i][/u]", "<span class=\"bbcode-u\"><span class=\"bbcode-i\">abc</span></span>", "can nest tags");
   format("[b]first[/b] [b]second[/b]", "<span class=\"bbcode-b\">first</span> <span class=\"bbcode-b\">second</span>", "can bold two things on the same line");
 });
-
 
 test("quotes", function() {
 

@@ -108,4 +108,6 @@
       });
     });
   }
+
+  Discourse.Markdown.whiteListClass("emoji");
 }).call(this);
