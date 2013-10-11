@@ -204,7 +204,7 @@ zh_CN:
       moderator: "{{user}} 是版主"
       admin: "{{user}} 是管理员"
       deleted: "（已删除）"
-
+      
       messages:
         all: "所有"
         mine: "我的"
@@ -526,6 +526,8 @@ zh_CN:
       remote_tip_with_attachments: "输入图片或文件的网址，格式为：http://example.com/file.ext （支持的格式： {{authorized_extensions}}）。"
       local_tip: "点击从你的设备中选择一张图片。"
       local_tip_with_attachments: "点击从你的设备中选择图片或文件（支持的格式： {{authorized_extensions}}）。"
+      hint: "（你也可以通过拖放至编辑器的方式来上传）" 
+      hint_for_chrome: "（你也可以通过拖放或复制粘帖至编辑器的方式来上传）"
       uploading: "上传图片中"
 
     search:
@@ -574,7 +576,7 @@ zh_CN:
       title: 主题排名详细
 
     topic:
-      filter_to: "只显示{{username}}发表的帖子"
+      filter_to: "只显示本主题中由{{username}}发表的{{post_count}}个帖子"
       create_in: '创建一个 {{categoryName}} 分类的主题'
       create: '创建主题'
       create_long: '创建一个新主题'
@@ -925,6 +927,7 @@ zh_CN:
     category:
       can: '能够'
       none: '（未分类）'
+      choose: '选择分类……'
       edit: '编辑'
       edit_long: "编辑分类"
       edit_uncategorized: "编辑未分类的"
