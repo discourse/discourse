@@ -93,6 +93,15 @@ replaceBBCodeParams("size", function(param, contents) {
   return ['span', {'class': "bbcode-size-" + param}].concat(contents);
 });
 
+replaceBBCodeParams("color", function(param, contents) {
+  // Only allow valid HTML colors.
+  if (/^(\#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?)|(aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow)$/.test(param)) {
+    return ['span', {style: "color: " + param}].concat(contents);
+  } else {
+    return ['span'].concat(contents);
+  }
+});
+
 // Handles `[code] ... [/code]` blocks
 Discourse.Dialect.replaceBlock({
   start: /(\[code\])([\s\S]*)/igm,
@@ -103,8 +112,3 @@ Discourse.Dialect.replaceBlock({
   }
 });
 
-Discourse.Markdown.whiteListClass("bbcode-b", "bbcode-i", "bbcode-u", "bbcode-s", "spoiler");
-
-for(var i=1; i<=40; i++) {
-  Discourse.Markdown.whiteListClass("bbcode-size-" + i);
-}

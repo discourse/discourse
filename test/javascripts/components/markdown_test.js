@@ -278,12 +278,10 @@ test("Code Blocks", function() {
 
 });
 
-test("sanitize", function() {
-  var sanitize = Discourse.Markdown.sanitize;
+test("SanitizeHTML", function() {
 
-  equal(sanitize("<i class=\"icon-bug icon-spin\">bug</i>"), "<i>bug</i>");
-  equal(sanitize("<div><script>alert('hi');</script></div>"), "<div></div>");
-  equal(sanitize("<div><p class=\"funky\" wrong='1'>hello</p></div>"), "<div><p>hello</p></div>");
+  equal(sanitizeHtml("<div><script>alert('hi');</script></div>"), "<div></div>");
+  equal(sanitizeHtml("<div><p class=\"funky\" wrong='1'>hello</p></div>"), "<div><p class=\"funky\">hello</p></div>");
   cooked("hello<script>alert(42)</script>", "<p>hello</p>", "it sanitizes while cooking");
 
   cooked("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>",
@@ -305,17 +303,5 @@ test("URLs in BBCode tags", function() {
   cooked("[url=http://discourse.org]discourse[/url]",
          "<p><a href=\"http://discourse.org\">discourse</a></p>",
          "named links are properly parsed");
-
-});
-
-test("urlAllowed", function() {
-  var allowed = function(url, msg) {
-    equal(Discourse.Markdown.urlAllowed(url), url, msg);
-  };
-
-  allowed("/foo/bar.html", "allows relative urls");
-  allowed("http://eviltrout.com/evil/trout", "allows full urls");
-  allowed("https://eviltrout.com/evil/trout", "allows https urls");
-  allowed("//eviltrout.com/evil/trout", "allows protocol relative urls");
 
 });

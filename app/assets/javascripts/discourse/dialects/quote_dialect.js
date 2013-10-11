@@ -68,5 +68,3 @@ Discourse.Dialect.on("parseNode", function(event) {
   }
 
 });
-
-Discourse.Markdown.whiteListClass("quote", "title", "quote-controls", "avatar");
