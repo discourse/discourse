@@ -7,7 +7,6 @@
 **/
 Discourse.Lightbox = {
   apply: function($elem) {
-    var _this = this;
     $LAB.script("/javascripts/jquery.magnific-popup-min.js").wait(function() {
       $('a.lightbox', $elem).each(function(i, e) {
         $(e).magnificPopup({ type: 'image', closeOnContentClick: true });
