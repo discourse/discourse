@@ -970,7 +970,7 @@ describe UsersController do
         upload = Fabricate(:upload)
         Upload.expects(:create_for).returns(upload)
         # enqueues the avatar generator job
-        Jobs.expects(:enqueue).with(:generate_avatars, { upload_id: upload.id })
+        Jobs.expects(:enqueue).with(:generate_avatars, { user_id: user.id, upload_id: upload.id })
         xhr :post, :upload_avatar, username: user.username, file: avatar
         user.reload
         # erase the previous template

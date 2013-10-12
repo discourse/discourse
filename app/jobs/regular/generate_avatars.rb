@@ -5,8 +5,15 @@ module Jobs
   class GenerateAvatars < Jobs::Base
 
     def execute(args)
-      upload = Upload.where(id: args[:upload_id]).first
-      return unless upload.present?
+      upload_id = args[:upload_id]
+      raise Discourse::InvalidParameters.new(:upload_id) unless upload_id.present?
+
+      user_id = args[:user_id]
+      raise Discourse::InvalidParameters.new(:user_id) unless user_id.present?
+
+      upload = Upload.where(id: upload_id).first
+      user = User.where(id: user_id).first
+      return unless upload.present? || user.present?
 
       external_copy = Discourse.store.download(upload) if Discourse.store.external?
       original_path = if Discourse.store.external?
@@ -37,7 +44,7 @@ module Jobs
       # make sure we remove the cached copy from external stores
       external_copy.close! if Discourse.store.external?
 
-      user = User.where(id: upload.user_id).first
+      # attach the avatar to the user
       user.uploaded_avatar_template = Discourse.store.absolute_avatar_template(upload)
       user.save!
 
