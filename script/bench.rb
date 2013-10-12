@@ -59,12 +59,22 @@ unless File.exists?("config/redis.yml")
   `cp config/redis.yml.sample config/redis.yml`
 end
 
-# Github settings
 ENV["RAILS_ENV"] = "profile"
-ENV["RUBY_GC_MALLOC_LIMIT"] = "1000000000"
-ENV["RUBY_HEAP_SLOTS_GROWTH_FACTOR"] = "1.25"
-ENV["RUBY_HEAP_MIN_SLOTS"] = "800000"
-ENV["RUBY_FREE_MIN"] = "600000"
+
+if ARGV.include?("--noenv")
+  puts "Running with default environment"
+  ENV.delete "RUBY_GC_MALLOC_LIMIT"
+  ENV.delete "RUBY_HEAP_SLOTS_GROWTH_FACTOR"
+  ENV.delete "RUBY_HEAP_MIN_SLOTS"
+  ENV.delete "RUBY_FREE_MIN"
+else
+  # Github settings
+  puts "Running with tuned environment"
+  ENV["RUBY_GC_MALLOC_LIMIT"] = "1000000000"
+  ENV["RUBY_HEAP_SLOTS_GROWTH_FACTOR"] = "1.25"
+  ENV["RUBY_HEAP_MIN_SLOTS"] = "800000"
+  ENV["RUBY_FREE_MIN"] = "600000"
+end
 
 def port_available? port
   server = TCPServer.open("0.0.0.0", port)
