@@ -50,11 +50,19 @@ class Category < ActiveRecord::Base
   }
 
   scope :topic_create_allowed, ->(guardian) {
-    scoped_to_permissions(guardian, [:full])
+    if guardian.anonymous?
+      where("1=0")
+    else
+      scoped_to_permissions(guardian, [:full])
+    end
   }
 
   scope :post_create_allowed, ->(guardian) {
-    scoped_to_permissions(guardian, [:create_post, :full])
+    if guardian.anonymous?
+      where("1=0")
+    else
+      scoped_to_permissions(guardian, [:create_post, :full])
+    end
   }
   delegate :post_template, to: 'self.class'
 

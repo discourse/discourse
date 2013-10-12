@@ -67,11 +67,12 @@ describe Category do
       can_post_category.save
 
       Category.post_create_allowed(guardian).count.should == 3
+
+      # anonymous has permission to create no topics
+      guardian = Guardian.new(nil)
+      Category.post_create_allowed(guardian).count.should == 0
+
     end
-
-  end
-
-  describe "post_create_allowed" do
 
   end
 
