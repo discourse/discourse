@@ -55,6 +55,11 @@ class Site
   end
 
   def self.cached_json(guardian)
+
+    if guardian.anonymous? && SiteSetting.login_required
+      return {}.to_json
+    end
+
     # Sam: bumping this way down, SiteSerializer will serialize post actions as well,
     #   On my local this was not being flushed as post actions types changed, it turn this
     #   broke local.
