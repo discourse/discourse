@@ -302,6 +302,10 @@ class UsersController < ApplicationController
 
     file = params[:file] || params[:files].first
 
+    unless SiteSetting.authorized_image?(file)
+      return render status: 422, text: I18n.t("upload.images.unknown_image_type")
+    end
+
     # check the file size (note: this might also be done in the web server)
     filesize = File.size(file.tempfile)
     max_size_kb = SiteSetting.max_image_size_kb * 1024
