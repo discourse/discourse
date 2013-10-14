@@ -10,10 +10,23 @@ describe CookedPostProcessor do
     let(:post_process) { sequence("post_process") }
 
     it "post process in sequence" do
+      cpp.expects(:clean_up_reverse_index).in_sequence(post_process)
       cpp.expects(:post_process_attachments).in_sequence(post_process)
       cpp.expects(:post_process_images).in_sequence(post_process)
       cpp.expects(:post_process_oneboxes).in_sequence(post_process)
       cpp.post_process
+    end
+
+  end
+
+  context "clean_up_reverse_index" do
+
+    let(:post) { build(:post) }
+    let(:cpp) { CookedPostProcessor.new(post) }
+
+    it "cleans the reverse index up for the current post" do
+      PostUpload.expects(:delete_all).with(post_id: post.id)
+      cpp.clean_up_reverse_index
     end
 
   end

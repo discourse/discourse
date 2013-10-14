@@ -10,25 +10,6 @@ task "images:compress" => :environment do
   end
 end
 
-desc "clean orphan uploaded files"
-task "images:clean_orphans" => :environment do
-  RailsMultisite::ConnectionManagement.each_connection do |db|
-    puts "Cleaning up #{db}"
-    # ligthweight safety net to prevent users from wiping all their uploads out
-    if PostUpload.count == 0 && Upload.count > 0
-      puts "The reverse index is empty. Make sure you run the `images:reindex` task"
-      next
-    end
-    Upload.joins("LEFT OUTER JOIN post_uploads ON uploads.id = post_uploads.upload_id")
-          .where("post_uploads.upload_id IS NULL")
-          .find_each do |u|
-      u.destroy
-      putc "."
-    end
-  end
-  puts "\ndone."
-end
-
 desc "download all hotlinked images"
 task "images:pull_hotlinked" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|

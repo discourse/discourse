@@ -184,6 +184,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
 
+  setting(:uploads_grace_period_in_hours, 1)
   setting(:enable_s3_uploads, false)
   setting(:s3_access_key_id, '')
   setting(:s3_secret_access_key, '')

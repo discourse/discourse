@@ -619,6 +619,7 @@ en:
 
     suggested_topics: "Number of suggested topics shown at the bottom of a topic"
 
+    uploads_grace_period_in_hours: "Grace period (in hours) before an orphan upload is removed."
     enable_s3_uploads: "Place uploads on Amazon S3"
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase (cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)"
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"

@@ -16,9 +16,14 @@ class CookedPostProcessor
   end
 
   def post_process
+    clean_up_reverse_index
     post_process_attachments
     post_process_images
     post_process_oneboxes
+  end
+
+  def clean_up_reverse_index
+    PostUpload.delete_all(post_id: @post.id)
   end
 
   def post_process_attachments
