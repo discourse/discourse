@@ -13,12 +13,19 @@ if Rails.configuration.respond_to?(:enable_rack_cache) && Rails.configuration.en
       @app = app
       super
     end
+
     def call(env)
-      if CurrentUser.has_auth_cookie?(env)
+      status, headers, body = if CurrentUser.has_auth_cookie?(env)
         @app.call(env)
       else
         super
       end
+
+      cache_control = Rack::Cache::CacheControl.new(headers['Cache-Control'])
+      cache_control.merge!('public' => false, 'private' => true)
+      headers['Cache-Control'] = cache_control.to_s
+
+      [status, headers, body]
     end
   end
 
