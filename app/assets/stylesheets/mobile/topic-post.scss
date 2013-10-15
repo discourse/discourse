@@ -299,8 +299,13 @@ span.post-count {
   padding: 15px 10px 15px 10px;
 }
 
-.topic-post article.boxed img {
-  max-width: 100%;
+.topic-post {
+  article.boxed img {
+    max-width: 100%;
+  }
+  &.moderator {
+    background-color: #eef0ff;
+  }
 }
 
 .quote-button {
@@ -417,11 +422,16 @@ iframe {
   border-radius: 4px;
   padding: 4px;
   margin: -4px 0 0 -4px;
-  background-color: lighten(yellow, 35%);}
+  background-color: lighten(yellow, 35%);
+}
+
+h3.new-user a[href] {
+  color: $dark_gray;
+}
 
 .topic-meta-data {
-white-space: nowrap; 
-float: left;
+  white-space: nowrap;
+  float: left;
 }
 
 .user-title {
