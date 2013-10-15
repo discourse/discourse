@@ -62,7 +62,7 @@ Discourse.URL = Em.Object.createWithMixins({
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path)) { return; }
     if (this.navigatedToListMore(oldPath, path)) { return; }
-    if (this.navigatedToHome(oldPath, path)) { return; }
+    if (this.navigatedToPost(oldPath, path)) { return; }
 
     if (path.match(/^\/?users\/[^\/]+$/)) {
       path += "/activity";
@@ -147,6 +147,7 @@ Discourse.URL = Em.Object.createWithMixins({
         // Abort routing, we have replaced our state.
         return true;
       }
+      this.set('queryParams', null);
     }
 
     return false;
