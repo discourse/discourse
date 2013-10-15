@@ -10,7 +10,7 @@ Still interested?
 
 ### [**Click here for the OFFICIAL INSTALL GUIDE**][1]
 
-Alternately, you can try the [unofficial Heroku install guide][2], or the [BitNami Discourse Virtual Machine package][3].
+Alternately, you can try the [unofficial Heroku install guide][2], the [BitNami Discourse Virtual Machine package][3] or [Cloud66][4].
 
 ## Quick and Dirty Install
 
@@ -43,3 +43,4 @@ Remember you *will* need swap enabled (enough for a total of 4 GB, so 2 GB swap 
 [1]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md
 [2]: https://github.com/discourse/discourse/blob/master/docs/HEROKU.md
 [3]: http://bitnami.com/stack/discourse
+[4]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud66.md
