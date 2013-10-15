@@ -22,7 +22,7 @@ class BackfillPostUploadReverseIndex < ActiveRecord::Migration
       url = url[index..-1]
     end
     # filter out non-uploads
-    return unless url.starts_with?(local_base_url) || url.starts_with?(s3_base_url)
+    return unless is_local?(url) || is_on_s3?(url)
     # update the reverse index
     execute "INSERT INTO post_uploads (upload_id, post_id)
              SELECT u.id, #{post_id}
@@ -35,8 +35,24 @@ class BackfillPostUploadReverseIndex < ActiveRecord::Migration
     @local_base_url ||= "/uploads/#{RailsMultisite::ConnectionManagement.current_db}"
   end
 
+  def local_optimized_base_url
+    @local_optimized_base_url ||= "#{local_base_url}/_optimized/"
+  end
+
   def s3_base_url
     @s3_base_url ||= "//#{SiteSetting.s3_upload_bucket.downcase}.s3.amazonaws.com"
+  end
+
+  def is_local?(url)
+    url.starts_with?(local_base_url) && !is_local_thumbnail?(url)
+  end
+
+  def is_local_thumbnail?(url)
+    url.starts_with?(local_optimized_base_url)
+  end
+
+  def is_on_s3?(url)
+    url.starts_with?(s3_base_url)
   end
 
 end
