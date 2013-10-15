@@ -1,7 +1,7 @@
 require 'v8'
 require 'nokogiri'
 require_dependency 'excerpt_parser'
-require 'post'
+require_dependency 'post'
 
 module PrettyText
 
