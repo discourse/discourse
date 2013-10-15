@@ -15,6 +15,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
 
   onShow: function() {
     this.changeSize();
+    this.titleChanged();
   },
 
   changeSize: function() {
@@ -44,7 +45,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     if (!this.get('name')) return true;
     if (!this.get('color')) return true;
     return false;
-  }.property('name', 'color', 'deleting'),
+  }.property('saving', 'name', 'color', 'deleting'),
 
   deleteVisible: function() {
     return (this.get('id') && this.get('topic_count') === 0);
@@ -160,25 +161,25 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     },
 
     deleteCategory: function() {
-      var categoryController = this;
+      var self = this;
       this.set('deleting', true);
 
-      $('#discourse-modal').modal('hide');
+      this.send('hideModal');
       bootbox.confirm(I18n.t("category.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
         if (result) {
-          categoryController.get('model').destroy().then(function(){
+          self.get('model').destroy().then(function(){
             // success
-            categoryController.send('closeModal');
+            self.send('closeModal');
             Discourse.URL.redirectTo("/categories");
           }, function(jqXHR){
             // error
-            $('#discourse-modal').modal('show');
-            categoryController.displayErrors([I18n.t("category.delete_error")]);
-            categoryController.set('deleting', false);
+            self.send('showModal');
+            self.displayErrors([I18n.t("category.delete_error")]);
+            self.set('deleting', false);
           });
         } else {
-          $('#discourse-modal').modal('show');
-          categoryController.set('deleting', false);
+          self.send('showModal');
+          self.set('deleting', false);
         }
       });
     }

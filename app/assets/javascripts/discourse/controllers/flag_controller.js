@@ -49,18 +49,18 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
     },
 
     createFlag: function(opts) {
-      var flagController = this;
+      var self = this;
       var postAction = this.get('actionByName.' + this.get('selected.name_key'));
       var params = this.get('selected.is_custom_flag') ? {message: this.get('message')} : {};
 
       if (opts) params = $.extend(params, opts);
 
-      $('#discourse-modal').modal('hide');
+      this.send('hideModal');
       postAction.act(params).then(function() {
-        flagController.send('closeModal');
+        self.send('closeModal');
       }, function(errors) {
-        $('#discourse-modal').modal('show');
-        flagController.displayErrors(errors);
+        self.send('showModal');
+        self.displayErrors(errors);
       });
     },
 
