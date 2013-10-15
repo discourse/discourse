@@ -34,6 +34,8 @@ class Post < ActiveRecord::Base
 
   has_one :post_search_data
 
+  has_many :post_details
+
   validates_with ::Validators::PostValidator
 
   # We can pass several creating options to a post via attributes
@@ -54,6 +56,17 @@ class Post < ActiveRecord::Base
 
   def self.types
     @types ||= Enum.new(:regular, :moderator_action)
+  end
+
+  def self.find_by_detail(key, value)
+    includes(:post_details).where( "post_details.key = ? AND " +
+                                   "post_details.value = ?",
+                                   key,
+                                   value ).first
+  end
+
+  def add_detail(key, value, extra = nil)
+    post_details.build(key: key, value: value, extra: extra)
   end
 
   def limit_posts_per_day
