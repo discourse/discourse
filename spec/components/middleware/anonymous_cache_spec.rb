@@ -19,6 +19,10 @@ describe Middleware::AnonymousCache::Helper do
     it "is false for non GET" do
       new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?.should be_false
     end
+
+    it "is false if it has an auth cookie" do
+      new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1"*32}; jill=2").cacheable?.should be_false
+    end
   end
 
   context "cached" do

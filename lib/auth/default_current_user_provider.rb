@@ -73,7 +73,7 @@ class Auth::DefaultCurrentUserProvider
 
   def has_auth_cookie?
     request = Rack::Request.new(@env)
-    cookie = request.cookies[CURRENT_USER_KEY]
+    cookie = request.cookies[TOKEN_COOKIE]
     !cookie.nil? && cookie.length == 32
   end
 end
