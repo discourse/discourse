@@ -484,7 +484,7 @@ en:
       quote_title: "Blockquote"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
-      code_text: "enter code here"
+      code_text: "enter preformatted text here"
       upload_title: "Upload"
       upload_description: "enter upload description here"
       olist_title: "Numbered List"
