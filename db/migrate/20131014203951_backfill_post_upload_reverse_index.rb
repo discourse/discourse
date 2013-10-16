@@ -36,23 +36,39 @@ class BackfillPostUploadReverseIndex < ActiveRecord::Migration
   end
 
   def local_optimized_base_url
-    @local_optimized_base_url ||= "#{local_base_url}/_optimized/"
+    @local_optimized_base_url ||= "#{local_base_url}/_optimized"
+  end
+
+  def local_avatar_base_url
+    @local_avatar_base_url ||= "#{local_base_url}/avatars"
   end
 
   def s3_base_url
     @s3_base_url ||= "//#{SiteSetting.s3_upload_bucket.downcase}.s3.amazonaws.com"
   end
 
+  def s3_avatar_base_url
+    @s3_avatar_base_url ||= "#{s3_base_url}/avatars"
+  end
+
   def is_local?(url)
-    url.starts_with?(local_base_url) && !is_local_thumbnail?(url)
+    url.starts_with?(local_base_url) && !is_local_thumbnail?(url) && !is_local_avatar?(url)
   end
 
   def is_local_thumbnail?(url)
     url.starts_with?(local_optimized_base_url)
   end
 
+  def is_local_avatar?(url)
+    url.starts_with?(local_avatar_base_url)
+  end
+
   def is_on_s3?(url)
-    url.starts_with?(s3_base_url)
+    url.starts_with?(s3_base_url) && !is_s3_avatar?(url)
+  end
+
+  def is_s3_avatar?(url)
+    url.starts_with?(s3_avatar_base_url)
   end
 
 end
