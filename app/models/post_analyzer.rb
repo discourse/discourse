@@ -95,8 +95,8 @@ class PostAnalyzer
 
     # Don't include @mentions in the link count
     @raw_links = []
-    cooked_document.search("a[href]").each do |l|
-      next if link_is_a_mention?(l)
+    cooked_document.search("a").each do |l|
+      next if l.attributes['href'].nil? || link_is_a_mention?(l)
       url = l.attributes['href'].to_s
       @raw_links << url
     end
