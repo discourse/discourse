@@ -12,9 +12,13 @@ Discourse.PosterExpansionController = Discourse.ObjectController.extend({
   user: null,
   participant: null,
 
+  postStream: Em.computed.alias('controllers.topic.postStream'),
   enoughPostsForFiltering: Em.computed.gte('participant.post_count', 2),
-  showFilter: Em.computed.and('controllers.topic.postStream.hasNoFilters', 'enoughPostsForFiltering'),
+
+  showFilter: Em.computed.and('postStream.hasNoFilters', 'enoughPostsForFiltering'),
   showName: Discourse.computed.propertyNotEqual('user.name', 'user.username'),
+
+  hasUserFilters: Em.computed.gt('postStream.userFilters.length', 0),
 
   show: function(post) {
 
@@ -24,11 +28,13 @@ Discourse.PosterExpansionController = Discourse.ObjectController.extend({
       return;
     }
 
-    var currentPostId = this.get('id');
+    var currentPostId = this.get('id'),
+        wasVisible = this.get('visible');
+
     this.setProperties({model: post, visible: true});
 
-    // If we're showing the same user we showed last time, just keep it
-    if (post.get('id') === currentPostId) {
+    // If we click the avatar again, close it.
+    if (post.get('id') === currentPostId && wasVisible) {
       this.setProperties({ visible: false, model: null });
       return;
     }
@@ -57,7 +63,11 @@ Discourse.PosterExpansionController = Discourse.ObjectController.extend({
       var postStream = this.get('controllers.topic.postStream');
       postStream.toggleParticipant(user.get('username'));
       this.close();
-    }
+    },
+    cancelFilter: function() {
+      this.get('postStream').cancelFilter();
+      this.close();
+    },
   }
 
 });

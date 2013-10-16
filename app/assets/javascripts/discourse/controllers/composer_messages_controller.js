@@ -89,7 +89,6 @@ Discourse.ComposerMessagesController = Ember.ArrayController.extend({
     Discourse.ComposerMessage.find(composer).then(function (messages) {
       self.set('checkedMessages', true);
       messages.forEach(function (msg) {
-        console.log(msg);
         if (msg.wait_for_typing) {
           queuedForTyping.addObject(msg);
         } else {

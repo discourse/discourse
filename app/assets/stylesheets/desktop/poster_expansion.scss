@@ -13,6 +13,10 @@
   padding: 7px 7px 6px 7px;
   width: 400px;
 
+  h1.new-user a {
+    color: $dark_gray;
+  }
+
   h1 {
     font-size: 30px;
     line-height: 33px;
@@ -27,6 +31,7 @@
     font-size: 20px;
     line-height: 22px;
     font-weight: normal;
+    margin-bottom: 5px;
 
     a {
       color: #333;
@@ -36,7 +41,7 @@
   h3 {
     font-size: 13px;
     font-weight: normal;
-    margin-top: 15px;
+    margin-top: 0px;
     color: #666;
   }
 

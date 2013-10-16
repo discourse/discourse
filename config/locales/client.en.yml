@@ -88,6 +88,7 @@ en:
     log_in: "Log In"
     age: "Age"
     last_post: "Last Post"
+    joined: "Joined"
     admin_title: "Admin"
     flags_title: "Flags"
     show_more: "show more"

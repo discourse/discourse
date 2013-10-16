@@ -23,8 +23,10 @@ Discourse.PosterExpansionView = Discourse.View.extend({
             $avatar = $('.topic-meta-data img.avatar', $post),
             position = $avatar.offset();
 
-        position.left += $avatar.width() + 5;
-        self.$().css(position);
+        if (position) {
+          position.left += $avatar.width() + 5;
+          self.$().css(position);
+        }
       }
     });
 

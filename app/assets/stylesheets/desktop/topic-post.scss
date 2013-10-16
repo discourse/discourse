@@ -29,6 +29,16 @@
   }
 }
 
+.staff a {
+  @include border-radius-all(3px);
+  padding: 1px 3px;
+  background-color: #ffe;
+  border: 1px solid #ffd;
+}
+
+.new-user a[href] {
+  color: $dark_gray;
+}
 
 #selected-posts {
   position: fixed;
@@ -358,17 +368,6 @@
       .deleted-user-avatar {
         font-size: 36px;
         line-height: 36px;
-      }
-
-      .staff a {
-        @include border-radius-all(3px);
-        padding: 1px 3px;
-        background-color: #ffe;
-        border: 1px solid #ffd;
-      }
-
-      h3.new-user a[href] {
-        color: $dark_gray;
       }
 
       div {
