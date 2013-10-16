@@ -4,6 +4,7 @@ module Jobs
     recurrence { hourly }
 
     def execute(args)
+      return unless SiteSetting.clean_up_uploads?
 
       uploads_used_in_posts = PostUpload.uniq.pluck(:upload_id)
       uploads_used_as_avatars = User.uniq.where('uploaded_avatar_id IS NOT NULL').pluck(:uploaded_avatar_id)
@@ -13,8 +14,7 @@ module Jobs
       Upload.where("created_at < ?", grace_period.hour.ago)
             .where("id NOT IN (?)", uploads_used_in_posts + uploads_used_as_avatars)
             .find_each do |upload|
-        # disable this for now.
-        #upload.destroy
+        upload.destroy
       end
 
     end
