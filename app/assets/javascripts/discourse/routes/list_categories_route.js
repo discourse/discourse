@@ -8,6 +8,8 @@
 **/
 Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
+  template: 'listCategories',
+
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
   actions: {
@@ -32,7 +34,7 @@ Discourse.ListCategoriesRoute = Discourse.Route.extend({
   },
 
   renderTemplate: function() {
-    this.render('listCategories', { into: 'list', outlet: 'listView' });
+    this.render(this.get('template'), { into: 'list', outlet: 'listView' });
   },
 
   afterModel: function(categoryList) {

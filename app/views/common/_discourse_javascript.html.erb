@@ -21,7 +21,7 @@
   Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname  %>';
   Discourse.BaseUri = '<%= Discourse::base_uri "/" %>';
   Discourse.Environment = '<%= Rails.env %>';
-  Discourse.SiteSettings.login_required && !Discourse.User.current();
+  Discourse.SiteSettings = PreloadStore.get('siteSettings');
   Discourse.Router.map(function() {
     Discourse.routeBuilder.call(this);
   });

@@ -667,6 +667,8 @@ en:
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
 
     category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
+    enable_wide_category_list: "Enable traditional full width, non-tiling, category list"
+
     max_image_size_kb: "The maximum size of images we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
     max_attachment_size_kb: "The maximum size of files we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
     authorized_extensions: "A pipe (|) separated list of file extensions allowed for upload"

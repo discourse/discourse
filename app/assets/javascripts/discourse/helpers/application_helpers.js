@@ -315,3 +315,21 @@ Handlebars.registerHelper('faqLink', function(property, options) {
     "'>" + I18n.t('faq') + "</a>"
   );
 });
+
+
+Ember.Handlebars.registerHelper('link-to-categories', function(){
+
+   var options = [].slice.call(arguments, -1)[0],
+        params = Discourse.SiteSettings.enable_wide_category_list ? ['list.wideCategories'] : ['list.categories'],
+        hash = options.hash;
+
+    hash.disabledBinding = hash.disabledWhen;
+
+    hash.parameters = {
+      context: this,
+      options: options,
+      params: params
+    };
+
+  return Ember.Handlebars.helpers.view.call(this, Ember.LinkView, options);
+});

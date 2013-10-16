@@ -191,6 +191,20 @@
   }
 }
 
+
+#topic-list.categories {
+  .category{
+    width: 50%;
+    .category-description {
+      margin-top: 10px;
+    }
+    .badge-category {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+  }
+}
+
 // Category list
 // --------------------------------------------------
 

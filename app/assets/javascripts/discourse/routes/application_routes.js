@@ -29,11 +29,15 @@ Discourse.Route.buildRoutes(function() {
     });
 
     // the homepage is the first item of the 'top_menu' site setting
-    var settings = Discourse.SiteSettings || PreloadStore.get('siteSettings');
+    var settings = Discourse.SiteSettings;
     var homepage = settings.top_menu.split("|")[0].split(",")[0];
     this.route(homepage, { path: '/' });
 
-    this.route('categories', { path: '/categories' });
+    if(settings.enable_wide_category_list) {
+      this.route('wideCategories', { path: '/categories' });
+    } else {
+      this.route('categories', { path: '/categories' });
+    }
     this.route('category', { path: '/category/:slug/more' });
     this.route('category', { path: '/category/:slug' });
   });
