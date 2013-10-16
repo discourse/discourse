@@ -38,7 +38,8 @@ Discourse.FlaggedPost = Discourse.Post.extend({
         r.push({
           user: _this.userLookup[action.user_id],
           message: action.message,
-          permalink: action.permalink
+          permalink: action.permalink,
+          bySystemUser: (action.user_id === -1 ? true : false)
         });
       }
     });

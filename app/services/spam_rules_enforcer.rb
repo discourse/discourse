@@ -40,9 +40,9 @@ class SpamRulesEnforcer
 
   def flag_sockpuppet_users
     system_user = Discourse.system_user
-    PostAction.act(system_user, @post, PostActionType.types[:spam]) rescue PostAction::AlreadyActed
+    PostAction.act(system_user, @post, PostActionType.types[:spam], message: I18n.t('flag_reason.sockpuppet')) rescue PostAction::AlreadyActed
     if (first_post = @post.topic.posts.by_post_number.first).try(:user).try(:new_user?)
-      PostAction.act(system_user, first_post, PostActionType.types[:spam]) rescue PostAction::AlreadyActed
+      PostAction.act(system_user, first_post, PostActionType.types[:spam], message: I18n.t('flag_reason.sockpuppet')) rescue PostAction::AlreadyActed
     end
   end
 

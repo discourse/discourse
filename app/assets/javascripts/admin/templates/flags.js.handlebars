@@ -54,7 +54,13 @@
             <tr>
               <td></td>
               <td class='message'>
-                <div>{{#link-to 'adminUser' user}}{{avatar user imageSize="small"}}{{/link-to}} {{message}} <a href="{{unbound permalink}}"><button class='btn'><i class="icon-reply"></i> {{i18n admin.flags.view_message}}</button></a></div>
+                <div>
+                  {{#link-to 'adminUser' user}}{{avatar user imageSize="small"}}{{/link-to}}
+                  {{message}}
+                  {{#unless bySystemUser}}
+                    <a href="{{unbound permalink}}"><button class='btn'><i class="icon-reply"></i> {{i18n admin.flags.view_message}}</button></a>
+                  {{/unless}}
+                </div>
               </td>
               <td></td>
               <td></td>
