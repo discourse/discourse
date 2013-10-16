@@ -23,7 +23,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: cfd9186e34a25a29f7cd2018e91548f5d1be22af
+  revision: 0785008a64f4af8d09379683303d49d160cd444d
   branch: 4-0-stable
   specs:
     actionmailer (4.0.0)
@@ -110,14 +110,6 @@ GIT
       rack (>= 1.1.3)
       redis
       thin
-
-GIT
-  remote: https://github.com/SamSaffron/redis-rack-cache.git
-  revision: 379ef30e31d4e185cb1d7f8badca0cc06403eba2
-  specs:
-    redis-rack-cache (1.2.1)
-      rack-cache (~> 1.2)
-      redis-store (~> 1.1.0)
 
 GIT
   remote: https://github.com/callahad/omniauth-browserid.git
@@ -281,7 +273,7 @@ GEM
     mocha (0.14.0)
       metaclass (~> 0.0.1)
     mock_redis (0.9.0)
-    multi_json (1.8.1)
+    multi_json (1.8.2)
     multipart-post (1.2.0)
     mustache (0.99.4)
     net-scp (1.1.2)
@@ -340,8 +332,6 @@ GEM
     qunit-rails (0.0.4)
       railties (>= 3.2.3)
     rack (1.5.2)
-    rack-cache (1.2)
-      rack (>= 0.4)
     rack-cors (0.2.8)
       rack
     rack-openid (1.3.1)
@@ -531,7 +521,6 @@ DEPENDENCIES
   pry-rails
   puma
   qunit-rails
-  rack-cache
   rack-cors
   rack-mini-profiler!
   rails!
@@ -542,7 +531,6 @@ DEPENDENCIES
   rb-inotify (~> 0.9)
   redcarpet
   redis
-  redis-rack-cache!
   redis-rails!
   rest-client
   rinku

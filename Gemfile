@@ -192,10 +192,6 @@ gem 'flamegraph', git: 'https://github.com/SamSaffron/flamegraph.git', require: 
 gem 'rack-mini-profiler',  git: 'https://github.com/MiniProfiler/rack-mini-profiler.git', require: false
 
 # used for caching, optional
-# redis-rack-cache is missing a sane expiry policy, it hogs redis
-# https://github.com/jodosha/redis-store/pull/183
-gem 'redis-rack-cache', git: 'https://github.com/SamSaffron/redis-rack-cache.git', require: false
-gem 'rack-cache', require: false
 gem 'rack-cors', require: false
 gem 'unicorn', require: false
 gem 'puma', require: false

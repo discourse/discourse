@@ -40,21 +40,21 @@ class TopicsController < ApplicationController
       return redirect_to(topic.relative_url)
     end
 
-    anonymous_etag(@topic_view.topic) do
-      redirect_to_correct_topic && return if slugs_do_not_match
+    discourse_expires_in 1.minute
 
-      # render workaround pseudo-static HTML page for old crawlers which ignores <noscript>
-      # (see http://meta.discourse.org/t/noscript-tag-and-some-search-engines/8078)
-      return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.has_key?('_escaped_fragment_'))
+    redirect_to_correct_topic && return if slugs_do_not_match
 
-      track_visit_to_topic
+    # render workaround pseudo-static HTML page for old crawlers which ignores <noscript>
+    # (see http://meta.discourse.org/t/noscript-tag-and-some-search-engines/8078)
+    return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.has_key?('_escaped_fragment_'))
 
-      if should_track_visit_to_topic?
-        @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
-      end
+    track_visit_to_topic
 
-      perform_show_response
+    if should_track_visit_to_topic?
+      @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
     end
+
+    perform_show_response
 
     canonical_url @topic_view.canonical_path
   end
@@ -75,10 +75,10 @@ class TopicsController < ApplicationController
           only_moderator_liked: params[:only_moderator_liked].to_s == "true"
     )
 
-    anonymous_etag(@topic_view.topic) do
-      wordpress_serializer = TopicViewWordpressSerializer.new(@topic_view, scope: guardian, root: false)
-      render_json_dump(wordpress_serializer)
-    end
+    discourse_expires_in 1.minute
+
+    wordpress_serializer = TopicViewWordpressSerializer.new(@topic_view, scope: guardian, root: false)
+    render_json_dump(wordpress_serializer)
   end
 
 
@@ -272,9 +272,8 @@ class TopicsController < ApplicationController
 
   def feed
     @topic_view = TopicView.new(params[:topic_id])
-    anonymous_etag(@topic_view.topic) do
-      render 'topics/show', formats: [:rss]
-    end
+    discourse_expires_in 1.minute
+    render 'topics/show', formats: [:rss]
   end
 
   private
