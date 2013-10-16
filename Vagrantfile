@@ -3,8 +3,8 @@
 # See https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md
 #
 Vagrant.configure("2") do |config|
-  config.vm.box = 'discourse-0.8.4'
-  config.vm.box_url = 'http://www.discourse.org/vms/discourse-0.8.4.box'
+  config.vm.box = 'discourse-0.9.7'
+  config.vm.box_url = 'http://www.discourse.org/vms/discourse-0.9.7.box'
 
   # Make this VM reachable on the host network as well, so that other
   # VM's running other browsers can access our dev server.

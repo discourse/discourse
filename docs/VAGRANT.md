@@ -27,12 +27,6 @@ Vagrant will prompt you for your admin password. This is so it can mount your lo
 
 (The first time you do this, it will take a while as it downloads the VM image and installs it. Go grab a coffee.)
 
-If you would like to download a smaller VM (574MB instead of 935MB), or if you are having **trouble** downloading the VM:
-- Download this file: http://www.discourse.org/vms/discourse-0.8.4.box.7z using your favorite web browser/download tool.
-- If you don't have 7z available, you can still get the larger image from http://www.discourse.org/vms/discourse-0.8.4.box
-- Extract it using 7z: `7z e discourse-0.8.4.box.7z`
-- Add it to vagrant: `vagrant box add discourse-0.8.4 /path/to/the/downloaded/discourse-0.8.4.box`.
-
 **Note to Linux users**: Your Discourse directory cannot be on an ecryptfs mount or you will receive an error: `exportfs: /home/your/path/to/discourse does not support NFS export`
 
 **Note to OSX/Linux users**: Vagrant will mount your local files via an NFS share. Therefore, make sure that NFS is installed or else you'll receive the error message:
@@ -86,7 +80,6 @@ Now you're in a virtual machine is almost ready to start developing. It's a good
 cd /vagrant
 bundle install
 bundle exec rake db:migrate
-bundle exec rake db:seed_fu
 ```
 
 ### Starting Rails
@@ -143,15 +136,20 @@ bundle exec sidekiq
 
 Mailcatcher is used to avoid the whole issue of actually sending emails: https://github.com/sj26/mailcatcher
 
-To start mailcatcher, run the following command in the vagrant image:
+Mailcatcher is already installed in the vm, and there's an alias to launch it:
 
 ```
-gem install mailcatcher && mailcatcher --http-ip 0.0.0.0
+mc
 ```
 
-Then in a browser, go to [http://localhost:4080](http://localhost:4080)
+Then in a browser, go to [http://localhost:4080](http://localhost:4080). Sent emails will be received by mailcatcher and shown in its web ui.
 
-Sent emails will be received by mailcatcher and shown in its web ui.
+If for some reason mailcatcher is not installed, install and launch it with these commands:
+
+```
+gem install mailcatcher
+mailcatcher --http-ip 0.0.0.0
+```
 
 ### Shutting down the VM
 
