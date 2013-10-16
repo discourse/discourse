@@ -321,7 +321,7 @@ Discourse.Dialect = {
 
         if (endFound !== -1) {
           if (trailingContents) {
-            next.unshift(MD.mk_block(trailingContents));
+            next.unshift(MD.mk_block(trailingContents.replace(/^\s+/, "")));
           }
 
           blockContents.push(leadingContents.replace(/\s+$/, ""));
@@ -330,8 +330,6 @@ Discourse.Dialect = {
           blockContents.push(b);
         }
       }
-
-
 
 
       var emitterResult = args.emitter.call(this, blockContents, m, dialect.options);

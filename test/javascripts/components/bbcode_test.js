@@ -95,4 +95,12 @@ test("quote formatting", function() {
 
 });
 
+test("quotes with trailing formatting", function() {
+  var cooked = Discourse.Markdown.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]\nhello\n[/quote]\n*Test*", {lookupAvatar: false});
+  equal(cooked,
+        "<p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">" +
+        "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote><p>hello</p></blockquote></aside></p>\n\n<p><em>Test</em></p>",
+        "it allows trailing formatting");
+});
+
 
