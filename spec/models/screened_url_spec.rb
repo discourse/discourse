@@ -16,18 +16,75 @@ describe ScreenedUrl do
       described_class.create(valid_params).last_match_at.should be_nil
     end
 
+    it "normalizes the url and domain" do
+      record = described_class.new(valid_params)
+      record.expects(:normalize).once
+      record.valid?
+    end
+  end
+
+  describe 'normalize' do
+    let(:record) { described_class.new(@params) }
+    subject { record.normalize; record }
+
     ['http://', 'HTTP://', 'https://', 'HTTPS://'].each do |prefix|
       it "strips #{prefix}" do
-        described_class.create(valid_params.merge(url: url.gsub('http://', prefix))).url.should == url.gsub('http://', '')
+        @params = valid_params.merge(url: url.gsub('http://', prefix))
+        subject.url.should == url.gsub('http://', '')
       end
     end
 
     it "strips trailing slash" do
-      described_class.create(valid_params.merge(url: 'silverbullet.in/')).url.should == 'silverbullet.in'
+      @params = valid_params.merge(url: 'silverbullet.in/')
+      subject.url.should == 'silverbullet.in'
     end
 
     it "strips trailing slashes" do
-      described_class.create(valid_params.merge(url: 'silverbullet.in/buy///')).url.should == 'silverbullet.in/buy'
+      @params = valid_params.merge(url: 'silverbullet.in/buy///')
+      subject.url.should == 'silverbullet.in/buy'
+    end
+
+    it "downcases domains" do
+      record1 = described_class.new(valid_params.merge(domain: 'DuB30.com', url: 'DuB30.com/Gems/Gems-of-Power'))
+      record1.normalize
+      record1.domain.should == 'dub30.com'
+      record1.url.should == 'dub30.com/Gems/Gems-of-Power'
+      record1.should be_valid
+
+      record2 = described_class.new(valid_params.merge(domain: 'DuB30.com', url: 'DuB30.com'))
+      record2.normalize
+      record2.domain.should == 'dub30.com'
+      record2.url.should == 'dub30.com'
+      record2.should be_valid
+    end
+
+    it "doesn't modify the url argument" do
+      expect {
+        described_class.new(valid_params).normalize
+      }.to_not change { valid_params[:url] }
+    end
+
+    it "doesn't modify the domain argument" do
+      params = valid_params.merge(domain: domain.upcase)
+      expect {
+        described_class.new(params).normalize
+      }.to_not change { params[:domain] }
+    end
+  end
+
+  describe 'find_match' do
+    it 'returns nil when there is no match' do
+      described_class.find_match('http://spamspot.com/buy/it').should be_nil
+    end
+
+    it 'returns the record when there is an exact match' do
+      match = described_class.create(valid_params)
+      described_class.find_match(valid_params[:url]).should == match
+    end
+
+    it 'ignores case of the domain' do
+      match = described_class.create(valid_params.merge(url: 'spamexchange.com/Good/Things'))
+      described_class.find_match("http://SPAMExchange.com/Good/Things").should == match
     end
   end
 
