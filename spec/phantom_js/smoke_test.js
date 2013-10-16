@@ -121,8 +121,8 @@ page.runTests = function(){
     },500);
   });
 
-  test("has about me section",function(){
-    return $('.about-me').length === 1;
+  test("has details",function(){
+    return $('.details').length === 1;
   });
 
   run();
