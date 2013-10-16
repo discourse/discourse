@@ -372,7 +372,7 @@ Markdown.dialects.Gruber = {
       if ( !m ) return undefined;
 
       var level = ( m[ 2 ] === "=" ) ? 1 : 2;
-      var header = [ "header", { level : level }, m[ 1 ] ];
+      var header = [ "header", { level : level } ].concat( this.processInline(m[ 1 ]) );
 
       if ( m[0].length < block.length )
         next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );

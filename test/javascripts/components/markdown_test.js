@@ -210,6 +210,13 @@ test("Mentions", function() {
 
 });
 
+
+test("Heading", function() {
+    cooked("**Bold**\n----------",
+           "<h2><strong>Bold</strong></h2>",
+           "It will bold the heading");
+});
+
 test("Oneboxing", function() {
 
   var matches = function(input, regexp) {
