@@ -161,12 +161,22 @@
       img.avatar {
         border: 3px solid #eee;
         margin-bottom: 4px;
+        background-color: white;
       }
 
       .primary {
         margin-top: 30px;
         float: left;
         width: 75%;
+
+        .bio {
+          color: #ddd;
+
+          a[href] {
+            color: #aae;
+          }
+        }
+
       }
 
       .secondary {

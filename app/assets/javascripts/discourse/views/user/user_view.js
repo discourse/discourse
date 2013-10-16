@@ -16,7 +16,11 @@ Discourse.UserView = Discourse.View.extend({
     if (username) {
       return Discourse.set('title', "" + (I18n.t("user.profile")) + " - " + username);
     }
-  }.observes('user.loaded', 'user.username')
+  }.observes('user.loaded', 'user.username'),
+
+  didInsertElement: function() {
+    window.scrollTo(0, 0);
+  }
 
 });
 
