@@ -64,10 +64,11 @@ Discourse.PosterExpansionController = Discourse.ObjectController.extend({
       postStream.toggleParticipant(user.get('username'));
       this.close();
     },
+
     cancelFilter: function() {
       this.get('postStream').cancelFilter();
       this.close();
-    },
+    }
   }
 
 });
