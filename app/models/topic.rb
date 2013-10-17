@@ -182,15 +182,13 @@ class Topic < ActiveRecord::Base
 
   # Additional rate limits on topics: per day and private messages per day
   def limit_topics_per_day
-    RateLimiter.new(user, "topics-per-day:#{Date.today.to_s}", SiteSetting.max_topics_per_day, 1.day.to_i)
-    if user.created_at > 1.day.ago
-      RateLimiter.new(user, "first-day-topics-per-day:#{Date.today.to_s}", SiteSetting.max_topics_in_first_day, 1.day.to_i)
-    end
+    apply_per_day_rate_limit_for("topics", :max_topics_per_day)
+    limit_first_day_topics_per_day if user.added_a_day_ago?
   end
 
   def limit_private_messages_per_day
     return unless private_message?
-    RateLimiter.new(user, "pms-per-day:#{Date.today.to_s}", SiteSetting.max_private_messages_per_day, 1.day.to_i)
+    apply_per_day_rate_limit_for("pms", :max_private_messages_per_day)
   end
 
   def fancy_title
@@ -325,9 +323,7 @@ class Topic < ActiveRecord::Base
   end
 
   def changed_to_category(cat)
-
-    return true if cat.blank?
-    return true if Category.where(topic_id: id).first.present?
+    return true if cat.blank? || Category.where(topic_id: id).first.present?
 
     Topic.transaction do
       old_category = category
@@ -615,11 +611,19 @@ class Topic < ActiveRecord::Base
 
   private
 
-    def update_category_topic_count_by(num)
-      if category_id.present?
-        Category.where(['id = ?', category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
-      end
+  def update_category_topic_count_by(num)
+    if category_id.present?
+      Category.where(['id = ?', category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
     end
+  end
+
+  def limit_first_day_topics_per_day
+    apply_per_day_rate_limit_for("first-day-topics", :max_topics_in_first_day)
+  end
+
+  def apply_per_day_rate_limit_for(key, method_name)
+    RateLimiter.new(user, "#{key}-per-day:#{Date.today.to_s}", SiteSetting.send(method_name), 1.day.to_i)
+  end
 
 end
 
