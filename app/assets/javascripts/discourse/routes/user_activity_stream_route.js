@@ -22,6 +22,8 @@ Discourse.UserActivityStreamRoute = Discourse.Route.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     this.controllerFor('user_activity').set('userActionType', this.get('userActionType'));
+
+    this.controllerFor('user').set('indexStream', !this.get('userActionType'));
   }
 });
 

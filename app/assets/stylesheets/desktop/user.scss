@@ -129,6 +129,43 @@
     @include border-radius-all(4px);
   }
 
+
+  .about.collapsed-info {
+    .controls {
+      margin-top: 0;
+    }
+
+    .details {
+      .secondary { display: none; }
+      .bio { display: none; }
+
+      .primary {
+        width: 100%;
+        text-align: left;
+        margin-top: 0;
+
+        .avatar {
+          float: left;
+          margin-right: 10px;
+          border: 2px solid white;
+          width: 45px;
+          height: 45px;
+        }
+
+        h1 {
+          font-size: 20px;
+          line-height: 22px;
+        }
+
+        h2 {
+          font-size: 17px;
+          line-height: 20px;
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+
   .about {
     background-color: #444;
     margin-bottom: 10px;
