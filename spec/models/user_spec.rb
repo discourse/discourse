@@ -822,4 +822,23 @@ describe User do
       end
     end
   end
+
+  describe "#added_a_day_ago?" do
+    context "when user is more than a day old" do
+      subject(:user) { Fabricate(:user, created_at: Date.today - 2.days) }
+
+      it "returns false" do
+        expect(user).to_not be_added_a_day_ago
+      end
+    end
+
+    context "is less than a day old" do
+      subject(:user) { Fabricate(:user) }
+
+      it "returns true" do
+        expect(user).to be_added_a_day_ago
+      end
+    end
+
+  end
 end

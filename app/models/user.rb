@@ -467,6 +467,10 @@ class User < ActiveRecord::Base
     uploaded_avatar.present?
   end
 
+  def added_a_day_ago?
+    created_at > 1.day.ago
+  end
+
   protected
 
   def cook
