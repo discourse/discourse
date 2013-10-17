@@ -196,7 +196,7 @@ display: none;
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
-        top: 100px;
+        top: 135px;
       }
     }
   }
@@ -235,7 +235,6 @@ display: none;
     }
     #reply-title {
       margin-right: 10px;
-      float: left;
       &:disabled {
         background-color: $light_gray;
       }
@@ -276,8 +275,7 @@ display: none;
       bottom: 8px;
     }
   }
-  .title-input, .category-input {
-    position: relative;
+  .category-input {
     display: inline;
   }
   .title-input .popup-tip {
@@ -290,12 +288,10 @@ display: none;
     left: 432px;
     top: -7px;
   }
-}
-.reply-to  {
-  margin-bottom: 10px;
-  position: absolute;
-  margin-right: 40px;
-
+  button.btn.no-text {
+    margin: 7px 0 0 5px;
+    position: absolute;
+  }
 }
 
 
