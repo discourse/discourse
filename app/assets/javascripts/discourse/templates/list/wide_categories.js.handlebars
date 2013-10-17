@@ -24,9 +24,15 @@
             <a href="/users/{{unbound username_lower}}">{{avatar this imageSize="small"}}</a>
           {{/each}}
         </td>
-        <td>{{number topics_total}}</td>
+        <td>{{number topic_count}}</td>
         <td>{{number posts_total}}</td>
-        <td><a href="#">this is a link to a post</a> <span class="age" data-bindattr-177="177" title="October 11, 2013 8:37am"><span class="relative-date" data-time="1381441065000" data-format="tiny">4d</span></span></td>
+        {{#with latestTopic}}
+          <td {{bindAttr class="archived"}}>
+            {{topicStatus topic=this}}
+            {{{topicLink this}}}
+
+          </td>
+        {{/with}}
       </tr>
       {{/each}}
     </tbody>

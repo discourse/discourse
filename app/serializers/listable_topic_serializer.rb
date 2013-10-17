@@ -69,5 +69,4 @@ class ListableTopicSerializer < BasicTopicSerializer
       @unread_helper ||= Unread.new(object, object.user_data)
     end
 
-
 end

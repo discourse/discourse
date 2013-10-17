@@ -8,7 +8,9 @@
 **/
 Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
-  template: 'listCategories',
+  template: function(){
+    return Discourse.SiteSettings.enable_wide_category_list ? 'listWideCategories' : 'listCategories';
+  }.property(),
 
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 

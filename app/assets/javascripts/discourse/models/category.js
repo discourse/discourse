@@ -97,7 +97,11 @@ Discourse.Category = Discourse.Model.extend({
       {group_name: "admins", permission: Discourse.PermissionType.create({id: 2}) },
       {group_name: "crap", permission: Discourse.PermissionType.create({id: 3}) }
     ]);
-  }.property()
+  }.property(),
+
+  latestTopic: function(){
+    return this.get("topics")[0];
+  }.property("topics")
 
 });
 

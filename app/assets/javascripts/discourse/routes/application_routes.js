@@ -33,11 +33,7 @@ Discourse.Route.buildRoutes(function() {
     var homepage = settings.top_menu.split("|")[0].split(",")[0];
     this.route(homepage, { path: '/' });
 
-    if(settings.enable_wide_category_list) {
-      this.route('wideCategories', { path: '/categories' });
-    } else {
-      this.route('categories', { path: '/categories' });
-    }
+    this.route('categories', { path: '/categories' });
     this.route('category', { path: '/category/:slug/more' });
     this.route('category', { path: '/category/:slug' });
   });
