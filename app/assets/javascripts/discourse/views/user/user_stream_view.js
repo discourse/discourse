@@ -9,7 +9,7 @@
 **/
 Discourse.UserStreamView = Discourse.View.extend(Discourse.LoadMore, {
   loading: false,
-  eyelineSelector: '#user-activity .user-stream .item',
+  eyelineSelector: '.user-stream .item',
   classNames: ['user-stream'],
 
   loadMore: function() {
