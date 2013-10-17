@@ -1,5 +1,5 @@
 {{#if model}}
-  {{boundAvatar model imageSize="huge"}}
+  {{#linkTo 'user' user}}{{boundAvatar model imageSize="huge"}}{{/linkTo}}
 
   <h1 {{bindAttr class="staff new_user"}}><a {{bindAttr href="usernameUrl"}}>{{username}}</a></h1>
   {{#if showName}}
