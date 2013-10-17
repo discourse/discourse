@@ -15,13 +15,11 @@ Discourse.ContainerView = Ember.ContainerView.extend(Discourse.Presence, {
     @method attachViewWithArgs
     @param {Object} viewArgs The arguments to pass when creating the view
     @param {Class} klass The view class we want to create
-    @return {Ember.View} the view we created
   **/
   attachViewWithArgs: function(viewArgs, viewClass) {
     if (!viewClass) { viewClass = Ember.View.extend(); }
     var view = this.createChildView(viewClass, viewArgs);
     this.pushObject(view);
-    return view;
   },
 
   /**
@@ -29,7 +27,6 @@ Discourse.ContainerView = Ember.ContainerView.extend(Discourse.Presence, {
 
     @method attachViewClass
     @param {Class} klass The view class we want to create
-    @return {Ember.View} the view we created
   **/
   attachViewClass: function(viewClass) {
     this.attachViewWithArgs(null, viewClass);
