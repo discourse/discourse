@@ -436,11 +436,7 @@ class Topic < ActiveRecord::Base
       invite = Invite.create(invited_by: invited_by, email: lower_email)
       unless invite.valid?
 
-        # If the email already exists, grant permission to that user
-        if invite.email_already_exists and private_message?
-          user = User.where(email: lower_email).first
-          topic_allowed_users.create!(user_id: user.id)
-        end
+        grant_permission_to_user(lower_email) if email_already_exists_for?(invite)
 
         return
       end
@@ -452,6 +448,15 @@ class Topic < ActiveRecord::Base
     topic_invites.create(invite_id: invite.id)
     Jobs.enqueue(:invite_email, invite_id: invite.id)
     invite
+  end
+
+  def email_already_exists_for?(invite)
+    invite.email_already_exists and private_message?
+  end
+
+  def grant_permission_to_user(lower_email)
+    user = User.where(email: lower_email).first
+    topic_allowed_users.create!(user_id: user.id)
   end
 
   def max_post_number
