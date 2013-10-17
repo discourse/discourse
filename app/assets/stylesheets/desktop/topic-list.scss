@@ -8,6 +8,8 @@
 // List controls
 // --------------------------------------------------
 
+
+
 #list-controls {
   .nav {
     float: left;
@@ -80,7 +82,7 @@
     color: $topic-list-th-color;
     font-weight: bold;
     font-size: 13px;
-    @include box-shadow(inset 0 1px 0 $white);
+    background: #f6f6f6;
     &:first-of-type {
       @include border-radius-all(4px 0 0 0);
     }
@@ -93,12 +95,16 @@
     color: $topic-list-td-color;
     font-size: 14px;
   }
+
+
+
   .star {
     width: 20px;
     padding-right: 0;
     .icon-star {
       position: relative;
-      top: 1px;
+      top: -1px;
+      font-size: 15px !important;
     }
     + .main-link {
       padding-left: 0;
@@ -190,6 +196,20 @@
     width: 60px;
   }
 }
+
+
+#topic-list tbody tr.has-excerpt .star
+ {
+
+
+  vertical-align: top;
+  margin-top: 3px;
+}
+
+
+
+.topic-statuses .topic-status i {font-size: 15px !important;}
+
 
 // Category list
 // --------------------------------------------------
