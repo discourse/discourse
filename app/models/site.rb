@@ -50,7 +50,7 @@ class Site
   end
 
   def cache_key
-    k ="site_json_cats_"
+    k = "site_json_cats_"
     k << @guardian.secure_category_ids.join("_") if @guardian
   end
 
@@ -64,9 +64,9 @@ class Site
     #   On my local this was not being flushed as post actions types changed, it turn this
     #   broke local.
     site = Site.new(guardian)
-    Discourse.cache.fetch(site.cache_key, family: "site", expires_in: 1.minute) do
-      MultiJson.dump(SiteSerializer.new(site, root: false))
-    end
+    #Discourse.cache.fetch(site.cache_key, family: "site", expires_in: 1.minute) do
+    MultiJson.dump(SiteSerializer.new(site, root: false))
+    #end
   end
 
   def self.invalidate_cache
