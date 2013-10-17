@@ -6,6 +6,7 @@ class CategoryDetailedSerializer < ApplicationSerializer
              :text_color,
              :slug,
              :topic_count,
+             :post_count,
              :topics_week,
              :topics_month,
              :topics_year,

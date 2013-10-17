@@ -19,6 +19,12 @@ class ListableTopicSerializer < BasicTopicSerializer
              :closed,
              :archived
 
+  has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
+
+  def include_associations!
+    include! :last_poster if object.include_last_poster
+  end
+
   def bumped
     object.created_at < object.bumped_at
   end

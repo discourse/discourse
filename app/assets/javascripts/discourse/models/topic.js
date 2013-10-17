@@ -87,6 +87,10 @@ Discourse.Topic = Discourse.Model.extend({
     return this.urlForPostNumber(this.get('highest_post_number'));
   }.property('url', 'highest_post_number'),
 
+  lastPosterUrl: function() {
+    return Discourse.getURL("/users/") + this.get("last_poster.username");
+  }.property('last_poster'),
+
   // The amount of new posts to display. It might be different than what the server
   // tells us if we are still asynchronously flushing our "recently read" data.
   // So take what the browser has seen into consideration.

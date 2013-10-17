@@ -80,9 +80,12 @@ class PostCreator
       SpamRulesEnforcer.enforce!(@post)
     end
 
+    track_latest_on_category
+
     enqueue_jobs
     @post
   end
+
 
   def self.create(user, opts)
     PostCreator.new(user, opts).create
@@ -106,6 +109,15 @@ class PostCreator
 
 
   protected
+
+  def track_latest_on_category
+    if @post && @post.errors.count == 0 && @topic && @topic.category_id
+      Category.update_all( {latest_post_id: @post.id}, {id: @topic.category_id} )
+      if @post.post_number == 1
+        Category.update_all( {latest_topic_id: @topic.id}, {id: @topic.category_id} )
+      end
+    end
+  end
 
   def ensure_in_allowed_users
     return unless @topic.private_message?

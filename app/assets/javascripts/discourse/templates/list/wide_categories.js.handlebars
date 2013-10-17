@@ -14,6 +14,12 @@
       {{#each model.categories}}
       <tr>
         <td class='category'>{{categoryLink this}}
+          {{#if unreadTopics}}
+            <a href={{unbound url}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
+          {{/if}}
+          {{#if newTopics}}
+            <a href={{unbound url}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='icon icon-asterisk'></i></a>
+          {{/if}}
           {{#if description_excerpt}}
             <div class="category-description">
               {{{description_excerpt}}}
@@ -25,12 +31,15 @@
           {{/each}}
         </td>
         <td>{{number topic_count}}</td>
-        <td>{{number posts_total}}</td>
+        <td>{{number post_count}}</td>
         {{#with latestTopic}}
           <td {{bindAttr class="archived"}}>
             {{topicStatus topic=this}}
             {{{topicLink this}}}
-
+            <div class='lastUserInfo'>
+              {{i18n categories.by}} <a href="{{{unbound lastPosterUrl}}}">{{unbound last_poster.username}}</a>
+              {{unboundAge last_posted_at}}
+            </div>
           </td>
         {{/with}}
       </tr>

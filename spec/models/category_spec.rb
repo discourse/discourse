@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'spec_helper'
+require_dependency 'post_creator'
 
 describe Category do
   it { should validate_presence_of :user_id }
@@ -245,6 +246,31 @@ describe Category do
     it 'is deleted correctly' do
       Category.exists?(id: @category_id).should be_false
       Topic.exists?(id: @topic_id).should be_false
+    end
+  end
+
+  describe 'latest' do
+    it 'should be updated correctly' do
+      category = Fabricate(:category)
+      post = create_post(category: category.name)
+
+      category.reload
+      category.latest_post_id.should == post.id
+      category.latest_topic_id.should == post.topic_id
+
+      post2 = create_post(category: category.name)
+      post3 = create_post(topic_id: post.topic_id, category: category.name)
+
+      category.reload
+      category.latest_post_id.should == post3.id
+      category.latest_topic_id.should == post2.topic_id
+
+
+      destroyer = PostDestroyer.new(Fabricate(:admin), post3)
+      destroyer.destroy
+
+      category.reload
+      category.latest_post_id.should == post2.id
     end
   end
 

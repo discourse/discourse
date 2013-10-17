@@ -13,6 +13,7 @@ class Category < ActiveRecord::Base
   end
 
   belongs_to :user
+  belongs_to :latest_post, class_name: "Post"
 
   has_many :topics
   has_many :category_featured_topics
@@ -227,6 +228,26 @@ SQL
     end
   end
 
+  def update_latest
+    latest_post_id = Post
+                        .order("posts.created_at desc")
+                        .where("NOT hidden")
+                        .joins("join topics on topics.id = topic_id")
+                        .where("topics.category_id = :id", id: self.id)
+                        .limit(1)
+                        .pluck("posts.id")
+                        .first
+
+    latest_topic_id = Topic
+                        .order("topics.created_at desc")
+                        .where("visible")
+                        .where("topics.category_id = :id", id: self.id)
+                        .limit(1)
+                        .pluck("topics.id")
+                        .first
+
+    self.update_attributes(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
+  end
 
   def self.resolve_permissions(permissions)
     read_restricted = true

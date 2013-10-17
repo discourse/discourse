@@ -9,7 +9,14 @@ class CategoriesController < ApplicationController
   def index
     @description = SiteSetting.site_description
 
-    @list = CategoryList.new(guardian)
+    wide_mode = SiteSetting.enable_wide_category_list
+
+    options = {}
+    options[:latest_post_only] = params[:latest_post_only] || wide_mode
+
+    @list = CategoryList.new(guardian,options)
+
+
 
     @list.draft_key = Draft::NEW_TOPIC
     @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)

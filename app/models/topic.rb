@@ -98,6 +98,7 @@ class Topic < ActiveRecord::Base
   attr_accessor :user_data
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :topic_list
+  attr_accessor :include_last_poster
 
   # The regular order
   scope :topic_list_order, lambda { order('topics.bumped_at desc') }

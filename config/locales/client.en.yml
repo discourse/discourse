@@ -189,6 +189,7 @@ en:
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
+      by: "by"
 
     user:
       said: "{{username}} said:"
@@ -591,6 +592,12 @@ en:
       private_message: 'Start a private message'
       list: 'Topics'
       new: 'new topic'
+      new_topics:
+        one: '1 new topic'
+        other: '{{count}} new topics'
+      unread_topics:
+        one: '1 unread topic'
+        other: '{{count}} unread topics'
       title: 'Topic'
       loading_more: "Loading more Topics..."
       loading: 'Loading topic...'
