@@ -257,7 +257,7 @@ Discourse.Composer = Discourse.Model.extend({
 
   init: function() {
     this._super();
-    var val = Discourse.KeyValueStore.get('composer.showPreview') || 'true';
+    var val = (Discourse.Mobile.mobileView ? false : (Discourse.KeyValueStore.get('composer.showPreview') || 'true'));
     this.set('showPreview', val === 'true');
     this.set('archetypeId', Discourse.Site.currentProp('default_archetype'));
   },
