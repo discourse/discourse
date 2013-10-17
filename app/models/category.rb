@@ -102,18 +102,35 @@ class Category < ActiveRecord::Base
   # all categories.
   def self.update_stats
     topics = Topic
-               .select("COUNT(*)")
+               .select("COUNT(*) topic_count")
                .where("topics.category_id = categories.id")
                .where("categories.topic_id <> topics.id")
                .visible
 
-    topic_count = topics.to_sql
+    topics_with_post_count = Topic
+                              .select("topics.category_id, topics.id topic_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
+                              .group("topics.category_id, topics.id")
+                              .visible.to_sql
+
     topics_year = topics.created_since(1.year.ago).to_sql
     topics_month = topics.created_since(1.month.ago).to_sql
     topics_week = topics.created_since(1.week.ago).to_sql
 
-    Category.update_all("topic_count = (#{topic_count}),
-                         topics_year = (#{topics_year}),
+
+    Category.exec_sql <<SQL
+    UPDATE categories c
+    SET   topic_count = x.topic_count,
+          post_count = x.post_count
+    FROM (#{topics_with_post_count}) x
+    WHERE x.category_id = c.id AND
+          (c.topic_count <> x.topic_count OR c.post_count <> x.post_count) AND
+          x.topic_id <> c.topic_id
+
+SQL
+
+
+    # TODO don't update unchanged data
+    Category.update_all("topics_year = (#{topics_year}),
                          topics_month = (#{topics_month}),
                          topics_week = (#{topics_week})")
   end

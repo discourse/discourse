@@ -255,7 +255,7 @@ describe Category do
 
     context 'with regular topics' do
       before do
-        @category.topics << Fabricate(:topic, user: @category.user)
+        create_post(user: @category.user, category: @category.name)
         Category.update_stats
         @category.reload
       end
@@ -265,6 +265,7 @@ describe Category do
         @category.topics_month.should == 1
         @category.topics_year.should == 1
         @category.topic_count.should == 1
+        @category.post_count.should == 1
       end
 
     end
@@ -282,6 +283,7 @@ describe Category do
         @category.topic_count.should == 0
         @category.topics_month.should == 0
         @category.topics_year.should == 0
+        @category.post_count.should == 0
       end
 
     end
