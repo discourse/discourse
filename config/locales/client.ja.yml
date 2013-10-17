@@ -70,36 +70,36 @@ ja:
           one: "1 day ago"
           other: "%{count} days ago"
     share:
-      topic: 'share a link to this topic'
-      post: 'share a link to post #%{postNumber}'
-      close: 'close'
-      twitter: 'share this link on Twitter'
-      facebook: 'share this link on Facebook'
-      google+: 'share this link on Google+'
-      email: 'send this link in an email'
+      topic: 'このトピックのリンクを共有する'
+      post: 'ポスト #%{postNumber} にリンクを共有する'
+      close: '閉じる'
+      twitter: 'Twitter でこのリンクを共有する'
+      facebook: 'Facebook でこのリンクを共有する'
+      google+: 'Google+ でこのリンクを共有する'
+      email: 'メールでこのリンクを送る'
 
-    edit: 'edit the title and category of this topic'
-    not_implemented: "That feature hasn't been implemented yet, sorry!"
-    no_value: "No"
-    yes_value: "Yes"
-    of_value: "of"
-    generic_error: "Sorry, an error has occurred."
-    generic_error_with_reason: "An error occured: %{error}"
-    log_in: "Log In"
+    edit: 'このトピックのタイトルとカテゴリを編集'
+    not_implemented: "申し訳ありませんが、この機能はまだ実装されていません"
+    no_value: "いいえ"
+    yes_value: "はい"
+    of_value: "/"
+    generic_error: "申し訳ありませんが、エラーが発生しました"
+    generic_error_with_reason: "エラーが発生しました: %{error}"
+    log_in: "ログイン"
     age: "Age"
     last_post: "Last Post"
-    admin_title: "Admin"
-    flags_title: "Flags"
-    show_more: "show more"
-    links: Links
+    admin_title: "管理者"
+    flags_title: "フラグ"
+    show_more: "もっと見る"
+    links: リンク
     faq: "FAQ"
-    privacy_policy: "Privacy Policy"
-    mobile_view: "Mobile View"
-    desktop_view: "Desktop View"
-    you: "You"
+    privacy_policy: "プライバシーポリシー"
+    mobile_view: "モバイル表示"
+    desktop_view: "デスクトップ表示"
+    you: "あなた"
     or: "or"
-    now: "just now"
-    read_more: 'read more'
+    now: "たった今"
+    read_more: 'もっと読む'
     more: "More"
     less: "Less"
     never: "never"
@@ -124,32 +124,32 @@ ja:
       other: "in {{count}} days"
 
     suggested_topics:
-      title: "Suggested Topics"
+      title: "関連トピック"
 
     bookmarks:
-      not_logged_in: "Sorry, you must be logged in to bookmark posts."
-      created: "You've bookmarked this post."
-      not_bookmarked: "You've read this post; click to bookmark it."
-      last_read: "This is the last post you've read; click to bookmark it."
+      not_logged_in: "ポストをブックマークするには、ログインする必要があります"
+      created: "このポストをブックマークしました"
+      not_bookmarked: "このポストをブックマークする"
+      last_read: "このポストをブックマークする"
 
-    new_topics_inserted: "{{count}} new topics."
+    new_topics_inserted: "新しいトピックが {{count}} 個あります"
     show_new_topics: "Click to show."
-    preview: "preview"
-    cancel: "cancel"
+    preview: "プレビュー"
+    cancel: "キャンセル"
 
-    save: "Save Changes"
-    saving: "Saving..."
-    saved: "Saved!"
+    save: "変更を保存"
+    saving: "保存中..."
+    saved: "保存しました"
 
-    upload: "Upload"
-    uploading: "Uploading..."
-    uploaded: "Uploaded!"
+    upload: "アップロード"
+    uploading: "アップロード中..."
+    uploaded: "アップロードしました"
 
     choose_topic:
-      none_found: "No topics found."
+      none_found: "トピックが見つかりませんでした"
       title:
-        search: "Search for a Topic by name, url or id:"
-        placeholder: "type the topic title here"
+        search: "トピック名、URL、または ID でトピックを検索:"
+        placeholder: "ココにトピックのタイトルを入力"
 
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the topic</a>"
@@ -169,18 +169,18 @@ ja:
       sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
 
     user_action_groups:
-      "1": "Likes Given"
-      "2": "Likes Received"
-      "3": "Bookmarks"
-      "4": "Topics"
-      "5": "Posts"
-      "6": "Replies"
-      "7": "Mentions"
-      "9": "Quotes"
-      "10": "Favorites"
-      "11": "Edits"
-      "12": "Sent Items"
-      "13": "Inbox"
+      "1": "いいね！ した"
+      "2": "いいね！ された"
+      "3": "ブックマーク"
+      "4": "トピック"
+      "5": "ポスト"
+      "6": "リプライ"
+      "7": "メンション"
+      "9": "引用"
+      "10": "お気に入り"
+      "11": "編集"
+      "12": "アイテム送信"
+      "13": "インボックス"
 
     user:
       said: "{{username}} said:"
