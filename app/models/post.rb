@@ -125,7 +125,6 @@ class Post < ActiveRecord::Base
     Plugin::Filter.apply(:after_post_cook, self, post_analyzer.cook(*args))
   end
 
-
   # Sometimes the post is being edited by someone else, for example, a mod.
   # If that's the case, they should not be bound by the original poster's
   # restrictions, for example on not posting images.
