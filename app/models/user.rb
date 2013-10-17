@@ -456,7 +456,7 @@ class User < ActiveRecord::Base
     admin = Discourse.system_user
     topic_links.includes(:post).each do |tl|
       begin
-        PostAction.act(admin, tl.post, PostActionType.types[:spam])
+        PostAction.act(admin, tl.post, PostActionType.types[:spam], message: I18n.t('flag_reason.spam_hosts'))
       rescue PostAction::AlreadyActed
         # If the user has already acted, just ignore it
       end
