@@ -960,6 +960,7 @@ en:
       auto_close_label: "Auto-close topics after:"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
+      this_year: "this year"
 
     flagging:
       title: 'Why are you flagging this post?'
