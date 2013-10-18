@@ -47,13 +47,16 @@ function processTextNodes(node, event) {
       }
 
       var result = textContent;
-      emitters.forEach(function (e) {
-        result = e(result, event)
-      });
+
+      for (var k=0; k<emitters.length; k++) {
+        result = emitters[k](result, event);
+      }
 
       if (result) {
         if (result instanceof Array) {
-          result.forEach(function (r) { skipSanitize[r] = true; });
+          for (var i=0; i<result.length; i++) {
+            skipSanitize[result[i]] = true;
+          }
           node.splice.apply(node, [j, 1].concat(result));
         } else {
           node[j] = result;
@@ -146,7 +149,7 @@ Discourse.Dialect = {
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
     dialect.options = opts;
-    var tree = parser.toHTMLTree(text, 'Discourse');
+    var tree = parser.toHTMLTree(text, 'Discourse'),
         html = parser.renderJsonML(parseTree(tree));
 
     return html;
