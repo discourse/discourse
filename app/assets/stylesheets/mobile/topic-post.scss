@@ -270,7 +270,7 @@ a.star {
     }
 
    .title {
-    font-size: 14px; line-height: 8px; 
+    font-size: 14px; line-height: 8px;
   }
 
 }
@@ -302,6 +302,7 @@ span.post-count {
 .topic-post {
   article.boxed img {
     max-width: 100%;
+    height: auto;
   }
   &.moderator {
     background-color: #eef0ff;
