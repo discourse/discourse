@@ -19,7 +19,6 @@ var md = function(input, expected, text) {
       expectedNorm = normalize(expected),
       same = (result === expected) || (resultNorm === expectedNorm);
 
-
   if (same) {
     ok(same, text);
   } else {
@@ -42,7 +41,7 @@ test("first", function(){
       filename = Pathname.new(filename_no_ext)
 
       text = File.read(f)
-      html = File.read("#{filename_no_ext}.xhtml").gsub(/\<\!\-\-(.*?)\-\-\>/m, '')
+      html = File.read("#{filename_no_ext}.xhtml");
       result << "test(\"#{filename}\", function() { md(#{text.to_json}, #{html.to_json}, 'passes MDTest'); });\n"
     end
     result
