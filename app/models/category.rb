@@ -1,4 +1,9 @@
+require_dependency "concern/positionable"
+
 class Category < ActiveRecord::Base
+
+  include Concern::Positionable
+
   belongs_to :topic, dependent: :destroy
   if rails4?
     belongs_to :topic_only_relative_url,
