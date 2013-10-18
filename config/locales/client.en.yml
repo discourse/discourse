@@ -185,11 +185,10 @@ en:
 
     categories:
       category: "Category"
-      participants: "Participants"
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
-      by: "by"
+      latest_by: "latest by"
 
     user:
       said: "{{username}} said:"

@@ -193,8 +193,21 @@
 
 
 #topic-list.categories {
+  .last-user-info {
+    font-size: 12px;
+    margin-top: 3px;
+  }
+  tbody td {
+    padding-bottom: 20px;
+  }
   .category{
-    width: 50%;
+    position: relative;
+    width: 55%;
+    .featured-users {
+      position: absolute;
+      right: 5px;
+      top: 3px;
+    }
     .category-description {
       margin-top: 10px;
     }
