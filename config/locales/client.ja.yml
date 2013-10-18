@@ -173,7 +173,7 @@ ja:
       "2": "いいね！ された"
       "3": "ブックマーク"
       "4": "トピック"
-      "5": "ポスト"
+      "5": "投稿"
       "6": "リプライ"
       "7": "メンション"
       "9": "引用"
@@ -184,14 +184,14 @@ ja:
 
     user:
       said: "{{username}} said:"
-      profile: "Profile"
+      profile: "プロフィール"
       mute: "Mute"
-      edit: "Edit Preferences"
-      download_archive: "download archive of my posts"
+      edit: "プロフィールを編集"
+      download_archive: "ポストのアーカイブをダウンロード"
       private_message: "Private Message"
       private_messages: "Messages"
-      activity_stream: "Activity"
-      preferences: "Preferences"
+      activity_stream: "アクティビティ"
+      preferences: "プロフィール"
       bio: "About me"
       invited_by: "Invited By"
       trust_level: "Trust Level"
@@ -201,7 +201,7 @@ ja:
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
       moderator: "{{user}} is a moderator"
-      admin: "{{user}} is an admin"
+      admin: "{{user}} は管理者です"
       deleted: "(deleted)"
 
       messages:
@@ -273,7 +273,7 @@ ja:
       last_emailed: "Last Emailed"
       last_seen: "Last Seen"
       created: "Created At"
-      log_out: "Log Out"
+      log_out: "ログアウト"
       website: "Web Site"
       email_settings: "Email"
       email_digests:
@@ -345,7 +345,7 @@ ja:
         private_message: "private message"
         the_topic: "the topic"
 
-    loading: "Loading..."
+    loading: "読み込み中..."
     close: "Close"
     learn_more: "learn more..."
 
@@ -454,19 +454,19 @@ ja:
       reply_here: "Reply Here"
       reply: "Reply"
       cancel: "Cancel"
-      create_topic: "Create Topic"
+      create_topic: "トピックを作成"
       create_pm: "Create Private Message"
 
       users_placeholder: "Add a user"
-      title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
-      reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
+      title_placeholder: "トピックのタイトルをここに入力してください。"
+      reply_placeholder: "本文をここに入力してください。Markdown や BBCode を利用することもできます。画像をアップロードするにはドラッグまたはペーストしてください。"
       view_new_post: "View your new post."
-      saving: "Saving..."
-      saved: "Saved!"
-      saved_draft: "You have a post draft in progress. Click anywhere in this box to resume editing."
-      uploading: "Uploading..."
-      show_preview: 'show preview &raquo;'
-      hide_preview: '&laquo; hide preview'
+      saving: "保存中..."
+      saved: "保存完了!"
+      saved_draft: "編集中のポストがあります。このボックス内をクリックすると編集を再開できます。"
+      uploading: "アップロード中..."
+      show_preview: 'プレビューを表示する &raquo;'
+      hide_preview: '&laquo; プレビューを隠す'
 
       quote_post_title: "Quote whole post"
       bold_title: "Strong"
@@ -494,9 +494,9 @@ ja:
       help: "Markdown Editing Help"
       toggler: "hide or show the composer panel"
 
-      admin_options_title: "Optional staff settings for this topic"
-      auto_close_label: "Auto-close topic after:"
-      auto_close_units: "days"
+      admin_options_title: "このトピックの詳細設定"
+      auto_close_label: "このトピックを"
+      auto_close_units: "日後に自動的にクローズする"
 
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
@@ -534,8 +534,8 @@ ja:
       uploading: "Uploading"
 
     search:
-      title: "search for topics, posts, users, or categories"
-      placeholder: "type your search terms here"
+      title: "トピック、ポスト、ユーザ、カテゴリを探す"
+      placeholder: "検索ワードを入力してください"
       no_results: "No results found."
       searching: "Searching ..."
 
@@ -543,7 +543,7 @@ ja:
         user: "search will prefer results by @{{username}}"
         category: "search will prefer results in {{category}}"
 
-    site_map: "go to another topic list or category"
+    site_map: "別のトピックリストやカテゴリに移動"
     go_back: 'go back'
     current_user: 'go to your user page'
 
@@ -555,17 +555,17 @@ ja:
 
     topics:
       none:
-        favorited: "You haven't favorited any topics yet. To favorite a topic, click or tap the star next to the title."
-        unread: "You have no unread topics."
-        new: "You have no new topics."
+        favorited: "トピックをお気に入り登録していません。お気に入り登録するには、タイトル横のスターをクリック/タップしてください。"
+        unread: "未読トピックはありません。"
+        new: "新規トピックはありません。"
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
         latest: "There are no latest topics. That's sad."
         hot: "There are no hot topics."
         category: "There are no {{category}} topics."
       bottom:
-        latest: "There are no more latest topics."
-        hot: "There are no more hot topics."
+        latest: "最新のトピックは以上です。"
+        hot: "ホットなトピックは以上です。"
         posted: "There are no more posted topics."
         read: "There are no more read topics."
         new: "There are no more new topics."
@@ -580,23 +580,23 @@ ja:
 
     topic:
       create_in: 'Create {{categoryName}} Topic'
-      create: 'Create Topic'
-      create_long: 'Create a new Topic'
+      create: 'トピックを作成する'
+      create_long: '新規トピックの作成'
       private_message: 'Start a private message'
       list: 'Topics'
       new: 'new topic'
-      title: 'Topic'
+      title: 'トピック'
       loading_more: "Loading more Topics..."
-      loading: 'Loading topic...'
+      loading: 'トピックをロード中...'
       invalid_access:
         title: "Topic is private"
         description: "Sorry, you don't have access to that topic!"
       server_error:
-        title: "Topic failed to load"
+        title: "トピックのロードに失敗しました"
         description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, let us know."
       not_found:
-        title: "Topic not found"
-        description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
+        title: "トピックが見つかりませんでした"
+        description: "申し訳有りませんがトピックが見つかりませんでした。モデレータによって削除された可能性があります。"
       unread_posts:
         one: "you have 1 unread old post in this topic"
         other: "you have {{count}} unread old posts in this topic"
@@ -605,10 +605,10 @@ ja:
         other: "there are {{count}} new posts in this topic since you last read it"
 
       likes:
-        one: "there is 1 like in this topic"
-        other: "there are {{count}} likes in this topic"
-      back_to_list: "Back to Topic List"
-      options: "Topic Options"
+        one: "このトピックには1個いいね！がついています"
+        other: "このトピックには{{count}}個いいね！がついています"
+      back_to_list: "トピックリストに戻る"
+      options: "トピックオプション"
       show_links: "show links within this topic"
       toggle_information: "toggle topic details"
       read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
@@ -630,10 +630,10 @@ ja:
             other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
         } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}} "
 
-      browse_all_categories: Browse all categories
+      browse_all_categories: 全てのカテゴリをブラウズする
 
-      view_latest_topics: view latest topics
-      suggest_create_topic: Why not create a topic?
+      view_latest_topics: 最新のトピックを見る
+      suggest_create_topic: 新しいトピックを作成しますか？
       read_position_reset: "Your read position has been reset."
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
@@ -928,16 +928,16 @@ ja:
 
     category:
       can: 'can&hellip; '
-      none: '(no category)'
+      none: '(カテゴリなし)'
       edit: 'edit'
       edit_long: "Edit Category"
       edit_uncategorized: "Edit Uncategorized"
       view: 'View Topics in Category'
       general: 'General'
-      settings: 'Settings'
-      delete: 'Delete Category'
-      create: 'Create Category'
-      save: 'Save Category'
+      settings: '設定'
+      delete: 'カテゴリを削除する'
+      create: 'カテゴリを作成する'
+      save: 'カテゴリを保存する'
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       more_posts: "view all {{posts}}..."
@@ -993,54 +993,54 @@ ja:
       invisible:
         help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
-    posts: "Posts"
-    posts_long: "there are {{number}} posts in this topic"
+    posts: "投稿数"
+    posts_long: "このトピックには{{number}}個のポストがあります"
     original_post: "Original Post"
-    views: "Views"
+    views: "閲覧数"
     replies: "Replies"
-    views_long: "this topic has been viewed {{number}} times"
-    activity: "Activity"
-    likes: "Likes"
+    views_long: "このトピックは{{number}}回閲覧されました"
+    activity: "アクティビティ"
+    likes: "いいね！"
     likes_long: "there are {{number}} likes in this topic"
-    top_contributors: "Participants"
-    category_title: "Category"
+    top_contributors: "主な参加者"
+    category_title: "カテゴリ"
     history: "History"
     changed_by: "by {{author}}"
 
-    categories_list: "Categories List"
+    categories_list: "カテゴリ一覧"
 
     filters:
       latest:
-        title: "Latest"
-        help: "the most recent topics"
+        title: "最新"
+        help: "最新のトピック"
       hot:
-        title: "Hot"
-        help: "a selection of the hottest topics"
+        title: "ホット"
+        help: "話題のトピック"
       favorited:
-        title: "Favorited"
-        help: "topics you marked as favorites"
+        title: "お気に入り"
+        help: "お気に入りしたトピック"
       read:
         title: "Read"
         help: "topics you've read, in the order that you last read them"
       categories:
-        title: "Categories"
-        title_in: "Category - {{categoryName}}"
-        help: "all topics grouped by category"
+        title: "カテゴリ"
+        title_in: "カテゴリ - {{categoryName}}"
+        help: "カテゴリ毎に整理されたトピックを表示"
       unread:
         title:
-          zero: "Unread"
-          one: "Unread (1)"
-          other: "Unread ({{count}})"
+          zero: "未読"
+          one: "未読 (1)"
+          other: "未読 ({{count}})"
         help: "tracked topics with unread posts"
       new:
         title:
-          zero: "New"
-          one: "New (1)"
-          other: "New ({{count}})"
+          zero: "新規"
+          one: "新規 (1)"
+          other: "新規 ({{count}})"
         help: "new topics since your last visit"
       posted:
-        title: "My Posts"
-        help: "topics you have posted in"
+        title: "あなたのポスト"
+        help: "あなたが投稿したトピック"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1060,8 +1060,8 @@ ja:
     type_to_filter: "type to filter..."
 
     admin:
-      title: 'Discourse Admin'
-      moderator: 'Moderator'
+      title: 'Discourse 管理者'
+      moderator: 'モデレータ'
 
       dashboard:
         title: "Dashboard"
@@ -1087,14 +1087,14 @@ ja:
         private_messages_title: "Private Messages"
 
         reports:
-          today: "Today"
-          yesterday: "Yesterday"
-          last_7_days: "Last 7 Days"
-          last_30_days: "Last 30 Days"
+          today: "今日"
+          yesterday: "昨日"
+          last_7_days: "過去7日"
+          last_30_days: "過去30日"
           all_time: "All Time"
-          7_days_ago: "7 Days Ago"
-          30_days_ago: "30 Days Ago"
-          all: "All"
+          7_days_ago: "7日前"
+          30_days_ago: "30日前"
+          all: "全て"
           view_table: "View as Table"
           view_chart: "View as Bar Chart"
 
@@ -1300,7 +1300,7 @@ ja:
         moderator: "Moderator?"
         admin: "Admin?"
         blocked: "Blocked?"
-        show_admin_profile: "Admin"
+        show_admin_profile: "管理者"
         edit_title: "Edit Title"
         save_title: "Save Title"
         refresh_browsers: "Force browser refresh"
