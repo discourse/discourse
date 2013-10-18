@@ -193,6 +193,12 @@
 
 
 #topic-list.categories {
+  th.latest, td.latest {
+    padding-left: 12px;
+  }
+  th.num {
+    width: 45px;
+  }
   .last-user-info {
     font-size: 12px;
     margin-top: 3px;
@@ -205,7 +211,7 @@
     width: 55%;
     .featured-users {
       position: absolute;
-      right: 5px;
+      right: 18px;
       top: 3px;
     }
     .category-description {

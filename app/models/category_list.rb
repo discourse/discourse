@@ -53,7 +53,7 @@ class CategoryList
                       .order('COALESCE(categories.topics_year, 0) DESC')
 
       if latest_post_only?
-        @categories = @categories.includes(:latest_post => :topic )
+        @categories = @categories.includes(:latest_post => {:topic => :last_poster} )
       end
 
       @categories = @categories.to_a

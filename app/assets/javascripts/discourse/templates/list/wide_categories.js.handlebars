@@ -33,7 +33,7 @@
         <td class='num'>{{number topic_count}}</td>
         <td class='num'>{{number post_count}}</td>
         {{#with latestTopic}}
-          <td {{bindAttr class="archived"}}>
+          <td {{bindAttr class="archived :latest"}}>
             {{topicStatus topic=this}}
             <a class='title' href="{{unbound lastUnreadUrl}}">{{{unbound fancy_title}}}</a>
             {{#if unread}}
