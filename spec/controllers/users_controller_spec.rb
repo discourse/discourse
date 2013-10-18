@@ -954,42 +954,95 @@ describe UsersController do
         })
       end
 
-      it 'raises an error when you don\'t have permission to upload an avatar' do
-        Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
-        xhr :post, :upload_avatar, username: user.username
-        response.should be_forbidden
+      describe "with uploaded file" do
+
+        it 'raises an error when you don\'t have permission to upload an avatar' do
+          Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
+          xhr :post, :upload_avatar, username: user.username
+          response.should be_forbidden
+        end
+
+        it 'rejects large images' do
+          SiteSetting.stubs(:max_image_size_kb).returns(1)
+          xhr :post, :upload_avatar, username: user.username, file: avatar
+          response.status.should eq 413
+        end
+
+        it 'rejects unauthorized images' do
+          SiteSetting.stubs(:authorized_image?).returns(false)
+          xhr :post, :upload_avatar, username: user.username, file: avatar
+          response.status.should eq 422
+        end
+
+        it 'is successful' do
+          upload = Fabricate(:upload)
+          Upload.expects(:create_for).returns(upload)
+          # enqueues the avatar generator job
+          Jobs.expects(:enqueue).with(:generate_avatars, { user_id: user.id, upload_id: upload.id })
+          xhr :post, :upload_avatar, username: user.username, file: avatar
+          user.reload
+          # erase the previous template
+          user.uploaded_avatar_template.should == nil
+          # link to the right upload
+          user.uploaded_avatar.id.should == upload.id
+          # automatically set "use_uploaded_avatar"
+          user.use_uploaded_avatar.should == true
+          # returns the url, width and height of the uploaded image
+          json = JSON.parse(response.body)
+          json['url'].should == "/uploads/default/1/1234567890123456.jpg"
+          json['width'].should == 100
+          json['height'].should == 200
+        end
       end
 
-      it 'rejects large images' do
-        SiteSetting.stubs(:max_image_size_kb).returns(1)
-        xhr :post, :upload_avatar, username: user.username, file: avatar
-        response.status.should eq 413
-      end
+      describe "with url" do
+        let(:avatar_url) { "http://cdn.discourse.org/assets/logo.png" }
 
-      it 'rejects unauthorized images' do
-        SiteSetting.stubs(:authorized_image?).returns(false)
-        xhr :post, :upload_avatar, username: user.username, file: avatar
-        response.status.should eq 422
-      end
+        before :each do
+          UsersController.any_instance.stubs(:is_api?).returns(true)
+        end
 
-      it 'is successful' do
-        upload = Fabricate(:upload)
-        Upload.expects(:create_for).returns(upload)
-        # enqueues the avatar generator job
-        Jobs.expects(:enqueue).with(:generate_avatars, { user_id: user.id, upload_id: upload.id })
-        xhr :post, :upload_avatar, username: user.username, file: avatar
-        user.reload
-        # erase the previous template
-        user.uploaded_avatar_template.should == nil
-        # link to the right upload
-        user.uploaded_avatar.id.should == upload.id
-        # automatically set "use_uploaded_avatar"
-        user.use_uploaded_avatar.should == true
-        # returns the url, width and height of the uploaded image
-        json = JSON.parse(response.body)
-        json['url'].should == "/uploads/default/1/1234567890123456.jpg"
-        json['width'].should == 100
-        json['height'].should == 200
+        describe "correct urls" do
+          before :each do
+            UriAdapter.any_instance.stubs(:open).returns StringIO.new(fixture_file("images/logo.png"))
+          end
+
+          it 'rejects large images' do
+            SiteSetting.stubs(:max_image_size_kb).returns(1)
+            xhr :post, :upload_avatar, username: user.username, file: avatar_url
+            response.status.should eq 413
+          end
+
+          it 'rejects unauthorized images' do
+            SiteSetting.stubs(:authorized_image?).returns(false)
+            xhr :post, :upload_avatar, username: user.username, file: avatar_url
+            response.status.should eq 422
+          end
+
+          it 'is successful' do
+            upload = Fabricate(:upload)
+            Upload.expects(:create_for).returns(upload)
+            # enqueues the avatar generator job
+            Jobs.expects(:enqueue).with(:generate_avatars, { user_id: user.id, upload_id: upload.id })
+            xhr :post, :upload_avatar, username: user.username, file: avatar_url
+            user.reload
+            user.uploaded_avatar_template.should == nil
+            user.uploaded_avatar.id.should == upload.id
+            user.use_uploaded_avatar.should == true
+
+            # returns the url, width and height of the uploaded image
+            json = JSON.parse(response.body)
+            json['url'].should == "/uploads/default/1/1234567890123456.jpg"
+            json['width'].should == 100
+            json['height'].should == 200
+          end
+        end
+
+        it "should handle malformed urls" do
+          xhr :post, :upload_avatar, username: user.username, file: "foobar"
+          response.status.should eq 422
+        end
+
       end
 
     end
