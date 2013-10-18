@@ -7,7 +7,8 @@
 var parser = window.BetterMarkdown,
     MD = parser.Markdown,
     dialect = MD.dialects.Discourse = MD.subclassDialect( MD.dialects.Gruber ),
-    initialized = false;
+    initialized = false,
+    emitters = [];
 
 /**
   Initialize our dialects for processing.
@@ -22,6 +23,51 @@ function initializeDialects() {
 }
 
 /**
+  Process the text nodes in the JsonML tree, calling any emitters that have
+  been added.
+
+  @method processTextNodes
+  @param {Array} node the JsonML tree
+  @param {Object} event the parse node event data
+**/
+function processTextNodes(node, event) {
+  if (node.length < 2) { return; }
+
+  if (node[0] === '__RAW') {
+    return;
+  }
+
+  var skipSanitize = [];
+  for (var j=1; j<node.length; j++) {
+    var textContent = node[j];
+    if (typeof textContent === "string") {
+
+      if (dialect.options.sanitize && !skipSanitize[textContent]) {
+        textContent = Discourse.Markdown.sanitize(textContent);
+      }
+
+      var result = textContent;
+      emitters.forEach(function (e) {
+        result = e(result, event)
+      });
+
+      if (result) {
+        if (result instanceof Array) {
+          result.forEach(function (r) { skipSanitize[r] = true; });
+          node.splice.apply(node, [j, 1].concat(result));
+        } else {
+          node[j] = result;
+        }
+      } else {
+        node[j] = textContent;
+      }
+
+    }
+  }
+
+}
+
+/**
   Parse a JSON ML tree, using registered handlers to adjust it if necessary.
 
   @method parseTree
@@ -33,8 +79,9 @@ function initializeDialects() {
 function parseTree(tree, path, insideCounts) {
 
   if (tree instanceof Array) {
-    Discourse.Dialect.trigger('parseNode', {node: tree, path: path, dialect: dialect, insideCounts: insideCounts || {}});
-
+    var event = {node: tree, path: path, dialect: dialect, insideCounts: insideCounts || {}};
+    Discourse.Dialect.trigger('parseNode', event);
+    processTextNodes(tree, event);
 
     path = path || [];
     insideCounts = insideCounts || {};
@@ -100,7 +147,9 @@ Discourse.Dialect = {
     if (!initialized) { initializeDialects(); }
     dialect.options = opts;
     var tree = parser.toHTMLTree(text, 'Discourse');
-    return parser.renderJsonML(parseTree(tree));
+        html = parser.renderJsonML(parseTree(tree));
+
+    return html;
   },
 
   /**
@@ -363,36 +412,7 @@ Discourse.Dialect = {
     @param {Function} emitter The function to call with the text. It returns JsonML to modify the tree.
   **/
   postProcessText: function(emitter) {
-    Discourse.Dialect.on("parseNode", function(event) {
-      var node = event.node;
-
-      if (node.length < 2) { return; }
-
-      if (node[0] === '__RAW') {
-        return;
-      }
-
-      for (var j=1; j<node.length; j++) {
-        var textContent = node[j];
-        if (typeof textContent === "string") {
-
-          if (dialect.options.sanitize) {
-            textContent = Discourse.Markdown.sanitize(textContent);
-          }
-
-          var result = emitter(textContent, event);
-          if (result) {
-            if (result instanceof Array) {
-              node.splice.apply(node, [j, 1].concat(result));
-            } else {
-              node[j] = result;
-            }
-          } else {
-            node[j] = textContent;
-          }
-        }
-      }
-    });
+    emitters.push(emitter);
   },
 
   /**

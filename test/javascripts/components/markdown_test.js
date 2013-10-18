@@ -54,6 +54,14 @@ test("Line Breaks", function() {
   cooked("[] first choice\n[] second choice",
          "<p>[] first choice<br/>[] second choice</p>",
          "it handles new lines correctly with [] options");
+
+  cooked("<blockquote>evil</blockquote>\ntrout",
+         "<blockquote>evil</blockquote>\n\n<p>trout</p>",
+         "it doesn't insert <br> after blockquotes");
+
+  cooked("leading<blockquote>evil</blockquote>\ntrout",
+         "leading<blockquote>evil</blockquote>\n\n<p>trout</p>",
+         "it doesn't insert <br> after blockquotes with leading text");
 });
 
 test("Paragraphs for HTML", function() {
@@ -311,6 +319,7 @@ test("sanitize", function() {
          "<p><a href=\"http://disneyland.disney.go.com/\">disney</a> <a href=\"http://reddit.com\">reddit</a></p>",
          "we can embed proper links");
 
+  cooked("<blockquote>a\n</blockquote>\n", "<blockquote>a\n\n<br/>\n\n</blockquote>", "it does not double sanitize");
 });
 
 test("URLs in BBCode tags", function() {

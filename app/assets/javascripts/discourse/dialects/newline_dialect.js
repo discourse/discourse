@@ -10,9 +10,10 @@ Discourse.Dialect.postProcessText(function (text, event) {
   if (linebreaks || (insideCounts.pre > 0)) { return; }
 
   if (text === "\n") {
-    // If the tage is just a new line, replace it with a `<br>`
+    // If the tag is just a new line, replace it with a `<br>`
     return [['br']];
   } else {
+
 
     // If the text node contains new lines, perhaps with text between them, insert the
     // `<br>` tags.
@@ -25,6 +26,7 @@ Discourse.Dialect.postProcessText(function (text, event) {
           if (i !== split.length-1) { replacement.push(['br']); }
         }
       }
+
       return replacement;
     }
   }
