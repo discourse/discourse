@@ -800,6 +800,7 @@ pt_BR:
       auto_close_label: "Fechar automaticamente tópicos depois de:"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
+      this_year: "esse ano"
     flagging:
       title: 'Porque está sinalizando esta postagem?'
       action: 'Sinalizar Postagem'
