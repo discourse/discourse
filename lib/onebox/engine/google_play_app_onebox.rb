@@ -15,13 +15,13 @@ module Onebox
       private
 
       def data
-      binding.pry
         {
           url: @url,
-          # name: raw.css("h1").inner_text,
-          # image: raw.css("#main-image").first["src"],
-          # description: raw.css("#postBodyPS").inner_text,
-          # price: raw.css(".priceLarge").inner_text
+          title: raw.css(".document-title div").inner_text,
+          developer: raw.css(".document-subtitle.primary").inner_text,
+          image: raw.css(".cover-image").first["src"],
+          description: raw.css(".text-body div").inner_text,
+          price: raw.css(".price.buy meta[itemprop=price]").first["content"],
         }
       end
     end
