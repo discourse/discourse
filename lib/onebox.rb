@@ -7,6 +7,7 @@ require "hexpress"
 require "hexpress/web"
 require "ostruct"
 require "moneta"
+require "cgi"
 
 require_relative "onebox/version"
 require_relative "onebox/preview"
