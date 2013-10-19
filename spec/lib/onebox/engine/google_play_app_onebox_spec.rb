@@ -18,12 +18,20 @@ describe Onebox::Engine::GooglePlayAppOnebox do
       expect(html).to include("Hulu Plus")
     end
 
+    it "returns the product developer" do
+      expect(html).to include("Hulu")
+    end
+
     it "returns the product image" do
-      expect(html).to include("https://lh5.ggpht.com/v8ODfPPNzQYv5xnNkZJEUg71RSLpNQgNulm8ChFcX5c3QgZd2293-JH08z41G8hlCw=w300-rw")
+      expect(html).to include("JH08z41G8hlCw=w300-rw")
     end
 
     it "returns the product description" do
-      expect(html).to include("Instantly watch current TV shows and acclaimed movies. Anywhere.")
+      expect(html).to include("Instantly watch current TV shows")
+    end
+
+    it "returns the product price" do
+      expect(html).to include("Free")
     end
 
     it "returns the product URL" do
