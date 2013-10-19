@@ -62,6 +62,7 @@
 
   h3 {
     color: #666;
+    margin: 20px 0 10px 0;
   }
 
   .summary {
@@ -165,9 +166,11 @@
       }
 
       .primary {
-        margin-top: 30px;
+        margin-top: 20px;
         float: left;
         width: 75%;
+
+        h1, h2 {margin-top: 10px;}
 
         .bio {
           color: #ddd;

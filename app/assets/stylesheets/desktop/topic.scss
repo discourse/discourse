@@ -148,7 +148,11 @@ i {background: #e4f2f8;
 
 .topic-statuses .topic-status {
   padding: 0;
-  i {font-size:20px;}
+  i {
+    margin-left: 5px !important;
+    font-size:20px;
+
+  }
 }
 
 

@@ -208,7 +208,6 @@
 
 
 
-.topic-statuses .topic-status i {font-size: 15px !important;}
 
 
 // Category list
@@ -326,6 +325,12 @@
   }
   #list-area {
     margin-bottom: 300px;
+
+
+.topic-statuses .topic-status i {font-size: 15px;}
+
+
+
     .empty-topic-list {
       padding: 10px;
     }

@@ -17,7 +17,7 @@ html {background-color: #fff;}
 
 
 .topic-post {
-  padding: 6px 0 3px 0;
+  padding: 0 0 3px 0;
   &:first-of-type {
     border-top: none;
   }
@@ -175,7 +175,7 @@ nav.post-controls {
             }
           }
           &.last-read {
-            color: $red;
+            color: #e45735;
           }
           &.bookmarked {
             &:before {
@@ -190,7 +190,8 @@ nav.post-controls {
 
 .embedded-posts {
   background: #eee;
- 
+  
+  .quote .title {background: #ddd;}
   blockquote {background: #ddd;}
  
   .reply {padding-bottom: 10px;}
@@ -212,13 +213,10 @@ nav.post-controls {
 
 
 
-.post-actions {
-  margin-top: 10px;
-
-}
 
 
 .post-action {
+  margin-top: 3px;
   margin-bottom: 3px;
   .relative-date {
     margin-left: 5px;
@@ -241,6 +239,7 @@ a.star {
 .profiler-results {
   display: none;
 }
+
 
 .topic-summary {
 
@@ -347,7 +346,7 @@ a.star {
       border-left: 1px solid #e6e6e6;
       padding: 0 23px;
       color: #444;
-      background: #ddd;
+      background: #eee;
       &:hover {
         background: #ccc;
         color: #444;
@@ -355,6 +354,8 @@ a.star {
 
       }
       &.collapsed {
+        border-bottom: 0;
+        padding-bottom: 1px;
       }
       .icon {
         margin: 0;
@@ -378,10 +379,12 @@ a.star {
 
 #suggested-topics {
   clear: left;
+
   table {
     box-shadow: none; 
     border-radius: 0;
     border-color: #ddd;
+    margin-top: 10px;
   }
   padding: 20px 10px 15px 10px;
    .title {
@@ -412,13 +415,16 @@ span.post-count {
   background: #eee;
   padding: 20px 10px 15px 10px;
 
-
 }
 
-.topic-post article.boxed img {
+.topic-post article.boxed 
+
+{
+padding-bottom: 5px;
+img {
   max-width: 100%;
 }
-
+}
 
 
 .quote-button {
@@ -505,6 +511,11 @@ h3 {display: block;}
   word-wrap: break-word;
 }
 
+.contents .cooked {
+
+h1, h2, h3 {margin: 10px 0;}
+
+}
 
 
 .modal-body {
@@ -515,6 +526,7 @@ h3 {display: block;}
   }
 }
 
+.moderator {background-color: lighten(yellow, 45%);}
 
 #share-link {
   width: 265px;
@@ -603,11 +615,11 @@ h3 {
 
 blockquote {
   clear:both;
-  margin: 0 40px 0 0;
+  margin: 0;
   padding: 12px;
 }
 
-.quote .title {margin-right: 40px;}
+.quote .title {margin-right: 0;}
 
 .quote-controls {
   float: right;
@@ -726,6 +738,8 @@ blockquote {
 .row:before, .row:after {display: table; content: "";}
 .row:after {clear: both;}
 .embedded-posts { 
+  h1, h2, h3 {margin: 10px 0;}
+
   &.bottom .arrow {float: right; margin: 0 15px 0 0;} 
   &.top {margin-left: 112px;}
   .topic-body, .topic-meta-data {border: none;} 
@@ -750,7 +764,10 @@ button.show-replies {
   margin-bottom: 0;
   border-bottom: none;
 
-  &:hover {background: #eee; border-radius: 20px;}
+  &:hover {background: #eee; border-radius: 20px;
+    .badge-posts {color: #888;}
+
+  }
 
   }
 
