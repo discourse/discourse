@@ -33,7 +33,6 @@
       color: $nav-pills-color;
       font-size: 16px;
       line-height: 20px;
-      @include border-radius-all(20px);
       &:hover {
         border-color: $nav-pills-border-color-hover;
         color: $nav-pills-color-hover;

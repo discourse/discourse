@@ -81,7 +81,6 @@ nav.post-controls {
     padding: 0px;
     margin-top: 20px;
     button {color: #aaa;
-    border-radius: 4px;
     margin-right: 2px;
 
   }
@@ -132,7 +131,6 @@ nav.post-controls {
     background: transparent;
     border: none;
     margin-left: 1px;
-    border-radius: 20px;
     transition: all linear .1s;
     outline: none; //removes the pesky square button highlight from some browsers 
          &:hover {
@@ -434,7 +432,6 @@ img {
   color: #fff;
   padding: 10px;
   width: 90px;
-  border-radius: 20px;
 
   &:hover {
     background-color: #999;
@@ -566,7 +563,6 @@ h1, h2, h3 {margin: 10px 0;}
   right: 20px;
   padding: 5px 8px;
   margin-top: 5px;
-  border-radius: 4px;
 
 
 
@@ -750,7 +746,6 @@ blockquote {
 
 button.show-replies {
 
-  border-radius: 20px 20px 0 0;
   background: #eee;
   border-bottom: 10px solid #eee;
 
@@ -760,11 +755,10 @@ button.show-replies {
   &.bottom-round button.show-replies {
 
   background: #fff;
-  border-radius: 20px;
   margin-bottom: 0;
   border-bottom: none;
 
-  &:hover {background: #eee; border-radius: 20px;
+  &:hover {background: #eee; 
     .badge-posts {color: #888;}
 
   }
