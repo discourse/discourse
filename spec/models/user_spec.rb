@@ -839,6 +839,14 @@ describe User do
         expect(user).to be_added_a_day_ago
       end
     end
+  end
 
+  describe "#update_avatar" do
+    let(:upload) { Fabricate(:upload) }
+    let(:user)   { Fabricate(:user) }
+
+    it "should update use's avatar" do
+      expect(user.update_avatar(upload)).to be_true
+    end
   end
 end
