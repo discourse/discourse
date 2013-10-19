@@ -1,6 +1,7 @@
 /**
   Debounce a Javascript function. This means if it's called many times in a time limit it
-  should only be executed once.
+  should only be executed once (at the end of the limit counted from the last call made).
+  Original function will be called with the context and arguments from the last call made.
 
   @method debounce
   @module Discourse
@@ -8,32 +9,16 @@
   @param {Number} wait how long to wait
 **/
 Discourse.debounce = function(func, wait) {
-  var timeout = null;
+  var self, args;
+  var later = function() {
+    func.apply(self, args);
+  };
 
   return function() {
-    var context = this;
-    var args = arguments;
+    self = this;
+    args = arguments;
 
-    var later = function() {
-      timeout = null;
-      return func.apply(context, args);
-    };
-
-    if (timeout) return;
-
-    var currentWait;
-    if (typeof wait === "function") {
-      currentWait = wait();
-    } else {
-      currentWait = wait;
-    }
-
-    if (timeout) {
-      clearTimeout(timeout);
-    }
-
-    timeout = setTimeout(later, currentWait);
-    return timeout;
+    Ember.run.debounce(null, later, wait);
   };
 };
 
