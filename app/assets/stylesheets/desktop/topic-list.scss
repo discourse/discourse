@@ -8,6 +8,8 @@
 // List controls
 // --------------------------------------------------
 
+
+
 #list-controls {
   .nav {
     float: left;
@@ -56,7 +58,7 @@
     }
     &.category-description {
       td {
-        color: #000;
+        color: $nav-pills-border-color-active;
       }
     }
     &.highlighted {
@@ -80,7 +82,7 @@
     color: $topic-list-th-color;
     font-weight: bold;
     font-size: 13px;
-    @include box-shadow(inset 0 1px 0 $white);
+    background: #f6f6f6;
     &:first-of-type {
       @include border-radius-all(4px 0 0 0);
     }
@@ -93,12 +95,16 @@
     color: $topic-list-td-color;
     font-size: 14px;
   }
+
+
+
   .star {
     width: 20px;
     padding-right: 0;
     .icon-star {
       position: relative;
-      top: 1px;
+      top: -1px;
+      font-size: 15px !important;
     }
     + .main-link {
       padding-left: 0;
@@ -192,37 +198,17 @@
 }
 
 
-#topic-list.categories {
-  th.latest, td.latest {
-    padding-left: 12px;
-  }
-  th.num {
-    width: 45px;
-  }
-  .last-user-info {
-    font-size: 12px;
-    margin-top: 3px;
-  }
-  tbody td {
-    padding-bottom: 20px;
-  }
-  .category{
-    position: relative;
-    width: 55%;
-    .featured-users {
-      position: absolute;
-      right: 18px;
-      top: 3px;
-    }
-    .category-description {
-      margin-top: 10px;
-    }
-    .badge-category {
-      padding: 6px 10px;
-      font-size: 14px;
-    }
-  }
+#topic-list tbody tr.has-excerpt .star
+ {
+
+
+  vertical-align: top;
+  margin-top: 3px;
 }
+
+
+
+
 
 // Category list
 // --------------------------------------------------
@@ -339,6 +325,12 @@
   }
   #list-area {
     margin-bottom: 300px;
+
+
+.topic-statuses .topic-status i {font-size: 15px;}
+
+
+
     .empty-topic-list {
       padding: 10px;
     }

@@ -233,6 +233,7 @@
 
   // When the post is new (new topic) the sizings are different
   &.edit-title {
+
     &.open {
       height: 400px;
     }
@@ -240,6 +241,8 @@
       input#reply-title {
         padding: 7px 10px;
         margin: 6px 10px 3px 0;
+        width: 400px;
+    
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
@@ -336,10 +339,6 @@
     width: 240px;
     left: 432px;
     top: -19px;
-  }
-  button.btn.no-text {
-    margin: 7px 0 0 5px;
-    position: absolute;
   }
 }
 
@@ -510,7 +509,6 @@ div.ac-wrap {
 }
 
 .admin-options-form {
-  margin-top: 8px;
   display: none;
 }
 
@@ -534,3 +532,9 @@ div.ac-wrap {
     }
   }
 }
+
+#reply-control button.btn.no-text {
+  margin: 7px 0 0 5px; 
+  position: absolute;  
+}
+
