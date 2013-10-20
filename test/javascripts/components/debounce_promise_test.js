@@ -49,14 +49,17 @@ test("executes only once, no matter how many times debounced function is called 
   originalAndCallbackFiredOnce("(second call was supressed)");
 });
 
-test("does not prolong the timeout when the debounced function is called for the second time during the timeout", function() {
+test("prolongs the timeout when the debounced function is called for the second time during the timeout", function() {
   debounced().then(callback);
 
   clock.tick(50);
   debounced().then(callback);
 
   clock.tick(50);
-  originalAndCallbackFiredOnce("exactly at the end of the original timeout");
+  nothingFired("at the end of the original timeout");
+
+  clock.tick(50);
+  originalAndCallbackFiredOnce("exactly at the end of the prolonged timeout");
 });
 
 test("preserves last call's context and params when executing delayed function", function() {
