@@ -118,7 +118,9 @@ zh_CN:
     topic_prefix: "分类的定义信息，用于分类： %{category}"
     replace_paragraph: "[用一段简短的分类描述替换此第一段内容，请不要超过200个字符。]"
     post_template: "%{replace_paragraph}\n\n使用下面的空间输入分类的详细描述信息，可包括在此分类下讨论的规则、内容导向等等。"
-
+    this_year: "今年"
+    
+    
   trust_levels:
     newuser:
       title: "访客"
