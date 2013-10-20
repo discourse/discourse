@@ -22,7 +22,6 @@ describe Concern::Positionable do
       # import is making my life hard, we need to nuke this out of orbit
       des = ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
       des[ActiveRecord::Base].delete(TestItem)
-      Object.send(:remove_const, :TestItem)
     end
 
     it "can position stuff correctly" do
