@@ -33,8 +33,6 @@
       color: $nav-pills-color;
       font-size: 16px;
       line-height: 20px;
-      text-shadow: 0 1px 0 rgba($white, 0.6);
-      @include border-radius-all(4px);
       &:hover {
         border-color: $nav-pills-border-color-hover;
         color: $nav-pills-color-hover;
@@ -42,11 +40,9 @@
       }
     }
     &.active > a, > a.active {
-      border-color: $nav-pills-border-color-active;
-      color: $nav-pills-color-active;
-      text-shadow: 0 1px 0 rgba($black, 0.24);
+      border-color: darken($nav-pills-background-color-active, 10%);
+      color: #fff;
       background-color: $nav-pills-background-color-active;
-      @include box-shadow((0 1px 3px rgba($black, 0.16), inset 0 1px 0 rgba($white, 0.22)));
     }
   }
 }
