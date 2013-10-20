@@ -48,6 +48,10 @@ module Onebox
       raise NoMethodError, "Engines need this method defined"
     end
 
+    def link
+      @url
+    end
+
     module ClassMethods
       def ===(object)
         if object.kind_of?(String)
