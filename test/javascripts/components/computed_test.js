@@ -10,18 +10,10 @@ module("Discourse.Computed", {
   }
 });
 
-var testClass = Em.Object.extend({
-  same: Discourse.computed.propertyEqual('cookies', 'biscuits'),
-  diff: Discourse.computed.propertyNotEqual('cookies', 'biscuits'),
-  exclaimyUsername: Discourse.computed.fmt('username', "!!! %@ !!!"),
-  multiple: Discourse.computed.fmt('username', 'mood', "%@ is %@"),
-  translatedExclaimyUsername: Discourse.computed.i18n('username', "!!! %@ !!!"),
-  translatedMultiple: Discourse.computed.i18n('username', 'mood', "%@ is %@"),
-  userUrl: Discourse.computed.url('username', "/users/%@")
-});
-
 test("propertyEqual", function() {
-  var t = testClass.create({
+  var t = Em.Object.extend({
+    same: Discourse.computed.propertyEqual('cookies', 'biscuits')
+  }).create({
     cookies: 10,
     biscuits: 10
   });
@@ -32,7 +24,9 @@ test("propertyEqual", function() {
 });
 
 test("propertyNotEqual", function() {
-  var t = testClass.create({
+  var t = Em.Object.extend({
+    diff: Discourse.computed.propertyNotEqual('cookies', 'biscuits')
+  }).create({
     cookies: 10,
     biscuits: 10
   });
@@ -44,7 +38,10 @@ test("propertyNotEqual", function() {
 
 
 test("fmt", function() {
-  var t = testClass.create({
+  var t = Em.Object.extend({
+    exclaimyUsername: Discourse.computed.fmt('username', "!!! %@ !!!"),
+    multiple: Discourse.computed.fmt('username', 'mood', "%@ is %@")
+  }).create({
     username: 'eviltrout',
     mood: "happy"
   });
@@ -60,28 +57,35 @@ test("fmt", function() {
 
 
 test("i18n", function() {
-  var t = testClass.create({
+  var t = Em.Object.extend({
+    exclaimyUsername: Discourse.computed.i18n('username', "!!! %@ !!!"),
+    multiple: Discourse.computed.i18n('username', 'mood', "%@ is %@")
+  }).create({
     username: 'eviltrout',
     mood: "happy"
   });
 
-  equal(t.get('translatedExclaimyUsername'), '%@ translated: !!! eviltrout !!!', "it inserts the string and then translates");
-  equal(t.get('translatedMultiple'), "%@ translated: eviltrout is happy", "it inserts multiple strings and then translates");
+  equal(t.get('exclaimyUsername'), '%@ translated: !!! eviltrout !!!', "it inserts the string and then translates");
+  equal(t.get('multiple'), "%@ translated: eviltrout is happy", "it inserts multiple strings and then translates");
 
   t.set('username', 'codinghorror');
-  equal(t.get('translatedMultiple'), "%@ translated: codinghorror is happy", "it supports changing properties");
+  equal(t.get('multiple'), "%@ translated: codinghorror is happy", "it supports changing properties");
   t.set('mood', 'ecstatic');
-  equal(t.get('translatedMultiple'), "%@ translated: codinghorror is ecstatic", "it supports changing another property");
+  equal(t.get('multiple'), "%@ translated: codinghorror is ecstatic", "it supports changing another property");
 });
 
 
-test("url without a prefix", function() {
-  var t = testClass.create({ username: 'eviltrout' });
-  equal(t.get('userUrl'), "/users/eviltrout");
-});
+test("url", function() {
+  var t, testClass;
+  
+  testClass = Em.Object.extend({
+    userUrl: Discourse.computed.url('username', "/users/%@")
+  });
 
-test("url with a prefix", function() {
+  t = testClass.create({ username: 'eviltrout' });
+  equal(t.get('userUrl'), "/users/eviltrout", "it supports urls without a prefix");
+
   Discourse.BaseUri = "/prefixed/";
-  var t = testClass.create({ username: 'eviltrout' });
-  equal(t.get('userUrl'), "/prefixed/users/eviltrout");
+  t = testClass.create({ username: 'eviltrout' });
+  equal(t.get('userUrl'), "/prefixed/users/eviltrout", "it supports urls with a prefix");
 });
