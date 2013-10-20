@@ -114,8 +114,9 @@ class Category < ActiveRecord::Base
                .visible
 
     topics_with_post_count = Topic
-                              .select("topics.category_id, topics.id topic_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
-                              .group("topics.category_id, topics.id")
+                              .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
+                              .where("topics.id NOT IN (select cc.topic_id from categories cc)")
+                              .group("topics.category_id")
                               .visible.to_sql
 
     topics_year = topics.created_since(1.year.ago).to_sql
@@ -129,8 +130,7 @@ class Category < ActiveRecord::Base
           post_count = x.post_count
     FROM (#{topics_with_post_count}) x
     WHERE x.category_id = c.id AND
-          (c.topic_count <> x.topic_count OR c.post_count <> x.post_count) AND
-          x.topic_id <> c.topic_id
+          (c.topic_count <> x.topic_count OR c.post_count <> x.post_count)
 
 SQL
 

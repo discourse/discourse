@@ -197,15 +197,42 @@
   }
 }
 
-
-#topic-list tbody tr.has-excerpt .star
- {
-
-
+#topic-list tbody tr.has-excerpt .star {
   vertical-align: top;
   margin-top: 3px;
 }
 
+#topic-list.categories {
+  th.latest, td.latest {
+    padding-left: 12px;
+  }
+  th.num {
+    width: 45px;
+  }
+  .last-user-info {
+    font-size: 12px;
+    margin-top: 3px;
+  }
+  tbody td {
+    padding-bottom: 20px;
+  }
+  .category{
+    position: relative;
+    width: 55%;
+    .featured-users {
+      position: absolute;
+      right: 18px;
+      top: 3px;
+    }
+    .category-description {
+      margin-top: 10px;
+    }
+    .badge-category {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+  }
+}
 
 
 
