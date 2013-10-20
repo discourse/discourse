@@ -9,6 +9,7 @@ module ApplicationHelper
   include CurrentUser
   include CanonicalURL::Helpers
   include ConfigurableUrls
+  include CommonHelper
 
   def discourse_csrf_tags
     # anon can not have a CSRF token cause these are all pages
