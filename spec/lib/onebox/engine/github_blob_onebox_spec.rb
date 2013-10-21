@@ -23,9 +23,5 @@ describe Onebox::Engine::GithubBlobOnebox do
     it "has blob contents" do
       expect(html).to include("module Oneboxer")
     end
-
-    it "has URL" do
-      expect(html).to include(link)
-    end
   end
 end

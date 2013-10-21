@@ -15,26 +15,16 @@ describe Onebox::Engine::KinomapOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    let(:html) { described_class.new(link).to_html }
-
-    it "returns video title" do
-      expect(html).to include("Enduro Jeunes Touquet - Nicolas Letévé")
-    end
-
-    it "returns video photo" do
+    it "has still" do
       expect(html).to include("52wjcu_320x240.jpg")
     end
 
-    it "returns video description" do
+    it "has description" do
       expect(html).to include("A partir du parc moto,")
     end
 
-    it "returns video URL" do
+    it "has embedded video link" do
       expect(html).to include("http://v2.kinomap.com/embed/52wjcu")
-    end
-
-    it "returns URL" do
-      expect(html).to include(link)
     end
   end
 end

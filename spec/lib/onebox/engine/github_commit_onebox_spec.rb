@@ -3,8 +3,8 @@ require "spec_helper"
 describe Onebox::Engine::GithubCommitOnebox do
   before(:all) do
     @link = "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
-    api = "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
-    fake(api, response(described_class.template_name))
+    @uri = "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
+    fake(@uri, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 
@@ -16,8 +16,6 @@ describe Onebox::Engine::GithubCommitOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    let(:html) { described_class.new(link).to_html }
-
     it "has owner" do
       expect(html).to include("discourse")
     end
@@ -56,10 +54,6 @@ describe Onebox::Engine::GithubCommitOnebox do
 
     it "has number of deletions" do
       expect(html).to include("2 deletions")
-    end
-
-    it "has URL" do
-      expect(html).to include(link)
     end
   end
 end

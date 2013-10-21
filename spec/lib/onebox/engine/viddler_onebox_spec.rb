@@ -15,28 +15,18 @@ describe Onebox::Engine::ViddlerOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    let(:html) { described_class.new(link).to_html }
-
-    it "returns video title" do
-      expect(html).to include("Viddler Demo")
-    end
-
-    it "returns video image" do
+    it "has still" do
       expect(html).to include("thumbnail_2_7164f749_v2.jpg")
     end
 
-    it "returns video description" do
+    it "has description" do
       expect(html).to include("Get familiar with your Viddler account.")
     end
 
-    it "returns video URL" do
+    it "has embedded video link" do
       expect(html).to include("http://www.viddler.com/player/7164f749")
     end
 
     it "returns video embed code"
-
-    it "returns URL" do
-      expect(html).to include(link)
-    end
   end
 end

@@ -15,17 +15,15 @@ describe Onebox::Engine::TwitterOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    let(:html) { described_class.new(link).to_html }
-
-    it "has tweet text" do
+    it "has tweet" do
       expect(html).to include("I&#39;m a sucker for pledges.")
     end
 
-    it "has tweet time and date" do
+    it "has timestamp" do
       expect(html).to include("6:59 PM - 1 Aug 13")
     end
 
-    it "has user name" do
+    it "has username" do
       expect(html).to include("@toastergrrl")
     end
 
@@ -41,10 +39,6 @@ describe Onebox::Engine::TwitterOnebox do
     it "has retweet count" do
       pending
       expect(html).to include("")
-    end
-
-    it "has URL" do
-      expect(html).to include(link)
     end
   end
 end

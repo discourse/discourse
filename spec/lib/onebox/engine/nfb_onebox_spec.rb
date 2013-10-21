@@ -15,27 +15,13 @@ describe Onebox::Engine::NFBOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    let(:html) { described_class.new(link).to_html }
-
-    it "returns video title" do
-      expect(html).to include("Overdose")
-    end
-
-    it "returns video description" do
+    it "has description" do
       expect(html).to include("With school, tennis lessons, swimming lessons, art classes,")
     end
 
-    it "returns video URL" do
-      expect(html).to include("http://www.nfb.ca/film/overdose_en/")
-    end
-
-    it "returns the video embed code" do
+    it "has video embedded link" do
       pending
       expect(html).to include("")
-    end
-
-    it "returns URL" do
-      expect(html).to include(link)
     end
   end
 end

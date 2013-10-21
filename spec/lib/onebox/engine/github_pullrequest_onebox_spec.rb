@@ -3,7 +3,8 @@ require "spec_helper"
 describe Onebox::Engine::GithubPullRequestOnebox do
   before(:all) do
     @link = "https://github.com/discourse/discourse/pull/1253/"
-    fake(@link, response(described_class.template_name))
+    @uri = "https://api.github.com/repos/discourse/discourse/pulls/1253"
+    fake(@uri, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 
@@ -15,14 +16,8 @@ describe Onebox::Engine::GithubPullRequestOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    let(:html) { described_class.new(link).to_html }
-
     it "has pull request author" do
       expect(html).to include("jamesaanderson")
-    end
-
-    it "has pull request title" do
-      expect(html).to include("Add audio onebox")
     end
 
     it "has repository name" do
@@ -55,10 +50,6 @@ describe Onebox::Engine::GithubPullRequestOnebox do
 
     it "has number of deletions" do
       expect(html).to include("1")
-    end
-
-    it "has URL" do
-      expect(html).to include(link)
     end
   end
 end
