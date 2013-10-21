@@ -11,11 +11,23 @@ module Onebox
     end
 
     def to_html(record)
-      if @layout
-        render(url: record[:url], view: @view.to_html(record))
-      else
-        render(record)
-      end
+      render(if @layout then details(record) else render(record) end)
+    end
+
+    private
+
+    def subview(record)
+      @view.to_html(record)
+    end
+
+    def details(record)
+      {
+        link: record[:link],
+        title: record[:title],
+        badge: record[:badge],
+        domain: record[:domain],
+        view: subview(record)
+      }
     end
   end
 end
