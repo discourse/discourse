@@ -152,16 +152,16 @@ ja:
         placeholder: "ココにトピックのタイトルを入力"
 
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the topic</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>You</a> posted <a href='{{topicUrl}}'>the topic</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
-      you_replied_to_post: "<a href='{{userUrl}}'>You</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{topicUrl}}'>the topic</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> replied to <a href='{{topicUrl}}'>the topic</a>"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{topicUrl}}'>トピック</a> を投稿"
+      you_posted_topic: "<a href='{{userUrl}}'>あなた</a> が <a href='{{topicUrl}}'>トピック</a> を投稿"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{postUrl}}'>{{post_number}}</a> に返信"
+      you_replied_to_post: "<a href='{{userUrl}}'>あなた</a> が <a href='{{postUrl}}'>{{post_number}}</a> に返信"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{topicUrl}}'>トピック</a> に返信"
+      you_replied_to_topic: "<a href='{{userUrl}}'>あなた</a> が <a href='{{topicUrl}}'>トピック</a> に返信"
 
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>you</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>You</a> mentioned <a href='{{user2Url}}'>{{user}}</a>"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> が <a href='{{user2Url}}'>{{another_user}}</a> をメンション"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> が <a href='{{user2Url}}'>あなた</a> をメンション"
+      you_mentioned_user: "<a href='{{user1Url}}'>あなた</a> が <a href='{{user2Url}}'>{{user}}</a> をメンション"
 
       posted_by_user: "Posted by <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Posted by <a href='{{userUrl}}'>you</a>"
@@ -183,56 +183,56 @@ ja:
       "13": "インボックス"
 
     user:
-      said: "{{username}} said:"
+      said: "{{username}} のコメント:"
       profile: "プロフィール"
       mute: "Mute"
       edit: "プロフィールを編集"
       download_archive: "ポストのアーカイブをダウンロード"
-      private_message: "Private Message"
-      private_messages: "Messages"
+      private_message: "プライベー度メッセージ"
+      private_messages: "メッセージ"
       activity_stream: "アクティビティ"
       preferences: "プロフィール"
-      bio: "About me"
-      invited_by: "Invited By"
-      trust_level: "Trust Level"
-      notifications: "Notifications"
-      dynamic_favicon: "Show incoming message notifications on favicon"
-      external_links_in_new_tab: "Open all external links in a new tab"
-      enable_quoting: "Enable quote reply for highlighted text"
+      bio: "自己紹介"
+      invited_by: "招待者"
+      trust_level: "トラストレベル"
+      notifications: "通知"
+      dynamic_favicon: "favicon に受信したメッセージ通知を表示する"
+      external_links_in_new_tab: "外部リンクを全て新しいタブで開く"
+      enable_quoting: "ハイライトしたテキストを引用して返信する"
       change: "change"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} は管理者です"
       deleted: "(deleted)"
 
       messages:
-        all: "All"
-        mine: "Mine"
-        unread: "Unread"
+        all: "すべて"
+        mine: "私の"
+        unread: "未読"
 
       change_password:
         success: "(email sent)"
         in_progress: "(sending email)"
         error: "(error)"
-        action: "Send Password Reset Email"
+        action: "パスワードリセット用メールを送信する"
 
       change_about:
-        title: "Change About Me"
+        title: "自己紹介の変更"
 
       change_username:
-        title: "Change Username"
-        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
-        taken: "Sorry, that username is taken."
-        error: "There was an error changing your username."
-        invalid: "That username is invalid. It must only include numbers and letters"
+        title: "ユーザ名の変更"
+        confirm: "ユーザ名を変更すると、あなたのポストの引用と @name メンションのリンクが解除されます。本当にユーザ名を変更しますか？"
+        taken: "このユーザ名は既に使われています。"
+        error: "ユーザ名変更中にエラーが発生しました。"
+        invalid: "このユーザ名は無効です。英数字のみ利用可能です。"
 
       change_email:
-        title: "Change Email"
-        taken: "Sorry, that email is not available."
-        error: "There was an error changing your email. Perhaps that address is already in use?"
-        success: "We've sent an email to that address. Please follow the confirmation instructions."
+        title: "メールドレスの変更"
+        taken: "このメールアドレスは既に使われています。"
+        error: "メールアドレス変更中にエラーが発生しました。既にこのアドレスが使われているのかもしれません。"
+        success: "このアドレスにメールを送信しました。メールの指示に従って確認処理を行ってください。"
 
       change_avatar:
-        title: "Change your avatar"
+        title: "アバターの変更"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         gravatar_title: "Change your avatar on Gravatar's website"
         uploaded_avatar: "Custom picture"
@@ -241,78 +241,78 @@ ja:
         image_is_not_a_square: "Warning: we've cropped your image as it's not a square."
 
       email:
-        title: "Email"
-        instructions: "Your email will never be shown to the public."
-        ok: "Looks good. We will email you to confirm."
-        invalid: "Please enter a valid email address."
-        authenticated: "Your email has been authenticated by {{provider}}."
-        frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
+        title: "メールアドレス"
+        instructions: "メールアドレスが外部に公開されることは一切ありません。"
+        ok: "メールアドレス OK。確認用のメールを送ります。"
+        invalid: "ただッシメールアドレスを入力してください。"
+        authenticated: "あたなのメールは {{provider}} により認証されました。"
+        frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
 
       name:
-        title: "Name"
-        instructions: "The longer version of your name; does not need to be unique. Used for alternate @name matching and shown only on your user page."
-        too_short: "Your name is too short."
-        ok: "Your name looks good."
+        title: "名前"
+        instructions: "フルネーム。ユニークである必要はありません。@name によるマッチングの代わりに利用可能であり、あなたのページのみに表示されます。"
+        too_short: "名前が短すぎいます。"
+        ok: "名前 OK。"
       username:
-        title: "Username"
-        instructions: "Must be unique, no spaces. People can mention you as @username."
-        short_instructions: "People can mention you as @{{username}}."
-        available: "Your username is available."
-        global_match: "Email matches the registered username."
-        global_mismatch: "Already registered. Try {{suggestion}}?"
-        not_available: "Not available. Try {{suggestion}}?"
-        too_short: "Your username is too short."
-        too_long: "Your username is too long."
-        checking: "Checking username availability..."
-        enter_email: 'Username found. Enter matching email.'
+        title: "ユーザ名"
+        instructions: "空白を含まないユニークな名前を入力してください。他のユーザはあなたを @name でメンションできます。"
+        short_instructions: "他のユーザはあなたを @name でメンションできます。"
+        available: "ユーザ名は利用可能です。"
+        global_match: "メールアドレスが登録済のユーザ名と一致しました。"
+        global_mismatch: "既に利用されています。{{suggestion}} などはいかがでしょう？"
+        not_available: "利用できません。{{suggestion}} などはいかがでしょう？"
+        too_short: "ユーザ名が短すぎます。"
+        too_long: "ユーザ名が長すぎます。"
+        checking: "ユーザ名が利用可能か確認しています..."
+        enter_email: 'ユーザ名が見つかりました。メールアドレスを入力してください。'
 
       password_confirmation:
-        title: "Password Again"
+        title: "もう一度パスワードを入力してください。"
 
-      last_posted: "Last Post"
-      last_emailed: "Last Emailed"
-      last_seen: "Last Seen"
-      created: "Created At"
+      last_posted: "最終投稿"
+      last_emailed: "最終メール"
+      last_seen: "最終アクティビティ"
+      created: "作成日"
       log_out: "ログアウト"
-      website: "Web Site"
-      email_settings: "Email"
+      website: "ウェブサイト"
+      email_settings: "メール"
       email_digests:
-        title: "When I don't visit the site, send me an email digest of what's new"
-        daily: "daily"
-        weekly: "weekly"
-        bi_weekly: "every two weeks"
+        title: "新規トピックのダイジェストをメールで受信する"
+        daily: "毎日"
+        weekly: "毎週"
+        bi_weekly: "隔週"
 
-      email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
-      email_private_messages: "Receive an email when someone sends you a private message"
+      email_direct: "ポストが引用されたり、返信を受けたり、 @username でメンションを受けた際にメール通知を受ける"
+      email_private_messages: "プライベートメッセージを受けた際にメール通知を受ける"
 
-      other_settings: "Other"
+      other_settings: "その他"
 
       new_topic_duration:
-        label: "Consider topics new when"
-        not_viewed: "I haven't viewed them yet"
-        last_here: "they were posted since I was here last"
+        label: "以下の条件でトピックを新規と見なす"
+        not_viewed: "未読のもの"
+        last_here: "前回ログアウト後に投稿されたもの"
         after_n_days:
-          one: "they were posted in the last day"
-          other: "they were posted in the last {{count}} days"
+          one: "1日前に投稿されたもの"
+          other: "過去{{count}}日に投稿されたもの"
         after_n_weeks:
-          one: "they were posted in the last week"
-          other: "they were posted in the last {{count}} week"
+          one: "先週投稿されたもの"
+          other: "過去{{count}}週に投稿されたもの"
 
-      auto_track_topics: "Automatically track topics I enter"
+      auto_track_topics: "以下のタイミングで、自分が投稿したトピックを自動的にトラックする"
       auto_track_options:
-        never: "never"
-        always: "always"
+        never: "トラックしない"
+        always: "常にトラックする"
         after_n_seconds:
-          one: "after 1 second"
-          other: "after {{count}} seconds"
+          one: "1秒後"
+          other: "{{count}}秒後"
         after_n_minutes:
-          one: "after 1 minute"
-          other: "after {{count}} minutes"
+          one: "1分後"
+          other: "{{count}}分後"
 
       invited:
-        title: "Invites"
-        user: "Invited User"
-        none: "{{username}} hasn't invited any users to the site."
+        title: "招待"
+        user: "招待したユーザ"
+        none: "{{username}}はこのサイトに誰も招待していません。"
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed At"
         pending: "Pending Invites"
@@ -325,19 +325,19 @@ ja:
         account_age_days: "Account age in days"
 
       password:
-        title: "Password"
-        too_short: "Your password is too short."
-        ok: "Your password looks good."
+        title: "パスワード"
+        too_short: "パスワードが短すぎます。"
+        ok: "パスワード OK。"
 
       ip_address:
-        title: "Last IP Address"
+        title: "最終 IP アドレス"
       avatar:
-        title: "Avatar"
+        title: "アバター"
       title:
-        title: "Title"
+        title: "タイトル"
 
       filters:
-        all: "All"
+        all: "すべて"
 
       stream:
         posted_by: "Posted by"
@@ -372,11 +372,11 @@ ja:
       title: "Private Message"
       invite: "Invite Others..."
 
-    email: 'Email'
-    username: 'Username'
-    last_seen: 'Last Seen'
-    created: 'Created'
-    trust_level: 'Trust Level'
+    email: 'メール'
+    username: 'ユーザ名'
+    last_seen: '最終アクティビティ'
+    created: '作成日'
+    trust_level: 'トラストレベル'
 
     create_account:
       title: "Create Account"
@@ -431,29 +431,29 @@ ja:
 
     composer:
       posting_not_on_topic: "Which topic do you want to reply to?"
-      saving_draft_tip: "saving"
-      saved_draft_tip: "saved"
-      saved_local_draft_tip: "saved locally"
+      saving_draft_tip: "保存中"
+      saved_draft_tip: "保存しました"
+      saved_local_draft_tip: "ローカルに保存しました"
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
 
       min_length:
-        need_more_for_title: "{{n}} to go for the title"
-        need_more_for_reply: "{{n}} to go for the post"
+        need_more_for_title: "タイトルにあと{{n}}文字必要"
+        need_more_for_reply: "ポストにあと{{n}}文字必要"
 
       error:
-        title_missing: "Title is required."
-        title_too_short: "Title must be at least {{min}} characters long."
-        title_too_long: "Title must be less than {{max}} characters long."
-        post_missing: "Post can't be empty."
-        post_length: "Post must be at least {{min}} characters long."
-        category_missing: "You must choose a category."
+        title_missing: "タイトルを入力してください。"
+        title_too_short: "タイトルは{{min}}文字以上必要です。"
+        title_too_long: "タイトルは最長で{{max}}未満です。"
+        post_missing: "ポスト内容が空です。"
+        post_length: "ポストは{{min}}文字以上必要です。"
+        category_missing: "カテゴリを選択してください。"
 
-      save_edit: "Save Edit"
-      reply_original: "Reply on Original Topic"
-      reply_here: "Reply Here"
-      reply: "Reply"
-      cancel: "Cancel"
+      save_edit: "編集内容を保存"
+      reply_original: "元のトピックに返信"
+      reply_here: "ここに返信"
+      reply: "返信"
+      cancel: "キャンセル"
       create_topic: "トピックを作成"
       create_pm: "Create Private Message"
 
@@ -499,9 +499,9 @@ ja:
       auto_close_units: "日後に自動的にクローズする"
 
     notifications:
-      title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
-      none: "You have no notifications right now."
-      more: "view older notifications"
+      title: "@name メンションやあなたのポストやトピックへの返信、プライベートメッセージなどの通知"
+      none: "現在通知はありません。"
+      more: "古い通知を確認する"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
       quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
       replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
@@ -548,16 +548,16 @@ ja:
     current_user: 'go to your user page'
 
     favorite:
-      title: 'Favorite'
+      title: 'お気に入り'
       help:
-        star: 'add this topic to your favorites list'
-        unstar: 'remove this topic from your favorites list'
+        star: 'このトピックをお気に入りに登録'
+        unstar: 'このトピックをお気に入りより削除'
 
     topics:
       none:
         favorited: "トピックをお気に入り登録していません。お気に入り登録するには、タイトル横のスターをクリック/タップしてください。"
         unread: "未読トピックはありません。"
-        new: "新規トピックはありません。"
+        new: "新着トピックはありません。"
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
         latest: "There are no latest topics. That's sad."
@@ -581,7 +581,7 @@ ja:
     topic:
       create_in: 'Create {{categoryName}} Topic'
       create: 'トピックを作成する'
-      create_long: '新規トピックの作成'
+      create_long: '新しいトピックの作成'
       private_message: 'Start a private message'
       list: 'Topics'
       new: 'new topic'
@@ -641,8 +641,8 @@ ja:
 
       auto_close_notice: "This topic will automatically close %{timeLeft}."
       auto_close_title: 'Auto-Close Settings'
-      auto_close_save: "Save"
-      auto_close_cancel: "Cancel"
+      auto_close_save: "保存"
+      auto_close_cancel: "キャンセル"
       auto_close_remove: "Don't Auto-Close This Topic"
 
       progress:
@@ -666,17 +666,17 @@ ja:
           "0": 'You are ignoring all notifications on this topic.'
           "0_2": 'You are ignoring all notifications on this topic.'
         watching:
-          title: "Watching"
+          title: "監視中"
           description: "same as Tracking, plus you will be notified of all new posts."
         tracking:
-          title: "Tracking"
+          title: "トラック中"
           description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
         regular:
-          title: "Regular"
-          description: "you will be notified only if someone mentions your @name or replies to your post."
+          title: "通常"
+          description: "誰かから @name でメンションを受けた際と、あなたのポストに返信がついた際に通知されます。"
         muted:
-          title: "Muted"
-          description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
+          title: "ミュート"
+          description: "このトピックについて何の通知も受けません。また未読タブにも表示されません。"
 
       actions:
         recover: "Un-Delete Topic"
@@ -695,18 +695,18 @@ ja:
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
-        title: 'Reply'
-        help: 'begin composing a reply to this topic'
+        title: '返信'
+        help: 'このトピックに返信する'
 
       clear_pin:
-        title: "Clear pin"
-        help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
+        title: "ピンを解除する"
+        help: "このトピックのピンを解除し、トピックリストの先頭に表示されないようにする"
 
       share:
-        title: 'Share'
-        help: 'share a link to this topic'
+        title: 'シェア'
+        help: 'このトピックへのリンクをシェアする'
 
-      inviting: "Inviting..."
+      inviting: "招待中..."
 
       invite_private:
         title: 'Invite to Private Message'
@@ -717,13 +717,13 @@ ja:
         error: "Sorry, there was an error inviting that user."
 
       invite_reply:
-        title: 'Invite Friends to Reply'
-        action: 'Email Invite'
-        help: 'send invitations to friends so they can reply to this topic with a single click'
-        email: "We'll send your friend a brief email allowing them to immediately reply to this topic by clicking a link, no login required."
-        email_placeholder: 'email address'
-        success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
-        error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
+        title: '友人を招待して返信してもらう'
+        action: 'メールで招待'
+        help: 'このトピックにワンクリックで回答ができるように友人を招待メールを送る'
+        email: "このトピックに（ログインすることなく）ワンクリックで回答ができるようにあなたの友人にメールを送ります"
+        email_placeholder: 'メールアドレス'
+        success: "ありがとうございます! <b>{{email}}</b> 宛に招待メールを送信しました。友人により招待が受理されたらお知らせします。招待した友人の一覧は、ユーザページの招待タブにて確認できます。"
+        error: "申し訳ありませんが招待に失敗しました。既にユーザ登録済かもしれません。"
 
       login_reply: 'Log In to Reply'
 
@@ -1031,13 +1031,13 @@ ja:
           zero: "未読"
           one: "未読 (1)"
           other: "未読 ({{count}})"
-        help: "tracked topics with unread posts"
+        help: "未読ポストのあるトピック"
       new:
         title:
           zero: "新規"
           one: "新規 (1)"
           other: "新規 ({{count}})"
-        help: "new topics since your last visit"
+        help: "前回ログイン時からの新規トピック"
       posted:
         title: "あなたのポスト"
         help: "あなたが投稿したトピック"
@@ -1064,27 +1064,27 @@ ja:
       moderator: 'モデレータ'
 
       dashboard:
-        title: "Dashboard"
-        last_updated: "Dashboard last updated:"
+        title: "ダッシュボード"
+        last_updated: "ダッシュボード最終更新:"
         version: "Version"
-        up_to_date: "You're up to date!"
-        critical_available: "A critical update is available."
-        updates_available: "Updates are available."
-        please_upgrade: "Please upgrade!"
-        no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
-        stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
+        up_to_date: "最新のバージョンです!"
+        critical_available: "重要度の高いアップデートが存在します。"
+        updates_available: "アップデートが存在します。"
+        please_upgrade: "今すぐアップデートしてください!"
+        no_check_performed: "アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
+        stale_data: "最近アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
         installed_version: "Installed"
         latest_version: "Latest"
-        problems_found: "Some problems have been found with your installation of Discourse:"
-        last_checked: "Last checked"
-        refresh_problems: "Refresh"
-        no_problems: "No problems were found."
-        moderators: 'Moderators:'
-        admins: 'Admins:'
-        blocked: 'Blocked:'
-        banned: 'Banned:'
+        problems_found: "Discourse のインストールにいくつか問題が発見されました:"
+        last_checked: "最終チェック"
+        refresh_problems: "更新"
+        no_problems: "問題は見つかりませんでした。"
+        moderators: 'モデレータ:'
+        admins: '管理者:'
+        blocked: 'ブロック済:'
+        banned: '追放済:'
         private_messages_short: "PMs"
-        private_messages_title: "Private Messages"
+        private_messages_title: "プライベートメッセージ"
 
         reports:
           today: "今日"
@@ -1105,7 +1105,7 @@ ja:
       flags:
         title: "Flags"
         old: "Old"
-        active: "Active"
+        active: "アクティブ"
 
         agree_hide: "Agree (hide post + send PM)"
         agree_hide_title: "Hide this post and automatically send the user a private message urging them to edit it"
@@ -1226,9 +1226,9 @@ ja:
           no_previous: "There is no previous value."
           deleted: "No new value. The record was deleted."
           actions:
-            delete_user: "delete user"
-            change_trust_level: "change trust level"
-            change_site_setting: "change site setting"
+            delete_user: "ユーザを削除"
+            change_trust_level: "トラストレベルを変更"
+            change_site_setting: "サイトの設定を変更"
             change_site_customization: "change site customization"
             delete_site_customization: "delete site customization"
         screened_emails:
@@ -1294,34 +1294,34 @@ ja:
         ban_duration: "How long would you like to ban the user for? (days)"
         delete_all_posts: "Delete all posts"
         delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
-        ban: "Ban"
-        unban: "Unban"
-        banned: "Banned?"
-        moderator: "Moderator?"
-        admin: "Admin?"
-        blocked: "Blocked?"
+        ban: "追放"
+        unban: "追放解除"
+        banned: "追放済?"
+        moderator: "モデレータ?"
+        admin: "管理者?"
+        blocked: "ブロック済?"
         show_admin_profile: "管理者"
-        edit_title: "Edit Title"
-        save_title: "Save Title"
-        refresh_browsers: "Force browser refresh"
-        show_public_profile: "Show Public Profile"
-        impersonate: 'Impersonate'
-        revoke_admin: 'Revoke Admin'
-        grant_admin: 'Grant Admin'
-        revoke_moderation: 'Revoke Moderation'
-        grant_moderation: 'Grant Moderation'
-        unblock: 'Unblock'
-        block: 'Block'
+        edit_title: "タイトルを編集"
+        save_title: "タイトルを保存"
+        refresh_browsers: "ブラウザを強制リフレッシュ"
+        show_public_profile: "一般プロファイルを表示"
+        impersonate: 'このユーザになりすます'
+        revoke_admin: '管理者権限を剥奪'
+        grant_admin: '管理者権限を付与'
+        revoke_moderation: 'モデレータ権限を剥奪'
+        grant_moderation: 'モデレータ権限を付与'
+        unblock: 'ブロック解除'
+        block: 'ブロック'
         reputation: Reputation
         permissions: Permissions
-        activity: Activity
-        like_count: Likes Received
-        private_topics_count: Private Topics
-        posts_read_count: Posts Read
-        post_count: Posts Created
-        topics_entered: Topics Entered
-        flags_given_count: Flags Given
-        flags_received_count: Flags Received
+        activity: アクティビティ
+        like_count: いいね！ された数
+        private_topics_count: プライベートトピック数
+        posts_read_count: 読んだポスト数
+        post_count: 投稿したポスト数
+        topics_entered: 投稿したトピック数
+        flags_given_count: 設定したフラグ数
+        flags_received_count: 設定されたフラグ数
         approve: 'Approve'
         approved_by: "approved by"
         approve_success: "User approved and email sent with activation
