@@ -17,9 +17,11 @@ module Onebox
 
       def data
         {
-          url: @url,
-          tweet_text: raw.css(".tweet-text").inner_text,
-          time_date: raw.css(".metadata span").inner_text,
+          link: link,
+          domain: "http://www.twitter.com",
+          badge: "t",
+          title: raw.css(".tweet-text").inner_text,
+          timestamp: raw.css(".metadata span").inner_text,
           user: raw.css(".stream-item-header .username").inner_text,
           avatar: raw.css(".avatar")[2]["src"],
           favorites: raw.css(".stats li .request-favorited-popup").inner_text,

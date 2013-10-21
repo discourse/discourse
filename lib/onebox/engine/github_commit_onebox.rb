@@ -25,12 +25,14 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://www.github.com",
+          badge: "g",
           owner: match[:owner],
           repo: match[:repo],
           sha: raw["sha"],
           gravatar: raw["author"]["avatar_url"],
-          message: raw["commit"]["message"],
+          title: raw["commit"]["message"],
           author: raw["author"]["login"],
           time_date: raw["commit"]["committer"]["date"],
           files_changed: raw["files"].length,

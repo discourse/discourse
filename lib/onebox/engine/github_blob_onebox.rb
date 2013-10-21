@@ -17,8 +17,10 @@ module Onebox
 
       def data
         {
-          url: @url,
-          filename: raw.css(".final-path").inner_text,
+          link: link,
+          domain: "https://www.github.com",
+          badge: "g",
+          title: raw.css(".final-path").inner_text,
           lines: raw.css("#files .file .info .mode + span").inner_text,
           file: raw.css("#files .file .blob-wrapper").inner_text
         }

@@ -15,7 +15,9 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://clikthrough.com",
+          badge: "c",
           title: raw.title,
           description: raw.description
         }

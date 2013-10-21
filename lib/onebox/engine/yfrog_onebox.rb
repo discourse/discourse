@@ -16,7 +16,9 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://www.yfrog.com",
+          badge: "y",
           title: raw.title,
           image: raw.images.first,
           description: raw.description

@@ -15,7 +15,10 @@ module Onebox
 
       def data
         {
-          header: raw.css("h1").inner_text
+          link: link,
+          domain: "http://www.example.com",
+          badge: "e",
+          title: raw.css("h1").inner_text
         }
       end
     end

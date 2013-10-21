@@ -15,8 +15,10 @@ module Onebox
 
       def data
         {
-          url: @url,
-          name: raw.css("h1").inner_text,
+          link: link,
+          domain: "https://amazon.com",
+          badge: "a",
+          title: raw.css("h1").inner_text,
           image: raw.css("#main-image").first["src"],
           description: raw.css("#postBodyPS").inner_text,
           price: raw.css(".priceLarge").inner_text

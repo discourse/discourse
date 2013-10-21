@@ -25,7 +25,9 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://www.github.com",
+          badge: "g",
           author: raw["user"]["login"],
           gravatar: raw["user"]["avatar_url"],
           title: raw["title"],

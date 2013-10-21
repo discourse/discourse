@@ -16,7 +16,9 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://www.nfb.ca",
+          badge: "f",
           title: raw.title,
           description: raw.description,
           video: raw.metadata[:video].first[:_value]
