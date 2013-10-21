@@ -274,14 +274,30 @@ class UsersController < ApplicationController
 
     file = params[:file] || params[:files].first
 
-    unless SiteSetting.authorized_image?(file)
+    # Only allow url uploading for API users
+    # TODO: Does not protect from huge uploads
+    # https://github.com/discourse/discourse/pull/1512
+    if file.is_a?(String) && is_api?
+      adapted   = ::UriAdapter.new(file)
+      file      = adapted.build_uploaded_file
+      filesize  = adapted.file_size
+    elsif file.is_a?(String)
       return render status: 422, text: I18n.t("upload.images.unknown_image_type")
     end
 
     # check the file size (note: this might also be done in the web server)
-    filesize = File.size(file.tempfile)
+    filesize ||= File.size(file.tempfile)
     max_size_kb = SiteSetting.max_image_size_kb * 1024
-    return render status: 413, text: I18n.t("upload.images.too_large", max_size_kb: max_size_kb) if filesize > max_size_kb
+
+    if filesize > max_size_kb
+      return render status: 413,
+                    text: I18n.t("upload.images.too_large",
+                                  max_size_kb: max_size_kb)
+    end
+
+    unless SiteSetting.authorized_image?(file)
+      return render status: 422, text: I18n.t("upload.images.unknown_image_type")
+    end
 
     upload = Upload.create_for(user.id, file, filesize)
     user.update_avatar(upload)
@@ -294,6 +310,8 @@ class UsersController < ApplicationController
       height: upload.height,
     }
 
+  rescue Discourse::InvalidParameters
+    render status: 422, text: I18n.t("upload.images.unknown_image_type")
   rescue FastImage::ImageFetchFailure
     render status: 422, text: I18n.t("upload.images.fetch_failure")
   rescue FastImage::UnknownImageType
