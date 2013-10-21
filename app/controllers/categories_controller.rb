@@ -53,15 +53,15 @@ class CategoriesController < ApplicationController
     return render_json_error(@category) unless @category.save
 
     @category.move_to(category_params[:position].to_i) if category_params[:position]
-
     render_serialized(@category, CategorySerializer)
   end
 
   def update
     guardian.ensure_can_edit!(@category)
     json_result(@category, serializer: CategorySerializer) { |cat|
-      cat.update_attributes(category_params)
       cat.move_to(category_params[:position].to_i) if category_params[:position]
+      category_params.delete(:position)
+      cat.update_attributes(category_params)
     }
   end
 
