@@ -183,6 +183,13 @@ zh_CN:
       "12": "发送条目"
       "13": "收件箱"
 
+    categories:
+      category: "分类"
+      posts: "帖子"
+      topics: "主题"
+      latest: "最新"
+      latest_by: "最新发表："
+
     user:
       said: "{{username}} 说："
       profile: "个人简介"
@@ -584,6 +591,12 @@ zh_CN:
       private_message: '开启一段私下交流'
       list: '主题'
       new: '新主题'
+      new_topics:
+        one: '1个新主题'
+        other: '{{count}}个新主题'
+      unread_topics:
+        one: '1个未读主题'
+        other: '{{count}}个未读主题' 
       title: '主题'
       loading_more: "载入更多主题中……"
       loading: '载入主题中……'
@@ -960,6 +973,7 @@ zh_CN:
       auto_close_label: "自动关闭主题，过："
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
+      this_year: "今年"
 
     flagging:
       title: '为何要报告本帖？'
