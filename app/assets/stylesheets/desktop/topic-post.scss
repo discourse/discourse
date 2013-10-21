@@ -423,7 +423,6 @@ span.post-count {
 #topic-title {
   z-index: 1000;
   padding: 20px 10px 15px 10px;
-  border-bottom: 1px solid #ddd;
 .chzn-container {vertical-align: middle;}
 }
 
@@ -712,12 +711,7 @@ blockquote {
 
 }
 
-.topic-post:first-of-type {
 
- .topic-body { border: none; }
- .topic-meta-data {border: none;}
-
-}
 
 .posts-wrapper { position: relative; }
 
