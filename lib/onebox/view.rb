@@ -26,7 +26,8 @@ module Onebox
         title: record[:title],
         badge: record[:badge],
         domain: record[:domain],
-        view: subview(record)
+        subname: view.template_name,
+        view: view.to_html(record)
       }
     end
   end
