@@ -425,7 +425,7 @@ span.post-count {
   z-index: 1000;
   padding: 20px 10px 15px 10px;
   border-bottom: 1px solid #ddd;
-
+.chzn-container {vertical-align: middle;}
 }
 
 .topic-post article.boxed 
@@ -470,7 +470,7 @@ iframe {
     max-width: 800px; 
     width: 90%;
     margin: 7px 0 0 0;
-    line-height: 1;
+    line-height: 1.1;
   }
 
 
@@ -954,5 +954,5 @@ clear: both;
   }
 }
 
-
+input#edit-title {margin-left: 10px;}
 
