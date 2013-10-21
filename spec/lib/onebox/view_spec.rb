@@ -9,8 +9,7 @@ describe Onebox::View do
       expect(html).to include(%|class="onebox"|)
     end
 
-    it "renders the url" do
-      expect(html).to include("http://example.com")
+      expect(html).to include(%|class="onebox|)
     end
   end
 end
