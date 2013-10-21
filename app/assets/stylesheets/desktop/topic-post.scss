@@ -428,7 +428,6 @@ span.post-count {
 article.boxed {
   img, svg {
     max-width: 100%;
-    height: auto;
   }
 }
 
@@ -720,9 +719,9 @@ blockquote {
 
 }
 
-.posts-wrapper { 
-  position: relative; 
-  border-bottom: 1px solid #ddd; 
+.posts-wrapper {
+  position: relative;
+  border-bottom: 1px solid #ddd;
 }
 
 
