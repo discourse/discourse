@@ -422,7 +422,6 @@ span.post-count {
 #topic-title {
   z-index: 1000;
   padding: 20px 10px 15px 10px;
-  border-bottom: 1px solid #ddd;
 .chzn-container {vertical-align: middle;}
 }
 
@@ -601,7 +600,6 @@ h1, h2, h3 {margin: 10px 0;}
   background-color: lighten(yellow, 35%);}
 
 .topic-meta-data {
-white-space: nowrap; 
 float: left;
 position: relative;
 
@@ -609,6 +607,8 @@ position: relative;
 h3 {
   font-size: 13px;
   margin-top: 5px;
+  word-wrap: break-word;
+  line-height: 1.2;
 }
 
 
@@ -712,12 +712,7 @@ blockquote {
 
 }
 
-.topic-post:first-of-type {
 
- .topic-body { border: none; }
- .topic-meta-data {border: none;}
-
-}
 
 .posts-wrapper { position: relative; }
 

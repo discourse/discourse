@@ -44,8 +44,8 @@ a.edit-topic {font-size: 15px;}
 
 #topic-progress-wrapper {
   position: fixed;
+  right: 50%;
   width: 0;
-  right: 29%;
   bottom: 0px;
   z-index: 500;
   outline: 1px solid transparent;
@@ -85,6 +85,7 @@ i {background: #e4f2f8;
     box-shadow: 0 0 3px #000;
 
   position: relative;
+  left: 302px;
   &.hidden {
     display: none;
   }
@@ -146,8 +147,7 @@ i {background: #e4f2f8;
   #topic-progress {
   }
   position: absolute;
-  margin-right: -68px;
-  bottom: 8px;
+  bottom: -55px;
 
 }
 
