@@ -18,11 +18,11 @@ describe Onebox::Engine::GithubCommitOnebox do
   describe "#to_html" do
     let(:html) { described_class.new(link).to_html }
 
-    it "has repo owner" do
+    it "has owner" do
       expect(html).to include("discourse")
     end
 
-    it "has repo name" do
+    it "has repository name" do
       expect(html).to include("discourse")
     end
 

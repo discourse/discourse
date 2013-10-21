@@ -25,7 +25,7 @@ describe Onebox::Engine::GithubPullRequestOnebox do
       expect(html).to include("Add audio onebox")
     end
 
-    it "has repo name" do
+    it "has repository name" do
       expect(html).to include("discourse")
     end
 
