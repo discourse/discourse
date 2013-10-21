@@ -20,12 +20,32 @@ shared_examples_for "an engine" do
     expect(described_class.private_instance_methods).to include(:data, :record, :raw)
   end
 
-  it "has implemented the data functionality" do
-    expect { described_class.new(link).send(:data) }.not_to raise_error
-  end
-
   it "correctly matches the url" do
     onebox = Onebox::Matcher.new(link).oneboxed
     expect(onebox).to be(described_class)
+  end
+
+  describe "#data" do
+    it "has a title" do
+      expect(data[:title]).not_to be_nil
+    end
+
+    it "has a link" do
+      expect(data[:link]).not_to be_nil
+    end
+
+    it "has a badge" do
+      expect(data[:badge]).not_to be_nil
+    end
+
+    it "has a domain" do
+      expect(data[:domain]).not_to be_nil
+    end
+  end
+
+  describe "to_html" do
+    it "has the title" do
+      expect(html).to include(data[:title])
+    end
   end
 end

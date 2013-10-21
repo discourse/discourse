@@ -1,12 +1,15 @@
 require "spec_helper"
 
 describe Onebox::Engine::YfrogOnebox do
-  before(:each) { Onebox.defaults.cache.clear }
   before(:all) do
     @link = "http://twitter.yfrog.com/h0jjdobj?sa=0"
     fake(@link, response(described_class.template_name))
   end
+  before(:each) { Onebox.defaults.cache.clear }
 
+  let(:onebox) { described_class.new(link) }
+  let(:html) { onebox.to_html }
+  let(:data) { onebox.send(:data) }
   let(:link) { @link }
 
   it_behaves_like "an engine"

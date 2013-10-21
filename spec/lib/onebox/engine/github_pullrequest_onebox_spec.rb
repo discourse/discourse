@@ -3,11 +3,13 @@ require "spec_helper"
 describe Onebox::Engine::GithubPullRequestOnebox do
   before(:all) do
     @link = "https://github.com/discourse/discourse/pull/1253/"
-    api = "https://api.github.com/repos/discourse/discourse/pulls/1253"
-    fake(api, response(described_class.template_name))
+    fake(@link, response(described_class.template_name))
   end
   before(:each) { Onebox.defaults.cache.clear }
 
+  let(:onebox) { described_class.new(link) }
+  let(:html) { onebox.to_html }
+  let(:data) { onebox.send(:data) }
   let(:link) { @link }
 
   it_behaves_like "an engine"

@@ -7,6 +7,9 @@ describe Onebox::Engine::HTML do
   end
   before(:each) { Onebox.defaults.cache.clear }
 
+  let(:onebox) { described_class.new(link) }
+  let(:html) { onebox.to_html }
+  let(:data) { onebox.send(:data) }
   let(:link) { @link }
 
   describe "#raw" do

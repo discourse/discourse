@@ -12,8 +12,6 @@ describe Onebox::Engine::GithubBlobOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    let(:html) { described_class.new(link).to_html }
-
     it "has file name" do
       expect(html).to include("github_blob_onebox.rb")
     end
