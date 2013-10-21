@@ -127,7 +127,7 @@ class Admin::UsersController < Admin::AdminController
     user = User.where(id: params[:id]).first
     guardian.ensure_can_delete_user!(user)
     begin
-      if UserDestroyer.new(current_user).destroy(user, params.slice(:delete_posts, :block_email, :block_urls, :context))
+      if UserDestroyer.new(current_user).destroy(user, params.slice(:delete_posts, :block_email, :block_urls, :block_ip, :context))
         render json: {deleted: true}
       else
         render json: {deleted: false, user: AdminDetailedUserSerializer.new(user, root: false).as_json}

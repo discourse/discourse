@@ -37,6 +37,10 @@ class UserDestroyer
             b = ScreenedEmail.block(u.email, ip_address: u.ip_address)
             b.record_match! if b
           end
+          if opts[:block_ip]
+            b = ScreenedIpAddress.watch(u.ip_address)
+            b.record_match! if b
+          end
           Post.with_deleted.where(user_id: user.id).update_all("user_id = NULL")
           StaffActionLogger.new(@staff).log_user_deletion(user, opts.slice(:context))
           DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?

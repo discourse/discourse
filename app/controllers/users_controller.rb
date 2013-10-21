@@ -135,6 +135,7 @@ class UsersController < ApplicationController
     return fake_success_response if suspicious? params
 
     user = User.new_from_params(params)
+    user.ip_address = request.ip
     auth = authenticate_user(user, params)
     register_nickname(user)
 

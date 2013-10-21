@@ -135,6 +135,8 @@ en:
         name: "Category Name"
       post:
         raw: "Body"
+      user:
+        ip_address: ""
     errors:
       messages:
         is_invalid: "is invalid; try to be a little more descriptive"
@@ -144,6 +146,10 @@ en:
           attributes:
             archetype:
               cant_send_pm: "Sorry, you cannot send a private message to that user."
+        user:
+          attributes:
+            ip_address:
+              signup_not_allowed: "Signup is not allowed from this account."
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
@@ -788,6 +794,8 @@ en:
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
+    ip_address:
+      blocked: "is blocked."
 
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion on %{site_name}"

@@ -236,6 +236,7 @@ Discourse.AdminUser = Discourse.User.extend({
       if (block) {
         formData["block_email"] = true;
         formData["block_urls"] = true;
+        formData["block_ip"] = true;
       }
       Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
         type: 'DELETE',
@@ -282,7 +283,7 @@ Discourse.AdminUser = Discourse.User.extend({
 
   deleteAsSpammer: function(successCallback) {
     var user = this;
-    var message = I18n.t('flagging.delete_confirm', {posts: user.get('post_count'), topics: user.get('topic_count'), email: user.get('email')});
+    var message = I18n.t('flagging.delete_confirm', {posts: user.get('post_count'), topics: user.get('topic_count'), email: user.get('email'), ip_address: user.get('ip_address')});
     var buttons = [{
       "label": I18n.t("composer.cancel"),
       "class": "cancel",
@@ -293,7 +294,7 @@ Discourse.AdminUser = Discourse.User.extend({
       "callback": function() {
         Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
           type: 'DELETE',
-          data: {delete_posts: true, block_email: true, block_urls: true, context: window.location.pathname}
+          data: {delete_posts: true, block_email: true, block_urls: true, block_ip: true, context: window.location.pathname}
         }).then(function(data) {
           if (data.deleted) {
             bootbox.alert(I18n.t("admin.user.deleted"), function() {

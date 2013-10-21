@@ -226,7 +226,6 @@ describe User do
       end
     end
 
-
     context 'after_save' do
       before do
         subject.save
@@ -235,6 +234,21 @@ describe User do
       its(:email_tokens) { should be_present }
       its(:bio_cooked) { should be_present }
       its(:bio_summary) { should be_present }
+    end
+  end
+
+  describe 'ip address validation' do
+    it 'validates ip_address for new users' do
+      u = Fabricate.build(:user)
+      AllowedIpAddressValidator.any_instance.expects(:validate_each).with(u, :ip_address, u.ip_address)
+      u.valid?
+    end
+
+    it 'does not validate ip_address when updating an existing user' do
+      u = Fabricate(:user)
+      u.ip_address = '87.123.23.11'
+      AllowedIpAddressValidator.any_instance.expects(:validate_each).never
+      u.valid?
     end
   end
 

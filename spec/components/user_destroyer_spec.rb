@@ -226,6 +226,18 @@ describe UserDestroyer do
         end
       end
     end
+
+    context 'ip address screening' do
+      it "doesn't create screened_ip_address records by default" do
+        ScreenedIpAddress.expects(:watch).never
+        UserDestroyer.new(@admin).destroy(@user)
+      end
+
+      it "creates new screened_ip_address records when block_ip is true" do
+        ScreenedIpAddress.expects(:watch).with(@user.ip_address).returns(stub_everything)
+        UserDestroyer.new(@admin).destroy(@user, {block_ip: true})
+      end
+    end
   end
 
 end

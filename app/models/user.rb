@@ -51,6 +51,7 @@ class User < ActiveRecord::Base
   validates :email, presence: true, uniqueness: true
   validates :email, email: true, if: :email_changed?
   validate :password_validator
+  validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
 
   before_save :cook
   before_save :update_username_lower

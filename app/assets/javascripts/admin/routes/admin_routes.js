@@ -33,6 +33,7 @@ Discourse.Route.buildRoutes(function() {
     this.resource('adminLogs', { path: '/logs' }, function() {
       this.route('staffActionLogs', { path: '/staff_action_logs' });
       this.route('screenedEmails', { path: '/screened_emails' });
+      this.route('screenedIpAddresses', { path: '/screened_ip_addresses' });
       this.route('screenedUrls', { path: '/screened_urls' });
     });
 
