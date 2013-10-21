@@ -57,7 +57,8 @@ Discourse.Category = Discourse.Model.extend({
         hotness: this.get('hotness'),
         secure: this.get('secure'),
         permissions: this.get('permissionsForUpdate'),
-        auto_close_days: this.get('auto_close_days')
+        auto_close_days: this.get('auto_close_days'),
+        position: this.get('position')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });

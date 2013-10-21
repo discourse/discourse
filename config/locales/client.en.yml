@@ -975,6 +975,7 @@ en:
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
       this_year: "this year"
+      position: "position"
 
     flagging:
       title: 'Why are you flagging this post?'

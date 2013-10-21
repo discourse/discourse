@@ -52,12 +52,17 @@ class CategoriesController < ApplicationController
     @category = Category.create(category_params.merge(user: current_user))
     return render_json_error(@category) unless @category.save
 
+    @category.move_to(category_params[:position].to_i) if category_params[:position]
+
     render_serialized(@category, CategorySerializer)
   end
 
   def update
     guardian.ensure_can_edit!(@category)
-    json_result(@category, serializer: CategorySerializer) { |cat| cat.update_attributes(category_params) }
+    json_result(@category, serializer: CategorySerializer) { |cat|
+      cat.update_attributes(category_params)
+      cat.move_to(category_params[:position].to_i) if category_params[:position]
+    }
   end
 
   def destroy
@@ -74,17 +79,19 @@ class CategoriesController < ApplicationController
     end
 
     def category_params
-      required_param_keys.each do |key|
-        params.require(key)
-      end
-
-      if p = params[:permissions]
-        p.each do |k,v|
-          p[k] = v.to_i
+      @category_params ||= begin
+        required_param_keys.each do |key|
+          params.require(key)
         end
-      end
 
-      params.permit(*required_param_keys, :hotness, :auto_close_days, :permissions => [*p.try(:keys)])
+        if p = params[:permissions]
+          p.each do |k,v|
+            p[k] = v.to_i
+          end
+        end
+
+        params.permit(*required_param_keys, :position, :hotness, :auto_close_days, :permissions => [*p.try(:keys)])
+      end
     end
 
     def fetch_category

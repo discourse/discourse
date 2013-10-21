@@ -87,6 +87,11 @@
         </section>
 
         <section class='field'>
+          <label>{{i18n category.position}}</label>
+          {{textField value=position}}
+        </section>
+
+        <section class='field'>
           <label>{{i18n category.hotness}}</label>
           {{view Discourse.HotnessView hotnessBinding="hotness"}}
         </section>
