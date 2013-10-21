@@ -189,6 +189,7 @@ en:
       topics: "Topics"
       latest: "Latest"
       latest_by: "latest by"
+      toggle_ordering: "toggle ordering control"
 
     user:
       said: "{{username}} said:"

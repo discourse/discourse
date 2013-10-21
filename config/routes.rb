@@ -187,6 +187,7 @@ Discourse::Application.routes.draw do
 
   resources :categories, :except => :show
   get 'category/:id/show' => 'categories#show'
+  post 'category/:category_id/move' => 'categories#move', as: 'category_move'
 
   get 'category/:category.rss' => 'list#category_feed', format: :rss, as: 'category_feed'
   get 'category/:category' => 'list#category', as: 'category_list'

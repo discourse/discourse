@@ -15,9 +15,6 @@ class CategoriesController < ApplicationController
     options[:latest_post_only] = params[:latest_post_only] || wide_mode
 
     @list = CategoryList.new(guardian,options)
-
-
-
     @list.draft_key = Draft::NEW_TOPIC
     @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
     @list.draft = Draft.get(current_user, @list.draft_key, @list.draft_sequence) if current_user
@@ -28,6 +25,18 @@ class CategoriesController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json { render_serialized(@list, CategoryListSerializer) }
+    end
+  end
+
+  def move
+    params.require("category_id")
+    params.require("position")
+
+    if category = Category.find(params["category_id"])
+      category.move_to(params["position"].to_i)
+      render json: success_json
+    else
+      render status: 500, json: failed_json
     end
   end
 
@@ -52,7 +61,8 @@ class CategoriesController < ApplicationController
   def destroy
     guardian.ensure_can_delete!(@category)
     @category.destroy
-    render nothing: true
+
+    render json: success_json
   end
 
   private

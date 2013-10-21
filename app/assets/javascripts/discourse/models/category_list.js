@@ -6,13 +6,26 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.CategoryList = Discourse.Model.extend({});
+Discourse.CategoryList = Ember.ArrayProxy.extend({
+
+  init: function() {
+    this.content = [];
+    this._super();
+  },
+
+  moveCategory: function(categoryId, position){
+    Discourse.ajax("/category/" + categoryId + "/move", {
+      type: 'POST',
+      data: {position: position}
+    });
+  }
+});
 
 Discourse.CategoryList.reopenClass({
 
   categoriesFrom: function(result) {
-    var categories = Em.A();
-    var users = this.extractByKey(result.featured_users, Discourse.User);
+    var categories = Discourse.CategoryList.create();
+    var users = Discourse.Model.extractByKey(result.featured_users, Discourse.User);
 
 
     _.each(result.category_list.categories,function(c) {

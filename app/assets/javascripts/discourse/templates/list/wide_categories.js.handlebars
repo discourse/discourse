@@ -6,13 +6,19 @@
       <th class='category'>{{i18n categories.category}}</th>
       <th class='num topics'>{{i18n categories.topics}}</th>
       <th class='num posts'>{{i18n categories.posts}}</th>
-      <th class='latest'>{{i18n categories.latest}}</th>
+      <th class='latest'>{{i18n categories.latest}}
+        <button title='{{i18n categories.toggle_ordering}}' class='btn toggle-admin no-text' {{action toggleOrdering}}><i class='icon icon-wrench'></i></button>
+      </th>
     </tr>
     </thead>
     <tbody>
-      {{#each model.categories}}
-      <tr>
-        <td class='category'>{{categoryLink this}}
+      {{#collection contentBinding="model.categories"}}
+      <tr data-category_id='{{unbound id}}'>
+        <td class='category'>
+          {{#if controller.ordering}}
+            <i class="icon-reorder"></i>
+          {{/if}}
+          {{categoryLink this}}
           {{#if unreadTopics}}
             <a href={{unbound url}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
           {{/if}}
@@ -52,7 +58,7 @@
           </td>
         {{/with}}
       </tr>
-      {{/each}}
+      {{/collection}}
     </tbody>
 
   </table>

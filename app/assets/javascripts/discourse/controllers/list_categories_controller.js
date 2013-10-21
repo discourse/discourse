@@ -9,6 +9,12 @@
 Discourse.ListCategoriesController = Discourse.ObjectController.extend({
   needs: ['modal'],
 
+  actions: {
+    toggleOrdering: function(){
+      this.set("ordering",!this.get("ordering"));
+    }
+  },
+
   categoriesEven: function() {
     if (this.blank('categories')) return Em.A();
 
@@ -31,6 +37,10 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
   // clear a pinned topic
   clearPin: function(topic) {
     topic.clearPin();
+  },
+
+  moveCategory: function(categoryId, position){
+    this.get('model.categories').moveCategory(categoryId, position);
   }
 
 });

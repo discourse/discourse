@@ -8,8 +8,6 @@
 // List controls
 // --------------------------------------------------
 
-
-
 #list-controls {
   .nav {
     float: left;
@@ -95,8 +93,6 @@
     color: $topic-list-td-color;
     font-size: 14px;
   }
-
-
 
   .star {
     width: 20px;
@@ -203,6 +199,16 @@
 }
 
 #topic-list.categories {
+  th.latest {
+    position: relative;
+  }
+  th .toggle-admin {
+    position: absolute;
+    padding: 3px 8px;
+    font-size: 12px;
+    right: 5px;
+    top: 4px;
+  }
   th.latest, td.latest {
     padding-left: 12px;
   }
