@@ -472,6 +472,13 @@ class User < ActiveRecord::Base
     created_at > 1.day.ago
   end
 
+  def update_avatar(upload)
+    self.uploaded_avatar_template = nil
+    self.uploaded_avatar = upload
+    self.use_uploaded_avatar = true
+    self.save!
+  end
+
   protected
 
   def cook
