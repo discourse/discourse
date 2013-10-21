@@ -20,9 +20,9 @@ module Onebox
           link: link,
           domain: "http://www.twitter.com",
           badge: "t",
-          title: raw.css(".tweet-text").inner_text,
+          tweet: raw.css(".tweet-text").inner_text,
           timestamp: raw.css(".metadata span").inner_text,
-          user: raw.css(".stream-item-header .username").inner_text,
+          title: raw.css(".stream-item-header .username").inner_text,
           avatar: raw.css(".avatar")[2]["src"],
           favorites: raw.css(".stats li .request-favorited-popup").inner_text,
           retweets: raw.css(".stats li .request-retweeted-popup").inner_text
