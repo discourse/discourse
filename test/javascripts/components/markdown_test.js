@@ -300,6 +300,9 @@ test("Code Blocks", function() {
          "<p><pre><code class=\"ruby\">hello &#x60;eviltrout&#x60;</code></pre></p>",
          "it allows code with backticks in it");
 
+  cooked("```eviltrout\nhello\n```",
+          "<p><pre><code class=\"lang-auto\">hello</code></pre></p>",
+          "it doesn't not whitelist all classes");
 
   cooked("```[quote=\"sam, post:1, topic:9441, full:true\"]This is `<not>` a bug.[/quote]```",
          "<p><pre><code class=\"lang-auto\">[quote=&quot;sam, post:1, topic:9441, full:true&quot;]This is &#x60;&lt;not&gt;&#x60; a bug.[/quote]</code></pre></p>",
