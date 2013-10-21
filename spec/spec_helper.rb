@@ -44,8 +44,12 @@ shared_examples_for "an engine" do
   end
 
   describe "to_html" do
+    def value_of(key)
+      CGI.escapeHTML(data[key])
+    end
+
     it "has the title" do
-      expect(html).to include(data[:title])
+      expect(html).to include(value_of(:title))
     end
   end
 end
