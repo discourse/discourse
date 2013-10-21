@@ -4,6 +4,10 @@ var firedOnce = function(message) {
   ok(original.calledOnce, message);
 };
 
+var firedTwice = function(message) {
+  ok(original.calledTwice, message);
+};
+
 var notFired = function(message) {
   ok(!original.called, message);
 };
@@ -39,27 +43,20 @@ test("executes delayed function only once, no matter how many times debounced fu
   firedOnce("second call was supressed");
 });
 
-test("does not prolong the timeout when the debounced function is called for the second time during the timeout", function() {
+test("prolongs the timeout when the debounced function is called for the second time during the timeout", function() {
   debounced();
 
   clock.tick(50);
   debounced();
 
   clock.tick(50);
-  firedOnce("function is executed exactly at the end of the original timeout");
-});
-
-test("returns a JS timer handle that allows delayed execution to be cancelled before the timeout ends", function() {
-  var timerId = debounced();
+  notFired("at the end of the original timeout nothing happens");
 
   clock.tick(50);
-  clearTimeout(timerId);
-
-  clock.tick(50);
-  notFired("timeout has ended but function was not executed");
+  firedOnce("function is executed exactly at the end of the prolonged timeout");
 });
 
-test("preserves first call's context and params when executing delayed function", function() {
+test("preserves last call's context and params when executing delayed function", function() {
   var firstObj = {};
   var secondObj = {};
 
@@ -67,11 +64,11 @@ test("preserves first call's context and params when executing delayed function"
   debounced.call(secondObj, "second");
 
   clock.tick(100);
-  ok(original.calledOn(firstObj), "the context of the first of two subsequent calls is preserved");
-  ok(original.calledWithExactly("first"), "param passed during the first of two subsequent calls is preserved");
+  ok(original.calledOn(secondObj), "the context of the last of two subsequent calls is preserved");
+  ok(original.calledWithExactly("second"), "param passed during the last of two subsequent calls is preserved");
 });
 
-test("can be called again (with a different context and params) after timeout passes", function() {
+test("can be called again after timeout passes", function() {
   var firstObj = {};
   var secondObj = {};
 
@@ -81,6 +78,5 @@ test("can be called again (with a different context and params) after timeout pa
   debounced.call(secondObj, "second");
 
   clock.tick(100);
-  ok(original.calledOn(secondObj), "function is executed with the context of the call made after the timeout has passed");
-  ok(original.calledWithExactly("second"), "function is executed with the param passed to the call made after the timeout has passed");
+  firedTwice();
 });
