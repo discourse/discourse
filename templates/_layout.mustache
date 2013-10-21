@@ -1,4 +1,21 @@
-<div class="onebox">
-  <a href="{{url}}">{{url}}</a>
-  {{{view}}}
-</div>
+<aside class="onebox {{class}}">
+  <aside class="badge">
+    <strong class="name">{{badge}}</strong>
+  </aside>
+  <header class="meta">
+    <hgroup>
+      <h1 class="title">
+        {{title}}
+        <small class="reference">
+          <a class="domain" href="{{domain}}" rel="domain">{{domain}}</a>
+        </small>
+      </h1>
+      <h2 class="link">
+        <a class="resource" href="{{link}}" title="{{title}}" rel="canonical">{{link}}</a>
+      </h2>
+    </hgroup>
+  </header>
+  <article class="content">
+    {{{view}}}
+  </article>
+</aside>
