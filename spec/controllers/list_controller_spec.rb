@@ -133,6 +133,15 @@ describe ListController do
 
   end
 
+  describe "topics_by" do
+    let!(:user) { log_in }
+
+    it "should respond with a list" do
+      xhr :get, :topics_by, username: @user.username
+      response.should be_success
+    end
+  end
+
   context "private_messages" do
     let!(:user) { log_in }
 
