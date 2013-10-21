@@ -3,7 +3,7 @@
 
 .topic-meta-data-inside {
   float: right; 
-  margin-top: -30px;
+  margin-top: -19px;
   font-size: 12px;
 }
 
@@ -17,7 +17,6 @@
 #topic-title {
   margin-bottom: 20px;
 margin: -20px 0 0 0;
-line-height: 1.7em;
 
 h1 {
 
@@ -45,10 +44,9 @@ a.edit-topic {font-size: 15px;}
 #topic-progress-wrapper {
   position: fixed;
   width: 0;
-  right: 0;
+  right: 29%;
   bottom: 0px;
   z-index: 500;
-  margin-right: 140px;
   outline: 1px solid transparent;
 
 
@@ -61,8 +59,11 @@ i {
   margin-right: 5px;
   background: #fff;
   border: 1px solid #ddd;
-  padding: 3px 4px; 
+  padding: 2px 4px; 
   border-radius: 20px;
+  transition: linear 1s;
+  -webkit-transition: linear 1s;
+
 }
 
 }
@@ -71,8 +72,8 @@ a.reply-new {color: #aaa;}
 a:hover.reply-new {color: #56aed3; 
 
 i {background: #e4f2f8;
-  border: none;
-  padding: 4px 5px;
+  border: 1px solid #e4f2f8;
+  padding: 2px 4px;
 }
 
 }
@@ -144,6 +145,9 @@ i {background: #e4f2f8;
   #topic-progress {
   }
   position: absolute;
+  margin-right: -68px;
+  bottom: 8px;
+
 }
 
 .topic-statuses .topic-status {
@@ -158,7 +162,6 @@ i {background: #e4f2f8;
 
 
 
-.topic-post:last-of-type {padding-bottom: 40px;}
 
 .heatmap-high {color: #f77 !important;}
 .heatmap-med {color: #a00 !important;}
