@@ -601,7 +601,6 @@ h1, h2, h3 {margin: 10px 0;}
   background-color: lighten(yellow, 35%);}
 
 .topic-meta-data {
-white-space: nowrap; 
 float: left;
 position: relative;
 
@@ -609,6 +608,8 @@ position: relative;
 h3 {
   font-size: 13px;
   margin-top: 5px;
+  word-wrap: break-word;
+  line-height: 1.2;
 }
 
 
