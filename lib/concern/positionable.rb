@@ -9,6 +9,12 @@ module Concern
     end
 
     def move_to(position)
+
+      self.exec_sql "
+      UPDATE #{self.class.table_name}
+      SET position = position - 1
+      WHERE position > :position AND position > 0", {position: self.position}
+
       self.exec_sql "
       UPDATE #{self.class.table_name}
       SET position = :position
