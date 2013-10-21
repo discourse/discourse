@@ -6,19 +6,18 @@ module Onebox
 
     def initialize(name, layout = false)
       @layout = layout
-      self.template_name = unless @layout then name else "_layout" end
-      @view = View.new(name) if @layout
+      self.template_name = if layout? then "_layout" else name end
     end
 
     def to_html(record)
-      render(if @layout then details(record) else render(record) end)
+      if layout? then render(details record) else render(record) end
+    end
+
+    def layout?
+      @layout
     end
 
     private
-
-    def subview(record)
-      @view.to_html(record)
-    end
 
     def details(record)
       {
