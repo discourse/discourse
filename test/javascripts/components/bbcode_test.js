@@ -74,6 +74,11 @@ test("quotes", function() {
   formatQuote("this is <not> a bug",
               "[quote=\"eviltrout, post:1, topic:2\"]\nthis is &lt;not&gt; a bug\n[/quote]\n\n",
               "it escapes the contents of the quote");
+
+  format("[quote]test[/quote]",
+         "<aside class=\"quote\"><blockquote><p>test</p></blockquote></aside>",
+         "it supports quotes without params");
+
 });
 
 test("quote formatting", function() {
