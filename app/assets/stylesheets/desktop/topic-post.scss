@@ -14,10 +14,10 @@ html {background-color: #fff;}
   margin-left: 0px;
 }
 
-
+.logo-small {margin-right: 8px;}
 
 .topic-post {
-  padding: 0 0 3px 0;
+  padding: 0;
   &:first-of-type {
     border-top: none;
   }
@@ -77,7 +77,7 @@ section.post-menu-area {
 
 nav.post-controls {
     background-color: #fff;
-    padding: 0px;
+    padding: 0;
     margin-top: 20px;
     button {color: #aaa;
     margin-right: 2px;
@@ -426,7 +426,6 @@ span.post-count {
 }
 
 article.boxed {
-  padding-bottom: 5px;
   img, svg {
     max-width: 100%;
     height: auto;
@@ -457,7 +456,8 @@ iframe {
 
 .extra-info-wrapper {float: left; width: 78%;}
 
-#main a.star {margin-top: 2px;}
+#main .inner a.star {margin-top: 6px;}
+
 .extra-info {
   h1 {
     display: inline-block;
@@ -469,7 +469,6 @@ iframe {
 
 
   a.star {
-    margin-left: 10px;
     margin-right: 8px;
     margin-top: 11px !important;
   }
@@ -531,7 +530,21 @@ h1, h2, h3 {margin: 10px 0;}
   }
 }
 
-.moderator {background-color: lighten(yellow, 45%);}
+
+.deleted {
+  .topic-body {
+  background-color: lighten(red, 45%);
+}
+}
+
+
+.moderator {
+
+  .topic-body {
+  background-color: lighten(yellow, 45%);
+}
+
+}
 
 #share-link {
   width: 265px;
@@ -562,9 +575,7 @@ h1, h2, h3 {margin: 10px 0;}
 }
 
 
-.deleted {
-  background-color: lighten(red, 45%);
-}
+
 
 #show-topic-admin {
   color: #7b7b7b;
@@ -672,7 +683,7 @@ blockquote {
   max-width: 250px;
   width: 15%;
       ul {margin: 0;}
-      padding-left: 20px;
+      padding-left: 10px;
 
   .post-links {
     margin-top: 6px;
@@ -695,26 +706,19 @@ blockquote {
 
 }
 
-
-
-
-
-
 .topic-body {
   border-top: 1px solid #ddd;
   float: left;
   position: relative;
   width: 720px;
-  padding: 10px 0 0 20px;
+  padding: 10px 10px 10px 20px;
 
 }
 
-
-
-.posts-wrapper { position: relative; }
-
-
-
+.posts-wrapper { 
+  position: relative; 
+  border-bottom: 1px solid #ddd; 
+}
 
 
 //columns
