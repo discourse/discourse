@@ -16,8 +16,12 @@ RSpec.configure do |config|
 end
 
 shared_examples_for "an engine" do
-  it "has engine behavior" do
-    expect(described_class.private_instance_methods).to include(:data, :record, :raw)
+  it "responds to data" do
+    expect(described_class.private_instance_methods).to include(:data)
+  end
+
+  it "responds to record" do
+    expect(described_class.private_instance_methods).to include(:record)
   end
 
   it "correctly matches the url" do
