@@ -6,7 +6,8 @@
 **/
 var parser = window.BetterMarkdown,
     MD = parser.Markdown,
-    dialect = MD.dialects.Discourse = MD.subclassDialect( MD.dialects.Gruber ),
+    DialectHelpers = parser.DialectHelpers,
+    dialect = MD.dialects.Discourse = DialectHelpers.subclassDialect( MD.dialects.Gruber ),
     initialized = false,
     emitters = [];
 
