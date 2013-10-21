@@ -15,15 +15,15 @@ describe Onebox::Engine::BliptvOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has image" do
+    it "includes image" do
       expect(html).to include("Striderdoom-SC2LWeek3AxiomVsAcerG6178-416.jpg")
     end
 
-    it "has video description" do
+    it "includes video description" do
       expect(html).to include("Acer and Axiom go head to head in week 3!")
     end
 
-    it "has embedded video link" do
+    it "includes embedded video link" do
       expect(html).to include("http://blip.tv/day9tv/sc2l-week-3-axiom-vs-acer-g6-6623829")
     end
   end

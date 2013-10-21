@@ -15,11 +15,11 @@ describe Onebox::Engine::YfrogOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has photo" do
+    it "includes photo" do
       expect(html).to include("jjdob.jpg")
     end
 
-    it "has description" do
+    it "includes description" do
       expect(html).to include("Click on the photo to comment, share or view other great photos")
     end
   end

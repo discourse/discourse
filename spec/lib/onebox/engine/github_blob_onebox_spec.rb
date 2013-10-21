@@ -12,15 +12,15 @@ describe Onebox::Engine::GithubBlobOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has file name" do
+    it "includes file name" do
       expect(html).to include("github_blob_onebox.rb")
     end
 
-    it "has number of lines" do
+    it "includes number of lines" do
       expect(html).to include("50")
     end
 
-    it "has blob contents" do
+    it "includes blob contents" do
       expect(html).to include("module Oneboxer")
     end
   end

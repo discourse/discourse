@@ -15,15 +15,15 @@ describe Onebox::Engine::QikOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has author" do
+    it "includes author" do
       expect(html).to include("mitesh patel")
     end
 
-    it "has still" do
+    it "includes still" do
       expect(html).to include("me_large.jpg")
     end
 
-    it "has embedded video link" do
+    it "includes embedded video link" do
       pending
       expect(html).to include("clsid:d27cdb6e-ae6d-11cf-96b8-444553540000")
     end

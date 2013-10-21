@@ -15,11 +15,11 @@ describe Onebox::Engine::FlickrOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has photo" do
+    it "includes photo" do
       expect(html).to include("6038315155_2875860c4b_z.jpg")
     end
 
-    it "has description" do
+    it "includes description" do
       expect(html).to include("The view from the Griffith Observatory, Los Angeles; July 2011")
     end
   end

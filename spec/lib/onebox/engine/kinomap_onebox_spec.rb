@@ -15,15 +15,15 @@ describe Onebox::Engine::KinomapOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has still" do
+    it "includes still" do
       expect(html).to include("52wjcu_320x240.jpg")
     end
 
-    it "has description" do
+    it "includes description" do
       expect(html).to include("A partir du parc moto,")
     end
 
-    it "has embedded video link" do
+    it "includes embedded video link" do
       expect(html).to include("http://v2.kinomap.com/embed/52wjcu")
     end
   end

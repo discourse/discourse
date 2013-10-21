@@ -15,11 +15,11 @@ describe Onebox::Engine::NFBOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has description" do
+    it "includes description" do
       expect(html).to include("With school, tennis lessons, swimming lessons, art classes,")
     end
 
-    it "has video embedded link" do
+    it "includes video embedded link" do
       pending
       expect(html).to include("")
     end

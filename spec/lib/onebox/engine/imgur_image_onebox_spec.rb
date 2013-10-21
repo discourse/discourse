@@ -15,7 +15,7 @@ describe Onebox::Engine::ImgurImageOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has image" do
+    it "includes image" do
       expect(html).to include("twoDTCU.jpg")
     end
   end

@@ -15,11 +15,11 @@ describe Onebox::Engine::FunnyOrDieOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has still" do
+    it "includes still" do
       expect(html).to include("c480x270_18.jpg")
     end
 
-    it "has description" do
+    it "includes description" do
       expect(html).to include("Will Ferrell meets his landlord.")
     end
   end

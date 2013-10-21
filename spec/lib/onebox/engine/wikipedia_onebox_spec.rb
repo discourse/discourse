@@ -15,11 +15,11 @@ describe Onebox::Engine::WikipediaOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has article image" do
+    it "includes article image" do
       expect(html).to include("225px-Kevin_Bacon_Comic-Con_2012.jpg")
     end
 
-    it "has the summary" do
+    it "includes summary" do
       expect(html).to include("Kevin Norwood Bacon[1] (born July 8, 1958)")
     end
   end

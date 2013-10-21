@@ -26,19 +26,19 @@ shared_examples_for "an engine" do
   end
 
   describe "#data" do
-    it "has a title" do
+    it "includes title" do
       expect(data[:title]).not_to be_nil
     end
 
-    it "has a link" do
+    it "includes link" do
       expect(data[:link]).not_to be_nil
     end
 
-    it "has a badge" do
+    it "includes badge" do
       expect(data[:badge]).not_to be_nil
     end
 
-    it "has a domain" do
+    it "includes domain" do
       expect(data[:domain]).not_to be_nil
     end
   end
@@ -48,7 +48,7 @@ shared_examples_for "an engine" do
       CGI.escapeHTML(data[key])
     end
 
-    it "has the title" do
+    it "includes title" do
       expect(html).to include(value_of(:title))
     end
   end

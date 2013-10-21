@@ -15,11 +15,11 @@ describe Onebox::Engine::ItunesOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has image" do
+    it "includes image" do
       expect(html).to include("bxerxqln.png")
     end
 
-    it "has description" do
+    it "includes description" do
       expect(html).to include("Get Minecraft – Pocket Edition on the App Store.")
     end
   end

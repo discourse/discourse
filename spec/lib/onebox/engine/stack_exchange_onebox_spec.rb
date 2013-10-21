@@ -15,7 +15,7 @@ describe Onebox::Engine::StackExchangeOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has the question" do
+    it "includes question" do
       expect(html).to include("Why does this code gives output C++Sucks? Can anyone explain the concept behind it?")
     end
   end

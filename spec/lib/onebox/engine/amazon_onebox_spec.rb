@@ -15,11 +15,11 @@ describe Onebox::Engine::AmazonOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has image" do
+    it "includes image" do
       expect(html).to include("61mI3YmHVnL._BO2,204,203,200_PIsitb-sticker-arrow-click,TopRight,35,-76_AA300_SH20_OU01_.jpg")
     end
 
-    it "has description" do
+    it "includes description" do
       expect(html).to include("Using only the finest natural materials and ecologically sound")
     end
 

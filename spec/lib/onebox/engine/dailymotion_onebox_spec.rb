@@ -15,18 +15,18 @@ describe Onebox::Engine::DailymotionOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has still" do
+    it "includes still" do
       expect(html).to include("526x297-bxE.jpg")
     end
 
-    it "has description" do
+    it "includes description" do
       expect(html).to include("Vibrez au son de l&#39;electro-pop des Irlandais de Two Door Cinema Club,")
     end
 
-    it "has embedded video link" do
+    it "includes embedded video link" do
       expect(html).to include("http://www.dailymotion.com/swf/video/x12h020?autoPlay=1")
     end
 
-    it "has embed code"
+    it "includes embed code"
   end
 end

@@ -15,17 +15,17 @@ describe Onebox::Engine::DotsubOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has description" do
+    it "includes description" do
       # og:decription tag spelled wrong in http response
       pending
       expect(html).to include("A short explanation of the micro-blogging service, Twitter.")
     end
 
-    it "has still" do
+    it "includes still" do
       expect(html).to include("/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/p")
     end
 
-    it "has video swf" do
+    it "includes video swf" do
       expect(html).to include("dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/m/flv/")
     end
   end

@@ -15,11 +15,11 @@ describe Onebox::Engine::SlideshareOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has description" do
+    it "includes description" do
       expect(html).to include("12 Local traditions that will make")
     end
 
-    it "has still" do
+    it "includes still" do
       expect(html).to include("12localtraditions-130729070157-phpapp01-thumbnail-4")
     end
   end

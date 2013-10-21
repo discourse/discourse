@@ -15,7 +15,7 @@ describe Onebox::Engine::ClikThroughOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has video description" do
+    it "includes video description" do
       expect(html).to include("Keri Hilson gets taken down by love once again")
     end
   end

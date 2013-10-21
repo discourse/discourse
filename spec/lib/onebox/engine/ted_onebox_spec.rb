@@ -15,11 +15,11 @@ describe Onebox::Engine::TedOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "has still" do
+    it "includes still" do
       expect(html).to include("aa8d0403aec3466d031e3e1c1605637d84d6a07d_389x292.jpg")
     end
 
-    it "has description" do
+    it "includes description" do
       expect(html).to include("As a young EMT on a Jerusalem ambulance")
     end
   end
