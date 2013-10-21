@@ -6,6 +6,7 @@ module Onebox
 
     def initialize(name, layout = false)
       @layout = layout
+      @view = View.new(name) if layout?
       self.template_name = if layout? then "_layout" else name end
     end
 
