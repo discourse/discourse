@@ -460,17 +460,17 @@ iframe {
 
 .extra-info {
   h1 {
-    display: inline-block;
-    max-width: 800px;
-    width: 90%;
-    margin: 7px 0 0 0;
-    line-height: 1.0;
+    margin: 7px 0 0 25px;
+    line-height: 1em;
+  a:not(.badge-category) {margin-left: -10px;}
+
   }
+
 
 
   a.star {
     margin-right: 8px;
-    margin-top: 11px !important;
+    margin-top: 6px;
   }
 
   .badge-category {
@@ -616,7 +616,7 @@ h3 {
   font-size: 13px;
   margin-top: 5px;
   word-wrap: break-word;
-  line-height: 1.2;
+  line-height: 1.2em;
 }
 
 
@@ -634,6 +634,11 @@ blockquote {
   clear:both;
   margin: 0;
   padding: 12px;
+}
+
+.info-line {
+  margin: 10px 0; 
+  color: #666;
 }
 
 .quote .title {margin-right: 0;}
@@ -775,13 +780,7 @@ button.show-replies {
   }
 
 
-
 }
-
-
-
-
-
 
 .btn-group .dropdown-toggle:active,
 .btn-group.open .dropdown-toggle {
