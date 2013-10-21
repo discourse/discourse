@@ -40,11 +40,10 @@ html {background-color: #fff;}
 }
 
 .gutter {
-      .reply-new,
-      .track-link {
+      .reply-new {
         opacity:0;
-          transition: linear 1s;
-    -webkit-transition: linear 1s;
+          transition: linear 0.15s;
+    -webkit-transition: linear 0.15s;
       }
     }
 
@@ -52,8 +51,8 @@ html {background-color: #fff;}
 section.post-menu-area {
     .discourse-no-touch & {
       opacity: 0.2;
-       transition: linear 1s;
-    -webkit-transition: linear 1s;
+       transition: linear 0.15s;
+    -webkit-transition: linear 0.15s;
     }
   }
 
@@ -131,7 +130,7 @@ nav.post-controls {
     background: transparent;
     border: none;
     margin-left: 1px;
-    transition: all linear .1s;
+    transition: all linear 0.15s;
     outline: none; //removes the pesky square button highlight from some browsers 
          &:hover {
           background: #eee;
