@@ -99,7 +99,7 @@ Discourse.Dialect.replaceBlock({
   stop: '[/code]',
 
   emitter: function(blockContents) {
-    return ['p', ['pre'].concat(blockContents)];
+    return ['p', ['pre'].concat(blockContents.join("\n"))];
   }
 });
 

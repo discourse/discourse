@@ -46,6 +46,7 @@ Discourse.Dialect.replaceBlock({
       });
     }
 
+    // If there's no username just return a simple quote
     if (!username) {
       return ['p', ['aside', params, contents ]];
     }

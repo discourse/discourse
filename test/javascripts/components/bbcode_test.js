@@ -11,8 +11,6 @@ test('basic bbcode', function() {
   format("[i]emphasis[/i]", "<span class=\"bbcode-i\">emphasis</span>", "italics text");
   format("[u]underlined[/u]", "<span class=\"bbcode-u\">underlined</span>", "underlines text");
   format("[s]strikethrough[/s]", "<span class=\"bbcode-s\">strikethrough</span>", "strikes-through text");
-  format("[code]\nx++\n[/code]", "<pre>\nx++</pre>", "makes code into pre");
-  format("[code]\nx++\ny++\nz++\n[/code]", "<pre>\nx++\ny++\nz++</pre>", "makes code into pre");
   format("[spoiler]it's a sled[/spoiler]", "<span class=\"spoiler\">it's a sled</span>", "supports spoiler tags");
   format("[img]http://eviltrout.com/eviltrout.png[/img]", "<img src=\"http://eviltrout.com/eviltrout.png\"/>", "links images");
   format("[url]http://bettercallsaul.com[/url]", "<a href=\"http://bettercallsaul.com\">http://bettercallsaul.com</a>", "supports [url] without a title");
@@ -25,6 +23,12 @@ test('basic bbcode', function() {
 test('invalid bbcode', function() {
   var cooked = Discourse.Markdown.cook("[code]I am not closed\n\nThis text exists.", {lookupAvatar: false});
   equal(cooked, "<p>[code]I am not closed</p>\n\n<p>This text exists.</p>", "does not raise an error with an open bbcode tag.");
+});
+
+test('code', function() {
+  format("[code]\nx++\n[/code]", "<pre>\nx++</pre>", "makes code into pre");
+  format("[code]\nx++\ny++\nz++\n[/code]", "<pre>\nx++\ny++\nz++</pre>", "makes code into pre");
+  format("[code]abc\n#def\n[/code]", '<pre>abc\n#def</pre>', 'it handles headings in a [code] block');
 });
 
 test('lists', function() {
