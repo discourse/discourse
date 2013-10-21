@@ -29,6 +29,8 @@ class CategoriesController < ApplicationController
   end
 
   def move
+    guardian.ensure_can_create!(Category)
+
     params.require("category_id")
     params.require("position")
 

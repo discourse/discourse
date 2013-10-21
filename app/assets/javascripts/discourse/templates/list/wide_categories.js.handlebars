@@ -7,7 +7,9 @@
       <th class='num topics'>{{i18n categories.topics}}</th>
       <th class='num posts'>{{i18n categories.posts}}</th>
       <th class='latest'>{{i18n categories.latest}}
+        {{#if canEdit}}
         <button title='{{i18n categories.toggle_ordering}}' class='btn toggle-admin no-text' {{action toggleOrdering}}><i class='icon icon-wrench'></i></button>
+        {{/if}}
       </th>
     </tr>
     </thead>
