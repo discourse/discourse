@@ -24,7 +24,7 @@ html {background-color: #fff;}
 
 .reply-to-tab {
   display: block;
-  position: absolute; 
+  position: absolute;
   left: 120px;
   z-index: 400;
   padding: 5px 12px;
@@ -96,8 +96,8 @@ nav.post-controls {
   }
 
 
-  button.show-replies { 
-    padding: 8px 20px; 
+  button.show-replies {
+    padding: 8px 20px;
     margin-left: 0px;
   }
 
@@ -131,7 +131,7 @@ nav.post-controls {
     border: none;
     margin-left: 1px;
     transition: all linear 0.15s;
-    outline: none; //removes the pesky square button highlight from some browsers 
+    outline: none; //removes the pesky square button highlight from some browsers
          &:hover {
           background: #eee;
           color: #888;
@@ -151,7 +151,7 @@ nav.post-controls {
         }
 
         &.delete:hover {
-          background: #E53B2E; 
+          background: #E53B2E;
           color: #fff;
         }
 
@@ -187,24 +187,24 @@ nav.post-controls {
 
 .embedded-posts {
   background: #eee;
-  
+
   .quote .title {background: #ddd;}
   blockquote {background: #ddd;}
- 
+
   .reply {padding-bottom: 10px;}
- 
+
   .topic-body {
     padding-top: 7px;
     padding-bottom: 10px;
   }
- 
+
   .topic-meta-data h5 {margin: 5px;}
-  
+
   .topic-meta-data-inside {
   margin: -3px 15px 0 0;
   color: #aaa;
   }
-  
+
   .topic-meta-data {padding-top: 20px;}
 }
 
@@ -243,7 +243,7 @@ a.star {
 .topic-summary {
 
   button {border-radius: 0;}
- 
+
   .btn {
   }
 
@@ -380,7 +380,7 @@ a.star {
   padding: 20px 10px 0 10px;
 
   p {
-    line-height: 32px; 
+    line-height: 32px;
     color: #888;
   }
 
@@ -390,7 +390,7 @@ a.star {
   clear: left;
 
   table {
-    box-shadow: none; 
+    box-shadow: none;
     border-radius: 0;
     border-color: #ddd;
     margin-top: 10px;
@@ -425,16 +425,13 @@ span.post-count {
 .chzn-container {vertical-align: middle;}
 }
 
-.topic-post article.boxed 
-
-{
-padding-bottom: 5px;
-img {
-  max-width: 100%;
-  height: auto;
+article.boxed {
+  padding-bottom: 5px;
+  img, svg {
+    max-width: 100%;
+    height: auto;
+  }
 }
-}
-
 
 .quote-button {
   display: none;
@@ -463,8 +460,8 @@ iframe {
 #main a.star {margin-top: 2px;}
 .extra-info {
   h1 {
-    display: inline-block; 
-    max-width: 800px; 
+    display: inline-block;
+    max-width: 800px;
     width: 90%;
     margin: 7px 0 0 0;
     line-height: 1.0;
@@ -474,7 +471,7 @@ iframe {
   a.star {
     margin-left: 10px;
     margin-right: 8px;
-    margin-top: 11px !important; 
+    margin-top: 11px !important;
   }
 
   .badge-category {
@@ -704,11 +701,11 @@ blockquote {
 
 
 .topic-body {
-  border-top: 1px solid #ddd; 
-  float: left; 
-  position: relative; 
+  border-top: 1px solid #ddd;
+  float: left;
+  position: relative;
   width: 720px;
-  padding: 10px 0 0 20px;  
+  padding: 10px 0 0 20px;
 
 }
 
@@ -720,10 +717,10 @@ blockquote {
 
 
 
-//columns 
+//columns
 
-.span14 { width: 70%; max-width: 720px; } //main content 
-.span2 {max-width: 92px;} 
+.span14 { width: 70%; max-width: 720px; } //main content
+.span2 {max-width: 92px;}
 .span11 {width: 90%; max-width: 580px;}
 .span5 {max-width: 250px;}
 
@@ -732,7 +729,7 @@ blockquote {
 
 .gutter {display: none;}
 
-.span14 { width: 80%; max-width: 720px; } //main content 
+.span14 { width: 80%; max-width: 720px; } //main content
 
   }
 
@@ -740,13 +737,13 @@ blockquote {
 
 .row:before, .row:after {display: table; content: "";}
 .row:after {clear: both;}
-.embedded-posts { 
+.embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
 
-  &.bottom .arrow {float: right; margin: 0 15px 0 0;} 
+  &.bottom .arrow {float: right; margin: 0 15px 0 0;}
   &.top {margin-left: 112px;}
   .topic-body img {max-width: 100%; height: auto;}
-  .topic-body, .topic-meta-data {border: none;} 
+  .topic-body, .topic-meta-data {border: none;}
   .row {border-top: 1px solid #ddd; padding-top: 7px;}
   .reply:first-of-type .row {border-top: none;}
 }
@@ -766,7 +763,7 @@ button.show-replies {
   margin-bottom: 0;
   border-bottom: none;
 
-  &:hover {background: #eee; 
+  &:hover {background: #eee;
     .badge-posts {color: #888;}
 
   }
@@ -942,7 +939,7 @@ clear: both;
         border-bottom: 1px solid #aaa;
         border-right: 1px solid #aaa;
         color: #999;
-       
+
       }
     }
   }

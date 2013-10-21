@@ -242,7 +242,7 @@
         padding: 7px 10px;
         margin: 6px 10px 3px 0;
         width: 400px;
-    
+
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
@@ -482,6 +482,10 @@ div.ac-wrap {
     .preview-wrapper {
       padding-left: 5px;
       float: right;
+      img, svg {
+        max-width: 100%;
+        height: auto;
+      }
     }
   }
   #wmd-button-bar {
@@ -534,7 +538,7 @@ div.ac-wrap {
 }
 
 #reply-control button.btn.no-text {
-  margin: 7px 0 0 5px; 
-  position: absolute;  
+  margin: 7px 0 0 5px;
+  position: absolute;
 }
 
