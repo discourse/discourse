@@ -48,8 +48,24 @@ shared_examples_for "an engine" do
       CGI.escapeHTML(data[key])
     end
 
+    it "includes subname" do
+      expect(html).to include(%|<aside class="onebox #{described_class.template_name}">|)
+    end
+
     it "includes title" do
       expect(html).to include(value_of(:title))
+    end
+
+    it "includes link" do
+      expect(html).to include(%|class="link" href="#{value_of(:link)}|)
+    end
+
+    it "includes badge" do
+      expect(html).to include(%|<strong class="name">#{value_of(:badge)}</strong>|)
+    end
+
+    it "includes domain" do
+      expect(html).to include(%|class="domain" href="#{value_of(:domain)}|)
     end
   end
 end
