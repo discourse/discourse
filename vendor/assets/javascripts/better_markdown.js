@@ -925,6 +925,7 @@ Markdown.dialects.Gruber.inline = {
       // Inline content is possible inside `link text`
       var res = Markdown.DialectHelpers.inline_until_char.call( this, text.substr(1), "]" );
 
+
       // No closing ']' found. Just consume the [
       if ( !res ) return [ 1, "[" ];
 
@@ -999,8 +1000,9 @@ Markdown.dialects.Gruber.inline = {
       }
 
       m = orig.match(/^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*?)\3|\((.*?)\)))?\n?/m);
-      if (m) {
-
+      if (m &&
+          (/^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i.test(m[2]) ||
+           /(\/[\w~,;\-\./?%&+#=]*)/.test(m[2]))) {
         var attrs = create_attrs.call(this);
         create_reference(attrs, m);
 

@@ -130,6 +130,9 @@ test("Links", function() {
          "<ul><li><a href=\"http://eviltrout.com\">Evil Trout</a></li></ul>",
          "allows markdown link references in a list");
 
+  cooked("User [MOD]: Hello!",
+         "<p>User [MOD]: Hello!</p>",
+         "It does not consider references that are obviously not URLs");
 });
 
 test("simple quotes", function() {
