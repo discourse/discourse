@@ -322,6 +322,7 @@ test("sanitize", function() {
          "<p><a href=\"http://disneyland.disney.go.com/\">disney</a> <a href=\"http://reddit.com\">reddit</a></p>",
          "we can embed proper links");
 
+  cooked("<table><tr><td>hello</td></tr></table>\nafter", "<p>after</p>", "it does not allow tables");
   cooked("<blockquote>a\n</blockquote>\n", "<blockquote>a\n\n<br/>\n\n</blockquote>", "it does not double sanitize");
 });
 
