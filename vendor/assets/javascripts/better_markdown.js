@@ -174,12 +174,14 @@
     return md.toTree( source );
   };
 
+  /**
+   *  count_lines( str ) -> count
+   *  - str (String): String whose lines we want to count
+   *
+   *  Counts the number of linebreaks in `str`
+   **/
   function count_lines( str ) {
-    var n = 0,
-        i = -1;
-    while ( ( i = str.indexOf("\n", i + 1) ) !== -1 )
-      n++;
-    return n;
+    return str.split("\n").length - 1;
   }
 
   // Internal - split source into rough blocks

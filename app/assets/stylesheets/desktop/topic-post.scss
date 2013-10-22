@@ -343,6 +343,9 @@ a.star {
 }
 
   .topic-links {
+    li > a {
+      margin-left: 5px;
+    }
     .badge-notification {
       margin: 0 0 4px;
     }
@@ -636,7 +639,7 @@ blockquote {
 }
 
 .info-line {
-  margin: 10px 0; 
+  margin: 10px 0;
   color: #666;
 }
 
