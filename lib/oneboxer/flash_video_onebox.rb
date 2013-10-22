@@ -7,7 +7,7 @@ module Oneboxer
 
     def onebox
       if SiteSetting.enable_flash_video_onebox
-        "<object width='100%' height='100%'><param name='#{@url}' value='#{@url}'><embed src='#{@url}' width='100%' height='100%'></embed></object>"
+        "<object width='100%' height='100%' wmode='opaque'><param name='#{@url}' value='#{@url}'><embed src='#{@url}' width='100%' height='100%' wmode='opaque'></embed></object>"
       else
         "<a href='#{@url}'>#{@url}</a>"
       end
