@@ -1,13 +1,33 @@
-<h3>{{i18n admin.api.long_title}}</h3>
-{{#if keyExists}}
-  <strong>{{i18n admin.api.key}}:</strong> {{key}}
-  <button class='btn' {{action regenerateKey target="model"}}>
-    {{i18n admin.api.regenerate}}
-  </button>
-  <p>{{{i18n admin.api.note_html}}}</p>
+{{#if model}}
+  <table class='api-keys'>
+  <tr>
+    <th>{{i18n admin.api.key}}</th>
+    <th>{{i18n admin.api.user}}</th>
+    <th>&nbsp;</th>
+  </tr>
+  {{#each model}}
+    <tr>
+      <td class='key'>{{key}}</td>
+      <td>
+        {{#if user}}
+          {{#link-to 'adminUser' user}}
+            {{avatar user imageSize="small"}}
+          {{/link-to}}
+        {{else}}
+          {{i18n admin.api.all_users}}
+        {{/if}}
+      </td>
+      <td>
+        <button class='btn' {{action regenerateKey this}}>{{i18n admin.api.regenerate}}</button>
+        <button class='btn' {{action revokeKey this}}>{{i18n admin.api.revoke}}</button>
+      </td>
+    </tr>
+  {{/each}}
+  </table>
 {{else}}
-  <p>{{{i18n admin.api.info_html}}}</p>
-  <button class='btn' {{action generateKey target="model"}}>
-    {{i18n admin.api.generate}}
-  </button>
+  <p>{{i18n admin.api.none}}</p>
 {{/if}}
+
+{{#unless hasMasterKey}}
+  <button class='btn' {{action generateMasterKey}}>{{i18n admin.api.generate_master}}</button>
+{{/unless }}

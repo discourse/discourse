@@ -423,7 +423,6 @@ zh_TW:
     company_full_name: "運行本站點的公司全稱，用于法律文檔，例如服務條款 /tos"
     company_short_name: "運行本站點的公司短名，用于法律文檔，例如服務條款 /tos"
     company_domain: "運行本站點的公司域名，用于法律文檔，例如服務條款 /tos"
-    api_key: "加密的應用開發接口密鑰（API key），用于創建和更新主題。使用 /admin/api 來對它進行設置。"
     queue_jobs: "如果失敗隊列在排隊，使用 Sidekiq 消息引擎對不同的工作排隊"
     crawl_images: "允許從第三方獲取圖片來插入寬、高數值"
     ninja_edit_window: "在多少秒鍾之內，對帖子的多次編輯不生成新版本"

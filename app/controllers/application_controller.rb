@@ -279,7 +279,7 @@ class ApplicationController < ActionController::Base
   protected
 
     def api_key_valid?
-      request["api_key"] && SiteSetting.api_key_valid?(request["api_key"])
+      request["api_key"] && ApiKey.where(key: request["api_key"]).exists?
     end
 
     # returns an array of integers given a param key

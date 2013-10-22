@@ -126,6 +126,25 @@
   </div>
 
   <div class='display-row'>
+    <div class='field'>{{i18n admin.api.key}}</div>
+
+    {{#if api_key}}
+      <div class='long-value'>
+        {{api_key.key}}
+        <button class='btn' {{action regenerateApiKey}}>{{i18n admin.api.regenerate}}</button>
+        <button {{action revokeApiKey}} class="btn">{{i18n admin.api.revoke}}</button>
+      </div>
+    {{else}}
+      <div class='value'>
+      &mdash;
+      </div>
+      <div class='controls'>
+        <button {{action generateApiKey}} class="btn">{{i18n admin.api.generate}}</button>
+      </div>
+    {{/if}}
+  </div>
+
+  <div class='display-row'>
     <div class='field'>{{i18n admin.user.admin}}</div>
     <div class='value'>{{admin}}</div>
     <div class='controls'>

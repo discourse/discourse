@@ -493,7 +493,6 @@ cs:
     company_full_name: "Plné jméno společnosti, která provozuje tento web, používá se v dokumentech jako je /tos"
     company_short_name: "Krátké jméno společnosti, která provozuje tento web, používá se v dokumentech jako je /tos"
     company_domain: "Doménové jméno vlastněné společností, která provozuje tento web, používá se v dokumentech jako je /tos"
-    api_key: "Zabezpečený API klíč, který se používá pro vytváření a aktualizaci témat, použijte sekci /admin/api k nastavení"
     queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
     crawl_images: "Povolit získávání obrázků z webů třetích stran"
     ninja_edit_window: "Jak rychle smíte udělat změnu, aniž by se uložila jako nová verze"

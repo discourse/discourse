@@ -423,7 +423,6 @@ it:
     company_full_name: "Il nome completo di chi gestisce il sito, usato in documenti legali come /tos"
     company_short_name: "Il nome abbreviato di chi gestisce il sito, usato in documenti legali come /tos"
     company_domain: "Il dominio di chi gestisce il sito, usato in documenti legali come /tos"
-    api_key: "La chiave API segreta usata per creare e aggiornare topic, usa la sezione /admin/api per impostarla"
     queue_jobs: "Metti in coda diversi job in sidekiq, se false le code sono inline"
     crawl_images: "Abilita la ricezione di immagini da sorgenti terze parti"
     ninja_edit_window: "Numero di secondi trascorsi affinché una modifica del post appena inviato, non venga considerata come nuova revisione"

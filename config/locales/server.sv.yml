@@ -346,7 +346,6 @@ sv:
     company_full_name: "Det fullständiga namnet för företaget som driver denna webbplats, används i juridiska dokument så som /tos"
     company_short_name: "Det korta namnet för företaget som driver denna webbplats, används i juridiska dokument så som /tos"
     company_domain: "Domännamnet som ägs av företaget som driver denna webbplats, används i juridiska dokument så som /tos"
-    api_key: "Den säkra API-nyckeln som används för att skapa och uppdatera trådar, använd /admin/api för att skapa en"
     queue_jobs: "Köa diverse jobb i sidekiq, om urkryssat så körs köer infogat"
     crawl_images: "Aktivera hämtning av bilder från tredjepartskällor för att infoga bredd och höjd"
     ninja_edit_window: "Antal sekunder efter ett inlägg när en ändring inte skapar en ny version"

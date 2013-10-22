@@ -62,6 +62,26 @@ describe Admin::UsersController do
 
     end
 
+    context '.generate_api_key' do
+      let(:evil_trout) { Fabricate(:evil_trout) }
+
+      it 'calls generate_api_key' do
+        User.any_instance.expects(:generate_api_key).with(@user)
+        xhr :post, :generate_api_key, user_id: evil_trout.id
+      end
+    end
+
+    context '.revoke_api_key' do
+
+      let(:evil_trout) { Fabricate(:evil_trout) }
+
+      it 'calls revoke_api_key' do
+        User.any_instance.expects(:revoke_api_key)
+        xhr :delete, :revoke_api_key, user_id: evil_trout.id
+      end
+
+    end
+
     context '.approve' do
 
       let(:evil_trout) { Fabricate(:evil_trout) }

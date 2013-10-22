@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   has_many :secure_categories, through: :groups, source: :categories
 
   has_one :user_search_data, dependent: :destroy
+  has_one :api_key, dependent: :destroy
 
   belongs_to :uploaded_avatar, class_name: 'Upload', dependent: :destroy
 
@@ -479,6 +480,19 @@ class User < ActiveRecord::Base
     self.save!
   end
 
+  def generate_api_key(created_by)
+    if api_key.present?
+      api_key.regenerate!(created_by)
+      api_key
+    else
+      ApiKey.create(user: self, key: SecureRandom.hex(32), created_by: created_by)
+    end
+  end
+
+  def revoke_api_key
+    ApiKey.where(user_id: self.id).delete_all
+  end
+
   protected
 
   def cook
@@ -566,6 +580,7 @@ class User < ActiveRecord::Base
       end
     end
   end
+
 
   private
 

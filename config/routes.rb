@@ -43,6 +43,8 @@ Discourse::Application.routes.draw do
       put 'unban'
       put 'revoke_admin', constraints: AdminConstraint.new
       put 'grant_admin', constraints: AdminConstraint.new
+      post 'generate_api_key', constraints: AdminConstraint.new
+      delete 'revoke_api_key', constraints: AdminConstraint.new
       put 'revoke_moderation', constraints: AdminConstraint.new
       put 'grant_moderation', constraints: AdminConstraint.new
       put 'approve'
@@ -89,7 +91,9 @@ Discourse::Application.routes.draw do
     end
     resources :api, only: [:index], constraints: AdminConstraint.new do
       collection do
-        post 'generate_key'
+        post 'key' => 'api#create_master_key'
+        put 'key' => 'api#regenerate_key'
+        delete 'key' => 'api#revoke_key'
       end
     end
   end

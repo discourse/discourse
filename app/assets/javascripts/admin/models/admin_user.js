@@ -8,6 +8,34 @@
 **/
 Discourse.AdminUser = Discourse.User.extend({
 
+  /**
+    Generates an API key for the user. Will regenerate if they already have one.
+
+    @method generateApiKey
+    @returns {Promise} a promise that resolves to the newly generated API key
+  **/
+  generateApiKey: function() {
+    var self = this;
+    return Discourse.ajax("/admin/users/" + this.get('id') + "/generate_api_key", {type: 'POST'}).then(function (result) {
+      var apiKey = Discourse.ApiKey.create(result.api_key);
+      self.set('api_key', apiKey);
+      return apiKey;
+    });
+  },
+
+  /**
+    Revokes a user's current API key
+
+    @method revokeApiKey
+    @returns {Promise} a promise that resolves when the API key has been deleted
+  **/
+  revokeApiKey: function() {
+    var self = this;
+    return Discourse.ajax("/admin/users/" + this.get('id') + "/revoke_api_key", {type: 'DELETE'}).then(function (result) {
+      self.set('api_key', null);
+    });
+  },
+
   deleteAllPosts: function() {
     this.set('can_delete_all_posts', false);
     var user = this;

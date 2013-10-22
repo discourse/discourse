@@ -489,7 +489,6 @@ pt_BR:
     company_full_name: "Nome completo da companhia que mantém este site, usada nos documentos legais como o /tos"
     company_short_name: "Nome curto da companhia que mantém este site, usada nos documentos legais como o /tos"
     company_domain: "Nome de domínio pertencente a companhia que mantém este site, usada nos documentos legais como o /tos"
-    api_key: "A chave de API segura usada para criar e modificar tópicos, acesse a seção /admin/api para defini-lá"
     queue_jobs: "APENAS DESENVOLVEDORES! ATENÇÃO! Por padrão, enfileira tarefas no sidekiq. Se desativado, seu site ficará defeituoso."
     crawl_images: "permitir mostrar imagens de sites terceiros"
     ninja_edit_window: "quão rápido é possivél fazer uma alteração sem guardar uma nova versão, em segundos."

@@ -15,10 +15,18 @@ describe 'api' do
       Fabricate(:post)
     end
 
+    let(:api_key) { user.generate_api_key(user) }
+    let(:master_key) { ApiKey.create_master_key }
+
     # choosing an arbitrarily easy to mock trusted activity
     it 'allows users with api key to bookmark posts' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).once
-      put :bookmark, bookmarked: "true", post_id: post.id, api_key: SiteSetting.api_key, api_username: user.username, format: :json
+      put :bookmark, bookmarked: "true", post_id: post.id, api_key: api_key.key, format: :json
+    end
+
+    it 'allows users with a master api key to bookmark posts' do
+      PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).once
+      put :bookmark, bookmarked: "true", post_id: post.id, api_key: master_key.key, api_username: user.username, format: :json
     end
 
     it 'disallows phonies to bookmark posts' do

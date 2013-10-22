@@ -16,6 +16,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_be_deleted
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
+  has_one :api_key, serializer: ApiKeySerializer, embed: :objects
 
   def can_revoke_admin
     scope.can_revoke_admin?(object)
@@ -47,6 +48,10 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def topic_count
     object.topics.count
+  end
+
+  def include_api_key?
+    api_key.present?
   end
 
 end

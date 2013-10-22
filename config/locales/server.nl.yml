@@ -465,7 +465,6 @@ nl:
     company_full_name: "De volledige naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     company_short_name: "De korte naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     company_domain: "De domeinnaam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
-    api_key: "De beveiligde API-sleutel wordt gebruikt om topics te maken en bij te werken. Gebruik /admin/api om deze in te stellen"
     queue_jobs: "DEVELOPERS ONLY! WARNING! Zet verschillende taken in een queue binnen sidekiq, bij 'false' worden taken ineens uitgevoerd"
     crawl_images: Zet het ophalen van afbeeldingen van externe bronnen aan
     ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in seconden."

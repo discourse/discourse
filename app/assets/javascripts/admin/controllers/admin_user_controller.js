@@ -27,6 +27,28 @@ Discourse.AdminUserController = Discourse.ObjectController.extend({
       });
 
       this.send('toggleTitleEdit');
+    },
+
+    generateApiKey: function() {
+      this.get('model').generateApiKey();
+    },
+
+    regenerateApiKey: function() {
+      var self = this;
+      bootbox.confirm(I18n.t("admin.api.confirm_regen"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
+        if (result) {
+          self.get('model').generateApiKey();
+        }
+      });
+    },
+
+    revokeApiKey: function() {
+      var self = this;
+      bootbox.confirm(I18n.t("admin.api.confirm_revoke"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
+        if (result) {
+          self.get('model').revokeApiKey();
+        }
+      });
     }
   }
 

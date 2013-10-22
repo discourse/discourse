@@ -206,6 +206,17 @@ table {
     float: left;
     margin-left: 12px;
   }
+  .long-value {
+    width: 800px;
+    float: left;
+    margin-left: 12px;
+    font-size: 13px;
+
+    button {
+      margin-left: 10px;
+    }
+  }
+
   .controls {
     .btn {
       margin-right: 5px;
@@ -371,6 +382,24 @@ table {
 .update-nag {
   i.icon {
     font-size: 20px;
+  }
+}
+
+table.api-keys {
+  margin-top: 10px;
+  width: 100%;
+
+  th {
+    text-align: left;
+    padding: 5px;
+  }
+
+  td {
+    padding: 5px;
+  }
+
+  td.key {
+    font-size: 12px;
   }
 }
 

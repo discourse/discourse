@@ -4,7 +4,21 @@ require_dependency 'boost_trust_level'
 
 class Admin::UsersController < Admin::AdminController
 
-  before_filter :fetch_user, only: [:ban, :unban, :refresh_browsers, :revoke_admin, :grant_admin, :revoke_moderation, :grant_moderation, :approve, :activate, :deactivate, :block, :unblock, :trust_level]
+  before_filter :fetch_user, only: [:ban,
+                                    :unban,
+                                    :refresh_browsers,
+                                    :revoke_admin,
+                                    :grant_admin,
+                                    :revoke_moderation,
+                                    :grant_moderation,
+                                    :approve,
+                                    :activate,
+                                    :deactivate,
+                                    :block,
+                                    :unblock,
+                                    :trust_level,
+                                    :generate_api_key,
+                                    :revoke_api_key]
 
   def index
     query = ::AdminUserIndexQuery.new(params)
@@ -49,6 +63,16 @@ class Admin::UsersController < Admin::AdminController
   def revoke_admin
     guardian.ensure_can_revoke_admin!(@user)
     @user.revoke_admin!
+    render nothing: true
+  end
+
+  def generate_api_key
+    api_key = @user.generate_api_key(current_user)
+    render_serialized(api_key, ApiKeySerializer)
+  end
+
+  def revoke_api_key
+    @user.revoke_api_key
     render nothing: true
   end
 

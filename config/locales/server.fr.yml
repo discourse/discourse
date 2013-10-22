@@ -460,7 +460,6 @@ fr:
     company_full_name: "Le nom complet de la société qui gère ce site, utilisé dans les documents légaux, tels que /tos"
     company_short_name: "Le nom de la société qui gère ce site, utilisé dans les documents légaux, tels que /tos"
     company_domain: "Le nom de domaine de la société qui gère ce site, utilisé dans les documents légaux, tels que /tos"
-    api_key: "La clé API sécurisé à utiliser pour créer et mettre à jour des discussions. Utilisez la section /admin/api pour la configurer."
     queue_jobs: "DÉVELOPPEURS SEULEMENT ! ATTENTION ! Par  défaut, empiler les travaux dans sidekiq. Si désactivé, votre site sera cassé."
     crawl_images: "Permettre aux images provenant de sources tierces d'insérer la hauteur et la largeur de celles-ci"
     ninja_edit_window: "Temps d'édition avant de sauvegarder une nouvelle version, en secondes."

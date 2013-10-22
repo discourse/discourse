@@ -119,8 +119,8 @@ zh_CN:
     replace_paragraph: "[用一段简短的分类描述替换此第一段内容，请不要超过200个字符。]"
     post_template: "%{replace_paragraph}\n\n使用下面的空间输入分类的详细描述信息，可包括在此分类下讨论的规则、内容导向等等。"
     this_year: "今年"
-    
-    
+
+
   trust_levels:
     newuser:
       title: "访客"
@@ -442,7 +442,6 @@ zh_CN:
     company_full_name: "运行本站点的公司全称，用于法律文档，例如服务条款 /tos"
     company_short_name: "运行本站点的公司短名，用于法律文档，例如服务条款 /tos"
     company_domain: "运行本站点的公司域名，用于法律文档，例如服务条款 /tos"
-    api_key: "加密的应用开发接口密钥（API key），用于创建和更新主题。使用 /admin/api 来对它进行设置。"
     queue_jobs: "如果失败队列在排队，使用 Sidekiq 消息引擎对不同的工作排队"
     crawl_images: "允许从第三方获取图片来插入宽、高数值"
     ninja_edit_window: "在多少秒钟之内，对帖子的多次编辑不生成新版本"

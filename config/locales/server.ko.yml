@@ -417,7 +417,6 @@ ko:
     company_full_name: "The full name of the company that runs this site, used in legal documents like the /tos"
     company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
     company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
-    api_key: "The secure API key used to create and update topics, use the /admin/api section to set it up"
     access_password: "When restricted access is enabled, this password must be entered"
     queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
