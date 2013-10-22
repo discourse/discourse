@@ -14,22 +14,24 @@ module Onebox
       end
 
       def url
-        "https://api.github.com/repos/#{match[:owner]}/#{match[:repo]}/pulls/#{match[:number]}"
+        "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/pulls/#{match[:number]}"
       end
 
       private
 
       def match
-        @url.match(/github\.com\/(?<owner>[^\/]+)\/(?<repo>[^\/]+)\/pull\/(?<number>[^\/]+)/)
+        @match ||= @url.match(/github\.com\/(?<owner>[^\/]+)\/(?<repository>[^\/]+)\/pull\/(?<number>[^\/]+)/)
       end
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://www.github.com",
+          badge: "g",
           author: raw["user"]["login"],
           gravatar: raw["user"]["avatar_url"],
           title: raw["title"],
-          repo: raw["base"]["repo"]["full_name"],
+          repository: raw["base"]["repo"]["full_name"],
           time_date: raw["created_at"],
           commits: raw["commits"],
           additions: raw["additions"],

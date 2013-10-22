@@ -14,7 +14,9 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://collegehumor.com",
+          badge: "c",
           title: raw.title,
           image: raw.images.first,
           description: raw.description,

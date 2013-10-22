@@ -15,7 +15,9 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://open.spotify.com",
+          badge: "s",
           title: raw.title,
           image: raw.images.first,
           description: raw.description

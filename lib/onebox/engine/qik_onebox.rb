@@ -15,7 +15,9 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://qik.com",
+          badge: "q",
           title: raw.css(".info h2").inner_text,
           image: raw.css(".userphoto").first["src"]
         }

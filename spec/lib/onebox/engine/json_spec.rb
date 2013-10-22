@@ -7,8 +7,6 @@ describe Onebox::Engine::JSON do
   end
   before(:each) { Onebox.defaults.cache.clear }
 
-  let(:link) { @link }
-
   describe "#raw" do
     class OneboxEngineJSON
       include Onebox::Engine

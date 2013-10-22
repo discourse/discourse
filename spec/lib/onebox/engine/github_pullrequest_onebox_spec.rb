@@ -3,60 +3,48 @@ require "spec_helper"
 describe Onebox::Engine::GithubPullRequestOnebox do
   before(:all) do
     @link = "https://github.com/discourse/discourse/pull/1253/"
-    api = "https://api.github.com/repos/discourse/discourse/pulls/1253"
-    fake(api, response(described_class.template_name))
+    @uri = "https://api.github.com/repos/discourse/discourse/pulls/1253"
+    fake(@uri, response(described_class.template_name))
   end
-  before(:each) { Onebox.defaults.cache.clear }
 
-  let(:link) { @link }
-
+  include_context "engines"
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    let(:html) { described_class.new(link).to_html }
-
-    it "has pull request author" do
+    it "includes pull request author" do
       expect(html).to include("jamesaanderson")
     end
 
-    it "has pull request title" do
-      expect(html).to include("Add audio onebox")
-    end
-
-    it "has repo name" do
+    it "includes repository name" do
       expect(html).to include("discourse")
     end
 
-    it "has commit author gravatar" do
+    it "includes commit author gravatar" do
       expect(html).to include("b3e9977094ce189bbb493cf7f9adea21")
     end
 
-    it "has commit description" do
+    it "includes commit description" do
       expect(html).to include("8168")
     end
 
-    it "has commit time and date" do
+    it "includes commit time and date" do
       expect(html).to include("2013-07-26T02:05:53Z")
     end
 
-    it "has number of commits" do
+    it "includes number of commits" do
       expect(html).to include("1")
     end
 
-    it "has number of files changed" do
+    it "includes number of files changed" do
       expect(html).to include("4")
     end
 
-    it "has number of additions" do
+    it "includes number of additions" do
       expect(html).to include("19")
     end
 
-    it "has number of deletions" do
+    it "includes number of deletions" do
       expect(html).to include("1")
-    end
-
-    it "has URL" do
-      expect(html).to include(link)
     end
   end
 end

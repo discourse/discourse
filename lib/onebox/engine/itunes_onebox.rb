@@ -17,7 +17,9 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://itunes.apple.com",
+          badge: "i",
           title: raw.title,
           image: raw.images.first,
           description: raw.description,

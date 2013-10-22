@@ -15,7 +15,9 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://stackoverflow.com",
+          badge: "s",
           title: raw.css(".question-hyperlink").inner_text,
           question: raw.css(".question .post-text p").first.inner_text
         }

@@ -15,17 +15,76 @@ RSpec.configure do |config|
   config.include HTMLSpecHelper
 end
 
+shared_context "engines" do
+  before(:all) do
+    fake(@uri || @link, response(described_class.template_name))
+    @onebox = described_class.new(@link)
+    @html = @onebox.to_html
+    @data = @onebox.send(:data)
+  end
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:onebox) { @onebox }
+  let(:html) { @html }
+  let(:data) { @data }
+  let(:link) { @link }
+
+  def escaped_data(key)
+    CGI.escapeHTML(data[key])
+  end
+end
+
 shared_examples_for "an engine" do
-  it "has engine behavior" do
-    expect(described_class.private_instance_methods).to include(:data, :record, :raw)
+  it "responds to data" do
+    expect(described_class.private_instance_methods).to include(:data)
   end
 
-  it "has implemented the data functionality" do
-    expect { described_class.new(link).send(:data) }.not_to raise_error
+  it "responds to record" do
+    expect(described_class.private_instance_methods).to include(:record)
   end
 
   it "correctly matches the url" do
     onebox = Onebox::Matcher.new(link).oneboxed
     expect(onebox).to be(described_class)
+  end
+
+  describe "#data" do
+    it "includes title" do
+      expect(data[:title]).not_to be_nil
+    end
+
+    it "includes link" do
+      expect(data[:link]).not_to be_nil
+    end
+
+    it "includes badge" do
+      expect(data[:badge]).not_to be_nil
+    end
+
+    it "includes domain" do
+      expect(data[:domain]).not_to be_nil
+    end
+  end
+
+  describe "to_html" do
+    it "includes subname" do
+      expect(html).to include(%|<aside class="onebox #{described_class.template_name}">|)
+    end
+
+    it "includes title" do
+      expect(html).to include(escaped_data(:title))
+    end
+
+    it "includes link" do
+      expect(html).to include(%|class="link" href="#{escaped_data(:link)}|)
+    end
+
+    it "includes badge" do
+      expect(html).to include(%|<strong class="name">#{data[:badge]}</strong>|)
+    end
+
+    it "includes domain" do
+      expect(html).to include(%|class="domain" href="#{escaped_data(:domain)}|)
+    end
   end
 end

@@ -15,8 +15,10 @@ module Onebox
 
       def data
         {
-          url: @url,
-          name: raw.css("html body h1").inner_text,
+          link: link,
+          domain: "http://wikipedia.com",
+          badge: "w",
+          title: raw.css("html body h1").inner_text,
           image: raw.css(".infobox .image img").first["src"],
           description: raw.css("html body p").inner_text
         }

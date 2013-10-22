@@ -1,13 +1,16 @@
 require "spec_helper"
 
 describe Onebox::Preview do
+  before(:all) { fake("http://www.amazon.com", response("amazon")) }
   before(:each) { Onebox.defaults.cache.clear }
 
+  let(:preview) { described_class.new("http://www.amazon.com") }
+
   describe "#to_s" do
+    let(:to_s) { preview.to_s }
     it "returns some html if given a valid url" do
-      fake("http://www.example.com", response("example"))
-      preview = described_class.new("http://www.example.com")
-      expect(preview.to_s).to include("Example Domain 1")
+      title = "Knit Noro: Accessories: 30 Colorful Little Knits [Hardcover]"
+      expect(to_s).to include(title)
     end
     it "returns an empty string if the resource is not found"
     it "returns an empty string if the resource fails to load"
@@ -16,7 +19,6 @@ describe Onebox::Preview do
 
   describe "#engine" do
     it "returns an engine" do
-      preview = described_class.new("http://www.example.com")
       expect(preview.send(:engine)).to be_a(Onebox::Engine)
     end
   end

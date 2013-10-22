@@ -15,7 +15,9 @@
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://www.viddler.com",
+          badge: "v",
           title: raw.title,
           image: raw.images.first,
           description: raw.description,

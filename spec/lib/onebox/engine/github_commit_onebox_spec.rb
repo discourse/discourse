@@ -3,60 +3,51 @@ require "spec_helper"
 describe Onebox::Engine::GithubCommitOnebox do
   before(:all) do
     @link = "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
-    api = "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
-    fake(api, response(described_class.template_name))
+    @uri = "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
   end
-  before(:each) { Onebox.defaults.cache.clear }
 
-  let(:link) { @link }
-
+  include_context "engines"
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    let(:html) { described_class.new(link).to_html }
-
-    it "has repo owner" do
+    it "includes owner" do
       expect(html).to include("discourse")
     end
 
-    it "has repo name" do
+    it "includes repository name" do
       expect(html).to include("discourse")
     end
 
-    it "has commit sha" do
+    it "includes commit sha" do
       expect(html).to include("803d023e2307309f8b776ab3b8b7e38ba91c0919")
     end
 
-    it "has commit author gravatar" do
+    it "includes commit author gravatar" do
       expect(html).to include("2F7d3010c11d08cf990b7614d2c2ca9098.png")
     end
 
-    it "has commit message" do
+    it "includes commit message" do
       expect(html).to include("Fixed GitHub auth")
     end
 
-    it "has commit author" do
+    it "includes commit author" do
       expect(html).to include("SamSaffron")
     end
 
-    it "has commit time and date" do
+    it "includes commit time and date" do
       expect(html).to include("2013-08-02T02:16:44Z")
     end
 
-    it "has number of files changed" do
+    it "includes number of files changed" do
       expect(html).to include("1 changed file")
     end
 
-    it "has number of additions" do
+    it "includes number of additions" do
       expect(html).to include("18 additions")
     end
 
-    it "has number of deletions" do
+    it "includes number of deletions" do
       expect(html).to include("2 deletions")
-    end
-
-    it "has URL" do
-      expect(html).to include(link)
     end
   end
 end

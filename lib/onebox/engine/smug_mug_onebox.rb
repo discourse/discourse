@@ -19,8 +19,10 @@ module Onebox
 
       def data
         {
-          url: @url,
-          photographer: raw["author_name"],
+          link: link,
+          domain: "http://www.smugmug.com",
+          badge: "i",
+          title: raw["author_name"],
           caption: raw["title"],
           image: raw["url"]
         }

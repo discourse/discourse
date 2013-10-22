@@ -15,7 +15,9 @@ module Onebox
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://www.dailymotion.com",
+          badge: "d",
           title: raw.title,
           image: raw.images.first,
           description: raw.description,

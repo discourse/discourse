@@ -12,18 +12,21 @@ module Onebox
       end
 
       def url
-        "https://api.github.com/gists/#{match[:number]}"
+        "https://api.github.com/gists/#{match[:sha]}"
       end
 
       private
 
       def match
-        @url.match(/gist\.github\.com\/([^\/]+\/)?(?<number>[0-9a-f]+)/)
+        @match ||= @url.match(/gist\.github\.com\/([^\/]+\/)?(?<sha>[0-9a-f]+)/)
       end
 
       def data
         {
-          url: @url,
+          link: link,
+          domain: "http://gist.github.com",
+          badge: "g",
+          title: raw["description"],
           content: raw["files"].first[1]["content"],
           author: raw["user"]["login"]
         }

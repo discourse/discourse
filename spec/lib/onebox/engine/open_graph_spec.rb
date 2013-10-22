@@ -7,8 +7,6 @@ describe Onebox::Engine::OpenGraph do
   end
   before(:each) { Onebox.defaults.cache.clear }
 
-  let(:link) { @link }
-
   describe "#raw" do
     class OneboxEngineOpenGraph
       include Onebox::Engine
