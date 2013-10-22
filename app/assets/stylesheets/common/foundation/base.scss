@@ -8,7 +8,7 @@
 html {
   color: $black;
   font: #{$base-font-size}/#{$base-line-height} $base-font-family;
-  background-color: $base-background-color;
+  background-color: #fff;
   overflow-y: scroll;
   -webkit-font-smoothing: subpixel-antialiased;
 }

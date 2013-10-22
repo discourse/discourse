@@ -1,6 +1,5 @@
 @import "common/foundation/variables";
 
-html {background-color: #fff;}
 
 .container {
   @extend .clearfix;
@@ -66,13 +65,7 @@ section.post-menu-area, .post-actions {
         opacity:1;
       }
     }
-
-
-  }
-
-
-
-
+}
 
 nav.post-controls {
     padding: 0;
@@ -185,22 +178,7 @@ nav.post-controls {
 
   .quote .title {background: #ddd;}
   blockquote {background: #ddd;}
-&.bottom { margin-top: -11px;
-  .reply {
-
-
-
-
-  }
-}
-
-
-
-
-
-
-  .topic-body {
-  }
+  &.bottom { margin-top: -11px;}
 
   .topic-meta-data h5 {margin: 5px;}
 
@@ -211,24 +189,14 @@ nav.post-controls {
 
   .topic-meta-data {padding-top: 20px;}
 
-
-
-
-
 }
-
-
-
-
 
 .post-action {
   .relative-date {
     margin-left: 5px;
   }
-  .avatar {margin-right: 2px;}
+  .avatar { margin-right: 2px; }
 }
-
-
 
 a.star {
   display: inline-block;
@@ -244,13 +212,9 @@ a.star {
   display: none;
 }
 
-
-
 .topic-summary {
   button {border-radius: 0;}
 
-  .btn {
-  }
 
   .topic-links li {
     word-wrap: break-word;
@@ -396,7 +360,6 @@ a.star {
 
 #suggested-topics {
   clear: left;
-
   table {
     box-shadow: none;
     border-radius: 0;
@@ -492,6 +455,7 @@ iframe {
   width: 92px;
   border-top: 1px solid #ddd;
   padding-top: 25px;
+
   img { text-align: center; }
 .contents {
 
@@ -542,16 +506,13 @@ h1, h2, h3 {margin: 10px 0;}
 .deleted {
   .topic-body {
   background-color: lighten(red, 45%);
+  }
 }
-}
-
 
 .moderator {
-
   .topic-body {
   background-color: lighten(yellow, 45%);
-}
-
+  }
 }
 
 #share-link {
@@ -639,7 +600,6 @@ h3 {
 
 
 blockquote {
-  clear:both;
   margin: 0;
   padding: 12px;
 }
@@ -729,11 +689,11 @@ blockquote {
   width: 720px;
   padding: 10px 10px 15px 20px;
 
+
 }
 
 .posts-wrapper {
   position: relative;
-  border-bottom: 1px solid #ddd;
 }
 
 
