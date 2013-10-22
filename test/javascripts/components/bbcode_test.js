@@ -37,11 +37,19 @@ test('lists', function() {
 });
 
 test('tags with arguments', function() {
-  format("[size=35]BIG [b]whoop[/b][/size]", "<span class=\"bbcode-size-35\">BIG <span class=\"bbcode-b\">whoop</span></span>", "supports [size=]");
   format("[url=http://bettercallsaul.com]better call![/url]", "<a href=\"http://bettercallsaul.com\">better call!</a>", "supports [url] with a title");
   format("[email=eviltrout@mailinator.com]evil trout[/email]", "<a href=\"mailto:eviltrout@mailinator.com\">evil trout</a>", "supports [email] with a title");
   format("[u][i]abc[/i][/u]", "<span class=\"bbcode-u\"><span class=\"bbcode-i\">abc</span></span>", "can nest tags");
   format("[b]first[/b] [b]second[/b]", "<span class=\"bbcode-b\">first</span> <span class=\"bbcode-b\">second</span>", "can bold two things on the same line");
+});
+
+test("size tags", function() {
+  format("[size=35]BIG [b]whoop[/b][/size]",
+         "<span class=\"bbcode-size-35\">BIG <span class=\"bbcode-b\">whoop</span></span>",
+         "supports [size=]");
+  format("[size=asdf]regular[/size]",
+         "<span class=\"bbcode-size-1\">regular</span>",
+         "it only supports numbers in bbcode");
 });
 
 test("quotes", function() {

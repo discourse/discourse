@@ -90,7 +90,7 @@ replaceBBCodeParamsRaw("email", function(param, contents) {
 });
 
 replaceBBCodeParams("size", function(param, contents) {
-  return ['span', {'class': "bbcode-size-" + param}].concat(contents);
+  return ['span', {'class': "bbcode-size-" + (parseInt(param) || 1)}].concat(contents);
 });
 
 // Handles `[code] ... [/code]` blocks
