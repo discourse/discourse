@@ -17,13 +17,13 @@ GIT
 
 GIT
   remote: git://github.com/paulelliott/fabrication.git
-  revision: e5738689767e97876b8cb9818ebda2b6a4fcdd58
+  revision: c394cca017e219ff20eb46a9d07b4b338c8e4323
   specs:
     fabrication (2.8.1)
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 81432139a9ca5bf90f08273d88e6e4f583c4189b
+  revision: 5e8129fa7ec949c62b8537d675f9b473fde83104
   branch: 4-0-stable
   specs:
     actionmailer (4.0.0)
@@ -81,7 +81,7 @@ GIT
 
 GIT
   remote: https://github.com/MiniProfiler/rack-mini-profiler.git
-  revision: c61f78062b924e9ac150b76bd0d2a50d0300afcd
+  revision: 5f2048351f5f8ed7cffa2943539a7cc97f0a9764
   specs:
     rack-mini-profiler (0.1.31)
       rack (>= 1.1.3)
@@ -203,7 +203,7 @@ GEM
       handlebars-source (= 1.0.12)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.25.3)
+    excon (0.27.6)
     execjs (2.0.2)
     exifr (1.1.3)
     fakeweb (1.3.0)
@@ -218,9 +218,9 @@ GEM
     fast_xs (0.8.0)
     fastimage (1.5.2)
     ffi (1.9.0)
-    fog (1.15.0)
+    fog (1.16.0)
       builder
-      excon (~> 0.25.0)
+      excon (~> 0.27.0)
       formatador (~> 0.2.0)
       mime-types
       multi_json (~> 1.0)
@@ -228,13 +228,14 @@ GEM
       net-ssh (>= 2.1.3)
       nokogiri (~> 1.5)
       ruby-hmac
+      unicode (~> 0.4.4)
     formatador (0.2.4)
     fspath (2.0.5)
     given_core (3.1.1)
       sorcerer (>= 0.3.7)
     handlebars-source (1.0.12)
     hashie (2.0.5)
-    highline (1.6.19)
+    highline (1.6.20)
     hike (1.2.3)
     hiredis (0.4.5)
     httpauth (0.2.0)
@@ -249,7 +250,7 @@ GEM
     image_size (1.1.3)
     image_sorcery (1.1.0)
     in_threads (1.2.0)
-    json (1.8.0)
+    json (1.8.1)
     jwt (0.1.8)
       multi_json (>= 1.5)
     kgio (2.8.1)
@@ -257,7 +258,7 @@ GEM
       highline
       thor (~> 0.15)
     libv8 (3.16.14.3)
-    listen (2.0.3)
+    listen (2.1.1)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -288,7 +289,7 @@ GEM
       jwt (~> 0.1.4)
       multi_json (~> 1.0)
       rack (~> 1.2)
-    oj (2.1.6)
+    oj (2.1.7)
     omniauth (1.1.4)
       hashie (>= 1.2, < 3)
       rack
@@ -337,7 +338,7 @@ GEM
     rack-openid (1.3.1)
       rack (>= 1.1.0)
       ruby-openid (>= 2.1.8)
-    rack-protection (1.5.0)
+    rack-protection (1.5.1)
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -374,13 +375,13 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
-    rspec-core (2.14.5)
+    rspec-core (2.14.6)
     rspec-expectations (2.14.3)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-given (3.1.1)
       given_core (= 3.1.1)
       rspec (>= 2.12)
-    rspec-mocks (2.14.3)
+    rspec-mocks (2.14.4)
     rspec-rails (2.14.0)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
@@ -393,8 +394,8 @@ GEM
     sanitize (2.0.6)
       nokogiri (>= 1.4.4)
     sass (3.2.12)
-    sass-rails (4.0.0)
-      railties (>= 4.0.0.beta, < 5.0)
+    sass-rails (4.0.1)
+      railties (>= 4.0.0, < 5.0)
       sass (>= 3.1.10)
       sprockets-rails (~> 2.0.0)
     shoulda (3.5.0)
@@ -403,15 +404,15 @@ GEM
     shoulda-context (1.1.5)
     shoulda-matchers (2.4.0)
       activesupport (>= 3.0.0)
-    sidekiq (2.15.1)
-      celluloid (>= 0.15.1)
+    sidekiq (2.15.2)
+      celluloid (>= 0.15.2)
       connection_pool (>= 1.0.0)
       json
       redis (>= 3.0.4)
       redis-namespace (>= 1.3.1)
     sidekiq-failures (0.2.2)
       sidekiq (>= 2.9.0)
-    sidetiq (0.4.2)
+    sidetiq (0.4.3)
       celluloid (>= 0.14.1)
       ice_cube (~> 0.11.0)
       sidekiq (~> 2.15.0)
@@ -419,7 +420,7 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
-    sinatra (1.4.3)
+    sinatra (1.4.4)
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
@@ -459,6 +460,7 @@ GEM
     uglifier (2.2.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    unicode (0.4.4)
     unicorn (4.6.3)
       kgio (~> 2.6)
       rack
