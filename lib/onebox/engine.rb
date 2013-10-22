@@ -76,7 +76,6 @@ end
 require_relative "engine/open_graph"
 require_relative "engine/html"
 require_relative "engine/json"
-require_relative "engine/example_onebox"
 require_relative "engine/amazon_onebox"
 require_relative "engine/bliptv_onebox"
 require_relative "engine/clikthrough_onebox"

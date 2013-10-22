@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe Onebox::View do
-  let(:view) { described_class.new("example", true) }
-  let(:html) { view.to_html(link: "http://example.com") }
+  let(:view) { described_class.new("amazon", true) }
+  let(:html) { view.to_html(link: "http://amazon.com") }
 
   describe "#to_html" do
     it "renders engine partial within layout template" do
