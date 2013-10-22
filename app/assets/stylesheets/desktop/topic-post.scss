@@ -94,7 +94,7 @@ nav.post-controls {
 
 
   button.show-replies {
-    padding: 8px;
+    padding: 8px 15px;
     margin-left: 0px;
   }
 
@@ -104,12 +104,10 @@ nav.post-controls {
     color: darken(#e4f2f8, 35%);
     background: #e4f2f8;
     padding: 8px 20px;
-    border: 1px solid darken(#e4f2f8, 35%);
     margin-left: 10px;
 
     &:hover {  color: darken(#e4f2f8, 45%);
       background: darken(#e4f2f8, 10%);
-        border: 1px solid darken(#e4f2f8, 10%);
     }
 
   }
@@ -125,7 +123,7 @@ nav.post-controls {
     padding: 8px 10px;
     vertical-align: top;
     background: transparent;
-    border: 1px solid #ddd;
+    border: none;
     margin-left: 3px;
     transition: all linear 0.15s;
     outline: none; //removes the pesky square button highlight from some browsers
@@ -189,32 +187,14 @@ nav.post-controls {
   blockquote {background: #ddd;}
 &.bottom { margin-top: -11px;
   .reply {
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
 
-  &:first-of-type {
-    border-top: 1px solid #ddd;
-  }
-  &:last-of-type {
-    border-bottom: 1px solid #ddd;
-  }
+
+
 
   }
 }
 
-&.top {
-  .reply {
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
 
-  &:first-of-type {
-    border-top: 1px solid #ddd;
-  }
-  &:last-of-type {
-  }
-
-  }
-}
 
 
 
@@ -721,7 +701,7 @@ blockquote {
   i {font-size: 12px;}
 
   .post-links {
-    margin-top: 3px;
+    margin-top: 5px;
     list-style-type: none;
     padding-left: 19px;
     position: relative;
@@ -801,22 +781,27 @@ button.show-replies {
 
   background: #eee;
   padding-bottom: 20px;
-  border-bottom: none;
-  }
 
 
-  &.bottom-round button.show-replies {
-
-  background: #fff;
-  margin-bottom: 0;
-  padding-bottom: 10px;
-  border: 1px solid #ddd;
-
-  &:hover {background: #eee;
+     &:hover {background: #ddd;
   .badge-posts {color: #888;}
 
   }
 
+ 
+}
+
+  &.bottom-round button.show-replies {
+
+  background: #eee;
+  margin-bottom: 0;
+  padding-bottom: 8px;
+
+  
+ &:hover {background: #ddd;
+  .badge-posts {color: #888;}
+
+  }
   }
 
 
