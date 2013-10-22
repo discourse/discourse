@@ -49,7 +49,7 @@ module Onebox
     end
 
     def link
-      @url
+      @url.gsub(/['\"<>]/, CGI::TABLE_FOR_ESCAPE_HTML__)
     end
 
     module ClassMethods
