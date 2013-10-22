@@ -23,6 +23,11 @@ module ScreeningModel
     self.action_type ||= self.class.actions[self.class.df_action]
   end
 
+  def action_name=(arg)
+    raise ArgumentError.new("Invalid action type #{arg}") if arg.nil? or !self.class.actions.has_key?(arg.to_sym)
+    self.action_type = self.class.actions[arg.to_sym]
+  end
+
   def record_match!
     self.match_count += 1
     self.last_match_at = Time.zone.now

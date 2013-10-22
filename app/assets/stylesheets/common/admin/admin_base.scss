@@ -700,14 +700,42 @@ table {
 
 // Logs
 
+.admin-logs-table {
+  input.ember-text-field {
+    padding: 1px 4px;
+  }
+}
+
 .screened-emails, .screened-urls, .screened-ip-addresses {
   width: 900px;
   .email, .url {
     width: 300px;
   }
-  .action, .match_count, .last_match_at, .created_at, .ip_address {
+  .action, .match_count, .last_match_at, .created_at {
+    text-align: center;
+    width: 110px;
+  }
+}
+
+.screened-emails, .screened-urls {
+  .ip_address {
     width: 110px;
     text-align: center;
+  }
+}
+.screened-ip-addresses {
+  .ip_address {
+    width: 150px;
+    text-align: left;
+    input {
+      width: 130px;
+    }
+  }
+  .actions {
+    width: 275px;
+    a {
+      text-decoration: underline;
+    }
   }
 }
 

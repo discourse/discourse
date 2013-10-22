@@ -1,5 +1,6 @@
 class ScreenedIpAddressSerializer < ApplicationSerializer
-  attributes :ip_address,
+  attributes :id,
+             :ip_address,
              :action,
              :match_count,
              :last_match_at,

@@ -7,7 +7,7 @@ describe Admin::ScreenedIpAddressesController do
 
   let!(:user) { log_in(:admin) }
 
-  context '.index' do
+  describe 'index' do
     before do
       xhr :get, :index
     end

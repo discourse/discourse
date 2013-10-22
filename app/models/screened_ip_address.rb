@@ -8,7 +8,7 @@ class ScreenedIpAddress < ActiveRecord::Base
 
   default_action :block
 
-  validates :ip_address, presence: true, uniqueness: true
+  validates :ip_address, ip_address_format: true, presence: true
 
   def self.watch(ip_address, opts={})
     match_for_ip_address(ip_address) || create(opts.slice(:action_type).merge(ip_address: ip_address))

@@ -1223,6 +1223,9 @@ en:
         last_match_at: "Last Matched"
         match_count: "Matches"
         ip_address: "IP"
+        delete: 'Delete'
+        edit: 'Edit'
+        save: 'Save'
         screened_actions:
           block: "block"
           do_nothing: "do nothing"
@@ -1260,7 +1263,10 @@ en:
         screened_ips:
           title: "Screened IPs"
           description: "IP addresses that are being watched."
-          allow: "allow"
+          delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
+          actions:
+            block: "Block"
+            do_nothing: "Allow"
 
       impersonate:
         title: "Impersonate User"

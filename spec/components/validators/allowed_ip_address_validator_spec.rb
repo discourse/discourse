@@ -30,4 +30,5 @@ describe AllowedIpAddressValidator do
       record.errors[:ip_address].should_not be_present
     end
   end
+
 end

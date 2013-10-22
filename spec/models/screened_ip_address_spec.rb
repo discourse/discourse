@@ -8,6 +8,29 @@ describe ScreenedIpAddress do
     it 'sets a default action_type' do
       described_class.create(valid_params).action_type.should == described_class.actions[:block]
     end
+
+    it 'sets an error when ip_address is invalid' do
+      described_class.create(valid_params.merge(ip_address: '99.99.99')).errors[:ip_address].should be_present
+    end
+
+    it 'can set action_type using the action_name virtual attribute' do
+      described_class.new(valid_params.merge(action_name: :do_nothing)).action_type.should == described_class.actions[:do_nothing]
+      described_class.new(valid_params.merge(action_name: :block)).action_type.should == described_class.actions[:block]
+      described_class.new(valid_params.merge(action_name: 'do_nothing')).action_type.should == described_class.actions[:do_nothing]
+      described_class.new(valid_params.merge(action_name: 'block')).action_type.should == described_class.actions[:block]
+    end
+
+    it 'raises a useful exception when action is invalid' do
+      expect {
+        described_class.new(valid_params.merge(action_name: 'dance'))
+      }.to raise_error(ArgumentError)
+    end
+
+    it 'raises a useful exception when action is nil' do
+      expect {
+        described_class.new(valid_params.merge(action_name: nil))
+      }.to raise_error(ArgumentError)
+    end
   end
 
   describe '#watch' do
