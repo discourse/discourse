@@ -7,17 +7,22 @@ class Auth::DefaultCurrentUserProvider
 
   TOKEN_COOKIE = "_t"
 
+  attr_reader :env, :request
+
   # do all current user initialization here
-  def initialize(env)
-    @env = env
-    @request = Rack::Request.new(env)
+  def initialize(provider)
+    if provider.is_a?(Hash)
+      @env = provider
+      @request = Rack::Request.new(@env)
+    else
+      @request = provider
+      @env = @request.env
+    end
   end
 
   # our current user, return nil if none is found
   def current_user
-    return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
-
-    request = Rack::Request.new(@env)
+    return env[CURRENT_USER_KEY] if env.key?(CURRENT_USER_KEY)
 
     auth_token = request.cookies[TOKEN_COOKIE]
 
@@ -41,14 +46,14 @@ class Auth::DefaultCurrentUserProvider
       if api_key = request["api_key"]
         if api_username = request["api_username"]
           if SiteSetting.api_key_valid?(api_key)
-            @env[API_KEY] = true
+            env[API_KEY] = true
             current_user = User.where(username_lower: api_username.downcase).first
           end
         end
       end
     end
 
-    @env[CURRENT_USER_KEY] = current_user
+    env[CURRENT_USER_KEY] = current_user
   end
 
   def log_on_user(user, session, cookies)
@@ -57,7 +62,7 @@ class Auth::DefaultCurrentUserProvider
       user.save!
     end
     cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
-    @env[CURRENT_USER_KEY] = user
+    env[CURRENT_USER_KEY] = user
   end
 
   def log_off_user(session, cookies)
@@ -68,11 +73,10 @@ class Auth::DefaultCurrentUserProvider
   # api has special rights return true if api was detected
   def is_api?
     current_user
-    @env[API_KEY]
+    env[API_KEY]
   end
 
   def has_auth_cookie?
-    request = Rack::Request.new(@env)
     cookie = request.cookies[TOKEN_COOKIE]
     !cookie.nil? && cookie.length == 32
   end

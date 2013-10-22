@@ -10,7 +10,7 @@ module Helpers
   end
 
   def log_in_user(user)
-    provider = Discourse.current_user_provider.new(request.env)
+    provider = Discourse.current_user_provider.new(request)
     provider.log_on_user(user,session,cookies)
   end
 
