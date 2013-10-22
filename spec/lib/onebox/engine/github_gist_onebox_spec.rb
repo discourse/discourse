@@ -4,7 +4,6 @@ describe Onebox::Engine::GithubGistOnebox do
   before(:all) do
     @link = "https://gist.github.com/anikalindtner/153044e9bea3331cc103"
     @uri = "https://api.github.com/gists/153044e9bea3331cc103"
-    fake(@uri, response(described_class.template_name))
   end
 
   include_context "engines"
