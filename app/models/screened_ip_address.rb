@@ -21,7 +21,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     #
     #   http://www.postgresql.org/docs/9.1/static/datatype-net-types.html
     #   http://www.postgresql.org/docs/9.1/static/functions-net.html
-    where('? <<= ip_address', ip_address).first
+    where("'#{ip_address.to_s}' <<= ip_address").first
   end
 
   def self.should_block?(ip_address)
