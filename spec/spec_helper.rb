@@ -16,13 +16,17 @@ RSpec.configure do |config|
 end
 
 shared_context "engines" do
-  before(:all) { fake(@link, response(described_class.template_name)) }
-
+  before(:all) do
+    fake(@uri || @link, response(described_class.template_name))
+    @onebox = described_class.new(@link)
+    @html = @onebox.to_html
+    @data = @onebox.send(:data)
+  end
   before(:each) { Onebox.defaults.cache.clear }
 
-  let(:onebox) { described_class.new(link) }
-  let(:html) { onebox.to_html }
-  let(:data) { onebox.send(:data) }
+  let(:onebox) { @onebox }
+  let(:html) { @html }
+  let(:data) { @data }
   let(:link) { @link }
 
   def escaped_data(key)
