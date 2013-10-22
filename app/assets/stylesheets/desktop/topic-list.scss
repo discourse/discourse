@@ -43,7 +43,7 @@
   @include border-radius-all(4px 4px 0 0);
   @include box-shadow(0 1px 3px rgba($black, 0.22));
 
-  a:visited {color: #888;}
+  a:visited:not(.badge-notification) {color: #888;}
 
   tbody tr {
     background-color: $white;
