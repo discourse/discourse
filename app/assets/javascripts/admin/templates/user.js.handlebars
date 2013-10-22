@@ -39,7 +39,7 @@
     <div class='controls'>
       {{#if editingTitle}}
         <button class='btn' {{action saveTitle}}>{{i18n admin.user.save_title}}</button>
-        <a href="#" {{action toggleTitleEdit}}>Cancel</a>
+        <a href="#" {{action toggleTitleEdit}}>{{i18n cancel}}</a>
       {{else}}
         <button class='btn' {{action toggleTitleEdit}}>{{i18n admin.user.edit_title}}</button>
       {{/if}}
