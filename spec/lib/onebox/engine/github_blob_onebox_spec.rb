@@ -3,12 +3,9 @@ require "spec_helper"
 describe Onebox::Engine::GithubBlobOnebox do
   before(:all) do
     @link = "https://github.com/discourse/discourse/blob/master/lib/oneboxer/github_blob_onebox.rb"
-    fake(@link, response(described_class.template_name))
   end
-  before(:each) { Onebox.defaults.cache.clear }
 
-  let(:link) { @link }
-
+  include_context "engines"
   it_behaves_like "an engine"
 
   describe "#to_html" do

@@ -3,15 +3,9 @@ require "spec_helper"
 describe Onebox::Engine::TedOnebox do
   before(:all) do
     @link = "http://www.ted.com/talks/eli_beer_the_fastest_ambulance_a_motorcycle.html"
-    fake(@link, response(described_class.template_name))
   end
-  before(:each) { Onebox.defaults.cache.clear }
 
-  let(:onebox) { described_class.new(link) }
-  let(:html) { onebox.to_html }
-  let(:data) { onebox.send(:data) }
-  let(:link) { @link }
-
+  include_context "engines"
   it_behaves_like "an engine"
 
   describe "#to_html" do

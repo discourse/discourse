@@ -15,6 +15,21 @@ RSpec.configure do |config|
   config.include HTMLSpecHelper
 end
 
+shared_context "engines" do
+  before(:all) { fake(@link, response(described_class.template_name)) }
+
+  before(:each) { Onebox.defaults.cache.clear }
+
+  let(:onebox) { described_class.new(link) }
+  let(:html) { onebox.to_html }
+  let(:data) { onebox.send(:data) }
+  let(:link) { @link }
+
+  def escaped_data(key)
+    CGI.escapeHTML(data[key])
+  end
+end
+
 shared_examples_for "an engine" do
   it "responds to data" do
     expect(described_class.private_instance_methods).to include(:data)
@@ -48,28 +63,24 @@ shared_examples_for "an engine" do
   end
 
   describe "to_html" do
-    def value_of(key)
-      CGI.escapeHTML(data[key])
-    end
-
     it "includes subname" do
       expect(html).to include(%|<aside class="onebox #{described_class.template_name}">|)
     end
 
     it "includes title" do
-      expect(html).to include(value_of(:title))
+      expect(html).to include(escaped_data(:title))
     end
 
     it "includes link" do
-      expect(html).to include(%|class="link" href="#{value_of(:link)}|)
+      expect(html).to include(%|class="link" href="#{escaped_data(:link)}|)
     end
 
     it "includes badge" do
-      expect(html).to include(%|<strong class="name">#{value_of(:badge)}</strong>|)
+      expect(html).to include(%|<strong class="name">#{data[:badge]}</strong>|)
     end
 
     it "includes domain" do
-      expect(html).to include(%|class="domain" href="#{value_of(:domain)}|)
+      expect(html).to include(%|class="domain" href="#{escaped_data(:domain)}|)
     end
   end
 end

@@ -6,13 +6,8 @@ describe Onebox::Engine::GithubPullRequestOnebox do
     @uri = "https://api.github.com/repos/discourse/discourse/pulls/1253"
     fake(@uri, response(described_class.template_name))
   end
-  before(:each) { Onebox.defaults.cache.clear }
 
-  let(:onebox) { described_class.new(link) }
-  let(:html) { onebox.to_html }
-  let(:data) { onebox.send(:data) }
-  let(:link) { @link }
-
+  include_context "engines"
   it_behaves_like "an engine"
 
   describe "#to_html" do
