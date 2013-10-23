@@ -601,10 +601,6 @@ pt_BR:
     active_user_rate_limit_secs: "Qual a frequencia de atualização do campo 'última vez visto em', em segundos."
     previous_visit_timeout_hours: "Quanto tempo uma visita dura antes de considerarmos como 'última visita', em horas."
 
-    uncategorized_name: "Nome para tópicos sem categoria na lista de categorias"
-    uncategorized_color: "Cor de fundo da etiqueta da categoria que tem tópicos sem nenhuma categoria"
-    uncategorized_text_color: "Cor do texto da etiqueta da categoria que tem tópicos sem nenhuma categoria"
-
     rate_limit_create_topic: "Quantos segundos você precisa aguardar antes de poder criar um novo tópico"
     rate_limit_create_post: "Quantos segundos você precisa aguardar antes de poder fazer uma nova postagem"
 

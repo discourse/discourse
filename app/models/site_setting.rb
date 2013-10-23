@@ -103,10 +103,6 @@ class SiteSetting < ActiveRecord::Base
   setting(:max_mentions_per_post, 10)
   setting(:newuser_max_mentions_per_post, 2)
 
-  client_setting(:uncategorized_name, 'uncategorized')
-  client_setting(:uncategorized_color, 'AB9364');
-  client_setting(:uncategorized_text_color, 'FFFFFF');
-
   setting(:unique_posts_mins, Rails.env.test? ? 0 : 5)
 
   # Rate Limits
@@ -267,10 +263,12 @@ class SiteSetting < ActiveRecord::Base
   setting(:max_daily_gravatar_crawls, 500)
 
   setting(:sequential_replies_threshold, 2)
-
   client_setting(:enable_mobile_theme, true)
 
   setting(:dominating_topic_minimum_percent, 20)
+
+  # hidden setting only used by system
+  hidden_setting(:uncategorized_category_id, -1, hidden: true)
 
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?

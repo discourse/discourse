@@ -117,19 +117,6 @@ Discourse.Category = Discourse.Model.extend({
 
 Discourse.Category.reopenClass({
 
-  uncategorizedInstance: function() {
-    if (this.uncategorized) return this.uncategorized;
-
-    this.uncategorized = this.create({
-      slug: 'uncategorized',
-      name: Discourse.SiteSettings.uncategorized_name,
-      isUncategorized: true,
-      color: Discourse.SiteSettings.uncategorized_color,
-      text_color: Discourse.SiteSettings.uncategorized_text_color
-    });
-    return this.uncategorized;
-  },
-
   slugFor: function(category) {
     if (!category) return "";
 

@@ -140,7 +140,6 @@ class PostCreator
   end
 
   def after_topic_create
-
     # Don't publish invisible topics
     return unless @topic.visible?
 

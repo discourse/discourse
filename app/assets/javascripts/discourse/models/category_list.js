@@ -45,19 +45,8 @@ Discourse.CategoryList.reopenClass({
         });
       }
 
-      if (c.is_uncategorized) {
-        var uncategorized = Discourse.Category.uncategorizedInstance();
-        uncategorized.setProperties({
-          topics: c.topics,
-          featured_users: c.featured_users,
-          topics_week: c.topics_week,
-          topics_month: c.topics_month,
-          topics_year: c.topics_year
-        });
-        categories.pushObject(uncategorized);
-      } else {
-        categories.pushObject(Discourse.Category.create(c));
-      }
+      categories.pushObject(Discourse.Category.create(c));
+
     });
     return categories;
   },

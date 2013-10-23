@@ -831,7 +831,6 @@ fr:
       choose: 'Sélectionner une catégorie&hellip;'
       edit: 'éditer'
       edit_long: "Editer la catégorie"
-      edit_uncategorized: "Editer les sans catégorie"
       view: 'Voir les discussions dans cette catégorie'
       general: 'Général'
       settings: 'Paramètres'

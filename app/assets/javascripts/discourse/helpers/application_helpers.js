@@ -42,8 +42,9 @@ Handlebars.registerHelper('topicLink', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('categoryLink', function(property, options) {
+  var allowUncategorized = options.hash && options.hash.allowUncategorized;
   var category = Ember.Handlebars.get(this, property, options);
-  return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category));
+  return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category, allowUncategorized));
 });
 
 

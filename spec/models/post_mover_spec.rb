@@ -113,7 +113,7 @@ describe PostMover do
           moved_to.highest_post_number.should == 3
           moved_to.featured_user1_id.should == another_user.id
           moved_to.like_count.should == 1
-          moved_to.category.should be_blank
+          moved_to.category_id.should == SiteSetting.uncategorized_category_id
 
           # Posts should be re-ordered
           p2.reload

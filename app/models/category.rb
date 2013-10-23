@@ -117,7 +117,7 @@ class Category < ActiveRecord::Base
 
     topics_with_post_count = Topic
                               .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
-                              .where("topics.id NOT IN (select cc.topic_id from categories cc)")
+                              .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
                               .group("topics.category_id")
                               .visible.to_sql
 
@@ -150,10 +150,11 @@ SQL
   end
 
   def create_category_definition
-    create_topic!(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now)
-    update_column(:topic_id, topic.id)
-    topic.update_column(:category_id, id)
-    topic.posts.create(raw: post_template, user: user)
+    t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
+    t.skip_callbacks = true
+    t.save!
+    update_column(:topic_id, t.id)
+    t.posts.create(raw: post_template, user: user)
   end
 
   def topic_url

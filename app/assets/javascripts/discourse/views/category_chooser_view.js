@@ -15,8 +15,10 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   init: function() {
     this._super();
     // TODO perhaps allow passing a param in to select if we need full or not
+
+    var uncategorized_id = Discourse.Site.currentProp("uncategorized_category_id");
     this.set('content', _.filter(Discourse.Category.list(), function(c){
-      return c.permission === Discourse.PermissionType.FULL;
+      return c.permission === Discourse.PermissionType.FULL && c.id !== uncategorized_id;
     }));
   },
 

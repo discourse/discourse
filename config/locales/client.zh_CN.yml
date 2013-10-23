@@ -945,7 +945,6 @@ zh_CN:
       choose: '选择分类……'
       edit: '编辑'
       edit_long: "编辑分类"
-      edit_uncategorized: "编辑未分类的"
       view: '浏览分类下的主题'
       general: '通常'
       settings: '设置'

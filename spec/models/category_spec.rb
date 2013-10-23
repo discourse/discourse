@@ -31,6 +31,9 @@ describe Category do
 
   describe "topic_create_allowed and post_create_allowed" do
     it "works" do
+
+      # NOTE we also have the uncategorized category ... hence the increased count
+
       default_category = Fabricate(:category)
       full_category = Fabricate(:category)
       can_post_category = Fabricate(:category)
@@ -54,20 +57,20 @@ describe Category do
       can_read_category.save
 
       guardian = Guardian.new(admin)
-      Category.topic_create_allowed(guardian).count.should == 4
-      Category.post_create_allowed(guardian).count.should == 4
-      Category.secured(guardian).count.should == 4
+      Category.topic_create_allowed(guardian).count.should == 5
+      Category.post_create_allowed(guardian).count.should == 5
+      Category.secured(guardian).count.should == 5
 
       guardian = Guardian.new(user)
-      Category.secured(guardian).count.should == 4
-      Category.post_create_allowed(guardian).count.should == 3
-      Category.topic_create_allowed(guardian).count.should == 2 # explicitly allowed once, default allowed once
+      Category.secured(guardian).count.should == 5
+      Category.post_create_allowed(guardian).count.should == 4
+      Category.topic_create_allowed(guardian).count.should == 3 # explicitly allowed once, default allowed once
 
       # everyone has special semantics, test it as well
       can_post_category.set_permissions(:everyone => :create_post)
       can_post_category.save
 
-      Category.post_create_allowed(guardian).count.should == 3
+      Category.post_create_allowed(guardian).count.should == 4
 
       # anonymous has permission to create no topics
       guardian = Guardian.new(nil)
@@ -105,22 +108,16 @@ describe Category do
     end
 
     it "lists all secured categories correctly" do
+      uncategorized = Category.first
+
       group.add(user)
       category.set_permissions(group.id => :full)
       category.save
       category_2.set_permissions(group.id => :full)
       category_2.save
 
-      Category.secured.should =~ []
-      Category.secured(Guardian.new(user)).should =~ [category, category_2]
-    end
-  end
-
-  describe "uncategorized name" do
-    let(:category) { Fabricate.build(:category, name: SiteSetting.uncategorized_name) }
-
-    it "is invalid to create a category with the reserved name" do
-      category.should_not be_valid
+      Category.secured.should =~ [uncategorized]
+      Category.secured(Guardian.new(user)).should =~ [uncategorized,category, category_2]
     end
   end
 

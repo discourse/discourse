@@ -34,6 +34,10 @@ module SiteSettingExtension
     @enums ||= {}
   end
 
+  def hidden_settings
+    @hidden_settings ||= []
+  end
+
   def setting(name, default = nil, opts = {})
     mutex.synchronize do
       self.defaults[name] = default
@@ -41,6 +45,9 @@ module SiteSettingExtension
       if opts[:enum]
         enum = opts[:enum]
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
+      end
+      if opts[:hidden] == true
+        hidden_settings << name
       end
       setup_methods(name, current_value)
     end
@@ -76,16 +83,18 @@ module SiteSettingExtension
   end
 
   # Retrieve all settings
-  def all_settings
-    @defaults.map do |s, v|
-      value = send(s)
-      type = types[get_data_type(s, value)]
-      {setting: s,
-       description: description(s),
-       default: v,
-       type: type.to_s,
-       value: value.to_s}.merge( type == :enum ? {valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?} : {})
-    end
+  def all_settings(include_hidden=false)
+    @defaults
+      .reject{|s, v| hidden_settings.include?(s) || include_hidden}
+      .map do |s, v|
+        value = send(s)
+        type = types[get_data_type(s, value)]
+        {setting: s,
+         description: description(s),
+         default: v,
+         type: type.to_s,
+         value: value.to_s}.merge( type == :enum ? {valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?} : {})
+      end
   end
 
   def description(setting)

@@ -373,7 +373,6 @@ es:
     active_user_rate_limit_secs: "Como de frecuentemente actualizaremos el campo 'last_seen_at', en segundos"
     previous_visit_timeout_hours: "Cuanto tiempo debe pasar antes de que una visita sea considerada la 'visita previa', en horas"
 
-    uncategorized_name: "La categoría por defecto para los topics que no tienen categoría en la página /categories"
     max_mentions_per_post: "Maximo número de notificaciones @name que se pueden usar en un post"
 
     rate_limit_create_topic: "Cuantos segundos, después de crear un topic, deben pasar antes de poder crear otro topic"

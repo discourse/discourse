@@ -942,7 +942,6 @@ ru:
       choose: 'Select a category&hellip;'
       edit: изменить
       edit_long: 'Изменить категорию'
-      edit_uncategorized: 'Изменить "Без категории"'
       view: 'Просмотр тем по категориям'
       general: Общие
       settings: Настройки

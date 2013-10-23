@@ -23,7 +23,7 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def is_uncategorized
-    name == SiteSetting.uncategorized_name
+    object.id == SiteSetting.uncategorized_category_id
   end
 
   def include_is_uncategorized?

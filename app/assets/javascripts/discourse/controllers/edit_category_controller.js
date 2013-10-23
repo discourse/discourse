@@ -30,9 +30,6 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     if (this.get('id')) {
       return I18n.t("category.edit_long") + " : " + this.get('model.name');
     }
-    if (this.get('isUncategorized')){
-      return I18n.t("category.edit_uncategorized");
-    }
     return I18n.t("category.create") + (this.get('model.name') ? (" : " + this.get('model.name')) : '');
   }.property('id', 'model.name'),
 
@@ -127,37 +124,16 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     saveCategory: function() {
       var categoryController = this;
       this.set('saving', true);
-
-
-      if( this.get('isUncategorized') ) {
-        $.when(
-          Discourse.SiteSetting.update('uncategorized_color', this.get('color')),
-          Discourse.SiteSetting.update('uncategorized_text_color', this.get('text_color')),
-          Discourse.SiteSetting.update('uncategorized_name', this.get('name'))
-        ).then(function(result) {
-          // success
-          categoryController.send('closeModal');
-          // We can't redirect to the uncategorized category on save because the slug
-          // might have changed.
-          Discourse.URL.redirectTo("/categories");
-        }, function(errors) {
-          // errors
-          if(errors.length === 0) errors.push(I18n.t("category.save_error"));
-          categoryController.displayErrors(errors);
-          categoryController.set('saving', false);
-        });
-      } else {
-        this.get('model').save().then(function(result) {
-          // success
-          categoryController.send('closeModal');
-          Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(result.category));
-        }, function(errors) {
-          // errors
-          if(errors.length === 0) errors.push(I18n.t("category.creation_error"));
-          categoryController.displayErrors(errors);
-          categoryController.set('saving', false);
-        });
-      }
+      this.get('model').save().then(function(result) {
+        // success
+        categoryController.send('closeModal');
+        Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(result.category));
+      }, function(errors) {
+        // errors
+        if(errors.length === 0) errors.push(I18n.t("category.creation_error"));
+        categoryController.displayErrors(errors);
+        categoryController.set('saving', false);
+      });
     },
 
     deleteCategory: function() {

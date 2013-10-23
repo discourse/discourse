@@ -570,10 +570,6 @@ nl:
     active_user_rate_limit_secs: "Hoe vaak we het 'last_seen_at'-veld updaten, in seconden."
     previous_visit_timeout_hours: "Hoe lang een bezoek duurt voordat we het als het 'vorige' bezoek beschouwen, in uren."
 
-    uncategorized_name: De naam voor ongecategoriseerde topics in de categorielijst
-    uncategorized_color: De achtergrondkleur van de badge voor de categorie met topics zonder categorie
-    uncategorized_text_color: De tekstkleur van de badge voor de categorie met topics zonder categorie
-
     rate_limit_create_topic: Hoeveel seconden voordat je een ander topic kan aanmaken
     rate_limit_create_post: Hoeveel seconden voordat je een ander bericht kan aanmaken
 

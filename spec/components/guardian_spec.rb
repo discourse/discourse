@@ -687,9 +687,6 @@ describe Guardian do
 
   end
 
-
-
-
   context 'can_delete?' do
 
     it 'returns false with a nil object' do
@@ -697,6 +694,10 @@ describe Guardian do
     end
 
     context 'a Topic' do
+      before do
+        # pretend we have a real topic
+        topic.id = 9999999
+      end
 
       it 'returns false when not logged in' do
         Guardian.new.can_delete?(topic).should be_false

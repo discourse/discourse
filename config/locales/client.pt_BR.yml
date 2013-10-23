@@ -944,7 +944,6 @@ pt_BR:
       choose: 'Selecione uma categoria&hellip;'
       edit: 'editar'
       edit_long: "Editar Categoria"
-      edit_uncategorized: "Editar Sem Categoria"
       view: 'Visualizar Tópicos na Categoria'
       general: 'Geral'
       settings: 'Configurações'

@@ -506,8 +506,6 @@ zh_TW:
     active_user_rate_limit_secs: "更新“最後一次見到”數據的頻率，單位爲秒"
     previous_visit_timeout_hours: "系統判斷一次訪問之後多少小時後爲“上一次”訪問"
 
-    uncategorized_name: "在分類 /categories 頁面，沒有分類的主題的缺省分類"
-
     rate_limit_create_topic: "在創建一個主題之後間隔多少秒你才能創建另一個主題"
     rate_limit_create_post: "在創建一個帖子之後間隔多少秒你才能創建另一個帖子"
 

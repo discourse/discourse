@@ -596,10 +596,6 @@ cs:
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"
 
-    uncategorized_name: "Výchozí kategorie pro témata, která nemají nastavenou kategorii"
-    uncategorized_color: "Barva pozadí štítku kategorie pro témata, která nemají nastavenou kategorii"
-    uncategorized_text_color: "Barva textu na štítku kategorie pro témata, která nemají nastavenou kategorii"
-
     rate_limit_create_topic: "Počet sekund, které je nutné počkat od vytvoření tématu, než smí uživatel vytvořit další"
     rate_limit_create_post: "Počet sekund, které je nutné počkat od zaslání příspěvku, než smí uživatel zaslat další"
 

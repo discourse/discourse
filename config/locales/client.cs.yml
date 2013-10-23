@@ -935,7 +935,6 @@ cs:
       none: '(bez kategorie)'
       edit: 'upravit'
       edit_long: "Upravit kategorii"
-      edit_uncategorized: "Upravit nekategorizované"
       view: 'Zobrazit témata v kategorii'
       general: 'Obecné'
       settings: 'Nastavení'

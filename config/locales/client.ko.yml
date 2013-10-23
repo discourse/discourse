@@ -733,7 +733,6 @@ ko:
       none: '(카테고리 없음)'
       edit: '편집'
       edit_long: "카테고리 편집"
-      edit_uncategorized: "분류되지 않은 편집"
       view: '카테고리 항목보기'
       delete: '카테고리 지우기'
       create: '카테고리 만들기'

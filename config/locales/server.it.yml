@@ -506,10 +506,6 @@ it:
     active_user_rate_limit_secs: "Quanto frequentemente viene aggiornato il campo 'last_seen_at' field, in secondi"
     previous_visit_timeout_hours: "Durata di una visita prima che venga considerata la visita 'precedente', in ore"
 
-    uncategorized_name: "La categoria di default per i topic non categorizzati nella pagina /categories"
-    uncategorized_color: "Il colore di sfondo del badge per la categoria con i topic privi di categoria"
-    uncategorized_text_color: "Il colore del testo del badge per la categoria con i topic privi di categoria"
-
     rate_limit_create_topic: "Quanti secondi, dopo aver creato un topic, per poter creare un nuovo topic"
     rate_limit_create_post: "Quanti secondi, dopo aver creato un post, per poter creare un nuovo post"
 

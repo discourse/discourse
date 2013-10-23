@@ -84,7 +84,7 @@ class Post < ActiveRecord::Base
     super
     update_flagged_posts_count
     TopicLink.extract_from(self)
-    if topic && topic.category_id
+    if topic && topic.category_id && topic.category
       topic.category.update_latest
     end
   end

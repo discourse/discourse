@@ -40,8 +40,9 @@ Discourse.Utilities = {
     @param {Discourse.Category} category the category whose link we want
     @returns {String} the html category badge
   **/
-  categoryLink: function(category) {
+  categoryLink: function(category, allowUncategorized) {
     if (!category) return "";
+    if (!allowUncategorized && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) return "";
 
     var color = Em.get(category, 'color'),
         textColor = Em.get(category, 'text_color'),

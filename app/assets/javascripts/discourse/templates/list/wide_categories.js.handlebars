@@ -20,7 +20,7 @@
           {{#if controller.ordering}}
             <i class="icon-reorder"></i>
           {{/if}}
-          {{categoryLink this}}
+          {{categoryLink this allowUncategorized=true}}
           {{#if unreadTopics}}
             <a href={{unbound url}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
           {{/if}}

@@ -49,7 +49,7 @@ describe TopicQuery do
 
     context 'list_latest' do
       it "returns the topics in the correct order" do
-        topics.should == [pinned_topic, closed_topic, archived_topic, regular_topic]
+        topics.map(&:title).should == [pinned_topic, closed_topic, archived_topic, regular_topic].map(&:title)
       end
 
       it "includes the invisible topic if you're a moderator" do
@@ -79,10 +79,6 @@ describe TopicQuery do
     let(:topic_category) { category.topic }
     let!(:topic_no_cat) { Fabricate(:topic) }
     let!(:topic_in_cat) { Fabricate(:topic, category: category) }
-
-    it "returns the topic without a category when filtering uncategorized" do
-      topic_query.list_uncategorized.topics.should == [topic_no_cat]
-    end
 
     it "returns the topic with a category when filtering by category" do
       topic_query.list_category(category).topics.should == [topic_category, topic_in_cat]

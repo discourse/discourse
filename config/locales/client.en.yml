@@ -945,7 +945,6 @@ en:
       choose: 'Select a category&hellip;'
       edit: 'edit'
       edit_long: "Edit Category"
-      edit_uncategorized: "Edit Uncategorized"
       view: 'View Topics in Category'
       general: 'General'
       settings: 'Settings'

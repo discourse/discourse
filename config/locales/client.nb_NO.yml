@@ -797,7 +797,6 @@ nb_NO:
       none: '(no category)'
       edit: 'rediger'
       edit_long: "Rediger Kategori"
-      edit_uncategorized: "Rediger Ukategorisert"
       view: 'Se Emner i Kategori'
       general: 'Generellt'
       settings: 'Innstillinger'

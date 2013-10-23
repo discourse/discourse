@@ -27,7 +27,8 @@ describe ListController do
     end
 
     it 'allows users to filter on a set of topic ids' do
-      p = Fabricate(:post)
+      p = create_post
+
       xhr :get, :latest, format: :json, topic_ids: "#{p.topic_id}"
       response.should be_success
       parsed = JSON.parse(response.body)
@@ -128,38 +129,7 @@ describe ListController do
           response.content_type.should == 'application/rss+xml'
         end
       end
-
     end
-
-    context 'uncategorized' do
-
-      it "doesn't check access to see the category, since we didn't provide one" do
-        Guardian.any_instance.expects(:can_see?).never
-        xhr :get, :category, category: SiteSetting.uncategorized_name
-      end
-
-      it "responds with success" do
-        xhr :get, :category, category: SiteSetting.uncategorized_name
-        response.should be_success
-      end
-
-      context 'SiteSetting.uncategorized_name is non standard' do
-        before do
-          SiteSetting.stubs(:uncategorized_name).returns('testing')
-        end
-
-        it "responds with success given SiteSetting.uncategorized_name" do
-          xhr :get, :category, category: SiteSetting.uncategorized_name
-          response.should be_success
-        end
-
-        it 'responds with success given "uncategorized"' do
-          xhr :get, :category, category: 'uncategorized'
-          response.should be_success
-        end
-      end
-    end
-
   end
 
   describe "topics_by" do

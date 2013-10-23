@@ -385,7 +385,6 @@ da:
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
 
-    uncategorized_name: "The default category for topics that have no category in the /categories page"
     max_mentions_per_post: "Maximum number of @name notifications you can use in a single post"
 
     rate_limit_create_topic: "How many seconds, after creating a topic, before you can create another topic"
