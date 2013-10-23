@@ -2,11 +2,25 @@
 .post-info a {color: #aaa;}
 
 .topic-meta-data-inside {
+  float: right; 
+  margin-top: -22px;
   float: right;
-  margin-top: -19px;
   font-size: 12px;
 }
 
+
+.post-actions { 
+  color: #bbb;
+  text-align: right;
+  a {color: #bbb;}
+  .post-action {
+display: inline-block;
+margin-left: 10px;
+  margin-top: 10px;
+
+  }
+}
+.post-menu-area {margin-bottom: 10px; margin-top: 20px;}
 
 .post-info  {
   display: inline-block;
@@ -17,11 +31,11 @@
 #topic-title {
   margin-bottom: 20px;
 margin: -20px 0 0 0;
-
+.topic-statuses {margin-left: 5px;}
 h1 {
 
-  font-size: 2em;
-  line-height: 1.0;
+  font-size: 2.2em;
+  line-height: 1em;
   margin: 0;
 
 
@@ -56,7 +70,7 @@ a.edit-topic {font-size: 15px;}
 
 .reply-new {
 i {
-
+  font-size: 12px;
   margin-right: 5px;
   background: #fff;
   border: 1px solid #ddd;
@@ -73,7 +87,7 @@ a.reply-new {color: #aaa;}
 a:hover.reply-new {color: #56aed3;
 
 i {background: #e4f2f8;
-  border: 1px solid #e4f2f8;
+  border: 1px solid #56aed3;
   padding: 2px 4px;
 }
 
@@ -154,7 +168,6 @@ i {background: #e4f2f8;
 .topic-statuses .topic-status {
   padding: 0;
   i {
-    margin-left: 5px !important;
     font-size:20px;
 
   }

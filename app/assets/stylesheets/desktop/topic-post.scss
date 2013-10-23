@@ -1,6 +1,5 @@
 @import "common/foundation/variables";
 
-html {background-color: #fff;}
 
 .container {
   @extend .clearfix;
@@ -10,6 +9,9 @@ html {background-color: #fff;}
 }
 
 
+
+h1 .topic-statuses .topic-status i {margin-right: 5px;}
+
 .full-width {
   margin-left: 0px;
 }
@@ -18,9 +20,16 @@ html {background-color: #fff;}
 
 .topic-post {
   padding: 0;
+
   &:first-of-type {
     border-top: none;
   }
+
+  &:last-of-type {
+    border-bottom: 1px solid #ddd;
+
+  }
+
 
 .reply-to-tab {
   display: block;
@@ -47,7 +56,7 @@ html {background-color: #fff;}
     }
 
 
-section.post-menu-area {
+section.post-menu-area, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
        transition: linear 0.15s;
@@ -55,7 +64,7 @@ section.post-menu-area {
     }
   }
 
-  &:hover section.post-menu-area {
+  &:hover section.post-menu-area, &:hover .post-actions {
     opacity: 1;
 
   }
@@ -66,18 +75,10 @@ section.post-menu-area {
         opacity:1;
       }
     }
-
-
-  }
-
-
-
-
+}
 
 nav.post-controls {
-    background-color: #fff;
     padding: 0;
-    margin-top: 20px;
     button {color: #aaa;
     margin-right: 2px;
 
@@ -96,7 +97,7 @@ nav.post-controls {
 
 
   button.show-replies {
-    padding: 8px 20px;
+    padding: 8px 15px;
     margin-left: 0px;
   }
 
@@ -105,13 +106,11 @@ nav.post-controls {
     margin-right: 0;
     color: darken(#e4f2f8, 35%);
     background: #e4f2f8;
-    padding: 7px 20px;
-    border: 1px solid #e4f2f8;
+    padding: 8px 20px;
     margin-left: 10px;
 
     &:hover {  color: darken(#e4f2f8, 45%);
       background: darken(#e4f2f8, 10%);
-        border: 1px solid darken(#e4f2f8, 10%);
     }
 
   }
@@ -128,7 +127,7 @@ nav.post-controls {
     vertical-align: top;
     background: transparent;
     border: none;
-    margin-left: 1px;
+    margin-left: 3px;
     transition: all linear 0.15s;
     outline: none; //removes the pesky square button highlight from some browsers
          &:hover {
@@ -189,38 +188,25 @@ nav.post-controls {
 
   .quote .title {background: #ddd;}
   blockquote {background: #ddd;}
-
-  .reply {padding-bottom: 10px;}
-
-  .topic-body {
-    padding-top: 7px;
-    padding-bottom: 10px;
-  }
+  &.bottom { margin-top: -11px;}
 
   .topic-meta-data h5 {margin: 5px;}
 
   .topic-meta-data-inside {
-  margin: -3px 15px 0 0;
+  margin: -3px 0 0 0;
   color: #aaa;
   }
 
   .topic-meta-data {padding-top: 20px;}
+
 }
 
-
-
-
-
 .post-action {
-  margin-top: 3px;
-  margin-bottom: 3px;
   .relative-date {
     margin-left: 5px;
   }
-  .avatar {margin-right: 2px;}
+  .avatar { margin-right: 2px; }
 }
-
-
 
 a.star {
   display: inline-block;
@@ -236,15 +222,8 @@ a.star {
   display: none;
 }
 
-.topic-link {margin-left: -8px;}
-
-
 .topic-summary {
-
   button {border-radius: 0;}
-
-  .btn {
-  }
 
   .topic-links li {
     word-wrap: break-word;
@@ -252,7 +231,7 @@ a.star {
 
 
 
-  margin: 15px 0 20px 0;
+  margin: 20px 0 0 0;
   border: 1px solid #ddd;
 
   h3 {
@@ -391,13 +370,20 @@ a.star {
 #suggested-topics {
   clear: left;
 
+
+.topics table tbody tr {background: #fff;}
+
   table {
     box-shadow: none;
     border-radius: 0;
     border-color: #ddd;
     margin-top: 10px;
+
+
+
   }
-  padding: 20px 10px 15px 10px;
+padding: 20px 10px 15px 10px;
+
    .title {
     font-size: 14px; line-height: 8px;
 
@@ -423,7 +409,7 @@ span.post-count {
 
 #topic-title {
   z-index: 1000;
-  padding: 20px 10px 15px 10px;
+  padding: 25px 10px 15px 10px;
 .chzn-container {vertical-align: middle;}
 }
 
@@ -456,7 +442,9 @@ iframe {
 }
 
 
-.extra-info-wrapper {float: left; width: 78%;}
+.extra-info-wrapper {float: left; width: 78%;
+.topic-statuses {margin-right: 5px;}
+}
 
 #main .inner a.star {margin-top: 6px;}
 
@@ -467,11 +455,9 @@ iframe {
   a:not(.badge-category) {margin-left: -10px;}
 
   }
-
-
-
+ 
   a.star {
-    margin-right: 8px;
+    margin-right: 5px;
     margin-top: 6px;
   }
 
@@ -485,7 +471,8 @@ iframe {
   margin-bottom: 10px;
   width: 92px;
   border-top: 1px solid #ddd;
-  padding-top: 25px;
+  padding-top: 30px;
+
   img { text-align: center; }
 .contents {
 
@@ -519,6 +506,8 @@ h3 {display: block;}
 
 .contents .cooked {
 
+  padding-right: 30px;
+
 h1, h2, h3 {margin: 10px 0;}
 
 }
@@ -536,16 +525,13 @@ h1, h2, h3 {margin: 10px 0;}
 .deleted {
   .topic-body {
   background-color: lighten(red, 45%);
+  }
 }
-}
-
 
 .moderator {
-
   .topic-body {
   background-color: lighten(yellow, 45%);
-}
-
+  }
 }
 
 #share-link {
@@ -633,7 +619,6 @@ h3 {
 
 
 blockquote {
-  clear:both;
   margin: 0;
   padding: 12px;
 }
@@ -644,7 +629,7 @@ blockquote {
 }
 
 .quote .title {margin-right: 0;}
-
+.quote {margin-top: 20px;}
 .quote-controls {
   float: right;
   color: #aaa;
@@ -692,10 +677,12 @@ blockquote {
       ul {margin: 0;}
       padding-left: 10px;
 
+  i {font-size: 12px;}
+
   .post-links {
-    margin-top: 6px;
+    margin-top: 3px;
     list-style-type: none;
-    padding-left: 20px;
+    padding-left: 19px;
     position: relative;
     margin-left: 5px;
     a i {
@@ -703,6 +690,7 @@ blockquote {
       left: 0;
       margin-right: 15px;
       margin-bottom: 20px;
+
     }
     a {color: #aaa;}
 
@@ -718,7 +706,7 @@ blockquote {
   float: left;
   position: relative;
   width: 720px;
-  padding: 10px 10px 10px 20px;
+  padding: 10px 0 15px 20px;
 
 }
 
@@ -749,35 +737,49 @@ blockquote {
 .row:after {clear: both;}
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
+  &.bottom { 
+    &.hidden {display: block; opacity: 0; }
 
-  &.bottom .arrow {float: right; margin: 0 15px 0 0;}
+  }
+  &.bottom .arrow {float: right; margin: 0 0 0 0;}
   &.top {margin-left: 112px;}
   .topic-body img {max-width: 100%; height: auto;}
   .topic-body, .topic-meta-data {border: none;}
   .row {border-top: 1px solid #ddd; padding-top: 7px;}
   .reply:first-of-type .row {border-top: none;}
 }
+
+
+
+
+
 .contents.regular  {
 
 button.show-replies {
 
   background: #eee;
-  border-bottom: 10px solid #eee;
+  padding-bottom: 20px;
+
+
+     &:hover {background: #ddd;
+  .badge-posts {color: #888;}
 
   }
 
+ 
+}
 
   &.bottom-round button.show-replies {
 
-  background: #fff;
+  background: #eee;
   margin-bottom: 0;
-  border-bottom: none;
+  padding-bottom: 8px;
 
-  &:hover {background: #eee;
-    .badge-posts {color: #888;}
+  
+ &:hover {background: #ddd;
+  .badge-posts {color: #888;}
 
   }
-
   }
 
 

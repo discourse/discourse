@@ -8,7 +8,7 @@
 html {
   color: $black;
   font: #{$base-font-size}/#{$base-line-height} $base-font-family;
-  background-color: $base-background-color;
+  background-color: #fff;
   overflow-y: scroll;
   -webkit-font-smoothing: subpixel-antialiased;
 }
@@ -42,7 +42,7 @@ hr {
   height: 1px;
   margin: 1em 0;
   border: 0;
-  border-top: 1px solid $hr-border-color;
+  border-top: 1px solid #eee;
   padding: 0;
 }
 
