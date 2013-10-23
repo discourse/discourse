@@ -189,6 +189,7 @@ zh_CN:
       topics: "主题"
       latest: "最新"
       latest_by: "最新发表："
+      toggle_ordering: "排序控制"
 
     user:
       said: "{{username}} 说："
@@ -974,6 +975,7 @@ zh_CN:
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
       this_year: "今年"
+      position: "位置"
 
     flagging:
       title: '为何要报告本帖？'
@@ -981,7 +983,7 @@ zh_CN:
       take_action: "立即执行"
       notify_action: '通知'
       delete_spammer: "删除垃圾发布者"
-      delete_confirm: "你将删除该用户的 <b>%{posts}</b> 个帖子和 <b>%{topics}</b> 个主题，删除该账户，并将其邮件地址 <b>%{email}</b> 加入黑名单。确定吗？"
+      delete_confirm: "你将删除该用户的 <b>%{posts}</b> 个帖子和 <b>%{topics}</b> 个主题，删除该账户，阻止其IP地址 <b>%{ip_address}</b> 再次注册，并将其邮件地址 <b>%{email}</b> 加入黑名单。确定吗？"
       yes_delete_spammer: "确定"
       cant: "抱歉，当前你不能报告本帖。"
       custom_placeholder_notify_user: "为何你要私下联系该用户？"
@@ -1167,13 +1169,19 @@ zh_CN:
         delete_failed: "无法删除小组。如果该小组是自动生成的，则不可删除。"
 
       api:
+        generate_master: "生成主API密钥"
+        none: "当前没有活动的API密钥。"
+        user: "用户"
         title: "应用开发接口（API）"
-        long_title: "API信息"
-        key: "密钥"
-        generate: "生成API密钥"
-        regenerate: "重新生成API密钥"
+        key: "API密钥"
+        generate: "生成"
+        regenerate: "重新生成"
+        revoke: "撤销"
+        confirm_regen: "确定要用新的API密钥替代该密钥？"
+        confirm_revoke: "确定要撤销该密钥？"
         info_html: "API密钥可以用来通过JSON调用创建和更新主题。"
-        note_html: "请<strong>安全的</strong>保管好本密钥，任何拥有该密钥的用户可以使用它以论坛任何用户的名义来发帖。"
+        all_users: "所有用户"
+        note_html: "请<strong>安全地</strong>保管好本密钥，任何拥有该密钥的用户可以使用它以论坛任何用户的名义来发帖。"
 
       customize:
         title: "定制"
@@ -1221,6 +1229,9 @@ zh_CN:
         last_match_at: "最近匹配"
         match_count: "匹配"
         ip_address: "IP"
+        delete: '删除'
+        edit: '编辑'
+        save: '保存'
         screened_actions:
           block: "阻挡"
           do_nothing: "无操作"
@@ -1255,6 +1266,13 @@ zh_CN:
           title: "被屏蔽的URL"
           description: "以下是垃圾信息发布者使用过的URL。"
           url: "URL"
+        screened_ips:
+          title: "被屏蔽的IP"
+          description: "受监视的IP地址。"
+          delete_confirm: "确定要撤销对IP地址为 %{ip_address} 的规则？"
+          actions:
+            block: "阻挡"
+            do_nothing: "放行"
 
       impersonate:
         title: "假冒用户"
@@ -1348,8 +1366,8 @@ zh_CN:
           one: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
           other: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
         delete_confirm: "你确定要永久地从本站删除此用户？该操作无法撤销！"
-        delete_and_block: "<b>确定</b>，并<b>阻止</b>该邮件地址再次注册。"
-        delete_dont_block: "<b>确定</b>，但<b>允许</b>该邮件地址再次注册。"
+        delete_and_block: "<b>确定</b>，并<b>阻止</b>该邮件地址和IP地址再次注册。"
+        delete_dont_block: "<b>确定</b>，但<b>允许</b>该邮件地址和IP地址再次注册。"
         deleted: "该用户已被删除。"
         delete_failed: "在删除用户时发生了错误。请确保删除该用户前删除了该用户的所有帖子。"
         send_activation_email: "发送激活邮件"
