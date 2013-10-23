@@ -9,21 +9,7 @@
 Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
 
   model: function(params) {
-    var categories = Discourse.Category.list();
-
-    var slug = Em.get(params, 'slug');
-
-    var uncategorized = Discourse.Category.uncategorizedInstance();
-    if (slug === uncategorized.get('slug')) return uncategorized;
-
-    var category = categories.findProperty('slug', Em.get(params, 'slug'));
-
-    // In case the slug didn't work, try to find it by id instead.
-    if (!category) {
-      category = categories.findProperty('id', parseInt(slug, 10));
-    }
-
-    return category;
+    return Discourse.Category.findBySlug(Em.get(params, 'slug'), Em.get(params, 'parentSlug'));
   },
 
   setupController: function(controller, category) {
@@ -35,16 +21,18 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
       }
     }
 
-    var listController = this.controllerFor('list');
-    var urlId = Discourse.Category.slugFor(category);
-    listController.set('filterMode', "category/" + urlId);
+    var listController = this.controllerFor('list'),
+        urlId = Discourse.Category.slugFor(category),
+        self = this;
 
-    var router = this;
+    listController.set('filterMode', "category/" + urlId);
     listController.load("category/" + urlId).then(function(topicList) {
-      listController.set('canCreateTopic', topicList.get('can_create_topic'));
-      listController.set('category', category);
-      router.controllerFor('listTopics').set('content', topicList);
-      router.controllerFor('listTopics').set('category', category);
+      listController.setProperties({
+        canCreateTopic: topicList.get('can_create_topic'),
+        category: category
+      });
+      self.controllerFor('listTopics').set('content', topicList);
+      self.controllerFor('listTopics').set('category', category);
     });
   },
 

@@ -132,18 +132,56 @@ Discourse.Category.reopenClass({
 
   slugFor: function(category) {
     if (!category) return "";
-    var id = Em.get(category, 'id');
-    var slug = Em.get(category, 'slug');
-    if (!slug || slug.trim().length === 0) return "" + id + "-category";
-    return slug;
+
+    var parentCategory = Em.get(category, 'parentCategory'),
+        result = "";
+
+    if (parentCategory) {
+      result = Discourse.Category.slugFor(parentCategory) + "/";
+    }
+
+    var id = Em.get(category, 'id'),
+        slug = Em.get(category, 'slug');
+
+    if (!slug || slug.trim().length === 0) return result + id + "-category";
+    return result + slug;
   },
 
   list: function() {
     return Discourse.Site.currentProp('categories');
   },
 
-  findBySlugOrId: function(slugOrId) {
-    // TODO: all our routing around categories need a rethink
+  findBySlug: function(slug, parentSlug) {
+
+    var uncategorized = Discourse.Category.uncategorizedInstance();
+    if (slug === uncategorized.get('slug')) return uncategorized;
+
+    var categories = Discourse.Category.list(),
+        category;
+
+    if (parentSlug) {
+      var parentCategory = categories.findBy('slug', parentSlug);
+      if (parentCategory) {
+        category = categories.find(function(item) {
+          return item && item.get('parentCategory') === parentCategory && item.get('slug') === slug;
+        });
+      }
+    } else {
+      category = categories.findBy('slug', slug);
+
+      // If we have a parent category, we need to enforce it
+      if (category.get('parentCategory')) return;
+    }
+
+    // In case the slug didn't work, try to find it by id instead.
+    if (!category) {
+      category = categories.findBy('id', parseInt(slug, 10));
+    }
+
+    return category;
+  },
+
+  reloadBySlugOrId: function(slugOrId) {
     return Discourse.ajax("/category/" + slugOrId + "/show.json").then(function (result) {
       return Discourse.Category.create(result.category);
     });

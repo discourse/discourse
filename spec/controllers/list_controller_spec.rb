@@ -92,6 +92,35 @@ describe ListController do
         end
       end
 
+      context 'a child category' do
+        let(:sub_category) { Fabricate(:category, parent_category_id: category.id) }
+
+        context 'when parent and child are requested' do
+          before do
+            xhr :get, :category, parent_category: category.slug, category: sub_category.slug
+          end
+
+          it { should respond_with(:success) }
+        end
+
+        context 'when child is requested with the wrong parent' do
+          before do
+            xhr :get, :category, parent_category: 'not_the_right_slug', category: sub_category.slug
+          end
+
+          it { should_not respond_with(:success) }
+        end
+
+        context 'when child is requested without a parent' do
+          before do
+            xhr :get, :category, category: sub_category.slug
+          end
+
+          it { should_not respond_with(:success) }
+        end
+
+      end
+
       describe 'feed' do
         it 'renders RSS' do
           get :category_feed, category: category.slug, format: :rss

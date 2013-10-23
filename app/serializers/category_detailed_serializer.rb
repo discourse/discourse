@@ -1,16 +1,9 @@
-class CategoryDetailedSerializer < ApplicationSerializer
+class CategoryDetailedSerializer < BasicCategorySerializer
 
-  attributes :id,
-             :name,
-             :color,
-             :text_color,
-             :slug,
-             :topic_count,
-             :post_count,
+  attributes :post_count,
              :topics_week,
              :topics_month,
              :topics_year,
-             :description,
              :description_excerpt,
              :is_uncategorized
 

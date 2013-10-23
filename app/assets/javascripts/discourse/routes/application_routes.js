@@ -29,13 +29,14 @@ Discourse.Route.buildRoutes(function() {
     });
 
     // the homepage is the first item of the 'top_menu' site setting
-    var settings = Discourse.SiteSettings;
-    var homepage = settings.top_menu.split("|")[0].split(",")[0];
+    var homepage = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
     this.route(homepage, { path: '/' });
 
     this.route('categories', { path: '/categories' });
-    this.route('category', { path: '/category/:slug/more' });
     this.route('category', { path: '/category/:slug' });
+    this.route('category', { path: '/category/:slug/more' });
+    this.route('category', { path: '/category/:parentSlug/:slug' });
+    this.route('category', { path: '/category/:parentSlug/:slug/more' });
   });
 
   // User routes

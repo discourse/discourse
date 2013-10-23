@@ -48,7 +48,7 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     var result = this._super(obj);
 
     if (result.categories) {
-      var byId = {}
+      var byId = {};
       result.categories = _.map(result.categories, function(c) {
         byId[c.id] = Discourse.Category.create(c);
         return byId[c.id];
@@ -59,7 +59,7 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
         if (c.get('parent_category_id')) {
           c.set('parentCategory', byId[c.get('parent_category_id')]);
         }
-      })
+      });
     }
 
     if (result.trust_levels) {

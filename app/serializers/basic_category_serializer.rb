@@ -13,4 +13,8 @@ class BasicCategorySerializer < ApplicationSerializer
              :permission,
              :parent_category_id
 
+  def include_parent_category_id?
+    parent_category_id
+  end
+
 end

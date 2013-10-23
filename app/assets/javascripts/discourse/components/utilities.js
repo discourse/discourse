@@ -33,22 +33,26 @@ Discourse.Utilities = {
     }
   },
 
-  // Create a badge like category link
+  /**
+    Create a badge-like category link
+
+    @method categoryLink
+    @param {Discourse.Category} category the category whose link we want
+    @returns {String} the html category badge
+  **/
   categoryLink: function(category) {
     if (!category) return "";
 
-    var color = Em.get(category, 'color');
-    var textColor = Em.get(category, 'text_color');
-    var name = Em.get(category, 'name');
-    var description = Em.get(category, 'description');
-
-    // Build the HTML link
-    var result = "<a href=\"" + Discourse.getURL("/category/") + Discourse.Category.slugFor(category) + "\" class=\"badge-category\" ";
+    var color = Em.get(category, 'color'),
+        textColor = Em.get(category, 'text_color'),
+        name = Em.get(category, 'name'),
+        description = Em.get(category, 'description'),
+        html = "<a href=\"" + Discourse.getURL("/category/") + Discourse.Category.slugFor(category) + "\" class=\"badge-category\" ";
 
     // Add description if we have it
-    if (description) result += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
+    if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
 
-    return result + "style=\"background-color: #" + color + "; color: #" + textColor + ";\">" + name + "</a>";
+    return html + "style=\"background-color: #" + color + "; color: #" + textColor + ";\">" + name + "</a>";
   },
 
   avatarUrl: function(template, size) {

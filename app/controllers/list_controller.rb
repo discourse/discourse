@@ -62,7 +62,12 @@ class ListController < ApplicationController
       @description = @category.description
     end
 
-    list.more_topics_url = url_for(category_list_path(params[:category], page: next_page, format: "json"))
+    if params[:parent_category].present?
+      list.more_topics_url = url_for(category_list_parent_path(params[:parent_category], params[:category], page: next_page, format: "json"))
+    else
+      list.more_topics_url = url_for(category_list_path(params[:category], page: next_page, format: "json"))
+    end
+
     respond(list)
   end
 
@@ -118,7 +123,18 @@ class ListController < ApplicationController
 
   def set_category
     slug = params.fetch(:category)
-    @category = Category.where("slug = ?", slug).includes(:featured_users).first || Category.where("id = ?", slug.to_i).includes(:featured_users).first
+    parent_slug = params[:parent_category]
+
+    parent_category_id = nil
+    if parent_slug.present?
+      parent_category_id = Category.where(slug: parent_slug).pluck(:id).first ||
+                           Category.where(id: parent_slug.to_i).pluck(:id).first
+
+      raise Discourse::NotFound.new if parent_category_id.blank?
+    end
+
+    @category = Category.where(slug: slug, parent_category_id: parent_category_id).includes(:featured_users).first ||
+                Category.where(id: slug.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
   end
 
   def request_is_for_uncategorized?

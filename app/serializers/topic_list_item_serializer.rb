@@ -6,9 +6,9 @@ class TopicListItemSerializer < ListableTopicSerializer
              :has_best_of,
              :archetype,
              :rank_details,
-             :last_poster_username
+             :last_poster_username,
+             :category_id
 
-  has_one :category, serializer: BasicCategorySerializer
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
 
   def starred
