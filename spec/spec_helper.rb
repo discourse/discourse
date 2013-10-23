@@ -66,7 +66,7 @@ shared_examples_for "an engine" do
     end
   end
 
-  describe "to_html" do
+  describe "#to_html" do
     it "includes subname" do
       expect(html).to include(%|<aside class="onebox #{described_class.template_name}">|)
     end
@@ -76,7 +76,7 @@ shared_examples_for "an engine" do
     end
 
     it "includes link" do
-      expect(html).to include(%|class="link" href="#{escaped_data(:link)}|)
+      expect(html).to include(%|class="link" href="#{data[:link]}|)
     end
 
     it "includes badge" do
