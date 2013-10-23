@@ -733,6 +733,12 @@ table.api-keys {
   input.ember-text-field {
     padding: 1px 4px;
   }
+  .btn {
+    padding: 2px 8px;
+    .icon {
+      margin-right: 2px;
+    }
+  }
 }
 
 .screened-emails, .screened-urls, .screened-ip-addresses {
@@ -760,8 +766,9 @@ table.api-keys {
       width: 130px;
     }
   }
-  .actions {
+  .col.actions {
     width: 275px;
+    padding-top: 4px;
     a {
       text-decoration: underline;
     }
