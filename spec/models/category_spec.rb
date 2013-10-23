@@ -18,7 +18,7 @@ describe Category do
   it { should have_many :topics }
   it { should have_many :category_featured_topics }
   it { should have_many :featured_topics }
-
+  it { should belong_to :parent_category}
 
   describe "resolve_permissions" do
     it "can determine read_restricted" do
@@ -314,4 +314,31 @@ describe Category do
 
     end
   end
+
+
+  describe "parent categories" do
+    let(:user) { Fabricate(:user) }
+    let(:parent_category) { Fabricate(:category, user: user) }
+
+    it "can be associated with a parent category" do
+      sub_category = Fabricate.build(:category, parent_category_id: parent_category.id, user: user)
+      sub_category.should be_valid
+      sub_category.parent_category.should == parent_category
+    end
+
+    it "cannot associate a category with itself" do
+      category = Fabricate(:category, user: user)
+      category.parent_category_id = category.id
+      category.should_not be_valid
+    end
+
+    it "cannot have a category two levels deep" do
+      sub_category = Fabricate(:category, parent_category_id: parent_category.id, user: user)
+      nested_sub_category = Fabricate.build(:category, parent_category_id: sub_category.id, user: user)
+      nested_sub_category.should_not be_valid
+
+    end
+
+  end
+
 end

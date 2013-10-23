@@ -7,14 +7,14 @@ class Category < ActiveRecord::Base
   belongs_to :topic, dependent: :destroy
   if rails4?
     belongs_to :topic_only_relative_url,
-    -> { select "id, title, slug" },
-    class_name: "Topic",
-    foreign_key: "topic_id"
+                -> { select "id, title, slug" },
+                class_name: "Topic",
+                foreign_key: "topic_id"
   else
     belongs_to :topic_only_relative_url,
-    select: "id, title, slug",
-    class_name: "Topic",
-    foreign_key: "topic_id"
+                select: "id, title, slug",
+                class_name: "Topic",
+                foreign_key: "topic_id"
   end
 
   belongs_to :user
@@ -33,6 +33,7 @@ class Category < ActiveRecord::Base
   validates :user_id, presence: true
   validates :name, presence: true, uniqueness: true, length: { in: 1..50 }
   validate :uncategorized_validator
+  validate :parent_category_validator
 
   before_validation :ensure_slug
   after_save :invalidate_site_cache
@@ -43,6 +44,7 @@ class Category < ActiveRecord::Base
   after_destroy :publish_categories_list
 
   has_one :category_search_data
+  belongs_to :parent_category, class_name: 'Category'
 
   scope :latest, ->{ order('topic_count desc') }
 
@@ -186,6 +188,15 @@ SQL
   def uncategorized_validator
     errors.add(:name, I18n.t(:is_reserved)) if name == SiteSetting.uncategorized_name
     errors.add(:slug, I18n.t(:is_reserved)) if slug == SiteSetting.uncategorized_name
+  end
+
+  def parent_category_validator
+    if parent_category_id
+      errors.add(:parent_category_id, "You can't link a category to itself") if parent_category_id == id
+
+      grandfather_id = Category.where(id: parent_category_id).pluck(:parent_category_id).first
+      errors.add(:parent_category_id, "You can't have more than one level of subcategory") if grandfather_id
+    end
   end
 
   def group_names=(names)
