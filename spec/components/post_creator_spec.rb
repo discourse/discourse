@@ -44,6 +44,17 @@ describe PostCreator do
 
     end
 
+    context "invalid raw" do
+
+      let(:creator_invalid_raw) { PostCreator.new(user, basic_topic_params.merge(raw: '')) }
+
+      it "has errors" do
+        creator_invalid_raw.create
+        expect(creator_invalid_raw.errors).to be_present
+      end
+
+    end
+
     context "success" do
 
       it "doesn't return true for spam" do

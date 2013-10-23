@@ -76,7 +76,7 @@ class PostCreator
                            { user: @user,
                              limit_once_per: 24.hours,
                              message_params: {domains: @post.linked_hosts.keys.join(', ')} } )
-    else
+    elsif @post && !@post.errors.present?
       SpamRulesEnforcer.enforce!(@post)
     end
 
