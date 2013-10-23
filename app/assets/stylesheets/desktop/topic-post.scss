@@ -7,6 +7,9 @@
   margin-right: auto;
   margin-left: auto;
 }
+
+
+
 h1 .topic-statuses .topic-status i {margin-right: 5px;}
 
 .full-width {
@@ -17,9 +20,16 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
 
 .topic-post {
   padding: 0;
+
   &:first-of-type {
     border-top: none;
   }
+
+  &:last-of-type {
+    border-bottom: 1px solid #ddd;
+
+  }
+
 
 .reply-to-tab {
   display: block;
@@ -215,7 +225,6 @@ a.star {
 .topic-summary {
   button {border-radius: 0;}
 
-
   .topic-links li {
     word-wrap: break-word;
   }
@@ -360,13 +369,21 @@ a.star {
 
 #suggested-topics {
   clear: left;
+
+
+.topics table tbody tr {background: #fff;}
+
   table {
     box-shadow: none;
     border-radius: 0;
     border-color: #ddd;
     margin-top: 10px;
+
+
+
   }
-  padding: 20px 10px 15px 10px;
+padding: 20px 10px 15px 10px;
+
    .title {
     font-size: 14px; line-height: 8px;
 
@@ -392,7 +409,7 @@ span.post-count {
 
 #topic-title {
   z-index: 1000;
-  padding: 20px 10px 15px 10px;
+  padding: 25px 10px 15px 10px;
 .chzn-container {vertical-align: middle;}
 }
 
@@ -454,7 +471,7 @@ iframe {
   margin-bottom: 10px;
   width: 92px;
   border-top: 1px solid #ddd;
-  padding-top: 25px;
+  padding-top: 30px;
 
   img { text-align: center; }
 .contents {
@@ -488,6 +505,8 @@ h3 {display: block;}
 }
 
 .contents .cooked {
+
+  padding-right: 30px;
 
 h1, h2, h3 {margin: 10px 0;}
 
@@ -610,7 +629,7 @@ blockquote {
 }
 
 .quote .title {margin-right: 0;}
-
+.quote {margin-top: 20px;}
 .quote-controls {
   float: right;
   color: #aaa;
@@ -661,7 +680,7 @@ blockquote {
   i {font-size: 12px;}
 
   .post-links {
-    margin-top: 5px;
+    margin-top: 3px;
     list-style-type: none;
     padding-left: 19px;
     position: relative;
@@ -687,8 +706,7 @@ blockquote {
   float: left;
   position: relative;
   width: 720px;
-  padding: 10px 10px 15px 20px;
-
+  padding: 10px 0 15px 20px;
 
 }
 
