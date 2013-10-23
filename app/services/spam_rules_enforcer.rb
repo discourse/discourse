@@ -35,7 +35,8 @@ class SpamRulesEnforcer
     !first_post.user.staff? and !@post.user.staff? and
       @post.user != first_post.user and
       @post.user.ip_address == first_post.user.ip_address and
-      @post.user.new_user?
+      @post.user.new_user? and
+      !ScreenedIpAddress.is_whitelisted?(@post.user.ip_address)
   end
 
   def flag_sockpuppet_users

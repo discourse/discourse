@@ -25,8 +25,16 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.should_block?(ip_address)
+    exists_for_ip_address_and_action?(ip_address, actions[:block])
+  end
+
+  def self.is_whitelisted?(ip_address)
+    exists_for_ip_address_and_action?(ip_address, actions[:do_nothing])
+  end
+
+  def self.exists_for_ip_address_and_action?(ip_address, action_type)
     b = match_for_ip_address(ip_address)
     b.record_match! if b
-    !!b and b.action_type == actions[:block]
+    !!b and b.action_type == action_type
   end
 end

@@ -20,9 +20,15 @@ describe SpamRulesEnforcer do
         SpamRulesEnforcer.new(post2).reply_is_from_sockpuppet?.should eq(false)
       end
 
-      it 'is true if users have the same IP address' do
-        post2 = Fabricate(:post, user: Fabricate(:user, ip_address: '182.189.119.174'), topic: post1.topic)
+      it 'is true if users have the same IP address and are new' do
+        post2 = Fabricate(:post, user: Fabricate(:user, ip_address: user1.ip_address), topic: post1.topic)
         SpamRulesEnforcer.new(post2).reply_is_from_sockpuppet?.should eq(true)
+      end
+
+      it 'is false if the ip address is whitelisted' do
+        ScreenedIpAddress.stubs(:is_whitelisted?).with(user1.ip_address).returns(true)
+        post2 = Fabricate(:post, user: Fabricate(:user, ip_address: user1.ip_address), topic: post1.topic)
+        SpamRulesEnforcer.new(post2).reply_is_from_sockpuppet?.should eq(false)
       end
 
       it 'is false if reply and first post are from the same user' do
