@@ -2,6 +2,9 @@ require "drb/drb"
 require "thread"
 require "fileutils"
 require "autospec/reload_css"
+require "autospec/base_runner"
+require "autospec/simple_runner"
+require "autospec/spork_runner"
 
 module Autospec; end
 
@@ -48,18 +51,18 @@ class Autospec::Runner
   end
 
   def run(opts = {})
-    if already_running?(pid_file)
-      puts "autospec appears to be running, it is possible the pid file is old"
-      puts "if you are sure it is not running, delete #{pid_file}"
-      return
-    end
-    write_pid_file(pid_file, Process.pid)
-
-    start_spork
-    Signal.trap("HUP") {stop_spork; exit }
-    Signal.trap("SIGINT") {stop_spork; exit }
 
     puts "Forced polling (slower) - inotify does not work on network filesystems, use local filesystem to avoid" if opts[:force_polling]
+
+    if ENV["SPORK"] == 0
+      @runner = Autospec::SimpleRunner.new
+    else
+      @runner = Autospec::SporkRunner.new
+    end
+    @runner.start
+
+    Signal.trap("HUP") {@runner.stop; exit }
+    Signal.trap("SIGINT") {@runner.stop; exit }
 
     options = {filter: /^app|^spec|^lib/, relative_paths: true}
 
@@ -79,22 +82,14 @@ class Autospec::Runner
       @signal.signal
     end
 
-    spork_running = true
-    Thread.new do
-      Process.wait(@spork_pid)
-      spork_running = false
-    end
-
-    while spork_running
+    while @runner.running?
       process_queue
     end
-
-    puts "Spork has been terminated, exiting"
 
   rescue => e
     puts e
     puts e.backtrace
-    stop_spork
+    @runner.stop
   end
 
   def process_queue
@@ -168,15 +163,13 @@ class Autospec::Runner
 
   def process_change(files)
     return unless files.length > 0
+
     specs = []
     hit = false
     files.each do |file|
       RELOAD_MATCHERS.each do |k|
         if k.match(file)
-          spork_service.abort
-          stop_spork
-          sleep 1
-          start_spork
+          @runner.reload
           return
         end
       end
@@ -213,7 +206,7 @@ class Autospec::Runner
       end
       return
     else
-      spork_service.abort
+      @runner.abort
     end
 
     @mutex.synchronize do
@@ -305,72 +298,9 @@ class Autospec::Runner
             "-r", "#{File.dirname(__FILE__)}/formatter.rb",
             "-f", "Autospec::Formatter"].flatten
 
-    spork_service.run(args,$stderr,$stdout)
-  end
-
-
-  def spork_pid_file
-    Rails.root + "tmp/pids/spork.pid"
-  end
-
-  def pid_file
-    Rails.root + "tmp/pids/autospec.pid"
-  end
-
-  def already_running?(pid_file)
-    if File.exists? pid_file
-      pid = File.read(pid_file).to_i
-      Process.getpgid(pid) rescue nil
-    end
-  end
-
-  def write_pid_file(file,pid)
-    FileUtils.mkdir_p(Rails.root + "tmp/pids")
-    File.open(file,'w') do |f|
-      f.write(pid)
-    end
-  end
-
-  def spork_running?
-    spork_service.port rescue nil
-  end
-
-  def spork_service
-
-    unless @drb_listener_running
-      begin
-        DRb.start_service("druby://127.0.0.1:0")
-      rescue SocketError, Errno::EADDRNOTAVAIL
-        DRb.start_service("druby://:0")
-      end
-
-      @drb_listener_running = true
-    end
-
-    @spork_service ||= DRbObject.new_with_uri("druby://127.0.0.1:8989")
-  end
-
-  def stop_spork
-    pid = File.read(spork_pid_file).to_i
-    Process.kill("SIGTERM",pid)
-  end
-
-  def start_spork
-
-    if already_running?(spork_pid_file)
-      puts "Killing old orphan spork instance"
-      stop_spork
-      sleep 1
-    end
-
-    @spork_pid = Process.spawn({'RAILS_ENV' => 'test'}, "bundle exec spork")
-    write_pid_file(spork_pid_file, @spork_pid)
-
-    running = false
-    while !running
-      running = spork_running?
-      sleep 0.1
-    end
+    @runner.run(args, specs)
 
   end
+
+
 end
