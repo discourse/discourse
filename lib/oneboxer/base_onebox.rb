@@ -37,6 +37,11 @@ module Oneboxer
         var.gsub! /https?:\/\//, '//' if var.is_a? String
       end
 
+      # Add wmode=opaque to the iframe src URL so that the flash player is rendered within the document flow instead of on top
+      def append_embed_wmode(var)
+        var.gsub! /(src="[^"]+)/, '\1&wmode=opaque"' if var.is_a? String
+      end
+
     end
 
     def initialize(url, opts={})
