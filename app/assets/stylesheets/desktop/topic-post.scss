@@ -455,7 +455,7 @@ iframe {
   a:not(.badge-category) {margin-left: -10px;}
 
   }
- 
+
   a.star {
     margin-right: 5px;
     margin-top: 6px;
@@ -737,7 +737,7 @@ blockquote {
 .row:after {clear: both;}
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
-  &.bottom { 
+  &.bottom {
     &.hidden {display: block; opacity: 0; }
 
   }
@@ -766,7 +766,7 @@ button.show-replies {
 
   }
 
- 
+
 }
 
   &.bottom-round button.show-replies {
@@ -775,7 +775,7 @@ button.show-replies {
   margin-bottom: 0;
   padding-bottom: 8px;
 
-  
+
  &:hover {background: #ddd;
   .badge-posts {color: #888;}
 
@@ -953,3 +953,9 @@ clear: both;
 
 input#edit-title {margin-left: 10px;}
 
+a.attachment:before {
+  display: inline-block;
+  margin-right: 4px;
+  font-family: "FontAwesome";
+  content: "\f019";
+}

@@ -245,7 +245,7 @@ Discourse.Utilities = {
     if (Discourse.Utilities.isAnImage(upload.original_filename)) {
       return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
     } else {
-      return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a><span class="size">(' + I18n.toHumanSize(upload.filesize) + ')</span>';
+      return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')';
     }
   },
 
