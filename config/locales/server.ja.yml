@@ -16,60 +16,60 @@ ja:
       date_only: "%b %-d, %Y"
 
   title: "Discourse"
-  topics: "Topics"
-  posts: "posts"
-  loading: "Loading"
+  topics: "トピック"
+  posts: "ポスト"
+  loading: "読み込み中"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
 
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
 
-  site_under_maintenance: 'Site is currently undergoing maintenance.'
-  operation_already_running: "An %{operation} is currently running. Can't start a new %{operation} job right now."
+  site_under_maintenance: 'このサイトは現在メンテナンス中です。'
+  operation_already_running: "%{operation} が現在起動中のため、新たな %{operation} ジョブをスタートできません。"
 
   too_many_mentions:
-    zero: "Sorry, you can't mention other users."
-    one: "Sorry, you can only mention one other user in a post."
-    other: "Sorry, you can only mention %{count} users in a post."
+    zero: "申し訳ありませんが、このポストにおいて他のユーザをメンションできません。"
+    one: "申し訳ありませんが、このポストにおいてあと1人しかメンションできません。"
+    other: "申し訳ありませんが、このポストにおいてあと%{count}人しかメンションできません。"
   too_many_mentions_newuser:
-    zero: "Sorry, new users can't mention other users."
-    one: "Sorry, new users can only mention one other user in a post."
-    other: "Sorry, new users can only mention %{count} users in a post."
+    zero: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをメンションできません。"
+    one: "申し訳ありませんが、新規ユーザはこのポストにおいてあと1人しかメンションできません。"
+    other: "申し訳ありませんが、新規ユーザはこのポストにおいてあと%{count}人しかメンションできません。"
   too_many_images:
-    zero: "Sorry, new users can't put images in posts."
-    one: "Sorry, new users can only put one image in a post."
-    other: "Sorry, new users can only put %{count} images in a post."
+    zero: "申し訳ありませんが、新規ユーザはこのポストに画像をアップロードできません。"
+    one: "申し訳ありませんが、新規ユーザはこのポストに画像を1つしかアップロードできません。"
+    other: "申し訳ありませんが、新規ユーザはこのポストに画像を%{count}個しかアップロードできません。"
   too_many_attachments:
-    zero: "Sorry, new users can't put attachments in posts."
-    one: "Sorry, new users can only put one attachment in a post."
-    other: "Sorry, new users can only put %{count} attachments in a post."
+    zero: "申し訳ありませんが、新規ユーザはこのポストにファイルを添付できません。"
+    one: "申し訳ありませんが、新規ユーザはこのポストにファイルを1つしか添付できません。"
+    other: "申し訳ありませんが、新規ユーザはこのポストにファイルを%{count}個しか添付できません。"
   too_many_links:
-    zero: "Sorry, new users can't put links in posts."
-    one: "Sorry, new users can only put one link in a post."
-    other: "Sorry, new users can only put %{count} links in a post."
-  spamming_host: "Sorry you cannot post a link to that host."
+    zero: "申し訳ありませんが、新規ユーザはこのポストにリンクを貼れません。"
+    one: "申し訳ありませんが、新規ユーザはこのポストにリンクを1つしか貼れません。"
+    other: "申し訳ありませんが、新規ユーザはこのポストにリンクを%{count}個しか貼れません。"
+  spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
 
-  just_posted_that: "is too similar to what you recently posted"
-  has_already_been_used: "has already been used"
-  invalid_characters: "contains invalid characters"
-  is_invalid: "is invalid; try to be a little more descriptive"
-  next_page: "next page →"
+  just_posted_that: "はあなたが最近投稿したポストと内容がほぼ一緒です"
+  has_already_been_used: "は既に使用中です"
+  invalid_characters: "は不正なキャラクターを含んでいます"
+  is_invalid: "は不正です。もう少し説明を追加してください"
+  next_page: "次のページ →"
   by: "By"
-  topics_in_category: "Topics in the '%{category}' category"
-  rss_posts_in_topic: "RSS feed of '%{topic}'"
-  rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
+  topics_in_category: "'%{category}' カテゴリ内のトピック"
+  rss_posts_in_topic: "'%{topic}' の RSS フィード"
+  rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"
   author_wrote: "%{author} wrote:"
   private_message_abbrev: "PM"
   rss_description:
-    latest: "Latest topics"
-    hot: "Hot topics"
+    latest: "最新トピック"
+    hot: "ホットトピック"
 
   groups:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"
     default_names:
-      admins: "admins"
-      moderators: "moderators"
+      admins: "管理者"
+      moderators: "モデレータ"
       staff: "staff"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -83,68 +83,66 @@ ja:
       other: "%{count} posts"
 
     'new-topic': |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+      %{site_name} へようこそ &mdash; **新たなトピックの作成ありがとうございます!**
 
-      - Does the title accurately describe your topic? Does it sound interesting?
+      - タイトルはトピックの内容を正しく説明していますか? 他の人にとって興味深いタイトルになっていますか?
 
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+      - このトピックは何をカバーするものですか? このトピックに興味を示しそうなのは誰でしょう? なぜこのトピックは重要なのでしょうか? コミュニティよりどのような回答を期待していますか?
 
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
+      - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。適切なカテゴリを選択すると、他の関連トピックとのグルーピングができます。
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      詳しいガイダンスは [FAQ](/faq) を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。
 
     'new-reply': |
-      Welcome to %{site_name} &mdash; **thanks for contributing!**
+      %{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!**
 
-      - Does your reply improve the conversation in some way?
+      - あなたの回答は議論に何らかの形で貢献していますか?
 
-      - Be kind to your fellow community members.
+      - コミュニティメンバー同士のやりとりは礼儀正しく、マナーを保ちましょう。
 
-      - Constructive criticism is welcome, but criticize *ideas*, not people.
+      - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      詳しいガイダンスは [FAQ](/faq) を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。
 
     avatar: |
       ### How about a new picture for your account?
 
-      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
+      コミュニティへの貢献ありがとうございます。アバターがデフォルトのままのようですが、**[ユーザプロファイル](%{profile_path})** にてアバター画像をアップロードしてみてはいかがでしょう?
 
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
-
-      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
+      ユニークなアバターは、コミュニティにおける議論の活性化にもつながりますので、ぜひご検討ください!
 
     sequential_replies: |
       ### Consider replying to several posts at once
 
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes or @name references to previous posts.
+      トピックに数多くの回答を投稿する代わりに、以前のポストへの @name 参照や引用などを活用して回答を一つのポストにまとめられないか検討してください。
 
-      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
+      細かい回答を数多く投稿するより、掘り下げた内容をカバーした数少ない回答を投稿した方がトピックの議論を追いやすくなります。
 
 
   activerecord:
     attributes:
       category:
-        name: "Category Name"
+        name: "カテゴリ名"
       post:
-        raw: "Body"
+        raw: "本文"
     errors:
       messages:
-        is_invalid: "is invalid; try to be a little more descriptive"
-        has_already_been_used: "has already been used"
+        is_invalid: "は不正です。もう少し説明を追加してください"
+        has_already_been_used: "は既に使用中です"
       models:
         topic:
           attributes:
             archetype:
-              cant_send_pm: "Sorry, you cannot send a private message to that user."
+              cant_send_pm: "申し訳ありませんが、このユーザにはプライベートメッセージを送信できません。"
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
+    no_info_me: "<div class='missing-profile'>プロフィールの自己紹介フィールドが空欄のようです。<a href='/users/%{username_lower}/preferences/about-me'>自己紹介をしてみませんか?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} は、まだプロフィールの自己紹介フィールドに何も書いていません</div>"
 
   category:
-    topic_prefix: "Category definition for %{category}"
-    replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters.]"
-    post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
+    topic_prefix: "%{category} カテゴリの定義"
+    replace_paragraph: "[この最初のパラグラフを、本カテゴリの簡単な紹介文に置き換えてください。このガイダンスはカテゴリ選択エリアに表示されるため、パラグラフは200文字以内にしてください。]"
+    post_template: "%{replace_paragraph}\n\nこれ以降のパラグラフに、カテゴリのガイドライン等を書いてください。\n\nいくつかのヒント:\n\n- このカテゴリは何か? どのようなトピックをこのカテゴリに入れるべきか?\n\n- 既に存在するカテゴリとの違いは何か?\n\n- このカテゴリはなぜ必要か?\n\n- 他のカテゴリとの統合や、複数カテゴリへの分割をするべきか?\n"
 
   trust_levels:
     newuser:
@@ -163,14 +161,14 @@ ja:
   rate_limiter:
     too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
     hours:
-      one: "1 hour"
-      other: "%{count} hours"
+      one: "1時間"
+      other: "%{count}時間"
     minutes:
-      one: "1 minute"
-      other: "%{count} minutes"
+      one: "1分"
+      other: "%{count}分"
     seconds:
-      one: "1 second"
-      other: "%{count} seconds"
+      one: "1秒"
+      other: "%{count}秒"
 
   datetime:
     distance_in_words:
@@ -210,102 +208,102 @@ ja:
         other: "%{count}y"
 
     distance_in_words_verbose:
-      half_a_minute: "just now"
+      half_a_minute: "たった今"
       less_than_x_seconds:
-        one:   "just now"
-        other: "just now"
+        one:   "たった今"
+        other: "たった今"
       x_seconds:
-        one:   "1 second ago"
-        other: "%{count} seconds ago"
+        one:   "1秒前"
+        other: "%{count}秒毎"
       less_than_x_minutes:
-        one:   "less than 1 minute ago"
-        other: "less than %{count} minutes ago"
+        one:   "1分未満前"
+        other: "%{count}分未満前"
       x_minutes:
-        one:   "1 minute ago"
-        other: "%{count} minutes ago"
+        one:   "1分前"
+        other: "%{count}分前"
       about_x_hours:
-        one:   "1 hour ago"
-        other: "%{count} hours ago"
+        one:   "1時間前"
+        other: "%{count}時間前"
       x_days:
-        one:   "1 day ago"
-        other: "%{count} days ago"
+        one:   "1日前"
+        other: "%{count}日前"
       about_x_months:
-        one:   "about 1 month ago"
-        other: "about %{count} months ago"
+        one:   "約1ヶ月前"
+        other: "約%{count}ヶ月前"
       x_months:
-        one:   "1 month ago"
-        other: "%{count} months ago"
+        one:   "1ヶ月前"
+        other: "%{count}ヶ月前"
       about_x_years:
-        one:   "about 1 year ago"
-        other: "about %{count} years ago"
+        one:   "約1年前"
+        other: "約%{count}年前"
       over_x_years:
-        one:   "over 1 year ago"
-        other: "over %{count} years ago"
+        one:   "1年以上前"
+        other: "%{count}年以上前"
       almost_x_years:
-        one:   "almost 1 year ago"
-        other: "almost %{count} years ago"
+        one:   "ほぼ1年前"
+        other: "ほぼ%{count}年前"
 
   password_reset:
-    no_token: "Sorry, your token has expired. Please try resetting your password again."
-    choose_new: "Please choose a new password"
-    update: 'update password'
-    title: 'reset password'
-    success: "You successfully changed your password and are now logged in."
-    success_unapproved: "You successfully changed your password."
-    continue: "Continue to %{site_name}"
+    no_token: "申し訳ありませんがトークンの有効期限が切れました。パスワードをリセットを再度試みてください。"
+    choose_new: "新しいパスワードを選択してください"
+    update: 'パスワード更新'
+    title: 'パスワードリセット'
+    success: "パスワードは無事更新され、ログインに成功しました。"
+    success_unapproved: "パスワードは無事更新されました。"
+    continue: "%{site_name} に進む"
 
   change_email:
-    confirmed: "Your email has been updated."
-    please_continue: "Please continue to %{link}"
-    error: "There was an error changing your email address. Perhaps the address is already in use?"
+    confirmed: "メールアドレスが更新されました。"
+    please_continue: "%{link} に進んでください"
+    error: "メールアドレスの更新に失敗しました。アドレスが既に使用されているかもしれません。"
 
   activation:
-    already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
-    please_continue: "Your new account is confirmed, and you are now logged in. Continue to %{link}"
-    welcome_to: "Welcome to %{site_name}!"
-    approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
+    already_done: "申し訳ありませんが、このアカウント認証リンクは無効です。既にアカウントがアクティブになっていませんか?"
+    please_continue: "新たなアカウントが認証され、ログインに成功しました。%{link} に進む"
+    welcome_to: "%{site_name} へようこそ!"
+    approval_required: "このフォーラムにアクセスするにはモデレータによる承認が必要です。承認されるとメールにて通知されます!"
 
   post_action_types:
     off_topic:
-      title: 'Off-Topic'
-      description: 'This post is radically off-topic in the current conversation, and should probably be moved to a different topic. If this is a topic, perhaps it does not belong here.'
-      long_form: 'flagged this as off-topic'
+      title: 'オフトピック'
+      description: 'このポストは現在の議論から著しく外れており、別トピックに移動すべきである。'
+      long_form: 'オフトピックフラグをたてる'
     spam:
-      title: 'Spam'
-      description: 'This post is an advertisement. It is not useful or relevant to the current conversation, but promotional in nature.'
-      long_form: 'flagged this as spam'
+      title: 'スパム'
+      description: 'このポストは宣伝であり、現在の議論に一切貢献していない。'
+      long_form: 'スパムフラグをたてる'
     inappropriate:
-      title: 'Inappropriate'
-      description: 'This post contains content that a reasonable person would consider offensive, abusive, or hate speech.'
-      long_form: 'flagged this as inappropriate'
+      title: '不適切'
+      description: 'このポストは、一般的に見て攻撃的、罵倒的、ヘイトスピーチ的な内容を含んでいる。'
+      long_form: '不適切フラグをたてる'
     notify_user:
-      title: 'Notify {{username}}'
-      description: 'This post contains something I want to talk to this person directly and privately about.'
-      long_form: 'notified user'
-      email_title: 'Regarding your post in "%{title}"'
+      title: '{{username}} に通知'
+      description: 'このポストは、このユーザに個人的に直接確認したい内容を含んでいる。'
+      long_form: 'ユーザに通知'
+      email_title: '"%{title}" のあなたのポストについて'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Notify moderators'
-      description: 'This post requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
-      long_form: 'notified moderators'
-      email_title: 'A post in "%{title}" requires moderator attention'
+      title: 'モデレータに通知'
+      description: 'このポストは、<a href="/faq">FAQ の規定</a>, <a href="%{tos_url}">TOS の規定</a>, もしくはその他の理由によりモデレータによる確認を要する。'
+      long_form: 'モデレータに通知'
+      email_title: '"%{title}" のポストに関するモデレータ確認依頼'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Bookmark'
-      description: 'Bookmark this post'
-      long_form: 'bookmarked this post'
+      title: 'ブックマーク'
+      description: 'このポストをブックマークする'
+      long_form: 'このポストをブックマーク'
     like:
-      title: 'Like'
-      description: 'Like this post'
-      long_form: 'liked this'
+      title: 'いいね！'
+      description: 'このポストを「いいね！」する'
+      long_form: '「いいね！」する'
     vote:
-      title: 'Vote'
-      description: 'Vote for this post'
-      long_form: 'voted for this post'
+      title: '投票'
+      description: 'このポストに投票する'
+      long_form: 'このポストに投票'
 
   flagging:
-    you_must_edit: '<p>Your post was flagged by the community. Please see your private messages.</p>'
-    user_must_edit: '<p>Flagged content temporarily hidden.</p>'
+    you_must_edit: '<p>あなたのポストにフラグがたちました。プライベートメッセージを確認してください。</p>'
+    user_must_edit: '<p>フラグのたった内容は一時的に非表示になります。</p>'
 
   archetypes:
     regular:
@@ -697,22 +695,22 @@ ja:
     sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
 
   notification_types:
-    mentioned: "%{display_username} mentioned you in %{link}"
-    liked: "%{display_username} liked your post in %{link}"
-    replied: "%{display_username} replied to your post in %{link}"
-    quoted: "%{display_username} quoted your post in %{link}"
-    edited: "%{display_username} edited your post in %{link}"
-    posted: "%{display_username} posted in %{link}"
-    moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a private message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
-    invitee_accepted: "%{display_username} accepted your invitation"
+    mentioned: "%{link} で %{display_username} があなたをメンションしました"
+    liked: "%{link} で %{display_username} があなたのポストを「いいね！」しました"
+    replied: "%{link} で %{display_username} があなたのポストに回答しました"
+    quoted: "%{link} で %{display_username} があなたのポストを引用しました"
+    edited: "%{link} で %{display_username} があなたのポストを編集しました"
+    posted: "%{link} に %{display_username} がポストを投稿しました"
+    moved_post: "%{display_username} があなたのポストを %{link} に移動しました"
+    private_message: "%{display_username} があなたにプラベートメッセージを送信しました: %{link}"
+    invited_to_private_message: "%{display_username} がプライベートメッセージにあなたを招待しました: %{link}"
+    invitee_accepted: "%{display_username} があなたの招待を受けました"
 
   search:
     types:
-      category: 'Categories'
-      topic: 'Topics'
-      user: 'Users'
+      category: 'カテゴリ'
+      topic: 'トピック'
+      user: 'ユーザ'
 
   original_poster: "Original Poster"
   most_posts: "Most Posts"
@@ -728,56 +726,56 @@ ja:
       other: "I moved %{count} posts to an existing topic: %{topic_link}"
 
   topic_statuses:
-    archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
-    archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
-    closed_enabled: "This topic is now closed. New replies are no longer allowed."
-    closed_disabled: "This topic is now opened. New replies are allowed."
+    archived_enabled: "このトピックはアーカイブされました。すべての内容は凍結されており、一切の変更ができません。"
+    archived_disabled: "このトピックはアーカイブ解除されました。凍結解除され、変更可能になりました。"
+    closed_enabled: "このトピックはクローズされました。新たに回答を投稿することはできません。"
+    closed_disabled: "このトピックはオープンされました。新たに回答を投稿することができます。"
     autoclosed_enabled:
       zero: "This topic was automatically closed after 1 day. New replies are no longer allowed."
       one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
-    pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is either unpinned by a moderator, or the Clear Pin button is pressed."
+    pinned_enabled: "このトピックはピン留めされました。ピン留めボタンが押されるかモデレータによってピン留めが解除されるまで、カテゴリのトップに表示されます。"
     pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
     visible_enabled: "This topic is now visible. It will be displayed in topic lists."
-    visible_disabled: "This topic is now invisible. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
+    visible_disabled: "このトピックは非表示状態になりました。トピックリストには表示されません。直接リンク経由でのみこのトピックにアクセスできます。"
 
   login:
-    not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
-    incorrect_username_email_or_password: "Incorrect username, email or password"
-    wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
-    active: "Your account is activated and ready to use."
-    activate_email: "You're almost done! We sent an activation email to <b>%{email}</b>. Please follow the instructions in the email to activate your account."
-    not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
-    banned: "You can't log in until %{date}."
+    not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
+    incorrect_username_email_or_password: "ユーザネーム、メールアドレス、またはパスワードが違います"
+    wait_approval: "サインアップありがとうござました。アカウントが承認され次第メールにて通知いたします。"
+    active: "アカウントが利用可能になりました。"
+    activate_email: "もうすこしです! <b>%{email}</b> にメールを送りましたので、メールの指示に従ってあなたのアカウントを有効にしてください。"
+    not_activated: "まだログインできません。メールを送信済ですので、メールの指示に従ってあなたのアカウントを有効にしてください。"
+    banned: "%{date} までログインできません。"
     errors: "%{errors}"
-    not_available: "Not available. Try %{suggestion}?"
-    something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error: "Sorry, there was an error authorizing your %{strategy} account. Perhaps you did not approve authorization?"
-    omniauth_error_unknown: "Something went wrong processing your log in, please try again."
+    not_available: "利用できません。%{suggestion} を試してみては?"
+    something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
+    omniauth_error: "あなたの %{strategy} アカウントの認可に失敗しました。アカウントの認可を許可したか確認してください。"
+    omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
 
   user:
     username:
-      short: "must be longer than %{min} characters"
-      long: "must be shorter than %{max} characters"
-      characters: "must only include numbers and letters"
-      unique: "must be unique"
-      blank: "must be present"
-      must_begin_with_alphanumeric: "must begin with a letter or number"
+      short: "は %{min} 文字より長い必要があります"
+      long: "は %{max} 文字より短い必要があります"
+      characters: "は英数字のみである必要があります"
+      unique: "はユニークである必要があります"
+      blank: "は空であってはなりません"
+      must_begin_with_alphanumeric: "は英数字で始まる必要があります"
     email:
-      not_allowed: "is not allowed from that email provider. Please use another email address."
-      blocked: "is not allowed."
+      not_allowed: "はこのメールプロバイダーを許可していません。他のメールアドレスを使用してください。"
+      blocked: "は許可されていません。"
 
   invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion on %{site_name}"
+    subject_template: "[%{site_name}] %{invitee_name} が %{site_name} のディスカッションにあなたを招待しています"
     text_body_template: |
-      %{invitee_name} invited you to the topic "%{topic_title}" at %{site_name}.
+      %{invitee_name} が %{site_name} の "%{topic_title}" トピックにあなたを招待しています。
 
-      If you're interested, click the link below to visit the discussion:
+      もしよろしければ、以下のリンクよりディスカッションをご確認ください:
 
       [Visit %{site_name}][1]
 
-      You were invited by a trusted user, so you'll be able to post a reply immediately, without needing to log in.
+      もしトラステッドユーザより招待された場合は、ログインすることなくすぐに回答を投稿することができます。
 
       [1]: %{invite_link}
 
