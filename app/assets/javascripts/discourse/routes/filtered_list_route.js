@@ -27,8 +27,9 @@ Discourse.FilteredListRoute = Discourse.Route.extend({
   },
 
   setupController: function() {
-    var listController = this.controllerFor('list');
-    var listTopicsController = this.controllerFor('listTopics');
+    var listController = this.controllerFor('list'),
+        listTopicsController = this.controllerFor('listTopics');
+
     listController.set('filterMode', this.filter);
 
     var listContent = listTopicsController.get('model');

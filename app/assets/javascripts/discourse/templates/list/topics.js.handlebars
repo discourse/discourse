@@ -10,6 +10,10 @@
         </button>
       {{/if}}
 
+      {{#if category}}
+        {{discourse-breadcrumbs title=Discourse.SiteSettings.title category=category categories=categories}}
+      {{/if}}
+
       <table id='topic-list'>
         <thead>
         <tr>

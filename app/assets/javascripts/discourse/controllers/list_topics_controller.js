@@ -15,6 +15,10 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
 
   latest: Ember.computed.equal('filter', 'latest'),
 
+  categories: function() {
+    return Discourse.Category.list();
+  }.property(),
+
   draftLoaded: function() {
     var draft = this.get('content.draft');
     if (draft) {
