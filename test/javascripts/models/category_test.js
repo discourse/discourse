@@ -11,3 +11,4 @@ test('slugFor', function(){
   slugFor({id: 456}, "456-category", "It returns id-category for undefined slugs");
 
 });
+

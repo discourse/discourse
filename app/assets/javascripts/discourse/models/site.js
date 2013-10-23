@@ -48,9 +48,18 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     var result = this._super(obj);
 
     if (result.categories) {
+      var byId = {}
       result.categories = _.map(result.categories, function(c) {
-        return Discourse.Category.create(c);
+        byId[c.id] = Discourse.Category.create(c);
+        return byId[c.id];
       });
+
+      // Associate the categories with their parents
+      result.categories.forEach(function (c) {
+        if (c.get('parent_category_id')) {
+          c.set('parentCategory', byId[c.get('parent_category_id')]);
+        }
+      })
     }
 
     if (result.trust_levels) {
