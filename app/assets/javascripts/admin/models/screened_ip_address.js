@@ -25,7 +25,7 @@ Discourse.ScreenedIpAddress = Discourse.Model.extend({
   }.property('action'),
 
   blockIcon: function() {
-    return 'icon-remove';
+    return 'icon-ban-circle';
   }.property(),
 
   doNothingIcon: function() {
