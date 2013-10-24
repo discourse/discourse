@@ -1,0 +1,1366 @@
+# encoding: utf-8
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+ja:
+  js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
+    dates:
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   "1s"
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   "1m"
+          other: "%{count}m"
+        about_x_hours:
+          one:   "1h"
+          other: "%{count}h"
+        x_days:
+          one:   "1d"
+          other: "%{count}d"
+        about_x_years:
+          one:   "1y"
+          other: "%{count}y"
+        over_x_years:
+          one:   "> 1y"
+          other: "> %{count}y"
+        almost_x_years:
+          one:   "1y"
+          other: "%{count}y"
+      medium:
+        x_minutes:
+          one: "1 min"
+          other: "%{count} mins"
+        x_hours:
+          one: "1 hour"
+          other: "%{count} hours"
+        x_days:
+          one: "1 day"
+          other: "%{count} days"
+      medium_with_ago:
+        x_minutes:
+          one: "1 min ago"
+          other: "%{count} mins ago"
+        x_hours:
+          one: "1 hour ago"
+          other: "%{count} hours ago"
+        x_days:
+          one: "1 day ago"
+          other: "%{count} days ago"
+    share:
+      topic: 'このトピックのリンクをシェアする'
+      post: 'ポスト #%{postNumber} のリンクをシェアする'
+      close: '閉じる'
+      twitter: 'Twitter でこのリンクを共有する'
+      facebook: 'Facebook でこのリンクを共有する'
+      google+: 'Google+ でこのリンクを共有する'
+      email: 'メールでこのリンクを送る'
+
+    edit: 'このトピックのタイトルとカテゴリを編集'
+    not_implemented: "申し訳ありませんが、この機能はまだ実装されていません"
+    no_value: "いいえ"
+    yes_value: "はい"
+    of_value: "/"
+    generic_error: "申し訳ありませんが、エラーが発生しました"
+    generic_error_with_reason: "エラーが発生しました: %{error}"
+    log_in: "ログイン"
+    age: "Age"
+    last_post: "最終投稿"
+    admin_title: "管理者"
+    flags_title: "フラグ"
+    show_more: "もっと見る"
+    links: リンク
+    faq: "FAQ"
+    privacy_policy: "プライバシーポリシー"
+    mobile_view: "モバイル表示"
+    desktop_view: "デスクトップ表示"
+    you: "あなた"
+    or: "or"
+    now: "たった今"
+    read_more: 'もっと読む'
+    more: "More"
+    less: "Less"
+    never: "never"
+    daily: "daily"
+    weekly: "weekly"
+    every_two_weeks: "every two weeks"
+    character_count:
+      one: "{{count}} character"
+      other: "{{count}} characters"
+
+    in_n_seconds:
+      one: "in 1 second"
+      other: "in {{count}} seconds"
+    in_n_minutes:
+      one: "in 1 minute"
+      other: "in {{count}} minutes"
+    in_n_hours:
+      one: "in 1 hour"
+      other: "in {{count}} hours"
+    in_n_days:
+      one: "in 1 day"
+      other: "in {{count}} days"
+
+    suggested_topics:
+      title: "関連トピック"
+
+    bookmarks:
+      not_logged_in: "ポストをブックマークするには、ログインする必要があります"
+      created: "このポストをブックマークしました"
+      not_bookmarked: "このポストをブックマークする"
+      last_read: "このポストをブックマークする"
+
+    new_topics_inserted: "新しいトピックが {{count}} 個あります"
+    show_new_topics: "Click to show."
+    preview: "プレビュー"
+    cancel: "キャンセル"
+
+    save: "変更を保存"
+    saving: "保存中..."
+    saved: "保存しました"
+
+    upload: "アップロード"
+    uploading: "アップロード中..."
+    uploaded: "アップロードしました"
+
+    choose_topic:
+      none_found: "トピックが見つかりませんでした"
+      title:
+        search: "トピック名、URL、または ID でトピックを検索:"
+        placeholder: "ここにトピックのタイトルを入力"
+
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{topicUrl}}'>トピック</a> を作成"
+      you_posted_topic: "<a href='{{userUrl}}'>あなた</a> が <a href='{{topicUrl}}'>トピック</a> を作成"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{postUrl}}'>{{post_number}}</a> に回答"
+      you_replied_to_post: "<a href='{{userUrl}}'>あなた</a> が <a href='{{postUrl}}'>{{post_number}}</a> に回答"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{topicUrl}}'>トピック</a> に回答"
+      you_replied_to_topic: "<a href='{{userUrl}}'>あなた</a> が <a href='{{topicUrl}}'>トピック</a> に回答"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> が <a href='{{user2Url}}'>{{another_user}}</a> をメンション"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> が <a href='{{user2Url}}'>あなた</a> をメンション"
+      you_mentioned_user: "<a href='{{user1Url}}'>あなた</a> が <a href='{{user2Url}}'>{{user}}</a> をメンション"
+
+      posted_by_user: "<a href='{{userUrl}}'>{{user}}</a> がポストを投稿"
+      posted_by_you: "<a href='{{userUrl}}'>あなた</a> がポストを投稿"
+      sent_by_user: "<a href='{{userUrl}}'>{{user}}</a> が送信"
+      sent_by_you: "<a href='{{userUrl}}'>あなた</a> が送信"
+
+    user_action_groups:
+      "1": "「いいね！」 した"
+      "2": "「いいね！」 された"
+      "3": "ブックマーク"
+      "4": "トピック"
+      "5": "投稿"
+      "6": "リプライ"
+      "7": "メンション"
+      "9": "引用"
+      "10": "お気に入り"
+      "11": "編集"
+      "12": "アイテム送信"
+      "13": "インボックス"
+
+    user:
+      said: "{{username}} のコメント:"
+      profile: "プロフィール"
+      mute: "Mute"
+      edit: "プロフィールを編集"
+      download_archive: "ポストのアーカイブをダウンロード"
+      private_message: "プライベートメッセージ"
+      private_messages: "メッセージ"
+      activity_stream: "アクティビティ"
+      preferences: "プロフィール"
+      bio: "自己紹介"
+      invited_by: "招待者"
+      trust_level: "トラストレベル"
+      notifications: "通知"
+      dynamic_favicon: "favicon に受信したメッセージ通知を表示する"
+      external_links_in_new_tab: "外部リンクを全て新しいタブで開く"
+      enable_quoting: "ハイライトしたテキストを引用して回答する"
+      change: "変更"
+      moderator: "{{user}} is a moderator"
+      admin: "{{user}} は管理者です"
+      deleted: "(deleted)"
+
+      messages:
+        all: "すべて"
+        mine: "私の"
+        unread: "未読"
+
+      change_password:
+        success: "(メールを送信しました)"
+        in_progress: "(メールを送信中)"
+        error: "(エラー)"
+        action: "パスワードリセット用メールを送信する"
+
+      change_about:
+        title: "自己紹介の変更"
+
+      change_username:
+        title: "ユーザ名の変更"
+        confirm: "ユーザ名を変更すると、あなたのポストの引用と @name メンションのリンクが解除されます。本当にユーザ名を変更しますか？"
+        taken: "このユーザ名は既に使われています。"
+        error: "ユーザ名変更中にエラーが発生しました。"
+        invalid: "このユーザ名は無効です。英数字のみ利用可能です。"
+
+      change_email:
+        title: "メールドレスの変更"
+        taken: "このメールアドレスは既に使われています。"
+        error: "メールアドレス変更中にエラーが発生しました。既にこのアドレスが使われているのかもしれません。"
+        success: "このアドレスにメールを送信しました。メールの指示に従って確認処理を行ってください。"
+
+      change_avatar:
+        title: "アバターの変更"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
+        gravatar_title: "Change your avatar on Gravatar's website"
+        uploaded_avatar: "Custom picture"
+        uploaded_avatar_empty: "Add a custom picture"
+        upload_title: "Upload your picture"
+        image_is_not_a_square: "Warning: we've cropped your image as it's not a square."
+
+      email:
+        title: "メールアドレス"
+        instructions: "メールアドレスが外部に公開されることは一切ありません。"
+        ok: "メールアドレス OK。確認用のメールを送ります。"
+        invalid: "ただッシメールアドレスを入力してください。"
+        authenticated: "あたなのメールは {{provider}} により認証されました。"
+        frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
+
+      name:
+        title: "名前"
+        instructions: "フルネーム。ユニークである必要はありません。@name によるマッチングの代わりに利用可能であり、あなたのページのみに表示されます。"
+        too_short: "名前が短すぎいます。"
+        ok: "名前 OK。"
+      username:
+        title: "ユーザ名"
+        instructions: "空白を含まないユニークな名前を入力してください。他のユーザはあなたを @name でメンションできます。"
+        short_instructions: "他のユーザはあなたを @name でメンションできます。"
+        available: "ユーザ名は利用可能です。"
+        global_match: "メールアドレスが登録済のユーザ名と一致しました。"
+        global_mismatch: "既に利用されています。{{suggestion}} などはいかがでしょう？"
+        not_available: "利用できません。{{suggestion}} などはいかがでしょう？"
+        too_short: "ユーザ名が短すぎます。"
+        too_long: "ユーザ名が長すぎます。"
+        checking: "ユーザ名が利用可能か確認しています..."
+        enter_email: 'ユーザ名が見つかりました。メールアドレスを入力してください。'
+
+      password_confirmation:
+        title: "もう一度パスワードを入力してください。"
+
+      last_posted: "最終投稿"
+      last_emailed: "最終メール"
+      last_seen: "最終アクティビティ"
+      created: "作成"
+      log_out: "ログアウト"
+      website: "ウェブサイト"
+      email_settings: "メール"
+      email_digests:
+        title: "新規トピックのダイジェストをメールで受信する"
+        daily: "毎日"
+        weekly: "毎週"
+        bi_weekly: "隔週"
+
+      email_direct: "ポストが引用されたり、回答を受けたり、 @username でメンションを受けた際にメール通知を受ける"
+      email_private_messages: "プライベートメッセージを受けた際にメール通知を受ける"
+
+      other_settings: "その他"
+
+      new_topic_duration:
+        label: "以下の条件でトピックを新規と見なす"
+        not_viewed: "未読のもの"
+        last_here: "前回ログアウト後に投稿されたもの"
+        after_n_days:
+          one: "1日前に投稿されたもの"
+          other: "過去{{count}}日に投稿されたもの"
+        after_n_weeks:
+          one: "先週投稿されたもの"
+          other: "過去{{count}}週に投稿されたもの"
+
+      auto_track_topics: "以下のタイミングで、自分が投稿したトピックを自動的にトラックする"
+      auto_track_options:
+        never: "トラックしない"
+        always: "常にトラックする"
+        after_n_seconds:
+          one: "1秒後"
+          other: "{{count}}秒後"
+        after_n_minutes:
+          one: "1分後"
+          other: "{{count}}分後"
+
+      invited:
+        title: "招待"
+        user: "招待したユーザ"
+        none: "{{username}} はこのサイトに誰も招待していません。"
+        redeemed: "Redeemed Invites"
+        redeemed_at: "Redeemed At"
+        pending: "Pending Invites"
+        topics_entered: "Topics Entered"
+        posts_read_count: "Posts Read"
+        rescind: "Remove Invitation"
+        rescinded: "Invite removed"
+        time_read: "Read Time"
+        days_visited: "Days Visited"
+        account_age_days: "Account age in days"
+
+      password:
+        title: "パスワード"
+        too_short: "パスワードが短すぎます。"
+        ok: "パスワード OK。"
+
+      ip_address:
+        title: "最終 IP アドレス"
+      avatar:
+        title: "アバター"
+      title:
+        title: "タイトル"
+
+      filters:
+        all: "すべて"
+
+      stream:
+        posted_by: "Posted by"
+        sent_by: "Sent by"
+        private_message: "private message"
+        the_topic: "the topic"
+
+    loading: "読み込み中..."
+    close: "Close"
+    learn_more: "learn more..."
+
+    year: 'year'
+    year_desc: 'topics posted in the last 365 days'
+    month: 'month'
+    month_desc: 'topics posted in the last 30 days'
+    week: 'week'
+    week_desc: 'topics posted in the last 7 days'
+
+    first_post: First post
+    mute: Mute
+    unmute: Unmute
+    last_post: 最終ポスト
+
+    best_of:
+      title: "Best Of"
+      enabled_description: "You're viewing only the best posts in this topic. To see all posts again, click below."
+      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the best posts?"
+      enable: 'Switch to "Best Of" view'
+      disable: 'Cancel "Best Of"'
+
+    private_message_info:
+      title: "Private Message"
+      invite: "Invite Others..."
+
+    email: 'メール'
+    username: 'ユーザ名'
+    last_seen: '最終アクティビティ'
+    created: '作成'
+    trust_level: 'トラストレベル'
+
+    create_account:
+      title: "アカウントの作成"
+      action: "今すぐアカウントを作成しましょう!"
+      invite: "まだアカウントをもっていない?"
+      failed: "エラーが発生しました。既にこのメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
+
+    forgot_password:
+      title: "パスワードを忘れました"
+      action: "パスワードを忘れました"
+      invite: "ユーザ名かメールアドレスを入力してください。パスワードリセット用のメールを送信します。"
+      reset: "パスワードをリセット"
+      complete: "パスワードリセット用のメールを送信しました。"
+
+    login:
+      title: "ログイン"
+      username: "ログイン名"
+      password: "パスワード"
+      email_placeholder: "メールアドレスかユーザ名"
+      error: "Unknown error"
+      reset_password: 'パスワードをリセット'
+      logging_in: "ログイン中..."
+      or: "または"
+      authenticating: "認証中..."
+      awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
+      awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
+      requires_invite: "Sorry, access to this forum is by invite only."
+      not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
+      resend_activation_email: "Click here to send the activation email again."
+      sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      google:
+        title: "with Google"
+        message: "Google による認証 (ポップアップがブロックされていないことを確認してください)"
+      twitter:
+        title: "with Twitter"
+        message: "Twitter による認証 (ポップアップがブロックされていないことを確認してください)"
+      facebook:
+        title: "with Facebook"
+        message: "Facebook による認証 (ポップアップがブロックされていないことを確認してください)"
+      cas:
+        title: "Log In with CAS"
+        message: "CAS による認証 (ポップアップがブロックされていないことを確認してください)"
+      yahoo:
+        title: "with Yahoo"
+        message: "Yahoo による認証 (ポップアップがブロックされていないことを確認してください)"
+      github:
+        title: "with GitHub"
+        message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"
+      persona:
+        title: "with Persona"
+        message: "Persona による認証 (ポップアップがブロックされていないことを確認してください)"
+
+    composer:
+      posting_not_on_topic: "回答したいトピックはどれですか?"
+      saving_draft_tip: "保存中"
+      saved_draft_tip: "保存しました"
+      saved_local_draft_tip: "ローカルに保存しました"
+      similar_topics: "Your topic is similar to..."
+      drafts_offline: "drafts offline"
+
+      min_length:
+        need_more_for_title: "タイトルにあと{{n}}文字必要"
+        need_more_for_reply: "ポストにあと{{n}}文字必要"
+
+      error:
+        title_missing: "タイトルを入力してください。"
+        title_too_short: "タイトルは{{min}}文字以上必要です。"
+        title_too_long: "タイトルは最長で{{max}}未満です。"
+        post_missing: "ポスト内容が空です。"
+        post_length: "ポストは{{min}}文字以上必要です。"
+        category_missing: "カテゴリを選択してください。"
+
+      save_edit: "編集内容を保存"
+      reply_original: "元のトピックに回答"
+      reply_here: "ここに回答"
+      reply: "回答"
+      cancel: "キャンセル"
+      create_topic: "トピックを作成"
+      create_pm: "プライベートメッセージの作成"
+
+      users_placeholder: "Add a user"
+      title_placeholder: "トピックのタイトルをここに入力してください。"
+      reply_placeholder: "本文をここに入力してください。Markdown や BBCode を利用することもできます。画像をアップロードするにはドラッグまたはペーストしてください。"
+      view_new_post: "View your new post."
+      saving: "保存中..."
+      saved: "保存完了!"
+      saved_draft: "編集中のポストがあります。このボックス内をクリックすると編集を再開できます。"
+      uploading: "アップロード中..."
+      show_preview: 'プレビューを表示する &raquo;'
+      hide_preview: '&laquo; プレビューを隠す'
+
+      quote_post_title: "ポスト全体を引用"
+      bold_title: "強調"
+      bold_text: "強調されたテキスト"
+      italic_title: "斜体"
+      italic_text: "斜体のテキスト"
+      link_title: "ハイパーリンク"
+      link_description: "リンクの説明文をここに入力"
+      link_dialog_title: "ハイパーリンクの挿入"
+      link_optional_text: "タイトル(オプション)"
+      quote_title: "ブロック引用"
+      quote_text: "ブロック引用"
+      code_title: "コードサンプル"
+      code_text: "コードサンプルをここに入力"
+      upload_title: "アップロード"
+      upload_description: "アップロード内容の説明文をここに入力"
+      olist_title: "番号付きリスト"
+      ulist_title: "箇条書き"
+      list_item: "リストアイテム"
+      heading_title: "見出し"
+      heading_text: "見出し"
+      hr_title: "水平線"
+      undo_title: "やり直し"
+      redo_title: "やり直しのやり直し"
+      help: "Markdown 編集のヘルプ"
+      toggler: "編集パネルの表示/非表示"
+
+      admin_options_title: "このトピックの詳細設定"
+      auto_close_label: "このトピックを"
+      auto_close_units: "日後に自動的にクローズする"
+
+    notifications:
+      title: "@name メンションやあなたのポストやトピックへの回答、プライベートメッセージなどの通知"
+      none: "現在通知はありません。"
+      more: "古い通知を確認する"
+      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
+      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
+      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved {{link}}"
+      total_flagged: "total flagged posts"
+
+    upload_selector:
+      title: "画像のアップロード"
+      title_with_attachments: "画像/ファイルをアップロード"
+      from_my_computer: "このデバイスから"
+      from_the_web: "Web から"
+      add_title: "画像を追加"
+      add_title_with_attachments: "画像/ファイルを追加"
+      remote_title: "remote image"
+      remote_title_with_attachments: "remote image or file"
+      remote_tip: "画像のアドレスを入力してください (例 http://example.com/image.jpg)。"
+      remote_tip_with_attachments: "画像/ファイルのアドレスを入力してください (例 http://example.com/file.ext) (allowed extensions: {{authorized_extensions}})."
+      local_title: "local image"
+      local_title_with_attachments: "local image or file"
+      local_tip: "クリックしてアップロードする画像を選択してください"
+      local_tip_with_attachments: "クリックしてアップロードする画像/ファイルを選択してください (allowed extensions: {{authorized_extensions}})"
+      upload_title: "画像をアップロード"
+      upload_title_with_attachments: "画像やファイルをアップロード"
+      uploading: "アップロード中"
+
+    search:
+      title: "トピック、ポスト、ユーザ、カテゴリを探す"
+      placeholder: "検索ワードを入力してください"
+      no_results: "何も見つかりませんでした。"
+      searching: "検索中..."
+
+      prefer:
+        user: "search will prefer results by @{{username}}"
+        category: "search will prefer results in {{category}}"
+
+    site_map: "別のトピックリストやカテゴリに移動"
+    go_back: 'go back'
+    current_user: 'go to your user page'
+
+    favorite:
+      title: 'お気に入り'
+      help:
+        star: 'このトピックをお気に入りに登録'
+        unstar: 'このトピックをお気に入りより削除'
+
+    topics:
+      none:
+        favorited: "お気に入り登録しているトピックがありません。お気に入り登録するには、タイトル横のスターをクリック/タップしてください。"
+        unread: "未読トピックはありません。"
+        new: "新着トピックはありません。"
+        read: "You haven't read any topics yet."
+        posted: "You haven't posted in any topics yet."
+        latest: "There are no latest topics. That's sad."
+        hot: "There are no hot topics."
+        category: "There are no {{category}} topics."
+      bottom:
+        latest: "最新のトピックは以上です。"
+        hot: "ホットなトピックは以上です。"
+        posted: "ポストのあるトピックは以上です。"
+        read: "未読トピックは以上です。"
+        new: "新規トピックは以上です。"
+        unread: "未読のトピックは以上です。"
+        favorited: "お気に入りしたトピックは以上です。"
+        category: "{{category}} トピックは以上です。"
+
+    rank_details:
+      toggle: toggle topic rank details
+      show: show topic rank details
+      title: Topic Rank Details
+
+    topic:
+      create_in: '{{categoryName}} トピックを作成'
+      create: 'トピックを作成する'
+      create_long: '新しいトピックの作成'
+      private_message: 'Start a private message'
+      list: 'Topics'
+      new: 'new topic'
+      title: 'トピック'
+      loading_more: "Loading more Topics..."
+      loading: 'トピックを読み込み中...'
+      invalid_access:
+        title: "Topic is private"
+        description: "Sorry, you don't have access to that topic!"
+      server_error:
+        title: "トピックの読み込みに失敗しました"
+        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, let us know."
+      not_found:
+        title: "トピックが見つかりませんでした"
+        description: "申し訳有りませんがトピックが見つかりませんでした。モデレータによって削除された可能性があります。"
+      unread_posts:
+        one: "you have 1 unread old post in this topic"
+        other: "you have {{count}} unread old posts in this topic"
+      new_posts:
+        one: "there is 1 new post in this topic since you last read it"
+        other: "there are {{count}} new posts in this topic since you last read it"
+
+      likes:
+        one: "このトピックには1個「いいね！」がついています"
+        other: "このトピックには{{count}}個「いいね！」がついています"
+      back_to_list: "トピックリストに戻る"
+      options: "トピックオプション"
+      show_links: "show links within this topic"
+      toggle_information: "toggle topic details"
+      read_more_in_category: "{{catLink}} の他のトピックを見る or {{latestLink}}。"
+      read_more: "{{catLink}} or {{latestLink}}。"
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_MF: "There {
+        UNREAD, plural,
+        =0 {}
+        one {
+          is <a href='/unread'>1 unread</a>
+        } other {
+          are <a href='/unread'># unread</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
+            other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
+        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}} "
+
+      browse_all_categories: 全てのカテゴリをブラウズする
+
+      view_latest_topics: 最新のトピックを見る
+      suggest_create_topic: 新しいトピックを作成しますか？
+      read_position_reset: "Your read position has been reset."
+      jump_reply_up: jump to earlier reply
+      jump_reply_down: jump to later reply
+      deleted: "The topic has been deleted"
+
+      auto_close_notice: "This topic will automatically close %{timeLeft}."
+      auto_close_title: 'Auto-Close Settings'
+      auto_close_save: "保存"
+      auto_close_cancel: "キャンセル"
+      auto_close_remove: "Don't Auto-Close This Topic"
+
+      progress:
+        title: topic progress
+        jump_top: jump to first post
+        jump_bottom: jump to last post
+        total: total posts
+        current: current post
+
+      notifications:
+        title: ''
+        reasons:
+          "3_2": 'このトピックを監視中のため通知されます。'
+          "3_1": 'このトピックを作成したため通知されます。'
+          "3": 'このトピックを監視中のため通知されます。'
+          "2_4": 'このトピックに回答したため通知されます。'
+          "2_2": 'このトピックをトラック中のため通知されます。'
+          "2": '<a href="/users/{{username}}/preferences">このトピックを閲覧した</a>ため通知されます。'
+          "1": '誰かから @name でメンションを受けた際と、あなたのポストに回答がついた際に通知されます。'
+          "1_2": '誰かから @name でメンションを受けた際と、あなたのポストに回答がついた際に通知されます。'
+          "0": 'このトピックに関して一切通知を受けません。'
+          "0_2": 'このトピックに関して一切通知を受けません。'
+        watching:
+          title: "監視中"
+          description: "トラック中と同様です。加えて、新規ポストが投稿されるたびに通知されます。"
+        tracking:
+          title: "トラック中"
+          description: "誰かから @name でメンションを受けた際と、あなたのポストに回答がついた際に通知されます。これに加えて、未読および新規ポストの数を確認します。"
+        regular:
+          title: "通常"
+          description: "誰かから @name でメンションを受けた際と、あなたのポストに回答がついた際に通知されます。"
+        muted:
+          title: "ミュート"
+          description: "このトピックについて何の通知も受けません。また未読タブにも表示されません。"
+
+      actions:
+        recover: "Un-Delete Topic"
+        delete: "Delete Topic"
+        open: "Open Topic"
+        close: "Close Topic"
+        auto_close: "Auto Close"
+        unpin: "Un-Pin Topic"
+        pin: "Pin Topic"
+        unarchive: "Unarchive Topic"
+        archive: "Archive Topic"
+        invisible: "Make Invisible"
+        visible: "Make Visible"
+        reset_read: "Reset Read Data"
+        multi_select: "Select Posts to Move"
+        convert_to_topic: "Convert to Regular Topic"
+
+      reply:
+        title: '回答'
+        help: 'このトピックに回答する'
+
+      clear_pin:
+        title: "ピンを解除する"
+        help: "このトピックのピンを解除し、トピックリストの先頭に表示されないようにする"
+
+      share:
+        title: 'シェア'
+        help: 'このトピックへのリンクをシェアする'
+
+      inviting: "招待中..."
+
+      invite_private:
+        title: 'Invite to Private Message'
+        email_or_username: "Invitee's Email or Username"
+        email_or_username_placeholder: "email address or username"
+        action: "Invite"
+        success: "Thanks! We've invited that user to participate in this private message."
+        error: "Sorry, there was an error inviting that user."
+
+      invite_reply:
+        title: '友人を招待して回答してもらう'
+        action: 'メールで招待'
+        help: 'このトピックにワンクリックで回答ができるように友人を招待メールを送る'
+        email: "このトピックに（ログインすることなく）ワンクリックで回答ができるようにあなたの友人にメールを送ります"
+        email_placeholder: 'メールアドレス'
+        success: "ありがとうございます! <b>{{email}}</b> 宛に招待メールを送信しました。友人により招待が受理されたらお知らせします。招待した友人の一覧は、ユーザページの招待タブにて確認できます。"
+        error: "申し訳ありませんが招待に失敗しました。既にユーザ登録済かもしれません。"
+
+      login_reply: 'ログインして回答'
+
+      filters:
+        user: "You're viewing only {{n_posts}} {{by_n_users}}."
+        n_posts:
+          one: "1 post"
+          other: "{{count}} posts"
+        by_n_users:
+          one: "made by 1 specific user"
+          other: "made by {{count}} specific users"
+
+        best_of: "You're viewing the {{n_best_posts}} {{of_n_posts}}."
+        n_best_posts:
+          one: "1 best post"
+          other: "{{count}} best posts"
+        of_n_posts:
+          one: "of 1 in the topic"
+          other: "of {{count}} in the topic"
+        cancel: "Show all posts in this topic again."
+
+      split_topic:
+        title: "Move to New Topic"
+        action: "move to new topic"
+        topic_name: "New Topic Name:"
+        error: "There was an error moving posts to the new topic."
+        instructions:
+          one: "You are about to create a new topic and populate it with the post you've selected."
+          other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
+
+      merge_topic:
+        title: "Move to Existing Topic"
+        action: "move to existing topic"
+        error: "There was an error moving posts into that topic."
+        instructions:
+          one: "Please choose the topic you'd like to move that post to."
+          other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+
+      multi_select:
+        select: 'select'
+        selected: 'selected ({{count}})'
+        select_replies: 'select +replies'
+        delete: delete selected
+        cancel: cancel selecting
+        description:
+          one: You have selected <b>1</b> post.
+          other: "You have selected <b>{{count}}</b> posts."
+
+    post:
+      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
+      reply_topic: "{{link}} に回答"
+      quote_reply: "引用して回答"
+      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      post_number: "post {{number}}"
+      in_reply_to: "in reply to"
+      last_edited_on: "post last edited on"
+      reply_as_new_topic: "新規トピックとして回答"
+      continue_discussion: "Continuing the discussion from {{postLink}}:"
+      follow_quote: "go to the quoted post"
+      deleted_by_author:
+        one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
+        other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      deleted_by: "deleted by"
+      expand_collapse: "展開/折りたたみ"
+
+      has_replies:
+        one: "回答"
+        other: "回答"
+
+      errors:
+        create: "申し訳ありませんが、ポスト作成中にエラーが発生しました。もう一度やり直してください。"
+        edit: "申し訳ありませんが、ポスト編集中にエラーが発生しました。もう一度やり直してください。"
+        upload: "申し訳ありませんが、ファイルアップロード中にエラーが発生しました。もう一度やり直してください。"
+        attachment_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}kb)。"
+        image_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}kb)。"
+        too_many_uploads: "申し訳ありませんが、複数のファイルは同時にアップロードできません。"
+        upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (authorized extension: {{authorized_extensions}})."
+        image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
+        attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
+
+      abandon: "編集中のポストを破棄してもよろしいですか?"
+
+      archetypes:
+        save: 'Save Options'
+
+      controls:
+        reply: "begin composing a reply to this post"
+        like: "このポストを「いいね！」する"
+        edit: "このポストを編集"
+        flag: "このポストにフラグをつける、または通知を送る"
+        delete: "このポストを削除する"
+        undelete: "このポストを復帰する"
+        share: "このポストのリンクをシェアする"
+        more: "もっと読む"
+        delete_replies:
+          confirm:
+            one: "このポストに対する回答も削除しますか?"
+            other: "このポストに対する{{count}}個の回答を削除しますか?"
+          yes_value: "はい、回答も一緒に削除する"
+          no_value: "いいえ、ポストのみ削除する"
+
+      actions:
+        flag: 'フラグ'
+        clear_flags:
+          one: "フラグをクリア"
+          other: "フラグをクリア"
+        it_too:
+          off_topic: "Flag it too"
+          spam: "Flag it too"
+          inappropriate: "Flag it too"
+          custom_flag: "Flag it too"
+          bookmark: "Bookmark it too"
+          like: "あなたも「いいね！」する"
+          vote: "Vote for it too"
+        undo:
+          off_topic: "Undo flag"
+          spam: "Undo flag"
+          inappropriate: "Undo flag"
+          bookmark: "Undo bookmark"
+          like: "「いいね！」を取り消す"
+          vote: "Undo vote"
+        people:
+          off_topic: "{{icons}} marked this as off-topic"
+          spam: "{{icons}} marked this as spam"
+          inappropriate: "{{icons}} marked this as inappropriate"
+          notify_moderators: "{{icons}} notified moderators"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
+          notify_user: "{{icons}} sent a private message"
+          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
+          bookmark: "{{icons}} bookmarked this"
+          like: "{{icons}} が「いいね！」しています"
+          vote: "{{icons}} voted for this"
+        by_you:
+          off_topic: "You flagged this as off-topic"
+          spam: "You flagged this as spam"
+          inappropriate: "You flagged this as inappropriate"
+          notify_moderators: "You flagged this for moderation"
+          notify_user: "You sent a private message to this user"
+          bookmark: "You bookmarked this post"
+          like: "あなたが「いいね！」しています"
+          vote: "You voted for this post"
+        by_you_and_others:
+          off_topic:
+            one: "You and 1 other flagged this as off-topic"
+            other: "You and {{count}} other people flagged this as off-topic"
+          spam:
+            one: "You and 1 other flagged this as spam"
+            other: "You and {{count}} other people flagged this as spam"
+          inappropriate:
+            one: "You and 1 other flagged this as inappropriate"
+            other: "You and {{count}} other people flagged this as inappropriate"
+          notify_moderators:
+            one: "You and 1 other flagged this for moderation"
+            other: "You and {{count}} other people flagged this for moderation"
+          notify_user:
+            one: "You and 1 other sent a private message to this user"
+            other: "You and {{count}} other people sent a private message to this user"
+          bookmark:
+            one: "You and 1 other bookmarked this post"
+            other: "You and {{count}} other people bookmarked this post"
+          like:
+            one: "あなたと他1人が「いいね！」しました"
+            other: "あなたと他{{count}}人が「いいね！」しました"
+          vote:
+            one: "You and 1 other voted for this post"
+            other: "You and {{count}} other people voted for this post"
+        by_others:
+          off_topic:
+            one: "1 person flagged this as off-topic"
+            other: "{{count}} people flagged this as off-topic"
+          spam:
+            one: "1 person flagged this as spam"
+            other: "{{count}} people flagged this as spam"
+          inappropriate:
+            one: "1 person flagged this as inappropriate"
+            other: "{{count}} people flagged this as inappropriate"
+          notify_moderators:
+            one: "1 person flagged this for moderation"
+            other: "{{count}} people flagged this for moderation"
+          notify_user:
+            one: "1 person sent a private message to this user"
+            other: "{{count}} sent a private message to this user"
+          bookmark:
+            one: "1 person bookmarked this post"
+            other: "{{count}} people bookmarked this post"
+          like:
+            one: "1人が「いいね！」しました"
+            other: "{{count}}人が「いいね！」しました"
+          vote:
+            one: "1 person voted for this post"
+            other: "{{count}} people voted for this post"
+
+      edits:
+        one: 1 edit
+        other: "{{count}} edits"
+        zero: no edits
+
+      delete:
+        confirm:
+          one: "Are you sure you want to delete that post?"
+          other: "Are you sure you want to delete all those posts?"
+
+    category:
+      can: 'can&hellip; '
+      none: '(カテゴリなし)'
+      edit: '編集'
+      edit_long: "カテゴリを編集"
+      edit_uncategorized: "Edit Uncategorized"
+      view: 'カテゴリ内のトピックを見る'
+      general: '一般'
+      settings: '設定'
+      delete: 'カテゴリを削除する'
+      create: 'カテゴリを作成する'
+      save: 'カテゴリを保存する'
+      creation_error: カテゴリの作成に失敗しました。
+      save_error: カテゴリの保存に失敗しました。
+      more_posts: "view all {{posts}}..."
+      name: "カテゴリ名"
+      description: "カテゴリ内容"
+      topic: "category topic"
+      badge_colors: "バッジの色"
+      background_color: "背景色"
+      foreground_color: "文字表示色"
+      name_placeholder: "簡潔な名前にしてください。"
+      color_placeholder: "任意の Web カラー"
+      delete_confirm: "本当にこのカテゴリを削除してもよいですか?"
+      delete_error: "カテゴリ削除に失敗しました。"
+      list: "カテゴリをリストする"
+      no_description: "このカテゴリの説明はありません。トピック定義を編集してください。"
+      change_in_category_topic: "カテゴリ内容を編集"
+      hotness: "ホット度"
+      already_used: 'この色は他のカテゴリで利用しています'
+      security: "セキュリティ"
+      auto_close_label: ""
+      edit_permissions: "パーミッションを編集"
+      add_permission: "パーミッションを追加"
+
+    flagging:
+      title: 'このポストにフラグをつける理由は何ですか?'
+      action: 'Flag Post'
+      take_action: "Take Action"
+      notify_action: 'Notify'
+      delete_spammer: "Delete Spammer"
+      delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
+      yes_delete_spammer: "Yes, Delete Spammer"
+      cant: "Sorry, you can't flag this post at this time."
+      custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
+      custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
+      custom_message:
+        at_least: "enter at least {{n}} characters"
+        more: "{{n}} to go..."
+        left: "{{n}} remaining"
+
+    topic_summary:
+      title: "Topic Summary"
+      links_shown: "show all {{totalLinks}} links..."
+      clicks: "clicks"
+      topic_link: "topic link"
+
+    topic_statuses:
+      locked:
+        help: "this topic is closed; it no longer accepts new replies"
+      pinned:
+        help: "this topic is pinned; it will display at the top of its category"
+      archived:
+        help: "this topic is archived; it is frozen and cannot be changed"
+      invisible:
+        help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
+
+    posts: "投稿"
+    posts_long: "このトピックには{{number}}個のポストがあります"
+    original_post: "Original Post"
+    views: "閲覧"
+    replies: "回答"
+    views_long: "このトピックは{{number}}回閲覧されました"
+    activity: "アクティビティ"
+    likes: "いいね！"
+    likes_long: "there are {{number}} likes in this topic"
+    top_contributors: "主な参加者"
+    category_title: "カテゴリ"
+    history: "History"
+    changed_by: "by {{author}}"
+
+    categories_list: "カテゴリ一覧"
+
+    filters:
+      latest:
+        title: "最新"
+        help: "最新のトピック"
+      hot:
+        title: "ホット"
+        help: "話題のトピック"
+      favorited:
+        title: "お気に入り"
+        help: "お気に入りしたトピック"
+      read:
+        title: "Read"
+        help: "topics you've read, in the order that you last read them"
+      categories:
+        title: "カテゴリ"
+        title_in: "カテゴリ - {{categoryName}}"
+        help: "カテゴリ毎に整理されたトピックを表示"
+      unread:
+        title:
+          zero: "未読"
+          one: "未読 (1)"
+          other: "未読 ({{count}})"
+        help: "未読ポストのあるトピック"
+      new:
+        title:
+          zero: "新規"
+          one: "新規 (1)"
+          other: "新規 ({{count}})"
+        help: "前回ログイン時からの新規トピック"
+      posted:
+        title: "あなたのポスト"
+        help: "あなたが投稿したトピック"
+      category:
+        title:
+          zero: "{{categoryName}}"
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
+        help: "latest topics in the {{categoryName}} category"
+
+    browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
+
+    permission_types:
+      full: "Create / Reply / See"
+      create_post: "Reply / See"
+      readonly: "See"
+
+  # This section is exported to the javascript for i18n in the admin section
+  admin_js:
+    type_to_filter: "type to filter..."
+
+    admin:
+      title: 'Discourse 管理者'
+      moderator: 'モデレータ'
+
+      dashboard:
+        title: "ダッシュボード"
+        last_updated: "ダッシュボード最終更新:"
+        version: "Version"
+        up_to_date: "最新のバージョンです!"
+        critical_available: "重要度の高いアップデートが存在します。"
+        updates_available: "アップデートが存在します。"
+        please_upgrade: "今すぐアップデートしてください!"
+        no_check_performed: "アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
+        stale_data: "最近アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
+        installed_version: "Installed"
+        latest_version: "Latest"
+        problems_found: "Discourse のインストールにいくつか問題が発見されました:"
+        last_checked: "最終チェック"
+        refresh_problems: "更新"
+        no_problems: "問題は見つかりませんでした。"
+        moderators: 'モデレータ:'
+        admins: '管理者:'
+        blocked: 'ブロック済:'
+        banned: '追放済:'
+        private_messages_short: "PMs"
+        private_messages_title: "プライベートメッセージ"
+
+        reports:
+          today: "今日"
+          yesterday: "昨日"
+          last_7_days: "過去7日"
+          last_30_days: "過去30日"
+          all_time: "All Time"
+          7_days_ago: "7日前"
+          30_days_ago: "30日前"
+          all: "全て"
+          view_table: "View as Table"
+          view_chart: "View as Bar Chart"
+
+      commits:
+        latest_changes: "Latest changes: please update often!"
+        by: "by"
+
+      flags:
+        title: "Flags"
+        old: "Old"
+        active: "アクティブ"
+
+        agree_hide: "Agree (hide post + send PM)"
+        agree_hide_title: "Hide this post and automatically send the user a private message urging them to edit it"
+        defer: "Defer"
+        defer_title: "No action is necessary at this time, defer any action on this flag until a later date, or never"
+        delete_post: "Delete Post"
+        delete_post_title: "Delete post; if the first post, delete the topic"
+        disagree_unhide: "Disagree (unhide post)"
+        disagree_unhide_title: "Remove any flags from this post and make the post visible again"
+        disagree: "Disagree"
+        disagree_title: "Disagree with flag, remove any flags from this post"
+        delete_spammer_title: "Delete the user and all its posts and topics."
+
+        flagged_by: "Flagged by"
+        error: "Something went wrong"
+        view_message: "Reply"
+        no_results: "There are no flags."
+
+        summary:
+          action_type_3:
+            one: "オフトピック"
+            other: "off-topic x{{count}}"
+          action_type_4:
+            one: "不適切"
+            other: "inappropriate x{{count}}"
+          action_type_6:
+            one: "custom"
+            other: "custom x{{count}}"
+          action_type_7:
+            one: "custom"
+            other: "custom x{{count}}"
+          action_type_8:
+            one: "spam"
+            other: "spam x{{count}}"
+
+      groups:
+        title: "Groups"
+        edit: "Edit Groups"
+        selector_placeholder: "add users"
+        name_placeholder: "Group name, no spaces, same as username rule"
+        about: "Edit your group membership and names here"
+        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
+        delete: "Delete"
+        delete_confirm: "Delete this group?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+
+      api:
+        title: "API"
+        long_title: "API Information"
+        key: "Key"
+        generate: "Generate API Key"
+        regenerate: "Regenerate API Key"
+        info_html: "Your API key will allow you to create and update topics using JSON calls."
+        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
+
+      customize:
+        title: "Customize"
+        long_title: "Site Customizations"
+        header: "Header"
+        css: "Stylesheet"
+        override_default: "Do not include standard style sheet"
+        enabled: "Enabled?"
+        preview: "preview"
+        undo_preview: "undo preview"
+        save: "Save"
+        new: "New"
+        new_style: "New Style"
+        delete: "Delete"
+        delete_confirm: "Delete this customization?"
+        about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
+
+      email:
+        title: "Email"
+        settings: "Settings"
+        logs: "Logs"
+        sent_at: "Sent At"
+        user: "User"
+        email_type: "Email Type"
+        to_address: "To Address"
+        test_email_address: "email address to test"
+        send_test: "send test email"
+        sent_test: "sent!"
+        delivery_method: "Delivery Method"
+        preview_digest: "Preview Digest"
+        preview_digest_desc: "This is a tool for previewing the content of the digest emails sent from your forum."
+        refresh: "Refresh"
+        format: "Format"
+        html: "html"
+        text: "text"
+        last_seen_user: "Last Seen User:"
+        reply_key: "Reply Key"
+
+      logs:
+        title: "Logs"
+        action: "Action"
+        created_at: "Created"
+        last_match_at: "Last Matched"
+        match_count: "Matches"
+        ip_address: "IP"
+        screened_actions:
+          block: "block"
+          do_nothing: "do nothing"
+        staff_actions:
+          title: "Staff Actions"
+          instructions: "Click usernames and actions to filter the list. Click avatars to go to user pages."
+          clear_filters: "Show Everything"
+          staff_user: "Staff User"
+          target_user: "Target User"
+          subject: "Subject"
+          when: "When"
+          context: "Context"
+          details: "Details"
+          previous_value: "Previous"
+          new_value: "New"
+          diff: "Diff"
+          show: "Show"
+          modal_title: "Details"
+          no_previous: "There is no previous value."
+          deleted: "No new value. The record was deleted."
+          actions:
+            delete_user: "ユーザを削除"
+            change_trust_level: "トラストレベルを変更"
+            change_site_setting: "サイトの設定を変更"
+            change_site_customization: "change site customization"
+            delete_site_customization: "delete site customization"
+        screened_emails:
+          title: "Screened Emails"
+          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
+          email: "Email Address"
+        screened_urls:
+          title: "Screened URLs"
+          description: "The URLs listed here were used in posts by users who have been identified as spammers."
+          url: "URL"
+
+      impersonate:
+        title: "Impersonate User"
+        username_or_email: "Username or Email of User"
+        help: "Use this tool to impersonate a user account for debugging purposes."
+        not_found: "That user can't be found."
+        invalid: "Sorry, you may not impersonate that user."
+
+      users:
+        title: 'Users'
+        create: 'Add Admin User'
+        last_emailed: "Last Emailed"
+        not_found: "Sorry, that username doesn't exist in our system."
+        active: "Active"
+        nav:
+          new: "New"
+          active: "Active"
+          pending: "Pending"
+          admins: 'Admins'
+          moderators: 'Mods'
+          banned: 'Banned'
+          blocked: 'Blocked'
+        approved: "Approved?"
+        approved_selected:
+          one: "approve user"
+          other: "approve users ({{count}})"
+        reject_selected:
+          one: "reject user"
+          other: "reject users ({{count}})"
+        titles:
+          active: 'Active Users'
+          new: 'New Users'
+          pending: 'Users Pending Review'
+          newuser: 'Users at Trust Level 0 (New User)'
+          basic: 'Users at Trust Level 1 (Basic User)'
+          regular: 'Users at Trust Level 2 (Regular User)'
+          leader: 'Users at Trust Level 3 (Leader)'
+          elder: 'Users at Trust Level 4 (Elder)'
+          admins: 'Admin Users'
+          moderators: 'Moderators'
+          blocked: 'Blocked Users'
+          banned: 'Banned Users'
+        reject_successful:
+          one: "Successfully rejected 1 user."
+          other: "Successfully rejected %{count} users."
+        reject_failures:
+          one: "Failed to reject 1 user."
+          other: "Failed to reject %{count} users."
+
+      user:
+        ban_failed: "Something went wrong banning this user {{error}}"
+        unban_failed: "Something went wrong unbanning this user {{error}}"
+        ban_duration: "How long would you like to ban the user for? (days)"
+        delete_all_posts: "Delete all posts"
+        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
+        ban: "追放"
+        unban: "追放解除"
+        banned: "追放済?"
+        moderator: "モデレータ?"
+        admin: "管理者?"
+        blocked: "ブロック済?"
+        show_admin_profile: "管理者"
+        edit_title: "タイトルを編集"
+        save_title: "タイトルを保存"
+        refresh_browsers: "ブラウザを強制リフレッシュ"
+        show_public_profile: "一般プロファイルを表示"
+        impersonate: 'このユーザになりすます'
+        revoke_admin: '管理者権限を剥奪'
+        grant_admin: '管理者権限を付与'
+        revoke_moderation: 'モデレータ権限を剥奪'
+        grant_moderation: 'モデレータ権限を付与'
+        unblock: 'ブロック解除'
+        block: 'ブロック'
+        reputation: Reputation
+        permissions: Permissions
+        activity: アクティビティ
+        like_count: 「いいね！」された数
+        private_topics_count: プライベートトピック数
+        posts_read_count: 読んだポスト数
+        post_count: 投稿したポスト数
+        topics_entered: 投稿したトピック数
+        flags_given_count: 設定したフラグ数
+        flags_received_count: 設定されたフラグ数
+        approve: 'Approve'
+        approved_by: "approved by"
+        approve_success: "User approved and email sent with activation
+          instructions."
+        approve_bulk_success: "Success! All selected users have been approved
+          and notified."
+        time_read: "Read Time"
+        delete: "Delete User"
+        delete_forbidden:
+          one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
+          other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
+        delete_confirm: "Are you SURE you want to delete this user? This action is permanent!"
+        delete_and_block: "<b>Yes</b>, and <b>block</b> signups from this email address"
+        delete_dont_block: "<b>Yes</b>, but <b>allow</b> signups from this email address"
+        deleted: "The user was deleted."
+        delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
+        send_activation_email: "Send Activation Email"
+        activation_email_sent: "An activation email has been sent."
+        send_activation_email_failed: "There was a problem sending another activation email. %{error}"
+        activate: "Activate Account"
+        activate_failed: "There was a problem activating the user."
+        deactivate_account: "Deactivate Account"
+        deactivate_failed: "There was a problem deactivating the user."
+        unblock_failed: 'There was a problem unblocking the user.'
+        block_failed: 'There was a problem blocking the user.'
+        deactivate_explanation: "A deactivated user must re-validate their email."
+        banned_explanation: "A banned user can't log in."
+        block_explanation: "A blocked user can't post or start topics."
+        trust_level_change_failed: "There was a problem changing the user's trust level."
+
+      site_content:
+        none: "Choose a type of content to begin editing."
+        title: 'Content'
+        edit: "Edit Site Content"
+
+      site_settings:
+        show_overriden: 'Only show overridden'
+        title: 'Settings'
+        reset: 'reset to default'
+        none: 'none'
+
+
