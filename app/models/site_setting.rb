@@ -268,7 +268,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:dominating_topic_minimum_percent, 20)
 
   # hidden setting only used by system
-  hidden_setting(:uncategorized_category_id, -1, hidden: true)
+  setting(:uncategorized_category_id, -1, hidden: true)
 
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?
