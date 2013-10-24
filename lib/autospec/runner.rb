@@ -54,9 +54,11 @@ class Autospec::Runner
 
     puts "Forced polling (slower) - inotify does not work on network filesystems, use local filesystem to avoid" if opts[:force_polling]
 
-    if ENV["SPORK"] == 0
+    if ENV["SPORK"] == "0"
+      puts "Using Simple Runner"
       @runner = Autospec::SimpleRunner.new
     else
+      puts "Using Spork Runner"
       @runner = Autospec::SporkRunner.new
     end
     @runner.start
