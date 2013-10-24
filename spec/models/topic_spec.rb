@@ -185,6 +185,11 @@ describe Topic do
         topic.errors[:category_id].should be_present
       end
 
+      it "allows PMs" do
+        topic = Fabricate.build(:topic, category: nil, archetype: Archetype.private_message)
+        topic.should be_valid
+      end
+
       it 'passes for topics with a category' do
         Fabricate.build(:topic, category: Fabricate(:category)).should be_valid
       end
