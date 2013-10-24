@@ -187,10 +187,10 @@ SQL
 
   def parent_category_validator
     if parent_category_id
-      errors.add(:parent_category_id, "You can't link a category to itself") if parent_category_id == id
+      errors.add(:parent_category_id, I18n.t("category.errors.self_parent")) if parent_category_id == id
 
       grandfather_id = Category.where(id: parent_category_id).pluck(:parent_category_id).first
-      errors.add(:parent_category_id, "You can't have more than one level of subcategory") if grandfather_id
+      errors.add(:base, I18n.t("category.errors.depth")) if grandfather_id
     end
   end
 

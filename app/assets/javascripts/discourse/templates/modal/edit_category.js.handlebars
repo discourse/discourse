@@ -21,6 +21,11 @@
           {{textField value=name placeholderKey="category.name_placeholder" maxlength="50"}}
         </section>
 
+        <section class='field'>
+          <label>{{i18n category.parent}}</label>
+          {{categoryChooser valueAttribute="id" value=parent_category_id categories=parentCategories}}
+        </section>
+
         {{#unless isUncategorized}}
           <section class='field'>
             <label>{{i18n category.description}}</label>

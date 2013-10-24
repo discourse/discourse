@@ -975,6 +975,7 @@ en:
       add_permission: "Add Permission"
       this_year: "this year"
       position: "position"
+      parent: "Parent Category"
 
     flagging:
       title: 'Why are you flagging this post?'

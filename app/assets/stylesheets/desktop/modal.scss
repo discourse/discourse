@@ -164,6 +164,19 @@
     border-bottom: 1px solid #bbb;
 
   }
+
+  .category-combobox {
+    width: 430px;
+
+    .chzn-drop {
+      left: -9000px;
+      width: 428px;
+    }
+    .chzn-search input {
+      width: 378px;
+    }
+  }
+
   &.hidden {
     display: none;
   }
