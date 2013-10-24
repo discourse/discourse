@@ -23,7 +23,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 5e8129fa7ec949c62b8537d675f9b473fde83104
+  revision: 7b2f64fca71c8d13428eb48b65399736a8327554
   branch: 4-0-stable
   specs:
     actionmailer (4.0.0)
@@ -168,7 +168,7 @@ GEM
     airbrake (3.1.2)
       activesupport
       builder
-    arel (4.0.0)
+    arel (4.0.1)
     atomic (1.1.14)
     barber (0.4.2)
       ember-source
