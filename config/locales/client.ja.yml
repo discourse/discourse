@@ -468,31 +468,31 @@ ja:
       show_preview: 'プレビューを表示する &raquo;'
       hide_preview: '&laquo; プレビューを隠す'
 
-      quote_post_title: "Quote whole post"
-      bold_title: "Strong"
-      bold_text: "strong text"
-      italic_title: "Emphasis"
-      italic_text: "emphasized text"
-      link_title: "Hyperlink"
-      link_description: "enter link description here"
-      link_dialog_title: "Insert Hyperlink"
-      link_optional_text: "optional title"
-      quote_title: "Blockquote"
-      quote_text: "Blockquote"
-      code_title: "Code Sample"
-      code_text: "enter code here"
-      upload_title: "Upload"
-      upload_description: "enter upload description here"
-      olist_title: "Numbered List"
-      ulist_title: "Bulleted List"
-      list_item: "List item"
-      heading_title: "Heading"
-      heading_text: "Heading"
-      hr_title: "Horizontal Rule"
-      undo_title: "Undo"
-      redo_title: "Redo"
-      help: "Markdown Editing Help"
-      toggler: "hide or show the composer panel"
+      quote_post_title: "ポスト全体を引用"
+      bold_title: "強調"
+      bold_text: "強調されたテキスト"
+      italic_title: "斜体"
+      italic_text: "斜体のテキスト"
+      link_title: "ハイパーリンク"
+      link_description: "リンクの説明文をここに入力"
+      link_dialog_title: "ハイパーリンクの挿入"
+      link_optional_text: "タイトル(オプション)"
+      quote_title: "ブロック引用"
+      quote_text: "ブロック引用"
+      code_title: "コードサンプル"
+      code_text: "コードサンプルをここに入力"
+      upload_title: "アップロード"
+      upload_description: "アップロード内容の説明文をここに入力"
+      olist_title: "番号付きリスト"
+      ulist_title: "箇条書き"
+      list_item: "リストアイテム"
+      heading_title: "見出し"
+      heading_text: "見出し"
+      hr_title: "水平線"
+      undo_title: "やり直し"
+      redo_title: "やり直しのやり直し"
+      help: "Markdown 編集のヘルプ"
+      toggler: "編集パネルの表示/非表示"
 
       admin_options_title: "このトピックの詳細設定"
       auto_close_label: "このトピックを"
@@ -515,29 +515,29 @@ ja:
       total_flagged: "total flagged posts"
 
     upload_selector:
-      title: "Upload an image"
-      title_with_attachments: "Upload an image or a file"
-      from_my_computer: "From My Device"
-      from_the_web: "From The Web"
-      add_title: "Add image"
-      add_title_with_attachments: "Add image or file"
+      title: "画像のアップロード"
+      title_with_attachments: "画像/ファイルをアップロード"
+      from_my_computer: "このデバイスから"
+      from_the_web: "Web から"
+      add_title: "画像を追加"
+      add_title_with_attachments: "画像/ファイルを追加"
       remote_title: "remote image"
       remote_title_with_attachments: "remote image or file"
-      remote_tip: "enter address of an image in the form http://example.com/image.jpg"
-      remote_tip_with_attachments: "enter address of an image or a file in the form http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
+      remote_tip: "画像のアドレスを入力してください (例 http://example.com/image.jpg)。"
+      remote_tip_with_attachments: "画像/ファイルのアドレスを入力してください (例 http://example.com/file.ext) (allowed extensions: {{authorized_extensions}})."
       local_title: "local image"
       local_title_with_attachments: "local image or file"
-      local_tip: "click to select an image from your device"
-      local_tip_with_attachments: "click to select an image or a file from your device (allowed extensions: {{authorized_extensions}})"
-      upload_title: "Upload image"
-      upload_title_with_attachments: "Upload image or file"
-      uploading: "Uploading"
+      local_tip: "クリックしてアップロードする画像を選択してください"
+      local_tip_with_attachments: "クリックしてアップロードする画像/ファイルを選択してください (allowed extensions: {{authorized_extensions}})"
+      upload_title: "画像をアップロード"
+      upload_title_with_attachments: "画像やファイルをアップロード"
+      uploading: "アップロード中"
 
     search:
       title: "トピック、ポスト、ユーザ、カテゴリを探す"
       placeholder: "検索ワードを入力してください"
-      no_results: "No results found."
-      searching: "Searching ..."
+      no_results: "何も見つかりませんでした。"
+      searching: "検索中..."
 
       prefer:
         user: "search will prefer results by @{{username}}"
@@ -787,24 +787,24 @@ ja:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       deleted_by: "deleted by"
-      expand_collapse: "expand/collapse"
+      expand_collapse: "展開/折りたたみ"
 
       has_replies:
-        one: "Reply"
-        other: "Replies"
+        one: "回答"
+        other: "回答"
 
       errors:
-        create: "Sorry, there was an error creating your post. Please try again."
-        edit: "Sorry, there was an error editing your post. Please try again."
-        upload: "Sorry, there was an error uploading that file. Please try again."
-        attachment_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)."
-        image_too_large: "Sorry, the image you are trying to upload is too big (maximum size is {{max_size_kb}}kb), please resize it and try again."
-        too_many_uploads: "Sorry, you can only upload one file at a time."
-        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
-        image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
-        attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
+        create: "申し訳ありませんが、ポスト作成中にエラーが発生しました。もう一度やり直してください。"
+        edit: "申し訳ありませんが、ポスト編集中にエラーが発生しました。もう一度やり直してください。"
+        upload: "申し訳ありませんが、ファイルアップロード中にエラーが発生しました。もう一度やり直してください。"
+        attachment_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}kb)。"
+        image_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}kb)。"
+        too_many_uploads: "申し訳ありませんが、複数のファイルは同時にアップロードできません。"
+        upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (authorized extension: {{authorized_extensions}})."
+        image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
+        attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
 
-      abandon: "Are you sure you want to abandon your post?"
+      abandon: "編集中のポストを破棄してもよろしいですか?"
 
       archetypes:
         save: 'Save Options'
@@ -932,13 +932,13 @@ ja:
       edit: '編集'
       edit_long: "カテゴリを編集"
       edit_uncategorized: "Edit Uncategorized"
-      view: 'View Topics in Category'
+      view: 'カテゴリ内のトピックを見る'
       general: '一般'
       settings: '設定'
       delete: 'カテゴリを削除する'
       create: 'カテゴリを作成する'
       save: 'カテゴリを保存する'
-      creation_error: There has been an error during the creation of the category.
+      creation_error: カテゴリの作成に失敗しました。
       save_error: カテゴリの保存に失敗しました。
       more_posts: "view all {{posts}}..."
       name: "カテゴリ名"
@@ -947,19 +947,19 @@ ja:
       badge_colors: "バッジの色"
       background_color: "背景色"
       foreground_color: "文字表示色"
-      name_placeholder: "Should be short and succinct."
-      color_placeholder: "Any web color"
-      delete_confirm: "Are you sure you want to delete this category?"
-      delete_error: "There was an error deleting the category."
-      list: "List Categories"
+      name_placeholder: "簡潔な名前にしてください。"
+      color_placeholder: "任意の Web カラー"
+      delete_confirm: "本当にこのカテゴリを削除してもよいですか?"
+      delete_error: "カテゴリ削除に失敗しました。"
+      list: "カテゴリをリストする"
       no_description: "このカテゴリの説明はありません。トピック定義を編集してください。"
       change_in_category_topic: "カテゴリ内容を編集"
-      hotness: "Hotness"
-      already_used: 'This color has been used by another category'
-      security: "Security"
-      auto_close_label: "Auto-close topics after:"
-      edit_permissions: "Edit Permissions"
-      add_permission: "Add Permission"
+      hotness: "ホット度"
+      already_used: 'この色は他のカテゴリで利用しています'
+      security: "セキュリティ"
+      auto_close_label: ""
+      edit_permissions: "パーミッションを編集"
+      add_permission: "パーミッションを追加"
 
     flagging:
       title: 'このポストにフラグをつける理由は何ですか?'
