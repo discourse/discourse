@@ -6,7 +6,7 @@
 //= require ../../app/assets/javascripts/preload_store.js
 
 // probe framework first
-//= require ../../app/assets/javascripts/discourse/components/probes.js
+//= require ../../app/assets/javascripts/discourse/lib/probes.js
 
 // Externals we need to load first
 //= require development/jquery-2.0.3.js
@@ -65,6 +65,7 @@
 //= require helpers/assertions
 
 //= require_tree ./fixtures
+//= require_tree ./lib
 //= require_tree .
 //= require_self
 //= require jshint_all

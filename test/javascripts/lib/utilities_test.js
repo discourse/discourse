@@ -26,8 +26,8 @@ test("new user cannot upload images", function() {
   Discourse.SiteSettings.newuser_max_images = 0;
   this.stub(bootbox, "alert");
 
-  ok(!validUpload([{name: "image.png"}]));
-  ok(bootbox.alert.calledWith(I18n.t('post.errors.image_upload_not_allowed_for_new_user')));
+  ok(!validUpload([{name: "image.png"}]), 'the upload is not valid');
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.image_upload_not_allowed_for_new_user')), 'the alert is called');
 });
 
 test("new user cannot upload attachments", function() {

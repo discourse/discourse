@@ -2,6 +2,9 @@
   "app/assets/javascripts/discourse/components/*.js": {
     "command": "dcomponent"
   },
+  "app/assets/javascripts/discourse/lib/*.js": {
+    "command": "dlib"
+  },
   "app/assets/javascripts/discourse/routes/*.js": {
     "command": "droute"
   },
