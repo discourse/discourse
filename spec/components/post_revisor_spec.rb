@@ -190,7 +190,7 @@ describe PostRevisor do
       let(:changed_by) { Fabricate(:admin) }
 
       before do
-        SiteSetting.stubs(:too_many_images).returns(0)
+        SiteSetting.stubs(:newuser_max_images).returns(0)
         subject.revise!(changed_by, "So, post them here!\nhttp://i.imgur.com/FGg7Vzu.gif")
       end
 
@@ -201,8 +201,11 @@ describe PostRevisor do
 
     describe "new user editing their own post" do
       before do
-        SiteSetting.stubs(:too_many_images).returns(0)
-        subject.revise!(post.user, "So, post them here!\nhttp://i.imgur.com/FGg7Vzu.gif")
+        SiteSetting.stubs(:newuser_max_images).returns(0)
+        url = "http://i.imgur.com/FGg7Vzu.gif"
+        # this test is problamatic, it leaves state in the onebox cache
+        Oneboxer.invalidate(url)
+        subject.revise!(post.user, "So, post them here!\n#{url}")
       end
 
       it "allows an admin to insert images into a new user's post" do
