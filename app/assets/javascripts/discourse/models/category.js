@@ -140,9 +140,6 @@ Discourse.Category.reopenClass({
 
   findBySlug: function(slug, parentSlug) {
 
-    var uncategorized = Discourse.Category.uncategorizedInstance();
-    if (slug === uncategorized.get('slug')) return uncategorized;
-
     var categories = Discourse.Category.list(),
         category;
 

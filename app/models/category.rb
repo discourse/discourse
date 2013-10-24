@@ -32,7 +32,6 @@ class Category < ActiveRecord::Base
 
   validates :user_id, presence: true
   validates :name, presence: true, uniqueness: true, length: { in: 1..50 }
-  validate :uncategorized_validator
   validate :parent_category_validator
 
   before_validation :ensure_slug
@@ -184,11 +183,6 @@ SQL
 
   def publish_categories_list
     MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new(Category.latest).as_json})
-  end
-
-  def uncategorized_validator
-    errors.add(:name, I18n.t(:is_reserved)) if name == SiteSetting.uncategorized_name
-    errors.add(:slug, I18n.t(:is_reserved)) if slug == SiteSetting.uncategorized_name
   end
 
   def parent_category_validator
