@@ -145,7 +145,8 @@ end
 
 group :test, :development do
   gem 'mock_redis'
-  gem 'listen', require: false
+  # TODO upgrade, but ensure rake autospec still works
+  gem 'listen', '0.7.3', require: false
   gem 'certified', require: false
   if rails4?
     gem 'fabrication', github: 'paulelliott/fabrication', require: false

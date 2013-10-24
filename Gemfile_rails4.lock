@@ -258,10 +258,7 @@ GEM
       highline
       thor (~> 0.15)
     libv8 (3.16.14.3)
-    listen (2.1.1)
-      celluloid (>= 0.15.2)
-      rb-fsevent (>= 0.9.3)
-      rb-inotify (>= 0.9)
+    listen (0.7.3)
     lru_redux (0.8.1)
     mail (2.5.4)
       mime-types (~> 1.16)
@@ -499,7 +496,7 @@ DEPENDENCIES
   image_optim
   image_sorcery
   librarian (>= 0.0.25)
-  listen
+  listen (= 0.7.3)
   lru_redux
   message_bus!
   minitest

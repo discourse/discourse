@@ -496,7 +496,7 @@ DEPENDENCIES
   image_optim
   image_sorcery
   librarian (>= 0.0.25)
-  listen
+  listen (= 0.7.3)
   lru_redux
   message_bus!
   minitest
