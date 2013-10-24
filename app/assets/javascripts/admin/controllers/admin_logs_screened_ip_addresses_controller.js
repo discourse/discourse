@@ -18,6 +18,12 @@ Discourse.AdminLogsScreenedIpAddressesController = Ember.ArrayController.extend(
       self.set('content', result);
       self.set('loading', false);
     });
+  },
+
+  actions: {
+    recordAdded: function(arg) {
+      this.get("content").unshiftObject(arg);
+    }
   }
 });
 
@@ -27,12 +33,12 @@ Discourse.AdminLogsScreenedIpAddressController = Ember.ObjectController.extend({
 
   actions: {
     allow: function(record) {
-      record.set('action', 'do_nothing');
+      record.set('action_name', 'do_nothing');
       this.send('save', record);
     },
 
     block: function(record) {
-      record.set('action', 'block');
+      record.set('action_name', 'block');
       this.send('save', record);
     },
 

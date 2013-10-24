@@ -7,6 +7,15 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
     render_serialized(screened_ip_addresses, ScreenedIpAddressSerializer)
   end
 
+  def create
+    screened_ip_address = ScreenedIpAddress.new(allowed_params)
+    if screened_ip_address.save
+      render_serialized(screened_ip_address, ScreenedIpAddressSerializer)
+    else
+      render_json_error(screened_ip_address)
+    end
+  end
+
   def update
     if @screened_ip_address.update_attributes(allowed_params)
       render json: success_json

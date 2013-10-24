@@ -69,7 +69,7 @@ Discourse::Application.routes.draw do
     scope '/logs' do
       resources :staff_action_logs,     only: [:index]
       resources :screened_emails,       only: [:index]
-      resources :screened_ip_addresses, only: [:index, :update, :destroy]
+      resources :screened_ip_addresses, only: [:index, :create, :update, :destroy]
       resources :screened_urls,         only: [:index]
     end
 
