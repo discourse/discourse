@@ -151,8 +151,10 @@ class Demon::Sidekiq < Demon::Base
 
   def after_fork
     require 'sidekiq/cli'
-
     begin
+      # Reload initializer cause it needs to run after sidekiq/cli
+      # was required
+      load Rails.root + "config/initializers/sidekiq.rb"
       cli = Sidekiq::CLI.instance
       cli.parse([])
       cli.run
