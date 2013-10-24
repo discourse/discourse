@@ -163,7 +163,7 @@ module PrettyText
   def self.apply_cdn(html, url)
     return html unless url
 
-    image = /\.(jpg|jpeg|gif|png|tiff|tif|bmp)$/
+    image = /\.(png|jpg|jpeg|gif|bmp|tif|tiff)$/i
     relative = /^\/[^\/]/
 
     doc = Nokogiri::HTML.fragment(html)
