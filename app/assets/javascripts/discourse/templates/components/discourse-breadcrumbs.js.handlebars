@@ -1,18 +1,9 @@
-<li>
-  <a href="/">{{title}}</a>
-  <i class='icon icon-caret-right first-caret'></i>
-</li>
+{{discourse-categorydrop title=title categories=parentCategories}}
+
+{{discourse-categorydrop category=targetCategory categories=childCategories}}
 
 {{#if parentCategory}}
-  <li>
-    {{discourse-categorydrop category=parentCategory categories=categories}}
-  </li>
-{{/if}}
-
-{{#if category}}
-  <li>
-    {{discourse-categorydrop category=category}}
-  </li>
+  {{discourse-categorydrop category=category}}
 {{/if}}
 
 <div class='clear'></div>

@@ -1,4 +1,15 @@
-{{categoryLink category}}
+{{#if category}}
+  {{categoryLink category}}
+{{else}}
+  <a href="/">{{title}}</a>
+{{/if}}
+
 {{#if categories}}
-  <button {{action expand}}><i class='icon icon-caret-right'></i></button>
+  <button {{action expand}}><i {{bindAttr class='iconClass'}}></i></button>
+
+  <section {{bindAttr class="expanded::hidden :category-menu"}} class='chooser'>
+    {{#each categories}}
+      <div class='cat'>{{categoryLink this}}</div>
+    {{/each}}
+  </section>
 {{/if}}
