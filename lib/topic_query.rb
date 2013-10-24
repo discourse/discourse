@@ -7,7 +7,7 @@ require_dependency 'suggested_topics_builder'
 
 class TopicQuery
   # Could be rewritten to %i if Ruby 1.9 is no longer supported
-  VALID_OPTIONS = %w(except_topic_id exclude_category limit page per_page topic_ids visible).map(&:to_sym)
+  VALID_OPTIONS = %w(except_topic_id exclude_category limit page per_page topic_ids visible category).map(&:to_sym)
 
   class << self
     # use the constants in conjuction with COALESCE to determine the order with regard to pinned
@@ -233,7 +233,7 @@ class TopicQuery
 
       result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
-      result = result.where('categories.name = ?', options[:only_category]).references(:categories) if options[:only_category]
+      result = result.where('categories.slug = ?', options[:category]).references(:categories) if options[:category].present?
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
       result = result.where('topics.id <> ?', options[:except_topic_id]).references(:topics) if options[:except_topic_id]

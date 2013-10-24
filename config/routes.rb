@@ -196,7 +196,6 @@ Discourse::Application.routes.draw do
 
   get 'category/:category.rss' => 'list#category_feed', format: :rss, as: 'category_feed'
   get 'category/:category' => 'list#category', as: 'category_list'
-  get 'category/:parent_category/:category' => 'list#category', as: 'category_list_parent'
   get 'category/:category/more' => 'list#category', as: 'category_list_more'
 
   # We've renamed popular to latest. If people access it we want a permanent redirect.
@@ -210,7 +209,12 @@ Discourse::Application.routes.draw do
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     get "#{filter}" => "list##{filter}"
     get "#{filter}/more" => "list##{filter}"
+
+    get "category/:category/#{filter}" => "list##{filter}"
+    get "category/:category/#{filter}/more" => "list##{filter}"
   end
+
+  get 'category/:parent_category/:category' => 'list#category', as: 'category_list_parent'
 
   get 'search' => 'search#query'
 

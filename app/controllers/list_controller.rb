@@ -139,7 +139,8 @@ class ListController < ApplicationController
     return {
       page: params[:page],
       topic_ids: param_to_integer_list(:topic_ids),
-      exclude_category: (params[:exclude_category] || menu_item.try(:filter))
+      exclude_category: (params[:exclude_category] || menu_item.try(:filter)),
+      category: params[:category]
     }
   end
 

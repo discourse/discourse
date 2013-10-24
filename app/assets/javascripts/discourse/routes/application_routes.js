@@ -26,6 +26,9 @@ Discourse.Route.buildRoutes(function() {
     Discourse.ListController.filters.forEach(function(filter) {
       router.route(filter, { path: "/" + filter });
       router.route(filter, { path: "/" + filter + "/more" });
+      router.route(filter + "Category", { path: "/category/:slug/" + filter });
+      router.route(filter + "Category", { path: "/category/:slug/" + filter + "/more" });
+
     });
 
     // the homepage is the first item of the 'top_menu' site setting

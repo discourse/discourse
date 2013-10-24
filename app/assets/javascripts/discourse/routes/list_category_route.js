@@ -40,7 +40,7 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
     this._super();
 
     // Add a search context
-    this.controllerFor('search').set('searchContext', this.modelFor('listCategory').get('searchContext'));
+    this.controllerFor('search').set('searchContext', this.modelFor(this.get('routeName')).get('searchContext'));
   },
 
   deactivate: function() {
@@ -51,6 +51,11 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
   }
 
 
+});
+
+
+Discourse.ListController.filters.forEach(function(filter) {
+  Discourse["List" + (filter.capitalize()) + "CategoryRoute"] = Discourse.ListCategoryRoute.extend({ filter: filter });
 });
 
 
