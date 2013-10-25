@@ -50,6 +50,7 @@
 //= require mousetrap.js
 //= require rsvp.js
 //= require show-html.js
+//= require htmlparser.js
 
 // Stuff we need to load first
 //= require main_include

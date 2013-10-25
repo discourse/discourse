@@ -29,11 +29,31 @@ Handlebars.registerHelper('shorten', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('topicLink', function(property, options) {
-  var title, topic;
-  topic = Ember.Handlebars.get(this, property, options);
-  title = topic.get('fancy_title') || topic.get('title');
-  return "<a href='" + (topic.get('lastUnreadUrl')) + "' class='title'>" + title + "</a>";
+  var topic = Ember.Handlebars.get(this, property, options),
+      title = topic.get('fancy_title') || topic.get('title');
+  return "<a href='" + topic.get('lastUnreadUrl') + "' class='title'>" + title + "</a>";
 });
+
+
+/**
+  Produces a link to a category given a category object and helper options
+
+  @method categoryLinkHTML
+  @param {Discourse.Category} category to link to
+  @param {Object} options standard from handlebars
+**/
+function categoryLinkHTML(category, options) {
+  var categoryOptions = {};
+  if (options.hash) {
+    if (options.hash.allowUncategorized) {
+      categoryOptions.allowUncategorized = true;
+    }
+    if (options.hash.categories) {
+      categoryOptions.categories = Em.Handlebars.get(this, options.hash.categories, options);
+    }
+  }
+  return new Handlebars.SafeString(Discourse.HTML.categoryLink(category, categoryOptions));
+}
 
 /**
   Produces a link to a category
@@ -42,11 +62,8 @@ Handlebars.registerHelper('topicLink', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('categoryLink', function(property, options) {
-  var allowUncategorized = options.hash && options.hash.allowUncategorized;
-  var category = Ember.Handlebars.get(this, property, options);
-  return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category, allowUncategorized));
+  return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
 });
-
 
 /**
   Produces a bound link to a category
@@ -54,9 +71,7 @@ Handlebars.registerHelper('categoryLink', function(property, options) {
   @method boundCategoryLink
   @for Handlebars
 **/
-Ember.Handlebars.registerBoundHelper('boundCategoryLink', function(category) {
-  return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category));
-});
+Ember.Handlebars.registerBoundHelper('boundCategoryLink', categoryLinkHTML);
 
 /**
   Produces a link to a route with support for i18n on the title

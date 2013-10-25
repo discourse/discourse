@@ -330,7 +330,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
     var category = this.get('controller.content.category');
     if (category) {
-      opts.catLink = Discourse.Utilities.categoryLink(category);
+      opts.catLink = Discourse.HTML.categoryLink(category);
     } else {
       opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + (I18n.t("topic.browse_all_categories")) + "</a>";
     }

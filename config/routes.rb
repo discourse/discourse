@@ -210,8 +210,10 @@ Discourse::Application.routes.draw do
     get "#{filter}" => "list##{filter}"
     get "#{filter}/more" => "list##{filter}"
 
-    get "category/:category/#{filter}" => "list##{filter}"
-    get "category/:category/#{filter}/more" => "list##{filter}"
+    get "category/:category/l/#{filter}" => "list##{filter}"
+    get "category/:category/l/#{filter}/more" => "list##{filter}"
+    get "category/:parent_category/:category/l/#{filter}" => "list##{filter}"
+    get "category/:parent_category/:category/l/#{filter}/more" => "list##{filter}"
   end
 
   get 'category/:parent_category/:category' => 'list#category', as: 'category_list_parent'

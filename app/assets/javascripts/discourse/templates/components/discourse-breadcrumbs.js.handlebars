@@ -1,9 +1,13 @@
-{{discourse-categorydrop title=title categories=parentCategories}}
-
-{{discourse-categorydrop category=targetCategory categories=childCategories}}
-
+<li>
+{{discourse-categorydrop parentCategory=category categories=parentCategories}}
+</li>
+<li>
+  {{discourse-categorydrop parentCategory=category category=targetCategory categories=childCategories}}
+</li>
 {{#if parentCategory}}
-  {{discourse-categorydrop category=category}}
+  <li>
+    {{boundCategoryLink category}}
+  </li>
 {{/if}}
 
 <div class='clear'></div>

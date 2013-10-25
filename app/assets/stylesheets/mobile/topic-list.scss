@@ -242,10 +242,13 @@
 .list-controls {
   .badge-category {
     display: inline-block;
-    background-color: yellow;
     margin: 8px 0 0 8px;
     float: left;
   }
+  .category-dropdown {
+    margin: 8px 0;
+  }
+
   clear: both;
 }
 #list-area {
@@ -370,9 +373,6 @@ ol.category-breadcrumb {
   list-style: none;
   .icon-home {
     font-size: 20px;
-  }
-  .badge-category {
-    margin: 3px 8px 0;
   }
   button {
     padding: 5px 10px;

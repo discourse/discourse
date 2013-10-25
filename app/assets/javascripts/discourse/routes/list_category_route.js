@@ -23,10 +23,9 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
 
     var listController = this.controllerFor('list'),
         categorySlug = Discourse.Category.slugFor(category),
-        self = this;
-
-    var filter = this.filter || "latest";
-    var url = "category/" + categorySlug + "/" + filter;
+        self = this,
+        filter = this.filter || "latest",
+        url = "category/" + categorySlug + "/l/" + filter;
 
     listController.set('filterMode', url);
     listController.load(url).then(function(topicList) {

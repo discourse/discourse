@@ -43,7 +43,11 @@ Discourse.NavItem = Discourse.Model.extend({
       var mode = "";
       var category = this.get("category");
       if(category){
-        mode += "category/" + category.get("slug") + "/";
+        mode += "category/";
+
+        var parentSlug = category.get('parentCategory.slug');
+        if (parentSlug) { mode += parentSlug + "/"; }
+        mode += category.get("slug") + "/l/";
       }
       return mode + name.replace(' ', '-');
     }

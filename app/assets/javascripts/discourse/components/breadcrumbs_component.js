@@ -12,8 +12,11 @@ Discourse.DiscourseBreadcrumbsComponent = Ember.Component.extend({
     return this.get('parentCategory') || this.get('category');
   }.property('parentCategory', 'category'),
 
-  childCategories: Em.computed.filter('categories', function(c) {
-    return c.get('parentCategory') === this.get('targetCategory');
-  })
+  childCategories: function() {
+    var self = this;
+    return this.get('categories').filter(function (c) {
+      return c.get('parentCategory') === self.get('targetCategory');
+    });
+  }.property('targetCategory')
 
 });

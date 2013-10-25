@@ -1,13 +1,12 @@
 {{#if category}}
-  {{categoryLink category}}
+  {{boundCategoryLink category}}
 {{else}}
-  <a href="/"><i class='icon icon-home'></i></a>
+  <a href='/' class='badge-category home' {{bindAttr style="badgeStyle"}}><i class='icon icon-home'></i></a>
 {{/if}}
 
 {{#if categories}}
-  <button {{action expand}}><i {{bindAttr class='iconClass'}}></i></button>
-
-  <section {{bindAttr class="expanded::hidden :category-menu"}} class='chooser'>
+  <a href='#' {{action expand}} class='badge-category category-dropdown-button' {{bindAttr style="badgeStyle"}}><i {{bindAttr class="iconClass"}}></i></a>
+  <section {{bindAttr class="expanded::hidden :category-dropdown-menu"}} class='chooser'>
     {{#each categories}}
       <div class='cat'>{{categoryLink this}}</div>
     {{/each}}
