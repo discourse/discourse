@@ -83,7 +83,11 @@ window.assetPath = function() { return null; };
 
 var oldAjax = $.ajax;
 $.ajax = function() {
-  console.error("Discourse.Ajax called in test environment (" + arguments[0] + ")");
+  try {
+    this.undef();
+  } catch(e) {
+    console.error("Discourse.Ajax called in test environment (" + arguments[0] + ")\n caller: " + e.stack.split("\n").slice(2).join("\n"));
+  }
   return oldAjax.apply(this, arguments);
 };
 
