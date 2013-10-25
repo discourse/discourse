@@ -576,6 +576,7 @@ fr:
         total: total messages
         current: message courant
       notifications:
+        title: ''
         reasons:
           '3_2': 'Vous recevrez des notifications car vous suivez attentivement cette discussion.'
           '3_1': 'Vous recevrez des notifications car vous avez créé cette discussion.'
@@ -858,7 +859,11 @@ fr:
       security: "Sécurité"
       auto_close_label: "Fermer automatiquement après :"
       edit_permissions: "Editer les Permissions"
-      add_permission: "AJouter une Permission"
+      add_permission: "Ajouter une Permission"
+      this_year: "cette année"
+      position: "position"
+      parent: "Catégorie parente"
+
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
       action: 'Signaler ce message'
