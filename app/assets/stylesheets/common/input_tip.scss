@@ -1,5 +1,5 @@
-@import "../common/foundation/variables";
-@import "../common/foundation/mixins";
+@import "foundation/variables";
+@import "foundation/mixins";
 
 .popup-tip {
   position: absolute;
@@ -16,14 +16,15 @@
   &.hide, &.good {
     display: none;
   }
-  a.close {
+  .close {
     float: right;
     color: $black;
     opacity: 0.5;
     font-size: 15px;
     margin-left: 4px;
+    cursor: pointer;
   }
-  a.close:hover {
+  .close:hover {
     opacity: 1.0;
   }
 }
