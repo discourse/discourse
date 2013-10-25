@@ -22,11 +22,14 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
     }
 
     var listController = this.controllerFor('list'),
-        urlId = Discourse.Category.slugFor(category),
+        categorySlug = Discourse.Category.slugFor(category),
         self = this;
 
-    listController.set('filterMode', "category/" + urlId);
-    listController.load("category/" + urlId).then(function(topicList) {
+    var filter = this.filter || "latest";
+    var url = "category/" + categorySlug + "/" + filter;
+
+    listController.set('filterMode', url);
+    listController.load(url).then(function(topicList) {
       listController.setProperties({
         canCreateTopic: topicList.get('can_create_topic'),
         category: category

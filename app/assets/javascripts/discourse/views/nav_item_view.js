@@ -14,7 +14,7 @@ Discourse.NavItemView = Discourse.View.extend({
   hidden: Em.computed.not('content.visible'),
   count: Ember.computed.alias('content.count'),
   shouldRerender: Discourse.View.renderIfChanged('count'),
-  active: Discourse.computed.propertyEqual('contentNameSlug', 'controller.filterMode'),
+  active: Discourse.computed.propertyEqual('content.filterMode', 'controller.filterMode'),
 
   title: function() {
     var categoryName, extra, name;
@@ -27,13 +27,6 @@ Discourse.NavItemView = Discourse.View.extend({
     return I18n.t("filters." + name + ".help", extra);
   }.property("content.filter"),
 
-  contentNameSlug: function() {
-    return this.get("content.name").toLowerCase().replace(' ','-');
-  }.property('content.name'),
-
-  // active: function() {
-  //   return (this.get("contentNameSlug") === this.get("controller.filterMode"));
-  // }.property("contentNameSlug", "controller.filterMode"),
 
   name: function() {
     var categoryName, extra, name;

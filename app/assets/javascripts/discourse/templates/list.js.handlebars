@@ -1,5 +1,10 @@
-<div id='list-controls'>
+<div class='list-controls'>
   <div class="container">
+
+    {{#if category}}
+      {{discourse-breadcrumbs category=category categories=categories}}
+    {{/if}}
+
     <ul class="nav nav-pills" id='category-filter'>
       {{each availableNavItems itemViewClass="Discourse.NavItemView"}}
     </ul>

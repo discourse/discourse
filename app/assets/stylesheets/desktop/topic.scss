@@ -199,17 +199,20 @@ i {background: #e4f2f8;
 }
 
 ol.category-breadcrumb {
+  display: block;
+  float: left;
   list-style: none;
-  margin: 0 0 10px 0;
+  margin: 0 10px 0 0;
   padding: 0;
 
   li {
     float: left;
     margin-right: 5px;
     border: 1px solid transparent;
+    line-height: 31px;
 
     &.no-category {
-      font-size: 13px;
+      font-size: 22px;
 
       a {
         margin-right: 3px;
@@ -243,7 +246,9 @@ ol.category-breadcrumb {
     .badge-category {
       margin: 0;
       display: inline-block;
-      padding: 1px 6px 2px 6px;
+      font-size: 14px;
+      padding: 0px 10px;
+      float: none;
     }
 
     button {
@@ -285,6 +290,12 @@ ol.category-breadcrumb {
     height: 200px;
     padding: 8px 5px 0 7px;
     z-index: 100;
+
+    .badge-category {
+      font-size: 13px;
+      line-height: 26px;
+      padding: 0px 8px;
+    }
 
     div {
       margin-bottom: 10px;

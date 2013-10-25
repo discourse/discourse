@@ -8,7 +8,7 @@
 // List controls
 // --------------------------------------------------
 
-#list-controls {
+.list-controls {
   margin: 5px;
   .nav {
     float: left;
@@ -239,48 +239,46 @@
 // Misc. stuff
 // --------------------------------------------------
 
-#main {
-  #list-controls {
-    .badge-category {
-      display: inline-block;
-      background-color: yellow;
-      margin: 8px 0 0 8px;
-      float: left;
-    }
-    clear: both;
-  }
-  #list-area {
-    margin-bottom: 300px;
-    .empty-topic-list {
-      padding: 10px;
-    }
-    .unseen {
-      background-color: transparent;
-      padding: 0;
-      border: 0;
-      color: lighten($red, 10%);
-      font-size: 13px;
-      cursor: default;
-    }
-  }
-  #topic-list {
-    .alert {
-      margin-bottom: 0;
-      font-size: 14px;
-    }
-    .spinner {
-      margin-top: 40px;
-    }
-  }
-  span.posted {
+.list-controls {
+  .badge-category {
     display: inline-block;
-    text-indent: -9999em;
-    width: 15px;
-    height: 15px;
-    background: {
-      image: image-url("posted.png");
-    };
+    background-color: yellow;
+    margin: 8px 0 0 8px;
+    float: left;
   }
+  clear: both;
+}
+#list-area {
+  margin-bottom: 300px;
+  .empty-topic-list {
+    padding: 10px;
+  }
+  .unseen {
+    background-color: transparent;
+    padding: 0;
+    border: 0;
+    color: lighten($red, 10%);
+    font-size: 13px;
+    cursor: default;
+  }
+}
+#topic-list {
+  .alert {
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+  .spinner {
+    margin-top: 40px;
+  }
+}
+span.posted {
+  display: inline-block;
+  text-indent: -9999em;
+  width: 15px;
+  height: 15px;
+  background: {
+    image: image-url("posted.png");
+  };
 }
 
 
@@ -364,3 +362,23 @@ clear: both;
   opacity: 1;
 }
 
+
+ol.category-breadcrumb {
+  display: block;
+  margin-top: 5px;
+  float: left;
+  list-style: none;
+  .icon-home {
+    font-size: 20px;
+  }
+  .badge-category {
+    margin: 3px 8px 0;
+  }
+  button {
+    padding: 5px 10px;
+    font-size: 16px;
+  }
+  li {
+    float: left;
+  }
+}

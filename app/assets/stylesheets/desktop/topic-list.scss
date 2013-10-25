@@ -8,7 +8,7 @@
 // List controls
 // --------------------------------------------------
 
-#list-controls {
+.list-controls {
   .nav {
     float: left;
     margin-bottom: 15px;
@@ -349,52 +349,50 @@
 // Misc. stuff
 // --------------------------------------------------
 
-#main {
-  #list-controls {
-    .badge-category {
-      display: inline-block;
-      background-color: yellow;
-      margin: 8px 0 0 8px;
-      float: left;
-    }
-    clear: both;
+.list-controls {
+  .badge-category {
+    display: inline-block;
+    background-color: yellow;
+    margin: 8px 0 0 8px;
+    float: left;
   }
-  #list-area {
-    margin-bottom: 300px;
+  clear: both;
+}
+#list-area {
+  margin-bottom: 300px;
 
 
 .topic-statuses .topic-status i {font-size: 15px;}
 
 
 
-    .empty-topic-list {
-      padding: 10px;
-    }
-    .unseen {
-      background-color: transparent;
-      padding: 0;
-      border: 0;
-      color: lighten($red, 10%);
-      font-size: 13px;
-      cursor: default;
-    }
+  .empty-topic-list {
+    padding: 10px;
   }
-  #topic-list {
-    .alert {
-      margin-bottom: 0;
-      font-size: 14px;
-    }
-    .spinner {
-      margin-top: 40px;
-    }
+  .unseen {
+    background-color: transparent;
+    padding: 0;
+    border: 0;
+    color: lighten($red, 10%);
+    font-size: 13px;
+    cursor: default;
   }
-  span.posted {
-    display: inline-block;
-    text-indent: -9999em;
-    width: 15px;
-    height: 15px;
-    background: {
-      image: image-url("posted.png");
-    };
+}
+#topic-list {
+  .alert {
+    margin-bottom: 0;
+    font-size: 14px;
   }
+  .spinner {
+    margin-top: 40px;
+  }
+}
+span.posted {
+  display: inline-block;
+  text-indent: -9999em;
+  width: 15px;
+  height: 15px;
+  background: {
+    image: image-url("posted.png");
+  };
 }

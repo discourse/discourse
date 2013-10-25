@@ -22,10 +22,10 @@
           {{/if}}
           {{categoryLink this allowUncategorized=true}}
           {{#if unreadTopics}}
-            <a href={{unbound url}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
+            <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
           {{/if}}
           {{#if newTopics}}
-            <a href={{unbound url}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='icon icon-asterisk'></i></a>
+            <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='icon icon-asterisk'></i></a>
           {{/if}}
           <div class='featured-users'>
             {{#each featured_users}}

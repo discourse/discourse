@@ -22,7 +22,7 @@ Discourse.ListController = Discourse.Controller.extend({
         category: category
       });
     }).filter(function(i) {
-      return i !== null && !(category && i.get("name") === "categories");
+      return i !== null && !(category && i.get("name").indexOf("categor") === 0);
     });
   }.property("category"),
 
@@ -134,7 +134,11 @@ Discourse.ListController = Discourse.Controller.extend({
     } else {
       return false;
     }
-  }.property('category')
+  }.property('category'),
+
+  categories: function() {
+    return Discourse.Category.list();
+  }.property()
 
 });
 

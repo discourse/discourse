@@ -146,7 +146,6 @@ Discourse.TopicList.reopenClass({
       return Ember.RSVP.resolve(list);
     }
     session.setProperties({topicList: null, topicListScrollPos: null});
-
     return Discourse.TopicList.find(filter, menuItem.get('excludeCategory'));
   }
 });

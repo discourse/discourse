@@ -34,6 +34,13 @@ Discourse.Category = Discourse.Model.extend({
     return Discourse.getURL("/category/") + (this.get('slug'));
   }.property('name'),
 
+  unreadUrl: function() {
+    return this.get('url') + '/unread';
+  }.property('url'),
+
+  newUrl: function() {
+    return this.get('url') + '/new';
+  }.property('url'),
 
   style: function() {
     return "background-color: #" + (this.get('category.color')) + "; color: #" + (this.get('category.text_color')) + ";";

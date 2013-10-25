@@ -31,11 +31,21 @@ Discourse.NavItem = Discourse.Model.extend({
 
   // href from this item
   href: function() {
+    return Discourse.getURL("/") + this.get('filterMode');
+  }.property('filterMode'),
+
+  // href from this item
+  filterMode: function() {
     var name = this.get('name');
     if( name.split('/')[0] === 'category' ) {
-      return Discourse.getURL("/") + 'category/' + this.get('categorySlug');
+      return 'category/' + this.get('categorySlug');
     } else {
-      return Discourse.getURL("/") + name.replace(' ', '-');
+      var mode = "";
+      var category = this.get("category");
+      if(category){
+        mode += "category/" + category.get("slug") + "/";
+      }
+      return mode + name.replace(' ', '-');
     }
   }.property('name'),
 
