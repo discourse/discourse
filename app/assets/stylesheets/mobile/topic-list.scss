@@ -240,17 +240,32 @@
 // --------------------------------------------------
 
 .list-controls {
-  .badge-category {
-    display: inline-block;
-    margin: 8px 0 0 8px;
-    float: left;
-  }
-  .category-dropdown {
-    margin: 8px 0;
+  .home {
+    font-size: 20px;
+    font-weight: normal;
   }
 
+  .badge-category {
+    margin-top: 6px;
+    padding: 4px 10px;
+    display: inline-block;
+    line-height: 24px;
+    float: left;
+  }
+  .category-dropdown-button {
+    padding: 4px 10px 3px 8px;
+    border-left: 1px solid rgba(0, 0, 0, 0.15);
+    font-size: 16px;
+    width: 10px;
+    text-align: center;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
   clear: both;
 }
+
 #list-area {
   margin-bottom: 300px;
   .empty-topic-list {
@@ -365,20 +380,40 @@ clear: both;
   opacity: 1;
 }
 
-
 ol.category-breadcrumb {
   display: block;
-  margin-top: 5px;
   float: left;
   list-style: none;
-  .icon-home {
-    font-size: 20px;
-  }
-  button {
-    padding: 5px 10px;
-    font-size: 16px;
-  }
+  margin: 0 10px 0 0;
+  padding: 0;
+
   li {
     float: left;
+    margin-right: 5px;
   }
 }
+
+.category-dropdown-menu {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  border: 1px solid #ccc;
+  background-color: white;
+  width: 200px;
+  height: 200px;
+  padding: 8px 5px 0 7px;
+  z-index: 100;
+  margin-top: 31px;
+
+  .badge-category {
+    font-size: 13px;
+    line-height: 26px;
+    padding: 0px 8px;
+    float: none;
+  }
+
+  div {
+    margin-bottom: 10px;
+  }
+}
+

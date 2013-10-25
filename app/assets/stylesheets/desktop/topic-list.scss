@@ -411,6 +411,19 @@ span.posted {
   };
 }
 
+ol.category-breadcrumb {
+  display: block;
+  float: left;
+  list-style: none;
+  margin: 0 10px 0 0;
+  padding: 0;
+
+  li {
+    float: left;
+    margin-right: 5px;
+  }
+}
+
 .category-dropdown-menu {
   overflow-x: hidden;
   overflow-y: scroll;
@@ -434,3 +447,4 @@ span.posted {
     margin-bottom: 10px;
   }
 }
+
