@@ -42,7 +42,7 @@ Discourse.NavItem = Discourse.Model.extend({
   count: function() {
     var state = this.get('topicTrackingState');
     if (state) {
-      return state.lookupCount(this.get('name'));
+      return state.lookupCount(this.get('name'), this.get('category'));
     }
   }.property('topicTrackingState.messageCount'),
 
@@ -71,7 +71,8 @@ Discourse.NavItem.reopenClass({
     opts = {
       name: name,
       hasIcon: name === "unread" || name === "favorited",
-      filters: split.splice(1)
+      filters: split.splice(1),
+      category: opts.category
     };
 
     return Discourse.NavItem.create(opts);
