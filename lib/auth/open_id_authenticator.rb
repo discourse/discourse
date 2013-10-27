@@ -22,7 +22,7 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
 
     user_open_id = UserOpenId.find_by_url(identity_url)
 
-    if !user_open_id && @opts[:trusted] && user = User.find_by_email(email)
+    if !user_open_id && @opts[:trusted] && user = User.find_by_email(email).first 
       user_open_id = UserOpenId.create(url: identity_url , user_id: user.id, email: email, active: true)
     end
 
