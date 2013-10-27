@@ -124,21 +124,18 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_username_or_email(username_or_email)
-    users = if username_or_email.include?('@')
-              find_by_email(username_or_email)
-            else
-              find_by_username(username_or_email)
-            end
-
-    if users.size > 1
-      raise Discourse::TooManyMatches
+    if username_or_email.include?('@')
+      find_by_email(username_or_email)
     else
+      users = find_by_username(username_or_email)
+      raise Discourse::TooManyMatches if users.size > 1
       users.first
     end
   end
 
+  # Find a user by email, which is unique for users
   def self.find_by_email(email)
-    where(email: Email.downcase(email))
+    where(email: Email.downcase(email)).first
   end
 
   def self.find_by_username(username)
