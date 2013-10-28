@@ -424,39 +424,38 @@ ja:
 
   content_types:
     education_new_reply:
-      title: "New User Education: First Replies"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
+      title: "新規ユーザ支援: 初めての回答"
+      description: "新規ユーザが回答の入力を開始した際に自動的にポップアップするガイダンスの内容 (最初の2回のみ表示)。"
     education_new_topic:
-      title: "New User Education: First Topics"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
+      title: "新規ユーザ支援: 初めてのポスト"
+      description: "新規ユーザが新規トピックの作成を行った際に自動的にポップアップするガイダンスに内容 (最初の2回のみ表示)。"
     usage_tips:
-      title: "New User Tips"
-      description: "Common usage tips, essential forum information, and key guidance intended for new users."
+      title: "新規ユーザ向けヒント"
+      description: "新規ユーザ向けのヒントや、ガイド、フォーラムに関する情報など。"
     welcome_user:
-      title: "Welcome: New User"
-      description: "A private message automatically sent to all new users when they sign up."
+      title: "ウェルカムメッセージ: 新規ユーザ"
+      description: "サインアップした全ての新規ユーザに自動送信されるプライベートメッセージの内容。"
     welcome_invite:
-      title: "Welcome: Invited User"
-      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
+      title: "ウェルカムメッセージ: 招待ユーザ"
+      description: "ユーザより招待された全ての外部ユーザに自動送信されるプライベートメッセージの内容。"
     privacy_policy:
-      title: "Privacy Policy"
-      description: "Your site's privacy policy. Leave blank for default policy."
+      title: "プライバシーポリシー"
+      description: "サイトのプライバシーポリシー。空欄でデフォルトポリシーを表示。"
     faq:
       title: "FAQ"
-      description: "Your site's FAQ. Leave blank for the default FAQ."
+      description: "サイトの FAQ。空欄でデフォルト FAQ を表示。"
     login_required_welcome_message:
-      title: "Login Required: Welcome Message"
-      description: "Welcome message that is displayed to logged out users when
-        the 'login required' setting is enabled."
+      title: "ウェルカムメッセージ: 要ログイン"
+      description: "'login required' 設定有効時に、ユーザに対してログインを促すメッセージの内容。"
     tos_user_content_license:
-      title: "Terms of Service: Content License"
-      description: "The text for the Content License section of the Terms of Service."
+      title: "利用規約: コンテンツ使用許諾"
+      description: "利用規約の「コンテンツ使用許諾」セクションの内容。"
     tos_miscellaneous:
-      title: "Terms of Service: Miscellaneous"
-      description: "The text for the Miscellaneous section of the Terms of Service."
+      title: "利用規約: その他"
+      description: "利用規約の「その他」セクションの内容。"
     login_required:
-      title: "Login Required: Homepage"
-      description: "The text displayed for unauthorized users when login is required on the site."
+      title: "ホームページ: 要ログイン"
+      description: "要ログイン設定の際に、未ログインユーザに対して表示されるメッセージの内容。"
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"

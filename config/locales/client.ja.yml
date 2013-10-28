@@ -103,12 +103,12 @@ ja:
     more: "More"
     less: "Less"
     never: "never"
-    daily: "daily"
-    weekly: "weekly"
-    every_two_weeks: "every two weeks"
+    daily: "毎日"
+    weekly: "毎週"
+    every_two_weeks: "隔週"
     character_count:
-      one: "{{count}} character"
-      other: "{{count}} characters"
+      one: "{{count}}文字"
+      other: "{{count}}文字"
 
     in_n_seconds:
       one: "in 1 second"
@@ -132,8 +132,8 @@ ja:
       not_bookmarked: "このポストをブックマークする"
       last_read: "このポストをブックマークする"
 
-    new_topics_inserted: "新しいトピックが {{count}} 個あります"
-    show_new_topics: "Click to show."
+    new_topics_inserted: "新しいトピックが {{count}}個あります"
+    show_new_topics: "クリックして表示。"
     preview: "プレビュー"
     cancel: "キャンセル"
 
@@ -200,9 +200,9 @@ ja:
       external_links_in_new_tab: "外部リンクを全て新しいタブで開く"
       enable_quoting: "ハイライトしたテキストを引用して回答する"
       change: "変更"
-      moderator: "{{user}} is a moderator"
+      moderator: "{{user}} はモデレータです"
       admin: "{{user}} は管理者です"
-      deleted: "(deleted)"
+      deleted: "(削除済)"
 
       messages:
         all: "すべて"
@@ -234,11 +234,11 @@ ja:
       change_avatar:
         title: "アバターの変更"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
-        gravatar_title: "Change your avatar on Gravatar's website"
-        uploaded_avatar: "Custom picture"
-        uploaded_avatar_empty: "Add a custom picture"
-        upload_title: "Upload your picture"
-        image_is_not_a_square: "Warning: we've cropped your image as it's not a square."
+        gravatar_title: "ウェブサイトのアバターを変更"
+        uploaded_avatar: "カスタム画像"
+        uploaded_avatar_empty: "カスタム画像を追加"
+        upload_title: "画像をアップロード"
+        image_is_not_a_square: "警告: 画像が正方形ではなかったためクロップしました。"
 
       email:
         title: "メールアドレス"
@@ -313,16 +313,16 @@ ja:
         title: "招待"
         user: "招待したユーザ"
         none: "{{username}} はこのサイトに誰も招待していません。"
-        redeemed: "Redeemed Invites"
-        redeemed_at: "Redeemed At"
-        pending: "Pending Invites"
+        redeemed: "受理された招待"
+        redeemed_at: "受理日"
+        pending: "保留中の招待"
         topics_entered: "Topics Entered"
         posts_read_count: "Posts Read"
-        rescind: "Remove Invitation"
-        rescinded: "Invite removed"
-        time_read: "Read Time"
-        days_visited: "Days Visited"
-        account_age_days: "Account age in days"
+        rescind: "招待の取り消し"
+        rescinded: "取り消された招待"
+        time_read: "リード時間"
+        days_visited: "訪問日数"
+        account_age_days: "アカウント有効日数"
 
       password:
         title: "パスワード"
@@ -340,25 +340,25 @@ ja:
         all: "すべて"
 
       stream:
-        posted_by: "Posted by"
-        sent_by: "Sent by"
-        private_message: "private message"
-        the_topic: "the topic"
+        posted_by: "投稿者"
+        sent_by: "送信者"
+        private_message: "プライベートメッセージ"
+        the_topic: "トピック"
 
     loading: "読み込み中..."
-    close: "Close"
-    learn_more: "learn more..."
+    close: "閉じる"
+    learn_more: "より詳しく..."
 
     year: 'year'
-    year_desc: 'topics posted in the last 365 days'
+    year_desc: '過去365日間に投稿されたトピック'
     month: 'month'
-    month_desc: 'topics posted in the last 30 days'
+    month_desc: '過去30日間に投稿されたトピック'
     week: 'week'
-    week_desc: 'topics posted in the last 7 days'
+    week_desc: '過去7日間に投稿されたトピック'
 
-    first_post: First post
-    mute: Mute
-    unmute: Unmute
+    first_post: 最初のポスト
+    mute: ミュート
+    unmute: ミュート解除
     last_post: 最終ポスト
 
     best_of:
@@ -369,8 +369,8 @@ ja:
       disable: 'Cancel "Best Of"'
 
     private_message_info:
-      title: "Private Message"
-      invite: "Invite Others..."
+      title: "プライベートメッセージ"
+      invite: "友人を招待..."
 
     email: 'メール'
     username: 'ユーザ名'
@@ -401,12 +401,12 @@ ja:
       logging_in: "ログイン中..."
       or: "または"
       authenticating: "認証中..."
-      awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
-      awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
-      requires_invite: "Sorry, access to this forum is by invite only."
-      not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
-      resend_activation_email: "Click here to send the activation email again."
-      sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      awaiting_confirmation: "アカウントはアクティベーション待ち状態です。もう一度アクティベーションメールを送信するには「パスワードを忘れました」リンクをクリックしてください。"
+      awaiting_approval: "アカウントはまだスタッフメンバーに承認されていません。承認され次第メールにてお知らせいたします。"
+      requires_invite: "申し訳ありませんが、このフォーラムは招待制です。"
+      not_activated: "まだログインできません。<b>{{sentTo}}</b> にアクティベーションメールを送信しております。メールの指示に従ってアカウントのアクティベーションを行ってください。"
+      resend_activation_email: "再度アクティベーションメールを送信するにはここをクリックシてください。"
+      sent_activation_email_again: "<b>{{currentEmail}}</b> にアクティベーションメールを再送しました。メール到着まで数分かかることがあります (いつまで立ってもメールが届かない場合は、念のためスパムフォルダの中も確認してみてください)。"
       google:
         title: "with Google"
         message: "Google による認証 (ポップアップがブロックされていないことを確認してください)"
@@ -434,8 +434,8 @@ ja:
       saving_draft_tip: "保存中"
       saved_draft_tip: "保存しました"
       saved_local_draft_tip: "ローカルに保存しました"
-      similar_topics: "Your topic is similar to..."
-      drafts_offline: "drafts offline"
+      similar_topics: "このトピックに似ているトピック..."
+      drafts_offline: "オフラインで下書き"
 
       min_length:
         need_more_for_title: "タイトルにあと{{n}}文字必要"
@@ -460,7 +460,7 @@ ja:
       users_placeholder: "Add a user"
       title_placeholder: "トピックのタイトルをここに入力してください。"
       reply_placeholder: "本文をここに入力してください。Markdown や BBCode を利用することもできます。画像をアップロードするにはドラッグまたはペーストしてください。"
-      view_new_post: "View your new post."
+      view_new_post: "新規ポストを見る。"
       saving: "保存中..."
       saved: "保存完了!"
       saved_draft: "編集中のポストがあります。このボックス内をクリックすると編集を再開できます。"
@@ -510,9 +510,9 @@ ja:
       liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
       private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved {{link}}"
-      total_flagged: "total flagged posts"
+      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} が招待を受理しました"
+      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} が {{link}} を移動しました"
+      total_flagged: "フラグがたったポストの総数"
 
     upload_selector:
       title: "画像のアップロード"
@@ -521,14 +521,14 @@ ja:
       from_the_web: "Web から"
       add_title: "画像を追加"
       add_title_with_attachments: "画像/ファイルを追加"
-      remote_title: "remote image"
-      remote_title_with_attachments: "remote image or file"
+      remote_title: "リモートの画像"
+      remote_title_with_attachments: "リモートの画像/ファイル"
       remote_tip: "画像のアドレスを入力してください (例 http://example.com/image.jpg)。"
-      remote_tip_with_attachments: "画像/ファイルのアドレスを入力してください (例 http://example.com/file.ext) (allowed extensions: {{authorized_extensions}})."
-      local_title: "local image"
-      local_title_with_attachments: "local image or file"
+      remote_tip_with_attachments: "画像/ファイルのアドレスを入力してください (例 http://example.com/file.ext) (使用可能な拡張子: {{authorized_extensions}})."
+      local_title: "ローカルの画像"
+      local_title_with_attachments: "ローカルの画像/ファイル"
       local_tip: "クリックしてアップロードする画像を選択してください"
-      local_tip_with_attachments: "クリックしてアップロードする画像/ファイルを選択してください (allowed extensions: {{authorized_extensions}})"
+      local_tip_with_attachments: "クリックしてアップロードする画像/ファイルを選択してください (使用可能な拡張子: {{authorized_extensions}})"
       upload_title: "画像をアップロード"
       upload_title_with_attachments: "画像やファイルをアップロード"
       uploading: "アップロード中"
@@ -540,8 +540,8 @@ ja:
       searching: "検索中..."
 
       prefer:
-        user: "search will prefer results by @{{username}}"
-        category: "search will prefer results in {{category}}"
+        user: "検索結果は @{{username}} を優先します"
+        category: "検索結果は {{category}} を優先します"
 
     site_map: "別のトピックリストやカテゴリに移動"
     go_back: '戻る'
@@ -574,26 +574,26 @@ ja:
         category: "{{category}} トピックは以上です。"
 
     rank_details:
-      toggle: toggle topic rank details
-      show: show topic rank details
-      title: Topic Rank Details
+      toggle: トピックランクの詳細をトグル
+      show: トピックランクの詳細を表示
+      title: トピックランクの詳細
 
     topic:
       create_in: '{{categoryName}} トピックを作成'
       create: 'トピックを作成する'
       create_long: '新しいトピックの作成'
-      private_message: 'Start a private message'
-      list: 'Topics'
-      new: 'new topic'
+      private_message: 'プライベートメッセージを作成'
+      list: 'トピック'
+      new: '新規トピック'
       title: 'トピック'
-      loading_more: "Loading more Topics..."
+      loading_more: "さらにトピックを読み込み中..."
       loading: 'トピックを読み込み中...'
       invalid_access:
-        title: "Topic is private"
-        description: "Sorry, you don't have access to that topic!"
+        title: "トピックはプライベートです"
+        description: "申し訳ありませんが、このトピックへのアクセスは許可されていません!"
       server_error:
         title: "トピックの読み込みに失敗しました"
-        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, let us know."
+        description: "申し訳ありませんが、トピックの読み込みに失敗しました。もう一度試してください。もし問題が継続する場合はお知らせください。"
       not_found:
         title: "トピックが見つかりませんでした"
         description: "申し訳有りませんがトピックが見つかりませんでした。モデレータによって削除された可能性があります。"
@@ -609,8 +609,8 @@ ja:
         other: "このトピックには{{count}}個「いいね！」がついています"
       back_to_list: "トピックリストに戻る"
       options: "トピックオプション"
-      show_links: "show links within this topic"
-      toggle_information: "toggle topic details"
+      show_links: "このトピック内のリンクを表示"
+      toggle_information: "トピック詳細をトグル"
       read_more_in_category: "{{catLink}} の他のトピックを見る or {{latestLink}}。"
       read_more: "{{catLink}} or {{latestLink}}。"
 
@@ -634,23 +634,23 @@ ja:
 
       view_latest_topics: 最新のトピックを見る
       suggest_create_topic: 新しいトピックを作成しますか？
-      read_position_reset: "Your read position has been reset."
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
-      deleted: "The topic has been deleted"
+      read_position_reset: "しおりがリセットされました。"
+      jump_reply_up: 以前の回答へジャンプ
+      jump_reply_down: 以後の回答へジャンプ
+      deleted: "トピックは削除されました"
 
-      auto_close_notice: "This topic will automatically close %{timeLeft}."
-      auto_close_title: 'Auto-Close Settings'
+      auto_close_notice: "このトピックは%{timeLeft}で自動的にクローズされます。"
+      auto_close_title: '自動クローズ設定'
       auto_close_save: "保存"
       auto_close_cancel: "キャンセル"
-      auto_close_remove: "Don't Auto-Close This Topic"
+      auto_close_remove: "このトピックを自動クローズしない"
 
       progress:
-        title: topic progress
-        jump_top: jump to first post
-        jump_bottom: jump to last post
-        total: total posts
-        current: current post
+        title: トピック進捗
+        jump_top: 最初のポストにジャンプ
+        jump_bottom: 最後のポストにジャンプ
+        total: ポスト総数
+        current: 現在のポスト
 
       notifications:
         title: ''
@@ -679,20 +679,20 @@ ja:
           description: "このトピックについて何の通知も受けません。また未読タブにも表示されません。"
 
       actions:
-        recover: "Un-Delete Topic"
-        delete: "Delete Topic"
-        open: "Open Topic"
-        close: "Close Topic"
-        auto_close: "Auto Close"
-        unpin: "Un-Pin Topic"
-        pin: "Pin Topic"
-        unarchive: "Unarchive Topic"
-        archive: "Archive Topic"
-        invisible: "Make Invisible"
-        visible: "Make Visible"
-        reset_read: "Reset Read Data"
-        multi_select: "Select Posts to Move"
-        convert_to_topic: "Convert to Regular Topic"
+        recover: "トピック削除の取り消し"
+        delete: "トピック削除"
+        open: "トピックを開く"
+        close: "トピックをクローズする"
+        auto_close: "自動クローズ"
+        unpin: "トピックのピン留め解除"
+        pin: "トピックのピン留め"
+        unarchive: "トピックのアーカイブ解除"
+        archive: "トピックのアーカイブ"
+        invisible: "非表示にする"
+        visible: "非表示を解除"
+        reset_read: "読み込みデータをリセット"
+        multi_select: "移動するポストを選択"
+        convert_to_topic: "通常トピックに変換"
 
       reply:
         title: '回答'
@@ -963,35 +963,35 @@ ja:
 
     flagging:
       title: 'このポストにフラグをつける理由は何ですか?'
-      action: 'Flag Post'
-      take_action: "Take Action"
-      notify_action: 'Notify'
+      action: 'フラグをつけるt'
+      take_action: "アクションを取る"
+      notify_action: '通知する'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
       cant: "Sorry, you can't flag this post at this time."
-      custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
-      custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
+      custom_placeholder_notify_user: "ポストについて、このユーザに個人的に直接確認する必要がある内容を書いてください。詳細かつ建設的に、そして何よりマナーを守った内容にしてください。"
+      custom_placeholder_notify_moderators: "ポストについて、モデレータの確認が必要な理由を書いてください。問題の詳細を書くとともに、可能であれば参照リンクなども加えてください。"
       custom_message:
-        at_least: "enter at least {{n}} characters"
-        more: "{{n}} to go..."
-        left: "{{n}} remaining"
+        at_least: "少なくとも{{n}}文字入力してください"
+        more: "あと{{n}}文字..."
+        left: "残り{{n}}文字"
 
     topic_summary:
-      title: "Topic Summary"
-      links_shown: "show all {{totalLinks}} links..."
-      clicks: "clicks"
-      topic_link: "topic link"
+      title: "トピック要約"
+      links_shown: "{{totalLinks}} のリンクを全て表示..."
+      clicks: "クリック"
+      topic_link: "トピックリンク"
 
     topic_statuses:
       locked:
-        help: "this topic is closed; it no longer accepts new replies"
+        help: このトピックはクローズしています。新たに回答を投稿することはできません"
       pinned:
-        help: "this topic is pinned; it will display at the top of its category"
+        help: "このトピックはピン留めされています。常にカテゴリのトップに表示されます"
       archived:
-        help: "this topic is archived; it is frozen and cannot be changed"
+        help: "このトピックはアーカイブされています。凍結状態のため一切の変更ができません"
       invisible:
-        help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "このトピックは非表示状態です。トピックリストには表示されません。直接リンクでのみアクセス可能です"
 
     posts: "投稿"
     posts_long: "このトピックには{{number}}個のポストがあります"
@@ -1142,15 +1142,15 @@ ja:
             other: "spam x{{count}}"
 
       groups:
-        title: "Groups"
-        edit: "Edit Groups"
-        selector_placeholder: "add users"
-        name_placeholder: "Group name, no spaces, same as username rule"
-        about: "Edit your group membership and names here"
-        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
-        delete: "Delete"
-        delete_confirm: "Delete this group?"
-        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        title: "グループ"
+        edit: "グループの編集"
+        selector_placeholder: "ユーザの追加"
+        name_placeholder: "グループ名を入力 (ユーザ名同様にスペースなし)"
+        about: "グループメンバーとグループ名を編集"
+        can_not_edit_automatic: "自動作成グループのメンバーは自動的に決まります (管理者ユーザによってロールとトラストレベルが設定されます)"
+        delete: "削除"
+        delete_confirm: "このグループを削除しますか?"
+        delete_failed: "グループの削除に失敗しました。自動作成グループを削除することはできません。"
 
       api:
         title: "API"
@@ -1162,62 +1162,62 @@ ja:
         note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
 
       customize:
-        title: "Customize"
-        long_title: "Site Customizations"
-        header: "Header"
-        css: "Stylesheet"
-        override_default: "Do not include standard style sheet"
-        enabled: "Enabled?"
-        preview: "preview"
-        undo_preview: "undo preview"
-        save: "Save"
-        new: "New"
-        new_style: "New Style"
-        delete: "Delete"
-        delete_confirm: "Delete this customization?"
-        about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
+        title: "カスタマイズ"
+        long_title: "サイトのカスタマイズ"
+        header: "ヘッダ"
+        css: "スタイルシート"
+        override_default: "標準のスタイルシートを読み込まない"
+        enabled: "有効にする"
+        preview: "プレビュー"
+        undo_preview: "プレビューをundo"
+        save: "保存"
+        new: "新規"
+        new_style: "新規スタイル"
+        delete: "削除"
+        delete_confirm: "このカスタマイズ設定を削除しますか?"
+        about: "サイトカスタマイズ設定により、サイトのヘッダとスタイルシートを変更できます。設定を選択するか、編集を開始して新たな設定を追加してください。"
 
       email:
-        title: "Email"
-        settings: "Settings"
-        logs: "Logs"
-        sent_at: "Sent At"
-        user: "User"
-        email_type: "Email Type"
-        to_address: "To Address"
-        test_email_address: "email address to test"
-        send_test: "send test email"
-        sent_test: "sent!"
-        delivery_method: "Delivery Method"
-        preview_digest: "Preview Digest"
-        preview_digest_desc: "This is a tool for previewing the content of the digest emails sent from your forum."
-        refresh: "Refresh"
-        format: "Format"
+        title: "メール"
+        settings: "設定"
+        logs: "ログ"
+        sent_at: "送信時間"
+        user: "ユーザ"
+        email_type: "メールタイプ"
+        to_address: "送信先アドレス"
+        test_email_address: "テスト用メールアドレス"
+        send_test: "テストメール送信"
+        sent_test: "送信完了!"
+        delivery_method: "送信方法"
+        preview_digest: "ダイジェストのプレビュー"
+        preview_digest_desc: "フォーラムより送信されるダイジェストメールのプレビューです。"
+        refresh: "更新"
+        format: "フォーマット"
         html: "html"
         text: "text"
-        last_seen_user: "Last Seen User:"
+        last_seen_user: "ユーザが最後にサイトを訪れた日:"
         reply_key: "Reply Key"
 
       logs:
-        title: "Logs"
-        action: "Action"
+        title: "ログ"
+        action: "アクション"
         created_at: "Created"
         last_match_at: "Last Matched"
         match_count: "Matches"
         ip_address: "IP"
         screened_actions:
-          block: "block"
-          do_nothing: "do nothing"
+          block: "ブロック"
+          do_nothing: "何もしない"
         staff_actions:
-          title: "Staff Actions"
-          instructions: "Click usernames and actions to filter the list. Click avatars to go to user pages."
-          clear_filters: "Show Everything"
-          staff_user: "Staff User"
-          target_user: "Target User"
-          subject: "Subject"
-          when: "When"
-          context: "Context"
-          details: "Details"
+          title: "スタッフ操作"
+          instructions: "ユーザ名やアクションをクリックするとリストをフィルタできます。アバターをクリックするとユーザページに遷移します。"
+          clear_filters: "全てを表示する"
+          staff_user: "スタッフユーザ"
+          target_user: "対象ユーザ"
+          subject: "対象"
+          when: "いつ"
+          context: "コンテンツ"
+          details: "詳細"
           previous_value: "Previous"
           new_value: "New"
           diff: "Diff"
@@ -1229,15 +1229,15 @@ ja:
             delete_user: "ユーザを削除"
             change_trust_level: "トラストレベルを変更"
             change_site_setting: "サイトの設定を変更"
-            change_site_customization: "change site customization"
-            delete_site_customization: "delete site customization"
+            change_site_customization: "サイトのカスタマイズ設定を変更"
+            delete_site_customization: "サイトのカスタマイズ設定を削除"
         screened_emails:
-          title: "Screened Emails"
-          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
-          email: "Email Address"
+          title: "ブロック対象アドレス"
+          description: "新規アカウント作成時、次のメールアドレスからの登録をブロックする。"
+          email: "メールアドレス"
         screened_urls:
-          title: "Screened URLs"
-          description: "The URLs listed here were used in posts by users who have been identified as spammers."
+          title: "ブロック対象 URL"
+          description: "スパマーからのポストにおいて引用されていた URL のリスト。"
           url: "URL"
 
       impersonate:
@@ -1248,19 +1248,19 @@ ja:
         invalid: "Sorry, you may not impersonate that user."
 
       users:
-        title: 'Users'
-        create: 'Add Admin User'
-        last_emailed: "Last Emailed"
-        not_found: "Sorry, that username doesn't exist in our system."
-        active: "Active"
+        title: 'ユーザ'
+        create: '管理者を追加'
+        last_emailed: "最終メール"
+        not_found: "このユーザネームはシステムに存在しません。"
+        active: "アクティブ"
         nav:
-          new: "New"
-          active: "Active"
-          pending: "Pending"
-          admins: 'Admins'
-          moderators: 'Mods'
-          banned: 'Banned'
-          blocked: 'Blocked'
+          new: "新規"
+          active: "アクティブ"
+          pending: "保留中"
+          admins: '管理者'
+          moderators: 'モデレータ'
+          banned: '追放中'
+          blocked: 'ブロック中'
         approved: "Approved?"
         approved_selected:
           one: "approve user"
@@ -1269,31 +1269,31 @@ ja:
           one: "reject user"
           other: "reject users ({{count}})"
         titles:
-          active: 'Active Users'
-          new: 'New Users'
-          pending: 'Users Pending Review'
-          newuser: 'Users at Trust Level 0 (New User)'
-          basic: 'Users at Trust Level 1 (Basic User)'
-          regular: 'Users at Trust Level 2 (Regular User)'
-          leader: 'Users at Trust Level 3 (Leader)'
-          elder: 'Users at Trust Level 4 (Elder)'
-          admins: 'Admin Users'
-          moderators: 'Moderators'
-          blocked: 'Blocked Users'
-          banned: 'Banned Users'
+          active: 'アクティブユーザ'
+          new: '新規ユーザ'
+          pending: '保留中のユーザ'
+          newuser: 'トラストレベル0のユーザ (新規ユーザ)'
+          basic: 'トラストレベル1のユーザ (ベーシックユーザ)'
+          regular: 'トラストレベル2のユーザ (レギュラーユーザ)'
+          leader: 'トラストレベル3のユーザ (リーダ)'
+          elder: 'トラストレベル4のユーザ (長老)'
+          admins: '管理者ユーザ'
+          moderators: 'モデレータ'
+          blocked: 'ブロック中のユーザ'
+          banned: '追放中のユーザ'
         reject_successful:
-          one: "Successfully rejected 1 user."
-          other: "Successfully rejected %{count} users."
+          one: "1人のユーザの拒否に成功しました。"
+          other: "%{count}人のユーザの拒否に成功しました。"
         reject_failures:
-          one: "Failed to reject 1 user."
-          other: "Failed to reject %{count} users."
+          one: "1人のユーザの拒否に失敗しました。"
+          other: "%{count}人のユーザの拒否に失敗しました。"
 
       user:
-        ban_failed: "Something went wrong banning this user {{error}}"
-        unban_failed: "Something went wrong unbanning this user {{error}}"
-        ban_duration: "How long would you like to ban the user for? (days)"
-        delete_all_posts: "Delete all posts"
-        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
+        ban_failed: "ユーザ {{error}} の追放に失敗しました"
+        unban_failed: "ユーザ {{error}} の追放解除に失敗しました"
+        ban_duration: "ユーザを何日間追放しますか?"
+        delete_all_posts: "全てのポストを削除"
+        delete_all_posts_confirm: "%{posts}個のポストと%{topics}個のトピックが削除されます。よろしいですか?"
         ban: "追放"
         unban: "追放解除"
         banned: "追放済?"
@@ -1312,8 +1312,8 @@ ja:
         grant_moderation: 'モデレータ権限を付与'
         unblock: 'ブロック解除'
         block: 'ブロック'
-        reputation: Reputation
-        permissions: Permissions
+        reputation: レピュテーション
+        permissions: パーミッション
         activity: アクティビティ
         like_count: 「いいね！」された数
         private_topics_count: プライベートトピック数
@@ -1322,14 +1322,14 @@ ja:
         topics_entered: 投稿したトピック数
         flags_given_count: 設定したフラグ数
         flags_received_count: 設定されたフラグ数
-        approve: 'Approve'
-        approved_by: "approved by"
+        approve: '承認'
+        approved_by: "承認したユーザ"
         approve_success: "User approved and email sent with activation
           instructions."
         approve_bulk_success: "Success! All selected users have been approved
           and notified."
-        time_read: "Read Time"
-        delete: "Delete User"
+        time_read: "リード時間"
+        delete: "ユーザを削除"
         delete_forbidden:
           one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
           other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
@@ -1353,14 +1353,14 @@ ja:
         trust_level_change_failed: "There was a problem changing the user's trust level."
 
       site_content:
-        none: "Choose a type of content to begin editing."
-        title: 'Content'
-        edit: "Edit Site Content"
+        none: "編集するコンテンツのタイプを選択してください。"
+        title: 'コンテンツ'
+        edit: "サイトのコンテンツを編集"
 
       site_settings:
-        show_overriden: 'Only show overridden'
-        title: 'Settings'
-        reset: 'reset to default'
-        none: 'none'
+        show_overriden: '上書き部分のみ表示'
+        title: '設定'
+        reset: 'デフォルトに戻す'
+        none: 'なし'
 
 
