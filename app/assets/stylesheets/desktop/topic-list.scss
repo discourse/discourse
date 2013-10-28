@@ -19,6 +19,24 @@
     font-size: 16px;
     font-weight: normal;
   }
+
+  a.badge-category {padding: 3px 12px;  font-size: 16px; 
+
+    &.category-dropdown-button {    padding: 3px 10px 3px 8px;
+    font-size: 14px;
+    }
+
+  }
+  
+  .badge-category {
+  
+    font-weight: normal;
+    text-transform: capitalize;
+
+    &.home {padding: 3px 12px;}
+
+  }
+
 }
 
 #category-filter {
@@ -353,7 +371,6 @@
     float: left;
   }
   .category-dropdown-button {
-    padding: 4px 10px 3px 8px;
     border-left: 1px solid rgba(0, 0, 0, 0.15);
     font-size: 16px;
     width: 10px;
@@ -421,18 +438,19 @@ ol.category-breadcrumb {
   position: absolute;
   border: 1px solid #ccc;
   background-color: white;
-  width: 200px;
+  max-width: 300px;
+  min-width: 140px;
   height: 200px;
   padding: 8px 5px 0 7px;
   z-index: 100;
-  margin-top: 31px;
+  margin-top: 30px;
 
   .badge-category {
     font-size: 13px;
     line-height: 26px;
-    padding: 0px 8px;
     float: none;
   }
+
 
   div {
     margin-bottom: 10px;
