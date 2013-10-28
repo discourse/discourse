@@ -73,7 +73,7 @@
 
         <section class='controls'>
           {{#if can_send_private_message_to_user}}
-            <button class='btn btn-primary right' {{action composePrivateMessage}}>
+            <button class='btn btn-primary' {{action composePrivateMessage}}>
               <i class='icon icon-envelope'></i>
               {{i18n user.private_message}}
             </button>
@@ -84,14 +84,14 @@
           {{/if}}
 
           {{#if currentUser.staff}}
-            <a {{bindAttr href="adminPath"}} class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
+            <a {{bindAttr href="adminPath"}} class='btn right'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
           {{/if}}
 
           {{#if can_edit}}
-            {{#link-to 'preferences' class="btn"}}<i class='icon icon-cog'></i>{{i18n user.preferences}}{{/link-to}}
+            {{#link-to 'preferences' class="btn right"}}<i class='icon icon-cog'></i>{{i18n user.preferences}}{{/link-to}}
           {{/if}}
 
-          {{#link-to 'user.invited' class="btn"}}<i class='icon icon-envelope-alt'></i>{{i18n user.invited.title}}{{/link-to}}
+          {{#link-to 'user.invited' class="btn right"}}<i class='icon icon-envelope-alt'></i>{{i18n user.invited.title}}{{/link-to}}
 
         </section>
       </section>
