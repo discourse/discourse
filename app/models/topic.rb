@@ -183,6 +183,10 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def self.count_exceeds_minimum?
+    count > SiteSetting.minimum_topics_similar
+  end
+
   def best_post
     posts.order('score desc').limit(1).first
   end

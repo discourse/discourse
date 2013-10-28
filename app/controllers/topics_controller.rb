@@ -29,8 +29,9 @@ class TopicsController < ApplicationController
     return wordpress if params[:best].present?
 
     opts = params.slice(:username_filters, :filter, :page, :post_number)
+    username_filters = opts[:username_filters]
 
-    opts[:username_filters] = [opts[:username_filters]] if opts[:username_filters].is_a?(String)
+    opts[:username_filters] = [username_filters] if username_filters.is_a?(String)
 
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
@@ -46,7 +47,7 @@ class TopicsController < ApplicationController
 
     # render workaround pseudo-static HTML page for old crawlers which ignores <noscript>
     # (see http://meta.discourse.org/t/noscript-tag-and-some-search-engines/8078)
-    return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.has_key?('_escaped_fragment_'))
+    return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.key?('_escaped_fragment_'))
 
     track_visit_to_topic
 
@@ -63,24 +64,20 @@ class TopicsController < ApplicationController
     params.require(:best)
     params.require(:topic_id)
     params.permit(:min_trust_level, :min_score, :min_replies, :bypass_trust_level_score, :only_moderator_liked)
+    opts = { best: params[:best].to_i,
+      min_trust_level: params[:min_trust_level] ? 1 : params[:min_trust_level].to_i,
+      min_score: params[:min_score].to_i,
+      min_replies: params[:min_replies].to_i,
+      bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
+      only_moderator_liked: params[:only_moderator_liked].to_s == "true"
+    }
 
-    @topic_view = TopicView.new(
-        params[:topic_id],
-        current_user,
-          best: params[:best].to_i,
-          min_trust_level: params[:min_trust_level].nil? ? 1 : params[:min_trust_level].to_i,
-          min_score: params[:min_score].to_i,
-          min_replies: params[:min_replies].to_i,
-          bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
-          only_moderator_liked: params[:only_moderator_liked].to_s == "true"
-    )
-
+    @topic_view = TopicView.new(params[:topic_id], current_user, opts)
     discourse_expires_in 1.minute
 
     wordpress_serializer = TopicViewWordpressSerializer.new(@topic_view, scope: guardian, root: false)
     render_json_dump(wordpress_serializer)
   end
-
 
   def posts
     params.require(:topic_id)
@@ -97,41 +94,31 @@ class TopicsController < ApplicationController
 
   def update
     topic = Topic.where(id: params[:topic_id]).first
+    title, archetype = params[:title], params[:archetype]
     guardian.ensure_can_edit!(topic)
-    topic.title = params[:title] if params[:title].present?
 
+    topic.title = params[:title] if title.present?
     # TODO: we may need smarter rules about converting archetypes
-    if current_user.admin?
-      topic.archetype = "regular" if params[:archetype] == 'regular'
-    end
+    topic.archetype = "regular" if current_user.admin? && archetype == 'regular'
 
     success = false
     Topic.transaction do
       success = topic.save
       success = topic.change_category(params[:category]) if success
     end
-
     # this is used to return the title to the client as it may have been
     # changed by "TextCleaner"
-    if success
-      render_serialized(topic, BasicTopicSerializer)
-    else
-      render_json_error(topic)
-    end
+    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
   end
 
   def similar_to
     params.require(:title)
     params.require(:raw)
     title, raw = params[:title], params[:raw]
-
-    raise Discourse::InvalidParameters.new(:title) if title.length < SiteSetting.min_title_similar_length
-    raise Discourse::InvalidParameters.new(:raw) if raw.length < SiteSetting.min_body_similar_length
+    [:title, :raw].each { |key| check_length_of(key, params[key]) }
 
     # Only suggest similar topics if the site has a minimmum amount of topics present.
-    if Topic.count > SiteSetting.minimum_topics_similar
-      topics = Topic.similar_to(title, raw, current_user).to_a
-    end
+    topics = Topic.similar_to(title, raw, current_user).to_a if Topic.count_exceeds_minimum?
 
     render_serialized(topics, BasicTopicSerializer)
   end
@@ -139,11 +126,13 @@ class TopicsController < ApplicationController
   def status
     params.require(:status)
     params.require(:enabled)
+    status, topic_id  = params[:status], params[:topic_id].to_i
+    enabled = (params[:enabled] == 'true')
 
-    raise Discourse::InvalidParameters.new(:status) unless %w(visible closed pinned archived).include?(params[:status])
-    @topic = Topic.where(id: params[:topic_id].to_i).first
+    check_for_status_presence(:status, status)
+    @topic = Topic.where(id: topic_id).first
     guardian.ensure_can_moderate!(@topic)
-    @topic.update_status(params[:status], (params[:enabled] == 'true'), current_user)
+    @topic.update_status(status, enabled, current_user)
     render nothing: true
   end
 
@@ -203,14 +192,7 @@ class TopicsController < ApplicationController
   end
 
   def invite
-    username_or_email = params[:user]
-    if username_or_email
-      # provides a level of protection for hashes
-      params.require(:user)
-    else
-      params.require(:email)
-      username_or_email = params[:email]
-    end
+    username_or_email = params[:user] ? fetch_username : fetch_email
 
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_invite_to!(topic)
@@ -345,6 +327,29 @@ class TopicsController < ApplicationController
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
 
     topic.move_posts(current_user, post_ids_including_replies, args)
+  end
+
+  def check_length_of(key, attr)
+    str = (key == :raw) ? "body" : key.to_s
+    invalid_param(key) if attr.length < SiteSetting.send("min_#{str}_similar_length")
+  end
+
+  def check_for_status_presence(key, attr)
+    invalid_param(key) unless %w(visible closed pinned archived).include?(attr)
+  end
+
+  def invalid_param(key)
+    raise Discourse::InvalidParameters.new(key.to_sym)
+  end
+
+  def fetch_username
+    params.require(:user)
+    params[:user]
+  end
+
+  def fetch_email
+    params.require(:email)
+    params[:email]
   end
 
 end
