@@ -16,6 +16,8 @@
   .btn {
     float: right;
     margin-left: 8px;
+    font-size: 16px;
+    font-weight: normal;
   }
 }
 
@@ -36,19 +38,15 @@
 // --------------------------------------------------
 
 #topic-list {
+  border: 1px solid #ddd;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border: 1px solid $topic-list-border-color;
-  @include border-radius-all(4px 4px 0 0);
-  @include box-shadow(0 1px 3px rgba($black, 0.22));
-
-  a:visited:not(.badge-notification) {color: #888;}
+  a.title:visited:not(.badge-notification) {color: #888;}
 
   tbody tr {
-    background-color: $white;
     &:nth-child(even) {
-      background-color: darken($white, 2%);
+      background-color: #f8f8f8;
     }
     &.archived a {
       opacity: 0.6;
@@ -83,13 +81,8 @@
     color: $topic-list-th-color;
     font-weight: bold;
     font-size: 13px;
-    background: #f6f6f6;
-    &:first-of-type {
-      @include border-radius-all(4px 0 0 0);
-    }
-    &:last-of-type {
-      @include border-radius-all(0 4px 0 0);
-    }
+    background: #eee;
+ 
   }
   td {
     //border-top: 1px solid $topic-list-td-border-color;
@@ -285,12 +278,10 @@
     float: left;
   }
   > footer {
-    border: 1px solid $topic-list-border-color;
+    border: 1px solid #ddd;
     border-top: 0;
     padding: 7px 10px;
     background-color: lighten($topic-list-th-background-color, 2%);
-    @include border-radius-all(0 0 4px 4px);
-    @include box-shadow(0 1px 3px rgba($black, 0.22));
     figure {
       float: left;
       margin: 3px 7px 0 0;
