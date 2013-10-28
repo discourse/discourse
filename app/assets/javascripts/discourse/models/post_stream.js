@@ -253,6 +253,8 @@ Discourse.PostStream = Em.Object.extend({
 
       if (opts.nearPost) {
         Discourse.TopicView.jumpToPost(topic.get('id'), opts.nearPost);
+      } else {
+        Discourse.TopicView.jumpToPost(topic.get('id'), 1);
       }
 
       Discourse.URL.set('queryParams', postStream.get('streamFilters'));
