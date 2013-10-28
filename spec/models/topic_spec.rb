@@ -1209,4 +1209,23 @@ describe Topic do
       create_post(user: user, topic_id: topic_id)
     }.should raise_exception
   end
+
+  describe ".count_exceeds_minimun?" do
+    before { SiteSetting.stubs(:minimum_topics_similar).returns(20) }
+
+    context "when Topic count is geater than minimum_topics_similar" do
+      it "should be true" do
+        Topic.stubs(:count).returns(30)
+        expect(Topic.count_exceeds_minimum?).to be_true
+      end
+    end
+
+    context "when topic's count is less than minimum_topics_similar" do
+      it "should be false" do
+        Topic.stubs(:count).returns(10)
+        expect(Topic.count_exceeds_minimum?).to_not be_true
+      end
+    end
+
+  end
 end
