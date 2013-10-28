@@ -4,6 +4,16 @@
 @import "common/foundation/helpers";
 
 
+
+
+.admin-contents table {
+width: 100%;
+tr {text-align: left;}
+td, th {padding: 8px;}
+th {border-top: 1px solid #ddd;}
+td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
+}
+
 .content-list li a span.count {
   font-size: 12px;
   float: right;
