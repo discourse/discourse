@@ -558,11 +558,11 @@ ja:
         favorited: "お気に入り登録しているトピックがありません。お気に入り登録するには、タイトル横のスターをクリック/タップしてください。"
         unread: "未読トピックはありません。"
         new: "新着トピックはありません。"
-        read: "You haven't read any topics yet."
-        posted: "You haven't posted in any topics yet."
-        latest: "There are no latest topics. That's sad."
-        hot: "There are no hot topics."
-        category: "There are no {{category}} topics."
+        read: "またトピックを一つも読んでいません。"
+        posted: "まだトピックを一つも投稿していません。"
+        latest: "最新のトピックはありません。"
+        hot: "ホットなトピックはありません。"
+        category: "{{category}} トピックはありません。"
       bottom:
         latest: "最新のトピックは以上です。"
         hot: "ホットなトピックは以上です。"
@@ -598,11 +598,11 @@ ja:
         title: "トピックが見つかりませんでした"
         description: "申し訳有りませんがトピックが見つかりませんでした。モデレータによって削除された可能性があります。"
       unread_posts:
-        one: "you have 1 unread old post in this topic"
-        other: "you have {{count}} unread old posts in this topic"
+        one: "このトピックに未読のポストが1つあります"
+        other: "このトピックに未読のポストが{{count}}つあります"
       new_posts:
-        one: "there is 1 new post in this topic since you last read it"
-        other: "there are {{count}} new posts in this topic since you last read it"
+        one: "前回閲覧時より、このトピックに新しいポストが1つ投稿されています"
+        other: "前回閲覧時より、このトピックに新しいポストが{{count}}つ投稿されています"
 
       likes:
         one: "このトピックには1個「いいね！」がついています"
@@ -615,20 +615,20 @@ ja:
       read_more: "{{catLink}} or {{latestLink}}。"
 
       # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
-      read_more_MF: "There {
+      read_more_MF: "{
         UNREAD, plural,
         =0 {}
         one {
-          is <a href='/unread'>1 unread</a>
+          <a href='/unread'>未読ポスト1つ</a>
         } other {
-          are <a href='/unread'># unread</a>
+          <a href='/unread'>未読ポスト#つ</a>
         }
         } {
           NEW, plural,
             =0 {}
-            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
-            other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
-        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}} "
+            one { {BOTH, select, true{and } false {} other{}} <a href='/new'>新規トピック1つ</a>c}
+            other { {BOTH, select, true{and } false {} other{}} <a href='/new'>新規トピック#つ</a>}
+        }を読む or {CATEGORY, select, true {{catLink} の他のトピックを読む} false {{latestLink}} other {}} "
 
       browse_all_categories: 全てのカテゴリをブラウズする
 
@@ -1001,7 +1001,7 @@ ja:
     views_long: "このトピックは{{number}}回閲覧されました"
     activity: "アクティビティ"
     likes: "いいね！"
-    likes_long: "there are {{number}} likes in this topic"
+    likes_long: "このトピックには{{number}}つ「いいね！」がついています"
     top_contributors: "主な参加者"
     category_title: "カテゴリ"
     history: "History"
@@ -1121,8 +1121,8 @@ ja:
 
         flagged_by: "Flagged by"
         error: "Something went wrong"
-        view_message: "Reply"
-        no_results: "There are no flags."
+        view_message: "回答"
+        no_results: "フラグはありません。"
 
         summary:
           action_type_3:
