@@ -7,6 +7,17 @@ Discourse.DiscourseCategorydropComponent = Ember.Component.extend({
     return "icon icon-caret-right";
   }.property('expanded'),
 
+  allCategoriesUrl: function() {
+    return this.get('category.parentCategory.url') || "/";
+  }.property('category'),
+
+  allCategoriesLabel: function() {
+    if (this.get('subCategory')) {
+      return I18n.t('categories.all_subcategories');
+    }
+    return I18n.t('categories.all');
+  }.property('category'),
+
   badgeStyle: function() {
     var category = this.get('category');
     if (category) {

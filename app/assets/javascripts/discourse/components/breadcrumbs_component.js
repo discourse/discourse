@@ -7,16 +7,20 @@ Discourse.DiscourseBreadcrumbsComponent = Ember.Component.extend({
     return !c.get('parentCategory');
   }),
 
-  targetCategory: function() {
-    // Note we can't use Em.computed.or here because it returns a boolean not the object
+  firstCategory: function() {
     return this.get('parentCategory') || this.get('category');
   }.property('parentCategory', 'category'),
+
+  secondCategory: function() {
+    if (this.get('parentCategory')) return this.get('category');
+    return null;
+  }.property('category', 'parentCategory'),
 
   childCategories: function() {
     var self = this;
     return this.get('categories').filter(function (c) {
-      return c.get('parentCategory') === self.get('targetCategory');
+      return c.get('parentCategory') === self.get('firstCategory');
     });
-  }.property('targetCategory')
+  }.property('firstCategory')
 
 });
