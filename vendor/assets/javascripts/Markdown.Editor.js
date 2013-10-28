@@ -18,6 +18,17 @@
 //        ]
 //      };
 //
+// To extend actions:
+//
+//      window.PagedownCustom = {
+//          customActions: {
+//             "doBlockquote": function(chunk, postProcessing, oldDoBlockquote) {
+//               console.log('custom blockquote called!');
+//               return oldDoBlockquote.call(this, chunk, postProcessing);
+//             }
+//          }
+//      };
+
 
 (function () {
 
@@ -1470,6 +1481,17 @@
         }
 
         function bindCommand(method) {
+            if (typeof PagedownCustom != "undefined" && PagedownCustom.customActions) {
+                var custom = PagedownCustom.customActions[method];
+                if (custom) {
+                    return function() {
+                        var args = Array.prototype.slice.call(arguments);
+                        args.push(commandManager[method]);
+                        return custom.apply(commandManager, args);
+                    };
+                }
+            }
+
             if (typeof method === "string")
                 method = commandManager[method];
             return function () { method.apply(commandManager, arguments); }

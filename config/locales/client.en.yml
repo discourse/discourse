@@ -184,6 +184,8 @@ en:
       "13": "Inbox"
 
     categories:
+      all: "all categories"
+      all_subcategories: "all subcategories"
       category: "Category"
       posts: "Posts"
       topics: "Topics"

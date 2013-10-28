@@ -31,7 +31,7 @@ Discourse.Category = Discourse.Model.extend({
   }.property('id'),
 
   url: function() {
-    return Discourse.getURL("/category/") + (this.get('slug'));
+    return Discourse.getURL("/category/") + Discourse.Category.slugFor(this);
   }.property('name'),
 
   unreadUrl: function() {

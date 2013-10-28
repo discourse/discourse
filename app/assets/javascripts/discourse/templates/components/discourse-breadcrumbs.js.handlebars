@@ -1,12 +1,10 @@
 <li>
-{{discourse-categorydrop parentCategory=category categories=parentCategories}}
+{{discourse-categorydrop category=firstCategory categories=parentCategories}}
 </li>
-<li>
-  {{discourse-categorydrop parentCategory=category category=targetCategory categories=childCategories}}
-</li>
-{{#if parentCategory}}
+
+{{#if childCategories}}
   <li>
-    {{boundCategoryLink category}}
+    {{discourse-categorydrop category=secondCategory categories=childCategories subCategory="true"}}
   </li>
 {{/if}}
 
