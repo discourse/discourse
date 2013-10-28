@@ -18,6 +18,14 @@ module Discourse
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # HACK!! regression in rubygems / bundler in ruby-head
+    if RUBY_VERSION == "2.1.0"
+      $:.map! do |path|
+        path = File.expand_path(path.sub("../../","../")) if path =~ /fast_xor/ && !File.directory?(File.expand_path(path))
+        path
+      end
+    end
+
     require 'discourse'
     require 'js_locale_helper'
 
