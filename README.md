@@ -24,7 +24,7 @@ Before you get started, ensure you have the following minimum versions: [Ruby 1.
 
 ## Setting up a Discourse Forum
 
-If you're not here to hack on the open source code, but rather looking to set up a Discourse forum in a production environment, see our [**Discourse Install Guide**](/docs/INSTALL-ubuntu.md). Be warned, however, that Discourse is still very much beta, and you will probably need a background as a developer or system administrator to set it up successfully. Alternatively, you can deploy in a matter of minutes through [**Cloud 66**](/docs/INSTALL-cloud66.md).
+If you're not here to hack on the open source code, but rather looking to set up a Discourse forum in a production environment, see our [**Discourse Install Guide**](/docs/INSTALL-ubuntu.md). Be warned, however, that Discourse is still very much beta, and you will probably need a background as a developer or system administrator to set it up successfully.
 
 ## Vision
 
