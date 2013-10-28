@@ -892,7 +892,7 @@ ja:
         - While reading a topic, move to the top ↑ by clicking its title at the top of the page. To reach the *bottom* ↓, click the down arrow on the topic progress indicator at the bottom of the page, or click the last post field on the topic summary under the first post.
 
     welcome_user:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "%{site_name} へようこそ!"
       text_body_template: |
         Thanks for joining %{site_name}, and welcome to our discussion forum!
 

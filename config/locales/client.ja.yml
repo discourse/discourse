@@ -396,7 +396,7 @@ ja:
       username: "ログイン名"
       password: "パスワード"
       email_placeholder: "メールアドレスかユーザ名"
-      error: "Unknown error"
+      error: "不明なエラー"
       reset_password: 'パスワードをリセット'
       logging_in: "ログイン中..."
       or: "または"
@@ -544,8 +544,8 @@ ja:
         category: "search will prefer results in {{category}}"
 
     site_map: "別のトピックリストやカテゴリに移動"
-    go_back: 'go back'
-    current_user: 'go to your user page'
+    go_back: '戻る'
+    current_user: 'ユーザページに移動'
 
     favorite:
       title: 'お気に入り'
