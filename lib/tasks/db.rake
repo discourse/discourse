@@ -2,3 +2,7 @@
 task 'db:migrate' => 'environment' do
   SeedFu.seed
 end
+
+task 'test:prepare' => 'environment' do
+  SeedFu.seed
+end

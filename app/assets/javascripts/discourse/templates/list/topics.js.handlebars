@@ -10,10 +10,6 @@
         </button>
       {{/if}}
 
-      {{#if category}}
-        {{discourse-breadcrumbs title=Discourse.SiteSettings.title category=category categories=categories}}
-      {{/if}}
-
       <table id='topic-list'>
         <thead>
         <tr>
@@ -23,7 +19,9 @@
           <th class='main-link'>
             {{i18n topic.title}}
           </th>
+          {{#unless category}}
           <th class='category'>{{i18n category_title}}</th>
+          {{/unless}}
           <th class='posters'>{{i18n top_contributors}}</th>
           <th class='num posts'>{{i18n posts}}</th>
           <th class='num likes'>{{i18n likes}}</th>

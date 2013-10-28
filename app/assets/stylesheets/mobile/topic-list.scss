@@ -8,7 +8,7 @@
 // List controls
 // --------------------------------------------------
 
-#list-controls {
+.list-controls {
   margin: 5px;
   .nav {
     float: left;
@@ -239,48 +239,64 @@
 // Misc. stuff
 // --------------------------------------------------
 
-#main {
-  #list-controls {
-    .badge-category {
-      display: inline-block;
-      background-color: yellow;
-      margin: 8px 0 0 8px;
-      float: left;
-    }
-    clear: both;
+.list-controls {
+  .home {
+    font-size: 20px;
+    font-weight: normal;
   }
-  #list-area {
-    margin-bottom: 300px;
-    .empty-topic-list {
-      padding: 10px;
-    }
-    .unseen {
-      background-color: transparent;
-      padding: 0;
-      border: 0;
-      color: lighten($red, 10%);
-      font-size: 13px;
-      cursor: default;
-    }
-  }
-  #topic-list {
-    .alert {
-      margin-bottom: 0;
-      font-size: 14px;
-    }
-    .spinner {
-      margin-top: 40px;
-    }
-  }
-  span.posted {
+
+  .badge-category {
+    margin-top: 6px;
+    padding: 4px 10px;
     display: inline-block;
-    text-indent: -9999em;
-    width: 15px;
-    height: 15px;
-    background: {
-      image: image-url("posted.png");
-    };
+    line-height: 24px;
+    float: left;
   }
+  .category-dropdown-button {
+    padding: 4px 10px 3px 8px;
+    border-left: 1px solid rgba(0, 0, 0, 0.15);
+    font-size: 16px;
+    width: 10px;
+    text-align: center;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  clear: both;
+}
+
+#list-area {
+  margin-bottom: 300px;
+  .empty-topic-list {
+    padding: 10px;
+  }
+  .unseen {
+    background-color: transparent;
+    padding: 0;
+    border: 0;
+    color: lighten($red, 10%);
+    font-size: 13px;
+    cursor: default;
+  }
+}
+#topic-list {
+  .alert {
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+  .spinner {
+    margin-top: 40px;
+  }
+}
+span.posted {
+  display: inline-block;
+  text-indent: -9999em;
+  width: 15px;
+  height: 15px;
+  background: {
+    image: image-url("posted.png");
+  };
 }
 
 
@@ -362,5 +378,42 @@ clear: both;
 }
 .fade.in {
   opacity: 1;
+}
+
+ol.category-breadcrumb {
+  display: block;
+  float: left;
+  list-style: none;
+  margin: 0 10px 0 0;
+  padding: 0;
+
+  li {
+    float: left;
+    margin-right: 5px;
+  }
+}
+
+.category-dropdown-menu {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  border: 1px solid #ccc;
+  background-color: white;
+  width: 200px;
+  height: 200px;
+  padding: 8px 5px 0 7px;
+  z-index: 100;
+  margin-top: 31px;
+
+  .badge-category {
+    font-size: 13px;
+    line-height: 26px;
+    padding: 0px 8px;
+    float: none;
+  }
+
+  div {
+    margin-bottom: 10px;
+  }
 }
 

@@ -26,8 +26,10 @@ Discourse.Route.buildRoutes(function() {
     Discourse.ListController.filters.forEach(function(filter) {
       router.route(filter, { path: "/" + filter });
       router.route(filter, { path: "/" + filter + "/more" });
-      router.route(filter + "Category", { path: "/category/:slug/" + filter });
-      router.route(filter + "Category", { path: "/category/:slug/" + filter + "/more" });
+      router.route(filter + "Category", { path: "/category/:slug/l/" + filter });
+      router.route(filter + "Category", { path: "/category/:slug/l/" + filter + "/more" });
+      router.route(filter + "Category", { path: "/category/:parentSlug/:slug/l/" + filter });
+      router.route(filter + "Category", { path: "/category/:parentSlug/:slug/l/" + filter + "/more" });
 
     });
 

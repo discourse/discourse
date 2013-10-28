@@ -11,7 +11,7 @@ production:
     ### If you change this setting you will need to
     ###   - restart sidekiq if you change this setting
     ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
-    - production.localhost # Update this to be the domain of your production site
+    - <%= ENV["DISCOURSE_HOSTNAME"] || "production.localhost" %> # Update this to be the domain of your production site
 
 test:
   adapter: postgresql

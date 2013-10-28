@@ -185,6 +185,11 @@ describe Topic do
         topic.errors[:category_id].should be_present
       end
 
+      it "allows PMs" do
+        topic = Fabricate.build(:topic, category: nil, archetype: Archetype.private_message)
+        topic.should be_valid
+      end
+
       it 'passes for topics with a category' do
         Fabricate.build(:topic, category: Fabricate(:category)).should be_valid
       end
@@ -1203,5 +1208,24 @@ describe Topic do
     lambda {
       create_post(user: user, topic_id: topic_id)
     }.should raise_exception
+  end
+
+  describe ".count_exceeds_minimun?" do
+    before { SiteSetting.stubs(:minimum_topics_similar).returns(20) }
+
+    context "when Topic count is geater than minimum_topics_similar" do
+      it "should be true" do
+        Topic.stubs(:count).returns(30)
+        expect(Topic.count_exceeds_minimum?).to be_true
+      end
+    end
+
+    context "when topic's count is less than minimum_topics_similar" do
+      it "should be false" do
+        Topic.stubs(:count).returns(10)
+        expect(Topic.count_exceeds_minimum?).to_not be_true
+      end
+    end
+
   end
 end

@@ -13,6 +13,12 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
   settingsSelected: Ember.computed.equal('selectedTab', 'settings'),
   foregroundColors: ['FFFFFF', '000000'],
 
+  parentCategories: function() {
+    return Discourse.Category.list().filter(function (c) {
+      return !c.get('parentCategory');
+    });
+  }.property(),
+
   onShow: function() {
     this.changeSize();
     this.titleChanged();
@@ -122,17 +128,27 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     },
 
     saveCategory: function() {
-      var categoryController = this;
+      var self = this,
+          model = this.get('model'),
+          parentCategory = Discourse.Category.list().findBy('id', parseInt(model.get('parent_category_id'), 10));
+
       this.set('saving', true);
+      model.set('parentCategory', parentCategory);
+      var newSlug = Discourse.Category.slugFor(this.get('model'));
+
       this.get('model').save().then(function(result) {
         // success
-        categoryController.send('closeModal');
-        Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(result.category));
-      }, function(errors) {
-        // errors
-        if(errors.length === 0) errors.push(I18n.t("category.creation_error"));
-        categoryController.displayErrors(errors);
-        categoryController.set('saving', false);
+        self.send('closeModal');
+        Discourse.URL.redirectTo("/category/" + newSlug);
+      }, function(error) {
+
+        if (error && error.responseText) {
+          self.flash($.parseJSON(error.responseText).errors[0]);
+        } else {
+          self.flash(I18n.t('generic_error'));
+        }
+
+        self.set('saving', false);
       });
     },
 
@@ -147,8 +163,14 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
             // success
             self.send('closeModal');
             Discourse.URL.redirectTo("/categories");
-          }, function(jqXHR){
-            // error
+          }, function(error){
+
+            if (error && error.responseText) {
+              self.flash($.parseJSON(error.responseText).errors[0]);
+            } else {
+              self.flash(I18n.t('generic_error'));
+            }
+
             self.send('showModal');
             self.displayErrors([I18n.t("category.delete_error")]);
             self.set('deleting', false);

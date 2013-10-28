@@ -279,14 +279,15 @@ display: none;
     display: inline;
   }
   .title-input .popup-tip {
-    width: 300px;
-    left: -8px;
-    margin-top: 8px;
+    width: 240px;
+    right: 5px;
   }
   .category-input .popup-tip {
     width: 240px;
-    left: 432px;
-    top: -7px;
+    right: 5px;
+  }
+  .textarea-wrapper .popup-tip {
+    top: 28px;
   }
   button.btn.no-text {
     margin: 7px 0 0 5px;

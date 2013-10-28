@@ -59,7 +59,8 @@ class Topic < ActiveRecord::Base
   validates :category_id, :presence => true ,:exclusion => {:in => [SiteSetting.uncategorized_category_id]},
                                      :if => Proc.new { |t|
                                            (t.new_record? || t.category_id_changed?) &&
-                                           !SiteSetting.allow_uncategorized_topics
+                                           !SiteSetting.allow_uncategorized_topics &&
+                                           (t.archetype.nil? || t.archetype == Archetype.default)
                                        }
 
 
@@ -106,7 +107,7 @@ class Topic < ActiveRecord::Base
 
   # Return private message topics
   scope :private_messages, lambda {
-    where(archetype: Archetype::private_message)
+    where(archetype: Archetype.private_message)
   }
 
   scope :listable_topics, lambda { where('topics.archetype <> ?', [Archetype.private_message]) }
@@ -169,7 +170,7 @@ class Topic < ActiveRecord::Base
       Jobs.cancel_scheduled_job(:close_topic, {topic_id: id})
       true
     end
-    if category_id.nil? && (archetype.nil? || archetype == "regular")
+    if category_id.nil? && (archetype.nil? || archetype == Archetype.default)
       self.category_id = SiteSetting.uncategorized_category_id
     end
   end
@@ -180,6 +181,10 @@ class Topic < ActiveRecord::Base
     if auto_close_at and (auto_close_at_changed? or auto_close_user_id_changed?)
       Jobs.enqueue_at(auto_close_at, :close_topic, {topic_id: id, user_id: auto_close_user_id || user_id})
     end
+  end
+
+  def self.count_exceeds_minimum?
+    count > SiteSetting.minimum_topics_similar
   end
 
   def best_post

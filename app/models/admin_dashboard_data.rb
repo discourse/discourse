@@ -22,6 +22,7 @@ class AdminDashboardData
 
   def problems
     [ rails_env_check,
+      ruby_version_check,
       host_names_check,
       gc_checks,
       sidekiq_check || queue_size_check,
@@ -159,6 +160,10 @@ class AdminDashboardData
 
   def notification_email_check
     I18n.t('dashboard.notification_email_warning') if SiteSetting.notification_email.blank?
+  end
+
+  def ruby_version_check
+    I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
   end
 
 

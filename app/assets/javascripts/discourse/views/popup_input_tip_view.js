@@ -17,6 +17,10 @@ Discourse.PopupInputTipView = Discourse.View.extend({
   bouncePixels: 6,
   bounceDelay: 100,
 
+  click: function(e) {
+    this.set('shownAt', false);
+  },
+
   good: function() {
     return !this.get('validation.failed');
   }.property('validation'),
@@ -24,10 +28,6 @@ Discourse.PopupInputTipView = Discourse.View.extend({
   bad: function() {
     return this.get('validation.failed');
   }.property('validation'),
-
-  hide: function() {
-    this.set('shownAt', false);
-  },
 
   bounce: function() {
     if( this.get('shownAt') ) {

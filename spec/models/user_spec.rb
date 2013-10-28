@@ -782,59 +782,30 @@ describe User do
   end
 
   describe '.find_by_username_or_email' do
-    it 'finds user by username' do
-      bob = Fabricate(:user, username: 'bob')
+    it 'finds users' do
+      bob = Fabricate(:user, username: 'bob', email: 'bob@example.com')
+      found_user = User.find_by_username_or_email('Bob')
+      expect(found_user).to eq bob
 
-      found_user = User.find_by_username_or_email('bob')
+      found_user = User.find_by_username_or_email('bob@Example.com')
+      expect(found_user).to eq bob
 
+      found_user = User.find_by_username_or_email('Bob@Example.com')
+      expect(found_user).to be_nil
+
+      found_user = User.find_by_username_or_email('bob1')
+      expect(found_user).to be_nil
+
+      found_user = User.find_by_email('bob@Example.com')
+      expect(found_user).to eq bob
+
+      found_user = User.find_by_email('bob')
+      expect(found_user).to be_nil
+
+      found_user = User.find_by_username('bOb')
       expect(found_user).to eq bob
     end
 
-    it 'finds user by email' do
-      bob = Fabricate(:user, email: 'bob@example.com')
-
-      found_user = User.find_by_username_or_email('bob@example.com')
-
-      expect(found_user).to eq bob
-    end
-
-    context 'when user does not exist' do
-      it 'returns nil' do
-        found_user = User.find_by_username_or_email('doesnotexist@example.com') ||
-          User.find_by_username_or_email('doesnotexist')
-
-        expect(found_user).to be_nil
-      end
-    end
-
-    context 'when username case does not match' do
-      it 'finds user' do
-        bob = Fabricate(:user, username: 'bob')
-
-        found_user = User.find_by_username_or_email('Bob')
-
-        expect(found_user).to eq bob
-      end
-    end
-
-    context 'when email domain case does not match' do
-      it 'finds user' do
-        bob = Fabricate(:user, email: 'bob@example.com')
-
-        found_user = User.find_by_username_or_email('bob@Example.com')
-
-        expect(found_user).to eq bob
-      end
-    end
-
-    context 'when multiple users are found' do
-      it 'raises an exception' do
-        user_query = stub(to_a: [stub, stub])
-        User.stubs(:where).with(username_lower: 'bob').returns(user_query)
-
-        expect { User.find_by_username_or_email('bob') }.to raise_error(Discourse::TooManyMatches)
-      end
-    end
   end
 
   describe "#added_a_day_ago?" do

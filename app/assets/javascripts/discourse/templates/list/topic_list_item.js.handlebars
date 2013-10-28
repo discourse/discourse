@@ -41,9 +41,11 @@
   {{/if}}
 </td>
 
+{{#unless controller.category}}
 <td class='category'>
   {{categoryLink category}}
 </td>
+{{/unless}}
 
 <td class='posters'>
   {{#each posters}}

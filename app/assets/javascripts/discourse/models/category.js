@@ -34,6 +34,13 @@ Discourse.Category = Discourse.Model.extend({
     return Discourse.getURL("/category/") + (this.get('slug'));
   }.property('name'),
 
+  unreadUrl: function() {
+    return this.get('url') + '/unread';
+  }.property('url'),
+
+  newUrl: function() {
+    return this.get('url') + '/new';
+  }.property('url'),
 
   style: function() {
     return "background-color: #" + (this.get('category.color')) + "; color: #" + (this.get('category.text_color')) + ";";
@@ -58,7 +65,8 @@ Discourse.Category = Discourse.Model.extend({
         secure: this.get('secure'),
         permissions: this.get('permissionsForUpdate'),
         auto_close_days: this.get('auto_close_days'),
-        position: this.get('position')
+        position: this.get('position'),
+        parent_category_id: this.get('parent_category_id')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });

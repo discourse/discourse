@@ -70,8 +70,8 @@ module PrettyText
               "vendor/assets/javascripts/better_markdown.js",
               "app/assets/javascripts/defer/html-sanitizer-bundle.js",
               "app/assets/javascripts/discourse/dialects/dialect.js",
-              "app/assets/javascripts/discourse/components/utilities.js",
-              "app/assets/javascripts/discourse/components/markdown.js")
+              "app/assets/javascripts/discourse/lib/utilities.js",
+              "app/assets/javascripts/discourse/lib/markdown.js")
 
     Dir["#{Rails.root}/app/assets/javascripts/discourse/dialects/**.js"].each do |dialect|
       unless dialect =~ /\/dialect\.js$/

@@ -1,17 +1,12 @@
 <li>
-  <a href="/">{{title}}</a>
-  <i class='icon icon-caret-right first-caret'></i>
+{{discourse-categorydrop parentCategory=category categories=parentCategories}}
 </li>
-
+<li>
+  {{discourse-categorydrop parentCategory=category category=targetCategory categories=childCategories}}
+</li>
 {{#if parentCategory}}
   <li>
-    {{discourse-categorydrop category=parentCategory categories=categories}}
-  </li>
-{{/if}}
-
-{{#if category}}
-  <li>
-    {{discourse-categorydrop category=category}}
+    {{boundCategoryLink category}}
   </li>
 {{/if}}
 

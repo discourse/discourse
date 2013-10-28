@@ -975,6 +975,7 @@ zh_CN:
       add_permission: "添加权限"
       this_year: "今年"
       position: "位置"
+      parent: "上级分类"
 
     flagging:
       title: '为何要报告本帖？'
@@ -1267,11 +1268,15 @@ zh_CN:
           url: "URL"
         screened_ips:
           title: "被屏蔽的IP"
-          description: "受监视的IP地址。"
+          description: "受监视的IP地址，使用“放行”可将IP地址加入白名单。"
           delete_confirm: "确定要撤销对IP地址为 %{ip_address} 的规则？"
           actions:
             block: "阻挡"
             do_nothing: "放行"
+          form:
+            label: "新："
+            ip_address: "IP地址"
+            add: "添加"
 
       impersonate:
         title: "假冒用户"

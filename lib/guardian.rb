@@ -252,7 +252,7 @@ class Guardian
   end
 
   def can_create_post?(parent)
-    !SpamRulesEnforcer.block?(@user) && (
+    !SpamRule::AutoBlock.block?(@user) && (
       !parent ||
       !parent.category ||
       Category.post_create_allowed(self).where(:id => parent.category.id).count == 1

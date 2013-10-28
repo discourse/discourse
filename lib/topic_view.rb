@@ -15,7 +15,7 @@ class TopicView
     check_and_raise_exceptions
 
     options.each do |key, value|
-        self.instance_variable_set("@#{key}".to_sym, value)
+      self.instance_variable_set("@#{key}".to_sym, value)
     end
 
     @page = @page.to_i

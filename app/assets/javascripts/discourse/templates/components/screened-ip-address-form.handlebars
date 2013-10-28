@@ -1,0 +1,4 @@
+<b>{{i18n admin.logs.screened_ips.form.label}}</b>
+{{textField value=ip_address disabled=formSubmitted class="ip-address-input" placeholderKey="admin.logs.screened_ips.form.ip_address" autocorrect="off" autocapitalize="off"}}
+{{combobox content=actionNames value=actionName}}
+<button class="btn btn-small" {{action submit target="view"}} {{bindAttr disabled="formSubmitted"}}>{{i18n admin.logs.screened_ips.form.add}}</button>

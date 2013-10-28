@@ -198,45 +198,4 @@ i {background: #e4f2f8;
   z-index: 495
 }
 
-ol.category-breadcrumb {
-  list-style: none;
-  margin: 0 0 10px 0;
-  padding: 0;
 
-  .first-caret {
-    margin: 0 3px 0 3px;
-    color: #666;
-    font-size: 13px;
-  }
-
-  li {
-    float: left;
-    margin-right: 5px;
-    border: 1px solid transparent;
-    height: 21px;
-    padding-top: 2px;
-
-    button {
-      background: none;
-      border: 1px solid transparent;
-      padding: 0px 4px;
-      margin: 0;
-      color: #666;
-    }
-
-    &.has-drop:hover {
-      background-color: #eee;
-      border: 1px solid #bbb;
-
-      button {
-        color: black;
-      }
-    }
-  }
-
-  .clear {
-    clear: both;
-  }
-
-
-}

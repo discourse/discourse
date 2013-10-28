@@ -752,6 +752,14 @@ table.api-keys {
   }
 }
 
+.screened-ip-address-form {
+  margin-left: 6px;
+  .combobox {
+    width: 130px;
+    top: 10px;
+  }
+}
+
 .screened-emails, .screened-urls {
   .ip_address {
     width: 110px;

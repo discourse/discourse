@@ -27,12 +27,6 @@ Discourse.ModalBodyView = Discourse.View.extend({
     }
   },
 
-  // Pass the errors to our errors view
-  displayErrors: function(errors, callback) {
-    this.set('parentView.parentView.modalErrorsView.errors', errors);
-    if (typeof callback === "function") callback();
-  },
-
   flashMessageChanged: function() {
     var flashMessage = this.get('controller.flashMessage');
     if (flashMessage) {

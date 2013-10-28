@@ -9,20 +9,20 @@
 **/
 Discourse.ScreenedIpAddress = Discourse.Model.extend({
   actionName: function() {
-    return I18n.t("admin.logs.screened_ips.actions." + this.get('action'));
-  }.property('action'),
+    return I18n.t("admin.logs.screened_ips.actions." + this.get('action_name'));
+  }.property('action_name'),
 
   isBlocked: function() {
-    return (this.get('action') === 'block');
-  }.property('action'),
+    return (this.get('action_name') === 'block');
+  }.property('action_name'),
 
   actionIcon: function() {
-    if (this.get('action') === 'block') {
+    if (this.get('action_name') === 'block') {
       return this.get('blockIcon');
     } else {
       return this.get('doNothingIcon');
     }
-  }.property('action'),
+  }.property('action_name'),
 
   blockIcon: function() {
     return 'icon-ban-circle';
@@ -33,9 +33,9 @@ Discourse.ScreenedIpAddress = Discourse.Model.extend({
   }.property(),
 
   save: function() {
-    return Discourse.ajax("/admin/logs/screened_ip_addresses/" + this.get('id') + ".json", {
-      type: 'PUT',
-      data: {ip_address: this.get('ip_address'), action_name: this.get('action')}
+    return Discourse.ajax("/admin/logs/screened_ip_addresses" + (this.id ? '/' + this.id : '') + ".json", {
+      type: this.id ? 'PUT' : 'POST',
+      data: {ip_address: this.get('ip_address'), action_name: this.get('action_name')}
     });
   },
 

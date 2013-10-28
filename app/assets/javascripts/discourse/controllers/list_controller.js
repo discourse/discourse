@@ -7,32 +7,34 @@
   @module Discourse
 **/
 Discourse.ListController = Discourse.Controller.extend({
-  categoryBinding: 'topicList.category',
+  categoryBinding: "topicList.category",
   canCreateCategory: false,
   canCreateTopic: false,
-  needs: ['composer', 'modal', 'listTopics'],
+  needs: ["composer", "modal", "listTopics"],
 
   availableNavItems: function() {
     var loggedOn = !!Discourse.User.current();
+    var category = this.get("category");
 
     return Discourse.SiteSettings.top_menu.split("|").map(function(i) {
       return Discourse.NavItem.fromText(i, {
-        loggedOn: loggedOn
+        loggedOn: loggedOn,
+        category: category
       });
     }).filter(function(i) {
-      return i !== null;
+      return i !== null && !(category && i.get("name").indexOf("categor") === 0);
     });
-  }.property(),
+  }.property("category"),
 
   createTopicText: function() {
-    if (this.get('category.name')) {
+    if (this.get("category.name")) {
       return I18n.t("topic.create_in", {
-        categoryName: this.get('category.name')
+        categoryName: this.get("category.name")
       });
     } else {
       return I18n.t("topic.create");
     }
-  }.property('category.name'),
+  }.property("category.name"),
 
   /**
     Refresh our current topic list
@@ -132,7 +134,11 @@ Discourse.ListController = Discourse.Controller.extend({
     } else {
       return false;
     }
-  }.property('category')
+  }.property('category'),
+
+  categories: function() {
+    return Discourse.Category.list();
+  }.property()
 
 });
 

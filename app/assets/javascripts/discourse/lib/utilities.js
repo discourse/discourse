@@ -33,29 +33,6 @@ Discourse.Utilities = {
     }
   },
 
-  /**
-    Create a badge-like category link
-
-    @method categoryLink
-    @param {Discourse.Category} category the category whose link we want
-    @returns {String} the html category badge
-  **/
-  categoryLink: function(category, allowUncategorized) {
-    if (!category) return "";
-    if (!allowUncategorized && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) return "";
-
-    var color = Em.get(category, 'color'),
-        textColor = Em.get(category, 'text_color'),
-        name = Em.get(category, 'name'),
-        description = Em.get(category, 'description'),
-        html = "<a href=\"" + Discourse.getURL("/category/") + Discourse.Category.slugFor(category) + "\" class=\"badge-category\" ";
-
-    // Add description if we have it
-    if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
-
-    return html + "style=\"background-color: #" + color + "; color: #" + textColor + ";\">" + name + "</a>";
-  },
-
   avatarUrl: function(template, size) {
     if (!template) { return ""; }
     var rawSize = Discourse.Utilities.getRawSize(Discourse.Utilities.translateSize(size));

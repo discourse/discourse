@@ -159,15 +159,16 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     return count;
   },
 
-  lookupCount: function(name){
+  lookupCount: function(name, category){
+    var categoryName = Em.get(category, "name");
     if(name==="new") {
-      return this.countNew();
+      return this.countNew(categoryName);
     } else if(name==="unread") {
-      return this.countUnread();
+      return this.countUnread(categoryName);
     } else {
-      var category = name.split("/")[1];
-      if(category) {
-        return this.countCategory(category);
+      categoryName = name.split("/")[1];
+      if(categoryName) {
+        return this.countCategory(categoryName);
       }
     }
   },
