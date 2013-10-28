@@ -1,4 +1,5 @@
 @import "common/foundation/variables";
+@import "common/foundation/mixins";
 
 
 .container {
@@ -113,6 +114,12 @@ nav.post-controls {
       background: darken(#e4f2f8, 10%);
     }
 
+    &:active {
+    @include linear-gradient(darken(#e4f2f8, 15%), darken(#e4f2f8, 10%));
+    @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+
+    }
+
   }
 
 
@@ -137,9 +144,11 @@ nav.post-controls {
 
         }
 
-        &:active {margin-top: 1px; margin-bottom: -1px;}
 
         &:active {
+
+            @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+
         }
         &.hidden {
           display: none;
@@ -344,6 +353,13 @@ a.star {
         border-bottom: 1px solid #ccc;
 
       }
+
+      &:active {
+
+
+    @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+      }
+
       &.collapsed {
         border-bottom: 0;
         padding-bottom: 1px;
@@ -566,12 +582,9 @@ h1, h2, h3 {margin: 10px 0;}
 
 
 #show-topic-admin {
-  color: #7b7b7b;
   right: 20px;
   padding: 5px 8px;
   margin-top: 5px;
-
-
 
 }
 

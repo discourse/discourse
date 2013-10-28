@@ -28,13 +28,12 @@
     float: left;
     margin-right: 5px;
     > a {
-      border: 1px solid transparent;
+      border: none;
       padding: 5px 12px;
       color: $nav-pills-color;
       font-size: 16px;
       line-height: 20px;
       &:hover {
-        border-color: $nav-pills-border-color-hover;
         color: $nav-pills-color-hover;
         background-color: $nav-pills-background-color-hover;
       }
