@@ -29,8 +29,8 @@ window.PagedownCustom = {
         } else {
           if (/\S/.test(line)) { newLine += "> " + line; }
         }
-        result.push(newLine)
-      })
+        result.push(newLine);
+      });
       chunk.selection = result.join("\n");
 
     }
