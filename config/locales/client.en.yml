@@ -763,7 +763,7 @@ en:
       split_topic:
         title: "Move to New Topic"
         action: "move to new topic"
-        topic_name: "New Topic Name:"
+        topic_name: "New Topic Name"
         error: "There was an error moving posts to the new topic."
         instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."

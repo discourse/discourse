@@ -469,7 +469,7 @@ id:
 
       move_selected:
         title: "Move Selected Posts"
-        topic_name: "New Topic Name:"
+        topic_name: "New Topic Name"
         error: "Sorry, there was an error moving those posts."
         instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."

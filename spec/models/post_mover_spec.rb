@@ -6,7 +6,7 @@ describe PostMover do
     let(:user) { Fabricate(:user) }
     let(:another_user) { Fabricate(:evil_trout) }
     let(:category) { Fabricate(:category, user: user) }
-    let!(:topic) { Fabricate(:topic, user: user, category: category) }
+    let!(:topic) { Fabricate(:topic, user: user) }
     let!(:p1) { Fabricate(:post, topic: topic, user: user) }
     let!(:p2) { Fabricate(:post, topic: topic, user: another_user, raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.")}
     let!(:p3) { Fabricate(:post, topic: topic, user: user)}
@@ -58,7 +58,7 @@ describe PostMover do
       end
 
       context "to a new topic" do
-        let!(:new_topic) { topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name") }
+        let!(:new_topic) { topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id) }
 
         it "works correctly" do
           TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
@@ -102,7 +102,7 @@ describe PostMover do
 
         let!(:destination_topic) { Fabricate(:topic, user: user ) }
         let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
-        let!(:moved_to) { topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id )}
+        let!(:moved_to) { topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id)}
 
         it "works correctly" do
           moved_to.should == destination_topic

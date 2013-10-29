@@ -175,6 +175,10 @@
     .chzn-search input {
       width: 378px;
     }
+
+    .chzn-search-icon {
+      margin-top: 8px;
+    }
   }
 
   &.hidden {
@@ -208,28 +212,6 @@
   }
 }
 
-#move-selected {
-  p {
-    margin-top: 0;
-  }
-
-  input[type=radio] {
-    margin-right: 10px;
-  }
-
-  button {
-    margin-top: 10px;
-    display: block;
-    width: 300px;
-  }
-
-  form {
-    margin-top: 20px;
-    input[type=text] {
-      width: 500px;
-    }
-  }
-}
 
 .flag-modal {
   max-height: 450px;
@@ -280,6 +262,37 @@
 
 .modal-tab {
   position: absolute;
+}
+
+.split-modal {
+  .modal-body {
+    position: relative;
+    height: 350px;
+  }
+
+
+  #move-selected {
+    p {
+      margin-top: 0;
+    }
+
+    input[type=radio] {
+      margin-right: 10px;
+    }
+
+    button {
+      margin-top: 10px;
+      display: block;
+      width: 300px;
+    }
+
+    form {
+      margin-top: 20px;
+      #split-topic-name, #choose-topic-title {
+        width: 520px;
+      }
+    }
+  }
 }
 
 .invite-modal {

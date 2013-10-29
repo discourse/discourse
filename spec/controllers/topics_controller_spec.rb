@@ -62,8 +62,8 @@ describe TopicsController do
         let(:p2) { Fabricate(:post, user: user) }
 
         before do
-          Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah').returns(topic)
-          xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p2.id]
+          Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah', category_id: 123).returns(topic)
+          xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p2.id], category_id: 123
         end
 
         it "returns success" do

@@ -25,6 +25,10 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
     return I18n.t('topic.merge_topic.title');
   }.property('saving'),
 
+  onShow: function() {
+    this.set('controllers.modal.modalClass', 'split-modal');
+  },
+
   movePostsToExistingTopic: function() {
     this.set('saving', true);
 

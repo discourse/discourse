@@ -227,6 +227,8 @@ class TopicsController < ApplicationController
 
   def move_posts
     params.require(:post_ids)
+    params.require(:topic_id)
+    params.permit(:category_id)
 
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_move_posts!(topic)
@@ -325,6 +327,7 @@ class TopicsController < ApplicationController
     args = {}
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
+    args[:category_id] = params[:category_id].to_i if params[:category_id].present?
 
     topic.move_posts(current_user, post_ids_including_replies, args)
   end
