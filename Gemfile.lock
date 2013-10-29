@@ -522,6 +522,7 @@ DEPENDENCIES
   qunit-rails
   rack-cors
   rack-mini-profiler!
+  rack-protection
   rails (= 3.2.12)
   rails_multisite!
   rake
