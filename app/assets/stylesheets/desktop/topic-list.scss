@@ -27,7 +27,7 @@
     }
 
   }
-  
+
   .badge-category {
   
     font-weight: normal;
@@ -445,10 +445,13 @@ ol.category-breadcrumb {
   z-index: 100;
   margin-top: 30px;
 
-  .badge-category {
+  a.badge-category {
     font-size: 13px;
-    line-height: 26px;
+    font-weight: bold;
+    padding: 4px 6px;
     float: none;
+    line-height: 19px;
+    text-transform: none;
   }
 
 
