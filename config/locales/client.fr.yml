@@ -81,6 +81,7 @@ fr:
       facebook: 'partager ce lien sur Facebook'
       google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien par email'
+
     edit: 'éditer le titre et la catégorie de cette discussion'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
     no_value: "Non"
@@ -90,6 +91,8 @@ fr:
     generic_error_with_reason: "Un erreur est survenue: %{error}"
     log_in: "Connexion"
     age: "Âge"
+    last_post: "Dernières discussions"
+    joined: "à rejoint"
     admin_title: "Admin"
     flags_title: "Signalements"
     show_more: "afficher plus"
@@ -111,6 +114,7 @@ fr:
     character_count:
       one: "{{count}} caractère"
       other: "{{count}} caractères"
+
     in_n_seconds:
       one: "dans 1 seconde"
       other: "dans {{count}} secondes"
@@ -123,42 +127,52 @@ fr:
     in_n_days:
       one: "dans 1 jour"
       other: "dans {{count}} jours"
+
     suggested_topics:
       title: "Discussions Proposées"
+
     bookmarks:
       not_logged_in: "Désolé vous devez être connecté pour placer ce message dans vos signets."
       created: "Vous avez placé ce message dans vos signets."
       not_bookmarked: "Vous avez lu ce message; Cliquez pour le placer dans vos signets."
       last_read: "Voici le dernier message que vous avez lu; cliquez pour l'ajouter à vos favoris."
+
     new_topics_inserted: "{{count}} nouvelles discussions."
     show_new_topics: "Cliquez pour afficher."
     preview: "prévisualiser"
     cancel: "annuler"
+
     save: "Sauvegarder les changements"
     saving: "Sauvegarde en cours..."
     saved: "Sauvegardé !"
+
     upload: "Envoyer"
     uploading: "Envoi en cours..."
     uploaded: "Envoyé!"
+
     choose_topic:
       none_found: "Aucune discussion trouvée."
       title:
         search: "Recherchez une Discussion par son nom, url ou id :"
         placeholder: "renseignez ici le titre de la discussion"
+
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> à démarré <a href='{{topicUrl}}'>la discussion</a>"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> a démarré <a href='{{topicUrl}}'>la discussion</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Vous</a> avez démarré <a href='{{topicUrl}}'>la discussion</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> à répondu à <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> a répondu à <a href='{{postUrl}}'>{{post_number}}</a>"
       you_replied_to_post: "<a href='{{userUrl}}'>Vous</a> avez répondu à <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> à participé à <a href='{{topicUrl}}'>la discussion</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> a participé à <a href='{{topicUrl}}'>la discussion</a>"
       you_replied_to_topic: "<a href='{{userUrl}}'>Vous</a> avez participé à <a href='{{topicUrl}}'>la discussion</a>"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> à mentionné <a href='{{user2Url}}'>{{another_user}}</a>"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> a mentionné <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user2Url}}'>Vous</a> avez été mentionné par <a href='{{user1Url}}'>{{user}}</a>"
       you_mentioned_user: "<a href='{{user1Url}}'>Vous</a> avez mentionné <a href='{{user2Url}}'>{{user}}</a>"
+
       posted_by_user: "Rédigé par <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Rédigé par <a href='{{userUrl}}'>vous</a>"
       sent_by_user: "Envoyé par <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Envoyé par <a href='{{userUrl}}'>vous</a>"
+
     user_action_groups:
       '1': "J'aime donnés"
       '2': "J'aime reçus"
@@ -172,6 +186,17 @@ fr:
       '11': "Editions"
       '12': "Eléments envoyés"
       '13': "Boîte de réception"
+
+    categories:
+      all: "toutes les catégories"
+      all_subcategories: "toutes les sous-catégories"
+      category: "Catégorie"
+      posts: "Messages"
+      topics: "Discussions"
+      latest: "Dernières"
+      latest_by: "Dernières par"
+      toggle_ordering: "Changer l'ordre"
+
     user:
       said: "{{username}} a dit :"
       profile: "Profil"
@@ -194,28 +219,34 @@ fr:
       moderator: "{{user}} est un modérateur"
       admin: "{{user}} est un administrateur"
       deleted: "(supprimé)"
+
       messages:
         all: "Tous"
         mine: "Le mien"
         unread: "Non lu"
+
       change_password:
         success: "(email envoyé)"
         in_progress: "(email en cours d'envoi)"
         error: "(erreur)"
         action: "Envoyer un mail de réinitialisation du mot de passe"
+
       change_about:
         title: "Modifier à propos de moi"
+
       change_username:
         title: "Changer le pseudo"
         confirm: "Si vous changez de pseudo, les citations de vos messages et les mentions @nom seront  cassées. Êtes-vous absolument sûr de le vouloir ?"
         taken: "Désolé, ce pseudo est déjà pris"
         error: "Il y a eu une erreur en changeant votre pseudo."
         invalid: "Ce pseudo est invalide. Il ne doit être composé que de lettres et de chiffres."
+
       change_email:
         title: "Changer d'email"
         taken: "Désolé, cette adresse email est indisponible."
         error: "Il y a eu une erreur lors du changement d'email. Cette adresse est peut-être déjà utilisée ?"
         success: "Nous vous avons envoyé un mail à cette adresse. Merci de suivre les instructions."
+
       change_avatar:
         title: "Changez votre avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
@@ -224,6 +255,7 @@ fr:
         uploaded_avatar_empty: "Ajouter une photo personnalisée"
         upload_title: "Envoyer votre photo"
         image_is_not_a_square: "Attention : nous avons coupé l'image pour en faire un carré."
+
       email:
         title: "Email"
         instructions: "Votre adresse email ne sera jamais communiquée."
@@ -231,6 +263,7 @@ fr:
         invalid: "Merci d'entrer une adresse email valide"
         authenticated: "Votre adresse email a été authentifiée par {{provider}}."
         frequency: "Nous vous envoyons des mails contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
+
       name:
         title: "Nom"
         instructions: "Votre nom complet (pas nécessairement unique). Utilisé aussi pour les recherches par @nom alternatives ; seulement affiché sur votre page utilisateur."
@@ -248,8 +281,10 @@ fr:
         too_long: "Votre pseudo est trop long."
         checking: "Vérification de la disponibilité de votre pseudo..."
         enter_email: 'Pseudo trouvé. Entrez l''adresse email correspondante.'
+
       password_confirmation:
         title: "Confirmation"
+
       last_posted: "Dernier message"
       last_emailed: "Dernier mail"
       last_seen: "Dernier vu"
@@ -262,10 +297,13 @@ fr:
         daily: "quotidien"
         weekly: "hebdomadaire"
         bi_weekly: "tous les 15 jours"
+
       email_direct: "Recevoir un mail quand quelqu'un vous cite, répond à votre message ou mentionne votre @pseudo"
       email_private_messages: "Recevoir un mail quand quelqu'un vous envoie un message privé"
       email_always: "Recevoir des notifications et des résumés par email même si je suis actif sur le forum"
+
       other_settings: "Autre"
+
       new_topic_duration:
         label: "Considérer une discussion comme nouvelle quand"
         not_viewed: "Je ne les ai pas encore vues"
@@ -276,6 +314,7 @@ fr:
         after_n_weeks:
           one: "elles ont été publiées la semaine dernière"
           other: "elles ont été publiées lors des {{count}} dernières semaines"
+
       auto_track_topics: "Suivre automatiquement les discussions que j'ai postées"
       auto_track_options:
         never: "jamais"
@@ -286,6 +325,7 @@ fr:
         after_n_minutes:
           one: "dans une minute"
           other: "dans {{count}} minutes"
+
       invited:
         title: "Invités"
         user: "Utilisateurs invités"
@@ -300,62 +340,75 @@ fr:
         time_read: "Temps de lecture"
         days_visited: "Nombre de jours de visite"
         account_age_days: "Âge du compte en jours"
+
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
         ok: "Votre mot de passe a l'air bon."
+
       ip_address:
         title: "Dernières adresses IP"
       avatar:
         title: "Avatar"
       title:
         title: "Titre"
+
       filters:
         all: "Tout"
+
       stream:
         posted_by: "Rédigé par"
         sent_by: "Envoyé par"
         private_message: "message privé"
         the_topic: "la discussion"
+
     loading: "Chargement..."
     close: "Fermeture"
     learn_more: "en savoir plus..."
+
     year: 'an'
     year_desc: 'discussions postées dans les 365 derniers jours'
     month: 'mois'
     month_desc: 'discussions postées dans les 30 derniers jours'
     week: 'semaine'
     week_desc: 'discussions postées dans les 7 derniers jours'
+
     first_post: Premier message
     mute: Désactiver
     unmute: Activer
     last_post: Dernier message
+
     best_of:
       title: "les meilleurs"
       enabled_description: "Vous êtes actuellement en train de consulter seulement les messages les plus populaires de cette discussion. Pour voir tous les messages, cliquez ci-dessous."
       description: "Il y a <b>{{count}}</b> messages dans cette discussion. C'est beaucoup ! Voulez-vous gagner du temps en n'affichant que les meilleurs messages ?"
       enable: 'Basculer dans la vue  : "les meilleurs"'
       disable: 'Annuler "les meilleurs"'
+
     private_message_info:
       title: "Discussion Privée"
       invite: "Inviter d'autres utilisateurs..."
       remove_allowed_user: "Voulez-vous vraiment supprimer {{name}} de ce message privé ?"
+
     email: 'Email'
     username: 'Pseudo'
     last_seen: 'Dernière apparition'
     created: 'Créé'
     trust_level: 'Niveau de confiance'
+
     create_account:
       title: "Créer un compte"
       action: "Créer !"
       invite: "Vous n'avez pas encore de compte ?"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse email est déjà enregistrée, essayez le lien Mot de passe oublié."
+
     forgot_password:
       title: "Mot de passe oublié ?"
       action: "J'ai oublié mon mot de passe"
       invite: "Entrez votre pseudo ou votre adresse email, et vous recevrez un nouveau mot de passe par mail."
       reset: "Réinitialiser votre mot de passe"
       complete: "Si un compte correspond à ce nom d'utilisateur ou cette adresse mail, vous allez recevoir rapidement un mail contenant les instructions pour réinitialiser votre mot de passe."
+
     login:
       title: "Connexion"
       username: "Pseudo"
@@ -393,6 +446,7 @@ fr:
       persona:
         title: "via Persona"
         message: "Authentification via Mozilla Persona (assurez-vous que les popups ne soient pas bloquées)"
+
     composer:
       posting_not_on_topic: "A quelle discussion voulez-vous répondre ?"
       saving_draft_tip: "sauvegarde..."
@@ -400,9 +454,11 @@ fr:
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre message est trop similaire à..."
       drafts_offline: "sauvegardé hors ligne"
+
       min_length:
         need_more_for_title: "{{n}} caractères restant pour le titre"
         need_more_for_reply: "{{n}} caractères restant pour le message"
+
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères."
@@ -410,6 +466,7 @@ fr:
         post_missing: "Le message ne peut être vide."
         post_length: "Le message doit avoir au moins {{min}} caractères."
         category_missing: "Vous devez choisir une catégorie."
+
       save_edit: "Sauvegarder la modification"
       reply_original: "Répondre à la discussion initiale"
       reply_here: "Répondre ici"
@@ -417,6 +474,7 @@ fr:
       cancel: "Annuler"
       create_topic: "Créer une Discussion"
       create_pm: "Créer un Message Privé"
+
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Choisissez un titre ici. Sur quoi porte cette discussion en quelques mots ?"
       reply_placeholder: "Saisissez votre réponse ici. Utilisez le Markdown ou le BBCode pour le formatage. Vous pouvez déposer ou coller une image ici."
@@ -427,6 +485,7 @@ fr:
       uploading: "Envoi en cours..."
       show_preview: 'afficher la prévisualisation &raquo;'
       hide_preview: '&laquo; cacher la prévisualisation'
+
       quote_post_title: "Citer le message en entier"
       bold_title: "Gras"
       bold_text: "texte en gras"
@@ -452,9 +511,11 @@ fr:
       redo_title: "Refaire"
       help: "Aide Markdown"
       toggler: "Afficher ou cacher le composer"
+
       admin_options_title: "Paramètres optionnels pour cette discussion"
       auto_close_label: "Fermer automatiquement cette discussion après :"
       auto_close_units: "jours"
+
     notifications:
       title: "Notification des mentions de votre @pseudo, réponses à vos discussions ou messages, etc."
       none: "Vous n'avez aucune notification pour le moment."
@@ -470,6 +531,7 @@ fr:
       invitee_accepted: "<i title='a accepté votre invitation' class='icon icon-signin'></i> {{username}} a accepté votre invitation"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} a déplacé {{link}}"
       total_flagged: "Nombre total de messages signalés"
+
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -482,22 +544,27 @@ fr:
       hint: "(vous pouvez également faire un glisser-déposer dans l'éditeur pour les télécharger)"
       hint_for_chrome: "(vous pouvez aussi faire un glisser-déposer ou coller des images dans l'éditeur pour les télécharger)"
       uploading: "Fichier en cours d'envoi"
+
     search:
       title: "Rechercher les discussions, messages, utilisateurs ou catégories"
       placeholder: "saisir votre requête ici"
       no_results: "Aucun résultat."
       searching: "Recherche en cours ..."
+
       prefer:
         user: "La recherche priorisera les résultats de @{{username}}"
         category: "La recherche priorisera les résultats de la catégorie : {{category}}"
+
     site_map: "voir une autre liste des discussions ou une catégorie"
     go_back: 'retour'
     current_user: 'voir la page de l''utilisateur'
+
     favorite:
       title: 'Favoris'
       help:
         star: 'ajouter cette discussion à vos favoris'
         unstar: 'enlever cette discussion de vos favoris'
+
     topics:
       none:
         favorited: "Vous n'avez aucune discussion favorite pour le moment. Pour ajouter une discussion aux favoris, cliquez sur l'étoile suivant le titre."
@@ -517,10 +584,12 @@ fr:
         unread: "Il n'y a plus de discussion non lue à lire."
         favorited: "Il n'y a plus de discussion favorites à lire."
         category: "Il n'y a plus de discussion sur {{category}} à lire."
+
     rank_details:
       toggle: afficher/cacher le détail du classement des discussions
       show: afficher le détail du classement des discussions
       title: Détail du classement des discussions
+
     topic:
       filter_to: "Afficher uniquement les {{post_count}} messages de {{username}} dans cette discussion"
       create_in: 'Créer une discussion dans la catégorie {{categoryName}}'
@@ -529,6 +598,12 @@ fr:
       private_message: 'Commencer une discussion privée'
       list: 'Liste des discussions'
       new: 'nouvelle discussion'
+      new_topics:
+        one: '1 nouvelle discussion'
+        other: '{{count}} nouvelles discussions'
+      unread_topics:
+        one: '1 discussion non lue'
+        other: '{{count}} discussions non lues'
       title: 'discussions'
       loading_more: "Chargement de discussions supplémentaires..."
       loading: 'Chargement des discussions en cours...'
@@ -547,6 +622,7 @@ fr:
       new_posts:
         one: "il y a 1 nouveau message dans cette discussion depuis la dernière fois"
         other: "il y a {{new_posts}} nouveaux messages dans cette discussion depuis la dernière fois"
+
       likes:
         one: "1 personne à aimé cette discussion"
         other: "{{count}} personnes ont aimés cette discussion"
@@ -557,24 +633,29 @@ fr:
       read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres discussions dans {{catLink}} ou {{latestLink}}."
       read_more: "Vous voulez en lire plus? {{catLink}} or {{latestLink}}."
       read_more_MF: "Il y a { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}} "
+
       browse_all_categories: Voir toutes les catégories
+
       view_latest_topics: voir les dernières discussions
       suggest_create_topic: Pourquoi ne pas créer une nouvelle discussion ?
       read_position_reset: "Votre position de lecture à été remise à zéro."
       jump_reply_up: aller à des réponses précédentes
       jump_reply_down: allez à des réponses ultérieures
       deleted: "Cette discussion à été supprimée"
+
       auto_close_notice: "Cette discussion sera automatiquement fermée %{timeLeft}."
       auto_close_title: 'Paramètres de fermeture automatique'
       auto_close_save: "Sauvegarder"
       auto_close_cancel: "Annuler"
       auto_close_remove: "Ne pas fermer automatiquement cette discussion"
+
       progress:
         title: progession dans la discussion
         jump_top: aller au premier message
         jump_bottom: aller au dernier message
         total: total messages
         current: message courant
+
       notifications:
         title: ''
         reasons:
@@ -600,6 +681,7 @@ fr:
         muted:
           title: "Silencieux"
           description: "vous ne recevrez aucune notification de cette discussion et elle n'apparaitra pas dans l'onglet des discussions non lues."
+
       actions:
         recover: "Annuler Suppression de la Discussion"
         delete: "Supprimer la discussion"
@@ -1036,14 +1118,22 @@ fr:
         delete: "Supprimer"
         delete_confirm: "Supprimer ce groupe ?"
         delete_failed: "Impossible de supprimer le groupe. Si c'est un groupe automatique il ne peut être détruit."
+
       api:
+        generate_master: "Générer une clé principale pour l'API"
+        none: "Il n'y a pas pour l'instant de clé pour l'API."
+        user: "Utilisateur"
         title: "API"
-        long_title: "Informations sur l'API"
         key: "Clé"
         generate: "Générer une clé pour l'API"
         regenerate: "Regénérer une clé pour l'API"
+        revoke: "Révoquer"
+        confirm_regen: "Êtes-vous sûr de vouloir remplacer cette clé API avec une nouvelle?"
+        confirm_revoke: "Êtes-vous sûr de vouloir révoquer cette clé?"
         info_html: "Cette clé vous permettra de créer et mettre à jour des discussions à l'aide d'appels JSON."
+        all_users: "Tous les utilisateurs"
         note_html: "Gardez cette clé <strong>secrète</strong> ! Tous les personnes qui la possède peuvent créer des messages sur ce forum au nom de n'import quel utilisateur."
+
       customize:
         title: "Personnaliser"
         long_title: "Personnalisation du site"
@@ -1061,6 +1151,7 @@ fr:
         delete: "Supprimer"
         delete_confirm: "Supprimer cette personnalisation"
         about: "La personnalisation du site vous permet de modifier les feuilles de styles et en-têtes de votre site. Choisissez ou ajouter un style pour commencer l'édition."
+
       email:
         title: "Email"
         settings: "Paramètres"
@@ -1088,6 +1179,9 @@ fr:
         last_match_at: "Dernière occurence"
         match_count: "Occurences"
         ip_address: "IP"
+        delete: 'Supprimer'
+        edit: 'Modifier'
+        save: 'Enregistrer'
         screened_actions:
           block: "bloquer"
           do_nothing: "ne rien faire"
@@ -1122,6 +1216,19 @@ fr:
           title: "URL affichées"
           description: "Les URL listées ici ont été utilisées dans des messages émis par des utilisateurs ayant été identifié comme spammeur."
           url: "URL"
+
+        screened_ips:
+          title: "Adresses IP affichées"
+          description: 'Adresses IP sous surveillance. Utilisez "Autoriser" pour les ajouter à la liste blanche'
+          delete_confirm: "Etes-vous certain de vouloir supprimer la règle pour %{ip_address}?"
+          actions:
+            block: "Bloquer"
+            do_nothing: "Autoriser"
+          form:
+            label: "Nouvelle:"
+            ip_address: "Adresse IP"
+            add: "Ajouter"
+
       impersonate:
         title: "Se faire passer pour un utilisateur"
         username_or_email: "Pseudo ou adresse mail de l'utilisateur"
