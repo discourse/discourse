@@ -66,11 +66,11 @@ ja:
 
   groups:
     errors:
-      can_not_modify_automatic: "You can not modify an automatic group"
+      can_not_modify_automatic: "自動作成グループの変更はできません"
     default_names:
       admins: "管理者"
       moderators: "モデレータ"
-      staff: "staff"
+      staff: "スタッフ"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
@@ -105,14 +105,14 @@ ja:
       詳しいガイダンスは [FAQ](/faq) を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。
 
     avatar: |
-      ### How about a new picture for your account?
+      ### アカウント用の画像を用意してみては?
 
       コミュニティへの貢献ありがとうございます。アバターがデフォルトのままのようですが、**[ユーザプロファイル](%{profile_path})** にてアバター画像をアップロードしてみてはいかがでしょう?
 
       ユニークなアバターは、コミュニティにおける議論の活性化にもつながりますので、ぜひご検討ください!
 
     sequential_replies: |
-      ### Consider replying to several posts at once
+      ### 一度に複数のポストに回答する
 
       トピックに数多くの回答を投稿する代わりに、以前のポストへの @name 参照や引用などを活用して回答を一つのポストにまとめられないか検討してください。
 
@@ -146,20 +146,20 @@ ja:
 
   trust_levels:
     newuser:
-      title: "new user"
+      title: "新規ユーザ"
     basic:
-      title: "basic user"
+      title: "ベーシックユーザ"
     regular:
-      title: "regular user"
+      title: "レギュラーユーザ"
     leader:
-      title: "leader"
+      title: "リーダー"
     elder:
-      title: "elder"
-    change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}'"
+      title: "長老"
+    change_failed_explanation: "%{user_name} を '%{new_trust_level}' に格下げしようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります。"
 
 
   rate_limiter:
-    too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
+    too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"
     hours:
       one: "1時間"
       other: "%{count}時間"
@@ -307,99 +307,99 @@ ja:
 
   archetypes:
     regular:
-      title: "Regular Topic"
+      title: "通常のトピック"
 
   unsubscribed:
-    title: 'Unsubscribed'
-    description: "You have been unsubscribed. We won't contact you again!"
-    oops: "In case you didn't mean to do this, click below."
-    not_found: "Error Unsubscribing"
-    not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
+    title: '購読解除'
+    description: "購読解除されました。メールの送信をストップしました。"
+    oops: "誤って購読解除した場合は、下をクリックしてください。"
+    not_found: "購読解除エラー"
+    not_found_description: "申し訳ありませんが購読解除に失敗しました。メール内のリンクの有効期限が切れているのかもしれません。"
 
   resubscribe:
-    action: "Re-Subscribe"
-    title: "Re-Subscribed!"
-    description: "You have been re-subscribed."
+    action: "再購読"
+    title: "再購読!"
+    description: "再購読が完了しました。"
 
   reports:
     visits:
-      title: "User Visits"
-      xaxis: "Day"
-      yaxis: "Number of visits"
+      title: "訪問ユーザ"
+      xaxis: "日"
+      yaxis: "訪問者数"
     signups:
-      title: "Users"
-      xaxis: "Day"
-      yaxis: "Number of new users"
+      title: "ユーザ"
+      xaxis: "日"
+      yaxis: "新規ユーザ数"
     topics:
-      title: "Topics"
-      xaxis: "Day"
-      yaxis: "Number of new topics"
+      title: "トピック"
+      xaxis: "日"
+      yaxis: "新規トピック数"
     posts:
-      title: "Posts"
-      xaxis: "Day"
-      yaxis: "Number of new posts"
+      title: "ポスト"
+      xaxis: "日"
+      yaxis: "新規ポスト数"
     likes:
-      title: "Likes"
-      xaxis: "Day"
-      yaxis: "Number of new likes"
+      title: "いいね"
+      xaxis: "日"
+      yaxis: "新規「いいね!」数"
     flags:
-      title: "Flags"
-      xaxis: "Day"
-      yaxis: "Number of flags"
+      title: "フラグ"
+      xaxis: "日"
+      yaxis: "フラグの数"
     bookmarks:
-      title: "Bookmarks"
-      xaxis: "Day"
-      yaxis: "Number of new bookmarks"
+      title: "ブックマーク"
+      xaxis: "日"
+      yaxis: "新規ブックマーク数"
     favorites:
-      title: "Favorites"
-      xaxis: "Day"
-      yaxis: "Number of new favorites"
+      title: "お気に入り"
+      xaxis: "日"
+      yaxis: "新規お気に入りの数"
     users_by_trust_level:
-      title: "Users per Trust Level"
-      xaxis: "Trust Level"
-      yaxis: "Number of Users"
+      title: "トラストレベル毎のユーザ"
+      xaxis: "トラストレベル"
+      yaxis: "ユーザ数"
     emails:
-      title: "Emails Sent"
-      xaxis: "Day"
-      yaxis: "Number of Emails"
+      title: "送信メール"
+      xaxis: "日"
+      yaxis: "メールの数"
     user_to_user_private_messages:
-      title: "User-to-User"
-      xaxis: "Day"
-      yaxis: "Number of private messages"
+      title: "ユーザ to ユーザ"
+      xaxis: "日"
+      yaxis: "プライベートメッセージの数"
     system_private_messages:
-      title: "System"
-      xaxis: "Day"
-      yaxis: "Number of private messages"
+      title: "システム"
+      xaxis: "日"
+      yaxis: "プライベートメッセージの数"
     moderator_warning_private_messages:
-      title: "Moderator Warning"
-      xaxis: "Day"
-      yaxis: "Number of private messages"
+      title: "モデレータ警告"
+      xaxis: "日"
+      yaxis: "プライベートメッセージの数"
     notify_moderators_private_messages:
-      title: "Notify Moderators"
-      xaxis: "Day"
-      yaxis: "Number of private messages"
+      title: "モデレータ通知"
+      xaxis: "日"
+      yaxis: "プライベートメッセージの数"
     notify_user_private_messages:
-      title: "Nofity User"
-      xaxis: "Day"
-      yaxis: "Number of private messages"
+      title: "ユーザ通知"
+      xaxis: "日"
+      yaxis: "プライベートメッセージの数"
     top_referrers:
-      title: "Top Referrers"
-      xaxis: "User"
-      num_clicks: "Clicks"
-      num_topics: "Topics"
+      title: "トップリファラ"
+      xaxis: "ユーザ"
+      num_clicks: "クリック"
+      num_topics: "トピック"
     top_traffic_sources:
-      title: "Top Traffic Sources"
-      xaxis: "Domain"
-      num_clicks: "Clicks"
-      num_topics: "Topics"
-      num_users: "Users"
+      title: "トップトラフィックソース"
+      xaxis: "ドメイン"
+      num_clicks: "クリック"
+      num_topics: "トピック"
+      num_users: "ユーザ"
     top_referred_topics:
-      title: "Top Referred Topics"
-      xaxis: "Topic"
-      num_clicks: "Clicks"
+      title: "トップ被参照トピック"
+      xaxis: "トピック"
+      num_clicks: "クリック"
 
   dashboard:
-    rails_env_warning: "Your server is running in %{env} mode."
+    rails_env_warning: "サーバは %{env} モードで起動中です。"
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -459,18 +459,18 @@ ja:
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
-    min_post_length: "Minimum post length in characters"
-    min_private_message_post_length: "Minimum post length in characters for private messages"
-    max_post_length: "Maximum post length in characters"
-    min_topic_title_length: "Minimum topic title length in characters"
-    max_topic_title_length: "Maximum topic title length in characters"
-    min_private_message_title_length: "Minimum title length for a private message in characters"
-    min_search_term_length: "Minimum search term length in characters"
-    allow_uncategorized_topics: "Allow topics to be created without a category. NOTE: After changing this setting, all clients will need to reload their browsers for the change to take effect."
-    allow_duplicate_topic_titles: "Allow topics with identical titles"
-    unique_posts_mins: "How many minutes before a user can make a post with the same content again"
-    enforce_global_nicknames: "Enforce global nickname uniqueness (WARNING: only change this during initial setup)"
-    discourse_org_access_key: "The access key used to access the Discourse Hub nickname registry at discourse.org"
+    min_post_length: "ポストの最小文字数"
+    min_private_message_post_length: "プライベートメッセージ本文の最小文字数"
+    max_post_length: "ポストの最大文字数"
+    min_topic_title_length: "トピックタイトルの最小文字数"
+    max_topic_title_length: "トピックタイトルの最大文字数"
+    min_private_message_title_length: "プライベートメッセージタイトルの最小文字数"
+    min_search_term_length: "検索語の最小文字数"
+    allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。注意: 設定変更を反映させるためには、すべてのクライアントのブラウザをリロードする必要があります。"
+    allow_duplicate_topic_titles: "トピックタイトルの重複を許可するか"
+    unique_posts_mins: "同じ内容のポストを再投稿可能にする時間 (分)"
+    enforce_global_nicknames: "ニックネームのグローバルユニーク性を強制する (警告: この設定は初回セットアップ時にのみ変更してください)"
+    discourse_org_access_key: "discourse.org の Discourse Hub ニックネームレジストリにアクセスするためのキー"
     educate_until_posts: "Show pop-up composer education panel until the user has made this many posts"
     title: "Title of this site, will be used in the title tag and elsewhere"
     site_description: "Describe this forum in one sentence. This description will be used in the meta description tag."
