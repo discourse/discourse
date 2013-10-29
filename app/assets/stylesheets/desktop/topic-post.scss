@@ -220,7 +220,6 @@ nav.post-controls {
 a.star {
   display: inline-block;
   float: left;
-  font-size: 20px !important;
 }
 
 #main a.star.starred {
@@ -425,7 +424,11 @@ span.post-count {
 
 #topic-title {
   z-index: 1000;
-  padding: 25px 10px 15px 10px;
+  padding: 14px 0 8px 0;
+ h1 { line-height: 1em;}
+.topic-statuses {margin-top: -2px; .icon-pushpin {margin-top: -1px;}}
+.star {font-size: 20px; margin-top: 4px;}
+
 .chzn-container {vertical-align: middle;}
 }
 
@@ -462,23 +465,24 @@ iframe {
 .topic-statuses {margin-right: 5px;}
 }
 
-#main .inner a.star {margin-top: 6px;}
 
 .extra-info {
   h1 {
-    margin: 7px 0 0 25px;
+    margin: 5px 0 0 25px;
+    font-size: 2em;
     line-height: 1em;
-  a:not(.badge-category) {margin-left: -10px;}
-
   }
 
   a.star {
     margin-right: 5px;
-    margin-top: 6px;
+    font-size: 20px;
+    margin-top: 5px;
   }
 
+  .topic-statuses {margin-top: -2px;}
+
   .badge-category {
-    vertical-align: middle  ;
+    vertical-align: top;
   }
 
 }
@@ -964,7 +968,6 @@ clear: both;
   }
 }
 
-input#edit-title {margin-left: 10px;}
 
 a.attachment:before {
   display: inline-block;

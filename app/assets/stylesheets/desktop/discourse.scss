@@ -35,6 +35,9 @@ body {
   }
 }
 
+/**/
+
+
 @include small-width {
   body {
     min-width: $small-width;
@@ -117,9 +120,6 @@ body {
       color: #e45735;
     }
     a.star {
-      display: inline-block;
-      font-size: 15px;
-      line-height: 1;
       color: #cacaca;
       &:before {
         font-family: "FontAwesome";
@@ -167,6 +167,8 @@ body {
       }
     }
   }
+
+  /**/
   .message {
     @include border-radius-all(8px);
     background-color: $white;
@@ -229,15 +231,14 @@ blockquote {
 }
 
 .topic-statuses {
-  display: inline-block;
-  margin: 0;
+  float: left;
+  margin: 1px 3px 0 0;
   padding: 0;
   .topic-status {
-    padding: 5px 2px 0 0;
+    padding: 0 2px 0 0;
     margin: 0;
-    display: inline-block;
     i {
-      font-size: 15px;
+        font-size: 15px;
       color: darken($white, 60%);
     }
   }
