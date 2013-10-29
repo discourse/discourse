@@ -17,7 +17,7 @@ asyncTestDiscourse('find', function() {
 });
 
 asyncTestDiscourse('generateMasterKey', function() {
-  this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve([]));
+  this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve({api_key: {}}));
   Discourse.ApiKey.generateMasterKey().then(function() {
     start();
     ok(Discourse.ajax.calledWith("/admin/api/key", {type: 'POST'}), "it POSTs to create a master key");

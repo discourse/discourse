@@ -43,6 +43,8 @@ Discourse.StaffActionLog = Discourse.Model.extend({
 
 Discourse.StaffActionLog.reopenClass({
   create: function(attrs) {
+    attrs = attrs || {};
+
     if (attrs.acting_user) {
       attrs.acting_user = Discourse.AdminUser.create(attrs.acting_user);
     }

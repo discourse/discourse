@@ -30,12 +30,12 @@ Discourse.Notification = Discourse.Model.extend({
 
 Discourse.Notification.reopenClass({
   create: function(obj) {
-    var result;
-    result = this._super(obj);
+    obj = obj || {};
+
     if (obj.data) {
-      result.set('data', Em.Object.create(obj.data));
+      obj.data = Em.Object.create(obj.data);
     }
-    return result;
+    return this._super(obj);
   }
 });
 

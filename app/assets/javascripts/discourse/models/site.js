@@ -44,8 +44,8 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     return Discourse.Site.create(PreloadStore.get('site'));
   },
 
-  create: function(obj) {
-    var result = this._super(obj);
+  create: function() {
+    var result = this._super.apply(this, arguments);
 
     if (result.categories) {
       var byId = {};

@@ -378,7 +378,7 @@ Discourse.Post.reopenClass({
   },
 
   create: function(obj) {
-    var result = this._super(obj);
+    var result = this._super.apply(this, arguments);
     this.createActionSummary(result);
     if (obj && obj.reply_to_user) {
       result.set('reply_to_user', Discourse.User.create(obj.reply_to_user));

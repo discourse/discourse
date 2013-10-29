@@ -21,9 +21,8 @@ Discourse.Invite = Discourse.Model.extend({
 
 Discourse.Invite.reopenClass({
 
-  create: function(invite) {
-    var result;
-    result = this._super(invite);
+  create: function() {
+    var result = this._super.apply(this, arguments);
     if (result.user) {
       result.user = Discourse.User.create(result.user);
     }

@@ -234,16 +234,16 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     var info = Discourse.Eyeline.analyze(rows);
     if(!info) { return; }
 
-
     // We disable scrolling of the topic while performing initial positioning
     // This code needs to be refactored, the pipline for positioning posts is wack
     // Be sure to test on safari as well when playing with this
     if(!Discourse.TopicView.disableScroll) {
+
       // are we scrolling upwards?
       if(info.top === 0 || info.onScreen[0] === 0 || info.bottom === 0) {
-        var $body = $('body');
-        var $elem = $(rows[0]);
-        var distToElement = $body.scrollTop() - $elem.position().top;
+        var $body = $('body'),
+            $elem = $(rows[0]),
+            distToElement = $body.scrollTop() - $elem.position().top;
         this.get('postStream').prependMore().then(function() {
           Em.run.next(function () {
             $('html, body').scrollTop($elem.position().top + distToElement);
@@ -251,6 +251,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
         });
       }
     }
+
 
     // are we scrolling down?
     var currentPost;

@@ -20,7 +20,7 @@ function createPMRoute(viewName, path, type) {
     },
 
     setupController: function(controller, model) {
-      this._super(controller, model);
+      this._super.apply(this, arguments);
       controller.set('hideCategories', true);
       this.controllerFor('user').setProperties({
         pmView: viewName,

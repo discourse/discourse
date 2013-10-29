@@ -1,6 +1,10 @@
 module("Discourse.Site");
 
-test('instance', function(){
+test('create', function() {
+  ok(Discourse.Site.create(), 'it can create with no parameters');
+});
+
+test('instance', function() {
 
   var site = Discourse.Site.current();
 
@@ -31,6 +35,5 @@ test('create categories', function() {
   var subcategory = categories.findBy('id', 3456);
   present(subcategory, "it loaded the subcategory");
   equal(subcategory.get('parentCategory'), parent, "it has associated the child with the parent");
-
 
 });

@@ -44,8 +44,8 @@ Discourse.ApiKey.reopenClass({
     @param {Object} the properties to create
     @returns {Discourse.ApiKey} the ApiKey instance
   **/
-  create: function(apiKey) {
-    var result = this._super(apiKey);
+  create: function() {
+    var result = this._super.apply(this, arguments);
     if (result.user) {
       result.user = Discourse.AdminUser.create(result.user);
     }

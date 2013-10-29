@@ -11,6 +11,10 @@ var buildStream = function(id, stream) {
 
 var participant = {username: 'eviltrout'};
 
+test('create', function() {
+  ok(Discourse.PostStream.create(), 'it can be created with no parameters');
+});
+
 test('defaults', function() {
   var postStream = buildStream(1234);
   blank(postStream.get('posts'), "there are no posts in a stream by default");

@@ -14,7 +14,7 @@ test("without selectedPosts", function () {
 });
 
 test("with some selectedPosts", function() {
-  var testObj = buildTestObj({ selectedPosts: [Discourse.Post.create()] });
+  var testObj = buildTestObj({ selectedPosts: [Discourse.Post.create({id: 123})] });
   equal(testObj.get('selectedPostsCount'), 1, "It returns the amount of posts");
 });
 
