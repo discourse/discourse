@@ -789,7 +789,6 @@ sv:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "skriv för att filtrera..."
 
     admin:
       title: 'Discourse Admin'

@@ -1033,7 +1033,6 @@ fr:
       create_post: "Répondre / Voir"
       readonly: "Voir"
   admin_js:
-    type_to_filter: "Commencez à taper pour filtrer..."
     admin:
       title: 'Administation Discourse'
       moderator: 'Modérateur'

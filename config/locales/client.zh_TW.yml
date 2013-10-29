@@ -969,7 +969,6 @@ zh_TW:
       readonly: "觀看"
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "輸入過濾條件……"
 
     admin:
       title: '論道 管理'

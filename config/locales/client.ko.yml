@@ -842,7 +842,6 @@ ko:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "필터를 입력하세요"
 
     admin:
       title: 'Discourse 관리자'

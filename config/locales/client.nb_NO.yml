@@ -915,7 +915,6 @@ nb_NO:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "skriv for å filtrere..."
 
     admin:
       title: 'Discourse Admin'

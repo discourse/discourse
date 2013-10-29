@@ -82,7 +82,7 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
   @include border-radius-all(5px);
   background-color: darken($white, 5%);
   border: 1px solid darken($white, 10%);
-  padding: 5px 10px 3px 0px;
+  padding: 10px 10px 3px 0px;
   margin-bottom: 20px;
   height: 35px;
   .nav.nav-pills {
@@ -102,11 +102,15 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
     color: $darkish_gray;
   }
   .controls {
-    padding-top: 3px;
+    margin-left: 10px;
   }
   button {
-    float: left;
     margin-right: 5px;
+    margin-left: 5px;
+  }
+  input[type=text] {
+    display: inline-block;
+    float: left;
   }
   .result-message {
     display: inline-block;

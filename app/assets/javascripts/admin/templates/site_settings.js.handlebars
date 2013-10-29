@@ -5,8 +5,9 @@
     {{i18n admin.site_settings.show_overriden}}
   </label>
   </div>
-  <div class='search controls'>
-    {{textField value=filter placeHolderKey="type_to_filter"}}
+  <div class='controls'>
+    {{textField value=newFilter}}
+    <button class="btn btn-primary" {{action changeFilter}}>{{i18n filter}}</button>
   </div>
 
 </div>

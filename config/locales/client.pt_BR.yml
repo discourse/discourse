@@ -1070,7 +1070,6 @@ pt_BR:
 
   # Essa seção é para o javascript para i18n no admin
   admin_js:
-    type_to_filter: "escreva para filtrar..."
 
     admin:
       title: 'Discourse Admin'

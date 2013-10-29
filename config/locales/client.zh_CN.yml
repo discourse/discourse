@@ -213,7 +213,7 @@ zh_CN:
       moderator: "{{user}} 是版主"
       admin: "{{user}} 是管理员"
       deleted: "（已删除）"
-      
+
       messages:
         all: "所有"
         mine: "我的"
@@ -535,7 +535,7 @@ zh_CN:
       remote_tip_with_attachments: "输入图片或文件的网址，格式为：http://example.com/file.ext （支持的格式： {{authorized_extensions}}）。"
       local_tip: "点击从你的设备中选择一张图片。"
       local_tip_with_attachments: "点击从你的设备中选择图片或文件（支持的格式： {{authorized_extensions}}）。"
-      hint: "（你也可以通过拖放至编辑器的方式来上传）" 
+      hint: "（你也可以通过拖放至编辑器的方式来上传）"
       hint_for_chrome: "（你也可以通过拖放或复制粘帖至编辑器的方式来上传）"
       uploading: "上传图片中"
 
@@ -597,7 +597,7 @@ zh_CN:
         other: '{{count}}个新主题'
       unread_topics:
         one: '1个未读主题'
-        other: '{{count}}个未读主题' 
+        other: '{{count}}个未读主题'
       title: '主题'
       loading_more: "载入更多主题中……"
       loading: '载入主题中……'
@@ -1073,7 +1073,6 @@ zh_CN:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "输入过滤条件……"
 
     admin:
       title: '论道 管理'

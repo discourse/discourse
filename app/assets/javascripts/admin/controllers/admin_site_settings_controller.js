@@ -40,6 +40,16 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
   }.property('filter', 'content.@each', 'onlyOverridden'),
 
   actions: {
+
+    /**
+      Changes the currently active filter
+
+      @method changeFilter
+    **/
+    changeFilter: function() {
+      this.set('filter', this.get('newFilter'));
+    },
+
     /**
       Reset a setting to its default value
 
