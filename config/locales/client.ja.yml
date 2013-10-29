@@ -709,12 +709,12 @@ ja:
       inviting: "招待中..."
 
       invite_private:
-        title: 'Invite to Private Message'
-        email_or_username: "Invitee's Email or Username"
-        email_or_username_placeholder: "email address or username"
-        action: "Invite"
-        success: "Thanks! We've invited that user to participate in this private message."
-        error: "Sorry, there was an error inviting that user."
+        title: 'プライベートメッセージへの招待'
+        email_or_username: "招待するユーザのメールアドレスまたはユーザ名"
+        email_or_username_placeholder: "メールアドレスまたはユーザ名"
+        action: "招待"
+        success: "このプライベートメッセージにユーザを招待しました。"
+        error: "申し訳ありませんが、ユーザ招待中にエラーが発生しました。"
 
       invite_reply:
         title: '友人を招待して回答してもらう'
@@ -746,47 +746,47 @@ ja:
         cancel: "Show all posts in this topic again."
 
       split_topic:
-        title: "Move to New Topic"
-        action: "move to new topic"
-        topic_name: "New Topic Name:"
-        error: "There was an error moving posts to the new topic."
+        title: "新規トピックに移動"
+        action: "新規トピックに移動"
+        topic_name: "新規トピック名:"
+        error: "新規トピックへのポスト移動中にエラーが発生しました。"
         instructions:
-          one: "You are about to create a new topic and populate it with the post you've selected."
-          other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
+          one: "新たにトピックを作成し、選択したポストをこのトピックに移動しようとしています。"
+          other: "新たにトピックを作成し、選択した<b>{{count}}</b>個のポストをこのトピックに移動しようとしています。"
 
       merge_topic:
-        title: "Move to Existing Topic"
-        action: "move to existing topic"
-        error: "There was an error moving posts into that topic."
+        title: "既存トピックに移動"
+        action: "既存トピックに移動"
+        error: "指定トピックへのポスト移動中にエラーが発生しました。"
         instructions:
-          one: "Please choose the topic you'd like to move that post to."
-          other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+          one: "このポストをどのトピックに移動するか選択してください。"
+          other: "これら<b>{{count}}</b>個のポストをどのトピックに移動するか選択してください。"
 
       multi_select:
-        select: 'select'
-        selected: 'selected ({{count}})'
-        select_replies: 'select +replies'
-        delete: delete selected
-        cancel: cancel selecting
+        select: '選択'
+        selected: '選択中 ({{count}})'
+        select_replies: '全ての回答と共に選択'
+        delete: 選択中のものを削除
+        cancel: deselect all
         description:
-          one: You have selected <b>1</b> post.
-          other: "You have selected <b>{{count}}</b> posts."
+          one: 現在<b>1</b>個のポストを選択中。
+          other: "現在<b>{{count}}</b>個のポストを選択中。"
 
     post:
-      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
+      reply: "{{replyAvatar}} {{username}} による {{link}} に回答"
       reply_topic: "{{link}} に回答"
       quote_reply: "引用して回答"
-      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
-      post_number: "post {{number}}"
+      edit: "{{replyAvatar}} {{username}} による {{link}} を編集"
+      post_number: "ポスト{{number}}"
       in_reply_to: "in reply to"
-      last_edited_on: "post last edited on"
+      last_edited_on: "ポストの最終編集日"
       reply_as_new_topic: "新規トピックとして回答"
-      continue_discussion: "Continuing the discussion from {{postLink}}:"
-      follow_quote: "go to the quoted post"
+      continue_discussion: "{{postLink}} からの議論を継続:"
+      follow_quote: "引用ポストに移動"
       deleted_by_author:
-        one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
-      deleted_by: "deleted by"
+        one: "(ポストは執筆者により取り下げられました。フラグがつかない場合%{count}時間後に自動的に削除されます)"
+        other: "(ポストは執筆者により取り下げられました。フラグがつかない場合%{count}時間後に自動的に削除されます)"
+      deleted_by: "削除者"
       expand_collapse: "展開/折りたたみ"
 
       has_replies:
@@ -800,17 +800,17 @@ ja:
         attachment_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}kb)。"
         image_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}kb)。"
         too_many_uploads: "申し訳ありませんが、複数のファイルは同時にアップロードできません。"
-        upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (authorized extension: {{authorized_extensions}})."
+        upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (利用可能な拡張子: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
 
       abandon: "編集中のポストを破棄してもよろしいですか?"
 
       archetypes:
-        save: 'Save Options'
+        save: '保存オプション'
 
       controls:
-        reply: "begin composing a reply to this post"
+        reply: "このポストに対する回答の編集を開始"
         like: "このポストを「いいね！」する"
         edit: "このポストを編集"
         flag: "このポストにフラグをつける、または通知を送る"
@@ -831,107 +831,107 @@ ja:
           one: "フラグをクリア"
           other: "フラグをクリア"
         it_too:
-          off_topic: "Flag it too"
-          spam: "Flag it too"
-          inappropriate: "Flag it too"
-          custom_flag: "Flag it too"
-          bookmark: "Bookmark it too"
+          off_topic: "フラグをたてる"
+          spam: "フラグをたてる"
+          inappropriate: "フラグをたてる"
+          custom_flag: "フラグをたてる"
+          bookmark: "ブックマークする"
           like: "あなたも「いいね！」する"
-          vote: "Vote for it too"
+          vote: "投票する"
         undo:
-          off_topic: "Undo flag"
-          spam: "Undo flag"
-          inappropriate: "Undo flag"
-          bookmark: "Undo bookmark"
+          off_topic: "フラグを取り消す"
+          spam: "フラグを取り消す"
+          inappropriate: "フラグを取り消す"
+          bookmark: "ブックマークを取り消す"
           like: "「いいね！」を取り消す"
-          vote: "Undo vote"
+          vote: "投票を取り消す"
         people:
-          off_topic: "{{icons}} marked this as off-topic"
-          spam: "{{icons}} marked this as spam"
-          inappropriate: "{{icons}} marked this as inappropriate"
-          notify_moderators: "{{icons}} notified moderators"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
-          notify_user: "{{icons}} sent a private message"
-          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
-          bookmark: "{{icons}} bookmarked this"
+          off_topic: "{{icons}} がオフトピックであるとマークしました"
+          spam: "{{icons}} がスパムであるとマークしました"
+          inappropriate: "{{icons}} が不適切であるとマークしました"
+          notify_moderators: "{{icons}} がモデレータに通報しました"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>通知されたモデレータ</a>"
+          notify_user: "{{icons}} がプライベートメッセージを送信しました"
+          notify_user_with_url: "{{icons}} が<a href='{{postUrl}}'>プライベートメッセージe</a>を送信しました"
+          bookmark: "{{icons}} がブックマークしました"
           like: "{{icons}} が「いいね！」しています"
-          vote: "{{icons}} voted for this"
+          vote: "{{icons}} が投票しました"
         by_you:
-          off_topic: "You flagged this as off-topic"
-          spam: "You flagged this as spam"
-          inappropriate: "You flagged this as inappropriate"
-          notify_moderators: "You flagged this for moderation"
-          notify_user: "You sent a private message to this user"
-          bookmark: "You bookmarked this post"
-          like: "あなたが「いいね！」しています"
-          vote: "You voted for this post"
+          off_topic: "あなたがオフトピックであるとフラグをたてました"
+          spam: "あなたがスパムであるとフラグを立てています"
+          inappropriate: "あなたが不適切であるとフラグをたてました"
+          notify_moderators: "あなたがモデレータ確認を要するとフラグをたてました"
+          notify_user: "あなたがこのユーザにプライベートメッセージを送信しました"
+          bookmark: "あなたがこのポストをブックマークしました"
+          like: "あなたが「いいね！」しました"
+          vote: "あなたがこのポストに投票しました"
         by_you_and_others:
           off_topic:
-            one: "You and 1 other flagged this as off-topic"
-            other: "You and {{count}} other people flagged this as off-topic"
+            one: "あなたともう1人がオフトピックであるとフラグをたてました"
+            other: "あなたと他{{count}}人がオフトピックであるとフラグをたてました"
           spam:
-            one: "You and 1 other flagged this as spam"
-            other: "You and {{count}} other people flagged this as spam"
+            one: "あなたともう1人がスパムであるとフラグをたてました"
+            other: "あなたと他{{count}}人がスパムであるとフラグをたてました"
           inappropriate:
-            one: "You and 1 other flagged this as inappropriate"
-            other: "You and {{count}} other people flagged this as inappropriate"
+            one: "あなたともう1人が不適切であるとフラグをたてました"
+            other: "あなたと他{{count}}人が不適切であるとフラグをたてました"
           notify_moderators:
-            one: "You and 1 other flagged this for moderation"
-            other: "You and {{count}} other people flagged this for moderation"
+            one: "あなたともう1人がモデレータ確認を要するとフラグをたてました"
+            other: "あなたと他{{count}}人がモデレータ確認を要するとフラグをたてました"
           notify_user:
-            one: "You and 1 other sent a private message to this user"
-            other: "You and {{count}} other people sent a private message to this user"
+            one: "あなたともう1人がこのユーザにプライベートメッセージを送信しました"
+            other: "あなたと他{{count}}人がこのユーザにプライベートメッセージを送信しました"
           bookmark:
-            one: "You and 1 other bookmarked this post"
-            other: "You and {{count}} other people bookmarked this post"
+            one: "あなたともう1人がこのポストをブックマークしました"
+            other: "あなたと他{{count}}人がこのポストをブックマークしました"
           like:
             one: "あなたと他1人が「いいね！」しました"
             other: "あなたと他{{count}}人が「いいね！」しました"
           vote:
-            one: "You and 1 other voted for this post"
-            other: "You and {{count}} other people voted for this post"
+            one: "あなたともう1人がこのポストに投票しました"
+            other: "あなたと他{{count}}人がこのポストに投票しました"
         by_others:
           off_topic:
-            one: "1 person flagged this as off-topic"
-            other: "{{count}} people flagged this as off-topic"
+            one: "1人のユーザがオフトピックであるとフラグをたてました"
+            other: "{{count}}人のユーザがオフトピックであるとフラグをたてました"
           spam:
-            one: "1 person flagged this as spam"
-            other: "{{count}} people flagged this as spam"
+            one: "1人のユーザがスパムであるとフラグをたてました"
+            other: "{{count}}人のユーザがスパムであるとフラグをたてました"
           inappropriate:
-            one: "1 person flagged this as inappropriate"
-            other: "{{count}} people flagged this as inappropriate"
+            one: "1人のユーザが不適切であるとフラグをたてました"
+            other: "{{count}}人のユーザが不適切であるとフラグをたてました"
           notify_moderators:
-            one: "1 person flagged this for moderation"
-            other: "{{count}} people flagged this for moderation"
+            one: "1人のユーザがモデレータ確認を要するとフラグをたてました"
+            other: "{{count}}人のユーザがモデレータ確認を要するとフラグをたてました"
           notify_user:
-            one: "1 person sent a private message to this user"
-            other: "{{count}} sent a private message to this user"
+            one: "1人のユーザがこのユーザにプライベートメッセージを送信しました"
+            other: "{{count}}人のユーザがこのユーザにプライベートメッセージを送信しました"
           bookmark:
-            one: "1 person bookmarked this post"
-            other: "{{count}} people bookmarked this post"
+            one: "1人のユーザがこのポストをブックマークしました"
+            other: "{{count}}人のユーザがこのポストをブックマークしました"
           like:
-            one: "1人が「いいね！」しました"
-            other: "{{count}}人が「いいね！」しました"
+            one: "1人のユーザが「いいね！」しました"
+            other: "{{count}}人のユーザが「いいね！」しました"
           vote:
-            one: "1 person voted for this post"
-            other: "{{count}} people voted for this post"
+            one: "1人のユーザがこのポストに投票しました"
+            other: "{{count}}人のユーザがこのポストに投票しました"
 
       edits:
-        one: 1 edit
-        other: "{{count}} edits"
-        zero: no edits
+        one: 1回編集
+        other: "{{count}}回編集"
+        zero: 編集なし
 
       delete:
         confirm:
-          one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete all those posts?"
+          one: "本当にこのポストを削除しますか?"
+          other: "本当にこれらのポストを削除しますか?"
 
     category:
       can: 'can&hellip; '
       none: '(カテゴリなし)'
       edit: '編集'
       edit_long: "カテゴリを編集"
-      edit_uncategorized: "Edit Uncategorized"
+      edit_uncategorized: "カテゴリなしを編集"
       view: 'カテゴリ内のトピックを見る'
       general: '一般'
       settings: '設定'
@@ -940,10 +940,10 @@ ja:
       save: 'カテゴリを保存する'
       creation_error: カテゴリの作成に失敗しました。
       save_error: カテゴリの保存に失敗しました。
-      more_posts: "view all {{posts}}..."
+      more_posts: "{{posts}}をすべて見る..."
       name: "カテゴリ名"
       description: "カテゴリ内容"
-      topic: "category topic"
+      topic: "カテゴリトピック"
       badge_colors: "バッジの色"
       background_color: "背景色"
       foreground_color: "文字表示色"
@@ -963,13 +963,13 @@ ja:
 
     flagging:
       title: 'このポストにフラグをつける理由は何ですか?'
-      action: 'フラグをつけるt'
+      action: 'フラグをつける'
       take_action: "アクションを取る"
       notify_action: '通知する'
-      delete_spammer: "Delete Spammer"
-      delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
-      yes_delete_spammer: "Yes, Delete Spammer"
-      cant: "Sorry, you can't flag this post at this time."
+      delete_spammer: "スパマーの削除"
+      delete_confirm: "このユーザによる<b>%{posts}</b>個のポストと<b>%{topics}</b>個のトピックを削除し、アカウントを削除し、このユーザのメールアドレス <b>%{email}</b> をブロックリストに追加しようとしています。本当にこのユーザをスマパー認定してもよいですか?"
+      yes_delete_spammer: "はい、スパマーを削除する"
+      cant: "申し訳ありませんが、現在このポストにフラグをたてることはできません。"
       custom_placeholder_notify_user: "ポストについて、このユーザに個人的に直接確認する必要がある内容を書いてください。詳細かつ建設的に、そして何よりマナーを守った内容にしてください。"
       custom_placeholder_notify_moderators: "ポストについて、モデレータの確認が必要な理由を書いてください。問題の詳細を書くとともに、可能であれば参照リンクなども加えてください。"
       custom_message:
@@ -995,7 +995,7 @@ ja:
 
     posts: "投稿"
     posts_long: "このトピックには{{number}}個のポストがあります"
-    original_post: "Original Post"
+    original_post: "大元のポスト"
     views: "閲覧"
     replies: "回答"
     views_long: "このトピックは{{number}}回閲覧されました"
@@ -1020,8 +1020,8 @@ ja:
         title: "お気に入り"
         help: "お気に入りしたトピック"
       read:
-        title: "Read"
-        help: "topics you've read, in the order that you last read them"
+        title: "既読"
+        help: "既読のトピックを、最後に読んだ順に表示"
       categories:
         title: "カテゴリ"
         title_in: "カテゴリ - {{categoryName}}"
@@ -1046,9 +1046,9 @@ ja:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "latest topics in the {{categoryName}} category"
+        help: "{{categoryName}} カテゴリの最新トピック"
 
-    browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
+    browser_update: '残念ながら、<a href="http://www.discourse.org/faq/#browser">ご使用中のブラウザが古すぎるため Discourse フォーラムが正しく動作しません</a>。<a href="http://browsehappy.com">ブラウザをアップグレードしてください</a>。'
 
     permission_types:
       full: "Create / Reply / See"
@@ -1057,7 +1057,7 @@ ja:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "type to filter..."
+    type_to_filter: "ファルタのタイプ..."
 
     admin:
       title: 'Discourse 管理者'
@@ -1081,8 +1081,8 @@ ja:
         no_problems: "問題は見つかりませんでした。"
         moderators: 'モデレータ:'
         admins: '管理者:'
-        blocked: 'ブロック済:'
-        banned: '追放済:'
+        blocked: 'ブロック中:'
+        banned: '追放中:'
         private_messages_short: "PMs"
         private_messages_title: "プライベートメッセージ"
 
@@ -1095,51 +1095,51 @@ ja:
           7_days_ago: "7日前"
           30_days_ago: "30日前"
           all: "全て"
-          view_table: "View as Table"
-          view_chart: "View as Bar Chart"
+          view_table: "テーブル表示"
+          view_chart: "棒グラフ表示"
 
       commits:
-        latest_changes: "Latest changes: please update often!"
+        latest_changes: "最新の更新内容: 定期的にアップデートしてください!"
         by: "by"
 
       flags:
-        title: "Flags"
-        old: "Old"
-        active: "アクティブ"
+        title: "フラグ"
+        old: "古いフラグ"
+        active: "アクティブなフラグ"
 
-        agree_hide: "Agree (hide post + send PM)"
-        agree_hide_title: "Hide this post and automatically send the user a private message urging them to edit it"
-        defer: "Defer"
-        defer_title: "No action is necessary at this time, defer any action on this flag until a later date, or never"
-        delete_post: "Delete Post"
-        delete_post_title: "Delete post; if the first post, delete the topic"
-        disagree_unhide: "Disagree (unhide post)"
-        disagree_unhide_title: "Remove any flags from this post and make the post visible again"
-        disagree: "Disagree"
-        disagree_title: "Disagree with flag, remove any flags from this post"
-        delete_spammer_title: "Delete the user and all its posts and topics."
+        agree_hide: "賛成 (ポストを非表示 + PM を送信)"
+        agree_hide_title: "このポストを非表示にし、編集を促すプライベートメッセージを自動的に送信"
+        defer: "保留"
+        defer_title: "現時点ではアクション不要。保留状態にしておき後ほど再判断"
+        delete_post: "ポストを削除"
+        delete_post_title: "ポストを削除。最初のポストの場合はトピックも合わせて削除"
+        disagree_unhide: "反対 (ポストを再表示)"
+        disagree_unhide_title: "このポストのフラグをクリアし、再度表示"
+        disagree: "反対"
+        disagree_title: "フラグに反対。このポストのフラグをクリア"
+        delete_spammer_title: "ユーザを削除し、全てのポストとトピックを削除。"
 
-        flagged_by: "Flagged by"
-        error: "Something went wrong"
+        flagged_by: "フラグをたてた人"
+        error: "何かがうまくいきませんでした"
         view_message: "回答"
         no_results: "フラグはありません。"
 
         summary:
           action_type_3:
             one: "オフトピック"
-            other: "off-topic x{{count}}"
+            other: "オフトピック x{{count}}"
           action_type_4:
             one: "不適切"
-            other: "inappropriate x{{count}}"
+            other: "不適切 x{{count}}"
           action_type_6:
-            one: "custom"
-            other: "custom x{{count}}"
+            one: "カスタム"
+            other: "カスタム x{{count}}"
           action_type_7:
-            one: "custom"
-            other: "custom x{{count}}"
+            one: "カスタム"
+            other: "カスタム x{{count}}"
           action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
+            one: "スパム"
+            other: "スパム x{{count}}"
 
       groups:
         title: "グループ"
@@ -1154,12 +1154,12 @@ ja:
 
       api:
         title: "API"
-        long_title: "API Information"
+        long_title: "API 情報"
         key: "Key"
-        generate: "Generate API Key"
-        regenerate: "Regenerate API Key"
-        info_html: "Your API key will allow you to create and update topics using JSON calls."
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
+        generate: "API キーを生成"
+        regenerate: "API キーを再生成"
+        info_html: "API キーを使うと、JSON 呼び出しでトピックの作成・更新を行うことが出来ます。"
+        note_html: "このキーは<strong>秘密</strong>情報です。キーを知るユーザは、任意のユーザとして任意のポストを作成することができます。"
 
       customize:
         title: "カスタマイズ"
@@ -1196,7 +1196,7 @@ ja:
         html: "html"
         text: "text"
         last_seen_user: "ユーザが最後にサイトを訪れた日:"
-        reply_key: "Reply Key"
+        reply_key: "回答キー"
 
       logs:
         title: "ログ"
@@ -1241,11 +1241,11 @@ ja:
           url: "URL"
 
       impersonate:
-        title: "Impersonate User"
-        username_or_email: "Username or Email of User"
-        help: "Use this tool to impersonate a user account for debugging purposes."
-        not_found: "That user can't be found."
-        invalid: "Sorry, you may not impersonate that user."
+        title: "ユーザになりすます"
+        username_or_email: "ユーザ名かメールアドレス"
+        help: "デバグ用途でユーザアカウントになりすますためのツールです。"
+        not_found: "ユーザが見つかりませんでした。"
+        invalid: "申し訳有りませうが、このユーザにはなりすませません。"
 
       users:
         title: 'ユーザ'
@@ -1261,13 +1261,13 @@ ja:
           moderators: 'モデレータ'
           banned: '追放中'
           blocked: 'ブロック中'
-        approved: "Approved?"
+        approved: "承認?"
         approved_selected:
-          one: "approve user"
-          other: "approve users ({{count}})"
+          one: "承認ユーザ"
+          other: "承認ユーザ ({{count}})"
         reject_selected:
-          one: "reject user"
-          other: "reject users ({{count}})"
+          one: "拒否ユーザ"
+          other: "拒否ユーザ ({{count}})"
         titles:
           active: 'アクティブユーザ'
           new: '新規ユーザ'
@@ -1296,10 +1296,10 @@ ja:
         delete_all_posts_confirm: "%{posts}個のポストと%{topics}個のトピックが削除されます。よろしいですか?"
         ban: "追放"
         unban: "追放解除"
-        banned: "追放済?"
+        banned: "追放中?"
         moderator: "モデレータ?"
         admin: "管理者?"
-        blocked: "ブロック済?"
+        blocked: "ブロック中?"
         show_admin_profile: "管理者"
         edit_title: "タイトルを編集"
         save_title: "タイトルを保存"
@@ -1324,33 +1324,31 @@ ja:
         flags_received_count: 設定されたフラグ数
         approve: '承認'
         approved_by: "承認したユーザ"
-        approve_success: "User approved and email sent with activation
-          instructions."
-        approve_bulk_success: "Success! All selected users have been approved
-          and notified."
+        approve_success: "ユーザが承認され、アクティベーション方法を記載したメールが送信されました。"
+        approve_bulk_success: "成功! 選択したユーザ全員が承認され、メールが送信されました。"
         time_read: "リード時間"
         delete: "ユーザを削除"
         delete_forbidden:
-          one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
-          other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
-        delete_confirm: "Are you SURE you want to delete this user? This action is permanent!"
-        delete_and_block: "<b>Yes</b>, and <b>block</b> signups from this email address"
-        delete_dont_block: "<b>Yes</b>, but <b>allow</b> signups from this email address"
-        deleted: "The user was deleted."
-        delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
-        send_activation_email: "Send Activation Email"
-        activation_email_sent: "An activation email has been sent."
-        send_activation_email_failed: "There was a problem sending another activation email. %{error}"
-        activate: "Activate Account"
-        activate_failed: "There was a problem activating the user."
-        deactivate_account: "Deactivate Account"
-        deactivate_failed: "There was a problem deactivating the user."
-        unblock_failed: 'There was a problem unblocking the user.'
-        block_failed: 'There was a problem blocking the user.'
-        deactivate_explanation: "A deactivated user must re-validate their email."
-        banned_explanation: "A banned user can't log in."
-        block_explanation: "A blocked user can't post or start topics."
-        trust_level_change_failed: "There was a problem changing the user's trust level."
+          one: "登録後%{count}日以上が経過したユーザ、およびポスト投稿済のユーザは削除できません (ユーザ削除の前に全てのポストを削除してください)。"
+          other: "登録後%{count}日以上が経過したユーザ、およびポスト投稿済のユーザは削除できません (ユーザ削除の前に全てのポストを削除してください)。"
+        delete_confirm: "本当にこのユーザを削除しますか? この操作はやり直しできません!"
+        delete_and_block: "<b>はい</b>。さらにこのメールアドレスからのサインアップを以後<b>ブロック</b>"
+        delete_dont_block: "<b>はい</b>。ただしこのメールアドレスからのサインアップは<b>許可</b>"
+        deleted: "ユーザが削除されました。"
+        delete_failed: "ユーザ削除中にエラーが発生しました。このユーザの全てのポストを削除したことを確認してください。"
+        send_activation_email: "アクティベーションメールを送信"
+        activation_email_sent: "アクティベーションメールが送信されました。"
+        send_activation_email_failed: "アクティベーションメールの送信に失敗しました。 %{error}"
+        activate: "アカウントのアクティベート"
+        activate_failed: "ユーザのアクティベートに失敗しました。"
+        deactivate_account: "アカウントのアクティベート解除"
+        deactivate_failed: "ユーザのアクティベート解除に失敗しました。"
+        unblock_failed: 'ユーザのブロック解除に失敗しました。'
+        block_failed: 'ユーザのブロックに失敗しました。'
+        deactivate_explanation: "アクティベート解除されたユーザは、メールで再アクティベートする必要があります。"
+        banned_explanation: "追放中のユーザはログインできません。"
+        block_explanation: "ブロック中のユーザはポストの投稿およびトピックの作成ができません。"
+        trust_level_change_failed: "ユーザのトラストレベル変更に失敗しました。"
 
       site_content:
         none: "編集するコンテンツのタイプを選択してください。"
