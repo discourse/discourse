@@ -276,25 +276,17 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_last_seen!(now=nil)
-    now ||= Time.zone.now
+
+  def update_last_seen!(now=Time.zone.now)
     now_date = now.to_date
-
     # Only update last seen once every minute
-    redis_key = "user:#{self.id}:#{now_date}"
-    if $redis.setnx(redis_key, "1")
-      $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
+    redis_key = "user:#{id}:#{now_date}"
+    return unless $redis.setnx(redis_key, "1")
 
-      update_visit_record!(now_date)
-
-      # using update_column to avoid the AR transaction
-      # Keep track of our last visit
-      if seen_before? && (self.last_seen_at < (now - SiteSetting.previous_visit_timeout_hours.hours))
-        previous_visit_at = last_seen_at
-        update_column(:previous_visit_at, previous_visit_at)
-      end
-      update_column(:last_seen_at, now)
-    end
+    $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
+    update_previous_visit(now)
+    # using update_column to avoid the AR transaction
+    update_column(:last_seen_at, now)
   end
 
   def self.gravatar_template(email)
@@ -505,14 +497,7 @@ class User < ActiveRecord::Base
 
   def update_tracked_topics
     return unless auto_track_topics_after_msecs_changed?
-
-    where_conditions = {notifications_reason_id: nil, user_id: id}
-    if auto_track_topics_after_msecs < 0
-      TopicUser.where(where_conditions).update_all({notification_level: TopicUser.notification_levels[:regular]})
-    else
-      TopicUser.where(where_conditions).update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
-                            auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]])
-    end
+    TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
   end
 
   def create_user_stat
@@ -583,6 +568,18 @@ class User < ActiveRecord::Base
 
 
   private
+
+  def previous_visit_at_update_required?(timestamp)
+    seen_before? &&
+      (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
+  end
+
+  def update_previous_visit(timestamp)
+    update_visit_record!(timestamp.to_date)
+    if previous_visit_at_update_required?(timestamp)
+      update_column(:previous_visit_at, last_seen_at)
+    end
+  end
 
 end
 
