@@ -426,9 +426,9 @@ span.post-count {
 
   z-index: 1000;
   padding: 14px 0 8px 0;
- h1 { line-height: 1em; overflow: hidden; }
+ h1 { line-height: 1.2em; overflow: hidden; }
 .topic-statuses {margin-top: -2px; .icon-pushpin {margin-top: -1px;}}
-.star {font-size: 20px; margin-top: 5px;}
+.star {font-size: 20px; margin-top: 8px;}
 
 .chzn-container {vertical-align: middle;}
 }
@@ -471,14 +471,14 @@ iframe {
   h1 {
     margin: 5px 0 0 0;
     font-size: 2em;
-    line-height: 1em;
+    line-height: 1.2em;
     overflow: hidden;
   }
 
   a.star {
-    margin-right: 5px;
+    margin-right: 8px;
     font-size: 20px;
-    margin-top: 5px;
+    margin-top: 8px;
   }
 
   .topic-statuses {margin-top: -2px;}
