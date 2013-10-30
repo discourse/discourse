@@ -13,7 +13,8 @@ module Jobs
 
       # Find the user
       user = User.where(id: args[:user_id]).first
-      return if !user || user.is_banned?
+      return unless user
+      return if user.is_banned? && args[:type] != :user_private_message
 
       seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
       seen_recently = false if user.email_always
@@ -36,9 +37,8 @@ module Jobs
       notification = nil
       notification = Notification.where(id: args[:notification_id]).first if args[:notification_id].present?
       if notification.present?
-
         # Don't email a user about a post when we've seen them recently.
-        return if seen_recently
+        return if seen_recently && !user.is_banned?
 
         # Load the post if present
         email_args[:post] ||= notification.post
@@ -69,6 +69,7 @@ module Jobs
       post &&
       (post.topic.blank? ||
        post.user_deleted? ||
+       (user.is_banned? && !post.user.try(:staff?)) ||
        PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?)
     end
 
