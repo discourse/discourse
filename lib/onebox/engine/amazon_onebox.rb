@@ -13,13 +13,22 @@ module Onebox
 
       private
 
+      def image
+        case
+          when raw.css("#main-image").any?
+            raw.css("#main-image").first["src"]
+          when raw.css("#landingImage").any?
+            raw.css("#landingImage").first["src"]
+        end
+      end
+
       def data
         {
           link: link,
           domain: "https://amazon.com",
           badge: "a",
           title: raw.css("h1").inner_text,
-          image: raw.css("#main-image").first["src"],
+          image: image,
           description: raw.css("#postBodyPS").inner_text,
           price: raw.css(".priceLarge").inner_text
         }
