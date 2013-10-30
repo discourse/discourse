@@ -91,31 +91,6 @@ Discourse.HeaderView = Discourse.View.extend({
     });
 
   },
-  /**
-    Display the correct logo in the header, showing a custom small icon if it exists.
-    In case the logo_url setting is empty, shows the site title as the logo.
-    @property logoHTML
-  **/
-  logoHTML: function() {
-    var result = "<div class='title'><a href='" + Discourse.getURL("/") + "'>";
-    if (!Discourse.Mobile.mobileView && this.get('controller.showExtraInfo')) {
-      var logoSmall = Discourse.SiteSettings.logo_small_url;
-      if (logoSmall && logoSmall.length > 1) {
-        result += "<img class='logo-small' src='" + logoSmall + "' width='33' height='33'>";
-      } else {
-        result += "<i class='icon-home'></i>";
-      }
-    } else {
-      var logo = Discourse.SiteSettings.logo_url;
-      if(logo && logo.length > 1) {
-        result += "<img class='logo-big' src=\"" + logo + "\" alt=\"" + Discourse.SiteSettings.title + "\" id='site-logo'>";
-      } else {
-        result += "<h2 class='text-logo' id='site-text-logo'>" + Discourse.SiteSettings.title + "</h2>";
-      }
-    }
-    result += "</a></div>";
-    return new Handlebars.SafeString(result);
-  }.property('controller.showExtraInfo'),
 
   willDestroyElement: function() {
     $(window).unbind('scroll.discourse-dock');

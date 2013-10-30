@@ -12,9 +12,11 @@ test("/", function() {
 test("displays small logo when extra info is shown and it is not mobile view", function() {
   expect(4);
 
+  Discourse.SiteSettings.logo_small_url = "logo-small-url";
+  Discourse.Mobile.mobileView = false;
+  Discourse.reset();
+
   Ember.run(function() {
-    Discourse.SiteSettings.logo_small_url = "logo-small-url";
-    Discourse.Mobile.mobileView = false;
     controllerFor("header").set("showExtraInfo", true);
   });
 
@@ -29,9 +31,11 @@ test("displays small logo when extra info is shown and it is not mobile view", f
 test("displays default home icon when small logo image source is not configured", function() {
   expect(3);
 
+  Discourse.SiteSettings.logo_small_url = "";
+  Discourse.Mobile.mobileView = false;
+  Discourse.reset();
+
   Ember.run(function() {
-    Discourse.SiteSettings.logo_small_url = "";
-    Discourse.Mobile.mobileView = false;
     controllerFor("header").set("showExtraInfo", true);
   });
 
@@ -45,8 +49,10 @@ test("displays default home icon when small logo image source is not configured"
 test("displays normal (big) logo when extra info is not shown", function() {
   expect(2);
 
+  Discourse.Mobile.mobileView = false;
+  Discourse.reset();
+
   Ember.run(function() {
-    Discourse.Mobile.mobileView = false;
     controllerFor("header").set("showExtraInfo", false);
   });
 
@@ -59,8 +65,10 @@ test("displays normal (big) logo when extra info is not shown", function() {
 test("displays normal (big) logo when it is mobile view", function() {
   expect(2);
 
+  Discourse.Mobile.mobileView = true;
+  Discourse.reset();
+
   Ember.run(function() {
-    Discourse.Mobile.mobileView = true;
     controllerFor("header").set("showExtraInfo", true);
   });
 
@@ -73,10 +81,12 @@ test("displays normal (big) logo when it is mobile view", function() {
 test("displays normal (big) logo image with alt title when big logo image source is configured", function() {
   expect(4);
 
+  Discourse.SiteSettings.logo_url = "logo-big-url";
+  Discourse.SiteSettings.title = "site-title";
+  Discourse.Mobile.mobileView = true;
+  Discourse.reset();
+
   Ember.run(function() {
-    Discourse.SiteSettings.logo_url = "logo-big-url";
-    Discourse.SiteSettings.title = "site-title";
-    Discourse.Mobile.mobileView = true;
     controllerFor("header").set("showExtraInfo", false);
   });
 
@@ -91,10 +101,12 @@ test("displays normal (big) logo image with alt title when big logo image source
 test("displays header with site title when big logo image source is not configured", function() {
   expect(3);
 
+  Discourse.SiteSettings.logo_url = "";
+  Discourse.SiteSettings.title = "site-title";
+  Discourse.Mobile.mobileView = true;
+  Discourse.reset();
+
   Ember.run(function() {
-    Discourse.SiteSettings.logo_url = "";
-    Discourse.SiteSettings.title = "site-title";
-    Discourse.Mobile.mobileView = true;
     controllerFor("header").set("showExtraInfo", false);
   });
 
@@ -108,9 +120,11 @@ test("displays header with site title when big logo image source is not configur
 test("dynamically toggles logo size when showing or hiding extra info", function() {
   expect(2);
 
+  Discourse.SiteSettings.logo_small_url = "logo-small-url";
+  Discourse.Mobile.mobileView = false;
+  Discourse.reset();
+
   Ember.run(function() {
-    Discourse.SiteSettings.logo_small_url = "logo-small-url";
-    Discourse.Mobile.mobileView = false;
     controllerFor("header").set("showExtraInfo", true);
   });
 
