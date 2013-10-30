@@ -309,9 +309,7 @@
       border: 1px dashed $gray;
       overflow: auto;
       visibility: visible;
-      p {
-        margin-top: 0;
-      }
+      
       &.hidden {
         width: 0;
         visibility: hidden;
