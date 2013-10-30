@@ -517,6 +517,7 @@ DEPENDENCIES
   qunit-rails
   rack-cors
   rack-mini-profiler!
+  rack-protection
   rails!
   rails-observers
   rails_multisite!
