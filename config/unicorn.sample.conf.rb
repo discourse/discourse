@@ -3,7 +3,7 @@
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
 # tune down if not enough ram
-worker_processes 3
+worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 
 working_directory discourse_path
 
@@ -41,14 +41,6 @@ before_fork do |server, worker|
     I18n.t(:posts)
     # get rid of rubbish so we don't share it
     GC.start
-
-    Thread.new do
-      # sleep a bit, on startup unicorn kills all its children
-      # so sidestep it
-      sleep 10
-      require 'demon/sidekiq'
-      Demon::Sidekiq.start(1)
-    end
   end
 
   ActiveRecord::Base.connection.disconnect!
