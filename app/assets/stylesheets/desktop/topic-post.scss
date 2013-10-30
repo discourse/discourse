@@ -9,13 +9,11 @@
   margin-left: auto;
 }
 
-
-
-h1 .topic-statuses .topic-status i {margin-right: 5px;}
-
 .full-width {
   margin-left: 0px;
 }
+
+h1 .topic-statuses .topic-status i {margin-right: 5px;}
 
 .logo-small {margin-right: 8px;}
 
@@ -28,9 +26,7 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
 
   &:last-of-type {
     border-bottom: 1px solid #ddd;
-
-  }
-
+}
 
 .reply-to-tab {
   display: block;
@@ -43,19 +39,21 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   margin-left: -8px;
 }
 
-.avoid-tab {padding-top: 25px;
-
-.topic-meta-data-inside {margin-top: -30px;}
+.avoid-tab { 
+  padding-top: 25px;
+  .topic-meta-data-inside {margin-top: -30px;}
 }
 
 .gutter {
-      .reply-new {
-        opacity:0;
-          transition: linear 0.15s;
-    -webkit-transition: linear 0.15s;
-      }
+  .reply-new {
+    .discourse-no-touch & {
+     opacity:0;
+     transition: linear 0.15s;
+     -webkit-transition: linear 0.15s;
     }
-
+    .discourse-touch & {opacity: 1;}
+  }
+}
 
 section.post-menu-area, .post-actions {
     .discourse-no-touch & {
@@ -63,6 +61,7 @@ section.post-menu-area, .post-actions {
        transition: linear 0.15s;
     -webkit-transition: linear 0.15s;
     }
+    .discourse-touch & {opacity: 1;}
   }
 
   &:hover section.post-menu-area, &:hover .post-actions {
@@ -82,7 +81,6 @@ nav.post-controls {
     padding: 0;
     button {color: #aaa;
     margin-right: 2px;
-
   }
 
   span.badge-posts {
@@ -95,7 +93,6 @@ nav.post-controls {
       margin-left: 5px;
     }
   }
-
 
   button.show-replies {
     padding: 8px 15px;
@@ -122,11 +119,9 @@ nav.post-controls {
 
   }
 
-
   .create i {
     margin-right: 5px;
   }
-
 
   button {
     font-size: 16px;
@@ -136,20 +131,16 @@ nav.post-controls {
     border: none;
     margin-left: 3px;
     transition: all linear 0.15s;
-    outline: none; //removes the pesky square button highlight from some browsers
+    outline: none; 
          &:hover {
           background: #eee;
           color: #888;
-
-
         }
-
 
         &:active {
-
             @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
-
         }
+
         &.hidden {
           display: none;
         }
@@ -188,27 +179,20 @@ nav.post-controls {
           }
         }
       }
-    }
-
-
-
-.embedded-posts {
-  background: #eee;
-
-  .quote .title {background: #ddd;}
-  blockquote {background: #ddd;}
-  &.bottom { margin-top: -11px;}
-
-  .topic-meta-data h5 {margin: 5px;}
-
-  .topic-meta-data-inside {
-  margin: -3px 0 0 0;
-  color: #aaa;
   }
 
-  .topic-meta-data {padding-top: 20px;}
-
-}
+  .embedded-posts {
+    background: #eee;
+    .quote .title {background: #ddd;}
+    blockquote {background: #ddd;}
+    &.bottom { margin-top: -11px;}
+    .topic-meta-data h5 {margin: 5px;}
+    .topic-meta-data-inside {
+    margin: -3px 0 0 0;
+    color: #aaa;
+    }
+    .topic-meta-data {padding-top: 20px;}
+  }
 
 .post-action {
   .relative-date {
@@ -231,16 +215,14 @@ a.star {
 }
 
 .topic-summary {
+  margin: 20px 0 0 0;
+  border: 1px solid #ddd;
+
   button {border-radius: 0;}
 
   .topic-links li {
     word-wrap: break-word;
   }
-
-
-
-  margin: 20px 0 0 0;
-  border: 1px solid #ddd;
 
   h3 {
     margin-bottom: 4px;
@@ -322,11 +304,8 @@ a.star {
   }
 
 
-.participants {
-
-.user {float: left; margin: 7px 20px 7px 0;}
-
-
+.participants { // PMs //
+  .user {float: left; margin: 7px 20px 7px 0;}
 }
 
   .topic-links {
@@ -374,7 +353,6 @@ a.star {
 
 #topic-footer-buttons {
   padding: 20px 10px 0 10px;
-
   p {
     line-height: 32px;
     color: #888;
@@ -384,28 +362,21 @@ a.star {
 
 #suggested-topics {
   clear: left;
+  padding: 20px 10px 15px 10px;
 
-
-.topics table tbody tr {background: #fff;}
+  .topics table tbody tr {background: #fff;}
 
   table {
     box-shadow: none;
     border-radius: 0;
     border-color: #ddd;
     margin-top: 10px;
-
-
-
   }
-padding: 20px 10px 15px 10px;
 
    .title {
     font-size: 14px; line-height: 8px;
-
-  }
-
+   }
 }
-
 
 span.post-count {
   background: #000;
@@ -423,14 +394,18 @@ span.post-count {
 }
 
 #topic-title {
-
   z-index: 1000;
   padding: 14px 0 8px 0;
- h1 { line-height: 1.2em; overflow: hidden; }
-.topic-statuses {margin-top: -2px; .icon-pushpin {margin-top: -1px;}}
-.star {font-size: 20px; margin-top: 8px;}
-
-.chzn-container {vertical-align: middle;}
+  h1 { 
+    line-height: 1.2em; 
+    overflow: hidden; 
+  }
+  .topic-statuses {
+    margin-top: -2px; 
+    .icon-pushpin {margin-top: -1px;}
+  }
+  .star {font-size: 20px; margin-top: 8px;}
+  .chzn-container {vertical-align: middle;}
 }
 
 article.boxed {
@@ -461,11 +436,11 @@ iframe {
   max-width: 100%;
 }
 
-
-.extra-info-wrapper {float: left; width: 78%;
-.topic-statuses {margin-right: 5px;}
+.extra-info-wrapper {
+  float: left; 
+  width: 78%;
+  .topic-statuses {margin-right: 5px;}
 }
-
 
 .extra-info {
   h1 {
@@ -496,13 +471,10 @@ iframe {
   padding-top: 30px;
 
   img { text-align: center; }
-.contents {
-
-  text-align: center;}
-h3 {display: block;}
+  .contents { text-align: center;}
+  h3 { display: block; }
 
 }
-
 
 .open>.dropdown-menu {
   display: block;
@@ -527,13 +499,9 @@ h3 {display: block;}
 }
 
 .contents .cooked {
-
   padding-right: 30px;
-
-h1, h2, h3 {margin: 10px 0;}
-
+  h1, h2, h3 {margin: 10px 0;}
 }
-
 
 .modal-body {
   input[type=text] {
@@ -582,19 +550,12 @@ h1, h2, h3 {margin: 10px 0;}
   margin-top: -20px;
 }
 
-
-
-
 #show-topic-admin {
   right: 20px;
   padding: 5px 8px;
   margin-top: 5px;
 
 }
-
-
-
-
 
 .topic-admin-menu {
 
@@ -610,21 +571,19 @@ h1, h2, h3 {margin: 10px 0;}
 .staff a {
   padding: 4px;
   margin: -4px 0 0 0;
-  background-color: lighten(yellow, 35%);}
+  background-color: lighten(yellow, 35%);
+}
 
 .topic-meta-data {
 float: left;
 position: relative;
 
-
-h3 {
-  font-size: 13px;
-  margin-top: 5px;
-  word-wrap: break-word;
-  line-height: 1.2em;
-}
-
-
+  h3 {
+    font-size: 13px;
+    margin-top: 5px;
+    word-wrap: break-word;
+    line-height: 1.2em;
+  }
 }
 
 .user-title {
@@ -634,19 +593,23 @@ h3 {
   font-size: 80%;
 }
 
-
-blockquote {
-  margin: 0;
-  padding: 12px;
-}
-
 .info-line {
   margin: 10px 0;
   color: #666;
 }
 
-.quote .title {margin-right: 0;}
-.quote {margin-top: 20px;}
+
+blockquote { /* solo quotes */
+  margin: 14px 0;
+  padding: 12px;
+}
+
+.quote { /* quotes with attribution */
+  margin-top: 14px;
+  .title {margin-right: 0;}
+  blockquote {margin: 0;}
+}
+
 .quote-controls {
   float: right;
   color: #aaa;
@@ -670,22 +633,13 @@ blockquote {
     }
 }
 
-
 .quote .title {
   border-left: 5px solid #bebebe;
   background-color: #f1f1f1;
   padding: 10px 10px 0 12px;
   .avatar { margin-right: 7px; }
   img {margin-top: -4px;}
-
-
-  .controls {}
 }
-
-
-
-
-
 
 .gutter {
   float: left;
@@ -707,15 +661,10 @@ blockquote {
       left: 0;
       margin-right: 15px;
       margin-bottom: 20px;
-
     }
     a {color: #aaa;}
-
     li {margin-bottom: 7px;}
-
-
   }
-
 }
 
 .topic-body {
@@ -724,13 +673,11 @@ blockquote {
   position: relative;
   width: 720px;
   padding: 10px 0 15px 20px;
-
 }
 
 .posts-wrapper {
   position: relative;
 }
-
 
 //columns
 
@@ -741,17 +688,13 @@ blockquote {
 
 
 @media screen and (max-width: 966px) {
-
-.gutter {display: none;}
-
-.span14 { width: 80%; max-width: 720px; } //main content
-
-  }
-
-
+  .gutter {display: none;}
+  .span14 { width: 80%; max-width: 720px; } //main content
+}
 
 .row:before, .row:after {display: table; content: "";}
 .row:after {clear: both;}
+
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
   &.bottom {
@@ -766,39 +709,25 @@ blockquote {
   .reply:first-of-type .row {border-top: none;}
 }
 
-
-
-
-
 .contents.regular  {
 
 button.show-replies {
-
   background: #eee;
   padding-bottom: 20px;
-
-
      &:hover {background: #ddd;
   .badge-posts {color: #888;}
 
   }
-
-
 }
 
   &.bottom-round button.show-replies {
-
   background: #eee;
   margin-bottom: 0;
   padding-bottom: 8px;
-
-
- &:hover {background: #ddd;
-  .badge-posts {color: #888;}
-
+    &:hover {background: #ddd;
+       .badge-posts {color: #888;}
+    }
   }
-  }
-
 
 }
 
@@ -881,48 +810,10 @@ clear: both;
   opacity: 1;
 }
 
-
-
 #selected-posts {
 
- margin-left: 330px;
-    width: 12%;
-
-.btn {
-  border: none;
-  color: $white;
-  font-weight: normal;
-
-    color: #fff;
-    background: $btn-primary-background-color;
-
-  &[href] {
-    color: $white;
-  }
-  &:hover
-  {
-    color: #fff;
-    background: darken($btn-primary-background-color, 12%);
-  }
-  &:active {
-    @include linear-gradient(darken($btn-primary-background-color, 18%), darken($btn-primary-background-color, 12%));
-    @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
-    color: #fff;
-  }
-  &[disabled] {
-    text-shadow: 0 1px 0 rgba($black, 0.2);
-    @include linear-gradient($btn-primary-background-color, $btn-primary-background-color-dark);
-    @include box-shadow((inset 0 1px 0 rgba($white, 0.33), inset 0 -1px 2px rgba($black, 0.2)));
-  }
-}
-
-
-
-    p {
-      font-size: 13px;
-    }
-
-
+  margin-left: 330px;
+  width: 12%;
   position: fixed;
   z-index: 1000;
   left: 50%;
@@ -930,6 +821,8 @@ clear: both;
   border: 1px solid lighten($blue, 40%);
   padding: 5px;
   margin-bottom: 5px;
+
+
 
   button {
     width: 160px;
@@ -945,6 +838,7 @@ clear: both;
     margin-top: 10px;
   }
   p {
+    font-size: 13px;
     margin: 0 0 10px 0;
   }
   p.cancel {
@@ -956,6 +850,33 @@ clear: both;
     margin-bottom: 5px;
     i {
       margin-right: 7px;
+    }
+  }
+  .btn {
+    border: none;
+    color: $white;
+    font-weight: normal;
+
+      color: #fff;
+      background: $btn-primary-background-color;
+
+    &[href] {
+      color: $white;
+    }
+    &:hover
+    {
+      color: #fff;
+      background: darken($btn-primary-background-color, 12%);
+    }
+    &:active {
+      @include linear-gradient(darken($btn-primary-background-color, 18%), darken($btn-primary-background-color, 12%));
+      @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+      color: #fff;
+    }
+    &[disabled] {
+      text-shadow: 0 1px 0 rgba($black, 0.2);
+      @include linear-gradient($btn-primary-background-color, $btn-primary-background-color-dark);
+      @include box-shadow((inset 0 1px 0 rgba($white, 0.33), inset 0 -1px 2px rgba($black, 0.2)));
     }
   }
 }

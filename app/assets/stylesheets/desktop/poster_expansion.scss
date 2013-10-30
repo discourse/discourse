@@ -7,11 +7,11 @@
   position: absolute;
   left: 20px;
   z-index: 990;
-  @include border-radius-all(3px);
-  @include box-shadow(1px 1px 5px $darkish_gray);
+  box-shadow: 0 2px 6px rgba(70, 70, 70, 0.4);
+  margin-top: -2px;
   background-color: $white;
-  padding: 7px 7px 6px 7px;
-  width: 400px;
+  padding: 12px 12px 5px 12px;
+  max-width: 350px;
 
   h1.new-user a {
     color: $dark_gray;
