@@ -197,26 +197,26 @@ i {background: #e4f2f8;
 
 
 code,kbd,pre,samp{
-  font-family:monospace, serif;font-size:1em
+  font-family:monospace, serif; font-size:1em;
 }
-pre { white-space:pre-wrap= }
-q{ quotes:"\201C" "\201D" "\2018" "\2019" }
-small{ font-size:80% }
+pre { white-space:pre-wrap;}
+q{ quotes:"\201C" "\201D" "\2018" "\2019"; }
+small{ font-size:80%; }
 sub,sup{
   font-size:75%;
   line-height:0;
   position:relative;
-  vertical-align:baseline
+  vertical-align:baseline;
 }
-sup{top:-0.5em}
-sub{bottom:-0.25em}
-figure{margin:0}
+sup{top:-0.5em; }
+sub{bottom:-0.25em; }
+figure{margin:0; }
 fieldset{
   border:1px solid #c0c0c0;
   margin:0 2px;
-  padding:0.35em 0.625em 0.75em
+  padding:0.35em 0.625em 0.75em;
 }
 legend{
   border:0;
-  padding:0
+  padding:0;
 }
