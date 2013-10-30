@@ -58,4 +58,21 @@ describe PostSerializer do
     end
   end
 
+  context "display_username" do
+    let(:user) { Fabricate.build(:user) }
+    let(:post) { Fabricate.build(:post, user: user) }
+    let(:serializer) { PostSerializer.new(post, scope: Guardian.new, root: false) }
+    let(:json) { serializer.as_json }
+
+    it "returns the display_username it when `enable_names` is on" do
+      SiteSetting.stubs(:enable_names).returns(true)
+      json[:display_username].should be_present
+    end
+
+    it "doesn't return the display_username it when `enable_names` is off" do
+      SiteSetting.stubs(:enable_names).returns(false)
+      json[:display_username].should be_blank
+    end
+  end
+
 end

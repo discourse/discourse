@@ -11,6 +11,10 @@ class ActiveRecord::Base
     exec_sql(*args).cmd_tuples
   end
 
+  def self.sql_fragment(*sql_array)
+    ActiveRecord::Base.send(:sanitize_sql_array, sql_array)
+  end
+
   # exists fine in rails4
   unless rails4?
     # note: update_attributes still spins up a transaction this can cause contention

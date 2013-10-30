@@ -721,6 +721,8 @@ en:
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before we consider it dominating."
 
+    enable_names: "Allow users to show their full names"
+
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"

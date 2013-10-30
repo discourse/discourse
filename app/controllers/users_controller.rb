@@ -240,10 +240,12 @@ class UsersController < ApplicationController
     topic_id = params[:topic_id]
     topic_id = topic_id.to_i if topic_id
 
-    results = UserSearch.search term, topic_id
+    results = UserSearch.new(term, topic_id).search
 
-    render json: { users: results.as_json(only: [ :username, :name, :use_uploaded_avatar, :upload_avatar_template, :uploaded_avatar_id],
-                                          methods: :avatar_template) }
+    user_fields = [:username, :use_uploaded_avatar, :upload_avatar_template, :uploaded_avatar_id]
+    user_fields << :name if SiteSetting.enable_names?
+
+    render json: { users: results.as_json(only: user_fields, methods: :avatar_template) }
   end
 
   # [LEGACY] avatars in quotes/oneboxes might still be pointing to this route

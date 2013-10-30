@@ -270,6 +270,8 @@ class SiteSetting < ActiveRecord::Base
   # hidden setting only used by system
   setting(:uncategorized_category_id, -1, hidden: true)
 
+  client_setting(:enable_names, true)
+
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?
   end

@@ -31,4 +31,8 @@ class BasicPostSerializer < ApplicationSerializer
     end
   end
 
+  def include_name?
+    SiteSetting.enable_names?
+  end
+
 end

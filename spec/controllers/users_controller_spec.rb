@@ -893,6 +893,30 @@ describe UsersController do
       json["users"].map { |u| u["username"] }.should include(user.username)
     end
 
+    context "when `enable_names` is true" do
+      before do
+        SiteSetting.stubs(:enable_names?).returns(true)
+      end
+
+      it "returns names" do
+        xhr :post, :search_users, term: user.name
+        json = JSON.parse(response.body)
+        json["users"].map { |u| u["name"] }.should include(user.name)
+      end
+    end
+
+    context "when `enable_names` is false" do
+      before do
+        SiteSetting.stubs(:enable_names?).returns(false)
+      end
+
+      it "returns names" do
+        xhr :post, :search_users, term: user.name
+        json = JSON.parse(response.body)
+        json["users"].map { |u| u["name"] }.should_not include(user.name)
+      end
+    end
+
   end
 
   describe 'send_activation_email' do

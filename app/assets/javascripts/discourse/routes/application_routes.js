@@ -49,9 +49,9 @@ Discourse.Route.buildRoutes(function() {
     this.route('index', { path: '/'} );
 
     this.resource('userActivity', { path: '/activity' }, function() {
-      var resource = this;
+      var self = this;
       Object.keys(Discourse.UserAction.TYPES).forEach(function (userAction) {
-        resource.route(userAction, { path: userAction.replace("_", "-") });
+        self.route(userAction, { path: userAction.replace("_", "-") });
       });
     });
 

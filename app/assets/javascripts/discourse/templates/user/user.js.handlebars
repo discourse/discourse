@@ -4,9 +4,9 @@
     <section class='user-navigation'>
 
       <ul class='action-list nav-stacked'>
-        {{activityFilter count=statsCountNonPM user=model}}
+        {{discourse-activity-filter count=statsCountNonPM user=model userActionType=userActionType indexStream=indexStream}}
         {{#each stat in statsExcludingPms}}
-          {{activityFilter content=stat user=model}}
+          {{discourse-activity-filter content=stat user=model userActionType=userActionType indexStream=indexStream}}
         {{/each}}
       </ul>
 

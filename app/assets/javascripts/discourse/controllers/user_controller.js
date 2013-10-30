@@ -12,9 +12,7 @@ Discourse.UserController = Discourse.ObjectController.extend({
     return this.get('content.username') === Discourse.User.currentProp('username');
   }.property('content.username'),
 
-  collapsedInfo: function() {
-    return !this.get('indexStream');
-  }.property('indexStream'),
+  collapsedInfo: Em.computed.not('indexStream'),
 
   canSeePrivateMessages: function() {
     return this.get('viewingSelf') || Discourse.User.currentProp('staff');
