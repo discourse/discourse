@@ -400,27 +400,27 @@ ja:
 
   dashboard:
     rails_env_warning: "サーバは %{env} モードで起動中です。"
-    host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
-    gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
-    sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
-    memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
-    facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">See this guide to learn more</a>.'
-    cas_config_warning: 'The server is configured to allow signup and log in with CAS (enable_cas_logins), but the hostname and domain name values are not set.'
-    twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">See this guide to learn more</a>.'
-    github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
-    s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
-    image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
-    failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/environments/production.rb file and ensure that the config.action_mailer settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
-    default_logo_warning: "You haven't customized the logo images for your site. Update logo_url, logo_small_url, and favicon_url in the <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_missing: "You haven't provided a contact email for your site. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_invalid: "The site contact email is invalid. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
-    title_nag: "The title Site Setting is still set to the default value. Please update it with your site's title in the <a href='/admin/site_settings'>Site Settings</a>."
-    site_description_missing: "The site_description setting is blank. Write a brief description of this forum in the <a href='/admin/site_settings'>Site Settings</a>."
-    consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-    access_password_removal: "Your site was using the access_password setting, which has been removed. The login_required and must_approve_users settings have been enabled, which should be used instead. You can change them in the <a href='/admin/site_settings'>Site Settings</a>. Be sure to <a href='/admin/users/list/pending'>approve users in the Pending Users list</a>. (This message will go away after 2 days.)"
-    site_contact_username_warning: "The site_contact_username setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>. Set it to the username of an admin user who should be the sender of system messages."
-    notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
+    host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
+    gc_warning: '現在サーバはデフォルトの ruby ガベージコレクションパラメータを使用しており、パフォーマンスが最適化されていません。パフォーマンス・チューニングの方法についてはこちらのトピックを参考にしてください: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
+    sidekiq_warning: 'Sidekiq が起動していません。メール送信等、多くのタスクが sidekiq により非同期に実行されます。少なくとも sidekiq のプロセスを1つは起動してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらを参考にしてください</a>。'
+    queue_size_warning: 'キューに入っているジョブの数が多すぎます (%{queue_size})。Sidekiq プロセスに問題があるか、Sidekiq ワーカを追加する必要がある可能性があります。'
+    memory_warning: '現在サーバが 1GB 未満の総メモリで起動しています。推奨メモリサイズは 1GB 以上です。'
+    facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    cas_config_warning: 'サーバが CAS によるサインアップ・ログイン可能な設定 (enable_cas_logins) になっていますが、ホスト名とドメイン名が設定されていません。。'
+    twitter_config_warning: 'サーバが Twitter アカウントによるサインアップ・ログイン可能な設定 (enable_twitter_logins) になっていますが、key と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    github_config_warning: 'サーバが Github アカウントによるサインアップ・ログイン可能な設定 (enable_github_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    s3_config_warning: 'サーバが S3 にファイルをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>。'
+    image_magick_warning: 'サーバが大きな画像のサムネイルを作成する設定になっていますが、ImageMagick がインストールされていません。お好きなパッケージマネージャを使って ImageMagick をインストールするか、<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">最新のリリースをダウンロードしてください</a>。'
+    failing_emails_warning: '%{num_failed_jobs}個のメールジョブが失敗しています。config/environments/production.rb ファイルを確認して config.action_mailer の設定が正しいか確認してください。<a href="/sidekiq/retries" target="_blank">Sidekiq で失敗したジョブを確認</a>。'
+    default_logo_warning: "サイトのロゴ画像をカスタマイズしていません。<a href='/admin/site_settings'>サイトの設定</a>において logo_url, logo_small_url, favicon_url を更新してください。"
+    contact_email_missing: "サイトの連絡先メールアドレスが設定されていません。<a href='/admin/site_settings'>サイトの設定</a>において contact_email を更新してください。"
+    contact_email_invalid: "サイトの連絡先メールアドレスが正しくありません。<a href='/admin/site_settings'>サイトの設定</a>において contact_email を更新してください。"
+    title_nag: "サイトのタイトルがデフォルトのままになっています。<a href='/admin/site_settings'>サイトの設定</a>において正しいサイトのタイトルを設定してください。"
+    site_description_missing: "サイトの site_description 設定が空欄になっています。<a href='/admin/site_settings'>サイトの設定</a>においてこのフォーラムに関する簡単な説明文を追加してください。"
+    consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーのり用を検討してください。"
+    access_password_removal: "現在サイトは access_password 設定を利用していますが、この設定は廃止されたため代わりに login_required と must_approve_users 設定を利用してください。<a href='/admin/site_settings'>サイトの設定</a>にて変更ができます。この際、<a href='/admin/users/list/pending'>保留中リストのユーザを承認</a>してください。(このメッセージは2日後に削除されます)"
+    site_contact_username_warning: "site_contact_username 設定が空欄です。<a href='/admin/site_settings'>サイトの設定</a>にてシステムメッセージの送信者となる管理者のユーザ名を設定してください。"
+    notification_email_warning: "notification_email 設定が空欄です。<a href='/admin/site_settings'>サイトの設定</a>にて正しい値を設定してください。"
 
   content_types:
     education_new_reply:
@@ -458,7 +458,7 @@ ja:
       description: "要ログイン設定の際に、未ログインユーザに対して表示されるメッセージの内容。"
 
   site_settings:
-    default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
+    default_locale: "この Discourse インスタンスのデフォルト言語 (ISO 639-1 Code)"
     min_post_length: "ポストの最小文字数"
     min_private_message_post_length: "プライベートメッセージ本文の最小文字数"
     max_post_length: "ポストの最大文字数"
@@ -471,48 +471,48 @@ ja:
     unique_posts_mins: "同じ内容のポストを再投稿可能にする時間 (分)"
     enforce_global_nicknames: "ニックネームのグローバルユニーク性を強制する (警告: この設定は初回セットアップ時にのみ変更してください)"
     discourse_org_access_key: "discourse.org の Discourse Hub ニックネームレジストリにアクセスするためのキー"
-    educate_until_posts: "Show pop-up composer education panel until the user has made this many posts"
-    title: "Title of this site, will be used in the title tag and elsewhere"
-    site_description: "Describe this forum in one sentence. This description will be used in the meta description tag."
-    contact_email: "The email address of someone who can be contacted about the site. Important notices from Discourse.org regarding critical updates may be sent to this address."
-    company_full_name: "The full name of the company that runs this site, used in legal documents like the /tos"
-    company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
-    company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
-    api_key: "The secure API key used to create and update topics, use the /admin/api section to set it up"
-    queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
-    crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
-    ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
-    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view edit history."
-    delete_removed_posts_after: "Number of hours after which posts removed by the author will be deleted."
-    max_image_width: "Maximum allowed width of images in a post"
-    max_image_height: "Maximum allowed height of images in a post"
-    category_featured_topics: "Number of topics displayed per category in the /categories page"
-    add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
+    educate_until_posts: "ポスト編集時におけるヒントパネルのポップアップを止めるまでのポスト投稿数"
+    title: "サイトのタイトル。タイトルタグを含め、様々な場所で利用されます"
+    site_description: "このフォーラムの説明 (1行)。meta タグの description に利用されます。"
+    contact_email: "サイトの連絡先メールアドレス。重要なアップデートのお知らせ等、Discourse.org からの連絡がこちらのアドレスに送信されます。"
+    company_full_name: "このサイトを運営する会社の名前。/tos などの法的ドキュメントに利用されます"
+    company_short_name: "このサイトを運営する会社の略称。/tos などの法的ドキュメントに利用されます"
+    company_domain: "このサイトを運営する会社が保持するドメイン名。/tos などの法的ドキュメントに利用されます"
+    api_key: "トピックの作成や更新に利用する API key。/admin/api セクションで生成可能です"
+    queue_jobs: "開発者ONLY! 警告! デフォルトでキューは sidekiq により処理されます。これを無効にするとサイトが動作不能になります。"
+    crawl_images: "第三者ソースからの画像読み込み (width および height 読み込み）を有効にする"
+    ninja_edit_window: "ポスト投稿後、実際に新しいバージョンが作られるまでの秒数 (ninja-edit)"
+    edit_history_visible_to_public: "すべてのユーザに対してポストの編集履歴を許可する。無効の場合はスタッフメンバーのみが編集履歴を確認できます。"
+    delete_removed_posts_after: "執筆者により削除されたポストを実際に削除するまでの時間。"
+    max_image_width: "ポストに添付する画像の最大横幅"
+    max_image_height: "ポストに添付する画像の最大縦幅"
+    category_featured_topics: "/categories ページに表示されるカテゴリ毎のトピック数"
+    add_rel_nofollow_to_user_content: "(親ドメインを含む) 内部リンクを除き、投稿されたすべてのユーザコンテンツに rel nofollow を追加する。この設定変更を反映するには \"rake posts:rebake\" を実行して baked markdown をすべて更新する必要があります"
+    exclude_rel_nofollow_domains: "nofollow を設定しないドメイン一覧 (カンマ区切り) (tld.com を設定すると、自動的に sub.tld.com も対象になります)"
 
-    post_excerpt_maxlength: "Maximum length in chars of a post's excerpt"
-    post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"
-    category_post_template: "The category definition post template used when you create a new category"
-    onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
+    post_excerpt_maxlength: "ポスト引用の最大文字数"
+    post_onebox_maxlength: "oneboxed Discourse ポストの最大長"
+    category_post_template: "新規カテゴリ作成時におけるカテゴリ定義ポストのテンプレート"
+    onebox_max_chars: "onebox が外部 Web サイトよりポストにインポートする最大文字数"
 
-    logo_url: "The logo for your site eg: http://example.com/logo.png"
-    logo_small_url: "The small logo for your site used when scrolling down on topics eg: http://example.com/logo-small.png"
-    favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
-    apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
+    logo_url: "サイトのロゴ。例: http://example.com/logo.png"
+    logo_small_url: "トピックスクロール時に表示するサイトの小さなロゴ。例: http://example.com/logo-small.png"
+    favicon_url: "サイトの favicon。参照: http://en.wikipedia.org/wiki/Favicon"
+    apple_touch_icon_url: "Apple のタッチデバイス用のアイコン。推奨サイズは 144px x 144px"
 
-    notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
-    email_custom_headers: "A pipe-delimited list of custom email headers"
-    use_ssl: "Should the site be accessible via SSL? (NOT IMPLEMENTED, EXPERIMENTAL)"
-    best_of_score_threshold: "The minimum score of a post to be included in the 'best of'"
-    best_of_posts_required: "Minimum posts in a topic before 'best of' mode is enabled"
-    best_of_likes_required: "Minimum likes in a topic before the 'best of' mode will be enabled"
-    best_of_percent_filter: "When a user clicks best of, show the top % of posts"
-    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
+    notification_email: "パスワードリセットや新規アカウント作成等をユーザに通知するシステムメールを送信するメールアドレス"
+    email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
+    use_ssl: "SSL でのアクセスを有効にするか? (未実装、試験的)"
+    best_of_score_threshold: "'best of' にポストが含まれるための最終スコア"
+    best_of_posts_required: "'best of' モードが有効になる、トピック内の最小ポスト数"
+    best_of_likes_required: "'best of' モードが有効になる、トピック内の最小「いいね!」数"
+    best_of_percent_filter: "ユーザが best of をクリックした際にポストのトップ % を表示"
+    enable_private_messages: "ベーシック (1) トラスtレベルのユーザにプライベートメッセージの作成およびプライベートメッセージへの返信を許可"
 
-    enable_long_polling: "Message bus used for notification can use long polling"
-    long_polling_interval: "Interval before a new long poll is issued in milliseconds "
-    polling_interval: "How often should logged in user clients poll in milliseconds"
-    anon_polling_interval: "How often should anonymous clients poll in milliseconds"
+    enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
+    long_polling_interval: "新たなロングポーリングを開始するまでの間隔 (ミリ秒)"
+    polling_interval: "ログイン済ユーザのクライアントのポーリング間隔 (ミリ秒)"
+    anon_polling_interval: "匿名ユーザのクライアントのポーリング間隔 (ミリ秒)"
 
     auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
@@ -718,11 +718,11 @@ ja:
 
   move_posts:
     new_topic_moderator_post:
-      one: "I moved a post to a new topic: %{topic_link}"
-      other: "I moved %{count} posts to a new topic: %{topic_link}"
+      one: "ポストを新しいトピックに移動しました: %{topic_link}"
+      other: "ポスト%{count}個を新しいトピックに移動しました: %{topic_link}"
     existing_topic_moderator_post:
-      one: "I moved a post to an existing topic: %{topic_link}"
-      other: "I moved %{count} posts to an existing topic: %{topic_link}"
+      one: "ポストを既存のトピックに移動しました: %{topic_link}"
+      other: "ポスト%{count}個を既存のトピックに移動しました: %{topic_link}"
 
   topic_statuses:
     archived_enabled: "このトピックはアーカイブされました。すべての内容は凍結されており、一切の変更ができません。"
@@ -730,13 +730,13 @@ ja:
     closed_enabled: "このトピックはクローズされました。新たに回答を投稿することはできません。"
     closed_disabled: "このトピックはオープンされました。新たに回答を投稿することができます。"
     autoclosed_enabled:
-      zero: "This topic was automatically closed after 1 day. New replies are no longer allowed."
-      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
-      other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
-    autoclosed_disabled: "This topic is now opened. New replies are allowed."
+      zero: "このトピックは1日が経過したので自動的にクローズされました。新しい回答を投稿することはできません。"
+      one: "このトピックは1日が経過したので自動的にクローズされました。新しい回答を投稿することはできません。"
+      other: "このトピックは%{count}日が経過したので自動的にクローズされました。新しい回答を投稿することはできません。"
+    autoclosed_disabled: "このトピックは再オープンされました。新しい回答が投稿できるようになりました。。"
     pinned_enabled: "このトピックはピン留めされました。ピン留めボタンが押されるかモデレータによってピン留めが解除されるまで、カテゴリのトップに表示されます。"
-    pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    visible_enabled: "This topic is now visible. It will be displayed in topic lists."
+    pinned_disabled: "このトピックのピン留めが解除されました。以後、カテゴリのトップに表示されません。"
+    visible_enabled: "このトピックは表示状態になりました。トピックリストに表示されます。"
     visible_disabled: "このトピックは非表示状態になりました。トピックリストには表示されません。直接リンク経由でのみこのトピックにアクセスできます。"
 
   login:
@@ -779,29 +779,29 @@ ja:
       [1]: %{invite_link}
 
   test_mailer:
-    subject_template: "[%{site_name}] Email Deliverability Test"
+    subject_template: "[%{site_name}] メール送信テスト"
     text_body_template: |
-      This is a test email sent from your %{site_name} forum at:
+      これは、あなたの %{site_name} フォーラムより送信されたテストメールです:
 
       [**%{base_url}**][0]
 
-      Email deliverability is complicated. Here are a few important things you should check first:
+      メール到達性の担保は複雑です。チェックする必要があるいくつかのポイントを以下にまとめます:
 
-      - Know how to view the *raw source of the email* in your mail client, so you can examine the email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu on each mail.
+      - メールクライアントで*メールの raw ソース*を見る方法を確認する。これはメールヘッダより重要なヒントを得るために必要です。Gmail の場合、メールのドロップダウンリストより "メッセージのソースを表示" オプションを選択することで確認ができます。
 
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
+      - **重要:** ISP が、メール送信元のドメイン名と IP アドレスを関連付けるリバース DNS レコードを正しく管理しているか確認してください。[こちらでリバース PTR レコードの確認ができます][2]。ISP が正しいリバース DNS ポインタレコードを管理していない場合、メール送信が失敗する可能性が非常に高くなります。
 
-      - Is your domain's SPF record correct? [Test your SPF record][1] here.
+      - ドメインの SPF レコードは正確ですか? [こちらで SPF レコードの確認ができます][1]。
 
-      - Check to make sure the IPs of your mail server are [not on any email blacklists][4].
+      - メールサーバの IP アドレスが[こちらのブラックリストに掲載されていないこと][4]を確認してください。
 
-      - Verify that your email server is *definitely* sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
+      - メールサーバが HELO メッセージにおいて、DNS が解決する fully-qualified hostname を*確実に*送信していることを確認してください。送信されていない場合、多くのメールサービスによってメールが拒否される可能性があります。
 
-      - Configure [DKIM email key signing][3] in your email software, and place the public DKIM key in your DNS records. This is not required, but will significantly improve email deliverability.
+      - メールソフトウェアの [DKIM email key signing][3]を設定して、DNS レコードに public DKIM キーを追記してください。これは必須ではありませんが、メール到達性を大きく改善します。
 
-      (The *easy* way is to [sign up for Mandrill][6], which has a generous free mailing plan and will be fine for small forums. You'll still need to set up the SPF and DKIM records in your DNS, though!)
+      (*簡単な*方法は[Mandrillへのサインアップ][6]です。小さなフォーラムであればカバー可能な無料のメールプランを提供しています。この場合も SPF と DKIM レコードを DNS に設定する必要がある点には注意してください!)
 
-      We hope you received this email deliverability test OK!
+      このメールを受信し、到達性テストに成功することを祈ります!
 
       Good luck,
 
@@ -834,155 +834,155 @@ ja:
 
   system_messages:
     post_hidden:
-      subject_template: "Post hidden due to community flagging"
+      subject_template: "コミュニティによるフラグによりポストが非表示になりました"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your post ...
+        このメールは、あなたのポスト...
 
         %{base_url}%{url}
 
-        ... was hidden due to community flagging.
+        ... が、コミュニティによってフラグた立てられた結果非表示状態になったことをお知らせする %{site_name} からの自動メッセージです。
 
-        Keep in mind that multiple community members flagged this post before it was hidden, so **please consider how you might revise your post to reflect their feedback.** You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your forum trust level.
+        複数のコミュニティメンバーによりこのポストにフラグが立てられた結果としてポストが非表示になったことをご理解ください。**このフィードバックを元に、ポスト内容を修正することを検討してください**。ポスト内容の編集は %{edit_delay}後より行うことができます。編集後、非表示状態は解除されます。
 
-        However, if the post is hidden by the community a second time, the moderators will be notified -- and there may be further action, including the possible suspension of your account.
+        ただし、再度あなたのポストがコミュニティによってフラグ立てされた場合、モデレータに通知が行われます。この結果アカウントの凍結などの処置が行われる可能性もあります。
 
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+        詳しいガイダンスについては [FAQ](%{base_url}/faq) をご参照ください。
 
     usage_tips:
       text_body_template: |
-        This private message has a few quick tips to get you started:
+        このプライベートメッセージでは、初心者向けヒントをいくつかご紹介します。
 
-        ### Keep scrolling
+        ### 自動スクロール
 
-        There are no next page buttons or page numbers – to read more, just keep scrolling down, and more content will load!
+        このサイトには「次のページヘ」ボタンやページ番号は存在しません。ページの内容を読み続けるには画面をスクロールダウンしてください。自動的に続きが画面に表示されます!
 
-        As new replies come in, they will appear automatically at the bottom of the topic. No need to refresh the page or re-enter the topic to see new posts.
+        新たな回答が投稿されると、トピックの下にこれが自動的に表示されます。新しいポストを確認するために更新ボタンを押したりトピックを再表示する必要は一切ありません。
 
-        ### How do I reply?
+        ### 回答の仕方
 
-        - To reply to a specific post, use the Reply button at the bottom of that post.
+        - 特定のポストに回答するには、ポストのすぐ下にある「回答」ボタンをクリックしてください。
 
-        - If you want to reply to the overall *theme* of the topic, rather than any specific post in the topic, use the Reply button at the very bottom of the topic.
+        - 特定のポストへの回答ではなくトピック全体の*テーマ*について回答する場合は、トピック下部の「回答」ボタンをクリックしてください。
 
-        - If you want to take the conversation in a different direction, but keep them linked together, use Reply as New Topic to the right of the post.
+        - 議論を別の方向に持って行きたいが今までの議論はキープした場合は、ポストの右側にある「新規トピックとして回答」をクリックしてください。
 
-        ### Who is talking to me?
+        ### 誰が私に話しかけているの?
 
-        When someone replies to your post, quotes you, or mentions your @username, a notification ➀ will appear at the top of the page. Click or tap that notification number to see who's talking to you, and where. Join the conversation!
+        誰かがあなたのポストに回答したり、ポストが引用されたり、@username であなたをメンションすると、ページのトップに ➀ のような通知が表示されます。この通知番号をクリック・タップすると、どこで誰があなたに話しかけているのかを見つけることができます。早速議論に参加してみましょう!
 
-        - To mention someone's name, start typing `@` and an autocompleter will pop up.
+        - 誰かの名前をメンションする場合は `@` からタイプを始めると自動補完候補がポップアップします。
 
-        - To quote just a section of a post, select it, then click the Reply button that appears over the highlight.
+        - ポストの一部のみ引用する場合は、引用部分をハイライトすると現れる「引用して回答」ボタンをクリックしてください。
 
-        - To quote an entire post, use the Import Quote button on the composer toolbar.
+        - ポスト全体を引用する場合は、編集画面のツールバーより「ポスト全体を引用」をクリックしてください。
 
-        ### Look at that post!
+        ### ポストをチェック!
 
-        To let someone know that you enjoyed their post, click the like ♥ button at the bottom of the post. If you see a problem with a post, don't hesitate to click the flag button and let the moderators – and your fellow community members – know about it.
+        気に入ったポストを見つけたら、ポスト下部の「いいね!」ボタン ♥ をクリックしましょう。問題のあるポストを見つけたら、フラグボタンをクリックしてモデレータや他のコミュニティメンバーに情報共有をしましょう。
 
-        ### Where am I?
+        ### 迷子になった?
 
-        - To get back to the home page at any time, **click the logo at the upper left** or use the back ← button on your browser.
+        - **ページ左上のログをクリック**することでいつでもホームページに戻ることができます。もしくはブラウザの戻る ← ボタンを使用してください。
 
-        - For search, your user page, or the sitemap, click on the icons at the upper right.
+        - ページ右上に、検索実行、ユーザページ表示、サイトマップ表示用のアイコンがあります。
 
-        - While reading a topic, move to the top ↑ by clicking its title at the top of the page. To reach the *bottom* ↓, click the down arrow on the topic progress indicator at the bottom of the page, or click the last post field on the topic summary under the first post.
+        - トピック閲覧中にページ最上部に移動するにはトピックタイトルをクリックしてください。ページの最下部に移動するにはトピック進捗インジケーターの下矢印をクリックするか、最初のポストの下に表示されているトピックサマリーより「最終ポスト」をクリックしてください。
 
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
       text_body_template: |
-        Thanks for joining %{site_name}, and welcome to our discussion forum!
+        %{site_name}への参加ありがとうございます!
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        [礼儀正しいコミュニティ](%{base_url}/faq)へのご協力、改めて感謝いたします。
 
-        Enjoy your stay!
+        それではお楽しみください!
 
     welcome_invite:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "%{site_name}へようこそ!"
       text_body_template: |
-        Thanks for accepting your invitation to %{site_name}, and welcome to our discussion forum!
+        T%{site_name}への招待の受理、ありがとうございます!
 
-        We've automatically generated a username for you: **%{username}**, but you can change that any time by visiting [your user profile][prefs].
+        あなた用のユーザ名 **%{username}** を自動的に作成いたしました。ユーザ名は、[ユーザプロファイル][prefs]ページでいつでも変更することができます。
 
-        To log in again, either:
+        再度ログインするには、以下のいずれかの方法をとってください:
 
-        1. Use Facebook, Google, Twitter, or many other supported credentials -- but that credential must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
+        1. Facebook, Google, Twitter, その他サポートされているサービスのアカウントを使ってログイン。ただし、**招待メールを受けたメールアドレスと一致**している必要があります。
 
-        2. Create a unique password for %{site_name} on [your user profile][prefs], then log in with that.
+        2. %{site_name} on [ユーザプロファイル][prefs]ページにて、%{site_name}用のユニークなパスワードを作成の上、これを使ってログイン。
 
         %{site_password}
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        [礼儀正しいコミュニティ](%{base_url}/faq)へのご協力、改めて感謝いたします。
 
-        Enjoy your stay!
+        それではお楽しみください!
 
         [prefs]: %{user_preferences_url}
 
     export_succeeded:
-      subject_template: "Export completed successfully"
-      text_body_template: "The export was successful."
+      subject_template: "エクスポートが正しく完了しました"
+      text_body_template: "エクスポートに成功しました。"
 
     import_succeeded:
-      subject_template: "Import completed successfully"
-      text_body_template: "The import was successful."
+      subject_template: "インポートが正しく完了しました"
+      text_body_template: "インポートに成功しました。"
 
     too_many_spam_flags:
-      subject_template: "New account blocked"
+      subject_template: "新規アカウントのブロック"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your posts have been automatically hidden because they were flagged by the community.
+        このメールは、コミュニティにおいてあなたのポストにフラグが立てられた結果、自動的に非表示状態になったことをお知らせする %{site_name} からの自動メッセージです。
 
-        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.
+        予防措置として、あなたの新規アカウントはブロックされました。スタッフメンバーによる確認が完了するまで、新規トピックやポストの投稿を行うことはできません。
 
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+        詳しいガイダンスについては [FAQ](%{base_url}/faq) をご参照ください。
 
     blocked_by_staff:
-      subject_template: "Account blocked"
+      subject_template: "アカウントのブロック"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
+        このメールは、スタッフメンバーによりあなたのアカウントがブロックされたことをお知らせする %{site_name} からの自動メッセージです。
 
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+        詳しいガイダンスについては [FAQ](%{base_url}/faq) をご参照ください。
 
     user_automatically_blocked:
-      subject_template: "New user %{username} blocked via flags"
+      subject_template: "フラグによる新規ユーザr %{username} のブロック"
       text_body_template: |
-        This is an automated message to inform you that the new user [%{username}](%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
+        このメールは、複数のユーザにより %{username} のポストにフラグが立てられた結果、新規ユーザ [%{username}](%{user_url}) が自動的にブロックされたことをお知らせする自動メッセージです。
 
-        Please [review the flags](/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{user_url}).
+        [立てられたフラグの確認をしてください](/admin/flags)。もし %{username} が不正にブロックされている場合は、[このユーザの管理ページ](%{user_url}) にてブロック解除ボタンをクリックしてください。
 
-        This threshold can be changed via the `block_new_user` site settings.
+        なお、しきい値はサイト設定の `block_new_user` で変更可能です。
 
     spam_post_blocked:
-      subject_template: "New user %{username} blocked for repeated links"
+      subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
       text_body_template: |
-        This is an automated message to inform you that the new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but they were blocked from further posting to avoid spam.
+        このメールは、%{domains} へのリンクを含む複数のポストを新規ユーザ [%{username}](%{user_url}) が作成しようとしたため SPAM 防止策としてブロックしたことをお知らせする自動メッセージです。
 
-        Please [review the user](%{user_url}).
+        詳しくは [このユーザの情報](%{user_url}) を参照してください。
 
-        This threshold can be changed via the `newuser_spam_host_threshold` site setting.
+        なお、しきい値はサイト設定の `newuser_spam_host_threshold` で変更可能です。
 
     unblocked:
-      subject_template: "Account unblocked"
+      subject_template: "アカウントのブロック解除"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
+        このメールは、スタッフメンバーによってあなたのアカウントがブロック解除されたことをお知らせする %{site_name} からの自動メッセージです。
 
-        You can now create new replies and topics again.
+        トピックの作成やポストの投稿ができるようになりました。
 
     pending_users_reminder:
       subject_template:
-        one: "1 user waiting for approval"
-        other: "%{count} users waiting for approval"
+        one: "1人のユーザが承認を待っています"
+        other: "%{count}人のユーザが承認を待っています"
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
 
@@ -1108,17 +1108,17 @@ ja:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
 
   page_not_found:
-    title: "The page you requested doesn't exist or may have been deleted by a moderator."
-    popular_topics: "Popular topics"
-    recent_topics: "Recent topics"
-    see_more: "See More"
-    search_title: "Search for this topic"
-    search_google: "Search Google"
+    title: "リクエストしたページは存在しないかモデレータによって削除されました。"
+    popular_topics: "人気のトピック"
+    recent_topics: "最近のトピック"
+    see_more: "もっと読む"
+    search_title: "このトピックを検索"
+    search_google: "Google で検索"
 
   login_required:
     welcome_message: |
-      #[Welcome to %{title}](#welcome)
-      This discussion forum requires an account to view %{title}. Please create an account or login to continue.
+      #[%{title}へようこそ](#welcome)
+      このフォーラムの%{title}を見るにはアカウントが必要です。アカウントを作成するかログインしてください。
 
   terms_of_service:
     user_content_license: |
