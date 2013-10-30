@@ -29,18 +29,15 @@ margin-left: 10px;
 
 #topic-title {
   margin-bottom: 20px;
-margin: -20px 0 0 0;
-.topic-statuses {margin-left: 5px;}
+  .star {margin-right: 8px;}
 h1 {
-
-  font-size: 2.2em;
-  line-height: 1em;
+  font-size: 2em;
   margin: 0;
 
 
-a.badge-category {vertical-align: middle;}
+a.badge-category {vertical-align: top;}
 
-a.edit-topic {font-size: 15px;}
+a.edit-topic {font-size: 15px; position: absolute; margin-left: 8px;}
 
 }
 
