@@ -18,7 +18,7 @@ describe UserSerializer do
       end
 
       it "has a name" do
-        json[:name].should == "Bruce Wayne"
+        json[:name].should be_present
       end
     end
 
