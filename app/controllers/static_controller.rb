@@ -5,6 +5,8 @@ class StaticController < ApplicationController
 
   def show
 
+    return redirect_to('/') if current_user && params[:id] == 'login'
+
     map = {
       "faq" => "faq_url",
       "tos" => "tos_url",
