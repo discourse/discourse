@@ -185,7 +185,7 @@ en:
 
     categories:
       all: "all categories"
-      all_subcategories: "all subcategories"
+      only_category: "only {{categoryName}}"
       category: "Category"
       posts: "Posts"
       topics: "Topics"

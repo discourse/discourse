@@ -13,7 +13,7 @@ Discourse.DiscourseCategorydropComponent = Ember.Component.extend({
 
   allCategoriesLabel: function() {
     if (this.get('subCategory')) {
-      return I18n.t('categories.all_subcategories');
+      return I18n.t('categories.only_category', {categoryName: this.get('parentCategory.name')});
     }
     return I18n.t('categories.all');
   }.property('category'),

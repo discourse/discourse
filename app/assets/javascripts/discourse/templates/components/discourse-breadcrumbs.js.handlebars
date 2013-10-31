@@ -4,7 +4,7 @@
 
 {{#if childCategories}}
   <li>
-    {{discourse-categorydrop category=secondCategory categories=childCategories subCategory="true"}}
+    {{discourse-categorydrop category=secondCategory parentCategory=firstCategory categories=childCategories subCategory="true"}}
   </li>
 {{/if}}
 
