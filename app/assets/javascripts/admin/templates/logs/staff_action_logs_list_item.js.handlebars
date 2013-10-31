@@ -1,17 +1,17 @@
 <div class="col value first staff_user">
   {{#link-to 'adminUser' acting_user}}{{avatar acting_user imageSize="tiny"}}{{/link-to}}
-  <a {{action filterByStaffUser acting_user}}>{{acting_user.username}}</a>
+  <a {{action filterByStaffUser acting_user}} class="btn btn-small">{{acting_user.username}}</a>
 </div>
 <div class="col value action">
-  <a {{action filterByAction action_name}}>{{actionName}}</a>
+  <a {{action filterByAction action_name}} class="btn btn-small">{{actionName}}</a>
 </div>
 <div class="col value subject">
   {{#if target_user}}
     {{#link-to 'adminUser' target_user}}{{avatar target_user imageSize="tiny"}}{{/link-to}}
-    <a {{action filterByTargetUser target_user}}>{{target_user.username}}</a>
+    <a {{action filterByTargetUser target_user}} class="btn btn-small">{{target_user.username}}</a>
   {{/if}}
   {{#if subject}}
-    <a {{action filterBySubject subject}} {{bindAttr title="subject"}}>{{subject}}</a>
+    <a {{action filterBySubject subject}} {{bindAttr title="subject"}}  class="btn btn-small">{{subject}}</a>
   {{/if}}
 </div>
 <div class="col value created_at">{{unboundAgeWithTooltip created_at}}</div>

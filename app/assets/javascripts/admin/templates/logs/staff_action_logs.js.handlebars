@@ -28,6 +28,10 @@
   {{/if}}
 </div>
 
+<div class="staff-action-logs-instructions" {{bindAttr class=":staff-action-logs-instructions showInstructions::invisible"}}>
+  {{i18n admin.logs.staff_actions.instructions}}
+</div>
+
 <div class='table staff-actions'>
   <div class="heading-container">
     <div class="col heading first staff_user">{{i18n admin.logs.staff_actions.staff_user}}</div>
@@ -50,9 +54,3 @@
     {{/if}}
   {{/if}}
 </div>
-
-{{#unless loading}}
-  <div class="staff-action-logs-instructions">
-    {{i18n admin.logs.staff_actions.instructions}}
-  </div>
-{{/unless}}

@@ -24,19 +24,6 @@ Discourse.AdminLogsStaffActionLogsController = Ember.ArrayController.extend(Disc
     return (_.size(this.get('filters')) > 0);
   }.property('filters.action_name', 'filters.acting_user', 'filters.target_user', 'filters.subject'),
 
-  clearFilter: function(key) {
-    delete this.get('filters')[key];
-    this.notifyPropertyChange('filters');
-  },
-
-  clearAllFilters: function() {
-    this.set('filters', {});
-  },
-
-  filterByAction: function(action) {
-    this.set('filters.action_name', action);
-  },
-
   actionFilter: function() {
     if (this.get('filters.action_name')) {
       return I18n.t("admin.logs.staff_actions.actions." + this.get('filters.action_name'));
@@ -45,15 +32,34 @@ Discourse.AdminLogsStaffActionLogsController = Ember.ArrayController.extend(Disc
     }
   }.property('filters.action_name'),
 
-  filterByStaffUser: function(acting_user) {
-    this.set('filters.acting_user', acting_user.username);
-  },
+  showInstructions: function() {
+    return this.get('model.length') > 0;
+  }.property('loading', 'model.length'),
 
-  filterByTargetUser: function(target_user) {
-    this.set('filters.target_user', target_user.username);
-  },
+  actions: {
+    clearFilter: function(key) {
+      delete this.get('filters')[key];
+      this.notifyPropertyChange('filters');
+    },
 
-  filterBySubject: function(subject) {
-    this.set('filters.subject', subject);
+    clearAllFilters: function() {
+      this.set('filters', {});
+    },
+
+    filterByAction: function(action) {
+      this.set('filters.action_name', action);
+    },
+
+    filterByStaffUser: function(acting_user) {
+      this.set('filters.acting_user', acting_user.username);
+    },
+
+    filterByTargetUser: function(target_user) {
+      this.set('filters.target_user', target_user.username);
+    },
+
+    filterBySubject: function(subject) {
+      this.set('filters.subject', subject);
+    }
   }
 });
