@@ -26,7 +26,7 @@ Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
   model: function() {
     var listTopicsController = this.controllerFor('listTopics');
-    if (listTopicsController) listTopicsController.set('content', null);
+    if (listTopicsController) { listTopicsController.set('content', null); }
     return this.controllerFor('list').load('categories');
   },
 

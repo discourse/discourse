@@ -34,6 +34,10 @@ Discourse.CategoryList.reopenClass({
         c.parentCategory = list.findBy('id', c.parent_category_id);
       }
 
+      if (c.subcategory_ids) {
+        c.subcategories = c.subcategory_ids.map(function(scid) { return list.findBy('id', parseInt(scid, 10)); });
+      }
+
       if (c.featured_user_ids) {
         c.featured_users = c.featured_user_ids.map(function(u) {
           return users[u];

@@ -37,6 +37,15 @@
               {{{description_excerpt}}}
             </div>
           {{/if}}
+
+          {{#if subcategories}}
+            <div class='subcategories'>
+              {{i18n categories.subcategories}}
+              {{#each subcategory in subcategories}}
+                {{categoryLink subcategory}}
+              {{/each}}
+            </div>
+          {{/if}}
         </td>
         <td class='num'>{{number topic_count}}</td>
         <td class='num'>{{number post_count}}</td>

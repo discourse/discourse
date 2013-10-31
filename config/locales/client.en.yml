@@ -192,6 +192,7 @@ en:
       latest: "Latest"
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
+      subcategories: "Subcategories:"
 
     user:
       said: "{{username}} said:"

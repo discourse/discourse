@@ -56,6 +56,19 @@
     </tr>
   {{/each}}
 
+  {{#if subcategories}}
+    <tr>
+      <td>
+        <div class='subcategories'>
+          {{i18n categories.subcategories}}
+          {{#each subcategory in subcategories}}
+            {{categoryLink subcategory}}
+          {{/each}}
+        </div>
+      </td>
+    </tr>
+  {{/if}}
+
 </table>
 <footer class="clearfix">
   <figure title="{{i18n year_desc}}">{{number topics_year}} <figcaption>{{i18n category.this_year}}</figcaption></figure>

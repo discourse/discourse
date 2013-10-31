@@ -5,7 +5,8 @@ class CategoryDetailedSerializer < BasicCategorySerializer
              :topics_month,
              :topics_year,
              :description_excerpt,
-             :is_uncategorized
+             :is_uncategorized,
+             :subcategory_ids
 
   has_many :featured_users, serializer: BasicUserSerializer
   has_many :displayable_topics, serializer: ListableTopicSerializer, embed: :objects, key: :topics
@@ -36,6 +37,10 @@ class CategoryDetailedSerializer < BasicCategorySerializer
 
   def description_excerpt
     PrettyText.excerpt(description,300) if description
+  end
+
+  def include_subcategory_ids?
+    subcategory_ids.present?
   end
 
 end

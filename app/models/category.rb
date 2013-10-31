@@ -75,7 +75,7 @@ class Category < ActiveRecord::Base
 
   # permission is just used by serialization
   # we may consider wrapping this in another spot
-  attr_accessor :displayable_topics, :permission
+  attr_accessor :displayable_topics, :permission, :subcategory_ids
 
 
   def self.scoped_to_permissions(guardian, permission_types)

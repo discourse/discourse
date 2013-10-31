@@ -21,7 +21,7 @@
     font-weight: normal;
   }
 
-  a.badge-category {padding: 3px 12px;  font-size: 16px; 
+  a.badge-category {padding: 3px 12px;  font-size: 16px;
 
     &.category-dropdown-button {    padding: 3px 10px 3px 8px;
     font-size: 14px;
@@ -30,7 +30,7 @@
   }
 
   .badge-category {
-  
+
     font-weight: normal;
     text-transform: capitalize;
 
@@ -101,7 +101,7 @@
     font-weight: bold;
     font-size: 13px;
     background: #eee;
- 
+
   }
   td {
     //border-top: 1px solid $topic-list-td-border-color;
@@ -235,9 +235,23 @@
   tbody td {
     padding-bottom: 20px;
   }
+
+  td.category {
+    padding-top: 15px;
+  }
+
   .category{
     position: relative;
     width: 55%;
+
+    .subcategories {
+      margin-top: 10px;
+      .badge-category {
+        font-size: 12px;
+        padding: 4px;
+      }
+    }
+
     .featured-users {
       position: absolute;
       right: 18px;
@@ -287,7 +301,7 @@
   #topic-list tbody tr:nth-child(even) {
     background-color: $white;
   }
-  .badge-category {
+  th .badge-category {
     float: left;
     margin: 1px 4px 0 0;
   }

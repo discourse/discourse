@@ -61,6 +61,23 @@ class CategoryList
 
       @categories = @categories.to_a
 
+      subcategories = {}
+      to_delete = Set.new
+      @categories.each do |c|
+        if c.parent_category_id.present?
+          subcategories[c.parent_category_id] ||= []
+          subcategories[c.parent_category_id] << c.id
+          to_delete << c
+        end
+      end
+
+      if subcategories.present?
+        @categories.each do |c|
+          c.subcategory_ids = subcategories[c.id]
+        end
+        @categories.delete_if {|c| to_delete.include?(c) }
+      end
+
       if latest_post_only?
         @all_topics = []
         @categories.each do |c|
