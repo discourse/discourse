@@ -333,8 +333,6 @@ a.star {
       }
 
       &:active {
-
-
     @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
       }
 
@@ -501,6 +499,8 @@ iframe {
 .contents .cooked {
   padding-right: 30px;
   h1, h2, h3 {margin: 10px 0;}
+  ul, ol {margin: 15px 0;}
+  li p {margin: 3px 0;}
 }
 
 .modal-body {
@@ -599,6 +599,9 @@ position: relative;
 }
 
 
+
+
+
 blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
@@ -672,7 +675,7 @@ blockquote { /* solo quotes */
   float: left;
   position: relative;
   width: 720px;
-  padding: 10px 0 15px 20px;
+  padding: 10px 10px 15px 20px;
 }
 
 .posts-wrapper {
