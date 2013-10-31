@@ -9,7 +9,6 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new('user is nil') unless deleted_user and deleted_user.is_a?(User)
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:delete_user],
-      target_user_id: deleted_user.id,
       email: deleted_user.email,
       ip_address: deleted_user.ip_address.to_s,
       details: [:id, :username, :name, :created_at, :trust_level, :last_seen_at, :last_emailed_at].map { |x| "#{x}: #{deleted_user.send(x)}" }.join(', ')
