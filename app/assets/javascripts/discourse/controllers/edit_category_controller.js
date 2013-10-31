@@ -134,13 +134,13 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
 
       this.set('saving', true);
       model.set('parentCategory', parentCategory);
-      var newSlug = Discourse.Category.slugFor(this.get('model'));
 
       this.get('model').save().then(function(result) {
         // success
         self.send('closeModal');
-        Discourse.URL.redirectTo("/category/" + newSlug);
-      }, function(error) {
+        model.set('slug', result.category.slug);
+        Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(model));
+      }).fail(function(error) {
 
         if (error && error.responseText) {
           self.flash($.parseJSON(error.responseText).errors[0]);

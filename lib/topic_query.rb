@@ -233,7 +233,17 @@ class TopicQuery
 
       result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
-      result = result.where('categories.slug = ?', options[:category]).references(:categories) if options[:category].present?
+
+      if options[:category].present?
+        category_id  = options[:category].to_i
+        if category_id == 0
+          result = result.where('categories.slug = ?', options[:category])
+        else
+          result = result.where('categories.id = ?', category_id)
+        end
+        result = result.references(:categories)
+      end
+
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
       result = result.where('topics.id <> ?', options[:except_topic_id]).references(:topics) if options[:except_topic_id]

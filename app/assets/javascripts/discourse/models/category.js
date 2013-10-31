@@ -11,6 +11,7 @@ Discourse.Category = Discourse.Model.extend({
   init: function() {
     this._super();
     this.set("availableGroups", Em.A(this.get("available_groups")));
+
     this.set("permissions", Em.A(_.map(this.group_permissions, function(elem){
       return {
                 group_name: elem.group_name,
@@ -146,23 +147,29 @@ Discourse.Category.reopenClass({
     return Discourse.Site.currentProp('categories');
   },
 
+  findSingleBySlug: function(slug) {
+    return Discourse.Category.list().find(function(c) {
+      return Discourse.Category.slugFor(c) === slug;
+    });
+  },
+
   findBySlug: function(slug, parentSlug) {
 
     var categories = Discourse.Category.list(),
         category;
 
     if (parentSlug) {
-      var parentCategory = categories.findBy('slug', parentSlug);
+      var parentCategory = Discourse.Category.findSingleBySlug(parentSlug);
       if (parentCategory) {
         category = categories.find(function(item) {
-          return item && item.get('parentCategory') === parentCategory && item.get('slug') === slug;
+          return item && item.get('parentCategory') === parentCategory && Discourse.Category.slugFor(item) === (parentSlug + "/" + slug);
         });
       }
     } else {
-      category = categories.findBy('slug', slug);
+      category = Discourse.Category.findSingleBySlug(slug);
 
       // If we have a parent category, we need to enforce it
-      if (category.get('parentCategory')) return;
+      if (category && category.get('parentCategory')) return;
     }
 
     // In case the slug didn't work, try to find it by id instead.
