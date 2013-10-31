@@ -10,13 +10,14 @@
           {{/if}}
 
           {{#if editingTopic}}
-            {{textField id='edit-title' value=newTitle}}
             {{categoryChooser valueAttribute="id" value=newCategoryId source=category_id}}
+            {{textField id='edit-title' value=newTitle}}
 
             <button class='btn btn-primary btn-small' {{action finishedEditingTopic}}><i class='icon-ok'></i></button>
             <button class='btn btn-small' {{action cancelEditingTopic}}><i class='icon-remove'></i></button>
           {{else}}
             <h1>
+              {{boundCategoryLink category}}
               {{#if details.loaded}}
                 {{topicStatus topic=model}}
                 <a href='{{unbound url}}'>
@@ -27,7 +28,7 @@
                   {{/if}}
                 </a>
               {{/if}}
-              {{boundCategoryLink category}}
+
 
               {{#if details.can_edit}}
                 <a href='#' {{action editTopic}} class='edit-topic' title='{{i18n edit}}'><i class="icon-pencil"></i></a>
