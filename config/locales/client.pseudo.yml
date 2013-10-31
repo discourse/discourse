@@ -517,7 +517,6 @@ pseudo:
       show: '[[ šĥóŵ ťóƿíč řáɳǩ ďéťáíłš ]]'
       title: '[[ Ťóƿíč Řáɳǩ Ďéťáíłš ]]'
     topic:
-      create_in: '[[ Čřéáťé {{categoryName}} Ťóƿíč ]]'
       create: '[[ Čřéáťé Ťóƿíč ]]'
       create_long: '[[ Čřéáťé á ɳéŵ Ťóƿíč ]]'
       private_message: '[[ Šťářť á ƿříνáťé ɱéššáǧé ]]'

@@ -585,7 +585,6 @@ pt_BR:
 
     topic:
       filter_to: "Mostrar apenas os {{post_count}} de {{username}} neste tópico"
-      create_in: 'Criar Tópico sobre {{categoryName}}'
       create: 'Criar Tópico'
       create_long: 'Criar um novo Tópico'
       private_message: 'Começar uma nova conversa privada'

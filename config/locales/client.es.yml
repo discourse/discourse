@@ -477,7 +477,6 @@ es:
 
 
     topic:
-      create_in: 'Crear tema en {{categoryName}}'
       create: 'Crear tema'
       create_long: 'Crear un nuevo tema'
       private_message: 'Comenzar una conversación privada'

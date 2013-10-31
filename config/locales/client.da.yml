@@ -385,7 +385,6 @@ da:
         category: "Der er ikke flere emner i kategorien {{category}}."
 
     topic:
-      create_in: 'Opret emne i kategorien {{categoryName}}'
       create: 'Opret emne'
       create_long: 'Opret et nyt emne i debatten'
       private_message: 'Start en privat samtale'

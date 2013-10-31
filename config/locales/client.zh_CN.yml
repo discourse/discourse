@@ -586,7 +586,6 @@ zh_CN:
 
     topic:
       filter_to: "只显示本主题中由{{username}}发表的{{post_count}}个帖子"
-      create_in: '创建一个 {{categoryName}} 分类的主题'
       create: '创建主题'
       create_long: '创建一个新主题'
       private_message: '开启一段私下交流'

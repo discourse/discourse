@@ -580,7 +580,6 @@ ru:
       title: 'Детальный рейтинг темы'
     topic:
       filter_to: 'Show only the {{post_count}} posts by {{username}} in this topic'
-      create_in: 'Создать тему'
       create: 'Создать тему'
       create_long: 'Создать новую тему'
       private_message: 'Написать личное сообщение'

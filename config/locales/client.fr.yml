@@ -592,7 +592,6 @@ fr:
 
     topic:
       filter_to: "Afficher uniquement les {{post_count}} messages de {{username}} dans cette discussion"
-      create_in: 'Créer une discussion dans la catégorie {{categoryName}}'
       create: 'Créer une discussion'
       create_long: 'Créer une nouvelle discussion'
       private_message: 'Commencer une discussion privée'

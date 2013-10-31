@@ -478,7 +478,6 @@ nb_NO:
       title: Topic Rank Details
 
     topic:
-      create_in: 'Lag {{categoryName}} Emne'
       create: 'Lag Emne'
       create_long: 'Lag ett nytt Emne'
       private_message: 'Start enn private melding'

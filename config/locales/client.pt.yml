@@ -330,7 +330,6 @@ pt:
       footer: "Não há mais tópicos neste categoria. <a href=\"/categories\">Procurar todas as categorias</a> ou <a href=\"/\">ver tópicos populares</a>"
 
     topic:
-      create_in: 'Criar Tópico sobre {{categoryName}}'
       create: 'Criar Tópico'
       create_long: 'Criar um novo Tópico'
       private_message: 'Começar uma nova conversa privada'

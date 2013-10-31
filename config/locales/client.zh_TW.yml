@@ -527,7 +527,6 @@ zh_TW:
       title: 主題排名詳細
 
     topic:
-      create_in: '創建一個 {{categoryName}} 分類的主題'
       create: '創建主題'
       create_long: '創建一個新主題'
       private_message: '開啓一段私下交流'

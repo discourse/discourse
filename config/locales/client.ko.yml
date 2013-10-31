@@ -432,7 +432,6 @@ ko:
       title: 주제 랭킹 세부 사항
 
     topic:
-      create_in: '{{categoryName}} 주제를 만듭니다'
       create: '주제 만들기'
       create_long: '새로운 주제를 개설합니다'
       private_message: '개인 메시지를 시작합니다'

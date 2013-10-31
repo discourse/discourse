@@ -349,7 +349,6 @@ id:
         category: "There are no more {{category}} topics."
 
     topic:
-      create_in: 'Create {{categoryName}} Topic'
       create: 'Create Topic'
       create_long: 'Create a new Topic'
       private_message: 'Start a private message'

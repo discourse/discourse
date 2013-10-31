@@ -574,7 +574,6 @@ de:
       title: Themadetails
 
     topic:
-      create_in: 'Neues Thema in {{categoryName}}'
       create: 'Neues Thema'
       create_long: 'Neues Thema beginnen'
       private_message: 'Beginne ein privates Gespräch'

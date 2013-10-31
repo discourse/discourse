@@ -545,7 +545,6 @@ nl:
       title: Details topic rangorde
 
     topic:
-      create_in: "Maak een {{categoryName}} topic"
       create: Maak topic
       create_long: Maak een nieuw topic
       private_message: Stuur een privé-bericht

@@ -571,7 +571,6 @@ it:
       title: Dettaglio Classifica Topic
 
     topic:
-      create_in: 'Crea Topic in {{categoryName}}'
       create: 'Crea Topic'
       create_long: 'Crea un nuovo Topic'
       private_message: 'Inizia una conversazione privata'

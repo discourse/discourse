@@ -564,7 +564,6 @@ cs:
       title: Detaily bodování tématu
 
     topic:
-      create_in: 'Nové téma v kategorii {{categoryName}}'
       create: 'Nové téma'
       create_long: 'Vytvořit nové téma'
       private_message: 'Vytvořit soukromou konverzaci'

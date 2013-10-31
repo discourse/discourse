@@ -400,7 +400,6 @@ sv:
       title: Trådranksdetaljer
 
     topic:
-      create_in: 'Skapa {{categoryName}}-tråd'
       create: 'Skapa Tråd'
       create_long: 'Skapa en nytt Tråd'
       private_message: 'Starta en privat konversation'
