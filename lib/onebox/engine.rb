@@ -13,17 +13,17 @@ module Onebox
     attr_reader :url
     attr_reader :cache
     attr_reader :timeout
-    attr_reader :view
+    attr_reader :layout
 
     def initialize(link, cache = nil, timeout = nil)
       @url = link
       @cache = cache || Onebox.defaults.cache
       @timeout = timeout || Onebox.defaults.timeout
-      @view = View.new(self.class.template_name, true, @cache)
+      @layout = Layout.new(self.class.template_name, record, @cache)
     end
 
     def to_html
-      view.to_html(record)
+      layout.to_html
     end
 
     private
