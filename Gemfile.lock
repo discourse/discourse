@@ -66,6 +66,14 @@ GIT
       tilt (~> 1.1, != 1.3.0)
 
 GIT
+  remote: https://github.com/SamSaffron/vestal_versions
+  revision: 671833227aa47f16e9c907fe7b2870be3743ac00
+  specs:
+    vestal_versions (1.2.3)
+      activerecord (> 3.0)
+      activesupport (> 3.0)
+
+GIT
   remote: https://github.com/callahad/omniauth-browserid.git
   revision: af62d667626c1622de6fe13b60849c3640765ab1
   branch: observer_api
@@ -80,14 +88,6 @@ GIT
   revision: 67408dfb1b99fb8d5f145f782b9e22d1851a8e5a
   specs:
     email_reply_parser (0.6)
-
-GIT
-  remote: https://github.com/zhangyuan/vestal_versions
-  revision: 0ea75ec4e269b5a9e609639919ade0f36381a446
-  specs:
-    vestal_versions (1.2.2)
-      activerecord (>= 3.0.0)
-      activesupport (>= 3.0.0)
 
 PATH
   remote: vendor/gems/discourse_emoji
