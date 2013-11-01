@@ -1085,6 +1085,7 @@ ru:
       create_post: 'Отвечать / Просматривать'
       readonly: Просматривать
   admin_js:
+    type_to_filter: 'Введите текст для фильтрации...'
     admin:
       title: 'Discourse Admin'
       moderator: Модератор

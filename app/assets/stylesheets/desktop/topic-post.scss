@@ -39,7 +39,7 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   margin-left: -8px;
 }
 
-.avoid-tab { 
+.avoid-tab {
   padding-top: 25px;
   .topic-meta-data-inside {margin-top: -30px;}
 }
@@ -131,7 +131,7 @@ nav.post-controls {
     border: none;
     margin-left: 3px;
     transition: all linear 0.15s;
-    outline: none; 
+    outline: none;
          &:hover {
           background: #eee;
           color: #888;
@@ -394,12 +394,12 @@ span.post-count {
 #topic-title {
   z-index: 1000;
   padding: 14px 0 8px 0;
-  h1 { 
-    line-height: 1.2em; 
-    overflow: hidden; 
+  h1 {
+    line-height: 1.2em;
+    overflow: hidden;
   }
   .topic-statuses {
-    margin-top: -2px; 
+    margin-top: -2px;
     .icon-pushpin {margin-top: -1px;}
   }
   .star {font-size: 20px; margin-top: 8px;}
@@ -435,7 +435,7 @@ iframe {
 }
 
 .extra-info-wrapper {
-  float: left; 
+  float: left;
   width: 78%;
   .topic-statuses {margin-right: 5px;}
 }
@@ -499,7 +499,7 @@ iframe {
 .contents .cooked {
   padding-right: 30px;
   h1, h2, h3 {margin: 10px 0;}
-  ul, ol {margin: 15px 0;}
+  ul, ol {margin: 0 15px;}
   li p {margin: 3px 0;}
 }
 

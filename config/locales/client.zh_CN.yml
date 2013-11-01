@@ -1075,6 +1075,7 @@ zh_CN:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
+    type_to_filter: "输入过滤条件……"
 
     admin:
       title: '论道 管理'

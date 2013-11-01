@@ -26,7 +26,9 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
     }
 
     var adminSettingsController = this;
-    return this.get('content').filter(function(item, index, enumerable) {
+
+    var maxResults = Em.isNone(filter) ? this.get('content.length') : 20;
+    return _.first(this.get('content').filter(function(item, index, enumerable) {
       if (adminSettingsController.get('onlyOverridden') && !item.get('overridden')) return false;
       if (filter) {
         if (item.get('setting').toLowerCase().indexOf(filter) > -1) return true;
@@ -36,19 +38,10 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
       }
 
       return true;
-    });
+    }), maxResults);
   }.property('filter', 'content.@each', 'onlyOverridden'),
 
   actions: {
-
-    /**
-      Changes the currently active filter
-
-      @method changeFilter
-    **/
-    changeFilter: function() {
-      this.set('filter', this.get('newFilter'));
-    },
 
     /**
       Reset a setting to its default value

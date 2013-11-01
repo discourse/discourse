@@ -19,7 +19,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     composePrivateMessage: function(user) {
       var self = this;
-      this.transitionTo('userPrivateMessages', user).then(function () {
+      this.transitionTo('userActivity', user).then(function () {
         self.controllerFor('userActivity').send('composePrivateMessage');
       });
     },
