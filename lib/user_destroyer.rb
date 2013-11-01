@@ -42,6 +42,19 @@ class UserDestroyer
             b.record_match! if b
           end
           Post.with_deleted.where(user_id: user.id).update_all("user_id = NULL")
+
+          # If this user created categories, fix those up:
+          categories = Category.where(user_id: user.id).all
+          categories.each do |c|
+            c.user_id = Discourse.system_user.id
+            c.save!
+            if topic = Topic.with_deleted.where(id: c.topic_id).first
+              topic.try(:recover!)
+              topic.user_id = Discourse.system_user.id
+              topic.save!
+            end
+          end
+
           StaffActionLogger.new(@staff).log_user_deletion(user, opts.slice(:context))
           DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
