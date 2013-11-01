@@ -836,25 +836,52 @@ describe UsersController do
     context 'with authenticated user' do
       context 'with permission to update' do
         it 'allows the update' do
-          user = create_authenticated_user('Billy Bob')
-          stub_guardian(user) do |guardian|
-            guardian.stubs(:ensure_can_edit!).with(user)
-          end
+          user = Fabricate(:user, name: 'Billy Bob')
+          log_in_user(user)
 
           put :update, username: user.username, name: 'Jim Tom'
 
           expect(response).to be_success
           expect(user.reload.name).to eq 'Jim Tom'
         end
+
+        it 'returns user JSON' do
+          user = log_in
+
+          put :update, username: user.username
+
+          json = JSON.parse(response.body)
+          expect(json['user']['id']).to eq user.id
+        end
+
+        context 'when website includes http' do
+          it 'does not add http before updating' do
+            user = log_in
+
+            put :update, username: user.username, website: 'http://example.com'
+
+            expect(user.reload.website).to eq 'http://example.com'
+          end
+        end
+
+        context 'when website does not include http' do
+          it 'adds http before updating' do
+            user = log_in
+
+            put :update, username: user.username, website: 'example.com'
+
+            expect(user.reload.website).to eq 'http://example.com'
+          end
+        end
       end
 
       context 'without permission to update' do
         it 'does not allow the update' do
-          user = create_authenticated_user('Billy Bob')
-          stub_guardian(user) do |guardian|
-            guardian.stubs(:ensure_can_edit!).
-              with(user).raises(Discourse::InvalidAccess.new)
-          end
+          user = Fabricate(:user, name: 'Billy Bob')
+          log_in_user(user)
+          guardian = Guardian.new(user)
+          guardian.stubs(:ensure_can_edit!).with(user).raises(Discourse::InvalidAccess.new)
+          Guardian.stubs(new: guardian).with(user)
 
           put :update, username: user.username, name: 'Jim Tom'
 
@@ -1103,17 +1130,5 @@ describe UsersController do
 
     end
 
-  end
-
-  private
-
-  def create_authenticated_user(name)
-    log_in_user(Fabricate(:user, name: name))
-  end
-
-  def stub_guardian(user)
-    guardian = Guardian.new(user)
-    yield(guardian)
-    Guardian.stubs(new: guardian).with(user)
   end
 end
