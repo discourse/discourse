@@ -638,6 +638,7 @@ id:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
+    type_to_filter: "type to filter..."
 
     admin:
       title: 'Discourse Admin'

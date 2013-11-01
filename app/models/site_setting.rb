@@ -270,6 +270,7 @@ class SiteSetting < ActiveRecord::Base
   # hidden setting only used by system
   setting(:uncategorized_category_id, -1, hidden: true)
 
+  client_setting(:display_name_on_posts, false)
   client_setting(:enable_names, true)
 
   def self.call_discourse_hub?
