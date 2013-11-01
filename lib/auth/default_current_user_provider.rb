@@ -2,10 +2,9 @@ require_dependency "auth/current_user_provider"
 
 class Auth::DefaultCurrentUserProvider
 
-  CURRENT_USER_KEY = "_DISCOURSE_CURRENT_USER"
-  API_KEY = "_DISCOURSE_API"
-
-  TOKEN_COOKIE = "_t"
+  CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER"
+  API_KEY ||= "_DISCOURSE_API"
+  TOKEN_COOKIE ||= "_t"
 
   # do all current user initialization here
   def initialize(env)
