@@ -56,7 +56,6 @@
   padding: 0;
   overflow: hidden;
   background-color: $nav-stacked-background-color;
-  @include border-radius-all(4px);
   @include box-shadow(0 1px 0 $white);
   > li {
     border-bottom: 1px solid $nav-stacked-divider-color;
@@ -66,16 +65,15 @@
     > a {
       margin: 0;
       padding: 13px 13px 13px 30px;
-      font-weight: bold;
       font-size: 16px;
       line-height: 20px;
       cursor: pointer;
+      color: $nav-stacked-color;
     }
   }
   .active > a,
   .active .icon-chevron-right {
-    color: $nav-stacked-border-color-active;
-    text-shadow: 0 1px 0 rgba($white, 0.5);
+    color: $white;
     background-color: $nav-stacked-background-color-active;
   }
   .count {
