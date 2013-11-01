@@ -588,7 +588,7 @@ ja:
 
     uncategorized_name: "/categories ページにおいて、カテゴリ指定のないトピックをリストするカテゴリの名前"
     uncategorized_color: "カテゴリ指定のないトピック用カテゴリの背景色"
-    uncategorized_text_color: "カテゴリ指定のないトピック用カテゴリの文字色"
+    uncategorized_text_color: "カテゴリ指定のないトピック用カテゴリの文字表示色"
 
     rate_limit_create_topic: "トピック作成後、次のトピックを作成するまでにユーザが待たなければならない時間 (秒)"
     rate_limit_create_post: "ポスト投稿後、次のポストを投稿するまでにユーザが待たなければならない時間 (秒)"
@@ -619,7 +619,7 @@ ja:
     basic_requires_time_spent_mins: "新規ユーザがベーシック (1) トラストレベルに昇格するためにポストを読まなければならない時間 (分)"
 
     regular_requires_topics_entered: "ベーシックユーザがレギュラー (2) トラストレベルに昇格するために作成しなければならないトピックの数"
-    regular_requires_read_posts: "ベーシックユーザがレギュラー (2) トラストレベルに昇格するために投稿しなければならないポストの数"するために
+    regular_requires_read_posts: "ベーシックユーザがレギュラー (2) トラストレベルに昇格するために投稿しなければならないポストの数"
     regular_requires_time_spent_mins: "ベーシックユーザがレギュラー (2) トラストレベルに昇格するためにポストを読まなければならない時間 (分)"
     regular_requires_days_visited: "ベーシックユーザがレギュラー (2) トラストレベルに昇格するためにサイトを訪問しなければならない日数"
     regular_requires_likes_received: "ベーシックユーザがレギュラー (2) トラストレベルに昇格するために貰わなければならない「いいね!」の数"
@@ -643,7 +643,7 @@ ja:
     title_min_entropy: "トピックタイトルの最小許容エントロピー (ユニークキャラクターや英語以外の単語を含むとより大きな値になります)"
     body_min_entropy: "ポスト本文の最小許容エントロピー (ユニークキャラクターや英語以外の単語を含むとより大きな値になります)"
 
-    title_fancy_entities: "トピックタイトルにいて、一般的な ASCII 文字をファンシーな HTML エンティティに変換する; SmartyPants http://daringfireball.net/projects/smartypants/"
+    title_fancy_entities: "トピックタイトルの一般的な ASCII 文字をファンシーな HTML エンティティに変換する; SmartyPants http://daringfireball.net/projects/smartypants/"
 
     min_title_similar_length: "類似トピックのチェックに必要な最小タイトル長"
     min_body_similar_length: "類似トピックのチェックに必要なポスト本文の最小長"

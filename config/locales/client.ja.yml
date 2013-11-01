@@ -86,7 +86,7 @@ ja:
     generic_error: "申し訳ありませんが、エラーが発生しました"
     generic_error_with_reason: "エラーが発生しました: %{error}"
     log_in: "ログイン"
-    age: "Age"
+    age: "経過"
     last_post: "最終投稿"
     admin_title: "管理者"
     flags_title: "フラグ"
@@ -349,11 +349,11 @@ ja:
     close: "閉じる"
     learn_more: "より詳しく..."
 
-    year: 'year'
+    year: 'ポスト/年'
     year_desc: '過去365日間に投稿されたトピック'
-    month: 'month'
+    month: 'ポスト/月'
     month_desc: '過去30日間に投稿されたトピック'
-    week: 'week'
+    week: 'ポスト/週'
     week_desc: '過去7日間に投稿されたトピック'
 
     first_post: 最初のポスト
@@ -940,7 +940,7 @@ ja:
       save: 'カテゴリを保存する'
       creation_error: カテゴリの作成に失敗しました。
       save_error: カテゴリの保存に失敗しました。
-      more_posts: "{{posts}}をすべて見る..."
+      more_posts: "{{posts}}個のポストをすべて見る..."
       name: "カテゴリ名"
       description: "カテゴリ内容"
       topic: "カテゴリトピック"
