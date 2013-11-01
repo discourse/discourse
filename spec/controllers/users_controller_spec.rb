@@ -875,7 +875,7 @@ describe UsersController do
         end
       end
 
-      context 'without permission to update' do
+      context 'without permission to update any attributes' do
         it 'does not allow the update' do
           user = Fabricate(:user, name: 'Billy Bob')
           log_in_user(user)
@@ -887,6 +887,20 @@ describe UsersController do
 
           expect(response).to be_forbidden
           expect(user.reload.name).not_to eq 'Jim Tom'
+        end
+      end
+
+      context 'without permission to update title' do
+        it 'does not allow the user to update their title' do
+          user = Fabricate(:user, title: 'Emperor')
+          log_in_user(user)
+          guardian = Guardian.new(user)
+          guardian.stubs(can_grant_title?: false).with(user)
+          Guardian.stubs(new: guardian).with(user)
+
+          put :update, username: user.username, title: 'Minion'
+
+          expect(user.reload.title).not_to eq 'Minion'
         end
       end
     end
