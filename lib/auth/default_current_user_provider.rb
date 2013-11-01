@@ -63,7 +63,17 @@ class Auth::DefaultCurrentUserProvider
       user.save!
     end
     cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
+    make_developer_admin(user)
     @env[CURRENT_USER_KEY] = user
+  end
+
+  def make_developer_admin(user)
+    if  user.active? &&
+        !user.admin &&
+        Rails.configuration.respond_to?(:developer_emails) &&
+        Rails.configuration.developer_emails.include?(user.email)
+      user.update_column(:admin, true)
+    end
   end
 
   def log_off_user(session, cookies)
