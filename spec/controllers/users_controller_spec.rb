@@ -836,11 +836,10 @@ describe UsersController do
     context 'with authenticated user' do
       context 'with permission to update' do
         it 'allows the update' do
-          user = Fabricate(:user, name: 'Billy Bob')
-          log_in_user(user)
-          guardian = Guardian.new(user)
-          guardian.stubs(:ensure_can_edit!)
-          Guardian.stubs(new: guardian).with(user)
+          user = create_authenticated_user('Billy Bob')
+          stub_guardian(user) do |guardian|
+            guardian.stubs(:ensure_can_edit!).with(user)
+          end
 
           put :update, username: user.username, name: 'Jim Tom'
 
@@ -851,11 +850,11 @@ describe UsersController do
 
       context 'without permission to update' do
         it 'does not allow the update' do
-          user = Fabricate(:user, name: 'Billy Bob')
-          log_in_user(user)
-          guardian = Guardian.new(user)
-          guardian.stubs(:ensure_can_edit!).raises(Discourse::InvalidAccess.new)
-          Guardian.stubs(new: guardian).with(user)
+          user = create_authenticated_user('Billy Bob')
+          stub_guardian(user) do |guardian|
+            guardian.stubs(:ensure_can_edit!).
+              with(user).raises(Discourse::InvalidAccess.new)
+          end
 
           put :update, username: user.username, name: 'Jim Tom'
 
@@ -1104,5 +1103,17 @@ describe UsersController do
 
     end
 
+  end
+
+  private
+
+  def create_authenticated_user(name)
+    log_in_user(Fabricate(:user, name: name))
+  end
+
+  def stub_guardian(user)
+    guardian = Guardian.new(user)
+    yield(guardian)
+    Guardian.stubs(new: guardian).with(user)
   end
 end
