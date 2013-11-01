@@ -8,6 +8,8 @@ module Onebox
     attr_reader :md5
 
     self.template_name = "_layout"
+    self.template_path = File.join(Gem::Specification.find_by_name("onebox").gem_dir, "templates")
+
 
     def initialize(name, record, cache)
       @cache = cache
@@ -20,7 +22,7 @@ module Onebox
       if cache.key?(checksum)
         cache.fetch(checksum)
       else
-        cache.store(checksum, render(content))
+        cache.store(checksum, render(details))
       end
     end
 
@@ -28,6 +30,10 @@ module Onebox
 
     def checksum
       @md5.hexdigest("#{VERSION}:#{link}")
+    end
+
+    def link
+      record[:link]
     end
 
     def details
