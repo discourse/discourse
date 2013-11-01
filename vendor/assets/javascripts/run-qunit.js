@@ -8,12 +8,8 @@ if (args.length < 1 || args.length > 2) {
   phantom.exit(1);
 }
 
-var fs = require('fs');
-function print(str) {
-  fs.write('/dev/stdout', str, 'w');
-}
-
-var page = require('webpage').create();
+var system = require("system"),
+    page = require('webpage').create();
 
 page.onConsoleMessage = function(msg) {
   if (msg.slice(0,8) === 'WARNING:') { return; }
