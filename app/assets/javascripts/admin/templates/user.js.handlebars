@@ -211,7 +211,7 @@
       {{i18n admin.user.banned_explanation}}
     {{else}}
       {{#if canBan}}
-        <button class='btn btn-danger' {{action ban target="content"}}>
+        <button class='btn btn-danger' {{action showBanModal this}}>
           <i class='icon icon-ban-circle'></i>
           {{i18n admin.user.ban}}
         </button>
@@ -220,6 +220,22 @@
     {{/if}}
     </div>
   </div>
+
+  {{#if isBanned}}
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.banned_by}}</div>
+    <div class='long-value'>
+      {{#link-to 'adminUser' banned_by}}{{avatar banned_by imageSize="tiny"}}{{/link-to}}
+      {{#link-to 'adminUser' banned_by}}{{banned_by.username}}{{/link-to}}
+    </div>
+  </div>
+
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.ban_reason}}</div>
+    <div class='long-value'>{{ban_reason}}</div>
+  </div>
+  {{/if}}
+
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.blocked}}</div>
     <div class='value'>{{blocked}}</div>

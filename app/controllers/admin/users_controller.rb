@@ -42,7 +42,7 @@ class Admin::UsersController < Admin::AdminController
     @user.banned_till = params[:duration].to_i.days.from_now
     @user.banned_at = DateTime.now
     @user.save!
-    # TODO logging
+    StaffActionLogger.new(current_user).log_user_ban(@user, params[:reason])
     render nothing: true
   end
 
@@ -51,7 +51,7 @@ class Admin::UsersController < Admin::AdminController
     @user.banned_till = nil
     @user.banned_at = nil
     @user.save!
-    # TODO logging
+    StaffActionLogger.new(current_user).log_user_unban(@user)
     render nothing: true
   end
 

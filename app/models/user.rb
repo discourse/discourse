@@ -360,6 +360,14 @@ class User < ActiveRecord::Base
     banned_till && banned_till > DateTime.now
   end
 
+  def ban_record
+    UserHistory.for(self, :ban_user).order('id DESC').first
+  end
+
+  def ban_reason
+    ban_record.try(:details) if is_banned?
+  end
+
   # Use this helper to determine if the user has a particular trust level.
   # Takes into account admin, etc.
   def has_trust_level?(level)

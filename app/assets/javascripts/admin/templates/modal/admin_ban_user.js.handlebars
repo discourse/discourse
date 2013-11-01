@@ -1,0 +1,15 @@
+<div class="modal-body">
+  <form>
+    {{i18n admin.user.ban_duration}}
+    {{textField value=duration maxlength="5" autofocus="autofocus" class="span2"}}
+    {{i18n admin.user.ban_duration_units}}
+    <br/>
+    {{i18n admin.user.ban_reason_label}}
+    <br/>
+    {{textField value=reason class="span8"}}
+  </form>
+</div>
+<div class="modal-footer">
+  <button class='btn btn-danger' {{action ban}} data-dismiss="modal"><i class='icon icon-ban-circle'></i>{{i18n admin.user.ban}}</button>
+  <a data-dismiss="modal">{{i18n cancel}}</a>
+</div>

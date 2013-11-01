@@ -142,21 +142,11 @@ Discourse.AdminUser = Discourse.User.extend({
     return banned_at.format('L') + " - " + banned_till.format('L');
   }.property('banned_till', 'banned_at'),
 
-  ban: function() {
-    var duration = parseInt(window.prompt(I18n.t('admin.user.ban_duration')), 10);
-    if (duration > 0) {
-      Discourse.ajax("/admin/users/" + this.id + "/ban", {
-        type: 'PUT',
-        data: {duration: duration}
-      }).then(function () {
-        // succeeded
-        window.location.reload();
-      }, function(e) {
-        // failure
-        var error = I18n.t('admin.user.ban_failed', { error: "http: " + e.status + " - " + e.body });
-        bootbox.alert(error);
-      });
-    }
+  ban: function(duration, reason) {
+    return Discourse.ajax("/admin/users/" + this.id + "/ban", {
+      type: 'PUT',
+      data: {duration: duration, reason: reason}
+    });
   },
 
   unban: function() {

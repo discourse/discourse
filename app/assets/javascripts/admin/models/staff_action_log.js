@@ -21,6 +21,9 @@ Discourse.StaffActionLog = Discourse.Model.extend({
       formatted += this.format('admin.logs.staff_actions.new_value', 'new_value');
       formatted += this.format('admin.logs.staff_actions.previous_value', 'previous_value');
     }
+    if (!this.get('useModalForDetails')) {
+      if (this.get('details')) formatted += this.get('details') + '<br/>';
+    }
     return formatted;
   }.property('ip_address', 'email'),
 
@@ -33,7 +36,7 @@ Discourse.StaffActionLog = Discourse.Model.extend({
   },
 
   useModalForDetails: function() {
-    return (this.get('details') && this.get('details').length > 0);
+    return (this.get('details') && this.get('details').length > 100);
   }.property('action_name'),
 
   useCustomModalForDetails: function() {

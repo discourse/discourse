@@ -57,6 +57,23 @@ class StaffActionLogger
     }))
   end
 
+  def log_user_ban(user, reason, opts={})
+    raise Discourse::InvalidParameters.new('user is nil') unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:ban_user],
+      target_user_id: user.id,
+      details: reason
+    }))
+  end
+
+  def log_user_unban(user, opts={})
+    raise Discourse::InvalidParameters.new('user is nil') unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:unban_user],
+      target_user_id: user.id
+    }))
+  end
+
   private
 
   def params(opts)
