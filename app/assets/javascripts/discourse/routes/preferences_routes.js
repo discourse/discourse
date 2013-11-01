@@ -46,6 +46,7 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
         'uploaded_avatar_template'
       ));
       user.set('avatar_template', avatarSelector.get('avatarTemplate'));
+      avatarSelector.send('closeModal');
     }
   }
 });

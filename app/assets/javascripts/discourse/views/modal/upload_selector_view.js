@@ -42,12 +42,14 @@ Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
     });
   }.observes('controller.local'),
 
-  upload: function() {
-    if (this.get("controller.local")) {
-      $('#reply-control').fileupload('add', { fileInput: $('#filename-input') });
-    } else {
-      this.get('controller.composerView').addMarkdown($('#fileurl-input').val());
-      this.get('controller').send('closeModal');
+  actions: {
+    upload: function() {
+      if (this.get("controller.local")) {
+        $('#reply-control').fileupload('add', { fileInput: $('#filename-input') });
+      } else {
+        this.get('controller.composerView').addMarkdown($('#fileurl-input').val());
+        this.get('controller').send('closeModal');
+      }
     }
   }
 

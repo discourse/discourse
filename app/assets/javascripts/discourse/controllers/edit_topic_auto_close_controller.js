@@ -31,16 +31,18 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
   },
 
   setAutoClose: function(days) {
-    var editTopicAutoCloseController = this;
+    var self = this;
+    this.send('hideModal');
     Discourse.ajax({
       url: '/t/' + this.get('id') + '/autoclose',
       type: 'PUT',
       dataType: 'html', // no custom errors, jquery 1.9 enforces json
       data: { auto_close_days: days > 0 ? days : null }
     }).then(function(){
-      editTopicAutoCloseController.set('details.auto_close_at', moment().add('days', days).format());
+      self.send('closeModal');
+      self.set('details.auto_close_at', moment().add('days', days).format());
     }, function (error) {
-      bootbox.alert(I18n.t('generic_error'));
+      bootbox.alert(I18n.t('generic_error'), function() { self.send('showModal'); } );
     });
   }
 

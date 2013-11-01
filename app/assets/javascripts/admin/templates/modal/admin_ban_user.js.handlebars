@@ -10,6 +10,6 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button class='btn btn-danger' {{action ban}} data-dismiss="modal"><i class='icon icon-ban-circle'></i>{{i18n admin.user.ban}}</button>
-  <a data-dismiss="modal">{{i18n cancel}}</a>
+  <button class='btn btn-danger' {{action ban}}><i class='icon icon-ban-circle'></i>{{i18n admin.user.ban}}</button>
+  <a {{action closeModal}}>{{i18n cancel}}</a>
 </div>

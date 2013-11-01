@@ -29,6 +29,6 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" {{action saveAvatarSelection}} data-dismiss="modal" {{bindAttr disabled="view.saveDisabled"}}>{{i18n save}}</button>
-  <a data-dismiss="modal">{{i18n cancel}}</a>
+  <button class="btn btn-primary" {{action saveAvatarSelection}} {{bindAttr disabled="view.saveDisabled"}}>{{i18n save}}</button>
+  <a {{action closeModal}}>{{i18n cancel}}</a>
 </div>

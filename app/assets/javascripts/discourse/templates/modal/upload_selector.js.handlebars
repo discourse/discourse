@@ -27,9 +27,9 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" data-dismiss="modal" {{action upload target="view"}}>
+  <button class="btn btn-primary" {{action upload target="view"}}>
     <span class='add-upload'><i {{bindAttr class="view.uploadIcon"}}></i><i class='icon-plus'></i></span>
     {{i18n upload}}
   </button>
-  <a data-dismiss="modal">{{i18n cancel}}</a>
+  <a {{action closeModal}}>{{i18n cancel}}</a>
 </div>
