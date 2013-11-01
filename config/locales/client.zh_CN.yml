@@ -184,12 +184,15 @@ zh_CN:
       "13": "收件箱"
 
     categories:
+      all: "所有分类"
+      only_category: "只看{{categoryName}}"
       category: "分类"
       posts: "帖子"
       topics: "主题"
       latest: "最新"
       latest_by: "最新发表："
       toggle_ordering: "排序控制"
+      subcategories: "子分类："
 
     user:
       said: "{{username}} 说："
@@ -760,7 +763,7 @@ zh_CN:
       split_topic:
         title: "拆分主题"
         action: "拆分主题"
-        topic_name: "新主题名："
+        topic_name: "新主题名"
         error: "拆分主题时发生错误。"
         instructions:
           one: "你想如何移动该帖？"
