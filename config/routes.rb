@@ -13,6 +13,10 @@ Discourse::Application.routes.draw do
 
   match "/404", to: "exceptions#not_found", via: [:get, :post]
 
+  get '/heroku-login' => 'heroku_session#new', as: :new_heroku_session
+  get '/heroku-logout' => 'heroku_session#destroy', as: :destroy_heroku_session
+  get '/auth/heroku/callback' => 'heroku_session#create'
+
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
   resources :forums

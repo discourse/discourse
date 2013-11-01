@@ -374,7 +374,7 @@ class UsersController < ApplicationController
 
     def create_third_party_auth_records(user, auth)
       return unless auth && auth[:authenticator_name]
-
+      
       authenticator = Users::OmniauthCallbacksController.find_authenticator(auth[:authenticator_name])
       authenticator.after_create_account(user, auth)
     end

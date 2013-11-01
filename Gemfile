@@ -101,6 +101,7 @@ gem 'omniauth-github'
 gem 'omniauth-oauth2', require: false
 gem 'omniauth-browserid', git: 'https://github.com/callahad/omniauth-browserid.git', branch: 'observer_api'
 gem 'omniauth-cas'
+gem 'omniauth-heroku'
 gem 'oj'
 gem 'pg'
 gem 'rake'

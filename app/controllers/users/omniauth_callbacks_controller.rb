@@ -12,7 +12,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     Auth::GithubAuthenticator.new,
     Auth::TwitterAuthenticator.new,
     Auth::PersonaAuthenticator.new,
-    Auth::CasAuthenticator.new
+    Auth::CasAuthenticator.new,
+    Auth::HerokuAuthenticator.new # Should try and use plugin interface instead (?)
   ]
 
   skip_before_filter :redirect_to_login_if_required
@@ -20,7 +21,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   layout false
 
   def self.types
-    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
+    @types ||= Enum.new(:heroku, :facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
   end
 
   # need to be able to call this
@@ -56,7 +57,6 @@ class Users::OmniauthCallbacksController < ApplicationController
     flash[:error] = I18n.t("login.omniauth_error", strategy: params[:strategy].titleize)
     render layout: 'no_js'
   end
-
 
   def self.find_authenticator(name)
     BUILTIN_AUTH.each do |authenticator|

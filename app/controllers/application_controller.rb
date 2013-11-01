@@ -13,6 +13,8 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
 
+  before_filter :sync_heroku_session, if: lambda{ |c| request.format && !request.format.json? }
+
   # Default Rails 3.2 lets the request through with a blank session
   #  we are being more pedantic here and nulling session / current_user
   #  and then raising a CSRF exception
@@ -26,6 +28,7 @@ class ApplicationController < ActionController::Base
   end
 
   before_filter :set_mobile_view
+  before_filter :sync_heroku_session, if: lambda{ |c| Rails.env.production? && request.format && request.format.html? }
   before_filter :inject_preview_style
   before_filter :block_if_maintenance_mode
   before_filter :authorize_mini_profiler
@@ -183,6 +186,16 @@ class ApplicationController < ActionController::Base
       post_ids.uniq!
     end
     post_ids
+  end
+
+  # Heroku session
+
+  def sync_heroku_session
+    heroku_session.sync
+  end
+
+  def heroku_session
+    HerokuSession.new(self)
   end
 
   private

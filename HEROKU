@@ -16,12 +16,18 @@
 1. heroku config:set RAILS_ENV=production
 1. heroku config:set RUBY_GC_MALLOC_LIMIT=90000000
 
+### Configure OAuth
+
+1. Create Heroku OAuth client: heroku clients:create discussion-yourname https://yourapp.herokuapp.com/auth/heroku/callback
+1. Store OAuth credentials as config vars: heroku config:set HEROKU_OAUTH_ID=12345 HEROKU_OAUTH_SECRET=abc123acb
+
+See HEROKU-LOCAL-OAUTH if you want to use heroku.com's OAuth locally.
+
 ### Deploy
 
 1. git push heroku master
 1. heroku run rake db:migrate
 1. heroku run rake db:seed_fu
-```
 
 ### Run
 
@@ -29,7 +35,7 @@
 1. heroku open
 1. Login/register as initial user
 
-### Configure
+### Setup admin
 
 ```console
 $ heroku run console
@@ -38,3 +44,4 @@ $ heroku run console
 > u.approved = true
 > u.save
 > SiteSetting.create(:name => 'force_hostname', :data_type =>1, :value=>'discourse-test.herokuapp.com')
+```

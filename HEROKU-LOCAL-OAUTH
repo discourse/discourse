@@ -1,0 +1,42 @@
+The sessions of discussion.heroku.com are integrated with the rest of the `heroku.com` official apps.
+
+To replicate this behavior locally you'll need to setup a fake local.heroku.com domain and register your local app as an OAuth client.
+
+### Setup OAuth
+
+```
+heroku plugins:install https://github.com/heroku/heroku-oauth
+heroku clients:create local-heroku https://local.heroku.com:5000/auth/heroku/callback
+```
+
+You'll see an ID and a secret, set them in your local environment as `HEROKU_OAUTH_ID` and `HEROKU_OAUTH_SECRET`.
+
+### Setup SSL locally (Mac OSX, skip if you already have SSL working locally):
+
+Install homebrew: `ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"`
+Install Node.js: `brew install node`
+Install a local SSL proxy:
+
+```
+git clone git://github.com/cameronhunter/local-ssl-proxy.git
+cd local-ssl-proxy
+npm install
+```
+
+Your local app will listen non-SSL requests on a certain port (e.g:`5001`). Set it as your `PORT` env. var so Foreman can use it.
+
+You'll need a new port to listen SSL requests (e.g:`5000`) and redirect those requests to your app's port:
+
+```
+node proxy-server.js --source 5000 --target 5001
+```
+
+### Run a heroku.com domain locally
+
+Add the following line to `/etc/hosts`:
+
+```
+local.heroku.com    127.0.0.1
+```
+
+Start your app, you should be able to browse it on `https://local.heroku.com:5000` (you may get an SSL warning because the certificate is self-signed, but you can access the app anyway).
