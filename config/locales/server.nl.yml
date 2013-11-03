@@ -97,7 +97,7 @@ nl:
       Voor meer informatie, [bekijk onze Veel Gestelde Vragen](/faq). Deze tekst zal alleen verschijnen bij je eerste %{education_posts_text}.
 
     'new-reply': |
-      Welkom op %{site_name} &mdash; **bedankt voor het deelnemen aan de conversatie!**
+      Welkom op %{site_name} &mdash; **bedankt voor je bijdrage!**
 
       - Geeft je reactie een nuttige bijdrage aan de conversatie, hoe klein dan ook?
 
@@ -107,6 +107,30 @@ nl:
 
       Voor meer informatie, [bekijk onze Veel Gestelde Vragen](/faq). Deze tekst zal alleen verschijnen bij je eerste %{education_posts_text}.
 
+    avatar: |
+      ### Wat dacht je van een nieuwe afbeelding voor je account?
+
+      Je hebt een aantal berichten en reacties geplaatst, maar je avatar is niet zo uniek als jij bent -- het is dezelfde avatar als alle andere nieuwe gebruikers hebben.
+
+      Heb je al overwogen **[om naar je profielpagina te gaan](%{profile_path})** om een nieuwe afbeelding van jou te uploaden?
+
+      Het is makkelijker om conversaties te volgen en interessante mensen te vinden als iedereen een unieke avatar heeft!
+
+    sequential_replies: |
+      ### Overweeg om op meerdere berichten ineens te reageren
+
+      In plaatst van een reactie per bericht te plaatsten, kan je ook meerdere berichten ineens citeren en @namen noemen in je reactie.
+
+      Je kan je vorige reactie wijzigen en er een citaat aan toevoegen door de betreffende tekst te selecteren en op de <b>citeer</b> knop te drukken die dan verschijnt.
+
+      Het is voor iedereen makkelijker om topics te lezen met minder losstaande reacties.
+
+    dominating_topic: |
+      ### Laat anderen meedoen in de conversatie
+
+      Deze topic is duidelijk belangrijk voor je &ndash; meer dan %{percent}% van de reacties zijn van jou.
+
+      Hou je in de gaten dat anderen ook de ruimte krijgen om hun visie te geven?
 
   activerecord:
     attributes:
@@ -114,6 +138,8 @@ nl:
         name: Naam categorie
       post:
         raw: Inhoud
+      user:
+        ip_address: ""
     errors:
       messages:
         is_invalid: "is ongeldig; probeer wat uitgebreider te zijn"
@@ -123,6 +149,10 @@ nl:
           attributes:
             archetype:
               cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
+        user:
+          attributes:
+            ip_address:
+              signup_not_allowed: Inschrijven vanaf dit account is niet toegestaan.
 
   user_profile:
     no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences/about-me'>zou je deze willen invullen?</a></div>"
@@ -132,7 +162,9 @@ nl:
     topic_prefix: "Beschrijving voor categorie %{category}"
     replace_paragraph: "[Vervang deze eerste regel met een korte omschrijving van je nieuwe categorie. Deze regel verschijnt in het selectiemenu als iemand een categorie kiest, dus hou het kort (max. 200 tekens).]"
     post_template: "%{replace_paragraph}\n\nGebruik de volgende alinea's voor een lange omschrijving en om wat verwachtingen en regels van deze categorie uit te leggen.\n\nZaken waar je het over kan hebben in de reacties hieronder:\n\n- Waar is deze categorie voor? Waarom zouden mensen deze categorie moeten kiezen voor hun topic?\n\n- Waarin verschilt deze categorie van de andere categorien die we al hebben?\n\n- Hebben we deze categorie echt nodig?\n\n- Moeten we deze categorie samenvoegen met een andere categorie, of juist opsplitsen?\n"
-
+    errors:
+      self_parent: "Een subcategorie kan niet onder zichzelf hangen."
+      depth: "Je kan een subcategorie niet onder een andere subcategorie hangen."
   trust_levels:
     newuser:
       title: nieuw lid
@@ -143,7 +175,7 @@ nl:
     leader:
       title: leider
     elder:
-      title: stamoudste
+      title: emiritus
     change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trust level is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'"
 
 
@@ -263,7 +295,7 @@ nl:
       long_form: heeft dit als spam gemeld
     inappropriate:
       title: Ongepast
-      description: 'Dit bericht bevat inhoud dat een persoon met gezond verstand als beledigend, discriminerend of kwetsend kan ervaren.'
+      description: 'Dit bericht bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/faq">de regels</a> zijn.'
       long_form: heeft dit als ongepast gemeld
     notify_user:
       title: "Licht {{username}} in"
@@ -389,6 +421,7 @@ nl:
 
   dashboard:
     rails_env_warning: "Je server draait in %{env} modus."
+    ruby_version_warning: Je gebruikt een versie van Ruby 2.0.0 met problemen. Upgrade naar patch level 247 of later.
     host_names_warning: "Het bestand config/database.yml heeft localhost als standaard hostname. Werk dat bij naar de hostname van je site."
     gc_warning: 'Je server gebruikt de standaard ruby garbage collection instellingen, en daarmee krijg je niet de beste prestaties. Lees deze topic over instellingen voor prestaties: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq draait niet. Veel taken, zoals het versturen van e-mails, worden asynchroon uitgevoerd door sidekiq. Zorg ervoor dat er altijd een sidekiq process draait. <a href="https://github.com/mperham/sidekiq">Hier is meer informatie over sidekiq</a>.'
@@ -399,12 +432,13 @@ nl:
     twitter_config_warning: 'De server is geconfigureerd om registratie en inloggen via Twitter mogelijk te maken (enable_twitter_logins), maar er zijn geen key en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
     github_config_warning: 'De server is geconfigureerd om registratie en inloggen via Github mogelijk te maken (enable_github_logins), maar er zijn geen client id en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Zie deze uitleg voor meer informatie</a>.'
     s3_config_warning: 'De server is geconfigureerd om bestanden naar S3 te uploaden, maar tenminste een van de volgende instellingen is niet opgegeven: s3_access_key_id, s3_secret_access_key of s3_upload_bucket. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zie "How to set up image uploads to S3?" voor meer informatie</a>.'
-    image_magick_warning: 'De server is geconfigureerd om thumbnails te maken van grote afbeeldingen, maar ImageMagick is niet geïnstalleerd. Installeer ImageMagick met je favoriete package manager of ga naar <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">om de laatste release te downloaden</a>.'
+    image_magick_warning: 'De server is geconfigureerd om thumbnails te maken van grote afbeeldingen, maar ImageMagick is niet geïnstalleerd. Installeer ImageMagick met je favoriete package manager of <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download de laatste release</a>.'
     failing_emails_warning: 'Er zijn %{num_failed_jobs} mislukte emailtaken. Check of de instellingen voor config.action_mailer in het bestand config/environments/production.rb kloppen. <a href="/sidekiq/retries" target="_blank">Bekijk alle mislukte Sidekiq jobs</a>.'
     default_logo_warning: "Je hebt nog niet een eigen logo ingesteld voor je site. Werk logo_url, logo_small_url, en favicon_url bij in de <a href='/admin/site_settings'>Instellingen</a>."
     contact_email_missing: "Je hebt nog geen contactadres opgegeven voor je site. Werk contact_email bij in de <a href='/admin/site_settings'>Instellingen</a>."
     contact_email_invalid: "Je hebt een ongeldig contactadres opgegeven voor je site. Werk contact_email bij in de <a href='/admin/site_settings'>Instellingen</a>."
     title_nag: "Je hebt nog geen title ingesteld voor je site. Geef een titel voor je site op in de <a href='/admin/site_settings'>Instellingen</a>."
+    site_description_missing: "Er is nog geen omschrijving van deze site. Schrijf een korte omschrijving in de <a href='/admin/site_settings'>Instellingen</a>"
     consumer_email_warning: "Je site is ingesteld om Gmail te gebruiken voor het versturen van mails. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail heeft limieten voor het aantal mails dat je kan versturen</a>. Overweeg om een andere e-mailprovider te gebruiken om er zeker van te zijn dat mails aankomen."
     access_password_removal: "Je site gebruikte een toegangswachtwoord (access_password) setting, maar die optie is uit Discourse verwijderd. De login_required en must_approve_users instellingen zijn er voor in de plaats gekomen. Je kan ze in <a href='/admin/site_settings'>de Instellingen</a> aanpassen. Zorg er voor dat je <a href='/admin/users/list/pending'>gebruikers op de wachtlijst accepteert</a>. (Dit bericht verdwijnt na twee dagen.)"
     site_contact_username_warning: "De instelling site_contact_username is leeg. Werk deze bij in <a href='/admin/site_settings'>de Instellingen</a>. Stel het in op de gebruikersnaam van een admin die als afzender van de systeemberichten zal worden wordt gebruikt."
@@ -461,6 +495,7 @@ nl:
     discourse_org_access_key: "De toegangscode voor het discourse.org nickname-register"
     educate_until_posts: Laat een popup zien totdat een lid dit aantal berichten geplaatst heeft
     title: "Titel van deze website, wordt gebruikt in de paginatitel en elders"
+    site_description: Omschrijf dit forum in een zin. Deze wordt getoond in de meta tag.
     contact_email: E-mailadres van een contactpersoon van deze site. Belangrijke updates van Discourse.org worden naar dit adres gestuurd.
     company_full_name: "De volledige naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     company_short_name: "De korte naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
@@ -470,7 +505,8 @@ nl:
     ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in seconden."
     edit_history_visible_to_public: "Iedereen mag eerdere versies van een bericht zien. Wanneer aangevinkt kan alleen de staf de eerdere versies van een bericht zien."
     delete_removed_posts_after: "Na dit aantal uren zal een door een gebruiker verwijderd bericht ook echt helemaal verwijderd worden (in plaats van alleen verborgen)."
-    max_image_width: Maximale breedte voor een afbeelding in een bericht
+    max_image_width: Maximale breedte van een afbeelding in een bericht
+    max_image_height: Maximale hoogte van een afbeelding in een bericht
     category_featured_topics: Aantal topics dat wordt weergegeven in de categorielijst
     add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle leden-content behalve voor interne links (inclusief parent domeinen). NB: Als je dit verandert, moet je ook alle 'baked markdown' updaten met \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Een kommagescheiden lijst van domeinen waar 'nofollow' niet is toegevoegd (voorbeelddomein.com zal automatisch sub.voorbeelddomein.com toestaan)."
@@ -504,9 +540,14 @@ nl:
 
     flags_required_to_hide_post: "Berichten zullen automatisch worden verborgen zodra het aantal meldingen maximaal dit aantal is (0 voor nooit)"
     cooldown_minutes_after_hiding_posts: "Hoeveel minuten moet iemand wachten voordat zij hun bericht kunnen wijzigen nadat het is verborgen door meldingen"
+
+    max_topics_in_first_day: "Het maximum aantal topics dat een gebruiker mag maken tijdens hun eerste dag op de site"
+    max_replies_in_first_day: "Het maximum aantal reacties dat een gebruiker mag schrijven tijdens hun eerste dag op de site"
+
     num_flags_to_block_new_user: "Als de berichten van een nieuwe gebruiker dit aantal spammarkeringen krijgen van (n) verschillende gebruikers, verberg dan alle berichten van deze gebruiker en houdt nieuwe berichten tegen. 0 om deze mogelijkheid uit te zetten."
     num_users_to_block_new_user: "Als de berichten van een nieuwe gebruiker (x) spammarkeringen krijgen van andere gebruikers, verberg dan alle berichten van deze gebruiker en houdt nieuwe berichten tegen. 0 om deze mogelijkheid uit te zetten."
-
+    notify_mods_when_user_blocked: "Als een gebruiker automatisch geblokkeerd is, stuur dan een bericht naar alle moderatoren."
+    flag_sockpuppets: "Als een nieuwe gebruiker (bijv. geregistreerd in de afgelopen 24 uur) reageert op de topic van een andere nieuwe gebruiker, maar wel van hetzelfde IP-adres dan, worden beide berichten automatisch gemarkeerd als spam."
 
     traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, gebruik 2 spaties voor een nieuw regeleinde"
     post_undo_action_window_mins: "Het tijdsbestek waarin iemand een actie binnen een bericht kan terugdraaien (zoals 'vind ik leuk')"
@@ -530,15 +571,16 @@ nl:
     email_domains_blacklist: "Een lijst met e-maildomeinen gescheiden door een |-teken van domeinen die niet worden toegestaan. Voorbeeld: mailinator.com|trashmail.net"
     email_domains_whitelist: "Een lijst met e-maildomeinen gescheiden door een |-teken van domeinen die wel worden toegestaan. N.B.: als je hier iets opgeeft, zijn andere domeinen NIET toegestaan."
     version_checks: "Ping de Discourse-hub voor versieupdates and laat versiemeldingen zien in het /admin dashboard"
+    new_version_emails: Stuur een e-mail naar het contact-email adres als er een nieuwe versie beschikbaar is.
 
-    port: "Mocht je een specifieke poort willen toewijzen aan de URL. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
-    force_hostname: "Mocht je een specifieke hostname willen toewijzen. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
+    port: "DEVELOPER ONLY! WARNING! Mocht je een specifieke poort willen toewijzen aan de URL. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
+    force_hostname: "DEVELOPER ONLY! WARNING! Mocht je een specifieke hostname willen toewijzen. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
 
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
-    invite_only: "Registratie is gesloten, alleen toegang op uitnodiging."
+    invite_only: "Registratie is niet mogelijk, alleen toegang op uitnodiging."
 
     login_required: Inloggen vereist om berichten te kunnen lezen
 
@@ -583,6 +625,8 @@ nl:
 
     suggested_topics: Het aantal aanbevolen topics dat is weergegeven aan de onderkant van een topic
 
+    clean_up_uploads: "Verwijder weesbestanden om illegale hosting te voorkomen. LET OP: maak een backup van je /uploads directory voordat je deze instelling activeert."
+    uploads_grace_period_in_hours: Na hoeveel uur een weesbestand verwijderd wordt.
     enable_s3_uploads: Of we uploads op Amazon S3 willen zetten of niet
     s3_upload_bucket: "De 'bucket' waarin we onze uploads naar Amazon S3 willen zetten"
     s3_access_key_id: "De Amazon S3 access key id dat wordt gebruikt om afbeeldingen te uploaden"
@@ -606,6 +650,8 @@ nl:
     regular_requires_likes_given: "Hoeveel keer een nieuw lid berichten leuk moet vinden voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
     regular_requires_topic_reply_count: "Op hoeveel topics een nieuw lid moet reageren voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
 
+    min_trust_to_create_topic: "Het minimale trust level dat nodig is om een topic te mogen maken."
+
     newuser_max_links: Hoeveel links een nieuw lid in een bericht kan plaatsen
     newuser_max_images: Hoeveel afbeeldingen een nieuw lid in een bericht kan plaatsen
     newuser_max_images: Hoeveel bestanden een nieuw lid in een bericht kan plaatsen
@@ -627,6 +673,8 @@ nl:
     min_body_similar_length: De minimale lengte die de inhoud van een bericht moet hebben voordat er wordt gezocht naar vergelijkbare topics
 
     category_colors: "Een lijst, gescheiden door een pipe (|), van hexadecimal kleurwaardes die gebruikt kunnen worden voor categorien"
+    enable_wide_category_list: "Activeer traditionele volle breedte, non-tiling, categorielijst"
+
     max_image_size_kb: "De maximale afbeeldingsgrootte die we toestaan voor uploads, in kB. Zorg er voor dat deze limiet ook ingesteld is in nginx (client_max_body_size) / apache of een proxy."
     max_attachment_size_kb: "De maximale bestandsgrootte die we toestaan voor uploads, in kB. Zorg er voor dat deze limiet ook ingesteld is in nginx (client_max_body_size) / apache of een proxy."
     authorized_extensions: "Een met pipes (|) gescheiden lijst van bestandsextensies die mogen worden geupload"
@@ -659,9 +707,24 @@ nl:
     relative_date_duration: "Na hoeveel dagen de datum van een bericht relatief zijn in plaats van absoluut.Voorbeelden: relatieve datum: 7d, absolute datum: 20 feb"
     delete_user_max_age: "Na hoeveel dagen na de inschrijving mag een admin een gebruiker nog verwijderen."
     delete_all_posts_max: "Het maximaal aantal berichten dat ineens verwijderd kan worden met de 'Verwijder alle berichten'-knop. Als een gebruiker meer berichten heeft, kunnen de berichten niet in een keer verwijderd worden en kan de gebruiker dus niet verwijderd worden."
-    username_change_period: "The number of days after registration that accounts can change their username."
+    username_change_period: "The number of days after registration that accounts can change their username (0 om wijziging niet toe te staan)."
+    email_editable: Gebruikers mogen hun e-mailadres na registratie nog wijzigen.
 
     allow_uploaded_avatars: "Sta toe dat avatars geupload kunnen worden"
+    allow_animated_avatars: "Gebruikers mogen een animated GIF gebruiken als avatar. LET OP: draai de rake task avatars:regenerate nadat je deze instelling hebt geactiveerd."
+    default_digest_email_frequency: "Hoe vaak ontvangen gebruikers standaard de digestmails. Ze kunnen dit in hun eigen instellingen nog aanpassen."
+
+    detect_custom_avatars: "Check of gebruikers een eigen avatar geupload hebben"
+    max_daily_gravatar_crawls: "Het maximum aantal keren per dag dat Discourse checkt of er nieuwe Gravatars zijn"
+
+    sequential_replies_threshold: "Het aantal reacties dat een gebruiker achter elkaar moet plaatsen in een topic om een melding te krijgen"
+
+    enable_mobile_theme: "Mobiele apparaten gebruiken een mobiel-vriendelijke theme met de mogelijkheid te schakelen naar de volledige site. Schakel deze optie uit als je een eigen stylesheet wil gebruiken die volledig responsive is."
+
+    dominating_topic_minimum_percent: "Vanaf welk percentage berichten dat een gebruiker plaatst in een topic vinden we de gebruiker dominant?"
+
+    enable_names: "Gebruikers mogen hun volledige naam laten zien"
+    display_name_on_posts: "Laat de volledige naam van een gebruiker ook bij zijn berichten zien"
 
   notification_types:
     mentioned: "%{display_username} heeft je genoemd in %{link}"
@@ -717,6 +780,7 @@ nl:
     activate_email: "Je bent er bijna! We hebben een activatiemail verstuurd naar <b>%{email}</b>. Volg de instructies in de mail om je account te activeren."
     not_activated: "Je kan nog niet inloggen. We hebben je een activatiemail gestuurd. Volg de instructies in de mail om je account te activeren."
     banned: "Je kan tot %{date} niet inloggen."
+    banned_with_reason: "Je kan tot %{date} niet inloggen. Je hebt een ban om de volgende reden: %{reden}"
     errors: "%{errors}"
     not_available: "Niet beschikbaar. Probeer %{suggestion}?"
     something_already_taken: "Er ging iets mis, misschien zijn de gebruikersnaam en/of e-mailadres al in gebruik? Gebruik dan de 'wachtwoord vergeten' link"
@@ -727,13 +791,15 @@ nl:
     username:
       short: "moet langer zijn dan %{min} tekens"
       long: "moet korter zijn dan %{max} tekens"
-      characters: "mag alleen nummers en letters bevatten"
-      unique: "moet uniek zijn"
-      blank: "mag niet leeg zijn"
+      characters: mag alleen nummers en letters bevatten
+      unique: moet uniek zijn
+      blank: mag niet leeg zijn
       must_begin_with_alphanumeric: "moet met een letter of nummer beginnen"
     email:
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
-      blocked: "is niet toegestaan."
+      blocked: is niet toegestaan.
+    ip_address:
+      blocked: is geblokkeerd.
 
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} heeft je uitgenodigd om op een privé-bericht te reageren op %{site_name}"
@@ -790,6 +856,17 @@ nl:
       ----
 
       <small>Er zou een unsubscribe footer op elke email die je verstuurt moeten zitten zodat men direct kan afmelden mocht men deze mails niet willen ontvangen. Dus laten we er eentje opzetten!
+
+  new_version_mailer:
+    subject_template: "[%{site_name}] Nieuwe updates beschikbaar"
+    text_body_template: |
+      Er is een nieuwe versie van Discourse beschikbaar.
+
+      **Nieuwe versie: %{new_version}**
+
+      Jouw versie: %{installed_version}
+
+      Werk zo snel mogelijk bij om de laatste oplossingen in mogelijkheden te krijgen.
 
   system_messages:
     post_hidden:
@@ -912,18 +989,22 @@ nl:
         Kijk voor verdere uitleg in de [FAQ](%{base_url}/faq).
 
     user_automatically_blocked:
-      subject_template: "Nieuwe gebruiker %{username} was automatisch geblokkeerd"
+      subject_template: "Nieuwe gebruiker %{username} is door meldingen geblokkeerd"
       text_body_template: |
-        Dit is een automatisch bericht om je te informeren dat de nieuwe gebruiker [%{username}](%{user_url}) automatisch geblokkeerd is, omdat meerdere gebruikers de berichten van %{username} gemarkeerd hebben.
+        Dit is een automatisch bericht om je te informeren dat de nieuwe gebruiker [%{username}](%{base_url}%{user_url}) automatisch geblokkeerd is, omdat meerdere gebruikers de berichten van %{username} gemarkeerd hebben.
 
         Kijk hier voor [de markeringen](/admin/flags). Als %{username} ten onrechte geblokkeerd is, klik dan op de deblokkeerdknop op [de beheerpagina van deze gebruiker](%{user_url}).
 
+        De drempel hiervoor kan ingesteld worden met de `block_new_user` instelling.
+
     spam_post_blocked:
-      subject_template: "Spam gedetecteerd in een bericht van %{username}"
+      subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd door herhaalde links"
       text_body_template: |
-        Dit is een automatisch bericht van %{site_name} om je te informeren dat [%{username}](%{user_url}) probeerde een bericht te plaatsen met links, maar gebaseerd op newuser_spam_host_threshold is dit gezien als spam.
+        Dit is een automatisch bericht van %{site_name} om je te informeren dat de nieuwe gebruiker [%{username}](%{base_url}%{user_url}) probeerde meerdere berichten te plaatsen met links naar %{domains}, maar deze berichten zijn geblokkeerd om spam tegen te gaan. De gebruiker kan nog steeds nieuwe berichten plaatsen die niet linken naar %{domains}.
 
         Bekijk de gebruiker [hier](%{user_url}).
+
+        De drempel hiervoor kan ingesteld worden met de `newuser_spam_host_threshold` instelling.
 
     unblocked:
       subject_template: Account gedeblokkeerd
@@ -933,6 +1014,15 @@ nl:
         Dit is een automatisch bericht van %{site_name} om je te informeren dat je account gedeblokkeerd is.
 
         Je kunt weer berichten plaatsen
+
+    pending_users_reminder:
+      subject_template:
+        one: "1 gebruiker wacht op goedkeuring"
+        other: "%{count} gebruikers wachten op goedkeuring"
+      text_body_template: |
+        Er zijn nieuwe gebruikers die zich hebben ingeschreven en wachten op goedkeuring (of afwijzing) voor zij het forum op kunnen.
+
+        [Beoordeel deze gebruikers in het admingedeelte](/admin/users/list/pending).
 
   unsubscribe_link: "Om deze e-mails niet langer willen ontvangen, ga naar [je gebruikersinstellingen](%{user_preferences_url})."
 
@@ -1000,7 +1090,7 @@ nl:
       new_activity: "Nieuwe reacties op je topics en berichten:"
       top_topics: "Veel besproken topics:"
       new_topics: "Nieuwe topics:"
-      unsubscribe: "Deze samenvatting wordt door %{site_link} verstuurd als we je 7 dagen hebben gemist op onze site.\nMocht je dit uit willen zetten, of je e-mailvoorkeur willen veranderen, %{unsubscribe_link}."
+      unsubscribe: "Deze samenvatting wordt door %{site_link} verstuurd als we je 7 dagen hebben gemist op onze site. Mocht je dit uit willen zetten, of je e-mailvoorkeur willen veranderen, %{unsubscribe_link}."
       click_here: klik hier
       from: "%{site_name} Digest"
       read_more: Lees verder
@@ -1083,3 +1173,7 @@ nl:
       fetch_failure: "Er ging iets mis bij het opvragen van de afbeelding."
       unknown_image_type: "Het bestand dat je wil uploaden is geen afbeelding."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
+
+  flag_reason:
+    sockpuppet: "Een nieuwe gebruiker maakte een nieuwe topic en een andere gebruiker reageerde - vanaf hetzelfde IP-adres. Zie de flag_sockpuppets instelling."
+    spam_hosts: "Deze gebruiker probeerde om meerdere berichten met links naar hetzelfde domein te plaatsen. Zie de newuser_spam_host_threshold instelling."
