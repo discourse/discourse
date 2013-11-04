@@ -261,6 +261,12 @@ test("Oneboxing", function() {
 
 });
 
+test("links with full urls", function() {
+  cooked("[http://eviltrout.com][1] is a url\n\n[1]: http://eviltrout.com",
+         "<p><a href=\"http://eviltrout.com\">http://eviltrout.com</a> is a url</p>",
+         "it supports links that are full URLs");
+});
+
 test("Code Blocks", function() {
 
   cooked("```\na\nb\nc\n\nd\n```",
