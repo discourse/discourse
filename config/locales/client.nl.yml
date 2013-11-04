@@ -75,7 +75,7 @@ nl:
           other: "%{count} dagen geleden"
     share:
       topic: Deel een link naar deze topic
-      post: Deel een link naar dit bericht
+      post: "Deel een link naar bericht #%{postNumber}"
       close: sluit
       twitter: deel deze link op Twitter
       facebook: deel deze link op Facebook
@@ -92,18 +92,28 @@ nl:
     log_in: Log in
     age: Leeftijd
     last_post: Laatste bericht
+    joined: Lid sinds
     admin_title: Beheer
     flags_title: Meldingen
     show_more: meer...
     links: Links
     faq: FAQ
     privacy_policy: "Privacy Policy"
+    mobile_view: Mobiele versie
+    desktop_versie: Desktopversie
     you: Jij
     or: of
     now: zonet
     read_more: lees verder
     more: Meer
     less: Minder
+    never: nooit
+    daily: dagelijks
+    weekly: wekelijks
+    every_two_weeks: elke twee weken
+    character_count:
+      one: "{{count}} teken"
+      other: "{{count}} tekens"
 
     in_n_seconds:
       one: "over 1 seconde"
@@ -135,6 +145,10 @@ nl:
     save: Bewaar wijzigingen
     saving: Wordt opgeslagen...
     saved: Opgeslagen!
+
+    upload: Upload
+    uploading: Uploaden...
+    uploaded: Geupload!
 
     choose_topic:
       none_found: Geen topics gevonden.
@@ -173,9 +187,21 @@ nl:
       "12": "Verzonden items"
       "13": "Inbox"
 
+    categories:
+      all: alle categoriëen
+      only_category: "only {{categoryName}}"
+      category: Categorie
+      posts: Berichten
+      topics: Topics
+      latest: Laatste
+      latest_by: Laatste door
+      toggle_ordering: schakel sorteermethode
+      subcategories: "Subcategoriëen:"
+
     user:
       said: "{{username}} zei:"
       profile: Profiel
+      show_profile: Bekijk profiel
       mute: Negeer
       edit: Wijzig voorkeuren
       download_archive: download een archief van mijn berichten
@@ -193,11 +219,18 @@ nl:
       change: verander
       moderator: "{{user}} is een moderator"
       admin: "{{user}} is een admin"
+      deleted: (verwijderd)
+
+      messages:
+        all: Alle
+        mine: Mijn
+        unread: Ongelezen
 
       change_password:
         success: (e-mail verzonden)
         in_progress: (e-mail wordt verzonden)
         error: (fout)
+        action: Stuur wachtwoord-reset-mail
 
       change_about:
         title: Wijzig bio
@@ -214,6 +247,15 @@ nl:
         taken: 'Sorry, dat e-mailadres is niet beschikbaar.'
         error: "Het veranderen van je e-mailadres is mislukt. Wellicht is deze al in gebruik?"
         success: "We hebben een mail gestuurd naar dat adres. Volg de bevestigingsinstructies in die mail."
+
+      change_avatar:
+        title: Wijzig je avatar
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, gebaseerd op"
+        gravatar_title: Verander je avatar op Gravatars website
+        uploaded_avatar: Eigen afbeelding
+        uploaded_avatar_empty: Voeg een eigen afbeelding toe
+        upload_title: Upload je afbeelding
+        image_is_not_a_square: "Let op: we hebben je afbeelding bijgesneden omdat het geen vierkant is."
 
       email:
         title: E-mail
@@ -259,6 +301,7 @@ nl:
 
       email_direct: "Ontvang een mail wanneer iemand je citeert, reageert op je bericht of je @gebruikersnaam noemt."
       email_private_messages: Ontvang een mail wanneer iemand je een privé-bericht heeft gestuurd.
+      email_always: "Ontvang notificaties en topicoverzichten zelfs als ik actief ben op het forum."
 
       other_settings: Overige
 
@@ -346,6 +389,7 @@ nl:
     private_message_info:
       title: 'Privé-bericht'
       invite: Nodig anderen uit...
+      remove_allowed_user: "Weet je zeker dat je {{name}} wil verwijderen uit deze priveconversatie?"
 
     email: E-mail
     username: Gebruikersnaam
@@ -378,6 +422,7 @@ nl:
       authenticating: Authenticatie...
       awaiting_confirmation: "Je account is nog niet geactiveerd. Gebruik de 'Wachtwoord vergeten'-link om een nieuwe activatie-mail te ontvangen."
       awaiting_approval: "Je account is nog niet goedgekeurd door iemand van de staf. Je krijgt van ons een mail wanneer dat gebeurd is."
+      requires_invite: "Toegang tot dit forum is alleen op uitnodiging."
       not_activated: "Je kan nog niet inloggen. We hebben je een activatie-mail gestuurd (naar <b>{{currentEmail}}</b>). Het kan een aantal minuten duren voor deze aan komt. Check ook je spamfolder."
       resend_activation_email: Klik hier om de activatiemail opnieuw te ontvangen.
       sent_activation_email_again: "We hebben een nieuwe activatiemail gestuurd naar <b>{{currentEmail}}</b>. Het kan een aantal minuten duren voor deze aan komt. Check ook je spamfolder."
@@ -453,8 +498,8 @@ nl:
       link_optional_text: optionele titel
       quote_title: Citaat
       quote_text: Citaat
-      code_title: Code voorbeeld
-      code_text: hier de code
+      code_title: Opgemaakte tekst
+      code_text: geef hier de opgemaakte tekst
       upload_title: Afbeelding
       upload_description: geef een omschrijving voor de afbeelding op
       olist_title: Genummerde lijst
@@ -485,7 +530,7 @@ nl:
       private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='heeft je uitnodiging geaccepteerd' class='icon icon-signin'></i> {{username}} heeft je uitnodiging geaccepteerd en heeft zich ingeschreven om deel te nemen."
-      moved_post: "<i title='bericht verplaatst' class='icon icon-arrow-right'></i> {{username}} verplaatst naar {{link}}"
+      moved_post: "<i title='bericht verplaatst' class='icon icon-arrow-right'></i> {{username}} verplaatst {{link}}"
       total_flagged: aantal gemarkeerde berichten
 
     upload_selector:
@@ -497,6 +542,8 @@ nl:
       remote_tip_with_attachments: "vul een internetadres in van een afbeelding of bestand in deze vorm: http://example.com/bestand.ext (toegestane extensies: {{authorized_extensions}})."
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
       local_tip_with_attachments: "klik om een afbeelding of bestand vanaf je apparaat te selecteren (toegestane extensies: {{authorized_extensions}})."
+      hint: "(je kan afbeeldingen ook slepen in de editor om deze te uploaden)"
+      hint_for_chrome: "(je kan afbeeldingen ook slepen of plakken in de editor om deze te uploaden)"
       uploading: Afbeelding uploaden
 
     search:
@@ -545,11 +592,18 @@ nl:
       title: Details topic rangorde
 
     topic:
+      filter_to: "Laat alleen de {{post_count}} berichten van {{username}} in deze topic zien"
       create: Maak topic
       create_long: Maak een nieuw topic
       private_message: Stuur een privé-bericht
       list: Topics
       new: nieuw topic
+      new_topics:
+        one: 1 nieuwe topic
+        other: "{{count}} nieuwe topics"
+      unread_topics:
+        one: 1 ongelezen topic
+        other: "{{count}} ongelezen topics"
       title: Topic
       loading_more: Er worden meer topics geladen...
       loading: Bezig met laden van topic...
@@ -607,7 +661,6 @@ nl:
       auto_close_notice: "Deze topic wordt automatisch over %{timeLeft} gesloten."
       auto_close_title: 'Instellingen voor automatisch sluiten'
       auto_close_save: Opslaan
-      auto_close_cancel: Annuleren
       auto_close_remove: Sluit deze topic niet automatisch
 
       progress:
@@ -713,7 +766,7 @@ nl:
       split_topic:
         title: Splits topic
         action: splits topic
-        topic_name: "Naam nieuwe topic:"
+        topic_name: "Naam nieuwe topic"
         error: "Er ging iets mis bij het splitsen van die topic."
         instructions:
           one: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met het bericht dat je geselecteerd hebt."
@@ -730,6 +783,7 @@ nl:
       multi_select:
         select: selecteer
         selected: "geselecteerd ({{count}})"
+        select_replies: "selecteer +antwoorden"
         delete: verwijder geselecteerde
         cancel: annuleer selectie
         description:
@@ -782,6 +836,12 @@ nl:
         undelete: herstel dit bericht
         share: deel een link naar dit bericht
         more: Meer
+        delete_replies:
+          confirm:
+            one: "Wil je ook het directe antwoord op dit bericht verwijderen?"
+            other: "Wil je ook de {{count}} directe antwoorden op dit bericht verwijderen?"
+          yes_value: "Ja, verwijder deze antwoorden ook"
+          no_value: "Nee, alleen dit bericht"
 
       actions:
         flag: 'Markeer'
@@ -887,6 +947,7 @@ nl:
     category:
       can: 'can&hellip; '
       none: (geen categorie)
+      choose: 'Selecteer een categorie&hellip;'
       edit: bewerk
       edit_long: Bewerk categorie
       view: Bekijk topics in categorie
@@ -917,6 +978,9 @@ nl:
       auto_close_label: "Sluit topics automatisch na:"
       edit_permissions: Wijzig permissies
       add_permission: Nieuwe permissie
+      this_year: dit jaar
+      position: positie
+      parent: Bovenliggende categorie
 
     flagging:
       title: Waarom meld je dit bericht?
@@ -924,7 +988,7 @@ nl:
       take_action: Onderneem actie
       notify_action: Meld
       delete_spammer: Verwijder spammer
-      delete_confirm: "Je gaat nu <b>%{posts}</b> berichten en <b>%{topics}</b> van deze gebruiker verwijderen, hun account verwijderen en hun e-mailadres <b>%{email}</b> op een permanente blokkeerlijst zetten. Weet je zeker dat dit een spammer is?"
+      delete_confirm: "Je gaat nu <b>%{posts}</b> berichten en <b>%{topics}</b> van deze gebruiker verwijderen, hun account verwijderen, nieuwe aanmeldingen vanaf hun IP-adres <b>%{ip_address}</b> blokkeren en hun e-mailadres <b>%{email}</b> op een permanente blokkeerlijst zetten. Weet je zeker dat dit een spammer is?"
       yes_delete_spammer: "Ja, verwijder spammer"
       cant: "Sorry, je kan dit bericht momenteel niet melden."
       custom_placeholder_notify_user: "Wat maakt dat je de schrijver persoonlijk iets wil melden? Wees specifiek, constructief en altijd aardig."
@@ -1028,8 +1092,8 @@ nl:
         critical_available: Er is een belangrijke update beschikbaar
         updates_available: Er zijn updates beschikbaar
         please_upgrade: Werk de software bij alsjeblieft
-        no_check_performed: Er is nog niet op updates gecontroleerd. Zorgen sidekiq loopt."
-        stale_data: Er is al een tijdje niet op updates gecontroleerd. Zorgen sidekiq loopt."
+        no_check_performed: Er is nog niet op updates gecontroleerd. Zorgen dat sidekiq loopt."
+        stale_data: Er is al een tijdje niet op updates gecontroleerd. Zorgen dat sidekiq loopt."
         installed_version: Geïnstalleerd
         latest_version: Recent
         problems_found: 'Er zijn een aantal problemen gevonden met je Discourse installatie:'
@@ -1110,12 +1174,18 @@ nl:
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
+        generate_master: Genereer Master API Key
+        none: Er zijn geen actieve API keys
+        user: Gebruiker
         title: API
-        long_title: "API informatie"
-        key: "Key"
+        key: API Key
         generate: "Genereer API Key"
         regenerate: "Genereer API Key opnieuw"
+        revoke: Intrekken
+        confirm_regen: Weet je zeker dat je die API Key wil vervangen door een nieuwe?
+        confirm_revoke: Weet je zeker dat je die API Key wil intrekken?
         info_html: "Met deze API key kun je met behulp van JSON calls topics maken en bewerken."
+        all_users: Alle gebruikers
         note_html: "Houd deze key <strong>geheim</strong>, gebruikers die deze key hebben kunnen zich als elke andere gebruiker voordoen op het forum en topics aanmaken."
 
       customize:
@@ -1123,6 +1193,8 @@ nl:
         long_title: Aanpassingen aan de site
         header: Header
         css: Stylesheet
+        mobile_header: Mobiele header
+        mobile_css: Mobiele stylesheet
         override_default: Sluit de standaard stylesheet uit
         enabled: Ingeschakeld?
         preview: voorbeeld
@@ -1174,12 +1246,44 @@ nl:
           clear_filters: Bekijk alles
           staff_user: Staflid
           target_user: Selecteer gebruiker
+          subject: Onderwerp
           when: Wanneer
           context: Context
           details: Details
+          previous_value: Vorige
+          new_value: Nieuw
+          diff: Diff
+          show: Bekijk
+          modal_title: Details
+          no_previous: Er is geen vorige waarde
+          deleted: Geen nieuwe waarde. De record was verwijderd.
           actions:
             delete_user: verwijder gebruiker
             change_trust_level: verander trust level
+            change_site_setting: verander instellingen
+            change_site_customization: verander site aanpassingen
+            delete_site_customization: verwijder site aanpassingen
+            ban_user: ban gebruiker
+            unban_user: hef ban op
+          screened_emails:
+            title: Gescreende e-mails
+            description: Nieuwe accounts met een van deze mailadressen worden geblokkeerd of een andere actie wordt ondernomen.
+            email: E-mailadres
+          screened_urls:
+            title: Gescreende urls
+            description: Deze urls zijn gebruikt door gebruikers die als spammer gemarkeerd zijn.
+            url: URL
+          screened_ips:
+            title: Gescreende ip-adressen
+            description: IP-adressen die in de gaten worden gehouden. Kies 'sta toe' om deze op een witte lijst te zetten.
+            delete_confirm: "Weet je zeker dat je de regel voor %{ip_address} wil verwijderen?"
+            actions:
+              block: Blokkeer
+              do_nothing: Sta toe
+            form:
+              label: "Nieuw:"
+              ip_address: IP-adres
+              add: Voeg toe
 
       impersonate:
         title: Log in als gebruiker
@@ -1206,6 +1310,9 @@ nl:
         approved_selected:
           one: accepteer lid
           other: "accepteer {{count}} leden"
+        reject_selected:
+          one: weiger lid
+          other: "weiger {{count}} leden"
         titles:
           active: 'Actieve leden'
           new: 'Nieuwe leden'
@@ -1219,12 +1326,23 @@ nl:
           moderators: Moderators
           blocked: Geblokkeerde leden
           banned: Verbannen leden
+        reject_successful:
+          one: "1 Gebruiker met succes geweigerd"
+          other: "%{count} Gebruikers met succes geweigerd"
+        reject_failures:
+          one: "Weigering van 1 gebruiker is niet gelukt"
+          other: "Weigering van %{count} gebruikers is niet gelukt"
 
       user:
         ban_failed: "Er ging iets fout met het blokkeren van deze gebruiker: {{error}}"
         unban_failed: "Er ging iets fout bij het deblokkeren van deze gebruiker: {{error}}"
-        ban_duration: "Hoe lang wil je deze gebruiker blokkeren? (dagen)"
+        ban_duration: "Hoe lang wil je deze gebruiker blokkeren?"
+        ban_duretion_units: (dagen)
+        ban_reason_label: "Waarom ban je? Als de gebruiker in probeert te loggen, zullen ze deze tekst zien. Hou het kort."
+        ban_reason: Reden voor ban
+        banned_by: Verbannen door
         delete_all_posts: Verwijder alle berichten
+        delete_all_posts_confirm: "Je gaat %{posts} en %{topics} verwijderen. Zeker weten?"
         ban: Blokkeer
         unban: Deblokkeer
         banned: Geblokkeerd?
@@ -1263,8 +1381,8 @@ nl:
           one: "Gebruikers kunnen niet worden verwijders als ze zich meer dan %{count} dag geleden registreerden of als ze berichten geplaatst hebben. Verwijder alle berichten voordat je een gebruiker probeert te verwijderen."
           other: "Gebruikers kunnen niet worden verwijders als ze zich meer dan %{count} dagen geleden registreerden of als ze berichten geplaatst hebben. Verwijder alle berichten voordat je een gebruiker probeert te verwijderen."
         delete_confirm: Weet je zeker dat je deze gebruiker definitief wil verwijderen? Deze handeling is permanant!
-        delete_and_block: "<b>Ja</b>, en <b>blokkeer</b> registraties met datzelfde e-mailadres"
-        delete_dont_block: "<b>Ja</b>, maar <b>sta nieuwe registraties toe</b> met datzelfde e-mailadres"
+        delete_and_block: "<b>Ja</b>, en <b>blokkeer</b> registraties met datzelfde e-mail- en IP-adres"
+        delete_dont_block: "<b>Ja</b>, maar <b>sta nieuwe registraties toe</b> met datzelfde e-mail- en IP-adres"
         deleted: De gebruiker is verwijderd.
         delete_failed: Er ging iets mis bij het verwijderen van deze gebruiker. Zorg er voor dat alle berichten van deze gebruiker eerst verwijderd zijn.
         send_activation_email: Verstuur activatiemail
@@ -1280,6 +1398,7 @@ nl:
         banned_explanation: Een verbannen gebruiker kan niet meer inloggen.
         block_explanation: Een geblokkeerde gebruiker kan geen topics maken of reageren op topics.
         trust_level_change_failed: Er ging iets mis bij het wijzigen van het trust level van deze gebruiker.
+        ban_modal_title: Ban gebruiker
 
       site_content:
         none: Selecteer een tekst om deze te bewerken
