@@ -14,6 +14,15 @@ class ScreenedIpAddress < ActiveRecord::Base
     match_for_ip_address(ip_address) || create(opts.slice(:action_type).merge(ip_address: ip_address))
   end
 
+  # @Neil please review, in rails 4 when setting an ip address attribute a conversion takes place
+  #  this may explode meaning you will never even reach the validator
+  # We can work around the issue like so, but I wonder if the spec is valid
+  def ip_address=(val)
+    write_attribute(:ip_address, val)
+  rescue IPAddr::InvalidAddressError
+    self.errors.add(:ip_address, :invalid)
+  end
+
   def self.match_for_ip_address(ip_address)
     # The <<= operator on inet columns means "is contained within or equal to".
     #
