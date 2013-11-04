@@ -55,23 +55,13 @@
 // Border radius
 
 @mixin border-radius-all($radius) {
-          border-radius: $radius;
-}
-
-@mixin border-radius-top($radius) {
-          border-top-right-radius: $radius;
-          border-top-left-radius: $radius;
-}
-
-@mixin border-radius-bottom($radius) {
-          border-bottom-right-radius: $radius;
-          border-bottom-left-radius: $radius;
+  border-radius: $radius;
 }
 
 // Box shadow
 
 @mixin box-shadow($shadow) {
-          box-shadow: $shadow;
+  box-shadow: $shadow;
 }
 
 // Linear gradient
@@ -79,32 +69,6 @@
 @mixin linear-gradient($start-color, $end-color) {
   background-color: $start-color;
   background-image: linear-gradient(to bottom, $start-color, $end-color);
-}
-
-// Background size
-
-@mixin background-size($size) {
-          background-size: $size;
-}
-
-// Background clip
-
-@mixin background-clip($clip) {
-          background-clip: $clip;
-}
-
-// Rotate
-
-@mixin rotate($degrees) {
-  -webkit-transform: rotate($degrees);
-          transform: rotate($degrees);
-}
-
-// Scale
-
-@mixin scale($ratio) {
-  -webkit-transform: scale($ratio);
-          transform: scale($ratio);
 }
 
 // Transition
@@ -138,27 +102,11 @@
   }
 }
 
-@mixin fade-soft($time: 1s) {
-  -webkit-transition: opacity $time ease-in-out;
-      -ms-transition: opacity $time ease-in-out;
-          transition: opacity $time ease-in-out;
-}
-
 @mixin visible {
   opacity: 1;
   visibility: visible;
   -webkit-transition-delay: 0s;
           transition-delay: 0s;
-}
-
-// Decorations
-// --------------------------------------------------
-
-// Glow
-
-@mixin glow($color) {
-      border: 1px solid $color;
-  box-shadow: 0 0 5px $color;
 }
 
 //

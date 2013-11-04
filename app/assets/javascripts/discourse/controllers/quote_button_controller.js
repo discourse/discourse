@@ -45,9 +45,7 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
         cloned = range.cloneRange(),
         $ancestor = $(range.commonAncestorContainer);
 
-    // don't display the "quote reply" button if you select text spanning two posts
-    // note: the ".contents" is here to prevent selection of the topic summary
-    if ($ancestor.closest('.topic-body > .contents').length === 0) {
+    if ($ancestor.closest('.cooked').length === 0) {
       this.set('buffer', '');
       return;
     }

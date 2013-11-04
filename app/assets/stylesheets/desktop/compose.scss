@@ -309,7 +309,7 @@
       border: 1px dashed $gray;
       overflow: auto;
       visibility: visible;
-      
+
       &.hidden {
         width: 0;
         visibility: hidden;
@@ -432,8 +432,7 @@ div.ac-wrap {
     }
 
     #wmd-input, #wmd-preview {
-      box-sizing: border-box;
-      -moz-box-sizing: border-box;
+      @include box-sizing(border-box);
       width: 100%;
       height: 100%;
       min-height: 100%;
@@ -453,7 +452,7 @@ div.ac-wrap {
       top: 0;
       height: 100%;
       min-height: 100%;
-      box-sizing: border-box;
+      @include box-sizing(border-box);
       border: 0;
       border-top: 36px solid transparent;
       @include border-radius-all(0);
@@ -461,8 +460,7 @@ div.ac-wrap {
     }
     .textarea-wrapper, .preview-wrapper {
       position: relative;
-      box-sizing: border-box;
-      -moz-box-sizing: border-box;
+      @include box-sizing(border-box);
       height: 100%;
       min-height: 100%;
       margin: 0;

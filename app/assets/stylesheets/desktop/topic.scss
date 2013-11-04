@@ -11,13 +11,14 @@
 }
 
 .post-actions {
+  @include unselectable;
   clear: both;
   text-align: right;
-    .post-action {
+  .post-action {
     display: inline-block;
     margin-left: 10px;
     margin-top: 10px;
-    }
+  }
 }
 .post-menu-area {
   margin-bottom: 10px;

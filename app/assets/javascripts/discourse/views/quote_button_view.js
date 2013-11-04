@@ -64,8 +64,8 @@ Discourse.QuoteButtonView = Discourse.View.extend({
       })
       .on('selectionchange', function() {
         // there is no need to handle this event when the mouse is down
-        // or if there is not a touch in progress
-        if (view.get('isMouseDown') || !view.get('isTouchInProgress')) return;
+        // or if there a touch in progress
+        if (view.get('isMouseDown') || view.get('isTouchInProgress')) return;
         // `selection.anchorNode` is used as a target
         view.selectText(window.getSelection().anchorNode, controller);
       });
