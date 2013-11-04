@@ -77,8 +77,6 @@ Spork.prefork do
 
     config.before(:all) do
       DiscoursePluginRegistry.clear
-      uncat_id = SiteSetting.uncategorized_category_id
-
       Discourse.current_user_provider = TestCurrentUserProvider
 
       # a bit odd, but this setting is actually preloaded
