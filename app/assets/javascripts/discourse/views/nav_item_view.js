@@ -17,9 +17,10 @@ Discourse.NavItemView = Discourse.View.extend({
   active: Discourse.computed.propertyEqual('content.filterMode', 'controller.filterMode'),
 
   title: function() {
-    var categoryName, extra, name;
-    name = this.get('content.name');
-    categoryName = this.get('content.categoryName');
+    var categoryName = this.get('content.categoryName'),
+        name = this.get('content.name'),
+        extra;
+
     if (categoryName) {
       extra = { categoryName: categoryName };
       name = "category";
@@ -29,12 +30,12 @@ Discourse.NavItemView = Discourse.View.extend({
 
 
   name: function() {
-    var categoryName, extra, name;
-    name = this.get('content.name');
-    categoryName = this.get('content.categoryName');
-    extra = {
-      count: this.get('content.count') || 0
-    };
+    var categoryName = this.get('content.categoryName'),
+        name = this.get('content.name'),
+        extra = {
+          count: this.get('content.count') || 0
+        };
+
     if (categoryName) {
       name = 'category';
       extra.categoryName = Discourse.Formatter.toTitleCase(categoryName);
