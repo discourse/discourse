@@ -7,10 +7,9 @@
   position: absolute;
   left: 20px;
   z-index: 990;
-  @include border-radius-all(3px);
-  @include box-shadow(1px 1px 5px $darkish_gray);
-  background-color: $light_gray;
-  padding: 3px 7px 6px 7px;
+  box-shadow: 0 1px 5px rgba(70, 70, 70, .4);
+  background-color: #fff;
+  padding: 6px 10px 10px 10px;
   width: 300px;
   display: none;
   &.visible {

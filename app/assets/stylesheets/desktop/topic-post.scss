@@ -772,12 +772,8 @@ button.show-replies {
   margin: 1px 0 0;
   list-style: none;
   background-color: #ffffff;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  *border-right-width: 2px;
-  *border-bottom-width: 2px;
-  border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 5px rgba(70, 70, 70, .4);
   background-clip: padding-box;
   span {font-size: 12px;}
 .title {font-weight: bold; display: block; font-size: 14px;}
