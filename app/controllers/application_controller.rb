@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
   def serialize_data(obj, serializer, opts={})
     # If it's an array, apply the serializer as an each_serializer to the elements
     serializer_opts = {scope: guardian}.merge!(opts)
-    if obj.is_a?(Array)
+    if obj.is_a?(Array) or obj.is_a?(ActiveRecord::Associations::CollectionProxy)
       serializer_opts[:each_serializer] = serializer
       ActiveModel::ArraySerializer.new(obj, serializer_opts).as_json
     else
