@@ -7,23 +7,16 @@
       'defer/google_diff_match_patch': <%= asset_path('defer/google_diff_match_patch.js').inspect.html_safe %>
     };
 
-    var assetPath = function(asset){
-      return map[asset];
-    };
-
-    return assetPath;
+    return function(asset){ return map[asset]; };
   })();
 </script>
 
-
 <script>
-  Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host  %>';
-  Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname  %>';
+  Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host %>';
+  Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname %>';
   Discourse.BaseUri = '<%= Discourse::base_uri "/" %>';
   Discourse.Environment = '<%= Rails.env %>';
   Discourse.SiteSettings = PreloadStore.get('siteSettings');
-  Discourse.Router.map(function() {
-    Discourse.routeBuilder.call(this);
-  });
+  Discourse.Router.map(function() { Discourse.routeBuilder.call(this); });
   Discourse.start()
 </script>
