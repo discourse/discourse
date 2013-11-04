@@ -45,9 +45,7 @@
   margin-left: 10px;
 }
 
-.docked #topic-progress {
-    box-shadow: 0 0 3px #aaa;
-}
+
 
 #topic-progress-wrapper {
   position: fixed;
@@ -81,7 +79,6 @@ a:hover.reply-new {
 }
 
 #topic-progress {
-  box-shadow: 0 0 3px #000;
   position: relative;
   left: 302px;
   &.hidden {
