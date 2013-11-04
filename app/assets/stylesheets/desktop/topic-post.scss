@@ -501,7 +501,16 @@ iframe {
   h1, h2, h3 {margin: 10px 0;}
   ul, ol {margin: 0 15px;}
   li p {margin: 3px 0;}
+
+
 }
+
+  a.mention {
+    padding: 2px 4px;
+    color: #666;
+    background: #eee;
+  }
+
 
 .modal-body {
   input[type=text] {
@@ -587,19 +596,17 @@ position: relative;
 }
 
 .user-title {
-  margin-top: 5px;
+  margin-top: 8px;
   color: #aaa;
   overflow: hidden;
   font-size: 80%;
+  line-height: 13px;
 }
 
 .info-line {
   margin: 10px 0;
   color: #666;
 }
-
-
-
 
 
 blockquote { /* solo quotes */
