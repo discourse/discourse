@@ -756,7 +756,7 @@ table.api-keys {
 }
 
 .screened-emails, .screened-urls, .screened-ip-addresses {
-  .email, .url {
+  .email, .url, .domain {
     width: 300px;
   }
   .action, .match_count, .last_match_at, .created_at {
