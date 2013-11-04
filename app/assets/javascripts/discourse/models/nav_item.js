@@ -39,7 +39,7 @@ Discourse.NavItem = Discourse.Model.extend({
     var name = this.get('name');
 
     if( name.split('/')[0] === 'category' ) {
-      return 'category/' + this.get('categorySlug')
+      return 'category/' + this.get('categorySlug');
     } else {
       var mode = "",
       category = this.get("category");
