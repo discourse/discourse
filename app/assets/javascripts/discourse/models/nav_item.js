@@ -37,17 +37,16 @@ Discourse.NavItem = Discourse.Model.extend({
   // href from this item
   filterMode: function() {
     var name = this.get('name');
+
     if( name.split('/')[0] === 'category' ) {
       return 'category/' + this.get('categorySlug');
     } else {
-      var mode = "";
-      var category = this.get("category");
+      var mode = "",
+      category = this.get("category");
+
       if(category){
         mode += "category/";
-
-        var parentSlug = category.get('parentCategory.slug');
-        if (parentSlug) { mode += parentSlug + "/"; }
-        mode += category.get("slug") + "/l/";
+        mode += Discourse.Category.slugFor(this.get('category')) + "/l/";
       }
       return mode + name.replace(' ', '-');
     }

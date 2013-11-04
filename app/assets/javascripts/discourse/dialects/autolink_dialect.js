@@ -10,6 +10,10 @@ var urlReplacerArgs = {
     var url = matches[1],
         displayUrl = url;
 
+
+    // Don't autolink a markdown link to something
+    if (url.match(/\]\[\d$/)) { return; }
+
     // If we improperly caught a markdown link abort
     if (url.match(/\(http/)) { return; }
 

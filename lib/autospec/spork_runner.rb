@@ -1,5 +1,9 @@
+require "drb/drb"
+require "autospec/rspec_runner"
+
 module Autospec
-  class SporkRunner < BaseRunner
+
+  class SporkRunner < RspecRunner
 
     def start
       if already_running?(pid_file)
@@ -13,24 +17,20 @@ module Autospec
     end
 
     def running?
+      # launch a thread that will wait for spork to die
       @monitor_thread ||=
         Thread.new do
           Process.wait(@spork_pid)
           @spork_running = false
         end
+
       @spork_running
     end
 
-    def stop
-      stop_spork
-    end
-
-    def run(args,specs)
+    def run(specs)
+      args = ["-r", "#{File.dirname(__FILE__)}/formatter.rb",
+              "-f", "Autospec::Formatter", specs.split].flatten
       spork_service.run(args,$stderr,$stdout)
-    end
-
-    def abort
-      spork_service.abort
     end
 
     def reload
@@ -39,7 +39,16 @@ module Autospec
       start_spork
     end
 
+    def abort
+      spork_service.abort
+    end
+
+    def stop
+      stop_spork
+    end
+
     private
+
     def spork_pid_file
       Rails.root + "tmp/pids/spork.pid"
     end
@@ -55,7 +64,7 @@ module Autospec
       end
     end
 
-    def write_pid_file(file,pid)
+    def write_pid_file(file, pid)
       FileUtils.mkdir_p(Rails.root + "tmp/pids")
       File.open(file,'w') do |f|
         f.write(pid)
@@ -67,23 +76,16 @@ module Autospec
     end
 
     def spork_service
-
       unless @drb_listener_running
         begin
           DRb.start_service("druby://127.0.0.1:0")
         rescue SocketError, Errno::EADDRNOTAVAIL
           DRb.start_service("druby://:0")
         end
-
         @drb_listener_running = true
       end
 
       @spork_service ||= DRbObject.new_with_uri("druby://127.0.0.1:8989")
-    end
-
-    def stop_spork
-      pid = File.read(spork_pid_file).to_i
-      Process.kill("SIGTERM",pid)
     end
 
     def start_spork
@@ -101,7 +103,13 @@ module Autospec
         running = spork_running?
         sleep 0.01
       end
-
     end
+
+    def stop_spork
+      pid = File.read(spork_pid_file).to_i
+      Process.kill("SIGTERM", pid) rescue nil
+    end
+
   end
+
 end

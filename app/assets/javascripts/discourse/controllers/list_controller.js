@@ -13,12 +13,11 @@ Discourse.ListController = Discourse.Controller.extend({
   needs: ["composer", "modal", "listTopics"],
 
   availableNavItems: function() {
-    var loggedOn = !!Discourse.User.current();
     var category = this.get("category");
 
     return Discourse.SiteSettings.top_menu.split("|").map(function(i) {
       return Discourse.NavItem.fromText(i, {
-        loggedOn: loggedOn,
+        loggedOn: !!Discourse.User.current(),
         category: category
       });
     }).filter(function(i) {

@@ -249,4 +249,3 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 });
 
 Discourse.Router = Discourse.Router.reopen({ location: 'discourse_location' });
-

@@ -62,16 +62,12 @@ class Users::OmniauthCallbacksController < ApplicationController
     BUILTIN_AUTH.each do |authenticator|
       if authenticator.name == name
         raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{name}_logins?")
-
         return authenticator
       end
     end
 
     Discourse.auth_providers.each do |provider|
-      if provider.name == name
-
-        return provider.authenticator
-      end
+      return provider.authenticator if provider.name == name
     end
 
     raise Discourse::InvalidAccess.new("provider is not found")

@@ -11,13 +11,14 @@
 }
 
 .post-actions {
+  @include unselectable;
   clear: both;
   text-align: right;
-    .post-action {
+  .post-action {
     display: inline-block;
     margin-left: 10px;
     margin-top: 10px;
-    }
+  }
 }
 .post-menu-area {
   margin-bottom: 10px;
@@ -45,9 +46,7 @@
   margin-left: 10px;
 }
 
-.docked #topic-progress {
-    box-shadow: 0 0 3px #aaa;
-}
+
 
 #topic-progress-wrapper {
   position: fixed;
@@ -81,7 +80,6 @@ a:hover.reply-new {
 }
 
 #topic-progress {
-  box-shadow: 0 0 3px #000;
   position: relative;
   left: 302px;
   &.hidden {

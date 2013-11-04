@@ -62,16 +62,26 @@
               {{#if versionCheck.staleData}}
                 <td class="version-number">&nbsp;</td>
                 <td class="face">
-                  <span class="icon critical-updates-available">☹</span>
+                  {{#if versionCheck.version_check_pending}}
+                    <span class='icon up-to-date'>☻</span>
+                  {{else}}
+                    <span class="icon critical-updates-available">☹</span>
+                  {{/if}}
                 </td>
                 <td class="version-notes">
-                  <span class="normal-note">{{i18n admin.dashboard.stale_data}}</span>
+                  <span class="normal-note">
+                    {{#if versionCheck.version_check_pending}}
+                      {{i18n admin.dashboard.version_check_pending}}
+                    {{else}}
+                      {{i18n admin.dashboard.stale_data}}
+                    {{/if}}
+                  </span>
                 </td>
               {{else}}
                 <td class="version-number">{{ versionCheck.latest_version }}</td>
                 <td class="face">
                   {{#if versionCheck.upToDate }}
-                    <span class='icon update-to-date'>☻</span>
+                    <span class='icon up-to-date'>☻</span>
                   {{else}}
                     <span {{bindAttr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
                       {{#if versionCheck.behindByOneVersion}}

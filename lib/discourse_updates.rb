@@ -24,18 +24,25 @@ module DiscourseUpdates
 
         # Handle cases when version check data is old so we report something that makes sense
 
-        if (version_info.updated_at.nil? or
-            (version_info.missing_versions_count == 0 and version_info.latest_version != version_info.installed_version) or
-            (version_info.missing_versions_count != 0 and version_info.latest_version == version_info.installed_version))
+        if (version_info.updated_at.nil? or  # never performed a version check
+            last_installed_version != Discourse::VERSION::STRING or  # upgraded since the last version check
+            (version_info.missing_versions_count == 0 and version_info.latest_version != version_info.installed_version) or  # old data
+            (version_info.missing_versions_count != 0 and version_info.latest_version == version_info.installed_version))    # old data
           Jobs.enqueue(:version_check, all_sites: true)
-        end
-
-        if !version_info.updated_at.nil? and version_info.latest_version == version_info.installed_version
-          version_info.missing_versions_count = 0
+          version_info.version_check_pending = true
+          unless version_info.updated_at.nil?
+            version_info.missing_versions_count = 0
+            version_info.critical_updates = false
+          end
         end
       end
 
       version_info
+    end
+
+    # last_installed_version is the installed version at the time of the last version check
+    def last_installed_version
+      $redis.get last_installed_version_key
     end
 
     def latest_version
@@ -59,7 +66,7 @@ module DiscourseUpdates
       $redis.set updated_at_key, time_with_zone.as_json
     end
 
-    ['latest_version', 'missing_versions_count', 'critical_updates_available'].each do |name|
+    ['last_installed_version', 'latest_version', 'missing_versions_count', 'critical_updates_available'].each do |name|
       eval "define_method :#{name}= do |arg|
         $redis.set #{name}_key, arg
       end"
@@ -67,6 +74,10 @@ module DiscourseUpdates
 
 
     private
+
+      def last_installed_version_key
+        'last_installed_version'
+      end
 
       def latest_version_key
         'discourse_latest_version'

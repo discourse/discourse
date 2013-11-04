@@ -657,8 +657,7 @@ zh_CN:
       auto_close_notice: "本主题将在%{timeLeft}后自动关闭"
       auto_close_title: '自动关闭设置'
       auto_close_save: "保存"
-      auto_close_cancel: "取消"
-      auto_close_remove: "不自动关闭该主题"
+      auto_close_remove: "不要自动关闭该主题"
 
       progress:
         title: 主题进度
@@ -1075,10 +1074,10 @@ zh_CN:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "输入过滤条件……"
+    filter: "过滤器"
 
     admin:
-      title: '论道 管理'
+      title: 'Discourse管理'
       moderator: '版主'
 
       dashboard:
@@ -1260,6 +1259,8 @@ zh_CN:
             change_site_setting: "更改站点设置"
             change_site_customization: "更改站点自定义"
             delete_site_customization: "删除站点自定义"
+            ban_user: "禁止用户"
+            unban_user: "解禁用户"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -1331,7 +1332,11 @@ zh_CN:
       user:
         ban_failed: "禁止此用户时发生了错误 {{error}}"
         unban_failed: "解禁此用户时发生了错误 {{error}}"
-        ban_duration: "你计划禁止该用户多久？（天）"
+        ban_duration: "你计划禁止该用户多久？"
+        ban_duration_units: "（天）"
+        ban_reason_label: "为什么禁止该用户？当其尝试登入时，会看到这条理由。"
+        ban_reason: "禁止的理由"
+        banned_by: "禁止操作者："
         delete_all_posts: "删除所有帖子"
         delete_all_posts_confirm: "你将删除 %{posts} 个帖子和 %{topics} 个主题，确认吗？"
         ban: "禁止"
@@ -1388,7 +1393,8 @@ zh_CN:
         deactivate_explanation: "已停用的用户必须重新验证他们的电子邮件。"
         banned_explanation: "被禁止的用户无法登录。"
         block_explanation: "被封禁的用户不能发表主题或者评论。"
-        trust_level_change_failed: "改变用户等级时出现了一个问题，"
+        trust_level_change_failed: "改变用户等级时出现了一个问题。"
+        ban_modal_title: "禁止用户"
 
       site_content:
         none: "选择内容类型以开始编辑。"

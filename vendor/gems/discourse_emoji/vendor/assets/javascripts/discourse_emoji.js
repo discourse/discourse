@@ -37,18 +37,17 @@
     ":-$"   : 'blush'
   };
 
-  Object.keys(translations).forEach(function (code) {
+  emoji.forEach(function (e) {
+    Discourse.Dialect.inlineReplace(":" + e + ":", function(code) {
+      return imageFor(e);
+    });
+  });
 
+  Object.keys(translations).forEach(function (code) {
     var replacement = translations[code];
     Discourse.Dialect.inlineReplace(code, function (code) {
       return imageFor(replacement);
     });
-  });
-
-  Discourse.Dialect.inlineBetween({
-    between: ':',
-    rawContents: true,
-    emitter: imageFor
   });
 
   if (Discourse && Discourse.ComposerView) {

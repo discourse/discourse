@@ -28,7 +28,6 @@ describe UserSerializer do
       end
 
       it "has a name" do
-        puts json[:name]
         json[:name].should be_blank
       end
     end
