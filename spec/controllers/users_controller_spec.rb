@@ -824,40 +824,83 @@ describe UsersController do
 
   end
 
-  describe '.update' do
-
-    context 'not logged in' do
-      it 'raises an error when not logged in' do
+  describe '#update' do
+    context 'with guest' do
+      it 'raises an error' do
         expect do
-          xhr :put, :update, username: 'somename'
+          xhr :put, :update, username: 'guest'
         end.to raise_error(Discourse::NotLoggedIn)
       end
     end
 
-    context 'logged in' do
-      let!(:user) { log_in }
+    context 'with authenticated user' do
+      context 'with permission to update' do
+        it 'allows the update' do
+          user = Fabricate(:user, name: 'Billy Bob')
+          log_in_user(user)
 
-      context 'without a token' do
-        it 'should ensure you can update the user' do
-          Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
-          put :update, username: user.username
-          response.should be_forbidden
+          put :update, username: user.username, name: 'Jim Tom'
+
+          expect(response).to be_success
+          expect(user.reload.name).to eq 'Jim Tom'
         end
 
-        context 'as a user who can edit the user' do
+        it 'returns user JSON' do
+          user = log_in
 
-          before do
-            put :update, username: user.username, bio_raw: 'brand new bio'
-            user.reload
-          end
+          put :update, username: user.username
 
-          it 'updates the user' do
-            user.bio_raw.should == 'brand new bio'
-          end
+          json = JSON.parse(response.body)
+          expect(json['user']['id']).to eq user.id
+        end
 
-          it 'returns json success' do
-            response.should be_success
+        context 'when website includes http' do
+          it 'does not add http before updating' do
+            user = log_in
+
+            put :update, username: user.username, website: 'http://example.com'
+
+            expect(user.reload.website).to eq 'http://example.com'
           end
+        end
+
+        context 'when website does not include http' do
+          it 'adds http before updating' do
+            user = log_in
+
+            put :update, username: user.username, website: 'example.com'
+
+            expect(user.reload.website).to eq 'http://example.com'
+          end
+        end
+      end
+
+      context 'without permission to update any attributes' do
+        it 'does not allow the update' do
+          user = Fabricate(:user, name: 'Billy Bob')
+          log_in_user(user)
+          guardian = Guardian.new(user)
+          guardian.stubs(:ensure_can_edit!).with(user).raises(Discourse::InvalidAccess.new)
+          Guardian.stubs(new: guardian).with(user)
+
+          put :update, username: user.username, name: 'Jim Tom'
+
+          expect(response).to be_forbidden
+          expect(user.reload.name).not_to eq 'Jim Tom'
+        end
+      end
+
+      context 'without permission to update title' do
+        it 'does not allow the user to update their title' do
+          user = Fabricate(:user, title: 'Emperor')
+          log_in_user(user)
+          guardian = Guardian.new(user)
+          guardian.stubs(can_grant_title?: false).with(user)
+          Guardian.stubs(new: guardian).with(user)
+
+          put :update, username: user.username, title: 'Minion'
+
+          expect(user.reload.title).not_to eq 'Minion'
         end
       end
     end
@@ -1102,5 +1145,4 @@ describe UsersController do
     end
 
   end
-
 end
