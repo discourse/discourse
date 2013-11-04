@@ -85,6 +85,8 @@ Discourse::Application.configure do
   # a comma delimited list of emails your devs have
   # developers have god like rights and may impersonate anyone in the system
   # normal admins may only impersonate other moderators (not admins)
-  config.developer_emails = []
+  if emails = ENV["DEVELOPER_EMAILS"]
+    config.developer_emails = emails.split(",")
+  end
 
 end

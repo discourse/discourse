@@ -32,6 +32,11 @@ Discourse.Post = Discourse.Model.extend({
   notDeleted: Em.computed.not('deleted'),
   userDeleted: Em.computed.empty('user_id'),
 
+  showName: function() {
+    var name = this.get('name');
+    return name && (name !== this.get('username'))  && Discourse.SiteSettings.display_name_on_posts;
+  }.property('name', 'username'),
+
   postDeletedBy: function() {
     if (this.get('firstPost')) { return this.get('topic.deleted_by'); }
     return this.get('deleted_by');

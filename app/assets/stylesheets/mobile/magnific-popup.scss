@@ -148,8 +148,8 @@ $caption-subtitle-color:          #BDBDBD !default;
   top: 0;
   padding: 0 $popup-padding-left;
   -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 // Vertical centerer helper
@@ -454,8 +454,8 @@ button::-moz-focus-inner {
     display: block;
     line-height: 0;
     -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
     padding: $image-padding-top 0 $image-padding-bottom;
     margin: 0 auto;
   }
@@ -535,8 +535,8 @@ button::-moz-focus-inner {
           padding: 3px 5px;
           position: fixed;
           -webkit-box-sizing: border-box;
-          -moz-box-sizing: border-box;
-          box-sizing: border-box;
+             -moz-box-sizing: border-box;
+                  box-sizing: border-box;
         }
         .mfp-img-mobile .mfp-bottom-bar:empty {
           padding: 0;

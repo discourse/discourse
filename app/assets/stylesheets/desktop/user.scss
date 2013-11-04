@@ -78,9 +78,7 @@
     .btn {
       width: 100%;
       margin-bottom: 5px;
-      -webkit-box-sizing: border-box;
-         -moz-box-sizing: border-box;
-              box-sizing: border-box;
+      @include box-sizing(border-box);
     }
   }
   h2 {
