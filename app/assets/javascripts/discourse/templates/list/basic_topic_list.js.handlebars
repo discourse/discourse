@@ -44,7 +44,7 @@
         <td {{bindAttr class=":num :views topic.viewsHeat"}}>{{number topic.views numberKey="views_long"}}</td>
         {{#if topic.bumped}}
           <td class='num activity'>
-            <a href="{{topic.unbound url}}" {{{bindAttr class=":age topic.ageCold"}}} title='{{i18n first_post}}: {{{unboundDate topic.created_at}}}' >{{unboundAge topic.created_at}}</a>
+            <a href="{{unbound topic.url}}" {{{bindAttr class=":age topic.ageCold"}}} title='{{i18n first_post}}: {{{unboundDate topic.created_at}}}' >{{unboundAge topic.created_at}}</a>
           </td>
           <td class='num activity last'>
             <a href="{{unbound topic.lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate topic.bumped_at}}}'>{{unboundAge topic.bumped_at}}</a>
