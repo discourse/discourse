@@ -40,7 +40,6 @@
     color: $darkish_gray;
   }
   .warning {
-    @include border-radius-all(6px);
     background-color: lighten($red, 10%);
     padding: 5px 8px;
     color: $white;
@@ -108,16 +107,16 @@
 }
 
 .user-main {
-  width: 840px;
+  width: 850px;
   float: left;
   margin-bottom: 50px;
 
   @include medium-width {
-    width: 730px;
+    width: 735px;
   }
 
   @include small-width {
-    width: 650px;
+    width: 680px;
   }
 
   .user-content {
@@ -125,21 +124,18 @@
     background-color: white;
     border: 1px solid #ddd;
     margin-bottom: 10px;
-    @include border-radius-all(4px);
   }
 
   .about {
     background-color: #444;
     margin-bottom: 10px;
     overflow: hidden;
-    border: 1px solid #bbb;
     color: #fff;
 
-    @include border-radius-all(4px);
 
     .details {
       text-align: center;
-      padding: 10px;
+      padding: 12px;
 
 
       h1 {
@@ -186,11 +182,12 @@
         text-align: right;
         padding: 0 10px;
         width: 20%;
-        @include border-radius-all(4px);
 
         dd {
           color: white;
           margin: 0 0 7px 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         dt {
           color: #aaa;
@@ -201,9 +198,8 @@
 
     .controls {
       background-color: #ddd;
-      margin-top: 10px;
-      padding: 5px;
-      height: 32px;
+      padding: 12px;
+      height: 30px;
 
       .right {
         float: right;
@@ -271,7 +267,6 @@
       background-color: white;
       border: 1px solid #ddd;
       margin-bottom: 10px;
-      @include border-radius-all(4px);
     }
     .type {
       color: lighten($black, 40%);

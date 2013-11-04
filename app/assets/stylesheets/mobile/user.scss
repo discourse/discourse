@@ -47,7 +47,6 @@
   width: 220px;
   min-height: 200px;
   background-color: #f8f8f8;
-  border-radius: 5px;
   color: #444;
   word-wrap: break-word;
 }
@@ -56,8 +55,12 @@
 
   h3 {
     color: #666;
+    padding-left: 5px;
   }
-
+  .nav-stacked {
+    border-left: 0;
+    border-right: 0;
+  }
   .summary {
     height: 50px;
   }
@@ -110,10 +113,7 @@
     background-color: #444;
     margin-bottom: 10px;
     overflow: hidden;
-    border: 1px solid #bbb;
     color: #fff;
-
-    @include border-radius-all(4px);
 
     .details {
       text-align: center;
@@ -143,7 +143,6 @@
         background-color: #222;
         text-align: left;
         padding: 0 10px;
-        @include border-radius-all(4px);
 
         dd {
           color: white;
@@ -159,9 +158,49 @@
     .controls {
       background-color: #ddd;
       margin-top: 0px;
-      padding: 5px;
+      padding: 10px 10px 0 10px;
 
-      button { margin-bottom: 3px; }
+      .btn { 
+        margin-bottom: 10px;
+        float: none;
+      }
+    }
+  }
+
+  .about.collapsed-info {
+    .controls {
+      margin-top: 0;
+    }
+
+    .details {
+      .secondary { display: none; }
+      .bio { display: none; }
+
+      .primary {
+        width: 100%;
+        text-align: left;
+        margin-top: 4px;
+
+        .avatar {
+          float: left;
+          margin-right: 10px;
+          border: 2px solid white;
+          width: 45px;
+          height: 45px;
+        }
+
+        h1 {
+          margin:0;
+          font-size: 20px;
+          line-height: 22px;
+        }
+
+        h2 {
+          font-size: 17px;
+          line-height: 16px;
+          margin-top: 4px;
+        }
+      }
     }
   }
 
@@ -186,9 +225,7 @@
     .item {
       padding: 10px 8px;
       background-color: white;
-      border: 1px solid #b9b9b9;
-      margin-bottom: 10px;
-      @include border-radius-all(4px);
+      border-bottom: 1px solid #b9b9b9;
     }
     .type {
       color: lighten($black, 40%);
