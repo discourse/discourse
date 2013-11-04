@@ -12,7 +12,7 @@ end
 
 module ::Kernel
   def rails4?
-    !!ENV["RAILS4"]
+    !ENV["RAILS3"]
   end
 end
 
@@ -35,7 +35,7 @@ end
 gem 'seed-fu' , github: 'SamSaffron/seed-fu'
 
 if rails4?
-  gem 'rails', :git => 'git://github.com/rails/rails.git', :branch => '4-0-stable'
+  gem 'rails'
   gem 'redis-rails', :git => 'git://github.com/SamSaffron/redis-store.git'
   gem 'rails-observers'
   gem 'actionpack-action_caching'

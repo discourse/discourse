@@ -4,7 +4,7 @@ task 'assets:precompile' => 'environment' do
   # this breaks stuff like the emoji plugin. We could fix it,
   # but its a major pain with little benefit.
   if rails4?
-    puts "Copying non-digested versions of assets"
+    puts "> Copying non-digested versions of assets"
     assets = Dir.glob(File.join(Rails.root, 'public/assets/**/*'))
     regex = /(-{1}[a-z0-9]{32}*\.{1}){1}/
     assets.each do |file|
@@ -16,5 +16,7 @@ task 'assets:precompile' => 'environment' do
       non_digested = File.join(source)
       FileUtils.cp(file, non_digested)
     end
+    puts "> Removing cache"
+    `rm -fr tmp/cache`
   end
 end
