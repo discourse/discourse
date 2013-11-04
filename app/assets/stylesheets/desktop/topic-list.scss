@@ -21,10 +21,13 @@
     font-weight: normal;
   }
 
-  a.badge-category {padding: 3px 12px;  font-size: 16px;
+  a.badge-category {padding: 3px 12px;  font-size: 16px; 
 
-    &.category-dropdown-button {    padding: 3px 10px 3px 8px;
-    font-size: 14px;
+    &.category-dropdown-button {    
+    padding: 3px 9px 2px 9px;
+
+    i {height: 20px;}
+
     }
 
   }
@@ -34,7 +37,6 @@
     font-weight: normal;
     text-transform: capitalize;
 
-    &.home {padding: 3px 12px;}
 
   }
 
@@ -85,7 +87,7 @@
   }
   th,
   td {
-    padding: 7px 5px;
+    padding: 9px 5px;
     line-height: 1.25;
     text-align: left;
     vertical-align: middle;
@@ -116,7 +118,7 @@
       position: relative;
     }
     + .main-link {
-      padding-left: 0;
+      padding-left: 5px;
     }
   }
   .main-link {
@@ -451,20 +453,27 @@ ol.category-breadcrumb {
   position: absolute;
   border: 1px solid #ccc;
   background-color: white;
-  max-width: 300px;
-  min-width: 140px;
   height: 200px;
-  padding: 8px 5px 0 7px;
+  padding: 8px 7px 0 7px;
   z-index: 100;
   margin-top: 30px;
+  min-width: 116px;
+
 
   a.badge-category {
     font-size: 13px;
     font-weight: bold;
-    padding: 4px 6px;
+    padding: 4px 0;
     float: none;
     line-height: 19px;
     text-transform: none;
+    width: 100%;
+    min-width: 102px;
+
+    text-align: center;
+    margin-right: 20px;
+
+
   }
 
 
