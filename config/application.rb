@@ -128,10 +128,11 @@ module Discourse
     config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
-    # Since we are using strong_parameters, we can disable and remove
-    # attr_accessible.
-    config.active_record.whitelist_attributes = false
-
+    unless rails4?
+      # Since we are using strong_parameters, we can disable and remove
+      # attr_accessible.
+      config.active_record.whitelist_attributes = false
+    end
 
     require 'plugin'
     require 'auth'
