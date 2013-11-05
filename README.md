@@ -51,12 +51,12 @@ preview = Onebox.preview(url, cache: Rails.cache)
 "#{preview}" == preview.to_s #=> true
 ```
 
-In addition you can set your own defaults with this handy interface:
+In addition you can set your own options with this handy interface:
 
 ``` ruby
 require "onebox"
 
-Onebox.defaults = {
+Onebox.options = {
   cache: Rails.cache
 }
 
@@ -153,7 +153,7 @@ Setup
     # in lib/onebox/engine/engine.rb
     require_relative "engine/name_onebox"
     ```
-    
+
 Onebox currently has support for page, image, and video URLs from these sites:
 
   - Amazon

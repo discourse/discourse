@@ -22,7 +22,7 @@ shared_context "engines" do
     @html = @onebox.to_html
     @data = @onebox.send(:data)
   end
-  before(:each) { Onebox.defaults.cache.clear }
+  before(:each) { Onebox.options.cache.clear }
 
   let(:onebox) { @onebox }
   let(:html) { @html }

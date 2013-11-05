@@ -5,7 +5,7 @@ describe Onebox::Engine::HTML do
     @link = "http://amazon.com"
     fake(@link, response("amazon"))
   end
-  before(:each) { Onebox.defaults.cache.clear }
+  before(:each) { Onebox.options.cache.clear }
 
   describe "#raw" do
     class OneboxEngineHTML

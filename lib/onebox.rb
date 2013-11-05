@@ -22,17 +22,17 @@ module Onebox
     timeout: 10
   }
 
-  @@defaults = DEFAULTS
+  @@options = DEFAULTS
 
-  def self.preview(url, options = Onebox.defaults)
+  def self.preview(url, options = Onebox.options)
     Preview.new(url, options)
   end
 
-  def self.defaults
-    OpenStruct.new(@@defaults)
+  def self.options
+    OpenStruct.new(@@options)
   end
 
-  def self.defaults=(options)
-    @@defaults = DEFAULTS.merge(options)
+  def self.options=(options)
+    @@options = DEFAULTS.merge(options)
   end
 end

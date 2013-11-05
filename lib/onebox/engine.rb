@@ -17,8 +17,8 @@ module Onebox
 
     def initialize(link, cache = nil, timeout = nil)
       @url = link
-      @cache = cache || Onebox.defaults.cache
-      @timeout = timeout || Onebox.defaults.timeout
+      @cache = cache || Onebox.options.cache
+      @timeout = timeout || Onebox.options.timeout
       @layout = Layout.new(self.class.template_name, record, @cache)
     end
 
