@@ -316,8 +316,8 @@ ja:
         redeemed: "受理された招待"
         redeemed_at: "受理日"
         pending: "保留中の招待"
-        topics_entered: "Topics Entered"
-        posts_read_count: "Posts Read"
+        topics_entered: "参加したトピック"
+        posts_read_count: "読んだポスト"
         rescind: "招待の取り消し"
         rescinded: "取り消された招待"
         time_read: "リード時間"
@@ -362,11 +362,11 @@ ja:
     last_post: 最終ポスト
 
     best_of:
-      title: "Best Of"
-      enabled_description: "You're viewing only the best posts in this topic. To see all posts again, click below."
-      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the best posts?"
-      enable: 'Switch to "Best Of" view'
-      disable: 'Cancel "Best Of"'
+      title: "ベストのみ"
+      enabled_description: "このトピックのベストポストのみが表示されています。すべてのポストを再度表示するには、下をクリックしてください。"
+      description: "このトピックには<b>{{count}}</b>個のポストがあります。ベストポストのみを表示しますか?"
+      enable: '"ベストのみ" 表示に切り替える'
+      disable: '"ベストのみ" 表示をキャンセルする'
 
     private_message_info:
       title: "プライベートメッセージ"
@@ -602,7 +602,7 @@ ja:
         other: "このトピックに未読のポストが{{count}}つあります"
       new_posts:
         one: "前回閲覧時より、このトピックに新しいポストが1つ投稿されています"
-        other: "前回閲覧時より、このトピックに新しいポストが{{count}}つ投稿されています"
+        other: "前回閲覧時より、このトピックに新しいポストが{{count}}個投稿されています"
 
       likes:
         one: "このトピックには1個「いいね！」がついています"
@@ -778,7 +778,7 @@ ja:
       quote_reply: "引用して回答"
       edit: "{{replyAvatar}} {{username}} による {{link}} を編集"
       post_number: "ポスト{{number}}"
-      in_reply_to: "in reply to"
+      in_reply_to: "こちらへの回答"
       last_edited_on: "ポストの最終編集日"
       reply_as_new_topic: "新規トピックとして回答"
       continue_discussion: "{{postLink}} からの議論を継続:"
@@ -1048,12 +1048,12 @@ ja:
           other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}} カテゴリの最新トピック"
 
-    browser_update: '残念ながら、<a href="http://www.discourse.org/faq/#browser">ご使用中のブラウザが古すぎるため Discourse フォーラムが正しく動作しません</a>。<a href="http://browsehappy.com">ブラウザをアップグレードしてください</a>。'
+    browser_update: '<a href="http://www.discourse.org/faq/#browser">ご使用中のブラウザが古すぎるため Discourse フォーラムが正しく動作しません</a>。<a href="http://browsehappy.com">ブラウザをアップグレードしてください</a>。'
 
     permission_types:
-      full: "Create / Reply / See"
-      create_post: "Reply / See"
-      readonly: "See"
+      full: "作成できる / 回答できる / 閲覧できる"
+      create_post: "回答できる / 閲覧できる"
+      readonly: "閲覧できる"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -1201,9 +1201,9 @@ ja:
       logs:
         title: "ログ"
         action: "アクション"
-        created_at: "Created"
-        last_match_at: "Last Matched"
-        match_count: "Matches"
+        created_at: "作成"
+        last_match_at: "最終マッチ"
+        match_count: "マッチ"
         ip_address: "IP"
         screened_actions:
           block: "ブロック"
@@ -1218,13 +1218,13 @@ ja:
           when: "いつ"
           context: "コンテンツ"
           details: "詳細"
-          previous_value: "Previous"
-          new_value: "New"
-          diff: "Diff"
-          show: "Show"
-          modal_title: "Details"
-          no_previous: "There is no previous value."
-          deleted: "No new value. The record was deleted."
+          previous_value: "変更前"
+          new_value: "変更後"
+          diff: "差分を見る"
+          show: "詳しく見る"
+          modal_title: "詳細"
+          no_previous: "変更前の値がありません。"
+          deleted: "変更後の値がありません。レコードが削除されました。"
           actions:
             delete_user: "ユーザを削除"
             change_trust_level: "トラストレベルを変更"
@@ -1243,9 +1243,9 @@ ja:
       impersonate:
         title: "ユーザになりすます"
         username_or_email: "ユーザ名かメールアドレス"
-        help: "デバグ用途でユーザアカウントになりすますためのツールです。"
+        help: "デバッグ用途でユーザアカウントになりすますためのツールです。"
         not_found: "ユーザが見つかりませんでした。"
-        invalid: "申し訳有りませうが、このユーザにはなりすませません。"
+        invalid: "申し訳ありませんがこのユーザにはなりすませません。"
 
       users:
         title: 'ユーザ'
@@ -1276,7 +1276,7 @@ ja:
           basic: 'トラストレベル1のユーザ (ベーシックユーザ)'
           regular: 'トラストレベル2のユーザ (レギュラーユーザ)'
           leader: 'トラストレベル3のユーザ (リーダ)'
-          elder: 'トラストレベル4のユーザ (長老)'
+          elder: 'トラストレベル4のユーザ (マスター)'
           admins: '管理者ユーザ'
           moderators: 'モデレータ'
           blocked: 'ブロック中のユーザ'

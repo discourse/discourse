@@ -154,7 +154,7 @@ ja:
     leader:
       title: "リーダー"
     elder:
-      title: "長老"
+      title: "マスター"
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に格下げしようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります。"
 
 
@@ -507,7 +507,7 @@ ja:
     best_of_posts_required: "'best of' モードが有効になる、トピック内の最小ポスト数"
     best_of_likes_required: "'best of' モードが有効になる、トピック内の最小「いいね!」数"
     best_of_percent_filter: "ユーザが best of をクリックした際にポストのトップ % を表示"
-    enable_private_messages: "ベーシック (1) トラスtレベルのユーザにプライベートメッセージの作成およびプライベートメッセージへの返信を許可"
+    enable_private_messages: "トラストレベルがベーシック (1) なユーザにプライベートメッセージの作成およびプライベートメッセージへの返信を許可"
 
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     long_polling_interval: "新たなロングポーリングを開始するまでの間隔 (ミリ秒)"
@@ -744,7 +744,7 @@ ja:
     incorrect_username_email_or_password: "ユーザネーム、メールアドレス、またはパスワードが違います"
     wait_approval: "サインアップありがとうござました。アカウントが承認され次第メールにて通知いたします。"
     active: "アカウントが利用可能になりました。"
-    activate_email: "もうすこしです! <b>%{email}</b> にメールを送りましたので、メールの指示に従ってあなたのアカウントを有効にしてください。"
+    activate_email: "<b>%{email}</b> にメールを送りました。メールの指示に従ってあなたのアカウントを有効にしてください。"
     not_activated: "まだログインできません。メールを送信済ですので、メールの指示に従ってあなたのアカウントを有効にしてください。"
     banned: "%{date} までログインできません。"
     errors: "%{errors}"
@@ -822,15 +822,15 @@ ja:
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
   new_version_mailer:
-    subject_template: "[%{site_name}] Updates Are Available"
+    subject_template: "[%{site_name}] アップデートがあります"
     text_body_template: |
-      A new version of Discourse is available.
+      新しいバージョンの Discourse が利用可能です。
 
-      **New version: %{new_version}**
+      **新しいバージョン: %{new_version}**
 
-      Your version: %{installed_version}
+      現在のバージョン: %{installed_version}
 
-      Please upgrade as soon as possible to get the latest fixes and new features.
+      最新のバグフィックスや新機能を適用するために、早めのアップグレードを検討してください。
 
   system_messages:
     post_hidden:
@@ -984,32 +984,32 @@ ja:
         one: "1人のユーザが承認を待っています"
         other: "%{count}人のユーザが承認を待っています"
       text_body_template: |
-        There are new user signups waiting to be approved (or rejected) before they can access this forum.
+        新たなユーザが、フォーラム参加のための承認（もしくは拒否）待ち状態になっています。
 
-        [Please review them in the admin section](/admin/users/list/pending).
+        [管理者セクションで確認する](/admin/users/list/pending).
 
-  unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
+  unsubscribe_link: "メール解除は [ユーザ設定画面](%{user_preferences_url}) で行ってください。"
 
   user_notifications:
-    previous_discussion: "Previous Replies"
+    previous_discussion: "以前の回答"
     unsubscribe:
-      title: "Unsubscribe"
-      description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
+      title: "解除"
+      description: "メールに興味がありませんか? 下のリンクをクリックすると、即座にメール解除ができます:"
 
-    reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
-    visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
+    reply_by_email: "回答するにはこのメールに返信するか、ブラウザで %{base_url}%{url} にアクセスしてください。"
+    visit_link_to_respond: "回答するにはブラウザで %{base_url}%{url} にアクセスしてください。"
 
-    posted_by: "Posted by %{username} on %{post_date}"
+    posted_by: "%{post_date} に %{username} が投稿"
 
     user_invited_to_private_message:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} がプライベートメッセージ '%{topic_title}' にあなたを招待しています"
       text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
+        %{username} が %{site_name} のプライベートメッセージ'%{topic_title}' にあなたを招待しています:
 
-        Please visit this link to view the topic: %{base_url}%{url}
+        トピックを見るには次のリンクをクリックしてください: %{base_url}%{url}
 
     user_replied:
-      subject_template: "[%{site_name}] new reply to your post in '%{topic_title}'"
+      subject_template: "[%{site_name}] '%{topic_title}' 内のあなたのポストに新たな回答が投稿されました"
       text_body_template: |
         %{message}
 
@@ -1019,7 +1019,7 @@ ja:
         %{respond_instructions}
 
     user_quoted:
-      subject_template: "[%{site_name}] %{username} quoted you in '%{topic_title}'"
+      subject_template: "[%{site_name}] '%{topic_title}' で %{username} があなたを引用しました"
       text_body_template: |
         %{message}
 
@@ -1029,7 +1029,7 @@ ja:
         %{respond_instructions}
 
     user_mentioned:
-      subject_template: "[%{site_name}] %{username} mentioned you in '%{topic_title}'"
+      subject_template: "[%{site_name}] '%{topic_title}' で %{username} があなたをメンションしました"
       text_body_template: |
         %{message}
 
@@ -1039,7 +1039,7 @@ ja:
         %{respond_instructions}
 
     user_posted:
-      subject_template: "[%{site_name}] %{subject_prefix}new post in '%{topic_title}'"
+      subject_template: "[%{site_name}] '%{topic_title}' に %{subject_prefix}個の新しいポストが投稿されました"
       text_body_template: |
         %{message}
 
@@ -1049,63 +1049,63 @@ ja:
         %{respond_instructions}
 
     digest:
-      why: "Here's a brief summary of the discussion on %{site_link} since we last saw you on %{last_seen_at}."
-      subject_template: "[%{site_name}] Forum Activity for %{date}"
-      new_activity: "New activity on your topics and posts:"
-      top_topics: "Recent posts the community enjoyed:"
-      other_new_topics: "Other New Topics:"
+      why: "あなたが最後にアクセスした %{last_seen_at} 以降に %{site_link} で行われた議論のサマリーです。"
+      subject_template: "[%{site_name}] %{date} のフォーラムアクティビティ"
+      new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
+      top_topics: "コミュニティで人気のあった新規ポスト:"
+      other_new_topics: "その他の新トピック:"
       unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
-      click_here: "click here"
-      from: "%{site_name} digest"
-      read_more: "Read More"
+      click_here: "ここをクリック"
+      from: "%{site_name} ダイジェスト"
+      read_more: "もっと読む"
 
     forgot_password:
-      subject_template: "[%{site_name}] Password reset"
+      subject_template: "[%{site_name}] パスワードのリセット"
       text_body_template: |
-        Somebody asked to reset your password on [%{site_name}](%{base_url}).
+        [%{site_name}](%{base_url}) のあなたのパスワードに対してリセット依頼が行われました。
 
-        If it was not you, you can safely ignore this email.
+        もし依頼を行ったのがあなたではない場合は、このメールを無視してください。
 
-        Click the following link to choose a new password:
+        新たなパスワードを設定する場合は次のリンクをクリックしてください:
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:
-      subject_template: "[%{site_name}] Confirm your new email address"
+      subject_template: "[%{site_name}] メールアドレスの確認"
       text_body_template: |
-        Confirm your new email address for %{site_name} by clicking on the following link:
+        次のリンクをクリックして %{site_name} 用のメールアドレスを確認してください:
 
         %{base_url}/users/authorize-email/%{email_token}
 
     signup_after_approval:
-      subject_template: "You've been approved on %{site_name}!"
+      subject_template: "%{site_name} への参加承認完了!"
       text_body_template: |
-        Welcome to %{site_name}!
+        %{site_name} へようこそ!
 
-        You're approved to join %{site_name}, welcome to our discussion forum!
+        %{site_name} への参加が承認されました。コミュニティへようこそ!
 
-        Click the following link to confirm and activate your new account:
+        次のリンクをクリックして、新たなアカウントの承認およびアクティベーションを行ってください:
         %{base_url}/users/activate-account/%{email_token}
 
-        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+        もし上記リンクがクリックできない場合は、ブラウザのアドレスバーにリンクアドレスをコピー&ペーストしてください。
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        [礼儀正しいコミュニティ](%{base_url}/faq)へのご協力、改めて感謝いたします。
 
-        Enjoy your stay!
+        それではお楽しみください!
 
     signup:
-      subject_template: "[%{site_name}] Activate your new account"
+      subject_template: "[%{site_name}] 新たなアカウントのアクティベーション"
       text_body_template: |
         Welcome to %{site_name}!
 
-        Click the following link to confirm and activate your new account:
+        次のリンクをクリックして、新たなアカウントの承認およびアクティベーションを行ってください:
         %{base_url}/users/activate-account/%{email_token}
 
-        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+        もし上記リンクがクリックできない場合は、ブラウザのアドレスバーにリンクアドレスをコピー&ペーストしてください。
 
   discourse_hub:
-    access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
+    access_token_problem: "管理者に通知: サイト設定を更新して正しい discourse_org_access_key を設定してください。"
 
   page_not_found:
     title: "リクエストしたページは存在しないかモデレータによって削除されました。"
@@ -1128,12 +1128,12 @@ ja:
   deleted: 'deleted'
 
   upload:
-    unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
-    pasted_image_filename: "Pasted image"
+    unauthorized: "申し訳ありません、ファイルのアップロードが拒否されました (サポートするファイルの拡張子: %{authorized_extensions})."
+    pasted_image_filename: "貼り付けた画像"
     attachments:
-      too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}%kb)."
+      too_large: "申し訳ありませんが、ファイルが大きすぎてアップロードできません (最大サイズは %{max_size_kb}%kb です)"
     images:
-      too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}%kb), please resize it and try again."
-      fetch_failure: "Sorry, there has been an error while fetching the image."
-      unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
-      size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
+      too_large: "申し訳ありませんが、画像が大きすぎてアップロードできません (最大サイズは %{max_size_kb}%kb です)。リサイズして再アップロードしてください。"
+      fetch_failure: "申し訳ありませんが、画像取得中にエラーが発生しました。"
+      unknown_image_type: "申し訳ありませんが、アップロードしようとしたファイルは画像ではないようです。"
+      size_not_found: "申し訳ありませんが、画像のサイズを判定できませんでした。画像が壊れているかもしれません。"
