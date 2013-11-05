@@ -23,7 +23,7 @@ class HerokuSession
     user_info = HerokuUserInfo.find_or_create_from_oauth_token(oauth_token)
     user = user_info.user
     controller.log_on_user(user)
-    set_cookies
+    set_cookies(user_info)
   end
 
   def destroy
@@ -44,15 +44,20 @@ class HerokuSession
 
   # cookies
 
-  def set_cookies
+  def set_cookies(user_info)
     cookies[:forums_session_nonce] = cookies[:heroku_session_nonce]
     cookies[:heroku_session] = {value: '1', domain: heroku_cookies_domain } if cookies[:heroku_session].blank?
+
+    # Used by DevCenter::Logger middleware to track page visits.
+    creds = HerokuCredentials.new(email: user_info.user.email, heroku_uid: user_info.heroku_user_id)
+    cookies[:user_info] = creds.encrypt
   end
 
   def unset_cookies
     cookies.delete(:forums_session_nonce)
     cookies.delete('heroku_session', :domain => heroku_cookies_domain)
     cookies.delete('heroku_session_nonce', :domain => heroku_cookies_domain)
+    cookies.delete(:user_info)
     cookies.delete(:_t)
   end
 
