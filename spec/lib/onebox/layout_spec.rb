@@ -26,20 +26,15 @@ describe Onebox::Layout do
     end
 
     it "contains layout template" do
-      pending
+      record = {}
+      html = described_class.new("amazon", record, cache).to_html
       expect(html).to include(%|class="onebox|)
     end
 
     it "contains the view" do
-      pending
-      expect(html).to include(%|""|)
-    end
-  end
-
-  describe "#checksum" do
-    it "generates a checksum from template version and resource url" do
-      pending
-      expect(result).to eq("")
+      record = { link: "foo"}
+      html = described_class.new("amazon", record, cache).to_html
+      expect(html).to include(%|"foo"|)
     end
   end
 end
