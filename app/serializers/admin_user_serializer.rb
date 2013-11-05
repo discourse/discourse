@@ -83,4 +83,8 @@ class AdminUserSerializer < BasicUserSerializer
     scope.can_deactivate?(object)
   end
 
+  def ip_address
+    object.ip_address.try(:to_s)
+  end
+
 end
