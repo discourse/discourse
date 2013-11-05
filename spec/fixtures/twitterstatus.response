@@ -1,19 +1,19 @@
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="lt-ie10 ie8 " lang="en" 
+<!--[if IE 8]><html class="lt-ie10 ie8 " lang="en"
 data-fouc-class-names="swift-loading"><![endif]-->
-<!--[if IE 9]><html class="lt-ie10 ie9 " lang="en" 
+<!--[if IE 9]><html class="lt-ie10 ie9 " lang="en"
 data-fouc-class-names="swift-loading"><![endif]-->
-<!--[if gt IE 9]><!--><html lang="en"  
+<!--[if gt IE 9]><!--><html lang="en"
 data-fouc-class-names="swift-loading"><!--<![endif]-->
   <head>
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
     <meta charset="utf-8">
       <title>Twitter / toastergrrl: I&#39;m a sucker for pledges.  ...</title>
       <meta name="description" content="Instantly connect to what&#39;s most important to you. Follow your friends, experts, favorite celebrities, and breaking news.">
@@ -41,8 +41,8 @@ data-fouc-class-names="swift-loading"><!--<![endif]-->
 
     <link rel="stylesheet" href="https://abs.twimg.com/a/1375391966/t1/css/t1_more.bundle.css" type="text/css">
 
-    
-  
+
+
     <script id="swift_loading_indicator">
       document.documentElement.className=document.documentElement.className+" "+document.documentElement.getAttribute("data-fouc-class-names");
     </script>
@@ -68,7 +68,7 @@ c.target.hostname.match(a)?!1:!0}var a=/^([^\.]+\.)*twitter.com$/,b=/^key/,c=["c
   <div class="global-nav" data-section-term="top_nav">
     <div class="global-nav-inner">
       <div class="container">
-        
+
 
         <ul class="nav js-global-actions">
           <li class="home" data-global-action="t1home">
@@ -86,13 +86,13 @@ c.target.hostname.match(a)?!1:!0}var a=/^([^\.]+\.)*twitter.com$/,b=/^key/,c=["c
     <span class="search-icon js-search-action">
       <button type="submit" class="icon nav-search">
         <span class="visuallyhidden">
-          
+
           Search
         </span>
       </button>
     </span>
     <input disabled="disabled" class="search-input search-hinting-input" type="text" id="search-query-hint" autocomplete="off" spellcheck="false">
-      
+
 
 
 <div class="dropdown-menu typeahead">
@@ -103,13 +103,13 @@ c.target.hostname.match(a)?!1:!0}var a=/^([^\.]+\.)*twitter.com$/,b=/^key/,c=["c
   <div class="dropdown-inner js-typeahead-results">
     <div class="typeahead-saved-searches">
   <ul class="typeahead-items saved-searches-list">
-    
+
     <li class="typeahead-item typeahead-saved-search-item"><a class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"><span class="icon generic-search"></span></a></li>
   </ul>
 </div>
 
     <ul class="typeahead-items typeahead-topics">
-  
+
   <li class="typeahead-item typeahead-topic-item">
     <a class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1">
       <i class="generic-search"></i>
@@ -118,13 +118,13 @@ c.target.hostname.match(a)?!1:!0}var a=/^([^\.]+\.)*twitter.com$/,b=/^key/,c=["c
 </ul>
 
 
-    
+
 
 
 <ul class="typeahead-items typeahead-accounts js-typeahead-accounts">
-  
+
   <li data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
-    
+
     <a class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
       <img class="avatar size24">
         <div class="typeahead-user-item-info">
@@ -138,11 +138,11 @@ c.target.hostname.match(a)?!1:!0}var a=/^([^\.]+\.)*twitter.com$/,b=/^key/,c=["c
 </ul>
 
     <ul class="typeahead-items typeahead-trend-locations-list">
-  
+
   <li class="typeahead-item typeahead-trend-locations-item"><a class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
 </ul>
     <ul class="typeahead-items typeahead-context-list">
-  
+
   <li class="typeahead-item typeahead-context-item"><a class="js-nav" href="" data-ds="context_helper" data-search-query="" tabindex="-1"></a></li>
 </ul>
   </div>
@@ -250,7 +250,7 @@ c.target.hostname.match(a)?!1:!0}var a=/^([^\.]+\.)*twitter.com$/,b=/^key/,c=["c
 
   <div class="divider"></div>
   <p class="footer-links">
-    
+
     <a class="forgot" href="/account/resend_password">Forgot password?</a><br />
     <a class="mobile has-sms" href="/account/complete">Already using Twitter via text message?</a>
   </p>
@@ -263,7 +263,7 @@ c.target.hostname.match(a)?!1:!0}var a=/^([^\.]+\.)*twitter.com$/,b=/^key/,c=["c
 
         </div>
 
-        
+
         <a id="close-all-button" class="close-all-tweets js-close-all-tweets" href="#" title="Close all open Tweets">
           <i class="nav-breaker"></i>
         </a>
@@ -275,7 +275,7 @@ c.target.hostname.match(a)?!1:!0}var a=/^([^\.]+\.)*twitter.com$/,b=/^key/,c=["c
 
         <div id="page-outer">
           <div id="page-container" class="wrapper wrapper-permalink white">
-              
+
 <style id="user-style-toastergrrl" class="js-user-style">
 
 
@@ -481,7 +481,7 @@ body {
 }
 </style>
 
-  
+
 <style id="user-style-toastergrrl-bg-img" class="js-user-style-bg-img">
   body.user-style-toastergrrl {
         background-image: url(https://si0.twimg.com/images/themes/theme18/bg.gif);
@@ -491,11 +491,11 @@ body {
 <div role="main" class="permalink ">
 
 
-      
+
   <div class="permalink-inner permalink-tweet-container">
 
 
-    <div class="tweet permalink-tweet js-actionable-user js-actionable-tweet js-original-tweet 
+    <div class="tweet permalink-tweet js-actionable-user js-actionable-tweet js-original-tweet
  opened-tweet
 
 
@@ -510,7 +510,7 @@ body {
 
 
 
-  preexpanded" data-associated-tweet-id="363116819147538433" 
+  preexpanded" data-associated-tweet-id="363116819147538433"
 data-feedback-key="stream_status_363116819147538433"
 data-tweet-id="363116819147538433"
 
@@ -536,39 +536,39 @@ data-item-id="363116819147538433"
 
 >
 
-      
+
       <i class="dogear"></i>
 
-      
+
       <div class="content clearfix">
         <div class="permalink-header">
-            
 
-    
+
+
     <div class="follow-bar">
       <div class="user-actions btn-group not-following  " data-user-id="1087064150"
     data-screen-name="toastergrrl" data-name="Vyki Englert" data-protected="false">
 
 
 
-        
 
 
 
-      
+
+
 
 <button class="js-follow-btn follow-button btn" type="button">
   <span class="button-text follow-text">
-     <i class="follow"></i> Follow 
-    
+     <i class="follow"></i> Follow
+
   </span>
   <span class="button-text following-text">
      Following
-    
+
   </span>
   <span class="button-text unfollow-text">
      Unfollow
-    
+
   </span>
   <span class="button-text blocked-text">Blocked</span>
   <span class="button-text unblock-text">Unblock</span>
@@ -588,10 +588,10 @@ data-item-id="363116819147538433"
     <img class="avatar js-action-profile-avatar" src="https://si0.twimg.com/profile_images/3518892092/39b969d32a10b2437563e246708c8f9d_normal.jpeg" alt="">
     <strong class="fullname js-action-profile-name show-popup-with-id">Vyki Englert</strong>
     <span>&rlm;</span><span class="username js-action-profile-name"><s>@</s><b>toastergrrl</b></span>
-    
+
   </a>
 
-          
+
           <small class="time">
     <a href="/toastergrrl/status/363116819147538433" class="tweet-timestamp js-permalink js-nav" title="6:59 PM - 1 Aug 13" ><span class="_timestamp js-short-timestamp js-relative-timestamp" data-time="1375408770" data-long-form="true">3h</span></a>
 </small>
@@ -599,22 +599,22 @@ data-item-id="363116819147538433"
         </div>
       </div>
 
-      
+
       <p class="js-tweet-text tweet-text">I&#39;m a sucker for pledges.  <a href="/peers" class="twitter-atreply pretty-link" dir="ltr" ><s>@</s><b>Peers</b></a> Pledge <a href="/search?q=%23sharingeconomy&amp;src=hash" data-query-source="hashtag_click" class="twitter-hashtag pretty-link js-nav" dir="ltr" ><s>#</s><b>sharingeconomy</b></a> <a href="http://t.co/T4Sc47KAzh" rel="nofollow" dir="ltr" data-expanded-url="http://www.peers.org/action/peers-pledgea/" class="twitter-timeline-link" target="_blank" title="http://www.peers.org/action/peers-pledgea/" ><span class="invisible">http://www.</span><span class="tco-ellipsis"></span><span class="js-display-url">peers.org/action/peers-p</span><span class="invisible">ledgea/</span><span class="tco-ellipsis"><span class="invisible">&nbsp;</span>…</span></a></p>
 
 
 
-      
+
       <div class="stream-item-footer">
-        
-        
+
+
 
 <div class="context">
 </div>
 
 
-        
-        
+
+
 
 <ul class="tweet-actions js-actions">
   <li class="action-reply-container">
@@ -673,13 +673,13 @@ data-item-id="363116819147538433"
 
 
 
-  
+
 </ul>
 
       </div>
 
       <div class="permalink-footer">
-        
+
 
 <div class="expanded-content js-tweet-details-dropdown">
 </div>
@@ -700,11 +700,11 @@ data-item-id="363116819147538433"
     <span class="metadata">
         <span title="6:59 PM - 1 Aug 13">6:59 PM - 1 Aug 13</span>
 
-        
 
 
 
-      
+
+
 
 
 
@@ -712,15 +712,15 @@ data-item-id="363116819147538433"
   </div>
 </div>
 
-        
+
 <div class="proxy-tweet-container">
-  
 
 
-  
 
 
-  <div class="tweet original-tweet js-stream-tweet js-actionable-tweet js-profile-popup-actionable js-original-tweet  
+
+
+  <div class="tweet original-tweet js-stream-tweet js-actionable-tweet js-profile-popup-actionable js-original-tweet
  opened-tweet
 
 
@@ -735,7 +735,7 @@ data-item-id="363116819147538433"
 
 
 
-" 
+"
 data-feedback-key="stream_status_363116819147538433"
 data-tweet-id="363116819147538433"
 
@@ -761,22 +761,22 @@ data-item-id="363116819147538433"
 
 >
 
-    
+
     <span class="icon dogear"></span>
 
-    
+
     <div class="content">
 
-      
-      
 
-      
+
+
+
       <div class="stream-item-header">
           <a  class="account-group js-account-group js-action-profile js-user-profile-link js-nav" href="/toastergrrl" data-user-id="1087064150">
     <img class="avatar js-action-profile-avatar" src="https://si0.twimg.com/profile_images/3518892092/39b969d32a10b2437563e246708c8f9d_normal.jpeg" alt="">
     <strong class="fullname js-action-profile-name show-popup-with-id">Vyki Englert</strong>
     <span>&rlm;</span><span class="username js-action-profile-name"><s>@</s><b>toastergrrl</b></span>
-    
+
   </a>
 
         <small class="time">
@@ -785,28 +785,28 @@ data-item-id="363116819147538433"
 
       </div>
 
-      
+
 
       <p class="js-tweet-text tweet-text">I&#39;m a sucker for pledges.  <a href="/peers" class="twitter-atreply pretty-link" dir="ltr" ><s>@</s><b>Peers</b></a> Pledge <a href="/search?q=%23sharingeconomy&amp;src=hash" data-query-source="hashtag_click" class="twitter-hashtag pretty-link js-nav" dir="ltr" ><s>#</s><b>sharingeconomy</b></a> <a href="http://t.co/T4Sc47KAzh" rel="nofollow" dir="ltr" data-expanded-url="http://www.peers.org/action/peers-pledgea/" class="twitter-timeline-link" target="_blank" title="http://www.peers.org/action/peers-pledgea/" ><span class="invisible">http://www.</span><span class="tco-ellipsis"></span><span class="js-display-url">peers.org/action/peers-p</span><span class="invisible">ledgea/</span><span class="tco-ellipsis"><span class="invisible">&nbsp;</span>…</span></a></p>
 
 
-      
+
       <div class="stream-item-footer">
-        
-        
+
+
 
 <div class="context">
 </div>
 
 
-          
+
 <a class="details with-icn js-details" href="/toastergrrl/status/363116819147538433">
   <span class="details-icon js-icon-container">
-    
+
   </span>
   <b>
     <span class="expand-stream-item js-view-details">
-      
+
         <span class="expand-action-wrapper">
           Expand
         </span>
@@ -817,8 +817,8 @@ data-item-id="363116819147538433"
   </b>
 </a>
 
-          
-          
+
+
 
 <ul class="tweet-actions js-actions">
   <li class="action-reply-container">
@@ -877,13 +877,13 @@ data-item-id="363116819147538433"
 
 
 
-  
+
 </ul>
 
       </div>
 
-      
-      
+
+
 
 <div class="expanded-content js-tweet-details-dropdown">
 </div>
@@ -902,15 +902,15 @@ data-item-id="363116819147538433"
 
 
 
-    
+
 
 <div class="replies-to  hidden permalink-inner permalink-replies" data-component-context="replies">
     <div class="tweets-wrapper">
       <div id="descendants">
           <div class="stream-container "
-    
+
     data-cursor=""
-    
+
     >
     <div class="stream permalink-stream">
       <ol class="stream-items js-navigable-stream" id="stream-items-id">
@@ -1026,7 +1026,7 @@ data-item-id="363116819147538433"
 
           </div>
         </div>
-      
+
     </div>
     <div class="alert-messages hidden" id="message-drawer">
     <div class="message ">
@@ -1095,7 +1095,7 @@ data-item-id="363116819147538433"
         <div class="modal-inner">
           <form class="goto-user-form">
             <input class="input-block username-input" type="text" placeholder="Start typing a name to jump to a profile">
-            
+
 
 
 <div class="dropdown-menu typeahead">
@@ -1106,13 +1106,13 @@ data-item-id="363116819147538433"
   <div class="dropdown-inner js-typeahead-results">
     <div class="typeahead-saved-searches">
   <ul class="typeahead-items saved-searches-list">
-    
+
     <li class="typeahead-item typeahead-saved-search-item"><a class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"><span class="icon generic-search"></span></a></li>
   </ul>
 </div>
 
     <ul class="typeahead-items typeahead-topics">
-  
+
   <li class="typeahead-item typeahead-topic-item">
     <a class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1">
       <i class="generic-search"></i>
@@ -1121,13 +1121,13 @@ data-item-id="363116819147538433"
 </ul>
 
 
-    
+
 
 
 <ul class="typeahead-items typeahead-accounts js-typeahead-accounts">
-  
+
   <li data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
-    
+
     <a class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
       <img class="avatar size24">
         <div class="typeahead-user-item-info">
@@ -1141,11 +1141,11 @@ data-item-id="363116819147538433"
 </ul>
 
     <ul class="typeahead-items typeahead-trend-locations-list">
-  
+
   <li class="typeahead-item typeahead-trend-locations-item"><a class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
 </ul>
     <ul class="typeahead-items typeahead-context-list">
-  
+
   <li class="typeahead-item typeahead-context-item"><a class="js-nav" href="" data-ds="context_helper" data-search-query="" tabindex="-1"></a></li>
 </ul>
   </div>
@@ -1207,12 +1207,12 @@ data-item-id="363116819147538433"
     <div class="modal-content">
       <button type="button" class="modal-btn modal-close js-close"><span class="icon close-medium"><span class="visuallyhidden">Close</span></span></button>
 
-      
+
       <div class="modal-header">
         <h3 class="modal-title">Keyboard shortcuts</h3>
       </div>
 
-      
+
       <div class="modal-body">
 
         <div class="keyboard-shortcuts clearfix" id="keyboard-shortcut-menu">
@@ -1300,8 +1300,8 @@ data-item-id="363116819147538433"
 
 
 
-  
-  
+
+
 
      <div id="geo-disabled-dropdown">
       <ul class="dropdown-menu" tabindex="-1">
@@ -1387,7 +1387,7 @@ data-item-id="363116819147538433"
         <h3 class="modal-title">Create a new list</h3>
       </div>
       <div class="modal-body">
-        
+
 <div class="list-editor">
   <div class="field">
     <label for="list-name">List name</label>
@@ -1523,7 +1523,7 @@ data-item-id="363116819147538433"
 
 
 
-  
+
   <div id="signin-or-signup-dialog">
     <div id="signin-or-signup" class="modal-container">
       <div class="close-modal-background-target"></div>
@@ -1624,7 +1624,7 @@ data-item-id="363116819147538433"
         <h3 class="modal-title">Two-way (sending and receiving) short codes:</h3>
       </div>
       <div class="modal-body">
-        
+
 <table id="sms_codes" cellpadding="0" cellspacing="0">
   <thead>
     <tr>
@@ -1707,6 +1707,6 @@ data-item-id="363116819147538433"
     <input type="hidden" class="swift-boot-module" value="app/pages/permalink">
   <input type="hidden" id="swift-module-path" value="https://abs.twimg.com/c/swift/en">
 
-  
+
     <script src="https://abs.twimg.com/c/swift/en/init.f37a5d8f16965ab055b8fb7351b559fcbd06909a.js" async></script>
 

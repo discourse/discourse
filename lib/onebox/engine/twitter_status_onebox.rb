@@ -1,6 +1,6 @@
 module Onebox
   module Engine
-    class TwitterOnebox
+    class TwitterStatusOnebox
       include Engine
       include HTML
 
@@ -14,6 +14,18 @@ module Onebox
       end
 
       private
+
+      def client
+        Onebox.options.twitter_client
+      end
+
+      def raw
+        if client
+          @raw ||= client.status(id)
+        else
+          super
+        end
+      end
 
       def data
         {

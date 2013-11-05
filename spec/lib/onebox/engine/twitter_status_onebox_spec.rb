@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Onebox::Engine::TwitterOnebox do
+describe Onebox::Engine::TwitterStatusOnebox do
   before(:all) do
     @link = "https://twitter.com/toastergrrl/status/363116819147538433"
   end
