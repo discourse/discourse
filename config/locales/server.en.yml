@@ -397,7 +397,7 @@ en:
       xaxis: "Day"
       yaxis: "Number of private messages"
     notify_user_private_messages:
-      title: "Nofity User"
+      title: "Notify User"
       xaxis: "Day"
       yaxis: "Number of private messages"
     top_referrers:
