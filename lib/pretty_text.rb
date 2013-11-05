@@ -24,9 +24,7 @@ module PrettyText
       return "" unless username
 
       user = User.where(username_lower: username.downcase).first
-      if user.present?
-        user.avatar_template
-      end
+      user.avatar_template if user.present?
     end
 
     def is_username_valid(username)
@@ -97,7 +95,6 @@ module PrettyText
   end
 
   def self.v8
-
     return @ctx if @ctx
 
     # ensure we only init one of these
@@ -143,8 +140,6 @@ module PrettyText
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
-    # we need some minimal server side stuff, apply CDN and TODO filter disallowed markup
-    baked = apply_cdn(baked, Rails.configuration.action_controller.asset_host)
     baked
   end
 
@@ -160,35 +155,12 @@ module PrettyText
     r
   end
 
-  def self.apply_cdn(html, url)
-    return html unless url
-
-    image = /\.(png|jpg|jpeg|gif|bmp|tif|tiff)$/i
-    relative = /^\/[^\/]/
-
-    doc = Nokogiri::HTML.fragment(html)
-
-    doc.css("a").each do |l|
-      href = l["href"].to_s
-      l["href"] = url + href if href =~ relative && href =~ image
-    end
-
-    doc.css("img").each do |l|
-      src = l["src"].to_s
-      l["src"] = url + src if src =~ relative
-    end
-
-    doc.to_s
-  end
-
   def self.cook(text, opts={})
     cloned = opts.dup
     # we have a minor inconsistency
     cloned[:topicId] = opts[:topic_id]
     sanitized = markdown(text.dup, cloned)
-    if SiteSetting.add_rel_nofollow_to_user_content
-      sanitized = add_rel_nofollow_to_user_content(sanitized)
-    end
+    sanitized = add_rel_nofollow_to_user_content(sanitized) if SiteSetting.add_rel_nofollow_to_user_content
     sanitized
   end
 
@@ -196,9 +168,7 @@ module PrettyText
     whitelist = []
 
     l = SiteSetting.exclude_rel_nofollow_domains
-    if l.present?
-      whitelist = l.split(",")
-    end
+    whitelist = l.split(",") if l.present?
 
     site_uri = nil
     doc = Nokogiri::HTML.fragment(html)
@@ -208,9 +178,9 @@ module PrettyText
         uri = URI(href)
         site_uri ||= URI(Discourse.base_url)
 
-        if  !uri.host.present? ||
-            uri.host.ends_with?(site_uri.host) ||
-            whitelist.any?{|u| uri.host.ends_with?(u)}
+        if !uri.host.present? ||
+           uri.host.ends_with?(site_uri.host) ||
+           whitelist.any?{|u| uri.host.ends_with?(u)}
           # we are good no need for nofollow
         else
           l["rel"] = "nofollow"
@@ -244,7 +214,6 @@ module PrettyText
 
     links
   end
-
 
   def self.excerpt(html, max_length, options={})
     ExcerptParser.get_excerpt(html, max_length, options)

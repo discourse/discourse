@@ -282,10 +282,15 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
 
     // done
     $uploadTarget.on('fileuploaddone', function (e, data) {
-      var markdown = Discourse.Utilities.getUploadMarkdown(data.result);
-      // appends a space at the end of the inserted markdown
-      composerView.addMarkdown(markdown + " ");
-      composerView.set('isUploading', false);
+      // make sure we have a url
+      if (data.result.url) {
+        var markdown = Discourse.Utilities.getUploadMarkdown(data.result);
+        // appends a space at the end of the inserted markdown
+        composerView.addMarkdown(markdown + " ");
+        composerView.set('isUploading', false);
+      } else {
+        bootbox.alert(I18n.t('post.errors.upload'));
+      }
     });
 
     // fail

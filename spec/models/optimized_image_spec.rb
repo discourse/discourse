@@ -4,57 +4,133 @@ describe OptimizedImage do
 
   it { should belong_to :upload }
 
-  let(:upload) { Fabricate(:upload) }
-  let(:oi) { OptimizedImage.create_for(upload, 100, 200) }
+  let(:upload) { build(:upload) }
+
+  before { upload.id = 42 }
 
   describe ".create_for" do
 
-    before { ImageSorcery.any_instance.expects(:convert).returns(true) }
+    context "when using an internal store" do
 
-    describe "internal store" do
+      let(:store) { FakeInternalStore.new }
+      before { Discourse.stubs(:store).returns(store) }
 
-      it "works" do
-        Tempfile.any_instance.expects(:close!)
-        oi.sha1.should == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-        oi.extension.should == ".jpg"
-        oi.width.should == 100
-        oi.height.should == 200
-        oi.url.should == "/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_100x200.jpg"
+      context "when an error happened while generatign the thumbnail" do
+
+        before { ImageSorcery.any_instance.stubs(:convert).returns(false) }
+
+        it "returns nil" do
+          OptimizedImage.create_for(upload, 100, 200).should be_nil
+        end
+
+      end
+
+      context "when the thumbnail is properly generated" do
+
+        before { ImageSorcery.any_instance.stubs(:convert).returns(true) }
+
+        it "does not download a copy of the original image" do
+          store.expects(:download).never
+          OptimizedImage.create_for(upload, 100, 200)
+        end
+
+        it "closes and removes the tempfile" do
+          Tempfile.any_instance.expects(:close!)
+          OptimizedImage.create_for(upload, 100, 200)
+        end
+
+        it "works" do
+          oi = OptimizedImage.create_for(upload, 100, 200)
+          oi.sha1.should == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+          oi.extension.should == ".jpg"
+          oi.width.should == 100
+          oi.height.should == 200
+          oi.url.should == "/internally/stored/optimized/image.jpg"
+        end
+
       end
 
     end
 
     describe "external store" do
 
-      require 'file_store/s3_store'
-      require 'fog'
+      let(:store) { FakeExternalStore.new }
+      before { Discourse.stubs(:store).returns(store) }
 
-      let(:store) { S3Store.new }
+      context "when an error happened while generatign the thumbnail" do
 
-      before do
-        Discourse.stubs(:store).returns(store)
-        SiteSetting.stubs(:s3_upload_bucket).returns("S3_Upload_Bucket")
-        SiteSetting.stubs(:s3_access_key_id).returns("s3_access_key_id")
-        SiteSetting.stubs(:s3_secret_access_key).returns("s3_secret_access_key")
-        Fog.mock!
+        before { ImageSorcery.any_instance.stubs(:convert).returns(false) }
+
+        it "returns nil" do
+          OptimizedImage.create_for(upload, 100, 200).should be_nil
+        end
+
       end
 
-      it "works" do
-        # fake downloaded file
-        downloaded_file = {}
-        downloaded_file.expects(:path).returns("/path/to/fake.png")
-        downloaded_file.expects(:close!)
-        store.expects(:download).returns(downloaded_file)
-        # assertions
-        oi.sha1.should == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-        oi.extension.should == ".png"
-        oi.width.should == 100
-        oi.height.should == 200
-        oi.url.should =~ /^\/\/s3_upload_bucket.s3.amazonaws.com\/[0-9a-f]+_100x200.png/
+      context "when the thumbnail is properly generated" do
+
+        before { ImageSorcery.any_instance.stubs(:convert).returns(true) }
+
+        it "downloads a copy of the original image" do
+          Tempfile.any_instance.expects(:close!).twice
+          store.expects(:download).with(upload).returns(Tempfile.new(["discourse-external", ".jpg"]))
+          OptimizedImage.create_for(upload, 100, 200)
+        end
+
+        it "works" do
+          oi = OptimizedImage.create_for(upload, 100, 200)
+          oi.sha1.should == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+          oi.extension.should == ".jpg"
+          oi.width.should == 100
+          oi.height.should == 200
+          oi.url.should == "/externally/stored/optimized/image.jpg"
+        end
+
       end
 
     end
 
+  end
+
+end
+
+class FakeInternalStore
+
+  def internal?
+    true
+  end
+
+  def external?
+    !internal?
+  end
+
+  def path_for(upload)
+    upload.url
+  end
+
+  def store_optimized_image(file, optimized_image)
+    "/internally/stored/optimized/image#{optimized_image.extension}"
+  end
+
+end
+
+class FakeExternalStore
+
+  def external?
+    true
+  end
+
+  def internal?
+    !external?
+  end
+
+  def store_optimized_image(file, optimized_image)
+    "/externally/stored/optimized/image#{optimized_image.extension}"
+  end
+
+  def download(upload)
+    extension = File.extname(upload.original_filename)
+    Tempfile.new(["discourse-s3", extension])
   end
 
 end
