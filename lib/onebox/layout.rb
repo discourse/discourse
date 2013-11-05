@@ -5,7 +5,6 @@ module Onebox
     attr_reader :cache
     attr_reader :record
     attr_reader :view
-    attr_reader :md5
 
     self.template_name = "_layout"
     self.template_path = File.join(Gem::Specification.find_by_name("onebox").gem_dir, "templates")
