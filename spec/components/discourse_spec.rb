@@ -67,12 +67,12 @@ describe Discourse do
   context "#store" do
 
     it "returns LocalStore by default" do
-      Discourse.store.should be_a(LocalStore)
+      Discourse.store.should be_a(FileStore::LocalStore)
     end
 
     it "returns S3Store when S3 is enabled" do
       SiteSetting.expects(:enable_s3_uploads?).returns(true)
-      Discourse.store.should be_a(S3Store)
+      Discourse.store.should be_a(FileStore::S3Store)
     end
 
   end

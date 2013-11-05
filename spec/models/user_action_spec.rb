@@ -210,7 +210,6 @@ describe UserAction do
     end
   end
 
-
   describe 'private messages' do
 
     let(:user) do

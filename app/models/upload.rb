@@ -1,12 +1,10 @@
-require 'digest/sha1'
-require 'image_sizer'
-require 'tempfile'
-require 'pathname'
+require "digest/sha1"
+require "image_sizer"
 
 class Upload < ActiveRecord::Base
   belongs_to :user
 
-  has_many :post_uploads
+  has_many :post_uploads, dependent: :destroy
   has_many :posts, through: :post_uploads
 
   has_many :optimized_images, dependent: :destroy
@@ -14,19 +12,16 @@ class Upload < ActiveRecord::Base
   validates_presence_of :filesize
   validates_presence_of :original_filename
 
-  def thumbnail(width = nil, height = nil)
-    width ||= self.width
-    height ||= self.height
+  def thumbnail(width = self.width, height = self.height)
     optimized_images.where(width: width, height: height).first
   end
 
-  def has_thumbnail?(width = nil, height = nil)
+  def has_thumbnail?(width, height)
     thumbnail(width, height).present?
   end
 
   def create_thumbnail!(width, height)
     return unless SiteSetting.create_thumbnails?
-    return if has_thumbnail?(width, height)
     thumbnail = OptimizedImage.create_for(self, width, height)
     if thumbnail
       optimized_images << thumbnail
@@ -47,12 +42,19 @@ class Upload < ActiveRecord::Base
     File.extname(original_filename)
   end
 
-  def self.create_for(user_id, file, filesize)
+  def self.create_for(user_id, file, filesize, origin = nil)
     # compute the sha
     sha1 = Digest::SHA1.file(file.tempfile).hexdigest
     # check if the file has already been uploaded
-    unless upload = Upload.where(sha1: sha1).first
-      # deal with width & heights for images
+    upload = Upload.where(sha1: sha1).first
+    # delete the previously uploaded file if there's been an error
+    if upload && upload.url.blank?
+      upload.destroy
+      upload = nil
+    end
+    # create the upload
+    unless upload
+      # deal with width & height for images
       if SiteSetting.authorized_image?(file)
         # retrieve image info
         image_info = FastImage.new(file.tempfile, raise_on_failure: true)
@@ -61,6 +63,8 @@ class Upload < ActiveRecord::Base
         # make sure we're at the beginning of the file (FastImage is moving the pointer)
         file.rewind
       end
+      # trim the origin if any
+      origin = origin[0...1000] if origin
       # create a db record (so we can use the id)
       upload = Upload.create!(
         user_id: user_id,
@@ -70,11 +74,16 @@ class Upload < ActiveRecord::Base
         url: "",
         width: width,
         height: height,
+        origin: origin,
       )
       # store the file and update its url
-      upload.url = Discourse.store.store_upload(file, upload)
-      # save the url
-      upload.save
+      url = Discourse.store.store_upload(file, upload)
+      if url.present?
+        upload.url = url
+        upload.save
+      else
+        Rails.logger.error("Failed to store upload ##{upload.id} for user ##{user_id}")
+      end
     end
     # return the uploaded file
     upload
@@ -82,8 +91,7 @@ class Upload < ActiveRecord::Base
 
   def self.get_from_url(url)
     # we store relative urls, so we need to remove any host/cdn
-    asset_host = Rails.configuration.action_controller.asset_host
-    url = url.gsub(/^#{asset_host}/i, "") if asset_host.present?
+    url = url.gsub(/^#{Discourse.asset_host}/i, "") if Discourse.asset_host.present?
     Upload.where(url: url).first if Discourse.store.has_been_uploaded?(url)
   end
 

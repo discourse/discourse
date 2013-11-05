@@ -75,11 +75,17 @@ DiscourseGroupedEach.prototype = {
     var content = this.content,
         contentLength = Em.get(content, 'length'),
         data = this.options.data,
-        template = this.template;
+        template = this.template,
+        keyword = this.options.hash.keyword;
 
     data.insideEach = true;
     for (var i = 0; i < contentLength; i++) {
-      template(content.objectAt(i), { data: data });
+      var row = content.objectAt(i);
+      if (keyword) {
+        data.keywords = data.keywords || {};
+        data.keywords[keyword] = row;
+      }
+      template(row, { data: data });
     }
   },
 

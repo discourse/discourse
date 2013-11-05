@@ -10,9 +10,6 @@ Discourse::Application.configure do
   # Configure static asset server for tests with Cache-Control for performance
   config.serve_static_assets = true
 
-  # Log error messages when you accidentally call methods on nil
-  config.whiny_nils = true
-
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
@@ -39,4 +36,9 @@ Discourse::Application.configure do
   # lower iteration count for test
   config.pbkdf2_iterations = 10
   config.ember.variant = :development
+
+  # silence deprecation warnings in test
+  config.whiny_nils = true unless rails4?
+  config.eager_load = false if rails4?
+  ActiveSupport::Deprecation.silenced = true
 end

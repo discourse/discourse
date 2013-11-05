@@ -22,6 +22,9 @@ module Discourse
   # When a setting is missing
   class SiteSettingMissing < Exception; end
 
+  # When ImageMagick is missing
+  class ImageMagickMissing < Exception; end
+
   # Cross site request forgery
   class CSRF < Exception; end
 
@@ -72,11 +75,11 @@ module Discourse
     end
   end
 
-  def self.base_uri default_value=""
+  def self.base_uri(default_value = "")
     if !ActionController::Base.config.relative_url_root.blank?
-      return ActionController::Base.config.relative_url_root
+      ActionController::Base.config.relative_url_root
     else
-      return default_value
+      default_value
     end
   end
 
@@ -142,10 +145,10 @@ module Discourse
   def self.store
     if SiteSetting.enable_s3_uploads?
       @s3_store_loaded ||= require 'file_store/s3_store'
-      S3Store.new
+      FileStore::S3Store.new
     else
       @local_store_loaded ||= require 'file_store/local_store'
-      LocalStore.new
+      FileStore::LocalStore.new
     end
   end
 
@@ -155,6 +158,10 @@ module Discourse
 
   def self.current_user_provider=(val)
     @current_user_provider = val
+  end
+
+  def self.asset_host
+    Rails.configuration.action_controller.asset_host
   end
 
 private

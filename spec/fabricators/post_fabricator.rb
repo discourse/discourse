@@ -59,11 +59,27 @@ Fabricator(:post_with_unsized_images, from: :post) do
 end
 
 Fabricator(:post_with_image_url, from: :post) do
-  cooked '<img src="http://foo.bar/image.png">'
+  cooked '<img src="http://foo.bar/image.png" width="50" height="42">'
 end
 
 Fabricator(:post_with_large_image, from: :post) do
   cooked '<img src="/uploads/default/1/1234567890123456.jpg">'
+end
+
+Fabricator(:post_with_uploads, from: :post) do
+  cooked '
+<a href="/uploads/default/2/2345678901234567.jpg">Link</a>
+<img src="/uploads/default/1/1234567890123456.jpg">
+'
+end
+
+Fabricator(:post_with_uploads_and_links, from: :post) do
+  cooked '
+<a href="/uploads/default/2/2345678901234567.jpg">Link</a>
+<img src="/uploads/default/1/1234567890123456.jpg">
+<a href="http://www.google.com">Google</a>
+<img src="http://foo.bar/image.png">
+'
 end
 
 Fabricator(:post_with_external_links, from: :post) do

@@ -10,4 +10,9 @@ class ScreenedUrlSerializer < ApplicationSerializer
   def action
     ScreenedUrl.actions.key(object.action_type).to_s
   end
+
+  def ip_address
+    object.ip_address.try(:to_s)
+  end
+
 end

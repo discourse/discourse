@@ -50,6 +50,17 @@ stripped from my reply?")
     end
   end
 
+  describe "It supports a non english reply" do
+    let(:hebrew) { File.read("#{Rails.root}/spec/fixtures/emails/hebrew.eml") }
+    let(:receiver) { Email::Receiver.new(hebrew) }
+
+    it "processes correctly" do
+      I18n.expects(:t).with('user_notifications.previous_discussion').returns('כלטוב')
+      receiver.process
+      expect(receiver.body).to eq("שלום")
+    end
+  end
+
   describe "via" do
     let(:wrote) { File.read("#{Rails.root}/spec/fixtures/emails/via_line.eml") }
     let(:receiver) { Email::Receiver.new(wrote) }

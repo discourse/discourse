@@ -138,8 +138,7 @@ class PostAction < ActiveRecord::Base
   def self.remove_act(user, post, post_action_type_id)
     if action = where(post_id: post.id,
                       user_id: user.id,
-                      post_action_type_id:
-                      post_action_type_id).first
+                      post_action_type_id: post_action_type_id).first
       action.remove_act!(user)
     end
   end

@@ -58,6 +58,20 @@ describe ScreenedUrl do
       record2.should be_valid
     end
 
+    it "strips www. from domains" do
+      record1 = described_class.new(valid_params.merge(domain: 'www.DuB30.com', url: 'www.DuB30.com/Gems/Gems-of-Power'))
+      record1.normalize
+      record1.domain.should == 'dub30.com'
+
+      record2 = described_class.new(valid_params.merge(domain: 'WWW.DuB30.cOM', url: 'WWW.DuB30.com/Gems/Gems-of-Power'))
+      record2.normalize
+      record2.domain.should == 'dub30.com'
+
+      record3 = described_class.new(valid_params.merge(domain: 'www.trolls.spammers.com', url: 'WWW.DuB30.com/Gems/Gems-of-Power'))
+      record3.normalize
+      record3.domain.should == 'trolls.spammers.com'
+    end
+
     it "doesn't modify the url argument" do
       expect {
         described_class.new(valid_params).normalize

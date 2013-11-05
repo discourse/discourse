@@ -84,7 +84,7 @@ en:
     yes_value: "Yes"
     of_value: "of"
     generic_error: "Sorry, an error has occurred."
-    generic_error_with_reason: "An error occured: %{error}"
+    generic_error_with_reason: "An error occurred: %{error}"
     log_in: "Log In"
     age: "Age"
     last_post: "Last Post"
@@ -1270,6 +1270,7 @@ en:
           title: "Screened URLs"
           description: "The URLs listed here were used in posts by users who have been identified as spammers."
           url: "URL"
+          domain: "Domain"
         screened_ips:
           title: "Screened IPs"
           description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
