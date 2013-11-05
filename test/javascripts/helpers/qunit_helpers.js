@@ -1,12 +1,20 @@
-function integration(name) {
+function integration(name, lifecycle) {
   module("Integration: " + name, {
     setup: function() {
       sinon.stub(Discourse.ScrollingDOMMethods, "bindOnScroll");
       sinon.stub(Discourse.ScrollingDOMMethods, "unbindOnScroll");
       Ember.run(Discourse, Discourse.advanceReadiness);
+
+      if (lifecycle && lifecycle.setup) {
+        lifecycle.setup.call(this);
+      }
     },
 
     teardown: function() {
+      if (lifecycle && lifecycle.teardown) {
+        lifecycle.teardown.call(this);
+      }
+
       Discourse.reset();
       Discourse.ScrollingDOMMethods.bindOnScroll.restore();
       Discourse.ScrollingDOMMethods.unbindOnScroll.restore();
