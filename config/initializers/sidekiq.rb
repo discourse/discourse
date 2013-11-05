@@ -2,7 +2,6 @@ sidekiq_redis = { url: $redis.url, namespace: 'sidekiq' }
 
 Sidekiq.configure_server do |config|
   config.redis = sidekiq_redis
-  Sidetiq::Clock.start!
 end
 
 Sidetiq.configure do |config|
