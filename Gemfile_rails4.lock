@@ -205,6 +205,8 @@ GEM
       nokogiri (~> 1.5)
       ruby-hmac
       unicode (~> 0.4.4)
+    font_assets (0.1.10)
+      rack
     formatador (0.2.4)
     fspath (2.0.5)
     given_core (3.1.1)
@@ -214,6 +216,9 @@ GEM
     highline (1.6.20)
     hike (1.2.3)
     hiredis (0.4.5)
+    honeybadger (1.9.2)
+      faraday
+      json
     httpauth (0.2.0)
     i18n (0.6.5)
     ice_cube (0.11.0)
@@ -253,6 +258,7 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
+    newrelic_rpm (3.6.8.168)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     oauth (0.4.7)
@@ -275,6 +281,9 @@ GEM
     omniauth-github (1.1.1)
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.1)
+    omniauth-heroku (0.1.1)
+      omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.0)
     omniauth-oauth (1.0.1)
       oauth
       omniauth (~> 1.0)
@@ -451,6 +460,8 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
+    unicorn-worker-killer (0.4.2)
+      unicorn (~> 4)
 
 PLATFORMS
   ruby
@@ -479,9 +490,11 @@ DEPENDENCIES
   fastimage
   flamegraph!
   fog
+  font_assets
   handlebars-source (= 1.0.12)
   highline
   hiredis
+  honeybadger
   image_optim
   image_sorcery
   librarian (>= 0.0.25)
@@ -493,6 +506,7 @@ DEPENDENCIES
   mock_redis
   multi_json
   mustache
+  newrelic_rpm
   nokogiri
   oj
   omniauth
@@ -500,6 +514,7 @@ DEPENDENCIES
   omniauth-cas
   omniauth-facebook
   omniauth-github
+  omniauth-heroku
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
@@ -543,4 +558,5 @@ DEPENDENCIES
   timecop
   uglifier
   unicorn
+  unicorn-worker-killer
   vestal_versions!
