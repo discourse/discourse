@@ -201,6 +201,9 @@ table {
   &:nth-of-type(1) {
     border-top: 0;
   }
+  &.highlight-danger {
+    background-color: #ffe5e5;
+  }
   border-top: 1px solid #dddddd;
   &:before, &:after {
     display: table;

@@ -198,7 +198,7 @@
     </div>
   </div>
 
-  <div class='display-row'>
+  <div {{bindAttr class=":display-row isBanned:highlight-danger"}}>
     <div class='field'>{{i18n admin.user.banned}}</div>
     <div class='value'>{{isBanned}}</div>
     <div class='controls'>
@@ -222,21 +222,20 @@
   </div>
 
   {{#if isBanned}}
-  <div class='display-row'>
+  <div class='display-row highlight-danger'>
     <div class='field'>{{i18n admin.user.banned_by}}</div>
-    <div class='long-value'>
+    <div class='value'>
       {{#link-to 'adminUser' banned_by}}{{avatar banned_by imageSize="tiny"}}{{/link-to}}
       {{#link-to 'adminUser' banned_by}}{{banned_by.username}}{{/link-to}}
     </div>
-  </div>
-
-  <div class='display-row'>
-    <div class='field'>{{i18n admin.user.ban_reason}}</div>
-    <div class='long-value'>{{ban_reason}}</div>
+    <div class='controls'>
+      <b>{{i18n admin.user.ban_reason}}</b>:
+      {{ban_reason}}
+    </div>
   </div>
   {{/if}}
 
-  <div class='display-row'>
+  <div class='display-row' {{bindAttr class=":display-row blocked:highlight-danger"}}>
     <div class='field'>{{i18n admin.user.blocked}}</div>
     <div class='value'>{{blocked}}</div>
     <div class='controls'>
