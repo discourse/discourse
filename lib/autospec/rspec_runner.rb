@@ -27,9 +27,9 @@ module Autospec
     def reloaders; RELOADERS; end
 
     # We need to reload the whole app when changing any of these files
-    reload('spec/spec_helper.rb')
-    reload('config/(.*).rb')
-    reload('app/helpers/(.*).rb')
+    reload("spec/spec_helper.rb")
+    reload(%r{config/.+\.rb})
+    reload(%r{app/helpers/.+\.rb})
 
     def failed_specs
       specs = []
