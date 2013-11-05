@@ -723,6 +723,7 @@ en:
 
     enable_names: "Allow users to show their full names"
     display_name_on_posts: "Also show a user's full name on their posts"
+    invites_shown: "Maximum invites shown on a user page"
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

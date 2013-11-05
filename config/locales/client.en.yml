@@ -324,9 +324,11 @@ en:
           other: "after {{count}} minutes"
 
       invited:
+        search: "type to search invites..."
         title: "Invites"
         user: "Invited User"
-        none: "{{username}} hasn't invited any users to the site."
+        none: "No invites were found."
+        truncated: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed At"
         pending: "Pending Invites"

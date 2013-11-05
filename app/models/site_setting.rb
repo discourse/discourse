@@ -272,6 +272,7 @@ class SiteSetting < ActiveRecord::Base
 
   client_setting(:display_name_on_posts, false)
   client_setting(:enable_names, true)
+  client_setting(:invites_shown, 30)
 
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?

@@ -1,7 +1,7 @@
 /**
   A data model representing a navigation item on the list views
 
-  @class InviteList
+  @class NavItem
   @extends Discourse.Model
   @namespace Discourse
   @module Discourse

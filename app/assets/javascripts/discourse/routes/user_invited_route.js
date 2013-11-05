@@ -12,11 +12,15 @@ Discourse.UserInvitedRoute = Discourse.Route.extend({
   },
 
   model: function() {
-    return Discourse.InviteList.findInvitedBy(this.modelFor('user'));
+    return Discourse.Invite.findInvitedBy(this.modelFor('user'));
   },
 
   setupController: function(controller, model) {
-    controller.set('model', model);
+    controller.setProperties({
+      model: model,
+      user: this.controllerFor('user').get('model'),
+      searchTerm: ''
+    });
     this.controllerFor('user').set('indexStream', false);
   }
 

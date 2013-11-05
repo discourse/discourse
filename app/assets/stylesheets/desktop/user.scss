@@ -89,23 +89,6 @@
   }
 }
 
-#no-invites {
-  padding: 10px;
-}
-
-#invited-users {
-  h2 {
-    color: $darkish_gray;
-    font-size: 20px;
-  }
-  .invites {
-    margin-bottom: 20px;
-    tr {
-      height: 45px;
-    }
-  }
-}
-
 .user-main {
   width: 850px;
   float: left;
@@ -124,6 +107,26 @@
     background-color: white;
     border: 1px solid #ddd;
     margin-bottom: 10px;
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 10px;
+
+      th {
+        text-align: left;
+        border-bottom: 1px solid #aaa;
+        padding: 5px;
+      }
+
+      td {
+        padding: 5px;
+        border-bottom: 1px solid #ddd;
+      }
+    }
   }
 
   .about {

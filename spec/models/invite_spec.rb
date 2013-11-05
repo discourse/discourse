@@ -71,11 +71,6 @@ describe Invite do
           @invite.topics.should == [topic]
         end
 
-        it 'is pending in the invite list for the creator' do
-          InvitedList.new(inviter).pending.should == [@invite]
-        end
-
-
         context 'when added by another user' do
           let(:coding_horror) { Fabricate(:coding_horror) }
           let(:new_invite) { topic.invite_by_email(coding_horror, iceking) }
@@ -197,12 +192,6 @@ describe Invite do
         end
 
         it 'works correctly' do
-          # no longer in the pending list for that user
-          InvitedList.new(invite.invited_by).pending.should be_blank
-
-          # is redeeemed in the invite list for the creator
-          InvitedList.new(invite.invited_by).redeemed.should == [invite]
-
           # has set the user_id attribute
           invite.user.should == user
 

@@ -1,70 +1,59 @@
-<div id='invited-users'>
-  {{#if empty}}
-    <div id='no-invites' class='boxed white'>
-      {{i18n user.invited.none username="user.username"}}
-    </div>
-  {{else}}
-    {{#if redeemed}}
-      <div class='invites'>
-        <h2>{{i18n user.invited.redeemed}}</h2>
-        <div class='boxed white'>
-          <table class='table'>
-            <tr>
-              <th>{{i18n user.invited.user}}</th>
-              <th>{{i18n user.invited.redeemed_at}}</th>
-              <th>{{i18n user.last_seen}}</th>
-              <th>{{i18n user.invited.topics_entered}}</th>
-              <th>{{i18n user.invited.posts_read_count}}</th>
-              <th>{{i18n user.invited.time_read}}</th>
-              <th>{{i18n user.invited.days_visited}}</th>
-            </tr>
-            {{#each redeemed}}
-              <tr>
-                <td>
-                  <a href="{{unbound user.path}}">{{avatar user imageSize="tiny"}}</a>
-                  <a href="{{unbound user.path}}">{{user.username}}</a>
-                </td>
-                <td>{{date redeemed_at}}</td>
-                <td>{{date user.last_seen_at}}</td>
-                <td>{{number user.topics_entered}}</td>
-                <td>{{number user.posts_read_count}}</td>
-                <td>{{{unbound user.time_read}}}</td>
-                <td><span title="{{i18n user.invited.days_visited}}">{{{unbound user.days_visited}}}</span>
-                    /
-                    <span title="{{i18n user.invited.account_age_days}}">{{{unbound user.days_since_created}}}</span></td>
-              </tr>
-            {{/each}}
-          </table>
-        </div>
-      </div>
+<section class='user-content'>
+
+  <h2>{{i18n user.invited.title}}</h2>
+
+  {{#if showSearch}}
+  <form>
+    {{textField value=searchTerm placeholderKey="user.invited.search"}}
+  </form>
+  {{/if}}
+
+  {{#if model}}
+    <table class='table'>
+      <tr>
+        <th>{{i18n user.invited.user}}</th>
+        <th>{{i18n user.invited.redeemed_at}}</th>
+        <th>{{i18n user.last_seen}}</th>
+        <th>{{i18n user.invited.topics_entered}}</th>
+        <th>{{i18n user.invited.posts_read_count}}</th>
+        <th>{{i18n user.invited.time_read}}</th>
+        <th>{{i18n user.invited.days_visited}}</th>
+      </tr>
+      {{#each model}}
+        <tr>
+          {{#if user}}
+          <td>
+            {{#linkTo 'user' user}}{{avatar user imageSize="tiny"}}{{/linkTo}}
+            {{#linkTo 'user' user}}{{user.username}}{{/linkTo}}
+          </td>
+          <td>{{date redeemed_at}}</td>
+          <td>{{date user.last_seen_at}}</td>
+          <td>{{number user.topics_entered}}</td>
+          <td>{{number user.posts_read_count}}</td>
+          <td>{{{unbound user.time_read}}}</td>
+          <td><span title="{{i18n user.invited.days_visited}}">{{{unbound user.days_visited}}}</span>
+              /
+              <span title="{{i18n user.invited.account_age_days}}">{{{unbound user.days_since_created}}}</span></td>
+          {{else}}
+            <td>{{unbound email}}</td>
+            <td colspan='6'>
+              {{#if rescinded}}
+                {{i18n user.invited.rescinded}}
+              {{else}}
+                <button class='btn' {{action rescind this}}>{{i18n user.invited.rescind}}</button>
+              {{/if}}
+            </td>
+          {{/if}}
+        </tr>
+      {{/each}}
+    </table>
+
+    {{#if truncated}}
+      <p>{{i18n user.invited.truncated count=maxInvites}}</p>
     {{/if}}
 
-    {{#if pending}}
-      <div class='invites'>
-        <h2>{{i18n user.invited.pending}}</h2>
-        <div class='boxed white'>
-          <table class='table'>
-            <tr>
-              <th style='width: 60%'>{{i18n user.email.title}}</th>
-              <th style='width: 20%'>{{i18n created}}</th>
-              <th>&nbsp;</th>
-            </tr>
-            {{#each pending}}
-              <tr>
-                <td>{{email}}</td>
-                <td>{{date created_at}}</td>
-                <td>
-                  {{#if rescinded}}
-                    {{i18n user.invited.rescinded}}
-                  {{else}}
-                    <button class='btn' {{action rescind this}}>{{i18n user.invited.rescind}}</button>
-                  {{/if}}
-                </td>
-              </tr>
-            {{/each}}
-          </table>
-        </div>
-      </div>
-    {{/if}}
+  {{else}}
+    {{i18n user.invited.none}}
   {{/if}}
-</div>
+
+</section>
