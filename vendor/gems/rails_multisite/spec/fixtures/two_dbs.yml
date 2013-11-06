@@ -1,6 +1,6 @@
 second:
   adapter: sqlite3
-  database: "db1.test"
+  database: "tmp/db1.test"
   host_names:
     - second.localhost
     - 2nd.localhost
