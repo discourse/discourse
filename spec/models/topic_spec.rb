@@ -1116,6 +1116,25 @@ describe Topic do
     end
   end
 
+  describe 'for_digest' do
+    let(:user) { Fabricate.build(:user) }
+
+    it "returns none when there are no topics" do
+      Topic.for_digest(user, 1.year.ago).should be_blank
+    end
+
+    it "doesn't return category topics" do
+      Fabricate(:category)
+      Topic.for_digest(user, 1.year.ago).should be_blank
+    end
+
+    it "returns regular topics" do
+      topic = Fabricate(:topic)
+      Topic.for_digest(user, 1.year.ago).should == [topic]
+    end
+
+  end
+
   describe 'secured' do
     it 'can remove secure groups' do
       category = Fabricate(:category, read_restricted: true)
@@ -1127,7 +1146,7 @@ describe Topic do
       # for_digest
 
       Topic.for_digest(Fabricate(:user), 1.year.ago).count.should == 0
-      Topic.for_digest(Fabricate(:admin), 1.year.ago).count.should == 2
+      Topic.for_digest(Fabricate(:admin), 1.year.ago).count.should == 1
     end
   end
 

@@ -5,6 +5,7 @@ require_dependency 'rate_limiter'
 require_dependency 'text_sentinel'
 require_dependency 'text_cleaner'
 require_dependency 'trashable'
+require_dependency 'archetype'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -228,14 +229,21 @@ class Topic < ActiveRecord::Base
 
   # Returns hot topics since a date for display in email digest.
   def self.for_digest(user, since)
-    Topic
-      .visible
-      .secured(Guardian.new(user))
-      .where(closed: false, archived: false)
-      .created_since(since)
-      .listable_topics
-      .order(:percent_rank)
-      .limit(100)
+    topics = Topic
+              .visible
+              .secured(Guardian.new(user))
+              .where(closed: false, archived: false)
+              .created_since(since)
+              .listable_topics
+              .order(:percent_rank)
+              .limit(100)
+
+    category_topic_ids = Category.pluck(:topic_id).compact!
+    if category_topic_ids.present?
+      topics = topics.where("id NOT IN (?)", category_topic_ids)
+    end
+
+    topics
   end
 
   def update_meta_data(data)
