@@ -33,8 +33,9 @@ class Site
     @categories ||= begin
       categories = Category
         .secured(@guardian)
-        .latest
-        .includes(:topic_only_relative_url).to_a
+        .includes(:topic_only_relative_url)
+        .order(:position)
+        .to_a
 
       allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
 
