@@ -50,7 +50,13 @@ module Discourse
 
     config.assets.paths += %W(#{config.root}/config/locales)
 
+    # explicitly precompile any images in plugins ( /assets/images ) path
+    config.assets.precompile += [lambda do |filename, path|
+      path =~ /assets\/images/ && !%w(.js .css).include?(File.extname(filename))
+    end]
+
     config.assets.precompile += ['common.css', 'desktop.css', 'mobile.css', 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js']
+
 
     # Precompile all defer
     Dir.glob("#{config.root}/app/assets/javascripts/defer/*.js").each do |file|
