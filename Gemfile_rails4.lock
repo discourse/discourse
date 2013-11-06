@@ -178,7 +178,7 @@ GEM
       handlebars-source (= 1.0.12)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.27.6)
+    excon (0.28.0)
     execjs (2.0.2)
     exifr (1.1.3)
     fabrication (2.8.1)
@@ -194,9 +194,9 @@ GEM
     fast_xs (0.8.0)
     fastimage (1.5.2)
     ffi (1.9.0)
-    fog (1.16.0)
+    fog (1.18.0)
       builder
-      excon (~> 0.27.0)
+      excon (~> 0.28.0)
       formatador (~> 0.2.0)
       mime-types
       multi_json (~> 1.0)
@@ -204,7 +204,6 @@ GEM
       net-ssh (>= 2.1.3)
       nokogiri (~> 1.5)
       ruby-hmac
-      unicode (~> 0.4.4)
     formatador (0.2.4)
     fspath (2.0.5)
     given_core (3.1.1)
@@ -446,7 +445,6 @@ GEM
     uglifier (2.2.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
-    unicode (0.4.4)
     unicorn (4.6.3)
       kgio (~> 2.6)
       rack
@@ -478,7 +476,7 @@ DEPENDENCIES
   fast_xs
   fastimage
   flamegraph!
-  fog
+  fog (= 1.18.0)
   handlebars-source (= 1.0.12)
   highline
   hiredis
