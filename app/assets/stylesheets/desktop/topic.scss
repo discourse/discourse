@@ -90,6 +90,7 @@ a:hover.reply-new {
   color: #666;
   width: 130px;
   height: 34px;
+
   .nums {
     position: relative;
     top: 9px;
@@ -98,21 +99,26 @@ a:hover.reply-new {
     z-index: 1;
   }
   button {
-    padding: 0 1px;
+    padding: 3px 0 0 0;
     cursor: pointer;
     z-index: 1000;
     position: absolute;
-    top: 8px;
+    top: 2px;
     left: 4px;
     border: 0;
     background: none;
-  color: #666;
+    color: #666;
+    width: 50%;
+    text-align: left;
+    height: 30px;
+    margin: 0;
     i {
       font-size: 18px;
     }
     &:nth-of-type(2) {
       right: 4px;
       left: auto;
+      text-align: right;
     }
     &:disabled {
     cursor: default;
