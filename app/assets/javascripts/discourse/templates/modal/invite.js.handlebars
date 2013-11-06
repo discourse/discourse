@@ -9,7 +9,8 @@
   {{#if finished}}
     {{{successMessage}}}
   {{else}}
-    <label>{{i18n topic.invite_reply.email}}</label>
+
+    <label>{{inviteInstructions}}</label>
     {{textField value=email placeholderKey="topic.invite_reply.email_placeholder"}}
   {{/if}}
 </div>

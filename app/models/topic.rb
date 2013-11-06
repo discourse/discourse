@@ -443,28 +443,8 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  # Invite a user by email and return the invite. Return the previously existing invite
-  # if already exists. Returns nil if the invite can't be created.
   def invite_by_email(invited_by, email)
-    lower_email = Email.downcase(email)
-    invite = Invite.with_deleted.where('invited_by_id = ? and email = ?', invited_by.id, lower_email).first
-
-    if invite.blank?
-      invite = Invite.create(invited_by: invited_by, email: lower_email)
-      unless invite.valid?
-
-        grant_permission_to_user(lower_email) if email_already_exists_for?(invite)
-
-        return
-      end
-    end
-
-    # Recover deleted invites if we invite them again
-    invite.recover if invite.deleted_at.present?
-
-    topic_invites.create(invite_id: invite.id)
-    Jobs.enqueue(:invite_email, invite_id: invite.id)
-    invite
+    Invite.invite_by_email(email, invited_by, self)
   end
 
   def email_already_exists_for?(invite)

@@ -813,6 +813,19 @@ en:
 
       [1]: %{invite_link}
 
+  invite_forum_mailer:
+    subject_template: "[%{site_name}] %{invitee_name} invited you to join %{site_name}"
+    text_body_template: |
+      %{invitee_name} invited you to %{site_name}.
+
+      If you're interested, click the link below to join:
+
+      [Visit %{site_name}][1]
+
+      You were invited by a trusted user, so you'll be able to join immediately, without needing to log in.
+
+      [1]: %{invite_link}
+
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
     text_body_template: |

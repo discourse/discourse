@@ -191,13 +191,16 @@ class Guardian
     is_me?(user)
   end
 
-  def can_invite_to?(object)
+  def can_invite_to_forum?
     authenticated? &&
-    can_see?(object) &&
     (
       (!SiteSetting.must_approve_users? && @user.has_trust_level?(:regular)) ||
       is_staff?
     )
+  end
+
+  def can_invite_to?(object)
+    can_see?(object) && can_invite_to_forum?
   end
 
   def can_see_deleted_posts?
