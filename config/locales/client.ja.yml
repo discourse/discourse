@@ -496,7 +496,7 @@ ja:
 
       admin_options_title: "このトピックの詳細設定"
       auto_close_label: "このトピックを"
-      auto_close_units: "日後に自動的にクローズする"
+      auto_close_units: "日後に自動的に終了する"
 
     notifications:
       title: "@name メンションやあなたのポストやトピックへの回答、プライベートメッセージなどの通知"
@@ -639,11 +639,11 @@ ja:
       jump_reply_down: 以後の回答へジャンプ
       deleted: "トピックは削除されました"
 
-      auto_close_notice: "このトピックは%{timeLeft}で自動的にクローズされます。"
-      auto_close_title: '自動クローズ設定'
+      auto_close_notice: "このトピックは%{timeLeft}で自動的に終了します。"
+      auto_close_title: '自動終了設定'
       auto_close_save: "保存"
       auto_close_cancel: "キャンセル"
-      auto_close_remove: "このトピックを自動クローズしない"
+      auto_close_remove: "このトピックを自動終了しない"
 
       progress:
         title: トピック進捗
@@ -682,8 +682,8 @@ ja:
         recover: "トピック削除の取り消し"
         delete: "トピック削除"
         open: "トピックを開く"
-        close: "トピックをクローズする"
-        auto_close: "自動クローズ"
+        close: "トピックを終了する"
+        auto_close: "自動終了"
         unpin: "トピックのピン留め解除"
         pin: "トピックのピン留め"
         unarchive: "トピックのアーカイブ解除"
@@ -985,7 +985,7 @@ ja:
 
     topic_statuses:
       locked:
-        help: このトピックはクローズしています。新たに回答を投稿することはできません"
+        help: このトピックは終了しています。新たに回答を投稿することはできません"
       pinned:
         help: "このトピックはピン留めされています。常にカテゴリのトップに表示されます"
       archived:
