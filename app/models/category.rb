@@ -45,6 +45,8 @@ class Category < ActiveRecord::Base
   has_one :category_search_data
   belongs_to :parent_category, class_name: 'Category'
 
+  default_scope order('position')
+
   scope :latest, ->{ order('topic_count desc') }
 
   scope :secured, ->(guardian = nil) {
