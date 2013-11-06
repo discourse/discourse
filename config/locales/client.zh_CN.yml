@@ -324,19 +324,21 @@ zh_CN:
           other: "{{count}} 分钟之后"
 
       invited:
+        search: "输入以搜索邀请……"
         title: "邀请"
         user: "邀请用户"
-        none: "{{username}} 尚未邀请任何用户到本站。"
+        none: "没有找到任何邀请。"
+        truncated: "只显示前{{count}}个邀请。"
         redeemed: "确认邀请"
         redeemed_at: "确认时间"
         pending: "待定邀请"
         topics_entered: "已进入的主题"
-        posts_read_count: "已阅的帖子"
+        posts_read_count: "已读的帖子"
         rescind: "删除邀请"
         rescinded: "邀请已删除"
         time_read: "阅读时间"
         days_visited: "访问天数"
-        account_age_days: "帐号存在天数"
+        account_age_days: "账号存在天数"
 
       password:
         title: "密码"
@@ -1090,6 +1092,7 @@ zh_CN:
         please_upgrade: "请升级！"
         no_check_performed: "检测更新未执行，请确保 sidekiq 在正常运行。"
         stale_data: "最近一次检查更新未执行，请确保 sidekiq 在正常运行。"
+        version_check_pending: "看来你最近刚更新过。太棒了！"
         installed_version: "已安装"
         latest_version: "最新版本"
         problems_found: "你安装的论坛目前有以下问题："
@@ -1269,6 +1272,7 @@ zh_CN:
           title: "被屏蔽的URL"
           description: "以下是垃圾信息发布者使用过的URL。"
           url: "URL"
+          domain: "域名"
         screened_ips:
           title: "被屏蔽的IP"
           description: "受监视的IP地址，使用“放行”可将IP地址加入白名单。"
