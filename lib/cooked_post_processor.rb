@@ -227,7 +227,7 @@ class CookedPostProcessor
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job
     delay = SiteSetting.ninja_edit_window + 1
-    Jobs.enqueue_in(delay.minutes.to_i, :pull_hotlinked_images, post_id: @post.id)
+    Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id)
   end
 
   def dirty?
