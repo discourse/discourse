@@ -51,24 +51,24 @@ ja:
           other: "%{count}y"
       medium:
         x_minutes:
-          one: "1 min"
-          other: "%{count} mins"
+          one: "1分"
+          other: "%{count}分"
         x_hours:
-          one: "1 hour"
-          other: "%{count} hours"
+          one: "1時間"
+          other: "%{count}時間"
         x_days:
-          one: "1 day"
-          other: "%{count} days"
+          one: "1日"
+          other: "%{count}日"
       medium_with_ago:
         x_minutes:
-          one: "1 min ago"
-          other: "%{count} mins ago"
+          one: "1分前"
+          other: "%{count}分前"
         x_hours:
-          one: "1 hour ago"
-          other: "%{count} hours ago"
+          one: "1時間前"
+          other: "%{count}時間前"
         x_days:
-          one: "1 day ago"
-          other: "%{count} days ago"
+          one: "1日前"
+          other: "%{count}日前"
     share:
       topic: 'このトピックのリンクをシェアする'
       post: 'ポスト #%{postNumber} のリンクをシェアする'
@@ -111,17 +111,17 @@ ja:
       other: "{{count}}文字"
 
     in_n_seconds:
-      one: "in 1 second"
-      other: "in {{count}} seconds"
+      one: "あと1秒"
+      other: "あと{{count}}秒"
     in_n_minutes:
-      one: "in 1 minute"
-      other: "in {{count}} minutes"
+      one: "あと1分"
+      other: "あと{{count}}分"
     in_n_hours:
-      one: "in 1 hour"
-      other: "in {{count}} hours"
+      one: "あと1時間"
+      other: "あと{{count}}時間"
     in_n_days:
-      one: "in 1 day"
-      other: "in {{count}} days"
+      one: "あと1日"
+      other: "あと{{count}}日"
 
     suggested_topics:
       title: "関連トピック"
