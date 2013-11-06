@@ -1,0 +1,12 @@
+category1:
+  title:
+    default: Discourse
+    client: true
+
+category2:
+  tos_url:
+    default: ''
+    client: true
+  must_approve_users:
+    default: false
+    client: true
