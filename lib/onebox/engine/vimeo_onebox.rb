@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class VimeoOnebox
       include Engine
+      include IFrameSupport
       include OpenGraph
 
       matches do
@@ -20,7 +21,7 @@ module Onebox
           title: raw.title,
           image: raw.images.first,
           description: raw.description,
-          video: raw.metadata[:video].first[:_value]
+          video: raw.metadata[:video].first
         }
       end
     end

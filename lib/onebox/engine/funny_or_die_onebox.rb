@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class FunnyOrDieOnebox
       include Engine
+      include LayoutSupport
       include OpenGraph
 
       matches do

@@ -77,7 +77,7 @@ Setup
     module Onebox
       module Engine
         class NameOnebox
-          include Engine
+          include LayoutSupport
           include HTML
 
           private

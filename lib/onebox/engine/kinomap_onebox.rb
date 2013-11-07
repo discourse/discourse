@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class KinomapOnebox
       include Engine
+      include LayoutSupport
       include OpenGraph
 
       matches do

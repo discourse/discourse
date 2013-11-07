@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class TedOnebox
       include Engine
+      include LayoutSupport
       include OpenGraph
 
       matches do

@@ -4,20 +4,23 @@ describe Onebox::Engine do
   class OneboxEngineExample
     include Onebox::Engine
 
+    def to_html
+      "Hello #{link}"
+    end
+
     def data
       { foo: raw[:key], url: @url }
     end
 
     def raw
       { key: "value" }
-    end      
+    end
   end
 
-  before(:each) { Onebox::View.any_instance.stub(:template) { %|this shold be a template| } }
+  describe "#link" do
+    before { Onebox::View.any_instance.stub(:template) { %|this shold be a template| } }
 
-  describe "#to_html" do
-    pending
-    it "doesn't allow XSS injection" do
+    it "escapes `link`" do
       html = OneboxEngineExample.new(%|http://foo.com" onscript="alert('foo')|).to_html
       expect(html).not_to include(%|onscript="alert('foo')|)
     end
@@ -71,21 +74,23 @@ describe Onebox::Engine do
     end
   end
 
-  describe ".template_name" do
-    module ScopeForTemplateName
-      class TemplateNameOnebox
-        include Onebox::Engine
-      end
-    end
+end
 
-    let(:template_name) { ScopeForTemplateName::TemplateNameOnebox.template_name }
 
-    it "should not include the scope" do
-      expect(template_name).not_to include("ScopeForTemplateName", "scopefortemplatename")
+describe ".onebox_name" do
+  module ScopeForTemplateName
+    class TemplateNameOnebox
+      include Onebox::Engine
     end
+  end
 
-    it "should not include the word Onebox" do
-      expect(template_name).not_to include("onebox", "Onebox")
-    end
+  let(:onebox_name) { ScopeForTemplateName::TemplateNameOnebox.onebox_name }
+
+  it "should not include the scope" do
+    expect(onebox_name).not_to include("ScopeForTemplateName", "scopefortemplatename")
+  end
+
+  it "should not include the word Onebox" do
+    expect(onebox_name).not_to include("onebox", "Onebox")
   end
 end

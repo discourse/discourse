@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class FlickrOnebox
       include Engine
+      include LayoutSupport
       include OpenGraph
 
       matches do

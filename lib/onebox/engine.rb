@@ -13,17 +13,19 @@ module Onebox
     attr_reader :url
     attr_reader :cache
     attr_reader :timeout
-    attr_reader :layout
 
     def initialize(link, cache = nil, timeout = nil)
       @url = link
       @cache = cache || Onebox.options.cache
       @timeout = timeout || Onebox.options.timeout
-      @layout = Layout.new(self.class.template_name, record, @cache)
+      @cache = cache || Onebox.defaults.cache
+      @timeout = timeout || Onebox.defaults.timeout
     end
 
+    # raises error if not defined in onebox engine. This is the output method for
+    # an engine.
     def to_html
-      layout.to_html
+      raise NoMethodError, "Engines need to implement this method"
     end
 
     private
@@ -65,14 +67,17 @@ module Onebox
         class_variable_set :@@matcher, Hexpress.new(&block).to_r
       end
 
-      # calculates handlebars template name for onebox using name of engine
-      def template_name
+      # calculates a name for onebox using the class name of engine
+      def onebox_name
         name.split("::").last.downcase.gsub(/onebox/, "")
       end
+
     end
   end
 end
 
+require_relative "layout_support"
+require_relative "iframe_support"
 require_relative "engine/open_graph"
 require_relative "engine/html"
 require_relative "engine/json"

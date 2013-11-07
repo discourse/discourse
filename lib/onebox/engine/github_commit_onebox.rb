@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class GithubCommitOnebox
       include Engine
+      include LayoutSupport
       include JSON
 
       matches do

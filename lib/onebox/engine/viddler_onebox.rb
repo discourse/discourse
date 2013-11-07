@@ -2,6 +2,7 @@
   module Engine
     class ViddlerOnebox
       include Engine
+      include LayoutSupport
       include OpenGraph
 
       matches do

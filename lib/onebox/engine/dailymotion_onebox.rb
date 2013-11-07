@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class DailymotionOnebox
       include Engine
+      include LayoutSupport
       include OpenGraph
 
       matches do

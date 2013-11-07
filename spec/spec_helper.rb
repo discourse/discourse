@@ -17,7 +17,7 @@ end
 
 shared_context "engines" do
   before(:each) do
-    fake(@uri || @link, response(described_class.template_name))
+    fake(@uri || @link, response(described_class.onebox_name))
     @onebox = described_class.new(@link)
     @html = @onebox.to_html
     @data = @onebox.send(:data)
@@ -65,10 +65,12 @@ shared_examples_for "an engine" do
       expect(data[:domain]).not_to be_nil
     end
   end
+end
 
+shared_examples_for "a layout engine" do
   describe "#to_html" do
     it "includes subname" do
-      expect(html).to include(%|<aside class="onebox #{described_class.template_name}">|)
+      expect(html).to include(%|<aside class="onebox #{described_class.onebox_name}">|)
     end
 
     it "includes title" do

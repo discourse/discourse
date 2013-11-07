@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class QikOnebox
       include Engine
+      include LayoutSupport
       include HTML
 
       matches do

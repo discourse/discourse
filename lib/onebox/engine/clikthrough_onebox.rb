@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class ClikThroughOnebox
       include Engine
+      include LayoutSupport
       include OpenGraph
 
       matches do

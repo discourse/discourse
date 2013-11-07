@@ -2,6 +2,7 @@ module Onebox
   module Engine
     class BliptvOnebox
       include Engine
+      include LayoutSupport
       include OpenGraph
 
       matches do

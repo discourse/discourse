@@ -9,16 +9,16 @@ describe Onebox::Engine::VimeoOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "includes still" do
-      expect(html).to include("443673159_1280.jpg")
+    it "includes iframe" do
+      expect(html).to include("iframe")
     end
 
-    it "includes description" do
-      expect(html).to include("To mark the launch of a new website for Hermann Miller furniture")
+    it "includes title" do
+      expect(html).to include("108 years of Herman Miller in 108 seconds")
     end
 
     it "includes embedded video link" do
-      expect(html).to include("http://vimeo.com/moogaloop.swf?clip_id=70437049")
+      expect(html).to include("ttp://vimeo.com/moogaloop.swf?clip_id=70437049")
     end
   end
 end
