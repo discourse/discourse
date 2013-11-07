@@ -91,6 +91,10 @@ test("quotes", function() {
          "<aside class=\"quote\"><blockquote><p>test</p></blockquote></aside>",
          "it supports quotes without params");
 
+  format("[quote]\n*test*\n[/quote]",
+         "<aside class=\"quote\"><blockquote><p><em>test</em></p></blockquote></aside>",
+         "it doesn't insert a new line for italics");
+
 });
 
 test("quote formatting", function() {
