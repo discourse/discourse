@@ -765,7 +765,7 @@ pt_BR:
     active: "A sua conta está ativa e pronta."
     activate_email: "Estamos quase prontos! Enviamos um email de ativação para <b>%{email}</b>. Por favor siga as instruções no email para ativar a sua conta."
     not_activated: "Ainda não podes fazer log in. Enviamos um email de ativação para você. Por favor siga as instruções no email para ativar a sua conta."
-    banned: "Você não pode entrar antes de %{date}."
+    suspended: "Você não pode entrar antes de %{date}."
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo deu errado, talvez o nome de usuário ou o email já estejam registrados. Tente o link Esqueci minha Senha."

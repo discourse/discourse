@@ -853,29 +853,9 @@ describe UsersController do
           json = JSON.parse(response.body)
           expect(json['user']['id']).to eq user.id
         end
-
-        context 'when website includes http' do
-          it 'does not add http before updating' do
-            user = log_in
-
-            put :update, username: user.username, website: 'http://example.com'
-
-            expect(user.reload.website).to eq 'http://example.com'
-          end
-        end
-
-        context 'when website does not include http' do
-          it 'adds http before updating' do
-            user = log_in
-
-            put :update, username: user.username, website: 'example.com'
-
-            expect(user.reload.website).to eq 'http://example.com'
-          end
-        end
       end
 
-      context 'without permission to update any attributes' do
+      context 'without permission to update' do
         it 'does not allow the update' do
           user = Fabricate(:user, name: 'Billy Bob')
           log_in_user(user)
@@ -887,20 +867,6 @@ describe UsersController do
 
           expect(response).to be_forbidden
           expect(user.reload.name).not_to eq 'Jim Tom'
-        end
-      end
-
-      context 'without permission to update title' do
-        it 'does not allow the user to update their title' do
-          user = Fabricate(:user, title: 'Emperor')
-          log_in_user(user)
-          guardian = Guardian.new(user)
-          guardian.stubs(can_grant_title?: false).with(user)
-          Guardian.stubs(new: guardian).with(user)
-
-          put :update, username: user.username, title: 'Minion'
-
-          expect(user.reload.title).not_to eq 'Minion'
         end
       end
     end

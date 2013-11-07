@@ -27,11 +27,11 @@ class SessionController < ApplicationController
       # If their password is correct
       if @user.confirm_password?(password)
 
-        if @user.is_banned?
-          if reason = @user.ban_reason
-            render json: { error: I18n.t("login.banned_with_reason", {date: I18n.l(@user.banned_till, format: :date_only), reason: reason}) }
+        if @user.suspended?
+          if reason = @user.suspend_reason
+            render json: { error: I18n.t("login.suspended_with_reason", {date: I18n.l(@user.suspended_till, format: :date_only), reason: reason}) }
           else
-            render json: { error: I18n.t("login.banned", {date: I18n.l(@user.banned_till, format: :date_only)}) }
+            render json: { error: I18n.t("login.suspended", {date: I18n.l(@user.suspended_till, format: :date_only)}) }
           end
           return
         end

@@ -743,7 +743,7 @@ cs:
     active: "Váš účet je aktivní a připraven k používání."
     activate_email: "Už to skoro bude! Zaslali jsme vám aktivační email na <b>%{email}</b>. Prosím následujte instrukce v tomto emailu a aktivujte si tak svůj účet."
     not_activated: "Ještě se nemůžete přihlásit. Zaslali jsme vám aktivační email na <b>%{email}</b>. Prosím následujte instrukce v tomto emailu a aktivujte si tak svůj účet."
-    banned: "Máte zakázáno přihlášení až do %{date}."
+    suspended: "Máte zakázáno přihlášení až do %{date}."
     errors: "%{errors}"
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."

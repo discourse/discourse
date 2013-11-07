@@ -1074,7 +1074,7 @@ de:
         moderators: 'Moderatoren:'
         admins: 'Administratoren:'
         blocked: 'Gesperrt:'
-        banned: "Gebannt:"
+        suspended: "Gebannt:"
         private_messages_short: "PNs"
         private_messages_title: "Private Nachrichten"
 
@@ -1251,7 +1251,7 @@ de:
           pending: "Unerledigt"
           admins: "Administratoren"
           moderators: "Moderatoren"
-          banned: "Gebannt"
+          suspended: "Gebannt"
           blocked: "Blockiert"
         approved: "Zugelassen?"
         approved_selected:
@@ -1272,7 +1272,7 @@ de:
           admins: 'Administratoren'
           moderators: 'Moderatoren'
           blocked: 'Gesperrte Benutzer'
-          banned: "Gebannte Benutzer"
+          suspended: "Gebannte Benutzer"
         reject_successful:
           one: "Erfolgreich 1 Benutzer abgelehnt."
           other: "Erfolgreich %{count} Benutzer abgelehnt."
@@ -1281,14 +1281,14 @@ de:
           other: "Konnte %{count} Benutzer nicht ablehnen."
 
       user:
-        ban_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen {{error}}"
-        unban_failed: "Beim Entsperren dieses Benutzers ist etwas schief gegangen {{error}}"
-        ban_duration: "Wie lange soll dieser Benutzer gesperrt werden? (Tage)"
+        suspend_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen {{error}}"
+        unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schief gegangen {{error}}"
+        suspend_duration: "Wie lange soll dieser Benutzer gesperrt werden? (Tage)"
         delete_all_posts: "Lösche alle Beiträge"
         delete_all_posts_confirm: "Du löschst %{posts} Beiträge und %{topics} Themen. Bist du sicher?"
-        ban: "Sperren"
-        unban: "Entsperren"
-        banned: "Gesperrt?"
+        suspend: "Sperren"
+        unsuspend: "Entsperren"
+        suspended: "Gesperrt?"
         moderator: "Moderator?"
         admin: "Administrator?"
         blocked: "Geblockt?"

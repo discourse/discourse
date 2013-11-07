@@ -4,8 +4,8 @@ require_dependency 'boost_trust_level'
 
 class Admin::UsersController < Admin::AdminController
 
-  before_filter :fetch_user, only: [:ban,
-                                    :unban,
+  before_filter :fetch_user, only: [:suspend,
+                                    :unsuspend,
                                     :refresh_browsers,
                                     :revoke_admin,
                                     :grant_admin,
@@ -37,21 +37,21 @@ class Admin::UsersController < Admin::AdminController
     render nothing: true
   end
 
-  def ban
-    guardian.ensure_can_ban!(@user)
-    @user.banned_till = params[:duration].to_i.days.from_now
-    @user.banned_at = DateTime.now
+  def suspend
+    guardian.ensure_can_suspend!(@user)
+    @user.suspended_till = params[:duration].to_i.days.from_now
+    @user.suspended_at = DateTime.now
     @user.save!
-    StaffActionLogger.new(current_user).log_user_ban(@user, params[:reason])
+    StaffActionLogger.new(current_user).log_user_suspend(@user, params[:reason])
     render nothing: true
   end
 
-  def unban
-    guardian.ensure_can_ban!(@user)
-    @user.banned_till = nil
-    @user.banned_at = nil
+  def unsuspend
+    guardian.ensure_can_suspend!(@user)
+    @user.suspended_till = nil
+    @user.suspended_at = nil
     @user.save!
-    StaffActionLogger.new(current_user).log_user_unban(@user)
+    StaffActionLogger.new(current_user).log_user_unsuspend(@user)
     render nothing: true
   end
 

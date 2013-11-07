@@ -38,9 +38,9 @@ Discourse::Application.routes.draw do
         put 'approve-bulk' => 'users#approve_bulk'
         delete 'reject-bulk' => 'users#reject_bulk'
       end
-      put 'ban'
+      put 'suspend'
       put 'delete_all_posts'
-      put 'unban'
+      put 'unsuspend'
       put 'revoke_admin', constraints: AdminConstraint.new
       put 'grant_admin', constraints: AdminConstraint.new
       post 'generate_api_key', constraints: AdminConstraint.new

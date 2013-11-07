@@ -64,7 +64,7 @@ class AdminDashboardData
       reports: REPORTS.map { |type| Report.find(type).as_json },
       admins: User.admins.count,
       moderators: User.moderators.count,
-      banned: User.banned.count,
+      suspended: User.suspended.count,
       blocked: User.blocked.count,
       top_referrers: IncomingLinksReport.find('top_referrers').as_json,
       top_traffic_sources: IncomingLinksReport.find('top_traffic_sources').as_json,

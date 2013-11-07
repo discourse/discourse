@@ -1055,7 +1055,7 @@ fr:
         moderators: 'Modérateurs :'
         admins: 'Administateurs :'
         blocked: 'Bloqués :'
-        banned: 'Banni :'
+        suspended: 'Banni :'
         private_messages_short: "MPs"
         private_messages_title: "Messages Privés"
         reports:
@@ -1246,7 +1246,7 @@ fr:
           pending: "En attente"
           admins: 'Administrateurs'
           moderators: 'Modérateurs'
-          banned: 'Banni'
+          suspended: 'Banni'
           blocked: 'Bloqué'
         approved: "Approuvé ?"
         approved_selected:
@@ -1267,7 +1267,7 @@ fr:
           admins: 'Administrateurs'
           moderators: 'Modérateurs'
           blocked: 'Utilisateurs bloqués'
-          banned: 'Utilisateurs bannis'
+          suspended: 'Utilisateurs bannis'
         reject_successful:
           one: "Utilisateur rejeté avec succès."
           other: "%{count} utilisateurs rejetés avec succès."
@@ -1275,14 +1275,14 @@ fr:
           one: "Utilisateur dont le rejet a échoué."
           other: "%{count} utilisateurs dont le rejet a échoué."
       user:
-        ban_failed: "Il y a eu un problème pendant le bannissement de cet utilisateur {{error}}"
-        unban_failed: "Il y a eu un problème pendant le débannissement de cet utilisateur {{error}}"
-        ban_duration: "Pour combien de temps voulez-vous bannir cet utilisateur ? (jours)"
+        suspend_failed: "Il y a eu un problème pendant le bannissement de cet utilisateur {{error}}"
+        unsuspend_failed: "Il y a eu un problème pendant le débannissement de cet utilisateur {{error}}"
+        suspend_duration: "Pour combien de temps voulez-vous bannir cet utilisateur ? (jours)"
         delete_all_posts: "Supprimer tous les messages"
         delete_all_posts_confirm: "Vous allez supprimer supprimer %{posts} messages et %{topics} discussions. Êtes-vous sûr ?"
-        ban: "Bannir"
-        unban: "Débannir"
-        banned: "Banni ?"
+        suspend: "Bannir"
+        unsuspend: "Débannir"
+        suspended: "Banni ?"
         moderator: "Modérateur ?"
         admin: "Admin ?"
         blocked: "Bloqué ?"

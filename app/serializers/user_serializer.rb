@@ -17,7 +17,10 @@ class UserSerializer < BasicUserSerializer
              :trust_level,
              :moderator,
              :admin,
-             :title
+             :title,
+             :suspended,
+             :suspend_reason,
+             :suspended_till
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
 
@@ -94,6 +97,20 @@ class UserSerializer < BasicUserSerializer
 
   def include_name?
     SiteSetting.enable_names?
+  end
+
+  def suspended
+    object.suspended?
+  end
+
+  def include_suspended?
+    object.suspended?
+  end
+  def include_suspend_reason?
+    object.suspended?
+  end
+  def include_suspended_till?
+    object.suspended?
   end
 
 end

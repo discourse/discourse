@@ -115,10 +115,10 @@ class Guardian
   end
   alias :can_activate? :can_approve?
 
-  def can_ban?(user)
+  def can_suspend?(user)
     user && is_staff? && user.regular?
   end
-  alias :can_deactivate? :can_ban?
+  alias :can_deactivate? :can_suspend?
 
   def can_clear_flags?(post)
     is_staff? && post

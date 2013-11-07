@@ -1103,7 +1103,7 @@ nl:
         moderators: "Moderators:"
         admins: "Admins:"
         blocked: "Geblokkeerd:"
-        banned: "Geband:"
+        suspended: "Geband:"
         private_messages_short: PBs
         private_messages_title: Privé-berichten
 
@@ -1304,7 +1304,7 @@ nl:
           pending: Te beoordelen
           admins: Admins
           moderators: Moderatoren
-          banned: Verbannen
+          suspended: Verbannen
           blocked: Geblokt
         approved: Goedgekeurd?
         approved_selected:
@@ -1325,7 +1325,7 @@ nl:
           admins: Administrators
           moderators: Moderators
           blocked: Geblokkeerde leden
-          banned: Verbannen leden
+          suspended: Verbannen leden
         reject_successful:
           one: "1 Gebruiker met succes geweigerd"
           other: "%{count} Gebruikers met succes geweigerd"
@@ -1334,18 +1334,18 @@ nl:
           other: "Weigering van %{count} gebruikers is niet gelukt"
 
       user:
-        ban_failed: "Er ging iets fout met het blokkeren van deze gebruiker: {{error}}"
-        unban_failed: "Er ging iets fout bij het deblokkeren van deze gebruiker: {{error}}"
-        ban_duration: "Hoe lang wil je deze gebruiker blokkeren?"
+        suspend_failed: "Er ging iets fout met het blokkeren van deze gebruiker: {{error}}"
+        unsuspend_failed: "Er ging iets fout bij het deblokkeren van deze gebruiker: {{error}}"
+        suspend_duration: "Hoe lang wil je deze gebruiker blokkeren?"
         ban_duretion_units: (dagen)
         ban_reason_label: "Waarom ban je? Als de gebruiker in probeert te loggen, zullen ze deze tekst zien. Hou het kort."
         ban_reason: Reden voor ban
         banned_by: Verbannen door
         delete_all_posts: Verwijder alle berichten
         delete_all_posts_confirm: "Je gaat %{posts} en %{topics} verwijderen. Zeker weten?"
-        ban: Blokkeer
-        unban: Deblokkeer
-        banned: Geblokkeerd?
+        suspend: Blokkeer
+        unsuspend: Deblokkeer
+        suspended: Geblokkeerd?
         moderator: Moderator?
         admin: Beheerder?
         blocked: Geblokkeerd?
