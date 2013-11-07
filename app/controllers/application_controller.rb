@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   serialization_scope :guardian
 
   protect_from_forgery
+  skip_before_action :verify_authenticity_token, if: :api_key_valid?
 
   # Default Rails 3.2 lets the request through with a blank session
   #  we are being more pedantic here and nulling session / current_user
