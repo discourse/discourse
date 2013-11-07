@@ -1105,7 +1105,7 @@ zh_CN:
         moderators: '版主：'
         admins: '管理员：'
         blocked: '禁止参与讨论:'
-        banned: "禁止登录"
+        suspended: "禁止登录"
         private_messages_short: "私信"
         private_messages_title: "私密信息"
 
@@ -1307,7 +1307,7 @@ zh_CN:
           pending: "待定"
           admins: "管理员"
           moderators: "版主"
-          banned: "禁止登录"
+          suspended: "禁止登录"
           blocked: "禁止参与讨论"
         approved: "已批准？"
         approved_selected:
@@ -1328,7 +1328,7 @@ zh_CN:
           admins: '管理员'
           moderators: '版主'
           blocked: '被封用户'
-          banned: '被禁用户'
+          suspended: '被禁用户'
         reject_successful:
           one: "1名用户已被拒绝。"
           other: "%{count}名用户已被拒绝。"
@@ -1337,18 +1337,18 @@ zh_CN:
           other: "%{count}名用户决绝失败。"
 
       user:
-        ban_failed: "禁止此用户时发生了错误 {{error}}"
-        unban_failed: "解禁此用户时发生了错误 {{error}}"
-        ban_duration: "你计划禁止该用户多久？"
+        suspend_failed: "禁止此用户时发生了错误 {{error}}"
+        unsuspend_failed: "解禁此用户时发生了错误 {{error}}"
+        suspend_duration: "你计划禁止该用户多久？"
         ban_duration_units: "（天）"
         ban_reason_label: "为什么禁止该用户？当其尝试登入时，会看到这条理由。"
         ban_reason: "禁止的理由"
         banned_by: "禁止操作者："
         delete_all_posts: "删除所有帖子"
         delete_all_posts_confirm: "你将删除 %{posts} 个帖子和 %{topics} 个主题，确认吗？"
-        ban: "禁止"
-        unban: "解禁"
-        banned: "已禁止？"
+        suspend: "禁止"
+        unsuspend: "解禁"
+        suspended: "已禁止？"
         moderator: "版主？"
         admin: "管理员？"
         blocked: "已封?"

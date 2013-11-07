@@ -1108,7 +1108,7 @@ ru:
         moderators: 'Модераторы:'
         admins: 'Администраторы:'
         blocked: 'Заблокированы:'
-        banned: 'Забанены:'
+        suspended: 'Забанены:'
         private_messages_short: ЛС
         private_messages_title: 'Личные сообщения'
         reports:
@@ -1304,7 +1304,7 @@ ru:
           pending: Ожидает одобрения
           admins: Администраторы
           moderators: Модераторы
-          banned: Забаненые
+          suspended: Забаненые
           blocked: Заблокированные
         approved: 'Подтвердить?'
         approved_selected:
@@ -1329,7 +1329,7 @@ ru:
           admins: 'Администраторы'
           moderators: Модераторы
           blocked: 'Заблокированные пользователи'
-          banned: 'Забаненые пользователи'
+          suspended: 'Забаненые пользователи'
         reject_successful:
           one: 'Отказано одному пользователю.'
           other: 'Отказано %{count} пользователей.'
@@ -1341,14 +1341,14 @@ ru:
           few: 'Ошибка отказа %{count} пользователям.'
           many: 'Ошибка отказа %{count} пользователям.'
       user:
-        ban_failed: 'Ошибка при наложении бана {{error}}'
-        unban_failed: 'Ошибка при снятии бана {{error}}'
-        ban_duration: 'Насколько вы хотите забанить пользователя? (в днях)'
+        suspend_failed: 'Ошибка при наложении бана {{error}}'
+        unsuspend_failed: 'Ошибка при снятии бана {{error}}'
+        suspend_duration: 'Насколько вы хотите забанить пользователя? (в днях)'
         delete_all_posts: 'Удалить все сообщения'
         delete_all_posts_confirm: 'Вы собираетесь удалить %{posts} сообщений и %{topics} тем. Вы уверены?'
-        ban: Забанить
-        unban: Разбанить
-        banned: 'Забанен?'
+        suspend: Забанить
+        unsuspend: Разбанить
+        suspended: 'Забанен?'
         moderator: 'Модератор?'
         admin: 'Администратор?'
         blocked: 'Заблокирован?'

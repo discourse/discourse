@@ -198,39 +198,39 @@
     </div>
   </div>
 
-  <div {{bindAttr class=":display-row isBanned:highlight-danger"}}>
-    <div class='field'>{{i18n admin.user.banned}}</div>
-    <div class='value'>{{isBanned}}</div>
+  <div {{bindAttr class=":display-row isSuspended:highlight-danger"}}>
+    <div class='field'>{{i18n admin.user.suspended}}</div>
+    <div class='value'>{{isSuspended}}</div>
     <div class='controls'>
-    {{#if isBanned}}
-      <button class='btn btn-danger' {{action unban target="content"}}>
+    {{#if isSuspended}}
+      <button class='btn btn-danger' {{action unsuspend target="content"}}>
         <i class='icon icon-ban-circle'></i>
-        {{i18n admin.user.unban}}
+        {{i18n admin.user.unsuspend}}
       </button>
-      {{banDuration}}
-      {{i18n admin.user.banned_explanation}}
+      {{suspendDuration}}
+      {{i18n admin.user.suspended_explanation}}
     {{else}}
-      {{#if canBan}}
-        <button class='btn btn-danger' {{action showBanModal this}}>
+      {{#if canSuspend}}
+        <button class='btn btn-danger' {{action showSuspendModal this}}>
           <i class='icon icon-ban-circle'></i>
-          {{i18n admin.user.ban}}
+          {{i18n admin.user.suspend}}
         </button>
-        {{i18n admin.user.banned_explanation}}
+        {{i18n admin.user.suspended_explanation}}
       {{/if}}
     {{/if}}
     </div>
   </div>
 
-  {{#if isBanned}}
+  {{#if isSuspended}}
   <div class='display-row highlight-danger'>
-    <div class='field'>{{i18n admin.user.banned_by}}</div>
+    <div class='field'>{{i18n admin.user.suspended_by}}</div>
     <div class='value'>
-      {{#link-to 'adminUser' banned_by}}{{avatar banned_by imageSize="tiny"}}{{/link-to}}
-      {{#link-to 'adminUser' banned_by}}{{banned_by.username}}{{/link-to}}
+      {{#link-to 'adminUser' suspended_by}}{{avatar suspended_by imageSize="tiny"}}{{/link-to}}
+      {{#link-to 'adminUser' suspended_by}}{{suspended_by.username}}{{/link-to}}
     </div>
     <div class='controls'>
-      <b>{{i18n admin.user.ban_reason}}</b>:
-      {{ban_reason}}
+      <b>{{i18n admin.user.suspend_reason}}</b>:
+      {{suspend_reason}}
     </div>
   </div>
   {{/if}}

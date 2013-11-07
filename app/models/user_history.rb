@@ -19,8 +19,8 @@ class UserHistory < ActiveRecord::Base
                            :notified_about_avatar,
                            :notified_about_sequential_replies,
                            :notitied_about_dominating_topic,
-                           :ban_user,
-                           :unban_user)
+                           :suspend_user,
+                           :unsuspend_user)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -30,8 +30,8 @@ class UserHistory < ActiveRecord::Base
                         :change_site_setting,
                         :change_site_customization,
                         :delete_site_customization,
-                        :ban_user,
-                        :unban_user]
+                        :suspend_user,
+                        :unsuspend_user]
   end
 
   def self.staff_action_ids

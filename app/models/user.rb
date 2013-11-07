@@ -78,8 +78,8 @@ class User < ActiveRecord::Base
   attr_accessor :notification_channel_position
 
   scope :blocked, -> { where(blocked: true) } # no index
-  scope :banned, -> { where('banned_till IS NOT NULL AND banned_till > ?', Time.zone.now) } # no index
-  scope :not_banned, -> { where('banned_till IS NULL') }
+  scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) } # no index
+  scope :not_suspended, -> { where('suspended_till IS NULL') }
   # excluding fake users like the community user
   scope :real, -> { where('id > 0') }
 
@@ -356,16 +356,16 @@ class User < ActiveRecord::Base
     end
   end
 
-  def is_banned?
-    banned_till && banned_till > DateTime.now
+  def suspended?
+    suspended_till && suspended_till > DateTime.now
   end
 
-  def ban_record
-    UserHistory.for(self, :ban_user).order('id DESC').first
+  def suspend_record
+    UserHistory.for(self, :suspend_user).order('id DESC').first
   end
 
-  def ban_reason
-    ban_record.try(:details) if is_banned?
+  def suspend_reason
+    suspend_record.try(:details) if suspended?
   end
 
   # Use this helper to determine if the user has a particular trust level.
@@ -623,8 +623,8 @@ end
 #  approved_at                   :datetime
 #  digest_after_days             :integer
 #  previous_visit_at             :datetime
-#  banned_at                     :datetime
-#  banned_till                   :datetime
+#  suspended_at                  :datetime
+#  suspended_till                :datetime
 #  date_of_birth                 :date
 #  auto_track_topics_after_msecs :integer
 #  views                         :integer          default(0), not null

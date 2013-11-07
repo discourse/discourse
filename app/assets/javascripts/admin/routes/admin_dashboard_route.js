@@ -32,7 +32,7 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
           c.set('top_referrers', topReferrers);
         }
 
-        ['admins', 'moderators', 'blocked', 'banned', 'top_traffic_sources', 'top_referred_topics', 'updated_at'].forEach(function(x) {
+        ['admins', 'moderators', 'blocked', 'suspended', 'top_traffic_sources', 'top_referred_topics', 'updated_at'].forEach(function(x) {
           c.set(x, d[x]);
         });
 

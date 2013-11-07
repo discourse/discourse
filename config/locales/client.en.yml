@@ -1105,7 +1105,7 @@ en:
         moderators: 'Moderators:'
         admins: 'Admins:'
         blocked: 'Blocked:'
-        banned: 'Banned:'
+        suspended: 'Suspended:'
         private_messages_short: "PMs"
         private_messages_title: "Private Messages"
 
@@ -1265,8 +1265,8 @@ en:
             change_site_setting: "change site setting"
             change_site_customization: "change site customization"
             delete_site_customization: "delete site customization"
-            ban_user: "ban user"
-            unban_user: "unban user"
+            suspend_user: "suspend user"
+            unsuspend_user: "unsuspend user"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -1307,7 +1307,7 @@ en:
           pending: "Pending"
           admins: 'Admins'
           moderators: 'Mods'
-          banned: 'Banned'
+          suspended: 'Suspended'
           blocked: 'Blocked'
         approved: "Approved?"
         approved_selected:
@@ -1328,7 +1328,7 @@ en:
           admins: 'Admin Users'
           moderators: 'Moderators'
           blocked: 'Blocked Users'
-          banned: 'Banned Users'
+          suspended: 'Suspended Users'
         reject_successful:
           one: "Successfully rejected 1 user."
           other: "Successfully rejected %{count} users."
@@ -1337,18 +1337,18 @@ en:
           other: "Failed to reject %{count} users."
 
       user:
-        ban_failed: "Something went wrong banning this user {{error}}"
-        unban_failed: "Something went wrong unbanning this user {{error}}"
-        ban_duration: "How long would you like to ban the user for?"
-        ban_duration_units: "(days)"
-        ban_reason_label: "Why are you banning? When the user tries to log in, they will see this text. Keep it short."
-        ban_reason: "Reason for Ban"
-        banned_by: "Banned by"
+        suspend_failed: "Something went wrong suspending this user {{error}}"
+        unsuspend_failed: "Something went wrong unsuspending this user {{error}}"
+        suspend_duration: "How long would you like to suspend the user for?"
+        suspend_duration_units: "(days)"
+        suspend_reason_label: "Why are you suspending? When the user tries to log in, they will see this text. Keep it short."
+        suspend_reason: "Reason"
+        suspended_by: "Suspended by"
         delete_all_posts: "Delete all posts"
         delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
-        ban: "Ban"
-        unban: "Unban"
-        banned: "Banned?"
+        suspend: "Suspend"
+        unsuspend: "Unsuspend"
+        suspended: "Suspended?"
         moderator: "Moderator?"
         admin: "Admin?"
         blocked: "Blocked?"
@@ -1400,10 +1400,10 @@ en:
         unblock_failed: 'There was a problem unblocking the user.'
         block_failed: 'There was a problem blocking the user.'
         deactivate_explanation: "A deactivated user must re-validate their email."
-        banned_explanation: "A banned user can't log in."
+        suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
         trust_level_change_failed: "There was a problem changing the user's trust level."
-        ban_modal_title: "Ban User"
+        suspend_modal_title: "Suspend User"
 
       site_content:
         none: "Choose a type of content to begin editing."
