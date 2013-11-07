@@ -82,6 +82,7 @@ ja:
       one: "post"
       other: "%{count} posts"
 
+    # MEMO: Removed a link to the FAQ page.
     'new-topic': |
       %{site_name} へようこそ &mdash; **新たなトピックの作成ありがとうございます!**
 
@@ -91,8 +92,9 @@ ja:
 
       - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。適切なカテゴリを選択すると、他の関連トピックとのグルーピングができます。
 
-      詳しいガイダンスは [FAQ](/faq) を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。
+      このパネルは最初の %{education_posts_text} のみに表示されます。
 
+    # MEMO: Removed a link to the FAQ page.
     'new-reply': |
       %{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!**
 
@@ -102,7 +104,7 @@ ja:
 
       - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。
 
-      詳しいガイダンスは [FAQ](/faq) を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。
+      このパネルは最初の %{education_posts_text} のみに表示されます。
 
     avatar: |
       ### アカウント用の画像を用意してみては?
@@ -282,9 +284,11 @@ ja:
       long_form: 'ユーザに通知'
       email_title: '"%{title}" のあなたのポストについて'
       email_body: "%{link}\n\n%{message}"
+
+    # MEMO: Removed a link to the FAQ page
     notify_moderators:
       title: 'モデレータに通知'
-      description: 'このポストは、<a href="/faq">FAQ の規定</a>, <a href="%{tos_url}">TOS の規定</a>, もしくはその他の理由によりモデレータによる確認を要する。'
+      description: 'このポストは、<a href="%{tos_url}">TOS の規定</a>もしくはその他の理由によりモデレータによる確認を要する。'
       long_form: 'モデレータに通知'
       email_title: '"%{title}" のポストに関するモデレータ確認依頼'
       email_body: "%{link}\n\n%{message}"
@@ -832,9 +836,12 @@ ja:
 
       最新のバグフィックスや新機能を適用するために、早めのアップグレードを検討してください。
 
+
   system_messages:
     post_hidden:
       subject_template: "コミュニティによるフラグによりポストが非表示になりました"
+
+      # MEMO: Removed a link to the FAQ page.
       text_body_template: |
         Hello,
 
@@ -847,8 +854,6 @@ ja:
         複数のコミュニティメンバーによりこのポストにフラグが立てられた結果としてポストが非表示になったことをご理解ください。**このフィードバックを元に、ポスト内容を修正することを検討してください**。ポスト内容の編集は %{edit_delay}後より行うことができます。編集後、非表示状態は解除されます。
 
         ただし、再度あなたのポストがコミュニティによってフラグ立てされた場合、モデレータに通知が行われます。この結果アカウントの凍結などの処置が行われる可能性もあります。
-
-        詳しいガイダンスについては [FAQ](%{base_url}/faq) をご参照ください。
 
     usage_tips:
       text_body_template: |
@@ -890,6 +895,7 @@ ja:
 
         - トピック閲覧中にページ最上部に移動するにはトピックタイトルをクリックしてください。ページの最下部に移動するにはトピック進捗インジケーターの下矢印をクリックするか、最初のポストの下に表示されているトピックサマリーより「最終ポスト」をクリックしてください。
 
+    # MEMO: Removed a link to the FAQ page.
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
       text_body_template: |
@@ -897,10 +903,11 @@ ja:
 
         %{new_user_tips}
 
-        [礼儀正しいコミュニティ](%{base_url}/faq)へのご協力、改めて感謝いたします。
+        マナーをお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
 
         それではお楽しみください!
 
+    # MEMO: Removed a link to the FAQ page.
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
       text_body_template: |
@@ -918,7 +925,7 @@ ja:
 
         %{new_user_tips}
 
-        [礼儀正しいコミュニティ](%{base_url}/faq)へのご協力、改めて感謝いたします。
+        マナーをお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
 
         それではお楽しみください!
 
@@ -932,6 +939,7 @@ ja:
       subject_template: "インポートが正しく完了しました"
       text_body_template: "インポートに成功しました。"
 
+    # MEMO: Removed a link to the FAQ page.
     too_many_spam_flags:
       subject_template: "新規アカウントのブロック"
       text_body_template: |
@@ -941,16 +949,13 @@ ja:
 
         予防措置として、あなたの新規アカウントはブロックされました。スタッフメンバーによる確認が完了するまで、新規トピックやポストの投稿を行うことはできません。
 
-        詳しいガイダンスについては [FAQ](%{base_url}/faq) をご参照ください。
-
+    # MEMO: Removed a link to the FAQ page.
     blocked_by_staff:
       subject_template: "アカウントのブロック"
       text_body_template: |
         Hello,
 
         このメールは、スタッフメンバーによりあなたのアカウントがブロックされたことをお知らせする %{site_name} からの自動メッセージです。
-
-        詳しいガイダンスについては [FAQ](%{base_url}/faq) をご参照ください。
 
     user_automatically_blocked:
       subject_template: "フラグによる新規ユーザr %{username} のブロック"
@@ -1076,6 +1081,7 @@ ja:
 
         %{base_url}/users/authorize-email/%{email_token}
 
+    # MEMO: Removed a link to the FAQ page.
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
       text_body_template: |
@@ -1090,7 +1096,7 @@ ja:
 
         %{new_user_tips}
 
-        [礼儀正しいコミュニティ](%{base_url}/faq)へのご協力、改めて感謝いたします。
+        マナーをお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
 
         それではお楽しみください!
 
