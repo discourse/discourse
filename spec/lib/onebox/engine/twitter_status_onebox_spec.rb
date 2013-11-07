@@ -5,10 +5,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
     @link = "https://twitter.com/toastergrrl/status/363116819147538433"
   end
 
-  include_context "engines"
-  it_behaves_like "an engine"
-
-  describe "#to_html" do
+  shared_examples_for "#to_html" do
     it "includes tweet" do
       expect(html).to include("I&#39;m a sucker for pledges.")
     end
@@ -34,5 +31,72 @@ describe Onebox::Engine::TwitterStatusOnebox do
       pending
       expect(html).to include("")
     end
+  end
+
+  context "with html" do
+    include_context "engines"
+    it_behaves_like "an engine"
+    it_behaves_like "#to_html"
+  end
+
+  context "with twitter client" do
+    before(:each) do
+      @twitter_client = double("TwitterClient")
+      @twitter_client.stub("status") do
+        {
+          :created_at=>"Fri Aug 02 01:59:30 +0000 2013",
+          :id=>363116819147538433,
+          :id_str=>"363116819147538433",
+          :text=>
+          "I'm a sucker for pledges.  @Peers Pledge #sharingeconomy http://t.co/T4Sc47KAzh",
+          :source=>
+          "<a href=\"http://twitter.com/tweetbutton\" rel=\"nofollow\">Tweet Button</a>",
+          :user=>
+          {:id=>1087064150,
+           :id_str=>"1087064150",
+           :name=>"Vyki Englert",
+           :screen_name=>"vyki_e",
+           :location=>"Los Angeles, CA",
+           :description=>"I am woman, hear me #RoR.",
+           :url=>"http://t.co/umZG76wmv2",
+           :protected=>false,
+           :followers_count=>249,
+           :friends_count=>907,
+           :listed_count=>6,
+           :created_at=>"Sun Jan 13 19:53:00 +0000 2013",
+           :favourites_count=>506,
+           :statuses_count=>926,
+           :lang=>"en",
+           :contributors_enabled=>false,
+           :is_translator=>false,
+           :profile_image_url=>
+            "http://pbs.twimg.com/profile_images/3518892092/39b969d32a10b2437563e246708c8f9d_normal.jpeg",
+           :profile_image_url_https=>
+            "https://pbs.twimg.com/profile_images/3518892092/39b969d32a10b2437563e246708c8f9d_normal.jpeg",
+           :following=>true,
+           :follow_request_sent=>false,
+           :notifications=>nil},
+          :geo=>nil,
+          :coordinates=>nil,
+          :place=>nil,
+          :contributors=>nil,
+          :retweet_count=>0,
+          :favorite_count=>0,
+          :favorited=>false,
+          :retweeted=>false,
+          :possibly_sensitive=>false,
+          :lang=>"en"
+        }
+      end
+      Onebox.options = { twitter_client: @twitter_client }
+    end
+
+    after(:each) do
+      Onebox.options = { twitter_client: nil }
+    end
+
+    include_context "engines"
+    it_behaves_like "an engine"
+    it_behaves_like "#to_html"
   end
 end
