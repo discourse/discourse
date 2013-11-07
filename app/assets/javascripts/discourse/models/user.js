@@ -97,6 +97,12 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.Site.currentProp('trustLevels').findProperty('id', parseInt(this.get('trust_level'), 10));
   }.property('trust_level'),
 
+  isSuspended: Em.computed.equal('suspended', true),
+
+  suspendedTillDate: function() {
+    return Discourse.Formatter.longDate(this.get('suspended_till'));
+  }.property('suspended_till'),
+
   /**
     Changes this user's username.
 
