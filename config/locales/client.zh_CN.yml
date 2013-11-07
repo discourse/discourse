@@ -339,6 +339,7 @@ zh_CN:
         time_read: "阅读时间"
         days_visited: "访问天数"
         account_age_days: "账号存在天数"
+        create: "邀请朋友"
 
       password:
         title: "密码"
@@ -736,7 +737,9 @@ zh_CN:
         title: '邀请朋友来回复'
         action: '邮件邀请'
         help: '向你的朋友发送邀请，他们只需要一个点击就能回复这个主题'
-        email: "我们会给你的朋友发送一封邮件，他们只需点击其中的一个链接，就可以无需登录直接回复这个主题。"
+        to_topic: "我们会给你的朋友发送一封邮件，他/她只需点击其中的一个链接，就可以无需登录直接回复这个主题。"
+        to_forum: "我们会给你的朋友发送一封邮件，他/她只需点击其中的链接，就可以注册加入这个论坛。"
+        
         email_placeholder: '电子邮箱地址'
         success: "谢谢！我们已发送一个邀请邮件到<b>{{email}}</b>。当他们确认的时候我们会通知你。你也可以在你的用户页面的邀请选项卡下查看邀请状态。"
         error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"
@@ -1076,7 +1079,7 @@ zh_CN:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    filter: "过滤器"
+    type_to_filter: "输入过滤条件……"
 
     admin:
       title: 'Discourse管理'
