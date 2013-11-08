@@ -1,4 +1,4 @@
-module("Integration: Header", {
+integration("Header", {
   setup: function() {
     sinon.stub(I18n, "t", function(scope, options) {
       if (options) {

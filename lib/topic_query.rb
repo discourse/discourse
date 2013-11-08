@@ -222,18 +222,7 @@ class TopicQuery
         result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
       end
 
-      unless options[:unordered]
-        # If we're logged in, we have to pay attention to our pinned settings
-        if @user
-          result = result.order(TopicQuery.order_nocategory_with_pinned_sql)
-        else
-          result = result.order(TopicQuery.order_nocategory_basic_bumped)
-        end
-      end
-
-      result = result.listable_topics.includes(category: :topic_only_relative_url)
-      result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
-
+      category_id = nil
       if options[:category].present?
         category_id  = options[:category].to_i
         if category_id == 0
@@ -243,6 +232,21 @@ class TopicQuery
         end
         result = result.references(:categories)
       end
+
+      unless options[:unordered]
+        # If we're logged in, we have to pay attention to our pinned settings
+        if @user
+          result = category_id.nil? ? result.order(TopicQuery.order_nocategory_with_pinned_sql) :
+                                      result.order(TopicQuery.order_with_pinned_sql)
+        else
+          result = result.order(TopicQuery.order_nocategory_basic_bumped)
+        end
+      end
+
+      result = result.listable_topics.includes(category: :topic_only_relative_url)
+      result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
+
+
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
