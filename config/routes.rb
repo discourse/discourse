@@ -11,6 +11,10 @@ USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\_]+/ unless defined? USERNAME_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
 
+  namespace :lp do
+    resources :posts, only: :create
+  end
+
   match "/404", to: "exceptions#not_found", via: [:get, :post]
 
   get '/lessonplanet-login' => 'lp_session#new', as: :new_lp_session
