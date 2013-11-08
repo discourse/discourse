@@ -157,6 +157,18 @@ Discourse.Dialect = {
   },
 
   /**
+    Registers an inline replacer function
+
+    @method registerInline
+    @param {String} start The token the replacement begins with
+    @param {Function} fn The replacing function
+  **/
+  registerInline: function(start, fn) {
+    dialect.inline[start] = fn;
+  },
+
+
+  /**
     The simplest kind of replacement possible. Replace a stirng token with JsonML.
 
     For example to replace all occurrances of :) with a smile image:
@@ -173,9 +185,9 @@ Discourse.Dialect = {
     @param {Function} emitter A function that emits the JsonML for the replacement.
   **/
   inlineReplace: function(token, emitter) {
-    dialect.inline[token] = function(text, match, prev) {
+    this.registerInline(token, function(text, match, prev) {
       return [token.length, emitter.call(this, token)];
-    };
+    });
   },
 
   /**
@@ -205,7 +217,7 @@ Discourse.Dialect = {
       @param {Boolean} [opts.spaceBoundary] If true, the match must be on a sppace boundary
   **/
   inlineRegexp: function(args) {
-    dialect.inline[args.start] = function(text, match, prev) {
+    this.registerInline(args.start, function(text, match, prev) {
       if (invalidBoundary(args, prev)) { return; }
 
       args.matcher.lastIndex = 0;
@@ -216,7 +228,7 @@ Discourse.Dialect = {
           return [m[0].length, result];
         }
       }
-    };
+    });
   },
 
   /**
@@ -252,7 +264,7 @@ Discourse.Dialect = {
         stop = args.stop || args.between,
         startLength = start.length;
 
-    dialect.inline[start] = function(text, match, prev) {
+    this.registerInline(start, function(text, match, prev) {
       if (invalidBoundary(args, prev)) { return; }
 
       var endPos = text.indexOf(stop, startLength);
@@ -269,7 +281,7 @@ Discourse.Dialect = {
       if (contents) {
         return [endPos+stop.length, contents];
       }
-    };
+    });
   },
 
   /**
