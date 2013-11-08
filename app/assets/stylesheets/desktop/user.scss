@@ -108,6 +108,10 @@
     border: 1px solid #ddd;
     margin-bottom: 10px;
 
+    .btn.right {
+      float: right
+    }
+
     h2 {
       margin-bottom: 10px;
     }
@@ -160,6 +164,10 @@
         border: 3px solid #eee;
         margin-bottom: 4px;
         background-color: white;
+      }
+
+      .suspended {
+        color: #f77;
       }
 
       .primary {

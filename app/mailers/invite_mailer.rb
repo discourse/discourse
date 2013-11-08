@@ -8,11 +8,19 @@ class InviteMailer < ActionMailer::Base
     first_topic = invite.topics.order(:created_at).first
 
     # If they were invited to a topic
-    build_email(invite.email,
-                      template: 'invite_mailer',
-                      invitee_name: invite.invited_by.username,
-                      invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
-                      topic_title: first_topic.try(:title))
+    if first_topic.present?
+      build_email(invite.email,
+                  template: 'invite_mailer',
+                  invitee_name: invite.invited_by.username,
+                  invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
+                  topic_title: first_topic.try(:title))
+    else
+      build_email(invite.email,
+                  template: 'invite_forum_mailer',
+                  invitee_name: invite.invited_by.username,
+                  invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}")
+    end
+
   end
 
 end

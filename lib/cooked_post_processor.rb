@@ -197,20 +197,20 @@ class CookedPostProcessor
   def optimize_urls
     @doc.search("a").each do |a|
       href = a["href"].to_s
-      if Discourse.store.has_been_uploaded?(href)
-        a["href"] = schemaless relative_to_absolute(href)
-      end
+      a["href"] = schemaless absolute(href) if is_local(href)
     end
 
     @doc.search("img").each do |img|
       src = img["src"].to_s
-      if Discourse.store.has_been_uploaded?(src)
-        img["src"] = schemaless relative_to_absolute(src)
-      end
+      img["src"] = schemaless absolute(src) if is_local(src)
     end
   end
 
-  def relative_to_absolute(url)
+  def is_local(url)
+    Discourse.store.has_been_uploaded?(url) || url =~ /^\/assets\//
+  end
+
+  def absolute(url)
     url =~ /^\/[^\/]/ ? (Discourse.asset_host || Discourse.base_url_no_prefix) + url : url
   end
 
@@ -227,7 +227,7 @@ class CookedPostProcessor
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job
     delay = SiteSetting.ninja_edit_window + 1
-    Jobs.enqueue_in(delay.minutes.to_i, :pull_hotlinked_images, post_id: @post.id)
+    Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id)
   end
 
   def dirty?

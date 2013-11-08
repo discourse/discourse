@@ -86,6 +86,7 @@ predef:
   - count
   - exists
   - asyncTestDiscourse
+  - fixture
   - find
   - sinon
   - controllerFor

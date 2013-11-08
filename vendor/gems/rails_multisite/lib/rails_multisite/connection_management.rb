@@ -16,16 +16,23 @@ module RailsMultisite
           handler = @@connection_handlers[spec]
           unless handler
             handler = ActiveRecord::ConnectionAdapters::ConnectionHandler.new
+            if rails4?
+              handler.establish_connection(ActiveRecord::Base, spec)
+            end
             @@connection_handlers[spec] = handler
           end
         else
           handler = @@default_connection_handler
+          if rails4? && !@@established_default
+            handler.establish_connection(ActiveRecord::Base, spec)
+            @@established_default = true
+          end
         end
+
         ActiveRecord::Base.connection_handler = handler
-        if rails4?
-          ActiveRecord::Base.connection_handler.establish_connection(ActiveRecord::Base, spec)
-        else
-          ActiveRecord::Base.connection_handler.establish_connection("ActiveRecord::Base", spec)
+
+        unless rails4?
+          handler.establish_connection("ActiveRecord::Base", spec)
         end
       end
     end
@@ -100,17 +107,19 @@ module RailsMultisite
         @@host_spec_cache[host] = @@default_spec
       end
 
+      @@default_connection_handler = ActiveRecord::Base.connection_handler
+
       # inject our connection_handler pool
       # WARNING MONKEY PATCH
       #
       # see: https://github.com/rails/rails/issues/8344#issuecomment-10800848
-      #
-      @@default_connection_handler = ActiveRecord::Base.connection_handler
-      ActiveRecord::Base.send :include, NewConnectionHandler if ActiveRecord::VERSION::MAJOR == 3
-
-      ActiveRecord::Base.connection_handler = @@default_connection_handler
+      if ActiveRecord::VERSION::MAJOR == 3
+        ActiveRecord::Base.send :include, NewConnectionHandler
+        ActiveRecord::Base.connection_handler = @@default_connection_handler
+      end
 
       @@connection_handlers = {}
+      @@established_default = false
     end
 
     module NewConnectionHandler

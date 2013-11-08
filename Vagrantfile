@@ -2,6 +2,7 @@
 # vi: set ft=ruby :
 # See https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md
 #
+require 'socket'
 Vagrant.configure("2") do |config|
   config.vm.box = 'discourse-0.9.7'
   config.vm.box_url = 'http://www.discourse.org/vms/discourse-0.9.7.box'
@@ -32,6 +33,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :shell, :inline => "apt-get -qq update && apt-get -qq -y install ruby1.9.3 build-essential && gem install chef --no-rdoc --no-ri --conservative"
 
+  host_ip = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address
   chef_cookbooks_path = ["chef/cookbooks"]
 
   # This run uses the updated chef-solo and does normal configuration
@@ -39,6 +41,13 @@ Vagrant.configure("2") do |config|
     chef.binary_env = "GEM_HOME=/opt/chef/embedded/lib/ruby/gems/1.9.1/ GEM_PATH= "
     chef.binary_path = "/opt/chef/bin/"
     chef.cookbooks_path = chef_cookbooks_path
+
+    chef.json = {
+        "vagrant_host" => {
+            "ip" => host_ip,
+            "hostname" => ENV['HOST_HOSTNAME']
+        }
+    }
 
     chef.add_recipe "recipe[apt]"
     chef.add_recipe "recipe[build-essential]"

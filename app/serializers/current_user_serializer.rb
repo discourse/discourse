@@ -14,7 +14,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :external_links_in_new_tab,
              :dynamic_favicon,
              :trust_level,
-             :can_edit
+             :can_edit,
+             :can_invite_to_forum
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -34,6 +35,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_edit
     true
+  end
+
+  def can_invite_to_forum
+    true
+  end
+
+  def include_can_invite_to_forum?
+    scope.can_invite_to_forum?
   end
 
 end

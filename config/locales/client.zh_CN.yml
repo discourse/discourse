@@ -324,19 +324,22 @@ zh_CN:
           other: "{{count}} 分钟之后"
 
       invited:
+        search: "输入以搜索邀请……"
         title: "邀请"
         user: "邀请用户"
-        none: "{{username}} 尚未邀请任何用户到本站。"
+        none: "没有找到任何邀请。"
+        truncated: "只显示前{{count}}个邀请。"
         redeemed: "确认邀请"
         redeemed_at: "确认时间"
         pending: "待定邀请"
         topics_entered: "已进入的主题"
-        posts_read_count: "已阅的帖子"
+        posts_read_count: "已读的帖子"
         rescind: "删除邀请"
         rescinded: "邀请已删除"
         time_read: "阅读时间"
         days_visited: "访问天数"
-        account_age_days: "帐号存在天数"
+        account_age_days: "账号存在天数"
+        create: "邀请朋友"
 
       password:
         title: "密码"
@@ -734,7 +737,9 @@ zh_CN:
         title: '邀请朋友来回复'
         action: '邮件邀请'
         help: '向你的朋友发送邀请，他们只需要一个点击就能回复这个主题'
-        email: "我们会给你的朋友发送一封邮件，他们只需点击其中的一个链接，就可以无需登录直接回复这个主题。"
+        to_topic: "我们会给你的朋友发送一封邮件，他/她只需点击其中的一个链接，就可以无需登录直接回复这个主题。"
+        to_forum: "我们会给你的朋友发送一封邮件，他/她只需点击其中的链接，就可以注册加入这个论坛。"
+        
         email_placeholder: '电子邮箱地址'
         success: "谢谢！我们已发送一个邀请邮件到<b>{{email}}</b>。当他们确认的时候我们会通知你。你也可以在你的用户页面的邀请选项卡下查看邀请状态。"
         error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"
@@ -1074,7 +1079,7 @@ zh_CN:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    filter: "过滤器"
+    type_to_filter: "输入过滤条件……"
 
     admin:
       title: 'Discourse管理'
@@ -1090,6 +1095,7 @@ zh_CN:
         please_upgrade: "请升级！"
         no_check_performed: "检测更新未执行，请确保 sidekiq 在正常运行。"
         stale_data: "最近一次检查更新未执行，请确保 sidekiq 在正常运行。"
+        version_check_pending: "看来你最近刚更新过。太棒了！"
         installed_version: "已安装"
         latest_version: "最新版本"
         problems_found: "你安装的论坛目前有以下问题："
@@ -1099,7 +1105,7 @@ zh_CN:
         moderators: '版主：'
         admins: '管理员：'
         blocked: '禁止参与讨论:'
-        banned: "禁止登录"
+        suspended: "禁止登录"
         private_messages_short: "私信"
         private_messages_title: "私密信息"
 
@@ -1269,6 +1275,7 @@ zh_CN:
           title: "被屏蔽的URL"
           description: "以下是垃圾信息发布者使用过的URL。"
           url: "URL"
+          domain: "域名"
         screened_ips:
           title: "被屏蔽的IP"
           description: "受监视的IP地址，使用“放行”可将IP地址加入白名单。"
@@ -1300,7 +1307,7 @@ zh_CN:
           pending: "待定"
           admins: "管理员"
           moderators: "版主"
-          banned: "禁止登录"
+          suspended: "禁止登录"
           blocked: "禁止参与讨论"
         approved: "已批准？"
         approved_selected:
@@ -1321,7 +1328,7 @@ zh_CN:
           admins: '管理员'
           moderators: '版主'
           blocked: '被封用户'
-          banned: '被禁用户'
+          suspended: '被禁用户'
         reject_successful:
           one: "1名用户已被拒绝。"
           other: "%{count}名用户已被拒绝。"
@@ -1330,18 +1337,18 @@ zh_CN:
           other: "%{count}名用户决绝失败。"
 
       user:
-        ban_failed: "禁止此用户时发生了错误 {{error}}"
-        unban_failed: "解禁此用户时发生了错误 {{error}}"
-        ban_duration: "你计划禁止该用户多久？"
+        suspend_failed: "禁止此用户时发生了错误 {{error}}"
+        unsuspend_failed: "解禁此用户时发生了错误 {{error}}"
+        suspend_duration: "你计划禁止该用户多久？"
         ban_duration_units: "（天）"
         ban_reason_label: "为什么禁止该用户？当其尝试登入时，会看到这条理由。"
         ban_reason: "禁止的理由"
         banned_by: "禁止操作者："
         delete_all_posts: "删除所有帖子"
         delete_all_posts_confirm: "你将删除 %{posts} 个帖子和 %{topics} 个主题，确认吗？"
-        ban: "禁止"
-        unban: "解禁"
-        banned: "已禁止？"
+        suspend: "禁止"
+        unsuspend: "解禁"
+        suspended: "已禁止？"
         moderator: "版主？"
         admin: "管理员？"
         blocked: "已封?"

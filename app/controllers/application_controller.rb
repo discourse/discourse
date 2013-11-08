@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   serialization_scope :guardian
 
   protect_from_forgery
+  skip_before_action :verify_authenticity_token, if: :api_key_valid?
 
   before_filter :sync_main_app_session, if: lambda{ |c| request.format && !request.format.json? }
 
@@ -203,7 +204,7 @@ class ApplicationController < ActionController::Base
     end
 
     def preload_current_user_data
-      store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, root: false)))
+      store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
       serializer = ActiveModel::ArraySerializer.new(TopicTrackingState.report([current_user.id]), each_serializer: TopicTrackingStateSerializer)
       store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
     end

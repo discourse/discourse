@@ -197,6 +197,11 @@ describe PostRevisor do
       it "allows an admin to insert images into a new user's post" do
         post.errors.should be_blank
       end
+
+      it "marks the admin as the last updater" do
+        post.updated_by.should == changed_by
+      end
+
     end
 
     describe "new user editing their own post" do

@@ -37,6 +37,7 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   border: 1px solid #ddd;
   font-size: 12px;
   margin-left: -8px;
+  background: #fff;
 }
 
 .avoid-tab {
@@ -679,6 +680,19 @@ blockquote { /* solo quotes */
   position: relative;
   width: 720px;
   padding: 10px 10px 15px 20px;
+   
+.highlighted {
+  background-color: lighten(yellow, 45%) !important;
+        }
+
+}
+
+
+.bottom-round.contents.regular {
+
+ -webkit-transition: background-color .25s linear;
+ transition: background-color .25s linear;
+
 }
 
 .posts-wrapper {

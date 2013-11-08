@@ -1045,13 +1045,13 @@ nb_NO:
           moderators: 'Moderatorer'
 
       user:
-        ban_failed: "Noe gikk galt ved å bannlyse denne brukeren {{error}}"
-        unban_failed: "Noe gikk galt ved å gjeninsette denne brukeren {{error}}"
-        ban_duration: "Hvor lenge vil du bannlyse denne brukeren? (dager)"
+        suspend_failed: "Noe gikk galt ved å bannlyse denne brukeren {{error}}"
+        unsuspend_failed: "Noe gikk galt ved å gjeninsette denne brukeren {{error}}"
+        suspend_duration: "Hvor lenge vil du bannlyse denne brukeren? (dager)"
         delete_all_posts: "Slett alle innlegg"
-        ban: "Bannlyst"
-        unban: Gjeninnsett"
-        banned: "Banlyst?"
+        suspend: "Bannlyst"
+        unsuspend: Gjeninnsett"
+        suspended: "Banlyst?"
         moderator: "Moderator?"
         admin: "Admin?"
         show_admin_profile: "Admin"

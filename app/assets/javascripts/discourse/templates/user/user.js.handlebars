@@ -42,6 +42,14 @@
           <h2>{{name}}</h2>
 
           <div class='bio'>{{{bio_excerpt}}}</div>
+
+          {{#if isSuspended}}
+            <div class='suspended'>
+              <i class='icon icon-ban-circle'></i>
+              <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
+              <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
+            </div>
+          {{/if}}
           </div>
 
           <div class='secondary'>

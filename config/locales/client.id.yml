@@ -162,7 +162,7 @@ id:
         user: "Invited User"
         none: "{{username}} hasn't invited any users to the site."
         redeemed: "Redeemed Invites"
-        redeemed_at: "Redeemed At"
+        redeemed_at: "Redeemed"
         pending: "Pending Invites"
         topics_entered: "Topics Entered"
         posts_read_count: "Posts Read"
@@ -217,7 +217,7 @@ id:
 
     email: 'Email'
     username: 'Username'
-    last_seen: 'Last Seen'
+    last_seen: 'Seen'
     created: 'Created'
     trust_level: 'Trust Level'
 
@@ -726,13 +726,13 @@ id:
           other: "approve users ({{count}})"
 
       user:
-        ban_failed: "Something went wrong banning this user {{error}}"
-        unban_failed: "Something went wrong unbanning this user {{error}}"
-        ban_duration: "How long would you like to ban the user for? (days)"
+        suspend_failed: "Something went wrong banning this user {{error}}"
+        unsuspend_failed: "Something went wrong unbanning this user {{error}}"
+        suspend_duration: "How long would you like to ban the user for? (days)"
         delete_all_posts: "Delete all posts"
-        ban: "Ban"
-        unban: "Unban"
-        banned: "Banned?"
+        suspend: "Ban"
+        unsuspend: "Unban"
+        suspended: "Banned?"
         moderator: "Moderator?"
         admin: "Admin?"
         show_admin_profile: "Admin"

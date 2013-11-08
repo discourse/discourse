@@ -97,6 +97,12 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.Site.currentProp('trustLevels').findProperty('id', parseInt(this.get('trust_level'), 10));
   }.property('trust_level'),
 
+  isSuspended: Em.computed.equal('suspended', true),
+
+  suspendedTillDate: function() {
+    return Discourse.Formatter.longDate(this.get('suspended_till'));
+  }.property('suspended_till'),
+
   /**
     Changes this user's username.
 
@@ -282,13 +288,27 @@ Discourse.User = Discourse.Model.extend({
     Determines whether the current user is allowed to upload a file.
 
     @method isAllowedToUploadAFile
-    @param {string} type The type of the upload (image, attachment)
+    @param {String} type The type of the upload (image, attachment)
     @returns true if the current user is allowed to upload a file
   **/
   isAllowedToUploadAFile: function(type) {
     return this.get('staff') ||
            this.get('trust_level') > 0 ||
            Discourse.SiteSettings['newuser_max_' + type + 's'] > 0;
+  },
+
+  /**
+    Invite a user to the site
+
+    @method createInvite
+    @param {String} email The email address of the user to invite to the site
+    @returns {Promise} the result of the server call
+  **/
+  createInvite: function(email) {
+    return Discourse.ajax('/invites', {
+      type: 'POST',
+      data: {email: email}
+    });
   }
 
 });

@@ -22,6 +22,19 @@ Discourse.UserInvitedRoute = Discourse.Route.extend({
       searchTerm: ''
     });
     this.controllerFor('user').set('indexStream', false);
+  },
+
+  actions: {
+
+    /**
+      Shows the invite modal to invite users to the forum.
+
+      @method showInvite
+    **/
+    showInvite: function() {
+      Discourse.Route.showModal(this, 'invite', Discourse.User.current());
+      this.controllerFor('invite').reset();
+    }
   }
 
 });

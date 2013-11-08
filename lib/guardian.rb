@@ -115,10 +115,10 @@ class Guardian
   end
   alias :can_activate? :can_approve?
 
-  def can_ban?(user)
+  def can_suspend?(user)
     user && is_staff? && user.regular?
   end
-  alias :can_deactivate? :can_ban?
+  alias :can_deactivate? :can_suspend?
 
   def can_clear_flags?(post)
     is_staff? && post
@@ -191,13 +191,16 @@ class Guardian
     is_me?(user)
   end
 
-  def can_invite_to?(object)
+  def can_invite_to_forum?
     authenticated? &&
-    can_see?(object) &&
     (
       (!SiteSetting.must_approve_users? && @user.has_trust_level?(:regular)) ||
       is_staff?
     )
+  end
+
+  def can_invite_to?(object)
+    can_see?(object) && can_invite_to_forum?
   end
 
   def can_see_deleted_posts?

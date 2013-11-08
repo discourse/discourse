@@ -40,3 +40,10 @@ function asyncTestDiscourse(text, func) {
     });
   });
 }
+
+function fixture(selector) {
+  if (selector) {
+    return $("#qunit-fixture").find(selector);
+  }
+  return $("#qunit-fixture");
+}

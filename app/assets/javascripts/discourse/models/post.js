@@ -361,7 +361,9 @@ Discourse.Post = Discourse.Model.extend({
   }.property('reply_count'),
 
   canViewEditHistory: function() {
-    return (Discourse.SiteSettings.edit_history_visible_to_public || (Discourse.User.current() && Discourse.User.current().get('staff')));
+    return (Discourse.SiteSettings.edit_history_visible_to_public ||
+            (Discourse.User.current() &&
+              (Discourse.User.current().get('staff') || Discourse.User.current().get('id') === this.get('user_id'))));
   }.property()
 
 });

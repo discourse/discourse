@@ -35,13 +35,39 @@ describe InvitesController do
 
     end
 
+  end
+
+  context '.create' do
+    it 'requires you to be logged in' do
+      lambda {
+        post :create, email: 'jake@adventuretime.ooo'
+      }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'while logged in' do
+      let!(:user) { log_in }
+      let(:email) { 'jake@adventuretime.ooo' }
+
+      it "fails if you can't invite to the forum" do
+        Guardian.any_instance.stubs(:can_invite_to_forum?).returns(false)
+        Invite.expects(:invite_by_email).never
+        post :create, email: email
+        response.should_not be_success
+      end
+
+      it "delegates to Invite#invite_by_email and returns success if you can invite" do
+        Guardian.any_instance.stubs(:can_invite_to_forum?).returns(true)
+        Invite.expects(:invite_by_email).with(email, user).returns(Invite.new)
+        post :create, email: email
+        response.should be_success
+      end
+    end
 
   end
 
   context '.show' do
 
     context 'with an invalid invite id' do
-
       before do
         get :show, id: "doesn't exist"
       end
@@ -53,7 +79,6 @@ describe InvitesController do
       it "should not change the session" do
         session[:current_user_id].should be_blank
       end
-
     end
 
     context 'with a deleted invite' do
@@ -71,9 +96,7 @@ describe InvitesController do
       it "should not change the session" do
         session[:current_user_id].should be_blank
       end
-
     end
-
 
     context 'with a valid invite id' do
       let(:topic) { Fabricate(:topic) }
