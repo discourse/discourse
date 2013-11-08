@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Onebox::Engine::TwitterStatusOnebox do
   before(:all) do
-    @link = "https://twitter.com/toastergrrl/status/363116819147538433"
+    @link = "https://twitter.com/vyki_e/status/363116819147538433"
   end
 
   shared_examples_for "#to_html" do
@@ -11,11 +11,12 @@ describe Onebox::Engine::TwitterStatusOnebox do
     end
 
     it "includes timestamp" do
+      pending
       expect(html).to include("6:59 PM - 1 Aug 13")
     end
 
     it "includes username" do
-      expect(html).to include("@toastergrrl")
+      expect(html).to include("vyki_e")
     end
 
     it "includes user avatar" do

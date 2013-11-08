@@ -35,7 +35,7 @@ module Onebox
         if raw.html?
           raw.css(".tweet-text").inner_text
         else
-          raw.tweet
+          raw.text
         end
       end
 
@@ -43,7 +43,7 @@ module Onebox
         if raw.html?
           raw.css(".metadata span").inner_text
         else
-          raw.timestamp
+          raw.created_at
         end
       end
 
@@ -51,7 +51,7 @@ module Onebox
         if raw.html?
           raw.css(".stream-item-header .username").inner_text
         else
-          raw.title
+          raw.user[:screen_name]
         end
       end
 
@@ -59,7 +59,7 @@ module Onebox
         if raw.html?
           raw.css(".avatar")[2]["src"]
         else
-          raw.avatar
+          raw.user[:profile_image_url]
         end
       end
 
@@ -67,7 +67,7 @@ module Onebox
         if raw.html?
           raw.css(".stats li .request-favorited-popup").inner_text
         else
-          raw.favorites
+          raw.favorite_count
         end
       end
 
@@ -75,7 +75,7 @@ module Onebox
         if raw.html?
           raw.css(".stats li .request-retweeted-popup").inner_text
         else
-          raw.retweets
+          raw.retweet_count
         end
       end
 
