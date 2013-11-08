@@ -813,15 +813,142 @@ describe UsersController do
     end
   end
 
-  describe '.invited' do
-
-    let(:user) { Fabricate(:user) }
-
+  describe '#invited' do
     it 'returns success' do
+      user = Fabricate(:user)
+
       xhr :get, :invited, username: user.username
-      response.should be_success
+
+      expect(response).to be_success
     end
 
+    it 'filters by email' do
+      inviter = Fabricate(:user)
+      invitee = Fabricate(:user)
+      invite = Fabricate(
+        :invite,
+        email: 'billybob@example.com',
+        invited_by: inviter,
+        user: invitee
+      )
+      Fabricate(
+        :invite,
+        email: 'jimtom@example.com',
+        invited_by: inviter,
+        user: invitee
+      )
+
+      xhr :get, :invited, username: inviter.username, filter: 'billybob'
+
+      invites = JSON.parse(response.body)
+      expect(invites).to have(1).item
+      expect(invites.first).to include('email' => 'billybob@example.com')
+    end
+
+    it 'filters by username' do
+      inviter = Fabricate(:user)
+      invitee = Fabricate(:user, username: 'billybob')
+      invite = Fabricate(
+        :invite,
+        invited_by: inviter,
+        email: 'billybob@example.com',
+        user: invitee
+      )
+      Fabricate(
+        :invite,
+        invited_by: inviter,
+        user: Fabricate(:user, username: 'jimtom')
+      )
+
+      xhr :get, :invited, username: inviter.username, filter: 'billybob'
+
+      invites = JSON.parse(response.body)
+      expect(invites).to have(1).item
+      expect(invites.first).to include('email' => 'billybob@example.com')
+    end
+
+    context 'with guest' do
+      context 'with pending invites' do
+        it 'does not return invites' do
+          inviter = Fabricate(:user)
+          Fabricate(:invite, invited_by: inviter)
+
+          xhr :get, :invited, username: inviter.username
+
+          invites = JSON.parse(response.body)
+          expect(invites).to be_empty
+        end
+      end
+
+      context 'with redeemed invites' do
+        it 'returns invites' do
+          inviter = Fabricate(:user)
+          invitee = Fabricate(:user)
+          invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+
+          xhr :get, :invited, username: inviter.username
+
+          invites = JSON.parse(response.body)
+          expect(invites).to have(1).item
+          expect(invites.first).to include('email' => invite.email)
+        end
+      end
+    end
+
+    context 'with authenticated user' do
+      context 'with pending invites' do
+        context 'with permission to see pending invites' do
+          it 'returns invites' do
+            user = log_in
+            inviter = Fabricate(:user)
+            invite = Fabricate(:invite, invited_by: inviter)
+            stub_guardian(user) do |guardian|
+              guardian.stubs(:can_see_pending_invites_from?).
+                with(inviter).returns(true)
+            end
+
+            xhr :get, :invited, username: inviter.username
+
+            invites = JSON.parse(response.body)
+            expect(invites).to have(1).item
+            expect(invites.first).to include("email" => invite.email)
+          end
+        end
+
+        context 'without permission to see pending invites' do
+          it 'does not return invites' do
+            user = log_in
+            inviter = Fabricate(:user)
+            invitee = Fabricate(:user)
+            Fabricate(:invite, invited_by: inviter)
+            stub_guardian(user) do |guardian|
+              guardian.stubs(:can_see_pending_invites_from?).
+                with(inviter).returns(false)
+            end
+
+            xhr :get, :invited, username: inviter.username
+
+            invites = JSON.parse(response.body)
+            expect(invites).to be_empty
+          end
+        end
+      end
+
+      context 'with redeemed invites' do
+        it 'returns invites' do
+          user = log_in
+          inviter = Fabricate(:user)
+          invitee = Fabricate(:user)
+          invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+
+          xhr :get, :invited, username: inviter.username
+
+          invites = JSON.parse(response.body)
+          expect(invites).to have(1).item
+          expect(invites.first).to include('email' => invite.email)
+        end
+      end
+    end
   end
 
   describe '#update' do

@@ -68,6 +68,30 @@ class Invite < ActiveRecord::Base
     invite
   end
 
+  def self.find_all_invites_from(inviter)
+    Invite.where(invited_by_id: inviter.id)
+          .includes(:user => :user_stat)
+          .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
+                 'user_stats.time_read DESC',
+                 'invites.redeemed_at DESC')
+          .limit(SiteSetting.invites_shown)
+          .references('user_stats')
+  end
+
+  def self.find_redeemed_invites_from(inviter)
+    find_all_invites_from(inviter).where('invites.user_id IS NOT NULL')
+  end
+
+  def self.filter_by(email_or_username)
+    if email_or_username
+      where(
+        '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)',
+        filter: "%#{email_or_username.downcase}%"
+      )
+    else
+      scoped
+    end
+  end
 end
 
 # == Schema Information
