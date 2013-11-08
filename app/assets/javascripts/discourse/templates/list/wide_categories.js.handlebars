@@ -14,7 +14,7 @@
     </tr>
     </thead>
     <tbody>
-      {{#collection contentBinding="model.categories"}}
+      {{#each model.categories}}
       <tr data-category_id='{{unbound id}}'>
         <td class='category'>
           {{#if controller.ordering}}
@@ -69,7 +69,7 @@
           </td>
         {{/with}}
       </tr>
-      {{/collection}}
+      {{/each}}
     </tbody>
 
   </table>
