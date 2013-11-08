@@ -9,6 +9,7 @@
 Discourse.HeaderController = Discourse.Controller.extend({
   topic: null,
   showExtraInfo: null,
+  notifications: null,
 
   categories: function() {
     return Discourse.Category.list();
@@ -39,6 +40,16 @@ Discourse.HeaderController = Discourse.Controller.extend({
 
     toggleMobileView: function() {
       Discourse.Mobile.toggleMobileView();
+    },
+
+    showNotifications: function(headerView) {
+      var self = this;
+
+      Discourse.ajax("/notifications").then(function(result) {
+        self.set("notifications", result);
+        self.set("currentUser.unread_notifications", 0);
+        headerView.showDropdownBySelector("#user-notifications");
+      });
     }
   }
 

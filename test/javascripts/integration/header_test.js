@@ -144,7 +144,7 @@ test("notifications: content", function() {
       equal(notificationsDropdown().find("li").eq(1).attr("class"), "read", "list item for read notification has correct class");
       equal(notificationsDropdown().find("li").eq(1).html(), 'notifications.replied velesin <a href="/t/topic/1234/2">Some topic title</a>', "notification without a slug and for a non-first post in a topic is rendered correctly");
 
-      equal(notificationsDropdown().find("li").eq(2).html(), 'notifications.liked velesin <a href=""></a>', "notification without topic title is rendered correctly");
+      equal(notificationsDropdown().find("li").eq(2).html(), 'notifications.liked velesin', "notification without topic title is rendered correctly");
 
       equal(notificationsDropdown().find("li").eq(3).attr("class"), "read last", "list item for 'more' link has correct class");
       equal(notificationsDropdown().find("li").eq(3).find("a").attr("href"), Discourse.User.current().get("path"), "'more' link points to a correct URL");

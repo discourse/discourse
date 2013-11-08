@@ -48,19 +48,12 @@ Discourse.HeaderView = Discourse.View.extend({
     return false;
   },
 
+  showDropdownBySelector: function(selector) {
+    this.showDropdown($(selector));
+  },
+
   showNotifications: function() {
-
-    var headerView = this;
-    Discourse.ajax('/notifications').then(function(result) {
-      headerView.set('notifications', result.map(function(n) {
-        return Discourse.Notification.create(n);
-      }));
-
-      // We've seen all the notifications now
-      Discourse.User.current().set('unread_notifications', 0);
-      headerView.showDropdown($('#user-notifications'));
-    });
-    return false;
+    this.get("controller").send("showNotifications", this);
   },
 
   examineDockHeader: function() {
@@ -106,7 +99,8 @@ Discourse.HeaderView = Discourse.View.extend({
       return headerView.showDropdown($(e.currentTarget));
     });
     this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on('click.notifications', function(e) {
-      return headerView.showNotifications(e);
+      headerView.showNotifications(e);
+      return false;
     });
     $(window).bind('scroll.discourse-dock', function() {
       headerView.examineDockHeader();
