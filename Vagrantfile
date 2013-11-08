@@ -43,8 +43,9 @@ Vagrant.configure("2") do |config|
     chef.cookbooks_path = chef_cookbooks_path
 
     chef.json = {
-        "lessonplanet" => {
-            "host_ip" => host_ip
+        "vagrant_host" => {
+            "ip" => host_ip,
+            "hostname" => ENV['HOST_HOSTNAME']
         }
     }
 
