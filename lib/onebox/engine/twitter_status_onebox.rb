@@ -31,11 +31,17 @@ module Onebox
         end
       end
 
+      def access(*keys)
+        keys.inject(raw) do |memo, key|
+          memo[key] || memo[key.to_s]
+        end
+      end
+
       def tweet
         if raw.html?
           raw.css(".tweet-text").inner_text
         else
-          raw.text
+          access(:text)
         end
       end
 
@@ -43,7 +49,7 @@ module Onebox
         if raw.html?
           raw.css(".metadata span").inner_text
         else
-          raw.created_at
+          access(:created_at)
         end
       end
 
@@ -51,7 +57,7 @@ module Onebox
         if raw.html?
           raw.css(".stream-item-header .username").inner_text
         else
-          raw.user[:screen_name]
+          access(:user, :screen_name)
         end
       end
 
@@ -59,7 +65,7 @@ module Onebox
         if raw.html?
           raw.css(".avatar")[2]["src"]
         else
-          raw.user[:profile_image_url]
+          access(:user, :profile_image_url)
         end
       end
 
@@ -67,7 +73,7 @@ module Onebox
         if raw.html?
           raw.css(".stats li .request-favorited-popup").inner_text
         else
-          raw.favorite_count
+          access(:favorite_count)
         end
       end
 
@@ -75,7 +81,7 @@ module Onebox
         if raw.html?
           raw.css(".stats li .request-retweeted-popup").inner_text
         else
-          raw.retweet_count
+          access(:retweet_count)
         end
       end
 
