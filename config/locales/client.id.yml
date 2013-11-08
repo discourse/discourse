@@ -162,7 +162,7 @@ id:
         user: "Invited User"
         none: "{{username}} hasn't invited any users to the site."
         redeemed: "Redeemed Invites"
-        redeemed_at: "Redeemed At"
+        redeemed_at: "Redeemed"
         pending: "Pending Invites"
         topics_entered: "Topics Entered"
         posts_read_count: "Posts Read"
@@ -217,7 +217,7 @@ id:
 
     email: 'Email'
     username: 'Username'
-    last_seen: 'Last Seen'
+    last_seen: 'Seen'
     created: 'Created'
     trust_level: 'Trust Level'
 

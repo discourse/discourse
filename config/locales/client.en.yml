@@ -286,7 +286,7 @@ en:
 
       last_posted: "Last Post"
       last_emailed: "Last Emailed"
-      last_seen: "Last Seen"
+      last_seen: "Seen"
       created: "Created At"
       log_out: "Log Out"
       website: "Web Site"
@@ -332,7 +332,7 @@ en:
         none: "No invites were found."
         truncated: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
-        redeemed_at: "Redeemed At"
+        redeemed_at: "Redeemed"
         pending: "Pending Invites"
         topics_entered: "Topics Entered"
         posts_read_count: "Posts Read"
@@ -394,7 +394,7 @@ en:
 
     email: 'Email'
     username: 'Username'
-    last_seen: 'Last Seen'
+    last_seen: 'Seen'
     created: 'Created'
     trust_level: 'Trust Level'
 
