@@ -216,12 +216,15 @@ ru:
       "12": 'Отправленные'
       "13": Входящие
     categories:
+      all: Все категории
+      only_category: "только {{categoryName}}"
       category: Категория
       posts: Сообщения
       topics: Темы
       latest: Последние
       latest_by: 'последние по'
       toggle_ordering: 'изменить сортировку'
+      subcategories: 'Подкатегории:'
     user:
       said: '{{username}} писал(а):'
       profile: Профайл
