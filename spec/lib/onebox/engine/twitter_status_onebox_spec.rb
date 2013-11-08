@@ -56,7 +56,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
           {:id=>1087064150,
            :id_str=>"1087064150",
            :name=>"Vyki Englert",
-           "screen_name"=>"vyki_e",
+           :screen_name=>"vyki_e",
            :location=>"Los Angeles, CA",
            :description=>"I am woman, hear me #RoR.",
            :url=>"http://t.co/umZG76wmv2",
