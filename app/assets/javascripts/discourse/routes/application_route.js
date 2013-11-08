@@ -10,7 +10,8 @@ Discourse.ApplicationRoute = Em.Route.extend({
 
   actions: {
     showLogin: function() {
-      Discourse.Route.showModal(this, 'login');
+      // Discourse.Route.showModal(this, 'login');
+      document.location.href='/lessonplanet-login';
     },
 
     showCreateAccount: function() {

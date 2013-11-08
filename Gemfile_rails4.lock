@@ -98,6 +98,13 @@ PATH
     discourse_plugin (0.0.1)
 
 PATH
+  remote: vendor/gems/omniauth-lessonplanet
+  specs:
+    omniauth-lessonplanet (0.0.1)
+      omniauth (~> 1.0)
+      omniauth-oauth2
+
+PATH
   remote: vendor/gems/rails_multisite
   specs:
     rails_multisite (0.0.1)
@@ -500,6 +507,7 @@ DEPENDENCIES
   omniauth-cas
   omniauth-facebook
   omniauth-github
+  omniauth-lessonplanet!
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter

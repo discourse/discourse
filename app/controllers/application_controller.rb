@@ -13,6 +13,8 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
 
+  before_filter :sync_main_app_session, if: lambda{ |c| request.format && !request.format.json? }
+
   # Default Rails 3.2 lets the request through with a blank session
   #  we are being more pedantic here and nulling session / current_user
   #  and then raising a CSRF exception
@@ -183,6 +185,14 @@ class ApplicationController < ActionController::Base
       post_ids.uniq!
     end
     post_ids
+  end
+
+  def sync_main_app_session
+    main_app_session.sync
+  end
+
+  def main_app_session
+    LpSession.new(self)
   end
 
   private
