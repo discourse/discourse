@@ -16,13 +16,13 @@ RSpec.configure do |config|
 end
 
 shared_context "engines" do
-  before(:all) do
+  before(:each) do
     fake(@uri || @link, response(described_class.template_name))
     @onebox = described_class.new(@link)
     @html = @onebox.to_html
     @data = @onebox.send(:data)
   end
-  before(:each) { Onebox.defaults.cache.clear }
+  before(:each) { Onebox.options.cache.clear }
 
   let(:onebox) { @onebox }
   let(:html) { @html }

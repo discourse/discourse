@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Onebox::Preview do
   before(:all) { fake("http://www.amazon.com", response("amazon")) }
-  before(:each) { Onebox.defaults.cache.clear }
+  before(:each) { Onebox.options.cache.clear }
 
   let(:preview) { described_class.new("http://www.amazon.com") }
 

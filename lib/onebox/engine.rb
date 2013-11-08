@@ -17,8 +17,8 @@ module Onebox
 
     def initialize(link, cache = nil, timeout = nil)
       @url = link
-      @cache = cache || Onebox.defaults.cache
-      @timeout = timeout || Onebox.defaults.timeout
+      @cache = cache || Onebox.options.cache
+      @timeout = timeout || Onebox.options.timeout
       @layout = Layout.new(self.class.template_name, record, @cache)
     end
 
@@ -102,7 +102,7 @@ require_relative "engine/sound_cloud_onebox"
 require_relative "engine/spotify_onebox"
 require_relative "engine/stack_exchange_onebox"
 require_relative "engine/ted_onebox"
-require_relative "engine/twitter_onebox"
+require_relative "engine/twitter_status_onebox"
 require_relative "engine/viddler_onebox"
 require_relative "engine/vimeo_onebox"
 require_relative "engine/wikipedia_onebox"

@@ -5,7 +5,7 @@ describe Onebox::Engine::JSON do
     @link = "http://gist.github.com"
     fake(@link, response("githubgist"))
   end
-  before(:each) { Onebox.defaults.cache.clear }
+  before(:each) { Onebox.options.cache.clear }
 
   describe "#raw" do
     class OneboxEngineJSON

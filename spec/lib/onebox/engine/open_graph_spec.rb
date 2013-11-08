@@ -5,7 +5,7 @@ describe Onebox::Engine::OpenGraph do
     @link = "http://flickr.com"
     fake(@link, response("flickr"))
   end
-  before(:each) { Onebox.defaults.cache.clear }
+  before(:each) { Onebox.options.cache.clear }
 
   describe "#raw" do
     class OneboxEngineOpenGraph
