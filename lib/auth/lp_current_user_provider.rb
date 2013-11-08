@@ -1,16 +1,6 @@
 require_dependency "auth/current_user_provider"
 
-class Auth::LpCurrentUserProvider
-
-  CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER"
-  API_KEY ||= "_DISCOURSE_API"
-  TOKEN_COOKIE ||= "_t"
-
-  # do all current user initialization here
-  def initialize(env)
-    @env = env
-    @request = ActionDispatch::Request.new(env)
-  end
+class Auth::LpCurrentUserProvider < Auth::DefaultCurrentUserProvider
 
   # our current user, return nil if none is found
   def current_user
@@ -26,7 +16,7 @@ class Auth::LpCurrentUserProvider
       current_user = User.where(auth_token: auth_token).first
     end
 
-    if current_user && current_user.is_banned?
+    if current_user && current_user.suspended?
       current_user = nil
     end
 
@@ -55,41 +45,5 @@ class Auth::LpCurrentUserProvider
     end
 
     @env[CURRENT_USER_KEY] = current_user
-  end
-
-  def log_on_user(user, session, cookies)
-    unless user.auth_token && user.auth_token.length == 32
-      user.auth_token = SecureRandom.hex(16)
-      user.save!
-    end
-    cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
-    make_developer_admin(user)
-    @env[CURRENT_USER_KEY] = user
-  end
-
-  def make_developer_admin(user)
-    if  user.active? &&
-        !user.admin &&
-        Rails.configuration.respond_to?(:developer_emails) &&
-        Rails.configuration.developer_emails.include?(user.email)
-      user.update_column(:admin, true)
-    end
-  end
-
-  def log_off_user(session, cookies)
-    cookies[TOKEN_COOKIE] = nil
-  end
-
-
-  # api has special rights return true if api was detected
-  def is_api?
-    current_user
-    @env[API_KEY]
-  end
-
-  def has_auth_cookie?
-    request = ActionDispatch::Request.new(@env)
-    cookie = request.cookies[TOKEN_COOKIE]
-    !cookie.nil? && cookie.length == 32
   end
 end
