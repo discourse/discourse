@@ -1,7 +1,3 @@
-require_dependency 'post_creator'
-require_dependency 'post_destroyer'
-require_dependency 'distributed_memoizer'
-
 class Lp::PostsController < PostsController
   def create
     errors = []
