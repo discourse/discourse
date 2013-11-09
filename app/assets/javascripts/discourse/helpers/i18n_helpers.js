@@ -35,6 +35,13 @@ Ember.Handlebars.registerHelper('i18n', function(property, options) {
 });
 
 /**
+ Bound version of i18n helper.
+ **/
+Ember.Handlebars.registerBoundHelper("boundI18n", function(property, options) {
+  return new Handlebars.SafeString(I18n.t(property, options.hash));
+});
+
+/**
   Set up an i18n binding that will update as a count changes, complete with pluralization.
 
   @method countI18n
