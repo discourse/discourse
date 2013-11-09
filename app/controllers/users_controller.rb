@@ -40,7 +40,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    user = User.where(username_lower: params[:username].downcase).first
+    user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
     json_result(user, serializer: UserSerializer) do |u|
       updater = UserUpdater.new(user)
@@ -127,7 +127,6 @@ class UsersController < ApplicationController
     params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
   end
 
-
   def create
     return fake_success_response if suspicious? params
 
@@ -157,22 +156,26 @@ class UsersController < ApplicationController
     if @user.blank?
       flash[:error] = I18n.t('password_reset.no_token')
     else
-      if request.put? && params[:password].present?
-        @user.password = params[:password]
-        if @user.save
-
-          if Guardian.new(@user).can_access_forum?
-            # Log in the user
-            log_on_user(@user)
-            flash[:success] = I18n.t('password_reset.success')
-          else
-            @requires_approval = true
-            flash[:success] = I18n.t('password_reset.success_unapproved')
-          end
-        end
-      end
+      raise Discourse::InvalidParameters.new(:password) unless good_reset_request_format
+      @user.password = params[:password]
+      logon_after_password_reset if @user.save
     end
     render layout: 'no_js'
+  end
+
+  def good_reset_request_format
+    request.put? && params[:password].present?
+  end
+
+  def logon_after_password_reset
+    if Guardian.new(@user).can_access_forum?
+      # Log in the user
+      log_on_user(@user)
+      flash[:success] = I18n.t('password_reset.success')
+    else
+      @requires_approval = true
+      flash[:success] = I18n.t('password_reset.success_unapproved')
+    end
   end
 
   def change_email
@@ -229,11 +232,13 @@ class UsersController < ApplicationController
   def send_activation_email
     @user = fetch_user_from_params
     @email_token = @user.email_tokens.unconfirmed.active.first
-    if @user
-      @email_token ||= @user.email_tokens.create(email: @user.email)
-      Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
-    end
+    enqueue_activation_email if @user
     render nothing: true
+  end
+
+  def enqueue_activation_email
+    @email_token ||= @user.email_tokens.create(email: @user.email)
+    Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
   end
 
   def search_users
@@ -289,21 +294,18 @@ class UsersController < ApplicationController
     end
 
     # check the file size (note: this might also be done in the web server)
-    filesize ||= File.size(file.tempfile)
+    filesize  ||= File.size(file.tempfile)
     max_size_kb = SiteSetting.max_image_size_kb * 1024
-
     if filesize > max_size_kb
-      return render status: 413,
-                    text: I18n.t("upload.images.too_large",
-                                  max_size_kb: max_size_kb)
+      return render status: 413, text: I18n.t("upload.images.too_large", max_size_kb: max_size_kb)
+    else
+      filesize
     end
 
-    unless SiteSetting.authorized_image?(file)
-      return render status: 422, text: I18n.t("upload.images.unknown_image_type")
-    end
+    return render status: 422, text: I18n.t("upload.images.unknown_image_type") unless SiteSetting.authorized_image?(file)
 
     upload = Upload.create_for(user.id, file, filesize)
-    user.update_avatar(upload)
+    user.upload_avatar(upload)
 
     Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
 
