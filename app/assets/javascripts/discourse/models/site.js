@@ -32,21 +32,33 @@ Discourse.Site = Discourse.Model.extend({
   }
 });
 
-Discourse.Site.reopenClass({
+Discourse.Site.reopenClass(Discourse.Singleton, {
 
-  instance: function() {
-    if ( this._site ) return this._site;
-    this._site = Discourse.Site.create(PreloadStore.get('site'));
-    return this._site;
+  /**
+    The current singleton will retrieve its attributes from the `PreloadStore`.
+
+    @method createCurrent
+    @returns {Discourse.Site} the site
+  **/
+  createCurrent: function() {
+    return Discourse.Site.create(PreloadStore.get('site'));
   },
 
-  create: function(obj) {
-    var _this = this;
-    var result = this._super(obj);
+  create: function() {
+    var result = this._super.apply(this, arguments);
 
     if (result.categories) {
+      var byId = {};
       result.categories = _.map(result.categories, function(c) {
-        return Discourse.Category.create(c);
+        byId[c.id] = Discourse.Category.create(c);
+        return byId[c.id];
+      });
+
+      // Associate the categories with their parents
+      result.categories.forEach(function (c) {
+        if (c.get('parent_category_id')) {
+          c.set('parentCategory', byId[c.get('parent_category_id')]);
+        }
       });
     }
 

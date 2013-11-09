@@ -1,0 +1,56 @@
+<div class="staff-action-logs-controls">
+  <a {{action clearAllFilters}} {{bindAttr class=":clear-filters :filter filtersExists::invisible"}}>
+    <span class="label">{{i18n admin.logs.staff_actions.clear_filters}}</span>
+  </a>
+  {{#if actionFilter}}
+    <a {{action clearFilter "action_name"}} class="filter">
+      <span class="label">{{i18n admin.logs.action}}</span>: {{actionFilter}}
+      <i class="icon icon-remove-sign"></i>
+    </a>
+  {{/if}}
+  {{#if filters.acting_user}}
+    <a {{action clearFilter "acting_user"}} class="filter">
+      <span class="label">{{i18n admin.logs.staff_actions.staff_user}}</span>: {{filters.acting_user}}
+      <i class="icon icon-remove-sign"></i>
+    </a>
+  {{/if}}
+  {{#if filters.target_user}}
+    <a {{action clearFilter "target_user"}} class="filter">
+      <span class="label">{{i18n admin.logs.staff_actions.target_user}}</span>: {{filters.target_user}}
+      <i class="icon icon-remove-sign"></i>
+    </a>
+  {{/if}}
+  {{#if filters.subject}}
+    <a {{action clearFilter "subject"}} class="filter">
+      <span class="label">{{i18n admin.logs.staff_actions.subject}}</span>: {{filters.subject}}
+      <i class="icon icon-remove-sign"></i>
+    </a>
+  {{/if}}
+</div>
+
+<div class="staff-action-logs-instructions" {{bindAttr class=":staff-action-logs-instructions showInstructions::invisible"}}>
+  {{i18n admin.logs.staff_actions.instructions}}
+</div>
+
+<div class='table staff-actions'>
+  <div class="heading-container">
+    <div class="col heading first staff_user">{{i18n admin.logs.staff_actions.staff_user}}</div>
+    <div class="col heading action">{{i18n admin.logs.action}}</div>
+    <div class="col heading subject">{{i18n admin.logs.staff_actions.subject}}</div>
+    <div class="col heading created_at">{{i18n admin.logs.staff_actions.when}}</div>
+    <div class="col heading details">{{i18n admin.logs.staff_actions.details}}</div>
+    <div class="col heading context">{{i18n admin.logs.staff_actions.context}}</div>
+    <div class="clearfix"></div>
+  </div>
+
+  {{#if loading}}
+    <br/>
+    <div class='admin-loading'>{{i18n loading}}</div>
+  {{else}}
+    {{#if model.length}}
+      {{view Discourse.StaffActionLogsListView contentBinding="controller"}}
+    {{else}}
+      {{i18n search.no_results}}
+    {{/if}}
+  {{/if}}
+</div>

@@ -1,0 +1,30 @@
+@import "foundation/variables";
+@import "foundation/mixins";
+
+.popup-tip {
+  position: absolute;
+  display: block;
+  padding: 5px 10px;
+  z-index: 101;
+  @include border-radius-all(2px);
+  border: solid 1px #955;
+  &.bad {
+    background-color: #b66;
+    color: white;
+    box-shadow: 1px 1px 5px #777, inset 0 0 9px #b55;
+  }
+  &.hide, &.good {
+    display: none;
+  }
+  .close {
+    float: right;
+    color: $black;
+    opacity: 0.5;
+    font-size: 15px;
+    margin-left: 4px;
+    cursor: pointer;
+  }
+  .close:hover {
+    opacity: 1.0;
+  }
+}

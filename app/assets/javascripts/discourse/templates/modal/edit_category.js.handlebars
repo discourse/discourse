@@ -21,6 +21,11 @@
           {{textField value=name placeholderKey="category.name_placeholder" maxlength="50"}}
         </section>
 
+        <section class='field'>
+          <label>{{i18n category.parent}}</label>
+          {{categoryChooser valueAttribute="id" value=parent_category_id categories=parentCategories}}
+        </section>
+
         {{#unless isUncategorized}}
           <section class='field'>
             <label>{{i18n category.description}}</label>
@@ -84,6 +89,11 @@
       <div {{bindAttr class=":modal-tab :options-tab settingsSelected::invisible"}}>
         <section class='field'>
           {{autoCloseForm autoCloseDays=auto_close_days labelKey="category.auto_close_label"}}
+        </section>
+
+        <section class='field'>
+          <label>{{i18n category.position}}</label>
+          {{textField value=position}}
         </section>
 
         <section class='field'>

@@ -1,0 +1,52 @@
+module("MDTest", {
+  setup: function() {
+    Discourse.SiteSettings.traditional_markdown_linebreaks = false;
+  }
+});
+
+// This is cheating, but the trivial differences between sanitization
+// do not affect formatting.
+function normalize(str) {
+  return str.replace(/\n\s*/g, '').
+             replace(/ \/\>/g, '/>').
+             replace(/    ?/g, "\t").
+             replace(/&#34;/g, '&quot;');
+}
+
+var md = function(input, expected, text) {
+  var result = Discourse.Markdown.cook(input, {mentionLookup: false, sanitize: true, traditional_markdown_linebreaks: true}),
+      resultNorm = normalize(result),
+      expectedNorm = normalize(expected),
+      same = (result === expected) || (resultNorm === expectedNorm);
+
+  if (same) {
+    ok(same, text);
+  } else {
+    console.log(resultNorm);
+    console.log(expectedNorm);
+    equal(resultNorm, expectedNorm, text);
+  }
+};
+
+test("first", function(){
+  equal(1, 1, "cool")
+});
+
+<%
+  def mdtest_suite
+    result = ""
+    Dir.glob("#{Rails.root}/test/javascripts/mdtest/fixtures/*.text").each do |f|
+
+      filename_no_ext = f.sub(/\.text$/, '')
+      filename = Pathname.new(filename_no_ext)
+
+      text = File.read(f)
+      html = File.read("#{filename_no_ext}.xhtml");
+      result << "test(\"#{filename}\", function() { md(#{text.to_json}, #{html.to_json}, 'passes MDTest'); });\n"
+    end
+    result
+  end
+
+%>
+
+<%= mdtest_suite %>

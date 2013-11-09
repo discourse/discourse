@@ -24,7 +24,7 @@ Discourse.Scrolling = Em.Mixin.create({
     if (opts.debounce) {
       onScrollMethod = Discourse.debounce(function() {
         return scrollingMixin.scrolled();
-      }, 100);
+      }, opts.debounce);
     } else {
       onScrollMethod = function() {
         return scrollingMixin.scrolled();

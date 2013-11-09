@@ -13,7 +13,7 @@ Discourse.VersionCheck = Discourse.Model.extend({
   }.property('updated_at'),
 
   dataIsOld: function() {
-    return moment().diff(moment(this.get('updated_at')), 'hours') >= 48;
+    return this.get('version_check_pending') || moment().diff(moment(this.get('updated_at')), 'hours') >= 48;
   }.property('updated_at'),
 
   staleData: function() {

@@ -5,7 +5,6 @@ class AdminUserSerializer < BasicUserSerializer
              :admin,
              :moderator,
              :last_seen_age,
-             :days_visited,
              :last_emailed_age,
              :created_at_age,
              :username_lower,
@@ -14,22 +13,27 @@ class AdminUserSerializer < BasicUserSerializer
              :username,
              :title,
              :avatar_template,
-             :topics_entered,
-             :posts_read_count,
-             :time_read,
              :can_approve,
              :approved,
-             :banned_at,
-             :banned_till,
-             :is_banned,
+             :suspended_at,
+             :suspended_till,
+             :suspended,
              :ip_address,
              :can_send_activation_email,
              :can_activate,
              :can_deactivate,
-             :blocked
+             :blocked,
+             :time_read
 
-  def is_banned
-    object.is_banned?
+  [:days_visited,:posts_read_count,:topics_entered].each do |sym|
+    attributes sym
+    define_method sym do
+      object.user_stat.send(sym)
+    end
+  end
+
+  def suspended
+    object.suspended?
   end
 
   def can_impersonate
@@ -47,8 +51,8 @@ class AdminUserSerializer < BasicUserSerializer
   end
 
   def time_read
-    return nil if object.time_read.blank?
-    AgeWords.age_words(object.time_read)
+    return nil if object.user_stat.time_read.blank?
+    AgeWords.age_words(object.user_stat.time_read)
   end
 
   def created_at_age
@@ -77,6 +81,10 @@ class AdminUserSerializer < BasicUserSerializer
 
   def can_deactivate
     scope.can_deactivate?(object)
+  end
+
+  def ip_address
+    object.ip_address.try(:to_s)
   end
 
 end

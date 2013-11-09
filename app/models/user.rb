@@ -13,48 +13,63 @@ class User < ActiveRecord::Base
   include Roleable
 
   has_many :posts
-  has_many :notifications
-  has_many :topic_users
+  has_many :notifications, dependent: :destroy
+  has_many :topic_users, dependent: :destroy
   has_many :topics
   has_many :user_open_ids, dependent: :destroy
-  has_many :user_actions
-  has_many :post_actions
-  has_many :email_logs
+  has_many :user_actions, dependent: :destroy
+  has_many :post_actions, dependent: :destroy
+  has_many :email_logs, dependent: :destroy
   has_many :post_timings
-  has_many :topic_allowed_users
+  has_many :topic_allowed_users, dependent: :destroy
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
-  has_many :email_tokens
+  has_many :email_tokens, dependent: :destroy
   has_many :views
-  has_many :user_visits
-  has_many :invites
-  has_many :topic_links
+  has_many :user_visits, dependent: :destroy
+  has_many :invites, dependent: :destroy
+  has_many :topic_links, dependent: :destroy
+  has_many :uploads, dependent: :destroy
 
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
   has_one :cas_user_info, dependent: :destroy
+  has_one :oauth2_user_info, dependent: :destroy
+  has_one :user_stat, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
 
-  has_many :group_users
+  has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users
   has_many :secure_categories, through: :groups, source: :categories
 
-  has_one :user_search_data
+  has_one :user_search_data, dependent: :destroy
+  has_one :api_key, dependent: :destroy
+
+  belongs_to :uploaded_avatar, class_name: 'Upload', dependent: :destroy
 
   validates_presence_of :username
   validate :username_validator
   validates :email, presence: true, uniqueness: true
   validates :email, email: true, if: :email_changed?
   validate :password_validator
+  validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
 
   before_save :cook
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
   after_initialize :add_trust_level
+  after_initialize :set_default_email_digest
 
   after_save :update_tracked_topics
 
   after_create :create_email_token
+  after_create :create_user_stat
+
+  before_destroy do
+    # These tables don't have primary keys, so destroying them with activerecord is tricky:
+    PostTiming.delete_all(user_id: self.id)
+    View.delete_all(user_id: self.id)
+  end
 
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
@@ -63,7 +78,10 @@ class User < ActiveRecord::Base
   attr_accessor :notification_channel_position
 
   scope :blocked, -> { where(blocked: true) } # no index
-  scope :banned, -> { where('banned_till IS NOT NULL AND banned_till > ?', Time.zone.now) } # no index
+  scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) } # no index
+  scope :not_suspended, -> { where('suspended_till IS NULL') }
+  # excluding fake users like the community user
+  scope :real, -> { where('id > 0') }
 
   module NewTopicDuration
     ALWAYS = -1
@@ -90,23 +108,6 @@ class User < ActiveRecord::Base
     user
   end
 
-  def self.create_for_email(email, opts={})
-    username = UserNameSuggester.suggest(email)
-
-    discourse_hub_nickname_operation do
-      match, available, suggestion = DiscourseHub.nickname_match?(username, email)
-      username = suggestion unless match || available
-    end
-
-    user = User.new(email: email, username: username, name: username)
-    user.trust_level = opts[:trust_level] if opts[:trust_level].present?
-    user.save!
-
-    discourse_hub_nickname_operation { DiscourseHub.register_nickname(username, email) }
-
-    user
-  end
-
   def self.suggest_name(email)
     return "" unless email
     name = email.split(/[@\+]/)[0]
@@ -123,24 +124,19 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_username_or_email(username_or_email)
-    lower_user = username_or_email.downcase
-    lower_email = Email.downcase(username_or_email)
-
-    users =
-      if username_or_email.include?('@')
-        User.where(email: lower_email)
-      else
-        User.where(username_lower: lower_user)
-      end
-        .to_a
-
-    if users.count > 1
-      raise Discourse::TooManyMatches
-    elsif users.count == 1
-      users[0]
+    if username_or_email.include?('@')
+      find_by_email(username_or_email)
     else
-      nil
+      find_by_username(username_or_email)
     end
+  end
+
+  def self.find_by_email(email)
+    where(email: Email.downcase(email)).first
+  end
+
+  def self.find_by_username(username)
+    where(username_lower: username.downcase).first
   end
 
   def enqueue_welcome_message(message_type)
@@ -153,7 +149,7 @@ class User < ActiveRecord::Base
     self.username = new_username
 
     if current_username.downcase != new_username.downcase && valid?
-      User.discourse_hub_nickname_operation { DiscourseHub.change_nickname(current_username, new_username) }
+      DiscourseHub.nickname_operation { DiscourseHub.change_nickname(current_username, new_username) }
     end
 
     save
@@ -166,6 +162,9 @@ class User < ActiveRecord::Base
     key
   end
 
+  def created_topic_count
+    topics.count
+  end
 
   # tricky, we need our bus to be subscribed from the right spot
   def sync_notification_channel_position
@@ -220,7 +219,8 @@ class User < ActiveRecord::Base
   end
 
   def saw_notification_id(notification_id)
-    User.where(["seen_notification_id < ?", notification_id]).update_all ["seen_notification_id = ?", notification_id]
+    User.where(["id = ? and seen_notification_id < ?", id, notification_id])
+        .update_all ["seen_notification_id = ?", notification_id]
   end
 
   def publish_notifications_state
@@ -251,6 +251,10 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password, salt)
   end
 
+  def new_user?
+    created_at >= 24.hours.ago || trust_level == TrustLevel.levels[:newuser]
+  end
+
   def seen_before?
     last_seen_at.present?
   end
@@ -261,7 +265,7 @@ class User < ActiveRecord::Base
 
   def update_visit_record!(date)
     unless has_visit_record?(date)
-      update_column(:days_visited, days_visited + 1)
+      user_stat.update_column(:days_visited, user_stat.days_visited + 1)
       user_visits.create!(visited_at: date)
     end
   end
@@ -272,67 +276,44 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_last_seen!(now=nil)
-    now ||= Time.zone.now
+
+  def update_last_seen!(now=Time.zone.now)
     now_date = now.to_date
-
     # Only update last seen once every minute
-    redis_key = "user:#{self.id}:#{now_date}"
-    if $redis.setnx(redis_key, "1")
-      $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
+    redis_key = "user:#{id}:#{now_date}"
+    return unless $redis.setnx(redis_key, "1")
 
-      update_visit_record!(now_date)
-
-      # using update_column to avoid the AR transaction
-      # Keep track of our last visit
-      if seen_before? && (self.last_seen_at < (now - SiteSetting.previous_visit_timeout_hours.hours))
-        previous_visit_at = last_seen_at
-        update_column(:previous_visit_at, previous_visit_at)
-      end
-      update_column(:last_seen_at, now)
-    end
+    $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
+    update_previous_visit(now)
+    # using update_column to avoid the AR transaction
+    update_column(:last_seen_at, now)
   end
 
-  def self.avatar_template(email)
+  def self.gravatar_template(email)
     email_hash = self.email_hash(email)
-    # robohash was possibly causing caching issues
-    # robohash = CGI.escape("http://robohash.org/size_") << "{size}x{size}" << CGI.escape("/#{email_hash}.png")
-    "https://www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
+    "//www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
   end
 
   # Don't pass this up to the client - it's meant for server side use
-  # The only spot this is now used is for self oneboxes in open graph data
+  # This is used in
+  #   - self oneboxes in open graph data
+  #   - emails
   def small_avatar_url
-    "https://www.gravatar.com/avatar/#{email_hash}.png?s=60&r=pg&d=identicon"
+    template = avatar_template
+    template.gsub("{size}", "45")
   end
 
-  # return null for local avatars, a template for gravatar
+  # the avatars might take a while to generate
+  # so return the url of the original image in the meantime
+  def uploaded_avatar_path
+    return unless SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
+    uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
+  end
+
   def avatar_template
-    User.avatar_template(email)
+    uploaded_avatar_path || User.gravatar_template(email)
   end
 
-
-  # Updates the denormalized view counts for all users
-  def self.update_view_counts
-    # Update denormalized topics_entered
-    exec_sql "UPDATE users SET topics_entered = x.c
-             FROM
-            (SELECT v.user_id,
-                    COUNT(DISTINCT parent_id) AS c
-             FROM views AS v
-             WHERE parent_type = 'Topic'
-             GROUP BY v.user_id) AS X
-            WHERE x.user_id = users.id"
-
-    # Update denormalzied posts_read_count
-    exec_sql "UPDATE users SET posts_read_count = x.c
-              FROM
-              (SELECT pt.user_id,
-                      COUNT(*) AS c
-               FROM post_timings AS pt
-               GROUP BY pt.user_id) AS X
-               WHERE x.user_id = users.id"
-  end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
   # They might need to be denormalized
@@ -375,8 +356,16 @@ class User < ActiveRecord::Base
     end
   end
 
-  def is_banned?
-    banned_till && banned_till > DateTime.now
+  def suspended?
+    suspended_till && suspended_till > DateTime.now
+  end
+
+  def suspend_record
+    UserHistory.for(self, :suspend_user).order('id DESC').first
+  end
+
+  def suspend_reason
+    suspend_record.try(:details) if suspended?
   end
 
   # Use this helper to determine if the user has a particular trust level.
@@ -439,20 +428,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  MAX_TIME_READ_DIFF = 100
-  # attempt to add total read time to user based on previous time this was called
-  def update_time_read!
-    last_seen_key = "user-last-seen:#{id}"
-    last_seen = $redis.get(last_seen_key)
-    if last_seen.present?
-      diff = (Time.now.to_f - last_seen.to_f).round
-      if diff > 0 && diff < MAX_TIME_READ_DIFF
-        User.where(id: id, time_read: time_read).update_all ["time_read = time_read + ?", diff]
-      end
-    end
-    $redis.set(last_seen_key, Time.now.to_f)
-  end
-
   def readable_name
     return "#{name} (#{username})" if name.present? && name != username
     username
@@ -467,44 +442,56 @@ class User < ActiveRecord::Base
     where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
   end
 
-  def self.counts_by_trust_level
-    group('trust_level').count
-  end
-
-  def update_topic_reply_count
-    self.topic_reply_count =
-        Topic
-        .where(['id in (
-              SELECT topic_id FROM posts p
-              JOIN topics t2 ON t2.id = p.topic_id
-              WHERE p.deleted_at IS NULL AND
-                t2.user_id <> p.user_id AND
-                p.user_id = ?
-              )', self.id])
-        .count
-  end
 
   def secure_category_ids
-    cats = self.staff? ? Category.select(:id).where(read_restricted: true) : secure_categories.select('categories.id')
-    cats.map { |c| c.id }.sort
+    cats = self.staff? ? Category.where(read_restricted: true) : secure_categories.references(:categories)
+    cats.pluck('categories.id').sort
   end
 
   def topic_create_allowed_category_ids
     Category.topic_create_allowed(self.id).select(:id)
   end
 
+
   # Flag all posts from a user as spam
   def flag_linked_posts_as_spam
     admin = Discourse.system_user
     topic_links.includes(:post).each do |tl|
       begin
-        PostAction.act(admin, tl.post, PostActionType.types[:spam])
+        PostAction.act(admin, tl.post, PostActionType.types[:spam], message: I18n.t('flag_reason.spam_hosts'))
       rescue PostAction::AlreadyActed
         # If the user has already acted, just ignore it
       end
     end
   end
 
+  def has_uploaded_avatar
+    uploaded_avatar.present?
+  end
+
+  def added_a_day_ago?
+    created_at > 1.day.ago
+  end
+
+  def update_avatar(upload)
+    self.uploaded_avatar_template = nil
+    self.uploaded_avatar = upload
+    self.use_uploaded_avatar = true
+    self.save!
+  end
+
+  def generate_api_key(created_by)
+    if api_key.present?
+      api_key.regenerate!(created_by)
+      api_key
+    else
+      ApiKey.create(user: self, key: SecureRandom.hex(32), created_by: created_by)
+    end
+  end
+
+  def revoke_api_key
+    ApiKey.where(user_id: self.id).delete_all
+  end
 
   protected
 
@@ -518,16 +505,14 @@ class User < ActiveRecord::Base
 
   def update_tracked_topics
     return unless auto_track_topics_after_msecs_changed?
-
-    where_conditions = {notifications_reason_id: nil, user_id: id}
-    if auto_track_topics_after_msecs < 0
-      TopicUser.where(where_conditions).update_all({notification_level: TopicUser.notification_levels[:regular]})
-    else
-      TopicUser.where(where_conditions).update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
-                            auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]])
-    end
+    TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
   end
 
+  def create_user_stat
+    stat = UserStat.new
+    stat.user_id = id
+    stat.save!
+  end
 
   def create_email_token
     email_tokens.create(email: email)
@@ -570,27 +555,40 @@ class User < ActiveRecord::Base
     end
   end
 
-    def send_approval_email
-      Jobs.enqueue(:user_email,
-        type: :signup_after_approval,
-        user_id: id,
-        email_token: email_tokens.first.token
-      )
-    end
+  def send_approval_email
+    Jobs.enqueue(:user_email,
+      type: :signup_after_approval,
+      user_id: id,
+      email_token: email_tokens.first.token
+    )
+  end
 
-  private
-
-  def self.discourse_hub_nickname_operation
-    if SiteSetting.call_discourse_hub?
-      begin
-        yield
-      rescue DiscourseHub::NicknameUnavailable
-        false
-      rescue => e
-        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
+  def set_default_email_digest
+    if has_attribute?(:email_digests) && self.email_digests.nil?
+      if SiteSetting.default_digest_email_frequency.blank?
+        self.email_digests = false
+      else
+        self.email_digests = true
+        self.digest_after_days ||= SiteSetting.default_digest_email_frequency.to_i if has_attribute?(:digest_after_days)
       end
     end
   end
+
+
+  private
+
+  def previous_visit_at_update_required?(timestamp)
+    seen_before? &&
+      (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
+  end
+
+  def update_previous_visit(timestamp)
+    update_visit_record!(timestamp.to_date)
+    if previous_visit_at_update_required?(timestamp)
+      update_column(:previous_visit_at, last_seen_at)
+    end
+  end
+
 end
 
 # == Schema Information
@@ -615,7 +613,7 @@ end
 #  website                       :string(255)
 #  admin                         :boolean          default(FALSE), not null
 #  last_emailed_at               :datetime
-#  email_digests                 :boolean          default(TRUE), not null
+#  email_digests                 :boolean          not null
 #  trust_level                   :integer          not null
 #  bio_cooked                    :text
 #  email_private_messages        :boolean          default(TRUE)
@@ -623,29 +621,26 @@ end
 #  approved                      :boolean          default(FALSE), not null
 #  approved_by_id                :integer
 #  approved_at                   :datetime
-#  topics_entered                :integer          default(0), not null
-#  posts_read_count              :integer          default(0), not null
-#  digest_after_days             :integer          default(7), not null
+#  digest_after_days             :integer
 #  previous_visit_at             :datetime
-#  banned_at                     :datetime
-#  banned_till                   :datetime
+#  suspended_at                  :datetime
+#  suspended_till                :datetime
 #  date_of_birth                 :date
 #  auto_track_topics_after_msecs :integer
 #  views                         :integer          default(0), not null
 #  flag_level                    :integer          default(0), not null
-#  time_read                     :integer          default(0), not null
-#  days_visited                  :integer          default(0), not null
 #  ip_address                    :string
 #  new_topic_duration_minutes    :integer
 #  external_links_in_new_tab     :boolean          default(FALSE), not null
 #  enable_quoting                :boolean          default(TRUE), not null
 #  moderator                     :boolean          default(FALSE)
-#  likes_given                   :integer          default(0), not null
-#  likes_received                :integer          default(0), not null
-#  topic_reply_count             :integer          default(0), not null
 #  blocked                       :boolean          default(FALSE)
 #  dynamic_favicon               :boolean          default(FALSE), not null
 #  title                         :string(255)
+#  use_uploaded_avatar           :boolean          default(FALSE)
+#  uploaded_avatar_template      :string(255)
+#  uploaded_avatar_id            :integer
+#  email_always                  :boolean          default(FALSE), not null
 #
 # Indexes
 #
@@ -655,3 +650,4 @@ end
 #  index_users_on_username        (username) UNIQUE
 #  index_users_on_username_lower  (username_lower) UNIQUE
 #
+

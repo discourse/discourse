@@ -13,9 +13,6 @@ paths:
   - test/javascripts/**/*.js
 
 exclude_paths:
-  - app/assets/javascripts/external/*
-  - app/assets/javascripts/external_production/*
-  - app/assets/javascripts/external_development/*
   - app/assets/javascripts/defer/*
   - app/assets/javascripts/locales/i18n.js
 
@@ -89,9 +86,12 @@ predef:
   - count
   - exists
   - asyncTestDiscourse
+  - fixture
   - find
   - sinon
   - controllerFor
+  - testController
+  - Favcount
 
 browser:  true      # true if the standard browser globals should be predefined
 rhino:    false     # true if the Rhino environment globals should be predefined

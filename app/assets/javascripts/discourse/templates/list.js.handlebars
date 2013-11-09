@@ -1,15 +1,18 @@
-<div id='list-controls'>
+<div class='list-controls'>
   <div class="container">
+
+    {{discourse-breadcrumbs category=category categories=categories}}
+
     <ul class="nav nav-pills" id='category-filter'>
       {{each availableNavItems itemViewClass="Discourse.NavItemView"}}
     </ul>
 
     {{#if canCreateTopic}}
-      <button class='btn btn-default' {{action createTopic}}><i class='icon icon-plus'></i>{{createTopicText}}</button>
+      <button class='btn btn-default' {{action createTopic}}><i class='icon icon-plus'></i>{{i18n topic.create}}</button>
     {{/if}}
 
     {{#if canEditCategory}}
-      <button class='btn btn-default' {{action editCategory category}}>{{i18n category.edit_long}}</button>
+      <button class='btn btn-default' {{action editCategory category}}><i class="icon icon-wrench"></i> {{i18n category.edit_long}}</button>
     {{/if}}
 
     {{#if canCreateCategory}}
@@ -19,7 +22,7 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container list-container">
   <div class="row">
     <div class="full-width">
       <div id='list-area'>

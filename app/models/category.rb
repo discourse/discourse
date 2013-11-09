@@ -1,10 +1,24 @@
+require_dependency "concern/positionable"
+
 class Category < ActiveRecord::Base
+
+  include Concern::Positionable
+
   belongs_to :topic, dependent: :destroy
-  belongs_to :topic_only_relative_url,
-    select: "id, title, slug",
-    class_name: "Topic",
-    foreign_key: "topic_id"
+  if rails4?
+    belongs_to :topic_only_relative_url,
+                -> { select "id, title, slug" },
+                class_name: "Topic",
+                foreign_key: "topic_id"
+  else
+    belongs_to :topic_only_relative_url,
+                select: "id, title, slug",
+                class_name: "Topic",
+                foreign_key: "topic_id"
+  end
+
   belongs_to :user
+  belongs_to :latest_post, class_name: "Post"
 
   has_many :topics
   has_many :category_featured_topics
@@ -18,7 +32,7 @@ class Category < ActiveRecord::Base
 
   validates :user_id, presence: true
   validates :name, presence: true, uniqueness: true, length: { in: 1..50 }
-  validate :uncategorized_validator
+  validate :parent_category_validator
 
   before_validation :ensure_slug
   after_save :invalidate_site_cache
@@ -29,35 +43,44 @@ class Category < ActiveRecord::Base
   after_destroy :publish_categories_list
 
   has_one :category_search_data
+  belongs_to :parent_category, class_name: 'Category'
 
   scope :latest, ->{ order('topic_count desc') }
 
   scope :secured, ->(guardian = nil) {
     ids = guardian.secure_category_ids if guardian
     if ids.present?
-      where("NOT categories.read_restricted or categories.id in (:cats)", cats: ids)
+      where("NOT categories.read_restricted or categories.id in (:cats)", cats: ids).references(:categories)
     else
-      where("NOT categories.read_restricted")
+      where("NOT categories.read_restricted").references(:categories)
     end
   }
 
   scope :topic_create_allowed, ->(guardian) {
-    scoped_to_permissions(guardian, [:full])
+    if guardian.anonymous?
+      where("1=0")
+    else
+      scoped_to_permissions(guardian, [:full])
+    end
   }
 
   scope :post_create_allowed, ->(guardian) {
-    scoped_to_permissions(guardian, [:create_post, :full])
+    if guardian.anonymous?
+      where("1=0")
+    else
+      scoped_to_permissions(guardian, [:create_post, :full])
+    end
   }
   delegate :post_template, to: 'self.class'
 
   # permission is just used by serialization
   # we may consider wrapping this in another spot
-  attr_accessor :displayable_topics, :permission
+  attr_accessor :displayable_topics, :permission, :subcategory_ids
 
 
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian && guardian.is_staff?
-      scoped
+      rails4? ? all : scoped
     else
       permission_types = permission_types.map{ |permission_type|
         CategoryGroup.permission_types[permission_type]
@@ -86,18 +109,35 @@ class Category < ActiveRecord::Base
   # all categories.
   def self.update_stats
     topics = Topic
-               .select("COUNT(*)")
+               .select("COUNT(*) topic_count")
                .where("topics.category_id = categories.id")
                .where("categories.topic_id <> topics.id")
                .visible
 
-    topic_count = topics.to_sql
+    topics_with_post_count = Topic
+                              .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
+                              .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
+                              .group("topics.category_id")
+                              .visible.to_sql
+
     topics_year = topics.created_since(1.year.ago).to_sql
     topics_month = topics.created_since(1.month.ago).to_sql
     topics_week = topics.created_since(1.week.ago).to_sql
 
-    Category.update_all("topic_count = (#{topic_count}),
-                         topics_year = (#{topics_year}),
+
+    Category.exec_sql <<SQL
+    UPDATE categories c
+    SET   topic_count = x.topic_count,
+          post_count = x.post_count
+    FROM (#{topics_with_post_count}) x
+    WHERE x.category_id = c.id AND
+          (c.topic_count <> x.topic_count OR c.post_count <> x.post_count)
+
+SQL
+
+
+    # TODO don't update unchanged data
+    Category.update_all("topics_year = (#{topics_year}),
                          topics_month = (#{topics_month}),
                          topics_week = (#{topics_week})")
   end
@@ -109,10 +149,11 @@ class Category < ActiveRecord::Base
   end
 
   def create_category_definition
-    create_topic!(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now)
-    update_column(:topic_id, topic.id)
-    topic.update_column(:category_id, id)
-    topic.posts.create(raw: post_template, user: user)
+    t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
+    t.skip_callbacks = true
+    t.save!
+    update_column(:topic_id, t.id)
+    t.posts.create(raw: post_template, user: user)
   end
 
   def topic_url
@@ -144,9 +185,13 @@ class Category < ActiveRecord::Base
     MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new(Category.latest).as_json})
   end
 
-  def uncategorized_validator
-    errors.add(:name, I18n.t(:is_reserved)) if name == SiteSetting.uncategorized_name
-    errors.add(:slug, I18n.t(:is_reserved)) if slug == SiteSetting.uncategorized_name
+  def parent_category_validator
+    if parent_category_id
+      errors.add(:parent_category_id, I18n.t("category.errors.self_parent")) if parent_category_id == id
+
+      grandfather_id = Category.where(id: parent_category_id).pluck(:parent_category_id).first
+      errors.add(:base, I18n.t("category.errors.depth")) if grandfather_id
+    end
   end
 
   def group_names=(names)
@@ -194,6 +239,26 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def update_latest
+    latest_post_id = Post
+                        .order("posts.created_at desc")
+                        .where("NOT hidden")
+                        .joins("join topics on topics.id = topic_id")
+                        .where("topics.category_id = :id", id: self.id)
+                        .limit(1)
+                        .pluck("posts.id")
+                        .first
+
+    latest_topic_id = Topic
+                        .order("topics.created_at desc")
+                        .where("visible")
+                        .where("topics.category_id = :id", id: self.id)
+                        .limit(1)
+                        .pluck("topics.id")
+                        .first
+
+    self.update_attributes(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
+  end
 
   def self.resolve_permissions(permissions)
     read_restricted = true

@@ -19,9 +19,23 @@ module ApplicationHelper
     end
   end
 
+  def html_classes
+    "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'}"
+  end
+
   def escape_unicode(javascript)
     if javascript
-      javascript.gsub(/\342\200\250/u, '&#x2028;').gsub(/(<\/)/u, '\u003C/').html_safe
+      javascript = javascript.dup.force_encoding("utf-8")
+
+      unless javascript.valid_encoding?
+        # work around bust string with a double conversion
+        javascript.encode!("utf-16","utf-8",:invalid => :replace)
+        javascript.encode!("utf-8","utf-16")
+      end
+
+      javascript.gsub!(/\342\200\250/u, '&#x2028;')
+      javascript.gsub!(/(<\/)/u, '\u003C/')
+      javascript.html_safe
     else
       ''
     end
@@ -99,5 +113,19 @@ module ApplicationHelper
 
   def login_path
     return "#{Discourse::base_uri}/login"
+  end
+
+  def mobile_view?
+    return false unless SiteSetting.enable_mobile_theme
+    if session[:mobile_view]
+      session[:mobile_view] == '1'
+    else
+      mobile_device?
+    end
+  end
+
+  def mobile_device?
+    # TODO: this is dumb. user agent matching is a doomed approach. a better solution is coming.
+    request.user_agent =~ /Mobile|webOS|Nexus 7/ and !(request.user_agent =~ /iPad/)
   end
 end

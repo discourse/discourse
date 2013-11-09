@@ -8,7 +8,7 @@
 **/
 Discourse.ApplicationRoute = Em.Route.extend({
 
-  events: {
+  actions: {
     showLogin: function() {
       Discourse.Route.showModal(this, 'login');
     },
@@ -33,12 +33,32 @@ Discourse.ApplicationRoute = Em.Route.extend({
 
 
     /**
-      Close the current modal.
+      Close the current modal, and destroy its state.
 
       @method closeModal
     **/
     closeModal: function() {
       this.render('hide_modal', {into: 'modal', outlet: 'modalBody'});
+    },
+
+    /**
+      Hide the modal, but keep it with all its state so that it can be shown again later.
+      This is useful if you want to prompt for confirmation. hideModal, ask "Are you sure?",
+      user clicks "No", showModal. If user clicks "Yes", be sure to call closeModal.
+
+      @method hideModal
+    **/
+    hideModal: function() {
+      $('#discourse-modal').modal('hide');
+    },
+
+    /**
+      Show the modal. Useful after calling hideModal.
+
+      @method showModal
+    **/
+    showModal: function() {
+      $('#discourse-modal').modal('show');
     },
 
     editCategory: function(category) {
@@ -48,8 +68,8 @@ Discourse.ApplicationRoute = Em.Route.extend({
         Discourse.Route.showModal(router, 'editCategory', category);
         router.controllerFor('editCategory').set('selectedTab', 'general');
       } else {
-        Discourse.Category.findBySlugOrId(category.get('slug') || category.get('id')).then(function (c) {
-          Discourse.Site.instance().updateCategory(c);
+        Discourse.Category.reloadBySlugOrId(category.get('slug') || category.get('id')).then(function (c) {
+          Discourse.Site.current().updateCategory(c);
           Discourse.Route.showModal(router, 'editCategory', c);
           router.controllerFor('editCategory').set('selectedTab', 'general');
         });

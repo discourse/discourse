@@ -1,0 +1,374 @@
+// base styles for every modal popup used in Discourse
+
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
+.modal-open {
+  .dropdown-menu {
+     z-index: 2050;
+  }
+  .dropdown.open {
+    *z-index: 2050;
+  }
+  .popover {
+    z-index: 2060;
+  }
+  .tooltip {
+    z-index: 2070;
+  }
+
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  background-color: #000000;
+  &.fade {
+    opacity: 0;
+  }
+}
+
+.modal-backdrop,
+.modal-backdrop.fade.in {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+.modal-outer-container {
+  display:table;
+  width:100%;
+  height:100%;
+}
+.modal-middle-container {
+  display:table-cell;
+  vertical-align: middle;
+}
+.modal-inner-container {
+  max-width: 710px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  *border: 1px solid #999;
+  /* IE6-7 */
+
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  background-clip: padding-box;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1050;
+  overflow: auto;
+}
+
+// Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
+.bootbox.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1050;
+  overflow: auto;
+  width: 610px;
+  height: auto;
+  margin: -250px 0 0 -305px;
+  background-color: #ffffff;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  *border: 1px solid #999;
+  /* IE6-7 */
+
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  background-clip: padding-box;
+}
+
+.modal.fade {
+  -webkit-transition: opacity .3s linear, top .3s ease-out;
+  transition: opacity .3s linear, top .3s ease-out;
+  top: -25%;
+}
+.modal.fade.in {
+  top: 50%;
+}
+.modal-body {
+  overflow-y: auto;
+  max-height: 400px;
+  padding: 15px;
+}
+.modal-form {
+  margin-bottom: 0;
+}
+.modal-footer {
+  margin: 0 15px;
+  padding: 14px 0 15px;
+  border-top: 1px solid #ddd;
+  *zoom: 1;
+}
+.modal-footer:before,
+.modal-footer:after {
+  display: table;
+  content: "";
+}
+.modal-footer:after {
+  clear: both;
+}
+.modal-footer .btn + .btn {
+  margin-left: 5px;
+  margin-bottom: 0;
+}
+.modal-footer .btn.right {
+  float: right;
+}
+
+.modal-footer .btn-group .btn + .btn {
+  margin-left: -1px;
+}
+.modal-header {
+  border-bottom: 1px solid #ddd;
+  h3 {
+    color: $nav-pills-background-color-active;
+    font-size: 20px;
+    padding: 10px 15px 7px;
+  }
+  .close {
+    float: right;
+    font-size: 20px;
+    margin: 10px 10px 0px;
+    text-decoration: none;
+    color: $modal-close-button-color;
+    cursor: pointer;
+    &:hover {
+      color: darken($modal-close-button-color,20);
+    }
+  }
+}
+
+.modal {
+  .nav {
+    padding: 10px 30px;
+    background-color: #e6e6e6;
+    li > a {
+      font-size: 14px;
+    }
+    border-bottom: 1px solid #bbb;
+
+  }
+
+  .category-combobox {
+    width: 430px;
+
+    .chzn-drop {
+      left: -9000px;
+      width: 428px;
+    }
+    .chzn-search input {
+      width: 378px;
+    }
+
+    .chzn-search-icon {
+      margin-top: 8px;
+    }
+  }
+
+  &.hidden {
+    display: none;
+  }
+  .modal-body {
+    textarea {
+      width: 99%;
+      height: 80px;
+    }
+    label {
+      color: $darkish_gray;
+    }
+    p {
+      color: $black;
+      font-size: 13px;
+    }
+    .archetype-option {
+      margin-bottom: 20px;
+    }
+    .warning {
+      color: lighten($red, 10%) !important;
+    }
+  }
+  .password-confirmation {
+    display: none;
+  }
+
+  section.field {
+    margin-bottom: 20px;
+  }
+}
+
+
+.flag-modal {
+  max-height: 450px;
+}
+
+.custom-message-length {
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+
+.flag-message {
+  margin-left: 20px;
+  width: 95% !important;
+}
+
+.edit-category-modal {
+  .modal-body {
+    position: relative;
+    height: 350px;
+  }
+  &.small .modal-body {
+    height: 310px;
+  }
+  .secure-category-options {
+    margin: 10px 0 0 16px;
+    .badge-list {
+      margin: 10px 0;
+      li {
+        margin: 0 4px 8px 0;
+        a {
+          color: #888;
+          cursor: pointer;
+        }
+        a:hover {
+          color: $black;
+        }
+      }
+    }
+  }
+}
+
+.tabbed-modal {
+  .modal-body {
+    position: relative;
+    height: 350px;
+  }
+}
+
+.modal-tab {
+  position: absolute;
+}
+
+.split-modal {
+  .modal-body {
+    position: relative;
+    height: 350px;
+  }
+
+
+  #move-selected {
+    p {
+      margin-top: 0;
+    }
+
+    input[type=radio] {
+      margin-right: 10px;
+    }
+
+    button {
+      margin-top: 10px;
+      display: block;
+      width: 300px;
+    }
+
+    form {
+      margin-top: 20px;
+      #split-topic-name, #choose-topic-title {
+        width: 520px;
+      }
+    }
+  }
+}
+
+.invite-modal {
+  overflow: visible;
+  .ember-text-field {
+    width: 550px;
+  }
+}
+
+.reply-where-modal {
+  width: 370px;
+  margin-left: -185px;
+  .modal-footer {
+    .btn {
+      text-align: left;
+      font-size: 18px;
+      line-height: 20px;
+      width: 310px;
+      margin-bottom: 10px;
+      display: block;
+      margin-left: 0;
+      .topic-title {
+        font-size: 13px;
+        font-weight: normal;
+      }
+      &.btn-reply-here {
+        @include linear-gradient(#ddd, #ddd);
+        text-shadow: none;
+        color: $darkish_gray;
+      }
+    }
+    .cancel {
+      text-decoration: underline;
+      float: right;
+      margin-right: 5px;
+    }
+  }
+}
+
+.delete-user-modal {
+  .modal-footer {
+    .btn {
+      font-weight: normal;
+      text-align: left;
+      font-size: 14px;
+      line-height: 20px;
+      margin-bottom: 10px;
+      display: inline-block;
+      margin-left: 0;
+    }
+    .cancel {
+      text-decoration: underline;
+      display: block;
+      margin-right: 5px;
+    }
+  }
+}
+
+.flagging-delete-spammer, .delete-all-posts {
+  .modal-footer .cancel {
+    text-decoration: underline;
+    margin-left: 10px;
+  }
+}
+
+.permission-list{
+  list-style:none;
+  margin: 0 0 30px;
+  padding: 0;
+  .name {
+    margin-right: 20px;
+    display: inline-block;
+    min-width: 100px;
+  }
+  .permission {
+    margin-left: 20px;
+  }
+  .icon-remove-sign {
+    margin-left: 5px;
+  }
+  li {
+    margin-bottom: 10px;
+  }
+}

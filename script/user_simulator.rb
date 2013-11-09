@@ -35,7 +35,7 @@ end
 
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 
-unless Rails.env.development?
+unless ["profile", "development"].include? Rails.env
   puts "Bad idea to run a script that inserts random posts in any non development environment"
   exit
 end
@@ -50,11 +50,11 @@ puts "Simulating activity for user id #{user.id}: #{user.name}"
 while true
   puts "Creating a random topic"
 
-  category = Category.where(secure: false).order('random()').first
+  category = Category.where(read_restricted: false).order('random()').first
   PostCreator.create(user, raw: sentence, title: sentence[0..50].strip, category:  category.name)
 
   puts "creating random reply"
   PostCreator.create(user, raw: sentence, topic_id: last_topics.sample)
 
-  sleep 10
+  sleep 2
 end

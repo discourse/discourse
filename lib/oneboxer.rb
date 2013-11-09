@@ -31,6 +31,10 @@ module Oneboxer
     1.day
   end
 
+  def self.oneboxer_exists_for_url?(url)
+    Whitelist.entry_for_url(url) || matchers.any? { |matcher| url =~ matcher.regexp }
+  end
+
   # Return a oneboxer for a given URL
   def self.onebox_for_url(url)
     matchers.each do |matcher|

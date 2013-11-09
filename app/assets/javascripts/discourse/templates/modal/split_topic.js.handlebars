@@ -9,7 +9,10 @@
 
   <form>
     <label>{{i18n topic.split_topic.topic_name}}</label>
-    {{textField value=topicName placeholderKey="composer.title_placeholder"}}
+    {{textField value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
+
+    <label>{{i18n categories.category}}</label>
+    {{categoryChooser value=categoryId}}
   </form>
 
 </div>

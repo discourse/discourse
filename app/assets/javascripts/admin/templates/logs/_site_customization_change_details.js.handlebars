@@ -1,0 +1,22 @@
+<section class="field">
+  <b>{{i18n admin.customize.css}}</b>:
+  {{#if stylesheet}}
+    ({{i18n character_count count=stylesheet.length}})
+  {{/if}}
+  <br/>
+  {{textarea value=stylesheet class="plain"}}
+</section>
+<section class="field">
+  <b>{{i18n admin.customize.header}}</b>:
+  {{#if header}}
+    ({{i18n character_count count=header.length}})
+  {{/if}}
+  <br/>
+  {{textarea value=header class="plain"}}
+</section>
+<section class="field">
+  <b>{{i18n admin.customize.enabled}}</b>: {{enabled}}
+</section>
+<section class="field">
+  <b>{{i18n admin.customize.override_default}}</b>: {{override_default_style}}
+</section>

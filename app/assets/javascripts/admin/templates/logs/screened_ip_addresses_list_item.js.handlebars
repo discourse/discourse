@@ -1,0 +1,33 @@
+<div class="col first ip_address">
+  {{#if editing}}
+    {{textField value=ip_address autofocus="autofocus"}}
+  {{else}}
+    <span {{action edit this}}>{{ip_address}}</span>
+  {{/if}}
+</div>
+<div class="col action">
+  <i {{bindAttr class=":icon actionIcon"}}></i>
+  {{actionName}}
+</div>
+<div class="col match_count">{{match_count}}</div>
+<div class="col last_match_at">
+  {{#if last_match_at}}
+    {{unboundAgeWithTooltip last_match_at}}
+  {{/if}}
+</div>
+<div class="col created_at">{{unboundAgeWithTooltip created_at}}</div>
+<div class="col actions">
+  {{#unless editing}}
+    <button class="btn btn-danger" {{action destroy this}}><i class="icon icon-trash"></i> {{i18n admin.logs.delete}}</button>
+    <button class="btn" {{action edit this}}><i class="icon icon-pencil"></i> {{i18n admin.logs.edit}}</button>
+    {{#if isBlocked}}
+      <button class="btn" {{action allow this}}><i {{bindAttr class=":icon doNothingIcon"}}></i> {{i18n admin.logs.screened_ips.actions.do_nothing}}</button>
+    {{else}}
+      <button class="btn" {{action block this}}><i {{bindAttr class=":icon blockIcon"}}></i> {{i18n admin.logs.screened_ips.actions.block}}</button>
+    {{/if}}
+  {{else}}
+    <button class="btn" {{action save this}}>{{i18n admin.logs.save}}</button>
+    <a {{action cancel this}}>{{i18n cancel}}</a>
+  {{/unless}}
+</div>
+<div class="clearfix"></div>

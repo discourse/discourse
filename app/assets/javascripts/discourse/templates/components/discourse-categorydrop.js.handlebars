@@ -1,0 +1,13 @@
+{{#if category}}
+  <a href="#" {{action expand}} class="badge-category" {{bindAttr style="badgeStyle"}}>{{category.name}}</a>
+{{else}}
+  <a href='#' {{action expand}} class='badge-category home' {{bindAttr style="badgeStyle"}}>{{allCategoriesLabel}}</i></a>
+{{/if}}
+
+{{#if categories}}
+  <a href='#' {{action expand}} class='badge-category category-dropdown-button' {{bindAttr style="badgeStyle"}}><i {{bindAttr class="iconClass"}}></i></a>
+  <section {{bindAttr class="expanded::hidden :category-dropdown-menu"}} class='chooser'>
+    <div class='cat'><a {{bindAttr href=allCategoriesUrl}} class='badge-category home'>{{allCategoriesLabel}}</a></div>
+    {{#each categories}}<div class='cat'>{{categoryLink this allowUncategorized=true}}</div>{{/each}}
+  </section>
+{{/if}}

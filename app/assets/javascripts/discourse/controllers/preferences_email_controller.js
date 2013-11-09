@@ -22,17 +22,16 @@ Discourse.PreferencesEmailController = Discourse.ObjectController.extend({
     return I18n.t("user.change");
   }.property('saving'),
 
-  changeEmail: function() {
-    var preferencesEmailController = this;
-    this.set('saving', true);
-    return this.get('content').changeEmail(this.get('newEmail')).then(function() {
-      preferencesEmailController.set('success', true);
-    }, function() {
-      preferencesEmailController.setProperties({
-        error: true,
-        saving: false
+  actions: {
+    changeEmail: function() {
+      var self = this;
+      this.set('saving', true);
+      return this.get('content').changeEmail(this.get('newEmail')).then(function() {
+        self.set('success', true);
+      }, function() {
+        self.setProperties({ error: true, saving: false });
       });
-    });
+    }
   }
 
 });

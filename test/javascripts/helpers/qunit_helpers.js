@@ -1,17 +1,29 @@
-function integration(name) {
+function integration(name, lifecycle) {
   module("Integration: " + name, {
     setup: function() {
       sinon.stub(Discourse.ScrollingDOMMethods, "bindOnScroll");
       sinon.stub(Discourse.ScrollingDOMMethods, "unbindOnScroll");
       Ember.run(Discourse, Discourse.advanceReadiness);
+
+      if (lifecycle && lifecycle.setup) {
+        lifecycle.setup.call(this);
+      }
     },
 
     teardown: function() {
+      if (lifecycle && lifecycle.teardown) {
+        lifecycle.teardown.call(this);
+      }
+
       Discourse.reset();
       Discourse.ScrollingDOMMethods.bindOnScroll.restore();
       Discourse.ScrollingDOMMethods.unbindOnScroll.restore();
     }
   });
+}
+
+function testController(klass, model) {
+  return klass.create({model: model, container: Discourse.__container__});
 }
 
 function controllerFor(controller, model) {
@@ -21,12 +33,17 @@ function controllerFor(controller, model) {
 }
 
 function asyncTestDiscourse(text, func) {
-
   asyncTest(text, function () {
-
-    var qunitContext = this;
+    var self = this;
     Ember.run(function () {
-      func.call(qunitContext);
+      func.call(self);
     });
   });
+}
+
+function fixture(selector) {
+  if (selector) {
+    return $("#qunit-fixture").find(selector);
+  }
+  return $("#qunit-fixture");
 }

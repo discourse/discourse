@@ -13,8 +13,11 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def presence(post)
-    [:raw,:user_id,:topic_id].each do |attr_name|
+    [:raw,:topic_id].each do |attr_name|
        post.errors.add(attr_name, :blank, options) if post.send(attr_name).blank?
+    end
+    if post.new_record? and post.user_id.nil?
+      post.errors.add(:user_id, :blank, options)
     end
   end
 
@@ -55,12 +58,13 @@ class Validators::PostValidator < ActiveModel::Validator
   # Stop us from posting the same thing too quickly
   def unique_post_validator(post)
     return if SiteSetting.unique_posts_mins == 0
+    return if post.skip_unique_check
     return if post.acting_user.admin? || post.acting_user.moderator?
 
     # If the post is empty, default to the validates_presence_of
     return if post.raw.blank?
 
-    if $redis.exists(post.unique_post_key)
+    if post.matches_recent_post?
       post.errors.add(:raw, I18n.t(:just_posted_that))
     end
   end

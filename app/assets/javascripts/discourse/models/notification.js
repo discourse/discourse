@@ -19,7 +19,7 @@ Discourse.Notification = Discourse.Model.extend({
   }.property(),
 
   rendered: function() {
-    var notificationName = Discourse.Site.instance().get('notificationLookup')[this.notification_type];
+    var notificationName = Discourse.Site.currentProp('notificationLookup')[this.notification_type];
     return I18n.t("notifications." + notificationName, {
       username: this.data.display_username,
       link: "<a href='" + (this.get('url')) + "'>" + this.data.topic_title + "</a>"
@@ -30,12 +30,12 @@ Discourse.Notification = Discourse.Model.extend({
 
 Discourse.Notification.reopenClass({
   create: function(obj) {
-    var result;
-    result = this._super(obj);
+    obj = obj || {};
+
     if (obj.data) {
-      result.set('data', Em.Object.create(obj.data));
+      obj.data = Em.Object.create(obj.data);
     }
-    return result;
+    return this._super(obj);
   }
 });
 

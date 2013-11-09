@@ -62,14 +62,20 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
   }.property('typeFilter', 'loading'),
 
   termChanged: function() {
-    this.cancelType();
+    this.cancelTypeFilter();
   }.observes('term'),
 
-  moreOfType: function(type) {
-    this.set('typeFilter', type);
+  actions: {
+    moreOfType: function(type) {
+      this.set('typeFilter', type);
+    },
+
+    cancelType: function() {
+      this.cancelTypeFilter();
+    }
   },
 
-  cancelType: function() {
+  cancelTypeFilter: function() {
     this.set('typeFilter', null);
   },
 

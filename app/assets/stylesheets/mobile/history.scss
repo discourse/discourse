@@ -1,0 +1,46 @@
+// styles that apply to the popup that appears when you show the edit history
+// of a post
+
+@import "../common/foundation/variables";
+@import "../common/foundation/mixins";
+
+.modal.history-modal {
+  .modal-inner-container {
+    min-width: 100%;
+    min-height: 100%;
+  }
+
+  ins {
+    background: #e6ffe6;
+  }
+  del {
+    background: #ffe6e6;
+  }
+  .modal-header {
+    height: 42px;
+    padding-bottom: 10px;
+  }
+  .modal-body {padding-top: 0px;}
+  .history-loading {
+    margin: 25px 0;
+    width: 120px;
+    font-size: 20px;
+    padding: 8px 0 30px 30px;
+    background: {
+      image: image-url("spinner_96.gif");
+      repeat: no-repeat;
+      size: 25px 25px;
+      position: 0 4px;
+    };
+  }
+  select {
+    height: auto;
+	width: auto;
+  font-size: 16px;
+  position: fixed;
+  margin-top: -45px;
+  background-color: #fff;
+  }
+}
+
+.offset1 {display: none;}

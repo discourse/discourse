@@ -34,6 +34,10 @@ module SiteSettingExtension
     @enums ||= {}
   end
 
+  def hidden_settings
+    @hidden_settings ||= []
+  end
+
   def setting(name, default = nil, opts = {})
     mutex.synchronize do
       self.defaults[name] = default
@@ -41,6 +45,9 @@ module SiteSettingExtension
       if opts[:enum]
         enum = opts[:enum]
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
+      end
+      if opts[:hidden] == true
+        hidden_settings << name
       end
       setup_methods(name, current_value)
     end
@@ -67,21 +74,27 @@ module SiteSettingExtension
 
   def client_settings_json
     Rails.cache.fetch(SiteSettingExtension.client_settings_cache_key, expires_in: 30.minutes) do
-      MultiJson.dump(Hash[*@@client_settings.map{|n| [n, self.send(n)]}.flatten])
+      client_settings_json_uncached
     end
   end
 
+  def client_settings_json_uncached
+    MultiJson.dump(Hash[*@@client_settings.map{|n| [n, self.send(n)]}.flatten])
+  end
+
   # Retrieve all settings
-  def all_settings
-    @defaults.map do |s, v|
-      value = send(s)
-      type = types[get_data_type(s, value)]
-      {setting: s,
-       description: description(s),
-       default: v,
-       type: type.to_s,
-       value: value.to_s}.merge( type == :enum ? {valid_values: enum_class(s).values} : {})
-    end
+  def all_settings(include_hidden=false)
+    @defaults
+      .reject{|s, v| hidden_settings.include?(s) || include_hidden}
+      .map do |s, v|
+        value = send(s)
+        type = types[get_data_type(s, value)]
+        {setting: s,
+         description: description(s),
+         default: v,
+         type: type.to_s,
+         value: value.to_s}.merge( type == :enum ? {valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?} : {})
+      end
   end
 
   def description(setting)
@@ -231,28 +244,23 @@ module SiteSettingExtension
 
     # trivial multi db support, we can optimize this later
     current[name] = current_value
+    clean_name = name.to_s.sub("?", "")
 
-    setter = ("#{name}=").sub("?","")
-
-    eval "define_singleton_method :#{name} do
+    eval "define_singleton_method :#{clean_name} do
       c = @@containers[provider.current_site]
       c = c[name] if c
       c
     end
 
-    define_singleton_method :#{setter} do |val|
+    define_singleton_method :#{clean_name}? do
+      #{clean_name}
+    end
+
+    define_singleton_method :#{clean_name}= do |val|
       add_override!(:#{name}, val)
       refresh!
     end
     "
-  end
-
-  def method_missing(method, *args, &block)
-    as_question = method.to_s.gsub(/\?$/, '')
-    if respond_to?(as_question)
-      return send(as_question, *args, &block)
-    end
-    super(method, *args, &block)
   end
 
   def enum_class(name)

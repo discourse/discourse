@@ -13,32 +13,36 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
     if( this.get('details.auto_close_at') ) {
       var closeTime = new Date( this.get('details.auto_close_at') );
       if (closeTime > new Date()) {
-        this.set('auto_close_days', closeTime.daysSince());
+        this.set('auto_close_days', Math.round(moment(closeTime).diff(new Date(), 'days', true)));
       }
     } else {
       this.set('details.auto_close_days', '');
     }
   }.observes('details.auto_close_at'),
 
-  saveAutoClose: function() {
-    this.setAutoClose( parseFloat(this.get('auto_close_days')) );
-  },
+  actions: {
+    saveAutoClose: function() {
+      this.setAutoClose( parseFloat(this.get('auto_close_days')) );
+    },
 
-  removeAutoClose: function() {
-    this.setAutoClose(null);
+    removeAutoClose: function() {
+      this.setAutoClose(null);
+    }
   },
 
   setAutoClose: function(days) {
-    var editTopicAutoCloseController = this;
+    var self = this;
+    this.send('hideModal');
     Discourse.ajax({
       url: '/t/' + this.get('id') + '/autoclose',
       type: 'PUT',
       dataType: 'html', // no custom errors, jquery 1.9 enforces json
       data: { auto_close_days: days > 0 ? days : null }
     }).then(function(){
-      editTopicAutoCloseController.set('details.auto_close_at', moment().add('days', days).format());
+      self.send('closeModal');
+      self.set('details.auto_close_at', moment().add('days', days).format());
     }, function (error) {
-      bootbox.alert(I18n.t('generic_error'));
+      bootbox.alert(I18n.t('generic_error'), function() { self.send('showModal'); } );
     });
   }
 

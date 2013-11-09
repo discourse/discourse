@@ -39,7 +39,14 @@ class TopicCreator
     topic_params[:archetype] = @opts[:archetype] if @opts[:archetype].present?
     topic_params[:subtype] = @opts[:subtype] if @opts[:subtype].present?
 
-    category = Category.where(name: @opts[:category]).first
+    # Temporary fix to allow older clients to create topics.
+    # When all clients are updated the category variable should
+    # be set directly to the contents of the if statement.
+    category = if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
+      Category.where(id: @opts[:category]).first
+    else
+      Category.where(name: @opts[:category]).first
+    end
 
     @guardian.ensure_can_create!(Topic,category)
     topic_params[:category_id] = category.id if category.present?

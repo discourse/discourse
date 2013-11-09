@@ -19,14 +19,14 @@ class PostMover
     end
   end
 
-  def to_new_topic(title)
+  def to_new_topic(title, category_id=nil)
     @move_type = PostMover.move_types[:new_topic]
 
     Topic.transaction do
       move_posts_to Topic.create!(
         user: user,
         title: title,
-        category: original_topic.category
+        category_id: category_id
       )
     end
   end

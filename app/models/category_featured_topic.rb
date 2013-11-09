@@ -15,23 +15,27 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   def self.feature_topics_for(c)
     return if c.blank?
 
+    query = TopicQuery.new(self.fake_admin, per_page: SiteSetting.category_featured_topics, except_topic_id: c.topic_id, visible: true)
+    results = query.list_category(c).topic_ids.to_a
+
     CategoryFeaturedTopic.transaction do
       CategoryFeaturedTopic.delete_all(category_id: c.id)
-
-      # fake an admin
-      admin = User.new
-      admin.admin = true
-      admin.id = -1
-
-      query = TopicQuery.new(admin, per_page: SiteSetting.category_featured_topics, except_topic_id: c.topic_id, visible: true)
-      results = query.list_category(c)
-      if results.present?
-        results.topic_ids.each_with_index do |topic_id, idx|
+      if results
+        results.each_with_index do |topic_id, idx|
           c.category_featured_topics.create(topic_id: topic_id, rank: idx)
         end
       end
     end
   end
+
+  private
+    def self.fake_admin
+      # fake an admin
+      admin = User.new
+      admin.admin = true
+      admin.id = -1
+      admin
+    end
 
 end
 
@@ -44,6 +48,7 @@ end
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  rank        :integer          default(0), not null
+#  id          :integer          not null, primary key
 #
 # Indexes
 #

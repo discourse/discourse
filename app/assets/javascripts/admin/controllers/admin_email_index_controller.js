@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminEmailIndexController = Discourse.Controller.extend(Discourse.Presence, {
+Discourse.AdminEmailIndexController = Discourse.Controller.extend({
 
   /**
     Is the "send test email" button disabled?
@@ -24,23 +24,24 @@ Discourse.AdminEmailIndexController = Discourse.Controller.extend(Discourse.Pres
     this.set('sentTestEmail', false);
   }.observes('testEmailAddress'),
 
+  actions: {
+    /**
+      Sends a test email to the currently entered email address
 
-  /**
-    Sends a test email to the currently entered email address
+      @method sendTestEmail
+    **/
+    sendTestEmail: function() {
+      this.set('sentTestEmail', false);
 
-    @method sendTestEmail
-  **/
-  sendTestEmail: function() {
-    this.set('sentTestEmail', false);
+      var adminEmailLogsController = this;
+      Discourse.ajax("/admin/email/test", {
+        type: 'POST',
+        data: { email_address: this.get('testEmailAddress') }
+      }).then(function () {
+        adminEmailLogsController.set('sentTestEmail', true);
+      });
 
-    var adminEmailLogsController = this;
-    Discourse.ajax("/admin/email/test", {
-      type: 'POST',
-      data: { email_address: this.get('testEmailAddress') }
-    }).then(function () {
-      adminEmailLogsController.set('sentTestEmail', true);
-    });
-
+    }
   }
 
 });

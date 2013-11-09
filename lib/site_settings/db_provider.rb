@@ -58,7 +58,7 @@ class SiteSettings::DbProvider
 
   # table is not in the db yet, initial migration, etc
   def table_exists?
-    @table_exists = ActiveRecord::Base.connection.table_exists? @model.table_name if @table_exists == nil
+    @table_exists = ActiveRecord::Base.connection.table_exists? @model.table_name unless @table_exists
     @table_exists
   end
 

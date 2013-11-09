@@ -8,6 +8,24 @@ InviteRedeemer = Struct.new(:invite) do
     invited_user
   end
 
+  # extracted from User cause it is very specific to invites
+  def self.create_user_for_email(email)
+    username = UserNameSuggester.suggest(email)
+
+    DiscourseHub.nickname_operation do
+      match, available, suggestion = DiscourseHub.nickname_match?(username, email)
+      username = suggestion unless match || available
+    end
+
+    user = User.new(email: email, username: username, name: username, active: true)
+    user.trust_level = SiteSetting.default_invitee_trust_level
+    user.save!
+
+    DiscourseHub.nickname_operation { DiscourseHub.register_nickname(username, email) }
+
+    user
+  end
+
   private
 
   def invited_user
@@ -34,7 +52,7 @@ InviteRedeemer = Struct.new(:invite) do
 
   def get_invited_user
     result = get_existing_user
-    result ||= create_new_user
+    result ||= InviteRedeemer.create_user_for_email(invite.email)
     result.send_welcome_message = false
     result
   end
@@ -43,9 +61,6 @@ InviteRedeemer = Struct.new(:invite) do
     User.where(email: invite.email).first
   end
 
-  def create_new_user
-    User.create_for_email(invite.email, trust_level: SiteSetting.default_invitee_trust_level)
-  end
 
   def add_to_private_topics_if_invited
     invite.topics.private_messages.each do |t|

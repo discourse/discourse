@@ -2,15 +2,14 @@
   This view handles rendering of an activity in a user's profile
 
   @class ActivityFilterView
-  @extends Discourse.View
+  @extends Ember.Component
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ActivityFilterView = Discourse.View.extend({
+Discourse.ActivityFilterView = Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['active', 'noGlyph'],
 
-  userActionType: Em.computed.alias('controller.userActionType'),
   shouldRerender: Discourse.View.renderIfChanged('count'),
   noGlyph: Em.computed.empty('icon'),
 
@@ -19,9 +18,9 @@ Discourse.ActivityFilterView = Discourse.View.extend({
     if (content) {
       return parseInt(this.get('userActionType'), 10) === parseInt(Em.get(content, 'action_type'), 10);
     } else {
-      return this.blank('userActionType');
+      return this.get('indexStream');
     }
-  }.property('userActionType', 'content.action_type'),
+  }.property('userActionType', 'indexStream'),
 
   activityCount: function() {
     return this.get('content.count') || this.get('count');
@@ -40,8 +39,7 @@ Discourse.ActivityFilterView = Discourse.View.extend({
   }.property('content.action_type'),
 
   url: function() {
-    var section = this.get('content.isPM') ? "/private-messages" : "/activity";
-    return "/users/" + this.get('user.username_lower') + section + this.get('typeKey');
+    return "/users/" + this.get('user.username_lower') + "/activity" + this.get('typeKey');
   }.property('typeKey', 'user.username_lower'),
 
   description: function() {
@@ -76,4 +74,4 @@ Discourse.ActivityFilterView = Discourse.View.extend({
 
 });
 
-Discourse.View.registerHelper('activityFilter', Discourse.ActivityFilterView);
+Discourse.View.registerHelper('discourse-activity-filter', Discourse.ActivityFilterView);

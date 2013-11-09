@@ -2,16 +2,18 @@ module ImageSizer
 
   # Resize an image to the aspect ratio we want
   def self.resize(width, height)
-    max_width = SiteSetting.max_image_width.to_f
     return if width.blank? || height.blank?
+
+    max_width = SiteSetting.max_image_width.to_f
+    max_height = SiteSetting.max_image_height.to_f
 
     w = width.to_f
     h = height.to_f
 
-    return [w.floor, h.floor] if w < max_width
+    return [w.floor, h.floor] if w <= max_width && h <= max_height
 
-    # Using the maximum width, resize the height retaining the aspect ratio
-    [max_width.floor, (h * (max_width / w)).floor]
+    ratio = [max_width / w, max_height / h].min;
+    [(w * ratio).floor, (h * ratio).floor]
   end
 
 end

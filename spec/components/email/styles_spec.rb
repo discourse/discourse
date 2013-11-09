@@ -40,6 +40,11 @@ describe Email::Styles do
       expect(frag.at("img")["src"]).to eq("#{Discourse.base_url}/some-image.png")
     end
 
+    it "prefixes schemaless image urls with http:" do
+      frag = basic_fragment("<img src='//www.discourse.com/some-image.gif'>")
+      expect(frag.at("img")["src"]).to eq("http://www.discourse.com/some-image.gif")
+    end
+
     it "strips classes and ids" do
       frag = basic_fragment("<div class='foo' id='bar'><div class='foo' id='bar'></div></div>")
       expect(frag.to_html).to eq("<div><div></div></div>")

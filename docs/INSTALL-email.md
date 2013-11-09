@@ -54,7 +54,8 @@ I'm pleased with Mandrill's setup - this is the Right Way to do things.
 
 ![mandrill email signup](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20mandrill%20editapikey2.png)
 
-1. Since we'll only be using this key for sending email and *nothing else*, check 'Only Allow This Key To Use Certain API Calls' and select only Messages / Send
+1. Since we'll only be using this key for sending email and *nothing else*, check 'Only Allow This Key To Use Certain API Calls' and select only Messages / Send and Messages/ Send-Raw. Send-Raw must be selected or Discourse won't be able to send email.
+ 
 
 ![mandrill email signup](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20mandrill%20editapikey3.png)
 
@@ -127,7 +128,7 @@ Login to Discourse, go to the Admin page and select 'Settings'.
 
 Filter with the string 'system'.
 
-* Ensure that `system_username` is set to an email address for an appropriate "owner" of the forum
+* Ensure that `site_contact_username` is set to an email address for an appropriate "owner" of the forum
 * Set `notification_email` to 'noreply@', 'nobody@' as appropriate.
 
 Filter with the string 'contact_email'

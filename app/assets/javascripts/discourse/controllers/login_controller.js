@@ -13,22 +13,15 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
   loggingIn: false,
 
   site: function() {
-    return Discourse.Site.instance();
+    return Discourse.Site.current();
   }.property(),
-
 
   /**
    Determines whether at least one login button is enabled
   **/
   hasAtLeastOneLoginButton: function() {
-    return Discourse.SiteSettings.enable_google_logins ||
-           Discourse.SiteSettings.enable_facebook_logins ||
-           Discourse.SiteSettings.enable_cas_logins ||
-           Discourse.SiteSettings.enable_twitter_logins ||
-           Discourse.SiteSettings.enable_yahoo_logins ||
-           Discourse.SiteSettings.enable_github_logins ||
-           Discourse.SiteSettings.enable_persona_logins;
-  }.property(),
+    return Em.get("Discourse.LoginMethod.all").length > 0;
+  }.property("Discourse.LoginMethod.all.@each"),
 
   loginButtonText: function() {
     return this.get('loggingIn') ? I18n.t('login.logging_in') : I18n.t('login.title');
@@ -63,7 +56,6 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
         $hidden_login_form.find('input[name=username]').val(loginController.get('loginName'));
         $hidden_login_form.find('input[name=password]').val(loginController.get('loginPassword'));
         $hidden_login_form.find('input[name=redirect]').val(window.location.href);
-        $hidden_login_form.find('input[name=authenticity_token]').val($('meta[name=csrf-token]').attr('content'));
         $hidden_login_form.submit();
       }
 
@@ -78,55 +70,36 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
 
   authMessage: (function() {
     if (this.blank('authenticate')) return "";
-    return I18n.t("login." + (this.get('authenticate')) + ".message");
+    var method = Discourse.get('LoginMethod.all').findProperty("name", this.get("authenticate"));
+    if(method){
+      return method.get('message');
+    }
   }).property('authenticate'),
 
-  twitterLogin: function() {
-    this.set('authenticate', 'twitter');
-    var left = this.get('lastX') - 400;
-    var top = this.get('lastY') - 200;
-    return window.open(Discourse.getURL("/auth/twitter"), "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
-  },
+  externalLogin: function(loginMethod){
+    var name = loginMethod.get("name");
+    var customLogin = loginMethod.get("customLogin");
 
-  facebookLogin: function() {
-    this.set('authenticate', 'facebook');
-    var left = this.get('lastX') - 400;
-    var top = this.get('lastY') - 200;
-    return window.open(Discourse.getURL("/auth/facebook"), "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
-  },
-
-  casLogin: function() {
-    var left, top;
-    this.set('authenticate', 'cas');
-    left = this.get('lastX') - 400;
-    top = this.get('lastY') - 200;
-    return window.open("/auth/cas", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
-   },
-
-  openidLogin: function(provider) {
-    var left = this.get('lastX') - 400;
-    var top = this.get('lastY') - 200;
-    if (provider === "yahoo") {
-      this.set("authenticate", 'yahoo');
-      return window.open(Discourse.getURL("/auth/yahoo"), "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
+    if(customLogin){
+      customLogin();
     } else {
-      window.open(Discourse.getURL("/auth/google"), "_blank", "menubar=no,status=no,height=500,width=850,left=" + left + ",top=" + top);
-      return this.set("authenticate", 'google');
+      this.set('authenticate', name);
+      var left = this.get('lastX') - 400;
+      var top = this.get('lastY') - 200;
+
+      var height = loginMethod.get("frameHeight") || 400;
+      var width = loginMethod.get("frameWidth") || 800;
+      window.open(Discourse.getURL("/auth/" + name), "_blank",
+          "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
     }
   },
 
-  githubLogin: function() {
-    this.set('authenticate', 'github');
-    var left = this.get('lastX') - 400;
-    var top = this.get('lastY') - 200;
-    return window.open(Discourse.getURL("/auth/github"), "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
-  },
-
-  personaLogin: function() {
-    navigator.id.request();
-  },
-
   authenticationComplete: function(options) {
+    if (options.requires_invite) {
+      this.flash(I18n.t('login.requires_invite'), 'success');
+      this.set('authenticate', null);
+      return;
+    }
     if (options.awaiting_approval) {
       this.flash(I18n.t('login.awaiting_approval'), 'success');
       this.set('authenticate', null);

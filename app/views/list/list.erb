@@ -10,6 +10,12 @@
 
 <p><%= t 'powered_by_html' %></p>
 
+<% if @rss %>
+  <% content_for :head do %>
+    <%= auto_discovery_link_tag(:rss, {action: "#{@rss}_feed"}, title: I18n.t("rss_description.#{@rss}")) %>
+  <% end %>
+<% end %>
+
 <% if @category %>
   <% content_for :head do %>
     <%= auto_discovery_link_tag(@category, {action: :category_feed, format: :rss}, title: t('rss_topics_in_category', category: @category.name), type: 'application/rss+xml') %>

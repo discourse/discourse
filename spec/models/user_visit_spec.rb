@@ -9,13 +9,13 @@ describe UserVisit do
     u.update_visit_record!(1.day.ago.to_date)
 
     u.reload
-    u.days_visited.should == 2
+    u.user_stat.days_visited.should == 2
 
-    u.days_visited = 1
+    u.user_stat.days_visited = 1
     u.save
     UserVisit.ensure_consistency!
 
     u.reload
-    u.days_visited.should == 2
+    u.user_stat.days_visited.should == 2
   end
 end

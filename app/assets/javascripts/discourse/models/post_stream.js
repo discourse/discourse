@@ -133,7 +133,6 @@ Discourse.PostStream = Em.Object.extend({
 
   hasNoFilters: Em.computed.empty('filterDesc'),
 
-
   /**
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
     This is the collection we'll ask for when scrolling upwards.
@@ -238,7 +237,7 @@ Discourse.PostStream = Em.Object.extend({
     var postWeWant = this.get('posts').findProperty('post_number', opts.nearPost);
     if (postWeWant) {
       Discourse.TopicView.jumpToPost(topic.get('id'), opts.nearPost);
-      return Ember.Deferred.create(function(p) { p.reject(); });
+      return Ember.RSVP.reject();
     }
 
     // TODO: if we have all the posts in the filter, don't go to the server for them.
@@ -254,6 +253,8 @@ Discourse.PostStream = Em.Object.extend({
 
       if (opts.nearPost) {
         Discourse.TopicView.jumpToPost(topic.get('id'), opts.nearPost);
+      } else {
+        Discourse.TopicView.jumpToPost(topic.get('id'), 1);
       }
 
       Discourse.URL.set('queryParams', postStream.get('streamFilters'));
@@ -270,22 +271,26 @@ Discourse.PostStream = Em.Object.extend({
     @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
   **/
   appendMore: function() {
-    var postStream = this,
-        rejectedPromise = Ember.Deferred.create(function(p) { p.reject(); });
+    var postStream = this;
 
     // Make sure we can append more posts
-    if (!postStream.get('canAppendMore')) { return rejectedPromise; }
+    if (!postStream.get('canAppendMore')) { return Ember.RSVP.reject(); }
 
     var postIds = postStream.get('nextWindow');
-    if (Ember.isEmpty(postIds)) { return rejectedPromise; }
+    if (Ember.isEmpty(postIds)) { return Ember.RSVP.reject(); }
 
     postStream.set('loadingBelow', true);
+
+    var stopLoading = function() {
+      postStream.set('loadingBelow', false);
+    };
+
     return postStream.findPostsByIds(postIds).then(function(posts) {
       posts.forEach(function(p) {
         postStream.appendPost(p);
       });
-      postStream.set('loadingBelow', false);
-    });
+      stopLoading();
+    }, stopLoading);
   },
 
   /**
@@ -296,7 +301,7 @@ Discourse.PostStream = Em.Object.extend({
   **/
   prependMore: function() {
     var postStream = this,
-        rejectedPromise = Ember.Deferred.create(function(p) { p.reject(); });
+        rejectedPromise = Ember.RSVP.reject();
 
     // Make sure we can append more posts
     if (!postStream.get('canPrependMore')) { return rejectedPromise; }
@@ -453,6 +458,26 @@ Discourse.PostStream = Em.Object.extend({
       this.get('stream').addObject(postId);
       if (lastPostLoaded) { this.appendMore(); }
     }
+  },
+
+  /**
+    Returns the "thread" of posts in the history of a post.
+
+    @method findReplyHistory
+    @param {Discourse.Post} post the post whose history we want
+    @returns {Array} the posts in the history.
+  **/
+  findReplyHistory: function(post) {
+    var postStream = this,
+        url = "/posts/" + post.get('id') + "/reply-history.json";
+
+    return Discourse.ajax(url).then(function(result) {
+      return result.map(function (p) {
+        return postStream.storePost(Discourse.Post.create(p));
+      });
+    }).then(function (replyHistory) {
+      post.set('replyHistory', replyHistory);
+    });
   },
 
   /**
@@ -659,8 +684,8 @@ Discourse.PostStream = Em.Object.extend({
 
 Discourse.PostStream.reopenClass({
 
-  create: function(args) {
-    var postStream = this._super(args);
+  create: function() {
+    var postStream = this._super.apply(this, arguments);
     postStream.setProperties({
       posts: Em.A(),
       stream: Em.A(),

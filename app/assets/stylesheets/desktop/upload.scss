@@ -1,0 +1,42 @@
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
+.add-upload .icon-plus {
+  font-size: 10px;
+  position: relative;
+  left: -5px;
+  bottom: -5px;
+  text-shadow: -1px -1px 0 $btn-primary-background-color,
+    1px 1px 0 $btn-primary-background-color,
+    1px -1px 0 $btn-primary-background-color,
+    -1px 1px 0 $btn-primary-background-color;
+}
+
+.upload-selector {
+  label {
+    display: inline-block;
+    padding-left: 10px;
+  }
+  .radios {
+    margin: 0 0 25px 0;
+    .inputs {
+      float: right;
+      width: 75%;
+      input {
+        width: 90%;
+        margin: 0 0 5px 0;
+      }
+      input[type="file"] {
+        font-size: 14px;
+        line-height: 18px;
+      }
+      .description, .hint {
+        color: #9a9ea0;
+      }
+      .hint {
+        font-style: italic;
+        margin: 5px 0 0 0;
+      }
+    }
+  }
+}

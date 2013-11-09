@@ -1,0 +1,84 @@
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
+// --------------------------------------------------
+// Base styles for HTML elements
+// --------------------------------------------------
+
+html {
+  color: $black;
+  font: #{$base-font-size}/#{$base-line-height} $base-font-family;
+  background-color: #fff;
+  overflow-y: scroll;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+// Links
+// --------------------------------------------------
+
+a {
+  color: $link-color;
+  text-decoration: none;
+  cursor: pointer;
+  &:visited {
+    color: $link-color-visited;
+  }
+  &:hover {
+    color: $link-color-hover;
+  }
+  &:focus {
+    outline: 0;
+  }
+  &:active {
+    color: $link-color-active;
+  }
+}
+
+// Typography
+// --------------------------------------------------
+
+hr {
+  display: block;
+  height: 1px;
+  margin: 1em 0;
+  border: 0;
+  border-top: 1px solid #eee;
+  padding: 0;
+}
+
+// Lists
+// --------------------------------------------------
+
+ul,
+ol,
+dd {
+  margin: 0 0 9px 25px;
+  padding: 0;
+}
+
+li {
+  > ul,
+  > ol {
+    margin-bottom: 0;
+  }
+}
+
+// Embedded content
+// --------------------------------------------------
+
+img {
+  vertical-align: middle;
+}
+
+// Forms
+// --------------------------------------------------
+
+fieldset {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+pre code {
+  overflow: auto;
+}

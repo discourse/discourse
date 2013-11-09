@@ -1,8 +1,13 @@
 <%- unless SiteCustomization.override_default_style(session[:preview_style]) %>
-  <%=stylesheet_link_tag "application"%>
+  <% if mobile_view? %>
+    <%= stylesheet_link_tag "mobile" %>
+  <% else %>
+    <%= stylesheet_link_tag "desktop" %>
+  <% end %>
 <%- end %>
 
 <%- if staff? %>
   <%= stylesheet_link_tag "admin"%>
 <%-end%>
-<%=SiteCustomization.custom_stylesheet(session[:preview_style])%>
+
+<%= SiteCustomization.custom_stylesheet(session[:preview_style], mobile_view? ? :mobile : :desktop) %>

@@ -129,20 +129,23 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     this.set("messageCount", this.get("messageCount") + 1);
   },
 
-  countNew: function(){
+  countNew: function(category_name){
     return _.chain(this.states)
       .where({last_read_post_number: null})
+      .where(function(topic){ return topic.category_name === category_name || !category_name;})
       .value()
       .length;
   },
 
-  countUnread: function(){
-    var count = 0;
-    _.each(this.states, function(topic){
-      count += (topic.last_read_post_number !== null &&
-                topic.last_read_post_number < topic.highest_post_number) ? 1 : 0;
-    });
-    return count;
+  countUnread: function(category_name){
+    return _.chain(this.states)
+      .where(function(topic){
+        return topic.last_read_post_number !== null &&
+               topic.last_read_post_number < topic.highest_post_number;
+      })
+      .where(function(topic){ return topic.category_name === category_name || !category_name;})
+      .value()
+      .length;
   },
 
   countCategory: function(category) {
@@ -156,15 +159,16 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     return count;
   },
 
-  lookupCount: function(name){
+  lookupCount: function(name, category){
+    var categoryName = Em.get(category, "name");
     if(name==="new") {
-      return this.countNew();
+      return this.countNew(categoryName);
     } else if(name==="unread") {
-      return this.countUnread();
+      return this.countUnread(categoryName);
     } else {
-      var category = name.split("/")[1];
-      if(category) {
-        return this.countCategory(category);
+      categoryName = name.split("/")[1];
+      if(categoryName) {
+        return this.countCategory(categoryName);
       }
     }
   },

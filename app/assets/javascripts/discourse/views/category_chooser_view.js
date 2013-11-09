@@ -12,16 +12,24 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   dataAttributes: ['name', 'color', 'text_color', 'description_text', 'topic_count'],
   valueBinding: Ember.Binding.oneWay('source'),
 
+  content: Em.computed.filter('categories', function(c) {
+    var uncategorized_id = Discourse.Site.currentProp("uncategorized_category_id");
+    return c.get('permission') === Discourse.PermissionType.FULL && c.get('id') !== uncategorized_id;
+  }),
+
   init: function() {
     this._super();
-    // TODO perhaps allow passing a param in to select if we need full or not
-    this.set('content', _.filter(Discourse.Category.list(), function(c){
-      return c.permission === Discourse.PermissionType.FULL;
-    }));
+    if (!this.get('categories')) {
+      this.set('categories', Discourse.Category.list());
+    }
   },
 
   none: function() {
-    if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('showUncategorized')) return 'category.none';
+    if (!Discourse.SiteSettings.allow_uncategorized_topics) {
+      return 'category.choose';
+    } else if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('showUncategorized')) {
+      return 'category.none';
+    }
   }.property('showUncategorized'),
 
   template: function(text, templateData) {

@@ -29,7 +29,7 @@ class ErrorLog
       date: DateTime.now,
       guid: SecureRandom.uuid,
       user_id: user && user.id,
-      request: filter_sensitive_post_data_parameters(controller, request.parameters).inspect,
+      parameters: request && request.filtered_parameters.to_json,
       action: controller.action_name,
       controller: controller.controller_name,
       backtrace: sanitize_backtrace(exception.backtrace).join("\n"),
@@ -92,17 +92,4 @@ class ErrorLog
     trace.map { |line| Pathname.new(line.gsub(re, "[RAILS_ROOT]")).cleanpath.to_s }
   end
 
-  def self.exclude_raw_post_parameters?(controller)
-    controller && controller.respond_to?(:filter_parameters)
-  end
-
-  def self.filter_sensitive_post_data_parameters(controller, parameters)
-    exclude_raw_post_parameters?(controller) ? controller.__send__(:filter_parameters, parameters) : parameters
-  end
-
-  def self.filter_sensitive_post_data_from_env(env_key, env_value, controller)
-    return env_value unless exclude_raw_post_parameters?
-    return PARAM_FILTER_REPLACEMENT if (env_key =~ /RAW_POST_DATA/i)
-    return controller.__send__(:filter_parameters, {env_key => env_value}).values[0]
-  end
 end

@@ -11,7 +11,7 @@ Discourse.Archetype = Discourse.Model.extend({
   hasOptions: Em.computed.gt('options.length', 0),
 
   site: function() {
-    return Discourse.Site.instance();
+    return Discourse.Site.current();
   }.property(),
 
   isDefault: Discourse.computed.propertyEqual('id', 'site.default_archetype'),

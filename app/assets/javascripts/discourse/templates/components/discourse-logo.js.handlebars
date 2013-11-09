@@ -1,0 +1,17 @@
+<div class="title">
+  <a href="{{unbound linkUrl}}">
+    {{#if showSmallLogo}}
+      {{#if smallLogoUrl}}
+        <img class="logo-small" src="{{unbound smallLogoUrl}}" width="33" height="33">
+      {{else}}
+        <i class="icon-home"></i>
+      {{/if}}
+    {{else}}
+      {{#if bigLogoUrl}}
+        <img id="site-logo" class="logo-big" src="{{unbound bigLogoUrl}}" alt="{{unbound title}}">
+      {{else}}
+        <h2 id="site-text-logo" class="text-logo">{{unbound title}}</h2>
+      {{/if}}
+    {{/if}}
+  </a>
+</div>

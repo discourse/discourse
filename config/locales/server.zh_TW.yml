@@ -371,7 +371,6 @@ zh_TW:
     rails_env_warning: "你的服務器運行在 %{env} 模式。"
     host_names_warning: "你的 config/database.yml 文件使用的是缺省的 localhost 主機名。請更改成你的站點主機名。"
     gc_warning: '你的服務器使用的是缺省的 ruby 垃圾回收參數，這個配置無法提供最高性能。請閱讀此性能調優文檔：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
-    clockwork_warning: '發條裝置（Clockwork）並未運行。請確保運行一個 clockwork 進程，這樣一些重要的工作能夠被安排執行。<a href="https://github.com/tomykaira/clockwork">了解發條裝置（clockwork）</a>。'
     sidekiq_warning: 'Sidekiq 不在運行。很多任務，例如發送電子郵件，是異步的被 sidekiq 調度執行的。請確保至少運行一個 sidekiq 進程。<a href="https://github.com/mperham/sidekiq">了解 Sidekiq</a>。'
     queue_size_warning: '隊列中的任務數爲%{queue_size}，任務較多。這可能因爲Sidekiq進程出問題導致，或者需要更多的Sidekiq進程。'
     memory_warning: '你的服務器環境內存少于 1GB，我們建議至少要有 1GB 內存'
@@ -424,7 +423,6 @@ zh_TW:
     company_full_name: "運行本站點的公司全稱，用于法律文檔，例如服務條款 /tos"
     company_short_name: "運行本站點的公司短名，用于法律文檔，例如服務條款 /tos"
     company_domain: "運行本站點的公司域名，用于法律文檔，例如服務條款 /tos"
-    api_key: "加密的應用開發接口密鑰（API key），用于創建和更新主題。使用 /admin/api 來對它進行設置。"
     queue_jobs: "如果失敗隊列在排隊，使用 Sidekiq 消息引擎對不同的工作排隊"
     crawl_images: "允許從第三方獲取圖片來插入寬、高數值"
     ninja_edit_window: "在多少秒鍾之內，對帖子的多次編輯不生成新版本"
@@ -471,7 +469,7 @@ zh_TW:
     track_external_right_clicks: "追蹤外部鏈接的右鍵點擊（例如：在浏覽器新標簽打開），缺省是禁用的，因爲它會重寫URL"
     topics_per_page: "在主題列表頁面，缺省載入多少個主題"
     posts_per_page: "在主題頁面，返回多少個帖子"
-    system_username: "論壇給用戶發送自動私信時使用的用戶名"
+    site_contact_username: "論壇給用戶發送自動私信時使用的用戶名"
     send_welcome_message: "給新用戶發送歡迎私信？"
     suppress_reply_directly_below: "當一個帖子只有一個回複時，不顯示帖子回複數量"
     allow_index_in_robots_txt: "允許搜索引擎索引站點內容（更新 robots.txt）"
@@ -507,8 +505,6 @@ zh_TW:
 
     active_user_rate_limit_secs: "更新“最後一次見到”數據的頻率，單位爲秒"
     previous_visit_timeout_hours: "系統判斷一次訪問之後多少小時後爲“上一次”訪問"
-
-    uncategorized_name: "在分類 /categories 頁面，沒有分類的主題的缺省分類"
 
     rate_limit_create_topic: "在創建一個主題之後間隔多少秒你才能創建另一個主題"
     rate_limit_create_post: "在創建一個帖子之後間隔多少秒你才能創建另一個帖子"
@@ -840,7 +836,7 @@ zh_TW:
         請訪問 %{base_url}%{url} 來回複。
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題發表了帖子"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} 在 '%{topic_title}' 主題發表了帖子"
       text_body_template: |
         %{username} 在 %{site_name} 的 '%{topic_title}' 主題中發表了帖子：
 
@@ -858,17 +854,6 @@ zh_TW:
       unsubscribe: "這封來自 %{site_link} 的彙總郵件是當我們有一段時間沒有見到你之後，作爲一個禮貌的通知發送給你的。\n如果你希望關閉它或者修改你的郵件設置，請訪問 %{unsubscribe_link}。"
       click_here: "點擊此處"
       from: "%{site_name} 摘要"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{private_message_from} 剛剛發送了一條私信給你
-
-        ---
-        %{message}
-
-        ---
-        請訪問 %{base_url}%{url} 來回複。
 
     forgot_password:
       subject_template: "[%{site_name}] 密碼重置"

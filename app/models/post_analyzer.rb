@@ -9,11 +9,18 @@ class PostAnalyzer
   def cook(*args)
     cooked = PrettyText.cook(*args)
 
-    # If we have any of the oneboxes in the cache, throw them in right away, don't
-    # wait for the post processor.
+    # cook all oneboxes, in the past we used to defer this
+    #  for some reason we decided to do this inline now
+    # TODO: discuss on http://meta.discourse.org what the correct thing is to do
+    #  keep in mind some oneboxes may take a long time to build
     result = Oneboxer.apply(cooked) do |url, elem|
       Oneboxer.invalidate(url) if args.last[:invalidate_oneboxes]
-      Oneboxer.onebox url
+      begin
+        Oneboxer.onebox url
+      rescue => e
+        Rails.logger.warn("Failed to cook onebox: #{e.message} #{e.backtrace}")
+        nil
+      end
     end
 
     cooked = result.to_html if result.changed?
@@ -36,37 +43,32 @@ class PostAnalyzer
   def attachment_count
     return 0 unless @raw.present?
 
-    if SiteSetting.enable_s3_uploads?
-      cooked_document.css("a.attachment[href^=\"#{S3Store.base_url}\"]")
-    else
-      cooked_document.css("a.attachment[href^=\"#{LocalStore.directory}\"]") +
-      cooked_document.css("a.attachment[href^=\"#{LocalStore.base_url}\"]")
-    end.count
+    attachments = cooked_document.css("a.attachment[href^=\"#{Discourse.store.absolute_base_url}\"]")
+    attachments += cooked_document.css("a.attachment[href^=\"#{Discourse.store.relative_base_url}\"]") if Discourse.store.internal?
+    attachments.count
   end
 
   def raw_mentions
     return [] if @raw.blank?
-
-    # We don't count mentions in quotes
     return @raw_mentions if @raw_mentions.present?
-    raw_stripped = @raw.gsub(/\[quote=(.*)\]([^\[]*?)\[\/quote\]/im, '')
 
-    # Strip pre and code tags
-    doc = Nokogiri::HTML.fragment(raw_stripped)
-    doc.search("pre").remove
-    doc.search("code").remove
+    # strip quotes and code blocks
+    cooked_stripped = cooked_document
+    cooked_stripped.search("aside.quote").remove
+    cooked_stripped.search("pre").remove
+    cooked_stripped.search("code").remove
 
-    results = doc.to_html.scan(PrettyText.mention_matcher)
+    results = cooked_stripped.to_html.scan(PrettyText.mention_matcher)
     @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }
   end
 
   # Count how many hosts are linked in the post
   def linked_hosts
     return {} if raw_links.blank?
-
     return @linked_hosts if @linked_hosts.present?
 
     @linked_hosts = {}
+
     raw_links.each do |u|
       begin
         uri = URI.parse(u)
@@ -77,22 +79,24 @@ class PostAnalyzer
         next
       end
     end
+
     @linked_hosts
   end
 
   # Returns an array of all links in a post excluding mentions
   def raw_links
     return [] unless @raw.present?
-
     return @raw_links if @raw_links.present?
 
     # Don't include @mentions in the link count
     @raw_links = []
-    cooked_document.search("a[href]").each do |l|
-      next if link_is_a_mention?(l)
+
+    cooked_document.search("a").each do |l|
+      next if l.attributes['href'].nil? || link_is_a_mention?(l)
       url = l.attributes['href'].to_s
       @raw_links << url
     end
+
     @raw_links
   end
 

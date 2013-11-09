@@ -28,7 +28,7 @@ class SystemMessage
     title = I18n.t("system_messages.#{type}.subject_template", params)
     raw_body = I18n.t("system_messages.#{type}.text_body_template", params)
 
-    PostCreator.create(Discourse.system_user,
+    PostCreator.create(Discourse.site_contact_user,
                        raw: raw_body,
                        title: title,
                        archetype: Archetype.private_message,

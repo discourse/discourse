@@ -113,12 +113,16 @@ page.runTests = function(){
     // for whatever reason the clicks do not respond at the begining
     //  defering
     Em.run.later(function(){
+
+      // Remove the popup action for testing
+      $('.topic-meta-data a:first').data('ember-action', '');
+
       $('.topic-meta-data a:first').focus().click();
     },500);
   });
 
-  test("has about me section",function(){
-    return $('.about-me').length === 1;
+  test("has details",function(){
+    return $('.details').length === 1;
   });
 
   run();

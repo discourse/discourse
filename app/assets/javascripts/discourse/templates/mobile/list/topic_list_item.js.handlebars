@@ -1,0 +1,67 @@
+<td>
+<div class='main-link clearfix'>
+
+  {{#if controller.rankDetailsVisible}}
+    <div class='rank-details'>
+      <p>{{rank_details.hot_topic_type}}</p>
+      <p>
+        ({{float rank_details.random_bias}} * {{float rank_details.random_multiplier}}) + ({{float rank_details.days_ago_bias}} * {{float rank_details.days_ago_multiplier}}) = <b>{{float rank_details.ranking_score}}</b>
+        <i class='icon icon-beaker score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>
+      </p>
+    </div>
+  {{/if}}
+
+  {{topicStatus topic=this}}
+  {{{topicLink this}}}
+  {{#if unread}}
+    <a href="{{lastUnreadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unread}}</a>
+  {{/if}}
+  {{#if displayNewPosts}}
+    <a href="{{lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="displayNewPosts"}}'>{{displayNewPosts}}</a>
+  {{/if}}
+  {{#if unseen}}
+    <a href="{{lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
+  {{/if}}
+
+  {{#if hasExcerpt}}
+    <div class="topic-excerpt">
+      {{excerpt}}
+      {{#if excerptTruncated}}
+        {{#unless canClearPin}}<a href="{{lastUnreadUrl}}">{{i18n read_more}}</a>{{/unless}}
+      {{/if}}
+      {{#if canClearPin}}
+        <a href="#" {{action clearPin this}} title="{{i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>
+
+<div class="topic-item-stats clearfix">
+  <div class='category'>
+    {{categoryLink category}}
+  </div>
+
+  <div class="pull-right">
+    <div class='num posts'><a href="{{lastUnreadUrl}}">{{number posts_count numberKey="posts_long"}}</a></div>
+
+    {{#if like_count}}
+      <div class='num likes'><a href='{{url}}{{#if has_best_of}}?filter=best_of{{/if}}' title='{{i18n topic.likes count="like_count"}}'><i class='icon-heart'></i> {{number like_count numberKey="likes_long"}}</a></div>
+    {{/if}}
+
+    <div class='last-poster'>
+      <i class="icon icon-user"></i> {{last_poster_username}}
+    </div>
+
+    {{#if bumped}}
+      <div class='num activity last'>
+        <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
+      </div>
+    {{else}}
+      <div class='num activity last'>
+        <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{unboundAge created_at}}</a>
+      </div>
+    {{/if}}
+  </div>
+  <div class="clearfix"></div>
+</div>
+</td>

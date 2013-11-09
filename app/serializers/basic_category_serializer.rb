@@ -10,6 +10,11 @@ class BasicCategorySerializer < ApplicationSerializer
              :topic_url,
              :hotness,
              :read_restricted,
-             :permission
+             :permission,
+             :parent_category_id
+
+  def include_parent_category_id?
+    parent_category_id
+  end
 
 end

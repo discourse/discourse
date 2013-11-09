@@ -4,9 +4,17 @@ require_dependency 'rate_limiter/on_create_record'
 # A redis backed rate limiter.
 class RateLimiter
 
+  def self.disable
+    @disabled = true
+  end
+
+  def self.enable
+    @disabled = false
+  end
+
   # We don't observe rate limits in test mode
   def self.disabled?
-    Rails.env.test?
+    @disabled || Rails.env.test?
   end
 
   def initialize(user, key, max, secs)

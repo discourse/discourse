@@ -1,0 +1,243 @@
+@import "../common/foundation/variables";
+@import "../common/foundation/mixins";
+
+// --------------------------------------------------
+// Discourse header
+// --------------------------------------------------
+
+.d-header {
+  padding-left: 10px !important; 
+  padding-right: 10px !important;
+  min-width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 1001;
+  background-color: #fff;
+box-shadow: 0 0 3px #aaa;
+
+  .docked & {
+    position: fixed;
+
+  }
+
+  a.star {float: left;}
+  .contents {
+    margin: 10px 0;
+  }
+  .title {
+    display: table;
+    float: left;
+    height: 40px;
+    > a {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+  #site-logo {
+    width: 110px;
+  }
+  .icon-home {
+    font-size: 20px;
+    line-height: 40px;
+  }
+  .panel {
+    float: right;
+    position: relative;
+    margin-right: 20px;
+  }
+  .current-username {
+    float: left;
+    display: none;
+    a {
+      color: $black;
+      font-size: 14px;
+      line-height: 40px;
+    }
+    button {
+      margin-top: 8px;
+    }
+  }
+  .icons {
+    float: left;
+    text-align: center;
+    margin: 0 0 0 15px;
+    list-style: none;
+    > li {
+      float: left;
+      &:first-child .icon {
+      }
+      &:first-child.active .icon {
+      }
+      &:last-child .icon {
+        border-right: 1px solid #ccc;
+      }
+    }
+    .icon {
+      display: block;
+      border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+      border-left: 1px solid #d6d6d6;
+      padding: 3px;
+      color: $nav-button-color;
+      text-decoration: none;
+      cursor: pointer;
+      &:hover {
+        color: $nav-button-color-hover;
+        background-color: $nav-button-background-color-hover;
+      }
+      &:active {
+        color: $nav-button-color-active;
+        background-color: $nav-button-background-color-active;
+      }
+    }
+    .active .icon {
+      position: relative;
+      color: #7b7b7b;
+      background-color: $white;
+      cursor: default;
+      @include box-shadow((6px 0 6px -6px rgba($black, 0.2), -6px 0 6px -6px rgba($black, 0.2), inset 0 13px 13px -13px rgba($black, 0.1)));
+      &:after {
+        display: block;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1101;
+        width: 100%;
+        height: 0;
+        content: "";
+        border-top: 1px solid $white;
+      }
+    }
+    [class^="icon-"] {
+      width: 32px;
+      height: 32px;
+      font-size: 20px;
+      line-height: 32px;
+      display: inline-block;
+    }
+    .notifications {
+      position: relative;
+    }
+    .badge-notification {
+      position: absolute;
+      top: -9px;
+      z-index: 1;
+      margin-left: 0;
+    }
+    .unread-notifications {
+      right: -4px;
+      background-color: #0088CC;
+    }
+    .unread-private-messages {
+      left: -4px;
+      background-color: #00953A;
+    }
+  }
+  .flagged-posts {
+    background-color: #E53B2E;
+  }
+}
+
+#main {
+  position: relative;
+}
+
+#main-outlet {
+  padding-top: 60px;
+}
+
+// Dropdowns
+// --------------------------------------------------
+
+.d-dropdown {
+  display: none;
+  overflow: hidden;
+  width: 290px;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1100;
+  margin-top: -1px;
+  border: 1px solid #ccc;
+  background-color: $white;
+  @include box-shadow(0 1px 1px rgba($black, 0.2));
+
+  // Common
+
+  ul {
+    margin: 0;
+    list-style: none;
+  }
+  li {
+    padding: 5px;
+    font-size: 13px;
+    line-height: 16px;
+    .icon {
+      margin-right: 3px;
+    }
+  }
+  .heading {
+    color: #2d3234;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 15px;
+
+
+  }
+  .selected {
+    background-color: $header-item-highlight;
+  }
+
+  // Notifications
+
+  &#notifications-dropdown {
+    .icon {
+      color: #777;
+    }
+    li {
+      background-color: $header-item-highlight;
+    }
+    .read {
+      background-color: $white;
+    }
+    .none {
+      padding: 5px;
+    }
+  }
+
+  // Search
+
+  input[type='text'] {
+    width: 267px;
+    height: 22px;
+    margin: 5px;
+    padding: 5px;
+    font-size: 16px;
+    &:focus {
+      @include box-shadow((inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 4px rgba(82, 168, 236, 0.6)));
+    }
+  }
+  .searching {
+    display: block;
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    color: #777;
+    font-size: 18px;
+  }
+  .no-results {
+    padding: 0 5px 5px;
+  }
+  .filter {
+    float: right;
+  }
+
+  // Categories
+
+  .category {
+    float: left;
+    background-color: transparent;
+    line-height: 20px;
+  }
+
+}

@@ -1,0 +1,91 @@
+// github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+pre {
+  code {
+    display: block;
+    padding: 5px 10px;
+    color: #333333;
+    background: #f1f1ff;
+    font-size: 14px;
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+  }
+  .comment, .template_comment, .diff .header, .javadoc {
+    color: #999988;
+    font-style: italic;
+  }
+  .keyword, .css .keyword, .winutils, .javascript .title, .nginx .title, .subst, .request, .status {
+    color: #333333;
+    font-weight: bold;
+  }
+  .number, .hexcolor, .ruby .constant {
+    color: #009999;
+  }
+  .string, .tag .value, .phpdoc, .tex .formula {
+    color: #dd1144;
+  }
+  .title, .id {
+    color: #990000;
+    font-weight: bold;
+  }
+  .javascript .title, .lisp .title, .clojure .title, .subst {
+    font-weight: normal;
+  }
+  .class .title, .haskell .type, .vhdl .literal, .tex .command {
+    color: #445588;
+    font-weight: bold;
+  }
+  .tag {
+    color: navy;
+    font-weight: normal;
+    .title {
+      color: navy;
+      font-weight: normal;
+    }
+  }
+  .rules .property, .django .keyword {
+    color: navy;
+    font-weight: normal;
+  }
+  .attribute, .variable, .lisp .body {
+    color: teal;
+  }
+  .regexp {
+    color: #009926;
+  }
+  .class {
+    color: #445588;
+    font-weight: bold;
+  }
+  .symbol, .ruby .string, .lisp .keyword, .tex .special, .input_number {
+    color: #990073;
+  }
+  .built_in, .lisp .title, .clojure .built_in {
+    color: #0086b3;
+  }
+  .preprocessor, .pi, .doctype, .shebang, .cdata {
+    color: #999999;
+    font-weight: bold;
+  }
+  .deletion {
+    background: #ffdddd;
+  }
+  .addition {
+    background: #ddffdd;
+  }
+  .diff .change {
+    background: #0086b3;
+  }
+  .chunk {
+    color: #aaaaaa;
+  }
+  .tex .formula {
+    opacity: 0.5;
+  }
+}
+
+p > code, li > code {
+  margin: 0 2px;
+  padding: 2px 5px;
+  background-color: #f1f1ff;
+  border-radius: 3px;
+}

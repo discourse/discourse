@@ -13,7 +13,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   userFiltersBinding: 'controller.userFilters',
   classNameBindings: ['controller.multiSelect:multi-select',
                       'topic.archetype',
-                      'topic.category.secure:secure_category',
+                      'topic.category.read_restricted:read_restricted',
                       'topic.deleted:deleted-topic'],
   menuVisible: true,
   SHORT_POST: 1200,
@@ -25,11 +25,20 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   }.observes('controller.streamPercentage'),
 
   updateProgressBar: function() {
-    var $topicProgress = $('#topic-progress');
-    if (!$topicProgress.length) return;
+    var $topicProgress = this._topicProgress;
 
-    var totalWidth = $topicProgress.width();
-    var progressWidth = this.get('controller.streamPercentage') * totalWidth;
+    // cache lookup
+    if (!$topicProgress) {
+      $topicProgress = $('#topic-progress');
+      if (!$topicProgress.length) {
+        return;
+      }
+      this._topicProgress = $topicProgress;
+    }
+
+    // speeds up stuff, bypass jquery slowness and extra checks
+    var totalWidth = $topicProgress[0].offsetWidth,
+        progressWidth = this.get('controller.streamPercentage') * totalWidth;
 
     $topicProgress.find('.bg')
                   .css("border-right-width", (progressWidth === totalWidth) ? "0px" : "1px")
@@ -79,6 +88,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   }.observes('composer'),
 
   enteredTopic: function() {
+    this._topicProgress = undefined;
     if (this.present('controller.enteredAt')) {
       var topicView = this;
       Em.run.schedule('afterRender', function() {
@@ -91,9 +101,19 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.bindScrolling({debounce: 0});
 
     var topicView = this;
-    $(window).bind('resize.discourse-on-scroll', function() { topicView.updatePosition(); });
+    Em.run.schedule('afterRender', function () {
+      $(window).resize('resize.discourse-on-scroll', function() {
+        topicView.updatePosition();
+      });
+    });
+
+    // This get seems counter intuitive, but it's to trigger the observer on
+    // the streamPercentage for this view. Otherwise the process bar does not
+    // update.
+    this.get('controller.streamPercentage');
 
     this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
+      if ($(e.target).hasClass('mention')) { return false; }
       return Discourse.ClickTrack.trackClick(e);
     });
   },
@@ -188,7 +208,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   throttledPositionUpdate: Discourse.debounce(function() {
-    Discourse.ScreenTrack.instance().scrolled();
+    Discourse.ScreenTrack.current().scrolled();
     var model = this.get('controller.model');
     if (model && this.get('nextPositionUpdate')) {
       this.set('controller.currentPost', this.get('nextPositionUpdate'));
@@ -214,17 +234,24 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     var info = Discourse.Eyeline.analyze(rows);
     if(!info) { return; }
 
-    // are we scrolling upwards?
-    if(info.top === 0 || info.onScreen[0] === 0 || info.bottom === 0) {
-      var $body = $('body');
-      var $elem = $(rows[0]);
-      var distToElement = $body.scrollTop() - $elem.position().top;
-      this.get('postStream').prependMore().then(function() {
-        Em.run.next(function () {
-          $('html, body').scrollTop($elem.position().top + distToElement);
+    // We disable scrolling of the topic while performing initial positioning
+    // This code needs to be refactored, the pipline for positioning posts is wack
+    // Be sure to test on safari as well when playing with this
+    if(!Discourse.TopicView.disableScroll) {
+
+      // are we scrolling upwards?
+      if(info.top === 0 || info.onScreen[0] === 0 || info.bottom === 0) {
+        var $body = $('body'),
+            $elem = $(rows[0]),
+            distToElement = $body.scrollTop() - $elem.position().top;
+        this.get('postStream').prependMore().then(function() {
+          Em.run.next(function () {
+            $('html, body').scrollTop($elem.position().top + distToElement);
+          });
         });
-      });
+      }
     }
+
 
     // are we scrolling down?
     var currentPost;
@@ -232,6 +259,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       currentPost = this.postSeen($(rows[info.bottom]));
       this.get('postStream').appendMore();
     }
+
 
     // update dock
     this.updateDock(Ember.View.views[rows[info.bottom].id]);
@@ -303,7 +331,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
     var category = this.get('controller.content.category');
     if (category) {
-      opts.catLink = Discourse.Utilities.categoryLink(category);
+      opts.catLink = Discourse.HTML.categoryLink(category);
     } else {
       opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + (I18n.t("topic.browse_all_categories")) + "</a>";
     }
@@ -338,6 +366,7 @@ Discourse.TopicView.reopenClass({
 
   // Scroll to a given post, if in the DOM. Returns whether it was in the DOM or not.
   jumpToPost: function(topicId, postNumber, avoidScrollIfPossible) {
+    this.disableScroll = true;
     Em.run.scheduleOnce('afterRender', function() {
       var rows = $('.topic-post.ready');
 
@@ -408,10 +437,14 @@ Discourse.TopicView.reopenClass({
 
           $contents.data("orig-color", origColor);
           $contents
-            .css({ backgroundColor: "#ffffcc" })
+            .addClass('highlighted')
             .stop()
-            .animate({ backgroundColor: origColor }, 2500);
+            .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
+              $contents.removeClass('highlighted');
+            });
         }
+
+        setTimeout(function(){Discourse.TopicView.disableScroll = false;}, 500);
       }
     });
   }

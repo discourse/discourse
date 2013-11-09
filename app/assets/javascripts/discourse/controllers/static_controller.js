@@ -7,8 +7,15 @@
   @module Discourse
 **/
 Discourse.StaticController = Discourse.Controller.extend({
+  needs: ['header'],
+  path: null,
+
+  showLoginButton: function() {
+    return this.get('path') === '/login';
+  }.property('path'),
 
   loadPath: function(path) {
+    this.set('path', path);
     var staticController = this;
     this.set('content', null);
 

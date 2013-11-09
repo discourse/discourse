@@ -2,6 +2,10 @@ module RailsMultisite
   class ConnectionManagement
     CONFIG_FILE = 'config/multisite.yml'
 
+    def self.rails4?
+      !!(Rails.version =~ /^4/)
+    end
+
     def self.establish_connection(opts)
       if opts[:db] == "default" && (!defined?(@@default_spec) || !@@default_spec)
         # don't do anything .. handled implicitly
@@ -12,13 +16,24 @@ module RailsMultisite
           handler = @@connection_handlers[spec]
           unless handler
             handler = ActiveRecord::ConnectionAdapters::ConnectionHandler.new
+            if rails4?
+              handler.establish_connection(ActiveRecord::Base, spec)
+            end
             @@connection_handlers[spec] = handler
           end
         else
           handler = @@default_connection_handler
+          if rails4? && !@@established_default
+            handler.establish_connection(ActiveRecord::Base, spec)
+            @@established_default = true
+          end
         end
+
         ActiveRecord::Base.connection_handler = handler
-        ActiveRecord::Base.connection_handler.establish_connection("ActiveRecord::Base", spec)
+
+        unless rails4?
+          handler.establish_connection("ActiveRecord::Base", spec)
+        end
       end
     end
 
@@ -68,6 +83,7 @@ module RailsMultisite
     end
 
     def self.load_settings!
+      spec_klass = rails4? ? ActiveRecord::ConnectionAdapters::ConnectionSpecification : ActiveRecord::Base::ConnectionSpecification
       configs = YAML::load(File.open(self.config_filename))
       configs.each do |k,v|
         raise ArgumentError.new("Please do not name any db default!") if k == "default"
@@ -75,7 +91,7 @@ module RailsMultisite
       end
 
       @@db_spec_cache = Hash[*configs.map do |k, data|
-        [k, ActiveRecord::Base::ConnectionSpecification::Resolver.new(k, configs).spec]
+        [k, spec_klass::Resolver.new(k, configs).spec]
       end.flatten]
 
       @@host_spec_cache = {}
@@ -86,20 +102,24 @@ module RailsMultisite
         end
       end
 
-      @@default_spec = ActiveRecord::Base::ConnectionSpecification::Resolver.new(Rails.env, ActiveRecord::Base.configurations).spec
+      @@default_spec = spec_klass::Resolver.new(Rails.env, ActiveRecord::Base.configurations).spec
       ActiveRecord::Base.configurations[Rails.env]["host_names"].each do |host|
         @@host_spec_cache[host] = @@default_spec
       end
+
+      @@default_connection_handler = ActiveRecord::Base.connection_handler
 
       # inject our connection_handler pool
       # WARNING MONKEY PATCH
       #
       # see: https://github.com/rails/rails/issues/8344#issuecomment-10800848
-      #
-      @@default_connection_handler = ActiveRecord::Base.connection_handler
-      ActiveRecord::Base.send :include, NewConnectionHandler
-      ActiveRecord::Base.connection_handler = @@default_connection_handler
+      if ActiveRecord::VERSION::MAJOR == 3
+        ActiveRecord::Base.send :include, NewConnectionHandler
+        ActiveRecord::Base.connection_handler = @@default_connection_handler
+      end
+
       @@connection_handlers = {}
+      @@established_default = false
     end
 
     module NewConnectionHandler

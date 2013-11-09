@@ -64,52 +64,33 @@ Discourse.HeaderView = Discourse.View.extend({
   },
 
   examineDockHeader: function() {
-    var $body, offset, outlet;
-    if (!this.docAt) {
-      outlet = $('#main-outlet');
-      if (!(outlet && outlet.length === 1)) return;
-      this.docAt = outlet.offset().top;
-    }
-    offset = window.pageYOffset || $('html').scrollTop();
-    if (offset >= this.docAt) {
-      if (!this.dockedHeader) {
-        $body = $('body');
-        $body.addClass('docked');
-        this.dockedHeader = true;
-      }
-    } else {
-      if (this.dockedHeader) {
-        $('body').removeClass('docked');
-        this.dockedHeader = false;
-      }
-    }
-  },
 
-  /**
-    Display the correct logo in the header, showing a custom small icon if it exists.
-    In case the logo_url setting is empty, shows the site title as the logo.
-    @property logoHTML
-  **/
-  logoHTML: function() {
-    var result = "<div class='title'><a href='" + Discourse.getURL("/") + "'>";
-    if (this.get('controller.showExtraInfo')) {
-      var logoSmall = Discourse.SiteSettings.logo_small_url;
-      if (logoSmall && logoSmall.length > 1) {
-        result += "<img class='logo-small' src='" + logoSmall + "' width='33' height='33'>";
-      } else {
-        result += "<i class='icon-home'></i>";
+    var headerView = this;
+
+    // Check the dock after the current run loop. While rendering,
+    // it's much slower to calculate `outlet.offset()`
+    Em.run.next(function () {
+      if (!headerView.docAt) {
+        var outlet = $('#main-outlet');
+        if (!(outlet && outlet.length === 1)) return;
+        headerView.docAt = outlet.offset().top;
       }
-    } else {
-      var logo = Discourse.SiteSettings.logo_url;
-      if(logo && logo.length > 1) {
-        result += "<img class='logo-big' src=\"" + logo + "\" alt=\"" + Discourse.SiteSettings.title + "\" id='site-logo'>";
+
+      var offset = window.pageYOffset || $('html').scrollTop();
+      if (offset >= headerView.docAt) {
+        if (!headerView.dockedHeader) {
+          $('body').addClass('docked');
+          headerView.dockedHeader = true;
+        }
       } else {
-        result += "<h2 class='text-logo' id='site-text-logo'>" + Discourse.SiteSettings.title + "</h2>";
+        if (headerView.dockedHeader) {
+          $('body').removeClass('docked');
+          headerView.dockedHeader = false;
+        }
       }
-    }
-    result += "</a></div>";
-    return new Handlebars.SafeString(result);
-  }.property('controller.showExtraInfo'),
+    });
+
+  },
 
   willDestroyElement: function() {
     $(window).unbind('scroll.discourse-dock');

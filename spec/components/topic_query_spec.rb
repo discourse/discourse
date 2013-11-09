@@ -39,6 +39,25 @@ describe TopicQuery do
 
   end
 
+  context 'category filter' do
+    let(:category) { Fabricate(:category) }
+    let(:diff_category) { Fabricate(:category) }
+
+    it "returns topics in the category when we filter to it" do
+      TopicQuery.new(moderator).list_latest.topics.size.should == 0
+
+      # Filter by slug
+      TopicQuery.new(moderator, category: category.slug).list_latest.topics.size.should == 1
+      TopicQuery.new(moderator, category: "#{category.id}-category").list_latest.topics.size.should == 1
+      TopicQuery.new(moderator, category: diff_category.slug).list_latest.topics.size.should == 1
+      TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size.should == 0
+    end
+
+
+
+  end
+
+
   context 'a bunch of topics' do
     let!(:regular_topic) { Fabricate(:topic, title: 'this is a regular topic', user: creator, bumped_at: 15.minutes.ago) }
     let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
@@ -49,7 +68,7 @@ describe TopicQuery do
 
     context 'list_latest' do
       it "returns the topics in the correct order" do
-        topics.should == [pinned_topic, closed_topic, archived_topic, regular_topic]
+        topics.map(&:title).should == [pinned_topic, closed_topic, archived_topic, regular_topic].map(&:title)
       end
 
       it "includes the invisible topic if you're a moderator" do
@@ -69,7 +88,6 @@ describe TopicQuery do
       it "no longer shows the pinned topic at the top" do
         topics.should == [closed_topic, archived_topic, pinned_topic, regular_topic]
       end
-
     end
 
   end
@@ -79,10 +97,6 @@ describe TopicQuery do
     let(:topic_category) { category.topic }
     let!(:topic_no_cat) { Fabricate(:topic) }
     let!(:topic_in_cat) { Fabricate(:topic, category: category) }
-
-    it "returns the topic without a category when filtering uncategorized" do
-      topic_query.list_uncategorized.topics.should == [topic_no_cat]
-    end
 
     it "returns the topic with a category when filtering by category" do
       topic_query.list_category(category).topics.should == [topic_category, topic_in_cat]

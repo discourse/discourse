@@ -1,0 +1,28 @@
+<p>{{i18n admin.logs.screened_ips.description}}</p>
+
+{{screened-ip-address-form action="recordAdded"}}
+<br/>
+
+{{#if loading}}
+  <div class='admin-loading'>{{i18n loading}}</div>
+{{else}}
+  {{#if model.length}}
+
+    <div class='table admin-logs-table screened-ip-addresses'>
+      <div class="heading-container">
+        <div class="col heading first ip_address">{{i18n admin.logs.ip_address}}</div>
+        <div class="col heading action">{{i18n admin.logs.action}}</div>
+        <div class="col heading match_count">{{i18n admin.logs.match_count}}</div>
+        <div class="col heading last_match_at">{{i18n admin.logs.last_match_at}}</div>
+        <div class="col heading created_at">{{i18n admin.logs.created_at}}</div>
+        <div class="col heading actions"></div>
+        <div class="clearfix"></div>
+      </div>
+
+      {{view Discourse.ScreenedIpAddressesListView contentBinding="controller"}}
+    </div>
+
+  {{else}}
+    {{i18n search.no_results}}
+  {{/if}}
+{{/if}}

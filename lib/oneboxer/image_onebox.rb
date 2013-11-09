@@ -3,7 +3,7 @@ require_dependency 'oneboxer/base_onebox'
 module Oneboxer
   class ImageOnebox < BaseOnebox
 
-    matcher /^https?:\/\/.*\.(jpg|png|gif|jpeg)$/
+    matcher /^(https?:)?\/\/.+\.(png|jpg|jpeg|gif|bmp|tif|tiff)$/i
 
     def onebox
       Oneboxer::BaseOnebox.image_html(@url, nil, @url)

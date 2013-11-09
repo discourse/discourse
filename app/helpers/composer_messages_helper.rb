@@ -1,0 +1,2 @@
+module ComposerMessagesHelper
+end

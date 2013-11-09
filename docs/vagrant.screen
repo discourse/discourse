@@ -1,0 +1,17 @@
+# GNU screen configuration file for Discourse vagrant image
+
+# Start up development support commands in detached mode:
+#   screen -d -m -c docs/vagrant.screen
+
+# Start in attached mode:
+# screen -m -c docs/vagrant.screen
+
+# commands that exit hang around until you hit 'k' to kill or 'r' to restart
+zombie kr
+
+screen -t rails_s 0 bash -c 'echo Starting rails server...;  cd /vagrant; bundle exec rails s'
+screen -t rails_c 1 bash -c 'echo Starting rails console...; cd /vagrant; bundle exec rails c'
+screen -t sidekiq 2 bash -c 'echo Starting sidekiq...;       cd /vagrant; bundle exec sidekiq'
+screen -t guard   3 bash -c 'echo Starting guard...;         cd /vagrant; bundle exec rake db:test:prepare; bundle exec guard -p'
+
+scrollback 50000

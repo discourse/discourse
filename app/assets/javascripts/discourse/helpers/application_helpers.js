@@ -29,11 +29,31 @@ Handlebars.registerHelper('shorten', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('topicLink', function(property, options) {
-  var title, topic;
-  topic = Ember.Handlebars.get(this, property, options);
-  title = topic.get('fancy_title') || topic.get('title');
-  return "<a href='" + (topic.get('lastReadUrl')) + "' class='title'>" + title + "</a>";
+  var topic = Ember.Handlebars.get(this, property, options),
+      title = topic.get('fancy_title') || topic.get('title');
+  return "<a href='" + topic.get('lastUnreadUrl') + "' class='title'>" + title + "</a>";
 });
+
+
+/**
+  Produces a link to a category given a category object and helper options
+
+  @method categoryLinkHTML
+  @param {Discourse.Category} category to link to
+  @param {Object} options standard from handlebars
+**/
+function categoryLinkHTML(category, options) {
+  var categoryOptions = {};
+  if (options.hash) {
+    if (options.hash.allowUncategorized) {
+      categoryOptions.allowUncategorized = true;
+    }
+    if (options.hash.categories) {
+      categoryOptions.categories = Em.Handlebars.get(this, options.hash.categories, options);
+    }
+  }
+  return new Handlebars.SafeString(Discourse.HTML.categoryLink(category, categoryOptions));
+}
 
 /**
   Produces a link to a category
@@ -42,10 +62,8 @@ Handlebars.registerHelper('topicLink', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('categoryLink', function(property, options) {
-  var category = Ember.Handlebars.get(this, property, options);
-  return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category));
+  return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
 });
-
 
 /**
   Produces a bound link to a category
@@ -53,9 +71,7 @@ Handlebars.registerHelper('categoryLink', function(property, options) {
   @method boundCategoryLink
   @for Handlebars
 **/
-Ember.Handlebars.registerBoundHelper('boundCategoryLink', function(category) {
-  return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category));
-});
+Ember.Handlebars.registerBoundHelper('boundCategoryLink', categoryLinkHTML);
 
 /**
   Produces a link to a route with support for i18n on the title
@@ -116,16 +132,22 @@ Handlebars.registerHelper('lower', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('avatar', function(user, options) {
-
   if (typeof user === 'string') {
     user = Ember.Handlebars.get(this, user, options);
   }
 
-  if( user ) {
+  if (user) {
     var username = Em.get(user, 'username');
     if (!username) username = Em.get(user, options.hash.usernamePath);
 
-    var avatarTemplate = Ember.get(user, 'avatar_template');
+    var avatarTemplate;
+    var template = options.hash.template;
+    if (template && template !== 'avatar_template') {
+      avatarTemplate = Em.get(user, template);
+      if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.' + template);
+    }
+
+    if (!avatarTemplate) avatarTemplate = Em.get(user, 'avatar_template');
     if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.avatar_template');
 
     var title;
@@ -147,7 +169,6 @@ Handlebars.registerHelper('avatar', function(user, options) {
     return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
       size: options.hash.imageSize,
       extraClasses: Em.get(user, 'extras') || options.hash.extraClasses,
-      username: username,
       title: title || username,
       avatarTemplate: avatarTemplate
     }));
@@ -158,18 +179,17 @@ Handlebars.registerHelper('avatar', function(user, options) {
 
 /**
   Bound avatar helper.
+  Will rerender whenever the "avatar_template" changes.
 
   @method boundAvatar
   @for Handlebars
 **/
 Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
-  var username = Em.get(user, 'username');
   return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
     size: options.hash.imageSize,
-    username: username,
-    avatarTemplate: Ember.get(user, 'avatar_template')
+    avatarTemplate: Em.get(user, options.hash.template || 'avatar_template')
   }));
-});
+}, 'avatar_template', 'uploaded_avatar_template', 'gravatar_template');
 
 /**
   Nicely format a date without a binding since the date doesn't need to change.

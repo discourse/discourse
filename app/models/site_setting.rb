@@ -8,6 +8,7 @@ class SiteSetting < ActiveRecord::Base
 
   # settings available in javascript under Discourse.SiteSettings
   client_setting(:title, "Discourse")
+  setting(:site_description, '')
   client_setting(:logo_url, '/assets/d-logo-sketch.png')
   client_setting(:logo_small_url, '/assets/d-logo-sketch-small.png')
   setting(:contact_email, '')
@@ -17,7 +18,6 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:tos_url, '')
   client_setting(:faq_url, '')
   client_setting(:privacy_policy_url, '')
-  setting(:api_key, '')
   client_setting(:traditional_markdown_linebreaks, false)
   client_setting(:top_menu, 'latest|new|unread|favorited|categories')
   client_setting(:post_menu, 'like|edit|flag|delete|share|bookmark|reply')
@@ -33,7 +33,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:anon_polling_interval, 30000)
   client_setting(:min_post_length, Rails.env.test? ? 5 : 20)
   client_setting(:min_private_message_post_length, Rails.env.test? ? 5 : 10)
-  client_setting(:max_post_length, 16000)
+  client_setting(:max_post_length, 32000)
   client_setting(:min_topic_title_length, 15)
   client_setting(:max_topic_title_length, 255)
   client_setting(:min_private_message_title_length, 2)
@@ -45,10 +45,12 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:email_domains_blacklist, 'mailinator.com')
   client_setting(:email_domains_whitelist)
   client_setting(:version_checks, true)
+  setting(:new_version_emails, true)
   client_setting(:min_title_similar_length, 10)
   client_setting(:min_body_similar_length, 15)
   # cf. https://github.com/discourse/discourse/pull/462#issuecomment-14991562
   client_setting(:category_colors, 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890')
+  client_setting(:enable_wide_category_list, false)
 
   # auto-replace rules for title
   setting(:title_prettify, true)
@@ -64,8 +66,14 @@ class SiteSetting < ActiveRecord::Base
   setting(:flags_required_to_hide_post, 3)
   setting(:cooldown_minutes_after_hiding_posts, 10)
 
+  setting(:max_topics_in_first_day, 5)
+  setting(:max_replies_in_first_day, 10)
+
   setting(:num_flags_to_block_new_user, 3)
   setting(:num_users_to_block_new_user, 3)
+  setting(:notify_mods_when_user_blocked, false)
+
+  setting(:flag_sockpuppets, true)
 
   # used mainly for dev, force hostname for Discourse.base_url
   # You would usually use multisite for this
@@ -75,8 +83,9 @@ class SiteSetting < ActiveRecord::Base
   setting(:use_ssl, false)
   setting(:queue_jobs, !Rails.env.test?)
   setting(:crawl_images, !Rails.env.test?)
-  setting(:max_image_width, 690)
-  setting(:create_thumbnails, false)
+  client_setting(:max_image_width, 690)
+  client_setting(:max_image_height, 500)
+  setting(:create_thumbnails, true)
   client_setting(:category_featured_topics, 6)
   setting(:topics_per_page, 30)
   client_setting(:posts_per_page, 20)
@@ -87,14 +96,12 @@ class SiteSetting < ActiveRecord::Base
   setting(:apple_touch_icon_url, '/assets/default-apple-touch-icon.png')
 
   setting(:ninja_edit_window, 5.minutes.to_i)
+  client_setting(:edit_history_visible_to_public, true)
+  client_setting(:delete_removed_posts_after, 24) # hours
   setting(:post_undo_action_window_mins, 10)
-  setting(:system_username, '')
+  setting(:site_contact_username, '')
   setting(:max_mentions_per_post, 10)
   setting(:newuser_max_mentions_per_post, 2)
-
-  client_setting(:uncategorized_name, 'uncategorized')
-  client_setting(:uncategorized_color, 'AB9364');
-  client_setting(:uncategorized_text_color, 'FFFFFF');
 
   setting(:unique_posts_mins, Rails.env.test? ? 0 : 5)
 
@@ -111,6 +118,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:email_time_window_mins, 10)
   setting(:email_posts_context, 5)
+  setting(:default_digest_email_frequency, '7', enum: 'DigestEmailSiteSetting')
 
   # How many characters we can import into a onebox
   setting(:onebox_max_chars, 5000)
@@ -152,6 +160,9 @@ class SiteSetting < ActiveRecord::Base
   setting(:twitter_consumer_key, '')
   setting(:twitter_consumer_secret, '')
 
+  # note we set this (and twitter to true for 2 reasons)
+  # 1. its an upgrade nightmare to change it to false, lots of people will complain
+  # 2. it advertises the feature (even though it is broken)
   client_setting(:enable_facebook_logins, true)
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
@@ -169,6 +180,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
 
+  setting(:clean_up_uploads, false)
+  setting(:uploads_grace_period_in_hours, 1)
   setting(:enable_s3_uploads, false)
   setting(:s3_access_key_id, '')
   setting(:s3_secret_access_key, '')
@@ -195,6 +208,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:regular_requires_likes_received, 1)
   setting(:regular_requires_likes_given, 1)
   setting(:regular_requires_topic_reply_count, 3)
+
+  setting(:min_trust_to_create_topic, 0, enum: 'MinTrustToCreateTopicSetting')
 
   # Reply by Email Settings
   setting(:reply_by_email_enabled, false)
@@ -233,19 +248,31 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:minimum_topics_similar, 50)
 
-  client_setting(:relative_date_duration, 14)
+  client_setting(:relative_date_duration, 30)
 
-  setting(:delete_user_max_age, 7)
-  setting(:delete_all_posts_max, 10)
+  client_setting(:delete_user_max_age, 14)
+  setting(:delete_all_posts_max, 15)
 
-  def self.generate_api_key!
-    self.api_key = SecureRandom.hex(32)
-  end
+  setting(:username_change_period, 3) # days
+  setting(:email_editable, true)
 
-  def self.api_key_valid?(tested)
-    t = tested.strip
-    t.length == 64 && t == self.api_key
-  end
+  client_setting(:allow_uploaded_avatars, true)
+  client_setting(:allow_animated_avatars, false)
+
+  setting(:detect_custom_avatars, true)
+  setting(:max_daily_gravatar_crawls, 500)
+
+  setting(:sequential_replies_threshold, 2)
+  client_setting(:enable_mobile_theme, true)
+
+  setting(:dominating_topic_minimum_percent, 20)
+
+  # hidden setting only used by system
+  setting(:uncategorized_category_id, -1, hidden: true)
+
+  client_setting(:display_name_on_posts, false)
+  client_setting(:enable_names, true)
+  client_setting(:invites_shown, 30)
 
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?
@@ -288,15 +315,15 @@ class SiteSetting < ActiveRecord::Base
   def self.authorized_uploads
     authorized_extensions.tr(" ", "")
                          .split("|")
-                         .map { |extension| (extension.start_with?(".") ? "" : ".") + extension }
+                         .map { |extension| (extension.start_with?(".") ? extension[1..-1] : extension).gsub(".", "\.") }
   end
 
   def self.authorized_upload?(file)
-    authorized_uploads.count > 0 && file.original_filename =~ /(#{authorized_uploads.join("|")})$/i
+    authorized_uploads.count > 0 && file.original_filename =~ /\.(#{authorized_uploads.join("|")})$/i
   end
 
   def self.images
-    @images ||= Set.new [".jpg", ".jpeg", ".png", ".gif", ".tif", ".tiff", ".bmp"]
+    @images ||= Set.new ["jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp"]
   end
 
   def self.authorized_images
@@ -304,7 +331,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.authorized_image?(file)
-    authorized_images.count > 0 && file.original_filename =~ /(#{authorized_images.join("|")})$/i
+    authorized_images.count > 0 && file.original_filename =~ /\.(#{authorized_images.join("|")})$/i
   end
 
 end

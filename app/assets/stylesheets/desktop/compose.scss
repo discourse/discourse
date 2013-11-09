@@ -1,0 +1,539 @@
+// styles that apply to the reply pane that slides up to compose replies
+
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
+// hack, this needs to be done cleaner
+.private-message input.span8 {
+  width: 47%;
+}
+
+.composer-popup-container {
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.composer-popup {
+
+  @include box-shadow(3px 3px 3px rgba($black, 0.14));
+
+  p {
+    margin: 0 0 10px 0;
+  }
+
+  a.close {
+    float: right;
+    color: $black;
+    opacity: 0.5;
+    font-size: 15px;
+  }
+
+  a.close:hover {
+    opacity: 1.0;
+  }
+
+  background-color: lighten($yellow, 40%);
+  border: 1px solid darken($yellow, 10%);
+  padding: 10px;
+  width: 600px;
+  position: absolute;
+
+  ul.topics {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      font-weight: normal;
+      margin-top: 3px;
+    }
+  }
+}
+
+.similar-topics {
+  background-color: #b5e8fd;
+  border: 1px solid darken(#b5e8fd, 10%);
+
+  a[href] {
+    color: #000;
+  }
+
+  .posts-count {
+    color: darken(#b5e8fd, 50%);
+    font-size: 12px;
+  }
+}
+
+.composer-popup:nth-of-type(2) {
+  margin-left: 10px;
+}
+
+
+.autocomplete {
+  z-index: 999999;
+  position: absolute;
+  width: 240px;
+  background-color: $white;
+  border: 1px solid $gray;
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    li {
+      border-bottom: 1px solid $light_gray;
+      a[href] {
+        padding: 5px;
+        display: block;
+        span.username {
+          color: lighten($black, 20);
+        }
+        span.name {
+          font-size: 11px;
+        }
+        &.selected {
+          background-color: $light_gray;
+        }
+        @include hover {
+          background-color: $light_gray;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+
+#reply-control {
+  .toggle-preview, #draft-status, #file-uploading {
+    position: absolute;
+    bottom: -31px;
+    margin-top: 0px;
+  }
+  .toggle-preview {
+    right: 5px;
+    text-decoration: underline;
+  }
+  #file-uploading {
+    left: 51%;
+    font-size: 12px;
+    color: darken($gray, 40);
+  }
+  #draft-status {
+    right: 51%;
+    color: lighten($black, 60);
+    &.flash {
+      color: lighten($red, 20);
+    }
+  }
+  @include transition(height 0.4s ease);
+  width: 100%;
+  z-index: 1039;
+  height: 0px;
+  background-color: rgba($composer_background, 0.96);
+  bottom: 0px;
+  font-size: 14px;
+  position: fixed;
+  .toggler {
+    display: block;
+    width: 13px;
+    height: 13px;
+    right: 13px;
+    position: absolute;
+    font-size: 15px;
+    color: $darkish_gray;
+    text-decoration: none;
+    &:before {
+      font-family: "FontAwesome";
+      content: "\f078";
+    }
+  }
+  a.cancel {
+    text-decoration: underline;
+    padding-left: 7px;
+  }
+  .control-row {
+    margin: 0 0 0 5px;
+  }
+  .saving-text {
+    display: none;
+  }
+  .draft-text {
+    display: none;
+  }
+  .grippie {
+    display: none;
+  }
+  // The various states
+  &.open {
+    height: 300px;
+    .grippie {
+      display: block;
+    }
+  }
+  &.closed {
+    height: 0px !important;
+  }
+  &.draft {
+    height: 40px !important;
+    cursor: pointer;
+    border-top: 1px solid $gray;
+    .draft-text {
+      display: block;
+    }
+    .toggler {
+      &:before {
+        font-family: "FontAwesome";
+        content: "\f077";
+      }
+    }
+  }
+  &.saving {
+    height: 40px !important;
+    border-top: 1px solid $gray;
+    .saving-text {
+      display: block;
+    }
+    .toggler {
+      &:before {
+        font-family: "FontAwesome";
+        content: "\f00d";
+      }
+    }
+  }
+  .spinner {
+    position: absolute;
+    @include fades-in(0.25s);
+    @include border-radius-all(10px);
+    left: 250px;
+    top: 95px;
+    height: 100px;
+    width: 70px;
+    height: 70px;
+    text-indent: -9999em;
+    background: {
+      color: $black;
+      image: image-url("spinner_96_w.gif");
+      repeat: no-repeat;
+      size: 35px;
+      position: 17px 17px;
+    };
+  }
+  &.loading {
+    .spinner {
+      z-index: 1000;
+      @include visible;
+    }
+  }
+  .reply-area {
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+  }
+
+  // When the post is new (new topic) the sizings are different
+  &.edit-title {
+
+    &.open {
+      height: 400px;
+    }
+    .contents {
+      input#reply-title {
+        padding: 7px 10px;
+        margin: 6px 10px 3px 0;
+        width: 400px;
+
+      }
+      .wmd-controls {
+        @include transition(top 0.3s ease);
+        top: 100px;
+      }
+    }
+  }
+  .contents {
+    padding: 10px;
+    min-width: 1280px;
+    .form-element {
+      .chzn-container {
+        width: 400px;
+        margin-top: 6px;
+        a {
+          padding-top: 4px;
+          height: 28px;
+        }
+        b {
+          margin-top: 4px;
+        }
+      }
+      .category-combobox {
+        width: 430px;
+        @include medium-width { width: 285px; }
+        @include small-width { width: 220px; }
+
+        .chzn-drop {
+          left: -9000px;
+          width: 428px;
+          @include medium-width { width: 283px; }
+          @include small-width { width: 218px; }
+        }
+        .chzn-search input {
+          width: 378px;
+          @include medium-width { width: 233px; }
+          @include small-width { width: 168px; }
+        }
+      }
+    }
+    #reply-title {
+      margin-right: 10px;
+      float: left;
+      &:disabled {
+        background-color: $light_gray;
+      }
+    }
+    #wmd-input:disabled {
+      background-color: $light_gray;
+    }
+    #wmd-input, #wmd-preview {
+      color: $black;
+
+      video {
+        max-width: 100%;
+        height: auto;
+      }
+
+      audio {
+        max-width: 100%;
+      }
+    }
+    #wmd-preview {
+      border: 1px dashed $gray;
+      overflow: auto;
+      visibility: visible;
+
+      &.hidden {
+        width: 0;
+        visibility: hidden;
+      }
+    }
+    #wmd-input {
+      bottom: 35px;
+    }
+    .submit-panel {
+      position: absolute;
+      display: block;
+      bottom: 8px;
+    }
+  }
+  .title-input, .category-input {
+    position: relative;
+    display: inline;
+  }
+  .title-input .popup-tip {
+    width: 300px;
+    left: -8px;
+    margin-top: 8px;
+  }
+  .category-input .popup-tip {
+    width: 240px;
+    left: 432px;
+    top: -19px;
+  }
+}
+
+.reply-to {
+  margin-bottom: 10px;
+}
+
+div.ac-wrap.disabled {
+  input {
+    display:none;
+  }
+  .item a {
+    display:none;
+  }
+}
+
+div.ac-wrap {
+  background-color: $white;
+  border: 1px solid #cccccc;
+  padding: 5px 10px;
+  @include border-radius-all(3px);
+  div.item {
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    span {
+      padding-left: 5px;
+      height: 22px;
+      display: inline-block;
+      line-height: 22px;
+      vertical-align: bottom;
+    }
+    a {
+      margin-left: 4px;
+      font-size: 10px;
+      line-height: 10px;
+      padding: 2px 1px 1px 3px;
+      border-radius: 10px;
+      width: 10px;
+      display: inline-block;
+      border: 1px solid rgba(255, 255, 255, 0);
+      &:hover {
+        background-color: lighten($red, 45);
+        border: 1px solid lighten($red, 20);
+        text-decoration: none;
+        color: $white;
+      }
+    }
+  }
+  input[type="text"] {
+    float: left;
+    margin-top: 5px;
+    border: 0;
+    padding: 0;
+    margin: 4px 0 0;
+    box-shadow: none;
+  }
+}
+
+
+#reply-control.edit-title.private-message {
+  .wmd-controls {
+    @include transition(top 0.3s ease);
+    top: 140px;
+  }
+}
+
+#reply-control {
+  &.hide-preview {
+    .wmd-controls {
+      #wmd-input {
+        width: 100%;
+      }
+      .preview-wrapper {
+        display: none;
+      }
+      .textarea-wrapper {
+        width: 100%;
+      }
+    }
+  }
+  .wmd-controls {
+    left: 30px;
+    right: 30px;
+    position: absolute;
+    top: 50px;
+    bottom: 48px;
+
+    // this removes the topmost margin;
+    // if we don't have this, all posts would have extra space at the top
+    #wmd-preview > *:first-child {
+      margin-top: 0px !important;
+    }
+
+    #wmd-input, #wmd-preview {
+      @include box-sizing(border-box);
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      padding: 7px;
+      margin: 0;
+      background-color: $white;
+      word-wrap: break-word;
+
+      // set up proper header margins in post preview
+      h1, h2, h3, h4, h5, h6 {
+        margin: 20px 0 10px;
+      }
+    }
+    #wmd-input {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      min-height: 100%;
+      @include box-sizing(border-box);
+      border: 0;
+      border-top: 36px solid transparent;
+      @include border-radius-all(0);
+      transition: none;
+    }
+    .textarea-wrapper, .preview-wrapper {
+      position: relative;
+      @include box-sizing(border-box);
+      height: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+      width: 50%;
+    }
+    .textarea-wrapper {
+      padding-right: 5px;
+      float: left;
+      .popup-tip {
+        margin-top: 3px;
+        right: 4px;
+      }
+    }
+    .preview-wrapper {
+      padding-left: 5px;
+      float: right;
+      img, svg {
+        max-width: 100%;
+      }
+    }
+  }
+  #wmd-button-bar {
+    top: 0;
+    position: absolute;
+    border-bottom: 1px solid $inner_line;
+    background-color: $white;
+    z-index: 100;
+  }
+}
+
+.control-row.reply-area {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+@media screen and (min-width: 1550px) {
+  #reply-control {
+    .wmd-controls {
+      width: 1450px;
+      left: auto;
+      right: auto;
+    }
+  }
+}
+
+.admin-options-form {
+  display: none;
+}
+
+.auto-close-fields {
+  input {
+    width: 50px;
+  }
+}
+
+.edit-auto-close-modal {
+  form {
+    margin: 0;
+  }
+  .auto-close-fields {
+    i.icon-time {
+      font-size: 16px;
+      line-height: 8px;
+    }
+    input {
+      margin: 0;
+    }
+  }
+}
+
+#reply-control button.btn.no-text {
+  margin: 7px 0 0 5px;
+  position: absolute;
+}
+

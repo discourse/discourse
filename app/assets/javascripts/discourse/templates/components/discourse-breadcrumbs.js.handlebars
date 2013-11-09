@@ -1,0 +1,11 @@
+<li>
+{{discourse-categorydrop category=firstCategory categories=parentCategories}}
+</li>
+
+{{#if childCategories}}
+  <li>
+    {{discourse-categorydrop category=secondCategory parentCategory=firstCategory categories=childCategories subCategory="true"}}
+  </li>
+{{/if}}
+
+<div class='clear'></div>

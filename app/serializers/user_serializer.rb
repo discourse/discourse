@@ -9,13 +9,18 @@ class UserSerializer < BasicUserSerializer
              :created_at,
              :website,
              :can_edit,
+             :can_edit_username,
+             :can_edit_email,
              :stats,
              :can_send_private_message_to_user,
              :bio_excerpt,
              :trust_level,
              :moderator,
              :admin,
-             :title
+             :title,
+             :suspended,
+             :suspend_reason,
+             :suspended_till
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
 
@@ -45,12 +50,17 @@ class UserSerializer < BasicUserSerializer
                      :email_digests,
                      :email_private_messages,
                      :email_direct,
+                     :email_always,
                      :digest_after_days,
                      :auto_track_topics_after_msecs,
                      :new_topic_duration_minutes,
                      :external_links_in_new_tab,
                      :dynamic_favicon,
-                     :enable_quoting
+                     :enable_quoting,
+                     :use_uploaded_avatar,
+                     :has_uploaded_avatar,
+                     :gravatar_template,
+                     :uploaded_avatar_template
 
 
   def auto_track_topics_after_msecs
@@ -69,8 +79,38 @@ class UserSerializer < BasicUserSerializer
     scope.can_edit?(object)
   end
 
+  def can_edit_username
+    scope.can_edit_username?(object)
+  end
+
+  def can_edit_email
+    scope.can_edit_email?(object)
+  end
+
   def stats
     UserAction.stats(object.id, scope)
+  end
+
+  def gravatar_template
+    User.gravatar_template(object.email)
+  end
+
+  def include_name?
+    SiteSetting.enable_names?
+  end
+
+  def suspended
+    object.suspended?
+  end
+
+  def include_suspended?
+    object.suspended?
+  end
+  def include_suspend_reason?
+    object.suspended?
+  end
+  def include_suspended_till?
+    object.suspended?
   end
 
 end

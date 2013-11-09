@@ -6,7 +6,9 @@ development:
   pool: 5
   timeout: 5000
   host_names:
-    # /!\ Make sure you *also* restart sidekiq if you change this setting /!\
+    ### If you change this setting you will need to
+    ###   - restart sidekiq if you change this setting
+    ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
     - "localhost"
 
 # Warning: The database defined as "test" will be erased and
@@ -30,12 +32,14 @@ production:
   pool: 5
   timeout: 5000
   host_names:
-    # /!\ Make sure you *also* restart sidekiq if you change this setting /!\
+    ### If you change this setting you will need to
+    ###   - restart sidekiq if you change this setting
+    ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
     - production.localhost # Update this to be the domain of your production site
 
 profile:
   adapter: postgresql
-  database: discourse_development
+  database: discourse_profile
   min_messages: warning
   host: localhost
   pool: 5

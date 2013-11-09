@@ -1,0 +1,90 @@
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
+// --------------------------------------------------
+// Badges
+// --------------------------------------------------
+
+// Base
+// --------------------------------------------------
+
+%badge {
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1;
+  white-space: nowrap;
+  @include border-radius-all(10px);
+}
+
+// Category badge
+// --------------------------------------------------
+
+.badge-category {
+  padding: 4px 6px;
+  color: $white;
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+  &[href] {
+    color: $white;
+  }
+}
+
+
+// Notification badge
+// --------------------------------------------------
+
+.badge-notification {
+  @extend %badge;
+  margin-left: 3px;
+  padding: 4px;
+  padding-top: 3px;
+  color: $white;
+  font-size: 11px;
+  min-width: 10px;
+  text-align: center;
+  background-color: $badge-notification-background-color;
+  &[href] {
+    color: $white;
+  }
+
+  // New posts
+
+  &.new-posts {
+    background-color: $blue;
+  }
+
+  // Click count
+
+  &.clicks {
+    font-weight: normal;
+    background-color: rgba($black, 0.15)
+  }
+}
+
+// Posts badge
+// --------------------------------------------------
+
+.badge-posts {
+  color: $badge-posts-color;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1;
+  &[href] {
+    color: $badge-posts-color;
+  }
+}
+
+// Group badge
+// --------------------------------------------------
+
+.badge-group {
+  @extend %badge;
+  padding: 3px 5px;
+  color: $black;
+  text-shadow: 0 1px 0 rgba($white, 0.2);
+  background-color: #ddd;
+  border-color: #aaa;
+  font-size: 12px;
+  @include box-shadow(inset 0 1px 0 rgba($white, 0.52));
+}

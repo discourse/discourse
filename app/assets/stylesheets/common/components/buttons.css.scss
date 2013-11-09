@@ -1,0 +1,205 @@
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
+// --------------------------------------------------
+// Buttons
+// --------------------------------------------------
+
+// Base
+// --------------------------------------------------
+
+button {
+  outline: 0;
+}
+
+.btn {
+  display: inline-block;
+  outline: 0;
+  margin: 0;
+  padding: 6px 12px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  cursor: pointer;
+  &:active {
+    text-shadow: none;
+  }
+  &[disabled], &.disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+  .icon {
+    margin-right: 7px;
+  }
+  &.no-text {
+    .icon {
+      margin-right: 0;
+      line-height: 10px;
+    }
+  }
+}
+
+// Default button
+// --------------------------------------------------
+
+.btn {
+  border: none;
+  color: #534d4b;
+  font-weight: normal;
+  background: #e8e8e8;
+  &[href] {
+    color: $btn-default-color;
+  }
+  &:hover
+   {
+    background: #aaa;
+    color: #fff;
+  }
+  &:active {
+   @include linear-gradient( darken(#aaa, 8%), #aaa);
+    @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+  }
+  &[disabled] {
+    @include linear-gradient($white, $btn-default-background-color);
+    @include box-shadow(inset 0 -1px 2px rgba($black, 0.2));
+  }
+}
+
+// Buttons used in admin panel
+// --------------------------------------------------
+.btn-admin {
+  text-align:left;
+}
+
+// Primary button
+// --------------------------------------------------
+
+.btn-primary {
+  border: none;
+  color: $white;
+  font-weight: normal;
+
+    color: #fff;
+    background: $btn-primary-background-color;
+
+   
+
+
+
+  &[href] {
+    color: $white;
+  }
+  &:hover
+  {
+    color: #fff;
+    background: darken($btn-primary-background-color, 12%);
+  }
+  &:active {
+    @include linear-gradient(darken($btn-primary-background-color, 18%), darken($btn-primary-background-color, 12%));
+    @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+    color: #fff;
+  }
+  &[disabled] {
+    text-shadow: 0 1px 0 rgba($black, 0.2);
+    @include linear-gradient($btn-primary-background-color, $btn-primary-background-color-dark);
+    @include box-shadow((inset 0 1px 0 rgba($white, 0.33), inset 0 -1px 2px rgba($black, 0.2)));
+  }
+}
+
+// Danger button
+// --------------------------------------------------
+
+.btn-danger {
+  color: $white;
+  font-weight: normal;
+  background: $btn-danger-background-color; 
+  &[href] {
+    color: $white;
+  }
+  &:hover{
+    background: $btn-danger-background-color-dark;
+  }
+  &:active {
+ @include linear-gradient($btn-primary-background-color-dark, $btn-primary-background-color);
+    @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+  }
+  &[disabled] {
+  
+  }
+}
+
+// Social buttons
+// --------------------------------------------------
+
+.btn-social {
+  color: $white;
+  text-shadow: 0 1px 0 rgba($black, 0.2);
+  @include box-shadow(inset 0 1px 0 rgba($white, 0.1));
+  &[href] {
+    color: $white;
+  }
+  &:before {
+    margin-right: 7px;
+    font-family: zocial;
+    line-height: 0.9;
+  }
+  &.google {
+    background: $google;
+    &:before {
+      content: "G";
+    }
+  }
+  &.facebook {
+    background: $facebook;
+    &:before {
+      content: "f";
+    }
+  }
+  &.cas {
+    background: $cas;
+  }
+  &.twitter {
+    background: $twitter;
+    &:before {
+      content: "T";
+    }
+  }
+  &.yahoo {
+    background: $yahoo;
+    &:before {
+      content: "Y";
+    }
+  }
+  &.github {
+    background: $github;
+    &:before {
+      content: "g";
+    }
+  }
+  &.persona {
+    background: $persona;
+    &:before {
+      content: "]";
+    }
+  }
+}
+
+// Button Sizes
+// --------------------------------------------------
+
+// Small
+
+.btn-small {
+  padding: 3px 6px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+// Large
+
+.btn-large {
+  padding: 9px 18px;
+  font-size: 16px;
+  line-height: 20px;
+}

@@ -1,11 +1,6 @@
 require 'spec_helper'
 
 describe 'api' do
-  before do
-    fake_key = SecureRandom.hex(32)
-    SiteSetting.stubs(:api_key).returns(fake_key)
-  end
-
   describe PostsController do
     let(:user) do
       Fabricate(:user)
@@ -15,10 +10,26 @@ describe 'api' do
       Fabricate(:post)
     end
 
+    let(:api_key) { user.generate_api_key(user) }
+    let(:master_key) { ApiKey.create_master_key }
+
     # choosing an arbitrarily easy to mock trusted activity
     it 'allows users with api key to bookmark posts' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).once
-      put :bookmark, bookmarked: "true", post_id: post.id, api_key: SiteSetting.api_key, api_username: user.username, format: :json
+      put :bookmark, bookmarked: "true", post_id: post.id, api_key: api_key.key, format: :json
+      response.should be_success
+    end
+
+    it 'raises an error with a user key that does not match an optionally specified username' do
+      PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
+      put :bookmark, bookmarked: "true", post_id: post.id, api_key: api_key.key, api_username: 'made_up', format: :json
+      response.should_not be_success
+    end
+
+    it 'allows users with a master api key to bookmark posts' do
+      PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).once
+      put :bookmark, bookmarked: "true", post_id: post.id, api_key: master_key.key, api_username: user.username, format: :json
+      response.should be_success
     end
 
     it 'disallows phonies to bookmark posts' do
@@ -29,7 +40,6 @@ describe 'api' do
     end
 
     it 'disallows blank api' do
-      SiteSetting.stubs(:api_key).returns("")
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
       lambda do
         put :bookmark, bookmarked: "true", post_id: post.id, api_key: "", api_username: user.username, format: :json

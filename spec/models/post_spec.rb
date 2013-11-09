@@ -26,6 +26,8 @@ describe Post do
   it { should have_many :post_uploads }
   it { should have_many :uploads }
 
+  it { should have_many :post_details }
+
   it { should rate_limit }
 
   let(:topic) { Fabricate(:topic) }
@@ -39,7 +41,9 @@ describe Post do
 
     describe '#by_newest' do
       it 'returns posts ordered by created_at desc' do
-        2.times { Fabricate(:post) }
+        2.times do |t|
+          Fabricate(:post, created_at: t.seconds.from_now)
+        end
         Post.by_newest.first.created_at.should > Post.by_newest.last.created_at
       end
     end
@@ -372,7 +376,7 @@ describe Post do
       end
 
       it "ignores code" do
-        post = Fabricate.build(:post, post_args.merge(raw: "@Jake <code>@Finn</code>"))
+        post = Fabricate.build(:post, post_args.merge(raw: "@Jake `@Finn`"))
         post.raw_mentions.should == ['jake']
       end
 
@@ -711,7 +715,6 @@ describe Post do
 
 
   context 'sort_order' do
-
     context 'regular topic' do
 
       let!(:p1) { Fabricate(:post, post_args) }
@@ -721,6 +724,20 @@ describe Post do
       it 'defaults to created order' do
         Post.regular_order.should == [p1, p2, p3]
       end
+    end
+  end
+
+  context "reply_history" do
+
+    let!(:p1) { Fabricate(:post, post_args) }
+    let!(:p2) { Fabricate(:post, post_args.merge(reply_to_post_number: p1.post_number)) }
+    let!(:p3) { Fabricate(:post, post_args) }
+    let!(:p4) { Fabricate(:post, post_args.merge(reply_to_post_number: p2.post_number)) }
+
+    it "returns the posts in reply to this post" do
+      p4.reply_history.should == [p1, p2]
+      p3.reply_history.should be_blank
+      p2.reply_history.should == [p1]
     end
 
   end
@@ -742,6 +759,22 @@ describe Post do
       p1 = Fabricate(:post)
       p2 = Fabricate(:post)
       Post.urls([p1.id, p2.id]).should == {p1.id => p1.url, p2.id => p2.url}
+    end
+  end
+
+  describe "details" do
+    it "adds details" do
+      post = Fabricate.build(:post)
+      post.add_detail("key", "value")
+      post.post_details.size.should == 1
+      post.post_details.first.key.should == "key"
+      post.post_details.first.value.should == "value"
+    end
+
+    it "can find a post by a detail" do
+      detail = Fabricate(:post_detail)
+      post   = detail.post
+      Post.find_by_detail(detail.key, detail.value).id.should == post.id
     end
   end
 

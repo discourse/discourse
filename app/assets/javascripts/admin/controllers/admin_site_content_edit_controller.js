@@ -14,12 +14,15 @@ Discourse.AdminSiteContentEditController = Discourse.Controller.extend({
     return false;
   }.property('saving', 'content.content'),
 
-  saveChanges: function() {
-    var controller = this;
-    controller.setProperties({saving: true, saved: false});
-    this.get('content').save().then(function () {
-      controller.setProperties({saving: false, saved: true});
-    });
+  actions: {
+    saveChanges: function() {
+      var self = this;
+      self.setProperties({saving: true, saved: false});
+      self.get('content').save().then(function () {
+        self.setProperties({saving: false, saved: true});
+      });
+    }
   }
-
 });
+
+Discourse.AdminSiteContentsController = Ember.ArrayController.extend({});

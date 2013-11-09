@@ -1,16 +1,12 @@
 <div class='row'>
-  <section class='embedded-posts top parent-post span14 offset2' style='display:none'>
-    {{#if view.parentPost}}
-      {{view Discourse.ParentView contentBinding="view.parentPost" postViewBinding="view"}}
-    {{/if}}
-  </section>
+  {{view Discourse.ReplyHistory contentBinding="replyHistory"}}
 </div>
 
 <article class='boxed' {{bindAttr id="postElementId"}} {{bindAttr data-post-id="id"}} data-user-id="{{unbound user_id}}">
   <div class='row'>
     {{#if showUserReplyTab}}
-      <a href='#' {{action toggleParent target="view"}} class='reply-to-tab'>
-        {{#if loadingParent}}
+      <a href='#' {{action toggleReplyHistory this target="view"}} class='reply-to-tab'>
+        {{#if loadingReplyHistory}}
           {{i18n loading}}
         {{else}}
           {{i18n post.in_reply_to}}
@@ -21,33 +17,55 @@
     {{/if}}
 
     <div class='topic-meta-data span2'>
-      <div {{bindAttr class=":contents byTopicCreator:topic-creator"}}>
-        <a href='{{unbound usernameUrl}}'>{{avatar this imageSize="large"}}</a>
-        <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h3>
-        {{#if user_title}}<div class="user-title">{{user_title}}</div>{{/if}}
-      </div>
+      {{#unless userDeleted}}
+        <div {{bindAttr class=":contents byTopicCreator:topic-creator :trigger-expansion"}}>
+          <a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{avatar this imageSize="large"}}</a>
+          <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp username}}</a></h3>
+
+          {{#if showName}}
+          <h3><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
+          {{/if}}
+
+          {{#if user_title}}<div class="user-title" {{action showPosterExpansion this}}>{{user_title}}</div>{{/if}}
+        </div>
+      {{else}}
+        <div class="contents">
+          <i class="icon icon-trash deleted-user-avatar"></i>
+          <h3 class="deleted-username">{{i18n user.deleted}}</h3>
+        </div>
+      {{/unless}}
     </div>
 
     <div class='topic-body span14'>
-      <button {{action selectPost this}} {{bindAttr class=":post-select controller.multiSelect::hidden"}}>{{view.selectText}}</button>
+      <div {{bindAttr class=":select-posts controller.multiSelect::hidden"}}>
+        <button {{action toggledSelectedPostReplies this}} {{bindAttr class="view.canSelectReplies::hidden"}}>{{i18n topic.multi_select.select_replies}}</button>
+        <button {{action toggledSelectedPost this}} class="select-post">{{view.selectPostText}}</button>
+      </div>
 
-      <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesHidden:bottom-round :contents :regular view.extraClass"}}>
+      <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesShown::bottom-round :contents :regular view.extraClass"}}>
         {{#unless controller.multiSelect}}
           <div class='topic-meta-data-inside'>
             {{#if hasHistory}}
               <div class='post-info edits'>
-                <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{unboundDate updated_at}}">
-                  {{editCount}}
-                  <i class='icon-pencil'></i>
-                </a>
+                {{#if canViewEditHistory}}
+                  <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{i18n post.last_edited_on}} {{unboundDate updated_at}}">
+                    {{editCount}}
+                    <i class='icon-pencil'></i>
+                  </a>
+                {{else}}
+                  <span class="{{unbound historyHeat}}" title="{{i18n post.last_edited_on}} {{unboundDate updated_at}}">
+                    {{editCount}}
+                    <i class='icon-pencil'></i>
+                  </span>
+                {{/if}}
               </div>
             {{/if}}
             <div class='post-info'>
-              <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{unboundAgeWithTooltip created_at}}</a>
+              <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}} {{bindAttr data-post-number="post_number"}}>{{unboundAgeWithTooltip created_at}}</a>
             </div>
           </div>
         {{/unless}}
-        {{view Discourse.RawDivView class="cooked" contentBinding="cooked"}}
+        <div class='cooked'>{{{cooked}}}</div>
         {{view Discourse.PostMenuView postBinding="this" postViewBinding="view"}}
       </div>
       {{view Discourse.RepliesView contentBinding="replies" postViewBinding="view"}}

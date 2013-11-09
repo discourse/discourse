@@ -21,53 +21,68 @@ describe UserSearch do
     Fabricate :post, user: user6, topic: topic
   end
 
+  def search_for(*args)
+    UserSearch.new(*args).search
+  end
+
   # this is a seriously expensive integration test, re-creating this entire test db is too expensive
   # reuse
   it "operates correctly" do
     # normal search
-    results = UserSearch.search user1.name.split(" ").first
+    results = search_for(user1.name.split(" ").first)
     results.size.should == 1
     results.first.should == user1
 
     # lower case
-    results = UserSearch.search user1.name.split(" ").first.downcase
+    results = search_for(user1.name.split(" ").first.downcase)
     results.size.should == 1
     results.first.should == user1
 
     #  username
-    results = UserSearch.search user4.username
+    results = search_for(user4.username)
     results.size.should == 1
     results.first.should == user4
 
     # case insensitive
-    results = UserSearch.search user4.username.upcase
+    results = search_for(user4.username.upcase)
     results.size.should == 1
     results.first.should == user4
 
     # substrings
-    results = UserSearch.search "mr"
+    results = search_for("mr")
     results.size.should == 6
 
-    results = UserSearch.search "mrb"
+    results = search_for("mrb")
     results.size.should == 3
 
 
-    results = UserSearch.search "MR"
+    results = search_for("MR")
     results.size.should == 6
 
-    results = UserSearch.search "MRB"
+    results = search_for("MRB")
     results.size.should == 3
 
     # topic priority
-    results = UserSearch.search "mrb", topic.id
+    results = search_for("mrb", topic.id)
     results.first.should == user1
 
 
-    results = UserSearch.search "mrb", topic2.id
+    results = search_for("mrb", topic2.id)
     results.first.should == user2
 
-    results = UserSearch.search "mrb", topic3.id
+    results = search_for("mrb", topic3.id)
     results.first.should == user5
+
+    # When searching by name is enabled, it returns the record
+    SiteSetting.stubs(:enable_names).returns(true)
+    results = search_for("Tarantino")
+    results.size.should == 1
+
+    # When searching by name is disabled, it will not return the record
+    SiteSetting.stubs(:enable_names).returns(false)
+    results = search_for("Tarantino")
+    results.size.should == 0
+
   end
 
 end

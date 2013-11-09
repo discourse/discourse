@@ -1,0 +1,64 @@
+<div class="modal-body">
+  {{#if hasAtLeastOneLoginButton}}
+    <div id="login-buttons">
+      {{#each Discourse.LoginMethod.all}}
+        <button class="btn btn-social {{unbound name}}" {{action externalLogin this}}>{{unbound title}}</button>
+      {{/each}}
+    </div>
+    <div class="clearfix"></div>
+  {{/if}}
+  {{#if Discourse.SiteSettings.enable_local_logins}}
+    {{#if hasAtLeastOneLoginButton}}
+      <h3 style="text-align:center; margin-bottom:10px;">{{i18n login.or}}</h3>
+    {{/if}}
+    <form id='login-form' method='post'>
+      <div>
+        <table>
+          <tr>
+            <td>
+              <label for='login-account-name'>{{i18n login.username}}&nbsp;</label>
+            </td>
+            <td>
+              {{textField value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off"}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <label for='login-account-password'>{{i18n login.password}}&nbsp;</label>
+            </td>
+            <td>
+                {{textField value=loginPassword type="password" id="login-account-password"}} &nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <a id="forgot-password-link" {{action showForgotPassword}}>{{i18n forgot_password.action}}</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  {{/if}}
+  {{authMessage}}
+  <div id='login-alert' {{bindAttr class="alertClass"}}>{{alert}}</div>
+</div>
+<div class="modal-footer">
+  {{#if authenticate}}
+    {{i18n login.authenticating}}
+  {{/if}}
+  {{#if Discourse.SiteSettings.enable_local_logins}}
+    <button class='btn btn-large btn-primary'
+      {{bindAttr disabled="loginDisabled"}}
+      {{action login}}>
+        <i class="icon-unlock"></i>&nbsp;{{loginButtonText}}
+    </button>
+
+    {{#unless Discourse.SiteSettings.invite_only}}
+      &nbsp; {{i18n create_account.invite}}
+      <a id="new-account-link" {{action showCreateAccount}}>
+        {{i18n create_account.action}}
+      </a>
+    {{/unless}}
+  {{/if}}
+</div>

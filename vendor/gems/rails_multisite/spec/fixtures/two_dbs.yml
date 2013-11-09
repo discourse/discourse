@@ -1,9 +1,6 @@
 second:
   adapter: sqlite3
-  database: second_db
-  username: username
-  password: password
-  db_id: 1
+  database: "tmp/db1.test"
   host_names:
     - second.localhost
     - 2nd.localhost

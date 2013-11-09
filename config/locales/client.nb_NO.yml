@@ -247,8 +247,6 @@ nb_NO:
         title: "Siste IP Addresse"
       avatar:
         title: "Profilbilde"
-        instructions: "Vi bruker <a href='https://gravatar.com' target='_blank'>Gravatar</a> basert på din email for profilbilder."
-
       filters:
         all: "Alle"
 
@@ -430,12 +428,8 @@ nb_NO:
       title: "Legg til Bilde"
       from_my_computer: "Fra Min Enhet"
       from_the_web: "Fra Nettet"
-      add_title: "Legg til Bilde"
-      remote_title: "eksternt bilde"
       remote_tip: "skriv inn addressen til et bilde, f.eks. http://example.com/image.jpg"
-      local_title: "lokalt bilde"
       local_tip: "klikk for å velge et bilde fra din enhet."
-      upload_title: "Last opp"
       uploading: "Laster opp bilde"
 
     search:
@@ -484,7 +478,6 @@ nb_NO:
       title: Topic Rank Details
 
     topic:
-      create_in: 'Lag {{categoryName}} Emne'
       create: 'Lag Emne'
       create_long: 'Lag ett nytt Emne'
       private_message: 'Start enn private melding'
@@ -803,7 +796,6 @@ nb_NO:
       none: '(no category)'
       edit: 'rediger'
       edit_long: "Rediger Kategori"
-      edit_uncategorized: "Rediger Ukategorisert"
       view: 'Se Emner i Kategori'
       general: 'Generellt'
       settings: 'Innstillinger'
@@ -1053,13 +1045,13 @@ nb_NO:
           moderators: 'Moderatorer'
 
       user:
-        ban_failed: "Noe gikk galt ved å bannlyse denne brukeren {{error}}"
-        unban_failed: "Noe gikk galt ved å gjeninsette denne brukeren {{error}}"
-        ban_duration: "Hvor lenge vil du bannlyse denne brukeren? (dager)"
+        suspend_failed: "Noe gikk galt ved å bannlyse denne brukeren {{error}}"
+        unsuspend_failed: "Noe gikk galt ved å gjeninsette denne brukeren {{error}}"
+        suspend_duration: "Hvor lenge vil du bannlyse denne brukeren? (dager)"
         delete_all_posts: "Slett alle innlegg"
-        ban: "Bannlyst"
-        unban: Gjeninnsett"
-        banned: "Banlyst?"
+        suspend: "Bannlyst"
+        unsuspend: Gjeninnsett"
+        suspended: "Banlyst?"
         moderator: "Moderator?"
         admin: "Admin?"
         show_admin_profile: "Admin"

@@ -7,8 +7,14 @@ class CategoriesController < ApplicationController
   skip_before_filter :check_xhr, only: [:index]
 
   def index
-    @list = CategoryList.new(guardian)
+    @description = SiteSetting.site_description
 
+    wide_mode = SiteSetting.enable_wide_category_list
+
+    options = {}
+    options[:latest_post_only] = params[:latest_post_only] || wide_mode
+
+    @list = CategoryList.new(guardian,options)
     @list.draft_key = Draft::NEW_TOPIC
     @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
     @list.draft = Draft.get(current_user, @list.draft_key, @list.draft_sequence) if current_user
@@ -22,6 +28,20 @@ class CategoriesController < ApplicationController
     end
   end
 
+  def move
+    guardian.ensure_can_create!(Category)
+
+    params.require("category_id")
+    params.require("position")
+
+    if category = Category.find(params["category_id"])
+      category.move_to(params["position"].to_i)
+      render json: success_json
+    else
+      render status: 500, json: failed_json
+    end
+  end
+
   def show
     render_serialized(@category, CategorySerializer)
   end
@@ -32,18 +52,24 @@ class CategoriesController < ApplicationController
     @category = Category.create(category_params.merge(user: current_user))
     return render_json_error(@category) unless @category.save
 
+    @category.move_to(category_params[:position].to_i) if category_params[:position]
     render_serialized(@category, CategorySerializer)
   end
 
   def update
     guardian.ensure_can_edit!(@category)
-    json_result(@category, serializer: CategorySerializer) { |cat| cat.update_attributes(category_params) }
+    json_result(@category, serializer: CategorySerializer) { |cat|
+      cat.move_to(category_params[:position].to_i) if category_params[:position]
+      category_params.delete(:position)
+      cat.update_attributes(category_params)
+    }
   end
 
   def destroy
     guardian.ensure_can_delete!(@category)
     @category.destroy
-    render nothing: true
+
+    render json: success_json
   end
 
   private
@@ -53,17 +79,19 @@ class CategoriesController < ApplicationController
     end
 
     def category_params
-      required_param_keys.each do |key|
-        params.require(key)
-      end
-
-      if p = params[:permissions]
-        p.each do |k,v|
-          p[k] = v.to_i
+      @category_params ||= begin
+        required_param_keys.each do |key|
+          params.require(key)
         end
-      end
 
-      params.permit(*required_param_keys, :hotness, :auto_close_days, :permissions => [*p.try(:keys)])
+        if p = params[:permissions]
+          p.each do |k,v|
+            p[k] = v.to_i
+          end
+        end
+
+        params.permit(*required_param_keys, :position, :hotness, :parent_category_id, :auto_close_days, :permissions => [*p.try(:keys)])
+      end
     end
 
     def fetch_category

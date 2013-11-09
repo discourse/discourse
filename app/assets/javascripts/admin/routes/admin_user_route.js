@@ -28,6 +28,13 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
       controller.set('model', adminUser);
       window.scrollTo(0, 0);
     });
+  },
+
+  actions: {
+    showSuspendModal: function(user) {
+      Discourse.Route.showModal(this, 'admin_suspend_user', user);
+      this.controllerFor('modal').set('modalClass', 'suspend-user-modal');
+    }
   }
 
 });

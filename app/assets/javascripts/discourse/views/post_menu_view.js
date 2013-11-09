@@ -16,10 +16,11 @@ Discourse.PostMenuView = Discourse.View.extend({
     'post.reply_count',
     'post.showRepliesBelow',
     'post.can_delete',
-    'bookmarkClass',
-    'bookmarkTooltip',
-    'shareUrl',
-    'post.topic.deleted_at'),
+    'post.bookmarkClass',
+    'post.bookmarkTooltip',
+    'post.shareUrl',
+    'post.topic.deleted_at',
+    'post.replies.length'),
 
   render: function(buffer) {
     var post = this.get('post');
@@ -55,12 +56,16 @@ Discourse.PostMenuView = Discourse.View.extend({
     buffer.push("<span class='badge-posts'>" + reply_count + "</span>");
     buffer.push(I18n.t("post.has_replies", { count: reply_count }));
 
-    var icon = this.get('postView.repliesShown') ? 'icon-chevron-up' : 'icon-chevron-down';
+    var icon = (this.get('post.replies.length') > 0) ? 'icon-chevron-up' : 'icon-chevron-down';
     return buffer.push("<i class='icon " + icon + "'></i></button>");
   },
 
   clickReplies: function() {
-    this.get('postView').showReplies();
+    if (this.get('post.replies.length') > 0) {
+      this.set('post.replies', []);
+    } else {
+      this.get('post').loadReplies();
+    }
   },
 
   // Delete button
@@ -70,7 +75,7 @@ Discourse.PostMenuView = Discourse.View.extend({
 
     if (post.get('post_number') === 1) {
 
-      // If if it's the first post, the delete/undo actions are related to the topic
+      // If it's the first post, the delete/undo actions are related to the topic
       var topic = post.get('topic');
       if (topic.get('deleted_at')) {
         if (!topic.get('details.can_recover')) { return; }
@@ -161,8 +166,9 @@ Discourse.PostMenuView = Discourse.View.extend({
   // Share button
   renderShare: function(post, buffer) {
     buffer.push("<button title=\"" +
-                 (I18n.t("post.controls.share")) +
-                 "\" data-share-url=\"" + post.get('shareUrl') + "\" class='share'><i class=\"icon-link\"></i></button>");
+                 I18n.t("post.controls.share") +
+                 "\" data-share-url=\"" + post.get('shareUrl') + "\" data-post-number=\"" + post.get('post_number') +
+                 "\" class='share'><i class=\"icon-link\"></i></button>");
   },
 
   // Reply button
@@ -170,8 +176,8 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (!this.get('controller.model.details.can_create_post')) return;
     buffer.push("<button title=\"" +
                  (I18n.t("post.controls.reply")) +
-                 "\" class='create' data-action=\"reply\"><i class='icon-reply'></i>" +
-                 (I18n.t("topic.reply.title")) + "</button>");
+                 "\" class='create' data-action=\"reply\"><i class='icon-reply'></i><span class='btn-text'>" +
+                 (I18n.t("topic.reply.title")) + "</span></button>");
   },
 
   clickReply: function() {

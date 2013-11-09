@@ -11,9 +11,9 @@
   <div class="span7 toggle">
     <label>{{i18n admin.email.format}}</label>
     {{#if showHtml}}
-      <span>{{i18n admin.email.html}}</span> | <a href='#' {{action toggleProperty 'showHtml'}}>{{i18n admin.email.text}}</a>
+      <span>{{i18n admin.email.html}}</span> | <a href='#' {{action toggleShowHtml}}>{{i18n admin.email.text}}</a>
     {{else}}
-      <a href='#' {{action toggleProperty 'showHtml'}}>{{i18n admin.email.html}}</a> | <span>{{i18n admin.email.text}}</span>
+      <a href='#' {{action toggleShowHtml}}>{{i18n admin.email.html}}</a> | <span>{{i18n admin.email.text}}</span>
     {{/if}}
   </div>
 </div>

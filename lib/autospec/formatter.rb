@@ -1,39 +1,46 @@
-require "rspec/core/formatters/base_formatter"
+require "rspec/core/formatters/base_text_formatter"
 
 module Autospec; end
-class Autospec::Formatter < RSpec::Core::Formatters::BaseFormatter
 
-  def dump_summary(duration, total, failures, pending)
-    # failed_specs = examples.delete_if{|e| e.execution_result[:status] != "failed"}.map{|s| s.metadata[:location]}
+class Autospec::Formatter < RSpec::Core::Formatters::BaseTextFormatter
 
-    # # if this fails don't kill everything
-    # begin
-    #   FileUtils.mkdir_p('tmp')
-    #   File.open("./tmp/rspec_result","w") do |f|
-    #     f.puts failed_specs.join("\n")
-    #   end
-    # rescue
-    #   # nothing really we can do, at least don't kill the test runner
-    # end
+  RSPEC_RESULT = "./tmp/rspec_result"
+
+  def initialize(output)
     super
+    FileUtils.mkdir_p("tmp") unless Dir.exists?("tmp")
   end
 
-  def start(count)
-    FileUtils.mkdir_p('tmp')
-    @fail_file = File.open("./tmp/rspec_result","w")
-    super(count)
+  def start(example_count)
+    super
+    File.delete(RSPEC_RESULT) if File.exists?(RSPEC_RESULT)
+    @fail_file = File.open(RSPEC_RESULT,"w")
+  end
+
+  def example_passed(example)
+    super
+    output.print success_color(".")
+  end
+
+  def example_pending(example)
+    super
+    output.print pending_color("*")
+  end
+
+  def example_failed(example)
+    super
+    output.print failure_color("F")
+    @fail_file.puts(example.metadata[:location] + " ")
+    @fail_file.flush
+  end
+
+  def start_dump
+    super
+    output.puts
   end
 
   def close
     @fail_file.close
-    super
   end
-
-  def example_failed(example)
-    @fail_file.puts example.metadata[:location]
-    @fail_file.flush
-    super(example)
-  end
-
 
 end

@@ -61,7 +61,11 @@ class SqlBuilder
     if @klass
       @klass.find_by_sql(ActiveRecord::Base.send(:sanitize_sql_array, [sql, @args]))
     else
-      ActiveRecord::Base.exec_sql(sql,@args)
+      if @args == {}
+        ActiveRecord::Base.exec_sql(sql)
+      else
+        ActiveRecord::Base.exec_sql(sql,@args)
+      end
     end
   end
 
@@ -73,7 +77,7 @@ class SqlBuilder
     16 => :value_to_boolean
   }
 
-  def map_exec(klass, args = {})
+  def map_exec(klass = OpenStruct, args = {})
     results = exec(args)
 
     setters = results.fields.each_with_index.map do |f, index|

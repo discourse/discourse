@@ -57,6 +57,7 @@ describe TopicLink do
         @topic.posts.create(user: @user, raw: 'initial post')
         @post = @topic.posts.create(user: @user, raw: "Link to another topic:\n\n#{@url}\n\n")
         @post.reload
+
         TopicLink.extract_from(@post)
 
         @link = @topic.topic_links.first

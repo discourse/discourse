@@ -19,6 +19,11 @@ class ListableTopicSerializer < BasicTopicSerializer
              :closed,
              :archived
 
+  has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
+  def include_last_poster?
+    object.include_last_poster
+  end
+
   def bumped
     object.created_at < object.bumped_at
   end
@@ -68,6 +73,5 @@ class ListableTopicSerializer < BasicTopicSerializer
     def unread_helper
       @unread_helper ||= Unread.new(object, object.user_data)
     end
-
 
 end

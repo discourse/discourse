@@ -3,7 +3,6 @@ require_dependency 'promotion'
 
 class TopicsController < ApplicationController
 
-  # Avatar is an image request, not XHR
   before_filter :ensure_logged_in, only: [:timings,
                                           :destroy_timings,
                                           :update,
@@ -22,36 +21,41 @@ class TopicsController < ApplicationController
 
   before_filter :consider_user_for_promotion, only: :show
 
-  skip_before_filter :check_xhr, only: [:avatar, :show, :feed]
-  caches_action :avatar, cache_path: Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
+  skip_before_filter :check_xhr, only: [:show, :feed]
 
   def show
-
     # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
     # existing installs.
     return wordpress if params[:best].present?
 
     opts = params.slice(:username_filters, :filter, :page, :post_number)
+    username_filters = opts[:username_filters]
+
+    opts[:username_filters] = [username_filters] if username_filters.is_a?(String)
+
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
     rescue Discourse::NotFound
-      Rails.logger.info ">>>> B"
       topic = Topic.where(slug: params[:id]).first if params[:id]
       raise Discourse::NotFound unless topic
       return redirect_to(topic.relative_url)
     end
 
-    anonymous_etag(@topic_view.topic) do
-      redirect_to_correct_topic && return if slugs_do_not_match
+    discourse_expires_in 1.minute
 
-      # render workaround pseudo-static HTML page for old crawlers which ignores <noscript>
-      # (see http://meta.discourse.org/t/noscript-tag-and-some-search-engines/8078)
-      return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.has_key?('_escaped_fragment_'))
+    redirect_to_correct_topic && return if slugs_do_not_match
 
-      View.create_for(@topic_view.topic, request.remote_ip, current_user)
-      track_visit_to_topic
-      perform_show_response
+    # render workaround pseudo-static HTML page for old crawlers which ignores <noscript>
+    # (see http://meta.discourse.org/t/noscript-tag-and-some-search-engines/8078)
+    return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.key?('_escaped_fragment_'))
+
+    track_visit_to_topic
+
+    if should_track_visit_to_topic?
+      @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
     end
+
+    perform_show_response
 
     canonical_url @topic_view.canonical_path
   end
@@ -60,24 +64,20 @@ class TopicsController < ApplicationController
     params.require(:best)
     params.require(:topic_id)
     params.permit(:min_trust_level, :min_score, :min_replies, :bypass_trust_level_score, :only_moderator_liked)
+    opts = { best: params[:best].to_i,
+      min_trust_level: params[:min_trust_level] ? 1 : params[:min_trust_level].to_i,
+      min_score: params[:min_score].to_i,
+      min_replies: params[:min_replies].to_i,
+      bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
+      only_moderator_liked: params[:only_moderator_liked].to_s == "true"
+    }
 
-    @topic_view = TopicView.new(
-        params[:topic_id],
-        current_user,
-          best: params[:best].to_i,
-          min_trust_level: params[:min_trust_level].nil? ? 1 : params[:min_trust_level].to_i,
-          min_score: params[:min_score].to_i,
-          min_replies: params[:min_replies].to_i,
-          bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
-          only_moderator_liked: params[:only_moderator_liked].to_s == "true"
-    )
+    @topic_view = TopicView.new(params[:topic_id], current_user, opts)
+    discourse_expires_in 1.minute
 
-    anonymous_etag(@topic_view.topic) do
-      wordpress_serializer = TopicViewWordpressSerializer.new(@topic_view, scope: guardian, root: false)
-      render_json_dump(wordpress_serializer)
-    end
+    wordpress_serializer = TopicViewWordpressSerializer.new(@topic_view, scope: guardian, root: false)
+    render_json_dump(wordpress_serializer)
   end
-
 
   def posts
     params.require(:topic_id)
@@ -94,41 +94,31 @@ class TopicsController < ApplicationController
 
   def update
     topic = Topic.where(id: params[:topic_id]).first
+    title, archetype = params[:title], params[:archetype]
     guardian.ensure_can_edit!(topic)
-    topic.title = params[:title] if params[:title].present?
 
+    topic.title = params[:title] if title.present?
     # TODO: we may need smarter rules about converting archetypes
-    if current_user.admin?
-      topic.archetype = "regular" if params[:archetype] == 'regular'
-    end
+    topic.archetype = "regular" if current_user.admin? && archetype == 'regular'
 
     success = false
     Topic.transaction do
       success = topic.save
-      topic.change_category(params[:category]) if success
+      success = topic.change_category(params[:category]) if success
     end
-
     # this is used to return the title to the client as it may have been
     # changed by "TextCleaner"
-    if success
-      render_serialized(topic, BasicTopicSerializer)
-    else
-      render_json_error(topic)
-    end
+    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
   end
 
   def similar_to
     params.require(:title)
     params.require(:raw)
     title, raw = params[:title], params[:raw]
-
-    raise Discourse::InvalidParameters.new(:title) if title.length < SiteSetting.min_title_similar_length
-    raise Discourse::InvalidParameters.new(:raw) if raw.length < SiteSetting.min_body_similar_length
+    [:title, :raw].each { |key| check_length_of(key, params[key]) }
 
     # Only suggest similar topics if the site has a minimmum amount of topics present.
-    if Topic.count > SiteSetting.minimum_topics_similar
-      topics = Topic.similar_to(title, raw, current_user).to_a
-    end
+    topics = Topic.similar_to(title, raw, current_user).to_a if Topic.count_exceeds_minimum?
 
     render_serialized(topics, BasicTopicSerializer)
   end
@@ -136,11 +126,13 @@ class TopicsController < ApplicationController
   def status
     params.require(:status)
     params.require(:enabled)
+    status, topic_id  = params[:status], params[:topic_id].to_i
+    enabled = (params[:enabled] == 'true')
 
-    raise Discourse::InvalidParameters.new(:status) unless %w(visible closed pinned archived).include?(params[:status])
-    @topic = Topic.where(id: params[:topic_id].to_i).first
+    check_for_status_presence(:status, status)
+    @topic = Topic.where(id: topic_id).first
     guardian.ensure_can_moderate!(@topic)
-    @topic.update_status(params[:status], (params[:enabled] == 'true'), current_user)
+    @topic.update_status(status, enabled, current_user)
     render nothing: true
   end
 
@@ -200,14 +192,7 @@ class TopicsController < ApplicationController
   end
 
   def invite
-    username_or_email = params[:user]
-    if username_or_email
-      # provides a level of protection for hashes
-      params.require(:user)
-    else
-      params.require(:email)
-      username_or_email = params[:email]
-    end
+    username_or_email = params[:user] ? fetch_username : fetch_email
 
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_invite_to!(topic)
@@ -242,11 +227,13 @@ class TopicsController < ApplicationController
 
   def move_posts
     params.require(:post_ids)
+    params.require(:topic_id)
+    params.permit(:category_id)
 
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_move_posts!(topic)
 
-    dest_topic = move_post_to_destination(topic)
+    dest_topic = move_posts_to_destination(topic)
     render_topic_changes(dest_topic)
   end
 
@@ -269,9 +256,8 @@ class TopicsController < ApplicationController
 
   def feed
     @topic_view = TopicView.new(params[:topic_id])
-    anonymous_etag(@topic_view.topic) do
-      render 'topics/show', formats: [:rss]
-    end
+    discourse_expires_in 1.minute
+    render 'topics/show', formats: [:rss]
   end
 
   private
@@ -302,13 +288,17 @@ class TopicsController < ApplicationController
   end
 
   def track_visit_to_topic
-    return unless should_track_visit_to_topic?
-    TopicUser.track_visit! @topic_view.topic, current_user
-    @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
+    Jobs.enqueue(:view_tracker,
+                    topic_id: @topic_view.topic.id,
+                    ip: request.remote_ip,
+                    user_id: (current_user.id if current_user),
+                    track_visit: should_track_visit_to_topic?
+                )
+
   end
 
   def should_track_visit_to_topic?
-    (!request.xhr? || params[:track_visit]) && current_user
+    !!((!request.xhr? || params[:track_visit]) && current_user)
   end
 
   def perform_show_response
@@ -333,14 +323,36 @@ class TopicsController < ApplicationController
     end
   end
 
-  private
-
-  def move_post_to_destination(topic)
+  def move_posts_to_destination(topic)
     args = {}
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
+    args[:category_id] = params[:category_id].to_i if params[:category_id].present?
 
-    topic.move_posts(current_user, params[:post_ids].map {|p| p.to_i}, args)
+    topic.move_posts(current_user, post_ids_including_replies, args)
+  end
+
+  def check_length_of(key, attr)
+    str = (key == :raw) ? "body" : key.to_s
+    invalid_param(key) if attr.length < SiteSetting.send("min_#{str}_similar_length")
+  end
+
+  def check_for_status_presence(key, attr)
+    invalid_param(key) unless %w(visible closed pinned archived).include?(attr)
+  end
+
+  def invalid_param(key)
+    raise Discourse::InvalidParameters.new(key.to_sym)
+  end
+
+  def fetch_username
+    params.require(:user)
+    params[:user]
+  end
+
+  def fetch_email
+    params.require(:email)
+    params[:email]
   end
 
 end

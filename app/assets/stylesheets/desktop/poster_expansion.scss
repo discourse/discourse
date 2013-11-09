@@ -1,0 +1,70 @@
+// styles that apply to the "share" popup when sharing a link to a post or topic
+
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
+#poster-expansion {
+  position: absolute;
+  left: 20px;
+  z-index: 990;
+  box-shadow: 0 2px 6px rgba(70, 70, 70, 0.4);
+  margin-top: -2px;
+  background-color: $white;
+  padding: 12px 12px 5px 12px;
+  max-width: 350px;
+
+  h1.new-user a {
+    color: $dark_gray;
+  }
+
+  h1 {
+    font-size: 30px;
+    line-height: 33px;
+    margin-bottom: 8px;
+
+    a {
+      color: #333;
+    }
+  }
+
+  h2 {
+    font-size: 20px;
+    line-height: 22px;
+    font-weight: normal;
+    margin-bottom: 5px;
+
+    a {
+      color: #333;
+    }
+  }
+
+  h3 {
+    font-size: 13px;
+    font-weight: normal;
+    margin-top: 0px;
+    color: #666;
+  }
+
+  .bottom {
+    clear: both;
+    padding-top: 10px;
+  }
+
+  img.avatar {
+    float: left;
+    padding-right: 10px;
+  }
+
+  p {
+    margin: 0 0 5px 0;
+  }
+
+  p.loading {
+    margin-top: 30px;
+    color: #666;
+  }
+
+  .btn {
+    margin: 0 0 7px 0;
+  }
+}

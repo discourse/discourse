@@ -23,10 +23,10 @@ describe SessionController do
         end
       end
 
-      describe 'banned user' do
+      describe 'suspended user' do
         it 'should return an error' do
-          User.any_instance.stubs(:is_banned?).returns(true)
-          User.any_instance.stubs(:banned_till).returns(2.days.from_now)
+          User.any_instance.stubs(:suspended?).returns(true)
+          User.any_instance.stubs(:suspended_till).returns(2.days.from_now)
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
           ::JSON.parse(response.body)['error'].should be_present
         end
@@ -105,6 +105,17 @@ describe SessionController do
             expect(JSON.parse(response.body)['error']).to eq(
               I18n.t('login.not_approved')
             )
+          end
+        end
+
+        context "with an unapproved user who is an admin" do
+          before do
+            User.any_instance.stubs(:admin?).returns(true)
+            xhr :post, :create, login: user.email, password: 'myawesomepassword'
+          end
+
+          it 'sets a session id' do
+            session[:current_user_id].should == user.id
           end
         end
       end

@@ -1,3 +1,6 @@
+Fabricator(:user_stat) do
+end
+
 Fabricator(:user) do
   name 'Bruce Wayne'
   username { sequence(:username) { |i| "bruce#{i}" } }
@@ -5,6 +8,7 @@ Fabricator(:user) do
   password 'myawesomepassword'
   trust_level TrustLevel.levels[:basic]
   bio_raw "I'm batman!"
+  ip_address { sequence(:ip_address) { |i| "99.232.23.#{i%254}"} }
 end
 
 Fabricator(:coding_horror, from: :user) do

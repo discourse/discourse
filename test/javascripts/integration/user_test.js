@@ -5,8 +5,8 @@ test("Activity Streams", function() {
 
   var streamTest = function(url) {
     visit(url).then(function() {
-      ok(exists(".user-heading"), "The heading is rendered");
-      ok(exists("#user-activity"), "The activity is rendered");
+      ok(exists(".user-main"), "The main content is rendered");
+      ok(exists(".user-navigation"), "The navigation is rendered");
     });
   };
 

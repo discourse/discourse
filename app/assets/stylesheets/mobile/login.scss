@@ -1,0 +1,39 @@
+// style that apply to the login popup
+
+@import "../common/foundation/variables";
+@import "../common/foundation/mixins";
+
+.btn-social {
+  width: 95%;
+  font-size: 16px;
+}
+
+#login-buttons {
+  text-align: center;
+  button {
+    margin: 0 0 5px 0;
+  }
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+#login-form {
+  a {
+    color: $dark_gray;
+    cursor: pointer;
+  }
+  label {float: left; display: block;}
+  textarea, input, select {font-size: 16px; clear: left;}
+}
+
+// Create account
+
+#new-account-link {
+	cursor: pointer;
+}
+
+a#forgot-password-link {clear: left; float: left; }
+
+.btn-primary {margin-bottom: 10px; font-size: 15; clear: left; float: left;}
+
+a#new-account-link {margin-left: 7px;}

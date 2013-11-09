@@ -1,0 +1,279 @@
+// global styles that apply to the Discourse application specifically
+// BEWARE: changing these styles implies they take effect anywhere they are seen
+// throughout the Discourse application
+
+@import "../common/foundation/variables";
+@import "../common/foundation/mixins";
+@import "../common/foundation/helpers";
+
+body {
+  background-color: #fff;
+}
+
+.container {
+  @extend .clearfix;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.full-width {
+  margin-left: 12px;
+}
+
+
+
+a.no-href {
+  cursor: pointer;
+}
+
+header {
+}
+
+body {
+
+  button.ok {
+    @include linear-gradient(lighten($green, 5%), $green);
+    color: $white;
+    @include hover {
+      @include linear-gradient(lighten($green, 10%), $green);
+      color: $white;
+    }
+  }
+  button.cancel {
+    @include linear-gradient(lighten($red, 5%), $red);
+    color: $white;
+    @include hover {
+      @include linear-gradient(lighten($red, 10%), $red);
+      color: $white;
+    }
+  }
+  .coldmap-high {
+    color: lighten($blue, 20%) !important;
+  }
+  .coldmap-med {
+    color: lighten($blue, 10%) !important;
+  }
+  .coldmap-low {
+    color: $blue !important;
+  }
+  .heatmap-high {
+    color: lighten($red, 50%) !important;
+  }
+  .heatmap-med {
+    color: lighten($red, 10%) !important;
+  }
+  .heatmap-low {
+    color: $red !important;
+  }
+  #loading-message {
+    position: absolute;
+    font-size: 30px;
+    text-align: center;
+    top: 120px;
+    left: 500px;
+    color: $darkish_gray;
+  }
+  .top-space {
+    margin-top: 10px;
+  }
+  ul.breadcrumb {
+    margin: 0 10px 0px 10px;
+  }
+  .boxed {
+    height: 100%;
+    @include border-radius-all(5px);
+    .contents {
+      padding: 10px 10px 10px 10px;
+    }
+    &.white {
+      background-color: $white;
+    }
+  }
+  #main {
+    .icon-star.starred {
+      color: #fe1;
+    }
+    a.star {
+      display: inline-block;
+      font-size: 15px;
+      line-height: 1;
+      color: #cacaca;
+      &:before {
+        font-family: "FontAwesome";
+        content: "\f005";
+      }
+      &.starred {
+        color: #fe1;
+        text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+        @include hover {
+          opacity: 1;
+          &:before {
+            content: "\f005";
+          }
+        }
+      }
+      @include hover {
+        opacity: 0.6;
+      }
+
+      &:active {
+        opacity: 1;
+      }
+    }
+    img.avatar {
+      &.header {
+        width: 45px;
+        height: 45px;
+      }
+      &.medium {
+        width: 32px;
+        height: 32px;
+      }
+      &.small {
+        width: 25px;
+        height: 25px;
+      }
+      &.tiny {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    .user-list {
+      .user {
+        padding-bottom: 5px;
+      }
+    }
+  }
+  .message {
+    @include border-radius-all(8px);
+    background-color: $white;
+    padding: 14px;
+    h2 {
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 20px;
+    }
+  }
+  #footer {
+    background-color: $eggplant;
+    .container {
+      height: 50px;
+      .contents {
+        padding-top: 10px;
+        a[href] {
+          color: $white;
+        }
+      }
+    }
+  }
+  .clear-transitions {
+    @include transition(none !important);
+  }
+  .grippie {
+    width: 100%;
+    border: 1px solid #dddddd;
+    border-width: 1px 0px;
+    cursor: row-resize;
+    height: 11px;
+    overflow: hidden;
+    background-color: #eeeeee;
+    display:block {}
+    background: image-url("grippie.png") #eeeeee no-repeat center 3px;
+  }
+}
+
+form {
+  .tip {
+    display: inline-block;
+    &.good {
+      color: $green;
+    }
+    &.bad {
+      color: $red;
+    }
+  }
+}
+
+blockquote {
+  /* 13px left is intentional here to properly align with post quotes */
+  padding: 10px 8px 10px 13px;
+  background-color: $quote-background;
+  border-left: 5px solid darken($quote-background, 20%);
+  p {
+    margin: 0 0 10px 0;
+  }
+}
+
+.topic-statuses {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  .topic-status {
+    padding: 5px 2px 0 0;
+    margin: 0;
+    display: inline-block;
+    i {
+      font-size: 15px;
+      color: darken($white, 60%);
+    }
+  }
+}
+
+#wmd-input {
+  resize: none;
+}
+
+#pagedown-editor {
+  width: 540px;
+  background-color: $white;
+  padding: 0 10px 13px 10px;
+  border: 1px solid $gray;
+  .preview {
+    margin-top: 8px;
+    border: 1px dashed $gray;
+    padding: 8px 8px 0 8px;
+    p {
+      margin: 0 0 10px 0;
+    }
+  }
+  .preview.hidden {
+    display: none;
+  }
+}
+
+.spinner {
+  width: 100px;
+  margin: 0 auto 30px auto;
+  background-color: $black;
+  @include border-radius-all(10px);
+  padding: 10px 10px 10px 30px;
+  font-size: 15px;
+  line-height: 23px;
+  text-align: center;
+  color: $white;
+  background: {
+    image: image-url("spinner_96_w.gif");
+    repeat: no-repeat;
+    position: 10px 8px;
+    size: 25px;
+  };
+}
+
+.avatar {
+  @include border-radius-all(2px);
+}
+
+.avatar-wrapper {
+  background-color: white;
+  display: inline-block;
+  border: 1px solid #82786b;
+  @include border-radius-all(5px);
+  img {
+    @include border-radius-all(4px);
+  }
+}
+
+.profiler-results.profiler-left {
+  top: 60px !important;
+}

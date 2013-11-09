@@ -1,0 +1,24 @@
+<p>{{i18n admin.logs.screened_urls.description}}</p>
+
+{{#if loading}}
+  <div class='admin-loading'>{{i18n loading}}</div>
+{{else}}
+  {{#if model.length}}
+
+    <div class='table screened-urls'>
+      <div class="heading-container">
+        <div class="col heading first domain">{{i18n admin.logs.screened_urls.domain}}</div>
+        <div class="col heading action">{{i18n admin.logs.action}}</div>
+        <div class="col heading match_count">{{i18n admin.logs.match_count}}</div>
+        <div class="col heading last_match_at">{{i18n admin.logs.last_match_at}}</div>
+        <div class="col heading created_at">{{i18n admin.logs.created_at}}</div>
+        <div class="clearfix"></div>
+      </div>
+
+      {{view Discourse.ScreenedUrlsListView contentBinding="controller"}}
+    </div>
+
+  {{else}}
+    {{i18n search.no_results}}
+  {{/if}}
+{{/if}}

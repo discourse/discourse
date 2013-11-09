@@ -1,0 +1,141 @@
+
+.topic-meta-data {
+  width: 100%;
+  h3 a {margin-left: 10px;}
+  a {float: left;
+  }
+
+}
+
+
+.post-info a {color: #aaa;}
+
+.topic-meta-data-inside {
+  float: right;
+  margin-top: -38px;
+  margin-right: 5px;
+}
+
+
+.post-info  {
+  display: inline-block;
+}
+
+.edits {margin-right: 5px;}
+
+#topic-title {
+  margin-bottom: 20px;
+margin: 0 60px 10px 20px;
+line-height: 1.7em;
+
+h1 {
+  font-size: 1.5em;
+  margin:0;
+
+a.edit-topic {font-size: 15px;}
+
+}
+
+
+}
+
+#topic-closing-info {
+  margin-left: 10px;
+}
+
+.docked #topic-progress {
+	  box-shadow: 0 0 3px #aaa;
+}
+
+#topic-progress-wrapper {
+  position: fixed;
+  width: 0;
+  right: 0;
+  bottom: 0px;
+  z-index: 500;
+  margin-right: 140px;
+  outline: 1px solid transparent;
+
+
+}
+
+
+
+
+#topic-progress {
+
+	  box-shadow: 0 0 3px #000;
+
+  position: relative;
+  &.hidden {
+    display: none;
+  }
+  border: none;
+  background-color: #ddd;
+  color: #666;
+  width: 130px;
+  height: 34px;
+  .nums {
+    position: relative;
+    top: 9px;
+    width: 100%;
+    text-align: center;
+    z-index: 1;
+  }
+  button {
+    padding: 0 1px;
+    cursor: pointer;
+    z-index: 1000;
+    position: absolute;
+    top: 8px;
+    left: 4px;
+    border: 0;
+    background: none;
+    color: #666;
+
+    width: 60px;
+    text-align: left;
+    i {
+      font-size: 18px;
+    }
+    &:nth-of-type(2) {
+      right: 4px;
+      left: auto;
+      text-align: right;
+    }
+
+
+    &:disabled {
+
+      cursor: default;
+  color: #666;
+    }
+  }
+  h4 {
+    display: inline;
+    font-size: 18px;
+    line-height: 15px;
+  }
+  .bg {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    width: 0px;
+    border-right: 1px solid #ccc;
+    // background-color: #d4eaf4;
+    // background-color: #C5E8F7;
+    background-color: #C6F3B6;
+  }
+}
+
+#topic-progress-wrapper.docked {
+  #topic-progress {
+  }
+  position: absolute;
+}
+
+.topic-post:last-of-type {padding-bottom: 40px;}
+
+.heatmap-high {color: #f77 !important;}
+.heatmap-med {color: #a00 !important;}
+.heatmap-low {color: #700 !important;}

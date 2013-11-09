@@ -19,7 +19,7 @@ Discourse.ClearPinButton = Discourse.ButtonView.extend({
   }.property('controller.pinned'),
 
   click: function(buffer) {
-    this.get('controller').clearPin();
+    this.get('controller').send('clearPin');
   },
 
   renderIcon: function(buffer) {
