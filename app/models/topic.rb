@@ -599,6 +599,21 @@ class Topic < ActiveRecord::Base
     set_auto_close(num_days)
   end
 
+  def self.auto_close
+    Topic.where("NOT closed AND auto_close_at < ? AND auto_close_user_id IS NOT NULL", 5.minutes.from_now).each do |t|
+      t.auto_close
+    end
+  end
+
+  def auto_close(closer = nil)
+    if auto_close_at && !closed? && !deleted_at && auto_close_at < 5.minutes.from_now
+      closer ||= auto_close_user
+      if Guardian.new(closer).can_moderate?(self)
+        update_status('autoclosed', true, closer)
+      end
+    end
+  end
+
   def set_auto_close(num_days, by_user=nil)
     num_days = num_days.to_i
     self.auto_close_at = (num_days > 0 ? num_days.days.from_now : nil)

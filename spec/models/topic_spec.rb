@@ -1051,7 +1051,17 @@ describe Topic do
           topic = Fabricate(:topic, category: Fabricate(:category, auto_close_days: 14), user: mod)
           Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
           topic.auto_close_at = 12.hours.from_now
-          topic.save.should be_true
+          topic.save
+
+          topic.reload
+          topic.closed.should == false
+
+          Timecop.freeze(24.hours.from_now) do
+            Topic.auto_close
+            topic.reload
+            topic.closed.should == true
+          end
+
         end
       end
     end

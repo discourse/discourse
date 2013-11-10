@@ -25,6 +25,8 @@ module Jobs
       # Refresh Hot Topics
       HotTopic.refresh!
 
+      # Automatically close stuff that we missed
+      Topic.auto_close
     end
 
   end
