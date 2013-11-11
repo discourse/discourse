@@ -1,4 +1,3 @@
-
 <div class='content-list span6'>
   <h3>{{i18n admin.customize.long_title}}</h3>
   <ul>
@@ -17,17 +16,17 @@
 
     <div class='admin-controls'>
       <ul class="nav nav-pills">
-        <li {{bindAttr class="view.stylesheetActive:active"}}>
-          <a {{action selectStylesheet href="true" target="view"}}>{{i18n admin.customize.css}}</a>
+        <li>
+          <a {{bindAttr class="view.stylesheetActive:active"}}{{action selectStylesheet href="true" target="view"}}>{{i18n admin.customize.css}}</a>
         </li>
-        <li {{bindAttr class="view.headerActive:active"}}>
-          <a {{action selectHeader href="true" target="view"}}>{{i18n admin.customize.header}}</a>
+        <li>
+          <a {{bindAttr class="view.headerActive:active"}}{{action selectHeader href="true" target="view"}}>{{i18n admin.customize.header}}</a>
         </li>
-        <li {{bindAttr class="view.mobileStylesheetActive:active"}}>
-          <a {{action selectMobileStylesheet href="true" target="view"}}>{{i18n admin.customize.mobile_css}}</a>
+        <li>
+          <a {{bindAttr class="view.mobileStylesheetActive:active"}}{{action selectMobileStylesheet href="true" target="view"}}>{{i18n admin.customize.mobile_css}}</a>
         </li>
-        <li {{bindAttr class="view.mobileHeaderActive:active"}}>
-          <a {{action selectMobileHeader href="true" target="view"}}>{{i18n admin.customize.mobile_header}}</a>
+        <li>
+          <a {{bindAttr class="view.mobileHeaderActive:active"}}{{action selectMobileHeader href="true" target="view"}}>{{i18n admin.customize.mobile_header}}</a>
         </li>
       </ul>
     </div>
@@ -67,4 +66,3 @@
   <p class="about">{{i18n admin.customize.about}}</p>
 {{/if}}
 <div class='clearfix'></div>
-
