@@ -156,16 +156,12 @@ class UsersController < ApplicationController
     @user = EmailToken.confirm(params[:token])
     if @user.blank?
       flash[:error] = I18n.t('password_reset.no_token')
-    else
-      raise Discourse::InvalidParameters.new(:password) unless good_reset_request_format
+    elsif request.put?
+      raise Discourse::InvalidParameters.new(:password) unless params[:password].present?
       @user.password = params[:password]
       logon_after_password_reset if @user.save
     end
     render layout: 'no_js'
-  end
-
-  def good_reset_request_format
-    request.put? && params[:password].present?
   end
 
   def logon_after_password_reset
