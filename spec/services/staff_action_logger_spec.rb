@@ -117,7 +117,7 @@ describe StaffActionLogger do
   end
 
   describe "log_user_suspend" do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, suspended_at: 10.minutes.ago, suspended_till: 1.day.from_now) }
 
     it "raises an error when arguments are missing" do
       expect { logger.log_user_suspend(nil, nil) }.to raise_error(Discourse::InvalidParameters)
