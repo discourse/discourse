@@ -1,6 +1,7 @@
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
 require_dependency 'user_activator'
+require_dependency 'avatar_upload_service'
 
 class UsersController < ApplicationController
 
@@ -168,15 +169,17 @@ class UsersController < ApplicationController
   end
 
   def logon_after_password_reset
-    if Guardian.new(@user).can_access_forum?
-      # Log in the user
-      log_on_user(@user)
-      flash[:success] = I18n.t('password_reset.success')
-    else
-      @requires_approval = true
-      flash[:success] = I18n.t('password_reset.success_unapproved')
-    end
-  end
+    message = if Guardian.new(@user).can_access_forum?
+                # Log in the user
+                log_on_user(@user)
+                'password_reset.success'
+              else
+                @requires_approval = true
+                'password_reset.success_unapproved'
+              end
+
+    flash[:success] = I18n.t(message)
+   end
 
   def change_email
     params.require(:email)
@@ -285,35 +288,18 @@ class UsersController < ApplicationController
     # Only allow url uploading for API users
     # TODO: Does not protect from huge uploads
     # https://github.com/discourse/discourse/pull/1512
-    if file.is_a?(String) && is_api?
-      adapted   = ::UriAdapter.new(file)
-      file      = adapted.build_uploaded_file
-      filesize  = adapted.file_size
-    elsif file.is_a?(String)
-      return render status: 422, text: I18n.t("upload.images.unknown_image_type")
-    end
-
     # check the file size (note: this might also be done in the web server)
-    filesize  ||= File.size(file.tempfile)
-    max_size_kb = SiteSetting.max_image_size_kb * 1024
-    if filesize > max_size_kb
-      return render status: 413, text: I18n.t("upload.images.too_large", max_size_kb: max_size_kb)
-    else
-      filesize
+    avatar        = build_avatar_from(file)
+    avatar_policy = AvatarUploadPolicy.new(avatar)
+
+    if avatar_policy.too_big?
+      return render status: 413, text: I18n.t("upload.images.too_large",
+                                              max_size_kb: avatar_policy.max_size_kb)
     end
 
-    return render status: 422, text: I18n.t("upload.images.unknown_image_type") unless SiteSetting.authorized_image?(file)
+    raise FastImage::UnknownImageType unless SiteSetting.authorized_image?(avatar.file)
 
-    upload = Upload.create_for(user.id, file, filesize)
-    user.upload_avatar(upload)
-
-    Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
-
-    render json: {
-      url: upload.url,
-      width: upload.width,
-      height: upload.height,
-    }
+    upload_avatar_for(user, avatar)
 
   rescue Discourse::InvalidParameters
     render status: 422, text: I18n.t("upload.images.unknown_image_type")
@@ -411,6 +397,23 @@ class UsersController < ApplicationController
       user.active = true if valid_session_authentication?(auth, params[:email])
       user.password_required! unless auth
       auth
+    end
+
+    def build_avatar_from(file)
+      source = if file.is_a?(String)
+                 is_api? ? :url : (raise FastImage::UnknownImageType)
+               else
+                 :image
+               end
+      AvatarUploadService.new(file, source)
+    end
+
+    def upload_avatar_for(user, avatar)
+      upload = Upload.create_for(user.id, avatar.file, avatar.filesize)
+      user.upload_avatar(upload)
+
+      Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
+      render json: { url: upload.url, width: upload.width, height: upload.height }
     end
 
 end

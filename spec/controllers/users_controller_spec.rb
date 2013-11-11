@@ -996,7 +996,7 @@ describe UsersController do
         end
 
         it 'rejects large images' do
-          SiteSetting.stubs(:max_image_size_kb).returns(1)
+          AvatarUploadPolicy.any_instance.stubs(:too_big?).returns(true)
           xhr :post, :upload_avatar, username: user.username, file: avatar
           response.status.should eq 413
         end
@@ -1041,7 +1041,7 @@ describe UsersController do
           end
 
           it 'rejects large images' do
-            SiteSetting.stubs(:max_image_size_kb).returns(1)
+            AvatarUploadPolicy.any_instance.stubs(:too_big?).returns(true)
             xhr :post, :upload_avatar, username: user.username, file: avatar_url
             response.status.should eq 413
           end
