@@ -34,17 +34,19 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.LoadMore, {
     Discourse.notifyTitle(this.get('topicTrackingState.incomingCount'));
   }.observes('topicTrackingState.incomingCount'),
 
-  loadMore: function() {
-    var listTopicsView = this;
-    Discourse.notifyTitle(0);
-    listTopicsView.get('controller').loadMore().then(function (hasMoreResults) {
-      Em.run.schedule('afterRender', function() {
-        listTopicsView.saveScrollPosition();
+  actions: {
+    loadMore: function() {
+      var self = this;
+      Discourse.notifyTitle(0);
+      self.get('controller').loadMore().then(function (hasMoreResults) {
+        Em.run.schedule('afterRender', function() {
+          self.saveScrollPosition();
+        });
+        if (!hasMoreResults) {
+          self.get('eyeline').flushRest();
+        }
       });
-      if (!hasMoreResults) {
-        listTopicsView.get('eyeline').flushRest();
-      }
-    });
+    }
   },
 
   // Remember where we were scrolled to

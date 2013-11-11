@@ -88,7 +88,7 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
 
   loadMore: function() {
     var topicList = this.get('model');
-    return topicList.loadMoreTopics().then(function(moreUrl) {
+    return topicList.loadMore().then(function(moreUrl) {
       if (!Em.isEmpty(moreUrl)) {
         Discourse.URL.replaceState(Discourse.getURL("/") + topicList.get('filter') + "/more");
       }
