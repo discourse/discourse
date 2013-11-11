@@ -56,6 +56,7 @@ module Jobs
         'SiteContent'           => 'content_type',
         'TopicUser'             => 'topic_id, user_id',
         'UserSearchData'        => 'user_id',
+        'UserStat'              => 'user_id',
         'View'                  => 'parent_id, parent_type, ip_address, viewed_at'
       }
       @order_columns_for_hash[model.name]
