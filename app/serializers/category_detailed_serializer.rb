@@ -1,12 +1,17 @@
-class CategoryDetailedSerializer < BasicCategorySerializer
+class CategoryDetailedSerializer < ApplicationSerializer
 
-  attributes :post_count,
+  attributes :id,
+             :name,
+             :color,
+             :text_color,
+             :slug,
+             :topic_count,
              :topics_week,
              :topics_month,
              :topics_year,
+             :description,
              :description_excerpt,
-             :is_uncategorized,
-             :subcategory_ids
+             :is_uncategorized
 
   has_many :featured_users, serializer: BasicUserSerializer
   has_many :displayable_topics, serializer: ListableTopicSerializer, embed: :objects, key: :topics
@@ -24,7 +29,7 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def is_uncategorized
-    object.id == SiteSetting.uncategorized_category_id
+    name == SiteSetting.uncategorized_name
   end
 
   def include_is_uncategorized?
@@ -37,10 +42,6 @@ class CategoryDetailedSerializer < BasicCategorySerializer
 
   def description_excerpt
     PrettyText.excerpt(description,300) if description
-  end
-
-  def include_subcategory_ids?
-    subcategory_ids.present?
   end
 
 end

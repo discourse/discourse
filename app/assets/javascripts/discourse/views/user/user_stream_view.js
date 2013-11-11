@@ -7,10 +7,19 @@
   @uses Discourse.LoadMore
   @module Discourse
 **/
-Discourse.UserStreamView = Discourse.View.extend(Discourse.LoadMore, {
+Discourse.UserStreamView = Ember.CollectionView.extend(Discourse.LoadMore, {
   loading: false,
-  eyelineSelector: '.user-stream .item',
+  content: Em.computed.alias('controller.model.content'),
+  eyelineSelector: '#user-activity .user-stream .item',
   classNames: ['user-stream'],
+
+  itemViewClass: Ember.View.extend({
+    templateName: 'user/stream_item',
+    init: function() {
+      this._super();
+      this.set('context', this.get('content'));
+    }
+  }),
 
   loadMore: function() {
     var userStreamView = this;
@@ -23,3 +32,6 @@ Discourse.UserStreamView = Discourse.View.extend(Discourse.LoadMore, {
     });
   }
 });
+
+
+Discourse.View.registerHelper('userStream', Discourse.UserStreamView);

@@ -10,29 +10,28 @@ class SessionController < ApplicationController
     params.require(:login)
     params.require(:password)
 
-    login    = params[:login].strip
-    password = params[:password]
-    login    = login[1..-1] if login[0] == "@"
+    login = params[:login].strip
+    login = login[1..-1] if login[0] == "@"
 
-    @user = User.find_by_username_or_email(login)
+    if login =~ /@/
+      @user = User.where(email: Email.downcase(login)).first
+    else
+      @user = User.where(username_lower: login.downcase).first
+    end
 
     if @user.present?
 
       # If the site requires user approval and the user is not approved yet
-      if SiteSetting.must_approve_users? && !@user.approved? && !@user.admin?
+      if SiteSetting.must_approve_users? && !@user.approved?
         render json: {error: I18n.t("login.not_approved")}
         return
       end
 
       # If their password is correct
-      if @user.confirm_password?(password)
+      if @user.confirm_password?(params[:password])
 
-        if @user.suspended?
-          if reason = @user.suspend_reason
-            render json: { error: I18n.t("login.suspended_with_reason", {date: I18n.l(@user.suspended_till, format: :date_only), reason: reason}) }
-          else
-            render json: { error: I18n.t("login.suspended", {date: I18n.l(@user.suspended_till, format: :date_only)}) }
-          end
+        if @user.is_banned?
+          render json: { error: I18n.t("login.banned", {date: I18n.l(@user.banned_till, format: :date_only)}) }
           return
         end
 
@@ -58,7 +57,7 @@ class SessionController < ApplicationController
   def forgot_password
     params.require(:login)
 
-    user = User.find_by_username_or_email(params[:login])
+    user = User.where('username_lower = :username or email = :email', username: params[:login].downcase, email: Email.downcase(params[:login])).first
     if user.present?
       email_token = user.email_tokens.create(email: user.email)
       Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
@@ -68,8 +67,8 @@ class SessionController < ApplicationController
   end
 
   def destroy
-    reset_session
-    log_off_user
+    session[:current_user_id] = nil
+    cookies[:_t] = nil
     render nothing: true
   end
 

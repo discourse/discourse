@@ -1,12 +1,13 @@
-require_dependency 'jobs/base'
+require_dependency 'jobs'
 require_dependency 'pretty_text'
+require_dependency 'local_store'
+require_dependency 's3_store'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
 require_dependency 'enum'
 require_dependency 'trashable'
 require_dependency 'post_analyzer'
 require_dependency 'validators/post_validator'
-require_dependency 'plugin/filter'
 
 require 'archetype'
 require 'digest/sha1'
@@ -18,7 +19,6 @@ class Post < ActiveRecord::Base
   versioned if: :raw_changed?
 
   rate_limit
-  rate_limit :limit_posts_per_day
 
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
@@ -34,12 +34,10 @@ class Post < ActiveRecord::Base
 
   has_one :post_search_data
 
-  has_many :post_details
-
   validates_with ::Validators::PostValidator
 
   # We can pass several creating options to a post via attributes
-  attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check
+  attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options
 
   SHORT_POST_CHARS = 1200
 
@@ -49,6 +47,7 @@ class Post < ActiveRecord::Base
   scope :public_posts, -> { joins(:topic).where('topics.archetype <> ?', Archetype.private_message) }
   scope :private_posts, -> { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
+  scope :without_nuked_users, -> { where(nuked_user: false) }
 
   def self.hidden_reasons
     @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again, :new_user_spam_threshold_reached)
@@ -56,23 +55,6 @@ class Post < ActiveRecord::Base
 
   def self.types
     @types ||= Enum.new(:regular, :moderator_action)
-  end
-
-  def self.find_by_detail(key, value)
-    includes(:post_details).where( "post_details.key = ? AND " +
-                                   "post_details.value = ?",
-                                   key,
-                                   value ).first
-  end
-
-  def add_detail(key, value, extra = nil)
-    post_details.build(key: key, value: value, extra: extra)
-  end
-
-  def limit_posts_per_day
-    if user.created_at > 1.day.ago && post_number > 1
-      RateLimiter.new(user, "first-day-replies-per-day:#{Date.today.to_s}", SiteSetting.max_replies_in_first_day, 1.day.to_i)
-    end
   end
 
   def trash!(trashed_by=nil)
@@ -84,24 +66,11 @@ class Post < ActiveRecord::Base
     super
     update_flagged_posts_count
     TopicLink.extract_from(self)
-    if topic && topic.category_id && topic.category
-      topic.category.update_latest
-    end
   end
 
   # The key we use in redis to ensure unique posts
   def unique_post_key
     "post-#{user_id}:#{raw_hash}"
-  end
-
-  def store_unique_post_key
-    if SiteSetting.unique_posts_mins > 0
-      $redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, "1")
-    end
-  end
-
-  def matches_recent_post?
-    $redis.exists(unique_post_key)
   end
 
   def raw_hash
@@ -125,8 +94,9 @@ class Post < ActiveRecord::Base
   end
 
   def cook(*args)
-    Plugin::Filter.apply(:after_post_cook, self, post_analyzer.cook(*args))
+    post_analyzer.cook(*args)
   end
+
 
   # Sometimes the post is being edited by someone else, for example, a mod.
   # If that's the case, they should not be bound by the original poster's
@@ -307,8 +277,7 @@ class Post < ActiveRecord::Base
                           AND p2.user_id <> post_timings.user_id
                       GROUP BY post_timings.topic_id, post_timings.post_number) AS x
                 WHERE x.topic_id = posts.topic_id
-                  AND x.post_number = posts.post_number
-                  AND (posts.avg_time <> (x.gmean / 1000)::int OR posts.avg_time IS NULL)")
+                  AND x.post_number = posts.post_number")
     end
   end
 
@@ -368,21 +337,6 @@ class Post < ActiveRecord::Base
     private_posts.with_topic_subtype(topic_subtype).where('posts.created_at > ?', since_days_ago.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
   end
 
-
-  def reply_history
-    post_ids = Post.exec_sql("WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
-                              SELECT p.id, p.reply_to_post_number FROM posts AS p
-                                WHERE p.id = :post_id
-                              UNION
-                                 SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
-                                   WHERE breadcrumb.reply_to_post_number = p.post_number
-                                     AND p.topic_id = :topic_id
-                            ) SELECT id from breadcrumb ORDER by id", post_id: id, topic_id: topic_id).to_a
-
-    post_ids.map! {|r| r['id'].to_i }.reject! {|post_id| post_id == id}
-    Post.where(id: post_ids).includes(:user, :topic).order(:id).to_a
-  end
-
   private
 
 
@@ -416,7 +370,7 @@ end
 # Table name: posts
 #
 #  id                      :integer          not null, primary key
-#  user_id                 :integer
+#  user_id                 :integer          not null
 #  topic_id                :integer          not null
 #  post_number             :integer          not null
 #  raw                     :text             not null
@@ -452,6 +406,7 @@ end
 #  notify_user_count       :integer          default(0), not null
 #  like_score              :integer          default(0), not null
 #  deleted_by_id           :integer
+#  nuked_user              :boolean          default(FALSE)
 #
 # Indexes
 #

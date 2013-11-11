@@ -41,8 +41,9 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
 
     this.attachViewWithArgs({
       templateName: 'topic_summary/info',
-      content: this.get('controller')
-    }, Discourse.GroupedView);
+      topic: this.get('topic'),
+      summaryView: this
+    });
 
     this.trigger('appendSummaryInformation', this);
   },
@@ -58,9 +59,8 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
       container.attachViewWithArgs({
         templateName: 'topic_summary/best_of_toggle',
         tagName: 'section',
-        classNames: ['information'],
-        content: this.get('controller')
-      }, Discourse.GroupedView);
+        classNames: ['information']
+      });
     }
 
     // If we have a private message
@@ -68,9 +68,8 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
       container.attachViewWithArgs({
         templateName: 'topic_summary/private_message',
         tagName: 'section',
-        classNames: ['information'],
-        content: this.get('controller')
-      }, Discourse.GroupedView);
+        classNames: ['information']
+      });
     }
   }
 });

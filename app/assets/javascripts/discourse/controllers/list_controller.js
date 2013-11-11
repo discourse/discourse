@@ -7,23 +7,32 @@
   @module Discourse
 **/
 Discourse.ListController = Discourse.Controller.extend({
-  categoryBinding: "topicList.category",
+  categoryBinding: 'topicList.category',
   canCreateCategory: false,
   canCreateTopic: false,
-  needs: ["composer", "modal", "listTopics"],
+  needs: ['composer', 'modal', 'listTopics'],
 
   availableNavItems: function() {
-    var category = this.get("category");
+    var loggedOn = !!Discourse.User.current();
 
     return Discourse.SiteSettings.top_menu.split("|").map(function(i) {
       return Discourse.NavItem.fromText(i, {
-        loggedOn: !!Discourse.User.current(),
-        category: category
+        loggedOn: loggedOn
       });
     }).filter(function(i) {
-      return i !== null && !(category && i.get("name").indexOf("categor") === 0);
+      return i !== null;
     });
-  }.property("category"),
+  }.property(),
+
+  createTopicText: function() {
+    if (this.get('category.name')) {
+      return I18n.t("topic.create_in", {
+        categoryName: this.get('category.name')
+      });
+    } else {
+      return I18n.t("topic.create");
+    }
+  }.property('category.name'),
 
   /**
     Refresh our current topic list
@@ -104,16 +113,14 @@ Discourse.ListController = Discourse.Controller.extend({
   }.observes('filterMode', 'category'),
 
   // Create topic button
-  actions: {
-    createTopic: function() {
-      this.get('controllers.composer').open({
-        categoryId: this.get('category.id'),
-        action: Discourse.Composer.CREATE_TOPIC,
-        draft: this.get('draft'),
-        draftKey: this.get('draft_key'),
-        draftSequence: this.get('draft_sequence')
-      });
-    }
+  createTopic: function() {
+    this.get('controllers.composer').open({
+      categoryName: this.get('category.name'),
+      action: Discourse.Composer.CREATE_TOPIC,
+      draft: this.get('draft'),
+      draftKey: this.get('draft_key'),
+      draftSequence: this.get('draft_sequence')
+    });
   },
 
   canEditCategory: function() {
@@ -123,11 +130,7 @@ Discourse.ListController = Discourse.Controller.extend({
     } else {
       return false;
     }
-  }.property('category'),
-
-  categories: function() {
-    return Discourse.Category.list();
-  }.property()
+  }.property('category')
 
 });
 

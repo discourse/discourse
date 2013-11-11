@@ -47,32 +47,20 @@ describe Discourse do
     end
   end
 
-  context '#site_contact_user' do
+
+  context '#system_user' do
 
     let!(:admin) { Fabricate(:admin) }
     let!(:another_admin) { Fabricate(:admin) }
 
-    it 'returns the user specified by the site setting site_contact_username' do
-      SiteSetting.stubs(:site_contact_username).returns(another_admin.username)
-      Discourse.site_contact_user.should == another_admin
+    it 'returns the user specified by the site setting system_username' do
+      SiteSetting.stubs(:system_username).returns(another_admin.username)
+      Discourse.system_user.should == another_admin
     end
 
     it 'returns the first admin user otherwise' do
-      SiteSetting.stubs(:site_contact_username).returns(nil)
-      Discourse.site_contact_user.should == admin
-    end
-
-  end
-
-  context "#store" do
-
-    it "returns LocalStore by default" do
-      Discourse.store.should be_a(FileStore::LocalStore)
-    end
-
-    it "returns S3Store when S3 is enabled" do
-      SiteSetting.expects(:enable_s3_uploads?).returns(true)
-      Discourse.store.should be_a(FileStore::S3Store)
+      SiteSetting.stubs(:system_username).returns(nil)
+      Discourse.system_user.should == admin
     end
 
   end

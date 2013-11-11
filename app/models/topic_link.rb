@@ -103,8 +103,8 @@ class TopicLink < ActiveRecord::Base
           topic_id = nil
           post_number = nil
 
-          if Discourse.store.has_been_uploaded?(url)
-            internal = Discourse.store.internal?
+          if Upload.has_been_uploaded?(url)
+            internal = !Upload.is_on_s3?(url)
           elsif parsed.host == Discourse.current_hostname || !parsed.host
             internal = true
 

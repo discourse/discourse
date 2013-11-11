@@ -8,6 +8,7 @@
   @module Discourse
 **/
 Discourse.InvitePrivateController = Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+
   modalClass: 'invite',
 
   onShow: function(){
@@ -25,25 +26,28 @@ Discourse.InvitePrivateController = Discourse.ObjectController.extend(Discourse.
     return I18n.t('topic.invite_private.action');
   }.property('saving'),
 
-  actions: {
-    invite: function() {
-      if (this.get('disabled')) return;
+  invite: function() {
 
-      var self = this;
-      this.setProperties({saving: true, error: false});
+    if (this.get('disabled')) return;
 
-      // Invite the user to the private message
-      this.get('model').createInvite(this.get('emailOrUsername')).then(function(result) {
-        self.setProperties({saving: true, finished: true});
+    var invitePrivateController = this;
+    this.set('saving', true);
+    this.set('error', false);
+    // Invite the user to the private message
+    this.get('content').inviteUser(this.get('emailOrUsername')).then(function(result) {
+      // Success
+      invitePrivateController.set('saving', false);
+      invitePrivateController.set('finished', true);
 
-        if(result && result.user) {
-          self.get('model.details.allowed_users').pushObject(result.user);
-        }
-      }).fail(function() {
-        self.setProperties({error: true, saving: false});
-      });
-      return false;
-    }
+      if(result && result.user) {
+        invitePrivateController.get('content.details.allowed_users').pushObject(result.user);
+      }
+    }, function() {
+      // Failure
+      invitePrivateController.set('error', true);
+      invitePrivateController.set('saving', false);
+    });
+    return false;
   }
 
 });

@@ -7,13 +7,13 @@ class UserVisit < ActiveRecord::Base
 
   def self.ensure_consistency!
     exec_sql <<SQL
-    UPDATE user_stats u set days_visited =
+    UPDATE users u set days_visited =
     (
-      SELECT COUNT(*) FROM user_visits v WHERE v.user_id = u.user_id
+      SELECT COUNT(*) FROM user_visits v WHERE v.user_id = u.id
     )
     WHERE days_visited <>
     (
-      SELECT COUNT(*) FROM user_visits v WHERE v.user_id = u.user_id
+      SELECT COUNT(*) FROM user_visits v WHERE v.user_id = u.id
     )
 SQL
   end

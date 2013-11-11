@@ -13,11 +13,11 @@ Discourse.TopicAdminMenuView = Discourse.View.extend({
   },
 
   didInsertElement: function() {
-    var self = this;
+    var topicAdminMenuView = this;
     $('html').on('mouseup.discourse-topic-admin-menu', function(e) {
       var $target = $(e.target);
-      if ($target.is('button') || self.$().has($target).length === 0) {
-        self.get('controller').send('hide');
+      if ($target.is('button') || topicAdminMenuView.$().has($target).length === 0) {
+        topicAdminMenuView.get('controller').hide();
       }
     });
   }

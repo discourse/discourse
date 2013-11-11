@@ -8,19 +8,25 @@ if (args.length < 1 || args.length > 2) {
   phantom.exit(1);
 }
 
-var system = require("system"),
-    page = require('webpage').create();
+var fs = require('fs');
+function print(str) {
+  fs.write('/dev/stdout', str, 'w');
+}
+
+var page = require('webpage').create();
 
 page.onConsoleMessage = function(msg) {
   if (msg.slice(0,8) === 'WARNING:') { return; }
   if (msg.slice(0,6) === 'DEBUG:') { return; }
 
-  console.log(msg);
-};
+  // Hack to access the print method
+  // If there's a better way to do this, please change
+  if (msg.slice(0,6) === 'PRINT:') {
+    print(msg.slice(7));
+    return;
+  }
 
-page.onCallback = function (message) {
-  // forward the message to the standard output
-  system.stdout.write(message);
+  console.log(msg);
 };
 
 page.open(args[0], function(status) {
@@ -74,9 +80,9 @@ function logQUnit() {
       var msg = "  Test Failed: " + context.name + assertionErrors.join("    ");
       testErrors.push(msg);
       assertionErrors = [];
-      window.callPhantom('F');
+      console.log('PRINT: F');
     } else {
-      window.callPhantom('.');
+      console.log('PRINT: .');
     }
   });
 

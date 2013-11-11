@@ -22,6 +22,8 @@ On old server, run `git status` and review changes to the tree. For example:
     #
     #	app/views/layouts/application.html.erb.bitnami
     #	config/environments/production.rb
+    #	log/clockworkd.clock.output
+    #	log/clockworkd.clock.pid
     #	log/sidekiq.pid
     #	vendor/gems/active_model_serializers/
     #	vendor/gems/fast_blank/

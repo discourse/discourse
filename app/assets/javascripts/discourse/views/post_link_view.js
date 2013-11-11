@@ -8,17 +8,23 @@
 **/
 Discourse.PostLinkView = Discourse.View.extend({
   tagName: 'li',
+  classNameBindings: ['direction'],
 
-  direction: function() { return this.get('content.reflection') ? "left" : "right"; },
+  direction: function() {
+    if (this.get('content.reflection')) return 'incoming';
+    return null;
+  }.property('content.reflection'),
 
   render: function(buffer) {
     var clicks;
-    buffer.push("<a href='" + this.get('content.url') + "' class='track-link'>");
-    buffer.push("<i class='icon icon-arrow-" + this.direction() + "'></i>");
+    buffer.push("<a href='" + (this.get('content.url')) + "' class='track-link'>\n");
+    buffer.push("<i class='icon icon-arrow-right'></i>");
     buffer.push(this.get('content.title'));
     if (clicks = this.get('content.clicks')) {
-      buffer.push("<span class='badge badge-notification clicks'>" + clicks + "</span>");
+      buffer.push("\n<span class='badge badge-notification clicks'>" + clicks + "</span>");
     }
-    buffer.push("</a>");
+    return buffer.push("</a>");
   }
 });
+
+

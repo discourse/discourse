@@ -22,10 +22,9 @@ class AdminDashboardData
 
   def problems
     [ rails_env_check,
-      ruby_version_check,
       host_names_check,
       gc_checks,
-      sidekiq_check || queue_size_check,
+      sidekiq_check || queue_size_check || clockwork_check,
       ram_check,
       facebook_config_check,
       twitter_config_check,
@@ -37,22 +36,13 @@ class AdminDashboardData
       contact_email_check,
       send_consumer_email_check,
       title_check,
-      site_description_check,
       access_password_removal,
-      site_contact_username_check,
+      system_username_check,
       notification_email_check ].compact
   end
 
-  def self.fetch_stats
+  def self.fetch_all
     AdminDashboardData.new
-  end
-  def self.fetch_cached_stats
-    # The DashboardStats job is responsible for generating and caching this.
-    stats = $redis.get(stats_cache_key)
-    stats ? JSON.parse(stats) : nil
-  end
-  def self.stats_cache_key
-    'dash-stats'
   end
 
   def self.fetch_problems
@@ -64,18 +54,12 @@ class AdminDashboardData
       reports: REPORTS.map { |type| Report.find(type).as_json },
       admins: User.admins.count,
       moderators: User.moderators.count,
-      suspended: User.suspended.count,
+      banned: User.banned.count,
       blocked: User.blocked.count,
       top_referrers: IncomingLinksReport.find('top_referrers').as_json,
       top_traffic_sources: IncomingLinksReport.find('top_traffic_sources').as_json,
-      top_referred_topics: IncomingLinksReport.find('top_referred_topics').as_json,
-      updated_at: Time.zone.now.as_json
+      top_referred_topics: IncomingLinksReport.find('top_referred_topics').as_json
     }
-  end
-
-  def self.recalculate_interval
-    # Could be configurable, multisite need to support it.
-    30 # minutes
   end
 
   def rails_env_check
@@ -93,6 +77,10 @@ class AdminDashboardData
   def sidekiq_check
     last_job_performed_at = Jobs.last_job_performed_at
     I18n.t('dashboard.sidekiq_warning') if Jobs.queued > 0 and (last_job_performed_at.nil? or last_job_performed_at < 2.minutes.ago)
+  end
+
+  def clockwork_check
+    I18n.t('dashboard.clockwork_warning') unless Jobs::ClockworkHeartbeat.is_clockwork_running?
   end
 
   def queue_size_check
@@ -146,24 +134,16 @@ class AdminDashboardData
     I18n.t('dashboard.title_nag') if SiteSetting.title == SiteSetting.defaults[:title]
   end
 
-  def site_description_check
-    return I18n.t('dashboard.site_description_missing') if !SiteSetting.site_description.present?
-  end
-
   def send_consumer_email_check
     I18n.t('dashboard.consumer_email_warning') if Rails.env == 'production' and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
   end
 
-  def site_contact_username_check
-    I18n.t('dashboard.site_contact_username_warning') if SiteSetting.site_contact_username.blank?
+  def system_username_check
+    I18n.t('dashboard.system_username_warning') if SiteSetting.system_username.blank?
   end
 
   def notification_email_check
     I18n.t('dashboard.notification_email_warning') if SiteSetting.notification_email.blank?
-  end
-
-  def ruby_version_check
-    I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
   end
 
 

@@ -21,18 +21,6 @@ describe Group do
     end
   end
 
-  def real_admins
-    Group[:admins].user_ids - [-1]
-  end
-
-  def real_moderators
-    Group[:moderators].user_ids - [-1]
-  end
-
-  def real_staff
-    Group[:staff].user_ids - [-1]
-  end
-
   it "Can update moderator/staff/admin groups correctly" do
 
     admin = Fabricate(:admin)
@@ -40,33 +28,33 @@ describe Group do
 
     Group.refresh_automatic_groups!(:admins, :staff, :moderators)
 
-    real_admins.should == [admin.id]
-    real_moderators.should == [moderator.id]
-    real_staff.sort.should == [moderator.id,admin.id].sort
+    Group[:admins].user_ids.should == [admin.id]
+    Group[:moderators].user_ids.should == [moderator.id]
+    Group[:staff].user_ids.sort.should == [moderator.id,admin.id].sort
 
     admin.admin = false
     admin.save
 
     Group.refresh_automatic_group!(:admins)
-    real_admins.should == []
+    Group[:admins].user_ids.should == []
 
     moderator.revoke_moderation!
 
     admin.grant_admin!
-    real_admins.should == [admin.id]
-    real_staff.should == [admin.id]
+    Group[:admins].user_ids.should == [admin.id]
+    Group[:staff].user_ids.should == [admin.id]
 
     admin.revoke_admin!
-    real_admins.should == []
-    real_staff.should == []
+    Group[:admins].user_ids.should == []
+    Group[:staff].user_ids.should == []
 
     admin.grant_moderation!
-    real_moderators.should == [admin.id]
-    real_staff.should == [admin.id]
+    Group[:moderators].user_ids.should == [admin.id]
+    Group[:staff].user_ids.should == [admin.id]
 
     admin.revoke_moderation!
-    real_admins.should == []
-    real_staff.should == []
+    Group[:admins].user_ids.should == []
+    Group[:staff].user_ids.should == []
   end
 
   it "Correctly updates automatic trust level groups" do
@@ -99,12 +87,12 @@ describe Group do
     groups.count.should == Group::AUTO_GROUPS.count
 
     g = groups.find{|g| g.id == Group::AUTO_GROUPS[:admins]}
-    g.users.count.should == 2
-    g.user_count.should == 2
+    g.users.count.should == 1
+    g.user_count.should == 1
 
     g = groups.find{|g| g.id == Group::AUTO_GROUPS[:staff]}
-    g.users.count.should == 2
-    g.user_count.should == 2
+    g.users.count.should == 1
+    g.user_count.should == 1
 
     g = groups.find{|g| g.id == Group::AUTO_GROUPS[:trust_level_2]}
     g.users.count.should == 1

@@ -18,7 +18,7 @@ Discourse::Application.configure do
   config.active_support.deprecation = :log
 
   # Only use best-standards-support built into browsers
-  config.action_dispatch.best_standards_support = :builtin unless rails4?
+  config.action_dispatch.best_standards_support = :builtin
 
   # Do not compress assets
   config.assets.compress = false
@@ -44,7 +44,5 @@ Discourse::Application.configure do
 
   require 'middleware/turbo_dev'
   config.middleware.insert 0, Middleware::TurboDev
-
-  config.enable_anon_caching = false
 end
 

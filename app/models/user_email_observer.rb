@@ -1,85 +1,68 @@
 class UserEmailObserver < ActiveRecord::Observer
   observe :notification
 
-  class EmailUser
-    attr_reader :notification
-
-    def initialize(notification)
-      @notification = notification
-    end
-
-    def mentioned
-      enqueue :user_mentioned
-    end
-
-    def posted
-      enqueue :user_posted
-    end
-
-    def quoted
-      enqueue :user_quoted
-    end
-
-    def replied
-      enqueue :user_replied
-    end
-
-    def private_message
-      enqueue_private :user_private_message
-    end
-
-    def invited_to_private_message
-      enqueue :user_invited_to_private_message
-    end
-
-    private
-
-    def enqueue(type)
-      return unless notification.user.email_direct?
-
-
-      Jobs.enqueue_in(delay,
-                     :user_email,
-                     type: type,
-                     user_id: notification.user_id,
-                     notification_id: notification.id)
-    end
-
-    def enqueue_private(type)
-      return unless (notification.user.email_direct? && notification.user.email_private_messages?)
-      Jobs.enqueue_in(delay,
-                      :user_email,
-                      type: type,
-                      user_id: notification.user_id,
-                      notification_id: notification.id)
-    end
-
-    def delay
-      SiteSetting.email_time_window_mins.minutes
-    end
-  end
-
   def after_commit(notification)
-    transaction_includes_action = if rails4?
-      notification.send(:transaction_include_any_action?, [:create])
+    if rails4?
+      if notification.send(:transaction_include_any_action?, [:create])
+        notification_type = Notification.types[notification.notification_type]
+
+        # Delegate to email_user_{{NOTIFICATION_TYPE}} if exists
+        email_method = :"email_user_#{notification_type.to_s}"
+        send(email_method, notification) if respond_to?(email_method)
+      end
     else
-      notification.send(:transaction_include_action?, :create)
+      if notification.send(:transaction_include_action?, :create)
+        notification_type = Notification.types[notification.notification_type]
+
+        # Delegate to email_user_{{NOTIFICATION_TYPE}} if exists
+        email_method = :"email_user_#{notification_type.to_s}"
+        send(email_method, notification) if respond_to?(email_method)
+      end
     end
-
-    delegate_to_email_user notification if transaction_includes_action
   end
 
-  private
-
-
-  def extract_notification_type(notification)
-    Notification.types[notification.notification_type]
+  def email_user_mentioned(notification)
+    return unless notification.user.email_direct?
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                   :user_email,
+                   type: :user_mentioned,
+                   user_id: notification.user_id,
+                   notification_id: notification.id)
   end
 
-  def delegate_to_email_user(notification)
-    email_user   = EmailUser.new(notification)
-    email_method = extract_notification_type notification
+  def email_user_posted(notification)
+    return unless notification.user.email_direct?
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                   :user_email,
+                   type: :user_posted,
+                   user_id: notification.user_id,
+                   notification_id: notification.id)
+  end
 
-    email_user.send(email_method) if email_user.respond_to? email_method
+  def email_user_quoted(notification)
+    return unless notification.user.email_direct?
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                   :user_email,
+                   type: :user_quoted,
+                   user_id: notification.user_id,
+                   notification_id: notification.id)
+  end
+
+  def email_user_replied(notification)
+    return unless notification.user.email_direct?
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                    :user_email,
+                    type: :user_replied,
+                    user_id: notification.user_id,
+                    notification_id: notification.id)
+  end
+
+  def email_user_invited_to_private_message(notification)
+    return unless notification.user.email_direct?
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                   :user_email,
+                   type: :user_invited_to_private_message,
+                   user_id: notification.user_id,
+                   notification_id: notification.id)
   end
 end

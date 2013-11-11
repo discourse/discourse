@@ -129,7 +129,7 @@ describe UserNotifications do
       end
 
       it "has a from alias" do
-        expects_build_with(has_entry(:from_alias, "#{username}"))
+        expects_build_with(has_entry(:from_alias, "#{username} via #{SiteSetting.title}"))
       end
     end
   end

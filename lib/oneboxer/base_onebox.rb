@@ -29,17 +29,7 @@ module Oneboxer
       end
 
       def uriencode(val)
-        URI.escape(val, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
-      end
-
-      # Replace any occurence of a HTTP or HTTPS URL in the string with the protocol-agnostic variant
-      def replace_agnostic(var)
-        var.gsub! /https?:\/\//, '//' if var.is_a? String
-      end
-
-      # Add wmode=opaque to the iframe src URL so that the flash player is rendered within the document flow instead of on top
-      def append_embed_wmode(var)
-        var.gsub! /(src="[^"]+)/, '\1&wmode=opaque"' if var.is_a? String
+        return URI.escape(val, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
       end
 
     end

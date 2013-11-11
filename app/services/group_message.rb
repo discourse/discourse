@@ -42,16 +42,10 @@ class GroupMessage
   end
 
   def message_params
-    @message_params ||= begin
-      h = {base_url: Discourse.base_url}.merge(@opts[:message_params]||{})
-      if @opts[:user]
-        h.merge!({
-          username: @opts[:user].username,
-          user_url: admin_user_path(@opts[:user].username)
-        })
-      end
-      h
-    end
+    @message_params ||= {
+      username: @opts[:user].username,
+      user_url: admin_user_path(@opts[:user].username)
+    }
   end
 
   def sent_recently?

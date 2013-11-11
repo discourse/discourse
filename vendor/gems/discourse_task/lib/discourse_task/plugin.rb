@@ -70,7 +70,9 @@ module DiscourseTask
             topic.update_meta_data(complete: false)
             topic.add_moderator_post(current_user, I18n.t(:'task.reversed'))
           end
+
         end
+
 
         render nothing: true
       end

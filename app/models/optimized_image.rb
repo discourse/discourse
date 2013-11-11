@@ -4,68 +4,64 @@ class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 
   def self.create_for(upload, width, height)
-    return unless width > 0 && height > 0
+    return unless width && height
 
-    # do we already have that thumbnail?
-    thumbnail = where(upload_id: upload.id, width: width, height: height).first
+    @image_sorcery_loaded ||= require "image_sorcery"
 
-    # make sure the previous thumbnail has not failed
-    if thumbnail && thumbnail.url.blank?
-      thumbnail.destroy
-      thumbnail = nil
+    original_path = "#{Rails.root}/public#{upload.url}"
+    # create a temp file with the same extension as the original
+    temp_file = Tempfile.new(["discourse", File.extname(original_path)])
+    temp_path = temp_file.path
+
+    if ImageSorcery.new(original_path).convert(temp_path, resize: "#{width}x#{height}")
+      thumbnail = OptimizedImage.new({
+        upload_id: upload.id,
+        sha1: Digest::SHA1.file(temp_path).hexdigest,
+        extension: File.extname(temp_path),
+        width: width,
+        height: height
+      })
+      # make sure the directory exists
+      FileUtils.mkdir_p Pathname.new(thumbnail.path).dirname
+      # move the temp file to the right location
+      File.open(thumbnail.path, "wb") do |f|
+        f.write temp_file.read
+      end
     end
 
-    # create the thumbnail otherwise
-    unless thumbnail
-      @image_sorcery_loaded ||= require "image_sorcery"
-
-      external_copy = Discourse.store.download(upload) if Discourse.store.external?
-      original_path = if Discourse.store.external?
-        external_copy.path
-      else
-        Discourse.store.path_for(upload)
-      end
-
-      # create a temp file with the same extension as the original
-      extension = File.extname(original_path)
-      temp_file = Tempfile.new(["discourse-thumbnail", extension])
-      temp_path = temp_file.path
-
-      if ImageSorcery.new("#{original_path}[0]").convert(temp_path, resize: "#{width}x#{height}!")
-        thumbnail = OptimizedImage.create!(
-          upload_id: upload.id,
-          sha1: Digest::SHA1.file(temp_path).hexdigest,
-          extension: File.extname(temp_path),
-          width: width,
-          height: height,
-          url: "",
-        )
-        # store the optimized image and update its url
-        url = Discourse.store.store_optimized_image(temp_file, thumbnail)
-        if url.present?
-          thumbnail.url = url
-          thumbnail.save
-        else
-          Rails.logger.error("Failed to store avatar #{size} for #{upload.url} from #{source}")
-        end
-      else
-        Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
-      end
-
-      # close && remove temp file
-      temp_file.close!
-      # make sure we remove the cached copy from external stores
-      external_copy.close! if Discourse.store.external?
-    end
+    # close && remove temp file
+    temp_file.close
+    temp_file.unlink
 
     thumbnail
   end
 
   def destroy
     OptimizedImage.transaction do
-      Discourse.store.remove_optimized_image(self)
+      remove_file
       super
     end
+  end
+
+  def remove_file
+    File.delete path
+  rescue Errno::ENOENT
+  end
+
+  def url
+    "#{LocalStore.base_url}/#{optimized_path}/#{filename}"
+  end
+
+  def path
+    "#{LocalStore.base_path}/#{optimized_path}/#{filename}"
+  end
+
+  def optimized_path
+    "_optimized/#{sha1[0..2]}/#{sha1[3..5]}"
+  end
+
+  def filename
+    "#{sha1[6..16]}_#{width}x#{height}#{extension}"
   end
 
 end
@@ -80,7 +76,6 @@ end
 #  width     :integer          not null
 #  height    :integer          not null
 #  upload_id :integer          not null
-#  url       :string(255)      not null
 #
 # Indexes
 #

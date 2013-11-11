@@ -1,6 +1,5 @@
 /*global Modernizr:true*/
 /*global assetPath:true*/
-/*global Favcount:true*/
 
 /**
   The main Discourse Application
@@ -28,7 +27,7 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     return u + url;
   },
 
-  Resolver: Discourse.Resolver,
+  resolver: Discourse.Resolver,
 
   titleChanged: function() {
     var title = "";
@@ -39,7 +38,7 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     $('title').text(title);
 
     var notifyCount = this.get('notifyCount');
-    if (notifyCount > 0 && !Discourse.User.currentProp('dynamic_favicon')) {
+    if (notifyCount > 0 && !Discourse.User.current('dynamic_favicon')) {
       title = "(" + notifyCount + ") " + title;
     }
     // chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
@@ -50,9 +49,9 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   }.observes('title', 'hasFocus', 'notifyCount'),
 
   faviconChanged: function() {
-    if(Discourse.User.currentProp('dynamic_favicon')) {
-      new Favcount(Discourse.SiteSettings.favicon_url).set(
-        this.get('notifyCount')
+    if(Discourse.User.current('dynamic_favicon')) {
+      $.faviconNotify(
+        Discourse.SiteSettings.favicon_url, this.get('notifyCount')
       );
     }
   }.observes('notifyCount'),
@@ -105,20 +104,19 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     $('#main').on('click.discourse', 'a', function(e) {
       if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) { return; }
 
-      var $currentTarget = $(e.currentTarget),
-          href = $currentTarget.attr('href');
+      var $currentTarget = $(e.currentTarget);
+      var href = $currentTarget.attr('href');
+      if (!href) { return; }
+      if (href === '#') { return; }
+      if ($currentTarget.attr('target')) { return; }
+      if ($currentTarget.data('auto-route')) { return; }
 
-      if (!href ||
-          href === '#' ||
-          $currentTarget.attr('target') ||
-          $currentTarget.data('ember-action') ||
-          $currentTarget.data('auto-route') ||
-          $currentTarget.hasClass('ember-view') ||
-          $currentTarget.hasClass('lightbox') ||
-          href.indexOf("mailto:") === 0 ||
-          (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i")))) {
-         return;
-      }
+      // If it's an ember #linkTo skip it
+      if ($currentTarget.hasClass('ember-view')) { return; }
+
+      if ($currentTarget.hasClass('lightbox')) { return; }
+      if (href.indexOf("mailto:") === 0) { return; }
+      if (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i"))) { return; }
 
       e.preventDefault();
       Discourse.URL.routeTo(href);
@@ -133,18 +131,18 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     });
 
     // Add a CSRF token to all AJAX requests
-    Discourse.csrfToken = $('meta[name=csrf-token]').attr('content');
+    var csrfToken = $('meta[name=csrf-token]').attr('content');
 
     $.ajaxPrefilter(function(options, originalOptions, xhr) {
       if (!options.crossDomain) {
-        xhr.setRequestHeader('X-CSRF-Token', Discourse.csrfToken);
+        // This may be delay set
+        csrfToken = csrfToken || $('meta[name=csrf-token]').attr('content');
+        xhr.setRequestHeader('X-CSRF-Token', csrfToken);
       }
     });
 
     bootbox.animate(false);
     bootbox.backdrop(true); // clicking outside a bootbox modal closes it
-
-    Discourse.Mobile.init();
 
     setInterval(function(){
       Discourse.Formatter.updateRelativeAge($('.relative-date'));
@@ -160,7 +158,7 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     Discourse.User.logout().then(function() {
       // Reloading will refresh unbound properties
       Discourse.KeyValueStore.abandonLocal();
-      window.location.pathname = Discourse.getURL('/');
+      window.location.reload();
     });
   },
 
@@ -200,7 +198,7 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       }), user.notification_channel_position);
 
       bus.subscribe("/categories", function(data){
-        var site = Discourse.Site.current();
+        var site = Discourse.Site.instance();
         _.each(data.categories,function(c){
           site.updateCategory(c);
         });
@@ -210,23 +208,13 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   },
 
   /**
-    Add an initializer hook for after the Discourse Application starts up.
-
-    @method addInitializer
-    @param {Function} init the initializer to add.
-  **/
-  addInitializer: function(init) {
-    Discourse.initializers = Discourse.initializers || [];
-    Discourse.initializers.push(init);
-  },
-
-  /**
     Start up the Discourse application.
 
     @method start
   **/
   start: function() {
     Discourse.bindDOMEvents();
+    Discourse.SiteSettings = PreloadStore.get('siteSettings');
     Discourse.MessageBus.alwaysLongPoll = Discourse.Environment === "development";
     Discourse.MessageBus.start();
     Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus);
@@ -234,17 +222,9 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     // Developer specific functions
     Discourse.Development.observeLiveChanges();
     Discourse.subscribeUserToNotifications();
-
-    if (Discourse.initializers) {
-      var self = this;
-      Em.run.next(function() {
-        Discourse.initializers.forEach(function (init) {
-          init.call(self);
-        });
-      });
-    }
   }
 
 });
 
 Discourse.Router = Discourse.Router.reopen({ location: 'discourse_location' });
+

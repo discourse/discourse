@@ -78,26 +78,16 @@ Discourse.Topic = Discourse.Model.extend({
     return this.urlForPostNumber(this.get('last_read_post_number'));
   }.property('url', 'last_read_post_number'),
 
-  lastUnreadUrl: function() {
-    var postNumber = Math.min(this.get('last_read_post_number') + 1, this.get('highest_post_number'));
-    return this.urlForPostNumber(postNumber);
-  }.property('url', 'last_read_post_number', 'highest_post_number'),
-
   lastPostUrl: function() {
     return this.urlForPostNumber(this.get('highest_post_number'));
   }.property('url', 'highest_post_number'),
-
-  lastPosterUrl: function() {
-    return Discourse.getURL("/users/") + this.get("last_poster.username");
-  }.property('last_poster'),
 
   // The amount of new posts to display. It might be different than what the server
   // tells us if we are still asynchronously flushing our "recently read" data.
   // So take what the browser has seen into consideration.
   displayNewPosts: function() {
-    var delta, result;
-    var highestSeen = Discourse.Session.currentProp('highestSeenByTopic')[this.get('id')];
-    if (highestSeen) {
+    var delta, highestSeen, result;
+    if (highestSeen = Discourse.Session.current('highestSeenByTopic')[this.get('id')]) {
       delta = highestSeen - this.get('last_read_post_number');
       if (delta > 0) {
         result = this.get('new_posts') - delta;
@@ -140,7 +130,7 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('views'),
 
   archetypeObject: function() {
-    return Discourse.Site.currentProp('archetypes').findProperty('id', this.get('archetype'));
+    return Discourse.Site.instance().get('archetypes').findProperty('id', this.get('archetype'));
   }.property('archetype'),
   isPrivateMessage: Em.computed.equal('archetype', 'private_message'),
 
@@ -196,16 +186,11 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
-  /**
-    Invite a user to this topic
-
-    @method createInvite
-    @param {String} emailOrUsername The email or username of the user to be invited
-  **/
-  createInvite: function(emailOrUsername) {
+  // Invite a user to this topic
+  inviteUser: function(user) {
     return Discourse.ajax("/t/" + this.get('id') + "/invite", {
       type: 'POST',
-      data: { user: emailOrUsername }
+      data: { user: user }
     });
   },
 

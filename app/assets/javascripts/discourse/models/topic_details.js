@@ -34,11 +34,11 @@ Discourse.TopicDetails = Discourse.Model.extend({
 
 
   notificationReasonText: function() {
-    var locale_string = "topic.notifications.reasons." + (this.get('notification_level') || 1);
+    var locale_string = "topic.notifications.reasons." + this.get('notification_level');
     if (typeof this.get('notifications_reason_id') === 'number') {
       locale_string += "_" + this.get('notifications_reason_id');
     }
-    return I18n.t(locale_string, { username: Discourse.User.currentProp('username_lower') });
+    return I18n.t(locale_string, { username: Discourse.User.current('username_lower') });
   }.property('notification_level', 'notifications_reason_id'),
 
 
@@ -49,15 +49,6 @@ Discourse.TopicDetails = Discourse.Model.extend({
       type: 'POST',
       data: { notification_level: v }
     });
-  },
-
-  removeAllowedUser: function(username) {
-    var users = this.get('allowed_users');
-    Discourse.ajax("/t/" + this.get('topic.id') + "/remove-allowed-user", {
-      type: 'PUT',
-      data: { username: username }
-    }).then(function(res) {
-      users.removeObject(users.findProperty('username', username));
-    });
   }
+
 });

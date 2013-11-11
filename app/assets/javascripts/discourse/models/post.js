@@ -8,10 +8,6 @@
 **/
 Discourse.Post = Discourse.Model.extend({
 
-  init: function() {
-    this.set('replyHistory', []);
-  },
-
   shareUrl: function() {
     var user = Discourse.User.current();
     var userSuffix = user ? '?u=' + user.get('username_lower') : '';
@@ -30,12 +26,6 @@ Discourse.Post = Discourse.Model.extend({
   deletedViaTopic: Em.computed.and('firstPost', 'topic.deleted_at'),
   deleted: Em.computed.or('deleted_at', 'deletedViaTopic'),
   notDeleted: Em.computed.not('deleted'),
-  userDeleted: Em.computed.empty('user_id'),
-
-  showName: function() {
-    var name = this.get('name');
-    return name && (name !== this.get('username'))  && Discourse.SiteSettings.display_name_on_posts;
-  }.property('name', 'username'),
 
   postDeletedBy: function() {
     if (this.get('firstPost')) { return this.get('topic.deleted_by'); }
@@ -131,7 +121,7 @@ Discourse.Post = Discourse.Model.extend({
 
   flagsAvailable: function() {
     var post = this,
-        flags = Discourse.Site.currentProp('flagTypes').filter(function(item) {
+        flags = Discourse.Site.instance().get('flagTypes').filter(function(item) {
       return post.get("actionByName." + (item.get('name_key')) + ".can_act");
     });
     return flags;
@@ -161,7 +151,7 @@ Discourse.Post = Discourse.Model.extend({
       }).then(function(result) {
         // If we received a category update, update it
         self.set('version', result.post.version);
-        if (result.category) Discourse.Site.current().updateCategory(result.category);
+        if (result.category) Discourse.Site.instance().updateCategory(result.category);
         if (complete) complete(Discourse.Post.create(result.post));
       }, function(result) {
         // Post failed to update
@@ -230,23 +220,22 @@ Discourse.Post = Discourse.Model.extend({
   },
 
   /**
-    Changes the state of the post to be deleted. Does not call the server, that should be
-    done elsewhere.
+    Deletes a post
 
-    @method setDeletedState
-    @param {Discourse.User} deletedBy The user deleting the post
+    @method destroy
+    @param {Discourse.User} deleted_by The user deleting the post
   **/
-  setDeletedState: function(deletedBy) {
+  destroy: function(deleted_by) {
     // Moderators can delete posts. Regular users can only trigger a deleted at message.
-    if (deletedBy.get('staff')) {
+    if (deleted_by.get('staff')) {
       this.setProperties({
         deleted_at: new Date(),
-        deleted_by: deletedBy,
+        deleted_by: deleted_by,
         can_delete: false
       });
     } else {
       this.setProperties({
-        cooked: Discourse.Markdown.cook(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})),
+        cooked: Discourse.Markdown.cook(I18n.t("post.deleted_by_author")),
         can_delete: false,
         version: this.get('version') + 1,
         can_recover: true,
@@ -254,16 +243,7 @@ Discourse.Post = Discourse.Model.extend({
         user_deleted: true
       });
     }
-  },
 
-  /**
-    Deletes a post
-
-    @method destroy
-    @param {Discourse.User} deletedBy The user deleting the post
-  **/
-  destroy: function(deletedBy) {
-    this.setDeletedState(deletedBy);
     return Discourse.ajax("/posts/" + (this.get('id')), { type: 'DELETE' });
   },
 
@@ -311,7 +291,7 @@ Discourse.Post = Discourse.Model.extend({
       _.each(obj.actions_summary,function(a) {
         var actionSummary;
         a.post = post;
-        a.actionType = Discourse.Site.current().postActionTypeById(a.id);
+        a.actionType = Discourse.Site.instance().postActionTypeById(a.id);
         actionSummary = Discourse.ActionSummary.create(a);
         post.get('actions_summary').pushObject(actionSummary);
         lookup.set(a.actionType.get('name_key'), actionSummary);
@@ -343,7 +323,8 @@ Discourse.Post = Discourse.Model.extend({
 
   // Whether to show replies directly below
   showRepliesBelow: function() {
-    var reply_count = this.get('reply_count');
+    var reply_count, topic;
+    reply_count = this.get('reply_count');
 
     // We don't show replies if there aren't any
     if (reply_count === 0) return false;
@@ -355,16 +336,10 @@ Discourse.Post = Discourse.Model.extend({
     if (reply_count > 1) return true;
 
     // If we have *exactly* one reply, we have to consider if it's directly below us
-    var topic = this.get('topic');
+    topic = this.get('topic');
     return !topic.isReplyDirectlyBelow(this);
 
-  }.property('reply_count'),
-
-  canViewEditHistory: function() {
-    return (Discourse.SiteSettings.edit_history_visible_to_public ||
-            (Discourse.User.current() &&
-              (Discourse.User.current().get('staff') || Discourse.User.current().get('id') === this.get('user_id'))));
-  }.property()
+  }.property('reply_count')
 
 });
 
@@ -375,7 +350,7 @@ Discourse.Post.reopenClass({
       var lookup = Em.Object.create();
       result.actions_summary = result.actions_summary.map(function(a) {
         a.post = result;
-        a.actionType = Discourse.Site.current().postActionTypeById(a.id);
+        a.actionType = Discourse.Site.instance().postActionTypeById(a.id);
         var actionSummary = Discourse.ActionSummary.create(a);
         lookup.set(a.actionType.get('name_key'), actionSummary);
         return actionSummary;
@@ -385,7 +360,7 @@ Discourse.Post.reopenClass({
   },
 
   create: function(obj) {
-    var result = this._super.apply(this, arguments);
+    var result = this._super(obj);
     this.createActionSummary(result);
     if (obj && obj.reply_to_user) {
       result.set('reply_to_user', Discourse.User.create(obj.reply_to_user));
@@ -393,12 +368,11 @@ Discourse.Post.reopenClass({
     return result;
   },
 
-  deleteMany: function(selectedPosts, selectedReplies) {
+  deleteMany: function(posts) {
     return Discourse.ajax("/posts/destroy_many", {
       type: 'DELETE',
       data: {
-        post_ids: selectedPosts.map(function(p) { return p.get('id'); }),
-        reply_post_ids: selectedReplies.map(function(p) { return p.get('id'); })
+        post_ids: posts.map(function(p) { return p.get('id'); })
       }
     });
   },
@@ -409,10 +383,16 @@ Discourse.Post.reopenClass({
     });
   },
 
+  loadByPostNumber: function(topicId, postId) {
+    return Discourse.ajax("/posts/by_number/" + topicId + "/" + postId + ".json").then(function (result) {
+      return Discourse.Post.create(result);
+    });
+  },
+
   loadQuote: function(postId) {
     return Discourse.ajax("/posts/" + postId + ".json").then(function(result) {
       var post = Discourse.Post.create(result);
-      return Discourse.Quote.build(post, post.get('raw'));
+      return Discourse.BBCode.buildQuoteBBCode(post, post.get('raw'));
     });
   },
 

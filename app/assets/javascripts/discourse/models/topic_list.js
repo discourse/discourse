@@ -45,7 +45,7 @@ Discourse.TopicList = Discourse.Model.extend({
           });
 
           topicList.set('more_topics_url', result.topic_list.more_topics_url);
-          Discourse.Session.currentProp('topicList', topicList);
+          Discourse.Session.current('topicList', topicList);
           topicList.set('loadingMore', false);
 
           return result.topic_list.more_topics_url;
@@ -75,7 +75,7 @@ Discourse.TopicList = Discourse.Model.extend({
           t.set('highlight', true);
           topics.insertAt(0,t);
         });
-        Discourse.Session.currentProp('topicList', topicList);
+        Discourse.Session.current('topicList', topicList);
       });
   }
 });
@@ -83,9 +83,9 @@ Discourse.TopicList = Discourse.Model.extend({
 Discourse.TopicList.reopenClass({
 
   loadTopics: function(topic_ids, filter) {
-    var defer = new Ember.Deferred(),
-        url = Discourse.getURL("/") + filter + "?topic_ids=" + topic_ids.join(",");
+    var defer = new Ember.Deferred();
 
+    var url = Discourse.getURL("/") + filter + "?topic_ids=" + topic_ids.join(",");
     Discourse.ajax({url: url}).then(function (result) {
       if (result) {
         // the new topics loaded from the server
@@ -107,45 +107,38 @@ Discourse.TopicList.reopenClass({
     return defer;
   },
 
-  /**
-    Stitch together side loaded topic data
-
-    @method topicsFrom
-    @param {Object} JSON object with topic data
-    @returns {Array} the list of topics
-  **/
   topicsFrom: function(result) {
     // Stitch together our side loaded data
-    var categories = Discourse.Category.list(),
-        users = this.extractByKey(result.users, Discourse.User),
-        topics = Em.A();
+    var categories, topics, users;
+    categories = this.extractByKey(result.categories, Discourse.Category);
+    users = this.extractByKey(result.users, Discourse.User);
+    topics = Em.A();
 
-    return result.topic_list.topics.map(function (t) {
-      t.category = categories.findBy('id', t.category_id);
-      t.posters.forEach(function(p) {
+    _.each(result.topic_list.topics,function(ft) {
+      ft.category = categories[ft.category_id];
+      _.each(ft.posters,function(p) {
         p.user = users[p.user_id];
       });
-      return Discourse.Topic.create(t);
+      topics.pushObject(Discourse.Topic.create(ft));
     });
+    return topics;
   },
 
-  /**
-    Lists topics on a given menu item
-
-    @method list
-    @param {Object} The menu item to filter to
-    @returns {Promise} a promise that resolves to the list of topics
-  **/
   list: function(menuItem) {
-    var filter = menuItem.get('name'),
-        session = Discourse.Session.current(),
-        list = session.get('topicList');
+    var filter = menuItem.get('name');
 
-    if (list && (list.get('filter') === filter) && window.location.pathname.indexOf('more') > 0) {
-      list.set('loaded', true);
-      return Ember.RSVP.resolve(list);
+    var session = Discourse.Session.current();
+    var list = session.get('topicList');
+    if (list) {
+      if ((list.get('filter') === filter) && window.location.pathname.indexOf('more') > 0) {
+        list.set('loaded', true);
+        return Ember.RSVP.resolve(list);
+      }
     }
-    session.setProperties({topicList: null, topicListScrollPos: null});
+
+    session.set('topicList', null);
+    session.set('topicListScrollPos', null);
+
     return Discourse.TopicList.find(filter, menuItem.get('excludeCategory'));
   }
 });

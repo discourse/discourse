@@ -12,7 +12,7 @@ class PostDestroyer
             WHERE t.deleted_at IS NOT NULL AND
                   t.id = posts.topic_id
         )")
-        .where("updated_at < ? AND post_number > 1", SiteSetting.delete_removed_posts_after.hours.ago)
+        .where("updated_at < ? AND post_number > 1", 1.day.ago)
         .where("NOT EXISTS (
                   SELECT 1
                   FROM post_actions pa
@@ -98,22 +98,13 @@ class PostDestroyer
       Notification.delete_all topic_id: @post.topic_id, post_number: @post.post_number
 
       @post.topic.trash!(@user) if @post.topic and @post.post_number == 1
-
-      if @post.topic && @post.topic.category && @post.id == @post.topic.category.latest_post_id
-        @post.topic.category.update_latest
-      end
-
-      if @post.post_number == 1 && @post.topic && @post.topic.category && @post.topic_id == @post.topic.category.latest_topic_id
-        @post.topic.category.update_latest
-      end
-
     end
   end
 
   # When a user 'deletes' their own post. We just change the text.
   def user_destroyed
     Post.transaction do
-      @post.revise(@user, I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after), force_new_version: true)
+      @post.revise(@user, I18n.t('js.post.deleted_by_author'), force_new_version: true)
       @post.update_column(:user_deleted, true)
       @post.update_flagged_posts_count
       @post.topic_links.each(&:destroy)
@@ -123,7 +114,6 @@ class PostDestroyer
   def user_recovered
     Post.transaction do
       @post.update_column(:user_deleted, false)
-      @post.skip_unique_check = true
       @post.revise(@user, @post.versions.last.modifications["raw"][0], force_new_version: true)
       @post.update_flagged_posts_count
     end

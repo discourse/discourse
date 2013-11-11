@@ -290,7 +290,7 @@ pt:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default cause it has to re-write urls, hurting usability"
     topics_per_page: "How many topics to show on the topics list page."
     posts_per_page: "How many posts are returned on a topic page"
-    site_contact_username: "Username that sends system messages"
+    system_username: "Username that sends system messages"
     send_welcome_message: "Do new users get a welcome private message?"
     suppress_reply_directly_below: "Don't show replies button below a post when the reply is directly below"
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
@@ -313,6 +313,7 @@ pt:
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds."
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours."
 
+    uncategorized_name: "The name for the uncategorized topics on the category list"
     max_mentions_per_post: "The maximum amount of @notifications you can add to a post"
 
     rate_limit_create_topic: "How many seconds before you can create another topic"
@@ -621,7 +622,7 @@ pt:
         Por-favor visita este link para responder: %{base_url}%{url}
 
     user_mentioned:
-      subject_template: "[%{site_name}] %{subject_prefix}%{username} mencionou-te em '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} mencionou-te em '%{topic_title}'"
       text_body_template: |
         %{username} mencionou-te em '%{topic_title}' em %{site_name}:
 
@@ -638,6 +639,17 @@ pt:
       new_activity: "Nova atividade nos teus tópicos e posts:"
       new_topics: "Tópicos novos:"
       unsubscribe: "Este email sumário é enviado como uma notificação de cortesia de %{site_link} quando não te vemos há de 7 dias.\nCaso quiseres desliga-lo ou alterar as configurações de email, %{unsubscribe_link}."
+
+    private_message:
+      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
+      text_body_template: |
+        %{from} acabou de te enviar uma mensagem privada
+
+        ---
+        %{message}
+
+        ---
+        Por-favor vista este link para responder: %{base_url}%{url}
 
     forgot_password:
       subject_template: "[%{site_name}] Repor password"

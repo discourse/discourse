@@ -6,16 +6,12 @@ describe Site do
     category = Fabricate(:category)
     user = Fabricate(:user)
 
-    Site.new(Guardian.new(user)).categories.count.should == 2
+    Site.new(Guardian.new(user)).categories.count.should == 1
 
     category.set_permissions(:everyone => :create_post)
     category.save
 
-    Site.new(Guardian.new(user))
-        .categories
-        .keep_if{|c| c.name == category.name}
-        .first
-        .permission
-        .should_not == CategoryGroup.permission_types[:full]
+    # TODO clean up querying so we can make sure we have the correct permission set
+    Site.new(Guardian.new(user)).categories[0].permission.should_not == CategoryGroup.permission_types[:full]
   end
 end

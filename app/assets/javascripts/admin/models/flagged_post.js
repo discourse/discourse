@@ -38,8 +38,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
         r.push({
           user: _this.userLookup[action.user_id],
           message: action.message,
-          permalink: action.permalink,
-          bySystemUser: (action.user_id === -1 ? true : false)
+          permalink: action.permalink
         });
       }
     });
@@ -63,11 +62,11 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   }.property('post_actions.@each.name_key'),
 
   canDeleteAsSpammer: function() {
-    return (Discourse.User.currentProp('staff') && this.get('flaggedForSpam') && this.get('user.can_delete_all_posts') && this.get('user.can_be_deleted'));
+    return (Discourse.User.current('staff') && this.get('flaggedForSpam') && this.get('user.can_delete_all_posts') && this.get('user.can_be_deleted'));
   }.property('flaggedForSpam'),
 
   deletePost: function() {
-    if (this.get('post_number') === 1) {
+    if (this.get('post_number') === '1') {
       return Discourse.ajax('/t/' + this.topic_id, { type: 'DELETE', cache: false });
     } else {
       return Discourse.ajax('/posts/' + this.id, { type: 'DELETE', cache: false });
@@ -104,13 +103,10 @@ Discourse.FlaggedPost = Discourse.Post.extend({
 });
 
 Discourse.FlaggedPost.reopenClass({
-  findAll: function(filter, offset) {
-
-    offset = offset || 0;
-
+  findAll: function(filter) {
     var result = Em.A();
     result.set('loading', true);
-    return Discourse.ajax('/admin/flags/' + filter + '.json?offset=' + offset).then(function(data) {
+    Discourse.ajax('/admin/flags/' + filter + '.json').then(function(data) {
       var userLookup = {};
       _.each(data.users,function(user) {
         userLookup[user.id] = Discourse.AdminUser.create(user);
@@ -121,8 +117,8 @@ Discourse.FlaggedPost.reopenClass({
         result.pushObject(f);
       });
       result.set('loading', false);
-      return result;
     });
+    return result;
   }
 });
 

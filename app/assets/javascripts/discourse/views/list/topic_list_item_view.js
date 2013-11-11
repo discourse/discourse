@@ -2,11 +2,11 @@
   This view handles the rendering of a topic in a list
 
   @class TopicListItemView
-  @extends Discourse.GroupedView
+  @extends Discourse.View
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicListItemView = Discourse.GroupedView.extend({
+Discourse.TopicListItemView = Discourse.View.extend({
   tagName: 'tr',
   templateName: 'list/topic_list_item',
   classNameBindings: ['content.archived', ':topic-list-item', 'content.hasExcerpt:has-excerpt'],
@@ -14,15 +14,19 @@ Discourse.TopicListItemView = Discourse.GroupedView.extend({
 
   'data-topic-id': Em.computed.alias('content.id'),
 
+  init: function() {
+    this._super();
+    this.set('context', this.get('content'));
+  },
+
   highlight: function() {
     var $topic = this.$();
     var originalCol = $topic.css('backgroundColor');
-    $topic
-      .addClass('highlighted')
-      .stop()
-      .animate({ backgroundColor: originalCol }, 2500, 'swing', function(){
-        $topic.removeClass('highlighted');
-      });
+    $topic.css({
+      backgroundColor: "#ffffcc"
+    }).animate({
+      backgroundColor: originalCol
+    }, 2500);
   },
 
   didInsertElement: function() {

@@ -10,8 +10,6 @@ Discourse.EmailLog = Discourse.Model.extend({});
 
 Discourse.EmailLog.reopenClass({
   create: function(attrs) {
-    attrs = attrs || {};
-
     if (attrs.user) {
       attrs.user = Discourse.AdminUser.create(attrs.user);
     }

@@ -1,0 +1,60 @@
+// --------------------------------------------------
+// Generic helper classes
+// --------------------------------------------------
+
+// Floats
+// --------------------------------------------------
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+// Element visibility
+// --------------------------------------------------
+
+.show {
+  display: block;
+}
+
+.hide,
+.hidden {
+  display: none;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+// Affix
+// --------------------------------------------------
+
+.affix {
+  position: fixed;
+}
+
+// Contain floats
+// --------------------------------------------------
+
+.clearfix {
+  &:before,
+  &:after {
+    display: table;
+    content: " ";
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// Overflow
+// --------------------------------------------------
+
+.overflow-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

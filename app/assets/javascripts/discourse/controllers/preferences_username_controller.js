@@ -41,24 +41,21 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
     return I18n.t("user.change");
   }.property('saving'),
 
-  actions: {
-    changeUsername: function() {
-      var preferencesUsernameController = this;
-      return bootbox.confirm(I18n.t("user.change_username.confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
-        if (result) {
-          preferencesUsernameController.set('saving', true);
-          preferencesUsernameController.get('content').changeUsername(preferencesUsernameController.get('newUsername')).then(function() {
-            Discourse.URL.redirectTo("/users/" + preferencesUsernameController.get('newUsername').toLowerCase() + "/preferences");
-          }, function() {
-            // error
-            preferencesUsernameController.set('error', true);
-            preferencesUsernameController.set('saving', false);
-          });
-        }
-      });
-    }
+  changeUsername: function() {
+    var preferencesUsernameController = this;
+    return bootbox.confirm(I18n.t("user.change_username.confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
+      if (result) {
+        preferencesUsernameController.set('saving', true);
+        preferencesUsernameController.get('content').changeUsername(preferencesUsernameController.get('newUsername')).then(function() {
+          Discourse.URL.redirectTo("/users/" + preferencesUsernameController.get('newUsername').toLowerCase() + "/preferences");
+        }, function() {
+          // error
+          preferencesUsernameController.set('error', true);
+          preferencesUsernameController.set('saving', false);
+        });
+      }
+    });
   }
-
 });
 
 

@@ -191,6 +191,8 @@ sv:
         title: "Senaste IP-adress"
       avatar:
         title: "Profilbild"
+        instructions: "Vi använder <a href='https://gravatar.com' target='_blank'>Gravatar</a> för profilbilder baserat på din e-post"
+
       filters:
         all: "Alla"
 
@@ -354,8 +356,10 @@ sv:
       title: "Infoga Bild"
       from_my_computer: "Från Min Enhet"
       from_the_web: "Från Internet"
+      add_title: "Lägg Till Bild"
       remote_tip: "skriv in en adress till en bild i formen http://exempel.se/bild.jpg"
       local_tip: "klicka för att välja en bild från din enhet."
+      upload_title: "Ladda Upp"
       uploading: "Laddar upp bild"
 
     search:
@@ -400,6 +404,7 @@ sv:
       title: Trådranksdetaljer
 
     topic:
+      create_in: 'Skapa {{categoryName}}-tråd'
       create: 'Skapa Tråd'
       create_long: 'Skapa en nytt Tråd'
       private_message: 'Starta en privat konversation'
@@ -900,13 +905,13 @@ sv:
           other: "godkänd användare ({{count}})"
 
       user:
-        suspend_failed: "Någonting gick fel under avstängningen av denna användare {{error}}"
-        unsuspend_failed: "Någonting gick fel under upplåsningen av denna användare {{error}}"
-        suspend_duration: "Hur länge vill du stänga av denna användare? (dagar)"
+        ban_failed: "Någonting gick fel under avstängningen av denna användare {{error}}"
+        unban_failed: "Någonting gick fel under upplåsningen av denna användare {{error}}"
+        ban_duration: "Hur länge vill du stänga av denna användare? (dagar)"
         delete_all_posts: "Radera alla inlägg"
-        suspend: "Stäng av"
-        unsuspend: "Lås upp"
-        suspended: "Avstängd?"
+        ban: "Stäng av"
+        unban: "Lås upp"
+        banned: "Avstängd?"
         moderator: "Moderator?"
         admin: "Administratör?"
         show_admin_profile: "Administratör"

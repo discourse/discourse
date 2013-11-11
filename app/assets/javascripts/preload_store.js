@@ -31,9 +31,11 @@ PreloadStore = {
     @returns {Ember.Deferred} a promise that will eventually be the object we want.
   **/
   getAndRemove: function(key, finder) {
-    if (this.data[key]) {
-      var promise = Ember.RSVP.resolve(this.data[key]);
-      delete this.data[key];
+    var preloadStore = this;
+
+    if (preloadStore.data[key]) {
+      var promise = Ember.RSVP.resolve(preloadStore.data[key]);
+      delete preloadStore.data[key];
       return promise;
     }
 

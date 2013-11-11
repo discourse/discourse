@@ -39,13 +39,14 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     var selection = window.getSelection();
     // no selections
     if (selection.rangeCount === 0) return;
-
     // retrieve the selected range
     var range = selection.getRangeAt(0),
         cloned = range.cloneRange(),
         $ancestor = $(range.commonAncestorContainer);
 
-    if ($ancestor.closest('.cooked').length === 0) {
+    // don't display the "quote reply" button if you select text spanning two posts
+    // note: the ".contents" is here to prevent selection of the topic summary
+    if ($ancestor.closest('.topic-body > .contents').length === 0) {
       this.set('buffer', '');
       return;
     }
@@ -54,6 +55,7 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     if (this.get('buffer') === selectedText) return;
 
     // we need to retrieve the post data from the posts collection in the topic controller
+
     var postStream = this.get('controllers.topic.postStream');
     this.set('post', postStream.findLoadedPost(postId));
     this.set('buffer', selectedText);
@@ -62,32 +64,31 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     // (ie. moves the end point to the start point)
     range.collapse(true);
 
-    // create a marker element
+    // create a marker element containing a single invisible character
     var markerElement = document.createElement("span");
-    // containing a single invisible character
     markerElement.appendChild(document.createTextNode("\ufeff"));
-    // and insert it at the beginning of our selection range
+    // insert it at the beginning of our range
     range.insertNode(markerElement);
 
-    // retrieve the position of the market
-    var markerOffset = $(markerElement).offset(),
-        $quoteButton = $('.quote-button');
-
-    // remove the marker
-    markerElement.parentNode.removeChild(markerElement);
-
-    // work around Chrome that would sometimes lose the selection
+    // work around chrome that would sometimes lose the selection
     var sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(cloned);
 
-    // move the quote button above the marker
+    // move the quote button at the beginning of the selection
+    var markerOffset = $(markerElement).offset(),
+        $quoteButton = $('.quote-button');
+
+
     Em.run.schedule('afterRender', function() {
       $quoteButton.offset({
         top: markerOffset.top - $quoteButton.outerHeight() - 5,
         left: markerOffset.left
       });
     });
+
+    // remove the marker
+    markerElement.parentNode.removeChild(markerElement);
   },
 
   /**
@@ -116,7 +117,7 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     }
 
     var buffer = this.get('buffer');
-    var quotedText = Discourse.Quote.build(post, buffer);
+    var quotedText = Discourse.BBCode.buildQuoteBBCode(post, buffer);
     if (composerController.get('content.replyDirty')) {
       composerController.appendText(quotedText);
     } else {

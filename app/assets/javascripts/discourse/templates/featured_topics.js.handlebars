@@ -1,7 +1,7 @@
 <table id='topic-list'>
   <tr>
     <th class="main-link">
-      {{categoryLink this allowUncategorized=true}}
+      {{categoryLink this}}
 
       <div class='posters'>
       {{#each featured_users}}
@@ -29,20 +29,20 @@
           {{{topicLink this}}}
 
           {{#if unread}}
-            <a href="{{unbound lastUnreadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unbound unread}}</a>
+            <a href="{{unbound lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unbound unread}}</a>
           {{/if}}
           {{#if new_posts}}
-            <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="new_posts"}}'>{{unbound new_posts}}</a>
+            <a href="{{unbound lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="new_posts"}}'>{{unbound new_posts}}</a>
           {{/if}}
           {{#if unseen}}
-            <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
+            <a href="{{unbound lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
           {{/if}}
 
           {{#if hasExcerpt}}
             <div class="topic-excerpt">
               {{{excerpt}}}
               {{#if excerptTruncated}}
-                {{#unless canClearPin}}<a href="{{lastUnreadUrl}}">{{i18n read_more}}</a>{{/unless}}
+                {{#unless canClearPin}}<a href="{{lastReadUrl}}">{{i18n read_more}}</a>{{/unless}}
               {{/if}}
               {{#if canClearPin}}
                 <a href="#" {{action clearPin this}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
@@ -56,22 +56,9 @@
     </tr>
   {{/each}}
 
-  {{#if subcategories}}
-    <tr>
-      <td>
-        <div class='subcategories'>
-          {{i18n categories.subcategories}}
-          {{#each subcategory in subcategories}}
-            {{categoryLink subcategory}}
-          {{/each}}
-        </div>
-      </td>
-    </tr>
-  {{/if}}
-
 </table>
 <footer class="clearfix">
-  <figure title="{{i18n year_desc}}">{{number topics_year}} <figcaption>{{i18n category.this_year}}</figcaption></figure>
+  <figure title="{{i18n year_desc}}">{{number topics_year}} <figcaption>{{i18n year}}</figcaption></figure>
   <figure title="{{i18n month_desc}}">{{number topics_month}} <figcaption>{{i18n month}}</figcaption></figure>
   <figure title="{{i18n week_desc}}">{{number topics_week}} <figcaption>{{i18n week}}</figcaption></figure>
 

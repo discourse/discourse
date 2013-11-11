@@ -123,12 +123,12 @@ describe UserAction do
       it 'should result in correct data assignment' do
         @liker_action.should_not be_nil
         @likee_action.should_not be_nil
-        likee.user_stat.reload.likes_received.should == 1
-        liker.user_stat.reload.likes_given.should == 1
+        likee.reload.likes_received.should == 1
+        liker.reload.likes_given.should == 1
 
         PostAction.remove_act(liker, post, PostActionType.types[:like])
-        likee.user_stat.reload.likes_received.should == 0
-        liker.user_stat.reload.likes_given.should == 0
+        likee.reload.likes_received.should == 0
+        liker.reload.likes_given.should == 0
       end
 
     end
@@ -210,6 +210,7 @@ describe UserAction do
     end
   end
 
+
   describe 'private messages' do
 
     let(:user) do
@@ -242,41 +243,25 @@ describe UserAction do
                         )
     end
 
-  end
+    it 'should collapse the inbox correctly' do
 
-  describe 'synchronize_favorites' do
-    it 'corrects out of sync favs' do
-      post = Fabricate(:post)
-      post.topic.toggle_star(post.user, true)
-      UserAction.delete_all
+      stream = UserAction.private_message_stream(UserAction::GOT_PRIVATE_MESSAGE, user_id: target_user.id, guardian: Guardian.new(target_user))
+      # inbox should collapse this initial and reply message into one item
+      stream.count.should == 1
 
-      action1 = UserAction.log_action!(
-        action_type: UserAction::STAR,
-        user_id: post.user.id,
-        acting_user_id: post.user.id,
-        target_topic_id: 99,
-        target_post_id: -1,
-      )
 
-      action2 = UserAction.log_action!(
-        action_type: UserAction::STAR,
-        user_id: Fabricate(:user).id,
-        acting_user_id: post.user.id,
-        target_topic_id: post.topic_id,
-        target_post_id: -1,
-      )
+      # outbox should also collapse
+      stream = UserAction.private_message_stream(UserAction::NEW_PRIVATE_MESSAGE, user_id: user.id, guardian: Guardian.new(user))
+      stream.count.should == 1
 
-      UserAction.synchronize_favorites
+      # anon should see nothing
+      stream = UserAction.private_message_stream(UserAction::NEW_PRIVATE_MESSAGE, user_id: user.id, guardian: Guardian.new(nil))
+      stream.count.should == 0
 
-      actions = UserAction.all.to_a
-
-      actions.length.should == 1
-      actions.first.action_type.should == UserAction::STAR
-      actions.first.user_id.should == post.user.id
     end
   end
 
-  describe 'synchronize_target_topic_ids' do
+  describe 'ensure_consistency!' do
     it 'correct target_topic_id' do
       post = Fabricate(:post)
 
@@ -296,10 +281,11 @@ describe UserAction do
         target_post_id: post.id,
       )
 
-      UserAction.synchronize_target_topic_ids
+      UserAction.ensure_consistency!
 
       action.reload
       action.target_topic_id.should == post.topic_id
+
     end
   end
 end

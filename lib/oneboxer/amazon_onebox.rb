@@ -12,6 +12,7 @@ module Oneboxer
 
     # Use the mobile version of the site
     def translate_url
+
       # If we're already mobile don't translate the url
       return @url if @url =~ /https?:\/\/www\.amazon\.com\/gp\/aw\/d\//
 
@@ -25,9 +26,9 @@ module Oneboxer
 
       result = {}
       result[:title] = html_doc.at("h1")
-      result[:title] = result[:title].inner_text.strip if result[:title].present?
+      result[:title] = result[:title].inner_html if result[:title].present?
 
-      image = html_doc.at("#main-image")
+      image = html_doc.at(".main-image img")
       result[:image] = image['src'] if image
 
       result[:by_info] = html_doc.at("#by-line")

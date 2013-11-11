@@ -3,24 +3,7 @@ require_dependency 'version'
 
 module DiscourseHub
 
-  class NicknameUnavailable < RuntimeError
-    def initialize(nickname)
-      @nickname = nickname
-    end
-
-    def response_message
-      {
-        success: false,
-        message: I18n.t(
-          "login.errors",
-          errors:I18n.t(
-            "login.not_available", suggestion: UserNameSuggester.suggest(@nickname)
-          )
-        )
-      }
-    end
-
-  end
+  class NicknameUnavailable < RuntimeError; end
 
   def self.nickname_available?(nickname)
     json = get('/users/nickname_available', {nickname: nickname})
@@ -37,7 +20,7 @@ module DiscourseHub
     if json.has_key?('success')
       true
     else
-      raise NicknameUnavailable.new(nickname)  # TODO: report ALL the errors
+      raise NicknameUnavailable  # TODO: report ALL the errors
     end
   end
 
@@ -51,7 +34,7 @@ module DiscourseHub
     if json.has_key?('success')
       true
     else
-      raise NicknameUnavailable.new(new_nickname)  # TODO: report ALL the errors
+      raise NicknameUnavailable  # TODO: report ALL the errors
     end
   end
 
@@ -60,7 +43,6 @@ module DiscourseHub
     get('/version_check', {
       installed_version: Discourse::VERSION::STRING,
       forum_title: SiteSetting.title,
-      forum_description: SiteSetting.site_description,
       forum_url: Discourse.base_url,
       contact_email: SiteSetting.contact_email,
       topic_count: Topic.listable_topics.count,
@@ -110,17 +92,5 @@ module DiscourseHub
 
   def self.accepts
     [:json, 'application/vnd.discoursehub.v1']
-  end
-
-  def self.nickname_operation
-    if SiteSetting.call_discourse_hub?
-      begin
-        yield
-      rescue DiscourseHub::NicknameUnavailable
-        false
-      rescue => e
-        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
-      end
-    end
   end
 end

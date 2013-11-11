@@ -6,13 +6,14 @@
 //= require ../../app/assets/javascripts/preload_store.js
 
 // probe framework first
-//= require ../../app/assets/javascripts/discourse/lib/probes.js
+//= require ../../app/assets/javascripts/discourse/components/probes.js
 
 // Externals we need to load first
-//= require development/jquery-2.0.3.js
-//= require jquery.ui.widget.js
-//= require handlebars.js
-//= require development/ember.js
+//= require ../../app/assets/javascripts/external/jquery-1.9.1.js
+//= require ../../app/assets/javascripts/external/jquery.ui.widget.js
+//= require ../../app/assets/javascripts/external/handlebars.js
+//= require ../../app/assets/javascripts/external_development/ember.js
+//= require ../../app/assets/javascripts/external_development/group-helper.js
 
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
@@ -21,36 +22,8 @@
 // Pagedown customizations
 //= require ../../app/assets/javascripts/pagedown_custom.js
 
-// The rest of the vendored JS
-//= require LAB.js
-//= require Markdown.Converter.js
-//= require Markdown.Editor.js
-//= require better_markdown.js
-//= require bootbox.js
-//= require bootstrap-alert.js
-//= require bootstrap-button.js
-//= require bootstrap-dropdown.js
-//= require bootstrap-modal.js
-//= require bootstrap-transition.js
-//= require browser-update.js
-//= require chosen.jquery.js
-//= require ember-renderspeed.js
-//= require favcount.js
-//= require jquery.ba-replacetext.js
-//= require jquery.ba-resize.min.js
-//= require jquery.color.js
-//= require jquery.cookie.js
-//= require jquery.fileupload.js
-//= require jquery.iframe-transport.js
-//= require jquery.putcursoratend.js
-//= require jquery.tagsinput.js
-//= require lodash.js
-//= require md5.js
-//= require modernizr.custom.95264.js
-//= require mousetrap.js
-//= require rsvp.js
-//= require show-html.js
-//= require htmlparser.js
+// The rest of the externals
+//= require_tree ../../app/assets/javascripts/external
 
 // Stuff we need to load first
 //= require main_include
@@ -66,7 +39,6 @@
 //= require helpers/assertions
 
 //= require_tree ./fixtures
-//= require_tree ./lib
 //= require_tree .
 //= require_self
 //= require jshint_all
@@ -84,16 +56,13 @@ window.assetPath = function() { return null; };
 
 var oldAjax = $.ajax;
 $.ajax = function() {
-  try {
-    this.undef();
-  } catch(e) {
-    console.error("Discourse.Ajax called in test environment (" + arguments[0] + ")\n caller: " + e.stack.split("\n").slice(2).join("\n"));
-  }
+  console.error("Discourse.Ajax called in test environment (" + arguments[0] + ")");
   return oldAjax.apply(this, arguments);
 };
 
 // Trick JSHint into allow document.write
 var d = document;
+d.write('<div id="qunit-scratch" style="display:none"></div>');
 d.write('<div id="ember-testing-container"><div id="ember-testing"></div></div>');
 d.write('<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>');
 
@@ -103,7 +72,7 @@ Discourse.injectTestHelpers();
 Discourse.bindDOMEvents();
 
 Discourse.Router.map(function() {
-  Discourse.routeBuilder.call(this);
+  return Discourse.routeBuilder.call(this);
 });
 
 

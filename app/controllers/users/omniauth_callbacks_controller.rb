@@ -4,17 +4,6 @@ require_dependency 'enum'
 require_dependency 'user_name_suggester'
 
 class Users::OmniauthCallbacksController < ApplicationController
-
-  BUILTIN_AUTH = [
-    Auth::FacebookAuthenticator.new,
-    Auth::OpenIdAuthenticator.new("google", "https://www.google.com/accounts/o8/id", trusted: true),
-    Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", trusted: true),
-    Auth::GithubAuthenticator.new,
-    Auth::TwitterAuthenticator.new,
-    Auth::PersonaAuthenticator.new,
-    Auth::CasAuthenticator.new
-  ]
-
   skip_before_filter :redirect_to_login_if_required
 
   layout false
@@ -31,24 +20,21 @@ class Users::OmniauthCallbacksController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: :complete
 
   def complete
-    auth = request.env["omniauth.auth"]
+    # Make sure we support that provider
+    provider = params[:provider]
+    raise Discourse::InvalidAccess.new unless self.class.types.keys.map(&:to_s).include?(provider)
 
-    authenticator = self.class.find_authenticator(params[:provider])
+    # Check if the provider is enabled
+    raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{provider}_logins?")
 
-    @data = authenticator.after_authenticate(auth)
-    @data.authenticator_name = authenticator.name
+    # Call the appropriate logic
+    send("create_or_sign_on_user_using_#{provider}", request.env["omniauth.auth"])
 
-    if @data.user
-      user_found(@data.user)
-    elsif SiteSetting.invite_only?
-      @data.requires_invite = true
-    else
-      session[:authentication] = @data.session_data
-    end
+    @data[:awaiting_approval] = true if invite_only?
 
     respond_to do |format|
       format.html
-      format.json { render json: @data.to_client_hash }
+      format.json { render json: @data }
     end
   end
 
@@ -57,43 +43,272 @@ class Users::OmniauthCallbacksController < ApplicationController
     render layout: 'no_js'
   end
 
+  def create_or_sign_on_user_using_twitter(auth_token)
 
-  def self.find_authenticator(name)
-    BUILTIN_AUTH.each do |authenticator|
-      if authenticator.name == name
-        raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{name}_logins?")
-        return authenticator
-      end
-    end
+    data = auth_token[:info]
+    screen_name = data["nickname"]
+    twitter_user_id = auth_token["uid"]
 
-    Discourse.auth_providers.each do |provider|
-      return provider.authenticator if provider.name == name
-    end
+    session[:authentication] = {
+      twitter_user_id: twitter_user_id,
+      twitter_screen_name: screen_name
+    }
 
-    raise Discourse::InvalidAccess.new("provider is not found")
+    user_info = TwitterUserInfo.where(twitter_user_id: twitter_user_id).first
+
+    @data = {
+      username: screen_name,
+      auth_provider: "Twitter"
+    }
+
+    process_user_info(user_info, screen_name)
   end
 
-  protected
+  def create_or_sign_on_user_using_facebook(auth_token)
 
-  def user_found(user)
-    # automatically activate any account if a provider marked the email valid
-    if !user.active && @data.email_valid
-      user.toggle(:active).save
-    end
+    data = auth_token[:info]
+    raw_info = auth_token["extra"]["raw_info"]
 
-    # log on any account that is active with forum access
-    if Guardian.new(user).can_access_forum? && user.active
-      log_on_user(user)
-      # don't carry around old auth info, perhaps move elsewhere
-      session[:authentication] = nil
-      @data.authenticated = true
+    email = data[:email]
+    name = data["name"]
+    fb_uid = auth_token["uid"]
+
+
+    username = UserNameSuggester.suggest(name)
+
+    session[:authentication] = {
+      facebook: {
+        facebook_user_id: fb_uid,
+        link: raw_info["link"],
+        username: raw_info["username"],
+        first_name: raw_info["first_name"],
+        last_name: raw_info["last_name"],
+        email: raw_info["email"],
+        gender: raw_info["gender"],
+        name: raw_info["name"]
+      },
+      email: email,
+      email_valid: true
+    }
+
+    user_info = FacebookUserInfo.where(facebook_user_id: fb_uid).first
+
+    @data = {
+      username: username,
+      name: name,
+      email: email,
+      auth_provider: "Facebook",
+      email_valid: true
+    }
+
+    if user_info
+      if user = user_info.user
+        user.toggle(:active).save unless user.active?
+
+        # If we have to approve users
+        if Guardian.new(user).can_access_forum?
+          log_on_user(user)
+          @data[:authenticated] = true
+        else
+          @data[:awaiting_approval] = true
+        end
+      end
     else
-      if SiteSetting.must_approve_users? && !user.approved?
-        @data.awaiting_approval = true
-      else
-        @data.awaiting_activation = true
+      if user = User.where(email: email).first
+        user.create_facebook_user_info! session[:authentication][:facebook]
+        user.toggle(:active).save unless user.active?
+        log_on_user(user)
+        @data[:authenticated] = true
       end
+    end
+
+  end
+
+  def create_or_sign_on_user_using_cas(auth_token)
+    logger.error "authtoken #{auth_token}"
+
+    email = auth_token[:info][:email] if auth_token[:info]
+    email ||= if SiteSetting.cas_domainname.present?
+      "#{auth_token[:extra][:user]}@#{SiteSetting.cas_domainname}"
+    else
+      auth_token[:extra][:user]
+    end
+
+    username = auth_token[:extra][:user]
+
+    name = if auth_token[:info] && auth_token[:info][:name]
+      auth_token[:info][:name]
+    else
+      auth_token["uid"]
+    end
+
+    cas_user_id = auth_token["uid"]
+
+    session[:authentication] = {
+        cas: {
+            cas_user_id: cas_user_id ,
+            username: username
+        },
+        email: email,
+        email_valid: true
+    }
+
+    user_info = CasUserInfo.where(:cas_user_id => cas_user_id ).first
+
+    @data = {
+        username: username,
+        name: name,
+        email: email,
+        auth_provider: "CAS",
+        email_valid: true
+    }
+
+    if user_info
+      if user = user_info.user
+        user.toggle(:active).save unless user.active?
+        log_on_user(user)
+        @data[:authenticated] = true
+      end
+    else
+      user = User.where(email: email).first
+      if user
+        CasUserInfo.create!(session[:authentication][:cas].merge(user_id: user.id))
+        user.toggle(:active).save unless user.active?
+        log_on_user(user)
+        @data[:authenticated] = true
+      end
+    end
+
+  end
+
+
+  def create_or_sign_on_user_using_openid(auth_token)
+
+    data = auth_token[:info]
+    identity_url = auth_token[:extra][:identity_url]
+
+    email = data[:email]
+
+    # If the auth supplies a name / username, use those. Otherwise start with email.
+    name = data[:name] || data[:email]
+    username = data[:nickname] || data[:email]
+
+    user_open_id = UserOpenId.find_by_url(identity_url)
+
+    if user_open_id.blank? && user = User.find_by_email(email)
+      # we trust so do an email lookup
+      user_open_id = UserOpenId.create(url: identity_url , user_id: user.id, email: email, active: true)
+    end
+
+    authenticated = user_open_id # if authed before
+
+    if authenticated
+      user = user_open_id.user
+
+      # If we have to approve users
+      if Guardian.new(user).can_access_forum?
+        log_on_user(user)
+        @data = {authenticated: true}
+      else
+        @data = {awaiting_approval: true}
+      end
+
+    else
+      @data = {
+        email: email,
+        name: User.suggest_name(name),
+        username: UserNameSuggester.suggest(username),
+        email_valid: true ,
+        auth_provider: data[:provider] || params[:provider].try(:capitalize)
+      }
+      session[:authentication] = {
+        email: @data[:email],
+        email_valid: @data[:email_valid],
+        openid_url: identity_url
+      }
+    end
+
+  end
+
+  alias_method :create_or_sign_on_user_using_yahoo, :create_or_sign_on_user_using_openid
+  alias_method :create_or_sign_on_user_using_google, :create_or_sign_on_user_using_openid
+
+  def create_or_sign_on_user_using_github(auth_token)
+
+    data = auth_token[:info]
+    screen_name = data["nickname"]
+    github_user_id = auth_token["uid"]
+
+    session[:authentication] = {
+      github_user_id: github_user_id,
+      github_screen_name: screen_name
+    }
+
+    user_info = GithubUserInfo.where(github_user_id: github_user_id).first
+
+    @data = {
+      username: screen_name,
+      auth_provider: "Github"
+    }
+
+    process_user_info(user_info, screen_name)
+  end
+
+  def create_or_sign_on_user_using_persona(auth_token)
+
+    email = auth_token[:info][:email]
+
+    user = User.find_by_email(email)
+
+    if user
+
+      if Guardian.new(user).can_access_forum?
+        log_on_user(user)
+        @data = {authenticated: true}
+      else
+        @data = {awaiting_approval: true}
+      end
+
+    else
+      @data = {
+        email: email,
+        email_valid: true,
+        name: User.suggest_name(email),
+        username: UserNameSuggester.suggest(email),
+        auth_provider: params[:provider].try(:capitalize)
+      }
+
+      session[:authentication] = {
+        email: email,
+        email_valid: true,
+      }
+    end
+
+  end
+
+  private
+
+  def process_user_info(user_info, screen_name)
+    if user_info
+      if user_info.user.active?
+
+        if Guardian.new(user_info.user).can_access_forum?
+          log_on_user(user_info.user)
+          @data[:authenticated] = true
+        else
+          @data[:awaiting_approval] = true
+        end
+
+      else
+        @data[:awaiting_activation] = true
+        # send another email ?
+      end
+    else
+      @data[:name] = screen_name
     end
   end
 
+  def invite_only?
+    SiteSetting.invite_only? && !@data[:authenticated]
+  end
 end

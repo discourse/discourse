@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.OptionBooleanView = Discourse.GroupedView.extend({
+Discourse.OptionBooleanView = Discourse.View.extend({
   classNames: ['archetype-option'],
   composerControllerBinding: 'Discourse.router.composerController',
   templateName: "modal/option_boolean",
@@ -16,7 +16,12 @@ Discourse.OptionBooleanView = Discourse.GroupedView.extend({
     metaData = this.get('parentView.metaData');
     metaData.set(this.get('content.key'), this.get('checked') ? 'true' : 'false');
     return this.get('controller.controllers.composer').saveDraft();
-  }).observes('checked')
+  }).observes('checked'),
+
+  init: function() {
+    this._super();
+    return this.set('context', this.get('content'));
+  }
 
 });
 

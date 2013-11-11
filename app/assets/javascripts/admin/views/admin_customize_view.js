@@ -11,15 +11,19 @@
 Discourse.AdminCustomizeView = Discourse.View.extend({
   templateName: 'admin/templates/customize',
   classNames: ['customize'],
-  headerActive: Ember.computed.equal('selected', 'header'),
-  stylesheetActive: Ember.computed.equal('selected', 'stylesheet'),
-  mobileHeaderActive: Ember.computed.equal('selected', 'mobileHeader'),
-  mobileStylesheetActive: Ember.computed.equal('selected', 'mobileStylesheet'),
 
   init: function() {
     this._super();
     this.set('selected', 'stylesheet');
   },
+
+  headerActive: (function() {
+    return this.get('selected') === 'header';
+  }).property('selected'),
+
+  stylesheetActive: (function() {
+    return this.get('selected') === 'stylesheet';
+  }).property('selected'),
 
   selectHeader: function() {
     this.set('selected', 'header');
@@ -27,14 +31,6 @@ Discourse.AdminCustomizeView = Discourse.View.extend({
 
   selectStylesheet: function() {
     this.set('selected', 'stylesheet');
-  },
-
-  selectMobileHeader: function() {
-    this.set('selected', 'mobileHeader');
-  },
-
-  selectMobileStylesheet: function() {
-    this.set('selected', 'mobileStylesheet');
   },
 
   didInsertElement: function() {

@@ -2,7 +2,23 @@
 
 <div class='contents'>
 
-  {{render composerMessages}}
+  <div class='composer-popup-container'>
+    <div id='new-user-education' class='composer-popup' style='display: none'>
+      <a href='#' {{action closeEducation}} class='close'><i class='icon icon-remove-sign'></i></a>
+      {{{educationContents}}}
+    </div>
+
+    <div id='similar-topics' class='composer-popup' style='display: none'>
+      <a href='#' {{action closeSimilar}} class='close'><i class='icon icon-remove-sign'></i></a>
+      <h3>{{i18n composer.similar_topics}}<h3>
+
+      <ul class='topics'>
+        {{#each similarTopics}}
+          <li>{{{topicLink this}}} <span class='posts-count'>({{{i18n topic.filters.n_posts count="posts_count"}}})</span></li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
 
   <div class='control'>
     <a href='#' class='toggler' {{action toggle bubbles=false}} title='{{i18n composer.toggler}}'></a>
@@ -28,9 +44,9 @@
               {{popupInputTip validation=view.titleValidation shownAt=view.showTitleTip}}
             </div>
 
-            {{#unless model.privateMessage}}
+            {{#unless model.creatingPrivateMessage}}
               <div class="category-input">
-                {{categoryChooser valueAttribute="id" value=model.categoryId}}
+                {{categoryChooser valueAttribute="name" value=model.categoryName showUncategorized="true"}}
                 {{popupInputTip validation=view.categoryValidation shownAt=view.showCategoryTip}}
               </div>
               {{#if model.archetype.hasOptions}}

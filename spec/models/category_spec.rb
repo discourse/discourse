@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require 'spec_helper'
-require_dependency 'post_creator'
 
 describe Category do
   it { should validate_presence_of :user_id }
@@ -18,7 +17,7 @@ describe Category do
   it { should have_many :topics }
   it { should have_many :category_featured_topics }
   it { should have_many :featured_topics }
-  it { should belong_to :parent_category}
+
 
   describe "resolve_permissions" do
     it "can determine read_restricted" do
@@ -31,9 +30,6 @@ describe Category do
 
   describe "topic_create_allowed and post_create_allowed" do
     it "works" do
-
-      # NOTE we also have the uncategorized category ... hence the increased count
-
       default_category = Fabricate(:category)
       full_category = Fabricate(:category)
       can_post_category = Fabricate(:category)
@@ -57,26 +53,25 @@ describe Category do
       can_read_category.save
 
       guardian = Guardian.new(admin)
-      Category.topic_create_allowed(guardian).count.should == 5
-      Category.post_create_allowed(guardian).count.should == 5
-      Category.secured(guardian).count.should == 5
+      Category.topic_create_allowed(guardian).count.should == 4
+      Category.post_create_allowed(guardian).count.should == 4
+      Category.secured(guardian).count.should == 4
 
       guardian = Guardian.new(user)
-      Category.secured(guardian).count.should == 5
-      Category.post_create_allowed(guardian).count.should == 4
-      Category.topic_create_allowed(guardian).count.should == 3 # explicitly allowed once, default allowed once
+      Category.secured(guardian).count.should == 4
+      Category.post_create_allowed(guardian).count.should == 3
+      Category.topic_create_allowed(guardian).count.should == 2 # explicitly allowed once, default allowed once
 
       # everyone has special semantics, test it as well
       can_post_category.set_permissions(:everyone => :create_post)
       can_post_category.save
 
-      Category.post_create_allowed(guardian).count.should == 4
-
-      # anonymous has permission to create no topics
-      guardian = Guardian.new(nil)
-      Category.post_create_allowed(guardian).count.should == 0
-
+      Category.post_create_allowed(guardian).count.should == 3
     end
+
+  end
+
+  describe "post_create_allowed" do
 
   end
 
@@ -108,16 +103,22 @@ describe Category do
     end
 
     it "lists all secured categories correctly" do
-      uncategorized = Category.first
-
       group.add(user)
       category.set_permissions(group.id => :full)
       category.save
       category_2.set_permissions(group.id => :full)
       category_2.save
 
-      Category.secured.should =~ [uncategorized]
-      Category.secured(Guardian.new(user)).should =~ [uncategorized,category, category_2]
+      Category.secured.should =~ []
+      Category.secured(Guardian.new(user)).should =~ [category, category_2]
+    end
+  end
+
+  describe "uncategorized name" do
+    let(:category) { Fabricate.build(:category, name: SiteSetting.uncategorized_name) }
+
+    it "is invalid to create a category with the reserved name" do
+      category.should_not be_valid
     end
   end
 
@@ -246,31 +247,6 @@ describe Category do
     end
   end
 
-  describe 'latest' do
-    it 'should be updated correctly' do
-      category = Fabricate(:category)
-      post = create_post(category: category.name)
-
-      category.reload
-      category.latest_post_id.should == post.id
-      category.latest_topic_id.should == post.topic_id
-
-      post2 = create_post(category: category.name)
-      post3 = create_post(topic_id: post.topic_id, category: category.name)
-
-      category.reload
-      category.latest_post_id.should == post3.id
-      category.latest_topic_id.should == post2.topic_id
-
-
-      destroyer = PostDestroyer.new(Fabricate(:admin), post3)
-      destroyer.destroy
-
-      category.reload
-      category.latest_post_id.should == post2.id
-    end
-  end
-
   describe 'update_stats' do
     before do
       @category = Fabricate(:category)
@@ -278,7 +254,7 @@ describe Category do
 
     context 'with regular topics' do
       before do
-        create_post(user: @category.user, category: @category.name)
+        @category.topics << Fabricate(:topic, user: @category.user)
         Category.update_stats
         @category.reload
       end
@@ -288,7 +264,6 @@ describe Category do
         @category.topics_month.should == 1
         @category.topics_year.should == 1
         @category.topic_count.should == 1
-        @category.post_count.should == 1
       end
 
     end
@@ -306,36 +281,8 @@ describe Category do
         @category.topic_count.should == 0
         @category.topics_month.should == 0
         @category.topics_year.should == 0
-        @category.post_count.should == 0
       end
 
     end
   end
-
-
-  describe "parent categories" do
-    let(:user) { Fabricate(:user) }
-    let(:parent_category) { Fabricate(:category, user: user) }
-
-    it "can be associated with a parent category" do
-      sub_category = Fabricate.build(:category, parent_category_id: parent_category.id, user: user)
-      sub_category.should be_valid
-      sub_category.parent_category.should == parent_category
-    end
-
-    it "cannot associate a category with itself" do
-      category = Fabricate(:category, user: user)
-      category.parent_category_id = category.id
-      category.should_not be_valid
-    end
-
-    it "cannot have a category two levels deep" do
-      sub_category = Fabricate(:category, parent_category_id: parent_category.id, user: user)
-      nested_sub_category = Fabricate.build(:category, parent_category_id: sub_category.id, user: user)
-      nested_sub_category.should_not be_valid
-
-    end
-
-  end
-
 end

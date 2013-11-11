@@ -7,10 +7,12 @@ class Draft < ActiveRecord::Base
     d = find_draft(user,key)
     if d
       return if d.sequence > sequence
-      d.update_columns(data: data, sequence: sequence)
+      d.data = data
+      d.sequence = sequence
     else
-      Draft.create!(user_id: user.id, draft_key: key, data: data, sequence: sequence)
+      d = Draft.new(user_id: user.id, draft_key: key, data: data, sequence: sequence)
     end
+    d.save!
   end
 
   def self.get(user, key, sequence)

@@ -32,33 +32,21 @@ Discourse.Site = Discourse.Model.extend({
   }
 });
 
-Discourse.Site.reopenClass(Discourse.Singleton, {
+Discourse.Site.reopenClass({
 
-  /**
-    The current singleton will retrieve its attributes from the `PreloadStore`.
-
-    @method createCurrent
-    @returns {Discourse.Site} the site
-  **/
-  createCurrent: function() {
-    return Discourse.Site.create(PreloadStore.get('site'));
+  instance: function() {
+    if ( this._site ) return this._site;
+    this._site = Discourse.Site.create(PreloadStore.get('site'));
+    return this._site;
   },
 
-  create: function() {
-    var result = this._super.apply(this, arguments);
+  create: function(obj) {
+    var _this = this;
+    var result = this._super(obj);
 
     if (result.categories) {
-      var byId = {};
       result.categories = _.map(result.categories, function(c) {
-        byId[c.id] = Discourse.Category.create(c);
-        return byId[c.id];
-      });
-
-      // Associate the categories with their parents
-      result.categories.forEach(function (c) {
-        if (c.get('parent_category_id')) {
-          c.set('parentCategory', byId[c.get('parent_category_id')]);
-        }
+        return Discourse.Category.create(c);
       });
     }
 

@@ -12,7 +12,6 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
 
   topicController: Em.computed.alias('controllers.topic'),
   selectedPosts: Em.computed.alias('topicController.selectedPosts'),
-  selectedReplies: Em.computed.alias('topicController.selectedReplies'),
   allPostsSelected: Em.computed.alias('topicController.allPostsSelected'),
 
   buttonDisabled: function() {
@@ -25,10 +24,6 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
     return I18n.t('topic.merge_topic.title');
   }.property('saving'),
 
-  onShow: function() {
-    this.set('controllers.modal.modalClass', 'split-modal');
-  },
-
   movePostsToExistingTopic: function() {
     this.set('saving', true);
 
@@ -36,13 +31,10 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
     if (this.get('allPostsSelected')) {
       promise = Discourse.Topic.mergeTopic(this.get('id'), this.get('selectedTopicId'));
     } else {
-      var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); }),
-          replyPostIds = this.get('selectedReplies').map(function(p) { return p.get('id'); });
-
+      var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); });
       promise = Discourse.Topic.movePosts(this.get('id'), {
         destination_topic_id: this.get('selectedTopicId'),
-        post_ids: postIds,
-        reply_post_ids: replyPostIds
+        post_ids: postIds
       });
     }
 
@@ -50,7 +42,7 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
     promise.then(function(result) {
       // Posts moved
       mergeTopicController.send('closeModal');
-      mergeTopicController.get('topicController').send('toggleMultiSelect');
+      mergeTopicController.get('topicController').toggleMultiSelect();
       Em.run.next(function() { Discourse.URL.routeTo(result.url); });
     }, function() {
       // Error moving posts

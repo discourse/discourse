@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe TopicsController do
 
+
+
   context 'wordpress' do
     let!(:user) { log_in(:moderator) }
     let(:p1) { Fabricate(:post, user: user) }
@@ -62,8 +64,8 @@ describe TopicsController do
         let(:p2) { Fabricate(:post, user: user) }
 
         before do
-          Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah', category_id: 123).returns(topic)
-          xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p2.id], category_id: 123
+          Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah').returns(topic)
+          xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p2.id]
         end
 
         it "returns success" do
@@ -90,27 +92,6 @@ describe TopicsController do
         end
       end
     end
-
-    describe "moving replied posts" do
-      let!(:user) { log_in(:moderator) }
-      let!(:p1) { Fabricate(:post, user: user) }
-      let!(:topic) { p1.topic }
-      let!(:p2) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: p1.post_number ) }
-
-      context 'success' do
-
-        before do
-          PostReply.create(post_id: p1.id, reply_id: p2.id)
-        end
-
-        it "moves the child posts too" do
-          Topic.any_instance.expects(:move_posts).with(user, [p1.id, p2.id], title: 'blah').returns(topic)
-          xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p1.id], reply_post_ids: [p1.id]
-        end
-      end
-
-    end
-
 
     describe 'moving to an existing topic' do
       let!(:user) { log_in(:moderator) }
@@ -525,7 +506,7 @@ describe TopicsController do
 
     it 'tracks a visit for all html requests' do
       current_user = log_in(:coding_horror)
-      TopicUser.expects(:track_visit!).with(topic.id, current_user.id)
+      TopicUser.expects(:track_visit!).with(topic, current_user)
       get :show, topic_id: topic.id, slug: topic.slug
     end
 
@@ -637,31 +618,13 @@ describe TopicsController do
         end
 
         it 'triggers a change of category' do
-          Topic.any_instance.expects(:change_category).with('incredible').returns(true)
+          Topic.any_instance.expects(:change_category).with('incredible')
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category: 'incredible'
         end
 
         it "returns errors with invalid titles" do
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'asdf'
           expect(response).not_to be_success
-        end
-
-        it "returns errors with invalid categories" do
-          Topic.any_instance.expects(:change_category).returns(false)
-          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category: ''
-          expect(response).not_to be_success
-        end
-
-        context "allow_uncategorized_topics is false" do
-          before do
-            SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
-          end
-
-          it "can add a category to an uncategorized topic" do
-            Topic.any_instance.expects(:change_category).with('incredible').returns(true)
-            xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category: 'incredible'
-            response.should be_success
-          end
         end
 
       end

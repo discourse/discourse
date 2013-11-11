@@ -5,11 +5,13 @@ class View < ActiveRecord::Base
   belongs_to :user
   validates_presence_of :parent_type, :parent_id, :ip_address, :viewed_at
 
-  def self.create_for_parent(parent_class, parent_id, ip, user_id)
+  # TODO: This could happen asyncronously
+  def self.create_for(parent, ip, user=nil)
+
     # Only store a view once per day per thing per user per ip
-    redis_key = "view:#{parent_class.name}:#{parent_id}:#{Date.today.to_s}"
-    if user_id
-      redis_key << ":user-#{user_id}"
+    redis_key = "view:#{parent.class.name}:#{parent.id}:#{Date.today.to_s}"
+    if user.present?
+      redis_key << ":user-#{user.id}"
     else
       redis_key << ":ip-#{ip}"
     end
@@ -18,19 +20,14 @@ class View < ActiveRecord::Base
       $redis.expire(redis_key, 1.day.to_i)
 
       View.transaction do
-        View.create!(parent_id: parent_id, parent_type: parent_class.to_s, ip_address: ip, viewed_at: Date.today, user_id: user_id)
+        View.create(parent: parent, ip_address: ip, viewed_at: Date.today, user: user)
 
         # Update the views count in the parent, if it exists.
-        if parent_class.columns_hash["views"]
-          parent_class.where(id: parent_id).update_all 'views = views + 1'
+        if parent.respond_to?(:views)
+          parent.class.where(id: parent.id).update_all 'views = views + 1'
         end
       end
     end
-  end
-
-  def self.create_for(parent, ip, user=nil)
-    user_id = user.id if user
-    create_for_parent(parent.class, parent.id, ip, user_id)
   end
 end
 
@@ -46,7 +43,6 @@ end
 #
 # Indexes
 #
-#  index_views_on_parent_id_and_parent_type              (parent_id,parent_type)
-#  index_views_on_user_id_and_parent_type_and_parent_id  (user_id,parent_type,parent_id)
+#  index_views_on_parent_id_and_parent_type  (parent_id,parent_type)
 #
 

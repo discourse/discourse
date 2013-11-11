@@ -6,23 +6,16 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminEmailPreviewDigestController = Discourse.ObjectController.extend({
+Discourse.AdminEmailPreviewDigestController = Discourse.ObjectController.extend(Discourse.Presence, {
 
-  actions: {
-    refresh: function() {
-      var model = this.get('model'),
-          self = this;
-
-      self.set('loading', true);
-      Discourse.EmailPreview.findDigest(this.get('lastSeen')).then(function (email) {
-        model.setProperties(email.getProperties('html_content', 'text_content'));
-        self.set('loading', false);
-      });
-    },
-
-    toggleShowHtml: function() {
-      this.toggleProperty('showHtml');
-    }
+  refresh: function() {
+    var model = this.get('model');
+    var controller = this;
+    controller.set('loading', true);
+    Discourse.EmailPreview.findDigest(this.get('lastSeen')).then(function (email) {
+      model.setProperties(email.getProperties('html_content', 'text_content'));
+      controller.set('loading', false);
+    });
   }
 
 });

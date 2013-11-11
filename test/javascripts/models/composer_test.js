@@ -176,31 +176,3 @@ test('clearState', function() {
   blank(composer.get('title'));
 
 });
-
-test('initial category when uncategorized is allowed', function() {
-  Discourse.SiteSettings.allow_uncategorized_topics = true;
-  var composer = Discourse.Composer.open({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
-  equal(composer.get('categoryId'),undefined,"Uncategorized by default");
-});
-
-test('initial category when uncategorized is not allowed', function() {
-  Discourse.SiteSettings.allow_uncategorized_topics = false;
-  var composer = Discourse.Composer.open({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
-  ok(composer.get('categoryId') === undefined, "Uncategorized by default. Must choose a category.");
-});
-
-test('showPreview', function() {
-  var new_composer = function() {
-    return Discourse.Composer.open({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
-  };
-
-  Discourse.Mobile.mobileView = true;
-  equal(new_composer().get('showPreview'), false, "Don't show preview in mobile view");
-
-  Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: 'true' });
-  equal(new_composer().get('showPreview'), false, "Don't show preview in mobile view even if KeyValueStore wants to");
-  Discourse.KeyValueStore.remove('composer.showPreview');
-
-  Discourse.Mobile.mobileView = false;
-  equal(new_composer().get('showPreview'), true, "Show preview by default in desktop view");
-});

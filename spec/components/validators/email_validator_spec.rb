@@ -8,13 +8,13 @@ describe EmailValidator do
 
   context "blocked email" do
     it "doesn't add an error when email doesn't match a blocked email" do
-      ScreenedEmail.stubs(:should_block?).with(record.email).returns(false)
+      BlockedEmail.stubs(:should_block?).with(record.email).returns(false)
       validate
       record.errors[:email].should_not be_present
     end
 
     it "adds an error when email matches a blocked email" do
-      ScreenedEmail.stubs(:should_block?).with(record.email).returns(true)
+      BlockedEmail.stubs(:should_block?).with(record.email).returns(true)
       validate
       record.errors[:email].should be_present
     end

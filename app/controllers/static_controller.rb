@@ -1,11 +1,8 @@
 class StaticController < ApplicationController
 
   skip_before_filter :check_xhr, :redirect_to_login_if_required
-  skip_before_filter :verify_authenticity_token, only: [:enter]
 
   def show
-
-    return redirect_to('/') if current_user && params[:id] == 'login'
 
     map = {
       "faq" => "faq_url",

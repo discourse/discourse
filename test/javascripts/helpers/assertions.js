@@ -1,4 +1,12 @@
 // Test helpers
+// var resolvingPromise = Ember.Deferred.promise(function (p) {
+//   p.resolve();
+// });
+
+// var resolvingPromiseWith = function(result) {
+//   return Ember.Deferred.promise(function (p) { p.resolve(result); });
+// };
+
 function exists(selector) {
   return !!count(selector);
 }

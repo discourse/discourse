@@ -1,7 +1,7 @@
 <div class='container'>
   <div class='contents clearfix'>
 
-    {{discourse-logo minimized=showExtraInfo}}
+    {{view.logoHTML}}
 
     {{#if showExtraInfo}}
       <div class="extra-info-wrapper">
@@ -10,7 +10,6 @@
             <a {{bindAttr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="topic.favoriteTooltip"}}></a>
           {{/if}}
           <h1>
-          {{boundCategoryLink topic.category}}
           {{#if topic.details.loaded}}
             {{topicStatus topic=topic}}
             <a class='topic-link' href='{{unbound topic.url}}'>{{{topic.fancy_title}}}</a>
@@ -21,6 +20,7 @@
               {{i18n topic.loading}}
             {{/if}}
           {{/if}}
+          {{boundCategoryLink topic.category}}
           </h1>
         </div>
       </div>
@@ -30,7 +30,7 @@
       {{#unless showExtraInfo}}
         <div class='current-username'>
           {{#if currentUser}}
-            <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.name}}</a></span>
+          <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.name}}</a></span>
           {{else}}
             <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/if}}
@@ -85,7 +85,7 @@
         </li>
         <li class='current-user'>
           {{#if currentUser}}
-            {{#link-to 'userActivity.index' currentUser titleKey="current_user" class="icon"}}{{boundAvatar currentUser imageSize="medium" }}{{/link-to}}
+            {{#linkTo 'userActivity.index' currentUser titleKey="current_user" class="icon"}}{{avatar currentUser imageSize="medium" }}{{/linkTo}}
           {{else}}
             <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='icon-user'></i></div>
           {{/if}}
@@ -123,28 +123,17 @@
           {{#titledLinkTo "list.latest" titleKey="filters.latest.help"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
         </li>
         <li>{{faqLink}}</li>
-        {{#if showMobileToggle}}
-          <li>
-            <a href="#" {{action toggleMobileView}}>
-              {{#if mobileView}}
-                {{i18n desktop_view}}
-              {{else}}
-                {{i18n mobile_view}}
-              {{/if}}
-            </a>
-          </li>
-        {{/if}}
       </ul>
 
       {{#if categories}}
         <ul class="category-links">
           <li class='heading' title="{{i18n filters.categories.help}}">
-            {{#link-to "list.categories"}}{{i18n filters.categories.title}}{{/link-to}}
+            {{#linkTo "list.categories"}}{{i18n filters.categories.title}}{{/linkTo}}
           </li>
 
           {{#each categories}}
             <li class='category'>
-              {{categoryLink this allowUncategorized=true}}
+              {{categoryLink this}}
               <b>{{unbound topic_count}}</b></a>
             </li>
           {{/each}}

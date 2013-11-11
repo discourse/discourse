@@ -1,10 +1,14 @@
-require "digest/sha1"
-require "image_sizer"
+require 'digest/sha1'
+require 'image_sizer'
+require 'tempfile'
+require 'pathname'
+require_dependency 's3_store'
+require_dependency 'local_store'
 
 class Upload < ActiveRecord::Base
   belongs_to :user
 
-  has_many :post_uploads, dependent: :destroy
+  has_many :post_uploads
   has_many :posts, through: :post_uploads
 
   has_many :optimized_images, dependent: :destroy
@@ -12,49 +16,39 @@ class Upload < ActiveRecord::Base
   validates_presence_of :filesize
   validates_presence_of :original_filename
 
-  def thumbnail(width = self.width, height = self.height)
+  def thumbnail
     optimized_images.where(width: width, height: height).first
   end
 
-  def has_thumbnail?(width, height)
-    thumbnail(width, height).present?
+  def thumbnail_url
+    thumbnail.url if has_thumbnail?
   end
 
-  def create_thumbnail!(width, height)
+  def has_thumbnail?
+    thumbnail.present?
+  end
+
+  def create_thumbnail!
     return unless SiteSetting.create_thumbnails?
+    return if SiteSetting.enable_s3_uploads?
+    return if has_thumbnail?
     thumbnail = OptimizedImage.create_for(self, width, height)
-    if thumbnail
-      optimized_images << thumbnail
-      self.width = width
-      self.height = height
-      save!
-    end
+    optimized_images << thumbnail if thumbnail
   end
 
   def destroy
     Upload.transaction do
-      Discourse.store.remove_upload(self)
+      Upload.remove_file url
       super
     end
   end
 
-  def extension
-    File.extname(original_filename)
-  end
-
-  def self.create_for(user_id, file, filesize, origin = nil)
+  def self.create_for(user_id, file, filesize)
     # compute the sha
     sha1 = Digest::SHA1.file(file.tempfile).hexdigest
     # check if the file has already been uploaded
-    upload = Upload.where(sha1: sha1).first
-    # delete the previously uploaded file if there's been an error
-    if upload && upload.url.blank?
-      upload.destroy
-      upload = nil
-    end
-    # create the upload
-    unless upload
-      # deal with width & height for images
+    unless upload = Upload.where(sha1: sha1).first
+      # deal with width & heights for images
       if SiteSetting.authorized_image?(file)
         # retrieve image info
         image_info = FastImage.new(file.tempfile, raise_on_failure: true)
@@ -63,10 +57,8 @@ class Upload < ActiveRecord::Base
         # make sure we're at the beginning of the file (FastImage is moving the pointer)
         file.rewind
       end
-      # trim the origin if any
-      origin = origin[0...1000] if origin
       # create a db record (so we can use the id)
-      upload = Upload.create!(
+      upload = Upload.create!({
         user_id: user_id,
         original_filename: file.original_filename,
         filesize: filesize,
@@ -74,25 +66,46 @@ class Upload < ActiveRecord::Base
         url: "",
         width: width,
         height: height,
-        origin: origin,
-      )
+      })
       # store the file and update its url
-      url = Discourse.store.store_upload(file, upload)
-      if url.present?
-        upload.url = url
-        upload.save
-      else
-        Rails.logger.error("Failed to store upload ##{upload.id} for user ##{user_id}")
-      end
+      upload.url = Upload.store_file(file, sha1, upload.id)
+      # save the url
+      upload.save
     end
     # return the uploaded file
     upload
   end
 
+  def self.store_file(file, sha1, upload_id)
+    return S3Store.store_file(file, sha1, upload_id) if SiteSetting.enable_s3_uploads?
+    return LocalStore.store_file(file, sha1, upload_id)
+  end
+
+  def self.remove_file(url)
+    return S3Store.remove_file(url) if SiteSetting.enable_s3_uploads?
+    return LocalStore.remove_file(url)
+  end
+
+  def self.has_been_uploaded?(url)
+    is_relative?(url) || is_local?(url) || is_on_s3?(url)
+  end
+
+  def self.is_relative?(url)
+    url.start_with?(LocalStore.directory)
+  end
+
+  def self.is_local?(url)
+    !SiteSetting.enable_s3_uploads? && url.start_with?(LocalStore.base_url)
+  end
+
+  def self.is_on_s3?(url)
+    SiteSetting.enable_s3_uploads? && url.start_with?(S3Store.base_url)
+  end
+
   def self.get_from_url(url)
     # we store relative urls, so we need to remove any host/cdn
-    url = url.gsub(/^#{Discourse.asset_host}/i, "") if Discourse.asset_host.present?
-    Upload.where(url: url).first if Discourse.store.has_been_uploaded?(url)
+    url = url.gsub(/^#{LocalStore.asset_host}/i, "") if LocalStore.asset_host.present?
+    Upload.where(url: url).first if has_been_uploaded?(url)
   end
 
 end
@@ -114,9 +127,8 @@ end
 #
 # Indexes
 #
-#  index_uploads_on_id_and_url  (id,url)
-#  index_uploads_on_sha1        (sha1) UNIQUE
-#  index_uploads_on_url         (url)
-#  index_uploads_on_user_id     (user_id)
+#  index_uploads_on_sha1     (sha1) UNIQUE
+#  index_uploads_on_url      (url)
+#  index_uploads_on_user_id  (user_id)
 #
 

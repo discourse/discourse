@@ -1,15 +1,11 @@
-require_dependency 'enum_site_setting'
-
-class LocaleSiteSetting < EnumSiteSetting
+class LocaleSiteSetting
 
   def self.valid_value?(val)
     supported_locales.include?(val)
   end
 
   def self.values
-    supported_locales.map do |l|
-      {name: l, value: l}
-    end
+    supported_locales
   end
 
 

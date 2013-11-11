@@ -60,7 +60,8 @@ I18n.locale = null;
 // Set the placeholder format. Accepts `{{placeholder}}` and `%{placeholder}`.
 I18n.PLACEHOLDER = /(?:\{\{|%\{)(.*?)(?:\}\}?)/gm;
 
-I18n.fallbackRules = {};
+I18n.fallbackRules = {
+};
 
 I18n.pluralizationRules = {
   en: function (n) {
@@ -206,7 +207,7 @@ I18n.translate = function(scope, options) {
     } else {
       return this.interpolate(translation, options);
     }
-  } catch (error) {
+  } catch(err) {
     return this.missingTranslation(scope);
   }
 };
@@ -484,9 +485,15 @@ I18n.findAndTranslateValidNode = function(keys, translation) {
 I18n.pluralize = function(count, scope, options) {
   var translation;
 
-  try { translation = this.lookup(scope, options); } catch (error) {}
-  if (!translation) { return this.missingTranslation(scope); }
+  try {
+    translation = this.lookup(scope, options);
+  } catch (error) {}
 
+  if (!translation) {
+    return this.missingTranslation(scope);
+  }
+
+  var message;
   options = this.prepareOptions(options);
   options.count = count.toString();
 
@@ -494,16 +501,24 @@ I18n.pluralize = function(count, scope, options) {
   var key = pluralizer(Math.abs(count));
   var keys = ((typeof key == "object") && (key instanceof Array)) ? key : [key];
 
-  var message = this.findAndTranslateValidNode(keys, translation);
+  message = this.findAndTranslateValidNode(keys, translation);
   if (message == null) message = this.missingTranslation(scope, keys[0]);
 
   return this.interpolate(message, options);
 };
 
-I18n.missingTranslation = function(scope, key) {
-  var message = '[' + this.currentLocale() + "." + scope;
-  if (key) { message += "." + key; }
-  return message + ']';
+I18n.missingTranslation = function() {
+  var message = '[missing "' + this.currentLocale()
+    , count = arguments.length
+  ;
+
+  for (var i = 0; i < count; i++) {
+    message += "." + arguments[i];
+  }
+
+  message += '" translation]';
+
+  return message;
 };
 
 I18n.currentLocale = function() {

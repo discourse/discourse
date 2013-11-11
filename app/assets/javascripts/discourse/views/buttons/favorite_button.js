@@ -14,7 +14,7 @@ Discourse.FavoriteButton = Discourse.ButtonView.extend({
   shouldRerender: Discourse.View.renderIfChanged('controller.starred'),
 
   click: function() {
-    this.get('controller').send('toggleStar');
+    this.get('controller').toggleStar();
   },
 
   renderIcon: function(buffer) {

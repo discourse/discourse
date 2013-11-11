@@ -7,10 +7,24 @@
   @module Discourse
 **/
 Discourse.RepliesView = Ember.CollectionView.extend({
+  templateName: 'replies',
   tagName: 'section',
-  classNameBindings: [':embedded-posts', ':bottom', 'hidden'],
+  classNames: ['replies-list', 'embedded-posts', 'bottom'],
   itemViewClass: Discourse.EmbeddedPostView,
-  hidden: Em.computed.equal('content.length', 0)
+
+  repliesShown: (function() {
+    var $this = this.$();
+    if (this.get('parentView.repliesShown')) {
+      Em.run.schedule('afterRender', function() {
+        $this.slideDown();
+      });
+    } else {
+      Em.run.schedule('afterRender', function() {
+        $this.slideUp();
+      });
+    }
+  }).observes('parentView.repliesShown')
+
 });
 
 

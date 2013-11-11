@@ -13,13 +13,8 @@ Discourse.ShareView = Discourse.View.extend({
 
   title: function() {
     if (this.get('controller.type') === 'topic') return I18n.t('share.topic');
-    var postNumber = this.get('controller.postNumber');
-    if (postNumber) {
-      return I18n.t('share.post', {postNumber: this.get('controller.postNumber')});
-    } else {
-      return I18n.t('share.topic');
-    }
-  }.property('controller.type', 'controller.postNumber'),
+    return I18n.t('share.post');
+  }.property('controller.type'),
 
   hasLink: function() {
     if (this.present('controller.link')) return 'visible';
@@ -39,13 +34,13 @@ Discourse.ShareView = Discourse.View.extend({
   }.observes('controller.link'),
 
   didInsertElement: function() {
+
     var shareView = this;
     $('html').on('mousedown.outside-share-link', function(e) {
       // Use mousedown instead of click so this event is handled before routing occurs when a
       // link is clicked (which is a click event) while the share dialog is showing.
       if (shareView.$().has(e.target).length !== 0) { return; }
-
-      shareView.get('controller').send('close');
+      shareView.get('controller').close();
       return true;
     });
 
@@ -53,40 +48,18 @@ Discourse.ShareView = Discourse.View.extend({
       e.preventDefault();
       var $currentTarget = $(e.currentTarget);
       var url = $currentTarget.data('share-url');
-      var postNumber = $currentTarget.data('post-number');
       // Relative urls
 
       if (url.indexOf("/") === 0) {
         url = window.location.protocol + "//" + window.location.host + url;
       }
-
-      var shareLinkWidth = $('#share-link').width();
-      var x = e.pageX - (shareLinkWidth / 2);
-      if (x < 25) {
-        x = 25;
-      }
-      if (x + shareLinkWidth > $(window).width()) {
-        x -= shareLinkWidth / 2;
-      }
-
-      var header = $('.d-header');
-      var y = e.pageY - ($('#share-link').height() + 20);
-      if (y < header.offset().top + header.height()) {
-        y = e.pageY + 10;
-      }
-
-      $('#share-link').css({
-        left: "" + x + "px",
-        top: "" + y + "px"
-      });
-      shareView.set('controller.link', url);
-      shareView.set('controller.postNumber', postNumber);
+      shareView.get('controller').shareLink(e, url);
       return false;
     });
 
     $('html').on('keydown.share-view', function(e){
       if (e.keyCode === 27) {
-        shareView.get('controller').send('close');
+        shareView.get('controller').close();
       }
     });
   },

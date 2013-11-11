@@ -4,8 +4,7 @@ class HomePageConstraint
   end
 
   def matches?(request)
-    provider = Discourse.current_user_provider.new(request.env)
-    homepage = provider.current_user ? SiteSetting.homepage : SiteSetting.anonymous_homepage
+    homepage = request.session[:current_user_id].present? ? SiteSetting.homepage : SiteSetting.anonymous_homepage
     homepage == @filter
   end
 end

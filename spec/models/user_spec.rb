@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_dependency 'user'
 
 describe User do
 
@@ -22,6 +21,58 @@ describe User do
   it { should validate_presence_of :username }
   it { should validate_presence_of :email }
 
+  context '#update_view_counts' do
+
+    let(:user) { Fabricate(:user) }
+
+    context 'topics_entered' do
+      context 'without any views' do
+        it "doesn't increase the user's topics_entered" do
+          lambda { User.update_view_counts; user.reload }.should_not change(user, :topics_entered)
+        end
+      end
+
+      context 'with a view' do
+        let(:topic) { Fabricate(:topic) }
+        let!(:view) { View.create_for(topic, '127.0.0.1', user) }
+
+        it "adds one to the topics entered" do
+          User.update_view_counts
+          user.reload
+          user.topics_entered.should == 1
+        end
+
+        it "won't record a second view as a different topic" do
+          View.create_for(topic, '127.0.0.1', user)
+          User.update_view_counts
+          user.reload
+          user.topics_entered.should == 1
+        end
+
+      end
+    end
+
+    context 'posts_read_count' do
+      context 'without any post timings' do
+        it "doesn't increase the user's posts_read_count" do
+          lambda { User.update_view_counts; user.reload }.should_not change(user, :posts_read_count)
+        end
+      end
+
+      context 'with a post timing' do
+        let!(:post) { Fabricate(:post) }
+        let!(:post_timings) do
+          PostTiming.record_timing(msecs: 1234, topic_id: post.topic_id, user_id: user.id, post_number: post.post_number)
+        end
+
+        it "increases posts_read_count" do
+          User.update_view_counts
+          user.reload
+          user.posts_read_count.should == 1
+        end
+      end
+    end
+  end
 
   context '.enqueue_welcome_message' do
     let(:user) { Fabricate(:user) }
@@ -205,26 +256,13 @@ describe User do
     it { should_not be_approved }
     its(:approved_at) { should be_blank }
     its(:approved_by_id) { should be_blank }
+    its(:email_digests) { should be_true }
     its(:email_private_messages) { should be_true }
     its(:email_direct ) { should be_true }
+    its(:time_read) { should == 0}
 
-    context 'digest emails' do
-      it 'defaults to digests every week' do
-        subject.email_digests.should be_true
-        subject.digest_after_days.should == 7
-      end
-
-      it 'uses default_digest_email_frequency' do
-        SiteSetting.stubs(:default_digest_email_frequency).returns(1)
-        subject.email_digests.should be_true
-        subject.digest_after_days.should == 1
-      end
-
-      it 'disables digests by default if site setting says so' do
-        SiteSetting.stubs(:default_digest_email_frequency).returns('')
-        subject.email_digests.should be_false
-      end
-    end
+    # Default to digests after one week
+    its(:digest_after_days) { should == 7 }
 
     context 'after_save' do
       before do
@@ -234,21 +272,8 @@ describe User do
       its(:email_tokens) { should be_present }
       its(:bio_cooked) { should be_present }
       its(:bio_summary) { should be_present }
-    end
-  end
-
-  describe 'ip address validation' do
-    it 'validates ip_address for new users' do
-      u = Fabricate.build(:user)
-      AllowedIpAddressValidator.any_instance.expects(:validate_each).with(u, :ip_address, u.ip_address)
-      u.valid?
-    end
-
-    it 'does not validate ip_address when updating an existing user' do
-      u = Fabricate(:user)
-      u.ip_address = '87.123.23.11'
-      AllowedIpAddressValidator.any_instance.expects(:validate_each).never
-      u.valid?
+      its(:topics_entered) { should == 0 }
+      its(:posts_read_count) { should == 0 }
     end
   end
 
@@ -616,7 +641,7 @@ describe User do
     end
 
     it "should have 0 for days_visited" do
-      user.user_stat.days_visited.should == 0
+      user.days_visited.should == 0
     end
 
     describe 'with no previous values' do
@@ -637,7 +662,7 @@ describe User do
 
       it "should have 0 for days_visited" do
         user.reload
-        user.user_stat.days_visited.should == 1
+        user.days_visited.should == 1
       end
 
       it "should log a user_visit with the date" do
@@ -658,7 +683,7 @@ describe User do
         end
 
         it "doesn't increase days_visited twice" do
-          user.user_stat.days_visited.should == 1
+          user.days_visited.should == 1
         end
 
       end
@@ -681,6 +706,15 @@ describe User do
       end
 
     end
+  end
+
+  describe '#create_for_email' do
+    let(:subject) { User.create_for_email('walter.white@email.com') }
+    it { should be_present }
+    its(:username) { should == 'walter_white' }
+    its(:name) { should == 'walter_white'}
+    it { should_not be_active }
+    its(:email) { should == 'walter.white@email.com' }
   end
 
   describe 'email_confirmed?' do
@@ -763,6 +797,33 @@ describe User do
 
   end
 
+  describe 'update_time_read!' do
+    let(:user) { Fabricate(:user) }
+
+    it 'makes no changes if nothing is cached' do
+      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(nil)
+      user.update_time_read!
+      user.reload
+      user.time_read.should == 0
+    end
+
+    it 'makes a change if time read is below threshold' do
+      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(Time.now - 10.0)
+      user.update_time_read!
+      user.reload
+      user.time_read.should == 10
+    end
+
+    it 'makes no change if time read is above threshold' do
+      t = Time.now - 1 - User::MAX_TIME_READ_DIFF
+      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(t)
+      user.update_time_read!
+      user.reload
+      user.time_read.should == 0
+    end
+
+  end
+
   describe '#readable_name' do
     context 'when name is missing' do
       it 'returns just the username' do
@@ -781,108 +842,19 @@ describe User do
     end
   end
 
-  describe '.find_by_username_or_email' do
-    it 'finds users' do
-      bob = Fabricate(:user, username: 'bob', email: 'bob@example.com')
-      found_user = User.find_by_username_or_email('Bob')
-      expect(found_user).to eq bob
+  describe '#find_by_username_or_email' do
+    it 'works correctly' do
+      bob = Fabricate(:user, username: 'bob', name: 'bobs', email: 'bob@bob.com')
+      bob2 = Fabricate(:user, username: 'bob2', name: 'bobs', email: 'bob2@bob.com')
 
-      found_user = User.find_by_username_or_email('bob@Example.com')
-      expect(found_user).to eq bob
+      expect(User.find_by_username_or_email('bob22@bob.com')).to eq(nil)
+      expect(User.find_by_username_or_email('bobs')).to eq(nil)
 
-      found_user = User.find_by_username_or_email('Bob@Example.com')
-      expect(found_user).to be_nil
+      expect(User.find_by_username_or_email('bob2')).to eq(bob2)
+      expect(User.find_by_username_or_email('bob2@BOB.com')).to eq(bob2)
 
-      found_user = User.find_by_username_or_email('bob1')
-      expect(found_user).to be_nil
-
-      found_user = User.find_by_email('bob@Example.com')
-      expect(found_user).to eq bob
-
-      found_user = User.find_by_email('bob')
-      expect(found_user).to be_nil
-
-      found_user = User.find_by_username('bOb')
-      expect(found_user).to eq bob
-    end
-
-  end
-
-  describe "#added_a_day_ago?" do
-    context "when user is more than a day old" do
-      subject(:user) { Fabricate(:user, created_at: Date.today - 2.days) }
-
-      it "returns false" do
-        expect(user).to_not be_added_a_day_ago
-      end
-    end
-
-    context "is less than a day old" do
-      subject(:user) { Fabricate(:user) }
-
-      it "returns true" do
-        expect(user).to be_added_a_day_ago
-      end
+      expect(User.find_by_username_or_email('bob')).to eq(bob)
+      expect(User.find_by_username_or_email('bob@BOB.com')).to eq(bob)
     end
   end
-
-  describe "#update_avatar" do
-    let(:upload) { Fabricate(:upload) }
-    let(:user)   { Fabricate(:user) }
-
-    it "should update use's avatar" do
-      expect(user.update_avatar(upload)).to be_true
-    end
-  end
-
-  describe 'api keys' do
-    let(:admin) { Fabricate(:admin) }
-    let(:other_admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
-
-    describe '.generate_api_key' do
-
-      it "generates an api key when none exists, and regenerates when it does" do
-        expect(user.api_key).to be_blank
-
-        # Generate a key
-        api_key = user.generate_api_key(admin)
-        expect(api_key.user).to eq(user)
-        expect(api_key.key).to be_present
-        expect(api_key.created_by).to eq(admin)
-
-        user.reload
-        expect(user.api_key).to eq(api_key)
-
-        # Regenerate a key. Keeps the same record, updates the key
-        new_key = user.generate_api_key(other_admin)
-        expect(new_key.id).to eq(api_key.id)
-        expect(new_key.key).to_not eq(api_key.key)
-        expect(new_key.created_by).to eq(other_admin)
-      end
-
-    end
-
-    describe '.revoke_api_key' do
-
-      it "revokes an api key when exists" do
-        expect(user.api_key).to be_blank
-
-        # Revoke nothing does nothing
-        user.revoke_api_key
-        user.reload
-        expect(user.api_key).to be_blank
-
-        # When a key is present it is removed
-        user.generate_api_key(admin)
-        user.reload
-        user.revoke_api_key
-        user.reload
-        expect(user.api_key).to be_blank
-      end
-
-    end
-
-  end
-
 end

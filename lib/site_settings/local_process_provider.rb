@@ -4,20 +4,16 @@ class SiteSettings::LocalProcessProvider
 
   Setting = Struct.new(:name, :value, :data_type) unless defined? SiteSettings::LocalProcessProvider::Setting
 
-  def initialize(defaults = {})
+  def initialize
     @settings = {}
-    @defaults = {}
-    defaults.each do |name,(value,data_type)|
-      @defaults[name] = Setting.new(name,value,data_type)
-    end
   end
 
   def all
-    (@defaults.merge @settings).values
+    @settings.values
   end
 
   def find(name)
-    @settings[name] || @defaults[name]
+    @settings[name]
   end
 
   def save(name, value, data_type)

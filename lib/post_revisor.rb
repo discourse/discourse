@@ -12,7 +12,6 @@ class PostRevisor
     return false if not should_revise?
 
     @post.acting_user = @user
-    @post.updated_by = @user
     revise_post
     update_category_description
     post_process_post

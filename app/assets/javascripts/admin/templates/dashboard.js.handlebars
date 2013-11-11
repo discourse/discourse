@@ -13,7 +13,7 @@
         </p>
         <p class="actions">
           <small>{{i18n admin.dashboard.last_checked}}: {{problemsTimestamp}}</small>
-          <button {{action refreshProblems}} class="btn btn-small"><i class="icon icon-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
+          <button {{action loadProblems}} class="btn btn-small"><i class="icon icon-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
         </p>
       </div>
       <div class="clearfix"></div>
@@ -25,7 +25,7 @@
         <div class="problem-messages">
           <p>
             {{i18n admin.dashboard.no_problems}}
-            <button {{action refreshProblems}} class="btn btn-small"><i class="icon icon-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
+            <button {{action loadProblems}} class="btn btn-small"><i class="icon icon-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
           </p>
         </div>
         <div class="clearfix"></div>
@@ -62,26 +62,16 @@
               {{#if versionCheck.staleData}}
                 <td class="version-number">&nbsp;</td>
                 <td class="face">
-                  {{#if versionCheck.version_check_pending}}
-                    <span class='icon up-to-date'>☻</span>
-                  {{else}}
-                    <span class="icon critical-updates-available">☹</span>
-                  {{/if}}
+                  <span class="icon critical-updates-available">☹</span>
                 </td>
                 <td class="version-notes">
-                  <span class="normal-note">
-                    {{#if versionCheck.version_check_pending}}
-                      {{i18n admin.dashboard.version_check_pending}}
-                    {{else}}
-                      {{i18n admin.dashboard.stale_data}}
-                    {{/if}}
-                  </span>
+                  <span class="normal-note">{{i18n admin.dashboard.stale_data}}</span>
                 </td>
               {{else}}
                 <td class="version-number">{{ versionCheck.latest_version }}</td>
                 <td class="face">
                   {{#if versionCheck.upToDate }}
-                    <span class='icon up-to-date'>☻</span>
+                    <span class='icon update-to-date'>☻</span>
                   {{else}}
                     <span {{bindAttr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
                       {{#if versionCheck.behindByOneVersion}}
@@ -131,15 +121,15 @@
     <table>
       <tr>
         <td class="title"><i class='icon icon-trophy'></i> {{i18n admin.dashboard.admins}}</td>
-        <td class="value">{{#link-to 'adminUsersList.admins'}}{{admins}}{{/link-to}}</td>
-        <td class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.suspended}}</td>
-        <td class="value">{{#link-to 'adminUsersList.suspended'}}{{suspended}}{{/link-to}}</td>
+        <td class="value">{{#linkTo 'adminUsersList.admins'}}{{admins}}{{/linkTo}}</td>
+        <td class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.banned}}</td>
+        <td class="value">{{#linkTo 'adminUsersList.banned'}}{{banned}}{{/linkTo}}</td>
       </tr>
       <tr>
         <td class="title"><i class='icon icon-magic'></i> {{i18n admin.dashboard.moderators}}</td>
-        <td class="value">{{#link-to 'adminUsersList.moderators'}}{{moderators}}{{/link-to}}</td>
+        <td class="value">{{#linkTo 'adminUsersList.moderators'}}{{moderators}}{{/linkTo}}</td>
         <td class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.blocked}}</td>
-        <td class="value">{{#link-to 'adminUsersList.blocked'}}{{blocked}}{{/link-to}}</td>
+        <td class="value">{{#linkTo 'adminUsersList.blocked'}}{{blocked}}{{/linkTo}}</td>
       </tr>
     </table>
   </div>
@@ -246,6 +236,7 @@
           <th class="title">{{top_traffic_sources.title}} ({{i18n admin.dashboard.reports.last_30_days}})</th>
           <th>{{top_traffic_sources.ytitles.num_clicks}}</th>
           <th>{{top_traffic_sources.ytitles.num_topics}}</th>
+          <th>{{top_traffic_sources.ytitles.num_users}}</th>
         </tr>
       </thead>
       {{#unless loading}}
@@ -255,6 +246,7 @@
               <td class="title">{{domain}}</td>
               <td class="value">{{num_clicks}}</td>
               <td class="value">{{num_topics}}</td>
+              <td class="value">{{num_users}}</td>
             </tr>
           </tbody>
         {{/each}}
@@ -275,7 +267,7 @@
         {{#each top_referrers.data}}
           <tbody>
             <tr>
-              <td class="title">{{#link-to 'adminUser' this}}{{unbound username}}{{/link-to}}</td>
+              <td class="title">{{#linkTo 'adminUser' this}}{{unbound username}}{{/linkTo}}</td>
               <td class="value">{{num_clicks}}</td>
               <td class="value">{{num_topics}}</td>
             </tr>
@@ -284,11 +276,5 @@
       {{/unless}}
     </table>
   </div>
-</div>
-<div class='clearfix'></div>
-
-<div class="dashboard-stats pull-right">
-  <div class="pull-right">{{i18n admin.dashboard.last_updated}} {{updatedTimestamp}}</div>
-  <div class='clearfix'></div>
 </div>
 <div class='clearfix'></div>

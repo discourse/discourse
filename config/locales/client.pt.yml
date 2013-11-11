@@ -181,6 +181,8 @@ pt:
         title: "Último endereço IP"
       avatar:
         title: "Avatar"
+        instructions: "Nós utilizamos <a href='https://gravatar.com' target='_blank'>Gravatar</a> para os avatares baseados no teu email"
+
       filters:
         all: "Todos"
 
@@ -302,8 +304,10 @@ pt:
     upload_selector:
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da internet"
+      add_title: "Adicionar Imagem"
       remote_tip: "insere o endereço de uma imagem no formato http://example.com/image.jpg"
       local_tip: "clica para selecionar uma imagem no teu dispositivo."
+      upload_title: "Enviar"
       uploading: "A enviar imagem"
 
     search:
@@ -330,6 +334,7 @@ pt:
       footer: "Não há mais tópicos neste categoria. <a href=\"/categories\">Procurar todas as categorias</a> ou <a href=\"/\">ver tópicos populares</a>"
 
     topic:
+      create_in: 'Criar Tópico sobre {{categoryName}}'
       create: 'Criar Tópico'
       create_long: 'Criar um novo Tópico'
       private_message: 'Começar uma nova conversa privada'
@@ -682,13 +687,13 @@ pt:
           other: "aprovar utilizadores ({{count}})"
 
       user:
-        suspend_failed: "Algo correu mal ao banir este utilizador {{error}}"
-        unsuspend_failed: "Algo não correu bem ao desbanir este utilizador {{error}}"
-        suspend_duration: "Por quanto tempo gostarias de banir a pessoa? (dias)"
+        ban_failed: "Algo correu mal ao banir este utilizador {{error}}"
+        unban_failed: "Algo não correu bem ao desbanir este utilizador {{error}}"
+        ban_duration: "Por quanto tempo gostarias de banir a pessoa? (dias)"
         delete_all_posts: "Apagar todos os posts"
-        suspend: "Banir"
-        unsuspend: "Desbanir"
-        suspended: "Banido?"
+        ban: "Banir"
+        unban: "Desbanir"
+        banned: "Banido?"
         moderator: "Moderador?"
         admin: "Admin?"
         show_admin_profile: "Admin"

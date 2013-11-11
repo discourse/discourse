@@ -22,23 +22,18 @@ var CLOSED = 'closed',
 Discourse.Composer = Discourse.Model.extend({
 
   archetypes: function() {
-    return Discourse.Site.currentProp('archetypes');
+    return Discourse.Site.instance().get('archetypes');
   }.property(),
 
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
-  notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
-
-  privateMessage: function(){
-    return this.get('creatingPrivateMessage') || this.get('topic.archetype') === 'private_message';
-  }.property('creatingPrivateMessage', 'topic'),
-
   editingPost: Em.computed.equal('action', EDIT),
   replyingToTopic: Em.computed.equal('action', REPLY),
 
   viewOpen: Em.computed.equal('composeState', OPEN),
   viewDraft: Em.computed.equal('composeState', DRAFT),
 
+  notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
 
   archetype: function() {
     return this.get('archetypes').findProperty('id', this.get('archetypeId'));
@@ -53,7 +48,7 @@ Discourse.Composer = Discourse.Model.extend({
   canCategorize: Em.computed.and('canEditTitle', 'notCreatingPrivateMessage'),
 
   showAdminOptions: function() {
-    if (this.get('creatingTopic') && Discourse.User.currentProp('staff')) return true;
+    if (this.get('creatingTopic') && Discourse.User.current('staff')) return true;
     return false;
   }.property('canEditTitle'),
 
@@ -75,14 +70,14 @@ Discourse.Composer = Discourse.Model.extend({
     if (post) {
       postDescription = I18n.t('post.' +  this.get('action'), {
         link: postLink,
-        replyAvatar: Discourse.Utilities.tinyAvatar(post.get('avatar_template')),
+        replyAvatar: Discourse.Utilities.tinyAvatar(post.get('username')),
         username: this.get('post.username')
       });
 
       var replyUsername = post.get('reply_to_user.username');
-      var replyAvatarTemplate = post.get('reply_to_user.avatar_template');
-      if (replyUsername && replyAvatarTemplate && this.get('action') === EDIT) {
-        postDescription += " " + I18n.t("post.in_reply_to") + " " + Discourse.Utilities.tinyAvatar(replyAvatarTemplate) + " " + replyUsername;
+      if (replyUsername && this.get('action') === EDIT) {
+        postDescription += " " + I18n.t("post.in_reply_to") + " " +
+                           Discourse.Utilities.tinyAvatar(replyUsername) + " " + replyUsername;
       }
     }
 
@@ -126,10 +121,10 @@ Discourse.Composer = Discourse.Model.extend({
     // reply is always required
     if (this.get('missingReplyCharacters') > 0) return true;
 
-    if (this.get('canCategorize') && !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('categoryId')) return true;
+    if (this.get('canCategorize') && !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('categoryName')) return true;
 
     return false;
-  }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
+  }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryName', 'missingReplyCharacters'),
 
   /**
     Is the title's length valid?
@@ -180,12 +175,12 @@ Discourse.Composer = Discourse.Model.extend({
     @property minimumTitleLength
   **/
   minimumTitleLength: function() {
-    if (this.get('privateMessage')) {
+    if (this.get('creatingPrivateMessage')) {
       return Discourse.SiteSettings.min_private_message_title_length;
     } else {
       return Discourse.SiteSettings.min_topic_title_length;
     }
-  }.property('privateMessage'),
+  }.property('creatingPrivateMessage'),
 
   /**
     Number of missing characters in the reply until valid.
@@ -202,12 +197,12 @@ Discourse.Composer = Discourse.Model.extend({
     @property minimumPostLength
   **/
   minimumPostLength: function() {
-    if( this.get('privateMessage') ) {
+    if( this.get('creatingPrivateMessage') ) {
       return Discourse.SiteSettings.min_private_message_post_length;
     } else {
       return Discourse.SiteSettings.min_post_length;
     }
-  }.property('privateMessage'),
+  }.property('creatingPrivateMessage'),
 
   /**
     Computes the length of the title minus non-significant whitespaces
@@ -226,7 +221,7 @@ Discourse.Composer = Discourse.Model.extend({
   **/
   replyLength: function() {
     var reply = this.get('reply') || "";
-    while (Discourse.Quote.REGEXP.test(reply)) { reply = reply.replace(Discourse.Quote.REGEXP, ""); }
+    while (Discourse.BBCode.QUOTE_REGEXP.test(reply)) { reply = reply.replace(Discourse.BBCode.QUOTE_REGEXP, ""); }
     return reply.replace(/\s+/img, " ").trim().length;
   }.property('reply'),
 
@@ -257,9 +252,9 @@ Discourse.Composer = Discourse.Model.extend({
 
   init: function() {
     this._super();
-    var val = (Discourse.Mobile.mobileView ? false : (Discourse.KeyValueStore.get('composer.showPreview') || 'true'));
+    var val = Discourse.KeyValueStore.get('composer.showPreview') || 'true';
     this.set('showPreview', val === 'true');
-    this.set('archetypeId', Discourse.Site.currentProp('default_archetype'));
+    this.set('archetypeId', Discourse.Site.instance().get('default_archetype'));
   },
 
   /**
@@ -284,7 +279,7 @@ Discourse.Composer = Discourse.Model.extend({
       this.set('loading', true);
       var composer = this;
       return Discourse.Post.load(postId).then(function(post) {
-        composer.appendText(Discourse.Quote.build(post, post.get('raw')));
+        composer.appendText(Discourse.BBCode.buildQuoteBBCode(post, post.get('raw')));
         composer.set('loading', false);
       });
     }
@@ -333,8 +328,8 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     this.setProperties({
-      categoryId: opts.categoryId || this.get('topic.category.id'),
-      archetypeId: opts.archetypeId || Discourse.Site.currentProp('default_archetype'),
+      categoryName: opts.categoryName || this.get('topic.category.name'),
+      archetypeId: opts.archetypeId || Discourse.Site.instance().get('default_archetype'),
       metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
       reply: opts.reply || this.get("reply") || ""
     });
@@ -400,7 +395,7 @@ Discourse.Composer = Discourse.Model.extend({
       topic.setProperties({
         title: this.get('title'),
         fancy_title: this.get('title'),
-        category_id: parseInt(this.get('categoryId'), 10)
+        categoryName: this.get('categoryName')
       });
       topic.save();
     }
@@ -436,12 +431,11 @@ Discourse.Composer = Discourse.Model.extend({
         postStream = this.get('topic.postStream'),
         addedToStream = false;
 
-
     // Build the post object
     var createdPost = Discourse.Post.create({
       raw: this.get('reply'),
       title: this.get('title'),
-      category: this.get('categoryId'),
+      category: this.get('categoryName'),
       topic_id: this.get('topic.id'),
       reply_to_post_number: post ? post.get('post_number') : null,
       imageSizes: opts.imageSizes,
@@ -452,7 +446,7 @@ Discourse.Composer = Discourse.Model.extend({
       user_id: currentUser.get('id'),
       metaData: this.get('metaData'),
       archetype: this.get('archetypeId'),
-      post_type: Discourse.Site.currentProp('post_types.regular'),
+      post_type: Discourse.Site.instance().get('post_types.regular'),
       target_usernames: this.get('targetUsernames'),
       actions_summary: Em.A(),
       moderator: currentUser.get('moderator'),
@@ -477,8 +471,6 @@ Discourse.Composer = Discourse.Model.extend({
 
     var composer = this;
     return Ember.Deferred.promise(function(promise) {
-
-      composer.set('composeState', SAVING);
       createdPost.save(function(result) {
         var addedPost = false,
             saving = true;
@@ -512,16 +504,8 @@ Discourse.Composer = Discourse.Model.extend({
         if (postStream) {
           postStream.undoPost(createdPost);
         }
+        promise.reject($.parseJSON(error.responseText).errors[0]);
         composer.set('composeState', OPEN);
-        // TODO extract error handling code
-        var parsedError;
-        try {
-          parsedError = $.parseJSON(error.responseText).errors[0];
-        }
-        catch(ex) {
-          parsedError = "Unknown error saving post, try again. Error: " + error.status + " " + error.statusText;
-        }
-        promise.reject(parsedError);
       });
     });
   },
@@ -538,7 +522,7 @@ Discourse.Composer = Discourse.Model.extend({
       reply: this.get('reply'),
       action: this.get('action'),
       title: this.get('title'),
-      categoryId: this.get('categoryId'),
+      categoryName: this.get('categoryName'),
       postId: this.get('post.id'),
       archetypeId: this.get('archetypeId'),
       metaData: this.get('metaData'),
@@ -560,7 +544,7 @@ Discourse.Composer = Discourse.Model.extend({
 
   flashDraftStatusForNewUser: function() {
     var $draftStatus = $('#draft-status');
-    if (Discourse.User.currentProp('trust_level') === 0) {
+    if (Discourse.User.current('trust_level') === 0) {
       $draftStatus.toggleClass('flash', true);
       setTimeout(function() { $draftStatus.removeClass('flash'); }, 250);
     }
@@ -593,7 +577,7 @@ Discourse.Composer.reopenClass({
         topic: topic,
         action: draft.action,
         title: draft.title,
-        categoryId: draft.categoryId,
+        categoryName: draft.categoryName,
         postId: draft.postId,
         archetypeId: draft.archetypeId,
         reply: draft.reply,

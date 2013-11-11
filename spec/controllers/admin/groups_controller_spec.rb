@@ -72,7 +72,7 @@ describe Admin::GroupsController do
           usernames: usernames,
           name: " bob "
         }
-      }.should_not raise_error()
+      }.should_not raise_error(ActiveRecord::RecordInvalid)
       Group.where(name: "bob").count.should == 1
     end
   end

@@ -14,13 +14,9 @@ class UserBlocker
 
   def block
     hide_posts
-    unless @user.blocked?
-      @user.blocked = true
-      if @user.save
-        SystemMessage.create(@user, @opts[:message] || :blocked_by_staff)
-      end
-    else
-      false
+    @user.blocked = true
+    if @user.save
+      SystemMessage.create(@user, @opts[:message] || :blocked_by_staff)
     end
   end
 

@@ -8,20 +8,24 @@
   @module Discourse
 **/
 Discourse.UploadSelectorController = Discourse.Controller.extend(Discourse.ModalFunctionality, {
-  local: true,
-  remote: Em.computed.not("local"),
+  localSelected: true,
+  remoteSelected: Em.computed.not('localSelected'),
 
-  actions: {
-    useLocal: function() { this.set("local", true); },
-    useRemote: function() { this.set("local", false); }
-  }
+  selectLocal: function() { this.set('localSelected', true); },
+  selectRemote: function() { this.set('localSelected', false); },
+
+  localTitle: function() { return Discourse.UploadSelectorController.translate("local_title") }.property(),
+  remoteTitle: function() { return Discourse.UploadSelectorController.translate("remote_title") }.property(),
+  localTip: function() { return Discourse.UploadSelectorController.translate("local_tip") }.property(),
+  remoteTip: function() { return Discourse.UploadSelectorController.translate("remote_tip") }.property(),
+  uploadTitle: function() { return Discourse.UploadSelectorController.translate("upload_title") }.property(),
+  addTitle: function() { return Discourse.UploadSelectorController.translate("add_title") }.property()
 
 });
 
 Discourse.UploadSelectorController.reopenClass({
-  translate: function(key, options) {
-    var opts = options || {};
-    if (Discourse.Utilities.allowsAttachments()) { key += "_with_attachments"; }
-    return I18n.t("upload_selector." + key, opts);
+  translate: function(key) {
+    if (Discourse.Utilities.allowsAttachments()) key += "_with_attachments";
+    return I18n.t("upload_selector." + key);
   }
 });

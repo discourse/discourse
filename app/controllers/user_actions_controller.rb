@@ -16,7 +16,15 @@ class UserActionsController < ApplicationController
       ignore_private_messages: params[:filter] ? false : true
     }
 
-    render_serialized(UserAction.stream(opts), UserActionSerializer, root: "user_actions")
+    stream =
+      if opts[:action_types] == [UserAction::GOT_PRIVATE_MESSAGE] ||
+         opts[:action_types] == [UserAction::NEW_PRIVATE_MESSAGE]
+        UserAction.private_message_stream(opts[:action_types][0], opts)
+      else
+        UserAction.stream(opts)
+      end
+
+    render_serialized(stream, UserActionSerializer, root: "user_actions")
   end
 
   def show

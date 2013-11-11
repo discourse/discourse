@@ -18,14 +18,6 @@ module Discourse
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    # HACK!! regression in rubygems / bundler in ruby-head
-    if RUBY_VERSION == "2.1.0"
-      $:.map! do |path|
-        path = File.expand_path(path.sub("../../","../")) if path =~ /fast_xor/ && !File.directory?(File.expand_path(path))
-        path
-      end
-    end
-
     require 'discourse'
     require 'js_locale_helper'
 
@@ -42,7 +34,6 @@ module Discourse
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir["#{config.root}/app/serializers"]
     config.autoload_paths += Dir["#{config.root}/lib/validators/"]
-    config.autoload_paths += Dir["#{config.root}/app"]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -50,13 +41,7 @@ module Discourse
 
     config.assets.paths += %W(#{config.root}/config/locales)
 
-    # explicitly precompile any images in plugins ( /assets/images ) path
-    config.assets.precompile += [lambda do |filename, path|
-      path =~ /assets\/images/ && !%w(.js .css).include?(File.extname(filename))
-    end]
-
-    config.assets.precompile += ['common.css', 'desktop.css', 'mobile.css', 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js']
-
+    config.assets.precompile += ['admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js', 'jquery.js']
 
     # Precompile all defer
     Dir.glob("#{config.root}/app/assets/javascripts/defer/*.js").each do |file|
@@ -111,10 +96,6 @@ module Discourse
     # rake assets:precompile also fails
     config.threadsafe! unless rails4? || $PROGRAM_NAME =~ /spork|rake/
 
-    # rack lock is nothing but trouble, get rid of it
-    # for some reason still seeing it in Rails 4
-    config.middleware.delete Rack::Lock
-
     # route all exceptions via our router
     config.exceptions_app = self.routes
 
@@ -131,33 +112,28 @@ module Discourse
 
     # ember stuff only used for asset precompliation, production variant plays up
     config.ember.variant = :development
-    config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
-    config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
+    config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external_production/ember.js"
+    config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars.js"
 
-    unless rails4?
-      # Since we are using strong_parameters, we can disable and remove
-      # attr_accessible.
-      config.active_record.whitelist_attributes = false
-    end
+    # Since we are using strong_parameters, we can disable and remove
+    # attr_accessible.
+    config.active_record.whitelist_attributes = false
 
-    require 'plugin'
-    require 'auth'
-    unless Rails.env.test?
-      Discourse.activate_plugins!
-    end
-
+    # So open id logs somewhere sane
     config.after_initialize do
-      # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger
-      if plugins = Discourse.plugins
-        plugins.each{|plugin| plugin.notify_after_initialize}
+
+      if ENV['EMBED_CLOCKWORK']
+        puts ">> Running clockwork in background thread"
+        require_relative "clock"
+
+        Thread.new do
+          Clockwork.run
+        end
       end
+
     end
 
-    # This is not really required per-se, but we do not want to support
-    # XML params, we see errors in our logs about malformed XML and there
-    # absolutly no spot in our app were we use XML as opposed to JSON endpoints
-    ActionDispatch::ParamsParser::DEFAULT_PARSERS.delete(Mime::XML)
 
   end
 end

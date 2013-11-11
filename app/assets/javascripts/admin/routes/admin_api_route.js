@@ -9,7 +9,7 @@
 Discourse.AdminApiRoute = Discourse.Route.extend({
 
   model: function() {
-    return Discourse.ApiKey.find();
+    return Discourse.AdminApi.find();
   }
 
 });

@@ -108,15 +108,12 @@ class TopicUser < ActiveRecord::Base
     end
 
     def track_visit!(topic,user)
-      topic_id = Topic === topic ? topic.id : topic
-      user_id = User === user ? user.id : topic
-
       now = DateTime.now
-      rows = TopicUser.where({topic_id: topic_id, user_id: user_id}).update_all({last_visited_at: now})
+      rows = TopicUser.where({topic_id: topic.id, user_id: user.id}).update_all({last_visited_at: now})
       if rows == 0
-        TopicUser.create(topic_id: topic_id, user_id: user_id, last_visited_at: now, first_visited_at: now)
+        TopicUser.create(topic_id: topic.id, user_id: user.id, last_visited_at: now, first_visited_at: now)
       else
-        observe_after_save_callbacks_for topic_id, user_id
+        observe_after_save_callbacks_for topic.id, user.id
       end
     end
 
@@ -262,7 +259,6 @@ end
 #  total_msecs_viewed       :integer          default(0), not null
 #  cleared_pinned_at        :datetime
 #  unstarred_at             :datetime
-#  id                       :integer          not null, primary key
 #
 # Indexes
 #

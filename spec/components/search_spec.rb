@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 require 'spec_helper'
-require_dependency 'search'
+require 'search'
 
 describe Search do
 
@@ -15,12 +15,6 @@ describe Search do
       return r[:results].first if r[:type] == type
     end
     nil
-  end
-
-  def result_ids_for_type(results, type)
-    results.find do |group|
-      group[:type] == type
-    end[:results].map {|r| r[:id]}
   end
 
   context 'post indexing observer' do
@@ -92,10 +86,6 @@ describe Search do
     Search.new('foo :!$);}]>@\#\"\'').execute.should be_blank # There are at least three levels of sanitation for Search.query!
   end
 
-  it "doesn't raise an error when single quotes are present" do
-    Search.new("'hello' world").execute.should be_blank # There are at least three levels of sanitation for Search.query!
-  end
-
   it 'works when given two terms with spaces' do
     lambda { Search.new('evil trout').execute }.should_not raise_error
   end
@@ -149,7 +139,7 @@ describe Search do
     end
 
     context "search for a topic by id" do
-      let(:result) { first_of_type(Search.new(topic.id, type_filter: 'topic', min_search_term_length: 1).execute, 'topic') }
+      let(:result) { first_of_type(Search.new(topic.id, type_filter: 'topic').execute, 'topic') }
 
       it 'returns the topic' do
         result.should be_present
@@ -260,30 +250,27 @@ describe Search do
   context 'search_context' do
 
     context 'user as a search context' do
+      let(:search_user) { Search.new('hello', search_context: post.user).execute }
       let(:coding_horror) { Fabricate(:coding_horror) }
+      let(:search_coding_horror) { Search.new('hello', search_context: coding_horror).execute }
 
       Given!(:post) { Fabricate(:post) }
       Given!(:coding_horror_post) { Fabricate(:post, user: coding_horror )}
-      When(:search_user) { Search.new('hello', search_context: post.user).execute }
 
-      # should find topic created by searched user first
-      Then          { first_of_type(search_user, 'topic')[:id].should == post.topic_id }
-      # results should also include topic by coding_horror
-      And           { result_ids_for_type(search_user, 'topic').should include coding_horror_post.topic_id }
+      Then          { first_of_type(search_user, 'topic')['id'] == post.topic_id }
+      And           { first_of_type(search_user, 'topic')['id'] == coding_horror_post.topic_id }
     end
 
     context 'category as a search context' do
       let(:category) { Fabricate(:category) }
+      let(:search_cat) { Search.new('hello', search_context: category).execute }
+      let(:search_other_cat) { Search.new('hello', search_context: Fabricate(:category) ).execute }
       let(:topic) { Fabricate(:topic, category: category) }
       let(:topic_no_cat) { Fabricate(:topic) }
 
       Given!(:post) { Fabricate(:post, topic: topic, user: topic.user ) }
-      Given!(:another_post) { Fabricate(:post, topic: topic_no_cat, user: topic.user ) }
-      When(:search_cat) { Search.new('hello', search_context: category).execute }
-      # should find topic in searched category first
-      Then          { first_of_type(search_cat, 'topic')[:id].should == topic.id }
-      # results should also include topic without category
-      And          { result_ids_for_type(search_cat, 'topic').should include topic_no_cat.id }
+      Then          { first_of_type(search_cat, 'topic')['id'] == topic.id }
+      Then          { first_of_type(search_cat, 'topic')['id'] == topic_no_cat.id }
 
     end
 

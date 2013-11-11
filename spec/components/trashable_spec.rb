@@ -7,8 +7,12 @@ describe Trashable do
     p1 = Fabricate(:post)
     p2 = Fabricate(:post)
 
-    expect { p1.trash! }.to change{Post.count}.by(-1)
-    Post.with_deleted.count.should == Post.count + 1
+    Post.count.should == 2
+    p1.trash!
+
+    Post.count.should == 1
+
+    Post.with_deleted.count.should == 2
   end
 end
 

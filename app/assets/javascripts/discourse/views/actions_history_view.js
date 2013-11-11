@@ -38,6 +38,7 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
             }
             iconsHtml += Discourse.Utilities.avatarImg({
               size: 'small',
+              username: u.get('username'),
               avatarTemplate: u.get('avatar_template'),
               title: u.get('username')
             });
@@ -62,7 +63,7 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
     if (post.get('deleted')) {
       buffer.push("<div class='post-action'>" +
                   I18n.t("post.deleted_by") + " " +
-                  Discourse.Utilities.tinyAvatar(post.get('postDeletedBy.avatar_template')) +
+                  Discourse.Utilities.tinyAvatar(post.get('postDeletedBy.username')) +
                   Discourse.Formatter.autoUpdatingRelativeAge(new Date(post.get('postDeletedAt'))) +
                   "</div>");
     }

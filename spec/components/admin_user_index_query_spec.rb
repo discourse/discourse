@@ -2,10 +2,6 @@ require 'spec_helper'
 require_dependency 'admin_user_index_query'
 
 describe AdminUserIndexQuery do
-  def real_users_count(query)
-    query.find_users_query.where('users.id > 0').count
-  end
-
   describe "sql order" do
     it "has default" do
       query = ::AdminUserIndexQuery.new({})
@@ -23,12 +19,11 @@ describe AdminUserIndexQuery do
     TrustLevel.levels.each do |key, value|
       it "#{key} returns no records" do
         query = ::AdminUserIndexQuery.new({ query: key.to_s })
-        expect(real_users_count(query)).to eq(0)
+        expect(query.find_users.count).to eq(0)
       end
     end
 
   end
-
 
   describe "users with trust level" do
 
@@ -36,7 +31,7 @@ describe AdminUserIndexQuery do
       it "finds user with trust #{key}" do
         Fabricate(:user, trust_level: TrustLevel.levels[key])
         query = ::AdminUserIndexQuery.new({ query: key.to_s })
-        expect(real_users_count(query)).to eq(1)
+        expect(query.find_users.count).to eq(1)
       end
     end
 
@@ -51,14 +46,6 @@ describe AdminUserIndexQuery do
       expect(query.find_users.count).to eq(1)
     end
 
-    context 'and a suspended pending user' do
-      let!(:suspended_user) { Fabricate(:user, approved: false, suspended_at: 1.hour.ago, suspended_till: 20.years.from_now) }
-      it "doesn't return the suspended user" do
-        query = ::AdminUserIndexQuery.new({ query: 'pending' })
-        expect(query.find_users.count).to eq(1)
-      end
-    end
-
   end
 
   describe "with an admin user" do
@@ -67,7 +54,7 @@ describe AdminUserIndexQuery do
 
     it "finds the admin" do
       query = ::AdminUserIndexQuery.new({ query: 'admins' })
-      expect(real_users_count(query)).to eq(1)
+      expect(query.find_users.count).to eq(1)
     end
 
   end
@@ -78,7 +65,7 @@ describe AdminUserIndexQuery do
 
     it "finds the moderator" do
       query = ::AdminUserIndexQuery.new({ query: 'moderators' })
-      expect(real_users_count(query)).to eq(1)
+      expect(query.find_users.count).to eq(1)
     end
 
   end

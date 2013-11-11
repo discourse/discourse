@@ -1,6 +1,4 @@
 require 'cache'
-require_dependency 'plugin/instance'
-require_dependency 'auth/default_current_user_provider'
 
 module Discourse
 
@@ -22,45 +20,8 @@ module Discourse
   # When a setting is missing
   class SiteSettingMissing < Exception; end
 
-  # When ImageMagick is missing
-  class ImageMagickMissing < Exception; end
-
   # Cross site request forgery
   class CSRF < Exception; end
-
-  def self.activate_plugins!
-    @plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
-    @plugins.each do |plugin|
-      plugin.activate!
-    end
-  end
-
-  def self.plugins
-    @plugins
-  end
-
-  def self.authenticators
-    # TODO: perhaps we don't need auth providers and authenticators maybe one object is enough
-
-    # NOTE: this bypasses the site settings and gives a list of everything, we need to register every middleware
-    #  for the cases of multisite
-    # In future we may change it so we don't include them all for cases where we are not a multisite, but we would
-    #  require a restart after site settings change
-    Users::OmniauthCallbacksController::BUILTIN_AUTH + auth_providers.map(&:authenticator)
-  end
-
-  def self.auth_providers
-    providers = []
-    if plugins
-      plugins.each do |p|
-        next unless p.auth_providers
-        p.auth_providers.each do |prov|
-          providers << prov
-        end
-      end
-    end
-    providers
-  end
 
   def self.cache
     @cache ||= Cache.new
@@ -75,11 +36,11 @@ module Discourse
     end
   end
 
-  def self.base_uri(default_value = "")
+  def self.base_uri default_value=""
     if !ActionController::Base.config.relative_url_root.blank?
-      ActionController::Base.config.relative_url_root
+      return ActionController::Base.config.relative_url_root
     else
-      default_value
+      return default_value
     end
   end
 
@@ -120,8 +81,6 @@ module Discourse
 
   def self.git_version
     return $git_version if $git_version
-
-    # load the version stamped by the "build:stamp" task
     f = Rails.root.to_s + "/config/version"
     require f if File.exists?("#{f}.rb")
 
@@ -132,36 +91,11 @@ module Discourse
     end
   end
 
-  # Either returns the site_contact_username user or the first admin.
-  def self.site_contact_user
-    user = User.where(username_lower: SiteSetting.site_contact_username).first if SiteSetting.site_contact_username.present?
-    user ||= User.admins.real.order(:id).first
-  end
-
+  # Either returns the system_username user or the first admin.
   def self.system_user
-    User.where(id: -1).first
-  end
-
-  def self.store
-    if SiteSetting.enable_s3_uploads?
-      @s3_store_loaded ||= require 'file_store/s3_store'
-      FileStore::S3Store.new
-    else
-      @local_store_loaded ||= require 'file_store/local_store'
-      FileStore::LocalStore.new
-    end
-  end
-
-  def self.current_user_provider
-    @current_user_provider || Auth::DefaultCurrentUserProvider
-  end
-
-  def self.current_user_provider=(val)
-    @current_user_provider = val
-  end
-
-  def self.asset_host
-    Rails.configuration.action_controller.asset_host
+    user = User.where(username_lower: SiteSetting.system_username).first if SiteSetting.system_username.present?
+    user = User.admins.order(:id).first if user.blank?
+    user
   end
 
 private
