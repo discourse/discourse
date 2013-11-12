@@ -133,31 +133,31 @@ Discourse.AdminUser = Discourse.User.extend({
     this.set('trustLevel.id', this.get('originalTrustLevel'));
   },
 
-  isBanned: Em.computed.equal('is_banned', true),
-  canBan: Em.computed.not('staff'),
+  isSuspended: Em.computed.equal('suspended', true),
+  canSuspend: Em.computed.not('staff'),
 
-  banDuration: function() {
-    var banned_at = moment(this.banned_at);
-    var banned_till = moment(this.banned_till);
-    return banned_at.format('L') + " - " + banned_till.format('L');
-  }.property('banned_till', 'banned_at'),
+  suspendDuration: function() {
+    var suspended_at = moment(this.suspended_at);
+    var suspended_till = moment(this.suspended_till);
+    return suspended_at.format('L') + " - " + suspended_till.format('L');
+  }.property('suspended_till', 'suspended_at'),
 
-  ban: function(duration, reason) {
-    return Discourse.ajax("/admin/users/" + this.id + "/ban", {
+  suspend: function(duration, reason) {
+    return Discourse.ajax("/admin/users/" + this.id + "/suspend", {
       type: 'PUT',
       data: {duration: duration, reason: reason}
     });
   },
 
-  unban: function() {
-    Discourse.ajax("/admin/users/" + this.id + "/unban", {
+  unsuspend: function() {
+    Discourse.ajax("/admin/users/" + this.id + "/unsuspend", {
       type: 'PUT'
     }).then(function() {
       // succeeded
       window.location.reload();
     }, function(e) {
       // failed
-      var error = I18n.t('admin.user.unban_failed', { error: "http: " + e.status + " - " + e.body });
+      var error = I18n.t('admin.user.unsuspend_failed', { error: "http: " + e.status + " - " + e.body });
       bootbox.alert(error);
     });
   },

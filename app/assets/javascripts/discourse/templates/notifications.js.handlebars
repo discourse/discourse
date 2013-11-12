@@ -1,0 +1,14 @@
+<section class="d-dropdown" id="notifications-dropdown">
+  {{#if content}}
+    <ul>
+      {{#each}}
+        <li {{bind-attr class="read"}}>{{unbound boundI18n scope linkBinding="link" usernameBinding="username"}}</li>
+      {{/each}}
+      <li class="read last">
+        <a {{bind-attr href="currentUser.path"}}>{{i18n notifications.more}} &hellip;</a>
+      </li>
+    </ul>
+  {{else}}
+    <div class="none">{{i18n notifications.none}}</div>
+  {{/if}}
+</section>

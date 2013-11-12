@@ -12,7 +12,7 @@ module Export
   def self.models_included_in_export
     @models_included_in_export ||= begin
       Rails.application.eager_load! # So that all models get loaded now
-      ActiveRecord::Base.descendants
+      ActiveRecord::Base.descendants - [ActiveRecord::SchemaMigration]
     end
   end
 

@@ -1,6 +1,6 @@
 test:
   adapter: sqlite3
-  database: rails_multisite
+  database: "tmp/db.test"
   timeout: 5000
   host_names:
     - default.localhost

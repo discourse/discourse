@@ -22,7 +22,7 @@ Discourse.TopicList = Discourse.Model.extend({
     });
   },
 
-  loadMoreTopics: function() {
+  loadMore: function() {
 
     if (this.get('loadingMore')) { return Ember.RSVP.reject(); }
 

@@ -38,6 +38,11 @@ Discourse.Dialect.replaceBlock({
     var contents = ['blockquote'];
     if (blockContents.length) {
       var self = this;
+
+      if (blockContents && (typeof blockContents[0] === "string")) {
+        blockContents[0] = blockContents[0].replace(/^[\s]*/, '');
+      }
+
       blockContents.forEach(function (bc) {
         var processed = self.processInline(bc);
         if (processed.length) {

@@ -195,7 +195,6 @@ table {
 }
 
 .display-row {
-  height: 30px;
   line-height: 30px;
   padding: 5px;
   &:nth-of-type(1) {
@@ -235,6 +234,9 @@ table {
   }
 
   .controls {
+    width: 600px;
+    float: left;
+    margin-left: 12px;
     .btn {
       margin-right: 5px;
     }

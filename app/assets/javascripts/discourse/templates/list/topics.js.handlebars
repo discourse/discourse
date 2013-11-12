@@ -34,9 +34,9 @@
           <tbody>
             <tr>
               <td colspan="9">
-                <div class='alert alert-info'>
+                <div class='alert alert-info clickable' {{action showInserted}}>
                   {{countI18n new_topics_inserted countBinding="view.topicTrackingState.incomingCount"}}
-                  <a href='#' {{action showInserted}}>{{i18n show_new_topics}}</a>
+                  {{i18n show_new_topics}}
                 </div>
               </td>
             </tr>

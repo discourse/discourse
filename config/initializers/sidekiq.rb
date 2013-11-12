@@ -10,7 +10,6 @@ Sidekiq.configure_server do |config|
     ActiveRecord::Base.establish_connection
   end
   Rails.logger.info("Connection Pool size for Sidekiq Server is now: #{ActiveRecord::Base.connection.pool.instance_variable_get('@size')}")
-  Sidetiq::Clock.start!
 end
 
 Sidetiq.configure do |config|

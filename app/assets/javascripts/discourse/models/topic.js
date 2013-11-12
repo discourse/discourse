@@ -196,11 +196,16 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
-  // Invite a user to this topic
-  inviteUser: function(user) {
+  /**
+    Invite a user to this topic
+
+    @method createInvite
+    @param {String} emailOrUsername The email or username of the user to be invited
+  **/
+  createInvite: function(emailOrUsername) {
     return Discourse.ajax("/t/" + this.get('id') + "/invite", {
       type: 'POST',
-      data: { user: user }
+      data: { user: emailOrUsername }
     });
   },
 

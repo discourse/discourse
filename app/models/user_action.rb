@@ -176,7 +176,7 @@ LEFT JOIN categories c on c.id = t.category_id
 
   def self.remove_action!(hash)
     require_parameters(hash, :action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id)
-    if action = UserAction.where(hash).first
+    if action = UserAction.where(hash.except(:created_at)).first
       action.destroy
       MessageBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
     end

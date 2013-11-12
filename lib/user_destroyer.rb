@@ -44,7 +44,7 @@ class UserDestroyer
           Post.with_deleted.where(user_id: user.id).update_all("user_id = NULL")
 
           # If this user created categories, fix those up:
-          categories = Category.where(user_id: user.id).all
+          categories = Category.where(user_id: user.id)
           categories.each do |c|
             c.user_id = Discourse.system_user.id
             c.save!

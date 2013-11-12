@@ -1,10 +1,10 @@
-{{#if view.topics}}
+{{#if topics}}
   <table id="topic-list">
     <tr>
       <th>
         {{i18n topic.title}}
       </th>
-      {{#unless controller.hideCategories}}
+      {{#unless hideCategories}}
         <th>{{i18n category_title}}</th>
       {{/unless}}
       <th class='num posts'>{{i18n posts}}</th>
@@ -13,7 +13,7 @@
       <th class='num activity' colspan='2'>{{i18n activity}}</th>
     </tr>
 
-    {{#groupedEach topic in view.topics}}
+    {{#groupedEach topic in topics}}
       <tr {{bindAttr class="archived"}}>
         <td class='main-link'>
           {{topicStatus topic=topic}}
@@ -28,7 +28,7 @@
             <a href="{{unbound topic.lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
           {{/if}}
         </td>
-        {{#unless controller.hideCategories}}
+        {{#unless view.hideCategories}}
           <td class='category'>
             {{categoryLink topic.category}}
           </td>

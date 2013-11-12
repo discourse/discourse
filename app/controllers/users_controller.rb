@@ -1,6 +1,7 @@
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
 require_dependency 'user_activator'
+require_dependency 'avatar_upload_service'
 
 class UsersController < ApplicationController
 
@@ -40,31 +41,11 @@ class UsersController < ApplicationController
   end
 
   def update
-    user = User.where(username_lower: params[:username].downcase).first
+    user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
     json_result(user, serializer: UserSerializer) do |u|
-
-      website = params[:website]
-      if website
-        website = "http://" + website unless website =~ /^http/
-      end
-
-      u.bio_raw = params[:bio_raw] || u.bio_raw
-      u.name = params[:name] || u.name
-      u.website = website || u.website
-      u.digest_after_days = params[:digest_after_days] || u.digest_after_days
-      u.auto_track_topics_after_msecs = params[:auto_track_topics_after_msecs].to_i if params[:auto_track_topics_after_msecs]
-      u.new_topic_duration_minutes = params[:new_topic_duration_minutes].to_i if params[:new_topic_duration_minutes]
-      u.title = params[:title] || u.title if guardian.can_grant_title?(u)
-
-      [:email_digests, :email_always, :email_direct, :email_private_messages,
-       :external_links_in_new_tab, :enable_quoting, :dynamic_favicon].each do |i|
-        if params[i].present?
-          u.send("#{i.to_s}=", params[i] == 'true')
-        end
-      end
-
-      u.save ? u : nil
+      updater = UserUpdater.new(user)
+      updater.update(params)
     end
   end
 
@@ -85,8 +66,17 @@ class UsersController < ApplicationController
   end
 
   def invited
-    invited_list = InvitedList.new(fetch_user_from_params)
-    render_serialized(invited_list, InvitedListSerializer)
+    inviter = fetch_user_from_params
+
+    invites = if guardian.can_see_pending_invites_from?(inviter)
+      Invite.find_all_invites_from(inviter)
+    else
+      Invite.find_redeemed_invites_from(inviter)
+    end
+
+    invites = invites.filter_by(params[:filter])
+
+    render_serialized(invites.to_a, InviteSerializer)
   end
 
   def is_local_username
@@ -126,7 +116,6 @@ class UsersController < ApplicationController
     params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
   end
 
-
   def create
     return fake_success_response if suspicious? params
 
@@ -155,24 +144,26 @@ class UsersController < ApplicationController
     @user = EmailToken.confirm(params[:token])
     if @user.blank?
       flash[:error] = I18n.t('password_reset.no_token')
-    else
-      if request.put? && params[:password].present?
-        @user.password = params[:password]
-        if @user.save
-
-          if Guardian.new(@user).can_access_forum?
-            # Log in the user
-            log_on_user(@user)
-            flash[:success] = I18n.t('password_reset.success')
-          else
-            @requires_approval = true
-            flash[:success] = I18n.t('password_reset.success_unapproved')
-          end
-        end
-      end
+    elsif request.put?
+      raise Discourse::InvalidParameters.new(:password) unless params[:password].present?
+      @user.password = params[:password]
+      logon_after_password_reset if @user.save
     end
     render layout: 'no_js'
   end
+
+  def logon_after_password_reset
+    message = if Guardian.new(@user).can_access_forum?
+                # Log in the user
+                log_on_user(@user)
+                'password_reset.success'
+              else
+                @requires_approval = true
+                'password_reset.success_unapproved'
+              end
+
+    flash[:success] = I18n.t(message)
+   end
 
   def change_email
     params.require(:email)
@@ -228,11 +219,13 @@ class UsersController < ApplicationController
   def send_activation_email
     @user = fetch_user_from_params
     @email_token = @user.email_tokens.unconfirmed.active.first
-    if @user
-      @email_token ||= @user.email_tokens.create(email: @user.email)
-      Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
-    end
+    enqueue_activation_email if @user
     render nothing: true
+  end
+
+  def enqueue_activation_email
+    @email_token ||= @user.email_tokens.create(email: @user.email)
+    Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
   end
 
   def search_users
@@ -279,38 +272,18 @@ class UsersController < ApplicationController
     # Only allow url uploading for API users
     # TODO: Does not protect from huge uploads
     # https://github.com/discourse/discourse/pull/1512
-    if file.is_a?(String) && is_api?
-      adapted   = ::UriAdapter.new(file)
-      file      = adapted.build_uploaded_file
-      filesize  = adapted.file_size
-    elsif file.is_a?(String)
-      return render status: 422, text: I18n.t("upload.images.unknown_image_type")
-    end
-
     # check the file size (note: this might also be done in the web server)
-    filesize ||= File.size(file.tempfile)
-    max_size_kb = SiteSetting.max_image_size_kb * 1024
+    avatar        = build_avatar_from(file)
+    avatar_policy = AvatarUploadPolicy.new(avatar)
 
-    if filesize > max_size_kb
-      return render status: 413,
-                    text: I18n.t("upload.images.too_large",
-                                  max_size_kb: max_size_kb)
+    if avatar_policy.too_big?
+      return render status: 413, text: I18n.t("upload.images.too_large",
+                                              max_size_kb: avatar_policy.max_size_kb)
     end
 
-    unless SiteSetting.authorized_image?(file)
-      return render status: 422, text: I18n.t("upload.images.unknown_image_type")
-    end
+    raise FastImage::UnknownImageType unless SiteSetting.authorized_image?(avatar.file)
 
-    upload = Upload.create_for(user.id, file, filesize)
-    user.update_avatar(upload)
-
-    Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
-
-    render json: {
-      url: upload.url,
-      width: upload.width,
-      height: upload.height,
-    }
+    upload_avatar_for(user, avatar)
 
   rescue Discourse::InvalidParameters
     render status: 422, text: I18n.t("upload.images.unknown_image_type")
@@ -408,6 +381,23 @@ class UsersController < ApplicationController
       user.active = true if valid_session_authentication?(auth, params[:email])
       user.password_required! unless auth
       auth
+    end
+
+    def build_avatar_from(file)
+      source = if file.is_a?(String)
+                 is_api? ? :url : (raise FastImage::UnknownImageType)
+               else
+                 :image
+               end
+      AvatarUploadService.new(file, source)
+    end
+
+    def upload_avatar_for(user, avatar)
+      upload = Upload.create_for(user.id, avatar.file, avatar.filesize)
+      user.upload_avatar(upload)
+
+      Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
+      render json: { url: upload.url, width: upload.width, height: upload.height }
     end
 
 end

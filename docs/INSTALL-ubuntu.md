@@ -138,7 +138,7 @@ Install RVM
     # to install during this step. As discourse does not have sudo 
     # permissions (likely the case), run:
     rvm --autolibs=read-fail requirements
-    # repeat untill it fully executes 
+    # repeat until it fully executes 
 
 Continue with Discourse installation
 

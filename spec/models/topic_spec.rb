@@ -1051,7 +1051,17 @@ describe Topic do
           topic = Fabricate(:topic, category: Fabricate(:category, auto_close_days: 14), user: mod)
           Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
           topic.auto_close_at = 12.hours.from_now
-          topic.save.should be_true
+          topic.save
+
+          topic.reload
+          topic.closed.should == false
+
+          Timecop.freeze(24.hours.from_now) do
+            Topic.auto_close
+            topic.reload
+            topic.closed.should == true
+          end
+
         end
       end
     end
@@ -1116,6 +1126,25 @@ describe Topic do
     end
   end
 
+  describe 'for_digest' do
+    let(:user) { Fabricate.build(:user) }
+
+    it "returns none when there are no topics" do
+      Topic.for_digest(user, 1.year.ago).should be_blank
+    end
+
+    it "doesn't return category topics" do
+      Fabricate(:category)
+      Topic.for_digest(user, 1.year.ago).should be_blank
+    end
+
+    it "returns regular topics" do
+      topic = Fabricate(:topic)
+      Topic.for_digest(user, 1.year.ago).should == [topic]
+    end
+
+  end
+
   describe 'secured' do
     it 'can remove secure groups' do
       category = Fabricate(:category, read_restricted: true)
@@ -1127,7 +1156,7 @@ describe Topic do
       # for_digest
 
       Topic.for_digest(Fabricate(:user), 1.year.ago).count.should == 0
-      Topic.for_digest(Fabricate(:admin), 1.year.ago).count.should == 2
+      Topic.for_digest(Fabricate(:admin), 1.year.ago).count.should == 1
     end
   end
 

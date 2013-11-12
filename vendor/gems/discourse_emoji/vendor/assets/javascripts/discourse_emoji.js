@@ -37,17 +37,51 @@
     ":-$"   : 'blush'
   };
 
-  emoji.forEach(function (e) {
-    Discourse.Dialect.inlineReplace(":" + e + ":", function(code) {
-      return imageFor(e);
-    });
+  var translationsWithColon = {};
+  Object.keys(translations).forEach(function (t) {
+    if (t[0] === ':') {
+      translationsWithColon[t] = translations[t];
+    } else {
+      var replacement = translations[t];
+      Discourse.Dialect.inlineReplace(t, function () {
+        return imageFor(replacement);
+      });
+    }
   });
 
-  Object.keys(translations).forEach(function (code) {
-    var replacement = translations[code];
-    Discourse.Dialect.inlineReplace(code, function (code) {
-      return imageFor(replacement);
-    });
+  function escapeRegExp(s) {
+    return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+  }
+
+  var translationColonRegexp = new RegExp("^" +
+                                           Object.keys(translationsWithColon).map(function (t) {
+                                             return "(" + escapeRegExp(t) + ")";
+                                           }).join("|")
+                                         );
+
+  Discourse.Dialect.registerInline(':', function(text, match, prev) {
+    var endPos = text.indexOf(':', 1),
+        contents;
+
+    // If there is no trailing colon, check our translations that begin with colons
+    if (endPos === -1) {
+      translationColonRegexp.lastIndex = 0;
+      var match = translationColonRegexp.exec(text);
+      if (match && match[0]) {
+        contents = imageFor(translationsWithColon[match[0]]);
+        if (contents) {
+          return [match[0].length, contents];
+        }
+      }
+      return;
+    }
+
+    // Simple find and replace from our array
+    var between = text.slice(1, endPos);
+    contents = imageFor(between);
+    if (contents) {
+      return [endPos+1, contents];
+    }
   });
 
   if (Discourse && Discourse.ComposerView) {
@@ -56,16 +90,16 @@
       var baseUrl = Discourse.getURL("/");
 
       template = Handlebars.compile("<div class='autocomplete'>" +
-     "<ul>" +
-        "{{#each options}}" +
-            "<li>" +
-              "<a href='#'>" +
-              "<img src='" + baseUrl + "assets/emoji/{{this}}.png' class='emoji'> " +
-              "{{this}}</a>" +
-            "</li>" +
-        "{{/each}}" +
-     "</ul>" +
-  "</div>");
+                                       "<ul>" +
+                                          "{{#each options}}" +
+                                              "<li>" +
+                                                "<a href='#'>" +
+                                                "<img src='" + baseUrl + "assets/emoji/{{this}}.png' class='emoji'> " +
+                                                "{{this}}</a>" +
+                                              "</li>" +
+                                          "{{/each}}" +
+                                       "</ul>" +
+                                    "</div>");
 
       $('#wmd-input').autocomplete({
         template: template,

@@ -9,7 +9,7 @@ class AddDescriptionToCategories < ActiveRecord::Migration
     remove_column :categories, :top2_user_id
 
     # Migrate excerpts over
-    Category.all.each do |c|
+    Category.order('id').each do |c|
       post = c.topic.posts.order(:post_number).first
       PostRevisor.new(post).send(:update_category_description)
     end

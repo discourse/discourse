@@ -32,21 +32,43 @@
 .edits {margin-right: 5px;}
 
 #topic-title {
+  z-index: 1000;
+  padding: 14px 0 8px 0;
   margin-bottom: 20px;
-  .star {margin-right: 8px;}
-  h1 {
-  font-size: 2em;
-  margin: 0;
-    a.badge-category {vertical-align: top;}
-    a.edit-topic {font-size: 15px; position: absolute; margin-left: 8px;}
+  .star {
+    font-size: 20px;
+    margin-top: 8px;
+    margin-right: 8px;
   }
+  #edit-title { width: 500px; }
+  .category-combobox {
+    width: 250px;
+    .chzn-drop {
+      left: -9000px;
+      width: 248px;
+    }
+    .chzn-search input {
+      width: 198px;
+    }
+  }
+  h1 {
+    font-size: 2em;
+    margin: 0;
+    line-height: 1.2em;
+    overflow: hidden;
+    a.badge-category { vertical-align: top; }
+    a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
+  }
+  .topic-statuses {
+    margin-top: -2px;
+    .icon-pushpin { margin-top: -1px; }
+  }
+  .chzn-container { vertical-align: middle; }
 }
 
 #topic-closing-info {
   margin-left: 10px;
 }
-
-
 
 #topic-progress-wrapper {
   position: fixed;
@@ -90,6 +112,7 @@ a:hover.reply-new {
   color: #666;
   width: 130px;
   height: 34px;
+
   .nums {
     position: relative;
     top: 9px;
@@ -98,21 +121,26 @@ a:hover.reply-new {
     z-index: 1;
   }
   button {
-    padding: 0 1px;
+    padding: 3px 0 0 0;
     cursor: pointer;
     z-index: 1000;
     position: absolute;
-    top: 8px;
+    top: 2px;
     left: 4px;
     border: 0;
     background: none;
-  color: #666;
+    color: #666;
+    width: 50%;
+    text-align: left;
+    height: 30px;
+    margin: 0;
     i {
       font-size: 18px;
     }
     &:nth-of-type(2) {
       right: 4px;
       left: auto;
+      text-align: right;
     }
     &:disabled {
     cursor: default;
@@ -148,6 +176,13 @@ a:hover.reply-new {
   padding: 0;
   i {
     font-size:20px;
+  }
+}
+
+#suggested-topics .topic-statuses .topic-status {
+  padding: 0;
+  i {
+    font-size:15px;
   }
 }
 

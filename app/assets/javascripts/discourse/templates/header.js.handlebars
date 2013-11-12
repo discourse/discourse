@@ -94,20 +94,7 @@
 
       {{render search}}
 
-      <section class='d-dropdown' id='notifications-dropdown'>
-        {{#if view.notifications}}
-          <ul>
-            {{#each view.notifications}}
-            <li class="{{unbound readClass}}">{{{unbound rendered}}}</li>
-            {{/each}}
-            <li class='read last'>
-              <a {{bindAttr href="currentUser.path"}}>{{i18n notifications.more}} &hellip;</a>
-            </li>
-          </ul>
-        {{else}}
-          <div class='none'>{{i18n notifications.none}}</div>
-        {{/if}}
-      </section>
+      {{render notifications notifications}}
 
       <section class='d-dropdown' id='site-map-dropdown'>
       <ul class="location-links">

@@ -1132,13 +1132,13 @@ it:
           moderators: 'Moderatori'
 
       user:
-        ban_failed: "Qualcosa è andato storto nel bannare questo utente {{error}}"
-        unban_failed: "Qualcosa è andato rimuovendo il ban a questo utente {{error}}"
-        ban_duration: "Per quanto tempo vuoi bannare l'utente? (giorni)"
+        suspend_failed: "Qualcosa è andato storto nel bannare questo utente {{error}}"
+        unsuspend_failed: "Qualcosa è andato rimuovendo il ban a questo utente {{error}}"
+        suspend_duration: "Per quanto tempo vuoi bannare l'utente? (giorni)"
         delete_all_posts: "Cancella tutti i post"
-        ban: "Ban"
-        unban: "Rimuovi Ban"
-        banned: "Bannato?"
+        suspend: "Ban"
+        unsuspend: "Rimuovi Ban"
+        suspended: "Bannato?"
         moderator: "Moderatore?"
         admin: "Amministratore?"
         show_admin_profile: "Amministratore"

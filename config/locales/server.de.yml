@@ -718,7 +718,7 @@ de:
     active: "Dein Konto ist nun freigeschaltet und einsatzbereit."
     activate_email: "Fast fertig! Wir haben eine Aktivierungsmail an <b>%{email}</b> verschickt. Bitte folge den Anweisungen in der Mail, um Dein Konto zu aktivieren."
     not_activated: "Du kannst Dich noch nicht anmelden. Wir haben Dir eine Aktivierungsmail geschickt. Bitte folge zunächst den Anweisungen aus der Mail, um Dein Konto zu aktivieren."
-    banned: "Du kannst dich bis am %{date} nicht mehr anmelden."
+    suspended: "Du kannst dich bis am %{date} nicht mehr anmelden."
     errors: "%{errors}"
     not_available: " Nicht verfügbar. Versuche %{suggestion}?"
     something_already_taken: "Etwas ist schief gelaufen. Möglicherweise ist der Benutzername bereits registriert. Probiere den 'Passwort vergessen'-Link."

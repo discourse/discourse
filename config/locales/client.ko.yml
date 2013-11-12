@@ -1099,7 +1099,7 @@ ko:
         moderators: '중간 관리자:'
         admins: '운영자:'
         blocked: '블락됨:'
-        banned: '접근금지:'
+        suspended: '접근금지:'
         private_messages_short: "PMs"
         private_messages_title: "개인 메시지"
         
@@ -1301,7 +1301,7 @@ ko:
           pending: "보류"
           admins: "운영자들"
           moderators: '중간 관리자들'
-          banned: '접근 금지'
+          suspended: '접근 금지'
           blocked: '블락됨'
         approved: "승인?"
         approved_selected:
@@ -1322,7 +1322,7 @@ ko:
           admins: '운영자 사용자'
           moderators: '중간 관리자'
           blocked: '블락된 사용자들'
-          banned: '접근 금지된 사용자들'
+          suspended: '접근 금지된 사용자들'
         reject_successful:
           other: "성공적으로 1명의 사용자를 거절하였습니다."
           other: "성공적으로 ${count}명의 사용자를 거절하였습니다."
@@ -1331,18 +1331,18 @@ ko:
           other: "%{count}명의 사용자를 거절하는데 실패했습니다."
           
       user:
-        ban_failed: "이 사용자를 접근 금지하는데 오류 발생 {{error}}"
-        unban_failed: "이 사용자를 접근 허용 하는데 오류 발생 {{error}}"
-        ban_duration: "사용자를 몇일 접근 금지 하시겠습니까?"
+        suspend_failed: "이 사용자를 접근 금지하는데 오류 발생 {{error}}"
+        unsuspend_failed: "이 사용자를 접근 허용 하는데 오류 발생 {{error}}"
+        suspend_duration: "사용자를 몇일 접근 금지 하시겠습니까?"
         ban_duration_units: "(일)"
         ban_reason_label: "왜 접근 금지 합니까? 사용자가 로그인을 시도하면 그들은 이 메시지를 보게 됩니다."
         ban_reason: "접근 금지 이유"
         banned_by: "접근 금지자"
         delete_all_posts: "모든 글을 삭제합니다"
         delete_all_posts_confirm: "당신은 %{posts} 개의 게시글과 %{topics} 개의 토픽를 삭제합니다. 확실합니까?"
-        ban: "접근 금지"
-        unban: "접근 허용"
-        banned: "접근 금지?"
+        suspend: "접근 금지"
+        unsuspend: "접근 허용"
+        suspended: "접근 금지?"
         moderator: "중간 관리자?"
         admin: "운영자?"
         blocked: "블락"

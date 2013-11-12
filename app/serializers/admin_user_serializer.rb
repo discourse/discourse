@@ -15,9 +15,9 @@ class AdminUserSerializer < BasicUserSerializer
              :avatar_template,
              :can_approve,
              :approved,
-             :banned_at,
-             :banned_till,
-             :is_banned,
+             :suspended_at,
+             :suspended_till,
+             :suspended,
              :ip_address,
              :can_send_activation_email,
              :can_activate,
@@ -32,8 +32,8 @@ class AdminUserSerializer < BasicUserSerializer
     end
   end
 
-  def is_banned
-    object.is_banned?
+  def suspended
+    object.suspended?
   end
 
   def can_impersonate

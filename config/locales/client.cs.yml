@@ -1086,7 +1086,7 @@ cs:
         moderators: 'Moderátoři:'
         admins: 'Administrátoři:'
         blocked: 'Blokováno:'
-        banned: 'Zakázáno:'
+        suspended: 'Zakázáno:'
         private_messages_short: "SZ"
         private_messages_title: "Soukromé zprávy"
 
@@ -1229,7 +1229,7 @@ cs:
           pending: "Čeká na schválení"
           admins: "Administrátoři"
           moderators: "Moderátoři"
-          banned: "Zakázaní"
+          suspended: "Zakázaní"
           blocked: "Blokovaní"
         approved: "Schválen?"
         approved_selected:
@@ -1248,16 +1248,16 @@ cs:
           admins: 'Admininstrátoři'
           moderators: 'Moderátoři'
           blocked: 'Blokovaní uživatelé'
-          banned: "Zakázaní uživatelé"
+          suspended: "Zakázaní uživatelé"
 
       user:
-        ban_failed: "Nastala chyba při zakazování uživatele {{error}}"
-        unban_failed: "Nastala chyba při povolování uživatele {{error}}"
-        ban_duration: "Jak dlouho má zákaz platit? (dny)"
+        suspend_failed: "Nastala chyba při zakazování uživatele {{error}}"
+        unsuspend_failed: "Nastala chyba při povolování uživatele {{error}}"
+        suspend_duration: "Jak dlouho má zákaz platit? (dny)"
         delete_all_posts: "Smazat všechny příspěvky"
-        ban: "Zakázat"
-        unban: "Povolit"
-        banned: "Zakázán?"
+        suspend: "Zakázat"
+        unsuspend: "Povolit"
+        suspended: "Zakázán?"
         moderator: "Moderátor?"
         admin: "Administrátor?"
         blocked: "Zablokovaný?"

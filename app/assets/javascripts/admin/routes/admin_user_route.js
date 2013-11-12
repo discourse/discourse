@@ -31,9 +31,9 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
   },
 
   actions: {
-    showBanModal: function(user) {
-      Discourse.Route.showModal(this, 'admin_ban_user', user);
-      this.controllerFor('modal').set('modalClass', 'ban-user-modal');
+    showSuspendModal: function(user) {
+      Discourse.Route.showModal(this, 'admin_suspend_user', user);
+      this.controllerFor('modal').set('modalClass', 'suspend-user-modal');
     }
   }
 

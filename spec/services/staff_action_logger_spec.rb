@@ -116,36 +116,36 @@ describe StaffActionLogger do
     end
   end
 
-  describe "log_user_ban" do
-    let(:user) { Fabricate(:user) }
+  describe "log_user_suspend" do
+    let(:user) { Fabricate(:user, suspended_at: 10.minutes.ago, suspended_till: 1.day.from_now) }
 
     it "raises an error when arguments are missing" do
-      expect { logger.log_user_ban(nil, nil) }.to raise_error(Discourse::InvalidParameters)
-      expect { logger.log_user_ban(nil, "He was bad.") }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_user_suspend(nil, nil) }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_user_suspend(nil, "He was bad.") }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "reason arg is optional" do
-      expect { logger.log_user_ban(user, nil) }.to_not raise_error
+      expect { logger.log_user_suspend(user, nil) }.to_not raise_error
     end
 
     it "creates a new UserHistory record" do
       reason = "He was a big meanie."
-      log_record = logger.log_user_ban(user, reason)
+      log_record = logger.log_user_suspend(user, reason)
       log_record.should be_valid
       log_record.details.should == reason
       log_record.target_user.should == user
     end
   end
 
-  describe "log_user_unban" do
-    let(:user) { Fabricate(:user, banned_at: 1.day.ago, banned_till: 7.days.from_now) }
+  describe "log_user_unsuspend" do
+    let(:user) { Fabricate(:user, suspended_at: 1.day.ago, suspended_till: 7.days.from_now) }
 
     it "raises an error when argument is missing" do
-      expect { logger.log_user_unban(nil) }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_user_unsuspend(nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "creates a new UserHistory record" do
-      log_record = logger.log_user_unban(user)
+      log_record = logger.log_user_unsuspend(user)
       log_record.should be_valid
       log_record.target_user.should == user
     end

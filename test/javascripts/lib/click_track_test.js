@@ -8,7 +8,7 @@ module("Discourse.ClickTrack", {
     this.windowOpen = sinon.stub(window, "open").returns(this.win);
     sinon.stub(this.win, "focus");
 
-    $('#qunit-scratch').html([
+    fixture().html([
       '<div id="topic" id="1337">',
       '  <article data-post-id="42" data-user-id="3141">',
       '    <a href="http://www.google.com">google.com</a>',
@@ -26,9 +26,6 @@ module("Discourse.ClickTrack", {
   },
 
   teardown: function() {
-    $('#topic').remove();
-    $('#qunit-scratch').html('');
-
     Discourse.URL.redirectTo.restore();
     Discourse.ajax.restore();
     window.open.restore();
@@ -40,7 +37,7 @@ var track = Discourse.ClickTrack.trackClick;
 
 // test
 var generateClickEventOn = function(selector) {
-  return $.Event("click", { currentTarget: $(selector)[0] });
+  return $.Event("click", { currentTarget: fixture(selector)[0] });
 };
 
 test("does not track clicks on lightboxes", function() {
@@ -69,7 +66,7 @@ test("does not track clicks on quote buttons", function() {
 test("removes the href and put it as a data attribute", function() {
   track(generateClickEventOn('a'));
 
-  var $link = $('a').first();
+  var $link = fixture('a').first();
   ok($link.hasClass('no-href'));
   equal($link.data('href'), 'http://www.google.com');
   blank($link.attr('href'));
@@ -80,7 +77,7 @@ test("removes the href and put it as a data attribute", function() {
 
 var badgeClickCount = function(id, expected) {
   track(generateClickEventOn('#' + id));
-  var $badge = $('span.badge', $('#' + id).first());
+  var $badge = $('span.badge', fixture('#' + id).first());
   equal(parseInt($badge.html(), 10), expected);
 };
 
@@ -108,13 +105,13 @@ var trackRightClick = function() {
 
 test("right clicks change the href", function() {
   ok(trackRightClick());
-  equal($('a').first().prop('href'), "http://www.google.com/");
+  equal(fixture('a').first().prop('href'), "http://www.google.com/");
 });
 
 test("right clicks are tracked", function() {
   Discourse.SiteSettings.track_external_right_clicks = true;
   trackRightClick();
-  equal($('a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42");
+  equal(fixture('a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42");
 });
 
 

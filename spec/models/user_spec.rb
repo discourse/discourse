@@ -826,12 +826,12 @@ describe User do
     end
   end
 
-  describe "#update_avatar" do
+  describe "#upload_avatar" do
     let(:upload) { Fabricate(:upload) }
     let(:user)   { Fabricate(:user) }
 
-    it "should update use's avatar" do
-      expect(user.update_avatar(upload)).to be_true
+    it "should update user's avatar" do
+      expect(user.upload_avatar(upload)).to be_true
     end
   end
 

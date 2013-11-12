@@ -50,7 +50,13 @@ module Discourse
 
     config.assets.paths += %W(#{config.root}/config/locales)
 
+    # explicitly precompile any images in plugins ( /assets/images ) path
+    config.assets.precompile += [lambda do |filename, path|
+      path =~ /assets\/images/ && !%w(.js .css).include?(File.extname(filename))
+    end]
+
     config.assets.precompile += ['common.css', 'desktop.css', 'mobile.css', 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js']
+
 
     # Precompile all defer
     Dir.glob("#{config.root}/app/assets/javascripts/defer/*.js").each do |file|
@@ -128,10 +134,11 @@ module Discourse
     config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
-    # Since we are using strong_parameters, we can disable and remove
-    # attr_accessible.
-    config.active_record.whitelist_attributes = false
-
+    unless rails4?
+      # Since we are using strong_parameters, we can disable and remove
+      # attr_accessible.
+      config.active_record.whitelist_attributes = false
+    end
 
     require 'plugin'
     require 'auth'

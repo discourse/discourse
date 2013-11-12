@@ -37,6 +37,7 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   border: 1px solid #ddd;
   font-size: 12px;
   margin-left: -8px;
+  background: #fff;
 }
 
 .avoid-tab {
@@ -387,21 +388,6 @@ span.post-count {
   }
 }
 
-#topic-title {
-  z-index: 1000;
-  padding: 14px 0 8px 0;
-  h1 {
-    line-height: 1.2em;
-    overflow: hidden;
-  }
-  .topic-statuses {
-    margin-top: -2px;
-    .icon-pushpin {margin-top: -1px;}
-  }
-  .star {font-size: 20px; margin-top: 8px;}
-  .chzn-container {vertical-align: middle;}
-}
-
 article.boxed {
   img, svg {
     max-width: 100%;
@@ -495,7 +481,7 @@ iframe {
 .contents .cooked {
   padding-right: 30px;
   h1, h2, h3 {margin: 10px 0;}
-  ul, ol {margin: 0 15px;}
+  ul, ol {margin: 0 0 0 20px;}
   li p {margin: 3px 0;}
 
 
@@ -679,6 +665,19 @@ blockquote { /* solo quotes */
   position: relative;
   width: 720px;
   padding: 10px 10px 15px 20px;
+
+.highlighted {
+  background-color: lighten(yellow, 45%) !important;
+        }
+
+}
+
+
+.bottom-round.contents.regular {
+
+ -webkit-transition: background-color .25s linear;
+ transition: background-color .25s linear;
+
 }
 
 .posts-wrapper {
@@ -931,6 +930,24 @@ a.attachment:before {
   content: "\f019";
 }
 
+.private_message .gutter, .deleted-topic .gutter,.read_restricted .gutter {
+    position: relative;
+}
 
+.private_message .gutter:before, .deleted-topic .gutter:before, .read_restricted .gutter:before {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 10px;
+    color: rgba(0,0,0,0.05);
+    font: 90px/1 FontAwesome;
+    content: "\f05c";
+}
 
+.read_restricted .gutter:before {
+    content: "\f0c0";
+}
 
+.private_message .gutter:before {
+    content: "\f0e0";
+}

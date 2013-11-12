@@ -8,8 +8,12 @@ module Oneboxer
     end
 
     def onebox
-      # Youtube allows HTTP and HTTPS, so replace them with the protocol-agnostic variant
-      super.each { |entry| BaseOnebox.replace_agnostic entry }
+      super.each do |entry|
+        # Youtube allows HTTP and HTTPS, so replace them with the protocol-agnostic variant
+        BaseOnebox.replace_agnostic entry
+        # Add wmode=opaque to the iframe src URL so that the flash player is rendered within the document flow instead of on top
+        BaseOnebox.append_embed_wmode entry
+      end
     end
   end
 end

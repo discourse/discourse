@@ -1,4 +1,4 @@
- // Version: 1.1.2
+ // Version: 1.1.3+pre.5a35fc76
 
 (function() {
 /*global __fail__*/
@@ -174,7 +174,7 @@ if (!Ember.testing) {
 
 })();
 
- // Version: 1.1.2
+ // Version: 1.1.3+pre.5a35fc76
 
 (function() {
 var define, requireModule;
@@ -239,7 +239,7 @@ var define, requireModule;
 
   @class Ember
   @static
-  @version 1.1.2
+  @version 1.1.3+pre.5a35fc76
 */
 
 if ('undefined' === typeof Ember) {
@@ -266,10 +266,10 @@ Ember.toString = function() { return "Ember"; };
 /**
   @property VERSION
   @type String
-  @default '1.1.2'
+  @default '1.1.3+pre.5a35fc76'
   @final
 */
-Ember.VERSION = '1.1.2';
+Ember.VERSION = '1.1.3+pre.5a35fc76';
 
 /**
   Standard environmental variables. You can define these in a global `ENV`
@@ -15587,7 +15587,6 @@ CoreObject.PrototypeMixin = Mixin.create({
     ```javascript
     App.Person = Ember.Object.extend({
       init: function() {
-        this._super();
         alert('Name is ' + this.get('name'));
       }
     });
@@ -20317,9 +20316,8 @@ Ember.View = Ember.CoreView.extend(
   /**
     The name of the template to lookup if no template is provided.
 
-    `Ember.View` will look for a template with this name in this view's
-    `templates` object. By default, this will be a global object
-    shared in `Ember.TEMPLATES`.
+    By default `Ember.View` will lookup a template with this name in
+    `Ember.TEMPLATES` (a shared global object).
 
     @property templateName
     @type String
@@ -20330,24 +20328,14 @@ Ember.View = Ember.CoreView.extend(
   /**
     The name of the layout to lookup if no layout is provided.
 
-    `Ember.View` will look for a template with this name in this view's
-    `templates` object. By default, this will be a global object
-    shared in `Ember.TEMPLATES`.
+    By default `Ember.View` will lookup a template with this name in
+    `Ember.TEMPLATES` (a shared global object).
 
     @property layoutName
     @type String
     @default null
   */
   layoutName: null,
-
-  /**
-    The hash in which to look for `templateName`.
-
-    @property templates
-    @type Ember.Object
-    @default Ember.TEMPLATES
-  */
-  templates: Ember.TEMPLATES,
 
   /**
     The template used to render the view. This should be a function that
@@ -23958,8 +23946,8 @@ if (!Handlebars && typeof require === 'function') {
   Handlebars = require('handlebars');
 }
 
-Ember.assert("Ember Handlebars requires Handlebars version 1.0.0. Include a SCRIPT tag in the HTML HEAD linking to the Handlebars file before you link to Ember.", Handlebars);
-Ember.assert("Ember Handlebars requires Handlebars version 1.0.0, COMPILER_REVISION expected: 4, got: " +  Handlebars.COMPILER_REVISION + " - Please note: Builds of master may have other COMPILER_REVISION values.", Handlebars.COMPILER_REVISION === 4);
+Ember.assert("Ember Handlebars requires Handlebars version 1.0 or 1.1. Include a SCRIPT tag in the HTML HEAD linking to the Handlebars file before you link to Ember.", Handlebars);
+Ember.assert("Ember Handlebars requires Handlebars version 1.0 or 1.1, COMPILER_REVISION expected: 4, got: " +  Handlebars.COMPILER_REVISION + " - Please note: Builds of master may have other COMPILER_REVISION values.", Handlebars.COMPILER_REVISION === 4);
 
 /**
   Prepares the Handlebars templating library for use inside Ember's view
@@ -31238,8 +31226,8 @@ Ember.Route = Ember.Object.extend(Ember.ActionHandler, {
   deactivate: Ember.K,
 
   /**
-    This hook is executed when the router enters the route for the first time.
-    It is not executed when the model for the route changes.
+    This hook is executed when the router enters the route. It is not executed
+    when the model for the route changes.
 
     @method activate
   */

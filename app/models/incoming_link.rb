@@ -52,8 +52,9 @@ class IncomingLink < ActiveRecord::Base
       begin
         # TODO achieve same thing with no exception
         params = Rails.application.routes.recognize_path(parsed.path)
-        self.topic_id = params[:topic_id]
-        self.post_number = params[:post_number]
+        if self.topic_id = params[:topic_id]
+          self.post_number = params[:post_number] || 1
+        end
       rescue ActionController::RoutingError
         # If we can't route to the url, that's OK. Don't save those two fields.
       end
