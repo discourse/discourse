@@ -73,6 +73,7 @@
           return [match[0].length, contents];
         }
       }
+      return;
     }
 
     // Simple find and replace from our array
