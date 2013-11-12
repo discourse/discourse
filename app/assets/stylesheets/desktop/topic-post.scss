@@ -388,21 +388,6 @@ span.post-count {
   }
 }
 
-#topic-title {
-  z-index: 1000;
-  padding: 14px 0 8px 0;
-  h1 {
-    line-height: 1.2em;
-    overflow: hidden;
-  }
-  .topic-statuses {
-    margin-top: -2px;
-    .icon-pushpin {margin-top: -1px;}
-  }
-  .star {font-size: 20px; margin-top: 8px;}
-  .chzn-container {vertical-align: middle;}
-}
-
 article.boxed {
   img, svg {
     max-width: 100%;
@@ -680,7 +665,7 @@ blockquote { /* solo quotes */
   position: relative;
   width: 720px;
   padding: 10px 10px 15px 20px;
-   
+
 .highlighted {
   background-color: lighten(yellow, 45%) !important;
         }

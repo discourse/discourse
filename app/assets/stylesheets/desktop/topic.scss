@@ -32,21 +32,43 @@
 .edits {margin-right: 5px;}
 
 #topic-title {
+  z-index: 1000;
+  padding: 14px 0 8px 0;
   margin-bottom: 20px;
-  .star {margin-right: 8px;}
-  h1 {
-  font-size: 2em;
-  margin: 0;
-    a.badge-category {vertical-align: top;}
-    a.edit-topic {font-size: 15px; position: absolute; margin-left: 8px;}
+  .star {
+    font-size: 20px;
+    margin-top: 8px;
+    margin-right: 8px;
   }
+  #edit-title { width: 500px; }
+  .category-combobox {
+    width: 250px;
+    .chzn-drop {
+      left: -9000px;
+      width: 248px;
+    }
+    .chzn-search input {
+      width: 198px;
+    }
+  }
+  h1 {
+    font-size: 2em;
+    margin: 0;
+    line-height: 1.2em;
+    overflow: hidden;
+    a.badge-category { vertical-align: top; }
+    a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
+  }
+  .topic-statuses {
+    margin-top: -2px;
+    .icon-pushpin { margin-top: -1px; }
+  }
+  .chzn-container { vertical-align: middle; }
 }
 
 #topic-closing-info {
   margin-left: 10px;
 }
-
-
 
 #topic-progress-wrapper {
   position: fixed;
