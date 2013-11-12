@@ -20,6 +20,7 @@ module("Discourse.NotificationsController", {
     controller = Discourse.NotificationsController.create();
 
     view = Ember.View.create({
+      container: Discourse.__container__,
       controller: controller,
       templateName: "notifications"
     });
