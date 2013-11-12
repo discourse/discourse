@@ -25,6 +25,7 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     if (u[u.length-1] === '/') {
       u = u.substring(0, u.length-1);
     }
+    if (url.indexOf(u) != -1) return url;
     return u + url;
   },
 
