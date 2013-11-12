@@ -21,6 +21,7 @@ Discourse::Application.routes.draw do
   namespace :admin, constraints: StaffConstraint.new do
     get '' => 'admin#index'
 
+
     resources :site_settings, constraints: AdminConstraint.new
 
     get 'reports/:type' => 'reports#show'
@@ -96,7 +97,10 @@ Discourse::Application.routes.draw do
         delete 'key' => 'api#revoke_key'
       end
     end
-  end
+
+    get 'upgrade' => 'upgrade#index'
+
+  end # admin namespace
 
   get 'email_preferences' => 'email#preferences_redirect', :as => 'email_preferences_redirect'
   get 'email/unsubscribe/:key' => 'email#unsubscribe', as: 'email_unsubscribe'

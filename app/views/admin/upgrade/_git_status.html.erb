@@ -1,0 +1,10 @@
+<% if repo.valid? %>
+  Current version: <%= repo.latest_local_commit %> (<%= time_ago_in_words repo.latest_local_commit_date %> ago),
+  Remote version: <a href="<%= repo.url %>"><%= repo.latest_origin_commit %></a> (<%= time_ago_in_words repo.latest_origin_commit_date %> ago)
+  <% if repo.commits_behind > 0 %>
+    commits behind: <%= repo.commits_behind %>
+    <button action="">upgrade</button>
+  <% end %>
+<% else %>
+    Not under source control.
+<% end %>

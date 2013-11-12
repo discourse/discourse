@@ -1,0 +1,18 @@
+<h2>Discourse</h2>
+<p>
+<%= render partial: 'git_status', locals: {repo: @main_repo} %>
+</p>
+
+<h2>Plugins</h2>
+<ul>
+  <% Discourse.plugins.each do |plugin| %>
+    <li>
+      <%= plugin.name %> -
+      <%= render partial: 'git_status', locals: {repo: Upgrade::GitRepo.new(File.dirname(plugin.path))} %>
+    </li>
+  <% end %>
+</ul>
+
+<h2>Processes</h2>
+
+<h2>Log</h2>
