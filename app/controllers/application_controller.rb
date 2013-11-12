@@ -14,6 +14,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   skip_before_action :verify_authenticity_token, if: :api_key_valid?
 
+  before_filter :sync_main_app_session, if: lambda{ |c| request.format && !(request.format.json? || request.format.js?) }
+
   # Default Rails 3.2 lets the request through with a blank session
   #  we are being more pedantic here and nulling session / current_user
   #  and then raising a CSRF exception
@@ -184,6 +186,14 @@ class ApplicationController < ActionController::Base
       post_ids.uniq!
     end
     post_ids
+  end
+
+  def sync_main_app_session
+    main_app_session.sync
+  end
+
+  def main_app_session
+    Discourse.session_syncronizer.new(self)
   end
 
   private

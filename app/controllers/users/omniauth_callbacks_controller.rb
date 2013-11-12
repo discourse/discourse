@@ -12,7 +12,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     Auth::GithubAuthenticator.new,
     Auth::TwitterAuthenticator.new,
     Auth::PersonaAuthenticator.new,
-    Auth::CasAuthenticator.new
+    Auth::CasAuthenticator.new,
+    Auth::LessonPlanetAuthenticator.new
   ]
 
   skip_before_filter :redirect_to_login_if_required
@@ -20,7 +21,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   layout false
 
   def self.types
-    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
+    @types ||= Enum.new(:lessonplanet, :facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
   end
 
   # need to be able to call this
