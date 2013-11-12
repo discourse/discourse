@@ -1,66 +1,76 @@
-{{#if topics}}
-  <table id="topic-list">
-    <tr>
-      <th>
-        {{i18n topic.title}}
-      </th>
-      {{#unless hideCategories}}
-        <th>{{i18n category_title}}</th>
-      {{/unless}}
-      <th class='num posts'>{{i18n posts}}</th>
-      <th class='num likes'>{{i18n likes}}</th>
-      <th class='num views'>{{i18n views}}</th>
-      <th class='num activity' colspan='2'>{{i18n activity}}</th>
-    </tr>
+{{#if loaded}}
+  {{#if topics}}
+    <table id="topic-list">
+      <tr>
+        {{#discourse-heading sortBy="default" sortOrder=sortOrder}}
+          {{i18n topic.title}}
+        {{/discourse-heading}}
+        {{#discourse-heading}}
+          {{i18n category_title}}
+        {{/discourse-heading}}
+        {{#discourse-heading sortBy="posts" number=true sortOrder=sortOrder}}
+          {{i18n posts}}
+        {{/discourse-heading}}
+        {{#discourse-heading sortBy="likes" number=true sortOrder=sortOrder}}
+          {{i18n likes}}
+        {{/discourse-heading}}
+        {{#discourse-heading sortBy="views" number=true sortOrder=sortOrder}}
+          {{i18n views}}
+        {{/discourse-heading}}
+        {{#discourse-heading sortBy="activity" number=true colspan="2" sortOrder=sortOrder}}
+          {{i18n activity}}
+        {{/discourse-heading}}
+      </tr>
 
-    {{#groupedEach topic in topics}}
-      <tr {{bindAttr class="archived"}}>
-        <td class='main-link'>
-          {{topicStatus topic=topic}}
-          <a class='title' href="{{unbound topic.lastUnreadUrl}}">{{{unbound topic.fancy_title}}}</a>
-          {{#if unread}}
-            <a href="{{unbound topic.lastUnreadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unbound topic.unread}}</a>
-          {{/if}}
-          {{#if topic.new_posts}}
-            <a href="{{unbound topic.lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="new_posts"}}'>{{unbound topic.new_posts}}</a>
-          {{/if}}
-          {{#if topic.unseen}}
-            <a href="{{unbound topic.lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
-          {{/if}}
-        </td>
-        {{#unless view.hideCategories}}
-          <td class='category'>
+      {{#groupedEach topic in topics}}
+        <tr {{bindAttr class="archived"}}>
+          <td class='main-link'>
+            {{topicStatus topic=topic}}
+            <a class='title' href="{{unbound topic.lastUnreadUrl}}">{{{unbound topic.fancy_title}}}</a>
+            {{#if unread}}
+              <a href="{{unbound topic.lastUnreadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unbound topic.unread}}</a>
+            {{/if}}
+            {{#if topic.new_posts}}
+              <a href="{{unbound topic.lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="new_posts"}}'>{{unbound topic.new_posts}}</a>
+            {{/if}}
+            {{#if topic.unseen}}
+              <a href="{{unbound topic.lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
+            {{/if}}
+          </td>
+          <td class="category">
             {{categoryLink topic.category}}
           </td>
-        {{/unless}}
-        <td class='num posts'><a href="{{unbound topic.lastUnreadUrl}}" class='badge-posts'>{{number topic.posts_count numberKey="posts_long"}}</a></td>
+          <td class='num posts'><a href="{{unbound topic.lastUnreadUrl}}" class='badge-posts'>{{number topic.posts_count numberKey="posts_long"}}</a></td>
 
-        <td class='num likes'>
-          {{#if topic.like_count}}
-            <a href='{{unbound topic.url}}{{#if topic.has_best_of}}?filter=best_of{{/if}}'>{{unbound topic.like_count}} <i class='icon-heart'></i></a>
+          <td class='num likes'>
+            {{#if topic.like_count}}
+              <a href='{{unbound topic.url}}{{#if topic.has_best_of}}?filter=best_of{{/if}}'>{{unbound topic.like_count}} <i class='icon-heart'></i></a>
+            {{/if}}
+          </td>
+
+          <td {{bindAttr class=":num :views topic.viewsHeat"}}>{{number topic.views numberKey="views_long"}}</td>
+          {{#if topic.bumped}}
+            <td class='num activity'>
+              <a href="{{unbound topic.url}}" {{{bindAttr class=":age topic.ageCold"}}} title='{{i18n first_post}}: {{{unboundDate topic.created_at}}}' >{{unboundAge topic.created_at}}</a>
+            </td>
+            <td class='num activity last'>
+              <a href="{{unbound topic.lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate topic.bumped_at}}}'>{{unboundAge topic.bumped_at}}</a>
+            </td>
+          {{else}}
+            <td class='num activity'>
+              <a href="{{unbound topic.url}}" class='age' title='{{i18n first_post}}: {{{unboundDate topic.created_at}}}'>{{unboundAge topic.created_at}}</a>
+            </td>
+            <td class="activity"></td>
           {{/if}}
-        </td>
+        </tr>
+      {{/groupedEach}}
 
-        <td {{bindAttr class=":num :views topic.viewsHeat"}}>{{number topic.views numberKey="views_long"}}</td>
-        {{#if topic.bumped}}
-          <td class='num activity'>
-            <a href="{{unbound topic.url}}" {{{bindAttr class=":age topic.ageCold"}}} title='{{i18n first_post}}: {{{unboundDate topic.created_at}}}' >{{unboundAge topic.created_at}}</a>
-          </td>
-          <td class='num activity last'>
-            <a href="{{unbound topic.lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate topic.bumped_at}}}'>{{unboundAge topic.bumped_at}}</a>
-          </td>
-        {{else}}
-          <td class='num activity'>
-            <a href="{{unbound topic.url}}" class='age' title='{{i18n first_post}}: {{{unboundDate topic.created_at}}}'>{{unboundAge topic.created_at}}</a>
-          </td>
-          <td class="activity"></td>
-        {{/if}}
-      </tr>
-    {{/groupedEach}}
-
-  </table>
+    </table>
+  {{else}}
+    <div class='alert alert-info'>
+    {{i18n choose_topic.none_found}}
+    </div>
+  {{/if}}
 {{else}}
-  <div class='alert alert-info'>
-  {{i18n choose_topic.none_found}}
-  </div>
+  <div class='spinner'>{{i18n loading}}</div>
 {{/if}}

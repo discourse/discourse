@@ -7,7 +7,16 @@ require_dependency 'suggested_topics_builder'
 
 class TopicQuery
   # Could be rewritten to %i if Ruby 1.9 is no longer supported
-  VALID_OPTIONS = %w(except_topic_id exclude_category limit page per_page topic_ids visible category).map(&:to_sym)
+  VALID_OPTIONS = %w(except_topic_id
+                     exclude_category
+                     limit
+                     page
+                     per_page
+                     topic_ids
+                     visible
+                     category
+                     sort_order
+                     sort_descending).map(&:to_sym)
 
   class << self
     # use the constants in conjuction with COALESCE to determine the order with regard to pinned
@@ -30,8 +39,8 @@ class TopicQuery
        END DESC"
     end
 
-    def order_hotness
-      if @user
+    def order_hotness(user)
+      if user
         # When logged in take into accounts what pins you've closed
         "CASE
           WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
@@ -113,7 +122,7 @@ class TopicQuery
 
   def list_hot
     create_list(:hot, unordered: true) do |topics|
-      topics.joins(:hot_topic).order(TopicQuery.order_hotness)
+      topics.joins(:hot_topic).order(TopicQuery.order_hotness(@user))
     end
   end
 

@@ -7,6 +7,26 @@
   @module Discourse
 **/
 
+function finderFor(filter, params) {
+  return function() {
+    var url = Discourse.getURL("/") + filter + ".json";
+
+    if (params) {
+      var keys = Object.keys(params);
+
+      if (keys.length > 0) {
+        var encoded = [];
+        keys.forEach(function(p) {
+          encoded.push(p + "=" + params[p]);
+        });
+
+        url += "?" + encoded.join('&');
+      }
+    }
+    return Discourse.ajax(url);
+  }
+}
+
 Discourse.TopicList = Discourse.Model.extend({
 
   forEachNew: function(topics, callback) {
@@ -22,8 +42,38 @@ Discourse.TopicList = Discourse.Model.extend({
     });
   },
 
-  loadMore: function() {
+  sortOrder: function() {
+    return Discourse.SortOrder.create();
+  }.property(),
 
+  /**
+    If the sort order changes, replace the topics in the list with the new
+    order.
+
+    @observes sortOrder
+  **/
+  _sortOrderChanged: function() {
+    var self = this,
+        sortOrder = this.get('sortOrder'),
+        params = this.get('params');
+
+    params.sort_order = sortOrder.get('order');
+    params.sort_descending = sortOrder.get('descending');
+
+    this.set('loaded', false);
+    var finder = finderFor(this.get('filter'), params);
+    finder().then(function (result) {
+      var newTopics = Discourse.TopicList.topicsFrom(result),
+          topics = self.get('topics');
+
+      topics.clear();
+      topics.pushObjects(newTopics);
+      self.set('loaded', true);
+    });
+
+  }.observes('sortOrder.order', 'sortOrder.descending'),
+
+  loadMore: function() {
     if (this.get('loadingMore')) { return Ember.RSVP.reject(); }
 
     var moreUrl = this.get('more_topics_url');
@@ -146,26 +196,16 @@ Discourse.TopicList.reopenClass({
       return Ember.RSVP.resolve(list);
     }
     session.setProperties({topicList: null, topicListScrollPos: null});
-    return Discourse.TopicList.find(filter, menuItem.get('excludeCategory'));
-  }
-});
+    return Discourse.TopicList.find(filter, {exclude_category: menuItem.get('excludeCategory')});
+  },
 
+  find: function(filter, params) {
 
-Discourse.TopicList.reopenClass({
-
-  find: function(filter, excludeCategory) {
-
-    // How we find our topic list
-    var finder = function() {
-      var url = Discourse.getURL("/") + filter + ".json";
-      if (excludeCategory) { url += "?exclude_category=" + excludeCategory; }
-      return Discourse.ajax(url);
-    };
-
-    return PreloadStore.getAndRemove("topic_list", finder).then(function(result) {
+    return PreloadStore.getAndRemove("topic_list", finderFor(filter, params)).then(function(result) {
       var topicList = Discourse.TopicList.create({
         inserted: Em.A(),
         filter: filter,
+        params: params || {},
         topics: Discourse.TopicList.topicsFrom(result),
         can_create_topic: result.topic_list.can_create_topic,
         more_topics_url: result.topic_list.more_topics_url,

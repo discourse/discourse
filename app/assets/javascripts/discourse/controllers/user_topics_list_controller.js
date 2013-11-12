@@ -11,6 +11,10 @@ Discourse.UserTopicsListController = Discourse.ObjectController.extend({
   actions: {
     loadMore: function() {
       this.get('model').loadMore();
+    },
+
+    changeSort: function() {
+      console.log('sort changed!');
     }
   }
 

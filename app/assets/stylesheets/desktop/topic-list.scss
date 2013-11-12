@@ -21,9 +21,9 @@
     font-weight: normal;
   }
 
-  a.badge-category {padding: 3px 12px;  font-size: 16px; 
+  a.badge-category {padding: 3px 12px;  font-size: 16px;
 
-    &.category-dropdown-button {    
+    &.category-dropdown-button {
     padding: 3px 9px 2px 9px;
 
     i {height: 20px;}
@@ -103,6 +103,7 @@
     font-weight: bold;
     font-size: 13px;
     background: #eee;
+
 
   }
   td {
@@ -197,6 +198,16 @@
       color: inherit;
     }
   }
+  .sorting {
+    color: #009;
+  }
+  .sortable {
+    cursor: pointer;
+    &:hover {
+      background-color: #e6e6e6;
+    }
+    @include unselectable;
+  }
   .likes {
     width: 50px;
   }
@@ -205,6 +216,21 @@
   }
   .age {
     width: 60px;
+  }
+}
+
+.paginated-topics-list {
+  #topic-list {
+    .posts {
+      width: 95px;
+    }
+    .likes {
+      width: 95px;
+    }
+    .views {
+      width: 95px;
+    }
+
   }
 }
 
