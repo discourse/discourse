@@ -27,6 +27,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_mobile_view
   before_filter :inject_preview_style
+  before_filter :disable_customization
   before_filter :block_if_maintenance_mode
   before_filter :authorize_mini_profiler
   before_filter :store_incoming_links
@@ -36,8 +37,10 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_to_login_if_required
 
   rescue_from Exception do |exception|
-    unless [ ActiveRecord::RecordNotFound, ActionController::RoutingError,
-             ActionController::UnknownController, AbstractController::ActionNotFound].include? exception.class
+    unless [ActiveRecord::RecordNotFound,
+            ActionController::RoutingError,
+            ActionController::UnknownController,
+            AbstractController::ActionNotFound].include? exception.class
       begin
         ErrorLog.report_async!(exception, self, request, current_user)
       rescue
@@ -121,10 +124,13 @@ class ApplicationController < ActionController::Base
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
-
   def inject_preview_style
     style = request['preview-style']
     session[:preview_style] = style if style
+  end
+
+  def disable_customization
+    session[:disable_customization] = params[:customization] == "0" if params.has_key?(:customization)
   end
 
   def guardian

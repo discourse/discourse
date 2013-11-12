@@ -1,5 +1,7 @@
 class Admin::SiteCustomizationsController < Admin::AdminController
 
+  before_filter :enable_customization
+
   def index
     @site_customizations = SiteCustomization.all
 
@@ -54,6 +56,10 @@ class Admin::SiteCustomizationsController < Admin::AdminController
 
     def log_site_customization_change(old_record, new_params)
       StaffActionLogger.new(current_user).log_site_customization_change(old_record, new_params)
+    end
+
+    def enable_customization
+      session[:disable_customization] = false
     end
 
 end
