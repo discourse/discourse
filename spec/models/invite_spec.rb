@@ -276,4 +276,50 @@ describe Invite do
     end
   end
 
+  describe '.find_all_invites_from' do
+    context 'with user that has invited' do
+      it 'returns invites' do
+        inviter = Fabricate(:user)
+        invite = Fabricate(:invite, invited_by: inviter)
+
+        invites = Invite.find_all_invites_from(inviter)
+
+        expect(invites).to include invite
+      end
+    end
+
+    context 'with user that has not invited' do
+      it 'does not return invites' do
+        user = Fabricate(:user)
+        invite = Fabricate(:invite)
+
+        invites = Invite.find_all_invites_from(user)
+
+        expect(invites).to be_empty
+      end
+    end
+  end
+
+  describe '.find_redeemed_invites_from' do
+    it 'returns redeemed invites only' do
+      inviter = Fabricate(:user)
+      pending_invite = Fabricate(
+        :invite,
+        invited_by: inviter,
+        user_id: nil,
+        email: 'pending@example.com'
+      )
+      redeemed_invite = Fabricate(
+        :invite,
+        invited_by: inviter,
+        user_id: 123,
+        email: 'redeemed@example.com'
+      )
+
+      invites = Invite.find_redeemed_invites_from(inviter)
+
+      expect(invites).to have(1).items
+      expect(invites.first).to eq redeemed_invite
+    end
+  end
 end

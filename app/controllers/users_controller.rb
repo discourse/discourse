@@ -66,29 +66,17 @@ class UsersController < ApplicationController
   end
 
   def invited
-    params.require(:username)
-    params.permit(:filter)
+    inviter = fetch_user_from_params
 
-    by_user = fetch_user_from_params
-
-    invited = Invite.where(invited_by_id: by_user.id)
-                    .includes(:user => :user_stat)
-                    .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
-                           'user_stats.time_read DESC',
-                           'invites.redeemed_at DESC')
-                    .limit(SiteSetting.invites_shown)
-                    .references('user_stats')
-
-    unless guardian.can_see_pending_invites_from?(by_user)
-      invited = invited.where('invites.user_id IS NOT NULL')
+    invites = if guardian.can_see_pending_invites_from?(inviter)
+      Invite.find_all_invites_from(inviter)
+    else
+      Invite.find_redeemed_invites_from(inviter)
     end
 
-    if params[:filter].present?
-      invited = invited.where('(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)', filter: "%#{params[:filter].downcase}%")
-                       .references(:users)
-    end
+    invites = invites.filter_by(params[:filter])
 
-    render_serialized(invited.to_a, InviteSerializer)
+    render_serialized(invites.to_a, InviteSerializer)
   end
 
   def is_local_username

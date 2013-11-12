@@ -43,4 +43,10 @@ module Helpers
     range = [*'a'..'z']
     Array.new(length){range.sample}.join
   end
+
+  def stub_guardian(user)
+    guardian = Guardian.new(user)
+    yield(guardian) if block_given?
+    Guardian.stubs(new: guardian).with(user)
+  end
 end
