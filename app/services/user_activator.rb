@@ -1,16 +1,22 @@
-# Responsible for dealing with different activation processes when a user is created
 class UserActivator
-  attr_reader :user, :request, :session, :cookies
+  attr_reader :user, :request, :session, :cookies, :message
 
   def initialize(user, request, session, cookies)
     @user = user
     @session = session
     @cookies = cookies
     @request = request
+    @settings = SiteSetting
+    @hub = DiscourseHub
+    @message = nil
   end
 
-  def activation_message
-    activator.activate
+  def start
+    register_nickname
+  end
+
+  def finish
+    @message = activator.activate
   end
 
   private
@@ -20,14 +26,19 @@ class UserActivator
   end
 
   def factory
-    if SiteSetting.must_approve_users?
+    if @settings.must_approve_users?
       ApprovalActivator
     elsif !user.active?
       EmailActivator
     else
       LoginActivator
     end
+  end
 
+  def register_nickname
+    if user.valid? && @settings.call_discourse_hub?
+      @hub.register_nickname(user.username, user.email)
+    end
   end
 end
 
