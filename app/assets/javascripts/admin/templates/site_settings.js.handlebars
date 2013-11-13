@@ -8,8 +8,14 @@
   <div class='controls'>
     {{textField value=filter placeholderKey="type_to_filter"}}
   </div>
-
 </div>
 
-{{collection contentBinding="filteredContent" classNames="form-horizontal settings" itemViewClass="Discourse.SiteSettingView"}}
+<ul class="nav nav-pills">
+  {{#each category in controller}}
+    <li>{{#link-to 'adminSiteSettingsCategory' category.nameKey}}{{category.name}}{{/link-to}}</a></li>
+  {{/each}}
+</ul>
 
+<hr/>
+
+{{ outlet }}

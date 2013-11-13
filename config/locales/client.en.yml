@@ -1417,5 +1417,13 @@ en:
         title: 'Settings'
         reset: 'reset to default'
         none: 'none'
-
-
+        categories:
+          mandatory: 'Mandatory'
+          users: 'Users'
+          posting: 'Posting'
+          email: 'Email'
+          files: 'Files'
+          trust: 'Trust Levels'
+          spam: 'Spam'
+          rate_limits: 'Rate Limits'
+          uncategorized: 'Uncategorized'

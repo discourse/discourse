@@ -11,3 +11,13 @@ Discourse.AdminSiteSettingsRoute = Discourse.Route.extend({
     return Discourse.SiteSetting.findAll();
   }
 });
+
+/**
+  Handles when you click the Site Settings tab in admin, but haven't
+  chosen a category. It will redirect to the first category.
+**/
+Discourse.AdminSiteSettingsIndexRoute = Discourse.Route.extend({
+  model: function() {
+    this.transitionTo('adminSiteSettingsCategory', this.modelFor('adminSiteSettings')[0].nameKey);
+  }
+});

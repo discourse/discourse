@@ -161,4 +161,32 @@ describe SiteSettingExtension do
   #     end
   #   end
   # end
+
+  describe 'a setting with a category' do
+    before do
+      settings.setting(:test_setting, 88, :tests)
+      settings.refresh!
+    end
+
+    it "should return the category in all_settings" do
+      settings.all_settings.find {|s| s[:setting] == :test_setting }[:category].should == :tests
+    end
+
+    context "when overidden" do
+      after :each do
+        settings.remove_override!(:test_setting)
+      end
+
+      it "should have the correct override" do
+        settings.test_setting = 101
+        settings.test_setting.should == 101
+      end
+
+      it "should still have the correct category" do
+        settings.test_setting = 102
+        settings.all_settings.find {|s| s[:setting] == :test_setting }[:category].should == :tests
+      end
+    end
+  end
+
 end

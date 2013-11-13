@@ -8,11 +8,10 @@ class SiteSetting < ActiveRecord::Base
   validates_presence_of :data_type
 
   SiteSettings::YamlLoader.new("#{Rails.root}/config/site_settings.yml").load do |category, name, default, opts|
-    # TODO: category support
     if opts.delete(:client)
-      client_setting(name.to_sym, default)
+      client_setting(name, default, category)
     else
-      setting(name.to_sym, default, opts)
+      setting(name, default, category, opts)
     end
   end
 

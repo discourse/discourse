@@ -21,8 +21,11 @@ Discourse::Application.routes.draw do
   namespace :admin, constraints: StaffConstraint.new do
     get '' => 'admin#index'
 
-
-    resources :site_settings, constraints: AdminConstraint.new
+    resources :site_settings, constraints: AdminConstraint.new do
+      collection do
+        get 'category/:id' => 'site_settings#index'
+      end
+    end
 
     get 'reports/:type' => 'reports#show'
 
