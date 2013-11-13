@@ -28,6 +28,8 @@ var setMinimized = function(value) {
 };
 
 
+var smallLogoUrl = "/assets/logo-single.png";
+var bigLogoUrl = "/assets/logo.png";
 var smallLogoSelector = "img.logo-small";
 var bigLogoSelector = "img#site-logo.logo-big";
 var homeIconSelector = "i.icon-home";
@@ -44,10 +46,6 @@ var appendView = function() {
 module("Discourse.DiscourseLogoComponent", {
   setup: function() {
     oldMobileView = Discourse.Mobile.mobileView;
-
-    setSmallLogoUrl("small-logo-url");
-    setBigLogoUrl("big-logo-url");
-
     view = View.create();
   },
 
@@ -63,7 +61,7 @@ test("displays small logo when 'minimized' version is chosen and application is 
   appendView();
 
   ok(exists(fixture(smallLogoSelector)), "small logo image is present");
-  equal(fixture(smallLogoSelector).attr("src"), "small-logo-url", "small logo image has correct source");
+  equal(fixture(smallLogoSelector).attr("src"), smallLogoUrl, "small logo image has correct source");
   ok(!exists(fixture(homeIconSelector)), "default home icon is not present");
   ok(!exists(fixture(bigLogoSelector)), "big logo image is not present");
 });
@@ -108,7 +106,7 @@ test("displays big logo image with alt title when big logo url is configured", f
   appendView();
 
   ok(exists(fixture(bigLogoSelector)), "big logo image is present");
-  equal(fixture(bigLogoSelector).attr("src"), "big-logo-url", "big logo image has correct source");
+  equal(fixture(bigLogoSelector).attr("src"), bigLogoUrl, "big logo image has correct source");
   equal(fixture(bigLogoSelector).attr("alt"), "site-title", "big logo image has correct alt text");
   ok(!exists(fixture(headerSelector)), "header with title is not present");
 });
