@@ -33,7 +33,7 @@ class AvatarUploadPolicy
   end
 
   def max_size_kb
-    SiteSetting.max_image_size_kb * 1024
+    SiteSetting.max_image_size_kb.kilobytes
   end
 
   def too_big?

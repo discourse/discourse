@@ -4,7 +4,7 @@ module Jobs
 
     def initialize
       # maximum size of the file in bytes
-      @max_size = SiteSetting.max_image_size_kb * 1024
+      @max_size = SiteSetting.max_image_size_kb.kilobytes
     end
 
     def execute(args)
@@ -34,7 +34,7 @@ module Jobs
                 upload = Upload.create_for(post.user_id, file, hotlinked.size, src)
                 downloaded_urls[src] = upload.url
               else
-                Rails.logger.warn("Failed to pull hotlinked image: #{src} - Image is bigger than #{@max_size}")
+                puts "Failed to pull hotlinked image: #{src} - Image is bigger than #{@max_size}"
               end
             end
             # have we successfuly downloaded that file?
@@ -54,7 +54,7 @@ module Jobs
               raw.gsub!(src, "<img src='#{url}'>")
             end
           rescue => e
-            Rails.logger.error("Failed to pull hotlinked image: #{src}\n" + e.message + "\n" + e.backtrace.join("\n"))
+            puts "Failed to pull hotlinked image: #{src}\n" + e.message + "\n" + e.backtrace.join("\n")
           ensure
             # close & delete the temp file
             hotlinked && hotlinked.close!
@@ -81,6 +81,7 @@ module Jobs
     end
 
     def download(url)
+      return if @max_size <= 0
       extension = File.extname(URI.parse(url).path)
       tmp = Tempfile.new(["discourse-hotlinked", extension])
 

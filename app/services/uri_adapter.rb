@@ -17,7 +17,7 @@ class UriAdapter
   end
 
   def copy_to_tempfile(src)
-    while data = src.read(16*1024)
+    while data = src.read(16.kilobytes)
       tempfile.write(data)
     end
     src.close
@@ -30,7 +30,7 @@ class UriAdapter
   end
 
   def build_uploaded_file
-    return if (SiteSetting.max_image_size_kb * 1024) < file_size
+    return if SiteSetting.max_image_size_kb.kilobytes < file_size
 
     copy_to_tempfile(content)
     content_type = content.content_type if content.respond_to?(:content_type)

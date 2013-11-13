@@ -56,7 +56,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:title_prettify, true)
 
   client_setting(:max_image_size_kb, 2048)
-  client_setting(:max_attachment_size_kb, 1024)
+  client_setting(:max_attachment_size_kb, 1.kilobyte)
   client_setting(:authorized_extensions, '.jpg|.jpeg|.png|.gif')
 
   # settings only available server side
