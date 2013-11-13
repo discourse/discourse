@@ -1,5 +1,8 @@
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
 
+# RUN out of band GC every 2 requests
+# ENV['UNICORN_OOBGC_REQS'] = "2" unless ENV['UNICORN_OOBGC_REQS']
+
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
 # tune down if not enough ram
@@ -39,8 +42,30 @@ before_fork do |server, worker|
   unless initialized
     # load up the yaml for the localization bits, in master process
     I18n.t(:posts)
+
+    # load up all models and schema
+    (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
+      table.classify.constantize.first rescue nil
+    end
+
     # get rid of rubbish so we don't share it
     GC.start
+
+    initialized = true
+
+    supervisor = ENV['UNICORN_SUPERVISOR_PID'].to_i
+    if supervisor > 0
+      Thread.new do
+        while true
+          unless File.exists?("/proc/#{supervisor}")
+            puts "Kill self supervisor is gone"
+            Process.kill "TERM", Process.pid
+          end
+          sleep 2
+        end
+      end
+    end
+
   end
 
   ActiveRecord::Base.connection.disconnect!
