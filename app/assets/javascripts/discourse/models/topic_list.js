@@ -17,14 +17,17 @@ function finderFor(filter, params) {
       if (keys.length > 0) {
         var encoded = [];
         keys.forEach(function(p) {
-          encoded.push(p + "=" + params[p]);
+          var value = params[p];
+          if (typeof value !== 'undefined') {
+            encoded.push(p + "=" + value);
+          }
         });
 
         url += "?" + encoded.join('&');
       }
     }
     return Discourse.ajax(url);
-  }
+  };
 }
 
 Discourse.TopicList = Discourse.Model.extend({

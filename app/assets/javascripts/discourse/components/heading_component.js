@@ -1,7 +1,14 @@
+/**
+  Renders a heading for a table with optional sorting controls.
+
+  @class DiscourseHeadingComponent
+  @extends Ember.Component
+  @namespace Discourse
+  @module Discourse
+**/
 Discourse.DiscourseHeadingComponent = Ember.Component.extend({
   tagName: 'th',
-
-  classNameBindings: ['number:num', 'sortBy', 'iconSortClass:sorting', 'sortable'],
+  classNameBindings: ['number:num', 'sortBy', 'iconSortClass:sorting', 'sortable:sortable'],
   attributeBindings: ['colspan'],
 
   sortable: function() {

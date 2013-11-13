@@ -19,6 +19,14 @@ class TopicQuery
                      sort_order
                      sort_descending).map(&:to_sym)
 
+  # Maps `sort_order` to a columns in `topics`
+  SORTABLE_MAPPING = {
+    'likes' => 'like_count',
+    'views' => 'views',
+    'posts' => 'posts_count',
+    'activity' => 'bumped_at'
+  }
+
   def initialize(user=nil, options={})
     options.assert_valid_keys(VALID_OPTIONS)
 
@@ -147,6 +155,31 @@ class TopicQuery
       result
     end
 
+    def default_ordering(result, options)
+      # If we're logged in, we have to pay attention to our pinned settings
+      if @user
+        result = options[:category].blank? ? result.order(TopicQuerySQL.order_nocategory_with_pinned_sql) :
+                                    result.order(TopicQuerySQL.order_with_pinned_sql)
+      else
+        result = result.order(TopicQuerySQL.order_nocategory_basic_bumped)
+      end
+      result
+    end
+
+    def apply_ordering(result, options)
+      sort_column = SORTABLE_MAPPING[options[:sort_order]] || 'default'
+      sort_dir = (options[:sort_descending] == "false") ? "ASC" : "DESC"
+
+      # If we are sorting in the default order desc, we should consider including pinned
+      # topics. Otherwise, just use bumped_at.
+      if sort_column == 'default'
+        return default_ordering(result, options) if sort_dir == 'DESC'
+        sort_column = 'bumped_at'
+      end
+
+      result.order("topics.#{sort_column} #{sort_dir}")
+    end
+
     # Create results based on a bunch of default options
     def default_results(options={})
       options.reverse_merge!(@options)
@@ -170,15 +203,7 @@ class TopicQuery
         result = result.references(:categories)
       end
 
-      unless options[:unordered]
-        # If we're logged in, we have to pay attention to our pinned settings
-        if @user
-          result = category_id.nil? ? result.order(TopicQuerySQL.order_nocategory_with_pinned_sql) :
-                                      result.order(TopicQuerySQL.order_with_pinned_sql)
-        else
-          result = result.order(TopicQuerySQL.order_nocategory_basic_bumped)
-        end
-      end
+      result = apply_ordering(result, options) unless options[:unordered]
 
       result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]

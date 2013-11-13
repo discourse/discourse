@@ -59,16 +59,56 @@ describe TopicQuery do
 
 
   context 'a bunch of topics' do
-    let!(:regular_topic) { Fabricate(:topic, title: 'this is a regular topic', user: creator, bumped_at: 15.minutes.ago) }
-    let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
-    let!(:archived_topic) { Fabricate(:topic, title: 'this is an archived topic', user: creator, archived: true, bumped_at: 6.minutes.ago) }
-    let!(:invisible_topic) { Fabricate(:topic, title: 'this is an invisible topic', user: creator, visible: false, bumped_at: 5.minutes.ago) }
-    let!(:closed_topic) { Fabricate(:topic, title: 'this is a closed topic', user: creator, closed: true, bumped_at: 1.minute.ago) }
+    let!(:regular_topic) do
+      Fabricate(:topic, title: 'this is a regular topic',
+                        user: creator,
+                        views: 100,
+                        like_count: 66,
+                        posts_count: 3,
+                        bumped_at: 15.minutes.ago)
+    end
+    let!(:pinned_topic) do
+      Fabricate(:topic, title: 'this is a pinned topic',
+                        user: creator,
+                        views: 10,
+                        like_count: 100,
+                        posts_count: 5,
+                        pinned_at: 10.minutes.ago,
+                        bumped_at: 10.minutes.ago)
+    end
+    let!(:archived_topic) do
+      Fabricate(:topic, title: 'this is an archived topic',
+                        user: creator,
+                        views: 50,
+                        like_count: 30,
+                        posts_count: 4,
+                        archived: true,
+                        bumped_at: 6.minutes.ago)
+    end
+    let!(:invisible_topic) do
+      Fabricate(:topic, title: 'this is an invisible topic',
+                        user: creator,
+                        views: 1,
+                        like_count: 5,
+                        posts_count: 2,
+                        visible: false,
+                        bumped_at: 5.minutes.ago)
+    end
+    let!(:closed_topic) do
+      Fabricate(:topic, title: 'this is a closed topic',
+                        user: creator,
+                        views: 2,
+                        like_count: 1,
+                        posts_count: 1,
+                        closed: true,
+                        bumped_at: 1.minute.ago)
+    end
+
     let(:topics) { topic_query.list_latest.topics }
 
     context 'list_latest' do
       it "returns the topics in the correct order" do
-        topics.map(&:title).should == [pinned_topic, closed_topic, archived_topic, regular_topic].map(&:title)
+        topics.map(&:id).should == [pinned_topic, closed_topic, archived_topic, regular_topic].map(&:id)
       end
 
       it "includes the invisible topic if you're a moderator" do
@@ -78,6 +118,39 @@ describe TopicQuery do
       it "includes the invisible topic if you're an admin" do
         TopicQuery.new(admin).list_latest.topics.include?(invisible_topic).should be_true
       end
+
+      context 'sort_order' do
+
+        def ids_in_order(order, descending=true)
+          TopicQuery.new(admin, sort_order: order, sort_descending: descending ? 'true' : 'false').list_latest.topics.map(&:id)
+        end
+
+        it "returns the topics in likes order if requested" do
+          ids_in_order('posts').should == [pinned_topic, archived_topic, regular_topic, invisible_topic, closed_topic].map(&:id)
+        end
+
+        it "returns the topics in reverse likes order if requested" do
+          ids_in_order('posts', false).should == [closed_topic, invisible_topic, regular_topic, archived_topic, pinned_topic].map(&:id)
+        end
+
+        it "returns the topics in likes order if requested" do
+          ids_in_order('likes').should == [pinned_topic, regular_topic, archived_topic, invisible_topic, closed_topic].map(&:id)
+        end
+
+        it "returns the topics in reverse likes order if requested" do
+          ids_in_order('likes', false).should == [closed_topic, invisible_topic, archived_topic, regular_topic, pinned_topic].map(&:id)
+        end
+
+        it "returns the topics in views order if requested" do
+          ids_in_order('views').should == [regular_topic, archived_topic, pinned_topic, closed_topic, invisible_topic].map(&:id)
+        end
+
+        it "returns the topics in reverse views order if requested" do
+          ids_in_order('views', false).should == [invisible_topic, closed_topic, pinned_topic, archived_topic, regular_topic].map(&:id)
+        end
+
+      end
+
     end
 
     context 'after clearring a pinned topic' do

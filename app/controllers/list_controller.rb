@@ -142,7 +142,7 @@ class ListController < ApplicationController
       exclude_category: (params[:exclude_category] || menu_item.try(:filter)),
       category: params[:category],
       sort_order: params[:sort_order],
-      sort_descending: params[:sort_order]
+      sort_descending: params[:sort_descending]
     }
   end
 

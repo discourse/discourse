@@ -17,15 +17,22 @@ Discourse.DiscourseBasicTopicListComponent = Ember.Component.extend({
     }
   }.property('topicList.loaded'),
 
+  _topicListChanged: function() {
+    this._initFromTopicList(this.get('topicList'));
+  }.observes('topicList'),
+
+  _initFromTopicList: function(topicList) {
+    this.setProperties({
+      topics: topicList.get('topics'),
+      sortOrder: topicList.get('sortOrder')
+    });
+  },
+
   init: function() {
     this._super();
-
     var topicList = this.get('topicList');
     if (topicList) {
-      this.setProperties({
-        topics: topicList.get('topics'),
-        sortOrder: topicList.get('sortOrder')
-      });
+      this._initFromTopicList(topicList);
     } else {
       // Without a topic list, we assume it's loaded always.
       this.set('loaded', true);
