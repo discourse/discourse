@@ -134,17 +134,11 @@ module Discourse
     config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
-    unless rails4?
-      # Since we are using strong_parameters, we can disable and remove
-      # attr_accessible.
-      config.active_record.whitelist_attributes = false
-    end
+    # Since we are using strong_parameters, we can disable and remove attr_accessible.
+    config.active_record.whitelist_attributes = false unless rails4?
 
-    require 'plugin'
     require 'auth'
-    unless Rails.env.test?
-      Discourse.activate_plugins!
-    end
+    Discourse.activate_plugins! unless Rails.env.test?
 
     config.after_initialize do
       # So open id logs somewhere sane
