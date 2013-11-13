@@ -4,6 +4,7 @@
 #
 require_dependency 'topic_list'
 require_dependency 'suggested_topics_builder'
+require_dependency 'topic_query_sql'
 
 class TopicQuery
   # Could be rewritten to %i if Ruby 1.9 is no longer supported
@@ -17,71 +18,6 @@ class TopicQuery
                      category
                      sort_order
                      sort_descending).map(&:to_sym)
-
-  class << self
-    # use the constants in conjuction with COALESCE to determine the order with regard to pinned
-    # topics that have been cleared by the user. There
-    # might be a cleaner way to do this.
-    def lowest_date
-      "2010-01-01"
-    end
-
-    def highest_date
-      "3000-01-01"
-    end
-
-    # If you've clearned the pin, use bumped_at, otherwise put it at the top
-    def order_with_pinned_sql
-      "CASE
-        WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
-          THEN '#{highest_date}'
-        ELSE topics.bumped_at
-       END DESC"
-    end
-
-    def order_hotness(user)
-      if user
-        # When logged in take into accounts what pins you've closed
-        "CASE
-          WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
-            THEN 100
-          ELSE hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0)
-         END DESC"
-      else
-        # When anonymous, don't use topic_user
-        "CASE
-          WHEN topics.pinned_at IS NOT NULL THEN 100
-          ELSE hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0)
-        END DESC"
-      end
-    end
-
-    # If you've clearned the pin, use bumped_at, otherwise put it at the top
-    def order_nocategory_with_pinned_sql
-      "CASE
-        WHEN topics.category_id = #{SiteSetting.uncategorized_category_id.to_i} and (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
-          THEN '#{highest_date}'
-        ELSE topics.bumped_at
-       END DESC"
-    end
-
-    # For anonymous users
-    def order_nocategory_basic_bumped
-      "CASE WHEN topics.category_id = #{SiteSetting.uncategorized_category_id.to_i} and (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
-    end
-
-    def order_basic_bumped
-      "CASE WHEN (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
-    end
-
-    def top_viewed(max = 10)
-      Topic.listable_topics.visible.secured.order('views desc').limit(max)
-    end
-
-    def recent(max = 10)
-      Topic.listable_topics.visible.secured.order('created_at desc').limit(max)
-    end
-  end
 
   def initialize(user=nil, options={})
     options.assert_valid_keys(VALID_OPTIONS)
@@ -122,16 +58,16 @@ class TopicQuery
 
   def list_hot
     create_list(:hot, unordered: true) do |topics|
-      topics.joins(:hot_topic).order(TopicQuery.order_hotness(@user))
+      topics.joins(:hot_topic).order(TopicQuerySQL.order_hotness(@user))
     end
   end
 
   def list_new
-    create_list(:new, {}, new_results)
+    TopicList.new(:new, @user, new_results)
   end
 
   def list_unread
-    create_list(:unread, {}, unread_results)
+    TopicList.new(:new, @user, unread_results)
   end
 
   def list_posted
@@ -165,9 +101,9 @@ class TopicQuery
     create_list(:category, unordered: true) do |list|
       list = list.where(category_id: category.id)
       if @user
-        list.order(TopicQuery.order_with_pinned_sql)
+        list.order(TopicQuerySQL.order_with_pinned_sql)
       else
-        list.order(TopicQuery.order_basic_bumped)
+        list.order(TopicQuerySQL.order_basic_bumped)
       end
     end
   end
@@ -187,14 +123,6 @@ class TopicQuery
         .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
-  def unread_count
-    unread_results(limit: false).count
-  end
-
-  def new_count
-    new_results(limit: false).count
-  end
-
   protected
 
     def create_list(filter, options={}, topics = nil)
@@ -209,9 +137,9 @@ class TopicQuery
 
       # Start with a list of all topics
       result = Topic.where(id: TopicAllowedUser.where(user_id: user.id).pluck(:topic_id))
-      result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
-      result = result.order(TopicQuery.order_nocategory_basic_bumped)
-      result = result.private_messages
+                    .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
+                    .order(TopicQuerySQL.order_nocategory_basic_bumped)
+                    .private_messages
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
@@ -245,10 +173,10 @@ class TopicQuery
       unless options[:unordered]
         # If we're logged in, we have to pay attention to our pinned settings
         if @user
-          result = category_id.nil? ? result.order(TopicQuery.order_nocategory_with_pinned_sql) :
-                                      result.order(TopicQuery.order_with_pinned_sql)
+          result = category_id.nil? ? result.order(TopicQuerySQL.order_nocategory_with_pinned_sql) :
+                                      result.order(TopicQuerySQL.order_with_pinned_sql)
         else
-          result = result.order(TopicQuery.order_nocategory_basic_bumped)
+          result = result.order(TopicQuerySQL.order_nocategory_basic_bumped)
         end
       end
 
@@ -310,6 +238,6 @@ class TopicQuery
         result = result.order("CASE WHEN topics.category_id = #{options[:topic].category_id.to_i} THEN 0 ELSE 1 END")
       end
 
-      result.order(TopicQuery.order_nocategory_with_pinned_sql)
+      result.order(TopicQuerySQL.order_nocategory_with_pinned_sql)
     end
 end

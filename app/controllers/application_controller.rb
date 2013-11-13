@@ -274,8 +274,8 @@ class ApplicationController < ActionController::Base
     end
 
     def build_not_found_page(status=404, layout=false)
-      @top_viewed = TopicQuery.top_viewed(10)
-      @recent = TopicQuery.recent(10)
+      @top_viewed = Topic.top_viewed(10)
+      @recent = Topic.recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.gsub!('-',' ')

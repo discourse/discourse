@@ -184,6 +184,14 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def self.top_viewed(max = 10)
+    Topic.listable_topics.visible.secured.order('views desc').limit(max)
+  end
+
+  def self.recent(max = 10)
+    Topic.listable_topics.visible.secured.order('created_at desc').limit(max)
+  end
+
   def self.count_exceeds_minimum?
     count > SiteSetting.minimum_topics_similar
   end

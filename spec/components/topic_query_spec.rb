@@ -24,8 +24,8 @@ describe TopicQuery do
       TopicQuery.new(nil).list_latest.topics.count.should == 0
       TopicQuery.new(user).list_latest.topics.count.should == 0
 
-      TopicQuery.top_viewed(10).count.should == 0
-      TopicQuery.recent(10).count.should == 0
+      Topic.top_viewed(10).count.should == 0
+      Topic.recent(10).count.should == 0
 
       # mods can see every group and hidden topics
       TopicQuery.new(moderator).list_latest.topics.count.should == 3
@@ -119,7 +119,6 @@ describe TopicQuery do
     context 'with no data' do
       it "has no unread topics" do
         topic_query.list_unread.topics.should be_blank
-        topic_query.unread_count.should == 0
       end
     end
 
@@ -135,7 +134,6 @@ describe TopicQuery do
       context 'list_unread' do
         it 'contains no topics' do
           topic_query.list_unread.topics.should == []
-          topic_query.unread_count.should == 0
         end
       end
 
@@ -147,10 +145,6 @@ describe TopicQuery do
 
         it 'only contains the partially read topic' do
           topic_query.list_unread.topics.should == [partially_read]
-        end
-
-        it "returns 1 as the unread count" do
-          topic_query.unread_count.should == 1
         end
       end
 
@@ -187,10 +181,6 @@ describe TopicQuery do
   context 'list_new' do
 
     context 'without a new topic' do
-      it "has an new_count of 0" do
-        topic_query.new_count.should == 0
-      end
-
       it "has no new topics" do
         topic_query.list_new.topics.should be_blank
       end
