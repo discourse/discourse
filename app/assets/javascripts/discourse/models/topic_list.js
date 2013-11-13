@@ -12,17 +12,17 @@ function finderFor(filter, params) {
     var url = Discourse.getURL("/") + filter + ".json";
 
     if (params) {
-      var keys = Object.keys(params);
+      var keys = Object.keys(params),
+          encoded = [];
 
-      if (keys.length > 0) {
-        var encoded = [];
-        keys.forEach(function(p) {
-          var value = params[p];
-          if (typeof value !== 'undefined') {
-            encoded.push(p + "=" + value);
-          }
-        });
+      keys.forEach(function(p) {
+        var value = params[p];
+        if (typeof value !== 'undefined') {
+          encoded.push(p + "=" + value);
+        }
+      });
 
+      if (encoded.length > 0) {
         url += "?" + encoded.join('&');
       }
     }
