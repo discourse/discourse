@@ -9,6 +9,7 @@ task 'assets:precompile' => 'environment' do
     regex = /(-{1}[a-z0-9]{32}*\.{1}){1}/
     assets.each do |file|
       next if File.directory?(file) || file !~ regex
+      next if File.extname(file) == ".json" # Avoid duplicate manifest
 
       source = file.split('/')
       source.push(source.pop.gsub(regex, '.'))
