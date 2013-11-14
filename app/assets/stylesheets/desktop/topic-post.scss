@@ -347,7 +347,7 @@ a.star {
 }
 
 #topic-footer-buttons {
-  padding: 20px 10px 0 10px;
+  padding: 10px 10px 0 10px;
   p {
     line-height: 32px;
     color: #888;
@@ -479,10 +479,10 @@ iframe {
 }
 
 .contents .cooked {
-  padding-right: 30px;
+  margin-right: 50px;
   word-wrap: break-word;
   h1, h2, h3 {margin: 10px 0;}
-  ul, ol {margin: 0 0 0 20px;}
+  ul, ol {margin: 15px 0 0 20px;}
   li p {margin: 3px 0;}
 }
 
@@ -593,13 +593,30 @@ position: relative;
 blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
+    p:first-of-type {margin-top: 0;}
+    p:last-of-type {margin-bottom: 0;}
 }
 
 .quote { /* quotes with attribution */
   margin-top: 14px;
-  .title {margin-right: 0;}
-  blockquote {margin: 0;}
+  blockquote {margin-top: 0; padding-top: 0;
+  .onebox-result {background-color: #ddd;}
+
+  
+  }
+
+  .title {
+  border-left: 5px solid #bebebe;
+  background-color: #f1f1f1;
+  padding: 12px;
+  .avatar { margin-right: 7px; }
+  img {margin-top: -4px;}
+
 }
+}
+
+
+
 
 .quote-controls {
   float: right;
@@ -624,13 +641,7 @@ blockquote { /* solo quotes */
     }
 }
 
-.quote .title {
-  border-left: 5px solid #bebebe;
-  background-color: #f1f1f1;
-  padding: 10px 10px 0 12px;
-  .avatar { margin-right: 7px; }
-  img {margin-top: -4px;}
-}
+
 
 .gutter {
   float: left;

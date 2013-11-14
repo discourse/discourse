@@ -68,6 +68,8 @@
 
 #topic-closing-info {
   margin-left: 10px;
+  margin-top: 10px;
+  height: 20px; 
 }
 
 #topic-progress-wrapper {
@@ -168,7 +170,7 @@ a:hover.reply-new {
   #topic-progress {
   }
   position: absolute;
-  bottom: -55px;
+  bottom: -70px;
 
 }
 
@@ -190,8 +192,7 @@ a:hover.reply-new {
 .heatmap-med {color: #a00 !important;}
 .heatmap-low {color: #700 !important;}
 
-.onebox-result {margin-top: 15px;}
-.source .info {padding-right: 10px;}
+
 
 #topic-filter {
   background-color: #ffe;
