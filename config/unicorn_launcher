@@ -28,7 +28,7 @@ export UNICORN_SUPERVISOR_PID=$$
 trap on_exit EXIT
 trap on_reload USR2
 
-unicorn -c $1 &
+unicorn $@ &
 UNICORN_PID=$!
 
 echo "supervisor pid: $UNICORN_SUPERVISOR_PID unicorn pid: $UNICORN_PID"
