@@ -24,7 +24,9 @@ class TopicQuery
     'likes' => 'like_count',
     'views' => 'views',
     'posts' => 'posts_count',
-    'activity' => 'bumped_at'
+    'activity' => 'bumped_at',
+    'posters' => 'participant_count',
+    'category' => 'category_id'
   }
 
   def initialize(user=nil, options={})
@@ -173,8 +175,21 @@ class TopicQuery
       # If we are sorting in the default order desc, we should consider including pinned
       # topics. Otherwise, just use bumped_at.
       if sort_column == 'default'
-        return default_ordering(result, options) if sort_dir == 'DESC'
+        if sort_dir == 'DESC'
+
+          # If something requires a custom order, for example "unread" which sorts the least read
+          # to the top, do nothing
+          return result if options[:unordered]
+
+          # Otherwise apply our default ordering
+          return default_ordering(result, options)
+        end
         sort_column = 'bumped_at'
+      end
+
+      # If we are sorting by category, actually use the name
+      if sort_column == 'category_id'
+        return result.references(:categories).order(TopicQuerySQL.order_by_category_sql(sort_dir))
       end
 
       result.order("topics.#{sort_column} #{sort_dir}")
@@ -203,12 +218,9 @@ class TopicQuery
         result = result.references(:categories)
       end
 
-      result = apply_ordering(result, options) unless options[:unordered]
-
+      result = apply_ordering(result, options)
       result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
-
-
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
@@ -233,9 +245,7 @@ class TopicQuery
     end
 
     def new_results(options={})
-      result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)),
-                                     @user.treat_as_new_topic_start_date)
-
+      result = TopicQuery.new_filter(default_results(options), @user.treat_as_new_topic_start_date)
       suggested_ordering(result, options)
     end
 

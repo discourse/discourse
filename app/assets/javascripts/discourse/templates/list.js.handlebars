@@ -26,18 +26,7 @@
   <div class="row">
     <div class="full-width">
       <div id='list-area'>
-        {{#if loading}}
-          <div class='contents loading'>
-            <table id='topic-list'>
-              <tr>
-                <td colspan='8'>
-                  <div class='spinner'>{{i18n loading}}</div>
-                </td>
-              </tr>
-            </table>
-          </div>
-        {{/if}}
-
+        {{discourse-topic-list-loading loading=loading}}
         {{outlet listView}}
       </div>
     </div>

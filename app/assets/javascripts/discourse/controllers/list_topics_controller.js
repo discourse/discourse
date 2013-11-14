@@ -15,6 +15,10 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
 
   latest: Ember.computed.equal('filter', 'latest'),
 
+  topicListReloading: function() {
+    return (!this.get('controllers.list.loading')) && (!this.get('loaded'));
+  }.property('loaded', 'controllers.list.loading'),
+
   categories: function() {
     return Discourse.Category.list();
   }.property(),

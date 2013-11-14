@@ -42,6 +42,10 @@ module TopicQuerySQL
       end
     end
 
+    def order_by_category_sql(dir)
+      "CASE WHEN categories.id = #{SiteSetting.uncategorized_category_id.to_i} THEN '' ELSE categories.name END #{dir}"
+    end
+
     # If you've clearned the pin, use bumped_at, otherwise put it at the top
     def order_nocategory_with_pinned_sql
       "CASE

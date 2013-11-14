@@ -178,7 +178,7 @@
     width: 140px;
   }
   .posters {
-    width: 150px;
+    width: 170px;
     > a {
       float: left;
       margin-right: 4px;
@@ -206,7 +206,13 @@
     @include unselectable;
   }
   .likes {
-    width: 50px;
+    width: 65px;
+  }
+  .views {
+    width: 65px;
+  }
+  .posts {
+    width: 65px;
   }
   .activity {
     width: 50px;
@@ -216,20 +222,6 @@
   }
 }
 
-.paginated-topics-list {
-  #topic-list {
-    .posts {
-      width: 95px;
-    }
-    .likes {
-      width: 95px;
-    }
-    .views {
-      width: 95px;
-    }
-
-  }
-}
 
 #topic-list tbody tr.has-excerpt .star {
   vertical-align: top;

@@ -65,6 +65,7 @@ describe TopicQuery do
                         views: 100,
                         like_count: 66,
                         posts_count: 3,
+                        participant_count: 11,
                         bumped_at: 15.minutes.ago)
     end
     let!(:pinned_topic) do
@@ -73,6 +74,7 @@ describe TopicQuery do
                         views: 10,
                         like_count: 100,
                         posts_count: 5,
+                        participant_count: 12,
                         pinned_at: 10.minutes.ago,
                         bumped_at: 10.minutes.ago)
     end
@@ -83,6 +85,7 @@ describe TopicQuery do
                         like_count: 30,
                         posts_count: 4,
                         archived: true,
+                        participant_count: 1,
                         bumped_at: 6.minutes.ago)
     end
     let!(:invisible_topic) do
@@ -92,6 +95,7 @@ describe TopicQuery do
                         like_count: 5,
                         posts_count: 2,
                         visible: false,
+                        participant_count: 3,
                         bumped_at: 5.minutes.ago)
     end
     let!(:closed_topic) do
@@ -101,6 +105,7 @@ describe TopicQuery do
                         like_count: 1,
                         posts_count: 1,
                         closed: true,
+                        participant_count: 2,
                         bumped_at: 1.minute.ago)
     end
 
@@ -147,6 +152,14 @@ describe TopicQuery do
 
         it "returns the topics in reverse views order if requested" do
           ids_in_order('views', false).should == [invisible_topic, closed_topic, pinned_topic, archived_topic, regular_topic].map(&:id)
+        end
+
+        it "returns the topics in posters order if requested" do
+          ids_in_order('posters').should == [pinned_topic, regular_topic, invisible_topic, closed_topic, archived_topic].map(&:id)
+        end
+
+        it "returns the topics in reverse posters order if requested" do
+          ids_in_order('posters', false).should == [archived_topic, closed_topic, invisible_topic, regular_topic, pinned_topic].map(&:id)
         end
 
       end

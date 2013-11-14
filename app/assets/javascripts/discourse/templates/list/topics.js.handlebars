@@ -1,3 +1,5 @@
+{{discourse-topic-list-loading loading=topicListReloading}}
+
 {{#unless loading}}
   {{#if loaded}}
     <div class='contents'>
@@ -16,17 +18,29 @@
           {{#if currentUser}}
             <th>&nbsp;</th>
           {{/if}}
-          <th class='main-link'>
+          {{#discourse-heading sortBy="default" sortOrder=sortOrder}}
             {{i18n topic.title}}
-          </th>
+          {{/discourse-heading}}
           {{#unless category}}
-          <th class='category'>{{i18n category_title}}</th>
+            {{#discourse-heading sortBy="category" sortOrder=sortOrder}}
+              {{i18n category_title}}
+            {{/discourse-heading}}
           {{/unless}}
-          <th class='posters'>{{i18n top_contributors}}</th>
-          <th class='num posts'>{{i18n posts}}</th>
-          <th class='num likes'>{{i18n likes}}</th>
-          <th class='num views'>{{i18n views}}</th>
-          <th class='num activity' colspan='2'>{{i18n activity}}</th>
+          {{#discourse-heading sortBy="posters" sortOrder=sortOrder}}
+            {{i18n top_contributors}}
+          {{/discourse-heading}}
+          {{#discourse-heading sortBy="posts" number=true sortOrder=sortOrder}}
+            {{i18n posts}}
+          {{/discourse-heading}}
+          {{#discourse-heading sortBy="likes" number=true sortOrder=sortOrder}}
+            {{i18n likes}}
+          {{/discourse-heading}}
+          {{#discourse-heading sortBy="views" number=true sortOrder=sortOrder}}
+            {{i18n views}}
+          {{/discourse-heading}}
+          {{#discourse-heading sortBy="activity" number=true colspan="2" sortOrder=sortOrder}}
+            {{i18n activity}}
+          {{/discourse-heading}}
         </tr>
         </thead>
 
@@ -67,6 +81,5 @@
         {{/if}}
       </h3>
     </footer>
-
   {{/if}}
 {{/unless}}
