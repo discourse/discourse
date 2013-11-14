@@ -240,7 +240,7 @@ nl:
         confirm: Het wijzigen van je gebruikersnaam kan consequenties hebben. Weet je zeker dat je dit wil doen?
         taken: "Sorry, maar die gebruikersnaam is al in gebruik."
         error: Het veranderen van je gebruikersnaam is mislukt.
-        invalid: Die gebruikersnaam is ongeldig. Gebruik alleen nummers en letters.
+        invalid: Die gebruikersnaam is ongeldig. Gebruik alleen cijfers en letters.
 
       change_email:
         title: Wijzig e-mail
