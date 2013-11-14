@@ -1418,7 +1418,7 @@ en:
         reset: 'reset to default'
         none: 'none'
         categories:
-          mandatory: 'Mandatory'
+          required: 'Required'
           users: 'Users'
           posting: 'Posting'
           email: 'Email'

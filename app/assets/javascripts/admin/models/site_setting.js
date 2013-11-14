@@ -118,7 +118,7 @@ Discourse.SiteSetting.reopenClass({
         categories[s.category].pushObject(Discourse.SiteSetting.create(s));
       });
       _.each(categoryNames, function(n) {
-        result.pushObject({nameKey: n, name: I18n.t('admin.site_settings.categories.' + n),siteSettings: categories[n]});
+        result.pushObject({nameKey: n, name: I18n.t('admin.site_settings.categories.' + n), siteSettings: categories[n]});
       });
       return result;
     });

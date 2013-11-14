@@ -1,0 +1,39 @@
+module("Discourse.AdminSiteSettingsController");
+
+test("filter", function() {
+  var allSettings = Em.A([Ember.Object.create({
+    nameKey: 'users', name: 'users',
+    siteSettings: [Discourse.SiteSetting.create({"setting":"username_change_period","description":"x","default":3,"type":"fixnum","value":"3","category":"users"})]
+  }), Ember.Object.create({
+    nameKey: 'posting', name: 'posting',
+    siteSettings: [Discourse.SiteSetting.create({"setting":"display_name_on_posts","description":"x","default":false,"type":"bool","value":"true","category":"posting"})]
+  })]);
+  var adminSiteSettingsController = testController(Discourse.AdminSiteSettingsController, allSettings);
+  adminSiteSettingsController.set('allSiteSettings', allSettings);
+
+  equal(adminSiteSettingsController.get('content')[0].nameKey, 'users', "Can get first site setting category's name key.");
+
+  adminSiteSettingsController.set('filter', 'username_change');
+  equal(adminSiteSettingsController.get('content').length, 1, "a. Filter with one match for username_change");
+  equal(adminSiteSettingsController.get('content')[0].nameKey, "users", "b. Filter with one match for username_change");
+  equal(adminSiteSettingsController.get('content')[0].siteSettings[0].setting, "username_change_period", "c. Filter with one match for username_change");
+
+  adminSiteSettingsController.set('filter', 'name_on');
+  equal(adminSiteSettingsController.get('content').length, 1, "a. Filter with one match for name_on");
+  equal(adminSiteSettingsController.get('content')[0].nameKey, "posting", "b. Filter with one match for name_on");
+  equal(adminSiteSettingsController.get('content')[0].siteSettings[0].setting, "display_name_on_posts", "c. Filter with one match for name_on");
+
+  adminSiteSettingsController.set('filter', 'name');
+  equal(adminSiteSettingsController.get('content').length, 2, "a. Filter with one match for name");
+  equal(adminSiteSettingsController.get('content')[0].nameKey, "users", "b. Filter with one match for name");
+  equal(adminSiteSettingsController.get('content')[1].nameKey, "posting", "c. Filter with one match for name");
+  equal(adminSiteSettingsController.get('content')[0].siteSettings[0].setting, "username_change_period", "d. Filter with one match for name");
+  equal(adminSiteSettingsController.get('content')[1].siteSettings[0].setting, "display_name_on_posts", "d. Filter with one match for name");
+
+  adminSiteSettingsController.set('filter', '');
+  adminSiteSettingsController.set('onlyOverridden', true);
+  equal(adminSiteSettingsController.get('content').length, 1, "a. onlyOverridden with one match");
+  equal(adminSiteSettingsController.get('content')[0].nameKey, "posting", "b. onlyOverridden with one match");
+  equal(adminSiteSettingsController.get('content')[0].siteSettings[0].setting, "display_name_on_posts", "c. onlyOverridden with one match");
+
+});

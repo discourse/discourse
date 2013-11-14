@@ -9,6 +9,10 @@
 Discourse.AdminSiteSettingsRoute = Discourse.Route.extend({
   model: function() {
     return Discourse.SiteSetting.findAll();
+  },
+
+  afterModel: function(siteSettings) {
+    this.controllerFor('adminSiteSettings').set('allSiteSettings', siteSettings);
   }
 });
 

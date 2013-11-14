@@ -1,4 +1,4 @@
-mandatory:
+required:
   title:
     client: true
     default: 'Discourse'
