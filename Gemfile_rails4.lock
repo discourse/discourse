@@ -220,7 +220,6 @@ GEM
     highline (1.6.20)
     hike (1.2.3)
     hiredis (0.4.5)
-    httpauth (0.2.0)
     i18n (0.6.5)
     ice_cube (0.11.0)
     image_optim (0.9.1)
@@ -233,8 +232,6 @@ GEM
     image_sorcery (1.1.0)
     in_threads (1.2.0)
     json (1.8.1)
-    jwt (0.1.8)
-      multi_json (>= 1.5)
     kgio (2.8.1)
     librarian (0.1.1)
       highline
@@ -263,12 +260,9 @@ GEM
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     oauth (0.4.7)
-    oauth2 (0.8.1)
-      faraday (~> 0.8)
-      httpauth (~> 0.1)
-      jwt (~> 0.1.4)
+    oauth2 (0.5.2)
+      faraday (~> 0.7)
       multi_json (~> 1.0)
-      rack (~> 1.2)
     oj (2.1.7)
     omniauth (1.1.4)
       hashie (>= 1.2, < 3)
@@ -277,16 +271,16 @@ GEM
       addressable (~> 2.3)
       nokogiri (~> 1.6)
       omniauth (~> 1.1.0)
-    omniauth-facebook (1.4.1)
-      omniauth-oauth2 (~> 1.1.0)
-    omniauth-github (1.1.1)
+    omniauth-facebook (1.2.0)
+      omniauth-oauth2 (~> 1.0.0)
+    omniauth-github (1.0.1)
       omniauth (~> 1.0)
-      omniauth-oauth2 (~> 1.1)
+      omniauth-oauth2 (~> 1.0)
     omniauth-oauth (1.0.1)
       oauth
       omniauth (~> 1.0)
-    omniauth-oauth2 (1.1.1)
-      oauth2 (~> 0.8.0)
+    omniauth-oauth2 (1.0.0)
+      oauth2 (~> 0.5.0)
       omniauth (~> 1.0)
     omniauth-openid (1.0.1)
       omniauth (~> 1.0)
@@ -332,6 +326,11 @@ GEM
       sprockets-rails (~> 2.0.0)
     rails-observers (0.1.2)
       activemodel (~> 4.0)
+    rails_12factor (0.0.2)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.1)
+    rails_stdout_logging (0.0.3)
     railties (4.0.1)
       actionpack (= 4.0.1)
       activesupport (= 4.0.1)
@@ -522,6 +521,7 @@ DEPENDENCIES
   rack-protection
   rails
   rails-observers
+  rails_12factor
   rails_multisite!
   rake
   rb-fsevent

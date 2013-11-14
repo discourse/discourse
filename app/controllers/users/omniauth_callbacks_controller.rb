@@ -6,13 +6,6 @@ require_dependency 'user_name_suggester'
 class Users::OmniauthCallbacksController < ApplicationController
 
   BUILTIN_AUTH = [
-    Auth::FacebookAuthenticator.new,
-    Auth::OpenIdAuthenticator.new("google", "https://www.google.com/accounts/o8/id", trusted: true),
-    Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", trusted: true),
-    Auth::GithubAuthenticator.new,
-    Auth::TwitterAuthenticator.new,
-    Auth::PersonaAuthenticator.new,
-    Auth::CasAuthenticator.new,
     Auth::LessonPlanetAuthenticator.new
   ]
 

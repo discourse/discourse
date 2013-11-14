@@ -8,23 +8,10 @@ module OmniAuth
       option :name, 'lessonplanet'
 
       option :client_options, {
-          :site => AUTH_URL,
-          :authorize_url => "#{AUTH_URL}/oauth/authorize",
-          :token_url => "#{AUTH_URL}/oauth/token"
+          site: AUTH_URL,
+          token_url: '/oauth/token',
+          authorize_url: '/oauth/authorize'
       }
-
-      uid { raw_info['id'] }
-
-      info do
-        {
-          name: raw_info['name'],
-          email: raw_info['email']
-        }
-      end
-
-      extra do
-        { 'raw_info' => raw_info }
-      end
 
       def raw_info
         @raw_info ||= access_token.get('/api/v2/account.json').parsed
