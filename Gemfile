@@ -193,6 +193,7 @@ gem 'rack-mini-profiler',  git: 'https://github.com/MiniProfiler/rack-mini-profi
 gem 'rack-cors', require: false
 gem 'unicorn', require: false
 gem 'puma', require: false
+gem 'newrelic_rpm'
 
 # perftools only works on 1.9 atm
 group :profile do
