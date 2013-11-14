@@ -259,6 +259,16 @@ rate_limits:
   max_edits_per_day: 30
   max_favorites_per_day: 20
 
+developer:
+  force_hostname: ''
+  port:
+    default:
+      development: 3000
+      default: ''
+  queue_jobs:
+    default:
+      test: false
+      default: true
 
 uncategorized:
   tos_url:
@@ -323,16 +333,9 @@ uncategorized:
   auto_track_topics_after: 240000
   new_topic_duration_minutes: 2880
   long_polling_interval: 15000
-  force_hostname: ''
-  port:
-    default:
-      development: 3000
-      default: ''
+  
   use_ssl: false
-  queue_jobs:
-    default:
-      test: false
-      default: true
+
 
   category_featured_topics:
     client: true

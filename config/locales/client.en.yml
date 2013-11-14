@@ -1426,4 +1426,5 @@ en:
           trust: 'Trust Levels'
           spam: 'Spam'
           rate_limits: 'Rate Limits'
+          developer: 'Developer'
           uncategorized: 'Uncategorized'
