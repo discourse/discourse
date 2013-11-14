@@ -10,9 +10,9 @@
   </div>
 </div>
 
-<ul class="nav nav-pills">
+<ul class="nav nav-pills site-settings-nav">
   {{#each category in controller}}
-    <li>{{#link-to 'adminSiteSettingsCategory' category.nameKey}}{{category.name}}{{/link-to}}</li>
+    <li {{bindAttr class="category.nameKey"}}>{{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}{{category.name}}{{/link-to}}</li>
   {{/each}}
 </ul>
 

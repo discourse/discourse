@@ -143,6 +143,24 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
   }
 }
 
+.site-settings-nav {
+  li {
+    background-color: grayscale($nav-pills-background-color-hover);
+    margin-bottom: 5px;
+
+    &.required, &.basic {
+      margin-bottom: 20px; // so nothing floats underneath these ones
+    }
+
+    > a {
+      font-size: 13px;
+      &.required, &.basic {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
 .settings {
   .setting {
     padding-bottom: 20px;
