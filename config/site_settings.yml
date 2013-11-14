@@ -20,6 +20,46 @@ required:
   company_short_name: 'Unconfigured Forum'
   company_domain: 'www.example.com'
 
+basic:
+  default_locale:
+    default: 'en'
+    enum: 'LocaleSiteSetting'
+  ga_tracking_code:
+    client: true
+    default: ''
+  ga_domain_name:
+    client: true
+    default: ''
+  enable_wide_category_list:
+    client: true
+    default: false
+  category_featured_topics:
+    client: true
+    default: 6
+  topics_per_page: 30
+  posts_per_page:
+    client: true
+    default: 20
+  suggested_topics: 5
+  enable_mobile_theme:
+    client: true
+    default: true
+  top_menu:
+    client: true
+    default: 'latest|new|unread|favorited|categories'
+  post_menu:
+    client: true
+    default: 'like|edit|flag|delete|share|bookmark|reply'
+  share_links:
+    client: true
+    default: 'twitter|facebook|google+|email'
+  category_colors:
+    client: true
+    default: 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890'
+  relative_date_duration:
+    client: true
+    default: 30
+
 users:
   enable_local_logins:
     client: true
@@ -227,6 +267,21 @@ trust:
     default: 0
     enum: 'MinTrustToCreateTopicSetting'
 
+security:
+  enable_flash_video_onebox: false
+  use_ssl: false
+  enable_escaped_fragments:
+    client: true
+    default: false
+
+seo:
+  add_rel_nofollow_to_user_content: true
+  exclude_rel_nofollow_domains: ''
+  allow_index_in_robots_txt: true
+  enable_noscript_support:
+    client: true
+    default: true
+
 spam:
   email_domains_blacklist:
     client: true
@@ -280,30 +335,11 @@ uncategorized:
   privacy_policy_url:
     client: true
     default: ''
-  top_menu:
-    client: true
-    default: 'latest|new|unread|favorited|categories'
-  post_menu:
-    client: true
-    default: 'like|edit|flag|delete|share|bookmark|reply'
-  share_links:
-    client: true
-    default: 'twitter|facebook|google+|email'
+
   track_external_right_clicks:
     client: true
     default: false
-  ga_tracking_code:
-    client: true
-    default: ''
-  ga_domain_name:
-    client: true
-    default: ''
-  enable_escaped_fragments:
-    client: true
-    default: false
-  enable_noscript_support:
-    client: true
-    default: true
+
   enable_long_polling:
     client: true
     default: true
@@ -323,45 +359,18 @@ uncategorized:
     client: true
     default: true
   new_version_emails: true
-  category_colors:
-    client: true
-    default: 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890'
-  enable_wide_category_list:
-    client: true
-    default: false
-
   auto_track_topics_after: 240000
   new_topic_duration_minutes: 2880
   long_polling_interval: 15000
-  
-  use_ssl: false
-
-
-  category_featured_topics:
-    client: true
-    default: 6
-  topics_per_page: 30
-  posts_per_page:
-    client: true
-    default: 20
   active_user_rate_limit_secs: 60
   previous_visit_timeout_hours: 1
-
-  suggested_topics: 5
   staff_like_weight: 3
-  add_rel_nofollow_to_user_content: true
-  exclude_rel_nofollow_domains: ''
   best_of_score_threshold: 15
   best_of_posts_required: 50
   best_of_likes_required: 1
   best_of_percent_filter: 20
-  allow_index_in_robots_txt: true
   send_welcome_message: true
-  enable_flash_video_onebox: false
   allow_import: false
-  default_locale:
-    default: 'en'
-    enum: 'LocaleSiteSetting'
   educate_until_posts:
     client: true
     default: 2
@@ -376,13 +385,7 @@ uncategorized:
     client: true
     default: 5000
   minimum_topics_similar: 50
-  relative_date_duration:
-    client: true
-    default: 30
   sequential_replies_threshold: 2
-  enable_mobile_theme:
-    client: true
-    default: true
   dominating_topic_minimum_percent: 20
-  
+
 
