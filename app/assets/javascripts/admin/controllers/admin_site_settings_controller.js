@@ -13,7 +13,7 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
   /**
     The list of settings based on the current filters
 
-    @property filteredContent
+    @property filterContent
   **/
   filterContent: function() {
 

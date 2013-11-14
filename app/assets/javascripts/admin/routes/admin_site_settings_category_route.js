@@ -9,5 +9,8 @@
 Discourse.AdminSiteSettingsCategoryRoute = Discourse.Route.extend({
   model: function(params) {
     this.controllerFor('adminSiteSettingsCategory').set('categoryNameKey', params.category_id);
+    return this.modelFor('adminSiteSettings').find(function(category) {
+      return category.nameKey === params.category_id;
+    });
   }
 });
