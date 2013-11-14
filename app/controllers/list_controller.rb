@@ -58,9 +58,9 @@ class ListController < ApplicationController
     @description = @category.description
 
     if params[:parent_category].present?
-      list.more_topics_url = url_for(category_list_parent_path(params[:parent_category], params[:category], page: next_page, format: "json"))
+      list.more_topics_url = url_for(category_list_parent_path(params[:parent_category], params[:category], next_page_params))
     else
-      list.more_topics_url = url_for(category_list_path(params[:category], page: next_page, format: "json"))
+      list.more_topics_url = url_for(category_list_path(params[:category], next_page_params))
     end
 
     respond(list)
@@ -108,8 +108,12 @@ class ListController < ApplicationController
     end
   end
 
-  def next_page
-    params[:page].to_i + 1
+  def next_page_params(opts=nil)
+    opts = opts || {}
+    route_params = { format: 'json', page: params[:page].to_i + 1 }
+    route_params[:sort_order] = opts[:sort_order] if opts[:sort_order].present?
+    route_params[:sort_descending] = opts[:sort_descending] if opts[:sort_descending].present?
+    route_params
   end
 
   private
@@ -155,12 +159,11 @@ class ListController < ApplicationController
   end
 
   def generate_list_for(action, target_user, opts)
-    list = TopicQuery.new(current_user, opts)
-    list = list.send("list_#{action}", target_user)
+    TopicQuery.new(current_user, opts).send("list_#{action}", target_user)
   end
 
   def construct_url_with(action, opts, url_prefix=nil)
     method = url_prefix.blank? ? "#{action}_path" : "#{url_prefix}_#{action}_path"
-    public_send(method, opts.merge(format: 'json', page: next_page))
+    public_send(method, opts.merge(next_page_params(opts)))
   end
 end

@@ -71,7 +71,7 @@ Discourse.TopicList = Discourse.Model.extend({
 
       topics.clear();
       topics.pushObjects(newTopics);
-      self.set('loaded', true);
+      self.setProperties({ loaded: true, more_topics_url: result.topic_list.more_topics_url });
     });
 
   }.observes('sortOrder.order', 'sortOrder.descending'),
@@ -82,26 +82,24 @@ Discourse.TopicList = Discourse.Model.extend({
     var moreUrl = this.get('more_topics_url');
     if (moreUrl) {
 
-      var topicList = this;
+      var self = this;
       this.set('loadingMore', true);
 
       return Discourse.ajax({url: moreUrl}).then(function (result) {
         var topicsAdded = 0;
         if (result) {
           // the new topics loaded from the server
-          var newTopics = Discourse.TopicList.topicsFrom(result);
-          var topics = topicList.get("topics");
+          var newTopics = Discourse.TopicList.topicsFrom(result),
+              topics = self.get("topics");
 
-          topicList.forEachNew(newTopics, function(t) {
+          self.forEachNew(newTopics, function(t) {
             t.set('highlight', topicsAdded++ === 0);
             topics.pushObject(t);
           });
 
-          topicList.set('more_topics_url', result.topic_list.more_topics_url);
-          Discourse.Session.currentProp('topicList', topicList);
-          topicList.set('loadingMore', false);
-
-          return result.topic_list.more_topics_url;
+          self.setProperties({ loadingMore: false, more_topics_url: result.topic_list.more_topics_url });
+          Discourse.Session.currentProp('topicList', self);
+          return self.get('more_topics_url');
         }
       });
     } else {
