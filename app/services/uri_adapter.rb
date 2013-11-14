@@ -6,14 +6,14 @@ class UriAdapter
   def initialize(target)
     raise Discourse::InvalidParameters unless target =~ /^https?:\/\//
 
-    @target = URI(target)
+    @target = Addressable::URI.parse(target)
     @original_filename = ::File.basename(@target.path)
     @content = download_content
     @tempfile = TempfileFactory.new.generate(@original_filename)
   end
 
   def download_content
-    open(target)
+    open(target.normalize)
   end
 
   def copy_to_tempfile(src)
