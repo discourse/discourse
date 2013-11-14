@@ -190,6 +190,8 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       var bus = Discourse.MessageBus;
       bus.callbackInterval = Discourse.SiteSettings.polling_interval;
       bus.enableLongPolling = true;
+      bus.baseUrl = Discourse.getURL("/");
+
       if (user.admin || user.moderator) {
         bus.subscribe("/flagged_counts", function(data) {
           user.set('site_flagged_posts_count', data.total);

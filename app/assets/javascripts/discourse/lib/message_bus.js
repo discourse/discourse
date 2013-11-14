@@ -9,7 +9,7 @@
 **/
 Discourse.MessageBus = (function() {
   // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-  var callbacks, clientId, failCount, interval, shouldLongPoll, queue, responseCallbacks, uniqueId;
+  var callbacks, clientId, failCount, interval, shouldLongPoll, queue, responseCallbacks, uniqueId, baseUrl;
   var me;
 
   uniqueId = function() {
@@ -27,6 +27,7 @@ Discourse.MessageBus = (function() {
   queue = [];
   interval = null;
   failCount = 0;
+  baseUrl = "/";
 
   var isHidden = function() {
     if (document.hidden !== void 0) {
@@ -38,8 +39,8 @@ Discourse.MessageBus = (function() {
     } else if (document.mozHidden !== void 0) {
       return document.mozHidden;
     } else {
-      // fallback to problamatic window.focus
-      return !Discourse.get('hasFocus');
+      // problamatic fallback
+      return !document.hasFocus;
     }
   };
 
@@ -55,6 +56,7 @@ Discourse.MessageBus = (function() {
     clientId: clientId,
     alwaysLongPoll: false,
     stop: false,
+    baseUrl: baseUrl,
 
     // Start polling
     start: function(opts) {
@@ -73,7 +75,7 @@ Discourse.MessageBus = (function() {
           data[callback.channel] = callback.last_id;
         });
         gotData = false;
-        _this.longPoll = $.ajax(Discourse.getURL("/message-bus/") + clientId + "/poll?" + (!shouldLongPoll() || !_this.enableLongPolling ? "dlp=t" : ""), {
+        _this.longPoll = $.ajax(baseUrl + "message-bus/" + clientId + "/poll?" + (!shouldLongPoll() || !_this.enableLongPolling ? "dlp=t" : ""), {
           data: data,
           cache: false,
           dataType: 'json',
