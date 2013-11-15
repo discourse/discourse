@@ -117,12 +117,11 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
 
     var buffer = this.get('buffer');
     var quotedText = Discourse.Quote.build(post, buffer);
+    composerOpts.quote = quotedText;
     if (composerController.get('content.replyDirty')) {
       composerController.appendText(quotedText);
     } else {
-      composerController.open(composerOpts).then(function() {
-        composerController.appendText(quotedText);
-      });
+      composerController.open(composerOpts);
     }
     this.set('buffer', '');
     return false;

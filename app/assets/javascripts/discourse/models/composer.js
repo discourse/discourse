@@ -361,6 +361,11 @@ Discourse.Composer = Discourse.Model.extend({
           loading: false
         });
       });
+    } else if (opts.action === REPLY && opts.quote) {
+      this.setProperties({
+        reply: opts.quote,
+        originalText: opts.quote
+      });
     }
     if (opts.title) { this.set('title', opts.title); }
     this.set('originalText', opts.draft ? '' : this.get('reply'));

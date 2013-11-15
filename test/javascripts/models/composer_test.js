@@ -204,3 +204,13 @@ test('showPreview', function() {
   Discourse.Mobile.mobileView = false;
   equal(new_composer().get('showPreview'), true, "Show preview by default in desktop view");
 });
+
+test('open with a quote', function() {
+  var quote = '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
+  var new_composer = function() {
+    return Discourse.Composer.open({action: Discourse.Composer.REPLY, draftKey: 'asfd', draftSequence: 1, quote: quote});
+  };
+
+  equal(new_composer().get('originalText'), quote, "originalText is the quote" );
+  equal(new_composer().get('replyDirty'), false, "replyDirty is initally false with a quote" );
+});
