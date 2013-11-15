@@ -13,16 +13,19 @@ class Lp::PostsController < PostsController
           raw: params[:topic_description],
         }
 
-        topic_post_creator = PostCreator.new(current_user, topic_post_params)
-        topic_post = topic_post_creator.create
+        topic_post = Post.find_by_raw(topic_post_params[:raw])
 
-        if topic_post_creator.errors.present?
-          resp[:errors] << topic_post_creator.errors.full_messages
-        else
-          topic_post_serializer = PostSerializer.new(topic_post, scope: guardian, root: false)
-          topic_post_serializer.topic_slug = topic_post.topic.slug
-          resp[:topic] = topic_post_serializer
+        unless topic_post.present?
+          topic_post_creator = PostCreator.new(current_user, topic_post_params)
+          topic_post = topic_post_creator.create
+          resp[:errors] << topic_post_creator.errors.full_messages if topic_post_creator.errors.present?
         end
+
+        topic_post_serializer = PostSerializer.new(topic_post, scope: guardian, root: false)
+        topic_post_serializer.topic_slug = topic_post.topic.slug
+        resp[:topic] = topic_post_serializer
+
+        comment_user = User.find_by_email(params[:email])
 
         comment_post_params = {
           skip_validations: true,
@@ -31,16 +34,20 @@ class Lp::PostsController < PostsController
           topic_id: topic_post.topic.id
         }
 
-        comment_user = User.find_by_email(params[:email])
-        comment_post_creator = PostCreator.new(comment_user, comment_post_params)
-        comment_post = comment_post_creator.create
+        comment_post = Post.where(
+          raw: comment_post_params[:raw],
+          topic: topic_post.topic,
+          user: comment_user
+        ).first
 
-        if comment_post_creator.errors.present?
-          resp[:errors] << comment_post_creator.errors.full_messages
-        else
-          comment_post_serializer = PostSerializer.new(comment_post, scope: guardian, root: false)
-          resp[:comment] = comment_post_serializer
+        unless comment_post.present?
+          comment_post_creator = PostCreator.new(comment_user, comment_post_params)
+          comment_post = comment_post_creator.create
+          resp[:errors] << comment_post_creator.errors.full_messages if comment_post_creator.errors.present?
         end
+
+        comment_post_serializer = PostSerializer.new(comment_post, scope: guardian, root: false)
+        resp[:comment] = comment_post_serializer
 
       end
 
