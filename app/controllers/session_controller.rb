@@ -10,49 +10,30 @@ class SessionController < ApplicationController
     params.require(:login)
     params.require(:password)
 
-    login    = params[:login].strip
-    password = params[:password]
-    login    = login[1..-1] if login[0] == "@"
+    login = params[:login].strip
+    login = login[1..-1] if login[0] == "@"
 
-    @user = User.find_by_username_or_email(login)
+    if user = User.find_by_username_or_email(login)
 
-    if @user.present?
-
-      # If the site requires user approval and the user is not approved yet
-      if SiteSetting.must_approve_users? && !@user.approved? && !@user.admin?
-        render json: {error: I18n.t("login.not_approved")}
+      # If their password is correct
+      unless user.confirm_password?(params[:password])
+        invalid_credentials
         return
       end
 
-      # If their password is correct
-      if @user.confirm_password?(password)
-
-        if @user.suspended?
-          if reason = @user.suspend_reason
-            render json: { error: I18n.t("login.suspended_with_reason", {date: I18n.l(@user.suspended_till, format: :date_only), reason: reason}) }
-          else
-            render json: { error: I18n.t("login.suspended", {date: I18n.l(@user.suspended_till, format: :date_only)}) }
-          end
-          return
-        end
-
-        if @user.email_confirmed?
-          log_on_user(@user)
-          render_serialized(@user, UserSerializer)
-          return
-        else
-          render json: {
-            error: I18n.t("login.not_activated"),
-            reason: 'not_activated',
-            sent_to_email: @user.email_logs.where(email_type: 'signup').order('created_at DESC').first.try(:to_address) || @user.email,
-            current_email: @user.email
-          }
-          return
-        end
+      # If the site requires user approval and the user is not approved yet
+      if login_not_approved_for?(user)
+        login_not_approved
+        return
       end
     end
 
-    render json: {error: I18n.t("login.incorrect_username_email_or_password")}
+    if user.suspended?
+      failed_to_login(user)
+      return
+    end
+
+    user.email_confirmed? ? login(user) : not_activated(user)
   end
 
   def forgot_password
@@ -71,6 +52,41 @@ class SessionController < ApplicationController
     reset_session
     log_off_user
     render nothing: true
+  end
+
+  private
+
+  def login_not_approved_for?(user)
+    SiteSetting.must_approve_users? && !user.approved? && !user.admin?
+  end
+
+  def invalid_credentials
+    render json: {error: I18n.t("login.incorrect_username_email_or_password")}
+  end
+
+  def login_not_approved
+    render json: {error: I18n.t("login.not_approved")}
+  end
+
+  def not_activated(user)
+    render json: {
+      error: I18n.t("login.not_activated"),
+      reason: 'not_activated',
+      sent_to_email: user.find_email || user.email,
+      current_email: user.email
+    }
+  end
+
+  def failed_to_login(user)
+    message = user.suspend_reason ? "login.suspended_with_reason" : "login.suspended"
+
+    render json: { error: I18n.t(message, { date: I18n.l(user.suspended_till, format: :date_only),
+                                            reason: user.suspend_reason}) }
+  end
+
+  def login(user)
+    log_on_user(user)
+    render_serialized(user, UserSerializer)
   end
 
 end

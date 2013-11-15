@@ -19,6 +19,11 @@ class EmailLog < ActiveRecord::Base
     EmailLog.where(reply_key: reply_key).first
   end
 
+  def self.last_sent_email_address
+    where(email_type: 'signup').order('created_at DESC')
+                               .first.try(:to_address)
+  end
+
 end
 
 # == Schema Information

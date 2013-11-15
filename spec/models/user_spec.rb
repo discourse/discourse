@@ -885,4 +885,25 @@ describe User do
 
   end
 
+  describe "#find_email" do
+
+    let(:user) { Fabricate(:user, email: "bob@example.com") }
+
+    context "when email is exists in the email logs" do
+      before { user.stubs(:last_sent_email_address).returns("bob@lastemail.com") }
+
+      it "returns email from the logs" do
+        expect(user.find_email).to eq("bob@lastemail.com")
+      end
+    end
+
+    context "when email does not exist in the email logs" do
+      before { user.stubs(:last_sent_email_address).returns(nil) }
+
+      it "fetches the user's email" do
+        expect(user.find_email).to eq(user.email)
+      end
+    end
+  end
+
 end

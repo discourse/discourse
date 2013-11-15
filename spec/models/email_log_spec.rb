@@ -21,4 +21,26 @@ describe EmailLog do
 
   end
 
+  describe ".last_sent_email_address" do
+    let(:user) { Fabricate(:user) }
+
+    context "when user's email exist in the logs" do
+      before do
+        user.email_logs.create(email_type: 'signup', to_address: user.email)
+        user.email_logs.create(email_type: 'blah', to_address: user.email)
+        user.reload
+      end
+
+      it "the user's last email from the log" do
+        expect(user.email_logs.last_sent_email_address).to eq(user.email)
+      end
+    end
+
+    context "when user's email does not exist email logs" do
+      it "returns nil" do
+        expect(user.email_logs.last_sent_email_address).to be_nil
+      end
+    end
+  end
+
 end
