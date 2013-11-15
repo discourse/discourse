@@ -184,7 +184,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       this.get('content').toggleStar();
     },
 
-
     /**
       Clears the pin from a topic for the currently logged in user
 
@@ -221,7 +220,22 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
           }) + "\n\n" + q);
         });
       });
+    },
+
+    removeAllowedUser: function(username) {
+      var self = this;
+      bootbox.dialog(I18n.t("private_message_info.remove_allowed_user", {name: username}), [
+        {label: I18n.t("no_value"),
+         'class': 'btn-danger rightg'},
+        {label: I18n.t("yes_value"),
+         'class': 'btn-primary',
+          callback: function() {
+            self.get('details').removeAllowedUser(username);
+          }
+        }
+      ]);
     }
+
   },
 
   jumpTopDisabled: function() {
@@ -414,15 +428,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return false;
   },
 
-  clearFlags: function(actionType) {
-    actionType.clearFlags();
-  },
-
-  // Who acted on a particular post / action type
-  whoActed: function(actionType) {
-    actionType.loadUsers();
-  },
-
   recoverPost: function(post) {
     post.recover();
   },
@@ -473,21 +478,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       }
       return true;
     }
-  },
-
-  removeAllowedUser: function(username) {
-    var self = this;
-    bootbox.dialog(I18n.t("private_message_info.remove_allowed_user", {name: username}), [
-      {label: I18n.t("no_value"),
-       'class': 'btn-danger rightg'},
-      {label: I18n.t("yes_value"),
-       'class': 'btn-primary',
-        callback: function() {
-          self.get('details').removeAllowedUser(username);
-        }
-      }
-    ]);
   }
+
 
 });
 

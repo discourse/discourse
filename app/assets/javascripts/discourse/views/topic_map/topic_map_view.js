@@ -1,20 +1,21 @@
 /**
-  This view handles rendering of the summary of the topic under the first post
+  This view handles rendering of the map of the topic under the first post
 
   @class TopicMapView
   @extends Discourse.View
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicMapView = Discourse.ContainerView.extend({
-  classNameBindings: ['hidden', ':topic-summary'],
-  allLinksShown: false,
 
-  topic: Em.computed.alias('controller.model'),
+var LINKS_SHOWN = 5;
+
+Discourse.TopicMapView = Discourse.ContainerView.extend({
+  classNameBindings: ['hidden', ':topic-map'],
+  allLinksShown: false,
 
   showAllLinksControls: function() {
     if (this.get('allLinksShown')) return false;
-    if ((this.get('topic.details.links.length') || 0) <= Discourse.TopicMapView.LINKS_SHOWN) return false;
+    if ((this.get('topic.details.links.length') || 0) <= LINKS_SHOWN) return false;
     return true;
   }.property('allLinksShown', 'topic.details.links'),
 
@@ -23,16 +24,18 @@ Discourse.TopicMapView = Discourse.ContainerView.extend({
 
     var allLinks = this.get('topic.details.links');
     if (this.get('allLinksShown')) return allLinks;
-    return allLinks.slice(0, Discourse.TopicMapView.LINKS_SHOWN);
+    return allLinks.slice(0, LINKS_SHOWN);
   }.property('topic.details.links', 'allLinksShown'),
 
   shouldRerender: Discourse.View.renderIfChanged('topic.posts_count'),
 
   hidden: function() {
     if (!this.get('post.firstPost')) return true;
-    if (this.get('controller.content.archetype') === 'private_message') return false;
-    if (this.get('controller.content.archetype') !== 'regular') return true;
-    return this.get('controller.content.posts_count') < 2;
+
+    var topic = this.get('topic');
+    if (topic.get('archetype') === 'private_message') return false;
+    if (topic.get('archetype') !== 'regular') return true;
+    return topic.get('posts_count') < 2;
   }.property(),
 
   init: function() {
@@ -44,23 +47,22 @@ Discourse.TopicMapView = Discourse.ContainerView.extend({
       content: this.get('controller')
     }, Discourse.GroupedView);
 
-    this.trigger('appendSummaryInformation', this);
+    this.trigger('appendMapInformation', this);
   },
 
-  showAllLinks: function() {
-    this.set('allLinksShown', true);
+  actions: {
+    showAllLinks: function() {
+      this.set('allLinksShown', true);
+    },
   },
 
-  appendSummaryInformation: function(container) {
+  appendMapInformation: function(container) {
 
-    // If we have a best of view
-    if (this.get('controller.has_best_of')) {
-      container.attachViewWithArgs({
-        templateName: 'topic_map/best_of_toggle',
-        tagName: 'section',
-        classNames: ['information'],
-        content: this.get('controller')
-      }, Discourse.GroupedView);
+    var topic = this.get('topic');
+
+    // If we have a best of capability
+    if (topic.get('has_best_of')) {
+      container.attachViewWithArgs({ topic: topic }, Discourse.DiscourseToggleBestOfComponent);
     }
 
     // If we have a private message
@@ -75,6 +77,3 @@ Discourse.TopicMapView = Discourse.ContainerView.extend({
   }
 });
 
-Discourse.TopicMapView.reopenClass({
-  LINKS_SHOWN: 5
-});

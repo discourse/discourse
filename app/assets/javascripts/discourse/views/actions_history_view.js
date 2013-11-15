@@ -2,24 +2,24 @@
   This view handles rendering of what actions have been taken on a post. It uses
   buffer rendering for performance rather than a template.
 
-  @class ActionsHistoryView
+  @class ActionsHistoryComponent
   @extends Discourse.View
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ActionsHistoryView = Discourse.View.extend({
+Discourse.ActionsHistoryComponent = Em.Component.extend({
   tagName: 'section',
   classNameBindings: [':post-actions', 'hidden'],
-  content: Em.computed.alias('post.actionsHistory'),
-  noContent: Em.computed.empty('content'),
-  hidden: Em.computed.and('noContent', 'post.notDeleted'),
-  shouldRerender: Discourse.View.renderIfChanged('content.@each', 'content.users.length', 'post.deleted'),
+  actionsHistory: Em.computed.alias('post.actionsHistory'),
+  emptyHistory: Em.computed.empty('actionsHistory'),
+  hidden: Em.computed.and('emptyHistory', 'post.notDeleted'),
+  shouldRerender: Discourse.View.renderIfChanged('actionsHistory.@each', 'actionsHistory.users.length', 'post.deleted'),
 
   // This was creating way too many bound ifs and subviews in the handlebars version.
   render: function(buffer) {
 
-    if (this.present('content')) {
-      this.get('content').forEach(function(c) {
+    if (!this.get('emptyHistory')) {
+      this.get('actionsHistory').forEach(function(c) {
         buffer.push("<div class='post-action'>");
 
         var renderActionIf = function(property, dataAttribute, text) {
@@ -69,7 +69,7 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
   },
 
   actionTypeById: function(actionTypeId) {
-    return this.get('content').findProperty('id', actionTypeId);
+    return this.get('actionsHistory').findProperty('id', actionTypeId);
   },
 
   click: function(e) {
@@ -77,23 +77,23 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
         actionTypeId;
 
     if (actionTypeId = $target.data('clear-flags')) {
-      this.get('controller').clearFlags(this.actionTypeById(actionTypeId));
+      this.actionTypeById(actionTypeId).clearFlags();
       return false;
     }
 
     // User wants to know who actioned it
     if (actionTypeId = $target.data('who-acted')) {
-      this.get('controller').whoActed(this.actionTypeById(actionTypeId));
+      this.actionTypeById(actionTypeId).loadUsers();
       return false;
     }
 
     if (actionTypeId = $target.data('act')) {
-      this.get('content').findProperty('id', actionTypeId).act();
+      this.get('actionsHistory').findProperty('id', actionTypeId).act();
       return false;
     }
 
     if (actionTypeId = $target.data('undo')) {
-      this.get('content').findProperty('id', actionTypeId).undo();
+      this.get('actionsHistory').findProperty('id', actionTypeId).undo();
       return false;
     }
 
@@ -102,3 +102,4 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
 });
 
 
+Discourse.View.registerHelper('discourse-action-history', Discourse.ActionsHistoryComponent);
