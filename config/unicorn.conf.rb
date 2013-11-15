@@ -1,7 +1,7 @@
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
 
-# RUN out of band GC every 2 requests
-# ENV['UNICORN_OOBGC_REQS'] = "2" unless ENV['UNICORN_OOBGC_REQS']
+# enable out of band gc out of the box, it is low risk and improves perf a lot
+ENV['UNICORN_ENABLE_OOBGC'] = "1"
 
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
