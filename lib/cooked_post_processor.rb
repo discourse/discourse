@@ -219,8 +219,8 @@ class CookedPostProcessor
   end
 
   def pull_hotlinked_images
-    # we don't want to run the job if we're not allowed to crawl images
-    return unless SiteSetting.crawl_images?
+    # is the job enabled?
+    return unless SiteSetting.download_remote_images_to_local?
     # we only want to run the job whenever it's changed by a user
     return if @post.updated_by == Discourse.system_user
     # make sure no other job is scheduled

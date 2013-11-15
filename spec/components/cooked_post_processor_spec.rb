@@ -275,15 +275,15 @@ describe CookedPostProcessor do
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
-    it "does not run when crawl images is disabled" do
-      SiteSetting.stubs(:crawl_images).returns(false)
+    it "does not run when download_remote_images_to_local is disabled" do
+      SiteSetting.stubs(:download_remote_images_to_local).returns(false)
       Jobs.expects(:cancel_scheduled_job).never
       cpp.pull_hotlinked_images
     end
 
-    context "when crawl_images? is enabled" do
+    context "when download_remote_images_to_local? is enabled" do
 
-      before { SiteSetting.stubs(:crawl_images).returns(true) }
+      before { SiteSetting.stubs(:download_remote_images_to_local).returns(true) }
 
       it "runs only when a user updated the post" do
         post.updated_by = Discourse.system_user

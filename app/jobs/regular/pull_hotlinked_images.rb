@@ -8,8 +8,7 @@ module Jobs
     end
 
     def execute(args)
-      # we don't want to run the job if we're not allowed to crawl images
-      return unless SiteSetting.crawl_images?
+      return unless SiteSetting.download_remote_images_to_local?
 
       post_id = args[:post_id]
       raise Discourse::InvalidParameters.new(:post_id) unless post_id.present?

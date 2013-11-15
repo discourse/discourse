@@ -249,6 +249,10 @@ files:
     default: false
   detect_custom_avatars: true
   max_daily_gravatar_crawls: 500
+  download_remote_images_to_local:
+    default:
+      test: false
+      default: true
 
 trust:
   default_trust_level: 0
