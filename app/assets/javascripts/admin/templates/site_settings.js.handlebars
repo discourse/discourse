@@ -10,12 +10,21 @@
   </div>
 </div>
 
-<ul class="nav nav-pills site-settings-nav">
-  {{#each category in controller}}
-    <li {{bindAttr class="category.nameKey"}}>{{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}{{category.name}}{{/link-to}}</li>
-  {{/each}}
-</ul>
+<div class="site-settings-nav pull-left">
+  <ul class="nav nav-stacked">
+    {{#each category in controller}}
+      <li {{bindAttr class="category.nameKey"}}>
+        {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
+          {{category.name}}
+          <span class='icon-chevron-right'></span>
+        {{/link-to}}
+      </li>
+    {{/each}}
+  </ul>
+</div>
 
-<hr/>
+<div class="site-settings-detail pull-left">
+  {{ outlet }}
+</div>
 
-{{ outlet }}
+<div class="clearfix"></div>
