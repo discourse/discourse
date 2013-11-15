@@ -132,7 +132,6 @@ gem 'discourse_emoji', path: 'vendor/gems/discourse_emoji'
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-  gem 'sass'
   gem 'sass-rails'
   # Sam: disabling for now, having issues with our jenkins build
   # gem 'turbo-sprockets-rails3'
