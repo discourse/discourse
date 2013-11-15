@@ -23,6 +23,14 @@ Discourse.TopicDetails = Discourse.Model.extend({
       });
     }
 
+    if (details.participants) {
+      var topic = this.get('topic');
+      details.participants = details.participants.map(function (p) {
+        p.topic = topic;
+        return Em.Object.create(p);
+      });
+    }
+
     this.setProperties(details);
     this.set('loaded', true);
   },

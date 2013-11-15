@@ -1,3 +1,11 @@
+/**
+  The controls at the top of a private message in the map area.
+
+  @class DiscoursePrivateMessageMapComponent
+  @extends Ember.Component
+  @namespace Discourse
+  @module Discourse
+**/
 Discourse.DiscoursePrivateMessageMapComponent = Ember.Component.extend({
   templateName: 'components/discourse-private-message-map',
   tagName: 'section',

@@ -8,7 +8,6 @@
 **/
 Discourse.TopicController = Discourse.ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
-  summaryCollapsed: true,
   needs: ['header', 'modal', 'composer', 'quoteButton'],
   allPostsSelected: false,
   editingTopic: false,
@@ -28,10 +27,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
     jumpBottom: function() {
       Discourse.URL.routeTo(this.get('lastPostUrl'));
-    },
-
-    toggleSummary: function() {
-      this.toggleProperty('summaryCollapsed');
     },
 
     selectAll: function() {

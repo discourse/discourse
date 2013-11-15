@@ -1,3 +1,11 @@
+/**
+  The controls for toggling the summarized view on/off
+
+  @class DiscourseToggleBestOfComponent
+  @extends Ember.Component
+  @namespace Discourse
+  @module Discourse
+**/
 Discourse.DiscourseToggleBestOfComponent = Ember.Component.extend({
   templateName: 'components/discourse-toggle-best-of',
   tagName: 'section',

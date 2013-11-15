@@ -6,27 +6,8 @@
   @namespace Discourse
   @module Discourse
 **/
-
-var LINKS_SHOWN = 5;
-
 Discourse.TopicMapView = Discourse.ContainerView.extend({
   classNameBindings: ['hidden', ':topic-map'],
-  allLinksShown: false,
-
-  showAllLinksControls: function() {
-    if (this.get('allLinksShown')) return false;
-    if ((this.get('topic.details.links.length') || 0) <= LINKS_SHOWN) return false;
-    return true;
-  }.property('allLinksShown', 'topic.details.links'),
-
-  infoLinks: function() {
-    if (this.blank('topic.details.links')) return [];
-
-    var allLinks = this.get('topic.details.links');
-    if (this.get('allLinksShown')) return allLinks;
-    return allLinks.slice(0, LINKS_SHOWN);
-  }.property('topic.details.links', 'allLinksShown'),
-
   shouldRerender: Discourse.View.renderIfChanged('topic.posts_count'),
 
   hidden: function() {
@@ -42,18 +23,8 @@ Discourse.TopicMapView = Discourse.ContainerView.extend({
     this._super();
     if (this.get('hidden')) return;
 
-    this.attachViewWithArgs({
-      templateName: 'topic_map/info',
-      content: this.get('controller')
-    }, Discourse.GroupedView);
-
+    this.attachViewWithArgs({ topic: this.get('topic') }, Discourse.DiscourseTopicInformationComponent);
     this.trigger('appendMapInformation', this);
-  },
-
-  actions: {
-    showAllLinks: function() {
-      this.set('allLinksShown', true);
-    },
   },
 
   appendMapInformation: function(container) {
