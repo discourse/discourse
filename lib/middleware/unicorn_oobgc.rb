@@ -49,8 +49,9 @@ module Middleware::UnicornOobgc
           # While tuning consider printing this out, each time this happens you saved
           # a user from running a GC inline
 
-          # puts "OobGC invoked req count: #{@num_requests} largest delta: #{largest}"
+          t = Time.now
           GC.start
+          puts "OobGC invoked req count: #{@num_requests} largest delta: #{largest} #{((Time.now - t) * 1000).to_i}ms saved"
           @num_requests = 0
         end
       end
