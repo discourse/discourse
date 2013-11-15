@@ -57,7 +57,6 @@ Discourse.TopicMapView = Discourse.ContainerView.extend({
   },
 
   appendMapInformation: function(container) {
-
     var topic = this.get('topic');
 
     // If we have a best of capability
@@ -67,12 +66,7 @@ Discourse.TopicMapView = Discourse.ContainerView.extend({
 
     // If we have a private message
     if (this.get('topic.isPrivateMessage')) {
-      container.attachViewWithArgs({
-        templateName: 'topic_map/private_message',
-        tagName: 'section',
-        classNames: ['information'],
-        content: this.get('controller')
-      }, Discourse.GroupedView);
+      container.attachViewWithArgs({ topic: topic, showPrivateInviteAction: 'showPrivateInvite' }, Discourse.DiscoursePrivateMessageMapComponent);
     }
   }
 });

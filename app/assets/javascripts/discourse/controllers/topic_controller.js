@@ -222,19 +222,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       });
     },
 
-    removeAllowedUser: function(username) {
-      var self = this;
-      bootbox.dialog(I18n.t("private_message_info.remove_allowed_user", {name: username}), [
-        {label: I18n.t("no_value"),
-         'class': 'btn-danger rightg'},
-        {label: I18n.t("yes_value"),
-         'class': 'btn-primary',
-          callback: function() {
-            self.get('details').removeAllowedUser(username);
-          }
-        }
-      ]);
-    }
+
 
   },
 
