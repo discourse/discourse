@@ -1,12 +1,12 @@
 /**
   This view handles rendering of the summary of the topic under the first post
 
-  @class TopicSummaryView
+  @class TopicMapView
   @extends Discourse.View
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicSummaryView = Discourse.ContainerView.extend({
+Discourse.TopicMapView = Discourse.ContainerView.extend({
   classNameBindings: ['hidden', ':topic-summary'],
   allLinksShown: false,
 
@@ -14,7 +14,7 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
 
   showAllLinksControls: function() {
     if (this.get('allLinksShown')) return false;
-    if ((this.get('topic.details.links.length') || 0) <= Discourse.TopicSummaryView.LINKS_SHOWN) return false;
+    if ((this.get('topic.details.links.length') || 0) <= Discourse.TopicMapView.LINKS_SHOWN) return false;
     return true;
   }.property('allLinksShown', 'topic.details.links'),
 
@@ -23,7 +23,7 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
 
     var allLinks = this.get('topic.details.links');
     if (this.get('allLinksShown')) return allLinks;
-    return allLinks.slice(0, Discourse.TopicSummaryView.LINKS_SHOWN);
+    return allLinks.slice(0, Discourse.TopicMapView.LINKS_SHOWN);
   }.property('topic.details.links', 'allLinksShown'),
 
   shouldRerender: Discourse.View.renderIfChanged('topic.posts_count'),
@@ -40,7 +40,7 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
     if (this.get('hidden')) return;
 
     this.attachViewWithArgs({
-      templateName: 'topic_summary/info',
+      templateName: 'topic_map/info',
       content: this.get('controller')
     }, Discourse.GroupedView);
 
@@ -56,7 +56,7 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
     // If we have a best of view
     if (this.get('controller.has_best_of')) {
       container.attachViewWithArgs({
-        templateName: 'topic_summary/best_of_toggle',
+        templateName: 'topic_map/best_of_toggle',
         tagName: 'section',
         classNames: ['information'],
         content: this.get('controller')
@@ -66,7 +66,7 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
     // If we have a private message
     if (this.get('topic.isPrivateMessage')) {
       container.attachViewWithArgs({
-        templateName: 'topic_summary/private_message',
+        templateName: 'topic_map/private_message',
         tagName: 'section',
         classNames: ['information'],
         content: this.get('controller')
@@ -75,6 +75,6 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
   }
 });
 
-Discourse.TopicSummaryView.reopenClass({
+Discourse.TopicMapView.reopenClass({
   LINKS_SHOWN: 5
 });

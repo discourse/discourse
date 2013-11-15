@@ -998,7 +998,7 @@ nl:
         more: "Nog {{n}} te gaan..."
         left: "Nog {{n}} resterend"
 
-    topic_summary:
+    topic_map:
       title: "Topic samenvatting"
       links_shown: "laat alle {{totalLinks}} links zien..."
       clicks: clicks

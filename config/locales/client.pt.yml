@@ -537,7 +537,7 @@ pt:
         more: "{{n}} em falta..."
         left: "{{n}} restantes"
 
-    topic_summary:
+    topic_map:
       title: "Sumário do Tópico"
       links_shown: "mostrar todos os {{totalLinks}} links..."
 

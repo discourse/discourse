@@ -927,7 +927,7 @@ it:
         more: "ancora {{n}}..."
         left: "{{n}} rimanenti"
 
-    topic_summary:
+    topic_map:
       title: "Riepilogo del Topic"
       links_shown: "mostra tutti i {{totalLinks}} link..."
       clicks: "click"

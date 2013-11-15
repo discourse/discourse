@@ -716,7 +716,7 @@ sv:
         more: "{{n}} fler..."
         left: "{{n}} kvar"
 
-    topic_summary:
+    topic_map:
       title: "Trådsammanfattning"
       links_shown: "Visa alla {{totalLinks}} länkar..."
 

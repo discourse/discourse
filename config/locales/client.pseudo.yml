@@ -897,7 +897,7 @@ pseudo:
         at_least: '[[ éɳťéř áť łéášť {{n}} čĥářáčťéřš ]]'
         more: '[[ {{n}} ťó ǧó... ]]'
         left: '[[ {{n}} řéɱáíɳíɳǧ ]]'
-    topic_summary:
+    topic_map:
       title: '[[ Ťóƿíč Šůɱɱářý ]]'
       links_shown: '[[ šĥóŵ áłł {{totalLinks}} łíɳǩš... ]]'
       clicks: '[[ čłíčǩš ]]'

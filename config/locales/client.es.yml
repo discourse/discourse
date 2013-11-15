@@ -726,7 +726,7 @@ es:
         more: "{{n}} para ir..."
         left: "{{n}} restantes"
 
-    topic_summary:
+    topic_map:
       title: "Resumen de temas"
       links_shown: "mostrar los {{totalLinks}} links..."
 

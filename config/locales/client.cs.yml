@@ -979,7 +979,7 @@ cs:
         more: "ještě {{n}}..."
         left: "{{n}} zbývá"
 
-    topic_summary:
+    topic_map:
       title: "Souhrn tématu"
       links_shown: "zobrazit všech {{totalLinks}} odkazů..."
       clicks: "počet kliknutí"

@@ -840,7 +840,7 @@ nb_NO:
         more: "{{n}} igjen..."
         left: "{{n}} gjenstående"
 
-    topic_summary:
+    topic_map:
       title: "Emneoppsummering"
       links_shown: "vis alle {{totalLinks}} linker..."
       clicks: "klikk"

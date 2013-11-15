@@ -82,10 +82,10 @@
         <ul class='topic-links'>
           {{#groupedEach view.parentView.infoLinks}}
             <li>
-              <span class='badge badge-notification clicks' title='{{i18n topic_summary.clicks}}'>{{clicks}}</span>
+              <span class='badge badge-notification clicks' title='{{i18n topic_map.clicks}}'>{{clicks}}</span>
               <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
                 {{#if title}}{{shorten title}}{{else}}{{shortenUrl url}}{{/if}}
-                {{#if internal}}<i class='icon-arrow-right' title='{{i18n topic_summary.topic_link}}'></i>{{/if}}
+                {{#if internal}}<i class='icon-arrow-right' title='{{i18n topic_map.topic_link}}'></i>{{/if}}
               </a>
             </li>
           {{/groupedEach}}
@@ -93,7 +93,7 @@
 
         {{#if view.parentView.showAllLinksControls}}
           <div class='link-summary'>
-            <a href='#' {{action showAllLinks target="view.parentView"}}>{{i18n topic_summary.links_shown totalLinks="details.links.length"}}</a>
+            <a href='#' {{action showAllLinks target="view.parentView"}}>{{i18n topic_map.links_shown totalLinks="details.links.length"}}</a>
           </div>
         {{/if}}
 

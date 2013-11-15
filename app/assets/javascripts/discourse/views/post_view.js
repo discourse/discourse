@@ -125,7 +125,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
               if (link.closest('.badge-category').length === 0) {
                 // nor in oneboxes (except when we force it)
                 if (link.closest(".onebox-result").length === 0 || link.hasClass("track-link")) {
-                  link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
+                  link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_map.clicks") + "'>" + lc.clicks + "</span>");
                 }
               }
             }

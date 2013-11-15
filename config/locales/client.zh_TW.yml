@@ -890,7 +890,7 @@ zh_TW:
         more: "還差 {{n}} 個……"
         left: "還剩下 {{n}}"
 
-    topic_summary:
+    topic_map:
       title: "主題概要"
       links_shown: "顯示所有 {{totalLinks}} 個鏈接……"
       clicks: "點擊"

@@ -960,7 +960,7 @@ fr:
         at_least: "saisissez au moins {{n}} caractères"
         more: "{{n}} restants..."
         left: "{{n}} restants"
-    topic_summary:
+    topic_map:
       title: "Résumé de la discussion"
       links_shown: "montrer les {{totalLinks}} liens..."
       clicks: "clics"

@@ -162,7 +162,7 @@ class TopicView
   end
 
   def links
-    @links ||= TopicLink.topic_summary(guardian, @topic.id)
+    @links ||= TopicLink.topic_map(guardian, @topic.id)
   end
 
   def link_counts

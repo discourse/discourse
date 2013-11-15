@@ -969,7 +969,7 @@ de:
         more: "{{n}} weitere..."
         left: "{{n}} übrig"
 
-    topic_summary:
+    topic_map:
       title: "Zusammenfassung des Themas"
       links_shown: "Zeige alle {{totalLinks}} Links..."
       clicks: "Klicks"

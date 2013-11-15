@@ -1010,7 +1010,7 @@ ru:
         at_least: 'введите как минимум {{n}} символов'
         more: 'ещё {{n}} символов...'
         left: 'осталось {{n}} символов'
-    topic_summary:
+    topic_map:
       title: 'Сводка по теме'
       links_shown: 'показать все {{totalLinks}} ссылок...'
       clicks: переходов

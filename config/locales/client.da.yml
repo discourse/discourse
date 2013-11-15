@@ -616,7 +616,7 @@ da:
         more: "{{n}} to go..."
         left: "{{n}} remaining"
 
-    topic_summary:
+    topic_map:
       title: "Topic Summary"
       links_shown: "show all {{totalLinks}} links..."
 
