@@ -1418,6 +1418,7 @@ en:
         reset: 'reset to default'
         none: 'none'
         categories:
+          all_results: 'All Results'
           required: 'Required'
           basic: 'Basic Setup'
           users: 'Users'

@@ -16,6 +16,16 @@ Discourse.AdminSiteSettingsCategoryController = Ember.ObjectController.extend({
     }
   }.property('controllers.adminSiteSettings.content', 'categoryNameKey'),
 
+  emptyContentHandler: function() {
+    if (this.get('filteredContent').length < 1) {
+      if ( this.get('controllers.adminSiteSettings.filtered') ) {
+        this.transitionToRoute('adminSiteSettingsCategory', 'all_results');
+      } else {
+        this.transitionToRoute('adminSiteSettings');
+      }
+    }
+  }.observes('filteredContent'),
+
   actions: {
 
     /**

@@ -16,6 +16,9 @@
       <li {{bindAttr class="category.nameKey"}}>
         {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
           {{category.name}}
+          {{#if filtered}}
+            <span class="count">({{category.siteSettings.length}})</span>
+          {{/if}}
           <span class='icon-chevron-right'></span>
         {{/link-to}}
       </li>

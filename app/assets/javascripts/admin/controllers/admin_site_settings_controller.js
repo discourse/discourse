@@ -9,6 +9,7 @@
 Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.Presence, {
   filter: null,
   onlyOverridden: false,
+  filtered: Ember.computed.notEmpty('filter'),
 
   /**
     The list of settings based on the current filters
@@ -32,7 +33,7 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
 
     var self = this,
         matches,
-        matchesGroupedByCategory = Em.A();
+        matchesGroupedByCategory = Em.A([{nameKey: 'all_results', name: I18n.t('admin.site_settings.categories.all_results'), siteSettings: []}]);
 
     _.each(this.get('allSiteSettings'), function(settingsCategory) {
       matches = settingsCategory.siteSettings.filter(function(item) {
@@ -47,6 +48,7 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
         }
       });
       if (matches.length > 0) {
+        matchesGroupedByCategory[0].siteSettings.pushObjects(matches);
         matchesGroupedByCategory.pushObject({
           nameKey: settingsCategory.nameKey,
           name: settingsCategory.name,
