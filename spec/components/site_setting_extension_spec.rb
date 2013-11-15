@@ -164,7 +164,7 @@ describe SiteSettingExtension do
 
   describe 'a setting with a category' do
     before do
-      settings.setting(:test_setting, 88, :tests)
+      settings.setting(:test_setting, 88, {category: :tests})
       settings.refresh!
     end
 

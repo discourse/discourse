@@ -9,9 +9,9 @@ class SiteSetting < ActiveRecord::Base
 
   SiteSettings::YamlLoader.new("#{Rails.root}/config/site_settings.yml").load do |category, name, default, opts|
     if opts.delete(:client)
-      client_setting(name, default, category)
+      client_setting(name, default, opts.merge(category: category))
     else
-      setting(name, default, category, opts)
+      setting(name, default, opts.merge(category: category))
     end
   end
 

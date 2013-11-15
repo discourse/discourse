@@ -42,11 +42,11 @@ module SiteSettingExtension
     @hidden_settings ||= []
   end
 
-  def setting(name_arg, default = nil, category = nil, opts = {})
+  def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
     mutex.synchronize do
       self.defaults[name] = default
-      categories[name] = category.try(:to_sym) || :uncategorized
+      categories[name] = opts[:category] || :uncategorized
       current_value = current.has_key?(name) ? current[name] : default
       if opts[:enum]
         enum = opts[:enum]
@@ -60,8 +60,8 @@ module SiteSettingExtension
   end
 
   # just like a setting, except that it is available in javascript via DiscourseSession
-  def client_setting(name, default = nil, category = nil)
-    setting(name, default, category)
+  def client_setting(name, default = nil, opts = {})
+    setting(name, default, opts)
     @@client_settings ||= []
     @@client_settings << name
   end
