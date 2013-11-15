@@ -46,12 +46,13 @@ module Middleware::UnicornOobgc
       if @gc_live_num && @num_requests > MIN_REQUESTS_PER_OOBGC
         largest = @previous_deltas.max
         if largest * (2 + Random.rand(2)) + new_live_num > @gc_live_num
+          puts "OobGC invoked"
           GC.start
           @num_requests = 0
         end
       end
     else
-      puts "OobGC, GC live num adjusted, GC was not avoided: #{live_num} reqs since GC: #{@num_requests} largest: #{@previous_deltas.max}"
+      puts "OobGC: GC live num adjusted: old live_num #{@gc_live_num}  new: #{live_num} - reqs since GC: #{@num_requests} largest delta: #{@previous_deltas.max}"
 
       @num_requests = 0
       @gc_live_num = live_num
