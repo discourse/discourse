@@ -47,6 +47,8 @@ class User < ActiveRecord::Base
 
   belongs_to :uploaded_avatar, class_name: 'Upload', dependent: :destroy
 
+  delegate :last_sent_email_address, :to => :email_logs
+
   validates_presence_of :username
   validate :username_validator
   validates :email, presence: true, uniqueness: true
@@ -276,7 +278,6 @@ class User < ActiveRecord::Base
     end
   end
 
-
   def update_last_seen!(now=Time.zone.now)
     now_date = now.to_date
     # Only update last seen once every minute
@@ -491,6 +492,10 @@ class User < ActiveRecord::Base
 
   def revoke_api_key
     ApiKey.where(user_id: self.id).delete_all
+  end
+
+  def find_email
+    last_sent_email_address || email
   end
 
   protected
