@@ -16,7 +16,7 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
 
     @property filterContent
   **/
-  filterContent: function() {
+  filterContent: Discourse.debounce(function() {
 
     // If we have no content, don't bother filtering anything
     if (!this.present('allSiteSettings')) return;
@@ -57,6 +57,6 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
     });
 
     this.set('model', matchesGroupedByCategory);
-  }.observes('filter', 'onlyOverridden')
+  }, 250).observes('filter', 'onlyOverridden')
 
 });
