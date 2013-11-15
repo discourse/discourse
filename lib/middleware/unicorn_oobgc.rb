@@ -5,8 +5,8 @@
 #  hook unicorn
 module Middleware::UnicornOobgc
 
-  MIN_REQUESTS_PER_OOBGC = 6
-  MAX_DELTAS = 20
+  MIN_REQUESTS_PER_OOBGC = 5
+  MAX_DELTAS = 25
 
   def self.init
     # hook up HttpServer intercept
@@ -45,7 +45,7 @@ module Middleware::UnicornOobgc
 
       if @gc_live_num && @num_requests > MIN_REQUESTS_PER_OOBGC
         largest = @previous_deltas.max
-        if largest * (2 + Random.rand(2)) + new_live_num > @gc_live_num
+        if (largest * 3) + new_live_num > @gc_live_num
           puts "OobGC invoked"
           GC.start
           @num_requests = 0
