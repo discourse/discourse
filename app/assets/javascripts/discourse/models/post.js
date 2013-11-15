@@ -155,7 +155,7 @@ Discourse.Post = Discourse.Model.extend({
       return Discourse.ajax("/posts/" + (this.get('id')), {
         type: 'PUT',
         data: {
-          post: { raw: this.get('raw') },
+          post: { raw: this.get('raw'), edit_reason: this.get('editReason') },
           image_sizes: this.get('imageSizes')
         }
       }).then(function(result) {

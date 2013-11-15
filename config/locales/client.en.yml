@@ -479,6 +479,7 @@ en:
 
       users_placeholder: "Add a user"
       title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
+      edit_reason_placeholder: "Short reason of your edit"
       reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
       view_new_post: "View your new post."
       saving: "Saving..."
@@ -798,6 +799,7 @@ en:
       reply_topic: "Reply to {{link}}"
       quote_reply: "quote reply"
       edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      edit_reason: "Reason: "
       post_number: "post {{number}}"
       in_reply_to: "in reply to"
       last_edited_on: "post last edited on"

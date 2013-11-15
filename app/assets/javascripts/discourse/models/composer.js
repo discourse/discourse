@@ -412,6 +412,7 @@ Discourse.Composer = Discourse.Model.extend({
 
     post.setProperties({
       raw: this.get('reply'),
+      editReason: this.get('editReason'),
       imageSizes: opts.imageSizes,
       cooked: $('#wmd-preview').html()
     });

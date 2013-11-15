@@ -1,13 +1,13 @@
 class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
-  attr_accessor :topic_slug
-  attr_accessor :topic_view
-  attr_accessor :parent_post
-  attr_accessor :add_raw
-  attr_accessor :single_post_link_counts
-  attr_accessor :draft_sequence
-  attr_accessor :post_actions
+  attr_accessor :topic_slug,
+                :topic_view,
+                :parent_post,
+                :add_raw,
+                :single_post_link_counts,
+                :draft_sequence,
+                :post_actions
 
   attributes :post_number,
              :post_type,
@@ -43,7 +43,8 @@ class PostSerializer < BasicPostSerializer
              :trust_level,
              :deleted_at,
              :deleted_by,
-             :user_deleted
+             :user_deleted,
+             :edit_reason
 
 
   def moderator?

@@ -1178,6 +1178,7 @@ en:
   deleted: 'deleted'
 
   upload:
+    edit_reason: "We have downloaded a copy of the remotes images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
     attachments:

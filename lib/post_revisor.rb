@@ -70,6 +70,7 @@ class PostRevisor
     @post.raw = @new_raw
     @post.updated_by = @user
     @post.last_editor_id = @user.id
+    @post.edit_reason = @opts[:edit_reason] if @opts[:edit_reason]
 
     if @post.hidden && @post.hidden_reason_id == Post.hidden_reasons[:flag_threshold_reached]
       @post.hidden = false

@@ -29,6 +29,10 @@
           optionValuePath="content.number"
           selectionBinding="versionRight"}}
 
+        {{#if postRight.edit_reason}}
+          <p><strong>{{i18n post.edit_reason}}</strong>{{postRight.edit_reason}}</p>
+        {{/if}}
+
         <div class='contents'>
           {{#if diff}}
             {{{diff}}}

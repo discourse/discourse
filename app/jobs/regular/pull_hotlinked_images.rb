@@ -27,7 +27,7 @@ module Jobs
             # have we already downloaded that file?
             if !downloaded_urls.include?(src)
               hotlinked = download(src)
-              if hotlinked.size <= @max_size
+              if hotlinked.try(:size) <= @max_size
                 filename = File.basename(URI.parse(src).path)
                 file = ActionDispatch::Http::UploadedFile.new(tempfile: hotlinked, filename: filename)
                 upload = Upload.create_for(post.user_id, file, hotlinked.size, src)
@@ -64,7 +64,10 @@ module Jobs
 
       # TODO: make sure the post hasn´t changed while we were downloading remote images
       if raw != post.raw
-        options = { force_new_version: true }
+        options = {
+          force_new_version: true,
+          edit_reason: I18n.t("upload.edit_reason")
+        }
         post.revise(Discourse.system_user, raw, options)
       end
 

@@ -382,7 +382,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
       archetype: this.get('model.archetype'),
       metaData: this.get('model.metaData')
     })) : void 0;
-  }
+  },
+
+  canEdit: function() {
+    return this.get("model.action") === "edit" && Discourse.User.current().get("can_edit");
+  }.property("model.action")
+
 });
-
-

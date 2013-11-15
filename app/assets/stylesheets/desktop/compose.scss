@@ -238,12 +238,12 @@
       height: 400px;
     }
     .contents {
-      input#reply-title {
+      input#reply-title, input#edit-reason {
         padding: 7px 10px;
         margin: 6px 10px 3px 0;
-        width: 400px;
-
       }
+      input#reply-title { width: 400px; }
+      input#edit-reason { width: 200px; }
       .wmd-controls {
         @include transition(top 0.3s ease);
         top: 100px;
@@ -283,7 +283,7 @@
         }
       }
     }
-    #reply-title {
+    #reply-title, #edit-reason {
       margin-right: 10px;
       float: left;
       &:disabled {
@@ -324,7 +324,7 @@
       bottom: 8px;
     }
   }
-  .title-input, .category-input {
+  .title-input, .category-input, .edit-reason-input {
     position: relative;
     display: inline;
   }
@@ -357,7 +357,6 @@ div.ac-wrap {
   background-color: $white;
   border: 1px solid #cccccc;
   padding: 5px 10px;
-  @include border-radius-all(3px);
   div.item {
     float: left;
     margin-right: 10px;
