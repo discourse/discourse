@@ -49,8 +49,11 @@ module Middleware::UnicornOobgc
         end
       end
     else
-      puts "OobGC, GC live num adjusted, GC was not avoided: #{live_num}"
+      puts "OobGC, GC live num adjusted, GC was not avoided: #{live_num} reqs since GC: #{@num_requests} largest: #{@previous_deltas.max}"
+
+      @num_requests = 0
       @gc_live_num = live_num
+
     end
 
   end
