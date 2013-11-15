@@ -13,6 +13,8 @@ module Middleware::UnicornOobgc
     ObjectSpace.each_object(Unicorn::HttpServer) do |s|
       s.extend(self)
     end
+  rescue
+    puts "Attempted to patch Unicorn but it is not loaded"
   end
 
   def process_client(client)
