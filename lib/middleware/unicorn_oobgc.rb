@@ -46,7 +46,10 @@ module Middleware::UnicornOobgc
       if @gc_live_num && @num_requests > MIN_REQUESTS_PER_OOBGC
         largest = @previous_deltas.max
         if (largest * 3) + new_live_num > @gc_live_num
-          puts "OobGC invoked req count: #{@num_requests} largest delta: #{largest}"
+          # While tuning consider printing this out, each time this happens you saved
+          # a user from running a GC inline
+
+          # puts "OobGC invoked req count: #{@num_requests} largest delta: #{largest}"
           GC.start
           @num_requests = 0
         end
