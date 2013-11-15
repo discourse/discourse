@@ -253,6 +253,8 @@ files:
     default:
       test: false
       default: true
+  download_remote_images_threshold:
+    default: 20
 
 trust:
   default_trust_level: 0

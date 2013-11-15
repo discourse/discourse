@@ -275,6 +275,8 @@ describe CookedPostProcessor do
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
+    before { cpp.stubs(:available_disk_space).returns(90) }
+
     it "does not run when download_remote_images_to_local is disabled" do
       SiteSetting.stubs(:download_remote_images_to_local).returns(false)
       Jobs.expects(:cancel_scheduled_job).never
@@ -287,6 +289,13 @@ describe CookedPostProcessor do
 
       it "runs only when a user updated the post" do
         post.updated_by = Discourse.system_user
+        Jobs.expects(:cancel_scheduled_job).never
+        cpp.pull_hotlinked_images
+      end
+
+      it "disables download when disk space is low" do
+        SiteSetting.expects(:download_remote_images_threshold).returns(20)
+        cpp.expects(:available_disk_space).returns(10)
         Jobs.expects(:cancel_scheduled_job).never
         cpp.pull_hotlinked_images
       end
@@ -306,6 +315,27 @@ describe CookedPostProcessor do
 
       end
 
+    end
+
+  end
+
+  context ".disable_if_low_on_disk_space" do
+
+    let(:post) { build(:post) }
+    let(:cpp) { CookedPostProcessor.new(post) }
+
+    before { cpp.expects(:available_disk_space).returns(50) }
+
+    it "does nothing when there's enough disk space" do
+      SiteSetting.expects(:download_remote_images_threshold).returns(20)
+      SiteSetting.expects(:download_remote_images_to_local).never
+      cpp.disable_if_low_on_disk_space.should == false
+    end
+
+    it "disables download_remote_images_threshold when there's not enough disk space" do
+      SiteSetting.expects(:download_remote_images_threshold).returns(75)
+      cpp.disable_if_low_on_disk_space.should == true
+      SiteSetting.download_remote_images_to_local.should == false
     end
 
   end

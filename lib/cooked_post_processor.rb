@@ -221,6 +221,8 @@ class CookedPostProcessor
   def pull_hotlinked_images
     # is the job enabled?
     return unless SiteSetting.download_remote_images_to_local?
+    # have we enough disk space?
+    return if disable_if_low_on_disk_space
     # we only want to run the job whenever it's changed by a user
     return if @post.updated_by == Discourse.system_user
     # make sure no other job is scheduled
@@ -228,6 +230,18 @@ class CookedPostProcessor
     # schedule the job
     delay = SiteSetting.ninja_edit_window + 1
     Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id)
+  end
+
+  def disable_if_low_on_disk_space
+    if available_disk_space < SiteSetting.download_remote_images_threshold
+      SiteSetting.download_remote_images_to_local = false
+      return true
+    end
+    false
+  end
+
+  def available_disk_space
+    100 - `df -l . | tail -1 | tr -s ' ' | cut -d ' ' -f 5`.to_i
   end
 
   def dirty?

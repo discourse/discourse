@@ -40,7 +40,8 @@ class AdminDashboardData
       site_description_check,
       access_password_removal,
       site_contact_username_check,
-      notification_email_check ].compact
+      notification_email_check,
+    ].compact
   end
 
   def self.fetch_stats
@@ -147,7 +148,7 @@ class AdminDashboardData
   end
 
   def site_description_check
-    return I18n.t('dashboard.site_description_missing') if !SiteSetting.site_description.present?
+    I18n.t('dashboard.site_description_missing') if !SiteSetting.site_description.present?
   end
 
   def send_consumer_email_check
@@ -165,7 +166,6 @@ class AdminDashboardData
   def ruby_version_check
     I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
   end
-
 
   # TODO: generalize this method of putting i18n keys with expiry in redis
   #       that should be reported on the admin dashboard:

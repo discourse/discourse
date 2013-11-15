@@ -15,7 +15,6 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
-
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?
   end
