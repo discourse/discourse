@@ -19,6 +19,14 @@ describe Group do
       group.name = "this is_a_name"
       group.valid?.should be_false
     end
+
+    it "is invalid for names the same as those of automatic groups" do
+      Group::AUTO_GROUPS.each_key do |g|
+        group.name = g.to_s
+        group.valid?.should be_false
+      end
+    end
+
   end
 
   def real_admins
@@ -153,3 +161,4 @@ describe Group do
   end
 
 end
+

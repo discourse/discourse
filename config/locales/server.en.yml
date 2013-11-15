@@ -67,6 +67,7 @@ en:
   groups:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"
+      exists_as_automatic_group: "cannot be that of an automatic group"
     default_names:
       admins: "admins"
       moderators: "moderators"
