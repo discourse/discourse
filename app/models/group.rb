@@ -8,6 +8,7 @@ class Group < ActiveRecord::Base
   after_save :destroy_deletions
 
   validate :name_format_validator
+  validate :is_automatic_group?
 
   AUTO_GROUPS = {
     :everyone => 0,
@@ -155,10 +156,17 @@ class Group < ActiveRecord::Base
   def add(user)
     self.users.push(user)
   end
+
   protected
 
   def name_format_validator
     UsernameValidator.perform_validation(self, 'name')
+  end
+
+  def is_automatic_group?
+    if !automatic && AUTO_GROUPS.include?(name.to_sym)
+      errors.add :name, I18n.t(:'groups.errors.exists_as_automatic_group')
+    end
   end
 
   # hack around AR
