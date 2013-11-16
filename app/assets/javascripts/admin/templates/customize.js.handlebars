@@ -31,18 +31,20 @@
       </ul>
     </div>
 
-    {{#if view.headerActive}}
-      {{aceEditor content=header mode="html"}}
-    {{/if}}
-    {{#if view.stylesheetActive}}
-      {{aceEditor content=stylesheet mode="scss"}}
-    {{/if}}
-    {{#if view.mobileHeaderActive}}
-      {{aceEditor content=mobile_header mode="html"}}
-    {{/if}}
-    {{#if view.mobileStylesheetActive}}
-      {{aceEditor content=mobile_stylesheet mode="scss"}}
-    {{/if}}
+    <div class="admin-container">
+      {{#if view.headerActive}}
+        {{aceEditor content=header mode="html"}}
+      {{/if}}
+      {{#if view.stylesheetActive}}
+        {{aceEditor content=stylesheet mode="scss"}}
+      {{/if}}
+      {{#if view.mobileHeaderActive}}
+        {{aceEditor content=mobile_header mode="html"}}
+      {{/if}}
+      {{#if view.mobileStylesheetActive}}
+        {{aceEditor content=mobile_stylesheet mode="scss"}}
+      {{/if}}
+    </div>
   {{/with}}
   <br>
   <div class='status-actions'>
