@@ -1,5 +1,5 @@
 class ExceptionsController < ApplicationController
-  skip_before_filter :check_xhr
+  skip_before_action :check_xhr
   layout 'no_js'
 
   def not_found

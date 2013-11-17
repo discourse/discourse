@@ -5,7 +5,7 @@ require 'actionpack/action_caching'
 class TopicsController < ApplicationController
 
   # Avatar is an image request, not XHR
-  before_filter :ensure_logged_in, only: [:timings,
+  before_action :ensure_logged_in, only: [:timings,
                                           :destroy_timings,
                                           :update,
                                           :star,
@@ -18,9 +18,9 @@ class TopicsController < ApplicationController
                                           :move_posts,
                                           :clear_pin]
 
-  before_filter :consider_user_for_promotion, only: :show
+  before_action :consider_user_for_promotion, only: :show
 
-  skip_before_filter :check_xhr, only: [:avatar, :show, :feed]
+  skip_before_action :check_xhr, only: [:avatar, :show, :feed]
   caches_action :avatar, cache_path: Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
 
   def show

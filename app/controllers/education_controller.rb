@@ -1,6 +1,6 @@
 class EducationController < ApplicationController
 
-  before_filter :ensure_logged_in
+  before_action :ensure_logged_in
 
   def show
     raise Discourse::InvalidAccess.new unless params[:id] =~ /^[a-z0-9\-\_]+$/

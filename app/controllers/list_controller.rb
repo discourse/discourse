@@ -1,7 +1,7 @@
 class ListController < ApplicationController
 
-  before_filter :ensure_logged_in, except: [:latest, :hot, :category, :category_feed]
-  skip_before_filter :check_xhr
+  before_action :ensure_logged_in, except: [:latest, :hot, :category, :category_feed]
+  skip_before_action :check_xhr
 
   # Create our filters
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
