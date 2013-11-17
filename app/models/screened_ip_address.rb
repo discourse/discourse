@@ -10,6 +10,14 @@ class ScreenedIpAddress < ActiveRecord::Base
 
   validates :ip_address, ip_address_format: true, presence: true
 
+  def ip_address_error
+    if IPAddr.const_defined?('InvalidAddressError')
+     IPAddr::InvalidAddressError
+    else
+     ArgumentError
+    end
+  end
+
   def self.watch(ip_address, opts={})
     match_for_ip_address(ip_address) || create(opts.slice(:action_type).merge(ip_address: ip_address))
   end
@@ -19,7 +27,7 @@ class ScreenedIpAddress < ActiveRecord::Base
   # inet/cidr columns:
   def ip_address=(val)
     write_attribute(:ip_address, val)
-  rescue IPAddr::InvalidAddressError
+  rescue self.ip_address_error
     self.errors.add(:ip_address, :invalid)
   end
 
@@ -40,6 +48,7 @@ class ScreenedIpAddress < ActiveRecord::Base
   def self.is_whitelisted?(ip_address)
     exists_for_ip_address_and_action?(ip_address, actions[:do_nothing])
   end
+
 
   def self.exists_for_ip_address_and_action?(ip_address, action_type)
     b = match_for_ip_address(ip_address)
