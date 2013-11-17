@@ -1,6 +1,6 @@
 class DraftController < ApplicationController
-  before_filter :ensure_logged_in
-  skip_before_filter :check_xhr
+  before_action :ensure_logged_in
+  skip_before_action :check_xhr
 
   def show
     seq = params[:sequence] || DraftSequence.current(current_user, params[:draft_key])
