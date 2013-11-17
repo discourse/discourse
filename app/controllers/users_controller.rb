@@ -2,16 +2,16 @@ require_dependency 'discourse_hub'
 
 class UsersController < ApplicationController
 
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :avatar, :authorize_email, :user_preferences_redirect]
-  skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_restricted_access, only: [:avatar]
+  skip_before_action :check_xhr, only: [:show, :password_reset, :update, :activate_account, :avatar, :authorize_email, :user_preferences_redirect]
+  skip_before_action :authorize_mini_profiler, only: [:avatar]
+  skip_before_action :check_restricted_access, only: [:avatar]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect]
+  before_action :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the 
   #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
   #  once that happens you can't log in with social
-  skip_before_filter :verify_authenticity_token, only: [:create]
+  skip_before_action :verify_authenticity_token, only: [:create]
 
   def show
     @user = fetch_user_from_params

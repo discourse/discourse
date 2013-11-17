@@ -1,6 +1,6 @@
 class StaticController < ApplicationController
 
-  skip_before_filter :check_xhr
+  skip_before_action :check_xhr
 
   def show
 

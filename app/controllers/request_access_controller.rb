@@ -1,6 +1,6 @@
 class RequestAccessController < ApplicationController
 
-  skip_before_filter :check_xhr, :check_restricted_access
+  skip_before_action :check_xhr, :check_restricted_access
 
   def new
     @return_path = params[:return_path] || "/"

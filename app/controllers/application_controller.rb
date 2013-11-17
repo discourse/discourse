@@ -14,14 +14,14 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
 
-  before_filter :inject_preview_style
-  before_filter :block_if_maintenance_mode
-  before_filter :check_restricted_access
-  before_filter :authorize_mini_profiler
-  before_filter :store_incoming_links
-  before_filter :preload_json
-  before_filter :check_xhr
-  before_filter :set_locale
+  before_action :inject_preview_style
+  before_action :block_if_maintenance_mode
+  before_action :check_restricted_access
+  before_action :authorize_mini_profiler
+  before_action :store_incoming_links
+  before_action :preload_json
+  before_action :check_xhr
+  before_action :set_locale
 
   rescue_from Exception do |exception|
     unless [ ActiveRecord::RecordNotFound, ActionController::RoutingError,
