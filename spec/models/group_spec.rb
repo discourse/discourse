@@ -152,4 +152,9 @@ describe Group do
     group.id.should == Group[group.name.to_sym].id
   end
 
+  it 'provides a list of all groups (names), including automatic groups' do
+    group = Fabricate(:group)
+    Group.list_names.should == Group::AUTO_GROUPS.keys.unshift(group.name)
+  end
+
 end

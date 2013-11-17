@@ -18,7 +18,7 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def available_groups
-    Group.order(:name).pluck(:name) - group_permissions.map{|g| g[:group_name]}
+    Group.list_names - group_permissions.map{|g| g[:group_name]}
   end
 
 end

@@ -25,6 +25,10 @@ class Group < ActiveRecord::Base
     (10..19).to_a
   end
 
+  def self.list_names
+    Group.order(:name).pluck(:name).concat(AUTO_GROUPS.keys).uniq
+  end
+
   def self.refresh_automatic_group!(name)
 
     id = AUTO_GROUPS[name]
