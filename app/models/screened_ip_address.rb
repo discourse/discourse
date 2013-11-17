@@ -19,7 +19,10 @@ class ScreenedIpAddress < ActiveRecord::Base
   # inet/cidr columns:
   def ip_address=(val)
     write_attribute(:ip_address, val)
-  rescue IPAddr::InvalidAddressError
+
+  # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
+  # handle both exceptions
+  rescue ArgumentError, IPAddr::InvalidAddressError
     self.errors.add(:ip_address, :invalid)
   end
 
