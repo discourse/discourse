@@ -1,7 +1,7 @@
 class InvitesController < ApplicationController
 
-  skip_before_filter :check_xhr, :check_restricted_access
-  before_filter :ensure_logged_in, only: [:destroy]
+  skip_before_action :check_xhr, :check_restricted_access
+  before_action :ensure_logged_in, only: [:destroy]
 
   def show
     invite = Invite.where(invite_key: params[:id]).first
