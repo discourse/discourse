@@ -1,8 +1,8 @@
 class EmailController < ApplicationController
-  skip_before_filter :check_xhr
+  skip_before_action :check_xhr
   layout 'no_js'
 
-  before_filter :ensure_logged_in, only: :preferences_redirect
+  before_action :ensure_logged_in, only: :preferences_redirect
 
   def preferences_redirect
     redirect_to(email_preferences_path(current_user.username_lower))
