@@ -47,22 +47,10 @@ class ListController < ApplicationController
   end
 
   def category
-    query = TopicQuery.new(current_user, page: params[:page])
-
-    if !@category
-      raise Discourse::NotFound
-      return
-    end
-    guardian.ensure_can_see!(@category)
-    list = query.list_category(@category)
-    @description = @category.description
-
-    if params[:parent_category].present?
-      list.more_topics_url = url_for(category_list_parent_path(params[:parent_category], params[:category], next_page_params))
-    else
-      list.more_topics_url = url_for(category_list_path(params[:category], next_page_params))
-    end
-
+    list_opts = build_topic_list_options
+    query = TopicQuery.new(current_user, list_opts)
+    list = query.list_latest
+    list.more_topics_url = construct_url_with(:latest, list_opts)
     respond(list)
   end
 

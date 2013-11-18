@@ -161,9 +161,10 @@ class TopicQuery
       # If we're logged in, we have to pay attention to our pinned settings
       if @user
         result = options[:category].blank? ? result.order(TopicQuerySQL.order_nocategory_with_pinned_sql) :
-                                    result.order(TopicQuerySQL.order_with_pinned_sql)
+                                             result.order(TopicQuerySQL.order_with_pinned_sql)
       else
-        result = result.order(TopicQuerySQL.order_nocategory_basic_bumped)
+        result = options[:category].blank? ? result.order(TopicQuerySQL.order_nocategory_basic_bumped) :
+                                             result.order(TopicQuerySQL.order_basic_bumped)
       end
       result
     end
@@ -176,11 +177,9 @@ class TopicQuery
       # topics. Otherwise, just use bumped_at.
       if sort_column == 'default'
         if sort_dir == 'DESC'
-
           # If something requires a custom order, for example "unread" which sorts the least read
           # to the top, do nothing
           return result if options[:unordered]
-
           # Otherwise apply our default ordering
           return default_ordering(result, options)
         end
