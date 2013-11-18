@@ -389,7 +389,8 @@ Discourse.Composer = Discourse.Model.extend({
       originalText: null,
       reply: null,
       post: null,
-      title: null
+      title: null,
+      editReason: null
     });
   },
 
@@ -412,7 +413,7 @@ Discourse.Composer = Discourse.Model.extend({
 
     post.setProperties({
       raw: this.get('reply'),
-      editReason: this.get('editReason'),
+      editReason: opts.editReason,
       imageSizes: opts.imageSizes,
       cooked: $('#wmd-preview').html()
     });

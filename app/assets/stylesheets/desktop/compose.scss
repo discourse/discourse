@@ -238,12 +238,11 @@
       height: 400px;
     }
     .contents {
-      input#reply-title, input#edit-reason {
+      input#reply-title {
         padding: 7px 10px;
         margin: 6px 10px 3px 0;
       }
       input#reply-title { width: 400px; }
-      input#edit-reason { width: 200px; }
       .wmd-controls {
         @include transition(top 0.3s ease);
         top: 100px;
@@ -254,6 +253,7 @@
     padding: 10px;
     min-width: 1280px;
     .form-element {
+      display: inline-block;
       .chzn-container {
         width: 400px;
         margin-top: 6px;
@@ -283,7 +283,18 @@
         }
       }
     }
-    #reply-title, #edit-reason {
+    .edit-reason-input {
+      display: inline-block;
+      position: absolute;
+      margin-left: 10px;
+      top: 18px;
+      #edit-reason {
+        margin: 0;
+        padding: 5px;
+        float: left;
+      }
+    }
+    #reply-title {
       margin-right: 10px;
       float: left;
       &:disabled {
@@ -324,7 +335,7 @@
       bottom: 8px;
     }
   }
-  .title-input, .category-input, .edit-reason-input {
+  .title-input, .category-input {
     position: relative;
     display: inline;
   }
