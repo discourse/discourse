@@ -33,11 +33,12 @@ Discourse.DiscourseTopicMapComponent = Ember.Component.extend({
   }.property('allLinksShown', 'topic.details.links'),
 
   infoLinks: function() {
-    if (Em.isNone('details.links')) return [];
-
     var allLinks = this.get('details.links');
+    if (Em.isNone(allLinks)) return [];
+
     if (this.get('allLinksShown')) return allLinks;
     return allLinks.slice(0, LINKS_SHOWN);
+
   }.property('details.links', 'allLinksShown'),
 
   actions: {
