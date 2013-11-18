@@ -67,7 +67,7 @@ Discourse::Application.configure do
   # Discourse strongly recommend you use a CDN.
   # For origin pull cdns all you need to do is register an account and configure
   # config.action_controller.asset_host = "http://YOUR_CDN_HERE"
-  config.action_controller.asset_host = ENV['CDN_SUMO_URL']
+  config.action_controller.asset_host = "//" + ENV['CDN_SUMO_URL']
 
   config.font_assets.origin = ENV['HOSTNAME'] || "https://discussion.heroku.com"
 end
