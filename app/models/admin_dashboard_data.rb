@@ -41,6 +41,7 @@ class AdminDashboardData
       access_password_removal,
       site_contact_username_check,
       notification_email_check,
+      enforce_global_nicknames_check
     ].compact
   end
 
@@ -165,6 +166,10 @@ class AdminDashboardData
 
   def ruby_version_check
     I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
+  end
+
+  def enforce_global_nicknames_check
+    I18n.t('dashboard.enforce_global_nicknames_warning') if SiteSetting.enforce_global_nicknames and !SiteSetting.discourse_org_access_key.present?
   end
 
   # TODO: generalize this method of putting i18n keys with expiry in redis
