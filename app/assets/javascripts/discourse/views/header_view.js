@@ -20,6 +20,19 @@ Discourse.HeaderView = Discourse.View.extend({
         $ul = $target.closest('ul'),
         $html = $('html');
 
+    // we need to ensure we are rendered,
+    //  this optimises the speed of the initial render
+    var render = $target.data('render');
+    if(render){
+      if(!this.get(render)){
+        this.set(render, true);
+        Em.run.next(this, function(){
+          this.showDropdown($target);
+        });
+        return;
+      }
+    }
+
     var hideDropdown = function() {
       $dropdown.fadeOut('fast');
       $li.removeClass('active');
@@ -27,7 +40,7 @@ Discourse.HeaderView = Discourse.View.extend({
       return $html.off('click.d-dropdown');
     };
 
-    // if a dropdown is active and the user clics on it, close it
+    // if a dropdown is active and the user clicks on it, close it
     if($li.hasClass('active')) { return hideDropdown(); }
     // otherwhise, mark it as active
     $li.addClass('active');

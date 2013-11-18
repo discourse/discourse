@@ -74,6 +74,7 @@
           {{else}}
             <a class='icon'
                data-dropdown="site-map-dropdown"
+               data-render="renderSiteMap"
                href="#"
                title='{{i18n site_map}}'>
                <i class='icon-reorder'></i>
@@ -96,6 +97,7 @@
 
       {{render notifications notifications}}
 
+      {{#if view.renderSiteMap}}
       <section class='d-dropdown' id='site-map-dropdown'>
       <ul class="location-links">
         {{#if currentUser.staff}}
@@ -131,14 +133,14 @@
 
           {{#each categories}}
             <li class='category'>
-              {{categoryLink this allowUncategorized=true}}
-              <b>{{unbound topic_count}}</b></a>
+              {{discourse-header-category-info category=this currentUser=controller.currentUser}}
             </li>
           {{/each}}
         </ul>
       {{/if}}
 
     </section>
+    {{/if}}
 
     </div>
   </div>
