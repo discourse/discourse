@@ -1,3 +1,5 @@
+{{view Discourse.HtmlView key="top"}}
+
 {{#if postStream.loaded}}
 
   {{#if postStream.firstPostLoaded}}
@@ -136,3 +138,4 @@
   {{render topicAdminMenu content}}
 {{/if}}
 
+{{view Discourse.HtmlView key="bottom"}}

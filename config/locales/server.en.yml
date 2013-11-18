@@ -476,6 +476,12 @@ en:
     login_required:
       title: "Login Required: Homepage"
       description: "The text displayed for unauthorized users when login is required on the site."
+    top:
+      title: "Top of the pages"
+      description: "HTML that will be added at the top of every pages (after the header, before the navigation or the topic title)"
+    bottom:
+      title: "Bottom of the pages"
+      description: "HTML that will be added at the bottom of every pages"
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
