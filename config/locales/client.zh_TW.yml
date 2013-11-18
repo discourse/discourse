@@ -332,8 +332,7 @@ zh_TW:
     unmute: 解除防打擾
     last_post: 最後一帖
 
-    best_of:
-      title: "優秀"
+    summary:
       enabled_description: 你現在正在浏覽本主題的“優秀”視圖。
       description: "此主題中有 <b>{{count}}</b> 個帖子，是不是有點多哦！你願意切換到只顯示最多交互和回複的帖子視圖麽？"
       enable: '切換到“優秀”視圖'
@@ -661,8 +660,8 @@ zh_TW:
           one: "一個指定用戶"
           other: "{{count}} 個用戶中的"
 
-        best_of: "你在浏覽 {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
+        summary: "你在浏覽 {{n_summarized_posts}} {{of_n_posts}}."
+        n_summarized_posts:
           one: "一個優秀帖子"
           other: "{{count}} 優秀帖子"
         of_n_posts:

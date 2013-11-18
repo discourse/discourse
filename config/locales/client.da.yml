@@ -212,8 +212,7 @@ da:
     unmute: Unmute
     last_post: Sidste indlæg
 
-    best_of:
-      title: "Topindlæg"
+    summary:
       description: "Der er <b>{{count}}</b> indlæg i dette emne. Det er mange! Vil du gerne spare lidt tid, ved kun at se de indlæg der har flest interaktioner og svar?"
       button: 'Vis kun “Topindlæg”'
 
@@ -502,7 +501,7 @@ da:
 
       filters:
         user: "Du ser kun endlæg fra specifikke brugere."
-        best_of: "Du ser kun “Topindlæg”."
+        summary: "Du ser kun “Topindlæg”."
         cancel: "Se alle indlæg i emnet."
 
       move_selected:

@@ -97,7 +97,7 @@ Discourse.PostStream = Em.Object.extend({
   **/
   streamFilters: function() {
     var result = {};
-    if (this.get('bestOf')) { result.filter = "best_of"; }
+    if (this.get('summary')) { result.filter = "summary"; }
 
     var userFilters = this.get('userFilters');
     if (userFilters) {
@@ -106,7 +106,7 @@ Discourse.PostStream = Em.Object.extend({
     }
 
     return result;
-  }.property('userFilters.[]', 'bestOf'),
+  }.property('userFilters.[]', 'summary'),
 
   /**
     The text describing the current filters. For display in the pop up at the bottom of the
@@ -117,9 +117,9 @@ Discourse.PostStream = Em.Object.extend({
   filterDesc: function() {
     var streamFilters = this.get('streamFilters');
 
-    if (streamFilters.filter && streamFilters.filter === "best_of") {
-      return I18n.t("topic.filters.best_of", {
-        n_best_posts: I18n.t("topic.filters.n_best_posts", { count: this.get('filteredPostsCount') }),
+    if (streamFilters.filter && streamFilters.filter === "summary") {
+      return I18n.t("topic.filters.summary", {
+        n_summarized_posts: I18n.t("topic.filters.n_summarized_posts", { count: this.get('filteredPostsCount') }),
         of_n_posts: I18n.t("topic.filters.of_n_posts", { count: this.get('topic.posts_count') })
       });
     } else if (streamFilters.username_filters) {
@@ -184,19 +184,19 @@ Discourse.PostStream = Em.Object.extend({
     @returns {Ember.Deferred} a promise that resolves when the filter has been cancelled.
   **/
   cancelFilter: function() {
-    this.set('bestOf', false);
+    this.set('summary', false);
     this.get('userFilters').clear();
     return this.refresh();
   },
 
   /**
-    Toggle best of mode on the stream.
+    Toggle summary mode for the stream.
 
-    @method toggleBestOf
-    @returns {Ember.Deferred} a promise that resolves when the best of stream has loaded.
+    @method toggleSummary
+    @returns {Ember.Deferred} a promise that resolves when the summary stream has loaded.
   **/
-  toggleBestOf: function() {
-    this.toggleProperty('bestOf');
+  toggleSummary: function() {
+    this.toggleProperty('summary');
     this.refresh();
   },
 
@@ -691,7 +691,7 @@ Discourse.PostStream.reopenClass({
       stream: Em.A(),
       userFilters: Em.Set.create(),
       postIdentityMap: Em.Map.create(),
-      bestOf: false,
+      summary: false,
       loaded: false,
       loadingAbove: false,
       loadingBelow: false,

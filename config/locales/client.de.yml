@@ -363,8 +363,7 @@ de:
     unmute: Wieder beachten
     last_post: Letzter Beitrag
 
-    best_of:
-      title: "Top-Beiträge"
+    summary:
       enabled_description: Du siehst gerade die Top-Beiträge dieses Themas.
       description: "Es gibt <b>{{count}}</b> Beiträge zu diesem Thema. Das sind eine Menge! Möchtest Du Zeit sparen und nur die Beiträge mit den meisten Antworten und Nutzerreaktionen betrachten?"
       enable: 'Nur die Top-Beiträge anzeigen'
@@ -730,8 +729,8 @@ de:
           one: "von einem Benutzer"
           other: "von {{count}} Benutzern"
 
-        best_of: "Du betrachtest {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
+        summary: "Du betrachtest {{n_summarized_posts}} {{of_n_posts}}."
+        n_summarized_posts:
           one: "den besten Beitrag"
           other: "{{count}} besten Beiträge"
         of_n_posts:

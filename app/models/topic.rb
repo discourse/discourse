@@ -692,7 +692,7 @@ end
 #  closed                  :boolean          default(FALSE), not null
 #  archived                :boolean          default(FALSE), not null
 #  bumped_at               :datetime         not null
-#  has_best_of             :boolean          default(FALSE), not null
+#  has_summary             :boolean          default(FALSE), not null
 #  meta_data               :hstore
 #  vote_count              :integer          default(0), not null
 #  archetype               :string(255)      default("regular"), not null

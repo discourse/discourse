@@ -701,14 +701,14 @@ describe Post do
 
   end
 
-  context 'best_of' do
+  context 'summary' do
     let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
     let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
     let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
 
-    it "returns the OP and posts above the threshold in best of mode" do
-      SiteSetting.stubs(:best_of_percent_filter).returns(66)
-      Post.best_of.order(:post_number).should == [p1, p2]
+    it "returns the OP and posts above the threshold in summary mode" do
+      SiteSetting.stubs(:summary_percent_filter).returns(66)
+      Post.summary.order(:post_number).should == [p1, p2]
     end
 
   end

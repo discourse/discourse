@@ -378,8 +378,7 @@ zh_CN:
     unmute: 解除防打扰
     last_post: 最后一帖
 
-    best_of:
-      title: "优秀"
+    summary:
       enabled_description: 你现在正在浏览本主题的“优秀”视图。
       description: "此主题中有 <b>{{count}}</b> 个帖子，是不是有点多哦！你愿意切换到只显示最多交互和回复的帖子视图么？"
       enable: '切换到“优秀”视图'
@@ -755,8 +754,8 @@ zh_CN:
           one: "一个指定用户"
           other: "{{count}} 个用户中的"
 
-        best_of: "你在浏览 {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
+        summary: "你在浏览 {{n_summarized_posts}} {{of_n_posts}}."
+        n_summarized_posts:
           one: "一个优秀帖子"
           other: "{{count}} 优秀帖子"
         of_n_posts:

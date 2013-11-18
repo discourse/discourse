@@ -206,8 +206,7 @@ pt:
     unmute: Reativar
     last_post: Último post
 
-    best_of:
-      title: "Melhor De"
+    summary:
       description: "Há <b>{{count}}</b> posts neste tópico. Isso é muito! Gostarias de poupar tempo alterando a vista para mostrar apenas os posts com mais interações e respostas?"
       button: 'Alterar para a vista "Melhor De"'
 
@@ -431,7 +430,7 @@ pt:
 
       filters:
         user: "Estás a ver apenas os posts de um utilizador especifico."
-        best_of: "Estás a ver apenas os posts em 'Melhor De'."
+        summary: "Estás a ver apenas os posts em 'Melhor De'."
         cancel: "Mostrar todos os posts neste tópico outra vez."
 
       move_selected:

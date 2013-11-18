@@ -374,8 +374,7 @@ ko:
     unmute: 음소거 해제
     last_post: 최근 게시물
 
-    best_of:
-      title: "인기 토픽"
+    summary:
       enabled_description: "당신은 해당 토픽의 인기 게시물 을 보고 있습니다. 모든 게시물을 보려면 아래를 클릭하세요."
       description: "해당 토픽에는 <b>{{count}}</b>개의 게시글이 있습니다. . 아주 많군요!! 인기 게시물만 봄으로 시간을 절약하겠습니까?"
       enable: '인기 토픽 보기로 전환하여 봅니다'
@@ -749,8 +748,8 @@ ko:
           one: "1 명의 유저에 의해 만들어짐"
           other: "{{count}} 명의 유저에 의해 만들어짐"
 
-        best_of: "당신은 {{n_best_posts}} {{of_n_posts}}를 보고 있습니다."
-        n_best_posts:
+        summary: "당신은 {{n_summarized_posts}} {{of_n_posts}}를 보고 있습니다."
+        n_summarized_posts:
           one: "1 개의 인기 게시글"
           other: "{{count}} 개의 인기 게시글"
         of_n_posts:

@@ -113,9 +113,9 @@ test("cancelFilter", function() {
 
   this.stub(postStream, "refresh");
 
-  postStream.set('bestOf', true);
+  postStream.set('summary', true);
   postStream.cancelFilter();
-  ok(!postStream.get('bestOf'), "best of is cancelled");
+  ok(!postStream.get('summary'), "summary is cancelled");
 
   postStream.toggleParticipant(participant);
   postStream.cancelFilter();
@@ -143,14 +143,14 @@ test("streamFilters", function() {
   ok(postStream.get('hasNoFilters'), "there are no filters by default");
   blank(postStream.get("filterDesc"), "there is no description of the filter");
 
-  postStream.set('bestOf', true);
-  deepEqual(postStream.get('streamFilters'), {filter: "best_of"}, "postFilters contains the bestOf flag");
+  postStream.set('summary', true);
+  deepEqual(postStream.get('streamFilters'), {filter: "summary"}, "postFilters contains the summary flag");
   ok(!postStream.get('hasNoFilters'), "now there are filters present");
   present(postStream.get("filterDesc"), "there is a description of the filter");
 
   postStream.toggleParticipant(participant.username);
   deepEqual(postStream.get('streamFilters'), {
-    filter: "best_of",
+    filter: "summary",
     username_filters: ['eviltrout']
   }, "streamFilters contains the username we filtered");
 });
@@ -363,9 +363,9 @@ test('triggerNewPostInStream', function() {
   postStream.triggerNewPostInStream(null);
   ok(!postStream.appendMore.calledOnce, "asking for a null id does nothing");
 
-  postStream.toggleBestOf();
+  postStream.toggleSummary();
   postStream.triggerNewPostInStream(1);
-  ok(!postStream.appendMore.calledOnce, "it will not trigger when bestOf is active");
+  ok(!postStream.appendMore.calledOnce, "it will not trigger when summary is active");
 
   postStream.cancelFilter();
   postStream.toggleParticipant('eviltrout');

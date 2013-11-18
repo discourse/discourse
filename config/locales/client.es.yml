@@ -297,8 +297,7 @@ es:
     unmute: Quitar silencio
     last_post: Última publicación
 
-    best_of:
-      title: "Lo Mejor De"
+    summary:
       description: "Hay <b>{{count}}</b> publicaciones en este tema. ¡Son muchas! ¿Te gustaría ahorrar algo de tiempo viendo sólo las publicaciones con más interacciones y respuestas?"
       button: 'Cambiar a la vista "Lo Mejor De"'
 
@@ -602,8 +601,8 @@ es:
           one: "hechos por 1 usuario específico"
           other: "hechos por {{count}} usuarios específicos"
 
-        best_of: "Estás viendo el {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
+        summary: "Estás viendo el {{n_summarized_posts}} {{of_n_posts}}."
+        n_summarized_posts:
           one: "1 mejor mensaje"
           other: "{{count}} mejores mensajes"
         of_n_posts:

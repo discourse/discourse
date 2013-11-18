@@ -378,8 +378,7 @@ fr:
     unmute: Activer
     last_post: Dernier message
 
-    best_of:
-      title: "les meilleurs"
+    summary:
       enabled_description: "Vous êtes actuellement en train de consulter seulement les messages les plus populaires de cette discussion. Pour voir tous les messages, cliquez ci-dessous."
       description: "Il y a <b>{{count}}</b> messages dans cette discussion. C'est beaucoup ! Voulez-vous gagner du temps en n'affichant que les meilleurs messages ?"
       enable: 'Basculer dans la vue  : "les meilleurs"'
@@ -730,8 +729,8 @@ fr:
         by_n_users:
           one: "de l'utilisateur"
           other: "rédigés par {{count}} utilisateurs"
-        best_of: "Vous voyez seulement {{n_best_posts}} {{of_n_posts}} de cette discussion."
-        n_best_posts:
+        summary: "Vous voyez seulement {{n_summarized_posts}} {{of_n_posts}} de cette discussion."
+        n_summarized_posts:
           one: "le message"
           other: "les {{count}} messages"
         of_n_posts:

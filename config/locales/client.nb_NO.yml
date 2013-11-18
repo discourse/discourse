@@ -272,8 +272,7 @@ nb_NO:
     unmute: "Udemp"
     last_post: "Siste Innlegg"
 
-    best_of:
-      title: "De Beste"
+    summary:
       enabled_description: "Du er for øyeblikket i De Beste modus i dette emnet."
       description: "Det er <b>{{count}}</b> innlegg i dette emnet. Det er mange! Will du spare tid ved å vise bare de beste innleggene?"
       enable: 'Bytt til "De Beste" modus'
@@ -617,8 +616,8 @@ nb_NO:
           one: "skrevet av 1 spesifikk bruker"
           other: "skrevet av {{count}} spesifikke brukere"
 
-        best_of: "Du ser på {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
+        summary: "Du ser på {{n_summarized_posts}} {{of_n_posts}}."
+        n_summarized_posts:
           one: "1 beste innlegg"
           other: "{{count}} beste innlegg"
         of_n_posts:

@@ -379,8 +379,7 @@ nl:
     unmute: Tonen
     last_post: Laatste bericht
 
-    best_of:
-      title: Best of
+    summary:
       enabled_description: "Je kijkt nu naar de beste berichten van deze topic. Klik hieronder om alle berichten te zien."
       description: "Er zijn <b>{{count}}</b> berichten in deze topic. Dat zijn een hoop! Zou je tijd willen besparen door alleen de berichten te zien met de meeste interactie en reacties?"
       enable: "Schakel naar 'Best of'-weergave"
@@ -754,8 +753,8 @@ nl:
           one: van één specifiek lid
           other: "van {{count}} specifieke leden"
 
-        best_of: "Je ziet momenteel alleen {{n_best_posts}} {{of_n_posts}}"
-        n_best_posts:
+        summary: "Je ziet momenteel alleen {{n_summarized_posts}} {{of_n_posts}}"
+        n_summarized_posts:
           one: "het enige 'Best of' bericht."
           other: "de {{count}} 'Best of' berichten"
         of_n_posts:

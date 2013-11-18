@@ -44,7 +44,7 @@
 
           <td class='num likes'>
             {{#if topic.like_count}}
-              <a href='{{unbound topic.url}}{{#if topic.has_best_of}}?filter=best_of{{/if}}'>{{unbound topic.like_count}} <i class='icon-heart'></i></a>
+              <a href='{{unbound topic.url}}{{#if topic.has_summary}}?filter=summary{{/if}}'>{{unbound topic.like_count}} <i class='icon-heart'></i></a>
             {{/if}}
           </td>
 

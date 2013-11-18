@@ -296,8 +296,7 @@ pseudo:
     first_post: '[[ Ƒířšť ƿóšť ]]'
     mute: '[[ Ϻůťé ]]'
     unmute: '[[ Ůɳɱůťé ]]'
-    best_of:
-      title: '[[ Ɓéšť Óƒ ]]'
+    summary:
       enabled_description: '[[ Ýóů ářé čůřřéɳťłý νíéŵíɳǧ ťĥé "Ɓéšť Óƒ" νíéŵ óƒ ťĥíš
         ťóƿíč. ]]'
       description: '[[ Ťĥéřé ářé <ƀ>{{count}}</ƀ> ƿóšťš íɳ ťĥíš ťóƿíč. Ťĥáť''š á łóť!
@@ -669,8 +668,8 @@ pseudo:
         by_n_users:
           one: '[[ ɱáďé ƀý 1 šƿéčíƒíč ůšéř ]]'
           other: '[[ ɱáďé ƀý {{count}} šƿéčíƒíč ůšéřš ]]'
-        best_of: '[[ Ýóů''řé νíéŵíɳǧ ťĥé {{n_best_posts}} {{of_n_posts}}. ]]'
-        n_best_posts:
+        summary: '[[ Ýóů''řé νíéŵíɳǧ ťĥé {{n_summarized_posts}} {{of_n_posts}}. ]]'
+        n_summarized_posts:
           one: '[[ 1 ƀéšť ƿóšť ]]'
           other: '[[ {{count}} ƀéšť ƿóšťš ]]'
         of_n_posts:

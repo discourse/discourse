@@ -380,12 +380,11 @@ en:
     unmute: Unmute
     last_post: Last post
 
-    best_of:
-      title: "Best Of"
-      enabled_description: "You're viewing only the best posts in this topic. To see all posts again, click below."
-      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the best posts?"
-      enable: 'Switch to "Best Of" view'
-      disable: 'Cancel "Best Of"'
+    summary:
+      enabled_description: "You're viewing a summary of this topic. To see all posts again, click below."
+      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the most relevant posts?"
+      enable: 'Switch to Summary view'
+      disable: 'Cancel Summary view'
 
     private_message_info:
       title: "Private Message"
@@ -758,10 +757,10 @@ en:
           one: "made by 1 specific user"
           other: "made by {{count}} specific users"
 
-        best_of: "You're viewing the {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
-          one: "1 best post"
-          other: "{{count}} best posts"
+        summary: "You're viewing the {{n_summarized_posts}} {{of_n_posts}}."
+        n_summarized_posts:
+          one: "1 summarized post"
+          other: "{{count}} summarized posts"
         of_n_posts:
           one: "of 1 in the topic"
           other: "of {{count}} in the topic"

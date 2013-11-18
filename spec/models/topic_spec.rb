@@ -712,7 +712,7 @@ describe Topic do
 
     it 'is a regular topic by default' do
       topic.archetype.should == Archetype.default
-      topic.has_best_of.should be_false
+      topic.has_summary.should be_false
       topic.percent_rank.should == 1.0
       topic.should be_visible
       topic.pinned_at.should be_blank

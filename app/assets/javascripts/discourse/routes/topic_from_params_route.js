@@ -18,8 +18,8 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
 
     var queryParams = Discourse.URL.get('queryParams');
     if (queryParams) {
-      // Set bestOf on the postStream if present
-      postStream.set('bestOf', Em.get(queryParams, 'filter') === 'best_of');
+      // Set summary on the postStream if present
+      postStream.set('summary', Em.get(queryParams, 'filter') === 'summary');
 
       // Set any username filters on the postStream
       var userFilters = Em.get(queryParams, 'username_filters') || Em.get(queryParams, 'username_filters[]');

@@ -30,9 +30,9 @@ Discourse.TopicMapView = Discourse.ContainerView.extend({
   appendMapInformation: function(container) {
     var topic = this.get('topic');
 
-    // If we have a best of capability
-    if (topic.get('has_best_of')) {
-      container.attachViewWithArgs({ topic: topic }, Discourse.DiscourseToggleBestOfComponent);
+    // If we have a summary capability
+    if (topic.get('has_summary')) {
+      container.attachViewWithArgs({ topic: topic }, Discourse.DiscourseToggleSummaryComponent);
     }
 
     // If we have a private message

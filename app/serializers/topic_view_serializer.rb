@@ -16,7 +16,7 @@ class TopicViewSerializer < ApplicationSerializer
      :visible,
      :closed,
      :archived,
-     :has_best_of,
+     :has_summary,
      :archetype,
      :slug,
      :category_id,

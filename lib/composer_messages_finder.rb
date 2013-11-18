@@ -95,7 +95,7 @@ class ComposerMessagesFinder
     topic = Topic.where(id: @details[:topic_id]).first
     return if topic.blank? ||
               topic.user_id == @user.id ||
-              topic.posts_count < SiteSetting.best_of_posts_required
+              topic.posts_count < SiteSetting.summary_posts_required
 
     posts_by_user = @user.posts.where(topic_id: topic.id).count
 

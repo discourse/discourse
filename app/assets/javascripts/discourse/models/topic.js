@@ -340,9 +340,9 @@ Discourse.Topic.reopenClass({
       });
     }
 
-    // Add the best of filter if we have it
-    if (opts.bestOf === true) {
-      data.best_of = true;
+    // Add the summary of filter if we have it
+    if (opts.summary === true) {
+      data.summary = true;
     }
 
     // Check the preload store. If not, load it via JSON

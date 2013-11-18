@@ -1,20 +1,20 @@
 /**
   The controls for toggling the summarized view on/off
 
-  @class DiscourseToggleBestOfComponent
+  @class DiscourseToggleSummaryComponent
   @extends Ember.Component
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscourseToggleBestOfComponent = Ember.Component.extend({
-  templateName: 'components/discourse-toggle-best-of',
+Discourse.DiscourseToggleSummaryComponent = Ember.Component.extend({
+  templateName: 'components/discourse-toggle-summary',
   tagName: 'section',
   classNames: ['information'],
   postStream: Em.computed.alias('topic.postStream'),
 
   actions: {
-    toggleBestOf: function() {
-      this.get('postStream').toggleBestOf();
+    toggleSummary: function() {
+      this.get('postStream').toggleSummary();
     }
   }
 });

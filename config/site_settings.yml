@@ -371,10 +371,10 @@ uncategorized:
   active_user_rate_limit_secs: 60
   previous_visit_timeout_hours: 1
   staff_like_weight: 3
-  best_of_score_threshold: 15
-  best_of_posts_required: 50
-  best_of_likes_required: 1
-  best_of_percent_filter: 20
+  summary_score_threshold: 15
+  summary_posts_required: 50
+  summary_likes_required: 1
+  summary_percent_filter: 20
   send_welcome_message: true
   allow_import: false
   educate_until_posts:

@@ -355,8 +355,7 @@ cs:
     unmute: Zrušit ignorování
     last_post: Poslední příspěvek
 
-    best_of:
-      title: "Nejlepší příspěvky"
+    summary:
       enabled_description: Právě máte zobrazeny "nejlepší příspěvky" tohoto tématu.
       description: "V tomto tématu je <b>{{count}}</b> příspěvků. A to už je hodně! Nechcete ušetřit čas při čtení tím, že zobrazíte pouze příspěvky, které mají nejvíce interakcí a odpovědí?"
       enable: 'Přepnout na "nejlepší příspěvky"'
@@ -724,8 +723,8 @@ cs:
           few: "od {{count}} vybraného uživatele"
           other: "od {{count}} vybraných uživatelů"
 
-        best_of: "{{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
+        summary: "{{n_summarized_posts}} {{of_n_posts}}."
+        n_summarized_posts:
           one: "Je zobrazen 1 nejlepší příspěvek"
           few: "Jsou zobrazeny {{count}} nejlepší příspěvky"
           other: "Je zobrazeno {{count}} nejlepších příspěvků"

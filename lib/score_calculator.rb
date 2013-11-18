@@ -32,7 +32,7 @@ class ScoreCalculator
 
     # Update the topics
     exec_sql "UPDATE topics AS t
-              SET has_best_of = (t.like_count >= :likes_required AND
+              SET has_summary = (t.like_count >= :likes_required AND
                                  t.posts_count >= :posts_required AND
                                  x.max_score >= :score_required),
                   score = x.avg_score
@@ -44,16 +44,16 @@ class ScoreCalculator
               WHERE x.topic_id = t.id AND
                         (
                           (t.score <> x.avg_score OR t.score IS NULL) OR
-                          (t.has_best_of IS NULL OR t.has_best_of <> (
+                          (t.has_summary IS NULL OR t.has_summary <> (
                             t.like_count >= :likes_required AND
                             t.posts_count >= :posts_required AND
                             x.max_score >= :score_required
                           ))
                         )
   ",
-              likes_required: SiteSetting.best_of_likes_required,
-              posts_required: SiteSetting.best_of_posts_required,
-              score_required: SiteSetting.best_of_score_threshold
+              likes_required: SiteSetting.summary_likes_required,
+              posts_required: SiteSetting.summary_posts_required,
+              score_required: SiteSetting.summary_score_threshold
 
     # Update percentage rank of topics
     exec_sql("UPDATE topics SET percent_rank = x.percent_rank
