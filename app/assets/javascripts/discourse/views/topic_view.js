@@ -328,8 +328,12 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       latestLink: "<a href=\"/\">" + (I18n.t("topic.view_latest_topics")) + "</a>"
     };
 
-
     var category = this.get('controller.content.category');
+
+    if(Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
+      category = null;
+    }
+
     if (category) {
       opts.catLink = Discourse.HTML.categoryLink(category);
     } else {
