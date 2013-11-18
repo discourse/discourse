@@ -50,7 +50,7 @@
             <li>
               <span class='badge badge-notification clicks' title='{{i18n topic_map.clicks}}'>{{clicks}}</span>
               <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
-                {{#if title}}{{shorten title}}{{else}}{{shortenUrl url}}{{/if}}
+                {{#if title}}{{title}}{{else}}{{shortenUrl url}}{{/if}}
                 {{#if internal}}<i class='icon-arrow-right' title='{{i18n topic_map.topic_link}}'></i>{{/if}}
               </a>
             </li>
