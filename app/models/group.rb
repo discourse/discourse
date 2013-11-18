@@ -89,6 +89,12 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.ensure_automatic_groups!
+    AUTO_GROUPS.keys.each do |name|
+      refresh_automatic_group!(name) unless lookup_group(name)
+    end
+  end
+
   def self.[](name)
     lookup_group(name) || refresh_automatic_group!(name)
   end
