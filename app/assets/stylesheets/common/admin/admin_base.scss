@@ -162,6 +162,7 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
   width: 850px;
   @include medium-width { width: 740px; }
   @include small-width  { width: 700px; }
+  min-height: 800px;
   margin-left: 0;
   border-left: solid 1px lighten($nav-stacked-border-color, 5%);
   padding: 30px 0 30px 30px;
