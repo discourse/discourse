@@ -593,7 +593,7 @@ id:
     views_long: "this topic has been viewed {{number}} times"
     activity: "Activity"
     likes: "Likes"
-    top_contributors: "Participants"
+    participants: "Participants"
     category_title: "Category"
     history: "History"
 

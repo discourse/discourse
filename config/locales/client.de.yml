@@ -993,7 +993,7 @@ de:
     activity: "Aktivität"
     likes: "Gefällt mir"
     likes_long: "es gibt {{number}} „Gefällt mir“ in diesem Thema"
-    top_contributors: "Teilnehmer"
+    participants: "Teilnehmer"
     category_title: "Kategorie"
     history: "Verlauf"
     changed_by: "durch {{author}}"

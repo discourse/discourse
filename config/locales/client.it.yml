@@ -950,7 +950,7 @@ it:
     views_long: "questo topic è stato visto {{number}} volte"
     activity: "Attività"
     likes: "Like"
-    top_contributors: "Partecipanti"
+    participants: "Partecipanti"
     category_title: "Categoria"
     history: "Cronologia"
     changed_by: "di {{author}}"

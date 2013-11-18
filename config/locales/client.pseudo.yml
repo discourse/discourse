@@ -921,7 +921,7 @@ pseudo:
     activity: '[[ Áčťíνíťý ]]'
     likes: '[[ Łíǩéš ]]'
     likes_long: '[[ ťĥéřé ářé {{number}} łíǩéš íɳ ťĥíš ťóƿíč ]]'
-    top_contributors: '[[ Рářťíčíƿáɳťš ]]'
+    participants: '[[ Рářťíčíƿáɳťš ]]'
     category_title: '[[ Čáťéǧóřý ]]'
     history: '[[ Ĥíšťóřý ]]'
     changed_by: '[[ ƀý {{author}} ]]'

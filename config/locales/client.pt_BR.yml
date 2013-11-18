@@ -1013,7 +1013,7 @@ pt_BR:
     activity: "Atividade"
     likes: "Curtidas"
     likes_long: "há {{number}} curtidas neste tópico"
-    top_contributors: "Participantes"
+    participants: "Participantes"
     category_title: "Categoria"
     history: "Histórico"
     changed_by: "por {{author}}"

@@ -1017,7 +1017,7 @@ ko:
     activity: "활동"
     likes: "좋아요"
     likes_long: "이 주제에 {{number}}개의 '좋아요'가 있습니다."
-    top_contributors: "참여자"
+    participants: "참여자"
     category_title: "카테고리"
     history: "기록"
     changed_by: "{{author}}에 의해"

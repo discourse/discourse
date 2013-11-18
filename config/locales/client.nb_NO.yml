@@ -863,7 +863,7 @@ nb_NO:
     views_long: "dette emnet har blit sett {{number}} ganger"
     activity: "Aktivitet"
     likes: "Likes"
-    top_contributors: "Deltakere"
+    participants: "Deltakere"
     category_title: "Kategori"
     history: "Historie"
     changed_by: "av {{author}}"

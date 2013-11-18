@@ -1027,7 +1027,7 @@ en:
     activity: "Activity"
     likes: "Likes"
     likes_long: "there are {{number}} likes in this topic"
-    top_contributors: "Participants"
+    participants: "Participants"
     category_title: "Category"
     history: "History"
     changed_by: "by {{author}}"

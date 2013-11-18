@@ -1023,7 +1023,7 @@ zh_CN:
     activity: "活动"
     likes: "赞"
     likes_long: "本主题已有 {{number}} 次赞"
-    top_contributors: "参与者"
+    participants: "参与者"
     category_title: "分类"
     history: "历史"
     changed_by: "由 {{author}}"

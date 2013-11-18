@@ -1032,7 +1032,7 @@ ru:
     activity: Активность
     likes: Нрав.
     likes_long: '{{number}} лайков в теме'
-    top_contributors: Участники
+    participants: Участники
     category_title: Категория
     history: История
     changed_by: 'автором {{author}}'

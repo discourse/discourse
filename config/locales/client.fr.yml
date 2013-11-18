@@ -982,7 +982,7 @@ fr:
     activity: "Activité"
     likes: "J'aime"
     likes_long: "il y a {{number}} j'aime dans cette discussion"
-    top_contributors: "Participants"
+    participants: "Participants"
     category_title: "Catégorie"
     history: "Historique"
     changed_by: "par {{author}}"

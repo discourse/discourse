@@ -1022,7 +1022,7 @@ nl:
     activity: Activiteit
     likes: Leuk
     likes_long: "er zijn {{count}} likes in deze topic"
-    top_contributors: Deelnemers
+    participants: Deelnemers
     category_title: Categorie
     history: Geschiedenis
     changed_by: "door {{author}}"

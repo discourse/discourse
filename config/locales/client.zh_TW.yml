@@ -913,7 +913,7 @@ zh_TW:
     views_long: "本主題已經被浏覽過 {{number}} 次"
     activity: "活動"
     likes: "贊"
-    top_contributors: "參與者"
+    participants: "參與者"
     category_title: "分類"
     history: "曆史"
     changed_by: "由 {{author}}"

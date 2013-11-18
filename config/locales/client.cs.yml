@@ -1003,7 +1003,7 @@ cs:
     activity: "Aktivita"
     likes: "Líbí se"
     likes_long: "je zde {{number}} 'líbí se' v tomto tématu"
-    top_contributors: "Účastníci"
+    participants: "Účastníci"
     category_title: "Kategorie"
     history: "Historie"
     changed_by: "od uživatele {{author}}"

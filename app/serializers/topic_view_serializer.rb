@@ -12,6 +12,8 @@ class TopicViewSerializer < ApplicationSerializer
      :created_at,
      :views,
      :reply_count,
+     :participant_count,
+     :like_count,
      :last_posted_at,
      :visible,
      :closed,
