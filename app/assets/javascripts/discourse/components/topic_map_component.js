@@ -1,7 +1,7 @@
 /**
-  The information that sits in the topic map.
+  The topic map underneath the first post of a topic.
 
-  @class DiscourseTopicInformationComponent
+  @class DiscourseTopicMapComponent
   @extends Ember.Component
   @namespace Discourse
   @module Discourse
@@ -9,11 +9,18 @@
 
 var LINKS_SHOWN = 5;
 
-Discourse.DiscourseTopicInformationComponent = Ember.Component.extend({
+Discourse.DiscourseTopicMapComponent = Ember.Component.extend({
   mapCollapsed: true,
-  templateName: 'components/discourse-topic-information',
+  templateName: 'components/discourse-topic-map',
   details: Em.computed.alias('topic.details'),
   allLinksShown: false,
+
+  init: function() {
+    this._super();
+
+    // If the topic has a summary, expand the map by default
+    this.set('mapCollapsed', !this.get('topic.has_summary'));
+  },
 
   toggleMapClass: function() {
     return this.get('mapCollapsed') ? 'icon-chevron-down' : 'icon-chevron-up';

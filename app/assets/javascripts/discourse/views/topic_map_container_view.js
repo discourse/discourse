@@ -1,12 +1,13 @@
 /**
-  This view handles rendering of the map of the topic under the first post
+  This view contains the topic map as well as other relevant information underneath the
+  first post.
 
-  @class TopicMapView
+  @class TopicMapContainerView
   @extends Discourse.View
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicMapView = Discourse.ContainerView.extend({
+Discourse.TopicMapContainerView = Discourse.ContainerView.extend({
   classNameBindings: ['hidden', ':topic-map'],
   shouldRerender: Discourse.View.renderIfChanged('topic.posts_count'),
 
@@ -23,7 +24,7 @@ Discourse.TopicMapView = Discourse.ContainerView.extend({
     this._super();
     if (this.get('hidden')) return;
 
-    this.attachViewWithArgs({ topic: this.get('topic') }, Discourse.DiscourseTopicInformationComponent);
+    this.attachViewWithArgs({ topic: this.get('topic') }, Discourse.DiscourseTopicMapComponent);
     this.trigger('appendMapInformation', this);
   },
 

@@ -383,8 +383,8 @@ en:
     summary:
       enabled_description: "You're viewing a summary of this topic. To see all posts again, click below."
       description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the most relevant posts?"
-      enable: 'Switch to Summary view'
-      disable: 'Cancel Summary view'
+      enable: 'Summarize This Topic'
+      disable: 'Cancel Summary'
 
     private_message_info:
       title: "Private Message"
