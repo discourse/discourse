@@ -18,7 +18,11 @@ class TopicListSerializer < ApplicationSerializer
   end
 
   def can_create_topic
-    scope.can_create?(Topic)
+    if object.category.present?
+      scope.can_create?(Topic, object.category)
+    else
+      scope.can_create?(Topic)
+    end
   end
 
   def include_more_topics_url?
