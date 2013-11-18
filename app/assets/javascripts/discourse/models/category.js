@@ -36,15 +36,15 @@ Discourse.Category = Discourse.Model.extend({
   }.property('name'),
 
   unreadUrl: function() {
-    return this.get('url') + '/unread';
+    return this.get('url') + '/l/unread';
   }.property('url'),
 
   newUrl: function() {
-    return this.get('url') + '/new';
+    return this.get('url') + '/l/new';
   }.property('url'),
 
   style: function() {
-    return "background-color: #" + (this.get('category.color')) + "; color: #" + (this.get('category.text_color')) + ";";
+    return "background-color: #" + this.get('category.color') + "; color: #" + (this.get('category.text_color')) + ";";
   }.property('color', 'text_color'),
 
   moreTopics: function() {
