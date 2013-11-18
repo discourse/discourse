@@ -92,7 +92,10 @@ class Plugin::Instance
     @javascripts ||= []
     @javascripts << js
   end
-
+  
+  def register_locale(locale)
+    I18n.load_path += locale
+  end
 
   def register_asset(file,opts=nil)
     full_path = File.dirname(path) << "/assets/" << file
