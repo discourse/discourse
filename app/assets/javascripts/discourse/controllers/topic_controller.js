@@ -215,9 +215,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
           }) + "\n\n" + q);
         });
       });
-    },
-
-
+    }
 
   },
 
