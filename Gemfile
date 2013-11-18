@@ -24,12 +24,14 @@ if rails4?
     # A bit messy, this can be called multiple times by bundler, avoid blowing the stack
     unless self.method_defined? :to_definition_unpatched
       alias_method :to_definition_unpatched, :to_definition
-      puts "Booting in Rails 4 mode"
     end
     def to_definition(bad_lockfile, unlock)
       to_definition_unpatched(Bundler::SharedHelpers.default_lockfile, unlock)
     end
   end
+else
+  # Note to be deprecated, in place of a dual boot master
+  puts "Booting in Rails 3 mode"
 end
 
 gem 'seed-fu' , github: 'SamSaffron/seed-fu'
