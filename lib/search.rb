@@ -26,6 +26,7 @@ class Search
       when :es then 'spanish'
       when :fr then 'french'
       when :it then 'italian'
+      when :ja then 'japanese'
       when :nl then 'dutch'
       when :pt then 'portuguese'
       when :sv then 'swedish'
