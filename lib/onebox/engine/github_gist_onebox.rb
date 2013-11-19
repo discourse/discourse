@@ -28,8 +28,8 @@ module Onebox
           domain: "http://gist.github.com",
           badge: "g",
           title: raw["description"],
-          content: raw["files"].first[1]["content"],
-          author: raw["user"]["login"]
+          author: raw["user"]["login"],
+          sha: match[:sha]
         }
       end
     end

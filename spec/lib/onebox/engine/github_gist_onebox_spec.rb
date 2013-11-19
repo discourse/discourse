@@ -10,8 +10,8 @@ describe Onebox::Engine::GithubGistOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
-    it "includes raw file contents" do
-      expect(html).to include("# Create a new blog post on GitHub")
+    it "includes sha" do
+      expect(html).to include("153044e9bea3331cc103")
     end
 
     it "includes author" do

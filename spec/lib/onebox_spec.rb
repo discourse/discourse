@@ -24,7 +24,9 @@ describe Onebox do
   end
 
   describe "templates" do
-    let(:templates) { Dir["templates/*.mustache"] - ["templates/_layout.mustache"] }
+    let(:ignored)  { ["templates/_layout.mustache", "templates/githubgist.mustache"] }
+    let(:templates) { Dir["templates/*.mustache"] - ignored }
+
 
     def expect_templates_to_not_match(text)
       templates.each do |template|
