@@ -24,7 +24,7 @@ Discourse.TopicMapContainerView = Discourse.ContainerView.extend({
     this._super();
     if (this.get('hidden')) return;
 
-    this.attachViewWithArgs({ topic: this.get('topic') }, Discourse.DiscourseTopicMapComponent);
+    this.attachViewWithArgs({ topic: this.get('topic') }, Discourse.TopicMapComponent);
     this.trigger('appendMapInformation', this);
   },
 
@@ -33,12 +33,12 @@ Discourse.TopicMapContainerView = Discourse.ContainerView.extend({
 
     // If we have a summary capability
     if (topic.get('has_summary')) {
-      container.attachViewWithArgs({ topic: topic }, Discourse.DiscourseToggleSummaryComponent);
+      container.attachViewWithArgs({ topic: topic }, Discourse.ToggleSummaryComponent);
     }
 
     // If we have a private message
     if (this.get('topic.isPrivateMessage')) {
-      container.attachViewWithArgs({ topic: topic, showPrivateInviteAction: 'showPrivateInvite' }, Discourse.DiscoursePrivateMessageMapComponent);
+      container.attachViewWithArgs({ topic: topic, showPrivateInviteAction: 'showPrivateInvite' }, Discourse.PrivateMessageMapComponent);
     }
   }
 });

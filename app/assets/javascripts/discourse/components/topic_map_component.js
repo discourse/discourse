@@ -1,7 +1,7 @@
 /**
   The topic map underneath the first post of a topic.
 
-  @class DiscourseTopicMapComponent
+  @class TopicMapComponent
   @extends Ember.Component
   @namespace Discourse
   @module Discourse
@@ -9,7 +9,7 @@
 
 var LINKS_SHOWN = 5;
 
-Discourse.DiscourseTopicMapComponent = Ember.Component.extend({
+Discourse.TopicMapComponent = Ember.Component.extend({
   mapCollapsed: true,
   templateName: 'components/topic-map',
   details: Em.computed.alias('topic.details'),
