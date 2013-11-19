@@ -18,8 +18,6 @@ module Onebox
       @url = link
       @cache = cache || Onebox.options.cache
       @timeout = timeout || Onebox.options.timeout
-      @cache = cache || Onebox.defaults.cache
-      @timeout = timeout || Onebox.defaults.timeout
     end
 
     # raises error if not defined in onebox engine. This is the output method for
