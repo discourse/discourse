@@ -1419,6 +1419,7 @@ en:
         title: 'Settings'
         reset: 'reset to default'
         none: 'none'
+        no_results: "No results found."
         categories:
           all_results: 'All'
           required: 'Required'
