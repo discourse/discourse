@@ -7,6 +7,9 @@ module Middleware::UnicornOobgc
 
   MIN_REQUESTS_PER_OOBGC = 3
 
+  # TUNE ME, for Discourse this number is good
+  MIN_FREE_SLOTS = 80_000
+
   def verbose(msg=nil)
     @verbose ||= ENV["OOBGC_VERBOSE"] == "1" ? :true : :false
     if @verbose == :true
@@ -64,6 +67,10 @@ module Middleware::UnicornOobgc
         # can really mess stuff up, if our delta is too low the algorithm fails
         new_delta = (delta * 0.995).to_i
         @max_delta = [new_delta, delta].max
+      end
+
+      if @max_delta < MIN_FREE_SLOTS
+        @max_delta = MIN_FREE_SLOTS
       end
 
       if @num_requests > MIN_REQUESTS_PER_OOBGC && @max_delta * 2 + new_live_num > @expect_gc_at
