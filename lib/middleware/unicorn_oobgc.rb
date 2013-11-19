@@ -8,7 +8,7 @@ module Middleware::UnicornOobgc
   MIN_REQUESTS_PER_OOBGC = 3
 
   # TUNE ME, for Discourse this number is good
-  MIN_FREE_SLOTS = 80_000
+  MIN_FREE_SLOTS = 50_000
 
   def verbose(msg=nil)
     @verbose ||= ENV["OOBGC_VERBOSE"] == "1" ? :true : :false
