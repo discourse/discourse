@@ -1429,6 +1429,6 @@ zh_CN:
           security: '安全性'
           seo: '搜索引擎优化（SEO）'
           spam: '垃圾信息'
-          rate_limits: '比率限制'
+          rate_limits: '速度限制'
           developer: '开发者'
           uncategorized: '未分类'
