@@ -74,7 +74,7 @@ module Middleware::UnicornOobgc
       end
     else
 
-      verbose "OobGC miss pid: #{Process.pid} reqs: #{@num_requests}"
+      verbose "OobGC miss pid: #{Process.pid} reqs: #{@num_requests} max delta: #{@max_delta}"
 
       @num_requests = 0
       @expect_gc_at = estimate_live_num_at_gc(stat)
