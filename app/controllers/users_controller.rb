@@ -97,7 +97,10 @@ class UsersController < ApplicationController
   # Used for checking availability of a username and will return suggestions
   # if the username is not available.
   def check_username
-    params.require(:username)
+    if !params[:username].present?
+      params.require(:username) if !params[:email].present?
+      return render(json: success_json) unless SiteSetting.call_discourse_hub?
+    end
     username = params[:username]
 
     target_user = user_from_params_or_current_user
@@ -107,7 +110,7 @@ class UsersController < ApplicationController
 
     checker = UsernameCheckerService.new
     email = params[:email] || target_user.try(:email)
-    render(json: checker.check_username(username, email))
+    render json: checker.check_username(username, email)
   rescue RestClient::Forbidden
     render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
   end

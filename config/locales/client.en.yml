@@ -280,6 +280,7 @@ en:
         too_long: "Your username is too long."
         checking: "Checking username availability..."
         enter_email: 'Username found. Enter matching email.'
+        prefilled: "Email matches this registered username."
 
       password_confirmation:
         title: "Password Again"
