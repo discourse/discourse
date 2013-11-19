@@ -134,8 +134,6 @@
           {{#each categories}}
             <li class='category'>
               {{header-category-info category=this currentUser=controller.currentUser}}
-              {{categoryLink this allowUncategorized=true}}
-              <b class="topic-count">{{unbound topic_count}}</b></a>
             </li>
           {{/each}}
         </ul>
