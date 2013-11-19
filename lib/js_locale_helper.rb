@@ -1,10 +1,17 @@
 module JsLocaleHelper
 
   def self.output_locale(locale, translations = nil)
-
     locale_str = locale.to_s
 
+    # load default translations
     translations ||= YAML::load(File.open("#{Rails.root}/config/locales/client.#{locale_str}.yml"))
+    # load plugins translations
+    plugin_translations = {}
+    Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
+      plugin_translations.merge! YAML::load(File.open(file))
+    end
+    # merge translations (plugin translations overwrite default translations)
+    translations[locale_str]['js'].merge!(plugin_translations[locale_str]['js'])
 
     # We used to split the admin versus the client side, but it's much simpler to just
     # include both for now due to the small size of the admin section.

@@ -57,7 +57,6 @@ module Discourse
 
     config.assets.precompile += ['common.css', 'desktop.css', 'mobile.css', 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js']
 
-
     # Precompile all defer
     Dir.glob("#{config.root}/app/assets/javascripts/defer/*.js").each do |file|
       config.assets.precompile << "defer/#{File.basename(file)}"
@@ -80,9 +79,8 @@ module Discourse
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'Eastern Time (US & Canada)'
 
-    # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    # config.i18n.default_locale = :de
+    # auto-load server locale in plugins
+    config.i18n.load_path += Dir["#{Rails.root}/plugins/*/config/locales/server.*.yml"]
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = 'utf-8'
