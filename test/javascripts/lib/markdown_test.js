@@ -50,10 +50,6 @@ test("Traditional Line Breaks", function() {
   cooked(input, traditionalOutput, "It supports traditional markdown via a Site Setting");
 });
 
-test("Unbalanced underscores", function() {
-  cooked("[evil_trout][1] hello_\n\n[1]: http://eviltrout.com", "<p><a href=\"http://eviltrout.com\">evil_trout</a> hello_</p>");
-});
-
 test("Line Breaks", function() {
   cooked("[] first choice\n[] second choice",
          "<p>[] first choice<br/>[] second choice</p>",

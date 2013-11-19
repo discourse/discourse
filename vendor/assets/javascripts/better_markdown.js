@@ -643,8 +643,7 @@
   var DialectHelpers = {};
   DialectHelpers.inline_until_char = function( text, want ) {
     var consumed = 0,
-        nodes = [],
-        patterns = this.dialect.inline.__patterns__.replace('|_|', '');
+        nodes = [];
 
     while ( true ) {
       if ( text.charAt( consumed ) === want ) {
@@ -658,7 +657,7 @@
         return null;
       }
 
-      var res = this.dialect.inline.__oneElement__.call(this, text.substr( consumed ), patterns );
+      var res = this.dialect.inline.__oneElement__.call(this, text.substr( consumed ) );
       consumed += res[ 0 ];
       // Add any returned nodes.
       nodes.push.apply( nodes, res.slice( 1 ) );
