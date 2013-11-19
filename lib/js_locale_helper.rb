@@ -11,7 +11,7 @@ module JsLocaleHelper
       plugin_translations.merge! YAML::load(File.open(file))
     end
     # merge translations (plugin translations overwrite default translations)
-    translations[locale_str]['js'].merge!(plugin_translations[locale_str]['js'])
+    translations[locale_str]['js'].merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str]
 
     # We used to split the admin versus the client side, but it's much simpler to just
     # include both for now due to the small size of the admin section.
