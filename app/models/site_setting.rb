@@ -15,6 +15,16 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
+  Dir["#{Rails.root}/plugins/*/config/settings.yml"].each do |plugin_settings|
+    SiteSettings::YamlLoader.new(plugin_settings).load do |category, name, default, opts|
+      if opts.delete(:client)
+        client_setting(name, default, opts.merge(category: category))
+      else
+        setting(name, default, opts.merge(category: category))
+      end
+    end
+  end
+
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?
   end
