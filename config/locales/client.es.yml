@@ -747,7 +747,7 @@ es:
     views_long: "este tema ha sido visto {{number}} veces"
     activity: "Actividad"
     likes: "Les gusta"
-    participants: "Participantes"
+    users: "Participantes"
     category_title: "Categoría"
     history: "Historia"
     changed_by: "por {{author}}"

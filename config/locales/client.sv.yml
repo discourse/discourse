@@ -737,7 +737,7 @@ sv:
     views_long: "denna tråd har visats {{number}} gånger"
     activity: "Aktivitet"
     likes: "Gillningar"
-    participants: "Deltagare"
+    users: "Deltagare"
     category_title: "Kategori"
     history: "Historik"
     changed_by: "av {{author}}"

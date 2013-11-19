@@ -29,7 +29,7 @@
       {{number topic.views}}
     </li>
     <li>
-      <h4>{{i18n participants}}</h4>
+      <h4>{{i18n users}}</h4>
       {{number topic.participant_count}}
     </li>
     {{#if topic.like_count}}
@@ -63,7 +63,7 @@
               <span class='badge badge-notification clicks' title='{{i18n topic_map.clicks}}'>{{clicks}}</span>
               <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
                 {{#if title}}{{title}}{{else}}{{shortenUrl url}}{{/if}}
-                {{#if internal}}<i class='icon-arrow-right' title='{{i18n topic_map.topic_link}}'></i>{{/if}}
+                {{#unless internal}}<i class='icon-external-link'></i>{{/unless}}
               </a>
             </li>
           {{/groupedEach}}

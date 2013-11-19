@@ -996,7 +996,6 @@ ko:
       title: "토픽 요약"
       links_shown: "모든 {{totalLinks}} 링크 보기..."
       clicks: "클릭"
-      topic_link: "토픽 링크"
 
     topic_statuses:
       locked:
@@ -1017,7 +1016,7 @@ ko:
     activity: "활동"
     likes: "좋아요"
     likes_long: "이 주제에 {{number}}개의 '좋아요'가 있습니다."
-    participants: "참여자"
+    users: "참여자"
     category_title: "카테고리"
     history: "기록"
     changed_by: "{{author}}에 의해"

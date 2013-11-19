@@ -930,7 +930,6 @@ it:
       title: "Riepilogo del Topic"
       links_shown: "mostra tutti i {{totalLinks}} link..."
       clicks: "click"
-      topic_link: "topic link"
 
     topic_statuses:
       locked:
@@ -950,7 +949,7 @@ it:
     views_long: "questo topic è stato visto {{number}} volte"
     activity: "Attività"
     likes: "Like"
-    participants: "Partecipanti"
+    users: "Partecipanti"
     category_title: "Categoria"
     history: "Cronologia"
     changed_by: "di {{author}}"

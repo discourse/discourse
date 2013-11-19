@@ -558,7 +558,7 @@ pt:
     views_long: "este tópico foi visto {{number}} vezes"
     activity: "Atividade"
     likes: "Gostos"
-    participants: "Participantes"
+    users: "Participantes"
     category_title: "Categoria"
 
     categories_list: "Lista de Categorias"

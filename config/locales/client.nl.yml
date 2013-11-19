@@ -1001,7 +1001,6 @@ nl:
       title: "Topic samenvatting"
       links_shown: "laat alle {{totalLinks}} links zien..."
       clicks: clicks
-      topic_link: link naar topic
 
     topic_statuses:
       locked:
@@ -1022,7 +1021,7 @@ nl:
     activity: Activiteit
     likes: Leuk
     likes_long: "er zijn {{count}} likes in deze topic"
-    participants: Deelnemers
+    users: Deelnemers
     category_title: Categorie
     history: Geschiedenis
     changed_by: "door {{author}}"

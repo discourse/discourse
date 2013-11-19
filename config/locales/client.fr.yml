@@ -963,7 +963,6 @@ fr:
       title: "Résumé de la discussion"
       links_shown: "montrer les {{totalLinks}} liens..."
       clicks: "clics"
-      topic_link: "lien de la discussion"
     topic_statuses:
       locked:
         help: "cette discussion est close, elle n'accepte plus de nouvelles réponses"
@@ -982,7 +981,7 @@ fr:
     activity: "Activité"
     likes: "J'aime"
     likes_long: "il y a {{number}} j'aime dans cette discussion"
-    participants: "Participants"
+    users: "Participants"
     category_title: "Catégorie"
     history: "Historique"
     changed_by: "par {{author}}"

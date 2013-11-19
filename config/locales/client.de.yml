@@ -972,7 +972,6 @@ de:
       title: "Zusammenfassung des Themas"
       links_shown: "Zeige alle {{totalLinks}} Links..."
       clicks: "Klicks"
-      topic_link: "Themenlinks"
 
     topic_statuses:
       locked:
@@ -993,7 +992,7 @@ de:
     activity: "Aktivität"
     likes: "Gefällt mir"
     likes_long: "es gibt {{number}} „Gefällt mir“ in diesem Thema"
-    participants: "Teilnehmer"
+    users: "Teilnehmer"
     category_title: "Kategorie"
     history: "Verlauf"
     changed_by: "durch {{author}}"

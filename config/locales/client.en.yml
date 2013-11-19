@@ -1007,7 +1007,6 @@ en:
       title: "Topic Summary"
       links_shown: "show all {{totalLinks}} links..."
       clicks: "clicks"
-      topic_link: "topic link"
 
     topic_statuses:
       locked:
@@ -1028,7 +1027,7 @@ en:
     activity: "Activity"
     likes: "Likes"
     likes_long: "there are {{number}} likes in this topic"
-    participants: "Participants"
+    users: "Users"
     category_title: "Category"
     history: "History"
     changed_by: "by {{author}}"

@@ -992,7 +992,6 @@ pt_BR:
       title: "Sumário do Tópico"
       links_shown: "mostrar todos os {{totalLinks}} links..."
       clicks: "clicks"
-      topic_link: "link do tópico"
 
     topic_statuses:
       locked:
@@ -1013,7 +1012,7 @@ pt_BR:
     activity: "Atividade"
     likes: "Curtidas"
     likes_long: "há {{number}} curtidas neste tópico"
-    participants: "Participantes"
+    users: "Participantes"
     category_title: "Categoria"
     history: "Histórico"
     changed_by: "por {{author}}"

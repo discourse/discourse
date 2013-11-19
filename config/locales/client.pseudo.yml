@@ -900,7 +900,6 @@ pseudo:
       title: '[[ Ťóƿíč Šůɱɱářý ]]'
       links_shown: '[[ šĥóŵ áłł {{totalLinks}} łíɳǩš... ]]'
       clicks: '[[ čłíčǩš ]]'
-      topic_link: '[[ ťóƿíč łíɳǩ ]]'
     topic_statuses:
       locked:
         help: '[[ ťĥíš ťóƿíč íš čłóšéď; íť ɳó łóɳǧéř áččéƿťš ɳéŵ řéƿłíéš ]]'
@@ -921,7 +920,7 @@ pseudo:
     activity: '[[ Áčťíνíťý ]]'
     likes: '[[ Łíǩéš ]]'
     likes_long: '[[ ťĥéřé ářé {{number}} łíǩéš íɳ ťĥíš ťóƿíč ]]'
-    participants: '[[ Рářťíčíƿáɳťš ]]'
+    users: '[[ Рářťíčíƿáɳťš ]]'
     category_title: '[[ Čáťéǧóřý ]]'
     history: '[[ Ĥíšťóřý ]]'
     changed_by: '[[ ƀý {{author}} ]]'

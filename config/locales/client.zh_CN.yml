@@ -742,7 +742,7 @@ zh_CN:
         help: '向你的朋友发送邀请，他们只需要一个点击就能回复这个主题'
         to_topic: "我们会给你的朋友发送一封邮件，他/她只需点击其中的一个链接，就可以无需登录直接回复这个主题。"
         to_forum: "我们会给你的朋友发送一封邮件，他/她只需点击其中的链接，就可以注册加入这个论坛。"
-        
+
         email_placeholder: '电子邮箱地址'
         success: "谢谢！我们已发送一个邀请邮件到<b>{{email}}</b>。当他们确认的时候我们会通知你。你也可以在你的用户页面的邀请选项卡下查看邀请状态。"
         error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"
@@ -1007,7 +1007,6 @@ zh_CN:
       title: "主题概要"
       links_shown: "显示所有 {{totalLinks}} 个链接……"
       clicks: "点击"
-      topic_link: "主题链接"
 
     topic_statuses:
       locked:
@@ -1028,7 +1027,7 @@ zh_CN:
     activity: "活动"
     likes: "赞"
     likes_long: "本主题已有 {{number}} 次赞"
-    participants: "参与者"
+    users: "参与者"
     category_title: "分类"
     history: "历史"
     changed_by: "由 {{author}}"

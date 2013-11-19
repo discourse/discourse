@@ -893,7 +893,6 @@ zh_TW:
       title: "主題概要"
       links_shown: "顯示所有 {{totalLinks}} 個鏈接……"
       clicks: "點擊"
-      topic_link: "主題鏈接"
 
     topic_statuses:
       locked:
@@ -913,7 +912,7 @@ zh_TW:
     views_long: "本主題已經被浏覽過 {{number}} 次"
     activity: "活動"
     likes: "贊"
-    participants: "參與者"
+    users: "參與者"
     category_title: "分類"
     history: "曆史"
     changed_by: "由 {{author}}"

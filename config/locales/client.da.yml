@@ -637,7 +637,7 @@ da:
     views_long: "dette emne er blevet vist {{number}} gange"
     activity: "Aktivitet"
     likes: "Synes godt om"
-    participants: "Deltagere"
+    users: "Deltagere"
     category_title: "Kategori"
     history: "Historik"
     changed_by: "af {{author}}"

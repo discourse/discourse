@@ -1013,7 +1013,6 @@ ru:
       title: 'Сводка по теме'
       links_shown: 'показать все {{totalLinks}} ссылок...'
       clicks: переходов
-      topic_link: 'ссылка на тему'
     topic_statuses:
       locked:
         help: 'закрытая тема (в этой теме больше нельзя отвечать)'
@@ -1032,7 +1031,7 @@ ru:
     activity: Активность
     likes: Нрав.
     likes_long: '{{number}} лайков в теме'
-    participants: Участники
+    users: Участники
     category_title: Категория
     history: История
     changed_by: 'автором {{author}}'

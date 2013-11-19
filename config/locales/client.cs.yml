@@ -982,7 +982,6 @@ cs:
       title: "Souhrn tématu"
       links_shown: "zobrazit všech {{totalLinks}} odkazů..."
       clicks: "počet kliknutí"
-      topic_link: "odkaz na téma"
 
     topic_statuses:
       locked:
@@ -1003,7 +1002,7 @@ cs:
     activity: "Aktivita"
     likes: "Líbí se"
     likes_long: "je zde {{number}} 'líbí se' v tomto tématu"
-    participants: "Účastníci"
+    users: "Účastníci"
     category_title: "Kategorie"
     history: "Historie"
     changed_by: "od uživatele {{author}}"

@@ -843,7 +843,6 @@ nb_NO:
       title: "Emneoppsummering"
       links_shown: "vis alle {{totalLinks}} linker..."
       clicks: "klikk"
-      topic_link: "emnelink"
 
     topic_statuses:
       locked:
@@ -863,7 +862,7 @@ nb_NO:
     views_long: "dette emnet har blit sett {{number}} ganger"
     activity: "Aktivitet"
     likes: "Likes"
-    participants: "Deltakere"
+    users: "Deltakere"
     category_title: "Kategori"
     history: "Historie"
     changed_by: "av {{author}}"
