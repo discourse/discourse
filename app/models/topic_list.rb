@@ -47,11 +47,7 @@ class TopicList
   end
 
   def attributes
-    hash = {'more_topics_url' => page}
-    if @category.present?
-      hash['category'] = @category
-    end
-    hash
+    {'more_topics_url' => page}
   end
 
   def has_rank_details?

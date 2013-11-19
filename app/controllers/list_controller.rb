@@ -11,9 +11,6 @@ class ListController < ApplicationController
       user = list_target_user
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = construct_url_with(filter, list_opts)
-      if list_opts.include?(:category)
-        list.category = Category.where(name: list_opts[:category]).first
-      end
       if [:latest, :hot].include?(filter)
         @description = SiteSetting.site_description
         @rss = filter
@@ -54,7 +51,6 @@ class ListController < ApplicationController
     query = TopicQuery.new(current_user, list_opts)
     list = query.list_latest
     list.more_topics_url = construct_url_with(:latest, list_opts)
-    list.category = @category if @category
     respond(list)
   end
 
