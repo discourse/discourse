@@ -70,8 +70,8 @@ zh_CN:
           one:   "1天前"
           other: "%{count}天前"
     share:
-      topic: '分享一个到本主题的链接'
-      post: '分享一个到#%{postNumber}帖的链接'
+      topic: '分享本主题的链接'
+      post: '分享#%{postNumber}帖的链接'
       close: '关闭'
       twitter: '分享这个链接到 Twitter'
       facebook: '分享这个链接到 Facebook'
@@ -108,8 +108,8 @@ zh_CN:
     weekly: "每周"
     every_two_weeks: "每两周"
     character_count:
-      one: "{{count}} 个字符"
-      other: "{{count}} 个字符"
+      one: "{{count}}个字符"
+      other: "{{count}}个字符"
 
     in_n_seconds:
       one: "一秒内"
@@ -756,15 +756,15 @@ zh_CN:
           other: "{{count}} 帖子"
         by_n_users:
           one: "一个指定用户"
-          other: "{{count}} 个用户中的"
+          other: "{{count}}个用户中的"
 
-        summary: "你在浏览 {{n_summarized_posts}} {{of_n_posts}}."
+        summary: "你在浏览{{of_n_posts}}{{n_summarized_posts}}."
         n_summarized_posts:
-          one: "一个概要帖子"
-          other: "{{count}}个概要帖子"
+          one: "一个概扩帖子"
+          other: "{{count}}个概扩帖子"
         of_n_posts:
           one: "一个帖子中的"
-          other: "{{count}} 个帖子中的"
+          other: "{{count}}个帖子中的"
         cancel: "再次显示本主题下的所有帖子。"
 
       split_topic:
