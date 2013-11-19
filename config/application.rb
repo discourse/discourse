@@ -151,5 +151,9 @@ module Discourse
     # absolutly no spot in our app were we use XML as opposed to JSON endpoints
     ActionDispatch::ParamsParser::DEFAULT_PARSERS.delete(Mime::XML)
 
+    if ENV['RBTRACE'] == "1"
+      require 'rbtrace'
+    end
+
   end
 end

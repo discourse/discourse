@@ -193,6 +193,7 @@ gem 'rack-mini-profiler',  git: 'https://github.com/MiniProfiler/rack-mini-profi
 gem 'rack-cors', require: false
 gem 'unicorn', require: false
 gem 'puma', require: false
+gem 'rbtrace', require: false
 
 # perftools only works on 1.9 atm
 group :profile do
