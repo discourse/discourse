@@ -7,8 +7,12 @@ module Onebox
     attr_reader :view
 
     self.template_name = "_layout"
-    self.template_path = File.join(Gem::Specification.find_by_name("onebox").gem_dir, "templates")
 
+    def self.template_path
+      @template_path ||= Onebox.options.load_paths.select do |path|
+        File.exist?(File.join(path, "#{template_name}.#{template_extension}"))
+      end.last
+    end
 
     def initialize(name, record, cache)
       @cache = cache
