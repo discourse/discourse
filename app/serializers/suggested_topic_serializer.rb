@@ -1,6 +1,5 @@
 class SuggestedTopicSerializer < ListableTopicSerializer
 
-  attributes :archetype, :like_count, :views
-  has_one :category, embed: :objects
+  attributes :archetype, :like_count, :views, :category_id
 
 end
