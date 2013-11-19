@@ -3,7 +3,7 @@
 <div class='list-controls'>
   <div class="container">
 
-    {{discourse-breadcrumbs category=category categories=categories}}
+    {{bread-crumbs category=category categories=categories}}
 
     <ul class="nav nav-pills" id='category-filter'>
       {{each availableNavItems itemViewClass="Discourse.NavItemView"}}
@@ -28,7 +28,7 @@
   <div class="row">
     <div class="full-width">
       <div id='list-area'>
-        {{discourse-topic-list-loading loading=loading}}
+        {{topic-list-loading loading=loading}}
         {{outlet listView}}
       </div>
     </div>

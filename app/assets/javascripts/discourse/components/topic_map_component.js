@@ -11,7 +11,7 @@ var LINKS_SHOWN = 5;
 
 Discourse.DiscourseTopicMapComponent = Ember.Component.extend({
   mapCollapsed: true,
-  templateName: 'components/discourse-topic-map',
+  templateName: 'components/topic-map',
   details: Em.computed.alias('topic.details'),
   allLinksShown: false,
 

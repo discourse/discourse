@@ -1,4 +1,4 @@
-Discourse.DiscourseLogoComponent = Ember.Component.extend({
+Discourse.HomeLogoComponent = Ember.Component.extend({
 
   linkUrl: function() {
     return Discourse.getURL("/");

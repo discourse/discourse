@@ -41,14 +41,14 @@
       {{number details.links.length}}
     </li>
     <li {{bindAttr class=":avatars mapCollapsed::hidden"}}>
-      {{#groupedEach participant in details.fewParticipants}}{{discourse-topic-participant participant=participant}}{{/groupedEach}}
+      {{#groupedEach participant in details.fewParticipants}}{{topic-participant participant=participant}}{{/groupedEach}}
     </li>
   </ul>
 </section>
 
 {{#unless mapCollapsed}}
   <section class='avatars clearfix'>
-    {{#groupedEach participant in details.participants}}{{discourse-topic-participant participant=participant}}{{/groupedEach}}
+    {{#groupedEach participant in details.participants}}{{topic-participant participant=participant}}{{/groupedEach}}
   </section>
 
   {{#if infoLinks}}

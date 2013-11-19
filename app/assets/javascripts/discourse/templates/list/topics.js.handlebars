@@ -1,4 +1,4 @@
-{{discourse-topic-list-loading loading=topicListReloading}}
+{{topic-list-loading loading=topicListReloading}}
 
 {{#unless loading}}
   {{#if loaded}}
@@ -18,29 +18,29 @@
           {{#if currentUser}}
             <th>&nbsp;</th>
           {{/if}}
-          {{#discourse-heading sortBy="default" sortOrder=sortOrder}}
+          {{#sortable-heading sortBy="default" sortOrder=sortOrder}}
             {{i18n topic.title}}
-          {{/discourse-heading}}
+          {{/sortable-heading}}
           {{#unless category}}
-            {{#discourse-heading sortBy="category" sortOrder=sortOrder}}
+            {{#sortable-heading sortBy="category" sortOrder=sortOrder}}
               {{i18n category_title}}
-            {{/discourse-heading}}
+            {{/sortable-heading}}
           {{/unless}}
-          {{#discourse-heading sortBy="posters" sortOrder=sortOrder}}
+          {{#sortable-heading sortBy="posters" sortOrder=sortOrder}}
             {{i18n participants}}
-          {{/discourse-heading}}
-          {{#discourse-heading sortBy="posts" number=true sortOrder=sortOrder}}
+          {{/sortable-heading}}
+          {{#sortable-heading sortBy="posts" number=true sortOrder=sortOrder}}
             {{i18n posts}}
-          {{/discourse-heading}}
-          {{#discourse-heading sortBy="likes" number=true sortOrder=sortOrder}}
+          {{/sortable-heading}}
+          {{#sortable-heading sortBy="likes" number=true sortOrder=sortOrder}}
             {{i18n likes}}
-          {{/discourse-heading}}
-          {{#discourse-heading sortBy="views" number=true sortOrder=sortOrder}}
+          {{/sortable-heading}}
+          {{#sortable-heading sortBy="views" number=true sortOrder=sortOrder}}
             {{i18n views}}
-          {{/discourse-heading}}
-          {{#discourse-heading sortBy="activity" number=true colspan="2" sortOrder=sortOrder}}
+          {{/sortable-heading}}
+          {{#sortable-heading sortBy="activity" number=true colspan="2" sortOrder=sortOrder}}
             {{i18n activity}}
-          {{/discourse-heading}}
+          {{/sortable-heading}}
         </tr>
         </thead>
 

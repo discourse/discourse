@@ -1,12 +1,12 @@
 /**
   A breadcrumb including category drop downs
 
-  @class DiscourseBreadcrumbsComponent
+  @class BreadCrumbsComponent
   @extends Ember.Component
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscourseBreadcrumbsComponent = Ember.Component.extend({
+Discourse.BreadCrumbsComponent = Ember.Component.extend({
   classNames: ['category-breadcrumb'],
   tagName: 'ol',
   parentCategory: Em.computed.alias('category.parentCategory'),

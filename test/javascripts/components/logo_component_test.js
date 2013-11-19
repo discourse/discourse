@@ -1,7 +1,7 @@
 var view, oldMobileView;
 
 var View = Ember.View.extend({
-  template: Ember.Handlebars.compile("{{discourse-logo minimized=view.minimized}}")
+  template: Ember.Handlebars.compile("{{home-logo minimized=view.minimized}}")
 });
 
 
@@ -43,7 +43,7 @@ var appendView = function() {
 };
 
 
-module("Discourse.DiscourseLogoComponent", {
+module("Discourse.HomeLogoComponent", {
   setup: function() {
     oldMobileView = Discourse.Mobile.mobileView;
     view = View.create();
