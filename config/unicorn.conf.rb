@@ -48,6 +48,9 @@ before_fork do |server, worker|
       table.classify.constantize.first rescue nil
     end
 
+    # router warm up
+    Rails.application.routes.recognize_path('abc') rescue nil
+
     # get rid of rubbish so we don't share it
     GC.start
 
