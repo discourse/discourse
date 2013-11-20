@@ -98,12 +98,17 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
 
   prefillUsername: function() {
     if (this.get('prefilledUsername')) {
+      // If username field has been filled automatically, and email field just changed,
+      // then remove the username.
       if (this.get('accountUsername') === this.get('prefilledUsername')) {
         this.set('accountUsername', '');
       }
       this.set('prefilledUsername', null);
     }
-    if (this.get('emailValidation.ok') && this.blank('accountUsername')) {
+    if (this.get('emailValidation.ok') && (this.blank('accountUsername') || this.get('authOptions.email'))) {
+      // If email is valid and username has not been entered yet,
+      // or email and username were filled automatically by 3rd parth auth,
+      // then look for a registered username that matches the email.
       this.fetchExistingUsername();
     }
   }.observes('emailValidation', 'accountEmail'),
@@ -111,7 +116,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
   fetchExistingUsername: Discourse.debounce(function() {
     var self = this;
     Discourse.User.checkUsername(null, this.get('accountEmail')).then(function(result) {
-      if (result.suggestion && self.blank('accountUsername')) {
+      if (result.suggestion && (self.blank('accountUsername') || self.get('accountUsername') === self.get('authOptions.username'))) {
         self.set('accountUsername', result.suggestion);
         self.set('prefilledUsername', result.suggestion);
       }
