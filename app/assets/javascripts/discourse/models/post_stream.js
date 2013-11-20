@@ -50,14 +50,32 @@ Discourse.PostStream = Em.Object.extend({
   /**
     Have we loaded the first post in the stream?
 
-    @property firstPostLoaded
+    @property firstPostPresent
   **/
-  firstPostLoaded: function() {
+  firstPostPresent: function() {
     if (!this.get('hasLoadedData')) { return false; }
     return !!this.get('posts').findProperty('id', this.get('firstPostId'));
   }.property('hasLoadedData', 'posts.[]', 'firstPostId'),
 
-  firstPostNotLoaded: Em.computed.not('firstPostLoaded'),
+  firstPostNotLoaded: Em.computed.not('firstPostPresent'),
+
+  /**
+    The first post that we have loaded. Useful for checking to see if we should scroll upwards
+
+    @property firstLoadedPost
+  **/
+  firstLoadedPost: function() {
+    return _.first(this.get('posts'));
+  }.property('posts.@each'),
+
+  /**
+    The last post we have loaded. Useful for checking to see if we should load more
+
+    @property lastLoadedPost
+  **/
+  lastLoadedPost: function() {
+    return _.last(this.get('posts'));
+  }.property('posts.@each'),
 
   /**
     Returns the id of the first post in the set
@@ -80,14 +98,14 @@ Discourse.PostStream = Em.Object.extend({
   /**
     Have we loaded the last post in the stream?
 
-    @property lastPostLoaded
+    @property loadedAllPosts
   **/
-  lastPostLoaded: function() {
+  loadedAllPosts: function() {
     if (!this.get('hasLoadedData')) { return false; }
     return !!this.get('posts').findProperty('id', this.get('lastPostId'));
   }.property('hasLoadedData', 'posts.@each.id', 'lastPostId'),
 
-  lastPostNotLoaded: Em.computed.not('lastPostLoaded'),
+  lastPostNotLoaded: Em.computed.not('loadedAllPosts'),
 
   /**
     Returns a JS Object of current stream filter options. It should match the query
@@ -163,18 +181,18 @@ Discourse.PostStream = Em.Object.extend({
   **/
   nextWindow: function() {
     // If we can't find the last post loaded, bail
-    var lastPost = _.last(this.get('posts'));
-    if (!lastPost) { return []; }
+    var lastLoadedPost = this.get('lastLoadedPost');
+    if (!lastLoadedPost) { return []; }
 
     // Find the index of the last post loaded, if not found, bail
     var stream = this.get('stream');
-    var lastIndex = this.indexOf(lastPost);
+    var lastIndex = this.indexOf(lastLoadedPost);
     if (lastIndex === -1) { return []; }
     if ((lastIndex + 1) >= this.get('filteredPostsCount')) { return []; }
 
     // find our window of posts
     return stream.slice(lastIndex+1, lastIndex+Discourse.SiteSettings.posts_per_page+1);
-  }.property('posts.@each', 'stream.@each'),
+  }.property('lastLoadedPost', 'stream.@each'),
 
 
   /**
@@ -197,7 +215,7 @@ Discourse.PostStream = Em.Object.extend({
   **/
   toggleSummary: function() {
     this.toggleProperty('summary');
-    this.refresh();
+    return this.refresh();
   },
 
   /**
@@ -227,39 +245,31 @@ Discourse.PostStream = Em.Object.extend({
     @returns {Ember.Deferred} a promise that is resolved when the posts have been inserted into the stream.
   **/
   refresh: function(opts) {
+
     opts = opts || {};
     opts.nearPost = parseInt(opts.nearPost, 10);
 
-    var topic = this.get('topic');
-    var postStream = this;
+    var topic = this.get('topic'),
+        self = this;
 
     // Do we already have the post in our list of posts? Jump there.
     var postWeWant = this.get('posts').findProperty('post_number', opts.nearPost);
-    if (postWeWant) {
-      Discourse.TopicView.jumpToPost(topic.get('id'), opts.nearPost);
-      return Ember.RSVP.reject();
-    }
+    if (postWeWant) { return Ember.RSVP.resolve(); }
 
     // TODO: if we have all the posts in the filter, don't go to the server for them.
-    postStream.set('loadingFilter', true);
+    self.set('loadingFilter', true);
 
-    opts = _.merge(opts, postStream.get('streamFilters'));
+    opts = _.merge(opts, self.get('streamFilters'));
 
     // Request a topicView
     return Discourse.PostStream.loadTopicView(topic.get('id'), opts).then(function (json) {
       topic.updateFromJson(json);
-      postStream.updateFromJson(json.post_stream);
-      postStream.setProperties({ loadingFilter: false, loaded: true });
+      self.updateFromJson(json.post_stream);
+      self.setProperties({ loadingFilter: false, loaded: true });
 
-      if (opts.nearPost) {
-        Discourse.TopicView.jumpToPost(topic.get('id'), opts.nearPost);
-      } else {
-        Discourse.TopicView.jumpToPost(topic.get('id'), 1);
-      }
-
-      Discourse.URL.set('queryParams', postStream.get('streamFilters'));
-    }, function(result) {
-      postStream.errorLoading(result);
+      Discourse.URL.set('queryParams', self.get('streamFilters'));
+    }).fail(function(result) {
+      self.errorLoading(result);
     });
   },
   hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
@@ -271,23 +281,23 @@ Discourse.PostStream = Em.Object.extend({
     @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
   **/
   appendMore: function() {
-    var postStream = this;
+    var self = this;
 
     // Make sure we can append more posts
-    if (!postStream.get('canAppendMore')) { return Ember.RSVP.reject(); }
+    if (!self.get('canAppendMore')) { return Ember.RSVP.reject(); }
 
-    var postIds = postStream.get('nextWindow');
+    var postIds = self.get('nextWindow');
     if (Ember.isEmpty(postIds)) { return Ember.RSVP.reject(); }
 
-    postStream.set('loadingBelow', true);
+    self.set('loadingBelow', true);
 
     var stopLoading = function() {
-      postStream.set('loadingBelow', false);
+      self.set('loadingBelow', false);
     };
 
-    return postStream.findPostsByIds(postIds).then(function(posts) {
+    return self.findPostsByIds(postIds).then(function(posts) {
       posts.forEach(function(p) {
-        postStream.appendPost(p);
+        self.appendPost(p);
       });
       stopLoading();
     }, stopLoading);
@@ -349,7 +359,7 @@ Discourse.PostStream = Em.Object.extend({
     });
 
     // If we're at the end of the stream, add the post
-    if (this.get('lastPostLoaded')) {
+    if (this.get('loadedAllPosts')) {
       this.appendPost(post);
     }
 
@@ -452,11 +462,11 @@ Discourse.PostStream = Em.Object.extend({
     // We only trigger if there are no filters active
     if (!this.get('hasNoFilters')) { return; }
 
-    var lastPostLoaded = this.get('lastPostLoaded');
+    var loadedAllPosts = this.get('loadedAllPosts');
 
     if (this.get('stream').indexOf(postId) === -1) {
       this.get('stream').addObject(postId);
-      if (lastPostLoaded) { this.appendMore(); }
+      if (loadedAllPosts) { this.appendMore(); }
     }
   },
 
@@ -702,8 +712,8 @@ Discourse.PostStream.reopenClass({
   },
 
   loadTopicView: function(topicId, args) {
-    var opts = _.merge({}, args);
-    var url = Discourse.getURL("/t/") + topicId;
+    var opts = _.merge({}, args),
+        url = Discourse.getURL("/t/") + topicId;
     if (opts.nearPost) {
       url += "/" + opts.nearPost;
     }

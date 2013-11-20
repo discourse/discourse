@@ -31,6 +31,7 @@
 //= require mousetrap.js
 //= require rsvp.js
 //= require show-html.js
+//= require lock-on.js
 
 //= require ./discourse/helpers/i18n_helpers
 //= require ./discourse/mixins/ajax

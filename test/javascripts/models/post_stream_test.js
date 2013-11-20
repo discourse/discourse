@@ -29,17 +29,17 @@ test('appending posts', function() {
   equal(postStream.get('lastPostId'), 4, "the last post id is 4");
 
   ok(!postStream.get('hasPosts'), "there are no posts by default");
-  ok(!postStream.get('firstPostLoaded'), "the first post is not loaded");
-  ok(!postStream.get('lastPostLoaded'), "the last post is not loaded");
+  ok(!postStream.get('firstPostPresent'), "the first post is not loaded");
+  ok(!postStream.get('loadedAllPosts'), "the last post is not loaded");
   equal(postStream.get('posts.length'), 0, "it has no posts initially");
 
   postStream.appendPost(Discourse.Post.create({id: 2, post_number: 2}));
-  ok(!postStream.get('firstPostLoaded'), "the first post is still not loaded");
+  ok(!postStream.get('firstPostPresent'), "the first post is still not loaded");
   equal(postStream.get('posts.length'), 1, "it has one post in the stream");
 
   postStream.appendPost(Discourse.Post.create({id: 4, post_number: 4}));
-  ok(!postStream.get('firstPostLoaded'), "the first post is still loaded");
-  ok(postStream.get('lastPostLoaded'), "the last post is now loaded");
+  ok(!postStream.get('firstPostPresent'), "the first post is still loaded");
+  ok(postStream.get('loadedAllPosts'), "the last post is now loaded");
   equal(postStream.get('posts.length'), 2, "it has two posts in the stream");
 
   postStream.appendPost(Discourse.Post.create({id: 4, post_number: 4}));
@@ -54,8 +54,8 @@ test('appending posts', function() {
 
   // change the stream
   postStream.set('stream', [1, 2, 4]);
-  ok(!postStream.get('firstPostLoaded'), "the first post no longer loaded since the stream changed.");
-  ok(postStream.get('lastPostLoaded'), "the last post is still the last post in the new stream");
+  ok(!postStream.get('firstPostPresent'), "the first post no longer loaded since the stream changed.");
+  ok(postStream.get('loadedAllPosts'), "the last post is still the last post in the new stream");
 });
 
 test('closestPostNumberFor', function() {
@@ -383,18 +383,18 @@ test('triggerNewPostInStream', function() {
 });
 
 
-test("lastPostLoaded when the id changes", function() {
+test("loadedAllPosts when the id changes", function() {
   // This can happen in a race condition between staging a post and it coming through on the
-  // message bus. If the id of a post changes we should reconsider the lastPostLoaded property.
+  // message bus. If the id of a post changes we should reconsider the loadedAllPosts property.
   var postStream = buildStream(10101, [1, 2]);
   var postWithoutId = Discourse.Post.create({ raw: 'hello world this is my new post' });
 
   postStream.appendPost(Discourse.Post.create({id: 1, post_number: 1}));
   postStream.appendPost(postWithoutId);
-  ok(!postStream.get('lastPostLoaded'), 'the last post is not loaded');
+  ok(!postStream.get('loadedAllPosts'), 'the last post is not loaded');
 
   postWithoutId.set('id', 2);
-  ok(postStream.get('lastPostLoaded'), 'the last post is loaded now that the post has an id');
+  ok(postStream.get('loadedAllPosts'), 'the last post is loaded now that the post has an id');
 });
 
 test("comitting and triggerNewPostInStream race condition", function() {

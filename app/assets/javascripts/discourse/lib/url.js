@@ -32,7 +32,7 @@ Discourse.URL = Em.Object.createWithMixins({
         // which triggers a replaceState even though the topic hasn't fully loaded yet!
         Em.run.next(function() {
           var location = Discourse.URL.get('router.location');
-          if (location.replaceURL) { location.replaceURL(path); }
+          if (location && location.replaceURL) { location.replaceURL(path); }
         });
     }
   },
@@ -133,15 +133,21 @@ Discourse.URL = Em.Object.createWithMixins({
         Discourse.URL.replaceState(path);
 
         var topicController = Discourse.__container__.lookup('controller:topic'),
-            opts = {};
+            opts = {},
+            postStream = topicController.get('postStream');
 
         if (newMatches[3]) opts.nearPost = newMatches[3];
-        var postStream = topicController.get('postStream');
+        var closest = opts.nearPost || 1;
+
         postStream.refresh(opts).then(function() {
           topicController.setProperties({
-            currentPost: opts.nearPost || 1,
-            progressPosition: opts.nearPost || 1
+            currentPost: closest,
+            progressPosition: closest,
+            highlightOnInsert: closest,
+            enteredAt: new Date().getTime().toString()
           });
+        }).then(function() {
+          Discourse.TopicView.jumpToPost(closest);
         });
 
         // Abort routing, we have replaced our state.

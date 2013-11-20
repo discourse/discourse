@@ -2,7 +2,7 @@
 
 {{#if postStream.loaded}}
 
-  {{#if postStream.firstPostLoaded}}
+  {{#if postStream.firstPostPresent}}
     <div id='topic-title'>
       <div class='container'>
         <div class='inner'>
@@ -64,7 +64,7 @@
           {{/if}}
 
           {{#unless postStream.loadingFilter}}
-            {{collection itemViewClass="Discourse.PostView" contentBinding="postStream.posts" topicViewBinding="view"}}
+            {{cloaked-collection cloakView="post" idProperty="post_number" defaultHeight="200" content=postStream.posts}}
           {{/unless}}
 
           {{#if postStream.loadingBelow}}
@@ -76,7 +76,7 @@
         {{#if postStream.loadingFilter}}
           <div class='spinner small'>{{i18n loading}}</div>
         {{else}}
-          {{#if postStream.lastPostLoaded}}
+          {{#if postStream.loadedAllPosts}}
 
             {{view Discourse.TopicClosingView topicBinding="model"}}
             {{view Discourse.TopicFooterButtonsView topicBinding="model"}}

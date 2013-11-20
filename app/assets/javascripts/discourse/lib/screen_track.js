@@ -6,10 +6,13 @@
   @namespace Discourse
   @module Discourse
 **/
+
+var PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3,
+    MAX_TRACKING_TIME = 1000 * 60 * 6;
+
 Discourse.ScreenTrack = Ember.Object.extend({
 
   init: function() {
-    var screenTrack = this;
     this.reset();
   },
 
@@ -24,9 +27,9 @@ Discourse.ScreenTrack = Ember.Object.extend({
 
     // Create an interval timer if we don't have one.
     if (!this.get('interval')) {
-      var screenTrack = this;
+      var self = this;
       this.set('interval', setInterval(function () {
-        screenTrack.tick();
+        self.tick();
       }, 1000));
     }
 
@@ -57,13 +60,15 @@ Discourse.ScreenTrack = Ember.Object.extend({
 
   // Reset our timers
   reset: function() {
-    this.set('lastTick', new Date().getTime());
-    this.set('lastScrolled', new Date().getTime());
-    this.set('lastFlush', 0);
-    this.set('cancelled', false);
-    this.set('timings', {});
-    this.set('totalTimings', {});
-    this.set('topicTime', 0);
+    this.setProperties({
+      lastTick: new Date().getTime(),
+      lastScrolled: new Date().getTime(),
+      lastFlush: 0,
+      cancelled: false,
+      timings: {},
+      totalTimings: {},
+      topicTime: 0
+    });
   },
 
   scrolled: function() {
@@ -76,24 +81,23 @@ Discourse.ScreenTrack = Ember.Object.extend({
     // We don't log anything unless we're logged in
     if (!Discourse.User.current()) return;
 
-    var newTimings = {};
-
-    // Update our total timings
-    var totalTimings = this.get('totalTimings');
+    var newTimings = {},
+        totalTimings = this.get('totalTimings');
 
     _.each(this.get('timings'), function(timing,key) {
       if (!totalTimings[timing.postNumber])
         totalTimings[timing.postNumber] = 0;
 
-      if (timing.time > 0 && totalTimings[timing.postNumber] < Discourse.ScreenTrack.MAX_TRACKING_TIME) {
+      if (timing.time > 0 && totalTimings[timing.postNumber] < MAX_TRACKING_TIME) {
         totalTimings[timing.postNumber] += timing.time;
         newTimings[timing.postNumber] = timing.time;
       }
       timing.time = 0;
     });
 
-    var topicId = parseInt(this.get('topicId'), 10);
-    var highestSeen = 0;
+    var topicId = parseInt(this.get('topicId'), 10),
+        highestSeen = 0;
+
     _.each(newTimings, function(time,postNumber) {
       highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
     });
@@ -103,6 +107,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
       highestSeenByTopic[topicId] = highestSeen;
       Discourse.TopicTrackingState.current().updateSeen(topicId, highestSeen);
     }
+
     if (!$.isEmptyObject(newTimings)) {
       Discourse.ajax('/topics/timings', {
         data: {
@@ -126,7 +131,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
 
     // If the user hasn't scrolled the browser in a long time, stop tracking time read
     var sinceScrolled = new Date().getTime() - this.get('lastScrolled');
-    if (sinceScrolled > Discourse.ScreenTrack.PAUSE_UNLESS_SCROLLED) {
+    if (sinceScrolled > PAUSE_UNLESS_SCROLLED) {
       this.reset();
       return;
     }
@@ -142,18 +147,16 @@ Discourse.ScreenTrack = Ember.Object.extend({
     if (!Discourse.get("hasFocus")) return;
 
     this.set('topicTime', this.get('topicTime') + diff);
-    var docViewTop = $(window).scrollTop() + $('header').height();
-    var docViewBottom = docViewTop + $(window).height();
+    var docViewTop = $(window).scrollTop() + $('header').height(),
+        docViewBottom = docViewTop + $(window).height();
 
     // TODO: Eyeline has a smarter more accurate function here. It's bad to do jQuery
     // in a model like component, so we should refactor this out later.
-    var screenTrack = this;
     _.each(this.get('timings'),function(timing,id) {
-      var $element, elemBottom, elemTop;
-      $element = $(id);
+      var $element = $(id);
       if ($element.length === 1) {
-        elemTop = $element.offset().top;
-        elemBottom = elemTop + $element.height();
+        var elemTop = $element.offset().top,
+            elemBottom = elemTop + $element.height();
 
         // If part of the element is on the screen, increase the counter
         if (((docViewTop <= elemTop && elemTop <= docViewBottom)) || ((docViewTop <= elemBottom && elemBottom <= docViewBottom))) {
@@ -165,13 +168,5 @@ Discourse.ScreenTrack = Ember.Object.extend({
 });
 
 
-Discourse.ScreenTrack.reopenClass(Discourse.Singleton, {
-
-  // Don't send events if we haven't scrolled in a long time
-  PAUSE_UNLESS_SCROLLED: 1000 * 60 * 3,
-
-  // After 6 minutes stop tracking read position on post
-  MAX_TRACKING_TIME: 1000 * 60 * 6
-
-});
+Discourse.ScreenTrack.reopenClass(Discourse.Singleton);
 

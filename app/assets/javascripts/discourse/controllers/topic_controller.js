@@ -200,13 +200,13 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     },
 
     replyAsNewTopic: function(post) {
-      var composerController = this.get('controllers.composer');
-      var promise = composerController.open({
-        action: Discourse.Composer.CREATE_TOPIC,
-        draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY
-      });
-      var postUrl = "" + location.protocol + "//" + location.host + (post.get('url'));
-      var postLink = "[" + (this.get('title')) + "](" + postUrl + ")";
+      var composerController = this.get('controllers.composer'),
+          promise = composerController.open({
+            action: Discourse.Composer.CREATE_TOPIC,
+            draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY
+          }),
+          postUrl = "" + location.protocol + "//" + location.host + (post.get('url')),
+          postLink = "[" + (this.get('title')) + "](" + postUrl + ")";
 
       promise.then(function() {
         Discourse.Post.loadQuote(post.get('id')).then(function(q) {
@@ -458,6 +458,65 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         this.set('allPostsSelected', true);
       }
       return true;
+    }
+  },
+
+  // If our current post is changed, notify the router
+  _currentPostChanged: function() {
+    var currentPost = this.get('currentPost');
+    if (currentPost) {
+      this.send('postChangedRoute', currentPost);
+    }
+  }.observes('currentPost'),
+
+  sawObjects: function(posts) {
+    if (posts) {
+      var self = this,
+          lastReadPostNumber = this.get('last_read_post_number');
+
+      posts.forEach(function(post) {
+        var postNumber = post.get('post_number');
+        if (postNumber > lastReadPostNumber) {
+          lastReadPostNumber = postNumber;
+        }
+        post.set('read', true);
+      });
+      self.set('last_read_post_number', lastReadPostNumber);
+
+    }
+  },
+
+  topVisibleChanged: function(post) {
+    var postStream = this.get('postStream'),
+        firstLoadedPost = postStream.get('firstLoadedPost');
+
+    this.set('currentPost', post.get('post_number'));
+
+    if (firstLoadedPost && firstLoadedPost === post) {
+      // Note: jQuery shouldn't be done in a controller, but how else can we
+      // trigger a scroll after a promise resolves in a controller? We need
+      // to do this to preserve upwards infinte scrolling.
+      var $body = $('body'),
+          $elem = $('#post-cloak-' + post.get('post_number')),
+          distToElement = $body.scrollTop() - $elem.position().top;
+
+      postStream.prependMore().then(function() {
+        Em.run.next(function () {
+          $elem = $('#post-cloak-' + post.get('post_number'));
+          $('html, body').scrollTop($elem.position().top + distToElement);
+        });
+      });
+    }
+  },
+
+  bottomVisibleChanged: function(post) {
+    this.set('progressPosition', post.get('post_number'));
+
+    var postStream = this.get('postStream'),
+        lastLoadedPost = postStream.get('lastLoadedPost');
+
+    if (lastLoadedPost && lastLoadedPost === post) {
+      postStream.appendMore();
     }
   }
 
