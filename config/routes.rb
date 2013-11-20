@@ -13,6 +13,7 @@ Discourse::Application.routes.draw do
 
   namespace :lp do
     resources :posts, only: :create
+    resources :topics, only: :index
   end
 
   match "/404", to: "exceptions#not_found", via: [:get, :post]
