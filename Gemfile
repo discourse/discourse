@@ -37,10 +37,11 @@ end
 gem 'seed-fu' , github: 'SamSaffron/seed-fu'
 
 if rails4?
-  gem 'rails'
+  gem 'rails', github: 'rails/rails', branch: 'master'
   gem 'redis-rails', :git => 'git://github.com/SamSaffron/redis-store.git'
   gem 'rails-observers'
-  gem 'actionpack-action_caching'
+  gem 'actionpack-action_caching', github: 'rails/actionpack-action_caching', branch: 'master'
+  gem 'arel', github: 'rails/arel', branch: 'master'
 else
   # we had pain with the 3.2.13 upgrade so monkey patch the security fix
   # next time around we hope to upgrade
@@ -66,7 +67,7 @@ gem 'ember-source', '1.0.0.rc6.2'
 gem 'handlebars-source', '1.0.12'
 gem 'barber'
 
-gem 'vestal_versions', git: 'https://github.com/SamSaffron/vestal_versions'
+gem 'vestal_versions', git: 'https://github.com/chancancode/vestal_versions'
 
 gem 'message_bus', git: 'https://github.com/SamSaffron/message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'

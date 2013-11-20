@@ -29,25 +29,26 @@ class RateLimiter
         self.after_create do
 
           rate_limiter = send(limiter_method)
-          return unless rate_limiter.present?
 
-          rate_limiter.performed!
-          @performed ||= {}
-          @performed[limiter_method] = true
+          if rate_limiter.present?
+            rate_limiter.performed!
+            @performed ||= {}
+            @performed[limiter_method] = true
+          end
         end
 
         self.after_destroy do
           rate_limiter = send(limiter_method)
-          return unless rate_limiter.present?
-
-          rate_limiter.rollback!
+          
+          if rate_limiter.present?
+            rate_limiter.rollback!
+          end
         end
 
         self.after_rollback do
           rate_limiter = send(limiter_method)
-          return unless rate_limiter.present?
 
-          if @performed.present? && @performed[limiter_method]
+          if rate_limiter.present? && @performed.present? && @performed[limiter_method]
             rate_limiter.rollback!
             @performed[limiter_method] = false
           end

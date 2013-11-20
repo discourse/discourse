@@ -19,7 +19,14 @@ class TopicList
   def topics
     return @topics if @topics.present?
 
-    @topics = @topics_input.to_a
+    @topics = []
+
+    begin
+      @topics = @topics_input.to_a
+    rescue Exception => e
+      # HACK! LOL
+      # See https://github.com/rails/rails/issues/12982
+    end
 
     # Attach some data for serialization to each topic
     @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user.present?

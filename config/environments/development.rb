@@ -40,7 +40,7 @@ Discourse::Application.configure do
 
   BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
 
-  config.enable_mini_profiler = true
+  config.enable_mini_profiler = false
 
   require 'middleware/turbo_dev'
   config.middleware.insert 0, Middleware::TurboDev
