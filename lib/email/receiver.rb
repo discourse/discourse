@@ -72,6 +72,13 @@ module Email
       end
 
       @body = @message.body.to_s.strip
+
+      # Certain trigger phrases that means we didn't parse correctly
+      @body = nil if @body =~ /Content\-Type\:/ ||
+                     @body =~ /multipart\/alternative/ ||
+                     @body =~ /text\/plain/
+
+      @body
     end
 
     def scrub_html(html)

@@ -40,6 +40,16 @@ stripped from my reply?")
     end
   end
 
+  describe "it ignores messages it can't parse due to containing weird terms" do
+    let(:attachment) { File.read("#{Rails.root}/spec/fixtures/emails/attachment.eml") }
+    let(:receiver) { Email::Receiver.new(attachment) }
+
+    it "processes correctly" do
+      expect(receiver.process).to eq(Email::Receiver.results[:unprocessable])
+      expect(receiver.body).to be_blank
+    end
+  end
+
   describe "it supports a dutch reply" do
     let(:dutch) { File.read("#{Rails.root}/spec/fixtures/emails/dutch.eml") }
     let(:receiver) { Email::Receiver.new(dutch) }
