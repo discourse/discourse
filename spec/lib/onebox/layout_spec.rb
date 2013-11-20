@@ -15,13 +15,16 @@ describe Onebox::Layout do
     let(:template_path) { onebox.template_path }
 
     it "looks in directory C for template" do
-      File.stub(:exist?) do |path|
+      allow(described_class).to receive(:valid_load_path?) do |path|
         path == "directory_c"
       end
       expect(template_path).to eq("directory_c")
     end
 
     it "looks in directory B if template doesn't exist in C" do
+      allow(described_class).to receive(:valid_load_path?) do |path|
+        path == "directory_b"
+      end
       expect(template_path).to eq("directory_b")
     end
 

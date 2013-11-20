@@ -9,9 +9,7 @@ module Onebox
     self.template_name = "_layout"
 
     def self.template_path
-      @template_path ||= Onebox.options.load_paths.select do |path|
-        File.exist?(File.join(path, "#{template_name}.#{template_extension}"))
-      end.last
+      @template_path ||= Onebox.options.load_paths.select(&method(:valid_load_path?)).last
     end
 
     def initialize(name, record, cache)
@@ -27,6 +25,11 @@ module Onebox
       else
         cache.store(checksum, render(details))
       end
+    end
+
+
+    def self.valid_load_path?(path)
+      File.exist?(File.join(path, "#{template_name}.#{template_extension}"))
     end
 
     private
@@ -49,5 +52,6 @@ module Onebox
         view: view.to_html
       }
     end
+
   end
 end
