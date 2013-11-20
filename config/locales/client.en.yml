@@ -595,7 +595,7 @@ en:
       title: Topic Rank Details
 
     topic:
-      filter_to: "Show only the {{post_count}} posts by {{username}} in this topic"
+      filter_to: "Show {{post_count}} posts in topic"
       create: 'Create Topic'
       create_long: 'Create a new Topic'
       private_message: 'Start a private message'
