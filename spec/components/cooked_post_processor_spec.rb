@@ -340,4 +340,22 @@ describe CookedPostProcessor do
 
   end
 
+  context ".is_a_hyperlink?" do
+
+    let(:post) { build(:post) }
+    let(:cpp) { CookedPostProcessor.new(post) }
+    let(:doc) { Nokogiri::HTML::fragment('<body><div><a><img id="linked_image"></a><p><img id="standard_image"></p></div></body>') }
+
+    it "is true when the image is inside a link" do
+      img = doc.css("img#linked_image").first
+      cpp.is_a_hyperlink?(img).should be_true
+    end
+
+    it "is false when the image is not inside a link" do
+      img = doc.css("img#standard_image").first
+      cpp.is_a_hyperlink?(img).should be_false
+    end
+
+  end
+
 end

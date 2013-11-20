@@ -1,6 +1,9 @@
+require_dependency 'url_helper'
+
 module Jobs
 
   class PullHotlinkedImages < Jobs::Base
+    include UrlHelper
 
     def initialize
       # maximum size of the file in bytes
@@ -40,11 +43,13 @@ module Jobs
             if downloaded_urls[src].present?
               url = downloaded_urls[src]
               escaped_src = src.gsub("?", "\\?").gsub(".", "\\.").gsub("+", "\\+")
-              # there are 5 ways to insert an image in a post
+              # there are 6 ways to insert an image in a post
               # HTML tag - <img src="http://...">
               raw.gsub!(/src=["']#{escaped_src}["']/i, "src='#{url}'")
               # BBCode tag - [img]http://...[/img]
               raw.gsub!(/\[img\]#{escaped_src}\[\/img\]/i, "[img]#{url}[/img]")
+              # Markdown linked image - [![alt](http://...)](http://...)
+              raw.gsub!(/\[!\[([^\]]*)\]\(#{escaped_src}\)\]/) { "[<img src='#{url}' alt='#{$1}'>]" }
               # Markdown inline - ![alt](http://...)
               raw.gsub!(/!\[([^\]]*)\]\(#{escaped_src}\)/) { "![#{$1}](#{url})" }
               # Markdown reference - [x]: http://

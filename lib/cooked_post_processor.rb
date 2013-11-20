@@ -2,9 +2,11 @@
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
 require_dependency "oneboxer"
+require_dependency 'url_helper'
 
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
+  include UrlHelper
 
   def initialize(post, opts={})
     @dirty = false
@@ -124,10 +126,11 @@ class CookedPostProcessor
   def is_a_hyperlink?(img)
     parent = img.parent
     while parent
-      return if parent.name == "a"
+      return true if parent.name == "a"
       break unless parent.respond_to? :parent
       parent = parent.parent
     end
+    false
   end
 
   def add_lightbox!(img, original_width, original_height, upload=nil)
@@ -206,17 +209,6 @@ class CookedPostProcessor
     end
   end
 
-  def is_local(url)
-    Discourse.store.has_been_uploaded?(url) || url =~ /^\/assets\//
-  end
-
-  def absolute(url)
-    url =~ /^\/[^\/]/ ? (Discourse.asset_host || Discourse.base_url_no_prefix) + url : url
-  end
-
-  def schemaless(url)
-    url.gsub(/^https?:/, "")
-  end
 
   def pull_hotlinked_images
     # is the job enabled?
