@@ -27,7 +27,7 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
         filter = this.filter || "latest",
         url = "category/" + categorySlug + "/l/" + filter;
 
-    listController.set('filterMode', url);
+    listController.setProperties({ filterMode: url, category: null });
     listController.load(url).then(function(topicList) {
       listController.setProperties({
         canCreateTopic: topicList.get('can_create_topic'),
