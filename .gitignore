@@ -11,6 +11,7 @@ tags
 dump.rdb
 
 .sass-cache/*
+public/plugins/*
 
 # Ignore bundler config
 /bin
