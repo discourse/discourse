@@ -1435,3 +1435,4 @@ en:
           rate_limits: 'Rate Limits'
           developer: 'Developer'
           uncategorized: 'Uncategorized'
+          plugin: "Plugin"
