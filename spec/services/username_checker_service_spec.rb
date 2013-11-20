@@ -95,6 +95,14 @@ describe UsernameCheckerService do
           DiscourseHub.stubs(:nickname_for_email).returns('vincent')
           result.should == {suggestion: 'vincent'}
         end
+
+        it 'match found for email, but username is taken' do
+          # This case can happen when you've already signed up on the site,
+          # or enforce_global_nicknames used to be disabled.
+          DiscourseHub.stubs(:nickname_for_email).returns('taken')
+          User.stubs(:username_available?).with('taken').returns(false)
+          result.should == {suggestion: nil}
+        end
       end
 
       context 'username is nil' do

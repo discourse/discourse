@@ -11,7 +11,12 @@ class UsernameCheckerService
         check_username_with_hub_server(username, email)
       end
     elsif email and SiteSetting.call_discourse_hub?
-      {suggestion: DiscourseHub.nickname_for_email(email)}
+      username_from_hub = DiscourseHub.nickname_for_email(email)
+      if username_from_hub && User.username_available?(username_from_hub)
+        {suggestion: username_from_hub}
+      else
+        {suggestion: nil}
+      end
     end
   end
 
