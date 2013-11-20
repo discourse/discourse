@@ -178,7 +178,8 @@ class Plugin::Instance
       `mkdir -p #{target}`
       target << name
       # TODO a cleaner way of registering and unregistering
-      `ln -s #{public_data} #{target}` unless File.exists? target
+      `rm -f #{target}`
+      `ln -s #{public_data} #{target}`
     end
   end
 
