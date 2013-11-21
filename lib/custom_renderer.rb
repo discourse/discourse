@@ -4,6 +4,7 @@ class CustomRenderer < AbstractController::Base
   include AbstractController::Helpers
   include AbstractController::Translation
   include AbstractController::AssetPaths
+  include ActionView::ViewPaths
   include Rails.application.routes.url_helpers
   helper ApplicationHelper
   self.view_paths = "app/views"

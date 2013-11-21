@@ -53,7 +53,7 @@ Discourse::Application.configure do
   config.enable_rack_cache = true
 
   # allows admins to use mini profiler
-  config.enable_mini_profiler = true
+  config.enable_mini_profiler = false
 
   # allows Cross-origin resource sharing (CORS) for API access in JavaScript (default to false for security).
   # See the initializer and https://github.com/cyu/rack-cors for configuration documentation.
