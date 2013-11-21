@@ -280,6 +280,7 @@ zh_CN:
         too_long: "你设置的用户名太长了。"
         checking: "查看用户名是否可用……"
         enter_email: '找到用户名，请输入对应电子邮箱。'
+        prefilled: "电子邮箱与用户名匹配。"
 
       password_confirmation:
         title: "请再次输入密码"
@@ -382,7 +383,7 @@ zh_CN:
 
     summary:
       enabled_description: "你现在正在浏览本主题的“概括”视图。要查看所有帖子，请点击下方。"
-      description: "此主题中有<b>{{count}}</b>个帖子，太多了！你是否只要查看与主题相关的帖子？"
+      description: "本主题中有<b>{{count}}</b>个帖子，是否只查看与主题最相关的帖子？"
       enable: '概括本主题'
       disable: '显示所有帖子'
 
@@ -594,7 +595,7 @@ zh_CN:
       title: 主题排名详细
 
     topic:
-      filter_to: "只显示本主题中由{{username}}发表的{{post_count}}个帖子"
+      filter_to: "只显示本主题中的{{post_count}}个帖子"
       create: '创建主题'
       create_long: '创建一个新主题'
       private_message: '开启一段私下交流'
@@ -1416,8 +1417,9 @@ zh_CN:
         title: '设置'
         reset: '重置为缺省值'
         none: '无'
+        no_results: "找不到结果。"
         categories:
-          all_results: '全部结果'
+          all_results: '全部'
           required: '必须'
           basic: '基本设置'
           users: '用户'
@@ -1426,7 +1428,7 @@ zh_CN:
           files: '文件'
           trust: '信任等级'
           security: '安全性'
-          seo: '搜索引擎优化（SEO）'
+          seo: '搜索引擎优化'
           spam: '垃圾信息'
           rate_limits: '速度限制'
           developer: '开发者'
