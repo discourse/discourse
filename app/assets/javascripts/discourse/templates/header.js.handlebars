@@ -76,7 +76,8 @@
                data-dropdown="site-map-dropdown"
                data-render="renderSiteMap"
                href="#"
-               title='{{i18n site_map}}'>
+               title='{{i18n site_map}}'
+               id="site-map">
                <i class='icon-reorder'></i>
             </a>
           {{/if}}
@@ -101,20 +102,20 @@
       <section class='d-dropdown' id='site-map-dropdown'>
       <ul class="location-links">
         {{#if currentUser.staff}}
-          <li><a href="/admin"><i class='icon icon-wrench'></i>{{i18n admin_title}}</a></li>
-          <li><a href="/admin/flags/active"><i class='icon icon-flag'></i>{{i18n flags_title}}</a>
+          <li><a href="/admin" class="admin-link"><i class='icon icon-wrench'></i>{{i18n admin_title}}</a></li>
+          <li><a href="/admin/flags/active" class="flagged-posts-link"><i class='icon icon-flag'></i>{{i18n flags_title}}</a>
           {{#if currentUser.site_flagged_posts_count}}
             <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
           {{/if}}
           </li>
         {{/if}}
         <li>
-          {{#titledLinkTo "list.latest" titleKey="filters.latest.help"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
+          {{#titledLinkTo "list.latest" titleKey="filters.latest.help" class="latest-topics-link"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
         </li>
         <li>{{faqLink}}</li>
         {{#if showMobileToggle}}
           <li>
-            <a href="#" {{action toggleMobileView}}>
+            <a href="#" class="mobile-toggle-link" {{action toggleMobileView}}>
               {{#if mobileView}}
                 {{i18n desktop_view}}
               {{else}}
