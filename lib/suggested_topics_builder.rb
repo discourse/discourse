@@ -7,6 +7,7 @@ class SuggestedTopicsBuilder
   def initialize(topic)
     @excluded_topic_ids = [topic.id]
     @category_id = topic.category_id
+    @category_topic_ids = Category.pluck(:topic_id).compact
     @results = []
   end
 
@@ -20,6 +21,7 @@ class SuggestedTopicsBuilder
     results = results.where('topics.id NOT IN (?)', @excluded_topic_ids)
                      .where(closed: false, archived: false, visible: true)
                      .to_a
+                     .reject { |topic| @category_topic_ids.include?(topic.id) }
 
     unless results.empty?
       # Keep track of the ids we've added

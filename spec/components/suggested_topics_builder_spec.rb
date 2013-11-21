@@ -90,6 +90,17 @@ describe SuggestedTopicsBuilder do
       end
     end
 
+    context "category definition topics" do
+      let!(:category) { Fabricate(:category) }
+
+      it "doesn't add a category definition topic" do
+        category.topic_id.should be_present
+        builder.add_results(Topic)
+        builder.size.should == 0
+        builder.should_not be_full
+      end
+    end
+
   end
 
 
