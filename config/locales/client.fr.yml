@@ -219,6 +219,8 @@ fr:
       moderator: "{{user}} est un modérateur"
       admin: "{{user}} est un administrateur"
       deleted: "(supprimé)"
+      suspended_notice: "Cet utilisateur est banni jusqu'au {{date}}."
+      suspended_reason: "Raison: "
 
       messages:
         all: "Tous"
@@ -327,6 +329,7 @@ fr:
           other: "dans {{count}} minutes"
 
       invited:
+        search: "Rechercher un invité..."
         title: "Invités"
         user: "Utilisateurs invités"
         none: "{{username}} n'a invité personne sur le site."
@@ -340,6 +343,7 @@ fr:
         time_read: "Temps de lecture"
         days_visited: "Nombre de jours de visite"
         account_age_days: "Âge du compte en jours"
+        create: "Inviter des amis sur ce forum"
 
       password:
         title: "Mot de passe"
@@ -476,7 +480,10 @@ fr:
 
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Choisissez un titre ici. Sur quoi porte cette discussion en quelques mots ?"
+      edit_reason_placeholder: "Raison de l'edition"
+      show_edit_reason: "(Ajouter une raison)"
       reply_placeholder: "Saisissez votre réponse ici. Utilisez le Markdown ou le BBCode pour le formatage. Vous pouvez déposer ou coller une image ici."
+
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde..."
       saved: "Sauvegardé !"
@@ -716,7 +723,7 @@ fr:
         title: 'Inviter des amis à répondre'
         action: 'Envoyer l''invitation'
         help: "envoyer des invitations à des amis pour qu'ils puissent participer à cette discussion en un simple clic"
-        email: "Nous allons envoyer un mail à votre ami pour lui permettre de participer à cette conversation juste en cliquant sur un lien, sans qu'il ait à se connecter."
+        to_forum: "Nous allons envoyer un mail à votre ami pour lui permettre de participer à cette conversation juste en cliquant sur un lien, sans qu'il ait à se connecter."
         email_placeholder: 'adresse email'
         success: "Merci ! Nous avons envoyé un mail à <b>{{email}}</b>. Nous vous informerons lorsqu''ils auront retourné votre invitation. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être est-elle déjà un utilisateur ?"
@@ -1205,6 +1212,8 @@ fr:
             change_site_setting: "modifier les paramètres du site"
             change_site_customization: "Modifier la personnalisation du site"
             delete_site_customization: "Supprimer la personnalisation du site"
+            suspend_user: "Bannir l'utilisateur" 
+            unsuspend_user: "Débannir l'utilisateur" 
         screened_emails:
           title: "Emails affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses mail suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -1342,3 +1351,18 @@ fr:
         title: 'Paramètres du site'
         reset: 'rétablir par défaut'
         none: 'rien'
+        categories:
+          all_results: 'Tous les resultats'
+          required: 'Obligatoire'
+          basic: 'Réglages de bases'
+          users: 'Utilisateurs'
+          posting: 'Discussions'
+          email: 'Email'
+          files: 'Fichiers'
+          trust: 'Niveaux de confiance'
+          security: 'Sécurité'
+          seo: 'SEO'
+          spam: 'Spam'
+          rate_limits: 'Limitations'
+          developer: 'Développeur'
+          uncategorized: 'Non catégorisés'
