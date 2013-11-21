@@ -35,6 +35,7 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
       });
       self.controllerFor('listTopics').set('content', topicList);
       self.controllerFor('listTopics').set('category', category);
+      Discourse.FilteredListRoute.scrollToLastPosition();
     });
   },
 
