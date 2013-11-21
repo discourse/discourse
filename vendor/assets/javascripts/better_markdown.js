@@ -644,7 +644,7 @@
   DialectHelpers.inline_until_char = function( text, want ) {
     var consumed = 0,
         nodes = [],
-        patterns = this.dialect.inline.__patterns__.replace('|_|', '');
+        patterns = this.dialect.inline.__patterns__.replace('|_|', '|');
 
     while ( true ) {
       if ( text.charAt( consumed ) === want ) {
