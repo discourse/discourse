@@ -446,6 +446,9 @@ GEM
     uglifier (2.2.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    unf (0.1.3)
+      unf_ext
+    unf_ext (0.0.6)
     unicorn (4.6.3)
       kgio (~> 2.6)
       rack
@@ -541,5 +544,6 @@ DEPENDENCIES
   thin
   timecop
   uglifier
+  unf
   unicorn
   vestal_versions!
