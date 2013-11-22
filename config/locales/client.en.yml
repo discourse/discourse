@@ -1147,6 +1147,7 @@ en:
         delete_spammer_title: "Delete the user and all its posts and topics."
 
         flagged_by: "Flagged by"
+        system: "System"
         error: "Something went wrong"
         view_message: "Reply"
         no_results: "There are no flags."

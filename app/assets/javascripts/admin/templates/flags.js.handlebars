@@ -56,10 +56,13 @@
                 <td></td>
                 <td class='message'>
                   <div>
-                    {{#link-to 'adminUser' user}}{{avatar user imageSize="small"}}{{/link-to}}
-                    {{message}}
                     {{#unless bySystemUser}}
+                      {{#link-to 'adminUser' user}}{{avatar user imageSize="small"}}{{/link-to}}
+                      {{message}}
                       <a href="{{unbound permalink}}"><button class='btn'><i class="icon-reply"></i> {{i18n admin.flags.view_message}}</button></a>
+                    {{else}}
+                      <b>{{i18n admin.flags.system}}</b>:
+                      {{message}}
                     {{/unless}}
                   </div>
                 </td>
