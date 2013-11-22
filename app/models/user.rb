@@ -8,9 +8,11 @@ require_dependency 'post_destroyer'
 require_dependency 'user_name_suggester'
 require_dependency 'roleable'
 require_dependency 'pretty_text'
+require_dependency 'url_helper'
 
 class User < ActiveRecord::Base
   include Roleable
+  include UrlHelper
 
   has_many :posts
   has_many :notifications, dependent: :destroy
@@ -301,20 +303,20 @@ class User < ActiveRecord::Base
   #   - emails
   def small_avatar_url
     template = avatar_template
-    template.gsub("{size}", "45")
+    schemaless template.gsub("{size}", "45")
   end
 
   # the avatars might take a while to generate
   # so return the url of the original image in the meantime
   def uploaded_avatar_path
     return unless SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
-    uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
+    avatar_template = uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
+    schemaless avatar_template
   end
 
   def avatar_template
     uploaded_avatar_path || User.gravatar_template(email)
   end
-
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
   # They might need to be denormalized

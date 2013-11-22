@@ -924,4 +924,54 @@ describe User do
     end
   end
 
+  describe "#gravatar_template" do
+
+    it "returns a gravatar based template" do
+      User.gravatar_template("em@il.com").should == "//www.gravatar.com/avatar/6dc2fde946483a1d8a84b89345a1b638.png?s={size}&r=pg&d=identicon"
+    end
+
+  end
+
+  describe ".small_avatar_url" do
+
+    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "http://test.localhost/uploaded/avatar/template/{size}.png") }
+
+    it "returns a 45-pixel-wide avatar" do
+      user.small_avatar_url.should == "//test.localhost/uploaded/avatar/template/45.png"
+    end
+
+  end
+
+  describe ".uploaded_avatar_path" do
+
+    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "http://test.localhost/uploaded/avatar/template/{size}.png") }
+
+    it "returns nothing when uploaded avatars are not allowed" do
+      SiteSetting.expects(:allow_uploaded_avatars).returns(false)
+      user.uploaded_avatar_path.should be_nil
+    end
+
+    it "returns a schemaless avatar template" do
+      user.uploaded_avatar_path.should == "//test.localhost/uploaded/avatar/template/{size}.png"
+    end
+
+  end
+
+  describe ".avatar_template" do
+
+    let(:user) { build(:user, email: "em@il.com") }
+
+    it "returns the uploaded_avatar_path by default" do
+      user.expects(:uploaded_avatar_path).returns("/uploaded/avatar.png")
+      user.avatar_template.should == "/uploaded/avatar.png"
+    end
+
+    it "returns the gravatar when no avatar has been uploaded" do
+      user.expects(:uploaded_avatar_path)
+      User.expects(:gravatar_template).with(user.email).returns("//gravatar.com/avatar.png")
+      user.avatar_template.should == "//gravatar.com/avatar.png"
+    end
+
+  end
+
 end
