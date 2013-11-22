@@ -69,10 +69,8 @@ module Jobs
 
       # TODO: make sure the post hasn´t changed while we were downloading remote images
       if raw != post.raw
-        options = {
-          force_new_version: true,
-          edit_reason: I18n.t("upload.edit_reason")
-        }
+        options = { edit_reason: I18n.t("upload.edit_reason") }
+        options[:bypass_bump] = true if args[:bypass_bump] == true
         post.revise(Discourse.system_user, raw, options)
       end
 

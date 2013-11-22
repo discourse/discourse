@@ -16,12 +16,12 @@ class CookedPostProcessor
     @size_cache = {}
   end
 
-  def post_process
+  def post_process(bypass_bump = false)
     keep_reverse_index_up_to_date
     post_process_images
     post_process_oneboxes
     optimize_urls
-    pull_hotlinked_images
+    pull_hotlinked_images(bypass_bump)
   end
 
   def keep_reverse_index_up_to_date
@@ -210,7 +210,7 @@ class CookedPostProcessor
   end
 
 
-  def pull_hotlinked_images
+  def pull_hotlinked_images(bypass_bump = false)
     # is the job enabled?
     return unless SiteSetting.download_remote_images_to_local?
     # have we enough disk space?
@@ -221,7 +221,7 @@ class CookedPostProcessor
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job
     delay = SiteSetting.ninja_edit_window + 1
-    Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id)
+    Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id, bypass_bump: bypass_bump)
   end
 
   def disable_if_low_on_disk_space
