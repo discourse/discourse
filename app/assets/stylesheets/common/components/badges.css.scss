@@ -49,7 +49,7 @@
 
   // New posts
 
-  &.new-posts {
+  &.new-posts, &.unread-posts {
     background-color: $blue;
   }
 

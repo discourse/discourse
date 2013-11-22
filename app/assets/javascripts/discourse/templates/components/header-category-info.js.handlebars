@@ -2,12 +2,12 @@
 {{#if currentUser}}
   {{#with view.category}}
     {{#if unreadTopics}}
-      <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
+      <a href={{unbound unreadUrl}} class='badge unread-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
     {{/if}}
     {{#if newTopics}}
       <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='icon icon-asterisk'></i></a>
     {{/if}}
   {{/with}}
 {{else}}
-<b>{{unbound category.topic_count}}</b>
+<b class="topics-count">{{unbound category.topic_count}}</b>
 {{/if}}

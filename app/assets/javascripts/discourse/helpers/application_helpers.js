@@ -328,6 +328,6 @@ Handlebars.registerHelper('faqLink', function(property, options) {
   return new Handlebars.SafeString(
     "<a href='" +
     (Discourse.SiteSettings.faq_url.length > 0 ? Discourse.SiteSettings.faq_url : Discourse.getURL('/faq')) +
-    "'>" + I18n.t('faq') + "</a>"
+    "' class='faq-link'>" + I18n.t('faq') + "</a>"
   );
 });
