@@ -70,7 +70,8 @@ module DiscourseHub
       contact_email: SiteSetting.contact_email,
       topic_count: Topic.listable_topics.count,
       user_count: User.count,
-      login_required: SiteSetting.login_required
+      login_required: SiteSetting.login_required,
+      locale: SiteSetting.default_locale
     })
   end
 
