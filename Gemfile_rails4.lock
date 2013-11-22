@@ -33,7 +33,7 @@ GIT
 
 GIT
   remote: https://github.com/MiniProfiler/rack-mini-profiler.git
-  revision: 5f2048351f5f8ed7cffa2943539a7cc97f0a9764
+  revision: 740970f50af5cdb2655c7f468f1a627bf1d7c644
   specs:
     rack-mini-profiler (0.1.31)
       rack (>= 1.1.3)
