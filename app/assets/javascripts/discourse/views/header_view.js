@@ -109,7 +109,8 @@ Discourse.HeaderView = Discourse.View.extend({
 
     var headerView = this;
     this.$('a[data-dropdown]').on('click.dropdown', function(e) {
-      return headerView.showDropdown($(e.currentTarget));
+      headerView.showDropdown($(e.currentTarget));
+      return false;
     });
     this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on('click.notifications', function(e) {
       headerView.showNotifications(e);

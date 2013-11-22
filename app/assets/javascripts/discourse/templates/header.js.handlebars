@@ -99,49 +99,50 @@
       {{render notifications notifications}}
 
       {{#if view.renderSiteMap}}
-      <section class='d-dropdown' id='site-map-dropdown'>
-      <ul class="location-links">
-        {{#if currentUser.staff}}
-          <li><a href="/admin" class="admin-link"><i class='icon icon-wrench'></i>{{i18n admin_title}}</a></li>
-          <li><a href="/admin/flags/active" class="flagged-posts-link"><i class='icon icon-flag'></i>{{i18n flags_title}}</a>
-          {{#if currentUser.site_flagged_posts_count}}
-            <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
-          {{/if}}
-          </li>
-        {{/if}}
-        <li>
-          {{#titledLinkTo "list.latest" titleKey="filters.latest.help" class="latest-topics-link"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
-        </li>
-        <li>{{faqLink}}</li>
-        {{#if showMobileToggle}}
-          <li>
-            <a href="#" class="mobile-toggle-link" {{action toggleMobileView}}>
-              {{#if mobileView}}
-                {{i18n desktop_view}}
-              {{else}}
-                {{i18n mobile_view}}
-              {{/if}}
-            </a>
-          </li>
-        {{/if}}
-      </ul>
-
-      {{#if categories}}
-        <ul class="category-links">
-          <li class='heading' title="{{i18n filters.categories.help}}">
-            {{#link-to "list.categories"}}{{i18n filters.categories.title}}{{/link-to}}
-          </li>
-
-          {{#each categories}}
-            <li class='category'>
-              {{header-category-info category=this currentUser=controller.currentUser}}
+        <section class='d-dropdown' id='site-map-dropdown'>
+          <ul class="location-links">
+            {{#if currentUser.staff}}
+              <li><a href="/admin" class="admin-link"><i class='icon icon-wrench'></i>{{i18n admin_title}}</a></li>
+              <li>
+                <a href="/admin/flags/active" class="flagged-posts-link"><i class='icon icon-flag'></i>{{i18n flags_title}}</a>
+                {{#if currentUser.site_flagged_posts_count}}
+                  <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
+                {{/if}}
+              </li>
+            {{/if}}
+            <li>
+              {{#titledLinkTo "list.latest" titleKey="filters.latest.help" class="latest-topics-link"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
             </li>
-          {{/each}}
-        </ul>
-      {{/if}}
+            <li>{{faqLink}}</li>
+            {{#if showMobileToggle}}
+              <li>
+                <a href="#" class="mobile-toggle-link" {{action toggleMobileView}}>
+                  {{#if mobileView}}
+                    {{i18n desktop_view}}
+                  {{else}}
+                    {{i18n mobile_view}}
+                  {{/if}}
+                </a>
+              </li>
+            {{/if}}
+          </ul>
 
-    </section>
-    {{/if}}
+          {{#if categories}}
+            <ul class="category-links">
+              <li class='heading' title="{{i18n filters.categories.help}}">
+                {{#link-to "list.categories"}}{{i18n filters.categories.title}}{{/link-to}}
+              </li>
+
+              {{#each categories}}
+                <li class='category'>
+                  {{header-category-info category=this currentUser=controller.currentUser}}
+                </li>
+              {{/each}}
+            </ul>
+          {{/if}}
+
+        </section>
+      {{/if}}
 
     </div>
   </div>
