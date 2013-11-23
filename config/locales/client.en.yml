@@ -759,7 +759,7 @@ en:
           one: "made by 1 specific user"
           other: "made by {{count}} specific users"
 
-        summary: "You're viewing the {{n_summarized_posts}} {{of_n_posts}}."
+        summary: "You're viewing {{n_summarized_posts}} {{of_n_posts}}. "
         n_summarized_posts:
           one: "1 summarized post"
           other: "{{count}} summarized posts"
