@@ -37,7 +37,6 @@ config/environments/production.rb
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
-/plugins
 /logfile
 
 /spec/fixtures/plugins/my_plugin/auto_generated
