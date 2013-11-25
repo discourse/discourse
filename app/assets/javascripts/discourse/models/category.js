@@ -114,13 +114,17 @@ Discourse.Category = Discourse.Model.extend({
     return this.get("topics")[0];
   }.property("topics"),
 
+  topicTrackingState: function(){
+    return Discourse.TopicTrackingState.current();
+  }.property(),
+
   unreadTopics: function(){
-    return Discourse.TopicTrackingState.current().countUnread(this.get('name'));
-  }.property('Discourse.TopicTrackingState.current.messageCount'),
+    return this.get('topicTrackingState').countUnread(this.get('name'));
+  }.property('topicTrackingState.messageCount'),
 
   newTopics: function(){
-    return Discourse.TopicTrackingState.current().countNew(this.get('name'));
-  }.property('Discourse.TopicTrackingState.current.messageCount')
+    return this.get('topicTrackingState').countNew(this.get('name'));
+  }.property('topicTrackingState.messageCount')
 
 });
 
