@@ -94,7 +94,8 @@ module Oneboxer
        Entry.new(/^https?:\/\/(?:www\.)?khanacademy\.org\/.+/, false),
        Entry.new(/^https?:\/\/(?:www\.)?ted\.com\/talks\/.+/, false), # only /talks have meta info
        Entry.new(/^https?:\/\/(?:www\.)?wikihow\.com\/.+/, false),
-       Entry.new(/^https?:\/\/(?:\w+\.)?wonderhowto\.com\/.+/, false)
+       Entry.new(/^https?:\/\/(?:\w+\.)?wonderhowto\.com\/.+/, false),
+       Entry.new(/^https?:\/\/(?:www\.)?lessonplanet\.com\/(?:teachers|professional\-development)\/.+/, false) # only /teachers and /professional-development have meta info
       ]
     end
 
