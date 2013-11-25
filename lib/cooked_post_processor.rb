@@ -70,9 +70,20 @@ class CookedPostProcessor
   end
 
   def limit_size!(img)
-    w, h = get_size_from_image_sizes(img["src"], @opts[:image_sizes]) || get_size(img["src"])
+    # retrieve the size from
+    #  1) the width/height attributes
+    #  2) the dimension from the preview (image_sizes)
+    #  3) the dimension of the original image (HTTP request)
+    w, h = get_size_from_attributes(img) ||
+           get_size_from_image_sizes(img["src"], @opts[:image_sizes]) ||
+           get_size(img["src"])
     # limit the size of the thumbnail
     img["width"], img["height"] = ImageSizer.resize(w, h)
+  end
+
+  def get_size_from_attributes(img)
+    w, h = img["width"].to_i, img["height"].to_i
+    return [w, h] if w > 0 && h > 0
   end
 
   def get_size_from_image_sizes(src, image_sizes)

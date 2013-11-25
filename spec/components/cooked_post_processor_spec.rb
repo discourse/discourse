@@ -42,12 +42,20 @@ describe CookedPostProcessor do
 
     context "with image_sizes" do
 
-      let(:post) { build(:post_with_image_url) }
+      let(:post) { build(:post_with_image_urls) }
       let(:cpp) { CookedPostProcessor.new(post, image_sizes: {"http://foo.bar/image.png" => {"width" => 111, "height" => 222}}) }
 
+      before { cpp.post_process_images }
+
+      it "adds the width from the image sizes provided when no dimension is provided" do
+        cpp.html.should =~ /src="http:\/\/foo.bar\/image.png" width="111" height="222"/
+      end
+
       it "adds the width from the image sizes provided" do
-        cpp.post_process_images
-        cpp.html.should =~ /width=\"111\"/
+        cpp.html.should =~ /src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/
+      end
+
+      it "should be dirty" do
         cpp.should be_dirty
       end
 
