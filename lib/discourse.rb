@@ -25,6 +25,8 @@ module Discourse
   # When ImageMagick is missing
   class ImageMagickMissing < Exception; end
 
+  class InvalidPost < Exception; end
+
   # Cross site request forgery
   class CSRF < Exception; end
 
