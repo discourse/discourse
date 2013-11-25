@@ -443,6 +443,7 @@ nl:
     access_password_removal: "Je site gebruikte een toegangswachtwoord (access_password) setting, maar die optie is uit Discourse verwijderd. De login_required en must_approve_users instellingen zijn er voor in de plaats gekomen. Je kan ze in <a href='/admin/site_settings'>de Instellingen</a> aanpassen. Zorg er voor dat je <a href='/admin/users/list/pending'>gebruikers op de wachtlijst accepteert</a>. (Dit bericht verdwijnt na twee dagen.)"
     site_contact_username_warning: "De instelling site_contact_username is leeg. Werk deze bij in <a href='/admin/site_settings'>de Instellingen</a>. Stel het in op de gebruikersnaam van een admin die als afzender van de systeemberichten zal worden wordt gebruikt."
     notification_email_warning: "De instelling notification_email is leeg. Werk deze bij in <a href='/admin/site_settings'>de Instellingen</a>."
+    enforce_global_nicknames_warning: "De instelling enforce_global_nicknames is geselecteerd, maar de discourse_org_access_key is niet ingevuld. Een Discourse.org access key is nodig omvoor de enforce_global_nicknames instelling. Werk je <a href='/admin/site_settings'>instellingen</a> bij."
 
   content_types:
     education_new_reply:
@@ -478,6 +479,12 @@ nl:
     login_required:
       title: "Inloggen nodig: Homepage"
       description: "De tekst die getoond wordt als men moet inloggen om naar het forum te kunnen gaan."
+    top:
+      title: "Bovenkant van de pagina's"
+      description: "HTML dat aan de bovenkant van elke pagina wordt toegevoegd (na de header, voor de navigatie of topictitel)"
+    bottom:
+      title: "Onderkant van de pagina's"
+      description: "HTML dat aan de onderkant van elke pagina wordt toegevoegd"
 
   site_settings:
     default_locale: De standaard taal van dit Discourse forum (ISO 639-1 code)
@@ -502,6 +509,8 @@ nl:
     company_domain: "De domeinnaam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     queue_jobs: "DEVELOPERS ONLY! WARNING! Zet verschillende taken in een queue binnen sidekiq, bij 'false' worden taken ineens uitgevoerd"
     crawl_images: Zet het ophalen van afbeeldingen van externe bronnen aan
+    download_remote_images_to_local: Download a kopie van externe afbeeldingen met een hotlink in een bericht
+    download_remote_images_threshold: "Minimum schijfruimte vereist om externe afbeeldingen lokaal te downloaden (percentage)"
     ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in seconden."
     edit_history_visible_to_public: "Iedereen mag eerdere versies van een bericht zien. Wanneer aangevinkt kan alleen de staf de eerdere versies van een bericht zien."
     delete_removed_posts_after: "Na dit aantal uren zal een door een gebruiker verwijderd bericht ook echt helemaal verwijderd worden (in plaats van alleen verborgen)."
@@ -524,11 +533,11 @@ nl:
     notification_email: "Het afzenderadres dat wordt gebruikt voor mails waarmee leden op de hoogte worden gesteld van verloren wachtwoorden, nieuwe accounts etc."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
     use_ssl: "Moet de site toegankelijk zijn via SSL? (NOG NIET GEIMPLEMENTEERD, EXPERIMENTEEL)"
-    summary_score_threshold: "De minimumscore van bericht om inbegrepen te worden in 'Best of'"
-    summary_posts_required: "Minimum aantal berichten nodig in een topic voordat de 'Best of'-modus wordt aangezet."
-    summary_likes_required: "Minimum aantal 'vind ik leuk' nodig voordat de 'Best of'-modus wordt aangezet."
-    summary_percent_filter: "Als iemand op 'Best of' klikt, laat dan de top % van de berichten zien"
-    enable_private_messages: "Sta nieuwe leden (trustlevel 1) toe privé-berichten te maken en er op te kunnen reageren"
+    summary_score_threshold: "De minimumscore van bericht om inbegrepen te worden in de samenvatting"
+    summary_posts_required: "Minimum aantal berichten nodig in een topic voordat de samenvattingsmodus mogelijk wordt."
+    summary_likes_required: "Minimum aantal 'vind ik leuk' nodig voordat de samenvattingsmodus mogelijk wordt."
+    summary_percent_filter: "Als iemand op samenvatting klikt, laat dan de top % van de berichten zien"
+    enable_private_messages: "Sta nieuwe leden (trustlevel 1) toe privé-berichten te maken en er op te reageren"
 
     enable_long_polling: "De 'message bus' die gebruikt wordt voor notificaties kan 'long polling' gebruiken."
     long_polling_interval: "Het interval in milliseconden voor dat een nieuwe 'long poll' wordt uitgestuurd"
@@ -725,6 +734,7 @@ nl:
 
     enable_names: "Gebruikers mogen hun volledige naam laten zien"
     display_name_on_posts: "Laat de volledige naam van een gebruiker ook bij zijn berichten zien"
+    invites_shown: Maximum uitnodigingen op gebruikerspagina
 
   notification_types:
     mentioned: "%{display_username} heeft je genoemd in %{link}"
@@ -780,7 +790,7 @@ nl:
     activate_email: "Je bent er bijna! We hebben een activatiemail verstuurd naar <b>%{email}</b>. Volg de instructies in de mail om je account te activeren."
     not_activated: "Je kan nog niet inloggen. We hebben je een activatiemail gestuurd. Volg de instructies in de mail om je account te activeren."
     suspended: "Je kan tot %{date} niet inloggen."
-    banned_with_reason: "Je kan tot %{date} niet inloggen. Je hebt een ban om de volgende reden: %{reden}"
+    suspended_with_reason: "Je kan tot %{date} niet inloggen. Je hebt bent om de volgende reden geschorst: %{reden}"
     errors: "%{errors}"
     not_available: "Niet beschikbaar. Probeer %{suggestion}?"
     something_already_taken: "Er ging iets mis, misschien zijn de gebruikersnaam en/of e-mailadres al in gebruik? Gebruik dan de 'wachtwoord vergeten' link"
@@ -811,6 +821,19 @@ nl:
       [Bezoek %{site_name}][1]
 
       Je bent uitgenodigd door een regulier lid, dus je kan direct een reactie achterlaten zonder in te hoeven loggen.
+
+      [1]: %{invite_link}
+
+  invite_forum_mailer:
+    subject_template: "[%{site_name}] %{invitee_name} heeft je uitgenodigd voor %{site_name}"
+    text_body_template: |
+      %{invitee_name} heeft je uitgenodigd voor %{site_name}.
+
+      Klik op onderstaande link om op de uitnodiging in te gaan als je geïnteresseerd bent:
+
+      [Bezoek %{site_name}][1]
+
+      Je bent uitgenodigd door een vertrouwde gebruiker, daarom kun je je direct inschrijven zonder in te hoeven loggen.
 
       [1]: %{invite_link}
 
@@ -1164,6 +1187,7 @@ nl:
   deleted: 'verwijderd'
 
   upload:
+    edit_reason: "We hebben een kopie van de externe afbeeldingen gedownload"
     unauthorized: 'Sorry, je mag dat bestand niet uploaden (toegestane extensies: %{authorized_extensions}).'
     pasted_image_filename: Geplakte afbeelding
     attachment:

@@ -24,6 +24,7 @@ module Jobs
 
       extract_images_from(post.cooked).each do |image|
         src = image['src']
+        src = "http:" + src if src.start_with?("//")
 
         if is_valid_image_url(src)
           begin
