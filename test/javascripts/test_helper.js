@@ -93,6 +93,9 @@ $.ajax = function() {
   return oldAjax.apply(this, arguments);
 };
 
+// Stop the message bus so we don't get ajax calls
+Discourse.MessageBus.stop();
+
 // Trick JSHint into allow document.write
 var d = document;
 d.write('<div id="ember-testing-container"><div id="ember-testing"></div></div>');
