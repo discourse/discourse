@@ -13,6 +13,7 @@
 //= require jquery.ui.widget.js
 //= require handlebars.js
 //= require development/ember.js
+//= require message-bus.js
 
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
