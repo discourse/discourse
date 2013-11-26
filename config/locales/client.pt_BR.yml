@@ -162,7 +162,7 @@ pt_BR:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mencionou <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mencionou <a href='{{user2Url}}'>você</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Você</a> mencionou <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Você</a> mencionou <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Postado por <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Postado por <a href='{{userUrl}}'>você</a>"

@@ -94,7 +94,7 @@ nb_NO:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> nevnte <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> nevnte <a href='{{user2Url}}'>deg</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> nevnte <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> nevnte <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Postet av <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Postet av <a href='{{userUrl}}'>deg</a>"

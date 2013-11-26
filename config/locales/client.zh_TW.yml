@@ -148,7 +148,7 @@ zh_TW:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>你</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>你</a> 提到 <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>你</a> 提到 <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "發起人 <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "發起人 <a href='{{userUrl}}'>你</a>"

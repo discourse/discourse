@@ -161,7 +161,7 @@ de:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> hat <a href='{{user2Url}}'>{{another_user}}</a> erwähnt"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> hat <a href='{{user2Url}}'>dich</a> erwähnt"
-      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> hat <a href='{{user2Url}}'>{{user}}</a> erwähnt"
+      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> hat <a href='{{user2Url}}'>{{another_user}}</a> erwähnt"
 
       posted_by_user: "Geschrieben von <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Geschrieben von <a href='{{userUrl}}'>dir</a>"
