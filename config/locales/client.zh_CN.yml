@@ -383,7 +383,7 @@ zh_CN:
 
     summary:
       enabled_description: "你现在正在浏览本主题的“概括”视图。要查看所有帖子，请点击下方。"
-      description: "本主题中有<b>{{count}}</b>个帖子，是否只查看与主题最相关的帖子？"
+      description: "本主题中有<b>{{count}}</b>个帖子，是否只查看与主题最相关的帖子以节省时间？"
       enable: '概括本主题'
       disable: '显示所有帖子'
 
@@ -478,9 +478,9 @@ zh_CN:
       create_pm: "创建私信"
 
       users_placeholder: "添加一个用户"
-      title_placeholder: "在此输入你的标题，简明扼要的用一句话说明讨论的内容。"
+      title_placeholder: "为什么需要编辑？"
       edit_reason_placeholder: "编辑理由"
-      show_edit_reason: "（添加理由）"
+      show_edit_reason: "（添加编辑理由）"
       reply_placeholder: "在此输入你的内容。你可以使用 Markdown（参考 http://wowubuntu.com/markdown/） 或 BBCode（参考 http://www.bbcode.org/reference.php） 来格式化内容。拖拽或粘贴一幅图片到这儿即可将它上传。"
       view_new_post: "浏览你的新帖子。"
       saving: "保存中……"
@@ -751,15 +751,15 @@ zh_CN:
       login_reply: '登录后回复'
 
       filters:
-        user: "你在浏览 {{n_posts}} {{by_n_users}}."
+        user: "你在浏览{{n_posts}} {{by_n_users}}。"
         n_posts:
           one: "一个帖子"
-          other: "{{count}} 帖子"
+          other: "{{count}}个帖子"
         by_n_users:
-          one: "一个指定用户"
-          other: "{{count}}个用户中的"
+          one: "一个指定用户的"
+          other: "{{count}}个用户的"
 
-        summary: "你在浏览{{of_n_posts}}{{n_summarized_posts}}."
+        summary: "你在浏览{{of_n_posts}}{{n_summarized_posts}}。"
         n_summarized_posts:
           one: "一个概扩帖子"
           other: "{{count}}个概扩帖子"
@@ -1147,6 +1147,7 @@ zh_CN:
         delete_spammer_title: "删除该用户及其所有帖子和主题。"
 
         flagged_by: "报告者为"
+        system: "系统"
         error: "出错了"
         view_message: "查看消息"
         no_results: "没有报告"
