@@ -32,7 +32,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: da800614cac8b5935d0fd352af4a99d73cd13de8
+  revision: 93c74e1b4d70dd1fab0c48da92c2dc05cc9338f4
   branch: master
   specs:
     actionmailer (4.1.0.beta)
@@ -276,7 +276,7 @@ GEM
       treetop (~> 1.4.8)
     metaclass (0.0.1)
     method_source (0.8.2)
-    mime-types (1.25)
+    mime-types (1.25.1)
     mini_portile (0.5.2)
     minitest (5.0.8)
     mocha (0.14.0)
@@ -443,7 +443,7 @@ GEM
     slop (3.4.7)
     sorcerer (1.0.2)
     spork (1.0.0rc4)
-    sprockets (2.10.0)
+    sprockets (2.10.1)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
