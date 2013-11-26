@@ -24,6 +24,9 @@ class SessionController < ApplicationController
       
       # Look up the user using their Active Directory email
       entry = ldap.search(filter: Net::LDAP::Filter.eq("sAMAccountName", login)).first
+      raise "LDAP record for #{login} does not have 'mail' attribute" unless entry.respond_to?(:mail)
+      raise "LDAP record for #{login} does not have 'name' attribute" unless entry.respond_to?(:name)
+      
       email = entry.mail.first.downcase
       @user = User.where(email: email).first
       
