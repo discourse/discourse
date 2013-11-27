@@ -30,12 +30,10 @@ var $buo = function() {
     sheet.innerHTML = style;
   }
   catch(e) {
-    console.log(e);
     try {
       sheet.styleSheet.cssText = style;
     }
     catch(ex) {
-      console.log('failed to add the css');
       return;
     }
   }
