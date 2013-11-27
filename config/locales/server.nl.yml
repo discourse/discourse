@@ -635,7 +635,7 @@ nl:
     suggested_topics: Het aantal aanbevolen topics dat is weergegeven aan de onderkant van een topic
 
     clean_up_uploads: "Verwijder weesbestanden om illegale hosting te voorkomen. LET OP: maak een backup van je /uploads directory voordat je deze instelling activeert."
-    uploads_grace_period_in_hours: Na hoeveel uur een weesbestand verwijderd wordt.
+    clean_orphan_uploads_grace_period_hours: Na hoeveel uur een weesbestand verwijderd wordt.
     enable_s3_uploads: Of we uploads op Amazon S3 willen zetten of niet
     s3_upload_bucket: "De 'bucket' waarin we onze uploads naar Amazon S3 willen zetten"
     s3_access_key_id: "De Amazon S3 access key id dat wordt gebruikt om afbeeldingen te uploaden"

@@ -62,6 +62,10 @@ module FileStore
       "#{absolute_base_url}/avatars/#{avatar.sha1}/{size}#{avatar.extension}"
     end
 
+    def purge_tombstone(grace_period)
+      update_tombstone_lifecycle(grace_period)
+    end
+
     private
 
     def get_path_for_upload(file, upload)
@@ -99,16 +103,6 @@ module FileStore
       raise Discourse::SiteSettingMissing.new("s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
     end
 
-    def get_or_create_directory(bucket)
-      check_missing_site_settings
-
-      fog = Fog::Storage.new(s3_options)
-
-      directory = fog.directories.get(bucket)
-      directory = fog.directories.create(key: bucket) unless directory
-      directory
-    end
-
     def s3_options
       options = {
         provider: 'AWS',
@@ -117,6 +111,18 @@ module FileStore
       }
       options[:region] = SiteSetting.s3_region unless SiteSetting.s3_region.empty?
       options
+    end
+
+    def fog_with_options
+      check_missing_site_settings
+      Fog::Storage.new(s3_options)
+    end
+
+    def get_or_create_directory(bucket)
+      fog = fog_with_options
+      directory = fog.directories.get(bucket)
+      directory = fog.directories.create(key: bucket) unless directory
+      directory
     end
 
     def upload(file, unique_filename, filename=nil, content_type=nil)
@@ -132,11 +138,30 @@ module FileStore
     end
 
     def remove(unique_filename)
-      check_missing_site_settings
-
-      fog = Fog::Storage.new(s3_options)
-
+      fog = fog_with_options
+      # copy the file in tombstone
+      fog.copy_object(unique_filename, s3_bucket, tombstone_prefix + unique_filename, s3_bucket)
+      # delete the file
       fog.delete_object(s3_bucket, unique_filename)
+    end
+
+    def update_tombstone_lifecycle(grace_period)
+      # cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html
+      fog_with_options.put_bucket_lifecycle(s3_bucket, lifecycle(grace_period))
+    end
+
+    def lifecycle(grace_period)
+      {
+        "Rules" => [{
+          "Prefix" => tombstone_prefix,
+          "Enabled" => true,
+          "Expiration" => { "Days" => grace_period }
+        }]
+      }
+    end
+
+    def tombstone_prefix
+      "tombstone/"
     end
 
   end

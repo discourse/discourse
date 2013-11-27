@@ -615,7 +615,7 @@ pt_BR:
     suggested_topics: "Quantidade de tópicos sugeridos que você verá na parte debaixo dos tópicos"
 
     clean_up_uploads: "Remove envios(uploads) orfãos para previnir hospedagem ilegal. AVISO: Você pode querer fazer um backup do seu diretório /uploads antes de habilitar essa configuração."
-    uploads_grace_period_in_hours: "Carência (em horas), antes que um envio(upload) órfão é removido."
+    clean_orphan_uploads_grace_period_hours: "Carência (em horas), antes que um envio(upload) órfão é removido."
     enable_s3_uploads: "Enviar arquivos recebidos para o s3"
     s3_upload_bucket: "Bucket do s3 para qual enviar"
     s3_access_key_id: "Access key da Amazon S3 que será usada para envio de imagens"

@@ -633,7 +633,8 @@ en:
     suggested_topics: "Number of suggested topics shown at the bottom of a topic"
 
     clean_up_uploads: "Remove orphaned uploads to prevent illegal hosting. WARNING: you might want to make a backup of your /uploads directory before enabled this setting."
-    uploads_grace_period_in_hours: "Grace period (in hours) before an orphan upload is removed."
+    clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
+    purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     enable_s3_uploads: "Place uploads on Amazon S3"
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase (cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)"
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
