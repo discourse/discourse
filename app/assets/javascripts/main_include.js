@@ -11,7 +11,6 @@
 //= require bootstrap-dropdown.js
 //= require bootstrap-modal.js
 //= require bootstrap-transition.js
-//= require browser-update.js
 //= require chosen.jquery.js
 //= require ember-renderspeed.js
 //= require favcount.js
@@ -70,5 +69,3 @@
 //= require_tree ./discourse/helpers
 //= require_tree ./discourse/templates
 //= require_tree ./discourse/routes
-
-//= require browser-update.js

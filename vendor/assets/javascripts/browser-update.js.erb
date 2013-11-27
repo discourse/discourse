@@ -11,7 +11,7 @@ var $buo = function() {
   }
 
   // retrieve localized browser upgrade text
-  var t = I18n.t('js.browser_update');
+  var t = <%= "'" + I18n.t('js.browser_update') + "'" %>;
 
   // create the notification div HTML
   var div = document.createElement("div");
@@ -30,10 +30,12 @@ var $buo = function() {
     sheet.innerHTML = style;
   }
   catch(e) {
+    console.log(e);
     try {
       sheet.styleSheet.cssText = style;
     }
     catch(ex) {
+      console.log('failed to add the css');
       return;
     }
   }
@@ -43,8 +45,6 @@ var $buo = function() {
 
 };
 
-$(function() {
-  $bu=$buo();
-});
+$bu=$buo();
 
 })(this);
