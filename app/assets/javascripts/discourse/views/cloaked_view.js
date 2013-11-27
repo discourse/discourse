@@ -11,7 +11,7 @@ Discourse.CloakedView = Discourse.View.extend({
 
   init: function() {
     this._super();
-    this.set('style', 'height: ' + this.get('defaultHeight') + 'px');
+    this.uncloak();
   },
 
   /**
