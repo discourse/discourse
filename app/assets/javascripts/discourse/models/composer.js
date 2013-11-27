@@ -465,7 +465,7 @@ Discourse.Composer = Discourse.Model.extend({
       moderator: currentUser.get('moderator'),
       yours: true,
       newPost: true,
-      auto_close_days: this.get('auto_close_days')
+      auto_close_time: Discourse.Utilities.timestampFromAutocloseString(this.get('auto_close_time'))
     });
 
     // If we're in a topic, we can append the post instantly.

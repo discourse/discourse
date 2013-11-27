@@ -16,7 +16,7 @@ class TopicCreator
     topic_params = setup
     @topic = Topic.new(topic_params)
 
-    setup_auto_close_days if @opts[:auto_close_days]
+    setup_auto_close_time if @opts[:auto_close_time]
 
     process_private_message if @opts[:archetype] == Archetype.private_message
     save_topic
@@ -55,9 +55,9 @@ class TopicCreator
     topic_params
   end
 
-  def setup_auto_close_days
+  def setup_auto_close_time
     @guardian.ensure_can_moderate!(@topic)
-    @topic.auto_close_days = @opts[:auto_close_days]
+    @topic.set_auto_close(@opts[:auto_close_time], @user)
   end
 
   def process_private_message

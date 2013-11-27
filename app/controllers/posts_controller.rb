@@ -225,7 +225,7 @@ class PostsController < ApplicationController
         :category,
         :target_usernames,
         :reply_to_post_number,
-        :auto_close_days,
+        :auto_close_time,
         :auto_track
       ]
 

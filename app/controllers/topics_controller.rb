@@ -153,12 +153,15 @@ class TopicsController < ApplicationController
   end
 
   def autoclose
-    raise Discourse::InvalidParameters.new(:auto_close_days) unless params.has_key?(:auto_close_days)
-    @topic = Topic.where(id: params[:topic_id].to_i).first
-    guardian.ensure_can_moderate!(@topic)
-    @topic.set_auto_close(params[:auto_close_days], current_user)
-    @topic.save
-    render nothing: true
+    raise Discourse::InvalidParameters.new(:auto_close_time) unless params.has_key?(:auto_close_time)
+    topic = Topic.where(id: params[:topic_id].to_i).first
+    guardian.ensure_can_moderate!(topic)
+    topic.set_auto_close(params[:auto_close_time], current_user)
+    if topic.save
+      render json: success_json.merge!(auto_close_at: topic.auto_close_at)
+    else
+      render_json_error(topic)
+    end
   end
 
   def destroy

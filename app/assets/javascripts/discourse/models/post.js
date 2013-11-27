@@ -180,7 +180,7 @@ Discourse.Post = Discourse.Model.extend({
         title: this.get('title'),
         image_sizes: this.get('imageSizes'),
         target_usernames: this.get('target_usernames'),
-        auto_close_days: this.get('auto_close_days')
+        auto_close_time: Discourse.Utilities.timestampFromAutocloseString(this.get('auto_close_time'))
       };
 
       var metaData = this.get('metaData');

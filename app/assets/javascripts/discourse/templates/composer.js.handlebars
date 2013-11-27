@@ -48,13 +48,13 @@
                 <button class='btn' {{action showOptions}}>{{i18n topic.options}}</button>
               {{/if}}
               {{#if model.showAdminOptions}}
-                <button {{action toggleAdminOptions target="view"}} class="btn no-text" title='{{i18n composer.admin_options_title}}'><i class="icon icon-wrench"></i></button>
+                <button {{action toggleAdminOptions target="view"}} class="btn no-text show-admin-options" title='{{i18n composer.admin_options_title}}'><i class="icon icon-wrench"></i></button>
               {{/if}}
             {{/unless}}
           </div>
 
           <div class="admin-options-form">
-            {{autoCloseForm autoCloseDays=model.auto_close_days}}
+            {{auto-close-form autoCloseTime=model.auto_close_time}}
           </div>
         {{/if}}
 

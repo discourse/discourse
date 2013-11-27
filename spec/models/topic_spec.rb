@@ -1074,10 +1074,53 @@ describe Topic do
 
     before { Discourse.stubs(:system_user).returns(admin) }
 
-    it 'sets auto_close_at' do
+    it 'can take a number of hours as an integer' do
       Timecop.freeze(Time.zone.now) do
-        topic.set_auto_close(3, admin)
+        topic.set_auto_close(72, admin)
         expect(topic.auto_close_at).to eq(3.days.from_now)
+      end
+    end
+
+    it 'can take a number of hours as a string' do
+      Timecop.freeze(Time.zone.now) do
+        topic.set_auto_close('18', admin)
+        expect(topic.auto_close_at).to eq(18.hours.from_now)
+      end
+    end
+
+    it "can take a time later in the day" do
+      Timecop.freeze(Time.zone.local(2013,11,20,8,0)) do
+        topic.set_auto_close('13:00', admin)
+        topic.auto_close_at.should == Time.zone.local(2013,11,20,13,0)
+      end
+    end
+
+    it "can take a time for the next day" do
+      Timecop.freeze(Time.zone.local(2013,11,20,8,0)) do
+        topic.set_auto_close('5:00', admin)
+        topic.auto_close_at.should == Time.zone.local(2013,11,21,5,0)
+      end
+    end
+
+    it "can take a timestamp for a future time" do
+      Timecop.freeze(Time.zone.local(2013,11,20,8,0)) do
+        topic.set_auto_close('2013-11-22 5:00', admin)
+        topic.auto_close_at.should == Time.zone.local(2013,11,22,5,0)
+      end
+    end
+
+    it "sets a validation error when given a timestamp in the past" do
+      Timecop.freeze(Time.zone.local(2013,11,20,8,0)) do
+        topic.set_auto_close('2013-11-19 5:00', admin)
+        topic.auto_close_at.should == Time.zone.local(2013,11,19,5,0)
+        topic.errors[:auto_close_at].should be_present
+      end
+    end
+
+    it "can take a timestamp with timezone" do
+      Timecop.freeze(Time.utc(2013,11,20,12,0)) do
+        topic.set_auto_close('2013-11-25T01:35:00-08:00', admin)
+        topic.auto_close_at.should == Time.utc(2013,11,25,9,35)
       end
     end
 
@@ -1102,20 +1145,20 @@ describe Topic do
       expect(staff_topic.auto_close_user_id).to eq(999)
     end
 
-    it 'clears auto_close_at if num_days is nil' do
+    it 'clears auto_close_at if arg is nil' do
       closing_topic.set_auto_close(nil)
       expect(closing_topic.auto_close_at).to be_nil
     end
 
-    it 'clears auto_close_started_at if num_days is nil' do
+    it 'clears auto_close_started_at if arg is nil' do
       closing_topic.set_auto_close(nil)
       expect(closing_topic.auto_close_started_at).to be_nil
     end
 
     it 'updates auto_close_at if it was already set to close' do
       Timecop.freeze(Time.zone.now) do
-        closing_topic.set_auto_close(14)
-        expect(closing_topic.auto_close_at).to eq(14.days.from_now)
+        closing_topic.set_auto_close(48)
+        expect(closing_topic.auto_close_at).to eq(2.days.from_now)
       end
     end
 

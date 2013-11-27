@@ -190,7 +190,7 @@ describe PostCreator do
       it 'ensures the user can auto-close the topic' do
         Guardian.any_instance.stubs(:can_moderate?).returns(false)
         expect {
-          PostCreator.new(user, basic_topic_params.merge(auto_close_days: 2)).create
+          PostCreator.new(user, basic_topic_params.merge(auto_close_time: 2)).create
         }.to raise_error(Discourse::InvalidAccess)
       end
     end

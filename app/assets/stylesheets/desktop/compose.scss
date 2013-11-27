@@ -334,8 +334,12 @@
       display: block;
       bottom: 8px;
     }
+    .auto-close-fields .examples {
+      margin-top: 0;
+      padding-bottom: 8px;
+    }
   }
-  .title-input, .category-input {
+  .title-input, .category-input, .show-admin-options {
     position: relative;
     display: inline;
   }
@@ -523,7 +527,11 @@ div.ac-wrap {
 
 .auto-close-fields {
   input {
-    width: 50px;
+    width: 150px;
+  }
+  .examples {
+    margin: 12px 0 0 17px;
+    color: $dark_gray;
   }
 }
 
@@ -543,7 +551,7 @@ div.ac-wrap {
 }
 
 #reply-control button.btn.no-text {
-  margin: 7px 0 0 5px;
-  position: absolute;
+  margin: 7px 0 0 5px; // works in safari, but not chrome and firefox
+  position: relative;
 }
 
