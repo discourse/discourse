@@ -256,7 +256,7 @@ class TopicView
   end
 
   def setup_filtered_posts
-    @filtered_posts = @topic.posts
+    @filtered_posts = @topic.posts.where(hidden: false)
     @filtered_posts = @filtered_posts.with_deleted if @user.try(:staff?)
     @filtered_posts = @filtered_posts.summary if @filter == 'summary'
     @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action]) if @best.present?
