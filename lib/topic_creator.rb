@@ -55,7 +55,7 @@ class TopicCreator
   end
 
   def setup_auto_close_time
-    @guardian.ensure_can_moderate!(@topic)
+    return unless @guardian.can_moderate?(@topic)
     @topic.set_auto_close(@opts[:auto_close_time], @user)
   end
 

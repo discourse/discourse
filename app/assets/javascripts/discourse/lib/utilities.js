@@ -339,7 +339,7 @@ Discourse.Utilities = {
           return t.add('days', 1).toJSON();
         }
       } else {
-        return arg;
+        return (arg === '' ? null : arg);
       }
     }
   }
