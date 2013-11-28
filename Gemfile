@@ -59,6 +59,8 @@ gem 'redis', :require => ["redis", "redis/connection/hiredis"]
 
 gem 'active_model_serializers'
 
+gem 'truncate_html'
+
 # we had issues with latest, stick to the rev till we figure this out
 # PR that makes it all hang together welcome
 gem 'ember-rails'

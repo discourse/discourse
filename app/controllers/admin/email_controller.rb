@@ -22,7 +22,7 @@ class Admin::EmailController < Admin::AdminController
 
   def preview_digest
     params.require(:last_seen_at)
-    renderer = Email::Renderer.new(UserNotifications.digest(current_user, since: params[:last_seen_at]), html_template: true)
+    renderer = Email::Renderer.new(UserNotifications.digest(current_user, since: params[:last_seen_at]))
     render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
   end
 

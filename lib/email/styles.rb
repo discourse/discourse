@@ -13,7 +13,9 @@ module Email
     def format_basic
       @fragment.css('img').each do |img|
 
-        if img['src'] =~ /\/assets\/emoji\//
+        next if img['class'] == 'site-logo'
+
+        if img['class'] == "emoji" || img['src'] =~ /plugins\/emoji/
           img['width'] = 20
           img['height'] = 20
         else
@@ -57,11 +59,6 @@ module Email
       style('div.digest-post', 'margin-left: 15px; margin-top: 20px; max-width: 694px;')
       style('div.digest-post h1', 'font-size: 20px;')
       style('span.footer-notice', 'color:#666; font-size:80%')
-
-      @fragment.css('pre').each do |pre|
-        pre.replace(pre.text)
-      end
-
     end
 
     def to_html
