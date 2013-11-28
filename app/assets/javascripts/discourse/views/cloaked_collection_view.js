@@ -141,15 +141,15 @@ Discourse.CloakedCollectionView = Ember.CollectionView.extend(Discourse.Scrollin
       toCloak.forEach(function (v) { v.cloak(); });
     });
 
-    // for (var j=bottomView; j<childViews.length; j++) {
-    //   var checkView = childViews[j];
-    //   if (!checkView.get('containedView')) {
-    //     if (!checkView.get('loading')) {
-    //       checkView.$().html("<div class='spinner'>" + I18n.t('loading') + "</div>");
-    //     }
-    //     return;
-    //   }
-    // }
+    for (var j=bottomView; j<childViews.length; j++) {
+      var checkView = childViews[j];
+      if (!checkView.get('containedView')) {
+        if (!checkView.get('loading')) {
+          checkView.$().html("<div class='spinner'>" + I18n.t('loading') + "</div>");
+        }
+        return;
+      }
+    }
 
   },
 
