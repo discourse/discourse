@@ -26,6 +26,10 @@ class SessionController < ApplicationController
         login_not_approved
         return
       end
+
+    else
+      invalid_credentials
+      return
     end
 
     if user.suspended?
