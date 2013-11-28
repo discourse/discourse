@@ -16,7 +16,7 @@ class TopicCreator
     topic_params = setup
     @topic = Topic.new(topic_params)
 
-    setup_auto_close_time if @opts[:auto_close_time]
+    setup_auto_close_time if @opts[:auto_close_time].present?
 
     process_private_message if @opts[:archetype] == Archetype.private_message
     save_topic
@@ -47,7 +47,6 @@ class TopicCreator
     else
       Category.where(name: @opts[:category]).first
     end
-
     @guardian.ensure_can_create!(Topic,category)
     topic_params[:category_id] = category.id if category.present?
     topic_params[:meta_data] = @opts[:meta_data] if @opts[:meta_data].present?
