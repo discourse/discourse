@@ -18,7 +18,8 @@ class Autospec::Manager
     @queue = []
     @mutex = Mutex.new
     @signal = ConditionVariable.new
-    @runners = [ruby_runner, javascript_runner]
+    @runners = [ruby_runner]
+    @runners << javascript_runner unless ENV['NO_QUNIT']
   end
 
   def run
