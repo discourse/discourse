@@ -4,7 +4,7 @@
   </button>
 </nav>
 
-<section class='map collapsed'>
+<section {{bindAttr class=":map mapCollapsed"}}>
   <ul class="clearfix">
     <li>
       <a href='{{unbound topic.url}}'>
@@ -24,22 +24,22 @@
       <h4>{{i18n posts}}</h4>
       {{number topic.posts_count}}
     </li>
-    <li>
+    <li class='secondary'>
       <h4>{{i18n views}}</h4>
       {{number topic.views}}
     </li>
-    <li>
+    <li class='secondary'>
       <h4>{{i18n users}}</h4>
       {{number topic.participant_count}}
     </li>
     {{#if topic.like_count}}
-      <li>
+      <li class='secondary'>
         <h4>{{i18n likes}}</h4>
         <i class='icon icon-heart'></i> {{number topic.like_count}}
       </li>
     {{/if}}
     {{#if details.links.length}}
-    <li>
+    <li class='secondary'>
       <h4>{{i18n links}}</h4>
       {{number details.links.length}}
     </li>

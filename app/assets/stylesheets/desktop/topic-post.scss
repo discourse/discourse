@@ -268,8 +268,6 @@ a.star {
   }
 
   .map {
-    &.collapsed {
-    }
     li {
       float: left;
       padding: 7px 11px;
@@ -277,9 +275,7 @@ a.star {
         border-right: 0;
       }
     }
-    a,
-
-    .number {
+    a, .number {
       font-weight: bold;
       line-height: 20px;
     }

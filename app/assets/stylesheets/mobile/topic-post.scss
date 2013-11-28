@@ -186,9 +186,13 @@ a.star {
     margin-right: 4px;
   }
 
-  .map {
-    &.collapsed {
+  .map-collapsed {
+    .secondary {
+      display: none;
     }
+  }
+
+  .map {
     li {
       float: left;
       padding: 7px 11px;
@@ -196,9 +200,7 @@ a.star {
         border-right: 0;
       }
     }
-    a,
-
-    .number {
+    a, .number {
       font-weight: bold;
       line-height: 20px;
     }

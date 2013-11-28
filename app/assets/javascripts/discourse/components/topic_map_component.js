@@ -19,7 +19,7 @@ Discourse.TopicMapComponent = Ember.Component.extend({
     this._super();
 
     // If the topic has a summary, expand the map by default
-    this.set('mapCollapsed', !this.get('topic.has_summary'));
+    this.set('mapCollapsed', Discourse.Mobile.mobileView || (!this.get('topic.has_summary')));
   },
 
   toggleMapClass: function() {
