@@ -7,9 +7,9 @@ Discourse.AutoCloseFormComponent = Ember.Component.extend({
   }.property('labelKey'),
 
   autoCloseChanged: function() {
-    // if( this.get('autoCloseTime') && this.get('autoCloseTime').length > 0 ) {
-    //   this.set('autoCloseTime', this.get('autoCloseTime').replace(/[^\d-\s\:]/g, '') );
-    // }
+    if( this.get('autoCloseTime') && this.get('autoCloseTime').length > 0 ) {
+      this.set('autoCloseTime', this.get('autoCloseTime').replace(/[^\d-\s\:]/g, '') );
+    }
     this.set('autoCloseValid', this.isAutoCloseValid());
   }.observes('autoCloseTime'),
 
