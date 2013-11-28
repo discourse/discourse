@@ -6,9 +6,6 @@
   @namespace Discourse
   @module Discourse
 **/
-
-var SLACK_RATIO = 0.75;
-
 Discourse.CloakedCollectionView = Ember.CollectionView.extend(Discourse.Scrolling, {
   topVisible: null,
   bottomVisible: null,
@@ -16,6 +13,10 @@ Discourse.CloakedCollectionView = Ember.CollectionView.extend(Discourse.Scrollin
   init: function() {
     var cloakView = this.get('cloakView'),
         idProperty = this.get('idProperty') || 'id';
+
+    // Give ourselves more slack on touch devices
+    // this.set('slackRatio', Discourse.touch ? 1.5 : 0.75);
+    this.set('slackRatio', 1.0);
 
     this.set('itemViewClass', Discourse.CloakedView.extend({
       classNames: [cloakView + '-cloak'],
@@ -89,7 +90,7 @@ Discourse.CloakedCollectionView = Ember.CollectionView.extend(Discourse.Scrollin
         $w = $(window),
         windowHeight = $w.height(),
         windowTop = $w.scrollTop(),
-        slack = Math.round(windowHeight * SLACK_RATIO),
+        slack = Math.round(windowHeight * this.get('slackRatio')),
         viewportTop = windowTop - slack,
         windowBottom = windowTop + windowHeight,
         viewportBottom = windowBottom + slack,
@@ -132,11 +133,23 @@ Discourse.CloakedCollectionView = Ember.CollectionView.extend(Discourse.Scrollin
       this.setProperties({topVisible: null, bottomVisible: null});
     }
 
-    var toCloak = childViews.slice(0, topView).concat(childViews.slice(bottomView+1));
+    var toCloak = childViews.slice(0, topView).concat(childViews.slice(bottomView+1)),
+        loadingView = childViews[bottomView + 1];
+
     Em.run.schedule('afterRender', function() {
       toUncloak.forEach(function (v) { v.uncloak(); });
       toCloak.forEach(function (v) { v.cloak(); });
     });
+
+    // for (var j=bottomView; j<childViews.length; j++) {
+    //   var checkView = childViews[j];
+    //   if (!checkView.get('containedView')) {
+    //     if (!checkView.get('loading')) {
+    //       checkView.$().html("<div class='spinner'>" + I18n.t('loading') + "</div>");
+    //     }
+    //     return;
+    //   }
+    // }
 
   },
 

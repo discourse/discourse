@@ -14,6 +14,7 @@ Discourse.CloakedView = Discourse.View.extend({
     this.uncloak();
   },
 
+
   /**
     Triggers the set up for rendering a view that is cloaked.
 
@@ -24,6 +25,7 @@ Discourse.CloakedView = Discourse.View.extend({
     if (!containedView) {
       this.setProperties({
         style: null,
+        loading: false,
         containedView: this.createChildView(Discourse[this.get('cloaks')], { content: this.get('content') })
       });
 
