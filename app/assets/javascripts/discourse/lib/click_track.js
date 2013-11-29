@@ -38,10 +38,9 @@ Discourse.ClickTrack = {
         userId = $link.data('user-id');
 
     if (!userId) userId = $article.data('user-id');
-    var ownLink = userId && (userId === Discourse.User.currentProp('id'));
 
-    // Build a Redirect URL
-    var trackingUrl = Discourse.getURL("/clicks/track?url=" + encodeURIComponent(href));
+    var ownLink = userId && (userId === Discourse.User.currentProp('id')),
+        trackingUrl = Discourse.getURL("/clicks/track?url=" + encodeURIComponent(href));
     if (postId && (!$link.data('ignore-post-id'))) {
       trackingUrl += "&post_id=" + encodeURI(postId);
     }
