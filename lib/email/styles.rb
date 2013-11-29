@@ -59,6 +59,10 @@ module Email
       style('div.digest-post', 'margin-left: 15px; margin-top: 20px; max-width: 694px;')
       style('div.digest-post h1', 'font-size: 20px;')
       style('span.footer-notice', 'color:#666; font-size:80%')
+
+      style('pre', 'white-space: pre-wrap')
+      style('code', 'background-color: f1f1ff; padding: 2px 5px;')
+      style('pre code', 'display: block; background-color: f1f1ff; padding: 5px')
     end
 
     def to_html

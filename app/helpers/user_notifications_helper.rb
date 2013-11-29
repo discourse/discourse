@@ -30,7 +30,6 @@ module UserNotificationsHelper
   end
 
   def email_excerpt(html)
-    html_string = TruncateHtml::HtmlString.new(html)
-    raw Sanitize.clean(TruncateHtml::HtmlTruncator.new(html_string, length: 1000).truncate, Sanitize::Config::RELAXED)
+    raw Sanitize.clean(HTML_Truncator.truncate(html, 300), Sanitize::Config::RELAXED)
   end
 end

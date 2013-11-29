@@ -34,7 +34,9 @@ module Email
 
       renderer = Email::Renderer.new(@message, opts)
 
-      unless @message.html_part
+      if @message.html_part
+        @message.html_part.body = renderer.html
+      else
         @message.html_part = Mail::Part.new do
           content_type 'text/html; charset=UTF-8'
           body renderer.html
