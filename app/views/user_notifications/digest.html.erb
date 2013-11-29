@@ -32,7 +32,7 @@
       <%- @new_topics.each do |t| %>
         <ul>
           <li>
-            <%= link_to t.title, t.relative_url %>
+            <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
 
             <span class='post-count'><%= t('user_notifications.digest.posts', count: t.posts_count) %></span>
 
@@ -46,7 +46,7 @@
   <span class='footer-notice'>
     <%=raw(t :'user_notifications.digest.unsubscribe',
        site_link: html_site_link,
-       unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_path(key: @user.temporary_key)))  %>
+       unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_path(host: Discourse.base_url, key: @user.temporary_key, only_path: false)))  %>
   </span>
   </td>
 </tr>
