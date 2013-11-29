@@ -1438,3 +1438,6 @@ en:
           rate_limits: 'Rate Limits'
           developer: 'Developer'
           uncategorized: 'Uncategorized'
+
+    lightbox:
+      download: "download"
