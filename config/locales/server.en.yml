@@ -79,7 +79,7 @@ en:
 
   education:
     until_posts:
-      one: "post"
+      one: "1 post"
       other: "%{count} posts"
 
     'new-topic': |
@@ -1116,6 +1116,10 @@ en:
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"
+
+      posts:
+        one: "1 post"
+        other: "%{count} posts"
 
     forgot_password:
       subject_template: "[%{site_name}] Password reset"

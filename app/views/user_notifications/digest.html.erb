@@ -31,7 +31,13 @@
 
       <%- @new_topics.each do |t| %>
         <ul>
-          <li><%= link_to t.title, t.relative_url %> <%- if t.category %>[<%= t.category.name %>]<%- end %></li>
+          <li>
+            <%= link_to t.title, t.relative_url %>
+
+            <span class='post-count'><%= t('user_notifications.digest.posts', count: t.posts_count) %></span>
+
+            <%- if t.category %><span style='background-color: #<%= t.category.color %>; color: #<%= t.category.text_color %>; font-size: 12px; padding: 4px 6px; font-weight: bold'><%= t.category.name %></span><%- end %>
+          </li>
         </ul>
       <%- end -%>
 
