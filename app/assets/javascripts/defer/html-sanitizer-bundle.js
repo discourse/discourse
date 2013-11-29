@@ -409,7 +409,7 @@ URI.prototype.setPath = function (newPath) {
 URI.prototype.setRawPath = function (newPath) {
   if (newPath) {
     newPath = String(newPath);
-    this.path_ = 
+    this.path_ =
       // Paths must start with '/' unless this is a path-relative URL.
       (!this.domain_ || /^\//.test(newPath)) ? newPath : '/' + newPath;
   } else {
@@ -898,6 +898,7 @@ html4.ATTRIBS = {
   'iframe::marginheight': 0,
   'iframe::marginwidth': 0,
   'iframe::width': 0,
+  'iframe::src': 1,
   'img::align': 0,
   'img::alt': 0,
   'img::border': 0,
@@ -1293,6 +1294,7 @@ html4.URIEFFECTS = {
   'command::icon': 1,
   'del::cite': 0,
   'form::action': 2,
+  'iframe::src': 1,
   'img::src': 1,
   'input::src': 1,
   'ins::cite': 0,
@@ -1315,6 +1317,7 @@ html4.LOADERTYPES = {
   'command::icon': 1,
   'del::cite': 2,
   'form::action': 2,
+  'iframe::src': 2,
   'img::src': 1,
   'input::src': 1,
   'ins::cite': 2,
@@ -1323,6 +1326,15 @@ html4.LOADERTYPES = {
   'video::src': 2
 };
 html4[ 'LOADERTYPES' ] = html4.LOADERTYPES;
+// NOTE: currently focused only on URI-type attributes
+html4.REQUIREDATTRIBUTES = {
+  "audio" : ["src"],
+  "form" : ["action"],
+  "iframe" : ["src"],
+  "image" : ["src"],
+  "video" : ["src"]
+};
+html4[ 'REQUIREDATTRIBUTES' ] = html4.REQUIREDATTRIBUTES;
 // export for Closure Compiler
 if (typeof window !== 'undefined') {
   window['html4'] = html4;
@@ -2194,8 +2206,7 @@ var html = (function(html4) {
    * @return {Array.<?string>} The sanitized attributes as a list of alternating
    *     names and values, where a null value means to omit the attribute.
    */
-  function sanitizeAttribs(tagName, attribs,
-    opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
+  function sanitizeAttribs(tagName, attribs, opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
     // TODO(felix8a): it's obnoxious that domado duplicates much of this
     // TODO(felix8a): maybe consistently enforce constraints like target=
     for (var i = 0; i < attribs.length; i += 2) {
@@ -2277,7 +2288,7 @@ var html = (function(html4) {
                 "XML_ATTR": attribName,
                 "XML_TAG": tagName
               }, opt_naiveUriRewriter);
-              if (opt_logger) {
+            if (opt_logger) {
               log(opt_logger, tagName, attribName, oldValue, value);
             }
             break;
@@ -2325,20 +2336,29 @@ var html = (function(html4) {
    * @return {function(string, Array.<?string>)} A tagPolicy suitable for
    *     passing to html.sanitize.
    */
-  function makeTagPolicy(
-    opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
+  function makeTagPolicy(opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
     return function(tagName, attribs) {
       if (!(html4.ELEMENTS[tagName] & html4.eflags['UNSAFE'])) {
-        return {
-          'attribs': sanitizeAttribs(tagName, attribs,
-            opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger)
-        };
+        var sanitizedAttribs = sanitizeAttribs(tagName, attribs, opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger);
+        var requiredAttributes = html4.REQUIREDATTRIBUTES[tagName];
+        if (requiredAttributes && missRequiredAttributes(sanitizedAttribs, requiredAttributes)) { return }
+        return { 'attribs': sanitizedAttribs };
       } else {
         if (opt_logger) {
           log(opt_logger, tagName, undefined, undefined, undefined);
         }
       }
     };
+  }
+
+  function missRequiredAttributes(sanitizedAttributes, requiredAttributes) {
+    var requiredAttributesWithValueCount = 0;
+    for (var i = 0, length = sanitizedAttributes.length; i < length; i += 2) {
+      var name = sanitizedAttributes[i];
+      var value = sanitizedAttributes[i + 1];
+      if (requiredAttributes.indexOf(name) > -1 && value && value.length > 0) { requiredAttributesWithValueCount++; }
+    }
+    return requiredAttributesWithValueCount != requiredAttributes.length;
   }
 
   /**
@@ -2364,10 +2384,8 @@ var html = (function(html4) {
    *     to attributes containing HTML names, element IDs, and space-separated
    *     lists of classes.  If not given, such attributes are left unchanged.
    */
-  function sanitize(inputHtml,
-    opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
-    var tagPolicy = makeTagPolicy(
-      opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger);
+  function sanitize(inputHtml, opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
+    var tagPolicy = makeTagPolicy(opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger);
     return sanitizeWithPolicy(inputHtml, tagPolicy);
   }
 

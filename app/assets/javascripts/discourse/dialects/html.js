@@ -3,7 +3,7 @@
 **/
 var blockTags = ['address', 'article', 'aside', 'audio', 'blockquote', 'canvas', 'dd', 'div',
                  'dl', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3',
-                 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'noscript', 'ol', 'output',
+                 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'iframe', 'noscript', 'ol', 'output',
                  'p', 'pre', 'section', 'table', 'tfoot', 'ul', 'video'],
 
     splitAtLast = function(tag, block, next, first) {
