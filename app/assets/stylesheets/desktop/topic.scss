@@ -230,3 +230,17 @@ legend{
   border:0;
   padding:0;
 }
+
+kbd
+{
+    background-color: #fff;
+    border:1px solid #ddd;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    color: #333;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 0 .1em;
+    padding: .1em .6em;
+}
