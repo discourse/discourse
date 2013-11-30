@@ -14,7 +14,7 @@ describe DiscourseUpdates do
     Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
   end
 
-  subject { DiscourseUpdates.check_version.as_json }
+  subject { DiscourseUpdates.check_version.instance_values }
 
   context 'version check was done at the current installed version' do
     before do
