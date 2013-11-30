@@ -20,7 +20,7 @@ class Search
       @result_ids << result.id
     end
 
-    def as_json
+    def as_json(options = nil)
       { type: @type.to_s,
         name: I18n.t("search.types.#{@type.to_s}"),
         more: @more,

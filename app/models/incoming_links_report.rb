@@ -8,7 +8,7 @@ class IncomingLinksReport
     @data = nil
   end
 
-  def as_json
+  def as_json(options = nil)
     {
       type: self.type,
       title: I18n.t("reports.#{self.type}.title"),

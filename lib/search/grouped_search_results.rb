@@ -15,7 +15,7 @@ class Search
       return topic_results.result_ids
     end
 
-    def as_json
+    def as_json(options = nil)
       @by_type.values.map do |grouped_result|
         grouped_result.as_json
       end
