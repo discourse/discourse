@@ -15,7 +15,7 @@ class Search
       @url, @id, @title = row[:url], row[:id], row[:title]
     end
 
-    def as_json
+    def as_json(options = nil)
       json = {id: @id, title: @title, url: @url}
       json[:avatar_template] = @avatar_template if @avatar_template.present?
       json[:color] = @color if @color.present?
