@@ -4,9 +4,12 @@
         the path. This is to get around CDN caching on the Origin:
 
         https://forums.aws.amazon.com/thread.jspa?threadID=114646
+
+        Also added a cache breaker there in case we have breaking config changes
+          &1 was added last when the nginx sample config changed
     %>
 
-<% font_domain = "#{request.protocol}#{request.host_with_port}" %>
+<% font_domain = "#{request.protocol}#{request.host_with_port}&1" %>
 
 <style>
   @font-face {
