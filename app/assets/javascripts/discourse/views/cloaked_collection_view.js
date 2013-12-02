@@ -15,8 +15,7 @@ Discourse.CloakedCollectionView = Ember.CollectionView.extend(Discourse.Scrollin
         idProperty = this.get('idProperty') || 'id';
 
     // Give ourselves more slack on touch devices
-    // this.set('slackRatio', Discourse.touch ? 1.5 : 0.75);
-    this.set('slackRatio', 1.0);
+    this.set('slackRatio', Discourse.touch ? 1.5 : 0.75);
 
     this.set('itemViewClass', Discourse.CloakedView.extend({
       classNames: [cloakView + '-cloak'],
