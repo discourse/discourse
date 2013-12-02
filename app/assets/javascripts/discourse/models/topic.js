@@ -355,7 +355,7 @@ Discourse.Topic.reopenClass({
       data: {destination_topic_id: destinationTopicId}
     }).then(function (result) {
       if (result.success) return result;
-      promise.reject();
+      promise.reject(new Error("error merging topic"));
     });
     return promise;
   },
@@ -366,7 +366,7 @@ Discourse.Topic.reopenClass({
       data: opts
     }).then(function (result) {
       if (result.success) return result;
-      promise.reject();
+      promise.reject(new Error("error moving posts topic"));
     });
     return promise;
   }

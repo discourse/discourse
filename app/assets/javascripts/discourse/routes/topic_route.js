@@ -7,8 +7,6 @@
   @module Discourse
 **/
 Discourse.TopicRoute = Discourse.Route.extend({
-  abc: 'def',
-
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
   actions: {

@@ -7,7 +7,6 @@
   @module Discourse
 **/
 Discourse.TopicFromParamsRoute = Discourse.Route.extend({
-  abc: 'asdfasdf',
 
   setupController: function(controller, params) {
     params = params || {};

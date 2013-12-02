@@ -284,10 +284,10 @@ Discourse.PostStream = Em.Object.extend({
     var self = this;
 
     // Make sure we can append more posts
-    if (!self.get('canAppendMore')) { return Ember.RSVP.reject(); }
+    if (!self.get('canAppendMore')) { return Ember.RSVP.resolve(); }
 
     var postIds = self.get('nextWindow');
-    if (Ember.isEmpty(postIds)) { return Ember.RSVP.reject(); }
+    if (Ember.isEmpty(postIds)) { return Ember.RSVP.resolve(); }
 
     self.set('loadingBelow', true);
 
@@ -310,14 +310,13 @@ Discourse.PostStream = Em.Object.extend({
     @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
   **/
   prependMore: function() {
-    var postStream = this,
-        rejectedPromise = Ember.RSVP.reject();
+    var postStream = this;
 
     // Make sure we can append more posts
-    if (!postStream.get('canPrependMore')) { return rejectedPromise; }
+    if (!postStream.get('canPrependMore')) { return Ember.RSVP.resolve(); }
 
     var postIds = postStream.get('previousWindow');
-    if (Ember.isEmpty(postIds)) { return rejectedPromise; }
+    if (Ember.isEmpty(postIds)) { return Ember.RSVP.resolve(); }
 
     postStream.set('loadingAbove', true);
     return postStream.findPostsByIds(postIds.reverse()).then(function(posts) {

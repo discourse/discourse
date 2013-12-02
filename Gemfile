@@ -64,8 +64,8 @@ gem 'html_truncator'
 # we had issues with latest, stick to the rev till we figure this out
 # PR that makes it all hang together welcome
 gem 'ember-rails'
-gem 'ember-source', '1.0.0.rc6.2'
-gem 'handlebars-source', '1.0.12'
+gem 'ember-source', '~> 1.2.0.1'
+gem 'handlebars-source', '~> 1.1.2'
 gem 'barber'
 
 gem 'vestal_versions', git: 'https://github.com/SamSaffron/vestal_versions'

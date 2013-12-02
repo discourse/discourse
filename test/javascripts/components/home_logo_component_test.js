@@ -1,52 +1,49 @@
-var view, oldMobileView;
+var smallLogoUrl = "/assets/logo-single.png",
+    bigLogoUrl = "/assets/logo.png",
+    smallLogoSelector = "img.logo-small",
+    bigLogoSelector = "img#site-logo.logo-big",
+    homeIconSelector = "i.icon-home",
+    headerSelector = "h2#site-text-logo.text-logo";
 
-var View = Ember.View.extend({
-  template: Ember.Handlebars.compile("{{home-logo minimized=view.minimized}}")
-});
 
-
-var setSmallLogoUrl = function(url) {
+function setSmallLogoUrl(url) {
   Discourse.SiteSettings.logo_small_url = url;
-};
+}
 
-var setBigLogoUrl = function(url) {
+function setBigLogoUrl(url) {
   Discourse.SiteSettings.logo_url = url;
-};
+}
 
-var setTitle = function(title) {
+function setTitle(title) {
   Discourse.SiteSettings.title = title;
-};
+}
 
-var setMobileView = function(value) {
+function setMobileView(value) {
   Discourse.Mobile.mobileView = value;
-};
+}
 
-var setMinimized = function(value) {
+var view;
+function setMinimized(value) {
   Ember.run(function() {
     view.set("minimized", value);
   });
-};
+}
 
-
-var smallLogoUrl = "/assets/logo-single.png";
-var bigLogoUrl = "/assets/logo.png";
-var smallLogoSelector = "img.logo-small";
-var bigLogoSelector = "img#site-logo.logo-big";
-var homeIconSelector = "i.icon-home";
-var headerSelector = "h2#site-text-logo.text-logo";
-
-
-var appendView = function() {
+function appendView() {
   Ember.run(function() {
     view.appendTo(fixture());
   });
-};
+}
 
-
+var oldMobileView;
 module("Discourse.HomeLogoComponent", {
   setup: function() {
     oldMobileView = Discourse.Mobile.mobileView;
-    view = View.create();
+
+    view = Ember.View.create({
+      container: Discourse.__container__,
+      template: Ember.Handlebars.compile("{{home-logo minimized=view.minimized}}")
+    });
   },
 
   teardown: function() {

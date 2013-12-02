@@ -283,8 +283,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       } else {
         opts.tested = true;
         if (!opts.ignoreIfChanged) {
-          this.cancelComposer().then(function() { self.open(opts); },
-                             function() { return promise.reject(); });
+          this.cancelComposer().then(function() { self.open(opts); }).fail(function() { return promise.reject(); });
         }
         return promise;
       }
@@ -341,10 +340,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
             self.destroyDraft();
             self.get('model').clearState();
             self.close();
-            promise.resolve();
-          } else {
-            promise.reject();
           }
+          promise.resolve();
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
