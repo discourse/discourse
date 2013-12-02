@@ -639,3 +639,14 @@ button {
     }
   }
 }
+
+
+.mfp-force-scrollbars {
+  &.mfp-wrap {
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+  }
+  .mfp-img {
+    max-width: none;
+  }
+}
