@@ -1,15 +1,42 @@
 <%- unless SiteCustomization.override_default_style(session[:preview_style]) %>
-  <% if mobile_view? %>
-    <%= stylesheet_link_tag "mobile" %>
-  <% else %>
-    <%= stylesheet_link_tag "desktop" %>
-  <% end %>
+
+  <script type="text/javascript">
+    (function() {
+      var h = document.getElementsByTagName('html')[0],
+          isMobileView = (localStorage && localStorage.mobileView) ? (localStorage.mobileView === 'true') :
+              Modernizr.mq("only screen and (max-width: 480px), only screen and (max-device-width: 480px)");
+
+      h.className += (isMobileView ? ' mobile-view' : ' desktop-view');
+      Modernizr.load({
+        test: isMobileView,
+        yep:  <%= stylesheet_filenames(:mobile).inspect.html_safe  %>,
+        nope: <%= stylesheet_filenames(:desktop).inspect.html_safe %>,
+        complete: function() {
+          // CSS file(s) have loaded.
+          $(function() {
+            setTimeout(function() {
+              // Use setTimeout to make this happen in the next event loop.
+              // Trying to avoid a FOUC (flash of unstyled content).
+              if (isMobileView) {
+                $('#custom-mobile-header').show();
+              } else {
+                $('#custom-desktop-header').show();
+              }
+              $('#js-app').attr('style', ''); // Show everything.
+              $(window).trigger('scroll.discourse-dock'); // Calc header div positions now that they're visible.
+            }, 1);
+          });
+        }
+      });
+    })();
+  </script>
+
 <%- end %>
+
+<noscript>
+  <%= stylesheet_link_tag "desktop" %>
+</noscript>
 
 <%- if staff? %>
   <%= stylesheet_link_tag "admin"%>
 <%-end%>
-
-<%- unless customization_disabled? %>
-  <%= SiteCustomization.custom_stylesheet(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
-<%- end %>

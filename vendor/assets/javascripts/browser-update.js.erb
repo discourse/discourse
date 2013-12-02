@@ -5,7 +5,9 @@
 
 var $buo = function() {
 
-  var badAndroid = false, ua = null;
+  var badAndroid = false,
+      haveJquery = (typeof($) !== 'undefined'),
+      ua = null;
 
   // Sometimes we have to resort to parsing the user agent string. :(
   if (navigator && navigator.userAgent) {
@@ -52,6 +54,11 @@ var $buo = function() {
 
   // shift the body down to make room for our notification div
   document.body.style.marginTop = (div.clientHeight) + "px";
+
+  if (!haveJquery) {
+    var h = document.getElementsByTagName('html')[0];
+    h.className = h.className.replace(/(\s|^)css-loading(\s|$)/g, ' ');
+  }
 
 };
 

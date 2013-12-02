@@ -83,6 +83,12 @@ class SiteCustomization < ActiveRecord::Base
     style.stylesheet_link_tag(target).html_safe if style
   end
 
+  def self.custom_stylesheet_path(preview_style, target=:desktop)
+    preview_style ||= enabled_style_key
+    style = lookup_style(preview_style)
+    style.stylesheet_relative_path(target) if style
+  end
+
   def self.custom_header(preview_style, target=:desktop)
     preview_style ||= enabled_style_key
     style = lookup_style(preview_style)
@@ -175,14 +181,18 @@ class SiteCustomization < ActiveRecord::Base
     return "" unless stylesheet.present?
     return @stylesheet_link_tag if @stylesheet_link_tag
     ensure_stylesheets_on_disk!
-    @stylesheet_link_tag = "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/#{CACHE_PATH}#{stylesheet_filename}?#{stylesheet_hash}\" type=\"text/css\" media=\"screen\">"
+    @stylesheet_link_tag = "<link class=\"custom-css\" rel=\"stylesheet\" href=\"#{stylesheet_relative_path(:desktop)}\" type=\"text/css\" media=\"screen\">"
   end
 
   def mobile_stylesheet_link_tag
     return "" unless mobile_stylesheet.present?
     return @mobile_stylesheet_link_tag if @mobile_stylesheet_link_tag
     ensure_stylesheets_on_disk!
-    @mobile_stylesheet_link_tag = "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/#{CACHE_PATH}#{stylesheet_filename(:mobile)}?#{stylesheet_hash(:mobile)}\" type=\"text/css\" media=\"screen\">"
+    @mobile_stylesheet_link_tag = "<link class=\"custom-css\" rel=\"stylesheet\" href=\"#{stylesheet_relative_path(:mobile)}\" type=\"text/css\" media=\"screen\">"
+  end
+
+  def stylesheet_relative_path(target=:desktop)
+    "/#{CACHE_PATH}#{stylesheet_filename(target)}?#{stylesheet_hash(target)}"
   end
 end
 
