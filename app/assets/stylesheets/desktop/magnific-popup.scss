@@ -1,47 +1,6 @@
 /* Magnific Popup CSS */
 
 ////////////////////////
-//      Settings      //
-////////////////////////
-
-// overlay
-$overlay-color:                   #0b0b0b;                    // Color of overlay screen
-$overlay-opacity:                 0.8;                        // Opacity of overlay screen
-$shadow:                          0 0 8px rgba(0, 0, 0, 0.6); // Shadow on image or iframe
-
-// spacing
-$popup-padding-left:              8px;                        // Padding from left and from right side
-$popup-padding-left-mobile:       6px;                        // Same as above, but is applied when width of window is less than 800px
-
-$z-index-base:                    1050;                       // Base z-index of popup
-
-// controls
-$include-arrows:                  true;                       // Include styles for nav arrows
-$controls-opacity:                0.65;                       // Opacity of controls
-$controls-color:                  #FFF;                       // Color of controls
-$inner-close-icon-color:          #333;                       // Color of close button when inside
-$controls-text-color:             #CCC;                       // Color of preloader and "1 of X" indicator
-$controls-text-color-hover:       #FFF;                       // Hover color of preloader and "1 of X" indicator
-$IE7support:                      false;                      // Very basic IE7 support
-
-// Iframe-type options
-$include-iframe-type:             false;                      // Enable Iframe-type popups
-$iframe-padding-top:              40px;                       // Iframe padding top
-$iframe-background:               #000;                       // Background color of iframes
-$iframe-max-width:                900px;                      // Maximum width of iframes
-$iframe-ratio:                    9/16;                       // Ratio of iframe (9/16 = widescreen, 3/4 = standard, etc.)
-
-// Image-type options
-$include-image-type:              true;                       // Enable Image-type popups
-$image-padding-top:               40px;                       // Image padding top
-$image-padding-bottom:            40px;                       // Image padding bottom
-$include-mobile-layout-for-image: true;                       // Removes paddings from top and bottom
-
-// Image caption options
-$caption-title-color:             #F3F3F3;                    // Caption title color
-$caption-subtitle-color:          #BDBDBD;                    // Caption subtitle color
-
-////////////////////////
 //
 // Contents:
 //
@@ -76,7 +35,7 @@ $shadow:                          0 0 8px rgba(0, 0, 0, 0.6) !default; // shadow
 $popup-padding-left:              8px !default; // Padding from left and from right side
 $popup-padding-left-mobile:       6px !default; // Same as above, but is applied when width of window is less than 800px
 
-$z-index-base:                    500 !default; // Base z-index of popup
+$z-index-base:                    1040 !default; // Base z-index of popup
 $include-arrows:                  true !default; // include styles for nav arrows
 $controls-opacity:                0.65 !default;
 $controls-color:                  #FFF !default;
@@ -94,6 +53,7 @@ $iframe-ratio:                    9/16 !default;
 
 // Image-type options
 $include-image-type:              true !default;
+$image-background:                #444 !default;
 $image-padding-top:               40px !default;
 $image-padding-bottom:            40px !default;
 $include-mobile-layout-for-image: true !default; // Removes paddings from top and bottom
@@ -101,6 +61,9 @@ $include-mobile-layout-for-image: true !default; // Removes paddings from top an
 // Image caption options
 $caption-title-color:             #F3F3F3 !default;
 $caption-subtitle-color:          #BDBDBD !default;
+
+// A11y
+$use-visuallyhidden:              false !default; // Hide content from browsers, but make it available for screen readers
 
 
 
@@ -121,7 +84,7 @@ $caption-subtitle-color:          #BDBDBD !default;
   background: $overlay-color;
   opacity: $overlay-opacity;
   @if $IE7support {
-    filter: alpha(opacity=$overlay-opacity*100);
+    filter: unquote("alpha(opacity=#{$overlay-opacity*100})");
   }
 }
 
@@ -139,7 +102,6 @@ $caption-subtitle-color:          #BDBDBD !default;
 
 // Root container
 .mfp-container {
-  height: 100%;
   text-align: center;
   position: absolute;
   width: 100%;
@@ -153,16 +115,22 @@ $caption-subtitle-color:          #BDBDBD !default;
 }
 
 // Vertical centerer helper
-.mfp-container:before {
-  content: '';
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
+.mfp-container {
+  &:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
 }
 
 // Remove vertical centering when popup has class `mfp-align-top`
-.mfp-align-top .mfp-container:before {
-  display: none;
+.mfp-align-top {
+  .mfp-container {
+    &:before {
+      display: none;
+    }
+  }
 }
 
 // Popup content holder
@@ -174,21 +142,24 @@ $caption-subtitle-color:          #BDBDBD !default;
   text-align: left;
   z-index: $z-index-base + 5;
 }
-.mfp-inline-holder .mfp-content,
-.mfp-ajax-holder .mfp-content {
-  width: 100%;
-  cursor: auto;
+.mfp-inline-holder,
+.mfp-ajax-holder {
+  .mfp-content {
+    width: 100%;
+    cursor: auto;
+  }
 }
 
 // Cursors
 .mfp-ajax-cur {
   cursor: progress;
 }
-.mfp-zoom-out-cur,
-.mfp-zoom-out-cur .mfp-image-holder .mfp-close {
-  cursor: -moz-zoom-out;
-  cursor: -webkit-zoom-out;
-  cursor: zoom-out;
+.mfp-zoom-out-cur {
+  &, .mfp-image-holder .mfp-close {
+    cursor: -moz-zoom-out;
+    cursor: -webkit-zoom-out;
+    cursor: zoom-out;
+  }
 }
 .mfp-zoom {
   cursor: pointer;
@@ -196,8 +167,10 @@ $caption-subtitle-color:          #BDBDBD !default;
   cursor: -moz-zoom-in;
   cursor: zoom-in;
 }
-.mfp-auto-cursor .mfp-content {
-  cursor: auto;
+.mfp-auto-cursor {
+  .mfp-content {
+    cursor: auto;
+  }
 }
 
 .mfp-close,
@@ -210,15 +183,30 @@ $caption-subtitle-color:          #BDBDBD !default;
 }
 
 // Hide the image during the loading
-.mfp-loading.mfp-figure {
-  display: none;
+.mfp-loading {
+  &.mfp-figure {
+    display: none;
+  }
 }
 
 // Helper class that hides stuff
-.mfp-hide {
-  display: none !important;
+@if $use-visuallyhidden {
+  // From HTML5 Boilerplate https://github.com/h5bp/html5-boilerplate/blob/v4.2.0/doc/css.md#visuallyhidden
+  .mfp-hide {
+    border: 0 !important;
+    clip: rect(0 0 0 0) !important;
+    height: 1px !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: absolute !important;
+    width: 1px !important;
+  }
+} @else {
+  .mfp-hide {
+    display: none !important;
+  }
 }
-
 
 
 ////////////////////////
@@ -236,47 +224,55 @@ $caption-subtitle-color:          #BDBDBD !default;
   left: 8px;
   right: 8px;
   z-index: $z-index-base + 4;
-}
-.mfp-preloader a {
-  color: $controls-text-color;
-}
-.mfp-preloader a:hover {
-  color: $controls-text-color-hover;
+  a {
+    color: $controls-text-color;
+    &:hover {
+      color: $controls-text-color-hover;
+    }
+  }
 }
 
 // Hide preloader when content successfully loaded
-.mfp-s-ready .mfp-preloader {
-  display: none;
+.mfp-s-ready {
+  .mfp-preloader {
+    display: none;
+  }
 }
 
 // Hide content when it was not loaded
-.mfp-s-error .mfp-content {
-  display: none;
+.mfp-s-error {
+  .mfp-content {
+    display: none;
+  }
 }
-
 
 // CSS-reset for buttons
-button.mfp-close,
-button.mfp-arrow {
-  overflow: visible;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-  -webkit-appearance: none;
-  display: block;
-  padding: 0;
-  z-index: $z-index-base + 6;
-}
-button::-moz-focus-inner {
+button {
+  &.mfp-close,
+  &.mfp-arrow {
+    overflow: visible;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    -webkit-appearance: none;
+    display: block;
+    outline: none;
     padding: 0;
-    border: 0
+    z-index: $z-index-base + 6;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  &::-moz-focus-inner {
+      padding: 0;
+      border: 0
+  }
 }
 
 
 // Close icon
 .mfp-close {
   width: 44px;
-  height:44px;
+  height: 44px;
   line-height: 44px;
 
   position: absolute;
@@ -285,6 +281,9 @@ button::-moz-focus-inner {
   text-decoration: none;
   text-align: center;
   opacity: $controls-opacity;
+  @if $IE7support {
+    filter: unquote("alpha(opacity=#{$controls-opacity*100})");
+  }
   padding: 0 0 18px 10px;
   color: $controls-color;
 
@@ -295,28 +294,35 @@ button::-moz-focus-inner {
   &:hover,
   &:focus {
     opacity: 1;
+    @if $IE7support {
+      filter: unquote("alpha(opacity=#{1*100})");
+    }
   }
 
   &:active {
     top: 1px;
   }
 }
-.mfp-close-btn-in .mfp-close {
-  color: $inner-close-icon-color;
+.mfp-close-btn-in {
+  .mfp-close {
+    color: $inner-close-icon-color;
+  }
 }
-.mfp-image-holder .mfp-close,
-.mfp-iframe-holder .mfp-close {
-  color: $controls-color;
-  right: -6px;
-  text-align: right;
-  padding-right: 6px;
-  width: 100%;
+.mfp-image-holder,
+.mfp-iframe-holder {
+  .mfp-close {
+    color: $controls-color;
+    right: -6px;
+    text-align: right;
+    padding-right: 6px;
+    width: 100%;
+  }
 }
 
 // "1 of X" counter
 .mfp-counter {
   position: absolute;
-  top:0;
+  top: 0;
   right: 0;
   color: $controls-text-color;
   font-size: 12px;
@@ -327,8 +333,10 @@ button::-moz-focus-inner {
 @if $include-arrows {
   .mfp-arrow {
     position: absolute;
-    top: 0;
     opacity: $controls-opacity;
+    @if $IE7support {
+      filter: unquote("alpha(opacity=#{$controls-opacity*100})");
+    }
     margin: 0;
     top: 50%;
     margin-top: -55px;
@@ -336,17 +344,16 @@ button::-moz-focus-inner {
     width: 90px;
     height: 110px;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
-  }
-  .mfp-arrow:active {
-    margin-top: -54px;
-  }
-  .mfp-arrow:hover,
-  .mfp-arrow:focus {
-    opacity: 1;
-  }
-
-  .mfp-arrow {
-
+    &:active {
+      margin-top: -54px;
+    }
+    &:hover,
+    &:focus {
+      opacity: 1;
+      @if $IE7support {
+        filter: unquote("alpha(opacity=#{1*100})");
+      }
+    }
     &:before,
     &:after,
     .mfp-b,
@@ -360,21 +367,21 @@ button::-moz-focus-inner {
       top: 0;
       margin-top: 35px;
       margin-left: 35px;
-      border: solid transparent;
+      border: medium inset transparent;
     }
 
     &:after,
     .mfp-a {
-      opacity: $overlay-opacity;
-      border-top-width: 12px;
-      border-bottom-width: 12px;
+
+      border-top-width: 13px;
+      border-bottom-width: 13px;
       top:8px;
     }
 
     &:before,
     .mfp-b {
-      border-top-width: 20px;
-      border-bottom-width: 20px;
+      border-top-width: 21px;
+      border-bottom-width: 21px;
     }
 
   }
@@ -384,12 +391,13 @@ button::-moz-focus-inner {
 
     &:after,
     .mfp-a {
-      border-right: 12px solid #000;
-      left: 5px;
+      border-right: 17px solid #FFF;
+      margin-left: 31px;
     }
     &:before,
     .mfp-b {
-       border-right: 20px solid #FFF;
+      margin-left: 25px;
+      border-right: 27px solid #3f3f3f;
     }
   }
 
@@ -397,12 +405,12 @@ button::-moz-focus-inner {
     right: 0;
     &:after,
     .mfp-a {
-      border-left: 12px solid #000;
-      left: 3px;
+      border-left: 17px solid #FFF;
+      margin-left: 39px
     }
     &:before,
     .mfp-b {
-      border-left: 20px solid #FFF;
+      border-left: 27px solid #3f3f3f;
     }
   }
 }
@@ -414,30 +422,30 @@ button::-moz-focus-inner {
   .mfp-iframe-holder {
     padding-top: $iframe-padding-top;
     padding-bottom: $iframe-padding-top;
-  }
-  .mfp-iframe-holder .mfp-content {
-    line-height: 0;
-    width: 100%;
-    max-width: $iframe-max-width;
+    .mfp-content {
+      line-height: 0;
+      width: 100%;
+      max-width: $iframe-max-width;
+    }
+    .mfp-close {
+      top: -40px;
+    }
   }
   .mfp-iframe-scaler {
     width: 100%;
     height: 0;
     overflow: hidden;
     padding-top: $iframe-ratio * 100%;
-  }
-  .mfp-iframe-scaler iframe {
-    position: absolute;
-    display: block;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: $shadow;
-    background: $iframe-background;
-  }
-  .mfp-iframe-holder .mfp-close {
-    top: -40px;
+    iframe {
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: $shadow;
+      background: $iframe-background;
+    }
   }
 }
 
@@ -447,38 +455,50 @@ button::-moz-focus-inner {
 @if $include-image-type {
 
   /* Main image in popup */
-  img.mfp-img {
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    display: block;
-    line-height: 0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    padding: $image-padding-top 0 $image-padding-bottom;
-    margin: 0 auto;
+  img {
+    &.mfp-img {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      line-height: 0;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: $image-padding-top 0 $image-padding-bottom;
+      margin: 0 auto;
+    }
   }
 
   /* The shadow behind the image */
-  .mfp-figure:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: $image-padding-top;
-    bottom: $image-padding-bottom;
-    display: block;
-    right: 0;
-    width: auto;
-    height: auto;
-    z-index: -1;
-    box-shadow: $shadow;
-  }
   .mfp-figure {
     line-height: 0;
+    &:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: $image-padding-top;
+      bottom: $image-padding-bottom;
+      display: block;
+      right: 0;
+      width: auto;
+      height: auto;
+      z-index: -1;
+      box-shadow: $shadow;
+      background: $image-background;
+    }
+    small {
+      color: $caption-subtitle-color;
+      display: block;
+      font-size: 12px;
+      line-height: 14px;
+    }
+    figure {
+      margin: 0;
+    }
   }
   .mfp-bottom-bar {
-    margin-top:  -36px;
+    margin-top: -$image-padding-bottom + 4;
     position: absolute;
     top: 100%;
     left: 0;
@@ -489,45 +509,52 @@ button::-moz-focus-inner {
     text-align: left;
     line-height: 18px;
     color: $caption-title-color;
-    word-break: break-word;
+    word-wrap: break-word;
     padding-right: 36px; // leave some space for counter at right side
   }
 
-  .mfp-figure small {
-    color: $caption-subtitle-color;
-    display: block;
-    font-size: 12px;
-    line-height: 14px;
-  }
-  .mfp-image-holder .mfp-content {
-    max-width: 100%;
+  .mfp-image-holder {
+    .mfp-content {
+      max-width: 100%;
+    }
   }
 
-  .mfp-gallery .mfp-image-holder .mfp-figure {
-    cursor: pointer;
+  .mfp-gallery {
+    .mfp-image-holder {
+      .mfp-figure {
+        cursor: pointer;
+      }
+    }
   }
 
 
   @if $include-mobile-layout-for-image {
-
-      @media screen and (max-width: 800px) and (orientation:landscape), screen and (max-height: 300px) {
-        /**
-         * Remove all paddings around the image on small screen
-         */
-        .mfp-img-mobile .mfp-image-holder {
+    @media screen and (max-width: 800px) and (orientation:landscape), screen and (max-height: 300px) {
+      /**
+       * Remove all paddings around the image on small screen
+       */
+      .mfp-img-mobile {
+        .mfp-image-holder {
           padding-left: 0;
           padding-right: 0;
         }
-        .mfp-img-mobile img.mfp-img {
-          padding: 0;
+        img {
+          &.mfp-img {
+            padding: 0;
+          }
         }
-        /* The shadow behind the image */
-        .mfp-img-mobile .mfp-figure:after {
-          top: 0;
-          bottom: 0;
+        .mfp-figure {
+          /* The shadow behind the image */
+          &:after {
+            top: 0;
+            bottom: 0;
+          }
+          small {
+            display: inline;
+            margin-left: 5px;
+          }
         }
-
-        .mfp-img-mobile .mfp-bottom-bar {
+        .mfp-bottom-bar {
           background: rgba(0,0,0,0.6);
           bottom: 0;
           margin: 0;
@@ -537,15 +564,15 @@ button::-moz-focus-inner {
           -webkit-box-sizing: border-box;
           -moz-box-sizing: border-box;
           box-sizing: border-box;
+          &:empty {
+            padding: 0;
+          }
         }
-        .mfp-img-mobile .mfp-bottom-bar:empty {
-          padding: 0;
-        }
-        .mfp-img-mobile .mfp-counter {
+        .mfp-counter {
           right: 5px;
           top: 3px;
         }
-        .mfp-img-mobile .mfp-close {
+        .mfp-close {
           top: 0;
           right: 0;
           width: 35px;
@@ -556,19 +583,15 @@ button::-moz-focus-inner {
           text-align: center;
           padding: 0;
         }
-        .mfp-img-mobile .mfp-figure small {
-          display: inline;
-          margin-left: 5px;
-        }
       }
+    }
   }
-
 }
 
 
 
 // Scale navigation arrows and reduce padding from sides
-@media all and (max-width: 800px) {
+@media all and (max-width: 900px) {
   .mfp-arrow {
     -webkit-transform: scale(0.75);
     transform: scale(0.75);
@@ -578,7 +601,7 @@ button::-moz-focus-inner {
     transform-origin: 0;
   }
   .mfp-arrow-right {
-     -webkit-transform-origin: 100%;
+    -webkit-transform-origin: 100%;
     transform-origin: 100%;
   }
   .mfp-container {
