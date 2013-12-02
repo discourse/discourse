@@ -5,8 +5,20 @@
 
 var $buo = function() {
 
+  var badAndroid = false, ua = null;
+
+  // Sometimes we have to resort to parsing the user agent string. :(
+  if (navigator && navigator.userAgent) {
+    ua = navigator.userAgent;
+  }
+  if (ua && (ua.indexOf('Android 2.2') >= 0 || ua.indexOf('Android 2.3') >= 0)) {
+    // Android 2.2 and 2.3 browsers report that they have pushState, but they don't really.
+    // See http://caniuse.com/#search=pushstate
+    badAndroid = true;
+  }
+
   // sam: my main concern here is mobile, but its an outlier, for now we support ie9, set conditionally and stuff with pushState
-  if (window.ie === "new" || (window.history && window.history.pushState)) {
+  if (window.ie === "new" || (window.history && window.history.pushState && !badAndroid)) {
       return;
   }
 
