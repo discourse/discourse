@@ -147,6 +147,7 @@ class CookedPostProcessor
   def add_lightbox!(img, original_width, original_height, upload=nil)
     # first, create a div to hold our lightbox
     lightbox = Nokogiri::XML::Node.new("div", @doc)
+    lightbox["class"] = "lightbox-wrapper"
     img.add_next_sibling(lightbox)
     lightbox.add_child(img)
 
