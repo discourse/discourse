@@ -13,7 +13,7 @@
       <h3><%=t 'user_notifications.digest.top_topics' %></h3>
 
       <%- @featured_topics.each_with_index do |t, i| %>
-        <%= link_to t.title, t.relative_url %>
+        <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
 
         <%- if t.best_post.present? %>
           <div class='digest-post'>
