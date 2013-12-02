@@ -134,7 +134,9 @@ posting:
       default: 10
   max_post_length:
     client: true
-    default: 32000
+    default: 
+      test: 4000
+      default: 32000
   min_topic_title_length:
     client: true
     default: 15
