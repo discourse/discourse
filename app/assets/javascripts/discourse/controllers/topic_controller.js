@@ -220,12 +220,13 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   jumpTopDisabled: function() {
-    return (this.get('progressPosition') === 1);
-  }.property('postStream.filteredPostsCount', 'progressPosition'),
+    return (this.get('progressPosition') <= 3);
+  }.property('progressPosition'),
 
   jumpBottomDisabled: function() {
-    return this.get('progressPosition') >= this.get('postStream.filteredPostsCount');
-  }.property('postStream.filteredPostsCount', 'progressPosition'),
+    return this.get('progressPosition') >= this.get('postStream.filteredPostsCount') ||
+           this.get('progressPosition') >= this.get('highest_post_number');
+  }.property('postStream.filteredPostsCount', 'highest_post_number', 'progressPosition'),
 
   canMergeTopic: function() {
     if (!this.get('details.can_move_posts')) return false;
@@ -269,9 +270,9 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   streamPercentage: function() {
     if (!this.get('postStream.loaded')) { return 0; }
-    if (this.get('postStream.filteredPostsCount') === 0) { return 0; }
-    return this.get('progressPosition') / this.get('postStream.filteredPostsCount');
-  }.property('postStream.loaded', 'progressPosition', 'postStream.filteredPostsCount'),
+    if (this.get('postStream.highest_post_number') === 0) { return 0; }
+    return this.get('progressPosition') / this.get('highest_post_number');
+  }.property('postStream.loaded', 'progressPosition', 'highest_post_number'),
 
   multiSelectChanged: function() {
     // Deselect all posts when multi select is turned off

@@ -52,7 +52,7 @@
             <nav id='topic-progress' title="{{i18n topic.progress.title}}" {{bindAttr class="hideProgress:hidden"}}>
               <button id='jump-top' title="{{i18n topic.progress.jump_top}}" {{bindAttr disabled="jumpTopDisabled"}} {{action jumpTop}}><i class="icon-circle-arrow-up"></i></button>
               <div class='nums'>
-                <h4 title="{{i18n topic.progress.current}}">{{progressPosition}}</h4> <span>{{i18n of_value}}</span> <h4>{{postStream.filteredPostsCount}}</h4>
+                <h4 title="{{i18n topic.progress.current}}">{{progressPosition}}</h4> <span>{{i18n of_value}}</span> <h4>{{highest_post_number}}</h4>
               </div>
               <button id='jump-bottom' title="{{i18n topic.progress.jump_bottom}}" {{bindAttr disabled="jumpBottomDisabled"}} {{action jumpBottom}}><i class="icon-circle-arrow-down"></i></button>
               <div class='bg'>&nbsp;</div>

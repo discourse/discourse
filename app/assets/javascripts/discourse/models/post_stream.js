@@ -188,7 +188,7 @@ Discourse.PostStream = Em.Object.extend({
     var stream = this.get('stream');
     var lastIndex = this.indexOf(lastLoadedPost);
     if (lastIndex === -1) { return []; }
-    if ((lastIndex + 1) >= this.get('filteredPostsCount')) { return []; }
+    if ((lastIndex + 1) >= this.get('highest_post_number')) { return []; }
 
     // find our window of posts
     return stream.slice(lastIndex+1, lastIndex+Discourse.SiteSettings.posts_per_page+1);
