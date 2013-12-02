@@ -62,8 +62,8 @@ module Email
 
       style('span.post-count', 'margin: 0 5px; color: #777;')
       style('pre', 'white-space: pre-wrap')
-      style('code', 'background-color: f1f1ff; padding: 2px 5px;')
-      style('pre code', 'display: block; background-color: f1f1ff; padding: 5px')
+      style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
+      style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px')
     end
 
     def to_html
