@@ -111,7 +111,10 @@ Discourse.Category = Discourse.Model.extend({
   }.property(),
 
   latestTopic: function(){
-    return this.get("topics")[0];
+    var topics = this.get('topics');
+    if (topics && topics.length) {
+      return topics[0]
+    }
   }.property("topics"),
 
   topicTrackingState: function(){
