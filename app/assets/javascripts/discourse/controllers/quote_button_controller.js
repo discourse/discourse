@@ -118,7 +118,7 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     var buffer = this.get('buffer');
     var quotedText = Discourse.Quote.build(post, buffer);
     composerOpts.quote = quotedText;
-    if (composerController.get('content.replyDirty')) {
+    if (composerController.get('content.viewOpen') || composerController.get('content.viewDraft')) {
       composerController.appendText(quotedText);
     } else {
       composerController.open(composerOpts);
