@@ -83,7 +83,7 @@ Discourse.Ajax = Em.Mixin.create({
       return Ember.Deferred.promise(function(promise){
         $.ajax(Discourse.getURL('/session/csrf'))
            .success(function(result){
-              Discourse.csrfToken = result.csrf;
+              Discourse.Session.currentProp('csrfToken', result.csrf);
               performAjax(promise);
            });
       });
