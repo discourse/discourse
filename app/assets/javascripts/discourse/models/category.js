@@ -113,7 +113,7 @@ Discourse.Category = Discourse.Model.extend({
   latestTopic: function(){
     var topics = this.get('topics');
     if (topics && topics.length) {
-      return topics[0]
+      return topics[0];
     }
   }.property("topics"),
 
