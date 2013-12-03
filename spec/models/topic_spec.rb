@@ -1067,6 +1067,22 @@ describe Topic do
     end
   end
 
+  describe "auto_close_days=" do
+    subject(:topic) { Fabricate.build(:topic) }
+
+    it 'can take a number' do
+      Timecop.freeze(Time.zone.now) do
+        topic.auto_close_days = 2
+        topic.auto_close_at.should be_within_one_second_of(2.days.from_now)
+      end
+    end
+
+    it 'can take nil' do
+      topic.auto_close_days = nil
+      topic.auto_close_at.should be_nil
+    end
+  end
+
   describe 'set_auto_close' do
     let(:topic)         { Fabricate.build(:topic) }
     let(:closing_topic) { Fabricate.build(:topic, auto_close_days: 5) }
