@@ -468,11 +468,11 @@ ol.category-breadcrumb {
   position: absolute;
   border: 1px solid #ccc;
   background-color: white;
-  height: 200px;
+  max-height: 350px;
   padding: 8px 7px 0 7px;
   z-index: 100;
   margin-top: 30px;
-  min-width: 116px;
+  min-width: 138px;
 
 
   a.badge-category {
