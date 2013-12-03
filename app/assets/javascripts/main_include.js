@@ -27,7 +27,7 @@
 //= require jquery.sortable.js
 //= require lodash.js
 //= require md5.js
-//= require modernizr.custom.95264.js
+//= require modernizr.custom.00874.js
 //= require mousetrap.js
 //= require rsvp.js
 //= require show-html.js
@@ -70,3 +70,4 @@
 //= require_tree ./discourse/helpers
 //= require_tree ./discourse/templates
 //= require_tree ./discourse/routes
+//= require_tree ./discourse/initializers

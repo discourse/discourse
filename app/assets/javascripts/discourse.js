@@ -75,34 +75,6 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     @method bindDOMEvents
   **/
   bindDOMEvents: function() {
-    var $html, hasTouch;
-
-    $html = $('html');
-    hasTouch = false;
-
-    if ($html.hasClass('touch')) {
-      hasTouch = true;
-    }
-
-    if (Modernizr.prefixed("MaxTouchPoints", navigator) > 1) {
-      hasTouch = true;
-    }
-
-    if (hasTouch) {
-      $html.addClass('discourse-touch');
-      this.touch = true;
-      this.hasTouch = true;
-    } else {
-      $html.addClass('discourse-no-touch');
-      this.touch = false;
-    }
-
-    $('#main').on('click.discourse', '[data-not-implemented=true]', function(e) {
-      e.preventDefault();
-      alert(I18n.t('not_implemented'));
-      return false;
-    });
-
     $('#main').on('click.discourse', 'a', function(e) {
       if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) { return; }
 
