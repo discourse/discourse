@@ -8,4 +8,4 @@ Discourse.addInitializer(function() {
   // clicking outside a bootbox modal closes it
   bootbox.backdrop(true);
 
-});
+}, true);

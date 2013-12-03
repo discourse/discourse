@@ -23,4 +23,4 @@ Discourse.addInitializer(function() {
   // iPads should report as 1024.
   caps.set('highRes', Modernizr.mq("only screen and (min-width: 1280px)"));
 
-});
+}, true);

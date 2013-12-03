@@ -15,5 +15,5 @@ Discourse.addInitializer(function() {
     }
   });
 
-});
+}, true);
 

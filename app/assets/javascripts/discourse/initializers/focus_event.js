@@ -13,4 +13,4 @@ Discourse.addInitializer(function() {
     self.set('hasFocus', false);
   });
 
-});
+}, true);

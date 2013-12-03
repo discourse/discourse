@@ -8,5 +8,5 @@ Discourse.addInitializer(function() {
     Discourse.Formatter.updateRelativeAge($('.relative-date'));
   }, 60 * 1000);
 
-});
+}, true);
 

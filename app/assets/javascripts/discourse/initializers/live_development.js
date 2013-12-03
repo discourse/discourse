@@ -3,8 +3,6 @@
 **/
 Discourse.addInitializer(function() {
 
-  console.log('live reloading');
-
   // subscribe to any site customizations that are loaded
   $('link.custom-css').each(function() {
     var split = this.href.split("/"),
@@ -70,4 +68,4 @@ Discourse.addInitializer(function() {
     });
   });
 
-});
+}, true);

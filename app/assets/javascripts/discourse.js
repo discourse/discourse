@@ -100,10 +100,12 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
     @method addInitializer
     @param {Function} init the initializer to add.
+    @param {Boolean} immediate whether to execute the function right away.
+                      Default is false, for next run loop. If unsure, use false.
   **/
-  addInitializer: function(init) {
+  addInitializer: function(init, immediate) {
     Discourse.initializers = Discourse.initializers || [];
-    Discourse.initializers.push(init);
+    Discourse.initializers.push({fn: init, immediate: !!immediate});
   },
 
   /**
@@ -115,10 +117,14 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     var initializers = this.initializers;
     if (initializers) {
       var self = this;
-      Em.run.next(function() {
-        initializers.forEach(function (init) {
-          init.call(self);
-        });
+      initializers.forEach(function (init) {
+        if (init.immediate) {
+          init.fn.call(self);
+        } else {
+          Em.run.next(function() {
+            init.fn.call(self);
+          });
+        }
       });
     }
   }

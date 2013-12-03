@@ -28,5 +28,6 @@ Discourse.addInitializer(function() {
       });
     });
   }
-});
+
+}, true);
 

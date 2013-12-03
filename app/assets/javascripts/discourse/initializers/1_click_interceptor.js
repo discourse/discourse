@@ -29,4 +29,4 @@ Discourse.addInitializer(function() {
     return false;
   });
 
-});
+}, true);

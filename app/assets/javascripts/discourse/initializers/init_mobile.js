@@ -3,5 +3,5 @@
 **/
 Discourse.addInitializer(function() {
   Discourse.Mobile.init();
-});
+}, true);
 
