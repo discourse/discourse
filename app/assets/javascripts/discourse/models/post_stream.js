@@ -563,6 +563,12 @@ Discourse.PostStream = Em.Object.extend({
 
       post.set('topic', this.get('topic'));
       postIdentityMap.set(post.get('id'), post);
+
+      // Update the `highest_post_number` if this post is higher.
+      var postNumber = post.get('post_number');
+      if (postNumber && postNumber > (this.get('topic.highest_post_number') || 0)) {
+        this.set('topic.highest_post_number', postNumber);
+      }
     }
     return post;
   },
