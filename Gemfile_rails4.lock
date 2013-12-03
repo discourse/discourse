@@ -519,7 +519,7 @@ DEPENDENCIES
   rack-cors
   rack-mini-profiler!
   rack-protection
-  rails (= 4.0.2)
+  rails
   rails-observers
   rails_multisite!
   rake
