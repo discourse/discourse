@@ -1189,7 +1189,7 @@ describe Guardian do
       let(:target_user) { build(:user, created_at: 1.minute.ago) }
       include_examples "staff can always change usernames"
 
-      it "is true for the user to change his own username" do
+      it "is true for the user to change their own username" do
         Guardian.new(target_user).can_edit_username?(target_user).should be_true
       end
     end
@@ -1203,7 +1203,7 @@ describe Guardian do
 
       context 'with no posts' do
         include_examples "staff can always change usernames"
-        it "is true for the user to change his own username" do
+        it "is true for the user to change their own username" do
           Guardian.new(target_user).can_edit_username?(target_user).should be_true
         end
       end
@@ -1211,7 +1211,7 @@ describe Guardian do
       context 'with posts' do
         before { target_user.stubs(:post_count).returns(1) }
         include_examples "staff can always change usernames"
-        it "is false for the user to change his own username" do
+        it "is false for the user to change their own username" do
           Guardian.new(target_user).can_edit_username?(target_user).should be_false
         end
       end
@@ -1224,7 +1224,7 @@ describe Guardian do
 
       include_examples "staff can always change usernames"
 
-      it "is false for the user to change his own username" do
+      it "is false for the user to change their own username" do
         Guardian.new(user).can_edit_username?(user).should be_false
       end
     end
@@ -1244,7 +1244,7 @@ describe Guardian do
         Guardian.new(build(:user)).can_edit_email?(build(:user, created_at: 1.minute.ago)).should be_false
       end
 
-      it "is true for a regular user to edit his own email" do
+      it "is true for a regular user to edit their own email" do
         Guardian.new(user).can_edit_email?(user).should be_true
       end
 
@@ -1270,7 +1270,7 @@ describe Guardian do
         Guardian.new(build(:user)).can_edit_email?(build(:user, created_at: 1.minute.ago)).should be_false
       end
 
-      it "is false for a regular user to edit his own email" do
+      it "is false for a regular user to edit their own email" do
         Guardian.new(user).can_edit_email?(user).should be_false
       end
 
