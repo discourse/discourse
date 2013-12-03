@@ -104,7 +104,7 @@ d.write('<style>#ember-testing-container { position: absolute; background: white
 Discourse.rootElement = '#ember-testing';
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
-Discourse.bindDOMEvents();
+Discourse.runInitializers();
 
 Discourse.Router.map(function() {
   Discourse.routeBuilder.call(this);
