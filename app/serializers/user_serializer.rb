@@ -18,7 +18,6 @@ class UserSerializer < BasicUserSerializer
              :moderator,
              :admin,
              :title,
-             :suspended,
              :suspend_reason,
              :suspended_till
 
@@ -97,10 +96,6 @@ class UserSerializer < BasicUserSerializer
 
   def include_name?
     SiteSetting.enable_names?
-  end
-
-  def suspended
-    object.suspended?
   end
 
   def include_suspended?

@@ -99,6 +99,10 @@ Discourse.User = Discourse.Model.extend({
 
   isSuspended: Em.computed.equal('suspended', true),
 
+  suspended: function() {
+    return this.get('suspended_till') && moment(this.get('suspended_till')).isAfter();
+  }.property('suspended_till'),
+
   suspendedTillDate: function() {
     return Discourse.Formatter.longDate(this.get('suspended_till'));
   }.property('suspended_till'),
