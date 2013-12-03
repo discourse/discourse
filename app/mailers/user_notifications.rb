@@ -46,7 +46,7 @@ class UserNotifications < ActionMailer::Base
       @featured_topics, @new_topics = @featured_topics[0..4], @featured_topics[5..-1]
 
       # Sort the new topics by score
-      @new_topics.sort! {|a, b| b.score - a.score } if @new_topics.present?
+      @new_topics.sort! {|a, b| (b.score || 0) - (a.score || 0) } if @new_topics.present?
 
       @markdown_linker = MarkdownLinker.new(Discourse.base_url)
 

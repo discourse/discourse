@@ -28,7 +28,7 @@ module Email
         end
 
         # ensure no schemaless urls
-        if img['src'].starts_with?("//")
+        if img['src'] && img['src'].starts_with?("//")
           img['src'] = "http:" + img['src']
         end
       end
