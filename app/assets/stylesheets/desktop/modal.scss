@@ -225,10 +225,9 @@
 .edit-category-modal {
   .modal-body {
     position: relative;
-    height: 350px;
-  }
-  &.small .modal-body {
-    height: 310px;
+    height: 420px;
+    max-height: 420px;
+    padding-bottom: 0;
   }
   .secure-category-options {
     margin: 10px 0 0 16px;
