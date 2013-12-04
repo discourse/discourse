@@ -605,7 +605,7 @@ class Topic < ActiveRecord::Base
   # TODO: change this method, along with category's auto_close_days. Use hours.
   def auto_close_days=(num_days)
     @ignore_category_auto_close = true
-    set_auto_close(num_days * 24)
+    set_auto_close( num_days ? num_days * 24 : nil)
   end
 
   def self.auto_close

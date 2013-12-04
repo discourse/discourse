@@ -210,6 +210,11 @@ describe Category do
       @category.topic_url.should be_present
     end
 
+    it "should not set its description topic to auto-close" do
+      category = Fabricate(:category, name: 'Closing Topics', auto_close_days: 1)
+      category.topic.auto_close_at.should be_nil
+    end
+
     describe "creating a new category with the same slug" do
       it "should have a blank slug" do
         Fabricate(:category, name: "Amazing Categóry").slug.should be_blank
