@@ -219,6 +219,10 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   },
 
+  slackRatio: function() {
+    return Discourse.Capabilities.currentProp('slackRatio');
+  }.property(),
+
   jumpTopDisabled: function() {
     return (this.get('progressPosition') <= 3);
   }.property('progressPosition'),
