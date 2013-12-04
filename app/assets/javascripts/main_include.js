@@ -32,6 +32,7 @@
 //= require rsvp.js
 //= require show-html.js
 //= require lock-on.js
+//= require ember-cloaking
 
 //= require ./discourse/helpers/i18n_helpers
 //= require ./discourse/mixins/ajax
