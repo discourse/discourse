@@ -152,14 +152,18 @@
 
   @include medium-width {
     .main-link {
-      width: 380px;
+      width: 300px;
     }
   }
-  @include small-width {
+
+   @include small-width {
     .main-link {
-      width: 335px;
+     width: 300px;
+
     }
+
   }
+
   .topic-statuses:empty {
     display: none;
   }
@@ -178,7 +182,8 @@
     width: 140px;
   }
   .posters {
-    width: 170px;
+    max-width: 220px;
+    min-width: 150px;
     > a {
       float: left;
       margin-right: 4px;
