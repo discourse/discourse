@@ -87,7 +87,7 @@
     **/
     scrolled: function() {
       var childViews = this.get('childViews');
-      if (childViews.length === 0) { return; }
+      if ((!childViews) || (childViews.length === 0)) { return; }
 
       var toUncloak = [],
           $w = $(window),
