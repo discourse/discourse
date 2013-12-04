@@ -82,7 +82,7 @@ nl:
 
   education:
     until_posts:
-      one: bericht
+      one: één bericht
       other: "%{count} berichten"
 
     'new-topic': |
@@ -440,7 +440,7 @@ nl:
     title_nag: "Je hebt nog geen title ingesteld voor je site. Geef een titel voor je site op in de <a href='/admin/site_settings'>Instellingen</a>."
     site_description_missing: "Er is nog geen omschrijving van deze site. Schrijf een korte omschrijving in de <a href='/admin/site_settings'>Instellingen</a>"
     consumer_email_warning: "Je site is ingesteld om Gmail te gebruiken voor het versturen van mails. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail heeft limieten voor het aantal mails dat je kan versturen</a>. Overweeg om een andere e-mailprovider te gebruiken om er zeker van te zijn dat mails aankomen."
-    access_password_removal: "Je site gebruikte een toegangswachtwoord (access_password) setting, maar die optie is uit Discourse verwijderd. De login_required en must_approve_users instellingen zijn er voor in de plaats gekomen. Je kan ze in <a href='/admin/site_settings'>de Instellingen</a> aanpassen. Zorg er voor dat je <a href='/admin/users/list/pending'>gebruikers op de wachtlijst accepteert</a>. (Dit bericht verdwijnt na twee dagen.)"
+    access_password_removal: "Je site gebruikte een toegangswachtwoord (access_password) setting, maar die optie is uit Discourse verwijderd. De login_required en must_approve_users instellingen zijn er voor in de plaats gekomen. Je kan ze in <a href='/admin/site_settings'>de Instellingen</a> aanpassen. Zorg er voor dat je <a href='%{base_url}/admin/users/list/pending'>gebruikers op de wachtlijst accepteert</a>. (Dit bericht verdwijnt na twee dagen.)"
     site_contact_username_warning: "De instelling site_contact_username is leeg. Werk deze bij in <a href='/admin/site_settings'>de Instellingen</a>. Stel het in op de gebruikersnaam van een admin die als afzender van de systeemberichten zal worden wordt gebruikt."
     notification_email_warning: "De instelling notification_email is leeg. Werk deze bij in <a href='/admin/site_settings'>de Instellingen</a>."
     enforce_global_nicknames_warning: "De instelling enforce_global_nicknames is geselecteerd, maar de discourse_org_access_key is niet ingevuld. Een Discourse.org access key is nodig omvoor de enforce_global_nicknames instelling. Werk je <a href='/admin/site_settings'>instellingen</a> bij."
@@ -635,7 +635,8 @@ nl:
     suggested_topics: Het aantal aanbevolen topics dat is weergegeven aan de onderkant van een topic
 
     clean_up_uploads: "Verwijder weesbestanden om illegale hosting te voorkomen. LET OP: maak een backup van je /uploads directory voordat je deze instelling activeert."
-    clean_orphan_uploads_grace_period_hours: Na hoeveel uur een weesbestand verwijderd wordt.
+    clean_orphan_uploads_grace_period_hours: Na hoeveel uur een weesbestand voor verwijderding gemarkeerd wordt.
+    purge_deleted_uploads_grace_period_days: Na hoeveel uur een weesbestand definitief verwijderd wordt.
     enable_s3_uploads: Of we uploads op Amazon S3 willen zetten of niet
     s3_upload_bucket: "De 'bucket' waarin we onze uploads naar Amazon S3 willen zetten"
     s3_access_key_id: "De Amazon S3 access key id dat wordt gebruikt om afbeeldingen te uploaden"
@@ -1118,6 +1119,10 @@ nl:
       from: "%{site_name} Digest"
       read_more: Lees verder
 
+      posts:
+        one: één bericht
+        other: "%{count} berichten"
+
     forgot_password:
       subject_template: "[%{site_name}] Wachtwoord herstellen"
       text_body_template: |
@@ -1187,7 +1192,7 @@ nl:
   deleted: 'verwijderd'
 
   upload:
-    edit_reason: "We hebben een kopie van de externe afbeeldingen gedownload"
+    edit_reason: "We hebben kopieën van de externe afbeeldingen gedownload"
     unauthorized: 'Sorry, je mag dat bestand niet uploaden (toegestane extensies: %{authorized_extensions}).'
     pasted_image_filename: Geplakte afbeelding
     attachment:

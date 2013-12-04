@@ -399,7 +399,7 @@ nl:
     email: E-mail
     username: Gebruikersnaam
     last_seen: Gezien
-    created: Gemaakt op
+    created: Gemaakt
     trust_level: Trustlevel
 
     create_account:
@@ -521,8 +521,10 @@ nl:
       toggler: verberg of toon de editor
 
       admin_options_title: "Optionele stafinstellingen voor deze topic"
-      auto_close_label: "Sluit topic automatisch na:"
-      auto_close_units: "dagen"
+      auto_close_label: "Sluit topic automatisch:"
+      auto_close_units: "(# uren, een tijd of een volledige datum en tijd)"
+      auto_close_examples: 'Voorbeelden: 24, 17:00, 22-11-2013 14:00'
+      auto_close_error: "Vul een geldige waarde in."
 
     notifications:
       title: "notificaties van @naam vermeldingen, reacties op je berichten en topics, privé-berichten, etc."
@@ -985,6 +987,7 @@ nl:
       already_used: Deze kleur is al in gebruik door een andere categorie
       security: Beveiliging
       auto_close_label: "Sluit topics automatisch na:"
+      auto_close_units: dagen
       edit_permissions: Wijzig permissies
       add_permission: Nieuwe permissie
       this_year: dit jaar
@@ -1228,12 +1231,12 @@ nl:
         send_test: verstuur test e-mail
         sent_test: Verzonden!
         delivery_method: Verzendmethode
-        preview_digest: "Preview Digest"
+        preview_digest: Voorbeeld digestmail
         preview_digest_desc: "Hiermee kun je een voorbeeld van de digest email zien die vanaf het forum wordt verstuurd."
-        refresh: "Refresh"
-        format: "Formaat"
-        html: "html"
-        text: "text"
+        refresh: Verniew
+        format: Formaat
+        html: html
+        text: text
         last_seen_user: "Laatste gebruiker:"
         reply_key: Reply key
 
@@ -1275,26 +1278,26 @@ nl:
             delete_site_customization: verwijder site aanpassingen
             suspend_user: schors gebruiker
             unsuspend_user: hef schorsing op
-          screened_emails:
-            title: Gescreende e-mails
-            description: Nieuwe accounts met een van deze mailadressen worden geblokkeerd of een andere actie wordt ondernomen.
-            email: E-mailadres
-          screened_urls:
-            title: Gescreende urls
-            description: Deze urls zijn gebruikt door gebruikers die als spammer gemarkeerd zijn.
-            url: URL
-            domain: Domein
-          screened_ips:
-            title: Gescreende ip-adressen
-            description: IP-adressen die in de gaten worden gehouden. Kies 'sta toe' om deze op een witte lijst te zetten.
-            delete_confirm: "Weet je zeker dat je de regel voor %{ip_address} wil verwijderen?"
-            actions:
-              block: Blokkeer
-              do_nothing: Sta toe
-            form:
-              label: "Nieuw:"
-              ip_address: IP-adres
-              add: Voeg toe
+        screened_emails:
+          title: Gescreende e-mails
+          description: Nieuwe accounts met een van deze mailadressen worden geblokkeerd of een andere actie wordt ondernomen.
+          email: E-mailadres
+        screened_urls:
+          title: Gescreende urls
+          description: Deze urls zijn gebruikt door gebruikers die als spammer gemarkeerd zijn.
+          url: URL
+          domain: Domein
+        screened_ips:
+          title: Gescreende ip-adressen
+          description: IP-adressen die in de gaten worden gehouden. Kies 'sta toe' om deze op een witte lijst te zetten.
+          delete_confirm: "Weet je zeker dat je de regel voor %{ip_address} wil verwijderen?"
+          actions:
+            block: Blokkeer
+            do_nothing: Sta toe
+          form:
+            label: "Nieuw:"
+            ip_address: IP-adres
+            add: Voeg toe
 
       impersonate:
         title: Log in als gebruiker
@@ -1379,12 +1382,12 @@ nl:
         private_topics_count: Privé-topics
         posts_read_count: Berichten gelezen
         post_count: Berichten gemaakt
-        topics_entered: Topics binnengegaan
+        topics_entered: Topics bekeken
         flags_given_count: Meldingen gedaan
         flags_received_count: Meldigen ontvangen
         approve: Accepteer
         approved_by: Geaccepteerd door
-        approve_succes: Gebruiker geaccepteerd en e-mail verzonden met instructies voor activering.
+        approve_success: Gebruiker geaccepteerd en e-mail verzonden met instructies voor activering.
         approve_bulk_success: Alle geselecteerde gebruikers zijn geaccepteerd en een e-mail met instructies voor activering is verstuurd.
         time_read: Tijd gelezen
         delete: Verwijder gebruiker
@@ -1405,11 +1408,11 @@ nl:
         deactivate_failed: Er ging iets mis bij het deactiveren van deze gebruiker.
         unblock_failed: Er ging iets mis bij het deblokkeren van deze gebruiker.
         block_failed: Er ging iets mis bij het blokkeren van deze gebruiker.
-        deactivation_explanation: Een gedeactiveerde gebruiker moet zijn e-mailadres opnieuw bevestigen.
-        banned_explanation: Een geschorste gebruiker kan niet meer inloggen.
+        deactivate_explanation: Een gedeactiveerde gebruiker moet zijn e-mailadres opnieuw bevestigen.
+        suspended_explanation: Een geschorste gebruiker kan niet meer inloggen.
         block_explanation: Een geblokkeerde gebruiker kan geen topics maken of reageren op topics.
         trust_level_change_failed: Er ging iets mis bij het wijzigen van het trust level van deze gebruiker.
-        ban_modal_title: Schors gebruiker
+        suspend_modal_title: Schors gebruiker
 
       site_content:
         none: Selecteer een tekst om deze te bewerken
@@ -1419,22 +1422,24 @@ nl:
       site_settings:
         show_overriden: Bekijk alleen bewerkte instellingen
         title: Instellingen
-        reset: herstel naar standaardinstellingen
+        reset: herstel
         none: geen
         no_results: "Geen resultaten."
+        categories:
+          all_results: Alle
+          required: Vereist
+          basic: Basissetup
+          users: Gebruikers
+          posting: Schrijven
+          email: E-mail
+          files: Bestanden
+          trust: Trustlevels
+          security: Beveiliging
+          seo: SEO
+          spam: Spam
+          developer: Ontwikkelaar
+          rate_limits: Rate limits
+          uncategorized: Ongecategoriseerd
 
-      categories:
-        all_results: Alle
-        required: Verplicht
-        basic: Basissetup
-        users: Gebruikers
-        posting: Schrijven
-        email: E-mail
-        files: Bestanden
-        trust: Trustlevels
-        security: Beveiliging
-        seo: SEO
-        spam: Spam
-        developer: Ontwikkelaar
-        rate_limits: Rate limits
-        uncategorized: Ongecategoriseerd
+    lightbox:
+      download: "download"
