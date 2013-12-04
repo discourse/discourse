@@ -12,7 +12,7 @@
     <%= discourse_csrf_tags %>
   </head>
   <body>
-    <%- unless session[:disable_customization] %>
+    <%- unless customization_disabled? %>
       <%= SiteCustomization.custom_header(session[:preview_style]) %>
     <%- end %>
     <section id='main'>

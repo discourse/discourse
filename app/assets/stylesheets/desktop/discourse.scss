@@ -226,7 +226,6 @@ blockquote {
   background-color: $quote-background;
   border-left: 5px solid darken($quote-background, 20%);
   p {
-    margin: 0 5px 5px 0;
   }
 }
 
@@ -323,7 +322,7 @@ body {
     color: inherit;
     text-rendering: optimizelegibility;
   }
- 
+
 
   // this removes the unwanted top margin on a paragraph under a heading
   h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {

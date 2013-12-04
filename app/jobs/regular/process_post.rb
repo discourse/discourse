@@ -10,12 +10,10 @@ module Jobs
       # two levels of deletion
       return unless post.present? && post.topic.present?
 
-      if args[:cook].present?
-        post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
-      end
+      post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id)) if args[:cook].present?
 
       cp = CookedPostProcessor.new(post, args)
-      cp.post_process
+      cp.post_process(args[:bypass_bump])
 
       # If we changed the document, save it
       post.update_column(:cooked, cp.html) if cp.dirty?

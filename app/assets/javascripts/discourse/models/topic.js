@@ -340,9 +340,9 @@ Discourse.Topic.reopenClass({
       });
     }
 
-    // Add the best of filter if we have it
-    if (opts.bestOf === true) {
-      data.best_of = true;
+    // Add the summary of filter if we have it
+    if (opts.summary === true) {
+      data.summary = true;
     }
 
     // Check the preload store. If not, load it via JSON
@@ -355,7 +355,7 @@ Discourse.Topic.reopenClass({
       data: {destination_topic_id: destinationTopicId}
     }).then(function (result) {
       if (result.success) return result;
-      promise.reject();
+      promise.reject(new Error("error merging topic"));
     });
     return promise;
   },
@@ -366,7 +366,7 @@ Discourse.Topic.reopenClass({
       data: opts
     }).then(function (result) {
       if (result.success) return result;
-      promise.reject();
+      promise.reject(new Error("error moving posts topic"));
     });
     return promise;
   }

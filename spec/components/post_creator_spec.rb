@@ -187,11 +187,10 @@ describe PostCreator do
     end
 
     context 'when auto-close param is given' do
-      it 'ensures the user can auto-close the topic' do
+      it 'ensures the user can auto-close the topic, but ignores auto-close param silently' do
         Guardian.any_instance.stubs(:can_moderate?).returns(false)
-        expect {
-          PostCreator.new(user, basic_topic_params.merge(auto_close_days: 2)).create
-        }.to raise_error(Discourse::InvalidAccess)
+        post = PostCreator.new(user, basic_topic_params.merge(auto_close_time: 2)).create
+        post.topic.auto_close_at.should be_nil
       end
     end
   end

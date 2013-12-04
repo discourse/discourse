@@ -21,18 +21,22 @@ module Email
     def send
       return if @message.blank?
       return if @message.to.blank?
-      return if @message.body.blank?
+
+      if @message.text_part
+        return if @message.text_part.body.to_s.blank?
+      else
+        return if @message.body.to_s.blank?
+      end
 
       @message.charset = 'UTF-8'
 
       opts = {}
 
-      # Only use the html template on digest emails
-      opts[:html_template] = true if (@email_type == 'digest')
-
       renderer = Email::Renderer.new(@message, opts)
 
-      unless @message.html_part
+      if @message.html_part
+        @message.html_part.body = renderer.html
+      else
         @message.html_part = Mail::Part.new do
           content_type 'text/html; charset=UTF-8'
           body renderer.html

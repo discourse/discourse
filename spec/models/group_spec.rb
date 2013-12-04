@@ -135,6 +135,8 @@ describe Group do
   end
 
   it "correctly destroys groups" do
+
+    original_count = GroupUser.count
     g = Fabricate(:group)
     u1 = Fabricate(:user)
     g.add(u1)
@@ -143,7 +145,7 @@ describe Group do
     g.destroy
 
     User.where(id: u1.id).count.should == 1
-    GroupUser.count.should == 0
+    GroupUser.count.should == original_count
   end
 
   it "allows you to lookup a new group by name" do

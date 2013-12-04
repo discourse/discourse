@@ -68,6 +68,8 @@
 
 #topic-closing-info {
   margin-left: 10px;
+  margin-top: 10px;
+  height: 20px; 
 }
 
 #topic-progress-wrapper {
@@ -168,7 +170,7 @@ a:hover.reply-new {
   #topic-progress {
   }
   position: absolute;
-  bottom: -55px;
+  bottom: -70px;
 
 }
 
@@ -190,8 +192,7 @@ a:hover.reply-new {
 .heatmap-med {color: #a00 !important;}
 .heatmap-low {color: #700 !important;}
 
-.onebox-result {margin-top: 15px;}
-.source .info {padding-right: 10px;}
+
 
 #topic-filter {
   background-color: #ffe;
@@ -228,4 +229,18 @@ fieldset{
 legend{
   border:0;
   padding:0;
+}
+
+kbd
+{
+    background-color: #fff;
+    border:1px solid #ddd;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    color: #333;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 0 .1em;
+    padding: .1em .6em;
 }

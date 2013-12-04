@@ -88,7 +88,14 @@
       </div>
       <div {{bindAttr class=":modal-tab :options-tab settingsSelected::invisible"}}>
         <section class='field'>
-          {{autoCloseForm autoCloseDays=auto_close_days labelKey="category.auto_close_label"}}
+          <div class="auto-close-fields">
+            <div>
+              <i class="icon icon-time"></i>
+              {{i18n category.auto_close_label}}
+              {{textField value=auto_close_days}}
+              {{i18n category.auto_close_units}}
+            </div>
+          </div>
         </section>
 
         <section class='field'>

@@ -322,6 +322,26 @@ Discourse.Utilities = {
         image.src = url;
       });
     }
+  },
+
+  timestampFromAutocloseString: function(arg) {
+    if (!arg) return null;
+    if (arg.match(/^[\d]{4}-[\d]{1,2}-[\d]{1,2} [\d]{1,2}:[\d]{2}/)) {
+      return moment(arg).toJSON(); // moment will add the timezone
+    } else {
+      var matches = arg.match(/^([\d]{1,2}):([\d]{2})$/); // just the time HH:MM
+      if (matches) {
+        var now = moment(),
+            t = moment(new Date(now.year(), now.month(), now.date(), matches[1], matches[2]));
+        if (t.isAfter()) {
+          return t.toJSON();
+        } else {
+          return t.add('days', 1).toJSON();
+        }
+      } else {
+        return (arg === '' ? null : arg);
+      }
+    }
   }
 
 };

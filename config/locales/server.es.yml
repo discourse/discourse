@@ -312,9 +312,9 @@ es:
     favicon_url: "Un favicon para tu sitio, ve http://en.wikipedia.org/wiki/Favicon"
     notification_email: "La dirección de emaul de respuesta utilizada cuando se envían emails del sistema tales como notificar a los usuarios de recuperación de contraseña, nuevas cuentas etc"
     use_ssl: "¿Debería ser el sitio accesible por SSL? (NO IMPLEMENTADO, EXPERIMENTAL)"
-    best_of_score_threshold: "La mínima puntuación de un post para ser incluido en los 'best of'"
-    best_of_posts_required: "Mínimo número de posts en un topic antes de que el modo 'best of' sea activado "
-    best_of_likes_required: "Mínimo número de me gustas en un topic antes de que el modo 'best of' sea activado"
+    summary_score_threshold: "La mínima puntuación de un post para ser incluido en los 'summary'"
+    summary_posts_required: "Mínimo número de posts en un topic antes de que el modo 'summary' sea activado "
+    summary_likes_required: "Mínimo número de me gustas en un topic antes de que el modo 'summary' sea activado"
     enable_private_messages: "Permitir el nivel básico de confianza en los usuarios (1) para crear mensajes privados y contestar a mensajes privados"
 
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"

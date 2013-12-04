@@ -1,4 +1,12 @@
-Discourse.DiscourseCategorydropComponent = Ember.Component.extend({
+/**
+  Renders a drop down for selecting a category
+
+  @class CategoryDropComponent
+  @extends Ember.Component
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.CategoryDropComponent = Ember.Component.extend({
   classNameBindings: ['category::no-category', 'categories:has-drop'],
   tagName: 'li',
 

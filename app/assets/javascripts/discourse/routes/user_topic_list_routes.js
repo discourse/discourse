@@ -45,6 +45,6 @@ Discourse.UserActivityFavoritesRoute = Discourse.UserTopicListRoute.extend({
   userActionType: Discourse.UserAction.TYPES.favorites,
 
   model: function() {
-    return Discourse.TopicList.find('favorited?user_id=' + this.modelFor('user').get('id'));
+    return Discourse.TopicList.find('favorited', {user_id: this.modelFor('user').get('id') });
   }
 });

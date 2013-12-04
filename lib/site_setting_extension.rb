@@ -30,6 +30,10 @@ module SiteSettingExtension
     @defaults ||= {}
   end
 
+  def categories
+    @categories ||= {}
+  end
+
   def enums
     @enums ||= {}
   end
@@ -38,9 +42,11 @@ module SiteSettingExtension
     @hidden_settings ||= []
   end
 
-  def setting(name, default = nil, opts = {})
+  def setting(name_arg, default = nil, opts = {})
+    name = name_arg.to_sym
     mutex.synchronize do
       self.defaults[name] = default
+      categories[name] = opts[:category] || :uncategorized
       current_value = current.has_key?(name) ? current[name] : default
       if opts[:enum]
         enum = opts[:enum]
@@ -54,8 +60,8 @@ module SiteSettingExtension
   end
 
   # just like a setting, except that it is available in javascript via DiscourseSession
-  def client_setting(name, default = nil)
-    setting(name,default)
+  def client_setting(name, default = nil, opts = {})
+    setting(name, default, opts)
     @@client_settings ||= []
     @@client_settings << name
   end
@@ -93,7 +99,8 @@ module SiteSettingExtension
          description: description(s),
          default: v,
          type: type.to_s,
-         value: value.to_s}.merge( type == :enum ? {valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?} : {})
+         value: value.to_s,
+         category: categories[s]}.merge( type == :enum ? {valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?} : {})
       end
   end
 

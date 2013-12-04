@@ -41,6 +41,9 @@ module FileStore
     def absolute_avatar_template(avatar)
     end
 
+    def purge_tombstone(grace_period)
+    end
+
   end
 
 end

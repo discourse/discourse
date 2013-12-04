@@ -112,7 +112,7 @@ module ApplicationHelper
   end
 
   def login_path
-    return "#{Discourse::base_uri}/login"
+    "#{Discourse::base_uri}/login"
   end
 
   def mobile_view?
@@ -128,4 +128,9 @@ module ApplicationHelper
     # TODO: this is dumb. user agent matching is a doomed approach. a better solution is coming.
     request.user_agent =~ /Mobile|webOS|Nexus 7/ and !(request.user_agent =~ /iPad/)
   end
+
+  def customization_disabled?
+    controller.class.name.split("::").first == "Admin" || session[:disable_customization]
+  end
+
 end

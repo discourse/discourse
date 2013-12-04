@@ -25,6 +25,10 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
     if status.manually_closing_topic? && topic.auto_close_at
       topic.reload.set_auto_close(nil).save
     end
+
+    # pick up the changes right away as opposed to waiting for
+    # the schedule
+    CategoryFeaturedTopic.feature_topics_for(topic.category)
   end
 
   def create_moderator_post_for(status)

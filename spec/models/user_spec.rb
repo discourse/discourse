@@ -3,25 +3,43 @@ require_dependency 'user'
 
 describe User do
 
-  it { should have_many :posts }
-  it { should have_many :notifications }
-  it { should have_many :topic_users }
-  it { should have_many :post_actions }
-  it { should have_many :user_actions }
-  it { should have_many :topics }
-  it { should have_many :user_open_ids }
-  it { should have_many :post_timings }
-  it { should have_many :email_tokens }
-  it { should have_many :views }
-  it { should have_many :user_visits }
-  it { should belong_to :approved_by }
-  it { should have_many :email_logs }
-  it { should have_many :topic_allowed_users }
-  it { should have_many :invites }
+  it { should have_many(:posts) }
+  it { should have_many(:notifications).dependent(:destroy) }
+  it { should have_many(:topic_users).dependent(:destroy) }
+  it { should have_many(:topics) }
+  it { should have_many(:user_open_ids).dependent(:destroy) }
+  it { should have_many(:user_actions).dependent(:destroy) }
+  it { should have_many(:post_actions).dependent(:destroy) }
+  it { should have_many(:email_logs).dependent(:destroy) }
+  it { should have_many(:post_timings) }
+  it { should have_many(:topic_allowed_users).dependent(:destroy) }
+  it { should have_many(:topics_allowed) }
+  it { should have_many(:email_tokens).dependent(:destroy) }
+  it { should have_many(:views) }
+  it { should have_many(:user_visits).dependent(:destroy) }
+  it { should have_many(:invites).dependent(:destroy) }
+  it { should have_many(:topic_links).dependent(:destroy) }
+  it { should have_many(:uploads) }
+
+  it { should have_one(:facebook_user_info).dependent(:destroy) }
+  it { should have_one(:twitter_user_info).dependent(:destroy) }
+  it { should have_one(:github_user_info).dependent(:destroy) }
+  it { should have_one(:cas_user_info).dependent(:destroy) }
+  it { should have_one(:oauth2_user_info).dependent(:destroy) }
+  it { should have_one(:user_stat).dependent(:destroy) }
+  it { should belong_to(:approved_by) }
+
+  it { should have_many(:group_users).dependent(:destroy) }
+  it { should have_many(:groups) }
+  it { should have_many(:secure_categories) }
+
+  it { should have_one(:user_search_data).dependent(:destroy) }
+  it { should have_one(:api_key).dependent(:destroy) }
+
+  it { should belong_to(:uploaded_avatar).dependent(:destroy) }
 
   it { should validate_presence_of :username }
   it { should validate_presence_of :email }
-
 
   context '.enqueue_welcome_message' do
     let(:user) { Fabricate(:user) }
@@ -881,6 +899,77 @@ describe User do
         expect(user.api_key).to be_blank
       end
 
+    end
+
+  end
+
+  describe "#find_email" do
+
+    let(:user) { Fabricate(:user, email: "bob@example.com") }
+
+    context "when email is exists in the email logs" do
+      before { user.stubs(:last_sent_email_address).returns("bob@lastemail.com") }
+
+      it "returns email from the logs" do
+        expect(user.find_email).to eq("bob@lastemail.com")
+      end
+    end
+
+    context "when email does not exist in the email logs" do
+      before { user.stubs(:last_sent_email_address).returns(nil) }
+
+      it "fetches the user's email" do
+        expect(user.find_email).to eq(user.email)
+      end
+    end
+  end
+
+  describe "#gravatar_template" do
+
+    it "returns a gravatar based template" do
+      User.gravatar_template("em@il.com").should == "//www.gravatar.com/avatar/6dc2fde946483a1d8a84b89345a1b638.png?s={size}&r=pg&d=identicon"
+    end
+
+  end
+
+  describe ".small_avatar_url" do
+
+    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "http://test.localhost/uploaded/avatar/template/{size}.png") }
+
+    it "returns a 45-pixel-wide avatar" do
+      user.small_avatar_url.should == "//test.localhost/uploaded/avatar/template/45.png"
+    end
+
+  end
+
+  describe ".uploaded_avatar_path" do
+
+    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "http://test.localhost/uploaded/avatar/template/{size}.png") }
+
+    it "returns nothing when uploaded avatars are not allowed" do
+      SiteSetting.expects(:allow_uploaded_avatars).returns(false)
+      user.uploaded_avatar_path.should be_nil
+    end
+
+    it "returns a schemaless avatar template" do
+      user.uploaded_avatar_path.should == "//test.localhost/uploaded/avatar/template/{size}.png"
+    end
+
+  end
+
+  describe ".avatar_template" do
+
+    let(:user) { build(:user, email: "em@il.com") }
+
+    it "returns the uploaded_avatar_path by default" do
+      user.expects(:uploaded_avatar_path).returns("/uploaded/avatar.png")
+      user.avatar_template.should == "/uploaded/avatar.png"
+    end
+
+    it "returns the gravatar when no avatar has been uploaded" do
+      user.expects(:uploaded_avatar_path)
+      User.expects(:gravatar_template).with(user.email).returns("//gravatar.com/avatar.png")
+      user.avatar_template.should == "//gravatar.com/avatar.png"
     end
 
   end

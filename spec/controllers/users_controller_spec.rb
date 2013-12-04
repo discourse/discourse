@@ -545,7 +545,7 @@ describe UsersController do
       DiscourseHub.stubs(:nickname_available?).returns([true, nil])
     end
 
-    it 'raises an error without a username parameter' do
+    it 'raises an error without any parameters' do
       lambda { xhr :get, :check_username }.should raise_error(ActionController::ParameterMissing)
     end
 
@@ -580,29 +580,19 @@ describe UsersController do
         DiscourseHub.expects(:nickname_match?).never
       end
 
-      context 'available everywhere' do
+      it 'returns nothing when given an email param but no username' do
+        xhr :get, :check_username, email: 'dood@example.com'
+        response.should be_success
+      end
+
+      context 'username is available' do
         before do
           xhr :get, :check_username, username: 'BruceWayne'
         end
         include_examples 'when username is available everywhere'
       end
 
-      context 'available locally but not globally' do
-        before do
-          xhr :get, :check_username, username: 'BruceWayne'
-        end
-        include_examples 'when username is available everywhere'
-      end
-
-      context 'unavailable locally but available globally' do
-        let!(:user) { Fabricate(:user) }
-        before do
-          xhr :get, :check_username, username: user.username
-        end
-        include_examples 'when username is unavailable locally'
-      end
-
-      context 'unavailable everywhere' do
+      context 'username is unavailable' do
         let!(:user) { Fabricate(:user) }
         before do
           xhr :get, :check_username, username: user.username
@@ -641,7 +631,7 @@ describe UsersController do
         end
         include_examples 'checking an invalid username'
 
-        it 'should return the "too short" message' do
+        it 'should return the "too long" message' do
           ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.long', max: User.username_length.end))
         end
       end
@@ -679,11 +669,19 @@ describe UsersController do
           include_examples 'check_username when nickname is available everywhere'
         end
 
-        context 'and email is given' do
+        context 'both username and email is given' do
           before do
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@gmail.com'
           end
           include_examples 'check_username when nickname is available everywhere'
+        end
+
+        context 'only email is given' do
+          it "should check for a matching username" do
+            UsernameCheckerService.any_instance.expects(:check_username).with(nil, 'brucie@gmail.com').returns({json: 'blah'})
+            xhr :get, :check_username, email: 'brucie@gmail.com'
+            response.should be_success
+          end
         end
       end
 

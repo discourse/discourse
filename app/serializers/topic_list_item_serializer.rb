@@ -3,7 +3,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   attributes :views,
              :like_count,
              :starred,
-             :has_best_of,
+             :has_summary,
              :archetype,
              :rank_details,
              :last_poster_username,

@@ -9,20 +9,23 @@
 **/
 Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
 
-  setDays: function() {
+  auto_close_valid: true,
+  auto_close_invalid: Em.computed.not('auto_close_valid'),
+
+  setAutoCloseTime: function() {
     if( this.get('details.auto_close_at') ) {
       var closeTime = new Date( this.get('details.auto_close_at') );
       if (closeTime > new Date()) {
-        this.set('auto_close_days', Math.round(moment(closeTime).diff(new Date(), 'days', true)));
+        this.set('auto_close_time', moment(closeTime).format("YYYY-MM-DD HH:mm"));
       }
     } else {
-      this.set('details.auto_close_days', '');
+      this.set('details.auto_close_time', '');
     }
   }.observes('details.auto_close_at'),
 
   actions: {
     saveAutoClose: function() {
-      this.setAutoClose( parseFloat(this.get('auto_close_days')) );
+      this.setAutoClose( this.get('auto_close_time') );
     },
 
     removeAutoClose: function() {
@@ -30,19 +33,23 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
     }
   },
 
-  setAutoClose: function(days) {
+  setAutoClose: function(time) {
     var self = this;
     this.send('hideModal');
     Discourse.ajax({
       url: '/t/' + this.get('id') + '/autoclose',
       type: 'PUT',
-      dataType: 'html', // no custom errors, jquery 1.9 enforces json
-      data: { auto_close_days: days > 0 ? days : null }
-    }).then(function(){
-      self.send('closeModal');
-      self.set('details.auto_close_at', moment().add('days', days).format());
+      dataType: 'json',
+      data: { auto_close_time: Discourse.Utilities.timestampFromAutocloseString(time) }
+    }).then(function(result){
+      if (result.success) {
+        self.send('closeModal');
+        self.set('details.auto_close_at', result.auto_close_at);
+      } else {
+        bootbox.alert(I18n.t('composer.auto_close_error'), function() { self.send('showModal'); } );
+      }
     }, function (error) {
-      bootbox.alert(I18n.t('generic_error'), function() { self.send('showModal'); } );
+      bootbox.alert(I18n.t('composer.auto_close_error'), function() { self.send('showModal'); } );
     });
   }
 

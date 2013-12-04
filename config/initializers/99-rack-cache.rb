@@ -6,7 +6,7 @@ enabled = if Rails.configuration.respond_to?(:enable_anon_caching)
             Rails.env.production?
           end
 
-if enabled
+if !ENV['DISCOURSE_DISABLE_ANON_CACHE'] && enabled
   Rails.configuration.middleware.insert 0, Middleware::AnonymousCache
 end
 

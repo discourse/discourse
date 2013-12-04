@@ -217,13 +217,20 @@ describe PostsController do
 
       let(:post) { Fabricate(:post, user: log_in) }
       let(:update_params) do
-        {id: post.id,
-         post: {raw: 'edited body'},
-         image_sizes: {'http://image.com/image.jpg' => {'width' => 123, 'height' => 456}}}
+        {
+          id: post.id,
+          post: { raw: 'edited body', edit_reason: 'typo' },
+          image_sizes: { 'http://image.com/image.jpg' => {'width' => 123, 'height' => 456} },
+        }
       end
 
       it 'passes the image sizes through' do
         Post.any_instance.expects(:image_sizes=)
+        xhr :put, :update, update_params
+      end
+
+      it 'passes the edit reason through' do
+        Post.any_instance.expects(:edit_reason=)
         xhr :put, :update, update_params
       end
 
@@ -241,7 +248,7 @@ describe PostsController do
       end
 
       it "calls revise with valid parameters" do
-        PostRevisor.any_instance.expects(:revise!).with(post.user, 'edited body')
+        PostRevisor.any_instance.expects(:revise!).with(post.user, 'edited body', edit_reason: 'typo')
         xhr :put, :update, update_params
       end
 

@@ -58,8 +58,11 @@ Fabricator(:post_with_unsized_images, from: :post) do
 '
 end
 
-Fabricator(:post_with_image_url, from: :post) do
-  cooked '<img src="http://foo.bar/image.png" width="50" height="42">'
+Fabricator(:post_with_image_urls, from: :post) do
+  cooked '
+<img src="http://foo.bar/image.png">
+<img src="http://domain.com/picture.jpg" width="50" height="42">
+'
 end
 
 Fabricator(:post_with_large_image, from: :post) do

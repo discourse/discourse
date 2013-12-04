@@ -29,8 +29,9 @@ class PostsController < ApplicationController
     params = create_params
 
     key = params_key(params)
+    error_json = nil
 
-    result = DistributedMemoizer.memoize(key, 120) do
+    payload = DistributedMemoizer.memoize(key, 120) do
       post_creator = PostCreator.new(current_user, params)
       post = post_creator.create
       if post_creator.errors.present?
@@ -38,24 +39,21 @@ class PostsController < ApplicationController
         # If the post was spam, flag all the user's posts as spam
         current_user.flag_linked_posts_as_spam if post_creator.spam?
 
-        "e" << MultiJson.dump(errors: post_creator.errors.full_messages)
+        error_json = MultiJson.dump(errors: post_creator.errors.full_messages)
+        raise Discourse::InvalidPost
+
       else
         post_serializer = PostSerializer.new(post, scope: guardian, root: false)
         post_serializer.topic_slug = post.topic.slug if post.topic.present?
         post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
-        "s" << MultiJson.dump(post_serializer)
+        MultiJson.dump(post_serializer)
       end
     end
 
+    render json: payload
 
-    payload = result[1..-1]
-    if result[0] == "e"
-      # don't memoize errors
-      $redis.del(DistributedMemoizer.redis_key(key))
-      render json: payload, status: 422
-    else
-      render json: payload
-    end
+  rescue Discourse::InvalidPost
+    render json: error_json, status: 422
   end
 
   def update
@@ -82,7 +80,7 @@ class PostsController < ApplicationController
     end
 
     revisor = PostRevisor.new(post)
-    if revisor.revise!(current_user, params[:post][:raw])
+    if revisor.revise!(current_user, params[:post][:raw], edit_reason: params[:post][:edit_reason])
       TopicLink.extract_from(post)
     end
 
@@ -157,7 +155,6 @@ class PostsController < ApplicationController
     posts.each {|p| guardian.ensure_can_delete!(p) }
 
     Post.transaction do
-      topic_id = posts.first.topic_id
       posts.each {|p| PostDestroyer.new(current_user, p).destroy }
     end
 
@@ -228,7 +225,7 @@ class PostsController < ApplicationController
         :category,
         :target_usernames,
         :reply_to_post_number,
-        :auto_close_days,
+        :auto_close_time,
         :auto_track
       ]
 

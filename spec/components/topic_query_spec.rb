@@ -24,8 +24,8 @@ describe TopicQuery do
       TopicQuery.new(nil).list_latest.topics.count.should == 0
       TopicQuery.new(user).list_latest.topics.count.should == 0
 
-      TopicQuery.top_viewed(10).count.should == 0
-      TopicQuery.recent(10).count.should == 0
+      Topic.top_viewed(10).count.should == 0
+      Topic.recent(10).count.should == 0
 
       # mods can see every group and hidden topics
       TopicQuery.new(moderator).list_latest.topics.count.should == 3
@@ -59,16 +59,61 @@ describe TopicQuery do
 
 
   context 'a bunch of topics' do
-    let!(:regular_topic) { Fabricate(:topic, title: 'this is a regular topic', user: creator, bumped_at: 15.minutes.ago) }
-    let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
-    let!(:archived_topic) { Fabricate(:topic, title: 'this is an archived topic', user: creator, archived: true, bumped_at: 6.minutes.ago) }
-    let!(:invisible_topic) { Fabricate(:topic, title: 'this is an invisible topic', user: creator, visible: false, bumped_at: 5.minutes.ago) }
-    let!(:closed_topic) { Fabricate(:topic, title: 'this is a closed topic', user: creator, closed: true, bumped_at: 1.minute.ago) }
+    let!(:regular_topic) do
+      Fabricate(:topic, title: 'this is a regular topic',
+                        user: creator,
+                        views: 100,
+                        like_count: 66,
+                        posts_count: 3,
+                        participant_count: 11,
+                        bumped_at: 15.minutes.ago)
+    end
+    let!(:pinned_topic) do
+      Fabricate(:topic, title: 'this is a pinned topic',
+                        user: creator,
+                        views: 10,
+                        like_count: 100,
+                        posts_count: 5,
+                        participant_count: 12,
+                        pinned_at: 10.minutes.ago,
+                        bumped_at: 10.minutes.ago)
+    end
+    let!(:archived_topic) do
+      Fabricate(:topic, title: 'this is an archived topic',
+                        user: creator,
+                        views: 50,
+                        like_count: 30,
+                        posts_count: 4,
+                        archived: true,
+                        participant_count: 1,
+                        bumped_at: 6.minutes.ago)
+    end
+    let!(:invisible_topic) do
+      Fabricate(:topic, title: 'this is an invisible topic',
+                        user: creator,
+                        views: 1,
+                        like_count: 5,
+                        posts_count: 2,
+                        visible: false,
+                        participant_count: 3,
+                        bumped_at: 5.minutes.ago)
+    end
+    let!(:closed_topic) do
+      Fabricate(:topic, title: 'this is a closed topic',
+                        user: creator,
+                        views: 2,
+                        like_count: 1,
+                        posts_count: 1,
+                        closed: true,
+                        participant_count: 2,
+                        bumped_at: 1.minute.ago)
+    end
+
     let(:topics) { topic_query.list_latest.topics }
 
     context 'list_latest' do
       it "returns the topics in the correct order" do
-        topics.map(&:title).should == [pinned_topic, closed_topic, archived_topic, regular_topic].map(&:title)
+        topics.map(&:id).should == [pinned_topic, closed_topic, archived_topic, regular_topic].map(&:id)
       end
 
       it "includes the invisible topic if you're a moderator" do
@@ -78,6 +123,47 @@ describe TopicQuery do
       it "includes the invisible topic if you're an admin" do
         TopicQuery.new(admin).list_latest.topics.include?(invisible_topic).should be_true
       end
+
+      context 'sort_order' do
+
+        def ids_in_order(order, descending=true)
+          TopicQuery.new(admin, sort_order: order, sort_descending: descending ? 'true' : 'false').list_latest.topics.map(&:id)
+        end
+
+        it "returns the topics in likes order if requested" do
+          ids_in_order('posts').should == [pinned_topic, archived_topic, regular_topic, invisible_topic, closed_topic].map(&:id)
+        end
+
+        it "returns the topics in reverse likes order if requested" do
+          ids_in_order('posts', false).should == [closed_topic, invisible_topic, regular_topic, archived_topic, pinned_topic].map(&:id)
+        end
+
+        it "returns the topics in likes order if requested" do
+          ids_in_order('likes').should == [pinned_topic, regular_topic, archived_topic, invisible_topic, closed_topic].map(&:id)
+        end
+
+        it "returns the topics in reverse likes order if requested" do
+          ids_in_order('likes', false).should == [closed_topic, invisible_topic, archived_topic, regular_topic, pinned_topic].map(&:id)
+        end
+
+        it "returns the topics in views order if requested" do
+          ids_in_order('views').should == [regular_topic, archived_topic, pinned_topic, closed_topic, invisible_topic].map(&:id)
+        end
+
+        it "returns the topics in reverse views order if requested" do
+          ids_in_order('views', false).should == [invisible_topic, closed_topic, pinned_topic, archived_topic, regular_topic].map(&:id)
+        end
+
+        it "returns the topics in posters order if requested" do
+          ids_in_order('posters').should == [pinned_topic, regular_topic, invisible_topic, closed_topic, archived_topic].map(&:id)
+        end
+
+        it "returns the topics in reverse posters order if requested" do
+          ids_in_order('posters', false).should == [archived_topic, closed_topic, invisible_topic, regular_topic, pinned_topic].map(&:id)
+        end
+
+      end
+
     end
 
     context 'after clearring a pinned topic' do
@@ -119,7 +205,6 @@ describe TopicQuery do
     context 'with no data' do
       it "has no unread topics" do
         topic_query.list_unread.topics.should be_blank
-        topic_query.unread_count.should == 0
       end
     end
 
@@ -135,7 +220,6 @@ describe TopicQuery do
       context 'list_unread' do
         it 'contains no topics' do
           topic_query.list_unread.topics.should == []
-          topic_query.unread_count.should == 0
         end
       end
 
@@ -147,10 +231,6 @@ describe TopicQuery do
 
         it 'only contains the partially read topic' do
           topic_query.list_unread.topics.should == [partially_read]
-        end
-
-        it "returns 1 as the unread count" do
-          topic_query.unread_count.should == 1
         end
       end
 
@@ -187,10 +267,6 @@ describe TopicQuery do
   context 'list_new' do
 
     context 'without a new topic' do
-      it "has an new_count of 0" do
-        topic_query.new_count.should == 0
-      end
-
       it "has no new topics" do
         topic_query.list_new.topics.should be_blank
       end

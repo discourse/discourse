@@ -37,7 +37,15 @@ describe UserNotifications do
       its(:to) { should == [user.email] }
       its(:subject) { should be_present }
       its(:from) { should == [SiteSetting.notification_email] }
-      its(:body) { should be_present }
+
+      it 'should have a html body' do
+        subject.html_part.body.to_s.should be_present
+      end
+
+      it 'should have a text body' do
+        subject.html_part.body.to_s.should be_present
+      end
+
     end
   end
 

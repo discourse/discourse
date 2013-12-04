@@ -162,7 +162,7 @@ class TopicView
   end
 
   def links
-    @links ||= TopicLink.topic_summary(guardian, @topic.id)
+    @links ||= TopicLink.topic_map(guardian, @topic.id)
   end
 
   def link_counts
@@ -256,9 +256,9 @@ class TopicView
   end
 
   def setup_filtered_posts
-    @filtered_posts = @topic.posts
+    @filtered_posts = @topic.posts.where(hidden: false)
     @filtered_posts = @filtered_posts.with_deleted if @user.try(:staff?)
-    @filtered_posts = @filtered_posts.best_of if @filter == 'best_of'
+    @filtered_posts = @filtered_posts.summary if @filter == 'summary'
     @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action]) if @best.present?
     return unless @username_filters.present?
     usernames = @username_filters.map{|u| u.downcase}

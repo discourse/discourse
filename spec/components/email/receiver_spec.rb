@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 require 'spec_helper'
 require 'email/receiver'
 
@@ -37,6 +39,16 @@ stripped from my reply?")
       receiver.process
       expect(receiver.body).to eq("The EC2 instance - I've seen that there tends to be odd and " +
                                   "unrecommended settings on the Bitnami installs that I've checked out.")
+    end
+  end
+
+  describe "it ignores messages it can't parse due to containing weird terms" do
+    let(:attachment) { File.read("#{Rails.root}/spec/fixtures/emails/attachment.eml") }
+    let(:receiver) { Email::Receiver.new(attachment) }
+
+    it "processes correctly" do
+      expect(receiver.process).to eq(Email::Receiver.results[:unprocessable])
+      expect(receiver.body).to be_blank
     end
   end
 

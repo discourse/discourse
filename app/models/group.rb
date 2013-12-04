@@ -89,17 +89,22 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.ensure_automatic_groups!
+    AUTO_GROUPS.keys.each do |name|
+      refresh_automatic_group!(name) unless lookup_group(name)
+    end
+  end
+
   def self.[](name)
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
   def self.lookup_group(name)
-    id = AUTO_GROUPS[name]
-    if id
+    if id = AUTO_GROUPS[name]
       Group.where(id: id).first
     else
       unless group = Group.where(name: name).first
-        raise ArgumentError, "unknown group" unless group
+        raise ArgumentError, "unknown group"
       end
       group
     end

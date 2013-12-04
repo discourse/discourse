@@ -335,7 +335,7 @@
       // __foo__ is reserved and not a pattern
       if ( i.match( /^__.*__$/) )
         continue;
-      var l = i.replace( /([\\.*+?|()\[\]{}])/g, "\\$1" )
+      var l = i.replace( /([\\.*+?^$|()\[\]{}])/g, "\\$1" )
                .replace( /\n/, "\\n" );
       patterns.push( i.length === 1 ? l : "(?:" + l + ")" );
     }
@@ -643,7 +643,8 @@
   var DialectHelpers = {};
   DialectHelpers.inline_until_char = function( text, want ) {
     var consumed = 0,
-        nodes = [];
+        nodes = [],
+        patterns = this.dialect.inline.__patterns__.replace('|_|', '|');
 
     while ( true ) {
       if ( text.charAt( consumed ) === want ) {
@@ -657,7 +658,7 @@
         return null;
       }
 
-      var res = this.dialect.inline.__oneElement__.call(this, text.substr( consumed ) );
+      var res = this.dialect.inline.__oneElement__.call(this, text.substr( consumed ), patterns );
       consumed += res[ 0 ];
       // Add any returned nodes.
       nodes.push.apply( nodes, res.slice( 1 ) );

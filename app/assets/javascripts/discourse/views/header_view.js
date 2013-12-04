@@ -20,6 +20,19 @@ Discourse.HeaderView = Discourse.View.extend({
         $ul = $target.closest('ul'),
         $html = $('html');
 
+    // we need to ensure we are rendered,
+    //  this optimises the speed of the initial render
+    var render = $target.data('render');
+    if(render){
+      if(!this.get(render)){
+        this.set(render, true);
+        Em.run.next(this, function(){
+          this.showDropdown($target);
+        });
+        return;
+      }
+    }
+
     var hideDropdown = function() {
       $dropdown.fadeOut('fast');
       $li.removeClass('active');
@@ -27,7 +40,7 @@ Discourse.HeaderView = Discourse.View.extend({
       return $html.off('click.d-dropdown');
     };
 
-    // if a dropdown is active and the user clics on it, close it
+    // if a dropdown is active and the user clicks on it, close it
     if($li.hasClass('active')) { return hideDropdown(); }
     // otherwhise, mark it as active
     $li.addClass('active');
@@ -96,7 +109,8 @@ Discourse.HeaderView = Discourse.View.extend({
 
     var headerView = this;
     this.$('a[data-dropdown]').on('click.dropdown', function(e) {
-      return headerView.showDropdown($(e.currentTarget));
+      headerView.showDropdown($(e.currentTarget));
+      return false;
     });
     this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on('click.notifications', function(e) {
       headerView.showNotifications(e);

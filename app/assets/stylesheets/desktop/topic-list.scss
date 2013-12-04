@@ -21,9 +21,9 @@
     font-weight: normal;
   }
 
-  a.badge-category {padding: 3px 12px;  font-size: 16px; 
+  a.badge-category {padding: 3px 12px;  font-size: 16px;
 
-    &.category-dropdown-button {    
+    &.category-dropdown-button {
     padding: 3px 9px 2px 9px;
 
     i {height: 20px;}
@@ -104,6 +104,7 @@
     font-size: 13px;
     background: #eee;
 
+
   }
   td {
     //border-top: 1px solid $topic-list-td-border-color;
@@ -177,7 +178,7 @@
     width: 140px;
   }
   .posters {
-    width: 150px;
+    width: 170px;
     > a {
       float: left;
       margin-right: 4px;
@@ -197,8 +198,21 @@
       color: inherit;
     }
   }
+  .sortable {
+    cursor: pointer;
+    &:hover {
+      background-color: #e6e6e6;
+    }
+    @include unselectable;
+  }
   .likes {
-    width: 50px;
+    width: 65px;
+  }
+  .views {
+    width: 65px;
+  }
+  .posts {
+    width: 65px;
   }
   .activity {
     width: 50px;
@@ -207,6 +221,7 @@
     width: 60px;
   }
 }
+
 
 #topic-list tbody tr.has-excerpt .star {
   vertical-align: top;
@@ -453,11 +468,11 @@ ol.category-breadcrumb {
   position: absolute;
   border: 1px solid #ccc;
   background-color: white;
-  height: 200px;
+  max-height: 350px;
   padding: 8px 7px 0 7px;
   z-index: 100;
   margin-top: 30px;
-  min-width: 116px;
+  min-width: 138px;
 
 
   a.badge-category {

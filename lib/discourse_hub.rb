@@ -32,6 +32,11 @@ module DiscourseHub
     [json['match'], json['available'] || false, json['suggestion']]
   end
 
+  def self.nickname_for_email(email)
+    json = get('/users/nickname_match', {email: email})
+    json['suggestion']
+  end
+
   def self.register_nickname(nickname, email)
     json = post('/users', {nickname: nickname, email: email})
     if json.has_key?('success')
@@ -65,7 +70,8 @@ module DiscourseHub
       contact_email: SiteSetting.contact_email,
       topic_count: Topic.listable_topics.count,
       user_count: User.count,
-      login_required: SiteSetting.login_required
+      login_required: SiteSetting.login_required,
+      locale: SiteSetting.default_locale
     })
   end
 
@@ -100,7 +106,7 @@ module DiscourseHub
     if Rails.env == 'production'
       'http://api.discourse.org/api'
     else
-      'http://local.hub:3000/api'
+      ENV['HUB_BASE_URL'] || 'http://local.hub:3000/api'
     end
   end
 

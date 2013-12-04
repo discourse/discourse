@@ -4,6 +4,8 @@ Discourse::Application.configure do
   # Code is not reloaded between requests
   config.cache_classes = true
 
+  config.eager_load = true
+
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
@@ -80,7 +82,7 @@ Discourse::Application.configure do
 
   # Discourse strongly recommend you use a CDN.
   # For origin pull cdns all you need to do is register an account and configure
-  # config.action_controller.asset_host = "http://YOUR_CDN_HERE"
+  config.action_controller.asset_host = ENV["CDN_URL"] if ENV["CDN_URL"]
 
   # a comma delimited list of emails your devs have
   # developers have god like rights and may impersonate anyone in the system

@@ -1,12 +1,12 @@
-<div class='span4 offset1'>
+<div class='setting-label'>
    <h3>{{unbound setting}}</h3>
 </div>
-<div class="span11">
+<div class="setting-value">
   {{combobox valueAttribute="value" content=validValues value=value none=allowsNone}}
   <div class='desc'>{{unbound description}}</div>
 </div>
 {{#if dirty}}
-  <div class='span3'>
+  <div class='setting-controls'>
     <button class='btn ok' {{action save this}}><i class='icon-ok'></i></button>
     <button class='btn cancel' {{action cancel this}}><i class='icon-remove'></i></button>
   </div>

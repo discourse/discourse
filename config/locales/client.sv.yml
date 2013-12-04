@@ -216,8 +216,7 @@ sv:
     unmute: Avdämpa
     last_post: Sista inlägget
 
-    best_of:
-      title: "Bäst Av"
+    summary:
       enabled_description: Just nu visar du "Bäst Av"-läget för denna tråd.
       description: "Det finns <b>{{count}}</b> inlägg i den här tråden. Det är många! Vill du spara tid genom att byta så du bara ser de inlägg med flest interaktioner och svar?"
       enable: 'Byt till "Bäst Av"-läget'
@@ -526,8 +525,8 @@ sv:
           one: "skapat av 1 specifik användare"
           other: "skapat av {{count}} specifika användare"
 
-        best_of: "Du visar bara {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
+        summary: "Du visar bara {{n_summarized_posts}} {{of_n_posts}}."
+        n_summarized_posts:
           one: "1 bästa inlägg"
           other: "{{count}} bästa inlägg"
         of_n_posts:
@@ -716,7 +715,7 @@ sv:
         more: "{{n}} fler..."
         left: "{{n}} kvar"
 
-    topic_summary:
+    topic_map:
       title: "Trådsammanfattning"
       links_shown: "Visa alla {{totalLinks}} länkar..."
 
@@ -738,7 +737,7 @@ sv:
     views_long: "denna tråd har visats {{number}} gånger"
     activity: "Aktivitet"
     likes: "Gillningar"
-    top_contributors: "Deltagare"
+    users: "Deltagare"
     category_title: "Kategori"
     history: "Historik"
     changed_by: "av {{author}}"

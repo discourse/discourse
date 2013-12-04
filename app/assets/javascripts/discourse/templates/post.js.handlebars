@@ -68,9 +68,9 @@
         <div class='cooked'>{{{cooked}}}</div>
         {{view Discourse.PostMenuView postBinding="this" postViewBinding="view"}}
       </div>
-      {{view Discourse.RepliesView contentBinding="replies" postViewBinding="view"}}
-      {{view Discourse.ActionsHistoryView postBinding="this"}}
-      {{view Discourse.TopicSummaryView postBinding="this"}}
+      {{view Discourse.RepliesView content=replies postView=view}}
+      {{discourse-action-history post=this}}
+      {{view Discourse.TopicMapContainerView post=this topic=controller.model}}
     </div>
 
     <div class='span5 gutter'>

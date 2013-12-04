@@ -5,6 +5,6 @@ test("Enter a Topic", function() {
 
   visit("/t/internationalization-localization/280").then(function() {
     ok(exists("#topic"), "The was rendered");
-    ok(exists("#topic .topic-post"), "The topic has posts");
+    ok(exists("#topic .post-cloak"), "The topic has cloaked posts");
   });
 });

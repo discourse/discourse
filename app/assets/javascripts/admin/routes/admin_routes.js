@@ -7,7 +7,9 @@
 Discourse.Route.buildRoutes(function() {
   this.resource('admin', { path: '/admin' }, function() {
     this.route('dashboard', { path: '/' });
-    this.route('site_settings', { path: '/site_settings' });
+    this.resource('adminSiteSettings', { path: '/site_settings' }, function() {
+      this.resource('adminSiteSettingsCategory', { path: 'category/:category_id'} );
+    });
 
 
     this.resource('adminSiteContents', { path: '/site_contents' }, function() {

@@ -20,6 +20,9 @@ class SiteContent < ActiveRecord::Base
   add_content_type :login_required_welcome_message, default_18n_key: 'login_required.welcome_message'
   add_content_type :privacy_policy, allow_blank: true
   add_content_type :faq, allow_blank: true
+  add_content_type :top, allow_blank: true
+  add_content_type :bottom, allow_blank: true
+
 
   def site_content_type
     @site_content_type ||= SiteContent.content_types.find {|t| t.content_type == content_type.to_sym}

@@ -361,6 +361,11 @@ Discourse.Composer = Discourse.Model.extend({
           loading: false
         });
       });
+    } else if (opts.action === REPLY && opts.quote) {
+      this.setProperties({
+        reply: opts.quote,
+        originalText: opts.quote
+      });
     }
     if (opts.title) { this.set('title', opts.title); }
     this.set('originalText', opts.draft ? '' : this.get('reply'));
@@ -384,7 +389,8 @@ Discourse.Composer = Discourse.Model.extend({
       originalText: null,
       reply: null,
       post: null,
-      title: null
+      title: null,
+      editReason: null
     });
   },
 
@@ -407,6 +413,7 @@ Discourse.Composer = Discourse.Model.extend({
 
     post.setProperties({
       raw: this.get('reply'),
+      editReason: opts.editReason,
       imageSizes: opts.imageSizes,
       cooked: $('#wmd-preview').html()
     });
@@ -436,7 +443,6 @@ Discourse.Composer = Discourse.Model.extend({
         postStream = this.get('topic.postStream'),
         addedToStream = false;
 
-
     // Build the post object
     var createdPost = Discourse.Post.create({
       raw: this.get('reply'),
@@ -458,7 +464,7 @@ Discourse.Composer = Discourse.Model.extend({
       moderator: currentUser.get('moderator'),
       yours: true,
       newPost: true,
-      auto_close_days: this.get('auto_close_days')
+      auto_close_time: Discourse.Utilities.timestampFromAutocloseString(this.get('auto_close_time'))
     });
 
     // If we're in a topic, we can append the post instantly.

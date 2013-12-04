@@ -371,8 +371,7 @@ pt_BR:
     unmute: Reativar
     last_post: Último post
 
-    best_of:
-      title: "Melhor De"
+    summary:
       enabled_description: "Você está vendo somente as melhores postagens neste tópico. Para ver todas as postagens de novo clique abaixo."
       description: "Há <b>{{count}}</b> postagen neste tópico. Isso é muito! Gostaria de poupar tempo alterando a vista para mostrar apenas as postagens com mais interações e respostas?"
       enable: 'Alternar para visualização "Os Melhores"'
@@ -747,8 +746,8 @@ pt_BR:
           one: "feito por 1 usuário específico"
           other: "feito por {count}} usuários específicos"
 
-        best_of: "Você está vendo apenas {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
+        summary: "Você está vendo apenas {{n_summarized_posts}} {{of_n_posts}}."
+        n_summarized_posts:
           one: "1 melhor postagem"
           other: "{{count}} melhores postagens"
         of_n_posts:
@@ -989,11 +988,10 @@ pt_BR:
         more: "{{n}} em falta..."
         left: "{{n}} restantes"
 
-    topic_summary:
+    topic_map:
       title: "Sumário do Tópico"
       links_shown: "mostrar todos os {{totalLinks}} links..."
       clicks: "clicks"
-      topic_link: "link do tópico"
 
     topic_statuses:
       locked:
@@ -1014,7 +1012,7 @@ pt_BR:
     activity: "Atividade"
     likes: "Curtidas"
     likes_long: "há {{number}} curtidas neste tópico"
-    top_contributors: "Participantes"
+    users: "Participantes"
     category_title: "Categoria"
     history: "Histórico"
     changed_by: "por {{author}}"

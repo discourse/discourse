@@ -1,0 +1,7 @@
+{{#if postStream.summary}}
+  <p>{{{i18n summary.enabled_description}}}</p>
+  <button class='btn' {{action toggleSummary}}>{{i18n summary.disable}}</button>
+{{else}}
+  <p>{{{i18n summary.description count="topic.posts_count"}}}</p>
+  <button class='btn' {{action toggleSummary}}>{{i18n summary.enable}}</button>
+{{/if}}

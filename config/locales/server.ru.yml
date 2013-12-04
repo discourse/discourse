@@ -15,8 +15,8 @@ ru:
   time:
     formats:
       short: '%d.%m.%Y'
-      short_no_year: '%B %-d'
-      date_only: '%b %-d, %Y'
+      short_no_year: '%d.%m'
+      date_only: '%d.%m.%Y'
   title: Discourse
   topics: Темы
   posts: сообщения
@@ -397,7 +397,7 @@ ru:
       xaxis: День
       yaxis: 'Количество личных сообщений'
     notify_user_private_messages:
-      title: 'Оповещений пользователей'
+      title: 'Оповещение пользователю'
       xaxis: День
       yaxis: 'Количество личных сообщений'
     top_referrers:
@@ -439,6 +439,7 @@ ru:
     access_password_removal: 'Ваш сайт использовал настройку access_password setting, которая была удалена. Были активированы настройки login_required и must_approve_users settings, которые должны были использоваться. Вы можете изменить их в  <a href=''/admin/site_settings''>Site Settings</a>. Не забудьте <a href=''/admin/users/list/pending''>подтвердить пользователей в листе ожидания</a>. (Это сообщение исчезнет через 2 суток.)'
     site_contact_username_warning: 'Опция site_contact_username не установлена. Пожалуйста, обновите ее на странице <a href=''/admin/site_settings''>Настройки сайта</a>. Установите ее в значение имени пользователя или администратора от имени которого будут отсылаться системные сообщения пользователям.'
     notification_email_warning: 'Опция notification_email не установлена. Пожалуйста обновите ее на странице <a href=''/admin/site_settings''>Настройки сайта</a>.'
+    enforce_global_nicknames_warning: 'Настройка enforce_global_nicknames включена, однако настройка discourse_org_access_key пуста. Необходим ключ доступа до Discourse.org для работы enforce_global_nicknames. Пожалуйста, обновите <a href=''/admin/site_settings''>Настройки сайта</a>.'
   content_types:
     education_new_reply:
       title: 'Обучение нового пользователя: Первые ответы'
@@ -473,6 +474,12 @@ ru:
     login_required:
       title: 'Требуется вход: Начальная страница'
       description: 'Текст, показываемый неавторизованным пользователям, когда требуется вход на сайт.'
+    top:
+      title: 'Топ страниц'
+      description: 'HTML, который будет добавлен к началу страницы (после заголовка, перед панелью навигации или заголовком темы)'
+    bottom:
+      title: 'Внизу страниц'
+      description: 'HTML, который будет добавлен внизу каждой страницы'
   site_settings:
     default_locale: 'Язык по умолчанию для данного экземпляра Discourse (ISO 639-1 Code)'
     min_post_length: 'Минимальная длина сообщения в символах'
@@ -496,6 +503,8 @@ ru:
     company_domain: 'Имя домена, принадлежащего компании, заведующей сайтом, используется в правовой документации как /tos'
     queue_jobs: 'ТОЛЬКО ДЛЯ РАЗРАБОТЧИКОВ! ВНИМАНИЕ! По умолчанию задачи обрабатываются асинхронно в очереди sidekiq. Если настройка выключена, ваш сайт может не работать.'
     crawl_images: 'Разрешить извлечение изображений из сторонних источников, ширина и высота'
+    download_remote_images_to_local: 'Загружать копию изображений, на которые ссылаются сообщения'
+    download_remote_images_threshold: 'Минимальное доступное место на диске, при котором разрешено загружать внешние изображения (в процентах)'
     ninja_edit_window: 'Количество секунд после размещения сообщения, в течение которых внесение правок в сообщение не повлечет его изменение'
     edit_history_visible_to_public: 'Позволить всем видеть предыдущие версии сообщения. Когда отключено, историю изменений может видеть только персонал.'
     delete_removed_posts_after: 'Количество часов, после которого сообщение, удаленное пользователем, удаляется.'
@@ -515,10 +524,10 @@ ru:
     notification_email: 'Обратный электронный адрес, используемый для отправки системных электронных писем пользователям, таких как оповещение пользователей о потерянном пароле, новой учетной записи и т.д.'
     email_custom_headers: 'Разделенный чертой список дополнительных заголовков в почтовых сообщениях'
     use_ssl: 'Будет ли сайт доступен по SSL? (НЕ РЕАЛИЗОВАНО, ЭКСПЕРИМЕНТАЛЬНАЯ ФУНКЦИЯ)'
-    best_of_score_threshold: 'Минимальная оценка сообщения, чтобы оно было включено в список «лучших сообщений»'
-    best_of_posts_required: 'Минимальное количество сообщений в теме для активации режима «лучшие»'
-    best_of_likes_required: 'Минимальное количество симпатий для активации режима «лучшие»'
-    best_of_percent_filter: 'Когда пользователь нажимает «Лучшие», показывать топ % сообщений'
+    summary_score_threshold: 'Минимальная оценка сообщения, чтобы оно было включено в список «лучших сообщений»'
+    summary_posts_required: 'Минимальное количество сообщений в теме для активации режима «лучшие»'
+    summary_likes_required: 'Минимальное количество симпатий в теме для активации режима «лучшие»'
+    summary_percent_filter: 'Когда пользователь нажимает «лучшие», показывать топ % сообщений'
     enable_private_messages: 'Разрешить пользователям базового (1) уровня доверия посылать личные сообщения и отвечать на них'
     enable_long_polling: 'Использовать механизм long polling для уведомлений о событиях'
     long_polling_interval: 'Время до того, как начнется новый long poll, в миллисекундах'
@@ -592,7 +601,7 @@ ru:
     max_private_messages_per_day: 'Максимальное количество личных сообщений, которое пользователь может послать в день'
     suggested_topics: 'Количество рекомендованных тем, отображаемых внизу текущей темы'
     clean_up_uploads: 'Удалить неиспользуемые загрузки для предотвращения хранения нелегального контента. ВНИМАНИЕ: рекомендуется сделать резервную копию директории /uploads перед включением данной настройки.'
-    uploads_grace_period_in_hours: 'Период (в часах) после которого неопубликованные вложения удаляются.'
+    clean_orphan_uploads_grace_period_hours: 'Период (в часах) после которого неопубликованные вложения удаляются.'
     enable_s3_uploads: 'Размещать загруженные файлы на Amazon S3'
     s3_upload_bucket: 'Наименование Amazon S3 bucket в который будут загружаться файлы. ВНИМАНИЕ: имя должно быть в нижнем регистре (см. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)'
     s3_access_key_id: 'Amazon S3 access key для загрузки и хранения изображений'
@@ -663,6 +672,9 @@ ru:
     sequential_replies_threshold: 'Количество сообщений отправленных подряд в теме, прежде чем пользователь получит уведомление'
     enable_mobile_theme: 'Мобильные устройства используют адаптированную тему с возможностью переключения в обычный вид. Отключите данную настройку если вы хотите использовать собственный стиль для мобильных устройств.'
     dominating_topic_minimum_percent: 'Процент сообщений пользователя в теме перед тем, как пользователь станет ведущим в теме.'
+    enable_names: 'Разрешить пользователям отображать полные имена'
+    display_name_on_posts: 'Отображать полные имена пользователей в сообщениях'
+    invites_shown: 'Максимальное количество приглашений, отображаемых на странице пользователя'
   notification_types:
     mentioned: '%{display_username} упомянул вас в  %{link}'
     liked: '%{display_username} понравилось ваше сообщение в теме %{link}'
@@ -718,6 +730,7 @@ ru:
     activate_email: 'Почти готово! Мы послали письмо с инструкциями по активации учетной записи на  <b>%{email}</b>.'
     not_activated: 'Вы пока что не можете войти на сайт. Пожалуйста, следуйте инструкциям по активации учетной записи, которые мы отправили вам  по электронной почтой.'
     suspended: 'Вы не можете войти до %{date}.'
+    suspended_with_reason: 'Вы не можете войти до %{date}. Причина блокировки: %{reason}'
     errors: '%{errors}'
     not_available: 'Недоступно. Попробуйте %{suggestion}?'
     something_already_taken: 'Что-то пошло не так, возможно, имя пользователя или электронный ящик уже используются. Попробуйте восстановить ваш пароль.'
@@ -739,6 +752,9 @@ ru:
   invite_mailer:
     subject_template: '[%{site_name}] %{invitee_name} пригласил вас присоединиться к обсуждению на  сайте %{site_name}'
     text_body_template: "%{invitee_name} пригласил вас в тему \"%{topic_title}\" на сайте %{site_name}.\n\nЕсли вам интересно, пройдите по ссылке ниже, чтобы попасть в обсуждение:\n\n[%{site_name}][1]\n\nВы приглашены доверенным пользователем, поэтому сразу сможете разместить свой ответ без входа на сайт.\n\n[1]: %{invite_link}\n"
+  invite_forum_mailer:
+    subject_template: '[%{site_name}] %{invitee_name} приглашает вас присоединиться к %{site_name}'
+    text_body_template: "%{invitee_name} приглашает вас на %{site_name}.\n\nЕсли вы заинтересованы в этом, кликните по ссылке ниже для регистрации:\n\n[Посетите %{site_name}][1]\n\nВы приглашены доверенным пользователем, поэтому сразу сможете разместить свой ответ без входа на сайт.\n\n[1]: %{invite_link}\n"
   test_mailer:
     subject_template: '[%{site_name}] Проверка доставки писем'
     text_body_template: "Это тестовое сообщение, отправленное с форума %{site_name}:\n\n[**%{base_url}**][0]\n\nПовышение доставляемости email (эффективность доставки сообщений по электронной почте) является непростой задачей. Вот несколько важных моментов, с которыми вы должны разобраться в первую очередь:\n\n- Узнаете, как просмотреть *исходный код сообщения* в вашем почтовом клиенте, чтобы можно было проанализировать заголовки сообщений. В случае Gmail это можно сделать в режиме просмотра сообщения в выпадающем списке \"Показать оригинал\".\n\n- **ВАЖНО:** Проверьте, заведена ли у вашего ISP обратная запись в DNS (запись типа PTR), позволяющая ассоциировать IP-адреса, с которых вы отправляете сообщения по электронной почте, с доменным именем? [Протестируйте ваши обратные записи PTR][2] здесь. Если ваш ISP не внес корректную PTR запись в DNS, то крайне маловероятно, что ваши сообщения будут доставлены.\n\n- Корректна ли запись SPF вашего домена? [Протестируйте свою запись SPF][1] здесь.\n\n- Убедитесь в том, что IP-адреса вашего почтового сервера [не включены в какой-либо черный список][4].\n\n- Убедитесь в том, что ваш почтовый сервер в приветствии HELO/EHLO отправляет полное (FQDN) имя хоста, которое, в свою очередь, прописано в DNS. Если это не так, ваши сообщения будут отклоняться многими почтовыми сервисами.\n\n- Настройте [добавление подписи DKIM в исходящую почту][3] на вашем почтовом сервере и пропишите открытый ключ DKIM в соответствующие записи DNS. Это не обязательно, но данная операция приведет к значительному повышению доставляемости email.\n\n(*Проще всего* [зарегистрироваться в Mandrill][6]. Этот сервис имеет отличный механизм бесплатной рассылки и прекрасно подходит для работы с небольшими форумами. Однако вам все же придется настроить записи SPF и DKIM на своем DNS!)\n\nНадеемся, что вы прошли этот тест доставляемости email!\n\nУдачи,\n\nВаши друзья из [Discourse](http://www.discourse.org)\n\n:smile:\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/SuperTool.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[5]: %{base_url}/unsubscribe\n[6]: http://mandrill.com\n\n----\n<small>В каждом из ваших электронных писем должен присутствовать футер, позволяющий отписаться от рассылки, так что давайте сделаем образец. Это письмо было отправлено Название компании, 55 Мэйн-стрит, город Энск, США 12345. Если вы хотите отказаться от последующего получения писем аналогичного характера, [кликните сюда,\
@@ -848,6 +864,7 @@ ru:
     miscellaneous: 'This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.'
   deleted: удалено
   upload:
+    edit_reason: 'Загружена копия внешнего изображения'
     unauthorized: 'К сожалению, вы не можете загрузить файл данного типа (список разрешенных типов файлов: %{authorized_extensions}).'
     pasted_image_filename: 'Имя файла изображения'
     attachments:

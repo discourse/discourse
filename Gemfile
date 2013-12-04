@@ -26,12 +26,14 @@ if rails4?
     # A bit messy, this can be called multiple times by bundler, avoid blowing the stack
     unless self.method_defined? :to_definition_unpatched
       alias_method :to_definition_unpatched, :to_definition
-      puts "Booting in Rails 4 mode"
     end
     def to_definition(bad_lockfile, unlock)
       to_definition_unpatched(Bundler::SharedHelpers.default_lockfile, unlock)
     end
   end
+else
+  # Note to be deprecated, in place of a dual boot master
+  puts "Booting in Rails 3 mode"
 end
 
 gem 'seed-fu' , github: 'SamSaffron/seed-fu'
@@ -59,11 +61,13 @@ gem 'redis', :require => ["redis", "redis/connection/hiredis"]
 
 gem 'active_model_serializers'
 
+gem 'html_truncator'
+
 # we had issues with latest, stick to the rev till we figure this out
 # PR that makes it all hang together welcome
 gem 'ember-rails'
-gem 'ember-source', '1.0.0.rc6.2'
-gem 'handlebars-source', '1.0.12'
+gem 'ember-source', '~> 1.2.0.1'
+gem 'handlebars-source', '~> 1.1.2'
 gem 'barber'
 
 gem 'vestal_versions', git: 'https://github.com/SamSaffron/vestal_versions'
@@ -80,6 +84,7 @@ gem 'fast_xs'
 gem 'fast_xor', git: 'https://github.com/CodeMonkeySteve/fast_xor.git'
 gem 'fastimage'
 gem 'fog', '1.18.0', require: false
+gem 'unf', require: false
 
 gem 'email_reply_parser', git: 'https://github.com/lawrencepit/email_reply_parser.git'
 
@@ -121,24 +126,11 @@ gem 'diffy', '>= 3.0', require: false
 gem 'highline', require: false
 gem 'rack-protection' # security
 
-# Gem that enables support for plugins. It is required.
-gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
-
-# Discourse Plugins (optional)
-# Polls and Tasks have been disabled for launch, we need think all sorts of stuff through before adding them back in
-#   biggest concern is core support for custom sort orders, but there is also styling that just gets mishmashed into our core theme.
-# gem 'discourse_poll', path: 'vendor/gems/discourse_poll'
-gem 'discourse_emoji', path: 'vendor/gems/discourse_emoji'
-# gem 'discourse_task', path: 'vendor/gems/discourse_task'
-
 # Gems used only for assets and not required
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-  gem 'sass'
   gem 'sass-rails'
-  # Sam: disabling for now, having issues with our jenkins build
-  # gem 'turbo-sprockets-rails3'
   gem 'uglifier'
 end
 
@@ -174,7 +166,9 @@ group :development do
   gem 'annotate', :git => 'https://github.com/SamSaffron/annotate_models.git'
 end
 
-
+# Gem that enables support for plugins. It is required.
+# TODO: does this really need to be a gem ?
+gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
 
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
@@ -199,6 +193,7 @@ gem 'unicorn-worker-killer'
 gem 'font_assets'
 gem 'newrelic_rpm'
 gem 'honeybadger'
+gem 'rbtrace', require: false
 
 # perftools only works on 1.9 atm
 group :profile do

@@ -9,32 +9,22 @@ module Email
     end
 
     def text
-      @text ||= @message.body.to_s.force_encoding('UTF-8')
-    end
-
-    def logo_url
-      logo_url = SiteSetting.logo_url
-      if logo_url !~ /http(s)?\:\/\//
-        logo_url = "#{Discourse.base_url}#{logo_url}"
-      end
-      logo_url
+      return @text if @text
+      @text = (@message.text_part ? @message.text_part : @message).body.to_s.force_encoding('UTF-8')
     end
 
     def html
-      style = Email::Styles.new(PrettyText.cook(text))
-      style.format_basic
 
-      if @opts[:html_template]
+      if @message.html_part
+        style = Email::Styles.new(@message.html_part.body.to_s)
+        style.format_basic
         style.format_html
-
-        ActionView::Base.new(Rails.configuration.paths["app/views"]).render(
-          template: 'email/template',
-          format: :html,
-          locals: { html_body: style.to_html, logo_url: logo_url }
-        )
       else
-        style.to_html
+        style = Email::Styles.new(PrettyText.cook(text))
+        style.format_basic
       end
+
+      style.to_html
     end
 
   end

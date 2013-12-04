@@ -3,7 +3,7 @@ require 'spec_helper'
 describe AdminDashboardData do
 
   describe "rails_env_check" do
-    subject { AdminDashboardData.new.rails_env_check }
+    subject { described_class.new.rails_env_check }
 
     it 'returns nil when running in production mode' do
       Rails.stubs(:env).returns('production')
@@ -22,7 +22,7 @@ describe AdminDashboardData do
   end
 
   describe 'host_names_check' do
-    subject { AdminDashboardData.new.host_names_check }
+    subject { described_class.new.host_names_check }
 
     it 'returns nil when host_names is set' do
       Discourse.stubs(:current_hostname).returns('something.com')
@@ -41,7 +41,7 @@ describe AdminDashboardData do
   end
 
   describe 'gc_checks' do
-    subject { AdminDashboardData.new.gc_checks }
+    subject { described_class.new.gc_checks }
 
     it 'returns nil when gc params are set' do
       ENV.stubs(:[]).with('RUBY_GC_MALLOC_LIMIT').returns(90000000)
@@ -55,7 +55,7 @@ describe AdminDashboardData do
   end
 
   describe 'sidekiq_check' do
-    subject { AdminDashboardData.new.sidekiq_check }
+    subject { described_class.new.sidekiq_check }
 
     it 'returns nil when sidekiq processed a job recently' do
       Jobs.stubs(:last_job_performed_at).returns(1.minute.ago)
@@ -89,7 +89,7 @@ describe AdminDashboardData do
   end
 
   describe 'ram_check' do
-    subject { AdminDashboardData.new.ram_check }
+    subject { described_class.new.ram_check }
 
     it 'returns nil when total ram is 1 GB' do
       MemInfo.any_instance.stubs(:mem_total).returns(1025272)
@@ -108,7 +108,7 @@ describe AdminDashboardData do
   end
 
   describe 'send_consumer_email_check' do
-    subject { AdminDashboardData.new.send_consumer_email_check }
+    subject { described_class.new.send_consumer_email_check }
 
     it 'returns nil if gmail.com is not in the smtp_settings address' do
       ActionMailer::Base.stubs(:smtp_settings).returns({address: 'mandrillapp.com'})
@@ -131,7 +131,7 @@ describe AdminDashboardData do
   end
 
   describe 'default_logo_check' do
-    subject { AdminDashboardData.new.default_logo_check }
+    subject { described_class.new.default_logo_check }
 
     describe 'favicon_url check' do
       before do
@@ -220,7 +220,7 @@ describe AdminDashboardData do
     end
 
     describe 'facebook' do
-      subject { AdminDashboardData.new.facebook_config_check }
+      subject { described_class.new.facebook_config_check }
       let(:enable_setting) { :enable_facebook_logins }
       let(:key) { :facebook_app_id }
       let(:secret) { :facebook_app_secret }
@@ -228,7 +228,7 @@ describe AdminDashboardData do
     end
 
     describe 'twitter' do
-      subject { AdminDashboardData.new.twitter_config_check }
+      subject { described_class.new.twitter_config_check }
       let(:enable_setting) { :enable_twitter_logins }
       let(:key) { :twitter_consumer_key }
       let(:secret) { :twitter_consumer_secret }
@@ -236,11 +236,33 @@ describe AdminDashboardData do
     end
 
     describe 'github' do
-      subject { AdminDashboardData.new.github_config_check }
+      subject { described_class.new.github_config_check }
       let(:enable_setting) { :enable_github_logins }
       let(:key) { :github_client_id }
       let(:secret) { :github_client_secret }
       include_examples 'problem detection for login providers'
+    end
+  end
+
+  describe "enforce_global_nicknames_check" do
+    subject { described_class.new.enforce_global_nicknames_check }
+
+    it 'returns nil when enforce_global_nicknames and discourse_org_access_key are set' do
+      SiteSetting.stubs(:enforce_global_nicknames).returns(true)
+      SiteSetting.stubs(:discourse_org_access_key).returns('123')
+      subject.should be_nil
+    end
+
+    it 'returns a string when enforce_global_nicknames is true but discourse_org_access_key is not' do
+      SiteSetting.stubs(:enforce_global_nicknames).returns(true)
+      SiteSetting.stubs(:discourse_org_access_key).returns('')
+      subject.should_not be_nil
+    end
+
+    it 'returns nil when enforce_global_nicknames is false and discourse_org_access_key is set' do
+      SiteSetting.stubs(:enforce_global_nicknames).returns(false)
+      SiteSetting.stubs(:discourse_org_access_key).returns('123')
+      subject.should be_nil
     end
   end
 

@@ -10,11 +10,10 @@
 <%= raw(@markdown_linker.create(t.title, t.relative_url)) %>
 
 <%- if t.best_post.present? %>
- <div class='digest-post'><%= raw(t.best_post.excerpt(1000,
+ <%= raw(t.best_post.excerpt(1000,
                             strip_links: true,
                             text_entities: true,
-                            markdown_images: true)) %></div>
-
+                            markdown_images: true)) %>
 --------------------------------------------------------------------------------
 
 <%- end %>
@@ -26,7 +25,7 @@
 **<%=t 'user_notifications.digest.other_new_topics' %>**
 
 <%- @new_topics.each do |t| %>
-* <%= raw(@markdown_linker.create(t.title, t.relative_url)) %> <%- if t.category %>[<%= t.category.name %>]<%- end %>
+* <%= raw(@markdown_linker.create(t.title, t.relative_url)) %> - <%= t('user_notifications.digest.posts', count: t.posts_count) %> - <%- if t.category %>[<%= t.category.name %>]<%- end %>
 <%- end -%>
 
 <%- end -%>
@@ -35,9 +34,9 @@
 
 <%= raw(@markdown_linker.references) %>
 
-<span class='footer-notice'><%=raw(t :'user_notifications.digest.unsubscribe',
+<%=raw(t :'user_notifications.digest.unsubscribe',
      site_link: site_link,
-     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), email_unsubscribe_path(key: @user.temporary_key))))  %></span>
+     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), email_unsubscribe_path(key: @user.temporary_key))))  %>
 
 <%= raw(@markdown_linker.references) %>
 

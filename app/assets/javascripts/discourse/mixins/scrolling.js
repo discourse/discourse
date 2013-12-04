@@ -7,6 +7,7 @@
   @namespace Discourse
   @module Discourse
 **/
+
 Discourse.Scrolling = Em.Mixin.create({
 
   /**
@@ -18,20 +19,16 @@ Discourse.Scrolling = Em.Mixin.create({
   bindScrolling: function(opts) {
     opts = opts || {debounce: 100};
 
-    var scrollingMixin = this;
-    var onScrollMethod;
+    var self = this,
+        onScrollMethod = function(e) {
+          return Em.run.scheduleOnce('afterRender', self, 'scrolled');
+        };
 
     if (opts.debounce) {
-      onScrollMethod = Discourse.debounce(function() {
-        return scrollingMixin.scrolled();
-      }, opts.debounce);
-    } else {
-      onScrollMethod = function() {
-        return scrollingMixin.scrolled();
-      };
+      onScrollMethod = Discourse.debounce(onScrollMethod, opts.debounce);
     }
 
-    Discourse.ScrollingDOMMethods.bindOnScroll(onScrollMethod);
+    Discourse.ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);
   },
 
   /**
@@ -39,8 +36,8 @@ Discourse.Scrolling = Em.Mixin.create({
 
     @method unbindScrolling
   */
-  unbindScrolling: function() {
-    Discourse.ScrollingDOMMethods.unbindOnScroll();
+  unbindScrolling: function(name) {
+    Discourse.ScrollingDOMMethods.unbindOnScroll(name);
   }
 
 });
@@ -56,14 +53,16 @@ Discourse.Scrolling = Em.Mixin.create({
 **/
 Discourse.ScrollingDOMMethods = {
 
-  bindOnScroll: function(onScrollMethod) {
-    $(document).bind('touchmove.discourse', onScrollMethod);
-    $(window).bind('scroll.discourse', onScrollMethod);
+  bindOnScroll: function(onScrollMethod, name) {
+    name = name || 'default';
+    $(document).bind('touchmove.discourse-' + name, onScrollMethod);
+    $(window).bind('scroll.discourse-' + name, onScrollMethod);
   },
 
-  unbindOnScroll: function() {
-    $(window).unbind('scroll.discourse');
-    $(document).unbind('touchmove.discourse');
+  unbindOnScroll: function(name) {
+    name = name || 'default';
+    $(window).unbind('scroll.discourse-' + name);
+    $(document).unbind('touchmove.discourse-' + name);
   }
 
 };

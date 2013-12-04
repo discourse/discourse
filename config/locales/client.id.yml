@@ -206,10 +206,9 @@ id:
     unmute: Unmute
     last_post: Last post
 
-    best_of:
-      title: "Best Of"
-      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the best posts?"
-      button: 'Switch to "Best Of" view'
+    summary:
+      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the most relevant posts?"
+      button: 'Switch to "Summary" view'
 
     private_message_info:
       title: "Private Message"
@@ -463,7 +462,7 @@ id:
 
       filters:
         user: "You're viewing only posts by specific user(s)."
-        best_of: "You're viewing only the 'Best Of' posts."
+        summary: "You're viewing only the 'Summary' posts."
         cancel: "Show all posts in this topic again."
 
       move_selected:
@@ -572,7 +571,7 @@ id:
         more: "{{n}} to go..."
         left: "{{n}} remaining"
 
-    topic_summary:
+    topic_map:
       title: "Topic Summary"
       links_shown: "show all {{totalLinks}} links..."
 
@@ -594,7 +593,7 @@ id:
     views_long: "this topic has been viewed {{number}} times"
     activity: "Activity"
     likes: "Likes"
-    top_contributors: "Participants"
+    users: "Users"
     category_title: "Category"
     history: "History"
 

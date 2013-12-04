@@ -263,9 +263,9 @@ pt:
     favicon_url: "Um favicon para o teu site"
     notification_email: "O endereço de email a ser usado para notificar os utilizadores de password esquecida, novas contas, etc."
     use_ssl: "Deverá o site estár acessivel via SSL?"
-    best_of_score_threshold: "A pontuação mínima de um post para ser incluído no 'melhor de'"
-    best_of_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
-    best_of_likes_required: "Um tópico precisa deste número de gostos antes de ser ativado o mode 'melhor de'."
+    summary_score_threshold: "A pontuação mínima de um post para ser incluído no 'melhor de'"
+    summary_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
+    summary_likes_required: "Um tópico precisa deste número de gostos antes de ser ativado o mode 'melhor de'."
     enable_private_messages: "permitir membros a ter conversas com mensagens privadas"
 
     enable_long_polling: "Message bus used for notification can use long polling."

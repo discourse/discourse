@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+
+require "thor"
+
+class DiscourseCLI < Thor
+  class_option :verbose, default: false, aliases: :v
+
+  desc "migrate", "Make sure all the posts are pointing to the new domain"
+  option :from, type: :array, required: true, banner: "http://previous.domain.com"
+  option :database, default: "default", aliases: :db
+  def migrate
+    verbose = options[:verbose]
+    database = options[:database]
+    from = options[:from].map { |f| schemaless f }
+
+    begin
+      puts "loading rails..." if verbose
+      load_rails
+
+      puts "connecting to #{database}..." if verbose
+      RailsMultisite::ConnectionManagement.establish_connection(db: database)
+
+      base_url = schemaless Discourse.base_url_no_prefix
+
+      puts "updating #{Post.count} posts to #{base_url}" if verbose
+      Post.find_each do |post|
+        raw, cooked = post.raw.dup, post.cooked.dup
+        from.each do |f|
+          raw.gsub!(f, base_url)
+          cooked.gsub!(f, base_url)
+        end
+        if raw != post.raw || cooked != post.cooked
+          Post.where(id: post.id).update_all(raw: raw, cooked: cooked)
+          putc "#" if verbose
+        else
+          putc "."
+        end
+      end
+
+    rescue => e
+      puts "Cannot connect to database: #{database}"
+      puts e
+      puts e.backtrace.join("\n")
+    end
+
+    puts "", "done!" if verbose
+  end
+
+  private
+
+  def load_rails
+    require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+  end
+
+  def schemaless(url)
+    url.gsub(/^https?:/, "")
+  end
+
+end
+
+DiscourseCLI.start(ARGV)

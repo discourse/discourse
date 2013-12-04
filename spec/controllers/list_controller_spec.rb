@@ -56,12 +56,6 @@ describe ListController do
     context 'in a category' do
       let(:category) { Fabricate(:category) }
 
-      it "raises an invalid access error when the user can't see the category" do
-        Guardian.any_instance.expects(:can_see?).with(category).returns(false)
-        xhr :get, :category, category: category.slug
-        response.should be_forbidden
-      end
-
       context 'with access to see the category' do
         before do
           xhr :get, :category, category: category.slug
@@ -107,14 +101,6 @@ describe ListController do
         context 'when child is requested with the wrong parent' do
           before do
             xhr :get, :category, parent_category: 'not_the_right_slug', category: sub_category.slug
-          end
-
-          it { should_not respond_with(:success) }
-        end
-
-        context 'when child is requested without a parent' do
-          before do
-            xhr :get, :category, category: sub_category.slug
           end
 
           it { should_not respond_with(:success) }

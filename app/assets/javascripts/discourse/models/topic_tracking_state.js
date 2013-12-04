@@ -13,16 +13,22 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     var tracker = this;
 
     var process = function(data){
+
       if (data.message_type === "delete") {
         tracker.removeTopic(data.topic_id);
+        tracker.incrementMessageCount();
       }
 
       if (data.message_type === "new_topic" || data.message_type === "unread" || data.message_type === "read") {
         tracker.notify(data);
-        tracker.states["t" + data.topic_id] = data.payload;
+        var old = tracker.states["t" + data.topic_id];
+
+        if(!_.isEqual(old, data.payload)){
+          tracker.states["t" + data.topic_id] = data.payload;
+          tracker.incrementMessageCount();
+        }
       }
 
-      tracker.incrementMessageCount();
     };
 
     Discourse.MessageBus.subscribe("/new", process);

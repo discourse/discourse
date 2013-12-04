@@ -22,7 +22,11 @@ class TopicLinkClick < ActiveRecord::Base
     # If no link is found, return the url for relative links
     unless link.present?
       return args[:url] if args[:url] =~ /^\//
-      return nil
+
+      # If we have it somewhere else on the site, just allow the redirect. This is
+      # likely due to a onebox of another topic.
+      link = TopicLink.where(url: args[:url]).first
+      return link.present? ? link.url : nil
     end
 
     return args[:url] if (args[:user_id] && (link.user_id == args[:user_id]))

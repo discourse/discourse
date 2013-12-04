@@ -15,6 +15,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
   accountChallenge: 0,
   formSubmitted: false,
   rejectedEmails: Em.A([]),
+  prefilledUsername: null,
 
   submitDisabled: function() {
     if (this.get('formSubmitted')) return true;
@@ -95,6 +96,33 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
     });
   }.property('accountEmail', 'rejectedEmails.@each'),
 
+  prefillUsername: function() {
+    if (this.get('prefilledUsername')) {
+      // If username field has been filled automatically, and email field just changed,
+      // then remove the username.
+      if (this.get('accountUsername') === this.get('prefilledUsername')) {
+        this.set('accountUsername', '');
+      }
+      this.set('prefilledUsername', null);
+    }
+    if (this.get('emailValidation.ok') && (this.blank('accountUsername') || this.get('authOptions.email'))) {
+      // If email is valid and username has not been entered yet,
+      // or email and username were filled automatically by 3rd parth auth,
+      // then look for a registered username that matches the email.
+      this.fetchExistingUsername();
+    }
+  }.observes('emailValidation', 'accountEmail'),
+
+  fetchExistingUsername: Discourse.debounce(function() {
+    var self = this;
+    Discourse.User.checkUsername(null, this.get('accountEmail')).then(function(result) {
+      if (result.suggestion && (self.blank('accountUsername') || self.get('accountUsername') === self.get('authOptions.username'))) {
+        self.set('accountUsername', result.suggestion);
+        self.set('prefilledUsername', result.suggestion);
+      }
+    });
+  }, 500),
+
   usernameMatch: function() {
     if (this.usernameNeedsToBeValidatedWithEmail()) {
       if (this.get('emailValidation.failed')) {
@@ -118,6 +146,13 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
 
   basicUsernameValidation: function() {
     this.set('uniqueUsernameValidation', null);
+
+    if (this.get('accountUsername') === this.get('prefilledUsername')) {
+      return Discourse.InputValidation.create({
+        ok: true,
+        reason: I18n.t('user.username.prefilled')
+      });
+    }
 
     // If blank, fail without a reason
     if (this.blank('accountUsername')) {

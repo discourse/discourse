@@ -220,6 +220,8 @@ nl:
       moderator: "{{user}} is een moderator"
       admin: "{{user}} is een admin"
       deleted: (verwijderd)
+      suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
+      suspended_reason: "Reden: "
 
       messages:
         all: Alle
@@ -282,13 +284,14 @@ nl:
         too_long: Je gebruikersnaam is te lang.
         checking: Beschikbaarheid controleren...
         enter_email: Gebruikersnaam gevonden. Vul het gekoppelde e-mailadres in.
+        prefilled: "E-mail hoort bij deze gebruikersnaam."
 
       password_confirmation:
         title: Nogmaals het wachtwoord
 
       last_posted: Laatste bericht
       last_emailed: Laatst gemailed
-      last_seen: Laatst gezien
+      last_seen: Gezien
       created: Lid sinds
       log_out: Log uit
       website: Website
@@ -328,11 +331,13 @@ nl:
           other: "na {{count}} minuten"
 
       invited:
+        search: "Typ om uitnodigingen te zoeken..."
         title: Uitnodigingen
         user: Uitgenodigd lid
-        none: "{{username}} heeft nog geen mensen uitgenodigd voor deze site."
+        none: Er zijn geen uitnodigingen gevonden.
+        truncated: "De eerste {{count}} uitnodigingen."
         redeemed: Verzilverde uitnodigingen
-        redeemed_at: Verzilverd op
+        redeemed_at: Verzilverd
         pending: Uitstaande uitnodigingen
         topics_entered: Topics bezocht
         posts_read_count: Berichten gelezen
@@ -341,6 +346,7 @@ nl:
         time_read: Tijd gelezen
         days_visited: Dagen bezocht
         account_age_days: leeftijd van account in dagen
+        create: Nodig anderen voor dit forum uit
 
       password:
         title: Wachtwoord
@@ -379,12 +385,11 @@ nl:
     unmute: Tonen
     last_post: Laatste bericht
 
-    best_of:
-      title: Best of
-      enabled_description: "Je kijkt nu naar de beste berichten van deze topic. Klik hieronder om alle berichten te zien."
-      description: "Er zijn <b>{{count}}</b> berichten in deze topic. Dat zijn een hoop! Zou je tijd willen besparen door alleen de berichten te zien met de meeste interactie en reacties?"
-      enable: "Schakel naar 'Best of'-weergave"
-      disable: "Schakel naar normale weergave"
+    summary:
+      enabled_description: "Je kijkt nu naar een samenvatting van deze topic. Klik hieronder om alle berichten te zien."
+      description: "Er zijn <b>{{count}}</b> reacties. Tijd besparen en alleen de meest relevante reacties zien?"
+      enable: "Samenvatting van topic"
+      disable: "Alle berichten"
 
     private_message_info:
       title: 'Privé-bericht'
@@ -393,8 +398,8 @@ nl:
 
     email: E-mail
     username: Gebruikersnaam
-    last_seen: Laatst gezien
-    created: Gemaakt op
+    last_seen: Gezien
+    created: Gemaakt
     trust_level: Trustlevel
 
     create_account:
@@ -478,6 +483,8 @@ nl:
 
       users_placeholder: Voeg een lid toe
       title_placeholder: Typ hier je title. Beschrijf in één korte zin waar deze discussie over gaat.
+      edit_reason_placeholder: vanwaar de wijziging?
+      show_edit_reason: "(geef een reden)"
       reply_placeholder: Typ hier. Gebruik Markdown of BBCode voor de tekstopmaak. Sleep of plak een afbeelding hierin om deze te uploaden."
       view_new_post: Bekijk je nieuwe bericht.
       saving: Opslaan...
@@ -514,8 +521,10 @@ nl:
       toggler: verberg of toon de editor
 
       admin_options_title: "Optionele stafinstellingen voor deze topic"
-      auto_close_label: "Sluit topic automatisch na:"
-      auto_close_units: "dagen"
+      auto_close_label: "Sluit topic automatisch:"
+      auto_close_units: "(# uren, een tijd of een volledige datum en tijd)"
+      auto_close_examples: 'Voorbeelden: 24, 17:00, 22-11-2013 14:00'
+      auto_close_error: "Vul een geldige waarde in."
 
     notifications:
       title: "notificaties van @naam vermeldingen, reacties op je berichten en topics, privé-berichten, etc."
@@ -592,7 +601,7 @@ nl:
       title: Details topic rangorde
 
     topic:
-      filter_to: "Laat alleen de {{post_count}} berichten van {{username}} in deze topic zien"
+      filter_to: "Bekijk {{post_count}} berichten in topic"
       create: Maak topic
       create_long: Maak een nieuw topic
       private_message: Stuur een privé-bericht
@@ -738,7 +747,8 @@ nl:
         title: Nodig vrienden uit om te reageren
         action: Mail uitnodiging
         help: verstuur uitnodigingen naar vrienden zodat zij met één klik kunnen reageren op deze topic
-        email: We zullen je vrienden een korte e-mail sturen waardoor zij op deze topic kunnen reageren door op een link te klikken.
+        to_topic: We zullen je vriend een korte e-mail sturen waardoor zij op deze topic kunnen reageren door op een link te klikken.
+        to_forum: We zullen je vriend een korte e-mail sturen waardoor zij het forum op kunnen door op een link te klikken.
         email_placeholder: e-mailadres
         success: 'Bedankt! We hebben een uitnodiging verstuurd naar <b>{{email}}</b>. We laten je direct weten wanneer ze je uitnodiging hebben geaccepteerd. Check de "Uitnodigingen"-tab op je gebruikerspagina om bij te houden wie je hebt uitgenodigd.'
         error: "Sorry, we kunnen deze persoon niet uitnodigen. Wellicht is deze al een lid op onze site?"
@@ -754,14 +764,14 @@ nl:
           one: van één specifiek lid
           other: "van {{count}} specifieke leden"
 
-        best_of: "Je ziet momenteel alleen {{n_best_posts}} {{of_n_posts}}"
-        n_best_posts:
-          one: "het enige 'Best of' bericht."
-          other: "de {{count}} 'Best of' berichten"
+        summary: "Je ziet momenteel {{n_summarized_posts}} {{of_n_posts}}"
+        n_summarized_posts:
+          one: "het enige bericht in deze topic."
+          other: "{{count}} berichten"
         of_n_posts:
           one: ''
-          other: "van {{count}} in deze topic."
-        cancel: Laat alle posts in deze topic zien.
+          other: "van {{count}} als samenvatting van deze topic."
+        cancel: Laat alle berichten in deze topic zien.
 
       split_topic:
         title: Splits topic
@@ -795,6 +805,7 @@ nl:
       reply_topic: "Reageer op {{link}}"
       quote_reply: citeer
       edit: "Bewerken van {{link}} door {{replyAvatar}} {{username}}"
+      edit_reason: "Reden: "
       post_number: "bericht {{number}}"
       in_reply_to: in reactie op
       last_edited_on: bericht gewijzig op
@@ -976,6 +987,7 @@ nl:
       already_used: Deze kleur is al in gebruik door een andere categorie
       security: Beveiliging
       auto_close_label: "Sluit topics automatisch na:"
+      auto_close_units: dagen
       edit_permissions: Wijzig permissies
       add_permission: Nieuwe permissie
       this_year: dit jaar
@@ -998,11 +1010,10 @@ nl:
         more: "Nog {{n}} te gaan..."
         left: "Nog {{n}} resterend"
 
-    topic_summary:
+    topic_map:
       title: "Topic samenvatting"
       links_shown: "laat alle {{totalLinks}} links zien..."
       clicks: clicks
-      topic_link: link naar topic
 
     topic_statuses:
       locked:
@@ -1023,7 +1034,7 @@ nl:
     activity: Activiteit
     likes: Leuk
     likes_long: "er zijn {{count}} likes in deze topic"
-    top_contributors: Deelnemers
+    users: Gebruikers
     category_title: Categorie
     history: Geschiedenis
     changed_by: "door {{author}}"
@@ -1094,6 +1105,7 @@ nl:
         please_upgrade: Werk de software bij alsjeblieft
         no_check_performed: Er is nog niet op updates gecontroleerd. Zorgen dat sidekiq loopt."
         stale_data: Er is al een tijdje niet op updates gecontroleerd. Zorgen dat sidekiq loopt."
+        version_check_pending: "Het lijkt er op dat je recentelijk hebt bijgewerkt. Fantastisch!"
         installed_version: Geïnstalleerd
         latest_version: Recent
         problems_found: 'Er zijn een aantal problemen gevonden met je Discourse installatie:'
@@ -1103,7 +1115,7 @@ nl:
         moderators: "Moderators:"
         admins: "Admins:"
         blocked: "Geblokkeerd:"
-        suspended: "Geband:"
+        suspended: "Geschorst:"
         private_messages_short: PBs
         private_messages_title: Privé-berichten
 
@@ -1141,6 +1153,7 @@ nl:
         delete_spammer_title: Verwijder de gebruiker en al hun berichten en topics.
 
         flagged_by: Gemarkeerd door
+        system: Systeem
         error: Er ging iets mis
         view_message: Reageer
         no_results: Er zijn geen markeringen
@@ -1218,12 +1231,12 @@ nl:
         send_test: verstuur test e-mail
         sent_test: Verzonden!
         delivery_method: Verzendmethode
-        preview_digest: "Preview Digest"
+        preview_digest: Voorbeeld digestmail
         preview_digest_desc: "Hiermee kun je een voorbeeld van de digest email zien die vanaf het forum wordt verstuurd."
-        refresh: "Refresh"
-        format: "Formaat"
-        html: "html"
-        text: "text"
+        refresh: Verniew
+        format: Formaat
+        html: html
+        text: text
         last_seen_user: "Laatste gebruiker:"
         reply_key: Reply key
 
@@ -1263,27 +1276,28 @@ nl:
             change_site_setting: verander instellingen
             change_site_customization: verander site aanpassingen
             delete_site_customization: verwijder site aanpassingen
-            ban_user: ban gebruiker
-            unban_user: hef ban op
-          screened_emails:
-            title: Gescreende e-mails
-            description: Nieuwe accounts met een van deze mailadressen worden geblokkeerd of een andere actie wordt ondernomen.
-            email: E-mailadres
-          screened_urls:
-            title: Gescreende urls
-            description: Deze urls zijn gebruikt door gebruikers die als spammer gemarkeerd zijn.
-            url: URL
-          screened_ips:
-            title: Gescreende ip-adressen
-            description: IP-adressen die in de gaten worden gehouden. Kies 'sta toe' om deze op een witte lijst te zetten.
-            delete_confirm: "Weet je zeker dat je de regel voor %{ip_address} wil verwijderen?"
-            actions:
-              block: Blokkeer
-              do_nothing: Sta toe
-            form:
-              label: "Nieuw:"
-              ip_address: IP-adres
-              add: Voeg toe
+            suspend_user: schors gebruiker
+            unsuspend_user: hef schorsing op
+        screened_emails:
+          title: Gescreende e-mails
+          description: Nieuwe accounts met een van deze mailadressen worden geblokkeerd of een andere actie wordt ondernomen.
+          email: E-mailadres
+        screened_urls:
+          title: Gescreende urls
+          description: Deze urls zijn gebruikt door gebruikers die als spammer gemarkeerd zijn.
+          url: URL
+          domain: Domein
+        screened_ips:
+          title: Gescreende ip-adressen
+          description: IP-adressen die in de gaten worden gehouden. Kies 'sta toe' om deze op een witte lijst te zetten.
+          delete_confirm: "Weet je zeker dat je de regel voor %{ip_address} wil verwijderen?"
+          actions:
+            block: Blokkeer
+            do_nothing: Sta toe
+          form:
+            label: "Nieuw:"
+            ip_address: IP-adres
+            add: Voeg toe
 
       impersonate:
         title: Log in als gebruiker
@@ -1304,7 +1318,7 @@ nl:
           pending: Te beoordelen
           admins: Admins
           moderators: Moderatoren
-          suspended: Verbannen
+          suspended: Geschorst
           blocked: Geblokt
         approved: Goedgekeurd?
         approved_selected:
@@ -1325,7 +1339,7 @@ nl:
           admins: Administrators
           moderators: Moderators
           blocked: Geblokkeerde leden
-          suspended: Verbannen leden
+          suspended: Geschorste leden
         reject_successful:
           one: "1 Gebruiker met succes geweigerd"
           other: "%{count} Gebruikers met succes geweigerd"
@@ -1337,10 +1351,10 @@ nl:
         suspend_failed: "Er ging iets fout met het blokkeren van deze gebruiker: {{error}}"
         unsuspend_failed: "Er ging iets fout bij het deblokkeren van deze gebruiker: {{error}}"
         suspend_duration: "Hoe lang wil je deze gebruiker blokkeren?"
-        ban_duretion_units: (dagen)
-        ban_reason_label: "Waarom ban je? Als de gebruiker in probeert te loggen, zullen ze deze tekst zien. Hou het kort."
-        ban_reason: Reden voor ban
-        banned_by: Verbannen door
+        ban_duration_units: (dagen)
+        ban_reason_label: "Waarom schors je? Deze tekst is voor iedereen zichtbaar en als de gebruiker in probeert te loggen, zullen ze deze tekst zien. Hou het kort."
+        ban_reason: Reden voor schorsing
+        banned_by: Geschorst door
         delete_all_posts: Verwijder alle berichten
         delete_all_posts_confirm: "Je gaat %{posts} en %{topics} verwijderen. Zeker weten?"
         suspend: Blokkeer
@@ -1368,12 +1382,12 @@ nl:
         private_topics_count: Privé-topics
         posts_read_count: Berichten gelezen
         post_count: Berichten gemaakt
-        topics_entered: Topics binnengegaan
+        topics_entered: Topics bekeken
         flags_given_count: Meldingen gedaan
         flags_received_count: Meldigen ontvangen
         approve: Accepteer
         approved_by: Geaccepteerd door
-        approve_succes: Gebruiker geaccepteerd en e-mail verzonden met instructies voor activering.
+        approve_success: Gebruiker geaccepteerd en e-mail verzonden met instructies voor activering.
         approve_bulk_success: Alle geselecteerde gebruikers zijn geaccepteerd en een e-mail met instructies voor activering is verstuurd.
         time_read: Tijd gelezen
         delete: Verwijder gebruiker
@@ -1394,11 +1408,11 @@ nl:
         deactivate_failed: Er ging iets mis bij het deactiveren van deze gebruiker.
         unblock_failed: Er ging iets mis bij het deblokkeren van deze gebruiker.
         block_failed: Er ging iets mis bij het blokkeren van deze gebruiker.
-        deactivation_explanation: Een gedeactiveerde gebruiker moet zijn e-mailadres opnieuw bevestigen.
-        banned_explanation: Een verbannen gebruiker kan niet meer inloggen.
+        deactivate_explanation: Een gedeactiveerde gebruiker moet zijn e-mailadres opnieuw bevestigen.
+        suspended_explanation: Een geschorste gebruiker kan niet meer inloggen.
         block_explanation: Een geblokkeerde gebruiker kan geen topics maken of reageren op topics.
         trust_level_change_failed: Er ging iets mis bij het wijzigen van het trust level van deze gebruiker.
-        ban_modal_title: Ban gebruiker
+        suspend_modal_title: Schors gebruiker
 
       site_content:
         none: Selecteer een tekst om deze te bewerken
@@ -1408,5 +1422,24 @@ nl:
       site_settings:
         show_overriden: Bekijk alleen bewerkte instellingen
         title: Instellingen
-        reset: herstel naar standaardinstellingen
+        reset: herstel
         none: geen
+        no_results: "Geen resultaten."
+        categories:
+          all_results: Alle
+          required: Vereist
+          basic: Basissetup
+          users: Gebruikers
+          posting: Schrijven
+          email: E-mail
+          files: Bestanden
+          trust: Trustlevels
+          security: Beveiliging
+          seo: SEO
+          spam: Spam
+          developer: Ontwikkelaar
+          rate_limits: Rate limits
+          uncategorized: Ongecategoriseerd
+
+    lightbox:
+      download: "download"

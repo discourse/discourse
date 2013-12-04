@@ -8,7 +8,7 @@ class MemInfo
         system = `uname`.strip
         if system == "Darwin"
           s = `sysctl -n hw.memsize`.strip
-          s.to_i / 1024
+          s.to_i / 1.kilobyte
         else
           s = `grep MemTotal /proc/meminfo`
           /(\d+)/.match(s)[0].try(:to_i)

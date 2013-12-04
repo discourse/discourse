@@ -36,7 +36,6 @@
 
 .badge-notification {
   @extend %badge;
-  margin-left: 3px;
   padding: 4px;
   padding-top: 3px;
   color: $white;
@@ -50,7 +49,7 @@
 
   // New posts
 
-  &.new-posts {
+  &.new-posts, &.unread-posts {
     background-color: $blue;
   }
 
@@ -58,7 +57,11 @@
 
   &.clicks {
     font-weight: normal;
-    background-color: rgba($black, 0.15)
+    background-color: #ddd;
+    top: -1px;  
+    color: #888;
+    position: relative;
+    margin-left: 2px;
   }
 }
 

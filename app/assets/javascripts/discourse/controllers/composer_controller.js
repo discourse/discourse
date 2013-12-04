@@ -12,6 +12,9 @@ Discourse.ComposerController = Discourse.Controller.extend({
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY),
   checkedMessages: false,
 
+  showEditReason: false,
+  editReason: null,
+
   init: function() {
     this._super();
     this.set('similarTopics', Em.A());
@@ -38,6 +41,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
     save: function() {
       this.save();
+    },
+
+    displayEditReason: function() {
+      this.set("showEditReason", true);
     }
   },
 
@@ -76,12 +83,15 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
   save: function(force) {
     var composer = this.get('model'),
-        composerController = this;
+        self = this;
 
-    if( composer.get('cantSubmitPost') ) {
-      this.set('view.showTitleTip', Date.now());
-      this.set('view.showCategoryTip', Date.now());
-      this.set('view.showReplyTip', Date.now());
+    if(composer.get('cantSubmitPost')) {
+      var now = Date.now();
+      this.setProperties({
+        "view.showTitleTip": now,
+        "view.showCategoryTip": now,
+        "view.showReplyTip": now
+      });
       return;
     }
 
@@ -108,7 +118,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
             "callback": function(){
               composer.set('topic', topic);
               composer.set('post', null);
-              composerController.save(true);
+              self.save(true);
             }
           });
         }
@@ -117,7 +127,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
           "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + this.get('model.topic.title') + "</div>",
           "class": "btn-primary btn-reply-on-original",
           "callback": function(){
-            composerController.save(true);
+            self.save(true);
           }
         });
 
@@ -127,16 +137,17 @@ Discourse.ComposerController = Discourse.Controller.extend({
     }
 
     return composer.save({
-      imageSizes: this.get('view').imageSizes()
+      imageSizes: this.get('view').imageSizes(),
+      editReason: this.get("editReason")
     }).then(function(opts) {
 
       // If we replied as a new topic successfully, remove the draft.
-      if (composerController.get('replyAsNewTopicDraft')) {
-        composerController.destroyDraft();
+      if (self.get('replyAsNewTopicDraft')) {
+        self.destroyDraft();
       }
 
       opts = opts || {};
-      composerController.close();
+      self.close();
 
       var currentUser = Discourse.User.current();
       if (composer.get('creatingTopic')) {
@@ -220,6 +231,11 @@ Discourse.ComposerController = Discourse.Controller.extend({
   open: function(opts) {
     if (!opts) opts = {};
 
+    this.setProperties({
+      showEditReason: false,
+      editReason: null
+    });
+
     var composerMessages = this.get('controllers.composerMessages');
     composerMessages.reset();
 
@@ -233,7 +249,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
     // ensure we have a view now, without it transitions are going to be messed
     var view = this.get('view');
-    var composerController = this;
+    var self = this;
     if (!view) {
 
       // TODO: We should refactor how composer is inserted. It should probably use a
@@ -247,7 +263,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       //  we need to change stuff, otherwise css animations don't kick in
       Em.run.next(function() {
         Em.run.next(function() {
-          composerController.open(opts);
+          self.open(opts);
         });
       });
       return promise;
@@ -267,8 +283,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       } else {
         opts.tested = true;
         if (!opts.ignoreIfChanged) {
-          this.cancelComposer().then(function() { composerController.open(opts); },
-                             function() { return promise.reject(); });
+          this.cancelComposer().then(function() { self.open(opts); }).fail(function() { return promise.reject(); });
         }
         return promise;
       }
@@ -279,7 +294,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       Discourse.Draft.get(opts.draftKey).then(function(data) {
         opts.draftSequence = data.draft_sequence;
         opts.draft = data.draft;
-        return composerController.open(opts);
+        return self.open(opts);
       });
       return promise;
     }
@@ -316,24 +331,23 @@ Discourse.ComposerController = Discourse.Controller.extend({
   },
 
   cancelComposer: function() {
-    var composerController = this;
+    var self = this;
 
     return Ember.Deferred.promise(function (promise) {
-      if (composerController.get('model.hasMetaData') || composerController.get('model.replyDirty')) {
+      if (self.get('model.hasMetaData') || self.get('model.replyDirty')) {
         bootbox.confirm(I18n.t("post.abandon"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
           if (result) {
-            composerController.destroyDraft();
-            composerController.get('model').clearState();
-            composerController.close();
-            promise.resolve();
-          } else {
-            promise.reject();
+            self.destroyDraft();
+            self.get('model').clearState();
+            self.close();
           }
+          promise.resolve();
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
-        composerController.destroyDraft();
-        composerController.close();
+        self.destroyDraft();
+        self.get('model').clearState();
+        self.close();
         promise.resolve();
       }
     });
@@ -359,10 +373,12 @@ Discourse.ComposerController = Discourse.Controller.extend({
   },
 
   close: function() {
-    this.set('model', null);
-    this.set('view.showTitleTip', false);
-    this.set('view.showCategoryTip', false);
-    this.set('view.showReplyTip', false);
+    this.setProperties({
+      model: null,
+      'view.showTitleTip': false,
+      'view.showCategoryTip': false,
+      'view.showReplyTip': false
+    });
   },
 
   closeAutocomplete: function() {
@@ -382,7 +398,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
       archetype: this.get('model.archetype'),
       metaData: this.get('model.metaData')
     })) : void 0;
-  }
+  },
+
+  canEdit: function() {
+    return this.get("model.action") === "edit" && Discourse.User.current().get("can_edit");
+  }.property("model.action")
+
 });
-
-

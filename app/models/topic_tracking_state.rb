@@ -53,25 +53,26 @@ class TopicTrackingState
       }
 
       MessageBus.publish("/unread/#{tu.user_id}", message.as_json, group_ids: group_ids)
-
     end
+
   end
 
   def self.publish_read(topic_id, last_read_post_number, user_id)
 
-      highest_post_number = Topic.where(id: topic_id).pluck(:highest_post_number).first
+    highest_post_number = Topic.where(id: topic_id).pluck(:highest_post_number).first
 
-      message = {
-        topic_id: topic_id,
-        message_type: "read",
-        payload: {
-          last_read_post_number: last_read_post_number,
-          highest_post_number: highest_post_number,
-          topic_id: topic_id
-        }
+    message = {
+      topic_id: topic_id,
+      message_type: "read",
+      payload: {
+        last_read_post_number: last_read_post_number,
+        highest_post_number: highest_post_number,
+        topic_id: topic_id
       }
+    }
 
-      MessageBus.publish("/unread/#{user_id}", message.as_json, user_ids: [user_id])
+    MessageBus.publish("/unread/#{user_id}", message.as_json, user_ids: [user_id])
+
   end
 
   def self.treat_as_new_topic_clause

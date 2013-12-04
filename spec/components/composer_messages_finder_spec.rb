@@ -181,7 +181,7 @@ describe ComposerMessagesFinder do
       SiteSetting.stubs(:educate_until_posts).returns(10)
       user.stubs(:post_count).returns(11)
 
-      SiteSetting.stubs(:best_of_posts_required).returns(1)
+      SiteSetting.stubs(:summary_posts_required).returns(1)
 
       Fabricate(:post, topic: topic, user: user)
       Fabricate(:post, topic: topic, user: user)
@@ -207,8 +207,8 @@ describe ComposerMessagesFinder do
         finder.check_dominating_topic.should be_blank
       end
 
-      it "does not notify if the `best_of_posts_required` has not been reached" do
-        SiteSetting.stubs(:best_of_posts_required).returns(100)
+      it "does not notify if the `summary_posts_required` has not been reached" do
+        SiteSetting.stubs(:summary_posts_required).returns(100)
         finder.check_dominating_topic.should be_blank
       end
 
@@ -222,8 +222,8 @@ describe ComposerMessagesFinder do
         finder.check_dominating_topic.should be_present
       end
 
-      it "doesn't notify a user if the topic has less than `best_of_posts_required` posts" do
-        SiteSetting.stubs(:best_of_posts_required).returns(5)
+      it "doesn't notify a user if the topic has less than `summary_posts_required` posts" do
+        SiteSetting.stubs(:summary_posts_required).returns(5)
         finder.check_dominating_topic.should be_blank
       end
 

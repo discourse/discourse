@@ -55,6 +55,10 @@ module FileStore
       avatar_template(avatar, absolute_base_url)
     end
 
+    def purge_tombstone(grace_period)
+      `find #{tombstone_dir} -mtime +#{grace_period} -type f -delete`
+    end
+
     private
 
     def get_path_for_upload(file, upload)
@@ -105,14 +109,16 @@ module FileStore
     def copy_file(file, path)
       FileUtils.mkdir_p(Pathname.new(path).dirname)
       # move the file to the right location
-      # not using cause mv, cause permissions are no good on move
-      File.open(path, "wb") do |f|
-        f.write(file.read)
-      end
+      # not using mv, cause permissions are no good on move
+      File.open(path, "wb") { |f| f.write(file.read) }
     end
 
     def remove_file(url)
-      File.delete("#{public_dir}#{url}") if is_relative?(url)
+      return unless is_relative?(url)
+      path = public_dir + url
+      tombstone = public_dir + url.gsub("/uploads/", "/tombstone/")
+      FileUtils.mkdir_p(Pathname.new(tombstone).dirname)
+      FileUtils.move(path, tombstone)
     rescue Errno::ENOENT
       # don't care if the file isn't there
     end
@@ -132,6 +138,10 @@ module FileStore
 
     def public_dir
       "#{Rails.root}/public"
+    end
+
+    def tombstone_dir
+      public_dir + relative_base_url.gsub("/uploads/", "/tombstone/")
     end
 
   end

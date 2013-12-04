@@ -513,10 +513,10 @@ pt_BR:
     notification_email: "O endereço de email a ser usado para notificar os utilizadores de password esquecida, novas contas, etc."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     use_ssl: "O site deve ser acessível via SSL?"
-    best_of_score_threshold: "A pontuação mínima de uma postagem para ser incluído no 'melhor de'"
-    best_of_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
-    best_of_likes_required: "Um tópico precisa deste número de curtidas antes de ser ativado o modo 'melhor de'."
-    best_of_percent_filter: "Quando um usuário clicar em Os Melhores, exibir os % posts"
+    summary_score_threshold: "A pontuação mínima de uma postagem para ser incluído no 'melhor de'"
+    summary_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
+    summary_likes_required: "Um tópico precisa deste número de curtidas antes de ser ativado o modo 'melhor de'."
+    summary_percent_filter: "Quando um usuário clicar em Os Melhores, exibir os % posts"
     enable_private_messages: "permitir membros a ter conversas com mensagens particulares"
 
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
@@ -615,7 +615,7 @@ pt_BR:
     suggested_topics: "Quantidade de tópicos sugeridos que você verá na parte debaixo dos tópicos"
 
     clean_up_uploads: "Remove envios(uploads) orfãos para previnir hospedagem ilegal. AVISO: Você pode querer fazer um backup do seu diretório /uploads antes de habilitar essa configuração."
-    uploads_grace_period_in_hours: "Carência (em horas), antes que um envio(upload) órfão é removido."
+    clean_orphan_uploads_grace_period_hours: "Carência (em horas), antes que um envio(upload) órfão é removido."
     enable_s3_uploads: "Enviar arquivos recebidos para o s3"
     s3_upload_bucket: "Bucket do s3 para qual enviar"
     s3_access_key_id: "Access key da Amazon S3 que será usada para envio de imagens"

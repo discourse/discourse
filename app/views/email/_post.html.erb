@@ -10,7 +10,7 @@
       </td>
     </tr>
     <tr>
-      <td class='body'><%= post.cooked.html_safe %></td>
+      <td class='body'><%= PrettyText.make_all_links_absolute(post.cooked).html_safe %></td>
     </tr>
   </tbody>
 </table>

@@ -13,6 +13,7 @@
 //= require jquery.ui.widget.js
 //= require handlebars.js
 //= require development/ember.js
+//= require message-bus.js
 
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
@@ -46,7 +47,7 @@
 //= require jquery.tagsinput.js
 //= require lodash.js
 //= require md5.js
-//= require modernizr.custom.95264.js
+//= require modernizr.custom.00874.js
 //= require mousetrap.js
 //= require rsvp.js
 //= require show-html.js
@@ -92,6 +93,9 @@ $.ajax = function() {
   return oldAjax.apply(this, arguments);
 };
 
+// Stop the message bus so we don't get ajax calls
+Discourse.MessageBus.stop();
+
 // Trick JSHint into allow document.write
 var d = document;
 d.write('<div id="ember-testing-container"><div id="ember-testing"></div></div>');
@@ -100,7 +104,7 @@ d.write('<style>#ember-testing-container { position: absolute; background: white
 Discourse.rootElement = '#ember-testing';
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
-Discourse.bindDOMEvents();
+Discourse.runInitializers();
 
 Discourse.Router.map(function() {
   Discourse.routeBuilder.call(this);

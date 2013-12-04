@@ -1,10 +1,17 @@
 module JsLocaleHelper
 
   def self.output_locale(locale, translations = nil)
-
     locale_str = locale.to_s
 
+    # load default translations
     translations ||= YAML::load(File.open("#{Rails.root}/config/locales/client.#{locale_str}.yml"))
+    # load plugins translations
+    plugin_translations = {}
+    Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
+      plugin_translations.merge! YAML::load(File.open(file))
+    end
+    # merge translations (plugin translations overwrite default translations)
+    translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
 
     # We used to split the admin versus the client side, but it's much simpler to just
     # include both for now due to the small size of the admin section.
@@ -13,6 +20,7 @@ module JsLocaleHelper
     # it again later, so we'll merge the JSON ourselves.
     admin_contents = translations[locale_str].delete('admin_js')
     translations[locale_str]['js'].merge!(admin_contents) if admin_contents.present?
+    translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['admin_js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['admin_js']
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
 
     result = generate_message_format(message_formats, locale_str)

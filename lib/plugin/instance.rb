@@ -154,7 +154,7 @@ class Plugin::Instance
     end
     unless assets.blank?
       assets.each do |asset|
-        if asset =~ /\.js$/
+        if asset =~ /\.js$|.js.erb$/
           DiscoursePluginRegistry.javascripts << asset
         elsif asset =~ /\.css$|\.scss$/
           DiscoursePluginRegistry.stylesheets << asset
@@ -170,6 +170,16 @@ class Plugin::Instance
       @server_side_javascripts.each do |js|
         DiscoursePluginRegistry.server_side_javascripts << js
       end
+    end
+
+    public_data = File.dirname(path) + "/public"
+    if Dir.exists?(public_data)
+      target = Rails.root.to_s + "/public/plugins/"
+      `mkdir -p #{target}`
+      target << name
+      # TODO a cleaner way of registering and unregistering
+      `rm -f #{target}`
+      `ln -s #{public_data} #{target}`
     end
   end
 
@@ -206,7 +216,7 @@ class Plugin::Instance
       end
     else
       puts "You are specifying the gem #{name} in #{path}, however it does not exist!"
-      exit -1
+      exit(-1)
     end
   end
 

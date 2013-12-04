@@ -17,7 +17,7 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
 
 .logo-small {margin-right: 8px;}
 
-.topic-post {
+.post-cloak {
   padding: 0;
 
   &:first-of-type {
@@ -211,7 +211,7 @@ a.star {
   text-shadow: none !important;
 }
 
-.topic-summary {
+.topic-map {
   margin: 20px 0 0 0;
   border: 1px solid #ddd;
 
@@ -267,9 +267,7 @@ a.star {
     margin-right: 4px;
   }
 
-  .summary {
-    &.collapsed {
-    }
+  .map {
     li {
       float: left;
       padding: 7px 11px;
@@ -277,9 +275,7 @@ a.star {
         border-right: 0;
       }
     }
-    a,
-
-    .number {
+    a, .number {
       font-weight: bold;
       line-height: 20px;
     }
@@ -347,7 +343,7 @@ a.star {
 }
 
 #topic-footer-buttons {
-  padding: 20px 10px 0 10px;
+  padding: 10px 10px 0 10px;
   p {
     line-height: 32px;
     color: #888;
@@ -479,12 +475,11 @@ iframe {
 }
 
 .contents .cooked {
-  padding-right: 30px;
+  margin-right: 50px;
+  word-wrap: break-word;
   h1, h2, h3 {margin: 10px 0;}
-  ul, ol {margin: 0 0 0 20px;}
+  ul, ol {margin: 15px 0 0 30px;}
   li p {margin: 3px 0;}
-
-
 }
 
   a.mention {
@@ -594,13 +589,30 @@ position: relative;
 blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
+    p:first-of-type {margin-top: 0;}
+    p:last-of-type {margin-bottom: 0;}
 }
 
 .quote { /* quotes with attribution */
   margin-top: 14px;
-  .title {margin-right: 0;}
-  blockquote {margin: 0;}
+  blockquote {margin-top: 0; padding-top: 0;
+  .onebox-result {background-color: #ddd;}
+
+
+  }
+
+  .title {
+  border-left: 5px solid #bebebe;
+  background-color: #f1f1f1;
+  padding: 12px;
+  .avatar { margin-right: 7px; }
+  img {margin-top: -4px;}
+
 }
+}
+
+
+
 
 .quote-controls {
   float: right;
@@ -625,13 +637,7 @@ blockquote { /* solo quotes */
     }
 }
 
-.quote .title {
-  border-left: 5px solid #bebebe;
-  background-color: #f1f1f1;
-  padding: 10px 10px 0 12px;
-  .avatar { margin-right: 7px; }
-  img {margin-top: -4px;}
-}
+
 
 .gutter {
   float: left;
@@ -688,7 +694,7 @@ blockquote { /* solo quotes */
 
 .span14 { width: 70%; max-width: 720px; } //main content
 .span2 {max-width: 92px;}
-.span11 {width: 90%; max-width: 580px;}
+.span11 {width: 80%; max-width: 580px;}
 .span5 {max-width: 250px;}
 
 
@@ -901,7 +907,7 @@ clear: both;
   }
  article.boxed {
     position: relative;
-    line-height: 20px;
+    line-height: 21px;
 
     .select-posts {
       position: absolute;

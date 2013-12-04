@@ -70,8 +70,8 @@ zh_CN:
           one:   "1天前"
           other: "%{count}天前"
     share:
-      topic: '分享一个到本主题的链接'
-      post: '分享一个到#%{postNumber}帖的链接'
+      topic: '分享本主题的链接'
+      post: '分享#%{postNumber}帖的链接'
       close: '关闭'
       twitter: '分享这个链接到 Twitter'
       facebook: '分享这个链接到 Facebook'
@@ -108,8 +108,8 @@ zh_CN:
     weekly: "每周"
     every_two_weeks: "每两周"
     character_count:
-      one: "{{count}} 个字符"
-      other: "{{count}} 个字符"
+      one: "{{count}}个字符"
+      other: "{{count}}个字符"
 
     in_n_seconds:
       one: "一秒内"
@@ -216,6 +216,8 @@ zh_CN:
       moderator: "{{user}} 是版主"
       admin: "{{user}} 是管理员"
       deleted: "（已删除）"
+      suspended_notice: "该用户将被禁止登录，直至{{date}}."
+      suspended_reason: "原因："
 
       messages:
         all: "所有"
@@ -278,6 +280,7 @@ zh_CN:
         too_long: "你设置的用户名太长了。"
         checking: "查看用户名是否可用……"
         enter_email: '找到用户名，请输入对应电子邮箱。'
+        prefilled: "电子邮箱与用户名匹配。"
 
       password_confirmation:
         title: "请再次输入密码"
@@ -378,12 +381,11 @@ zh_CN:
     unmute: 解除防打扰
     last_post: 最后一帖
 
-    best_of:
-      title: "优秀"
-      enabled_description: 你现在正在浏览本主题的“优秀”视图。
-      description: "此主题中有 <b>{{count}}</b> 个帖子，是不是有点多哦！你愿意切换到只显示最多交互和回复的帖子视图么？"
-      enable: '切换到“优秀”视图'
-      disable: '取消“优秀”'
+    summary:
+      enabled_description: "你现在正在浏览本主题的“概括”视图。要查看所有帖子，请点击下方。"
+      description: "本主题中有<b>{{count}}</b>个帖子，是否只查看与主题最相关的帖子以节省时间？"
+      enable: '概括本主题'
+      disable: '显示所有帖子'
 
     private_message_info:
       title: "私下交流"
@@ -476,7 +478,9 @@ zh_CN:
       create_pm: "创建私信"
 
       users_placeholder: "添加一个用户"
-      title_placeholder: "在此输入你的标题，简明扼要的用一句话说明讨论的内容。"
+      title_placeholder: "为什么需要编辑？"
+      edit_reason_placeholder: "编辑理由"
+      show_edit_reason: "（添加编辑理由）"
       reply_placeholder: "在此输入你的内容。你可以使用 Markdown（参考 http://wowubuntu.com/markdown/） 或 BBCode（参考 http://www.bbcode.org/reference.php） 来格式化内容。拖拽或粘贴一幅图片到这儿即可将它上传。"
       view_new_post: "浏览你的新帖子。"
       saving: "保存中……"
@@ -591,7 +595,7 @@ zh_CN:
       title: 主题排名详细
 
     topic:
-      filter_to: "只显示本主题中由{{username}}发表的{{post_count}}个帖子"
+      filter_to: "只显示本主题中的{{post_count}}个帖子"
       create: '创建主题'
       create_long: '创建一个新主题'
       private_message: '开启一段私下交流'
@@ -739,7 +743,7 @@ zh_CN:
         help: '向你的朋友发送邀请，他们只需要一个点击就能回复这个主题'
         to_topic: "我们会给你的朋友发送一封邮件，他/她只需点击其中的一个链接，就可以无需登录直接回复这个主题。"
         to_forum: "我们会给你的朋友发送一封邮件，他/她只需点击其中的链接，就可以注册加入这个论坛。"
-        
+
         email_placeholder: '电子邮箱地址'
         success: "谢谢！我们已发送一个邀请邮件到<b>{{email}}</b>。当他们确认的时候我们会通知你。你也可以在你的用户页面的邀请选项卡下查看邀请状态。"
         error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"
@@ -747,21 +751,21 @@ zh_CN:
       login_reply: '登录后回复'
 
       filters:
-        user: "你在浏览 {{n_posts}} {{by_n_users}}."
+        user: "你在浏览{{n_posts}} {{by_n_users}}。"
         n_posts:
           one: "一个帖子"
-          other: "{{count}} 帖子"
+          other: "{{count}}个帖子"
         by_n_users:
-          one: "一个指定用户"
-          other: "{{count}} 个用户中的"
+          one: "一个指定用户的"
+          other: "{{count}}个用户的"
 
-        best_of: "你在浏览 {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
-          one: "一个优秀帖子"
-          other: "{{count}} 优秀帖子"
+        summary: "你在浏览{{of_n_posts}}{{n_summarized_posts}}。"
+        n_summarized_posts:
+          one: "一个概扩帖子"
+          other: "{{count}}个概扩帖子"
         of_n_posts:
           one: "一个帖子中的"
-          other: "{{count}} 个帖子中的"
+          other: "{{count}}个帖子中的"
         cancel: "再次显示本主题下的所有帖子。"
 
       split_topic:
@@ -796,6 +800,7 @@ zh_CN:
       reply_topic: "回复 {{link}}"
       quote_reply: "引用回复"
       edit: "编辑 {{link}}"
+      edit_reason: "理由："
       post_number: "帖子 {{number}}"
       in_reply_to: "回复给"
       last_edited_on: "最后修改于"
@@ -999,11 +1004,10 @@ zh_CN:
         more: "还差 {{n}} 个……"
         left: "还剩下 {{n}}"
 
-    topic_summary:
+    topic_map:
       title: "主题概要"
       links_shown: "显示所有 {{totalLinks}} 个链接……"
       clicks: "点击"
-      topic_link: "主题链接"
 
     topic_statuses:
       locked:
@@ -1024,7 +1028,7 @@ zh_CN:
     activity: "活动"
     likes: "赞"
     likes_long: "本主题已有 {{number}} 次赞"
-    top_contributors: "参与者"
+    users: "参与者"
     category_title: "分类"
     history: "历史"
     changed_by: "由 {{author}}"
@@ -1143,6 +1147,7 @@ zh_CN:
         delete_spammer_title: "删除该用户及其所有帖子和主题。"
 
         flagged_by: "报告者为"
+        system: "系统"
         error: "出错了"
         view_message: "查看消息"
         no_results: "没有报告"
@@ -1339,9 +1344,9 @@ zh_CN:
       user:
         suspend_failed: "禁止此用户时发生了错误 {{error}}"
         unsuspend_failed: "解禁此用户时发生了错误 {{error}}"
-        suspend_duration: "你计划禁止该用户多久？"
+        suspend_duration: "该用户将被禁止多久？"
         ban_duration_units: "（天）"
-        ban_reason_label: "为什么禁止该用户？当其尝试登入时，会看到这条理由。"
+        ban_reason_label: "为什么禁止该用户？该理由将公开显示在用户个人页面上，当其尝试登入时，也看到这条理由。尽量简洁。"
         ban_reason: "禁止的理由"
         banned_by: "禁止操作者："
         delete_all_posts: "删除所有帖子"
@@ -1413,3 +1418,19 @@ zh_CN:
         title: '设置'
         reset: '重置为缺省值'
         none: '无'
+        no_results: "找不到结果。"
+        categories:
+          all_results: '全部'
+          required: '必须'
+          basic: '基本设置'
+          users: '用户'
+          posting: '发帖'
+          email: '电子邮件'
+          files: '文件'
+          trust: '信任等级'
+          security: '安全性'
+          seo: '搜索引擎优化'
+          spam: '垃圾信息'
+          rate_limits: '速度限制'
+          developer: '开发者'
+          uncategorized: '未分类'

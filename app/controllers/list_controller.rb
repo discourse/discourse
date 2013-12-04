@@ -47,22 +47,10 @@ class ListController < ApplicationController
   end
 
   def category
-    query = TopicQuery.new(current_user, page: params[:page])
-
-    if !@category
-      raise Discourse::NotFound
-      return
-    end
-    guardian.ensure_can_see!(@category)
-    list = query.list_category(@category)
-    @description = @category.description
-
-    if params[:parent_category].present?
-      list.more_topics_url = url_for(category_list_parent_path(params[:parent_category], params[:category], page: next_page, format: "json"))
-    else
-      list.more_topics_url = url_for(category_list_path(params[:category], page: next_page, format: "json"))
-    end
-
+    list_opts = build_topic_list_options
+    query = TopicQuery.new(current_user, list_opts)
+    list = query.list_latest
+    list.more_topics_url = construct_url_with(:latest, list_opts)
     respond(list)
   end
 
@@ -108,8 +96,12 @@ class ListController < ApplicationController
     end
   end
 
-  def next_page
-    params[:page].to_i + 1
+  def next_page_params(opts=nil)
+    opts = opts || {}
+    route_params = { format: 'json', page: params[:page].to_i + 1 }
+    route_params[:sort_order] = opts[:sort_order] if opts[:sort_order].present?
+    route_params[:sort_descending] = opts[:sort_descending] if opts[:sort_descending].present?
+    route_params
   end
 
   private
@@ -140,7 +132,9 @@ class ListController < ApplicationController
       page: params[:page],
       topic_ids: param_to_integer_list(:topic_ids),
       exclude_category: (params[:exclude_category] || menu_item.try(:filter)),
-      category: params[:category]
+      category: params[:category],
+      sort_order: params[:sort_order],
+      sort_descending: params[:sort_descending]
     }
   end
 
@@ -153,12 +147,11 @@ class ListController < ApplicationController
   end
 
   def generate_list_for(action, target_user, opts)
-    list = TopicQuery.new(current_user, opts)
-    list = list.send("list_#{action}", target_user)
+    TopicQuery.new(current_user, opts).send("list_#{action}", target_user)
   end
 
   def construct_url_with(action, opts, url_prefix=nil)
     method = url_prefix.blank? ? "#{action}_path" : "#{url_prefix}_#{action}_path"
-    public_send(method, opts.merge(format: 'json', page: next_page))
+    public_send(method, opts.merge(next_page_params(opts)))
   end
 end

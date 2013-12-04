@@ -1,0 +1,146 @@
+(function() {
+
+  var emoji = <%= Dir.glob(File.expand_path("../../../public/images/*.png", __FILE__)).map{|f| File.basename(f).split(".")[0]}.inspect %>;
+
+  function imageFor(code) {
+    if (emoji.indexOf(code) !== -1) {
+      var url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
+      return ['img', {href: url, title: ':' + code + ':', 'class': 'emoji', alt: code}];
+    }
+  }
+
+  // Also support default emotions
+  var translations = {
+    ':)'   : 'smile',
+    ':-)'   : 'smile',
+    ':('   : 'frowning',
+    ':-('   : 'frowning',
+    ';)'   : 'wink',
+    ';-)'   : 'wink',
+    ':\'(' : 'cry',
+    ':\'-(' : 'cry',
+    ':-\'(' : 'cry',
+    ':p'   : 'stuck_out_tongue',
+    ':P'   : 'stuck_out_tongue',
+    ':-P'   : 'stuck_out_tongue',
+    ':O'   : 'open_mouth',
+    ':-O'   : 'open_mouth',
+    ':D'   : 'smiley',
+    ':-D'   : 'smiley',
+    ':|'   : 'expressionless',
+    ':-|'   : 'expressionless',
+    ";P"   : 'stuck_out_tongue_winking_eye',
+    ";-P"   : 'stuck_out_tongue_winking_eye',
+    ';)'   : 'wink',
+    ';-)'   : 'wink',
+    ":$"   : 'blush',
+    ":-$"   : 'blush'
+  };
+
+  var translationsWithColon = {};
+  Object.keys(translations).forEach(function (t) {
+    if (t[0] === ':') {
+      translationsWithColon[t] = translations[t];
+    } else {
+      var replacement = translations[t];
+      Discourse.Dialect.inlineReplace(t, function () {
+        return imageFor(replacement);
+      });
+    }
+  });
+
+  function escapeRegExp(s) {
+    return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+  }
+
+  var translationColonRegexp = new RegExp("^" +
+                                           Object.keys(translationsWithColon).map(function (t) {
+                                             return "(" + escapeRegExp(t) + ")";
+                                           }).join("|")
+                                         );
+
+  Discourse.Dialect.registerInline(':', function(text, match, prev) {
+    var endPos = text.indexOf(':', 1),
+        contents;
+
+    // If there is no trailing colon, check our translations that begin with colons
+    if (endPos === -1) {
+      translationColonRegexp.lastIndex = 0;
+      var match = translationColonRegexp.exec(text);
+      if (match && match[0]) {
+        contents = imageFor(translationsWithColon[match[0]]);
+        if (contents) {
+          return [match[0].length, contents];
+        }
+      }
+      return;
+    }
+
+    // Simple find and replace from our array
+    var between = text.slice(1, endPos);
+    contents = imageFor(between);
+    if (contents) {
+      return [endPos+1, contents];
+    }
+  });
+
+  if (Discourse && Discourse.ComposerView) {
+    Discourse.ComposerView.on("initWmdEditor", function(event){
+
+      var baseUrl = Discourse.getURL("/");
+
+      template = Handlebars.compile("<div class='autocomplete'>" +
+                                       "<ul>" +
+                                          "{{#each options}}" +
+                                              "<li>" +
+                                                "<a href='#'>" +
+                                                "<img src='" + baseUrl + "plugins/emoji/images/{{this}}.png' class='emoji'> " +
+                                                "{{this}}</a>" +
+                                              "</li>" +
+                                          "{{/each}}" +
+                                       "</ul>" +
+                                    "</div>");
+
+      $('#wmd-input').autocomplete({
+        template: template,
+        key: ":",
+        transformComplete: function(v){ return v + ":"; },
+        dataSource: function(term){
+
+          var full = ":" + term;
+          term = term.toLowerCase();
+
+          if (term === "") {
+            return Ember.RSVP.resolve(["smile", "smiley", "wink", "sunny", "blush"]);
+          }
+
+          if (translations[full]) {
+            return Ember.RSVP.resolve([translations[full]]);
+          }
+
+          var options = [];
+          var i;
+          for (i=0; i < emoji.length; i++) {
+            if (emoji[i].indexOf(term) === 0) {
+              options.push(emoji[i]);
+              if(options.length > 4) { break; }
+            }
+          }
+
+          if (options.length <= 4) {
+            for (i=0; i < emoji.length; i++) {
+              if (emoji[i].indexOf(term) > 0) {
+                options.push(emoji[i]);
+                if(options.length > 4) { break; }
+              }
+            }
+          }
+
+          return Ember.RSVP.resolve(options);
+        }
+      });
+    });
+  }
+
+  Discourse.Markdown.whiteListClass("emoji");
+}).call(this);

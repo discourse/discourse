@@ -280,6 +280,7 @@ en:
         too_long: "Your username is too long."
         checking: "Checking username availability..."
         enter_email: 'Username found. Enter matching email.'
+        prefilled: "Email matches this registered username."
 
       password_confirmation:
         title: "Password Again"
@@ -380,12 +381,11 @@ en:
     unmute: Unmute
     last_post: Last post
 
-    best_of:
-      title: "Best Of"
-      enabled_description: "You're viewing only the best posts in this topic. To see all posts again, click below."
-      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the best posts?"
-      enable: 'Switch to "Best Of" view'
-      disable: 'Cancel "Best Of"'
+    summary:
+      enabled_description: "You're viewing a summary of this topic. To see all posts again, click below."
+      description: "There are <b>{{count}}</b> replies. Save reading time by displaying only the most relevant replies?"
+      enable: 'Summarize This Topic'
+      disable: 'Show All Posts'
 
     private_message_info:
       title: "Private Message"
@@ -479,6 +479,8 @@ en:
 
       users_placeholder: "Add a user"
       title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
+      edit_reason_placeholder: "why are you editing?"
+      show_edit_reason: "(add edit reason)"
       reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
       view_new_post: "View your new post."
       saving: "Saving..."
@@ -515,8 +517,10 @@ en:
       toggler: "hide or show the composer panel"
 
       admin_options_title: "Optional staff settings for this topic"
-      auto_close_label: "Auto-close topic after:"
-      auto_close_units: "days"
+      auto_close_label: "Auto-close topic time:"
+      auto_close_units: "(# of hours, a time, or a timestamp)"
+      auto_close_examples: 'Examples: 24, 17:00, 2013-11-22 14:00'
+      auto_close_error: "Please enter a valid value."
 
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
@@ -593,7 +597,7 @@ en:
       title: Topic Rank Details
 
     topic:
-      filter_to: "Show only the {{post_count}} posts by {{username}} in this topic"
+      filter_to: "Show {{post_count}} posts in topic"
       create: 'Create Topic'
       create_long: 'Create a new Topic'
       private_message: 'Start a private message'
@@ -757,10 +761,10 @@ en:
           one: "made by 1 specific user"
           other: "made by {{count}} specific users"
 
-        best_of: "You're viewing the {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
-          one: "1 best post"
-          other: "{{count}} best posts"
+        summary: "You're viewing {{n_summarized_posts}} {{of_n_posts}}. "
+        n_summarized_posts:
+          one: "1 summarized post"
+          other: "{{count}} summarized posts"
         of_n_posts:
           one: "of 1 in the topic"
           other: "of {{count}} in the topic"
@@ -798,6 +802,7 @@ en:
       reply_topic: "Reply to {{link}}"
       quote_reply: "quote reply"
       edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      edit_reason: "Reason: "
       post_number: "post {{number}}"
       in_reply_to: "in reply to"
       last_edited_on: "post last edited on"
@@ -979,6 +984,7 @@ en:
       already_used: 'This color has been used by another category'
       security: "Security"
       auto_close_label: "Auto-close topics after:"
+      auto_close_units: "days"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
       this_year: "this year"
@@ -1001,11 +1007,10 @@ en:
         more: "{{n}} to go..."
         left: "{{n}} remaining"
 
-    topic_summary:
+    topic_map:
       title: "Topic Summary"
       links_shown: "show all {{totalLinks}} links..."
       clicks: "clicks"
-      topic_link: "topic link"
 
     topic_statuses:
       locked:
@@ -1026,7 +1031,7 @@ en:
     activity: "Activity"
     likes: "Likes"
     likes_long: "there are {{number}} likes in this topic"
-    top_contributors: "Participants"
+    users: "Users"
     category_title: "Category"
     history: "History"
     changed_by: "by {{author}}"
@@ -1145,6 +1150,7 @@ en:
         delete_spammer_title: "Delete the user and all its posts and topics."
 
         flagged_by: "Flagged by"
+        system: "System"
         error: "Something went wrong"
         view_message: "Reply"
         no_results: "There are no flags."
@@ -1417,5 +1423,22 @@ en:
         title: 'Settings'
         reset: 'reset to default'
         none: 'none'
+        no_results: "No results found."
+        categories:
+          all_results: 'All'
+          required: 'Required'
+          basic: 'Basic Setup'
+          users: 'Users'
+          posting: 'Posting'
+          email: 'Email'
+          files: 'Files'
+          trust: 'Trust Levels'
+          security: 'Security'
+          seo: 'SEO'
+          spam: 'Spam'
+          rate_limits: 'Rate Limits'
+          developer: 'Developer'
+          uncategorized: 'Uncategorized'
 
-
+    lightbox:
+      download: "download"

@@ -1,6 +1,8 @@
+{{view Discourse.HtmlView key="top"}}
+
 {{#if postStream.loaded}}
 
-  {{#if postStream.firstPostLoaded}}
+  {{#if postStream.firstPostPresent}}
     <div id='topic-title'>
       <div class='container'>
         <div class='inner'>
@@ -50,7 +52,7 @@
             <nav id='topic-progress' title="{{i18n topic.progress.title}}" {{bindAttr class="hideProgress:hidden"}}>
               <button id='jump-top' title="{{i18n topic.progress.jump_top}}" {{bindAttr disabled="jumpTopDisabled"}} {{action jumpTop}}><i class="icon-circle-arrow-up"></i></button>
               <div class='nums'>
-                <h4 title="{{i18n topic.progress.current}}">{{progressPosition}}</h4> <span>{{i18n of_value}}</span> <h4>{{postStream.filteredPostsCount}}</h4>
+                <h4 title="{{i18n topic.progress.current}}">{{progressPosition}}</h4> <span>{{i18n of_value}}</span> <h4>{{highest_post_number}}</h4>
               </div>
               <button id='jump-bottom' title="{{i18n topic.progress.jump_bottom}}" {{bindAttr disabled="jumpBottomDisabled"}} {{action jumpBottom}}><i class="icon-circle-arrow-down"></i></button>
               <div class='bg'>&nbsp;</div>
@@ -62,7 +64,7 @@
           {{/if}}
 
           {{#unless postStream.loadingFilter}}
-            {{collection itemViewClass="Discourse.PostView" contentBinding="postStream.posts" topicViewBinding="view"}}
+            {{cloaked-collection cloakView="post" idProperty="post_number" defaultHeight="200" content=postStream.posts}}
           {{/unless}}
 
           {{#if postStream.loadingBelow}}
@@ -74,7 +76,7 @@
         {{#if postStream.loadingFilter}}
           <div class='spinner small'>{{i18n loading}}</div>
         {{else}}
-          {{#if postStream.lastPostLoaded}}
+          {{#if postStream.loadedAllPosts}}
 
             {{view Discourse.TopicClosingView topicBinding="model"}}
             {{view Discourse.TopicFooterButtonsView topicBinding="model"}}
@@ -83,7 +85,7 @@
               <div id='suggested-topics'>
                 <h3>{{i18n suggested_topics.title}}</h3>
                 <div class='topics'>
-                  {{discourse-basic-topic-list topics=details.suggested_topics}}
+                  {{basic-topic-list topics=details.suggested_topics}}
                 </div>
                 <br/>
                 <h3>{{{view.browseMoreMessage}}}</h3>
@@ -136,3 +138,4 @@
   {{render topicAdminMenu content}}
 {{/if}}
 
+{{view Discourse.HtmlView key="bottom"}}
