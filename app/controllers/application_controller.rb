@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_filter :set_locale
   before_filter :set_mobile_view
   before_filter :inject_preview_style
   before_filter :disable_customization
@@ -33,7 +34,6 @@ class ApplicationController < ActionController::Base
   before_filter :store_incoming_links
   before_filter :preload_json
   before_filter :check_xhr
-  before_filter :set_locale
   before_filter :redirect_to_login_if_required
 
   rescue_from Exception do |exception|
