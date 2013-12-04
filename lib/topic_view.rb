@@ -2,6 +2,7 @@ require_dependency 'guardian'
 require_dependency 'topic_query'
 require_dependency 'filter_best_posts'
 require_dependency 'summarize'
+require_dependency 'gaps'
 
 class TopicView
 
@@ -42,6 +43,15 @@ class TopicView
       (@page && @page.to_i > 1) ? "?page=#{@page}" : ""
     end
     path
+  end
+
+  def contains_gaps?
+    @contains_gaps
+  end
+
+  def gaps
+    return unless @contains_gaps
+    Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
   end
 
   def last_post
@@ -113,9 +123,7 @@ class TopicView
 
   # Filter to all posts near a particular post number
   def filter_posts_near(post_number)
-
     min_idx, max_idx = get_minmax_ids(post_number)
-
     filter_posts_in_range(min_idx, max_idx)
   end
 
@@ -255,14 +263,36 @@ class TopicView
     finder.first
   end
 
+  def unfiltered_posts
+    result = @topic.posts.where(hidden: false)
+    result = result.with_deleted if @user.try(:staff?)
+    result
+  end
+
   def setup_filtered_posts
-    @filtered_posts = @topic.posts.where(hidden: false)
+
+    # Certain filters might leave gaps between posts. If that's true, we can return a gap structure
+    @contains_gaps = false
+    @filtered_posts = unfiltered_posts
     @filtered_posts = @filtered_posts.with_deleted if @user.try(:staff?)
-    @filtered_posts = @filtered_posts.summary if @filter == 'summary'
-    @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action]) if @best.present?
-    return unless @username_filters.present?
-    usernames = @username_filters.map{|u| u.downcase}
-    @filtered_posts = @filtered_posts.where('post_number = 1 or user_id in (select u.id from users u where username_lower in (?))', usernames)
+
+    # Filters
+    if @filter == 'summary'
+      @filtered_posts = @filtered_posts.summary
+      @contains_gaps = true
+    end
+
+    if @best.present?
+      @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action])
+      @contains_gaps = true
+    end
+
+    if @username_filters.present?
+      usernames = @username_filters.map{|u| u.downcase}
+      @filtered_posts = @filtered_posts.where('post_number = 1 or user_id in (select u.id from users u where username_lower in (?))', usernames)
+      @contains_gaps = true
+    end
+
   end
 
   def check_and_raise_exceptions

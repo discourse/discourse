@@ -500,6 +500,12 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     }
   },
 
+  /**
+    Called the the topmost visible post on the page changes.
+
+    @method topVisibleChanged
+    @params {Discourse.Post} post that is at the top
+  **/
   topVisibleChanged: function(post) {
     var postStream = this.get('postStream'),
         firstLoadedPost = postStream.get('firstLoadedPost');
@@ -523,11 +529,18 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     }
   },
 
-  bottomVisibleChanged: function(post) {
-    this.set('progressPosition', post.get('post_number'));
+  /**
+    Called the the bottommost visible post on the page changes.
 
+    @method bottomVisibleChanged
+    @params {Discourse.Post} post that is at the bottom
+  **/
+  bottomVisibleChanged: function(post) {
     var postStream = this.get('postStream'),
-        lastLoadedPost = postStream.get('lastLoadedPost');
+        lastLoadedPost = postStream.get('lastLoadedPost'),
+        index = postStream.get('stream').indexOf(post.get('id'))+1;
+
+    this.set('progressPosition', index);
 
     if (lastLoadedPost && lastLoadedPost === post) {
       postStream.appendMore();

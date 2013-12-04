@@ -1,3 +1,5 @@
+{{post-gap post=this postStream=controller.postStream before="true"}}
+
 <div class='row'>
   {{view Discourse.ReplyHistory contentBinding="replyHistory"}}
 </div>
@@ -82,3 +84,5 @@
   </div>
 
 </article>
+
+{{post-gap post=this postStream=controller.postStream before="false"}}

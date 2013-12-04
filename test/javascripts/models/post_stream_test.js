@@ -141,12 +141,10 @@ test("streamFilters", function() {
 
   deepEqual(postStream.get('streamFilters'), {}, "there are no postFilters by default");
   ok(postStream.get('hasNoFilters'), "there are no filters by default");
-  blank(postStream.get("filterDesc"), "there is no description of the filter");
 
   postStream.set('summary', true);
   deepEqual(postStream.get('streamFilters'), {filter: "summary"}, "postFilters contains the summary flag");
   ok(!postStream.get('hasNoFilters'), "now there are filters present");
-  present(postStream.get("filterDesc"), "there is a description of the filter");
 
   postStream.toggleParticipant(participant.username);
   deepEqual(postStream.get('streamFilters'), {

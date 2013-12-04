@@ -815,6 +815,9 @@ en:
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
+      gap:
+        one: "1 post was omitted due to your current filter. Click to show it."
+        other: "{{count}} posts were omitted due to your current filter. Click to show them."
 
       has_replies:
         one: "Reply"

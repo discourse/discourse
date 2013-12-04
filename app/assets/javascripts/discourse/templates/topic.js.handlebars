@@ -52,7 +52,7 @@
             <nav id='topic-progress' title="{{i18n topic.progress.title}}" {{bindAttr class="hideProgress:hidden"}}>
               <button id='jump-top' title="{{i18n topic.progress.jump_top}}" {{bindAttr disabled="jumpTopDisabled"}} {{action jumpTop}}><i class="icon-circle-arrow-up"></i></button>
               <div class='nums' {{bindAttr title="progressPositionTitle"}}>
-                <h4>{{progressPosition}}</h4><span {{bindAttr class="hugeNumberOfPosts:hidden"}}> <span>{{i18n of_value}}</span> <h4>{{highest_post_number}}</h4></span>
+                <h4>{{progressPosition}}</h4><span {{bindAttr class="hugeNumberOfPosts:hidden"}}> <span>{{i18n of_value}}</span> <h4>{{postStream.filteredPostsCount}}</h4></span>
               </div>
               <button id='jump-bottom' title="{{i18n topic.progress.jump_bottom}}" {{bindAttr disabled="jumpBottomDisabled"}} {{action jumpBottom}}><i class="icon-circle-arrow-down"></i></button>
               <div class='bg'>&nbsp;</div>
@@ -120,12 +120,6 @@
     </div>
   {{/if}}
 {{/if}}
-
-
-<div id='topic-filter' {{bindAttr class="postStream.hasNoFilters:hidden"}}>
-  {{postStream.filterDesc}}
-  <a href='#' {{action cancelFilter target="postStream"}}>{{i18n topic.filters.cancel}}</a>
-</div>
 
 {{render share}}
 {{render posterExpansion}}
