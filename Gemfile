@@ -70,7 +70,7 @@ gem 'barber'
 
 gem 'vestal_versions', git: 'https://github.com/SamSaffron/vestal_versions'
 
-gem 'message_bus', git: 'https://github.com/SamSaffron/message_bus'
+gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
@@ -79,6 +79,8 @@ gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
 gem 'sidetiq', '>= 0.3.6'
 gem 'eventmachine'
 gem 'fast_xs'
+
+# https://github.com/CodeMonkeySteve/fast_xor/issues/6
 gem 'fast_xor', git: 'https://github.com/CodeMonkeySteve/fast_xor.git'
 gem 'fastimage'
 gem 'fog', '1.18.0', require: false
@@ -159,8 +161,7 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'librarian', '>= 0.0.25', require: false
-  # https://github.com/ctran/annotate_models/pull/106
-  gem 'annotate', :git => 'https://github.com/SamSaffron/annotate_models.git'
+  gem 'annotate'
 end
 
 # Gem that enables support for plugins. It is required.
@@ -179,8 +180,8 @@ gem 'lru_redux'
 #  If you want to amend mini profiler to do the monkey patches in the railstie
 #  we are open to it. by deferring require to the initializer we can configure disourse installs without it
 
-gem 'flamegraph', git: 'https://github.com/SamSaffron/flamegraph.git', require: false
-gem 'rack-mini-profiler',  git: 'https://github.com/MiniProfiler/rack-mini-profiler.git', require: false
+gem 'flamegraph', require: false
+gem 'rack-mini-profiler',  '0.9.0.pre ', require: false
 
 # used for caching, optional
 gem 'rack-cors', require: false
