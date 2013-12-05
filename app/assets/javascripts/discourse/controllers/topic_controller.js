@@ -294,12 +294,16 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   }.property('postStream.loaded', 'currentPost', 'postStream.filteredPostsCount'),
 
   hugeNumberOfPosts: function() {
-    return (this.get('postStream.filteredPostsCount') >= 1000);
-  }.property('postStream.filteredPostsCount'),
+    return (this.get('postStream.filteredPostsCount') >= Discourse.SiteSettings.short_progress_text_threshold);
+  }.property('highest_post_number'),
 
-  progressPositionTitle: function() {
-    return I18n.t("topic.progress.position", {current: this.get('progressPosition'), total: this.get('highest_post_number')});
-  }.property('progressPosition', 'highest_post_number'),
+  jumpToBottomTitle: function() {
+    if (this.get('hugeNumberOfPosts')) {
+      return I18n.t('topic.progress.jump_bottom_with_number', {post_number: this.get('highest_post_number')});
+    } else {
+      return I18n.t('topic.progress.jump_bottom');
+    }
+  }.property('hugeNumberOfPosts', 'highest_post_number'),
 
   deselectPost: function(post) {
     this.get('selectedPosts').removeObject(post);

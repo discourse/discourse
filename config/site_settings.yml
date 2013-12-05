@@ -134,7 +134,7 @@ posting:
       default: 10
   max_post_length:
     client: true
-    default: 
+    default:
       test: 4000
       default: 32000
   min_topic_title_length:
@@ -197,6 +197,9 @@ posting:
   display_name_on_posts:
     client: true
     default: false
+  short_progress_text_threshold:
+    client: true
+    default: 1000
 
 email:
   email_time_window_mins: 10
