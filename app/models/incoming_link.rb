@@ -102,7 +102,7 @@ end
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  user_id         :integer
-#  ip_address      :string
+#  ip_address      :inet
 #  current_user_id :integer
 #
 # Indexes
@@ -111,4 +111,3 @@ end
 #  index_incoming_links_on_created_at_and_domain   (created_at,domain)
 #  index_incoming_links_on_created_at_and_user_id  (created_at,user_id)
 #
-

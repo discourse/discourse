@@ -455,6 +455,7 @@ end
 #  notify_user_count       :integer          default(0), not null
 #  like_score              :integer          default(0), not null
 #  deleted_by_id           :integer
+#  edit_reason             :string(255)
 #
 # Indexes
 #
@@ -462,4 +463,3 @@ end
 #  index_posts_on_reply_to_post_number      (reply_to_post_number)
 #  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE
 #
-

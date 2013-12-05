@@ -729,6 +729,7 @@ end
 #  auto_close_user_id      :integer
 #  auto_close_started_at   :datetime
 #  deleted_by_id           :integer
+#  participant_count       :integer          default(1)
 #
 # Indexes
 #
@@ -737,4 +738,3 @@ end
 #  index_topics_on_deleted_at_and_visible_and_archetype_and_id  (deleted_at,visible,archetype,id)
 #  index_topics_on_id_and_deleted_at                            (id,deleted_at)
 #
-

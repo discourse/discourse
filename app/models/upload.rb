@@ -111,6 +111,7 @@ end
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  sha1              :string(40)
+#  origin            :string(1000)
 #
 # Indexes
 #
@@ -119,4 +120,3 @@ end
 #  index_uploads_on_url         (url)
 #  index_uploads_on_user_id     (user_id)
 #
-
