@@ -293,6 +293,14 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return false;
   }.property('postStream.loaded', 'currentPost', 'postStream.filteredPostsCount'),
 
+  hugeNumberOfPosts: function() {
+    return (this.get('postStream.filteredPostsCount') >= 1000);
+  }.property('postStream.filteredPostsCount'),
+
+  progressPositionTitle: function() {
+    return I18n.t("topic.progress.position", {current: this.get('progressPosition'), total: this.get('highest_post_number')});
+  }.property('progressPosition', 'highest_post_number'),
+
   deselectPost: function(post) {
     this.get('selectedPosts').removeObject(post);
 

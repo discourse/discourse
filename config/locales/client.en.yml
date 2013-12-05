@@ -674,6 +674,7 @@ en:
         jump_bottom: jump to last post
         total: total posts
         current: current post
+        position: "post %{current} of %{total}"
 
       notifications:
         title: ''
