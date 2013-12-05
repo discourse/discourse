@@ -340,8 +340,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
             self.destroyDraft();
             self.get('model').clearState();
             self.close();
+            promise.resolve();
           }
-          promise.resolve();
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
