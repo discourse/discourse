@@ -1,5 +1,7 @@
 class Populate < Thor
 
+  MAX_ERRORS = 5
+
   desc "posts", "Generate posts in a topic"
   long_desc <<-LONGDESC
     Create a topic with any number of posts, or add posts to an existing topic.
@@ -54,16 +56,36 @@ class Populate < Thor
 
     puts "Making #{options[:num_posts]} posts"
 
+    num_errors = 0
+
     (start_post..options[:num_posts]).each do |num|
       print '.'
       raw = rand(4) == 0 ? (rand(2) == 0 ? image_posts.sample : wikipedia_posts.sample ) : hipster_words.sample(20).join(' ')
       post_creator = PostCreator.new(users[num % (users.length)], topic_id: topic.id, raw: raw)
       post_creator.create
+      if post_creator.errors.present?
+        # It's probably a "Body is too similar to what you recently posted" error.
+        # Try one more time using more random words.
+        post_creator = PostCreator.new(users[num % (users.length)], topic_id: topic.id, raw: hipster_words.sample(40).join(' '))
+        post_creator.create
+        if post_creator.errors.present?
+          # Still failing! Show the error.
+          puts '', "--------------------------"
+          puts "ERROR creating a post!"
+          puts post_creator.errors.full_messages
+          puts "--------------------------"
+
+          # Stop looping after MAX_ERRORS errors
+          num_errors += 1
+          if num_errors > MAX_ERRORS
+            puts "Giving up. Too many errors."
+            exit 1
+          end
+        end
+      end
     end
 
     puts ''
-
-    RateLimiter.enable
 
     puts "Done. Topic id = #{topic.id}"
   ensure
