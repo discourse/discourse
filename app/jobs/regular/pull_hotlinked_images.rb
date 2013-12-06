@@ -74,7 +74,6 @@ module Jobs
         options[:bypass_bump] = true if args[:bypass_bump] == true
         post.revise(Discourse.system_user, raw, options)
       end
-
     end
 
     def extract_images_from(html)

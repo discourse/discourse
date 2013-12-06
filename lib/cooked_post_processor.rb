@@ -12,6 +12,7 @@ class CookedPostProcessor
     @dirty = false
     @opts = opts
     @post = post
+    @previous_cooked = (@post.cooked || "").dup
     @doc = Nokogiri::HTML::fragment(post.cooked)
     @size_cache = {}
   end
@@ -58,7 +59,6 @@ class CookedPostProcessor
       src, width, height = img["src"], img["width"], img["height"]
       limit_size!(img)
       convert_to_link!(img)
-      @dirty |= (src != img["src"]) || (width.to_i != img["width"].to_i) || (height.to_i != img["height"].to_i)
     end
 
     update_topic_image(images)
@@ -130,8 +130,6 @@ class CookedPostProcessor
     end
 
     add_lightbox!(img, original_width, original_height, upload)
-
-    @dirty = true
   end
 
   def is_a_hyperlink?(img)
@@ -207,8 +205,6 @@ class CookedPostProcessor
     result = Oneboxer.apply(@doc) do |url, element|
       Oneboxer.onebox(url, args)
     end
-
-    @dirty |= result.changed?
   end
 
   def optimize_urls
@@ -251,7 +247,7 @@ class CookedPostProcessor
   end
 
   def dirty?
-    @dirty
+    @previous_cooked != html
   end
 
   def html
