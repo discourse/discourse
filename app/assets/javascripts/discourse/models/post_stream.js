@@ -194,6 +194,8 @@ Discourse.PostStream = Em.Object.extend({
     @returns {Ember.Deferred} a promise that resolves when the summary stream has loaded.
   **/
   toggleSummary: function() {
+    var userFilters = this.get('userFilters');
+    userFilters.clear();
     this.toggleProperty('summary');
     return this.refresh();
   },
@@ -206,6 +208,7 @@ Discourse.PostStream = Em.Object.extend({
   **/
   toggleParticipant: function(username) {
     var userFilters = this.get('userFilters');
+    this.set('summary', false);
     if (userFilters.contains(username)) {
       userFilters.remove(username);
     } else {

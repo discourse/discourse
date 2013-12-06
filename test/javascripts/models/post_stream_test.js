@@ -148,7 +148,6 @@ test("streamFilters", function() {
 
   postStream.toggleParticipant(participant.username);
   deepEqual(postStream.get('streamFilters'), {
-    filter: "summary",
     username_filters: ['eviltrout']
   }, "streamFilters contains the username we filtered");
 });
