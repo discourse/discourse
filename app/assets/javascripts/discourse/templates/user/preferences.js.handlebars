@@ -49,7 +49,11 @@
       <label class="control-label">{{i18n user.avatar.title}}</label>
       <div class="controls">
         {{boundAvatar model imageSize="large"}}
-        <button {{action showAvatarSelector}} class="btn pad-left"><i class="icon-pencil"></i></button>
+        {{#if allowAvatarUpload}}
+          <button {{action showAvatarSelector}} class="btn pad-left"><i class="icon-pencil"></i></button>
+        {{else}}
+          <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn"><i class="icon-pencil"></i></a>
+        {{/if}}
       </div>
     </div>
 
