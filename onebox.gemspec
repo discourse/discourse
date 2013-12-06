@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["holla@jzeta.com", "vyki.englert@gmail.com"]
   spec.description   = %q{A gem for turning URLs into previews.}
   spec.summary       = spec.description
-  spec.homepage      = "http://github.com/dysania/onebox"
+  spec.homepage      = "https://github.com/dysania/onebox"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
