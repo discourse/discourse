@@ -48,22 +48,24 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     return this.present('controller.createdPost') ? 'created-post' : null;
   }.property('model.createdPost'),
 
-  observeReplyChanges: function() {
-    var self = this;
-    if (this.get('model.hidePreview')) return;
-    Ember.run.next(function() {
-      if (self.editor) {
-        self.editor.refreshPreview();
-        // if the caret is on the last line ensure preview scrolled to bottom
-        var caretPosition = Discourse.Utilities.caretPosition(self.wmdInput[0]);
-        if (!self.wmdInput.val().substring(caretPosition).match(/\n/)) {
-          var $wmdPreview = $('#wmd-preview');
-          if ($wmdPreview.is(':visible')) {
-            $wmdPreview.scrollTop($wmdPreview[0].scrollHeight);
-          }
+
+  refreshPreview: Discourse.debounce(function() {
+    if (this.editor) {
+      this.editor.refreshPreview();
+      // if the caret is on the last line ensure preview scrolled to bottom
+      var caretPosition = Discourse.Utilities.caretPosition(this.wmdInput[0]);
+      if (!this.wmdInput.val().substring(caretPosition).match(/\n/)) {
+        var $wmdPreview = $('#wmd-preview');
+        if ($wmdPreview.is(':visible')) {
+          $wmdPreview.scrollTop($wmdPreview[0].scrollHeight);
         }
       }
-    });
+    }
+  }, 30),
+
+  observeReplyChanges: function() {
+    if (this.get('model.hidePreview')) return;
+    Ember.run.scheduleOnce('afterRender', this, 'refreshPreview');
   }.observes('model.reply', 'model.hidePreview'),
 
   movePanels: function(sizePx) {
@@ -131,7 +133,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   // Called after the preview renders. Debounced for performance
-  afterRender: Discourse.debounce(function() {
+  afterRender: function() {
     var $wmdPreview = $('#wmd-preview');
     if ($wmdPreview.length === 0) return;
 
@@ -156,7 +158,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     });
 
     this.trigger('previewRefreshed', $wmdPreview);
-  }, 100),
+  },
 
   initEditor: function() {
     // not quite right, need a callback to pass in, meaning this gets called once,
