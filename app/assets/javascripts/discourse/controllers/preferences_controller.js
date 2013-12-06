@@ -8,7 +8,7 @@
 **/
 Discourse.PreferencesController = Discourse.ObjectController.extend({
   allowAvatarUpload: function() {
-    return Discourse.SiteSetting.allow_uploaded_avatars;
+    return Discourse.SiteSettings.allow_uploaded_avatars;
   }.property(),
 
   // By default we haven't saved anything
