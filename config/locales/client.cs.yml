@@ -713,25 +713,10 @@ cs:
       login_reply: 'Přihlaste se, chcete-li odpovědět'
 
       filters:
-        user: "{{n_posts}} {{by_n_users}}."
         n_posts:
           one: "Je zobrazen pouze 1 příspěvek"
           few: "Jsou zobrazeny pouze {{count}} příspěvky"
           other: "Je zobrazeno pouze {{count}} příspěvků"
-        by_n_users:
-          one: "od 1 vybraného uživatele"
-          few: "od {{count}} vybraného uživatele"
-          other: "od {{count}} vybraných uživatelů"
-
-        summary: "{{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "Je zobrazen 1 nejlepší příspěvek"
-          few: "Jsou zobrazeny {{count}} nejlepší příspěvky"
-          other: "Je zobrazeno {{count}} nejlepších příspěvků"
-        of_n_posts:
-          one: "z celkem 1 příspěvku v tématu"
-          few: "z celkem {{count}} příspěvků v tématu"
-          other: "z celkem {{count}} příspěvků v tématu"
         cancel: "Zobrazí znovu všechny příspěvky v tomto tématu."
 
       split_topic:

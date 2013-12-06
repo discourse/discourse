@@ -608,21 +608,9 @@ nb_NO:
       login_reply: 'Logg Inn for å Svare'
 
       filters:
-        user: "Du ser bare på {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 innlegg"
           other: "{{count}} innlegg"
-        by_n_users:
-          one: "skrevet av 1 spesifikk bruker"
-          other: "skrevet av {{count}} spesifikke brukere"
-
-        summary: "Du ser på {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "1 beste innlegg"
-          other: "{{count}} beste innlegg"
-        of_n_posts:
-          one: "av 1 i emnet"
-          other: "av {{count}} i emnet"
         cancel: "Vis alle innlegg i dette emnet igjen."
 
       split_topic:

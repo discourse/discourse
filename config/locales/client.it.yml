@@ -696,21 +696,9 @@ it:
       login_reply: 'Log In per Rispondere'
 
       filters:
-        user: "Stai vedendo solo {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 post"
           other: "{{count}} post"
-        by_n_users:
-          one: "da 1 utente specifico"
-          other: "da {{count}} utenti specifici"
-
-        summary: "Stai vedendo i {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "1 best post"
-          other: "{{count}} best post"
-        of_n_posts:
-          one: "di 1 nel topic"
-          other: "di {{count}} nel topic"
         cancel: "Mostra nuovamente tutti i post di questo topic."
 
       split_topic:

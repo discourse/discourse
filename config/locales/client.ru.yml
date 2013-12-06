@@ -723,28 +723,11 @@ ru:
         error: 'К сожалению, мы не смогли пригласить этого человека. Возможно, он уже пользователь форума?'
       login_reply: 'Войдите, чтобы ответить'
       filters:
-        user: 'Отображено только {{n_posts}} от {{by_n_users}}.'
         n_posts:
           one: '1 сообщение'
           other: '{{count}} сообщений'
           few: '{{count}} сообщения'
           many: '{{count}} сообщений'
-        by_n_users:
-          one: 'от одного пользователя'
-          other: 'от {{count}} пользователей'
-          few: 'от {{count}} пользователя'
-          many: 'от {{count}} пользователей'
-        summary: 'Отображено только {{n_summarized_posts}} из {{of_n_posts}} сообщений.'
-        n_summarized_posts:
-          one: '1 сообщение'
-          other: '{{count}} сообщений'
-          few: '{{count}} сообщение'
-          many: '{{count}} сообщений'
-        of_n_posts:
-          one: 'из 1 в теме'
-          other: 'из {{count}} в теме'
-          few: 'из {{count}} в теме'
-          many: 'из {{count}} в теме'
         cancel: 'Показать все сообщения в этой теме еще раз.'
       split_topic:
         title: 'Переместить в новую тему'

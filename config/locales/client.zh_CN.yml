@@ -751,21 +751,9 @@ zh_CN:
       login_reply: '登录后回复'
 
       filters:
-        user: "你在浏览{{n_posts}} {{by_n_users}}。"
         n_posts:
           one: "一个帖子"
           other: "{{count}}个帖子"
-        by_n_users:
-          one: "一个指定用户的"
-          other: "{{count}}个用户的"
-
-        summary: "你在浏览{{of_n_posts}}{{n_summarized_posts}}。"
-        n_summarized_posts:
-          one: "一个概扩帖子"
-          other: "{{count}}个概扩帖子"
-        of_n_posts:
-          one: "一个帖子中的"
-          other: "{{count}}个帖子中的"
         cancel: "再次显示本主题下的所有帖子。"
 
       split_topic:

@@ -729,20 +729,9 @@ fr:
         error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être est-elle déjà un utilisateur ?"
       login_reply: 'Connectez-vous pour répondre'
       filters:
-        user: "Vous voyez seulement {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 message"
           other: "{{count}} messages"
-        by_n_users:
-          one: "de l'utilisateur"
-          other: "rédigés par {{count}} utilisateurs"
-        summary: "Vous voyez seulement {{n_summarized_posts}} {{of_n_posts}} de cette discussion."
-        n_summarized_posts:
-          one: "le message"
-          other: "les {{count}} messages"
-        of_n_posts:
-          one: "le plus populaire"
-          other: "les {{count}} plus populaires"
         cancel: "Réafficher tous les messages de cette discussion."
       split_topic:
         title: "Déplacer vers une Nouvelle Discussion"
@@ -1212,8 +1201,8 @@ fr:
             change_site_setting: "modifier les paramètres du site"
             change_site_customization: "Modifier la personnalisation du site"
             delete_site_customization: "Supprimer la personnalisation du site"
-            suspend_user: "Bannir l'utilisateur" 
-            unsuspend_user: "Débannir l'utilisateur" 
+            suspend_user: "Bannir l'utilisateur"
+            unsuspend_user: "Débannir l'utilisateur"
         screened_emails:
           title: "Emails affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses mail suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."

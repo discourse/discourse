@@ -738,21 +738,9 @@ pt_BR:
       login_reply: 'Entre com sua conta para responder'
 
       filters:
-        user: "Você está vendo apenas {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 postagem"
           other: "{{count}} postagens"
-        by_n_users:
-          one: "feito por 1 usuário específico"
-          other: "feito por {count}} usuários específicos"
-
-        summary: "Você está vendo apenas {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "1 melhor postagem"
-          other: "{{count}} melhores postagens"
-        of_n_posts:
-          one: "de 1 no tópico"
-          other: "de {{count}} no tópico"
         cancel: "Mostrar novamente todas as postagens deste tópico."
 
       split_topic:

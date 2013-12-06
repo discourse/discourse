@@ -517,21 +517,9 @@ sv:
       login_reply: 'Logga In för att Svara'
 
       filters:
-        user: "Du visar bara {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 inlägg"
           other: "{{count}} inlägg"
-        by_n_users:
-          one: "skapat av 1 specifik användare"
-          other: "skapat av {{count}} specifika användare"
-
-        summary: "Du visar bara {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "1 bästa inlägg"
-          other: "{{count}} bästa inlägg"
-        of_n_posts:
-          one: "av 1 i tråden"
-          other: "av {{count}} i tråden"
         cancel: "Visa alla inlägg i den här tråden igen."
 
       move_selected:

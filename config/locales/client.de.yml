@@ -721,21 +721,9 @@ de:
       login_reply: 'Anmelden, um zu antworten'
 
       filters:
-        user: "Du betrachtest nur {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "einen Beitrag"
           other: "{{count}} Beiträge"
-        by_n_users:
-          one: "von einem Benutzer"
-          other: "von {{count}} Benutzern"
-
-        summary: "Du betrachtest {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "den besten Beitrag"
-          other: "{{count}} besten Beiträge"
-        of_n_posts:
-          one: "von einem Thema"
-          other: "von {{count}} Themen"
         cancel: "Zeige wieder alle Beiträge zu diesem Thema."
 
       split_topic:

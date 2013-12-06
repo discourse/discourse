@@ -593,21 +593,9 @@ es:
       login_reply: 'Inicia sesión para responder'
 
       filters:
-        user: "Estás viendo sólo {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 mensaje"
           other: "{{count}} mensajes"
-        by_n_users:
-          one: "hechos por 1 usuario específico"
-          other: "hechos por {{count}} usuarios específicos"
-
-        summary: "Estás viendo el {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "1 mejor mensaje"
-          other: "{{count}} mejores mensajes"
-        of_n_posts:
-          one: "de 1 en el tema"
-          other: "de {{count}} en el tema"
         cancel: "Mostrar todos los mensajes en este tema de nuevo.."
 
       move_selected:

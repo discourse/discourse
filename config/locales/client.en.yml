@@ -755,21 +755,9 @@ en:
       login_reply: 'Log In to Reply'
 
       filters:
-        user: "You're viewing only {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 post"
           other: "{{count}} posts"
-        by_n_users:
-          one: "made by 1 specific user"
-          other: "made by {{count}} specific users"
-
-        summary: "You're viewing {{n_summarized_posts}} {{of_n_posts}}. "
-        n_summarized_posts:
-          one: "1 summarized post"
-          other: "{{count}} summarized posts"
-        of_n_posts:
-          one: "of 1 in the topic"
-          other: "of {{count}} in the topic"
         cancel: "Show all posts in this topic again."
 
       split_topic:

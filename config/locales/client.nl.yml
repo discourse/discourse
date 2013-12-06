@@ -756,21 +756,9 @@ nl:
       login_reply: Log in om te reageren
 
       filters:
-        user: "Je ziet momenteel alleen {{n_posts}} {{by_n_users}}."
         n_posts:
           one: één bericht
           other: "{{count}} berichten"
-        by_n_users:
-          one: van één specifiek lid
-          other: "van {{count}} specifieke leden"
-
-        summary: "Je ziet momenteel {{n_summarized_posts}} {{of_n_posts}}"
-        n_summarized_posts:
-          one: "het enige bericht in deze topic."
-          other: "{{count}} berichten"
-        of_n_posts:
-          one: ''
-          other: "van {{count}} als samenvatting van deze topic."
         cancel: Laat alle berichten in deze topic zien.
 
       split_topic:

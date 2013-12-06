@@ -652,21 +652,9 @@ zh_TW:
       login_reply: '登錄來回複'
 
       filters:
-        user: "你在浏覽 {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "一個帖子"
           other: "{{count}} 帖子"
-        by_n_users:
-          one: "一個指定用戶"
-          other: "{{count}} 個用戶中的"
-
-        summary: "你在浏覽 {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "一個優秀帖子"
-          other: "{{count}} 優秀帖子"
-        of_n_posts:
-          one: "一個帖子中的"
-          other: "{{count}} 個帖子中的"
         cancel: "再次顯示本主題下的所有帖子。"
 
       split_topic:

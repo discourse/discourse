@@ -661,20 +661,9 @@ pseudo:
           á ůšéř? ]]'
       login_reply: '[[ Łóǧ Íɳ ťó Řéƿłý ]]'
       filters:
-        user: '[[ Ýóů''řé νíéŵíɳǧ óɳłý {{n_posts}} {{by_n_users}}. ]]'
         n_posts:
           one: '[[ 1 ƿóšť ]]'
           other: '[[ {{count}} ƿóšťš ]]'
-        by_n_users:
-          one: '[[ ɱáďé ƀý 1 šƿéčíƒíč ůšéř ]]'
-          other: '[[ ɱáďé ƀý {{count}} šƿéčíƒíč ůšéřš ]]'
-        summary: '[[ Ýóů''řé νíéŵíɳǧ ťĥé {{n_summarized_posts}} {{of_n_posts}}. ]]'
-        n_summarized_posts:
-          one: '[[ 1 ƀéšť ƿóšť ]]'
-          other: '[[ {{count}} ƀéšť ƿóšťš ]]'
-        of_n_posts:
-          one: '[[ óƒ 1 íɳ ťĥé ťóƿíč ]]'
-          other: '[[ óƒ {{count}} íɳ ťĥé ťóƿíč ]]'
         cancel: '[[ Šĥóŵ áłł ƿóšťš íɳ ťĥíš ťóƿíč áǧáíɳ. ]]'
       split_topic:
         title: '[[ Šƿłíť Ťóƿíč ]]'
