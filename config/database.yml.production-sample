@@ -8,6 +8,7 @@ production:
   timeout: 5000
   # db_id: 0	# database ID if hosting multiple sites
   host_names:
+    ### Don't include the port number here. Change the "port" site setting instead, at /admin/site_settings.
     ### If you change this setting you will need to
     ###   - restart sidekiq if you change this setting
     ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
