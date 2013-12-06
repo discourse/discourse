@@ -51,7 +51,7 @@ describe CategoriesController do
 
           xhr :post, :create, name: "hello", color: "ff0", text_color: "fff",
                               hotness: 2,
-                              auto_close_days: 3,
+                              auto_close_hours: 72,
                               permissions: {
                                 "everyone" => readonly,
                                 "staff" => create_post
@@ -65,7 +65,7 @@ describe CategoriesController do
           category.name.should == "hello"
           category.color.should == "ff0"
           category.hotness.should == 2
-          category.auto_close_days.should == 3
+          category.auto_close_hours.should == 72
         end
       end
     end
@@ -152,7 +152,7 @@ describe CategoriesController do
 
           xhr :put, :update, id: @category.id, name: "hello", color: "ff0", text_color: "fff",
                               hotness: 2,
-                              auto_close_days: 3,
+                              auto_close_hours: 72,
                               permissions: {
                                 "everyone" => readonly,
                                 "staff" => create_post
@@ -166,7 +166,7 @@ describe CategoriesController do
           @category.name.should == "hello"
           @category.color.should == "ff0"
           @category.hotness.should == 2
-          @category.auto_close_days.should == 3
+          @category.auto_close_hours.should == 72
 
         end
       end

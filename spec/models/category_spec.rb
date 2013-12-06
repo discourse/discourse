@@ -211,7 +211,7 @@ describe Category do
     end
 
     it "should not set its description topic to auto-close" do
-      category = Fabricate(:category, name: 'Closing Topics', auto_close_days: 1)
+      category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
       category.topic.auto_close_at.should be_nil
     end
 

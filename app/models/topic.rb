@@ -145,8 +145,8 @@ class Topic < ActiveRecord::Base
   before_create do
     self.bumped_at ||= Time.now
     self.last_post_user_id ||= user_id
-    if !@ignore_category_auto_close and self.category and self.category.auto_close_days and self.auto_close_at.nil?
-      set_auto_close(self.category.auto_close_days * 24)
+    if !@ignore_category_auto_close and self.category and self.category.auto_close_hours and self.auto_close_at.nil?
+      set_auto_close(self.category.auto_close_hours)
     end
   end
 
@@ -268,8 +268,8 @@ class Topic < ActiveRecord::Base
     @post_numbers ||= posts.order(:post_number).pluck(:post_number)
   end
 
-  def age_in_days
-    ((Time.zone.now - created_at) / 1.day).round
+  def age_in_minutes
+    ((Time.zone.now - created_at) / 1.minute).round
   end
 
   def has_meta_data_boolean?(key)
@@ -602,10 +602,9 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  # TODO: change this method, along with category's auto_close_days. Use hours.
-  def auto_close_days=(num_days)
+  def auto_close_hours=(num_hours)
     @ignore_category_auto_close = true
-    set_auto_close( num_days ? num_days * 24 : nil)
+    set_auto_close( num_hours )
   end
 
   def self.auto_close

@@ -34,7 +34,7 @@ describe Topic do
     end
 
     context 'category without default auto-close' do
-      Given(:category) { Fabricate(:category, auto_close_days: nil) }
+      Given(:category) { Fabricate(:category, auto_close_hours: nil) }
       Then { topic.auto_close_at.should be_nil }
       And  { scheduled_jobs_for(:close_topic).should be_empty }
     end
@@ -50,8 +50,8 @@ describe Topic do
       end
 
       context 'category has a default auto-close' do
-        Given(:category) { Fabricate(:category, auto_close_days: 2.0) }
-        Then { topic.auto_close_at.should == 2.days.from_now }
+        Given(:category) { Fabricate(:category, auto_close_hours: 2.0) }
+        Then { topic.auto_close_at.should be_within_one_second_of(2.hours.from_now) }
         And  { topic.auto_close_started_at.should == Time.zone.now }
         And  { scheduled_jobs_for(:close_topic, {topic_id: topic.id}).should have(1).job }
         And  { scheduled_jobs_for(:close_topic, {topic_id: category.topic.id}).should be_empty }
@@ -76,8 +76,8 @@ describe Topic do
           Then { scheduled_jobs_for(:close_topic, {topic_id: regular_user_topic.id, user_id: system_user.id}).should have(1).job }
         end
 
-        context 'auto_close_days of topic was set to 0' do
-          Given(:dont_close_topic) { Fabricate(:topic, auto_close_days: 0, category: category) }
+        context 'auto_close_hours of topic was set to 0' do
+          Given(:dont_close_topic) { Fabricate(:topic, auto_close_hours: 0, category: category) }
           Then { scheduled_jobs_for(:close_topic).should be_empty }
         end
 

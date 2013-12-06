@@ -151,7 +151,7 @@ SQL
   def create_category_definition
     t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
     t.skip_callbacks = true
-    t.auto_close_days = nil
+    t.auto_close_hours = nil
     t.save!
     update_column(:topic_id, t.id)
     t.posts.create(raw: post_template, user: user)
@@ -309,7 +309,7 @@ end
 #  text_color         :string(6)        default("FFFFFF"), not null
 #  hotness            :float            default(5.0), not null
 #  read_restricted    :boolean          default(FALSE), not null
-#  auto_close_days    :float
+#  auto_close_hours   :float
 #  post_count         :integer          default(0), not null
 #  latest_post_id     :integer
 #  latest_topic_id    :integer

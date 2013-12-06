@@ -90,7 +90,7 @@ class CategoriesController < ApplicationController
           end
         end
 
-        params.permit(*required_param_keys, :position, :hotness, :parent_category_id, :auto_close_days, :permissions => [*p.try(:keys)])
+        params.permit(*required_param_keys, :position, :hotness, :parent_category_id, :auto_close_hours, :permissions => [*p.try(:keys)])
       end
     end
 
