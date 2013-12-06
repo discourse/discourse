@@ -3,18 +3,19 @@
 
 .gap {
   background-color: #f9f9f9;
-  border: 1px solid #eee;
   padding: 5px 10px;
   margin-bottom: 10px;
-  color: #555;
+  color: #999;
   cursor: pointer;
+  text-align: center;
+  width: 820px;
 
   &:hover {
     background-color: #eee;
   }
 
-  i.icon {
-    margin-right: 6px;
+  @include medium-width {
+    width: 800px;
   }
 }
 

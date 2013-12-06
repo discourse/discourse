@@ -1,5 +1,13 @@
 @import "common/foundation/variables";
 
+.gap {
+  background-color: #f9f9f9;
+  padding: 5px 15px;
+  color: #999;
+  text-align: center;
+  margin: 0 10px;
+}
+
 .topic-post {
   border-top: 1px solid #ddd;
   padding: 6px 0 3px 0;

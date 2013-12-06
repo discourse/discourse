@@ -25,7 +25,7 @@ Discourse.PostGapComponent = Ember.Component.extend({
     if (this.get('loading')) {
       buffer.push(I18n.t('loading'));
     } else {
-      buffer.push("<i class='icon icon-cut'></i>" + I18n.t('post.gap', {count: this.get('gap.length')}));
+      buffer.push(I18n.t('post.gap', {count: this.get('gap.length')}));
     }
   },
 

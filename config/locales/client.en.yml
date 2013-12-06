@@ -817,8 +817,8 @@ en:
       deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
       gap:
-        one: "1 post was omitted due to your current filter. Click to show it."
-        other: "{{count}} posts were omitted due to your current filter. Click to show them."
+        one: "1 post omitted"
+        other: "{{count}} posts omitted"
 
       has_replies:
         one: "Reply"
