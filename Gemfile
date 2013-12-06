@@ -38,6 +38,7 @@ gem 'seed-fu' , github: 'SamSaffron/seed-fu'
 
 if rails4?
   gem 'rails'
+  # because of https://github.com/redis-store/redis-store/pull/183
   gem 'redis-rails', :git => 'git://github.com/SamSaffron/redis-store.git'
   gem 'rails-observers'
   gem 'actionpack-action_caching'
@@ -80,8 +81,7 @@ gem 'sidetiq', '>= 0.3.6'
 gem 'eventmachine'
 gem 'fast_xs'
 
-# https://github.com/CodeMonkeySteve/fast_xor/issues/6
-gem 'fast_xor', git: 'https://github.com/CodeMonkeySteve/fast_xor.git'
+gem 'fast_xor'
 gem 'fastimage'
 gem 'fog', '1.18.0', require: false
 gem 'unf', require: false
