@@ -204,7 +204,8 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     };
 
     this.editor.hooks.onPreviewRefresh = function() {
-      return composerView.afterRender();
+      composerView.afterRender();
+      composerView.trigger('previewRefreshed2');
     };
 
     this.editor.run();
