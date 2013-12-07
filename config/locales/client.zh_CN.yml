@@ -517,8 +517,10 @@ zh_CN:
       toggler: "隐藏或显示编辑面板"
 
       admin_options_title: "本主题可选设置"
-      auto_close_label: "自动关闭主题，过："
-      auto_close_units: "天"
+      auto_close_label: "自动关闭主题时间："
+      auto_close_units: "（可以是小时数，具体时间，或某个时间戳）"
+      auto_close_examples: '例如：24, 17:00, 2013-11-22 14:00'
+      auto_close_error: "请输入有效数值。"
 
     notifications:
       title: "使用 @name 提及到你，回复你的帖子和主题，私信等等的通知消息"
@@ -670,8 +672,10 @@ zh_CN:
         title: 主题进度
         jump_top: 跳转到第一帖
         jump_bottom: 跳转到最后一帖
+        jump_bottom_with_number: "跳转到第%{post_number}帖"
         total: 全部帖子
         current: 当前帖
+        position: "%{total}帖中的第%{current}帖"
 
       notifications:
         title: ''
@@ -799,7 +803,10 @@ zh_CN:
         one: "(该帖已被作者撤销，如无报告则将在 %{count} 小时后自动被删除。)"
         other: "(该帖已被作者撤销，如无报告则将在 %{count} 小时后自动被删除。)"
       deleted_by: "删除者为"
-      expand_collapse: "展开/收缩"
+      expand_collapse: "展开/折叠"
+      gap:
+        one: "1个帖子被过滤。"
+        other: "{{count}}个帖子被过滤。"
 
       has_replies:
         one: "回复"
@@ -969,7 +976,8 @@ zh_CN:
       hotness: "热度"
       already_used: '此色彩已经被另一个分类使用'
       security: "安全"
-      auto_close_label: "自动关闭主题，过："
+      auto_close_label: "该时间段后自动关闭主题："
+      auto_close_units: "小时"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
       this_year: "今年"
@@ -1422,3 +1430,6 @@ zh_CN:
           rate_limits: '速度限制'
           developer: '开发者'
           uncategorized: '未分类'
+
+    lightbox:
+      download: "下载"
