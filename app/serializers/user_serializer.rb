@@ -94,10 +94,6 @@ class UserSerializer < BasicUserSerializer
     User.gravatar_template(object.email)
   end
 
-  def include_name?
-    SiteSetting.enable_names?
-  end
-
   def include_suspended?
     object.suspended?
   end
