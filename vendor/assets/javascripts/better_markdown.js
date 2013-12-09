@@ -1250,6 +1250,15 @@
 
       "[": function link( text ) {
 
+        var open = 1;
+        for (var i=0; i<text.length; i++) {
+          var c = text.charAt(i);
+          if (c === '[') { open++; }
+          if (c === ']') { open--; }
+
+          if (open > 3) { return [1, "["]; }
+        }
+
         var orig = String(text);
         // Inline content is possible inside `link text`
         var res = inline_until_char.call( this, text.substr(1), "]" );
