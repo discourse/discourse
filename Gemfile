@@ -39,7 +39,7 @@ gem 'seed-fu' , github: 'SamSaffron/seed-fu'
 if rails4?
   gem 'rails'
   # because of https://github.com/redis-store/redis-store/pull/183
-  gem 'redis-rails', :git => 'git://github.com/SamSaffron/redis-store.git'
+  gem 'redis-rails', :git => 'https://github.com/SamSaffron/redis-store.git'
   gem 'rails-observers'
   gem 'actionpack-action_caching'
 else
@@ -119,7 +119,9 @@ gem 'sidekiq', '2.15.1'
 gem 'sidekiq-failures'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
-gem 'therubyracer', require: 'v8'
+
+# URGENT fix needed see: https://github.com/cowboyd/therubyracer/pull/280
+gem 'therubyracer', require: 'v8', git: 'https://github.com/SamSaffron/therubyracer.git'
 gem 'thin', require: false
 gem 'diffy', '>= 3.0', require: false
 gem 'highline', require: false
