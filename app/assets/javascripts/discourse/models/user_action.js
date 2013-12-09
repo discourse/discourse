@@ -85,7 +85,7 @@ Discourse.UserAction = Discourse.Model.extend({
       post_number: '#' + this.get('reply_to_post_number'),
       user1Url: this.get('userUrl'),
       user2Url: this.get('targetUserUrl'),
-      another_user: this.get('target_name')
+      another_user: this.get('targetDisplayName')
     }));
 
   }.property('descriptionKey'),
@@ -99,6 +99,9 @@ Discourse.UserAction = Discourse.Model.extend({
   }.property('target_username'),
 
   presentName: Em.computed.any('name', 'username'),
+  targetDisplayName: Em.computed.any('target_name', 'target_username'),
+  actingDisplayName: Em.computed.any('acting_name', 'acting_username'),
+
 
   targetUserUrl: Discourse.computed.url('target_username', '/users/%@'),
   usernameLower: function() {
@@ -170,7 +173,7 @@ Discourse.UserAction = Discourse.Model.extend({
     this.setProperties({
       username: this.get('acting_username'),
       avatar_template: this.get('acting_avatar_template'),
-      name: this.get('acting_name')
+      name: this.get('actingDisplayName')
     });
   }
 });

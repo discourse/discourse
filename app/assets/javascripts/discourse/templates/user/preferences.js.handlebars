@@ -15,15 +15,17 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <label class="control-label">{{i18n user.name.title}}</label>
-      <div class="controls">
-        {{textField value=name classNames="input-xxlarge"}}
+    {{#if canEditName}}
+      <div class="control-group">
+        <label class="control-label">{{i18n user.name.title}}</label>
+        <div class="controls">
+          {{textField value=name classNames="input-xxlarge"}}
+        </div>
+        <div class='instructions'>
+          {{i18n user.name.instructions}}
+        </div>
       </div>
-      <div class='instructions'>
-        {{i18n user.name.instructions}}
-      </div>
-    </div>
+    {{/if}}
 
     <div class="control-group">
       <label class="control-label">{{i18n user.email.title}}</label>

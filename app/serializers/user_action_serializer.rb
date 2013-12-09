@@ -45,6 +45,18 @@ class UserActionSerializer < ApplicationSerializer
     )
   end
 
+  def include_name?
+    SiteSetting.enable_names?
+  end
+
+  def include_target_name?
+    include_name?
+  end
+
+  def include_acting_name?
+    include_name?
+  end
+
   def slug
     Slug.for(object.title)
   end

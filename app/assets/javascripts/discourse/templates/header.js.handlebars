@@ -30,7 +30,7 @@
       {{#unless showExtraInfo}}
         <div class='current-username'>
           {{#if currentUser}}
-            <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.name}}</a></span>
+            <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.displayName}}</a></span>
           {{else}}
             <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/if}}
