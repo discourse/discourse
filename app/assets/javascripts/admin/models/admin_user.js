@@ -48,7 +48,7 @@ Discourse.AdminUser = Discourse.User.extend({
         user.set('can_delete_all_posts', true);
       }
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t("admin.user.delete_all_posts"),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("admin.user.delete_all_posts"),
       "class": "btn btn-danger",
       "callback": function() {
         Discourse.ajax("/admin/users/" + (user.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
@@ -283,13 +283,13 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t('admin.user.delete_dont_block'),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_dont_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(false);
       }
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t('admin.user.delete_and_block'),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_and_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(true);
@@ -307,7 +307,7 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t("flagging.yes_delete_spammer"),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("flagging.yes_delete_spammer"),
       "class": "btn btn-danger",
       "callback": function() {
         Discourse.ajax("/admin/users/" + user.get('id') + '.json', {

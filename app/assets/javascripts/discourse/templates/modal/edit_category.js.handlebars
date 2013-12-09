@@ -72,7 +72,7 @@
                 {{{i18n "category.can"}}}
                 <span class="permission">{{permission.description}}</span>
                 {{#if controller.editingPermissions}}
-                  <a {{action removePermission this}}><i class="icon icon-remove-sign"></i></a>
+                  <a {{action removePermission this}}><i class="fa fa-times-circle"></i></a>
                 {{/if}}
               </li>
             {{/each}}
@@ -90,7 +90,7 @@
         <section class='field'>
           <div class="auto-close-fields">
             <div>
-              <i class="icon icon-time"></i>
+              <i class="fa fa-clock-o"></i>
               {{i18n category.auto_close_label}}
               {{textField value=auto_close_hours}}
               {{i18n category.auto_close_units}}
@@ -113,7 +113,7 @@
   <div class="modal-footer">
     <button class='btn btn-primary' {{bindAttr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
     {{#if deleteVisible}}
-      <button class='btn btn-danger pull-right' {{bindAttr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="icon icon-trash"></i>{{deleteButtonTitle}}</button>
+      <button class='btn btn-danger pull-right' {{bindAttr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
     {{/if}}
   </div>
 </div>

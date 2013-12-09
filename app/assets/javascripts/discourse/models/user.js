@@ -66,11 +66,11 @@ Discourse.User = Discourse.Model.extend({
     var desc;
     if(this.get('admin')) {
       desc = I18n.t('user.admin', {user: this.get("name")});
-      return '<i class="icon icon-trophy" title="' + desc +  '" alt="' + desc + '"></i>';
+      return '<i class="fa fa-trophy" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     if(this.get('moderator')){
       desc = I18n.t('user.moderator', {user: this.get("name")});
-      return '<i class="icon icon-magic" title="' + desc +  '" alt="' + desc + '"></i>';
+      return '<i class="fa fa-magic" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     return null;
   }.property('admin','moderator'),

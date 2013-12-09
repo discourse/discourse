@@ -1,6 +1,6 @@
 {{#if controller.currentUser.id}}
   <td class='star'>
-    <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
+    <a {{bindAttr class=":star :fa :fa-star starred:starred"}} {{action toggleStar this}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
   </td>
 {{/if}}
 
@@ -11,7 +11,7 @@
       <p>{{rank_details.hot_topic_type}}</p>
       <p>
         ({{float rank_details.random_bias}} * {{float rank_details.random_multiplier}}) + ({{float rank_details.days_ago_bias}} * {{float rank_details.days_ago_multiplier}}) = <b>{{float rank_details.ranking_score}}</b>
-        <i class='icon icon-beaker score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>
+        <i class='fa fa-flask score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>
       </p>
     </div>
   {{/if}}
@@ -25,7 +25,7 @@
     <a href="{{lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="displayNewPosts"}}'>{{displayNewPosts}}</a>
   {{/if}}
   {{#if unseen}}
-    <a href="{{lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
+    <a href="{{lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='fa fa-asterisk'></i></a>
   {{/if}}
 
   {{#if hasExcerpt}}
@@ -57,7 +57,7 @@
 
 <td class='num likes'>
   {{#if like_count}}
-    <a href='{{url}}{{#if has_summary}}?filter=summary{{/if}}' title='{{i18n topic.likes count="like_count"}}'>{{number like_count numberKey="likes_long"}} <i class='icon-heart'></i></a>
+    <a href='{{url}}{{#if has_summary}}?filter=summary{{/if}}' title='{{i18n topic.likes count="like_count"}}'>{{number like_count numberKey="likes_long"}} <i class='fa fa-heart'></i></a>
   {{/if}}
 </td>
 

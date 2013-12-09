@@ -23,7 +23,7 @@ Discourse.ClearPinButton = Discourse.ButtonView.extend({
   },
 
   renderIcon: function(buffer) {
-    buffer.push("<i class='icon icon-pushpin'></i>");
+    buffer.push("<i class='fa fa-thumb-tack'></i>");
   }
 });
 

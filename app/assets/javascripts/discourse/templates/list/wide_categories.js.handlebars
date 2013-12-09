@@ -8,7 +8,7 @@
       <th class='num posts'>{{i18n categories.posts}}</th>
       <th class='latest'>{{i18n categories.latest}}
         {{#if canEdit}}
-        <button title='{{i18n categories.toggle_ordering}}' class='btn toggle-admin no-text' {{action toggleOrdering}}><i class='icon icon-wrench'></i></button>
+        <button title='{{i18n categories.toggle_ordering}}' class='btn toggle-admin no-text' {{action toggleOrdering}}><i class='fa fa-wrench'></i></button>
         {{/if}}
       </th>
     </tr>
@@ -18,14 +18,14 @@
       <tr data-category_id='{{unbound id}}'>
         <td class='category'>
           {{#if controller.ordering}}
-            <i class="icon-reorder"></i>
+            <i class="fa fa-bars"></i>
           {{/if}}
           {{categoryLink this allowUncategorized=true}}
           {{#if unreadTopics}}
             <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
           {{/if}}
           {{#if newTopics}}
-            <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='icon icon-asterisk'></i></a>
+            <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='fa fa-asterisk'></i></a>
           {{/if}}
           <div class='featured-users'>
             {{#each featured_users}}
@@ -60,7 +60,7 @@
               <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="new_posts"}}'>{{new_posts}}</a>
             {{/if}}
             {{#if unseen}}
-              <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
+              <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='fa fa-asterisk'></i></a>
             {{/if}}
             <div class='last-user-info'>
               {{i18n categories.latest_by}} <a href="{{{unbound lastPosterUrl}}}">{{unbound last_poster.username}}</a>

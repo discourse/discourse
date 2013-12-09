@@ -42,7 +42,7 @@ Discourse.TopicClosingView = Discourse.View.extend({
       rerenderDelay = 1000;
     }
 
-    buffer.push('<h3><i class="icon icon-time"></i> ');
+    buffer.push('<h3><i class="fa fa-clock-o"></i> ');
     buffer.push( I18n.t('topic.auto_close_notice', {timeLeft: timeLeftString}) );
     buffer.push('</h3>');
 

@@ -31,9 +31,9 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
 
     var icon = (function() {
       switch (key) {
-        case 'watching': return '<i class="icon-circle heatmap-high"></i>&nbsp;';
-        case 'tracking': return '<i class="icon-circle heatmap-low"></i>&nbsp;';
-        case 'muted': return '<i class="icon-remove-sign"></i>&nbsp;';
+        case 'watching': return '<i class="fa fa-circle heatmap-high"></i>&nbsp;';
+        case 'tracking': return '<i class="fa fa-circle heatmap-low"></i>&nbsp;';
+        case 'muted': return '<i class="fa fa-times-circle"></i>&nbsp;';
         default: return '';
       }
     })();

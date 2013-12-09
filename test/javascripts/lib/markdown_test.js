@@ -320,7 +320,7 @@ test("Code Blocks", function() {
 test("sanitize", function() {
   var sanitize = Discourse.Markdown.sanitize;
 
-  equal(sanitize("<i class=\"icon-bug icon-spin\">bug</i>"), "<i>bug</i>");
+  equal(sanitize("<i class=\"fa-bug fa-spin\">bug</i>"), "<i>bug</i>");
   equal(sanitize("<div><script>alert('hi');</script></div>"), "<div></div>");
   equal(sanitize("<div><p class=\"funky\" wrong='1'>hello</p></div>"), "<div><p>hello</p></div>");
   cooked("hello<script>alert(42)</script>", "<p>hello</p>", "it sanitizes while cooking");

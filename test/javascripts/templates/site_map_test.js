@@ -60,13 +60,13 @@ test("location links part is rendered correctly", function() {
   ok(exists($adminLink), "a link to the admin section is present");
   equal($adminLink.attr("href"), "/admin", "the link to the admin section points to a correct URL");
   notEqual($adminLink.text().indexOf("admin_title"), -1, "the link to the admin section contains correct text");
-  ok(exists($adminLink.find(".icon-wrench")), "the link to the admin section contains correct icon");
+  ok(exists($adminLink.find(".fa-wrench")), "the link to the admin section contains correct icon");
 
   var $flaggedPostsLink = $locationLinks.find(".flagged-posts-link");
   ok(exists($flaggedPostsLink), "link to the flagged posts list is present");
   equal($flaggedPostsLink.attr("href"), "/admin/flags/active", "the link to the flagged posts list points to a correct URL");
   notEqual($flaggedPostsLink.text().indexOf("flags_title"), -1, "the link to the flagged posts list contains correct text");
-  ok(exists($flaggedPostsLink.find(".icon-flag")), "the link to the flagged posts list contains correct icon");
+  ok(exists($flaggedPostsLink.find(".fa-flag")), "the link to the flagged posts list contains correct icon");
 
   var $flaggedPostsBadge = $locationLinks.find(".flagged-posts.badge-notification");
   ok(exists($flaggedPostsBadge), "a flagged posts badge is present");
@@ -199,7 +199,7 @@ test("category links part is rendered correctly", function() {
   ok($firstCategoryNewTopicsLink.hasClass("badge") && $firstCategoryNewTopicsLink.hasClass("badge-notification"), "the new topics link has correct classes");
   equal($firstCategoryNewTopicsLink.attr("title"), "topic.new_topics 20", "the new topics link has correct title");
   notEqual($firstCategoryNewTopicsLink.text().indexOf("20"), -1, "the new topics link contains correct text");
-  ok(exists($firstCategoryNewTopicsLink.find(".icon-asterisk")), "the new topics link contains correct icon");
+  ok(exists($firstCategoryNewTopicsLink.find(".fa-asterisk")), "the new topics link contains correct icon");
 
   var $firstCategoryAllTopicsCount = $categories.first().find(".topics-count");
   ok(!exists($firstCategoryAllTopicsCount), "the count of all topics is not shown");

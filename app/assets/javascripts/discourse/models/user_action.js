@@ -74,7 +74,7 @@ Discourse.UserAction = Discourse.Model.extend({
     var descriptionKey = this.get('descriptionKey');
     if (!descriptionKey) { return; }
 
-    var icon = this.get('isPM') ? '<i class="icon icon-envelope" title="{{i18n user.stream.private_message}}"></i>' : '';
+    var icon = this.get('isPM') ? '<i class="fa fa-envelope" title="{{i18n user.stream.private_message}}"></i>' : '';
 
     return new Handlebars.SafeString(icon + " " + I18n.t("user_action." + descriptionKey, {
       userUrl: this.get('userUrl'),
@@ -131,10 +131,10 @@ Discourse.UserAction = Discourse.Model.extend({
     var groups = this.get("childGroups");
     if (!groups) {
       groups = {
-        likes: Discourse.UserActionGroup.create({ icon: "icon-heart" }),
-        stars: Discourse.UserActionGroup.create({ icon: "icon-star" }),
-        edits: Discourse.UserActionGroup.create({ icon: "icon-pencil" }),
-        bookmarks: Discourse.UserActionGroup.create({ icon: "icon-bookmark" })
+        likes: Discourse.UserActionGroup.create({ icon: "fa-heart" }),
+        stars: Discourse.UserActionGroup.create({ icon: "fa-star" }),
+        edits: Discourse.UserActionGroup.create({ icon: "fa-pencil" }),
+        bookmarks: Discourse.UserActionGroup.create({ icon: "fa-bookmark" })
       };
     }
     this.set("childGroups", groups);

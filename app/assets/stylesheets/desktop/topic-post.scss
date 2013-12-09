@@ -1,5 +1,6 @@
 @import "common/foundation/variables";
 @import "common/foundation/mixins";
+@import "common/foundation/helpers";
 
 .gap {
   background-color: #f9f9f9;
@@ -350,7 +351,7 @@ a.star {
         border-bottom: 0;
         padding-bottom: 1px;
       }
-      .icon {
+      .fa {
         margin: 0;
         font-size: 18px;
         line-height: 52px;
@@ -397,7 +398,7 @@ span.post-count {
   .btn {
     margin-bottom: 5px;
     margin-right: 10px;
-    .icon-star {margin-right: 5px;}
+    .fa-star {margin-right: 5px;}
   }
 }
 

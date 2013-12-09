@@ -4,7 +4,7 @@
     <a href={{unbound unreadUrl}} class='badge unread-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unreadTopics}}</a>
   {{/if}}
   {{#if newTopics}}
-    <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{newTopics}} <i class='icon icon-asterisk'></i></a>
+    <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{newTopics}} <i class='fa fa-asterisk'></i></a>
   {{/if}}
 {{else}}
   <b class="topics-count">{{unbound topic_count}}</b>

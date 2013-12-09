@@ -4,65 +4,65 @@
 
     <ul>
         <li>
-          <button {{action toggleMultiSelect}} class='btn btn-admin'><i class='icon-tasks'></i> {{i18n topic.actions.multi_select}}</button>
+          <button {{action toggleMultiSelect}} class='btn btn-admin'><i class='fa fa-tasks'></i> {{i18n topic.actions.multi_select}}</button>
         </li>
 
       {{#if details.can_delete}}
         <li>
-          <button {{action deleteTopic}} class='btn btn-admin btn-danger'><i class='icon-trash'></i> {{i18n topic.actions.delete}}</button>
+          <button {{action deleteTopic}} class='btn btn-admin btn-danger'><i class='fa fa-trash-o'></i> {{i18n topic.actions.delete}}</button>
         </li>
       {{/if}}
 
       {{#if showRecover}}
         <li>
-          <button {{action recoverTopic}} class='btn btn-admin'><i class='icon-undo'></i> {{i18n topic.actions.recover}}</button>
+          <button {{action recoverTopic}} class='btn btn-admin'><i class='fa fa-undo'></i> {{i18n topic.actions.recover}}</button>
         </li>
       {{/if}}
 
       <li>
         {{#if closed}}
-          <button {{action toggleClosed}} class='btn btn-admin'><i class='icon-unlock'></i> {{i18n topic.actions.open}}</button>
+          <button {{action toggleClosed}} class='btn btn-admin'><i class='fa fa-unlock'></i> {{i18n topic.actions.open}}</button>
         {{else}}
-          <button {{action toggleClosed}} class='btn btn-admin'><i class='icon-lock'></i> {{i18n topic.actions.close}}</button>
-          <button {{action showAutoClose}} class='btn btn-admin'><i class='icon-time'></i> {{i18n topic.actions.auto_close}}</button>
+          <button {{action toggleClosed}} class='btn btn-admin'><i class='fa fa-lock'></i> {{i18n topic.actions.close}}</button>
+          <button {{action showAutoClose}} class='btn btn-admin'><i class='fa fa-clock-o'></i> {{i18n topic.actions.auto_close}}</button>
         {{/if}}
       </li>
 
       <li>
         {{#if pinned}}
-          <button {{action togglePinned}} class='btn btn-admin'><i class='icon-pushpin'></i> {{i18n topic.actions.unpin}}</button>
+          <button {{action togglePinned}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.unpin}}</button>
         {{else}}
-          <button {{action togglePinned}} class='btn btn-admin'><i class='icon-pushpin'></i> {{i18n topic.actions.pin}}</button>
+          <button {{action togglePinned}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.pin}}</button>
         {{/if}}
       </li>
 
       <li>
         {{#if archived}}
-          <button {{action toggleArchived}} class='btn btn-admin'><i class='icon-folder-close'></i> {{i18n topic.actions.unarchive}}</button>
+          <button {{action toggleArchived}} class='btn btn-admin'><i class='fa fa-folder'></i> {{i18n topic.actions.unarchive}}</button>
         {{else}}
-          <button {{action toggleArchived}} class='btn btn-admin'><i class='icon-folder-close'></i> {{i18n topic.actions.archive}}</button>
+          <button {{action toggleArchived}} class='btn btn-admin'><i class='fa fa-folder'></i> {{i18n topic.actions.archive}}</button>
         {{/if}}
       </li>
 
       <li>
         {{#if visible}}
-          <button {{action toggleVisibility}} class='btn btn-admin'><i class='icon-eye-close'></i> {{i18n topic.actions.invisible}}</button>
+          <button {{action toggleVisibility}} class='btn btn-admin'><i class='fa fa-eye-slash'></i> {{i18n topic.actions.invisible}}</button>
         {{else}}
-          <button {{action toggleVisibility}} class='btn btn-admin'><i class='icon-eye-open'></i> {{i18n topic.actions.visible}}</button>
+          <button {{action toggleVisibility}} class='btn btn-admin'><i class='fa fa-eye'></i> {{i18n topic.actions.visible}}</button>
         {{/if}}
       </li>
 
       {{#if canConvertToRegular}}
       <li>
-          <button {{action convertToRegular}} class='btn btn-admin'><i class='icon-minus'></i> {{i18n topic.actions.convert_to_topic}}</button>
+          <button {{action convertToRegular}} class='btn btn-admin'><i class='fa fa-minus'></i> {{i18n topic.actions.convert_to_topic}}</button>
       </li>
       {{/if}}
 
       <li>
-        <button class='btn btn-admin' {{action resetRead}}><i class='icon-remove'></i> {{i18n topic.actions.reset_read}}</button>
+        <button class='btn btn-admin' {{action resetRead}}><i class='fa fa-times'></i> {{i18n topic.actions.reset_read}}</button>
       </li>
     </ul>
   </div>
 {{else}}
-  <button class='btn no-text' id='show-topic-admin' {{action show}}><i class='icon icon-wrench'></i></button>
+  <button class='btn no-text' id='show-topic-admin' {{action show}}><i class='fa fa-wrench'></i></button>
 {{/if}}

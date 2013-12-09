@@ -4,7 +4,7 @@
 
     // Add check icon for polls
     if (this.get('topic.archetype') === 'poll') {
-      this.renderIcon(buffer, 'check-empty', 'poll');
+      this.renderIcon(buffer, 'square-o', 'poll');
     }
 
   });

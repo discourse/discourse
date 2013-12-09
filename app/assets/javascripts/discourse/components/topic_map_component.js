@@ -23,7 +23,7 @@ Discourse.TopicMapComponent = Ember.Component.extend({
   },
 
   toggleMapClass: function() {
-    return this.get('mapCollapsed') ? 'icon-chevron-down' : 'icon-chevron-up';
+    return this.get('mapCollapsed') ? 'fa fa-chevron-down' : 'fa fa-chevron-up';
   }.property('mapCollapsed'),
 
   showAllLinksControls: function() {

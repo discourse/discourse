@@ -7,7 +7,7 @@
       <div class="controls">
         <span class='static'>{{username}}</span>
         {{#if can_edit_username}}
-          {{#link-to "preferences.username" class="btn pad-left"}}<i class="icon-pencil"></i>{{/link-to}}
+          {{#link-to "preferences.username" class="btn pad-left"}}<i class="fa fa-pencil"></i>{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -32,7 +32,7 @@
       <div class="controls">
         <span class='static'>{{email}}</span>
         {{#if can_edit_email}}
-          {{#link-to "preferences.email" class="btn pad-left"}}<i class="icon-pencil"></i>{{/link-to}}
+          {{#link-to "preferences.email" class="btn pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -43,7 +43,7 @@
     <div class="control-group">
       <label class="control-label">{{i18n user.password.title}}</label>
       <div class="controls">
-        <a href="#" {{action changePassword}} class='btn'><i class="icon icon-envelope"></i>{{i18n user.change_password.action}}</a> {{passwordProgress}}
+        <a href="#" {{action changePassword}} class='btn'><i class="fa fa-envelope"></i>{{i18n user.change_password.action}}</a> {{passwordProgress}}
       </div>
     </div>
 
@@ -52,9 +52,9 @@
       <div class="controls">
         {{boundAvatar model imageSize="large"}}
         {{#if allowAvatarUpload}}
-          <button {{action showAvatarSelector}} class="btn pad-left"><i class="icon-pencil"></i></button>
+          <button {{action showAvatarSelector}} class="btn pad-left no-text"><i class="fa fa-pencil"></i></button>
         {{else}}
-          <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn"><i class="icon-pencil"></i></a>
+          <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn no-text"><i class="fa fa-pencil"></i></a>
         {{/if}}
       </div>
     </div>

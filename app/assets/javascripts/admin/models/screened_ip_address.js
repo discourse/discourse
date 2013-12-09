@@ -25,11 +25,11 @@ Discourse.ScreenedIpAddress = Discourse.Model.extend({
   }.property('action_name'),
 
   blockIcon: function() {
-    return 'icon-ban-circle';
+    return 'fa-ban';
   }.property(),
 
   doNothingIcon: function() {
-    return 'icon-ok';
+    return 'fa-check';
   }.property(),
 
   save: function() {

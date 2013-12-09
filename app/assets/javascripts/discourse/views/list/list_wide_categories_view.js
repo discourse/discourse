@@ -15,7 +15,7 @@ Discourse.ListWideCategoriesView = Discourse.View.extend({
   enableOrdering: function(){
     var self = this;
     Em.run.next(function(){
-      self.rows().sortable({handle: '.icon-reorder'}).on('sortupdate',function(evt, data){
+      self.rows().sortable({handle: '.fa-bars'}).on('sortupdate',function(evt, data){
         var tr = $(data.item);
         var categoryId = tr.data('category_id');
         var position = self.rows().find('tr').index(tr[0]);

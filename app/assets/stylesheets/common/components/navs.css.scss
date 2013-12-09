@@ -72,7 +72,7 @@
     }
   }
   .active > a,
-  .active .icon-chevron-right {
+  .active .fa-chevron-right {
     color: $white;
     background-color: $nav-stacked-background-color-active;
   }
@@ -80,7 +80,7 @@
     font-size: 12px;
     line-height: 16px;
   }
-  .icon-chevron-right {
+  .fa-chevron-right {
     float: right;
     margin: 0;
     color: $nav-stacked-chevron-color;
@@ -94,5 +94,6 @@
     text-align: center;
     position: absolute;
     left: 2px;
+    line-height: 20px;
   }
 }

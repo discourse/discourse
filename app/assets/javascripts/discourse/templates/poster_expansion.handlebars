@@ -14,17 +14,17 @@
       {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}
 
       {{#if user.can_send_private_message_to_user}}
-        <button class='btn' {{action composePrivateMessage user}}><i class='icon icon-envelope'></i>{{i18n user.private_message}}</button>
+        <button class='btn' {{action composePrivateMessage user}}><i class='fa fa-envelope'></i>{{i18n user.private_message}}</button>
       {{/if}}
 
-      {{#link-to 'user' user class="btn"}}<i class='icon icon-user'></i>{{i18n user.show_profile}}{{/link-to}}
+      {{#link-to 'user' user class="btn"}}<i class='fa fa-user'></i>{{i18n user.show_profile}}{{/link-to}}
 
       {{#if showFilter}}
-        <button class='btn' {{action togglePosts user}}><i class='icon icon-filter'></i>{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</button>
+        <button class='btn' {{action togglePosts user}}><i class='fa fa-filter'></i>{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</button>
       {{/if}}
 
       {{#if hasUserFilters}}
-        <button class='btn' {{action cancelFilter}}><i class='icon icon-remove'></i>{{i18n topic.filters.cancel}}</button>
+        <button class='btn' {{action cancelFilter}}><i class='fa fa-times'></i>{{i18n topic.filters.cancel}}</button>
       {{/if}}
 
     </div>

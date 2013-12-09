@@ -50,11 +50,11 @@ Discourse.ActivityFilterView = Ember.Component.extend({
     buffer.push("<a href='" + this.get('url') + "'>");
     var icon = this.get('icon');
     if (icon) {
-      buffer.push("<i class='glyph icon icon-" + icon + "'></i> ");
+      buffer.push("<i class='glyph fa fa-" + icon + "'></i> ");
     }
 
     buffer.push(this.get('description') + " <span class='count'>(" + this.get('activityCount') + ")</span>");
-    buffer.push("<span class='icon-chevron-right'></span></a>");
+    buffer.push("<span class='fa fa-chevron-right'></span></a>");
   },
 
   icon: function(){

@@ -5,25 +5,25 @@
   {{#if actionFilter}}
     <a {{action clearFilter "action_name"}} class="filter">
       <span class="label">{{i18n admin.logs.action}}</span>: {{actionFilter}}
-      <i class="icon icon-remove-sign"></i>
+      <i class="fa fa-times-circle"></i>
     </a>
   {{/if}}
   {{#if filters.acting_user}}
     <a {{action clearFilter "acting_user"}} class="filter">
       <span class="label">{{i18n admin.logs.staff_actions.staff_user}}</span>: {{filters.acting_user}}
-      <i class="icon icon-remove-sign"></i>
+      <i class="fa fa-times-circle"></i>
     </a>
   {{/if}}
   {{#if filters.target_user}}
     <a {{action clearFilter "target_user"}} class="filter">
       <span class="label">{{i18n admin.logs.staff_actions.target_user}}</span>: {{filters.target_user}}
-      <i class="icon icon-remove-sign"></i>
+      <i class="fa fa-times-circle"></i>
     </a>
   {{/if}}
   {{#if filters.subject}}
     <a {{action clearFilter "subject"}} class="filter">
       <span class="label">{{i18n admin.logs.staff_actions.subject}}</span>: {{filters.subject}}
-      <i class="icon icon-remove-sign"></i>
+      <i class="fa fa-times-circle"></i>
     </a>
   {{/if}}
 </div>

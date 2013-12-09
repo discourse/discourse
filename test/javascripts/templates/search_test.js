@@ -80,7 +80,7 @@ test("shows spinner icon instead of results area when loading", function() {
 
   var $searchInProgress = fixture(searchInProgressSelector);
   ok(exists($searchInProgress), "the 'search in progress' message is shown");
-  ok(exists($searchInProgress.find(".icon-spinner")), "the 'search in progress' message contains a spinner icon");
+  ok(exists($searchInProgress.find(".fa-spinner")), "the 'search in progress' message contains a spinner icon");
 });
 
 test("shows 'no results' message when loading has finished and there are no results found", function() {
@@ -173,5 +173,5 @@ test("displays 'close more results' button when the search is in the more result
   var $firstSection = fixture(resultsSectionSelector).eq(0);
   var $filter = $firstSection.find(resultsFilterSelector);
   ok(exists($filter), "the 'close more results' button exists");
-  ok(exists($filter.find(".icon-remove-sign")), "the 'close more results' contains correct icon");
+  ok(exists($filter.find(".fa-times-circle")), "the 'close more results' contains correct icon");
 });

@@ -11,8 +11,8 @@ Discourse.CategoryDropComponent = Ember.Component.extend({
   tagName: 'li',
 
   iconClass: function() {
-    if (this.get('expanded')) { return "icon icon-caret-down"; }
-    return "icon icon-caret-right";
+    if (this.get('expanded')) { return "fa fa-caret-down"; }
+    return "fa fa-caret-right";
   }.property('expanded'),
 
   allCategoriesUrl: function() {
