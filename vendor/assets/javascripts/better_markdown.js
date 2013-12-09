@@ -655,7 +655,7 @@
 
       if ( consumed >= text.length ) {
         // No closing char found. Abort.
-        return null;
+        return [consumed, null, nodes];
       }
 
       var res = this.dialect.inline.__oneElement__.call(this, text.substr( consumed ), patterns );
@@ -1264,8 +1264,10 @@
         var res = inline_until_char.call( this, text.substr(1), "]" );
 
         // No closing ']' found. Just consume the [
-        if ( !res )
-          return [ 1, "[" ];
+        if ( !res[1] ) {
+          var size = res[0] + 1;
+          return [ size, text.charAt(0) + res[2].join('') ];
+        }
 
         var consumed = 1 + res[ 0 ],
             children = res[ 1 ],
