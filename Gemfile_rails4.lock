@@ -271,7 +271,7 @@ GEM
     openid-redis-store (0.0.2)
       redis
       ruby-openid
-    pg (0.17.0)
+    pg (0.15.1)
     polyglot (0.3.3)
     progress (3.0.0)
     pry (0.9.12.4)
@@ -491,7 +491,7 @@ DEPENDENCIES
   omniauth-openid
   omniauth-twitter
   openid-redis-store
-  pg
+  pg (= 0.15.1)
   pry-nav
   pry-rails
   puma

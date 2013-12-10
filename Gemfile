@@ -107,7 +107,8 @@ gem 'omniauth-oauth2', require: false
 gem 'omniauth-browserid', git: 'https://github.com/callahad/omniauth-browserid.git', branch: 'observer_api'
 gem 'omniauth-cas'
 gem 'oj'
-gem 'pg'
+# while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4
+gem 'pg', '0.15.1'
 gem 'rake'
 
 
