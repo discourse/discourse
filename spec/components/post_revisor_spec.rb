@@ -222,14 +222,14 @@ describe PostRevisor do
 
     describe 'with a new body' do
       let(:changed_by) { Fabricate(:coding_horror) }
-      let!(:result) { subject.revise!(changed_by, 'updated body') }
+      let!(:result) { subject.revise!(changed_by, "lets update the body") }
 
       it 'returns true' do
         result.should be_true
       end
 
       it 'updates the body' do
-        post.raw.should == 'updated body'
+        post.raw.should == "lets update the body"
       end
 
       it 'sets the invalidate oneboxes attribute' do
@@ -250,6 +250,12 @@ describe PostRevisor do
 
       it "saved the user who made the change in the version" do
         post.versions.first.user.should be_present
+      end
+
+      it "updates the word count" do
+        post.word_count.should == 4
+        post.topic.reload
+        post.topic.word_count.should == 4
       end
 
       context 'second poster posts again quickly' do

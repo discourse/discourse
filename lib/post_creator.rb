@@ -96,6 +96,7 @@ class PostCreator
       post.reply_to_user_id ||= Post.select(:user_id).where(topic_id: post.topic_id, post_number: post.reply_to_post_number).first.try(:user_id)
     end
 
+    post.word_count = post.raw.scan(/\w+/).size
     post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?)
 
     cooking_options = post.cooking_options || {}
@@ -198,6 +199,7 @@ class PostCreator
     # Update attributes on the topic - featured users and last posted.
     attrs = {last_posted_at: @post.created_at, last_post_user_id: @post.user_id}
     attrs[:bumped_at] = @post.created_at unless @post.no_bump
+    attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
     @topic.update_attributes(attrs)
   end
 

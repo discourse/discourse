@@ -2,6 +2,11 @@
   <p>{{{i18n summary.enabled_description}}}</p>
   <button class='btn' {{action toggleSummary}}>{{i18n summary.disable}}</button>
 {{else}}
-  <p>{{{i18n summary.description count="topic.posts_count"}}}</p>
+  {{#if topic.estimatedReadingTime}}
+    <p>{{{i18n summary.description_time count="topic.posts_count" readingTime="topic.estimatedReadingTime"}}}</p>
+  {{else}}
+    <p>{{{i18n summary.description count="topic.posts_count"}}}</p>
+  {{/if}}
+
   <button class='btn' {{action toggleSummary}}>{{i18n summary.enable}}</button>
 {{/if}}

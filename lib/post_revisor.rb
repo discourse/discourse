@@ -16,6 +16,7 @@ class PostRevisor
     revise_post
     update_category_description
     post_process_post
+    update_topic_word_counts
     @post.advance_draft_sequence
     true
   end
@@ -66,8 +67,15 @@ class PostRevisor
     end
   end
 
+  def update_topic_word_counts
+    Topic.exec_sql("UPDATE topics SET word_count = (SELECT SUM(COALESCE(posts.word_count, 0))
+                                                    FROM posts WHERE posts.topic_id = :topic_id)
+                    WHERE topics.id = :topic_id", topic_id: @post.topic_id)
+  end
+
   def update_post
     @post.raw = @new_raw
+    @post.word_count = @new_raw.scan(/\w+/).size
     @post.updated_by = @user
     @post.last_editor_id = @user.id
     @post.edit_reason = @opts[:edit_reason] if @opts[:edit_reason]

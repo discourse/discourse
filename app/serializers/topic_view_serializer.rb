@@ -22,6 +22,7 @@ class TopicViewSerializer < ApplicationSerializer
      :archetype,
      :slug,
      :category_id,
+     :word_count,
      :deleted_at]
   end
 
