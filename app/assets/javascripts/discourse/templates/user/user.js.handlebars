@@ -10,7 +10,7 @@
         {{/each}}
       </ul>
 
-      {{#if viewingSelf}}
+      {{#if canSeePrivateMessages}}
         <h3><i class='icon icon-envelope'></i> {{i18n user.private_messages}}</h3>
         <ul class='action-list nav-stacked'>
           <li {{bindAttr class=":noGlyph privateMessagesActive:active"}}>
