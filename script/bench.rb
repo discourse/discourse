@@ -1,6 +1,21 @@
 require "socket"
 require "csv"
 require "yaml"
+require "optparse"
+
+@include_env = false
+@result_file = nil
+opts = OptionParser.new do |o|
+  o.banner = "Usage: ruby bench.rb [options]"
+
+  o.on("-n", "--with_default_env", "Include recommended Discourse env") do
+    @include_env = true
+  end
+  o.on("-o", "--output [FILE]", "Output results to this file") do |f|
+    @result_file = f
+  end
+end
+opts.parse!
 
 def run(command)
   system(command, out: $stdout, err: :out)
@@ -10,7 +25,8 @@ begin
   require 'facter'
 rescue LoadError
   run "gem install facter"
-  puts "just installed the facter gem, please re-run script"
+  puts "just installed the facter gem, rerunning script"
+  exec("ruby " + [ File.absolute_path(__FILE__), __FILE__ ], *ARGV)
   exit
 end
 
@@ -61,19 +77,20 @@ end
 
 ENV["RAILS_ENV"] = "profile"
 
-if ARGV.include?("--noenv")
+
+if @include_env
+  puts "Running with tuned environment"
+  ENV["RUBY_GC_MALLOC_LIMIT"] = "50_000_000"
+  ENV.delete "RUBY_HEAP_SLOTS_GROWTH_FACTOR"
+  ENV.delete "RUBY_HEAP_MIN_SLOTS"
+  ENV.delete "RUBY_FREE_MIN"
+else
+  # clean env
   puts "Running with default environment"
   ENV.delete "RUBY_GC_MALLOC_LIMIT"
   ENV.delete "RUBY_HEAP_SLOTS_GROWTH_FACTOR"
   ENV.delete "RUBY_HEAP_MIN_SLOTS"
   ENV.delete "RUBY_FREE_MIN"
-else
-  # Github settings
-  puts "Running with tuned environment"
-  ENV["RUBY_GC_MALLOC_LIMIT"] = "1000000000"
-  ENV["RUBY_HEAP_SLOTS_GROWTH_FACTOR"] = "1.25"
-  ENV["RUBY_HEAP_MIN_SLOTS"] = "800000"
-  ENV["RUBY_FREE_MIN"] = "600000"
 end
 
 def port_available? port
@@ -154,15 +171,22 @@ begin
 
   run("RAILS_ENV=profile bundle exec rake assets:clean")
 
-  puts({
+  results = {
     "home_page" => home_page,
     "topic_page" => topic_page,
     "home_page_admin" => home_page_admin,
     "topic_page_admin" => topic_page_admin,
     "timings" => @timings,
-    "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
-    "rails4?" => ENV["RAILS4"] == "1"
-  }.merge(facts).to_yaml)
+    "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
+  }.merge(facts).to_yaml
+
+  puts results
+
+  if @result_file
+    File.open(@result_file,"wb") do |f|
+      f.write(results)
+    end
+  end
 
 
   # TODO include Facter.to_hash ... for all facts
