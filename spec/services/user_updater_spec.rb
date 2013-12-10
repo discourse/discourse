@@ -1,10 +1,13 @@
 require 'spec_helper'
 
 describe UserUpdater do
+
+  let(:acting_user) { Fabricate.build(:user) }
+
   describe '#update' do
     it 'saves user' do
       user = Fabricate(:user, name: 'Billy Bob')
-      updater = UserUpdater.new(user)
+      updater = described_class.new(acting_user, user)
 
       updater.update(name: 'Jim Tom')
 
@@ -14,7 +17,7 @@ describe UserUpdater do
     context 'when update succeeds' do
       it 'returns true' do
         user = Fabricate(:user)
-        updater = UserUpdater.new(user)
+        updater = described_class.new(acting_user, user)
 
         expect(updater.update).to be_true
       end
@@ -24,7 +27,7 @@ describe UserUpdater do
       it 'returns false' do
         user = Fabricate(:user)
         user.stubs(save: false)
-        updater = UserUpdater.new(user)
+        updater = described_class.new(acting_user, user)
 
         expect(updater.update).to be_false
       end
@@ -35,8 +38,8 @@ describe UserUpdater do
         user = Fabricate(:user, title: 'Emperor')
         guardian = stub
         guardian.stubs(:can_grant_title?).with(user).returns(true)
-        Guardian.stubs(:new).with(user).returns(guardian)
-        updater = UserUpdater.new(user)
+        Guardian.stubs(:new).with(acting_user).returns(guardian)
+        updater = described_class.new(acting_user, user)
 
         updater.update(title: 'Minion')
 
@@ -49,8 +52,8 @@ describe UserUpdater do
         user = Fabricate(:user, title: 'Emperor')
         guardian = stub
         guardian.stubs(:can_grant_title?).with(user).returns(false)
-        Guardian.stubs(:new).with(user).returns(guardian)
-        updater = UserUpdater.new(user)
+        Guardian.stubs(:new).with(acting_user).returns(guardian)
+        updater = described_class.new(acting_user, user)
 
         updater.update(title: 'Minion')
 
@@ -61,7 +64,7 @@ describe UserUpdater do
     context 'when website includes http' do
       it 'does not add http before updating' do
         user = Fabricate(:user)
-        updater = UserUpdater.new(user)
+        updater = described_class.new(acting_user, user)
 
         updater.update(website: 'http://example.com')
 
@@ -72,7 +75,7 @@ describe UserUpdater do
     context 'when website does not include http' do
       it 'adds http before updating' do
         user = Fabricate(:user)
-        updater = UserUpdater.new(user)
+        updater = described_class.new(acting_user, user)
 
         updater.update(website: 'example.com')
 

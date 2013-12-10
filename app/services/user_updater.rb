@@ -1,7 +1,7 @@
 class UserUpdater
-  def initialize(user)
+  def initialize(actor, user)
     @user = user
-    @guardian = Guardian.new(user)
+    @guardian = Guardian.new(actor)
   end
 
   def update(attributes = {})
