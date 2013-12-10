@@ -1,0 +1,30 @@
+<header>
+  <%- if @topic_view.posts.present? %>
+    <%= link_to(I18n.t('embed.title'), @topic_view.topic.url, class: 'button', target: '_blank') %>
+  <%- else %>
+    <%= link_to(I18n.t('embed.start_discussion'), @topic_view.topic.url, class: 'button', target: '_blank') %>
+  <%- end if %>
+
+  <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url) %>
+</header>
+
+<%- if @topic_view.posts.present? %>
+  <%- @topic_view.posts.each do |post| %>
+    <article class='post'>
+      <%= link_to post.created_at.strftime("%e %b %Y"), post.url, class: 'post-date', target: "_blank" %>
+      <div class='author'>
+        <img src='<%= post.user.small_avatar_url %>'>
+        <h3><%= post.user.username %></h3>
+      </div>
+      <div class='cooked'><%= raw post.cooked %></div>
+      <div style='clear: both'></div>
+    </article>
+  <%- end %>
+
+  <footer>
+    <%= link_to(I18n.t('embed.continue'), @topic_view.topic.url, class: 'button', target: '_blank') %>
+    <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url) %>
+  </footer>
+
+<% end %>
+

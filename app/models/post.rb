@@ -60,6 +60,10 @@ class Post < ActiveRecord::Base
     @types ||= Enum.new(:regular, :moderator_action)
   end
 
+  def self.cook_methods
+    @cook_methods ||= Enum.new(:regular, :raw_html)
+  end
+
   def self.find_by_detail(key, value)
     includes(:post_details).where(post_details: { key: key, value: value }).first
   end
@@ -124,6 +128,11 @@ class Post < ActiveRecord::Base
   end
 
   def cook(*args)
+    # For some posts, for example those imported via RSS, we support raw HTML. In that
+    # case we can skip the rendering pipeline.
+    return raw if cook_method == Post.cook_methods[:raw_html]
+
+    # Default is to cook posts
     Plugin::Filter.apply(:after_post_cook, self, post_analyzer.cook(*args))
   end
 

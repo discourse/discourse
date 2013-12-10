@@ -29,6 +29,14 @@ en:
 
   too_many_replies: "Sorry you can't reply any more times in that topic."
 
+  embed:
+    title: "Discussion Highlights"
+    start_discussion: "Begin the Discussion"
+    continue: "Continue the Discussion"
+    loading: "Loading Discussion..."
+    permalink: "Permalink"
+    imported_from: "Imported from: %{link}"
+
   too_many_mentions:
     zero: "Sorry, you can't mention other users."
     one: "Sorry, you can only mention one other user in a post."
@@ -756,6 +764,11 @@ en:
     invites_shown: "Maximum invites shown on a user page"
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
+
+    embeddable_host: "Host that can embed the comments from this Discourse forum"
+    feed_polling_enabled: "Whether to import a RSS/ATOM feed as posts"
+    feed_polling_url: "URL of RSS/ATOM feed to import"
+    embed_by_username: "Discourse username of the user who creates the topics"
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

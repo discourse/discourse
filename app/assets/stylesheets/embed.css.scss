@@ -1,0 +1,69 @@
+//= require ./vendor/normalize
+//= require ./common/foundation/base
+
+article.post {
+  border-bottom: 1px solid #ddd;
+
+  .post-date {
+    float: right;
+    color: #aaa;
+    font-size: 12px;
+    margin: 4px 4px 0 0;
+  }
+
+  .author {
+    padding: 20px 0;
+    width: 92px;
+    float: left;
+
+    text-align: center;
+
+    h3 {
+      text-align: center;
+      color: #4a6b82;
+      font-size: 13px;
+      margin: 0;
+    }
+  }
+
+  .cooked {
+    padding: 20px 0;
+    margin-left: 92px;
+
+    p {
+      margin: 0 0 1em 0;
+    }
+  }
+}
+
+header {
+  padding: 10px 10px 20px 10px;
+
+  font-size: 18px;
+
+  border-bottom: 1px solid #ddd;
+}
+
+footer {
+  font-size: 18px;
+
+  .logo {
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+
+  a[href].button {
+    margin: 10px 0 0 10px;
+  }
+}
+
+.logo {
+  float: right;
+  max-height: 30px;
+}
+
+a[href].button {
+  background-color: #eee;
+  padding: 5px;
+  display: inline-block;
+}

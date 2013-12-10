@@ -350,6 +350,12 @@ developer:
       test: false
       default: true
 
+embedding:
+  embeddable_host: ''
+  feed_polling_enabled: false
+  feed_polling_url: ''
+  embed_by_username: ''
+
 uncategorized:
   tos_url:
     client: true

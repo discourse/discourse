@@ -1,6 +1,6 @@
 class CreateTopTopics < ActiveRecord::Migration
   def change
-    create_table :top_topics do |t|
+    create_table :top_topics, force: true do |t|
       t.belongs_to :topic
 
       TopTopic.periods.each do |period|
