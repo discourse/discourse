@@ -26,7 +26,6 @@ class ApplicationController < ActionController::Base
   end
 
   before_filter :set_locale
-  before_filter :set_mobile_view
   before_filter :inject_preview_style
   before_filter :disable_customization
   before_filter :block_if_maintenance_mode
@@ -118,10 +117,6 @@ class ApplicationController < ActionController::Base
       preload_current_user_data
       current_user.sync_notification_channel_position
     end
-  end
-
-  def set_mobile_view
-    session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
   def inject_preview_style

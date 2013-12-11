@@ -177,4 +177,23 @@ describe SiteCustomization do
 
   end
 
+  describe "custom_stylesheet_path" do
+
+    it "returns the path when customization exists for the target" do
+      described_class.stubs(:lookup_style).returns( described_class.create!(customization_params) )
+      described_class.custom_stylesheet_path(nil, :desktop).should be_present
+    end
+
+    it "returns nil if customization doesn't exist for the target" do
+      described_class.stubs(:lookup_style).returns( described_class.create!(customization_params) )
+      described_class.custom_stylesheet_path(nil, :mobile).should be_nil
+    end
+
+    it "returns nil if customization doesn't exist at all" do
+      described_class.stubs(:lookup_style).returns( nil )
+      described_class.custom_stylesheet_path(nil, :desktop).should be_nil
+    end
+
+  end
+
 end
