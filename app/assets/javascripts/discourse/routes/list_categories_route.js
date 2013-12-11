@@ -9,7 +9,10 @@
 Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
   template: function() {
-    return Discourse.SiteSettings.enable_wide_category_list ? 'listWideCategories' : 'listCategories';
+    // Remove the option to have 2-column layout on categories page.
+    // TODO: remove this old code when we're sure about it.
+    // return Discourse.SiteSettings.enable_wide_category_list ? 'listWideCategories' : 'listCategories';
+    return 'listWideCategories';
   }.property(),
 
   redirect: function() { Discourse.redirectIfLoginRequired(this); },

@@ -252,7 +252,6 @@
   }
   .last-user-info {
     font-size: 12px;
-    margin-top: 3px;
   }
   tbody td {
     padding-bottom: 20px;
@@ -285,6 +284,13 @@
     .badge-category {
       padding: 6px 10px;
       font-size: 14px;
+    }
+  }
+
+  .featured-topic {
+    margin: 6px 0;
+    a.last-posted-at, a.last-posted-at:visited {
+      color: #888;
     }
   }
 }

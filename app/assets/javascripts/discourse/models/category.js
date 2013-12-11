@@ -117,6 +117,13 @@ Discourse.Category = Discourse.Model.extend({
     }
   }.property("topics"),
 
+  featuredTopics: function() {
+    var topics = this.get('topics');
+    if (topics && topics.length) {
+      return topics.slice(0, Discourse.SiteSettings.category_featured_topics || 2);
+    }
+  }.property('topics'),
+
   topicTrackingState: function(){
     return Discourse.TopicTrackingState.current();
   }.property(),

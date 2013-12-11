@@ -22,7 +22,15 @@ class CategoryList
   private
 
     def latest_post_only?
-      @options[:latest_post_only]
+      @options[:latest_posts] and latest_posts_count == 1
+    end
+
+    def include_latest_posts?
+      @options[:latest_posts] and latest_posts_count > 1
+    end
+
+    def latest_posts_count
+      @options[:latest_posts].to_i > 0 ? @options[:latest_posts].to_i : SiteSetting.category_featured_topics
     end
 
     # Retrieve a list of all the topics we'll need
@@ -33,6 +41,7 @@ class CategoryList
 
       @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id))
       @all_topics.each do |t|
+        t.include_last_poster = true if include_latest_posts? # hint for serialization
         @topics_by_id[t.id] = t
       end
 

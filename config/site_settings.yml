@@ -32,10 +32,10 @@ basic:
     default: ''
   enable_wide_category_list:
     client: true
-    default: false
+    default: true
   category_featured_topics:
     client: true
-    default: 6
+    default: 3
   topics_per_page: 30
   posts_per_page:
     client: true
