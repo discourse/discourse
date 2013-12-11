@@ -3,7 +3,7 @@ require_dependency 'oneboxer/handlebars_onebox'
 module Oneboxer
   class AmazonOnebox < HandlebarsOnebox
 
-    matcher /^https?:\/\/(?:www\.)?amazon.(com|ca)\/.*$/
+    matcher /^https?:\/\/(?:www\.)?amazon.(com\.au|com|br|mx|ca|at|cn|fr|de|it|es|in|co\.jp|co\.uk)\/.*$/
     favicon 'amazon.png'
 
     def template
