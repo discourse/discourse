@@ -1,8 +1,7 @@
 class MigrateWordCounts < ActiveRecord::Migration
+  disable_ddl_transaction!
+  
   def up
-
-    disable_ddl_transaction
-
     post_ids = execute("SELECT id FROM posts WHERE word_count IS NULL LIMIT 500").map {|r| r['id'].to_i }
     while post_ids.length > 0
       3.times do
