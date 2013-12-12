@@ -26,24 +26,26 @@ class RateLimiter
 
         limiter_method = limiter_method || :default_rate_limiter
 
-        self.after_create do
+        # Use lambda blocks in these callbacks so that return works properly
+        # See https://github.com/rails/rails/pull/13271
 
+        self.after_create &lambda {
           rate_limiter = send(limiter_method)
           return unless rate_limiter.present?
 
           rate_limiter.performed!
           @performed ||= {}
           @performed[limiter_method] = true
-        end
+        }
 
-        self.after_destroy do
+        self.after_destroy &lambda {
           rate_limiter = send(limiter_method)
           return unless rate_limiter.present?
 
           rate_limiter.rollback!
-        end
+        }
 
-        self.after_rollback do
+        self.after_rollback &lambda {
           rate_limiter = send(limiter_method)
           return unless rate_limiter.present?
 
@@ -51,7 +53,7 @@ class RateLimiter
             rate_limiter.rollback!
             @performed[limiter_method] = false
           end
-        end
+        }
 
       end
     end

@@ -152,7 +152,9 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :skip_callbacks
 
-  after_create do
+  after_create :after_create_callback
+
+  def after_create_callback
     return if skip_callbacks
 
     changed_to_category(category)
@@ -163,7 +165,9 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  before_save do
+  before_save :before_save_callback
+
+  def before_save_callback
     return if skip_callbacks
 
     if (auto_close_at_changed? and !auto_close_at_was.nil?) or (auto_close_user_id_changed? and auto_close_at)
@@ -176,7 +180,9 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  after_save do
+  after_save :after_save_callback
+
+  def after_save_callback
     return if skip_callbacks
 
     if auto_close_at and (auto_close_at_changed? or auto_close_user_id_changed?)
