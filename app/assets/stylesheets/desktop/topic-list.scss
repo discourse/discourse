@@ -234,14 +234,14 @@
 }
 
 #topic-list.categories {
-  th.latest {
+  th.posts {
     position: relative;
   }
   th .toggle-admin {
     position: absolute;
     padding: 3px 8px;
     font-size: 12px;
-    right: 5px;
+    right: -35px;
     top: 4px;
   }
   th.latest, td.latest {

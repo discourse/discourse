@@ -4,11 +4,11 @@
     <thead>
     <tr>
       <th class='category'>{{i18n categories.category}}</th>
+      <th class='latest'>{{i18n categories.latest}}</th>
       <th class='num topics'>{{i18n categories.topics}}</th>
-      <th class='num posts'>{{i18n categories.posts}}</th>
-      <th class='latest'>{{i18n categories.latest}}
+      <th class='num posts'>{{i18n categories.posts}}
         {{#if canEdit}}
-        <button title='{{i18n categories.toggle_ordering}}' class='btn toggle-admin no-text' {{action toggleOrdering}}><i class='fa fa-wrench'></i></button>
+          <button title='{{i18n categories.toggle_ordering}}' class='btn toggle-admin no-text' {{action toggleOrdering}}><i class='fa fa-wrench'></i></button>
         {{/if}}
       </th>
     </tr>
@@ -52,8 +52,6 @@
             </div>
           {{/if}}
         </td>
-        <td class='num'>{{number topic_count}}</td>
-        <td class='num'>{{number post_count}}</td>
         <td {{bindAttr class="archived :latest"}}>
           {{#each featuredTopics}}
             <div class="featured-topic">
@@ -81,6 +79,8 @@
             </div>
           {{/each}}
         </td>
+        <td class='num'>{{number topic_count}}</td>
+        <td class='num'>{{number post_count}}</td>
       </tr>
       {{/each}}
     </tbody>
