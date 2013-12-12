@@ -125,6 +125,7 @@ describe Post do
     let(:post_with_favicon) { post_with_body('<img src="/assets/favicons/wikipedia.png" class="favicon">', newuser) }
     let(:post_with_thumbnail) { post_with_body('<img src="/assets/emoji/smiley.png" class="thumbnail">', newuser) }
     let(:post_with_two_classy_images) { post_with_body("<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", newuser) }
+    let(:post_with_emojis) { post_with_body("<img src='/plugins/emoji/images/smile.png' title=':smile:' class='emoji' alt='smile'><img src='/plugins/emoji/images/wink.png' title=':wink:' class='emoji' alt='wink'>", newuser) }
 
     it "returns 0 images for an empty post" do
       Fabricate.build(:post).image_count.should == 0
@@ -150,6 +151,10 @@ describe Post do
       post_with_thumbnail.image_count.should == 0
     end
 
+    it "doesn't count emojies as images" do
+      post_with_emojis.image_count.should == 0
+    end
+
     it "doesn't count whitelisted images" do
       Post.stubs(:white_listed_image_classes).returns(["classy"])
       post_with_two_classy_images.image_count.should == 0
@@ -164,6 +169,10 @@ describe Post do
       context 'newuser' do
         it "allows a new user to post below the limit" do
           post_one_image.should be_valid
+        end
+
+        it "allows a new user to post emojies" do
+          post_with_emojis.should be_valid
         end
 
         it "doesn't allow more than the maximum" do

@@ -111,7 +111,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.white_listed_image_classes
-    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail']
+    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail', 'emoji']
   end
 
   def post_analyzer
