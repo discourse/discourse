@@ -56,6 +56,7 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
 
     record(@thread, :link, str, 'link')
     record(@thread, :title, str, 'title')
+    record(@thread, :created_at, str, 'createdAt')
   end
 
   def cdata_block(str)
@@ -99,6 +100,7 @@ class Disqus < Thor
   desc "import", "Imports posts from a Disqus XML export"
   method_option :file, aliases: '-f', required: true, desc: "The disqus XML file to import"
   method_option :post_as, aliases: '-p', required: true, desc: "The Discourse username to post as"
+  method_option :category, aliases: '-c', desc: "The category to post in"
   def import
     require './config/environment'
 
@@ -124,10 +126,15 @@ class Disqus < Thor
 
     SiteSetting.email_domains_blacklist = ""
 
+    category_id = nil
+    if options[:category]
+      category_id = Category.where(name: options[:category]).first.try(:id)
+    end
+
     parser.threads.each do |id, t|
       puts "Creating #{t[:title]}... (#{t[:posts].size} posts)"
 
-      creator = PostCreator.new(user, title: t[:title], raw: "\[[Permalink](#{t[:link]})\]")
+      creator = PostCreator.new(user, title: t[:title], raw: "\[[Permalink](#{t[:link]})\]", created_at: Date.parse(t[:created_at]), category: category_id)
       post = creator.create
 
       if post.present?
@@ -144,7 +151,8 @@ class Disqus < Thor
           attrs = {
             topic_id: post.topic_id,
             raw: p[:cooked],
-            cooked: p[:cooked]
+            cooked: p[:cooked],
+            created_at: Date.parse(p[:created_at])
           }
 
           if p[:parent_id]
@@ -157,7 +165,10 @@ class Disqus < Thor
           post = PostCreator.new(post_user, attrs).create
           p[:discourse_number] = post.post_number
         end
+        TopicFeaturedUsers.new(post.topic).choose
       end
+
+
     end
 
   ensure
