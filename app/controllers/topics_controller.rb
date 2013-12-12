@@ -1,7 +1,9 @@
 require_dependency 'topic_view'
 require_dependency 'promotion'
+require_dependency 'url_helper'
 
 class TopicsController < ApplicationController
+  include UrlHelper
 
   before_filter :ensure_logged_in, only: [:timings,
                                           :destroy_timings,
@@ -57,7 +59,7 @@ class TopicsController < ApplicationController
 
     perform_show_response
 
-    canonical_url @topic_view.canonical_path
+    canonical_url absolute(@topic_view.canonical_path)
   end
 
   def wordpress
