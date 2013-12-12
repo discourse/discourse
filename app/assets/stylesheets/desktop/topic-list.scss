@@ -253,12 +253,15 @@
   .last-user-info {
     font-size: 12px;
   }
-  tbody td {
-    padding-bottom: 20px;
+
+  .has-description td.category {
+    padding-top: 15px;
   }
 
-  td.category {
-    padding-top: 15px;
+  .has-description {
+    td.category {
+      padding-top: 15px;
+    }
   }
 
   .category{
@@ -272,11 +275,8 @@
         padding: 4px;
       }
     }
-
     .featured-users {
-      position: absolute;
-      right: 18px;
-      top: 3px;
+      margin-right: 13px;
     }
     .category-description {
       margin-top: 10px;
