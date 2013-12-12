@@ -946,6 +946,26 @@ en:
           one: "Are you sure you want to delete that post?"
           other: "Are you sure you want to delete all those posts?"
 
+      revisions:
+        controls:
+          first: "First revision"
+          previous: "Previous revision"
+          next: "Next revision"
+          last: "Last revision"
+          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> (out of {{total}})"
+        displays:
+          inline:
+            title: "Show the rendered output with additions and removals inline"
+            button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            title: "Show the rendered output diffs side-by-side"
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "Show the markdown source diffs side-by-side"
+            button: '<i class="fa fa-columns"></i> Markdown'
+        details:
+          edited_by: "Edited by"
+
     category:
       can: 'can&hellip; '
       none: '(no category)'

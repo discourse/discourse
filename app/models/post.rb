@@ -15,8 +15,6 @@ class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
 
-  versioned if: :raw_changed?
-
   rate_limit
   rate_limit :limit_posts_per_day
 
@@ -35,6 +33,9 @@ class Post < ActiveRecord::Base
   has_one :post_search_data
 
   has_many :post_details
+
+  has_many :post_revisions
+  has_many :revisions, foreign_key: :post_id, class_name: 'PostRevision'
 
   validates_with ::Validators::PostValidator
 
@@ -317,11 +318,18 @@ class Post < ActiveRecord::Base
     self.cooked = cook(raw, topic_id: topic_id) unless new_record?
   end
 
+  after_save do
+    save_revision if self.version_changed?
+  end
+
+  after_update do
+    update_revision if self.changed?
+  end
+
   def advance_draft_sequence
     return if topic.blank? # could be deleted
     DraftSequence.next!(last_editor_id, topic.draft_key)
   end
-
 
   # TODO: move to post-analyzer?
   # Determine what posts are quoted by this post
@@ -386,9 +394,16 @@ class Post < ActiveRecord::Base
     Post.where(id: post_ids).includes(:user, :topic).order(:id).to_a
   end
 
+  def revert_to(number)
+    return if number >= version
+    post_revision = PostRevision.where(post_id: id, number: number + 1).first
+    post_revision.modifications.each do |attribute, change|
+      attribute = "version" if attribute == "cached_version"
+      write_attribute(attribute, change[0])
+    end
+  end
+
   private
-
-
 
   def parse_quote_into_arguments(quote)
     return {} unless quote.present?
@@ -412,6 +427,27 @@ class Post < ActiveRecord::Base
       Post.where(id: post.id).update_all ['reply_count = reply_count + 1']
     end
   end
+
+  def save_revision
+    modifications = changes.extract!(:raw, :cooked, :edit_reason)
+    # make sure cooked is always present (oneboxes might not change the cooked post)
+    modifications["cooked"] = [self.cooked, self.cooked] unless modifications["cooked"].present?
+    PostRevision.create!(
+      user_id: last_editor_id,
+      post_id: id,
+      number: version,
+      modifications: modifications
+    )
+  end
+
+  def update_revision
+    revision = PostRevision.where(post_id: id, number: version).first
+    return unless revision
+    revision.user_id = last_editor_id
+    revision.modifications = changes.extract!(:raw, :cooked, :edit_reason)
+    revision.save
+  end
+
 end
 
 # == Schema Information
@@ -427,7 +463,7 @@ end
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  reply_to_post_number    :integer
-#  cached_version          :integer          default(1), not null
+#  version                 :integer          default(1), not null
 #  reply_count             :integer          default(0), not null
 #  quote_count             :integer          default(0), not null
 #  deleted_at              :datetime

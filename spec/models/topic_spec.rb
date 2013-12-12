@@ -21,10 +21,10 @@ describe Topic do
   it { should have_many :topic_allowed_users }
   it { should have_many :allowed_users }
   it { should have_many :invites }
+  it { should have_many :topic_revisions }
+  it { should have_many :revisions }
 
   it { should rate_limit }
-
-  it_behaves_like "a versioned model"
 
   context 'slug' do
 
@@ -734,22 +734,24 @@ describe Topic do
     end
   end
 
-  describe 'versions' do
+  describe 'revisions' do
     let(:topic) { Fabricate(:topic) }
 
-    it "has version 1 by default" do
-      topic.version.should == 1
+    it "has no revisions by default" do
+      topic.revisions.size.should == 1
     end
 
     context 'changing title' do
+
       before do
         topic.title = "new title for the topic"
         topic.save
       end
 
-      it "creates a new version" do
-        topic.version.should == 2
+      it "creates a new revision" do
+        topic.revisions.size.should == 2
       end
+
     end
 
     context 'changing category' do
@@ -759,8 +761,8 @@ describe Topic do
         topic.change_category(category.name)
       end
 
-      it "creates a new version" do
-        topic.version.should == 2
+      it "creates a new revision" do
+        topic.revisions.size.should == 2
       end
 
       context "removing a category" do
@@ -768,8 +770,8 @@ describe Topic do
           topic.change_category(nil)
         end
 
-        it "creates a new version" do
-          topic.version.should == 3
+        it "creates a new revision" do
+          topic.revisions.size.should == 3
         end
       end
 
@@ -781,8 +783,8 @@ describe Topic do
         topic.save
       end
 
-      it "doesn't craete a new version" do
-        topic.version.should == 1
+      it "doesn't create a new version" do
+        topic.revisions.size.should == 1
       end
     end
 

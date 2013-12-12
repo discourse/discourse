@@ -162,9 +162,9 @@ Discourse::Application.routes.draw do
   get 'posts/by_number/:topic_id/:post_number' => 'posts#by_number'
   get 'posts/:id/reply-history' => 'posts#reply_history'
   resources :posts do
-    get 'versions'
     put 'bookmark'
     get 'replies'
+    get 'revisions/:revision' => 'posts#revisions'
     put 'recover'
     collection do
       delete 'destroy_many'

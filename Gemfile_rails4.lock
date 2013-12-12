@@ -32,14 +32,6 @@ GIT
       ref
 
 GIT
-  remote: https://github.com/SamSaffron/vestal_versions
-  revision: 007b30a5274db7db55da745a4482243559247782
-  specs:
-    vestal_versions (1.2.3)
-      activerecord (> 3.0)
-      activesupport (> 3.0)
-
-GIT
   remote: https://github.com/callahad/omniauth-browserid.git
   revision: af62d667626c1622de6fe13b60849c3640765ab1
   branch: observer_api
@@ -129,7 +121,6 @@ GEM
     daemons (1.1.9)
     debug_inspector (0.0.2)
     diff-lcs (1.2.4)
-    diffy (3.0.1)
     ember-data-source (0.14)
       ember-source
     ember-rails (0.14.1)
@@ -451,7 +442,6 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   certified
-  diffy (>= 3.0)
   discourse_plugin!
   email_reply_parser!
   ember-rails
@@ -532,4 +522,3 @@ DEPENDENCIES
   uglifier
   unf
   unicorn
-  vestal_versions!

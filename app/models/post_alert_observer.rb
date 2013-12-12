@@ -1,5 +1,5 @@
 class PostAlertObserver < ActiveRecord::Observer
-  observe :post, VestalVersions::Version, :post_action
+  observe :post, :post_action, :post_revision
 
   # Dispatch to an after_save_#{class_name} method
   def after_save(model)
@@ -46,15 +46,14 @@ class PostAlertObserver < ActiveRecord::Observer
                         post_action_id: post_action.id)
   end
 
-  def after_create_version(version)
-    post = version.versioned
+  def after_create_post_revision(post_revision)
+    post = post_revision.post
 
-    return unless post.is_a?(Post)
-    return if version.user.blank?
-    return if version.user_id == post.user_id
+    return if post_revision.user.blank?
+    return if post_revision.user_id == post.user_id
     return if post.topic.private_message?
 
-    create_notification(post.user, Notification.types[:edited], post, display_username: version.user.username)
+    create_notification(post.user, Notification.types[:edited], post, display_username: post_revision.user.username)
   end
 
   def after_create_post(post)

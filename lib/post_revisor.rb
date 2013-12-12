@@ -1,4 +1,5 @@
 require 'edit_rate_limiter'
+
 class PostRevisor
 
   attr_reader :category_changed
@@ -12,12 +13,12 @@ class PostRevisor
     return false if not should_revise?
 
     @post.acting_user = @user
-    @post.updated_by = @user
     revise_post
     update_category_description
     post_process_post
     update_topic_word_counts
     @post.advance_draft_sequence
+
     true
   end
 
@@ -31,7 +32,7 @@ class PostRevisor
     if should_create_new_version?
       revise_and_create_new_version
     else
-      revise_without_creating_a_new_version
+      update_post
     end
   end
 
@@ -47,17 +48,11 @@ class PostRevisor
 
   def revise_and_create_new_version
     Post.transaction do
-      @post.cached_version = @post.version + 1
+      @post.version += 1
       @post.last_version_at = get_revised_at
       update_post
       EditRateLimiter.new(@post.user).performed! unless @opts[:bypass_rate_limiter] == true
       bump_topic unless @opts[:bypass_bump]
-    end
-  end
-
-  def revise_without_creating_a_new_version
-    @post.skip_version do
-      update_post
     end
   end
 
@@ -76,7 +71,6 @@ class PostRevisor
   def update_post
     @post.raw = @new_raw
     @post.word_count = @new_raw.scan(/\w+/).size
-    @post.updated_by = @user
     @post.last_editor_id = @user.id
     @post.edit_reason = @opts[:edit_reason] if @opts[:edit_reason]
 

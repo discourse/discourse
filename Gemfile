@@ -69,8 +69,6 @@ gem 'ember-source', '~> 1.2.0.1'
 gem 'handlebars-source', '~> 1.1.2'
 gem 'barber'
 
-gem 'vestal_versions', git: 'https://github.com/SamSaffron/vestal_versions'
-
 gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
@@ -124,7 +122,6 @@ gem 'slim'  # required for sidekiq-web
 # URGENT fix needed see: https://github.com/cowboyd/therubyracer/pull/280
 gem 'therubyracer', require: 'v8', git: 'https://github.com/SamSaffron/therubyracer.git'
 gem 'thin', require: false
-gem 'diffy', '>= 3.0', require: false
 gem 'highline', require: false
 gem 'rack-protection' # security
 

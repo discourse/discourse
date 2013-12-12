@@ -10,14 +10,19 @@ Discourse.ModalBodyView = Discourse.View.extend({
 
   // Focus on first element
   didInsertElement: function() {
+    var self = this;
+
     $('#discourse-modal').modal('show');
+
+    $('#discourse-modal').one("hide", function () {
+      self.get("controller").send("closeModal");
+    });
 
     $('#modal-alert').hide();
 
     if (!Discourse.Mobile.mobileView) {
-      var modalBodyView = this;
       Em.run.schedule('afterRender', function() {
-        modalBodyView.$('input:first').focus();
+        self.$('input:first').focus();
       });
     }
 

@@ -226,7 +226,7 @@ class CookedPostProcessor
     # have we enough disk space?
     return if disable_if_low_on_disk_space
     # we only want to run the job whenever it's changed by a user
-    return if @post.updated_by == Discourse.system_user
+    return if @post.last_editor_id == Discourse.system_user.id
     # make sure no other job is scheduled
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job

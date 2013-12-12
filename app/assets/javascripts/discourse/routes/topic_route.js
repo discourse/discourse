@@ -49,7 +49,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     showHistory: function(post) {
       Discourse.Route.showModal(this, 'history', post);
-      this.controllerFor('history').refresh();
+      this.controllerFor('history').refresh(post.get("id"), post.get("version"));
       this.controllerFor('modal').set('modalClass', 'history-modal');
     },
 

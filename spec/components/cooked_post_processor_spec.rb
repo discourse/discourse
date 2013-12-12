@@ -296,7 +296,7 @@ describe CookedPostProcessor do
       before { SiteSetting.stubs(:download_remote_images_to_local).returns(true) }
 
       it "runs only when a user updated the post" do
-        post.updated_by = Discourse.system_user
+        post.last_editor_id = Discourse.system_user.id
         Jobs.expects(:cancel_scheduled_job).never
         cpp.pull_hotlinked_images
       end

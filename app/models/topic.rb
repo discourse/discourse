@@ -26,8 +26,6 @@ class Topic < ActiveRecord::Base
     2**31 - 1
   end
 
-  versioned if: :new_version_required?
-
   def featured_users
     @featured_users ||= TopicFeaturedUsers.new(self)
   end
@@ -96,6 +94,9 @@ class Topic < ActiveRecord::Base
   has_many :topic_links
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
+
+  has_many :topic_revisions
+  has_many :revisions, foreign_key: :topic_id, class_name: 'TopicRevision'
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
@@ -177,11 +178,26 @@ class Topic < ActiveRecord::Base
   end
 
   after_save do
+    save_revision if should_create_new_version?
+
     return if skip_callbacks
 
     if auto_close_at and (auto_close_at_changed? or auto_close_user_id_changed?)
       Jobs.enqueue_at(auto_close_at, :close_topic, {topic_id: id, user_id: auto_close_user_id || user_id})
     end
+  end
+
+  def save_revision
+    TopicRevision.create!(
+      user_id: acting_user.id,
+      topic_id: id,
+      number: TopicRevision.where(topic_id: id).count + 2,
+      modifications: changes.extract!(:category, :title)
+    )
+  end
+
+  def should_create_new_version?
+    !new_record? && (category_id_changed? || title_changed?)
   end
 
   def self.top_viewed(max = 10)
@@ -657,6 +673,14 @@ class Topic < ActiveRecord::Base
 
   def read_restricted_category?
     category && category.read_restricted
+  end
+
+  def acting_user
+    @acting_user || user
+  end
+
+  def acting_user=(u)
+    @acting_user = u
   end
 
   private

@@ -376,6 +376,10 @@ class Guardian
     post.present? && (is_staff? || (!post.deleted_at.present? && can_see_topic?(post.topic)))
   end
 
+  def can_see_post_revision?(post_revision)
+    post_revision.present? && (is_staff? || can_see_post?(post_revision.post))
+  end
+
   def can_see_category?(category)
     not(category.read_restricted) || secure_category_ids.include?(category.id)
   end

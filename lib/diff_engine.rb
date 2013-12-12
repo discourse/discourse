@@ -1,6 +1,4 @@
-require 'diffy'
-# This class is used to generate diffs, it will be consumed by the UI on
-# on the client the displays diffs.
+# This class is used to generate diffs, it will be consumed by the UI on the client that displays diffs.
 #
 # There are potential performance issues associated with diffing large amounts of completely
 # different text, see answer here for optimization if needed
@@ -8,18 +6,20 @@ require 'diffy'
 
 class DiffEngine
 
-  # generate an html friendly diff similar to the way Stack Exchange generates
-  # html diffs
+  # Generate an html friendly diff
   #
   #  returns: html containing decorations indicating the changes
   def self.html_diff(html_before, html_after)
-    Diffy::Diff.new(html_before, html_after, {allow_empty_diff: false}).to_s(:html)
+    # tokenize
+    # remove leading/trailing common
+    # SES
+    # format diff
   end
 
-  # same as html diff, except that it operates on markdown
+  # Same as html diff, except that it operates on markdown
   #
   # returns html containing decorated areas where diff happened
   def self.markdown_diff(markdown_before, markdown_after)
-    Diffy::Diff.new(markdown_before, markdown_after).to_s(:html)
+
   end
 end
