@@ -33,7 +33,8 @@ module Oneboxer
       result[:by_info] = html_doc.at("#by-line")
       result[:by_info] = BaseOnebox.remove_whitespace(BaseOnebox.replace_tags_with_spaces(result[:by_info].inner_html)) if result[:by_info].present?
 
-      summary = html_doc.at("#description-and-details-content")
+      # not many CSS selectors to work with here, go with the first span in about-item ID
+      summary = html_doc.at("#about-item span")
       result[:text] = summary.inner_html if summary.present?
 
       result
