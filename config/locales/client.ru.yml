@@ -197,7 +197,7 @@ ru:
       you_replied_to_topic: '<a href=''{{userUrl}}''>Вы</a> ответили в <a href=''{{topicUrl}}''>теме</a>'
       user_mentioned_user: '<a href=''{{user1Url}}''>{{user}}</a> упомянул <a href=''{{user2Url}}''>{{another_user}}</a>'
       user_mentioned_you: '<a href=''{{user1Url}}''>{{user}}</a> упомянул<a href=''{{user2Url}}''>Вас</a>'
-      you_mentioned_user: '<a href=''{{user1Url}}''>Вы</a> упомянули<a href=''{{user2Url}}''>{{user}}</a>'
+      you_mentioned_user: '<a href=''{{user1Url}}''>Вы</a> упомянули<a href=''{{user2Url}}''>{{another_user}}</a>'
       posted_by_user: 'Размещено пользователем <a href=''{{userUrl}}''>{{user}}</a>'
       posted_by_you: 'Размещено <a href=''{{userUrl}}''>Вами</a>'
       sent_by_user: 'Отправлено пользователем <a href=''{{userUrl}}''>{{user}}</a>'

@@ -161,7 +161,7 @@ ko:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}가</a> <a href='{{user2Url}}'>{{another_user}}</a>를 언급"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}가</a> <a href='{{user2Url}}'>당신</a>을 언급"
-      you_mentioned_user: "<a href='{{user1Url}}'>당신은</a> <a href='{{user2Url}}'>{{user}}</a>를 언급"
+      you_mentioned_user: "<a href='{{user1Url}}'>당신은</a> <a href='{{user2Url}}'>{{another_user}}</a>를 언급"
 
       posted_by_user: "<a href='{{userUrl}}'>{{user}}</a>에 의해 게시됨"
       posted_by_you: "<a href='{{userUrl}}'>당신</a> 게시함"

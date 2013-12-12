@@ -166,7 +166,7 @@ cs:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> zmínil uživatele <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> zmínil <a href='{{user2Url}}'>vás</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Vy</a> jste znínil uživatele <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Vy</a> jste znínil uživatele <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Odesláno uživatel <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Odesláno <a href='{{userUrl}}'>vámi</a>"

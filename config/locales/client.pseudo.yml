@@ -127,7 +127,7 @@ pseudo:
         ĥřéƒ=''{{user2Url}}''>{{another_user}}</á> ]]'
       user_mentioned_you: '[[ <á ĥřéƒ=''{{user1Url}}''>{{user}}</á> ɱéɳťíóɳéď <á ĥřéƒ=''{{user2Url}}''>ýóů</á>
         ]]'
-      you_mentioned_user: '[[ <á ĥřéƒ=''{{user1Url}}''>Ýóů</á> ɱéɳťíóɳéď <á ĥřéƒ=''{{user2Url}}''>{{user}}</á>
+      you_mentioned_user: '[[ <á ĥřéƒ=''{{user1Url}}''>Ýóů</á> ɱéɳťíóɳéď <á ĥřéƒ=''{{user2Url}}''>{{another_user}}</á>
         ]]'
       posted_by_user: '[[ Рóšťéď ƀý <á ĥřéƒ=''{{userUrl}}''>{{user}}</á> ]]'
       posted_by_you: '[[ Рóšťéď ƀý <á ĥřéƒ=''{{userUrl}}''>ýóů</á> ]]'
