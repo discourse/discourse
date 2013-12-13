@@ -250,12 +250,11 @@
   th.num {
     width: 45px;
   }
+  th.stats {
+    width: 90px;
+  }
   .last-user-info {
     font-size: 12px;
-  }
-
-  .has-description td.category {
-    padding-top: 15px;
   }
 
   .has-description {
@@ -266,7 +265,7 @@
 
   .category{
     position: relative;
-    width: 55%;
+    width: 45%;
 
     .subcategories {
       margin-top: 10px;

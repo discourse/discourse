@@ -294,6 +294,9 @@ describe Category do
         @category.topics_year.should == 1
         @category.topic_count.should == 1
         @category.post_count.should == 1
+        @category.posts_year.should == 1
+        @category.posts_month.should == 1
+        @category.posts_week.should == 1
       end
 
     end
@@ -312,8 +315,29 @@ describe Category do
         @category.topics_month.should == 0
         @category.topics_year.should == 0
         @category.post_count.should == 0
+        @category.posts_year.should == 0
+        @category.posts_month.should == 0
+        @category.posts_week.should == 0
+      end
+    end
+
+    context 'with revised post' do
+      before do
+        post = create_post(user: @category.user, category: @category.name)
+
+        SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i)
+        post.revise(post.user, 'updated body', revised_at: post.updated_at + 2.minutes)
+
+        Category.update_stats
+        @category.reload
       end
 
+      it "doesn't count each version of a post" do
+        @category.post_count.should == 1
+        @category.posts_year.should == 1
+        @category.posts_month.should == 1
+        @category.posts_week.should == 1
+      end
     end
   end
 

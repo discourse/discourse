@@ -193,6 +193,8 @@ en:
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories:"
+      total_topics: "Total topics: %{count}"
+      total_posts: "Total posts: %{count}"
 
     user:
       said: "{{username}} said:"
@@ -375,6 +377,7 @@ en:
     month_desc: 'topics posted in the last 30 days'
     week: 'week'
     week_desc: 'topics posted in the last 7 days'
+    day: 'day'
 
     first_post: First post
     mute: Mute

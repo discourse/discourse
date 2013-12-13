@@ -5,8 +5,8 @@
     <tr>
       <th class='category'>{{i18n categories.category}}</th>
       <th class='latest'>{{i18n categories.latest}}</th>
-      <th class='num topics'>{{i18n categories.topics}}</th>
-      <th class='num posts'>{{i18n categories.posts}}
+      <th class='stats topics'>{{i18n categories.topics}}</th>
+      <th class='stats posts'>{{i18n categories.posts}}
         {{#if canEdit}}
           <button title='{{i18n categories.toggle_ordering}}' class='btn toggle-admin no-text' {{action toggleOrdering}}><i class='fa fa-wrench'></i></button>
         {{/if}}
@@ -79,8 +79,16 @@
             </div>
           {{/each}}
         </td>
-        <td class='num'>{{number topic_count}}</td>
-        <td class='num'>{{number post_count}}</td>
+        <td class='stats' {{bindAttr title="totalTopicsTitle"}}>
+          {{#each stat in topicCountStatsStrings}}
+            {{stat}}<br/>
+          {{/each}}
+        </td>
+        <td class='stats' {{bindAttr title="totalPostsTitle"}}>
+          {{#each stat in postCountStatsStrings}}
+            {{stat}}<br/>
+          {{/each}}
+        </td>
       </tr>
       {{/each}}
     </tbody>
