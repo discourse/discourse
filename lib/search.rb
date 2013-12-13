@@ -126,7 +126,6 @@ class Search
                            .order("topics_month DESC")
                            .secured(@guardian)
                            .limit(@limit)
-                           .to_a
 
       categories.each do |c|
         @results.add_result(SearchResult.from_category(c))
