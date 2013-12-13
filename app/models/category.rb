@@ -111,7 +111,7 @@ class Category < ActiveRecord::Base
     topics = Topic
                .select("COUNT(*) topic_count")
                .where("topics.category_id = categories.id")
-               .where("categories.topic_id <> topics.id")
+               .where("categories.topic_id <> topics.id OR categories.topic_id is null")
                .visible
 
     topics_with_post_count = Topic
