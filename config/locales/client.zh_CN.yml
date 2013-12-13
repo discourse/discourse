@@ -383,7 +383,8 @@ zh_CN:
 
     summary:
       enabled_description: "你现在正在浏览本主题的“概括”视图。要查看所有帖子，请点击下方。"
-      description: "本主题中有<b>{{count}}</b>个帖子，是否只查看与主题最相关的帖子以节省时间？"
+      description: "本主题中有<b>{{count}}</b>条回复，是否只查看与主题最相关的帖子以节省时间？"
+      description_time: "本主题中有<b>{{count}}</b>条回复，预计阅读时间为<b>{{readingTime}}分钟</b>。是否只查看与主题最相关的帖子以节省时间？"
       enable: '概括本主题'
       disable: '显示所有帖子'
 
@@ -944,6 +945,26 @@ zh_CN:
         confirm:
           one: "你确定要删除此帖吗？"
           other: "你确定要删除这些帖子吗？"
+
+      revisions:
+        controls:
+          first: "首次修改"
+          previous: "前一次修改"
+          next: "下一次修改"
+          last: "上一次修改"
+          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> (共计{{total}})"
+        displays:
+          inline:
+            title: "在生成的结果中显示增加和删除的内容"
+            button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            title: "并列显示生成结果中不同的内容"
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "并列显示markdown源码中不同的内容"
+            button: '<i class="fa fa-columns"></i> Markdown'
+        details:
+          edited_by: "编辑："
 
     category:
       can: '能够'
