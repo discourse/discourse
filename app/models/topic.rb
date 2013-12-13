@@ -154,37 +154,42 @@ class Topic < ActiveRecord::Base
   attr_accessor :skip_callbacks
 
   after_create do
-    return if skip_callbacks
 
-    changed_to_category(category)
-    if archetype == Archetype.private_message
-      DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
-    else
-      DraftSequence.next!(user, Draft::NEW_TOPIC)
+    unless skip_callbacks
+      changed_to_category(category)
+      if archetype == Archetype.private_message
+        DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
+      else
+        DraftSequence.next!(user, Draft::NEW_TOPIC)
+      end
     end
+
   end
 
   before_save do
-    return if skip_callbacks
 
-    if (auto_close_at_changed? and !auto_close_at_was.nil?) or (auto_close_user_id_changed? and auto_close_at)
-      self.auto_close_started_at ||= Time.zone.now if auto_close_at
-      Jobs.cancel_scheduled_job(:close_topic, {topic_id: id})
-      true
+    unless skip_callbacks
+      if (auto_close_at_changed? and !auto_close_at_was.nil?) or (auto_close_user_id_changed? and auto_close_at)
+        self.auto_close_started_at ||= Time.zone.now if auto_close_at
+        Jobs.cancel_scheduled_job(:close_topic, {topic_id: id})
+        true
+      end
+      if category_id.nil? && (archetype.nil? || archetype == Archetype.default)
+        self.category_id = SiteSetting.uncategorized_category_id
+      end
     end
-    if category_id.nil? && (archetype.nil? || archetype == Archetype.default)
-      self.category_id = SiteSetting.uncategorized_category_id
-    end
+
   end
 
   after_save do
     save_revision if should_create_new_version?
 
-    return if skip_callbacks
-
-    if auto_close_at and (auto_close_at_changed? or auto_close_user_id_changed?)
-      Jobs.enqueue_at(auto_close_at, :close_topic, {topic_id: id, user_id: auto_close_user_id || user_id})
+    unless skip_callbacks
+      if auto_close_at and (auto_close_at_changed? or auto_close_user_id_changed?)
+        Jobs.enqueue_at(auto_close_at, :close_topic, {topic_id: id, user_id: auto_close_user_id || user_id})
+      end
     end
+
   end
 
   def save_revision
