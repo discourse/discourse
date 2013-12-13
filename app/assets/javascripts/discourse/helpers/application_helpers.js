@@ -267,30 +267,32 @@ Ember.Handlebars.registerHelper('float', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('number', function(property, options) {
-  var n, orig, title, result;
-  orig = parseInt(Ember.Handlebars.get(this, property, options), 10);
-  if (isNaN(orig)) {
-    orig = 0;
-  }
-  title = orig;
+
+  var orig = parseInt(Ember.Handlebars.get(this, property, options), 10);
+  if (isNaN(orig)) { orig = 0; }
+
+  var title = orig;
   if (options.hash.numberKey) {
-    title = I18n.t(options.hash.numberKey, {
-      number: orig
-    });
+    title = I18n.t(options.hash.numberKey, { number: orig });
   }
+
   // Round off the thousands to one decimal place
-  n = orig;
+  var n = orig;
   if (orig > 999 && !options.hash.noTitle) {
     n = (orig / 1000).toFixed(1) + "K";
   }
 
-  result = "<span class='number'";
+  var classNames = 'number';
+  if (options.hash['class']) {
+    classNames += ' ' + Ember.Handlebars.get(this, options.hash['class'], options);
+  }
+  var result = "<span class='" + classNames + "'";
 
-  if(n !== title) {
+  if (n !== title) {
     result += " title='" + title + "'";
   }
-
   result += ">" + n + "</span>";
+
   return new Handlebars.SafeString(result);
 });
 
@@ -310,6 +312,7 @@ Handlebars.registerHelper('date', function(property, options) {
       property = property.hash.path;
     }
   }
+
   var val = Ember.Handlebars.get(this, property, options);
   if (val) {
     var date = new Date(val);
