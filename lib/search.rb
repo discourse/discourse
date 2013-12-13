@@ -114,12 +114,19 @@ class Search
     end
 
     def category_search
+      # scope is leaking onto Category, this is not good and probably a bug in Rails
+      # the secure_category_ids will invoke the same method on User, it calls Category.where
+      # however the scope from the query below is leaking in to Category, this works around
+      # the issue while we figure out what is up in Rails
+      secure_category_ids
+
       categories = Category.includes(:category_search_data)
                            .where("category_search_data.search_data @@ #{ts_query}")
                            .references(:category_search_data)
                            .order("topics_month DESC")
                            .secured(@guardian)
                            .limit(@limit)
+                           .to_a
 
       categories.each do |c|
         @results.add_result(SearchResult.from_category(c))
