@@ -182,6 +182,17 @@ it:
       "12": "Oggetti inviati"
       "13": "Inbox"
 
+    categories:
+      all: "tutte le categorie"
+      only_category: "solo {{categoryName}}"
+      category: "Categoria"
+      posts: "Post"
+      topics: "Topic"
+      latest: "Ultimi"
+      latest_by: "ultimi da"
+      toggle_ordering: "alterna l'ordine"
+      subcategories: "Sottocategorie:"
+
     user:
       said: "{{username}} ha detto:"
       profile: Profilo
