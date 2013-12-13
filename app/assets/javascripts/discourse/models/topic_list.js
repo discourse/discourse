@@ -8,6 +8,7 @@
 **/
 
 function finderFor(filter, params) {
+
   return function() {
     var url = Discourse.getURL("/") + filter + ".json";
 
@@ -185,9 +186,10 @@ Discourse.TopicList.reopenClass({
 
     @method list
     @param {Object} The menu item to filter to
+    @param {Object} Any additional params
     @returns {Promise} a promise that resolves to the list of topics
   **/
-  list: function(menuItem) {
+  list: function(menuItem, params) {
     var filter = menuItem.get('name'),
         session = Discourse.Session.current(),
         list = session.get('topicList');
@@ -197,11 +199,12 @@ Discourse.TopicList.reopenClass({
       return Ember.RSVP.resolve(list);
     }
     session.setProperties({topicList: null, topicListScrollPos: null});
-    return Discourse.TopicList.find(filter, {exclude_category: menuItem.get('excludeCategory')});
+
+    var findParams = {exclude_category: menuItem.get('excludeCategory')};
+    return Discourse.TopicList.find(filter, _.extend(findParams, params || {}));
   },
 
   find: function(filter, params) {
-
     return PreloadStore.getAndRemove("topic_list", finderFor(filter, params)).then(function(result) {
       var topicList = Discourse.TopicList.create({
         inserted: Em.A(),

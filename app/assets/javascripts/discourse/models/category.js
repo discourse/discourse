@@ -202,6 +202,8 @@ Discourse.Category.reopenClass({
     if (parentSlug) {
       var parentCategory = Discourse.Category.findSingleBySlug(parentSlug);
       if (parentCategory) {
+        if (slug === 'none') { return parentCategory; }
+
         category = categories.find(function(item) {
           return item && item.get('parentCategory') === parentCategory && Discourse.Category.slugFor(item) === (parentSlug + "/" + slug);
         });

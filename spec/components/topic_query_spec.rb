@@ -41,6 +41,7 @@ describe TopicQuery do
 
   context 'category filter' do
     let(:category) { Fabricate(:category) }
+
     let(:diff_category) { Fabricate(:category) }
 
     it "returns topics in the category when we filter to it" do
@@ -50,9 +51,21 @@ describe TopicQuery do
       TopicQuery.new(moderator, category: category.slug).list_latest.topics.size.should == 1
       TopicQuery.new(moderator, category: "#{category.id}-category").list_latest.topics.size.should == 1
       TopicQuery.new(moderator, category: diff_category.slug).list_latest.topics.size.should == 1
-      TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size.should == 0
+
+      # Defaults to no category filter when slug does not exist
+      TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size.should == 2
     end
 
+    context 'subcategories' do
+      let!(:subcategory) { Fabricate(:category, parent_category_id: category.id)}
+
+      it "works with subcategories" do
+        TopicQuery.new(moderator, category: category.id).list_latest.topics.size.should == 2
+        TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size.should == 1
+        TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size.should == 1
+      end
+
+    end
 
 
   end

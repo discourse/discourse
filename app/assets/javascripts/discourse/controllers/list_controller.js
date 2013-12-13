@@ -43,9 +43,10 @@ Discourse.ListController = Discourse.Controller.extend({
 
     @method load
     @param {String} filterMode the filter we want to load
+    @param {Object} params for additional filtering
     @returns {Ember.Deferred} the promise that will resolve to the list of items.
   **/
-  load: function(filterMode) {
+  load: function(filterMode, params) {
     var self = this;
     this.set('loading', true);
 
@@ -74,13 +75,15 @@ Discourse.ListController = Discourse.Controller.extend({
       current = Discourse.NavItem.create({ name: filterMode });
     }
 
-    return Discourse.TopicList.list(current).then(function(items) {
+    params = params || {};
+    return Discourse.TopicList.list(current, params).then(function(items) {
       self.setProperties({
         loading: false,
         filterMode: filterMode,
         draft: items.draft,
         draft_key: items.draft_key,
-        draft_sequence: items.draft_sequence
+        draft_sequence: items.draft_sequence,
+        noSubcategories: params.no_subcategories
       });
       if(trackingState) {
         trackingState.sync(items, filterMode);

@@ -40,6 +40,8 @@ Discourse.Route.buildRoutes(function() {
     this.route('categories', { path: '/categories' });
     this.route('category', { path: '/category/:slug' });
     this.route('category', { path: '/category/:slug/more' });
+    this.route('categoryNone', { path: '/category/:slug/none' });
+    this.route('categoryNone', { path: '/category/:slug/none/more' });
     this.route('category', { path: '/category/:parentSlug/:slug' });
     this.route('category', { path: '/category/:parentSlug/:slug/more' });
   });

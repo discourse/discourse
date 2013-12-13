@@ -17,6 +17,7 @@ class TopicQuery
                      visible
                      category
                      sort_order
+                     no_subcategories
                      sort_descending).map(&:to_sym)
 
   # Maps `sort_order` to a columns in `topics`
@@ -31,7 +32,6 @@ class TopicQuery
 
   def initialize(user=nil, options={})
     options.assert_valid_keys(VALID_OPTIONS)
-
     @options = options
     @user = user
   end
@@ -209,12 +209,16 @@ class TopicQuery
       category_id = nil
       if options[:category].present?
         category_id  = options[:category].to_i
-        if category_id == 0
-          result = result.where('categories.slug = ?', options[:category])
-        else
-          result = result.where('categories.id = ?', category_id)
+        category_id = Category.where(slug: options[:category]).pluck(:id).first if category_id == 0
+
+        if category_id
+          if options[:no_subcategories]
+            result = result.where('categories.id = ?', category_id)
+          else
+            result = result.where('categories.id = ? or categories.parent_category_id = ?', category_id, category_id)
+          end
+          result = result.references(:categories)
         end
-        result = result.references(:categories)
       end
 
       result = apply_ordering(result, options)

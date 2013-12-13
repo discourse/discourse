@@ -16,12 +16,20 @@ Discourse.CategoryDropComponent = Ember.Component.extend({
   }.property('expanded'),
 
   allCategoriesUrl: function() {
-    return this.get('category.parentCategory.url') || "/";
-  }.property('category'),
+    if (this.get('subCategory')) {
+      return this.get('parentCategory.url') || "/";
+    } else {
+      return "/";
+    }
+  }.property('parentCategory.url', 'subCategory'),
+
+  noCategoriesUrl: function() {
+    return this.get('parentCategory.url') + "/none";
+  }.property('parentCategory.url'),
 
   allCategoriesLabel: function() {
     if (this.get('subCategory')) {
-      return I18n.t('categories.only_category', {categoryName: this.get('parentCategory.name')});
+      return I18n.t('categories.all_subcategories', {categoryName: this.get('parentCategory.name')});
     }
     return I18n.t('categories.all');
   }.property('category'),
