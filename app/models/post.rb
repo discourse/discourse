@@ -61,10 +61,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.find_by_detail(key, value)
-    includes(:post_details).where( "post_details.key = ? AND " +
-                                   "post_details.value = ?",
-                                   key,
-                                   value ).first
+    includes(:post_details).where(post_details: { key: key, value: value }).first
   end
 
   def add_detail(key, value, extra = nil)
