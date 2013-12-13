@@ -164,8 +164,8 @@ Discourse.Topic = Discourse.Model.extend({
     var wordCount = this.get('word_count');
     if (!wordCount) return;
 
-    // Avg for 250 words per minute.
-    var minutes = Math.floor(wordCount / 250.0);
+    // Avg for 500 words per minute when you account for skimming
+    var minutes = Math.floor(wordCount / 500.0);
     return minutes;
   }.property('word_count'),
 
