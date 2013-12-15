@@ -1,11 +1,3 @@
-GIT
-  remote: git://github.com/sporkrb/spork-rails.git
-  revision: 0dd45e59d3237b4c8f9efc215b46d9c07072a95e
-  specs:
-    spork-rails (4.0.0)
-      rails (>= 3.0.0, < 5)
-      spork (>= 1.0rc0)
-
 PATH
   remote: vendor/gems/discourse_plugin
   specs:
@@ -365,6 +357,9 @@ GEM
     slop (3.4.7)
     sorcerer (1.0.2)
     spork (1.0.0rc4)
+    spork-rails (4.0.0)
+      rails (>= 3.0.0, < 5)
+      spork (>= 1.0rc0)
     sprockets (2.10.1)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -489,7 +484,7 @@ DEPENDENCIES
   simplecov
   sinatra
   slim
-  spork-rails!
+  spork-rails
   therubyracer-discourse
   thin
   timecop

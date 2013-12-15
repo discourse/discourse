@@ -161,7 +161,7 @@ group :test, :development do
   gem 'rspec-given'
   gem 'pry-rails'
   gem 'pry-nav'
-  gem 'spork-rails', :github => 'sporkrb/spork-rails'
+  gem 'spork-rails'
 end
 
 group :development do
