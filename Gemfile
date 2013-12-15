@@ -40,8 +40,6 @@ gem 'seed-fu-discourse', require: 'seed-fu'
 
 if rails4?
   gem 'rails'
-  # because of https://github.com/redis-store/redis-store/pull/183
-  gem 'redis-rails', :git => 'https://github.com/SamSaffron/redis-store.git'
   gem 'rails-observers'
   gem 'actionpack-action_caching'
 else
@@ -52,11 +50,11 @@ else
   # we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
   # REVIEW EVERY RELEASE
   gem 'sprockets', git: 'https://github.com/SamSaffron/sprockets.git', branch: 'rails-compat'
-  gem 'redis-rails'
   gem 'activerecord-postgres-hstore'
   gem 'active_attr'
 end
 
+gem 'redis-rails'
 gem 'hiredis'
 gem 'redis', :require => ["redis", "redis/connection/hiredis"]
 

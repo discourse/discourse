@@ -6,15 +6,6 @@ GIT
       rails (>= 3.0.0, < 5)
       spork (>= 1.0rc0)
 
-GIT
-  remote: https://github.com/SamSaffron/redis-store.git
-  revision: 1eafaa3d8bfbcb61ad89d1a2831adbba4ea8e1e1
-  specs:
-    redis-rails (3.2.3)
-      redis-actionpack (>= 3.2.3)
-      redis-activesupport (>= 3.2.3)
-      redis-store (~> 1.1.0)
-
 PATH
   remote: vendor/gems/discourse_plugin
   specs:
@@ -302,6 +293,10 @@ GEM
     redis-rack (1.5.0)
       rack (~> 1.5)
       redis-store (~> 1.1.0)
+    redis-rails (4.0.0)
+      redis-actionpack (~> 4)
+      redis-activesupport (~> 4)
+      redis-store (~> 1.1.0)
     redis-store (1.1.4)
       redis (>= 2.2)
     ref (1.0.5)
@@ -477,7 +472,7 @@ DEPENDENCIES
   rbtrace
   redcarpet
   redis
-  redis-rails!
+  redis-rails
   rest-client
   rinku
   rspec-given
