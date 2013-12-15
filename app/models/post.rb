@@ -281,10 +281,6 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def author_readable
-    user.readable_name
-  end
-
   def revise(updated_by, new_raw, opts = {})
     PostRevisor.new(self).revise!(updated_by, new_raw, opts)
   end

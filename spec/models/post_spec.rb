@@ -742,13 +742,6 @@ describe Post do
 
   end
 
-  describe '#readable_author' do
-    it 'delegates to the associated user' do
-      User.any_instance.expects(:readable_name)
-      Fabricate(:post).author_readable
-    end
-  end
-
   describe 'urls' do
     it 'no-ops for empty list' do
       Post.urls([]).should == {}
