@@ -59,6 +59,9 @@ en:
   rss_posts_in_topic: "RSS feed of '%{topic}'"
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
   author_wrote: "%{author} wrote:"
+  num_posts: "Posts:"
+  num_participants: "Participants:"
+  read_full_topic: "Read full topic"
   private_message_abbrev: "PM"
   rss_description:
     latest: "Latest topics"
