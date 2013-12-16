@@ -59,7 +59,7 @@ class TopicsController < ApplicationController
 
     perform_show_response
 
-    canonical_url absolute(@topic_view.canonical_path)
+    canonical_url absolute_without_cdn(@topic_view.canonical_path)
   end
 
   def wordpress
