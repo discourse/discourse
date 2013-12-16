@@ -15,11 +15,11 @@ class ONPDiff
   end
 
   def diff
-    @diff ||= build_diff_script(compose)
+    @diff ||= build_edit_script(compose)
   end
 
   def short_diff
-    @short_diff ||= build_short_diff_script(compose)
+    @short_diff ||= build_short_edit_script(compose)
   end
 
   private
@@ -78,7 +78,7 @@ class ONPDiff
     y
   end
 
-  def build_diff_script(shortest_path)
+  def build_edit_script(shortest_path)
     ses = []
     x, y = 1, 1
     px, py = 0, 0
@@ -108,7 +108,7 @@ class ONPDiff
     ses
   end
 
-  def build_short_diff_script(shortest_path)
+  def build_short_edit_script(shortest_path)
     ses = []
     x, y = 1, 1
     px, py = 0, 0
