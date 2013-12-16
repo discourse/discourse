@@ -98,7 +98,7 @@ class CookedPostProcessor
     absolute_url = url
     absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ /^\/[^\/]/
     # FastImage fails when there's no scheme
-    absolute_url = (SiteSetting.use_ssl? ? "https:" : "http:") + absolute_url if absolute_url.start_with?("//")
+    absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
     return unless is_valid_image_url?(absolute_url)
     # we can *always* crawl our own images
     return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)

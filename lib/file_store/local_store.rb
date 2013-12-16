@@ -128,7 +128,7 @@ module FileStore
     end
 
     def is_local?(url)
-      absolute_url = url.start_with?("//") ? (SiteSetting.use_ssl? ? "https:" : "http:") + url : url
+      absolute_url = url.start_with?("//") ? SiteSetting.scheme + ":" + url : url
       absolute_url.start_with?(absolute_base_url) || absolute_url.start_with?(absolute_base_cdn_url)
     end
 

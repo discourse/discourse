@@ -110,4 +110,18 @@ describe SiteSetting do
 
   end
 
+  describe "scheme" do
+
+    it "returns http when ssl is disabled" do
+      SiteSetting.expects(:use_ssl).returns(false)
+      SiteSetting.scheme.should == "http"
+    end
+
+    it "returns https when using ssl" do
+      SiteSetting.expects(:use_ssl).returns(true)
+      SiteSetting.scheme.should == "https"
+    end
+
+  end
+
 end

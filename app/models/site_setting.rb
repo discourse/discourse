@@ -84,6 +84,10 @@ class SiteSetting < ActiveRecord::Base
     authorized_images.count > 0 && file.original_filename =~ /\.(#{authorized_images.join("|")})$/i
   end
 
+  def self.scheme
+    use_ssl? ? "https" : "http"
+  end
+
 end
 
 # == Schema Information
