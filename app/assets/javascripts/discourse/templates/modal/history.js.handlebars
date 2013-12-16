@@ -19,6 +19,8 @@
     <div id="revision-details">
       {{i18n post.revisions.details.edited_by}} {{avatar this imageSize="small"}} {{username}} <span class="date">{{date path="created_at" leaveAgo="true"}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
     </div>
-    {{{diff}}}
+    <div id="revisions">
+      {{{diff}}}
+    </div>
   {{/if}}
 </div>

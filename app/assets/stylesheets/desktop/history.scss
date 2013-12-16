@@ -19,17 +19,17 @@
     padding: 5px;
     margin-top: 10px;
   }
+  #revisions {
+    word-wrap: break-word;
+  }
   img {
     max-width: 670px;
     height: auto;
   }
   .inline-diff {
     width: 670px;
-    word-wrap: break-word;
   }
   .markdown {
-    word-wrap: break-word;
-    white-space: pre-wrap;
     font-family: monospace;
     font-size: 12px;
     width: 100%;
@@ -38,6 +38,9 @@
     td {
       width: 50%;
       vertical-align: top;
+      max-width: 440px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
     }
   }
   .span8, .markdown {
