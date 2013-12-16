@@ -10,6 +10,9 @@
   }
   #revision-controls {
     float: left;
+    .btn[disabled]:hover {
+      color: #534d4b;
+    }
   }
   #display-modes {
     text-align: right;
