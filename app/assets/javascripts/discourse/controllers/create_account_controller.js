@@ -30,6 +30,10 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
     return this.blank('authOptions.auth_provider');
   }.property('authOptions.auth_provider'),
 
+  passwordInstructions: function() {
+    return I18n.t('user.password.instructions', {count: 6}); // TODO: soon to be configurable
+  }.property(),
+
   // Validate the name
   nameValidation: function() {
 

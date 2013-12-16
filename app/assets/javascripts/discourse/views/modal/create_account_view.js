@@ -9,6 +9,7 @@
 Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
   templateName: 'modal/create_account',
   title: I18n.t('create_account.title'),
+  classNames: ['create-account'],
 
   didInsertElement: function(e) {
 

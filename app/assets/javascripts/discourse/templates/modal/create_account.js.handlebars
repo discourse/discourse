@@ -3,49 +3,53 @@
     <div>
       <form>
       <table>
-      <tr>
+      <tr class="input">
           <td style="width:80px"><label for='new-account-name'>{{i18n user.name.title}}</label></td>
           <td style="width:496px">
           {{textField value=accountName id="new-account-name" autofocus="autofocus"}}
           &nbsp;{{inputTip validation=nameValidation}}
           </td>
       </tr>
-      <tr>
+      <tr class="instructions">
         <td></td>
         <td><label>{{i18n user.name.instructions}}</label></td>
       </tr>
 
-      <tr>
+      <tr class="input">
             <td><label for='new-account-email'>{{i18n user.email.title}}</label></td>
             <td>
             {{input value=accountEmail id="new-account-email"}}
             &nbsp;{{inputTip validation=emailValidation}}
             </td>
       </tr>
-      <tr>
+      <tr class="instructions">
         <td></td>
         <td><label>{{i18n user.email.instructions}}</label></td>
       </tr>
 
-      <tr>
+      <tr class="input">
             <td><label for='new-account-username'>{{i18n user.username.title}}</label></td>
             <td>
             {{input value=accountUsername id="new-account-username" maxlength="15"}}
             &nbsp;{{inputTip validation=usernameValidation}}
             </td>
       </tr>
-      <tr>
+      <tr class="instructions">
         <td></td>
         <td><label>{{i18n user.username.instructions}}</label></td>
       </tr>
 
       {{#if passwordRequired}}
-      <tr>
+      <tr class="input">
           <td><label for='new-account-password'>{{i18n user.password.title}}</label></td>
           <td>
           {{input type="password" value=accountPassword id="new-account-password"}}
           &nbsp;{{inputTip validation=passwordValidation}}
           </td>
+      </tr>
+      <tr class="instructions">
+        <td></td>
+        <td><label>{{passwordInstructions}}</label></td>
       </tr>
       {{/if}}
 

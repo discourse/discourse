@@ -351,6 +351,7 @@ en:
         title: "Password"
         too_short: "Your password is too short."
         ok: "Your password looks good."
+        instructions: "Must be at least %{count} characters."
 
       ip_address:
         title: "Last IP Address"

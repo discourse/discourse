@@ -24,3 +24,20 @@
 #new-account-link {
 	cursor: pointer;
 }
+
+.create-account {
+  tr.input {
+    td {
+      padding-top: 10px;
+    }
+    input, label {
+      margin-bottom: 0;
+    }
+  }
+
+  tr.instructions {
+    label {
+      color: #888;
+    }
+  }
+}
