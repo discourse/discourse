@@ -47,7 +47,7 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def side_by_side_markdown
-    DiscourseDiff.new(previous_raw, raw).side_by_side_text
+    DiscourseDiff.new(previous_raw, raw).side_by_side_markdown
   end
 
   private

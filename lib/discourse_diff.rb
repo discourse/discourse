@@ -84,7 +84,7 @@ class DiscourseDiff
     "<div class=\"span8\">#{left.join}</div><div class=\"span8 offset1\">#{right.join}</div>"
   end
 
-  def side_by_side_text
+  def side_by_side_markdown
     i = 0
     table = ["<table class=\"markdown\">"]
     while i < @line_by_line_diff.length
@@ -105,12 +105,12 @@ class DiscourseDiff
         end
 
         if i + 1 < @line_by_line_diff.length && @line_by_line_diff[i + 1][1] == opposite_op_code
-          before_tokens, after_tokens = tokenize_text(@line_by_line_diff[first][0]), tokenize_text(@line_by_line_diff[second][0])
+          before_tokens, after_tokens = tokenize_markdown(@line_by_line_diff[first][0]), tokenize_markdown(@line_by_line_diff[second][0])
           if (before_tokens.length - after_tokens.length).abs > MAX_DIFFERENCE
             before_tokens, after_tokens = tokenize_line(@line_by_line_diff[first][0]), tokenize_line(@line_by_line_diff[second][0])
           end
           diff = ONPDiff.new(before_tokens, after_tokens).short_diff
-          deleted, inserted = generate_side_by_side_text(diff)
+          deleted, inserted = generate_side_by_side_markdown(diff)
           table << "<td class=\"diff-del\">#{deleted.join}</td>"
           table << "<td class=\"diff-ins\">#{inserted.join}</td>"
           i += 1
@@ -138,7 +138,7 @@ class DiscourseDiff
     text.scan(/[^\r\n]+[\r\n]*/)
   end
 
-  def tokenize_text(text)
+  def tokenize_markdown(text)
     t, tokens = [], []
     i = 0
     while i < text.length
@@ -214,7 +214,7 @@ class DiscourseDiff
     [deleted, inserted]
   end
 
-  def generate_side_by_side_text(diff)
+  def generate_side_by_side_markdown(diff)
     deleted, inserted = [], []
     diff.each do |d|
       case d[1]
