@@ -105,6 +105,8 @@ describe CategoriesController do
 
 
     describe "logged in" do
+      let(:valid_attrs) { {id: @category.id, name: "hello", color: "ff0", text_color: "fff"} }
+
       before do
         @user = log_in(:moderator)
         @category = Fabricate(:category, user: @user)
@@ -146,7 +148,6 @@ describe CategoriesController do
       describe "success" do
 
         it "updates the group correctly" do
-
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
 
@@ -167,7 +168,13 @@ describe CategoriesController do
           @category.color.should == "ff0"
           @category.hotness.should == 2
           @category.auto_close_hours.should == 72
+        end
 
+        it "can set category to use default position" do
+          xhr :put, :update, valid_attrs.merge(position: 'default')
+          response.should be_success
+          @category.reload
+          @category.position.should be_nil
         end
       end
     end

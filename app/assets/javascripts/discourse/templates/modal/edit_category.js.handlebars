@@ -100,7 +100,12 @@
 
         <section class='field'>
           <label>{{i18n category.position}}</label>
-          {{textField value=position}}
+          <span {{action disableDefaultPosition}}>{{textField value=position disabled=defaultPosition class="position-input"}}</span>
+          &nbsp;{{i18n or}}&nbsp;
+          <button {{bindAttr class=":btn defaultPosition:btn-primary"}} {{action toggleDefaultPosition}}>
+            <span {{bindAttr class="defaultPosition::hidden"}}><i class="fa fa-check"></i></span>
+            {{i18n category.default_position}}
+          </button>
         </section>
 
         <section class='field'>

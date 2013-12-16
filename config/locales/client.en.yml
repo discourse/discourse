@@ -1007,6 +1007,7 @@ en:
       add_permission: "Add Permission"
       this_year: "this year"
       position: "position"
+      default_position: "Default Position"
       parent: "Parent Category"
 
     flagging:

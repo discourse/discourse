@@ -60,7 +60,9 @@ class CategoriesController < ApplicationController
   def update
     guardian.ensure_can_edit!(@category)
     json_result(@category, serializer: CategorySerializer) { |cat|
-      cat.move_to(category_params[:position].to_i) if category_params[:position]
+      if category_params[:position]
+        category_params[:position] == 'default' ? cat.use_default_position : cat.move_to(category_params[:position].to_i)
+      end
       category_params.delete(:position)
       cat.update_attributes(category_params)
     }

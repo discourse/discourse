@@ -364,7 +364,7 @@ end
 #  post_count         :integer          default(0), not null
 #  latest_post_id     :integer
 #  latest_topic_id    :integer
-#  position           :integer          not null
+#  position           :integer
 #  parent_category_id :integer
 #
 # Indexes
