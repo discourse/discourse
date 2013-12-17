@@ -320,7 +320,7 @@ class Guardian
   end
 
   def can_delete_category?(category)
-    is_staff? && category.topic_count == 0
+    is_staff? && category.topic_count == 0 && !category.uncatgorized?
   end
 
   def can_delete_topic?(topic)

@@ -168,8 +168,11 @@ Discourse.Category = Discourse.Model.extend({
       if (stats.length === 2) return false;
     }, this);
     return stats;
-  }
+  },
 
+  isUncategorizedCategory: function() {
+    return this.get('id') === Discourse.Site.currentProp("uncategorized_category_id");
+  }.property('id')
 });
 
 Discourse.Category.reopenClass({
