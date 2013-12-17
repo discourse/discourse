@@ -87,17 +87,11 @@
           </div>
         </div>
       </header>
-      <!-- top: -->
-      <%= raw SiteContent.content_for(:top) %>
-      <!-- :top -->
       <div id="main-outlet" class="container">
         <!-- preload-content: -->
         <%= yield %>
         <!-- :preload-content -->
       </div>
-      <!-- bottom: -->
-      <%= raw SiteContent.content_for(:bottom) %>
-      <!-- :bottom -->
     </noscript>
     <!-- Discourse Version: <%= Discourse::VERSION::STRING %> -->
     <!-- Git Version: <%= Discourse.git_version %> -->

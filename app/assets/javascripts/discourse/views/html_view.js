@@ -2,13 +2,10 @@ Discourse.HtmlView = Ember.View.extend({
 
   render: function(buffer) {
     var key = this.get("key"),
-        noscript = $("noscript").text();
+        htmlContent = PreloadStore.get("htmlContent");
 
-    if (noscript.length) {
-      var regexp = new RegExp("<!-- " +  key + ": -->((?:.|[\\n\\r])*)<!-- :" + key + " -->"),
-          content = noscript.match(regexp)[1];
-
-      buffer.push(content);
+    if (htmlContent && htmlContent[key] && htmlContent[key].length) {
+      buffer.push(htmlContent[key]);
     }
   }
 

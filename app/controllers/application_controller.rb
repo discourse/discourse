@@ -191,12 +191,20 @@ class ApplicationController < ActionController::Base
     def preload_anonymous_data
       store_preloaded("site", Site.cached_json(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
+      store_preloaded("htmlContent", html_content_json)
     end
 
     def preload_current_user_data
       store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
       serializer = ActiveModel::ArraySerializer.new(TopicTrackingState.report([current_user.id]), each_serializer: TopicTrackingStateSerializer)
       store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
+    end
+
+    def html_content_json
+      MultiJson.dump({
+        top: SiteContent.content_for(:top),
+        bottom: SiteContent.content_for(:bottom),
+      })
     end
 
     def render_json_error(obj)
