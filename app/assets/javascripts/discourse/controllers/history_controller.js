@@ -12,7 +12,10 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
   viewMode: "side_by_side",
 
   refresh: function(postId, postVersion) {
-    this.set("loading", true);
+    this.setProperties({
+      loading: true,
+      viewMode: Discourse.Mobile.mobileView ? "inline" : "side_by_side"
+    });
 
     var self = this;
     Discourse.Post.loadRevision(postId, postVersion).then(function (result) {

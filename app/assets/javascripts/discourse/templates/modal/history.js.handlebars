@@ -12,8 +12,10 @@
       </div>
       <div id="display-modes">
         <button {{bindAttr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n post.revisions.displays.inline.title}}" {{action displayInline}}>{{{i18n post.revisions.displays.inline.button}}}</button>
-        <button {{bindAttr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side.title}}" {{action displaySideBySide}}>{{{i18n post.revisions.displays.side_by_side.button}}}</button>
-        <button {{bindAttr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side_markdown.title}}" {{action displaySideBySideMarkdown}}>{{{i18n post.revisions.displays.side_by_side_markdown.button}}}</button>
+        {{#unless Discourse.Mobile.mobileView}}
+          <button {{bindAttr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side.title}}" {{action displaySideBySide}}>{{{i18n post.revisions.displays.side_by_side.button}}}</button>
+          <button {{bindAttr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side_markdown.title}}" {{action displaySideBySideMarkdown}}>{{{i18n post.revisions.displays.side_by_side_markdown.button}}}</button>
+        {{/unless}}
       </div>
     </div>
     <div id="revision-details">
