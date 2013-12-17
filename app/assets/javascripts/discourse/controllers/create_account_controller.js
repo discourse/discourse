@@ -295,33 +295,34 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
     });
   },
 
-  createAccount: function() {
-    var createAccountController = this;
-    this.set('formSubmitted', true);
-    var name = this.get('accountName');
-    var email = this.get('accountEmail');
-    var password = this.get('accountPassword');
-    var username = this.get('accountUsername');
-    var passwordConfirm = this.get('accountPasswordConfirm');
-    var challenge = this.get('accountChallenge');
-    return Discourse.User.createAccount(name, email, password, username, passwordConfirm, challenge).then(function(result) {
-      if (result.success) {
-        createAccountController.flash(result.message);
-        createAccountController.set('complete', true);
-      } else {
-        createAccountController.flash(result.message || I18n.t('create_account.failed'), 'error');
-        if (result.errors && result.errors.email && result.values) {
-          createAccountController.get('rejectedEmails').pushObject(result.values.email);
+  actions: {
+    createAccount: function() {
+      var createAccountController = this;
+      this.set('formSubmitted', true);
+      var name = this.get('accountName');
+      var email = this.get('accountEmail');
+      var password = this.get('accountPassword');
+      var username = this.get('accountUsername');
+      var passwordConfirm = this.get('accountPasswordConfirm');
+      var challenge = this.get('accountChallenge');
+      return Discourse.User.createAccount(name, email, password, username, passwordConfirm, challenge).then(function(result) {
+        if (result.success) {
+          createAccountController.flash(result.message);
+          createAccountController.set('complete', true);
+        } else {
+          createAccountController.flash(result.message || I18n.t('create_account.failed'), 'error');
+          if (result.errors && result.errors.email && result.values) {
+            createAccountController.get('rejectedEmails').pushObject(result.values.email);
+          }
+          createAccountController.set('formSubmitted', false);
         }
+        if (result.active) {
+          return window.location.reload();
+        }
+      }, function() {
         createAccountController.set('formSubmitted', false);
-      }
-      if (result.active) {
-        return window.location.reload();
-      }
-    }, function() {
-      createAccountController.set('formSubmitted', false);
-      return createAccountController.flash(I18n.t('create_account.failed'), 'error');
-    });
+        return createAccountController.flash(I18n.t('create_account.failed'), 'error');
+      });
+    }
   }
-
 });
