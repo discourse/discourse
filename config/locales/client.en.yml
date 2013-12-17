@@ -188,14 +188,20 @@ en:
       all_subcategories: "all subcategories"
       no_subcategory: "no subcategory"
       category: "Category"
-      posts: "Posts"
-      topics: "Topics"
+      posts: "New Posts"
+      topics: "New Topics"
       latest: "Latest"
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories:"
-      total_topics: "Total topics: %{count}"
-      total_posts: "Total posts: %{count}"
+      topic_stats: "The number of new topics."
+      topic_stat_sentence:
+        one: "%{count} new topic in the past %{unit}."
+        other: "%{count} new topics in the past %{unit}."
+      post_stats: "The number of new posts."
+      post_stat_sentence:
+        one: "%{count} new post in the past %{unit}."
+        other: "%{count} new posts in the past %{unit}."
 
     user:
       said: "{{username}} said:"

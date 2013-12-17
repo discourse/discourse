@@ -136,12 +136,20 @@ Discourse.Category = Discourse.Model.extend({
     return this.get('topicTrackingState').countNew(this.get('name'));
   }.property('topicTrackingState.messageCount'),
 
-  totalTopicsTitle: function() {
-    return I18n.t('categories.total_topics', {count: this.get('topic_count')});
+  topicStatsTitle: function() {
+    var string = I18n.t('categories.topic_stats');
+    _.each(this.get('topicCountStats'), function(stat) {
+      string += ' ' + I18n.t('categories.topic_stat_sentence', {count: stat.value, unit: stat.unit});
+    }, this);
+    return string;
   }.property('post_count'),
 
-  totalPostsTitle: function() {
-    return I18n.t('categories.total_posts', {count: this.get('post_count')});
+  postStatsTitle: function() {
+    var string = I18n.t('categories.post_stats');
+    _.each(this.get('postCountStats'), function(stat) {
+      string += ' ' + I18n.t('categories.post_stat_sentence', {count: stat.value, unit: stat.unit});
+    }, this);
+    return string;
   }.property('post_count'),
 
   topicCountStats: function() {
