@@ -65,7 +65,7 @@ class UsernameValidator
 
   def username_first_char_valid?
     return unless errors.empty?
-    if username[0,1] =~ /[^A-Za-z0-9]/
+    if username[0] =~ /[^A-Za-z0-9]/
       self.errors << I18n.t(:'user.username.must_begin_with_alphanumeric')
     end
   end
