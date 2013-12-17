@@ -12,6 +12,7 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
     facebook_hash = session_info[:facebook]
 
     result.email = email = session_info[:email]
+    result.email_valid = true
     result.name = name = facebook_hash[:name]
 
     result.extra_data = facebook_hash
