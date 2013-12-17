@@ -78,7 +78,7 @@ Attaching other file types is supported too, read [the announcement](http://meta
 
 ### Test Email Sending
 
-Discourse relies heavily on emails to notify folks about conversations happening on the forum. Visit [the admin email logs](/admin/email/logs), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>. Did it work? Great! **Read this test email closely**, it has critical email deliverability tips. If you didn't get the test email, your users may not be getting any email notifications, either.
+Discourse relies heavily on emails to notify folks about conversations happening on the forum. Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>. Did it work? Great! **Read this test email closely**, it has critical email deliverability tips. If you didn't get the test email, your users may not be getting any email notifications, either.
 
 Also, achieving proper email deliverability can be hard. We strongly recommend something like [Mandrill](http://mandrill.com), which solves all this for you with virtually no effort, and has a generous free plan that works fine for small forums.
 
