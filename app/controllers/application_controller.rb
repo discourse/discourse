@@ -191,7 +191,7 @@ class ApplicationController < ActionController::Base
     def preload_anonymous_data
       store_preloaded("site", Site.cached_json(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
-      store_preloaded("htmlContent", html_content_json)
+      store_preloaded("customHTML", custom_html_json)
     end
 
     def preload_current_user_data
@@ -200,7 +200,7 @@ class ApplicationController < ActionController::Base
       store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
     end
 
-    def html_content_json
+    def custom_html_json
       MultiJson.dump({
         top: SiteContent.content_for(:top),
         bottom: SiteContent.content_for(:bottom),

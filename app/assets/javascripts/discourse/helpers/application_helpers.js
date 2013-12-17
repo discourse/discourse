@@ -320,3 +320,18 @@ Handlebars.registerHelper('date', function(property, options) {
   }
 
 });
+
+/**
+  Look for custom html content in the preload store.
+
+  @method customHTML
+  @for Handlebars
+**/
+Handlebars.registerHelper('customHTML', function(property, options) {
+  var html = PreloadStore.get("customHTML");
+
+  if (html && html[property] && html[property].length) {
+    return new Handlebars.SafeString(html[property]);
+  }
+
+});
