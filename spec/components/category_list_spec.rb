@@ -99,7 +99,11 @@ describe CategoryList do
 
     it "handles duplicate position values" do
       cat1, cat2, cat3, cat4 = Fabricate(:category, position: 0), Fabricate(:category, position: 0), Fabricate(:category, position: nil), Fabricate(:category, position: 0)
-      category_ids.should == [cat1.id, cat2.id, cat4.id, cat3.id]
+      first_three = category_ids[0,3] # The order is not deterministic
+      first_three.should include(cat1.id)
+      first_three.should include(cat2.id)
+      first_three.should include(cat4.id)
+      category_ids[-1].should == cat3.id
     end
   end
 
