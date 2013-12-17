@@ -65,7 +65,7 @@
   border-spacing: 0;
   a.title:visited:not(.badge-notification) {color: #888;}
 
-  tbody tr {
+  > tbody > tr {
     &:nth-child(even) {
       background-color: #f8f8f8;
     }
@@ -252,6 +252,20 @@
   }
   th.stats {
     width: 90px;
+  }
+  td.stats {
+    .unit {
+      font-size: 11px;
+    }
+  }
+  table.categoryStats {
+    td {
+      padding: 2px;
+      vertical-align: bottom;
+      line-height: 17px;
+      &.value { text-align: right; }
+      &.unit  { text-align: left; }
+    }
   }
   .last-user-info {
     font-size: 12px;

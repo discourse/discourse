@@ -144,23 +144,22 @@ Discourse.Category = Discourse.Model.extend({
     return I18n.t('categories.total_posts', {count: this.get('post_count')});
   }.property('post_count'),
 
-  topicCountStatsStrings: function() {
-    return this.countStatsStrings('topics');
+  topicCountStats: function() {
+    return this.countStats('topics');
   }.property('posts_year', 'posts_month', 'posts_week', 'posts_day'),
 
-  postCountStatsStrings: function() {
-    return this.countStatsStrings('posts');
+  postCountStats: function() {
+    return this.countStats('posts');
   }.property('posts_year', 'posts_month', 'posts_week', 'posts_day'),
 
-  countStatsStrings: function(prefix) {
-    var sep = ' / ';
-    if (this.get(prefix + '_day') > 1) {
-      return [this.get(prefix + '_day') + sep + I18n.t('day'), this.get(prefix + '_week') + sep + I18n.t('week')];
-    } else if (this.get(prefix + '_week') > 1) {
-      return [this.get(prefix + '_week') + sep + I18n.t('week'), this.get(prefix + '_month') + sep + I18n.t('month')];
-    } else {
-      return [this.get(prefix + '_month') + sep + I18n.t('month'), this.get(prefix + '_year') + sep + I18n.t('year')];
-    }
+  countStats: function(prefix) {
+    var stats = [], val;
+    _.each(['day', 'week', 'month', 'year'], function(unit) {
+      val = this.get(prefix + '_' + unit);
+      if (val > 0) stats.pushObject({value: val, unit: I18n.t(unit)});
+      if (stats.length === 2) return false;
+    }, this);
+    return stats;
   }
 
 });

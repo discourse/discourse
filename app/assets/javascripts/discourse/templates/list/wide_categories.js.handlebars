@@ -80,14 +80,24 @@
           {{/each}}
         </td>
         <td class='stats' {{bindAttr title="totalTopicsTitle"}}>
-          {{#each stat in topicCountStatsStrings}}
-            {{stat}}<br/>
-          {{/each}}
+          <table class="categoryStats">
+            {{#each topicCountStats}}
+              <tr>
+                <td class="value">{{value}}</td>
+                <td class="unit">{{unit}}</td>
+              </tr>
+            {{/each}}
+          </table>
         </td>
         <td class='stats' {{bindAttr title="totalPostsTitle"}}>
-          {{#each stat in postCountStatsStrings}}
-            {{stat}}<br/>
-          {{/each}}
+          <table class="categoryStats">
+            {{#each postCountStats}}
+              <tr>
+                <td class="value">{{value}}</td>
+                <td class="unit">{{unit}}</td>
+              </tr>
+            {{/each}}
+          </table>
         </td>
       </tr>
       {{/each}}
