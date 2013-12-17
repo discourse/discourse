@@ -19,7 +19,7 @@ Discourse.Dialect.replaceBlock({
   stop: '```',
   emitter: function(blockContents, matches) {
 
-    var klass = 'lang-auto';
+    var klass = Discourse.SiteSettings.default_code_lang;
     if (matches[1] && acceptableCodeClasses.indexOf(matches[1]) !== -1) {
       klass = matches[1];
     }

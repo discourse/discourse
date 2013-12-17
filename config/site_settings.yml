@@ -200,6 +200,9 @@ posting:
   short_progress_text_threshold:
     client: true
     default: 1000
+  default_code_lang:
+    client: true
+    default: "lang-auto"
 
 email:
   email_time_window_mins: 10
