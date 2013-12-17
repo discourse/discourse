@@ -6,17 +6,13 @@ module Onebox
     attr_reader :record
     attr_reader :view
 
-    self.template_name = "_layout"
-
-    def self.template_path
-      @template_path ||= Onebox.options.load_paths.select(&method(:valid_load_path?)).last
-    end
-
     def initialize(name, record, cache)
       @cache = cache
       @record = record
       @md5 = Digest::MD5.new
       @view = View.new(name, record)
+      @template_name = "_layout"
+      @template_path = load_paths.last
     end
 
     def to_html
@@ -27,12 +23,15 @@ module Onebox
       end
     end
 
+    private
 
-    def self.valid_load_path?(path)
-      File.exist?(File.join(path, "#{template_name}.#{template_extension}"))
+    def load_paths
+      Onebox.options.load_paths.select(&method(:has_template?))
     end
 
-    private
+    def has_template?(path)
+      File.exist?(File.join(path, "#{template_name}.#{template_extension}"))
+    end
 
     def checksum
       @md5.hexdigest("#{VERSION}:#{link}")

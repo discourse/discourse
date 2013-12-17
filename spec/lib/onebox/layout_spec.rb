@@ -7,31 +7,43 @@ describe Onebox::Layout do
   let(:html) { onebox.to_html }
 
   describe ".template_path" do
-    before(:each) do
-      Onebox.options.load_paths << "directory_b"
-      Onebox.options.load_paths << "directory_c"
-    end
-
     let(:template_path) { onebox.template_path }
 
-    it "looks in directory C for template" do
-      allow(described_class).to receive(:valid_load_path?) do |path|
-        path == "directory_c"
+    before(:each) do
+      Onebox.options.load_paths << "directory_a"
+      Onebox.options.load_paths << "directory_b"
+    end
+
+    context "when template exists in directory_b" do
+      before(:each) do
+        allow_any_instance_of(described_class).to receive(:has_template?) do |path|
+          path == "directory_b"
+        end
       end
-      expect(template_path).to eq("directory_c")
-    end
 
-    it "looks in directory B if template doesn't exist in C" do
-      allow(described_class).to receive(:valid_load_path?) do |path|
-        path == "directory_b"
+      it "returns directory_b" do
+        expect(template_path).to eq("directory_b")
       end
-      expect(template_path).to eq("directory_b")
     end
 
-    it "looks in default directory if template doesn't exist in B or C" do
-      expect(template_path).to include("template")
+    context "when template exists in directory_a" do
+      before(:each) do
+        allow_any_instance_of(described_class).to receive(:has_template?) do |path|
+          path == "directory_a"
+        end
+      end
+
+      it "returns directory_a" do
+        expect(template_path).to eq("directory_a")
+      end
     end
 
+    context "when template doesn't exist in directory_a or directory_b" do
+      it "returns default path" do
+        expect(template_path).to include("template")
+      end
+    end
+    
     after(:each) do
       Onebox.options.load_paths.pop(2)
     end
