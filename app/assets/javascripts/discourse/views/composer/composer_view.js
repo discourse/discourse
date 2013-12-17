@@ -122,8 +122,8 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
 
   ensureMaximumDimensionForImagesInPreview: function() {
     $('<style>#wmd-preview img, .cooked img {' +
-      'max-width:' + Discourse.SiteSettings.max_image_width + 'px;' +
-      'max-height:' + Discourse.SiteSettings.max_image_height + 'px;' +
+      'max-width:' + Discourse.SiteSettings.max_image_width + 'px!important;' +
+      'max-height:' + Discourse.SiteSettings.max_image_height + 'px!important;' +
       '}</style>'
      ).appendTo('head');
   },
