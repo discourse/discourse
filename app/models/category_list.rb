@@ -53,36 +53,18 @@ class CategoryList
 
     # Find a list of all categories to associate the topics with
     def find_categories
-      @absolute_position_categories = Category
-                                        .includes(:featured_users)
-                                        .secured(@guardian)
-                                        .where('position IS NOT NULL')
-                                        .order('position ASC')
-      @default_position_categories = Category
-                                        .includes(:featured_users)
-                                        .secured(@guardian)
-                                        .where('position IS NULL')
-                                        .order('COALESCE(categories.posts_week, 0) DESC')
-                                        .order('COALESCE(categories.posts_month, 0) DESC')
-                                        .order('COALESCE(categories.posts_year, 0) DESC')
+      @categories = Category
+                        .includes(:featured_users)
+                        .secured(@guardian)
+                        .order('position asc')
+                        .order('COALESCE(categories.posts_week, 0) DESC')
+                        .order('COALESCE(categories.posts_month, 0) DESC')
+                        .order('COALESCE(categories.posts_year, 0) DESC')
+                        .to_a
 
       if latest_post_only?
-        @absolute_position_categories = @absolute_position_categories.includes(:latest_post => {:topic => :last_poster} )
-        @default_position_categories  = @default_position_categories.includes(:latest_post => {:topic => :last_poster} )
+        @categories  = @categories.includes(:latest_post => {:topic => :last_poster} )
       end
-
-      @default_position_categories = @default_position_categories.to_a
-      @categories = []
-      index = 0
-      @absolute_position_categories.to_a.each do |c|
-        if c.position > index
-          @categories.push(*(@default_position_categories.shift(c.position - index)))
-        end
-        @categories << c
-        index = c.position + 1 if c.position >= index # handles duplicate position values
-      end
-      @categories.push *@default_position_categories # Whatever is left is put on the end
-
 
       subcategories = {}
       to_delete = Set.new

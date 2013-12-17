@@ -12,13 +12,12 @@ describe CategoryList do
       user = Fabricate(:user)
 
       cat = Fabricate(:category)
-      topic = Fabricate(:topic, category: cat)
+      Fabricate(:topic, category: cat)
       cat.set_permissions(:admins => :full)
       cat.save
 
       # uncategorized + this
       CategoryList.new(Guardian.new admin).categories.count.should == 2
-
       CategoryList.new(Guardian.new user).categories.count.should == 0
       CategoryList.new(Guardian.new nil).categories.count.should == 0
     end
@@ -46,7 +45,7 @@ describe CategoryList do
       end
 
       it 'returns the empty category and a non-empty category for those who can create them' do
-        category_with_topics = Fabricate(:topic, category: Fabricate(:category))
+        Fabricate(:topic, category: Fabricate(:category))
         Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
         category_list.categories.should have(3).categories
         category_list.categories.should include(topic_category)
@@ -93,9 +92,9 @@ describe CategoryList do
       category_ids.should include(cat2.id)
     end
 
-    it "mixes default order categories with absolute position categories" do
+    it "default always at the end" do
       cat1, cat2, cat3 = Fabricate(:category, position: 0), Fabricate(:category, position: 2), Fabricate(:category, position: nil)
-      category_ids.should == [cat1.id, cat3.id, cat2.id]
+      category_ids.should == [cat1.id, cat2.id, cat3.id]
     end
 
     it "handles duplicate position values" do
