@@ -44,7 +44,7 @@ production:
   socket: <%= ENV['POSTGRES_SOCKET'] %>
   host: <%= uri.host  %>
   port: <%= uri.port || 5432 %>
-  database: <%= ENV['POSTGRES_DB'] %>
+  database: <%= ENV['POSTGRES_DB'] || "discourse" %>
   username: <%= uri.user %>
   password: <%= uri.password %>
   host_names:
