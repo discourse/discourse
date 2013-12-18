@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<%= SiteSetting.default_locale %>">
+<html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>">
   <head>
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
@@ -20,55 +20,48 @@
       <%= javascript_include_tag "admin"%>
     <%- end %>
 
-    <%= render :partial => "common/discourse_stylesheet" %>
     <%= render :partial => "common/special_font_face" %>
+    <%= render :partial => "common/discourse_stylesheet" %>
 
     <%= discourse_csrf_tags %>
 
     <%= yield :head %>
   </head>
 
-  <body class="css-loading">
+  <body>
     <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
 
-    <div id="js-app" style="display: none;">
-      <%- unless customization_disabled? %>
-        <div id='custom-desktop-header' style='display: none;'>
-          <%= SiteCustomization.custom_header(session[:preview_style], :desktop) %>
-        </div>
-        <div id='custom-mobile-header' style='display: none;'>
-          <%= SiteCustomization.custom_header(session[:preview_style], :mobile) %>
-        </div>
-      <%- end %>
+    <%- unless customization_disabled? %>
+      <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
+    <%- end %>
 
-      <section id='main'>
-      </section>
+    <section id='main'>
+    </section>
 
-      <% unless current_user %>
-        <form id='hidden-login-form' method="post" action="<%=login_path%>" style="display: none;">
-          <input name="username" type="text"     id="signin_username">
-          <input name="password" type="password" id="signin_password">
-          <input name="redirect" type="hidden">
-          <input type="submit" id="signin-button" value="Log In">
-        </form>
+    <% unless current_user %>
+      <form id='hidden-login-form' method="post" action="<%=login_path%>" style="display: none;">
+        <input name="username" type="text"     id="signin_username">
+        <input name="password" type="password" id="signin_password">
+        <input name="redirect" type="hidden">
+        <input type="submit" id="signin-button" value="Log In">
+      </form>
+    <% end %>
+
+    <%- if @preloaded.present? %>
+      <script>
+      <%- @preloaded.each do |key, json| %>
+        PreloadStore.store("<%= key %>",<%= escape_unicode(json) %>);
       <% end %>
+      </script>
+    <%- end %>
 
-      <%- if @preloaded.present? %>
-        <script>
-        <%- @preloaded.each do |key, json| %>
-          PreloadStore.store("<%= key %>",<%= escape_unicode(json) %>);
-        <% end %>
-        </script>
-      <%- end %>
+    <%= yield :data %>
 
-      <%= yield :data %>
+    <footer id='bottom'></footer>
 
-      <footer id='bottom'></footer>
+    <%= render :partial => "common/discourse_javascript" %>
 
-      <%= render :partial => "common/discourse_javascript" %>
-
-      <%= render_google_analytics_code %>
-    </div>
+    <%= render_google_analytics_code %>
 
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
       <header class="d-header">
