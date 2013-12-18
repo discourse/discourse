@@ -40,7 +40,7 @@ production:
   pool: <%= ENV['POSTGRES_CONNECTION_POOL'] || 5 %>
   timeout: 5000
   adapter: postgresql
-  uri: <%= uri = URI.parse(ENV['POSTGRES_URL']) %>
+  uri: <%= uri = URI.parse(ENV['POSTGRES_URL'] ? ENV['POSTGRES_URL'] : "pg://localhost") %>
   socket: <%= ENV['POSTGRES_SOCKET'] %>
   host: <%= uri.host  %>
   port: <%= uri.port || 5432 %>
