@@ -2,7 +2,7 @@ module Onebox
   class View < Mustache
     attr_reader :record
 
-    self.template_path = File.join(Gem::Specification.find_by_name("onebox").gem_dir, "templates")
+    self.template_path = Onebox.options.load_paths.last
 
     def initialize(name, record)
       @record = record

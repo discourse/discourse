@@ -6,15 +6,13 @@ module Onebox
     attr_reader :record
     attr_reader :view
 
-    self.template_name = "_layout"
-    self.template_path = File.join(Gem::Specification.find_by_name("onebox").gem_dir, "templates")
-
-
     def initialize(name, record, cache)
       @cache = cache
       @record = record
       @md5 = Digest::MD5.new
       @view = View.new(name, record)
+      @template_name = "_layout"
+      @template_path = load_paths.last
     end
 
     def to_html
@@ -26,6 +24,14 @@ module Onebox
     end
 
     private
+
+    def load_paths
+      Onebox.options.load_paths.select(&method(:has_template?))
+    end
+
+    def has_template?(path)
+      File.exist?(File.join(path, "#{template_name}.#{template_extension}"))
+    end
 
     def checksum
       @md5.hexdigest("#{VERSION}:#{link}")
@@ -45,5 +51,6 @@ module Onebox
         view: view.to_html
       }
     end
+
   end
 end
