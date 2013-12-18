@@ -42,8 +42,8 @@ production:
   adapter: postgresql
   uri: <%= uri = URI.parse(ENV['POSTGRES_URL'] ? ENV['POSTGRES_URL'] : "pg://localhost") %>
   socket: <%= ENV['POSTGRES_SOCKET'] %>
-  host: <%= uri.host  %>
-  port: <%= uri.port || (ENV['POSTGRES_SOCKET'] ? nil : 5432) %>
+  host: <%= ENV['POSTGRES_SOCKET'].present? ? nil : uri.host  %>
+  port: <%= uri.port || (ENV['POSTGRES_SOCKET'].present? ? nil : 5432) %>
   database: <%= ENV['POSTGRES_DB'] || "discourse" %>
   username: <%= uri.user %>
   password: <%= uri.password %>
