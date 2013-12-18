@@ -3,7 +3,6 @@ Discourse::Application.configure do
 
   # Code is not reloaded between requests
   config.cache_classes = true
-
   config.eager_load = true
 
   # Full error reports are disabled and caching is turned on
@@ -13,12 +12,12 @@ Discourse::Application.configure do
   # Disable Rails's static asset server (Apache or nginx will already do this)
   config.serve_static_assets = false
 
-  # Compress JavaScripts and CSS
-  config.assets.compress = true
-
-  # rails 4
-  config.assets.js_compressor  = :uglifier
-  config.assets.css_compressor = :sass
+  if rails4?
+    config.assets.js_compressor  = :uglifier
+    config.assets.css_compressor = :sass
+  else
+    config.assets.compress = true
+  end
 
   # stuff should be pre-compiled
   config.assets.compile = false
@@ -33,30 +32,19 @@ Discourse::Application.configure do
   # the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = true
 
-
-  # you may use other configuration here for mail eg: sendgrid
-
-  # config.action_mailer.delivery_method = :smtp
-  # config.action_mailer.smtp_settings = {
-  #   :address              => "smtp.sendgrid.net",
-  #   :port                 => 587,
-  #   :domain               => 'YOUR DOMAIN',
-  #   :user_name            => 'YOUR_USER',
-  #   :password             => 'YOUR_PASSWORD',
-  #   :authentication       => 'plain',
-  #   :enable_starttls_auto => true  }
-
+  # specify your smtp url using the SMTP_URL env var eg:
+  # SMTP_URL=smtp://user:password@myhost.com
   if ENV.key?('SMTP_URL')
     config.action_mailer.smtp_settings = begin
       uri = URI.parse(ENV['SMTP_URL'])
       params = {
         :address              => uri.host,
-        :port                 => uri.port,
+        :port                 => uri.port || 25,
         :domain               => (uri.path || "").split("/")[1],
         :user_name            => uri.user,
         :password             => uri.password,
         :authentication       => 'plain',
-        :enable_starttls_auto => true
+        :enable_starttls_auto => !ENV['SMTP_DISABLE_TLS']
       }
       CGI.parse(uri.query || "").each {|k,v| params[k.to_sym] = v.first}
       params
@@ -75,14 +63,7 @@ Discourse::Application.configure do
   config.handlebars.precompile = true
 
   # allows admins to use mini profiler
-  config.enable_mini_profiler = true
-
-  # allows Cross-origin resource sharing (CORS) for API access in JavaScript (default to false for security).
-  # See the initializer and https://github.com/cyu/rack-cors for configuration documentation.
-  #
-  # config.enable_rack_cors = false
-  # config.rack_cors_origins = ['*']
-  # config.rack_cors_resource = ['*', { :headers => :any, :methods => [:get, :post, :options] }]
+  config.enable_mini_profiler = !ENV["DISABLE_MINI_PROFILER"]
 
   # Discourse strongly recommend you use a CDN.
   # For origin pull cdns all you need to do is register an account and configure

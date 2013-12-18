@@ -23,10 +23,7 @@ public/plugins/*
 
 /public/assets/*
 
-config/database.yml
-config/redis.yml
 config/discourse.pill
-config/environments/production.rb
 
 # Ignore the default SQLite database and db dumps
 /db/*.sqlite3

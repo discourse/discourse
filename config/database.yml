@@ -25,19 +25,7 @@ test:
   host_names:
     - test.localhost
 
-# using the test db, so jenkins can run this config
-# we need it to be in production so it minifies assets
-production:
-  adapter: postgresql
-  database: discourse_development
-  pool: 5
-  timeout: 5000
-  host_names:
-    ### If you change this setting you will need to
-    ###   - restart sidekiq if you change this setting
-    ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
-    - production.localhost # Update this to be the domain of your production site
-
+# profile db is used for benchamarking using the script/bench.rb script
 profile:
   adapter: postgresql
   database: discourse_profile
@@ -47,3 +35,17 @@ profile:
   timeout: 5000
   host_names:
     - "localhost"
+
+production:
+  pool: <%= ENV['POSTGRES_CONNECTION_POOL'] || 5 %>
+  timeout: 5000
+  adapter: postgresql
+  uri: <%= uri = URI.parse(ENV['POSTGRES_URL']) %>
+  socket: <%= ENV['POSTGRES_SOCKET'] %>
+  host: <%= uri.host  %>
+  port: <%= uri.port || 5432 %>
+  database: <%= ENV['POSTGRES_DB'] %>
+  username: <%= uri.user %>
+  password: <%= uri.password %>
+  host_names:
+    - <%= ENV["DISCOURSE_HOSTNAME"] || raise "env var for DISCOURSE_HOSTNAME must be set" %> # Update this to be the domain of your production site
