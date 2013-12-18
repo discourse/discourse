@@ -41,6 +41,18 @@
   }
 }
 
+@mixin portrait {
+  @media only screen and (max-width : 320px) {
+    @content;
+  }
+}
+
+@mixin landscape {
+  @media only screen and (min-width : 321px) {
+    @content;
+  }
+}
+
 // CSS3 properties
 // --------------------------------------------------
 

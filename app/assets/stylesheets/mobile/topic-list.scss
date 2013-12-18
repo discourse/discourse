@@ -162,6 +162,32 @@
 // Category list
 // --------------------------------------------------
 
+#topic-list.categories {
+  .featured-users {
+    @include portrait  {
+      margin-bottom: 10px;
+      padding-top: 8px;
+      clear: left;
+    }
+    @include landscape  {
+      float: right;
+    }
+  }
+  .latest {
+    @include portrait { width: 150px; }
+    @include landscape { width: 270px; }
+    .featured-topic {
+      margin: 8px 0;
+      a.last-posted-at, a.last-posted-at:visited {
+        color: #888;
+      }
+    }
+  }
+  .stats {
+    display: none;
+  }
+}
+
 .category-list-item {
   margin-bottom: 10px;
   #topic-list tbody tr:nth-child(even) {
