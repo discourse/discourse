@@ -2,16 +2,32 @@
 
   <script type="text/javascript">
     (function() {
-      var h = document.getElementsByTagName('html')[0];
-      window.isMobileView = (localStorage && localStorage.mobileView) ? (localStorage.mobileView === 'true') :
-          Modernizr.mq("only screen and (max-width: 480px), only screen and (max-device-width: 480px)");
+      var h = document.getElementsByTagName('html')[0],
+          isMobileView = (localStorage && localStorage.mobileView) ? (localStorage.mobileView === 'true') :
+              Modernizr.mq("only screen and (max-width: 480px), only screen and (max-device-width: 480px)");
 
       h.className += (isMobileView ? ' mobile-view' : ' desktop-view');
-      if(isMobileView) {
-        document.write(<%= stylesheet_links(:mobile).inspect.html_safe %>);
-      } else {
-        document.write(<%= stylesheet_links(:desktop).inspect.html_safe %>);
-      }
+      Modernizr.load({
+        test: isMobileView,
+        yep:  <%= stylesheet_filenames(:mobile).inspect.html_safe  %>,
+        nope: <%= stylesheet_filenames(:desktop).inspect.html_safe %>,
+        complete: function() {
+          // CSS file(s) have loaded.
+          $(function() {
+            setTimeout(function() {
+              // Use setTimeout to make this happen in the next event loop.
+              // Trying to avoid a FOUC (flash of unstyled content).
+              if (isMobileView) {
+                $('#custom-mobile-header').show();
+              } else {
+                $('#custom-desktop-header').show();
+              }
+              $('#js-app').attr('style', ''); // Show everything.
+              $(window).trigger('scroll.discourse-dock'); // Calc header div positions now that they're visible.
+            }, 1);
+          });
+        }
+      });
     })();
   </script>
 

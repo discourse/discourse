@@ -31,19 +31,14 @@
   <body class="css-loading">
     <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
 
-    <div id="js-app">
+    <div id="js-app" style="display: none;">
       <%- unless customization_disabled? %>
-        <script>
-          if(window.isMobile){
-            document.write("<div id='custom-mobile-header'>");
-            document.write(<%= SiteCustomization.custom_header(session[:preview_style], :mobile).inspect.gsub("<", '\x3c').html_safe %>);
-            document.write("</div>");
-          } else {
-            document.write("<div id='custom-desktop-header'>");
-            document.write(<%= SiteCustomization.custom_header(session[:preview_style], :desktop).inspect.gsub("<", '\x3c').html_safe %>);
-            document.write("</div>");
-          }
-        </script>
+        <div id='custom-desktop-header' style='display: none;'>
+          <%= SiteCustomization.custom_header(session[:preview_style], :desktop) %>
+        </div>
+        <div id='custom-mobile-header' style='display: none;'>
+          <%= SiteCustomization.custom_header(session[:preview_style], :mobile) %>
+        </div>
       <%- end %>
 
       <section id='main'>

@@ -115,12 +115,6 @@ module ApplicationHelper
     [asset_path("#{target}.css"), customization_disabled? ? nil : SiteCustomization.custom_stylesheet_path(session[:preview_style], target)].compact
   end
 
-  def stylesheet_links(target=:desktop)
-    stylesheet_filenames(target).map do |f|
-      "<link rel=\"stylesheet\" href=\"#{f}\" type=\"text/css\" media=\"screen\">"
-    end.join("\n")
-  end
-
   def customization_disabled?
     controller.class.name.split("::").first == "Admin" || session[:disable_customization]
   end
