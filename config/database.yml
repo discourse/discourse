@@ -48,4 +48,4 @@ production:
   username: <%= uri.user %>
   password: <%= uri.password %>
   host_names:
-    - <%= ENV["DISCOURSE_HOSTNAME"] || raise("env var for DISCOURSE_HOSTNAME must be set") %> # Update this to be the domain of your production site
+    - <%= ENV["DISCOURSE_HOSTNAME"] || raise("env var for DISCOURSE_HOSTNAME must be set") if Rails.env == "production" %> # Update this to be the domain of your production site
