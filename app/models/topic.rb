@@ -629,7 +629,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.auto_close
-    Topic.where("NOT closed AND auto_close_at < ? AND auto_close_user_id IS NOT NULL", 5.minutes.from_now).each do |t|
+    Topic.where("NOT closed AND auto_close_at < ? AND auto_close_user_id IS NOT NULL", 1.minute.ago).each do |t|
       t.auto_close
     end
   end
