@@ -185,17 +185,26 @@ zh_CN:
 
     categories:
       all: "所有分类"
-      only_category: "只看{{categoryName}}"
+      all_subcategories: "所有子分类"
+      no_subcategory: "无子分类"
       category: "分类"
-      posts: "帖子"
-      topics: "主题"
+      posts: "新帖子"
+      topics: "新主题"
       latest: "最新"
       latest_by: "最新发表："
       toggle_ordering: "排序控制"
       subcategories: "子分类："
+      topic_stats: "新主题的数量。"
+      topic_stat_sentence:
+        one: "过去的%{unit}中有%{count}个新主题。"
+        other: "过去的%{unit}中有%{count}个新主题。"
+      post_stats: "新帖子的数量。"
+      post_stat_sentence:
+        one: "过去的%{unit}中有%{count}个新帖子。"
+        other: "过去的%{unit}中有%{count}个新帖子。"
 
     user:
-      said: "{{username}} 说："
+      said: "{{username}}说："
       profile: "个人简介"
       show_profile: "访问个人简介"
       mute: "防打扰"
@@ -348,6 +357,7 @@ zh_CN:
         title: "密码"
         too_short: "你设置的密码太短了。"
         ok: "你设置的密码符合要求。"
+        instructions: "至少需要%{count}个字符。"
 
       ip_address:
         title: "最后使用的IP地址"
@@ -375,6 +385,7 @@ zh_CN:
     month_desc: '30天以前发表的主题'
     week: '周'
     week_desc: '7天以前发表的主题'
+    day: '天'
 
     first_post: 第一帖
     mute: 防打扰
@@ -1003,6 +1014,7 @@ zh_CN:
       add_permission: "添加权限"
       this_year: "今年"
       position: "位置"
+      default_position: "默认位置"
       parent: "上级分类"
 
     flagging:
