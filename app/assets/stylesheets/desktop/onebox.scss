@@ -16,7 +16,7 @@ a.loading-onebox {
 .onebox-result {
 
     margin-top: 15px;
-  padding: 12px 25px 12px 12px; 
+  padding: 12px 25px 12px 12px;
   border-left: 5px solid #bebebe;
   background: #eee;
   font-size: 14px;
@@ -43,7 +43,10 @@ a.loading-onebox {
   .onebox-result-body {
     padding-top: 5px;
     img {
-      max-width:200px;
+      max-width: 100px;
+      max-height: 80%;
+      float: left;
+      margin-right: 10px;
     }
     h3, h4 {
       margin: 0px !important;
@@ -54,12 +57,6 @@ a.loading-onebox {
     }
     code {
       max-height: 400px;
-    }
-    img {
-      max-width: 30%;
-      max-height: 80%;
-      float: left;
-      margin-right: 10px;
     }
     .metrics {
       clear: both;
@@ -76,8 +73,8 @@ a.loading-onebox {
 // RottenTomatoes Onebox
 .onebox-result {
   .onebox-result-body {
-    img.verdict { 
-      float: none; 
+    img.verdict {
+      float: none;
       margin-right: 7px;
     }
     img.popcorn {
