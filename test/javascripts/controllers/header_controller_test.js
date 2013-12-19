@@ -1,12 +1,4 @@
-module("Discourse.HeaderController", {
-  setup: function() {
-    sinon.stub(Discourse, "ajax");
-  },
-
-  teardown: function() {
-    Discourse.ajax.restore();
-  }
-});
+module("Discourse.HeaderController");
 
 test("showNotifications action", function() {
   var resolveRequestWith;
@@ -19,10 +11,10 @@ test("showNotifications action", function() {
   var viewSpy = {
     showDropdownBySelector: sinon.spy()
   };
-  Discourse.User.current().set("unread_notifications", 1);
-  Ember.run(function() {
-    Discourse.ajax.withArgs("/notifications").returns(request);
-  });
+  this.stub(Discourse, "ajax").withArgs("/notifications").returns(request);
+  this.stub(Discourse.User, "current").returns(Discourse.User.create({
+    unread_notifications: 1
+  }));
 
 
   Ember.run(function() {
