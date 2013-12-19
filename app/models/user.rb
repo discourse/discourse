@@ -143,6 +143,7 @@ class User < ActiveRecord::Base
     where(username_lower: username.downcase).first
   end
 
+
   def enqueue_welcome_message(message_type)
     return unless SiteSetting.send_welcome_message?
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
@@ -338,6 +339,10 @@ class User < ActiveRecord::Base
 
   def private_topics_count
     topics_allowed.where(archetype: Archetype.private_message).count
+  end
+
+  def posted_too_much_in_topic?(topic_id)
+    trust_level == TrustLevel.levels[:newuser] && (Post.where(topic_id: topic_id, user_id: id).count >= SiteSetting.newuser_max_replies_per_topic)
   end
 
   def bio_excerpt
