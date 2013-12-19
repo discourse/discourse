@@ -50,7 +50,7 @@
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 
-  tbody tr {
+  > tbody > tr {
     background-color: $white;
     &:nth-child(even) {
       background-color: darken($white, 4%);
@@ -167,19 +167,23 @@
     display: inline-block;
     margin-top: 1px;
   }
+  .category-description {
+    margin-top: 8px;
+  }
   .featured-users {
-    @include portrait  {
+    @include mobile-portrait  {
       margin-bottom: 10px;
       padding-top: 8px;
       clear: left;
     }
-    @include landscape  {
+    @include not-mobile-portrait  {
       float: right;
     }
   }
   .latest {
-    @include portrait { width: 150px; }
-    @include landscape { width: 270px; }
+    @include mobile-portrait { width: 150px; }
+    @include mobile-landscape { width: 270px; }
+    @include tablet-landscape { width: 450px; }
     .featured-topic {
       margin: 8px 0;
       a.last-posted-at, a.last-posted-at:visited {
@@ -188,7 +192,22 @@
     }
   }
   .stats {
-    display: none;
+    @include not-tablet-landscape { display: none; }
+    @include tablet-landscape { min-width: 80px; }
+  }
+  td.stats {
+    .unit {
+      font-size: 11px;
+    }
+  }
+  table.categoryStats {
+    td {
+      padding: 2px;
+      vertical-align: bottom;
+      line-height: 17px;
+      &.value { text-align: right; }
+      &.unit  { text-align: left; }
+    }
   }
 }
 
