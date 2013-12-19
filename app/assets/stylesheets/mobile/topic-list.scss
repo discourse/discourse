@@ -163,6 +163,10 @@
 // --------------------------------------------------
 
 #topic-list.categories {
+  .badge-category {
+    display: inline-block;
+    margin-top: 1px;
+  }
   .featured-users {
     @include portrait  {
       margin-bottom: 10px;
