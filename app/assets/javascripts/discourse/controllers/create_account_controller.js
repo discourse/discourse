@@ -31,7 +31,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
   }.property('authOptions.auth_provider'),
 
   passwordInstructions: function() {
-    return I18n.t('user.password.instructions', {count: 6}); // TODO: soon to be configurable
+    return I18n.t('user.password.instructions', {count: Discourse.SiteSettings.min_password_length});
   }.property(),
 
   // Validate the name
@@ -273,7 +273,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
     }
 
     // If too short
-    if (password.length < 6) {
+    if (password.length < Discourse.SiteSettings.min_password_length) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.password.too_short')

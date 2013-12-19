@@ -4,8 +4,8 @@ class PasswordValidator < ActiveModel::EachValidator
     return unless record.password_required?
     if value.nil?
       record.errors.add(attribute, :blank)
-    elsif value.length < 6
-      record.errors.add(attribute, :too_short, count: 6)
+    elsif value.length < SiteSetting.min_password_length
+      record.errors.add(attribute, :too_short, count: SiteSetting.min_password_length)
     end
   end
 
