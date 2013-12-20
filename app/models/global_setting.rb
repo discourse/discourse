@@ -1,39 +1,14 @@
 class GlobalSetting
 
-  def self.available_settings(*settings)
-    settings.each do |name, desc, default|
+  def self.load_defaults
+    provider = FileProvider.from(File.expand_path('../../../config/discourse_defaults.conf', __FILE__))
+    provider.data.each do |name, default|
       define_singleton_method(name) do
         provider.lookup(name, default)
       end
     end
   end
 
-  def self.generate_sample_file(file)
-  end
-
-  available_settings(
-      [:db_pool,                "connection pool size", 5],
-      [:db_timeout,             "database timeout in milliseconds", 5000],
-      [:db_socket,              "socket file used to access db", ""],
-      [:db_host,                "host address for db server", "localhost"],
-      [:db_port,                "port running db server", 5432],
-      [:db_name,                "database name running discourse", "discourse"],
-      [:db_username,            "username accessing database", "discourse"],
-      [:db_password,            "password used to access the db", ""],
-      [:hostname,               "hostname running the forum", "www.example.com"],
-      [:smtp_address,           "address of smtp server used to send emails",""],
-      [:smtp_port,              "port of smtp server used to send emails", 25],
-      [:smtp_domain,            "domain passed to smtp server", ""],
-      [:smtp_user_name,         "username for smtp server", ""],
-      [:smtp_password,          "password for smtp server", ""],
-      [:smtp_enable_start_tls,  "enable TLS encryption for smtp connections", true],
-      [:enable_mini_profiler,   "enable MiniProfiler for administrators", true],
-      [:cdn_url,                "recommended, cdn used to access assets", ""],
-      [:developer_emails,       "comma delimited list of emails that have devloper level access", true],
-      [:redis_host,             "redis server address", "localhost"],
-      [:redis_port,             "redis server port", 6379],
-      [:redis_password,         "redis password", ""]
-  )
 
   class BaseProvider
     def self.coerce(setting)
@@ -55,6 +30,7 @@ class GlobalSetting
   end
 
   class FileProvider < BaseProvider
+    attr_reader :data
     def self.from(file)
       if File.exists?(file)
         parse(file)
@@ -99,6 +75,8 @@ class GlobalSetting
     attr_accessor :provider
   end
 
+
+  load_defaults
   @provider =
     FileProvider.from(File.expand_path('../../../config/discourse.conf', __FILE__)) ||
     EnvProvider.new
