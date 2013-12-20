@@ -33,7 +33,7 @@ Discourse::Application.configure do
   config.i18n.fallbacks = true
 
   if GlobalSetting.smtp_address
-    config.action_mailer.smtp_settings = {
+    settings = {
       address:              GlobalSetting.smtp_address,
       port:                 GlobalSetting.smtp_port,
       domain:               GlobalSetting.smtp_domain,
@@ -41,6 +41,8 @@ Discourse::Application.configure do
       authentication:       'plain',
       enable_starttls_auto: GlobalSetting.smtp_enable_start_tls
     }
+
+    config.action_mailer.smtp_settings = settings.reject{|x,y| y.nil?}
   else
     config.action_mailer.delivery_method = :sendmail
     config.action_mailer.sendmail_settings = {arguments: '-i'}
