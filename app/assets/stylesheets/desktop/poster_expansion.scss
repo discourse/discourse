@@ -13,10 +13,6 @@
   padding: 12px 12px 5px 12px;
   max-width: 350px;
 
-  h1.new-user a {
-    color: $dark_gray;
-  }
-
   h1 {
     font-size: 30px;
     line-height: 33px;
@@ -66,5 +62,9 @@
 
   .btn {
     margin: 0 0 7px 0;
+  }
+
+  .new-user a {
+    color: $dark_gray;
   }
 }

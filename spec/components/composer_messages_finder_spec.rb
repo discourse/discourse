@@ -10,6 +10,7 @@ describe ComposerMessagesFinder do
 
     it "calls all the message finders" do
       finder.expects(:check_education_message).once
+      finder.expects(:check_new_user_many_replies).once
       finder.expects(:check_avatar_notification).once
       finder.expects(:check_sequential_replies).once
       finder.expects(:check_dominating_topic).once
@@ -54,6 +55,24 @@ describe ComposerMessagesFinder do
       it "returns no message when the user has posted enough topics" do
         user.expects(:post_count).returns(10)
         finder.check_education_message.should be_blank
+      end
+    end
+  end
+
+  context '.check_new_user_many_replies' do
+    let(:user) { Fabricate.build(:user) }
+
+    context 'replying' do
+      let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'reply') }
+
+      it "has no message when `posted_too_much_in_topic?` is false" do
+        user.expects(:posted_too_much_in_topic?).returns(false)
+        finder.check_new_user_many_replies.should be_blank
+      end
+
+      it "has a message when a user has posted too much" do
+        user.expects(:posted_too_much_in_topic?).returns(true)
+        finder.check_new_user_many_replies.should be_present
       end
     end
 

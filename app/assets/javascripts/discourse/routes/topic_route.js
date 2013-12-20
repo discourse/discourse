@@ -128,10 +128,13 @@ Discourse.TopicRoute = Discourse.Route.extend({
       editingTopic: false
     });
 
+    Discourse.TopicRoute.trigger('setupTopicController', this);
+
     this.controllerFor('header').setProperties({
       topic: model,
       showExtraInfo: false
     });
+
     this.controllerFor('composer').set('topic', model);
     Discourse.TopicTrackingState.current().trackIncoming('all');
     controller.subscribe();
@@ -142,4 +145,4 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
 });
 
-
+RSVP.EventTarget.mixin(Discourse.TopicRoute);

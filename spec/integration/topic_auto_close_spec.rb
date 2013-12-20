@@ -87,6 +87,14 @@ describe Topic do
           Then { scheduled_jobs_for(:close_topic).should have(2).jobs }
         end
       end
+
+      context 'a topic that has been auto-closed' do
+        Given(:admin)              { Fabricate(:admin) }
+        Given!(:auto_closed_topic) { Fabricate(:topic, user: admin, closed: true, auto_close_at: 1.day.ago, auto_close_user_id: admin.id, auto_close_started_at: 6.days.ago) }
+        When { auto_closed_topic.update_status('closed', false, admin) }
+        Then { auto_closed_topic.reload.auto_close_at.should be_nil }
+        And  { auto_closed_topic.auto_close_started_at.should be_nil }
+      end
     end
   end
 end

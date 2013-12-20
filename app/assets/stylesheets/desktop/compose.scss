@@ -18,8 +18,12 @@
 
   @include box-shadow(3px 3px 3px rgba($black, 0.14));
 
+  h3 {
+    margin-bottom: 10px;
+  }
+
   p {
-    margin: 0 0 10px 0;
+    margin-bottom: 10px;
   }
 
   a.close {

@@ -172,6 +172,7 @@ class UsersController < ApplicationController
     elsif request.put?
       raise Discourse::InvalidParameters.new(:password) unless params[:password].present?
       @user.password = params[:password]
+      @user.password_required!
       logon_after_password_reset if @user.save
     end
     render layout: 'no_js'

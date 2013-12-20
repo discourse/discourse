@@ -76,6 +76,9 @@ users:
   must_approve_users:
     client: true
     default: false
+  min_password_length:
+    client: true
+    default: 8
   enable_google_logins:
     client: true
     default: true
@@ -177,6 +180,7 @@ posting:
     default: true
   post_undo_action_window_mins: 10
   max_mentions_per_post: 10
+  newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
   onebox_max_chars: 5000
   title_min_entropy: 10

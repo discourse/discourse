@@ -17,7 +17,6 @@ var parser = window.BetterMarkdown,
   @method initializeDialects
 **/
 function initializeDialects() {
-  Discourse.Dialect.trigger('register', {dialect: dialect, MD: MD});
   MD.buildBlockOrder(dialect.block);
   MD.buildInlinePatterns(dialect.inline);
   initialized = true;

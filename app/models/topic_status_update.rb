@@ -22,7 +22,7 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
       topic.update_column status.name, status.enabled?
     end
 
-    if status.manually_closing_topic? && topic.auto_close_at
+    if topic.auto_close_at && (status.reopening_topic? || status.manually_closing_topic?)
       topic.reload.set_auto_close(nil).save
     end
 
