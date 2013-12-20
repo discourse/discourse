@@ -66,7 +66,8 @@ class GlobalSetting
 
   class EnvProvider < BaseProvider
     def lookup(key, default)
-      resolve(ENV["DISCOURSE_" << key.to_s.upcase], default)
+      var = ENV["DISCOURSE_" << key.to_s.upcase]
+      resolve(var , var.nil? ? default : nil)
     end
   end
 
