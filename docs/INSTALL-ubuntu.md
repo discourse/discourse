@@ -339,9 +339,7 @@ Check the sample configuration files provided in the repo with the ones being us
 
     # Run these commands as the discourse user
     cd /var/www/discourse
-    diff -u config/discourse.pill.sample config/discourse.pill
-    diff -u config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
-    diff -u config/environments/production.rb.sample config/environments/production.rb
+    diff -u config/discourse_defaults.comf config/discourse.conf
 
 #### Example 1
 
