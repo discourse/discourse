@@ -24,6 +24,11 @@ class DiscourseRedis
     @redis = DiscourseRedis.raw_connection(@config)
   end
 
+  def without_namespace
+    # Only use this if you want to store and fetch data that's shared between sites
+    @redis
+  end
+
   def url
     self.class.url(@config)
   end

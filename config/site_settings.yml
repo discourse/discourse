@@ -81,6 +81,7 @@ users:
   min_password_length:
     client: true
     default: 8
+  block_common_passwords: true
   enable_google_logins:
     client: true
     default: true

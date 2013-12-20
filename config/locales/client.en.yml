@@ -356,6 +356,7 @@ en:
       password:
         title: "Password"
         too_short: "Your password is too short."
+        common: "That password is too common."
         ok: "Your password looks good."
         instructions: "Must be at least %{count} characters."
 
