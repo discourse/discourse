@@ -42,7 +42,7 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def max_posts_validator(post)
-    if post.acting_user.present? && post.acting_user.posted_too_much_in_topic?(post.topic_id)
+    if post.new_record? && post.acting_user.present? && post.acting_user.posted_too_much_in_topic?(post.topic_id)
       post.errors.add(:base, I18n.t(:too_many_replies))
     end
   end
