@@ -144,6 +144,10 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
     display: inline-block;
     margin-right: 5px;
   }
+  .btn {
+    background: darken(#e8e8e8, 5%);
+    &:hover { background: #aaa; }
+  }
 }
 
 .site-settings-nav {

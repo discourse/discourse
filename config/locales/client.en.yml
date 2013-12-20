@@ -1450,6 +1450,7 @@ en:
         reset: 'reset to default'
         none: 'none'
         no_results: "No results found."
+        clear_filter: "Clear"
         categories:
           all_results: 'All'
           required: 'Required'

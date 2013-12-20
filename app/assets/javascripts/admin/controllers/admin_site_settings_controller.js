@@ -57,6 +57,13 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
     });
 
     this.set('model', matchesGroupedByCategory);
-  }, 250).observes('filter', 'onlyOverridden')
+  }, 250).observes('filter', 'onlyOverridden'),
+
+  actions: {
+    clearFilter: function() {
+      this.set('filter', '');
+      this.set('onlyOverridden', false);
+    }
+  }
 
 });
