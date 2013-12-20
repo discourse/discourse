@@ -238,9 +238,13 @@ Discourse.AdminUser = Discourse.User.extend({
     return (!this.get('can_be_deleted') || this.get('post_count') > 0);
   }.property('post_count'),
 
-  deleteButtonTitle: function() {
+  deleteExplanation: function() {
     if (this.get('deleteForbidden')) {
-      return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_age});
+      if (this.get('staff')) {
+        return I18n.t('admin.user.delete_forbidden_because_staff');
+      } else {
+        return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_age});
+      }
     } else {
       return null;
     }

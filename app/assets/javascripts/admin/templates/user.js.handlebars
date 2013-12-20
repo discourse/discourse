@@ -313,9 +313,13 @@
 
 <section>
   <hr/>
-  <button class="btn btn-danger pull-right" {{action destroy target="content"}} {{bindAttr disabled="deleteForbidden"}} {{bindAttr title="deleteButtonTitle"}}>
+  <button {{bindAttr class=":btn :btn-danger :pull-right deleteForbidden:hidden"}} {{action destroy target="content"}} {{bindAttr disabled="deleteForbidden"}} {{bindAttr}}>
     <i class="fa fa-exclamation-triangle"></i>
     {{i18n admin.user.delete}}
   </button>
+  {{#if deleteExplanation}}
+    <div class="clearfix"></div>
+    <div class="pull-right"><i class="fa fa-exclamation-triangle"></i> {{deleteExplanation}}</div>
+  {{/if}}
 </section>
 <div class="clearfix"></div>

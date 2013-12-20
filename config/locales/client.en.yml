@@ -1410,12 +1410,11 @@ en:
         flags_received_count: Flags Received
         approve: 'Approve'
         approved_by: "approved by"
-        approve_success: "User approved and email sent with activation
-          instructions."
-        approve_bulk_success: "Success! All selected users have been approved
-          and notified."
+        approve_success: "User approved and email sent with activation instructions."
+        approve_bulk_success: "Success! All selected users have been approved and notified."
         time_read: "Read Time"
         delete: "Delete User"
+        delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_forbidden:
           one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
           other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
