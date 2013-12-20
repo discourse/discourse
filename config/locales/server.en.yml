@@ -139,7 +139,7 @@ en:
 
       We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
 
-      Instead of adding another reply, please consider editing your previous replies.
+      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
 
   activerecord:
     attributes:
