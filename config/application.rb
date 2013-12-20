@@ -5,6 +5,9 @@ require 'redis-store' # HACK
 # Plugin related stuff
 require_relative '../lib/discourse_plugin_registry'
 
+# Global config
+require_relative '../app/models/global_setting'
+
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
   Bundler.require(*Rails.groups(assets: %w(development test profile)))

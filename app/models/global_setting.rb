@@ -36,22 +36,62 @@ class GlobalSetting
   )
 
   class BaseProvider
-    def lookup(name, val)
-      t = ENV["D_" << name.to_s.upcase]
-      if t.present?
-        t
-      else
-        val.present? ? val : nil
+    def self.coerce(setting)
+      return setting == "true" if setting == "true" || setting == "false"
+      return $1.to_i if setting.to_s.strip =~ /^([0-9]+)$/
+      setting
+    end
+
+
+    def resolve(current, default)
+      BaseProvider.coerce(
+        if current.present?
+          current
+        else
+          default.present? ? default : nil
+        end
+      )
+    end
+  end
+
+  class FileProvider < BaseProvider
+    def self.from(file)
+      if File.exists?(file)
+        parse(file)
       end
     end
-  end
 
-  class FileProvider
-    def self.from(location)
+    def initialize(file)
+      @file = file
+      @data = {}
+    end
+
+    def read
+      File.read(@file).split("\n").each do |line|
+        if line =~ /([a-z_]+)\s*=\s*(\"([^\"]*)\"|\'([^\']*)\'|[^#]*)/
+          @data[$1.strip.to_sym] = ($4 || $3 || $2).strip
+        end
+      end
+    end
+
+
+    def lookup(key,default)
+      resolve(@data[key], default)
+    end
+
+
+    private
+    def self.parse(file)
+      provider = self.new(file)
+      provider.read
+      provider
     end
   end
 
-  class EnvProvider
+  class EnvProvider < BaseProvider
+    def lookup(key, default)
+      resolve(ENV["DISCOURSE_" << key.to_s.upcase], default)
+    end
   end
 
 
@@ -60,6 +100,6 @@ class GlobalSetting
   end
 
   @provider =
-    FileProvider.from(Rails.root + '/config/discourse.conf') ||
+    FileProvider.from(File.expand_path('../../../config/discourse.conf', __FILE__)) ||
     EnvProvider.new
 end
