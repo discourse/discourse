@@ -135,9 +135,9 @@ en:
       Are you sure you're providing adequate time for other people to share their points of view, too?
 
     too_many_replies: |
-      ### You have reached the reply limit
+      ### You have reached the reply limit for this topic
 
-      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in a single topic.
+      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
 
       Instead of adding another reply, please consider editing your previous replies.
 
