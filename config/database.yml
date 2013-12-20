@@ -37,15 +37,14 @@ profile:
     - "localhost"
 
 production:
-  pool: <%= ENV['POSTGRES_CONNECTION_POOL'] || 5 %>
-  timeout: 5000
+  pool: <%= GlobalSetting.db_pool %>
+  timeout: <%= GlobalSetting.db_timeout %>
   adapter: postgresql
-  uri: <%= uri = URI.parse(ENV['POSTGRES_URL'] ? ENV['POSTGRES_URL'] : "pg://localhost") %>
-  socket: <%= ENV['POSTGRES_SOCKET'] %>
-  host: <%= ENV['POSTGRES_SOCKET'].present? ? nil : uri.host  %>
-  port: <%= uri.port || (ENV['POSTGRES_SOCKET'].present? ? nil : 5432) %>
-  database: <%= ENV['POSTGRES_DB'] || "discourse" %>
-  username: <%= uri.user %>
-  password: <%= uri.password %>
+  socket: <%= GlobalSetting.db_socket %>
+  host: <%= GlobalSetting.db_host %>
+  port: <%= GlobalSetting.db_port %>
+  database: <%= GlobalSetting.db_name %>
+  username: <%= GlobalSetting.db_username %>
+  password: <%= GlobalSetting.db_password %>
   host_names:
-    - <%= ENV["DISCOURSE_HOSTNAME"] || raise("env var for DISCOURSE_HOSTNAME must be set") if Rails.env == "production" %> # Update this to be the domain of your production site
+    - <%= GlobalSetting.hostname %>
