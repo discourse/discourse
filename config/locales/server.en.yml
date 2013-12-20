@@ -135,11 +135,11 @@ en:
       Are you sure you're providing adequate time for other people to share their points of view, too?
 
     too_many_replies: |
-      ### You've replied too many times to this topic
+      ### You have reached the reply limit
 
-      Sorry, but new users are limited to %{newuser_max_replies_per_topic} replies in a topic.
+      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in a single topic.
 
-      You should consider editing one of your previous replies instead of a new reply.
+      Instead of adding another reply, please consider editing your previous replies.
 
   activerecord:
     attributes:
