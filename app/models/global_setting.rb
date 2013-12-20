@@ -52,7 +52,8 @@ class GlobalSetting
 
 
     def lookup(key,default)
-      resolve(@data[key], default)
+      var = @data[key]
+      resolve(var, var.nil? ? default : "")
     end
 
 
