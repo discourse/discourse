@@ -253,6 +253,15 @@
   th.stats {
     width: 90px;
   }
+  td.latest {
+    vertical-align: top;
+    padding: 8px;
+  }
+  td.category {
+    vertical-align: top;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
   td.stats {
     .unit {
       font-size: 11px;
@@ -306,6 +315,11 @@
     a.last-posted-at, a.last-posted-at:visited {
       color: #888;
     }
+  }
+
+  .badge-category {
+    display: inline-block;
+    margin-top: 1px;
   }
 }
 

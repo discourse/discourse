@@ -163,6 +163,15 @@
 // --------------------------------------------------
 
 #topic-list.categories {
+  td.latest {
+    vertical-align: top;
+    padding: 5px;
+  }
+  td.category {
+    vertical-align: top;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
   .badge-category {
     display: inline-block;
     margin-top: 1px;
