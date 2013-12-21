@@ -37,7 +37,8 @@ Discourse::Application.configure do
       address:              GlobalSetting.smtp_address,
       port:                 GlobalSetting.smtp_port,
       domain:               GlobalSetting.smtp_domain,
-      user_name:            GlobalSetting.smtp_password,
+      user_name:            GlobalSetting.smtp_user_name,
+      password:             GlobalSetting.smtp_password,
       authentication:       'plain',
       enable_starttls_auto: GlobalSetting.smtp_enable_start_tls
     }
