@@ -180,8 +180,7 @@ Redis:
 - no changes if this is the only application using redis, but have a look
 
 E-mail:
-- browse througn all the settings
-- be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))
+- browse through all the settings, and be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))
 - If your users will come from "internal" [private unroutable IPs](https://en.wikipedia.org/wiki/Private_network) like 10.x.x.x or 192.168.x.x please [see this topic](http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607).
 
 Initialize the database:
