@@ -40,7 +40,7 @@ module Jobs
                 puts "Failed to pull hotlinked image: #{src} - Image is bigger than #{@max_size}"
               end
             end
-            # have we successfuly downloaded that file?
+            # have we successfully downloaded that file?
             if downloaded_urls[src].present?
               url = downloaded_urls[src]
               escaped_src = src.gsub("?", "\\?").gsub(".", "\\.").gsub("+", "\\+")

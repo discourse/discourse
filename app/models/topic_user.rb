@@ -138,7 +138,7 @@ class TopicUser < ActiveRecord::Base
 
       # In case anyone seens "seen_post_count" and gets confused, like I do.
       # seen_post_count represents the highest_post_number of the topic when
-      # the user visited it. It may be out of alignement with last_read, meaning
+      # the user visited it. It may be out of alignment with last_read, meaning
       # ... user visited the topic but did not read the posts
       rows = exec_sql("UPDATE topic_users
                                     SET
