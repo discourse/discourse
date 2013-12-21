@@ -339,7 +339,7 @@ Check the sample configuration files provided in the repo with the ones being us
 
     # Run these commands as the discourse user
     cd /var/www/discourse
-    diff -u config/discourse_defaults.comf config/discourse.conf
+    diff -u config/discourse_defaults.conf config/discourse.conf
 
 #### Example 1
 
