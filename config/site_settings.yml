@@ -8,14 +8,14 @@ required:
   site_contact_username: ''
   logo_url:
     client: true
-    default: '/assets/d-logo-sketch.png'
+    default: '/images/d-logo-sketch.png'
   logo_small_url:
     client: true
-    default: '/assets/d-logo-sketch-small.png'
+    default: '/images/d-logo-sketch-small.png'
   favicon_url:
     client: true
-    default: '/assets/default-favicon.ico'
-  apple_touch_icon_url: /assets/default-apple-touch-icon.png'
+    default: '/images/default-favicon.ico'
+  apple_touch_icon_url: /images/default-apple-touch-icon.png'
   company_full_name: 'My Unconfigured Forum Ltd.'
   company_short_name: 'Unconfigured Forum'
   company_domain: 'www.example.com'
