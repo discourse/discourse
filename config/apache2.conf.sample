@@ -35,6 +35,8 @@ Header set Server "Sample Server Name"
  
  # Prevent requests for /assets from being passed upstream
  ProxyPass /assets !
+ # Prevent requests for /javascripts from being passed upstream
+ ProxyPass /javascripts !
  
  # Pass the everything else
  ProxyPass / balancer://thinservers/
