@@ -168,7 +168,7 @@ Configure Discourse:
 
     # Run these commands as the discourse user
     cd /var/www/discourse/config
-    cp discourse_defaults.conf discourse.conf
+    cp discourse_quickstart.conf discourse.conf
     cp discourse.pill.sample discourse.pill
 
 Editing /var/www/discourse/config/discourse.conf:
