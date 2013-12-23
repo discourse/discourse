@@ -242,6 +242,7 @@ class TopicQuery
         else
           result = result.where('topics.category_id IS NULL')
         end
+        result = result.references(:categories)
       end
 
       result
