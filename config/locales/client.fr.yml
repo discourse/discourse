@@ -415,7 +415,7 @@ fr:
       saving_draft_tip: "sauvegarde..."
       saved_draft_tip: "sauvegardé"
       saved_local_draft_tip: "sauvegardé en local"
-      similar_topics: "Votre message est trop similaire à..."
+      similar_topics: "Votre message est similaire à..."
       drafts_offline: "sauvegardé hors ligne"
       min_length:
         need_more_for_title: "{{n}} caractères restant pour le titre"
