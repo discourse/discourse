@@ -6,39 +6,30 @@ Discourse.Formatter = (function(){
       relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
       shortDate, shortDateNoYear, tinyDateYear, breakUp;
 
-  breakUp = function(string, maxLength){
-    if(string.length <= maxLength) {
-      return string;
-    }
+  breakUp = function(str){
+    var rval = [];
+    var prev = str[0];
+    var cur;
 
-    var firstPart = string.substr(0, maxLength);
-
-    // work backward to split stuff like ABPoop to AB Poop
-    var i;
-    for(i=firstPart.length-1;i>0;i--){
-      if(firstPart[i].match(/[A-Z]/)){
-        break;
+    rval.push(prev);
+    for (var i=1;i<str.length;i++) {
+      cur = str[i];
+      if(prev.match(/[^0-9]/) && cur.match(/[0-9]/)){
+        rval.push("<wbr>");
+      } else if(i>1 && prev.match(/[A-Z]/) && cur.match(/[a-z]/)){
+        rval.pop();
+        rval.push("<wbr>");
+        rval.push(prev);
+      } else if(prev.match(/[^A-Za-z0-9]/) && cur.match(/[a-zA-Z0-9]/)){
+        rval.push("<wbr>");
       }
+
+      rval.push(cur);
+      prev = cur;
     }
 
-    // work forwards to split stuff like ab111 to ab 111
-    if(i===0) {
-      for(i=1;i<firstPart.length;i++){
-        if(firstPart[i].match(/[^a-z]/)){
-          break;
-        }
-      }
-    }
+    return rval.join("");
 
-    if (i > 0 && i < firstPart.length) {
-      var offset = 0;
-      if(string[i] === "_") {
-        offset = 1;
-      }
-      return string.substr(0, i + offset) + " " + string.substring(i + offset);
-    } else {
-      return firstPart + " " + string.substr(maxLength);
-    }
   };
 
   shortDate = function(date){

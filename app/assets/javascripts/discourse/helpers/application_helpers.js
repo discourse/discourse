@@ -9,7 +9,7 @@ Handlebars.registerHelper('breakUp', function(property, options) {
   prop = Ember.Handlebars.get(this, property, options);
   if (!prop) return "";
 
-  return Discourse.Formatter.breakUp(prop, 13);
+  return Discourse.Formatter.breakUp(prop);
 });
 
 /**
