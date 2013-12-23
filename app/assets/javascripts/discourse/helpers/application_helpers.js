@@ -289,7 +289,7 @@ Handlebars.registerHelper('number', function(property, options) {
   var result = "<span class='" + classNames + "'";
 
   if (n !== title) {
-    result += " title='" + title + "'";
+    result += " title='" + Handlebars.Utils.escapeExpression(title) + "'";
   }
   result += ">" + n + "</span>";
 
