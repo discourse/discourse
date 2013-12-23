@@ -327,11 +327,12 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   imageSizes: function() {
     var result = {};
     $('#wmd-preview img').each(function(i, e) {
-      var $img = $(e);
-      result[$img.prop('src')] = {
-        width: $img.width(),
-        height: $img.height()
-      };
+      var $img = $(e),
+          src = $img.prop('src');
+
+      if (src && src.length) {
+        result[src] = { width: $img.width(), height: $img.height() };
+      }
     });
     return result;
   },
