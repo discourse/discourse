@@ -264,7 +264,13 @@ class UsersController < ApplicationController
     user_fields = [:username, :use_uploaded_avatar, :upload_avatar_template, :uploaded_avatar_id]
     user_fields << :name if SiteSetting.enable_names?
 
-    render json: { users: results.as_json(only: user_fields, methods: :avatar_template) }
+    to_render = { users: results.as_json(only: user_fields, methods: :avatar_template) }
+
+    if params[:include_groups] == "true"
+      to_render[:groups] = Group.search_group(term, current_user).map {|m| {:name=>m.name, :usernames=> m.usernames.split(",")} }
+    end
+
+    render json: to_render
   end
 
   # [LEGACY] avatars in quotes/oneboxes might still be pointing to this route

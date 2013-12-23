@@ -4,7 +4,6 @@ Discourse.UserSelector = Discourse.TextField.extend({
 
     var userSelectorView = this;
     var selected = [];
-    var transformTemplate = Handlebars.compile("{{avatar this imageSize=\"tiny\"}} {{this.username}}");
 
     $(this.get('element')).val(this.get('usernames')).autocomplete({
       template: Discourse.UserSelector.templateFunction(),
@@ -20,9 +19,17 @@ Discourse.UserSelector = Discourse.TextField.extend({
         return Discourse.UserSearch.search({
           term: term,
           topicId: userSelectorView.get('topicId'),
-          exclude: exclude
+          exclude: exclude,
+          include_groups: userSelectorView.get('include_groups')
         });
       },
+      transformComplete: function(v) {
+          if (v.username) {
+            return v.username;
+          } else {
+            return v.usernames; 
+          }
+        },
 
       onChangeItems: function(items) {
         items = _.map(items, function(i) {
@@ -36,13 +43,21 @@ Discourse.UserSelector = Discourse.TextField.extend({
         selected = items;
       },
 
-      transformComplete: transformTemplate,
-
       reverseTransform: function(i) {
         return { username: i };
       }
 
     });
+  }
+
+});
+
+Handlebars.registerHelper("showMax", function(context, block){
+  var maxLength = parseInt(block.hash.max) || 3;
+  if (context.length > maxLength){
+    return context.slice(0, maxLength).join(", ") + ", +" + (context.length - maxLength);
+  } else {
+    return context.join(", ");
   }
 
 });
@@ -53,13 +68,23 @@ Discourse.UserSelector.reopenClass({
   templateFunction: function(){
       this.compiled = this.compiled || Handlebars.compile("<div class='autocomplete'>" +
                                     "<ul>" +
-                                    "{{#each options}}" +
+                                    "{{#each options.users}}" +
                                       "<li>" +
                                           "<a href='#'>{{avatar this imageSize=\"tiny\"}} " +
                                           "<span class='username'>{{this.username}}</span> " +
                                           "<span class='name'>{{this.name}}</span></a>" +
                                       "</li>" +
                                       "{{/each}}" +
+                                      "{{#if options.groups}}" +
+                                        "{{#if options.users}}<hr>{{/if}}"+
+                                          "{{#each options.groups}}" +
+                                            "<li>" +
+                                                "<a href=''><i class='icon-group'></i>" +
+                                                "<span class='username'>{{this.name}}</span> " +
+                                                "<span class='name'>{{showMax this.usernames max=3}}</span></a>" +
+                                            "</li>" +
+                                          "{{/each}}" +
+                                        "{{/if}}" +
                                     "</ul>" +
                                   "</div>");
       return this.compiled;
