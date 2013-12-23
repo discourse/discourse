@@ -99,6 +99,23 @@ class Group < ActiveRecord::Base
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
+  def self.search_group(name, current_user)
+
+    levels = [99]
+    if current_user.admin?
+      levels = [99, 1, 2, 3]
+    elsif current_user.moderator?
+      levels = [99, 2, 3]
+    end
+
+    return Group.where("name LIKE :term_like AND (" +
+        " alias_level in (:levels)" + 
+        " OR (alias_level = 3 AND id in (" + 
+            "SELECT group_id FROM group_users WHERE user_id= :user_id)" +
+          ")" + 
+        ")", term_like: "#{name.downcase}%", levels: levels, user_id: current_user.id)
+  end
+
   def self.lookup_group(name)
     if id = AUTO_GROUPS[name]
       Group.where(id: id).first

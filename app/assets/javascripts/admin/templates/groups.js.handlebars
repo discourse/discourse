@@ -24,15 +24,23 @@
             {{textField value=name placeholderKey="admin.groups.name_placeholder"}}
           {{/if}}
 
-          {{userSelector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" disabledBinding="automatic"}}
+          <div class="control-group">
+            <label class="control-label">Group members
+            </label>
+            <div class="controls">
+              {{userSelector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" disabledBinding="automatic"}}
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{i18n admin.groups.alias_levels.title}}</label>
+            <div class="controls">
+              {{combobox valueAttribute="value" value=alias_level content=validValues}}
+            </div>
+          </div>
           <div class='controls'>
+            <button {{action save this}} {{bindAttr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
             {{#unless automatic}}
-              <button {{action save this}} {{bindAttr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
-              {{#if id}}
                 <a {{action destroy this}} class='delete-link'>{{i18n admin.customize.delete}}</a>
-              {{/if}}
-            {{else}}
-              {{i18n admin.groups.can_not_edit_automatic}}
             {{/unless}}
           </div>
         {{/with}}
