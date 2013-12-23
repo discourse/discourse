@@ -73,7 +73,7 @@ Discourse.PreferencesAboutRoute = Discourse.RestrictedUserRoute.extend({
   },
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet
-  exit: function() {
+  deactivate: function() {
     this._super();
     this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
   },
@@ -119,7 +119,7 @@ Discourse.PreferencesEmailRoute = Discourse.RestrictedUserRoute.extend({
   },
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet
-  exit: function() {
+  deactivate: function() {
     this._super();
     this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
   }
@@ -143,7 +143,7 @@ Discourse.PreferencesUsernameRoute = Discourse.RestrictedUserRoute.extend({
   },
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet
-  exit: function() {
+  deactivate: function() {
     this._super();
     this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
   },

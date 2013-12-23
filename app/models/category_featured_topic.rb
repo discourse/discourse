@@ -15,7 +15,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   def self.feature_topics_for(c)
     return if c.blank?
 
-    query = TopicQuery.new(self.fake_admin, per_page: SiteSetting.category_featured_topics, except_topic_id: c.topic_id, visible: true)
+    query = TopicQuery.new(self.fake_admin, per_page: SiteSetting.category_featured_topics, except_topic_ids: [c.topic_id], visible: true)
     results = query.list_category(c).topic_ids.to_a
 
     CategoryFeaturedTopic.transaction do

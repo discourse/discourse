@@ -51,7 +51,6 @@ class TopicList
   end
 
   def has_rank_details?
-
     # Only moderators can see rank details
     return false unless @current_user && @current_user.staff?
 

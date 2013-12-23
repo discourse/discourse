@@ -13,14 +13,14 @@ describe ListController do
 
   describe 'indexes' do
 
-    [:latest, :hot].each do |filter|
+    Discourse.anonymous_filters.each do |filter|
       context "#{filter}" do
         before { xhr :get, filter }
         it { should respond_with(:success) }
       end
     end
 
-    [:favorited, :read, :posted, :unread, :new].each do |filter|
+    Discourse.logged_in_filters.each do |filter|
       context "#{filter}" do
         it { expect { xhr :get, filter }.to raise_error(Discourse::NotLoggedIn) }
       end
@@ -39,7 +39,7 @@ describe ListController do
 
   describe 'RSS feeds' do
 
-    [:latest, :hot].each do |filter|
+    Discourse.anonymous_filters.each do |filter|
 
       it 'renders RSS' do
         get "#{filter}_feed", format: :rss
@@ -173,14 +173,6 @@ describe ListController do
       xhr :get, :private_messages_unread, username: @user.username
       response.should be_success
     end
-  end
-
-  context 'hot' do
-    before do
-      xhr :get, :hot
-    end
-
-    it { should respond_with(:success) }
   end
 
   context 'favorited' do

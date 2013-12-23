@@ -26,19 +26,6 @@ Discourse.ListController = Discourse.Controller.extend({
   }.property("category"),
 
   /**
-    Refresh our current topic list
-
-    @method refresh
-  **/
-  refresh: function() {
-    var listTopicsController = this.get('controllers.listTopics');
-    listTopicsController.set('model.loaded', false);
-    this.load(this.get('filterMode')).then(function (topicList) {
-      listTopicsController.set('model', topicList);
-    });
-  },
-
-  /**
     Load a list based on a filter
 
     @method load
@@ -135,5 +122,5 @@ Discourse.ListController = Discourse.Controller.extend({
 });
 
 Discourse.ListController.reopenClass({
-  filters: ['latest', 'hot', 'favorited', 'read', 'unread', 'new', 'posted']
+  filters: <%= Discourse.filters.map(&:to_s) %>
 });

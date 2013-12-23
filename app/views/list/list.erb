@@ -1,6 +1,6 @@
 <div class="topic-list">
 <% @list.topics.each do |t| %>
-<a href="<%= t.relative_url %>"><%= t.title %></a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
+  <a href="<%= t.relative_url %>"><%= t.title %></a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
 <% end %>
 </div>
 

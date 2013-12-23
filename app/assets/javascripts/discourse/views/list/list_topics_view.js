@@ -60,7 +60,4 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.LoadMore, {
     this.saveScrollPosition();
   }
 
-
 });
-
-

@@ -668,7 +668,7 @@ en:
 
       browse_all_categories: Browse all categories
 
-      view_latest_topics: view latest topics
+      view_latest_topics: view latest topics.
       suggest_create_topic: Why not create a topic?
       read_position_reset: "Your read position has been reset."
       jump_reply_up: jump to earlier reply
@@ -1102,6 +1102,13 @@ en:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "latest topics in the {{categoryName}} category"
+      top:
+        title: "Top"
+        help: "a selection of the best topics"
+        this_year: "This year"
+        this_month: "This month"
+        this_week: "This week"
+        today: "Today"
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
 

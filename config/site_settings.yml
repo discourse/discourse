@@ -59,6 +59,8 @@ basic:
   relative_date_duration:
     client: true
     default: 30
+  topics_per_period_in_summary:
+    default: 10
 
 users:
   enable_local_logins:

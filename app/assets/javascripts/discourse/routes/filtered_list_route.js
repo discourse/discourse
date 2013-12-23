@@ -10,12 +10,13 @@ Discourse.FilteredListRoute = Discourse.Route.extend({
 
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
-  exit: function() {
+  deactivate: function() {
     this._super();
 
-    var listController = this.controllerFor('list');
-    listController.set('canCreateTopic', false);
-    listController.set('filterMode', '');
+    this.controllerFor('list').setProperties({
+      canCreateTopic: false,
+      filterMode: ''
+    });
   },
 
   renderTemplate: function() {

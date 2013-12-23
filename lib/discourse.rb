@@ -30,11 +30,29 @@ module Discourse
   # Cross site request forgery
   class CSRF < Exception; end
 
+  def self.filters
+    @filters ||= [:latest, :hot, :unread, :new, :favorited, :read, :posted]
+  end
+
+  def self.anonymous_filters
+    @anonymous_filters ||= [:latest, :hot]
+  end
+
+  def self.logged_in_filters
+    @logged_in_filters ||= Discourse.filters - Discourse.anonymous_filters
+  end
+
+  def self.top_menu_items
+    @top_menu_items ||= Discourse.filters.concat([:category, :categories, :top])
+  end
+
+  def self.anonymous_top_menu_items
+    @anonymous_top_menu_items ||= Discourse.anonymous_filters.concat([:category, :categories, :top])
+  end
+
   def self.activate_plugins!
     @plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
-    @plugins.each do |plugin|
-      plugin.activate!
-    end
+    @plugins.each { |plugin| plugin.activate! }
   end
 
   def self.plugins

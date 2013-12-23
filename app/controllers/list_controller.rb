@@ -1,26 +1,25 @@
 class ListController < ApplicationController
 
-  before_filter :ensure_logged_in, except: [:latest, :hot, :category, :category_feed, :latest_feed, :hot_feed, :topics_by]
+  before_filter :ensure_logged_in, except: [:latest, :hot, :category, :top, :category_feed, :latest_feed, :hot_feed, :topics_by]
   before_filter :set_category, only: [:category, :category_feed]
   skip_before_filter :check_xhr
 
   # Create our filters
-  [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
+  Discourse.filters.each do |filter|
     define_method(filter) do
       list_opts = build_topic_list_options
       user = list_target_user
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = construct_url_with(filter, list_opts)
-      if [:latest, :hot].include?(filter)
+      if Discourse.anonymous_filters.include?(filter)
         @description = SiteSetting.site_description
         @rss = filter
       end
-
       respond(list)
     end
   end
 
-  [:latest, :hot].each do |filter|
+  Discourse.anonymous_filters.each do |filter|
     define_method("#{filter}_feed") do
       discourse_expires_in 1.minute
 
@@ -29,6 +28,7 @@ class ListController < ApplicationController
       @description = I18n.t("rss_description.#{filter}")
       @atom_link = "#{Discourse.base_url}/#{filter}.rss"
       @topic_list = TopicQuery.new.public_send("list_#{filter}")
+
       render 'list', formats: [:rss]
     end
   end
@@ -72,6 +72,22 @@ class ListController < ApplicationController
     redirect_to latest_path, :status => 301
   end
 
+  def top
+    sort_order = params[:sort_order] || "posts"
+    top = generate_top_lists_by(sort_order)
+
+    respond_to do |format|
+      format.html do
+        @top = top
+        store_preloaded('top_list', MultiJson.dump(TopListSerializer.new(top, scope: guardian, root: false)))
+        render 'top'
+      end
+      format.json do
+        render json: MultiJson.dump(TopListSerializer.new(top, scope: guardian, root: false))
+      end
+    end
+  end
+
   protected
 
   def category_response(extra_opts=nil)
@@ -84,14 +100,11 @@ class ListController < ApplicationController
   end
 
   def respond(list)
+    discourse_expires_in 1.minute
 
+    list.draft = Draft.get(current_user, list.draft_key, list.draft_sequence) if current_user
     list.draft_key = Draft::NEW_TOPIC
     list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
-
-    draft = Draft.get(current_user, list.draft_key, list.draft_sequence) if current_user
-    list.draft = draft
-
-    discourse_expires_in 1.minute
 
     respond_to do |format|
       format.html do
@@ -165,4 +178,22 @@ class ListController < ApplicationController
     method = url_prefix.blank? ? "#{action}_path" : "#{url_prefix}_#{action}_path"
     public_send(method, opts.merge(next_page_params(opts)))
   end
+
+  def generate_top_lists_by(sort_order)
+    top = {}
+    topic_ids = Set.new
+
+    TopTopic.periods.each do |period|
+      options = {
+        per_page: SiteSetting.topics_per_period_in_summary,
+        except_topic_ids: topic_ids.to_a
+      }
+      list = TopicQuery.new(current_user, options).list_top(sort_order, period)
+      topic_ids.merge(list.topic_ids)
+      top[period] = list
+    end
+
+    top
+  end
+
 end
