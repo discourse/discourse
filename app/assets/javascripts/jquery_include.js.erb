@@ -1,5 +1,5 @@
 <%
-if Rails.env.development?
+if Rails.env.development? || Rails.env.test?
   require_asset ("development/jquery-2.0.3.js")
 else
   require_asset ("production/jquery-2.0.3.min.js")
