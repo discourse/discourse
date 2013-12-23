@@ -92,19 +92,26 @@ $.fn.autocomplete = function(options) {
       // dump what we have in single mode, just in case
       inputSelectedItems = [];
     }
-    var d = $("<div class='item'><span>" + (transformed || item) + "<a class='remove' href='#'><i class='fa fa-times'></i></a></span></div>");
-    var prev = me.parent().find('.item:last');
-    if (prev.length === 0) {
-      me.parent().prepend(d);
-    } else {
-      prev.after(d);
+    if (!_.isArray(transformed)) {
+      transformed = [transformed || item];
     }
-    inputSelectedItems.push(item);
+    var divs = transformed.map(function(itm) {
+      var d = $("<div class='item'><span>" + (itm) + "<a href='#'><i class='fa fa-times'></i></a></span></div>");
+      var prev = me.parent().find('.item:last');
+      if (prev.length === 0) {
+        me.parent().prepend(d);
+      } else {
+        prev.after(d);
+      }
+      inputSelectedItems.push(itm);
+      return divs;
+    });
+    
     if (options.onChangeItems) {
       options.onChangeItems(inputSelectedItems);
     }
 
-    d.find('a').click(function() {
+    $(divs).find('a').click(function() {
       closeAutocomplete();
       inputSelectedItems.splice($.inArray(item, inputSelectedItems), 1);
       $(this).parent().parent().remove();

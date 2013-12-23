@@ -35,6 +35,16 @@ Discourse.Group = Discourse.Model.extend({
     return usernames;
   }.property('users'),
 
+  validValues: function() {
+    return Em.A([
+      { name: I18n.t("admin.groups.alias_levels.nobody"), value: 0},
+      { name: I18n.t("admin.groups.alias_levels.only_admins"), value: 1},
+      { name: I18n.t("admin.groups.alias_levels.mods_and_admins"), value: 2},
+      { name: I18n.t("admin.groups.alias_levels.members_mods_and_admins"), value: 3},
+      { name: I18n.t("admin.groups.alias_levels.everyone"), value: 99}
+    ]);
+  }.property(),
+
   destroy: function(){
     if(!this.id) return;
 
@@ -58,6 +68,7 @@ Discourse.Group = Discourse.Model.extend({
     return Discourse.ajax("/admin/groups", {type: "POST", data: {
       group: {
         name: this.get('name'),
+        alias_level: this.get('alias_level'),
         usernames: this.get('usernames')
       }
     }}).then(function(resp) {
@@ -83,6 +94,7 @@ Discourse.Group = Discourse.Model.extend({
       data: {
         group: {
           name: this.get('name'),
+          alias_level: this.get('alias_level'),
           usernames: this.get('usernames')
         }
       },
