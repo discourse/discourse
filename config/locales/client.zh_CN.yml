@@ -274,7 +274,7 @@ zh_CN:
 
       name:
         title: "名字"
-        instructions: "你的名字，不要求独一无二（可以与他人的名字重复）。用于在@name匹配你时参考，只在你的用户页面显示。"
+        instructions: "你公开的名字。用于在@name匹配时参考。"
         too_short: "你设置的名字太短了。"
         ok: "你的名字符合要求。"
       username:
@@ -963,7 +963,7 @@ zh_CN:
           previous: "前一次修改"
           next: "下一次修改"
           last: "上一次修改"
-          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> (共计{{total}})"
+          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "在生成的结果中显示增加和删除的内容"
@@ -1414,6 +1414,7 @@ zh_CN:
         approve_bulk_success: "成功！所有选定的用户已批准并通知。"
         time_read: "阅读次数"
         delete: "删除用户"
+        delete_forbidden_because_staff: "不能删除管理员和版主。"
         delete_forbidden:
           one: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
           other: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
@@ -1448,6 +1449,7 @@ zh_CN:
         reset: '重置为缺省值'
         none: '无'
         no_results: "找不到结果。"
+        clear_filter: "清除"
         categories:
           all_results: '全部'
           required: '必须'
