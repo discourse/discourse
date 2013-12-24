@@ -85,8 +85,11 @@ class TopicQuery
   end
 
   def list_top(sort_order, period)
+    count = "#{period}_#{sort_order}_count"
     create_list(:top, unordered: true) do |topics|
-      topics.joins(:top_topic).order("top_topics.#{period}_#{sort_order}_count DESC, topics.bumped_at DESC")
+      topics.joins(:top_topic)
+            .where("top_topics.#{count} > 0")
+            .order("top_topics.#{count} DESC, topics.bumped_at DESC")
     end
   end
 
