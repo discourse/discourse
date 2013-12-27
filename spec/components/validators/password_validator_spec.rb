@@ -11,7 +11,7 @@ describe PasswordValidator do
 
     context "password is not common" do
       before do
-        CommonPasswords.any_instance.stubs(:common_password?).returns(false)
+        CommonPasswords.stubs(:common_password?).returns(false)
       end
 
       context "min password length is 8" do
@@ -55,7 +55,7 @@ describe PasswordValidator do
 
     context "password is commonly used" do
       before do
-        CommonPasswords.any_instance.stubs(:common_password?).returns(true)
+        CommonPasswords.stubs(:common_password?).returns(true)
       end
 
       it "adds an error when block_common_passwords is enabled" do
