@@ -3,11 +3,11 @@ class TopTopic < ActiveRecord::Base
   belongs_to :topic
 
   def self.periods
-    @periods ||= %i{yearly monthly weekly daily}
+    @periods ||= [:yearly, :monthly, :weekly, :daily]
   end
 
   def self.sort_orders
-    @sort_orders ||= %i{posts views likes}
+    @sort_orders ||= [:posts, :views, :likes]
   end
 
   def self.refresh!
