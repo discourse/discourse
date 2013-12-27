@@ -26,12 +26,18 @@
 }
 
 .create-account {
+  table {
+    width: 100%;
+  }
   tr.input {
     td {
       padding-top: 10px;
     }
     input, label {
       margin-bottom: 0;
+    }
+    .tip {
+      max-width: 340px;
     }
   }
 

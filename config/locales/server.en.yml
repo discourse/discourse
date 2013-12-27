@@ -608,7 +608,7 @@ en:
     login_required: "Require authentication to read posts"
 
     min_password_length: "Minimum password length."
-    block_common_passwords: "Don't allow passwords that are in the top 5000 most common passwords."
+    block_common_passwords: "Don't allow passwords that are in the 5000 most common passwords."
     enable_local_logins: "Enable traditional, local username and password authentication"
     enable_local_account_create: "Enable creating new local accounts"
     enable_google_logins: "Enable Google authentication"
