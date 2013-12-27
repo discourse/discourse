@@ -146,6 +146,9 @@ Discourse.Topic = Discourse.Model.extend({
 
   toggleStatus: function(property) {
     this.toggleProperty(property);
+    if (property === 'closed' && this.get('closed')) {
+      this.set('details.auto_close_at', null);
+    }
     return Discourse.ajax(this.get('url') + "/status", {
       type: 'PUT',
       data: {status: property, enabled: this.get(property) ? 'true' : 'false' }
