@@ -67,13 +67,8 @@ class TopTopic < ActiveRecord::Base
   end
 
   def self.compute_top_score_for(period)
-    exec_sql("UPDATE top_topics
-              SET #{period}_score = log(
-                1 +
-                (#{period}_posts_count) *
-                (#{period}_likes_count / 2.0 + 1.0) *
-                (#{period}_views_count / 100.0 + 1.0)
-              )")
+    # log(views) + (posts * likes)
+    exec_sql("UPDATE top_topics SET #{period}_score = log(#{period}_views_count + 1) + (#{period}_posts_count * #{period}_likes_count)")
   end
 
   def self.start_of(period)
