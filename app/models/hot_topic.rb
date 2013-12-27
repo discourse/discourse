@@ -3,7 +3,7 @@ class HotTopic < ActiveRecord::Base
   belongs_to :topic
   belongs_to :category
 
-  # Here's the current idea behind the implementaiton of hot: random can produce good results!
+  # Here's the current idea behind the implementation of hot: random can produce good results!
   # Hot is currently made up of a random selection of high percentile topics. It includes mostly
   # new topics, but also some old ones for variety.
   def self.refresh!
