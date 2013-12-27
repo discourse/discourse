@@ -15,7 +15,7 @@ required:
   favicon_url:
     client: true
     default: '/images/default-favicon.ico'
-  apple_touch_icon_url: /images/default-apple-touch-icon.png'
+  apple_touch_icon_url: '/images/default-apple-touch-icon.png'
   company_full_name: 'My Unconfigured Forum Ltd.'
   company_short_name: 'Unconfigured Forum'
   company_domain: 'www.example.com'
