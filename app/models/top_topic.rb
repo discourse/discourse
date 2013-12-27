@@ -20,12 +20,17 @@ class TopTopic < ActiveRecord::Base
                 FROM topics
                 WHERE deleted_at IS NULL
                 AND visible
-                AND NOT archived")
-      # update all the counter caches
+                AND archetype <> :private_message
+                AND NOT archived",
+                private_message: Archetype::private_message)
+
       TopTopic.periods.each do |period|
+        # update all the counter caches
         TopTopic.sort_orders.each do |sort|
           TopTopic.send("update_#{sort}_count_for", period)
         end
+        # compute top score
+        TopTopic.compute_top_score_for(period)
       end
     end
   end
@@ -59,6 +64,16 @@ class TopTopic < ActiveRecord::Base
            GROUP BY topic_id"
 
     TopTopic.update_top_topics(period, "likes", sql)
+  end
+
+  def self.compute_top_score_for(period)
+    exec_sql("UPDATE top_topics
+              SET #{period}_score = log(
+                1 +
+                (#{period}_posts_count) *
+                (#{period}_likes_count / 2.0 + 1.0) *
+                (#{period}_views_count / 100.0 + 1.0)
+              )")
   end
 
   def self.start_of(period)

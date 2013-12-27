@@ -84,12 +84,11 @@ class TopicQuery
     create_list(:posted) {|l| l.where('tu.user_id IS NOT NULL') }
   end
 
-  def list_top(sort_order, period)
-    count = "#{period}_#{sort_order}_count"
+  def list_top_for(period)
+    score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
       topics.joins(:top_topic)
-            .where("top_topics.#{count} > 0")
-            .order("top_topics.#{count} DESC, topics.bumped_at DESC")
+            .order("top_topics.#{score} DESC, topics.bumped_at DESC")
     end
   end
 

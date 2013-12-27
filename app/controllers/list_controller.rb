@@ -73,8 +73,7 @@ class ListController < ApplicationController
   end
 
   def top
-    sort_order = params[:sort_order] || "posts"
-    top = generate_top_lists_by(sort_order)
+    top = generate_top_lists
 
     respond_to do |format|
       format.html do
@@ -179,7 +178,7 @@ class ListController < ApplicationController
     public_send(method, opts.merge(next_page_params(opts)))
   end
 
-  def generate_top_lists_by(sort_order)
+  def generate_top_lists
     top = {}
     topic_ids = Set.new
 
@@ -188,7 +187,7 @@ class ListController < ApplicationController
         per_page: SiteSetting.topics_per_period_in_summary,
         except_topic_ids: topic_ids.to_a
       }
-      list = TopicQuery.new(current_user, options).list_top(sort_order, period)
+      list = TopicQuery.new(current_user, options).list_top_for(period)
       topic_ids.merge(list.topic_ids)
       top[period] = list
     end
