@@ -63,7 +63,7 @@ module Oneboxer
         doc = Nokogiri::HTML(page_html)
 
         if whitelist_entry.allows_oembed?
-          # See if if it has an oembed thing we can use
+          # See if it has an oembed thing we can use
           (doc/"link[@type='application/json+oembed']").each do |oembed|
             return OembedOnebox.new(oembed[:href]).onebox
           end

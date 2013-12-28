@@ -287,7 +287,7 @@ class PostCreator
   def enqueue_jobs
     if @post && !@post.errors.present?
       # We need to enqueue jobs after the transaction. Otherwise they might begin before the data has
-      # been comitted.
+      # been committed.
       topic_id = @opts[:topic_id] || @topic.try(:id)
       Jobs.enqueue(:feature_topic_users, topic_id: @topic.id) if topic_id.present?
       @post.trigger_post_process

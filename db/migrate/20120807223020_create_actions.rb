@@ -5,7 +5,7 @@ class CreateActions < ActiveRecord::Migration
       # I elected for multiple ids as opposed to using :as cause it makes the table
       # thinner, and the joining semantics much simpler (a simple multiple left join will do)
       #
-      # There is a notificiation table as well that covers much of this,
+      # There is a notification table as well that covers much of this,
       # but this table is wider and is intended for non-notifying actions as well
 
 

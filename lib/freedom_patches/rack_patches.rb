@@ -32,7 +32,7 @@ class Rack::ConditionalGet
     # anything shorter is invalid, this avoids exceptions for common cases
     # most common being the empty string
     if since && since.length >= 16
-      # NOTE: there is no trivial way to write this in a non execption way
+      # NOTE: there is no trivial way to write this in a non exeception way
       #   _rfc2822 returns a hash but is not that usable
       Time.rfc2822(since) rescue nil
     else

@@ -41,13 +41,13 @@ If you instead want to use apache2 to serve the static pages:
     # Next, we "create" a new apache2 module, passenger
     sudo vim /etc/apache2/mods-available/passenger.load
 
-    # Inside paste (change the user accodingly)
+    # Inside paste (change the user accordingly)
     LoadModule passenger_module /home/YOUR-USER/.rvm/gems/ruby-2.0.0-p0/gems/passenger-4.0.2/libout/apache2/mod_passenger.so
 
     # Now the passenger module configuration
     sudo vim /etc/apache2/mods-available/passenger.conf
 
-    # Inside, paste (change the user accodingly)
+    # Inside, paste (change the user accordingly)
     PassengerRoot /home/YOUR-USER/.rvm/gems/ruby-2.0.0-p0/gems/passenger-4.0.2
     PassengerDefaultRuby /home/YOUR-USER/.rvm/wrappers/ruby-2.0.0-p0/ruby
 
