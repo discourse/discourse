@@ -8,7 +8,6 @@
 #
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
-
 fr:
   js:
     number:
@@ -175,14 +174,23 @@ fr:
       '13': "Boîte de réception"
     categories:
       all: "toutes les catégories"
-      only_category: "seulement {{categoryName}}"
+      all_subcategories: "toutes les sous-catégories"
+      no_subcategory: "aucune sous-catégorie"
       category: "Catégorie"
-      posts: "Messages"
-      topics: "Liste des discussions"
+      posts: "Nouveaux Messages"
+      topics: "Nouvelles Discussions"
       latest: "Récentes"
       latest_by: "dernière discussion de"
       toggle_ordering: "modifier le mode du tri"
       subcategories: "Sous-catégories :"
+      topic_stats: "Le nombre de nouvelles discussions."
+      topic_stat_sentence:
+        one: "%{count} nouvelle discussion depuis %{unit}."
+        other: "%{count} nouvelles discussions depuis %{unit}."
+      post_stats: "Le nombre de nouveaux messages."
+      post_stat_sentence:
+        one: "%{count} nouveau message depuis %{unit}."
+        other: "%{count} nouveaux messages depuis %{unit}."
     user:
       said: "{{username}} a dit :"
       profile: "Profil"
@@ -246,7 +254,7 @@ fr:
         frequency: "Nous vous envoyons des mails contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
       name:
         title: "Nom"
-        instructions: "Votre nom complet (pas nécessairement unique). Utilisé aussi pour les recherches par @nom alternatives ; seulement affiché sur votre page utilisateur."
+        instructions: "La version longue de votre nom. Visible publiquement, et utilisée dans les mentions @nom."
         too_short: "Votre nom est trop court."
         ok: "Votre nom à l'air sympa !."
       username:
@@ -320,7 +328,9 @@ fr:
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
+        common: "Ce mot de passe est trop commun."
         ok: "Votre mot de passe a l'air bon."
+        instructions: "Doit être d'au moins %{count} caractères."
       ip_address:
         title: "Dernières adresses IP"
       avatar:
@@ -343,6 +353,7 @@ fr:
     month_desc: 'discussions postées dans les 30 derniers jours'
     week: 'semaine'
     week_desc: 'discussions postées dans les 7 derniers jours'
+    day: 'jour'
     first_post: Premier message
     mute: Désactiver
     unmute: Activer
@@ -415,7 +426,7 @@ fr:
       saving_draft_tip: "sauvegarde..."
       saved_draft_tip: "sauvegardé"
       saved_local_draft_tip: "sauvegardé en local"
-      similar_topics: "Votre message est similaire à..."
+      similar_topics: "Votre message est trop similaire à..."
       drafts_offline: "sauvegardé hors ligne"
       min_length:
         need_more_for_title: "{{n}} caractères restant pour le titre"
@@ -584,7 +595,7 @@ fr:
       read_more: "Vous voulez en lire plus? {{catLink}} or {{latestLink}}."
       read_more_MF: "Il y a { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}} "
       browse_all_categories: Voir toutes les catégories
-      view_latest_topics: voir les dernières discussions
+      view_latest_topics: voir les dernières discussions.
       suggest_create_topic: Pourquoi ne pas créer une nouvelle discussion ?
       read_position_reset: "Votre position de lecture à été remise à zéro."
       jump_reply_up: aller à des réponses précédentes
@@ -852,7 +863,7 @@ fr:
           previous: "Révision précédente"
           next: "Révision suivante"
           last: "Dernière révision"
-          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> (sur un de total de {{total}})"
+          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Afficher le rendu avec les ajouts et les retraits en ligne"
@@ -875,7 +886,7 @@ fr:
       general: 'Général'
       settings: 'Paramètres'
       delete: 'Supprimer la catégorie'
-      create: 'Créer la catégorie'
+      create: 'Créer une catégorie'
       save: 'Enregistrer la catégorie'
       creation_error: Il y a eu une erreur lors de la création de la catégorie.
       save_error: Il y a eu une erreur lors de la sauvegarde de la catégorie.
@@ -902,6 +913,7 @@ fr:
       add_permission: "AJouter une Permission"
       this_year: "cette année"
       position: "position"
+      default_position: "Position par défaut"
       parent: "Catégorie Parent"
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
@@ -983,6 +995,13 @@ fr:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "dernières discussions dans la catégorie {{categoryName}}"
+      top:
+        title: "Le meilleur"
+        help: "une sélection des meilleurs discussions"
+        this_year: "Cette année"
+        this_month: "Ce mois-ci"
+        this_week: "Cette semaine"
+        today: "Aujourd'hui"
     browser_update: 'Malheureusement, <a href="http://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour afficher ce forum Discourse</a>. Merci <a href="http://browsehappy.com">de mettre à jour votre navigateur</a>.'
     permission_types:
       full: "Créer / Répondre / Voir"
@@ -1275,6 +1294,7 @@ fr:
         approve_bulk_success: "Bravo! Tous les utlisateurs sélectionnés ont été approuvés et notifiés."
         time_read: "Temps de lecture"
         delete: "Supprimer Utilisateur"
+        delete_forbidden_because_staff: "Administrateurs et modérateurs ne peuvent pas être supprimés."
         delete_forbidden:
           one: "Cet utilisateur ne peut pas être supprimé s'il s'est inscrit il y a plus de %{count} jour, ou s'il a des messages. Supprimez tous ses messages avant de supprimer cet utilisateur."
           other: "Cet utilisateur ne peut pas être supprimé s'il s'est inscrit il y a plus de %{count} jours, ou s'il a des messages. Supprimez tous ses messages avant de supprimer cet utilisateur."
@@ -1307,6 +1327,7 @@ fr:
         reset: 'rétablir par défaut'
         none: 'rien'
         no_results: "Aucun résultat trouvé."
+        clear_filter: "Effacer"
         categories:
           all_results: 'Tout'
           required: 'Requis'
