@@ -9,6 +9,7 @@ describe GlobalSetting::FileProvider do
     f.write("a = 1000  # this is a comment\n")
     f.write("b = \"10 # = 00\"  # this is a # comment\n")
     f.write("c = \'10 # = 00\' # this is a # comment\n")
+    f.write("d =\n")
     f.close
 
     provider = GlobalSetting::FileProvider.from(f.path)
@@ -16,6 +17,8 @@ describe GlobalSetting::FileProvider do
     provider.lookup(:a,"").should == 1000
     provider.lookup(:b,"").should == "10 # = 00"
     provider.lookup(:c,"").should == "10 # = 00"
+    provider.lookup(:d,"bob").should == nil
+    provider.lookup(:e,"bob").should == "bob"
 
     f.unlink
   end
