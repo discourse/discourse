@@ -18,8 +18,12 @@ class IncomingLink < ActiveRecord::Base
     end
 
     if request.referer.present?
-      host = URI.parse(request.referer).host
-      referer = request.referer[0..999]
+      begin
+        host = URI.parse(request.referer).host
+        referer = request.referer[0..999]
+      rescue URI::InvalidURIError
+        # bad uri, skip
+      end
     end
 
     if host != request.host && (user_id || referer)
