@@ -14,10 +14,16 @@ module ::Kernel
   def rails4?
     !ENV["RAILS3"]
   end
+
+  def rails_master?
+    rails4? && ENV["RAILS_MASTER"]
+  end
 end
 
 if rails4?
-  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_rails4.lock")
+  rails_version = rails_master? ? 'rails_master' : 'rails4'
+
+  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_#{rails_version}.lock")
 
   # Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
   class Bundler::Dsl
@@ -39,9 +45,14 @@ end
 gem 'seed-fu-discourse', require: 'seed-fu'
 
 if rails4?
-  gem 'rails'
+  if rails_master?
+    gem 'rails', git: 'https://github.com/rails/rails.git'
+    gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
+  else
+    gem 'rails'
+    gem 'actionpack-action_caching'
+  end
   gem 'rails-observers'
-  gem 'actionpack-action_caching'
 else
   # we had pain with the 3.2.13 upgrade so monkey patch the security fix
   # next time around we hope to upgrade
