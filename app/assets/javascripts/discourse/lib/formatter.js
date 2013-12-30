@@ -6,6 +6,48 @@ Discourse.Formatter = (function(){
       relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
       shortDate, shortDateNoYear, tinyDateYear, breakUp;
 
+    /*
+  * memoize.js
+  * by @philogb and @addyosmani
+  * with further optimizations by @mathias
+  * and @DmitryBaranovsk
+  * perf tests: http://bit.ly/q3zpG3
+  * Released under an MIT license.
+  *
+  * modified with cap by Sam
+  */
+  var cappedMemoize = function ( fn, max ) {
+      fn.maxMemoize = max;
+      fn.memoizeLength = 0;
+
+      return function () {
+          var args = Array.prototype.slice.call(arguments),
+              hash = "",
+              i = args.length;
+          currentArg = null;
+          while (i--) {
+              currentArg = args[i];
+              hash += (currentArg === Object(currentArg)) ?
+              JSON.stringify(currentArg) : currentArg;
+              if(!fn.memoize) {
+                fn.memoize = {};
+              }
+          }
+          if (hash in fn.memoize) {
+            return fn.memoize[hash];
+          } else {
+            fn.memoizeLength++;
+            if(fn.memoizeLength > max) {
+              fn.memoizeLength = 0;
+              fn.memoize = {};
+            }
+            var result = fn.apply(this, args);
+            fn.memoize[hash] = result;
+            return result;
+          }
+      };
+  };
+
   breakUp = function(str, hint){
     var rval = [];
     var prev = str[0];
@@ -48,6 +90,8 @@ Discourse.Formatter = (function(){
     return rval.join("");
 
   };
+
+  breakUp = cappedMemoize(breakUp, 100);
 
   shortDate = function(date){
     return moment(date).shortDate();
@@ -240,6 +284,7 @@ Discourse.Formatter = (function(){
     updateRelativeAge: updateRelativeAge,
     toTitleCase: toTitleCase,
     shortDate: shortDate,
-    breakUp: breakUp
+    breakUp: breakUp,
+    cappedMemoize: cappedMemoize
   };
 })();
