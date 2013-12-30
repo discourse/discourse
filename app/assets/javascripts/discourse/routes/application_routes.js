@@ -32,8 +32,10 @@ Discourse.Route.buildRoutes(function() {
       router.route(filter + "Category", { path: "/category/:parentSlug/:slug/l/" + filter + "/more" });
     });
 
-    // the homepage is the first item of the 'top_menu' site setting
-    var homepage = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
+    // homepage
+    var homepage = Discourse.User.current() ?
+                   Discourse.User.currentProp("homepage") :
+                   Discourse.Utilities.defaultHomepage();
     this.route(homepage, { path: '/' });
 
     // categories page

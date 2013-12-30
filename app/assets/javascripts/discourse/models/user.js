@@ -328,7 +328,22 @@ Discourse.User = Discourse.Model.extend({
       type: 'POST',
       data: {email: email}
     });
-  }
+  },
+
+  /**
+    Homepage of the user
+
+    @property homepage
+    @type {String}
+  **/
+  homepage: function() {
+    // top is the default for new users
+    if (Discourse.SiteSettings.top_menu.indexOf("top") >= 0 &&
+        this.get("trust_level") === 0) {
+      return "top";
+    }
+    return Discourse.Utilities.defaultHomepage();
+  }.property("trust_level")
 
 });
 

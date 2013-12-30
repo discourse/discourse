@@ -342,6 +342,11 @@ Discourse.Utilities = {
         return (arg === '' ? null : arg);
       }
     }
+  },
+
+  defaultHomepage: function() {
+    // the homepage is the first item of the 'top_menu' site setting
+    return Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
   }
 
 };
