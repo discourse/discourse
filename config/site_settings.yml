@@ -225,6 +225,9 @@ email:
   pop3s_polling_port: 995
   pop3s_polling_username: ''
   pop3s_polling_password: ''
+  enable_watch_new_topics:
+    default: false
+    client: true
 
 files:
   max_image_size_kb:

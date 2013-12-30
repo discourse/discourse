@@ -24,7 +24,7 @@ class UserSerializer < BasicUserSerializer
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
 
   def self.private_attributes(*attrs)
-    attributes *attrs
+    attributes(*attrs)
     attrs.each do |attr|
       define_method "include_#{attr}?" do
         can_edit
@@ -51,6 +51,7 @@ class UserSerializer < BasicUserSerializer
                      :email_direct,
                      :email_always,
                      :digest_after_days,
+                     :watch_new_topics,
                      :auto_track_topics_after_msecs,
                      :new_topic_duration_minutes,
                      :external_links_in_new_tab,

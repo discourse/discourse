@@ -30,7 +30,8 @@ class UserUpdater
       :email_private_messages,
       :external_links_in_new_tab,
       :enable_quoting,
-      :dynamic_favicon
+      :dynamic_favicon,
+      :watch_new_topics
     ].each do |attribute|
       if attributes[attribute].present?
         user.send("#{attribute.to_s}=", attributes[attribute] == 'true')

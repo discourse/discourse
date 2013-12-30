@@ -20,7 +20,7 @@ class TopicUser < ActiveRecord::Base
     end
 
     def notification_reasons
-      @notification_reasons ||= Enum.new(:created_topic, :user_changed, :user_interacted, :created_post)
+      @notification_reasons ||= Enum.new(:created_topic, :user_changed, :user_interacted, :created_post, :auto_watch)
     end
 
     def auto_track(user_id, topic_id, reason)
@@ -62,6 +62,24 @@ class TopicUser < ActiveRecord::Base
       topic = topic.id if Topic === topic
       user = user.id if User === user
       TopicUser.where('topic_id = ? and user_id = ?', topic, user).first
+    end
+
+    def auto_watch_new_topic(topic_id)
+      # Can not afford to slow down creation of topics when a pile of users are watching new topics, reverting to SQL for max perf here
+      sql = <<SQL
+      INSERT INTO topic_users(user_id, topic_id, notification_level, notifications_reason_id)
+      SELECT id, :topic_id, :level, :reason
+      FROM users
+      WHERE watch_new_topics AND
+            NOT EXISTS(SELECT 1 FROM topic_users WHERE topic_id = :topic_id AND user_id = users.id)
+SQL
+
+      exec_sql(
+          sql,
+                    topic_id: topic_id,
+                    level: notification_levels[:watching],
+                    reason: notification_reasons[:auto_watch]
+              )
     end
 
     # Change attributes for a user (creates a record when none is present). First it tries an update

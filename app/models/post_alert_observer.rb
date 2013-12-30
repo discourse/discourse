@@ -123,17 +123,16 @@ class PostAlertObserver < ActiveRecord::Observer
       reply_to_user = post.reply_notification_target
       notify_users(reply_to_user, :replied, post)
 
-      # find all users watching
-      if post.post_number > 1
-        exclude_user_ids = []
-        exclude_user_ids << post.user_id
-        exclude_user_ids << reply_to_user.id if reply_to_user.present?
-        exclude_user_ids << extract_mentioned_users(post).map(&:id)
-        exclude_user_ids << extract_quoted_users(post).map(&:id)
-        exclude_user_ids.flatten!
-        TopicUser.where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching]).includes(:user).each do |tu|
+      exclude_user_ids = []
+      exclude_user_ids << post.user_id
+      exclude_user_ids << reply_to_user.id if reply_to_user.present?
+      exclude_user_ids << extract_mentioned_users(post).map(&:id)
+      exclude_user_ids << extract_quoted_users(post).map(&:id)
+      exclude_user_ids.flatten!
+      TopicUser
+        .where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching])
+        .includes(:user).each do |tu|
           create_notification(tu.user, Notification.types[:posted], post) unless exclude_user_ids.include?(tu.user_id)
         end
-      end
     end
 end

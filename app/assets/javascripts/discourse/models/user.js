@@ -180,6 +180,7 @@ Discourse.User = Discourse.Model.extend({
                                'digest_after_days',
                                'new_topic_duration_minutes',
                                'external_links_in_new_tab',
+                               'watch_new_topics',
                                'enable_quoting'),
       type: 'PUT'
     }).then(function(data) {

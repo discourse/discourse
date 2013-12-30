@@ -227,6 +227,7 @@ en:
       deleted: "(deleted)"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
+      watch_new_topics: "Automatically watch all new topics posted on the forum"
 
       messages:
         all: "All"
@@ -693,6 +694,7 @@ en:
       notifications:
         title: ''
         reasons:
+          "3_5": 'You will receive notifications because you started watching this topic automatically.'
           "3_2": 'You will receive notifications because you are watching this topic.'
           "3_1": 'You will receive notifications because you created this topic.'
           "3": 'You will receive notifications because you are watching this topic.'

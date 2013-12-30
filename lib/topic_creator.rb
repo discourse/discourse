@@ -32,6 +32,7 @@ class TopicCreator
     unless @opts[:auto_track] == false
       @topic.notifier.watch_topic!(@topic.user_id)
     end
+    TopicUser.auto_watch_new_topic(@topic.id)
   end
 
   def setup

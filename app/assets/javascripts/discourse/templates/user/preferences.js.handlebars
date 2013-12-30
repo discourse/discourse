@@ -109,6 +109,15 @@
         {{combobox valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
       </div>
 
+      {{#if Discourse.SiteSettings.enable_watch_new_topics}}
+      <div class="controls">
+        <label>
+          {{view Ember.Checkbox checkedBinding="watch_new_topics"}}
+          {{i18n user.watch_new_topics}}
+        </label>
+      </div>
+      {{/if}}
+
       <div class="controls">
         <label>{{view Ember.Checkbox checkedBinding="external_links_in_new_tab"}}
         {{i18n user.external_links_in_new_tab}}</label>

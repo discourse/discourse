@@ -728,6 +728,7 @@ en:
     pop3s_polling_host: "The host to poll for email via POP3S"
     pop3s_polling_username: "The username for the POP3S account to poll for email"
     pop3s_polling_password: "The password for the POP3S account to poll for email"
+    enable_watch_new_topics: "Allow users to watch all new topics (optionally) via a user preference"
 
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 
@@ -1096,7 +1097,7 @@ en:
         Please visit this link to view the topic: %{base_url}%{url}
 
     user_replied:
-      subject_template: "[%{site_name}] new reply to your post in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1106,7 +1107,7 @@ en:
         %{respond_instructions}
 
     user_quoted:
-      subject_template: "[%{site_name}] %{username} quoted you in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1116,7 +1117,7 @@ en:
         %{respond_instructions}
 
     user_mentioned:
-      subject_template: "[%{site_name}] %{username} mentioned you in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1126,7 +1127,7 @@ en:
         %{respond_instructions}
 
     user_posted:
-      subject_template: "[%{site_name}] %{subject_prefix}new post in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 
