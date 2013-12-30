@@ -50139,6 +50139,25 @@ assert.AssertionError = function AssertionError(options) {
   if (Error.captureStackTrace) {
     Error.captureStackTrace(this, stackStartFunction);
   }
+  else {
+    // non v8 browsers so we can have a stacktrace
+    var err = new Error();
+    if (err.stack) {
+      var out = err.stack;
+
+      // try to strip useless frames
+      var fn_name = stackStartFunction.name;
+      var idx = out.indexOf('\n' + fn_name);
+      if (idx >= 0) {
+        // once we have located the function frame
+        // we need to strip out everything before it (and its line)
+        var next_line = out.indexOf('\n', idx + 1);
+        out = out.substring(next_line + 1);
+      }
+
+      this.stack = out;
+    }
+  }
 };
 
 // assert.AssertionError instanceof Error
@@ -52712,7 +52731,7 @@ function assert(expression) {
 
 }).call(this);
 
-},{}],"nr+AlQ":[function(require,module,exports){
+},{}],"FcDwKk":[function(require,module,exports){
 /*!
  * JSHint, by JSHint Community.
  *
@@ -56079,7 +56098,8 @@ var JSHINT = (function () {
                 lone = true;
             }
             for (var t in tokens) {
-                if (t = tokens[t]) {
+                if (tokens.hasOwnProperty(t)) {
+                    t = tokens[t];
                     if (funct[t.id] === "const") {
                         warning("E011", null, t.id);
                     }
@@ -56152,7 +56172,8 @@ var JSHINT = (function () {
                 lone = true;
             }
             for (var t in tokens) {
-                if (t = tokens[t]) {
+                if (tokens.hasOwnProperty(t)) {
+                    t = tokens[t];
                     if (state.option.inESNext() && funct[t.id] === "const") {
                         warning("E011", null, t.id);
                     }
@@ -56234,7 +56255,8 @@ var JSHINT = (function () {
                 lone = true;
             }
             for (var t in tokens) {
-                if (t = tokens[t]) {
+                if (tokens.hasOwnProperty(t)) {
+                    t = tokens[t];
                     if (state.option.inESNext() && funct[t.id] === "const") {
                         warning("E011", null, t.id);
                     }
@@ -57847,7 +57869,7 @@ if (typeof exports === "object" && exports) {
 }
 
 },{"./lex.js":14,"./messages.js":15,"./reg.js":16,"./state.js":17,"./style.js":18,"./vars.js":19,"console-browserify":10,"events":5,"underscore":11}],"jshint":[function(require,module,exports){
-module.exports=require('nr+AlQ');
+module.exports=require('FcDwKk');
 },{}],14:[function(require,module,exports){
 /*
  * Lexical analysis and token construction.
@@ -60500,7 +60522,7 @@ exports.yui = {
 };
 
 
-},{}]},{},["nr+AlQ"])
+},{}]},{},["FcDwKk"])
 JSHINT = require('jshint').JSHINT;
 if (typeof exports === 'object' && exports) exports.JSHINT = JSHINT;
 }());
