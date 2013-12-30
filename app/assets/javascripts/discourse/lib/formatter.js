@@ -1,5 +1,3 @@
-/*jshint onecase:true */
-
 Discourse.Formatter = (function(){
 
   var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,

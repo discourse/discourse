@@ -1,4 +1,4 @@
-/*global Markdown:true assetPath:true */
+/*global assetPath:true */
 
 /**
   This view handles rendering of the composer

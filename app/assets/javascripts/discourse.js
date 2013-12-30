@@ -1,5 +1,3 @@
-/*global Modernizr:true*/
-/*global assetPath:true*/
 /*global Favcount:true*/
 
 /**
@@ -8,7 +6,7 @@
   @class Discourse
   @extends Ember.Application
 **/
-Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
+window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
 
   // Helps with integration tests
