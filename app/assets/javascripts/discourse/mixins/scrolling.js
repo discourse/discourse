@@ -20,7 +20,7 @@ Discourse.Scrolling = Em.Mixin.create({
     opts = opts || {debounce: 100};
 
     var self = this,
-        onScrollMethod = function(e) {
+        onScrollMethod = function() {
           return Em.run.scheduleOnce('afterRender', self, 'scrolled');
         };
 

@@ -31,7 +31,7 @@ Discourse.AdminUser = Discourse.User.extend({
   **/
   revokeApiKey: function() {
     var self = this;
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/revoke_api_key", {type: 'DELETE'}).then(function (result) {
+    return Discourse.ajax("/admin/users/" + this.get('id') + "/revoke_api_key", {type: 'DELETE'}).then(function () {
       self.set('api_key', null);
     });
   },
@@ -51,7 +51,7 @@ Discourse.AdminUser = Discourse.User.extend({
       "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("admin.user.delete_all_posts"),
       "class": "btn btn-danger",
       "callback": function() {
-        Discourse.ajax("/admin/users/" + (user.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
+        Discourse.ajax("/admin/users/" + (user.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(){
           user.set('post_count', 0);
         });
       }
@@ -274,7 +274,7 @@ Discourse.AdminUser = Discourse.User.extend({
             user.mergeAttributes(data.user);
           }
         }
-      }, function(jqXHR, status, error) {
+      }, function() {
         Discourse.AdminUser.find( user.get('username') ).then(function(u){ user.mergeAttributes(u); });
         bootbox.alert(I18n.t("admin.user.delete_failed"));
       });
@@ -325,7 +325,7 @@ Discourse.AdminUser = Discourse.User.extend({
           } else {
             bootbox.alert(I18n.t("admin.user.delete_failed"));
           }
-        }, function(jqXHR, status, error) {
+        }, function() {
           bootbox.alert(I18n.t("admin.user.delete_failed"));
         });
       }

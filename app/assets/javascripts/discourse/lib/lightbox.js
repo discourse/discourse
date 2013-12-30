@@ -15,8 +15,7 @@ Discourse.Lightbox = {
 
           callbacks: {
             open: function() {
-              var self = this,
-                  wrap = this.wrap,
+              var wrap = this.wrap,
                   img = this.currItem.img,
                   maxHeight = img.css("max-height");
 

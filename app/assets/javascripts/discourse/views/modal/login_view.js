@@ -41,7 +41,7 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     });
   },
 
-  didInsertElement: function(e) {
+  didInsertElement: function() {
 
     this._super();
 

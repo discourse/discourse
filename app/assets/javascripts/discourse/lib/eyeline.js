@@ -19,7 +19,6 @@ Discourse.Eyeline.prototype.update = function() {
   var docViewTop = $(window).scrollTop(),
       windowHeight = $(window).height(),
       docViewBottom = docViewTop + windowHeight,
-      documentHeight = $(document).height(),
       $elements = $(this.selector),
       atBottom = false,
       foundElement = false,

@@ -61,7 +61,7 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
           $hidden_login_form.submit();
         }
 
-      }, function(result) {
+      }, function() {
         // Failed to login
         loginController.flash(I18n.t('login.error'), 'error');
         loginController.set('loggingIn', false);

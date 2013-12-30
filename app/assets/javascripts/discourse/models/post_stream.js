@@ -306,9 +306,7 @@ Discourse.PostStream = Em.Object.extend({
   fillGapAfter: function(post, gap) {
     var postId = post.get('id'),
         stream = this.get('stream'),
-        idx = stream.indexOf(postId),
-        currentPosts = this.get('posts'),
-        self = this;
+        idx = stream.indexOf(postId);
 
     if (idx !== -1) {
       stream.pushObjects(gap);
@@ -674,8 +672,7 @@ Discourse.PostStream = Em.Object.extend({
 
     var url = "/t/" + this.get('topic.id') + "/posts.json",
         data = { post_ids: postIds },
-        postStream = this,
-        result = Em.A();
+        postStream = this;
 
     return Discourse.ajax(url, {data: data}).then(function(result) {
       var posts = Em.get(result, "post_stream.posts");

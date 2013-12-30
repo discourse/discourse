@@ -91,8 +91,7 @@ Discourse.Post = Discourse.Model.extend({
   }.property('read', 'topic.last_read_post_number', 'bookmarked'),
 
   bookmarkedChanged: function() {
-    var post = this;
-    Discourse.ajax("/posts/" + (this.get('id')) + "/bookmark", {
+    Discourse.ajax("/posts/" + this.get('id') + "/bookmark", {
       type: 'PUT',
       data: {
         bookmarked: this.get('bookmarked') ? true : false

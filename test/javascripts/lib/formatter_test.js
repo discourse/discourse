@@ -28,10 +28,6 @@ var formatDays = function(days) {
   return formatHours(days * 24);
 };
 
-var formatMonths = function(months) {
-  return formatDays(months * 30);
-};
-
 var shortDate = function(days){
   return moment().subtract('days', days).format('D MMM');
 };

@@ -151,7 +151,7 @@ Discourse.Formatter = (function(){
   };
 
 
-  relativeAgeTiny = function(date, options){
+  relativeAgeTiny = function(date){
     var format = "tiny";
     var distance = Math.round((new Date() - date) / 1000);
     var distanceInMinutes = Math.round(distance / 60.0);
@@ -226,7 +226,7 @@ Discourse.Formatter = (function(){
   };
 
   relativeAgeMedium = function(date, options){
-    var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo, val;
+    var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo;
     var wrapInSpan = options.wrapInSpan === false ? false : true;
 
     leaveAgo = options.leaveAgo;

@@ -9,7 +9,7 @@ Discourse.KeyValueStore = {
   initialized: false,
   context: "",
 
-  init: function(ctx, messageBus) {
+  init: function(ctx) {
     this.initialized = true;
     this.context = ctx;
   },

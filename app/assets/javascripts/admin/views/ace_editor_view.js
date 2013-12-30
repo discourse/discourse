@@ -42,7 +42,7 @@ Discourse.AceEditorView = Discourse.View.extend({
       aceEditorView.editor.setTheme("ace/theme/chrome");
       aceEditorView.editor.setShowPrintMargin(false);
       aceEditorView.editor.getSession().setMode("ace/mode/" + (aceEditorView.get('mode')));
-      aceEditorView.editor.on("change", function(e) {
+      aceEditorView.editor.on("change", function() {
         aceEditorView.skipContentChangeEvent = true;
         aceEditorView.set('content', aceEditorView.editor.getSession().getValue());
         aceEditorView.skipContentChangeEvent = false;

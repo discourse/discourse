@@ -1,5 +1,3 @@
-/*global sanitizeHtml:true */
-
 module("Discourse.Markdown", {
   setup: function() {
     Discourse.SiteSettings.traditional_markdown_linebreaks = false;
@@ -173,7 +171,7 @@ test("Quotes", function() {
                 "handles quotes properly");
 
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",
-                { topicId: 2, lookupAvatar: function(name) { } },
+                { topicId: 2, lookupAvatar: function() { } },
                 "<p>1</p>\n\n<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob said:" +
                 "</div><blockquote><p>my quote</p></blockquote></aside></p>\n\n<p>2</p>",
                 "includes no avatar if none is found");

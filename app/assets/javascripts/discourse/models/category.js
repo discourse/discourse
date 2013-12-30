@@ -51,7 +51,7 @@ Discourse.Category = Discourse.Model.extend({
     return this.get('topic_count') > Discourse.SiteSettings.category_featured_topics;
   }.property('topic_count'),
 
-  save: function(args) {
+  save: function() {
     var url = "/categories";
     if (this.get('id')) {
       url = "/categories/" + (this.get('id'));
@@ -81,7 +81,7 @@ Discourse.Category = Discourse.Model.extend({
     return rval;
   }.property("permissions"),
 
-  destroy: function(callback) {
+  destroy: function() {
     return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
   },
 

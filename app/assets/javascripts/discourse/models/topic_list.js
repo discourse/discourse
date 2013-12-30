@@ -169,8 +169,7 @@ Discourse.TopicList.reopenClass({
   topicsFrom: function(result) {
     // Stitch together our side loaded data
     var categories = Discourse.Category.list(),
-        users = this.extractByKey(result.users, Discourse.User),
-        topics = Em.A();
+        users = this.extractByKey(result.users, Discourse.User);
 
     return result.topic_list.topics.map(function (t) {
       t.category = categories.findBy('id', t.category_id);

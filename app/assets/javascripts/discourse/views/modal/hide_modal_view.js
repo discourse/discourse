@@ -9,7 +9,7 @@
 Discourse.HideModalView = Discourse.ModalBodyView.extend({
 
   // No rendering!
-  render: function(buffer) { },
+  render: function() { },
 
   didInsertElement: function() {
     $('#discourse-modal').modal('hide');

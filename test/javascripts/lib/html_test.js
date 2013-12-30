@@ -1,7 +1,5 @@
 module("Discourse.HTML");
 
-var html = Discourse.HTML;
-
 test("categoryLink without a category", function() {
   blank(Discourse.HTML.categoryLink(), "it returns no HTML");
 });

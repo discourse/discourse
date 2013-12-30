@@ -88,7 +88,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     });
   }.observes('model.composeState'),
 
-  keyUp: function(e) {
+  keyUp: function() {
     var controller = this.get('controller');
     controller.checkReplyLength();
 
@@ -337,7 +337,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     return result;
   },
 
-  childDidInsertElement: function(e) {
+  childDidInsertElement: function() {
     return this.initEditor();
   },
 

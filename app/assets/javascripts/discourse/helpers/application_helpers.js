@@ -5,8 +5,7 @@
   @for Handlebars
 **/
 Handlebars.registerHelper('breakUp', function(property, hint, options) {
-  var prop, result, tokens;
-  prop = Ember.Handlebars.get(this, property, options);
+  var prop = Ember.Handlebars.get(this, property, options);
   if (!prop) return "";
   hint = Ember.Handlebars.get(this, hint, options);
 
@@ -328,7 +327,7 @@ Handlebars.registerHelper('date', function(property, options) {
   @method customHTML
   @for Handlebars
 **/
-Handlebars.registerHelper('customHTML', function(property, options) {
+Handlebars.registerHelper('customHTML', function(property) {
   var html = PreloadStore.get("customHTML");
 
   if (html && html[property] && html[property].length) {
