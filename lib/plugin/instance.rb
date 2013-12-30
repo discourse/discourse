@@ -204,7 +204,10 @@ class Plugin::Instance
     spec_path = gems_path + "/specifications"
     spec_file = spec_path + "/#{name}-#{version}.gemspec"
     unless File.exists? spec_file
-      command = "gem install #{name} -v #{version} -i #{gems_path} --no-rdoc --no-ri"
+      command = "gem install #{name} -v #{version} -i #{gems_path} --no-document"
+      if opts[:source]
+        command << " --source #{opts[:source]}"
+      end
       puts command
       puts `#{command}`
     end
