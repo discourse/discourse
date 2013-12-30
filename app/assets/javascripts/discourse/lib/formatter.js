@@ -24,10 +24,10 @@ Discourse.Formatter = (function(){
           var args = Array.prototype.slice.call(arguments),
               hash = "",
               i = args.length;
-          currentArg = null;
+          var currentArg = null;
           while (i--) {
               currentArg = args[i];
-              hash += (currentArg === Object(currentArg)) ?
+              hash += (currentArg === new Object(currentArg)) ?
               JSON.stringify(currentArg) : currentArg;
               if(!fn.memoize) {
                 fn.memoize = {};
