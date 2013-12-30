@@ -94,10 +94,10 @@ module Email
     end
 
     def discourse_email_parser
-      lines = @body.lines.to_a
+      lines = @body.scrub.lines.to_a
       range_end = 0
 
-      email_year = lines.each_with_index do |l, idx|
+      lines.each_with_index do |l, idx|
         break if l =~ /\A\s*\-{3,80}\s*\z/ ||
                  l =~ Regexp.new("\\A\\s*" + I18n.t('user_notifications.previous_discussion') + "\\s*\\Z") ||
                  (l =~ /via #{SiteSetting.title}(.*)\:$/) ||
