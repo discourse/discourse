@@ -27,25 +27,31 @@ test("isAllowedToUploadAFile", function() {
 });
 
 test("homepage when top is disabled", function() {
-  var newUser = Discourse.User.create({ trust_level: 0 }),
-      oldUser = Discourse.User.create({ trust_level: 1 }),
+  var newUser = Discourse.User.create({ trust_level: 0, last_seen_at: moment() }),
+      oldUser = Discourse.User.create({ trust_level: 1, last_seen_at: moment() }),
       defaultHomepage = Discourse.Utilities.defaultHomepage();
 
   Discourse.SiteSettings.top_menu = "latest";
 
-  ok(newUser.get("homepage") === defaultHomepage, "new user's homepage is default when top is disabled");
-  ok(oldUser.get("homepage") === defaultHomepage, "old user's homepage is default when top is disabled");
+  equal(newUser.get("homepage"), defaultHomepage, "new user's homepage is default when top is disabled");
+  equal(oldUser.get("homepage"), defaultHomepage, "old user's homepage is default when top is disabled");
+
+  oldUser.set("last_seen_at", moment().subtract('month', 2));
+  equal(oldUser.get("homepage"), defaultHomepage, "long-time-no-see old user's homepage is default when top is disabled");
 });
 
 test("homepage when top is enabled", function() {
-  var newUser = Discourse.User.create({ trust_level: 0 }),
-      oldUser = Discourse.User.create({ trust_level: 1 }),
+  var newUser = Discourse.User.create({ trust_level: 0, last_seen_at: moment() }),
+      oldUser = Discourse.User.create({ trust_level: 1, last_seen_at: moment() }),
       defaultHomepage = Discourse.Utilities.defaultHomepage();
 
   Discourse.SiteSettings.top_menu = "latest|top";
 
-  ok(newUser.get("homepage") === "top", "new user's homepage is top when top is enabled");
-  ok(oldUser.get("homepage") === defaultHomepage, "old user's homepage is default when top is enabled");
+  equal(newUser.get("homepage"), "top", "new user's homepage is top when top is enabled");
+  equal(oldUser.get("homepage"), defaultHomepage, "old user's homepage is default when top is enabled");
+
+  oldUser.set("last_seen_at", moment().subtract('month', 2));
+  equal(oldUser.get("homepage"), "top", "long-time-no-see old user's homepage is top when top is enabled");
 });
 
 

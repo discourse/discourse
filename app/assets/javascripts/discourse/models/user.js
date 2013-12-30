@@ -330,6 +330,10 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
+  hasBeenSeenInTheLastMonth: function() {
+    return moment().diff(moment(this.get('last_seen_at')), 'month', true) < 1.0;
+  }.property("last_seen_at"),
+
   /**
     Homepage of the user
 
@@ -337,13 +341,16 @@ Discourse.User = Discourse.Model.extend({
     @type {String}
   **/
   homepage: function() {
-    // top is the default for new users
-    if (Discourse.SiteSettings.top_menu.indexOf("top") >= 0 &&
-        this.get("trust_level") === 0) {
-      return "top";
+    // top is the default for:
+    //   - new users
+    //   - long-time-no-see user (ie. > 1 month)
+    if (Discourse.SiteSettings.top_menu.indexOf("top") >= 0) {
+      if (this.get("trust_level") === 0 || !this.get("hasBeenSeenInTheLastMonth")) {
+        return "top";
+      }
     }
     return Discourse.Utilities.defaultHomepage();
-  }.property("trust_level")
+  }.property("trust_level", "hasBeenSeenInTheLastMonth")
 
 });
 
