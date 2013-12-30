@@ -192,13 +192,14 @@ test("updateRelativeAge", function(){
 
 test("breakUp", function(){
 
-  var b = function(s){ return Discourse.Formatter.breakUp(s); };
+  var b = function(s,hint){ return Discourse.Formatter.breakUp(s,hint); };
 
   equal(b("hello"), "hello");
   equal(b("helloworld"), "helloworld");
-  equal(b("HeMans11"), "He<wbr>Mans<wbr>11");
-  equal(b("he_man"), "he_<wbr>man");
-  equal(b("he11111"), "he<wbr>11111");
-  equal(b("HRCBob"), "HRC<wbr>Bob");
+  equal(b("HeMans11"), "He<wbr>&#8203;Mans<wbr>&#8203;11");
+  equal(b("he_man"), "he_<wbr>&#8203;man");
+  equal(b("he11111"), "he<wbr>&#8203;11111");
+  equal(b("HRCBob"), "HRC<wbr>&#8203;Bob");
+  equal(b("bobmarleytoo","Bob Marley Too"), "bob<wbr>&#8203;marley<wbr>&#8203;too");
 
 });

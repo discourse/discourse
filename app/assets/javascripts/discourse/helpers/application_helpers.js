@@ -4,12 +4,13 @@
   @method breakUp
   @for Handlebars
 **/
-Handlebars.registerHelper('breakUp', function(property, options) {
+Handlebars.registerHelper('breakUp', function(property, hint, options) {
   var prop, result, tokens;
   prop = Ember.Handlebars.get(this, property, options);
   if (!prop) return "";
+  hint = Ember.Handlebars.get(this, hint, options);
 
-  return Discourse.Formatter.breakUp(prop);
+  return Discourse.Formatter.breakUp(prop, hint);
 });
 
 /**
