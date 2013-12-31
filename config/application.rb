@@ -152,7 +152,9 @@ module Discourse
     # This is not really required per-se, but we do not want to support
     # XML params, we see errors in our logs about malformed XML and there
     # absolutly no spot in our app were we use XML as opposed to JSON endpoints
-    ActionDispatch::ParamsParser::DEFAULT_PARSERS.delete(Mime::XML)
+    #
+    # Rails 4 no longer includes this by default
+    ActionDispatch::ParamsParser::DEFAULT_PARSERS.delete(Mime::XML) unless rails4?
 
     if ENV['RBTRACE'] == "1"
       require 'rbtrace'
