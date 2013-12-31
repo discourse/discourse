@@ -93,7 +93,6 @@ class Plugin::Instance
     @javascripts << js
   end
 
-
   def register_asset(file,opts=nil)
     full_path = File.dirname(path) << "/assets/" << file
     assets << full_path
@@ -154,10 +153,12 @@ class Plugin::Instance
     end
     unless assets.blank?
       assets.each do |asset|
-        if asset =~ /\.js$|.js.erb$/
+        if asset =~ /\.js$|\.js\.erb$/
           DiscoursePluginRegistry.javascripts << asset
         elsif asset =~ /\.css$|\.scss$/
           DiscoursePluginRegistry.stylesheets << asset
+        elsif asset =~ /\.js\.handlebars$$/
+          DiscoursePluginRegistry.handlebars << asset
         end
       end
 

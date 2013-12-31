@@ -7,6 +7,7 @@ class DiscoursePluginRegistry
     attr_accessor :javascripts
     attr_accessor :server_side_javascripts
     attr_accessor :stylesheets
+    attr_accessor :handlebars
 
     # Default accessor values
     def javascripts
@@ -19,6 +20,10 @@ class DiscoursePluginRegistry
 
     def stylesheets
       @stylesheets ||= Set.new
+    end
+
+    def handlebars
+      @handlebars ||= Set.new
     end
   end
 
@@ -48,10 +53,15 @@ class DiscoursePluginRegistry
     self.class.stylesheets
   end
 
+  def handlebars
+    self.class.handlebars
+  end
+
   def self.clear
     self.javascripts = nil
     self.server_side_javascripts = nil
     self.stylesheets = nil
+    self.handlebars = nil
   end
 
   def self.setup(plugin_class)

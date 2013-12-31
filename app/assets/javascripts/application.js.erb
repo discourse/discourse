@@ -1,8 +1,9 @@
 <%
+
 require_asset ("./main_include.js")
 
-# Include plugin javascripts
-DiscoursePluginRegistry.javascripts.each do |js|
-  require_asset(js)
-end
+# Include plugin javascripts/handlebars templates
+DiscoursePluginRegistry.javascripts.each { |js| require_asset(js) }
+DiscoursePluginRegistry.handlebars.each { |hb| require_asset(hb) }
+
 %>
