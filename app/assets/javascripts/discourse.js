@@ -28,6 +28,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
   titleChanged: function() {
     var title = "";
+
     if (this.get('title')) {
       title += "" + (this.get('title')) + " - ";
     }
