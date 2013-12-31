@@ -11,6 +11,7 @@ class PostRevisor
   def revise!(user, new_raw, opts = {})
     @user, @new_raw, @opts = user, new_raw, opts
     return false if not should_revise?
+
     @post.acting_user = @user
     revise_post
     update_category_description
@@ -82,8 +83,7 @@ class PostRevisor
     end
 
     @post.extract_quoted_post_numbers
-    @post.save(validate: !@opts[:skip_validations])
-
+    @post.save
     @post.save_reply_relationships
   end
 

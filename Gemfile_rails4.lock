@@ -63,7 +63,6 @@ GEM
     certified (0.1.1)
     coderay (1.1.0)
     connection_pool (1.2.0)
-    curb (0.8.5)
     daemons (1.1.9)
     debug_inspector (0.0.2)
     diff-lcs (1.2.4)
@@ -101,10 +100,6 @@ GEM
       rake-compiler
     fast_xs (0.8.0)
     fastimage (1.5.2)
-    feedzirra (0.5.0)
-      curb (~> 0.8.1)
-      loofah (~> 1.2.1)
-      sax-machine (~> 0.2.1)
     ffi (1.9.3)
     flamegraph (0.0.5)
       fast_stack
@@ -122,7 +117,6 @@ GEM
     fspath (2.0.5)
     given_core (3.1.1)
       sorcerer (>= 0.3.7)
-    guess_html_encoding (0.0.9)
     handlebars-source (1.1.2)
     hashie (2.0.5)
     highline (1.6.20)
@@ -154,8 +148,6 @@ GEM
       thor (~> 0.15)
     libv8 (3.16.14.3)
     listen (0.7.3)
-    loofah (1.2.1)
-      nokogiri (>= 1.4.4)
     lru_redux (0.8.1)
     mail (2.5.4)
       mime-types (~> 1.16)
@@ -317,9 +309,6 @@ GEM
       rspec-mocks (~> 2.14.0)
     ruby-hmac (0.4.0)
     ruby-openid (2.3.0)
-    ruby-readability (0.5.7)
-      guess_html_encoding (>= 0.0.4)
-      nokogiri (>= 1.4.2)
     sanitize (2.0.6)
       nokogiri (>= 1.4.4)
     sass (3.2.12)
@@ -327,8 +316,6 @@ GEM
       railties (>= 4.0.0, < 5.0)
       sass (>= 3.1.10)
       sprockets-rails (~> 2.0.0)
-    sax-machine (0.2.1)
-      nokogiri (~> 1.6.0)
     seed-fu-discourse (2.2.0)
       activerecord (>= 3.1, < 4.1)
       activesupport (>= 3.1, < 4.1)
@@ -429,7 +416,6 @@ DEPENDENCIES
   fast_xor
   fast_xs
   fastimage
-  feedzirra
   flamegraph
   fog (= 1.18.0)
   handlebars-source (~> 1.1.2)
@@ -480,7 +466,6 @@ DEPENDENCIES
   rinku
   rspec-given
   rspec-rails
-  ruby-readability
   sanitize
   sass
   sass-rails

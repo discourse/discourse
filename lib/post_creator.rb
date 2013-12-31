@@ -213,7 +213,6 @@ class PostCreator
       post.send("#{a}=", @opts[a]) if @opts[a].present?
     end
 
-    post.cook_method = @opts[:cook_method] if @opts[:cook_method].present?
     post.extract_quoted_post_numbers
     post.created_at = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
     @post = post
