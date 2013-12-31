@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= stylesheet_link_tag 'embed' %>
+
+    <script>
+      (function() {
+        window.onload = function() {
+          if (parent) {
+            // Send a post message with our loaded height
+            parent.postMessage({type: 'discourse-resize', height: document['body'].offsetHeight}, '<%= request.referer %>');
+          }
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

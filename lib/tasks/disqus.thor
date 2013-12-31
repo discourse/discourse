@@ -114,7 +114,6 @@ class Disqus < Thor
   method_option :dry_run, required: false, desc: "Just output what will be imported rather than doing it"
   method_option :post_as, aliases: '-p', required: true, desc: "The Discourse username to post as"
   method_option :strip, aliases: '-s', required: false, desc: "Text to strip from titles"
-  method_option :category, aliases: '-c', desc: "The category to post in"
 
   def import
     require './config/environment'
@@ -141,18 +140,12 @@ class Disqus < Thor
 
     SiteSetting.email_domains_blacklist = ""
 
-    category_id = nil
-    if options[:category]
-      category_id = Category.where(name: options[:category]).first.try(:id)
-    end
-
     parser.threads.each do |id, t|
       puts "Creating #{t[:title]}... (#{t[:posts].size} posts)"
 
       if options[:dry_run].blank?
-        creator = PostCreator.new(user, title: t[:title], raw: "\[[Permalink](#{t[:link]})\]", created_at: Date.parse(t[:created_at]), category: category_id)
-        post = creator.create
 
+        post = TopicEmbed.import_remote(user, t[:link], title: t[:title])
         if post.present?
           t[:posts].each do |p|
             post_user = user

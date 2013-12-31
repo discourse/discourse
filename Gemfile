@@ -206,6 +206,10 @@ gem 'unicorn', require: false
 gem 'puma', require: false
 gem 'rbtrace', require: false
 
+# required for feed importing and embedding
+gem 'ruby-readability', require: false
+gem 'simple-rss', require: false
+
 # perftools only works on 1.9 atm
 group :profile do
   # travis refuses to install this, instead of fuffing, just avoid it for now
