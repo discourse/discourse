@@ -36,3 +36,4 @@
 //= require_tree ./discourse/templates
 //= require_tree ./discourse/routes
 //= require_tree ./discourse/initializers
+
