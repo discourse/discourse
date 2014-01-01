@@ -29,7 +29,8 @@ begin
   require 'facter'
 rescue LoadError
   run "gem install facter"
-  require 'facter'
+  put "please rerun script"
+  exit
 end
 
 @timings = {}
@@ -62,7 +63,8 @@ end
 
 puts "Ensuring config is setup"
 
-unless %x{which ab > /dev/null 2>&1}
+%x{which ab > /dev/null 2>&1}
+unless $? == 0
   abort "Apache Bench is not installed. Try: apt-get install apache2-utils or brew install ab"
 end
 

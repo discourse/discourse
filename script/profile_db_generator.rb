@@ -28,6 +28,12 @@ def unbundled_require(gem)
   end
 end
 
+# by default, Discourse has a "system" account
+if User.count > 1
+  puts "Only run this script against an empty DB"
+  exit
+end
+
 require 'optparse'
 begin
   unbundled_require 'gabbler'
@@ -36,8 +42,6 @@ rescue LoadError
   puts `gem install gabbler`
   unbundled_require 'gabbler'
 end
-
-user_id = nil
 
 def sentence
   @gabbler ||= Gabbler.new.tap do |gabbler|
@@ -69,12 +73,6 @@ require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 
 unless Rails.env == "profile"
   puts "This script should only be used in the profile environment"
-  exit
-end
-
-# by default, Discourse has a "system" account
-if User.count > 1
-  puts "Only run this script against an empty DB"
   exit
 end
 
