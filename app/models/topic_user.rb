@@ -20,7 +20,15 @@ class TopicUser < ActiveRecord::Base
     end
 
     def notification_reasons
-      @notification_reasons ||= Enum.new(:created_topic, :user_changed, :user_interacted, :created_post, :auto_watch)
+      @notification_reasons ||= Enum.new(
+        :created_topic,
+        :user_changed,
+        :user_interacted,
+        :created_post,
+        :auto_watch,
+        :auto_watch_category,
+        :auto_mute_category
+      )
     end
 
     def auto_track(user_id, topic_id, reason)
