@@ -121,7 +121,13 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   ensureMaximumDimensionForImagesInPreview: function() {
-    $('<style>#wmd-preview img, .cooked img {' +
+    // This enforce maximum dimensions of images in the preview according
+    // to the current site settings.
+    // For interactivity, we immediately insert the locally cooked version
+    // of the post into the stream when the user hits reply. We therefore also
+    // need to enforce these rules on the .cooked version.
+    // Meanwhile, the server is busy post-processing the post and generating thumbnails.
+    $('<style>#wmd-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {' +
       'max-width:' + Discourse.SiteSettings.max_image_width + 'px;' +
       'max-height:' + Discourse.SiteSettings.max_image_height + 'px;' +
       '}</style>'
