@@ -53,7 +53,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
   }.property('saving', 'name', 'color', 'deleting'),
 
   deleteVisible: function() {
-    return (this.get('id') && this.get('topic_count') === 0);
+    return (this.get('id') && this.get('topic_count') === 0 && !this.get("isUncategorizedCategory"));
   }.property('id', 'topic_count'),
 
   deleteDisabled: function() {

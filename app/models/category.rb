@@ -338,6 +338,10 @@ SQL
 
     [read_restricted, mapped]
   end
+
+  def uncatgorized?
+    id == SiteSetting.uncategorized_category_id
+  end
 end
 
 # == Schema Information
