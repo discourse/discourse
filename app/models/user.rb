@@ -354,6 +354,10 @@ class User < ActiveRecord::Base
   end
 
   def posted_too_much_in_topic?(topic_id)
+
+    # Does not apply to staff or your own topics
+    return false if staff? || Topic.where(id: topic_id, user_id: id).exists?
+
     trust_level == TrustLevel.levels[:newuser] && (Post.where(topic_id: topic_id, user_id: id).count >= SiteSetting.newuser_max_replies_per_topic)
   end
 

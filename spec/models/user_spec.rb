@@ -903,6 +903,36 @@ describe User do
 
   end
 
+  describe "posted too much in topic" do
+    let!(:user) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let!(:topic) { Fabricate(:post).topic }
+
+    before do
+      # To make testing easier, say 1 reply is too much
+      SiteSetting.stubs(:newuser_max_replies_per_topic).returns(1)
+    end
+
+    context "for a user who didn't create the topic" do
+      let!(:post) { Fabricate(:post, topic: topic, user: user) }
+
+      it "does not return true for staff" do
+        user.stubs(:staff?).returns(true)
+        user.posted_too_much_in_topic?(topic.id).should be_false
+      end
+
+      it "returns true when the user has posted too much" do
+        user.posted_too_much_in_topic?(topic.id).should be_true
+      end
+    end
+
+    it "returns false for a user who created the topic" do
+      topic_user = topic.user
+      topic_user.trust_level = TrustLevel.levels[:newuser]
+      topic.user.posted_too_much_in_topic?(topic.id).should be_false
+    end
+
+  end
+
   describe "#find_email" do
 
     let(:user) { Fabricate(:user, email: "bob@example.com") }
