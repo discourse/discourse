@@ -1,5 +1,5 @@
 defaults: &defaults
-  uri: <%= uri = URI.parse(ENV['REDISCLOUD_URL'] || ENV['OPENREDIS_URL'] || "redis://localhost:6379") %>
+  uri: <%= uri = URI.parse(ENV['OPENREDIS_URL'] || "redis://localhost:6379") %>
   host: <%= uri.host %>
   port: <%= uri.port %>
   password: <%= uri.password %>
