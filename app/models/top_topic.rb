@@ -36,7 +36,7 @@ class TopTopic < ActiveRecord::Base
   end
 
   def self.update_posts_count_for(period)
-    sql = "SELECT topic_id, COUNT(*) AS count
+    sql = "SELECT topic_id, GREATEST(COUNT(*), 1) AS count
            FROM posts p
            WHERE p.created_at >= :from
            AND p.deleted_at IS NULL
@@ -47,7 +47,7 @@ class TopTopic < ActiveRecord::Base
   end
 
   def self.update_views_count_for(period)
-    sql = "SELECT parent_id as topic_id, COUNT(*) AS count
+    sql = "SELECT parent_id as topic_id, GREATEST(COUNT(*), 1) AS count
            FROM views v
            WHERE v.viewed_at >= :from
            GROUP BY topic_id"
@@ -68,7 +68,11 @@ class TopTopic < ActiveRecord::Base
 
   def self.compute_top_score_for(period)
     # log(views) + (posts * likes)
-    exec_sql("UPDATE top_topics SET #{period}_score = log(#{period}_views_count + 1) + (#{period}_posts_count * #{period}_likes_count)")
+    exec_sql("UPDATE top_topics
+              SET #{period}_score = CASE #{period}_views_count
+                                    WHEN 0 THEN 0
+                                    ELSE log(#{period}_views_count) + (#{period}_posts_count * #{period}_likes_count)
+                                    END")
   end
 
   def self.start_of(period)
