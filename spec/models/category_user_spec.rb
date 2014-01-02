@@ -4,6 +4,25 @@ require 'spec_helper'
 require_dependency 'post_creator'
 
 describe CategoryUser do
+
+  it 'allows batch set' do
+    user = Fabricate(:user)
+    category1 = Fabricate(:category)
+    category2 = Fabricate(:category)
+
+    watching = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:watching])
+
+    CategoryUser.batch_set(user, :watching, [category1.id, category2.id])
+    watching.pluck(:category_id).sort.should == [category1.id, category2.id]
+
+    CategoryUser.batch_set(user, :watching, [])
+    watching.count.should == 0
+
+    CategoryUser.batch_set(user, :watching, [category2.id])
+    watching.count.should == 1
+  end
+
+
   context 'integration' do
     before do
       ActiveRecord::Base.observers.enable :all

@@ -60,7 +60,9 @@ class UserSerializer < BasicUserSerializer
                      :use_uploaded_avatar,
                      :has_uploaded_avatar,
                      :gravatar_template,
-                     :uploaded_avatar_template
+                     :uploaded_avatar_template,
+                     :muted_category_ids,
+                     :watched_category_ids
 
 
   def auto_track_topics_after_msecs
@@ -101,8 +103,16 @@ class UserSerializer < BasicUserSerializer
   def include_suspend_reason?
     object.suspended?
   end
+
   def include_suspended_till?
     object.suspended?
   end
 
+  def muted_category_ids
+    CategoryUser.lookup(object, :muted).pluck(:category_id)
+  end
+
+  def watched_category_ids
+    CategoryUser.lookup(object, :watching).pluck(:category_id)
+  end
 end

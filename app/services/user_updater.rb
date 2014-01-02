@@ -11,8 +11,16 @@ class UserUpdater
     user.name = attributes[:name] || user.name
     user.digest_after_days = attributes[:digest_after_days] || user.digest_after_days
 
+    if ids = attributes[:watched_category_ids]
+      CategoryUser.batch_set(user, :watching, ids)
+    end
+
+    if ids = attributes[:muted_category_ids]
+      CategoryUser.batch_set(user, :muted, ids)
+    end
+
     if attributes[:auto_track_topics_after_msecs]
-      user.auto_track_topics_after_msecs = attributes[:auto_track_topics_after_msecs].to_i 
+      user.auto_track_topics_after_msecs = attributes[:auto_track_topics_after_msecs].to_i
     end
 
     if attributes[:new_topic_duration_minutes]

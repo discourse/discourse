@@ -167,8 +167,7 @@ Discourse.User = Discourse.Model.extend({
   **/
   save: function() {
     var user = this;
-    return Discourse.ajax("/users/" + this.get('username_lower'), {
-      data: this.getProperties('auto_track_topics_after_msecs',
+    var data = this.getProperties('auto_track_topics_after_msecs',
                                'bio_raw',
                                'website',
                                'name',
@@ -181,7 +180,12 @@ Discourse.User = Discourse.Model.extend({
                                'new_topic_duration_minutes',
                                'external_links_in_new_tab',
                                'watch_new_topics',
-                               'enable_quoting'),
+                               'enable_quoting');
+    data.watched_category_ids = this.get('watchedCategories').map(function(c){ return c.get('id')});
+    data.muted_category_ids = this.get('mutedCategories').map(function(c){ return c.get('id')});
+
+    return Discourse.ajax("/users/" + this.get('username_lower'), {
+      data: data,
       type: 'PUT'
     }).then(function(data) {
       user.set('bio_excerpt',data.user.bio_excerpt);
@@ -350,8 +354,19 @@ Discourse.User = Discourse.Model.extend({
       }
     }
     return Discourse.Utilities.defaultHomepage();
-  }.property("trust_level", "hasBeenSeenInTheLastMonth")
+  }.property("trust_level", "hasBeenSeenInTheLastMonth"),
 
+  updateMutedCategories: function() {
+    this.set("mutedCategories", _.map(this.muted_category_ids, function(id){
+      return Discourse.Category.findById(id);
+    }));
+  }.observes("muted_category_ids"),
+
+  updateWatchedCategories: function() {
+    this.set("watchedCategories", _.map(this.watched_category_ids, function(id){
+      return Discourse.Category.findById(id);
+    }));
+  }.observes("watched_category_ids")
 });
 
 Discourse.User.reopenClass(Discourse.Singleton, {

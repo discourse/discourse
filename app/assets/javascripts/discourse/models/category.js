@@ -204,6 +204,11 @@ Discourse.Category.reopenClass({
     });
   },
 
+  // TODO: optimise, slow for no real reason
+  findById: function(id){
+    return Discourse.Category.list().findBy('id', id);
+  },
+
   findBySlug: function(slug, parentSlug) {
 
     var categories = Discourse.Category.list(),

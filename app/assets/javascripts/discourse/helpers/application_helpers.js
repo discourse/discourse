@@ -65,6 +65,10 @@ Handlebars.registerHelper('categoryLink', function(property, options) {
   return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
 });
 
+Handlebars.registerHelper('categoryLinkRaw', function(property, options) {
+  return categoryLinkHTML(property, options);
+});
+
 /**
   Produces a bound link to a category
 
