@@ -227,6 +227,7 @@ zh_CN:
       deleted: "（已删除）"
       suspended_notice: "该用户将被禁止登录，直至{{date}}."
       suspended_reason: "原因："
+      watch_new_topics: "自动关注论坛中所有新发表的主题"
 
       messages:
         all: "所有"
@@ -356,6 +357,7 @@ zh_CN:
       password:
         title: "密码"
         too_short: "你设置的密码太短了。"
+        common: "你设置的密码太常见了。"
         ok: "你设置的密码符合要求。"
         instructions: "至少需要%{count}个字符。"
 
@@ -668,8 +670,8 @@ zh_CN:
 
       browse_all_categories: 浏览所有分类
 
-      view_latest_topics: 浏览热门主题
-      suggest_create_topic: 这就创建一个主题吧！
+      view_latest_topics: 浏览最新主题。
+      suggest_create_topic: 马上创建一个主题吧！
       read_position_reset: "你的阅读位置已经被重置。"
       jump_reply_up: 跳转至更早的回复
       jump_reply_down: 跳转至更晚的回复
@@ -692,6 +694,7 @@ zh_CN:
       notifications:
         title: ''
         reasons:
+          "3_5": '因为你自动关注了此主题，所以你将收到相关通知。'
           "3_2": '因为你在关注此主题，所以你将收到相关通知。'
           "3_1": '因为你创建了此主题，所以你将收到相关通知。'
           "3": '因为你在关注此主题，所以你将收到相关通知。'
@@ -1103,6 +1106,14 @@ zh_CN:
           other: "{{categoryName}}（{{count}}）"
         help: "在 {{categoryName}} 分类中热门的主题"
 
+      top:
+        title: "Top"
+        help: "最佳主题精选"
+        this_year: "今年"
+        this_month: "本月"
+        this_week: "本周"
+        today: "今天"
+
     browser_update: '抱歉, <a href="http://www.iteriter.com/faq/#browser">你的浏览器版本太低，推荐使用Chrome</a>. 请 <a href="http://www.google.com/chrome/">升级你的浏览器</a>。'
 
     permission_types:
@@ -1464,6 +1475,7 @@ zh_CN:
           spam: '垃圾信息'
           rate_limits: '速度限制'
           developer: '开发者'
+          embedding: "嵌入"
           uncategorized: '未分类'
 
     lightbox:
