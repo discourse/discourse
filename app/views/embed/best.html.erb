@@ -1,6 +1,6 @@
 <header>
   <%- if @topic_view.posts.present? %>
-    <%= link_to(I18n.t('embed.title'), @topic_view.topic.url, class: 'button', target: '_blank') %>
+    <%= link_to(I18n.t('embed.title'), @second_post_url, class: 'button', target: '_blank') %>
   <%- else %>
     <%= link_to(I18n.t('embed.start_discussion'), @topic_view.topic.url, class: 'button', target: '_blank') %>
   <%- end if %>
@@ -22,7 +22,7 @@
   <%- end %>
 
   <footer>
-    <%= link_to(I18n.t('embed.continue'), @topic_view.topic.url, class: 'button', target: '_blank') %>
+    <%= link_to(I18n.t('embed.continue'), @second_post_url, class: 'button', target: '_blank') %>
     <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
   </footer>
 
