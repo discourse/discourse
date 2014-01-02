@@ -45,12 +45,12 @@ class LearnAuthenticator < ::Auth::OAuth2Authenticator
   end
 
   def set_subscription_permissions(user, user_has_active_subscription)
-    if(user_has_active_subscription)
+    if user_has_active_subscription
       if not_in_subscriber_group?(user)
         subscriber_group.add(user)
       end
     else
-      subscriber_group_user(user).destroy
+      subscriber_group_user(user).try(:destroy)
     end
   end
 
