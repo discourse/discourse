@@ -23,7 +23,7 @@
 
   <footer>
     <%= link_to(I18n.t('embed.continue'), @topic_view.topic.url, class: 'button', target: '_blank') %>
-    <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url) %>
+    <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
   </footer>
 
 <% end %>
