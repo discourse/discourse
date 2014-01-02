@@ -11,7 +11,7 @@ class EmbedController < ApplicationController
 
     if topic_id
       @topic_view = TopicView.new(topic_id, current_user, {best: 5})
-      @second_post_url = "#{@topic_view.topic.url}/2"
+      @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
     else
       Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url)
       render 'loading'
