@@ -5,7 +5,7 @@
     <%= link_to(I18n.t('embed.start_discussion'), @topic_view.topic.url, class: 'button', target: '_blank') %>
   <%- end if %>
 
-  <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url) %>
+  <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
 </header>
 
 <%- if @topic_view.posts.present? %>
