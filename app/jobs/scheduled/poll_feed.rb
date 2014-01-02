@@ -32,8 +32,10 @@ module Jobs
         url = i.link
         url = i.id if url.blank? || url !~ /^https?\:\/\//
 
-        content = CGI.unescapeHTML(i.content.scrub)
-        TopicEmbed.import(user, url, i.title, content)
+        content = i.content || i.description
+        if content
+          TopicEmbed.import(user, url, i.title, CGI.unescapeHTML(content.scrub))
+        end
       end
     end
 
