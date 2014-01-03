@@ -13,8 +13,9 @@ class BasicCategorySerializer < ApplicationSerializer
              :permission,
              :parent_category_id
 
-  def include_parent_category_id?
-    parent_category_id
+  def filter(keys)
+    keys.delete(:parent_category_id) unless parent_category_id
+    keys
   end
 
 end

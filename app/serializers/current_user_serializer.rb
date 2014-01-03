@@ -17,8 +17,12 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_edit,
              :can_invite_to_forum
 
-  def include_site_flagged_posts_count?
-    object.staff?
+  root :user
+
+  def filter(keys)
+    keys.delete(:site_flagged_posts_count) unless object.staff?
+    keys.delete(:can_invite_to_forum) unless scope.can_invite_to_forum?
+    keys
   end
 
   def topic_count
@@ -39,10 +43,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_invite_to_forum
     true
-  end
-
-  def include_can_invite_to_forum?
-    scope.can_invite_to_forum?
   end
 
 end

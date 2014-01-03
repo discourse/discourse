@@ -52,8 +52,9 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     object.topics.count
   end
 
-  def include_api_key?
-    api_key.present?
+  def filter(keys)
+    keys.delete(:api_key) unless api_key.present?
+    keys
   end
 
   def suspended_by

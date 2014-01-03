@@ -5,8 +5,9 @@ class ApiKeySerializer < ApplicationSerializer
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 
-  def include_user_id?
-    !object.user_id.nil?
+  def filter(keys)
+    keys.delete(:user_id) unless object.user_id.present?
+    keys
   end
 
 end

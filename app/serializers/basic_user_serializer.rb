@@ -1,7 +1,8 @@
 class BasicUserSerializer < ApplicationSerializer
   attributes :id, :username, :avatar_template
 
-  def include_name?
-    SiteSetting.enable_names?
+  def filter(keys)
+    keys.delete(:username) unless SiteSetting.enable_names?
+    keys
   end
 end

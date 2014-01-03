@@ -31,8 +31,9 @@ class BasicPostSerializer < ApplicationSerializer
     end
   end
 
-  def include_name?
-    SiteSetting.enable_names?
+  def filter(keys)
+    keys.delete(:name) unless SiteSetting.enable_names?
+    keys
   end
 
 end

@@ -14,7 +14,16 @@ class TopicListItemSerializer < ListableTopicSerializer
   def starred
     object.user_data.starred?
   end
-  alias :include_starred? :seen
+
+  def filter(keys)
+    keys.delete(:starred) unless seen
+    keys.delete(:rank_details) unless include_rank_details?
+    # Remove inherited keys
+    keys.delete(:last_read_post_number)
+    keys.delete(:unread)
+    keys.delete(:new_posts)
+    keys
+  end
 
 
   # This is for debugging / tweaking the hot topic rankings.

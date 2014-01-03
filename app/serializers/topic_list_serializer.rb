@@ -9,12 +9,14 @@ class TopicListSerializer < ApplicationSerializer
 
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
 
-  def can_view_rank_details
-    true
+  def filter(keys)
+    keys.delete(:can_view_rank_details) unless object.has_rank_details?
+    keys.delete(:more_topics_url) unless include_more_topics_url?
+    keys
   end
 
-  def include_can_view_rank_details?
-    object.has_rank_details?
+  def can_view_rank_details
+    true
   end
 
   def can_create_topic

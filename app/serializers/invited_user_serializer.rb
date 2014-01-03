@@ -27,4 +27,11 @@ class InvitedUserSerializer < BasicUserSerializer
     ((Time.now - object.created_at) / 60 / 60 / 24).ceil
   end
 
+  # Remove some keys inherited from BasicUserSerializer
+  def filter(keys)
+    keys.delete(:created_at)
+    keys.delete(:redeemed_at)
+    keys
+  end
+
 end

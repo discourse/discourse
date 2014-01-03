@@ -63,12 +63,12 @@ class AdminUserSerializer < BasicUserSerializer
     scope.can_approve?(object)
   end
 
-  def include_can_approve?
-    SiteSetting.must_approve_users
-  end
-
-  def include_approved?
-    SiteSetting.must_approve_users
+  def filter(keys)
+    unless SiteSetting.must_approve_users
+      keys.delete(:can_approve)
+      keys.delete(:approved)
+    end
+    keys
   end
 
   def can_send_activation_email
