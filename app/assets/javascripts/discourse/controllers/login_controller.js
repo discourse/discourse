@@ -31,6 +31,9 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
     return this.get('loggingIn') || this.blank('loginName') || this.blank('loginPassword');
   }.property('loginName', 'loginPassword', 'loggingIn'),
 
+  showSignupLink: function() {
+    return !Discourse.SiteSettings.invite_only && !this.get('loggingIn');
+  }.property('loggingIn'),
 
   actions: {
     login: function() {

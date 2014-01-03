@@ -51,11 +51,15 @@
         <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
     </button>
 
-    {{#unless Discourse.SiteSettings.invite_only}}
+    {{#if showSignupLink}}
       &nbsp; {{i18n create_account.invite}}
       <a id="new-account-link" {{action showCreateAccount}}>
         {{i18n create_account.action}}
       </a>
-    {{/unless}}
+    {{/if}}
+
+    {{#if loggingIn}}
+      &nbsp; <i class='fa fa-spinner fa-spin'></i>
+    {{/if}}
   {{/if}}
 </div>
