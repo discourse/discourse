@@ -5,12 +5,12 @@ class EmbedController < ApplicationController
 
   layout 'embed'
 
-  def best
+  def comments
     embed_url = params.require(:embed_url)
     topic_id = TopicEmbed.topic_id_for_embed(embed_url)
 
     if topic_id
-      @topic_view = TopicView.new(topic_id, current_user, {best: 5})
+      @topic_view = TopicView.new(topic_id, current_user, limit: SiteSetting.embed_post_limit, exclude_first: true)
       @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
     else
       Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url)

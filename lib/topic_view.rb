@@ -37,7 +37,7 @@ class TopicView
   def canonical_path
     path = @topic.relative_url
     path << if @post_number
-      page = ((@post_number.to_i - 1) / SiteSetting.posts_per_page) + 1
+      page = ((@post_number.to_i - 1) / @limit) + 1
       (page > 1) ? "?page=#{page}" : ""
     else
       (@page && @page.to_i > 1) ? "?page=#{@page}" : ""
@@ -130,8 +130,12 @@ class TopicView
 
   def filter_posts_paged(page)
     page = [page, 1].max
-    min = SiteSetting.posts_per_page * (page - 1)
-    max = (min + SiteSetting.posts_per_page) - 1
+    min = @limit * (page - 1)
+
+    # Sometimes we don't care about the OP, for example when embedding comments
+    min = 1 if min == 0 && @exclude_first
+
+    max = (min + @limit) - 1
 
     filter_posts_in_range(min, max)
   end
@@ -317,12 +321,12 @@ class TopicView
     return nil if closest_index.nil?
 
     # Make sure to get at least one post before, even with rounding
-    posts_before = (SiteSetting.posts_per_page.to_f / 4).floor
+    posts_before = (@limit.to_f / 4).floor
     posts_before = 1 if posts_before.zero?
 
     min_idx = closest_index - posts_before
     min_idx = 0 if min_idx < 0
-    max_idx = min_idx + (SiteSetting.posts_per_page - 1)
+    max_idx = min_idx + (@limit - 1)
 
     # Get a full page even if at the end
     ensure_full_page(min_idx, max_idx)
@@ -331,7 +335,7 @@ class TopicView
   def ensure_full_page(min, max)
     upper_limit = (filtered_post_ids.length - 1)
     if max >= upper_limit
-      return (upper_limit - SiteSetting.posts_per_page) + 1, upper_limit
+      return (upper_limit - @limit) + 1, upper_limit
     else
       return min, max
     end

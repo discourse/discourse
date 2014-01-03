@@ -4,7 +4,7 @@
 
   var comments = document.getElementById('discourse-comments'),
       iframe = document.createElement('iframe');
-  iframe.src = discourseUrl + "embed/best?embed_url=" + encodeURIComponent(discourseEmbedUrl);
+  iframe.src = discourseUrl + "embed/comments?embed_url=" + encodeURIComponent(discourseEmbedUrl);
   iframe.id = 'discourse-embed-frame';
   iframe.width = "100%";
   iframe.frameBorder = "0";
