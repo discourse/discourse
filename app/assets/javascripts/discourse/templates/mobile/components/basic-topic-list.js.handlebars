@@ -2,7 +2,7 @@
   {{#if topics}}
     <table id="topic-list">
       {{#groupedEach topic in topics}}
-        <tr>
+        <tr {{bindAttr class="archived"}}>
           <td>
             <div class='main-link clearfix'>
               {{topicStatus topic=this}}
