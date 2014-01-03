@@ -42,6 +42,7 @@ class TopTopic < ActiveRecord::Base
            AND p.deleted_at IS NULL
            AND NOT p.hidden
            AND post_type = #{Post.types[:regular]}
+           AND user_id <> #{Discourse.system_user.id}
            GROUP BY topic_id"
 
     TopTopic.update_top_topics(period, "posts", sql)
