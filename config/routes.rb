@@ -297,5 +297,7 @@ Discourse::Application.routes.draw do
   end
   # special case for categories
   root to: "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
+  # special case for top
+  root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "list_top"
 
 end
