@@ -32,6 +32,10 @@ en:
   embed:
     start_discussion: "Begin the Discussion"
     continue: "Continue the Discussion"
+    more_replies:
+      one: "1 more reply"
+      other: "%{count} more replies"
+
     loading: "Loading Discussion..."
     permalink: "Permalink"
     imported_from: "Imported from: %{link}"

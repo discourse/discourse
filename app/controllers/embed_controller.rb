@@ -12,6 +12,10 @@ class EmbedController < ApplicationController
     if topic_id
       @topic_view = TopicView.new(topic_id, current_user, limit: SiteSetting.embed_post_limit, exclude_first: true)
       @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
+      @posts_left = 0
+      if @topic_view && @topic_view.posts.size == SiteSetting.embed_post_limit
+        @posts_left = @topic_view.topic.posts_count - SiteSetting.embed_post_limit
+      end
     else
       Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url)
       render 'loading'

@@ -39,8 +39,10 @@
   <%- end %>
 
   <footer>
-    <%= link_to(I18n.t('embed.continue'), @topic_view.topic.last_post_url, class: 'button', target: '_blank') %>
-    <span class='replies'><%= I18n.t('embed.replies', count: @topic_view.topic.posts_count) %></span>
+    <%= link_to(I18n.t('embed.continue'), @topic_view.posts.last.url, class: 'button', target: '_blank') %>
+    <%- if @posts_left > 0 %>
+      <span class='replies'><%= I18n.t('embed.more_replies', count: @posts_left) %></span>
+    <%- end %>
     <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
   </footer>
 
