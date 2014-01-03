@@ -17,8 +17,13 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_edit,
              :can_invite_to_forum
 
-  def include_site_flagged_posts_count?
-    object.staff?
+  root :user
+
+  def filter(keys)
+    rejected_keys = []
+    rejected_keys << :site_flagged_posts_count unless object.staff?
+    rejected_keys << :can_invite_to_forum unless scope.can_invite_to_forum?
+    keys - rejected_keys
   end
 
   def topic_count
@@ -39,10 +44,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_invite_to_forum
     true
-  end
-
-  def include_can_invite_to_forum?
-    scope.can_invite_to_forum?
   end
 
 end

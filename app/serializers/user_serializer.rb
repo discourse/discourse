@@ -23,15 +23,6 @@ class UserSerializer < BasicUserSerializer
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
 
-  def self.private_attributes(*attrs)
-    attributes(*attrs)
-    attrs.each do |attr|
-      define_method "include_#{attr}?" do
-        can_edit
-      end
-    end
-  end
-
   def bio_excerpt
     # If they have a bio return it
     excerpt = object.bio_excerpt
@@ -45,25 +36,39 @@ class UserSerializer < BasicUserSerializer
     end
   end
 
-  private_attributes :email,
-                     :email_digests,
-                     :email_private_messages,
-                     :email_direct,
-                     :email_always,
-                     :digest_after_days,
-                     :watch_new_topics,
-                     :auto_track_topics_after_msecs,
-                     :new_topic_duration_minutes,
-                     :external_links_in_new_tab,
-                     :dynamic_favicon,
-                     :enable_quoting,
-                     :use_uploaded_avatar,
-                     :has_uploaded_avatar,
-                     :gravatar_template,
-                     :uploaded_avatar_template,
-                     :muted_category_ids,
-                     :watched_category_ids
+  PRIVATE_ATTRIBUTES = [
+    :email,
+    :email_digests,
+    :email_private_messages,
+    :email_direct,
+    :email_always,
+    :digest_after_days,
+    :watch_new_topics,
+    :auto_track_topics_after_msecs,
+    :new_topic_duration_minutes,
+    :external_links_in_new_tab,
+    :dynamic_favicon,
+    :enable_quoting,
+    :use_uploaded_avatar,
+    :has_uploaded_avatar,
+    :gravatar_template,
+    :uploaded_avatar_template,
+    :muted_category_ids,
+    :watched_category_ids
+  ]
 
+  attributes(*PRIVATE_ATTRIBUTES)
+
+  def filter(keys)
+    keys = super(keys)
+    rejected_keys = []
+    rejected_keys += PRIVATE_ATTRIBUTES unless can_edit
+    rejected_keys << :name unless SiteSetting.enable_names?
+    unless object.suspended?
+      rejected_keys += [ :suspended, :suspend_reason, :suspended_till ]
+    end
+    keys - rejected_keys
+  end
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.auto_track_topics_after
@@ -95,17 +100,6 @@ class UserSerializer < BasicUserSerializer
 
   def gravatar_template
     User.gravatar_template(object.email)
-  end
-
-  def include_suspended?
-    object.suspended?
-  end
-  def include_suspend_reason?
-    object.suspended?
-  end
-
-  def include_suspended_till?
-    object.suspended?
   end
 
   def muted_category_ids

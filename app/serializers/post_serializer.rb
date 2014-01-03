@@ -160,16 +160,17 @@ class PostSerializer < BasicPostSerializer
     result
   end
 
-  def include_draft_sequence?
-    @draft_sequence.present?
-  end
-
-  def include_slug_title?
-    @topic_slug.present?
-  end
-
-  def include_raw?
-    @add_raw.present?
+  def filter(keys)
+    rejected_keys = []
+    rejected_keys << :draft_sequence unless @draft_sequence.present?
+    rejected_keys << :slug_title unless @topic_slug.present?
+    rejected_keys << :raw unless @add_raw.present?
+    rejected_keys << :link_counts unless include_link_counts?
+    rejected_keys << :read unless @topic_view.present?
+    rejected_keys << :reply_to_user unless include_reply_to_user?
+    rejected_keys << :bookmarked unless include_bookmarked?
+    rejected_keys << :display_username unless SiteSetting.enable_names?
+    keys - rejected_keys
   end
 
   def include_link_counts?
@@ -178,20 +179,12 @@ class PostSerializer < BasicPostSerializer
     @topic_view.present? && @topic_view.link_counts.present? && @topic_view.link_counts[object.id].present?
   end
 
-  def include_read?
-    @topic_view.present?
-  end
-
   def include_reply_to_user?
     object.quoteless? && object.reply_to_user
   end
 
   def include_bookmarked?
     post_actions.present? && post_actions.keys.include?(PostActionType.types[:bookmark])
-  end
-
-  def include_display_username?
-    SiteSetting.enable_names?
   end
 
   private

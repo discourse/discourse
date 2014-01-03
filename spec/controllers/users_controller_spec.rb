@@ -971,7 +971,6 @@ describe UsersController do
           user = log_in
 
           put :update, username: user.username
-
           json = JSON.parse(response.body)
           expect(json['user']['id']).to eq user.id
         end

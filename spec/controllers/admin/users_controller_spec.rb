@@ -66,7 +66,7 @@ describe Admin::UsersController do
       let(:evil_trout) { Fabricate(:evil_trout) }
 
       it 'calls generate_api_key' do
-        User.any_instance.expects(:generate_api_key).with(@user)
+        User.any_instance.expects(:generate_api_key).with(@user).returns(ApiKey.new)
         xhr :post, :generate_api_key, user_id: evil_trout.id
       end
     end

@@ -42,24 +42,20 @@ class CategoryDetailedSerializer < BasicCategorySerializer
     object.posts_year || 0
   end
 
+  def filter(keys)
+    rejected_keys = []
+    rejected_keys << :is_uncategorized unless is_uncategorized
+    rejected_keys << :displayable_topics unless displayable_topics.present?
+    rejected_keys << :subcategory_ids unless subcategory_ids.present?
+    keys - rejected_keys
+  end
+
   def is_uncategorized
     object.id == SiteSetting.uncategorized_category_id
   end
 
-  def include_is_uncategorized?
-    is_uncategorized
-  end
-
-  def include_displayable_topics?
-    return displayable_topics.present?
-  end
-
   def description_excerpt
     PrettyText.excerpt(description,300) if description
-  end
-
-  def include_subcategory_ids?
-    subcategory_ids.present?
   end
 
 end

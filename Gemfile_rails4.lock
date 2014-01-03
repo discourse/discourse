@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/rails-api/active_model_serializers.git
+  revision: c8cfe94f299619382d2178344e99d6c6d0e02cb1
+  ref: c8cfe94f299619382d2178344e99d6c6d0e02cb1
+  specs:
+    active_model_serializers (0.9.0.pre)
+      activemodel (>= 3.2)
+
 PATH
   remote: vendor/gems/discourse_plugin
   specs:
@@ -22,8 +30,6 @@ GEM
       rack-test (~> 0.6.2)
     actionpack-action_caching (1.0.0)
       actionpack (>= 4.0.0.beta, < 5.0)
-    active_model_serializers (0.8.1)
-      activemodel (>= 3.0)
     activemodel (4.0.2)
       activesupport (= 4.0.2)
       builder (~> 3.1.0)
@@ -403,7 +409,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-action_caching
-  active_model_serializers
+  active_model_serializers!
   airbrake (= 3.1.2)
   annotate
   barber

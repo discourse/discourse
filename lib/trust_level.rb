@@ -1,6 +1,8 @@
 require_dependency 'enum'
 
 class TrustLevel
+  include ActiveModel::SerializerSupport
+
   attr_reader :id, :name
 
   class << self

@@ -45,17 +45,12 @@ class UserActionSerializer < ApplicationSerializer
       object.acting_uploaded_avatar_id
     )
   end
-
-  def include_name?
-    SiteSetting.enable_names?
-  end
-
-  def include_target_name?
-    include_name?
-  end
-
-  def include_acting_name?
-    include_name?
+  
+  def filter_keys(keys)
+    unless SiteSetting.enable_names?
+      keys -= [:name, :target_name, :acting_name ]
+    end
+    keys
   end
 
   def slug

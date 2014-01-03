@@ -120,7 +120,7 @@ measure("load_rails") do
 end
 
 puts "Populating Profile DB"
-run("bundle exec ruby script/profile_db_generator.rb")
+run("bundle exec rails r script/profile_db_generator.rb")
 
 puts "Getting api key"
 api_key = `bundle exec rake api_key:get`.split("\n")[-1]

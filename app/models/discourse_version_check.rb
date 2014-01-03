@@ -1,4 +1,6 @@
 class DiscourseVersionCheck
+  include ActiveModel::SerializerSupport
+
   if rails4?
     include ActiveModel::Model
   else

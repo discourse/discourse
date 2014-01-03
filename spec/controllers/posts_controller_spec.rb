@@ -64,7 +64,6 @@ describe PostsController do
     end
 
     it 'suceeds' do
-      Post.any_instance.expects(:reply_history)
       xhr :get, :reply_history, id: post.id
       response.should be_success
     end

@@ -20,8 +20,15 @@ class ListableTopicSerializer < BasicTopicSerializer
              :archived
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
-  def include_last_poster?
-    object.include_last_poster
+
+  def filter(keys)
+    rejected_keys = []
+    rejected_keys << :last_poster unless object.include_last_poster
+    unless seen
+      rejected_keys += [ :last_read_post_number, :unread, :new_posts ]
+    end
+    rejected_keys << :excerpt unless pinned
+    keys - rejected_keys
   end
 
   def bumped
@@ -43,20 +50,13 @@ class ListableTopicSerializer < BasicTopicSerializer
   def last_read_post_number
     object.user_data.last_read_post_number
   end
-  alias :include_last_read_post_number? :seen
 
   def unread
     unread_helper.unread_posts
   end
-  alias :include_unread? :seen
 
   def new_posts
     unread_helper.new_posts
-  end
-  alias :include_new_posts? :seen
-
-  def include_excerpt?
-    pinned
   end
 
   def excerpt

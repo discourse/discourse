@@ -69,7 +69,8 @@ gem 'redis-rails'
 gem 'hiredis'
 gem 'redis', :require => ["redis", "redis/connection/hiredis"]
 
-gem 'active_model_serializers'
+gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_serializers.git',
+  ref: 'c8cfe94f299619382d2178344e99d6c6d0e02cb1'
 
 gem 'html_truncator'
 
