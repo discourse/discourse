@@ -18,7 +18,7 @@
       <tr class="input">
             <td><label for='new-account-email'>{{i18n user.email.title}}</label></td>
             <td>
-            {{input value=accountEmail id="new-account-email"}}
+            {{input value=accountEmail id="new-account-email" disabled=emailValidated}}
             &nbsp;{{inputTip validation=emailValidation}}
             </td>
       </tr>
@@ -70,6 +70,8 @@
     <button class='btn btn-large btn-primary' {{bindAttr disabled="submitDisabled"}} {{action createAccount}}>{{i18n create_account.title}}</button>
     {{#if formSubmitted}}
       &nbsp; <i class='fa fa-spinner fa-spin'></i>
+    {{else}}
+      &nbsp; <a {{action showLogin}}>{{i18n cancel}}</a>
     {{/if}}
   </div>
 {{/unless}}

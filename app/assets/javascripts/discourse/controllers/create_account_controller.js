@@ -18,6 +18,22 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
   rejectedPasswords: Em.A([]),
   prefilledUsername: null,
 
+  resetForm: function() {
+    this.setProperties({
+      accountName: '',
+      accountEmail: '',
+      accountUsername: '',
+      accountPassword: '',
+      authOptions: null,
+      globalNicknameExists: false,
+      complete: false,
+      formSubmitted: false,
+      rejectedEmails: Em.A([]),
+      rejectedPasswords: Em.A([]),
+      prefilledUsername: null
+    });
+  },
+
   submitDisabled: function() {
     if (this.get('formSubmitted')) return true;
     if (this.get('nameValidation.failed')) return true;
@@ -37,7 +53,6 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
 
   // Validate the name
   nameValidation: function() {
-
     // If blank, fail without a reason
     if (this.blank('accountName')) return Discourse.InputValidation.create({ failed: true });
 
@@ -100,6 +115,10 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
       reason: I18n.t('user.email.invalid')
     });
   }.property('accountEmail', 'rejectedEmails.@each'),
+
+  emailValidated: function() {
+    return this.get('authOptions.email') === this.get("accountEmail") && this.get('authOptions.email_valid');
+  }.property('accountEmail', 'authOptions.email', 'authOptions.email_valid'),
 
   prefillUsername: function() {
     if (this.get('prefilledUsername')) {

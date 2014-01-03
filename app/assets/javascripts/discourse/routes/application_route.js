@@ -11,6 +11,7 @@ Discourse.ApplicationRoute = Em.Route.extend({
   actions: {
     showLogin: function() {
       Discourse.Route.showModal(this, 'login');
+      this.controllerFor('login').resetForm();
     },
 
     showCreateAccount: function() {
