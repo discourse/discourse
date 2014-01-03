@@ -83,7 +83,8 @@ gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 
 gem 'redcarpet', require: false
-gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
+gem 'airbrake'
+gem 'sidetiq', '>= 0.3.6'
 gem 'eventmachine'
 gem 'fast_xs'
 
