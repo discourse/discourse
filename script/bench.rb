@@ -29,7 +29,7 @@ begin
   require 'facter'
 rescue LoadError
   run "gem install facter"
-  put "please rerun script"
+  puts "please rerun script"
   exit
 end
 
