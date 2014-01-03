@@ -1,5 +1,12 @@
-<h2>{{i18n filters.top.this_year}}</h2>
-{{basic-topic-list topicList=content.yearly}}
+{{#if redirectedToTopPageReason}}
+  <div class="alert alert-info">
+    {{redirectedToTopPageReason}}
+  </div>
+{{/if}}
+{{#if showThisYear}}
+  <h2>{{i18n filters.top.this_year}}</h2>
+  {{basic-topic-list topicList=content.yearly}}
+{{/if}}
 <h2>{{i18n filters.top.this_month}}</h2>
 {{basic-topic-list topicList=content.monthly}}
 <h2>{{i18n filters.top.this_week}}</h2>
