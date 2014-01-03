@@ -12,7 +12,7 @@
 
 <%- if @topic_view.posts.present? %>
   <%- @topic_view.posts.each do |post| %>
-    <article class='post'>
+    <article class='post<%- if post.trashed? %> deleted<% end %>'>
       <%= link_to post.created_at.strftime("%e %b %Y"), post.url, class: 'post-date', target: "_blank" %>
       <%- if post.reply_to_post.present? %>
         <%= link_to I18n.t('embed.in_reply_to', username: post.reply_to_post.username), post.reply_to_post.url, class: 'in-reply-to', target: "_blank" %>
@@ -35,7 +35,7 @@
   <%- end %>
 
   <footer>
-    <%= link_to(I18n.t('embed.continue'), @second_post_url, class: 'button', target: '_blank') %>
+    <%= link_to(I18n.t('embed.continue'), @topic_view.topic.last_post_url, class: 'button', target: '_blank') %>
     <span class='replies'><%= I18n.t('embed.replies', count: @topic_view.topic.posts_count) %></span>
     <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
   </footer>

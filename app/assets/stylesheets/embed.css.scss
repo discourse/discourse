@@ -4,6 +4,10 @@
 article.post {
   border-bottom: 1px solid #ddd;
 
+  &.deleted {
+    background-color: #ffe5e5;
+  }
+
   .post-date {
     float: right;
     color: #aaa;
