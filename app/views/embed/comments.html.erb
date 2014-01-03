@@ -12,10 +12,10 @@
 
 <%- if @topic_view.posts.present? %>
   <%- @topic_view.posts.each do |post| %>
-    <article class='post<%- if post.trashed? %> deleted<% end %>'>
+    <article class='post<%- if post.trashed? %> deleted<% end %>' id='post-<%= post.id.to_s %>'>
       <%= link_to post.created_at.strftime("%e %b %Y"), post.url, class: 'post-date', target: "_blank" %>
       <%- if post.reply_to_post.present? %>
-        <%= link_to I18n.t('embed.in_reply_to', username: post.reply_to_post.username), post.reply_to_post.url, class: 'in-reply-to', target: "_blank" %>
+        <%= link_to I18n.t('embed.in_reply_to', username: post.reply_to_post.username), post.reply_to_post.url, 'data-link-to-post' => post.reply_to_post.id.to_s, :class => 'in-reply-to' %>
       <%- end %>
 
       <div class='author'>
@@ -26,7 +26,11 @@
         <%= raw post.cooked %>
 
         <%- if post.reply_count > 0 %>
-          <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, class: 'post-replies', target: "_blank" %>
+          <%- if post.reply_count == 1 %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies' %>
+          <% else %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, class: 'post-replies', target: "_blank" %>
+          <%- end %>
         <%- end %>
       </div>
 
