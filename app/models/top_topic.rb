@@ -41,6 +41,7 @@ class TopTopic < ActiveRecord::Base
            WHERE p.created_at >= :from
            AND p.deleted_at IS NULL
            AND NOT p.hidden
+           AND post_type = #{Post.types[:regular]}
            GROUP BY topic_id"
 
     TopTopic.update_top_topics(period, "posts", sql)
