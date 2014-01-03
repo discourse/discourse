@@ -174,13 +174,16 @@ begin
 
   run("RAILS_ENV=profile bundle exec rake assets:clean")
 
+  rss = `ps -o rss -p #{pid}`.chomp.split("\n").last.to_i
+
   results = {
     "home_page" => home_page,
     "topic_page" => topic_page,
     "home_page_admin" => home_page_admin,
     "topic_page_admin" => topic_page_admin,
     "timings" => @timings,
-    "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
+    "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
+    "rss_kb" => rss
   }.merge(facts).to_yaml
 
   puts results
