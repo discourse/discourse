@@ -43,11 +43,10 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def filter(keys)
-    rejected_keys = []
-    rejected_keys << :is_uncategorized unless is_uncategorized
-    rejected_keys << :displayable_topics unless displayable_topics.present?
-    rejected_keys << :subcategory_ids unless subcategory_ids.present?
-    keys - rejected_keys
+    keys.delete(:is_uncategorized) unless is_uncategorized
+    keys.delete(:displayable_topics) unless displayable_topics.present?
+    keys.delete(:subcategory_ids) unless subcategory_ids.present?
+    keys
   end
 
   def is_uncategorized

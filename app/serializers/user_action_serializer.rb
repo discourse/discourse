@@ -48,7 +48,9 @@ class UserActionSerializer < ApplicationSerializer
   
   def filter_keys(keys)
     unless SiteSetting.enable_names?
-      keys -= [:name, :target_name, :acting_name ]
+      keys.delete(:name)
+      keys.delete(:target_name)
+      keys.delete(:action_name)
     end
     keys
   end

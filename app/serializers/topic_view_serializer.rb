@@ -126,12 +126,13 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def filter(keys)
-    rejected_keys = []
-    rejected_keys << :starred unless has_topic_user?
+    keys.delete(:starred) unless has_topic_user?
     unless has_topic_user?
-      rejected_keys += [ :starred, :last_read_post_number, :posted ]
+      keys.delete(:starred)
+      keys.delete(:last_read_post_number)
+      keys.delete(:posted)
     end
-    keys - rejected_keys
+    keys
   end
 
   def highest_post_number

@@ -37,7 +37,7 @@ class TopicLinkSerializer < ApplicationSerializer
   end
 
   def filter(keys)
-    keys -= [:user_id] unless object['user_id'].present?
+    keys.delete(:user_id) unless object['user_id'].present?
     keys
   end
 

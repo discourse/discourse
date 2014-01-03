@@ -29,7 +29,9 @@ class InvitedUserSerializer < BasicUserSerializer
 
   # Remove some keys inherited from BasicUserSerializer
   def filter(keys)
-    keys - [:created_at, :redeemed_at]
+    keys.delete(:created_at)
+    keys.delete(:redeemed_at)
+    keys
   end
 
 end

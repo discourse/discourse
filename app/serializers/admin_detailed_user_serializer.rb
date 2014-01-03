@@ -53,7 +53,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def filter(keys)
-    keys -= [ :api_key ] unless api_key.present?
+    keys.delete(:api_key) unless api_key.present?
     keys
   end
 

@@ -32,7 +32,7 @@ class BasicPostSerializer < ApplicationSerializer
   end
 
   def filter(keys)
-    keys -= [ :name ] unless SiteSetting.enable_names?
+    keys.delete(:name) unless SiteSetting.enable_names?
     keys
   end
 

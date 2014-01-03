@@ -61,13 +61,16 @@ class UserSerializer < BasicUserSerializer
 
   def filter(keys)
     keys = super(keys)
-    rejected_keys = []
-    rejected_keys += PRIVATE_ATTRIBUTES unless can_edit
-    rejected_keys << :name unless SiteSetting.enable_names?
-    unless object.suspended?
-      rejected_keys += [ :suspended, :suspend_reason, :suspended_till ]
+    unless can_edit
+      PRIVATE_ATTRIBUTES.each { |k| keys.delete(k) }
     end
-    keys - rejected_keys
+    keys.delete(:name) unless SiteSetting.enable_names?
+    unless object.suspended?
+      keys.delete(:suspended)
+      keys.delete(:suspend_reason)
+      keys.delete(:suspended_till)
+    end
+    keys
   end
 
   def auto_track_topics_after_msecs

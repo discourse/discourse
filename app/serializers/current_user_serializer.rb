@@ -20,10 +20,9 @@ class CurrentUserSerializer < BasicUserSerializer
   root :user
 
   def filter(keys)
-    rejected_keys = []
-    rejected_keys << :site_flagged_posts_count unless object.staff?
-    rejected_keys << :can_invite_to_forum unless scope.can_invite_to_forum?
-    keys - rejected_keys
+    keys.delete(:site_flagged_posts_count) unless object.staff?
+    keys.delete(:can_invite_to_forum) unless scope.can_invite_to_forum?
+    keys
   end
 
   def topic_count

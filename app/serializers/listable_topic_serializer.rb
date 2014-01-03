@@ -22,13 +22,14 @@ class ListableTopicSerializer < BasicTopicSerializer
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
 
   def filter(keys)
-    rejected_keys = []
-    rejected_keys << :last_poster unless object.include_last_poster
+    keys.delete(:last_poster) unless object.include_last_poster
     unless seen
-      rejected_keys += [ :last_read_post_number, :unread, :new_posts ]
+      keys.delete(:last_read_post_number)
+      keys.delete(:unread)
+      keys.delete(:new_posts)
     end
-    rejected_keys << :excerpt unless pinned
-    keys - rejected_keys
+    keys.delete(:excerpt) unless pinned
+    keys
   end
 
   def bumped

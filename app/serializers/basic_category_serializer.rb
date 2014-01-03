@@ -14,7 +14,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :parent_category_id
 
   def filter(keys)
-    keys -= [ :parent_category_id ] unless parent_category_id
+    keys.delete(:parent_category_id) unless parent_category_id
     keys
   end
 

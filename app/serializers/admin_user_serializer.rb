@@ -65,7 +65,8 @@ class AdminUserSerializer < BasicUserSerializer
 
   def filter(keys)
     unless SiteSetting.must_approve_users
-      keys -= [ :can_approve, :approved ]
+      keys.delete(:can_approve)
+      keys.delete(:approved)
     end
     keys
   end

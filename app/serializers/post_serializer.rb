@@ -161,16 +161,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def filter(keys)
-    rejected_keys = []
-    rejected_keys << :draft_sequence unless @draft_sequence.present?
-    rejected_keys << :slug_title unless @topic_slug.present?
-    rejected_keys << :raw unless @add_raw.present?
-    rejected_keys << :link_counts unless include_link_counts?
-    rejected_keys << :read unless @topic_view.present?
-    rejected_keys << :reply_to_user unless include_reply_to_user?
-    rejected_keys << :bookmarked unless include_bookmarked?
-    rejected_keys << :display_username unless SiteSetting.enable_names?
-    keys - rejected_keys
+    keys.delete(:draft_sequence) unless @draft_sequence.present?
+    keys.delete(:slug_title) unless @topic_slug.present?
+    keys.delete(:raw) unless @add_raw.present?
+    keys.delete(:link_counts) unless include_link_counts?
+    keys.delete(:read) unless @topic_view.present?
+    keys.delete(:reply_to_user) unless include_reply_to_user?
+    keys.delete(:bookmarked) unless include_bookmarked?
+    keys.delete(:display_username) unless SiteSetting.enable_names?
+    keys
   end
 
   def include_link_counts?
