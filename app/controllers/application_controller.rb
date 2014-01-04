@@ -167,7 +167,7 @@ class ApplicationController < ActionController::Base
   # Our custom cache method
   def discourse_expires_in(time_length)
     return unless can_cache_content?
-    Middleware::AnonymousCache.anon_cache(request.env, 1.minute)
+    Middleware::AnonymousCache.anon_cache(request.env, time_length)
   end
 
   def fetch_user_from_params
