@@ -230,6 +230,8 @@ en:
       watch_new_topics: "Automatically watch all new topics posted on the forum"
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all topics in these categories"
+      tracked_categories: "Tracked"
+      tracked_categories_instructions: "You will automatically recieve notifications for topics in these categories"
       muted_categories: "Muted"
       muted_categories_instructions: "You will automatically mute all topics in these categories"
 

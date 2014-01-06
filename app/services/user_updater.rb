@@ -15,6 +15,10 @@ class UserUpdater
       CategoryUser.batch_set(user, :watching, ids)
     end
 
+    if ids = attributes[:tracked_category_ids]
+      CategoryUser.batch_set(user, :tracking, ids)
+    end
+
     if ids = attributes[:muted_category_ids]
       CategoryUser.batch_set(user, :muted, ids)
     end

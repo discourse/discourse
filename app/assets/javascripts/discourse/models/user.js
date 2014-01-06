@@ -181,8 +181,9 @@ Discourse.User = Discourse.Model.extend({
                                'external_links_in_new_tab',
                                'watch_new_topics',
                                'enable_quoting');
-    data.watched_category_ids = this.get('watchedCategories').map(function(c){ return c.get('id')});
-    data.muted_category_ids = this.get('mutedCategories').map(function(c){ return c.get('id')});
+    _.each(['muted','watched','tracked'], function(s){
+      data[s + '_category_ids'] = user.get(s + 'Categories').map(function(c){ return c.get('id')});
+    });
 
     return Discourse.ajax("/users/" + this.get('username_lower'), {
       data: data,
@@ -361,6 +362,12 @@ Discourse.User = Discourse.Model.extend({
       return Discourse.Category.findById(id);
     }));
   }.observes("muted_category_ids"),
+
+  updateTrackedCategories: function() {
+    this.set("trackedCategories", _.map(this.tracked_category_ids, function(id){
+      return Discourse.Category.findById(id);
+    }));
+  }.observes("tracked_category_ids"),
 
   updateWatchedCategories: function() {
     this.set("watchedCategories", _.map(this.watched_category_ids, function(id){

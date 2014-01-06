@@ -62,6 +62,7 @@ class UserSerializer < BasicUserSerializer
                      :gravatar_template,
                      :uploaded_avatar_template,
                      :muted_category_ids,
+                     :tracked_category_ids,
                      :watched_category_ids
 
 
@@ -110,6 +111,10 @@ class UserSerializer < BasicUserSerializer
 
   def muted_category_ids
     CategoryUser.lookup(object, :muted).pluck(:category_id)
+  end
+
+  def tracked_category_ids
+    CategoryUser.lookup(object, :tracking).pluck(:category_id)
   end
 
   def watched_category_ids
