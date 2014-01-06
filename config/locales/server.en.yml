@@ -27,7 +27,9 @@ en:
   site_under_maintenance: 'Site is currently undergoing maintenance.'
   operation_already_running: "An %{operation} is currently running. Can't start a new %{operation} job right now."
 
-  too_many_replies: "Sorry you can't reply any more times in that topic."
+  too_many_replies:
+    one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
+    other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
 
   embed:
     start_discussion: "Begin the Discussion"
