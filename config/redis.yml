@@ -3,7 +3,6 @@ defaults: &defaults
   port: <%= GlobalSetting.redis_port %>
   password: <%= GlobalSetting.redis_password %>
   db: <%= GlobalSetting.redis_db %>
-  cache_db: <%= GlobalSetting.redis_cache_db %>
 
 development:
   <<: *defaults
