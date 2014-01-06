@@ -22,7 +22,7 @@ task "db:seed:welcome" => :environment do
 
   ActiveRecord::Base.transaction do
     begin 
-      # Not using admin:create cause it will become uneccessary complicated between handling passed args and user input
+      # Not using admin:create cause it will become unneccessary complicated between handling passed args and user input
       admin = User.create!(email: "change_me@example.com", username: "forumadmin", password: "password")
       admin.grant_admin!
       admin.change_trust_level!(TrustLevel.levels.max_by{|k, v| v}[0])

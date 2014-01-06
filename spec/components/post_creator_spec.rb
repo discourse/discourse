@@ -268,7 +268,7 @@ describe PostCreator do
 
   end
 
-  # more integration testing ... maximise our testing
+  # more integration testing ... maximize our testing
   context 'existing topic' do
     let!(:topic) { Fabricate(:topic, user: user) }
     let(:creator) { PostCreator.new(user, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4) }
@@ -304,7 +304,7 @@ describe PostCreator do
     end
   end
 
-  # integration test ... minimise db work
+  # integration test ... minimize db work
   context 'private message' do
     let(:target_user1) { Fabricate(:coding_horror) }
     let(:target_user2) { Fabricate(:moderator) }

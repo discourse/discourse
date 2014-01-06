@@ -45,7 +45,7 @@ module Windows
     end
 
     # Create a feature provider dependent value object.
-    # mainly created becasue Windows Feature names are 
+    # mainly created because Windows Feature names are 
     # different based on whether dism.exe or servicemanagercmd.exe 
     # is used for installation
     def value_for_feature_provider(provider_hash)

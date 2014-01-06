@@ -536,7 +536,7 @@ de:
 
     invite_expiry_days: "Tage, die Nutzereinladungen gültig bleiben."
 
-    # TODO: perhaps we need a way of protcting these settings for hosted solution, global settings ...
+    # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
     invite_only: "Die Registration ist deaktiviert und du kannst nur durch eine Einladung beitreten"
 

@@ -14,7 +14,7 @@ class SearchObserver < ActiveRecord::Observer
     # for user login and name use "simple" lowercase stemmer
     stemmer = table == "user" ? "simple" : Search.long_locale
 
-    # Would be nice to use AR here but not sure how to execut Postgres functions
+    # Would be nice to use AR here but not sure how to execute Postgres functions
     # when inserting data like this.
     rows = Post.exec_sql_row_count("UPDATE #{table_name} SET search_data = TO_TSVECTOR('#{stemmer}', ?) WHERE #{foreign_key} = ?", search_data, id)
     if rows == 0

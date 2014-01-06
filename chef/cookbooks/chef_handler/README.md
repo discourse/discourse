@@ -59,7 +59,7 @@ It is best to declare `chef_handler` resources early on in the compile phase so 
     # enable the CloudkickHandler which was
     # dropped off in the default handler path.
     # passes the oauth key/secret to the handler's
-    # intializer.
+    # initializer.
     chef_handler "CloudkickHandler" do
       source "#{node['chef_handler']['handler_path']}/cloudkick_handler.rb"
       arguments [node['cloudkick']['oauth_key'], node['cloudkick']['oauth_secret']]

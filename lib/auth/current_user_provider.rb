@@ -22,7 +22,7 @@ class Auth::CurrentUserProvider
   end
 
   # we may need to know very early on in the middleware if an auth token
-  # exists, to optimise caching
+  # exists, to optimize caching
   def has_auth_cookie?
     raise NotImplementedError
   end

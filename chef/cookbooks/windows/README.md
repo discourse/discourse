@@ -501,7 +501,7 @@ Server 2008 due to API usage.
       action :change
     end
 
-    # Delete a taks named "old task"
+    # Delete a task named "old task"
     windows_task "old task" do
       action :delete
     end

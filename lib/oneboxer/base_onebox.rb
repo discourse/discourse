@@ -32,7 +32,7 @@ module Oneboxer
         URI.escape(val, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
       end
 
-      # Replace any occurence of a HTTP or HTTPS URL in the string with the protocol-agnostic variant
+      # Replace any occurrence of a HTTP or HTTPS URL in the string with the protocol-agnostic variant
       def replace_agnostic(var)
         var.gsub! /https?:\/\//, '//' if var.is_a? String
       end
