@@ -30,7 +30,6 @@ Discourse.ListController = Discourse.Controller.extend({
     @method refresh
   **/
   refresh: function() {
-    debugger;
     var listTopicsController = this.get('controllers.listTopics');
     listTopicsController.set('model.loaded', false);
     this.load(this.get('filterMode')).then(function (topicList) {
