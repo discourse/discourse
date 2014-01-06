@@ -88,7 +88,15 @@ module Discourse
     config.encoding = 'utf-8'
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password]
+    config.filter_parameters += [
+        :password,
+        :pop3s_polling_password,
+        :s3_secret_access_key,
+        :twitter_consumer_secret,
+        :facebook_app_secret,
+        :github_client_secret,
+        :discourse_org_access_key,
+    ]
 
     # Enable the asset pipeline
     config.assets.enabled = true
