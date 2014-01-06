@@ -59,7 +59,9 @@ class PostsController < ApplicationController
   def update
     params.require(:post)
 
-    post = Post.where(id: params[:id]).first
+    post = Post.where(id: params[:id])
+    post = post.with_deleted if guardian.is_staff?
+    post = post.first
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
     guardian.ensure_can_edit!(post)
 

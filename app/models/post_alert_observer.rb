@@ -49,6 +49,7 @@ class PostAlertObserver < ActiveRecord::Observer
   def after_create_post_revision(post_revision)
     post = post_revision.post
 
+    return unless post
     return if post_revision.user.blank?
     return if post_revision.user_id == post.user_id
     return if post.topic.private_message?
