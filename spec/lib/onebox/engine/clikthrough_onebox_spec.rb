@@ -5,7 +5,6 @@ describe Onebox::Engine::ClikThroughOnebox do
     @link = "http://www.clikthrough.com/theater/video/49/en-US"
   end
 
-
   include_context "engines"
   it_behaves_like "an engine"
 

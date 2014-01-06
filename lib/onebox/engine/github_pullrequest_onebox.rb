@@ -25,8 +25,7 @@ module Onebox
       end
 
       def data
-        {
-          link: link,
+        { link: link,
           domain: "http://www.github.com",
           badge: "g",
           author: raw["user"]["login"],
@@ -38,8 +37,7 @@ module Onebox
           additions: raw["additions"],
           deletions: raw["deletions"],
           changed_files: raw["changed_files"],
-          description: raw["body"]
-        }
+          description: raw["body"] }
       end
     end
   end

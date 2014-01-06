@@ -48,7 +48,6 @@ describe Onebox::Engine do
     end
   end
 
-
   describe '.placeholder_html' do
     let(:onebox) { OneboxEngineExample.new('http://eviltrout.com') }
     it "returns `to_html` by default" do
@@ -83,7 +82,6 @@ describe Onebox::Engine do
   end
 
 end
-
 
 describe ".onebox_name" do
   module ScopeForTemplateName

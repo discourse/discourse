@@ -5,7 +5,6 @@ describe Onebox::Engine::DailymotionOnebox do
     @link = "http://dailymotion.com"
   end
 
-
   include_context "engines"
   it_behaves_like "an engine"
 

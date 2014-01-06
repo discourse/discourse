@@ -26,10 +26,10 @@ module Onebox
     private
 
     def load_paths
-      Onebox.options.load_paths.select(&method(:has_template?))
+      Onebox.options.load_paths.select(&method(:template?))
     end
 
-    def has_template?(path)
+    def template?(path)
       File.exist?(File.join(path, "#{template_name}.#{template_extension}"))
     end
 
@@ -51,6 +51,5 @@ module Onebox
         view: view.to_html
       }
     end
-
   end
 end

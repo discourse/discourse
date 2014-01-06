@@ -14,4 +14,3 @@ describe Onebox::Engine::StackExchangeOnebox do
     end
   end
 end
-

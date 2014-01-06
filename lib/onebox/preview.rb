@@ -28,8 +28,6 @@ module Onebox
     end
 
     class InvalidURI < StandardError
-
     end
   end
 end
-

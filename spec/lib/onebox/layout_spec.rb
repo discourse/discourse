@@ -16,7 +16,7 @@ describe Onebox::Layout do
 
     context "when template exists in directory_b" do
       before(:each) do
-        allow_any_instance_of(described_class).to receive(:has_template?) do |path|
+        allow_any_instance_of(described_class).to receive(:template?) do |path|
           path == "directory_b"
         end
       end
@@ -28,7 +28,7 @@ describe Onebox::Layout do
 
     context "when template exists in directory_a" do
       before(:each) do
-        allow_any_instance_of(described_class).to receive(:has_template?) do |path|
+        allow_any_instance_of(described_class).to receive(:template?) do |path|
           path == "directory_a"
         end
       end
@@ -43,7 +43,7 @@ describe Onebox::Layout do
         expect(template_path).to include("template")
       end
     end
-    
+
     after(:each) do
       Onebox.options.load_paths.pop(2)
     end

@@ -26,4 +26,3 @@ module Onebox
     end
   end
 end
-

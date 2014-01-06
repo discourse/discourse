@@ -17,7 +17,7 @@ describe Onebox do
     end
 
     it "replaces the cache if the cache is expired" do
-      preview = Onebox.preview(url, cache: Moneta.new(:Memory, expires: 100000, serializer: :json))
+      preview = Onebox.preview(url, cache: Moneta.new(:Memory, expires: 100_000, serializer: :json))
       cache = preview.cache
       expect(cache.fetch(url)).to be(nil)
     end
@@ -26,7 +26,6 @@ describe Onebox do
   describe "templates" do
     let(:ignored)  { ["templates/_layout.mustache", "templates/githubgist.mustache"] }
     let(:templates) { Dir["templates/*.mustache"] - ignored }
-
 
     def expect_templates_to_not_match(text)
       templates.each do |template|

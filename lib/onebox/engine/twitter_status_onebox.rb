@@ -33,7 +33,7 @@ module Onebox
       end
 
       def access(*keys)
-        keys.inject(raw) do |memo, key|
+        keys.reduce(raw) do |memo, key|
           memo[key] || memo[key.to_s]
         end
       end
@@ -87,8 +87,7 @@ module Onebox
       end
 
       def data
-        {
-          link: link,
+        { link: link,
           domain: "http://www.twitter.com",
           badge: "t",
           tweet: tweet,
@@ -96,8 +95,7 @@ module Onebox
           title: title,
           avatar: avatar,
           favorites: favorites,
-          retweets: retweets
-        }
+          retweets: retweets }
       end
     end
   end

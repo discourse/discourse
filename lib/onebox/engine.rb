@@ -23,7 +23,7 @@ module Onebox
     # raises error if not defined in onebox engine. This is the output method for
     # an engine.
     def to_html
-      raise NoMethodError, "Engines need to implement this method"
+      fail NoMethodError, "Engines need to implement this method"
     end
 
     # Some oneboxes create iframes or other complicated controls. If you're using
@@ -51,13 +51,13 @@ module Onebox
     # raises error if not defined in onebox engine
     # in each onebox, uses either Nokogiri or OpenGraph to get raw HTML from url
     def raw
-      raise NoMethodError, "Engines need to implement this method"
+      fail NoMethodError, "Engines need to implement this method"
     end
 
     # raises error if not defined in onebox engine
     # in each onebox, returns hash of desired onebox content
     def data
-      raise NoMethodError, "Engines need this method defined"
+      fail NoMethodError, "Engines need this method defined"
     end
 
     def link
@@ -65,9 +65,9 @@ module Onebox
     end
 
     module ClassMethods
-      def ===(object)
-        if object.kind_of?(String)
-          !!(object =~ class_variable_get(:@@matcher))
+      def ===(other)
+        if other.kind_of?(String)
+          !!(other =~ class_variable_get(:@@matcher))
         else
           super
         end
@@ -81,7 +81,6 @@ module Onebox
       def onebox_name
         name.split("::").last.downcase.gsub(/onebox/, "")
       end
-
     end
   end
 end
