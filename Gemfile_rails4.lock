@@ -268,24 +268,8 @@ GEM
       trollop (>= 1.16.2)
     redcarpet (3.0.0)
     redis (3.0.6)
-    redis-actionpack (4.0.0)
-      actionpack (~> 4)
-      redis-rack (~> 1.5.0)
-      redis-store (~> 1.1.0)
-    redis-activesupport (4.0.0)
-      activesupport (~> 4)
-      redis-store (~> 1.1.0)
     redis-namespace (1.3.2)
       redis (~> 3.0.4)
-    redis-rack (1.5.0)
-      rack (~> 1.5)
-      redis-store (~> 1.1.0)
-    redis-rails (4.0.0)
-      redis-actionpack (~> 4)
-      redis-activesupport (~> 4)
-      redis-store (~> 1.1.0)
-    redis-store (1.1.4)
-      redis (>= 2.2)
     ref (1.0.5)
     rest-client (1.6.7)
       mime-types (>= 1.16)
@@ -466,7 +450,6 @@ DEPENDENCIES
   rbtrace
   redcarpet
   redis
-  redis-rails
   rest-client
   rinku
   rspec-given

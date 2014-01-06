@@ -4,7 +4,7 @@ require 'cache'
 describe "Redis Store" do
 
   let :cache do
-    Cache.new
+    Cache.new(namespace: 'foo')
   end
 
   let :store do
@@ -27,16 +27,17 @@ describe "Redis Store" do
   end
 
   it "doesn't collide with our Cache" do
+
     store.fetch "key" do
       "key in store"
     end
-   
+
     cache.fetch "key" do
       "key in cache"
     end
- 
+
     r = store.read "key"
-    
+
     r.should == "key in store"
   end
 
@@ -52,6 +53,7 @@ describe "Redis Store" do
     store.clear
     store.read("key").should be_nil
     cache.fetch("key").should == "key in cache"
+
   end
 
 end

@@ -1,6 +1,5 @@
 require File.expand_path('../boot', __FILE__)
 require 'rails/all'
-require 'redis-store' # HACK
 
 # Plugin related stuff
 require_relative '../lib/discourse_plugin_registry'

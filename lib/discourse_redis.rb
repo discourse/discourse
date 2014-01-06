@@ -1,6 +1,7 @@
 #
 #  A wrapper around redis that namespaces keys with the current site id
 #
+require_dependency 'cache'
 class DiscourseRedis
 
   def self.raw_connection(config = nil)
@@ -43,7 +44,7 @@ class DiscourseRedis
   end
 
   # Proxy key methods through, but prefix the keys with the namespace
-  [:append, :blpop, :brpop, :brpoplpush, :decr, :decrby, :del, :exists, :expire, :expireat, :get, :getbit, :getrange, :getset,
+  [:append, :blpop, :brpop, :brpoplpush, :decr, :decrby, :exists, :expire, :expireat, :get, :getbit, :getrange, :getset,
    :hdel, :hexists, :hget, :hgetall, :hincrby, :hincrbyfloat, :hkeys, :hlen, :hmget, :hmset, :hset, :hsetnx, :hvals, :incr,
    :incrby, :incrbyfloat, :lindex, :linsert, :llen, :lpop, :lpush, :lpushx, :lrange, :lrem, :lset, :ltrim,
    :mapped_hmset, :mapped_hmget, :mapped_mget, :mapped_mset, :mapped_msetnx, :mget, :move, :mset,
@@ -57,20 +58,32 @@ class DiscourseRedis
     end
   end
 
+  def del(k)
+    k = "#{DiscourseRedis.namespace}:#{k}"
+    @redis.del k
+  end
+
+  def keys
+    len = DiscourseRedis.namespace.length + 1
+    @redis.keys("#{DiscourseRedis.namespace}:*").map{
+      |k| k[len..-1]
+    }
+  end
+
+  def flushdb
+    keys.each{|k| del(k)}
+  end
+
+  def reconnect
+    @redis.client.reconnect
+  end
+
   def self.namespace
     RailsMultisite::ConnectionManagement.current_db
   end
 
   def self.new_redis_store
-    redis_config = YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env]
-    unless redis_config
-      puts '', "Redis config for environment '#{Rails.env}' was not found in #{Rails.root}/config/redis.yml."
-      puts "Did you forget to do RAILS_ENV=production?"
-      puts "Check your redis.yml and make sure it has configuration for the environment you're trying to use.", ''
-      raise 'Redis config not found'
-    end
-    ActiveSupport::Cache::RedisStore.new host:redis_config['host'], port:redis_config['port'], password:redis_config['password'], db:redis_config['db'], namespace:->{ DiscourseRedis.namespace + "_cache" }
+    Cache.new
   end
-
 
 end
