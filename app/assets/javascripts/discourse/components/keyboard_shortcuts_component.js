@@ -13,7 +13,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'g u': '/unread',
     'g f': '/favorited',
     'g c': '/categories',
-    'g t': '/top',
+    'g t': '/top'
   },
 
   CLICK_BINDINGS: {
@@ -37,8 +37,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     's': '#topic-footer-buttons button.share',                    // share topic
     'S': 'article.selected button.share',                         // share selected post
     '/': '#search-button',                                        // focus search
-    '!': 'article.selected button.flag',                          // flag selected post
-    '?': '#keyboard-help'                                         // open keyboard shortcut help
+    '!': 'article.selected button.flag'                           // flag selected post
   },
 
   FUNCTION_BINDINGS: {
@@ -46,7 +45,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'k': 'selectUp',
     'u': 'goBack',
     '`': 'nextSection',
-    '~': 'prevSection'
+    '~': 'prevSection',
+    '?': 'showHelpModal'                                          // open keyboard shortcut help
   },
 
   bindEvents: function(keyTrapper) {
@@ -74,6 +74,10 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
   prevSection: function() {
     this._changeSection(-1);
+  },
+
+  showHelpModal: function() {
+    Discourse.__container__.lookup('controller:application').send("showKeyboardShortcutsHelp");
   },
 
   _bindToPath: function(path, binding) {
