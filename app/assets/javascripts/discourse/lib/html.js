@@ -39,7 +39,11 @@ Discourse.HTML = {
     opts = opts || {};
 
     if ((!category) ||
-        (!opts.allowUncategorized && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id"))) return "";
+          (!opts.allowUncategorized &&
+           Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id") &&
+           Discourse.SiteSettings.suppress_uncategorized_badge
+          )
+       ) return "";
 
     var name = Em.get(category, 'name'),
         description = Em.get(category, 'description'),
