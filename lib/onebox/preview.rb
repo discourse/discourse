@@ -6,14 +6,16 @@ module Onebox
       @url = link
       @options = parameters
       @cache = options.cache
-      @engine = Matcher.new(@url).oneboxed
+      @engine_class = Matcher.new(@url).oneboxed
     end
 
     def to_s
+      return "" unless engine
       engine.to_html
     end
 
     def placeholder_html
+      return "" unless engine
       engine.placeholder_html
     end
 
@@ -24,7 +26,8 @@ module Onebox
     private
 
     def engine
-      @engine.new(@url, cache)
+      return nil unless @engine_class
+      @engine ||= @engine_class.new(@url, cache)
     end
 
     class InvalidURI < StandardError

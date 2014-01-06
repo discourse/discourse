@@ -5,9 +5,13 @@ module Onebox
     end
 
     def oneboxed
+      URI(@url)
+
       Engine.engines.select do |engine|
         engine === @url
       end.first
+    rescue URI::InvalidURIError
+      # If it's not a valid URL, don't even match
     end
   end
 end

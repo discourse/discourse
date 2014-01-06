@@ -14,12 +14,15 @@ describe Onebox::Preview do
     end
     it "returns an empty string if the resource is not found"
     it "returns an empty string if the resource fails to load"
-    it "returns an empty string if the url is not valid"
+
+    it "returns an empty string if the url is not valid" do
+      expect(described_class.new('not a url').to_s).to eq("")
+    end
   end
 
   describe "#engine" do
     it "returns an engine" do
-      expect(preview.send(:engine)).to be_a(Onebox::Engine)
+      expect(preview.send(:engine)).to be_an(Onebox::Engine)
     end
   end
 end
