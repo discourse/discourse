@@ -12,7 +12,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'g n': '/new',
     'g u': '/unread',
     'g f': '/favorited',
-    'g c': '/categories'
+    'g c': '/categories',
+    'g t': '/top',
   },
 
   CLICK_BINDINGS: {
