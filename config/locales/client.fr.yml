@@ -1103,8 +1103,8 @@ fr:
         this_week: "Cette semaine"
         today: "Aujourd'hui"
         redirect_reasons:
-          new_user: "Vous êtes un nouvel utilisateur. Ceci sera pour le moment votre page d'accueil. Si vous de savez pas par où commencer, voici une sélection des meilleurs discussions."
-          not_seen_in_a_month: "Nous ne vous avons pas vu depuis plus d'un mois. Voici une sélection des meilleurs discussion depuis que vous êtes parti."
+          new_user: "Vous êtes un nouvel utilisateur. Ceci sera pour le moment votre page d'accueil. Si vous ne savez pas par où commencer, voici une sélection des meilleures discussions."
+          not_seen_in_a_month: "Nous ne vous avons pas vu depuis plus d'un mois. Voici une sélection des meilleures discussions depuis que vous êtes parti."
 
     browser_update: 'Malheureusement, <a href="http://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour afficher ce forum Discourse</a>. Merci <a href="http://browsehappy.com">de mettre à jour votre navigateur</a>.'
 
