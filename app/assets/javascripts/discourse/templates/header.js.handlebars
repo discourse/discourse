@@ -52,11 +52,12 @@
         </li>
         <li>
           {{#if Discourse.loginRequired}}
-            <a class='icon expand' href='#' {{action showLogin}}>
+            <a id='search-button' class='icon expand' href='#' {{action showLogin}}>
               <i class='fa fa-search'></i>
             </a>
           {{else}}
-            <a class='icon expand'
+            <a id='search-button'
+               class='icon expand'
                href='#'
                data-dropdown="search-dropdown"
                title='{{i18n search.title}}'>
