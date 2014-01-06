@@ -228,6 +228,10 @@ zh_CN:
       suspended_notice: "该用户将被禁止登录，直至{{date}}."
       suspended_reason: "原因："
       watch_new_topics: "自动关注论坛中所有新发表的主题"
+      watched_categories: "已关注"
+      watched_categories_instructions: "你将自动关注这些分类中的所有主题"
+      muted_categories: "免打扰"
+      muted_categories_instructions: "你已将这些分类中的所有主题设为自动免打扰"
 
       messages:
         all: "所有"
@@ -313,6 +317,7 @@ zh_CN:
       email_always: "即使在论坛中是活跃状态也接收电子邮件提醒和摘要"
 
       other_settings: "其它"
+      categories_settings: "分类"
 
       new_topic_duration:
         label: "认为主题是新主题，当"
@@ -1113,6 +1118,9 @@ zh_CN:
         this_month: "本月"
         this_week: "本周"
         today: "今天"
+        redirect_reasons:
+          new_user: "你是一名新用户。这里将在一段时间内作为你的主页。如果你不知道从何开始，这里有一些最棒的主题。"
+          not_seen_in_a_month: "我们已经一个月没见到你了。这里有一些你不在时的最棒的主题。"
 
     browser_update: '抱歉, <a href="http://www.iteriter.com/faq/#browser">你的浏览器版本太低，推荐使用Chrome</a>. 请 <a href="http://www.google.com/chrome/">升级你的浏览器</a>。'
 
