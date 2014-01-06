@@ -29,7 +29,6 @@ Discourse.TopController = Discourse.ObjectController.extend({
     } else {
       return true;
     }
-  }.property(),
-
+  }.property()
 
 });
