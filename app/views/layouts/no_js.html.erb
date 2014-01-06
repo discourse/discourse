@@ -10,6 +10,7 @@
     <%= render :partial => "common/special_font_face" %>
     <%= render :partial => "common/discourse_stylesheet" %>
     <%= discourse_csrf_tags %>
+    <%= raw SiteContent.content_for(:head) %>
   </head>
   <body>
     <%- unless customization_disabled? %>

@@ -17,7 +17,7 @@ Discourse.PopupInputTipView = Discourse.View.extend({
   bouncePixels: 6,
   bounceDelay: 100,
 
-  click: function(e) {
+  click: function() {
     this.set('shownAt', false);
   },
 

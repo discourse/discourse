@@ -12,6 +12,11 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
   authenticate: null,
   loggingIn: false,
 
+  resetForm: function() {
+    this.set('authenticate', null);
+    this.set('loggingIn', false);
+  },
+
   site: function() {
     return Discourse.Site.current();
   }.property(),
@@ -31,6 +36,9 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
     return this.get('loggingIn') || this.blank('loginName') || this.blank('loginPassword');
   }.property('loginName', 'loginPassword', 'loggingIn'),
 
+  showSignupLink: function() {
+    return !Discourse.SiteSettings.invite_only && !this.get('loggingIn');
+  }.property('loggingIn'),
 
   actions: {
     login: function() {
@@ -61,7 +69,7 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
           $hidden_login_form.submit();
         }
 
-      }, function(result) {
+      }, function() {
         // Failed to login
         loginController.flash(I18n.t('login.error'), 'error');
         loginController.set('loggingIn', false);
@@ -86,6 +94,12 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
         window.open(Discourse.getURL("/auth/" + name), "_blank",
             "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
       }
+    },
+
+    createAccount: function() {
+      var createAccountController = this.get('controllers.createAccount');
+      createAccountController.resetForm();
+      this.send('showCreateAccount');
     }
   },
 

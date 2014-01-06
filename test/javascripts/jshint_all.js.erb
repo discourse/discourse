@@ -90,73 +90,6 @@ qHint.sendRequest = function (url, callback) {
   req.send();
 };
 
-var jsHintOpts = {
-  "predef":["Ember",
-    "jQuery",
-    "$",
-    "RSVP",
-    "Discourse",
-    "$LAB",
-    "Em",
-    "PreloadStore",
-    "Handlebars",
-    "I18n",
-    "bootbox",
-    "module",
-    "integration",
-    "test",
-    "ok",
-    "expect",
-    "equal",
-    "blank",
-    "present",
-    "visit",
-    "count",
-    "exists",
-    "asyncTestDiscourse",
-    "fixture",
-    "find",
-    "sinon",
-    "moment",
-    "start",
-    "_",
-    "console",
-    "alert",
-    "controllerFor",
-    "testController",
-    "containsInstance",
-    "parseHTML",
-    "deepEqual",
-    "notEqual",
-    "Blob",
-    "File"],
-  "node" : false,
-  "browser" : true,
-  "boss" : true,
-  "curly": false,
-  "debug": false,
-  "devel": false,
-  "eqeqeq": true,
-  "evil": true,
-  "forin": false,
-  "immed": false,
-  "laxbreak": false,
-  "newcap": true,
-  "noarg": true,
-  "noempty": false,
-  "nonew": false,
-  "nomen": false,
-  "onevar": false,
-  "plusplus": false,
-  "regexp": false,
-  "undef": true,
-  "sub": true,
-  "strict": false,
-  "white": false,
-  "eqnull": true,
-  "lastsemic": true
-};
-
 <%
   def jshint(dir, remove, to_ignore)
     result = ""
@@ -171,7 +104,7 @@ var jsHintOpts = {
 
       depend_on filename
 
-      result << "qHint('#{filename}', '/assets/#{filename}', jsHintOpts);\n" if ok
+      result << "qHint('#{filename}', '/assets/#{filename}', #{File.read(File.join(Rails.root, '.jshintrc'))});\n" if ok
 
     end
     result

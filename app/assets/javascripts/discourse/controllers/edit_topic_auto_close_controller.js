@@ -48,7 +48,7 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
       } else {
         bootbox.alert(I18n.t('composer.auto_close_error'), function() { self.send('showModal'); } );
       }
-    }, function (error) {
+    }, function () {
       bootbox.alert(I18n.t('composer.auto_close_error'), function() { self.send('showModal'); } );
     });
   }

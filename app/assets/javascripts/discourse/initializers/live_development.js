@@ -31,7 +31,7 @@ Discourse.addInitializer(function() {
   // Observe file changes
   return Discourse.MessageBus.subscribe("/file-change", function(data) {
     Ember.TEMPLATES.empty = Handlebars.compile("<div></div>");
-    _.each(data,function(me,idx) {
+    _.each(data,function(me) {
 
       if (me === "refresh") {
         // Refresh if necessary

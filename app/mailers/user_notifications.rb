@@ -113,11 +113,20 @@ class UserNotifications < ActionMailer::Base
     notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
     context = ""
+    tu = TopicUser.get(@post.topic_id, user)
+
     context_posts = Post.where(topic_id: @post.topic_id)
                         .where("post_number < ?", @post.post_number)
                         .where(user_deleted: false)
                         .order('created_at desc')
                         .limit(SiteSetting.email_posts_context)
+
+    if tu && tu.last_emailed_post_number
+      context_posts = context_posts.where("post_number > ?", tu.last_emailed_post_number)
+    end
+
+    # make .present? cheaper
+    context_posts = context_posts.to_a
 
     if context_posts.present?
       context << "---\n*#{I18n.t('user_notifications.previous_discussion')}*\n"
@@ -156,6 +165,8 @@ class UserNotifications < ActionMailer::Base
     if username.present?
       email_opts[:from_alias] = username
     end
+
+    TopicUser.change(user.id, @post.topic_id, last_emailed_post_number: @post.post_number)
 
     build_email(user.email, email_opts)
   end

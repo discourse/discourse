@@ -1,27 +1,84 @@
-/*jshint onecase:true */
-
 Discourse.Formatter = (function(){
 
   var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
       relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
       shortDate, shortDateNoYear, tinyDateYear, breakUp;
 
-  breakUp = function(str){
+    /*
+  * memoize.js
+  * by @philogb and @addyosmani
+  * with further optimizations by @mathias
+  * and @DmitryBaranovsk
+  * perf tests: http://bit.ly/q3zpG3
+  * Released under an MIT license.
+  *
+  * modified with cap by Sam
+  */
+  var cappedMemoize = function ( fn, max ) {
+      fn.maxMemoize = max;
+      fn.memoizeLength = 0;
+
+      return function () {
+          var args = Array.prototype.slice.call(arguments),
+              hash = "",
+              i = args.length;
+          var currentArg = null;
+          while (i--) {
+              currentArg = args[i];
+              hash += (currentArg === new Object(currentArg)) ?
+              JSON.stringify(currentArg) : currentArg;
+              if(!fn.memoize) {
+                fn.memoize = {};
+              }
+          }
+          if (hash in fn.memoize) {
+            return fn.memoize[hash];
+          } else {
+            fn.memoizeLength++;
+            if(fn.memoizeLength > max) {
+              fn.memoizeLength = 0;
+              fn.memoize = {};
+            }
+            var result = fn.apply(this, args);
+            fn.memoize[hash] = result;
+            return result;
+          }
+      };
+  };
+
+  breakUp = function(str, hint){
     var rval = [];
     var prev = str[0];
     var cur;
+    var brk = "<wbr>&#8203;";
+
+    var hintPos = [];
+    if(hint) {
+      hint = hint.toLowerCase().split(/\s+/).reverse();
+      var current = 0;
+      while(hint.length > 0) {
+        var word = hint.pop();
+        if(word !== str.substr(current, word.length).toLowerCase()) {
+          break;
+        }
+        current += word.length;
+        hintPos.push(current);
+      }
+    }
 
     rval.push(prev);
     for (var i=1;i<str.length;i++) {
       cur = str[i];
       if(prev.match(/[^0-9]/) && cur.match(/[0-9]/)){
-        rval.push("<wbr>");
+        rval.push(brk);
       } else if(i>1 && prev.match(/[A-Z]/) && cur.match(/[a-z]/)){
         rval.pop();
-        rval.push("<wbr>");
+        rval.push(brk);
         rval.push(prev);
       } else if(prev.match(/[^A-Za-z0-9]/) && cur.match(/[a-zA-Z0-9]/)){
-        rval.push("<wbr>");
+        rval.push(brk);
+      } else if(hintPos.indexOf(i) > -1) {
+        rval.push(brk);
       }
 
       rval.push(cur);
@@ -31,6 +88,8 @@ Discourse.Formatter = (function(){
     return rval.join("");
 
   };
+
+  breakUp = cappedMemoize(breakUp, 100);
 
   shortDate = function(date){
     return moment(date).shortDate();
@@ -92,7 +151,7 @@ Discourse.Formatter = (function(){
   };
 
 
-  relativeAgeTiny = function(date, options){
+  relativeAgeTiny = function(date){
     var format = "tiny";
     var distance = Math.round((new Date() - date) / 1000);
     var distanceInMinutes = Math.round(distance / 60.0);
@@ -167,7 +226,7 @@ Discourse.Formatter = (function(){
   };
 
   relativeAgeMedium = function(date, options){
-    var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo, val;
+    var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo;
     var wrapInSpan = options.wrapInSpan === false ? false : true;
 
     leaveAgo = options.leaveAgo;
@@ -223,6 +282,7 @@ Discourse.Formatter = (function(){
     updateRelativeAge: updateRelativeAge,
     toTitleCase: toTitleCase,
     shortDate: shortDate,
-    breakUp: breakUp
+    breakUp: breakUp,
+    cappedMemoize: cappedMemoize
   };
 })();

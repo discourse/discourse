@@ -84,7 +84,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
     var newTimings = {},
         totalTimings = this.get('totalTimings');
 
-    _.each(this.get('timings'), function(timing,key) {
+    _.each(this.get('timings'), function(timing) {
       if (!totalTimings[timing.postNumber])
         totalTimings[timing.postNumber] = 0;
 

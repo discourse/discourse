@@ -5,17 +5,12 @@ describe TopicUser do
   it { should belong_to :user }
   it { should belong_to :topic }
 
-  let!(:yesterday) { DateTime.now.yesterday }
+  let(:user) { Fabricate(:user) }
 
-  before do
-    DateTime.expects(:now).at_least_once.returns(yesterday)
-  end
-
-  let!(:user) { Fabricate(:coding_horror) }
-  let!(:topic) {
-    user = Fabricate(:user)
-    guardian = Guardian.new(user)
-    TopicCreator.create(user, guardian, title: "this is my topic title")
+  let(:topic) {
+    u = Fabricate(:user)
+    guardian = Guardian.new(u)
+    TopicCreator.create(u, guardian, title: "this is my topic title")
   }
   let(:topic_user) { TopicUser.get(topic,user) }
   let(:topic_creator_user) { TopicUser.get(topic, topic.user) }
@@ -23,6 +18,7 @@ describe TopicUser do
   let(:post) { Fabricate(:post, topic: topic, user: user) }
   let(:new_user) { Fabricate(:user, auto_track_topics_after_msecs: 1000) }
   let(:topic_new_user) { TopicUser.get(topic, new_user)}
+  let(:yesterday) { DateTime.now.yesterday }
 
 
   describe "unpinned" do
@@ -96,19 +92,22 @@ describe TopicUser do
     end
 
     it 'set upon initial visit' do
-      topic_user.first_visited_at.to_i.should == yesterday.to_i
-      topic_user.last_visited_at.to_i.should == yesterday.to_i
+      freeze_time yesterday do
+        topic_user.first_visited_at.to_i.should == yesterday.to_i
+        topic_user.last_visited_at.to_i.should == yesterday.to_i
+      end
     end
 
     it 'updates upon repeat visit' do
       today = yesterday.tomorrow
-      DateTime.expects(:now).returns(today)
 
-      TopicUser.track_visit!(topic,user)
-      # reload is a no go
-      topic_user = TopicUser.get(topic,user)
-      topic_user.first_visited_at.to_i.should == yesterday.to_i
-      topic_user.last_visited_at.to_i.should == today.to_i
+      freeze_time today do
+        TopicUser.track_visit!(topic,user)
+        # reload is a no go
+        topic_user = TopicUser.get(topic,user)
+        topic_user.first_visited_at.to_i.should == yesterday.to_i
+        topic_user.last_visited_at.to_i.should == today.to_i
+      end
     end
 
     it 'triggers the observer callbacks when updating' do
@@ -128,18 +127,22 @@ describe TopicUser do
       let(:topic_user) { TopicUser.get(topic,user) }
 
       it 'should create a new record for a visit' do
-        topic_user.last_read_post_number.should == 1
-        topic_user.last_visited_at.to_i.should == yesterday.to_i
-        topic_user.first_visited_at.to_i.should == yesterday.to_i
+        freeze_time yesterday do
+          topic_user.last_read_post_number.should == 1
+          topic_user.last_visited_at.to_i.should == yesterday.to_i
+          topic_user.first_visited_at.to_i.should == yesterday.to_i
+        end
       end
 
       it 'should update the record for repeat visit' do
-        Fabricate(:post, topic: topic, user: user)
-        TopicUser.update_last_read(user, topic.id, 2, 0)
-        topic_user = TopicUser.get(topic,user)
-        topic_user.last_read_post_number.should == 2
-        topic_user.last_visited_at.to_i.should == yesterday.to_i
-        topic_user.first_visited_at.to_i.should == yesterday.to_i
+        freeze_time yesterday do
+          Fabricate(:post, topic: topic, user: user)
+          TopicUser.update_last_read(user, topic.id, 2, 0)
+          topic_user = TopicUser.get(topic,user)
+          topic_user.last_read_post_number.should == 2
+          topic_user.last_visited_at.to_i.should == yesterday.to_i
+          topic_user.first_visited_at.to_i.should == yesterday.to_i
+        end
       end
     end
 
@@ -181,12 +184,17 @@ describe TopicUser do
   describe 'change a flag' do
 
     it 'creates a forum topic user record' do
+      user; topic
+
       lambda {
         TopicUser.change(user, topic.id, starred: true)
       }.should change(TopicUser, :count).by(1)
     end
 
     it "only inserts a row once, even on repeated calls" do
+
+      topic; user
+
       lambda {
         TopicUser.change(user, topic.id, starred: true)
         TopicUser.change(user, topic.id, starred: false)
@@ -246,6 +254,24 @@ describe TopicUser do
     tu = TopicUser.where(user_id: p1.user_id, topic_id: p1.topic_id).first
     tu.last_read_post_number.should == p2.post_number
     tu.seen_post_count.should == 2
+  end
+
+  describe "auto_watch_new_topic" do
+
+    it "auto watches topics when called" do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user, watch_new_topics: true)
+      user3 = Fabricate(:user, watch_new_topics: true)
+      TopicUser.auto_watch_new_topic(topic.id)
+
+      TopicUser.get(topic, user1).should == nil
+
+      tu = TopicUser.get(topic, user2)
+      tu.notification_level.should == TopicUser.notification_levels[:watching]
+      tu.notifications_reason_id.should == TopicUser.notification_reasons[:auto_watch]
+
+      TopicUser.get(topic, user3).notification_level.should == TopicUser.notification_levels[:watching]
+    end
   end
 
 end

@@ -242,6 +242,8 @@ Discourse::Application.routes.draw do
   get "topics/private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", constraints: {username: USERNAME_ROUTE_FORMAT}
 
+  get 'embed/comments' => 'embed#comments'
+
   # Topic routes
   get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: {topic_id: /\d+/}
@@ -295,5 +297,7 @@ Discourse::Application.routes.draw do
   end
   # special case for categories
   root to: "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
+  # special case for top
+  root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "list_top"
 
 end

@@ -5,6 +5,7 @@ require "optparse"
 
 @include_env = false
 @result_file = nil
+@iterations = 500
 opts = OptionParser.new do |o|
   o.banner = "Usage: ruby bench.rb [options]"
 
@@ -13,6 +14,9 @@ opts = OptionParser.new do |o|
   end
   o.on("-o", "--output [FILE]", "Output results to this file") do |f|
     @result_file = f
+  end
+  o.on("-i", "--iterations [ITERATIONS]", "Number of iterations to run the bench for") do |i|
+    @iterations = i.to_i
   end
 end
 opts.parse!
@@ -25,8 +29,7 @@ begin
   require 'facter'
 rescue LoadError
   run "gem install facter"
-  puts "just installed the facter gem, rerunning script"
-  exec("ruby " + [ File.absolute_path(__FILE__), __FILE__ ], *ARGV)
+  puts "please rerun script"
   exit
 end
 
@@ -60,7 +63,8 @@ end
 
 puts "Ensuring config is setup"
 
-unless %x{which ab > /dev/null 2>&1}
+%x{which ab > /dev/null 2>&1}
+unless $? == 0
   abort "Apache Bench is not installed. Try: apt-get install apache2-utils or brew install ab"
 end
 
@@ -86,11 +90,10 @@ if @include_env
   ENV.delete "RUBY_FREE_MIN"
 else
   # clean env
-  puts "Running with default environment"
-  ENV.delete "RUBY_GC_MALLOC_LIMIT"
-  ENV.delete "RUBY_HEAP_SLOTS_GROWTH_FACTOR"
-  ENV.delete "RUBY_HEAP_MIN_SLOTS"
-  ENV.delete "RUBY_FREE_MIN"
+  puts "Running with the following custom environment"
+  %w{RUBY_GC_MALLOC_LIMIT RUBY_HEAP_MIN_SLOTS RUBY_FREE_MIN}.each do |w|
+    puts "#{w}: #{ENV[w]}"
+  end
 end
 
 def port_available? port
@@ -124,9 +127,9 @@ api_key = `bundle exec rake api_key:get`.split("\n")[-1]
 
 def bench(path)
   puts "Running apache bench warmup"
-  `ab -n 100 "http://127.0.0.1:#{@port}#{path}"`
+  `ab -n 10 "http://127.0.0.1:#{@port}#{path}"`
   puts "Benchmarking #{path}"
-  `ab -n 500 -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
+  `ab -n #{@iterations} -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
   CSV.foreach("tmp/ab.csv") do |percent, time|
@@ -171,13 +174,16 @@ begin
 
   run("RAILS_ENV=profile bundle exec rake assets:clean")
 
+  rss = `ps -o rss -p #{pid}`.chomp.split("\n").last.to_i
+
   results = {
     "home_page" => home_page,
     "topic_page" => topic_page,
     "home_page_admin" => home_page_admin,
     "topic_page_admin" => topic_page_admin,
     "timings" => @timings,
-    "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
+    "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
+    "rss_kb" => rss
   }.merge(facts).to_yaml
 
   puts results

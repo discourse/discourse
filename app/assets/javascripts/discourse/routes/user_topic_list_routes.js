@@ -10,7 +10,7 @@ Discourse.UserTopicListRoute = Discourse.Route.extend({
   }
 });
 
-function createPMRoute(viewName, path, type) {
+function createPMRoute(viewName, path) {
   return Discourse.UserTopicListRoute.extend({
     userActionType: Discourse.UserAction.TYPES.messages_received,
 
@@ -18,7 +18,7 @@ function createPMRoute(viewName, path, type) {
       return Discourse.TopicList.find('topics/' + path + '/' + this.modelFor('user').get('username_lower'));
     },
 
-    setupController: function(controller, model) {
+    setupController: function() {
       this._super.apply(this, arguments);
       this.controllerFor('user').setProperties({
         pmView: viewName,

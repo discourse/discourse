@@ -109,6 +109,15 @@
         {{combobox valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
       </div>
 
+      {{#if Discourse.SiteSettings.enable_watch_new_topics}}
+      <div class="controls">
+        <label>
+          {{view Ember.Checkbox checkedBinding="watch_new_topics"}}
+          {{i18n user.watch_new_topics}}
+        </label>
+      </div>
+      {{/if}}
+
       <div class="controls">
         <label>{{view Ember.Checkbox checkedBinding="external_links_in_new_tab"}}
         {{i18n user.external_links_in_new_tab}}</label>
@@ -123,6 +132,25 @@
         </label>
       </div>
 
+    </div>
+
+    <div class="control-group category">
+      <label class="control-label">{{i18n user.categories_settings}}</label>
+      <div class="controls">
+        <label>{{i18n user.watched_categories}}</label>
+        {{category-group categories=watchedCategories}}
+        <div class="instructions">{{i18n user.watched_categories_instructions}}</div>
+      </div>
+      <div class="controls">
+        <label>{{i18n user.tracked_categories}}</label>
+        {{category-group categories=trackedCategories}}
+        <div class="instructions">{{i18n user.tracked_categories_instructions}}</div>
+      </div>
+      <div class="controls">
+        <label>{{i18n user.muted_categories}}</label>
+        {{category-group categories=mutedCategories}}
+        <div class="instructions">{{i18n user.muted_categories_instructions}}</div>
+      </div>
     </div>
 
     <div class="control-group">

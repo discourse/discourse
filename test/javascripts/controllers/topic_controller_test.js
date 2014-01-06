@@ -92,8 +92,7 @@ test("Select Replies when present", function() {
       tc = testController(Discourse.TopicController, topic),
       p1 = Discourse.Post.create({id: 1, post_number: 1, reply_count: 1}),
       p2 = Discourse.Post.create({id: 2, post_number: 2}),
-      p3 = Discourse.Post.create({id: 2, post_number: 3, reply_to_post_number: 1}),
-      postStream = tc.get('postStream');
+      p3 = Discourse.Post.create({id: 2, post_number: 3, reply_to_post_number: 1});
 
   ok(!tc.postSelected(p3), "replies are not selected by default");
   tc.send('toggledSelectedPostReplies', p1);

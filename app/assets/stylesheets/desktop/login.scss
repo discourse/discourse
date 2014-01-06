@@ -19,6 +19,12 @@
   }
 }
 
+.login-modal {
+  .fa-spinner {
+    font-size: 18px;
+  }
+}
+
 // Create account
 
 #new-account-link {
@@ -45,5 +51,9 @@
     label {
       color: #888;
     }
+  }
+
+  .fa-spinner {
+    font-size: 18px;
   }
 }

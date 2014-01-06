@@ -1,0 +1,50 @@
+<header>
+  <%- if @topic_view.posts.present? %>
+    <%= link_to(I18n.t('embed.continue'), @second_post_url, class: 'button', target: '_blank') %>
+    <span class='replies'><%= I18n.t('embed.replies', count: @topic_view.topic.posts_count) %></span>
+
+  <%- else %>
+    <%= link_to(I18n.t('embed.start_discussion'), @topic_view.topic.url, class: 'button', target: '_blank') %>
+  <%- end if %>
+
+  <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
+</header>
+
+<%- if @topic_view.posts.present? %>
+  <%- @topic_view.posts.each do |post| %>
+    <article class='post<%- if post.trashed? %> deleted<% end %>' id='post-<%= post.id.to_s %>'>
+      <%= link_to post.created_at.strftime("%e %b %Y"), post.url, class: 'post-date', target: "_blank" %>
+      <%- if post.reply_to_post.present? %>
+        <%= link_to I18n.t('embed.in_reply_to', username: post.reply_to_post.username), post.reply_to_post.url, 'data-link-to-post' => post.reply_to_post.id.to_s, :class => 'in-reply-to' %>
+      <%- end %>
+
+      <div class='author'>
+        <img src='<%= post.user.small_avatar_url %>'>
+        <h3 class='username'><%= post.user.username %></h3>
+      </div>
+      <div class='cooked'>
+        <%= raw post.cooked %>
+
+        <%- if post.reply_count > 0 %>
+          <%- if post.reply_count == 1 %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies' %>
+          <% else %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, class: 'post-replies', target: "_blank" %>
+          <%- end %>
+        <%- end %>
+      </div>
+
+      <div style='clear: both'></div>
+    </article>
+  <%- end %>
+
+  <footer>
+    <%= link_to(I18n.t('embed.continue'), @topic_view.posts.last.url, class: 'button', target: '_blank') %>
+    <%- if @posts_left > 0 %>
+      <span class='replies'><%= I18n.t('embed.more_replies', count: @posts_left) %></span>
+    <%- end %>
+    <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
+  </footer>
+
+<% end %>
+

@@ -90,18 +90,18 @@ module Jobs
 
     def create_tar_file
       filenames = @encoder.filenames
+      tar_filename = "#{@output_base_filename}.tar"
+      upload_directory = "uploads/" + RailsMultisite::ConnectionManagement.current_db
 
-      FileUtils.cd( File.dirname(filenames.first) ) do
-        `tar cvf #{@output_base_filename}.tar #{File.basename(filenames.first)}`
+      FileUtils.cd(File.dirname(filenames.first)) do
+        `tar cvf #{tar_filename} #{File.basename(filenames.first)}`
       end
 
-      FileUtils.cd( File.join(Rails.root, 'public') ) do
-        Upload.find_each do |upload|
-          `tar rvf #{@output_base_filename}.tar #{upload.url[1..-1]}` unless upload.url[0,4] == 'http'
-        end
+      FileUtils.cd(File.join(Rails.root, 'public')) do
+        `tar cvf #{tar_filename} #{upload_directory}`
       end
 
-      `gzip #{@output_base_filename}.tar`
+      `gzip #{tar_filename}`
 
       true
     end

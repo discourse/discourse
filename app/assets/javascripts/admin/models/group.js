@@ -44,7 +44,7 @@ Discourse.Group = Discourse.Model.extend({
     return Discourse.ajax("/admin/groups/" + group.get('id'), {type: "DELETE"})
       .then(function(){
         return true;
-      }, function(error) {
+      }, function() {
         group.set('disableSave', false);
         bootbox.alert(I18n.t("admin.groups.delete_failed"));
         return false;
@@ -108,15 +108,5 @@ Discourse.Group.reopenClass({
     });
 
     return list;
-  },
-
-  find: function(id) {
-    var promise = new Em.Deferred();
-
-    setTimeout(function(){
-      promise.resolve(Discourse.Group.create({id: 1, name: "all mods", members: ["A","b","c"]}));
-    }, 1000);
-
-    return promise;
   }
 });

@@ -72,6 +72,30 @@ module DiscourseUpdates
       end"
     end
 
+    def missing_versions=(versions)
+      # delete previous list from redis
+      prev_keys = $redis.lrange(missing_versions_list_key, 0, 4)
+      if prev_keys
+        $redis.del prev_keys
+        $redis.del(missing_versions_list_key)
+      end
+
+      # store the list in redis
+      version_keys = []
+      versions[0,5].each do |v|
+        key = "#{missing_versions_key_prefix}:#{v['version']}"
+        $redis.mapped_hmset key, v
+        version_keys << key
+      end
+      $redis.rpush missing_versions_list_key, version_keys
+      versions
+    end
+
+    def missing_versions
+      keys = $redis.lrange(missing_versions_list_key, 0, 4) # max of 5 versions
+      keys.present? ? keys.map { |k| $redis.hgetall(k) } : []
+    end
+
 
     private
 
@@ -93,6 +117,14 @@ module DiscourseUpdates
 
       def updated_at_key
         'last_version_check_at'
+      end
+
+      def missing_versions_list_key
+        'missing_versions'
+      end
+
+      def missing_versions_key_prefix
+        'missing_version'
       end
   end
 end

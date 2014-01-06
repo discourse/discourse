@@ -27,7 +27,24 @@ en:
   site_under_maintenance: 'Site is currently undergoing maintenance.'
   operation_already_running: "An %{operation} is currently running. Can't start a new %{operation} job right now."
 
-  too_many_replies: "Sorry you can't reply any more times in that topic."
+  too_many_replies:
+    one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
+    other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
+
+  embed:
+    start_discussion: "Begin the Discussion"
+    continue: "Continue the Discussion"
+    more_replies:
+      one: "1 more reply"
+      other: "%{count} more replies"
+
+    loading: "Loading Discussion..."
+    permalink: "Permalink"
+    imported_from: "Imported from: %{link}"
+    in_reply_to: "in reply to %{username}"
+    replies:
+      one: "1 reply"
+      other: "%{count} replies"
 
   too_many_mentions:
     zero: "Sorry, you can't mention other users."
@@ -171,7 +188,7 @@ en:
 
   category:
     topic_prefix: "Category definition for %{category}"
-    replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters.]"
+    replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters. Until you edit this text or create topics, this category won't appear on the categories page.]"
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
     errors:
       self_parent: "A subcategory's parent cannot be itself."
@@ -491,9 +508,12 @@ en:
     login_required:
       title: "Login Required: Homepage"
       description: "The text displayed for unauthorized users when login is required on the site."
+    head:
+      title: "HTML head"
+      description: "HTML that will be inserted inside the <head></head> tags"
     top:
       title: "Top of the pages"
-      description: "HTML that will be added at the top of every pages (after the header, before the navigation or the topic title)"
+      description: "HTML that will be added at the top of every pages (after the header, before the navigation or the topic title)."
     bottom:
       title: "Bottom of the pages"
       description: "HTML that will be added at the bottom of every pages"
@@ -728,6 +748,7 @@ en:
     pop3s_polling_host: "The host to poll for email via POP3S"
     pop3s_polling_username: "The username for the POP3S account to poll for email"
     pop3s_polling_password: "The password for the POP3S account to poll for email"
+    enable_watch_new_topics: "Allow users to watch all new topics (optionally) via a user preference"
 
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 
@@ -740,6 +761,7 @@ en:
     allow_uploaded_avatars: "Allow users to upload their custom avatars"
     allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:regenerate rake task after changing that setting."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
+    default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars"
     max_daily_gravatar_crawls: "The maximum amount of times Discourse will check gravatar for custom avatars in a day"
@@ -755,6 +777,12 @@ en:
     invites_shown: "Maximum invites shown on a user page"
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
+
+    embeddable_host: "Host that can embed the comments from this Discourse forum"
+    feed_polling_enabled: "Whether to import a RSS/ATOM feed as posts"
+    feed_polling_url: "URL of RSS/ATOM feed to import"
+    embed_by_username: "Discourse username of the user who creates the topics"
+    embed_post_limit: "Maximum number of posts to embed"
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
@@ -913,11 +941,22 @@ en:
     text_body_template: |
       A new version of Discourse is available.
 
+      Your version: %{installed_version}
+
       **New version: %{new_version}**
+
+      Please upgrade as soon as possible to get the latest fixes and new features.
+
+  new_version_mailer_with_notes:
+    subject_template: "[%{site_name}] Updates Are Available"
+    text_body_template: |
+      A new version of Discourse is available. Please upgrade as soon as possible to get the latest fixes and new features.
 
       Your version: %{installed_version}
 
-      Please upgrade as soon as possible to get the latest fixes and new features.
+      **New version: %{new_version}**
+
+      %{notes}
 
   system_messages:
     post_hidden:
@@ -1096,7 +1135,7 @@ en:
         Please visit this link to view the topic: %{base_url}%{url}
 
     user_replied:
-      subject_template: "[%{site_name}] new reply to your post in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1106,7 +1145,7 @@ en:
         %{respond_instructions}
 
     user_quoted:
-      subject_template: "[%{site_name}] %{username} quoted you in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1116,7 +1155,7 @@ en:
         %{respond_instructions}
 
     user_mentioned:
-      subject_template: "[%{site_name}] %{username} mentioned you in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1126,7 +1165,7 @@ en:
         %{respond_instructions}
 
     user_posted:
-      subject_template: "[%{site_name}] %{subject_prefix}new post in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 

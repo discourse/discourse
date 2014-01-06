@@ -30,7 +30,7 @@ class CommonPasswords
 
     def self.password_list
       @mutex.synchronize do
-        load_passwords unless redis.exists(LIST_KEY)
+        load_passwords unless redis.scard(LIST_KEY) > 0
       end
       RedisPasswordList.new
     end

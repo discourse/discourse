@@ -3,10 +3,11 @@ require 'nokogiri'
 class DisqusSAX < Nokogiri::XML::SAX::Document
   attr_accessor :posts, :threads
 
-  def initialize
+  def initialize(options=nil)
     @inside = {}
     @posts = {}
     @threads = {}
+    @options = options || {}
   end
 
   def start_element(name, attrs = [])
@@ -65,7 +66,12 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
 
   def record(target, sym, str, *params)
     return if target.nil?
-    target[sym] = str if inside?(*params)
+
+    if inside?(*params)
+      target[sym] ||= ""
+      target[sym] << str
+    end
+
   end
 
   def inside?(*params)
@@ -74,10 +80,14 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
 
   def normalize
 
-    # Remove any threads that have no posts
     @threads.each do |id, t|
       if t[:posts].size == 0
+        # Remove any threads that have no posts
         @threads.delete(id)
+      else
+        # Normalize titles
+        t[:title].gsub!(@options[:strip], '') if @options[:strip].present?
+        t[:title].strip!
       end
     end
 
@@ -93,14 +103,18 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
         @threads.delete(t[:id])
       end
     end
+
+
   end
 end
 
 class Disqus < Thor
   desc "import", "Imports posts from a Disqus XML export"
   method_option :file, aliases: '-f', required: true, desc: "The disqus XML file to import"
+  method_option :dry_run, required: false, desc: "Just output what will be imported rather than doing it"
   method_option :post_as, aliases: '-p', required: true, desc: "The Discourse username to post as"
-  method_option :category, aliases: '-c', desc: "The category to post in"
+  method_option :strip, aliases: '-s', required: false, desc: "Text to strip from titles"
+
   def import
     require './config/environment'
 
@@ -117,7 +131,7 @@ class Disqus < Thor
       exit 1
     end
 
-    parser = DisqusSAX.new
+    parser = DisqusSAX.new(options)
     doc = Nokogiri::XML::SAX::Parser.new(parser)
     doc.parse_file(options[:file])
     parser.normalize
@@ -126,49 +140,43 @@ class Disqus < Thor
 
     SiteSetting.email_domains_blacklist = ""
 
-    category_id = nil
-    if options[:category]
-      category_id = Category.where(name: options[:category]).first.try(:id)
-    end
-
     parser.threads.each do |id, t|
       puts "Creating #{t[:title]}... (#{t[:posts].size} posts)"
 
-      creator = PostCreator.new(user, title: t[:title], raw: "\[[Permalink](#{t[:link]})\]", created_at: Date.parse(t[:created_at]), category: category_id)
-      post = creator.create
+      if options[:dry_run].blank?
 
-      if post.present?
-        t[:posts].each do |p|
-          post_user = user
-          if p[:author_email]
-            email = Email.downcase(p[:author_email])
-            post_user = User.where(email: email).first
-            if post_user.blank?
-              post_user = User.create!(email: email, username: UserNameSuggester.suggest(email))
+        post = TopicEmbed.import_remote(user, t[:link], title: t[:title])
+        if post.present?
+          t[:posts].each do |p|
+            post_user = user
+            if p[:author_email]
+              email = Email.downcase(p[:author_email])
+              post_user = User.where(email: email).first
+              if post_user.blank?
+                post_user = User.create!(email: email, username: UserNameSuggester.suggest(email))
+              end
             end
-          end
 
-          attrs = {
-            topic_id: post.topic_id,
-            raw: p[:cooked],
-            cooked: p[:cooked],
-            created_at: Date.parse(p[:created_at])
-          }
+            attrs = {
+              topic_id: post.topic_id,
+              raw: p[:cooked],
+              cooked: p[:cooked],
+              created_at: Date.parse(p[:created_at])
+            }
 
-          if p[:parent_id]
-            parent = parser.posts[p[:parent_id]]
-            if parent && parent[:discourse_number]
-              attrs[:reply_to_post_number] = parent[:discourse_number]
+            if p[:parent_id]
+              parent = parser.posts[p[:parent_id]]
+              if parent && parent[:discourse_number]
+                attrs[:reply_to_post_number] = parent[:discourse_number]
+              end
             end
-          end
 
-          post = PostCreator.new(post_user, attrs).create
-          p[:discourse_number] = post.post_number
+            post = PostCreator.new(post_user, attrs).create
+            p[:discourse_number] = post.post_number
+          end
+          TopicFeaturedUsers.new(post.topic).choose
         end
-        TopicFeaturedUsers.new(post.topic).choose
       end
-
-
     end
 
   ensure

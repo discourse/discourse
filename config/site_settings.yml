@@ -126,6 +126,7 @@ users:
     client: true
     default: 14
   delete_all_posts_max: 15
+  default_external_links_in_new_tab: false
 
 posting:
   min_post_length:
@@ -225,6 +226,9 @@ email:
   pop3s_polling_port: 995
   pop3s_polling_username: ''
   pop3s_polling_password: ''
+  enable_watch_new_topics:
+    default: false
+    client: true
 
 files:
   max_image_size_kb:
@@ -346,6 +350,13 @@ developer:
     default:
       test: false
       default: true
+
+embedding:
+  embeddable_host: ''
+  feed_polling_enabled: false
+  feed_polling_url: ''
+  embed_by_username: ''
+  embed_post_limit: 100
 
 uncategorized:
   tos_url:

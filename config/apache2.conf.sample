@@ -33,10 +33,13 @@ Header set Server "Sample Server Name"
    BalancerMember http://127.0.0.1:3002
  </Proxy>
  
- # Prevent requests for /assets from being passed upstream
+ # Prevent requests for /assets, /javascripts, /plugins and /uploads from being passed upstream
  ProxyPass /assets !
+ ProxyPass /javascripts !
+ ProxyPass /plugins !
+ ProxyPass /uploads !
  
- # Pass the everything else
+  # Pass the everything else
  ProxyPass / balancer://thinservers/
  ProxyPassReverse / balancer://thinservers/
  ProxyPreserveHost on

@@ -16,7 +16,7 @@ Discourse.Route = Em.Route.extend({
 
     @method activate
   **/
-  activate: function(router, context) {
+  activate: function() {
     this._super();
 
     // Close mini profiler

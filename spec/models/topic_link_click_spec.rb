@@ -1,4 +1,3 @@
-require 'discourse'
 require 'spec_helper'
 
 describe TopicLinkClick do

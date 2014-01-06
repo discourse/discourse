@@ -55,7 +55,7 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
     },
 
     // Show newly inserted topics
-    showInserted: function(e) {
+    showInserted: function() {
       var tracker = Discourse.TopicTrackingState.current();
 
       // Move inserted into topics

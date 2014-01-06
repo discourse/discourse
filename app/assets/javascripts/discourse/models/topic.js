@@ -24,7 +24,7 @@ Discourse.Topic = Discourse.Model.extend({
     return a !== 'regular' && a !== 'private_message';
   }.property('archetype'),
 
-  convertArchetype: function(archetype) {
+  convertArchetype: function() {
     var a = this.get('archetype');
     if (a !== 'regular' && a !== 'private_message') {
       this.set('archetype', 'regular');
@@ -233,7 +233,7 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   // Recover this topic if deleted
-  recover: function(deleted_by) {
+  recover: function() {
     this.setProperties({
       deleted_at: null,
       deleted_by: null,
@@ -326,14 +326,13 @@ Discourse.Topic.reopenClass({
 
   // Load a topic, but accepts a set of filters
   find: function(topicId, opts) {
-    var data, promise, url;
-    url = Discourse.getURL("/t/") + topicId;
+    var url = Discourse.getURL("/t/") + topicId;
 
     if (opts.nearPost) {
       url += "/" + opts.nearPost;
     }
 
-    data = {};
+    var data = {};
     if (opts.postsAfter) {
       data.posts_after = opts.postsAfter;
     }

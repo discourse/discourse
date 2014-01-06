@@ -51,7 +51,7 @@ Discourse.Category = Discourse.Model.extend({
     return this.get('topic_count') > Discourse.SiteSettings.category_featured_topics;
   }.property('topic_count'),
 
-  save: function(args) {
+  save: function() {
     var url = "/categories";
     if (this.get('id')) {
       url = "/categories/" + (this.get('id'));
@@ -81,7 +81,7 @@ Discourse.Category = Discourse.Model.extend({
     return rval;
   }.property("permissions"),
 
-  destroy: function(callback) {
+  destroy: function() {
     return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
   },
 
@@ -168,8 +168,11 @@ Discourse.Category = Discourse.Model.extend({
       if (stats.length === 2) return false;
     }, this);
     return stats;
-  }
+  },
 
+  isUncategorizedCategory: function() {
+    return this.get('id') === Discourse.Site.currentProp("uncategorized_category_id");
+  }.property('id')
 });
 
 Discourse.Category.reopenClass({
@@ -199,6 +202,11 @@ Discourse.Category.reopenClass({
     return Discourse.Category.list().find(function(c) {
       return Discourse.Category.slugFor(c) === slug;
     });
+  },
+
+  // TODO: optimise, slow for no real reason
+  findById: function(id){
+    return Discourse.Category.list().findBy('id', id);
   },
 
   findBySlug: function(slug, parentSlug) {

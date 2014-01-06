@@ -402,12 +402,6 @@ span.post-count {
   }
 }
 
-article.boxed {
-  img, svg {
-    max-width: 100%;
-  }
-}
-
 .quote-button {
   display: none;
   position: absolute;
@@ -693,11 +687,13 @@ blockquote { /* solo quotes */
   position: relative;
   width: 720px;
   padding: 10px 10px 15px 20px;
-
-.highlighted {
-  background-color: lighten(yellow, 45%) !important;
-        }
-
+  .highlighted {
+    background-color: lighten(yellow, 45%) !important;
+  }
+  img, svg {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 
@@ -736,7 +732,6 @@ blockquote { /* solo quotes */
   }
   &.bottom .arrow {float: right; margin: 0 0 0 0;}
   &.top {margin-left: 112px;}
-  .topic-body img {max-width: 100%; height: auto;}
   .topic-body, .topic-meta-data {border: none;}
   .row {border-top: 1px solid #ddd; padding-top: 7px;}
   .reply:first-of-type .row {border-top: none;}

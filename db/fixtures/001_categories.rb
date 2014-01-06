@@ -1,5 +1,5 @@
 SiteSetting.refresh!
-if SiteSetting.uncategorized_category_id == -1
+if SiteSetting.uncategorized_category_id == -1 || !Category.exists?(SiteSetting.uncategorized_category_id)
   puts "Seeding uncategorized category!"
 
   result = Category.exec_sql "SELECT 1 FROM categories WHERE name = 'uncategorized'"
@@ -15,6 +15,7 @@ if SiteSetting.uncategorized_category_id == -1
   "
   category_id = result[0]["id"].to_i
 
+  Category.exec_sql "DELETE FROM site_settings where name = 'uncategorized_category_id'"
   Category.exec_sql "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
            VALUES ('uncategorized_category_id', 3, #{category_id}, now(), now())"
 end

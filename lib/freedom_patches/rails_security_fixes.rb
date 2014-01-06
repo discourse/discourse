@@ -45,7 +45,9 @@ unless rails4?
     class Relation
 
       def where_values_hash
-        equalities = with_default_scope.where_values.grep(Arel::Nodes::Equality).find_all { |node|
+        values = rails_master? ? where_values : with_default_scope.where_values
+
+        equalities = values.grep(Arel::Nodes::Equality).find_all { |node|
           node.left.relation.name == table_name
         }
 
