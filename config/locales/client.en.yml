@@ -231,7 +231,7 @@ en:
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all topics in these categories"
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically recieve notifications for topics in these categories"
+      tracked_categories_instructions: "You will automatically receive notifications for topics in these categories"
       muted_categories: "Muted"
       muted_categories_instructions: "You will automatically mute all topics in these categories"
 
@@ -251,7 +251,7 @@ en:
 
       change_username:
         title: "Change Username"
-        confirm: "I you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
+        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
         error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
