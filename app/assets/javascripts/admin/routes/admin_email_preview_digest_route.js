@@ -7,21 +7,17 @@
   @module Discourse
 **/
 
-var oneWeekAgo = function() {
-  return moment().subtract('days',7).format('YYYY-MM-DD');
-};
-
 Discourse.AdminEmailPreviewDigestRoute = Discourse.Route.extend({
 
   model: function() {
-    return Discourse.EmailPreview.findDigest(oneWeekAgo());
+    return Discourse.EmailPreview.findDigest();
   },
 
   afterModel: function(model) {
     var controller = this.controllerFor('adminEmailPreviewDigest');
     controller.setProperties({
       model: model,
-      lastSeen: oneWeekAgo(),
+      lastSeen: moment().subtract('days',7).format('YYYY-MM-DD'),
       showHtml: true
     });
   }
