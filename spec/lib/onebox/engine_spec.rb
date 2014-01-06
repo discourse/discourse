@@ -48,6 +48,14 @@ describe Onebox::Engine do
     end
   end
 
+
+  describe '.placeholder_html' do
+    let(:onebox) { OneboxEngineExample.new('http://eviltrout.com') }
+    it "returns `to_html` by default" do
+      expect(onebox.to_html).to eq(onebox.placeholder_html)
+    end
+  end
+
   describe ".===" do
     class OneboxEngineTripleEqual
       include Onebox::Engine

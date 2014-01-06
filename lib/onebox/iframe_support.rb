@@ -22,6 +22,11 @@ module Onebox
       return ""
     end
 
+    def placeholder_html
+      return "<img src=\"#{data[:image]}\">" if data[:image]
+      to_html
+    end
+
 
     private
 

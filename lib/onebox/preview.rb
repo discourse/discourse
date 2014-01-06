@@ -13,6 +13,10 @@ module Onebox
       engine.to_html
     end
 
+    def placeholder_html
+      engine.placeholder_html
+    end
+
     def options
       OpenStruct.new(@options)
     end

@@ -26,6 +26,18 @@ module Onebox
       raise NoMethodError, "Engines need to implement this method"
     end
 
+    # Some oneboxes create iframes or other complicated controls. If you're using
+    # a live editor with HTML preview, rendering those complicated controls can
+    # be slow or cause flickering.
+    #
+    # This method allows engines to produce a placeholder such as static image
+    # frame of a video.
+    #
+    # By default it just calls `to_html` unless implemented.
+    def placeholder_html
+      to_html
+    end
+
     private
 
     def record
