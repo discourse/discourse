@@ -49,6 +49,7 @@ sv:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"

@@ -72,6 +72,7 @@ ru:
           other: '%{count}лет'
           few: '%{count}лет'
           many: '%{count}лет'
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: '1 минута'
