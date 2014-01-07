@@ -1,6 +1,15 @@
 Discourse.Group = Discourse.Model.extend({
   loaded: false,
 
+
+  ALIAS_LEVELS : {
+    "nobody": 0,
+    "only_admins": 1,
+    "mods_and_admins": 2,
+    "members_mods_and_admins": 3,
+    "everyone": 99
+  },
+
   userCountDisplay: function(){
     var c = this.get('user_count');
     // don't display zero its ugly
@@ -37,11 +46,11 @@ Discourse.Group = Discourse.Model.extend({
 
   validValues: function() {
     return Em.A([
-      { name: I18n.t("admin.groups.alias_levels.nobody"), value: 0},
-      { name: I18n.t("admin.groups.alias_levels.only_admins"), value: 1},
-      { name: I18n.t("admin.groups.alias_levels.mods_and_admins"), value: 2},
-      { name: I18n.t("admin.groups.alias_levels.members_mods_and_admins"), value: 3},
-      { name: I18n.t("admin.groups.alias_levels.everyone"), value: 99}
+      { name: I18n.t("admin.groups.alias_levels.nobody"), value: this.ALIAS_LEVELS.nobody},
+      { name: I18n.t("admin.groups.alias_levels.only_admins"), value: this.ALIAS_LEVELS.only_admins},
+      { name: I18n.t("admin.groups.alias_levels.mods_and_admins"), value: this.ALIAS_LEVELS.mods_and_admins},
+      { name: I18n.t("admin.groups.alias_levels.members_mods_and_admins"), value: this.ALIAS_LEVELS.members_mods_and_admins},
+      { name: I18n.t("admin.groups.alias_levels.everyone"), value: this.ALIAS_LEVELS.everyone}
     ]);
   }.property(),
 
