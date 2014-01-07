@@ -723,7 +723,6 @@ da:
     min_body_similar_length: "Den mindste længde af en brødtekst før der ledes efter lignende emner."
 
     category_colors: "En pipe-separeret (|) liste af tilladte hexadecimale farveværdier for kategorier."
-    enable_wide_category_list: "Aktivér traditionel, fuldbredde kategoriliste uden tiling. BEMÆRK: Denne indstilling har ingen virkning og bliver fjernet. Den brede liste er den eneste mulighed nu."
 
     max_image_size_kb: "Den maksimale billedstørrelse som vi lader brugerne uploade, i kB - husk at tilpasse den tilsvarende værdi i nginx (client_max_body_size) / apache eller proxy."
     max_attachment_size_kb: "Den maksimale filstørrelse som vi lader brugerne uploade, i kB - husk at tilpasse den tilsvarende værdi i nginx (client_max_body_size) / apache eller proxy."

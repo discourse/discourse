@@ -615,7 +615,6 @@ fr:
     min_title_similar_length: "La taille minimale d'un titre avant que l'on vérifie l'existence de discussions identiques"
     min_body_similar_length: "La taille minimale d'un message avant que l'on vérifie l'existence de discussions identiques"
     category_colors: "Une liste de couleurs autorisées pour les catégories (au format hexadécimal, séparés par un |)"
-    enable_wide_category_list: "Activer pleine largeur, sans cadrillage, liste des catégories"
     max_image_size_kb: "La taille maximale des images que nous permettons aux utilisateurs d'envoyer (en Ko) - configure la limite dans nginx (client_max_body_size) / apache ou proxy aussi."
     max_attachment_size_kb: "La taille maximale des fichiers que nous permettons aux utilisateurs d'envoyer (en Ko) - configure la limite dans nginx (client_max_body_size) / apache ou proxy aussi."
     authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois de fichiers (séparés par un |)"

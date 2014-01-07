@@ -670,7 +670,6 @@ ko:
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
 
     category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
-    enable_wide_category_list: "Enable traditional full width, non-tiling, category list"
 
     max_image_size_kb: "사용자가 업로드 할 수 있는 이미지 최대 kB 사이즈 - nginx(client_max_body_size), apache, proxy 역시 설정해야함"
     max_attachment_size_kb: "사용자가 업로드 할 수 있는 파일 최대 kB 사이즈 - nginx(client_max_body_size), apache, proxy 역시 설정해야함"

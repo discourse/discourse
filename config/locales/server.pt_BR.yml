@@ -662,7 +662,6 @@ pt_BR:
     min_body_similar_length: "Tamanho mínimo do corpo de uma postagem antes de ele ser checado por tópicos similares"
 
     category_colors: "Lista separada por barra (|) das cores em hexadecimal permitidas para as categorias"
-    enable_wide_category_list: "Habilitar lista de categorias tradicional com largura total"
 
     max_image_size_kb: "Tamanho máximo de imagens que os usuários podem enviar em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
     max_attachment_size_kb: "Tamanho máximo de arquivos que os usuários podem enviar em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
