@@ -1,18 +1,15 @@
 Discourse.ListTopRoute = Discourse.Route.extend({
 
+  model: function() {
+    return Discourse.TopList.find();
+  },
+
   activate: function() {
     this._super();
     // will mark the "top" navigation item as selected
     this.controllerFor('list').setProperties({
       filterMode: 'top',
       category: null
-    });
-  },
-
-  setupController: function() {
-    var topController = this.controllerFor("top");
-    Discourse.TopList.find().then(function (result) {
-      topController.set("model", result);
     });
   },
 

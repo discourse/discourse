@@ -1,12 +1,12 @@
 /**
   Controller of the top page
 
-  @class TopController
+  @class ListTopController
   @extends Discourse.ObjectController
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopController = Discourse.ObjectController.extend({
+Discourse.ListTopController = Discourse.ObjectController.extend({
 
   redirectedToTopPageReason: function() {
     // no need for a reason if the default homepage is "top"
