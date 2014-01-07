@@ -214,7 +214,7 @@ describe PostsController do
       end
 
       it "raises an error when the user doesn't have permission to see the post" do
-        Guardian.any_instance.expects(:can_edit?).with(post).returns(false)
+        Guardian.any_instance.expects(:can_edit?).with(post).at_least_once.returns(false)
         xhr :put, :update, update_params
         response.should be_forbidden
       end
