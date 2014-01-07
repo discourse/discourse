@@ -12,14 +12,14 @@ module Onebox
     def to_s
       return "" unless engine
       engine.to_html
-    rescue Net::HTTPServerException
+    rescue Net::HTTPServerException, OpenURI::HTTPError, Timeout::Error, Net::HTTPError
       ""
     end
 
     def placeholder_html
       return "" unless engine
       engine.placeholder_html
-    rescue Net::HTTPServerException
+    rescue Net::HTTPServerException, OpenURI::HTTPError, Timeout::Error, Net::HTTPError
       ""
     end
 
