@@ -1121,8 +1121,8 @@ en:
         this_week: "This week"
         today: "Today"
         redirect_reasons:
-          new_user: "You are a new user. This will be your homepage for a while. If you don't know where to start, here's a summary of the best topics."
-          not_seen_in_a_month: "We have not seen you in more than a month. Here's a summary of the best topics since you were away."
+          new_user: "Welcome! As a new visitor, we thought you might like to start with this list of the top discussion topics in the last year."
+          not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
 
