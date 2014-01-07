@@ -51,8 +51,8 @@ module FileStore
       "#{public_dir}#{upload.url}"
     end
 
-    def absolute_avatar_template(avatar)
-      avatar_template(avatar, absolute_base_url)
+    def avatar_template(avatar)
+      relative_avatar_template(avatar)
     end
 
     def purge_tombstone(grace_period)
@@ -85,12 +85,8 @@ module FileStore
     end
 
     def relative_avatar_template(avatar)
-      avatar_template(avatar, relative_base_url)
-    end
-
-    def avatar_template(avatar, base_url)
       File.join(
-        base_url,
+        relative_base_url,
         "avatars",
         avatar.sha1[0..2],
         avatar.sha1[3..5],

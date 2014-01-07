@@ -964,7 +964,7 @@ describe User do
 
   describe ".small_avatar_url" do
 
-    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "http://test.localhost/uploaded/avatar/template/{size}.png") }
+    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "/uploaded/avatar/template/{size}.png") }
 
     it "returns a 45-pixel-wide avatar" do
       user.small_avatar_url.should == "//test.localhost/uploaded/avatar/template/45.png"
@@ -974,7 +974,7 @@ describe User do
 
   describe ".uploaded_avatar_path" do
 
-    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "http://test.localhost/uploaded/avatar/template/{size}.png") }
+    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "/uploaded/avatar/template/{size}.png") }
 
     it "returns nothing when uploaded avatars are not allowed" do
       SiteSetting.expects(:allow_uploaded_avatars).returns(false)
@@ -985,6 +985,11 @@ describe User do
       user.uploaded_avatar_path.should == "//test.localhost/uploaded/avatar/template/{size}.png"
     end
 
+    it "returns a schemaless cdn-based avatar template" do
+      Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
+      user.uploaded_avatar_path.should == "//my.cdn.com/uploaded/avatar/template/{size}.png"
+    end
+
   end
 
   describe ".avatar_template" do
@@ -992,8 +997,8 @@ describe User do
     let(:user) { build(:user, email: "em@il.com") }
 
     it "returns the uploaded_avatar_path by default" do
-      user.expects(:uploaded_avatar_path).returns("/uploaded/avatar.png")
-      user.avatar_template.should == "/uploaded/avatar.png"
+      user.expects(:uploaded_avatar_path).returns("//discourse.org/uploaded/avatar.png")
+      user.avatar_template.should == "//discourse.org/uploaded/avatar.png"
     end
 
     it "returns the gravatar when no avatar has been uploaded" do
