@@ -100,7 +100,7 @@ Discourse.Formatter = (function(){
   };
 
   tinyDateYear = function(date) {
-    return moment(date).format("D MMM 'YY");
+    return moment(date).format(I18n.t("dates.tiny.date_year"));
   };
 
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
