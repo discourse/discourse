@@ -17,7 +17,7 @@ module Onebox
       private
 
       def match
-        @match ||= @url.match(/twitter\.com\/.+?\/status\/(?<id>\d+)/)
+        @match ||= @url.match(%r{twitter\.com/.+?/status/(?<id>\d+)})
       end
 
       def client

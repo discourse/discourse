@@ -12,6 +12,7 @@ module Onebox
       end.first
     rescue URI::InvalidURIError
       # If it's not a valid URL, don't even match
+      nil
     end
   end
 end

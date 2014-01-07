@@ -21,9 +21,10 @@ module Onebox
       private
 
       def match
-        @match ||= @url.match(/github\.com\/(?<owner>[^\/]+)\/(?<repository>[^\/]+)\/commit\/(?<sha>[^\/]+)/)
+        @match ||= @url.match(%{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/commit/(?<sha>[^/]+)})
       end
 
+      # rubocop:disable MethodLength
       def data
         {
           link: link,
@@ -41,6 +42,7 @@ module Onebox
           deletions: raw["stats"]["deletions"]
         }
       end
+      # rubocop:enable MethodLength
     end
   end
 end

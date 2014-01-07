@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "multi_json", "~> 1.7"
   spec.add_runtime_dependency "mustache", "~> 0.99"
   spec.add_runtime_dependency "nokogiri", "~> 1.4"
-  spec.add_runtime_dependency "opengraph_parser", "~> 0.2"
+  spec.add_runtime_dependency "opengraph_parser", "~> 0.2.3"
   spec.add_runtime_dependency "hexpress", "~> 1.2"
   spec.add_runtime_dependency "moneta", "~> 0.7"
   spec.add_development_dependency "bundler", "~> 1.3"

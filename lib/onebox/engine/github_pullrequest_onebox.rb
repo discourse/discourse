@@ -21,9 +21,10 @@ module Onebox
       private
 
       def match
-        @match ||= @url.match(/github\.com\/(?<owner>[^\/]+)\/(?<repository>[^\/]+)\/pull\/(?<number>[^\/]+)/)
+        @match ||= @url.match(%r{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/pull/(?<number>[^/]+)})
       end
 
+      # rubocop:disable MethodLength
       def data
         { link: link,
           domain: "http://www.github.com",
@@ -39,6 +40,7 @@ module Onebox
           changed_files: raw["changed_files"],
           description: raw["body"] }
       end
+      # rubocop:enable MethodLength
     end
   end
 end

@@ -19,7 +19,7 @@ module Onebox
       private
 
       def match
-        @match ||= @url.match(/gist\.github\.com\/([^\/]+\/)?(?<sha>[0-9a-f]+)/)
+        @match ||= @url.match(%r{gist\.github\.com/([^/]+/)?(?<sha>[0-9a-f]+)})
       end
 
       def data
