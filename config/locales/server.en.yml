@@ -85,6 +85,7 @@ en:
   rss_description:
     latest: "Latest topics"
     hot: "Hot topics"
+  too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
 
   groups:
     errors:
@@ -544,6 +545,7 @@ en:
     download_remote_images_to_local: "Download a copy of remote images hotlinked in posts"
     download_remote_images_threshold: "Amount of minimum available disk space required to download remote images locally (in percent)"
     ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
+    post_edit_time_limit: "Amount of time in minutes in which posts can be edited and deleted by the author. Set to 0 to allow editing and deleting posts at any time."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view edit history."
     delete_removed_posts_after: "Number of hours after which posts removed by the author will be deleted."
     max_image_width: "Maximum allowed width of images in a post"

@@ -459,7 +459,17 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         }
       ]);
     } else {
-      post.destroy(user);
+      post.destroy(user).then(null, function(e) {
+        console.log('Error case?');
+        console.log(e);
+        post.undoDeleteState();
+        var response = $.parseJSON(e.responseText);
+        if (response && response.errors) {
+          bootbox.alert(response.errors[0]);
+        } else {
+          bootbox.alert(I18n.t('generic_error'));
+        }
+      });
     }
   },
 

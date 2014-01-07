@@ -544,6 +544,29 @@ describe Guardian do
       it 'returns true as an admin' do
         Guardian.new(admin).can_edit?(post).should be_true
       end
+
+      context 'post is older than post_edit_time_limit' do
+        let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
+        before do
+          SiteSetting.stubs(:post_edit_time_limit).returns(5)
+        end
+
+        it 'returns false to the author of the post' do
+          Guardian.new(old_post.user).can_edit?(old_post).should eq(false)
+        end
+
+        it 'returns true as a moderator' do
+          Guardian.new(moderator).can_edit?(old_post).should eq(true)
+        end
+
+        it 'returns true as an admin' do
+          Guardian.new(admin).can_edit?(old_post).should eq(true)
+        end
+
+        it 'returns false for another regular user trying to edit your post' do
+          Guardian.new(coding_horror).can_edit?(old_post).should eq(false)
+        end
+      end
     end
 
     describe 'a Topic' do
@@ -772,6 +795,34 @@ describe Guardian do
 
       it 'returns true when an admin' do
         Guardian.new(admin).can_delete?(post).should be_true
+      end
+
+      context 'post is older than post_edit_time_limit' do
+        let(:old_post) { build(:post, topic: topic, user: topic.user, post_number: 2, created_at: 6.minutes.ago) }
+        before do
+          SiteSetting.stubs(:post_edit_time_limit).returns(5)
+        end
+
+        it 'returns false to the author of the post' do
+          Guardian.new(old_post.user).can_delete?(old_post).should eq(false)
+        end
+
+        it 'returns true as a moderator' do
+          Guardian.new(moderator).can_delete?(old_post).should eq(true)
+        end
+
+        it 'returns true as an admin' do
+          Guardian.new(admin).can_delete?(old_post).should eq(true)
+        end
+
+        it "returns false when it's the OP, even as a moderator" do
+          old_post.post_number = 1
+          Guardian.new(moderator).can_delete?(old_post).should eq(false)
+        end
+
+        it 'returns false for another regular user trying to delete your post' do
+          Guardian.new(coding_horror).can_delete?(old_post).should eq(false)
+        end
       end
     end
 
