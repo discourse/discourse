@@ -37,8 +37,12 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
   }.property('loginName', 'loginPassword', 'loggingIn'),
 
   showSignupLink: function() {
-    return !Discourse.SiteSettings.invite_only && !this.get('loggingIn');
-  }.property('loggingIn'),
+    return !Discourse.SiteSettings.invite_only && !this.get('loggingIn') && this.blank('authenticate');
+  }.property('loggingIn', 'authenticate'),
+
+  showSpinner: function() {
+    return this.get('loggingIn') || this.get('authenticate');
+  }.property('loggingIn', 'authenticate'),
 
   actions: {
     login: function() {
@@ -91,8 +95,15 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
 
         var height = loginMethod.get("frameHeight") || 400;
         var width = loginMethod.get("frameWidth") || 800;
-        window.open(Discourse.getURL("/auth/" + name), "_blank",
+        var w = window.open(Discourse.getURL("/auth/" + name), "_blank",
             "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
+        var self = this;
+        var timer = setInterval(function() {
+          if(w.closed) {
+            clearInterval(timer);
+            self.set('authenticate', null);
+          }
+        }, 1000);
       }
     },
 
