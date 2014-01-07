@@ -1,4 +1,3 @@
 # Install the configuration files we need
-cookbook_file "/vagrant/config/redis.yml" do
-  source "redis.yml"
-end
+
+# Nothing here anymore. I'll leave this recipe in case we need to add stuff for vagrant again.
