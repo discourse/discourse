@@ -53,6 +53,7 @@ fr:
         almost_x_years:
           one: "1y"
           other: "%{count}a"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"

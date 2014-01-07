@@ -49,6 +49,7 @@ ko:
         almost_x_years:
           one:   "거의 1년"
           other: "거의 %{count}년"
+        date_year: "'YY M/D"
       medium:
         x_minutes:
           one: "1분"

@@ -59,6 +59,7 @@ cs:
           one:   "1r"
           few:   "%{count}r"
           other: "%{count}let"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 minuta"
