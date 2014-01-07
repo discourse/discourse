@@ -38,15 +38,20 @@ class Cache < ActiveSupport::Cache::Store
 
   def read_entry(key, options)
     if data = redis.get(key)
+      data = Marshal.load(data)
       ActiveSupport::Cache::Entry.new data
     end
+  rescue
+    # corrupt cache, fail silently for now, remove rescue later
   end
 
   def write_entry(key, entry, options)
+    dumped = Marshal.dump(entry.value)
+
     if expiry = options[:expires_in]
-      redis.setex(key, expiry, entry.value)
+      redis.setex(key, expiry, dumped)
     else
-      redis.set(key, entry.value)
+      redis.set(key, dumped)
     end
 
     if family = family_key(options[:family], options)
