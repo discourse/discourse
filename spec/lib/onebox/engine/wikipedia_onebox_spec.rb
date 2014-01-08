@@ -14,7 +14,7 @@ describe Onebox::Engine::WikipediaOnebox do
     end
 
     it "includes summary" do
-      expect(html).to include("Kevin Norwood Bacon[1] (born July 8, 1958)")
+      expect(html).to include("Kevin Norwood Bacon (born July 8, 1958)")
     end
   end
 end

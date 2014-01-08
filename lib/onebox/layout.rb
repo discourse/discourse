@@ -8,7 +8,13 @@ module Onebox
 
     def initialize(name, record, cache)
       @cache = cache
-      @record = record
+      @record = Onebox::Helpers.symbolize_keys(record)
+
+      # Fix any relative paths
+      if record[:image] && record[:image] =~ /^\//
+        record[:image] = "#{uri.scheme}://#{uri.host}/#{record[:image]}"
+      end
+
       @md5 = Digest::MD5.new
       @view = View.new(name, record)
       @template_name = "_layout"
@@ -24,6 +30,10 @@ module Onebox
     end
 
     private
+
+    def uri
+      @uri = URI(link)
+    end
 
     def load_paths
       Onebox.options.load_paths.select(&method(:template?))
@@ -41,12 +51,18 @@ module Onebox
       record[:link]
     end
 
+    def domain
+
+      return record[:domain] if record[:domain]
+
+      URI(link || '').host
+    end
+
     def details
       {
         link: record[:link],
         title: record[:title],
-        badge: record[:badge],
-        domain: record[:domain],
+        domain: domain,
         subname: view.template_name,
         view: view.to_html
       }

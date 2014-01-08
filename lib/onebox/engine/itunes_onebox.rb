@@ -3,7 +3,7 @@ module Onebox
     class ItunesOnebox
       include Engine
       include LayoutSupport
-      include OpenGraph
+      include StandardEmbed
 
       matches do
         # matcher /^https?:\/\/itunes.apple.com\/.+$/
@@ -19,8 +19,6 @@ module Onebox
       def data
         {
           link: link,
-          domain: "http://itunes.apple.com",
-          badge: "i",
           title: raw.title,
           image: raw.images.first,
           description: raw.description,

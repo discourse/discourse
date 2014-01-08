@@ -27,8 +27,6 @@ module Onebox
       # rubocop:disable MethodLength
       def data
         { link: link,
-          domain: "http://www.github.com",
-          badge: "g",
           author: raw["user"]["login"],
           gravatar: raw["user"]["avatar_url"],
           title: raw["title"],

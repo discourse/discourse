@@ -26,8 +26,6 @@ module Onebox
       def data
         {
           link: link,
-          domain: "https://amazon.com",
-          badge: "a",
           title: raw.css("h1").inner_text,
           image: image,
           description: raw.css("#postBodyPS").inner_text,

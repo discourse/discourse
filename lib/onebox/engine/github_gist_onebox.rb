@@ -25,8 +25,6 @@ module Onebox
       def data
         {
           link: link,
-          domain: "http://gist.github.com",
-          badge: "g",
           title: raw["description"],
           author: raw["user"]["login"],
           sha: match[:sha]

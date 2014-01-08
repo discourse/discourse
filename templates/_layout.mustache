@@ -1,21 +1,11 @@
 <aside class="onebox {{subname}}">
-  <aside class="badge">
-    <strong class="name">{{badge}}</strong>
-  </aside>
-  <header class="meta">
-    <hgroup>
-      <h1 class="title">
-        {{title}}
-        <small class="provider">
-          <a class="domain" href="{{domain}}" rel="provider">{{domain}}</a>
-        </small>
-      </h1>
-      <h2 class="canonical">
-        <a class="link" href="{{{link}}}" title="{{title}}" rel="canonical">{{{link}}}</a>
-      </h2>
-    </hgroup>
+  <header class="source">
+    <a href="{{{link}}}">
+      {{domain}}
+    </a>
   </header>
-  <article class="content">
+  <article class="onebox-body">
     {{{view}}}
   </article>
+  <div style='clear: both'></div>
 </aside>

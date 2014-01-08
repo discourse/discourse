@@ -88,8 +88,6 @@ module Onebox
 
       def data
         { link: link,
-          domain: "http://www.twitter.com",
-          badge: "t",
           tweet: tweet,
           timestamp: timestamp,
           title: title,

@@ -17,8 +17,6 @@ module Onebox
       def data
         {
           link: link,
-          domain: "http://www.imgur.com",
-          badge: "i",
           title: raw.css("h2#image-title").inner_text,
           image: raw.css("#image img").first["src"]
         }

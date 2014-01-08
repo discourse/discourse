@@ -33,10 +33,6 @@ describe Onebox do
       end
     end
 
-    it "should not contain any triple braces" do
-      expect_templates_to_not_match(/\{\{\{/)
-    end
-
     it "should not contain any script tags" do
       expect_templates_to_not_match(/<script/)
     end

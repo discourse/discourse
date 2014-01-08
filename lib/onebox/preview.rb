@@ -11,20 +11,24 @@ module Onebox
 
     def to_s
       return "" unless engine
-      engine.to_html
-    rescue Net::HTTPServerException, OpenURI::HTTPError, Timeout::Error, Net::HTTPError
+      engine.to_html || ""
+    rescue *Onebox::Preview.web_exceptions
       ""
     end
 
     def placeholder_html
       return "" unless engine
-      engine.placeholder_html
-    rescue Net::HTTPServerException, OpenURI::HTTPError, Timeout::Error, Net::HTTPError
+      engine.placeholder_html || ""
+    rescue *Onebox::Preview.web_exceptions
       ""
     end
 
     def options
       OpenStruct.new(@options)
+    end
+
+    def self.web_exceptions
+     [Net::HTTPServerException, OpenURI::HTTPError, Timeout::Error, Net::HTTPError, Errno::ECONNREFUSED]
     end
 
     private

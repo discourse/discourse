@@ -49,7 +49,7 @@ module Onebox
     end
 
     # raises error if not defined in onebox engine
-    # in each onebox, uses either Nokogiri or OpenGraph to get raw HTML from url
+    # in each onebox, uses either Nokogiri or StandardEmbed to get raw HTML from url
     def raw
       fail NoMethodError, "Engines need to implement this method"
     end
@@ -66,8 +66,8 @@ module Onebox
 
     module ClassMethods
       def ===(other)
-        if other.kind_of?(String)
-          !!(other =~ class_variable_get(:@@matcher))
+        if other.kind_of?(URI)
+          !!(other.to_s =~ class_variable_get(:@@matcher))
         else
           super
         end
@@ -81,43 +81,25 @@ module Onebox
       def onebox_name
         name.split("::").last.downcase.gsub(/onebox/, "")
       end
+
     end
   end
 end
 
+require_relative "helpers"
 require_relative "layout_support"
 require_relative "iframe_support"
-require_relative "engine/open_graph"
+require_relative "engine/standard_embed"
 require_relative "engine/html"
 require_relative "engine/json"
+require_relative "engine/itunes_onebox"
 require_relative "engine/amazon_onebox"
-require_relative "engine/bliptv_onebox"
-require_relative "engine/clikthrough_onebox"
-require_relative "engine/college_humor_onebox"
-require_relative "engine/dailymotion_onebox"
-require_relative "engine/dotsub_onebox"
-require_relative "engine/flickr_onebox"
-require_relative "engine/funny_or_die_onebox"
 require_relative "engine/github_blob_onebox"
 require_relative "engine/github_commit_onebox"
 require_relative "engine/github_gist_onebox"
 require_relative "engine/github_pullrequest_onebox"
 require_relative "engine/google_play_app_onebox"
-require_relative "engine/hulu_onebox"
-require_relative "engine/imgur_image_onebox"
-require_relative "engine/itunes_onebox"
-require_relative "engine/kinomap_onebox"
-require_relative "engine/nfb_onebox"
-require_relative "engine/qik_onebox"
-require_relative "engine/revision3_onebox"
-require_relative "engine/slideshare_onebox"
-require_relative "engine/smug_mug_onebox"
-require_relative "engine/sound_cloud_onebox"
-require_relative "engine/spotify_onebox"
 require_relative "engine/stack_exchange_onebox"
-require_relative "engine/ted_onebox"
 require_relative "engine/twitter_status_onebox"
-require_relative "engine/viddler_onebox"
-require_relative "engine/vimeo_onebox"
 require_relative "engine/wikipedia_onebox"
-require_relative "engine/yfrog_onebox"
+require_relative "engine/whitelisted_generic_onebox"

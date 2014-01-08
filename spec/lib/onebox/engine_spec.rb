@@ -61,7 +61,7 @@ describe Onebox::Engine do
       @@matcher = /example/
     end
     it "returns true if argument matches the matcher" do
-      result = OneboxEngineTripleEqual === "http://www.example.com/product/5?var=foo&bar=5"
+      result = OneboxEngineTripleEqual === URI("http://www.example.com/product/5?var=foo&bar=5")
       expect(result).to eq(true)
     end
   end

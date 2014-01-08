@@ -5,10 +5,10 @@ module Onebox
     end
 
     def oneboxed
-      URI(@url)
+      uri = URI(@url)
 
       Engine.engines.select do |engine|
-        engine === @url
+        engine === uri
       end.first
     rescue URI::InvalidURIError
       # If it's not a valid URL, don't even match

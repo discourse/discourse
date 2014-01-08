@@ -28,8 +28,6 @@ module Onebox
       def data
         {
           link: link,
-          domain: "http://www.github.com",
-          badge: "g",
           owner: match[:owner],
           repository: match[:repository],
           sha: raw["sha"],

@@ -9,6 +9,7 @@ describe Onebox::Preview do
     FakeWeb.register_uri(:get, "http://www.amazon.com/error-url", status: 500)
     FakeWeb.register_uri(:get, "http://www.amazon.com/timeout-url", exception: Timeout::Error)
     FakeWeb.register_uri(:get, "http://www.amazon.com/http-error", exception: Net::HTTPError)
+    FakeWeb.register_uri(:get, "http://www.amazon.com/error-connecting", exception: Errno::ECONNREFUSED)
   end
 
   let(:preview) { described_class.new("http://www.amazon.com") }
@@ -33,6 +34,10 @@ describe Onebox::Preview do
 
     it "returns an empty string if there is an http error" do
       expect(described_class.new("http://www.amazon.com/http-error").to_s).to eq("")
+    end
+
+    it "returns an empty string if there is an error connecting" do
+      expect(described_class.new("http://www.amazon.com/error-connecting").to_s).to eq("")
     end
 
     it "returns an empty string if the url is not valid" do

@@ -18,8 +18,6 @@ module Onebox
       def data
         {
           link: link,
-          domain: "http://play.google.com",
-          badge: "i",
           title: raw.css(".document-title div").inner_text,
           developer: raw.css(".document-subtitle.primary").inner_text,
           image: raw.css(".cover-image").first["src"],

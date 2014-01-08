@@ -56,14 +56,6 @@ shared_examples_for "an engine" do
     it "includes link" do
       expect(data[:link]).not_to be_nil
     end
-
-    it "includes badge" do
-      expect(data[:badge]).not_to be_nil
-    end
-
-    it "includes domain" do
-      expect(data[:domain]).not_to be_nil
-    end
   end
 end
 
