@@ -114,6 +114,7 @@ $.fn.autocomplete = function(options) {
       if (options.onChangeItems) {
         options.onChangeItems(inputSelectedItems);
       }
+      return false;
     });
   };
 

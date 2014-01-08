@@ -19,7 +19,7 @@ Discourse.CategoryGroupComponent = Ember.Component.extend({
       },
       template: Discourse.CategoryGroupComponent.templateFunction(),
       transformComplete: function(category){
-        return Discourse.HTML.categoryLink(category);
+        return Discourse.HTML.categoryLink(category, {allowUncategorized: true});
       }
     });
   }
@@ -32,7 +32,7 @@ Discourse.CategoryGroupComponent.reopenClass({
                                     "<ul>" +
                                     "{{#each options}}" +
                                       "<li>" +
-                                          "{{categoryLinkRaw this}}" +
+                                          "{{categoryLinkRaw this allowUncategorized=true}}" +
                                       "</li>" +
                                       "{{/each}}" +
                                     "</ul>" +

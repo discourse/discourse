@@ -21,8 +21,9 @@ class CategoryUser < ActiveRecord::Base
 
   def self.batch_set(user, level, category_ids)
     records = CategoryUser.where(user: user, notification_level: notification_levels[level])
-
     old_ids = records.pluck(:category_id)
+
+    category_ids = Category.where('id in (?)', category_ids).pluck(:id)
 
     remove = (old_ids - category_ids)
     if remove.present?

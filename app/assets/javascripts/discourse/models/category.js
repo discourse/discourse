@@ -209,6 +209,12 @@ Discourse.Category.reopenClass({
     return Discourse.Category.list().findBy('id', id);
   },
 
+  findByIds: function(ids){
+    return ids.map(function(id){
+      return Discourse.Category.findById(id);
+    });
+  },
+
   findBySlug: function(slug, parentSlug) {
 
     var categories = Discourse.Category.list(),
