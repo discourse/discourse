@@ -292,7 +292,7 @@ trust:
 
 security:
   enable_flash_video_onebox: false
-  use_ssl: false
+  use_https: false
   enable_escaped_fragments:
     client: true
     default: false

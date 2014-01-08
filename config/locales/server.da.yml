@@ -567,7 +567,6 @@ da:
 
     notification_email: "Afsenderadressen som bruges til afsendelse af system-e-mails, som f.eks. beskeder til brugere om mistede adgangskoder, nye konti, etc."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
-    use_ssl: "Skal sitet være tilgængeligt via SSL? (IKKE IMPLEMENTERET, EKSPERIMENTELT)"
     summary_score_threshold: "Den mindste score for at et indlæg medtages i 'resuméet'."
     summary_posts_required: "Mindste antal indlæg i et emne før  'resumé'-tilstand aktiveres."
     summary_likes_required: "Mindste antal likes i et emne før  'resumé'-tilstand aktiveres."
