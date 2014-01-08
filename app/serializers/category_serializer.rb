@@ -1,6 +1,6 @@
 class CategorySerializer < BasicCategorySerializer
 
-  attributes :read_restricted, :available_groups, :auto_close_days, :group_permissions, :position
+  attributes :read_restricted, :available_groups, :auto_close_hours, :group_permissions, :position
 
   def group_permissions
     @group_permissions ||= begin

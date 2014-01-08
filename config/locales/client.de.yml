@@ -161,7 +161,7 @@ de:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> hat <a href='{{user2Url}}'>{{another_user}}</a> erwähnt"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> hat <a href='{{user2Url}}'>dich</a> erwähnt"
-      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> hat <a href='{{user2Url}}'>{{user}}</a> erwähnt"
+      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> hat <a href='{{user2Url}}'>{{another_user}}</a> erwähnt"
 
       posted_by_user: "Geschrieben von <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Geschrieben von <a href='{{userUrl}}'>dir</a>"
@@ -505,15 +505,15 @@ de:
       none: "Du hast aktuell keine Benachrichtiungen."
       more: "Zeige frühere Benachrichtigungen"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} hat Dir eine private Nachricht geschickt: {{link}}"
-      invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} hat sich zu einem privaten Gespräch eingeladen: {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} hat deine Einladung akzeptiert"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} hat einen Beitrag nach {{link}} verschoben"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} hat Dir eine private Nachricht geschickt: {{link}}"
+      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} hat sich zu einem privaten Gespräch eingeladen: {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} hat deine Einladung akzeptiert"
+      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} hat einen Beitrag nach {{link}} verschoben"
       total_flagged: "total markierte Einträge"
 
     upload_selector:
@@ -721,21 +721,9 @@ de:
       login_reply: 'Anmelden, um zu antworten'
 
       filters:
-        user: "Du betrachtest nur {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "einen Beitrag"
           other: "{{count}} Beiträge"
-        by_n_users:
-          one: "von einem Benutzer"
-          other: "von {{count}} Benutzern"
-
-        summary: "Du betrachtest {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "den besten Beitrag"
-          other: "{{count}} besten Beiträge"
-        of_n_posts:
-          one: "von einem Thema"
-          other: "von {{count}} Themen"
         cancel: "Zeige wieder alle Beiträge zu diesem Thema."
 
       split_topic:

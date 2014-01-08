@@ -320,7 +320,7 @@ class Guardian
   end
 
   def can_delete_category?(category)
-    is_staff? && category.topic_count == 0
+    is_staff? && category.topic_count == 0 && !category.uncatgorized?
   end
 
   def can_delete_topic?(topic)
@@ -374,6 +374,10 @@ class Guardian
 
   def can_see_post?(post)
     post.present? && (is_staff? || (!post.deleted_at.present? && can_see_topic?(post.topic)))
+  end
+
+  def can_see_post_revision?(post_revision)
+    post_revision.present? && (is_staff? || can_see_post?(post_revision.post))
   end
 
   def can_see_category?(category)

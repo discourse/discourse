@@ -232,6 +232,10 @@
       margin-bottom: 4px;
       font-size: 14px;
     }
+    .edit-reason {
+      background-color: #ffffcc;
+      padding: 3px 5px 5px 5px;
+    }
   }
 }
 
@@ -241,7 +245,7 @@
   .avatar-link {
     float: none;
   }
-  .icon {
+  .fa {
     width: 15px;
     display: inline-block;
     color: #777;

@@ -20,42 +20,57 @@ es:
             kb: KB
             mb: MB
             tb: TB
+
     dates:
       tiny:
-        half_a_minute: "menos de un minuto"
+        half_a_minute: "< 1m"
         less_than_x_seconds:
-          one:   "menos de un segundo"
-          other: "menos de %{count} segundos"
+          one:   "< 1s"
+          other: "< %{count}s"
         x_seconds:
-          one:   "un segundo"
-          other: "%{count} segundos"
+          one:   "1s"
+          other: "%{count}s"
         less_than_x_minutes:
-          one:   "menos de 1 minuto"
-          other: "menos de %{count} minutos"
+          one:   "< 1m"
+          other: "< %{count}m"
         x_minutes:
-          one:   "un minuto"
-          other: "%{count} minutos"
+          one:   "1m"
+          other: "%{count}m"
         about_x_hours:
-          one:   "alrededor de 1 hora"
-          other: "alrededor de %{count} horas"
+          one:   "1h"
+          other: "%{count}h"
         x_days:
-          one:   "un día"
-          other: "%{count} días"
-        about_x_months:
-          one:   "alrededor de un mes"
-          other: "alrededor de %{count} meses"
-        x_months:
-          one:   "un mes"
-          other: "%{count} meses"
+          one:   "1d"
+          other: "%{count}d"
         about_x_years:
-          one:   "alrededor de un año"
-          other: "%{count} años"
+          one:   "1a"
+          other: "%{count}a"
         over_x_years:
-          one:   "más de un año"
-          other: "más de %{count} años"
+          one:   "> 1a"
+          other: "> %{count}a"
         almost_x_years:
-          one:   "casi un año"
-          other: "casi %{count} años"
+          one:   "1a"
+          other: "%{count}a"
+      medium:
+        x_minutes:
+          one: "1 minuto"
+          other: "%{count} mins"
+        x_hours:
+          one: "1 hora"
+          other: "%{count} horas"
+        x_days:
+          one: "1 día"
+          other: "%{count} días"
+      medium_with_ago:
+        x_minutes:
+          one: "hace 1 minuto"
+          other: "hace %{count} minutos"
+        x_hours:
+          one: "hace 1 hora"
+          other: "hace %{count} horas"
+        x_days:
+          one: "hace 1 día"
+          other: "hace %{count} días"
     share:
       topic: 'comparte un enlace en este tema'
       post: 'comparte un enlace en esta publicación'
@@ -118,7 +133,7 @@ es:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mencionó a <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> <a href='{{user2Url}}'>te</a> mencionó"
-      you_mentioned_user: "<a href='{{user1Url}}'>Tú</a> mencionaste a <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Tú</a> mencionaste a <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Publicado por <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Publicado por <a href='{{userUrl}}'>ti</a>"
@@ -129,7 +144,7 @@ es:
       "1": "Likes dados"
       "2": "Likes recibidos"
       "3": "Marcadores"
-      "4": "temas"
+      "4": "Temas"
       "5": "Mensajes"
       "6": "Respuestas"
       "7": "Menciones"
@@ -141,6 +156,17 @@ es:
 
     user_action_descriptions:
       "6": "Respuestas"
+      
+    categories:
+      all: "Todas las categorías"
+      only_category: "Solo {{categoryName}}"
+      category: "Categoría"
+      posts: "Posts"
+      topics: "Temas"
+      latest: "Últimos"
+      latest_by: "último por"
+      toggle_ordering: "activar ordenamiento"
+      subcategories: "Subcategorías:"
 
     user:
       profile: Perfil
@@ -158,6 +184,11 @@ es:
       trust_level: "Nivel de Confianza"
       external_links_in_new_tab: "Abrir todos los links externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto resaltado"
+
+      messages:
+        all: "Todos"
+        mine: "Míos"
+        unread: "No leídos"
 
       change_password:
         action: "cambiar"
@@ -412,21 +443,27 @@ es:
       undo_title: "Deshacer"
       redo_title: "Rehacer"
       help: "Ayuda de edición Markdown"
+      
+      admin_options_title: "Opciones de moderación para este tema"
+      auto_close_label: "Hora de auto-cierre:"
+      auto_close_units: "(# de horas, una fecha, o marca de tiempo)"
+      auto_close_examples: 'Ejemplos: 24, 17:00, 2013-11-22 14:00'
+      auto_close_error: "Por favor, ingrese un valor válido."
 
     notifications:
       title: "notificaciones por menciones de tu @nombre, respuestas a tus publicaciones y temas, mensajes privados, etc."
       none: "No tienes notificaciones por el momento."
       more: "ver antiguas notificaciones"
       mentioned: "<span title='mencionado' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='citado' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replicado' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replicado' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='editado' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='gustaron' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='mensaje privado'></i> Tienes un mensaje privado de {{username}}: {{link}}"
+      quoted: "<i title='citado' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replicado' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replicado' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='editado' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='gustaron' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='mensaje privado'></i> Tienes un mensaje privado de {{username}}: {{link}}"
       invited_to_private_message: "{{username}} te ha invitado a una conversación privada: {{link}}"
-      invitee_accepted: "<i title='aceptó tu invitación' class='icon icon-signin'></i> {{username}} ha aceptado tu invitación"
-      moved_post: "<i title='publicación trasladada' class='icon icon-arrow-right'></i> {{username}} ha traladado la publicación a {{link}}"
+      invitee_accepted: "<i title='aceptó tu invitación' class='fa fa-sign-in'></i> {{username}} ha aceptado tu invitación"
+      moved_post: "<i title='publicación trasladada' class='fa fa-arrow-right'></i> {{username}} ha traladado la publicación a {{link}}"
 
     upload_selector:
       title: "Insertar imagen"
@@ -481,7 +518,7 @@ es:
       private_message: 'Comenzar una conversación privada'
       list: 'temas'
       new: 'nuevo tema'
-      title: 'tema'
+      title: 'Tema'
       loading_more: "Cargando más temas..."
       loading: 'Cargando tema...'
       invalid_access:
@@ -593,21 +630,9 @@ es:
       login_reply: 'Inicia sesión para responder'
 
       filters:
-        user: "Estás viendo sólo {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 mensaje"
           other: "{{count}} mensajes"
-        by_n_users:
-          one: "hechos por 1 usuario específico"
-          other: "hechos por {{count}} usuarios específicos"
-
-        summary: "Estás viendo el {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "1 mejor mensaje"
-          other: "{{count}} mejores mensajes"
-        of_n_posts:
-          one: "de 1 en el tema"
-          other: "de {{count}} en el tema"
         cancel: "Mostrar todos los mensajes en este tema de nuevo.."
 
       move_selected:
@@ -746,7 +771,7 @@ es:
     replies: "Respuestas"
     views_long: "este tema ha sido visto {{number}} veces"
     activity: "Actividad"
-    likes: "Les gusta"
+    likes: "Likes"
     users: "Participantes"
     category_title: "Categoría"
     history: "Historia"
@@ -866,6 +891,65 @@ es:
         test_email_address: "dirección de email para probar"
         send_test: "enviar mensaje de prueba"
         sent_test: "enviado!"
+        
+      logs:
+        title: "Logs"
+        action: "Acción"
+        created_at: "Creado"
+        last_match_at: "Última coincidencia"
+        match_count: "Coincidencias"
+        ip_address: "IP"
+        delete: 'Borrar'
+        edit: 'Editar'
+        save: 'Guardar'
+        screened_actions:
+          block: "bloquear"
+          do_nothing: "no hacer nada"
+        staff_actions:
+          title: "Acciones de Moderación"
+          instructions: "Haz click en nombres de usuarios y acciones para filtrar la lista. Haz click en los avatares para ir a las páginas del los usuarios."
+          clear_filters: "Mostrar todo"
+          staff_user: "Staff User"
+          target_user: "Target User"
+          subject: "Subject"
+          when: "When"
+          context: "Context"
+          details: "Details"
+          previous_value: "Previous"
+          new_value: "New"
+          diff: "Diff"
+          show: "Show"
+          modal_title: "Details"
+          no_previous: "There is no previous value."
+          deleted: "No new value. The record was deleted."
+          actions:
+            delete_user: "delete user"
+            change_trust_level: "change trust level"
+            change_site_setting: "change site setting"
+            change_site_customization: "change site customization"
+            delete_site_customization: "delete site customization"
+            suspend_user: "suspend user"
+            unsuspend_user: "unsuspend user"
+        screened_emails:
+          title: "Screened Emails"
+          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
+          email: "Email Address"
+        screened_urls:
+          title: "Screened URLs"
+          description: "The URLs listed here were used in posts by users who have been identified as spammers."
+          url: "URL"
+          domain: "Domain"
+        screened_ips:
+          title: "Screened IPs"
+          description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
+          delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
+          actions:
+            block: "Block"
+            do_nothing: "Allow"
+          form:
+            label: "New:"
+            ip_address: "IP address"
+            add: "Add"
 
       impersonate:
         title: "Hacerse pasar por el Usuario"
@@ -920,6 +1004,12 @@ es:
         approve: 'Aprobar'
         approved_by: "aprobado por"
         time_read: "Tiempo de lectura"
+        
+
+      site_content:
+        none: "Elige un tipo de contenido para empezar a editar."
+        title: 'Contenido'
+        edit: "Editar contenido del sitio"
 
       site_settings:
         show_overriden: 'Sólo mostrar lo sobreescrito'

@@ -7,21 +7,25 @@ class CategoryFeaturedUser < ActiveRecord::Base
   end
 
   def self.feature_users_in(category)
-    # Figure out major posters in the category
-    user_counts = exec_sql "
-      SELECT p.user_id,
-             COUNT(*) AS category_posts
-      FROM posts AS p
-      INNER JOIN topics AS ft ON ft.id = p.topic_id
-      WHERE ft.category_id = :category_id
-      GROUP BY p.user_id
-      ORDER BY category_posts DESC
-      LIMIT :max_featured_users
+    # Figure out most recent posters in the category
+    most_recent_user_ids = exec_sql "
+      SELECT x.user_id
+      FROM (
+        SELECT DISTINCT ON (p.user_id) p.user_id AS user_id,
+               p.created_at AS created_at
+        FROM posts AS p
+        INNER JOIN topics AS ft ON ft.id = p.topic_id
+        WHERE ft.category_id = :category_id
+        AND p.user_id IS NOT NULL
+        ORDER BY p.user_id, p.created_at DESC
+      ) AS x
+      ORDER BY x.created_at DESC
+      LIMIT :max_featured_users;
     ", category_id: category.id, max_featured_users: max_featured_users
 
     transaction do
       CategoryFeaturedUser.delete_all category_id: category.id
-      user_counts.each do |uc|
+      most_recent_user_ids.each do |uc|
         create(category_id: category.id, user_id: uc['user_id'])
       end
     end

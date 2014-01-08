@@ -162,7 +162,7 @@ en:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>you</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>You</a> mentioned <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>You</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Posted by <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Posted by <a href='{{userUrl}}'>you</a>"
@@ -185,14 +185,23 @@ en:
 
     categories:
       all: "all categories"
-      only_category: "only {{categoryName}}"
+      all_subcategories: "all subcategories"
+      no_subcategory: "no subcategory"
       category: "Category"
-      posts: "Posts"
-      topics: "Topics"
+      posts: "New Posts"
+      topics: "New Topics"
       latest: "Latest"
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories:"
+      topic_stats: "The number of new topics."
+      topic_stat_sentence:
+        one: "%{count} new topic in the past %{unit}."
+        other: "%{count} new topics in the past %{unit}."
+      post_stats: "The number of new posts."
+      post_stat_sentence:
+        one: "%{count} new post in the past %{unit}."
+        other: "%{count} new posts in the past %{unit}."
 
     user:
       said: "{{username}} said:"
@@ -218,6 +227,13 @@ en:
       deleted: "(deleted)"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
+      watch_new_topics: "Automatically watch all new topics posted on the forum"
+      watched_categories: "Watched"
+      watched_categories_instructions: "You will automatically watch all topics in these categories"
+      tracked_categories: "Tracked"
+      tracked_categories_instructions: "You will automatically receive notifications for topics in these categories"
+      muted_categories: "Muted"
+      muted_categories_instructions: "You will automatically mute all topics in these categories"
 
       messages:
         all: "All"
@@ -265,7 +281,7 @@ en:
 
       name:
         title: "Name"
-        instructions: "The longer version of your name; does not need to be unique. Used for alternate @name matching and shown only on your user page."
+        instructions: "The long version of your name. Publicly visible, and used for @name matching."
         too_short: "Your name is too short."
         ok: "Your name looks good."
       username:
@@ -303,6 +319,7 @@ en:
       email_always: "Receive email notifications and email digests even if I am active on the forum"
 
       other_settings: "Other"
+      categories_settings: "Categories"
 
       new_topic_duration:
         label: "Consider topics new when"
@@ -347,7 +364,9 @@ en:
       password:
         title: "Password"
         too_short: "Your password is too short."
+        common: "That password is too common."
         ok: "Your password looks good."
+        instructions: "Must be at least %{count} characters."
 
       ip_address:
         title: "Last IP Address"
@@ -375,6 +394,7 @@ en:
     month_desc: 'topics posted in the last 30 days'
     week: 'week'
     week_desc: 'topics posted in the last 7 days'
+    day: 'day'
 
     first_post: First post
     mute: Mute
@@ -384,6 +404,7 @@ en:
     summary:
       enabled_description: "You're viewing a summary of this topic. To see all posts again, click below."
       description: "There are <b>{{count}}</b> replies. Save reading time by displaying only the most relevant replies?"
+      description_time: "There are <b>{{count}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>. Save reading time by displaying only the most relevant replies?"
       enable: 'Summarize This Topic'
       disable: 'Show All Posts'
 
@@ -527,15 +548,15 @@ en:
       none: "You have no notifications right now."
       more: "view older notifications"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved {{link}}"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} accepted your invitation"
+      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} moved {{link}}"
       total_flagged: "total flagged posts"
 
     upload_selector:
@@ -652,7 +673,7 @@ en:
             =0 {}
             one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
             other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
-        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}} "
+        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}."
 
       browse_all_categories: Browse all categories
 
@@ -672,12 +693,16 @@ en:
         title: topic progress
         jump_top: jump to first post
         jump_bottom: jump to last post
+        jump_bottom_with_number: "jump to post %{post_number}"
         total: total posts
         current: current post
+        position: "post %{current} of %{total}"
 
       notifications:
         title: ''
         reasons:
+          "3_6": 'You will receive notifications because you are watching this category.'
+          "3_5": 'You will receive notifications because you started watching this topic automatically.'
           "3_2": 'You will receive notifications because you are watching this topic.'
           "3_1": 'You will receive notifications because you created this topic.'
           "3": 'You will receive notifications because you are watching this topic.'
@@ -753,21 +778,9 @@ en:
       login_reply: 'Log In to Reply'
 
       filters:
-        user: "You're viewing only {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 post"
           other: "{{count}} posts"
-        by_n_users:
-          one: "made by 1 specific user"
-          other: "made by {{count}} specific users"
-
-        summary: "You're viewing {{n_summarized_posts}} {{of_n_posts}}. "
-        n_summarized_posts:
-          one: "1 summarized post"
-          other: "{{count}} summarized posts"
-        of_n_posts:
-          one: "of 1 in the topic"
-          other: "of {{count}} in the topic"
         cancel: "Show all posts in this topic again."
 
       split_topic:
@@ -814,6 +827,9 @@ en:
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
+      gap:
+        one: "1 post omitted"
+        other: "{{count}} posts omitted"
 
       has_replies:
         one: "Reply"
@@ -952,6 +968,26 @@ en:
           one: "Are you sure you want to delete that post?"
           other: "Are you sure you want to delete all those posts?"
 
+      revisions:
+        controls:
+          first: "First revision"
+          previous: "Previous revision"
+          next: "Next revision"
+          last: "Last revision"
+          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> / {{total}}"
+        displays:
+          inline:
+            title: "Show the rendered output with additions and removals inline"
+            button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            title: "Show the rendered output diffs side-by-side"
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "Show the markdown source diffs side-by-side"
+            button: '<i class="fa fa-columns"></i> Markdown'
+        details:
+          edited_by: "Edited by"
+
     category:
       can: 'can&hellip; '
       none: '(no category)'
@@ -984,11 +1020,12 @@ en:
       already_used: 'This color has been used by another category'
       security: "Security"
       auto_close_label: "Auto-close topics after:"
-      auto_close_units: "days"
+      auto_close_units: "hours"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
       this_year: "this year"
       position: "position"
+      default_position: "Default Position"
       parent: "Parent Category"
 
     flagging:
@@ -1076,6 +1113,16 @@ en:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "latest topics in the {{categoryName}} category"
+      top:
+        title: "Top"
+        help: "a selection of the best topics"
+        this_year: "This year"
+        this_month: "This month"
+        this_week: "This week"
+        today: "Today"
+        redirect_reasons:
+          new_user: "Welcome! As a new visitor, we thought you might like to start with this list of the top discussion topics in the last year."
+          not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
 
@@ -1384,12 +1431,11 @@ en:
         flags_received_count: Flags Received
         approve: 'Approve'
         approved_by: "approved by"
-        approve_success: "User approved and email sent with activation
-          instructions."
-        approve_bulk_success: "Success! All selected users have been approved
-          and notified."
+        approve_success: "User approved and email sent with activation instructions."
+        approve_bulk_success: "Success! All selected users have been approved and notified."
         time_read: "Read Time"
         delete: "Delete User"
+        delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_forbidden:
           one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
           other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
@@ -1424,6 +1470,7 @@ en:
         reset: 'reset to default'
         none: 'none'
         no_results: "No results found."
+        clear_filter: "Clear"
         categories:
           all_results: 'All'
           required: 'Required'
@@ -1438,7 +1485,47 @@ en:
           spam: 'Spam'
           rate_limits: 'Rate Limits'
           developer: 'Developer'
+          embedding: "Embedding"
           uncategorized: 'Uncategorized'
 
     lightbox:
       download: "download"
+
+    keyboard_shortcuts_help:
+      title: 'Keyboard Shortcuts'
+      jump_to:
+        title: 'Jump To'
+        home: '<b>g</b> then <b>h</b> Home (Latest)'
+        latest: '<b>g</b> then <b>l</b> Latest'
+        new: '<b>g</b> then <b>n</b> New'
+        unread: '<b>g</b> then <b>u</b> Unread'
+        favorited: '<b>g</b> then <b>f</b> Favorited'
+        categories: '<b>g</b> then <b>c</b> Categories'
+      navigation:
+        title: 'Navigation'
+        back: '<b>u</b> Back'
+        up_down: '<b>k</b>/<b>j</b> Move selection up/down'
+        open: '<b>o</b> or <b>Enter</b> Open selected topic'
+        next_prev: '<b>`</b>/<b>~</b> Next/previous section'
+      application:
+        title: 'Application'
+        create: '<b>c</b> Create a new topic'
+        notifications: '<b>n</b> Open notifications'
+        search: '<b>/</b> Search'
+        help: '<b>?</b> Open keyboard shortcuts help'
+      actions:
+        title: 'Actions'
+        favorite: '<b>f</b> Favorite topic'
+        share_topic: '<b>s</b> Share topic'
+        share_post: '<b>shift s</b> Share post'
+        reply_topic: '<b>r</b> Reply to topic'
+        reply_post: '<b>shift r</b> Reply to post'
+        like: '<b>l</b> Like post'
+        flag: '<b>!</b> Flag post'
+        bookmark: '<b>b</b> Bookmark post'
+        edit: '<b>e</b> Edit post'
+        delete: '<b>d</b> Delete post'
+        mark_muted: '<b>m</b> then <b>m</b> Mark topic as muted'
+        mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
+        mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
+        mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'

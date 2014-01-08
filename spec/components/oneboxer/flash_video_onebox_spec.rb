@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'oneboxer'
-require 'oneboxer/flash_video_onebox'
+require 'oneboxer/_flash_video_onebox'
 
 describe Oneboxer::FlashVideoOnebox do
   before do

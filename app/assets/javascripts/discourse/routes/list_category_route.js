@@ -7,7 +7,6 @@
   @module Discourse
 **/
 Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
-
   model: function(params) {
     return Discourse.Category.findBySlug(Em.get(params, 'slug'), Em.get(params, 'parentSlug'));
   },
@@ -24,11 +23,16 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
     var listController = this.controllerFor('list'),
         categorySlug = Discourse.Category.slugFor(category),
         self = this,
-        filter = this.filter || "latest",
-        url = "category/" + categorySlug + "/l/" + filter;
+        filter = this.get('filter') || "latest",
+        url = "category/" + categorySlug + "/l/" + filter,
+        params = {};
+
+    if (this.get('noSubcategories')) {
+      params.no_subcategories = true;
+    }
 
     listController.setProperties({ filterMode: url, category: null });
-    listController.load(url).then(function(topicList) {
+    listController.load(url, params).then(function(topicList) {
       listController.setProperties({
         canCreateTopic: topicList.get('can_create_topic'),
         category: category
@@ -52,13 +56,14 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
     // Clear the search context
     this.controllerFor('search').set('searchContext', null);
   }
-
-
 });
 
+Discourse.ListCategoryNoneRoute = Discourse.ListCategoryRoute.extend({
+  noSubcategories: true
+});
 
 Discourse.ListController.filters.forEach(function(filter) {
-  Discourse["List" + (filter.capitalize()) + "CategoryRoute"] = Discourse.ListCategoryRoute.extend({ filter: filter });
+  Discourse["List" + filter.capitalize() + "CategoryRoute"] = Discourse.ListCategoryRoute.extend({ filter: filter });
 });
 
 

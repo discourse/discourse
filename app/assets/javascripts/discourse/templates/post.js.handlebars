@@ -1,3 +1,5 @@
+{{post-gap post=this postStream=controller.postStream before="true"}}
+
 <div class='row'>
   {{view Discourse.ReplyHistory contentBinding="replyHistory"}}
 </div>
@@ -20,7 +22,7 @@
       {{#unless userDeleted}}
         <div {{bindAttr class=":contents byTopicCreator:topic-creator :trigger-expansion"}}>
           <a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{avatar this imageSize="large"}}</a>
-          <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp username}}</a></h3>
+          <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{{breakUp username name}}}</a></h3>
 
           {{#if showName}}
           <h3><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
@@ -30,7 +32,7 @@
         </div>
       {{else}}
         <div class="contents">
-          <i class="icon icon-trash deleted-user-avatar"></i>
+          <i class="fa fa-trash-o deleted-user-avatar"></i>
           <h3 class="deleted-username">{{i18n user.deleted}}</h3>
         </div>
       {{/unless}}
@@ -50,12 +52,12 @@
                 {{#if canViewEditHistory}}
                   <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{i18n post.last_edited_on}} {{unboundDate updated_at}}">
                     {{editCount}}
-                    <i class='icon-pencil'></i>
+                    <i class='fa fa-pencil'></i>
                   </a>
                 {{else}}
                   <span class="{{unbound historyHeat}}" title="{{i18n post.last_edited_on}} {{unboundDate updated_at}}">
                     {{editCount}}
-                    <i class='icon-pencil'></i>
+                    <i class='fa fa-pencil'></i>
                   </span>
                 {{/if}}
               </div>
@@ -76,9 +78,11 @@
     <div class='span5 gutter'>
       {{collection contentBinding="internalLinks" itemViewClass="Discourse.PostLinkView" tagName="ul" classNames="post-links"}}
       {{#if topic.details.can_reply_as_new_topic}}
-        <a href='#' class='reply-new' {{action replyAsNewTopic this}}><i class='icon icon-plus'></i>{{i18n post.reply_as_new_topic}}</a>
+        <a href='#' class='reply-new' {{action replyAsNewTopic this}}><i class='fa fa-plus'></i>{{i18n post.reply_as_new_topic}}</a>
       {{/if}}
     </div>
   </div>
 
 </article>
+
+{{post-gap post=this postStream=controller.postStream before="false"}}

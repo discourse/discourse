@@ -141,16 +141,13 @@ test("streamFilters", function() {
 
   deepEqual(postStream.get('streamFilters'), {}, "there are no postFilters by default");
   ok(postStream.get('hasNoFilters'), "there are no filters by default");
-  blank(postStream.get("filterDesc"), "there is no description of the filter");
 
   postStream.set('summary', true);
   deepEqual(postStream.get('streamFilters'), {filter: "summary"}, "postFilters contains the summary flag");
   ok(!postStream.get('hasNoFilters'), "now there are filters present");
-  present(postStream.get("filterDesc"), "there is a description of the filter");
 
   postStream.toggleParticipant(participant.username);
   deepEqual(postStream.get('streamFilters'), {
-    filter: "summary",
     username_filters: ['eviltrout']
   }, "streamFilters contains the username we filtered");
 });
@@ -230,7 +227,7 @@ test("storePost", function() {
 test("identity map", function() {
   var postStream = buildStream(1234);
   var p1 = postStream.appendPost(Discourse.Post.create({id: 1, post_number: 1}));
-  var p3 = postStream.appendPost(Discourse.Post.create({id: 3, post_number: 4}));
+  postStream.appendPost(Discourse.Post.create({id: 3, post_number: 4}));
 
   equal(postStream.findLoadedPost(1), p1, "it can return cached posts by id");
   blank(postStream.findLoadedPost(4), "it can't find uncached posts");
@@ -406,7 +403,7 @@ test("comitting and triggerNewPostInStream race condition", function() {
   var user = Discourse.User.create({username: 'eviltrout', name: 'eviltrout', id: 321});
   var stagedPost = Discourse.Post.create({ raw: 'hello world this is my new post' });
 
-  var result = postStream.stagePost(stagedPost, user);
+  postStream.stagePost(stagedPost, user);
   equal(postStream.get('filteredPostsCount'), 0, "it has no filteredPostsCount yet");
   stagedPost.set('id', 123);
 

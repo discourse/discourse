@@ -27,7 +27,7 @@ Discourse.QuoteButtonView = Discourse.View.extend({
     @method render
   **/
   render: function(buffer) {
-    buffer.push('<i class="icon-quote-right"></i>&nbsp;&nbsp;');
+    buffer.push('<i class="fa fa-quote-right"></i>&nbsp;&nbsp;');
     buffer.push(I18n.t("post.quote_reply"));
   },
 
@@ -56,10 +56,10 @@ Discourse.QuoteButtonView = Discourse.View.extend({
         view.selectText(e.target, controller);
         view.set('isMouseDown', false);
       })
-      .on('touchstart.quote-button', function(e){
+      .on('touchstart.quote-button', function(){
         view.set('isTouchInProgress', true);
       })
-      .on('touchend.quote-button', function(e){
+      .on('touchend.quote-button', function(){
         view.set('isTouchInProgress', false);
       })
       .on('selectionchange', function() {

@@ -210,6 +210,11 @@ describe Category do
       @category.topic_url.should be_present
     end
 
+    it "should not set its description topic to auto-close" do
+      category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
+      category.topic.auto_close_at.should be_nil
+    end
+
     describe "creating a new category with the same slug" do
       it "should have a blank slug" do
         Fabricate(:category, name: "Amazing Categóry").slug.should be_blank
@@ -262,6 +267,7 @@ describe Category do
       category.latest_post_id.should == post3.id
       category.latest_topic_id.should == post2.topic_id
 
+      post3.reload
 
       destroyer = PostDestroyer.new(Fabricate(:admin), post3)
       destroyer.destroy
@@ -289,6 +295,9 @@ describe Category do
         @category.topics_year.should == 1
         @category.topic_count.should == 1
         @category.post_count.should == 1
+        @category.posts_year.should == 1
+        @category.posts_month.should == 1
+        @category.posts_week.should == 1
       end
 
     end
@@ -307,8 +316,29 @@ describe Category do
         @category.topics_month.should == 0
         @category.topics_year.should == 0
         @category.post_count.should == 0
+        @category.posts_year.should == 0
+        @category.posts_month.should == 0
+        @category.posts_week.should == 0
+      end
+    end
+
+    context 'with revised post' do
+      before do
+        post = create_post(user: @category.user, category: @category.name)
+
+        SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i)
+        post.revise(post.user, 'updated body', revised_at: post.updated_at + 2.minutes)
+
+        Category.update_stats
+        @category.reload
       end
 
+      it "doesn't count each version of a post" do
+        @category.post_count.should == 1
+        @category.posts_year.should == 1
+        @category.posts_month.should == 1
+        @category.posts_week.should == 1
+      end
     end
   end
 

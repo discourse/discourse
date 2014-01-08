@@ -7,8 +7,8 @@
 </div>
 {{#if dirty}}
   <div class='setting-controls'>
-    <button class='btn ok' {{action save this}}><i class='icon-ok'></i></button>
-    <button class='btn cancel' {{action cancel this}}><i class='icon-remove'></i></button>
+    <button class='btn ok no-text' {{action save this}}><i class='fa fa-check'></i></button>
+    <button class='btn cancel no-text' {{action cancel this}}><i class='fa fa-times'></i></button>
   </div>
 {{else}}
   {{#if overridden}}

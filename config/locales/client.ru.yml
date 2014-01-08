@@ -197,7 +197,7 @@ ru:
       you_replied_to_topic: '<a href=''{{userUrl}}''>Вы</a> ответили в <a href=''{{topicUrl}}''>теме</a>'
       user_mentioned_user: '<a href=''{{user1Url}}''>{{user}}</a> упомянул <a href=''{{user2Url}}''>{{another_user}}</a>'
       user_mentioned_you: '<a href=''{{user1Url}}''>{{user}}</a> упомянул<a href=''{{user2Url}}''>Вас</a>'
-      you_mentioned_user: '<a href=''{{user1Url}}''>Вы</a> упомянули<a href=''{{user2Url}}''>{{user}}</a>'
+      you_mentioned_user: '<a href=''{{user1Url}}''>Вы</a> упомянули <a href=''{{user2Url}}''>{{another_user}}</a>'
       posted_by_user: 'Размещено пользователем <a href=''{{userUrl}}''>{{user}}</a>'
       posted_by_you: 'Размещено <a href=''{{userUrl}}''>Вами</a>'
       sent_by_user: 'Отправлено пользователем <a href=''{{userUrl}}''>{{user}}</a>'
@@ -225,6 +225,8 @@ ru:
       latest_by: 'последние по'
       toggle_ordering: 'изменить сортировку'
       subcategories: 'Подкатегории:'
+      total_topics: 'Всего тем: %{count}'
+      total_posts: 'Всего сообщений: %{count}'
     user:
       said: '{{username}} писал(а):'
       profile: Профайл
@@ -393,12 +395,14 @@ ru:
     month_desc: 'создано тем за последние 30 дней'
     week: неделя
     week_desc: 'создано тем за последние 7 дней'
+    day: день
     first_post: 'Первое сообщение'
     mute: Отключить
     unmute: Включить
     summary:
       enabled_description: 'Вы просматриваете только популярные сообщения в данной теме. Для просмотра всех сообщений нажмите кнопку ниже.'
       description: 'В теме <b>{{count}}</b> сообщений. Хотите посмотреть только сообщения релевантные теме?'
+      description_time: 'В теме <b>{{count}}</b> сообщений со средним временем чтения <b>{{readingTime}} минут</b>. Сократить время чтения, отобразив только важные сообщения?'
       enable: 'Сводка по теме'
       disable: 'Показать все сообщения'
     private_message_info:
@@ -520,22 +524,24 @@ ru:
       help: 'Справка по Markdown'
       toggler: 'скрыть / показать панель редактирования'
       admin_options_title: 'Дополнительные настройки темы'
-      auto_close_label: 'Автоматически закрыть тему после:'
-      auto_close_units: дней
+      auto_close_label: 'Автоматически закрыть тему:'
+      auto_close_units: '(# часов, время, или штамп времени)'
+      auto_close_examples: 'Например: 24, 17:00, 2013-11-22 14:00'
+      auto_close_error: 'Пожалуйста, введите правильное значение'
     notifications:
       title: 'уведомления об упоминании @name в сообщениях, ответах на ваши сообщения и темы, личные сообщения и т.д.'
       none: 'На данный момент уведомлений нет.'
       more: 'посмотреть более ранние уведомления'
       mentioned: '<span title=''mentioned'' class=''icon''>@</span> {{username}} {{link}}'
-      quoted: '<i title=''quoted'' class=''icon icon-quote-right''></i> {{username}} {{link}}'
-      replied: '<i title=''replied'' class=''icon icon-reply''></i> {{username}} {{link}}'
-      posted: '<i title=''replied'' class=''icon icon-reply''></i> {{username}} {{link}}'
-      edited: '<i title=''edited'' class=''icon icon-pencil''></i> {{username}} {{link}}'
-      liked: '<i title=''liked'' class=''icon icon-heart''></i> {{username}} {{link}}'
-      private_message: '<i class=''icon icon-envelope-alt'' title=''private message''></i> {{username}} {{link}}'
-      invited_to_private_message: '<i class=''icon icon-envelope-alt'' title=''private message''></i> {{username}} {{link}}'
-      invitee_accepted: '<i title=''принятое приглашение'' class=''icon icon-signin''></i> {{username}} принял ваше приглашение'
-      moved_post: '<i title=''moved post'' class=''icon icon-arrow-right''></i> {{username}} переместил сообщение в {{link}}'
+      quoted: '<i title=''quoted'' class=''fa fa-quote-right''></i> {{username}} {{link}}'
+      replied: '<i title=''replied'' class=''fa fa-reply''></i> {{username}} {{link}}'
+      posted: '<i title=''replied'' class=''fa fa-reply''></i> {{username}} {{link}}'
+      edited: '<i title=''edited'' class=''fa fa-pencil''></i> {{username}} {{link}}'
+      liked: '<i title=''liked'' class=''fa fa-heart''></i> {{username}} {{link}}'
+      private_message: '<i class=''fa fa-envelope-o'' title=''private message''></i> {{username}} {{link}}'
+      invited_to_private_message: '<i class=''fa fa-envelope-o'' title=''private message''></i> {{username}} {{link}}'
+      invitee_accepted: '<i title=''accepted your invitation'' class=''fa fa-sign-in''></i> {{username}} принял ваше приглашение'
+      moved_post: '<i title=''moved post'' class=''fa fa-arrow-right''></i> {{username}} перемещено {{link}}'
       total_flagged: 'всего сообщений с жалобами'
     upload_selector:
       title: 'Add an image'
@@ -653,8 +659,10 @@ ru:
         title: 'текущее местоположение в теме'
         jump_top: 'перейти к первому сообщению'
         jump_bottom: 'перейти к последнему сообщению'
+        jump_bottom_with_number: 'перейти к сообщению %{post_number}'
         total: 'всего сообщений'
         current: 'текущее сообщение'
+        position: '%{current} сообщение из %{total}'
       notifications:
         title: '&nbsp;'
         reasons:
@@ -723,28 +731,11 @@ ru:
         error: 'К сожалению, мы не смогли пригласить этого человека. Возможно, он уже пользователь форума?'
       login_reply: 'Войдите, чтобы ответить'
       filters:
-        user: 'Отображено только {{n_posts}} от {{by_n_users}}.'
         n_posts:
           one: '1 сообщение'
           other: '{{count}} сообщений'
           few: '{{count}} сообщения'
           many: '{{count}} сообщений'
-        by_n_users:
-          one: 'от одного пользователя'
-          other: 'от {{count}} пользователей'
-          few: 'от {{count}} пользователя'
-          many: 'от {{count}} пользователей'
-        summary: 'Отображено только {{n_summarized_posts}} из {{of_n_posts}} сообщений.'
-        n_summarized_posts:
-          one: '1 сообщение'
-          other: '{{count}} сообщений'
-          few: '{{count}} сообщение'
-          many: '{{count}} сообщений'
-        of_n_posts:
-          one: 'из 1 в теме'
-          other: 'из {{count}} в теме'
-          few: 'из {{count}} в теме'
-          many: 'из {{count}} в теме'
         cancel: 'Показать все сообщения в этой теме еще раз.'
       split_topic:
         title: 'Переместить в новую тему'
@@ -795,6 +786,11 @@ ru:
         many: '(сообщение отозвано автором и будет автоматически удалено через %{count} часов при отсутствии жалоб)'
       deleted_by: 'Удалено'
       expand_collapse: развернуть/свернуть
+      gap:
+        one: '1 сообщение пропущено'
+        other: '{{count}} сообщений пропущено'
+        few: '{{count}} сообщения пропущено'
+        many: '{{count}} сообщений пропущено'
       has_replies:
         one: ответ
         other: ответов
@@ -966,6 +962,25 @@ ru:
           other: 'Вы уверены, что хотите удалить эти сообщения?'
           few: 'Вы уверены, что хотите удалить сообщения?'
           many: 'Вы уверены, что хотите удалить сообщения?'
+      revisions:
+        controls:
+          first: 'Начальная версия'
+          previous: 'Предыдущая версия'
+          next: 'Следующая версия'
+          last: 'Последняя версия'
+          comparing_previous_to_current_out_of_total: '<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> (из {{total}})'
+        displays:
+          inline:
+            title: 'Отобразить сообщение с включенными добавлениями и удалениями.'
+            button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            title: 'Отобразить сообщение с построчными изменениями'
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: 'Отобразить вывод с построчными изменениями и разметкой'
+            button: '<i class="fa fa-columns"></i> Markdown'
+        details:
+          edited_by: 'Изменено'
     category:
       can: 'может&hellip; '
       none: '(без категории)'
@@ -998,6 +1013,7 @@ ru:
       already_used: 'Цвет уже используется другой категорией'
       security: Безопасность
       auto_close_label: 'Закрыть тему через:'
+      auto_close_units: часов
       edit_permissions: 'Изменить права доступа'
       add_permission: 'Добавить права'
       this_year: 'в год'
@@ -1152,6 +1168,7 @@ ru:
         disagree_title: 'Удалить все жалобы с данного сообщения'
         delete_spammer_title: 'Удалить пользователя и все его сообщения.'
         flagged_by: 'Отмечено'
+        system: Системные
         error: 'что-то пошло не так'
         view_message: Ответить
         no_results: 'Жалоб нет.'
@@ -1447,3 +1464,5 @@ ru:
           rate_limits: 'Ограничения'
           developer: Разработчик
           uncategorized: Без категории
+    lightbox:
+      download: загрузить

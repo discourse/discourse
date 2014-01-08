@@ -1,5 +1,3 @@
-/*global sanitizeHtml:true */
-
 module("Discourse.Markdown", {
   setup: function() {
     Discourse.SiteSettings.traditional_markdown_linebreaks = false;
@@ -27,6 +25,14 @@ test("basic cooking", function() {
   cooked("hello \\*evil\\*", "<p>hello *evil*</p>", "it supports escaping of asterisks");
   cooked("hello \\_evil\\_", "<p>hello _evil_</p>", "it supports escaping of italics");
   cooked("brussel sproutes are *awful*.", "<p>brussel sproutes are <em>awful</em>.</p>", "it doesn't swallow periods.");
+});
+
+test("Auto quoting", function() {
+  cooked('"My fake plants died because I did not pretend to water them."',
+         "<p><blockquote>My fake plants died because I did not pretend to water them.</blockquote></p>",
+         "it converts single line quotes to blockquotes");
+  cooked('"hello\nworld"', "<p>\"hello<br/>world\"</p>", "It doesn't convert multi line quotes");
+  cooked('"hello "evil" trout"', '<p>"hello "evil" trout"</p>', "it doesn't format quotes in the middle of a line");
 });
 
 test("Traditional Line Breaks", function() {
@@ -165,7 +171,7 @@ test("Quotes", function() {
                 "handles quotes properly");
 
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",
-                { topicId: 2, lookupAvatar: function(name) { } },
+                { topicId: 2, lookupAvatar: function() { } },
                 "<p>1</p>\n\n<p><aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob said:" +
                 "</div><blockquote><p>my quote</p></blockquote></aside></p>\n\n<p>2</p>",
                 "includes no avatar if none is found");
@@ -320,7 +326,7 @@ test("Code Blocks", function() {
 test("sanitize", function() {
   var sanitize = Discourse.Markdown.sanitize;
 
-  equal(sanitize("<i class=\"icon-bug icon-spin\">bug</i>"), "<i>bug</i>");
+  equal(sanitize("<i class=\"fa-bug fa-spin\">bug</i>"), "<i>bug</i>");
   equal(sanitize("<div><script>alert('hi');</script></div>"), "<div></div>");
   equal(sanitize("<div><p class=\"funky\" wrong='1'>hello</p></div>"), "<div><p>hello</p></div>");
   cooked("hello<script>alert(42)</script>", "<p>hello</p>", "it sanitizes while cooking");
@@ -329,6 +335,7 @@ test("sanitize", function() {
          "<p><a href=\"http://disneyland.disney.go.com/\">disney</a> <a href=\"http://reddit.com\">reddit</a></p>",
          "we can embed proper links");
 
+  cooked("<center>hello</center>", "<p>hello</p>", "it does not allow centering");
   cooked("<table><tr><td>hello</td></tr></table>\nafter", "<p>after</p>", "it does not allow tables");
   cooked("<blockquote>a\n</blockquote>\n", "<blockquote>a\n\n<br/>\n\n</blockquote>", "it does not double sanitize");
 

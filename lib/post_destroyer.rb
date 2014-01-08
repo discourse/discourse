@@ -124,7 +124,7 @@ class PostDestroyer
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true
-      @post.revise(@user, @post.versions.last.modifications["raw"][0], force_new_version: true)
+      @post.revise(@user, @post.revisions.last.modifications["raw"][0], force_new_version: true)
       @post.update_flagged_posts_count
     end
   end

@@ -34,7 +34,7 @@
               <a href="{{unbound topic.lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="new_posts"}}'>{{unbound topic.new_posts}}</a>
             {{/if}}
             {{#if topic.unseen}}
-              <a href="{{unbound topic.lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
+              <a href="{{unbound topic.lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='fa fa-asterisk'></i></a>
             {{/if}}
           </td>
           <td class="category">
@@ -44,7 +44,7 @@
 
           <td class='num likes'>
             {{#if topic.like_count}}
-              <a href='{{unbound topic.url}}{{#if topic.has_summary}}?filter=summary{{/if}}'>{{unbound topic.like_count}} <i class='icon-heart'></i></a>
+              <a href='{{unbound topic.url}}{{#if topic.has_summary}}?filter=summary{{/if}}'>{{unbound topic.like_count}} <i class='fa fa-heart'></i></a>
             {{/if}}
           </td>
 

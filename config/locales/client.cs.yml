@@ -166,7 +166,7 @@ cs:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> zmínil uživatele <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> zmínil <a href='{{user2Url}}'>vás</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Vy</a> jste znínil uživatele <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Vy</a> jste znínil uživatele <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Odesláno uživatel <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Odesláno <a href='{{userUrl}}'>vámi</a>"
@@ -495,15 +495,15 @@ cs:
       none: "V tuto chvíli nemáte žádná oznámení."
       more: "zobrazit starší oznámení"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='soukromá zpráva'></i> {{username}} vám zaslal soukromou zprávu: {{link}}"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='soukromá zpráva'></i> {{username}} vám zaslal soukromou zprávu: {{link}}"
       invited_to_private_message: "{{username}} vás pozval do soukromé konverzace: {{link}}"
-      invitee_accepted: "<i title='přijetí pozvánky' class='icon icon-signin'></i> {{username}} přijal vaši pozvánku"
-      moved_post: "<i title='přesunutý příspěvek' class='icon icon-arrow-right'></i> {{username}} přesunul příspěvek do {{link}}"
+      invitee_accepted: "<i title='přijetí pozvánky' class='fa fa-sign-in'></i> {{username}} přijal vaši pozvánku"
+      moved_post: "<i title='přesunutý příspěvek' class='fa fa-arrow-right'></i> {{username}} přesunul příspěvek do {{link}}"
       total_flagged: "celkem nahlášeno příspěvků"
 
     upload_selector:
@@ -713,25 +713,10 @@ cs:
       login_reply: 'Přihlaste se, chcete-li odpovědět'
 
       filters:
-        user: "{{n_posts}} {{by_n_users}}."
         n_posts:
           one: "Je zobrazen pouze 1 příspěvek"
           few: "Jsou zobrazeny pouze {{count}} příspěvky"
           other: "Je zobrazeno pouze {{count}} příspěvků"
-        by_n_users:
-          one: "od 1 vybraného uživatele"
-          few: "od {{count}} vybraného uživatele"
-          other: "od {{count}} vybraných uživatelů"
-
-        summary: "{{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "Je zobrazen 1 nejlepší příspěvek"
-          few: "Jsou zobrazeny {{count}} nejlepší příspěvky"
-          other: "Je zobrazeno {{count}} nejlepších příspěvků"
-        of_n_posts:
-          one: "z celkem 1 příspěvku v tématu"
-          few: "z celkem {{count}} příspěvků v tématu"
-          other: "z celkem {{count}} příspěvků v tématu"
         cancel: "Zobrazí znovu všechny příspěvky v tomto tématu."
 
       split_topic:

@@ -162,7 +162,7 @@ pt_BR:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mencionou <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mencionou <a href='{{user2Url}}'>você</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Você</a> mencionou <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Você</a> mencionou <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Postado por <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Postado por <a href='{{userUrl}}'>você</a>"
@@ -513,15 +513,15 @@ pt_BR:
       none: "Não há notifcações neste momento."
       more: "ver notificações antigas"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} enviou uma mensagem particular para você: {{link}}"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} enviou uma mensagem particular para você: {{link}}"
       invited_to_private_message: "{{username}} convidou você para uma conversa privada: {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} aceitou o seu convite"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moveu a postagem para {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} aceitou o seu convite"
+      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} moveu a postagem para {{link}}"
       total_flagged: "postagens sinalizadas totais"
 
     upload_selector:
@@ -738,21 +738,9 @@ pt_BR:
       login_reply: 'Entre com sua conta para responder'
 
       filters:
-        user: "Você está vendo apenas {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 postagem"
           other: "{{count}} postagens"
-        by_n_users:
-          one: "feito por 1 usuário específico"
-          other: "feito por {count}} usuários específicos"
-
-        summary: "Você está vendo apenas {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "1 melhor postagem"
-          other: "{{count}} melhores postagens"
-        of_n_posts:
-          one: "de 1 no tópico"
-          other: "de {{count}} no tópico"
         cancel: "Mostrar novamente todas as postagens deste tópico."
 
       split_topic:

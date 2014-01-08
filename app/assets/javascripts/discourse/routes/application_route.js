@@ -10,8 +10,9 @@ Discourse.ApplicationRoute = Em.Route.extend({
 
   actions: {
     showLogin: function() {
-      // Discourse.Route.showModal(this, 'login');
       document.location.href='/heroku-login'
+      // Discourse.Route.showModal(this, 'login');
+      // this.controllerFor('login').resetForm();
     },
 
     showCreateAccount: function() {
@@ -30,6 +31,10 @@ Discourse.ApplicationRoute = Em.Route.extend({
     showUploadSelector: function(composerView) {
       Discourse.Route.showModal(this, 'uploadSelector');
       this.controllerFor('uploadSelector').setProperties({ composerView: composerView });
+    },
+
+    showKeyboardShortcutsHelp: function() {
+      Discourse.Route.showModal(this, 'keyboardShortcutsHelp');
     },
 
 

@@ -7,7 +7,7 @@
       <div class="controls">
         <span class='static'>{{username}}</span>
         {{#if can_edit_username}}
-          {{#link-to "preferences.username" class="btn pad-left"}}<i class="icon-pencil"></i>{{/link-to}}
+          {{#link-to "preferences.username" class="btn pad-left"}}<i class="fa fa-pencil"></i>{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -15,22 +15,24 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <label class="control-label">{{i18n user.name.title}}</label>
-      <div class="controls">
-        {{textField value=name classNames="input-xxlarge"}}
+    {{#if canEditName}}
+      <div class="control-group">
+        <label class="control-label">{{i18n user.name.title}}</label>
+        <div class="controls">
+          {{textField value=name classNames="input-xxlarge"}}
+        </div>
+        <div class='instructions'>
+          {{i18n user.name.instructions}}
+        </div>
       </div>
-      <div class='instructions'>
-        {{i18n user.name.instructions}}
-      </div>
-    </div>
+    {{/if}}
 
     <div class="control-group">
       <label class="control-label">{{i18n user.email.title}}</label>
       <div class="controls">
         <span class='static'>{{email}}</span>
         {{#if can_edit_email}}
-          {{#link-to "preferences.email" class="btn pad-left"}}<i class="icon-pencil"></i>{{/link-to}}
+          {{#link-to "preferences.email" class="btn pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -41,7 +43,7 @@
     <div class="control-group">
       <label class="control-label">{{i18n user.password.title}}</label>
       <div class="controls">
-        <a href="#" {{action changePassword}} class='btn'><i class="icon icon-envelope"></i>{{i18n user.change_password.action}}</a> {{passwordProgress}}
+        <a href="#" {{action changePassword}} class='btn'><i class="fa fa-envelope"></i>{{i18n user.change_password.action}}</a> {{passwordProgress}}
       </div>
     </div>
 
@@ -49,7 +51,11 @@
       <label class="control-label">{{i18n user.avatar.title}}</label>
       <div class="controls">
         {{boundAvatar model imageSize="large"}}
-        <button {{action showAvatarSelector}} class="btn pad-left"><i class="icon-pencil"></i></button>
+        {{#if allowAvatarUpload}}
+          <button {{action showAvatarSelector}} class="btn pad-left no-text"><i class="fa fa-pencil"></i></button>
+        {{else}}
+          <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn no-text"><i class="fa fa-pencil"></i></a>
+        {{/if}}
       </div>
     </div>
 
@@ -103,6 +109,15 @@
         {{combobox valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
       </div>
 
+      {{#if Discourse.SiteSettings.enable_watch_new_topics}}
+      <div class="controls">
+        <label>
+          {{view Ember.Checkbox checkedBinding="watch_new_topics"}}
+          {{i18n user.watch_new_topics}}
+        </label>
+      </div>
+      {{/if}}
+
       <div class="controls">
         <label>{{view Ember.Checkbox checkedBinding="external_links_in_new_tab"}}
         {{i18n user.external_links_in_new_tab}}</label>
@@ -117,6 +132,25 @@
         </label>
       </div>
 
+    </div>
+
+    <div class="control-group category">
+      <label class="control-label">{{i18n user.categories_settings}}</label>
+      <div class="controls">
+        <label>{{i18n user.watched_categories}}</label>
+        {{category-group categories=watchedCategories}}
+        <div class="instructions">{{i18n user.watched_categories_instructions}}</div>
+      </div>
+      <div class="controls">
+        <label>{{i18n user.tracked_categories}}</label>
+        {{category-group categories=trackedCategories}}
+        <div class="instructions">{{i18n user.tracked_categories_instructions}}</div>
+      </div>
+      <div class="controls">
+        <label>{{i18n user.muted_categories}}</label>
+        {{category-group categories=mutedCategories}}
+        <div class="instructions">{{i18n user.muted_categories_instructions}}</div>
+      </div>
     </div>
 
     <div class="control-group">

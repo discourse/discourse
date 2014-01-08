@@ -166,7 +166,7 @@ nl:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> noemde <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> noemde <a href='{{user2Url}}'>jou</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Jij</a> noemde <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Jij</a> noemde <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Geplaatst door <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Geplaatst door <a href='{{userUrl}}'>jou</a>"
@@ -531,15 +531,15 @@ nl:
       none: "Er zijn nu geen notificaties."
       more: "bekijk oudere notificaties"
       mentioned: "<span title='genoemd' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='geciteerd' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='beantwoord' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='beantwoord' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='gewijzigd' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='leuk' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='heeft je uitnodiging geaccepteerd' class='icon icon-signin'></i> {{username}} heeft je uitnodiging geaccepteerd en heeft zich ingeschreven om deel te nemen."
-      moved_post: "<i title='bericht verplaatst' class='icon icon-arrow-right'></i> {{username}} verplaatst {{link}}"
+      quoted: "<i title='geciteerd' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='beantwoord' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='beantwoord' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='gewijzigd' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='leuk' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='privé-bericht'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='fa fa-envelope-o' title='privé-bericht'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='heeft je uitnodiging geaccepteerd' class='fa fa-sign-in'></i> {{username}} heeft je uitnodiging geaccepteerd en heeft zich ingeschreven om deel te nemen."
+      moved_post: "<i title='bericht verplaatst' class='fa fa-arrow-right'></i> {{username}} verplaatst {{link}}"
       total_flagged: aantal gemarkeerde berichten
 
     upload_selector:
@@ -756,21 +756,9 @@ nl:
       login_reply: Log in om te reageren
 
       filters:
-        user: "Je ziet momenteel alleen {{n_posts}} {{by_n_users}}."
         n_posts:
           one: één bericht
           other: "{{count}} berichten"
-        by_n_users:
-          one: van één specifiek lid
-          other: "van {{count}} specifieke leden"
-
-        summary: "Je ziet momenteel {{n_summarized_posts}} {{of_n_posts}}"
-        n_summarized_posts:
-          one: "het enige bericht in deze topic."
-          other: "{{count}} berichten"
-        of_n_posts:
-          one: ''
-          other: "van {{count}} als samenvatting van deze topic."
         cancel: Laat alle berichten in deze topic zien.
 
       split_topic:

@@ -126,30 +126,10 @@ Discourse.PostStream = Em.Object.extend({
     return result;
   }.property('userFilters.[]', 'summary'),
 
-  /**
-    The text describing the current filters. For display in the pop up at the bottom of the
-    screen.
-
-    @property filterDesc
-  **/
-  filterDesc: function() {
+  hasNoFilters: function() {
     var streamFilters = this.get('streamFilters');
-
-    if (streamFilters.filter && streamFilters.filter === "summary") {
-      return I18n.t("topic.filters.summary", {
-        n_summarized_posts: I18n.t("topic.filters.n_summarized_posts", { count: this.get('filteredPostsCount') }),
-        of_n_posts: I18n.t("topic.filters.of_n_posts", { count: this.get('topic.posts_count') })
-      });
-    } else if (streamFilters.username_filters) {
-      return I18n.t("topic.filters.user", {
-        n_posts: I18n.t("topic.filters.n_posts", { count: this.get('filteredPostsCount') }),
-        by_n_users: I18n.t("topic.filters.by_n_users", { count: streamFilters.username_filters.length })
-      });
-    }
-    return "";
+    return !(streamFilters && ((streamFilters.filter === 'summary') || streamFilters.userFilters));
   }.property('streamFilters.[]', 'topic.posts_count', 'posts.length'),
-
-  hasNoFilters: Em.computed.empty('filterDesc'),
 
   /**
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
@@ -214,6 +194,8 @@ Discourse.PostStream = Em.Object.extend({
     @returns {Ember.Deferred} a promise that resolves when the summary stream has loaded.
   **/
   toggleSummary: function() {
+    var userFilters = this.get('userFilters');
+    userFilters.clear();
     this.toggleProperty('summary');
     return this.refresh();
   },
@@ -226,6 +208,7 @@ Discourse.PostStream = Em.Object.extend({
   **/
   toggleParticipant: function(username) {
     var userFilters = this.get('userFilters');
+    this.set('summary', false);
     if (userFilters.contains(username)) {
       userFilters.remove(username);
     } else {
@@ -273,6 +256,64 @@ Discourse.PostStream = Em.Object.extend({
     });
   },
   hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
+
+
+  /**
+    Fill in a gap of posts before a particular post
+
+    @method fillGapBefore
+    @paaram {Discourse.Post} post beside gap
+    @paaram {Array} gap array of post ids to load
+    @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
+  **/
+  fillGapBefore: function(post, gap) {
+    var postId = post.get('id'),
+        stream = this.get('stream'),
+        idx = stream.indexOf(postId),
+        currentPosts = this.get('posts'),
+        self = this;
+
+    if (idx !== -1) {
+      // Insert the gap at the appropriate place
+      stream.splice.apply(stream, [idx, 0].concat(gap));
+      stream.enumerableContentDidChange();
+
+      var postIdx = currentPosts.indexOf(post);
+      if (postIdx !== -1) {
+        return this.findPostsByIds(gap).then(function(posts) {
+          posts.forEach(function(p) {
+            var stored = self.storePost(p);
+            if (!currentPosts.contains(stored)) {
+              currentPosts.insertAt(postIdx++, stored);
+            }
+          });
+
+          delete self.get('gaps.before')[postId];
+        });
+      }
+    }
+    return Ember.RSVP.resolve();
+  },
+
+  /**
+    Fill in a gap of posts after a particular post
+
+    @method fillGapAfter
+    @paaram {Discourse.Post} post beside gap
+    @paaram {Array} gap array of post ids to load
+    @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
+  **/
+  fillGapAfter: function(post, gap) {
+    var postId = post.get('id'),
+        stream = this.get('stream'),
+        idx = stream.indexOf(postId);
+
+    if (idx !== -1) {
+      stream.pushObjects(gap);
+      return this.appendMore();
+    }
+    return Ember.RSVP.resolve();
+  },
 
   /**
     Appends the next window of posts to the stream. Call it when scrolling downwards.
@@ -522,9 +563,9 @@ Discourse.PostStream = Em.Object.extend({
     @method updateFromJson
   **/
   updateFromJson: function(postStreamData) {
-    var postStream = this;
+    var postStream = this,
+        posts = this.get('posts');
 
-    var posts = this.get('posts');
     posts.clear();
     if (postStreamData) {
       // Load posts if present
@@ -631,8 +672,7 @@ Discourse.PostStream = Em.Object.extend({
 
     var url = "/t/" + this.get('topic.id') + "/posts.json",
         data = { post_ids: postIds },
-        postStream = this,
-        result = Em.A();
+        postStream = this;
 
     return Discourse.ajax(url, {data: data}).then(function(result) {
       var posts = Em.get(result, "post_stream.posts");

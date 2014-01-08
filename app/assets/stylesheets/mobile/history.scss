@@ -1,46 +1,121 @@
-// styles that apply to the popup that appears when you show the edit history
-// of a post
+// styles that apply to the popup that appears when you show the edit history of a post
 
-@import "../common/foundation/variables";
-@import "../common/foundation/mixins";
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
 
 .modal.history-modal {
   .modal-inner-container {
-    min-width: 100%;
-    min-height: 100%;
+    min-width: 960px;
+    min-height: 500px;
   }
-
+  #revision-controls {
+    float: left;
+    .btn[disabled]:hover {
+      color: #534d4b;
+    }
+  }
+  #display-modes {
+    text-align: right;
+    .btn-primary {
+      float: none;
+    }
+  }
+  #revision-details {
+    background-color: #eee;
+    padding: 5px;
+    margin-top: 10px;
+  }
+  #revisions {
+    word-wrap: break-word;
+  }
+  img {
+    max-width: 670px;
+    height: auto;
+  }
+  .inline-diff {
+    width: 670px;
+  }
+  .markdown {
+    font-family: monospace;
+    font-size: 12px;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    td {
+      width: 50%;
+      vertical-align: top;
+      max-width: 440px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+  }
+  .span8, .markdown {
+    img {
+      max-width: 400px;
+    }
+  }
+  ins, .diff-ins {
+    code, img {
+      border: 2px solid #405A04;
+    }
+    img {
+      opacity: .75;
+      filter: alpha(opacity=75);
+    }
+    a {
+      color: #2D4003;
+      text-decoration: none;
+    }
+  }
+  img.diff-ins, code.diff-ins {
+    border: 2px solid #405A04;
+  }
+  img.diff-ins {
+    opacity: .75;
+    filter: alpha(opacity=75);
+  }
+  .diff-ins {
+    background: #f9ffe1;
+  }
   ins {
-    background: #e6ffe6;
+    color: #405A04;
+    background: #D1E1AD;
+  }
+  del, .diff-del {
+    code, img {
+      border: 2px solid #A82400;
+    }
+    img {
+      opacity: .5;
+      filter: alpha(opacity=50);
+    }
+    a {
+      color: #400E00;
+      text-decoration: none;
+    }
+  }
+  img.diff-del, code.diff-del {
+    border: 2px solid #A82400;
+  }
+  img.diff-del {
+    opacity: .5;
+    filter: alpha(opacity=50);
+  }
+  .diff-del {
+    background: #fff4f4;
   }
   del {
-    background: #ffe6e6;
+    color: #A82400;
+    background: #E5BDB2;
+  }
+  span.date {
+    font-weight: bold;
+  }
+  span.edit-reason {
+    background-color: #ffffcc;
+    padding: 3px 5px 5px 5px;
   }
   .modal-header {
     height: 42px;
-    padding-bottom: 10px;
-  }
-  .modal-body {padding-top: 0px;}
-  .history-loading {
-    margin: 25px 0;
-    width: 120px;
-    font-size: 20px;
-    padding: 8px 0 30px 30px;
-    background: {
-      image: image-url("spinner_96.gif");
-      repeat: no-repeat;
-      size: 25px 25px;
-      position: 0 4px;
-    };
-  }
-  select {
-    height: auto;
-	width: auto;
-  font-size: 16px;
-  position: fixed;
-  margin-top: -45px;
-  background-color: #fff;
   }
 }
-
-.offset1 {display: none;}

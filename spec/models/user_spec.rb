@@ -903,6 +903,36 @@ describe User do
 
   end
 
+  describe "posted too much in topic" do
+    let!(:user) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let!(:topic) { Fabricate(:post).topic }
+
+    before do
+      # To make testing easier, say 1 reply is too much
+      SiteSetting.stubs(:newuser_max_replies_per_topic).returns(1)
+    end
+
+    context "for a user who didn't create the topic" do
+      let!(:post) { Fabricate(:post, topic: topic, user: user) }
+
+      it "does not return true for staff" do
+        user.stubs(:staff?).returns(true)
+        user.posted_too_much_in_topic?(topic.id).should be_false
+      end
+
+      it "returns true when the user has posted too much" do
+        user.posted_too_much_in_topic?(topic.id).should be_true
+      end
+    end
+
+    it "returns false for a user who created the topic" do
+      topic_user = topic.user
+      topic_user.trust_level = TrustLevel.levels[:newuser]
+      topic.user.posted_too_much_in_topic?(topic.id).should be_false
+    end
+
+  end
+
   describe "#find_email" do
 
     let(:user) { Fabricate(:user, email: "bob@example.com") }
@@ -934,7 +964,7 @@ describe User do
 
   describe ".small_avatar_url" do
 
-    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "http://test.localhost/uploaded/avatar/template/{size}.png") }
+    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "/uploaded/avatar/template/{size}.png") }
 
     it "returns a 45-pixel-wide avatar" do
       user.small_avatar_url.should == "//test.localhost/uploaded/avatar/template/45.png"
@@ -944,7 +974,7 @@ describe User do
 
   describe ".uploaded_avatar_path" do
 
-    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "http://test.localhost/uploaded/avatar/template/{size}.png") }
+    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "/uploaded/avatar/template/{size}.png") }
 
     it "returns nothing when uploaded avatars are not allowed" do
       SiteSetting.expects(:allow_uploaded_avatars).returns(false)
@@ -955,6 +985,11 @@ describe User do
       user.uploaded_avatar_path.should == "//test.localhost/uploaded/avatar/template/{size}.png"
     end
 
+    it "returns a schemaless cdn-based avatar template" do
+      Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
+      user.uploaded_avatar_path.should == "//my.cdn.com/uploaded/avatar/template/{size}.png"
+    end
+
   end
 
   describe ".avatar_template" do
@@ -962,8 +997,8 @@ describe User do
     let(:user) { build(:user, email: "em@il.com") }
 
     it "returns the uploaded_avatar_path by default" do
-      user.expects(:uploaded_avatar_path).returns("/uploaded/avatar.png")
-      user.avatar_template.should == "/uploaded/avatar.png"
+      user.expects(:uploaded_avatar_path).returns("//discourse.org/uploaded/avatar.png")
+      user.avatar_template.should == "//discourse.org/uploaded/avatar.png"
     end
 
     it "returns the gravatar when no avatar has been uploaded" do

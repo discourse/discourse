@@ -1,13 +1,13 @@
 <nav class='buttons'>
   <button class='btn' {{action toggleMap}} title="{{i18n topic.toggle_information}}">
-    <i {{bindAttr class=":icon toggleMapClass"}}></i>
+    <i {{bindAttr class=":fa toggleMapClass"}}></i>
   </button>
 </nav>
 
 <section {{bindAttr class=":map mapCollapsed"}}>
   <ul class="clearfix">
     <li>
-      <a href='{{unbound topic.url}}'>
+      <a href='{{unbound topic.url}}' {{bindAttr class=topic.ageCold}}>
       <h4>{{i18n created}}</h4>
       {{avatar details.created_by imageSize="tiny"}}
       {{date topic.created_at}}
@@ -26,7 +26,7 @@
     </li>
     <li class='secondary'>
       <h4>{{i18n views}}</h4>
-      {{number topic.views}}
+      {{number topic.views class=topic.viewsHeat}}
     </li>
     <li class='secondary'>
       <h4>{{i18n users}}</h4>
@@ -35,7 +35,7 @@
     {{#if topic.like_count}}
       <li class='secondary'>
         <h4>{{i18n likes}}</h4>
-        <i class='icon icon-heart'></i> {{number topic.like_count}}
+        <i class='fa fa-heart'></i> {{number topic.like_count}}
       </li>
     {{/if}}
     {{#if details.links.length}}
@@ -63,7 +63,7 @@
               <span class='badge badge-notification clicks' title='{{i18n topic_map.clicks}}'>{{clicks}}</span>
               <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
                 {{#if title}}{{title}}{{else}}{{shortenUrl url}}{{/if}}
-                {{#unless internal}}<i class='icon-external-link'></i>{{/unless}}
+                {{#unless internal}}<i class='fa fa-external-link'></i>{{/unless}}
               </a>
             </li>
           {{/groupedEach}}

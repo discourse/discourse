@@ -50,3 +50,21 @@ class ScreenedIpAddress < ActiveRecord::Base
     !!b and b.action_type == action_type
   end
 end
+
+# == Schema Information
+#
+# Table name: screened_ip_addresses
+#
+#  id            :integer          not null, primary key
+#  ip_address    :inet             not null
+#  action_type   :integer          not null
+#  match_count   :integer          default(0), not null
+#  last_match_at :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+# Indexes
+#
+#  index_screened_ip_addresses_on_ip_address     (ip_address) UNIQUE
+#  index_screened_ip_addresses_on_last_match_at  (last_match_at)
+#

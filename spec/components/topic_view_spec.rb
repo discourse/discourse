@@ -89,7 +89,6 @@ describe TopicView do
 
     end
 
-
     it "raises NotLoggedIn if the user isn't logged in and is trying to view a private message" do
       Topic.any_instance.expects(:private_message?).returns(true)
       lambda { TopicView.new(topic.id, nil) }.should raise_error(Discourse::NotLoggedIn)
@@ -232,6 +231,26 @@ describe TopicView do
       p6.user_id = nil # user got nuked
       p6.save!
     end
+
+    describe "contains_gaps?" do
+      it "does not contain contains_gaps with default filtering" do
+        topic_view.contains_gaps?.should be_false
+      end
+
+      it "contains contains_gaps when filtered by username" do
+        TopicView.new(topic.id, coding_horror, username_filters: ['eviltrout']).contains_gaps?.should be_true
+      end
+
+      it "contains contains_gaps when filtered by summary" do
+        TopicView.new(topic.id, coding_horror, filter: 'summary').contains_gaps?.should be_true
+      end
+
+      it "contains contains_gaps when filtered by best" do
+        TopicView.new(topic.id, coding_horror, best: 5).contains_gaps?.should be_true
+      end
+
+    end
+
 
     describe '#filter_posts_paged' do
       before { SiteSetting.stubs(:posts_per_page).returns(2) }

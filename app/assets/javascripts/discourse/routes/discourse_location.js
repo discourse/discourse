@@ -216,7 +216,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
     var guid = Ember.guidFor(this),
         self = this;
 
-    Ember.$(window).on('popstate.ember-location-'+guid, function(e) {
+    Ember.$(window).on('popstate.ember-location-'+guid, function() {
       // Ignore initial page load popstate event in Chrome
       if (!popstateFired) {
         popstateFired = true;

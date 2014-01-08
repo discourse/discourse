@@ -50,7 +50,7 @@
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 
-  tbody tr {
+  > tbody > tr {
     background-color: $white;
     &:nth-child(even) {
       background-color: darken($white, 4%);
@@ -161,6 +161,64 @@
 
 // Category list
 // --------------------------------------------------
+
+#topic-list.categories {
+  td.latest {
+    vertical-align: top;
+    padding: 5px;
+  }
+  td.category {
+    vertical-align: top;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .badge-category {
+    display: inline-block;
+    margin-top: 1px;
+  }
+  .category-description {
+    margin-top: 8px;
+  }
+  .featured-users {
+    @include mobile-portrait  {
+      margin-bottom: 10px;
+      padding-top: 8px;
+      clear: left;
+    }
+    @include not-mobile-portrait  {
+      float: right;
+    }
+  }
+  .latest {
+    @include mobile-portrait { width: 150px; }
+    @include mobile-landscape { width: 270px; }
+    @include tablet-landscape { width: 450px; }
+    .featured-topic {
+      margin: 8px 0;
+      a.last-posted-at, a.last-posted-at:visited {
+        color: #888;
+      }
+    }
+  }
+  .stats {
+    @include not-tablet-landscape { display: none; }
+    @include tablet-landscape { min-width: 80px; }
+  }
+  td.stats {
+    .unit {
+      font-size: 11px;
+    }
+  }
+  table.categoryStats {
+    td {
+      padding: 2px;
+      vertical-align: bottom;
+      line-height: 17px;
+      &.value { text-align: right; }
+      &.unit  { text-align: left; }
+    }
+  }
+}
 
 .category-list-item {
   margin-bottom: 10px;

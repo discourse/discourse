@@ -161,7 +161,7 @@ it:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> ha menzionato <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> ha menzionato <a href='{{user2Url}}'>te</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Tu</a> hai menzionato <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Tu</a> hai menzionato <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Pubblicato da <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Pubblicato da <a href='{{userUrl}}'>te</a>"
@@ -181,6 +181,17 @@ it:
       "11": "Modifiche"
       "12": "Oggetti inviati"
       "13": "Inbox"
+
+    categories:
+      all: "tutte le categorie"
+      only_category: "solo {{categoryName}}"
+      category: "Categoria"
+      posts: "Post"
+      topics: "Topic"
+      latest: "Ultimi"
+      latest_by: "ultimi da"
+      toggle_ordering: "alterna l'ordine"
+      subcategories: "Sottocategorie:"
 
     user:
       said: "{{username}} ha detto:"
@@ -284,7 +295,8 @@ it:
 
       email_direct: "Ricevi un'email quando qualcuno ti cita, risponde ad un tuo post oppure menziona il tuo @username"
       email_private_messages: "Ricevi un'email quando qualcuno ti invia un messaggio privato"
-
+      email_always: "Recevi email di notifica e mail riassuntive anche se attivo sul sito"
+      
       other_settings: "Altro"
 
       new_topic_duration:
@@ -310,6 +322,7 @@ it:
           other: "dopo {{count}} minuti"
 
       invited:
+        search: "scrivi per cercare tra gli inviti..."
         title: "Inviti"
         user: "Utenti Invitati"
         none: "{{username}} non ha invitato alcun utente al sito."
@@ -323,6 +336,7 @@ it:
         time_read: "Tempo di Lettura"
         days_visited: "Giornate di visita"
         account_age_days: "Età account in giorni"
+        create: "Invita Amici a questo sito"
 
       password:
         title: "Password"
@@ -502,15 +516,15 @@ it:
       none: "Non hai notifiche in questo momento."
       more: "guarda notifiche più vecchie"
       mentioned: "<span title='menzionato' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='citato' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='risposto' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='risposto' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='modificato' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='messaggio privato'></i> {{username}} ti ha mandato un messaggio privato: {{link}}"
+      quoted: "<i title='citato' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='risposto' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='risposto' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='modificato' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='messaggio privato'></i> {{username}} ti ha mandato un messaggio privato: {{link}}"
       invited_to_private_message: "{{username}} ti ha invitato ad una conversazione privata: {{link}}"
-      invitee_accepted: "<i title='ha accettato il tuo invito' class='icon icon-signin'></i> {{username}} ha accettato il tuo invito"
-      moved_post: "<i title='post spostato' class='icon icon-arrow-right'></i> {{username}} ha spostato il post qui {{link}}"
+      invitee_accepted: "<i title='ha accettato il tuo invito' class='fa fa-sign-in'></i> {{username}} ha accettato il tuo invito"
+      moved_post: "<i title='post spostato' class='fa fa-arrow-right'></i> {{username}} ha spostato il post qui {{link}}"
       total_flagged: "totale post segnalati"
 
     upload_selector:
@@ -696,21 +710,9 @@ it:
       login_reply: 'Log In per Rispondere'
 
       filters:
-        user: "Stai vedendo solo {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 post"
           other: "{{count}} post"
-        by_n_users:
-          one: "da 1 utente specifico"
-          other: "da {{count}} utenti specifici"
-
-        summary: "Stai vedendo i {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "1 best post"
-          other: "{{count}} best post"
-        of_n_posts:
-          one: "di 1 nel topic"
-          other: "di {{count}} nel topic"
         cancel: "Mostra nuovamente tutti i post di questo topic."
 
       split_topic:
@@ -1130,13 +1132,18 @@ it:
           moderators: 'Moderatori'
 
       user:
-        suspend_failed: "Qualcosa è andato storto nel bannare questo utente {{error}}"
-        unsuspend_failed: "Qualcosa è andato rimuovendo il ban a questo utente {{error}}"
-        suspend_duration: "Per quanto tempo vuoi bannare l'utente? (giorni)"
+        suspend_failed: "Qualcosa è andato storto nel sospendere questo utente {{error}}"
+        unsuspend_failed: "Qualcosa è andato storto nel riabilitare questo utente {{error}}"
+        suspend_duration: "Per quanto tempo vuoi sospendere l'utente?"
+        suspend_duration_units: "(giorni)"
+        suspend_reason_label: "Perché vuoi sospendere l'utente? Questo messaggio <b>sarà visibile a tutti</b> sul profilo dell'utente, e verrà mostrato all'utente quando proverà a collegarsi. Sii conciso."
+        suspend_reason: "Motivo"
+        suspended_by: "Sospeso da"
         delete_all_posts: "Cancella tutti i post"
-        suspend: "Ban"
-        unsuspend: "Rimuovi Ban"
-        suspended: "Bannato?"
+        delete_all_posts_confirm: "Stai per cancellare %{posts} post e %{topics} topic. Sei sicuro?"
+        suspend: "Sospendi"
+        unsuspend: "Riabilita"
+        suspended: "Sospeso?"
         moderator: "Moderatore?"
         admin: "Amministratore?"
         show_admin_profile: "Amministratore"
@@ -1147,6 +1154,8 @@ it:
         grant_admin: 'Garantisci Amministratore'
         revoke_moderation: 'Revoca Moderatore'
         grant_moderation: 'Garantisci Moderatore'
+        unblock: 'Sblocca'
+        block: 'Blocca'
         reputation: Reputazione
         permissions: Permessi
         activity: Attività
@@ -1159,10 +1168,17 @@ it:
         flags_received_count: Segnalazioni Ricevute
         approve: 'Approva'
         approved_by: "approvato da"
+        approve_success: "User approvato ed inviata un'email con le istruzioni per l'attivazione."
+        approve_bulk_success: "Successo! Tutti gli utenti selezionati sono stati approvati ed avvisati."
         time_read: "Tempo di Lettura"
         delete: "Cancella Utente"
-        delete_forbidden: "Questo utente non può essere cancellato poiché ci sono altri post. Cancella i suoi post prima di eliminarlo."
-        delete_confirm: "Sei sicuro di voler cancellare definitivamente questo utente? Questa azione è irreversibile!"
+        delete_forbidden_because_staff: "Amministratori e moderatori non possono esser cancellati."
+        delete_forbidden:
+          one: "Gli utenti non posson esser cancellati se si sono registrati prima di %{count} giorni fa, o se hanno dei post. Cancella tutti i post prima di cancellare l'utente."
+          other: "Gli utenti non posson esser cancellati se si sono registrati prima di %{count} giorni fa, o se hanno dei post. Cancella tutti i post prima di cancellare l'utente."       
+        delete_confirm: "Sei SICURO di voler cancellare definitivamente questo utente? Questa azione è irreversibile!"
+        delete_and_block: "<b>Si</b>, e <b>blocca</b> iscrizioni con questa email ed indirizzo IP"
+        delete_dont_block: "<b>Si</b>, ma <b>permetti</b> iscrizioni con questa email ed indirizzo IP"
         deleted: "L'utente è stato cancellato."
         delete_failed: "Si sono verificati degli errori nella cancellazione dell'utente. Assicurati che tutti i suoi post sono stati cancellati."
         send_activation_email: "Invia Email di Attivazione"
@@ -1172,6 +1188,13 @@ it:
         activate_failed: "Si sono verificati dei problemi durante l'attivazione dell'account."
         deactivate_account: "Disattiva Account"
         deactivate_failed: "Si sono verificati dei problemi durante la disattivazione dell'account."
+        unblock_failed: "Si sono verificati dei problemi nel sbloccare l'utente."
+        block_failed: "Si sono verificati problemi nel bloccare l'utente."
+        deactivate_explanation: "Un utente disattivato deve rivalidare la sua email."
+        suspended_explanation: "Un utente sospeso non può collegarsi."
+        block_explanation: "Un utente bloccato non può creare post o aprire topic."
+        trust_level_change_failed: "Si sono verificati dei problemi nel cambiare il livello di trust dell'utente."
+        suspend_modal_title: "Utente Sospeso"
 
       site_content:
         none: "Scegli un tipo di contenuto da modificare."

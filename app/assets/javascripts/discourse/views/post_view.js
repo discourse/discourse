@@ -11,7 +11,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   templateName: 'post',
   classNameBindings: ['postTypeClass',
                       'selected',
-                      'post.hidden:hidden',
+                      'post.hidden:deleted',
                       'post.deleted'],
   postBinding: 'content',
 
@@ -76,7 +76,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     // Only add the expand/contract control if it's not a full post
     var expandContract = "";
     if (!$aside.data('full')) {
-      expandContract = "<i class='icon-" + desc + "' title='" + I18n.t("post.expand_collapse") + "'></i>";
+      expandContract = "<i class='fa fa-" + desc + "' title='" + I18n.t("post.expand_collapse") + "'></i>";
       $aside.css('cursor', 'pointer');
     }
     $('.quote-controls', $aside).html("" + expandContract + navLink);

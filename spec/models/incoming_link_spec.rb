@@ -62,6 +62,12 @@ describe IncomingLink do
       IncomingLink.add(req('http://somesite.com', 'http://somesite.com'))
     end
 
+    it "tracks visits for invalid referers" do
+      IncomingLink.add(req('http://somesite.com', 'bang bang bang'))
+      # no current user, don't track
+      IncomingLink.count.should == 0
+    end
+
     it "expects to be called with referer and user id" do
       IncomingLink.expects(:create).once.returns(true)
       IncomingLink.add(req('http://somesite.com', 'http://some.other.site.com'), build(:user))

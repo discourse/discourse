@@ -1,7 +1,7 @@
 module("Discourse.Composer");
 
 test('replyLength', function() {
-  var replyLength = function(val, expectedLength, text) {
+  var replyLength = function(val, expectedLength) {
     var composer = Discourse.Composer.create({ reply: val });
     equal(composer.get('replyLength'), expectedLength);
   };

@@ -162,7 +162,7 @@ zh_CN:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>你</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>你</a> 提到 <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>你</a> 提到 <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "发起人 <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "发起人 <a href='{{userUrl}}'>你</a>"
@@ -185,17 +185,26 @@ zh_CN:
 
     categories:
       all: "所有分类"
-      only_category: "只看{{categoryName}}"
+      all_subcategories: "所有子分类"
+      no_subcategory: "无子分类"
       category: "分类"
-      posts: "帖子"
-      topics: "主题"
+      posts: "新帖子"
+      topics: "新主题"
       latest: "最新"
       latest_by: "最新发表："
       toggle_ordering: "排序控制"
       subcategories: "子分类："
+      topic_stats: "新主题的数量。"
+      topic_stat_sentence:
+        one: "过去的%{unit}中有%{count}个新主题。"
+        other: "过去的%{unit}中有%{count}个新主题。"
+      post_stats: "新帖子的数量。"
+      post_stat_sentence:
+        one: "过去的%{unit}中有%{count}个新帖子。"
+        other: "过去的%{unit}中有%{count}个新帖子。"
 
     user:
-      said: "{{username}} 说："
+      said: "{{username}}说："
       profile: "个人简介"
       show_profile: "访问个人简介"
       mute: "防打扰"
@@ -218,6 +227,11 @@ zh_CN:
       deleted: "（已删除）"
       suspended_notice: "该用户将被禁止登录，直至{{date}}."
       suspended_reason: "原因："
+      watch_new_topics: "自动关注论坛中所有新发表的主题"
+      watched_categories: "已关注"
+      watched_categories_instructions: "你将自动关注这些分类中的所有主题"
+      muted_categories: "免打扰"
+      muted_categories_instructions: "你已将这些分类中的所有主题设为自动免打扰"
 
       messages:
         all: "所有"
@@ -265,7 +279,7 @@ zh_CN:
 
       name:
         title: "名字"
-        instructions: "你的名字，不要求独一无二（可以与他人的名字重复）。用于在@name匹配你时参考，只在你的用户页面显示。"
+        instructions: "你公开的名字。用于在@name匹配时参考。"
         too_short: "你设置的名字太短了。"
         ok: "你的名字符合要求。"
       username:
@@ -303,6 +317,7 @@ zh_CN:
       email_always: "即使在论坛中是活跃状态也接收电子邮件提醒和摘要"
 
       other_settings: "其它"
+      categories_settings: "分类"
 
       new_topic_duration:
         label: "认为主题是新主题，当"
@@ -347,7 +362,9 @@ zh_CN:
       password:
         title: "密码"
         too_short: "你设置的密码太短了。"
+        common: "你设置的密码太常见了。"
         ok: "你设置的密码符合要求。"
+        instructions: "至少需要%{count}个字符。"
 
       ip_address:
         title: "最后使用的IP地址"
@@ -375,6 +392,7 @@ zh_CN:
     month_desc: '30天以前发表的主题'
     week: '周'
     week_desc: '7天以前发表的主题'
+    day: '天'
 
     first_post: 第一帖
     mute: 防打扰
@@ -383,7 +401,8 @@ zh_CN:
 
     summary:
       enabled_description: "你现在正在浏览本主题的“概括”视图。要查看所有帖子，请点击下方。"
-      description: "本主题中有<b>{{count}}</b>个帖子，是否只查看与主题最相关的帖子以节省时间？"
+      description: "本主题中有<b>{{count}}</b>条回复，是否只查看与主题最相关的帖子以节省时间？"
+      description_time: "本主题中有<b>{{count}}</b>条回复，预计阅读时间为<b>{{readingTime}}分钟</b>。是否只查看与主题最相关的帖子以节省时间？"
       enable: '概括本主题'
       disable: '显示所有帖子'
 
@@ -517,23 +536,25 @@ zh_CN:
       toggler: "隐藏或显示编辑面板"
 
       admin_options_title: "本主题可选设置"
-      auto_close_label: "自动关闭主题，过："
-      auto_close_units: "天"
+      auto_close_label: "自动关闭主题时间："
+      auto_close_units: "（可以是小时数，具体时间，或某个时间戳）"
+      auto_close_examples: '例如：24, 17:00, 2013-11-22 14:00'
+      auto_close_error: "请输入有效数值。"
 
     notifications:
       title: "使用 @name 提及到你，回复你的帖子和主题，私信等等的通知消息"
       none: "你当前没有任何通知。"
       more: "浏览以前的通知"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='私信'></i> {{username}} 发送给你一条私信：{{link}}"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='私信'></i> {{username}} 发送给你一条私信：{{link}}"
       invited_to_private_message: "{{username}} 邀请你进行私下交流：{{link}}"
-      invitee_accepted: "<i title='已接受你的邀请' class='icon icon-signin'></i> {{username}} 已接受你的邀请"
-      moved_post: "<i title='移动帖子' class='icon icon-arrow-right'></i> {{username}} 移动了该帖： {{link}}"
+      invitee_accepted: "<i title='已接受你的邀请' class='fa fa-sign-in'></i> {{username}} 已接受你的邀请"
+      moved_post: "<i title='移动帖子' class='fa fa-arrow-right'></i> {{username}} 移动了该帖： {{link}}"
       total_flagged: "被报告帖子的总数"
 
     upload_selector:
@@ -654,8 +675,8 @@ zh_CN:
 
       browse_all_categories: 浏览所有分类
 
-      view_latest_topics: 浏览热门主题
-      suggest_create_topic: 这就创建一个主题吧！
+      view_latest_topics: 浏览最新主题。
+      suggest_create_topic: 马上创建一个主题吧！
       read_position_reset: "你的阅读位置已经被重置。"
       jump_reply_up: 跳转至更早的回复
       jump_reply_down: 跳转至更晚的回复
@@ -670,12 +691,15 @@ zh_CN:
         title: 主题进度
         jump_top: 跳转到第一帖
         jump_bottom: 跳转到最后一帖
+        jump_bottom_with_number: "跳转到第%{post_number}帖"
         total: 全部帖子
         current: 当前帖
+        position: "%{total}帖中的第%{current}帖"
 
       notifications:
         title: ''
         reasons:
+          "3_5": '因为你自动关注了此主题，所以你将收到相关通知。'
           "3_2": '因为你在关注此主题，所以你将收到相关通知。'
           "3_1": '因为你创建了此主题，所以你将收到相关通知。'
           "3": '因为你在关注此主题，所以你将收到相关通知。'
@@ -751,21 +775,9 @@ zh_CN:
       login_reply: '登录后回复'
 
       filters:
-        user: "你在浏览{{n_posts}} {{by_n_users}}。"
         n_posts:
           one: "一个帖子"
           other: "{{count}}个帖子"
-        by_n_users:
-          one: "一个指定用户的"
-          other: "{{count}}个用户的"
-
-        summary: "你在浏览{{of_n_posts}}{{n_summarized_posts}}。"
-        n_summarized_posts:
-          one: "一个概扩帖子"
-          other: "{{count}}个概扩帖子"
-        of_n_posts:
-          one: "一个帖子中的"
-          other: "{{count}}个帖子中的"
         cancel: "再次显示本主题下的所有帖子。"
 
       split_topic:
@@ -811,7 +823,10 @@ zh_CN:
         one: "(该帖已被作者撤销，如无报告则将在 %{count} 小时后自动被删除。)"
         other: "(该帖已被作者撤销，如无报告则将在 %{count} 小时后自动被删除。)"
       deleted_by: "删除者为"
-      expand_collapse: "展开/收缩"
+      expand_collapse: "展开/折叠"
+      gap:
+        one: "1个帖子被过滤。"
+        other: "{{count}}个帖子被过滤。"
 
       has_replies:
         one: "回复"
@@ -950,6 +965,26 @@ zh_CN:
           one: "你确定要删除此帖吗？"
           other: "你确定要删除这些帖子吗？"
 
+      revisions:
+        controls:
+          first: "首次修改"
+          previous: "前一次修改"
+          next: "下一次修改"
+          last: "上一次修改"
+          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> / {{total}}"
+        displays:
+          inline:
+            title: "在生成的结果中显示增加和删除的内容"
+            button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            title: "并列显示生成结果中不同的内容"
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "并列显示markdown源码中不同的内容"
+            button: '<i class="fa fa-columns"></i> Markdown'
+        details:
+          edited_by: "编辑："
+
     category:
       can: '能够'
       none: '（未分类）'
@@ -981,11 +1016,13 @@ zh_CN:
       hotness: "热度"
       already_used: '此色彩已经被另一个分类使用'
       security: "安全"
-      auto_close_label: "自动关闭主题，过："
+      auto_close_label: "该时间段后自动关闭主题："
+      auto_close_units: "小时"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
       this_year: "今年"
       position: "位置"
+      default_position: "默认位置"
       parent: "上级分类"
 
     flagging:
@@ -1073,6 +1110,17 @@ zh_CN:
           one: "{{categoryName}}（1）"
           other: "{{categoryName}}（{{count}}）"
         help: "在 {{categoryName}} 分类中热门的主题"
+
+      top:
+        title: "Top"
+        help: "最佳主题精选"
+        this_year: "今年"
+        this_month: "本月"
+        this_week: "本周"
+        today: "今天"
+        redirect_reasons:
+          new_user: "你是一名新用户。这里将在一段时间内作为你的主页。如果你不知道从何开始，这里有一些最棒的主题。"
+          not_seen_in_a_month: "我们已经一个月没见到你了。这里有一些你不在时的最棒的主题。"
 
     browser_update: '抱歉, <a href="http://www.iteriter.com/faq/#browser">你的浏览器版本太低，推荐使用Chrome</a>. 请 <a href="http://www.google.com/chrome/">升级你的浏览器</a>。'
 
@@ -1385,6 +1433,7 @@ zh_CN:
         approve_bulk_success: "成功！所有选定的用户已批准并通知。"
         time_read: "阅读次数"
         delete: "删除用户"
+        delete_forbidden_because_staff: "不能删除管理员和版主。"
         delete_forbidden:
           one: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
           other: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
@@ -1419,6 +1468,7 @@ zh_CN:
         reset: '重置为缺省值'
         none: '无'
         no_results: "找不到结果。"
+        clear_filter: "清除"
         categories:
           all_results: '全部'
           required: '必须'
@@ -1433,4 +1483,8 @@ zh_CN:
           spam: '垃圾信息'
           rate_limits: '速度限制'
           developer: '开发者'
+          embedding: "嵌入"
           uncategorized: '未分类'
+
+    lightbox:
+      download: "下载"

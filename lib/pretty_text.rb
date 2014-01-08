@@ -46,7 +46,8 @@ module PrettyText
   end
 
   def self.create_new_context
-    ctx = V8::Context.new
+    # timeout any eval that takes longer that 5 seconds
+    ctx = V8::Context.new(timeout: 5000)
 
     ctx["helpers"] = Helpers.new
 
@@ -58,7 +59,7 @@ module PrettyText
               "vendor/assets/javascripts/rsvp.js",
               Rails.configuration.ember.handlebars_location)
 
-    ctx.eval("var Discourse = {}; Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
+    ctx.eval("var Discourse = {}; Discourse.SiteSettings = {};")
     ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
     ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
 
@@ -90,8 +91,8 @@ module PrettyText
       end
     end
 
-    ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.js.shbrs') {|f| f.read}
-    ctx['quoteEmailTemplate'] = File.open(app_root + 'lib/assets/quote_email.js.shbrs') {|f| f.read}
+    ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.js.handlebars') {|f| f.read}
+    ctx['quoteEmailTemplate'] = File.open(app_root + 'lib/assets/quote_email.js.handlebars') {|f| f.read}
     ctx.eval("HANDLEBARS_TEMPLATES = {
       'quote': Handlebars.compile(quoteTemplate),
       'quote_email': Handlebars.compile(quoteEmailTemplate),

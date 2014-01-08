@@ -66,7 +66,7 @@ Discourse.TopicDetails = Discourse.Model.extend({
     Discourse.ajax("/t/" + this.get('topic.id') + "/remove-allowed-user", {
       type: 'PUT',
       data: { username: username }
-    }).then(function(res) {
+    }).then(function() {
       users.removeObject(users.findProperty('username', username));
     });
   }

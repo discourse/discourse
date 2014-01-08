@@ -28,17 +28,6 @@ def unbundled_require(gem)
   end
 end
 
-require 'optparse'
-begin
-  unbundled_require 'gabbler'
-rescue LoadError
-  puts "installing gabbler gem"
-  puts `gem install gabbler`
-  unbundled_require 'gabbler'
-end
-
-user_id = nil
-
 def sentence
   @gabbler ||= Gabbler.new.tap do |gabbler|
     story = File.read(File.dirname(__FILE__) + "/alice.txt")
@@ -76,6 +65,15 @@ end
 if User.count > 1
   puts "Only run this script against an empty DB"
   exit
+end
+
+require 'optparse'
+begin
+  unbundled_require 'gabbler'
+rescue LoadError
+  puts "installing gabbler gem"
+  puts `gem install gabbler`
+  unbundled_require 'gabbler'
 end
 
 puts "Creating 100 users"

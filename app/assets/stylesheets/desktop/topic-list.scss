@@ -65,7 +65,7 @@
   border-spacing: 0;
   a.title:visited:not(.badge-notification) {color: #888;}
 
-  tbody tr {
+  > tbody > tr {
     &:nth-child(even) {
       background-color: #f8f8f8;
     }
@@ -115,7 +115,7 @@
   .star {
     width: 20px;
     padding-right: 0;
-    .icon-star {
+    .fa-star {
       position: relative;
     }
     + .main-link {
@@ -152,14 +152,18 @@
 
   @include medium-width {
     .main-link {
-      width: 380px;
+      width: 300px;
     }
   }
-  @include small-width {
+
+   @include small-width {
     .main-link {
-      width: 335px;
+     width: 300px;
+
     }
+
   }
+
   .topic-statuses:empty {
     display: none;
   }
@@ -178,7 +182,7 @@
     width: 140px;
   }
   .posters {
-    width: 170px;
+    min-width: 150px;
     > a {
       float: left;
       margin-right: 4px;
@@ -229,14 +233,14 @@
 }
 
 #topic-list.categories {
-  th.latest {
+  th.posts {
     position: relative;
   }
   th .toggle-admin {
     position: absolute;
     padding: 3px 8px;
     font-size: 12px;
-    right: 5px;
+    right: -35px;
     top: 4px;
   }
   th.latest, td.latest {
@@ -245,21 +249,45 @@
   th.num {
     width: 45px;
   }
+  th.stats {
+    width: 90px;
+  }
+  td.latest {
+    vertical-align: top;
+    padding: 8px;
+  }
+  td.category {
+    vertical-align: top;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  td.stats {
+    .unit {
+      font-size: 11px;
+    }
+  }
+  table.categoryStats {
+    td {
+      padding: 2px;
+      vertical-align: bottom;
+      line-height: 17px;
+      &.value { text-align: right; }
+      &.unit  { text-align: left; }
+    }
+  }
   .last-user-info {
     font-size: 12px;
-    margin-top: 3px;
-  }
-  tbody td {
-    padding-bottom: 20px;
   }
 
-  td.category {
-    padding-top: 15px;
+  .has-description {
+    td.category {
+      padding-top: 15px;
+    }
   }
 
   .category{
     position: relative;
-    width: 55%;
+    width: 45%;
 
     .subcategories {
       margin-top: 10px;
@@ -268,11 +296,9 @@
         padding: 4px;
       }
     }
-
     .featured-users {
-      position: absolute;
-      right: 18px;
-      top: 3px;
+      float: right;
+      margin-right: 13px;
     }
     .category-description {
       margin-top: 10px;
@@ -281,6 +307,18 @@
       padding: 6px 10px;
       font-size: 14px;
     }
+  }
+
+  .featured-topic {
+    margin: 6px 0;
+    a.last-posted-at, a.last-posted-at:visited {
+      color: #888;
+    }
+  }
+
+  .badge-category {
+    display: inline-block;
+    margin-top: 1px;
   }
 }
 
@@ -415,6 +453,9 @@
 #list-area {
   margin-bottom: 300px;
 
+  h2 {
+    margin: 20px 0 10px;
+  }
 
 .topic-statuses .topic-status i {font-size: 15px;}
 

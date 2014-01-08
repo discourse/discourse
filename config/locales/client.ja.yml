@@ -161,7 +161,7 @@ ja:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> が <a href='{{user2Url}}'>{{another_user}}</a> をメンション"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> が <a href='{{user2Url}}'>あなた</a> をメンション"
-      you_mentioned_user: "<a href='{{user1Url}}'>あなた</a> が <a href='{{user2Url}}'>{{user}}</a> をメンション"
+      you_mentioned_user: "<a href='{{user1Url}}'>あなた</a> が <a href='{{user2Url}}'>{{another_user}}</a> をメンション"
 
       posted_by_user: "<a href='{{userUrl}}'>{{user}}</a> がポストを投稿"
       posted_by_you: "<a href='{{userUrl}}'>あなた</a> がポストを投稿"
@@ -503,15 +503,15 @@ ja:
       none: "現在通知はありません。"
       more: "古い通知を確認する"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} が招待を受理しました"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} が {{link}} を移動しました"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} が招待を受理しました"
+      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} が {{link}} を移動しました"
       total_flagged: "フラグがたったポストの総数"
 
     upload_selector:
@@ -728,21 +728,9 @@ ja:
       login_reply: 'ログインして回答'
 
       filters:
-        user: "You're viewing only {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 post"
           other: "{{count}} posts"
-        by_n_users:
-          one: "made by 1 specific user"
-          other: "made by {{count}} specific users"
-
-        best_of: "You're viewing the {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
-          one: "1 best post"
-          other: "{{count}} best posts"
-        of_n_posts:
-          one: "of 1 in the topic"
-          other: "of {{count}} in the topic"
         cancel: "Show all posts in this topic again."
 
       split_topic:

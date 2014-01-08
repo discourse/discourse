@@ -11,7 +11,7 @@ Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
   classNames: ['upload-selector'],
 
   title: function() { return Discourse.UploadSelectorController.translate("title"); }.property(),
-  uploadIcon: function() { return Discourse.Utilities.allowsAttachments() ? "icon-file-alt" : "icon-picture"; }.property(),
+  uploadIcon: function() { return Discourse.Utilities.allowsAttachments() ? "fa-file-o" : "fa-picture-o"; }.property(),
 
   tip: function() {
     var source = this.get("controller.local") ? "local" : "remote";

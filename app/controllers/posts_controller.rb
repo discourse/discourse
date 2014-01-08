@@ -5,7 +5,7 @@ require_dependency 'distributed_memoizer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :versions, :reply_history]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions]
 
   skip_before_filter :store_incoming_links, only: [:short_link]
   skip_before_filter :check_xhr, only: [:markdown,:short_link]
@@ -59,14 +59,17 @@ class PostsController < ApplicationController
   def update
     params.require(:post)
 
-    post = Post.where(id: params[:id]).first
+    post = Post.where(id: params[:id])
+    post = post.with_deleted if guardian.is_staff?
+    post = post.first
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
     guardian.ensure_can_edit!(post)
 
     # to stay consistent with the create api,
     #  we should allow for title changes and category changes here
-    # we should also move all of this to a post updater.
+    #  we should also move all of this to a post updater.
     if post.post_number == 1 && (params[:title] || params[:post][:category])
+      post.topic.acting_user = current_user
       post.topic.title = params[:title] if params[:title]
       Topic.transaction do
         post.topic.change_category(params[:post][:category])
@@ -83,7 +86,6 @@ class PostsController < ApplicationController
     if revisor.revise!(current_user, params[:post][:raw], edit_reason: params[:post][:edit_reason])
       TopicLink.extract_from(post)
     end
-
 
     if post.errors.present?
       render_json_error(post)
@@ -104,6 +106,12 @@ class PostsController < ApplicationController
     render_json_dump(result)
   end
 
+  def show
+    @post = find_post_from_params
+    @post.revert_to(params[:version].to_i) if params[:version].present?
+    render_post_json(@post)
+  end
+
   def by_number
     @post = Post.where(topic_id: params[:topic_id], post_number: params[:post_number]).first
     guardian.ensure_can_see!(@post)
@@ -114,14 +122,7 @@ class PostsController < ApplicationController
   def reply_history
     @post = Post.where(id: params[:id]).first
     guardian.ensure_can_see!(@post)
-
     render_serialized(@post.reply_history, PostSerializer)
-  end
-
-  def show
-    @post = find_post_from_params
-    @post.revert_to(params[:version].to_i) if params[:version].present?
-    render_post_json(@post)
   end
 
   def destroy
@@ -161,16 +162,16 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
-  # Retrieves a list of versions and who made them for a post
-  def versions
-    post = find_post_from_params
-    render_serialized(post.all_versions, VersionSerializer)
-  end
-
   # Direct replies to this post
   def replies
     post = find_post_from_params
     render_serialized(post.replies, PostSerializer)
+  end
+
+  def revisions
+    post_revision = find_post_revision_from_params
+    post_revision_serializer = PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
+    render_json_dump(post_revision_serializer)
   end
 
   def bookmark
@@ -185,19 +186,27 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
-
   protected
 
-    def find_post_from_params
-      finder = Post.where(id: params[:id] || params[:post_id])
+  def find_post_from_params
+    finder = Post.where(id: params[:id] || params[:post_id])
+    # Include deleted posts if the user is staff
+    finder = finder.with_deleted if current_user.try(:staff?)
 
-      # Include deleted posts if the user is staff
-      finder = finder.with_deleted if current_user.try(:staff?)
+    post = finder.first
+    guardian.ensure_can_see!(post)
+    post
+  end
 
-      post = finder.first
-      guardian.ensure_can_see!(post)
-      post
-    end
+  def find_post_revision_from_params
+    post_id = params[:id] || params[:post_id]
+    revision = params[:revision].to_i
+    raise Discourse::InvalidParameters.new(:revision) if revision < 2
+
+    post_revision = PostRevision.where(post_id: post_id, number: revision).first
+    guardian.ensure_can_see!(post_revision)
+    post_revision
+  end
 
   def render_post_json(post)
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)
@@ -207,42 +216,43 @@ class PostsController < ApplicationController
 
   private
 
-    def params_key(params)
-      "post##" << Digest::SHA1.hexdigest(params
-        .to_a
-        .concat([["user", current_user.id]])
-        .sort{|x,y| x[0] <=> y[0]}.join do |x,y|
-          "#{x}:#{y}"
-        end)
+  def params_key(params)
+    "post##" << Digest::SHA1.hexdigest(params
+      .to_a
+      .concat([["user", current_user.id]])
+      .sort{|x,y| x[0] <=> y[0]}.join do |x,y|
+        "#{x}:#{y}"
+      end)
+  end
+
+  def create_params
+    permitted = [
+      :raw,
+      :topic_id,
+      :title,
+      :archetype,
+      :category,
+      :target_usernames,
+      :reply_to_post_number,
+      :auto_close_time,
+      :auto_track
+    ]
+
+    # param munging for WordPress
+    params[:auto_track] = !(params[:auto_track].to_s == "false") if params[:auto_track]
+
+    if api_key_valid?
+      # php seems to be sending this incorrectly, don't fight with it
+      params[:skip_validations] = params[:skip_validations].to_s == "true"
+      permitted << :skip_validations
     end
 
-    def create_params
-      permitted = [
-        :raw,
-        :topic_id,
-        :title,
-        :archetype,
-        :category,
-        :target_usernames,
-        :reply_to_post_number,
-        :auto_close_time,
-        :auto_track
-      ]
-
-      # param munging for WordPress
-      params[:auto_track] = !(params[:auto_track].to_s == "false") if params[:auto_track]
-
-      if api_key_valid?
-        # php seems to be sending this incorrectly, don't fight with it
-        params[:skip_validations] = params[:skip_validations].to_s == "true"
-        permitted << :skip_validations
-      end
-
-      params.require(:raw)
-      params.permit(*permitted).tap do |whitelisted|
-          whitelisted[:image_sizes] = params[:image_sizes]
-          # TODO this does not feel right, we should name what meta_data is allowed
-          whitelisted[:meta_data] = params[:meta_data]
-      end
+    params.require(:raw)
+    params.permit(*permitted).tap do |whitelisted|
+        whitelisted[:image_sizes] = params[:image_sizes]
+        # TODO this does not feel right, we should name what meta_data is allowed
+        whitelisted[:meta_data] = params[:meta_data]
     end
+  end
+
 end

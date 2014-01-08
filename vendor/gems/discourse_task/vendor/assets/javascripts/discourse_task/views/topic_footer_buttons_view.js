@@ -15,7 +15,7 @@
 
         renderIcon: function (buffer) {
           if (!this.get('complete')) {
-            buffer.push("<i class='icon-cog'></i>")
+            buffer.push("<i class='fa-cog'></i>")
           }
         },
 

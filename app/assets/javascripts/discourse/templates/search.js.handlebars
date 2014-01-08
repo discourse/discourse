@@ -9,7 +9,7 @@
             <a href='#' class='filter' {{action moreOfType resultType.type bubbles=false}}>{{i18n show_more}}</a>
           {{else}}
             {{#if showCancelFilter}}
-              <a href='#' class='filter' {{action cancelType bubbles=false}}><i class='icon icon-remove-sign'></i></a>
+              <a href='#' class='filter' {{action cancelType bubbles=false}}><i class='fa fa-times-circle'></i></a>
             {{/if}}
           {{/if}}
         </li>
@@ -22,5 +22,5 @@
     </div>
   {{/unless}}
 {{else}}
-<div class='searching'><i class='icon-spinner icon-spin'></i></div>
+<div class='searching'><i class='fa fa-spinner fa-spin'></i></div>
 {{/unless}}

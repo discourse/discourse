@@ -2,6 +2,7 @@ require_dependency 'guardian'
 require_dependency 'topic_query'
 require_dependency 'filter_best_posts'
 require_dependency 'summarize'
+require_dependency 'gaps'
 
 class TopicView
 
@@ -36,12 +37,21 @@ class TopicView
   def canonical_path
     path = @topic.relative_url
     path << if @post_number
-      page = ((@post_number.to_i - 1) / SiteSetting.posts_per_page) + 1
+      page = ((@post_number.to_i - 1) / @limit) + 1
       (page > 1) ? "?page=#{page}" : ""
     else
       (@page && @page.to_i > 1) ? "?page=#{@page}" : ""
     end
     path
+  end
+
+  def contains_gaps?
+    @contains_gaps
+  end
+
+  def gaps
+    return unless @contains_gaps
+    Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
   end
 
   def last_post
@@ -113,17 +123,19 @@ class TopicView
 
   # Filter to all posts near a particular post number
   def filter_posts_near(post_number)
-
     min_idx, max_idx = get_minmax_ids(post_number)
-
     filter_posts_in_range(min_idx, max_idx)
   end
 
 
   def filter_posts_paged(page)
     page = [page, 1].max
-    min = SiteSetting.posts_per_page * (page - 1)
-    max = (min + SiteSetting.posts_per_page) - 1
+    min = @limit * (page - 1)
+
+    # Sometimes we don't care about the OP, for example when embedding comments
+    min = 1 if min == 0 && @exclude_first
+
+    max = (min + @limit) - 1
 
     filter_posts_in_range(min, max)
   end
@@ -255,14 +267,37 @@ class TopicView
     finder.first
   end
 
+  def unfiltered_posts
+    result = @topic.posts
+    result = result.where(hidden: false) unless @user.try(:staff?)
+    result = result.with_deleted if @user.try(:staff?)
+    result
+  end
+
   def setup_filtered_posts
-    @filtered_posts = @topic.posts.where(hidden: false)
+
+    # Certain filters might leave gaps between posts. If that's true, we can return a gap structure
+    @contains_gaps = false
+    @filtered_posts = unfiltered_posts
     @filtered_posts = @filtered_posts.with_deleted if @user.try(:staff?)
-    @filtered_posts = @filtered_posts.summary if @filter == 'summary'
-    @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action]) if @best.present?
-    return unless @username_filters.present?
-    usernames = @username_filters.map{|u| u.downcase}
-    @filtered_posts = @filtered_posts.where('post_number = 1 or user_id in (select u.id from users u where username_lower in (?))', usernames)
+
+    # Filters
+    if @filter == 'summary'
+      @filtered_posts = @filtered_posts.summary
+      @contains_gaps = true
+    end
+
+    if @best.present?
+      @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action])
+      @contains_gaps = true
+    end
+
+    if @username_filters.present?
+      usernames = @username_filters.map{|u| u.downcase}
+      @filtered_posts = @filtered_posts.where('post_number = 1 or user_id in (select u.id from users u where username_lower in (?))', usernames)
+      @contains_gaps = true
+    end
+
   end
 
   def check_and_raise_exceptions
@@ -286,12 +321,12 @@ class TopicView
     return nil if closest_index.nil?
 
     # Make sure to get at least one post before, even with rounding
-    posts_before = (SiteSetting.posts_per_page.to_f / 4).floor
+    posts_before = (@limit.to_f / 4).floor
     posts_before = 1 if posts_before.zero?
 
     min_idx = closest_index - posts_before
     min_idx = 0 if min_idx < 0
-    max_idx = min_idx + (SiteSetting.posts_per_page - 1)
+    max_idx = min_idx + (@limit - 1)
 
     # Get a full page even if at the end
     ensure_full_page(min_idx, max_idx)
@@ -300,7 +335,7 @@ class TopicView
   def ensure_full_page(min, max)
     upper_limit = (filtered_post_ids.length - 1)
     if max >= upper_limit
-      return (upper_limit - SiteSetting.posts_per_page) + 1, upper_limit
+      return (upper_limit - @limit) + 1, upper_limit
     else
       return min, max
     end

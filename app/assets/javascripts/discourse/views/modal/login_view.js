@@ -9,6 +9,7 @@
 Discourse.LoginView = Discourse.ModalBodyView.extend({
   templateName: 'modal/login',
   title: I18n.t('login.title'),
+  classNames: ['login-modal'],
 
 
   mouseMove: function(e) {
@@ -41,7 +42,7 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     });
   },
 
-  didInsertElement: function(e) {
+  didInsertElement: function() {
 
     this._super();
 
@@ -56,7 +57,9 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     Em.run.schedule('afterRender', function() {
       $('#login-account-password, #login-account-name').keydown(function(e) {
         if (e.keyCode === 13) {
-          loginController.login();
+          if (!loginController.get('loginDisabled')) {
+            loginController.send('login');
+          }
         }
       });
     });

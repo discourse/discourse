@@ -70,34 +70,6 @@ describe PostsController do
     end
   end
 
-
-  describe 'versions' do
-
-    shared_examples 'posts_controller versions examples' do
-      it "raises an error if the user doesn't have permission to see the post" do
-        Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-        xhr :get, :versions, post_id: post.id
-        response.should be_forbidden
-      end
-
-      it 'renders JSON' do
-        xhr :get, :versions, post_id: post.id
-        ::JSON.parse(response.body).should be_present
-      end
-    end
-
-    context 'when not logged in' do
-      let(:post) { Fabricate(:post) }
-      include_examples 'posts_controller versions examples'
-    end
-
-    context 'when logged in' do
-      let(:post) { Fabricate(:post, user: log_in) }
-      include_examples 'posts_controller versions examples'
-    end
-
-  end
-
   describe 'delete a post' do
     it 'raises an exception when not logged in' do
       lambda { xhr :delete, :destroy, id: 123 }.should raise_error(Discourse::NotLoggedIn)

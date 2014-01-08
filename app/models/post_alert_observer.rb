@@ -1,5 +1,5 @@
 class PostAlertObserver < ActiveRecord::Observer
-  observe :post, VestalVersions::Version, :post_action
+  observe :post, :post_action, :post_revision
 
   # Dispatch to an after_save_#{class_name} method
   def after_save(model)
@@ -46,15 +46,15 @@ class PostAlertObserver < ActiveRecord::Observer
                         post_action_id: post_action.id)
   end
 
-  def after_create_version(version)
-    post = version.versioned
+  def after_create_post_revision(post_revision)
+    post = post_revision.post
 
-    return unless post.is_a?(Post)
-    return if version.user.blank?
-    return if version.user_id == post.user_id
+    return unless post
+    return if post_revision.user.blank?
+    return if post_revision.user_id == post.user_id
     return if post.topic.private_message?
 
-    create_notification(post.user, Notification.types[:edited], post, display_username: version.user.username)
+    create_notification(post.user, Notification.types[:edited], post, display_username: post_revision.user.username)
   end
 
   def after_create_post(post)
@@ -124,17 +124,16 @@ class PostAlertObserver < ActiveRecord::Observer
       reply_to_user = post.reply_notification_target
       notify_users(reply_to_user, :replied, post)
 
-      # find all users watching
-      if post.post_number > 1
-        exclude_user_ids = []
-        exclude_user_ids << post.user_id
-        exclude_user_ids << reply_to_user.id if reply_to_user.present?
-        exclude_user_ids << extract_mentioned_users(post).map(&:id)
-        exclude_user_ids << extract_quoted_users(post).map(&:id)
-        exclude_user_ids.flatten!
-        TopicUser.where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching]).includes(:user).each do |tu|
+      exclude_user_ids = []
+      exclude_user_ids << post.user_id
+      exclude_user_ids << reply_to_user.id if reply_to_user.present?
+      exclude_user_ids << extract_mentioned_users(post).map(&:id)
+      exclude_user_ids << extract_quoted_users(post).map(&:id)
+      exclude_user_ids.flatten!
+      TopicUser
+        .where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching])
+        .includes(:user).each do |tu|
           create_notification(tu.user, Notification.types[:posted], post) unless exclude_user_ids.include?(tu.user_id)
         end
-      end
     end
 end

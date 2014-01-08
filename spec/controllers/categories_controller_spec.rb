@@ -51,7 +51,7 @@ describe CategoriesController do
 
           xhr :post, :create, name: "hello", color: "ff0", text_color: "fff",
                               hotness: 2,
-                              auto_close_days: 3,
+                              auto_close_hours: 72,
                               permissions: {
                                 "everyone" => readonly,
                                 "staff" => create_post
@@ -65,7 +65,7 @@ describe CategoriesController do
           category.name.should == "hello"
           category.color.should == "ff0"
           category.hotness.should == 2
-          category.auto_close_days.should == 3
+          category.auto_close_hours.should == 72
         end
       end
     end
@@ -105,6 +105,8 @@ describe CategoriesController do
 
 
     describe "logged in" do
+      let(:valid_attrs) { {id: @category.id, name: "hello", color: "ff0", text_color: "fff"} }
+
       before do
         @user = log_in(:moderator)
         @category = Fabricate(:category, user: @user)
@@ -146,13 +148,12 @@ describe CategoriesController do
       describe "success" do
 
         it "updates the group correctly" do
-
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
 
           xhr :put, :update, id: @category.id, name: "hello", color: "ff0", text_color: "fff",
                               hotness: 2,
-                              auto_close_days: 3,
+                              auto_close_hours: 72,
                               permissions: {
                                 "everyone" => readonly,
                                 "staff" => create_post
@@ -166,8 +167,14 @@ describe CategoriesController do
           @category.name.should == "hello"
           @category.color.should == "ff0"
           @category.hotness.should == 2
-          @category.auto_close_days.should == 3
+          @category.auto_close_hours.should == 72
+        end
 
+        it "can set category to use default position" do
+          xhr :put, :update, valid_attrs.merge(position: 'default')
+          response.should be_success
+          @category.reload
+          @category.position.should be_nil
         end
       end
     end

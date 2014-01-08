@@ -25,11 +25,11 @@ Discourse.ScreenedIpAddress = Discourse.Model.extend({
   }.property('action_name'),
 
   blockIcon: function() {
-    return 'icon-ban-circle';
+    return 'fa-ban';
   }.property(),
 
   doNothingIcon: function() {
-    return 'icon-ok';
+    return 'fa-check';
   }.property(),
 
   save: function() {
@@ -45,7 +45,7 @@ Discourse.ScreenedIpAddress = Discourse.Model.extend({
 });
 
 Discourse.ScreenedIpAddress.reopenClass({
-  findAll: function(filter) {
+  findAll: function() {
     return Discourse.ajax("/admin/logs/screened_ip_addresses.json").then(function(screened_ips) {
       return screened_ips.map(function(b) {
         return Discourse.ScreenedIpAddress.create(b);

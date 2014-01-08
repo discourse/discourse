@@ -5,7 +5,6 @@
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
-
 sv:
   js:
     number:
@@ -20,6 +19,56 @@ sv:
             kb: KB
             mb: MB
             tb: TB
+    dates:
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   "1s"
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   "1m"
+          other: "%{count}m"
+        about_x_hours:
+          one:   "1h"
+          other: "%{count}h"
+        x_days:
+          one:   "1d"
+          other: "%{count}d"
+        about_x_years:
+          one:   "1y"
+          other: "%{count}y"
+        over_x_years:
+          one:   "> 1y"
+          other: "> %{count}y"
+        almost_x_years:
+          one:   "1y"
+          other: "%{count}y"
+      medium:
+        x_minutes:
+          one: "1 min"
+          other: "%{count} minuter"
+        x_hours:
+          one: "1 timme"
+          other: "%{count} timmar"
+        x_days:
+          one: "1 dag"
+          other: "%{count} dagar"
+      medium_with_ago:
+        x_minutes:
+          one: "1 min sedan"
+          other: "%{count} minuter sedan"
+        x_hours:
+          one: "1 timme sedan"
+          other: "%{count} timmar sedan"
+        x_days:
+          one: "1 timme sedan"
+          other: "%{count} dagar sedan"
     share:
       topic: 'dela en länk till denna tråd'
       post: 'dela en länk till denna tråd'
@@ -27,6 +76,7 @@ sv:
       twitter: 'dela denna länk via Twitter'
       facebook: 'dela denna länk via Facebook'
       google+: 'dela denna länk via Google+'
+      email: 'dela denna länk via mejl'
 
     edit: 'ändra titel och kategori för denna tråd'
     not_implemented: "Den funktionen har inte implementerats än, tyvärr!"
@@ -34,17 +84,45 @@ sv:
     yes_value: "Ja"
     of_value: "av"
     generic_error: "Tyvärr, ett fel har uppstått."
+    generic_error_with_reason: "Ett fel har uppstått: %{error}"
     log_in: "Logga In"
     age: "Ålder"
     last_post: "Senaste Inlägg"
+    joined: "Joined"
     admin_title: "Admin"
     flags_title: "Flaggningar"
     show_more: "visa mer"
     links: Länkar
     faq: "FAQ"
+    privacy_policy: "Integritetspolicy"
+    mobile_view: "Mobil vy"
+    desktop_view: "Standardvy"
     you: "Du"
     or: "eller"
     now: "just nu"
+    read_more: 'läs mer'
+    more: "Mer"
+    less: "Mindre"
+    never: "aldrig"
+    daily: "dagligen"
+    weekly: "veckovis"
+    every_two_weeks: "varannan vecka"
+    character_count:
+      one: "{{count}} tecken"
+      other: "{{count}} tecken"
+
+    in_n_seconds:
+      one: "om 1 sekund"
+      other: "om {{count}} sekunder"
+    in_n_minutes:
+      one: "om 1 minut"
+      other: "om {{count}} minuter"
+    in_n_hours:
+      one: "om 1 timme"
+      other: "om {{count}} timmar"
+    in_n_days:
+      one: "om 1 dag"
+      other: "om {{count}} dagar"
 
     suggested_topics:
       title: "Föreslagna Trådar"
@@ -64,39 +142,120 @@ sv:
     saving: "Sparar..."
     saved: "Sparat!"
 
-    user_action_descriptions:
+    upload: "Ladda upp"
+    uploading: "Laddar upp..."
+    uploaded: "Uppladdad!"
+
+    choose_topic:
+      none_found: "Inga trådar funna."
+      title:
+        search: "Sök efter tråd med namn, URL eller ID:"
+        placeholder: "skriv in trådens titel här"
+
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postade <a href='{{topicUrl}}'>tråden</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>Du</a> postade <a href='{{topicUrl}}'>tråden</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> svarade på <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>You</a> svarade på <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> svarade på <a href='{{topicUrl}}'>tråden</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> svarade på <a href='{{topicUrl}}'>tråden</a>"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> nämnde <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> nämnde <a href='{{user2Url}}'>dig</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>You</a> nämnde <a href='{{user2Url}}'>{{another_user}}</a>"
+
+      posted_by_user: "Postat av <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "Postat av <a href='{{userUrl}}'>dig</a>"
+      sent_by_user: "Skickat av <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "Skickat av <a href='{{userUrl}}'>dig</a>"
+
+    user_action_groups:
+      "1": "Likes utdelade"
+      "2": "Likes mottagna"
+      "3": "Bokmärken"
+      "4": "Trådar"
+      "5": "Inlägg"
       "6": "Svar"
+      "7": "Omnämningar"
+      "9": "Citeringar"
+      "10": "Favoriter"
+      "11": "Editeringar"
+      "12": "Skickade items"
+      "13": "Inbox"
+
+    categories:
+      all: "alla kategorier"
+      only_category: "bara {{categoryName}}"
+      category: "Kategori"
+      posts: "Inlägg"
+      topics: "Trådar"
+      latest: "Senaste"
+      latest_by: "Senaste av"
+      toggle_ordering: "toggle ordering control"
+      subcategories: "Underkategorier:"
+      total_topics: "Totalt antal trådar: %{count}"
+      total_posts: "Totalt antal inlägg: %{count}"
 
     user:
-      profile: Profil
-      title: "Användare"
-      mute: Dämpa
-      edit: Ändra Inställningar
+      said: "{{username}} sa:"
+      profile: "Profil"
+      show_profile: "Besök profil"
+      mute: "Dämpa"
+      edit: "Ändra inställningar"
       download_archive: "ladda ner ett arkiv med mina inlägg"
-      private_message: "Privata Meddelanden"
+      private_message: "Privat meddelande"
       private_messages: "Meddelanden"
       activity_stream: "Aktivitet"
       preferences: "Inställningar"
       bio: "Om mig"
-      change_password: "byt"
       invited_by: "Inbjuden Av"
       trust_level: "Pålitlighetsnivå"
+      notifications: "Notifikationer"
+      dynamic_favicon: "Visa meddelande om inkommande meddelande i favicon"
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
       enable_quoting: "Aktivera citatsvar för markerad text"
+      change: "ändra"
+      moderator: "{{user}} är moderator"
+      admin: "{{user}} är admin"
+      deleted: "(borttaget)"
+      suspended_notice: "Denna användare är avstängd fram till {{date}}."
+      suspended_reason: "Anledning: "
+
+      messages:
+        all: "Alla"
+        mine: "Mina"
+        unread: "Olästa"
+
+      change_password:
+        success: "(e-post skickad)"
+        in_progress: "(skickar e-post)"
+        error: "(fel)"
+        action: "Skicka återställningsmejl"
+
+      change_about:
+        title: "Ändra Om Mig"
 
       change_username:
-        action: "byt"
         title: "Byt Användarnamn"
         confirm: "Det kan finnas konsekvenser till att byta ditt användarnamn. Är du helt säker på att du vill?"
         taken: "Tyvärr det användarnamn är taget."
         error: "Det uppstod ett problem under bytet av ditt användarnamn."
         invalid: "Det användarnamnet är ogiltigt. Det får bara innehålla siffror och bokstäver"
+
       change_email:
-        action: 'byt'
         title: "Byt E-post"
-        taken: "Tyvärr den adressen är inte tillgänglig."
+        taken: "Tyvärr, den adressen är inte tillgänglig."
         error: "Det uppstod ett problem under bytet av din e-post. Är kanske adressen redan upptagen?"
         success: "Vi har skickat ett mail till den adressen. Var god följ bekräftelseinstruktionerna."
+
+      change_avatar:
+        title: "Ändra din avatar"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baserad på"
+        gravatar_title: "Ändra din avatar på Gravatars hemsida"
+        uploaded_avatar: "Egen bild"
+        uploaded_avatar_empty: "Lägg till en egen bild"
+        upload_title: "Ladda upp din bild"
+        image_is_not_a_square: "Varning! Vi har beskurit din bild då den ej är kvadratisk."
 
       email:
         title: "E-post"
@@ -123,6 +282,7 @@ sv:
         too_long: "Ditt användarnamn är för långt."
         checking: "Kollar användarnamnets tillgänglighet..."
         enter_email: 'Användarnamn hittat. Ange matchande e-post.'
+        prefilled: "E-post matchar detta registrerade användarnamn."
 
       password_confirmation:
         title: "Lösenord Igen"
@@ -142,6 +302,7 @@ sv:
 
       email_direct: "Ta emot ett mail när någon citerar dig, svarar på dina inlägg, eller nämner ditt @användarnamn"
       email_private_messages: "Ta emot ett mail när någon skickar dig ett privat meddelande"
+      email_always: "Få notifikationer och sammandrag via e-post även om jag är aktiv på forumet"
 
       other_settings: "Övrigt"
 
@@ -168,9 +329,11 @@ sv:
           other: "efter {{count}} minuter"
 
       invited:
+        search: "skriv för att söka efter inbjudningar..."
         title: "Inbjudningar"
         user: "Inbjuden Användare"
         none: "{{username}} har inte bjudit in några användare till webbplatsen."
+        truncated: "Visar de första {{count}} inbjudningarna."
         redeemed: "Inlösta Inbjudnignar"
         redeemed_at: "Inlöst Vid"
         pending: "Avvaktande Inbjudningar"
@@ -181,6 +344,7 @@ sv:
         time_read: "Lästid"
         days_visited: "Dagar Besökta"
         account_age_days: "Kontoålder i dagar"
+        create: "Bjud in vänner till det här forumet"
 
       password:
         title: "Lösenord"
@@ -191,6 +355,9 @@ sv:
         title: "Senaste IP-adress"
       avatar:
         title: "Profilbild"
+      title:
+        title: "Titel"
+
       filters:
         all: "Alla"
 
@@ -210,6 +377,7 @@ sv:
     month_desc: 'trådar postade i de senaste 30 dagarna'
     week: 'vecka'
     week_desc: 'trådar postade i de senaste 7 dagarna'
+    day: 'dag'
 
     first_post: Första inlägget
     mute: Dämpa
@@ -219,12 +387,14 @@ sv:
     summary:
       enabled_description: Just nu visar du "Bäst Av"-läget för denna tråd.
       description: "Det finns <b>{{count}}</b> inlägg i den här tråden. Det är många! Vill du spara tid genom att byta så du bara ser de inlägg med flest interaktioner och svar?"
+      description_time: "Det finns <b>{{count}}</b> svar med en beräknad lästid på <b>{{readingTime}} minuter</b>. Spara lästid genom att bara visa de mest relevanta svaren?"
       enable: 'Byt till "Bäst Av"-läget'
       disable: 'Avbryt "Bäst Av"'
 
     private_message_info:
       title: "Privat Konversation"
       invite: "Bjud In Andra..."
+      remove_allowed_user: "Vill du verklige ta bort {{name}} från det här privata meddelandet?"
 
     email: 'E-post'
     username: 'Användarnamn'
@@ -257,6 +427,7 @@ sv:
       authenticating: "Autentiserar..."
       awaiting_confirmation: "Ditt konto väntar på aktivering, använd glömt lösenordslänken för att skicka ett nytt aktiveringsmail."
       awaiting_approval: "Ditt konto har inte godkänts av en moderator än. Du kommer att få ett mail när det är godkänt."
+      requires_invite: "Tyvärr, tillgång till det här forumet kräver en injudan."
       not_activated: "Du kan inte logga in än. Vi har tidigare skickat ett aktiveringsmail till dig via <b>{{sentTo}}</b>. Var god följ instruktionerna i det mailet för att aktivera ditt konto."
       resend_activation_email: "Klicka här för att skicka aktiveringsmailet igen."
       sent_activation_email_again: "Vi har skickat ännu ett aktiveringsmail till dig via <b>{{currentEmail}}</b>. Det kan ta ett par minuter för det att komma fram; var noga med att kolla din skräppost."
@@ -269,6 +440,9 @@ sv:
       facebook:
         title: "med Facebook"
         message: "Autentiserar med Facebook (kolla så att pop up-blockare inte är aktiverade)"
+      cas:
+        title: "Logga in med CAS"
+        message: "Autentiserar med CAS (kolla så att pop up-blockare inte är aktiverade)"
       yahoo:
         title: "med Yahoo"
         message: "Autentiserar med Yahoo (kolla så att pop up-blockare inte är aktiverade)"
@@ -291,6 +465,14 @@ sv:
         need_more_for_title: "{{n}} tecken kvar för titeln"
         need_more_for_reply: "{{n}} tecken kvar för svaret"
 
+      error:
+        title_missing: "Titel måste anges."
+        title_too_short: "Titeln måste vara minst {{min}} tecken lång."
+        title_too_long: "Titeln måste vara mindre än {{max}} tecken lång."
+        post_missing: "Inlägget kan inte vara tomt."
+        post_length: "Inlägget måste vara minst {{min}} tecken långt."
+        category_missing: "Du måste välja en kategori."
+
       save_edit: "Spara Ändring"
       reply_original: "Svara på Ursprungstråd"
       reply_here: "Svara Här"
@@ -301,6 +483,8 @@ sv:
 
       users_placeholder: "Lägg till en användare"
       title_placeholder: "Skriv din titel här. Vad handlar denna diskussion om i en kort mening?"
+      edit_reason_placeholder: "varför ändrar du?"
+      show_edit_reason: "(lägg till anledning till ändring)"
       reply_placeholder: "Skriv ditt svar här. Använd Markdown eller BBCode för formatering. Dra eller klista in en bild här för att ladda upp den."
       view_new_post: "Visa ditt nya inlägg."
       saving: "Sparar..."
@@ -310,6 +494,7 @@ sv:
       show_preview: 'visa förhandsgranskning &raquo;'
       hide_preview: '&laquo; dölj förhandsgranskning'
 
+      quote_post_title: "Citera hela inlägget"
       bold_title: "Fet"
       bold_text: "fet text"
       italic_title: "Kursiv"
@@ -333,35 +518,52 @@ sv:
       undo_title: "Ångra"
       redo_title: "Återställ"
       help: "Markdown Redigeringshjälp"
+      toggler: "hide or show the composer panel"
+
+      admin_options_title: "Valfria personalinställningar för denna tråd"
+      auto_close_label: "Automatstängning av tråd, tid:"
+      auto_close_units: "(antal timmar, en tid, eller en tidpunkt)"
+      auto_close_examples: 'Exempel: 24, 17:00, 2013-11-22 14:00'
+      auto_close_error: "Var god ange ett giltigt värde."
 
     notifications:
       title: "notifikationer med omnämnanden av @namn, svar på dina inlägg och trådar, privata meddelanden, etc"
       none: "Du har inte notifikationer just nu."
       more: "visa äldre notifikationer"
       mentioned: "<span title='omnämnd' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='citerad' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='svarad' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='svarad' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='ändrad' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='gillad' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='privat meddelande'></i> {{username}} skickade dig ett privat meddelande: {{link}}"
+      quoted: "<i title='citerad' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='svarad' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='svarad' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='ändrad' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='gillad' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='privat meddelande'></i> {{username}} skickade dig ett privat meddelande: {{link}}"
       invited_to_private_message: "{{username}} bjöd in dig till en privat konversation: {{link}}"
-      invitee_accepted: "<i title='accepterade din inbjudan' class='icon icon-signin'></i> {{username}} accepterade din inbjudan"
-      moved_post: "<i title='flyttade inlägg' class='icon icon-arrow-right'></i> {{username}} flyttade inlägg till {{link}}"
+      invitee_accepted: "<i title='accepterade din inbjudan' class='fa fa-sign-in'></i> {{username}} accepterade din inbjudan"
+      moved_post: "<i title='flyttade inlägg' class='fa fa-arrow-right'></i> {{username}} flyttade inlägg till {{link}}"
+      total_flagged: "totalt antal flaggade inlägg"
 
     upload_selector:
-      title: "Infoga Bild"
-      from_my_computer: "Från Min Enhet"
+      title: "Infoga bild"
+      title_with_attachments: "Infoga bild eller fil"
+      from_my_computer: "Från min enhet"
       from_the_web: "Från Internet"
       remote_tip: "skriv in en adress till en bild i formen http://exempel.se/bild.jpg"
+      remote_tip_with_attachments: "skriv in en adress till en bild eller fil i formen http://example.com/file.ext (tillåtna filändelser: {{authorized_extensions}})."
       local_tip: "klicka för att välja en bild från din enhet."
-      uploading: "Laddar upp bild"
+      local_tip_with_attachments: "klicka för att välja en bild eller fil från din enhet (tillåtna filändelser: {{authorized_extensions}})"
+      hint: "(du kan också dra och släppa in i editorn för att ladda upp dem)"
+      hint_for_chrome: "(du kan också dra och släppa eller klistra in bilder direkt i editorn för att ladda upp dem)"
+      uploading: "Laddar upp"
 
     search:
       title: "sök efter trådar, inlägg, användare, eller kategorier"
       placeholder: "skriv din sökterm här"
       no_results: "Inga resultat hittades."
       searching: "Söker ..."
+
+      prefer:
+        user: "sökningen kommer att prioritera resultat av @{{username}}"
+        category: "sökningen kommmer att prioritera resultat i {{category}}"
 
     site_map: "gå till en annan trådlista eller kategori"
     go_back: 'gå tillbaka'
@@ -399,11 +601,18 @@ sv:
       title: Trådranksdetaljer
 
     topic:
-      create: 'Skapa Tråd'
-      create_long: 'Skapa en nytt Tråd'
+      filter_to: "Visa {{post_count}} inlägg i tråden"
+      create: 'Skapa tråd'
+      create_long: 'Skapa en ny tråd'
       private_message: 'Starta en privat konversation'
       list: 'Trådar'
       new: 'ny tråd'
+      new_topics:
+        one: '1 ny tråd'
+        other: '{{count}} nya trådar'
+      unread_topics:
+        one: '1 oläst tråd'
+        other: '{{count}} olästa trådar'
       title: 'Tråd'
       loading_more: "Laddar fler Trådar..."
       loading: 'Laddar tråd...'
@@ -416,8 +625,12 @@ sv:
       not_found:
         title: "Tråden hittades inte"
         description: "Tyvärr, vi kunde inte hitta den tråden. Kanske har den tagits bort av en moderator?"
-      unread_posts: "du har {{unread}} gamla olästa inlägg i den här tråden"
-      new_posts: "det finns {{new_posts}} nya inlägg i den här tråden sen du senaste läste det"
+      unread_posts:
+        one: "du har 1 gammalt oläst inlägg i den här tråden"
+        other: "du har {{count}} gamla olästa inlägg i den här tråden"
+      new_posts:
+        one: "det finns 1 nytt inlägg i den här tråden sen du senast läste den"
+        other: "det finns {{count}} nya inlägg i den här tråden sen du senast läste den"
 
       likes:
         one: "det finns 1 gillning i den här tråden"
@@ -428,6 +641,23 @@ sv:
       toggle_information: "slå på/av tråddetaljer"
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra trådar i {{catLink}} eller {{latestLink}}."
       read_more: "Vill du läsa mer? {{catLink}} eller {{latestLink}}."
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_MF: "Det {
+        UNREAD, plural,
+        =0 {}
+        one {
+          finns <a href='/unread'>1 oläst</a>
+        } other {
+          finns <a href='/unread'># olästa</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 ny</a> tråd}
+            other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># nya</a> trådar}
+        } remaining, or {CATEGORY, select, true {bläddra bland andra trådar i {catLink}} false {{latestLink}} other {}} "
+
       browse_all_categories: Bläddra bland alla kategorier
 
       view_latest_topics: visa senaste trådar
@@ -437,12 +667,19 @@ sv:
       jump_reply_down: hoppa till senare svar
       deleted: "Tråden har raderats"
 
+      auto_close_notice: "Den här tråden kommer automatiskt att stängas %{timeLeft}."
+      auto_close_title: 'Inställningar automatisk stängning'
+      auto_close_save: "Spara"
+      auto_close_remove: "Automatstäng inte denna tråd"
+
       progress:
         title: trådplacering
         jump_top: hoppa till första inlägget
         jump_bottom: hoppa till sista inlägget
+        jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         total: antal inlägg
         current: nuvarande inlägg
+        position: "inlägg %{current} av %{total}"
 
       notifications:
         title: ''
@@ -471,9 +708,11 @@ sv:
           description: "du kommer inte meddelas om denna tråd alls, och den kommer inte visas i din flik med olästa."
 
       actions:
+        recover: "Återställ Tråd"
         delete: "Radera Tråd"
         open: "Öppna Tråd"
         close: "Stäng Tråd"
+        auto_close: "Automatstäng"
         unpin: "Avnåla Tråd"
         pin: "Nåla Tråd"
         unarchive: "Dearkivera Tråd"
@@ -508,8 +747,11 @@ sv:
 
       invite_reply:
         title: 'Bjud in Vänner att Svara'
+        action: 'Skicka inbjudan med e-post'
         help: 'skicka inbjudningar till vänner så de kan svara i den här tråden med ett enda klick'
-        email: "Vi skickar din vän ett kort mail så de kan svara i den här tråden genom att klicka på en länk."
+        to_topic: "Vi skickar din vän ett kort mejl som gör det möjligt att svara på tråden genom att klicka på en länk, utan att logga in."
+        to_forum: "Vi skickar din vän ett kort mejl som gör det möjligt att registrera sig genom att klicka på en länk."
+
         email_placeholder: 'e-postadress'
         success: "Tack! Vi har mailat ut ett inbjudan till <b>{{email}}</b>. Vi låter dig veta när de löst in sin inbjudan. Kolla in fliken med Inbjudningar på din användarsida för att hålla koll på vem du har bjudit in."
         error: "Tyvärr vi kunde inte bjudan in den personen. Kanske är den redan en användare?"
@@ -517,30 +759,27 @@ sv:
       login_reply: 'Logga In för att Svara'
 
       filters:
-        user: "Du visar bara {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 inlägg"
           other: "{{count}} inlägg"
-        by_n_users:
-          one: "skapat av 1 specifik användare"
-          other: "skapat av {{count}} specifika användare"
-
-        summary: "Du visar bara {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "1 bästa inlägg"
-          other: "{{count}} bästa inlägg"
-        of_n_posts:
-          one: "av 1 i tråden"
-          other: "av {{count}} i tråden"
         cancel: "Visa alla inlägg i den här tråden igen."
 
-      move_selected:
-        title: "Flytta Markerade Inlägg"
-        topic_name: "Nya Trådens Namn:"
-        error: "Tyvärr, det uppstod ett problem under flytten av de inläggen."
+      split_topic:
+        title: "Flytta till en ny tråd"
+        action: "flytta till ny tråd"
+        topic_name: "Namn på ny tråd"
+        error: "Det uppstod ett fel när inläggen skulle flyttas till den nya tråden."
         instructions:
-          one: "Du håller på att skapa en ny tråd och fylla den med inlägget som du markerat."
-          other: "Du håller på att skapa en ny tråd och fylla den med de <b>{{count}}</b> inlägg som du markerat."
+          one: "Du är på väg att skapa en ny tråd och lägga till det inlägg du valt."
+          other: "Du är på väg att skapa en ny tråd och lägga till de <b>{{count}}</b> inlägg du valt."
+
+      merge_topic:
+        title: "Flytta till en befintlig tråd"
+        action: "flytta till befintlig tråd"
+        error: "Det uppstod ett fel när inläggen skulle flyttas till tråden."
+        instructions:
+          one: "Vad god välj den tråd som inlägget ska flyttas till."
+          other: "Vad god välj den tråd som de <b>{{count}}</b> inläggen ska flyttas till."
 
       multi_select:
         select: 'markera'
@@ -557,12 +796,21 @@ sv:
       reply_topic: "Svar på {{link}}"
       quote_reply: "citatsvar"
       edit: "Ändra {{link}} av {{replyAvatar}} {{username}}"
+      edit_reason: "Anledning: "
       post_number: "inlägg {{number}}"
       in_reply_to: "som svar till"
+      last_edited_on: "inlägget senast ändrat"
       reply_as_new_topic: "Svara som ny Tråd"
       continue_discussion: "Fortsätter diskussionen från {{postLink}}:"
       follow_quote: "gå till det citerade inlägget"
-      deleted_by_author: "(inlägg borttaget av författaren)"
+      deleted_by_author:
+        one: "(inlägget ångrat av författaren, kommer automatiskt att raderas om %{count} timme om det inte flaggas)"
+        other: "(inlägget ångrat av författaren, kommer automatiskt att raderas om  %{count} timmar om det inte flaggas)"
+      deleted_by: "deleted by"
+      expand_collapse: "expand/collapse"
+      gap:
+        one: "1 post omitted"
+        other: "{{count}} posts omitted"
 
       has_replies:
         one: "Svara"
@@ -572,8 +820,12 @@ sv:
         create: "Tyvärr, det uppstod ett fel under skapandet av ditt inlägg. Var god försök igen."
         edit: "Tyvärr, det uppstod ett fel under ändringen av ditt inlägg. Var god försök igen."
         upload: "Tyvärr, det uppstod ett fel under uppladdandet av den filen. Vad god försök igen."
-        image_too_large: "Tyvärr, filen som du försöker ladda upp är för stor (maxstorlek är {{max_size_kb}}kb), var god ändra storlek och försök igen."
+        attachment_too_large: "Tyvärr, filen som du försöker ladda upp är för stor (maxstorlek är {{max_size_kb}}kb)."
+        image_too_large: "Tyvärr, bilden som du försöker ladda upp är för stor (maxstorlek är {{max_size_kb}}kb), var god ändra storlek och försök igen."
         too_many_uploads: "Tyvärr, du kan bara ladda upp en bild i taget."
+        upload_not_authorized: "Tyvärr, filen som du försöker ladda upp är ej tillåten (tillåtna filändelser: {{authorized_extensions}})."
+        image_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp bilder."
+        attachment_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp filer."
 
       abandon: "Är du säker på att du vill överge ditt inlägg?"
 
@@ -589,6 +841,12 @@ sv:
         undelete: "återställ detta inlägg"
         share: "dela en länk till detta inlägg"
         more: "Mer"
+        delete_replies:
+          confirm:
+            one: "Vill du även ta bort det direkta svaret på det här inlägget?"
+            other: "Vill du även ta bort de {{count}} direkta svaren på det här inlägget?"
+          yes_value: "Ja, ta även bort svaren"
+          no_value: "Nej, bara det här inlägget"
 
       actions:
         flag: 'Flaga'
@@ -607,7 +865,6 @@ sv:
           off_topic: "Ångra flaggning"
           spam: "Ångra flaggning"
           inappropriate: "Ångra flaggning"
-          custom_flag: "Ångra flaggning"
           bookmark: "Ångra bokmärkning"
           like: "Ångra gillning"
           vote: "Ångra röstning"
@@ -615,7 +872,10 @@ sv:
           off_topic: "{{icons}} markerade detta som off-topic"
           spam: "{{icons}} markerade detta som spam"
           inappropriate: "{{icons}} markerade detta som olämpligt"
-          custom_flag: "{{icons}} flaggade detta"
+          notify_moderators: "{{icons}} notifiera moderatorer"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notifiera moderatorer</a>"
+          notify_user: "{{icons}} skickade ett privat meddelande"
+          notify_user_with_url: "{{icons}} skickade ett <a href='{{postUrl}}'>privat meddelande</a>"
           bookmark: "{{icons}} bokmärkte detta"
           like: "{{icons}} gillade detta"
           vote: "{{icons}} röstade för detta"
@@ -623,7 +883,8 @@ sv:
           off_topic: "Du flaggade detta som off-topic"
           spam: "Du flaggade detta som spam"
           inappropriate: "Du flaggade detta som olämpligt"
-          custom_flag: "Du flaggade detta för moderation"
+          notify_moderators: "Du flaggade det här för moderering"
+          notify_user: "Du skickade ett privat meddelande till den här användaren"
           bookmark: "Du bokmärkte detta inlägg"
           like: "Du gillade detta"
           vote: "Du röstade för detta inlägg"
@@ -637,9 +898,12 @@ sv:
           inappropriate:
             one: "Du och 1 annan flaggade detta som olämpligt"
             other: "Du och {{count}} andra personer flaggade detta som olämpligt"
-          custom_flag:
-            one: "Du och 1 annan flaggade detta för moderation"
-            other: "Du och {{count}} andra personer flaggade detta för moderation"
+          notify_moderators:
+            one: "Du och 1 annan flaggade detta för moderering"
+            other: "Du och {{count}} andra flaggade detta för moderering"
+          notify_user:
+            one: "Du och 1 annan skickade ett privat meddelande till den här användaren"
+            other: "Du och {{count}} andra skickade ett privat meddelande till den här användaren"
           bookmark:
             one: "Du och 1 annan bokmärkte detta inlägg"
             other: "Du och {{count}} andra personer bokmärkte detta inlägg"
@@ -659,9 +923,12 @@ sv:
           inappropriate:
             one: "1 person flaggade detta som olämpligt"
             other: "{{count}} personer flaggade detta som olämpligt"
-          custom_flag:
-            one: "1 person flaggade detta för moderation"
-            other: "{{count}} personer flaggade detta för moderation"
+          notify_moderators:
+            one: "1 person flaggade detta för moderering"
+            other: "{{count}} personer flaggade detta för moderering"
+          notify_user:
+            one: "1 person skickade ett privat meddelande till den här användaren"
+            other: "{{count}} personer skickade ett privat meddelande till den här användaren"
           bookmark:
             one: "1 person bokmärkte detta inlägg"
             other: "{{count}} personer bokmärkte detta inlägg"
@@ -682,14 +949,40 @@ sv:
           one: "Är du säker på att du vill radera detta inlägg?"
           other: "Är du säker på att du vill radera alla dessa inlägg?"
 
+      revisions:
+        controls:
+          first: "Första revisionen"
+          previous: "Tidigare revision"
+          next: "Nästa revision"
+          last: "Sista revisionen"
+          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> (av {{total}})"
+        displays:
+          inline:
+            title: "Show the rendered output with additions and removals inline"
+            button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            title: "Show the rendered output diffs side-by-side"
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "Show the markdown source diffs side-by-side"
+            button: '<i class="fa fa-columns"></i> Markdown'
+        details:
+          edited_by: "Ändrad av"
+
     category:
+      can: 'kan&hellip; '
       none: '(ingen kategori)'
+      choose: 'Välj en kategori&hellip;'
       edit: 'ändra'
       edit_long: "Ändra Kategori"
       view: 'Visa Trådar i Kategori'
+      general: 'Allmänt'
+      settings: 'Inställningar'
       delete: 'Radera Kategori'
       create: 'Skapa Kategori'
+      save: 'Spara kategori'
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
+      save_error: Det uppstod ett fel när kategorin skulle sparas.
       more_posts: "visa alla {{posts}}..."
       name: "Kategorinamn"
       description: "Beskrivning"
@@ -700,16 +993,32 @@ sv:
       name_placeholder: "Ska vara kort och koncist."
       color_placeholder: "Någon webbfärg"
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
+      delete_error: "Det uppstod ett fel när kategorin skulle tas bort."
       list: "Lista Kategorier"
       no_description: "Det finns ingen beskrivning för denna kategori."
       change_in_category_topic: "besök kategorins tråd för att ändra beskrivning"
       hotness: "Hethet"
+      already_used: 'Den här färgen används till en annan kategori'
+      security: "Säkerhet"
+      auto_close_label: "Stäng trådar automatiskt efter:"
+      auto_close_units: "timmar"
+      edit_permissions: "Ändra behörigheter"
+      add_permission: "Lägg till behörighet"
+      this_year: "detta året"
+      position: "position"
+      parent: "Föräldrakategori"
 
     flagging:
       title: 'Varför flaggar du detta inlägg?'
       action: 'Flagga Inlägg'
+      take_action: "Vidta åtgärd"
+      notify_action: 'Notifiera'
+      delete_spammer: "Radera spammare"
+      delete_confirm: "Du är på väg att ta bort <b>%{posts}</b> inlägg och <b>%{topics}</b> trådar från denna användare, radera deras konto, blockera registreringar från deras IP-adress <b>%{ip_address}</b>, och lägga till deras e-postadress <b>%{email}</b> till en permanent blockeringslista. Är du säker på att detta verkligen är en spammare?"
+      yes_delete_spammer: "Ja, ta bort spammaren!"
       cant: "Tyvärr, du kan inte flagga detta inlägg just nu."
-      custom_placeholder: "Varför kräver detta inlägg en moderators uppmärksamhet? Låt oss veta specifikt vad du är orolig för, och ta med relevanta länkar om möjligt."
+      custom_placeholder_notify_user: "Varför kräver detta inlägg att du kontaktar användaren privat? Var tydlig, konstruktiv, och alltid trevlig."
+      custom_placeholder_notify_moderators: "Varför kräver detta inlägg en moderators uppmärksamhet? Låt oss veta specifikt vad du är orolig för, och ta med relevanta länkar om möjligt."
       custom_message:
         at_least: "skriv åtminstone {{n}} tecken"
         more: "{{n}} fler..."
@@ -718,6 +1027,7 @@ sv:
     topic_map:
       title: "Trådsammanfattning"
       links_shown: "Visa alla {{totalLinks}} länkar..."
+      clicks: "klick"
 
     topic_statuses:
       locked:
@@ -737,6 +1047,7 @@ sv:
     views_long: "denna tråd har visats {{number}} gånger"
     activity: "Aktivitet"
     likes: "Gillningar"
+    likes_long: "det finns {{number}} gillningar i den här tråden"
     users: "Deltagare"
     category_title: "Kategori"
     history: "Historik"
@@ -785,6 +1096,11 @@ sv:
 
     browser_update: 'Tyvärr, <a href="http://www.discourse.org/faq/#browser">din webbläsare är för gammal för att fungera på detta Discourse-forum</a>. Var god <a href="http://browsehappy.com">uppgradera din webbläsare</a>.'
 
+    permission_types:
+      full: "Skapa / Svara / Läsa"
+      create_post: "Svara / Läsa"
+      readonly: "Läsa"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "skriv för att filtrera..."
@@ -794,29 +1110,40 @@ sv:
       moderator: 'Moderator'
 
       dashboard:
-        title: "Översiktspanel"
+        title: "Översiktspanel" 
+        last_updated: "Översiktspanelen senast uppdaterad:"
         version: "Version"
         up_to_date: "Du är aktuell!"
         critical_available: "En kritisk uppdatering är tillgänglig."
         updates_available: "Uppdateringar är tillgängliga."
         please_upgrade: "Var god uppgradera!"
+        no_check_performed: "Sökning efter uppdateringar har inte utförts. Kontrollera att sidekiq körs."
+        stale_data: "Sökning efter uppdateringar har inte gjorts den senaste tiden. Kontrollera att sidekiq körs."
+        version_check_pending: "Ser ut som att du nyss har uppdaterat. Fantastic!"
         installed_version: "Installerad"
         latest_version: "Senaste"
         problems_found: "Några problem har hittas med din installation av Discourse:"
+        last_checked: "Senaste sökning efter uppdatering"
+        refresh_problems: "Uppdatera"
+        no_problems: "Inga problem hittades."
         moderators: 'Moderatorer:'
         admins: 'Administratörer:'
+        blocked: 'Blockerade:'
+        suspended: 'Avstängda:'
+        private_messages_short: "PMs"
+        private_messages_title: "Privata meddelanden"
 
-      reports:
-        today: "Idag"
-        yesterday: "Igår"
-        last_7_days: "Senaste 7 Dagarna"
-        last_30_days: "Senaste 30 Dagarna"
-        all_time: "Från Början"
-        7_days_ago: "7 Dagar Sedan"
-        30_days_ago: "30 Dagar Sedan"
-        all: "Alla"
-        view_table: "Visa som Tabell"
-        view_chart: "Visa som Stapeldiagram"
+        reports:
+          today: "Idag"
+          yesterday: "Igår"
+          last_7_days: "Senaste 7 Dagarna"
+          last_30_days: "Senaste 30 Dagarna"
+          all_time: "Från Början"
+          7_days_ago: "7 Dagar Sedan"
+          30_days_ago: "30 Dagar Sedan"
+          all: "Alla"
+          view_table: "Visa som Tabell"
+          view_chart: "Visa som Stapeldiagram"
 
       commits:
         latest_changes: "Senaste ändringarna: snälla uppdatera ofta!"
@@ -826,18 +1153,47 @@ sv:
         title: "Flaggningar"
         old: "Gamla"
         active: "Aktiva"
-        clear: "Rensa Flaggningar"
-        clear_title: "rensa alla flaggningar av detta inlägg (kommer visa gömda inlägg)"
-        delete: "Radera Inlägg"
-        delete_title: "radera inlägg (om det är första inlägget radera tråd)"
+
+        agree_hide: "Instämmer (göm inlägg + skicka PM)"
+        agree_hide_title: "Göm det här inlägget och skicka automatiskt ett privat meddelande till användaren som uppmanar dem att ändra det."
+        defer: "Skjut upp"
+        defer_title: "Ingen åtgärd behövs just nu, skjut upp åtgärd för den här flaggan till senare, eller aldrig"
+        delete_post: "Radera inlägg"
+        delete_post_title: "Radera inlägg; om första inlägget, ta bort tråden"
+        disagree_unhide: "Håller inte med (gör inlägget synligt igen)"
+        disagree_unhide_title: "Ta bort alla flaggor från det här inlägget och gör inlägget synligt igen"
+        disagree: "Håller inte med"
+        disagree_title: "Håller inte med om flaggan, ta bort alla flaggor från det här inlägget"
+        delete_spammer_title: "Ta bort användaren samt användarens alla inlägg och trådar."
+
         flagged_by: "Flaggad av"
+        system: "System"
         error: "Någonting gick snett"
+        view_message: "Svara"
+        no_results: "Det finns inga flaggor."
+
+        summary:
+          action_type_3:
+            one: "off-topic"
+            other: "off-topic x{{count}}"
+          action_type_4:
+            one: "olämpligt"
+            other: "olämpligt x{{count}}"
+          action_type_6:
+            one: "custom"
+            other: "custom x{{count}}"
+          action_type_7:
+            one: "custom"
+            other: "custom x{{count}}"
+          action_type_8:
+            one: "spam"
+            other: "spam x{{count}}"
 
       groups:
-        title: "Groups"
-        edit: "Edit Groups"
-        selector_placeholder: "add users"
-        name_placeholder: "Group name, no spaces, same as username rule"
+        title: "Grupper"
+        edit: "Ändra grupper"
+        selector_placeholder: "lägg till användare"
+        name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
         about: "Edit your group membership and names here"
         can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
         delete: "Radera"
@@ -845,18 +1201,27 @@ sv:
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
+        generate_master: "Generate Master API Key"
+        none: "There are no active API keys right now."
+        user: "User"
         title: "API"
-        long_title: "API Information"
-        key: "Key"
-        generate: "Generate API Key"
-        regenerate: "Regenerate API Key"
+        key: "API Key"
+        generate: "Generate"
+        regenerate: "Regenerate"
+        revoke: "Revoke"
+        confirm_regen: "Are you sure you want to replace that API Key with a new one?"
+        confirm_revoke: "Are you sure you want to revoke that key?"
         info_html: "Your API key will allow you to create and update topics using JSON calls."
+        all_users: "All Users"
         note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
 
       customize:
         title: "Anpassa"
+        long_title: "Anpassningar av sajt"
         header: "Sidhuvud"
         css: "Stilmall"
+        mobile_header: "Mobilt sidhuvud"
+        mobile_css: "Mobil stilmall"
         override_default: "Skriv över standard?"
         enabled: "Aktiverad?"
         preview: "förhandsgranska"
@@ -866,15 +1231,87 @@ sv:
         new_style: "Ny Stil"
         delete: "Radera"
         delete_confirm: "Radera denna anpassning?"
+        about: "Anpassningar tillåter dig att modifiera stilmallar och sidhuvud. Välj eller lägg till för att ändra."
 
       email:
         title: "E-postloggar"
+        settings: "Inställningar"
+        logs: "Loggar"
         sent_at: "Skickat"
+        user: "Användare"
         email_type: "E-posttyp"
         to_address: "Till adress"
         test_email_address: "e-postadress att testa"
         send_test: "skicka testmail"
         sent_test: "skickat!"
+        delivery_method: "Leveransmetod"
+        preview_digest: "Förhandsgranska sammandrag"
+        preview_digest_desc: "Detta är ett verktyg för att förhandsgranska innehållet i de sammandrag som skickas via e-post från ditt forum."
+        refresh: "Uppdatera"
+        format: "Format"
+        html: "html"
+        text: "text"
+        last_seen_user: "Senast sedda användare:"
+        reply_key: "Svarsnyckel"
+
+      logs:
+        title: "Loggar"
+        action: "Åtgärd"
+        created_at: "Skapad"
+        last_match_at: "Senast matchad"
+        match_count: "Matchningar"
+        ip_address: "IP"
+        delete: 'Radera'
+        edit: 'Ändra'
+        save: 'Spara'
+        screened_actions:
+          block: "blockera"
+          do_nothing: "gör ingenting"
+        staff_actions:
+          title: "Åtgärder Personal"
+          instructions: "Klicka på användarnamn och åtgärder för att filtrera listan. Klicka på avataren för att gå till användarens sida."
+          clear_filters: "Visa Allt"
+          staff_user: "Personalanvändare"
+          target_user: "Målanvändare"
+          subject: "Ämne"
+          when: "När"
+          context: "Kontext"
+          details: "Detaljer"
+          previous_value: "Tidigare"
+          new_value: "Nytt"
+          diff: "Diff"
+          show: "Visa"
+          modal_title: "Detaljer"
+          no_previous: "Det finns inget tidigare värde."
+          deleted: "Inget nytt värde. Posten har raderats."
+          actions:
+            delete_user: "radera användare"
+            change_trust_level: "ändra pålitlighetsnivå"
+            change_site_setting: "ändra sajtinställning"
+            change_site_customization: "ändra sajtanpassning"
+            delete_site_customization: "radera sajtanpassning"
+            suspend_user: "stäng av användare"
+            unsuspend_user: "ta bort användarens avstängning"
+        screened_emails:
+          title: "Screened Emails"
+          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
+          email: "Email Address"
+        screened_urls:
+          title: "Screened URLs"
+          description: "The URLs listed here were used in posts by users who have been identified as spammers."
+          url: "URL"
+          domain: "Domain"
+        screened_ips:
+          title: "Screened IPs"
+          description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
+          delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
+          actions:
+            block: "Block"
+            do_nothing: "Allow"
+          form:
+            label: "New:"
+            ip_address: "IP address"
+            add: "Add"
 
       impersonate:
         title: "Imitera Användare"
@@ -893,22 +1330,56 @@ sv:
           new: "Ny"
           active: "Aktiv"
           pending: "Avvaktande"
+          admins: 'Administratörer'
+          moderators: 'Moderatorer'
+          suspended: 'Avstängd'
+          blocked: 'Blockerad'
         approved: "Godkänd?"
         approved_selected:
-          one: "godkänd användare"
-          other: "godkänd användare ({{count}})"
+          one: "godkänn använadare"
+          other: "godkänn användare ({{count}})"
+        reject_selected:
+          one: "avvisa användare"
+          other: "avvisa användare ({{count}})"
+        titles:
+          active: 'Aktiva användare'
+          new: 'Nya användare'
+          pending: 'Användare som ska granskas'
+          newuser: 'Användare med pålitlighetsnivå 0 (Nya användare)'
+          basic: 'Användare med pålitlighetsnivå 1 (Grundläggande användare)'
+          regular: 'Användare med pålitlighetsnivå 2 (Vanlig användare)'
+          leader: 'Användare med pålitlighetsnivå 3 (Ledare)'
+          elder: 'Användare med pålitlighetsnivå 4 (Veteran)'
+          admins: 'Administratörer'
+          moderators: 'Moderatorer'
+          §: 'Blockerade användare'
+          suspended: 'Avstängda användare'
+        reject_successful:
+          one: "Avvisade 1 användare."
+          other: "Avvisade %{count} användare."
+        reject_failures:
+          one: "Misslyckades med att avvisa 1 användare."
+          other: "Misslyckades med att avvisa %{count} användare."
 
       user:
         suspend_failed: "Någonting gick fel under avstängningen av denna användare {{error}}"
         unsuspend_failed: "Någonting gick fel under upplåsningen av denna användare {{error}}"
         suspend_duration: "Hur länge vill du stänga av denna användare? (dagar)"
+        suspend_duration_units: "(dagar)"
+        suspend_reason_label: "Varför stänger du av användaren? Denna text <b>kommer att visas för all</b> på användarens profilsida, och kommer att visas för användaren när denne försöker logga in. Håll det kort."
+        suspend_reason: "Anledning"
+        suspended_by: "Avstängd av"
         delete_all_posts: "Radera alla inlägg"
+        delete_all_posts_confirm: "Du är på väg att ta bort %{posts} inlägg och %{topics} trådar. Är du säker?"
         suspend: "Stäng av"
         unsuspend: "Lås upp"
         suspended: "Avstängd?"
         moderator: "Moderator?"
         admin: "Administratör?"
+        blocked: "Blockerad?"
         show_admin_profile: "Administratör"
+        edit_title: "Ändra titel"
+        save_title: "Spara titel"
         refresh_browsers: "Tvinga webbläsaruppdatering"
         show_public_profile: "Visa Publik Profil"
         impersonate: 'Imitera'
@@ -916,6 +1387,8 @@ sv:
         grant_admin: 'Bevilja Administratör'
         revoke_moderation: 'Återkalla Moderering'
         grant_moderation: 'Bevilja Moderering'
+        unblock: 'Ta bort blockering'
+        block: 'Blockera'
         reputation: Rykte
         permissions: Rättigheter
         activity: Aktivitet
@@ -928,7 +1401,32 @@ sv:
         flags_received_count: Mottagna Flaggningar
         approve: 'Godkänn'
         approved_by: "godkänd av"
+        approve_success: "Användaren godkänd och e-post skickad med aktiveringsinstruktioner."
+        approve_bulk_success: "Alla valda användare har godkänts och blivit notifierade!"
         time_read: "Lästid"
+        delete: "Radera användare"
+        delete_forbidden:
+          one: "Användare kan ej tas bort om de registrerade sig för mer än %{count} dag sedan, eller om de har inlägg. Ta bort alla inlägg innan du försöker ta bort en användare."
+          other: "Användare kan ej tas bort om de registrerade sig för mer än %{count} dagar sedan, eller om de har inlägg. Ta bort alla inlägg innan du försöker ta bort en användare."
+        delete_confirm: "Är du SÄKER på att du vill ta bort den här användaren? Den här åtgärden är permament!"
+        delete_and_block: "<b>Ja</b>, och <b>blockera</b> registreringar från denna e-postadress och IP-address"
+        delete_dont_block: "<b>Ja</b>, men <b>tillåt</b> registreringar från denna e-postadress och IP-address"
+        deleted: "Användaren har tagits bort."
+        delete_failed: "Ett fel uppstod när användaren skull tas bort. Kontrollera att alla inlägg är raderade innan användaren raderas."
+        send_activation_email: "Skicka aktiveringsmejl"
+        activation_email_sent: "Ett aktiveringsmejl har skickats."
+        send_activation_email_failed: "Ett fel uppstod när ett nytt aktiveringsmejl skull skickas. %{error}"
+        activate: "Aktivera konto"
+        activate_failed: "Ett fel uppstod vid aktivering av användaren."
+        deactivate_account: "Deaktivera konto"
+        deactivate_failed: "Ett fel uppstod vid deaktivering av användaren."
+        unblock_failed: 'Ett fel uppstod när blockeringen skulle tas bort.'
+        block_failed: 'Ett fel uppstod när användaren skulle blockeras.'
+        deactivate_explanation: "En deaktiverad användare måste omvalidera sin e-postadress."
+        suspended_explanation: "En avstängs användare kan inte logga in."
+        block_explanation: "En blockerad användaren kan inte skriva inlägg eller starta trådar."
+        trust_level_change_failed: "Ett fel uppstod när användarens pålitlighetsnivå skulle ändras."
+        suspend_modal_title: "Stäng av användare"
 
       site_content:
         none: "Välj typ av innehåll för att börja ändra."
@@ -939,3 +1437,23 @@ sv:
         show_overriden: 'Visa bara överskrivna'
         title: 'Webbplatsinställningar'
         reset: 'återställ till standard'
+        none: 'ingen'
+        no_results: "Inga resultat hittades."
+        categories:
+          all_results: 'Alla'
+          required: 'Krävs'
+          basic: 'Grundläggande Setup'
+          users: 'Användare'
+          posting: 'Inlägg'
+          email: 'E-post'
+          files: 'Filer'
+          trust: 'Pålitlighetsnivåer'
+          security: 'Säkerhet'
+          seo: 'SEO'
+          spam: 'Spam'
+          rate_limits: 'Rate Limits'
+          developer: 'Utvecklare'
+          uncategorized: 'Okategoriserat'
+
+    lightbox:
+      download: "ladda ned"

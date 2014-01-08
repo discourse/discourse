@@ -1,12 +1,12 @@
 language: ruby
 rvm:
   - 2.0.0
+  - 2.1.0
 before_script:
-  - cp config/database.yml.development-sample config/database.yml
-  - cp config/redis.yml.sample config/redis.yml
   - psql -c 'create database discourse_test;' -U postgres
-  - rake db:migrate
+  - export DISCOURSE_HOSTNAME=www.example.com
   - export RUBY_GC_MALLOC_LIMIT=50000000
+  - bundle exec rake db:migrate
 bundler_args: --without development
 script: 'bundle exec rspec && bundle exec rake qunit:test'
 services:

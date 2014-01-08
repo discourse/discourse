@@ -17,7 +17,6 @@ var parser = window.BetterMarkdown,
   @method initializeDialects
 **/
 function initializeDialects() {
-  Discourse.Dialect.trigger('register', {dialect: dialect, MD: MD});
   MD.buildBlockOrder(dialect.block);
   MD.buildInlinePatterns(dialect.inline);
   initialized = true;
@@ -30,8 +29,9 @@ function initializeDialects() {
   @method processTextNodes
   @param {Array} node the JsonML tree
   @param {Object} event the parse node event data
+  @param {Function} emitter the function to call on the text node
 **/
-function processTextNodes(node, event) {
+function processTextNodes(node, event, emitter) {
   if (node.length < 2) { return; }
 
   if (node[0] === '__RAW') {
@@ -47,12 +47,7 @@ function processTextNodes(node, event) {
         textContent = Discourse.Markdown.sanitize(textContent);
       }
 
-      var result = textContent;
-
-      for (var k=0; k<emitters.length; k++) {
-        result = emitters[k](result, event);
-      }
-
+      var result = emitter(textContent, event);
       if (result) {
         if (result instanceof Array) {
           for (var i=0; i<result.length; i++) {
@@ -85,7 +80,10 @@ function parseTree(tree, path, insideCounts) {
   if (tree instanceof Array) {
     var event = {node: tree, path: path, dialect: dialect, insideCounts: insideCounts || {}};
     Discourse.Dialect.trigger('parseNode', event);
-    processTextNodes(tree, event);
+
+    for (var j=0; j<emitters.length; j++) {
+      processTextNodes(tree, event, emitters[j]);
+    }
 
     path = path || [];
     insideCounts = insideCounts || {};
@@ -185,7 +183,7 @@ Discourse.Dialect = {
     @param {Function} emitter A function that emits the JsonML for the replacement.
   **/
   inlineReplace: function(token, emitter) {
-    this.registerInline(token, function(text, match, prev) {
+    this.registerInline(token, function() {
       return [token.length, emitter.call(this, token)];
     });
   },

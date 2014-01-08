@@ -31,7 +31,7 @@
   #site-logo {
     max-width: 122px;
   }
-  .icon-home {
+  .fa-home {
     font-size: 20px;
     line-height: 40px;
   }
@@ -101,7 +101,7 @@
         border-top: 1px solid $white;
       }
     }
-    [class^="icon-"] {
+    [class^="fa fa-"] {
       width: 32px;
       height: 32px;
       font-size: 20px;
@@ -165,7 +165,7 @@
     padding: 5px;
     font-size: 13px;
     line-height: 16px;
-    .icon {
+    .fa {
       margin-right: 3px;
     }
   }
@@ -187,7 +187,7 @@
   // Notifications
 
   &#notifications-dropdown {
-    .icon {
+    .fa {
       color: #777;
     }
     li {

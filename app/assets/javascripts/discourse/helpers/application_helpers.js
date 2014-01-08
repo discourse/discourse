@@ -4,12 +4,12 @@
   @method breakUp
   @for Handlebars
 **/
-Handlebars.registerHelper('breakUp', function(property, options) {
-  var prop, result, tokens;
-  prop = Ember.Handlebars.get(this, property, options);
+Handlebars.registerHelper('breakUp', function(property, hint, options) {
+  var prop = Ember.Handlebars.get(this, property, options);
   if (!prop) return "";
+  hint = Ember.Handlebars.get(this, hint, options);
 
-  return Discourse.Formatter.breakUp(prop, 13);
+  return Discourse.Formatter.breakUp(prop, hint);
 });
 
 /**
@@ -63,6 +63,10 @@ function categoryLinkHTML(category, options) {
 **/
 Handlebars.registerHelper('categoryLink', function(property, options) {
   return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
+});
+
+Handlebars.registerHelper('categoryLinkRaw', function(property, options) {
+  return categoryLinkHTML(property, options);
 });
 
 /**
@@ -267,30 +271,32 @@ Ember.Handlebars.registerHelper('float', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('number', function(property, options) {
-  var n, orig, title, result;
-  orig = parseInt(Ember.Handlebars.get(this, property, options), 10);
-  if (isNaN(orig)) {
-    orig = 0;
-  }
-  title = orig;
+
+  var orig = parseInt(Ember.Handlebars.get(this, property, options), 10);
+  if (isNaN(orig)) { orig = 0; }
+
+  var title = orig;
   if (options.hash.numberKey) {
-    title = I18n.t(options.hash.numberKey, {
-      number: orig
-    });
+    title = I18n.t(options.hash.numberKey, { number: orig });
   }
+
   // Round off the thousands to one decimal place
-  n = orig;
+  var n = orig;
   if (orig > 999 && !options.hash.noTitle) {
     n = (orig / 1000).toFixed(1) + "K";
   }
 
-  result = "<span class='number'";
-
-  if(n !== title) {
-    result += " title='" + title + "'";
+  var classNames = 'number';
+  if (options.hash['class']) {
+    classNames += ' ' + Ember.Handlebars.get(this, options.hash['class'], options);
   }
+  var result = "<span class='" + classNames + "'";
 
+  if (n !== title) {
+    result += " title='" + Handlebars.Utils.escapeExpression(title) + "'";
+  }
   result += ">" + n + "</span>";
+
   return new Handlebars.SafeString(result);
 });
 
@@ -310,10 +316,26 @@ Handlebars.registerHelper('date', function(property, options) {
       property = property.hash.path;
     }
   }
+
   var val = Ember.Handlebars.get(this, property, options);
   if (val) {
     var date = new Date(val);
     return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', title: true, leaveAgo: leaveAgo}));
+  }
+
+});
+
+/**
+  Look for custom html content in the preload store.
+
+  @method customHTML
+  @for Handlebars
+**/
+Handlebars.registerHelper('customHTML', function(property) {
+  var html = PreloadStore.get("customHTML");
+
+  if (html && html[property] && html[property].length) {
+    return new Handlebars.SafeString(html[property]);
   }
 
 });

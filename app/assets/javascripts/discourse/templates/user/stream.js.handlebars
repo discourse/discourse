@@ -14,9 +14,10 @@
     {{#groupedEach children}}
       <div class='child-actions'>
         <i class="icon {{unbound icon}}"></i>
-      {{#groupedEach items}}
-        <a href="{{unbound userUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
-      {{/groupedEach}}
+        {{#groupedEach items}}
+          <a href="{{unbound userUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
+          {{#if edit_reason}} &mdash; <span class="edit-reason">{{unbound edit_reason}}</span>{{/if}}
+        {{/groupedEach}}
       </div>
     {{/groupedEach}}
   </div>

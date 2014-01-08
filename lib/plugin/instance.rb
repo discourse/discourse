@@ -93,7 +93,6 @@ class Plugin::Instance
     @javascripts << js
   end
 
-
   def register_asset(file,opts=nil)
     full_path = File.dirname(path) << "/assets/" << file
     assets << full_path
@@ -154,10 +153,12 @@ class Plugin::Instance
     end
     unless assets.blank?
       assets.each do |asset|
-        if asset =~ /\.js$|.js.erb$/
+        if asset =~ /\.js$|\.js\.erb$/
           DiscoursePluginRegistry.javascripts << asset
         elsif asset =~ /\.css$|\.scss$/
           DiscoursePluginRegistry.stylesheets << asset
+        elsif asset =~ /\.js\.handlebars$/
+          DiscoursePluginRegistry.handlebars << asset
         end
       end
 
@@ -204,7 +205,10 @@ class Plugin::Instance
     spec_path = gems_path + "/specifications"
     spec_file = spec_path + "/#{name}-#{version}.gemspec"
     unless File.exists? spec_file
-      command = "gem install #{name} -v #{version} -i #{gems_path} --no-rdoc --no-ri"
+      command = "gem install #{name} -v #{version} -i #{gems_path} --no-document"
+      if opts[:source]
+        command << " --source #{opts[:source]}"
+      end
       puts command
       puts `#{command}`
     end

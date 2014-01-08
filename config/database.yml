@@ -1,0 +1,47 @@
+development:
+  adapter: postgresql
+  database: discourse_development
+  min_messages: warning
+  pool: 5
+  timeout: 5000
+  host_names:
+    ### Don't include the port number here. Change the "port" site setting instead, at /admin/site_settings.
+    ### If you change this setting you will need to
+    ###   - restart sidekiq if you change this setting
+    ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
+    - "localhost"
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  adapter: postgresql
+  database: discourse_test
+  min_messages: warning
+  pool: 5
+  timeout: 5000
+  host_names:
+    - test.localhost
+
+# profile db is used for benchamarking using the script/bench.rb script
+profile:
+  adapter: postgresql
+  database: discourse_profile
+  min_messages: warning
+  pool: 5
+  timeout: 5000
+  host_names:
+    - "localhost"
+
+production:
+  pool: <%= GlobalSetting.db_pool %>
+  timeout: <%= GlobalSetting.db_timeout %>
+  adapter: postgresql
+  socket: <%= GlobalSetting.db_socket %>
+  host: <%= GlobalSetting.db_host %>
+  port: <%= GlobalSetting.db_port %>
+  database: <%= GlobalSetting.db_name %>
+  username: <%= GlobalSetting.db_username %>
+  password: <%= GlobalSetting.db_password %>
+  host_names:
+    - <%= GlobalSetting.hostname %>

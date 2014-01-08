@@ -28,10 +28,6 @@ var formatDays = function(days) {
   return formatHours(days * 24);
 };
 
-var formatMonths = function(months) {
-  return formatDays(months * 30);
-};
-
 var shortDate = function(days){
   return moment().subtract('days', days).format('D MMM');
 };
@@ -192,13 +188,14 @@ test("updateRelativeAge", function(){
 
 test("breakUp", function(){
 
-  var b = function(s){ return Discourse.Formatter.breakUp(s,5); };
+  var b = function(s,hint){ return Discourse.Formatter.breakUp(s,hint); };
 
   equal(b("hello"), "hello");
-  equal(b("helloworld"), "hello world");
-  equal(b("HeMans"), "He Mans");
-  equal(b("he_man"), "he_ man");
-  equal(b("he11111"), "he 11111");
-  equal(b("HRCBob"), "HRC Bob");
+  equal(b("helloworld"), "helloworld");
+  equal(b("HeMans11"), "He<wbr>&#8203;Mans<wbr>&#8203;11");
+  equal(b("he_man"), "he_<wbr>&#8203;man");
+  equal(b("he11111"), "he<wbr>&#8203;11111");
+  equal(b("HRCBob"), "HRC<wbr>&#8203;Bob");
+  equal(b("bobmarleytoo","Bob Marley Too"), "bob<wbr>&#8203;marley<wbr>&#8203;too");
 
 });

@@ -1,6 +1,6 @@
 module("Discourse.SelectedPostsCount");
 
-var buildTestObj = function(params, topicParams) {
+var buildTestObj = function(params) {
   return Ember.Object.createWithMixins(Discourse.SelectedPostsCount, params || {});
 };
 

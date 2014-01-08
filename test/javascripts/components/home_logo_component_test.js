@@ -2,7 +2,7 @@ var smallLogoUrl = "/assets/logo-single.png",
     bigLogoUrl = "/assets/logo.png",
     smallLogoSelector = "img.logo-small",
     bigLogoSelector = "img#site-logo.logo-big",
-    homeIconSelector = "i.icon-home",
+    homeIconSelector = "i.fa-home",
     headerSelector = "h2#site-text-logo.text-logo";
 
 

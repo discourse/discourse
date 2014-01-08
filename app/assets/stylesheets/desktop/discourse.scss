@@ -116,7 +116,7 @@ body {
     }
   }
   #main {
-    .icon-star.starred {
+    .fa-star.starred {
       color: #e45735;
     }
     a.star {
@@ -231,7 +231,7 @@ blockquote {
 
 .topic-statuses {
   float: left;
-  margin: 1px 3px 0 0;
+  margin: 0 3px 0 0;
   padding: 0;
   .topic-status {
     padding: 0 2px 0 0;

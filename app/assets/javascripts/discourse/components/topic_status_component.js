@@ -19,14 +19,14 @@ Discourse.TopicStatusComponent = Ember.Component.extend({
         renderIconIf = function(conditionProp, name, key) {
       if (!self.get(conditionProp)) { return; }
       var title = I18n.t("topic_statuses." + key + ".help");
-      buffer.push("<span title='" + title + "' class='topic-status'><i class='icon icon-" + name + "'></i></span>");
+      buffer.push("<span title='" + title + "' class='topic-status'><i class='fa fa-" + name + "'></i></span>");
     };
 
     // Allow a plugin to add a custom icon to a topic
     this.trigger('addCustomIcon', buffer);
 
     renderIconIf('topic.closed', 'lock', 'locked');
-    renderIconIf('topic.pinned', 'pushpin', 'pinned');
+    renderIconIf('topic.pinned', 'thumb-tack', 'pinned');
     renderIconIf('topic.invisible', 'eye-close', 'invisible');
   }
 });

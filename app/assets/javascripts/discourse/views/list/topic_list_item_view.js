@@ -28,7 +28,7 @@ Discourse.TopicListItemView = Discourse.GroupedView.extend({
   didInsertElement: function() {
     var session = Discourse.Session.current();
 
-    // // highligth the last topic viewed
+    // highligth the last topic viewed
     if (session.get('lastTopicIdViewed') === this.get('content.id')) {
       session.set('lastTopicIdViewed', null);
       this.highlight();

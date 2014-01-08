@@ -19,7 +19,7 @@ Discourse.SortableHeadingComponent = Ember.Component.extend({
     var sortable = this.get('sortable');
 
     if (sortable && this.get('sortBy') === this.get('sortOrder.order')) {
-      return this.get('sortOrder.descending') ? 'icon-chevron-down' : 'icon-chevron-up';
+      return this.get('sortOrder.descending') ? 'fa fa-chevron-down' : 'fa fa-chevron-up';
     }
   }.property('sortable', 'sortOrder.order', 'sortOrder.descending'),
 

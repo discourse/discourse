@@ -22,7 +22,7 @@ test("Categories List", function() {
   expect(1);
 
   visit("/categories").then(function() {
-    ok(exists('.category-list-item'), "has a list of categories");
+    ok(exists('.category'), "has a list of categories");
   });
 });
 

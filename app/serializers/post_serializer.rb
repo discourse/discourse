@@ -98,10 +98,6 @@ class PostSerializer < BasicPostSerializer
     object.score || 0
   end
 
-  def version
-    object.cached_version
-  end
-
   def user_title
     object.user.try(:title)
   end

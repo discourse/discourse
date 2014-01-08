@@ -22,7 +22,15 @@ class CategoryList
   private
 
     def latest_post_only?
-      @options[:latest_post_only]
+      @options[:latest_posts] and latest_posts_count == 1
+    end
+
+    def include_latest_posts?
+      @options[:latest_posts] and latest_posts_count > 1
+    end
+
+    def latest_posts_count
+      @options[:latest_posts].to_i > 0 ? @options[:latest_posts].to_i : SiteSetting.category_featured_topics
     end
 
     # Retrieve a list of all the topics we'll need
@@ -33,6 +41,7 @@ class CategoryList
 
       @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id))
       @all_topics.each do |t|
+        t.include_last_poster = true if include_latest_posts? # hint for serialization
         @topics_by_id[t.id] = t
       end
 
@@ -45,21 +54,17 @@ class CategoryList
     # Find a list of all categories to associate the topics with
     def find_categories
       @categories = Category
-                      .includes(:featured_users)
-                      .secured(@guardian)
+                        .includes(:featured_users)
+                        .secured(@guardian)
+                        .order('position asc')
+                        .order('COALESCE(categories.posts_week, 0) DESC')
+                        .order('COALESCE(categories.posts_month, 0) DESC')
+                        .order('COALESCE(categories.posts_year, 0) DESC')
+                        .to_a
 
       if latest_post_only?
-        @categories = @categories
-                        .includes(:latest_post => {:topic => :last_poster} )
-                        .order('position ASC')
-      else
-        @categories = @categories
-                        .order('COALESCE(categories.topics_week, 0) DESC')
-                        .order('COALESCE(categories.topics_month, 0) DESC')
-                        .order('COALESCE(categories.topics_year, 0) DESC')
+        @categories  = @categories.includes(:latest_post => {:topic => :last_poster} )
       end
-
-      @categories = @categories.to_a
 
       subcategories = {}
       to_delete = Set.new

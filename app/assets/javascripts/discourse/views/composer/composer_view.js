@@ -1,4 +1,4 @@
-/*global Markdown:true assetPath:true */
+/*global assetPath:true */
 
 /**
   This view handles rendering of the composer
@@ -48,22 +48,24 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     return this.present('controller.createdPost') ? 'created-post' : null;
   }.property('model.createdPost'),
 
-  observeReplyChanges: function() {
-    var self = this;
-    if (this.get('model.hidePreview')) return;
-    Ember.run.next(function() {
-      if (self.editor) {
-        self.editor.refreshPreview();
-        // if the caret is on the last line ensure preview scrolled to bottom
-        var caretPosition = Discourse.Utilities.caretPosition(self.wmdInput[0]);
-        if (!self.wmdInput.val().substring(caretPosition).match(/\n/)) {
-          var $wmdPreview = $('#wmd-preview');
-          if ($wmdPreview.is(':visible')) {
-            $wmdPreview.scrollTop($wmdPreview[0].scrollHeight);
-          }
+
+  refreshPreview: Discourse.debounce(function() {
+    if (this.editor) {
+      this.editor.refreshPreview();
+      // if the caret is on the last line ensure preview scrolled to bottom
+      var caretPosition = Discourse.Utilities.caretPosition(this.wmdInput[0]);
+      if (!this.wmdInput.val().substring(caretPosition).match(/\n/)) {
+        var $wmdPreview = $('#wmd-preview');
+        if ($wmdPreview.is(':visible')) {
+          $wmdPreview.scrollTop($wmdPreview[0].scrollHeight);
         }
       }
-    });
+    }
+  }, 30),
+
+  observeReplyChanges: function() {
+    if (this.get('model.hidePreview')) return;
+    Ember.run.scheduleOnce('afterRender', this, 'refreshPreview');
   }.observes('model.reply', 'model.hidePreview'),
 
   movePanels: function(sizePx) {
@@ -86,7 +88,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     });
   }.observes('model.composeState'),
 
-  keyUp: function(e) {
+  keyUp: function() {
     var controller = this.get('controller');
     controller.checkReplyLength();
 
@@ -119,7 +121,13 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   ensureMaximumDimensionForImagesInPreview: function() {
-    $('<style>#wmd-preview img, .cooked img {' +
+    // This enforce maximum dimensions of images in the preview according
+    // to the current site settings.
+    // For interactivity, we immediately insert the locally cooked version
+    // of the post into the stream when the user hits reply. We therefore also
+    // need to enforce these rules on the .cooked version.
+    // Meanwhile, the server is busy post-processing the post and generating thumbnails.
+    $('<style>#wmd-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {' +
       'max-width:' + Discourse.SiteSettings.max_image_width + 'px;' +
       'max-height:' + Discourse.SiteSettings.max_image_height + 'px;' +
       '}</style>'
@@ -131,7 +139,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   // Called after the preview renders. Debounced for performance
-  afterRender: Discourse.debounce(function() {
+  afterRender: function() {
     var $wmdPreview = $('#wmd-preview');
     if ($wmdPreview.length === 0) return;
 
@@ -156,7 +164,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     });
 
     this.trigger('previewRefreshed', $wmdPreview);
-  }, 100),
+  },
 
   initEditor: function() {
     // not quite right, need a callback to pass in, meaning this gets called once,
@@ -325,16 +333,17 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   imageSizes: function() {
     var result = {};
     $('#wmd-preview img').each(function(i, e) {
-      var $img = $(e);
-      result[$img.prop('src')] = {
-        width: $img.width(),
-        height: $img.height()
-      };
+      var $img = $(e),
+          src = $img.prop('src');
+
+      if (src && src.length) {
+        result[src] = { width: $img.width(), height: $img.height() };
+      }
     });
     return result;
   },
 
-  childDidInsertElement: function(e) {
+  childDidInsertElement: function() {
     return this.initEditor();
   },
 

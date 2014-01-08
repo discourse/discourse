@@ -18,8 +18,12 @@ class IncomingLink < ActiveRecord::Base
     end
 
     if request.referer.present?
-      host = URI.parse(request.referer).host
-      referer = request.referer[0..999]
+      begin
+        host = URI.parse(request.referer).host
+        referer = request.referer[0..999]
+      rescue URI::InvalidURIError
+        # bad uri, skip
+      end
     end
 
     if host != request.host && (user_id || referer)
@@ -102,7 +106,7 @@ end
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  user_id         :integer
-#  ip_address      :string
+#  ip_address      :inet
 #  current_user_id :integer
 #
 # Indexes
@@ -111,4 +115,3 @@ end
 #  index_incoming_links_on_created_at_and_domain   (created_at,domain)
 #  index_incoming_links_on_created_at_and_user_id  (created_at,user_id)
 #
-

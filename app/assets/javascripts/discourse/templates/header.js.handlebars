@@ -30,7 +30,7 @@
       {{#unless showExtraInfo}}
         <div class='current-username'>
           {{#if currentUser}}
-            <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.name}}</a></span>
+            <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.displayName}}</a></span>
           {{else}}
             <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/if}}
@@ -39,7 +39,7 @@
       <ul class='icons clearfix'>
         <li class='notifications'>
           {{#if currentUser}}
-            <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'><i class='icon-comment'></i></a>
+            <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'><i class='fa fa-comment'></i></a>
             {{#if currentUser.unread_notifications}}
               <a href='#' class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
             {{/if}}
@@ -47,20 +47,21 @@
               <a href='#' class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
           {{else}}
-            <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}'><i class='icon-comment'></i></a>
+            <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}'><i class='fa fa-comment'></i></a>
           {{/if}}
         </li>
         <li>
           {{#if Discourse.loginRequired}}
-            <a class='icon expand' href='#' {{action showLogin}}>
-              <i class='icon-search'></i>
+            <a id='search-button' class='icon expand' href='#' {{action showLogin}}>
+              <i class='fa fa-search'></i>
             </a>
           {{else}}
-            <a class='icon expand'
+            <a id='search-button'
+               class='icon expand'
                href='#'
                data-dropdown="search-dropdown"
                title='{{i18n search.title}}'>
-               <i class='icon-search'></i>
+               <i class='fa fa-search'></i>
             </a>
           {{/if}}
         </li>
@@ -69,7 +70,7 @@
             <a class='icon'
                href="#"
                {{action showLogin}}>
-               <i class='icon-reorder'></i>
+               <i class='fa fa-bars'></i>
             </a>
           {{else}}
             <a class='icon'
@@ -78,7 +79,7 @@
                href="#"
                title='{{i18n site_map}}'
                id="site-map">
-               <i class='icon-reorder'></i>
+               <i class='fa fa-bars'></i>
             </a>
           {{/if}}
           {{#if currentUser.site_flagged_posts_count}}
@@ -89,7 +90,7 @@
           {{#if currentUser}}
             {{#titledLinkTo 'userActivity.index' currentUser titleKey="current_user" class="icon"}}{{boundAvatar currentUser imageSize="medium" }}{{/titledLinkTo}}
           {{else}}
-            <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='icon-user'></i></div>
+            <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='fa fa-user'></i></div>
           {{/if}}
         </li>
       </ul>

@@ -57,7 +57,7 @@ module Jobs
       external_copy.close! if Discourse.store.external?
 
       # attach the avatar to the user
-      user.uploaded_avatar_template = Discourse.store.absolute_avatar_template(upload)
+      user.uploaded_avatar_template = Discourse.store.avatar_template(upload)
       user.save!
 
     end

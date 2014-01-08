@@ -1,6 +1,24 @@
 @import "common/foundation/variables";
 @import "common/foundation/mixins";
+@import "common/foundation/helpers";
 
+.gap {
+  background-color: #f9f9f9;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  color: #999;
+  cursor: pointer;
+  text-align: center;
+  width: 820px;
+
+  &:hover {
+    background-color: #eee;
+  }
+
+  @include medium-width {
+    width: 800px;
+  }
+}
 
 .container {
   @extend .clearfix;
@@ -333,7 +351,7 @@ a.star {
         border-bottom: 0;
         padding-bottom: 1px;
       }
-      .icon {
+      .fa {
         margin: 0;
         font-size: 18px;
         line-height: 52px;
@@ -380,13 +398,7 @@ span.post-count {
   .btn {
     margin-bottom: 5px;
     margin-right: 10px;
-    .icon-star {margin-right: 5px;}
-  }
-}
-
-article.boxed {
-  img, svg {
-    max-width: 100%;
+    .fa-star {margin-right: 5px;}
   }
 }
 
@@ -554,6 +566,10 @@ iframe {
   font-size: 36px;
 }
 
+.new-user a {
+  color: $dark_gray;
+}
+
 .staff a {
   padding: 4px;
   margin: -4px 0 0 0;
@@ -671,11 +687,13 @@ blockquote { /* solo quotes */
   position: relative;
   width: 720px;
   padding: 10px 10px 15px 20px;
-
-.highlighted {
-  background-color: lighten(yellow, 45%) !important;
-        }
-
+  .highlighted {
+    background-color: lighten(yellow, 45%) !important;
+  }
+  img, svg {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 
@@ -714,7 +732,6 @@ blockquote { /* solo quotes */
   }
   &.bottom .arrow {float: right; margin: 0 0 0 0;}
   &.top {margin-left: 112px;}
-  .topic-body img {max-width: 100%; height: auto;}
   .topic-body, .topic-meta-data {border: none;}
   .row {border-top: 1px solid #ddd; padding-top: 7px;}
   .reply:first-of-type .row {border-top: none;}

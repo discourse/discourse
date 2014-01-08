@@ -4,15 +4,15 @@
       <div>
         <a href='/users/{{unbound username}}'>{{avatar this imageSize="large"}}</a>
       </div>
-      <h5 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h5>
+      <h5 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{{breakUp username name}}}</a></h5>
     </div>
   </div>
   <div class='span11 topic-body'>
     <div class="topic-meta-data-inside">
       <div class='post-info post-date'>{{unboundAgeWithTooltip created_at}}</div>
-      {{#if view.parentView.previousPost}}<a href='{{unbound url}}' class="post-info arrow" title="{{i18n topic.jump_reply_up}}"><i class='icon icon-arrow-up'></i></a>{{/if}}
+      {{#if view.parentView.previousPost}}<a href='{{unbound url}}' class="post-info arrow" title="{{i18n topic.jump_reply_up}}"><i class='fa fa-arrow-up'></i></a>{{/if}}
     </div>
     {{{unbound cooked}}}
-    {{#unless view.parentView.previousPost}}<a href='{{unbound url}}' class="arrow" title="{{i18n topic.jump_reply_down}}"><i class='icon icon-arrow-down'></i></a>{{/unless}}
+    {{#unless view.parentView.previousPost}}<a href='{{unbound url}}' class="arrow" title="{{i18n topic.jump_reply_down}}"><i class='fa fa-arrow-down'></i></a>{{/unless}}
   </div>
 </div>

@@ -16,10 +16,16 @@ module ::Kernel
   def rails4?
     !ENV["RAILS3"]
   end
+
+  def rails_master?
+    rails4? && ENV["RAILS_MASTER"]
+  end
 end
 
 if rails4?
-  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_rails4.lock")
+  rails_version = rails_master? ? 'rails_master' : 'rails4'
+
+  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_#{rails_version}.lock")
 
   # Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
   class Bundler::Dsl
@@ -36,13 +42,19 @@ else
   puts "Booting in Rails 3 mode"
 end
 
-gem 'seed-fu' , github: 'SamSaffron/seed-fu'
+# see: https://github.com/mbleigh/seed-fu/pull/54
+# taking forever to get changes upstream in seed-fu
+gem 'seed-fu-discourse', require: 'seed-fu'
 
 if rails4?
-  gem 'rails'
-  gem 'redis-rails', :git => 'git://github.com/SamSaffron/redis-store.git'
+  if rails_master?
+    gem 'rails', git: 'https://github.com/rails/rails.git'
+    gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
+  else
+    gem 'rails'
+    gem 'actionpack-action_caching'
+  end
   gem 'rails-observers'
-  gem 'actionpack-action_caching'
 else
   # we had pain with the 3.2.13 upgrade so monkey patch the security fix
   # next time around we hope to upgrade
@@ -51,11 +63,11 @@ else
   # we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
   # REVIEW EVERY RELEASE
   gem 'sprockets', git: 'https://github.com/SamSaffron/sprockets.git', branch: 'rails-compat'
-  gem 'redis-rails'
   gem 'activerecord-postgres-hstore'
   gem 'active_attr'
 end
 
+#gem 'redis-rails'
 gem 'hiredis'
 gem 'redis', :require => ["redis", "redis/connection/hiredis"]
 
@@ -70,23 +82,25 @@ gem 'ember-source', '~> 1.2.0.1'
 gem 'handlebars-source', '~> 1.1.2'
 gem 'barber'
 
-gem 'vestal_versions', git: 'https://github.com/SamSaffron/vestal_versions'
-
-gem 'message_bus', git: 'https://github.com/SamSaffron/message_bus'
+gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
-gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
 gem 'redcarpet', require: false
 gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
 gem 'sidetiq', '>= 0.3.6'
 gem 'eventmachine'
 gem 'fast_xs'
-gem 'fast_xor', git: 'https://github.com/CodeMonkeySteve/fast_xor.git'
+
+gem 'fast_xor'
 gem 'fastimage'
 gem 'fog', '1.18.0', require: false
 gem 'unf', require: false
 
-gem 'email_reply_parser', git: 'https://github.com/lawrencepit/email_reply_parser.git'
+# see: https://twitter.com/samsaffron/status/412360162297393152
+# Massive amount of changes made in branch we use, no PR upstreamed
+# We need to get this sorted
+# https://github.com/samsaffron/email_reply_parser
+gem 'email_reply_parser-discourse', require: 'email_reply_parser'
 
 # note: for image_optim to correctly work you need
 # sudo apt-get install -y advancecomp gifsicle jpegoptim libjpeg-progs optipng pngcrush
@@ -104,11 +118,15 @@ gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-github'
 gem 'omniauth-oauth2', require: false
-gem 'omniauth-browserid', git: 'https://github.com/callahad/omniauth-browserid.git', branch: 'observer_api'
+# abandoned gem hard to tell what is going on, multiple PRs upstream being ignored:
+# https://twitter.com/samsaffron/status/412372111710109696
+# we use: gem 'omniauth-browserid', git: 'https://github.com/samsaffron/omniauth-browserid.git', branch: 'observer_api'
+gem 'omniauth-browserid-discourse', require: 'omniauth-browserid'
 gem 'omniauth-cas'
 gem 'omniauth-heroku'
 gem 'oj'
-gem 'pg'
+# while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4
+gem 'pg', '0.15.1'
 gem 'rake'
 
 
@@ -120,9 +138,10 @@ gem 'sidekiq', '2.15.1'
 gem 'sidekiq-failures'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
-gem 'therubyracer', require: 'v8'
+
+# URGENT fix needed see: https://github.com/cowboyd/therubyracer/pull/280
+gem 'therubyracer-discourse', require: 'v8'
 gem 'thin', require: false
-gem 'diffy', '>= 3.0', require: false
 gem 'highline', require: false
 gem 'rack-protection' # security
 
@@ -155,15 +174,14 @@ group :test, :development do
   gem 'rspec-given'
   gem 'pry-rails'
   gem 'pry-nav'
-  gem 'spork-rails', :github => 'sporkrb/spork-rails'
+  gem 'spork-rails'
 end
 
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'librarian', '>= 0.0.25', require: false
-  # https://github.com/ctran/annotate_models/pull/106
-  gem 'annotate', :git => 'https://github.com/SamSaffron/annotate_models.git'
+  gem 'annotate'
 end
 
 # Gem that enables support for plugins. It is required.
@@ -182,18 +200,24 @@ gem 'lru_redux'
 #  If you want to amend mini profiler to do the monkey patches in the railstie
 #  we are open to it. by deferring require to the initializer we can configure disourse installs without it
 
-gem 'flamegraph', git: 'https://github.com/SamSaffron/flamegraph.git', require: false
-gem 'rack-mini-profiler',  git: 'https://github.com/MiniProfiler/rack-mini-profiler.git', require: false
+gem 'flamegraph', require: false
+gem 'rack-mini-profiler', require: false
 
 # used for caching, optional
 gem 'rack-cors', require: false
 gem 'unicorn', require: false
 gem 'puma', require: false
+
 gem 'unicorn-worker-killer'
 gem 'font_assets'
 gem 'newrelic_rpm'
 gem 'honeybadger'
-gem 'rbtrace', require: false
+
+gem 'rbtrace', require: false, platform: :mri
+
+# required for feed importing and embedding
+gem 'ruby-readability', require: false
+gem 'simple-rss', require: false
 
 # perftools only works on 1.9 atm
 group :profile do

@@ -27,6 +27,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_filter :set_locale
   before_filter :set_mobile_view
   before_filter :sync_heroku_session, if: lambda{ |c| Rails.env.production? && request.format && request.format.html? }
   before_filter :inject_preview_style
@@ -36,7 +37,6 @@ class ApplicationController < ActionController::Base
   before_filter :store_incoming_links
   before_filter :preload_json
   before_filter :check_xhr
-  before_filter :set_locale
   before_filter :redirect_to_login_if_required
 
   rescue_from Exception do |exception|
@@ -170,7 +170,7 @@ class ApplicationController < ActionController::Base
   # Our custom cache method
   def discourse_expires_in(time_length)
     return unless can_cache_content?
-    Middleware::AnonymousCache.anon_cache(request.env, 1.minute)
+    Middleware::AnonymousCache.anon_cache(request.env, time_length)
   end
 
   def fetch_user_from_params
@@ -209,12 +209,20 @@ class ApplicationController < ActionController::Base
     def preload_anonymous_data
       store_preloaded("site", Site.cached_json(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
+      store_preloaded("customHTML", custom_html_json)
     end
 
     def preload_current_user_data
       store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
       serializer = ActiveModel::ArraySerializer.new(TopicTrackingState.report([current_user.id]), each_serializer: TopicTrackingStateSerializer)
       store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
+    end
+
+    def custom_html_json
+      MultiJson.dump({
+        top: SiteContent.content_for(:top),
+        bottom: SiteContent.content_for(:bottom),
+      })
     end
 
     def render_json_error(obj)

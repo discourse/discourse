@@ -55,12 +55,9 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.LoadMore, {
   },
 
   // When the topic list is scrolled
-  scrolled: function(e) {
+  scrolled: function() {
     this._super();
     this.saveScrollPosition();
   }
 
-
 });
-
-

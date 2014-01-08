@@ -15,7 +15,24 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
   accountChallenge: 0,
   formSubmitted: false,
   rejectedEmails: Em.A([]),
+  rejectedPasswords: Em.A([]),
   prefilledUsername: null,
+
+  resetForm: function() {
+    this.setProperties({
+      accountName: '',
+      accountEmail: '',
+      accountUsername: '',
+      accountPassword: '',
+      authOptions: null,
+      globalNicknameExists: false,
+      complete: false,
+      formSubmitted: false,
+      rejectedEmails: Em.A([]),
+      rejectedPasswords: Em.A([]),
+      prefilledUsername: null
+    });
+  },
 
   submitDisabled: function() {
     if (this.get('formSubmitted')) return true;
@@ -27,12 +44,15 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
   }.property('nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted'),
 
   passwordRequired: function() {
-    return this.blank('authOptions.auth_provider');
+    return (this.blank('authOptions.auth_provider') || this.blank('authOptions.email_valid') || !this.get('authOptions.email_valid'));
   }.property('authOptions.auth_provider'),
+
+  passwordInstructions: function() {
+    return I18n.t('user.password.instructions', {count: Discourse.SiteSettings.min_password_length});
+  }.property(),
 
   // Validate the name
   nameValidation: function() {
-
     // If blank, fail without a reason
     if (this.blank('accountName')) return Discourse.InputValidation.create({ failed: true });
 
@@ -95,6 +115,10 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
       reason: I18n.t('user.email.invalid')
     });
   }.property('accountEmail', 'rejectedEmails.@each'),
+
+  emailValidated: function() {
+    return this.get('authOptions.email') === this.get("accountEmail") && this.get('authOptions.email_valid');
+  }.property('accountEmail', 'authOptions.email', 'authOptions.email_valid'),
 
   prefillUsername: function() {
     if (this.get('prefilledUsername')) {
@@ -269,10 +293,17 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
     }
 
     // If too short
-    if (password.length < 6) {
+    if (password.length < Discourse.SiteSettings.min_password_length) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.password.too_short')
+      });
+    }
+
+    if (this.get('rejectedPasswords').contains(password)) {
+      return Discourse.InputValidation.create({
+        failed: true,
+        reason: I18n.t('user.password.common')
       });
     }
 
@@ -281,7 +312,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
       ok: true,
       reason: I18n.t('user.password.ok')
     });
-  }.property('accountPassword'),
+  }.property('accountPassword', 'rejectedPasswords.@each'),
 
   fetchConfirmationValue: function() {
     var createAccountController = this;
@@ -291,33 +322,37 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
     });
   },
 
-  createAccount: function() {
-    var createAccountController = this;
-    this.set('formSubmitted', true);
-    var name = this.get('accountName');
-    var email = this.get('accountEmail');
-    var password = this.get('accountPassword');
-    var username = this.get('accountUsername');
-    var passwordConfirm = this.get('accountPasswordConfirm');
-    var challenge = this.get('accountChallenge');
-    return Discourse.User.createAccount(name, email, password, username, passwordConfirm, challenge).then(function(result) {
-      if (result.success) {
-        createAccountController.flash(result.message);
-        createAccountController.set('complete', true);
-      } else {
-        createAccountController.flash(result.message || I18n.t('create_account.failed'), 'error');
-        if (result.errors && result.errors.email && result.values) {
-          createAccountController.get('rejectedEmails').pushObject(result.values.email);
+  actions: {
+    createAccount: function() {
+      var self = this;
+      this.set('formSubmitted', true);
+      var name = this.get('accountName');
+      var email = this.get('accountEmail');
+      var password = this.get('accountPassword');
+      var username = this.get('accountUsername');
+      var passwordConfirm = this.get('accountPasswordConfirm');
+      var challenge = this.get('accountChallenge');
+      return Discourse.User.createAccount(name, email, password, username, passwordConfirm, challenge).then(function(result) {
+        if (result.success) {
+          self.flash(result.message);
+          self.set('complete', true);
+        } else {
+          self.flash(result.message || I18n.t('create_account.failed'), 'error');
+          if (result.errors && result.errors.email && result.errors.email.length > 0 && result.values) {
+            self.get('rejectedEmails').pushObject(result.values.email);
+          }
+          if (result.errors && result.errors.password && result.errors.password.length > 0) {
+            self.get('rejectedPasswords').pushObject(password);
+          }
+          self.set('formSubmitted', false);
         }
-        createAccountController.set('formSubmitted', false);
-      }
-      if (result.active) {
-        return window.location.reload();
-      }
-    }, function() {
-      createAccountController.set('formSubmitted', false);
-      return createAccountController.flash(I18n.t('create_account.failed'), 'error');
-    });
+        if (result.active) {
+          return window.location.reload();
+        }
+      }, function() {
+        self.set('formSubmitted', false);
+        return self.flash(I18n.t('create_account.failed'), 'error');
+      });
+    }
   }
-
 });

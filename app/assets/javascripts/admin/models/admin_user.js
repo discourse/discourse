@@ -31,7 +31,7 @@ Discourse.AdminUser = Discourse.User.extend({
   **/
   revokeApiKey: function() {
     var self = this;
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/revoke_api_key", {type: 'DELETE'}).then(function (result) {
+    return Discourse.ajax("/admin/users/" + this.get('id') + "/revoke_api_key", {type: 'DELETE'}).then(function () {
       self.set('api_key', null);
     });
   },
@@ -48,10 +48,10 @@ Discourse.AdminUser = Discourse.User.extend({
         user.set('can_delete_all_posts', true);
       }
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t("admin.user.delete_all_posts"),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("admin.user.delete_all_posts"),
       "class": "btn btn-danger",
       "callback": function() {
-        Discourse.ajax("/admin/users/" + (user.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
+        Discourse.ajax("/admin/users/" + (user.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(){
           user.set('post_count', 0);
         });
       }
@@ -238,9 +238,13 @@ Discourse.AdminUser = Discourse.User.extend({
     return (!this.get('can_be_deleted') || this.get('post_count') > 0);
   }.property('post_count'),
 
-  deleteButtonTitle: function() {
+  deleteExplanation: function() {
     if (this.get('deleteForbidden')) {
-      return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_age});
+      if (this.get('staff')) {
+        return I18n.t('admin.user.delete_forbidden_because_staff');
+      } else {
+        return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_age});
+      }
     } else {
       return null;
     }
@@ -270,7 +274,7 @@ Discourse.AdminUser = Discourse.User.extend({
             user.mergeAttributes(data.user);
           }
         }
-      }, function(jqXHR, status, error) {
+      }, function() {
         Discourse.AdminUser.find( user.get('username') ).then(function(u){ user.mergeAttributes(u); });
         bootbox.alert(I18n.t("admin.user.delete_failed"));
       });
@@ -283,13 +287,13 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t('admin.user.delete_dont_block'),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_dont_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(false);
       }
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t('admin.user.delete_and_block'),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_and_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(true);
@@ -307,7 +311,7 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t("flagging.yes_delete_spammer"),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("flagging.yes_delete_spammer"),
       "class": "btn btn-danger",
       "callback": function() {
         Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
@@ -321,7 +325,7 @@ Discourse.AdminUser = Discourse.User.extend({
           } else {
             bootbox.alert(I18n.t("admin.user.delete_failed"));
           }
-        }, function(jqXHR, status, error) {
+        }, function() {
           bootbox.alert(I18n.t("admin.user.delete_failed"));
         });
       }

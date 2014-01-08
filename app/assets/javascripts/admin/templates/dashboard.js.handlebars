@@ -1,7 +1,7 @@
 <div class="dashboard-left">
   {{#if foundProblems}}
     <div class="dashboard-stats detected-problems">
-      <div class="look-here"><i class="icon icon-warning-sign"></i></div>
+      <div class="look-here"><i class="fa fa-exclamation-triangle"></i></div>
       <div class="problem-messages">
         <p {{bindAttr class="loadingProblems:invisible"}}>
           {{i18n admin.dashboard.problems_found}}
@@ -13,7 +13,7 @@
         </p>
         <p class="actions">
           <small>{{i18n admin.dashboard.last_checked}}: {{problemsTimestamp}}</small>
-          <button {{action refreshProblems}} class="btn btn-small"><i class="icon icon-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
+          <button {{action refreshProblems}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
         </p>
       </div>
       <div class="clearfix"></div>
@@ -25,7 +25,7 @@
         <div class="problem-messages">
           <p>
             {{i18n admin.dashboard.no_problems}}
-            <button {{action refreshProblems}} class="btn btn-small"><i class="icon icon-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
+            <button {{action refreshProblems}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
           </p>
         </div>
         <div class="clearfix"></div>
@@ -130,15 +130,15 @@
   <div class="dashboard-stats totals">
     <table>
       <tr>
-        <td class="title"><i class='icon icon-trophy'></i> {{i18n admin.dashboard.admins}}</td>
+        <td class="title"><i class='fa fa-trophy'></i> {{i18n admin.dashboard.admins}}</td>
         <td class="value">{{#link-to 'adminUsersList.admins'}}{{admins}}{{/link-to}}</td>
-        <td class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.suspended}}</td>
+        <td class="title"><i class='fa fa-ban'></i> {{i18n admin.dashboard.suspended}}</td>
         <td class="value">{{#link-to 'adminUsersList.suspended'}}{{suspended}}{{/link-to}}</td>
       </tr>
       <tr>
-        <td class="title"><i class='icon icon-magic'></i> {{i18n admin.dashboard.moderators}}</td>
+        <td class="title"><i class='fa fa-magic'></i> {{i18n admin.dashboard.moderators}}</td>
         <td class="value">{{#link-to 'adminUsersList.moderators'}}{{moderators}}{{/link-to}}</td>
-        <td class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.blocked}}</td>
+        <td class="title"><i class='fa fa-ban'></i> {{i18n admin.dashboard.blocked}}</td>
         <td class="value">{{#link-to 'adminUsersList.blocked'}}{{blocked}}{{/link-to}}</td>
       </tr>
     </table>
@@ -173,7 +173,7 @@
     <table class="table table-condensed table-hover">
       <thead>
         <tr>
-          <th class="title" title="{{i18n admin.dashboard.private_messages_title}}"><i class="icon icon-envelope"></i> {{i18n admin.dashboard.private_messages_short}}</th>
+          <th class="title" title="{{i18n admin.dashboard.private_messages_title}}"><i class="fa fa-envelope"></i> {{i18n admin.dashboard.private_messages_short}}</th>
           <th>{{i18n admin.dashboard.reports.today}}</th>
           <th>{{i18n admin.dashboard.reports.yesterday}}</th>
           <th>{{i18n admin.dashboard.reports.last_7_days}}</th>

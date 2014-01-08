@@ -3,6 +3,19 @@
 @import "common/foundation/mixins";
 
 .user-preferences {
+  input.category-group {
+    width: 500px;
+  }
+
+  .autocomplete .badge-category {
+    margin: 2px;
+    font-weight: normal;
+  }
+
+  .autocomplete .badge-category.selected {
+    font-weight: bold;
+  }
+
   textarea {
     width: 530px;
     height: 100px;
@@ -301,6 +314,10 @@
       margin-bottom: 4px;
       font-size: 14px;
     }
+    .edit-reason {
+      background-color: #ffffcc;
+      padding: 3px 5px 5px 5px;
+    }
   }
 }
 
@@ -310,7 +327,7 @@
   .avatar-link {
     float: none;
   }
-  .icon {
+  .fa {
     width: 15px;
     display: inline-block;
     color: #777;

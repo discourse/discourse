@@ -394,5 +394,17 @@ describe PostCreator do
       creator.errors.should be_nil
     end
   end
+
+  describe "word_count" do
+    it "has a word count" do
+      creator = PostCreator.new(user, title: 'some inspired poetry for a rainy day', raw: 'mary had a little lamb, little lamb, little lamb. mary had a little lamb')
+      post = creator.create
+      post.word_count.should == 14
+
+      post.topic.reload
+      post.topic.word_count.should == 14
+    end
+  end
+
 end
 

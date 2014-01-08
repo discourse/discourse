@@ -168,31 +168,25 @@ Configure Discourse:
 
     # Run these commands as the discourse user
     cd /var/www/discourse/config
-    cp database.yml.production-sample database.yml
-    cp redis.yml.sample redis.yml
+    cp discourse_quickstart.conf discourse.conf
     cp discourse.pill.sample discourse.pill
-    cp environments/production.rb.sample environments/production.rb
 
-Edit /var/www/discourse/config/database.yml
+Editing /var/www/discourse/config/discourse.conf:
 
-- change production database name if appropriate
+Database/Hostname:
 - change database username/password if appropriate
-- if you are hosting multiple Discourse forums on the same server (multisite), set `db_id`
-- change `host_names` to the name you'll use to access the discourse site, e.g. "forum.example.com"
+- change `hostname` to the name you'll use to access the discourse site, e.g. "forum.example.com"
 
-Edit /var/www/discourse/config/redis.yml
-
+Redis:
 - no changes if this is the only application using redis, but have a look
 
-Edit /var/www/discourse/config/discourse.pill
+E-mail:
+- browse through all the settings and be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))
+- If your users will come from "internal" [private unroutable IPs](https://en.wikipedia.org/wiki/Private_network) like 10.x.x.x or 192.168.x.x please [see this topic](http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607).
 
+Editing: /var/www/discourse/config/discourse.pill
 - change application name from 'discourse' if necessary
 - Ensure appropriate Bluepill.application line is uncommented
-
-Edit /var/www/discourse/config/environments/production.rb
-- browse througn all the settings
-- be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))
-- If your users will come from "internal" [private unroutable IPs](https://en.wikipedia.org/wiki/Private_network) like 10.x.x.x or 192.168.x.x please [see this topic](http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607).
 
 Initialize the database:
 
@@ -349,9 +343,7 @@ Check the sample configuration files provided in the repo with the ones being us
 
     # Run these commands as the discourse user
     cd /var/www/discourse
-    diff -u config/discourse.pill.sample config/discourse.pill
-    diff -u config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
-    diff -u config/environments/production.rb.sample config/environments/production.rb
+    diff -u config/discourse_defaults.conf config/discourse.conf
 
 #### Example 1
 

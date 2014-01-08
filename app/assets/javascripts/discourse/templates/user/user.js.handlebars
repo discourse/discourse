@@ -10,24 +10,24 @@
         {{/each}}
       </ul>
 
-      {{#if viewingSelf}}
-        <h3><i class='icon icon-envelope'></i> {{i18n user.private_messages}}</h3>
+      {{#if canSeePrivateMessages}}
+        <h3><i class='fa fa-envelope'></i> {{i18n user.private_messages}}</h3>
         <ul class='action-list nav-stacked'>
           <li {{bindAttr class=":noGlyph privateMessagesActive:active"}}>
-            {{#link-to 'userPrivateMessages.index' model}}{{i18n user.messages.all}}<span class='icon-chevron-right'></span>{{/link-to}}
+            {{#link-to 'userPrivateMessages.index' model}}{{i18n user.messages.all}}<span class='fa fa-chevron-right'></span>{{/link-to}}
           </li>
           <li {{bindAttr class=":noGlyph privateMessagesMineActive:active"}}>
-            {{#link-to 'userPrivateMessages.mine' model}}{{i18n user.messages.mine}}<span class='icon-chevron-right'></span>{{/link-to}}
+            {{#link-to 'userPrivateMessages.mine' model}}{{i18n user.messages.mine}}<span class='fa fa-chevron-right'></span>{{/link-to}}
           </li>
           <li {{bindAttr class=":noGlyph privateMessagesUnreadActive:active"}}>
-            {{#link-to 'userPrivateMessages.unread' model}}{{i18n user.messages.unread}}<span class='icon-chevron-right'></span>{{/link-to}}
+            {{#link-to 'userPrivateMessages.unread' model}}{{i18n user.messages.unread}}<span class='fa fa-chevron-right'></span>{{/link-to}}
           </li>
         </ul>
       {{/if}}
 
       {{#if can_edit}}
         <div style='margin-top: 10px'>
-          <button class='btn' data-not-implemented='true' disabled title="{{i18n not_implemented}}"><i class='icon icon-download-alt'></i>{{i18n user.download_archive}}</button>
+          <button class='btn' data-not-implemented='true' disabled title="{{i18n not_implemented}}"><i class='fa fa-download'></i>{{i18n user.download_archive}}</button>
         </div>
       {{/if}}
     </section>
@@ -41,11 +41,11 @@
           <h1>{{username}} {{{statusIcon}}}</h1>
           <h2>{{name}}</h2>
 
-          <div class='bio'>{{{bio_excerpt}}}</div>
+          <div class='bio'>{{{bio_cooked}}}</div>
 
           {{#if isSuspended}}
             <div class='suspended'>
-              <i class='icon icon-ban-circle'></i>
+              <i class='fa fa-ban'></i>
               <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
               <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
             </div>
@@ -82,24 +82,24 @@
         <section class='controls'>
           {{#if can_send_private_message_to_user}}
             <button class='btn btn-primary' {{action composePrivateMessage}}>
-              <i class='icon icon-envelope'></i>
+              <i class='fa fa-envelope'></i>
               {{i18n user.private_message}}
             </button>
           {{/if}}
 
           {{#if viewingSelf}}
-            <button {{action "logout"}} class='btn btn-danger right'><i class='icon icon-signout'></i>{{i18n user.log_out}}</button>
+            <button {{action "logout"}} class='btn btn-danger right'><i class='fa fa-sign-out'></i>{{i18n user.log_out}}</button>
           {{/if}}
 
           {{#if currentUser.staff}}
-            <a {{bindAttr href="adminPath"}} class='btn right'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
+            <a {{bindAttr href="adminPath"}} class='btn right'><i class="fa fa-wrench"></i>{{i18n admin.user.show_admin_profile}}</a>
           {{/if}}
 
           {{#if can_edit}}
-            {{#link-to 'preferences' class="btn right"}}<i class='icon icon-cog'></i>{{i18n user.preferences}}{{/link-to}}
+            {{#link-to 'preferences' class="btn right"}}<i class='fa fa-cog'></i>{{i18n user.preferences}}{{/link-to}}
           {{/if}}
 
-          {{#link-to 'user.invited' class="btn right"}}<i class='icon icon-envelope-alt'></i>{{i18n user.invited.title}}{{/link-to}}
+          {{#link-to 'user.invited' class="btn right"}}<i class='fa fa-envelope-o'></i>{{i18n user.invited.title}}{{/link-to}}
 
         </section>
       </section>

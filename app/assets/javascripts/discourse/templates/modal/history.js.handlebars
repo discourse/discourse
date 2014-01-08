@@ -1,48 +1,28 @@
 <div class="modal-body">
-
   {{#if loading}}
     {{i18n loading}}
   {{else}}
-    {{#if versions}}
-      <div class='span8'>
-
-        {{view Ember.Select
-          contentBinding="versions"
-          optionLabelPath="content.description"
-          optionValuePath="content.number"
-          selectionBinding="versionLeft"}}
-
-        <div class='contents'>
-          {{#if postLeft}}
-            {{{postLeft.cooked}}}
-          {{else}}
-            <div class='history-loading'>{{i18n loading}}</div>
-          {{/if}}
-        </div>
-
+    <div>
+      <div id="revision-controls">
+        <button class="btn standard" title="{{i18n post.revisions.controls.first}}" {{action loadFirstVersion}} {{bindAttr disabled=isFirstVersion}}><i class="fa fa-fast-backward"></i></button>
+        <button class="btn standard" title="{{i18n post.revisions.controls.previous}}" {{action loadPreviousVersion}} {{bindAttr disabled=isFirstVersion}}><i class="fa fa-backward"></i></button>
+        {{{i18n post.revisions.controls.comparing_previous_to_current_out_of_total previous=previousVersionNumber current=currentVersionNumber total=revisions_count}}}
+        <button class="btn standard" title="{{i18n post.revisions.controls.next}}" {{action loadNextVersion}} {{bindAttr disabled=isLastVersion}}><i class="fa fa-forward"></i></button>
+        <button class="btn standard" title="{{i18n post.revisions.controls.last}}" {{action loadLastVersion}} {{bindAttr disabled=isLastVersion}}><i class="fa fa-fast-forward"></i></button>
       </div>
-
-      <div class='span8 offset1'>
-        {{view Ember.Select
-          contentBinding="versions"
-          optionLabelPath="content.description"
-          optionValuePath="content.number"
-          selectionBinding="versionRight"}}
-
-        {{#if postRight.edit_reason}}
-          <p><strong>{{i18n post.edit_reason}}</strong>{{postRight.edit_reason}}</p>
-        {{/if}}
-
-        <div class='contents'>
-          {{#if diff}}
-            {{{diff}}}
-          {{else}}
-            <div class='history-loading'>{{i18n loading}}</div>
-          {{/if}}
-        </div>
-
+      <div id="display-modes">
+        <button {{bindAttr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n post.revisions.displays.inline.title}}" {{action displayInline}}>{{{i18n post.revisions.displays.inline.button}}}</button>
+        {{#unless Discourse.Mobile.mobileView}}
+          <button {{bindAttr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side.title}}" {{action displaySideBySide}}>{{{i18n post.revisions.displays.side_by_side.button}}}</button>
+          <button {{bindAttr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side_markdown.title}}" {{action displaySideBySideMarkdown}}>{{{i18n post.revisions.displays.side_by_side_markdown.button}}}</button>
+        {{/unless}}
       </div>
-    {{/if}}
+    </div>
+    <div id="revision-details">
+      {{i18n post.revisions.details.edited_by}} {{avatar this imageSize="small"}} {{username}} <span class="date">{{date path="created_at" leaveAgo="true"}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
+    </div>
+    <div id="revisions">
+      {{{diff}}}
+    </div>
   {{/if}}
-
 </div>

@@ -19,8 +19,8 @@ describe PostRevisor do
         subject.revise!(post.user, post.raw).should be_false
       end
 
-      it "doesn't change cached_version" do
-        lambda { subject.revise!(post.user, post.raw); post.reload }.should_not change(post, :cached_version)
+      it "doesn't change version" do
+        lambda { subject.revise!(post.user, post.raw); post.reload }.should_not change(post, :version)
       end
 
     end
@@ -32,12 +32,12 @@ describe PostRevisor do
         post.reload
       end
 
-      it 'does not update cached_version' do
-        post.cached_version.should == 1
+      it 'does not update version' do
+        post.version.should == 1
       end
 
-      it 'does not create a new version' do
-        post.all_versions.size.should == 1
+      it 'does not create a new revision' do
+        post.revisions.size.should == 0
       end
 
       it "doesn't change the last_version_at" do
@@ -64,12 +64,12 @@ describe PostRevisor do
         subject.category_changed.should be_blank
       end
 
-      it 'updates the cached_version' do
-        post.cached_version.should == 2
+      it 'updates the version' do
+        post.version.should == 2
       end
 
       it 'creates a new version' do
-        post.all_versions.size.should == 2
+        post.revisions.size.should == 1
       end
 
       it "updates the last_version_at" do
@@ -84,7 +84,7 @@ describe PostRevisor do
         end
 
         it "doesn't create a new version if you do another" do
-          post.cached_version.should == 2
+          post.version.should == 2
         end
 
         it "doesn't change last_version_at" do
@@ -105,7 +105,7 @@ describe PostRevisor do
           end
 
           it "does create a new version after the edit window" do
-            post.cached_version.should == 3
+            post.version.should == 3
           end
 
           it "does create a new version after the edit window" do
@@ -199,7 +199,7 @@ describe PostRevisor do
       end
 
       it "marks the admin as the last updater" do
-        post.updated_by.should == changed_by
+        post.last_editor_id.should == changed_by.id
       end
 
     end
@@ -222,34 +222,36 @@ describe PostRevisor do
 
     describe 'with a new body' do
       let(:changed_by) { Fabricate(:coding_horror) }
-      let!(:result) { subject.revise!(changed_by, 'updated body') }
+      let!(:result) { subject.revise!(changed_by, "lets update the body") }
 
       it 'returns true' do
         result.should be_true
       end
 
       it 'updates the body' do
-        post.raw.should == 'updated body'
+        post.raw.should == "lets update the body"
       end
 
       it 'sets the invalidate oneboxes attribute' do
         post.invalidate_oneboxes.should == true
       end
 
-      it 'increased the cached_version' do
-        post.cached_version.should == 2
+      it 'increased the version' do
+        post.version.should == 2
       end
 
-      it 'has the new version in all_versions' do
-        post.all_versions.size.should == 2
+      it 'has the new revision' do
+        post.revisions.size.should == 1
       end
 
-      it 'has versions' do
-        post.versions.should be_present
+      it "saved the user who made the change in the revisions" do
+        post.revisions.first.user_id.should == changed_by.id
       end
 
-      it "saved the user who made the change in the version" do
-        post.versions.first.user.should be_present
+      it "updates the word count" do
+        post.word_count.should == 4
+        post.topic.reload
+        post.topic.word_count.should == 4
       end
 
       context 'second poster posts again quickly' do
@@ -260,11 +262,11 @@ describe PostRevisor do
         end
 
         it 'is a ninja edit, because the second poster posted again quickly' do
-          post.cached_version.should == 2
+          post.version.should == 2
         end
 
         it 'is a ninja edit, because the second poster posted again quickly' do
-          post.all_versions.size.should == 2
+          post.revisions.size.should == 1
         end
       end
     end

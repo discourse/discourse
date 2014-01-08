@@ -1,10 +1,10 @@
 <li>
-{{category-drop category=firstCategory categories=parentCategories}}
+  {{category-drop category=firstCategory categories=parentCategories}}
 </li>
 
 {{#if childCategories}}
   <li>
-    {{category-drop category=secondCategory parentCategory=firstCategory categories=childCategories subCategory="true"}}
+    {{category-drop category=secondCategory parentCategory=firstCategory categories=childCategories subCategory="true" noSubcategories=noSubcategories}}
   </li>
 {{/if}}
 

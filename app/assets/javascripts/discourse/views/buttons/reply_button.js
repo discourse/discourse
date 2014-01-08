@@ -21,7 +21,7 @@ Discourse.ReplyButton = Discourse.ButtonView.extend({
   }.property(),
 
   renderIcon: function(buffer) {
-    buffer.push("<i class='icon icon-plus'></i>");
+    buffer.push("<i class='fa fa-plus'></i>");
   },
 
   click: function() {

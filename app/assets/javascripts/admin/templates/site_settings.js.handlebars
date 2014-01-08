@@ -7,6 +7,7 @@
   </div>
   <div class='controls'>
     {{textField value=filter placeholderKey="type_to_filter"}}
+    <button {{action clearFilter}} class="btn">{{i18n admin.site_settings.clear_filter}}</button>
   </div>
 </div>
 
@@ -19,7 +20,7 @@
           {{#if filtered}}
             <span class="count">({{category.siteSettings.length}})</span>
           {{/if}}
-          <span class='icon-chevron-right'></span>
+          <span class='fa fa-chevron-right'></span>
         {{/link-to}}
       </li>
     {{/each}}

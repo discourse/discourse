@@ -7,6 +7,7 @@ class ComposerMessagesFinder
 
   def find
     check_education_message ||
+    check_new_user_many_replies ||
     check_avatar_notification ||
     check_sequential_replies ||
     check_dominating_topic
@@ -30,6 +31,12 @@ class ComposerMessagesFinder
     end
 
     nil
+  end
+
+  # New users have a limited number of replies in a topic
+  def check_new_user_many_replies
+    return unless replying? && @user.posted_too_much_in_topic?(@details[:topic_id])
+    {templateName: 'composer/education', body: PrettyText.cook(I18n.t('education.too_many_replies', newuser_max_replies_per_topic: SiteSetting.newuser_max_replies_per_topic)) }
   end
 
   # Should a user be contacted to update their avatar?

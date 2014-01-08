@@ -33,8 +33,22 @@ describe UrlHelper do
       helper.absolute("http://www.discourse.org").should == "http://www.discourse.org"
     end
 
-    it "changes a relative url to an absolute one" do
+    it "changes a relative url to an absolute one using base url by default" do
       helper.absolute("/path/to/file").should == "http://test.localhost/path/to/file"
+    end
+
+    it "changes a relative url to an absolute one using the cdn when enabled" do
+      Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
+      helper.absolute("/path/to/file").should == "http://my.cdn.com/path/to/file"
+    end
+
+  end
+
+  describe "#absolute_without_cdn" do
+
+    it "changes a relative url to an absolute one using base url even when cdn is enabled" do
+      Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
+      helper.absolute_without_cdn("/path/to/file").should == "http://test.localhost/path/to/file"
     end
 
   end

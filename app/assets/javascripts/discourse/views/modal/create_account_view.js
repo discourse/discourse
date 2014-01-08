@@ -9,8 +9,9 @@
 Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
   templateName: 'modal/create_account',
   title: I18n.t('create_account.title'),
+  classNames: ['create-account'],
 
-  didInsertElement: function(e) {
+  didInsertElement: function() {
 
     this._super();
 
@@ -20,7 +21,7 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
     Em.run.schedule('afterRender', function() {
       $("input[type='text'], input[type='password']").keydown(function(e) {
         if (createAccountController.get('submitDisabled') === false && e.keyCode === 13) {
-          createAccountController.createAccount();
+          createAccountController.send('createAccount');
         }
       });
     });

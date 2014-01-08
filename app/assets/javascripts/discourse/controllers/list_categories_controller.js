@@ -15,21 +15,6 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
     }
   },
 
-  categoriesEven: function() {
-    if (this.blank('categories')) return Em.A();
-
-    return this.get('categories').filter(function(item, index) {
-      return (index % 2) === 0;
-    });
-  }.property('categories.@each'),
-
-  categoriesOdd: function() {
-    if (this.blank('categories')) return Em.A();
-    return this.get('categories').filter(function(item, index) {
-      return (index % 2) === 1;
-    });
-  }.property('categories.@each'),
-
   canEdit: function() {
     return Discourse.User.currentProp('staff');
   }.property(),
@@ -41,7 +26,11 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
 
   moveCategory: function(categoryId, position){
     this.get('model.categories').moveCategory(categoryId, position);
-  }
+  },
+
+  latestTopicOnly: function() {
+    return this.get('categories').find(function(c) { return c.get('featuredTopics.length') > 1; }) === undefined;
+  }.property('categories.featuredTopics.length')
 
 });
 

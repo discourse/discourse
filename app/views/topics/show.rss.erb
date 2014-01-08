@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
+    <% topic_url = Discourse.base_url + @topic_view.relative_url %>
+    <% lang = SiteSetting.find_by_name('default_locale').try(:value) %>
+    <% site_email = SiteSetting.find_by_name('contact_email').try(:value) %>
     <title><%= @topic_view.title %></title>
-    <link><%= Discourse.base_url %><%= @topic_view.relative_url %></link>
+    <link><%= topic_url %></link>
     <description><%= @topic_view.posts.first.raw %></description>
-    <atom:link href="<%= Discourse.base_url %><%= @topic_view.relative_url %>.rss" rel="self" type="application/rss+xml" />
+    <%= "<language>#{lang}</language>" if lang %>
+    <lastBuildDate><%= @topic_view.topic.created_at.rfc2822 %></lastBuildDate>
+    <category><%= @topic_view.topic.category.name %></category>
+    <atom:link href="<%= topic_url %>.rss" rel="self" type="application/rss+xml" />
     <% @topic_view.recent_posts.each do |post| %>
-      <% if post.user %>
-        <item>
-          <title><%= @topic_view.title %> at <%= post.created_at %></title>
-          <description><![CDATA[
-            <p><%= post.author_readable %> wrote:</p>
+      <% next unless post.user %>
+      <item>
+        <title><%= @topic_view.title %></title>
+        <author><%= "#{site_email} (@#{post.user.username}#{" #{post.user.name}" if post.user.name.present?})" -%></author>
+        <description><![CDATA[
+          <% post_url = Discourse.base_url + post.url %>
+          <p><%= t('author_wrote', author: link_to(post.user.name, userpage_url(post.user))).html_safe %></p>
+          <blockquote>
             <%= post.cooked.html_safe %>
-          ]]></description>
-          <link><%= Discourse.base_url %><%= post.url %></link>
-          <pubDate><%= post.created_at.rfc2822 %></pubDate>
-          <guid><%= Discourse.base_url %><%= post.url %></guid>
-          <source url="<%= Discourse.base_url %><%= @topic_view.relative_url %>.rss"><%= @topic_view.title %></source>
-        </item>
-      <% end %>
+          </blockquote>
+          <p><%= link_to t('read_full_topic'), post_url %></p>
+        ]]></description>
+        <link><%= post_url %></link>
+        <pubDate><%= post.created_at.rfc2822 %></pubDate>
+        <guid><%= post_url %></guid>
+        <source url="<%= Discourse.base_url %><%= @topic_view.relative_url %>.rss"><%= @topic_view.title %></source>
+      </item>
     <% end %>
   </channel>
 </rss>

@@ -32,6 +32,10 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
     p {
       margin-left: 6px;
     }
+
+    .ace-wrapper {
+      height: 400px;
+    }
   }
 
   table.report {
@@ -143,6 +147,10 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
   label {
     display: inline-block;
     margin-right: 5px;
+  }
+  .btn {
+    background: darken(#e8e8e8, 5%);
+    &:hover { background: #aaa; }
   }
 }
 
@@ -367,7 +375,7 @@ table {
     width: 740px;
     padding: 0 10px 10px 0;
     word-wrap: break-word;
-    .icon,h3 { display: inline-block; }
+    .fa,h3 { display: inline-block; }
 
   }
   .flaggers {
@@ -421,7 +429,7 @@ table {
     width: 20px;
   }
 
-  .version-notes .icon {
+  .version-notes .fa {
     vertical-align: bottom;
   }
 
@@ -432,7 +440,7 @@ table {
     display: none;
   }
 
-  .icon {
+  .fa {
     font-size: 26px;
   }
 
@@ -448,7 +456,7 @@ table {
 }
 
 .update-nag {
-  i.icon {
+  i.fa {
     font-size: 20px;
   }
 }
@@ -485,7 +493,7 @@ table.api-keys {
     width: 100%;
 
     .title {
-      i.icon {
+      i.fa {
         color: #444;
       }
     }
@@ -548,7 +556,7 @@ table.api-keys {
       float: left;
       margin: 20px 20px 0 20px;
 
-      .icon {
+      .fa {
         font-size: 32px;
         vertical-align: middle;
         color: $darkish_gray;
@@ -806,7 +814,7 @@ table.api-keys {
   }
   .btn {
     padding: 2px 8px;
-    .icon {
+    .fa {
       margin-right: 2px;
     }
   }

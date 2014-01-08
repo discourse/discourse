@@ -36,6 +36,20 @@ Discourse.User = Discourse.Model.extend({
   }.property('username_lower'),
 
   /**
+    This user's display name. Returns the name if possible, otherwise returns the
+    username.
+
+    @property displayName
+    @type {String}
+  **/
+  displayName: function() {
+    if (Discourse.SiteSettings.enable_names && !this.blank('name')) {
+      return this.get('name');
+    }
+    return this.get('username');
+  }.property('username', 'name'),
+
+  /**
     This user's website.
 
     @property websiteName
@@ -52,11 +66,11 @@ Discourse.User = Discourse.Model.extend({
     var desc;
     if(this.get('admin')) {
       desc = I18n.t('user.admin', {user: this.get("name")});
-      return '<i class="icon icon-trophy" title="' + desc +  '" alt="' + desc + '"></i>';
+      return '<i class="fa fa-trophy" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     if(this.get('moderator')){
       desc = I18n.t('user.moderator', {user: this.get("name")});
-      return '<i class="icon icon-magic" title="' + desc +  '" alt="' + desc + '"></i>';
+      return '<i class="fa fa-magic" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     return null;
   }.property('admin','moderator'),
@@ -153,8 +167,7 @@ Discourse.User = Discourse.Model.extend({
   **/
   save: function() {
     var user = this;
-    return Discourse.ajax("/users/" + this.get('username_lower'), {
-      data: this.getProperties('auto_track_topics_after_msecs',
+    var data = this.getProperties('auto_track_topics_after_msecs',
                                'bio_raw',
                                'website',
                                'name',
@@ -166,7 +179,18 @@ Discourse.User = Discourse.Model.extend({
                                'digest_after_days',
                                'new_topic_duration_minutes',
                                'external_links_in_new_tab',
-                               'enable_quoting'),
+                               'watch_new_topics',
+                               'enable_quoting');
+
+    _.each(['muted','watched','tracked'], function(s){
+      var cats = user.get(s + 'Categories').map(function(c){ return c.get('id')});
+      // HACK: denote lack of categories
+      if(cats.length === 0) { cats = [-1]; }
+      data[s + '_category_ids'] = cats;
+    });
+
+    return Discourse.ajax("/users/" + this.get('username_lower'), {
+      data: data,
       type: 'PUT'
     }).then(function(data) {
       user.set('bio_excerpt',data.user.bio_excerpt);
@@ -313,7 +337,41 @@ Discourse.User = Discourse.Model.extend({
       type: 'POST',
       data: {email: email}
     });
-  }
+  },
+
+  hasBeenSeenInTheLastMonth: function() {
+    return moment().diff(moment(this.get('last_seen_at')), 'month', true) < 1.0;
+  }.property("last_seen_at"),
+
+  /**
+    Homepage of the user
+
+    @property homepage
+    @type {String}
+  **/
+  homepage: function() {
+    // top is the default for:
+    //   - new users
+    //   - long-time-no-see user (ie. > 1 month)
+    if (Discourse.SiteSettings.top_menu.indexOf("top") >= 0) {
+      if (this.get("trust_level") === 0 || !this.get("hasBeenSeenInTheLastMonth")) {
+        return "top";
+      }
+    }
+    return Discourse.Utilities.defaultHomepage();
+  }.property("trust_level", "hasBeenSeenInTheLastMonth"),
+
+  updateMutedCategories: function() {
+    this.set("mutedCategories", Discourse.Category.findByIds(this.muted_category_ids));
+  }.observes("muted_category_ids"),
+
+  updateTrackedCategories: function() {
+    this.set("trackedCategories", Discourse.Category.findByIds(this.tracked_category_ids));
+  }.observes("tracked_category_ids"),
+
+  updateWatchedCategories: function() {
+    this.set("watchedCategories", Discourse.Category.findByIds(this.watched_category_ids));
+  }.observes("watched_category_ids")
 
 });
 

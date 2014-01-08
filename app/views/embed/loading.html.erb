@@ -1,0 +1,12 @@
+<header>
+  <%= t 'embed.loading' %>
+  <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url) %>
+</header>
+
+<script>
+  (function() {
+    setTimeout(function() {
+      document.location.reload();
+    }, 30000);
+  })();
+</script>

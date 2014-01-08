@@ -1,6 +1,3 @@
-/*jshint newcap:false*/
-/*global diff_match_patch:true assetPath:true*/
-
 /**
   This controller handles displaying of history
 
@@ -11,79 +8,46 @@
   @module Discourse
 **/
 Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
-  diffLibraryLoaded: false,
-  diff: null,
+  loading: false,
+  viewMode: "side_by_side",
 
-  init: function(){
-    this._super();
-    var historyController = this;
-    $LAB.script(assetPath('defer/google_diff_match_patch')).wait(function(){
-      historyController.set('diffLibraryLoaded', true);
-    });
-  },
-
-  loadSide: function(side) {
-    if (this.get("version" + side)) {
-      var orig = this.get('model');
-      var version = this.get("version" + side + ".number");
-      if (version === orig.get('version')) {
-        this.set("post" + side, orig);
-      } else {
-        var historyController = this;
-        Discourse.Post.loadVersion(orig.get('id'), version).then(function(post) {
-          historyController.set("post" + side, post);
-        });
-      }
-    }
-  },
-
-  changedLeftVersion: function() {
-    this.loadSide("Left");
-  }.observes('versionLeft'),
-
-  changedRightVersion: function() {
-    this.loadSide("Right");
-  }.observes('versionRight'),
-
-  loadedPosts: function() {
-    if (this.get('diffLibraryLoaded') && this.get('postLeft') && this.get('postRight')) {
-      var dmp = new diff_match_patch(),
-          before = this.get("postLeft.cooked"),
-          after = this.get("postRight.cooked"),
-          diff = dmp.diff_main(before, after);
-      dmp.diff_cleanupSemantic(diff);
-      this.set('diff', dmp.diff_prettyHtml(diff));
-    }
-  }.observes('diffLibraryLoaded', 'postLeft', 'postRight'),
-
-  refresh: function() {
+  refresh: function(postId, postVersion) {
     this.setProperties({
       loading: true,
-      postLeft: null,
-      postRight: null
+      viewMode: Discourse.Mobile.mobileView ? "inline" : "side_by_side"
     });
 
-    var historyController = this;
-    this.get('model').loadVersions().then(function(result) {
-      _.each(result,function(item) {
-
-        var age = Discourse.Formatter.relativeAge(new Date(item.created_at), {
-          format: 'medium',
-          leaveAgo: true,
-          wrapInSpan: false});
-
-        item.description = "v" + item.number + " - " + age + " - " + I18n.t("changed_by", { author: item.display_username });
-      });
-
-      historyController.setProperties({
+    var self = this;
+    Discourse.Post.loadRevision(postId, postVersion).then(function (result) {
+      self.setProperties({
         loading: false,
-        versionLeft: result[0],
-        versionRight: result[result.length-1],
-        versions: result
+        model: result
       });
     });
+  },
+
+  createdAtDate: function() { return moment(this.get("created_at")).format("LLLL"); }.property("created_at"),
+
+  previousVersionNumber: function() { return this.get("version") - 1; }.property("version"),
+  currentVersionNumber: Em.computed.alias("version"),
+
+  isFirstVersion: Em.computed.equal("version", 2),
+  isLastVersion: Discourse.computed.propertyEqual("version", "revisions_count"),
+
+  displayingInline: Em.computed.equal("viewMode", "inline"),
+  displayingSideBySide: Em.computed.equal("viewMode", "side_by_side"),
+  displayingSideBySideMarkdown: Em.computed.equal("viewMode", "side_by_side_markdown"),
+
+  diff: function() { return this.get(this.get("viewMode")); }.property("inline", "side_by_side", "side_by_side_markdown", "viewMode"),
+
+  actions: {
+    loadFirstVersion: function() { this.refresh(this.get("post_id"), 2); },
+    loadPreviousVersion: function() { this.refresh(this.get("post_id"), this.get("version") - 1); },
+    loadNextVersion: function() { this.refresh(this.get("post_id"), this.get("version") + 1); },
+    loadLastVersion: function() { this.refresh(this.get("post_id"), this.get("revisions_count")); },
+
+    displayInline: function() { this.set("viewMode", "inline"); },
+    displaySideBySide: function() { this.set("viewMode", "side_by_side"); },
+    displaySideBySideMarkdown: function() { this.set("viewMode", "side_by_side_markdown"); }
   }
-
 });
-
-

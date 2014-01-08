@@ -7,6 +7,7 @@
   @module Discourse
 **/
 Discourse.FavoriteButton = Discourse.ButtonView.extend({
+  classNames: ['favorite'],
   textKey: 'favorite.title',
   helpKeyBinding: 'controller.favoriteTooltipKey',
   attributeBindings: ['disabled'],
@@ -18,7 +19,7 @@ Discourse.FavoriteButton = Discourse.ButtonView.extend({
   },
 
   renderIcon: function(buffer) {
-    buffer.push("<i class='icon-star " +
+    buffer.push("<i class='fa fa-star " +
                  (this.get('controller.starred') ? ' starred' : '') +
                  "'></i>");
   }

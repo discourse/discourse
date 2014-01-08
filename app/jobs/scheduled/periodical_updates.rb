@@ -8,7 +8,6 @@ module Jobs
     recurrence { hourly.minute_of_hour(3, 18, 33, 48) }
 
     def execute(args)
-
       # Update the average times
       Post.calculate_avg_time
       Topic.calculate_avg_time
@@ -24,6 +23,9 @@ module Jobs
 
       # Refresh Hot Topics
       HotTopic.refresh!
+
+      # Refresh Top Topics
+      TopTopic.refresh!
 
       # Automatically close stuff that we missed
       Topic.auto_close

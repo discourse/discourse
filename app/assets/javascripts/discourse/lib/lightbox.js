@@ -15,8 +15,7 @@ Discourse.Lightbox = {
 
           callbacks: {
             open: function() {
-              var self = this,
-                  wrap = this.wrap,
+              var wrap = this.wrap,
                   img = this.currItem.img,
                   maxHeight = img.css("max-height");
 
@@ -33,7 +32,11 @@ Discourse.Lightbox = {
 
           image: {
             titleSrc: function(item) {
-              return item.el.attr("title") + ' &middot; <a class="image-source-link" href="' + item.src + '" target="_blank">' + I18n.t("lightbox.download") + '</a>';
+              return [
+                item.el.attr("title"),
+                $("span.informations", item.el).text(),
+                '<a class="image-source-link" href="' + item.src + '" target="_blank">' + I18n.t("lightbox.download") + '</a>'
+              ].join(' &middot; ');
             }
           }
 

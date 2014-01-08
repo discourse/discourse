@@ -24,6 +24,27 @@ describe Validators::PostValidator do
     end
   end
 
+  context "too_many_posts" do
+    it "should be invalid when the user has posted too much" do
+      post.user.expects(:posted_too_much_in_topic?).returns(true)
+      validator.max_posts_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be allowed to edit when the user has posted too much" do
+      post.user.stubs(:posted_too_much_in_topic?).returns(true)
+      post.expects(:new_record?).returns(false)
+      validator.max_posts_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid when the user hasn't posted too much" do
+      post.user.expects(:posted_too_much_in_topic?).returns(false)
+      validator.max_posts_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+  end
+
   context "invalid post" do
     it "should be invalid" do
       validator.validate(post)

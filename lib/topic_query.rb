@@ -8,7 +8,7 @@ require_dependency 'topic_query_sql'
 
 class TopicQuery
   # Could be rewritten to %i if Ruby 1.9 is no longer supported
-  VALID_OPTIONS = %w(except_topic_id
+  VALID_OPTIONS = %w(except_topic_ids
                      exclude_category
                      limit
                      page
@@ -17,6 +17,7 @@ class TopicQuery
                      visible
                      category
                      sort_order
+                     no_subcategories
                      sort_descending).map(&:to_sym)
 
   # Maps `sort_order` to a columns in `topics`
@@ -31,7 +32,6 @@ class TopicQuery
 
   def initialize(user=nil, options={})
     options.assert_valid_keys(VALID_OPTIONS)
-
     @options = options
     @user = user
   end
@@ -82,6 +82,15 @@ class TopicQuery
 
   def list_posted
     create_list(:posted) {|l| l.where('tu.user_id IS NOT NULL') }
+  end
+
+  def list_top_for(period)
+    score = "#{period}_score"
+    create_list(:top, unordered: true) do |topics|
+      topics.joins(:top_topic)
+            .where("top_topics.#{score} > 1")
+            .order("top_topics.#{score} DESC, topics.bumped_at DESC")
+    end
   end
 
   def list_topics_by(user)
@@ -209,12 +218,16 @@ class TopicQuery
       category_id = nil
       if options[:category].present?
         category_id  = options[:category].to_i
-        if category_id == 0
-          result = result.where('categories.slug = ?', options[:category])
-        else
-          result = result.where('categories.id = ?', category_id)
+        category_id = Category.where(slug: options[:category]).pluck(:id).first if category_id == 0
+
+        if category_id
+          if options[:no_subcategories]
+            result = result.where('categories.id = ?', category_id)
+          else
+            result = result.where('categories.id = ? or categories.parent_category_id = ?', category_id, category_id)
+          end
+          result = result.references(:categories)
         end
-        result = result.references(:categories)
       end
 
       result = apply_ordering(result, options)
@@ -223,7 +236,7 @@ class TopicQuery
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
-      result = result.where('topics.id <> ?', options[:except_topic_id]).references(:topics) if options[:except_topic_id]
+      result = result.where.not(topics: {id: options[:except_topic_ids]}).references(:topics) if options[:except_topic_ids]
       result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
 
       if options[:topic_ids]
@@ -238,6 +251,7 @@ class TopicQuery
         else
           result = result.where('topics.category_id IS NULL')
         end
+        result = result.references(:categories)
       end
 
       result

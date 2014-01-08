@@ -655,7 +655,7 @@
 
       if ( consumed >= text.length ) {
         // No closing char found. Abort.
-        return null;
+        return [consumed, null, nodes];
       }
 
       var res = this.dialect.inline.__oneElement__.call(this, text.substr( consumed ), patterns );
@@ -1250,13 +1250,24 @@
 
       "[": function link( text ) {
 
+        var open = 1;
+        for (var i=0; i<text.length; i++) {
+          var c = text.charAt(i);
+          if (c === '[') { open++; }
+          if (c === ']') { open--; }
+
+          if (open > 3) { return [1, "["]; }
+        }
+
         var orig = String(text);
         // Inline content is possible inside `link text`
         var res = inline_until_char.call( this, text.substr(1), "]" );
 
         // No closing ']' found. Just consume the [
-        if ( !res )
-          return [ 1, "[" ];
+        if ( !res[1] ) {
+          var size = res[0] + 1;
+          return [ size, text.charAt(0) + res[2].join('') ];
+        }
 
         var consumed = 1 + res[ 0 ],
             children = res[ 1 ],

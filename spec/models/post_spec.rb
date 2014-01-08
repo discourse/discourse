@@ -28,14 +28,15 @@ describe Post do
 
   it { should have_many :post_details }
 
+  it { should have_many :post_revisions }
+  it { should have_many :revisions}
+
   it { should rate_limit }
 
   let(:topic) { Fabricate(:topic) }
   let(:post_args) do
-    {user: topic.user, topic: topic}
+    { user: topic.user, topic: topic }
   end
-
-  it_behaves_like "a versioned model"
 
   describe 'scopes' do
 
@@ -57,7 +58,7 @@ describe Post do
 
   end
 
-  describe "versions and deleting/recovery" do
+  describe "revisions and deleting/recovery" do
 
     context 'a post without links' do
       let(:post) { Fabricate(:post, post_args) }
@@ -67,8 +68,8 @@ describe Post do
         post.reload
       end
 
-      it "doesn't create a new version when deleted" do
-        post.versions.count.should == 0
+      it "doesn't create a new revision when deleted" do
+        post.revisions.count.should == 0
       end
 
       describe "recovery" do
@@ -77,8 +78,8 @@ describe Post do
           post.reload
         end
 
-        it "doesn't create a new version when recovered" do
-          post.versions.count.should == 0
+        it "doesn't create a new revision when recovered" do
+          post.revisions.count.should == 0
         end
       end
     end
@@ -481,16 +482,16 @@ describe Post do
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
 
-    it 'has one version in all_versions' do
-      post.all_versions.size.should == 1
+    it 'has no revision' do
+      post.revisions.size.should == 0
       first_version_at.should be_present
       post.revise(post.user, post.raw).should be_false
     end
 
-
     describe 'with the same body' do
-      it "doesn't change cached_version" do
-        lambda { post.revise(post.user, post.raw); post.reload }.should_not change(post, :cached_version)
+
+      it "doesn't change version" do
+        lambda { post.revise(post.user, post.raw); post.reload }.should_not change(post, :version)
       end
 
     end
@@ -503,8 +504,8 @@ describe Post do
       end
 
       it 'causes no update' do
-        post.cached_version.should == 1
-        post.all_versions.size.should == 1
+        post.version.should == 1
+        post.revisions.size.should == 0
         post.last_version_at.should == first_version_at
       end
 
@@ -520,9 +521,9 @@ describe Post do
         post.reload
       end
 
-      it 'updates the cached_version' do
-        post.cached_version.should == 2
-        post.all_versions.size.should == 2
+      it 'updates the version' do
+        post.version.should == 2
+        post.revisions.size.should == 1
         post.last_version_at.to_i.should == revised_at.to_i
       end
 
@@ -534,7 +535,7 @@ describe Post do
         end
 
         it "doesn't create a new version if you do another" do
-          post.cached_version.should == 2
+          post.version.should == 2
         end
 
         it "doesn't change last_version_at" do
@@ -551,7 +552,7 @@ describe Post do
           end
 
           it "does create a new version after the edit window" do
-            post.cached_version.should == 3
+            post.version.should == 3
           end
 
           it "does create a new version after the edit window" do
@@ -582,10 +583,9 @@ describe Post do
         result.should be_true
         post.raw.should == 'updated body'
         post.invalidate_oneboxes.should == true
-        post.cached_version.should == 2
-        post.all_versions.size.should == 2
-        post.versions.should be_present
-        post.versions.first.user.should be_present
+        post.version.should == 2
+        post.revisions.size.should == 1
+        post.revisions.first.user.should be_present
       end
 
       context 'second poster posts again quickly' do
@@ -596,8 +596,8 @@ describe Post do
         end
 
         it 'is a ninja edit, because the second poster posted again quickly' do
-          post.cached_version.should == 2
-          post.all_versions.size.should == 2
+          post.version.should == 2
+          post.revisions.size.should == 1
         end
 
       end
@@ -615,7 +615,7 @@ describe Post do
       post.post_number.should be_present
       post.excerpt.should be_present
       post.post_type.should == Post.types[:regular]
-      post.versions.should be_blank
+      post.revisions.should be_blank
       post.cooked.should be_present
       post.external_id.should be_present
       post.quote_count.should == 0
@@ -740,13 +740,6 @@ describe Post do
       p2.reply_history.should == [p1]
     end
 
-  end
-
-  describe '#readable_author' do
-    it 'delegates to the associated user' do
-      User.any_instance.expects(:readable_name)
-      Fabricate(:post).author_readable
-    end
   end
 
   describe 'urls' do

@@ -5,12 +5,12 @@
     <div class='value'>{{username}}</div>
     <div class='controls'>
       {{#link-to 'userActivity' model class="btn"}}
-        <i class='icon icon-user'></i>
+        <i class='fa fa-user'></i>
         {{i18n admin.user.show_public_profile}}
       {{/link-to}}
       {{#if can_impersonate}}
           <button class='btn' {{action impersonate target="content"}}>
-            <i class='icon icon-screenshot'></i>
+            <i class='fa fa-crosshairs'></i>
             {{i18n admin.user.impersonate}}
           </button>
       {{/if}}
@@ -84,7 +84,7 @@
         {{else}}
           {{#if can_approve}}
             <button class='btn' {{action approve target="content"}}>
-              <i class='icon icon-ok'></i>
+              <i class='fa fa-check'></i>
               {{i18n admin.user.approve}}
             </button>
           {{/if}}
@@ -111,13 +111,13 @@
       {{else}}
         {{#if can_send_activation_email}}
           <button class='btn' {{action sendActivationEmail target="content"}}>
-            <i class='icon icon-envelope'></i>
+            <i class='fa fa-envelope'></i>
             {{i18n admin.user.send_activation_email}}
           </button>
         {{/if}}
         {{#if can_activate}}
           <button class='btn' {{action activate target="content"}}>
-            <i class='icon icon-ok'></i>
+            <i class='fa fa-check'></i>
             {{i18n admin.user.activate}}
           </button>
         {{/if}}
@@ -150,13 +150,13 @@
     <div class='controls'>
       {{#if can_revoke_admin}}
         <button class='btn' {{action revokeAdmin target="content"}}>
-          <i class='icon icon-trophy'></i>
+          <i class='fa fa-trophy'></i>
           {{i18n admin.user.revoke_admin}}
         </button>
       {{/if}}
       {{#if can_grant_admin}}
         <button class='btn' {{action grantAdmin target="content"}}>
-          <i class='icon icon-trophy'></i>
+          <i class='fa fa-trophy'></i>
           {{i18n admin.user.grant_admin}}
         </button>
       {{/if}}
@@ -169,13 +169,13 @@
     <div class='controls'>
       {{#if can_revoke_moderation}}
         <button class='btn' {{action revokeModeration target="content"}}>
-          <i class='icon icon-magic'></i>
+          <i class='fa fa-magic'></i>
           {{i18n admin.user.revoke_moderation}}
         </button>
       {{/if}}
       {{#if can_grant_moderation}}
         <button class='btn' {{action grantModeration target="content"}}>
-          <i class='icon icon-magic'></i>
+          <i class='fa fa-magic'></i>
           {{i18n admin.user.grant_moderation}}
         </button>
       {{/if}}
@@ -191,8 +191,8 @@
     <div class="controls">
     {{#if dirty}}
       <div>
-      <button class='btn ok' {{action saveTrustLevel target="content"}}><i class='icon-ok'></i></button>
-      <button class='btn cancel' {{action restoreTrustLevel target="content"}}><i class='icon-remove'></i></button>
+      <button class='btn ok' {{action saveTrustLevel target="content"}}><i class='fa fa-check'></i></button>
+      <button class='btn cancel' {{action restoreTrustLevel target="content"}}><i class='fa fa-times'></i></button>
       </div>
     {{/if}}
     </div>
@@ -204,7 +204,7 @@
     <div class='controls'>
     {{#if isSuspended}}
       <button class='btn btn-danger' {{action unsuspend target="content"}}>
-        <i class='icon icon-ban-circle'></i>
+        <i class='fa fa-ban'></i>
         {{i18n admin.user.unsuspend}}
       </button>
       {{suspendDuration}}
@@ -212,7 +212,7 @@
     {{else}}
       {{#if canSuspend}}
         <button class='btn btn-danger' {{action showSuspendModal this}}>
-          <i class='icon icon-ban-circle'></i>
+          <i class='fa fa-ban'></i>
           {{i18n admin.user.suspend}}
         </button>
         {{i18n admin.user.suspended_explanation}}
@@ -241,7 +241,7 @@
     <div class='controls'>
       {{#if blocked}}
         <button class='btn' {{action unblock target="content"}}>
-          <i class='icon icon-thumbs-up'></i>
+          <i class='fa fa-thumbs-o-up'></i>
           {{i18n admin.user.unblock}}
         </button>
         {{i18n admin.user.block_explanation}}
@@ -279,7 +279,7 @@
     <div class='controls'>
       {{#if can_delete_all_posts}}
         <button class='btn btn-danger' {{action deleteAllPosts target="content"}}>
-          <i class='icon icon-trash'></i>
+          <i class='fa fa-trash-o'></i>
           {{i18n admin.user.delete_all_posts}}
         </button>
       {{/if}}
@@ -313,9 +313,13 @@
 
 <section>
   <hr/>
-  <button class="btn btn-danger pull-right" {{action destroy target="content"}} {{bindAttr disabled="deleteForbidden"}} {{bindAttr title="deleteButtonTitle"}}>
-    <i class="icon icon-warning-sign"></i>
+  <button {{bindAttr class=":btn :btn-danger :pull-right deleteForbidden:hidden"}} {{action destroy target="content"}} {{bindAttr disabled="deleteForbidden"}} {{bindAttr}}>
+    <i class="fa fa-exclamation-triangle"></i>
     {{i18n admin.user.delete}}
   </button>
+  {{#if deleteExplanation}}
+    <div class="clearfix"></div>
+    <div class="pull-right"><i class="fa fa-exclamation-triangle"></i> {{deleteExplanation}}</div>
+  {{/if}}
 </section>
 <div class="clearfix"></div>

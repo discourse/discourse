@@ -30,18 +30,27 @@ Discourse.Route.buildRoutes(function() {
       router.route(filter + "Category", { path: "/category/:slug/l/" + filter + "/more" });
       router.route(filter + "Category", { path: "/category/:parentSlug/:slug/l/" + filter });
       router.route(filter + "Category", { path: "/category/:parentSlug/:slug/l/" + filter + "/more" });
-
     });
 
-    // the homepage is the first item of the 'top_menu' site setting
-    var homepage = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
+    // homepage
+    var homepage = Discourse.User.current() ?
+                   Discourse.User.currentProp("homepage") :
+                   Discourse.Utilities.defaultHomepage();
     this.route(homepage, { path: '/' });
 
+    // categories page
     this.route('categories', { path: '/categories' });
+
+    // category
     this.route('category', { path: '/category/:slug' });
     this.route('category', { path: '/category/:slug/more' });
+    this.route('categoryNone', { path: '/category/:slug/none' });
+    this.route('categoryNone', { path: '/category/:slug/none/more' });
     this.route('category', { path: '/category/:parentSlug/:slug' });
     this.route('category', { path: '/category/:parentSlug/:slug/more' });
+
+    // top page
+    this.route('top', { path: '/top' });
   });
 
   // User routes
@@ -56,8 +65,8 @@ Discourse.Route.buildRoutes(function() {
     });
 
     this.resource('userPrivateMessages', { path: '/private-messages' }, function() {
-      this.route('mine', {path: '/mine'});
-      this.route('unread', {path: '/unread'});
+      this.route('mine', { path: '/mine' });
+      this.route('unread', { path: '/unread' });
     });
 
     this.resource('preferences', { path: '/preferences' }, function() {

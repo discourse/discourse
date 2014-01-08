@@ -3,7 +3,7 @@
     <div>
       <input type="radio" id="avatar" name="avatar" value="gravatar" {{action useGravatar}}>
       <label class="radio" for="avatar">{{avatar controller imageSize="large" template="gravatar_template"}} {{{i18n user.change_avatar.gravatar}}} {{email}}</label>
-      <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn"><i class="icon-pencil"></i></a>
+      <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn no-text"><i class="fa fa-pencil"></i></a>
     </div>
     <div>
       <input type="radio" id="uploaded_avatar" name="avatar" value="uploaded_avatar" {{action useUploadedAvatar}}>
@@ -15,7 +15,7 @@
         {{/if}}
       </label>
       <button id="fake-avatar-input" class="btn" {{bindAttr disabled="view.uploading"}} title="{{i18n user.change_avatar.upload_title}}">
-        <i class="icon-picture"></i>&nbsp;{{view.uploadButtonText}}
+        <i class="fa fa-picture-o"></i>&nbsp;{{view.uploadButtonText}}
       </button>
       <input type="file" id="avatar-input" accept="image/*" style="display:none">
       {{#if view.uploading}}

@@ -53,7 +53,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.anonymous_menu_items
-    @anonymous_menu_items ||= Set.new ['latest', 'hot', 'categories', 'category']
+    @anonymous_menu_items ||= Set.new Discourse.anonymous_filters.map(&:to_s)
   end
 
   def self.anonymous_homepage
@@ -82,6 +82,10 @@ class SiteSetting < ActiveRecord::Base
 
   def self.authorized_image?(file)
     authorized_images.count > 0 && file.original_filename =~ /\.(#{authorized_images.join("|")})$/i
+  end
+
+  def self.scheme
+    use_ssl? ? "https" : "http"
   end
 
 end

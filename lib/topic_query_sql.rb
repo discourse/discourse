@@ -6,8 +6,7 @@ module TopicQuerySQL
   class << self
 
     # use the constants in conjuction with COALESCE to determine the order with regard to pinned
-    # topics that have been cleared by the user. There
-    # might be a cleaner way to do this.
+    # topics that have been cleared by the user. There might be a cleaner way to do this.
     def lowest_date
       "2010-01-01"
     end

@@ -30,8 +30,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     },
 
     selectAll: function() {
-      var posts = this.get('postStream.posts');
-      var selectedPosts = this.get('selectedPosts');
+      var posts = this.get('postStream.posts'),
+          selectedPosts = this.get('selectedPosts');
       if (posts) {
         selectedPosts.addObjects(posts);
       }
@@ -219,6 +219,10 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   },
 
+  slackRatio: function() {
+    return Discourse.Capabilities.currentProp('slackRatio');
+  }.property(),
+
   jumpTopDisabled: function() {
     return (this.get('progressPosition') <= 3);
   }.property('progressPosition'),
@@ -271,9 +275,9 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   streamPercentage: function() {
     if (!this.get('postStream.loaded')) { return 0; }
     if (this.get('postStream.highest_post_number') === 0) { return 0; }
-    var perc = this.get('progressPosition') / this.get('highest_post_number');
+    var perc = this.get('progressPosition') / this.get('postStream.filteredPostsCount');
     return (perc > 1.0) ? 1.0 : perc;
-  }.property('postStream.loaded', 'progressPosition', 'highest_post_number'),
+  }.property('postStream.loaded', 'progressPosition', 'postStream.filteredPostsCount'),
 
   multiSelectChanged: function() {
     // Deselect all posts when multi select is turned off
@@ -288,6 +292,18 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     if (this.get('postStream.filteredPostsCount') < 2) return true;
     return false;
   }.property('postStream.loaded', 'currentPost', 'postStream.filteredPostsCount'),
+
+  hugeNumberOfPosts: function() {
+    return (this.get('postStream.filteredPostsCount') >= Discourse.SiteSettings.short_progress_text_threshold);
+  }.property('highest_post_number'),
+
+  jumpToBottomTitle: function() {
+    if (this.get('hugeNumberOfPosts')) {
+      return I18n.t('topic.progress.jump_bottom_with_number', {post_number: this.get('highest_post_number')});
+    } else {
+      return I18n.t('topic.progress.jump_bottom');
+    }
+  }.property('hugeNumberOfPosts', 'highest_post_number'),
 
   deselectPost: function(post) {
     this.get('selectedPosts').removeObject(post);
@@ -488,6 +504,12 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     }
   },
 
+  /**
+    Called the the topmost visible post on the page changes.
+
+    @method topVisibleChanged
+    @params {Discourse.Post} post that is at the top
+  **/
   topVisibleChanged: function(post) {
     var postStream = this.get('postStream'),
         firstLoadedPost = postStream.get('firstLoadedPost');
@@ -511,11 +533,18 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     }
   },
 
-  bottomVisibleChanged: function(post) {
-    this.set('progressPosition', post.get('post_number'));
+  /**
+    Called the the bottommost visible post on the page changes.
 
+    @method bottomVisibleChanged
+    @params {Discourse.Post} post that is at the bottom
+  **/
+  bottomVisibleChanged: function(post) {
     var postStream = this.get('postStream'),
-        lastLoadedPost = postStream.get('lastLoadedPost');
+        lastLoadedPost = postStream.get('lastLoadedPost'),
+        index = postStream.get('stream').indexOf(post.get('id'))+1;
+
+    this.set('progressPosition', index);
 
     if (lastLoadedPost && lastLoadedPost === post) {
       postStream.appendMore();

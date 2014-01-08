@@ -148,7 +148,7 @@ zh_TW:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>你</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>你</a> 提到 <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>你</a> 提到 <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "發起人 <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "發起人 <a href='{{userUrl}}'>你</a>"
@@ -461,15 +461,15 @@ zh_TW:
       none: "你當前沒有任何通知。"
       more: "浏覽以前的通知"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='私信'></i> {{username}} 發送給你一條私信：{{link}}"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='私信'></i> {{username}} 發送給你一條私信：{{link}}"
       invited_to_private_message: "{{username}} 邀請你進行私下交流：{{link}}"
-      invitee_accepted: "<i title='已接受你的邀請' class='icon icon-signin'></i> {{username}} 已接受你的邀請"
-      moved_post: "<i title='移動帖子' class='icon icon-arrow-right'></i> {{username}} 已將帖子移動到 {{link}}"
+      invitee_accepted: "<i title='已接受你的邀請' class='fa fa-sign-in'></i> {{username}} 已接受你的邀請"
+      moved_post: "<i title='移動帖子' class='fa fa-arrow-right'></i> {{username}} 已將帖子移動到 {{link}}"
       total_flagged: "被投訴帖子的總數"
 
     upload_selector:
@@ -652,21 +652,9 @@ zh_TW:
       login_reply: '登錄來回複'
 
       filters:
-        user: "你在浏覽 {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "一個帖子"
           other: "{{count}} 帖子"
-        by_n_users:
-          one: "一個指定用戶"
-          other: "{{count}} 個用戶中的"
-
-        summary: "你在浏覽 {{n_summarized_posts}} {{of_n_posts}}."
-        n_summarized_posts:
-          one: "一個優秀帖子"
-          other: "{{count}} 優秀帖子"
-        of_n_posts:
-          one: "一個帖子中的"
-          other: "{{count}} 個帖子中的"
         cancel: "再次顯示本主題下的所有帖子。"
 
       split_topic:

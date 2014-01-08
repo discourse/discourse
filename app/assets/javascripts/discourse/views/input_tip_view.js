@@ -16,8 +16,8 @@ Discourse.InputTipView = Discourse.View.extend({
   render: function(buffer) {
     var reason = this.get('validation.reason');
     if (reason) {
-      var icon = this.get('good') ? 'icon-ok' : 'icon-remove';
-      return buffer.push("<i class=\"icon " + icon + "\"></i> " + reason);
+      var icon = this.get('good') ? 'fa-check' : 'fa-times';
+      return buffer.push("<i class=\"fa " + icon + "\"></i> " + reason);
     }
   }
 });

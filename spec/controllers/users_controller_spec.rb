@@ -277,12 +277,9 @@ describe UsersController do
         session[:current_user_id].should be_blank
       end
     end
-
-
   end
 
-
-  describe '.create' do
+  describe '#create' do
     before do
       @user = Fabricate.build(:user)
       @user.password = "strongpassword"

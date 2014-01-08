@@ -97,7 +97,8 @@ SELECT
   coalesce(p.cooked, p2.cooked) cooked,
   CASE WHEN coalesce(p.deleted_at, p2.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
   p.hidden,
-  p.post_type
+  p.post_type,
+  p.edit_reason
 FROM user_actions as a
 JOIN topics t on t.id = a.target_topic_id
 LEFT JOIN posts p on p.id = a.target_post_id

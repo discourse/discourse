@@ -121,7 +121,7 @@ Content-Length: 32664
       "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/templates/list/topic_list_item.js.handlebars",
       "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/templates/list/topic_list_item.js.handlebars",
       "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/assets/javascripts/discourse/templates/list/topic_list_item.js.handlebars?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
-      "patch": "@@ -17,7 +17,12 @@\n       {{#if unseen}}\n         <a href=\"{{lastReadUrl}}\" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>\n       {{/if}}\n+\n+      {{#if rank_details}}\n+        <i class='icon icon-beaker score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>\n+      {{/if}}\n   </td>\n+\n   <td class='category'>\n     {{categoryLink category}}\n   </td>"
+      "patch": "@@ -17,7 +17,12 @@\n       {{#if unseen}}\n         <a href=\"{{lastReadUrl}}\" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='fa fa-asterisk'></i></a>\n       {{/if}}\n+\n+      {{#if rank_details}}\n+        <i class='fa fa-beaker score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>\n+      {{/if}}\n   </td>\n+\n   <td class='category'>\n     {{categoryLink category}}\n   </td>"
     },
     {
       "sha": "411d3fb62be23046309bc4254b43f185784429ec",

@@ -7,15 +7,23 @@
   @module Discourse
 **/
 Discourse.PreferencesController = Discourse.ObjectController.extend({
+  allowAvatarUpload: function() {
+    return Discourse.SiteSettings.allow_uploaded_avatars;
+  }.property(),
+
   // By default we haven't saved anything
   saved: false,
 
   saveDisabled: function() {
     if (this.get('saving')) return true;
-    if (this.blank('name')) return true;
+    if (Discourse.SiteSettings.enable_names && this.blank('name')) return true;
     if (this.blank('email')) return true;
     return false;
   }.property('saving', 'name', 'email'),
+
+  canEditName: function() {
+    return Discourse.SiteSettings.enable_names;
+  }.property(),
 
   digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
                       { name: I18n.t('user.email_digests.weekly'), value: 7 },

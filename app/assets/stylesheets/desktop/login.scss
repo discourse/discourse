@@ -19,8 +19,41 @@
   }
 }
 
+.login-modal {
+  .fa-spinner {
+    font-size: 18px;
+  }
+}
+
 // Create account
 
 #new-account-link {
 	cursor: pointer;
+}
+
+.create-account {
+  table {
+    width: 100%;
+  }
+  tr.input {
+    td {
+      padding-top: 10px;
+    }
+    input, label {
+      margin-bottom: 0;
+    }
+    .tip {
+      max-width: 340px;
+    }
+  }
+
+  tr.instructions {
+    label {
+      color: #888;
+    }
+  }
+
+  .fa-spinner {
+    font-size: 18px;
+  }
 }

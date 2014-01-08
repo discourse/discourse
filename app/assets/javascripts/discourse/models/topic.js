@@ -24,7 +24,7 @@ Discourse.Topic = Discourse.Model.extend({
     return a !== 'regular' && a !== 'private_message';
   }.property('archetype'),
 
-  convertArchetype: function(archetype) {
+  convertArchetype: function() {
     var a = this.get('archetype');
     if (a !== 'regular' && a !== 'private_message') {
       this.set('archetype', 'regular');
@@ -146,6 +146,9 @@ Discourse.Topic = Discourse.Model.extend({
 
   toggleStatus: function(property) {
     this.toggleProperty(property);
+    if (property === 'closed' && this.get('closed')) {
+      this.set('details.auto_close_at', null);
+    }
     return Discourse.ajax(this.get('url') + "/status", {
       type: 'PUT',
       data: {status: property, enabled: this.get(property) ? 'true' : 'false' }
@@ -159,6 +162,15 @@ Discourse.Topic = Discourse.Model.extend({
   favoriteTooltip: function() {
     return I18n.t(this.get('favoriteTooltipKey'));
   }.property('favoriteTooltipKey'),
+
+  estimatedReadingTime: function() {
+    var wordCount = this.get('word_count');
+    if (!wordCount) return;
+
+    // Avg for 500 words per minute when you account for skimming
+    var minutes = Math.floor(wordCount / 500.0);
+    return minutes;
+  }.property('word_count'),
 
   toggleStar: function() {
     var topic = this;
@@ -221,7 +233,7 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   // Recover this topic if deleted
-  recover: function(deleted_by) {
+  recover: function() {
     this.setProperties({
       deleted_at: null,
       deleted_by: null,
@@ -314,14 +326,13 @@ Discourse.Topic.reopenClass({
 
   // Load a topic, but accepts a set of filters
   find: function(topicId, opts) {
-    var data, promise, url;
-    url = Discourse.getURL("/t/") + topicId;
+    var url = Discourse.getURL("/t/") + topicId;
 
     if (opts.nearPost) {
       url += "/" + opts.nearPost;
     }
 
-    data = {};
+    var data = {};
     if (opts.postsAfter) {
       data.posts_after = opts.postsAfter;
     }

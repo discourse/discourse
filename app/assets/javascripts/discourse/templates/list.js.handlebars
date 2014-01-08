@@ -1,24 +1,24 @@
-{{view Discourse.HtmlView key="top"}}
+{{customHTML "top"}}
 
 <div class='list-controls'>
   <div class="container">
 
-    {{bread-crumbs category=category categories=categories}}
+    {{bread-crumbs category=category categories=categories noSubcategories=noSubcategories}}
 
     <ul class="nav nav-pills" id='category-filter'>
       {{each availableNavItems itemViewClass="Discourse.NavItemView"}}
     </ul>
 
     {{#if canCreateTopic}}
-      <button class='btn btn-default' {{action createTopic}}><i class='icon icon-plus'></i>{{i18n topic.create}}</button>
+      <button id="create-topic" class='btn btn-default' {{action createTopic}}><i class='fa fa-plus'></i>{{i18n topic.create}}</button>
     {{/if}}
 
     {{#if canEditCategory}}
-      <button class='btn btn-default' {{action editCategory category}}><i class="icon icon-wrench"></i> {{i18n category.edit_long}}</button>
+      <button class='btn btn-default' {{action editCategory category}}><i class="fa fa-wrench"></i> {{i18n category.edit_long}}</button>
     {{/if}}
 
     {{#if canCreateCategory}}
-      <button class='btn btn-default' {{action createCategory}}><i class='icon icon-plus'></i>{{i18n category.create}}</button>
+      <button class='btn btn-default' {{action createCategory}}><i class='fa fa-plus'></i>{{i18n category.create}}</button>
     {{/if}}
 
   </div>
@@ -35,4 +35,4 @@
   </div>
 </div>
 
-{{view Discourse.HtmlView key="bottom"}}
+{{customHTML "bottom"}}
