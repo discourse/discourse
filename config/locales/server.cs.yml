@@ -513,7 +513,6 @@ cs:
 
     notification_email: "Návratová emailová adresa, která se použije u systémových emailů, jako jsou notifikace o zapomenutém heslu, nových účtech, atd."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
-    use_ssl: "Má být web přístupný přes SSL? (NEPODPOROVÁNO, EXPERIMENTÁLNÍ FUNKCE)"
     summary_score_threshold: "Minimální skóre příspěvku, aby byl zařazen mezi 'nejlepší'"
     summary_posts_required: "Minimální počet příspěvků v tématu, aby byl povolen mód 'nejlepší příspěvky'"
     summary_likes_required: "Minimální počet 'líbí se' v tématu, aby byl povolen mód 'nejlepší příspěvky'"

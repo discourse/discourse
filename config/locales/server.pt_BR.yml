@@ -512,7 +512,6 @@ pt_BR:
 
     notification_email: "O endereço de email a ser usado para notificar os utilizadores de password esquecida, novas contas, etc."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
-    use_ssl: "O site deve ser acessível via SSL?"
     summary_score_threshold: "A pontuação mínima de uma postagem para ser incluído no 'melhor de'"
     summary_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
     summary_likes_required: "Um tópico precisa deste número de curtidas antes de ser ativado o modo 'melhor de'."

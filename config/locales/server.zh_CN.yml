@@ -459,7 +459,7 @@ zh_CN:
     logo_small_url: "你的站点的小号标志图片，例如：http://example.com/logo-small.png，用于卷起主题列表时显示"
     favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon"
     notification_email: "邮件回复地址，当发送系统邮件，例如通知用户找回密码、新用户注册等等时，所使用的发信人地址"
-    use_ssl: "使用 SSL 安全套接层来访问本站吗？"
+    use_https: "使用 SSL 安全套接层来访问本站吗？"
     summary_score_threshold: "将一个帖子包含到“优秀”帖子中所需的最小分值"
     summary_posts_required: "在一个主题中启用“优秀”模式所要求的最小帖子数量"
     summary_likes_required: "在一个主题中启用“优秀”模式所要求的最小赞数量"

@@ -440,7 +440,6 @@ zh_TW:
     logo_small_url: "你的站點的小號標志圖片，例如：http://example.com/logo-small.png，用于卷起主題列表時顯示"
     favicon_url: "你的站點圖標（favicon），參考 http://zh.wikipedia.org/wiki/Favicon"
     notification_email: "郵件回複地址，當發送系統郵件，例如通知用戶找回密碼、新用戶注冊等等時，所使用的發信人地址"
-    use_ssl: "使用 SSL 安全套接層來訪問本站嗎？"
     summary_score_threshold: "將一個帖子包含到“優秀”帖子中所需的最小分值"
     summary_posts_required: "在一個主題中啓用“優秀”模式所要求的最小帖子數量"
     summary_likes_required: "在一個主題中啓用“優秀”模式所要求的最小贊數量"

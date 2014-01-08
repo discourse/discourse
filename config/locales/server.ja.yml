@@ -506,7 +506,6 @@ ja:
 
     notification_email: "パスワードリセットや新規アカウント作成等をユーザに通知するシステムメールを送信するメールアドレス"
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
-    use_ssl: "SSL でのアクセスを有効にするか? (未実装、試験的)"
     best_of_score_threshold: "'best of' にポストが含まれるための最終スコア"
     best_of_posts_required: "'best of' モードが有効になる、トピック内の最小ポスト数"
     best_of_likes_required: "'best of' モードが有効になる、トピック内の最小「いいね!」数"

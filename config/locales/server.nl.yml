@@ -532,7 +532,6 @@ nl:
 
     notification_email: "Het afzenderadres dat wordt gebruikt voor mails waarmee leden op de hoogte worden gesteld van verloren wachtwoorden, nieuwe accounts etc."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
-    use_ssl: "Moet de site toegankelijk zijn via SSL? (NOG NIET GEIMPLEMENTEERD, EXPERIMENTEEL)"
     summary_score_threshold: "De minimumscore van bericht om inbegrepen te worden in de samenvatting"
     summary_posts_required: "Minimum aantal berichten nodig in een topic voordat de samenvattingsmodus mogelijk wordt."
     summary_likes_required: "Minimum aantal 'vind ik leuk' nodig voordat de samenvattingsmodus mogelijk wordt."

@@ -500,7 +500,6 @@ fr:
     apple_touch_icon_url: "Icône utilisée pour les appareils d'Apple. Taille recommandée 144 px par 144 px."
     notification_email: "L'adresse email utilisée pour notifier les utilisateurs de mots de passe perdus, d'activation de compte, etc."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes d'email"
-    use_ssl: "Le site doit-il être accessible via SSL? (NON IMPLEMENTE, EXPERIMENTAL)"
     summary_score_threshold: "Le score minimum d'un message pour être inclus dans le «résumé»"
     summary_posts_required: "Nombre minimum de messages dans une discussion avant que le mode «résumé» soit activé"
     summary_likes_required: "Nombre de J'aime minimum dans une discussion avant que le mode «Résumé» soit activé"
