@@ -371,7 +371,7 @@ nl:
       title: Bladwijzers
       xaxis: Dag
       yaxis: Aantal nieuwe bladwijzers
-    favorites:
+    starred:
       title: Favorieten
       xaxis: Dag
       yaxis: Aantal nieuwe favorieten
@@ -564,7 +564,7 @@ nl:
     ga_domain_name: "Google analytics domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
     enable_escaped_fragments: "Schakel workaround in om oude crawlers je site te kunnen laten indexeren. WAARSCHUWING: gebruik dit alleen als je het echt nodig hebt."
     enable_noscript_support: "Ondersteun &lt;noscript&gt; tag"
-    top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|hot|read|starred|unread|new|posted|categories"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
     share_links: "De volgorde en selectie van items in het deelmenu. Bijvoorbeeld twitter|facebook|google+"
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
@@ -627,7 +627,7 @@ nl:
     max_flags_per_day: Het maximaal aantal moderatie-meldingen dat een lid per dag kan geven
     max_bookmarks_per_day: Het maximaal aantal favorieten dat een lid per dag kan aanmaken
     max_edits_per_day: Het maximaal aantal bewerkingen dat een lid per dag kan maken
-    max_favorites_per_day: Het maximaal aantal topics dat als favoriet ingesteld kan worden binnen een dag
+    max_stars_per_day: Het maximaal aantal topics dat als favoriet ingesteld kan worden binnen een dag
     max_topics_per_day: Het maximaal aantal topics dat je kan aanmaken op een dag
     max_private_messages_per_day: Het maximaal aantal privé-berichten dat je per dag kan versturen
 

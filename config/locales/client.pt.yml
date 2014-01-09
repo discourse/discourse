@@ -315,12 +315,12 @@ pt:
     go_back: 'voltar atrás'
     current_user: 'ir para a tua página de utilizador'
 
-    favorite:
+    starred:
       title: 'Favorito'
       help: 'adicionar este tópico à tua lista de favoritos'
 
     topics:
-      no_favorited: "Ainda não marcaste nenhum tópico como favorito. Para marcar um tópico como favorito, clica na estrela à beira do título."
+      no_starred: "Ainda não marcaste nenhum tópico como favorito. Para marcar um tópico como favorito, clica na estrela à beira do título."
       no_unread: "Não tens tópicos ainda não lidos para ler."
       no_new: "Não tens novos tópicos para ler."
       no_read: "Ainda não leste nenhum tópico."
@@ -567,7 +567,7 @@ pt:
       latest:
         title: "Populares"
         help: "os tópicos recentes mais populares"
-      favorited:
+      starred:
         title: "Favoritos"
         help: "tópicos que marcaste como favorito"
       read:

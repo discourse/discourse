@@ -581,7 +581,7 @@ describe Topic do
       end
 
       it 'triggers the rate limiter' do
-        Topic::FavoriteLimiter.any_instance.expects(:performed!)
+        Topic::StarLimiter.any_instance.expects(:performed!)
         @topic.toggle_star(@user, true)
       end
     end
@@ -600,7 +600,7 @@ describe Topic do
       end
 
       it 'rolls back the rate limiter' do
-        Topic::FavoriteLimiter.any_instance.expects(:rollback!)
+        Topic::StarLimiter.any_instance.expects(:rollback!)
         @topic.toggle_star(@user, false)
       end
 

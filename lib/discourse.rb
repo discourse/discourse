@@ -31,7 +31,7 @@ module Discourse
   class CSRF < Exception; end
 
   def self.filters
-    @filters ||= [:latest, :hot, :unread, :new, :favorited, :read, :posted]
+    @filters ||= [:latest, :hot, :unread, :new, :starred, :read, :posted]
   end
 
   def self.anonymous_filters

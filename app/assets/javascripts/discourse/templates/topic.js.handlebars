@@ -7,8 +7,8 @@
       <div class='container'>
         <div class='inner'>
 
-          {{#if showFavoriteButton}}
-            <a {{bindAttr class=":star starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
+          {{#if showStarButton}}
+            <a {{bindAttr class=":star starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="starTooltip"}}></a>
           {{/if}}
 
           {{#if editingTopic}}

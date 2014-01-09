@@ -137,10 +137,10 @@ class Topic < ActiveRecord::Base
            WHERE #{condition[0]})", condition[1])
   }
 
-  # Helps us limit how many favorites can be made in a day
-  class FavoriteLimiter < RateLimiter
+  # Helps us limit how many topics can be starred in a day
+  class StarLimiter < RateLimiter
     def initialize(user)
-      super(user, "favorited:#{Date.today.to_s}", SiteSetting.max_favorites_per_day, 1.day.to_i)
+      super(user, "starred:#{Date.today.to_s}", SiteSetting.max_stars_per_day, 1.day.to_i)
     end
   end
 
@@ -547,9 +547,9 @@ class Topic < ActiveRecord::Base
                 WHERE id = ?", id
 
       if starred
-        FavoriteLimiter.new(user).performed!
+        StarLimiter.new(user).performed!
       else
-        FavoriteLimiter.new(user).rollback!
+        StarLimiter.new(user).rollback!
       end
     end
   end

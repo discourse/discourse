@@ -6,8 +6,8 @@
     {{#if showExtraInfo}}
       <div class="extra-info-wrapper">
         <div class="extra-info">
-          {{#if showFavoriteButton}}
-            <a {{bindAttr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="topic.favoriteTooltip"}}></a>
+          {{#if showStarButton}}
+            <a {{bindAttr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="topic.starTooltip"}}></a>
           {{/if}}
           <h1>
           {{boundCategoryLink topic.category}}

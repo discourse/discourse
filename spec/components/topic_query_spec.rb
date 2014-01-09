@@ -256,22 +256,22 @@ describe TopicQuery do
 
   end
 
-  context 'list_favorited' do
+  context 'list_starred' do
 
     let(:topic) { Fabricate(:topic) }
 
-    it "returns no results when the user hasn't favorited anything" do
-      topic_query.list_favorited.topics.should be_blank
+    it "returns no results when the user hasn't starred any topics" do
+      topic_query.list_starred.topics.should be_blank
     end
 
-    context 'with a favorited topic' do
+    context 'with a starred topic' do
 
       before do
         topic.toggle_star(user, true)
       end
 
-      it "returns the topic after it has been favorited" do
-        topic_query.list_favorited.topics.should == [topic]
+      it "returns the topic after it has been starred" do
+        topic_query.list_starred.topics.should == [topic]
       end
     end
 
