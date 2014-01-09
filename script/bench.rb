@@ -162,7 +162,8 @@ begin
   append = "?api_key=#{api_key}&api_username=admin1"
 
   # asset precompilation is a dog, wget to force it
-  run "wget http://127.0.0.1:#{@port}/ -o tmp/test.html"
+  run "wget http://127.0.0.1:#{@port}/ -o test.html"
+  `rm test.html`
 
   tests = [
     ["home", "/"],
