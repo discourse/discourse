@@ -1,12 +1,12 @@
 module("Discourse.NavItem", {
   setup: function() {
     this.site = Discourse.Site.current();
-    this.originalCategories = Discourse.Site.currentProp('categories') || [];
-    this.site.set('categories', this.originalCategories.concat( [Discourse.Category.create({name: '确实是这样', id: 343434})] ));
+    this.asianCategory = Discourse.Category.create({name: '确实是这样', id: 343434});
+    this.site.get('categories').addObject(this.asianCategory);
   },
 
   teardown: function() {
-    this.site.set('categories', this.originalCategories);
+    this.site.get('categories').removeObject(this.asianCategory);
   }
 });
 

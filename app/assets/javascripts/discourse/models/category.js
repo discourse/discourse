@@ -195,7 +195,7 @@ Discourse.Category.reopenClass({
   },
 
   list: function() {
-    return Discourse.Site.currentProp('categories');
+    return Discourse.Site.currentProp('sortedCategories');
   },
 
   findSingleBySlug: function(slug) {
