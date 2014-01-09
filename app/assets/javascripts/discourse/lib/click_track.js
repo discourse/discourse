@@ -77,7 +77,8 @@ Discourse.ClickTrack = {
           post_id: postId,
           topic_id: topicId,
           redirect: false
-        }
+        },
+        dataType: 'html'
       });
       window.open(href, '_blank');
       return false;
@@ -91,7 +92,8 @@ Discourse.ClickTrack = {
           post_id: postId,
           topic_id: topicId,
           redirect: false
-        }
+        },
+        dataType: 'html'
       });
       Discourse.URL.routeTo(href);
       return false;
