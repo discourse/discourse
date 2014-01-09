@@ -20,7 +20,9 @@ module Middleware
         @is_mobile ||=
           begin
             session = @env["rack.session"]
-            params = ActionDispatch::Request.new(@env).params
+            # don't initialize params until later otherwise
+            # you get a broken params on the request
+            params = {}
             user_agent  = @env["HTTP_USER_AGENT"]
 
             MobileDetection.resolve_mobile_view!(user_agent,params,session) ? :true : :false
