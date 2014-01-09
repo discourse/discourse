@@ -859,7 +859,7 @@ en:
     username:
       short: "must be longer than %{min} characters"
       long: "must be shorter than %{max} characters"
-      characters: "must only include numbers and letters"
+      characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
       must_begin_with_alphanumeric: "must begin with a letter or number"
