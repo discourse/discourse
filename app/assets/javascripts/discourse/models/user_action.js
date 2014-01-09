@@ -16,7 +16,7 @@ var UserActionTypes = {
   replies: 6,
   mentions: 7,
   quotes: 9,
-  favorites: 10,
+  starred: 10,
   edits: 11,
   messages_sent: 12,
   messages_received: 13
@@ -144,7 +144,7 @@ Discourse.UserAction = Discourse.Model.extend({
         case UserActionTypes.likes_given:
         case UserActionTypes.likes_received:
           return "likes";
-        case UserActionTypes.favorites:
+        case UserActionTypes.starred:
           return "stars";
         case UserActionTypes.edits:
           return "edits";
@@ -218,14 +218,14 @@ Discourse.UserAction.reopenClass({
 
   TO_COLLAPSE: [UserActionTypes.likes_given,
                 UserActionTypes.likes_received,
-                UserActionTypes.favorites,
+                UserActionTypes.starred,
                 UserActionTypes.edits,
                 UserActionTypes.bookmarks],
 
   TO_SHOW: [
     UserActionTypes.likes_given,
     UserActionTypes.likes_received,
-    UserActionTypes.favorites,
+    UserActionTypes.starred,
     UserActionTypes.edits,
     UserActionTypes.bookmarks,
     UserActionTypes.messages_sent,

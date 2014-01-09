@@ -586,7 +586,7 @@ fr:
     go_back: 'retour'
     current_user: 'voir la page de l''utilisateur'
 
-    favorite:
+    starred:
       title: 'Favoris'
       help:
         star: 'ajouter cette discussion à vos favoris'
@@ -594,7 +594,7 @@ fr:
 
     topics:
       none:
-        favorited: "Vous n'avez aucune discussion favorite pour le moment. Pour ajouter une discussion aux favoris, cliquez sur l'étoile suivant le titre."
+        starred: "Vous n'avez aucune discussion favorite pour le moment. Pour ajouter une discussion aux favoris, cliquez sur l'étoile suivant le titre."
         unread: "Vous n'avez aucune discussion non lue."
         new: "Vous n'avez aucune discussion non lue."
         read: "Vous n'avez lu aucune discussion pour le moment."
@@ -609,7 +609,7 @@ fr:
         read: "Il n'y a plus de discussion à lire."
         new: "Il n'y a plus de discussion à lire."
         unread: "Il n'y a plus de discussion non lue à lire."
-        favorited: "Il n'y a plus de discussion favorites à lire."
+        starred: "Il n'y a plus de discussion favorites à lire."
         category: "Il n'y a plus de discussion sur {{category}} à lire."
 
     rank_details:
@@ -1066,7 +1066,7 @@ fr:
       hot:
         title: "Populaires"
         help: "discussions populaires"
-      favorited:
+      starred:
         title: "Ajouté à vos Favoris"
         help: "discussions que vous avez ajoutées à vos favoris"
       read:
@@ -1481,7 +1481,7 @@ fr:
         latest: '<b>g</b> puis <b>l</b> La plus récente'
         new: '<b>g</b> puis <b>n</b> Nouvelles'
         unread: '<b>g</b> puis <b>u</b> Non lues'
-        favorited: '<b>g</b> puis <b>f</b> Favorites'
+        starred: '<b>g</b> puis <b>f</b> Favorites'
         categories: '<b>g</b> puis <b>c</b> Catégories'
       navigation:
         title: 'Navigation'
@@ -1497,7 +1497,7 @@ fr:
         help: '<b>?</b> Ouvrir l''aide des raccourcis clavier'
       actions:
         title: 'Actions'
-        favorite: '<b>f</b> Ajouter une discussion aux favoris'
+        starred: '<b>f</b> Ajouter une discussion aux favoris'
         share_topic: '<b>s</b> Partager une discussion'
         share_post: '<b>Maj s</b> Partager un message '
         reply_topic: '<b>r</b> Répondre à une discussion'

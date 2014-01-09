@@ -325,7 +325,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return false;
   },
 
-  showFavoriteButton: function() {
+  showStarButton: function() {
     return Discourse.User.current() && !this.get('isPrivateMessage');
   }.property('isPrivateMessage'),
 

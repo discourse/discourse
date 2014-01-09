@@ -1,5 +1,5 @@
 /**
-  A button for favoriting a topic
+  A button to display notification options.
 
   @class NotificationsButton
   @extends Discourse.DropdownButtonView

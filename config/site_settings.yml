@@ -43,7 +43,7 @@ basic:
     default: true
   top_menu:
     client: true
-    default: 'latest|new|unread|favorited|categories'
+    default: 'latest|new|unread|starred|categories'
   post_menu:
     client: true
     default: 'like|edit|flag|delete|share|bookmark|reply'
@@ -336,7 +336,7 @@ rate_limits:
   max_bookmarks_per_day: 20
   max_flags_per_day: 20
   max_edits_per_day: 30
-  max_favorites_per_day: 20
+  max_stars_per_day: 20
 
 developer:
   force_hostname: ''

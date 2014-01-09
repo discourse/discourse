@@ -55,9 +55,9 @@ class TopicQuery
     create_list(:latest)
   end
 
-  # The favorited topics
-  def list_favorited
-    create_list(:favorited) {|topics| topics.where('tu.starred') }
+  # The starred topics
+  def list_starred
+    create_list(:starred) {|topics| topics.where('tu.starred') }
   end
 
   def list_read

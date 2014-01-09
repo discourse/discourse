@@ -400,10 +400,10 @@ en:
       title: "Bookmarks"
       xaxis: "Day"
       yaxis: "Number of new bookmarks"
-    favorites:
-      title: "Favorites"
+    starred:
+      title: "Starred"
       xaxis: "Day"
-      yaxis: "Number of new favorites"
+      yaxis: "Number of new starred topics"
     users_by_trust_level:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
@@ -599,7 +599,7 @@ en:
     ga_domain_name: "Google analytics domain name, eg: mysite.com; see http://google.com/analytics"
     enable_escaped_fragments: "Enable workaround solution to help older search engine webcrawlers index your site. WARNING: enable only if you have to."
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|starred|unread|new|posted|categories"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
@@ -666,7 +666,7 @@ en:
     max_flags_per_day: "Maximum number of flags per user per day"
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
     max_edits_per_day: "Maximum number of edits per user per day"
-    max_favorites_per_day: "Maximum number of topics that can be favorited per user per day"
+    max_stars_per_day: "Maximum number of topics that can be starred per user per day"
     max_topics_per_day: "Maximum number of topics a user can create per day"
     max_private_messages_per_day: "The maximum amount of private messages users can create per day"
 

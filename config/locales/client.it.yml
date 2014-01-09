@@ -552,7 +552,7 @@ it:
     go_back: 'torna indietro'
     current_user: 'vai alla tua pagina utente'
 
-    favorite:
+    starred:
       title: 'Preferito'
       help:
         star: 'aggiungi questo topic nella tua lista dei preferiti'
@@ -560,7 +560,7 @@ it:
 
     topics:
       none:
-        favorited: "Non hai alcun topic preferito. Per rendere un topic preferito, clicca la stella di fianco al titolo."
+        starred: "Non hai alcun topic preferito. Per rendere un topic preferito, clicca la stella di fianco al titolo."
         unread: "Non hai alcun topic non letto da leggere."
         new: "Non hai nuovi topic da leggere."
         read: "Non hai ancora letto alcun topic."
@@ -575,7 +575,7 @@ it:
         read: "Non ci sono altri topic da leggere."
         new: "Non ci sono altri nuovi topic da leggere."
         unread: "Non ci sono altri topic non letti da leggere."
-        favorited: "Non ci sono altri topic preferiti da leggere."
+        starred: "Non ci sono altri topic preferiti da leggere."
         category: "Non ci sono altri topic nella categoria {{category}} da leggere."
 
     rank_details:
@@ -965,7 +965,7 @@ it:
       hot:
         title: "Hot"
         help: "una selezione dei topic più attivi"
-      favorited:
+      starred:
         title: "Preferiti"
         help: "topic preferiti"
       read:

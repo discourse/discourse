@@ -41,10 +41,10 @@ Discourse.UserActivityTopicsRoute = Discourse.UserTopicListRoute.extend({
   }
 });
 
-Discourse.UserActivityFavoritesRoute = Discourse.UserTopicListRoute.extend({
-  userActionType: Discourse.UserAction.TYPES.favorites,
+Discourse.UserActivityStarredRoute = Discourse.UserTopicListRoute.extend({
+  userActionType: Discourse.UserAction.TYPES.starred,
 
   model: function() {
-    return Discourse.TopicList.find('favorited', {user_id: this.modelFor('user').get('id') });
+    return Discourse.TopicList.find('starred', {user_id: this.modelFor('user').get('id') });
   }
 });

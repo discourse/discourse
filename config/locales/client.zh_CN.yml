@@ -584,7 +584,7 @@ zh_CN:
     go_back: '返回'
     current_user: '去你的用户页面'
 
-    favorite:
+    starred:
       title: '收藏'
       help:
         star: '将此主题加入你的收藏列表'
@@ -592,7 +592,7 @@ zh_CN:
 
     topics:
       none:
-        favorited: "你尚未收藏任何主题。要收藏一个主题，点击标题旁的星星图标。"
+        starred: "你尚未收藏任何主题。要收藏一个主题，点击标题旁的星星图标。"
         unread: "你没有未阅主题。"
         new: "你没有新主题可读。"
         read: "你尚未阅读任何主题。"
@@ -607,7 +607,7 @@ zh_CN:
         read: "没有更多已阅主题可看了。"
         new: "没有更多新主题可看了。"
         unread: "没有更多未阅主题可看了。"
-        favorited: "没有更多收藏主题可看了。"
+        starred: "没有更多收藏主题可看了。"
         category: "没有更多 {{category}} 分类的主题了。"
 
     rank_details:
@@ -1079,7 +1079,7 @@ zh_CN:
       hot:
         title: "热门"
         help: "最近最受欢迎的主题"
-      favorited:
+      starred:
         title: "收藏"
         help: "你收藏的主题"
       read:

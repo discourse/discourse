@@ -178,7 +178,7 @@ en:
       "6": "Replies"
       "7": "Mentions"
       "9": "Quotes"
-      "10": "Favorites"
+      "10": "Starred"
       "11": "Edits"
       "12": "Sent Items"
       "13": "Inbox"
@@ -587,15 +587,15 @@ en:
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
 
-    favorite:
-      title: 'Favorite'
+    starred:
+      title: 'Starred'
       help:
-        star: 'add this topic to your favorites list'
-        unstar: 'remove this topic from your favorites list'
+        star: 'add this topic to your starred list'
+        unstar: 'remove this topic from your starred list'
 
     topics:
       none:
-        favorited: "You haven't favorited any topics yet. To favorite a topic, click or tap the star next to the title."
+        starred: "You haven't starred any topics yet. To star a topic, click or tap the star next to the title."
         unread: "You have no unread topics."
         new: "You have no new topics."
         read: "You haven't read any topics yet."
@@ -610,7 +610,7 @@ en:
         read: "There are no more read topics."
         new: "There are no more new topics."
         unread: "There are no more unread topics."
-        favorited: "There are no more favorited topics."
+        starred: "There are no more starred topics."
         category: "There are no more {{category}} topics."
 
     rank_details:
@@ -1083,9 +1083,9 @@ en:
       hot:
         title: "Hot"
         help: "a selection of the hottest topics"
-      favorited:
-        title: "Favorited"
-        help: "topics you marked as favorites"
+      starred:
+        title: "Starred"
+        help: "topics you starred"
       read:
         title: "Read"
         help: "topics you've read, in the order that you last read them"
@@ -1500,7 +1500,7 @@ en:
         latest: '<b>g</b> then <b>l</b> Latest'
         new: '<b>g</b> then <b>n</b> New'
         unread: '<b>g</b> then <b>u</b> Unread'
-        favorited: '<b>g</b> then <b>f</b> Favorited'
+        starred: '<b>g</b> then <b>f</b> Starred'
         categories: '<b>g</b> then <b>c</b> Categories'
       navigation:
         title: 'Navigation'
@@ -1516,7 +1516,7 @@ en:
         help: '<b>?</b> Open keyboard shortcuts help'
       actions:
         title: 'Actions'
-        favorite: '<b>f</b> Favorite topic'
+        star: '<b>f</b> Star topic'
         share_topic: '<b>s</b> Share topic'
         share_post: '<b>shift s</b> Share post'
         reply_topic: '<b>r</b> Reply to topic'

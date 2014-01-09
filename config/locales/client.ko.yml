@@ -561,7 +561,7 @@ ko:
     go_back: '돌아가기'
     current_user: '사용자 페이지로 이동'
 
-    favorite:
+    starred:
       title: '즐겨찾기'
       help:
         star: '즐겨찾기로 이 토픽을 추가'
@@ -569,7 +569,7 @@ ko:
 
     topics:
       none:
-        favorited: "아직 즐겨찾기가 없습니다. 토픽을 즐겨찾기하려면 제목 옆 별표를 눌러주세요."
+        starred: "아직 즐겨찾기가 없습니다. 토픽을 즐겨찾기하려면 제목 옆 별표를 눌러주세요."
         unread: "읽지 않은 토픽이 없습니다."
         new: "읽을 새로운 토픽이 없습니다."
         read: "아직 어떠한 토픽도 읽지 않았습니다."
@@ -584,7 +584,7 @@ ko:
         read: "더 이상 읽을 토픽이 없습니다"
         new: "더 이상 읽을 새로운 토픽이 없습니다."
         unread: "더 이상 읽지 않은 토픽이 없습니다"
-        favorited: "더 이상 읽을 즐겨찾기 토픽이 없습니다"
+        starred: "더 이상 읽을 즐겨찾기 토픽이 없습니다"
         category: "더 이상 {{category}}에 토픽이 없습니다"
 
     rank_details:
@@ -1028,7 +1028,7 @@ ko:
       hot:
         title: "인기 있는 글"
         help: "가장 인기있는 토픽 중 하나를 선택"
-      favorited:
+      starred:
         title: "즐겨찾기"
         help: "즐겨찾기로 표시한 게시글"
       read:

@@ -8,7 +8,7 @@ describe ListController do
     @post = Fabricate(:post, user: @user)
 
     # forces tests down some code paths
-    SiteSetting.stubs(:top_menu).returns('latest,-video|new|unread|favorited|categories|category/beer')
+    SiteSetting.stubs(:top_menu).returns('latest,-video|new|unread|starred|categories|category/beer')
   end
 
   describe 'indexes' do
@@ -175,15 +175,15 @@ describe ListController do
     end
   end
 
-  context 'favorited' do
+  context 'starred' do
     it 'raises an error when not logged in' do
-      lambda { xhr :get, :favorited }.should raise_error(Discourse::NotLoggedIn)
+      lambda { xhr :get, :starred }.should raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
       before do
         log_in_user(@user)
-        xhr :get, :favorited
+        xhr :get, :starred
       end
 
       it { should respond_with(:success) }

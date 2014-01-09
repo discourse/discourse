@@ -25,7 +25,7 @@ Discourse.TopicFooterButtonsView = Discourse.ContainerView.extend({
         if (this.get('topic.details.can_invite_to')) {
           this.attachViewClass(Discourse.InviteReplyButton);
         }
-        this.attachViewClass(Discourse.FavoriteButton);
+        this.attachViewClass(Discourse.StarButton);
         this.attachViewClass(Discourse.ShareButton);
         this.attachViewClass(Discourse.ClearPinButton);
       }

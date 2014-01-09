@@ -541,7 +541,7 @@ de:
     go_back: 'Zurück'
     current_user: 'Gehe zu deinem Nutzerprofil'
 
-    favorite:
+    starred:
       title: 'Favoriten'
       help:
         star: 'Füge dieses Thema deinen Favoriten hinzu'

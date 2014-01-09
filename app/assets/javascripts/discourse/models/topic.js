@@ -155,13 +155,13 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
-  favoriteTooltipKey: function() {
-    return this.get('starred') ? 'favorite.help.unstar' : 'favorite.help.star';
+  starTooltipKey: function() {
+    return this.get('starred') ? 'starred.help.unstar' : 'starred.help.star';
   }.property('starred'),
 
-  favoriteTooltip: function() {
-    return I18n.t(this.get('favoriteTooltipKey'));
-  }.property('favoriteTooltipKey'),
+  starTooltip: function() {
+    return I18n.t(this.get('starTooltipKey'));
+  }.property('starTooltipKey'),
 
   estimatedReadingTime: function() {
     var wordCount = this.get('word_count');

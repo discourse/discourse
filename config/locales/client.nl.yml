@@ -569,7 +569,7 @@ nl:
     go_back: ga terug
     current_user: ga naar je gebruikerspagina
 
-    favorite:
+    starred:
       title: Favoriet
       help:
         star: Voeg deze topic toe aan je favorietenlijst
@@ -577,7 +577,7 @@ nl:
 
     topics:
       none:
-        favorited: "Je hebt nog geen topics tussen je favorieten staan. Om een topic toe te voegen, klik of druk op de ster naast de topictitel."
+        starred: "Je hebt nog geen topics tussen je favorieten staan. Om een topic toe te voegen, klik of druk op de ster naast de topictitel."
         unread: Je hebt geen ongelezen topics.
         new: Je hebt geen nieuwe topics.
         read: Je hebt nog geen topics gelezen.
@@ -592,7 +592,7 @@ nl:
         read: Er zijn geen gelezen topics meer.
         new: Er zijn geen nieuwe topics meer.
         unread: Er zijn geen ongelezen topics meer.
-        favorited: Er zijn geen favoriete topics meer.
+        starred: Er zijn geen favoriete topics meer.
         category: "Er zijn geen topics meer in {{category}}."
 
     rank_details:
@@ -1036,7 +1036,7 @@ nl:
       hot:
         title: Populair
         help: een selectie van de meest populaire topics
-      favorited:
+      starred:
         title: Favorieten
         help: topics die je als favoriet hebt ingesteld
       read:
