@@ -12,6 +12,10 @@ module Middleware
         @env = env
       end
 
+      def is_mobile=(val)
+        @is_mobile = val ? :true : :false
+      end
+
       def is_mobile?
         @is_mobile ||=
           begin
