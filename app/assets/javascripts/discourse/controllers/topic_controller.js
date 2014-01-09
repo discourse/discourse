@@ -460,8 +460,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       ]);
     } else {
       post.destroy(user).then(null, function(e) {
-        console.log('Error case?');
-        console.log(e);
         post.undoDeleteState();
         var response = $.parseJSON(e.responseText);
         if (response && response.errors) {
