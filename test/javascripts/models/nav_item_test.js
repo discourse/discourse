@@ -1,12 +1,16 @@
+var asianCategory = Discourse.Category.create({name: '确实是这样', id: 343434});
+
 module("Discourse.NavItem", {
   setup: function() {
-    this.site = Discourse.Site.current();
-    this.asianCategory = Discourse.Category.create({name: '确实是这样', id: 343434});
-    this.site.get('categories').addObject(this.asianCategory);
+    Ember.run(function() {
+      Discourse.Site.currentProp('categories').addObject(asianCategory);
+    });
   },
 
   teardown: function() {
-    this.site.get('categories').removeObject(this.asianCategory);
+    Em.run(function() {
+      Discourse.Site.currentProp('categories').removeObject(asianCategory);
+    });
   }
 });
 
