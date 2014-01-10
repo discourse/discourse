@@ -204,7 +204,7 @@ begin
 
   rss = `ps -o rss -p #{pid}`.chomp.split("\n").last.to_i
 
-  results.merge({
+  results = results.merge({
     "timings" => @timings,
     "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
     "rss_kb" => rss
