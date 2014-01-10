@@ -653,7 +653,11 @@ zh_CN:
       must_begin_with_alphanumeric: "必须以字母或数字开头"
     email:
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
-
+    attributes:
+            password:
+              common: "是5000个最常用的密码之一。请使用一个更安全的密码。"
+            ip_address:
+              signup_not_allowed: "你的 IP 已被屏蔽， 禁止使用此 IP 注册。"
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} 邀请你参与 %{site_name} 上的一个讨论"
     text_body_template: |
