@@ -157,6 +157,12 @@
       color: inherit;
     }
   }
+  .age {
+    white-space: nowrap;
+    .with-year {
+      font-size: 85%;
+    }
+  }
 }
 
 // Category list
