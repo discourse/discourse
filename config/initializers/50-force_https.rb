@@ -12,6 +12,6 @@ class Discourse::ForceHttpsMiddleware
 
 end
 
-
-Rails.configuration.middleware.insert_before MessageBus::Rack::Middleware, Discourse::ForceHttpsMiddleware
+# this code plays up, skip for now
+#Rails.configuration.middleware.insert_before MessageBus::Rack::Middleware, Discourse::ForceHttpsMiddleware
 
