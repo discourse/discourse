@@ -686,6 +686,7 @@ fr:
         position: "message %{current} sur %{total}"
 
       notifications:
+        title: ''
         reasons:
           '3_6': 'Vous recevrez des notifications parce que vous surveillez cette catégorie.'
           '3_5': 'Vous recevrez des notifications parce que vous avez commencé à surveiller cette discussion automatiquement.'
