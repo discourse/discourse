@@ -172,7 +172,7 @@ begin
   ]
 
   tests += tests.map{|k,url| ["#{k}_admin", "#{url}#{append}"]}
-  tests.shuffle
+  tests.shuffle!
 
   def best_of(a, b)
     return a unless b
