@@ -1211,6 +1211,9 @@
 
       "![": function image( text ) {
 
+        // Without this guard V8 crashes hard on the RegExp
+        if (text.indexOf('(') >= 0 && text.indexOf(')') === -1) { return; }
+
         // Unlike images, alt text is plain text only. no other elements are
         // allowed in there
 
