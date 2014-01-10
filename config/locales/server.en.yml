@@ -947,7 +947,7 @@ en:
 
       **New version: %{new_version}**
 
-      Please upgrade as soon as possible to get the latest fixes and new features.
+      Please upgrade as soon as possible to get the latest fixes and new features. Visit http://meta.discourse.org for discussion and news about Discourse.
 
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Updates Are Available"
@@ -959,6 +959,8 @@ en:
       **New version: %{new_version}**
 
       %{notes}
+
+      Visit http://meta.discourse.org for discussion and news about Discourse.
 
   system_messages:
     post_hidden:
