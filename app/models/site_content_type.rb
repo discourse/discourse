@@ -21,10 +21,7 @@ class SiteContentType
   end
 
   def default_content
-    if @opts[:default_18n_key].present?
-      return I18n.t(@opts[:default_18n_key])
-    end
-    ""
+    @opts[:default_18n_key].present? ? I18n.t(@opts[:default_18n_key]) : ""
   end
 
 end

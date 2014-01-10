@@ -24,7 +24,7 @@ Discourse.AdminSiteContentEditRoute = Discourse.Route.extend({
     this.render('admin/templates/site_content_edit', {into: 'admin/templates/site_contents'});
   },
 
-  exit: function() {
+  deactivate: function() {
     this._super();
     this.render('admin/templates/site_contents_empty', {into: 'admin/templates/site_contents'});
   },

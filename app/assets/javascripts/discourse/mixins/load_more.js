@@ -10,7 +10,7 @@
 **/
 Discourse.LoadMore = Em.Mixin.create(Ember.ViewTargetActionSupport, Discourse.Scrolling, {
 
-  scrolled: function(e) {
+  scrolled: function() {
     var eyeline = this.get('eyeline');
     if (eyeline) { eyeline.update(); }
   },

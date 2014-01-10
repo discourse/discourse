@@ -11,7 +11,7 @@ class Admin::EmailController < Admin::AdminController
 
   def test
     params.require(:email_address)
-    Jobs.enqueue(:test_email, to_address: params[:email_address])
+    Jobs::TestEmail.new.execute(to_address: params[:email_address])
     render nothing: true
   end
 

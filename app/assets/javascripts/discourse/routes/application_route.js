@@ -11,6 +11,7 @@ Discourse.ApplicationRoute = Em.Route.extend({
   actions: {
     showLogin: function() {
       Discourse.Route.showModal(this, 'login');
+      this.controllerFor('login').resetForm();
     },
 
     showCreateAccount: function() {
@@ -29,6 +30,10 @@ Discourse.ApplicationRoute = Em.Route.extend({
     showUploadSelector: function(composerView) {
       Discourse.Route.showModal(this, 'uploadSelector');
       this.controllerFor('uploadSelector').setProperties({ composerView: composerView });
+    },
+
+    showKeyboardShortcutsHelp: function() {
+      Discourse.Route.showModal(this, 'keyboardShortcutsHelp');
     },
 
 
@@ -75,8 +80,16 @@ Discourse.ApplicationRoute = Em.Route.extend({
         });
       }
 
-    }
+    },
+  },
 
+  activate: function() {
+    this._super();
+    Em.run.next(function() { 
+      // Support for callbacks once the application has activated
+      Discourse.ApplicationRoute.trigger('activate');
+    });
   }
-
 });
+
+RSVP.EventTarget.mixin(Discourse.ApplicationRoute);

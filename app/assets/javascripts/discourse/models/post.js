@@ -91,8 +91,7 @@ Discourse.Post = Discourse.Model.extend({
   }.property('read', 'topic.last_read_post_number', 'bookmarked'),
 
   bookmarkedChanged: function() {
-    var post = this;
-    Discourse.ajax("/posts/" + (this.get('id')) + "/bookmark", {
+    Discourse.ajax("/posts/" + this.get('id') + "/bookmark", {
       type: 'PUT',
       data: {
         bookmarked: this.get('bookmarked') ? true : false
@@ -154,6 +153,7 @@ Discourse.Post = Discourse.Model.extend({
       // We're updating a post
       return Discourse.ajax("/posts/" + (this.get('id')), {
         type: 'PUT',
+        dataType: 'json',
         data: {
           post: { raw: this.get('raw'), edit_reason: this.get('editReason') },
           image_sizes: this.get('imageSizes')
@@ -237,6 +237,8 @@ Discourse.Post = Discourse.Model.extend({
     @param {Discourse.User} deletedBy The user deleting the post
   **/
   setDeletedState: function(deletedBy) {
+    this.set('oldCooked', this.get('cooked'));
+
     // Moderators can delete posts. Regular users can only trigger a deleted at message.
     if (deletedBy.get('staff')) {
       this.setProperties({
@@ -252,6 +254,26 @@ Discourse.Post = Discourse.Model.extend({
         can_recover: true,
         can_edit: false,
         user_deleted: true
+      });
+    }
+  },
+
+  /**
+    Changes the state of the post to NOT be deleted. Does not call the server.
+    This can only be called after setDeletedState was called, but the delete
+    failed on the server.
+
+    @method undoDeletedState
+  **/
+  undoDeleteState: function() {
+    if (this.get('oldCooked')) {
+      this.setProperties({
+        deleted_at: null,
+        deleted_by: null,
+        cooked: this.get('oldCooked'),
+        version: this.get('version') - 1,
+        can_recover: false,
+        user_deleted: false
       });
     }
   },

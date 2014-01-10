@@ -459,7 +459,7 @@ zh_CN:
     logo_small_url: "你的站点的小号标志图片，例如：http://example.com/logo-small.png，用于卷起主题列表时显示"
     favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon"
     notification_email: "邮件回复地址，当发送系统邮件，例如通知用户找回密码、新用户注册等等时，所使用的发信人地址"
-    use_ssl: "使用 SSL 安全套接层来访问本站吗？"
+    use_https: "使用 SSL 安全套接层来访问本站吗？"
     summary_score_threshold: "将一个帖子包含到“优秀”帖子中所需的最小分值"
     summary_posts_required: "在一个主题中启用“优秀”模式所要求的最小帖子数量"
     summary_likes_required: "在一个主题中启用“优秀”模式所要求的最小赞数量"
@@ -653,7 +653,11 @@ zh_CN:
       must_begin_with_alphanumeric: "必须以字母或数字开头"
     email:
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
-
+    attributes:
+            password:
+              common: "是5000个最常用的密码之一。请使用一个更安全的密码。"
+            ip_address:
+              signup_not_allowed: "你的 IP 已被屏蔽， 禁止使用此 IP 注册。"
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} 邀请你参与 %{site_name} 上的一个讨论"
     text_body_template: |

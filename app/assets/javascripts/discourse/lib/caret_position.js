@@ -32,7 +32,7 @@ $.fn.caretPosition = function(options) {
   span = $("#pos span");
   textarea = $(this);
 
-  getStyles = function(el, prop) {
+  getStyles = function(el) {
     if (el.currentStyle) {
       return el.currentStyle;
     } else {

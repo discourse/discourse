@@ -1,0 +1,33 @@
+@import "../foundation/variables";
+
+.topic-list-item td:first-child, .topic-post {
+  background-color: inherit;
+  border-left: 1px solid transparent;
+}
+
+.topic-list-item.selected td:first-child, .topic-post.selected {
+  border-left: 1px solid $topic-list-starred-color;
+}
+
+.topic-list-item.selected {
+  background-color: inherit;
+}
+
+#keyboard-shortcuts-help {
+  ul {
+    list-style: none;
+    padding-left: 0;
+
+    li {
+      margin: 5px 0px
+    }
+
+    b {
+      background-color: $nav-stacked-divider-color;
+      color: $nav-stacked-color;
+      display: inline-block;
+      margin: 0px 2px;
+      padding: 2px 4px;
+    }
+  }
+}

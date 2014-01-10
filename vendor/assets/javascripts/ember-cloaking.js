@@ -91,7 +91,7 @@
 
       var toUncloak = [],
           $w = $(window),
-          windowHeight = $w.height(),
+          windowHeight = window.innerHeight ? window.innerHeight : $w.height(),
           windowTop = $w.scrollTop(),
           slack = Math.round(windowHeight * this.get('slackRatio')),
           viewportTop = windowTop - slack,

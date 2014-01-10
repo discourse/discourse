@@ -14,10 +14,16 @@ module ::Kernel
   def rails4?
     !ENV["RAILS3"]
   end
+
+  def rails_master?
+    rails4? && ENV["RAILS_MASTER"]
+  end
 end
 
 if rails4?
-  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_rails4.lock")
+  rails_version = rails_master? ? 'rails_master' : 'rails4'
+
+  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_#{rails_version}.lock")
 
   # Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
   class Bundler::Dsl
@@ -39,9 +45,14 @@ end
 gem 'seed-fu-discourse', require: 'seed-fu'
 
 if rails4?
-  gem 'rails'
+  if rails_master?
+    gem 'rails', git: 'https://github.com/rails/rails.git'
+    gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
+  else
+    gem 'rails'
+    gem 'actionpack-action_caching'
+  end
   gem 'rails-observers'
-  gem 'actionpack-action_caching'
 else
   # we had pain with the 3.2.13 upgrade so monkey patch the security fix
   # next time around we hope to upgrade
@@ -54,7 +65,7 @@ else
   gem 'active_attr'
 end
 
-gem 'redis-rails'
+#gem 'redis-rails'
 gem 'hiredis'
 gem 'redis', :require => ["redis", "redis/connection/hiredis"]
 
@@ -71,7 +82,6 @@ gem 'barber'
 
 gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
-gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
 gem 'redcarpet', require: false
 gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
@@ -188,13 +198,17 @@ gem 'lru_redux'
 #  we are open to it. by deferring require to the initializer we can configure disourse installs without it
 
 gem 'flamegraph', require: false
-gem 'rack-mini-profiler',  '0.9.0.pre ', require: false
+gem 'rack-mini-profiler', require: false
 
 # used for caching, optional
 gem 'rack-cors', require: false
 gem 'unicorn', require: false
 gem 'puma', require: false
-gem 'rbtrace', require: false
+gem 'rbtrace', require: false, platform: :mri
+
+# required for feed importing and embedding
+gem 'ruby-readability', require: false
+gem 'simple-rss', require: false
 
 # perftools only works on 1.9 atm
 group :profile do

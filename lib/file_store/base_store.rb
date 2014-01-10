@@ -38,7 +38,7 @@ module FileStore
     def download(upload)
     end
 
-    def absolute_avatar_template(avatar)
+    def avatar_template(avatar)
     end
 
     def purge_tombstone(grace_period)

@@ -59,8 +59,16 @@ class PostsController < ApplicationController
   def update
     params.require(:post)
 
-    post = Post.where(id: params[:id]).first
+    post = Post.where(id: params[:id])
+    post = post.with_deleted if guardian.is_staff?
+    post = post.first
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
+
+    if !guardian.can_edit?(post) && post.user_id == current_user.id && post.edit_time_limit_expired?
+      render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
+      return
+    end
+
     guardian.ensure_can_edit!(post)
 
     # to stay consistent with the create api,
@@ -125,6 +133,12 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
+
+    if !guardian.can_delete_post?(post) && post.user_id == current_user.id && post.edit_time_limit_expired?
+      render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
+      return
+    end
+
     guardian.ensure_can_delete!(post)
 
     destroyer = PostDestroyer.new(current_user, post)

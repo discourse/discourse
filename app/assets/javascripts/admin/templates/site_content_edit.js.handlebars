@@ -1,32 +1,26 @@
+<h3>{{model.title}}</h3>
+<p class='description'>{{model.description}}</p>
 
-  <h3>{{model.title}}</h3>
-  <p class='description'>{{model.description}}</p>
+{{#if model.markdown}}
+  {{pagedown value=model.content}}
+{{/if}}
+{{#if model.plainText}}
+  {{textarea value=model.content class="plain"}}
+{{/if}}
+{{#if model.html}}
+  {{aceEditor content=model.content mode="html"}}
+{{/if}}
+{{#if model.css}}
+  {{aceEditor content=model.content mode="css"}}
+{{/if}}
 
-  {{#if model.markdown}}
-    {{pagedown value=model.content}}
-  {{/if}}
-
-  {{#if model.plainText}}
-    {{textarea value=model.content class="plain"}}
-  {{/if}}
-
-  {{#if model.html}}
-    {{aceEditor content=model.content mode="html"}}
-  {{/if}}
-
-  {{#if model.css}}
-    {{aceEditor content=model.content mode="css"}}
-  {{/if}}
-
-
-
-  <div class='controls'>
-    <button class='btn' {{action saveChanges}} {{bindAttr disabled="saveDisabled"}}>
-      {{#if saving}}
-        {{i18n saving}}
-      {{else}}
-        {{i18n save}}
-      {{/if}}
-    </button>
-    {{#if saved}}{{i18n saved}}{{/if}}
-  </div>
+<div class='controls'>
+  <button class='btn' {{action saveChanges}} {{bindAttr disabled="saveDisabled"}}>
+    {{#if saving}}
+      {{i18n saving}}
+    {{else}}
+      {{i18n save}}
+    {{/if}}
+  </button>
+  {{#if saved}}{{i18n saved}}{{/if}}
+</div>

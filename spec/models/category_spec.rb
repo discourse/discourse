@@ -267,6 +267,7 @@ describe Category do
       category.latest_post_id.should == post3.id
       category.latest_topic_id.should == post2.topic_id
 
+      post3.reload
 
       destroyer = PostDestroyer.new(Fabricate(:admin), post3)
       destroyer.destroy

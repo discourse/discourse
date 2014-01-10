@@ -2,8 +2,7 @@ defaults: &defaults
   host: <%= GlobalSetting.redis_host %>
   port: <%= GlobalSetting.redis_port %>
   password: <%= GlobalSetting.redis_password %>
-  db: 0
-  cache_db: 2
+  db: <%= GlobalSetting.redis_db %>
 
 development:
   <<: *defaults

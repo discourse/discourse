@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="<%= @description %>" name="description">
+    <meta content="<%= SiteSetting.site_description %>" name="description">
     <meta content="" name="author">
 
     <%= canonical_link_tag %>
@@ -13,8 +13,8 @@
     <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
 
     <%= javascript_include_tag "preload_store" %>
-
     <%= javascript_include_tag "locales/#{I18n.locale}" %>
+    <%= javascript_include_tag "vendor" %>
     <%= javascript_include_tag "application" %>
     <%- if staff? %>
       <%= javascript_include_tag "admin"%>
@@ -24,6 +24,8 @@
     <%= render :partial => "common/discourse_stylesheet" %>
 
     <%= discourse_csrf_tags %>
+
+    <%= raw SiteContent.content_for(:head) %>
 
     <%= yield :head %>
   </head>

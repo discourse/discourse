@@ -276,7 +276,7 @@ class Guardian
   end
 
   def can_edit_post?(post)
-    is_staff? || (!post.topic.archived? && is_my_own?(post) && !post.user_deleted &&!post.deleted_at)
+    is_staff? || (!post.topic.archived? && is_my_own?(post) && !post.user_deleted && !post.deleted_at && !post.edit_time_limit_expired?)
   end
 
   def can_edit_user?(user)
@@ -304,6 +304,9 @@ class Guardian
     # Can't delete the first post
     return false if post.post_number == 1
 
+    # Can't delete after post_edit_time_limit minutes have passed
+    return false if !is_staff? && post.edit_time_limit_expired?
+
     # You can delete your own posts
     return !post.user_deleted? if is_my_own?(post)
 
@@ -320,7 +323,7 @@ class Guardian
   end
 
   def can_delete_category?(category)
-    is_staff? && category.topic_count == 0
+    is_staff? && category.topic_count == 0 && !category.uncatgorized?
   end
 
   def can_delete_topic?(topic)

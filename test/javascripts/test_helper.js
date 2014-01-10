@@ -21,36 +21,9 @@
 
 // Pagedown customizations
 //= require ../../app/assets/javascripts/pagedown_custom.js
-
-// The rest of the vendored JS
-//= require LAB.js
-//= require Markdown.Converter.js
-//= require Markdown.Editor.js
-//= require better_markdown.js
-//= require bootbox.js
-//= require bootstrap-alert.js
-//= require bootstrap-button.js
-//= require bootstrap-dropdown.js
-//= require bootstrap-modal.js
-//= require bootstrap-transition.js
-//= require browser-update.js
-//= require chosen.jquery.js
-//= require ember-renderspeed.js
-//= require favcount.js
-//= require jquery.ba-replacetext.js
-//= require jquery.ba-resize.min.js
-//= require jquery.color.js
-//= require jquery.cookie.js
-//= require jquery.fileupload.js
-//= require jquery.iframe-transport.js
-//= require jquery.putcursoratend.js
-//= require jquery.tagsinput.js
-//= require lodash.js
-//= require md5.js
-//= require modernizr.custom.00874.js
-//= require mousetrap.js
-//= require rsvp.js
-//= require show-html.js
+//
+//= require vendor
+//
 //= require htmlparser.js
 
 // Stuff we need to load first

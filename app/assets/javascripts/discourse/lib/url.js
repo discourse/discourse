@@ -20,7 +20,6 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path The path we are replacing our history state with.
   **/
   replaceState: function(path) {
-
     if (window.history &&
         window.history.pushState &&
         window.history.replaceState &&
@@ -48,7 +47,6 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path The path we are routing to.
   **/
   routeTo: function(path) {
-
     var oldPath = window.location.pathname;
     path = path.replace(/https?\:\/\/[^\/]+/, '');
 
@@ -120,7 +118,6 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToPost: function(oldPath, path) {
-
     var newMatches = this.TOPIC_REGEXP.exec(path),
         newTopicId = newMatches ? newMatches[2] : null;
 
@@ -168,7 +165,6 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
-
     var defaultFilter = "/" + Discourse.ListController.filters[0];
 
     if (path === "/" && (oldPath === "/" || oldPath === defaultFilter)) {
@@ -216,6 +212,5 @@ Discourse.URL = Em.Object.createWithMixins({
   controllerFor: function(name) {
     return Discourse.__container__.lookup('controller:' + name);
   }
-
 
 });

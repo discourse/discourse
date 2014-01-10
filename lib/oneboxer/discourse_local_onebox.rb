@@ -88,7 +88,7 @@ module Oneboxer
       end
 
       return nil unless @template
-      Mustache.render(File.read("#{Rails.root}/lib/oneboxer/templates/discourse_#{@template}_onebox.hbrs"), args)
+      Mustache.render(File.read("#{Rails.root}/lib/oneboxer/templates/discourse_#{@template}_onebox.handlebars"), args)
     rescue ActionController::RoutingError
       nil
     end

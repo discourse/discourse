@@ -1,6 +1,7 @@
 #
 #  A wrapper around redis that namespaces keys with the current site id
 #
+require_dependency 'cache'
 class DiscourseRedis
 
   def self.raw_connection(config = nil)
@@ -24,6 +25,11 @@ class DiscourseRedis
     @redis = DiscourseRedis.raw_connection(@config)
   end
 
+  def without_namespace
+    # Only use this if you want to store and fetch data that's shared between sites
+    @redis
+  end
+
   def url
     self.class.url(@config)
   end
@@ -38,9 +44,10 @@ class DiscourseRedis
   end
 
   # Proxy key methods through, but prefix the keys with the namespace
-  [:append, :blpop, :brpop, :brpoplpush, :decr, :decrby, :del, :exists, :expire, :expireat, :get, :getbit, :getrange, :getset,
+  [:append, :blpop, :brpop, :brpoplpush, :decr, :decrby, :exists, :expire, :expireat, :get, :getbit, :getrange, :getset,
    :hdel, :hexists, :hget, :hgetall, :hincrby, :hincrbyfloat, :hkeys, :hlen, :hmget, :hmset, :hset, :hsetnx, :hvals, :incr,
-   :incrby, :incrbyfloat, :lindex, :linsert, :llen, :lpop, :lpush, :lpushx, :lrange, :lrem, :lset, :ltrim, :mget, :move, :mset,
+   :incrby, :incrbyfloat, :lindex, :linsert, :llen, :lpop, :lpush, :lpushx, :lrange, :lrem, :lset, :ltrim,
+   :mapped_hmset, :mapped_hmget, :mapped_mget, :mapped_mset, :mapped_msetnx, :mget, :move, :mset,
    :msetnx, :persist, :pexpire, :pexpireat, :psetex, :pttl, :rename, :renamenx, :rpop, :rpoplpush, :rpush, :rpushx, :sadd, :scard,
    :sdiff, :set, :setbit, :setex, :setnx, :setrange, :sinter, :sismember, :smembers, :sort, :spop, :srandmember, :srem, :strlen,
    :sunion, :ttl, :type, :watch, :zadd, :zcard, :zcount, :zincrby, :zrange, :zrangebyscore, :zrank, :zrem, :zremrangebyrank,
@@ -51,22 +58,32 @@ class DiscourseRedis
     end
   end
 
+  def del(k)
+    k = "#{DiscourseRedis.namespace}:#{k}"
+    @redis.del k
+  end
+
+  def keys
+    len = DiscourseRedis.namespace.length + 1
+    @redis.keys("#{DiscourseRedis.namespace}:*").map{
+      |k| k[len..-1]
+    }
+  end
+
+  def flushdb
+    keys.each{|k| del(k)}
+  end
+
+  def reconnect
+    @redis.client.reconnect
+  end
+
   def self.namespace
     RailsMultisite::ConnectionManagement.current_db
   end
 
   def self.new_redis_store
-    redis_config = YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env]
-    unless redis_config
-      puts '', "Redis config for environment '#{Rails.env}' was not found in #{Rails.root}/config/redis.yml."
-      puts "Did you forget to do RAILS_ENV=production?"
-      puts "Check your redis.yml and make sure it has configuration for the environment you're trying to use.", ''
-      raise 'Redis config not found'
-    end
-    redis_store = ActiveSupport::Cache::RedisStore.new "redis://#{(':' + redis_config['password'] + '@') if redis_config['password']}#{redis_config['host']}:#{redis_config['port']}/#{redis_config['cache_db']}"
-    redis_store.options[:namespace] = -> { DiscourseRedis.namespace }
-    redis_store
+    Cache.new
   end
-
 
 end

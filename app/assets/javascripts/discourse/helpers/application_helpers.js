@@ -4,12 +4,12 @@
   @method breakUp
   @for Handlebars
 **/
-Handlebars.registerHelper('breakUp', function(property, options) {
-  var prop, result, tokens;
-  prop = Ember.Handlebars.get(this, property, options);
+Handlebars.registerHelper('breakUp', function(property, hint, options) {
+  var prop = Ember.Handlebars.get(this, property, options);
   if (!prop) return "";
+  hint = Ember.Handlebars.get(this, hint, options);
 
-  return Discourse.Formatter.breakUp(prop, 13);
+  return Discourse.Formatter.breakUp(prop, hint);
 });
 
 /**
@@ -63,6 +63,10 @@ function categoryLinkHTML(category, options) {
 **/
 Handlebars.registerHelper('categoryLink', function(property, options) {
   return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
+});
+
+Handlebars.registerHelper('categoryLinkRaw', function(property, options) {
+  return categoryLinkHTML(property, options);
 });
 
 /**
@@ -289,7 +293,7 @@ Handlebars.registerHelper('number', function(property, options) {
   var result = "<span class='" + classNames + "'";
 
   if (n !== title) {
-    result += " title='" + title + "'";
+    result += " title='" + Handlebars.Utils.escapeExpression(title) + "'";
   }
   result += ">" + n + "</span>";
 
@@ -327,7 +331,7 @@ Handlebars.registerHelper('date', function(property, options) {
   @method customHTML
   @for Handlebars
 **/
-Handlebars.registerHelper('customHTML', function(property, options) {
+Handlebars.registerHelper('customHTML', function(property) {
   var html = PreloadStore.get("customHTML");
 
   if (html && html[property] && html[property].length) {

@@ -1,5 +1,3 @@
-/*global Modernizr:true*/
-/*global assetPath:true*/
 /*global Favcount:true*/
 
 /**
@@ -8,7 +6,7 @@
   @class Discourse
   @extends Ember.Application
 **/
-Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
+window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
 
   // Helps with integration tests
@@ -30,6 +28,7 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
   titleChanged: function() {
     var title = "";
+
     if (this.get('title')) {
       title += "" + (this.get('title')) + " - ";
     }
@@ -40,11 +39,14 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     if (notifyCount > 0 && !Discourse.User.currentProp('dynamic_favicon')) {
       title = "(" + notifyCount + ") " + title;
     }
-    // chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
-    window.setTimeout(function() {
-      document.title = ".";
-      document.title = title;
-    }, 200);
+
+    if(title !== document.title) {
+      // chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
+      window.setTimeout(function() {
+        document.title = ".";
+        document.title = title;
+      }, 200);
+    }
   }.observes('title', 'hasFocus', 'notifyCount'),
 
   faviconChanged: function() {

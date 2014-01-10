@@ -56,10 +56,10 @@ Discourse.QuoteButtonView = Discourse.View.extend({
         view.selectText(e.target, controller);
         view.set('isMouseDown', false);
       })
-      .on('touchstart.quote-button', function(e){
+      .on('touchstart.quote-button', function(){
         view.set('isTouchInProgress', true);
       })
-      .on('touchend.quote-button', function(e){
+      .on('touchend.quote-button', function(){
         view.set('isTouchInProgress', false);
       })
       .on('selectionchange', function() {

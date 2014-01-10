@@ -1,4 +1,3 @@
-/*global md5:true */
 module("Discourse.BBCode");
 
 var format = function(input, expected, text) {

@@ -50,7 +50,7 @@ Discourse.ScreenedIpAddressFormComponent = Ember.Component.extend({
     }
   },
 
-  didInsertElement: function(e) {
+  didInsertElement: function() {
     var self = this;
     this._super();
     Em.run.schedule('afterRender', function() {

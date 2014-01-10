@@ -71,7 +71,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     }
   }.observes('controller.enteredAt'),
 
-  didInsertElement: function(e) {
+  didInsertElement: function() {
     this.bindScrolling({name: 'topic-view'});
 
     var topicView = this;

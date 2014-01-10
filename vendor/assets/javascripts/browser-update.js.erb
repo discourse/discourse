@@ -22,6 +22,11 @@ var $buo = function() {
       return;
   }
 
+  // we don't ask Googlebot to update their browser
+  if (ua.indexOf('Googlebot') >= 0) {
+      return;
+  }
+
   // retrieve localized browser upgrade text
   var t = <%= "'" + I18n.t('js.browser_update') + "'" %>;
 

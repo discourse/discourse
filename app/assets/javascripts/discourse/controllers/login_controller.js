@@ -12,6 +12,11 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
   authenticate: null,
   loggingIn: false,
 
+  resetForm: function() {
+    this.set('authenticate', null);
+    this.set('loggingIn', false);
+  },
+
   site: function() {
     return Discourse.Site.current();
   }.property(),
@@ -31,6 +36,13 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
     return this.get('loggingIn') || this.blank('loginName') || this.blank('loginPassword');
   }.property('loginName', 'loginPassword', 'loggingIn'),
 
+  showSignupLink: function() {
+    return !Discourse.SiteSettings.invite_only && !this.get('loggingIn') && this.blank('authenticate');
+  }.property('loggingIn', 'authenticate'),
+
+  showSpinner: function() {
+    return this.get('loggingIn') || this.get('authenticate');
+  }.property('loggingIn', 'authenticate'),
 
   actions: {
     login: function() {
@@ -61,7 +73,7 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
           $hidden_login_form.submit();
         }
 
-      }, function(result) {
+      }, function() {
         // Failed to login
         loginController.flash(I18n.t('login.error'), 'error');
         loginController.set('loggingIn', false);
@@ -83,9 +95,22 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
 
         var height = loginMethod.get("frameHeight") || 400;
         var width = loginMethod.get("frameWidth") || 800;
-        window.open(Discourse.getURL("/auth/" + name), "_blank",
+        var w = window.open(Discourse.getURL("/auth/" + name), "_blank",
             "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
+        var self = this;
+        var timer = setInterval(function() {
+          if(w.closed) {
+            clearInterval(timer);
+            self.set('authenticate', null);
+          }
+        }, 1000);
       }
+    },
+
+    createAccount: function() {
+      var createAccountController = this.get('controllers.createAccount');
+      createAccountController.resetForm();
+      this.send('showCreateAccount');
     }
   },
 

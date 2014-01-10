@@ -169,8 +169,7 @@ Discourse.TopicList.reopenClass({
   topicsFrom: function(result) {
     // Stitch together our side loaded data
     var categories = Discourse.Category.list(),
-        users = this.extractByKey(result.users, Discourse.User),
-        topics = Em.A();
+        users = this.extractByKey(result.users, Discourse.User);
 
     return result.topic_list.topics.map(function (t) {
       t.category = categories.findBy('id', t.category_id);
@@ -179,6 +178,28 @@ Discourse.TopicList.reopenClass({
       });
       return Discourse.Topic.create(t);
     });
+  },
+
+  from: function(result, filter, params) {
+    var topicList = Discourse.TopicList.create({
+      inserted: Em.A(),
+      filter: filter,
+      params: params || {},
+      topics: Discourse.TopicList.topicsFrom(result),
+      can_create_topic: result.topic_list.can_create_topic,
+      more_topics_url: result.topic_list.more_topics_url,
+      draft_key: result.topic_list.draft_key,
+      draft_sequence: result.topic_list.draft_sequence,
+      draft: result.topic_list.draft,
+      canViewRankDetails: result.topic_list.can_view_rank_details,
+      loaded: true
+    });
+
+    if (result.topic_list.filtered_category) {
+      topicList.set('category', Discourse.Category.create(result.topic_list.filtered_category));
+    }
+
+    return topicList;
   },
 
   /**
@@ -206,24 +227,7 @@ Discourse.TopicList.reopenClass({
 
   find: function(filter, params) {
     return PreloadStore.getAndRemove("topic_list", finderFor(filter, params)).then(function(result) {
-      var topicList = Discourse.TopicList.create({
-        inserted: Em.A(),
-        filter: filter,
-        params: params || {},
-        topics: Discourse.TopicList.topicsFrom(result),
-        can_create_topic: result.topic_list.can_create_topic,
-        more_topics_url: result.topic_list.more_topics_url,
-        draft_key: result.topic_list.draft_key,
-        draft_sequence: result.topic_list.draft_sequence,
-        draft: result.topic_list.draft,
-        canViewRankDetails: result.topic_list.can_view_rank_details,
-        loaded: true
-      });
-
-      if (result.topic_list.filtered_category) {
-        topicList.set('category', Discourse.Category.create(result.topic_list.filtered_category));
-      }
-      return topicList;
+      return Discourse.TopicList.from(result, filter, params);
     });
   }
 

@@ -64,6 +64,9 @@ describe UserNotifications do
       # 1 unsubscribe
       mail.html_part.to_s.scan(/To unsubscribe/).count.should == 1
 
+      # side effect, topic user is updated with post number
+      tu = TopicUser.get(post.topic_id, response.user)
+      tu.last_emailed_post_number.should == response.post_number
     end
   end
 

@@ -80,15 +80,18 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotFound do
-    rescue_discourse_actions("[error: 'not found']", 404)
+    rescue_discourse_actions("[error: 'not found']", 404) # TODO: this breaks json responses
   end
 
   rescue_from Discourse::InvalidAccess do
-    rescue_discourse_actions("[error: 'invalid access']", 403)
+    rescue_discourse_actions("[error: 'invalid access']", 403) # TODO: this breaks json responses
   end
 
   def rescue_discourse_actions(message, error)
     if request.format && request.format.json?
+      # TODO: this doesn't make sense. Stuffing an html page into a json response will cause
+      #       $.parseJSON to fail in the browser. Also returning text like "[error: 'invalid access']"
+      #       from the above rescue_from blocks will fail because that isn't valid json.
       render status: error, layout: false, text: (error == 404) ? build_not_found_page(error) : message
     else
       render text: build_not_found_page(error, 'no_js')
@@ -167,7 +170,7 @@ class ApplicationController < ActionController::Base
   # Our custom cache method
   def discourse_expires_in(time_length)
     return unless can_cache_content?
-    Middleware::AnonymousCache.anon_cache(request.env, 1.minute)
+    Middleware::AnonymousCache.anon_cache(request.env, time_length)
   end
 
   def fetch_user_from_params

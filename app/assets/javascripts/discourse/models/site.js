@@ -22,6 +22,10 @@ Discourse.Site = Discourse.Model.extend({
     return postActionTypes.filterProperty('is_flag', true);
   }.property('post_action_types.@each'),
 
+  sortedCategories: Em.computed.sort('categories', function(a, b) {
+    return (b.get('topic_count') || 0) - (a.get('topic_count') || 0);
+  }),
+
   postActionTypeById: function(id) {
     return this.get("postActionByIdLookup.action" + id);
   },

@@ -63,9 +63,7 @@ Discourse.ListCategoryNoneRoute = Discourse.ListCategoryRoute.extend({
 });
 
 Discourse.ListController.filters.forEach(function(filter) {
-  Discourse["List" + (filter.capitalize()) + "CategoryRoute"] = Discourse.ListCategoryRoute.extend({
-    filter: filter
-  });
+  Discourse["List" + filter.capitalize() + "CategoryRoute"] = Discourse.ListCategoryRoute.extend({ filter: filter });
 });
 
 

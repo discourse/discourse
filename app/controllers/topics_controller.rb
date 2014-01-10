@@ -120,7 +120,7 @@ class TopicsController < ApplicationController
     title, raw = params[:title], params[:raw]
     [:title, :raw].each { |key| check_length_of(key, params[key]) }
 
-    # Only suggest similar topics if the site has a minimmum amount of topics present.
+    # Only suggest similar topics if the site has a minimum amount of topics present.
     topics = Topic.similar_to(title, raw, current_user).to_a if Topic.count_exceeds_minimum?
 
     render_serialized(topics, BasicTopicSerializer)

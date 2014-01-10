@@ -18,7 +18,7 @@ Discourse.ClearPinButton = Discourse.ButtonView.extend({
     return this.get('controller.pinned') ? null : 'hidden';
   }.property('controller.pinned'),
 
-  click: function(buffer) {
+  click: function() {
     this.get('controller').send('clearPin');
   },
 

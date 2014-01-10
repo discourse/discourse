@@ -4,6 +4,7 @@ require_dependency 'guardian'
 require_dependency 'unread'
 require_dependency 'age_words'
 require_dependency 'configurable_urls'
+require_dependency 'mobile_detection'
 
 module ApplicationHelper
   include CurrentUser
@@ -25,14 +26,7 @@ module ApplicationHelper
 
   def escape_unicode(javascript)
     if javascript
-      javascript = javascript.dup.force_encoding("utf-8")
-
-      unless javascript.valid_encoding?
-        # work around bust string with a double conversion
-        javascript.encode!("utf-16","utf-8",:invalid => :replace)
-        javascript.encode!("utf-8","utf-16")
-      end
-
+      javascript = javascript.scrub
       javascript.gsub!(/\342\200\250/u, '&#x2028;')
       javascript.gsub!(/(<\/)/u, '\u003C/')
       javascript.html_safe
@@ -116,21 +110,16 @@ module ApplicationHelper
   end
 
   def mobile_view?
-    return false unless SiteSetting.enable_mobile_theme
-    if session[:mobile_view]
-      session[:mobile_view] == '1'
-    else
-      mobile_device?
-    end
+    MobileDetection.resolve_mobile_view!(request.user_agent,params,session)
   end
 
   def mobile_device?
-    # TODO: this is dumb. user agent matching is a doomed approach. a better solution is coming.
-    request.user_agent =~ /Mobile|webOS|Nexus 7/ and !(request.user_agent =~ /iPad/)
+    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def customization_disabled?
     controller.class.name.split("::").first == "Admin" || session[:disable_customization]
   end
+
 
 end

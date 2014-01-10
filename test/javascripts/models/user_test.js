@@ -26,6 +26,34 @@ test("isAllowedToUploadAFile", function() {
   ok(user.isAllowedToUploadAFile("image"), "moderator can always upload a file");
 });
 
+test("homepage when top is disabled", function() {
+  var newUser = Discourse.User.create({ trust_level: 0, last_seen_at: moment() }),
+      oldUser = Discourse.User.create({ trust_level: 1, last_seen_at: moment() }),
+      defaultHomepage = Discourse.Utilities.defaultHomepage();
+
+  Discourse.SiteSettings.top_menu = "latest";
+
+  equal(newUser.get("homepage"), defaultHomepage, "new user's homepage is default when top is disabled");
+  equal(oldUser.get("homepage"), defaultHomepage, "old user's homepage is default when top is disabled");
+
+  oldUser.set("last_seen_at", moment().subtract('month', 2));
+  equal(oldUser.get("homepage"), defaultHomepage, "long-time-no-see old user's homepage is default when top is disabled");
+});
+
+test("homepage when top is enabled", function() {
+  var newUser = Discourse.User.create({ trust_level: 0, last_seen_at: moment() }),
+      oldUser = Discourse.User.create({ trust_level: 1, last_seen_at: moment() }),
+      defaultHomepage = Discourse.Utilities.defaultHomepage();
+
+  Discourse.SiteSettings.top_menu = "latest|top";
+
+  equal(newUser.get("homepage"), "top", "new user's homepage is top when top is enabled");
+  equal(oldUser.get("homepage"), defaultHomepage, "old user's homepage is default when top is enabled");
+
+  oldUser.set("last_seen_at", moment().subtract('month', 2));
+  equal(oldUser.get("homepage"), "top", "long-time-no-see old user's homepage is top when top is enabled");
+});
+
 
 asyncTestDiscourse("findByUsername", function() {
   expect(3);

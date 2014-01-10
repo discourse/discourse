@@ -459,7 +459,15 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         }
       ]);
     } else {
-      post.destroy(user);
+      post.destroy(user).then(null, function(e) {
+        post.undoDeleteState();
+        var response = $.parseJSON(e.responseText);
+        if (response && response.errors) {
+          bootbox.alert(response.errors[0]);
+        } else {
+          bootbox.alert(I18n.t('generic_error'));
+        }
+      });
     }
   },
 
@@ -515,6 +523,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         firstLoadedPost = postStream.get('firstLoadedPost');
 
     this.set('currentPost', post.get('post_number'));
+
+    if (post.get('post_number') === 1) { return; }
 
     if (firstLoadedPost && firstLoadedPost === post) {
       // Note: jQuery shouldn't be done in a controller, but how else can we

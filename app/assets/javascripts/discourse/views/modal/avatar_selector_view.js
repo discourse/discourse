@@ -39,7 +39,7 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
     });
 
     // when a file has been selected
-    $upload.on("fileuploadadd", function (e, data) {
+    $upload.on("fileuploadadd", function () {
       self.setProperties({
         uploading: true,
         imageIsNotASquare: false
@@ -81,7 +81,7 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
     });
 
     // when the upload is done
-    $upload.on("fileuploadalways", function (e, data) {
+    $upload.on("fileuploadalways", function () {
       self.setProperties({ uploading: false, uploadProgress: 0 });
     });
   },

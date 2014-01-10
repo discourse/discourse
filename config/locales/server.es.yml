@@ -311,7 +311,6 @@ es:
     logo_small_url: "El pequeño logo para tu sitio utilizado cuando se hace scroll en un topic ej: http://example.com/logo-small.png"
     favicon_url: "Un favicon para tu sitio, ve http://en.wikipedia.org/wiki/Favicon"
     notification_email: "La dirección de emaul de respuesta utilizada cuando se envían emails del sistema tales como notificar a los usuarios de recuperación de contraseña, nuevas cuentas etc"
-    use_ssl: "¿Debería ser el sitio accesible por SSL? (NO IMPLEMENTADO, EXPERIMENTAL)"
     summary_score_threshold: "La mínima puntuación de un post para ser incluido en los 'summary'"
     summary_posts_required: "Mínimo número de posts en un topic antes de que el modo 'summary' sea activado "
     summary_likes_required: "Mínimo número de me gustas en un topic antes de que el modo 'summary' sea activado"

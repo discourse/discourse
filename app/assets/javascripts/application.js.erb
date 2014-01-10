@@ -1,38 +1,9 @@
-// This is a manifest file that'll be compiled into including all the files listed below.
-// Add new JavaScript code in separate files in this directory and they'll automatically
-// be included in the compiled file accessible from http://example.com/assets/application.js
-// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
-// the compiled file.
-//
-//= require ./env
-
-// probe framework first
-//= require ./discourse/lib/probes.js
-
-// Externals we need to load first
-
 <%
-if Rails.env.development?
-  require_asset ("development/jquery-2.0.3.js")
-else
-  require_asset ("production/jquery-2.0.3.min.js")
-end
-
-require_asset("message-bus")
-
-require_asset ("jquery.ui.widget.js")
-require_asset ("handlebars.js")
-
-if Rails.env.development?
-  require_asset ("development/ember.js")
-else
-  require_asset ("production/ember.js")
-end
 
 require_asset ("./main_include.js")
 
-# Include plugin javascripts
-DiscoursePluginRegistry.javascripts.each do |js|
-  require_asset(js)
-end
+# Include plugin javascripts/handlebars templates
+DiscoursePluginRegistry.javascripts.each { |js| require_asset(js) }
+DiscoursePluginRegistry.handlebars.each { |hb| require_asset(hb) }
+
 %>

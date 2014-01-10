@@ -10,7 +10,7 @@ module Oneboxer
     end
 
     def self.template_path(template_name)
-      "#{Rails.root}/lib/oneboxer/templates/#{template_name}.hbrs"
+      "#{Rails.root}/lib/oneboxer/templates/#{template_name}.handlebars"
     end
 
     def template_path(template_name)

@@ -7,6 +7,7 @@
   @module Discourse
 **/
 Discourse.FavoriteButton = Discourse.ButtonView.extend({
+  classNames: ['favorite'],
   textKey: 'favorite.title',
   helpKeyBinding: 'controller.favoriteTooltipKey',
   attributeBindings: ['disabled'],

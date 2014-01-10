@@ -22,6 +22,7 @@ public/plugins/*
 /coverage/*
 
 /public/assets/*
+/bundle/*
 
 config/discourse.pill
 config/discourse.conf
@@ -53,7 +54,7 @@ log/
 # Ignore gem that is copied in
 MiniProfiler/Ruby/rack-mini-profiler-2.0.1a.gem
 
-sublime-project.sublime-workspace
+discourse.sublime-workspace
 
 # Vim temp files
 *~
