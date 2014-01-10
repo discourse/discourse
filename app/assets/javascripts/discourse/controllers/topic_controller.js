@@ -524,6 +524,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
     this.set('currentPost', post.get('post_number'));
 
+    if (post.get('post_number') === 1) { return; }
+
     if (firstLoadedPost && firstLoadedPost === post) {
       // Note: jQuery shouldn't be done in a controller, but how else can we
       // trigger a scroll after a promise resolves in a controller? We need
