@@ -1502,7 +1502,7 @@ zh_CN:
       navigation:
         title: '导航'
         back: '<b>u</b> 返回'
-        up_down: '<b>k</b>/<b>j</b> 上/下移动'
+        up_down: '<b>k</b> 和 <b>j</b> 上/下移动'
         open: '<b>o</b> 或者 <b>Enter</b> 打开选中的主题'
         next_prev: '<b>`</b>/<b>~</b> 下一个/上一个选区'
       application:
