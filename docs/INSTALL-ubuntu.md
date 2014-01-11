@@ -123,12 +123,7 @@ Install RVM
     # As 'discourse'
     # Install RVM
     \curl -s -S -L https://get.rvm.io | bash -s stable
-    . ~/.bash_profile
-
-    # rvm added shell initialization code to ~/.bash_profile,
-    # move it to ~/.profile instead
-    cat ~/.bash_profile >> ~/.profile
-    rm ~/.bash_profile
+    . ~/.rvm/scripts/rvm
 
     # Install necessary packages for building ruby (this will only work if
     # you've given discourse sudo permissions, which is *not* the default)
