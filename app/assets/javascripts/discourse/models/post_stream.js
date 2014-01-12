@@ -347,7 +347,7 @@ Discourse.PostStream = Em.Object.extend({
   /**
     Prepend the previous window of posts to the stream. Call it when scrolling upwards.
 
-    @method appendMore
+    @method prependMore
     @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
   **/
   prependMore: function() {
