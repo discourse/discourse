@@ -13,88 +13,88 @@ uk:
           format: ! '%n %u'
           units:
             byte:
-              one: Byte
-              other: Bytes
-            gb: GB
-            kb: KB
-            mb: MB
-            tb: TB
+              one: Байт
+              other: Байтів
+            gb: ГБ
+            kb: КБ
+            mb: МБ
+            tb: ТБ
     dates:
       tiny:
-        half_a_minute: "< 1m"
+        half_a_minute: "< 1 хв"
         less_than_x_seconds:
-          one:   "< 1s"
-          other: "< %{count}s"
+          one:   "< 1 с"
+          other: "< %{count} с"
         x_seconds:
-          one:   "1s"
-          other: "%{count}s"
+          one:   "1 с"
+          other: "%{count} с"
         less_than_x_minutes:
-          one:   "< 1m"
-          other: "< %{count}m"
+          one:   "< 1 хв"
+          other: "< %{count} хв"
         x_minutes:
-          one:   "1m"
-          other: "%{count}m"
+          one:   "1 хв"
+          other: "%{count} хв"
         about_x_hours:
-          one:   "1h"
-          other: "%{count}h"
+          one:   "1 год"
+          other: "%{count} год"
         x_days:
-          one:   "1d"
-          other: "%{count}d"
+          one:   "1 д"
+          other: "%{count} д"
         about_x_years:
-          one:   "1y"
-          other: "%{count}y"
+          one:   "1 р"
+          other: "%{count} р"
         over_x_years:
-          one:   "> 1y"
-          other: "> %{count}y"
+          one:   "> 1 р"
+          other: "> %{count} р"
         almost_x_years:
-          one:   "1y"
-          other: "%{count}y"
+          one:   "1 р"
+          other: "%{count} р"
       medium:
         x_minutes:
-          one: "1 min"
-          other: "%{count} mins"
+          one: "1 хвилина"
+          other: "%{count} хвилин"
         x_hours:
-          one: "1 hour"
-          other: "%{count} hours"
+          one: "1 година"
+          other: "%{count} годин"
         x_days:
-          one: "1 day"
-          other: "%{count} days"
+          one: "1 день"
+          other: "%{count} днів"
       medium_with_ago:
         x_minutes:
-          one: "1 min ago"
-          other: "%{count} mins ago"
+          one: "1 хвилина тому"
+          other: "%{count} хвилин тому"
         x_hours:
-          one: "1 hour ago"
-          other: "%{count} hours ago"
+          one: "1 година тому"
+          other: "%{count} годин тому"
         x_days:
-          one: "1 day ago"
-          other: "%{count} days ago"
+          one: "1 день тому"
+          other: "%{count} днів тому"
     share:
-      topic: 'share a link to this topic'
-      post: 'share a link to post #%{postNumber}'
-      close: 'close'
-      twitter: 'share this link on Twitter'
-      facebook: 'share this link on Facebook'
-      google+: 'share this link on Google+'
-      email: 'send this link in an email'
+      topic: 'поширити посилання на цю тему'
+      post: 'поширити посилання на допис #%{postNumber}'
+      close: 'сховати'
+      twitter: 'поширити це посилання в Twitter'
+      facebook: 'поширити це посилання в Facebook'
+      google+: 'поширити це посилання в Google+'
+      email: 'надіслати це посилання електронною поштою'
 
-    edit: 'edit the title and category of this topic'
-    not_implemented: "That feature hasn't been implemented yet, sorry!"
-    no_value: "No"
-    yes_value: "Yes"
+    edit: 'редагувати назву та категорію цієї теми'
+    not_implemented: "Цей функціонал ще не реалізовано, даруйте!"
+    no_value: "Ні"
+    yes_value: "Так"
     of_value: "of"
-    generic_error: "Sorry, an error has occurred."
-    generic_error_with_reason: "An error occurred: %{error}"
-    log_in: "Log In"
-    age: "Age"
-    last_post: "Last Post"
-    joined: "Joined"
-    admin_title: "Admin"
+    generic_error: "Даруйте, виникла помилка."
+    generic_error_with_reason: "Виникла помилка: %{error}"
+    log_in: "Увійти"
+    age: "Вік"
+    last_post: "Останній допис"
+    joined: "Приєднався (-лась)"
+    admin_title: "Адмін"
     flags_title: "Flags"
     show_more: "show more"
     links: Links
-    faq: "FAQ"
-    privacy_policy: "Privacy Policy"
+    faq: "ЧаПи"
+    privacy_policy: "Політика приватності"
     mobile_view: "Mobile View"
     desktop_view: "Desktop View"
     you: "You"
@@ -125,7 +125,7 @@ uk:
       other: "in {{count}} days"
 
     suggested_topics:
-      title: "Suggested Topics"
+      title: "Пропоновані теми"
 
     bookmarks:
       not_logged_in: "Sorry, you must be logged in to bookmark posts."
@@ -184,17 +184,17 @@ uk:
       "13": "Inbox"
 
     categories:
-      all: "all categories"
-      all_subcategories: "all subcategories"
+      all: "всі категорії"
+      all_subcategories: "всі підкатегорії"
       no_subcategory: "no subcategory"
-      category: "Category"
-      posts: "New Posts"
-      topics: "New Topics"
-      latest: "Latest"
+      category: "Категорія"
+      posts: "Нові дописи"
+      topics: "Нові теми"
+      latest: "Останні"
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
-      subcategories: "Subcategories:"
-      topic_stats: "The number of new topics."
+      subcategories: "Підкатегорії:"
+      topic_stats: "Кількість нових тем."
       topic_stat_sentence:
         one: "%{count} new topic in the past %{unit}."
         other: "%{count} new topics in the past %{unit}."
@@ -471,11 +471,11 @@ uk:
         message: "Authenticating with Mozilla Persona (make sure pop up blockers are not enabled)"
 
     composer:
-      posting_not_on_topic: "Which topic do you want to reply to?"
-      saving_draft_tip: "saving"
-      saved_draft_tip: "saved"
+      posting_not_on_topic: "На яку тему Ви хочете відповісти?"
+      saving_draft_tip: "збереження"
+      saved_draft_tip: "збережено"
       saved_local_draft_tip: "saved locally"
-      similar_topics: "Your topic is similar to..."
+      similar_topics: "Ваша тема схожа на..."
       drafts_offline: "drafts offline"
 
       min_length:
@@ -483,20 +483,20 @@ uk:
         need_more_for_reply: "{{n}} to go for the post"
 
       error:
-        title_missing: "Title is required."
-        title_too_short: "Title must be at least {{min}} characters long."
-        title_too_long: "Title must be less than {{max}} characters long."
-        post_missing: "Post can't be empty."
-        post_length: "Post must be at least {{min}} characters long."
-        category_missing: "You must choose a category."
+        title_missing: "Потрібно вказати назву."
+        title_too_short: "Назва має містити щонайменше {{min}} символів."
+        title_too_long: "Назва має містити менше ніж {{max}} символів."
+        post_missing: "Допис не може бути порожнім."
+        post_length: "Допис повинен містити щонайменше {{min}} символів."
+        category_missing: "Потрібно обрати категорію."
 
-      save_edit: "Save Edit"
-      reply_original: "Reply on Original Topic"
-      reply_here: "Reply Here"
-      reply: "Reply"
-      cancel: "Cancel"
-      create_topic: "Create Topic"
-      create_pm: "Create Private Message"
+      save_edit: "Зберегти зміни"
+      reply_original: "Відповісти в початковій темі"
+      reply_here: "Відповісти тут"
+      reply: "Відповісти"
+      cancel: "Скасувати"
+      create_topic: "Створити тему"
+      create_pm: "Створити приватне повідомлення"
 
       users_placeholder: "Add a user"
       title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
@@ -1078,42 +1078,42 @@ uk:
 
     filters:
       latest:
-        title: "Latest"
-        help: "the most recent topics"
+        title: "Останні"
+        help: "найсвіжіші теми"
       hot:
-        title: "Hot"
-        help: "a selection of the hottest topics"
+        title: "Гарячі"
+        help: "добірка найгарячіших тем"
       starred:
-        title: "Starred"
-        help: "topics you starred"
+        title: "Із зірочкою"
+        help: "теми, які Ви позначили зірочкою"
       read:
-        title: "Read"
-        help: "topics you've read, in the order that you last read them"
+        title: "Прочитані"
+        help: "теми, які Ви прочитали, in the order that you last read them"
       categories:
-        title: "Categories"
-        title_in: "Category - {{categoryName}}"
-        help: "all topics grouped by category"
+        title: "Категорії"
+        title_in: "Категорія - {{categoryName}}"
+        help: "всі теми, що належать до категорії"
       unread:
         title:
-          zero: "Unread"
-          one: "Unread (1)"
-          other: "Unread ({{count}})"
-        help: "tracked topics with unread posts"
+          zero: "Непрочитані"
+          one: "Непрочитані (1)"
+          other: "Непрочитані ({{count}})"
+        help: "теми, що відслідковуються та містять непрочитані дописи"
       new:
         title:
-          zero: "New"
-          one: "New (1)"
-          other: "New ({{count}})"
-        help: "new topics since your last visit"
+          zero: "Нові"
+          one: "Нові (1)"
+          other: "Нові ({{count}})"
+        help: "нові теми від часу Вашого останнього перегляду"
       posted:
-        title: "My Posts"
-        help: "topics you have posted in"
+        title: "Мої дописи"
+        help: "теми, в які Ви дописували"
       category:
         title:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "latest topics in the {{categoryName}} category"
+        help: "Останні теми в категорії {{categoryName}}"
       top:
         title: "Top"
         help: "a selection of the best topics"
