@@ -88,6 +88,7 @@ gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
 gem 'sidetiq', '>= 0.3.6'
 gem 'eventmachine'
 gem 'fast_xs'
+gem 'newrelic_rpm'
 
 gem 'fast_xor'
 gem 'fastimage'

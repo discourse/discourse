@@ -156,3 +156,4 @@ If you've stuck to all the defaults above, the default `discourse.conf` and `red
     rake db:seed_fu
     bundle exec rspec # All specs should pass
 
+
