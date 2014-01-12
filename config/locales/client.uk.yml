@@ -5,7 +5,7 @@
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
-en:
+uk:
   js:
     number:
       human:
