@@ -213,7 +213,7 @@ Discourse.Dialect = {
       @param {String} [opts.start] The starting token we want to find
       @param {String} [opts.matcher] The regular expression to match
       @param {Boolean} [opts.wordBoundary] If true, the match must be on a word boundary
-      @param {Boolean} [opts.spaceBoundary] If true, the match must be on a sppace boundary
+      @param {Boolean} [opts.spaceBoundary] If true, the match must be on a space boundary
   **/
   inlineRegexp: function(args) {
     this.registerInline(args.start, function(text, match, prev) {

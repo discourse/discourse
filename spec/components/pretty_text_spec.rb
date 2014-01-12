@@ -41,7 +41,7 @@ describe PrettyText do
     end
 
     it 'should add spoiler tags' do
-      PrettyText.cook("[spoiler]hello[/spoiler]").should match_html "<p><span class=\"spoiler\">hello</span></p>"
+      PrettyText.cook("[spoiler]hello[/spoiler]").should match_html "<p><div class=\"spoiler\">hello</div></p>"
     end
   end
 
