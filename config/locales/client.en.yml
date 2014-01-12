@@ -1227,10 +1227,16 @@ en:
         selector_placeholder: "add users"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
-        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        alias_levels:
+          title: "Who can use this group as an alias?"
+          nobody: "Nobody"
+          only_admins: "Only admins"
+          mods_and_admins: "Only moderators and Admins"
+          members_mods_and_admins: "Only group members, moderators and admins"
+          everyone: "Everyone"
 
       api:
         generate_master: "Generate Master API Key"
