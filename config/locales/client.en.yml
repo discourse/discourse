@@ -230,11 +230,11 @@ en:
       suspended_reason: "Reason: "
       watch_new_topics: "Automatically watch all new topics posted on the forum"
       watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all topics in these categories"
+      watched_categories_instructions: "Same as Tracking, plus you will be notified of all new posts and topics."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically receive notifications for topics in these categories"
+      tracked_categories_instructions: "You will automatically track all new and existing topics providing you a count of unread and new posts"
       muted_categories: "Muted"
-      muted_categories_instructions: "You will automatically mute all topics in these categories"
+      muted_categories_instructions: "You will not be notified of anything about this topic, and it will not appear on your unread tab."
 
       messages:
         all: "All"
