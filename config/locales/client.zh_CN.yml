@@ -597,7 +597,7 @@ zh_CN:
         new: "你没有新主题可读。"
         read: "你尚未阅读任何主题。"
         posted: "你尚未在任何主题中发帖。"
-        latest: "伤心啊，没有主题。"
+        latest: "伤心啊，没有主题。 :("
         hot: "没有热门主题。"
         category: "没有 {{category}} 分类的主题。"
       bottom:
@@ -1497,12 +1497,12 @@ zh_CN:
         latest: '先按 <b>g</b> 再按 <b>l</b> 查看最新内容'
         new: '先按 <b>g</b> 再按 <b>n</b> 查看新主题'
         unread: '先按 <b>g</b> 再按 <b>u</b> 查看未阅主题'
-        favorited: '先按 <b>g</b> 再按 <b>f</b> 查看收藏主题'
+        starred: '先按 <b>g</b> 再按 <b>f</b> 查看收藏主题'
         categories: '先按 <b>g</b> 再按 <b>c</b> 查看分类列表'
       navigation:
         title: '导航'
         back: '<b>u</b> 返回'
-        up_down: '<b>k</b>/<b>j</b> 上/下移动'
+        up_down: '<b>k</b> 和 <b>j</b> 上/下移动'
         open: '<b>o</b> 或者 <b>Enter</b> 打开选中的主题'
         next_prev: '<b>`</b>/<b>~</b> 下一个/上一个选区'
       application:
@@ -1513,7 +1513,7 @@ zh_CN:
         help: '<b>?</b> 打开快捷键列表'
       actions:
         title: '动作'
-        favorite: '<b>f</b> 收藏主题'
+        star: '<b>f</b> 收藏主题'
         share_topic: '<b>s</b> 分享主题'
         share_post: '<b>shift s</b> 分享帖子'
         reply_topic: '<b>r</b> 回复主题'
@@ -1523,7 +1523,7 @@ zh_CN:
         bookmark: '<b>b</b> 给帖子添加书签'
         edit: '<b>e</b> 编辑帖子'
         delete: '<b>d</b> 删除帖子'
-        mark_muted: '<先按 b>m</b> 再按 <b>m</b> 把主题设为免打扰主题'
+        mark_muted: '先按 <b>m</b> 再按 <b>m</b> 把主题设为免打扰主题'
         mark_regular: '先按 <b>m</b> 再按 <b>r</b> 把主题设为常规主题'
         mark_tracking: '先按 <b>m</b> 再按 <b>t</b> 追踪主题'
         mark_watching: '先按 <b>m</b> 再按 <b>w</b> 关注主题'
