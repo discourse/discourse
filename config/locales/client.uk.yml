@@ -82,13 +82,13 @@ uk:
     not_implemented: "Цей функціонал ще не реалізовано, даруйте!"
     no_value: "Ні"
     yes_value: "Так"
-    of_value: "of"
+    of_value: "з"
     generic_error: "Даруйте, виникла помилка."
     generic_error_with_reason: "Виникла помилка: %{error}"
     log_in: "Увійти"
     age: "Вік"
     last_post: "Останній допис"
-    joined: "Приєднався (-лась)"
+    joined: "Приєднався(-лась)"
     admin_title: "Адмін"
     flags_title: "Flags"
     show_more: "show more"
@@ -138,50 +138,50 @@ uk:
     preview: "preview"
     cancel: "cancel"
 
-    save: "Save Changes"
-    saving: "Saving..."
-    saved: "Saved!"
+    save: "Зберегти зміни"
+    saving: "Збереження..."
+    saved: "Збережено!"
 
-    upload: "Upload"
-    uploading: "Uploading..."
-    uploaded: "Uploaded!"
+    upload: "Завантажити"
+    uploading: "Завантаження..."
+    uploaded: "Завантажено!"
 
     choose_topic:
-      none_found: "No topics found."
+      none_found: "Не знайдено тем."
       title:
-        search: "Search for a Topic by name, url or id:"
-        placeholder: "type the topic title here"
+        search: "Шукати тему за назвою, url або id:"
+        placeholder: "введіть назву теми"
 
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the topic</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>You</a> posted <a href='{{topicUrl}}'>the topic</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
-      you_replied_to_post: "<a href='{{userUrl}}'>You</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{topicUrl}}'>the topic</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> replied to <a href='{{topicUrl}}'>the topic</a>"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> написав(ла) <a href='{{topicUrl}}'>тему</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>Ви</a> написали <a href='{{topicUrl}}'>тему</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> відповів(ла) на <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>Ви</a> відповіли на <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> відповів(ла) на <a href='{{topicUrl}}'>тему</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>Ви</a> відповіли на <a href='{{topicUrl}}'>тему</a>"
 
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>you</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>You</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> згадав(ла) <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> згадав(ла) <a href='{{user2Url}}'>Вас</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Ви</a> згадали <a href='{{user2Url}}'>{{another_user}}</a>"
 
-      posted_by_user: "Posted by <a href='{{userUrl}}'>{{user}}</a>"
-      posted_by_you: "Posted by <a href='{{userUrl}}'>you</a>"
-      sent_by_user: "Sent by <a href='{{userUrl}}'>{{user}}</a>"
-      sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
+      posted_by_user: "Написано користувачем <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "Написано <a href='{{userUrl}}'>Вами</a>"
+      sent_by_user: "Надіслано користувачем <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "Надіслано <a href='{{userUrl}}'>Вами</a>"
 
     user_action_groups:
-      "1": "Likes Given"
-      "2": "Likes Received"
-      "3": "Bookmarks"
-      "4": "Topics"
-      "5": "Posts"
-      "6": "Replies"
-      "7": "Mentions"
-      "9": "Quotes"
-      "10": "Starred"
-      "11": "Edits"
+      "1": "Вподобано"
+      "2": "Отримано вподобання"
+      "3": "Закладки"
+      "4": "Теми"
+      "5": "Дописи"
+      "6": "Відповіді"
+      "7": "Згадки"
+      "9": "Цитати"
+      "10": "Позначено зірочкою"
+      "11": "Редагування"
       "12": "Sent Items"
-      "13": "Inbox"
+      "13": "Вхідні"
 
     categories:
       all: "всі категорії"
@@ -250,31 +250,31 @@ uk:
         title: "Змінити Про мене"
 
       change_username:
-        title: "Change Username"
-        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
-        taken: "Sorry, that username is taken."
-        error: "There was an error changing your username."
-        invalid: "That username is invalid. It must only include numbers and letters"
+        title: "Зміна імені користувача"
+        confirm: "Якщо Ви зміните ім'я користувача, всі попередні цитування Ваших дописів та згадки @імені буде порушено. Ви точно абсолютно впевнені, що хочете цього?"
+        taken: "Даруйте, це ім'я користувача вже зайняте."
+        error: "Під час зміни імені користувача трапилася помилка."
+        invalid: "Таке ім'я користувача не підійде. Воно має містити лише цифри та літери"
 
       change_email:
-        title: "Change Email"
-        taken: "Sorry, that email is not available."
-        error: "There was an error changing your email. Perhaps that address is already in use?"
-        success: "We've sent an email to that address. Please follow the confirmation instructions."
+        title: "Зміна адреси електронної пошти"
+        taken: "Даруйте, ця адреса не доступна."
+        error: "При зміні адреси електронної пошти сталася помилка. Можливо, ця адреса вже використовується?"
+        success: "Ми надсілали листа на цю скриньку. Будь ласка, виконайте інструкції щодо підтердження."
 
       change_avatar:
-        title: "Change your avatar"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
-        gravatar_title: "Change your avatar on Gravatar's website"
-        uploaded_avatar: "Custom picture"
-        uploaded_avatar_empty: "Add a custom picture"
-        upload_title: "Upload your picture"
-        image_is_not_a_square: "Warning: we've cropped your image as it's not a square."
+        title: "Зміна аватарки"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, враховуючи"
+        gravatar_title: "Змінити аватарку на сайті Gravatar"
+        uploaded_avatar: "Інше зображення"
+        uploaded_avatar_empty: "Додати інше зображення"
+        upload_title: "Завантажити своє зображення"
+        image_is_not_a_square: "Попередження: ми обрізали Ваше зображення, оскільки воно не квадратне."
 
       email:
         title: "Електронна пошта"
         instructions: "Ваша пошта не відображається публічно."
-        ok: "Looks good. We will email you to confirm."
+        ok: "Адресу прийнято. Ми надішлемо Вам листа для підтвердження."
         invalid: "Будь ласка, введіть правильну адресу електронної пошти."
         authenticated: "Your email has been authenticated by {{provider}}."
         frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
@@ -498,44 +498,44 @@ uk:
       create_topic: "Створити тему"
       create_pm: "Створити приватне повідомлення"
 
-      users_placeholder: "Add a user"
+      users_placeholder: "Додати користувача"
       title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
-      edit_reason_placeholder: "why are you editing?"
-      show_edit_reason: "(add edit reason)"
+      edit_reason_placeholder: "чому Ви редагуєте допис?"
+      show_edit_reason: "(додати причину редагування)"
       reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
       view_new_post: "View your new post."
       saving: "Saving..."
       saved: "Saved!"
       saved_draft: "You have a post draft in progress. Click anywhere in this box to resume editing."
       uploading: "Uploading..."
-      show_preview: 'show preview &raquo;'
-      hide_preview: '&laquo; hide preview'
+      show_preview: 'попередній перегляд &raquo;'
+      hide_preview: '&laquo; сховати попередній перегляд'
 
-      quote_post_title: "Quote whole post"
+      quote_post_title: "Процитувати весь допис повністю"
       bold_title: "Strong"
       bold_text: "strong text"
       italic_title: "Emphasis"
       italic_text: "emphasized text"
-      link_title: "Hyperlink"
+      link_title: "Гіперпосилання"
       link_description: "enter link description here"
-      link_dialog_title: "Insert Hyperlink"
-      link_optional_text: "optional title"
+      link_dialog_title: "Вставити гіперпосилання"
+      link_optional_text: "необов'язкова назва"
       quote_title: "Blockquote"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
       code_text: "enter preformatted text here"
-      upload_title: "Upload"
+      upload_title: "Завантажити"
       upload_description: "enter upload description here"
-      olist_title: "Numbered List"
-      ulist_title: "Bulleted List"
-      list_item: "List item"
-      heading_title: "Heading"
-      heading_text: "Heading"
-      hr_title: "Horizontal Rule"
-      undo_title: "Undo"
-      redo_title: "Redo"
+      olist_title: "Нумерований список"
+      ulist_title: "Маркований список"
+      list_item: "Елемент списку"
+      heading_title: "Заголовок"
+      heading_text: "Заголовок"
+      hr_title: "Горизонтальна лінія"
+      undo_title: "Скасувати"
+      redo_title: "Повернути"
       help: "Markdown Editing Help"
-      toggler: "hide or show the composer panel"
+      toggler: "показати або сховати панель редагування"
 
       admin_options_title: "Optional staff settings for this topic"
       auto_close_label: "Auto-close topic time:"
@@ -544,39 +544,39 @@ uk:
       auto_close_error: "Please enter a valid value."
 
     notifications:
-      title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
-      none: "You have no notifications right now."
-      more: "view older notifications"
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} accepted your invitation"
-      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} moved {{link}}"
+      title: "Сповіщення про згадку Вашого @імені, відповіді на Ваші дописи та теми, приватні повідомлення, тощо"
+      none: "Наразі Ви не маєте сповіщень."
+      more: "переглянути старіші сповіщення"
+      mentioned: "<span title='згадав(ла)' class='icon'>@</span> {{username}} {{link}}"
+      quoted: "<i title='процитував(ла)' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='відповів(ла)' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='написав(ла)' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='відредагував(ла)' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='вподобав(ла)' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='приватне повідомлення'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='fa fa-envelope-o' title='приватне повідомлення'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='прийняв(ла) Ваше запрошення' class='fa fa-sign-in'></i> {{username}} прийняв(ла) Ваше запрошення"
+      moved_post: "<i title='перемістив допис' class='fa fa-arrow-right'></i> {{username}} перемістив {{link}}"
       total_flagged: "total flagged posts"
 
     upload_selector:
-      title: "Add an image"
-      title_with_attachments: "Add an image or a file"
-      from_my_computer: "From my device"
-      from_the_web: "From the web"
-      remote_tip: "enter address of an image in the form http://example.com/image.jpg"
-      remote_tip_with_attachments: "enter address of an image or a file in the form http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
-      local_tip: "click to select an image from your device"
-      local_tip_with_attachments: "click to select an image or a file from your device (allowed extensions: {{authorized_extensions}})"
-      hint: "(you can also drag & drop into the editor to upload them)"
-      hint_for_chrome: "(you can also drag and drop or paste images into the editor to upload them)"
-      uploading: "Uploading"
+      title: "Додати зображення"
+      title_with_attachments: "Додати зображення або файл"
+      from_my_computer: "З мого пристрою"
+      from_the_web: "З інтернету"
+      remote_tip: "введіть адресу зображення у вигляді http://example.com/image.jpg"
+      remote_tip_with_attachments: "введіть адресу зображення або файлу у вигляді http://example.com/file.ext (дозволені розширення: {{authorized_extensions}})."
+      local_tip: "натисніть, щоб обрати зображення з Вашого пристрою"
+      local_tip_with_attachments: "натисніть, щоб обрати зображення або файл з Вашого пристрою (дозволені розширення: {{authorized_extensions}})"
+      hint: "(Ви також можете перетягувати зображення в редактор, щоб їх завантажити)"
+      hint_for_chrome: "(Ви також можете перетягувати або вставляти зображення в редактор, щоб їх завантажити)"
+      uploading: "Завантаження"
 
     search:
-      title: "search for topics, posts, users, or categories"
-      placeholder: "type your search terms here"
-      no_results: "No results found."
-      searching: "Searching ..."
+      title: "шукати в темах, дописах, користувачах та категоріях"
+      placeholder: "введіть слова для пошуку"
+      no_results: "Нічого не знайдено."
+      searching: "Пошук ..."
 
       prefer:
         user: "search will prefer results by @{{username}}"
@@ -620,29 +620,29 @@ uk:
 
     topic:
       filter_to: "Show {{post_count}} posts in topic"
-      create: 'Create Topic'
-      create_long: 'Create a new Topic'
-      private_message: 'Start a private message'
-      list: 'Topics'
-      new: 'new topic'
+      create: 'Створити тему'
+      create_long: 'Створити нову тему'
+      private_message: 'Надіслати приватне повідомлення'
+      list: 'Теми'
+      new: 'нова тема'
       new_topics:
-        one: '1 new topic'
-        other: '{{count}} new topics'
+        one: '1 нова тема'
+        other: '{{count}} нових тем'
       unread_topics:
-        one: '1 unread topic'
-        other: '{{count}} unread topics'
-      title: 'Topic'
-      loading_more: "Loading more Topics..."
-      loading: 'Loading topic...'
+        one: '1 непрочитана тема'
+        other: '{{count}} непрочитаних тем'
+      title: 'Тема'
+      loading_more: "Завантаження інших тем..."
+      loading: 'Завантаження теми...'
       invalid_access:
-        title: "Topic is private"
-        description: "Sorry, you don't have access to that topic!"
+        title: "Тема є приватною."
+        description: "Вибачте, у Вас немає доступу до цієї теми!"
       server_error:
-        title: "Topic failed to load"
-        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, let us know."
+        title: "Тему не вдалося завантажити"
+        description: "Даруйте, ми не змогли завантажити цю тему, ймовірно, через проблему зі з'єднанням. Будь ласка, спробуйте ще раз. Якщо проблема залишається, дайте нам знати."
       not_found:
-        title: "Topic not found"
-        description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
+        title: "Тему не знайдено"
+        description: "Даруйте, ми не змогли знайти цю тему. Можливо, її було видалено модератором?"
       unread_posts:
         one: "you have 1 unread old post in this topic"
         other: "you have {{count}} unread old posts in this topic"
@@ -744,8 +744,8 @@ uk:
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
-        title: 'Reply'
-        help: 'begin composing a reply to this topic'
+        title: 'Відповісти'
+        help: 'почати складати відповідь на цю тему'
 
       clear_pin:
         title: "Clear pin"
@@ -816,13 +816,13 @@ uk:
       reply_topic: "Reply to {{link}}"
       quote_reply: "quote reply"
       edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
-      edit_reason: "Reason: "
-      post_number: "post {{number}}"
-      in_reply_to: "in reply to"
-      last_edited_on: "post last edited on"
-      reply_as_new_topic: "Reply as new Topic"
-      continue_discussion: "Continuing the discussion from {{postLink}}:"
-      follow_quote: "go to the quoted post"
+      edit_reason: "Причина: "
+      post_number: "допис {{number}}"
+      in_reply_to: "у відповідь на"
+      last_edited_on: "допис востаннє редаговано"
+      reply_as_new_topic: "Відповісти у новій Темі"
+      continue_discussion: "В продовження дискусії {{postLink}}:"
+      follow_quote: "перейти до цитованого допису"
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
@@ -847,20 +847,20 @@ uk:
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
 
-      abandon: "Are you sure you want to abandon your post?"
+      abandon: "Ви впевнені, що хочете облишити цей допис?"
 
       archetypes:
         save: 'Save Options'
 
       controls:
-        reply: "begin composing a reply to this post"
-        like: "like this post"
-        edit: "edit this post"
+        reply: "почати складати відповідь на цей допис"
+        like: "вподобати цей допис"
+        edit: "редагувати цей допис"
         flag: "flag this post for attention or send a notification about it"
-        delete: "delete this post"
-        undelete: "undelete this post"
-        share: "share a link to this post"
-        more: "More"
+        delete: "видалити цей допис"
+        undelete: "скасувати видалення цього допису"
+        share: "поширити посилання на цей допис"
+        more: "Більше"
         delete_replies:
           confirm:
             one: "Do you also want to delete the direct reply to this post?"
@@ -904,9 +904,9 @@ uk:
           spam: "You flagged this as spam"
           inappropriate: "You flagged this as inappropriate"
           notify_moderators: "You flagged this for moderation"
-          notify_user: "You sent a private message to this user"
+          notify_user: "Ви надіслали приватне повідомлення цьому користувачу"
           bookmark: "You bookmarked this post"
-          like: "You liked this"
+          like: "Ви це вподобали"
           vote: "You voted for this post"
         by_you_and_others:
           off_topic:
@@ -1373,17 +1373,17 @@ uk:
           one: "reject user"
           other: "reject users ({{count}})"
         titles:
-          active: 'Active Users'
-          new: 'New Users'
-          pending: 'Users Pending Review'
-          newuser: 'Users at Trust Level 0 (New User)'
-          basic: 'Users at Trust Level 1 (Basic User)'
-          regular: 'Users at Trust Level 2 (Regular User)'
-          leader: 'Users at Trust Level 3 (Leader)'
-          elder: 'Users at Trust Level 4 (Elder)'
-          admins: 'Admin Users'
-          moderators: 'Moderators'
-          blocked: 'Blocked Users'
+          active: 'Активні користувачі'
+          new: 'Нові користувачі'
+          pending: 'Користувачі, що очікують на перевірку'
+          newuser: 'Користувачі з Рівнем довіри 0 (Новий користувач)'
+          basic: 'Користувачі з Рівнем довіри 1 (Базовий користувач)'
+          regular: 'Користувачі з Рівнем довіри 2 (Звичайний користувач)'
+          leader: 'Користувачі з Рівнем довіри 3 (Провідник)'
+          elder: 'Користувачі з Рівнем довіри 4 (Старійшина)'
+          admins: 'Адміністратори'
+          moderators: 'Модератори'
+          blocked: 'Заблоковані користувачі'
           suspended: 'Suspended Users'
         reject_successful:
           one: "Successfully rejected 1 user."
