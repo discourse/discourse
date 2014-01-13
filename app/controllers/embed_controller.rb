@@ -1,6 +1,8 @@
 class EmbedController < ApplicationController
   skip_before_filter :check_xhr
   skip_before_filter :preload_json
+  skip_before_filter :store_incoming_links
+
   before_filter :ensure_embeddable
 
   layout 'embed'
