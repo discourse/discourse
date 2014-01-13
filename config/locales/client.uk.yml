@@ -13,7 +13,9 @@ uk:
           format: ! '%n %u'
           units:
             byte:
-              one: Байт
+              one:   Байт
+              few:   Байтів
+              many:  Байтів
               other: Байтів
             gb: ГБ
             kb: КБ
@@ -24,50 +26,80 @@ uk:
         half_a_minute: "< 1 хв"
         less_than_x_seconds:
           one:   "< 1 с"
+          few:   "< %{count} с"
+          many:  "< %{count} с"
           other: "< %{count} с"
         x_seconds:
           one:   "1 с"
+          few:   "%{count} с"
+          many:  "%{count} с"
           other: "%{count} с"
         less_than_x_minutes:
           one:   "< 1 хв"
+          few:   "< %{count} хв"
+          many:  "< %{count} хв"
           other: "< %{count} хв"
         x_minutes:
           one:   "1 хв"
+          few:   "%{count} хв"
+          many:  "%{count} хв"
           other: "%{count} хв"
         about_x_hours:
           one:   "1 год"
+          few:   "%{count} год"
+          many:  "%{count} год"
           other: "%{count} год"
         x_days:
           one:   "1 д"
+          few:   "%{count} д"
+          many:  "%{count} д"
           other: "%{count} д"
         about_x_years:
           one:   "1 р"
+          few:   "%{count} р"
+          many:  "%{count} р"
           other: "%{count} р"
         over_x_years:
           one:   "> 1 р"
+          few:   "> %{count} р"
+          many:  "> %{count} р"
           other: "> %{count} р"
         almost_x_years:
           one:   "1 р"
+          few:   "%{count} р"
+          many:  "%{count} р"
           other: "%{count} р"
       medium:
         x_minutes:
-          one: "1 хвилина"
+          one:   "1 хвилина"
+          few:   "%{count} хвилин"
+          many:  "%{count} хвилин"
           other: "%{count} хвилин"
         x_hours:
-          one: "1 година"
+          one:   "1 година"
+          few:   "%{count} годин"
+          many:  "%{count} годин"
           other: "%{count} годин"
         x_days:
-          one: "1 день"
+          one:   "1 день"
+          few:   "%{count} днів"
+          many:  "%{count} днів"
           other: "%{count} днів"
       medium_with_ago:
         x_minutes:
-          one: "1 хвилина тому"
+          one:   "1 хвилина тому"
+          few:   "%{count} хвилин тому"
+          many:  "%{count} хвилин тому"
           other: "%{count} хвилин тому"
         x_hours:
-          one: "1 година тому"
+          one:   "1 година тому"
+          few:   "%{count} годин тому"
+          many:  "%{count} годин тому"
           other: "%{count} годин тому"
         x_days:
-          one: "1 день тому"
+          one:   "1 день тому"
+          few:   "%{count} днів тому"
+          many:  "%{count} днів тому"
           other: "%{count} днів тому"
     share:
       topic: 'поширити посилання на цю тему'
@@ -108,20 +140,30 @@ uk:
     weekly: "weekly"
     every_two_weeks: "every two weeks"
     character_count:
-      one: "{{count}} character"
+      one:   "{{count}} character"
+      few:   "{{count}} characters"
+      many:  "{{count}} characters"
       other: "{{count}} characters"
 
     in_n_seconds:
-      one: "in 1 second"
+      one:   "in 1 second"
+      few:   "in {{count}} seconds"
+      many:  "in {{count}} seconds"
       other: "in {{count}} seconds"
     in_n_minutes:
-      one: "in 1 minute"
+      one:   "in 1 minute"
+      few:   "in {{count}} minutes"
+      many:  "in {{count}} minutes"
       other: "in {{count}} minutes"
     in_n_hours:
-      one: "in 1 hour"
+      one:   "in 1 hour"
+      few:   "in {{count}} hours"
+      many:  "in {{count}} hours"
       other: "in {{count}} hours"
     in_n_days:
-      one: "in 1 day"
+      one:   "in 1 day"
+      few:   "in {{count}} days"
+      many:  "in {{count}} days"
       other: "in {{count}} days"
 
     suggested_topics:
@@ -196,11 +238,15 @@ uk:
       subcategories: "Підкатегорії:"
       topic_stats: "Кількість нових тем."
       topic_stat_sentence:
-        one: "%{count} new topic in the past %{unit}."
+        one:   "%{count} new topic in the past %{unit}."
+        few:   "%{count} new topics in the past %{unit}."
+        many:  "%{count} new topics in the past %{unit}."
         other: "%{count} new topics in the past %{unit}."
       post_stats: "The number of new posts."
       post_stat_sentence:
-        one: "%{count} new post in the past %{unit}."
+        one:   "%{count} new post in the past %{unit}."
+        few:   "%{count} new posts in the past %{unit}."
+        many:  "%{count} new posts in the past %{unit}."
         other: "%{count} new posts in the past %{unit}."
 
     user:
@@ -326,10 +372,14 @@ uk:
         not_viewed: "I haven't viewed them yet"
         last_here: "they were posted since I was here last"
         after_n_days:
-          one: "they were posted in the last day"
+          one:   "they were posted in the last day"
+          few:   "they were posted in the last {{count}} days"
+          many:  "they were posted in the last {{count}} days"
           other: "they were posted in the last {{count}} days"
         after_n_weeks:
-          one: "they were posted in the last week"
+          one:   "they were posted in the last week"
+          few:   "they were posted in the last {{count}} week"
+          many:  "they were posted in the last {{count}} week"
           other: "they were posted in the last {{count}} week"
 
       auto_track_topics: "Automatically track topics I enter"
@@ -337,10 +387,14 @@ uk:
         never: "never"
         always: "always"
         after_n_seconds:
-          one: "after 1 second"
+          one:   "after 1 second"
+          few:   "after {{count}} seconds"
+          many:  "after {{count}} seconds"
           other: "after {{count}} seconds"
         after_n_minutes:
-          one: "after 1 minute"
+          one:   "after 1 minute"
+          few:   "after {{count}} minutes"
+          many:  "after {{count}} minutes"
           other: "after {{count}} minutes"
 
       invited:
@@ -626,10 +680,14 @@ uk:
       list: 'Теми'
       new: 'нова тема'
       new_topics:
-        one: '1 нова тема'
+        one:   '1 нова тема'
+        few:   '{{count}} нових тем'
+        many:  '{{count}} нових тем'
         other: '{{count}} нових тем'
       unread_topics:
-        one: '1 непрочитана тема'
+        one:   '1 непрочитана тема'
+        few:   '{{count}} непрочитаних тем'
+        many:  '{{count}} непрочитаних тем'
         other: '{{count}} непрочитаних тем'
       title: 'Тема'
       loading_more: "Завантаження інших тем..."
@@ -644,14 +702,20 @@ uk:
         title: "Тему не знайдено"
         description: "Даруйте, ми не змогли знайти цю тему. Можливо, її було видалено модератором?"
       unread_posts:
-        one: "you have 1 unread old post in this topic"
+        one:   "you have 1 unread old post in this topic"
+        few:   "you have {{count}} unread old posts in this topic"
+        many:  "you have {{count}} unread old posts in this topic"
         other: "you have {{count}} unread old posts in this topic"
       new_posts:
-        one: "there is 1 new post in this topic since you last read it"
+        one:   "there is 1 new post in this topic since you last read it"
+        few:   "there are {{count}} new posts in this topic since you last read it"
+        many:  "there are {{count}} new posts in this topic since you last read it"
         other: "there are {{count}} new posts in this topic since you last read it"
 
       likes:
-        one: "there is 1 like in this topic"
+        one:   "there is 1 like in this topic"
+        few:   "there are {{count}} likes in this topic"
+        many:  "there are {{count}} likes in this topic"
         other: "there are {{count}} likes in this topic"
       back_to_list: "Back to Topic List"
       options: "Topic Options"
@@ -780,7 +844,9 @@ uk:
 
       filters:
         n_posts:
-          one: "1 post"
+          one:   "1 post"
+          few:   "{{count}} posts"
+          many:  "{{count}} posts"
           other: "{{count}} posts"
         cancel: "Show all posts in this topic again."
 
@@ -790,7 +856,9 @@ uk:
         topic_name: "New Topic Name"
         error: "There was an error moving posts to the new topic."
         instructions:
-          one: "You are about to create a new topic and populate it with the post you've selected."
+          one:   "You are about to create a new topic and populate it with the post you've selected."
+          few:   "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
+          many:  "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
           other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
 
       merge_topic:
@@ -798,7 +866,9 @@ uk:
         action: "move to existing topic"
         error: "There was an error moving posts into that topic."
         instructions:
-          one: "Please choose the topic you'd like to move that post to."
+          one:   "Please choose the topic you'd like to move that post to."
+          few:   "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+          many:  "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
           other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
 
       multi_select:
@@ -808,7 +878,9 @@ uk:
         delete: delete selected
         cancel: cancel selecting
         description:
-          one: You have selected <b>1</b> post.
+          one:   You have selected <b>1</b> post.
+          few:   "You have selected <b>{{count}}</b> posts."
+          many:  "You have selected <b>{{count}}</b> posts."
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
@@ -824,16 +896,22 @@ uk:
       continue_discussion: "В продовження дискусії {{postLink}}:"
       follow_quote: "перейти до цитованого допису"
       deleted_by_author:
-        one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
+        one:   "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
+        few:   "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+        many:  "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
       gap:
-        one: "1 post omitted"
+        one:   "1 post omitted"
+        few:   "{{count}} posts omitted"
+        many:  "{{count}} posts omitted"
         other: "{{count}} posts omitted"
 
       has_replies:
-        one: "Reply"
+        one:   "Reply"
+        few:   "Replies"
+        many:  "Replies"
         other: "Replies"
 
       errors:
@@ -863,7 +941,9 @@ uk:
         more: "Більше"
         delete_replies:
           confirm:
-            one: "Do you also want to delete the direct reply to this post?"
+            one:   "Do you also want to delete the direct reply to this post?"
+            few:   "Do you also want to delete the {{count}} direct replies to this post?"
+            many:  "Do you also want to delete the {{count}} direct replies to this post?"
             other: "Do you also want to delete the {{count}} direct replies to this post?"
           yes_value: "Yes, delete the replies too"
           no_value: "No, just this post"
@@ -871,7 +951,9 @@ uk:
       actions:
         flag: 'Flag'
         clear_flags:
-          one: "Clear flag"
+          one:   "Clear flag"
+          few:   "Clear flags"
+          many:  "Clear flags"
           other: "Clear flags"
         it_too:
           off_topic: "Flag it too"
@@ -910,63 +992,99 @@ uk:
           vote: "You voted for this post"
         by_you_and_others:
           off_topic:
-            one: "You and 1 other flagged this as off-topic"
+            one:   "You and 1 other flagged this as off-topic"
+            few:   "You and {{count}} other people flagged this as off-topic"
+            many:  "You and {{count}} other people flagged this as off-topic"
             other: "You and {{count}} other people flagged this as off-topic"
           spam:
-            one: "You and 1 other flagged this as spam"
+            one:   "You and 1 other flagged this as spam"
+            few:   "You and {{count}} other people flagged this as spam"
+            many:  "You and {{count}} other people flagged this as spam"
             other: "You and {{count}} other people flagged this as spam"
           inappropriate:
-            one: "You and 1 other flagged this as inappropriate"
+            one:   "You and 1 other flagged this as inappropriate"
+            few:   "You and {{count}} other people flagged this as inappropriate"
+            many:  "You and {{count}} other people flagged this as inappropriate"
             other: "You and {{count}} other people flagged this as inappropriate"
           notify_moderators:
-            one: "You and 1 other flagged this for moderation"
+            one:   "You and 1 other flagged this for moderation"
+            few:   "You and {{count}} other people flagged this for moderation"
+            many:  "You and {{count}} other people flagged this for moderation"
             other: "You and {{count}} other people flagged this for moderation"
           notify_user:
-            one: "You and 1 other sent a private message to this user"
+            one:   "You and 1 other sent a private message to this user"
+            few:   "You and {{count}} other people sent a private message to this user"
+            many:  "You and {{count}} other people sent a private message to this user"
             other: "You and {{count}} other people sent a private message to this user"
           bookmark:
-            one: "You and 1 other bookmarked this post"
+            one:   "You and 1 other bookmarked this post"
+            few:   "You and {{count}} other people bookmarked this post"
+            many:  "You and {{count}} other people bookmarked this post"
             other: "You and {{count}} other people bookmarked this post"
           like:
-            one: "You and 1 other liked this"
+            one:   "You and 1 other liked this"
+            few:   "You and {{count}} other people liked this"
+            many:  "You and {{count}} other people liked this"
             other: "You and {{count}} other people liked this"
           vote:
-            one: "You and 1 other voted for this post"
+            one:   "You and 1 other voted for this post"
+            few:   "You and {{count}} other people voted for this post"
+            many:  "You and {{count}} other people voted for this post"
             other: "You and {{count}} other people voted for this post"
         by_others:
           off_topic:
-            one: "1 person flagged this as off-topic"
+            one:   "1 person flagged this as off-topic"
+            few:   "{{count}} people flagged this as off-topic"
+            many:  "{{count}} people flagged this as off-topic"
             other: "{{count}} people flagged this as off-topic"
           spam:
-            one: "1 person flagged this as spam"
+            one:   "1 person flagged this as spam"
+            few:   "{{count}} people flagged this as spam"
+            many:  "{{count}} people flagged this as spam"
             other: "{{count}} people flagged this as spam"
           inappropriate:
-            one: "1 person flagged this as inappropriate"
+            one:   "1 person flagged this as inappropriate"
+            few:   "{{count}} people flagged this as inappropriate"
+            many:  "{{count}} people flagged this as inappropriate"
             other: "{{count}} people flagged this as inappropriate"
           notify_moderators:
-            one: "1 person flagged this for moderation"
+            one:   "1 person flagged this for moderation"
+            few:   "{{count}} people flagged this for moderation"
+            many:  "{{count}} people flagged this for moderation"
             other: "{{count}} people flagged this for moderation"
           notify_user:
-            one: "1 person sent a private message to this user"
+            one:   "1 person sent a private message to this user"
+            few:   "{{count}} sent a private message to this user"
+            many:  "{{count}} sent a private message to this user"
             other: "{{count}} sent a private message to this user"
           bookmark:
-            one: "1 person bookmarked this post"
+            one:   "1 person bookmarked this post"
+            few:   "{{count}} people bookmarked this post"
+            many:  "{{count}} people bookmarked this post"
             other: "{{count}} people bookmarked this post"
           like:
-            one: "1 person liked this"
+            one:   "1 person liked this"
+            few:   "{{count}} people liked this"
+            many:  "{{count}} people liked this"
             other: "{{count}} people liked this"
           vote:
-            one: "1 person voted for this post"
+            one:   "1 person voted for this post"
+            few:   "{{count}} people voted for this post"
+            many:  "{{count}} people voted for this post"
             other: "{{count}} people voted for this post"
 
       edits:
-        one: 1 edit
+        one:   1 edit
+        few:   "{{count}} edits"
+        many:  "{{count}} edits"
         other: "{{count}} edits"
-        zero: no edits
+        zero:  no edits
 
       delete:
         confirm:
-          one: "Are you sure you want to delete that post?"
+          one:   "Are you sure you want to delete that post?"
+          few:   "Are you sure you want to delete all those posts?"
+          many:  "Are you sure you want to delete all those posts?"
           other: "Are you sure you want to delete all those posts?"
 
       revisions:
@@ -1096,13 +1214,17 @@ uk:
       unread:
         title:
           zero: "Непрочитані"
-          one: "Непрочитані (1)"
+          one:   "Непрочитані (1)"
+          few:   "Непрочитані ({{count}})"
+          many:  "Непрочитані ({{count}})"
           other: "Непрочитані ({{count}})"
         help: "теми, що відслідковуються та містять непрочитані дописи"
       new:
         title:
           zero: "Нові"
-          one: "Нові (1)"
+          one:   "Нові (1)"
+          few:   "Нові ({{count}})"
+          many:  "Нові ({{count}})"
           other: "Нові ({{count}})"
         help: "нові теми від часу Вашого останнього перегляду"
       posted:
@@ -1111,7 +1233,9 @@ uk:
       category:
         title:
           zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
+          one:   "{{categoryName}} (1)"
+          few:   "{{categoryName}} ({{count}})"
+          many:  "{{categoryName}} ({{count}})"
           other: "{{categoryName}} ({{count}})"
         help: "Останні теми в категорії {{categoryName}}"
       top:
@@ -1205,19 +1329,29 @@ uk:
 
         summary:
           action_type_3:
-            one: "off-topic"
+            one:   "off-topic"
+            few:   "off-topic x{{count}}"
+            many:  "off-topic x{{count}}"
             other: "off-topic x{{count}}"
           action_type_4:
-            one: "inappropriate"
+            one:   "inappropriate"
+            few:   "inappropriate x{{count}}"
+            many:  "inappropriate x{{count}}"
             other: "inappropriate x{{count}}"
           action_type_6:
-            one: "custom"
+            one:   "custom"
+            few:   "custom x{{count}}"
+            many:  "custom x{{count}}"
             other: "custom x{{count}}"
           action_type_7:
-            one: "custom"
+            one:   "custom"
+            few:   "custom x{{count}}"
+            many:  "custom x{{count}}"
             other: "custom x{{count}}"
           action_type_8:
-            one: "spam"
+            one:   "spam"
+            few:   "spam x{{count}}"
+            many:  "spam x{{count}}"
             other: "spam x{{count}}"
 
       groups:
@@ -1367,10 +1501,14 @@ uk:
           blocked: 'Blocked'
         approved: "Approved?"
         approved_selected:
-          one: "approve user"
+          one:   "approve user"
+          few:   "approve users ({{count}})"
+          many:  "approve users ({{count}})"
           other: "approve users ({{count}})"
         reject_selected:
-          one: "reject user"
+          one:   "reject user"
+          few:   "reject users ({{count}})"
+          many:  "reject users ({{count}})"
           other: "reject users ({{count}})"
         titles:
           active: 'Активні користувачі'
@@ -1386,10 +1524,14 @@ uk:
           blocked: 'Заблоковані користувачі'
           suspended: 'Suspended Users'
         reject_successful:
-          one: "Successfully rejected 1 user."
+          one:   "Successfully rejected 1 user."
+          few:   "Successfully rejected %{count} users."
+          many:  "Successfully rejected %{count} users."
           other: "Successfully rejected %{count} users."
         reject_failures:
-          one: "Failed to reject 1 user."
+          one:   "Failed to reject 1 user."
+          few:   "Failed to reject %{count} users."
+          many:  "Failed to reject %{count} users."
           other: "Failed to reject %{count} users."
 
       user:
@@ -1438,7 +1580,9 @@ uk:
         delete: "Delete User"
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_forbidden:
-          one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
+          one:   "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
+          few:   "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
+          many:  "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
           other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
         delete_confirm: "Are you SURE you want to delete this user? This action is permanent!"
         delete_and_block: "<b>Yes</b>, and <b>block</b> future signups from this email and IP address"

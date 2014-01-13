@@ -28,14 +28,18 @@ uk:
   operation_already_running: "An %{operation} is currently running. Can't start a new %{operation} job right now."
 
   too_many_replies:
-    one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
+    one:   "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
+    few:   "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
+    many:  "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
 
   embed:
     start_discussion: "Begin the Discussion"
     continue: "Continue the Discussion"
     more_replies:
-      one: "1 more reply"
+      one:   "1 more reply"
+      few:   "%{count} more replies"
+      many:  "%{count} more replies"
       other: "%{count} more replies"
 
     loading: "Loading Discussion..."
@@ -43,28 +47,40 @@ uk:
     imported_from: "Discussion topic for the original blog entry at: %{link}"
     in_reply_to: "in reply to %{username}"
     replies:
-      one: "1 reply"
+      one:   "1 reply"
+      few:   "%{count} replies"
+      many:  "%{count} replies"
       other: "%{count} replies"
 
   too_many_mentions:
-    zero: "Sorry, you can't mention other users."
-    one: "Sorry, you can only mention one other user in a post."
+    zero:  "Sorry, you can't mention other users."
+    one:   "Sorry, you can only mention one other user in a post."
+    few:   "Sorry, you can only mention %{count} users in a post."
+    many:  "Sorry, you can only mention %{count} users in a post."
     other: "Sorry, you can only mention %{count} users in a post."
   too_many_mentions_newuser:
-    zero: "Sorry, new users can't mention other users."
-    one: "Sorry, new users can only mention one other user in a post."
+    zero:  "Sorry, new users can't mention other users."
+    one:   "Sorry, new users can only mention one other user in a post."
+    few:   "Sorry, new users can only mention %{count} users in a post."
+    many:  "Sorry, new users can only mention %{count} users in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
   too_many_images:
-    zero: "Sorry, new users can't put images in posts."
-    one: "Sorry, new users can only put one image in a post."
+    zero:  "Sorry, new users can't put images in posts."
+    one:   "Sorry, new users can only put one image in a post."
+    few:   "Sorry, new users can only put %{count} images in a post."
+    many:  "Sorry, new users can only put %{count} images in a post."
     other: "Sorry, new users can only put %{count} images in a post."
   too_many_attachments:
-    zero: "Sorry, new users can't put attachments in posts."
-    one: "Sorry, new users can only put one attachment in a post."
+    zero:  "Sorry, new users can't put attachments in posts."
+    one:   "Sorry, new users can only put one attachment in a post."
+    few:   "Sorry, new users can only put %{count} attachments in a post."
+    many:  "Sorry, new users can only put %{count} attachments in a post."
     other: "Sorry, new users can only put %{count} attachments in a post."
   too_many_links:
-    zero: "Sorry, new users can't put links in posts."
-    one: "Sorry, new users can only put one link in a post."
+    zero:  "Sorry, new users can't put links in posts."
+    one:   "Sorry, new users can only put one link in a post."
+    few:   "Sorry, new users can only put %{count} links in a post."
+    many:  "Sorry, new users can only put %{count} links in a post."
     other: "Sorry, new users can only put %{count} links in a post."
   spamming_host: "Sorry you cannot post a link to that host."
 
@@ -102,7 +118,9 @@ uk:
 
   education:
     until_posts:
-      one: "1 post"
+      one:   "1 post"
+      few:   "%{count} posts"
+      many:  "%{count} posts"
       other: "%{count} posts"
 
     'new-topic': |
@@ -211,13 +229,19 @@ uk:
   rate_limiter:
     too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
     hours:
-      one: "1 hour"
+      one:   "1 hour"
+      few:   "%{count} hours"
+      many:  "%{count} hours"
       other: "%{count} hours"
     minutes:
-      one: "1 minute"
+      one:   "1 minute"
+      few:   "%{count} minutes"
+      many:  "%{count} minutes"
       other: "%{count} minutes"
     seconds:
-      one: "1 second"
+      one:   "1 second"
+      few:   "%{count} seconds"
+      many:  "%{count} seconds"
       other: "%{count} seconds"
 
   datetime:
@@ -225,72 +249,116 @@ uk:
       half_a_minute: "< 1m"
       less_than_x_seconds:
         one:   "< 1s"
+        few:   "< %{count}s"
+        many:  "< %{count}s"
         other: "< %{count}s"
       x_seconds:
         one:   "1s"
+        few:   "%{count}s"
+        many:  "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
         one:   "< 1m"
+        few:   "< %{count}m"
+        many:  "< %{count}m"
         other: "< %{count}m"
       x_minutes:
         one:   "1m"
+        few:   "%{count}m"
+        many:  "%{count}m"
         other: "%{count}m"
       about_x_hours:
         one:   "1h"
+        few:   "%{count}h"
+        many:  "%{count}h"
         other: "%{count}h"
       x_days:
         one:   "1d"
+        few:   "%{count}d"
+        many:  "%{count}d"
         other: "%{count}d"
       about_x_months:
         one:   "1mon"
+        few:   "%{count}mon"
+        many:  "%{count}mon"
         other: "%{count}mon"
       x_months:
         one:   "1mon"
+        few:   "%{count}mon"
+        many:  "%{count}mon"
         other: "%{count}mon"
       about_x_years:
         one:   "1y"
+        few:   "%{count}y"
+        many:  "%{count}y"
         other: "%{count}y"
       over_x_years:
         one:   "> 1y"
+        few:   "> %{count}y"
+        many:  "> %{count}y"
         other: "> %{count}y"
       almost_x_years:
         one:   "1y"
+        few:   "%{count}y"
+        many:  "%{count}y"
         other: "%{count}y"
 
     distance_in_words_verbose:
       half_a_minute: "just now"
       less_than_x_seconds:
         one:   "just now"
+        few:   "just now"
+        many:  "just now"
         other: "just now"
       x_seconds:
         one:   "1 second ago"
+        few:   "%{count} seconds ago"
+        many:  "%{count} seconds ago"
         other: "%{count} seconds ago"
       less_than_x_minutes:
         one:   "less than 1 minute ago"
+        few:   "less than %{count} minutes ago"
+        many:  "less than %{count} minutes ago"
         other: "less than %{count} minutes ago"
       x_minutes:
         one:   "1 minute ago"
+        few:   "%{count} minutes ago"
+        many:  "%{count} minutes ago"
         other: "%{count} minutes ago"
       about_x_hours:
         one:   "1 hour ago"
+        few:   "%{count} hours ago"
+        many:  "%{count} hours ago"
         other: "%{count} hours ago"
       x_days:
         one:   "1 day ago"
+        few:   "%{count} days ago"
+        many:  "%{count} days ago"
         other: "%{count} days ago"
       about_x_months:
         one:   "about 1 month ago"
+        few:   "about %{count} months ago"
+        many:  "about %{count} months ago"
         other: "about %{count} months ago"
       x_months:
         one:   "1 month ago"
+        few:   "%{count} months ago"
+        many:  "%{count} months ago"
         other: "%{count} months ago"
       about_x_years:
         one:   "about 1 year ago"
+        few:   "about %{count} years ago"
+        many:  "about %{count} years ago"
         other: "about %{count} years ago"
       over_x_years:
         one:   "over 1 year ago"
+        few:   "over %{count} years ago"
+        many:  "over %{count} years ago"
         other: "over %{count} years ago"
       almost_x_years:
         one:   "almost 1 year ago"
+        few:   "almost %{count} years ago"
+        many:  "almost %{count} years ago"
         other: "almost %{count} years ago"
 
   password_reset:
@@ -811,10 +879,14 @@ uk:
 
   move_posts:
     new_topic_moderator_post:
-      one: "I moved a post to a new topic: %{topic_link}"
+      one:   "I moved a post to a new topic: %{topic_link}"
+      few:   "I moved %{count} posts to a new topic: %{topic_link}"
+      many:  "I moved %{count} posts to a new topic: %{topic_link}"
       other: "I moved %{count} posts to a new topic: %{topic_link}"
     existing_topic_moderator_post:
-      one: "I moved a post to an existing topic: %{topic_link}"
+      one:   "I moved a post to an existing topic: %{topic_link}"
+      few:   "I moved %{count} posts to an existing topic: %{topic_link}"
+      many:  "I moved %{count} posts to an existing topic: %{topic_link}"
       other: "I moved %{count} posts to an existing topic: %{topic_link}"
 
   topic_statuses:
@@ -823,16 +895,22 @@ uk:
     closed_enabled: "This topic is now closed. New replies are no longer allowed."
     closed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_enabled_days:
-      zero: "This topic was automatically closed after 1 day. New replies are no longer allowed."
-      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
+      zero:  "This topic was automatically closed after 1 day. New replies are no longer allowed."
+      one:   "This topic was automatically closed after 1 day. New replies are no longer allowed."
+      few:   "This topic was automatically closed after %{count} days. New replies are no longer allowed."
+      many:  "This topic was automatically closed after %{count} days. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
     autoclosed_enabled_hours:
-      zero: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
-      one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
+      zero:  "This topic was automatically closed after 1 hour. New replies are no longer allowed."
+      one:   "This topic was automatically closed after 1 hour. New replies are no longer allowed."
+      few:   "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
+      many:  "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
     autoclosed_enabled_minutes:
-      zero: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
-      one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
+      zero:  "This topic was automatically closed after 1 minute. New replies are no longer allowed."
+      one:   "This topic was automatically closed after 1 minute. New replies are no longer allowed."
+      few:   "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
+      many:  "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is either unpinned by a moderator, or the Clear Pin button is pressed."
@@ -1111,7 +1189,9 @@ uk:
 
     pending_users_reminder:
       subject_template:
-        one: "1 user waiting for approval"
+        one:   "1 user waiting for approval"
+        few:   "%{count} users waiting for approval"
+        many:  "%{count} users waiting for approval"
         other: "%{count} users waiting for approval"
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
@@ -1190,7 +1270,9 @@ uk:
       read_more: "Read More"
 
       posts:
-        one: "1 post"
+        one:   "1 post"
+        few:   "%{count} posts"
+        many:  "%{count} posts"
         other: "%{count} posts"
 
     forgot_password:
