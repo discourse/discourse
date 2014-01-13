@@ -61,7 +61,7 @@ Be sure to install the latest stable Redis, as the package in the distro may be 
 
     sudo apt-add-repository -y ppa:rwky/redis
     sudo apt-get update
-    sudo apt-get install redis-server
+    sudo apt-get install -y redis-server
 
 ## Web Server: nginx
 
