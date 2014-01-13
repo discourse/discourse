@@ -8,13 +8,20 @@
       countFor = [];
 
   for(var i=0; i<links.length; i++) {
-    var href = links[i].href;
+    var link = links[i],
+        href = link.href;
     if (href && href.length) {
-      var m = /^(.*)#discourse-comments$/.exec(href);
-      if (m && m[1]) { countFor.push(m[1]); }
+      if (/#discourse-comments$/.test(href)) {
+        countFor.push(href);
+      }
+    }
+
+    var dataEmbed = link.getAttribute('data-discourse-embed-url');
+    if (dataEmbed && dataEmbed.length) {
+      countFor.push(dataEmbed);
     }
   }
-  //
+
   // JSONP callback to update counts
   window.discourseUpdateCounts = function(result) {
     if (result && result.counts) {
