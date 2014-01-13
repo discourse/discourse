@@ -204,26 +204,26 @@ uk:
         other: "%{count} new posts in the past %{unit}."
 
     user:
-      said: "{{username}} said:"
-      profile: "Profile"
-      show_profile: "Visit Profile"
+      said: "{{username}} сказав:"
+      profile: "Профіль"
+      show_profile: "Переглянути профіль"
       mute: "Mute"
-      edit: "Edit Preferences"
-      download_archive: "download archive of my posts"
-      private_message: "Private Message"
-      private_messages: "Messages"
-      activity_stream: "Activity"
-      preferences: "Preferences"
-      bio: "About me"
-      invited_by: "Invited By"
-      trust_level: "Trust Level"
-      notifications: "Notifications"
+      edit: "Редагувати налаштування"
+      download_archive: "звантажити архів з моїми дописами"
+      private_message: "Приватне повідомлення"
+      private_messages: "Повідомлення"
+      activity_stream: "Активність"
+      preferences: "Налаштування"
+      bio: "Про мене"
+      invited_by: "Запрошений(а)"
+      trust_level: "Рівень довіри"
+      notifications: "Сповіщення"
       dynamic_favicon: "Show incoming message notifications on favicon"
-      external_links_in_new_tab: "Open all external links in a new tab"
+      external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
-      moderator: "{{user}} is a moderator"
-      admin: "{{user}} is an admin"
+      moderator: "{{user}} є модератором"
+      admin: "{{user}} є адміном"
       deleted: "(deleted)"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
@@ -236,18 +236,18 @@ uk:
       muted_categories_instructions: "You will automatically mute all topics in these categories"
 
       messages:
-        all: "All"
-        mine: "Mine"
-        unread: "Unread"
+        all: "Всі"
+        mine: "Мої"
+        unread: "Непрочитані"
 
       change_password:
-        success: "(email sent)"
-        in_progress: "(sending email)"
-        error: "(error)"
+        success: "(лист надіслано)"
+        in_progress: "(надсилання листа)"
+        error: "(помилка)"
         action: "Send Password Reset Email"
 
       change_about:
-        title: "Change About Me"
+        title: "Змінити Про мене"
 
       change_username:
         title: "Change Username"
@@ -272,42 +272,42 @@ uk:
         image_is_not_a_square: "Warning: we've cropped your image as it's not a square."
 
       email:
-        title: "Email"
-        instructions: "Your email will never be shown to the public."
+        title: "Електронна пошта"
+        instructions: "Ваша пошта не відображається публічно."
         ok: "Looks good. We will email you to confirm."
-        invalid: "Please enter a valid email address."
+        invalid: "Будь ласка, введіть правильну адресу електронної пошти."
         authenticated: "Your email has been authenticated by {{provider}}."
         frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
 
       name:
-        title: "Name"
-        instructions: "The long version of your name. Publicly visible, and used for @name matching."
-        too_short: "Your name is too short."
-        ok: "Your name looks good."
+        title: "Ім'я"
+        instructions: "Довга версія Вашого імені. Відображається публічно, і використовується для посилання через @Ім'я."
+        too_short: "Ваше ім'я надто коротке."
+        ok: "Ваше ім'я виглядає добре."
       username:
-        title: "Username"
-        instructions: "Must be unique, no spaces. People can mention you as @username."
-        short_instructions: "People can mention you as @{{username}}."
-        available: "Your username is available."
-        global_match: "Email matches the registered username."
-        global_mismatch: "Already registered. Try {{suggestion}}?"
-        not_available: "Not available. Try {{suggestion}}?"
-        too_short: "Your username is too short."
-        too_long: "Your username is too long."
-        checking: "Checking username availability..."
+        title: "Ім'я користувача"
+        instructions: "Має бути унікальним, не містити пробілів. Інші можуть посилатися на Вас через @Ім'я користувача."
+        short_instructions: "Інші можуть посилатися на Вас як на @{{username}}."
+        available: "Ім'я користувача доступне."
+        global_match: "Електронна пошта відповідає зареєстрованому імені користувача."
+        global_mismatch: "Вже зареєстровано. Спробуєте {{suggestion}}?"
+        not_available: "Не доступно. Спробуєте {{suggestion}}?"
+        too_short: "Ім'я користувача надто коротке."
+        too_long: "Ім'я користувача надто довге."
+        checking: "Перевірка доступності імені користувача..."
         enter_email: 'Username found. Enter matching email.'
         prefilled: "Email matches this registered username."
 
       password_confirmation:
-        title: "Password Again"
+        title: "Пароль ще раз"
 
-      last_posted: "Last Post"
+      last_posted: "Останній допис"
       last_emailed: "Last Emailed"
-      last_seen: "Seen"
-      created: "Created At"
-      log_out: "Log Out"
-      website: "Web Site"
-      email_settings: "Email"
+      last_seen: "Помічено"
+      created: "Створено"
+      log_out: "Вийти"
+      website: "Вебсайт"
+      email_settings: "Електронна пошта"
       email_digests:
         title: "When I don't visit the site, send me an email digest of what's new"
         daily: "daily"
@@ -318,8 +318,8 @@ uk:
       email_private_messages: "Receive an email when someone sends you a private message"
       email_always: "Receive email notifications and email digests even if I am active on the forum"
 
-      other_settings: "Other"
-      categories_settings: "Categories"
+      other_settings: "Інше"
+      categories_settings: "Категорії"
 
       new_topic_duration:
         label: "Consider topics new when"
@@ -344,36 +344,36 @@ uk:
           other: "after {{count}} minutes"
 
       invited:
-        search: "type to search invites..."
-        title: "Invites"
-        user: "Invited User"
-        none: "No invites were found."
-        truncated: "Showing the first {{count}} invites."
+        search: "шукати запрошення..."
+        title: "Запрошення"
+        user: "Запрошений користувач"
+        none: "Запрошень не знайдено."
+        truncated: "Показано перші {{count}} запрошень."
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed"
         pending: "Pending Invites"
         topics_entered: "Topics Entered"
-        posts_read_count: "Posts Read"
-        rescind: "Remove Invitation"
-        rescinded: "Invite removed"
+        posts_read_count: "Прочитано дописів"
+        rescind: "Видалити запрошення"
+        rescinded: "Запрошення видалено"
         time_read: "Read Time"
         days_visited: "Days Visited"
         account_age_days: "Account age in days"
         create: "Invite Friends to this Forum"
 
       password:
-        title: "Password"
-        too_short: "Your password is too short."
-        common: "That password is too common."
-        ok: "Your password looks good."
-        instructions: "Must be at least %{count} characters."
+        title: "Пароль"
+        too_short: "Ваш пароль надто короткий."
+        common: "Цей пароль надто простий."
+        ok: "Ваш пароль добрий."
+        instructions: "Має містити щонайменше %{count} символів."
 
       ip_address:
-        title: "Last IP Address"
+        title: "Остання IP-адреса"
       avatar:
-        title: "Avatar"
+        title: "Аватарка"
       title:
-        title: "Title"
+        title: "Назва"
 
       filters:
         all: "All"
@@ -409,21 +409,21 @@ uk:
       disable: 'Show All Posts'
 
     private_message_info:
-      title: "Private Message"
-      invite: "Invite Others..."
-      remove_allowed_user: "Do you really want to remove {{name}} from this private message?"
+      title: "Приватне повідомлення"
+      invite: "Запросити інших..."
+      remove_allowed_user: "Ви точно хочете видалити {{name}} з цього приватного повідомлення?"
 
-    email: 'Email'
+    email: 'Електронна пошта'
     username: 'Username'
     last_seen: 'Seen'
     created: 'Created'
-    trust_level: 'Trust Level'
+    trust_level: 'Рівень довіри'
 
     create_account:
-      title: "Create Account"
-      action: "Create one now!"
-      invite: "Don't have an account yet?"
-      failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
+      title: "Створити обліковий запис"
+      action: "Створити зараз!"
+      invite: "Ще не маєте облікового запису?"
+      failed: "Щось пішло не так; скоріше за все, цю електронну пошту вже зареєстровано, спробуйте посилання Забув пароль"
 
     forgot_password:
       title: "Forgot Password"
