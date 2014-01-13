@@ -1,10 +1,10 @@
 <header>
   <% if @topic_view.topic.posts_count == 0 %>
     <%= link_to(I18n.t('embed.start_discussion'), @topic_view.topic.url, class: 'button', target: '_blank') %>
-  <% elsif @topic_view.topic.posts_count > 10 %>
+  <% else %>
     <%= link_to(I18n.t('embed.continue'), @second_post_url, class: 'button', target: '_blank') %>
-    <span class='replies'><%= I18n.t('embed.replies', count: @topic_view.topic.posts_count - 1) %></span>
   <% end %>
+  <span class='replies'><%= I18n.t('embed.replies', count: @topic_view.topic.posts_count - 1) %></span>
 </header>
 
 <%- if @topic_view.posts.present? %>
