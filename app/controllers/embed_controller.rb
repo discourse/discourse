@@ -24,6 +24,20 @@ class EmbedController < ApplicationController
     discourse_expires_in 1.minute
   end
 
+  def count
+
+    topic_embeds = TopicEmbed.where(embed_url: params[:embed_url]).includes(:topic).all
+
+    by_url = {}
+    topic_embeds.each do |te|
+      by_url["#{te.embed_url}#discourse-comments"] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
+    end
+
+    respond_to do |format|
+      format.js { render json: {counts: by_url}, callback: params[:callback] }
+    end
+  end
+
   private
 
     def ensure_embeddable
