@@ -28,11 +28,14 @@ class EmbedController < ApplicationController
 
   def count
 
-    topic_embeds = TopicEmbed.where(embed_url: params[:embed_url]).includes(:topic).all
+    urls = params[:embed_url].map {|u| u.sub(/#discourse-comments$/, '') } 
+    topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
 
     by_url = {}
     topic_embeds.each do |te|
-      by_url["#{te.embed_url}#discourse-comments"] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
+      url = te.embed_url 
+      url = "#{url}#discourse-comments" unless params[:embed_url].include?(url)
+      by_url[url] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
     end
 
     respond_to do |format|
