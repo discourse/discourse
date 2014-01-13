@@ -18,7 +18,8 @@ class TopicQuery
                      category
                      sort_order
                      no_subcategories
-                     sort_descending).map(&:to_sym)
+                     sort_descending
+                     status).map(&:to_sym)
 
   # Maps `sort_order` to a columns in `topics`
   SORTABLE_MAPPING = {
@@ -241,6 +242,17 @@ class TopicQuery
 
       if options[:topic_ids]
         result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
+      end
+
+      if status = options[:status]
+        case status
+        when 'open'
+          result = result.where('NOT topics.closed AND NOT topics.archived')
+        when 'closed'
+          result = result.where('topics.closed')
+        when 'archived'
+          result = result.where('topics.archived')
+        end
       end
 
       guardian = Guardian.new(@user)
