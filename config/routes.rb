@@ -243,6 +243,7 @@ Discourse::Application.routes.draw do
   get "topics/private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   get 'embed/comments' => 'embed#comments'
+  get 'embed/count' => 'embed#count'
 
   # Topic routes
   get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
