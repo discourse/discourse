@@ -125,7 +125,7 @@ class Group < ActiveRecord::Base
 
     Group.where("name LIKE :term_like AND (" +
         " alias_level in (:levels)" +
-        " OR (alias_level = #{ALIAS_LEVELS[:everyone]} AND id in (" +
+        " OR (alias_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (" +
             "SELECT group_id FROM group_users WHERE user_id= :user_id)" +
           ")" +
         ")", term_like: "#{name.downcase}%", levels: levels, user_id: current_user.id)
