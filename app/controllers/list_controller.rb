@@ -156,6 +156,7 @@ class ListController < ApplicationController
       category: params[:category],
       sort_order: params[:sort_order],
       sort_descending: params[:sort_descending],
+      status: params[:status]
     }
     result[:no_subcategories] = true if params[:no_subcategories] == 'true'
     result
