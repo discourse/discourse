@@ -19,7 +19,7 @@ Discourse.KeyValueStore = {
   abandonLocal: function() {
     var i, k;
     if (!(localStorage && this.initialized)) {
-      return;
+      return false;
     }
     i = localStorage.length - 1;
     while (i >= 0) {
@@ -67,7 +67,7 @@ Discourse.KeyValueStore = {
 
   handleStorageEvent: function(event) {
     var key = event.key;
-    if (key.indexOf(this.context) == 0) {
+    if (key.indexOf(this.context) === 0) {
       key = key.substring(this.context.length);
     } else {
       // Not our context, not our responsibility
@@ -77,8 +77,10 @@ Discourse.KeyValueStore = {
     if (!targets) {
       return false;
     }
-    targets.forEach(function(listener){
-      listener(event.oldValue, event.NewValue);
+    Em.run(function() {
+      targets.forEach(function(listener){
+        listener(event.oldValue, event.newValue);
+      });
     });
     return false;
   }

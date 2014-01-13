@@ -9,12 +9,10 @@ Discourse.addInitializer(function() {
 
   var self = this;
   $(window).focus(function() {
-    console.log(new Date(), 'focused');
     self.setProperties({hasFocus: true, notify: false});
     self.KeyValueStore.set({key:"lastActiveInstance", value: self.get('instanceId')});
     self.set('isLastActiveInstance', true);
   }).blur(function() {
-    console.log(new Date(), 'blurred');
     self.set('hasFocus', false);
   });
 
