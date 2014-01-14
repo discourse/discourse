@@ -14,7 +14,7 @@ uk:
           units:
             byte:
               one:   Байт
-              few:   Байтів
+              few:   Байти
               many:  Байтів
               other: Байтів
             gb: ГБ
@@ -25,80 +25,80 @@ uk:
       tiny:
         half_a_minute: "< 1 хв"
         less_than_x_seconds:
-          one:   "< 1 с"
+          one:   "< %{count} с"
           few:   "< %{count} с"
           many:  "< %{count} с"
           other: "< %{count} с"
         x_seconds:
-          one:   "1 с"
+          one:   "%{count} с"
           few:   "%{count} с"
           many:  "%{count} с"
           other: "%{count} с"
         less_than_x_minutes:
-          one:   "< 1 хв"
+          one:   "< %{count} хв"
           few:   "< %{count} хв"
           many:  "< %{count} хв"
           other: "< %{count} хв"
         x_minutes:
-          one:   "1 хв"
+          one:   "%{count} хв"
           few:   "%{count} хв"
           many:  "%{count} хв"
           other: "%{count} хв"
         about_x_hours:
-          one:   "1 год"
+          one:   "%{count} год"
           few:   "%{count} год"
           many:  "%{count} год"
           other: "%{count} год"
         x_days:
-          one:   "1 д"
+          one:   "%{count} д"
           few:   "%{count} д"
           many:  "%{count} д"
           other: "%{count} д"
         about_x_years:
-          one:   "1 р"
+          one:   "%{count} р"
           few:   "%{count} р"
           many:  "%{count} р"
           other: "%{count} р"
         over_x_years:
-          one:   "> 1 р"
+          one:   "> %{count} р"
           few:   "> %{count} р"
           many:  "> %{count} р"
           other: "> %{count} р"
         almost_x_years:
-          one:   "1 р"
+          one:   "%{count} р"
           few:   "%{count} р"
           many:  "%{count} р"
           other: "%{count} р"
       medium:
         x_minutes:
-          one:   "1 хвилина"
-          few:   "%{count} хвилин"
+          one:   "%{count} хвилина"
+          few:   "%{count} хвилини"
           many:  "%{count} хвилин"
           other: "%{count} хвилин"
         x_hours:
-          one:   "1 година"
-          few:   "%{count} годин"
+          one:   "%{count} година"
+          few:   "%{count} години"
           many:  "%{count} годин"
           other: "%{count} годин"
         x_days:
-          one:   "1 день"
-          few:   "%{count} днів"
+          one:   "%{count} день"
+          few:   "%{count} дні"
           many:  "%{count} днів"
           other: "%{count} днів"
       medium_with_ago:
         x_minutes:
-          one:   "1 хвилина тому"
-          few:   "%{count} хвилин тому"
+          one:   "%{count} хвилина тому"
+          few:   "%{count} хвилини тому"
           many:  "%{count} хвилин тому"
           other: "%{count} хвилин тому"
         x_hours:
-          one:   "1 година тому"
-          few:   "%{count} годин тому"
+          one:   "%{count} година тому"
+          few:   "%{count} години тому"
           many:  "%{count} годин тому"
           other: "%{count} годин тому"
         x_days:
-          one:   "1 день тому"
-          few:   "%{count} днів тому"
+          one:   "%{count} день тому"
+          few:   "%{count} дні тому"
           many:  "%{count} днів тому"
           other: "%{count} днів тому"
     share:
@@ -124,26 +124,26 @@ uk:
     admin_title: "Адмін"
     flags_title: "Flags"
     show_more: "show more"
-    links: Links
+    links: Посилання
     faq: "ЧаПи"
     privacy_policy: "Політика приватності"
-    mobile_view: "Mobile View"
-    desktop_view: "Desktop View"
+    mobile_view: "Вигляд для мобільного"
+    desktop_view: "Вигляд для настільного комп'ютера"
     you: "You"
     or: "or"
-    now: "just now"
-    read_more: 'read more'
-    more: "More"
-    less: "Less"
-    never: "never"
-    daily: "daily"
-    weekly: "weekly"
-    every_two_weeks: "every two weeks"
+    now: "щойно"
+    read_more: 'читати більше'
+    more: "Більше"
+    less: "Менше"
+    never: "ніколи"
+    daily: "щодня"
+    weekly: "щотижня"
+    every_two_weeks: "кожні два тижні"
     character_count:
-      one:   "{{count}} character"
-      few:   "{{count}} characters"
-      many:  "{{count}} characters"
-      other: "{{count}} characters"
+      one:   "{{count}} симол"
+      few:   "{{count}} символи"
+      many:  "{{count}} символів"
+      other: "{{count}} символів"
 
     in_n_seconds:
       one:   "in 1 second"
@@ -487,42 +487,42 @@ uk:
       complete: "If an account matches that username or email address, you should receive an email with instructions on how to reset your password shortly."
 
     login:
-      title: "Log In"
-      username: "Login"
-      password: "Password"
-      email_placeholder: "email address or username"
-      error: "Unknown error"
-      reset_password: 'Reset Password'
-      logging_in: "Logging In..."
-      or: "Or"
-      authenticating: "Authenticating..."
-      awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
-      awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
-      requires_invite: "Sorry, access to this forum is by invite only."
-      not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
-      resend_activation_email: "Click here to send the activation email again."
-      sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      title: "Вхід"
+      username: "Ім'я користувача"
+      password: "Пароль"
+      email_placeholder: "електронна скринька або ім'я користувача"
+      error: "Невідома помилка"
+      reset_password: 'Скинути пароль'
+      logging_in: "Входимо..."
+      or: "Або"
+      authenticating: "Автентифікуємося..."
+      awaiting_confirmation: "Ваш обліковий запис очікує на активацію. Для отримання ще одного активаційного листа використайте посилання Забув пароль."
+      awaiting_approval: "Ваш обліковий запис ще не затверджено членом команди. Коли його буде активовано, Ви отримаєте електронного листа."
+      requires_invite: "Даруйте, доступ до цього форуму - лише за запрошеннями."
+      not_activated: "Ви ще не можете увійти. Ми вже надіслали Вам листа для активації на скриньку <b>{{sentTo}}</b>. Будь ласка, виконайте інструкції в цьому листі, щоб активувати обліковий запис."
+      resend_activation_email: "Натисніть тут, щоб отримати ще один лист з активацією."
+      sent_activation_email_again: "Ми надіслали на Вашу скриньку <b>{{currentEmail}}</b> ще один лист для активації облікового запису. Протягом кількох хвилин він має з'явитися у Вашій скриньці. Не забувайте також перевіряти теку зі спамом."
       google:
-        title: "with Google"
-        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
+        title: "через Google"
+        message: "Автентифікація через Google (перевірте, щоб блокувальники спливних вікон були вимкнені)"
       twitter:
-        title: "with Twitter"
-        message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
+        title: "через Twitter"
+        message: "Автентифікація через Twitter (перевірте, щоб блокувальники спливних вікон були вимкнені)"
       facebook:
-        title: "with Facebook"
-        message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
+        title: "через Facebook"
+        message: "Автентифікація через Facebook (перевірте, щоб блокувальники спливних вікон були вимкнені)"
       cas:
-        title: "Log In with CAS"
-        message: "Authenticating with CAS (make sure pop up blockers are not enabled)"
+        title: "Вхід через CAS"
+        message: "Автентифікація через CAS (перевірте, щоб блокувальники спливних вікон були вимкнені)"
       yahoo:
-        title: "with Yahoo"
-        message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
+        title: "через Yahoo"
+        message: "Автентифікація через Yahoo (перевірте, щоб блокувальники спливних вікон були вимкнені)"
       github:
-        title: "with GitHub"
-        message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
+        title: "через GitHub"
+        message: "Автентифікація через GitHub (перевірте, щоб блокувальники спливних вікон були вимкнені)"
       persona:
-        title: "with Persona"
-        message: "Authenticating with Mozilla Persona (make sure pop up blockers are not enabled)"
+        title: "через Persona"
+        message: "Автентифікація через Mozilla Persona (перевірте, щоб блокувальники спливних вікон були вимкнені)"
 
     composer:
       posting_not_on_topic: "На яку тему Ви хочете відповісти?"
@@ -680,13 +680,13 @@ uk:
       list: 'Теми'
       new: 'нова тема'
       new_topics:
-        one:   '1 нова тема'
-        few:   '{{count}} нових тем'
+        one:   '{{count}} нова тема'
+        few:   '{{count}} нові теми'
         many:  '{{count}} нових тем'
         other: '{{count}} нових тем'
       unread_topics:
-        one:   '1 непрочитана тема'
-        few:   '{{count}} непрочитаних тем'
+        one:   '{{count}} непрочитана тема'
+        few:   '{{count}} непрочитані теми'
         many:  '{{count}} непрочитаних тем'
         other: '{{count}} непрочитаних тем'
       title: 'Тема'
@@ -1213,16 +1213,16 @@ uk:
         help: "всі теми, що належать до категорії"
       unread:
         title:
-          zero: "Непрочитані"
-          one:   "Непрочитані (1)"
+          zero:  "Непрочитані"
+          one:   "Непрочитані ({{count}})"
           few:   "Непрочитані ({{count}})"
           many:  "Непрочитані ({{count}})"
           other: "Непрочитані ({{count}})"
         help: "теми, що відслідковуються та містять непрочитані дописи"
       new:
         title:
-          zero: "Нові"
-          one:   "Нові (1)"
+          zero:  "Нові"
+          one:   "Нові ({{count}})"
           few:   "Нові ({{count}})"
           many:  "Нові ({{count}})"
           other: "Нові ({{count}})"
@@ -1232,8 +1232,8 @@ uk:
         help: "теми, в які Ви дописували"
       category:
         title:
-          zero: "{{categoryName}}"
-          one:   "{{categoryName}} (1)"
+          zero:  "{{categoryName}}"
+          one:   "{{categoryName}} ({{count}})"
           few:   "{{categoryName}} ({{count}})"
           many:  "{{categoryName}} ({{count}})"
           other: "{{categoryName}} ({{count}})"
