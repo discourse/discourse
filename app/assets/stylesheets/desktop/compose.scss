@@ -347,6 +347,10 @@
     position: relative;
     display: inline;
   }
+  .show-admin-options {
+    vertical-align: top; 
+    margin-top: 8px;
+  }
   .title-input .popup-tip {
     width: 300px;
     left: -8px;
@@ -551,8 +555,4 @@ div.ac-wrap {
   }
 }
 
-#reply-control button.btn.no-text {
-  margin: 7px 0 0 5px; // works in safari, but not chrome and firefox
-  position: relative;
-}
 
