@@ -1,5 +1,5 @@
 {{#groupedEach model.content}}
-  <div {{bindAttr class=":item hidden deleted moderator_action"}}>
+  <div {{bind-attr class=":item hidden deleted moderator_action"}}>
     <div class='clearfix info'>
       <a href="{{unbound userUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
       <span class='time'>{{unboundDate path="created_at" leaveAgo="true"}}</span>

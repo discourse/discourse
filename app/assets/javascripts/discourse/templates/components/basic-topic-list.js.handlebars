@@ -23,7 +23,7 @@
       </tr>
 
       {{#groupedEach topic in topics}}
-        <tr {{bindAttr class="archived"}}>
+        <tr {{bind-attr class="archived"}}>
           <td class='main-link'>
             {{topicStatus topic=topic}}
             <a class='title' href="{{unbound topic.lastUnreadUrl}}">{{{unbound topic.fancy_title}}}</a>
@@ -50,7 +50,7 @@
             {{/if}}
           </td>
 
-          <td {{bindAttr class=":num :views topic.viewsHeat"}}>{{number topic.views numberKey="views_long"}}</td>
+          <td {{bind-attr class=":num :views topic.viewsHeat"}}>{{number topic.views numberKey="views_long"}}</td>
           {{#if topic.bumped}}
             <td class='num activity'>
               <a href="{{unbound topic.url}}" {{{bindAttr class=":age topic.ageCold"}}} title='{{i18n first_post}}: {{{rawDate topic.created_at}}}' >{{unboundAge topic.created_at}}</a>

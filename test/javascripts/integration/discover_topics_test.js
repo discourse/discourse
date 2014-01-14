@@ -1,4 +1,4 @@
-integration("List Topics");
+integration("Discover Topics");
 
 test("Default List", function() {
   expect(2);

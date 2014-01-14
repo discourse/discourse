@@ -92,7 +92,7 @@ Discourse.InviteController = Discourse.ObjectController.extend(Discourse.ModalFu
       this.setProperties({ saving: true, error: false });
       this.get('model').createInvite(this.get('email')).then(function() {
         self.setProperties({ saving: false, finished: true });
-      }).fail(function() {
+      }).catch(function() {
         self.setProperties({ saving: false, error: true });
       });
       return false;

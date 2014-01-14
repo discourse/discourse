@@ -78,6 +78,7 @@ Discourse.rootElement = '#ember-testing';
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
 Discourse.runInitializers();
+Discourse.start();
 
 Discourse.Router.map(function() {
   Discourse.routeBuilder.call(this);

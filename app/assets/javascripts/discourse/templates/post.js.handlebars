@@ -4,7 +4,7 @@
   {{view Discourse.ReplyHistory contentBinding="replyHistory"}}
 </div>
 
-<article class='boxed' {{bindAttr id="postElementId"}} {{bindAttr data-post-id="id"}} data-user-id="{{unbound user_id}}">
+<article class='boxed' {{bind-attr id="postElementId"}} {{bind-attr data-post-id="id"}} data-user-id="{{unbound user_id}}">
   <div class='row'>
     {{#if showUserReplyTab}}
       <a href='#' {{action toggleReplyHistory this target="view"}} class='reply-to-tab'>
@@ -20,9 +20,9 @@
 
     <div class='topic-meta-data span2'>
       {{#unless userDeleted}}
-        <div {{bindAttr class=":contents byTopicCreator:topic-creator :trigger-expansion"}}>
+        <div {{bind-attr class=":contents byTopicCreator:topic-creator :trigger-expansion"}}>
           <a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{avatar this imageSize="large"}}</a>
-          <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{{breakUp username name}}}</a></h3>
+          <h3 {{bind-attr class="staff new_user"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{{breakUp username name}}}</a></h3>
 
           {{#if showName}}
           <h3><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
@@ -39,12 +39,12 @@
     </div>
 
     <div class='topic-body span14'>
-      <div {{bindAttr class=":select-posts controller.multiSelect::hidden"}}>
-        <button {{action toggledSelectedPostReplies this}} {{bindAttr class="view.canSelectReplies::hidden"}}>{{i18n topic.multi_select.select_replies}}</button>
+      <div {{bind-attr class=":select-posts controller.multiSelect::hidden"}}>
+        <button {{action toggledSelectedPostReplies this}} {{bind-attr class="view.canSelectReplies::hidden"}}>{{i18n topic.multi_select.select_replies}}</button>
         <button {{action toggledSelectedPost this}} class="select-post">{{view.selectPostText}}</button>
       </div>
 
-      <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesShown::bottom-round :contents :regular view.extraClass"}}>
+      <div {{bind-attr class="showUserReplyTab:avoid-tab view.repliesShown::bottom-round :contents :regular view.extraClass"}}>
         {{#unless controller.multiSelect}}
           <div class='topic-meta-data-inside'>
             {{#if hasHistory}}
@@ -63,7 +63,7 @@
               </div>
             {{/if}}
             <div class='post-info'>
-              <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}} {{bindAttr data-post-number="post_number"}}>{{unboundAgeWithTooltip created_at}}</a>
+              <a href='#' class='post-date' {{bind-attr data-share-url="shareUrl"}} {{bind-attr data-post-number="post_number"}}>{{unboundAgeWithTooltip created_at}}</a>
             </div>
           </div>
         {{/unless}}

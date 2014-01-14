@@ -4,17 +4,17 @@
   {{else}}
     <div>
       <div id="revision-controls">
-        <button class="btn standard" title="{{i18n post.revisions.controls.first}}" {{action loadFirstVersion}} {{bindAttr disabled=isFirstVersion}}><i class="fa fa-fast-backward"></i></button>
-        <button class="btn standard" title="{{i18n post.revisions.controls.previous}}" {{action loadPreviousVersion}} {{bindAttr disabled=isFirstVersion}}><i class="fa fa-backward"></i></button>
+        <button class="btn standard" title="{{i18n post.revisions.controls.first}}" {{action loadFirstVersion}} {{bind-attr disabled=isFirstVersion}}><i class="fa fa-fast-backward"></i></button>
+        <button class="btn standard" title="{{i18n post.revisions.controls.previous}}" {{action loadPreviousVersion}} {{bind-attr disabled=isFirstVersion}}><i class="fa fa-backward"></i></button>
         {{{i18n post.revisions.controls.comparing_previous_to_current_out_of_total previous=previousVersionNumber current=currentVersionNumber total=revisions_count}}}
-        <button class="btn standard" title="{{i18n post.revisions.controls.next}}" {{action loadNextVersion}} {{bindAttr disabled=isLastVersion}}><i class="fa fa-forward"></i></button>
-        <button class="btn standard" title="{{i18n post.revisions.controls.last}}" {{action loadLastVersion}} {{bindAttr disabled=isLastVersion}}><i class="fa fa-fast-forward"></i></button>
+        <button class="btn standard" title="{{i18n post.revisions.controls.next}}" {{action loadNextVersion}} {{bind-attr disabled=isLastVersion}}><i class="fa fa-forward"></i></button>
+        <button class="btn standard" title="{{i18n post.revisions.controls.last}}" {{action loadLastVersion}} {{bind-attr disabled=isLastVersion}}><i class="fa fa-fast-forward"></i></button>
       </div>
       <div id="display-modes">
-        <button {{bindAttr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n post.revisions.displays.inline.title}}" {{action displayInline}}>{{{i18n post.revisions.displays.inline.button}}}</button>
+        <button {{bind-attr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n post.revisions.displays.inline.title}}" {{action displayInline}}>{{{i18n post.revisions.displays.inline.button}}}</button>
         {{#unless Discourse.Mobile.mobileView}}
-          <button {{bindAttr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side.title}}" {{action displaySideBySide}}>{{{i18n post.revisions.displays.side_by_side.button}}}</button>
-          <button {{bindAttr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side_markdown.title}}" {{action displaySideBySideMarkdown}}>{{{i18n post.revisions.displays.side_by_side_markdown.button}}}</button>
+          <button {{bind-attr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side.title}}" {{action displaySideBySide}}>{{{i18n post.revisions.displays.side_by_side.button}}}</button>
+          <button {{bind-attr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side_markdown.title}}" {{action displaySideBySideMarkdown}}>{{{i18n post.revisions.displays.side_by_side_markdown.button}}}</button>
         {{/unless}}
       </div>
     </div>

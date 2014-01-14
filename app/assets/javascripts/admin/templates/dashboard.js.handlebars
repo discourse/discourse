@@ -3,9 +3,9 @@
     <div class="dashboard-stats detected-problems">
       <div class="look-here"><i class="fa fa-exclamation-triangle"></i></div>
       <div class="problem-messages">
-        <p {{bindAttr class="loadingProblems:invisible"}}>
+        <p {{bind-attr class="loadingProblems:invisible"}}>
           {{i18n admin.dashboard.problems_found}}
-          <ul {{bindAttr class="loadingProblems:invisible"}}>
+          <ul {{bind-attr class="loadingProblems:invisible"}}>
             {{#each problem in problems}}
               <li>{{{problem}}}</li>
             {{/each}}
@@ -34,7 +34,7 @@
   {{/if}}
 
   {{#if Discourse.SiteSettings.version_checks}}
-    <div {{bindAttr class=":dashboard-stats :version-check versionCheck.critical_updates:critical:normal"}}>
+    <div {{bind-attr class=":dashboard-stats :version-check versionCheck.critical_updates:critical:normal"}}>
       <table class="table table-condensed table-hover">
         <thead>
           <tr>
@@ -48,7 +48,7 @@
         {{#unless loading}}
           <tbody>
             <td class="title">{{i18n admin.dashboard.version}}</td>
-            <td class="version-number"><a {{bindAttr href="versionCheck.gitLink"}} target="_blank">{{ versionCheck.installed_version }}</a></td>
+            <td class="version-number"><a {{bind-attr href="versionCheck.gitLink"}} target="_blank">{{ versionCheck.installed_version }}</a></td>
 
             {{#if versionCheck.noCheckPerformed}}
               <td class="version-number">&nbsp;</td>
@@ -83,7 +83,7 @@
                   {{#if versionCheck.upToDate }}
                     <span class='icon up-to-date'>☻</span>
                   {{else}}
-                    <span {{bindAttr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
+                    <span {{bind-attr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
                       {{#if versionCheck.behindByOneVersion}}
                         ☺
                       {{else}}

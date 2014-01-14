@@ -1,0 +1,22 @@
+{{customHTML "top"}}
+
+<div class='list-controls'>
+  <div class="container">
+    {{outlet navigation-bar}}
+  </div>
+</div>
+
+<div {{bind-attr class="loading::hidden"}}>
+  <div class='spinner'>{{i18n loading}}</div>
+</div>
+
+<div {{bind-attr class=":container :list-container loading:hidden"}}>
+  <div class="row">
+    <div class="full-width">
+      <div id='list-area'>
+        {{outlet list-container}}
+      </div>
+    </div>
+  </div>
+</div>
+

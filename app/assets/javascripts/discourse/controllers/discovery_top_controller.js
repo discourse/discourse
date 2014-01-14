@@ -1,12 +1,13 @@
 /**
-  Controller of the top page
+  The controller for discoverying "Top" topics
 
-  @class ListTopController
-  @extends Discourse.ObjectController
+  @class DiscoveryTopController
+  @extends Discourse.Controller
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ListTopController = Discourse.ObjectController.extend({
+Discourse.DiscoveryTopController = Discourse.ObjectController.extend({
+  category:null,
 
   redirectedToTopPageReason: function() {
     // no need for a reason if the default homepage is "top"
@@ -36,5 +37,4 @@ Discourse.ListTopController = Discourse.ObjectController.extend({
   showMoreWeeklyUrl: function() { return this.showMoreUrl("weekly"); }.property("category.url"),
   showMoreMonthlyUrl: function() { return this.showMoreUrl("monthly"); }.property("category.url"),
   showMoreYearlyUrl: function() { return this.showMoreUrl("yearly"); }.property("category.url"),
-
 });

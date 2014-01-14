@@ -558,11 +558,6 @@ cs:
         starred: "Nejsou tu žádná další oblíbená témata k přečtení."
         category: "V kategorii {{category}} nejsou žádná další témata."
 
-    rank_details:
-      toggle: zobrazit/skrýt detaily bodování
-      show: zobrazit detaily bodování tématu
-      title: Detaily bodování tématu
-
     topic:
       create: 'Nové téma'
       create_long: 'Vytvořit nové téma'

@@ -15,7 +15,7 @@
 {{/if}}
 
 <div class='controls'>
-  <button class='btn' {{action saveChanges}} {{bindAttr disabled="saveDisabled"}}>
+  <button class='btn' {{action saveChanges}} {{bind-attr disabled="saveDisabled"}}>
     {{#if saving}}
       {{i18n saving}}
     {{else}}

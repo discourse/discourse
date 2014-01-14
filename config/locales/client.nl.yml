@@ -596,11 +596,6 @@ nl:
         starred: Er zijn geen favoriete topics meer.
         category: "Er zijn geen topics meer in {{category}}."
 
-    rank_details:
-      toggle: 'schakel details topic rangorde aan/uit'
-      show: bekijk details topic rangorde
-      title: Details topic rangorde
-
     topic:
       filter_to: "Bekijk {{post_count}} berichten in topic"
       create: Maak topic

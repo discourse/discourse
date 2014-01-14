@@ -3,7 +3,7 @@
     {{auto-close-form autoCloseTime=auto_close_time autoCloseValid=auto_close_valid}}
   </div>
   <div class="modal-footer">
-    <button class='btn btn-primary' type='submit' {{bindAttr disabled="auto_close_invalid"}}>{{i18n topic.auto_close_save}}</button>
+    <button class='btn btn-primary' type='submit' {{bind-attr disabled="auto_close_invalid"}}>{{i18n topic.auto_close_save}}</button>
     <a {{action closeModal}}>{{i18n cancel}}</a>
     <button class='btn pull-right' {{action removeAutoClose}}>{{i18n topic.auto_close_remove}}</button>
   </div>

@@ -1,0 +1,12 @@
+{{bread-crumbs categories=categories}}
+
+<ul class="nav nav-pills" id='navigation-bar'>
+  {{#each navItem in navItems}}
+    {{navigation-item content=navItem filterMode=filterMode}}
+  {{/each}}
+</ul>
+
+{{#if canCreateCategory}}
+  <button class='btn btn-default' {{action createCategory}}><i class='fa fa-plus'></i>{{i18n category.create}}</button>
+{{/if}}
+

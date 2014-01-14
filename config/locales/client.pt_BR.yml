@@ -578,11 +578,6 @@ pt_BR:
         starred: "Não há mais tópicos favoritos."
         category: "Não há mais tópicos na categoria {{category}}."
 
-    rank_details:
-      toggle: alternar detalhes do rank de tópicos
-      show: exibir rank de tópicos
-      title: Detalhes do Ranking de Tópicos
-
     topic:
       filter_to: "Mostrar apenas os {{post_count}} de {{username}} neste tópico"
       create: 'Criar Tópico'

@@ -27,8 +27,8 @@
         <tr>
           {{#if user}}
           <td>
-            {{#linkTo 'user' user}}{{avatar user imageSize="tiny"}}{{/linkTo}}
-            {{#linkTo 'user' user}}{{user.username}}{{/linkTo}}
+            {{#link-to 'user' user}}{{avatar user imageSize="tiny"}}{{/link-to}}
+            {{#link-to 'user' user}}{{user.username}}{{/link-to}}
           </td>
           <td>{{unboundDate redeemed_at}}</td>
           <td>{{unboundDate user.last_seen_at}}</td>

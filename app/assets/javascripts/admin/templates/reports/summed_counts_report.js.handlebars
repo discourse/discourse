@@ -1,13 +1,13 @@
 <tr>
   <td class="title">
     {{#if icon}}
-      <i {{bindAttr class=":fa icon"}}></i>
+      <i {{bind-attr class=":fa icon"}}></i>
     {{/if}}
-    <a {{bindAttr href="reportUrl"}}>{{title}}</a>
+    <a {{bind-attr href="reportUrl"}}>{{title}}</a>
   </td>
   <td class="value">{{todayCount}}</td>
-  <td {{bindAttr class=":value yesterdayTrend"}} {{bindAttr title="yesterdayCountTitle"}}>{{yesterdayCount}} <i class="fa up fa-caret-up"></i><i class="fa down fa-caret-down"></i></td>
-  <td {{bindAttr class=":value sevenDayTrend"}} {{bindAttr title="sevenDayCountTitle"}}>{{lastSevenDaysCount}} <i class="fa up fa-caret-up"></i><i class="fa down fa-caret-down"></i></td>
-  <td {{bindAttr class=":value thirtyDayTrend"}} {{bindAttr title="thirtyDayCountTitle"}}>{{lastThirtyDaysCount}} <i class="fa up fa-caret-up"></i><i class="fa down fa-caret-down"></i></td>
+  <td {{bind-attr class=":value yesterdayTrend"}} {{bind-attr title="yesterdayCountTitle"}}>{{yesterdayCount}} <i class="fa up fa-caret-up"></i><i class="fa down fa-caret-down"></i></td>
+  <td {{bind-attr class=":value sevenDayTrend"}} {{bind-attr title="sevenDayCountTitle"}}>{{lastSevenDaysCount}} <i class="fa up fa-caret-up"></i><i class="fa down fa-caret-down"></i></td>
+  <td {{bind-attr class=":value thirtyDayTrend"}} {{bind-attr title="thirtyDayCountTitle"}}>{{lastThirtyDaysCount}} <i class="fa up fa-caret-up"></i><i class="fa down fa-caret-down"></i></td>
   <td class="value">{{total}}</td>
 </tr>

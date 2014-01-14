@@ -67,12 +67,6 @@ class TopicQuery
     end
   end
 
-  def list_hot
-    create_list(:hot, unordered: true) do |topics|
-      topics.joins(:hot_topic).order(TopicQuerySQL.order_hotness(@user))
-    end
-  end
-
   def list_new
     TopicList.new(:new, @user, new_results)
   end
