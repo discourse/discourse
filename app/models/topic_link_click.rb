@@ -15,7 +15,7 @@ class TopicLinkClick < ActiveRecord::Base
     
     if args[:url] =~ /^http/
       http_url = args[:url].sub(/^https/, 'http')
-      https_url = args[:url].sub(/^http[^s]/, 'https')
+      https_url = args[:url].sub(/^http/, 'https')
       link = TopicLink.select([:id, :user_id]).where('url = ? OR url = ?', http_url, https_url)
     else
       link = TopicLink.select([:id, :user_id]).where(url: args[:url])
