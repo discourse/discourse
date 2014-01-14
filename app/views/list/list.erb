@@ -21,4 +21,6 @@
     <%= auto_discovery_link_tag(@category, {action: :category_feed, format: :rss}, title: t('rss_topics_in_category', category: @category.name), type: 'application/rss+xml') %>
   <% end %>
   <% content_for :title do %><%=@category.name%> <%=t('topics')%><% end %>
+<% elsif params[:page] %>
+  <% content_for :title do %><%=t 'page_num', num: params[:page].to_i + 1 %><% end %>
 <% end %>
