@@ -106,11 +106,10 @@ Discourse.Group = Discourse.Model.extend({
           alias_level: this.get('alias_level'),
           usernames: this.get('usernames')
         }
-      },
-      complete: function(){
-        group.set('disableSave', false);
       }
-    }).then(null, function(e){
+    }).then(function(){
+      group.set('disableSave', false);
+    }, function(e){
       var message = $.parseJSON(e.responseText).errors;
       bootbox.alert(message);
     });

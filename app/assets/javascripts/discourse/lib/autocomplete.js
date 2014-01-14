@@ -47,7 +47,6 @@ function mapKeyPressToActualCharacter(isShiftKey, characterCode) {
 }
 
 $.fn.autocomplete = function(options) {
-
   var autocompletePlugin = this;
 
   if (this.length === 0) return;
@@ -85,18 +84,14 @@ $.fn.autocomplete = function(options) {
 
   var addInputSelectedItem = function(item) {
     var transformed;
-    if (options.transformComplete) {
-      transformed = options.transformComplete(item);
-    }
-    if (options.single){
-      // dump what we have in single mode, just in case
-      inputSelectedItems = [];
-    }
-    if (!_.isArray(transformed)) {
-      transformed = [transformed || item];
-    }
+
+    if (options.transformComplete) { transformed = options.transformComplete(item); }
+    // dump what we have in single mode, just in case
+    if (options.single) { inputSelectedItems = []; }
+    if (!_.isArray(transformed)) { transformed = [transformed || item]; }
+
     var divs = transformed.map(function(itm) {
-      var d = $("<div class='item'><span>" + (itm) + "<a href='#'><i class='fa fa-times'></i></a></span></div>");
+      var d = $("<div class='item'><span>" + itm + "<a href='#'><i class='fa fa-times'></i></a></span></div>");
       var prev = me.parent().find('.item:last');
       if (prev.length === 0) {
         me.parent().prepend(d);
@@ -104,12 +99,10 @@ $.fn.autocomplete = function(options) {
         prev.after(d);
       }
       inputSelectedItems.push(itm);
-      return divs;
+      return d[0];
     });
-    
-    if (options.onChangeItems) {
-      options.onChangeItems(inputSelectedItems);
-    }
+
+    if (options.onChangeItems) { options.onChangeItems(inputSelectedItems); }
 
     $(divs).find('a').click(function() {
       closeAutocomplete();
