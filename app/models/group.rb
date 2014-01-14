@@ -110,8 +110,8 @@ class Group < ActiveRecord::Base
   end
 
   def self.search_group(name, current_user)
-
     levels = [ALIAS_LEVELS[:everyone]]
+
     if current_user.admin?
       levels = [ALIAS_LEVELS[:everyone],
                 ALIAS_LEVELS[:only_admins],
@@ -123,11 +123,11 @@ class Group < ActiveRecord::Base
                 ALIAS_LEVELS[:members_mods_and_admins]]
     end
 
-    return Group.where("name LIKE :term_like AND (" +
-        " alias_level in (:levels)" + 
-        " OR (alias_level = #{ALIAS_LEVELS[:everyone]} AND id in (" + 
+    Group.where("name LIKE :term_like AND (" +
+        " alias_level in (:levels)" +
+        " OR (alias_level = #{ALIAS_LEVELS[:everyone]} AND id in (" +
             "SELECT group_id FROM group_users WHERE user_id= :user_id)" +
-          ")" + 
+          ")" +
         ")", term_like: "#{name.downcase}%", levels: levels, user_id: current_user.id)
   end
 
