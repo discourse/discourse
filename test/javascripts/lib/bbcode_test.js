@@ -30,7 +30,7 @@ test('code', function() {
 });
 
 test('spoiler', function() {
-  format("[spoiler]it's a sled[/spoiler]", "<div class=\"spoiler\">it's a sled</div>", "supports spoiler tags on text");
+  format("[spoiler]it's a sled[/spoiler]", "<span class=\"spoiler\">it's a sled</span>", "supports spoiler tags on text");
   format("[spoiler]<img src='http://eviltrout.com/eviltrout.png' width='50' height='50'>[/spoiler]", "<div class=\"spoiler\"><img src='http://eviltrout.com/eviltrout.png' width='50' height='50'></div>", "supports spoiler tags on images");
 });
 
