@@ -78,6 +78,19 @@ Discourse.Dialect.inlineBetween({
   emitter: function(contents) { return ['a', {href: contents, 'data-bbcode': true}, contents]; }
 });
 
+Discourse.Dialect.inlineBetween({
+  start: '[spoiler]',
+  stop: '[/spoiler]',
+  rawContents: true,
+  emitter: function(contents) {
+    if (/<img/i.test(contents)) {
+      return ['div', { 'class': 'spoiler' }, contents];
+    } else {
+      return ['span', { 'class': 'spoiler' }, contents];
+    }
+  }
+});
+
 replaceBBCodeParamsRaw("url", function(param, contents) {
   return ['a', {href: param, 'data-bbcode': true}, contents];
 });
@@ -97,14 +110,5 @@ Discourse.Dialect.replaceBlock({
 
   emitter: function(blockContents) {
     return ['p', ['pre'].concat(blockContents.join("\n"))];
-  }
-});
-
-Discourse.Dialect.replaceBlock({
-  start: /(\[spoiler\])([\s\S]*)/igm,
-  stop: '[/spoiler]',
-
-  emitter: function(blockContents) {
-    return ['p', ['div', { 'class': 'spoiler' }, blockContents.join("\n")]];
   }
 });
