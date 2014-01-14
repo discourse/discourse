@@ -37,6 +37,7 @@
   Discourse.SiteSettings = PreloadStore.get('siteSettings');
   Discourse.Router.map(function() { Discourse.routeBuilder.call(this); });
   Discourse.start()
+  Discourse.set('assetVersion','<%= Rails.application.assets.digest %>');
 </script>
 
 <%= javascript_include_tag 'browser-update.js' %>

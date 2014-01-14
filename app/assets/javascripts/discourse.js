@@ -128,7 +128,18 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
         }
       });
     }
-  }
+  },
+
+  assetVersion: function(prop, val) {
+    if(val) {
+      if(this.get("currentAssetVersion")){
+        this.set("desiredAssetVersion", val);
+      } else {
+        this.set("currentAssetVersion", val);
+      }
+    }
+    return this.get("currentAssetVersion");
+  }.property()
 
 });
 
