@@ -79,6 +79,19 @@ describe TopicLinkClick do
         end
       end
 
+      context 'with a HTTPS version of the same URL' do
+        before do
+          @url = TopicLinkClick.create_from(url: 'https://twitter.com', topic_id: @topic.id, ip: '127.0.0.3')
+          @click = TopicLinkClick.last
+        end
+
+        it 'creates a click' do
+          @click.should be_present
+          @click.topic_link.should == @topic_link
+          @url.should == 'https://twitter.com'
+        end
+      end
+
       context 'with a valid url and topic_id' do
         before do
           @url = TopicLinkClick.create_from(url: @topic_link.url, topic_id: @topic.id, ip: '127.0.0.3')
