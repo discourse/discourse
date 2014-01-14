@@ -123,7 +123,7 @@ class Group < ActiveRecord::Base
                 ALIAS_LEVELS[:members_mods_and_admins]]
     end
 
-    Group.where("name LIKE :term_like AND (" +
+    Group.where("name ILIKE :term_like AND (" +
         " alias_level in (:levels)" +
         " OR (alias_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (" +
             "SELECT group_id FROM group_users WHERE user_id= :user_id)" +
