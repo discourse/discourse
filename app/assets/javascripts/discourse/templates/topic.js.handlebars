@@ -8,7 +8,7 @@
         <div class='inner'>
 
           {{#if showStarButton}}
-            <a {{bindAttr class=":star starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="starTooltip"}}></a>
+            <a {{bind-attr class=":star starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="starTooltip"}}></a>
           {{/if}}
 
           {{#if editingTopic}}
@@ -48,13 +48,13 @@
     <div class="row">
       <section class="topic-area" id='topic' data-topic-id='{{unbound id}}'>
         <div class='posts-wrapper'>
-          <div id='topic-progress-wrapper' {{bindAttr class="dockedCounter:docked"}}>
-            <nav id='topic-progress' title="{{i18n topic.progress.title}}" {{bindAttr class="hideProgress:hidden"}}>
-              <button id='jump-top' title="{{i18n topic.progress.jump_top}}" {{bindAttr disabled="jumpTopDisabled"}} {{action jumpTop}}><i class="fa fa-arrow-circle-up"></i></button>
-              <div class='nums' {{bindAttr title="progressPositionTitle"}}>
-                <h4>{{progressPosition}}</h4><span {{bindAttr class="hugeNumberOfPosts:hidden"}}> <span>{{i18n of_value}}</span> <h4>{{postStream.filteredPostsCount}}</h4></span>
+          <div id='topic-progress-wrapper' {{bind-attr class="dockedCounter:docked"}}>
+            <nav id='topic-progress' title="{{i18n topic.progress.title}}" {{bind-attr class="hideProgress:hidden"}}>
+              <button id='jump-top' title="{{i18n topic.progress.jump_top}}" {{bind-attr disabled="jumpTopDisabled"}} {{action jumpTop}}><i class="fa fa-arrow-circle-up"></i></button>
+              <div class='nums' {{bind-attr title="progressPositionTitle"}}>
+                <h4>{{progressPosition}}</h4><span {{bind-attr class="hugeNumberOfPosts:hidden"}}> <span>{{i18n of_value}}</span> <h4>{{postStream.filteredPostsCount}}</h4></span>
               </div>
-              <button id='jump-bottom' {{bindAttr title="jumpToBottomTitle"}} {{bindAttr disabled="jumpBottomDisabled"}} {{action jumpBottom}}><i class="fa fa-arrow-circle-down"></i></button>
+              <button id='jump-bottom' {{bind-attr title="jumpToBottomTitle"}} {{bind-attr disabled="jumpBottomDisabled"}} {{action jumpBottom}}><i class="fa fa-arrow-circle-down"></i></button>
               <div class='bg'>&nbsp;</div>
             </nav>
           </div>

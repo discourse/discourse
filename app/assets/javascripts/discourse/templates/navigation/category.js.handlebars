@@ -1,0 +1,15 @@
+{{bread-crumbs categories=categories category=category noSubcategories=noSubcategories}}
+
+<ul class="nav nav-pills" id='navigation-bar'>
+  {{#each navItem in navItems}}
+    {{navigation-item content=navItem filterMode=filterMode}}
+  {{/each}}
+</ul>
+
+{{#if canCreateTopic}}
+  <button id="create-topic" class='btn btn-default' {{action createTopic}}><i class='fa fa-plus'></i>{{i18n topic.create}}</button>
+{{/if}}
+
+{{#if canEditCategory}}
+  <button class='btn btn-default' {{action editCategory category}}><i class="fa fa-wrench"></i> {{i18n category.edit_long}}</button>
+{{/if}}

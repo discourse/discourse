@@ -4,12 +4,12 @@
     <ul>
       {{#each group in model}}
         <li>
-          <a href="#" {{action "edit" group}} {{bindAttr class="group.active"}}>{{group.name}} <span class="count">{{group.userCountDisplay}}</span></a>
+          <a href="#" {{action "edit" group}} {{bind-attr class="group.active"}}>{{group.name}} <span class="count">{{group.userCountDisplay}}</span></a>
         </li>
       {{/each}}
     </ul>
     <div class='controls'>
-      <button class='btn' {{bindAttr disabled="refreshingAutoGroups"}} {{action "refreshAutoGroups"}}>Refresh</button>
+      <button class='btn' {{bind-attr disabled="refreshingAutoGroups"}} {{action "refreshAutoGroups"}}>Refresh</button>
       <button class='btn' {{action newGroup}}>New</button>
     </div>
   </div>
@@ -37,7 +37,7 @@
             </div>
           </div>
           <div class='controls'>
-            <button {{action save this}} {{bindAttr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
+            <button {{action save this}} {{bind-attr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
             {{#unless automatic}}
                 <a {{action destroy this}} class='delete-link'>{{i18n admin.customize.delete}}</a>
             {{/unless}}

@@ -67,7 +67,7 @@
             {{popupInputTip validation=view.replyValidation shownAt=view.showReplyTip}}
           </div>
           <div class='preview-wrapper'>
-            <div id='wmd-preview' {{bindAttr class="hidePreview:hidden"}}></div>
+            <div id='wmd-preview' {{bind-attr class="hidePreview:hidden"}}></div>
           </div>
           {{#if currentUser}}
             <a href="#" {{action togglePreview}} class='toggle-preview'>{{{model.toggleText}}}</a>
@@ -82,7 +82,7 @@
 
         {{#if currentUser}}
           <div class='submit-panel'>
-            <button {{action save}} tabindex="4" {{bindAttr class=":btn :btn-primary :create model.cantSubmitPost:disabled"}}>{{model.saveText}}</button>
+            <button {{action save}} tabindex="4" {{bind-attr class=":btn :btn-primary :create model.cantSubmitPost:disabled"}}>{{model.saveText}}</button>
             <a href='#' {{action cancel}} class='cancel' tabindex="4">{{i18n cancel}}</a>
           </div>
         {{/if}}

@@ -23,7 +23,7 @@
 
   <div class="control-group">
     <div class="controls">
-        <button {{action changeAbout}} {{bindAttr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
+        <button {{action changeAbout}} {{bind-attr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
         {{#if saved}}{{i18n saved}}{{/if}}
     </div>
   </div>

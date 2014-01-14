@@ -10,8 +10,6 @@
 Discourse.TopList = Discourse.Model.extend({});
 
 Discourse.TopList.reopenClass({
-  PERIODS: <%= TopTopic.periods.map(&:to_s) %>,
-
   find: function(period, category) {
     return PreloadStore.getAndRemove("top_lists", function() {
       var url = "";
@@ -22,7 +20,7 @@ Discourse.TopList.reopenClass({
     }).then(function (result) {
       var topList = Discourse.TopList.create({});
 
-      _.each(Discourse.TopList.PERIODS, function(period) {
+      Discourse.Site.currentProp('periods').forEach(function(period) {
         // if there is a list for that period
         if (result[period]) {
           // instanciate a new topic list with no sorting

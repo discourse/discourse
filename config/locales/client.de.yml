@@ -568,11 +568,6 @@ de:
         favorited: "Das waren alle favorisierten Themen."
         category: "Das waren alle Themen der Kategorie {{category}}."
 
-    rank_details:
-      toggle: Themadetails
-      show: zeige Themadetails
-      title: Themadetails
-
     topic:
       create: 'Neues Thema'
       create_long: 'Neues Thema beginnen'

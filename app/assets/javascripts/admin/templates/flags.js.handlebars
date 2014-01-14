@@ -24,7 +24,7 @@
         </thead>
         <tbody>
           {{#each flaggedPost in content}}
-          <tr {{bindAttr class="flaggedPost.extraClasses"}}>
+          <tr {{bind-attr class="flaggedPost.extraClasses"}}>
 
             <td class='user'>{{#if flaggedPost.user}}{{#link-to 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="small"}}{{/link-to}}{{/if}}</td>
 

@@ -613,11 +613,6 @@ fr:
         starred: "Il n'y a plus de discussion favorites à lire."
         category: "Il n'y a plus de discussion sur {{category}} à lire."
 
-    rank_details:
-      toggle: afficher/cacher le détail du classement des discussions
-      show: afficher le détail du classement des discussions
-      title: Détail du classement des discussions
-
     topic:
       filter_to: "Afficher {{post_count}} messages dans cette discussion"
       create: 'Créer une discussion'

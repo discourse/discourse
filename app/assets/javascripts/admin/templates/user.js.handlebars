@@ -198,7 +198,7 @@
     </div>
   </div>
 
-  <div {{bindAttr class=":display-row isSuspended:highlight-danger"}}>
+  <div {{bind-attr class=":display-row isSuspended:highlight-danger"}}>
     <div class='field'>{{i18n admin.user.suspended}}</div>
     <div class='value'>{{isSuspended}}</div>
     <div class='controls'>
@@ -235,7 +235,7 @@
   </div>
   {{/if}}
 
-  <div class='display-row' {{bindAttr class=":display-row blocked:highlight-danger"}}>
+  <div class='display-row' {{bind-attr class=":display-row blocked:highlight-danger"}}>
     <div class='field'>{{i18n admin.user.blocked}}</div>
     <div class='value'>{{blocked}}</div>
     <div class='controls'>
@@ -313,7 +313,7 @@
 
 <section>
   <hr/>
-  <button {{bindAttr class=":btn :btn-danger :pull-right deleteForbidden:hidden"}} {{action destroy target="content"}} {{bindAttr disabled="deleteForbidden"}} {{bindAttr}}>
+  <button {{bind-attr class=":btn :btn-danger :pull-right deleteForbidden:hidden"}} {{action destroy target="content"}} {{bind-attr disabled="deleteForbidden"}} {{bind-attr}}>
     <i class="fa fa-exclamation-triangle"></i>
     {{i18n admin.user.delete}}
   </button>

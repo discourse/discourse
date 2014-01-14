@@ -11,7 +11,7 @@
         </label>
         {{#if showMessageInput}}
           {{textarea name="message" class="flag-message" placeholder=customPlaceholder value=message}}
-          <div {{bindAttr class=":custom-message-length customMessageLengthClasses"}}>{{customMessageLength}}</div>
+          <div {{bind-attr class=":custom-message-length customMessageLengthClasses"}}>{{customMessageLength}}</div>
         {{/if}}
       </div>
     {{else}}
@@ -21,14 +21,14 @@
 
 </div>
 <div class="modal-footer">
-  <button class='btn btn-primary' {{action createFlag}} {{bindAttr disabled="submitDisabled"}}>{{submitText}}</button>
+  <button class='btn btn-primary' {{action createFlag}} {{bind-attr disabled="submitDisabled"}}>{{submitText}}</button>
 
   {{#if canTakeAction}}
-    <button class='btn btn-danger' {{action takeAction}} {{bindAttr disabled="submitDisabled"}}>{{i18n flagging.take_action}}</button>
+    <button class='btn btn-danger' {{action takeAction}} {{bind-attr disabled="submitDisabled"}}>{{i18n flagging.take_action}}</button>
   {{/if}}
 
   {{#if canDeleteSpammer}}
-    <button class="btn btn-danger" {{action deleteSpammer}} {{bindAttr disabled="submitDisabled"}}><i class="fa fa-exclamation-triangle"></i> {{i18n flagging.delete_spammer}}</button>
+    <button class="btn btn-danger" {{action deleteSpammer}} {{bind-attr disabled="submitDisabled"}}><i class="fa fa-exclamation-triangle"></i> {{i18n flagging.delete_spammer}}</button>
   {{/if}}
 </div>
 

@@ -596,11 +596,6 @@ sv:
         starred: "Det finns inga fler favoritmarkerade trådar att läsa."
         category: "Det finns inga fler {{category}}-trådar."
 
-    rank_details:
-      toggle: växla på/av trådranksdetaljer
-      show: visa trådranksdetaljer
-      title: Trådranksdetaljer
-
     topic:
       filter_to: "Visa {{post_count}} inlägg i tråden"
       create: 'Skapa tråd'

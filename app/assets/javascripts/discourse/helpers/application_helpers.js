@@ -93,9 +93,9 @@ Handlebars.registerHelper('titledLinkTo', function(name, object) {
     options.hash.title = I18n.t(options.hash.titleKey);
   }
   if (arguments.length === 3) {
-    return Ember.Handlebars.helpers.linkTo.call(this, name, object, options);
+    return Ember.Handlebars.helpers['link-to'].call(this, name, object, options);
   } else {
-    return Ember.Handlebars.helpers.linkTo.call(this, name, options);
+    return Ember.Handlebars.helpers['link-to'].call(this, name, options);
   }
 });
 

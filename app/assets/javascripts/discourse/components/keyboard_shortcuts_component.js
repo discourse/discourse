@@ -141,7 +141,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   _changeSection: function(num) {
-    var $sections = $('#category-filter').find('li'),
+    var $sections = $('#navigation-bar').find('li'),
         index = $sections.index('.active');
 
     $sections.eq(index + num).find('a').click();

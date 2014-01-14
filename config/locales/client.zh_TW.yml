@@ -521,11 +521,6 @@ zh_TW:
         starred: "沒有更多收藏主題可看了。"
         category: "沒有更多 {{category}} 分類的主題了。"
 
-    rank_details:
-      toggle: 切換主題排名詳細
-      show: 顯示主題排名詳細信息
-      title: 主題排名詳細
-
     topic:
       create: '創建主題'
       create_long: '創建一個新主題'

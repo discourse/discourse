@@ -1,12 +1,12 @@
 /**
   This controller supports actions when listing categories
 
-  @class ListCategoriesController
+  @class DiscoveryCategoriesController
   @extends Discourse.ObjectController
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ListCategoriesController = Discourse.ObjectController.extend({
+Discourse.DiscoveryCategoriesController = Discourse.ObjectController.extend({
   needs: ['modal'],
 
   actions: {
@@ -33,5 +33,3 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
   }.property('categories.@each.featuredTopics.length')
 
 });
-
-

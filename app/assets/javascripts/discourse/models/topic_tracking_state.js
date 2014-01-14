@@ -166,7 +166,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
   },
 
   lookupCount: function(name, category){
-    var categoryName = Em.get(category, "name");
+    var categoryName = category ? Em.get(category, "name") : null;
     if(name === "new") {
       return this.countNew(categoryName);
     } else if(name === "unread") {

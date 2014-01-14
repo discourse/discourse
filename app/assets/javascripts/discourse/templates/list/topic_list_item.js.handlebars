@@ -1,21 +1,10 @@
 {{#if controller.currentUser.id}}
   <td class='star'>
-    <a {{bindAttr class=":star :fa :fa-star starred:starred"}} {{action toggleStar this}} href='#' {{bindAttr title="starTooltip"}}></a>
+    <a {{bind-attr class=":star :fa :fa-star starred:starred"}} {{action toggleStar this}} href='#' {{bind-attr title="starTooltip"}}></a>
   </td>
 {{/if}}
 
 <td class='main-link clearfix'>
-
-  {{#if controller.rankDetailsVisible}}
-    <div class='rank-details'>
-      <p>{{rank_details.hot_topic_type}}</p>
-      <p>
-        ({{float rank_details.random_bias}} * {{float rank_details.random_multiplier}}) + ({{float rank_details.days_ago_bias}} * {{float rank_details.days_ago_multiplier}}) = <b>{{float rank_details.ranking_score}}</b>
-        <i class='fa fa-flask score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>
-      </p>
-    </div>
-  {{/if}}
-
   {{topicStatus topic=this}}
   {{{topicLink this}}}
   {{#if unread}}
@@ -41,7 +30,7 @@
   {{/if}}
 </td>
 
-{{#unless controller.category}}
+{{#unless controller.hideCategory}}
 <td class='category'>
   {{categoryLink category}}
 </td>
@@ -61,7 +50,7 @@
   {{/if}}
 </td>
 
-<td {{bindAttr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
+<td {{bind-attr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
 
 {{#if bumped}}
   <td class='num activity'>

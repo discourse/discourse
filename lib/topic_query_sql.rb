@@ -24,23 +24,6 @@ module TopicQuerySQL
        END DESC"
     end
 
-    def order_hotness(user)
-      if user
-        # When logged in take into accounts what pins you've closed
-        "CASE
-          WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
-            THEN 100
-          ELSE hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0)
-         END DESC"
-      else
-        # When anonymous, don't use topic_user
-        "CASE
-          WHEN topics.pinned_at IS NOT NULL THEN 100
-          ELSE hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0)
-        END DESC"
-      end
-    end
-
     def order_by_category_sql(dir)
       "CASE WHEN categories.id = #{SiteSetting.uncategorized_category_id.to_i} THEN '' ELSE categories.name END #{dir}"
     end

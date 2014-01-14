@@ -1,20 +1,20 @@
 <nav class='buttons'>
   <button class='btn' {{action toggleMap}} title="{{i18n topic.toggle_information}}">
-    <i {{bindAttr class=":fa toggleMapClass"}}></i>
+    <i {{bind-attr class=":fa toggleMapClass"}}></i>
   </button>
 </nav>
 
-<section {{bindAttr class=":map mapCollapsed"}}>
+<section {{bind-attr class=":map mapCollapsed"}}>
   <ul class="clearfix">
     <li>
-      <a href='{{unbound topic.url}}' {{bindAttr class=topic.ageCold}}>
+      <a href='{{unbound topic.url}}' {{bind-attr class=topic.ageCold}}>
       <h4>{{i18n created}}</h4>
       {{avatar details.created_by imageSize="tiny"}}
       {{unboundDate topic.created_at}}
       </a>
     </li>
     <li>
-      <a {{bindAttr href="topic.lastPostUrl"}}>
+      <a {{bind-attr href="topic.lastPostUrl"}}>
       <h4>{{i18n last_post}}</h4>
       {{avatar details.last_poster imageSize="tiny"}}
       {{unboundDate topic.last_posted_at}}
@@ -44,7 +44,7 @@
       {{number details.links.length}}
     </li>
     {{/if}}
-    <li {{bindAttr class=":avatars mapCollapsed::hidden"}}>
+    <li {{bind-attr class=":avatars mapCollapsed::hidden"}}>
       {{#groupedEach participant in details.fewParticipants}}{{topic-participant participant=participant}}{{/groupedEach}}
     </li>
   </ul>

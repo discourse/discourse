@@ -2,7 +2,7 @@
   {{#if topics}}
     <table id="topic-list">
       {{#groupedEach topic in topics}}
-        <tr {{bindAttr class="archived"}}>
+        <tr {{bind-attr class="archived"}}>
           <td>
             <div class='main-link clearfix'>
               {{topicStatus topic=this}}
@@ -43,7 +43,7 @@
                     </a>
                   </div>
                 {{/if}}
-                <div {{bindAttr class=":num :views viewsHeat"}}>
+                <div {{bind-attr class=":num :views viewsHeat"}}>
                   <a href="{{lastUnreadUrl}}">
                     <i class='fa fa-eye'></i> {{number views numberKey="views_long"}}
                   </a>

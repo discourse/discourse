@@ -4,7 +4,7 @@ desc 'Creates the integration fixtures. Requires a development instance running.
 task 'integration:create_fixtures' => :environment do
 
   fixtures = {
-    list: ["/latest.json", "/categories.json", "/category/bug.json"],
+    discovery: ["/latest.json", "/categories.json", "/category/bug/l/latest.json"],
     topic: ["/t/280.json"],
     user: ["/users/eviltrout.json",
            "/user_actions.json?offset=0&username=eviltrout",
@@ -38,6 +38,7 @@ task 'integration:create_fixtures' => :environment do
 
     File.write(filename, content)
   end
+
 end
 
 

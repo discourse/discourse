@@ -9,7 +9,7 @@
 
 var LINKS_SHOWN = 5;
 
-Discourse.TopicMapComponent = Ember.Component.extend({
+Discourse.TopicMapComponent = Ember.View.extend({
   mapCollapsed: true,
   templateName: 'components/topic-map',
   details: Em.computed.alias('topic.details'),
@@ -17,6 +17,9 @@ Discourse.TopicMapComponent = Ember.Component.extend({
 
   init: function() {
     this._super();
+
+    this.set('context', this);
+    this.set('controller', this);
 
     // If the topic has a summary, expand the map by default
     this.set('mapCollapsed', Discourse.Mobile.mobileView || (!this.get('topic.has_summary')));
