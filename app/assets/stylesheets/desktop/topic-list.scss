@@ -63,6 +63,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+  margin: 0 0 10px;
   a.title:visited:not(.badge-notification) {color: #888;}
 
   > tbody > tr {
@@ -230,6 +231,7 @@
   }
 }
 
+#list-area .top-lists h2 { margin: 5px 0 10px; }
 
 #topic-list tbody tr.has-excerpt .star {
   vertical-align: top;

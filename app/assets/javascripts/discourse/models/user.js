@@ -376,8 +376,6 @@ Discourse.User = Discourse.Model.extend({
 });
 
 Discourse.User.reopenClass(Discourse.Singleton, {
-
-
   /**
     Find a `Discourse.User` for a given username.
 

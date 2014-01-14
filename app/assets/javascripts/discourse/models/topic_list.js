@@ -65,8 +65,7 @@ Discourse.TopicList = Discourse.Model.extend({
     params.sort_descending = sortOrder.get('descending');
 
     this.set('loaded', false);
-    var finder = finderFor(this.get('filter'), params);
-    finder().then(function (result) {
+    finderFor(this.get('filter'), params).then(function (result) {
       var newTopics = Discourse.TopicList.topicsFrom(result),
           topics = self.get('topics');
 

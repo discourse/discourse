@@ -7,8 +7,17 @@
   @module Discourse
 **/
 Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
+
   model: function(params) {
-    return Discourse.Category.findBySlug(Em.get(params, 'slug'), Em.get(params, 'parentSlug'));
+    this.controllerFor('listTop').set('content', null);
+    this.controllerFor('listCategories').set('content', null);
+    return Discourse.Category.findBySlug(params.slug, params.parentSlug);
+  },
+
+  activate: function() {
+    this._super();
+    // Add a search context
+    this.controllerFor('search').set('searchContext', this.modelFor(this.get('routeName')).get('searchContext'));
   },
 
   setupController: function(controller, category) {
@@ -37,33 +46,29 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
         canCreateTopic: topicList.get('can_create_topic'),
         category: category
       });
-      self.controllerFor('listTopics').set('content', topicList);
-      self.controllerFor('listTopics').set('category', category);
+      self.controllerFor('listTopics').setProperties({
+        content: topicList,
+        category: category
+      });
       Discourse.FilteredListRoute.scrollToLastPosition();
     });
   },
 
-  activate: function() {
-    this._super();
-
-    // Add a search context
-    this.controllerFor('search').set('searchContext', this.modelFor(this.get('routeName')).get('searchContext'));
-  },
-
   deactivate: function() {
     this._super();
-
     // Clear the search context
     this.controllerFor('search').set('searchContext', null);
   }
 });
 
-Discourse.ListCategoryNoneRoute = Discourse.ListCategoryRoute.extend({
-  noSubcategories: true
-});
+Discourse.ListCategoryNoneRoute = Discourse.ListCategoryRoute.extend({ noSubcategories: true });
 
-Discourse.ListController.filters.forEach(function(filter) {
+_.each(Discourse.ListController.FILTERS, function(filter) {
   Discourse["List" + filter.capitalize() + "CategoryRoute"] = Discourse.ListCategoryRoute.extend({ filter: filter });
+  Discourse["List" + filter.capitalize() + "CategoryNoneRoute"] = Discourse.ListCategoryRoute.extend({ filter: filter, noSubcategories: true });
 });
 
-
+_.each(Discourse.TopList.PERIODS, function(period) {
+  Discourse["ListTop" + period.capitalize() + "CategoryRoute"] = Discourse.ListCategoryRoute.extend({ filter: "top/" + period });
+  Discourse["ListTop" + period.capitalize() + "CategoryNoneRoute"] = Discourse.ListCategoryRoute.extend({ filter: "top/" + period, noSubcategories: true });
+});

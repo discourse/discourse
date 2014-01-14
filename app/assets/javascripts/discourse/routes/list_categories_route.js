@@ -8,34 +8,18 @@
 **/
 Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
-  template: 'listCategories',
-
-  redirect: function() { Discourse.redirectIfLoginRequired(this); },
-
-  actions: {
-    createCategory: function() {
-      Discourse.Route.showModal(this, 'editCategory', Discourse.Category.create({
-        color: 'AB9364', text_color: 'FFFFFF', hotness: 5, group_permissions: [{group_name: "everyone", permission_type: 1}],
-        available_groups: Discourse.Site.current().group_names
-      }));
-      this.controllerFor('editCategory').set('selectedTab', 'general');
-    }
-  },
-
   model: function() {
-    var listTopicsController = this.controllerFor('listTopics');
-    if (listTopicsController) { listTopicsController.set('content', null); }
+    this.controllerFor('listTop').set('content', null);
+    this.controllerFor('listTopics').set('content', null);
     return this.controllerFor('list').load('categories');
   },
 
-  deactivate: function() {
+  activate: function() {
     this._super();
-    this.controllerFor('list').set('canCreateCategory', false);
+    this.controllerFor('list').setProperties({ filterMode: 'categories', category: null });
   },
 
-  renderTemplate: function() {
-    this.render(this.get('template'), { into: 'list', outlet: 'listView' });
-  },
+  redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
   afterModel: function(categoryList) {
     this.controllerFor('list').setProperties({
@@ -44,13 +28,23 @@ Discourse.ListCategoriesRoute = Discourse.Route.extend({
     });
   },
 
-  activate: function() {
-    this.controllerFor('list').setProperties({
-      filterMode: 'categories',
-      category: null
-    });
-  }
+  renderTemplate: function() {
+    this.render('listCategories', { into: 'list', outlet: 'listView' });
+  },
+
+  deactivate: function() {
+    this._super();
+    this.controllerFor('list').set('canCreateCategory', false);
+  },
+
+  actions: {
+    createCategory: function() {
+      Discourse.Route.showModal(this, 'editCategory', Discourse.Category.create({
+        color: 'AB9364', text_color: 'FFFFFF', hotness: 5, group_permissions: [{group_name: 'everyone', permission_type: 1}],
+        available_groups: Discourse.Site.current().group_names
+      }));
+      this.controllerFor('editCategory').set('selectedTab', 'general');
+    }
+  },
 
 });
-
-
