@@ -89,6 +89,23 @@ Discourse.URL = Em.Object.createWithMixins({
     window.location = Discourse.getURL(url);
   },
 
+  /** 
+   * Determines whether a URL is internal or not
+   *
+   * @method isInternal
+   * @param {String} url
+  **/
+  isInternal: function(url) {
+    if (url && url.length) {
+      if (url.indexOf('/') === 0) { return true; }
+      if (url.indexOf(this.origin()) === 0) { return true; }
+      if (url.replace(/^http[^s]/, 'https').indexOf(this.origin()) === 0) { return true; }
+      if (url.replace(/^https/, 'http').indexOf(this.origin()) === 0) { return true; }
+    }
+    return false;
+  },
+
+
   /**
     @private
 
