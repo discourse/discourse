@@ -222,7 +222,7 @@ uk:
       "9": "Цитати"
       "10": "Позначено зірочкою"
       "11": "Редагування"
-      "12": "Sent Items"
+      "12": "Надіслані"
       "13": "Вхідні"
 
     categories:
@@ -571,15 +571,15 @@ uk:
       italic_title: "Emphasis"
       italic_text: "emphasized text"
       link_title: "Гіперпосилання"
-      link_description: "enter link description here"
+      link_description: "введіть опис посилання"
       link_dialog_title: "Вставити гіперпосилання"
       link_optional_text: "необов'язкова назва"
-      quote_title: "Blockquote"
-      quote_text: "Blockquote"
+      quote_title: "Цитата"
+      quote_text: "Цитата"
       code_title: "Preformatted text"
       code_text: "enter preformatted text here"
       upload_title: "Завантажити"
-      upload_description: "enter upload description here"
+      upload_description: "введіть опис завантаження"
       olist_title: "Нумерований список"
       ulist_title: "Маркований список"
       list_item: "Елемент списку"
@@ -766,30 +766,30 @@ uk:
       notifications:
         title: ''
         reasons:
-          "3_6": 'You will receive notifications because you are watching this category.'
-          "3_5": 'You will receive notifications because you started watching this topic automatically.'
-          "3_2": 'You will receive notifications because you are watching this topic.'
-          "3_1": 'You will receive notifications because you created this topic.'
-          "3": 'You will receive notifications because you are watching this topic.'
-          "2_4": 'You will receive notifications because you posted a reply to this topic.'
-          "2_2": 'You will receive notifications because you are tracking this topic.'
-          "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
-          "1": 'You will be notified only if someone mentions your @name or replies to your post.'
-          "1_2": 'You will be notified only if someone mentions your @name or replies to your post.'
-          "0": 'You are ignoring all notifications on this topic.'
-          "0_2": 'You are ignoring all notifications on this topic.'
+          "3_6": 'Ви будете отримувати сповіщення, бо Ви слідкуєте за цією категорією.'
+          "3_5": 'Ви будете отримувати сповіщення, бо Ви автоматично почали слідкувати за цією темою.'
+          "3_2": 'Ви будете отримувати сповіщення, бо Ви слідкуєте за цією темою.'
+          "3_1": 'Ви будете отримувати сповіщення, бо Ви створили цю тему.'
+          "3":   'Ви будете отримувати сповіщення, бо Ви слідкуєте за цією темою.'
+          "2_4": 'Ви будете отримувати сповіщення, бо Ви залишили відповідь в цій темі.'
+          "2_2": 'Ви будете отримувати сповіщення, бо Ви стежите за цією темою.'
+          "2":   'Ви будете отримувати сповіщення, бо Ви <a href="/users/{{username}}/preferences">читаєте цю тему</a>.'
+          "1":   "Ви будете отримувати сповіщення лише якщо хтось згадуватиме Ваше @Ім'я або відповідатиме на Ваш допис."
+          "1_2": "Ви будете отримувати сповіщення лише якщо хтось згадуватиме Ваше @Ім'я або відповідатиме на Ваш допис."
+          "0":   'Ви ігноруєте всі сповіщення з цієї теми.'
+          "0_2": 'Ви ігноруєте всі сповіщення з цієї теми.'
         watching:
-          title: "Watching"
-          description: "same as Tracking, plus you will be notified of all new posts."
+          title: "Слідкувати"
+          description: "те саме, що \"Стежити\", плюс Ви отримуватимете сповіщення про всі нові дописи."
         tracking:
-          title: "Tracking"
-          description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
+          title: "Стежити"
+          description: "Ви будете отримувати сповіщення про згадування Вашого @Імені та відповіді на Ваші дописи, а також бачити кількість непрочитаних та нових дописів."
         regular:
-          title: "Regular"
-          description: "you will be notified only if someone mentions your @name or replies to your post."
+          title: "Звичайно"
+          description: "Ви будете отримувати сповіщення лише якщо хтось згадуватиме Ваше @Ім'я або відповідатиме на Ваш допис."
         muted:
-          title: "Muted"
-          description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
+          title: "Ігнорувати"
+          description: "Ви не будете отримувати жодних сповіщень з цієї теми, і вона не буде відображатися у Вашій вкладці \"Непрочитані\"."
 
       actions:
         recover: "Un-Delete Topic"
@@ -816,8 +816,8 @@ uk:
         help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
 
       share:
-        title: 'Share'
-        help: 'share a link to this topic'
+        title: 'Поширити'
+        help: 'Поширити посилання на цю тему'
 
       inviting: "Inviting..."
 
@@ -1634,43 +1634,43 @@ uk:
           uncategorized: 'Uncategorized'
 
     lightbox:
-      download: "download"
+      download: "звантажити"
 
     keyboard_shortcuts_help:
-      title: 'Keyboard Shortcuts'
+      title: 'Поєднання клавіш'
       jump_to:
-        title: 'Jump To'
-        home: '<b>g</b> then <b>h</b> Home (Latest)'
-        latest: '<b>g</b> then <b>l</b> Latest'
-        new: '<b>g</b> then <b>n</b> New'
-        unread: '<b>g</b> then <b>u</b> Unread'
-        starred: '<b>g</b> then <b>f</b> Starred'
-        categories: '<b>g</b> then <b>c</b> Categories'
+        title: 'Перейти до'
+        home: '<b>g</b> потім <b>h</b> Головна (Останні)'
+        latest: '<b>g</b> потім <b>l</b> Останні'
+        new: '<b>g</b> потім <b>n</b> Нові'
+        unread: '<b>g</b> потім <b>u</b> Непрочитані'
+        starred: '<b>g</b> потім <b>f</b> Позначені зірочкою'
+        categories: '<b>g</b> потім <b>c</b> Категорії'
       navigation:
-        title: 'Navigation'
-        back: '<b>u</b> Back'
-        up_down: '<b>k</b>/<b>j</b> Move selection up/down'
-        open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>`</b>/<b>~</b> Next/previous section'
+        title: 'Навігація'
+        back: '<b>u</b> Назад'
+        up_down: '<b>k</b>/<b>j</b> Перемістити виділення вгору/вниз'
+        open: '<b>o</b> або <b>Enter</b> Відкрити обрану тему'
+        next_prev: '<b>`</b>/<b>~</b> Наступний/попередній розділ'
       application:
-        title: 'Application'
-        create: '<b>c</b> Create a new topic'
-        notifications: '<b>n</b> Open notifications'
-        search: '<b>/</b> Search'
-        help: '<b>?</b> Open keyboard shortcuts help'
+        title: 'Застосунок'
+        create: '<b>c</b> Створити нову тему'
+        notifications: '<b>n</b> Відкрити сповіщення'
+        search: '<b>/</b> Пошук'
+        help: '<b>?</b> Відкрити довідку з поєднань клавіш'
       actions:
-        title: 'Actions'
-        star: '<b>f</b> Star topic'
-        share_topic: '<b>s</b> Share topic'
-        share_post: '<b>shift s</b> Share post'
-        reply_topic: '<b>r</b> Reply to topic'
-        reply_post: '<b>shift r</b> Reply to post'
-        like: '<b>l</b> Like post'
+        title: 'Дії'
+        star: '<b>f</b> Позначити тему зірочкою'
+        share_topic: '<b>s</b> Поширити тему'
+        share_post: '<b>shift s</b> Поширити допис'
+        reply_topic: '<b>r</b> Відповісти на тему'
+        reply_post: '<b>shift r</b> Відповісти на допис'
+        like: '<b>l</b> Вподобати допис'
         flag: '<b>!</b> Flag post'
         bookmark: '<b>b</b> Bookmark post'
-        edit: '<b>e</b> Edit post'
-        delete: '<b>d</b> Delete post'
-        mark_muted: '<b>m</b> then <b>m</b> Mark topic as muted'
-        mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
-        mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
-        mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
+        edit: '<b>e</b> Редагувати допис'
+        delete: '<b>d</b> Видалити допис'
+        mark_muted: '<b>m</b> потім <b>m</b> Ігнорувати сповіщення з теми'
+        mark_regular: '<b>m</b> потім <b>r</b> Встановити звичайні сповіщення з теми'
+        mark_tracking: '<b>m</b> потім <b>t</b> Стежити за темою'
+        mark_watching: '<b>m</b> потім <b>w</b> Слідкувати за темою'
