@@ -99,7 +99,7 @@ Discourse.URL = Em.Object.createWithMixins({
     if (url && url.length) {
       if (url.indexOf('/') === 0) { return true; }
       if (url.indexOf(this.origin()) === 0) { return true; }
-      if (url.replace(/^http[^s]/, 'https').indexOf(this.origin()) === 0) { return true; }
+      if (url.replace(/^http/, 'https').indexOf(this.origin()) === 0) { return true; }
       if (url.replace(/^https/, 'http').indexOf(this.origin()) === 0) { return true; }
     }
     return false;
