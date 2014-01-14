@@ -89,8 +89,14 @@ class TopicQuery
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
       topics.joins(:top_topic)
-            .where("top_topics.#{score} > 1")
+            .where("top_topics.#{score} > 0")
             .order("top_topics.#{score} DESC, topics.bumped_at DESC")
+    end
+  end
+
+  TopTopic.periods.each do |period|
+    define_method("list_top_#{period}") do
+      list_top_for(period)
     end
   end
 

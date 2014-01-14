@@ -32,7 +32,6 @@ Discourse.UserPrivateMessagesIndexRoute = createPMRoute('index', 'private-messag
 Discourse.UserPrivateMessagesMineRoute = createPMRoute('mine', 'private-messages-sent');
 Discourse.UserPrivateMessagesUnreadRoute = createPMRoute('unread', 'private-messages-unread');
 
-
 Discourse.UserActivityTopicsRoute = Discourse.UserTopicListRoute.extend({
   userActionType: Discourse.UserAction.TYPES.topics,
 
@@ -45,6 +44,6 @@ Discourse.UserActivityStarredRoute = Discourse.UserTopicListRoute.extend({
   userActionType: Discourse.UserAction.TYPES.starred,
 
   model: function() {
-    return Discourse.TopicList.find('starred', {user_id: this.modelFor('user').get('id') });
+    return Discourse.TopicList.find('starred', { user_id: this.modelFor('user').get('id') });
   }
 });

@@ -30,7 +30,7 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
 
   latestTopicOnly: function() {
     return this.get('categories').find(function(c) { return c.get('featuredTopics.length') > 1; }) === undefined;
-  }.property('categories.featuredTopics.length')
+  }.property('categories.@each.featuredTopics.length')
 
 });
 

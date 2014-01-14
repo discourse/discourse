@@ -1,6 +1,15 @@
 class ListController < ApplicationController
 
-  before_filter :ensure_logged_in, except: [:latest, :hot, :category, :top, :category_feed, :latest_feed, :hot_feed, :topics_by]
+  before_filter :ensure_logged_in, except: [
+    :topics_by,
+    # anonymous filters
+    Discourse.anonymous_filters, Discourse.anonymous_filters.map { |f| "#{f}_feed".to_sym },
+    # category
+    :category, :category_feed,
+    # top
+    :top_lists, TopTopic.periods.map { |p| "top_#{p}".to_sym }
+  ].flatten
+
   before_filter :set_category, only: [:category, :category_feed]
   skip_before_filter :check_xhr
 
@@ -72,18 +81,30 @@ class ListController < ApplicationController
     redirect_to latest_path, :status => 301
   end
 
-  def top
+  def top_lists
+    discourse_expires_in 1.minute
+
     top = generate_top_lists
 
     respond_to do |format|
       format.html do
         @top = top
-        store_preloaded('top_list', MultiJson.dump(TopListSerializer.new(top, scope: guardian, root: false)))
+        store_preloaded('top_lists', MultiJson.dump(TopListSerializer.new(top, scope: guardian, root: false)))
         render 'top'
       end
       format.json do
         render json: MultiJson.dump(TopListSerializer.new(top, scope: guardian, root: false))
       end
+    end
+  end
+
+  TopTopic.periods.each do |period|
+    define_method("top_#{period}") do
+      options = build_topic_list_options
+      user = list_target_user
+      list = TopicQuery.new(user, options).public_send("list_top_#{period}")
+      list.more_topics_url = construct_url_with(period, options, "top")
+      respond(list)
     end
   end
 
@@ -181,19 +202,27 @@ class ListController < ApplicationController
 
   def generate_top_lists
     top = {}
-    topic_ids = Set.new
+    options = {
+      per_page: SiteSetting.topics_per_period_in_summary,
+      category: params[:category]
+    }
+    topic_query = TopicQuery.new(current_user, options)
+    periods = periods_since(current_user.try(:last_seen_at))
 
-    TopTopic.periods.each do |period|
-      options = {
-        per_page: SiteSetting.topics_per_period_in_summary,
-        except_topic_ids: topic_ids.to_a
-      }
-      list = TopicQuery.new(current_user, options).list_top_for(period)
-      topic_ids.merge(list.topic_ids)
-      top[period] = list
-    end
+    periods.each { |period| top[period] = topic_query.list_top_for(period) }
 
     top
+  end
+
+  def periods_since(date)
+    date ||= 1.year.ago
+
+    periods = [:daily]
+    periods << :weekly  if date < 8.days.ago
+    periods << :monthly if date < 35.days.ago
+    periods << :yearly  if date < 180.days.ago
+
+    periods
   end
 
 end

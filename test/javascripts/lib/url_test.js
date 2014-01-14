@@ -8,7 +8,7 @@ test("navigatedToHome", function() {
   mock.expects("refresh").twice();
   ok(Discourse.URL.navigatedToHome("/", "/"));
 
-  var defaultFilter = "/" + Discourse.ListController.filters[0];
+  var defaultFilter = "/" + Discourse.ListController.FILTERS[0];
   ok(Discourse.URL.navigatedToHome(defaultFilter, "/"));
 
   ok(!Discourse.URL.navigatedToHome("/old", "/new"));

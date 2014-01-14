@@ -10,21 +10,8 @@ Discourse.FilteredListRoute = Discourse.Route.extend({
 
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
-  deactivate: function() {
-    this._super();
-
-    this.controllerFor('list').setProperties({
-      canCreateTopic: false,
-      filterMode: ''
-    });
-  },
-
   renderTemplate: function() {
-    this.render('listTopics', {
-      into: 'list',
-      outlet: 'listView',
-      controller: 'listTopics'
-    });
+    this.render('listTopics', { into: 'list', outlet: 'listView', controller: 'listTopics' });
   },
 
   setupController: function() {
@@ -44,7 +31,16 @@ Discourse.FilteredListRoute = Discourse.Route.extend({
       listTopicsController.set('model', topicList);
       Discourse.FilteredListRoute.scrollToLastPosition();
     });
-  }
+  },
+
+  deactivate: function() {
+    this._super();
+
+    this.controllerFor('list').setProperties({
+      canCreateTopic: false,
+      filterMode: ''
+    });
+  },
 });
 
 Discourse.FilteredListRoute.reopenClass({
@@ -57,6 +53,10 @@ Discourse.FilteredListRoute.reopenClass({
   }
 });
 
-Discourse.ListController.filters.forEach(function(filter) {
-  Discourse["List" + (filter.capitalize()) + "Route"] = Discourse.FilteredListRoute.extend({ filter: filter });
+_.each(Discourse.ListController.FILTERS, function(filter) {
+  Discourse["List" + filter.capitalize() + "Route"] = Discourse.FilteredListRoute.extend({ filter: filter });
+});
+
+_.each(Discourse.TopList.PERIODS, function(period) {
+  Discourse["ListTop" + period.capitalize() + "Route"] = Discourse.FilteredListRoute.extend({ filter: "top/" + period });
 });

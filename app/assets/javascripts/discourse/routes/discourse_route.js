@@ -32,7 +32,7 @@ Discourse.Route = Em.Route.extend({
     Discourse.set('notifyCount',0);
 
     var hideDropDownFunction = $('html').data('hide-dropdown');
-    if (hideDropDownFunction) return hideDropDownFunction();
+    if (hideDropDownFunction) { hideDropDownFunction(); }
   }
 
 });

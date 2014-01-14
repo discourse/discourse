@@ -1,17 +1,14 @@
 <div class='contents'>
-
   <table id='topic-list' class='categories'>
     <thead>
-    <tr>
-      <th class='category'>{{i18n categories.category}}</th>
-      <th class='latest'>{{i18n categories.latest}}</th>
-      <th class='stats topics'>{{i18n categories.topics}}</th>
-      <th class='stats posts'>{{i18n categories.posts}}
-        {{#if canEdit}}
-          <button title='{{i18n categories.toggle_ordering}}' class='btn toggle-admin no-text' {{action toggleOrdering}}><i class='fa fa-wrench'></i></button>
-        {{/if}}
-      </th>
-    </tr>
+      <tr>
+        <th class='category'>{{i18n categories.category}}</th>
+        <th class='latest'>{{i18n categories.latest}}</th>
+        <th class='stats topics'>{{i18n categories.topics}}</th>
+        <th class='stats posts'>{{i18n categories.posts}}
+          {{#if canEdit}}<button title='{{i18n categories.toggle_ordering}}' class='btn toggle-admin no-text' {{action toggleOrdering}}><i class='fa fa-wrench'></i></button>{{/if}}
+        </th>
+      </tr>
     </thead>
     <tbody>
       {{#each model.categories}}
@@ -19,9 +16,7 @@
         <td class='category'>
           <div>
             <div class="pull-left">
-              {{#if controller.ordering}}
-                <i class="fa fa-bars"></i>
-              {{/if}}
+              {{#if controller.ordering}}<i class="fa fa-bars"></i>{{/if}}
               {{categoryLink this allowUncategorized=true}}
               {{#if unreadTopics}}
                 <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
@@ -42,7 +37,6 @@
               {{{description_excerpt}}}
             </div>
           {{/if}}
-
           {{#if subcategories}}
             <div class='subcategories'>
               {{i18n categories.subcategories}}
@@ -102,10 +96,7 @@
       </tr>
       {{/each}}
     </tbody>
-
   </table>
 </div>
-
-<footer id='topic-list-bottom'>
-</footer>
+<footer id='topic-list-bottom'></footer>
 

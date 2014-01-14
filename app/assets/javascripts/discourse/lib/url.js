@@ -165,7 +165,7 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
-    var defaultFilter = "/" + Discourse.ListController.filters[0];
+    var defaultFilter = "/" + Discourse.ListController.FILTERS[0];
 
     if (path === "/" && (oldPath === "/" || oldPath === defaultFilter)) {
       // Refresh our list

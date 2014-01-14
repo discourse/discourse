@@ -6,8 +6,6 @@
   @namespace Discourse
   @module Discourse
 **/
-var validNavNames = <%= Discourse.top_menu_items.map(&:to_s) %>;
-var validAnon = <%= Discourse.anonymous_top_menu_items.map(&:to_s) %>;
 
 Discourse.NavItem = Discourse.Model.extend({
 
@@ -69,26 +67,25 @@ Discourse.NavItem = Discourse.Model.extend({
 });
 
 Discourse.NavItem.reopenClass({
+  NAMES: <%= Discourse.top_menu_items.map(&:to_s) %>,
+  ANONYMOUS_NAMES: <%= Discourse.anonymous_top_menu_items.map(&:to_s) %>,
 
   // create a nav item from the text, will return null if there is not valid nav item for this particular text
   fromText: function(text, opts) {
-    var countSummary = opts.countSummary,
-        split = text.split(","),
+    var split = text.split(","),
         name = split[0],
         testName = name.split("/")[0];
 
-    if (!opts.loggedOn && !validAnon.contains(testName)) return null;
+    if (!opts.loggedOn && !Discourse.NavItem.ANONYMOUS_NAMES.contains(testName)) return null;
     if (!Discourse.Category.list() && testName === "categories") return null;
-    if (!validNavNames.contains(testName)) return null;
+    if (!Discourse.NavItem.NAMES.contains(testName)) return null;
 
-    opts = {
+    return Discourse.NavItem.create({
       name: name,
       hasIcon: name === "unread" || name === "starred",
       filters: split.splice(1),
-      category: opts.category
-    };
-
-    return Discourse.NavItem.create(opts);
+      category: opts.category,
+    });
   }
 
 });
