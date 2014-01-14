@@ -26,7 +26,6 @@ Discourse.User = Discourse.Model.extend({
   **/
   staff: Em.computed.or('admin', 'moderator'),
 
-
   searchContext: function() {
     return {
       type: 'user',
