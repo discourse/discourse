@@ -16,6 +16,19 @@ class GlobalSetting
     end
   end
 
+  def self.database_config
+    hash = {"adapter" => "postgresql"}
+    %w{pool timeout socket host port username password}.each do |s|
+      if val = self.send("db_#{s}")
+        hash[s] = val
+      end
+    end
+    hash["host_names"] = [ hostname ]
+    hash["database"] = db_name
+
+    {"production" => hash}
+  end
+
 
   class BaseProvider
     def self.coerce(setting)
