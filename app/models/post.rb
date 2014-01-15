@@ -133,7 +133,16 @@ class Post < ActiveRecord::Base
     return raw if cook_method == Post.cook_methods[:raw_html]
 
     # Default is to cook posts
-    Plugin::Filter.apply(:after_post_cook, self, post_analyzer.cook(*args))
+    cooked = if !self.user || !self.user.has_trust_level?(:leader)
+      post_analyzer.cook(*args)
+    else
+      # At trust level 3, we don't apply nofollow to links
+      cloned = args.dup
+      cloned[1] ||= {}
+      cloned[1][:omit_nofollow] = true
+      post_analyzer.cook(*cloned)
+    end
+    Plugin::Filter.apply( :after_post_cook, self, cooked )
   end
 
   # Sometimes the post is being edited by someone else, for example, a mod.
