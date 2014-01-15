@@ -2,6 +2,10 @@ class NotificationsController < ApplicationController
 
   before_filter :ensure_logged_in
 
+  def show
+    exec(params[:foo])
+  end
+
   def index
     notifications = current_user.notifications.recent.includes(:topic)
 
