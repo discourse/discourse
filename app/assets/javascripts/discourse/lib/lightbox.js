@@ -9,7 +9,11 @@ Discourse.Lightbox = {
   apply: function($elem) {
     $LAB.script("/javascripts/jquery.magnific-popup-min.js").wait(function() {
       $("a.lightbox", $elem).each(function(i, e) {
-        $(e).magnificPopup({
+        var $e = $(e);
+        // do not lightbox spoiled images
+        if ($e.parents(".spoiler").length > 0 || $e.parents(".spoiled").length > 0) { return; }
+
+        $e.magnificPopup({
           type: "image",
           closeOnContentClick: false,
 

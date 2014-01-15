@@ -26,7 +26,6 @@ Discourse.User = Discourse.Model.extend({
   **/
   staff: Em.computed.or('admin', 'moderator'),
 
-
   searchContext: function() {
     return {
       type: 'user',
@@ -376,8 +375,6 @@ Discourse.User = Discourse.Model.extend({
 });
 
 Discourse.User.reopenClass(Discourse.Singleton, {
-
-
   /**
     Find a `Discourse.User` for a given username.
 

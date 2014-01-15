@@ -25,7 +25,7 @@ Discourse.NavItemView = Discourse.View.extend({
       name = "category";
     }
     return I18n.t("filters." + name + ".help", extra);
-  }.property("content.filter"),
+  }.property("content.name"),
 
 
   name: function() {

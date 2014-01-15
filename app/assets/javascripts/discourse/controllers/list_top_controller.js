@@ -23,12 +23,18 @@ Discourse.ListTopController = Discourse.ObjectController.extend({
     return null;
   }.property(),
 
-  showThisYear: function() {
-    if (Discourse.User.current()) {
-      return !Discourse.User.currentProp("hasBeenSeenInTheLastMonth");
-    } else {
-      return true;
-    }
-  }.property()
+  hasDisplayedAllTopLists: Em.computed.and('content.yearly', 'content.monthly', 'content.weekly', 'content.daily'),
+
+  showMoreUrl: function(period) {
+    var url = "", category = this.get("category");
+    if (category) { url += category.get("url") + "/l"; }
+    url += "/top/" + period;
+    return url;
+  },
+
+  showMoreDailyUrl: function() { return this.showMoreUrl("daily"); }.property("category.url"),
+  showMoreWeeklyUrl: function() { return this.showMoreUrl("weekly"); }.property("category.url"),
+  showMoreMonthlyUrl: function() { return this.showMoreUrl("monthly"); }.property("category.url"),
+  showMoreYearlyUrl: function() { return this.showMoreUrl("yearly"); }.property("category.url"),
 
 });

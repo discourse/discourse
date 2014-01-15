@@ -49,6 +49,7 @@ zh_TW:
         almost_x_years:
           one: "1年"
           other: "%{count}年"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 分鐘"

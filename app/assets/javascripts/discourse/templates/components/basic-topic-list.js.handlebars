@@ -37,9 +37,11 @@
               <a href="{{unbound topic.lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='fa fa-asterisk'></i></a>
             {{/if}}
           </td>
+
           <td class="category">
             {{categoryLink topic.category}}
           </td>
+
           <td class='num posts'><a href="{{unbound topic.lastUnreadUrl}}" class='badge-posts'>{{number topic.posts_count numberKey="posts_long"}}</a></td>
 
           <td class='num likes'>

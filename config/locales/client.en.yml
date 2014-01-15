@@ -49,6 +49,7 @@ en:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"
@@ -229,11 +230,11 @@ en:
       suspended_reason: "Reason: "
       watch_new_topics: "Automatically watch all new topics posted on the forum"
       watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all topics in these categories"
+      watched_categories_instructions: "Same as Tracking, plus you will be notified of all new posts and topics."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically receive notifications for topics in these categories"
+      tracked_categories_instructions: "You will automatically track all new and existing topics providing you a count of unread and new posts"
       muted_categories: "Muted"
-      muted_categories_instructions: "You will automatically mute all topics in these categories"
+      muted_categories_instructions: "You will not be notified of anything about this topic, and it will not appear on your unread tab."
 
       messages:
         all: "All"
@@ -386,6 +387,7 @@ en:
 
     loading: "Loading..."
     close: "Close"
+    assets_changed_confirm: "Discourse has been updated, would you like to refresh to get the latest version?"
     learn_more: "learn more..."
 
     year: 'year'
@@ -603,6 +605,7 @@ en:
         latest: "There are no latest topics. That's sad."
         hot: "There are no hot topics."
         category: "There are no {{category}} topics."
+        top: "There are no top topics."
       bottom:
         latest: "There are no more latest topics."
         hot: "There are no more hot topics."
@@ -612,6 +615,7 @@ en:
         unread: "There are no more unread topics."
         starred: "There are no more starred topics."
         category: "There are no more {{category}} topics."
+        top: "There are no more top topics."
 
     rank_details:
       toggle: toggle topic rank details
@@ -1121,6 +1125,7 @@ en:
         this_month: "This month"
         this_week: "This week"
         today: "Today"
+        other_periods: "dig into other periods"
         redirect_reasons:
           new_user: "Welcome! As a new visitor, we thought you might like to start with this list of the top discussion topics in the last year."
           not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
@@ -1226,10 +1231,16 @@ en:
         selector_placeholder: "add users"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
-        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        alias_levels:
+          title: "Who can use this group as an alias?"
+          nobody: "Nobody"
+          only_admins: "Only admins"
+          mods_and_admins: "Only moderators and Admins"
+          members_mods_and_admins: "Only group members, moderators and admins"
+          everyone: "Everyone"
 
       api:
         generate_master: "Generate Master API Key"

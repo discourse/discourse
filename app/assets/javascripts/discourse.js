@@ -88,9 +88,8 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   },
 
   loginRequired: function() {
-    return (
-      Discourse.SiteSettings.login_required && !Discourse.User.current()
-    );
+    return Discourse.SiteSettings.login_required &&
+           !Discourse.User.current();
   }.property(),
 
   redirectIfLoginRequired: function(route) {
@@ -129,7 +128,23 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
         }
       });
     }
-  }
+  },
+
+  requiresRefresh: function(){
+    var desired = Discourse.get("desiredAssetVersion");
+    return desired && Discourse.get("currentAssetVersion") !== desired;
+  }.property("currentAssetVersion", "desiredAssetVersion"),
+
+  assetVersion: function(prop, val) {
+    if(val) {
+      if(this.get("currentAssetVersion")){
+        this.set("desiredAssetVersion", val);
+      } else {
+        this.set("currentAssetVersion", val);
+      }
+    }
+    return this.get("currentAssetVersion");
+  }.property()
 
 });
 
