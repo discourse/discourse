@@ -69,7 +69,7 @@ uk:
           few:   "%{count} р"
           many:  "%{count} р"
           other: "%{count} р"
-        date_year: "D MMM"
+        date_year: "D MMM."
       medium:
         x_minutes:
           one:   "%{count} хвилина"
