@@ -130,6 +130,11 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     }
   },
 
+  requiresRefresh: function(){
+    var desired = Discourse.get("desiredAssetVersion");
+    return desired && Discourse.get("currentAssetVersion") !== desired;
+  }.property("currentAssetVersion", "desiredAssetVersion"),
+
   assetVersion: function(prop, val) {
     if(val) {
       if(this.get("currentAssetVersion")){

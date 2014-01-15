@@ -48,13 +48,9 @@ Discourse.URL = Em.Object.createWithMixins({
   **/
   routeTo: function(path) {
 
-    // If somehow our asset version changed, force a full reload of desired path
-    var desired = Discourse.get("desiredAssetVersion");
-    if(desired) {
-      if(Discourse.get("currentAssetVersion") !== desired){
-        document.location.href = path;
-        return;
-      }
+    if(Discourse.get("requiresRefresh")){
+      document.location.href = path;
+      return;
     }
 
     var oldPath = window.location.pathname;
