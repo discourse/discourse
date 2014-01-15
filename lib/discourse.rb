@@ -59,6 +59,20 @@ module Discourse
     @plugins
   end
 
+  def self.assets_digest
+    @assets_digest ||= begin
+      digest = Digest::MD5.hexdigest(ActionView::Base.assets_manifest.assets.values.sort.join)
+
+      channel = "/global/asset-version"
+      message = MessageBus.last_message(channel)
+
+      unless message && message.data == digest
+        MessageBus.publish channel, digest
+      end
+      digest
+    end
+  end
+
   def self.authenticators
     # TODO: perhaps we don't need auth providers and authenticators maybe one object is enough
 
