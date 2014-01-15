@@ -20,7 +20,7 @@ To learn more about the philosophy and goals of the project, [visit discourse.or
 
 3. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md).
 
-Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). And if you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
+Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.8+](http://redis.io/download). And if you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
 ## Setting up a Discourse Forum
 
@@ -49,14 +49,14 @@ Discourse is built for the *next* 10 years of the Internet, so our requirements 
   - Firefox 16+
   - Google Chrome 23+
   - Safari 5+
-2. The latest generation of tablets, 7" or larger:
+2. The latest generation of tablets
   - iPad 2+
   - Android 4.1+
   - Windows 8
-3. Modern small screen mobile/smartphones *as soon as possible*:
-  - Windows Phone 8
+3. Modern mobile/smartphones
   - iOS 6+
-  - Android 4.0+
+  - Android 4.1+
+  - Windows Phone 8
 
 ## Built With
 
@@ -100,7 +100,7 @@ The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/A
 
 ## Copyright / License
 
-Copyright 2013 Civilized Discourse Construction Kit, Inc.
+Copyright 2014 Civilized Discourse Construction Kit, Inc.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.
