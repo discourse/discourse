@@ -203,7 +203,7 @@ class ListController < ApplicationController
   def generate_top_lists
     top = {}
     options = {
-      per_page: SiteSetting.topics_per_period_in_summary,
+      per_page: SiteSetting.topics_per_period_in_top_summary,
       category: params[:category]
     }
     topic_query = TopicQuery.new(current_user, options)

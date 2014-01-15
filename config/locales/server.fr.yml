@@ -561,7 +561,7 @@ fr:
     send_welcome_message: "Les nouveaux utilisateurs reçoivent-ils un message privé de bienvenue ?"
     suppress_reply_directly_below: "Ne pas afficher le nombre de réponses d'un message quand la seule réponse est juste en dessous"
     suppress_reply_directly_above: "Ne pas afficher 'en réponse à'  sur un message quand la seule réponse est juste en dessus"
-    topics_per_period_in_summary: "Combien de discussions chargées par défaut sur la page des meilleures discussions"
+    topics_per_period_in_top_summary: "Combien de discussions chargées par défaut sur la page des meilleures discussions"
     allow_index_in_robots_txt: "Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)"
     email_domains_blacklist: "Liste des domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines d'email autorisés, délimités par un pipe. ATTENTION : les utilisateurs ayant un email sur un autre domaine ne pourrons pas s'enregistrer."
