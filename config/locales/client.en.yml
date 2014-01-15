@@ -1034,7 +1034,7 @@ en:
       parent: "Parent Category"
 
     flagging:
-      title: 'Why are you flagging this post?'
+      title: 'Why are you privately flagging this post?'
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Notify'

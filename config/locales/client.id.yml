@@ -562,7 +562,7 @@ id:
       change_in_category_topic: "Edit Description"
 
     flagging:
-      title: 'Why are you flagging this post?'
+      title: 'Why are you privately flagging this post?'
       action: 'Flag Post'
       cant: "Sorry, you can't flag this post at this time."
       custom_placeholder: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
