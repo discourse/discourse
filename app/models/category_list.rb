@@ -113,13 +113,19 @@ class CategoryList
     end
 
 
-    # Remove any empty topics unless we can create them (so we can see the controls)
+    # Remove any empty categories unless we can create them (so we can see the controls)
     def prune_empty
-      unless @guardian.can_create?(Category)
+      if !@guardian.can_create?(Category)
         # Remove categories with no featured topics unless we have the ability to edit one
-        @categories.delete_if { |c|
+        @categories.delete_if do |c|
           c.displayable_topics.blank? && c.description.blank?
-        }
+        end
+      elsif !SiteSetting.allow_uncategorized_topics
+        # Don't show uncategorized to admins either, if uncategorized topics are not allowed
+        # and there are none.
+        @categories.delete_if do |c|
+          c.uncategorized? && c.displayable_topics.blank?
+        end
       end
     end
 
