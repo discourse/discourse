@@ -611,7 +611,7 @@ en:
     suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
     suppress_reply_directly_above: "Don't show in-reply-to on a post when there is a single reply directly above"
 
-    topics_per_period_in_summary: "How many topics loaded by default on the top topics page"
+    topics_per_period_in_top_summary: "How many topics loaded by default on the top topics page"
 
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"

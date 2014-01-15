@@ -56,7 +56,7 @@ basic:
   relative_date_duration:
     client: true
     default: 30
-  topics_per_period_in_summary:
+  topics_per_period_in_top_summary:
     default: 20
 
 users:
