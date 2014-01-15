@@ -64,6 +64,36 @@ class Notification < ActiveRecord::Base
     result
   end
 
+  def self.interesting_before(min_date)
+    result =  where("created_at > ?", min_date)
+              .includes(:topic)
+              .unread
+              .limit(20)
+              .order("CASE WHEN notification_type = #{Notification.types[:replied]} THEN 1
+                           WHEN notification_type = #{Notification.types[:mentioned]} THEN 2
+                           ELSE 3
+                      END, created_at DESC").to_a
+
+    # Remove any duplicates by type and topic
+    if result.present?
+      seen = {}
+      to_remove = Set.new
+
+      result.each do |r|
+        seen[r.notification_type] ||= Set.new
+        if seen[r.notification_type].include?(r.topic_id)
+          to_remove << r.id
+        else
+          seen[r.notification_type] << r.topic_id
+        end
+      end
+      result.reject! {|r| to_remove.include?(r.id) }
+    end
+
+    result
+  end
+
+
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||= begin

@@ -172,6 +172,7 @@ group :test, :development do
   gem 'pry-rails'
   gem 'pry-nav'
   gem 'spork-rails'
+  gem "codeclimate-test-reporter", group: :test, require: nil
 end
 
 group :development do

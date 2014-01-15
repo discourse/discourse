@@ -25,17 +25,6 @@ module RequireProfiler
       @start_time = Time.now
       [ ::Kernel, (class << ::Kernel; self; end) ].each do |klass|
         klass.class_eval do
-          def require_with_profiling(path, *args)
-            RequireProfiler.measure(path, caller, :require) { require_without_profiling(path, *args) }
-          end
-          alias require_without_profiling require
-          alias require require_with_profiling
-
-          def load_with_profiling(path, *args)
-            RequireProfiler.measure(path, caller, :load) { load_without_profiling(path, *args) }
-          end
-          alias load_without_profiling load
-          alias load load_with_profiling
         end
       end
       # This is necessary so we don't clobber Bundler.require on Rails 3

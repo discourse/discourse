@@ -64,45 +64,12 @@ class PostsController < ApplicationController
     post = post.first
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
-    if !guardian.can_edit?(post) && post.user_id == current_user.id && post.edit_time_limit_expired?
-      render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
-      return
-    end
-
     guardian.ensure_can_edit!(post)
-
-    # to stay consistent with the create api,
-    #  we should allow for title changes and category changes here
-    #  we should also move all of this to a post updater.
-    if post.post_number == 1 && (params[:title] || params[:post][:category])
-      post.topic.acting_user = current_user
-      post.topic.title = params[:title] if params[:title]
-      Topic.transaction do
-        post.topic.change_category(params[:post][:category])
-        post.topic.save
-      end
-
-      if post.topic.errors.present?
-        render_json_error(post.topic)
-        return
-      end
-    end
-
-    revisor = PostRevisor.new(post)
-    if revisor.revise!(current_user, params[:post][:raw], edit_reason: params[:post][:edit_reason])
-      TopicLink.extract_from(post)
-    end
 
     if post.errors.present?
       render_json_error(post)
       return
     end
-
-    post_serializer = PostSerializer.new(post, scope: guardian, root: false)
-    post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
-    link_counts = TopicLink.counts_for(guardian,post.topic, [post])
-    post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
-    post_serializer.topic_slug = post.topic.slug if post.topic.present?
 
     result = {post: post_serializer.as_json}
     if revisor.category_changed.present?
@@ -249,22 +216,6 @@ class PostsController < ApplicationController
       :auto_close_time,
       :auto_track
     ]
-
-    # param munging for WordPress
-    params[:auto_track] = !(params[:auto_track].to_s == "false") if params[:auto_track]
-
-    if api_key_valid?
-      # php seems to be sending this incorrectly, don't fight with it
-      params[:skip_validations] = params[:skip_validations].to_s == "true"
-      permitted << :skip_validations
-    end
-
-    params.require(:raw)
-    params.permit(*permitted).tap do |whitelisted|
-        whitelisted[:image_sizes] = params[:image_sizes]
-        # TODO this does not feel right, we should name what meta_data is allowed
-        whitelisted[:meta_data] = params[:meta_data]
-    end
   end
 
 end
