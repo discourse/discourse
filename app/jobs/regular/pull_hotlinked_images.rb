@@ -82,7 +82,9 @@ module Jobs
     end
 
     def is_valid_image_url(src)
-      src.present? && !Discourse.store.has_been_uploaded?(src)
+      src.present? &&
+      !Discourse.store.has_been_uploaded?(src) &&
+      !src.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
     end
 
     def download(url)
