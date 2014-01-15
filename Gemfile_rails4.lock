@@ -61,6 +61,8 @@ GEM
     celluloid (0.15.2)
       timers (~> 1.1.0)
     certified (0.1.1)
+    codeclimate-test-reporter (0.1.1)
+      simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
     connection_pool (1.2.0)
     daemons (1.1.9)
@@ -394,6 +396,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   certified
+  codeclimate-test-reporter
   discourse_plugin!
   email_reply_parser-discourse
   ember-rails
