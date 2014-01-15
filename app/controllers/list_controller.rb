@@ -101,6 +101,7 @@ class ListController < ApplicationController
   TopTopic.periods.each do |period|
     define_method("top_#{period}") do
       options = build_topic_list_options
+      options[:per_page] = SiteSetting.topics_per_period_in_top_page
       user = list_target_user
       list = TopicQuery.new(user, options).public_send("list_top_#{period}")
       list.more_topics_url = construct_url_with(period, options, "top")
