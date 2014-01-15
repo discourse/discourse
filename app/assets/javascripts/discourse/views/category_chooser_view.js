@@ -25,12 +25,12 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   },
 
   none: function() {
-    if (!Discourse.SiteSettings.allow_uncategorized_topics) {
-      return 'category.choose';
-    } else if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('showUncategorized')) {
+    if (Discourse.User.currentProp('staff') || Discourse.SiteSettings.allow_uncategorized_topics) {
       return 'category.none';
+    } else {
+      return 'category.choose';
     }
-  }.property('showUncategorized'),
+  }.property(),
 
   template: function(text, templateData) {
     if (!templateData.color) return text;
