@@ -16,11 +16,9 @@ To learn more about the philosophy and goals of the project, [visit discourse.or
 
 1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. This beginner's guide is also adequate for developers ready to sink their teeth quickly; it's the easiest way to hack on Discourse!
 
-2. Once you have Discourse up and running, be sure to load [the appropriate seed data](pg_dumps) on your forum, either the **developer** seed data, which is the same data you'll see on [try.discourse.org](http://try.discourse.org), or the **production** seed data which includes the [Discourse Admin Quick Start Guide](https://github.com/discourse/discourse/blob/master/docs/ADMIN-QUICK-START-GUIDE.md) and meta guidance.
+2. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md).
 
-3. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md).
-
-Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.8+](http://redis.io/download). And if you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
+Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). And if you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
 ## Setting up a Discourse Forum
 
@@ -44,16 +42,16 @@ Our goal is to **foster an active community of contributors**, all of whom commi
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
-1. Modern browsers on the desktop:
+1. Up-to-date desktop browsers:
   - Internet Explorer 9.0 (may not be fully functional), 10.0+
   - Firefox 16+
   - Google Chrome 23+
   - Safari 5+
-2. The latest generation of tablets
+2. The latest generation of tablets:
   - iPad 2+
   - Android 4.1+
   - Windows 8
-3. Modern mobile/smartphones
+3. Modern mobile/smartphones:
   - iOS 6+
   - Android 4.1+
   - Windows Phone 8
