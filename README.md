@@ -47,7 +47,7 @@ Discourse is built for the *next* 10 years of the Internet, so our requirements 
   - Firefox 16+
   - Google Chrome 23+
   - Safari 5+
-2. The latest generation of tablets:
+2. Latest generation of tablets:
   - iPad 2+
   - Android 4.1+
   - Windows 8
@@ -65,7 +65,7 @@ Discourse is built from the following open source components:
 - [PostgreSQL](http://www.postgresql.org/) - Our main data store is in Postgres.
 - [Redis](http://redis.io/) - We use Redis for our job queue, rate limiting, as a cache and for transient data.
 
-Plus *lots* of Ruby Gems, a complete list of which is at [**SOFTWARE.MD**](docs/SOFTWARE.md).
+Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https://github.com/discourse/discourse/blob/master/Gemfile).
 
 ## Contributing
 
