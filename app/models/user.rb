@@ -408,6 +408,7 @@ class User < ActiveRecord::Base
   def change_trust_level!(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
     self.trust_level = TrustLevel.levels[level]
+    self.bio_raw_will_change! # So it can get re-cooked based on the new trust level
     transaction do
       self.save!
       Group.user_trust_level_change!(self.id, self.trust_level)
@@ -526,7 +527,7 @@ class User < ActiveRecord::Base
 
   def cook
     if bio_raw.present?
-      self.bio_cooked = PrettyText.cook(bio_raw) if bio_raw_changed?
+      self.bio_cooked = PrettyText.cook(bio_raw, omit_nofollow: self.has_trust_level?(:leader)) if bio_raw_changed?
     else
       self.bio_cooked = nil
     end
