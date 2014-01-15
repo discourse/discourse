@@ -84,7 +84,8 @@ class ListController < ApplicationController
   def top_lists
     discourse_expires_in 1.minute
 
-    top = generate_top_lists
+    options = build_topic_list_options
+    top = generate_top_lists(options)
 
     respond_to do |format|
       format.html do
@@ -201,12 +202,9 @@ class ListController < ApplicationController
     public_send(method, opts.merge(next_page_params(opts)))
   end
 
-  def generate_top_lists
+  def generate_top_lists(options)
     top = {}
-    options = {
-      per_page: SiteSetting.topics_per_period_in_top_summary,
-      category: params[:category]
-    }
+    options[:per_page] = SiteSetting.topics_per_period_in_top_summary
     topic_query = TopicQuery.new(current_user, options)
 
     if current_user.present?
