@@ -58,7 +58,7 @@ module Oneboxer
       # TODO - only download HEAD section
       # TODO - sane timeout
       # TODO - FAIL if for any reason you are downloading more that 5000 bytes
-      page_html = open(url).read
+      page_html = open(url, "User-Agent" => "Discourse Onebox #{Discourse::VERSION::STRING}").read
       if page_html.present?
         doc = Nokogiri::HTML(page_html)
 
