@@ -339,7 +339,7 @@ SQL
     [read_restricted, mapped]
   end
 
-  def uncatgorized?
+  def uncategorized?
     id == SiteSetting.uncategorized_category_id
   end
 end
