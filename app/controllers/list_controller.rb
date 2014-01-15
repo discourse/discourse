@@ -207,22 +207,23 @@ class ListController < ApplicationController
       category: params[:category]
     }
     topic_query = TopicQuery.new(current_user, options)
-    periods = periods_since(current_user.try(:last_seen_at))
+
+    if current_user.present?
+      periods = [best_period_for(current_user.last_seen_at)]
+    else
+      periods = TopTopic.periods
+    end
 
     periods.each { |period| top[period] = topic_query.list_top_for(period) }
 
     top
   end
 
-  def periods_since(date)
-    date ||= 1.year.ago
-
-    periods = [:daily]
-    periods << :weekly  if date < 8.days.ago
-    periods << :monthly if date < 35.days.ago
-    periods << :yearly  if date < 180.days.ago
-
-    periods
+  def best_period_for(date)
+    return :yearly  if date < 180.days.ago
+    return :monthly if date <  35.days.ago
+    return :weekly  if date <   8.days.ago
+    :daily
   end
 
 end
