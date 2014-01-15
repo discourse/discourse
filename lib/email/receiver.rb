@@ -39,12 +39,17 @@ module Email
         @reply_key.gsub!(t, "") if t.present?
       end
 
-      # Look up the email log for the reply key
+      # Look up the email log for the reply key, or create a new post if there is none
       @email_log = EmailLog.for(reply_key)
-      return Email::Receiver.results[:missing] if @email_log.blank?
-
-      create_reply
-
+      if @email_log.blank? && GlobalSetting.allow_new_category_from_email == true
+        @subject = @message.subject
+        @user_info = User.find_by_email(@message.from.first)
+        return Email::Receiver.results[:unprocessable] if @user_info.blank?
+        Rails.logger.debug "Creating post from #{@message.from.first} with subject #{@subject}"
+        create_new
+      else
+        create_reply
+      end
       Email::Receiver.results[:processed]
     end
 
@@ -120,6 +125,15 @@ module Email
                                 reply_to_post_number: @email_log.post.post_number,
                                 cooking_options: {traditional_markdown_linebreaks: true})
 
+      creator.create
+    end
+    def create_new
+      # Create a a new topic witht he body and subject
+      creator = PostCreator.new(@user_info,
+                                title: @subject,
+                                raw: @body,
+                                category: GlobalSetting.default_category,
+                                cooking_options: {traditional_markdown_linebreaks: true})
       creator.create
     end
 
