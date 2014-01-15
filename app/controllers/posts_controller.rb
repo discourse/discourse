@@ -64,11 +64,6 @@ class PostsController < ApplicationController
     post = post.first
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
-    if !guardian.can_edit?(post) && post.user_id == current_user.id && post.edit_time_limit_expired?
-      render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
-      return
-    end
-
     guardian.ensure_can_edit!(post)
 
     # to stay consistent with the create api,
