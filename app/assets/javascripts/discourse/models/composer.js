@@ -126,7 +126,12 @@ Discourse.Composer = Discourse.Model.extend({
     // reply is always required
     if (this.get('missingReplyCharacters') > 0) return true;
 
-    if (this.get('canCategorize') && !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('categoryId')) return true;
+    if (this.get('canCategorize') &&
+        !Discourse.SiteSettings.allow_uncategorized_topics &&
+        !this.get('categoryId') &&
+        !Discourse.User.currentProp('staff')) {
+      return true;
+    }
 
     return false;
   }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),

@@ -59,7 +59,8 @@ class Topic < ActiveRecord::Base
                                      :if => Proc.new { |t|
                                            (t.new_record? || t.category_id_changed?) &&
                                            !SiteSetting.allow_uncategorized_topics &&
-                                           (t.archetype.nil? || t.archetype == Archetype.default)
+                                           (t.archetype.nil? || t.archetype == Archetype.default) &&
+                                           (!t.user_id || !t.user.staff?)
                                        }
 
 
