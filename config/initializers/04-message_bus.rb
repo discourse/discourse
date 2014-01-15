@@ -37,11 +37,3 @@ end
 
 MessageBus.cache_assets = !Rails.env.development?
 MessageBus.enable_diagnostics
-
-digest = Rails.application.assets.digest.to_s
-channel = "/global/asset-version"
-message = MessageBus.last_message(channel)
-
-unless message && message.data == digest
-  MessageBus.publish channel, digest
-end
