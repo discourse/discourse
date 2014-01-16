@@ -40,6 +40,7 @@ module Email
       end
 
       # Look up the email log for the reply key, or create a new post if there is none
+      # Enabled when config/discourse.conf contains "allow_new_topics_from_email = true"
       @email_log = EmailLog.for(reply_key)
       if @email_log.blank?
      	return Email::Receiver.results[:unprocessable] if GlobalSetting.allow_new_topics_from_email == false
@@ -129,7 +130,8 @@ module Email
       creator.create
     end
     def create_new
-      # Create a a new topic witht he body and subject
+      # Try to create a new topic with the body and subject
+      # looking to config/discourse.conf to set category 
       creator = PostCreator.new(@user_info,
                                 title: @subject,
                                 raw: @body,
