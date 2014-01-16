@@ -69,7 +69,7 @@ uk:
           few:   "%{count} р"
           many:  "%{count} р"
           other: "%{count} р"
-        date_year: "D MMM."
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one:   "%{count} хвилина"
@@ -213,8 +213,8 @@ uk:
       sent_by_you: "Надіслано <a href='{{userUrl}}'>Вами</a>"
 
     user_action_groups:
-      "1": "Вподобано"
-      "2": "Отримано вподобання"
+      "1": "Вподобані"
+      "2": "Отримані вподобання"
       "3": "Закладки"
       "4": "Теми"
       "5": "Дописи"
@@ -273,14 +273,14 @@ uk:
       admin: "{{user}} є адміном"
       deleted: "(deleted)"
       suspended_notice: "This user is suspended until {{date}}."
-      suspended_reason: "Reason: "
-      watch_new_topics: "Automatically watch all new topics posted on the forum"
-      watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all topics in these categories"
-      tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically receive notifications for topics in these categories"
-      muted_categories: "Muted"
-      muted_categories_instructions: "You will automatically mute all topics in these categories"
+      suspended_reason: "Причина: "
+      watch_new_topics: "Автоматично слідкувати за всіма новими темами, що з'являтимуться на форумі"
+      watched_categories: "Відслідковувані"
+      watched_categories_instructions: "Ви будете автоматично слідкувати за темами в цих категоріях"
+      tracked_categories: "Відстежувані"
+      tracked_categories_instructions: "Ви будете автоматично отримувати сповіщення з тем в цих категоріях"
+      muted_categories: "Ігноровані"
+      muted_categories_instructions: "Ви будете автоматично ігнорувати всі теми в цих категоріях"
 
       messages:
         all: "Всі"
@@ -451,10 +451,10 @@ uk:
     week_desc: 'topics posted in the last 7 days'
     day: 'day'
 
-    first_post: First post
+    first_post: Перший допис
     mute: Mute
     unmute: Unmute
-    last_post: Last post
+    last_post: Останній допис
 
     summary:
       enabled_description: "You're viewing a summary of this topic. To see all posts again, click below."
@@ -674,7 +674,7 @@ uk:
       title: Topic Rank Details
 
     topic:
-      filter_to: "Show {{post_count}} posts in topic"
+      filter_to: "Показати {{post_count}} дописів в темі"
       create: 'Створити тему'
       create_long: 'Створити нову тему'
       private_message: 'Надіслати приватне повідомлення'
@@ -849,7 +849,7 @@ uk:
           few:   "{{count}} posts"
           many:  "{{count}} posts"
           other: "{{count}} posts"
-        cancel: "Show all posts in this topic again."
+        cancel: "Знову показати всі дописи в цій темі."
 
       split_topic:
         title: "Move to New Topic"
@@ -904,10 +904,10 @@ uk:
       deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
       gap:
-        one:   "1 post omitted"
-        few:   "{{count}} posts omitted"
-        many:  "{{count}} posts omitted"
-        other: "{{count}} posts omitted"
+        one:   "{{count}} допис пропущено"
+        few:   "{{count}} дописи пропущено"
+        many:  "{{count}} дописів пропущено"
+        other: "{{count}} дописів проущено"
 
       has_replies:
         one:   "Відповідь"
