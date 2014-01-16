@@ -133,7 +133,7 @@ module Email
       creator = PostCreator.new(@user_info,
                                 title: @subject,
                                 raw: @body,
-                                category: GlobalSetting.default_category,
+                                category: GlobalSetting.default_categories_id,
                                 cooking_options: {traditional_markdown_linebreaks: true})
       creator.create
     end
