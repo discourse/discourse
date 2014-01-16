@@ -42,7 +42,7 @@ module Email
       # Look up the email log for the reply key, or create a new post if there is none
       @email_log = EmailLog.for(reply_key)
       if @email_log.blank?
-     	return Email::Receiver.results[:unprocessable] if GlobalSetting.allow_new_category_from_email == false
+     	return Email::Receiver.results[:unprocessable] if GlobalSetting.allow_new_topics_from_email == false
         @subject = @message.subject
         @user_info = User.find_by_email(@message.from.first)
         return Email::Receiver.results[:unprocessable] if @user_info.blank?
