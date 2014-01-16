@@ -714,10 +714,10 @@ uk:
         other: "there are {{count}} new posts in this topic since you last read it"
 
       likes:
-        one:   "there is 1 like in this topic"
-        few:   "there are {{count}} likes in this topic"
-        many:  "there are {{count}} likes in this topic"
-        other: "there are {{count}} likes in this topic"
+        one:   "в цій темі {{count}} вподобання"
+        few:   "в цій темі {{count}} вподобання"
+        many:  "в цій темі {{count}} вподобань"
+        other: "в цій темі {{count}} вподобань"
       back_to_list: "Back to Topic List"
       options: "Topic Options"
       show_links: "show links within this topic"
