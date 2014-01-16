@@ -7,6 +7,7 @@ describe Guardian do
   let(:user) { build(:user) }
   let(:moderator) { build(:moderator) }
   let(:admin) { build(:admin) }
+  let(:leader) { build(:user, trust_level: 3) }
   let(:another_admin) { build(:admin) }
   let(:coding_horror) { build(:coding_horror) }
 
@@ -510,7 +511,7 @@ describe Guardian do
   describe 'can_edit?' do
 
     it 'returns false with a nil object' do
-      Guardian.new(user).can_edit?(nil).should be_false
+      Guardian.new(user).can_edit?(nil).should == false
     end
 
     describe 'a Post' do
@@ -552,7 +553,7 @@ describe Guardian do
         end
 
         it 'returns false to the author of the post' do
-          Guardian.new(old_post.user).can_edit?(old_post).should eq(false)
+          Guardian.new(old_post.user).can_edit?(old_post).should == false
         end
 
         it 'returns true as a moderator' do
@@ -564,7 +565,7 @@ describe Guardian do
         end
 
         it 'returns false for another regular user trying to edit your post' do
-          Guardian.new(coding_horror).can_edit?(old_post).should eq(false)
+          Guardian.new(coding_horror).can_edit?(old_post).should == false
         end
       end
     end
@@ -572,35 +573,43 @@ describe Guardian do
     describe 'a Topic' do
 
       it 'returns false when not logged in' do
-        Guardian.new.can_edit?(topic).should be_false
+        Guardian.new.can_edit?(topic).should == false
       end
 
       it 'returns true for editing your own post' do
-        Guardian.new(topic.user).can_edit?(topic).should be_true
+        Guardian.new(topic.user).can_edit?(topic).should eq(true)
       end
 
 
       it 'returns false as a regular user' do
-        Guardian.new(coding_horror).can_edit?(topic).should be_false
+        Guardian.new(coding_horror).can_edit?(topic).should == false
       end
 
       context 'not archived' do
         it 'returns true as a moderator' do
-          Guardian.new(moderator).can_edit?(topic).should be_true
+          Guardian.new(moderator).can_edit?(topic).should eq(true)
         end
 
         it 'returns true as an admin' do
-          Guardian.new(admin).can_edit?(topic).should be_true
+          Guardian.new(admin).can_edit?(topic).should eq(true)
+        end
+
+        it 'returns true at trust level 3' do
+          Guardian.new(leader).can_edit?(topic).should eq(true)
         end
       end
 
       context 'archived' do
         it 'returns false as a moderator' do
-          Guardian.new(moderator).can_edit?(build(:topic, user: user, archived: true)).should be_false
+          Guardian.new(moderator).can_edit?(build(:topic, user: user, archived: true)).should == false
         end
 
         it 'returns false as an admin' do
-          Guardian.new(admin).can_edit?(build(:topic, user: user, archived: true)).should be_false
+          Guardian.new(admin).can_edit?(build(:topic, user: user, archived: true)).should == false
+        end
+
+        it 'returns false at trust level 3' do
+          Guardian.new(leader).can_edit?(build(:topic, user: user, archived: true)).should == false
         end
       end
     end
