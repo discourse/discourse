@@ -58,8 +58,9 @@ module FileStore
       temp_file
     end
 
-    def absolute_avatar_template(avatar)
-      "#{absolute_base_url}/avatars/#{avatar.sha1}/{size}#{avatar.extension}"
+    def avatar_template(avatar)
+      template = relative_avatar_template(avatar)
+      "#{absolute_base_url}/#{template}"
     end
 
     def purge_tombstone(grace_period)
@@ -77,7 +78,11 @@ module FileStore
     end
 
     def get_path_for_avatar(file, avatar, size)
-      "avatars/#{avatar.sha1}/#{size}#{avatar.extension}"
+      relative_avatar_template(avatar).gsub("{size}", size.to_s)
+    end
+
+    def relative_avatar_template(avatar)
+      "avatars/#{avatar.sha1}/{size}#{avatar.extension}"
     end
 
     def store_file(file, path, filename = nil, content_type = nil)

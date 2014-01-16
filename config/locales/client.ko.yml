@@ -398,7 +398,7 @@ ko:
     day: '일'
 
     first_post: '첫 번째 게시물'
-    mute: '끄기거'
+    mute: '끄기'
     unmute: '끄기 해제'
     last_post: '최근 게시물'
 
@@ -608,7 +608,7 @@ ko:
         hot: "더 이상 읽을 인기있는 토픽이 없습니다."
         posted: "더 이상 작성된 토픽이 없습니다."
         read: "더 이상 읽을 토픽이 없습니다."
-        new: "더 이상 읽을 새로운 토픽이 없습니다.."
+        new: "더 이상 읽을 새로운 토픽이 없습니다."
         unread: "더 이상 읽지 않은 토픽이 없습니다."
         favorited: "더 이상 읽을 즐겨찾기 토픽이 없습니다."
         category: "더 이상 {{category}}에 토픽이 없습니다."
@@ -1420,16 +1420,16 @@ ko:
         grant_moderation: '중간 관리자 사용'
         unblock: '언블락'
         block: '블락'
-        reputation: 평판
-        permissions: 권한
-        activity: 활동
-        like_count: 좋아요
-        private_topics_count: 개인적인 토픽 수
-        posts_read_count: 게시글 읽은 수
-        post_count: 게시글 수
-        topics_entered: 토픽 수
-        flags_given_count: 관심 수
-        flags_received_count: 관심 받은 수
+        reputation: '평판'
+        permissions: '권한'
+        activity: '활동'
+        like_count: '좋아요'
+        private_topics_count: '개인적인 토픽 수'
+        posts_read_count: '게시글 읽은 수'
+        post_count: '게시글 수'
+        topics_entered: '토픽 수'
+        flags_given_count: '관심 수'
+        flags_received_count: '관심 받은 수'
         approve: '승인'
         approved_by: "승인자"
         approve_success: "인증 이메일이 발송되었습니다."
@@ -1458,7 +1458,7 @@ ko:
         suspended_explanation: "접근 금지된 유저는 로그인 할 수 없습니다."
         block_explanation: "블락 사용자는 게시글을 작성하거나 토픽을 작성할 수 없습니다."
         trust_level_change_failed: "신뢰도 변경에 문제가 있습니다."
-        suspend_modal_title: "의심되는 사용자"
+        suspend_modal_title: "금지 사용자"
 
       site_content:
         none: "편집을 시작하려는 컨텐츠의 타입을 선택하세요."

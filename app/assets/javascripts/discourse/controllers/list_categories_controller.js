@@ -15,21 +15,6 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
     }
   },
 
-  categoriesEven: function() {
-    if (this.blank('categories')) return Em.A();
-
-    return this.get('categories').filter(function(item, index) {
-      return (index % 2) === 0;
-    });
-  }.property('categories.@each'),
-
-  categoriesOdd: function() {
-    if (this.blank('categories')) return Em.A();
-    return this.get('categories').filter(function(item, index) {
-      return (index % 2) === 1;
-    });
-  }.property('categories.@each'),
-
   canEdit: function() {
     return Discourse.User.currentProp('staff');
   }.property(),

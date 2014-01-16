@@ -325,7 +325,7 @@ class User < ActiveRecord::Base
   def uploaded_avatar_path
     return unless SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
     avatar_template = uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
-    schemaless avatar_template
+    schemaless absolute avatar_template
   end
 
   def avatar_template

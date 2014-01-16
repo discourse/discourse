@@ -80,15 +80,18 @@ module DiscourseUpdates
         $redis.del(missing_versions_list_key)
       end
 
-      # store the list in redis
-      version_keys = []
-      versions[0,5].each do |v|
-        key = "#{missing_versions_key_prefix}:#{v['version']}"
-        $redis.mapped_hmset key, v
-        version_keys << key
+      if versions.present?
+        # store the list in redis
+        version_keys = []
+        versions[0,5].each do |v|
+          key = "#{missing_versions_key_prefix}:#{v['version']}"
+          $redis.mapped_hmset key, v
+          version_keys << key
+        end
+        $redis.rpush missing_versions_list_key, version_keys
       end
-      $redis.rpush missing_versions_list_key, version_keys
-      versions
+
+      versions || []
     end
 
     def missing_versions

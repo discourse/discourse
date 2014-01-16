@@ -9,9 +9,6 @@ class CategoriesController < ApplicationController
   def index
     @description = SiteSetting.site_description
 
-    # TODO: remove this when we're sure about removing 2-column layout on categories page
-    # wide_mode = SiteSetting.enable_wide_category_list
-
     options = {}
     options[:latest_posts] = params[:latest_posts] || SiteSetting.category_featured_topics
 

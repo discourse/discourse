@@ -122,10 +122,10 @@ describe FileStore::LocalStore do
     store.external?.should == false
   end
 
-  describe ".absolute_avatar_template" do
+  describe ".avatar_template" do
 
     it "is present" do
-      store.absolute_avatar_template(avatar).should == "http://test.localhost/uploads/default/avatars/e9d/71f/5ee7c92d6d/{size}.jpg"
+      store.avatar_template(avatar).should == "/uploads/default/avatars/e9d/71f/5ee7c92d6d/{size}.jpg"
     end
 
   end

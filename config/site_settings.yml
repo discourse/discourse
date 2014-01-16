@@ -30,9 +30,6 @@ basic:
   ga_domain_name:
     client: true
     default: ''
-  enable_wide_category_list:
-    client: true
-    default: true
   category_featured_topics:
     client: true
     default: 3
