@@ -124,7 +124,7 @@ uk:
     joined: "Приєднався(-лась)"
     admin_title: "Адмін"
     flags_title: "Flags"
-    show_more: "show more"
+    show_more: "показати більше"
     links: Посилання
     faq: "ЧаПи"
     privacy_policy: "Політика приватності"
@@ -179,7 +179,7 @@ uk:
     new_topics_inserted: "{{count}} new topics."
     show_new_topics: "Click to show."
     preview: "preview"
-    cancel: "cancel"
+    cancel: "скасувати"
 
     save: "Зберегти зміни"
     saving: "Збереження..."
@@ -221,7 +221,7 @@ uk:
       "6": "Відповіді"
       "7": "Згадки"
       "9": "Цитати"
-      "10": "Позначено зірочкою"
+      "10": "Позначені зірочкою"
       "11": "Редагування"
       "12": "Надіслані"
       "13": "Вхідні"
@@ -268,7 +268,7 @@ uk:
       dynamic_favicon: "Show incoming message notifications on favicon"
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Enable quote reply for highlighted text"
-      change: "change"
+      change: "змінити"
       moderator: "{{user}} є модератором"
       admin: "{{user}} є адміном"
       deleted: "(deleted)"
@@ -291,7 +291,7 @@ uk:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
         error: "(помилка)"
-        action: "Send Password Reset Email"
+        action: "Надіслати лист для відновлення паролю"
 
       change_about:
         title: "Змінити Про мене"
@@ -324,7 +324,7 @@ uk:
         ok: "Адресу прийнято. Ми надішлемо Вам листа для підтвердження."
         invalid: "Будь ласка, введіть правильну адресу електронної пошти."
         authenticated: "Your email has been authenticated by {{provider}}."
-        frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
+        frequency: "Ми будемо надсилати Вам листи тільки якщо ми Вас останнім часом не бачили і Ви ще не бачили те, про що ми Вам пишемо."
 
       name:
         title: "Ім'я"
@@ -356,21 +356,21 @@ uk:
       website: "Вебсайт"
       email_settings: "Електронна пошта"
       email_digests:
-        title: "When I don't visit the site, send me an email digest of what's new"
-        daily: "daily"
-        weekly: "weekly"
-        bi_weekly: "every two weeks"
+        title: "Коли я не відвідую сайт, надсилайте мені на електронну скриньку стислий виклад новин"
+        daily: "щодня"
+        weekly: "щотижня"
+        bi_weekly: "кожні два тижні"
 
-      email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
-      email_private_messages: "Receive an email when someone sends you a private message"
-      email_always: "Receive email notifications and email digests even if I am active on the forum"
+      email_direct: "Отримувати електронний лист, коли хтось цитує Вас, відповідає на Ваш допис або згадує Ваше @Ім'я"
+      email_private_messages: "Отримувати електронний лист, коли хтось надсилає Вам приватне повідомлення"
+      email_always: "Отримувати електронні листи та виклади новин навіть якщо я активний(а) на форумі"
 
       other_settings: "Інше"
       categories_settings: "Категорії"
 
       new_topic_duration:
-        label: "Consider topics new when"
-        not_viewed: "I haven't viewed them yet"
+        label: "Вважати теми новими, якщо"
+        not_viewed: "я їх ще не переглядав"
         last_here: "they were posted since I was here last"
         after_n_days:
           one:   "they were posted in the last day"
@@ -383,20 +383,20 @@ uk:
           many:  "they were posted in the last {{count}} week"
           other: "they were posted in the last {{count}} week"
 
-      auto_track_topics: "Automatically track topics I enter"
+      auto_track_topics: "Автоматично стежити за темами, які я відвідую"
       auto_track_options:
-        never: "never"
-        always: "always"
+        never: "ніколи"
+        always: "завжди"
         after_n_seconds:
-          one:   "after 1 second"
-          few:   "after {{count}} seconds"
-          many:  "after {{count}} seconds"
-          other: "after {{count}} seconds"
+          one:   "після {{count}} секунди"
+          few:   "після {{count}} секунд"
+          many:  "після {{count}} секунд"
+          other: "після {{count}} секунд"
         after_n_minutes:
-          one:   "after 1 minute"
-          few:   "after {{count}} minutes"
-          many:  "after {{count}} minutes"
-          other: "after {{count}} minutes"
+          one:   "після {{count}} хвилини"
+          few:   "після {{count}} хвилин"
+          many:  "після {{count}} хвилин"
+          other: "після {{count}} хвилин"
 
       invited:
         search: "шукати запрошення..."
@@ -439,7 +439,7 @@ uk:
         private_message: "private message"
         the_topic: "the topic"
 
-    loading: "Loading..."
+    loading: "Завантаження..."
     close: "Close"
     learn_more: "learn more..."
 
@@ -534,8 +534,8 @@ uk:
       drafts_offline: "drafts offline"
 
       min_length:
-        need_more_for_title: "{{n}} to go for the title"
-        need_more_for_reply: "{{n}} to go for the post"
+        need_more_for_title: "для назви треба ще {{n}}"
+        need_more_for_reply: "для допису треба ще {{n}}"
 
       error:
         title_missing: "Потрібно вказати назву."
@@ -554,7 +554,7 @@ uk:
       create_pm: "Створити приватне повідомлення"
 
       users_placeholder: "Додати користувача"
-      title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
+      title_placeholder: "Введіть тут назву. Про що ця дискусія одним коротким реченням?"
       edit_reason_placeholder: "чому Ви редагуєте допис?"
       show_edit_reason: "(додати причину редагування)"
       reply_placeholder: "Вводьте текст тут. Для форматування використовуйте Markdown або BBCode. Для завантаження зображення перетягніть його або вставте з буферу обміну."
@@ -562,7 +562,7 @@ uk:
       saving: "Збереження..."
       saved: "Збережено!"
       saved_draft: "You have a post draft in progress. Click anywhere in this box to resume editing."
-      uploading: "Uploading..."
+      uploading: "Завантаження..."
       show_preview: 'попередній перегляд &raquo;'
       hide_preview: '&laquo; сховати попередній перегляд'
 
@@ -643,10 +643,10 @@ uk:
     current_user: 'перейти до Вашої сторінки користувача'
 
     starred:
-      title: 'Starred'
+      title: 'Позначити зірочкою'
       help:
-        star: 'add this topic to your starred list'
-        unstar: 'remove this topic from your starred list'
+        star: 'додати цю тему до Вашого списку позначених зірочкою'
+        unstar: 'видалити цю тему із Вашого списку позначених зірочкою'
 
     topics:
       none:
@@ -721,7 +721,7 @@ uk:
       back_to_list: "Back to Topic List"
       options: "Topic Options"
       show_links: "show links within this topic"
-      toggle_information: "toggle topic details"
+      toggle_information: "показати/сховати деталі теми"
       read_more_in_category: "Хочете почитати ще? Перегляньте інші теми в {{catLink}} або {{latestLink}}."
       read_more: "Want to read more? {{catLink}} or {{latestLink}}."
 
@@ -746,9 +746,9 @@ uk:
       view_latest_topics: перегляньте останні теми
       suggest_create_topic: Чому б не створити тему?
       read_position_reset: "Your read position has been reset."
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
-      deleted: "The topic has been deleted"
+      jump_reply_up: перейти до ранішої відповіді
+      jump_reply_down: перейти до пізнішої відповіді
+      deleted: "Тему було видалено"
 
       auto_close_notice: "This topic will automatically close %{timeLeft}."
       auto_close_title: 'Auto-Close Settings'
@@ -910,10 +910,10 @@ uk:
         other: "{{count}} posts omitted"
 
       has_replies:
-        one:   "Reply"
-        few:   "Replies"
-        many:  "Replies"
-        other: "Replies"
+        one:   "Відповідь"
+        few:   "Відповіді"
+        many:  "Відповідей"
+        other: "Відповідей"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
@@ -1110,7 +1110,7 @@ uk:
 
     category:
       can: 'can&hellip; '
-      none: '(no category)'
+      none: '(без категорії)'
       choose: 'Select a category&hellip;'
       edit: 'edit'
       edit_long: "Edit Category"
@@ -1166,8 +1166,8 @@ uk:
 
     topic_map:
       title: "Topic Summary"
-      links_shown: "show all {{totalLinks}} links..."
-      clicks: "clicks"
+      links_shown: "показати всі {{totalLinks}} посилання..."
+      clicks: "натискань"
 
     topic_statuses:
       locked:
@@ -1180,20 +1180,20 @@ uk:
         help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
     posts: "Дописи"
-    posts_long: "there are {{number}} posts in this topic"
-    original_post: "Original Post"
+    posts_long: "тема містить {{number}} дописів"
+    original_post: "Перший допис"
     views: "Перегляди"
     replies: "Відповіді"
-    views_long: "this topic has been viewed {{number}} times"
+    views_long: "цю тему переглянули {{number}} разів"
     activity: "Активність"
     likes: "Вподобання"
-    likes_long: "there are {{number}} likes in this topic"
+    likes_long: "в цій темі {{number}} вподобань"
     users: "Користувачі"
     category_title: "Категорія"
     history: "Історія"
-    changed_by: "by {{author}}"
+    changed_by: "{{author}}"
 
-    categories_list: "Categories List"
+    categories_list: "Список категорій"
 
     filters:
       latest:
