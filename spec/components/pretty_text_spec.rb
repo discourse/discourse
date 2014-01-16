@@ -74,6 +74,10 @@ describe PrettyText do
     it "should not inject nofollow for bar.foo.com" do
       (PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).should be_true
     end
+
+    it "should not inject nofollow if omit_nofollow option is given" do
+      (PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow/).should be_true
+    end
   end
 
   describe "Excerpt" do

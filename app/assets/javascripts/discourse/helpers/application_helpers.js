@@ -7,9 +7,13 @@
 Handlebars.registerHelper('breakUp', function(property, hint, options) {
   var prop = Ember.Handlebars.get(this, property, options);
   if (!prop) return "";
-  hint = Ember.Handlebars.get(this, hint, options);
+  if (typeof(hint) === 'string') {
+    hint = Ember.Handlebars.get(this, hint, options);
+  } else {
+    hint = undefined;
+  }
 
-  return Discourse.Formatter.breakUp(prop, hint);
+  return new Handlebars.SafeString(Discourse.Formatter.breakUp(prop, hint));
 });
 
 /**

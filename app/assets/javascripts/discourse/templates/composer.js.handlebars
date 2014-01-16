@@ -51,6 +51,7 @@
               {{#if model.showAdminOptions}}
                 <button {{action toggleAdminOptions target="view"}} class="btn no-text show-admin-options" title='{{i18n composer.admin_options_title}}'><i class="fa fa-wrench"></i></button>
               {{/if}}
+              {{render additionalComposerButtons model}}
             {{/unless}}
           </div>
 

@@ -610,7 +610,7 @@ da:
     suppress_reply_directly_below: "Vis ikke antallet af svar på et indlæg når der er et enkelt svar umiddelbart nedenfor"
     suppress_reply_directly_above: "Vis ikke “svar til“ på et indlæg når der er et enkelt svar umiddelbart nedenfor"
 
-    topics_per_period_in_summary: "Hvor mange emner der som standard indlæses på siden med populære emner."
+    topics_per_period_in_top_summary: "Hvor mange emner der som standard indlæses på siden med populære emner."
 
     allow_index_in_robots_txt: "Sitet skal indekseres af søgemaskiner (opdatér robots.txt)"
     email_domains_blacklist: "En liste af e-mail-domæner som ikke er tilladte, adskilt af pipe-tegn. Eksempel: mailinator.com|trashmail.net."

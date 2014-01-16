@@ -22,7 +22,14 @@ Discourse.SiteMapController = Ember.ArrayController.extend(Discourse.HasCurrentU
   }.property(),
 
   categories: function() {
-    return Discourse.Category.list();
+    if (Discourse.SiteSettings.allow_uncategorized_topics) {
+      return Discourse.Category.list();
+    } else {
+      // Exclude the uncategorized category if it's empty
+      return Discourse.Category.list().reject(function(c) {
+        return c.get('isUncategorizedCategory') && !Discourse.User.currentProp('staff');
+      });
+    }
   }.property(),
 
   actions: {

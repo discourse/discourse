@@ -860,7 +860,7 @@ en:
         reply: "begin composing a reply to this post"
         like: "like this post"
         edit: "edit this post"
-        flag: "flag this post for attention or send a notification about it"
+        flag: "privately flag this post for attention or send a private notification about it"
         delete: "delete this post"
         undelete: "undelete this post"
         share: "share a link to this post"
@@ -1034,7 +1034,7 @@ en:
       parent: "Parent Category"
 
     flagging:
-      title: 'Why are you flagging this post?'
+      title: 'Why are you privately flagging this post?'
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Notify'
@@ -1127,7 +1127,7 @@ en:
         today: "Today"
         other_periods: "dig into other periods"
         redirect_reasons:
-          new_user: "Welcome! As a new visitor, we thought you might like to start with this list of the top discussion topics in the last year."
+          new_user: "Welcome! As a new visitor, we thought you might like to start with this list of the top discussion topics."
           not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'

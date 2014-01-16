@@ -11,7 +11,7 @@ module CategoryGuardian
   end
 
   def can_delete_category?(category)
-    is_staff? && category.topic_count == 0 && !category.uncatgorized?
+    is_staff? && category.topic_count == 0 && !category.uncategorized?
   end
 
   def can_see_category?(category)

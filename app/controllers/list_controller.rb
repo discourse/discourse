@@ -84,7 +84,8 @@ class ListController < ApplicationController
   def top_lists
     discourse_expires_in 1.minute
 
-    top = generate_top_lists
+    options = build_topic_list_options
+    top = generate_top_lists(options)
 
     respond_to do |format|
       format.html do
@@ -101,6 +102,7 @@ class ListController < ApplicationController
   TopTopic.periods.each do |period|
     define_method("top_#{period}") do
       options = build_topic_list_options
+      options[:per_page] = SiteSetting.topics_per_period_in_top_page
       user = list_target_user
       list = TopicQuery.new(user, options).public_send("list_top_#{period}")
       list.more_topics_url = construct_url_with(period, options, "top")
@@ -200,29 +202,28 @@ class ListController < ApplicationController
     public_send(method, opts.merge(next_page_params(opts)))
   end
 
-  def generate_top_lists
+  def generate_top_lists(options)
     top = {}
-    options = {
-      per_page: SiteSetting.topics_per_period_in_summary,
-      category: params[:category]
-    }
+    options[:per_page] = SiteSetting.topics_per_period_in_top_summary
     topic_query = TopicQuery.new(current_user, options)
-    periods = periods_since(current_user.try(:last_seen_at))
+
+    if current_user.present?
+      periods = [best_period_for(current_user.previous_visit_at)]
+    else
+      periods = TopTopic.periods
+    end
 
     periods.each { |period| top[period] = topic_query.list_top_for(period) }
 
     top
   end
 
-  def periods_since(date)
+  def best_period_for(date)
     date ||= 1.year.ago
-
-    periods = [:daily]
-    periods << :weekly  if date < 8.days.ago
-    periods << :monthly if date < 35.days.ago
-    periods << :yearly  if date < 180.days.ago
-
-    periods
+    return :yearly  if date < 180.days.ago
+    return :monthly if date <  35.days.ago
+    return :weekly  if date <   8.days.ago
+    :daily
   end
 
 end
