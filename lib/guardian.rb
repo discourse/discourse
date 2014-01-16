@@ -80,7 +80,7 @@ class Guardian
   alias :can_see_flags? :can_moderate?
   alias :can_send_activation_email? :can_moderate?
 
- 
+
 
   # Can we impersonate this user?
   def can_impersonate?(target)
@@ -241,6 +241,8 @@ class Guardian
     if obj && authenticated?
       action_method = method_name_for action, obj
       return (action_method ? send(action_method, obj) : true)
+    else
+      false
     end
   end
 

@@ -47,7 +47,7 @@ module TopicGuardian
 
   # Editing Method
   def can_edit_topic?(topic)
-    !topic.archived && (is_staff? || is_my_own?(topic))
+    !topic.archived && (is_staff? || is_my_own?(topic) || user.has_trust_level?(:leader))
   end
 
   # Recovery Method
