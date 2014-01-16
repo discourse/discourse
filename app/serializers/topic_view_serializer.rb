@@ -23,7 +23,8 @@ class TopicViewSerializer < ApplicationSerializer
      :slug,
      :category_id,
      :word_count,
-     :deleted_at]
+     :deleted_at,
+     :meta_data]
   end
 
   attributes :draft,
