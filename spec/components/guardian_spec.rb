@@ -833,6 +833,22 @@ describe Guardian do
           Guardian.new(coding_horror).can_delete?(old_post).should eq(false)
         end
       end
+
+      context 'the topic is archived' do
+        before do
+          post.topic.archived = true
+        end
+
+        it "allows a staff member to delete it" do
+          Guardian.new(moderator).can_delete?(post).should be_true
+        end
+
+        it "doesn't allow a regular user to delete it" do
+          Guardian.new(post.user).can_delete?(post).should be_false
+        end
+
+      end
+
     end
 
     context 'a Category' do
