@@ -10,7 +10,7 @@ module MobileDetection
 
     session[:mobile_view] = params[:mobile_view] if params && params.has_key?(:mobile_view)
 
-    if session[:mobile_view]
+    if session && session[:mobile_view]
       session[:mobile_view] == '1'
     else
       mobile_device?(user_agent)
