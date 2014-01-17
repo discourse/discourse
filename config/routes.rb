@@ -203,14 +203,12 @@ Discourse::Application.routes.draw do
   post "category/:category_id/move" => "categories#move", as: "category_move"
   get "category/:category.rss" => "list#category_feed", format: :rss, as: "category_feed"
   get "category/:category" => "list#category"
-  get "category/:category/more" => "list#category"
   get "category/:category/none" => "list#category_none"
-  get "category/:category/none/more" => "list#category_none"
   get "category/:parent_category/:category" => "list#category"
-  get "category/:parent_category/:category/more" => "list#category"
 
   get "top" => "list#top_lists"
   get "category/:category/l/top" => "list#top_lists"
+  get "category/:category/none/l/top" => "list#top_lists"
   get "category/:parent_category/:category/l/top" => "list#top_lists"
 
   TopTopic.periods.each do |period|

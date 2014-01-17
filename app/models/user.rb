@@ -607,7 +607,7 @@ class User < ActiveRecord::Base
   private
 
   def previous_visit_at_update_required?(timestamp)
-    seen_before? && last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours)
+    seen_before? && (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
   end
 
   def update_previous_visit(timestamp)

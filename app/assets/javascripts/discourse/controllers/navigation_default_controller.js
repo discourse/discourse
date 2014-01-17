@@ -28,13 +28,13 @@ Discourse.NavigationDefaultController = Discourse.Controller.extend({
 
   navItems: function() {
     return Discourse.NavItem.buildList();
-  }.property() 
+  }.property()
 });
 
 Discourse.NavigationCategoryController = Discourse.NavigationDefaultController.extend({
   navItems: function() {
     return Discourse.NavItem.buildList(this.get('category'), { noSubcategories: this.get('noSubcategories') });
-  }.property('category', 'noSubcategories') 
+  }.property('category', 'noSubcategories')
 });
 
 Discourse.NavigationCategoriesController = Discourse.NavigationDefaultController.extend({});

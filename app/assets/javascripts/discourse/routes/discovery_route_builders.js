@@ -6,11 +6,6 @@
 **/
 function buildTopicRoute(filter) {
   return Discourse.Route.extend({
-    renderTemplate: function() {
-      this.render('navigation/default', { outlet: 'navigation-bar' });
-      this.render('discovery/topics', { controller: 'discoveryTopics', outlet: 'list-container' });
-    },
-
     beforeModel: function() {
       this.controllerFor('navigationDefault').set('filterMode', filter);
     },
@@ -27,10 +22,15 @@ function buildTopicRoute(filter) {
     },
 
     setupController: function(controller, model) {
-      var filterText = I18n.t('filters.' + filter + '.title', {count: 0});
+      var filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
       Discourse.set('title', I18n.t('filters.with_topics', {filter: filterText}));
       this.controllerFor('discoveryTopics').set('model', model);
       this.controllerFor('navigationDefault').set('canCreateTopic', model.get('can_create_topic'));
+    },
+
+    renderTemplate: function() {
+      this.render('navigation/default', { outlet: 'navigation-bar' });
+      this.render('discovery/topics', { controller: 'discoveryTopics', outlet: 'list-container' });
     }
   });
 }
@@ -44,11 +44,6 @@ function buildTopicRoute(filter) {
 **/
 function buildCategoryRoute(filter, params) {
   return Discourse.Route.extend({
-    renderTemplate: function() {
-      this.render('navigation/category', { outlet: 'navigation-bar' });
-      this.render('discovery/topics', { controller: 'discoveryTopics', outlet: 'list-container' });
-    },
-
     model: function(params) {
       return Discourse.Category.findBySlug(params.slug, params.parentSlug);
     },
@@ -74,10 +69,8 @@ function buildCategoryRoute(filter, params) {
         }
 
         // If all the categories are the same, we can hide them
-        var diffCat = list.get('topics').find(function (t) {
-          return t.get('category') !== model;
-        });
-        if (!diffCat) { list.set('hideCategory', true); }
+        var hideCategory = !list.get('topics').find(function (t) { return t.get('category') !== model; });
+        list.set('hideCategory', hideCategory);
         self.set('topics', list);
       });
     },
@@ -85,11 +78,16 @@ function buildCategoryRoute(filter, params) {
     setupController: function(controller, model) {
       var topics = this.get('topics');
 
-      var filterText = I18n.t('filters.' + filter + '.title', {count: 0});
+      var filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
       Discourse.set('title', I18n.t('filters.with_category', {filter: filterText, category: model.get('name').capitalize()}));
       this.controllerFor('discoveryTopics').set('model', topics);
       this.controllerFor('navigationCategory').set('canCreateTopic', topics.get('can_create_topic'));
       this.set('topics', null);
+    },
+
+    renderTemplate: function() {
+      this.render('navigation/category', { outlet: 'navigation-bar' });
+      this.render('discovery/topics', { controller: 'discoveryTopics', outlet: 'list-container' });
     },
 
     deactivate: function() {

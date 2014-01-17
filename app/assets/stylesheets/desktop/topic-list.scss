@@ -13,6 +13,7 @@
     float: left;
     margin-bottom: 15px;
   }
+
   .btn {
     float: right;
     margin-left: 8px;
@@ -21,23 +22,20 @@
     font-weight: normal;
   }
 
-  a.badge-category {padding: 3px 12px;  font-size: 16px;
+  a.badge-category {
+    padding: 3px 12px;
+    font-size: 16px;
 
     &.category-dropdown-button {
-    padding: 3px 9px 2px 9px;
-
-    i {height: 20px;}
-
+      padding: 3px 9px;
+      i { height: 20px; }
     }
 
   }
 
   .badge-category {
-
     font-weight: normal;
     text-transform: capitalize;
-
-
   }
 
 }

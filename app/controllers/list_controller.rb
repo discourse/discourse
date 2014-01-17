@@ -10,7 +10,7 @@ class ListController < ApplicationController
     :top_lists, TopTopic.periods.map { |p| "top_#{p}".to_sym }
   ].flatten
 
-  before_filter :set_category, only: [:category, :category_feed]
+  before_filter :set_category, only: [:category_feed]
   skip_before_filter :check_xhr
 
   # Create our filters
@@ -151,19 +151,19 @@ class ListController < ApplicationController
   private
 
   def set_category
-    slug = params.fetch(:category)
-    parent_slug = params[:parent_category]
+    slug_or_id = params.fetch(:category)
+    parent_slug_or_id = params[:parent_category]
 
     parent_category_id = nil
     if parent_slug.present?
-      parent_category_id = Category.where(slug: parent_slug).pluck(:id).first ||
-                           Category.where(id: parent_slug.to_i).pluck(:id).first
+      parent_category_id = Category.where(slug: parent_slug_or_id).pluck(:id).first ||
+                           Category.where(id: parent_slug_or_id.to_i).pluck(:id).first
 
       raise Discourse::NotFound.new if parent_category_id.blank?
     end
 
-    @category = Category.where(slug: slug, parent_category_id: parent_category_id).includes(:featured_users).first ||
-                Category.where(id: slug.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+    @category = Category.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
+                Category.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
   end
 
   def build_topic_list_options
@@ -172,7 +172,7 @@ class ListController < ApplicationController
     menu_item = menu_items.select { |item| item.query_should_exclude_category?(action_name, params[:format]) }.first
 
     # exclude_category = 1. from params / 2. parsed from top menu / 3. nil
-    result = {
+    options = {
       page: params[:page],
       topic_ids: param_to_integer_list(:topic_ids),
       exclude_category: (params[:exclude_category] || menu_item.try(:filter)),
@@ -181,8 +181,9 @@ class ListController < ApplicationController
       sort_descending: params[:sort_descending],
       status: params[:status]
     }
-    result[:no_subcategories] = true if params[:no_subcategories] == 'true'
-    result
+    options[:no_subcategories] = true if params[:no_subcategories] == 'true'
+
+    options
   end
 
   def list_target_user

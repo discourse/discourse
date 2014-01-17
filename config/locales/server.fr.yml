@@ -551,7 +551,7 @@ fr:
     ga_domain_name: "Domaine suivi par Google Analytics, par exemple : monsite.com, voir: http://google.com/analytics"
     enable_escaped_fragments: "Activer une solution de contournement afin d'aider d'ancien moteurs de recherche d'indexer votre site. ATTENTION : à activer seulement si vous le devez."
     enable_noscript_support: "Activer le support des moteurs de recherches standards via le tag noscript"
-    top_menu: "L'ordre des éléments dans le menu du haut. Exemple latest|hot|read|starred|unread|new|posted|categories"
+    top_menu: "L'ordre des éléments dans le menu du haut. Exemple latest|new|unread|starred|categories|top|read|posted"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"
     share_links: "Liste ordonnée des boutons de partage. Exemple : twitter|facebook|google+|email"
     track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écrite de toutes les urls"

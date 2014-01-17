@@ -20,7 +20,7 @@ Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.LoadMore, {
     loadMore: function() {
       var self = this;
       Discourse.notifyTitle(0);
-      self.get('controller').loadMoreTopics().then(function (hasMoreResults) {
+      this.get('controller').loadMoreTopics().then(function (hasMoreResults) {
         Em.run.schedule('afterRender', function() {
           self.saveScrollPosition();
         });

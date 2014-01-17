@@ -78,7 +78,7 @@ Discourse.TopicList = Discourse.Model.extend({
   }.observes('sortOrder.order', 'sortOrder.descending'),
 
   loadMore: function() {
-    if (this.get('loadingMore')) { return Ember.RSVP.reject(); }
+    if (this.get('loadingMore')) { return Ember.RSVP.resolve(); }
 
     var moreUrl = this.get('more_topics_url');
     if (moreUrl) {
@@ -105,7 +105,7 @@ Discourse.TopicList = Discourse.Model.extend({
       });
     } else {
       // Return a promise indicating no more results
-      return Ember.RSVP.reject();
+      return Ember.RSVP.resolve();
     }
   },
 

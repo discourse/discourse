@@ -482,7 +482,7 @@ zh_CN:
     must_approve_users: "用户必须获得管理员批准方能访问"
     ga_tracking_code: "谷歌分析追踪代码，例如：UA-12345678-9。参考 http://google.com/analytics"
     ga_domain_name: "谷歌分析域名，例如：mysite.com；参考 http://google.com/analytics"
-    top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|hot|read|starred|unread|new|posted|categories"
+    top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|starred|categories|top|read|posted"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     share_links: "确定在分享对话框里显示哪些条目、以什么顺序显示。例如 twitter|facebook|google+"
     track_external_right_clicks: "追踪外部链接的右键点击（例如：在浏览器新标签打开），缺省是禁用的，因为它会重写URL"
