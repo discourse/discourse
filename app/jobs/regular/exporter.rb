@@ -93,13 +93,14 @@ module Jobs
       tar_filename = "#{@output_base_filename}.tar"
       upload_directory = "uploads/" + RailsMultisite::ConnectionManagement.current_db
 
-      FileUtils.cd(File.dirname(filenames.first)) do
-        `tar cvf #{tar_filename} #{File.basename(filenames.first)}`
-      end
-
       FileUtils.cd(File.join(Rails.root, 'public')) do
         `tar cvf #{tar_filename} #{upload_directory}`
       end
+
+      FileUtils.cd(File.dirname(filenames.first)) do
+        `tar --append --file=#{tar_filename} #{File.basename(filenames.first)}`
+      end
+
 
       `gzip #{tar_filename}`
 
