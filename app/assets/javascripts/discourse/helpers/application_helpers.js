@@ -327,7 +327,10 @@ Handlebars.registerHelper('unboundDate', function(property, options) {
     var date = new Date(val);
     return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', title: true, leaveAgo: leaveAgo}));
   }
+});
 
+Ember.Handlebars.registerBoundHelper('date', function(dt) {
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(new Date(dt), {format: 'medium', title: true }));
 });
 
 /**
