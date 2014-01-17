@@ -305,12 +305,13 @@ Handlebars.registerHelper('number', function(property, options) {
 });
 
 /**
-  Display logic for dates.
+  Display logic for dates. It is unbound in Ember but will use jQuery to
+  update the dates on a regular interval.
 
-  @method date
+  @method unboundDate
   @for Handlebars
 **/
-Handlebars.registerHelper('date', function(property, options) {
+Handlebars.registerHelper('unboundDate', function(property, options) {
   var leaveAgo;
   if (property.hash) {
     if (property.hash.leaveAgo) {
