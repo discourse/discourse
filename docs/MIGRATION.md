@@ -58,10 +58,10 @@ On oldserver:
 
 * rsync -avz -e ssh public newserver:public
 
-    bundle install --without test --deployment
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake posts:rebake
+    bundle install --without test --deployment  
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate  
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile  
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake posts:rebake  
 
 Are you just testing your migration? Disable outgoing email by changing
 `config/environments/production.rb` and adding the following below the mail
