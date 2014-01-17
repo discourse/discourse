@@ -353,7 +353,7 @@ en:
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed"
         pending: "Pending Invites"
-        topics_entered: "Topics Entered"
+        topics_entered: "Topics Visited"
         posts_read_count: "Posts Read"
         rescind: "Remove Invitation"
         rescinded: "Invite removed"
@@ -1438,7 +1438,7 @@ en:
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
-        topics_entered: Topics Entered
+        topics_entered: Topics Visited
         flags_given_count: Flags Given
         flags_received_count: Flags Received
         approve: 'Approve'
