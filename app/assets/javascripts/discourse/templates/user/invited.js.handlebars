@@ -30,8 +30,8 @@
             {{#linkTo 'user' user}}{{avatar user imageSize="tiny"}}{{/linkTo}}
             {{#linkTo 'user' user}}{{user.username}}{{/linkTo}}
           </td>
-          <td>{{date redeemed_at}}</td>
-          <td>{{date user.last_seen_at}}</td>
+          <td>{{unboundDate redeemed_at}}</td>
+          <td>{{unboundDate user.last_seen_at}}</td>
           <td>{{number user.topics_entered}}</td>
           <td>{{number user.posts_read_count}}</td>
           <td>{{{unbound user.time_read}}}</td>
