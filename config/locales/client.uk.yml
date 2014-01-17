@@ -69,7 +69,7 @@ uk:
           few:   "%{count} р"
           many:  "%{count} р"
           other: "%{count} р"
-        date_year: "D MMM."
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one:   "%{count} хвилина"
@@ -124,14 +124,14 @@ uk:
     joined: "Приєднався(-лась)"
     admin_title: "Адмін"
     flags_title: "Flags"
-    show_more: "show more"
+    show_more: "показати більше"
     links: Посилання
     faq: "ЧаПи"
     privacy_policy: "Політика приватності"
     mobile_view: "Вигляд для мобільного"
     desktop_view: "Вигляд для настільного комп'ютера"
     you: "You"
-    or: "or"
+    or: "або"
     now: "щойно"
     read_more: 'читати більше'
     more: "Більше"
@@ -171,15 +171,15 @@ uk:
       title: "Пропоновані теми"
 
     bookmarks:
-      not_logged_in: "Sorry, you must be logged in to bookmark posts."
-      created: "You've bookmarked this post."
-      not_bookmarked: "You've read this post; click to bookmark it."
-      last_read: "This is the last post you've read; click to bookmark it."
+      not_logged_in: "Даруйте, але щоб лишати закладки, необхідно увійти."
+      created: "Ви лишили закладку в цьому дописі."
+      not_bookmarked: "Ви прочитали цей допис; натисніть, щоб лишити тут закладку."
+      last_read: "Це - останній допис, який Ви прочитали; натисніть, щоб лишити тут закладку."
 
     new_topics_inserted: "{{count}} new topics."
     show_new_topics: "Click to show."
     preview: "preview"
-    cancel: "cancel"
+    cancel: "скасувати"
 
     save: "Зберегти зміни"
     saving: "Збереження..."
@@ -213,15 +213,15 @@ uk:
       sent_by_you: "Надіслано <a href='{{userUrl}}'>Вами</a>"
 
     user_action_groups:
-      "1": "Вподобано"
-      "2": "Отримано вподобання"
+      "1": "Вподобані"
+      "2": "Отримані вподобання"
       "3": "Закладки"
       "4": "Теми"
       "5": "Дописи"
       "6": "Відповіді"
       "7": "Згадки"
       "9": "Цитати"
-      "10": "Позначено зірочкою"
+      "10": "Позначені зірочкою"
       "11": "Редагування"
       "12": "Надіслані"
       "13": "Вхідні"
@@ -239,16 +239,16 @@ uk:
       subcategories: "Підкатегорії:"
       topic_stats: "Кількість нових тем."
       topic_stat_sentence:
-        one:   "%{count} new topic in the past %{unit}."
-        few:   "%{count} new topics in the past %{unit}."
-        many:  "%{count} new topics in the past %{unit}."
-        other: "%{count} new topics in the past %{unit}."
-      post_stats: "The number of new posts."
+        one:   "%{count} нова тема за останній %{unit}."
+        few:   "%{count} нові теми за останній %{unit}."
+        many:  "%{count} нових тем за останній %{unit}."
+        other: "%{count} нових тем за останній %{unit}."
+      post_stats: "Кількість нових дописів."
       post_stat_sentence:
-        one:   "%{count} new post in the past %{unit}."
-        few:   "%{count} new posts in the past %{unit}."
-        many:  "%{count} new posts in the past %{unit}."
-        other: "%{count} new posts in the past %{unit}."
+        one:   "%{count} новий допис за останній %{unit}."
+        few:   "%{count} нові дописи за останній %{unit}."
+        many:  "%{count} нових дописів за останній %{unit}."
+        other: "%{count} нових дописів за останній %{unit}."
 
     user:
       said: "{{username}} сказав:"
@@ -265,22 +265,22 @@ uk:
       invited_by: "Запрошений(а)"
       trust_level: "Рівень довіри"
       notifications: "Сповіщення"
-      dynamic_favicon: "Show incoming message notifications on favicon"
+      dynamic_favicon: "Відображати сповіщення про вхідні повідомлення в <span title='Піктограма сайту'>favicon</span>"
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
-      enable_quoting: "Enable quote reply for highlighted text"
-      change: "change"
+      enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
+      change: "змінити"
       moderator: "{{user}} є модератором"
       admin: "{{user}} є адміном"
       deleted: "(deleted)"
       suspended_notice: "This user is suspended until {{date}}."
-      suspended_reason: "Reason: "
-      watch_new_topics: "Automatically watch all new topics posted on the forum"
-      watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all topics in these categories"
-      tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically receive notifications for topics in these categories"
-      muted_categories: "Muted"
-      muted_categories_instructions: "You will automatically mute all topics in these categories"
+      suspended_reason: "Причина: "
+      watch_new_topics: "Автоматично слідкувати за всіма новими темами, що з'являтимуться на форумі"
+      watched_categories: "Відслідковувані"
+      watched_categories_instructions: "Ви будете автоматично слідкувати за темами в цих категоріях"
+      tracked_categories: "Відстежувані"
+      tracked_categories_instructions: "Ви будете автоматично отримувати сповіщення з тем в цих категоріях"
+      muted_categories: "Ігноровані"
+      muted_categories_instructions: "Ви будете автоматично ігнорувати всі теми в цих категоріях"
 
       messages:
         all: "Всі"
@@ -291,7 +291,7 @@ uk:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
         error: "(помилка)"
-        action: "Send Password Reset Email"
+        action: "Надіслати лист для відновлення паролю"
 
       change_about:
         title: "Змінити Про мене"
@@ -324,7 +324,7 @@ uk:
         ok: "Адресу прийнято. Ми надішлемо Вам листа для підтвердження."
         invalid: "Будь ласка, введіть правильну адресу електронної пошти."
         authenticated: "Your email has been authenticated by {{provider}}."
-        frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
+        frequency: "Ми будемо надсилати Вам листи тільки якщо ми Вас останнім часом не бачили і Ви ще не бачили те, про що ми Вам пишемо."
 
       name:
         title: "Ім'я"
@@ -356,21 +356,21 @@ uk:
       website: "Вебсайт"
       email_settings: "Електронна пошта"
       email_digests:
-        title: "When I don't visit the site, send me an email digest of what's new"
-        daily: "daily"
-        weekly: "weekly"
-        bi_weekly: "every two weeks"
+        title: "Коли я не відвідую сайт, надсилайте мені на електронну скриньку стислий виклад новин"
+        daily: "щодня"
+        weekly: "щотижня"
+        bi_weekly: "кожні два тижні"
 
-      email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
-      email_private_messages: "Receive an email when someone sends you a private message"
-      email_always: "Receive email notifications and email digests even if I am active on the forum"
+      email_direct: "Отримувати електронний лист, коли хтось цитує Вас, відповідає на Ваш допис або згадує Ваше @Ім'я"
+      email_private_messages: "Отримувати електронний лист, коли хтось надсилає Вам приватне повідомлення"
+      email_always: "Отримувати електронні листи та виклади новин навіть якщо я активний(а) на форумі"
 
       other_settings: "Інше"
       categories_settings: "Категорії"
 
       new_topic_duration:
-        label: "Consider topics new when"
-        not_viewed: "I haven't viewed them yet"
+        label: "Вважати теми новими, якщо"
+        not_viewed: "я їх ще не переглядав"
         last_here: "they were posted since I was here last"
         after_n_days:
           one:   "they were posted in the last day"
@@ -383,20 +383,20 @@ uk:
           many:  "they were posted in the last {{count}} week"
           other: "they were posted in the last {{count}} week"
 
-      auto_track_topics: "Automatically track topics I enter"
+      auto_track_topics: "Автоматично стежити за темами, які я відвідую"
       auto_track_options:
-        never: "never"
-        always: "always"
+        never: "ніколи"
+        always: "завжди"
         after_n_seconds:
-          one:   "after 1 second"
-          few:   "after {{count}} seconds"
-          many:  "after {{count}} seconds"
-          other: "after {{count}} seconds"
+          one:   "після {{count}} секунди"
+          few:   "після {{count}} секунд"
+          many:  "після {{count}} секунд"
+          other: "після {{count}} секунд"
         after_n_minutes:
-          one:   "after 1 minute"
-          few:   "after {{count}} minutes"
-          many:  "after {{count}} minutes"
-          other: "after {{count}} minutes"
+          one:   "після {{count}} хвилини"
+          few:   "після {{count}} хвилин"
+          many:  "після {{count}} хвилин"
+          other: "після {{count}} хвилин"
 
       invited:
         search: "шукати запрошення..."
@@ -431,7 +431,7 @@ uk:
         title: "Назва"
 
       filters:
-        all: "All"
+        all: "Всі"
 
       stream:
         posted_by: "Posted by"
@@ -439,22 +439,22 @@ uk:
         private_message: "private message"
         the_topic: "the topic"
 
-    loading: "Loading..."
+    loading: "Завантаження..."
     close: "Close"
     learn_more: "learn more..."
 
-    year: 'year'
+    year: 'рік'
     year_desc: 'topics posted in the last 365 days'
-    month: 'month'
+    month: 'місяць'
     month_desc: 'topics posted in the last 30 days'
-    week: 'week'
+    week: 'тиждень'
     week_desc: 'topics posted in the last 7 days'
-    day: 'day'
+    day: 'день'
 
-    first_post: First post
+    first_post: Перший допис
     mute: Mute
     unmute: Unmute
-    last_post: Last post
+    last_post: Останній допис
 
     summary:
       enabled_description: "You're viewing a summary of this topic. To see all posts again, click below."
@@ -471,7 +471,7 @@ uk:
     email: 'Електронна пошта'
     username: 'Username'
     last_seen: 'Seen'
-    created: 'Created'
+    created: 'Створено'
     trust_level: 'Рівень довіри'
 
     create_account:
@@ -482,7 +482,7 @@ uk:
 
     forgot_password:
       title: "Forgot Password"
-      action: "I forgot my password"
+      action: "Я забув свій пароль"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       reset: "Reset Password"
       complete: "If an account matches that username or email address, you should receive an email with instructions on how to reset your password shortly."
@@ -534,8 +534,8 @@ uk:
       drafts_offline: "drafts offline"
 
       min_length:
-        need_more_for_title: "{{n}} to go for the title"
-        need_more_for_reply: "{{n}} to go for the post"
+        need_more_for_title: "для назви треба ще {{n}}"
+        need_more_for_reply: "для допису треба ще {{n}}"
 
       error:
         title_missing: "Потрібно вказати назву."
@@ -554,31 +554,31 @@ uk:
       create_pm: "Створити приватне повідомлення"
 
       users_placeholder: "Додати користувача"
-      title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
+      title_placeholder: "Введіть тут назву. Про що ця дискусія одним коротким реченням?"
       edit_reason_placeholder: "чому Ви редагуєте допис?"
       show_edit_reason: "(додати причину редагування)"
-      reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
+      reply_placeholder: "Вводьте текст тут. Для форматування використовуйте Markdown або BBCode. Для завантаження зображення перетягніть його або вставте з буферу обміну."
       view_new_post: "View your new post."
-      saving: "Saving..."
-      saved: "Saved!"
+      saving: "Збереження..."
+      saved: "Збережено!"
       saved_draft: "You have a post draft in progress. Click anywhere in this box to resume editing."
-      uploading: "Uploading..."
+      uploading: "Завантаження..."
       show_preview: 'попередній перегляд &raquo;'
       hide_preview: '&laquo; сховати попередній перегляд'
 
       quote_post_title: "Процитувати весь допис повністю"
-      bold_title: "Strong"
-      bold_text: "strong text"
-      italic_title: "Emphasis"
-      italic_text: "emphasized text"
+      bold_title: "Сильне виділення"
+      bold_text: "Сильне виділення тексту"
+      italic_title: "Виділення"
+      italic_text: "виділення тексту"
       link_title: "Гіперпосилання"
       link_description: "введіть опис посилання"
       link_dialog_title: "Вставити гіперпосилання"
       link_optional_text: "необов'язкова назва"
       quote_title: "Цитата"
       quote_text: "Цитата"
-      code_title: "Preformatted text"
-      code_text: "enter preformatted text here"
+      code_title: "Попередньо форматований текст"
+      code_text: "введіть тут попередньо форматований текст"
       upload_title: "Завантажити"
       upload_description: "введіть опис завантаження"
       olist_title: "Нумерований список"
@@ -637,36 +637,36 @@ uk:
         user: "search will prefer results by @{{username}}"
         category: "search will prefer results in {{category}}"
 
-    site_map: "go to another topic list or category"
+    site_map: "перейти до іншого переліку або категорії тем"
     go_back: 'go back'
     not_logged_in_user: 'user page with summary of current activity and preferences'
-    current_user: 'go to your user page'
+    current_user: 'перейти до Вашої сторінки користувача'
 
     starred:
-      title: 'Starred'
+      title: 'Позначити зірочкою'
       help:
-        star: 'add this topic to your starred list'
-        unstar: 'remove this topic from your starred list'
+        star: 'додати цю тему до Вашого списку позначених зірочкою'
+        unstar: 'видалити цю тему із Вашого списку позначених зірочкою'
 
     topics:
       none:
-        starred: "You haven't starred any topics yet. To star a topic, click or tap the star next to the title."
-        unread: "You have no unread topics."
-        new: "You have no new topics."
-        read: "You haven't read any topics yet."
+        starred: "Ви ще не позначили зірочкою жодної теми. Щоб позначити тему, клацніть зірочку біля її назви."
+        unread: "У Вас немає непрочитаних тем."
+        new: "У Вас немає нових тем."
+        read: "Ви ще не прочитали жодної теми."
         posted: "You haven't posted in any topics yet."
         latest: "There are no latest topics. That's sad."
-        hot: "There are no hot topics."
-        category: "There are no {{category}} topics."
+        hot: "Гарячих тем немає."
+        category: "В категорії {{category}} немає тем."
       bottom:
-        latest: "There are no more latest topics."
-        hot: "There are no more hot topics."
+        latest: "Більше немає останніх тем."
+        hot: "Більше немає гарячих тем."
         posted: "There are no more posted topics."
-        read: "There are no more read topics."
-        new: "There are no more new topics."
-        unread: "There are no more unread topics."
-        starred: "There are no more starred topics."
-        category: "There are no more {{category}} topics."
+        read: "Більше немає прочитаних тем."
+        new: "Більше немає нових тем."
+        unread: "Більше немає непрочитаних тем."
+        starred: "Більше немає тем, позначених зірочкою."
+        category: "Більше немає тем в категорії {{category}}."
 
     rank_details:
       toggle: toggle topic rank details
@@ -674,7 +674,7 @@ uk:
       title: Topic Rank Details
 
     topic:
-      filter_to: "Show {{post_count}} posts in topic"
+      filter_to: "Показати {{post_count}} дописів в темі"
       create: 'Створити тему'
       create_long: 'Створити нову тему'
       private_message: 'Надіслати приватне повідомлення'
@@ -714,14 +714,14 @@ uk:
         other: "there are {{count}} new posts in this topic since you last read it"
 
       likes:
-        one:   "there is 1 like in this topic"
-        few:   "there are {{count}} likes in this topic"
-        many:  "there are {{count}} likes in this topic"
-        other: "there are {{count}} likes in this topic"
+        one:   "в цій темі {{count}} вподобання"
+        few:   "в цій темі {{count}} вподобання"
+        many:  "в цій темі {{count}} вподобань"
+        other: "в цій темі {{count}} вподобань"
       back_to_list: "Back to Topic List"
       options: "Topic Options"
       show_links: "show links within this topic"
-      toggle_information: "toggle topic details"
+      toggle_information: "показати/сховати деталі теми"
       read_more_in_category: "Хочете почитати ще? Перегляньте інші теми в {{catLink}} або {{latestLink}}."
       read_more: "Want to read more? {{catLink}} or {{latestLink}}."
 
@@ -744,11 +744,11 @@ uk:
       browse_all_categories: Browse all categories
 
       view_latest_topics: перегляньте останні теми
-      suggest_create_topic: Why not create a topic?
+      suggest_create_topic: Чому б не створити тему?
       read_position_reset: "Your read position has been reset."
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
-      deleted: "The topic has been deleted"
+      jump_reply_up: перейти до ранішої відповіді
+      jump_reply_down: перейти до пізнішої відповіді
+      deleted: "Тему було видалено"
 
       auto_close_notice: "This topic will automatically close %{timeLeft}."
       auto_close_title: 'Auto-Close Settings'
@@ -813,8 +813,8 @@ uk:
         help: 'почати складати відповідь на цю тему'
 
       clear_pin:
-        title: "Clear pin"
-        help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
+        title: "Скасувати закріплення"
+        help: "Скасувати закріплення цієї теми, щоб вона більше не з'являлася на початку Вашого переліку тем"
 
       share:
         title: 'Поширити'
@@ -845,11 +845,11 @@ uk:
 
       filters:
         n_posts:
-          one:   "1 post"
-          few:   "{{count}} posts"
-          many:  "{{count}} posts"
-          other: "{{count}} posts"
-        cancel: "Show all posts in this topic again."
+          one:   "{{count}} допис"
+          few:   "{{count}} дописи"
+          many:  "{{count}} дописів"
+          other: "{{count}} дописів"
+        cancel: "Знову показати всі дописи в цій темі."
 
       split_topic:
         title: "Move to New Topic"
@@ -885,10 +885,10 @@ uk:
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
-      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
-      reply_topic: "Reply to {{link}}"
-      quote_reply: "quote reply"
-      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      reply: "У відповідь на {{link}} користувача {{replyAvatar}} {{username}}"
+      reply_topic: "Відповідь на {{link}}"
+      quote_reply: "відповісти на цитату"
+      edit: "Редагування {{link}} користувача {{replyAvatar}} {{username}}"
       edit_reason: "Причина: "
       post_number: "допис {{number}}"
       in_reply_to: "у відповідь на"
@@ -897,34 +897,34 @@ uk:
       continue_discussion: "В продовження дискусії {{postLink}}:"
       follow_quote: "перейти до цитованого допису"
       deleted_by_author:
-        one:   "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        few:   "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
-        many:  "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
-        other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+        one:   "(допис відкликано автором і буде автоматично видалено через %{count} годину, якщо на нього не поскаржаться)"
+        few:   "(допис відкликано автором і буде автоматично видалено через %{count} години, якщо на нього не поскаржаться)"
+        many:  "(допис відкликано автором і буде автоматично видалено через %{count} годин, якщо на нього не поскаржаться)"
+        other: "(допис відкликано автором і буде автоматично видалено через %{count} годин, якщо на нього не поскаржаться)"
       deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
       gap:
-        one:   "1 post omitted"
-        few:   "{{count}} posts omitted"
-        many:  "{{count}} posts omitted"
-        other: "{{count}} posts omitted"
+        one:   "{{count}} допис пропущено"
+        few:   "{{count}} дописи пропущено"
+        many:  "{{count}} дописів пропущено"
+        other: "{{count}} дописів проущено"
 
       has_replies:
-        one:   "Reply"
-        few:   "Replies"
-        many:  "Replies"
-        other: "Replies"
+        one:   "Відповідь"
+        few:   "Відповіді"
+        many:  "Відповідей"
+        other: "Відповідей"
 
       errors:
-        create: "Sorry, there was an error creating your post. Please try again."
-        edit: "Sorry, there was an error editing your post. Please try again."
-        upload: "Sorry, there was an error uploading that file. Please try again."
-        attachment_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)."
-        image_too_large: "Sorry, the image you are trying to upload is too big (maximum size is {{max_size_kb}}kb), please resize it and try again."
-        too_many_uploads: "Sorry, you can only upload one file at a time."
-        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
-        image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
-        attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
+        create: "Даруйте, під час створення допису трапилася помилка. Будь ласка, спробуйте ще раз."
+        edit: "Даруйте, під час редагування допису трапилася помилка. Будь ласка, спробуйте ще раз."
+        upload: "Даруйте, під час завантаження цього файлу трапилася помилка. Будь ласка, спробуйте ще раз."
+        attachment_too_large: "Даруйте, але файл, який Ви намагаєтеся завантажити, надто великий (максимальний розмір складає {{max_size_kb}} кБ)."
+        image_too_large: "Даруйте, але зображення, яке Ви намагаєтеся завантажити, є надто великим (максимальний розмір складає {{max_size_kb}} кБ). Будь ласка, зменшіть його та спробуйте ще раз."
+        too_many_uploads: "Даруйте, але Ви можете одночасно завантажувати тільки один файл."
+        upload_not_authorized: "Даруйте, але файл, який Ви намагаєтеся завантажити, є недозволеним (дозволені розширення: {{authorized_extensions}})."
+        image_upload_not_allowed_for_new_user: "Даруйте, нові користувачі не можуть завантажувати зображення."
+        attachment_upload_not_allowed_for_new_user: "Даруйте, нові користувачі не можуть завантажувати прикріплення."
 
       abandon: "Ви впевнені, що хочете облишити цей допис?"
 
@@ -935,7 +935,7 @@ uk:
         reply: "почати складати відповідь на цей допис"
         like: "вподобати цей допис"
         edit: "редагувати цей допис"
-        flag: "flag this post for attention or send a notification about it"
+        flag: "поскаржитися на цей допис"
         delete: "видалити цей допис"
         undelete: "скасувати видалення цього допису"
         share: "поширити посилання на цей допис"
@@ -957,136 +957,136 @@ uk:
           many:  "Clear flags"
           other: "Clear flags"
         it_too:
-          off_topic: "Flag it too"
-          spam: "Flag it too"
-          inappropriate: "Flag it too"
-          custom_flag: "Flag it too"
-          bookmark: "Bookmark it too"
-          like: "Like it too"
-          vote: "Vote for it too"
+          off_topic: "Також поскаржитися"
+          spam: "Також поскаржитися"
+          inappropriate: "Також поскаржитися"
+          custom_flag: "Також поскаржитися"
+          bookmark: "Також лишити закладку"
+          like: "Також вподобати"
+          vote: "Також проголосувати за"
         undo:
-          off_topic: "Undo flag"
-          spam: "Undo flag"
-          inappropriate: "Undo flag"
-          bookmark: "Undo bookmark"
-          like: "Undo like"
-          vote: "Undo vote"
+          off_topic: "Відкликати скаргу"
+          spam: "Відкликати скаргу"
+          inappropriate: "Відкликати скаргу"
+          bookmark: "Скасувати закладку"
+          like: "Скасувати вподобання"
+          vote: "Відкликати голос"
         people:
-          off_topic: "{{icons}} marked this as off-topic"
-          spam: "{{icons}} marked this as spam"
-          inappropriate: "{{icons}} marked this as inappropriate"
-          notify_moderators: "{{icons}} notified moderators"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
-          notify_user: "{{icons}} sent a private message"
-          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
-          bookmark: "{{icons}} bookmarked this"
-          like: "{{icons}} liked this"
-          vote: "{{icons}} voted for this"
+          off_topic: "{{icons}} позначив(ла) це як недотичне до теми"
+          spam: "{{icons}} позначив(ла) це як спам"
+          inappropriate: "{{icons}} позначив(ла) це як неприпустиме"
+          notify_moderators: "{{icons}} звернув увагу модераторів"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>звернув(ла) увагу модераторів</a>"
+          notify_user: "{{icons}} надіслав(ла) приватне повідомлення"
+          notify_user_with_url: "{{icons}} надіслав(ла) <a href='{{postUrl}}'>приватне повідомлення</a>"
+          bookmark: "{{icons}} лишив(ла) тут закладку"
+          like: "{{icons}} вподобав(ла) це"
+          vote: "{{icons}} проголосував(ла) за це"
         by_you:
-          off_topic: "You flagged this as off-topic"
-          spam: "You flagged this as spam"
-          inappropriate: "You flagged this as inappropriate"
-          notify_moderators: "You flagged this for moderation"
+          off_topic: "Ви поскаржилися на це як на недотичне до теми"
+          spam: "Ви поскаржилися на це як на спам"
+          inappropriate: "Ви поскаржилися на це як на неприпустиме"
+          notify_moderators: "Ви позначили допис для модерації"
           notify_user: "Ви надіслали приватне повідомлення цьому користувачу"
-          bookmark: "You bookmarked this post"
+          bookmark: "Ви лишили тут закладку"
           like: "Ви це вподобали"
-          vote: "You voted for this post"
+          vote: "Ви проголосували за цей допис"
         by_you_and_others:
           off_topic:
-            one:   "You and 1 other flagged this as off-topic"
-            few:   "You and {{count}} other people flagged this as off-topic"
-            many:  "You and {{count}} other people flagged this as off-topic"
-            other: "You and {{count}} other people flagged this as off-topic"
+            one:   "Ви та ще {{count}} особа позначили це як недотичне до теми"
+            few:   "Ви та ще {{count}} особи позначили це як недотичне до теми"
+            many:  "Ви та ще {{count}} осіб позначили це як недотичне до теми"
+            other: "Ви та ще {{count}} осіб позначили це як недотичне до теми"
           spam:
-            one:   "You and 1 other flagged this as spam"
-            few:   "You and {{count}} other people flagged this as spam"
-            many:  "You and {{count}} other people flagged this as spam"
-            other: "You and {{count}} other people flagged this as spam"
+            one:   "Ви та ще {{count}} особа позначили це як спам"
+            few:   "Ви та ще {{count}} особи позначили це як спам"
+            many:  "Ви та ще {{count}} осіб позначили це як спам"
+            other: "Ви та ще {{count}} осіб позначили це як спам"
           inappropriate:
-            one:   "You and 1 other flagged this as inappropriate"
-            few:   "You and {{count}} other people flagged this as inappropriate"
-            many:  "You and {{count}} other people flagged this as inappropriate"
-            other: "You and {{count}} other people flagged this as inappropriate"
+            one:   "Ви та ще {{count}} особа позначили це як неприпустиме"
+            few:   "Ви та ще {{count}} особи позначили це як неприпустиме"
+            many:  "Ви та ще {{count}} осіб позначили це як неприпустиме"
+            other: "Ви та ще {{count}} осіб позначили це як неприпустиме"
           notify_moderators:
-            one:   "You and 1 other flagged this for moderation"
-            few:   "You and {{count}} other people flagged this for moderation"
-            many:  "You and {{count}} other people flagged this for moderation"
-            other: "You and {{count}} other people flagged this for moderation"
+            one:   "Ви та ще {{count}} особа позначили це для модерації"
+            few:   "Ви та ще {{count}} особи позначили це для модерації"
+            many:  "Ви та ще {{count}} осіб позначили це для модерації"
+            other: "Ви та ще {{count}} осіб позначили це для модерації"
           notify_user:
-            one:   "You and 1 other sent a private message to this user"
-            few:   "You and {{count}} other people sent a private message to this user"
-            many:  "You and {{count}} other people sent a private message to this user"
-            other: "You and {{count}} other people sent a private message to this user"
+            one:   "Ви та ще {{count}} особа надіслали цьому користувачеві приватне повідомлення"
+            few:   "Ви та ще {{count}} особи надіслали цьому користувачеві приватне повідомлення"
+            many:  "Ви та ще {{count}} осіб надіслали цьому користувачеві приватне повідомлення"
+            other: "Ви та ще {{count}} осіб надіслали цьому користувачеві приватне повідомлення"
           bookmark:
-            one:   "You and 1 other bookmarked this post"
-            few:   "You and {{count}} other people bookmarked this post"
-            many:  "You and {{count}} other people bookmarked this post"
-            other: "You and {{count}} other people bookmarked this post"
+            one:   "Ви та ще {{count}} особа лишили тут закладку"
+            few:   "Ви та ще {{count}} особи лишили тут закладку"
+            many:  "Ви та ще {{count}} осіб лишили тут закладку"
+            other: "Ви та ще {{count}} осіб лишили тут закладку"
           like:
-            one:   "You and 1 other liked this"
-            few:   "You and {{count}} other people liked this"
-            many:  "You and {{count}} other people liked this"
-            other: "You and {{count}} other people liked this"
+            one:   "Ви та ще {{count}} особа вподобали це"
+            few:   "Ви та ще {{count}} особи вподобали це"
+            many:  "Ви та ще {{count}} осіб вподобали це"
+            other: "Ви та ще {{count}} осіб вподобали це"
           vote:
-            one:   "You and 1 other voted for this post"
-            few:   "You and {{count}} other people voted for this post"
-            many:  "You and {{count}} other people voted for this post"
-            other: "You and {{count}} other people voted for this post"
+            one:   "Ви та ще {{count}} особа проголосували за цей допис"
+            few:   "Ви та ще {{count}} особи проголосували за цей допис"
+            many:  "Ви та ще {{count}} осіб проголосували за цей допис"
+            other: "Ви та ще {{count}} осіб проголосували за цей допис"
         by_others:
           off_topic:
-            one:   "1 person flagged this as off-topic"
-            few:   "{{count}} people flagged this as off-topic"
-            many:  "{{count}} people flagged this as off-topic"
-            other: "{{count}} people flagged this as off-topic"
+            one:   "{{count}} особа позначила це як недотичне до теми"
+            few:   "{{count}} особи позначили це як недотичне до теми"
+            many:  "{{count}} осіб позначили це як недотичне до теми"
+            other: "{{count}} осіб позначили це як недотичне до теми"
           spam:
-            one:   "1 person flagged this as spam"
-            few:   "{{count}} people flagged this as spam"
-            many:  "{{count}} people flagged this as spam"
-            other: "{{count}} people flagged this as spam"
+            one:   "{{count}} особа позначила це як спам"
+            few:   "{{count}} особи позначили це як спам"
+            many:  "{{count}} осіб позначили це як спам"
+            other: "{{count}} осіб позначили це як спам"
           inappropriate:
-            one:   "1 person flagged this as inappropriate"
-            few:   "{{count}} people flagged this as inappropriate"
-            many:  "{{count}} people flagged this as inappropriate"
-            other: "{{count}} people flagged this as inappropriate"
+            one:   "{{count}} особа позначила це як неприпустиме"
+            few:   "{{count}} особи позначили це як неприпустиме"
+            many:  "{{count}} осіб позначили це як неприпустиме"
+            other: "{{count}} осіб позначили це як неприпустиме"
           notify_moderators:
-            one:   "1 person flagged this for moderation"
-            few:   "{{count}} people flagged this for moderation"
-            many:  "{{count}} people flagged this for moderation"
-            other: "{{count}} people flagged this for moderation"
+            one:   "{{count}} особа звернула на це увагу модераторів"
+            few:   "{{count}} особи звернули на це увагу модераторів"
+            many:  "{{count}} осіб звернули на це увагу модераторів"
+            other: "{{count}} осіб звернули на це увагу модераторів"
           notify_user:
-            one:   "1 person sent a private message to this user"
-            few:   "{{count}} sent a private message to this user"
-            many:  "{{count}} sent a private message to this user"
-            other: "{{count}} sent a private message to this user"
+            one:   "{{count}} особа надіслала цьому користувачеві приватне повідомлення"
+            few:   "{{count}} особи надіслали цьому користувачеві приватне повідомлення"
+            many:  "{{count}} осіб надіслали цьому користувачеві приватне повідомлення"
+            other: "{{count}} осіб надіслали цьому користувачеві приватне повідомлення"
           bookmark:
-            one:   "1 person bookmarked this post"
-            few:   "{{count}} people bookmarked this post"
-            many:  "{{count}} people bookmarked this post"
-            other: "{{count}} people bookmarked this post"
+            one:   "{{count}} особа лишила тут закладку"
+            few:   "{{count}} особи лишили тут закладку"
+            many:  "{{count}} осіб лишили тут закладку"
+            other: "{{count}} осіб лишили тут закладку"
           like:
-            one:   "1 person liked this"
-            few:   "{{count}} people liked this"
-            many:  "{{count}} people liked this"
-            other: "{{count}} people liked this"
+            one:   "{{count}} особа це вподобала"
+            few:   "{{count}} особи це вподобали"
+            many:  "{{count}} осіб це вподобали"
+            other: "{{count}} осіб це вподобали"
           vote:
-            one:   "1 person voted for this post"
-            few:   "{{count}} people voted for this post"
-            many:  "{{count}} people voted for this post"
-            other: "{{count}} people voted for this post"
+            one:   "{{count}} особа проголосувала за цей допис"
+            few:   "{{count}} особи проголосували за цей допис"
+            many:  "{{count}} осіб проголосували за цей допис"
+            other: "{{count}} осіб проголосували за цей допис"
 
       edits:
-        one:   1 edit
-        few:   "{{count}} edits"
-        many:  "{{count}} edits"
-        other: "{{count}} edits"
-        zero:  no edits
+        one:   "{{count}} редагування"
+        few:   "{{count}} редагування"
+        many:  "{{count}} редагувань"
+        other: "{{count}} редагувань"
+        zero:  без редагувань
 
       delete:
         confirm:
-          one:   "Are you sure you want to delete that post?"
-          few:   "Are you sure you want to delete all those posts?"
-          many:  "Are you sure you want to delete all those posts?"
-          other: "Are you sure you want to delete all those posts?"
+          one:   "Ви впевнені, що хочете видалити {{count}} допис?"
+          few:   "Ви впевнені, що хочете видалити {{count}} дописи?"
+          many:  "Ви впевнені, що хочете видалити {{count}} дописів?"
+          other: "Ви впевнені, що хочете видалити {{count}} дописів?"
 
       revisions:
         controls:
@@ -1110,7 +1110,7 @@ uk:
 
     category:
       can: 'can&hellip; '
-      none: '(no category)'
+      none: '(без категорії)'
       choose: 'Select a category&hellip;'
       edit: 'edit'
       edit_long: "Edit Category"
@@ -1121,10 +1121,10 @@ uk:
       create: 'Create Category'
       save: 'Save Category'
       creation_error: There has been an error during the creation of the category.
-      save_error: There was an error saving the category.
+      save_error: Під час збереження категорії трапилася помилка.
       more_posts: "view all {{posts}}..."
-      name: "Category Name"
-      description: "Description"
+      name: "Назва категорії"
+      description: "Опис"
       topic: "category topic"
       badge_colors: "Badge colors"
       background_color: "Background color"
@@ -1149,25 +1149,25 @@ uk:
       parent: "Parent Category"
 
     flagging:
-      title: 'Why are you flagging this post?'
-      action: 'Flag Post'
+      title: 'Чому Ви скаржитеся на цей допис?'
+      action: 'Поскаржитися на допис'
       take_action: "Take Action"
       notify_action: 'Notify'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
       cant: "Sorry, you can't flag this post at this time."
-      custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
-      custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
+      custom_placeholder_notify_user: "Чому цей допис вимагає, щоб Ви звернулися до автора напряму і приватно? Будьте конкретними, будьте конструктивними, і обов'язково - доброзичливими."
+      custom_placeholder_notify_moderators: "Чому цей допис потребує уваги модератора? Дайте нам знати, що саме Вас занепокоїло, і надайте відповідні посилання, якщо це можливо."
       custom_message:
-        at_least: "enter at least {{n}} characters"
-        more: "{{n}} to go..."
-        left: "{{n}} remaining"
+        at_least: "введіть принаймні {{n}} символів"
+        more: "ще {{n}}..."
+        left: "залишилось {{n}}"
 
     topic_map:
       title: "Topic Summary"
-      links_shown: "show all {{totalLinks}} links..."
-      clicks: "clicks"
+      links_shown: "показати всі {{totalLinks}} посилання..."
+      clicks: "натискань"
 
     topic_statuses:
       locked:
@@ -1180,20 +1180,20 @@ uk:
         help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
     posts: "Дописи"
-    posts_long: "there are {{number}} posts in this topic"
-    original_post: "Original Post"
+    posts_long: "тема містить {{number}} дописів"
+    original_post: "Перший допис"
     views: "Перегляди"
     replies: "Відповіді"
-    views_long: "this topic has been viewed {{number}} times"
+    views_long: "цю тему переглянули {{number}} разів"
     activity: "Активність"
     likes: "Вподобання"
-    likes_long: "there are {{number}} likes in this topic"
+    likes_long: "в цій темі {{number}} вподобань"
     users: "Користувачі"
     category_title: "Категорія"
     history: "Історія"
-    changed_by: "by {{author}}"
+    changed_by: "{{author}}"
 
-    categories_list: "Categories List"
+    categories_list: "Список категорій"
 
     filters:
       latest:
@@ -1211,7 +1211,7 @@ uk:
       categories:
         title: "Категорії"
         title_in: "Категорія - {{categoryName}}"
-        help: "всі теми, що належать до категорії"
+        help: "всі теми, згруповані за категоріями"
       unread:
         title:
           zero:  "Непрочитані"
@@ -1632,7 +1632,7 @@ uk:
           rate_limits: 'Rate Limits'
           developer: 'Developer'
           embedding: "Embedding"
-          uncategorized: 'Uncategorized'
+          uncategorized: 'Без категорій'
 
     lightbox:
       download: "звантажити"
