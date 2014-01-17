@@ -46,7 +46,7 @@ Discourse.DiscoveryTopicsController = Discourse.ObjectController.extend({
 
   hasTopics: Em.computed.gt('topics.length', 0),
   showTable: Em.computed.or('hasTopics', 'topicTrackingState.hasIncoming'),
-  latest: Ember.computed.equal('filter', 'latest'),
+  latest: Em.computed.equal('filter', 'latest'),
   allLoaded: Em.computed.empty('more_topics_url'),
 
   updateTitle: function(){

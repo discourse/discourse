@@ -5,9 +5,11 @@
         {{#sortable-heading sortBy="default" sortOrder=sortOrder}}
           {{i18n topic.title}}
         {{/sortable-heading}}
-        {{#sortable-heading sortBy="category" sortOrder=sortOrder}}
-          {{i18n category_title}}
-        {{/sortable-heading}}
+        {{#unless controller.hideCategory}}
+          {{#sortable-heading sortBy="category" sortOrder=sortOrder}}
+            {{i18n category_title}}
+          {{/sortable-heading}}
+        {{/unless}}
         {{#sortable-heading sortBy="posts" number=true sortOrder=sortOrder}}
           {{i18n posts}}
         {{/sortable-heading}}
@@ -38,9 +40,11 @@
             {{/if}}
           </td>
 
+          {{#unless controller.hideCategory}}
           <td class="category">
             {{categoryLink topic.category}}
           </td>
+          {{/unless}}
 
           <td class='num posts'><a href="{{unbound topic.lastUnreadUrl}}" class='badge-posts'>{{number topic.posts_count numberKey="posts_long"}}</a></td>
 

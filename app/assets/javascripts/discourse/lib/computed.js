@@ -88,8 +88,6 @@ Discourse.computed = {
       })));
     });
     return computed.property.apply(computed, args);
-
   }
-
 
 };

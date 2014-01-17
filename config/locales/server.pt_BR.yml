@@ -544,7 +544,7 @@ pt_BR:
     ga_domain_name: "Nome de domínio no Google Analytics, exemplo: meusite.com; see http://google.com/analytics"
     enable_escaped_fragments: "Ativa solução alternativa que ajuda os mecanismos de busca antigos a indexarem o seu site. ALERTA: apenas ative se você realmente precisa disto."
     enable_noscript_support: "Ativar suporte a tag &lt;noscript&gt;"
-    top_menu: "A ordem dos items no menu de cima. Exemplo latest|hot|read|starred|unread|new|posted|categories"
+    top_menu: "A ordem dos items no menu de cima. Exemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "A ordem dos items no menu da postagem."
     share_links: "Determine quais ítens aparecerem no diálogo de compartilhar, e em que ordem. Por exemplo: twitter|facebook|google+|email"
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"

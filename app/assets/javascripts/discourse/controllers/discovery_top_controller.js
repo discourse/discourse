@@ -7,7 +7,7 @@
   @module Discourse
 **/
 Discourse.DiscoveryTopController = Discourse.ObjectController.extend({
-  category:null,
+  category: null,
 
   redirectedToTopPageReason: function() {
     // no need for a reason if the default homepage is "top"

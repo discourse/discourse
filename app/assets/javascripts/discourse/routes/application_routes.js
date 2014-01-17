@@ -21,7 +21,7 @@ Discourse.Route.buildRoutes(function() {
   this.resource('discovery', { path: '/' }, function() {
 
     router = this;
-    
+
     // top
     this.route('top');
     this.route('topCategory', { path: '/category/:slug/l/top' });
@@ -56,9 +56,7 @@ Discourse.Route.buildRoutes(function() {
 
     // default filter for a category
     this.route('category', { path: '/category/:slug' });
-    this.route('category', { path: '/category/:slug/more' });
     this.route('categoryNone', { path: '/category/:slug/none' });
-    this.route('categoryNone', { path: '/category/:slug/none/more' });
     this.route('category', { path: '/category/:parentSlug/:slug' });
 
     // homepage

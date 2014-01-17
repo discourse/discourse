@@ -7,28 +7,28 @@
   {{#if content.yearly}}
     <div class="clearfix">
       <h2>{{i18n filters.top.this_year}}</h2>
-      {{basic-topic-list topicList=content.yearly}}
+      {{basic-topic-list topicList=content.yearly hideCategory=hideCategory}}
       {{#if content.yearly.topics.length}}<a href="{{unbound showMoreYearlyUrl}}" class='btn pull-right'>{{i18n show_more}}</a>{{/if}}
     </div>
   {{/if}}
   {{#if content.monthly}}
     <div class="clearfix">
       <h2>{{i18n filters.top.this_month}}</h2>
-      {{basic-topic-list topicList=content.monthly}}
+      {{basic-topic-list topicList=content.monthly hideCategory=hideCategory}}
       {{#if content.monthly.topics.length}}<a href="{{unbound showMoreMonthlyUrl}}" class='btn pull-right'>{{i18n show_more}}</a>{{/if}}
     </div>
   {{/if}}
   {{#if content.weekly}}
     <div class="clearfix">
       <h2>{{i18n filters.top.this_week}}</h2>
-      {{basic-topic-list topicList=content.weekly}}
+      {{basic-topic-list topicList=content.weekly hideCategory=hideCategory}}
       {{#if content.weekly.topics.length}}<a href="{{unbound showMoreWeeklyUrl}}" class='btn pull-right'>{{i18n show_more}}</a>{{/if}}
     </div>
   {{/if}}
   {{#if content.daily}}
     <div class="clearfix">
       <h2>{{i18n filters.top.today}}</h2>
-      {{basic-topic-list topicList=content.daily}}
+      {{basic-topic-list topicList=content.daily hideCategory=hideCategory}}
       {{#if content.daily.topics.length}}<a href="{{unbound showMoreDailyUrl}}" class='btn pull-right'>{{i18n show_more}}</a>{{/if}}
     </div>
   {{/if}}
