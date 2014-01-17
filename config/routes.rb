@@ -200,24 +200,23 @@ Discourse::Application.routes.draw do
 
   resources :categories, :except => :show
   get "category/:id/show" => "categories#show"
-  post "category/:category_id/move" => "categories#move", as: "category_move"
-  get "category/:category.rss" => "list#category_feed", format: :rss, as: "category_feed"
-  get "category/:category" => "list#category"
-  get "category/:category/none" => "list#category_none"
-  get "category/:parent_category/:category" => "list#category"
+  post "category/:category_id/move" => "categories#move"
+  get "category/:category.rss" => "list#category_feed", format: :rss
+  get "category/:parent_category/:category.rss" => "list#category_feed", format: :rss
+  get "category/:category" => "list#latest_category"
+  get "category/:category/none" => "list#latest_category_none"
+  get "category/:parent_category/:category" => "list#latest_category"
 
-  get "top" => "list#top_lists"
-  get "category/:category/l/top" => "list#top_lists"
-  get "category/:category/none/l/top" => "list#top_lists"
-  get "category/:parent_category/:category/l/top" => "list#top_lists"
+  get "top" => "list#top"
+  get "category/:category/l/top" => "list#top_category"
+  get "category/:category/none/l/top" => "list#top_category_none"
+  get "category/:parent_category/:category/l/top" => "list#top_category"
 
   TopTopic.periods.each do |period|
     get "top/#{period}" => "list#top_#{period}"
-    get "top/#{period}/more" => "list#top_#{period}"
-    get "category/:category/l/top/#{period}" => "list#top_#{period}"
-    get "category/:category/l/top/#{period}/more" => "list#top_#{period}"
-    get "category/:parent_category/:category/l/top/#{period}" => "list#top_#{period}"
-    get "category/:parent_category/:category/l/top/#{period}/more" => "list#top_#{period}"
+    get "category/:category/l/top/#{period}" => "list#top_#{period}_category"
+    get "category/:category/none/l/top/#{period}" => "list#top_#{period}_category_none"
+    get "category/:parent_category/:category/l/top/#{period}" => "list#top_#{period}_category"
   end
 
   Discourse.anonymous_filters.each do |filter|
@@ -227,10 +226,12 @@ Discourse::Application.routes.draw do
   Discourse.filters.each do |filter|
     get "#{filter}" => "list##{filter}"
     get "#{filter}/more" => "list##{filter}"
-    get "category/:category/l/#{filter}" => "list##{filter}"
-    get "category/:category/l/#{filter}/more" => "list##{filter}"
-    get "category/:parent_category/:category/l/#{filter}" => "list##{filter}"
-    get "category/:parent_category/:category/l/#{filter}/more" => "list##{filter}"
+    get "category/:category/l/#{filter}" => "list##{filter}_category"
+    get "category/:category/l/#{filter}/more" => "list##{filter}_category"
+    get "category/:category/none/l/#{filter}" => "list##{filter}_category_none"
+    get "category/:category/none/l/#{filter}/more" => "list##{filter}_category_none"
+    get "category/:parent_category/:category/l/#{filter}" => "list##{filter}_category"
+    get "category/:parent_category/:category/l/#{filter}/more" => "list##{filter}_category"
   end
 
   get "search" => "search#query"
@@ -303,6 +304,6 @@ Discourse::Application.routes.draw do
   # special case for categories
   root to: "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
   # special case for top
-  root to: "list#top_lists", constraints: HomePageConstraint.new("top"), :as => "top_lists"
+  root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
 
 end
