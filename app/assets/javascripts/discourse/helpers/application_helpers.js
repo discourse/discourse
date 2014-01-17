@@ -200,12 +200,12 @@ Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
 }, 'avatar_template', 'uploaded_avatar_template', 'gravatar_template');
 
 /**
-  Nicely format a date without a binding since the date doesn't need to change.
+  Nicely format a date without binding or returning HTML
 
-  @method unboundDate
+  @method rawDate
   @for Handlebars
 **/
-Handlebars.registerHelper('unboundDate', function(property, options) {
+Handlebars.registerHelper('rawDate', function(property, options) {
   var dt = new Date(Ember.Handlebars.get(this, property, options));
   return Discourse.Formatter.longDate(dt);
 });
@@ -213,7 +213,7 @@ Handlebars.registerHelper('unboundDate', function(property, options) {
 /**
   Live refreshing age helper
 
-  @method unboundDate
+  @method rawDate
   @for Handlebars
 **/
 Handlebars.registerHelper('unboundAge', function(property, options) {

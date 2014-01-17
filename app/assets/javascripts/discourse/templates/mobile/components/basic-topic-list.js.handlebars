@@ -50,11 +50,11 @@
                 </div>
                 {{#if bumped}}
                   <div class='num activity last'>
-                    <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
+                    <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
                   </div>
                 {{else}}
                   <div class='num activity last'>
-                    <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{unboundAge created_at}}</a>
+                    <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{rawDate created_at}}}'>{{unboundAge created_at}}</a>
                   </div>
                 {{/if}}
               </div>
