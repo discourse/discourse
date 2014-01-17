@@ -10,7 +10,7 @@ class ListController < ApplicationController
     :top_lists, TopTopic.periods.map { |p| "top_#{p}".to_sym }
   ].flatten
 
-  before_filter :set_category, only: [:category_feed]
+  before_filter :set_category, only: [:category, :category_none, :category_feed]
   skip_before_filter :check_xhr
 
   # Create our filters
@@ -155,7 +155,7 @@ class ListController < ApplicationController
     parent_slug_or_id = params[:parent_category]
 
     parent_category_id = nil
-    if parent_slug.present?
+    if parent_slug_or_id.present?
       parent_category_id = Category.where(slug: parent_slug_or_id).pluck(:id).first ||
                            Category.where(id: parent_slug_or_id.to_i).pluck(:id).first
 
