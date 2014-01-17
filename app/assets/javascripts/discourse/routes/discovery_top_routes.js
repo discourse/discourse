@@ -1,5 +1,5 @@
 /**
-  Handles the routes related to "Top"
+  Handles the routes related to 'Top'
 
   @class DiscoveryTopRoute
   @extends Discourse.Route
@@ -29,7 +29,7 @@ Discourse.DiscoveryTopRoute = Discourse.Route.extend({
 });
 
 /**
-  Handles the routes related to "Top" within a category
+  Handles the routes related to 'Top' within a category
 
   @class DiscoveryTopCategoryRoute
   @extends Discourse.Route
@@ -44,7 +44,7 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend({
   afterModel: function(model) {
     var self = this,
                noSubcategories = this.get('no_subcategories'),
-               filterMode = "category/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/top";
+               filterMode = 'category/' + Discourse.Category.slugFor(model) + (noSubcategories ? '/none' : '') + '/l/top';
 
     this.controllerFor('search').set('searchContext', model);
 
@@ -70,8 +70,12 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend({
     var topList = this.get('topList');
     var filterText = I18n.t('filters.top.title');
     Discourse.set('title', I18n.t('filters.with_category', {filter: filterText, category: model.get('name').capitalize()}));
-    this.controllerFor('discoveryTop').setProperties({ model: topList, category: model });
     this.controllerFor('navigationCategory').set('canCreateTopic', topList.get('can_create_topic'));
+    this.controllerFor('discoveryTop').setProperties({
+      model: topList,
+      category: model,
+      noSubcategories: this.get('no_subcategories')
+    });
     this.set('topList', null);
   },
 

@@ -129,7 +129,11 @@ class TopicQuery
   end
 
   def list_new_in_category(category)
-    create_list(:new_in_category, unordered: true) {|l| l.where(category_id: category.id).by_newest.first(25)}
+    create_list(:new_in_category, unordered: true) do |list|
+      list.where(category_id: category.id)
+          .by_newest
+          .first(25)
+    end
   end
 
   def self.new_filter(list, treat_as_new_topic_start_date)
