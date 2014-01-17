@@ -165,10 +165,29 @@ describe Invite do
         invite.redeem.trust_level.should == TrustLevel.levels[:leader]
       end
 
+      context "invited by a trust level 3 user" do
+        let(:leader) { Fabricate(:user, trust_level: TrustLevel.levels[:leader]) }
+        let(:invitation) { Fabricate(:invite, invited_by: leader) }
+
+        it "default_invitee_trust_level is 1, then invited user should be trust level 2" do
+          SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:basic])
+          invitation.redeem.trust_level.should == TrustLevel.levels[:regular]
+        end
+
+        it "default_invitee_trust_level is 2, then invited user should be trust level 2" do
+          SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:regular])
+          invitation.redeem.trust_level.should == TrustLevel.levels[:regular]
+        end
+
+        it "default_invitee_trust_level is 3, then invited user should be trust level 3" do
+          SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:leader])
+          invitation.redeem.trust_level.should == TrustLevel.levels[:leader]
+        end
+      end
     end
 
     context 'inviting when must_approve_users? is enabled' do
-      it 'correctly acitvates accounts' do
+      it 'correctly activates accounts' do
         SiteSetting.stubs(:must_approve_users).returns(true)
         user = invite.redeem
 
