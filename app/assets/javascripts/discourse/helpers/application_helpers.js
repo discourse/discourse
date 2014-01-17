@@ -213,7 +213,7 @@ Handlebars.registerHelper('rawDate', function(property, options) {
 /**
   Live refreshing age helper
 
-  @method rawDate
+  @method unboundAge
   @for Handlebars
 **/
 Handlebars.registerHelper('unboundAge', function(property, options) {
