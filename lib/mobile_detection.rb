@@ -8,7 +8,7 @@ module MobileDetection
   def self.resolve_mobile_view!(user_agent, params, session)
     return false unless SiteSetting.enable_mobile_theme
 
-    session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
+    session[:mobile_view] = params[:mobile_view] if params && params.has_key?(:mobile_view)
 
     if session[:mobile_view]
       session[:mobile_view] == '1'
