@@ -82,9 +82,12 @@ class TopicQuery
   def list_top_for(period)
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
-      topics.joins(:top_topic)
-            .where("top_topics.#{score} > 0")
-            .order("top_topics.#{score} DESC, topics.bumped_at DESC")
+      topics = topics.joins(:top_topic).where("top_topics.#{score} > 0")
+      if period == :yearly && @user.try(:trust_level) == TrustLevel.levels[:newuser]
+        topics.order(TopicQuerySQL.order_top_with_pinned_category_for(score))
+      else
+        topics.order(TopicQuerySQL.order_top_for(score))
+      end
     end
   end
 

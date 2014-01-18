@@ -135,6 +135,7 @@
     font-size: 14px;
     margin-top: 8px;
     color: $dark_gray;
+    word-break: break-word;
   }
 
   @include medium-width {
