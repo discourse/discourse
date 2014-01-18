@@ -230,9 +230,11 @@ zh_CN:
       suspended_reason: "原因："
       watch_new_topics: "自动关注论坛中所有新发表的主题"
       watched_categories: "已关注"
-      watched_categories_instructions: "你将自动关注这些分类中的所有主题"
+      watched_categories_instructions: "和跟踪相同，此外你还将收到新的帖子和主题的通知。"
+      tracked_categories: "已跟踪"
+      tracked_categories_instructions: "你将自动跟踪所有新的和已有的主题，并会显示新的和未读帖子的数量。"
       muted_categories: "免打扰"
-      muted_categories_instructions: "你已将这些分类中的所有主题设为自动免打扰"
+      muted_categories_instructions: "你不会收到任何通知，也不会显示未读数量。"
 
       messages:
         all: "所有"
@@ -351,7 +353,7 @@ zh_CN:
         redeemed: "确认邀请"
         redeemed_at: "确认时间"
         pending: "待定邀请"
-        topics_entered: "已进入的主题"
+        topics_entered: "已查看的主题"
         posts_read_count: "已读的帖子"
         rescind: "删除邀请"
         rescinded: "邀请已删除"
@@ -385,6 +387,7 @@ zh_CN:
 
     loading: "载入中……"
     close: "关闭"
+    assets_changed_confirm: "Discourse已更新，是否刷新以获取最新版本？"
     learn_more: "了解更多……"
 
     year: '年'
@@ -583,6 +586,7 @@ zh_CN:
 
     site_map: "去另一个主题列表或分类"
     go_back: '返回'
+    not_logged_in_user: '显示当前活动和设置的用户页面'
     current_user: '去你的用户页面'
 
     starred:
@@ -601,6 +605,7 @@ zh_CN:
         latest: "伤心啊，没有主题。 :("
         hot: "没有热门主题。"
         category: "没有 {{category}} 分类的主题。"
+        top: "没有最佳主题。"
       bottom:
         latest: "没有更多主题可看了。"
         hot: "没有更多热门主题可看了。"
@@ -610,6 +615,7 @@ zh_CN:
         unread: "没有更多未阅主题可看了。"
         starred: "没有更多收藏主题可看了。"
         category: "没有更多 {{category}} 分类的主题了。"
+        top: "没有更多最佳主题了。"
 
     rank_details:
       toggle: 切换主题排名详细
@@ -700,6 +706,7 @@ zh_CN:
       notifications:
         title: ''
         reasons:
+          "3_6": '因为你在关注此分类，所以你将收到相关通知。'
           "3_5": '因为你自动关注了此主题，所以你将收到相关通知。'
           "3_2": '因为你在关注此主题，所以你将收到相关通知。'
           "3_1": '因为你创建了此主题，所以你将收到相关通知。'
@@ -853,7 +860,7 @@ zh_CN:
         reply: "开始给本帖撰写回复"
         like: "赞本帖"
         edit: "编辑本帖"
-        flag: "报告本帖以提醒论坛版主"
+        flag: "私下报告本帖以提醒管理人员关注或发送私信通知"
         delete: "删除本帖"
         undelete: "恢复本帖"
         share: "分享一个到本帖的链接"
@@ -1027,7 +1034,7 @@ zh_CN:
       parent: "上级分类"
 
     flagging:
-      title: '为何要报告本帖？'
+      title: '为何要私下报告本帖？'
       action: '报告帖子'
       take_action: "立即执行"
       notify_action: '通知'
@@ -1111,7 +1118,6 @@ zh_CN:
           one: "{{categoryName}}（1）"
           other: "{{categoryName}}（{{count}}）"
         help: "在 {{categoryName}} 分类中热门的主题"
-
       top:
         title: "Top"
         help: "最佳主题精选"
@@ -1119,8 +1125,9 @@ zh_CN:
         this_month: "本月"
         this_week: "本周"
         today: "今天"
+        other_periods: "查看更多最佳主题"
         redirect_reasons:
-          new_user: "你是一名新用户。这里将在一段时间内作为你的主页。如果你不知道从何开始，这里有一些最棒的主题。"
+          new_user: "欢迎！作为一名新用户，你大概愿意从这些最佳主题开始看起。"
           not_seen_in_a_month: "我们已经一个月没见到你了。这里有一些你不在时的最棒的主题。"
 
     browser_update: '抱歉, <a href="http://www.iteriter.com/faq/#browser">你的浏览器版本太低，推荐使用Chrome</a>. 请 <a href="http://www.google.com/chrome/">升级你的浏览器</a>。'
@@ -1224,10 +1231,16 @@ zh_CN:
         selector_placeholder: "添加用户"
         name_placeholder: "组名，不能含有空格，与用户名规则一致"
         about: "在这里编辑群组的名字和成员"
-        can_not_edit_automatic: "这是一个自动划分的群组，管理员用来分配角色和管理用户等级"
         delete: "删除"
         delete_confirm: "删除这个小组吗？"
         delete_failed: "无法删除小组。如果该小组是自动生成的，则不可删除。"
+        alias_levels:
+          title: "谁能把组名作为别名？"
+          nobody: "无"
+          only_admins: "仅管理员"
+          mods_and_admins: "仅版主与管理员"
+          members_mods_and_admins: "仅组员、版主与管理员"
+          everyone: "任何人"
 
       api:
         generate_master: "生成主API密钥"
@@ -1425,7 +1438,7 @@ zh_CN:
         private_topics_count: 私有主题数量
         posts_read_count: 已阅帖子数量
         post_count: 创建的帖子数量
-        topics_entered: 进入的主题数量
+        topics_entered: 已查看的主题数量
         flags_given_count: 所做报告数量
         flags_received_count: 收到报告数量
         approve: '批准'
