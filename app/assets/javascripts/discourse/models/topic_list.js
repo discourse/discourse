@@ -32,7 +32,6 @@ function finderFor(filter, params) {
 }
 
 Discourse.TopicList = Discourse.Model.extend({
-
   forEachNew: function(topics, callback) {
     var topicIds = [];
     _.each(this.get('topics'),function(topic) {
