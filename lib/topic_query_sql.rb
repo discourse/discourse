@@ -46,13 +46,5 @@ module TopicQuerySQL
       "CASE WHEN (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
     end
 
-    def order_with_pinned_sql
-      "CASE
-        WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
-          THEN '#{highest_date}'
-        ELSE topics.bumped_at
-       END DESC"
-    end
-
   end
 end
