@@ -177,7 +177,7 @@ class Plugin::Instance
     if Dir.exists?(public_data)
       target = Rails.root.to_s + "/public/plugins/"
       `mkdir -p #{target}`
-      target << name
+      target << name.gsub(/\s/,"_")
       # TODO a cleaner way of registering and unregistering
       `rm -f #{target}`
       `ln -s #{public_data} #{target}`
