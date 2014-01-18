@@ -19,6 +19,22 @@ Discourse.DiscoveryRoute = Discourse.Route.extend({
 
     didTransition: function() {
       this.send('loadingComplete');
+    },
+
+    // clear a pinned topic
+    clearPin: function(topic) {
+      topic.clearPin();
+    },
+
+    createTopic: function() {
+      var topicsController = this.controllerFor('discoveryTopics');
+      this.controllerFor('composer').open({
+        categoryId: topicsController.get('category.id'),
+        action: Discourse.Composer.CREATE_TOPIC,
+        draft: topicsController.get('draft'),
+        draftKey: topicsController.get('draft_key'),
+        draftSequence: topicsController.get('draft_sequence')
+      });
     }
   }
 });

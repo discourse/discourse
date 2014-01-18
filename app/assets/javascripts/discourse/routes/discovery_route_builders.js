@@ -22,9 +22,12 @@ function buildTopicRoute(filter) {
     },
 
     setupController: function(controller, model) {
-      var filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
+      var period = filter.indexOf('/') > 0 ? filter.split('/')[1] : '',
+          filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
+
       Discourse.set('title', I18n.t('filters.with_topics', {filter: filterText}));
-      this.controllerFor('discoveryTopics').set('model', model);
+
+      this.controllerFor('discoveryTopics').setProperties({ model: model, category: null, period: period });
       this.controllerFor('navigationDefault').set('canCreateTopic', model.get('can_create_topic'));
     },
 
@@ -76,12 +79,20 @@ function buildCategoryRoute(filter, params) {
     },
 
     setupController: function(controller, model) {
-      var topics = this.get('topics');
+      var topics = this.get('topics'),
+          period = filter.indexOf('/') > 0 ? filter.split('/')[1] : '',
+          filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
 
-      var filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
-      Discourse.set('title', I18n.t('filters.with_category', {filter: filterText, category: model.get('name').capitalize()}));
-      this.controllerFor('discoveryTopics').set('model', topics);
+      Discourse.set('title', I18n.t('filters.with_category', { filter: filterText, category: model.get('name').capitalize() }));
+
       this.controllerFor('navigationCategory').set('canCreateTopic', topics.get('can_create_topic'));
+      this.controllerFor('discoveryTopics').setProperties({
+        model: topics,
+        category: model,
+        period: period,
+        noSubcategories: params && !!params.no_subcategories
+      });
+
       this.set('topics', null);
     },
 

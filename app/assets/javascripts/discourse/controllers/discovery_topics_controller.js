@@ -6,16 +6,11 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryTopicsController = Discourse.ObjectController.extend({
+Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
   actions: {
     // Star a topic
     toggleStar: function(topic) {
       topic.toggleStar();
-    },
-
-    // clear a pinned topic
-    clearPin: function(topic) {
-      topic.clearPin();
     },
 
     // Show newly inserted topics
@@ -46,8 +41,13 @@ Discourse.DiscoveryTopicsController = Discourse.ObjectController.extend({
 
   hasTopics: Em.computed.gt('topics.length', 0),
   showTable: Em.computed.or('hasTopics', 'topicTrackingState.hasIncoming'),
-  latest: Em.computed.equal('filter', 'latest'),
   allLoaded: Em.computed.empty('more_topics_url'),
+  latest: Discourse.computed.endWith('filter', 'latest'),
+  top: Em.computed.notEmpty('period'),
+  yearly: Em.computed.equal('period', 'yearly'),
+  monthly: Em.computed.equal('period', 'monthly'),
+  weekly: Em.computed.equal('period', 'weekly'),
+  daily: Em.computed.equal('period', 'daily'),
 
   updateTitle: function(){
     Discourse.notifyTitle(this.get('topicTrackingState.incomingCount'));

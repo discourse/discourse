@@ -54,17 +54,23 @@
   {{#if loadingMore}}
     <div class='topics-loading'>{{i18n topic.loading_more}}</div>
   {{/if}}
-
-  <h3>
-    {{footerMessage}}
-    {{#if allLoaded}}
+  {{#if allLoaded}}
+    <h3>
       {{#if latest}}
         {{#if can_create_topic}}
-          <a href='#' {{action createTopic}}>{{i18n topic.suggest_create_topic}}</a>
+          {{footerMessage}}<a href='#' {{action createTopic}}>{{i18n topic.suggest_create_topic}}</a>
         {{/if}}
       {{else}}
-        {{#link-to "discovery.categories"}}{{i18n topic.browse_all_categories}}{{/link-to}} {{i18n or}} {{#link-to 'discovery.latest'}}{{i18n topic.view_latest_topics}}{{/link-to}}
+        {{#if top}}
+          {{#link-to "discovery.categories"}}{{i18n topic.browse_all_categories}}{{/link-to}}, {{#link-to 'discovery.latest'}}{{i18n topic.view_latest_topics}}{{/link-to}} {{i18n or}} {{i18n filters.top.other_periods}}
+          {{#unless yearly}}<a href="{{unbound showMoreYearlyUrl}}" class='btn'>{{i18n filters.top.this_year}}</a>{{/unless}}
+          {{#unless monthly}}<a href="{{unbound showMoreMonthlyUrl}}" class='btn'>{{i18n filters.top.this_month}}</a>{{/unless}}
+          {{#unless weekly}}<a href="{{unbound showMoreWeeklyUrl}}" class='btn'>{{i18n filters.top.this_week}}</a>{{/unless}}
+          {{#unless daily}}<a href="{{unbound showMoreDailyUrl}}" class='btn'>{{i18n filters.top.today}}</a>{{/unless}}
+        {{else}}
+          {{footerMessage}}{{#link-to "discovery.categories"}}{{i18n topic.browse_all_categories}}{{/link-to}} {{i18n or}} {{#link-to 'discovery.latest'}}{{i18n topic.view_latest_topics}}{{/link-to}}
+        {{/if}}
       {{/if}}
-    {{/if}}
-  </h3>
+    </h3>
+  {{/if}}
 </footer>

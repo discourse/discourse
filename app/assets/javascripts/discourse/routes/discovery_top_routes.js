@@ -48,7 +48,7 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend({
 
     this.controllerFor('search').set('searchContext', model);
 
-    var opts = { category: model, filterMode: filterMode};
+    var opts = { category: model, filterMode: filterMode };
     opts.noSubcategories = noSubcategories;
     opts.canEditCategory = Discourse.User.current('staff');
     this.controllerFor('navigationCategory').setProperties(opts);
