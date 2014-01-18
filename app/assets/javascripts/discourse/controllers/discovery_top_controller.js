@@ -6,9 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryTopController = Discourse.ObjectController.extend({
-  category: null,
-
+Discourse.DiscoveryTopController = Discourse.DiscoveryController.extend({
   redirectedToTopPageReason: function() {
     // no need for a reason if the default homepage is 'top'
     if (Discourse.Utilities.defaultHomepage() === 'top') { return null; }
@@ -24,19 +22,5 @@ Discourse.DiscoveryTopController = Discourse.ObjectController.extend({
     return null;
   }.property(),
 
-  hasDisplayedAllTopLists: Em.computed.and('content.yearly', 'content.monthly', 'content.weekly', 'content.daily'),
-
-  showMoreUrl: function(period) {
-    var url = '', category = this.get('category');
-    if (category) {
-      url = '/category/' + Discourse.Category.slugFor(category) + (this.get('noSubcategories') ? '/none' : '') + '/l';
-    }
-    url += '/top/' + period;
-    return url;
-  },
-
-  showMoreDailyUrl: function() { return this.showMoreUrl('daily'); }.property('category', 'noSubcategories'),
-  showMoreWeeklyUrl: function() { return this.showMoreUrl('weekly'); }.property('category', 'noSubcategories'),
-  showMoreMonthlyUrl: function() { return this.showMoreUrl('monthly'); }.property('category', 'noSubcategories'),
-  showMoreYearlyUrl: function() { return this.showMoreUrl('yearly'); }.property('category', 'noSubcategories'),
+  hasDisplayedAllTopLists: Em.computed.and('content.yearly', 'content.monthly', 'content.weekly', 'content.daily')
 });

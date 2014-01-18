@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryCategoriesController = Discourse.ObjectController.extend({
+Discourse.DiscoveryCategoriesController = Discourse.DiscoveryController.extend({
   needs: ['modal'],
 
   actions: {
@@ -18,11 +18,6 @@ Discourse.DiscoveryCategoriesController = Discourse.ObjectController.extend({
   canEdit: function() {
     return Discourse.User.currentProp('staff');
   }.property(),
-
-  // clear a pinned topic
-  clearPin: function(topic) {
-    topic.clearPin();
-  },
 
   moveCategory: function(categoryId, position){
     this.get('model.categories').moveCategory(categoryId, position);

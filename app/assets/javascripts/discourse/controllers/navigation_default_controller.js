@@ -7,21 +7,6 @@
   @module Discourse
 **/
 Discourse.NavigationDefaultController = Discourse.Controller.extend({
-  needs: ['composer', 'discoveryTopics'],
-
-  actions: {
-    createTopic: function() {
-      var topicsController = this.get('controllers.discoveryTopics');
-      this.get('controllers.composer').open({
-        categoryId: this.get('category.id'),
-        action: Discourse.Composer.CREATE_TOPIC,
-        draft: topicsController.get('draft'),
-        draftKey: topicsController.get('draft_key'),
-        draftSequence: topicsController.get('draft_sequence')
-      });
-    }
-  },
-
   categories: function() {
     return Discourse.Category.list();
   }.property(),
