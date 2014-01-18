@@ -10,10 +10,10 @@ zh_TW:
       short: "%Y-%m-%d"
 
   title: "論壇"
-  topics: "貼"
-  posts: "posts"
+  topics: "標題"
+  posts: "貼文"
   loading: "載入中"
-  powered_by_html: '源自<a href="http://www.discourse.org">論壇 - Discourse</a>，請開啓JavaScript支持以獲得最佳效果'
+  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, 請啟用 Javascript 以獲得最佳瀏覽效果'
 
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留權利"
@@ -22,75 +22,76 @@ zh_TW:
   operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
 
   too_many_mentions:
-    zero: "抱歉, 你無法@用戶。"
-    one: "抱歉, 你一次僅能@一個用戶。"
-    other: "抱歉, 你一次僅能@ %{count} 個用戶。"
+    zero: "抱歉, 你無法提及(@)用戶。"
+    one: "抱歉, 你每次只能提及(@)一個用戶。"
+    other: "抱歉, 你每次只能提及(@) %{count} 個用戶。"
   too_many_mentions_newuser:
-    zero: "抱歉, 遊客無法@用戶。"
-    one: "抱歉, 遊客一次僅能@一個用戶。"
-    other: "抱歉, 遊客一次僅能@ %{count} 個用戶。"
+    zero: "抱歉, 訪客無法提及(@)用戶。"
+    one: "抱歉, 訪客每次只能提及(@)一個用戶。"
+    other: "抱歉, 訪客每次只能提及(@) %{count} 個用戶。"
   too_many_images:
-    zero: "抱歉, 遊客無法貼圖。"
-    one: "抱歉, 遊客一次僅能貼一張圖。"
-    other: "抱歉, 遊客一次僅能貼 %{count} 張圖。"
+    zero: "抱歉, 訪客無法貼圖。"
+    one: "抱歉, 訪客每次只能張貼一張圖片。"
+    other: "抱歉, 訪客每次只能張貼 %{count} 張圖片。"
   too_many_links:
-    zero: "抱歉, 遊客無法貼鏈接。"
-    one: "抱歉, 遊客一次僅能貼一條鏈接。"
-    other: "抱歉, 遊客一次僅能貼 %{count} 條鏈接。"
-  spamming_host: "抱歉，你不能添加一個鏈接到那台主機的鏈接。"
+    zero: "抱歉, 訪客無法分享連結。"
+    one: "抱歉, 訪客每次只能貼一條連結。"
+    other: "抱歉, 訪客每次只能貼 %{count} 條連結。"
+  spamming_host: "抱歉，你不能張貼該網站之連結。"
 
-  just_posted_that: "與你最近發表的內容太過相似"
+  just_posted_that: "與你最近發表的內容太相似"
   has_already_been_used: "已經被使用"
-  invalid_characters: "包含無效字符"
-  is_invalid: "無效，請描述得更清楚一點"
+  invalid_characters: "包含無效字詞"
+  is_invalid: "無效，請再仔細描述"
   next_page: "下一頁 &rarr;"
-  by: "由"
+  by: "從"
   topics_in_category: "分類'%{category}'中的主題"
-  rss_posts_in_topic: "'%{topic}'的RSS內容聚合"
-  rss_topics_in_category: "分類'%{category}'中主題的RSS內容聚合"
-  author_wrote: "%{author}寫道："
+  rss_posts_in_topic: "'%{topic}'的RSS feed"
+  rss_topics_in_category: "分類'%{category}'中主題的RSS feed"
+  author_wrote: "%{author}說:"
+  private_message_abbrev: "私人訊息"
 
   groups:
     default_names:
       admins: "管理員"
       moderators: "版主"
-      staff: "員工"
-      trust_level_1: "trust_level_1"
-      trust_level_2: "trust_level_2"
-      trust_level_3: "trust_level_3"
-      trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
+      staff: "職員"
+      trust_level_1: "L1信任者"
+      trust_level_2: "L2信任者"
+      trust_level_3: "L3信任者"
+      trust_level_4: "L4信任者"
+      trust_level_5: "L5信任者"
 
   education:
     until_posts:
-      one: "帖子"
-      other: "%{count}個帖子"
+      one: "貼文"
+      other: "%{count}個貼文"
 
     'new-topic': |
-      歡迎來到 %{site_name} &mdash; **衷心感謝你開啓一段新的討論！**
+      歡迎來到 %{site_name} &mdash; **祝你能在這裡開始一段嶄新的討論區體驗！**
 
-      當你撰寫主題時請注意：
+      當你撰寫主題時, 請注意以下事項:
 
-      - 你的標題是否清晰明了的告訴了讀者他們能在你的主題中找到的內容？
+      - 張貼標題是否清晰易明? 主題內容能否吸讀者?
 
-      - 你的主題第一帖確定了：主題是關于什麽的？誰會對它感興趣？它爲什麽重要？你期望從社區中獲得什麽樣的回應？
+      -建議撰寫時需考慮: 張貼內容是甚麼, 能吸引哪些人, 主題的重要性, 期待從討論中得到怎樣的回應等
 
-      - 選擇恰當的詞句以便別人能 *找到* 你的主題，如果該主題應該屬于某個分類，請選擇一個恰當的分類。
+      - 使用適合的字詞, 能更容易使其他人 *找到* 你的主題, 若你撰寫的內容屬於某個分類的話，應選擇張貼在該分類。
 
-      更多的幫助信息，[請查看我們的常見問答](/faq)。此信息面板只在你的最早的 %{education_posts_text} 顯示。
+      其他的說明教學，[請查看我們的常見問答](/faq)。此資訊只在你的最早的 %{education_posts_text} 顯示。
 
     'new-reply': |
-      歡迎來到 %{site_name} &mdash; **衷心感謝你參與討論！**
+      歡迎來到 %{site_name} &mdash; **感謝你參與討論！**
 
-      當你撰寫回複時請注意：
+      當你撰寫回覆時, 請注意以下事項:
 
-      - 你的回複是否從某個方面多多少少的幫助到了這段討論？
+      - 你的回覆在某程度能否對整個討論有幫助?
 
-      - 請給予論壇其他成員同等的尊重，多換位思考，將心比心。
+      - 尊重。論壇其他成員是同等的, 你應作多角度思考，將心比心。
 
-      - 持批判態度是可以的，但是請對事不對人。
+      - 可以持批判態度，但請緊記 *對事不對人*。
 
-      更多的幫助信息，[請查看我們的常見問答](/faq)。此信息面板只在你的最早的 %{education_posts_text} 顯示。
+      更多的説明資訊，[請查看我們的常見問答](/faq)。此資訊只在你的最早的 %{education_posts_text} 顯示。
 
 
   activerecord:
@@ -100,20 +101,25 @@ zh_TW:
       post:
         raw: "內容"
     errors:
+      messages:
+        is_invalid: "無效, 可嘗試寫得更明確"
+        has_already_been_used: "已經被使用"
       models:
         topic:
           attributes:
             archetype:
-              cant_send_pm: "抱歉，你不能向該用戶發送私信。"
+              cant_send_pm: "抱歉，你不能向該用戶發送私人訊息。"
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>你的介紹信息中，“關于我”部分目前還是空白，<a href='/users/%{username_lower}/preferences/about-me'>介紹一下你自己，好不好？</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她的介紹中的“關于我”部分填寫任何信息</div>"
+    no_info_me: "<div class='missing-profile'>你的自我簡介中，“關於我” 部分目前還沒有內容，<a href='/users/%{username_lower}/preferences/about-me'>不如來自我介紹一下?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
 
   category:
-    topic_prefix: "分類的定義信息，用于分類： %{category}"
-    replace_paragraph: "[用一段簡短的分類描述替換此第一段內容，請不要超過200個字符。]"
-    post_template: "%{replace_paragraph}\n\n使用下面的空間輸入分類的詳細描述信息，可包括在此分類下討論的規則、內容導向等等。"
+    topic_prefix: "對於分類: %{category} 的定義"
+    replace_paragraph: "[為分類一段簡單的描述以替換首段內容, 請不要超過200個字。]"
+    post_template: "%{replace_paragraph}\n\n在下面的空格輸入分類的詳細描述, 可以包括在此分類下討論的規則、內容主題等等。"
+    this_year: "本年"
+
 
   trust_levels:
     newuser:
@@ -128,13 +134,13 @@ zh_TW:
       title: "資深用戶"
 
   rate_limiter:
-    too_many_requests: "你的請求過于頻繁，請等待 %{time_left} 之後再試。"
+    too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     hours:
       one: "1 小時"
       other: "%{count} 小時"
     minutes:
-      one: "1 分鍾"
-      other: "%{count} 分鍾"
+      one: "1 分鐘"
+      other: "%{count} 分鐘"
     seconds:
       one: "1 秒"
       other: "%{count} 秒"
@@ -185,11 +191,11 @@ zh_TW:
         one:   "1 秒前"
         other: "%{count} 秒前"
       less_than_x_minutes:
-        one:   "不到 1 分鍾前"
-        other: "不到 %{count} 分鍾前"
+        one:   "不到 1 分鐘前"
+        other: "不到 %{count} 分鐘前"
       x_minutes:
-        one:   "1 分鍾前"
-        other: "%{count} 分鍾前"
+        one:   "1 分鐘前"
+        other: "%{count} 分鐘前"
       about_x_hours:
         one:   "1 小時前"
         other: "%{count} 小時前"
@@ -197,40 +203,40 @@ zh_TW:
         one:   "1 天前"
         other: "%{count} 天前"
       about_x_months:
-        one:   "大概 1 個月前"
-        other: "大概 %{count} 個月前"
+        one:   "約 1 個月前"
+        other: "約 %{count} 個月前"
       x_months:
         one:   "1 個月前"
         other: "%{count} 個月前"
       about_x_years:
-        one:   "大概 1 年前"
-        other: "大概 %{count} 年前"
+        one:   "約 1 年前"
+        other: "約 %{count} 年前"
       over_x_years:
-        one:   "超過 1 年前"
-        other: "超過 %{count} 年前"
+        one:   "1 年之前"
+        other: "%{count} 年之前"
       almost_x_years:
-        one:   "差不多 1 年前"
-        other: "差不多 %{count} 年前"
+        one:   "近 1 年前"
+        other: "近 %{count} 年前"
 
   password_reset:
-    no_token: "抱歉，你的令牌已過期，請嘗試再次重置你的密碼。"
+    no_token: "抱歉，你的令牌(Token)已過期，請再嘗試重設你的密碼。"
     choose_new: "請選擇一個新密碼"
     update: '更新密碼'
-    title: '重置密碼'
-    success: "你的密碼已經修改成功，你現在已經登錄。"
-    success_unapproved: "你的密碼已經修改成功。"
-    continue: "轉入到 %{site_name}"
+    title: '重設密碼'
+    success: "密碼修改成功，現在已為你登入。"
+    success_unapproved: "你的密碼已成功修改。"
+    continue: "繼續連接至 %{site_name}"
 
   change_email:
-    confirmed: "你的電子郵箱已被更新。"
-    please_continue: "請點擊 %{link} 來繼續"
-    error: "在修改你的電子郵箱地址時出現了錯誤，可能此郵箱已經在論壇中使用了？"
+    confirmed: "你的電子郵箱已更新。"
+    please_continue: "請按 %{link} 來繼續"
+    error: "修改你的電郵位址時發生錯誤，可能此郵箱已有人使用了。"
 
   activation:
-    already_done: "抱歉，此帳號激活鏈接已經失效。可能你的帳號已經被激活了？"
-    please_continue: "你的新帳號已激活，你現在已登錄論壇。點擊 %{link} 繼續"
+    already_done: "抱歉，此帳號啟用連結已經失效。可能你的帳號已經啟用了。"
+    please_continue: "你的帳號已啟用，並已為你登入。點擊 %{link} 繼續"
     welcome_to: "歡迎來到%{site_name}！"
-    approval_required: "你的新帳號需要由一位論壇版主手動批准方可使用。一旦你的帳號獲得批准，你將收到一封電子郵件通知！"
+    approval_required: "你的論壇帳號需要由版主審批後才可使用。當你的帳號獲得批准，你將收到電子郵件通知。"
 
   post_action_types:
     off_topic:
@@ -368,55 +374,55 @@ zh_TW:
       num_visits: "訪問數"
 
   dashboard:
-    rails_env_warning: "你的服務器運行在 %{env} 模式。"
-    host_names_warning: "你的 config/database.yml 文件使用的是缺省的 localhost 主機名。請更改成你的站點主機名。"
-    gc_warning: '你的服務器使用的是缺省的 ruby 垃圾回收參數，這個配置無法提供最高性能。請閱讀此性能調優文檔：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
-    sidekiq_warning: 'Sidekiq 不在運行。很多任務，例如發送電子郵件，是異步的被 sidekiq 調度執行的。請確保至少運行一個 sidekiq 進程。<a href="https://github.com/mperham/sidekiq">了解 Sidekiq</a>。'
-    queue_size_warning: '隊列中的任務數爲%{queue_size}，任務較多。這可能因爲Sidekiq進程出問題導致，或者需要更多的Sidekiq進程。'
-    memory_warning: '你的服務器環境內存少于 1GB，我們建議至少要有 1GB 內存'
-    facebook_config_warning: '服務器允許使用臉書賬號登陸 (enable_facebook_logins), 但是 app id 和 app secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">參考設定指南</a>。'
-    twitter_config_warning: '服務器允許使用推特賬號登陸 (enable_twitter_logins), 但是 key 和 secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">參考設定指南</a>。'
-    github_config_warning: '服務器允許使用GitHub賬號登陸  (enable_github_logins), 但是 client id 和 secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">參考設定指南</a>。'
-    failing_emails_warning: "%{num_failed_jobs}個email任務失敗。請檢查config/environments/production.rb文件是否正確配置了config.action_mailer。<a href='/sidekiq/retries' target='_blank'>在Sidekiq中查看失敗的任務</a>。"
-    default_logo_warning: "你沒有自定義你的站點logo。請在<a href='/admin/site_settings'>站點設置</a>中配置logo_url、logo_small_url和favicon_url。"
-    contact_email_missing: "你沒有爲站點指定一個聯系郵箱。請在<a href='/admin/site_settings'>站點設置</a>配置contact_email。"
-    contact_email_invalid: "站點聯系郵箱不正確。請在<a href='/admin/site_settings'>站點設置</a>修改。"
-    title_nag: "站點標題在站點設置中仍爲缺省值。請在<a href='/admin/site_settings'>站點設置</a>中將其設置爲你的標題。"
+    rails_env_warning: "伺服器現在運行 %{env} 模式。"
+    host_names_warning: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
+    gc_warning: '伺服器正在使用的 ruby 可能僅啟用了預設的 垃圾回收設定 (garbage collection), 這個設定無法提供最佳效能。請瀏覽此效能設定的資訊: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
+    sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
+    queue_size_warning: '排定中的任務數量為%{queue_size}，任務較多。這可能是因為 Sidekiq 程序出現問題, 或者需要更多的 Sidekiq 程序。'
+    memory_warning: '伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體'
+    facebook_config_warning: '伺服器允許使用 Facebook 帳號登入 (enable_facebook_logins), 但未有設定 app id 及 app secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">設定教學指南</a>。'
+    twitter_config_warning: '伺服器允許使用 Twitter 帳號登入 (enable_twitter_logins), 但未有設定 key 和 secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">設定教學指南</a>。'
+    github_config_warning: '伺服器允許使用 GitHub 帳號登入  (enable_github_logins), 但未有設定 client id 和 secret values。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">設定教學指南</a>。'
+    failing_emails_warning: "%{num_failed_jobs}個 email 任務失敗。請檢查 config/environments/production.rb 內 config.action_mailer 項目是否已正確設定。<a href='/sidekiq/retries' target='_blank'>在 Sidekiq 中檢視失敗的任務</a>。"
+    default_logo_warning: "你沒有自訂你的網站 logo。請在<a href='/admin/site_settings'>網站設定</a>中更改 logo_url, logo_small_url 及 favicon_url。"
+    contact_email_missing: "你沒有為網站指定一個聯絡電郵。請在<a href='/admin/site_settings'>網站設定</a>中設定 contact_email。"
+    contact_email_invalid: "網站聯絡電郵不正確。請在<a href='/admin/site_settings'>網站設定</a>修改。"
+    title_nag: "正在使用預設的網站標題。請在<a href='/admin/site_settings'>網站設定</a>更改你的網站標題。"
 
   content_types:
     education_new_reply:
-      title: "新用戶培訓：第一個回複"
-      description: "在新用戶發表前兩個回複時，自動在編輯器上方彈出的幫助信息。"
+      title: "新用戶教學：第一個回覆"
+      description: "在新用戶發表首兩個回覆時, 自動在編輯器上方彈出的說明資訊。"
     education_new_topic:
-      title: "新用戶培訓：第一個主題"
-      description: "在新用戶發表前兩個主題時，自動在編輯器上方彈出的幫助信息。"
+      title: "新用戶教學：第一個主題"
+      description: "在新用戶發表首兩個主題時, 自動在編輯器上方彈出的說明資訊。"
     usage_tips:
       title: "新用戶提示"
-      description: "使用提示，關于對新用戶的必要論壇信息和關鍵指導信息。"
+      description: "對於新用戶的使用提示, 重要的論壇資訊及教學資訊。"
     welcome_user:
-      title: "歡迎：新用戶"
-      description: "當新用戶注冊後自動發送給他們的歡迎私信。"
+      title: "歡迎: 新用戶"
+      description: "當新用戶註冊後自動發送給他們的歡迎訊息。"
     welcome_invite:
-      title: "歡迎：受約用戶"
-      description: "當新用戶通過接受用戶邀請加入論壇後，自動發送給他們的歡迎私信。"
+      title: "歡迎: 受邀請用戶"
+      description: "當新用戶通過接受用戶邀請加入論壇後, 自動發送給他們的歡迎訊息。"
     tos_user_content_license:
       title: "服務條款：內容授權"
-      description: "服務條款中關于論壇內容授權的相關條款。"
+      description: "服務條款中關於論壇內容授權的相關條款。"
     tos_miscellaneous:
       title: "服務條款：其它"
       description: "服務條款中其他條款。"
 
   site_settings:
-    default_locale: "此 論壇 - Discourse 實例的缺省語言 (ISO 639-1 代碼)"
-    min_post_length: "帖子最少字符數"
-    max_post_length: "帖子最大字符數"
-    min_topic_title_length: "標題最少字符數"
-    max_topic_title_length: "標題最大字符數"
-    min_search_term_length: "搜索條件最少字符數"
+    default_locale: "Discourse 執行個體 (instance) 的預設語言編碼 (ISO 639-1)"
+    min_post_length: "貼文最少字數"
+    max_post_length: "貼文最大字數"
+    min_topic_title_length: "標題最少字數"
+    max_topic_title_length: "標題最大字數"
+    min_search_term_length: "搜索內容最少字數"
     allow_duplicate_topic_titles: "允許主題有相同的標題"
-    unique_posts_mins: "幾分鍾之後才允許一個用戶再次發表包含相同內容的帖子"
-    enforce_global_nicknames: "強制昵稱必須唯一（警告：只在剛剛安裝完成時修改此設置）"
-    discourse_org_access_key: "訪問 discourse.org 上的 Discourse Hub 昵稱注冊表的訪問密匙（access key）"
+    unique_posts_mins: "使用者再次發表包含相同內容貼文的間隔時間"
+    enforce_global_nicknames: "強制暱稱 (nickname) 不能重覆 (警告：此功能只能在完成初始安裝時設定)"
+    discourse_org_access_key: "存取密匙 (access key) 用作登錄 discourse.org 上 Discourse Hub 的註冊表"
     educate_until_posts: "顯示彈出指導面板直到用戶發表了這麽多數量的帖子"
     title: "本站點標題，用于 HTML 標題標簽（title）和其它地方"
     contact_email: "可以與本站聯系的email地址。Discourse.org將會把重要更新的通知消息發送到該郵箱。"
