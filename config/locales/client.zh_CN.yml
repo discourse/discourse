@@ -617,11 +617,6 @@ zh_CN:
         category: "没有更多 {{category}} 分类的主题了。"
         top: "没有更多最佳主题了。"
 
-    rank_details:
-      toggle: 切换主题排名详细
-      show: 显示主题排名详细信息
-      title: 主题排名详细
-
     topic:
       filter_to: "只显示本主题中的{{post_count}}个帖子"
       create: '创建主题'

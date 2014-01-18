@@ -552,7 +552,7 @@ ru:
     ga_domain_name: 'Доменное имя для Google analytics, например: mysite.com; смотрите http://google.com/analytics'
     enable_escaped_fragments: 'Включить поддержку escaped_fragments для устаревших поисковых роботов (типа Яндекс). Внимание: включайте только при крайней необходимости.'
     enable_noscript_support: 'Включить поддержку тэга noscript для поисковых роботов'
-    top_menu: 'Определите, как должны располагаться элементы в навигации на главной странице. Пример: latest|hot|read|starred|unread|new|posted|categories'
+    top_menu: 'Определите, как должны располагаться элементы в навигации на главной странице. Пример: latest|new|unread|starred|categories|top|read|posted'
     post_menu: 'Определите, какие элементы должны отображаться в меню у сообщения и в какой последовательности.  Пример: like|edit|flag|delete|share|bookmark|reply'
     share_links: 'Определите, какие элементы должны отображаться в меню «Поделиться» и в какой последовательности. Пример: twitter|facebook|google+'
     track_external_right_clicks: 'Отслеживать внешние ссылки, открытые правой кнопкой мыши (например: открыть в новой вкладке), по умолчанию отключено, так как это перезаписывает пути'

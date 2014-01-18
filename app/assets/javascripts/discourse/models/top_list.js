@@ -10,19 +10,14 @@
 Discourse.TopList = Discourse.Model.extend({});
 
 Discourse.TopList.reopenClass({
-  PERIODS: <%= TopTopic.periods.map(&:to_s) %>,
-
-  find: function(period, category) {
+  find: function(filter) {
     return PreloadStore.getAndRemove("top_lists", function() {
-      var url = "";
-      if (category) { url += category.get("url") + "/l"; }
-      url += "/top";
-      if (period) { url += "/" + period; }
-      return Discourse.ajax(url + ".json");
+      var url = Discourse.getURL("/") + (filter || "top") + ".json";
+      return Discourse.ajax(url);
     }).then(function (result) {
-      var topList = Discourse.TopList.create({});
+      var topList = Discourse.TopList.create({ can_create_topic: result.can_create_topic });
 
-      _.each(Discourse.TopList.PERIODS, function(period) {
+      Discourse.Site.currentProp('periods').forEach(function(period) {
         // if there is a list for that period
         if (result[period]) {
           // instanciate a new topic list with no sorting

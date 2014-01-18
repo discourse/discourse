@@ -617,11 +617,6 @@ en:
         category: "There are no more {{category}} topics."
         top: "There are no more top topics."
 
-    rank_details:
-      toggle: toggle topic rank details
-      show: show topic rank details
-      title: Topic Rank Details
-
     topic:
       filter_to: "Show {{post_count}} posts in topic"
       create: 'Create Topic'
@@ -1081,6 +1076,8 @@ en:
     categories_list: "Categories List"
 
     filters:
+      with_topics: "%{filter} Topics"
+      with_category: "%{filter} %{category} Topics"
       latest:
         title: "Latest"
         help: "the most recent topics"
@@ -1121,6 +1118,14 @@ en:
       top:
         title: "Top"
         help: "a selection of the best topics"
+        yearly:
+          title: "Top Yearly"
+        monthly:
+          title: "Top Monthly"
+        weekly:
+          title: "Top Weekly"
+        daily:
+          title: "Top Daily"
         this_year: "This year"
         this_month: "This month"
         this_week: "This week"

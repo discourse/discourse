@@ -579,11 +579,6 @@ it:
         starred: "Non ci sono altri topic preferiti da leggere."
         category: "Non ci sono altri topic nella categoria {{category}} da leggere."
 
-    rank_details:
-      toggle: attica dettaglio classifica topic
-      show: mostra dettaglio classifica topic
-      title: Dettaglio Classifica Topic
-
     topic:
       create: 'Crea Topic'
       create_long: 'Crea un nuovo Topic'

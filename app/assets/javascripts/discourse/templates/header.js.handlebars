@@ -7,7 +7,7 @@
       <div class="extra-info-wrapper">
         <div class="extra-info">
           {{#if showStarButton}}
-            <a {{bindAttr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="topic.starTooltip"}}></a>
+            <a {{bind-attr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
           {{/if}}
           <h1>
           {{boundCategoryLink topic.category}}
@@ -30,7 +30,7 @@
       {{#unless showExtraInfo}}
         <div class='current-username'>
           {{#if currentUser}}
-            <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.displayName}}</a></span>
+            <span class='username'><a {{bind-attr href="currentUser.path"}}>{{currentUser.displayName}}</a></span>
           {{else}}
             <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/if}}

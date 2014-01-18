@@ -574,11 +574,6 @@ ja:
         starred: "お気に入りしたトピックは以上です。"
         category: "{{category}} トピックは以上です。"
 
-    rank_details:
-      toggle: トピックランクの詳細をトグル
-      show: トピックランクの詳細を表示
-      title: トピックランクの詳細
-
     topic:
       create_in: '{{categoryName}} トピックを作成'
       create: 'トピックを作成する'

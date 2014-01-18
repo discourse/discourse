@@ -1,16 +1,5 @@
 <td>
 <div class='main-link clearfix'>
-
-  {{#if controller.rankDetailsVisible}}
-    <div class='rank-details'>
-      <p>{{rank_details.hot_topic_type}}</p>
-      <p>
-        ({{float rank_details.random_bias}} * {{float rank_details.random_multiplier}}) + ({{float rank_details.days_ago_bias}} * {{float rank_details.days_ago_multiplier}}) = <b>{{float rank_details.ranking_score}}</b>
-        <i class='fa fa-flask score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>
-      </p>
-    </div>
-  {{/if}}
-
   {{topicStatus topic=this}}
   {{{topicLink this}}}
   {{#if unread}}

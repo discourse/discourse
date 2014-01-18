@@ -471,11 +471,6 @@ nb_NO:
         starred: "Det er ikke noen favorittemner igjen å lese."
         category: "Det er ikke noen {{category}} emner igjen."
 
-    rank_details:
-      toggle: toggle topic rank details
-      show: show topic rank details
-      title: Topic Rank Details
-
     topic:
       create: 'Lag Emne'
       create_long: 'Lag ett nytt Emne'

@@ -88,8 +88,28 @@ Discourse.computed = {
       })));
     });
     return computed.property.apply(computed, args);
+  },
 
-  }
+  /**
+    Returns whether properties end with a string
 
+    @method i18n
+    @params {String} properties* to check
+    @params {String} substring the substring
+    @return {Function} computedProperty function
+  **/
+  endWith: function() {
+    var args = Array.prototype.slice.call(arguments, 0);
+    var substring = args.pop();
+    var computed = Ember.computed(function() {
+      var self = this;
+      return _.all(args.map(function(a) { return self.get(a); }), function(s) {
+        var position = s.length - substring.length,
+            lastIndex = s.lastIndexOf(substring);
+        return lastIndex !== -1 && lastIndex === position;
+      });
+    });
+    return computed.property.apply(computed, args);
+  },
 
 };

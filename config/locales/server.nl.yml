@@ -564,7 +564,7 @@ nl:
     ga_domain_name: "Google analytics domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
     enable_escaped_fragments: "Schakel workaround in om oude crawlers je site te kunnen laten indexeren. WAARSCHUWING: gebruik dit alleen als je het echt nodig hebt."
     enable_noscript_support: "Ondersteun &lt;noscript&gt; tag"
-    top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|hot|read|starred|unread|new|posted|categories"
+    top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|new|unread|starred|categories|top|read|posted"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
     share_links: "De volgorde en selectie van items in het deelmenu. Bijvoorbeeld twitter|facebook|google+"
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"

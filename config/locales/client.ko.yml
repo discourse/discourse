@@ -588,11 +588,6 @@ ko:
         starred: "더 이상 읽을 즐겨찾기 토픽이 없습니다"
         category: "더 이상 {{category}}에 토픽이 없습니다"
 
-    rank_details:
-      toggle: 토픽의 랭킹 세부 사항을 토글합니다.
-      show: 토픽의 랭킹 세부 사항을 보여줍니다.
-      title: 토픽의 랭킹 세부 사항
-
     topic:
       filter_to: "이 토픽에서 {{username}}님의 {{post_count}}건의 게시물만 보기"
       create: '토픽 만들기'

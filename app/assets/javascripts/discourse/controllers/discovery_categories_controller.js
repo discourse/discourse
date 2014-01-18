@@ -1,12 +1,12 @@
 /**
   This controller supports actions when listing categories
 
-  @class ListCategoriesController
+  @class DiscoveryCategoriesController
   @extends Discourse.ObjectController
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ListCategoriesController = Discourse.ObjectController.extend({
+Discourse.DiscoveryCategoriesController = Discourse.DiscoveryController.extend({
   needs: ['modal'],
 
   actions: {
@@ -19,11 +19,6 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
     return Discourse.User.currentProp('staff');
   }.property(),
 
-  // clear a pinned topic
-  clearPin: function(topic) {
-    topic.clearPin();
-  },
-
   moveCategory: function(categoryId, position){
     this.get('model.categories').moveCategory(categoryId, position);
   },
@@ -33,5 +28,3 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
   }.property('categories.@each.featuredTopics.length')
 
 });
-
-

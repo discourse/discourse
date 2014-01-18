@@ -59,7 +59,7 @@ basic:
   topics_per_period_in_top_summary:
     default: 20
   topics_per_period_in_top_page:
-    default: 200
+    default: 100
 
 users:
   enable_local_logins:

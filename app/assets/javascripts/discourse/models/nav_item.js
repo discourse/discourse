@@ -44,7 +44,9 @@ Discourse.NavItem = Discourse.Model.extend({
 
       if(category){
         mode += "category/";
-        mode += Discourse.Category.slugFor(this.get('category')) + "/l/";
+        mode += Discourse.Category.slugFor(this.get('category'));
+        if (this.get('noSubcategories')) { mode += '/none'; }
+        mode += "/l/";
       }
       return mode + name.replace(' ', '-');
     }
@@ -55,36 +57,37 @@ Discourse.NavItem = Discourse.Model.extend({
     if (state) {
       return state.lookupCount(this.get('name'), this.get('category'));
     }
-  }.property('topicTrackingState.messageCount'),
-
-  excludeCategory: function() {
-    if (parseInt(this.get('filters.length'), 10) > 0) {
-      return this.get('filters')[0].substring(1);
-    }
-  }.property('filters.length')
-
+  }.property('topicTrackingState.messageCount')
 
 });
 
 Discourse.NavItem.reopenClass({
-  NAMES: <%= Discourse.top_menu_items.map(&:to_s) %>,
-  ANONYMOUS_NAMES: <%= Discourse.anonymous_top_menu_items.map(&:to_s) %>,
 
   // create a nav item from the text, will return null if there is not valid nav item for this particular text
   fromText: function(text, opts) {
     var split = text.split(","),
         name = split[0],
-        testName = name.split("/")[0];
+        testName = name.split("/")[0],
+        anonymous = !Discourse.User.current();
 
-    if (!opts.loggedOn && !Discourse.NavItem.ANONYMOUS_NAMES.contains(testName)) return null;
+    if (anonymous && !Discourse.Site.currentProp('anonymous_top_menu_items').contains(testName)) return null;
     if (!Discourse.Category.list() && testName === "categories") return null;
-    if (!Discourse.NavItem.NAMES.contains(testName)) return null;
+    if (!Discourse.Site.currentProp('top_menu_items').contains(testName)) return null;
 
-    return Discourse.NavItem.create({
-      name: name,
-      hasIcon: name === "unread" || name === "starred",
-      filters: split.splice(1),
-      category: opts.category,
+    var args = { name: name, hasIcon: name === "unread" || name === "starred" };
+    if (opts.category) { args.category = opts.category; }
+    if (opts.noSubcategories) { args.noSubcategories = true; }
+    return Discourse.NavItem.create(args);
+  },
+
+  buildList: function(category, args) {
+    args = args || {};
+    if (category) { args.category = category }
+
+    return Discourse.SiteSettings.top_menu.split("|").map(function(i) {
+      return Discourse.NavItem.fromText(i, args);
+    }).filter(function(i) {
+      return i !== null && !(category && i.get("name").indexOf("categor") === 0);
     });
   }
 

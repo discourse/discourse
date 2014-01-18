@@ -1,5 +1,11 @@
 class TopListSerializer < ApplicationSerializer
 
+  attribute :can_create_topic
+
+  def can_create_topic
+    scope.can_create?(Topic)
+  end
+
   TopTopic.periods.each do |period|
     attribute period
 

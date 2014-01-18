@@ -180,6 +180,7 @@ Discourse.Utilities = {
     @returns true whenever the upload is valid
   **/
   validateUploadedFile: function(file, type) {
+
     // check that the uploaded file is authorized
     if (!Discourse.Utilities.isAuthorizedUpload(file)) {
       var extensions = Discourse.Utilities.authorizedExtensions();

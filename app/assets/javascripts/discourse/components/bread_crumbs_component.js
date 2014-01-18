@@ -29,9 +29,11 @@ Discourse.BreadCrumbsComponent = Ember.Component.extend({
   }.property('category', 'parentCategory'),
 
   childCategories: function() {
-    var self = this;
+    var firstCategory = this.get('firstCategory');
+    if (!firstCategory) { return; }
+
     return this.get('categories').filter(function (c) {
-      return c.get('parentCategory') === self.get('firstCategory');
+      return c.get('parentCategory') === firstCategory;
     });
   }.property('firstCategory')
 
