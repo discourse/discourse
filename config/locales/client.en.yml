@@ -353,7 +353,7 @@ en:
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed"
         pending: "Pending Invites"
-        topics_entered: "Topics Entered"
+        topics_entered: "Topics Viewed"
         posts_read_count: "Posts Read"
         rescind: "Remove Invitation"
         rescinded: "Invite removed"
@@ -1125,9 +1125,9 @@ en:
         this_month: "This month"
         this_week: "This week"
         today: "Today"
-        other_periods: "dig into other periods"
+        other_periods: "see more top topics"
         redirect_reasons:
-          new_user: "Welcome! As a new visitor, we thought you might like to start with this list of the top discussion topics."
+          new_user: "Welcome! As a new visitor, we thought you might like to start with the top discussion topics."
           not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
@@ -1438,7 +1438,7 @@ en:
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
-        topics_entered: Topics Entered
+        topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
         approve: 'Approve'

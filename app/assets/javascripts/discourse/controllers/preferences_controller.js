@@ -63,7 +63,7 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
         if (Discourse.User.currentProp('id') === model.get('id')) {
           Discourse.User.currentProp('name', model.get('name'));
         }
-        self.set('bio_cooked', Discourse.Markdown.cook(self.get('bio_raw')));
+        self.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(self.get('bio_raw'))));
         self.set('saved', true);
       }, function() {
         // model failed to save

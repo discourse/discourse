@@ -329,6 +329,10 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return Discourse.User.current() && !this.get('isPrivateMessage');
   }.property('isPrivateMessage'),
 
+  loadingHTML: function() {
+    return "<div class='spinner'>" + I18n.t('loading') + "</div>";
+  }.property(),
+
   recoverTopic: function() {
     this.get('content').recover();
   },
