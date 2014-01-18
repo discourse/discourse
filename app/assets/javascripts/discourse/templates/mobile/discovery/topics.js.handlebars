@@ -1,50 +1,18 @@
 <div class='contents'>
   {{#if showTable}}
     <table id='topic-list'>
-      <thead>
-      <tr>
-        {{#if currentUser}}
-          <th>&nbsp;</th>
-        {{/if}}
-        {{#sortable-heading sortBy="default" sortOrder=sortOrder}}
-          {{i18n topic.title}}
-        {{/sortable-heading}}
-        {{#unless controller.hideCategory}}
-          {{#sortable-heading sortBy="category" sortOrder=sortOrder}}
-            {{i18n category_title}}
-          {{/sortable-heading}}
-        {{/unless}}
-        {{#sortable-heading sortBy="posters" sortOrder=sortOrder}}
-          {{i18n users}}
-        {{/sortable-heading}}
-        {{#sortable-heading sortBy="posts" number=true sortOrder=sortOrder}}
-          {{i18n posts}}
-        {{/sortable-heading}}
-        {{#sortable-heading sortBy="likes" number=true sortOrder=sortOrder}}
-          {{i18n likes}}
-        {{/sortable-heading}}
-        {{#sortable-heading sortBy="views" number=true sortOrder=sortOrder}}
-          {{i18n views}}
-        {{/sortable-heading}}
-        {{#sortable-heading sortBy="activity" number=true colspan="2" sortOrder=sortOrder}}
-          {{i18n activity}}
-        {{/sortable-heading}}
-      </tr>
-      </thead>
-
       {{#if topicTrackingState.hasIncoming}}
         <tbody>
           <tr>
-            <td colspan="9">
-              <div class='alert alert-info clickable' {{action showInserted}}>
-                {{countI18n new_topics_inserted count=topicTrackingState.incomingCount}}
+            <td>
+              <div class='alert alert-info' {{action showInserted}}>
+                {{countI18n new_topics_inserted countBinding="topicTrackingState.incomingCount"}}
                 {{i18n show_new_topics}}
               </div>
             </td>
           </tr>
         </tbody>
       {{/if}}
-
       {{collection contentBinding="topics" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
     </table>
   {{/if}}
