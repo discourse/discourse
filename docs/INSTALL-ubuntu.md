@@ -122,8 +122,12 @@ Install RVM
 
     # As 'discourse'
     # Install RVM
-    \curl -s -S -L https://get.rvm.io | bash -s stable
+     \curl -s -S -L https://get.rvm.io | bash -s stable
+     
+    # Refresh your profile
     . ~/.rvm/scripts/rvm
+
+Install missing packages
 
     # Install necessary packages for building ruby (this will only work if
     # you've given discourse sudo permissions, which is *not* the default)
@@ -132,12 +136,17 @@ Install RVM
     # NOTE: rvm will tell you which packages you (or your sysadmin) need
     # to install during this step. As discourse does not have sudo 
     # permissions (likely the case), run:
+
     rvm --autolibs=read-fail requirements
-    # repeat until it fully executes 
 
-Continue with Discourse installation
+    # If prompted with `libreadline6-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake bison pkg-config libffi-dev' etc
+    # Fix with this command, run as your user:
+    # sudo apt-get install -dev libreadline6-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake bison pkg-config libffi-dev
+    # repeat the autolibs test until "Requirements installation successful" 
 
-    # Build and install ruby
+
+Build and install ruby
+
     rvm install 2.0.0
 
     # Use installed ruby as default
@@ -146,7 +155,11 @@ Continue with Discourse installation
     # Install bundler
     gem install bundler
 
+Continue with Discourse installation
+
     # Pull down the latest code
+    # Now would be a great time to consider [forking](https://help.github.com/articles/fork-a-repo), if want to work from your own copy of discourse
+    #If you don't need to customize your installation, and want less hassle upgrading clone from Discourse's repo
     git clone git://github.com/discourse/discourse.git /var/www/discourse
     cd /var/www/discourse
     git checkout master
