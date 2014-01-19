@@ -50,7 +50,7 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend({
 
     var opts = { category: model, filterMode: filterMode };
     opts.noSubcategories = noSubcategories;
-    opts.canEditCategory = Discourse.User.current('staff');
+    opts.canEditCategory = Discourse.User.currentProp('staff');
     this.controllerFor('navigationCategory').setProperties(opts);
 
     return Discourse.TopList.find(filterMode).then(function(list) {
