@@ -5,7 +5,7 @@ require "thor"
 class DiscourseCLI < Thor
   class_option :verbose, default: false, aliases: :v
 
-  desc "export", "Import a Discourse backup"
+  desc "export", "Export a Discourse backup"
   def export(filename=nil)
     load_rails
 
