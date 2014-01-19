@@ -49,7 +49,7 @@ zh_CN:
         almost_x_years:
           one:   "1年"
           other: "%{count}年"
-        date_year: "D MMM 'YY"
+        date_year: "YY-MM-D"
       medium:
         x_minutes:
           one:   "1分钟"
@@ -1076,6 +1076,8 @@ zh_CN:
     categories_list: "分类列表"
 
     filters:
+      with_topics: "%{filter} 主题"
+      with_category: "%{filter} %{category} 主题"
       latest:
         title: "最新"
         help: "最新发布的帖子"
@@ -1116,6 +1118,14 @@ zh_CN:
       top:
         title: "Top"
         help: "最佳主题精选"
+        yearly:
+          title: "年度最佳"
+        monthly:
+          title: "月度最佳"
+        weekly:
+          title: "每周最佳"
+        daily:
+          title: "每日最佳"
         this_year: "今年"
         this_month: "本月"
         this_week: "本周"
