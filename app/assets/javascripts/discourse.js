@@ -88,8 +88,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   },
 
   loginRequired: function() {
-    return Discourse.SiteSettings.login_required &&
-           !Discourse.User.current();
+    return Discourse.SiteSettings.login_required && !Discourse.User.current();
   }.property(),
 
   redirectIfLoginRequired: function(route) {
