@@ -78,16 +78,23 @@ Discourse.Dialect.inlineBetween({
   emitter: function(contents) { return ['a', {href: contents, 'data-bbcode': true}, contents]; }
 });
 
+
 Discourse.Dialect.inlineBetween({
   start: '[spoiler]',
   stop: '[/spoiler]',
   rawContents: true,
   emitter: function(contents) {
-    if (/<img/i.test(contents)) {
-      return ['div', { 'class': 'spoiler' }, contents];
-    } else {
-      return ['span', { 'class': 'spoiler' }, contents];
-    }
+    return ["__spoiler", this.processInline(contents)];
+  }
+});
+
+Discourse.Dialect.replaceElement('__spoiler', function(node, processInside) {
+  // Surround images with a `<div class='spoiler'>`, any other tags
+  // end up in a `span`
+  if (node.nodeType === 1 && node.nodeName === "IMG") {
+    return ['div', {class: 'spoiler'}, processInside(node)];
+  } else {
+    return ['span', {class: 'spoiler'}, processInside(node)];
   }
 });
 

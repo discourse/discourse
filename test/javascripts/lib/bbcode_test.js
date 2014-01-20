@@ -1,8 +1,8 @@
 module("Discourse.BBCode");
 
 var format = function(input, expected, text) {
-  var cooked = Discourse.Markdown.cook(input, {lookupAvatar: false});
-  equal(cooked, "<p>" + expected + "</p>", text);
+  var cooked = Discourse.Markdown.cook(input, {lookupAvatar: false}).replace(/'/g, "\"");
+  equal(cooked, "<p>" + expected.replace(/'/g, "\"") + "</p>", text);
 };
 
 test('basic bbcode', function() {
@@ -30,8 +30,15 @@ test('code', function() {
 });
 
 test('spoiler', function() {
+  format("[spoiler][/spoiler]", "", "it can spoil nothing");
   format("[spoiler]it's a sled[/spoiler]", "<span class=\"spoiler\">it's a sled</span>", "supports spoiler tags on text");
-  format("[spoiler]<img src='http://eviltrout.com/eviltrout.png' width='50' height='50'>[/spoiler]", "<div class=\"spoiler\"><img src='http://eviltrout.com/eviltrout.png' width='50' height='50'></div>", "supports spoiler tags on images");
+  format("[spoiler]<img src='http://eviltrout.com/eviltrout.png' width='50' height='50'>[/spoiler]", "<div class=\"spoiler\"><img src='http://eviltrout.com/eviltrout.png' width='50' height='50'/></div>", "supports spoiler tags on images");
+  format("foo bar[spoiler]aaa <img src='#'> bbb[/spoiler]", 
+        "foo bar<span class='spoiler'>aaa </span><div class='spoiler'><img src='#'/></div><span class='spoiler'> bbb</span>",
+        "It wraps images and text differently in the same block");
+  format("[spoiler]<a href='#'>hello</a>[/spoiler]", 
+         "<span class='spoiler'><a href='#'>hello</a></span>",
+         "It surrounds other HTML");
 });
 
 test('lists', function() {
