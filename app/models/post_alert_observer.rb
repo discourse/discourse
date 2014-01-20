@@ -64,7 +64,7 @@ class PostAlertObserver < ActiveRecord::Observer
         next if user.blank?
 
         destroy_notifications(user, Notification.types[:private_message], post.topic)
-        unread_post = first_unread_post(user,post.topic)
+        unread_post = first_unread_post(user,post.topic) || post
         create_notification(user, Notification.types[:private_message], unread_post)
       end
     elsif post.post_type != Post.types[:moderator_action]
@@ -84,6 +84,7 @@ class PostAlertObserver < ActiveRecord::Observer
                  SELECT last_read_post_number FROM topic_users tu
                  WHERE tu.user_id = ? AND tu.topic_id = ? ),0)',
                   user.id, topic.id)
+          .where(topic_id: topic.id)
           .order('post_number').first
     end
 
