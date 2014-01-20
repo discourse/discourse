@@ -423,5 +423,8 @@ uncategorized:
   suppress_uncategorized_badge:
     client: true
     default: true
+  lounge_category_id:
+    default: -1
+    hidden: true
 
 
