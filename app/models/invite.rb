@@ -26,7 +26,8 @@ class Invite < ActiveRecord::Base
   def user_doesnt_already_exist
     @email_already_exists = false
     return if email.blank?
-    if User.where("email = ?", Email.downcase(email)).exists?
+    u = User.where("email = ?", Email.downcase(email)).first
+    if u && u.id != self.user_id
       @email_already_exists = true
       errors.add(:email)
     end
@@ -40,8 +41,13 @@ class Invite < ActiveRecord::Base
     created_at < SiteSetting.invite_expiry_days.days.ago
   end
 
+  # link_valid? indicates whether the invite link can be used to log in to the site
+  def link_valid?
+    invalidated_at.nil?
+  end
+
   def redeem
-    InviteRedeemer.new(self).redeem unless expired? || destroyed?
+    InviteRedeemer.new(self).redeem unless expired? || destroyed? || !link_valid?
   end
 
 
@@ -99,6 +105,15 @@ class Invite < ActiveRecord::Base
     else
       rails4? ? all : scoped
     end
+  end
+
+  def self.invalidate_for_email(email)
+    i = Invite.where(email: Email.downcase(email)).first
+    if i
+      i.invalidated_at = Time.zone.now
+      i.save
+    end
+    i
   end
 end
 
