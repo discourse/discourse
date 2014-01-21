@@ -1067,9 +1067,11 @@ en:
     email_reject_notification:
        subject_template: "Message posting failed"
        text_body_template: |
-        This is an automated message to inform you that the user [%{username}](%{base_url}%{user_url}) posted a message which failed to meet topic criteria.
+        This is an automated message to inform you that the user a message failed to meet topic criteria.
 
-        Please [review the user](%{base_url}%{user_url}).
+        Please review the following message.  
+
+        %{email}
 
     too_many_spam_flags:
       subject_template: "New account blocked"
