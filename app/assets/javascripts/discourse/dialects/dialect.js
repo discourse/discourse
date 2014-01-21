@@ -23,50 +23,6 @@ function initializeDialects() {
 }
 
 /**
-  Converts an HTML node Element into JsonML.
-
-  @method nodeToJsonML
-  @param {Element} node to convert
-  @returns {Array} jsonML result
-**/
-function nodeToJsonML(node) {
-  if (node.nodeType === 3) {
-    return node.nodeValue;
-  }
-
-  var result = [node.nodeName.toLowerCase()],
-      attributes = {};
-
-  if (node.attributes && node.attributes.length > 0) {
-    for (var i=0; i<node.attributes.length; i++) {
-      var attr = node.attributes[i];
-      attributes[attr.name] = attr.value;
-    }
-    result.push(attributes);
-  }
-  var innerResult = eachNodeList(node.childNodes, nodeToJsonML);
-  return result.concat(innerResult);
-}
-
-/**
-  Iterate through a NodeList and apply a function, returning
-  a concatenated array of results.
-
-  @method eachNodeList
-  @param {NodeList} nodeList to iterate through
-  @param {Function} f to call
-**/
-function eachNodeList(nodeList, f) {
-  if (!nodeList || nodeList.length === 0) { return []; }
-
-  var result = [];
-  for (var i=0; i<nodeList.length; i++) {
-    result.push(f(nodeList[i], nodeToJsonML));
-  }
-  return result;
-}
-
-/**
   Process the text nodes in the JsonML tree, calling any emitters that have
   been added.
 
@@ -495,32 +451,6 @@ Discourse.Dialect = {
       var node = event.node;
       if (node[0] === tag) {
         node[node.length-1] = emitter(node[node.length-1]);
-      }
-    });
-  },
-
-
-  /**
-    Replaces an element by name in the final jsonML tree by parsing the HTML
-    and using a `replacer` callback.
-
-    @method replaceElement
-    @param {String} nodeName to match
-    @param {Function} replacer function to call on each node
-  **/
-  replaceElement: function(nodeName, replacer) {
-    Discourse.Dialect.on('parseNode', function(event) {
-      var node = event.node;
-      if (node[0] === nodeName) {
-        var doc = document.implementation.createHTMLDocument("");
-        if (doc) {
-          doc.documentElement.innerHTML = node[1];
-          if (doc.body) {
-            var jsonML = eachNodeList(doc.body.childNodes, replacer),
-                parentNode = event.path[event.path.length-1];
-            parentNode.splice.apply(parentNode, [parentNode.indexOf(node), 1].concat(jsonML));
-          }
-        }
       }
     });
   }
