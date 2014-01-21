@@ -246,6 +246,7 @@ en:
         in_progress: "(sending email)"
         error: "(error)"
         action: "Send Password Reset Email"
+        set_password: "Set Password"
 
       change_about:
         title: "Change About Me"

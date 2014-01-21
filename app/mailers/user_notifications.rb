@@ -25,7 +25,9 @@ class UserNotifications < ActionMailer::Base
   end
 
   def forgot_password(user, opts={})
-    build_email(user.email, template: "user_notifications.forgot_password", email_token: opts[:email_token])
+    build_email( user.email,
+                 template: user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
+                 email_token: opts[:email_token])
   end
 
   def digest(user, opts={})
