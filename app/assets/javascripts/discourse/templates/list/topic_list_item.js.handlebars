@@ -19,7 +19,7 @@
 
   {{#if hasExcerpt}}
     <div class="topic-excerpt">
-      {{excerpt}}
+      {{{excerpt}}}
       {{#if excerptTruncated}}
         {{#unless canClearPin}}<a href="{{lastUnreadUrl}}">{{i18n read_more}}</a>{{/unless}}
       {{/if}}
@@ -61,7 +61,7 @@
   </td>
 {{else}}
   <td class='num activity'>
-    <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{rawDate created_at}}}'>{{unboundAge created_at}}</a>
+    <a href="{{url}}" {{{bindAttr class=":age ageCold"}}} title='{{i18n first_post}}: {{{rawDate created_at}}}'>{{unboundAge created_at}}</a>
   </td>
   <td class='activity'></td>
 {{/if}}

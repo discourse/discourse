@@ -7,19 +7,18 @@
 Discourse.Route.buildRoutes(function() {
   var router = this;
 
+  // Generate static page routes
+  _.each(Discourse.StaticController.PAGES, function (page) {
+    router.route(page, { path: '/' + page });
+  });
+
   // Topic routes
   this.resource('topic', { path: '/t/:slug/:id' }, function() {
     this.route('fromParams', { path: '/' });
     this.route('fromParamsNear', { path: '/:nearPost' });
   });
 
-  // Generate static page routes
-  _.each(Discourse.StaticController.PAGES, function (page) {
-    router.route(page, { path: '/' + page });
-  });
-
   this.resource('discovery', { path: '/' }, function() {
-
     router = this;
 
     // top
@@ -41,6 +40,7 @@ Discourse.Route.buildRoutes(function() {
       router.route(top + 'Category', { path: '/category/:parentSlug/:slug/l/top/' + period + '/more' });
     });
 
+    // filters
     Discourse.Site.currentProp('filters').forEach(function(filter) {
       router.route(filter, { path: '/' + filter });
       router.route(filter, { path: '/' + filter + '/more' });

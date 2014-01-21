@@ -61,7 +61,7 @@ function buildCategoryRoute(filter, params) {
 
       var opts = { category: model, filterMode: filterMode };
       opts.noSubcategories = params && params.no_subcategories;
-      opts.canEditCategory = Discourse.User.current('staff');
+      opts.canEditCategory = Discourse.User.currentProp('staff');
       this.controllerFor('navigationCategory').setProperties(opts);
 
       return Discourse.TopicList.list(listFilter, params).then(function(list) {

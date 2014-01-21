@@ -59,7 +59,7 @@ basic:
   topics_per_period_in_top_summary:
     default: 20
   topics_per_period_in_top_page:
-    default: 100
+    default: 50
 
 users:
   enable_local_logins:
@@ -423,5 +423,8 @@ uncategorized:
   suppress_uncategorized_badge:
     client: true
     default: true
+  lounge_category_id:
+    default: -1
+    hidden: true
 
 

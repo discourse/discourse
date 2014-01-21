@@ -40,13 +40,6 @@ describe PrettyText do
         match_html "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
     end
 
-    it 'should spoiler text' do
-      PrettyText.cook("[spoiler]hello[/spoiler]").should match_html "<p><span class=\"spoiler\">hello</span></p>"
-    end
-
-    it 'should spoiler img' do
-      PrettyText.cook("[spoiler]<img src='http://cnn.com/a.gif'>[/spoiler]").should match_html "<p><div class=\"spoiler\"><img src=\"http://cnn.com/a.gif\"</div></p>"
-    end
   end
 
   describe "rel nofollow" do

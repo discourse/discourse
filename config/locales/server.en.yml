@@ -188,6 +188,9 @@ en:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
 
+  vip_category_name: "Lounge"
+  vip_category_description: "A category exclusive to members with trust level 3 and higher."
+
   category:
     topic_prefix: "Category definition for %{category}"
     replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters. Until you edit this text or create topics, this category won't appear on the categories page.]"
