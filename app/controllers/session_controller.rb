@@ -27,6 +27,9 @@ class SessionController < ApplicationController
         return
       end
 
+      # User signed on with username and password, so let's prevent the invite link
+      # from being used to log in (if one exists).
+      Invite.invalidate_for_email(user.email)
     else
       invalid_credentials
       return

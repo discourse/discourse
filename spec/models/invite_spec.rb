@@ -167,6 +167,11 @@ describe Invite do
       invite.redeem.should be_blank
     end
 
+    it "won't redeem an invalidated invite" do
+      invite.invalidated_at = 1.day.ago
+      invite.redeem.should be_blank
+    end
+
     context 'invite trust levels' do
 
       it "returns the trust level in default_invitee_trust_level" do
@@ -348,6 +353,30 @@ describe Invite do
 
       expect(invites).to have(1).items
       expect(invites.first).to eq redeemed_invite
+    end
+  end
+
+  describe '.invalidate_for_email' do
+    let(:email) { 'invite.me@example.com' }
+    subject { described_class.invalidate_for_email(email) }
+
+    it 'returns nil if there is no invite for the given email' do
+      subject.should == nil
+    end
+
+    it 'sets the matching invite to be invalid' do
+      invite = Fabricate(:invite, invited_by: Fabricate(:user), user_id: nil, email: email)
+      subject.should == invite
+      subject.link_valid?.should == false
+      subject.should be_valid
+    end
+
+    it 'sets the matching invite to be invalid without being case-sensitive' do
+      invite = Fabricate(:invite, invited_by: Fabricate(:user), user_id: nil, email: 'invite.me2@Example.COM')
+      result = described_class.invalidate_for_email('invite.me2@EXAMPLE.com')
+      result.should == invite
+      result.link_valid?.should == false
+      result.should be_valid
     end
   end
 end
