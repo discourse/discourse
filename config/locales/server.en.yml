@@ -300,8 +300,10 @@ en:
   password_reset:
     no_token: "Sorry, your token has expired. Please try resetting your password again."
     choose_new: "Please choose a new password"
-    update: 'update password'
-    title: 'reset password'
+    choose: "Please choose a password"
+    update: 'Update Password'
+    save: 'Set Password'
+    title: 'Reset Password'
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
     continue: "Continue to %{site_name}"
@@ -1216,6 +1218,16 @@ en:
         If it was not you, you can safely ignore this email.
 
         Click the following link to choose a new password:
+        %{base_url}/users/password-reset/%{email_token}
+
+    set_password:
+      subject_template: "[%{site_name}] Set Password"
+      text_body_template: |
+        Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
+
+        If you did not make this request, you can safely ignore this email.
+
+        Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:
