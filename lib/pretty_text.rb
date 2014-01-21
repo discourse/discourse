@@ -57,6 +57,7 @@ module PrettyText
               "vendor/assets/javascripts/Markdown.Converter.js",
               "lib/headless-ember.js",
               "vendor/assets/javascripts/rsvp.js",
+              "vendor/assets/javascripts/domino.js",
               Rails.configuration.ember.handlebars_location)
 
     ctx.eval("var Discourse = {}; Discourse.SiteSettings = {};")
