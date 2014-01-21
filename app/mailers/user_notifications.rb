@@ -141,8 +141,9 @@ class UserNotifications < ActionMailer::Base
       locals: { context_posts: context_posts, post: @post }
     )
 
+    template = "user_notifications.user_#{notification_type}"
     if @post.topic.private_message?
-      opts[:subject_prefix] = "[#{I18n.t('private_message_abbrev')}] "
+      template << "_pm"
     end
 
     email_opts = {
@@ -155,10 +156,9 @@ class UserNotifications < ActionMailer::Base
       username: username,
       add_unsubscribe_link: true,
       allow_reply_by_email: opts[:allow_reply_by_email],
-      template: "user_notifications.user_#{notification_type}",
+      template: template,
       html_override: html,
-      style: :notification,
-      subject_prefix: opts[:subject_prefix] || ''
+      style: :notification
     }
 
     # If we have a display name, change the from address
