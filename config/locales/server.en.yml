@@ -1072,7 +1072,13 @@ en:
        text_body_template: |
         This is an automated message to inform you that the user a message failed to meet topic criteria.
 
+<<<<<<< HEAD
+        Please review the following message.  
+
+        %{email}
+=======
         Please review the following message.
+>>>>>>> a15883949220b7fa7d9c2f91e75b33d0fbb722e5
 
     too_many_spam_flags:
       subject_template: "New account blocked"
