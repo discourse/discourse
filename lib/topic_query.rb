@@ -67,12 +67,6 @@ class TopicQuery
     end
   end
 
-  def list_hot
-    create_list(:hot, unordered: true) do |topics|
-      topics.joins(:hot_topic).order(TopicQuerySQL.order_hotness(@user))
-    end
-  end
-
   def list_new
     TopicList.new(:new, @user, new_results)
   end
@@ -88,9 +82,12 @@ class TopicQuery
   def list_top_for(period)
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
-      topics.joins(:top_topic)
-            .where("top_topics.#{score} > 0")
-            .order("top_topics.#{score} DESC, topics.bumped_at DESC")
+      topics = topics.joins(:top_topic).where("top_topics.#{score} > 0")
+      if period == :yearly && @user.try(:trust_level) == TrustLevel.levels[:newuser]
+        topics.order(TopicQuerySQL.order_top_with_pinned_category_for(score))
+      else
+        topics.order(TopicQuerySQL.order_top_for(score))
+      end
     end
   end
 
@@ -135,7 +132,11 @@ class TopicQuery
   end
 
   def list_new_in_category(category)
-    create_list(:new_in_category, unordered: true) {|l| l.where(category_id: category.id).by_newest.first(25)}
+    create_list(:new_in_category, unordered: true) do |list|
+      list.where(category_id: category.id)
+          .by_newest
+          .first(25)
+    end
   end
 
   def self.new_filter(list, treat_as_new_topic_start_date)

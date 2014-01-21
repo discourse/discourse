@@ -188,11 +188,11 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
-    var defaultFilter = "/" + Discourse.ListController.FILTERS[0];
+    var defaultFilter = "/" + Discourse.Site.currentProp('filters')[0];
 
     if (path === "/" && (oldPath === "/" || oldPath === defaultFilter)) {
       // Refresh our list
-      this.controllerFor('list').refresh();
+      this.controllerFor('discoveryTopics').send('refresh');
       return true;
     }
 

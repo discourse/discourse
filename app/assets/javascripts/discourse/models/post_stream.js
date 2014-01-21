@@ -251,7 +251,7 @@ Discourse.PostStream = Em.Object.extend({
       self.setProperties({ loadingFilter: false, loaded: true });
 
       Discourse.URL.set('queryParams', self.get('streamFilters'));
-    }).fail(function(result) {
+    }).catch(function(result) {
       self.errorLoading(result);
     });
   },

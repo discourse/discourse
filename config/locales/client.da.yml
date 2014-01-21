@@ -612,11 +612,6 @@ da:
         starred: "Der er ikke flere favorit-emner."
         category: "Der er ikke flere emner i kategorien {{category}}."
 
-    rank_details:
-      toggle: vis/skjul detaljer om emnerang
-      show: vis detaljer om emnerang
-      title: Emnerang
-
     topic:
       filter_to: "Vis {{post_count}} indlæg i emnet"
       create: 'Opret emne'

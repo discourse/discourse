@@ -77,6 +77,9 @@ module PostGuardain
     # Can't delete after post_edit_time_limit minutes have passed
     return false if !is_staff? && post.edit_time_limit_expired?
 
+    # Can't delete posts in archived topics unless you are staff
+    return false if !is_staff? && post.topic.archived?
+
     # You can delete your own posts
     return !post.user_deleted? if is_my_own?(post)
 

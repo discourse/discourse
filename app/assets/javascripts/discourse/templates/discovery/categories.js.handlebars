@@ -13,7 +13,7 @@
       </thead>
       <tbody>
         {{#each model.categories}}
-        <tr data-category_id='{{unbound id}}' {{bindAttr class="description_excerpt:has-description:no-description"}}>
+        <tr data-category_id='{{unbound id}}' {{bind-attr class="description_excerpt:has-description:no-description"}}>
           <td class='category'>
             <div>
               <div class="pull-left">
@@ -47,7 +47,7 @@
               </div>
             {{/if}}
           </td>
-          <td {{bindAttr class="archived :latest"}}>
+          <td {{bind-attr class="archived :latest"}}>
             {{#each featuredTopics}}
               <div class="featured-topic">
                 {{topicStatus topic=this}}
@@ -74,7 +74,7 @@
               </div>
             {{/each}}
           </td>
-          <td class='stats' {{bindAttr title="topicStatsTitle"}}>
+          <td class='stats' {{bind-attr title="topicStatsTitle"}}>
             <table class="categoryStats">
               {{#each topicCountStats}}
                 <tr>
@@ -84,7 +84,7 @@
               {{/each}}
             </table>
           </td>
-          <td class='stats' {{bindAttr title="postStatsTitle"}}>
+          <td class='stats' {{bind-attr title="postStatsTitle"}}>
             <table class="categoryStats">
               {{#each postCountStats}}
                 <tr>

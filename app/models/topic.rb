@@ -82,7 +82,6 @@ class Topic < ActiveRecord::Base
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_users, through: :topic_allowed_users, source: :user
 
-  has_one :hot_topic
   has_one :top_topic
   belongs_to :user
   belongs_to :last_poster, class_name: 'User', foreign_key: :last_post_user_id

@@ -1,5 +1,5 @@
 <div class="staff-action-logs-controls">
-  <a {{action clearAllFilters}} {{bindAttr class=":clear-filters :filter filtersExists::invisible"}}>
+  <a {{action clearAllFilters}} {{bind-attr class=":clear-filters :filter filtersExists::invisible"}}>
     <span class="label">{{i18n admin.logs.staff_actions.clear_filters}}</span>
   </a>
   {{#if actionFilter}}
@@ -28,7 +28,7 @@
   {{/if}}
 </div>
 
-<div class="staff-action-logs-instructions" {{bindAttr class=":staff-action-logs-instructions showInstructions::invisible"}}>
+<div class="staff-action-logs-instructions" {{bind-attr class=":staff-action-logs-instructions showInstructions::invisible"}}>
   {{i18n admin.logs.staff_actions.instructions}}
 </div>
 

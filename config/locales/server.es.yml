@@ -331,7 +331,7 @@ es:
     post_undo_action_window_mins: "Número de segundos en los que a los usuarios se les permite revertir la acción en un post (like, flag, etc)"
     must_approve_users: "Los administradores deben aprovar a todos los usuarios antes de tener acceso"
     ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
-    top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|hot|read|starred|unread|new|posted|categories"
+    top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determinar que items aparecen en el menú de post y en qué orden. Ejemplo like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "Cuantos topics son cargados por defecto en la página de lista de topics"

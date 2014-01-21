@@ -599,7 +599,7 @@ da:
     ga_domain_name: "Google analytics domænenavn, f.eks.: example.com; se http://google.com/analytics."
     enable_escaped_fragments: "Aktivér workaround som kan hjælpe ældre webcrawlers med at indeksere sitet. ADVARSEL: aktivér kun hvis du har behov for det."
     enable_noscript_support: "Aktivér standard webcrawler søgemaskineunderstøttelse vha. noscript-tagget"
-    top_menu: "Angiv hvilke elementer der skal vises i hjemmesidenavigationen, og i hvilken rækkefølge. Eksempel: latest|hot|read|starred|unread|new|posted|categories."
+    top_menu: "Angiv hvilke elementer der skal vises i hjemmesidenavigationen, og i hvilken rækkefølge. Eksempel: latest|new|unread|starred|categories|top|read|posted."
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge. Eksempel twitter|facebook|google+|email."
     track_external_right_clicks: "Spor højreklik på eksterne links (f.eks.: åbn i ny tab); deaktiveret som standard fordi den omskriver URLer"
