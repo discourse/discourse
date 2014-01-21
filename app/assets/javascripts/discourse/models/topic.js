@@ -318,7 +318,11 @@ Discourse.Topic.reopenClass({
   **/
   findSimilarTo: function(title, body) {
     return Discourse.ajax("/topics/similar_to", { data: {title: title, raw: body} }).then(function (results) {
-      return results.map(function(topic) { return Discourse.Topic.create(topic); });
+      if (Array.isArray(results)) {
+        return results.map(function(topic) { return Discourse.Topic.create(topic); });
+      } else {
+        return Ember.A();
+      }
     });
   },
 
