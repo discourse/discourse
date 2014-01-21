@@ -107,9 +107,14 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   keyDown: function(e) {
-    // If the user hit ESC
     if (e.which === 27) {
+      // ESC
       this.get('controller').hitEsc();
+      return false;
+    } else if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
+      // CTRL+ENTER or CMD+ENTER
+      this.get('controller').send('save');
+      return false;
     }
   },
 
