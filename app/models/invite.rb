@@ -50,7 +50,15 @@ class Invite < ActiveRecord::Base
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
   def self.invite_by_email(email, invited_by, topic=nil)
     lower_email = Email.downcase(email)
-    invite = Invite.with_deleted.where('invited_by_id = ? and email = ?', invited_by.id, lower_email).first
+    invite = Invite.with_deleted
+                   .where('invited_by_id = ? and email = ?', invited_by.id, lower_email)
+                   .order('created_at DESC')
+                   .first
+
+    if invite && invite.expired?
+      invite.destroy
+      invite = nil
+    end
 
     if invite.blank?
       invite = Invite.create(invited_by: invited_by, email: lower_email)

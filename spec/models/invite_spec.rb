@@ -100,6 +100,15 @@ describe Invite do
           it 'matches case sensitively for the local part' do
             topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo').should_not == @invite
           end
+
+          it 'returns a new invite if the other has expired' do
+            SiteSetting.stubs(:invite_expiry_days).returns(1)
+            @invite.created_at = 2.days.ago
+            @invite.save
+            new_invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
+            new_invite.should_not == @invite
+            new_invite.should_not be_expired
+          end
         end
 
         context 'when adding to another topic' do

@@ -356,6 +356,7 @@ en:
         pending: "Pending Invites"
         topics_entered: "Topics Viewed"
         posts_read_count: "Posts Read"
+        expired: "This invite has expired."
         rescind: "Remove Invitation"
         rescinded: "Invite removed"
         time_read: "Read Time"
