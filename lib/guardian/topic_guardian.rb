@@ -27,18 +27,17 @@ module TopicGuardian
 
   # Creating Methods
   def can_create_topic?(parent)
-    user && user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i && can_create_post?(parent)
+    user &&
+    user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i &&
+    can_create_post?(parent)
   end
 
   def can_create_topic_on_category?(category)
-    can_create_topic?(nil) && (
-    !category ||
-    Category.topic_create_allowed(self).where(:id => category.id).count == 1
-    )
+    can_create_topic?(nil) &&
+    (!category || Category.topic_create_allowed(self).where(:id => category.id).count == 1)
   end
 
   def can_create_post_on_topic?(topic)
-
     # No users can create posts on deleted topics
     return false if topic.trashed?
 
