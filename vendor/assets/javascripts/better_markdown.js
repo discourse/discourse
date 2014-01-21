@@ -1005,7 +1005,12 @@
             } // tight_search
 
             if ( li_accumulate.length ) {
-              add( last_li, loose, this.processInline( li_accumulate ), nl );
+              var contents = this.processBlock(li_accumulate, []),
+                  firstBlock = contents[0];
+
+              firstBlock.shift();
+              contents.splice.apply(contents, [0, 1].concat(firstBlock));
+              add( last_li, loose, contents, nl );
 
               // Let's not creating a trailing \n after content in the li
               if(last_li[last_li.length-1] === "\n") {
