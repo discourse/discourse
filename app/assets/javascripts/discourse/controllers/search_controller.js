@@ -23,7 +23,7 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
 
   searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
     var searchController = this;
-    this.set('count', 0);
+    this.set('resultCount', 0);
 
     var searcher = Discourse.Search.forTerm(term, {
       typeFilter: typeFilter,
@@ -48,7 +48,7 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
             })
             .value();
 
-        searchController.set('count', index);
+        searchController.set('resultCount', index);
         searchController.set('content', results);
       }
 
