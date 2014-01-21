@@ -41,6 +41,9 @@
           {{else}}
             <td>{{unbound email}}</td>
             <td colspan='6'>
+              {{#if expired}}
+                {{i18n user.invited.expired}}
+              {{/if}}
               {{#if rescinded}}
                 {{i18n user.invited.rescinded}}
               {{else}}
