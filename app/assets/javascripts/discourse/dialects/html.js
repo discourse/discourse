@@ -29,7 +29,6 @@ Discourse.Dialect.registerBlock('html', function(block, next) {
 
   // Fix manual blockquote paragraphing even though it's not strictly correct
   if (block.search(/[^\s]+<blockquote/) === 0) {
-    console.log(/[^\s]+<blockquote/.exec(block));
     split = splitAtLast('blockquote', block, next, true);
     if (split) { return this.processInline(split[0]); }
   }
