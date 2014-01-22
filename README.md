@@ -26,32 +26,34 @@ If you're not here to hack on the open source code, but rather looking to set up
 
 ## Vision
 
-We think of Discourse as a **Civilized Discourse Construction Kit**, an open-source discussion platform that acts as a free, flexible, fundamental building block for online communities of any size, tiny to huge.
+Discourse is a **Civilized Discourse Construction Kit**, a free, flexible, fundamental building block for online discussion communities of any size, tiny to huge.
 
 Discourse is: 
 
-- A **flattened, endlessly scrolling discussion**, which avoids the awkwardness of traditionally threaded and paginated discussion, while still allowing replies to be expanded in place for context.
+- A **flattened, endlessly scrolling discussion**, avoiding the awkwardness of traditionally threaded and paginated discussion, where replies to be expanded in place for context.
 
-- A **user trust system** that grants users rights to assist in moderating the forum as they participate in good faith over time. The goal is for the forum to be nearly self-moderating in the absence of any formal moderators, although excellent moderators do accelerate the process greatly.
+- A **user trust system** that grants users rights to assist in governing the forum as they participate in good faith over time. The goal is for the forum to be nearly self-moderating in the absence of any formal moderators, although excellent moderators always accelerate the process greatly.
 
-- An **advanced JavaScript app** which runs in modern browsers and works identically on desktop and tablet, without the need for a native app.
+- An **advanced JavaScript app** which runs in modern browsers and works identically on desktop and tablet and smartphone without the need for a native app.
 
 - A **contemporary, robust technology stack**, free of legacy PHP and MySQL constraints.
 
-Our goal is to **foster an active community of contributors**, all of whom commit to free, simple, pleasant to use online discussion software that can thrive in an Internet age dominated by micro-blogging and diminishing attention spans. Internet discussion belongs to everyone, not just huge corporate websites.
+Internet discussion belongs to everyone, not just huge corporate websites. Our goal is to **foster an active community of contributors**, all of whom commit to free, simple, pleasant to use online discussion software that can thrive in an Internet age dominated by micro-blogging and diminishing attention spans. 
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
-1. Up-to-date desktop browsers:
+Up-to-date desktop browsers:
   - Internet Explorer 9.0 (may not be fully functional), 10.0+
   - Firefox 16+
   - Google Chrome 23+
   - Safari 5+
-2. Latest generation of tablets:
+
+Latest generation of tablets:
   - iPad 2+
   - Android 4.1+
   - Windows 8
-3. Modern mobile/smartphones:
+
+Modern mobile/smartphones:
   - iOS 6+
   - Android 4.1+
   - Windows Phone 8
