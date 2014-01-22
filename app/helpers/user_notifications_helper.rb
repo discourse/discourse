@@ -1,4 +1,12 @@
 module UserNotificationsHelper
+  
+  def self.sanitize_options
+    return @sanitize_options if @sanitize_options
+    @sanitize_options = Sanitize::Config::RELAXED.deep_dup
+    @sanitize_options[:elements] << 'aside' << 'div'
+    @sanitize_options[:attributes][:all] << 'class'
+    @sanitize_options
+  end
 
   def indent(text, by=2)
     spacer = " " * by
@@ -29,14 +37,25 @@ module UserNotificationsHelper
     "<a href='#{Discourse.base_url}'>#{@site_name}</a>"
   end
 
+  def first_paragraph_from(html)
+    doc = Nokogiri::HTML(html)
+    doc.css('p').each do |p|
+      return p if p.text.present?
+    end
+
+    # If there is no first paragaph, return the first div (onebox)
+    doc.css('div').first
+  end
+
   def email_excerpt(html, posts_count)
     # If there's only one post, include the whole thing.
     if posts_count == 1
-      return raw Sanitize.clean(html, Sanitize::Config::RELAXED)
+      raw Sanitize.clean(html, sanitize_options)
     else
       # Otherwise, try just the first paragraph.
-      first_paragraph = Nokogiri::HTML(html).at('p')
-      return raw Sanitize.clean(first_paragraph.to_s, Sanitize::Config::RELAXED)
+      para = first_paragraph_from(html)
+      Rails.logger.info ">>> #{para}"
+      raw Sanitize.clean(para.to_s, UserNotificationsHelper.sanitize_options)
     end
   end
 end
