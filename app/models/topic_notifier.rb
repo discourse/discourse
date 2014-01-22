@@ -14,8 +14,8 @@ class TopicNotifier
 
   end
 
-  def watch_topic!(user_id)
-    change_level user_id, :watching, :created_topic
+  def watch_topic!(user_id, reason = :created_topic)
+    change_level user_id, :watching, reason
   end
 
   # Enable/disable the mute on the topic
