@@ -527,6 +527,10 @@ class User < ActiveRecord::Base
     last_sent_email_address || email
   end
 
+  def leader_requirements
+    @lq ||= LeaderRequirements.new(self)
+  end
+
   protected
 
   def cook

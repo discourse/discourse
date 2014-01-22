@@ -189,12 +189,16 @@
       {{combobox content=trustLevels value=trust_level nameProperty="detailedName"}}
     </div>
     <div class="controls">
-    {{#if dirty}}
-      <div>
-      <button class='btn ok' {{action saveTrustLevel target="content"}}><i class='fa fa-check'></i></button>
-      <button class='btn cancel' {{action restoreTrustLevel target="content"}}><i class='fa fa-times'></i></button>
-      </div>
-    {{/if}}
+      {{#if leader_requirements}}
+        {{#link-to 'adminUser.leaderRequirements' this class="btn"}}{{i18n admin.user.trust_level_3_requirements}}{{/link-to}}
+      {{/if}}
+
+      {{#if dirty}}
+        <div>
+        <button class='btn ok' {{action saveTrustLevel target="content"}}><i class='fa fa-check'></i></button>
+        <button class='btn cancel' {{action restoreTrustLevel target="content"}}><i class='fa fa-times'></i></button>
+        </div>
+      {{/if}}
     </div>
   </div>
 

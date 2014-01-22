@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminUserController = Discourse.ObjectController.extend({
+Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
   editingTitle: false,
 
   showApproval: function() {

@@ -1,0 +1,64 @@
+<div class='admin-controls'>
+  <div class='span15'>
+    <ul class="nav nav-pills">
+      <li>{{#link-to 'adminUser' this}}{{i18n go_back}}{{/link-to}}</li>
+    </ul>
+  </div>
+</div>
+
+<div class="admin-container">
+  <h2>{{username}} - {{i18n admin.user.tl3_requirements.title}}</h2>
+  <br/>
+  <p>{{i18n admin.user.tl3_requirements.table_title}}</p>
+
+  {{#with leader_requirements}}
+    <table class="table" style="width: 50%;">
+      <tbody>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.visits}}</th>
+          <td>
+            <strong>{{days_visited_percent}}%</strong> ({{days_visited}} / {{time_period}} {{i18n admin.user.tl3_requirements.days}})
+          </td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.topics_with_replies}}</th>
+          <td>
+            {{num_topics_with_replies}}
+          </td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.topics_replied_to}}</th>
+          <td>
+            {{num_topics_replied_to}}
+          </td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.quality_content}}</th>
+          <td style="color: #ccc;">
+            TODO
+          </td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.reading}}</th>
+          <td  style="color: #ccc;">
+            TODO
+          </td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.site_promotion}}</th>
+          <td  style="color: #ccc;">
+            TODO
+          </td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.flagged_posts}}</th>
+          <td>
+            {{num_flagged_posts}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  {{/with}}
+</div>
+
+
