@@ -112,7 +112,7 @@ users:
     default: false
   enforce_global_nicknames: false
   discourse_org_access_key: ''
-  invite_expiry_days: 14
+  invite_expiry_days: 4
   username_change_period: 3
   email_editable: true
   enable_names:
