@@ -54,7 +54,6 @@ module UserNotificationsHelper
     else
       # Otherwise, try just the first paragraph.
       para = first_paragraph_from(html)
-      Rails.logger.info ">>> #{para}"
       raw Sanitize.clean(para.to_s, UserNotificationsHelper.sanitize_options)
     end
   end
