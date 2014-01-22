@@ -426,5 +426,7 @@ uncategorized:
   lounge_category_id:
     default: -1
     hidden: true
-
+  meta_category_id:
+    default: -1
+    hidden: true
 
