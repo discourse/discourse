@@ -28,8 +28,6 @@ If you're not here to hack on the open source code, but rather looking to set up
 
 Discourse is a **Civilized Discourse Construction Kit**, a free, flexible, fundamental building block for online discussion communities of any size, tiny to huge.
 
-Discourse is: 
-
 - A **flattened, endlessly scrolling discussion**, avoiding the awkwardness of traditionally threaded and paginated discussion, where replies to be expanded in place for context.
 
 - A **user trust system** that grants users rights to assist in governing the forum as they participate in good faith over time. The goal is for the forum to be nearly self-moderating in the absence of any formal moderators, although excellent moderators always accelerate the process greatly.
