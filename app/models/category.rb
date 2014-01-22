@@ -339,6 +339,16 @@ SQL
     [read_restricted, mapped]
   end
 
+  def self.query_parent_category(parent_slug)
+    self.where(slug: parent_slug).pluck(:id).first ||
+    self.where(id: parent_slug.to_i).pluck(:id).first
+  end
+
+  def self.query_category(slug, parent_category_id)
+    self.where(slug: slug, parent_category_id: parent_category_id).includes(:featured_users).first ||
+    self.where(id: slug.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+  end
+
   def uncatgorized?
     id == SiteSetting.uncategorized_category_id
   end
