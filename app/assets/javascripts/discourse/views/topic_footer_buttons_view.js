@@ -30,10 +30,8 @@ Discourse.TopicFooterButtonsView = Discourse.ContainerView.extend({
         this.attachViewClass(Discourse.ClearPinButton);
       }
       this.attachViewClass(Discourse.ReplyButton);
+      this.attachViewClass(Discourse.NotificationsButton);
 
-      if (!topic.get('isPrivateMessage')) {
-        this.attachViewClass(Discourse.NotificationsButton);
-      }
       this.trigger('additionalButtons', this);
     } else {
       // If not logged in give them a login control

@@ -715,15 +715,24 @@ en:
           "1_2": 'You will be notified only if someone mentions your @name or replies to your post.'
           "0": 'You are ignoring all notifications on this topic.'
           "0_2": 'You are ignoring all notifications on this topic.'
+        watching_pm:
+          title: "Watching"
+          description: "same as Tracking, plus you will be notified of all new posts."
         watching:
           title: "Watching"
           description: "same as Tracking, plus you will be notified of all new posts."
+        tracking_pm:
+          title: "Tracking"
+          description: "you will be notified of @name mentions and replies to your posts"
         tracking:
           title: "Tracking"
           description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
         regular:
           title: "Regular"
           description: "you will be notified only if someone mentions your @name or replies to your post."
+        muted_pm:
+          title: "Muted"
+          description: "you will not be notified of anything about this private message."
         muted:
           title: "Muted"
           description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
