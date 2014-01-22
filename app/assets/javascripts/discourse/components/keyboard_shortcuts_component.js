@@ -103,7 +103,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
-  _moveSelection: function(num) {
+  _moveSelection: function(direction) {
     var $articles = this._findArticles();
 
     if (typeof $articles === 'undefined') {
@@ -111,8 +111,12 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
 
     var $selected = $articles.filter('.selected'),
-        index = $articles.index($selected),
-        $article = $articles.eq(index + num);
+        index = $articles.index($selected);
+
+    // loop is not allowed
+    if (direction === -1 && index === 0) { return; }
+
+    var $article = $articles.eq(index + direction);
 
     if ($article.size() > 0) {
       $articles.removeClass('selected');
@@ -140,10 +144,10 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
-  _changeSection: function(num) {
+  _changeSection: function(direction) {
     var $sections = $('#navigation-bar').find('li'),
         index = $sections.index('.active');
 
-    $sections.eq(index + num).find('a').click();
+    $sections.eq(index + direction).find('a').click();
   }
 });
