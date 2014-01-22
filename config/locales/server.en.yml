@@ -192,7 +192,7 @@ en:
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
 
   meta_category_name: "Meta"
-  meta_category_description: "A category to discuss issues related to this forum"
+  meta_category_description: "Discussion about this forum, its organization, how it works, and how we can improve it."
 
   category:
     topic_prefix: "Category definition for %{category}"
