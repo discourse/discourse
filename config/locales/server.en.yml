@@ -191,6 +191,9 @@ en:
   vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
 
+  meta_category_name: "Meta"
+  meta_category_description: "A category to discuss issues related to this forum"
+
   category:
     topic_prefix: "Category definition for %{category}"
     replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters. Until you edit this text or create topics, this category won't appear on the categories page.]"
