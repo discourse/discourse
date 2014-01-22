@@ -4,8 +4,8 @@
 @import "common/foundation/mixins";
 
 // hack, this needs to be done cleaner
-.private-message input.span8 {
-  width: 47%;
+#private-message-users {
+  width: 400px;
 }
 
 .composer-popup-container {
