@@ -29,11 +29,12 @@ module DevCenter
 				event['page_url'] = req.base_url + req.path # Don't want url b/c that includes query_string
 				event['page_query_string'] = req.query_string
 				event['referrer_url'] = req.referer
-				
+				event['source_ip'] = req.ip
+
 				event['at'] = Time.now
 				event['event_type'] = 'PageVisit'
 				event['component'] = 'discussion'
-				
+
 				# If they're logged in
 				if(req.cookies['user_info'])
 					creds = ::HerokuCredentials.decrypt(req.cookies['user_info'])
@@ -42,7 +43,7 @@ module DevCenter
 				end
 
 				STDOUT.puts event.to_json
-			end			
+			end
 		end
 	end
 end
