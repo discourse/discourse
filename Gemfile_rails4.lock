@@ -123,8 +123,6 @@ GEM
     highline (1.6.20)
     hike (1.2.3)
     hiredis (0.4.5)
-    html_truncator (0.3.1)
-      nokogiri (~> 1.5)
     httpauth (0.2.0)
     i18n (0.6.9)
     ice_cube (0.11.1)
@@ -410,7 +408,6 @@ DEPENDENCIES
   handlebars-source (~> 1.1.2)
   highline
   hiredis
-  html_truncator
   image_optim
   image_sorcery
   librarian (>= 0.0.25)
