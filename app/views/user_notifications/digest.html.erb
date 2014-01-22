@@ -17,7 +17,7 @@
 
         <%- if t.best_post.present? %>
           <div class='digest-post'>
-            <%= email_excerpt(t.best_post.cooked) %>
+            <%= email_excerpt(t.best_post.cooked, @featured_topics.size) %>
           </div>
         <%- end %>
 
