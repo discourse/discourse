@@ -182,18 +182,17 @@ class ListController < ApplicationController
   private
 
   def set_category
-    slug_or_id = params.fetch(:category)
-    parent_slug_or_id = params[:parent_category]
-
+    slug = params.fetch(:category)
+    parent_slug = params[:parent_category]
     parent_category_id = nil
-    if parent_slug_or_id.present?
-      parent_category_id = Category.where(slug: parent_slug_or_id).pluck(:id).first ||
-                           Category.where(id: parent_slug_or_id.to_i).pluck(:id).first
+
+    if parent_slug.present?
+      parent_category_id = Category.query_parent_category(parent_slug)
+
       raise Discourse::NotFound.new if parent_category_id.blank?
     end
 
-    @category = Category.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
-                Category.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+    @category = Category.query_category(slug, parent_category_id)
 
     raise Discourse::NotFound.new if @category.blank?
   end
