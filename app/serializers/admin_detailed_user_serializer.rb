@@ -66,7 +66,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def include_leader_requirements?
-    object.trust_level == TrustLevel.levels[:regular]
+    object.has_trust_level?(:regular)
   end
 
 end

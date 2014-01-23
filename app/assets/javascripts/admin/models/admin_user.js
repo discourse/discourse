@@ -341,7 +341,13 @@ Discourse.AdminUser = Discourse.User.extend({
       model.setProperties(result);
       model.set('loadedDetails', true);
     });
-  }
+  },
+
+  leaderRequirements: function() {
+    if (this.get('leader_requirements')) {
+      return Discourse.LeaderRequirements.create(this.get('leader_requirements'));
+    }
+  }.property('leader_requirements')
 
 });
 
