@@ -509,11 +509,14 @@ iframe {
   }
 }
 
-
 .deleted {
   .topic-body {
   background-color: lighten(red, 45%);
   }
+}
+
+.post-hidden {
+  opacity: 0.5;
 }
 
 .moderator {

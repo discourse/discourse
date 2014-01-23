@@ -173,7 +173,10 @@ class UsersController < ApplicationController
       raise Discourse::InvalidParameters.new(:password) unless params[:password].present?
       @user.password = params[:password]
       @user.password_required!
-      logon_after_password_reset if @user.save
+      if @user.save
+        Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
+        logon_after_password_reset
+      end
     end
     render layout: 'no_js'
   end

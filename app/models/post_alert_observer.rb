@@ -63,6 +63,11 @@ class PostAlertObserver < ActiveRecord::Observer
       post.topic.all_allowed_users.reject{ |user| user.id == post.user_id }.each do |user|
         next if user.blank?
 
+        if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
+          next unless post.reply_to_post_number
+          next unless post.reply_to_post.user_id == user.id
+        end
+
         destroy_notifications(user, Notification.types[:private_message], post.topic)
         unread_post = first_unread_post(user,post.topic) || post
         create_notification(user, Notification.types[:private_message], unread_post)

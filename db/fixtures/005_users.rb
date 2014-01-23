@@ -22,4 +22,5 @@ User.seed do |u|
   u.email_direct = false
   u.approved = true
   u.email_private_messages = false
+  u.trust_level = TrustLevel.levels[:elder]
 end

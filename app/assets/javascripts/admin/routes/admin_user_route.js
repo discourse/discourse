@@ -38,3 +38,9 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
   }
 
 });
+
+Discourse.AdminUserIndexRoute = Discourse.Route.extend({
+  setupController: function(c) {
+    c.set('model', this.controllerFor('adminUser').get('model'));
+  }
+});

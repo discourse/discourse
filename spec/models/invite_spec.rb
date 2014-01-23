@@ -100,6 +100,15 @@ describe Invite do
           it 'matches case sensitively for the local part' do
             topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo').should_not == @invite
           end
+
+          it 'returns a new invite if the other has expired' do
+            SiteSetting.stubs(:invite_expiry_days).returns(1)
+            @invite.created_at = 2.days.ago
+            @invite.save
+            new_invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
+            new_invite.should_not == @invite
+            new_invite.should_not be_expired
+          end
         end
 
         context 'when adding to another topic' do
@@ -155,6 +164,11 @@ describe Invite do
 
     it 'wont redeem a deleted invite' do
       invite.destroy
+      invite.redeem.should be_blank
+    end
+
+    it "won't redeem an invalidated invite" do
+      invite.invalidated_at = 1.day.ago
       invite.redeem.should be_blank
     end
 
@@ -339,6 +353,30 @@ describe Invite do
 
       expect(invites).to have(1).items
       expect(invites.first).to eq redeemed_invite
+    end
+  end
+
+  describe '.invalidate_for_email' do
+    let(:email) { 'invite.me@example.com' }
+    subject { described_class.invalidate_for_email(email) }
+
+    it 'returns nil if there is no invite for the given email' do
+      subject.should == nil
+    end
+
+    it 'sets the matching invite to be invalid' do
+      invite = Fabricate(:invite, invited_by: Fabricate(:user), user_id: nil, email: email)
+      subject.should == invite
+      subject.link_valid?.should == false
+      subject.should be_valid
+    end
+
+    it 'sets the matching invite to be invalid without being case-sensitive' do
+      invite = Fabricate(:invite, invited_by: Fabricate(:user), user_id: nil, email: 'invite.me2@Example.COM')
+      result = described_class.invalidate_for_email('invite.me2@EXAMPLE.com')
+      result.should == invite
+      result.link_valid?.should == false
+      result.should be_valid
     end
   end
 end

@@ -246,6 +246,7 @@ en:
         in_progress: "(sending email)"
         error: "(error)"
         action: "Send Password Reset Email"
+        set_password: "Set Password"
 
       change_about:
         title: "Change About Me"
@@ -305,7 +306,7 @@ en:
       last_posted: "Last Post"
       last_emailed: "Last Emailed"
       last_seen: "Seen"
-      created: "Created At"
+      created: "Joined"
       log_out: "Log Out"
       website: "Web Site"
       email_settings: "Email"
@@ -355,6 +356,7 @@ en:
         pending: "Pending Invites"
         topics_entered: "Topics Viewed"
         posts_read_count: "Posts Read"
+        expired: "This invite has expired."
         rescind: "Remove Invitation"
         rescinded: "Invite removed"
         time_read: "Read Time"
@@ -713,15 +715,24 @@ en:
           "1_2": 'You will be notified only if someone mentions your @name or replies to your post.'
           "0": 'You are ignoring all notifications on this topic.'
           "0_2": 'You are ignoring all notifications on this topic.'
+        watching_pm:
+          title: "Watching"
+          description: "same as Tracking, plus you will be notified of all new posts."
         watching:
           title: "Watching"
           description: "same as Tracking, plus you will be notified of all new posts."
+        tracking_pm:
+          title: "Tracking"
+          description: "you will be notified of @name mentions and replies to your posts"
         tracking:
           title: "Tracking"
           description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
         regular:
           title: "Regular"
           description: "you will be notified only if someone mentions your @name or replies to your post."
+        muted_pm:
+          title: "Muted"
+          description: "you will not be notified of anything about this private message."
         muted:
           title: "Muted"
           description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
@@ -1475,6 +1486,18 @@ en:
         block_explanation: "A blocked user can't post or start topics."
         trust_level_change_failed: "There was a problem changing the user's trust level."
         suspend_modal_title: "Suspend User"
+        trust_level_3_requirements: "Trust Level 3 Requirements"
+        tl3_requirements:
+          title: "Requirements for Trust Level 3"
+          table_title: "In the last 100 days:"
+          visits: "Visits"
+          days: "days"
+          topics_with_replies: "Topics with Replies"
+          topics_replied_to: "Topics Replied To"
+          quality_content: "Quality Content"
+          reading: "Reading"
+          site_promotion: "Site Promotion"
+          flagged_posts: "Flagged Posts"
 
       site_content:
         none: "Choose a type of content to begin editing."

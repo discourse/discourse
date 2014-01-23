@@ -61,10 +61,11 @@
 
   Discourse.Dialect.registerInline(':', function(text, match, prev) {
     var endPos = text.indexOf(':', 1),
+        firstSpace = text.search(/\s/),
         contents;
 
     // If there is no trailing colon, check our translations that begin with colons
-    if (endPos === -1) {
+    if (endPos === -1 || (firstSpace !== -1 && endPos > firstSpace)) {
       translationColonRegexp.lastIndex = 0;
       var match = translationColonRegexp.exec(text);
       if (match && match[0]) {

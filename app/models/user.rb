@@ -260,6 +260,10 @@ class User < ActiveRecord::Base
     !!@password_required
   end
 
+  def has_password?
+    password_hash.present?
+  end
+
   def password_validator
     PasswordValidator.new(attributes: :password).validate_each(self, :password, @raw_password)
   end
@@ -521,6 +525,10 @@ class User < ActiveRecord::Base
 
   def find_email
     last_sent_email_address || email
+  end
+
+  def leader_requirements
+    @lq ||= LeaderRequirements.new(self)
   end
 
   protected
