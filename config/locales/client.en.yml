@@ -332,7 +332,7 @@ en:
           other: "they were posted in the last {{count}} days"
         after_n_weeks:
           one: "they were posted in the last week"
-          other: "they were posted in the last {{count}} week"
+          other: "they were posted in the last {{count}} weeks"
 
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
