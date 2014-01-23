@@ -20,6 +20,8 @@
         img  = document.createElement('img');
 
     if (self.canvas.getContext) {
+      img.crossOrigin = "anonymous";
+
       img.onload = function() {
         drawCanvas(self.canvas, self.opacity, self.font, img, normalize(count));
       };
