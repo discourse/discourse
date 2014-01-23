@@ -7,6 +7,18 @@
   @module Discourse
 **/
 Discourse.DiscoveryTopController = Discourse.DiscoveryController.extend({
+
+  actions: {
+    refresh: function() {
+      var self = this;
+      this.send('loading');
+      Discourse.TopList.find().then(function(top_lists) {
+        self.set('model', top_lists);
+        self.send('loadingComplete');
+      });
+    }
+  },
+
   redirectedToTopPageReason: function() {
     // no need for a reason if the default homepage is 'top'
     if (Discourse.Utilities.defaultHomepage() === 'top') { return null; }

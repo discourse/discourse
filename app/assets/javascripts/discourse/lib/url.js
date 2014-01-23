@@ -95,7 +95,7 @@ Discourse.URL = Em.Object.createWithMixins({
     window.location = Discourse.getURL(url);
   },
 
-  /** 
+  /**
    * Determines whether a URL is internal or not
    *
    * @method isInternal
@@ -188,11 +188,15 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
-    var defaultFilter = "/" + Discourse.Site.currentProp('filters')[0];
+    var homepage = Discourse.User.current() ? Discourse.User.currentProp('homepage') : Discourse.Utilities.defaultHomepage();
 
-    if (path === "/" && (oldPath === "/" || oldPath === defaultFilter)) {
-      // Refresh our list
-      this.controllerFor('discoveryTopics').send('refresh');
+    if (path === "/" && (oldPath === "/" || oldPath === "/" + homepage)) {
+      // refresh the list
+      switch (homepage) {
+        case "top" :       { this.controllerFor('discoveryTop').send('refresh'); break; }
+        case "categories": { this.controllerFor('discoveryCategories').send('refresh'); break; }
+        default:           { this.controllerFor('discoveryTopics').send('refresh'); break; }
+      }
       return true;
     }
 
