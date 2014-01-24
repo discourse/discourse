@@ -14,6 +14,11 @@ module Onebox
         result
       }
     end
+
+    def self.clean(html)
+      html.gsub(/<[^>]+>/, ' ').gsub(/\n/, '')
+    end
+
   end
 end
 

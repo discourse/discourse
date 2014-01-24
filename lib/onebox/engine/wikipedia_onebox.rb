@@ -31,12 +31,17 @@ module Onebox
         end
 
         text = "#{text[0..Onebox::LayoutSupport.max_text]}..." if text.length > Onebox::LayoutSupport.max_text
-        {
+        result = {
           link: link,
           title: raw.css("html body h1").inner_text,
-          image: raw.css(".infobox .image img").first["src"],
           description: text
         }
+        img = raw.css(".infobox .image img")
+        if img && img.first
+          result[:image] = img.first["src"]
+        end
+
+        result
       end
     end
   end

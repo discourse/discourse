@@ -3,8 +3,13 @@ module Onebox
     module HTML
       private
 
+      # Overwrite for any custom headers
+      def http_params
+        {}
+      end
+
       def raw
-        @raw ||= Nokogiri::HTML(open(url, read_timeout: timeout))
+        @raw ||= Nokogiri::HTML(open(url, {read_timeout: timeout}.merge(http_params)).read)
       end
 
       def html?

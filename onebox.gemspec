@@ -6,8 +6,8 @@ require 'onebox/version'
 Gem::Specification.new do |spec|
   spec.name          = "onebox"
   spec.version       = Onebox::VERSION
-  spec.authors       = ["Joanna Zeta", "Vyki Englert"]
-  spec.email         = ["holla@jzeta.com", "vyki.englert@gmail.com"]
+  spec.authors       = ["Joanna Zeta", "Vyki Englert", "Robin Ward"]
+  spec.email         = ["holla@jzeta.com", "vyki.englert@gmail.com", "robin.ward@gmail.com"]
   spec.description   = %q{A gem for turning URLs into previews.}
   spec.summary       = spec.description
   spec.homepage      = "https://github.com/dysania/onebox"
@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "multi_json", "~> 1.7"
   spec.add_runtime_dependency "mustache", "~> 0.99"
-  spec.add_runtime_dependency "nokogiri", "~> 1.4"
+  spec.add_runtime_dependency "nokogiri", "~> 1.6.1"
   spec.add_runtime_dependency "opengraph_parser", "~> 0.2.3"
   spec.add_runtime_dependency "hexpress", "~> 1.2"
   spec.add_runtime_dependency "moneta", "~> 0.7"
