@@ -7,6 +7,7 @@ describe Onebox::Engine::StackExchangeOnebox do
   end
 
   include_context "engines"
+  it_behaves_like "an engine"
 
   describe "#to_html" do
     it "includes question" do

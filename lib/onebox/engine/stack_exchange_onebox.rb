@@ -3,6 +3,7 @@ module Onebox
     class StackExchangeOnebox
       include Engine
       include LayoutSupport
+      include JSON
 
       def self.domains
         %w(stackexchange stackoverflow superuser serverfault askubuntu)
@@ -12,15 +13,12 @@ module Onebox
 
       private
 
-      def raw
-        return @raw if @raw
+      def match
+        @match ||= @url.match(@@matcher)
+      end
 
-        m = url.match(@@matcher)
-        if m && m[:question]
-          uri = URI(url)
-          json_url = "http://api.stackexchange.com/2.1/questions/#{m[:question]}?site=#{uri.host}"
-        end
-        @raw = ::MultiJson.load(open(json_url, read_timeout: timeout))
+      def url
+        "http://api.stackexchange.com/2.1/questions/#{match[:question]}?site=#{match[:domain]}"
       end
 
       def data
