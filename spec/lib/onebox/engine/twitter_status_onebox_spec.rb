@@ -7,7 +7,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
 
   shared_examples_for "#to_html" do
     it "includes tweet" do
-      expect(html).to include("I&#39;m a sucker for pledges.")
+      expect(html).to include("I'm a sucker for pledges.")
     end
 
     it "includes timestamp" do

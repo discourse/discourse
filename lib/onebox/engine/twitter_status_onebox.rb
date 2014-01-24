@@ -40,7 +40,7 @@ module Onebox
 
       def tweet
         if raw.html?
-          raw.css(".tweet-text").inner_text
+          raw.css(".tweet-text")[0].inner_text
         else
           access(:text)
         end
