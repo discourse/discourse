@@ -23,12 +23,8 @@ describe Onebox::Engine::GithubPullRequestOnebox do
       expect(html).to include("b3e9977094ce189bbb493cf7f9adea21")
     end
 
-    it "includes commit description" do
-      expect(html).to include("8168")
-    end
-
     it "includes commit time and date" do
-      expect(html).to include("2013-07-26T02:05:53Z")
+      expect(html).to include("02:05AM - 26 Jul 13")
     end
 
     it "includes number of commits" do

@@ -1,14 +1,21 @@
+{{#user.avatar_url}}
+  <a href="{{user.html_url}}" target="_blank">
+    <img alt="{{user.login}}" src="{{user.avatar_url}}">
+  </a>
+{{/user.avatar_url}}
 
-{{repo}}
-{{url}}
-{{author}}
-{{title}}
-<img src="{{gravatar}}" />
-{{time_date}}
-{{commits}}
-{{additions}}
-{{deletions}}
-{{changed_files}}
-{{description}}
+<h4>
+  <a href="{{html_url}}" target="_blank">{{title}}</a>
+</h4>
 
+<div class="date">
+  by <a href="{{user.html_url}}" target="_blank">{{user.login}}</a>
+  on <a href="{{html_url}}" target="_blank">{{created_at}}</a>
+</div>
 
+<div class="github-commit-stats">
+  <strong>{{commits}} commits</strong>
+  changed <strong>{{changed_files}} files</strong>
+  with <strong>{{additions}} additions</strong>
+  and <strong>{{deletions}} deletions</strong>.
+</div>
