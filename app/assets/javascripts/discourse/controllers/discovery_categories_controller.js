@@ -12,6 +12,15 @@ Discourse.DiscoveryCategoriesController = Discourse.DiscoveryController.extend({
   actions: {
     toggleOrdering: function(){
       this.set("ordering",!this.get("ordering"));
+    },
+
+    refresh: function() {
+      var self = this;
+      this.send('loading');
+      Discourse.CategoryList.list('categories').then(function(list) {
+        self.set('model', list);
+        self.send('loadingComplete');
+      });
     }
   },
 

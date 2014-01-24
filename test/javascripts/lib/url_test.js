@@ -16,15 +16,15 @@ test("isInternal with a HTTPS url", function() {
 });
 
 test("navigatedToHome", function() {
-  var fakeListController = { send: function() { return true; } };
-  var mock = sinon.mock(fakeListController);
-  this.stub(Discourse.URL, "controllerFor").returns(fakeListController);
+  var fakeDiscoveryController = { send: function() { return true; } };
+  var mock = sinon.mock(fakeDiscoveryController);
+  this.stub(Discourse.URL, "controllerFor").returns(fakeDiscoveryController);
 
   mock.expects("send").withArgs('refresh').twice();
   ok(Discourse.URL.navigatedToHome("/", "/"));
 
-  var defaultFilter = "/" + Discourse.Site.currentProp('filters')[0];
-  ok(Discourse.URL.navigatedToHome(defaultFilter, "/"));
+  var homepage = "/" + Discourse.Utilities.defaultHomepage();
+  ok(Discourse.URL.navigatedToHome(homepage, "/"));
 
   ok(!Discourse.URL.navigatedToHome("/old", "/new"));
 

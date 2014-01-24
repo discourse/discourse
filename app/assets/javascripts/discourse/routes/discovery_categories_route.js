@@ -25,7 +25,7 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend({
       }
       return list;
     });
-  }, 
+  },
 
   setupController: function(controller, model) {
     controller.set('model', model);

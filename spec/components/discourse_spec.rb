@@ -57,6 +57,11 @@ describe Discourse do
       Discourse.site_contact_user.should == another_admin
     end
 
+    it 'returns the user specified by the site setting site_contact_username regardless of its case' do
+      SiteSetting.stubs(:site_contact_username).returns(another_admin.username.upcase)
+      Discourse.site_contact_user.should == another_admin
+    end
+
     it 'returns the first admin user otherwise' do
       SiteSetting.stubs(:site_contact_username).returns(nil)
       Discourse.site_contact_user.should == admin
