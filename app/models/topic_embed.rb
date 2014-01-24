@@ -19,7 +19,12 @@ class TopicEmbed < ActiveRecord::Base
     # If there is no embed, create a topic, post and the embed.
     if embed.blank?
       Topic.transaction do
-        creator = PostCreator.new(user, title: title, raw: absolutize_urls(url, contents), skip_validations: true, cook_method: Post.cook_methods[:raw_html])
+        creator = PostCreator.new(user,
+                                  title: title,
+                                  raw: absolutize_urls(url, contents),
+                                  skip_validations: true,
+                                  cook_method: Post.cook_methods[:raw_html],
+                                  category: SiteSetting.embed_category)
         post = creator.create
         if post.present?
           TopicEmbed.create!(topic_id: post.topic_id,
