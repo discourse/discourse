@@ -12,6 +12,9 @@ require 'mocha/api'
 require_relative "support/html_spec_helper"
 
 RSpec.configure do |config|
+  config.before(:all) do
+    FakeWeb.allow_net_connect = false
+  end
   config.include HTMLSpecHelper
 end
 
