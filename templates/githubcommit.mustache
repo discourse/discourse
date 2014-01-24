@@ -1,12 +1,20 @@
-{{title}}
-{{owner}}/{{repository}}
-{{sha}}
-{{branch}}
+{{#author.avatar_url}}
+  <a href="{{author.html_url}}" target="_blank">
+    <img alt="{{author.login}}" src="{{author.avatar_url}}">
+  </a>
+{{/author.avatar_url}}
 
-<img src="{{gravatar}}" />
-{{message}}
-{{author}}
-{{time_date}}
-{{files_changed}} changed file
-{{additions}} additions
-{{deletions}} deletions
+<h4>
+  <a href="{{html_url}}" target="_blank">{{commit.message}}</a>
+</h4>
+
+<div class="date">
+  by <a href="{{author.html_url}}" target="_blank">{{author.login}}</a>
+  on <a href="{{html_url}}" target="_blank">{{commit_date}}</a>
+</div>
+
+<div class="github-commit-stats">
+  changed <strong>{{files.length}} files</strong>
+  with <strong>{{stats.additions}} additions</strong>
+  and <strong>{{stats.deletions}} deletions</strong>.
+</div>

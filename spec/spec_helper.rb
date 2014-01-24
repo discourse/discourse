@@ -20,7 +20,7 @@ shared_context "engines" do
     fake(@uri || @link, response(described_class.onebox_name))
     @onebox = described_class.new(@link)
     @html = @onebox.to_html
-    @data = @onebox.send(:data)
+    @data = Onebox::Helpers.symbolize_keys(@onebox.send(:data))
   end
   before(:each) { Onebox.options.cache.clear }
 

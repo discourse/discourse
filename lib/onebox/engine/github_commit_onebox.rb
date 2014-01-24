@@ -24,23 +24,13 @@ module Onebox
         @match ||= @url.match(%{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/commit/(?<sha>[^/]+)})
       end
 
-      # rubocop:disable MethodLength
       def data
-        {
-          link: link,
-          owner: match[:owner],
-          repository: match[:repository],
-          sha: raw["sha"],
-          gravatar: raw["author"]["avatar_url"],
-          title: raw["commit"]["message"],
-          author: raw["author"]["login"],
-          time_date: raw["commit"]["committer"]["date"],
-          files_changed: raw["files"].length,
-          additions: raw["stats"]["additions"],
-          deletions: raw["stats"]["deletions"]
-        }
+        result = raw.clone
+        result['link'] = link
+        result['title'] = result['commit']['message']
+        result['commit_date'] = Time.parse(result['commit']['author']['date']).strftime("%I:%M%p - %d %b %y")
+        result
       end
-      # rubocop:enable MethodLength
     end
   end
 end

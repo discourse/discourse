@@ -35,11 +35,11 @@ describe Onebox::Engine::GithubCommitOnebox do
     end
 
     it "includes commit time and date" do
-      expect(html).to include("2013-08-02T02:16:44Z")
+      expect(html).to include("02:03AM - 02 Aug 13")
     end
 
     it "includes number of files changed" do
-      expect(html).to include("1 changed file")
+      expect(html).to include("1 file")
     end
 
     it "includes number of additions" do
