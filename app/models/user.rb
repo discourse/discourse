@@ -281,14 +281,21 @@ class User < ActiveRecord::Base
     last_seen_at.present?
   end
 
-  def has_visit_record?(date)
+  def visit_record_for(date)
     user_visits.where(visited_at: date).first
   end
 
   def update_visit_record!(date)
-    unless has_visit_record?(date)
-      user_stat.update_column(:days_visited, user_stat.days_visited + 1)
-      user_visits.create!(visited_at: date)
+    create_visit_record!(date) unless visit_record_for(date)
+  end
+
+  def update_posts_read!(num_posts, now=Time.zone.now)
+    if user_visit = visit_record_for(now.to_date)
+      user_visit.posts_read += num_posts
+      user_visit.save
+      user_visit
+    else
+      create_visit_record!(now.to_date, num_posts)
     end
   end
 
@@ -554,6 +561,11 @@ class User < ActiveRecord::Base
 
   def create_email_token
     email_tokens.create(email: email)
+  end
+
+  def create_visit_record!(date, posts_read=0)
+    user_stat.update_column(:days_visited, user_stat.days_visited + 1)
+    user_visits.create!(visited_at: date, posts_read: posts_read)
   end
 
   def ensure_password_is_hashed
