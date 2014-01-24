@@ -271,7 +271,7 @@ en:
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
-        image_is_not_a_square: "Warning: we've cropped your image as it's not a square."
+        image_is_not_a_square: "Warning: we've cropped your image; it is not square."
 
       email:
         title: "Email"
@@ -1091,7 +1091,7 @@ en:
       with_category: "%{filter} %{category} Topics"
       latest:
         title: "Latest"
-        help: "the most recent topics"
+        help: "topics with recent posts"
       hot:
         title: "Hot"
         help: "a selection of the hottest topics"
@@ -1110,13 +1110,13 @@ en:
           zero: "Unread"
           one: "Unread (1)"
           other: "Unread ({{count}})"
-        help: "tracked topics with unread posts"
+        help: "topics you are watching or tracking with unread posts"
       new:
         title:
           zero: "New"
           one: "New (1)"
           other: "New ({{count}})"
-        help: "new topics since your last visit"
+        help: "topics created since your last visit"
       posted:
         title: "My Posts"
         help: "topics you have posted in"
