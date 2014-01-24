@@ -2,8 +2,7 @@ module Onebox
   module Engine
     class GithubGistOnebox
       include Engine
-      include LayoutSupport
-      include JSON
+      include IFrameSupport
 
       matches do
         http
@@ -16,20 +15,20 @@ module Onebox
         "https://api.github.com/gists/#{match[:sha]}"
       end
 
+      def to_html
+        "<script src=\"http://gist.github.com/#{match[:sha]}.js\"></script>"
+      end
+
       private
+
+      def data
+        { sha: match[:sha], title: match[:sha], link: @url }
+      end
 
       def match
         @match ||= @url.match(%r{gist\.github\.com/([^/]+/)?(?<sha>[0-9a-f]+)})
       end
 
-      def data
-        {
-          link: link,
-          title: raw["description"],
-          author: raw["user"]["login"],
-          sha: match[:sha]
-        }
-      end
     end
   end
 end

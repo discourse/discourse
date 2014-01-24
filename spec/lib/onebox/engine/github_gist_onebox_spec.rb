@@ -14,8 +14,8 @@ describe Onebox::Engine::GithubGistOnebox do
       expect(html).to include("153044e9bea3331cc103")
     end
 
-    it "includes author" do
-      expect(html).to include("anikalindtner")
+    it "includes script" do
+      expect(html).to include("script")
     end
   end
 end

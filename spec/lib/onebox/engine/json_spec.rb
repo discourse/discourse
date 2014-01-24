@@ -2,8 +2,8 @@ require "spec_helper"
 
 describe Onebox::Engine::JSON do
   before(:all) do
-    @link = "http://gist.github.com"
-    fake(@link, response("githubgist"))
+    @link = "http://stackoverflow.com"
+    fake(@link, response("stackexchange"))
   end
   before(:each) { Onebox.options.cache.clear }
 
@@ -18,7 +18,7 @@ describe Onebox::Engine::JSON do
     end
 
     it "returns a hash" do
-      object = OneboxEngineJSON.new("http://gist.github.com").send(:raw)
+      object = OneboxEngineJSON.new(@link).send(:raw)
       expect(object).to be_a(Hash)
     end
   end
