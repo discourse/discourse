@@ -74,7 +74,11 @@ module Onebox
       end
 
       def matches(&block)
-        class_variable_set :@@matcher, Hexpress.new(&block).to_r
+        matches_regexp(Hexpress.new(&block).to_r)
+      end
+
+      def matches_regexp(r)
+        class_variable_set :@@matcher, r
       end
 
       # calculates a name for onebox using the class name of engine

@@ -11,7 +11,7 @@ module Onebox
       @record = Onebox::Helpers.symbolize_keys(record)
 
       # Fix any relative paths
-      if record[:image] && record[:image] =~ /^\//
+      if record[:image] && record[:image] =~ /^\/[^\/]/
         record[:image] = "#{uri.scheme}://#{uri.host}/#{record[:image]}"
       end
 
@@ -52,9 +52,7 @@ module Onebox
     end
 
     def domain
-
       return record[:domain] if record[:domain]
-
       URI(link || '').host
     end
 

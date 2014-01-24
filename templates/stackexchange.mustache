@@ -1,3 +1,19 @@
+{{#owner.profile_image}}
+  <a href="{{owner.link}}" target="_blank">
+    <img alt="{{owner.display_name}}" src="{{owner.profile_image}}">
+  </a>
+{{/owner.profile_image}}
+<h4>
+  <a href="{{link}}" target="_blank">{{{title}}}</a>
+</h4>
 
+<div class="date">
+  asked by <a href="{{owner.link}}" target="_blank">
+    {{owner.display_name}}
+  </a>
+  on <a href="{{link}}" target="_blank">{{creation_date}}</a>
+</div>
 
-<p>{{question}}</p>
+<div>
+  <strong>{{tags}}</strong>
+</div>

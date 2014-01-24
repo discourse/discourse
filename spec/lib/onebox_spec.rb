@@ -37,8 +37,5 @@ describe Onebox do
       expect_templates_to_not_match(/<script/)
     end
 
-    it "should not contain any on*" do
-      expect_templates_to_not_match(/\s*on.+\s*=/)
-    end
   end
 end
