@@ -60,6 +60,7 @@ module Onebox
           indiatimes.com
           instagr.am
           instagram.com
+          itunes.apple.com
           khanacademy.org
           kickstarter.com
           kinomap.com
