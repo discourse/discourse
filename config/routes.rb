@@ -58,6 +58,7 @@ Discourse::Application.routes.draw do
       put "block"
       put "unblock"
       put "trust_level"
+      get "leader_requirements"
     end
 
     resources :impersonate, constraints: AdminConstraint.new

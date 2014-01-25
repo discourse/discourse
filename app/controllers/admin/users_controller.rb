@@ -161,6 +161,9 @@ class Admin::UsersController < Admin::AdminController
     end
   end
 
+  def leader_requirements
+  end
+
 
   private
 

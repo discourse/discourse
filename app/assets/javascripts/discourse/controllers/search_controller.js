@@ -17,6 +17,7 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
       this.searchTerm(term, this.get('typeFilter'));
     } else {
       this.set('content', Em.A());
+      this.set('resultCount', 0);
     }
     this.set('selectedIndex', 0);
   }.observes('term', 'typeFilter'),

@@ -583,8 +583,20 @@ describe TopicsController do
       end
 
       context 'and the user is not logged in' do
+        let(:api_key) { topic.user.generate_api_key(topic.user) }
+
         it 'redirects to the login page' do
           get :show, topic_id: topic.id, slug: topic.slug
+          expect(response).to redirect_to login_path
+        end
+
+        it 'shows the topic if valid api key is provided' do
+          get :show, topic_id: topic.id, slug: topic.slug, api_key: api_key.key
+          expect(response).to be_successful
+        end
+
+        it 'redirects to the login page if invalid key is provided' do
+          get :show, topic_id: topic.id, slug: topic.slug, api_key: "bad"
           expect(response).to redirect_to login_path
         end
       end
