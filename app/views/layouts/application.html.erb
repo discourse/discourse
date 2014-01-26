@@ -27,6 +27,8 @@
 
     <%= raw SiteContent.content_for(:head) %>
 
+    <%= render_google_universal_analytics_code %>
+
     <%= yield :head %>
   </head>
 
