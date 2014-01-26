@@ -192,6 +192,14 @@ module Discourse
 
   def self.current_user_provider=(val)
     @current_user_provider = val
+
+    # Needed for legacy current user providers that don't inherit from 
+    # Auth::CurrentUserProvider.
+    @current_user_provider.class_eval do
+      unless method_defined?(:current_user_wrapper)
+        define_method(:current_user_wrapper) { current_user }
+      end
+    end
   end
 
   def self.asset_host
