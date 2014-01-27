@@ -56,8 +56,8 @@ Discourse.Utilities = {
     return "<img width='" + size + "' height='" + size + "' src='" + url + "' class='" + classes + "'" + title + ">";
   },
 
-  tinyAvatar: function(avatarTemplate) {
-    return Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny' });
+  tinyAvatar: function(avatarTemplate, options) {
+    return Discourse.Utilities.avatarImg(_.merge({avatarTemplate: avatarTemplate, size: 'tiny' }, options));
   },
 
   postUrl: function(slug, topicId, postNumber) {
