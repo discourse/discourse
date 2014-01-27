@@ -42,7 +42,7 @@ module Onebox
 
     def record
       result = cache.fetch(url) { data } 
-      cache[url] = result if result.respond_to?(:key?)
+      cache[url] = result if cache.respond_to?(:key?)
       result
     end
 

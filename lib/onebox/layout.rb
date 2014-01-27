@@ -23,7 +23,7 @@ module Onebox
 
     def to_html
       result = cache.fetch(checksum) { render(details) }
-      cache[checksum] = result if result.respond_to?(:key?)
+      cache[checksum] = result if cache.respond_to?(:key?)
       result
     end
 
