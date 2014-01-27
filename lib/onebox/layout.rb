@@ -22,11 +22,7 @@ module Onebox
     end
 
     def to_html
-      if cache.key?(checksum)
-        cache.fetch(checksum)
-      else
-        cache.store(checksum, render(details))
-      end
+      cache.fetch(checksum) { render(details) }
     end
 
     private

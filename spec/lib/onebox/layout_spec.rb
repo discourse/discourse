@@ -64,11 +64,6 @@ describe Onebox::Layout do
       described_class.new("amazon", record, cache).to_html
     end
 
-    it "stores rendered template if it isn't cached" do
-      expect(cache).to receive(:store)
-      described_class.new("wikipedia", record, cache).to_html
-    end
-
     it "contains layout template" do
       expect(html).to include(%|class="onebox|)
     end
