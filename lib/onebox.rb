@@ -26,6 +26,11 @@ module Onebox
     OpenStruct.new(@@options)
   end
 
+  def self.has_matcher?(url)
+    result = Matcher.new(url).oneboxed
+    !!result
+  end
+
   def self.options=(options)
     @@options = DEFAULTS.merge(options)
   end

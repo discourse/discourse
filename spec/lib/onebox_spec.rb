@@ -36,6 +36,18 @@ describe Onebox do
     it "should not contain any script tags" do
       expect_templates_to_not_match(/<script/)
     end
+  end
 
+  describe 'has_matcher?' do
+    before do
+      Onebox::Engine::WhitelistedGenericOnebox.whitelist = %w(youtube.com)
+    end
+    it "has no matcher for a made up url" do
+      expect(Onebox.has_matcher?("http://wow.com/omg/doge")).to be_false
+    end
+
+    it "has a matcher for a real site" do
+      expect(Onebox.has_matcher?("http://www.youtube.com/watch?v=azaIE6QSMUs")).to be_true
+    end
   end
 end
