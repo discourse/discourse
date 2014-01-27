@@ -24,6 +24,12 @@ Discourse.DiscoveryCategoriesView = Discourse.View.extend({
     });
   },
 
+  _scrollTop: function() {
+    Em.run.schedule('afterRender', function() {
+      $(document).scrollTop(0);
+    });
+  }.on('didInsertElement'),
+
   disableOrdering: function(){
     this.rows().sortable("destroy").off('sortupdate');
   },
