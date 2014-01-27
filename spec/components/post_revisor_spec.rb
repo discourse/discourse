@@ -191,7 +191,9 @@ describe PostRevisor do
 
       before do
         SiteSetting.stubs(:newuser_max_images).returns(0)
-        subject.revise!(changed_by, "So, post them here!\nhttp://i.imgur.com/FGg7Vzu.gif")
+        url = "http://i.imgur.com/wfn7rgU.jpg"
+        Oneboxer.stubs(:onebox).with(url, anything).returns("<img src='#{url}'>")
+        subject.revise!(changed_by, "So, post them here!\n#{url}")
       end
 
       it "allows an admin to insert images into a new user's post" do
@@ -209,11 +211,11 @@ describe PostRevisor do
         SiteSetting.stubs(:newuser_max_images).returns(0)
         url = "http://i.imgur.com/FGg7Vzu.gif"
         # this test is problamatic, it leaves state in the onebox cache
-        Oneboxer.invalidate(url)
+        Oneboxer.stubs(:onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(post.user, "So, post them here!\n#{url}")
       end
 
-      it "allows an admin to insert images into a new user's post" do
+      it "doesn't allow images to be inserted" do
         post.errors.should be_present
       end
 
