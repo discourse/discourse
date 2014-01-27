@@ -92,7 +92,6 @@ end
 
 require_relative "helpers"
 require_relative "layout_support"
-require_relative "iframe_support"
 require_relative "engine/standard_embed"
 require_relative "engine/html"
 require_relative "engine/json"

@@ -2,7 +2,6 @@ module Onebox
   module Engine
     class GithubGistOnebox
       include Engine
-      include IFrameSupport
 
       matches do
         http
