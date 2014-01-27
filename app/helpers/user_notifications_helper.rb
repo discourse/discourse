@@ -50,7 +50,7 @@ module UserNotificationsHelper
   def email_excerpt(html, posts_count)
     # If there's only one post, include the whole thing.
     if posts_count == 1
-      raw Sanitize.clean(html, sanitize_options)
+      raw Sanitize.clean(html, UserNotificationsHelper.sanitize_options)
     else
       # Otherwise, try just the first paragraph.
       para = first_paragraph_from(html)
