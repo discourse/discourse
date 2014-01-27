@@ -7,11 +7,18 @@ module Onebox
       matches_regexp /^(https?:)?\/\/(maps\.google\.[\w.]{2,}|goo\.gl)\/maps?.+$/
 
       def url
-        @url.include?("//goo.gl/maps/") ? get_long_url : @url
+        @url = get_long_url if @url.include?("//goo.gl/maps/") 
+        @url
       end
 
       def to_html
         "<iframe src='#{url}&output=embed' width='690px' height='400px' frameborder='0' style='border:0'></iframe>" 
+      end
+
+      private 
+
+      def data
+        {link: url, title: url}
       end
 
       def get_long_url
@@ -22,7 +29,7 @@ module Onebox
         response = http.head(uri.path)
         response["Location"] if response.code == "301"
       rescue
-        nil
+        @url
       end
 
     end
