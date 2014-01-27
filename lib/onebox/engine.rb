@@ -41,11 +41,9 @@ module Onebox
     private
 
     def record
-      if cache.key?(url)
-        cache.fetch(url)
-      else
-        cache.store(url, data)
-      end
+      result = cache.fetch(url) { data } 
+      cache[url] = result if result.respond_to?(:key?)
+      result
     end
 
     # raises error if not defined in onebox engine
