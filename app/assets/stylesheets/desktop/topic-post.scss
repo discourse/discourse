@@ -458,7 +458,12 @@ iframe {
   border-top: 1px solid #ddd;
   padding-top: 30px;
 
-  img { text-align: center; }
+  img {
+    text-align: center;
+    width: 45px;
+    height: 45px;
+  }
+  
   .contents { text-align: center;}
   h3 { display: block; }
 
