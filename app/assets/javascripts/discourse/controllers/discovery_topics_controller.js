@@ -8,10 +8,6 @@
 **/
 Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
   actions: {
-    // Star a topic
-    toggleStar: function(topic) {
-      topic.toggleStar();
-    },
 
     // Show newly inserted topics
     showInserted: function() {

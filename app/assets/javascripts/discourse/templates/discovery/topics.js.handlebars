@@ -45,7 +45,7 @@
         </tbody>
       {{/if}}
 
-      {{collection contentBinding="topics" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
+      {{each topics itemController="topicListItem" itemViewClass="Discourse.TopicListItemView"}}
     </table>
   {{/if}}
 </div>

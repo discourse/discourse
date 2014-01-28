@@ -1,6 +1,6 @@
-{{#if controller.currentUser.id}}
+{{#if canStar}}
   <td class='star'>
-    <a {{bind-attr class=":star :fa :fa-star starred:starred"}} {{action toggleStar this}} href='#' {{bind-attr title="starTooltip"}}></a>
+    <a {{bind-attr class=":star :fa :fa-star starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="starTooltip"}}></a>
   </td>
 {{/if}}
 
@@ -30,10 +30,8 @@
   {{/if}}
 </td>
 
-{{#unless controller.hideCategory}}
-<td class='category'>
-  {{categoryLink category}}
-</td>
+{{#unless hideCategory}}
+<td class='category'>{{categoryLink category}}</td>
 {{/unless}}
 
 <td class='posters'>
