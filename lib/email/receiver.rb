@@ -138,10 +138,15 @@ module Email
     def create_new
       # Try to create a new topic with the body and subject
       # looking to config/discourse.conf to set category 
+      if defined? GlobalSetting.default_categories_id
+        @categoryID = 1
+      else 
+        @categoryID = GlobalSetting.default_categories_id
+      end
       creator = PostCreator.new(@user_info,
                                 title: @subject,
                                 raw: @body,
-                                category: GlobalSetting.default_categories_id,
+                                category: @categoryID,
                                 cooking_options: {traditional_markdown_linebreaks: true})
       creator.create
     end
