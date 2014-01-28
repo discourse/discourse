@@ -1,7 +1,13 @@
-{{#if canStar}}
+{{#if bulkSelectEnabled}}
   <td class='star'>
-    <a {{bind-attr class=":star :fa :fa-star starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="starTooltip"}}></a>
+    {{input type="checkbox" checked=checked}}
   </td>
+{{else}}
+  {{#if canStar}}
+    <td class='star'>
+      <a {{bind-attr class=":star :fa :fa-star starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="starTooltip"}}></a>
+    </td>
+  {{/if}}
 {{/if}}
 
 <td class='main-link clearfix'>

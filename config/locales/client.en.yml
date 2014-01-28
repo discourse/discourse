@@ -600,6 +600,8 @@ en:
         unstar: 'remove this topic from your starred list'
 
     topics:
+      toggle_bulk_select: "toggle bulk selection of topics"
+
       none:
         starred: "You haven't starred any topics yet. To star a topic, click or tap the star next to the title."
         unread: "You have no unread topics."

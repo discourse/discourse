@@ -7,8 +7,10 @@
   @module Discourse
 **/
 Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
-  actions: {
+  bulkSelectEnabled: false,
+  selected: [],
 
+  actions: {
     // Show newly inserted topics
     showInserted: function() {
       var tracker = Discourse.TopicTrackingState.current();
@@ -28,6 +30,11 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
         self.set('model', list);
         self.send('loadingComplete');
       });
+    },
+
+    toggleBulkSelect: function() {
+      this.toggleProperty('bulkSelectEnabled');
+      this.get('selected').clear();
     }
   },
 
@@ -35,6 +42,7 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
     return Discourse.TopicTrackingState.current();
   }.property(),
 
+  canBulkSelect: Em.computed.alias('currentUser.staff'),
   hasTopics: Em.computed.gt('topics.length', 0),
   showTable: Em.computed.or('hasTopics', 'topicTrackingState.hasIncoming'),
   allLoaded: Em.computed.empty('more_topics_url'),
