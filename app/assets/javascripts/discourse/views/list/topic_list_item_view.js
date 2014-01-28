@@ -25,7 +25,7 @@ Discourse.TopicListItemView = Discourse.GroupedView.extend({
       });
   },
 
-  didInsertElement: function() {
+  _highlightIfNeeded: function() {
     var session = Discourse.Session.current();
 
     // highligth the last topic viewed
@@ -37,6 +37,6 @@ Discourse.TopicListItemView = Discourse.GroupedView.extend({
       this.set('content.highlight', false);
       this.highlight();
     }
-  }
+  }.on('didInsertElement')
 
 });
