@@ -496,7 +496,7 @@ fr:
       reply_here: "Répondre ici"
       reply: "Répondre"
       cancel: "Annuler"
-      create_topic: "Créer une Discussion"
+      create_topic: "Créer une discussion"
       create_pm: "Créer un Message Privé"
 
       users_placeholder: "Ajouter un utilisateur"
@@ -626,7 +626,7 @@ fr:
       unread_topics:
         one: '1 discussion non lue'
         other: '{{count}} discussions non lues'
-      title: 'discussions'
+      title: 'Discussion'
       loading_more: "Chargement de discussions supplémentaires..."
       loading: 'Chargement des discussions en cours...'
       invalid_access:
@@ -1064,7 +1064,7 @@ fr:
         title: "Populaires"
         help: "discussions populaires"
       starred:
-        title: "Ajouté à vos Favoris"
+        title: "Favoris"
         help: "discussions que vous avez ajoutées à vos favoris"
       read:
         title: "Lues"
