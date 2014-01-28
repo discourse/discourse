@@ -1028,4 +1028,26 @@ describe User do
 
   end
 
+  describe "update_posts_read!" do
+    context "with a UserVisit record" do
+      let!(:user) { Fabricate(:user) }
+      let!(:now)  { Time.zone.now }
+      before { user.update_last_seen!(now) }
+
+      it "with existing UserVisit record, increments the posts_read value" do
+        expect {
+          user_visit = user.update_posts_read!(2)
+          user_visit.posts_read.should == 2
+        }.to_not change { UserVisit.count }
+      end
+
+      it "with no existing UserVisit record, creates a new UserVisit record and increments the posts_read count" do
+        expect {
+          user_visit = user.update_posts_read!(3, 5.days.ago)
+          user_visit.posts_read.should == 3
+        }.to change { UserVisit.count }.by(1)
+      end
+    end
+  end
+
 end

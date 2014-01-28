@@ -24,8 +24,7 @@ class LeaderRequirements
   end
 
   def days_visited
-    # This is naive. The user may have visited the site, but not read any posts.
-    @user.user_visits.where("visited_at > ?", time_period.days.ago).count
+    @user.user_visits.where("visited_at > ? and posts_read > 0", time_period.days.ago).count
   end
 
   def min_days_visited

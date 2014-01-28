@@ -23,18 +23,18 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
   }.observes('term', 'typeFilter'),
 
   searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
-    var searchController = this;
-    this.set('resultCount', 0);
+    var self = this;
+    self.set('resultCount', 0);
 
     var searcher = Discourse.Search.forTerm(term, {
       typeFilter: typeFilter,
-      searchContext: searchController.get('searchContext')
+      searchContext: self.get('searchContext')
     });
 
     return searcher.then(function(results) {
-      searchController.set('results', results);
+      self.set('results', results);
       if (results) {
-        searchController.set('noResults', results.length === 0);
+        self.set('noResults', results.length === 0);
 
         var index = 0;
         results = _(['topic', 'category', 'user'])
@@ -49,11 +49,11 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
             })
             .value();
 
-        searchController.set('resultCount', index);
-        searchController.set('content', results);
+        self.set('resultCount', index);
+        self.set('content', results);
       }
 
-      searchController.set('loading', false);
+      self.set('loading', false);
     });
   }, 300),
 

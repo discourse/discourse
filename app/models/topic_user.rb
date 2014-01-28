@@ -199,7 +199,9 @@ SQL
         before_last_read = rows[0][2].to_i
 
         if before_last_read < post_number
+          # The user read at least one new post
           TopicTrackingState.publish_read(topic_id, post_number, user.id)
+          user.update_posts_read!(post_number - before_last_read)
         end
 
         if before != after
@@ -208,7 +210,9 @@ SQL
       end
 
       if rows.length == 0
+        # The user read at least one post in a topic that they haven't viewed before.
         TopicTrackingState.publish_read(topic_id, post_number, user.id)
+        user.update_posts_read!(post_number)
 
         args[:tracking] = notification_levels[:tracking]
         args[:regular] = notification_levels[:regular]

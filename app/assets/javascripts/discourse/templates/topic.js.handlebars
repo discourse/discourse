@@ -19,6 +19,9 @@
             <button class='btn btn-small' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
           {{else}}
             <h1>
+              {{#if category.parentCategory}}
+                {{boundCategoryLink category.parentCategory}}
+              {{/if}}
               {{boundCategoryLink category}}
               {{#if details.loaded}}
                 {{topicStatus topic=model}}

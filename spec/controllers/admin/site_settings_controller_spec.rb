@@ -25,6 +25,10 @@ describe Admin::SiteSettingsController do
 
     context 'update' do
 
+      before do
+        SiteSetting.setting(:test_setting, "default")
+      end
+
       it 'sets the value when the param is present' do
         SiteSetting.expects(:'test_setting=').with('hello').once
         xhr :put, :update, id: 'test_setting', test_setting: 'hello'
@@ -40,6 +44,12 @@ describe Admin::SiteSettingsController do
         SiteSetting.expects(:'test_setting=').with('hello').once
         StaffActionLogger.any_instance.expects(:log_site_setting_change).with('test_setting', 'previous', 'hello')
         xhr :put, :update, id: 'test_setting', test_setting: 'hello'
+      end
+
+      it 'fails when a setting does not exist' do
+        expect {
+          xhr :put, :update, id: 'provider', provider: 'gotcha'
+        }.to raise_error(ArgumentError)
       end
     end
 

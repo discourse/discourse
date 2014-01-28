@@ -10,6 +10,9 @@
             <a {{bind-attr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
           {{/if}}
           <h1>
+          {{#if topic.category.parentCategory}}
+            {{boundCategoryLink topic.category.parentCategory}}
+          {{/if}}
           {{boundCategoryLink topic.category}}
           {{#if topic.details.loaded}}
             {{topicStatus topic=topic}}

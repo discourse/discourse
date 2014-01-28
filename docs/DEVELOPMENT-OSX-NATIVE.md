@@ -101,7 +101,29 @@ OS X ships with Postgres 9.1.5, but you're better off going with the latest from
 
 ### Using Postgres.app
 
-[Instructions pending]
+After installing the [Postgres93 App](http://postgresapp.com/), there is some additional setup that is necessary for discourse to create a database on your machine.
+
+Open this file:
+```
+~/Library/Application Support/Postgres93/var/postgresql.conf
+```
+And change these two lines so that postgres will create a socket in the folder discourse expects it to:
+```
+unix_socket_directories = '/var/pgsql_socket'»# comma-separated list of directories
+#and
+unix_socket_permissions = 0777»·»·# begin with 0 to use octal notation
+```
+Then create the '/var/pgsql/' folder and set up the appropriate permission in your bash (this requires admin access)
+```
+sudo mkdir /var/pgsql_socket
+sudo chmod 770 /var/pgsql_socket
+sudo chown root:staff /var/pgsql_socket
+```
+Now you can restart Postgres.app and it will use this socket. Make sure you not only restart the app but kill any processes that may be left behind. You can view these processes with this bash command:
+```
+netstat -ln | grep PGSQL
+```
+And you should be good to go!
 
 ### Using Homebrew:
 

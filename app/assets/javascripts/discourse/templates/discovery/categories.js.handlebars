@@ -41,8 +41,14 @@
             {{#if subcategories}}
               <div class='subcategories'>
                 {{i18n categories.subcategories}}
-                {{#each subcategory in subcategories}}
-                  {{categoryLink subcategory}}
+                {{#each subcategories}}
+                  {{categoryLink this}}
+                  {{#if unreadTopics}}
+                    <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
+                  {{/if}}
+                  {{#if newTopics}}
+                    <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='fa fa-asterisk'></i></a>
+                  {{/if}}
                 {{/each}}
               </div>
             {{/if}}
