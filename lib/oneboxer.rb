@@ -1,3 +1,8 @@
+
+Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].each {|f|
+  require_dependency(f.split('/')[-3..-1].join('/'))
+}
+
 module Oneboxer
 
 
@@ -26,14 +31,14 @@ module Oneboxer
     Onebox.preview(url, cache: Rails.cache).to_s
   end
 
-  def self.oneboxer_exists_for_url?(url) 
+  def self.oneboxer_exists_for_url?(url)
     Onebox.has_matcher?(url)
   end
 
-  def self.invalidate(url) 
+  def self.invalidate(url)
     Rails.cache.delete(url)
   end
-  
+
   # Parse URLs out of HTML, returning the document when finished.
   def self.each_onebox_link(string_or_doc)
     doc = string_or_doc
