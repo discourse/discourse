@@ -3,12 +3,14 @@
 #
 require 'net/pop'
 require_dependency 'email/receiver'
+require_dependency 'email/sender'
 require_dependency 'email/message_builder'
 
 module Jobs
   class PollMailbox < Jobs::Scheduled
     recurrence { hourly.minute_of_hour(0,5,10,15,20,25,30,35,40,45,50,55) }
     sidekiq_options retry: false
+    include Email::BuildEmailHelper
 
     def execute(args)
       if SiteSetting.pop3s_polling_enabled?
@@ -27,10 +29,11 @@ module Jobs
             if Email::Receiver.new(mail.pop).process == Email::Receiver.results[:processed]
               mail.delete
             else
-                @message = Mail::Message.new(@raw)
+                @message = Mail::Message.new(mail.pop)
                 # One for you (mod), and one for me (sender)
-                GroupMessage.create(Group[:moderators].name, :email_reject_notification, {limit_once_per: false})
-                 build_email(@message.from.first, template: 'email_reject_notification', email: @message)
+                GroupMessage.create(Group[:moderators].name, :email_reject_notification, {limit_once_per: false, message_params: {from: @message.from, body: @message.body}})
+                clientMessage = RejectionMailer.send_rejection(@message.from, @message.body)
+                Email::Sender.new(clientMessage, :email_reject_notification).send
             end
           end
         end
