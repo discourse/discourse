@@ -751,7 +751,7 @@ fr:
         title: 'Inviter des amis à répondre'
         action: 'Envoyer l''invitation'
         help: 'envoyer des invitations à des amis pour qu''ils puissent participer à cette discussion en un simple clic'
-        to_topic: "Nous allons envoyer un mail à votre ami pour lui permettre de participer à cette conversation juste en cliquant sur un lien, sans qu'il ait à se connecter."
+        to_topic: "Nous allons envoyer un mail à votre ami pour lui permettre de participer à cette discussion juste en cliquant sur un lien, sans qu'il ait à se connecter."
         to_forum: "Nous allons envoyer un mail à votre ami pour lui permettre de participer au forum juste en cliquant sur un lien."
         email_placeholder: 'adresse email'
         success: "Merci ! Nous avons envoyé un mail à <b>{{email}}</b>. Nous vous informerons lorsqu'ils auront retourné votre invitation. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
@@ -801,7 +801,7 @@ fr:
       post_number: "message {{number}}"
       in_reply_to: "Réponse courte"
       last_edited_on: "message dernièrement édité le"
-      reply_as_new_topic: "Répondre dans une nouvelle conversation"
+      reply_as_new_topic: "Répondre dans une nouvelle discussion"
       continue_discussion: "Continuer la discussion suivante {{postLink}}:"
       follow_quote: "Voir le message cité"
       deleted_by_author:
@@ -874,8 +874,8 @@ fr:
           inappropriate: "{{icons}} l'ont signalé comme inapproprié"
           notify_moderators: "{{icons}} l'ont signalé pour modération"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>l'ont signalé pour modération</a>"
-          notify_user: "{{icons}} ont démarré une conversation privée"
-          notify_user_with_url: "{{icons}} ont démarré une <a href='{{postUrl}}'>conversation privée</a>"
+          notify_user: "{{icons}} ont démarré une discussion privée"
+          notify_user_with_url: "{{icons}} ont démarré une <a href='{{postUrl}}'>discussion privée</a>"
           bookmark: "{{icons}} l'ont ajouté à leurs signets"
           like: "{{icons}} l'ont aimé"
           vote: "{{icons}} ont voté pour"
@@ -884,7 +884,7 @@ fr:
           spam: "Vous l'avez signalé comme étant du spam"
           inappropriate: "Vous l'avez signalé comme inapproprié"
           notify_moderators: "Vous l'avez signalé pour modération"
-          notify_user: "Vous avez démarré une conversation privée avec cet utilisateur"
+          notify_user: "Vous avez démarré une discussion privée avec cet utilisateur"
           bookmark: "Vous l'avez ajouté à vos signets"
           like: "Vous l'avez aimé"
           vote: "Vous avez voté pour"
@@ -902,8 +902,8 @@ fr:
             one: "Vous et 1 autre personne l'avez signalé pour modération"
             other: "Vous et {{count}} autres personnes l'avez signalé pour modération"
           notify_user:
-            one: "Vous et 1 autre personne avez démarré une conversation privée avec cet utilisateur"
-            other: "Vous et {{count}} autres personnes avez démarré une conversation privée avec cet utilisateur"
+            one: "Vous et 1 autre personne avez démarré une discussion privée avec cet utilisateur"
+            other: "Vous et {{count}} autres personnes avez démarré une discussion privée avec cet utilisateur"
           bookmark:
             one: "Vous et 1 autre personne l'avez ajouté à vos signets"
             other: "Vous et {{count}} autres personnes l'avez ajouté à vos signets"
@@ -927,8 +927,8 @@ fr:
             one: "1 personne a signalé ceci pour modération"
             other: "{{count}} personnes ont signalé pour modération"
           notify_user:
-            one: "1 personne a démarré une conversation privée avec cet utilisateur"
-            other: "{{count}} personnes ont démarré une conversation privée avec cet utilisateur"
+            one: "1 personne a démarré une discussion privée avec cet utilisateur"
+            other: "{{count}} personnes ont démarré une discussion privée avec cet utilisateur"
           bookmark:
             one: "1 personne a ajouté ceci à ses signets"
             other: "{{count}} personnes ont ajouté ceci à leurs signets"
