@@ -936,7 +936,6 @@ cs:
       list: "Seznam kategorií"
       no_description: "K této kategorii zatím není žádný popis."
       change_in_category_topic: "navštivte téma kategorie pro editaci jejího popisu"
-      hotness: "Popularita"
       already_used: 'Tato barva je již použita jinou kategorií'
       security: "Bezpečnost"
       auto_close_label: "Automaticky zavírat témata po:"

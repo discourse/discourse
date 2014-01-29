@@ -997,7 +997,6 @@ fr:
       list: "Liste des catégories"
       no_description: "Il n'y a pas de description pour cette catégorie."
       change_in_category_topic: "Editer la description"
-      hotness: "Buzz"
       already_used: 'Cette couleur est déjà utilisée par une autre catégorie'
       security: "Sécurité"
       auto_close_label: "Fermer automatiquement après :"

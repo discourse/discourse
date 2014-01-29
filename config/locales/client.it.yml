@@ -903,7 +903,6 @@ it:
       list: "Lista Categorie"
       no_description: "Nessuna descrizione per questa categoria."
       change_in_category_topic: "Modifica Descrizione"
-      hotness: "Hotness"
       already_used: "Questo colore è già in uso da un'altra categoria"
       is_secure: "Categoria protetta?"
       add_group: "Aggiungi Gruppo"

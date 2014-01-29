@@ -1028,7 +1028,6 @@ en:
       list: "List Categories"
       no_description: "There is no description for this category, edit the topic definition."
       change_in_category_topic: "Edit Description"
-      hotness: "Hotness"
       already_used: 'This color has been used by another category'
       security: "Security"
       auto_close_label: "Auto-close topics after:"

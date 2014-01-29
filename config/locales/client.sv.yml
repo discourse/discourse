@@ -993,7 +993,6 @@ sv:
       list: "Lista Kategorier"
       no_description: "Det finns ingen beskrivning för denna kategori."
       change_in_category_topic: "besök kategorins tråd för att ändra beskrivning"
-      hotness: "Hethet"
       already_used: 'Den här färgen används till en annan kategori'
       security: "Säkerhet"
       auto_close_label: "Stäng trådar automatiskt efter:"

@@ -1016,7 +1016,6 @@ zh_CN:
       list: "列出分类"
       no_description: "本分类没有描述信息。"
       change_in_category_topic: "访问分类主题来编辑描述信息"
-      hotness: "热度"
       already_used: '此色彩已经被另一个分类使用'
       security: "安全"
       auto_close_label: "该时间段后自动关闭主题："

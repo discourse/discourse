@@ -362,7 +362,6 @@ end
 #  slug               :string(255)      not null
 #  description        :text
 #  text_color         :string(6)        default("FFFFFF"), not null
-#  hotness            :float            default(5.0), not null
 #  read_restricted    :boolean          default(FALSE), not null
 #  auto_close_hours   :float
 #  post_count         :integer          default(0), not null

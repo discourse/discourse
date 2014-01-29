@@ -189,8 +189,6 @@ describe Category do
     it 'is created correctly' do
       @category.slug.should == 'amazing-category'
 
-      @category.hotness.should == 5.0
-
       @category.description.should be_blank
 
       Topic.where(category_id: @category).count.should == 1

@@ -929,7 +929,6 @@ de:
       list: "Kategorien auflisten"
       no_description: "Es gibt keine Beschreibung zu dieser Kategorie."
       change_in_category_topic: "Besuche die Themen dieser Kategorie um einen Eindruck für eine gute Beschreibung zu gewinnen."
-      hotness: "Beliebtheit"
       already_used: 'Diese Farbe wird bereits für eine andere Kategorie verwendet'
       security: "Sicherheit"
       auto_close_label: "Thema automatisch schließen nach:"

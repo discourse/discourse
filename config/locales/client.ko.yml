@@ -959,7 +959,6 @@ ko:
       list: "카테고리 목록"
       no_description: "이 카테고리에 대한 설명이 없습니다."
       change_in_category_topic: "설명 편집"
-      hotness: "활발한"
       already_used: '이 색은 다른 카테고리에서 사용되고 있습니다.'
       security: "보안"
       auto_close_label: "토픽 자동 닫기 :"

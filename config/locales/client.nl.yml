@@ -1019,7 +1019,6 @@ nl:
       list: Lijst van categorieën
       no_description: Er is geen omschrijving voor deze categorie
       change_in_category_topic: Wijzig omschrijving
-      hotness: Populariteit
       already_used: Deze kleur is al in gebruik door een andere categorie
       security: Beveiliging
       auto_close_label: "Sluit topics automatisch na:"

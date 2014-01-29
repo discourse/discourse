@@ -1011,7 +1011,6 @@ da:
       list: "Kategoriliste"
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "besøg kategoriemnet for at redigere beskrivelsen"
-      hotness: "Popularitet"
       already_used: 'This color has been used by another category'
       security: "Sikkerhed"
       auto_close_label: "Luk automatisk emner efter:"

@@ -1005,7 +1005,6 @@ zh_TW:
       list: "列出分類"
       no_description: "此類別沒有描述，請編輯主題定義。"
       change_in_category_topic: "編輯描述"
-      hotness: "熱度"
       already_used: '此顏色已經用於其它類別'
       security: "安全性"
       auto_close_label: "自動關閉主題的期限:"
