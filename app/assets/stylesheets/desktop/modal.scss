@@ -251,6 +251,10 @@
   p {
     margin-top: 0;
   }
+  .modal-body {
+    height: 420px;
+    max-height: 420px;
+  }
 }
 .tabbed-modal {
   .modal-body {

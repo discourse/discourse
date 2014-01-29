@@ -382,6 +382,16 @@ Discourse.Topic.reopenClass({
       promise.reject(new Error("error moving posts topic"));
     });
     return promise;
+  },
+
+  bulkOperation: function(topics, operation) {
+    return Discourse.ajax("/topics/bulk", {
+      type: 'PUT',
+      data: {
+        topic_ids: topics.map(function(t) { return t.get('id'); }),
+        operation: operation
+      }
+    });
   }
 
 });

@@ -242,6 +242,7 @@ Discourse::Application.routes.draw do
   post "t" => "topics#create"
   put "t/:id" => "topics#update"
   delete "t/:id" => "topics#destroy"
+  put "topics/bulk"
   post "topics/timings"
   get "topics/similar_to"
   get "topics/created-by/:username" => "list#topics_by", as: "topics_by", constraints: {username: USERNAME_ROUTE_FORMAT}

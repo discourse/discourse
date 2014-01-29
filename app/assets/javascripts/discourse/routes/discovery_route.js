@@ -37,9 +37,14 @@ Discourse.DiscoveryRoute = Discourse.Route.extend({
       });
     },
 
+    changeBulkTemplate: function(w) {
+      this.render(w, {into: 'topicBulkActions', outlet: 'bulkOutlet', controller: 'topicBulkActions'});
+    },
+
     showBulkActions: function() {
       var selected = this.controllerFor('discoveryTopics').get('selected');
       Discourse.Route.showModal(this, 'topicBulkActions', selected);
+      this.send('changeBulkTemplate', 'modal/bulk_actions_buttons');
     }
   }
 });

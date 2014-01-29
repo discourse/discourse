@@ -19,7 +19,8 @@ class TopicsController < ApplicationController
                                           :move_posts,
                                           :merge_topic,
                                           :clear_pin,
-                                          :autoclose]
+                                          :autoclose,
+                                          :bulk]
 
   before_filter :consider_user_for_promotion, only: :show
 
@@ -264,6 +265,11 @@ class TopicsController < ApplicationController
     @topic_view = TopicView.new(params[:topic_id])
     discourse_expires_in 1.minute
     render 'topics/show', formats: [:rss]
+  end
+
+  def bulk
+    topic_ids = params.require(:topic_ids).map {|t| t.to_i}
+    render_json_dump topic_ids: topic_ids
   end
 
   private

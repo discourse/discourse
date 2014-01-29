@@ -69,9 +69,6 @@
     &:nth-child(even) {
       background-color: #f8f8f8;
     }
-    &.checked {
-      background-color: $highlight;
-    }
     &.archived a {
       opacity: 0.6;
     }
