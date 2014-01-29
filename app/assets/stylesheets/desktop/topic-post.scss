@@ -669,25 +669,27 @@ blockquote { /* solo quotes */
   float: left;
   max-width: 250px;
   width: 15%;
+  margin-top: 6px;
       ul {margin: 0;}
       padding-left: 10px;
 
   i {font-size: 12px;}
 
   .post-links {
-    margin-top: 3px;
     list-style-type: none;
     padding-left: 19px;
     position: relative;
     margin-left: 5px;
+    line-height: 18px;
     a i {
       position: absolute;
       left: 0;
       margin-right: 15px;
       margin-bottom: 20px;
+      margin-top: 2px;
     }
     a {color: #aaa;}
-    li {margin-bottom: 7px;}
+    li {margin-bottom: 10px;}
   }
 }
 
