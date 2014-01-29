@@ -615,6 +615,8 @@ position: relative;
 blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
+
+    a.mention {background: #ddd;}
     p:first-of-type {margin-top: 0;}
     p:last-of-type {margin-bottom: 0;}
 }
