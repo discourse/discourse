@@ -42,8 +42,8 @@ class TopicList
   end
 
   def topic_ids
-    return [] if @topics_input.blank?
-    @topics_input.map {|t| t.id}
+    return [] unless @topics_input
+    @topics_input.pluck(:id)
   end
 
   def attributes
