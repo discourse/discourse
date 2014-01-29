@@ -49,6 +49,7 @@ zh_CN:
         almost_x_years:
           one:   "1年"
           other: "%{count}年"
+        date_month: "MMM-D"
         date_year: "YY-MM-D"
       medium:
         x_minutes:
