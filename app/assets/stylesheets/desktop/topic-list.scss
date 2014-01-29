@@ -532,8 +532,6 @@ ol.category-breadcrumb {
 
     text-align: center;
     margin-right: 20px;
-
-
   }
 
 
@@ -542,3 +540,12 @@ ol.category-breadcrumb {
   }
 }
 
+#bulk-select {
+  position: fixed;
+  right: 20px;
+  padding: 5px;
+  background-color: white;
+  button {
+    padding: 3px 0 3px 6px;
+  }
+}

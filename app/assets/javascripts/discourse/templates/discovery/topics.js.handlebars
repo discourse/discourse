@@ -1,3 +1,9 @@
+{{#if selected}}
+  <div id='bulk-select'>
+    <button class='btn' {{action showBulkActions}}><i class="fa fa-wrench"></i></button>
+  </div>
+{{/if}}
+
 <div class='contents'>
   {{#if showTable}}
     <table id='topic-list'>

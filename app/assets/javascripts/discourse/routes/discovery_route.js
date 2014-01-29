@@ -35,6 +35,11 @@ Discourse.DiscoveryRoute = Discourse.Route.extend({
         draftKey: topicsController.get('draft_key'),
         draftSequence: topicsController.get('draft_sequence')
       });
+    },
+
+    showBulkActions: function() {
+      var selected = this.controllerFor('discoveryTopics').get('selected');
+      Discourse.Route.showModal(this, 'topicBulkActions', selected);
     }
   }
 });
