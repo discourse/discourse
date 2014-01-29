@@ -5,56 +5,61 @@ module Export
   class SchemaArgumentsError < RuntimeError; end
 
   class JsonEncoder
+    attr_accessor :stream_creator
+
     include DirectoryHelper
 
-    def initialize
-      @table_data = {}
+    def initialize(stream_creator = nil)
+      @stream_creator = stream_creator
+      @stream_creator ||= lambda do |filename|
+        File.new(filename, 'w+b' )
+      end
+
+      @schema_data = {
+          schema: {}
+      }
+
+      @table_info = {}
     end
 
-    def json_output_stream
-      @json_output_stream ||= File.new( File.join( tmp_directory('export'), 'tables.json' ), 'w+b' )
+
+    def write_json(name, data)
+      filename = File.join( tmp_directory('export'), "#{name}.json")
+      filenames << filename
+      stream = stream_creator.call(filename)
+      Oj.to_stream(stream, data, :mode => :compat)
+      stream.close
     end
 
     def write_schema_info(args)
       raise SchemaArgumentsError unless args[:source].present? && args[:version].present?
 
-      @schema_data = {
-          schema: {
-            source: args[:source],
-            version: args[:version]
-          }
-        }
+      @schema_data[:schema][:source] = args[:source]
+      @schema_data[:schema][:version] = args[:version]
     end
 
     def write_table(table_name, columns)
-      @table_data[table_name] ||= {}
-      @table_data[table_name][:fields] = columns.map(&:name)
-      @table_data[table_name][:rows] ||= []
+      rows ||= []
 
-      row_count = 0
-      begin
-        rows = yield(row_count)
-        if rows
-          row_count += rows.size
-          @table_data[table_name][:rows] << rows
-        end
+      while true
+        current_rows = yield(rows.count)
+        break unless current_rows && current_rows.size > 0
+        rows.concat current_rows
+      end
 
-        # TODO: write to multiple files as needed.
-        #       one file per table? multiple files per table?
+      # TODO still way too big a chunk, needs to be split up
+      write_json(table_name, rows)
 
-      end while rows && rows.size > 0
+      @table_info[table_name] ||= {
+        fields: columns.map(&:name),
+        row_count: rows.size
+      }
 
-      @table_data[table_name][:rows].flatten!(1)
-      @table_data[table_name][:row_count] = @table_data[table_name][:rows].size
     end
 
     def finish
-      @schema_data[:schema][:table_count] = @table_data.keys.count
-      json_output_stream.write( Oj.dump(@schema_data.merge(@table_data),
-                                        :mode => :compat) )
-      json_output_stream.close
-
-      @filenames = [File.join( tmp_directory('export'), 'tables.json' )]
+      @schema_data[:schema][:table_count] = @table_info.keys.count
+      write_json("schema", @schema_data.merge(@table_info))
     end
 
     def filenames

@@ -4,10 +4,14 @@ require 'export/json_encoder'
 describe Export::JsonEncoder do
   describe "exported data" do
     before do
-      @encoder = Export::JsonEncoder.new
-      @testIO = StringIO.new
-      @encoder.stubs(:json_output_stream).returns(@testIO)
-      @encoder.stubs(:tmp_directory).returns( File.join(Rails.root, 'tmp', 'json_encoder_spec') )
+      @streams = {}
+      @encoder = Export::JsonEncoder.new(lambda{ |filename|
+        @streams[File.basename(filename, ".*")] = StringIO.new
+      })
+    end
+
+    let :schema do
+      JSON.parse(@streams['schema'].string)
     end
 
     describe "write_schema_info" do
@@ -15,10 +19,9 @@ describe Export::JsonEncoder do
         version = '20121216230719'
         @encoder.write_schema_info( source: 'discourse', version: version )
         @encoder.finish
-        json = JSON.parse( @testIO.string )
-        json.should have_key('schema')
-        json['schema']['source'].should == 'discourse'
-        json['schema']['version'].should == version
+        schema.should have_key('schema')
+        schema['schema']['source'].should == 'discourse'
+        schema['schema']['version'].should == version
       end
 
       it "should raise an exception when its arguments are invalid" do
@@ -88,15 +91,13 @@ describe Export::JsonEncoder do
 
       it "should have a table count of 0 when no tables were exported" do
         @encoder.finish
-        json = JSON.parse( @testIO.string )
-        json['schema']['table_count'].should == 0
+        schema['schema']['table_count'].should == 0
       end
 
       it "should have a table count of 1 when one table was exported" do
         @encoder.write_table(Topic.table_name, Topic.columns) { |row_count| [] }
         @encoder.finish
-        json = JSON.parse( @testIO.string )
-        json['schema']['table_count'].should == 1
+        schema['schema']['table_count'].should == 1
       end
 
       it "should have a table count of 3 when three tables were exported" do
@@ -104,15 +105,13 @@ describe Export::JsonEncoder do
         @encoder.write_table(User.table_name, User.columns)   { |row_count| [] }
         @encoder.write_table(Post.table_name, Post.columns)   { |row_count| [] }
         @encoder.finish
-        json = JSON.parse( @testIO.string )
-        json['schema']['table_count'].should == 3
+        schema['schema']['table_count'].should == 3
       end
 
       it "should have a row count of 0 when no rows were exported" do
         @encoder.write_table(Notification.table_name, Notification.columns) { |row_count| [] }
         @encoder.finish
-        json = JSON.parse( @testIO.string )
-        json[Notification.table_name]['row_count'].should == 0
+        schema[Notification.table_name]['row_count'].should == 0
       end
 
       it "should have a row count of 1 when one row was exported" do
@@ -124,8 +123,7 @@ describe Export::JsonEncoder do
           end
         end
         @encoder.finish
-        json = JSON.parse( @testIO.string )
-        json[Notification.table_name]['row_count'].should == 1
+        schema[Notification.table_name]['row_count'].should == 1
       end
 
       it "should have a row count of 2 when two rows were exported" do
@@ -138,8 +136,7 @@ describe Export::JsonEncoder do
           end
         end
         @encoder.finish
-        json = JSON.parse( @testIO.string )
-        json[Notification.table_name]['row_count'].should == 2
+        schema[Notification.table_name]['row_count'].should == 2
       end
     end
   end
