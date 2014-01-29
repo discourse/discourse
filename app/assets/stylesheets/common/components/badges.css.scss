@@ -25,6 +25,11 @@
   font-size: 12px;
   font-weight: bold;
   white-space: nowrap;
+  text-align: center;
+  width: 90%;
+  display: block;
+  margin: 0 auto;
+
   &[href] {
     color: $white;
   }
