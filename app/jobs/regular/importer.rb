@@ -188,7 +188,7 @@ module Jobs
         parameter_markers = fields.map {|x| "?"}.join(',')
         sql_stmt = "INSERT INTO #{table_name} (#{fields.join(',')}) VALUES (#{parameter_markers})"
 
-        User.exec_sql("BEGIN TRANSACTION")
+        User.exec_sql("BEGIN TRANSACTION") unless Rails.env.test?
         i = 0
         rows.each do |row|
           if i % batch_size == 0 && i > 0
@@ -197,7 +197,7 @@ module Jobs
           User.exec_sql(sql_stmt, *row)
           i += 1
         end
-        User.exec_sql("COMMIT")
+        User.exec_sql("COMMIT") unless Rails.env.test?
 
         true
       else
