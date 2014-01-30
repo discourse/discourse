@@ -69,7 +69,11 @@ Discourse.Topic = Discourse.Model.extend({
   urlForPostNumber: function(postNumber) {
     var url = this.get('url');
     if (postNumber && (postNumber > 1)) {
-      url += "/" + postNumber;
+      if (postNumber >= this.get('highest_post_number')) {
+        url += "/last";
+      } else {
+        url += "/" + postNumber;
+      }
     }
     return url;
   },
