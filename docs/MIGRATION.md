@@ -52,7 +52,7 @@ Run as discourse user:
 ```
 createdb discourse_prod
 psql discourse_prod
-    \i discourse_dump_from_old_server.sql
+    \i backup_file_name.sql
 ```
 On oldserver:
 
