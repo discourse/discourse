@@ -196,37 +196,40 @@ test("keyboard navigation", function() {
   equal(controller.get("selectedIndex"), 0, "you can go up from the middle item");
 });
 
-// This test is a bit hackish due to the current design
-// of the SearchController that manipulates the DOM directly.
-// The alternative was to skip this test completely
-// and verify selecting highlighted item in an end-to-end
-// test, but I think that testing all the edge cases
-// (existing/missing href, loading flag true/false) is too
-// fine grained for an e2e test, so untill SearchController
-// is refactored I decided to keep the test here.
 test("selecting a highlighted item", function() {
   this.stub(Discourse.URL, "routeTo");
 
-  fixture().append($('<div id="search-dropdown"><ul><ul><li class="selected"><a>some text</a></li></ul></ul></div>'));
+  Ember.run(function() {
+    controller.set("term", "ab");
+    searcherStub.resolve([
+      {
+        type: "user",
+        results: [
+          {},
+          {url: "some-url"}
+        ]
+      }
+    ]);
+  });
 
   Ember.run(function() {
-    controller.set("loading", false);
+    controller.set("selectedIndex", 0);
   });
   controller.select();
-  ok(!Discourse.URL.routeTo.called, "when selected item's link has no href, there is no redirect");
+  ok(!Discourse.URL.routeTo.called, "when selected item has no url, there is no redirect");
 
+  Ember.run(function() {
+    controller.set("selectedIndex", 1);
+  });
+  controller.select();
+  ok(Discourse.URL.routeTo.calledWith("some-url"), "when selected item has url, a redirect is fired");
+
+  Discourse.URL.routeTo.reset();
   Ember.run(function() {
     controller.set("loading", true);
   });
-  fixture("a").attr("href", "some-url");
   controller.select();
   ok(!Discourse.URL.routeTo.called, "when loading flag is set to true, there is no redirect");
-
-  Ember.run(function() {
-    controller.set("loading", false);
-  });
-  controller.select();
-  ok(Discourse.URL.routeTo.calledWith(sinon.match(/\/some-url$/)), "when loading flag is set to false and selected item's link has href, redirect to the selected item's link href is fired");
 });
 
 test("search query / the flow of the search", function() {
