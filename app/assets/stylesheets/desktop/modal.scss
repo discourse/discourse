@@ -251,9 +251,9 @@
   p {
     margin-top: 0;
   }
-  .modal-body {
-    height: 420px;
-    max-height: 420px;
+  &.full .modal-body {
+    height: 400px;
+    max-height: 400px;
   }
 }
 .tabbed-modal {

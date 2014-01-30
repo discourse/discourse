@@ -9,7 +9,7 @@
 **/
 Discourse.TopicBulkActionsController = Ember.ArrayController.extend(Discourse.ModalFunctionality, {
   onShow: function() {
-    this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal');
+    this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal small');
   },
 
   perform: function(operation) {
@@ -30,9 +30,26 @@ Discourse.TopicBulkActionsController = Ember.ArrayController.extend(Discourse.Mo
     });
   },
 
+  forEachPerformed: function(operation, cb) {
+    var self = this;
+    this.perform(operation).then(function (topics) {
+      if (topics) {
+        topics.forEach(cb);
+        self.send('closeModal');
+      }
+    });
+  },
+
   actions: {
     showChangeCategory: function() {
       this.send('changeBulkTemplate', 'modal/bulk_change_category');
+      this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal full');
+    },
+
+    closeTopics: function() {
+      this.forEachPerformed({type: 'close'}, function(t) {
+        t.set('closed', true);
+      });
     },
 
     changeCategory: function() {
