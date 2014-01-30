@@ -64,6 +64,8 @@ Discourse.Route.buildRoutes(function() {
     this.route(homepage, { path: '/' });
   });
 
+  this.resource('group', { path: '/groups/:groupname' });
+
   // User routes
   this.resource('user', { path: '/users/:username' }, function() {
     this.resource('userActivity', { path: '/activity' }, function() {
