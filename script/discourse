@@ -11,8 +11,8 @@ class DiscourseCLI < Thor
 
     puts "Rewriting all occurences of #{from} to #{to}"
     puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
-    result = STDIN.gets
-    if result.strip != "YES"
+    text = STDIN.gets
+    if text.strip != "YES"
       puts "aborting."
       exit
     end
