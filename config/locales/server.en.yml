@@ -15,7 +15,7 @@ en:
       short_no_year: "%B %-d"
       date_only: "%b %-d, %Y"
 
-  title: "Discourse"
+  title: "Community"
   topics: "Topics"
   posts: "posts"
   loading: "Loading"
@@ -107,7 +107,7 @@ en:
       other: "%{count} posts"
 
     'new-topic': |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+      Welcome to the Watchman Monitoring Community &mdash; **thanks for starting a new conversation!**
 
       - Does the title accurately describe your topic? Does it sound interesting?
 
@@ -118,7 +118,7 @@ en:
       For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
 
     'new-reply': |
-      Welcome to %{site_name} &mdash; **thanks for contributing!**
+      Welcome to the Watchman Monitoring Community &mdash; **thanks for contributing!**
 
       - Does your reply improve the conversation in some way?
 
@@ -309,7 +309,7 @@ en:
     title: 'Reset Password'
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
-    continue: "Continue to %{site_name}"
+    continue: "Continue to the Watchman Monitoring Community"
 
   change_email:
     confirmed: "Your email has been updated."
@@ -319,7 +319,7 @@ en:
   activation:
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
     please_continue: "Your new account is confirmed, and you are now logged in. Continue to %{link}"
-    welcome_to: "Welcome to %{site_name}!"
+    welcome_to: "Welcome to the Watchman Monitoring Community!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
 
   post_action_types:
@@ -885,7 +885,7 @@ en:
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion on %{site_name}"
     text_body_template: |
-      %{invitee_name} invited you to the topic "%{topic_title}" at %{site_name}.
+      %{invitee_name} invited you to the topic "%{topic_title}" at the Watchman Monitoring Community.
 
       If you're interested, click the link below to visit the discussion:
 
@@ -914,7 +914,7 @@ en:
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
     text_body_template: |
-      This is a test email sent from your %{site_name} forum at:
+      This is a test email sent from your the Watchman Monitoring Community forum at:
 
       [**%{base_url}**][0]
 
@@ -984,7 +984,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your post ...
+        This is an automated message from the Watchman Monitoring Community to inform you that your post ...
 
         %{base_url}%{url}
 
@@ -1058,7 +1058,7 @@ en:
 
         1. Use Facebook, Google, Twitter, or many other supported credentials -- but that credential must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
 
-        2. Create a unique password for %{site_name} on [your user profile][prefs], then log in with that.
+        2. Create a unique password for the Watchman Monitoring Community on [your user profile][prefs], then log in with that.
 
         %{site_password}
 
@@ -1095,7 +1095,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your posts have been automatically hidden because they were flagged by the community.
+        This is an automated message from the Watchman Monitoring Community to inform you that your posts have been automatically hidden because they were flagged by the community.
 
         As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.
 
@@ -1106,7 +1106,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
+        This is an automated message from the Watchman Monitoring Community to inform you that your account has been blocked by a staff member.
 
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 
@@ -1133,7 +1133,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
+        This is an automated message from the Watchman Monitoring Community to inform you that your account has been unblocked after staff review.
 
         You can now create new replies and topics again.
 
@@ -1162,7 +1162,7 @@ en:
     user_invited_to_private_message:
       subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
       text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
+        %{username} invited you to a private message '%{topic_title}' on the Watchman Monitoring Community:
 
         Please visit this link to view the topic: %{base_url}%{url}
 
