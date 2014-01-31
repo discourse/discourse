@@ -190,8 +190,10 @@ module Jobs
 
         in_tran = false
         begin
-          User.exec_sql("BEGIN TRANSACTION") unless Rails.env.test?
-          in_tran = true
+          unless Rails.env.test?
+            User.exec_sql("BEGIN TRANSACTION")
+            in_tran = true
+          end
           i = 0
           rows.each do |row|
             if i % batch_size == 0 && i > 0
@@ -200,7 +202,7 @@ module Jobs
             User.exec_sql(sql_stmt, *row)
             i += 1
           end
-          User.exec_sql("COMMIT") unless Rails.env.test?
+          User.exec_sql("COMMIT") if in_tran
         rescue
           User.exec_sql("ROLLBACK") if in_tran
         end
