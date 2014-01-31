@@ -889,7 +889,7 @@ en:
 
       If you're interested, click the link below to visit the discussion:
 
-      [Visit the Watchman Monitoring Subscriber Community][1]
+      [Visit the Watchman Monitoring Community][1]
 
       You'll be able to post a reply immediately, without needing to log in.
 
@@ -898,7 +898,7 @@ en:
   invite_forum_mailer:
     subject_template: "[%{site_name}] You are invited to join the Watchman Monitoring Community"
     text_body_template: |
-      You are invited to join the Watchman Monitoring Subscriber Community
+      You are invited to join the Watchman Monitoring Community
       
       Click the link below to join:
 
@@ -1039,7 +1039,7 @@ en:
     welcome_user:
       subject_template: "Welcome to the Watchman Monitoring Community!"
       text_body_template: |
-        Thanks for joining the Watchman Monitoring Subscriber Community, and welcome!
+        Thanks for joining the Watchman Monitoring Community, and welcome!
 
         %{new_user_tips}
 
