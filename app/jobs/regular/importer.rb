@@ -205,6 +205,7 @@ module Jobs
           User.exec_sql("COMMIT") if in_tran
         rescue
           User.exec_sql("ROLLBACK") if in_tran
+          raise
         end
 
         true
