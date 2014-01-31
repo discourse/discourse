@@ -43,12 +43,8 @@ class TopMenuItem
     name.split('/')[1]
   end
 
-  def query_should_exclude_category?(action_name, format)
-    if format.blank? || format == "html"
-      matches_action?(action_name) && has_filter?
-    else
-      false
-    end
+  def query_should_exclude_category?(action_name)
+    matches_action?(action_name) && has_filter?
   end
 
   def matches_action?(action_name)
