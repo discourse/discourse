@@ -896,17 +896,20 @@ en:
       [1]: %{invite_link}
 
   invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join %{site_name}"
+    subject_template: "[%{site_name}] You are invited to join the Watchman Monitoring Subscriber Community"
     text_body_template: |
-      %{invitee_name} invited you to %{site_name}.
+      You are invited to join the Watchman Monitoring Subscriber Community
+      
+      Click the link below to join:
 
-      If you're interested, click the link below to join:
+      [Click here to accept this invitation and be automatically logged in.][1]
 
-      [Visit %{site_name}][1]
-
-      You were invited by a trusted user, so you'll be able to join immediately, without needing to log in.
+      Questions? Vistit our support site at [https://support.watchmanmonitoring.com][2]
 
       [1]: %{invite_link}
+      [2]: https://support.watchmanmonitoring.com
+      
+
 
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
