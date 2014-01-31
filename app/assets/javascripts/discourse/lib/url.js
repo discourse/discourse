@@ -154,6 +154,7 @@ Discourse.URL = Em.Object.createWithMixins({
             postStream = topicController.get('postStream');
 
         if (newMatches[3]) opts.nearPost = newMatches[3];
+        if (path.match(/last$/)) { opts.nearPost = topicController.get('highest_post_number'); }
         var closest = opts.nearPost || 1;
 
         postStream.refresh(opts).then(function() {
