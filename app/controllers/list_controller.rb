@@ -199,9 +199,9 @@ class ListController < ApplicationController
   end
 
   def build_topic_list_options
-    # html format means we need to parse exclude category (aka filter) from the site options top menu
     menu_items = SiteSetting.top_menu_items
     menu_item = menu_items.select { |item| item.query_should_exclude_category?(action_name) }.first
+    menu_item = nil if menu_item.try(:filter).try(:parameterize) == params[:category]
 
     # exclude_category = 1. from params / 2. parsed from top menu / 3. nil
     options = {
