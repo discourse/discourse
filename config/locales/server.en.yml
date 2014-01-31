@@ -1160,14 +1160,14 @@ en:
     posted_by: "Posted by %{username} on %{post_date}"
 
     user_invited_to_private_message:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
+      subject_template: "[watchman community] %{username} invited you to a private message '%{topic_title}'"
       text_body_template: |
         %{username} invited you to a private message '%{topic_title}' on the Watchman Monitoring Community:
 
         Please visit this link to view the topic: %{base_url}%{url}
 
     user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[watchman community] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1177,7 +1177,7 @@ en:
         %{respond_instructions}
 
     user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[watchman community] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1187,7 +1187,7 @@ en:
         %{respond_instructions}
 
     user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[watchman community] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1197,7 +1197,7 @@ en:
         %{respond_instructions}
 
     user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[watchman community] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1207,7 +1207,7 @@ en:
         %{respond_instructions}
 
     user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      subject_template: "[watchman community] [PM] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1218,7 +1218,7 @@ en:
 
     digest:
       why: "Here's a brief summary of the discussion on %{site_link} since we last saw you on %{last_seen_at}."
-      subject_template: "[%{site_name}] Forum Activity for %{date}"
+      subject_template: "[watchman community] Forum Activity for %{date}"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Recent posts the community enjoyed:"
       other_new_topics: "Other New Topics:"
@@ -1232,7 +1232,7 @@ en:
         other: "%{count} posts"
 
     forgot_password:
-      subject_template: "[%{site_name}] Password reset"
+      subject_template: "[watchman community] Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
 
@@ -1242,7 +1242,7 @@ en:
         %{base_url}/users/password-reset/%{email_token}
 
     set_password:
-      subject_template: "[%{site_name}] Set Password"
+      subject_template: "[watchman community] Set Password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
@@ -1252,7 +1252,7 @@ en:
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:
-      subject_template: "[%{site_name}] Confirm your new email address"
+      subject_template: "[watchman community] Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
@@ -1277,7 +1277,7 @@ en:
         Enjoy your stay!
 
     signup:
-      subject_template: "[%{site_name}] Activate your new account"
+      subject_template: "[watchman community] Activate your new account"
       text_body_template: |
         Welcome to %{site_name}!
 
