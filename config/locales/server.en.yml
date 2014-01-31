@@ -896,7 +896,7 @@ en:
       [1]: %{invite_link}
 
   invite_forum_mailer:
-    subject_template: "[%{site_name}] You are invited to join the Watchman Monitoring Subscriber Community"
+    subject_template: "[%{site_name}] You are invited to join the Watchman Monitoring Community"
     text_body_template: |
       You are invited to join the Watchman Monitoring Subscriber Community
       
@@ -1037,9 +1037,9 @@ en:
         - While reading a topic, move to the top ↑ by clicking its title at the top of the page. To reach the *bottom* ↓, click the down arrow on the topic progress indicator at the bottom of the page, or click the last post field on the topic summary under the first post.
 
     welcome_user:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "Welcome to the Watchman Monitoring Community!"
       text_body_template: |
-        Thanks for joining %{site_name}, and welcome to our discussion forum!
+        Thanks for joining the Watchman Monitoring Subscriber Community, and welcome!
 
         %{new_user_tips}
 
@@ -1048,9 +1048,9 @@ en:
         Enjoy your stay!
 
     welcome_invite:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "Welcome to the Watchman Monitoring Community!"
       text_body_template: |
-        Thanks for accepting your invitation to %{site_name}, and welcome to our discussion forum!
+        Thanks for accepting your invitation to the Watchman Monitoring Community, Welcome!
 
         We've automatically generated a username for you: **%{username}**, but you can change that any time by visiting [your user profile][prefs].
 
