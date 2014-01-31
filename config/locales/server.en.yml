@@ -1144,7 +1144,7 @@ en:
 
     posted_by: "Posted by %{username} on %{post_date}"
 
-    user_invited_to_private_message:
+    user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
       text_body_template: |
         %{username} invited you to a private message '%{topic_title}' on %{site_name}:
