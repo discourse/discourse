@@ -6,7 +6,7 @@ module Onebox
       matches_regexp /^(https?:)?\/\/.+\.(png|jpg|jpeg|gif|bmp|tif|tiff)$/i
 
       def to_html
-        "<a href='#{@url} target='_blank'><img src='#{@url}'></a>"
+        "<a href='#{@url}' target='_blank'><img src='#{@url}'></a>"
       end
     end
   end
