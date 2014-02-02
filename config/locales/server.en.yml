@@ -883,7 +883,7 @@ en:
       blocked: "is blocked."
 
   invite_mailer:
-    subject_template: "[Watchman Community] %{invitee_name} invited you to join a discussion on the Watchman Monitoring Community"
+    subject_template: "[Watchman Community] %{invitee_name} invited you to join a discussion in the Watchman Monitoring Community"
     text_body_template: |
       %{invitee_name} invited you to the topic "%{topic_title}" at the Watchman Monitoring Community.
 
@@ -1166,7 +1166,7 @@ en:
       subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
       subject_template: "[Watchman Community] %{username} invited you to a private message '%{topic_title}'"
       text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on the Watchman Monitoring Community:
+        %{username} invited you to a private message '%{topic_title}' in the Watchman Monitoring Community:
 
         Please visit this link to view the topic: %{base_url}%{url}
 
@@ -1238,7 +1238,7 @@ en:
     forgot_password:
       subject_template: "[Watchman Community] Password reset"
       text_body_template: |
-        Somebody asked to reset your password on the Watchman Monitoring Subscriber Community(%{base_url}).
+        Somebody asked to reset your password for the Watchman Monitoring Subscriber Community(%{base_url}).
 
         If it was not you, you can safely ignore this email.
 
@@ -1248,7 +1248,7 @@ en:
     set_password:
       subject_template: "[Watchman Community] Set Password"
       text_body_template: |
-        Somebody asked to add a password to your account on the Watchman Monitoring Subscriber Community(%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
+        Somebody asked to add a password to your account for the Watchman Monitoring Subscriber Community(%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
         If you did not make this request, you can safely ignore this email.
 
