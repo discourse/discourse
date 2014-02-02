@@ -892,8 +892,8 @@ uk:
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
-    closed_enabled: "This topic is now closed. New replies are no longer allowed."
-    closed_disabled: "This topic is now opened. New replies are allowed."
+    closed_enabled: "Цю тему закрито. Нові відповіді заборонено."
+    closed_disabled: "Цю тему відкрито. Нові відповіді дозволено."
     autoclosed_enabled_days:
       zero:  "This topic was automatically closed after 1 day. New replies are no longer allowed."
       one:   "This topic was automatically closed after 1 day. New replies are no longer allowed."
