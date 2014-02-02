@@ -719,10 +719,10 @@ uk:
         many:  "you have {{count}} unread old posts in this topic"
         other: "you have {{count}} unread old posts in this topic"
       new_posts:
-        one:   "there is 1 new post in this topic since you last read it"
-        few:   "there are {{count}} new posts in this topic since you last read it"
-        many:  "there are {{count}} new posts in this topic since you last read it"
-        other: "there are {{count}} new posts in this topic since you last read it"
+        one:   "в цій темі з'явився {{count}} новий допис відтоді, як Ви її читали востаннє"
+        few:   "в цій темі з'явилися {{count}} нові дописи відтоді, як Ви її читали востаннє"
+        many:  "в цій темі з'явилося {{count}} нових дописів відтоді, як Ви її читали востаннє"
+        other: "в цій темі з'явилося {{count}} нових дописів відтоді, як Ви її читали востаннє"
 
       likes:
         one:   "в цій темі {{count}} вподобання"
@@ -1192,7 +1192,7 @@ uk:
       locked:
         help: "цю тему закрито; нові відповіді більше не приймаються"
       pinned:
-        help: "this topic is pinned; it will display at the top of its category"
+        help: "цю тему закріплено; вона буде відображатися вгорі своєї категорії"
       archived:
         help: "this topic is archived; it is frozen and cannot be changed"
       invisible:
