@@ -146,6 +146,18 @@ describe TopicUser do
       end
     end
 
+    context 'private messages' do
+      it 'should ensure recepients and senders are watching' do
+        ActiveRecord::Base.observers.enable :all
+
+        target_user = Fabricate(:user)
+        post = create_post(archetype: Archetype.private_message, target_usernames: target_user.username);
+
+        TopicUser.get(post.topic, post.user).notification_level.should == TopicUser.notification_levels[:watching]
+        TopicUser.get(post.topic, target_user).notification_level.should == TopicUser.notification_levels[:watching]
+      end
+    end
+
     context 'auto tracking' do
 
       let(:post_creator) { PostCreator.new(new_user, raw: Fabricate.build(:post).raw, topic_id: topic.id) }

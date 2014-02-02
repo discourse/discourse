@@ -49,7 +49,8 @@ ja:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
-        date_year: "D MMM 'YY"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1分"
@@ -574,11 +575,6 @@ ja:
         starred: "お気に入りしたトピックは以上です。"
         category: "{{category}} トピックは以上です。"
 
-    rank_details:
-      toggle: トピックランクの詳細をトグル
-      show: トピックランクの詳細を表示
-      title: トピックランクの詳細
-
     topic:
       create_in: '{{categoryName}} トピックを作成'
       create: 'トピックを作成する'
@@ -943,7 +939,6 @@ ja:
       list: "カテゴリをリストする"
       no_description: "このカテゴリの説明はありません。トピック定義を編集してください。"
       change_in_category_topic: "カテゴリ内容を編集"
-      hotness: "ホット度"
       already_used: 'この色は他のカテゴリで利用しています'
       security: "セキュリティ"
       auto_close_label: ""

@@ -188,6 +188,12 @@ en:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
 
+  vip_category_name: "Lounge"
+  vip_category_description: "A category exclusive to members with trust level 3 and higher."
+
+  meta_category_name: "Meta"
+  meta_category_description: "Discussion about this forum, its organization, how it works, and how we can improve it."
+
   category:
     topic_prefix: "Category definition for %{category}"
     replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters. Until you edit this text or create topics, this category won't appear on the categories page.]"
@@ -297,8 +303,10 @@ en:
   password_reset:
     no_token: "Sorry, your token has expired. Please try resetting your password again."
     choose_new: "Please choose a new password"
-    update: 'update password'
-    title: 'reset password'
+    choose: "Please choose a password"
+    update: 'Update Password'
+    save: 'Set Password'
+    title: 'Reset Password'
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
     continue: "Continue to %{site_name}"
@@ -596,22 +604,25 @@ en:
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
     post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
     must_approve_users: "Admins must approve all users before they gain access"
-    ga_tracking_code: "Google analytics tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "Google analytics domain name, eg: mysite.com; see http://google.com/analytics"
+    ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
+    ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
+    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
+    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
     enable_escaped_fragments: "Enable workaround solution to help older search engine webcrawlers index your site. WARNING: enable only if you have to."
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|starred|unread|new|posted|categories"
+    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    topics_per_page: "How many topics loaded by default on the topics list page"
+    topics_per_page: "How many topics loaded by default on the topics list page, and when loading more topics"
     posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
     site_contact_username: "Username for the author of automated private messages sent by the forum"
     send_welcome_message: "Do new users get a welcome private message?"
     suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
     suppress_reply_directly_above: "Don't show in-reply-to on a post when there is a single reply directly above"
 
-    topics_per_period_in_summary: "How many topics loaded by default on the top topics page"
+    topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
+    topics_per_period_in_top_page: "How many topics loaded on the top topics page"
 
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
@@ -785,6 +796,7 @@ en:
     feed_polling_enabled: "Whether to import a RSS/ATOM feed as posts"
     feed_polling_url: "URL of RSS/ATOM feed to import"
     embed_by_username: "Discourse username of the user who creates the topics"
+    embed_category: "Category of created topics"
     embed_post_limit: "Maximum number of posts to embed"
 
   notification_types:
@@ -1132,7 +1144,7 @@ en:
 
     posted_by: "Posted by %{username} on %{post_date}"
 
-    user_invited_to_private_message:
+    user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
       text_body_template: |
         %{username} invited you to a private message '%{topic_title}' on %{site_name}:
@@ -1179,6 +1191,16 @@ en:
         ---
         %{respond_instructions}
 
+    user_posted_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+
     digest:
       why: "Here's a brief summary of the discussion on %{site_link} since we last saw you on %{last_seen_at}."
       subject_template: "[%{site_name}] Forum Activity for %{date}"
@@ -1202,6 +1224,16 @@ en:
         If it was not you, you can safely ignore this email.
 
         Click the following link to choose a new password:
+        %{base_url}/users/password-reset/%{email_token}
+
+    set_password:
+      subject_template: "[%{site_name}] Set Password"
+      text_body_template: |
+        Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
+
+        If you did not make this request, you can safely ignore this email.
+
+        Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:

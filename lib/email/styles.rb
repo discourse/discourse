@@ -63,6 +63,20 @@ module Email
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
       style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
+
+      # Links to other topics
+      style('aside.quote', 'border-left: 5px solid #bebebe; background-color: #f1f1f1; padding: 12px;')
+      style('aside.quote blockquote', 'border: 0px; padding: 0')
+      style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
+      style('aside.quote .avatar', 'margin-right: 5px')
+
+      # Oneboxes
+      style('div.onebox-result', "padding: 12px 25px 12px 12px; border-left: 5px solid #bebebe; background: #eee;")
+      style('div.onebox-result img', "max-height: 80%; max-width: 25%; height: auto; float: left; margin-right: 10px;")
+      style('div.onebox-result h3', "border-bottom: 0")
+      style('div.onebox-result .source', "margin-bottom: 8px")
+      style('div.onebox-result .source a[href]', "color: #333; font-weight: normal")
+      style('div.clearfix', "clear: both")
     end
 
     def to_html

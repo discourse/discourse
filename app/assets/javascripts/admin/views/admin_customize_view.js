@@ -11,42 +11,30 @@
 Discourse.AdminCustomizeView = Discourse.View.extend({
   templateName: 'admin/templates/customize',
   classNames: ['customize'],
-  headerActive: Ember.computed.equal('selected', 'header'),
-  stylesheetActive: Ember.computed.equal('selected', 'stylesheet'),
-  mobileHeaderActive: Ember.computed.equal('selected', 'mobileHeader'),
-  mobileStylesheetActive: Ember.computed.equal('selected', 'mobileStylesheet'),
+  selected: 'stylesheet',
+  headerActive:     Em.computed.equal('selected', 'header'),
+  stylesheetActive: Em.computed.equal('selected', 'stylesheet'),
+  mobileHeaderActive:     Em.computed.equal('selected', 'mobileHeader'),
+  mobileStylesheetActive: Em.computed.equal('selected', 'mobileStylesheet'),
 
-  init: function() {
-    this._super();
-    this.set('selected', 'stylesheet');
-  },
+  actions: {
+    selectHeader:     function() { this.set('selected', 'header'); },
+    selectStylesheet: function() { this.set('selected', 'stylesheet'); },
 
-  selectHeader: function() {
-    this.set('selected', 'header');
-  },
-
-  selectStylesheet: function() {
-    this.set('selected', 'stylesheet');
-  },
-
-  selectMobileHeader: function() {
-    this.set('selected', 'mobileHeader');
-  },
-
-  selectMobileStylesheet: function() {
-    this.set('selected', 'mobileStylesheet');
+    selectMobileHeader:     function() { this.set('selected', 'mobileHeader'); },
+    selectMobileStylesheet: function() { this.set('selected', 'mobileStylesheet'); },
   },
 
   didInsertElement: function() {
     var controller = this.get('controller');
-    return Mousetrap.bindGlobal(['meta+s', 'ctrl+s'], function() {
-      controller.save();
+    Mousetrap.bindGlobal('mod+s', function() {
+      controller.send("save");
       return false;
     });
   },
 
   willDestroyElement: function() {
-    return Mousetrap.unbindGlobal('meta+s', 'ctrl+s');
+    Mousetrap.unbindGlobal('mod+s');
   }
 
 });

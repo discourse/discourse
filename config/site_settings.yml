@@ -30,6 +30,12 @@ basic:
   ga_domain_name:
     client: true
     default: ''
+  ga_universal_tracking_code:
+    client: true
+    default: ''
+  ga_universal_domain_name:
+    client: true
+    default: 'auto'
   category_featured_topics:
     client: true
     default: 3
@@ -56,8 +62,10 @@ basic:
   relative_date_duration:
     client: true
     default: 30
-  topics_per_period_in_summary:
-    default: 10
+  topics_per_period_in_top_summary:
+    default: 20
+  topics_per_period_in_top_page:
+    default: 50
 
 users:
   enable_local_logins:
@@ -110,7 +118,7 @@ users:
     default: false
   enforce_global_nicknames: false
   discourse_org_access_key: ''
-  invite_expiry_days: 14
+  invite_expiry_days: 4
   username_change_period: 3
   email_editable: true
   enable_names:
@@ -354,6 +362,7 @@ embedding:
   feed_polling_enabled: false
   feed_polling_url: ''
   embed_by_username: ''
+  embed_category: ''
   embed_post_limit: 100
 
 uncategorized:
@@ -421,5 +430,10 @@ uncategorized:
   suppress_uncategorized_badge:
     client: true
     default: true
-
+  lounge_category_id:
+    default: -1
+    hidden: true
+  meta_category_id:
+    default: -1
+    hidden: true
 

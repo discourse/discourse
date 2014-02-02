@@ -59,11 +59,7 @@ describe TopMenuItem do
     end
 
     it "excludes category" do
-      expect(items[0].query_should_exclude_category?(nil, nil)).to be_true
-    end
-
-    it "does not exclude for json format" do
-      expect(items[0].query_should_exclude_category?(nil, 'json')).to be_false
+      expect(items[0].query_should_exclude_category?(nil)).to be_true
     end
   end
 end

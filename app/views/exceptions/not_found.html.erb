@@ -25,7 +25,7 @@
   <div class="span10" style='padding-top: 20px'>
     <h2><%= t 'page_not_found.search_title' %></h2>
     <p>
-      <form action='http://google.com' id='google-search' onsubmit="return google_button_clicked()">
+      <form action='//google.com' id='google-search' onsubmit="return google_button_clicked()">
         <input type="text" id='user-query' value="<%= @slug %>">
         <input type='hidden' id='google-query' name="q">
         <button class="btn btn-primary"><%= t 'page_not_found.search_google' %></button>

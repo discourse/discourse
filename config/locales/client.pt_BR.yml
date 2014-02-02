@@ -49,7 +49,8 @@ pt_BR:
         almost_x_years:
           one: "1y"
           other: "%{count}y"
-        date_year: "D MMM 'YY"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 minuto"
@@ -578,11 +579,6 @@ pt_BR:
         starred: "Não há mais tópicos favoritos."
         category: "Não há mais tópicos na categoria {{category}}."
 
-    rank_details:
-      toggle: alternar detalhes do rank de tópicos
-      show: exibir rank de tópicos
-      title: Detalhes do Ranking de Tópicos
-
     topic:
       filter_to: "Mostrar apenas os {{post_count}} de {{username}} neste tópico"
       create: 'Criar Tópico'
@@ -953,7 +949,6 @@ pt_BR:
       list: "Lista de Categorias"
       no_description: "Não há descrição para esta categoria, edite a definição do tópico."
       change_in_category_topic: "Editar Descrição"
-      hotness: "Mais Quente"
       already_used: 'Esta cor já foi usada para outra categoria'
       security: "Segurança"
       auto_close_label: "Fechar automaticamente tópicos depois de:"

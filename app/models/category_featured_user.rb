@@ -6,7 +6,14 @@ class CategoryFeaturedUser < ActiveRecord::Base
     5
   end
 
-  def self.feature_users_in(category)
+  def self.feature_users_in(category_or_category_id)
+    category_id =
+      if Fixnum === category_or_category_id
+        category_or_category_id
+      else
+        category_or_category_id.id
+      end
+
     # Figure out most recent posters in the category
     most_recent_user_ids = exec_sql "
       SELECT x.user_id
@@ -21,12 +28,17 @@ class CategoryFeaturedUser < ActiveRecord::Base
       ) AS x
       ORDER BY x.created_at DESC
       LIMIT :max_featured_users;
-    ", category_id: category.id, max_featured_users: max_featured_users
+    ", category_id: category_id, max_featured_users: max_featured_users
+
+    user_ids = most_recent_user_ids.map{|uc| uc['user_id'].to_i}
+    current = CategoryFeaturedUser.where(category_id: category_id).order(:id).pluck(:user_id)
+
+    return if current == user_ids
 
     transaction do
-      CategoryFeaturedUser.delete_all category_id: category.id
-      most_recent_user_ids.each do |uc|
-        create(category_id: category.id, user_id: uc['user_id'])
+      CategoryFeaturedUser.delete_all category_id: category_id
+      user_ids.each do |user_id|
+        create(category_id: category_id, user_id: user_id)
       end
     end
 

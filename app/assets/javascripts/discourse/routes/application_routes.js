@@ -7,22 +7,19 @@
 Discourse.Route.buildRoutes(function() {
   var router = this;
 
+  // Generate static page routes
+  _.each(Discourse.StaticController.PAGES, function (page) {
+    router.route(page, { path: '/' + page });
+  });
+
   // Topic routes
   this.resource('topic', { path: '/t/:slug/:id' }, function() {
     this.route('fromParams', { path: '/' });
     this.route('fromParamsNear', { path: '/:nearPost' });
   });
 
-  // Generate static page routes
-  _.each(Discourse.StaticController.PAGES, function (page) {
-    router.route(page, { path: '/' + page });
-  });
-
-  this.resource("list", { path: "/" }, function() {
+  this.resource('discovery', { path: '/' }, function() {
     router = this;
-
-    // categories
-    this.route('categories');
 
     // top
     this.route('top');
@@ -31,7 +28,7 @@ Discourse.Route.buildRoutes(function() {
     this.route('topCategory', { path: '/category/:parentSlug/:slug/l/top' });
 
     // top by periods
-    _.each(Discourse.TopList.PERIODS, function(period) {
+    Discourse.Site.currentProp('periods').forEach(function(period) {
       var top = 'top' + period.capitalize();
       router.route(top, { path: '/top/' + period });
       router.route(top, { path: '/top/' + period + '/more' });
@@ -44,7 +41,7 @@ Discourse.Route.buildRoutes(function() {
     });
 
     // filters
-    _.each(Discourse.ListController.FILTERS, function(filter) {
+    Discourse.Site.currentProp('filters').forEach(function(filter) {
       router.route(filter, { path: '/' + filter });
       router.route(filter, { path: '/' + filter + '/more' });
       router.route(filter + 'Category', { path: '/category/:slug/l/' + filter });
@@ -55,13 +52,12 @@ Discourse.Route.buildRoutes(function() {
       router.route(filter + 'Category', { path: '/category/:parentSlug/:slug/l/' + filter + '/more' });
     });
 
+    this.route('categories');
+
     // default filter for a category
     this.route('category', { path: '/category/:slug' });
-    this.route('category', { path: '/category/:slug/more' });
     this.route('categoryNone', { path: '/category/:slug/none' });
-    this.route('categoryNone', { path: '/category/:slug/none/more' });
     this.route('category', { path: '/category/:parentSlug/:slug' });
-    this.route('category', { path: '/category/:parentSlug/:slug/more' });
 
     // homepage
     var homepage = Discourse.User.current() ? Discourse.User.currentProp('homepage') : Discourse.Utilities.defaultHomepage();

@@ -12,4 +12,11 @@ Discourse.addInitializer(function() {
       window._gaq.push(['_trackPageview']);
     });
   }
+
+  // Also use Universal Analytics if it is present
+  if (typeof window.ga !== 'undefined') { 
+    pageTracker.on('change', function() {
+      window.ga('send', 'pageview');
+    });
+  }
 });

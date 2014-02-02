@@ -34,10 +34,10 @@ Discourse.Ajax = Em.Mixin.create({
     }
 
     if (args.success) {
-      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
+      Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
     }
     if (args.error) {
-      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
+      Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
     }
 
     // If we have URL_FIXTURES, load from there instead (testing)
@@ -65,7 +65,7 @@ Discourse.Ajax = Em.Mixin.create({
         // If it's a parseerror, don't reject
         if (xhr.status === 200) return args.success(xhr);
 
-        promise.reject(xhr);
+        Ember.run(promise, promise.reject, xhr);
         if (oldError) oldError(xhr);
       };
 

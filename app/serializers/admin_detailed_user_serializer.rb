@@ -19,6 +19,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :api_key, serializer: ApiKeySerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
+  has_one :leader_requirements, serializer: LeaderRequirementsSerializer, embed: :objects
 
   def can_revoke_admin
     scope.can_revoke_admin?(object)
@@ -58,6 +59,14 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def suspended_by
     object.suspend_record.try(:acting_user)
+  end
+
+  def leader_requirements
+    object.leader_requirements
+  end
+
+  def include_leader_requirements?
+    object.has_trust_level?(:regular)
   end
 
 end

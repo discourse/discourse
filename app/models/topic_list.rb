@@ -42,19 +42,11 @@ class TopicList
   end
 
   def topic_ids
-    return [] if @topics_input.blank?
-    @topics_input.map {|t| t.id}
+    return [] unless @topics_input
+    @topics_input.pluck(:id)
   end
 
   def attributes
     {'more_topics_url' => page}
-  end
-
-  def has_rank_details?
-    # Only moderators can see rank details
-    return false unless @current_user && @current_user.staff?
-
-    # Only show them on 'Hot'
-    return @filter == :hot
   end
 end

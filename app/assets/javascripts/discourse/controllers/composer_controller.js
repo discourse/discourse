@@ -283,7 +283,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       } else {
         opts.tested = true;
         if (!opts.ignoreIfChanged) {
-          this.cancelComposer().then(function() { self.open(opts); }).fail(function() { return promise.reject(); });
+          this.cancelComposer().then(function() { self.open(opts); }).catch(function() { return promise.reject(); });
         }
         return promise;
       }

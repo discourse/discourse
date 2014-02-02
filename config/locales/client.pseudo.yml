@@ -43,6 +43,8 @@ pseudo:
         almost_x_years:
           one: '[[ 1ý ]]'
           other: '[[ %{count}ý ]]'
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: '[[ 1 ɱíɳ ]]'
@@ -604,10 +606,6 @@ pseudo:
         unread: '[[ Ťĥéřé ářé ɳó ɱóřé ůɳřéáď ťóƿíčš. ]]'
         starred: '[[ Ťĥéřé ářé ɳó ɱóřé ƒáνóříťéď ťóƿíčš. ]]'
         category: '[[ Ťĥéřé ářé ɳó ɱóřé {{category}} ťóƿíčš. ]]'
-    rank_details:
-      toggle: '[[ ťóǧǧłé ťóƿíč řáɳǩ ďéťáíłš ]]'
-      show: '[[ šĥóŵ ťóƿíč řáɳǩ ďéťáíłš ]]'
-      title: '[[ Ťóƿíč Řáɳǩ Ďéťáíłš ]]'
     topic:
       filter_to: '[[ Šĥóŵ {{post_count}} ƿóšťš íɳ ťóƿíč ]]'
       create: '[[ Čřéáťé Ťóƿíč ]]'
@@ -1011,7 +1009,6 @@ pseudo:
       no_description: '[[ Ťĥéřé íš ɳó ďéščříƿťíóɳ ƒóř ťĥíš čáťéǧóřý, éďíť ťĥé ťóƿíč
         ďéƒíɳíťíóɳ. ]]'
       change_in_category_topic: '[[ Éďíť Ďéščříƿťíóɳ ]]'
-      hotness: '[[ Ĥóťɳéšš ]]'
       already_used: '[[ Ťĥíš čółóř ĥáš ƀééɳ ůšéď ƀý áɳóťĥéř čáťéǧóřý ]]'
       security: '[[ Šéčůříťý ]]'
       auto_close_label: '[[ Áůťó-čłóšé ťóƿíčš áƒťéř: ]]'

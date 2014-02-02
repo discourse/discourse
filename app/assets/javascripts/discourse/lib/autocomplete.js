@@ -91,7 +91,7 @@ $.fn.autocomplete = function(options) {
     if (!_.isArray(transformed)) { transformed = [transformed || item]; }
 
     var divs = transformed.map(function(itm) {
-      var d = $("<div class='item'><span>" + itm + "<a href='#'><i class='fa fa-times'></i></a></span></div>");
+      var d = $("<div class='item'><span>" + itm + "<a class='remove' href='#'><i class='fa fa-times'></i></a></span></div>");
       var prev = me.parent().find('.item:last');
       if (prev.length === 0) {
         me.parent().prepend(d);

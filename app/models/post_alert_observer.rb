@@ -60,8 +60,17 @@ class PostAlertObserver < ActiveRecord::Observer
   def after_create_post(post)
     if post.topic.private_message?
       # If it's a private message, notify the topic_allowed_users
-      post.topic.all_allowed_users.reject{ |a| a.id == post.user_id }.each do |a|
-        create_notification(a, Notification.types[:private_message], post)
+      post.topic.all_allowed_users.reject{ |user| user.id == post.user_id }.each do |user|
+        next if user.blank?
+
+        if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
+          next unless post.reply_to_post_number
+          next unless post.reply_to_post.user_id == user.id
+        end
+
+        destroy_notifications(user, Notification.types[:private_message], post.topic)
+        unread_post = first_unread_post(user,post.topic) || post
+        create_notification(user, Notification.types[:private_message], unread_post)
       end
     elsif post.post_type != Post.types[:moderator_action]
       # If it's not a private message and it's not an automatic post caused by a moderator action, notify the users
@@ -73,6 +82,23 @@ class PostAlertObserver < ActiveRecord::Observer
 
     def callback_for(action, model)
       "#{action}_#{model.class.name.underscore.gsub(/.+\//, '')}"
+    end
+
+    def first_unread_post(user, topic)
+      Post.where('post_number > COALESCE((
+                 SELECT last_read_post_number FROM topic_users tu
+                 WHERE tu.user_id = ? AND tu.topic_id = ? ),0)',
+                  user.id, topic.id)
+          .where(topic_id: topic.id)
+          .order('post_number').first
+    end
+
+    def destroy_notifications(user, type, topic)
+      return if user.blank?
+      return unless Guardian.new(user).can_see?(topic)
+
+      user.notifications.where(notification_type: type,
+                               topic_id: topic.id).destroy_all
     end
 
     def create_notification(user, type, post, opts={})

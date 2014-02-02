@@ -59,7 +59,8 @@ class Topic < ActiveRecord::Base
                                      :if => Proc.new { |t|
                                            (t.new_record? || t.category_id_changed?) &&
                                            !SiteSetting.allow_uncategorized_topics &&
-                                           (t.archetype.nil? || t.archetype == Archetype.default)
+                                           (t.archetype.nil? || t.archetype == Archetype.default) &&
+                                           (!t.user_id || !t.user.staff?)
                                        }
 
 
@@ -81,7 +82,6 @@ class Topic < ActiveRecord::Base
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_users, through: :topic_allowed_users, source: :user
 
-  has_one :hot_topic
   has_one :top_topic
   belongs_to :user
   belongs_to :last_poster, class_name: 'User', foreign_key: :last_post_user_id

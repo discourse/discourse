@@ -14,7 +14,7 @@
 <div class="site-settings-nav pull-left">
   <ul class="nav nav-stacked">
     {{#each category in controller}}
-      <li {{bindAttr class="category.nameKey"}}>
+      <li {{bind-attr class="category.nameKey"}}>
         {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
           {{category.name}}
           {{#if filtered}}

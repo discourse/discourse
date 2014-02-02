@@ -1,5 +1,5 @@
 {{#if openInPopup}}
-  <a href="#" {{action sharePopup target href}} {{bindAttr title="title"}}><i {{bindAttr class=":fa iconClass"}}></i></a>
+  <a href="#" {{action sharePopup target href}} {{bind-attr title="title"}}><i {{bind-attr class=":fa iconClass"}}></i></a>
 {{else}}
-  <a {{bindAttr href="href"}} {{bindAttr title="title"}} target="_blank"><i {{bindAttr class=":fa iconClass"}}></i></a>
+  <a {{bind-attr href="href"}} {{bind-attr title="title"}} target="_blank"><i {{bind-attr class=":fa iconClass"}}></i></a>
 {{/if}}

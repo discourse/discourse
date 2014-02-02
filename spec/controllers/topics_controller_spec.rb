@@ -583,8 +583,20 @@ describe TopicsController do
       end
 
       context 'and the user is not logged in' do
+        let(:api_key) { topic.user.generate_api_key(topic.user) }
+
         it 'redirects to the login page' do
           get :show, topic_id: topic.id, slug: topic.slug
+          expect(response).to redirect_to login_path
+        end
+
+        it 'shows the topic if valid api key is provided' do
+          get :show, topic_id: topic.id, slug: topic.slug, api_key: api_key.key
+          expect(response).to be_successful
+        end
+
+        it 'redirects to the login page if invalid key is provided' do
+          get :show, topic_id: topic.id, slug: topic.slug, api_key: "bad"
           expect(response).to redirect_to login_path
         end
       end
@@ -769,4 +781,34 @@ describe TopicsController do
 
   end
 
+  describe "bulk" do
+    it 'needs you to be logged in' do
+      lambda { xhr :put, :bulk }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    describe "when logged in" do
+      let!(:user) { log_in }
+      let(:operation) { {type: 'change_category', category_id: '1'} }
+      let(:topic_ids) { [1,2,3] }
+
+      it "requires a list of topic_ids" do
+        lambda { xhr :put, :bulk, operation: operation }.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it "requires an operation param" do
+        lambda { xhr :put, :bulk, topic_ids: topic_ids}.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it "requires a type field for the operation param" do
+        lambda { xhr :put, :bulk, topic_ids: topic_ids, operation: {}}.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it "delegates work to `TopicsBulkAction`" do
+        topics_bulk_action = mock
+        TopicsBulkAction.expects(:new).with(user, topic_ids, operation).returns(topics_bulk_action)
+        topics_bulk_action.expects(:perform!)
+        xhr :put, :bulk, topic_ids: topic_ids, operation: operation
+      end
+    end
+  end
 end

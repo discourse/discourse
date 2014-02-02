@@ -37,14 +37,29 @@ class TopicCreator
     unless @opts[:auto_track] == false
       @topic.notifier.watch_topic!(@topic.user_id)
     end
+
+    @topic.topic_allowed_users.pluck(:user_id).reject{|id| id == @topic.user_id}.each do |id|
+      @topic.notifier.watch_topic!(id, nil)
+    end
+
     TopicUser.auto_watch_new_topic(@topic.id)
     CategoryUser.auto_watch_new_topic(@topic)
   end
 
   def setup
-    topic_params = {title: @opts[:title], user_id: @user.id, last_post_user_id: @user.id}
-    topic_params[:archetype] = @opts[:archetype] if @opts[:archetype].present?
+    topic_params = {
+      title: @opts[:title],
+      user_id: @user.id,
+      last_post_user_id: @user.id
+    }
+
     topic_params[:subtype] = @opts[:subtype] if @opts[:subtype].present?
+
+    if @opts[:archetype].present?
+      topic_params[:archetype] = @opts[:archetype]
+      # PM can't have a category
+      @opts.delete(:category) if topic_params[:archetype] == Archetype.private_message
+    end
 
     # Temporary fix to allow older clients to create topics.
     # When all clients are updated the category variable should
@@ -54,10 +69,13 @@ class TopicCreator
     else
       Category.where(name: @opts[:category]).first
     end
+
     @guardian.ensure_can_create!(Topic,category)
+
     topic_params[:category_id] = category.id if category.present?
     topic_params[:meta_data] = @opts[:meta_data] if @opts[:meta_data].present?
     topic_params[:created_at] = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
+
     topic_params
   end
 

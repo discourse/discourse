@@ -183,7 +183,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   }.property(),
 
   browseMoreMessage: function() {
-    var opts = { latestLink: "<a href=\"/\">" + (I18n.t("topic.view_latest_topics")) + "</a>" },
+    var opts = { latestLink: "<a href=\"" + Discourse.getURL("/latest") + "\">" + I18n.t("topic.view_latest_topics") + "</a>" },
         category = this.get('controller.content.category');
 
     if(Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
@@ -193,7 +193,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     if (category) {
       opts.catLink = Discourse.HTML.categoryLink(category);
     } else {
-      opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + (I18n.t("topic.browse_all_categories")) + "</a>";
+      opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
     }
 
     var tracking = this.get('topicTrackingState'),

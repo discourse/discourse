@@ -25,7 +25,9 @@ class UserNotifications < ActionMailer::Base
   end
 
   def forgot_password(user, opts={})
-    build_email(user.email, template: "user_notifications.forgot_password", email_token: opts[:email_token])
+    build_email( user.email,
+                 template: user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
+                 email_token: opts[:email_token])
   end
 
   def digest(user, opts={})
@@ -105,6 +107,22 @@ class UserNotifications < ActionMailer::Base
     include UserNotificationsHelper
   end
 
+  def self.get_context_posts(post, topic_user)
+
+    context_posts = Post.where(topic_id: post.topic_id)
+                        .where("post_number < ?", post.post_number)
+                        .where(user_deleted: false)
+                        .where(hidden: false)
+                        .order('created_at desc')
+                        .limit(SiteSetting.email_posts_context)
+
+    if topic_user && topic_user.last_emailed_post_number
+      context_posts = context_posts.where("post_number > ?", topic_user.last_emailed_post_number)
+    end
+
+    context_posts
+  end
+
   def notification_email(user, opts)
     return unless @notification = opts[:notification]
     return unless @post = opts[:post]
@@ -114,16 +132,7 @@ class UserNotifications < ActionMailer::Base
 
     context = ""
     tu = TopicUser.get(@post.topic_id, user)
-
-    context_posts = Post.where(topic_id: @post.topic_id)
-                        .where("post_number < ?", @post.post_number)
-                        .where(user_deleted: false)
-                        .order('created_at desc')
-                        .limit(SiteSetting.email_posts_context)
-
-    if tu && tu.last_emailed_post_number
-      context_posts = context_posts.where("post_number > ?", tu.last_emailed_post_number)
-    end
+    context_posts = self.class.get_context_posts(@post, tu)
 
     # make .present? cheaper
     context_posts = context_posts.to_a
@@ -141,8 +150,9 @@ class UserNotifications < ActionMailer::Base
       locals: { context_posts: context_posts, post: @post }
     )
 
+    template = "user_notifications.user_#{notification_type}"
     if @post.topic.private_message?
-      opts[:subject_prefix] = "[#{I18n.t('private_message_abbrev')}] "
+      template << "_pm"
     end
 
     email_opts = {
@@ -155,10 +165,9 @@ class UserNotifications < ActionMailer::Base
       username: username,
       add_unsubscribe_link: true,
       allow_reply_by_email: opts[:allow_reply_by_email],
-      template: "user_notifications.user_#{notification_type}",
+      template: template,
       html_override: html,
-      style: :notification,
-      subject_prefix: opts[:subject_prefix] || ''
+      style: :notification
     }
 
     # If we have a display name, change the from address

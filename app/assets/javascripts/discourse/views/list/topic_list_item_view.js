@@ -2,16 +2,15 @@
   This view handles the rendering of a topic in a list
 
   @class TopicListItemView
-  @extends Discourse.GroupedView
+  @extends Discourse.View
   @namespace Discourse
   @module Discourse
 **/
 Discourse.TopicListItemView = Discourse.GroupedView.extend({
   tagName: 'tr',
   templateName: 'list/topic_list_item',
-  classNameBindings: ['content.archived', ':topic-list-item', 'content.hasExcerpt:has-excerpt'],
+  classNameBindings: ['controller.checked', 'content.archived', ':topic-list-item', 'content.hasExcerpt:has-excerpt'],
   attributeBindings: ['data-topic-id'],
-
   'data-topic-id': Em.computed.alias('content.id'),
 
   highlight: function() {
@@ -25,7 +24,7 @@ Discourse.TopicListItemView = Discourse.GroupedView.extend({
       });
   },
 
-  didInsertElement: function() {
+  _highlightIfNeeded: function() {
     var session = Discourse.Session.current();
 
     // highligth the last topic viewed
@@ -37,6 +36,6 @@ Discourse.TopicListItemView = Discourse.GroupedView.extend({
       this.set('content.highlight', false);
       this.highlight();
     }
-  }
+  }.on('didInsertElement')
 
 });

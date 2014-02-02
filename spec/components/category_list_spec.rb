@@ -34,6 +34,7 @@ describe CategoryList do
       end
 
       it "returns empty categories for those who can create them" do
+        SiteSetting.stubs(:allow_uncategorized_topics).returns(true)
         Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
         category_list.categories.should_not be_blank
       end
@@ -45,10 +46,17 @@ describe CategoryList do
       end
 
       it 'returns the empty category and a non-empty category for those who can create them' do
+        SiteSetting.stubs(:allow_uncategorized_topics).returns(true)
         Fabricate(:topic, category: Fabricate(:category))
         Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
         category_list.categories.should have(3).categories
         category_list.categories.should include(topic_category)
+      end
+
+      it "doesn't return empty uncategorized category to admins if allow_uncategorized_topics is false" do
+        SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
+        CategoryList.new(Guardian.new(user)).categories.should be_empty
+        CategoryList.new(Guardian.new(admin)).categories.map(&:id).should_not include(SiteSetting.uncategorized_category_id)
       end
 
     end

@@ -69,7 +69,11 @@ Discourse.Topic = Discourse.Model.extend({
   urlForPostNumber: function(postNumber) {
     var url = this.get('url');
     if (postNumber && (postNumber > 1)) {
-      url += "/" + postNumber;
+      if (postNumber >= this.get('highest_post_number')) {
+        url += "/last";
+      } else {
+        url += "/" + postNumber;
+      }
     }
     return url;
   },
@@ -112,9 +116,9 @@ Discourse.Topic = Discourse.Model.extend({
 
   // The coldmap class for the age of the topic
   ageCold: function() {
-    var createdAt, createdAtDays, daysSinceEpoch, lastPost, nowDays;
-    if (!(lastPost = this.get('last_posted_at'))) return;
+    var createdAt, daysSinceEpoch, lastPost, lastPostDays, nowDays;
     if (!(createdAt = this.get('created_at'))) return;
+    if (!(lastPost = this.get('last_posted_at'))) lastPost = createdAt;
     daysSinceEpoch = function(dt) {
       // 1000 * 60 * 60 * 24 = days since epoch
       return dt.getTime() / 86400000;
@@ -122,14 +126,12 @@ Discourse.Topic = Discourse.Model.extend({
 
     // Show heat on age
     nowDays = daysSinceEpoch(new Date());
-    createdAtDays = daysSinceEpoch(new Date(createdAt));
-    if (daysSinceEpoch(new Date(lastPost)) > nowDays - 90) {
-      if (createdAtDays < nowDays - 60) return 'coldmap-high';
-      if (createdAtDays < nowDays - 30) return 'coldmap-med';
-      if (createdAtDays < nowDays - 14) return 'coldmap-low';
-    }
+    lastPostDays = daysSinceEpoch(new Date(lastPost));
+    if (nowDays - lastPostDays > 60) return 'coldmap-high';
+    if (nowDays - lastPostDays > 30) return 'coldmap-med';
+    if (nowDays - lastPostDays > 14) return 'coldmap-low';
     return null;
-  }.property('age', 'created_at'),
+  }.property('age', 'created_at', 'last_posted_at'),
 
   viewsHeat: function() {
     var v = this.get('views');
@@ -320,7 +322,11 @@ Discourse.Topic.reopenClass({
   **/
   findSimilarTo: function(title, body) {
     return Discourse.ajax("/topics/similar_to", { data: {title: title, raw: body} }).then(function (results) {
-      return results.map(function(topic) { return Discourse.Topic.create(topic); });
+      if (Array.isArray(results)) {
+        return results.map(function(topic) { return Discourse.Topic.create(topic); });
+      } else {
+        return Ember.A();
+      }
     });
   },
 
@@ -380,6 +386,16 @@ Discourse.Topic.reopenClass({
       promise.reject(new Error("error moving posts topic"));
     });
     return promise;
+  },
+
+  bulkOperation: function(topics, operation) {
+    return Discourse.ajax("/topics/bulk", {
+      type: 'PUT',
+      data: {
+        topic_ids: topics.map(function(t) { return t.get('id'); }),
+        operation: operation
+      }
+    });
   }
 
 });

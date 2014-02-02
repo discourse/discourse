@@ -94,7 +94,10 @@
   }
 }
 
-a.reply-new {color: #aaa;}
+a.reply-new {
+  position: absolute;
+  color: #aaa; 
+  margin-top: -2px;}
 a:hover.reply-new {
   color: #56aed3;
   i {background: #e4f2f8;

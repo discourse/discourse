@@ -458,7 +458,12 @@ iframe {
   border-top: 1px solid #ddd;
   padding-top: 30px;
 
-  img { text-align: center; }
+  img {
+    text-align: center;
+    width: 45px;
+    height: 45px;
+  }
+  
   .contents { text-align: center;}
   h3 { display: block; }
 
@@ -509,11 +514,14 @@ iframe {
   }
 }
 
-
 .deleted {
   .topic-body {
   background-color: lighten(red, 45%);
   }
+}
+
+.post-hidden {
+  opacity: 0.5;
 }
 
 .moderator {
@@ -573,8 +581,8 @@ iframe {
 }
 
 .staff a {
-  padding: 4px;
-  margin: -4px 0 0 0;
+  padding: 2px;
+  margin: -2px 0 0 0;
   background-color: lighten(yellow, 35%);
 }
 
@@ -607,6 +615,8 @@ position: relative;
 blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
+
+    a.mention {background: #ddd;}
     p:first-of-type {margin-top: 0;}
     p:last-of-type {margin-bottom: 0;}
 }
@@ -661,25 +671,27 @@ blockquote { /* solo quotes */
   float: left;
   max-width: 250px;
   width: 15%;
+  margin-top: 6px;
       ul {margin: 0;}
       padding-left: 10px;
 
   i {font-size: 12px;}
 
   .post-links {
-    margin-top: 3px;
     list-style-type: none;
     padding-left: 19px;
     position: relative;
     margin-left: 5px;
+    line-height: 18px;
     a i {
       position: absolute;
       left: 0;
       margin-right: 15px;
       margin-bottom: 20px;
+      margin-top: 2px;
     }
     a {color: #aaa;}
-    li {margin-bottom: 7px;}
+    li {margin-bottom: 10px;}
   }
 }
 

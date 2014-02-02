@@ -1,0 +1,329 @@
+<section class='details'>
+
+  <div class='display-row'>
+    <div class='field'>{{i18n user.username.title}}</div>
+    <div class='value'>{{username}}</div>
+    <div class='controls'>
+      {{#link-to 'userActivity' model class="btn"}}
+        <i class='fa fa-user'></i>
+        {{i18n admin.user.show_public_profile}}
+      {{/link-to}}
+      {{#if can_impersonate}}
+          <button class='btn' {{action impersonate target="content"}}>
+            <i class='fa fa-crosshairs'></i>
+            {{i18n admin.user.impersonate}}
+          </button>
+      {{/if}}
+    </div>
+  </div>
+
+  <div class='display-row'>
+    <div class='field'>{{i18n user.email.title}}</div>
+    <div class='value'><a href="mailto:{{unbound email}}">{{email}}</a></div>
+  </div>
+
+  <div class='display-row'>
+    <div class='field'>{{i18n user.avatar.title}}</div>
+    <div class='value'>{{avatar content imageSize="large"}}</div>
+  </div>
+
+  <div class='display-row'>
+    <div class='field'>{{i18n user.title.title}}</div>
+    <div class='value'>
+      {{#if editingTitle}}
+        {{textField value=title autofocus="autofocus"}}
+      {{else}}
+        <span {{action toggleTitleEdit}}>{{title}}&nbsp;</span>
+      {{/if}}
+    </div>
+    <div class='controls'>
+      {{#if editingTitle}}
+        <button class='btn' {{action saveTitle}}>{{i18n admin.user.save_title}}</button>
+        <a href="#" {{action toggleTitleEdit}}>{{i18n cancel}}</a>
+      {{else}}
+        <button class='btn' {{action toggleTitleEdit}}>{{i18n admin.user.edit_title}}</button>
+      {{/if}}
+    </div>
+  </div>
+
+  <div class='display-row'>
+    <div class='field'>{{i18n user.ip_address.title}}</div>
+    <div class='value'>{{ip_address}}</div>
+    <div class='controls'>
+      {{#if currentUser.admin}}
+      <button class='btn' {{action refreshBrowsers target="content"}}>
+        {{i18n admin.user.refresh_browsers}}
+      </button>
+      {{/if}}
+    </div>
+  </div>
+
+</section>
+
+
+<section class='details'>
+  <h1>{{i18n admin.user.permissions}}</h1>
+
+  {{#if showApproval}}
+    <div class='display-row'>
+      <div class='field'>{{i18n admin.users.approved}}</div>
+      <div class='value'>
+        {{#if approved}}
+          {{i18n admin.user.approved_by}}
+
+          {{#link-to 'adminUser' approved_by}}{{avatar approved_by imageSize="small"}}{{/link-to}}
+          {{#link-to 'adminUser' approved_by}}{{approved_by.username}}{{/link-to}}
+        {{else}}
+          {{i18n no_value}}
+        {{/if}}
+
+      </div>
+      <div class='controls'>
+        {{#if approved}}
+          {{i18n admin.user.approve_success}}
+        {{else}}
+          {{#if can_approve}}
+            <button class='btn' {{action approve target="content"}}>
+              <i class='fa fa-check'></i>
+              {{i18n admin.user.approve}}
+            </button>
+          {{/if}}
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.users.active}}</div>
+    <div class='value'>
+      {{#if active}}
+        {{i18n yes_value}}
+      {{else}}
+        {{i18n no_value}}
+      {{/if}}
+    </div>
+    <div class='controls'>
+      {{#if active}}
+        {{#if can_deactivate}}
+          <button class='btn' {{action deactivate target="content"}}>{{i18n admin.user.deactivate_account}}</button>
+          {{i18n admin.user.deactivate_explanation}}
+        {{/if}}
+      {{else}}
+        {{#if can_send_activation_email}}
+          <button class='btn' {{action sendActivationEmail target="content"}}>
+            <i class='fa fa-envelope'></i>
+            {{i18n admin.user.send_activation_email}}
+          </button>
+        {{/if}}
+        {{#if can_activate}}
+          <button class='btn' {{action activate target="content"}}>
+            <i class='fa fa-check'></i>
+            {{i18n admin.user.activate}}
+          </button>
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.api.key}}</div>
+
+    {{#if api_key}}
+      <div class='long-value'>
+        {{api_key.key}}
+        <button class='btn' {{action regenerateApiKey}}>{{i18n admin.api.regenerate}}</button>
+        <button {{action revokeApiKey}} class="btn">{{i18n admin.api.revoke}}</button>
+      </div>
+    {{else}}
+      <div class='value'>
+      &mdash;
+      </div>
+      <div class='controls'>
+        <button {{action generateApiKey}} class="btn">{{i18n admin.api.generate}}</button>
+      </div>
+    {{/if}}
+  </div>
+
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.admin}}</div>
+    <div class='value'>{{admin}}</div>
+    <div class='controls'>
+      {{#if can_revoke_admin}}
+        <button class='btn' {{action revokeAdmin target="content"}}>
+          <i class='fa fa-trophy'></i>
+          {{i18n admin.user.revoke_admin}}
+        </button>
+      {{/if}}
+      {{#if can_grant_admin}}
+        <button class='btn' {{action grantAdmin target="content"}}>
+          <i class='fa fa-trophy'></i>
+          {{i18n admin.user.grant_admin}}
+        </button>
+      {{/if}}
+    </div>
+
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.moderator}}</div>
+    <div class='value'>{{moderator}}</div>
+    <div class='controls'>
+      {{#if can_revoke_moderation}}
+        <button class='btn' {{action revokeModeration target="content"}}>
+          <i class='fa fa-magic'></i>
+          {{i18n admin.user.revoke_moderation}}
+        </button>
+      {{/if}}
+      {{#if can_grant_moderation}}
+        <button class='btn' {{action grantModeration target="content"}}>
+          <i class='fa fa-magic'></i>
+          {{i18n admin.user.grant_moderation}}
+        </button>
+      {{/if}}
+    </div>
+
+  </div>
+
+  <div class='display-row'>
+    <div class='field'>{{i18n trust_level}}</div>
+    <div class="value">
+      {{combobox content=trustLevels value=trust_level nameProperty="detailedName"}}
+    </div>
+    <div class="controls">
+      {{#if leaderRequirements}}
+        {{#link-to 'adminUser.leaderRequirements' this class="btn"}}{{i18n admin.user.trust_level_3_requirements}}{{/link-to}}
+      {{/if}}
+
+      {{#if dirty}}
+        <div>
+        <button class='btn ok' {{action saveTrustLevel target="content"}}><i class='fa fa-check'></i></button>
+        <button class='btn cancel' {{action restoreTrustLevel target="content"}}><i class='fa fa-times'></i></button>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+
+  <div {{bind-attr class=":display-row isSuspended:highlight-danger"}}>
+    <div class='field'>{{i18n admin.user.suspended}}</div>
+    <div class='value'>{{isSuspended}}</div>
+    <div class='controls'>
+    {{#if isSuspended}}
+      <button class='btn btn-danger' {{action unsuspend target="content"}}>
+        <i class='fa fa-ban'></i>
+        {{i18n admin.user.unsuspend}}
+      </button>
+      {{suspendDuration}}
+      {{i18n admin.user.suspended_explanation}}
+    {{else}}
+      {{#if canSuspend}}
+        <button class='btn btn-danger' {{action showSuspendModal this}}>
+          <i class='fa fa-ban'></i>
+          {{i18n admin.user.suspend}}
+        </button>
+        {{i18n admin.user.suspended_explanation}}
+      {{/if}}
+    {{/if}}
+    </div>
+  </div>
+
+  {{#if isSuspended}}
+  <div class='display-row highlight-danger'>
+    <div class='field'>{{i18n admin.user.suspended_by}}</div>
+    <div class='value'>
+      {{#link-to 'adminUser' suspended_by}}{{avatar suspended_by imageSize="tiny"}}{{/link-to}}
+      {{#link-to 'adminUser' suspended_by}}{{suspended_by.username}}{{/link-to}}
+    </div>
+    <div class='controls'>
+      <b>{{i18n admin.user.suspend_reason}}</b>:
+      {{suspend_reason}}
+    </div>
+  </div>
+  {{/if}}
+
+  <div class='display-row' {{bind-attr class=":display-row blocked:highlight-danger"}}>
+    <div class='field'>{{i18n admin.user.blocked}}</div>
+    <div class='value'>{{blocked}}</div>
+    <div class='controls'>
+      {{#if blocked}}
+        <button class='btn' {{action unblock target="content"}}>
+          <i class='fa fa-thumbs-o-up'></i>
+          {{i18n admin.user.unblock}}
+        </button>
+        {{i18n admin.user.block_explanation}}
+      {{/if}}
+    </div>
+  </div>
+</section>
+
+<section class='details'>
+  <h1>{{i18n admin.user.activity}}</h1>
+
+  <div class='display-row'>
+    <div class='field'>{{i18n created}}</div>
+    <div class='value'>{{{created_at_age}}}</div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.users.last_emailed}}</div>
+    <div class='value'>{{{last_emailed_age}}}</div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n last_seen}}</div>
+    <div class='value'>{{{last_seen_age}}}</div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.like_count}}</div>
+    <div class='value'>{{like_count}}</div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.topics_entered}}</div>
+    <div class='value'>{{topics_entered}}</div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.post_count}}</div>
+    <div class='value'>{{post_count}}</div>
+    <div class='controls'>
+      {{#if can_delete_all_posts}}
+        <button class='btn btn-danger' {{action deleteAllPosts target="content"}}>
+          <i class='fa fa-trash-o'></i>
+          {{i18n admin.user.delete_all_posts}}
+        </button>
+      {{/if}}
+    </div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.posts_read_count}}</div>
+    <div class='value'>{{posts_read_count}}</div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.flags_given_count}}</div>
+    <div class='value'>{{flags_given_count}}</div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.flags_received_count}}</div>
+    <div class='value'>{{flags_received_count}}</div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.private_topics_count}}</div>
+    <div class='value'>{{private_topics_count}}</div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.time_read}}</div>
+    <div class='value'>{{{time_read}}}</div>
+  </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n user.invited.days_visited}}</div>
+    <div class='value'>{{{days_visited}}}</div>
+  </div>
+</section>
+
+<section>
+  <hr/>
+  <button {{bind-attr class=":btn :btn-danger :pull-right deleteForbidden:hidden"}} {{action destroy target="content"}} {{bind-attr disabled="deleteForbidden"}} {{bind-attr}}>
+    <i class="fa fa-exclamation-triangle"></i>
+    {{i18n admin.user.delete}}
+  </button>
+  {{#if deleteExplanation}}
+    <div class="clearfix"></div>
+    <div class="pull-right"><i class="fa fa-exclamation-triangle"></i> {{deleteExplanation}}</div>
+  {{/if}}
+</section>
+<div class="clearfix"></div>

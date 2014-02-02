@@ -31,11 +31,11 @@ module Discourse
   class CSRF < Exception; end
 
   def self.filters
-    @filters ||= [:latest, :hot, :unread, :new, :starred, :read, :posted]
+    @filters ||= [:latest, :unread, :new, :starred, :read, :posted]
   end
 
   def self.anonymous_filters
-    @anonymous_filters ||= [:latest, :hot]
+    @anonymous_filters ||= [:latest]
   end
 
   def self.logged_in_filters
@@ -43,11 +43,11 @@ module Discourse
   end
 
   def self.top_menu_items
-    @top_menu_items ||= Discourse.filters.concat([:category, :categories, :top])
+    @top_menu_items ||= Discourse.filters + [:category, :categories, :top]
   end
 
   def self.anonymous_top_menu_items
-    @anonymous_top_menu_items ||= Discourse.anonymous_filters.concat([:category, :categories, :top])
+    @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
   end
 
   def self.activate_plugins!
@@ -168,7 +168,7 @@ module Discourse
 
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
-    user = User.where(username_lower: SiteSetting.site_contact_username).first if SiteSetting.site_contact_username.present?
+    user = User.where(username_lower: SiteSetting.site_contact_username.downcase).first if SiteSetting.site_contact_username.present?
     user ||= User.admins.real.order(:id).first
   end
 

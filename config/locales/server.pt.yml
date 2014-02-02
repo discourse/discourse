@@ -283,7 +283,7 @@ pt:
     post_undo_action_window_mins: "The window in which someone can reverse an action on a post (such as liking)"
     must_approve_users: "The owners of the forum must approve users before they gain access."
     ga_tracking_code: "Google analytics tracking code, see: http://google.com/analytics"
-    top_menu: "The order of the items in the top menu. Example latest|hot|read|starred|unread|new|posted|categories"
+    top_menu: "The order of the items in the top menu. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "The order of the items on the post menu."
     max_length_show_reply: "Embedded replies to posts won't be shown if they directly below and are below this length."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default cause it has to re-write urls, hurting usability"

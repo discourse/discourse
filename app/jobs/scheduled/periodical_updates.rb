@@ -21,9 +21,6 @@ module Jobs
       # Update the scores of posts
       ScoreCalculator.new.calculate
 
-      # Refresh Hot Topics
-      HotTopic.refresh!
-
       # Refresh Top Topics
       TopTopic.refresh!
 

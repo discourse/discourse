@@ -43,6 +43,7 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
                             { name: I18n.t('user.new_topic_duration.after_n_days', { count: 1 }), value: 60 * 24 },
                             { name: I18n.t('user.new_topic_duration.after_n_days', { count: 2 }), value: 60 * 48 },
                             { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 1 }), value: 7 * 60 * 24 },
+                            { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 2 }), value: 2 * 7 * 60 * 24 },
                             { name: I18n.t('user.new_topic_duration.last_here'), value: -2 }],
 
   saveButtonText: function() {
@@ -52,8 +53,7 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
   actions: {
     save: function() {
       var self = this;
-      this.set('saving', true);
-      this.set('saved', false);
+      this.setProperties({ saving: true, saved: false });
 
       // Cook the bio for preview
       var model = this.get('model');
@@ -63,7 +63,7 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
         if (Discourse.User.currentProp('id') === model.get('id')) {
           Discourse.User.currentProp('name', model.get('name'));
         }
-        self.set('bio_cooked', Discourse.Markdown.cook(self.get('bio_raw')));
+        self.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(self.get('bio_raw'))));
         self.set('saved', true);
       }, function() {
         // model failed to save

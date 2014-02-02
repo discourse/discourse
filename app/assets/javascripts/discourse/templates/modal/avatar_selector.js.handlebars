@@ -14,7 +14,7 @@
           {{i18n user.change_avatar.uploaded_avatar_empty}}
         {{/if}}
       </label>
-      <button id="fake-avatar-input" class="btn" {{bindAttr disabled="view.uploading"}} title="{{i18n user.change_avatar.upload_title}}">
+      <button id="fake-avatar-input" class="btn" {{bind-attr disabled="view.uploading"}} title="{{i18n user.change_avatar.upload_title}}">
         <i class="fa fa-picture-o"></i>&nbsp;{{view.uploadButtonText}}
       </button>
       <input type="file" id="avatar-input" accept="image/*" style="display:none">
@@ -29,6 +29,6 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" {{action saveAvatarSelection}} {{bindAttr disabled="view.saveDisabled"}}>{{i18n save}}</button>
+  <button class="btn btn-primary" {{action saveAvatarSelection}} {{bind-attr disabled="view.saveDisabled"}}>{{i18n save}}</button>
   <a {{action closeModal}}>{{i18n cancel}}</a>
 </div>

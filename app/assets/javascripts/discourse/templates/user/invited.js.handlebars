@@ -27,11 +27,11 @@
         <tr>
           {{#if user}}
           <td>
-            {{#linkTo 'user' user}}{{avatar user imageSize="tiny"}}{{/linkTo}}
-            {{#linkTo 'user' user}}{{user.username}}{{/linkTo}}
+            {{#link-to 'user' user}}{{avatar user imageSize="tiny"}}{{/link-to}}
+            {{#link-to 'user' user}}{{user.username}}{{/link-to}}
           </td>
-          <td>{{date redeemed_at}}</td>
-          <td>{{date user.last_seen_at}}</td>
+          <td>{{unboundDate redeemed_at}}</td>
+          <td>{{unboundDate user.last_seen_at}}</td>
           <td>{{number user.topics_entered}}</td>
           <td>{{number user.posts_read_count}}</td>
           <td>{{{unbound user.time_read}}}</td>
@@ -41,6 +41,9 @@
           {{else}}
             <td>{{unbound email}}</td>
             <td colspan='6'>
+              {{#if expired}}
+                {{i18n user.invited.expired}}
+              {{/if}}
               {{#if rescinded}}
                 {{i18n user.invited.rescinded}}
               {{else}}

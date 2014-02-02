@@ -62,7 +62,6 @@ Discourse.Category = Discourse.Model.extend({
         name: this.get('name'),
         color: this.get('color'),
         text_color: this.get('text_color'),
-        hotness: this.get('hotness'),
         secure: this.get('secure'),
         permissions: this.get('permissionsForUpdate'),
         auto_close_hours: this.get('auto_close_hours'),

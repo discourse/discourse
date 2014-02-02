@@ -321,6 +321,9 @@ test("Code Blocks", function() {
          "<p><pre><code class=\"lang-auto\">[quote=&quot;sam, post:1, topic:9441, full:true&quot;]This is &#x60;&lt;not&gt;&#x60; a bug.[/quote]</code></pre></p>",
          "it allows code with backticks in it");
 
+  cooked("    hello\n<blockquote>test</blockquote>",
+         "<pre><code>hello</code></pre>\n\n<blockquote>test</blockquote>",
+         "it allows an indented code block to by followed by a `<blockquote>`");
 });
 
 test("sanitize", function() {
@@ -329,6 +332,8 @@ test("sanitize", function() {
   equal(sanitize("<i class=\"fa-bug fa-spin\">bug</i>"), "<i>bug</i>");
   equal(sanitize("<div><script>alert('hi');</script></div>"), "<div></div>");
   equal(sanitize("<div><p class=\"funky\" wrong='1'>hello</p></div>"), "<div><p>hello</p></div>");
+  equal(sanitize("<3 <3"), "&lt;3 &lt;3");
+  equal(sanitize("<_<"), "&lt;_&lt;");
   cooked("hello<script>alert(42)</script>", "<p>hello</p>", "it sanitizes while cooking");
 
   cooked("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>",

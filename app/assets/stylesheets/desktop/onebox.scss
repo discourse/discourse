@@ -14,8 +14,7 @@ a.loading-onebox {
 
 
 .onebox-result {
-
-    margin-top: 15px;
+  margin-top: 15px;
   padding: 12px 25px 12px 12px;
   border-left: 5px solid #bebebe;
   background: #eee;
@@ -81,3 +80,59 @@ a.loading-onebox {
     }
   }
 }
+
+@mixin onebox-favicon($class, $image) {
+  &.#{$class} .source {
+    background-image: image-url("favicons/#{$image}.png");
+    background-repeat: no-repeat;
+    padding-left: 20px;
+  }
+}
+
+aside.onebox {
+  margin-top: 15px;
+  padding: 12px 25px 12px 12px;
+  border-left: 5px solid #bebebe;
+  background: #eee;
+  font-size: 14px;
+
+  header {
+    a[href] {
+      color: #333;
+      text-decoration: none;
+    }
+  }
+
+  @include onebox-favicon('stackexchange', 'stackexchange');
+  @include onebox-favicon('twitterstatus', 'twitter');
+  @include onebox-favicon('wikipedia', 'wikipedia');
+  @include onebox-favicon('githubblob', 'github');
+
+
+  .onebox-body {
+    clear: both;
+
+    h3 {
+      font-size: 1.17em;
+    }
+
+    a[href] {
+      color: #006699;
+      text-decoration: none;
+    }
+
+    a[href]:visited {
+      color: #4a6b82;
+    }
+
+    img {
+      max-height: 80%;
+      max-width: 25%;
+      height: auto;
+      float: left;
+      margin-right: 10px;
+    }
+  }
+}
+
+

@@ -42,7 +42,12 @@ Discourse.TopicDetails = Discourse.Model.extend({
 
 
   notificationReasonText: function() {
-    var localeString = "topic.notifications.reasons." + (this.get('notification_level') || 1);
+    var level = this.get('notification_level');
+    if(typeof level !== 'number'){
+      level = 1;
+    }
+
+    var localeString = "topic.notifications.reasons." + level;
     if (typeof this.get('notifications_reason_id') === 'number') {
       localeString += "_" + this.get('notifications_reason_id');
     }

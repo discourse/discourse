@@ -7,28 +7,30 @@
     <link><%= @link %></link>
     <description><%= @description %></description>
     <%= "<language>#{lang}</language>" if lang %>
-    <lastBuildDate><%= @topic_list.topics.first.created_at.rfc2822 %></lastBuildDate>
-    <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
-    <% @topic_list.topics.each do |topic| %>
-      <% topic_url = Discourse.base_url + topic.relative_url -%>
-      <item>
-        <title><%= topic.title %></title>
-        <author><%= "#{site_email} (@#{topic.user.username}#{" #{topic.user.name}" if topic.user.name.present?})" -%></author>
-        <category><%= topic.category.name %></category>
-        <description><![CDATA[
-          <p><%= t('author_wrote', author: link_to(topic.user.name, userpage_url(topic.user))).html_safe %></p>
-          <blockquote>
-            <%= topic.posts.first.cooked.html_safe %>
-          </blockquote>
-          <p><%= t 'num_posts' %> <%= topic.posts_count %></p>
-          <p><%= t 'num_participants' %> <%= topic.participant_count %></p>
-          <p><%= link_to t('read_full_topic'), topic_url %></p>
-        ]]></description>
-        <link><%= topic_url %></link>
-        <pubDate><%= topic.created_at.rfc2822 %></pubDate>
-        <guid><%= topic_url %></guid>
-        <source url="<%= topic_url %>.rss"><%= topic.title %></source>
-      </item>
+    <% if @topic_list.topics && @topic_list.topics.length > 0 %>
+      <lastBuildDate><%= @topic_list.topics.first.created_at.rfc2822 %></lastBuildDate>
+      <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
+      <% @topic_list.topics.each do |topic| %>
+        <% topic_url = Discourse.base_url + topic.relative_url -%>
+        <item>
+          <title><%= topic.title %></title>
+          <author><%= "#{site_email} (@#{topic.user.username}#{" #{topic.user.name}" if topic.user.name.present?})" -%></author>
+          <category><%= topic.category.name %></category>
+          <description><![CDATA[
+            <p><%= t('author_wrote', author: link_to(topic.user.name, userpage_url(topic.user))).html_safe %></p>
+            <blockquote>
+              <%= topic.posts.first.cooked.html_safe %>
+            </blockquote>
+            <p><%= t 'num_posts' %> <%= topic.posts_count %></p>
+            <p><%= t 'num_participants' %> <%= topic.participant_count %></p>
+            <p><%= link_to t('read_full_topic'), topic_url %></p>
+          ]]></description>
+          <link><%= topic_url %></link>
+          <pubDate><%= topic.created_at.rfc2822 %></pubDate>
+          <guid><%= topic_url %></guid>
+          <source url="<%= topic_url %>.rss"><%= topic.title %></source>
+        </item>
+      <% end %>
     <% end %>
   </channel>
 </rss>

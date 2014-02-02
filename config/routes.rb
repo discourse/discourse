@@ -58,6 +58,7 @@ Discourse::Application.routes.draw do
       put "block"
       put "unblock"
       put "trust_level"
+      get "leader_requirements"
     end
 
     resources :impersonate, constraints: AdminConstraint.new
@@ -200,26 +201,23 @@ Discourse::Application.routes.draw do
 
   resources :categories, :except => :show
   get "category/:id/show" => "categories#show"
-  post "category/:category_id/move" => "categories#move", as: "category_move"
-  get "category/:category.rss" => "list#category_feed", format: :rss, as: "category_feed"
-  get "category/:category" => "list#category"
-  get "category/:category/more" => "list#category"
-  get "category/:category/none" => "list#category_none"
-  get "category/:category/none/more" => "list#category_none"
-  get "category/:parent_category/:category" => "list#category"
-  get "category/:parent_category/:category/more" => "list#category"
+  post "category/:category_id/move" => "categories#move"
+  get "category/:category.rss" => "list#category_feed", format: :rss
+  get "category/:parent_category/:category.rss" => "list#category_feed", format: :rss
+  get "category/:category" => "list#latest_category"
+  get "category/:category/none" => "list#latest_category_none"
+  get "category/:parent_category/:category" => "list#latest_category"
 
-  get "top" => "list#top_lists"
-  get "category/:category/l/top" => "list#top_lists"
-  get "category/:parent_category/:category/l/top" => "list#top_lists"
+  get "top" => "list#top"
+  get "category/:category/l/top" => "list#top_category"
+  get "category/:category/none/l/top" => "list#top_category_none"
+  get "category/:parent_category/:category/l/top" => "list#top_category"
 
   TopTopic.periods.each do |period|
     get "top/#{period}" => "list#top_#{period}"
-    get "top/#{period}/more" => "list#top_#{period}"
-    get "category/:category/l/top/#{period}" => "list#top_#{period}"
-    get "category/:category/l/top/#{period}/more" => "list#top_#{period}"
-    get "category/:parent_category/:category/l/top/#{period}" => "list#top_#{period}"
-    get "category/:parent_category/:category/l/top/#{period}/more" => "list#top_#{period}"
+    get "category/:category/l/top/#{period}" => "list#top_#{period}_category"
+    get "category/:category/none/l/top/#{period}" => "list#top_#{period}_category_none"
+    get "category/:parent_category/:category/l/top/#{period}" => "list#top_#{period}_category"
   end
 
   Discourse.anonymous_filters.each do |filter|
@@ -229,10 +227,12 @@ Discourse::Application.routes.draw do
   Discourse.filters.each do |filter|
     get "#{filter}" => "list##{filter}"
     get "#{filter}/more" => "list##{filter}"
-    get "category/:category/l/#{filter}" => "list##{filter}"
-    get "category/:category/l/#{filter}/more" => "list##{filter}"
-    get "category/:parent_category/:category/l/#{filter}" => "list##{filter}"
-    get "category/:parent_category/:category/l/#{filter}/more" => "list##{filter}"
+    get "category/:category/l/#{filter}" => "list##{filter}_category"
+    get "category/:category/l/#{filter}/more" => "list##{filter}_category"
+    get "category/:category/none/l/#{filter}" => "list##{filter}_category_none"
+    get "category/:category/none/l/#{filter}/more" => "list##{filter}_category_none"
+    get "category/:parent_category/:category/l/#{filter}" => "list##{filter}_category"
+    get "category/:parent_category/:category/l/#{filter}/more" => "list##{filter}_category"
   end
 
   get "search" => "search#query"
@@ -242,6 +242,7 @@ Discourse::Application.routes.draw do
   post "t" => "topics#create"
   put "t/:id" => "topics#update"
   delete "t/:id" => "topics#destroy"
+  put "topics/bulk"
   post "topics/timings"
   get "topics/similar_to"
   get "topics/created-by/:username" => "list#topics_by", as: "topics_by", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -270,9 +271,11 @@ Discourse::Application.routes.draw do
   put "t/:topic_id/remove-allowed-user" => "topics#remove_allowed_user", constraints: {topic_id: /\d+/}
   put "t/:topic_id/recover" => "topics#recover", constraints: {topic_id: /\d+/}
   get "t/:topic_id/:post_number" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}
+  get "t/:topic_id/last" => "topics#show", post_number: 99999999, constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id.rss" => "topics#feed", format: :rss, constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id" => "topics#show", constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id/:post_number" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}
+  get "t/:slug/:topic_id/last" => "topics#show", post_number: 99999999, constraints: {topic_id: /\d+/}
   get "t/:topic_id/posts" => "topics#posts", constraints: {topic_id: /\d+/}
   post "t/:topic_id/timings" => "topics#timings", constraints: {topic_id: /\d+/}
   post "t/:topic_id/invite" => "topics#invite", constraints: {topic_id: /\d+/}
@@ -305,6 +308,6 @@ Discourse::Application.routes.draw do
   # special case for categories
   root to: "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
   # special case for top
-  root to: "list#top_lists", constraints: HomePageConstraint.new("top"), :as => "top_lists"
+  root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
 
 end

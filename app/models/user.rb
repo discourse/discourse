@@ -260,6 +260,10 @@ class User < ActiveRecord::Base
     !!@password_required
   end
 
+  def has_password?
+    password_hash.present?
+  end
+
   def password_validator
     PasswordValidator.new(attributes: :password).validate_each(self, :password, @raw_password)
   end
@@ -277,14 +281,21 @@ class User < ActiveRecord::Base
     last_seen_at.present?
   end
 
-  def has_visit_record?(date)
+  def visit_record_for(date)
     user_visits.where(visited_at: date).first
   end
 
   def update_visit_record!(date)
-    unless has_visit_record?(date)
-      user_stat.update_column(:days_visited, user_stat.days_visited + 1)
-      user_visits.create!(visited_at: date)
+    create_visit_record!(date) unless visit_record_for(date)
+  end
+
+  def update_posts_read!(num_posts, now=Time.zone.now)
+    if user_visit = visit_record_for(now.to_date)
+      user_visit.posts_read += num_posts
+      user_visit.save
+      user_visit
+    else
+      create_visit_record!(now.to_date, num_posts)
     end
   end
 
@@ -329,7 +340,7 @@ class User < ActiveRecord::Base
   end
 
   def avatar_template
-    uploaded_avatar_path || User.gravatar_template(email)
+    uploaded_avatar_path || User.gravatar_template(id != -1 ? email : "team@discourse.org")
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
@@ -408,6 +419,7 @@ class User < ActiveRecord::Base
   def change_trust_level!(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
     self.trust_level = TrustLevel.levels[level]
+    self.bio_raw_will_change! # So it can get re-cooked based on the new trust level
     transaction do
       self.save!
       Group.user_trust_level_change!(self.id, self.trust_level)
@@ -522,11 +534,15 @@ class User < ActiveRecord::Base
     last_sent_email_address || email
   end
 
+  def leader_requirements
+    @lq ||= LeaderRequirements.new(self)
+  end
+
   protected
 
   def cook
     if bio_raw.present?
-      self.bio_cooked = PrettyText.cook(bio_raw) if bio_raw_changed?
+      self.bio_cooked = PrettyText.cook(bio_raw, omit_nofollow: self.has_trust_level?(:leader)) if bio_raw_changed?
     else
       self.bio_cooked = nil
     end
@@ -545,6 +561,11 @@ class User < ActiveRecord::Base
 
   def create_email_token
     email_tokens.create(email: email)
+  end
+
+  def create_visit_record!(date, posts_read=0)
+    user_stat.update_column(:days_visited, user_stat.days_visited + 1)
+    user_visits.create!(visited_at: date, posts_read: posts_read)
   end
 
   def ensure_password_is_hashed
@@ -606,8 +627,7 @@ class User < ActiveRecord::Base
   private
 
   def previous_visit_at_update_required?(timestamp)
-    seen_before? &&
-      (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
+    seen_before? && (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
   end
 
   def update_previous_visit(timestamp)

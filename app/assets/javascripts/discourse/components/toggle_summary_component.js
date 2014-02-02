@@ -7,7 +7,7 @@
   @module Discourse
 **/
 Discourse.ToggleSummaryComponent = Ember.Component.extend({
-  templateName: 'components/toggle-summary',
+  layoutName: 'components/toggle-summary',
   tagName: 'section',
   classNames: ['information'],
   postStream: Em.computed.alias('topic.postStream'),

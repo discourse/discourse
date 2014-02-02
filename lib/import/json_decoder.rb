@@ -2,23 +2,39 @@ module Import
 
   class JsonDecoder
 
-    def initialize(input_filename)
-      @input_filename = input_filename
+    def initialize(filenames, loader = nil)
+      @filemap = Hash[*
+        filenames.map do |filename|
+          [File.basename(filename, '.*'), filename]
+        end.flatten
+      ]
+      @loader = loader || lambda{|filename| Oj.load_file(filename)}
+    end
+
+    def load_schema
+      @loader.call(@filemap['schema'])
+    end
+
+    def each_table
+      @filemap.each do |name, filename|
+        next if name == 'schema'
+        yield name, @loader.call(filename)
+      end
     end
 
 
     def input_stream
       @input_stream ||= begin
-        File.open( @input_filename, 'rb' )
       end
     end
 
     def start( opts )
-      @json = JSON.parse(input_stream.read)
-      opts[:callbacks][:schema_info].call( source: @json['schema']['source'], version: @json['schema']['version'], table_count: @json.keys.size - 1)
-      @json.each do |key, val|
-        next if key == 'schema'
-        opts[:callbacks][:table_data].call( key, val['fields'], val['rows'], val['row_count'] )
+      schema = load_schema
+      opts[:callbacks][:schema_info].call( source: schema['schema']['source'], version: schema['schema']['version'], table_count: schema.keys.size - 1)
+
+      each_table do |name, data|
+        info = schema[name]
+        opts[:callbacks][:table_data].call( name, info['fields'], data, info['row_count'] )
       end
     end
 

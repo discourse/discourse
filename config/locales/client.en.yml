@@ -49,7 +49,8 @@ en:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
-        date_year: "D MMM 'YY"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"
@@ -108,6 +109,7 @@ en:
     daily: "daily"
     weekly: "weekly"
     every_two_weeks: "every two weeks"
+    max: "max"
     character_count:
       one: "{{count}} character"
       other: "{{count}} characters"
@@ -219,7 +221,7 @@ en:
       invited_by: "Invited By"
       trust_level: "Trust Level"
       notifications: "Notifications"
-      dynamic_favicon: "Show incoming message notifications on favicon"
+      dynamic_favicon: "Show incoming message notifications on favicon (experimental)"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
@@ -246,6 +248,7 @@ en:
         in_progress: "(sending email)"
         error: "(error)"
         action: "Send Password Reset Email"
+        set_password: "Set Password"
 
       change_about:
         title: "Change About Me"
@@ -270,7 +273,7 @@ en:
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
-        image_is_not_a_square: "Warning: we've cropped your image as it's not a square."
+        image_is_not_a_square: "Warning: we've cropped your image; it is not square."
 
       email:
         title: "Email"
@@ -305,7 +308,7 @@ en:
       last_posted: "Last Post"
       last_emailed: "Last Emailed"
       last_seen: "Seen"
-      created: "Created At"
+      created: "Joined"
       log_out: "Log Out"
       website: "Web Site"
       email_settings: "Email"
@@ -331,7 +334,7 @@ en:
           other: "they were posted in the last {{count}} days"
         after_n_weeks:
           one: "they were posted in the last week"
-          other: "they were posted in the last {{count}} week"
+          other: "they were posted in the last {{count}} weeks"
 
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
@@ -353,8 +356,9 @@ en:
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed"
         pending: "Pending Invites"
-        topics_entered: "Topics Entered"
+        topics_entered: "Topics Viewed"
         posts_read_count: "Posts Read"
+        expired: "This invite has expired."
         rescind: "Remove Invitation"
         rescinded: "Invite removed"
         time_read: "Read Time"
@@ -596,6 +600,15 @@ en:
         unstar: 'remove this topic from your starred list'
 
     topics:
+      bulk:
+        toggle: "toggle bulk selection of topics"
+        actions: "Bulk Actions"
+        change_category: "Change Category"
+        close_topics: "Close Topics"
+        selected:
+          one: "You have selected <b>1</b> topic."
+          other: "You have selected <b>{{count}}</b> topics."
+
       none:
         starred: "You haven't starred any topics yet. To star a topic, click or tap the star next to the title."
         unread: "You have no unread topics."
@@ -616,11 +629,6 @@ en:
         starred: "There are no more starred topics."
         category: "There are no more {{category}} topics."
         top: "There are no more top topics."
-
-    rank_details:
-      toggle: toggle topic rank details
-      show: show topic rank details
-      title: Topic Rank Details
 
     topic:
       filter_to: "Show {{post_count}} posts in topic"
@@ -718,15 +726,24 @@ en:
           "1_2": 'You will be notified only if someone mentions your @name or replies to your post.'
           "0": 'You are ignoring all notifications on this topic.'
           "0_2": 'You are ignoring all notifications on this topic.'
+        watching_pm:
+          title: "Watching"
+          description: "same as Tracking, plus you will be notified of all new posts."
         watching:
           title: "Watching"
           description: "same as Tracking, plus you will be notified of all new posts."
+        tracking_pm:
+          title: "Tracking"
+          description: "you will be notified of @name mentions and replies to your posts"
         tracking:
           title: "Tracking"
           description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
         regular:
           title: "Regular"
           description: "you will be notified only if someone mentions your @name or replies to your post."
+        muted_pm:
+          title: "Muted"
+          description: "you will not be notified of anything about this private message."
         muted:
           title: "Muted"
           description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
@@ -860,7 +877,7 @@ en:
         reply: "begin composing a reply to this post"
         like: "like this post"
         edit: "edit this post"
-        flag: "flag this post for attention or send a notification about it"
+        flag: "privately flag this post for attention or send a private notification about it"
         delete: "delete this post"
         undelete: "undelete this post"
         share: "share a link to this post"
@@ -1014,14 +1031,13 @@ en:
       badge_colors: "Badge colors"
       background_color: "Background color"
       foreground_color: "Foreground color"
-      name_placeholder: "Should be short and succinct."
+      name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
       list: "List Categories"
       no_description: "There is no description for this category, edit the topic definition."
       change_in_category_topic: "Edit Description"
-      hotness: "Hotness"
       already_used: 'This color has been used by another category'
       security: "Security"
       auto_close_label: "Auto-close topics after:"
@@ -1034,7 +1050,7 @@ en:
       parent: "Parent Category"
 
     flagging:
-      title: 'Why are you flagging this post?'
+      title: 'Why are you privately flagging this post?'
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Notify'
@@ -1081,9 +1097,11 @@ en:
     categories_list: "Categories List"
 
     filters:
+      with_topics: "%{filter} Topics"
+      with_category: "%{filter} %{category} Topics"
       latest:
         title: "Latest"
-        help: "the most recent topics"
+        help: "topics with recent posts"
       hot:
         title: "Hot"
         help: "a selection of the hottest topics"
@@ -1102,13 +1120,13 @@ en:
           zero: "Unread"
           one: "Unread (1)"
           other: "Unread ({{count}})"
-        help: "tracked topics with unread posts"
+        help: "topics you are watching or tracking with unread posts"
       new:
         title:
           zero: "New"
           one: "New (1)"
           other: "New ({{count}})"
-        help: "new topics since your last visit"
+        help: "topics created since your last visit"
       posted:
         title: "My Posts"
         help: "topics you have posted in"
@@ -1120,14 +1138,22 @@ en:
         help: "latest topics in the {{categoryName}} category"
       top:
         title: "Top"
-        help: "a selection of the best topics"
+        help: "a selection of best topics in the last year, month, week or day"
+        yearly:
+          title: "Top Yearly"
+        monthly:
+          title: "Top Monthly"
+        weekly:
+          title: "Top Weekly"
+        daily:
+          title: "Top Daily"
         this_year: "This year"
         this_month: "This month"
         this_week: "This week"
         today: "Today"
-        other_periods: "dig into other periods"
+        other_periods: "see more top topics"
         redirect_reasons:
-          new_user: "Welcome! As a new visitor, we thought you might like to start with this list of the top discussion topics in the last year."
+          new_user: "Welcome! As a new visitor, we thought you might like to start with the top discussion topics."
           not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
@@ -1438,7 +1464,7 @@ en:
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
-        topics_entered: Topics Entered
+        topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
         approve: 'Approve'
@@ -1470,6 +1496,21 @@ en:
         block_explanation: "A blocked user can't post or start topics."
         trust_level_change_failed: "There was a problem changing the user's trust level."
         suspend_modal_title: "Suspend User"
+        trust_level_2_users: "Trust Level 2 Users"
+        trust_level_3_requirements: "Trust Level 3 Requirements"
+        tl3_requirements:
+          title: "Requirements for Trust Level 3"
+          table_title: "In the last 100 days:"
+          value_heading: "Value"
+          requirement_heading: "Requirement"
+          visits: "Visits"
+          days: "days"
+          topics_with_replies: "Topics with Replies"
+          topics_replied_to: "Topics Replied To"
+          quality_content: "Quality Content"
+          reading: "Reading"
+          site_promotion: "Site Promotion"
+          flagged_posts: "Flagged Posts"
 
       site_content:
         none: "Choose a type of content to begin editing."
@@ -1504,7 +1545,7 @@ en:
       download: "download"
 
     keyboard_shortcuts_help:
-      title: 'Keyboard Shortcuts'
+      title: 'Keyboard Shortcuts (experimental)'
       jump_to:
         title: 'Jump To'
         home: '<b>g</b> then <b>h</b> Home (Latest)'

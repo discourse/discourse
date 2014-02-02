@@ -4,8 +4,11 @@ class SiteSerializer < ApplicationSerializer
              :notification_types,
              :post_types,
              :group_names,
+             :filters,
+             :periods,
+             :top_menu_items,
+             :anonymous_top_menu_items,
              :uncategorized_category_id # this is hidden so putting it here
-
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :post_action_types, embed: :objects
@@ -19,6 +22,22 @@ class SiteSerializer < ApplicationSerializer
 
   def post_types
     Post.types
+  end
+
+  def filters
+    Discourse.filters.map(&:to_s)
+  end
+
+  def periods
+    TopTopic.periods.map(&:to_s)
+  end
+  
+  def top_menu_items
+    Discourse.top_menu_items.map(&:to_s)
+  end
+
+  def anonymous_top_menu_items
+    Discourse.anonymous_top_menu_items.map(&:to_s)
   end
 
   def uncategorized_category_id

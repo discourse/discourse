@@ -471,11 +471,6 @@ nb_NO:
         starred: "Det er ikke noen favorittemner igjen å lese."
         category: "Det er ikke noen {{category}} emner igjen."
 
-    rank_details:
-      toggle: toggle topic rank details
-      show: show topic rank details
-      title: Topic Rank Details
-
     topic:
       create: 'Lag Emne'
       create_long: 'Lag ett nytt Emne'
@@ -805,7 +800,6 @@ nb_NO:
       list: "List Kategorier"
       no_description: "Det er ingen beskrivelse på denne kategorien."
       change_in_category_topic: "Rediger Beskrivelse"
-      hotness: "Temperatur"
       already_used: 'Denne fargen er i bruk av en annen kategori'
       is_secure: "Sikker kategori?"
       add_group: "Legg til Gruppe"
