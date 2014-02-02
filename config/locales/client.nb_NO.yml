@@ -800,7 +800,6 @@ nb_NO:
       list: "List Kategorier"
       no_description: "Det er ingen beskrivelse på denne kategorien."
       change_in_category_topic: "Rediger Beskrivelse"
-      hotness: "Temperatur"
       already_used: 'Denne fargen er i bruk av en annen kategori'
       is_secure: "Sikker kategori?"
       add_group: "Legg til Gruppe"

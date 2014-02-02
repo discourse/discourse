@@ -112,6 +112,14 @@
     font-size: 14px;
   }
 
+  button.bulk-select {
+    padding: 0;
+    background: transparent;
+    &:hover {
+      color: #999;
+    }
+  }
+
   .star {
     width: 20px;
     padding-right: 0;
@@ -214,7 +222,6 @@
     width: 60px;
   }
   .with-year {
-    font-size: 85%;
     white-space: nowrap;
   }
 }
@@ -522,8 +529,6 @@ ol.category-breadcrumb {
 
     text-align: center;
     margin-right: 20px;
-
-
   }
 
 
@@ -532,3 +537,12 @@ ol.category-breadcrumb {
   }
 }
 
+#bulk-select {
+  position: fixed;
+  right: 20px;
+  padding: 5px;
+  background-color: white;
+  button {
+    padding: 3px 0 3px 6px;
+  }
+}

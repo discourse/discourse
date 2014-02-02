@@ -50,7 +50,6 @@ describe CategoriesController do
           create_post = CategoryGroup.permission_types[:create_post]
 
           xhr :post, :create, name: "hello", color: "ff0", text_color: "fff",
-                              hotness: 2,
                               auto_close_hours: 72,
                               permissions: {
                                 "everyone" => readonly,
@@ -64,7 +63,6 @@ describe CategoriesController do
           ]
           category.name.should == "hello"
           category.color.should == "ff0"
-          category.hotness.should == 2
           category.auto_close_hours.should == 72
         end
       end
@@ -152,7 +150,6 @@ describe CategoriesController do
           create_post = CategoryGroup.permission_types[:create_post]
 
           xhr :put, :update, id: @category.id, name: "hello", color: "ff0", text_color: "fff",
-                              hotness: 2,
                               auto_close_hours: 72,
                               permissions: {
                                 "everyone" => readonly,
@@ -166,7 +163,6 @@ describe CategoriesController do
           ]
           @category.name.should == "hello"
           @category.color.should == "ff0"
-          @category.hotness.should == 2
           @category.auto_close_hours.should == 72
         end
 

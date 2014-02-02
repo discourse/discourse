@@ -13,8 +13,10 @@ describe Jobs::Exporter do
   describe "execute" do
     context 'when no export or import is running' do
       before do
-        @testIO = StringIO.new
-        Export::JsonEncoder.any_instance.stubs(:json_output_stream).returns(@testIO)
+        @streams = {}
+        Export::JsonEncoder.any_instance.stubs(:stream_creator).returns(lambda {|filename|
+          @streams[File.basename(filename, '.*')] = StringIO.new
+        })
         Jobs::Exporter.any_instance.stubs(:ordered_models_for_export).returns([])
         Export.stubs(:is_export_running?).returns(false)
         Export.stubs(:is_import_running?).returns(false)
@@ -99,32 +101,23 @@ describe Jobs::Exporter do
           it "should export all rows from the topics table in ascending id order" do
             Jobs::Exporter.any_instance.stubs(:ordered_models_for_export).returns([Topic])
             Jobs::Exporter.new.execute( @exporter_args )
-            json = JSON.parse( @testIO.string )
-            json.should have_key('topics')
-            json['topics'].should have_key('rows')
-            json['topics']['rows'].should have(3).rows
-            json['topics']['rows'][0][0].to_i.should == @topic1.id
-            json['topics']['rows'][1][0].to_i.should == @topic2.id
-            json['topics']['rows'][2][0].to_i.should == @topic3.id
+            topics = JSON.parse( @streams['topics'].string )
+            topics.should have(3).rows
+            topics.map{|row| row[0].to_i}.sort.should == [@topic1.id, @topic2.id, @topic3.id].sort
           end
 
           it "should export all rows from the post_replies table in ascending order by post_id, reply_id" do
             # because post_replies doesn't have an id column, so order by one of its indexes
             Jobs::Exporter.any_instance.stubs(:ordered_models_for_export).returns([PostReply])
             Jobs::Exporter.new.execute( @exporter_args )
-            json = JSON.parse( @testIO.string )
-            json.should have_key('post_replies')
-            json['post_replies'].should have_key('rows')
-            json['post_replies']['rows'].should have(3).rows
-            json['post_replies']['rows'][0][1].to_i.should == @reply2.id
-            json['post_replies']['rows'][1][1].to_i.should == @reply1.id
-            json['post_replies']['rows'][2][1].to_i.should == @reply3.id
+            post_replies = JSON.parse( @streams['post_replies'].string )
+            post_replies.map{|row| row[1].to_i}.sort.should == [@reply1.id, @reply2.id, @reply3.id].sort
           end
 
           it "should export column names for each table" do
             Jobs::Exporter.any_instance.stubs(:ordered_models_for_export).returns([Topic, TopicUser, PostReply])
             Jobs::Exporter.new.execute( @exporter_args )
-            json = JSON.parse( @testIO.string )
+            json = JSON.parse( @streams['schema'].string )
             json['topics'].should have_key('fields')
             json['topic_users'].should have_key('fields')
             json['post_replies'].should have_key('fields')

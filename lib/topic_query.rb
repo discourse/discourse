@@ -46,7 +46,7 @@ class TopicQuery
       builder.add_results(unread_results(topic: topic, per_page: builder.results_left), :high)
       builder.add_results(new_results(topic: topic, per_page: builder.category_results_left), :high) unless builder.category_full?
     end
-    builder.add_results(random_suggested(topic, builder.results_left), :low) unless builder.full?
+    builder.add_results(random_suggested(topic, builder.results_left, builder.excluded_topic_ids), :low) unless builder.full?
 
     create_list(:suggested, {}, builder.results)
   end
@@ -288,8 +288,10 @@ class TopicQuery
       suggested_ordering(result, options)
     end
 
-    def random_suggested(topic, count)
+    def random_suggested(topic, count, excluded_topic_ids=[])
       result = default_results(unordered: true, per_page: count)
+      excluded_topic_ids += Category.pluck(:topic_id).compact
+      result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 
       # If we are in a category, prefer it for the random results
       if topic.category_id

@@ -18,6 +18,7 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
     } else {
       this.set('content', Em.A());
       this.set('resultCount', 0);
+      this.set('urls', []);
     }
     this.set('selectedIndex', 0);
   }.observes('term', 'typeFilter'),
@@ -25,6 +26,7 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
   searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
     var self = this;
     self.set('resultCount', 0);
+    self.set('urls', []);
 
     var searcher = Discourse.Search.forTerm(term, {
       typeFilter: typeFilter,
@@ -32,7 +34,7 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
     });
 
     return searcher.then(function(results) {
-      self.set('results', results);
+      var urls = [];
       if (results) {
         self.set('noResults', results.length === 0);
 
@@ -45,12 +47,14 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
             .each(function(list){
               _.each(list.results, function(item){
                 item.index = index++;
+                urls.pushObject(item.url);
               });
             })
             .value();
 
         self.set('resultCount', index);
         self.set('content', results);
+        self.set('urls', urls);
       }
 
       self.set('loading', false);
@@ -92,10 +96,9 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
 
   select: function() {
     if (this.get('loading')) return;
-    var href = $('#search-dropdown li.selected a').prop('href');
+    var href = this.get('urls')[this.get("selectedIndex")];
     if (href) {
       Discourse.URL.routeTo(href);
     }
   }
-
 });

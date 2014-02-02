@@ -43,6 +43,8 @@ pseudo:
         almost_x_years:
           one: '[[ 1ý ]]'
           other: '[[ %{count}ý ]]'
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: '[[ 1 ɱíɳ ]]'
@@ -1007,7 +1009,6 @@ pseudo:
       no_description: '[[ Ťĥéřé íš ɳó ďéščříƿťíóɳ ƒóř ťĥíš čáťéǧóřý, éďíť ťĥé ťóƿíč
         ďéƒíɳíťíóɳ. ]]'
       change_in_category_topic: '[[ Éďíť Ďéščříƿťíóɳ ]]'
-      hotness: '[[ Ĥóťɳéšš ]]'
       already_used: '[[ Ťĥíš čółóř ĥáš ƀééɳ ůšéď ƀý áɳóťĥéř čáťéǧóřý ]]'
       security: '[[ Šéčůříťý ]]'
       auto_close_label: '[[ Áůťó-čłóšé ťóƿíčš áƒťéř: ]]'

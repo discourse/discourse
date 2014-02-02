@@ -49,7 +49,8 @@ sv:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
-        date_year: "D MMM 'YY"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"
@@ -993,7 +994,6 @@ sv:
       list: "Lista Kategorier"
       no_description: "Det finns ingen beskrivning för denna kategori."
       change_in_category_topic: "besök kategorins tråd för att ändra beskrivning"
-      hotness: "Hethet"
       already_used: 'Den här färgen används till en annan kategori'
       security: "Säkerhet"
       auto_close_label: "Stäng trådar automatiskt efter:"

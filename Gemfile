@@ -72,8 +72,8 @@ gem 'redis', :require => ["redis", "redis/connection/hiredis"]
 gem 'active_model_serializers'
 
 
-# we had issues with latest, stick to the rev till we figure this out
-# PR that makes it all hang together welcome
+gem 'onebox', git: 'https://github.com/dysania/onebox.git'
+
 gem 'ember-rails'
 gem 'ember-source', '~> 1.2.0.1'
 gem 'handlebars-source', '~> 1.1.2'

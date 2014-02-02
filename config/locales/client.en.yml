@@ -49,7 +49,8 @@ en:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
-        date_year: "D MMM 'YY"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"
@@ -599,6 +600,15 @@ en:
         unstar: 'remove this topic from your starred list'
 
     topics:
+      bulk:
+        toggle: "toggle bulk selection of topics"
+        actions: "Bulk Actions"
+        change_category: "Change Category"
+        close_topics: "Close Topics"
+        selected:
+          one: "You have selected <b>1</b> topic."
+          other: "You have selected <b>{{count}}</b> topics."
+
       none:
         starred: "You haven't starred any topics yet. To star a topic, click or tap the star next to the title."
         unread: "You have no unread topics."
@@ -1021,14 +1031,13 @@ en:
       badge_colors: "Badge colors"
       background_color: "Background color"
       foreground_color: "Foreground color"
-      name_placeholder: "Should be short and succinct."
+      name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
       list: "List Categories"
       no_description: "There is no description for this category, edit the topic definition."
       change_in_category_topic: "Edit Description"
-      hotness: "Hotness"
       already_used: 'This color has been used by another category'
       security: "Security"
       auto_close_label: "Auto-close topics after:"

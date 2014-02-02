@@ -33,6 +33,9 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
     var topicController = this.controllerFor('topic'),
         composerController = this.controllerFor('composer');
 
+    // I sincerely hope no topic gets this many posts
+    if (params.nearPost === "last") { params.nearPost = 999999999; }
+
     postStream.refresh(params).then(function () {
       // The post we requested might not exist. Let's find the closest post
       var closest = postStream.closestPostNumberFor(params.nearPost) || 1;

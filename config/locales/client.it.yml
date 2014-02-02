@@ -49,7 +49,8 @@ it:
         almost_x_years:
           one:   "1a"
           other: "%{count}a"
-        date_year: "D MMM 'YY"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 minuto"
@@ -903,7 +904,6 @@ it:
       list: "Lista Categorie"
       no_description: "Nessuna descrizione per questa categoria."
       change_in_category_topic: "Modifica Descrizione"
-      hotness: "Hotness"
       already_used: "Questo colore è già in uso da un'altra categoria"
       is_secure: "Categoria protetta?"
       add_group: "Aggiungi Gruppo"

@@ -242,6 +242,7 @@ Discourse::Application.routes.draw do
   post "t" => "topics#create"
   put "t/:id" => "topics#update"
   delete "t/:id" => "topics#destroy"
+  put "topics/bulk"
   post "topics/timings"
   get "topics/similar_to"
   get "topics/created-by/:username" => "list#topics_by", as: "topics_by", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -270,9 +271,11 @@ Discourse::Application.routes.draw do
   put "t/:topic_id/remove-allowed-user" => "topics#remove_allowed_user", constraints: {topic_id: /\d+/}
   put "t/:topic_id/recover" => "topics#recover", constraints: {topic_id: /\d+/}
   get "t/:topic_id/:post_number" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}
+  get "t/:topic_id/last" => "topics#show", post_number: 99999999, constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id.rss" => "topics#feed", format: :rss, constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id" => "topics#show", constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id/:post_number" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}
+  get "t/:slug/:topic_id/last" => "topics#show", post_number: 99999999, constraints: {topic_id: /\d+/}
   get "t/:topic_id/posts" => "topics#posts", constraints: {topic_id: /\d+/}
   post "t/:topic_id/timings" => "topics#timings", constraints: {topic_id: /\d+/}
   post "t/:topic_id/invite" => "topics#invite", constraints: {topic_id: /\d+/}

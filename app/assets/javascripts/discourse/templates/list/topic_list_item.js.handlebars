@@ -1,7 +1,13 @@
-{{#if controller.currentUser.id}}
+{{#if bulkSelectEnabled}}
   <td class='star'>
-    <a {{bind-attr class=":star :fa :fa-star starred:starred"}} {{action toggleStar this}} href='#' {{bind-attr title="starTooltip"}}></a>
+    {{input type="checkbox" checked=checked}}
   </td>
+{{else}}
+  {{#if canStar}}
+    <td class='star'>
+      <a {{bind-attr class=":star :fa :fa-star starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="starTooltip"}}></a>
+    </td>
+  {{/if}}
 {{/if}}
 
 <td class='main-link clearfix'>
@@ -30,10 +36,8 @@
   {{/if}}
 </td>
 
-{{#unless controller.hideCategory}}
-<td class='category'>
-  {{categoryLink category}}
-</td>
+{{#unless hideCategory}}
+<td class='category'>{{boundCategoryLink category}}</td>
 {{/unless}}
 
 <td class='posters'>

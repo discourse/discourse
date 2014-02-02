@@ -54,9 +54,9 @@ Discourse.URL = Em.Object.createWithMixins({
     }
 
     var oldPath = window.location.pathname;
-    path = path.replace(/https?\:\/\/[^\/]+/, '');
+    path = path.replace(/(https?\:)?\/\/[^\/]+/, '');
 
-    // If the URL is absolute, remove rootURL
+    // handle prefixes
     if (path.match(/^\//)) {
       var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
       rootURL = rootURL.replace(/\/$/, '');
@@ -71,11 +71,8 @@ Discourse.URL = Em.Object.createWithMixins({
     if (path.match(/^\/?users\/[^\/]+$/)) {
       path += "/activity";
     }
-    // Be wary of looking up the router. In this case, we have links in our
-    // HTML, say form compiled markdown posts, that need to be routed.
-    var router = this.get('router');
-    router.router.updateURL(path);
-    return router.handleURL(path);
+
+    return this.handleURL(path);
   },
 
   /**
@@ -157,6 +154,7 @@ Discourse.URL = Em.Object.createWithMixins({
             postStream = topicController.get('postStream');
 
         if (newMatches[3]) opts.nearPost = newMatches[3];
+        if (path.match(/last$/)) { opts.nearPost = topicController.get('highest_post_number'); }
         var closest = opts.nearPost || 1;
 
         postStream.refresh(opts).then(function() {
@@ -238,6 +236,21 @@ Discourse.URL = Em.Object.createWithMixins({
   **/
   controllerFor: function(name) {
     return Discourse.__container__.lookup('controller:' + name);
+  },
+
+  /**
+    @private
+
+    Be wary of looking up the router. In this case, we have links in our
+    HTML, say form compiled markdown posts, that need to be routed.
+
+    @method handleURL
+    @param {String} path the url to handle
+  **/
+  handleURL: function(path) {
+    var router = this.get('router');
+    router.router.updateURL(path);
+    return router.handleURL(path);
   }
 
 });

@@ -49,7 +49,8 @@ pt_BR:
         almost_x_years:
           one: "1y"
           other: "%{count}y"
-        date_year: "D MMM 'YY"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 minuto"
@@ -948,7 +949,6 @@ pt_BR:
       list: "Lista de Categorias"
       no_description: "Não há descrição para esta categoria, edite a definição do tópico."
       change_in_category_topic: "Editar Descrição"
-      hotness: "Mais Quente"
       already_used: 'Esta cor já foi usada para outra categoria'
       security: "Segurança"
       auto_close_label: "Fechar automaticamente tópicos depois de:"

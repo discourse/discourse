@@ -49,6 +49,8 @@ da:
         almost_x_years:
           one:   "1å"
           other: "%{count}å"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"
@@ -1011,7 +1013,6 @@ da:
       list: "Kategoriliste"
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "besøg kategoriemnet for at redigere beskrivelsen"
-      hotness: "Popularitet"
       already_used: 'This color has been used by another category'
       security: "Sikkerhed"
       auto_close_label: "Luk automatisk emner efter:"

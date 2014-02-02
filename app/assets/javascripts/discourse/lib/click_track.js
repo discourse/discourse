@@ -85,7 +85,7 @@ Discourse.ClickTrack = {
     }
 
     // If we're on the same site, use the router and track via AJAX
-    if (Discourse.URL.isInternal(href) && !href.match(/\/uploads\//i)) {
+    if (Discourse.URL.isInternal(href) && !$link.hasClass('attachment')) {
       Discourse.ajax("/clicks/track", {
         data: {
           url: href,

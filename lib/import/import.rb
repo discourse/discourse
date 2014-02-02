@@ -27,6 +27,10 @@ module Import
     $redis.del import_running_key
   end
 
+  def self.backup_tables_count
+    User.exec_sql("select count(*) as count from information_schema.tables where table_schema = '#{Jobs::Importer::BACKUP_SCHEMA}'")[0]['count'].to_i
+  end
+
 
   def self.clear_adapters
     @adapters = {}

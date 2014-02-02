@@ -69,7 +69,7 @@ module Jobs
         raise Import::FilenameMissingError
       else
         extract_files
-        @decoder = Import::JsonDecoder.new( File.join(tmp_directory('import'), 'tables.json') )
+        @decoder = Import::JsonDecoder.new( Dir[File.join(tmp_directory('import'), '*.json')] )
         Import.set_import_started
         Discourse.enable_maintenance_mode
       end
@@ -78,7 +78,7 @@ module Jobs
 
     def extract_files
       FileUtils.cd( tmp_directory('import') ) do
-        `tar xvzf #{@archive_filename} tables.json`
+        `tar xvzf #{@archive_filename}`
       end
     end
 
@@ -116,6 +116,10 @@ module Jobs
         }
       )
       self
+    end
+
+    def batch_size
+      1000
     end
 
     def set_schema_info(arg)
@@ -184,8 +188,24 @@ module Jobs
         parameter_markers = fields.map {|x| "?"}.join(',')
         sql_stmt = "INSERT INTO #{table_name} (#{fields.join(',')}) VALUES (#{parameter_markers})"
 
-        rows.each do |row|
-          User.exec_sql(sql_stmt, *row)
+        in_tran = false
+        begin
+          unless Rails.env.test?
+            User.exec_sql("BEGIN TRANSACTION")
+            in_tran = true
+          end
+          i = 0
+          rows.each do |row|
+            if i % batch_size == 0 && i > 0
+              log "#{i} rows done"
+            end
+            User.exec_sql(sql_stmt, *row)
+            i += 1
+          end
+          User.exec_sql("COMMIT") if in_tran
+        rescue
+          User.exec_sql("ROLLBACK") if in_tran
+          raise
         end
 
         true
