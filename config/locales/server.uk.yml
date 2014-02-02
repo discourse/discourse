@@ -16,12 +16,12 @@ uk:
       date_only: "%b %-d, %Y"
 
   title: "Discourse"
-  topics: "Topics"
-  posts: "posts"
-  loading: "Loading"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  topics: "Теми"
+  posts: "дописи"
+  loading: "Завантаження"
+  powered_by_html: 'Створено за допомогою технології <a href="http://www.discourse.org">Discourse</a>, бажано переглядати з увімкненим JavaScript'
 
-  via: "%{username} via %{site_name}"
+  via: "%{username} через %{site_name}"
   is_reserved: "is reserved"
 
   site_under_maintenance: 'Site is currently undergoing maintenance.'
@@ -37,20 +37,20 @@ uk:
     start_discussion: "Begin the Discussion"
     continue: "Continue the Discussion"
     more_replies:
-      one:   "1 more reply"
-      few:   "%{count} more replies"
-      many:  "%{count} more replies"
-      other: "%{count} more replies"
+      one:   "ще %{count} відповідь"
+      few:   "ще %{count} відповіді"
+      many:  "ще %{count} відповідей"
+      other: "ще %{count} відповідей"
 
-    loading: "Loading Discussion..."
-    permalink: "Permalink"
+    loading: "Завантаження обговорення..."
+    permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
     in_reply_to: "in reply to %{username}"
     replies:
-      one:   "1 reply"
-      few:   "%{count} replies"
-      many:  "%{count} replies"
-      other: "%{count} replies"
+      one:   "%{count} відповідь"
+      few:   "%{count} відповіді"
+      many:  "%{count} відповідей"
+      other: "%{count} відповідей"
 
   too_many_mentions:
     zero:  "Sorry, you can't mention other users."
@@ -119,10 +119,10 @@ uk:
 
   education:
     until_posts:
-      one:   "1 post"
-      few:   "%{count} posts"
-      many:  "%{count} posts"
-      other: "%{count} posts"
+      one:   "%{count} допис"
+      few:   "%{count} дописи"
+      many:  "%{count} дописів"
+      other: "%{count} дописів"
 
     'new-topic': |
       Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
@@ -181,7 +181,7 @@ uk:
   activerecord:
     attributes:
       category:
-        name: "Category Name"
+        name: "Назва категорії"
       post:
         raw: "Body"
       user:
@@ -194,7 +194,7 @@ uk:
         topic:
           attributes:
             archetype:
-              cant_send_pm: "Sorry, you cannot send a private message to that user."
+              cant_send_pm: "Даруйте, Ви не можете надіслати приватне повідомлення цьому користувачу."
         user:
           attributes:
             password:
@@ -209,27 +209,27 @@ uk:
   vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
 
-  meta_category_name: "Meta"
-  meta_category_description: "Discussion about this forum, its organization, how it works, and how we can improve it."
+  meta_category_name: "Мета"
+  meta_category_description: "Обговорення цього форуму, його організації, того, як він працює, і того, як ми можемо його покращити."
 
   category:
-    topic_prefix: "Category definition for %{category}"
-    replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters. Until you edit this text or create topics, this category won't appear on the categories page.]"
+    topic_prefix: "Визначення категорії %{category}"
+    replace_paragraph: "[Замініть цей перший параграф коротким описом Вашої нової категорії. Він з'являтиметься в області вибору категорій, тому намагайтеся, щоб він був коротшим за 200 символів. Поки Ви не відредагуєте цей текст або не створите тем, ця категорія не з'явиться на сторінці категорій.]"
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
     errors:
       self_parent: "A subcategory's parent cannot be itself."
       depth: "You can't nest a subcategory under another."
   trust_levels:
     newuser:
-      title: "new user"
+      title: "новий користувач"
     basic:
-      title: "basic user"
+      title: "базовий користувач"
     regular:
-      title: "regular user"
+      title: "звичайний користувач"
     leader:
-      title: "leader"
+      title: "провідник"
     elder:
-      title: "elder"
+      title: "старійшина"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}'"
 
 
@@ -885,10 +885,10 @@ uk:
       topic: 'Topics'
       user: 'Users'
 
-  original_poster: "Original Poster"
-  most_posts: "Most Posts"
-  most_recent_poster: "Most Recent Poster"
-  frequent_poster: "Frequent Poster"
+  original_poster: "Перший дописувач"
+  most_posts: "Найбільше дописів"
+  most_recent_poster: "Автор останнього допису"
+  frequent_poster: "Частий дописувач"
 
   move_posts:
     new_topic_moderator_post:
