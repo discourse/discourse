@@ -887,13 +887,16 @@ en:
     text_body_template: |
       %{invitee_name} invited you to the topic "%{topic_title}" at the Watchman Monitoring Community.
 
-      If you're interested, click the link below to visit the discussion:
+      Click the link below to visit the discussion:
 
       [Visit the Watchman Monitoring Community][1]
 
       You'll be able to post a reply immediately, without needing to log in.
 
+      Questions? Visit our support site at [https://support.watchmanmonitoring.com][2]
+
       [1]: %{invite_link}
+      [2]: https://watchmanmonitoring.zendesk.com/hc/articles/201912358-Getting-Started-in-the-Subscriber-Community
 
   invite_forum_mailer:
     subject_template: "[Watchman Community] You are invited to join the Watchman Monitoring Community"
