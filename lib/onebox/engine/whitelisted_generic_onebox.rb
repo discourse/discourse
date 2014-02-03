@@ -13,8 +13,8 @@ module Onebox
         @whitelist ||= default_whitelist.dup
       end
 
-			def	self.default_whitelist
-				%w(500px.com
+      def self.default_whitelist
+        %w(500px.com
           about.com
           answers.com
           archive.org
@@ -109,7 +109,7 @@ module Onebox
           youtube.com
           zappos.com
           zillow.com)
-			end
+      end
 
       # A re-written URL coverts https:// -> // - it is useful on HTTPS sites that embed
       # youtube for example
@@ -126,18 +126,18 @@ module Onebox
       end
 
       def self.host_matches(uri, list)
-			  !!list.find {|h| %r((^|\.)#{Regexp.escape(h)}$).match(uri.host) }
+        !!list.find {|h| %r((^|\.)#{Regexp.escape(h)}$).match(uri.host) }
       end
 
-			def self.===(other)
-				if other.kind_of?(URI)
+      def self.===(other)
+        if other.kind_of?(URI)
           return WhitelistedGenericOnebox.host_matches(other, WhitelistedGenericOnebox.whitelist)
-				else
-					super
-				end
-			end
+        else
+          super
+        end
+      end
 
-			# Generates the HTML for the embedded content
+      # Generates the HTML for the embedded content
       def photo_type?
         data[:type] =~ /photo/ || data[:type] =~ /image/
       end
@@ -151,73 +151,73 @@ module Onebox
       end
 
       def generic_html
-				return data[:html] if data[:html]
+        return data[:html] if data[:html]
         return html_for_video(data[:video]) if data[:video]
         return image_html if photo_type?
         layout.to_html
       end
 
-			def to_html
+      def to_html
         rewrite_agnostic(generic_html)
-			end
+      end
 
-			def placeholder_html
+      def placeholder_html
         result = nil
         result = image_html if data[:html] || data[:video] || photo_type?
-				result || to_html
-			end
+        result || to_html
+      end
 
-			def data
-				return raw if raw.is_a?(Hash)
+      def data
+        return raw if raw.is_a?(Hash)
 
-				data_hash = { link: link, title: raw.title, description: raw.description }
-				data_hash[:image] = raw.images.first if raw.images && raw.images.first
+        data_hash = { link: link, title: raw.title, description: raw.description }
+        data_hash[:image] = raw.images.first if raw.images && raw.images.first
         data_hash[:type] = raw.type if raw.type
 
-				if raw.metadata && raw.metadata[:video] && raw.metadata[:video].first
-					data_hash[:video] = raw.metadata[:video].first 
-				end
+        if raw.metadata && raw.metadata[:video] && raw.metadata[:video].first
+          data_hash[:video] = raw.metadata[:video].first 
+        end
 
-				data_hash
-			end
+        data_hash
+      end
 
-			private
+      private
 
-			def image_html
-				return @image_html if @image_html
+      def image_html
+        return @image_html if @image_html
 
-				return @image_html = "<img src=\"#{data[:image]}\">" if data[:image]
+        return @image_html = "<img src=\"#{data[:image]}\">" if data[:image]
 
-				if data[:thumbnail_url]
-					@image_html = "<img src=\"#{data[:thumbnail_url]}\""
-					@image_html << " width=\"#{data[:thumbnail_width]}\"" if data[:thumbnail_width]
-					@image_html << " height=\"#{data[:thumbnail_height]}\"" if data[:thumbnail_height]
-					@image_html << ">"
-				end
+        if data[:thumbnail_url]
+          @image_html = "<img src=\"#{data[:thumbnail_url]}\""
+          @image_html << " width=\"#{data[:thumbnail_width]}\"" if data[:thumbnail_width]
+          @image_html << " height=\"#{data[:thumbnail_height]}\"" if data[:thumbnail_height]
+          @image_html << ">"
+        end
 
-				@image_html
-			end
+        @image_html
+      end
 
-			def html_for_video(video)
-				video_url = video[:_value]
+      def html_for_video(video)
+        video_url = video[:_value]
 
-				if video_url
-					html = "<iframe src=\"#{video_url}\" frameborder=\"0\" title=\"#{data[:title]}\""
+        if video_url
+          html = "<iframe src=\"#{video_url}\" frameborder=\"0\" title=\"#{data[:title]}\""
 
-					append_attribute(:width, html, video)
-					append_attribute(:height, html, video)
+          append_attribute(:width, html, video)
+          append_attribute(:height, html, video)
 
-					html << "></iframe>"
-					return html
-				end
-			end
+          html << "></iframe>"
+          return html
+        end
+      end
 
-			def append_attribute(attribute, html, video)
-				if video[attribute] && video[attribute].first
-					val = video[attribute].first[:_value]
-					html << " #{attribute.to_s}=\"#{val}\""
-				end
-			end
-		end
+      def append_attribute(attribute, html, video)
+        if video[attribute] && video[attribute].first
+          val = video[attribute].first[:_value]
+          html << " #{attribute.to_s}=\"#{val}\""
+        end
+      end
+    end
   end
 end
