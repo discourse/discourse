@@ -57,7 +57,7 @@ function buildCategoryRoute(filter, params) {
           filterMode = "category/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/" + filter,
           listFilter = "category/" + Discourse.Category.slugFor(model) + "/l/" + filter;
 
-      this.controllerFor('search').set('searchContext', model);
+      this.controllerFor('search').set('searchContext', model.get('searchContext'));
 
       var opts = { category: model, filterMode: filterMode };
       opts.noSubcategories = params && params.no_subcategories;
