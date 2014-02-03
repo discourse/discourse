@@ -31,6 +31,10 @@ Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.LoadMore, {
     }
   },
 
+  _updateTitle: function() {
+    Discourse.notifyTitle(this.get('controller.topicTrackingState.incomingCount'));
+  }.observes('controller.topicTrackingState.incomingCount'),
+
   // Remember where we were scrolled to
   saveScrollPosition: function() {
     Discourse.Session.current().set('topicListScrollPosition', $(window).scrollTop());
