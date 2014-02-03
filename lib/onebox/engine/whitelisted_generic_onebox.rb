@@ -102,13 +102,15 @@ module Onebox
           wikia.com
           wikihow.com
           wired.com
+          wistia.com
+          wi.st
           wonderhowto.com
           wsj.com
           youtube.com
           zappos.com
           zillow.com)
 			end
-				
+
 			def self.===(other)
 				if other.kind_of?(URI)
 					!!whitelist.find {|h| %r((^|\.)#{Regexp.escape(h)}$).match(other.host) }
