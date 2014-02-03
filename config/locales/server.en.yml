@@ -889,7 +889,7 @@ en:
 
       Click the link below to visit the discussion:
 
-      [Visit the Watchman Monitoring Community][1]
+      Join in the [%{topic_title}][1] topic
 
       You'll be able to post a reply immediately, without needing to log in.
 
@@ -903,9 +903,9 @@ en:
     text_body_template: |
       You are invited to join the Watchman Monitoring Community
       
-      Click the link below to join:
+      Click here to accept this invitation and be automatically logged in:
 
-      [Click here to accept this invitation and be automatically logged in.][1]
+      [%{invite_link}][1]
 
       Questions? Visit our support site at [https://support.watchmanmonitoring.com][2]
 
@@ -1163,12 +1163,11 @@ en:
     posted_by: "Posted by %{username} on %{post_date}"
 
     user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
       subject_template: "[Watchman Community] %{username} invited you to a private message '%{topic_title}'"
       text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' in the Watchman Monitoring Community:
+        %{username} sent you to a private message '%{topic_title}' in the Watchman Monitoring Community:
 
-        Please visit this link to view the topic: %{base_url}%{url}
+        Please visit this link to view the message: %{base_url}%{url}
 
     user_replied:
       subject_template: "[Watchman Community] %{topic_title}"
