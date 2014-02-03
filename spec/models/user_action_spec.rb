@@ -250,7 +250,7 @@ describe UserAction do
       post.topic.toggle_star(post.user, true)
       UserAction.delete_all
 
-      action1 = UserAction.log_action!(
+      UserAction.log_action!(
         action_type: UserAction::STAR,
         user_id: post.user.id,
         acting_user_id: post.user.id,
@@ -258,7 +258,7 @@ describe UserAction do
         target_post_id: -1,
       )
 
-      action2 = UserAction.log_action!(
+      UserAction.log_action!(
         action_type: UserAction::STAR,
         user_id: Fabricate(:user).id,
         acting_user_id: post.user.id,
