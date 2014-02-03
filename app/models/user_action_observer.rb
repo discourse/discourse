@@ -9,14 +9,10 @@ class UserActionObserver < ActiveRecord::Observer
       log_topic(model)
     when (model.is_a?(Post))
       log_post(model)
-    when (model.is_a?(Notification))
-      log_notification(model)
     when (model.is_a?(TopicUser))
       log_topic_user(model)
     end
   end
-
-  protected
 
   def log_topic_user(model)
     action = UserAction::STAR
@@ -37,9 +33,9 @@ class UserActionObserver < ActiveRecord::Observer
     end
   end
 
-  def log_notification(model)
+  def self.log_notification(post, user, notification_type)
     action =
-      case model.notification_type
+      case notification_type
         when Notification.types[:quoted]
           UserAction::QUOTE
         when Notification.types[:replied]
@@ -51,20 +47,14 @@ class UserActionObserver < ActiveRecord::Observer
       end
 
     # like is skipped
-    return unless action
-
-    post = Post.where(post_number: model.post_number, topic_id: model.topic_id).first
-
-    # stray data
-    return unless post
+    return unless action && post && user
 
     row = {
         action_type: action,
-        user_id: model.user_id,
+        user_id: user.id,
         acting_user_id: (action == UserAction::EDIT) ? post.last_editor_id : post.user_id,
-        target_topic_id: model.topic_id,
-        target_post_id: post.id,
-        created_at: model.created_at
+        target_topic_id: post.topic_id,
+        target_post_id: post.id
     }
 
     if post.deleted_at.nil?
