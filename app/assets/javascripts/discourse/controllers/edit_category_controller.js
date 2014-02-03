@@ -20,6 +20,11 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     });
   }.property(),
 
+  // We can change the parent if there are no children
+  subCategories: function() {
+    return Discourse.Category.list().filterBy('parent_category_id', this.get('id'));
+  }.property('model.id'),
+
   onShow: function() {
     this.changeSize();
     this.titleChanged();

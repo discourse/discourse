@@ -73,6 +73,12 @@ Handlebars.registerHelper('categoryLinkRaw', function(property, options) {
   return categoryLinkHTML(property, options);
 });
 
+Handlebars.registerHelper('categoryBadge', function(property, options) {
+  var category = Em.Handlebars.get(this, property, options),
+      style = Discourse.HTML.categoryStyle(category);
+  return new Handlebars.SafeString("<span class='badge-category' style='" + style + "'>" + category.get('name') + "</span>");
+});
+
 /**
   Produces a bound link to a category
 

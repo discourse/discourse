@@ -196,7 +196,7 @@ en:
       latest: "Latest"
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
-      subcategories: "Subcategories:"
+      subcategories: "Subcategories"
       topic_stats: "The number of new topics."
       topic_stat_sentence:
         one: "%{count} new topic in the past %{unit}."
