@@ -31,6 +31,14 @@ Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.LoadMore, {
     }
   },
 
+  didInsertElement: function() {
+    this.set('controller.enableTitleUpdate', true);
+  },
+
+  willDestroyElement: function() {
+    this.set('controller.enableTitleUpdate', false);
+  },
+
   // Remember where we were scrolled to
   saveScrollPosition: function() {
     Discourse.Session.current().set('topicListScrollPosition', $(window).scrollTop());
