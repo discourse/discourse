@@ -111,9 +111,27 @@ module Onebox
           zillow.com)
 			end
 
+      # A re-written URL coverts https:// -> // - it is useful on HTTPS sites that embed
+      # youtube for example
+      def self.rewrites
+        @rewrites ||= default_rewrites.dup
+      end
+
+      def self.rewrites=(new_list)
+        @rewrites = new_list
+      end
+
+      def self.default_rewrites
+        %w(youtube.com)
+      end
+
+      def self.host_matches(uri, list)
+			  !!list.find {|h| %r((^|\.)#{Regexp.escape(h)}$).match(uri.host) }
+      end
+
 			def self.===(other)
 				if other.kind_of?(URI)
-					!!whitelist.find {|h| %r((^|\.)#{Regexp.escape(h)}$).match(other.host) }
+          return WhitelistedGenericOnebox.host_matches(other, WhitelistedGenericOnebox.whitelist)
 				else
 					super
 				end
@@ -124,11 +142,23 @@ module Onebox
         data[:type] =~ /photo/ || data[:type] =~ /image/
       end
 
-			def to_html
+      def rewrite_agnostic(html)
+        uri = URI(@url)
+        if WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.rewrites)
+          html.gsub!(/https?:\/\//, '//')
+        end
+        html
+      end
+
+      def generic_html
 				return data[:html] if data[:html]
         return html_for_video(data[:video]) if data[:video]
         return image_html if photo_type?
         layout.to_html
+      end
+
+			def to_html
+        rewrite_agnostic(generic_html)
 			end
 
 			def placeholder_html
