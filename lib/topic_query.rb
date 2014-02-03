@@ -53,7 +53,7 @@ class TopicQuery
 
   # The latest view of topics
   def list_latest
-    create_list(:latest)
+    TopicList.new(:latest, @user, latest_results)
   end
 
   # The starred topics
@@ -278,8 +278,28 @@ class TopicQuery
 
     def new_results(options={})
       result = TopicQuery.new_filter(default_results(options), @user.treat_as_new_topic_start_date)
+      result = remove_muted_categories(result, @user)
       suggested_ordering(result, options)
     end
+
+    def latest_results(options={})
+      result = default_results(options)
+      remove_muted_categories(result, @user)
+    end
+
+    def remove_muted_categories(list, user)
+      if user
+        list = list.where("NOT EXISTS(
+                         SELECT 1 FROM category_users cu
+                         WHERE cu.user_id = ? AND
+                               cu.category_id = topics.category_id AND
+                               cu.notification_level = ?
+                         )", user.id, CategoryUser.notification_levels[:muted])
+      end
+
+      list
+    end
+
 
     def unread_results(options={})
       result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))

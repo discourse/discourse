@@ -70,6 +70,17 @@ describe TopicQuery do
 
   end
 
+  context 'muted categories' do
+    it 'is removed from new and latest lists' do
+      category = Fabricate(:category)
+      topic = Fabricate(:topic, category: category)
+      CategoryUser.create!(user_id: user.id,
+                           category_id: category.id,
+                           notification_level: CategoryUser.notification_levels[:muted])
+      topic_query.list_new.topics.map(&:id).should_not include(topic.id)
+      topic_query.list_latest.topics.map(&:id).should_not include(topic.id)
+    end
+  end
 
   context 'a bunch of topics' do
     let!(:regular_topic) do
@@ -127,13 +138,11 @@ describe TopicQuery do
     context 'list_latest' do
       it "returns the topics in the correct order" do
         topics.map(&:id).should == [pinned_topic, closed_topic, archived_topic, regular_topic].map(&:id)
-      end
 
-      it "includes the invisible topic if you're a moderator" do
+        # includes the invisible topic if you're a moderator
         TopicQuery.new(moderator).list_latest.topics.include?(invisible_topic).should be_true
-      end
 
-      it "includes the invisible topic if you're an admin" do
+        # includes the invisible topic if you're an admin" do
         TopicQuery.new(admin).list_latest.topics.include?(invisible_topic).should be_true
       end
 
@@ -143,41 +152,36 @@ describe TopicQuery do
           TopicQuery.new(admin, sort_order: order, sort_descending: descending ? 'true' : 'false').list_latest.topics.map(&:id)
         end
 
-        it "returns the topics in likes order if requested" do
+        it "returns the topics in correct order" do
+          # returns the topics in likes order if requested
           ids_in_order('posts').should == [pinned_topic, archived_topic, regular_topic, invisible_topic, closed_topic].map(&:id)
-        end
 
-        it "returns the topics in reverse likes order if requested" do
+          # returns the topics in reverse likes order if requested
           ids_in_order('posts', false).should == [closed_topic, invisible_topic, regular_topic, archived_topic, pinned_topic].map(&:id)
-        end
 
-        it "returns the topics in likes order if requested" do
+          # returns the topics in likes order if requested
           ids_in_order('likes').should == [pinned_topic, regular_topic, archived_topic, invisible_topic, closed_topic].map(&:id)
-        end
 
-        it "returns the topics in reverse likes order if requested" do
+          # returns the topics in reverse likes order if requested
           ids_in_order('likes', false).should == [closed_topic, invisible_topic, archived_topic, regular_topic, pinned_topic].map(&:id)
-        end
 
-        it "returns the topics in views order if requested" do
+          # returns the topics in views order if requested
           ids_in_order('views').should == [regular_topic, archived_topic, pinned_topic, closed_topic, invisible_topic].map(&:id)
-        end
 
-        it "returns the topics in reverse views order if requested" do
+          # returns the topics in reverse views order if requested" do
           ids_in_order('views', false).should == [invisible_topic, closed_topic, pinned_topic, archived_topic, regular_topic].map(&:id)
-        end
 
-        it "returns the topics in posters order if requested" do
+          # returns the topics in posters order if requested" do
           ids_in_order('posters').should == [pinned_topic, regular_topic, invisible_topic, closed_topic, archived_topic].map(&:id)
-        end
 
-        it "returns the topics in reverse posters order if requested" do
+          # returns the topics in reverse posters order if requested" do
           ids_in_order('posters', false).should == [archived_topic, closed_topic, invisible_topic, regular_topic, pinned_topic].map(&:id)
         end
 
       end
 
     end
+
 
     context 'after clearring a pinned topic' do
       before do

@@ -43,15 +43,6 @@ class CategoryUser < ActiveRecord::Base
                           )
   end
 
-  def notification_level1=(val)
-    val = Symbol === val ? CategoryUser.notification_levels[val] : val
-    attributes[:notification_level] = val
-  end
-
-  def notification_level1
-    attributes[:notification_level]
-  end
-
   private
 
   def self.apply_default_to_topic(topic, level, reason)
