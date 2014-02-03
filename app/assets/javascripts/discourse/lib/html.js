@@ -47,7 +47,10 @@ Discourse.HTML = {
 
     var name = Em.get(category, 'name'),
         description = Em.get(category, 'description'),
-        html = "<a href=\"" + Discourse.getURL("/category/") + Discourse.Category.slugFor(category) + "\" class=\"badge-category\" ";
+        restricted = Em.get(category, 'read_restricted'),
+        html = "<a href=\"" + Discourse.getURL("/category/") + Discourse.Category.slugFor(category) + "\" ";
+
+    html += "class=\"badge-category" + (restricted ? ' restricted' : '' ) + "\" ";
 
     // Add description if we have it
     if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
@@ -56,7 +59,12 @@ Discourse.HTML = {
     if (categoryStyle) {
       html += "style=\"" + categoryStyle + "\" ";
     }
-    html += ">" + name + "</a>";
+
+    if (restricted) {
+      html += "><div><i class='fa fa-group'></i> " + name + "</div></a>";
+    } else {
+      html += ">" + name + "</a>";
+    }
 
     return html;
   }

@@ -1,5 +1,10 @@
 {{#if category}}
-  <a href="#" {{action expand}} class="badge-category" {{bind-attr style="badgeStyle"}}>{{category.name}}</a>
+  <a href="#" {{action expand}} class="badge-category" {{bind-attr style="badgeStyle"}}>
+    {{#if category.read_restricted}}
+      <i class='fa fa-group'></i>
+    {{/if}}
+    {{category.name}}
+  </a>
 {{else}}
   {{#if noSubcategories}}
     <a href='#' {{action expand}} class='badge-category home' {{bind-attr style="badgeStyle"}}>{{i18n categories.no_subcategory}}</i></a>

@@ -28,6 +28,13 @@
   &[href] {
     color: $white;
   }
+  &.restricted {
+    div {
+      display: inline-block;
+      vertical-align: top;
+      margin: 0;
+    }
+  }
 }
 
 
