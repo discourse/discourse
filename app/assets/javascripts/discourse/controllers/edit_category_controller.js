@@ -22,6 +22,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
 
   // We can change the parent if there are no children
   subCategories: function() {
+    if (Em.isEmpty(this.get('id'))) { return null; }
     return Discourse.Category.list().filterBy('parent_category_id', this.get('id'));
   }.property('model.id'),
 
