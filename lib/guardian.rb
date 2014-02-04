@@ -8,7 +8,7 @@ class Guardian
   include CategoryGuardian
   include PostGuardain
   include TopicGuardian
-    
+
   class AnonymousUser
     def blank?; true; end
     def admin?; false; end
