@@ -28,6 +28,17 @@ function buildTopicRoute(filter) {
       Discourse.set('title', I18n.t('filters.with_topics', {filter: filterText}));
 
       this.controllerFor('discoveryTopics').setProperties({ model: model, category: null, period: period });
+
+      // If there's a draft, open the create topic composer
+      if (model.draft) {
+        this.controllerFor('composer').open({
+          action: Discourse.Composer.CREATE_TOPIC,
+          draft: model.draft,
+          draftKey: model.draft_key,
+          draftSequence: model.draft_sequence
+        });
+      }
+
       this.controllerFor('navigationDefault').set('canCreateTopic', model.get('can_create_topic'));
     },
 
