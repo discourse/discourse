@@ -33,7 +33,7 @@ UNICORN_PID=$!
 
 echo "supervisor pid: $UNICORN_SUPERVISOR_PID unicorn pid: $UNICORN_PID"
 
-while [ -e /proc/$UNICORN_PID ]
+while kill -0 $UNICORN_PID
 do
-  sleep 0.1
+  sleep 1
 done
