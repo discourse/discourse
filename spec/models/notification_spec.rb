@@ -173,14 +173,14 @@ describe Notification do
                            user_id: user.id,
                            topic_id: 2,
                            post_number: 1,
-                           data: {}.to_json,
+                           data: '{}',
                            notification_type: Notification.types[:private_message])
 
       other = Notification.create!(read: false,
                            user_id: user.id,
                            topic_id: 2,
                            post_number: 1,
-                           data: {}.to_json,
+                           data: '{}',
                            notification_type: Notification.types[:mentioned])
 
 
