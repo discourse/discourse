@@ -13,6 +13,9 @@ body {
   min-width: $large-width;
 }
 
+:focus {box-shadow:0 0 10px #2b95ca; }
+
+
 .container {
   @extend .clearfix;
   max-width: $large-width;
