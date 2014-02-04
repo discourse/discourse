@@ -309,7 +309,7 @@ class TopicQuery
     end
 
     def random_suggested(topic, count, excluded_topic_ids=[])
-      result = default_results(unordered: true, per_page: count)
+      result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)
       excluded_topic_ids += Category.pluck(:topic_id).compact
       result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 
