@@ -135,8 +135,7 @@ gem 'sidekiq-failures'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 
-# URGENT fix needed see: https://github.com/cowboyd/therubyracer/pull/280
-gem 'therubyracer-discourse', require: 'v8'
+gem 'therubyracer'
 gem 'thin', require: false
 gem 'highline', require: false
 gem 'rack-protection' # security

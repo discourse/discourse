@@ -368,7 +368,7 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     temple (0.6.7)
-    therubyracer-discourse (0.12.0)
+    therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
       ref
     thin (1.6.1)
@@ -483,7 +483,7 @@ DEPENDENCIES
   sinatra
   slim
   spork-rails
-  therubyracer-discourse
+  therubyracer
   thin
   timecop
   uglifier
