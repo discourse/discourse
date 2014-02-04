@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/dysania/onebox.git
-  revision: a02540f9b1460277e7132fbbd71a7d1dbeb486c2
+  revision: 3753be3252dbb811f2ce94b56b55b5de54475a6c
   specs:
     onebox (1.1.0)
       hexpress (~> 1.2)
