@@ -28,12 +28,12 @@ describe TopicQuery do
       Topic.recent(10).count.should == 0
 
       # mods can see every group and hidden topics
-      TopicQuery.new(moderator).list_latest.topics.count.should == 3
+      TopicQuery.new(moderator).list_latest.topics.count.should == 2
 
       group.add(user)
       group.save
 
-      TopicQuery.new(user).list_latest.topics.count.should == 2
+      TopicQuery.new(user).list_latest.topics.count.should == 1
 
     end
 
