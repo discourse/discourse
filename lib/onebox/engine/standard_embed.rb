@@ -19,8 +19,8 @@ module Onebox
 					end
 				end
 
-				open_graph = OpenGraph.new(response.body)
-        if @raw 
+				open_graph = OpenGraph.new(response.body, false)
+        if @raw
           @raw[:image] = open_graph.images.first if @raw[:image].nil? && open_graph && open_graph.images
 
           return @raw
