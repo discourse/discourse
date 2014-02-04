@@ -13,8 +13,7 @@ body {
   min-width: $large-width;
 }
 
-:focus {outline: #2b95ca dotted thin !important; }
-:hover, :active {outline: none !important;}
+
 
 .container {
   @extend .clearfix;
