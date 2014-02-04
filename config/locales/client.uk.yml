@@ -124,14 +124,14 @@ uk:
     last_post: "Останній допис"
     joined: "Приєднався(-лась)"
     admin_title: "Адмін"
-    flags_title: "Flags"
+    flags_title: "Скарги"
     show_more: "показати більше"
     links: Посилання
-    faq: "ЧаПи"
+    faq: "Часті запитання"
     privacy_policy: "Політика приватності"
     mobile_view: "Вигляд для мобільного"
     desktop_view: "Вигляд для настільного комп'ютера"
-    you: "You"
+    you: "Ви"
     or: "або"
     now: "щойно"
     read_more: 'читати більше'
@@ -143,31 +143,31 @@ uk:
     every_two_weeks: "кожні два тижні"
     max: "max"
     character_count:
-      one:   "{{count}} симол"
+      one:   "{{count}} символ"
       few:   "{{count}} символи"
       many:  "{{count}} символів"
       other: "{{count}} символів"
 
     in_n_seconds:
-      one:   "in 1 second"
-      few:   "in {{count}} seconds"
-      many:  "in {{count}} seconds"
-      other: "in {{count}} seconds"
+      one:   "за {{count}} секунду"
+      few:   "за {{count}} секунди"
+      many:  "за {{count}} секунд"
+      other: "за {{count}} секунд"
     in_n_minutes:
-      one:   "in 1 minute"
-      few:   "in {{count}} minutes"
-      many:  "in {{count}} minutes"
-      other: "in {{count}} minutes"
+      one:   "за {{count}} хвилину"
+      few:   "за {{count}} хвилини"
+      many:  "за {{count}} хвилин"
+      other: "за {{count}} хвилин"
     in_n_hours:
-      one:   "in 1 hour"
-      few:   "in {{count}} hours"
-      many:  "in {{count}} hours"
-      other: "in {{count}} hours"
+      one:   "за {{count}} годину"
+      few:   "за {{count}} години"
+      many:  "за {{count}} годин"
+      other: "за {{count}} годин"
     in_n_days:
-      one:   "in 1 day"
-      few:   "in {{count}} days"
-      many:  "in {{count}} days"
-      other: "in {{count}} days"
+      one:   "за {{count}} день"
+      few:   "за {{count}} дні"
+      many:  "за {{count}} днів"
+      other: "за {{count}} днів"
 
     suggested_topics:
       title: "Пропоновані теми"
@@ -178,9 +178,9 @@ uk:
       not_bookmarked: "Ви прочитали цей допис; натисніть, щоб лишити тут закладку."
       last_read: "Це - останній допис, який Ви прочитали; натисніть, щоб лишити тут закладку."
 
-    new_topics_inserted: "{{count}} new topics."
-    show_new_topics: "Click to show."
-    preview: "preview"
+    new_topics_inserted: "{{count}} нових тем."
+    show_new_topics: "Натисніть, щоб показати."
+    preview: "попередній перегляд"
     cancel: "скасувати"
 
     save: "Зберегти зміни"
@@ -231,7 +231,7 @@ uk:
     categories:
       all: "всі категорії"
       all_subcategories: "всі підкатегорії"
-      no_subcategory: "no subcategory"
+      no_subcategory: "без підкатегорії"
       category: "Категорія"
       posts: "Нові дописи"
       topics: "Нові теми"
@@ -253,7 +253,7 @@ uk:
         other: "%{count} нових дописів за останній %{unit}."
 
     user:
-      said: "{{username}} сказав:"
+      said: "{{username}} сказав(ла):"
       profile: "Профіль"
       show_profile: "Переглянути профіль"
       mute: "Mute"
@@ -267,13 +267,13 @@ uk:
       invited_by: "Запрошений(а)"
       trust_level: "Рівень довіри"
       notifications: "Сповіщення"
-      dynamic_favicon: "Відображати сповіщення про вхідні повідомлення в <span title='Піктограма сайту'>favicon</span> (експериментальне)"
+      dynamic_favicon: "Відображати сповіщення про вхідні повідомлення на піктограмі сайту (експериментальне)"
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
       change: "змінити"
       moderator: "{{user}} є модератором"
       admin: "{{user}} є адміном"
-      deleted: "(deleted)"
+      deleted: "(видалено)"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Причина: "
       watch_new_topics: "Автоматично слідкувати за всіма новими темами, що з'являтимуться на форумі"
@@ -345,8 +345,8 @@ uk:
         too_short: "Ім'я користувача надто коротке."
         too_long: "Ім'я користувача надто довге."
         checking: "Перевірка доступності імені користувача..."
-        enter_email: 'Username found. Enter matching email.'
-        prefilled: "Email matches this registered username."
+        enter_email: "Ім'я користувача знайдено. Введіть відповідну електронну скриньку."
+        prefilled: "Електронна скринька відповідає цьому зареєстрованому імені користувача."
 
       password_confirmation:
         title: "Пароль ще раз"
@@ -418,7 +418,7 @@ uk:
         time_read: "Read Time"
         days_visited: "Days Visited"
         account_age_days: "Account age in days"
-        create: "Invite Friends to this Forum"
+        create: "Запросити друзів на цей форум"
 
       password:
         title: "Пароль"
@@ -439,14 +439,14 @@ uk:
 
       stream:
         posted_by: "Posted by"
-        sent_by: "Sent by"
-        private_message: "private message"
-        the_topic: "the topic"
+        sent_by: "Надіслано"
+        private_message: "приватне повідомлення"
+        the_topic: "тема"
 
     loading: "Завантаження..."
-    close: "Close"
-    assets_changed_confirm: "Discourse has been updated, would you like to refresh to get the latest version?"
-    learn_more: "learn more..."
+    close: "Закрити"
+    assets_changed_confirm: "Discourse було оновлено, чи хочете Ви отримати останню версію?"
+    learn_more: "дізнатися більше..."
 
     year: 'рік'
     year_desc: 'topics posted in the last 365 days'
@@ -466,7 +466,7 @@ uk:
       description: "There are <b>{{count}}</b> replies. Save reading time by displaying only the most relevant replies?"
       description_time: "There are <b>{{count}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>. Save reading time by displaying only the most relevant replies?"
       enable: 'Summarize This Topic'
-      disable: 'Show All Posts'
+      disable: 'Показати всі дописи'
 
     private_message_info:
       title: "Приватне повідомлення"
@@ -474,7 +474,7 @@ uk:
       remove_allowed_user: "Ви точно хочете видалити {{name}} з цього приватного повідомлення?"
 
     email: 'Електронна пошта'
-    username: 'Username'
+    username: "Ім'я користувача"
     last_seen: 'Seen'
     created: 'Створено'
     trust_level: 'Рівень довіри'
@@ -486,10 +486,10 @@ uk:
       failed: "Щось пішло не так; скоріше за все, цю електронну пошту вже зареєстровано, спробуйте посилання Забув пароль"
 
     forgot_password:
-      title: "Forgot Password"
-      action: "Я забув свій пароль"
-      invite: "Enter your username or email address, and we'll send you a password reset email."
-      reset: "Reset Password"
+      title: "Забув(ла) пароль"
+      action: "Я забув(ла) свій пароль"
+      invite: "Введіть своє ім'я користувача або адресу електронної скриньки, і ми надішлемо Вам лист для скинення пароля."
+      reset: "Скинути пароль"
       complete: "If an account matches that username or email address, you should receive an email with instructions on how to reset your password shortly."
 
     login:
@@ -601,7 +601,7 @@ uk:
       auto_close_label: "Auto-close topic time:"
       auto_close_units: "(# of hours, a time, or a timestamp)"
       auto_close_examples: 'Examples: 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Please enter a valid value."
+      auto_close_error: "Будь ласка, введіть коректне значення."
 
     notifications:
       title: "Сповіщення про згадку Вашого @імені, відповіді на Ваші дописи та теми, приватні повідомлення, тощо"
@@ -617,7 +617,7 @@ uk:
       invited_to_private_message: "<i class='fa fa-envelope-o' title='приватне повідомлення'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='прийняв(ла) Ваше запрошення' class='fa fa-sign-in'></i> {{username}} прийняв(ла) Ваше запрошення"
       moved_post: "<i title='перемістив допис' class='fa fa-arrow-right'></i> {{username}} перемістив {{link}}"
-      total_flagged: "total flagged posts"
+      total_flagged: "всього дописів, на які поскаржилися"
 
     upload_selector:
       title: "Додати зображення"
@@ -643,7 +643,7 @@ uk:
         category: "search will prefer results in {{category}}"
 
     site_map: "перейти до іншого переліку або категорії тем"
-    go_back: 'go back'
+    go_back: 'повернутися назад'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'перейти до Вашої сторінки користувача'
 
@@ -1110,39 +1110,39 @@ uk:
 
       revisions:
         controls:
-          first: "First revision"
-          previous: "Previous revision"
-          next: "Next revision"
-          last: "Last revision"
-          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> / {{total}}"
+          first: "Перша версія"
+          previous: "Попередня версія"
+          next: "Наступна версія"
+          last: "Остання версія"
+          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> порівняно з <strong>#{{current}}</strong> / {{total}}"
         displays:
           inline:
-            title: "Show the rendered output with additions and removals inline"
+            title: "Показати результат виведення зі змінами на місці"
             button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
-            title: "Show the rendered output diffs side-by-side"
+            title: "Показати бік-о-бік результати виведення"
             button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
-            title: "Show the markdown source diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> Markdown'
+            title: "Показати бік-о-бік коди розмітки"
+            button: '<i class="fa fa-columns"></i> Розмітка'
         details:
-          edited_by: "Edited by"
+          edited_by: "Редаговано"
 
     category:
       can: 'can&hellip; '
       none: '(без категорії)'
       choose: 'Select a category&hellip;'
-      edit: 'edit'
-      edit_long: "Edit Category"
-      view: 'View Topics in Category'
+      edit: 'редагувати'
+      edit_long: "Редагувати категорію"
+      view: 'Переглянути теми, що належать до категорії'
       general: 'General'
-      settings: 'Settings'
-      delete: 'Delete Category'
-      create: 'Create Category'
-      save: 'Save Category'
-      creation_error: There has been an error during the creation of the category.
+      settings: 'Налаштування'
+      delete: 'Видалити категорію'
+      create: 'Створити категорію'
+      save: 'Зберегти категорію'
+      creation_error: Під час створення категорії трапилася помилка.
       save_error: Під час збереження категорії трапилася помилка.
-      more_posts: "view all {{posts}}..."
+      more_posts: "переглянути всі {{posts}}..."
       name: "Назва категорії"
       description: "Опис"
       topic: "category topic"
@@ -1151,11 +1151,11 @@ uk:
       foreground_color: "Foreground color"
       name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
-      delete_confirm: "Are you sure you want to delete this category?"
-      delete_error: "There was an error deleting the category."
+      delete_confirm: "Ви впевнені, що хочете видалити цю категорію?"
+      delete_error: "Під час видалення категорії трапилася помилка."
       list: "List Categories"
       no_description: "There is no description for this category, edit the topic definition."
-      change_in_category_topic: "Edit Description"
+      change_in_category_topic: "Редагувати опис"
       already_used: 'This color has been used by another category'
       security: "Security"
       auto_close_label: "Auto-close topics after:"
@@ -1666,7 +1666,7 @@ uk:
         title: 'Settings'
         reset: 'reset to default'
         none: 'none'
-        no_results: "No results found."
+        no_results: "Не знайдено результатів."
         clear_filter: "Clear"
         categories:
           all_results: 'All'
