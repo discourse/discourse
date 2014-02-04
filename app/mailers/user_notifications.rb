@@ -127,7 +127,7 @@ class UserNotifications < ActionMailer::Base
     return unless @notification = opts[:notification]
     return unless @post = opts[:post]
 
-    username = @notification.data_hash[:display_username]
+    username = @notification.data_hash[:original_username]
     notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
     context = ""
