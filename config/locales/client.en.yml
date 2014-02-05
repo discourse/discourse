@@ -594,7 +594,7 @@ en:
     current_user: 'go to your user page'
 
     starred:
-      title: 'Starred'
+      title: 'Star'
       help:
         star: 'add this topic to your starred list'
         unstar: 'remove this topic from your starred list'
