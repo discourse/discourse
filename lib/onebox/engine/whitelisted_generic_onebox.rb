@@ -17,7 +17,6 @@ module Onebox
         %w(500px.com
           about.com
           answers.com
-          archive.org
           ask.com
           battle.net
           bbc.co.uk
