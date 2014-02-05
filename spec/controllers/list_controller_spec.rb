@@ -56,6 +56,15 @@ describe ListController do
     context 'in a category' do
       let(:category) { Fabricate(:category) }
 
+      context 'without access to see the category' do
+        before do
+          Guardian.any_instance.expects(:can_see?).with(category).returns(false)
+          xhr :get, :category_latest, category: category.slug
+        end
+
+        it { should_not respond_with(:success) }
+      end
+
       context 'with access to see the category' do
         before do
           xhr :get, :category_latest, category: category.slug

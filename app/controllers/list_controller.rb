@@ -217,6 +217,7 @@ class ListController < ApplicationController
 
     @category = Category.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
                 Category.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+    guardian.ensure_can_see!(@category)
 
     raise Discourse::NotFound.new if @category.blank?
   end
