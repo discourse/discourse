@@ -30,6 +30,10 @@ Discourse.Site = Discourse.Model.extend({
     return this.get("postActionByIdLookup.action" + id);
   },
 
+  topicFlagTypeById: function(id) {
+    return this.get("topicFlagByIdLookup.action" + id);
+  },
+
   updateCategory: function(newCategory) {
     var existingCategory = this.get('categories').findProperty('id', Em.get(newCategory, 'id'));
     if (existingCategory) existingCategory.mergeAttributes(newCategory);
@@ -82,6 +86,16 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
         return actionType;
       });
     }
+
+    if (result.topic_flag_types) {
+      result.topicFlagByIdLookup = Em.Object.create();
+      result.topic_flag_types = _.map(result.topic_flag_types,function(p) {
+        var actionType = Discourse.PostActionType.create(p);
+        result.topicFlagByIdLookup.set("action" + p.id, actionType);
+        return actionType;
+      });
+    }
+
     if (result.archetypes) {
       result.archetypes = _.map(result.archetypes,function(a) {
         return Discourse.Archetype.create(a);

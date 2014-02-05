@@ -369,11 +369,11 @@ table {
   }
   td { vertical-align: top; }
   th { text-align: left; }
-  .user { width: 40px; }
+  .user { width: 40px; padding-top: 12px; }
   .excerpt {
     max-width: 740px;
     width: 740px;
-    padding: 0 10px 10px 0;
+    padding: 8px;
     word-wrap: break-word;
     .fa,h3 { display: inline-block; }
 

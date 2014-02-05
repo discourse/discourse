@@ -42,6 +42,10 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
       });
     },
 
+    doneTopicFlags: function(item) {
+      this.send('disagreeFlags', item);
+    },
+
     /**
       Deletes a post
 

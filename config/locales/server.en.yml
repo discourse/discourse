@@ -360,6 +360,22 @@ en:
       description: 'Vote for this post'
       long_form: 'voted for this post'
 
+  topic_flag_types:
+    spam:
+      title: 'Spam'
+      description: 'This topic is an advertisement. It is not useful or relevant to this site, but promotional in nature.'
+      long_form: 'flagged this as spam'
+    inappropriate:
+      title: 'Inappropriate'
+      description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/faq">our community guidelines</a>.'
+      long_form: 'flagged this as inappropriate'
+    notify_moderators:
+      title: 'Notify moderators'
+      description: 'This topic requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
+      long_form: 'notified moderators'
+      email_title: 'The topic "%{title}" requires moderator attention'
+      email_body: "%{link}\n\n%{message}"
+
   flagging:
     you_must_edit: '<p>Your post was flagged by the community. Please see your private messages.</p>'
     user_must_edit: '<p>Flagged content temporarily hidden.</p>'
