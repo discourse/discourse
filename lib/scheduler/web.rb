@@ -5,8 +5,10 @@ module Scheduler
 
     def self.registered(app)
       app.get "/scheduler" do
-        @schedules = Scheduler::Manager.discover_schedules
         @manager = Scheduler::Manager.without_runner
+        @schedules = Scheduler::Manager.discover_schedules.sort do |a,b|
+          a.schedule_info.next_run <=> b.schedule_info.next_run
+        end
         erb File.read(File.join(VIEWS, 'scheduler.erb')), locals: {view_path: VIEWS}
       end
 
