@@ -55,6 +55,14 @@ class SessionController < ApplicationController
     render json: {result: "ok"}
   end
 
+  def current
+    if current_user.present?
+      render_serialized(current_user, CurrentUserSerializer)
+    else
+      render nothing: true, status: 404
+    end
+  end
+
   def destroy
     reset_session
     log_off_user

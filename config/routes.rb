@@ -113,6 +113,7 @@ Discourse::Application.routes.draw do
     end
   end
 
+  get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
   get "composer-messages" => "composer_messages#index"
 
