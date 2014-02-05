@@ -44,6 +44,7 @@ class Category < ActiveRecord::Base
 
   has_one :category_search_data
   belongs_to :parent_category, class_name: 'Category'
+  has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
 
   scope :latest, ->{ order('topic_count desc') }
 
