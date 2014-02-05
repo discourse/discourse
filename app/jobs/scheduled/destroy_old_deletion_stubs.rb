@@ -1,7 +1,7 @@
 module Jobs
   # various consistency checks
   class DestroyOldDeletionStubs < Jobs::Scheduled
-    recurrence { hourly.minute_of_hour(0, 30) }
+    every 30.minutes
 
     def execute(args)
       PostDestroyer.destroy_stubs

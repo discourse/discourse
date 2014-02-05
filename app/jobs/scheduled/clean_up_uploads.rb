@@ -1,7 +1,7 @@
 module Jobs
 
   class CleanUpUploads < Jobs::Scheduled
-    recurrence { hourly }
+    every 1.hour
 
     def execute(args)
       return unless SiteSetting.clean_up_uploads?

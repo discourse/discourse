@@ -61,6 +61,12 @@ describe Scheduler::Manager do
 
   end
 
+  describe '#discover_schedules' do
+    it 'Discovers Testing::RandomJob' do
+      Scheduler::Manager.discover_schedules.should include(Testing::RandomJob)
+    end
+  end
+
   describe '#next_run' do
     it 'should be within the next 5 mins if it never ran' do
 

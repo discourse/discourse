@@ -3,7 +3,7 @@ require_dependency 'avatar_detector'
 module Jobs
 
   class DetectAvatars < Jobs::Scheduled
-    recurrence { daily.hour_of_day(8) }
+    every 8.hours
 
     def execute(args)
       return unless SiteSetting.detect_custom_avatars?

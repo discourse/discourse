@@ -1,7 +1,7 @@
 module Jobs
 
   class PurgeDeletedUploads < Jobs::Scheduled
-    recurrence { daily }
+    every 1.day
 
     def execute(args)
       grace_period = SiteSetting.purge_deleted_uploads_grace_period_days
