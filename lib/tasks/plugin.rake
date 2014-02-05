@@ -47,7 +47,7 @@ desc 'run plugin specs'
 task 'plugin:spec', :plugin do |t, args|
   args.with_defaults(plugin: "**")
   ruby = `which ruby`.strip
-  files = Dir.glob("./plugins/#{args[:plugin]}/spec/*.rb")
+  files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*.rb")
   if files.length > 0
     sh "LOAD_PLUGINS=true #{ruby} -S rspec #{files.join(' ')}"
   else
