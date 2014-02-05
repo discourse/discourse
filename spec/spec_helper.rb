@@ -76,7 +76,7 @@ Spork.prefork do
     end
 
     config.before(:all) do
-      DiscoursePluginRegistry.clear
+      DiscoursePluginRegistry.clear if ENV['LOAD_PLUGINS'] != "true"
       Discourse.current_user_provider = TestCurrentUserProvider
 
       # a bit odd, but this setting is actually preloaded
