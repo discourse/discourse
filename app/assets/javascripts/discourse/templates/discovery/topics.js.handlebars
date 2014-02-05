@@ -9,11 +9,13 @@
     <table id='topic-list'>
       <thead>
       <tr>
+        {{#if currentUser}}
         <th>
           {{#if canBulkSelect}}
           <button class='btn bulk-select' {{action toggleBulkSelect}} title="{{i18n topics.bulk.toggle}}"><i class='fa fa-list'></i></button>
           {{/if}}
         </th>
+        {{/if}}
         {{#sortable-heading sortBy="default" sortOrder=sortOrder}}
           {{i18n topic.title}}
         {{/sortable-heading}}

@@ -121,8 +121,7 @@ class TopicQuery
   end
 
   def list_category(category)
-    create_list(:category, unordered: true) do |list|
-      list = list.where(category_id: category.id)
+    create_list(:category, unordered: true, category: category.id) do |list|
       if @user
         list.order(TopicQuerySQL.order_with_pinned_sql)
       else
@@ -132,10 +131,8 @@ class TopicQuery
   end
 
   def list_new_in_category(category)
-    create_list(:new_in_category, unordered: true) do |list|
-      list.where(category_id: category.id)
-          .by_newest
-          .first(25)
+    create_list(:new_in_category, unordered: true, category: category.id) do |list|
+      list.by_newest.first(25)
     end
   end
 
@@ -242,6 +239,11 @@ class TopicQuery
       result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
 
+      # Don't include the category topic unless restricted to that category
+      if options[:category].blank?
+        result = result.where('COALESCE(categories.topic_id, 0) <> topics.id')
+      end
+
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
       result = result.where.not(topics: {id: options[:except_topic_ids]}).references(:topics) if options[:except_topic_ids]
@@ -309,7 +311,7 @@ class TopicQuery
     end
 
     def random_suggested(topic, count, excluded_topic_ids=[])
-      result = default_results(unordered: true, per_page: count)
+      result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)
       excluded_topic_ids += Category.pluck(:topic_id).compact
       result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 

@@ -123,7 +123,7 @@ describe UserNotifications do
                 topic: post.topic,
                 notification_type: Notification.types[notification_type],
                 post_number: post.post_number,
-                data: {display_username: username}.to_json )
+                data: {original_username: username}.to_json )
     end
 
     describe '.user_mentioned' do

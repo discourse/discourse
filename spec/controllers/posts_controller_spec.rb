@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe PostsController do
 
-
   describe 'short_link' do
     it 'logs the incoming link once' do
       IncomingLink.expects(:add).once.returns(true)
@@ -384,6 +383,66 @@ describe PostsController do
       end
 
     end
+  end
+
+  describe "revisions" do
+
+    let(:post_revision) { Fabricate(:post_revision) }
+
+    it "throws an exception when revision is < 2" do
+      expect {
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: 1
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    context "when edit history is not visible to the public" do
+
+      before { SiteSetting.stubs(:edit_history_visible_to_public).returns(false) }
+
+      it "ensures anonymous can not see the revisions" do
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_forbidden
+      end
+
+      it "ensures staff can see the revisions" do
+        log_in(:admin)
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_success
+      end
+
+      it "ensures poster can see the revisions" do
+        user = log_in(:active_user)
+        pr = Fabricate(:post_revision, user: user)
+        xhr :get, :revisions, post_id: pr.post_id, revision: pr.number
+        response.should be_success
+      end
+
+    end
+
+    context "when edit history is visible to everyone" do
+
+      before { SiteSetting.stubs(:edit_history_visible_to_public).returns(true) }
+
+      it "ensures anyone can see the revisions" do
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_success
+      end
+
+    end
+
+    context "deleted post" do
+      let(:admin) { log_in(:admin) }
+      let(:deleted_post) { Fabricate(:post, user: admin) }
+      let(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
+
+      before { deleted_post.trash!(admin) }
+
+      it "also work on deleted post" do
+        xhr :get, :revisions, post_id: deleted_post_revision.post_id, revision: deleted_post_revision.number
+        response.should be_success
+      end
+    end
+
   end
 
 end

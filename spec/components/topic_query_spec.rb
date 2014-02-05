@@ -28,12 +28,12 @@ describe TopicQuery do
       Topic.recent(10).count.should == 0
 
       # mods can see every group and hidden topics
-      TopicQuery.new(moderator).list_latest.topics.count.should == 3
+      TopicQuery.new(moderator).list_latest.topics.count.should == 2
 
       group.add(user)
       group.save
 
-      TopicQuery.new(user).list_latest.topics.count.should == 2
+      TopicQuery.new(user).list_latest.topics.count.should == 1
 
     end
 
@@ -366,7 +366,7 @@ describe TopicQuery do
       end
     end
 
-    context "anonymously browswing with invisible, closed and archived" do
+    context "anonymously browsing with invisible, closed and archived" do
       let!(:topic) { Fabricate(:topic) }
       let!(:regular_topic) { Fabricate(:post, user: creator).topic }
       let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
@@ -394,12 +394,20 @@ describe TopicQuery do
         let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
         let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
         let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
+        let!(:fully_read_closed) { Fabricate(:post, user: creator).topic }
+        let!(:fully_read_archived) { Fabricate(:post, user: creator).topic }
 
         before do
           user.auto_track_topics_after_msecs = 0
           user.save
           TopicUser.update_last_read(user, partially_read.id, 0, 0)
           TopicUser.update_last_read(user, fully_read.id, 1, 0)
+          TopicUser.update_last_read(user, fully_read_closed.id, 1, 0)
+          TopicUser.update_last_read(user, fully_read_archived.id, 1, 0)
+          fully_read_closed.closed = true
+          fully_read_closed.save
+          fully_read_archived.archived = true
+          fully_read_archived.save
         end
 
         it "won't return new or fully read if there are enough partially read topics" do
@@ -407,14 +415,22 @@ describe TopicQuery do
           suggested_topics.should == [partially_read.id]
         end
 
-        it "won't fully read if there are enough partially read topics and new topics" do
-          SiteSetting.stubs(:suggested_topics).returns(2)
-          suggested_topics.should == [partially_read.id, new_topic.id]
+        it "won't return fully read if there are enough partially read topics and new topics" do
+          SiteSetting.stubs(:suggested_topics).returns(4)
+          suggested_topics[0].should == partially_read.id
+          suggested_topics[1,3].should include(new_topic.id)
+          suggested_topics[1,3].should include(closed_topic.id)
+          suggested_topics[1,3].should include(archived_topic.id)
         end
 
         it "returns unread, then new, then random" do
-          SiteSetting.stubs(:suggested_topics).returns(3)
-          suggested_topics.should == [partially_read.id, new_topic.id, fully_read.id]
+          SiteSetting.stubs(:suggested_topics).returns(7)
+          suggested_topics[0].should == partially_read.id
+          suggested_topics[1,3].should include(new_topic.id)
+          suggested_topics[1,3].should include(closed_topic.id)
+          suggested_topics[1,3].should include(archived_topic.id)
+          suggested_topics[4].should == fully_read.id
+          # random doesn't include closed and archived
         end
 
       end

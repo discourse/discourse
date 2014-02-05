@@ -39,6 +39,15 @@ test('findBySlug', function() {
   blank(Discourse.Category.findBySlug('luke', 'leia'), 'luke is blank with an incorrect parent');
 });
 
+test('findByIds', function(){
+  var categories =  [
+        Discourse.Category.create({id: 1}),
+        Discourse.Category.create({id: 2})];
+
+  this.stub(Discourse.Category, 'list').returns(categories);
+  deepEqual(Discourse.Category.findByIds([1,2,3]), categories);
+});
+
 test('postCountStats', function() {
   var category1 = Discourse.Category.create({id: 1, slug: 'unloved', posts_year: 2, posts_month: 0, posts_week: 0, posts_day: 0}),
       category2 = Discourse.Category.create({id: 2, slug: 'hasbeen', posts_year: 50, posts_month: 4, posts_week: 0, posts_day: 0}),

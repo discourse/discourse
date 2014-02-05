@@ -101,7 +101,16 @@ describe Jobs::UserEmail do
 
     context 'notification' do
       let(:post) { Fabricate(:post, user: user) }
-      let!(:notification) { Fabricate(:notification, user: user, topic: post.topic, post_number: post.post_number)}
+      let!(:notification) {
+        Fabricate(:notification,
+                    user: user,
+                    topic: post.topic,
+                    post_number: post.post_number,
+                    data: {
+                      original_post_id: post.id
+                    }.to_json
+                 )
+      }
 
       it 'passes a notification as an argument when a notification_id is present' do
         Email::Sender.any_instance.expects(:send)
@@ -131,11 +140,17 @@ describe Jobs::UserEmail do
           before do
             @pm_from_staff = Fabricate(:post, user: Fabricate(:moderator))
             @pm_from_staff.topic.topic_allowed_users.create!(user_id: suspended.id)
-            @pm_notification = Fabricate(:notification, user: suspended, topic: @pm_from_staff.topic, post_number: @pm_from_staff.post_number)
+            @pm_notification = Fabricate(:notification,
+                                            user: suspended,
+                                            topic: @pm_from_staff.topic,
+                                            post_number: @pm_from_staff.post_number,
+                                            data: { original_post_id: @pm_from_staff.id }.to_json
+                                        )
             UserNotifications.expects(:user_private_message).with(suspended, notification: @pm_notification, post: @pm_from_staff).returns(mailer)
           end
 
-          subject(:execute_user_email_job) { Jobs::UserEmail.new.execute(type: :user_private_message, user_id: suspended.id, notification_id: @pm_notification.id) }
+          subject(:execute_user_email_job) {
+            Jobs::UserEmail.new.execute(type: :user_private_message, user_id: suspended.id, notification_id: @pm_notification.id) }
 
           it "sends an email" do
             execute_user_email_job

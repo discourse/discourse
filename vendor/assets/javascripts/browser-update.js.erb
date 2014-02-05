@@ -19,12 +19,12 @@ var $buo = function() {
 
   // sam: my main concern here is mobile, but its an outlier, for now we support ie9, set conditionally and stuff with pushState
   if (window.ie === "new" || (window.history && window.history.pushState && !badAndroid)) {
-      return;
+    return;
   }
 
   // we don't ask Googlebot to update their browser
-  if (ua.indexOf('Googlebot') >= 0) {
-      return;
+  if (ua.indexOf('Googlebot') >= 0 || ua.indexOf('Mediapartners') >= 0 || ua.indexOf('AdsBot') >= 0) {
+    return;
   }
 
   // retrieve localized browser upgrade text

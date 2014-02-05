@@ -41,6 +41,7 @@ module Jobs
         return if seen_recently && !user.suspended?
 
         # Load the post if present
+        email_args[:post] ||= Post.where(id: notification.data_hash[:original_post_id].to_i).first
         email_args[:post] ||= notification.post
         email_args[:notification] = notification
 

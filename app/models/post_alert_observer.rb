@@ -140,6 +140,7 @@ class PostAlertObserver < ActiveRecord::Observer
       end
 
       original_post = post
+      original_username = opts[:display_username] || post.username
 
       if collapsed
         post = first_unread_post(user,post.topic) || post
@@ -155,6 +156,8 @@ class PostAlertObserver < ActiveRecord::Observer
                                 post_number: post.post_number,
                                 post_action_id: opts[:post_action_id],
                                 data: { topic_title: post.topic.title,
+                                        original_post_id: original_post.id,
+                                        original_username: original_username,
                                         display_username: opts[:display_username] || post.user.username }.to_json)
     end
 
