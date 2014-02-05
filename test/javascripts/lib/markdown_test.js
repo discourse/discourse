@@ -351,6 +351,7 @@ test("sanitize", function() {
          "it allows iframe to google maps");
   equal(sanitize("<textarea>hullo</textarea>"), "hullo");
   equal(sanitize("<button>press me!</button>"), "press me!");
+  equal(sanitize("<canvas>draw me!</canvas>"), "draw me!");
 });
 
 test("URLs in BBCode tags", function() {
