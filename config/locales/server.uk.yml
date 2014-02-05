@@ -236,137 +236,137 @@ uk:
   rate_limiter:
     too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
     hours:
-      one:   "1 hour"
-      few:   "%{count} hours"
-      many:  "%{count} hours"
-      other: "%{count} hours"
+      one:   "%{count} година"
+      few:   "%{count} години"
+      many:  "%{count} годин"
+      other: "%{count} годин"
     minutes:
-      one:   "1 minute"
-      few:   "%{count} minutes"
-      many:  "%{count} minutes"
-      other: "%{count} minutes"
+      one:   "%{count} хвилина"
+      few:   "%{count} хвилини"
+      many:  "%{count} хвилин"
+      other: "%{count} хвилин"
     seconds:
-      one:   "1 second"
-      few:   "%{count} seconds"
-      many:  "%{count} seconds"
-      other: "%{count} seconds"
+      one:   "%{count} секунда"
+      few:   "%{count} секунди"
+      many:  "%{count} секунд"
+      other: "%{count} секунд"
 
   datetime:
     distance_in_words:
-      half_a_minute: "< 1m"
+      half_a_minute: "< 1 хв"
       less_than_x_seconds:
-        one:   "< 1s"
-        few:   "< %{count}s"
-        many:  "< %{count}s"
-        other: "< %{count}s"
+        one:   "< %{count} с"
+        few:   "< %{count} с"
+        many:  "< %{count} с"
+        other: "< %{count} с"
       x_seconds:
-        one:   "1s"
-        few:   "%{count}s"
-        many:  "%{count}s"
-        other: "%{count}s"
+        one:   "%{count} с"
+        few:   "%{count} с"
+        many:  "%{count} с"
+        other: "%{count} с"
       less_than_x_minutes:
-        one:   "< 1m"
-        few:   "< %{count}m"
-        many:  "< %{count}m"
-        other: "< %{count}m"
+        one:   "< %{count} хв"
+        few:   "< %{count} хв"
+        many:  "< %{count} хв"
+        other: "< %{count} хв"
       x_minutes:
-        one:   "1m"
-        few:   "%{count}m"
-        many:  "%{count}m"
-        other: "%{count}m"
+        one:   "%{count} хв"
+        few:   "%{count} хв"
+        many:  "%{count} хв"
+        other: "%{count} хв"
       about_x_hours:
-        one:   "1h"
-        few:   "%{count}h"
-        many:  "%{count}h"
-        other: "%{count}h"
+        one:   "%{count} год"
+        few:   "%{count} год"
+        many:  "%{count} год"
+        other: "%{count} год"
       x_days:
-        one:   "1d"
-        few:   "%{count}d"
-        many:  "%{count}d"
-        other: "%{count}d"
+        one:   "%{count} д"
+        few:   "%{count} д"
+        many:  "%{count} д"
+        other: "%{count} д"
       about_x_months:
-        one:   "1mon"
-        few:   "%{count}mon"
-        many:  "%{count}mon"
-        other: "%{count}mon"
+        one:   "%{count} міс"
+        few:   "%{count} міс"
+        many:  "%{count} міс"
+        other: "%{count} міс"
       x_months:
-        one:   "1mon"
-        few:   "%{count}mon"
-        many:  "%{count}mon"
-        other: "%{count}mon"
+        one:   "%{count} міс"
+        few:   "%{count} міс"
+        many:  "%{count} міс"
+        other: "%{count} міс"
       about_x_years:
-        one:   "1y"
-        few:   "%{count}y"
-        many:  "%{count}y"
-        other: "%{count}y"
+        one:   "%{count} р"
+        few:   "%{count} р"
+        many:  "%{count} р"
+        other: "%{count} р"
       over_x_years:
-        one:   "> 1y"
-        few:   "> %{count}y"
-        many:  "> %{count}y"
-        other: "> %{count}y"
+        one:   "> %{count} р"
+        few:   "> %{count} р"
+        many:  "> %{count} р"
+        other: "> %{count} р"
       almost_x_years:
-        one:   "1y"
-        few:   "%{count}y"
-        many:  "%{count}y"
-        other: "%{count}y"
+        one:   "%{count} р"
+        few:   "%{count} р"
+        many:  "%{count} р"
+        other: "%{count} р"
 
     distance_in_words_verbose:
-      half_a_minute: "just now"
+      half_a_minute: "щойно"
       less_than_x_seconds:
-        one:   "just now"
-        few:   "just now"
-        many:  "just now"
-        other: "just now"
+        one:   "щойно"
+        few:   "щойно"
+        many:  "щойно"
+        other: "щойно"
       x_seconds:
-        one:   "1 second ago"
-        few:   "%{count} seconds ago"
-        many:  "%{count} seconds ago"
-        other: "%{count} seconds ago"
+        one:   "%{count} секунда тому"
+        few:   "%{count} секунди тому"
+        many:  "%{count} секунд тому"
+        other: "%{count} секунд тому"
       less_than_x_minutes:
-        one:   "less than 1 minute ago"
-        few:   "less than %{count} minutes ago"
-        many:  "less than %{count} minutes ago"
-        other: "less than %{count} minutes ago"
+        one:   "менше %{count} хвилини тому"
+        few:   "менше %{count} хвилин тому"
+        many:  "менше %{count} хвилин тому"
+        other: "менше %{count} хвилин тому"
       x_minutes:
-        one:   "1 minute ago"
-        few:   "%{count} minutes ago"
-        many:  "%{count} minutes ago"
-        other: "%{count} minutes ago"
+        one:   "%{count} хвилина тому"
+        few:   "%{count} хвилини тому"
+        many:  "%{count} хвилин тому"
+        other: "%{count} хвилин тому"
       about_x_hours:
-        one:   "1 hour ago"
-        few:   "%{count} hours ago"
-        many:  "%{count} hours ago"
-        other: "%{count} hours ago"
+        one:   "%{count} година тому"
+        few:   "%{count} години тому"
+        many:  "%{count} годин тому"
+        other: "%{count} годин тому"
       x_days:
-        one:   "1 day ago"
-        few:   "%{count} days ago"
-        many:  "%{count} days ago"
-        other: "%{count} days ago"
+        one:   "%{count} день тому"
+        few:   "%{count} дні тому"
+        many:  "%{count} днів тому"
+        other: "%{count} днів тому"
       about_x_months:
-        one:   "about 1 month ago"
-        few:   "about %{count} months ago"
-        many:  "about %{count} months ago"
-        other: "about %{count} months ago"
+        one:   "близько %{count} місяця тому"
+        few:   "близько %{count} місяців тому"
+        many:  "близько %{count} місяців тому"
+        other: "близько %{count} місяців тому"
       x_months:
-        one:   "1 month ago"
-        few:   "%{count} months ago"
-        many:  "%{count} months ago"
-        other: "%{count} months ago"
+        one:   "%{count} місяць тому"
+        few:   "%{count} місяці тому"
+        many:  "%{count} місяців тому"
+        other: "%{count} місяців тому"
       about_x_years:
-        one:   "about 1 year ago"
-        few:   "about %{count} years ago"
-        many:  "about %{count} years ago"
-        other: "about %{count} years ago"
+        one:   "близько %{count} року тому"
+        few:   "близько %{count} років тому"
+        many:  "близько %{count} років тому"
+        other: "близько %{count} років тому"
       over_x_years:
-        one:   "over 1 year ago"
-        few:   "over %{count} years ago"
-        many:  "over %{count} years ago"
-        other: "over %{count} years ago"
+        one:   "більше %{count} року тому"
+        few:   "більше %{count} років тому"
+        many:  "більше %{count} років тому"
+        other: "більше %{count} років тому"
       almost_x_years:
-        one:   "almost 1 year ago"
-        few:   "almost %{count} years ago"
-        many:  "almost %{count} years ago"
-        other: "almost %{count} years ago"
+        one:   "майже %{count} рік тому"
+        few:   "майже %{count} роки тому"
+        many:  "майже %{count} років тому"
+        other: "майже %{count} років тому"
 
   password_reset:
     no_token: "Sorry, your token has expired. Please try resetting your password again."
@@ -482,9 +482,9 @@ uk:
       xaxis: "Day"
       yaxis: "Number of new starred topics"
     users_by_trust_level:
-      title: "Users per Trust Level"
-      xaxis: "Trust Level"
-      yaxis: "Number of Users"
+      title: "Користувачі за Рівнем довіри"
+      xaxis: "Рівень довіри"
+      yaxis: "Кількість користувачів"
     emails:
       title: "Emails Sent"
       xaxis: "Day"
@@ -492,34 +492,34 @@ uk:
     user_to_user_private_messages:
       title: "User-to-User"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Кількість приватних повідомлень"
     system_private_messages:
       title: "System"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Кількість приватних повідомлень"
     moderator_warning_private_messages:
       title: "Moderator Warning"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Кількість приватних повідомлень"
     notify_moderators_private_messages:
       title: "Notify Moderators"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Кількість приватних повідомлень"
     notify_user_private_messages:
       title: "Notify User"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Кількість приватних повідомлень"
     top_referrers:
       title: "Top Referrers"
       xaxis: "User"
       num_clicks: "Clicks"
       num_topics: "Topics"
     top_traffic_sources:
-      title: "Top Traffic Sources"
-      xaxis: "Domain"
-      num_clicks: "Clicks"
-      num_topics: "Topics"
-      num_users: "Users"
+      title: "Головні джерела трафіку"
+      xaxis: "Домен"
+      num_clicks: "Переходи"
+      num_topics: "Теми"
+      num_users: "Користувачі"
     top_referred_topics:
       title: "Top Referred Topics"
       xaxis: "Topic"
@@ -903,8 +903,8 @@ uk:
       other: "I moved %{count} posts to an existing topic: %{topic_link}"
 
   topic_statuses:
-    archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
-    archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
+    archived_enabled: "Цю тему тепер заархівовано. Вона заморожена і її жодним чином не можна змінити."
+    archived_disabled: "Цю тему тепер розархівовано. Вона більше не заморожена, і її можна змінювати."
     closed_enabled: "Цю тему закрито. Нові відповіді заборонено."
     closed_disabled: "Цю тему відкрито. Нові відповіді дозволено."
     autoclosed_enabled_days:
@@ -925,11 +925,11 @@ uk:
       few:   "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
       many:  "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
-    autoclosed_disabled: "This topic is now opened. New replies are allowed."
+    autoclosed_disabled: "Тепер ця тема відкрита. Дозволено нові відповіді."
     pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is either unpinned by a moderator, or the Clear Pin button is pressed."
     pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    visible_enabled: "This topic is now visible. It will be displayed in topic lists."
-    visible_disabled: "This topic is now invisible. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
+    visible_enabled: "Тепер ця тема видима. Вона буде відображатися у списках тем."
+    visible_disabled: "Тепер ця тема невидима. Вона більше не відображатиметься в жодному списку тем. Єдиний спосіб отримати до неї доступ - це за прямим посиланням."
 
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
@@ -974,46 +974,46 @@ uk:
       [1]: %{invite_link}
 
   invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join %{site_name}"
+    subject_template: "[%{site_name}] %{invitee_name} запросив(ла) Вас приєднатися до %{site_name}"
     text_body_template: |
-      %{invitee_name} invited you to %{site_name}.
+      %{invitee_name} запросив(ла) Вас до %{site_name}.
 
-      If you're interested, click the link below to join:
+      Якщо Вас це цікавить, перейдіть за посиланням, щоб приєднатися:
 
-      [Visit %{site_name}][1]
+      [Завітати до %{site_name}][1]
 
-      You were invited by a trusted user, so you'll be able to join immediately, without needing to log in.
+      Вас запросив довірений користувач, тому Ви матимете можливість приєднатися одразу, без входу до системи.
 
       [1]: %{invite_link}
 
   test_mailer:
-    subject_template: "[%{site_name}] Email Deliverability Test"
+    subject_template: "[%{site_name}] Тест доставки електронної пошти"
     text_body_template: |
-      This is a test email sent from your %{site_name} forum at:
+      Це - тестовий лист, надісланий з Вашого форуму %{site_name} за адресою:
 
       [**%{base_url}**][0]
 
-      Email deliverability is complicated. Here are a few important things you should check first:
+      Доставка електронної пошти - складна штука. Ось декілька важливих моментів, які спершу необхідно перевірити:
 
-      - Know how to view the *raw source of the email* in your mail client, so you can examine the email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu on each mail.
+      - Дізнайтесь, як переглянути *сире джерело електронного листа* у Вашому поштовому клієнті, щоб Ви могли знайти в заголовках листа важливі підказки. В Gmail це - опція "Показати оригінал" у спадному меню будь-якого листа.
 
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
+      - **ВАЖЛИВО:** Чи має Ваш інтернет-провайдер зворотній DNS-запис для сполучення доменних імен та IP-адрес, з яких Ви надсилаєте листи? [Перевірте свій запис про зворотній вказівник на DNS-адресу][2]. Якщо Ваш провайдер не має правильного запису про зворотній DNS-вказівник, навряд чи Ваші листи буде доставлено.
 
-      - Is your domain's SPF record correct? [Test your SPF record][1] here.
+      - Чи правильний SPF-запис Вашого домену? [Перевірте свій SPF-запис][1].
 
-      - Check to make sure the IPs of your mail server are [not on any email blacklists][4].
+      - Перевірте, чи немає IP-адрес Ваших поштових серверів [у чорних списках][4].
 
-      - Verify that your email server is *definitely* sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
+      - Перевірте, що Ваш поштовий сервер *точно* надсилає повне ім'я хосту, що проектується на DNS в його HELO-повідомленні. Якщо це не так, Ваші листи будуть відкидатися багатьма поштовими сервісами.
 
-      - Configure [DKIM email key signing][3] in your email software, and place the public DKIM key in your DNS records. This is not required, but will significantly improve email deliverability.
+      - Налаштуйте [DKIM-підпис електронних листів][3] у своєму поштовому програному забезпеченні, і розмістіть публічний DKIM-ключ у Ваших DNS-записах. Це не обов'язково, але суттєво покращить шанси на успішну доставку листів.
 
-      (The *easy* way is to [sign up for Mandrill][6], which has a generous free mailing plan and will be fine for small forums. You'll still need to set up the SPF and DKIM records in your DNS, though!)
+      (*Простий* спосіб полягає в тому, щоб [зареєструватися на Mandrill][6], який щедро пропонує безкоштовний поштовий тариф, що підійде для малих форумів. Втім, Вам все одно доведеться налаштувати SPF- і DKIM-записи у своєму DNS!)
 
-      We hope you received this email deliverability test OK!
+      Ми сподіваємося, що Ви отримали цього листа для перевірки доставки електронної пошти без проблем!
 
-      Good luck,
+      Успіхів,
 
-      Your friends at [Discourse](http://www.discourse.org)
+      Ваші друзі в [Discourse](http://www.discourse.org)
 
       :smile:
 
@@ -1027,7 +1027,7 @@ uk:
 
       ----
 
-      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
+      <small>В кожному листі, який Ви надсилаєте, має бути нижній колонтитул з можливістю відписатися від розсилки, тому змакетуймо його. Цього листа було надіслано ТзОВ Паралелепіпедмоторз, вул. Центральна, 55, Всюдигород, Україна 12345. Якщо Ви бажаєте відмовитися від наших наступних листів, [натисніть, щоб відписатися][5].</small>
 
   new_version_mailer:
     subject_template: "[%{site_name}] Updates Are Available"
@@ -1073,75 +1073,77 @@ uk:
 
     usage_tips:
       text_body_template: |
-        This private message has a few quick tips to get you started:
+        Це приватне повідомлення містить декілька коротких підказок, що допоможуть Вам розпочати:
 
-        ### Keep scrolling
+        ### Продовжуйте прокручувати
 
-        There are no next page buttons or page numbers – to read more, just keep scrolling down, and more content will load!
+        Тут немає кнопок з посиланнями на наступну сторінку або номер сторінки - щоб читати далі, просто прокручуйте екран вниз, і вміст буде підвантажуватися автоматично!
 
-        As new replies come in, they will appear automatically at the bottom of the topic. No need to refresh the page or re-enter the topic to see new posts.
+        Нові відповіді автоматично з'являтимуться внизу теми. Щоб побачити нові дописи, непотрібно оновлювати сторінку або заново відкривати тему.
 
-        ### How do I reply?
+        ### Як мені відповісти?
 
-        - To reply to a specific post, use the Reply button at the bottom of that post.
+        - Щоб відповісти на окремий допис, натисніть кнопку "Відповісти" під цим дописом.
 
-        - If you want to reply to the overall *theme* of the topic, rather than any specific post in the topic, use the Reply button at the very bottom of the topic.
+        - Якщо Ви хочете загалом відповісти на всю *тему* обговорення, а не на окремий допис в темі, натисніть кнопку "Відповісти" в самому низу теми.
 
-        - If you want to take the conversation in a different direction, but keep them linked together, use Reply as New Topic to the right of the post.
+        - Якщо Ви хочете змінити напрямок дискусії, але залишити зв'язок між дописами, натисніть "Відповісти у новій Темі" праворуч від допису.
 
-        ### Who is talking to me?
+        ### Хто говорить до мене?
 
-        When someone replies to your post, quotes you, or mentions your @username, a notification ➀ will appear at the top of the page. Click or tap that notification number to see who's talking to you, and where. Join the conversation!
+        Коли хтось відповідає на Ваш допис, цитує Вас або згадує Ваше @Ім'я, вгорі сторінки з'являтиметься сповіщення ➀. Клацніть це число, щоб побачити, хто до Вас говорить, і де. Приєднуйтеся до обговорення!
 
-        - To mention someone's name, start typing `@` and an autocompleter will pop up.
+        - Щоб зазначити чиєсь ім'я, введіть @ - і з'являться варіанти для автозаповнення.
 
-        - To quote just a section of a post, select it, then click the Reply button that appears over the highlight.
+        - Щоб процитувати лише частину допису, виділіть її, потім натисніть кнопку "Відповісти на цитату", що з'явиться над виділенням.
 
-        - To quote an entire post, use the Import Quote button on the composer toolbar.
+        - Щоб процитувати цілий допис, натисніть кнопку "Імпортувати цитату" на панелі інструментів редактора.
 
-        ### Look at that post!
+        ### Погляньте на цей допис!
 
-        To let someone know that you enjoyed their post, click the like ♥ button at the bottom of the post. If you see a problem with a post, don't hesitate to click the flag button and let the moderators – and your fellow community members – know about it.
+        Щоб дати комусь знати, що Вам сподобався його допис, натисніть кнопку вподобати ♥ внизу допису. Якщо Ви побачили в дописі проблему, не соромтеся натиснути кнопку з прапорцем і повідомити модераторів, а також Ваших товаришів - членів спільноти.
 
-        ### Where am I?
+        ### Де я?
 
-        - To get back to the home page at any time, **click the logo at the upper left** or use the back ← button on your browser.
+        - Щоб в будь-яку мить повернутися на головну сторінку, **натисніть логотип у верхньому лівому кутку**, або скористайтеся кнопкою "Назад" ← Вашого веб-оглядача.
 
-        - For search, your user page, or the sitemap, click on the icons at the upper right.
+        - Для пошуку, профілю, або карти сайту натисніть піктограми у верхньому правому кутку.
 
-        - While reading a topic, move to the top ↑ by clicking its title at the top of the page. To reach the *bottom* ↓, click the down arrow on the topic progress indicator at the bottom of the page, or click the last post field on the topic summary under the first post.
+        - Під час читання теми натисніть заголовок вгорі сторінки, щоб повернутися на її початок ↑. Щоб перейти в *кінець* ↓, натисніть стрілочку вниз на індикаторі прогресу по темі внизу сторінки, або натисніть поле "Останній допис" в підсумку теми під першим дописом.
 
     welcome_user:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "Ласкаво просимо до %{site_name}!"
       text_body_template: |
-        Thanks for joining %{site_name}, and welcome to our discussion forum!
+        Дякуємо за приєднання до %{site_name}, і вітаємо у нашому дискусійному форумі!
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        Ми завжди віримо у [цивілізовану поведінку у спільноті](%{base_url}/faq).
 
-        Enjoy your stay!
+        Бажаємо приємного перебування на форумі!
 
     welcome_invite:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "Ласкаво просимо до %{site_name}!"
       text_body_template: |
-        Thanks for accepting your invitation to %{site_name}, and welcome to our discussion forum!
+        Дякуємо за те, що Ви прийняли запрошення до %{site_name}, і вітаємо у нашому дискусійному форумі!
 
-        We've automatically generated a username for you: **%{username}**, but you can change that any time by visiting [your user profile][prefs].
+        Ми автоматично згенерували для Вас ім'я користувача **%{username}**, але Ви можете його змінити в будь-який час, відвідавши [свій користувацький профіль][prefs].
 
-        To log in again, either:
+        Щоб знову ввійти наступного разу:
 
-        1. Use Facebook, Google, Twitter, or many other supported credentials -- but that credential must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
+        1. Використовуйте обліковий запис Facebook, Google, Twitter, або будь-якої іншої підтримуваної системи -- але будьте певні, що цей запис пов'язаний із **тією ж електронною скринькою**, на яку Ви отримали оригінальне запрошення. Інакше ми не знатимемо, що це Ви!
 
-        2. Create a unique password for %{site_name} on [your user profile][prefs], then log in with that.
+        АБО
+
+        2. Створіть унікальний пароль для %{site_name} у [своєму профілі][prefs], і потім використайте його для входу.
 
         %{site_password}
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        Ми завжди віримо у [цивілізовану поведінку у спільноті](%{base_url}/faq).
 
-        Enjoy your stay!
+        Бажаємо приємного перебування на форумі!
 
         [prefs]: %{user_preferences_url}
 
@@ -1282,21 +1284,21 @@ uk:
         %{respond_instructions}
 
     digest:
-      why: "Here's a brief summary of the discussion on %{site_link} since we last saw you on %{last_seen_at}."
-      subject_template: "[%{site_name}] Forum Activity for %{date}"
+      why: "Ось короткий виклад обговорення на %{site_link} відтоді, як ми Вас востаннє бачили %{last_seen_at}."
+      subject_template: "[%{site_name}] Активність на форумі за %{date}"
       new_activity: "New activity on your topics and posts:"
-      top_topics: "Recent posts the community enjoyed:"
-      other_new_topics: "Other New Topics:"
-      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
-      click_here: "click here"
-      from: "%{site_name} digest"
-      read_more: "Read More"
+      top_topics: "Останні дописи, що з'явилися у спільноті:"
+      other_new_topics: "Інші нові теми:"
+      unsubscribe: "Цей підсумковий лист надіслано в якості люб'язного сповіщення від %{site_link}, оскільки ми Вас не бачили тривалий час. Щоб відписатися, %{unsubscribe_link}."
+      click_here: "натисніть тут"
+      from: "Стислий виклад новин від %{site_name}"
+      read_more: "Читати більше"
 
       posts:
-        one:   "1 post"
-        few:   "%{count} posts"
-        many:  "%{count} posts"
-        other: "%{count} posts"
+        one:   "%{count} допис"
+        few:   "%{count} дописи"
+        many:  "%{count} дописів"
+        other: "%{count} дописів"
 
     forgot_password:
       subject_template: "[%{site_name}] Password reset"
@@ -1344,14 +1346,14 @@ uk:
         Enjoy your stay!
 
     signup:
-      subject_template: "[%{site_name}] Activate your new account"
+      subject_template: "[%{site_name}] Активуйте свій новий обліковий запис"
       text_body_template: |
-        Welcome to %{site_name}!
+        Вітаємо у %{site_name}!
 
-        Click the following link to confirm and activate your new account:
+        Натисніть це посилання для підтвердження та активації Вашого нового облікового запису:
         %{base_url}/users/activate-account/%{email_token}
 
-        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+        Якщо наведене посилання не є клікабельним, спробуйте скопіювати та вставити його в адресний рядок Вашого веб-оглядача.
 
   discourse_hub:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
@@ -1366,8 +1368,8 @@ uk:
 
   login_required:
     welcome_message: |
-      #[Welcome to %{title}](#welcome)
-      This discussion forum requires an account to view %{title}. Please create an account or login to continue.
+      #[Ласкаво просимо до %{title}](#welcome)
+      Для цього форуму потрібен обліковий запис, щоб переглядати %{title}. Будь ласка, увійдіть або створіть обліковий запис, щоб продовжити.
 
   terms_of_service:
     user_content_license: |
