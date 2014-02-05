@@ -970,6 +970,10 @@ es:
           new: "Nuevo"
           active: "Activo"
           pending: "Pendiente"
+          admins: "Administradores"
+          moderators: "Moderadores"
+          suspended: "Suspendidos"
+          blocked: "Bloqueados"
         approved: "Aprobado?"
         approved_selected:
           one: "aprobar usuario"
