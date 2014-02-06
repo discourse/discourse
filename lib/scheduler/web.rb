@@ -1,26 +1,30 @@
 # Based off sidetiq https://github.com/tobiassvn/sidetiq/blob/master/lib/sidetiq/web.rb
 module Scheduler
   module Web
-    VIEWS = File.expand_path('views', File.dirname(__FILE__))
+    VIEWS = File.expand_path('views', File.dirname(__FILE__)) unless defined? VIEWS
 
     def self.registered(app)
       app.get "/scheduler" do
-        @manager = Scheduler::Manager.without_runner
-        @schedules = Scheduler::Manager.discover_schedules.sort do |a,b|
-          a.schedule_info.next_run <=> b.schedule_info.next_run
+        RailsMultisite::ConnectionManagement.with_connection("default") do
+          @manager = Scheduler::Manager.without_runner
+          @schedules = Scheduler::Manager.discover_schedules.sort do |a,b|
+            a.schedule_info.next_run <=> b.schedule_info.next_run
+          end
+          erb File.read(File.join(VIEWS, 'scheduler.erb')), locals: {view_path: VIEWS}
         end
-        erb File.read(File.join(VIEWS, 'scheduler.erb')), locals: {view_path: VIEWS}
       end
 
       app.post "/scheduler/:name/trigger" do
         halt 404 unless (name = params[:name])
 
-        klass = name.constantize
-        info = klass.schedule_info
-        info.next_run = Time.now.to_f
-        info.write!
+        RailsMultisite::ConnectionManagement.with_connection("default") do
+          klass = name.constantize
+          info = klass.schedule_info
+          info.next_run = Time.now.to_f
+          info.write!
 
-        redirect "#{root_path}scheduler"
+          redirect "#{root_path}scheduler"
+        end
       end
 
     end
