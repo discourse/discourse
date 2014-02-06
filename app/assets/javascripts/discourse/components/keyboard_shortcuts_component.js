@@ -98,11 +98,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
   _bindToClick: function(selector, binding) {
     binding = binding.split(',');
-    this.keyTrapper.bind(binding, function(e) {
-      if (!_.isUndefined(e) && _.isFunction(e.preventDefault)) {
-        e.preventDefault();
-      }
-
+    this.keyTrapper.bind(binding, function() {
       $(selector).click();
     });
   },
