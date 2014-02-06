@@ -43,6 +43,14 @@
 
           <div class='bio'>{{{bio_cooked}}}</div>
 
+          {{#if custom_groups}}
+          <div class='groups'>
+            {{#each custom_groups}}
+              {{#link-to 'group' this}}{{name}}{{/link-to}}
+            {{/each}}
+          </div>
+          {{/if}}
+
           {{#if isSuspended}}
             <div class='suspended'>
               <i class='fa fa-ban'></i>

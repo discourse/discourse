@@ -288,6 +288,11 @@ Discourse.User = Discourse.Model.extend({
         }));
       }
 
+      if (!Em.isEmpty(json.user.custom_groups)) {
+        json.user.custom_groups = json.user.custom_groups.map(function (g) {
+          return Discourse.Group.create(g);
+        });
+      }
       if (json.user.invited_by) {
         json.user.invited_by = Discourse.User.create(json.user.invited_by);
       }

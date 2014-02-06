@@ -22,6 +22,7 @@ class UserSerializer < BasicUserSerializer
              :suspended_till
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
+  has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
 
   def self.private_attributes(*attrs)
     attributes(*attrs)

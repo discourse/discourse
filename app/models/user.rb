@@ -98,6 +98,10 @@ class User < ActiveRecord::Base
     3..15
   end
 
+  def custom_groups
+    groups.where(automatic: false)
+  end
+
   def self.username_available?(username)
     lower = username.downcase
     User.where(username_lower: lower).blank?
