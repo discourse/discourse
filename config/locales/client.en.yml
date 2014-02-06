@@ -61,6 +61,7 @@ en:
         x_days:
           one: "1 day"
           other: "%{count} days"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "1 min ago"

@@ -40,7 +40,7 @@ test("formating medium length dates", function() {
   };
 
   var shortDateYear = function(days){
-    return moment().subtract('days', days).format('D MMM, YYYY');
+    return moment().subtract('days', days).format('D MMM YYYY');
   };
 
   leaveAgo = true;
