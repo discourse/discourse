@@ -173,6 +173,15 @@ en:
       sent_by_user: "Sent by <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
 
+    groups:
+      alias_levels:
+        title: "Who can use this group as an alias?"
+        nobody: "Nobody"
+        only_admins: "Only admins"
+        mods_and_admins: "Only moderators and Admins"
+        members_mods_and_admins: "Only group members, moderators and admins"
+        everyone: "Everyone"
+
     user_action_groups:
       "1": "Likes Given"
       "2": "Likes Received"
@@ -1261,13 +1270,6 @@ en:
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        alias_levels:
-          title: "Who can use this group as an alias?"
-          nobody: "Nobody"
-          only_admins: "Only admins"
-          mods_and_admins: "Only moderators and Admins"
-          members_mods_and_admins: "Only group members, moderators and admins"
-          everyone: "Everyone"
 
       api:
         generate_master: "Generate Master API Key"

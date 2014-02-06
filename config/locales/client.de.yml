@@ -172,6 +172,15 @@ de:
       sent_by_user: "Gesendet von <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Gesendet von <a href='{{userUrl}}'>dir</a>"
 
+    groups:
+      alias_levels:
+        title: "Wer kann diese Gruppe als Alias verwenden?"
+        nobody: "Niemand"
+        only_admins: "Nur Administatoren"
+        mods_and_admins: "Nur Moderatoren und Administratoren"
+        members_mods_and_admins: "Nur Gruppenmitglieder, Moderatoren und Administratoren"
+        everyone: "Everyone"
+
     user_action_groups:
       "1": "„Gefällt mir“ gegeben"
       "2": "„Gefällt mir“ erhalten"
@@ -1259,13 +1268,6 @@ de:
         delete: "Löschen"
         delete_confirm: "Diese gruppe löschen?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
-        alias_levels:
-          title: "Wer kann diese Gruppe als Alias verwenden?"
-          nobody: "Niemand"
-          only_admins: "Nur Administatoren"
-          mods_and_admins: "Nur Moderatoren und Administratoren"
-          members_mods_and_admins: "Nur Gruppenmitglieder, Moderatoren und Administratoren"
-          everyone: "Everyone"
 
       api:
         generate_master: "Master API Key generieren"

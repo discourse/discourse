@@ -1,5 +1,6 @@
 Discourse.AdminGroupsController = Ember.Controller.extend({
   itemController: 'adminGroup',
+  aliasLevels: null,
 
   actions: {
     edit: function(group){
