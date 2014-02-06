@@ -181,7 +181,7 @@ Editing /var/www/discourse/config/discourse.conf:
 
 Database/Hostname:
 - change database username/password if appropriate
-- change `hostname` to the name you'll use to access the discourse site, e.g. "forum.example.com"
+- change `hostname` to the name you'll use to access the Discourse site, e.g. "forum.example.com"
 
 Redis:
 - no changes if this is the only application using redis, but have a look
@@ -230,8 +230,8 @@ Edit /etc/nginx/conf.d/discourse.conf
 
 - edit `server_name`. Example: `server_name cain.discourse.org test.cain.discourse.org;`
 - change socket count depending on your NUM_WEB count
-- change socket paths if discourse is installed to a different location
-- modify root location if discourse is installed to a different location
+- change socket paths if Discourse is installed to a different location
+- modify root location if Discourse is installed to a different location
 
 Reload nginx by running
 
