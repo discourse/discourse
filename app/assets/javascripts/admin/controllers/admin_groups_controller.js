@@ -1,6 +1,5 @@
 Discourse.AdminGroupsController = Ember.Controller.extend({
   itemController: 'adminGroup',
-  aliasLevels: null,
 
   actions: {
     edit: function(group){
@@ -13,8 +12,10 @@ Discourse.AdminGroupsController = Ember.Controller.extend({
 
       self.set('refreshingAutoGroups', true);
       Discourse.ajax('/admin/groups/refresh_automatic_groups', {type: 'POST'}).then(function() {
-        self.set('model', Discourse.Group.findAll());
-        self.set('refreshingAutoGroups', false);
+        return Discourse.Group.findAll().then(function(groups) {
+          self.set('model', groups);
+          self.set('refreshingAutoGroups', false);
+        });
       });
     },
 

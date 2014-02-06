@@ -122,15 +122,13 @@ Discourse.Group = Discourse.Model.extend({
 
 Discourse.Group.reopenClass({
   findAll: function(){
-    var list = Discourse.SelectableArray.create();
-
-    Discourse.ajax("/admin/groups.json").then(function(groups){
+    return Discourse.ajax("/admin/groups.json").then(function(groups){
+      var list = Discourse.SelectableArray.create();
       _.each(groups,function(group){
         list.addObject(Discourse.Group.create(group));
       });
+      return list;
     });
-
-    return list;
   },
 
   aliasLevelOptions: function() {
