@@ -400,7 +400,8 @@ class UsersController < ApplicationController
         :name,
         :email,
         :password,
-        :username
+        :username,
+        :active
       ).merge(ip_address: request.ip)
     end
 end
