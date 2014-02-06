@@ -206,6 +206,14 @@ describe Category do
       @topic.posts.count.should == 1
 
       @category.topic_url.should be_present
+
+      @category.posts_week.should  == 0
+      @category.posts_month.should == 0
+      @category.posts_year.should  == 0
+
+      @category.topics_week.should  == 0
+      @category.topics_month.should == 0
+      @category.topics_year.should  == 0
     end
 
     it "should not set its description topic to auto-close" do
