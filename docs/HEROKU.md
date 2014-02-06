@@ -4,38 +4,13 @@ This guide takes you through the steps for deploying Discourse to the [Heroku](h
 
 For details on how to reduce the monthly cost of your application, see [Advanced Heroku deployment](#advanced-heroku-deployment).
 
-## Download and configure Discourse
+## Clone Discourse
 
-1. If you haven't already, download Discourse and create a new branch for your Heroku configuration.
+If you haven't already, download Discourse and create a new branch for your Heroku configuration.
 
         git clone git@github.com:discourse/discourse.git
         cd discourse
         git checkout -b heroku
-
-2. Create a redis.yml file from the sample.
-
-        cp config/redis.yml.sample config/redis.yml
-
-3. Create a production.rb file from the sample.
-
-        cp config/environments/production.rb.sample config/environments/production.rb
-
-4. Comment out or delete the created files from .gitignore. We want to include them when we push to Heroku.
-
-    *.gitignore*
-
-    ```diff
-    - config/redis.yml
-    + # config/redis.yml
-    ...
-    - config/environments/production.rb
-    + # config/environments/production.rb
-    ```
-
-5. Commit your changes.
-
-        git add .
-        git commit -m "ready for Heroku"
 
 
 ## Deploy to Heroku
