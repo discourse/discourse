@@ -116,6 +116,19 @@
     width: 680px;
   }
 
+  .group-member {
+    img {
+      float: left;
+      margin-right: 10px;
+    }
+    span.last-seen-at {
+      float: right;
+      color: #999;
+    }
+    clear: both;
+
+  }
+
   .user-content {
     padding: 10px 8px;
     background-color: white;

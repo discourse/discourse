@@ -12,6 +12,7 @@ Discourse.GroupMembersRoute = Discourse.Route.extend({
 
   setupController: function(controller) {
     controller.set('model', this.get('_members'));
+    this.controllerFor('group').set('showing', 'members');
   }
 
 });

@@ -1,10 +1,18 @@
 <div class="container">
     <section class='user-navigation'>
       <ul class='action-list nav-stacked'>
-        <li>{{#link-to 'group.index' model}}Posts{{/link-to}}</li>
-        <li>{{#link-to 'group.members' model}}Members{{/link-to}}</li>
+        <li {{bind-attr class="showingIndex:active"}}>{{#link-to 'group.index' model}}{{i18n groups.posts}}{{/link-to}}</li>
+        <li {{bind-attr class="showingMembers:active"}}>{{#link-to 'group.members' model}}{{i18n groups.members}}{{/link-to}}</li>
       </ul>
     </section>
 
-    {{outlet}}
+    <section class='user-main'>
+      <section class='about'>
+        <div class='details'>
+          <h1>{{name}}</h1>
+        </div>
+      </section>
+
+      {{outlet}}
+    </section>
 </div>

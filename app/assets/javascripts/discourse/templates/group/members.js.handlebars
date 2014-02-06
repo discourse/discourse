@@ -1,3 +1,8 @@
 {{#each model}}
-  {{username}}
+  <div class='group-member'>
+    <span class='last-seen-at'>{{i18n last_seen}} {{date last_seen_at}}</span>
+    {{avatar this imageSize="large"}}
+    <h3>{{#link-to 'user' this}}{{username}}{{/link-to}}</h3>
+    <p>{{name}}</p>
+  </div>
 {{/each}}
