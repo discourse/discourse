@@ -106,10 +106,11 @@ Handlebars.registerHelper('titledLinkTo', function(name, object) {
   @for Handlebars
 **/
 Handlebars.registerHelper('shortenUrl', function(property, options) {
-  var url;
+  var url, matches;
   url = Ember.Handlebars.get(this, property, options);
   // Remove trailing slash if it's a top level URL
-  if (url.match(/\//g).length === 3) {
+  matches = url.match(/\//g);
+  if (matches && matches.length === 3) {
     url = url.replace(/\/$/, '');
   }
   url = url.replace(/^https?:\/\//, '');
