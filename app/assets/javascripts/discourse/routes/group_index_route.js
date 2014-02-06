@@ -1,6 +1,5 @@
 Discourse.GroupIndexRoute = Discourse.Route.extend({
-
   model: function() {
-    console.log('group index');
+    return this.modelFor('group');
   }
 });

@@ -83,12 +83,13 @@ $.fn.autocomplete = function(options) {
   };
 
   var addInputSelectedItem = function(item) {
-    var transformed;
+    var transformed,
+        transformedItem = item;
 
-    if (options.transformComplete) { transformed = options.transformComplete(item); }
+    if (options.transformComplete) { transformedItem = options.transformComplete(transformedItem); }
     // dump what we have in single mode, just in case
     if (options.single) { inputSelectedItems = []; }
-    if (!_.isArray(transformed)) { transformed = [transformed || item]; }
+    if (!_.isArray(transformedItem)) { transformed = [transformedItem || item]; }
 
     var divs = transformed.map(function(itm) {
       var d = $("<div class='item'><span>" + itm + "<a class='remove' href='#'><i class='fa fa-times'></i></a></span></div>");
@@ -106,7 +107,7 @@ $.fn.autocomplete = function(options) {
 
     $(divs).find('a').click(function() {
       closeAutocomplete();
-      inputSelectedItems.splice($.inArray(item, inputSelectedItems), 1);
+      inputSelectedItems.splice($.inArray(transformedItem, inputSelectedItems), 1);
       $(this).parent().parent().remove();
       if (options.single) {
         me.show();

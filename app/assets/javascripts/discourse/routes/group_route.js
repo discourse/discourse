@@ -1,7 +1,7 @@
 Discourse.GroupRoute = Discourse.Route.extend({
 
-  model: function() {
-    return Discourse.Group.create();
+  model: function(params) {
+    return Discourse.Group.find(params.name);
   },
 
 });

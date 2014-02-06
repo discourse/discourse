@@ -31,15 +31,18 @@ Discourse.Group = Discourse.Model.extend({
     }
   }.property('user_count'),
 
+  // TODO: Refactor so adminGroups doesn't store the groups inside itself either.
+  findMembers: function() {
+    return Discourse.ajax('/groups/' + this.get('name') + '/members').then(function(result) {
+      return result.map(function(u) { return Discourse.User.create(u) });
+    });
+  },
+
   loadUsers: function() {
     var id = this.get('id');
     if(id && !this.get('loadedUsers')) {
       var self = this;
-      return Discourse.ajax('/admin/groups/' + this.get('id') + '/users').then(function(payload){
-        var users = Em.A();
-        _.each(payload,function(user){
-          users.addObject(Discourse.User.create(user));
-        });
+      return this.findMembers().then(function(users) {
         self.set('users', users);
         self.set('loadedUsers', true);
         return self;
@@ -48,16 +51,21 @@ Discourse.Group = Discourse.Model.extend({
     return Ember.RSVP.resolve(this);
   },
 
-  usernames: function() {
+  usernames: function(key, value) {
     var users = this.get('users');
-    var usernames = "";
-    if(users) {
-      usernames = _.map(users, function(user){
-        return user.get('username');
-      }).join(',');
+    if (arguments.length > 1) {
+      this.set('_usernames', value);
+    } else {
+      var usernames = "";
+      if(users) {
+        usernames = users.map(function(user) {
+          return user.get('username');
+        }).join(',');
+      }
+      this.set('_usernames', usernames);
     }
-    return usernames;
-  }.property('users'),
+    return this.get('_usernames');
+  }.property('users.@each.username'),
 
   destroy: function(){
     if(!this.id) return;
@@ -130,6 +138,12 @@ Discourse.Group.reopenClass({
         list.addObject(Discourse.Group.create(group));
       });
       return list;
+    });
+  },
+
+  find: function(name) {
+    return Discourse.ajax("/groups/" + name + ".json").then(function(g) {
+      return Discourse.Group.create(g.basic_group);
     });
   },
 
