@@ -98,7 +98,7 @@ uk:
   num_posts: "Posts:"
   num_participants: "Participants:"
   read_full_topic: "Read full topic"
-  private_message_abbrev: "PM"
+  private_message_abbrev: "ПП"
   rss_description:
     latest: "Latest topics"
     hot: "Hot topics"
@@ -451,63 +451,63 @@ uk:
   reports:
     visits:
       title: "User Visits"
-      xaxis: "Day"
+      xaxis: "День"
       yaxis: "Number of visits"
     signups:
-      title: "Users"
-      xaxis: "Day"
-      yaxis: "Number of new users"
+      title: "Користувачі"
+      xaxis: "День"
+      yaxis: "Кількість нових користувачів"
     topics:
-      title: "Topics"
-      xaxis: "Day"
-      yaxis: "Number of new topics"
+      title: "Теми"
+      xaxis: "День"
+      yaxis: "Кількість нових тем"
     posts:
-      title: "Posts"
-      xaxis: "Day"
-      yaxis: "Number of new posts"
+      title: "Дописи"
+      xaxis: "День"
+      yaxis: "Кількість нових дописів"
     likes:
-      title: "Likes"
-      xaxis: "Day"
-      yaxis: "Number of new likes"
+      title: "Вподобання"
+      xaxis: "День"
+      yaxis: "Кількість нових вподобань"
     flags:
-      title: "Flags"
-      xaxis: "Day"
-      yaxis: "Number of flags"
+      title: "Скарги"
+      xaxis: "День"
+      yaxis: "Кількість скарг"
     bookmarks:
-      title: "Bookmarks"
-      xaxis: "Day"
-      yaxis: "Number of new bookmarks"
+      title: "Закладки"
+      xaxis: "День"
+      yaxis: "Кількість нових закладок"
     starred:
-      title: "Starred"
-      xaxis: "Day"
-      yaxis: "Number of new starred topics"
+      title: "Зірочки"
+      xaxis: "День"
+      yaxis: "Кількість нових тем, позначених зірочкою"
     users_by_trust_level:
       title: "Користувачі за Рівнем довіри"
       xaxis: "Рівень довіри"
       yaxis: "Кількість користувачів"
     emails:
-      title: "Emails Sent"
-      xaxis: "Day"
-      yaxis: "Number of Emails"
+      title: "Листів надіслано"
+      xaxis: "День"
+      yaxis: "Кількість листів"
     user_to_user_private_messages:
-      title: "User-to-User"
-      xaxis: "Day"
+      title: "Користувач користувачу"
+      xaxis: "День"
       yaxis: "Кількість приватних повідомлень"
     system_private_messages:
-      title: "System"
-      xaxis: "Day"
+      title: "Системні"
+      xaxis: "День"
       yaxis: "Кількість приватних повідомлень"
     moderator_warning_private_messages:
-      title: "Moderator Warning"
-      xaxis: "Day"
+      title: "Попередження модератора"
+      xaxis: "День"
       yaxis: "Кількість приватних повідомлень"
     notify_moderators_private_messages:
-      title: "Notify Moderators"
-      xaxis: "Day"
+      title: "Сповіщення модераторів"
+      xaxis: "День"
       yaxis: "Кількість приватних повідомлень"
     notify_user_private_messages:
-      title: "Notify User"
-      xaxis: "Day"
+      title: "Сповіщення користувача"
+      xaxis: "День"
       yaxis: "Кількість приватних повідомлень"
     top_referrers:
       title: "Top Referrers"
@@ -1204,16 +1204,16 @@ uk:
 
     pending_users_reminder:
       subject_template:
-        one:   "1 user waiting for approval"
-        few:   "%{count} users waiting for approval"
-        many:  "%{count} users waiting for approval"
-        other: "%{count} users waiting for approval"
+        one:   "%{count} користувач чекає на схвалення"
+        few:   "%{count} користувачі чекають на схвалення"
+        many:  "%{count} користувачів чекають на схвалення"
+        other: "%{count} користувачів чекають на схвалення"
       text_body_template: |
-        There are new user signups waiting to be approved (or rejected) before they can access this forum.
+        Є нові користувачі, що зареєструвалися і очікують на схвалення (або відхилення) перед тим, як зможуть отримати доступ до цього форуму.
 
-        [Please review them in the admin section](%{base_url}/admin/users/list/pending).
+        [Будь ласка, розгляньте їх в адміністративній секції](%{base_url}/admin/users/list/pending).
 
-  unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
+  unsubscribe_link: "Щоб відписатися від цих листів, відідайте [сторінку своїх налаштувань](%{user_preferences_url})."
 
   user_notifications:
     previous_discussion: "Previous Replies"
@@ -1221,10 +1221,10 @@ uk:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
-    reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
-    visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
+    reply_by_email: "Щоб відповісти, надішліть відповідь на цей лист або відвідайте %{base_url}%{url} у своєму веб-оглядачі."
+    visit_link_to_respond: "Щоб відповісти, відвідайте %{base_url}%{url} у своєму веб-оглядачі."
 
-    posted_by: "Posted by %{username} on %{post_date}"
+    posted_by: "Опубліковано %{username} %{post_date}"
 
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
@@ -1274,7 +1274,7 @@ uk:
         %{respond_instructions}
 
     user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      subject_template: "[%{site_name}] [ПП] %{topic_title}"
       text_body_template: |
         %{message}
 

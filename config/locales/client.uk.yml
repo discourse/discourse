@@ -655,13 +655,15 @@ uk:
 
     topics:
       bulk:
-        toggle: "toggle bulk selection of topics"
-        actions: "Bulk Actions"
-        change_category: "Change Category"
-        close_topics: "Close Topics"
+        toggle: "перемикач масової дії над темами"
+        actions: "Масові дії"
+        change_category: "Змінити категорію"
+        close_topics: "Закрити теми"
         selected:
-          one: "You have selected <b>1</b> topic."
-          other: "You have selected <b>{{count}}</b> topics."
+          one:   "Ви обрали <b>{{count}}</b> тему."
+          few:   "Ви обрали <b>{{count}}</b> теми."
+          many:  "Ви обрали <b>{{count}}</b> тем."
+          other: "Ви обрали <b>{{count}}</b> тем."
 
       none:
         starred: "Ви ще не позначили зірочкою жодної теми. Щоб позначити тему, клацніть зірочку біля її назви."
@@ -714,7 +716,7 @@ uk:
         title: "Тему не знайдено"
         description: "Даруйте, ми не змогли знайти цю тему. Можливо, її було видалено модератором?"
       unread_posts:
-        one:   "you have 1 unread old post in this topic"
+        one:   "you have {{count}} unread old post in this topic"
         few:   "you have {{count}} unread old posts in this topic"
         many:  "you have {{count}} unread old posts in this topic"
         other: "you have {{count}} unread old posts in this topic"
@@ -761,10 +763,10 @@ uk:
       jump_reply_down: перейти до пізнішої відповіді
       deleted: "Тему було видалено"
 
-      auto_close_notice: "This topic will automatically close %{timeLeft}."
-      auto_close_title: 'Auto-Close Settings'
-      auto_close_save: "Save"
-      auto_close_remove: "Don't Auto-Close This Topic"
+      auto_close_notice: "Ця тема автоматично закриється %{timeLeft}."
+      auto_close_title: 'Налаштування автоматичного закриття'
+      auto_close_save: "Зберегти"
+      auto_close_remove: "Не закривати цю тему автоматично"
 
       progress:
         title: topic progress
@@ -791,13 +793,13 @@ uk:
           "0":   'Ви ігноруєте всі сповіщення з цієї теми.'
           "0_2": 'Ви ігноруєте всі сповіщення з цієї теми.'
         watching_pm:
-          title: "Watching"
+          title: "Слідкувати"
           description: "same as Tracking, plus you will be notified of all new posts."
         watching:
           title: "Слідкувати"
           description: "те саме, що \"Стежити\", плюс Ви отримуватимете сповіщення про всі нові дописи."
         tracking_pm:
-          title: "Tracking"
+          title: "Стежити"
           description: "you will be notified of @name mentions and replies to your posts"
         tracking:
           title: "Стежити"
@@ -806,7 +808,7 @@ uk:
           title: "Звичайно"
           description: "Ви будете отримувати сповіщення лише якщо хтось згадуватиме Ваше @Ім'я або відповідатиме на Ваш допис."
         muted_pm:
-          title: "Muted"
+          title: "Ігнорувати"
           description: "you will not be notified of anything about this private message." 
         muted:
           title: "Ігнорувати"
@@ -851,17 +853,17 @@ uk:
         error: "Даруйте, під час запрошення цього користувача сталася помилка."
 
       invite_reply:
-        title: 'Invite Friends to Reply'
+        title: 'Запросити друзів до відповіді'
         action: 'Надіслати запрошення'
-        help: 'send invitations to friends so they can reply to this topic with a single click'
-        to_topic: "We'll send your friend a brief email allowing them to immediately reply to this topic by clicking a link, no login required."
+        help: 'надіслати запрошення друзям, щоб вони могли відповісти на цю тему в один клац'
+        to_topic: "Ми надішлемо Вашому другові короткого листа, що міститиме посилання, яке дозволить йому одразу відповісти на цю тему без входу до системи."
         to_forum: "Ми надішлемо Вашому другові короткого листа, що міститиме посилання, яке дозволить йому приєднатися до форуму."
 
         email_placeholder: 'електронна скринька'
         success: "Дякуємо! Ми надіслали запрошення на <b>{{email}}</b>. Ми дамо Вам знати, коли адресат погасить Ваше запрошення. Завітайте на вкладку Запрошення Вашого профілю, щоб відстежувати, кого Ви запросили."
         error: "Вибачте, ми не змогли запросити цю особу. Можливо, вона вже є користувачем?"
 
-      login_reply: 'Log In to Reply'
+      login_reply: 'Увійдіть, щоб відповісти'
 
       filters:
         n_posts:
@@ -1129,13 +1131,13 @@ uk:
           edited_by: "Редаговано"
 
     category:
-      can: 'can&hellip; '
+      can: 'може&hellip; '
       none: '(без категорії)'
       choose: 'Select a category&hellip;'
       edit: 'редагувати'
       edit_long: "Редагувати категорію"
       view: 'Переглянути теми, що належать до категорії'
-      general: 'General'
+      general: 'Основне'
       settings: 'Налаштування'
       delete: 'Видалити категорію'
       create: 'Створити категорію'
@@ -1146,26 +1148,26 @@ uk:
       name: "Назва категорії"
       description: "Опис"
       topic: "category topic"
-      badge_colors: "Badge colors"
-      background_color: "Background color"
-      foreground_color: "Foreground color"
-      name_placeholder: "One or two words maximum"
-      color_placeholder: "Any web color"
+      badge_colors: "Кольори значка"
+      background_color: "Колір тла"
+      foreground_color: "Колір тексту"
+      name_placeholder: "Не більше одного-двох слів"
+      color_placeholder: "Будь-який веб-колір"
       delete_confirm: "Ви впевнені, що хочете видалити цю категорію?"
       delete_error: "Під час видалення категорії трапилася помилка."
       list: "List Categories"
-      no_description: "There is no description for this category, edit the topic definition."
+      no_description: "Ця категорія не має опису, відредагуйте визначення теми."
       change_in_category_topic: "Редагувати опис"
-      already_used: 'This color has been used by another category'
-      security: "Security"
-      auto_close_label: "Auto-close topics after:"
-      auto_close_units: "hours"
-      edit_permissions: "Edit Permissions"
-      add_permission: "Add Permission"
+      already_used: 'Цей колір вже використовується іншою категорією'
+      security: "Безпека"
+      auto_close_label: "Автоматично закривати теми після:"
+      auto_close_units: "годин"
+      edit_permissions: "Редагувати дозволи"
+      add_permission: "Додати дозвіл"
       this_year: "this year"
       position: "position"
       default_position: "Default Position"
-      parent: "Parent Category"
+      parent: "Батьківська категорія"
 
     flagging:
       title: 'Чому Ви приватно скаржитеся на цей допис?'
@@ -1280,19 +1282,19 @@ uk:
           new_user: "Welcome! As a new visitor, we thought you might like to start with the top discussion topics."
           not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
 
-    browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
+    browser_update: 'На жаль, <a href="http://www.discourse.org/faq/#browser">Ваш веб-оглядач надто застарілий, щоб працювати із цим Discourse-форумом</a>. Будь ласка, <a href="http://browsehappy.com">оновіть свій оглядач</a>.'
 
     permission_types:
-      full: "Create / Reply / See"
-      create_post: "Reply / See"
-      readonly: "See"
+      full: "Створювати / Відповідати / Бачити"
+      create_post: "Відповідати / Бачити"
+      readonly: "Бачити"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
 
     admin:
-      title: 'Discourse Admin'
+      title: 'Адміністратор Discourse'
       moderator: 'Модератор'
 
       dashboard:
@@ -1300,8 +1302,8 @@ uk:
         last_updated: "Майстерню востаннє оновлено:"
         version: "Версія"
         up_to_date: "У вас остання версія!"
-        critical_available: "A critical update is available."
-        updates_available: "Updates are available."
+        critical_available: "Доступне критичне оновлення."
+        updates_available: "Доступні оновлення."
         please_upgrade: "Please upgrade!"
         no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
         stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
@@ -1315,8 +1317,8 @@ uk:
         moderators: 'Модератори:'
         admins: 'Адміни:'
         blocked: 'Заблоковані:'
-        suspended: 'Suspended:'
-        private_messages_short: "PMs"
+        suspended: 'Призупинені:'
+        private_messages_short: "ПП"
         private_messages_title: "Приватні повідомлення"
 
         reports:
