@@ -10,7 +10,7 @@
   {{/if}}
 {{/if}}
 
-<td class='main-link clearfix'>
+<td class='main-link clearfix' {{bind-attr colspan="titleColSpan"}}>
   {{topicStatus topic=this}}
   {{{topicLink this}}}
   {{#if unread}}

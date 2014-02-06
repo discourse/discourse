@@ -260,6 +260,10 @@ Discourse.Topic = Discourse.Model.extend({
 
   },
 
+  isPinnedUncategorized: function() {
+    return this.get('pinned') && this.get('category.isUncategorizedCategory');
+  }.property('pinned', 'category.isUncategorizedCategory'),
+
   /**
     Clears the pin from a topic for the currently logged in user
 
