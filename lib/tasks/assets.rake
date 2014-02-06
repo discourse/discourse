@@ -20,11 +20,12 @@ task 'assets:precompile:before' do
         digest = Digest::SHA1.hexdigest(data)
         key = "SPROCKETS_#{digest}"
 
-        unless compiled = $redis.get(key)
+        if compiled = $redis.get(key)
+          $redis.expire(key, 1.week)
+        else
           compiled = Uglifier.new(:comments => :none).compile(data)
           $redis.setex(key, 1.week, compiled)
         end
-        $redis.expire(key, 1.week)
         compiled
       end
     end
