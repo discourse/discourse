@@ -25,7 +25,7 @@
           <h3 {{bind-attr class="staff new_user"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{{breakUp username name}}}</a></h3>
 
           {{#if showName}}
-          <h3><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
+          <h3 class="full-name"><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
           {{/if}}
 
           {{#if user_title}}<div class="user-title" {{action showPosterExpansion this}}>{{user_title}}</div>{{/if}}
