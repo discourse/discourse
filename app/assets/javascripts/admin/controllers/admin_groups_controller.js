@@ -4,7 +4,7 @@ Discourse.AdminGroupsController = Ember.Controller.extend({
   actions: {
     edit: function(group){
       this.get('model').select(group);
-      group.load();
+      group.loadUsers();
     },
 
     refreshAutoGroups: function(){
@@ -20,9 +20,8 @@ Discourse.AdminGroupsController = Ember.Controller.extend({
     },
 
     newGroup: function(){
-      var group = Discourse.Group.create();
-      group.set("loaded", true);
-      var model = this.get("model");
+      var group = Discourse.Group.create({ loadedUsers: true }),
+          model = this.get("model");
       model.addObject(group);
       model.select(group);
     },

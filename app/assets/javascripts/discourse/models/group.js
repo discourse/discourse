@@ -21,7 +21,7 @@ var ALIAS_LEVELS = {
   ];
 
 Discourse.Group = Discourse.Model.extend({
-  loaded: false,
+  loadedUsers: false,
 
   userCountDisplay: function(){
     var c = this.get('user_count');
@@ -31,19 +31,21 @@ Discourse.Group = Discourse.Model.extend({
     }
   }.property('user_count'),
 
-  load: function() {
+  loadUsers: function() {
     var id = this.get('id');
-    if(id && !this.get('loaded')) {
+    if(id && !this.get('loadedUsers')) {
       var self = this;
-      Discourse.ajax('/admin/groups/' + this.get('id') + '/users').then(function(payload){
+      return Discourse.ajax('/admin/groups/' + this.get('id') + '/users').then(function(payload){
         var users = Em.A();
         _.each(payload,function(user){
           users.addObject(Discourse.User.create(user));
         });
         self.set('users', users);
-        self.set('loaded', true);
+        self.set('loadedUsers', true);
+        return self;
       });
     }
+    return Ember.RSVP.resolve(this);
   },
 
   usernames: function() {
