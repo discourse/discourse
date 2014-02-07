@@ -245,7 +245,7 @@ en:
       deleted: "(deleted)"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
-      mailing_list_mode: "Receive an email every time a post is made on the forum (unless muted)"
+      mailing_list_mode: "Receive an email every time a post is made on the forum (unless you have muted the topic or category)"
       watched_categories: "Watched"
       watched_categories_instructions: "Same as Tracking, plus you will be notified of all new posts and topics."
       tracked_categories: "Tracked"
