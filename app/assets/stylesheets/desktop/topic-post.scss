@@ -995,6 +995,7 @@ a.attachment:before {
     color: rgba(0,0,0,0.05);
     font: 90px/1 FontAwesome;
     content: "\f05c";
+    z-index: -5;
 }
 
 .read_restricted .gutter:before {
