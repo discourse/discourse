@@ -67,6 +67,12 @@
   </div>
 
   <div class="modal-footer">
+    {{#if tosAcceptRequired}}
+      <div class="tos-agree">
+        {{input type="checkbox" checked=tosAccepted}}
+        {{customHTML "tos_signup_form_message"}}
+      </div>
+    {{/if}}
     <button class='btn btn-large btn-primary' {{bind-attr disabled="submitDisabled"}} {{action createAccount}}>{{i18n create_account.title}}</button>
     {{#if formSubmitted}}
       &nbsp; <i class='fa fa-spinner fa-spin'></i>

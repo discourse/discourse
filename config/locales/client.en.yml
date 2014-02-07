@@ -1547,6 +1547,7 @@ en:
           rate_limits: 'Rate Limits'
           developer: 'Developer'
           embedding: "Embedding"
+          legal: "Legal"
           uncategorized: 'Uncategorized'
 
     lightbox:

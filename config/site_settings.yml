@@ -365,14 +365,20 @@ embedding:
   embed_category: ''
   embed_post_limit: 100
 
-uncategorized:
+legal:
   tos_url:
     client: true
     default: ''
-  faq_url:
+  privacy_policy_url:
     client: true
     default: ''
-  privacy_policy_url:
+  tos_accept_required:
+    client: true
+    default: false
+
+uncategorized:
+
+  faq_url:
     client: true
     default: ''
 

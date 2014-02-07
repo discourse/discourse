@@ -32,6 +32,9 @@
 }
 
 .create-account {
+  form {
+    margin-bottom: 0;
+  }
   table {
     width: 100%;
   }
@@ -55,5 +58,9 @@
 
   .fa-spinner {
     font-size: 18px;
+  }
+
+  .tos-agree {
+    margin-bottom: 12px;
   }
 }
