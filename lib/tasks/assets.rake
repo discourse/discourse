@@ -1,4 +1,3 @@
-
 task 'assets:precompile:before' do
 
   unless %w{profile production}.include? Rails.env
@@ -7,9 +6,8 @@ task 'assets:precompile:before' do
 
   # Ensure we ALWAYS do a clean build
   # We use many .erbs that get out of date quickly, especially with plugins
-  puts "Purging old assets"
+  puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
-  `rm -fr #{Rails.root}/public/assets`
 
   # in the past we applied a patch that removed asset postfixes, but it is terrible practice
   # leaving very complicated build issues
