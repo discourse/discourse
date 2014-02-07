@@ -10,10 +10,10 @@ zh_TW:
       short: "%Y-%m-%d"
 
   title: "論壇"
-  topics: "貼"
-  posts: "posts"
+  topics: "標題"
+  posts: "貼文"
   loading: "載入中"
-  powered_by_html: '源自<a href="http://www.discourse.org">論壇 - Discourse</a>，請開啓JavaScript支持以獲得最佳效果'
+  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, 請啟用 Javascript 以獲得最佳瀏覽效果'
 
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留權利"
@@ -22,75 +22,76 @@ zh_TW:
   operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
 
   too_many_mentions:
-    zero: "抱歉, 你無法@用戶。"
-    one: "抱歉, 你一次僅能@一個用戶。"
-    other: "抱歉, 你一次僅能@ %{count} 個用戶。"
+    zero: "抱歉, 你無法提及(@)用戶。"
+    one: "抱歉, 你每次只能提及(@)一個用戶。"
+    other: "抱歉, 你每次只能提及(@) %{count} 個用戶。"
   too_many_mentions_newuser:
-    zero: "抱歉, 遊客無法@用戶。"
-    one: "抱歉, 遊客一次僅能@一個用戶。"
-    other: "抱歉, 遊客一次僅能@ %{count} 個用戶。"
+    zero: "抱歉, 訪客無法提及(@)用戶。"
+    one: "抱歉, 訪客每次只能提及(@)一個用戶。"
+    other: "抱歉, 訪客每次只能提及(@) %{count} 個用戶。"
   too_many_images:
-    zero: "抱歉, 遊客無法貼圖。"
-    one: "抱歉, 遊客一次僅能貼一張圖。"
-    other: "抱歉, 遊客一次僅能貼 %{count} 張圖。"
+    zero: "抱歉, 訪客無法貼圖。"
+    one: "抱歉, 訪客每次只能張貼一張圖片。"
+    other: "抱歉, 訪客每次只能張貼 %{count} 張圖片。"
   too_many_links:
-    zero: "抱歉, 遊客無法貼鏈接。"
-    one: "抱歉, 遊客一次僅能貼一條鏈接。"
-    other: "抱歉, 遊客一次僅能貼 %{count} 條鏈接。"
-  spamming_host: "抱歉，你不能添加一個鏈接到那台主機的鏈接。"
+    zero: "抱歉, 訪客無法分享連結。"
+    one: "抱歉, 訪客每次只能貼一條連結。"
+    other: "抱歉, 訪客每次只能貼 %{count} 條連結。"
+  spamming_host: "抱歉，你不能張貼該網站之連結。"
 
-  just_posted_that: "與你最近發表的內容太過相似"
+  just_posted_that: "與你最近發表的內容太相似"
   has_already_been_used: "已經被使用"
-  invalid_characters: "包含無效字符"
-  is_invalid: "無效，請描述得更清楚一點"
+  invalid_characters: "包含無效字詞"
+  is_invalid: "無效，請再仔細描述"
   next_page: "下一頁 &rarr;"
-  by: "由"
+  by: "從"
   topics_in_category: "分類'%{category}'中的主題"
-  rss_posts_in_topic: "'%{topic}'的RSS內容聚合"
-  rss_topics_in_category: "分類'%{category}'中主題的RSS內容聚合"
-  author_wrote: "%{author}寫道："
+  rss_posts_in_topic: "'%{topic}'的RSS feed"
+  rss_topics_in_category: "分類'%{category}'中主題的RSS feed"
+  author_wrote: "%{author}說:"
+  private_message_abbrev: "私人訊息"
 
   groups:
     default_names:
       admins: "管理員"
       moderators: "版主"
-      staff: "員工"
-      trust_level_1: "trust_level_1"
-      trust_level_2: "trust_level_2"
-      trust_level_3: "trust_level_3"
-      trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
+      staff: "職員"
+      trust_level_1: "L1信任者"
+      trust_level_2: "L2信任者"
+      trust_level_3: "L3信任者"
+      trust_level_4: "L4信任者"
+      trust_level_5: "L5信任者"
 
   education:
     until_posts:
-      one: "帖子"
-      other: "%{count}個帖子"
+      one: "貼文"
+      other: "%{count}個貼文"
 
     'new-topic': |
-      歡迎來到 %{site_name} &mdash; **衷心感謝你開啓一段新的討論！**
+      歡迎來到 %{site_name} &mdash; **祝你能在這裡開始一段嶄新的討論區體驗！**
 
-      當你撰寫主題時請注意：
+      當你撰寫主題時, 請注意以下事項:
 
-      - 你的標題是否清晰明了的告訴了讀者他們能在你的主題中找到的內容？
+      - 張貼標題是否清晰易明? 主題內容能否吸讀者?
 
-      - 你的主題第一帖確定了：主題是關于什麽的？誰會對它感興趣？它爲什麽重要？你期望從社區中獲得什麽樣的回應？
+      -建議撰寫時需考慮: 張貼內容是甚麼, 能吸引哪些人, 主題的重要性, 期待從討論中得到怎樣的回應等
 
-      - 選擇恰當的詞句以便別人能 *找到* 你的主題，如果該主題應該屬于某個分類，請選擇一個恰當的分類。
+      - 使用適合的字詞, 能更容易使其他人 *找到* 你的主題, 若你撰寫的內容屬於某個分類的話，應選擇張貼在該分類。
 
-      更多的幫助信息，[請查看我們的常見問答](/faq)。此信息面板只在你的最早的 %{education_posts_text} 顯示。
+      其他的說明教學，[請查看我們的常見問答](/faq)。此資訊只在你的最早的 %{education_posts_text} 顯示。
 
     'new-reply': |
-      歡迎來到 %{site_name} &mdash; **衷心感謝你參與討論！**
+      歡迎來到 %{site_name} &mdash; **感謝你參與討論！**
 
-      當你撰寫回複時請注意：
+      當你撰寫回覆時, 請注意以下事項:
 
-      - 你的回複是否從某個方面多多少少的幫助到了這段討論？
+      - 你的回覆在某程度能否對整個討論有幫助?
 
-      - 請給予論壇其他成員同等的尊重，多換位思考，將心比心。
+      - 尊重。論壇其他成員是同等的, 你應作多角度思考，將心比心。
 
-      - 持批判態度是可以的，但是請對事不對人。
+      - 可以持批判態度，但請緊記 *對事不對人*。
 
-      更多的幫助信息，[請查看我們的常見問答](/faq)。此信息面板只在你的最早的 %{education_posts_text} 顯示。
+      更多的説明資訊，[請查看我們的常見問答](/faq)。此資訊只在你的最早的 %{education_posts_text} 顯示。
 
 
   activerecord:
@@ -100,20 +101,25 @@ zh_TW:
       post:
         raw: "內容"
     errors:
+      messages:
+        is_invalid: "無效, 可嘗試寫得更明確"
+        has_already_been_used: "已經被使用"
       models:
         topic:
           attributes:
             archetype:
-              cant_send_pm: "抱歉，你不能向該用戶發送私信。"
+              cant_send_pm: "抱歉，你不能向該用戶發送私人訊息。"
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>你的介紹信息中，“關于我”部分目前還是空白，<a href='/users/%{username_lower}/preferences/about-me'>介紹一下你自己，好不好？</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她的介紹中的“關于我”部分填寫任何信息</div>"
+    no_info_me: "<div class='missing-profile'>你的自我簡介中，“關於我” 部分目前還沒有內容，<a href='/users/%{username_lower}/preferences/about-me'>不如來自我介紹一下?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
 
   category:
-    topic_prefix: "分類的定義信息，用于分類： %{category}"
-    replace_paragraph: "[用一段簡短的分類描述替換此第一段內容，請不要超過200個字符。]"
-    post_template: "%{replace_paragraph}\n\n使用下面的空間輸入分類的詳細描述信息，可包括在此分類下討論的規則、內容導向等等。"
+    topic_prefix: "對於分類: %{category} 的定義"
+    replace_paragraph: "[為分類一段簡單的描述以替換首段內容, 請不要超過200個字。]"
+    post_template: "%{replace_paragraph}\n\n在下面的空格輸入分類的詳細描述, 可以包括在此分類下討論的規則、內容主題等等。"
+    this_year: "本年"
+
 
   trust_levels:
     newuser:
@@ -128,13 +134,13 @@ zh_TW:
       title: "資深用戶"
 
   rate_limiter:
-    too_many_requests: "你的請求過于頻繁，請等待 %{time_left} 之後再試。"
+    too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     hours:
       one: "1 小時"
       other: "%{count} 小時"
     minutes:
-      one: "1 分鍾"
-      other: "%{count} 分鍾"
+      one: "1 分鐘"
+      other: "%{count} 分鐘"
     seconds:
       one: "1 秒"
       other: "%{count} 秒"
@@ -185,11 +191,11 @@ zh_TW:
         one:   "1 秒前"
         other: "%{count} 秒前"
       less_than_x_minutes:
-        one:   "不到 1 分鍾前"
-        other: "不到 %{count} 分鍾前"
+        one:   "不到 1 分鐘前"
+        other: "不到 %{count} 分鐘前"
       x_minutes:
-        one:   "1 分鍾前"
-        other: "%{count} 分鍾前"
+        one:   "1 分鐘前"
+        other: "%{count} 分鐘前"
       about_x_hours:
         one:   "1 小時前"
         other: "%{count} 小時前"
@@ -197,73 +203,73 @@ zh_TW:
         one:   "1 天前"
         other: "%{count} 天前"
       about_x_months:
-        one:   "大概 1 個月前"
-        other: "大概 %{count} 個月前"
+        one:   "約 1 個月前"
+        other: "約 %{count} 個月前"
       x_months:
         one:   "1 個月前"
         other: "%{count} 個月前"
       about_x_years:
-        one:   "大概 1 年前"
-        other: "大概 %{count} 年前"
+        one:   "約 1 年前"
+        other: "約 %{count} 年前"
       over_x_years:
-        one:   "超過 1 年前"
-        other: "超過 %{count} 年前"
+        one:   "1 年之前"
+        other: "%{count} 年之前"
       almost_x_years:
-        one:   "差不多 1 年前"
-        other: "差不多 %{count} 年前"
+        one:   "近 1 年前"
+        other: "近 %{count} 年前"
 
   password_reset:
-    no_token: "抱歉，你的令牌已過期，請嘗試再次重置你的密碼。"
+    no_token: "抱歉，你的令牌(Token)已過期，請再嘗試重設你的密碼。"
     choose_new: "請選擇一個新密碼"
     update: '更新密碼'
-    title: '重置密碼'
-    success: "你的密碼已經修改成功，你現在已經登錄。"
-    success_unapproved: "你的密碼已經修改成功。"
-    continue: "轉入到 %{site_name}"
+    title: '重設密碼'
+    success: "密碼修改成功，現在已為你登入。"
+    success_unapproved: "你的密碼已成功修改。"
+    continue: "繼續連接至 %{site_name}"
 
   change_email:
-    confirmed: "你的電子郵箱已被更新。"
-    please_continue: "請點擊 %{link} 來繼續"
-    error: "在修改你的電子郵箱地址時出現了錯誤，可能此郵箱已經在論壇中使用了？"
+    confirmed: "你的電子郵箱已更新。"
+    please_continue: "請按 %{link} 來繼續"
+    error: "修改你的電郵位址時發生錯誤，可能此郵箱已有人使用了。"
 
   activation:
-    already_done: "抱歉，此帳號激活鏈接已經失效。可能你的帳號已經被激活了？"
-    please_continue: "你的新帳號已激活，你現在已登錄論壇。點擊 %{link} 繼續"
+    already_done: "抱歉，此帳號啟用連結已經失效。可能你的帳號已經啟用了。"
+    please_continue: "你的帳號已啟用，並已為你登入。點擊 %{link} 繼續"
     welcome_to: "歡迎來到%{site_name}！"
-    approval_required: "你的新帳號需要由一位論壇版主手動批准方可使用。一旦你的帳號獲得批准，你將收到一封電子郵件通知！"
+    approval_required: "你的論壇帳號需要由版主審批後才可使用。當你的帳號獲得批准，你將收到電子郵件通知。"
 
   post_action_types:
     off_topic:
-      title: '題外話'
-      description: '此帖對于當前討論而言屬于題外話，應該移動到其它相關主題下。'
-      long_form: '投訴爲題外話'
+      title: '離題內容'
+      description: '該內容為離題內容，應該移到其它關主題下。'
+      long_form: '投訴為離題內容'
     spam:
-      title: '垃圾'
-      description: '此帖爲廣告，它不包含任何對當前討論有幫助的內容，只有促銷信息。'
-      long_form: '投訴爲垃圾'
+      title: '垃圾內容'
+      description: '該內容為廣告，它不包含任何討論內容，只有促銷資訊。'
+      long_form: '投訴為垃圾內容'
     inappropriate:
       title: '不當內容'
       description: '此帖內容包含對他人的攻擊、侮辱或仇視語言。'
-      long_form: '投訴爲不當內容'
+      long_form: '投訴為不當內容'
     notify_user:
       title: '通知 {{username}}'
-      description: '此帖包含一些我想與該用戶私下直接交流的內容。'
+      description: '此帖包含一些我想與該用戶私下討論的內容。'
       long_form: '已通知用戶'
-      email_title: '關于 "%{title}"'
+      email_title: '關於 "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: '通知版主'
-      description: '此帖需要版主依據<a href="/faq">常見問答 FAQ</a>、<a href="/tos">服務條款 TOS</a>或其它未列出的原因來給予關注。'
+      description: '此帖依據<a href="/faq">常見問答 FAQ</a>、<a href="/tos">服務條款 TOS</a>或其它原因等, 需要版主關注。'
       long_form: '已通知版主'
-      email_title: '關于 "%{title}"'
+      email_title: '關於 "%{title}"'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: '書簽'
-      description: '給本帖加書簽'
-      long_form: '已給本帖加上書簽'
+      title: '書籤'
+      description: '給本帖加書籤'
+      long_form: '已給本帖加上書籤'
     like:
-      title: '贊'
-      description: '贊本帖'
+      title: '讚好'
+      description: '讚好本帖'
       long_form: '喜歡本帖內容'
     vote:
       title: '投票'
@@ -271,19 +277,19 @@ zh_TW:
       long_form: '已給本帖投票'
 
   flagging:
-    you_must_edit: '<p>你的帖子已經到達投訴阈值，請查看你的私信。</p>'
+    you_must_edit: '<p>你的貼文已經達到投訴上限，請查看你的私人訊息。</p>'
     user_must_edit: '<p>投訴的內容已隱藏。</p>'
 
   archetypes:
     regular:
-      title: "常規主題"
+      title: "一般主題"
 
   unsubscribed:
     title: '取消訂閱'
-    description: "你已經取消訂閱，我們不會再聯系你！"
-    oops: "如果你並非想要取消訂閱，請點擊下面。"
+    description: "你已經取消訂閱，我們不會再聯絡你。"
+    oops: "如果你不希望取消訂閱，請點擊下方的連結。"
     not_found: "取消訂閱出錯"
-    not_found_description: "抱歉，我們無法幫你取消訂閱。可能你的郵件裏的鏈接已過期。"
+    not_found_description: "抱歉，我們無法替你取消訂閱。可能你郵件裡的連結已過期。"
 
   resubscribe:
     action: "重新訂閱"
@@ -292,292 +298,305 @@ zh_TW:
 
   reports:
     visits:
-      title: "用戶訪問量"
+      title: "用戶瀏覽量"
       xaxis: "天"
-      yaxis: "訪問量"
+      yaxis: "瀏覽量"
     signups:
-      title: "新注冊用戶"
+      title: "新註冊用戶"
       xaxis: "天"
-      yaxis: "新用戶數"
+      yaxis: "新用戶數量"
     topics:
       title: "新發表主題"
       xaxis: "天"
-      yaxis: "新主題數"
+      yaxis: "新主題數量"
     posts:
-      title: "新發表帖子"
+      title: "新發表的貼文"
       xaxis: "天"
-      yaxis: "新帖子數"
+      yaxis: "新貼文數量"
     likes:
-      title: "新的贊"
+      title: "新的讚好"
       xaxis: "天"
-      yaxis: "新的贊數"
+      yaxis: "新的讚好數量"
     flags:
       title: "投訴"
       xaxis: "天"
-      yaxis: "投訴數"
+      yaxis: "投訴數量"
     bookmarks:
-      title: "書簽"
+      title: "書籤"
       xaxis: "天"
-      yaxis: "新書簽數"
-    favorites:
-      title: "喜愛"
+      yaxis: "新書籤數量"
+    starred:
+      title: "關注"
       xaxis: "天"
-      yaxis: "新喜愛數"
+      yaxis: "新關注數量"
     users_by_trust_level:
-      title: "按用戶等級的用戶統計"
-      xaxis: "用戶等級"
-      yaxis: "用戶數"
+      title: "按使用者等級的使用者統計"
+      xaxis: "使用者等級"
+      yaxis: "用戶數量"
     emails:
       title: "已發送郵件"
       xaxis: "天"
-      yaxis: "郵件數"
+      yaxis: "郵件數量"
     user_to_user_private_messages:
       title: "用戶至用戶"
       xaxis: "天"
-      yaxis: "私信數"
+      yaxis: "訊息數量"
     system_private_messages:
       title: "系統"
       xaxis: "天"
-      yaxis: "私信數"
+      yaxis: "訊息數量"
     moderator_warning_private_messages:
       title: "版主警告"
       xaxis: "天"
-      yaxis: "私信數"
+      yaxis: "訊息數量"
     notify_moderators_private_messages:
       title: "版主通知"
       xaxis: "天"
-      yaxis: "私信數"
+      yaxis: "訊息數量"
     notify_user_private_messages:
       title: "用戶通知"
       xaxis: "天"
-      yaxis: "私信數"
+      yaxis: "訊息數量"
     top_referrers:
       title: "最高引用"
       xaxis: "用戶"
-      num_visits: "訪問數"
+      num_visits: "瀏覽量"
       num_topics: "主題數"
+      num_clicks: "點擊率"
     top_traffic_sources:
       title: "最高流量來源"
-      xaxis: "域名"
-      num_visits: "訪問數"
+      xaxis: "網域"
+      num_visits: "瀏覽量"
       num_topics: "主題數"
-      num_users: "用戶數"
+      num_users: "用戶數量"
+      num_clicks: "點擊率"
     top_referred_topics:
       title: "最高引用主題"
       xaxis: "主題"
-      num_visits: "訪問數"
+      num_visits: "瀏覽量"
+      num_clicks: "點擊率"
 
   dashboard:
-    rails_env_warning: "你的服務器運行在 %{env} 模式。"
-    host_names_warning: "你的 config/database.yml 文件使用的是缺省的 localhost 主機名。請更改成你的站點主機名。"
-    gc_warning: '你的服務器使用的是缺省的 ruby 垃圾回收參數，這個配置無法提供最高性能。請閱讀此性能調優文檔：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
-    sidekiq_warning: 'Sidekiq 不在運行。很多任務，例如發送電子郵件，是異步的被 sidekiq 調度執行的。請確保至少運行一個 sidekiq 進程。<a href="https://github.com/mperham/sidekiq">了解 Sidekiq</a>。'
-    queue_size_warning: '隊列中的任務數爲%{queue_size}，任務較多。這可能因爲Sidekiq進程出問題導致，或者需要更多的Sidekiq進程。'
-    memory_warning: '你的服務器環境內存少于 1GB，我們建議至少要有 1GB 內存'
-    facebook_config_warning: '服務器允許使用臉書賬號登陸 (enable_facebook_logins), 但是 app id 和 app secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">參考設定指南</a>。'
-    twitter_config_warning: '服務器允許使用推特賬號登陸 (enable_twitter_logins), 但是 key 和 secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">參考設定指南</a>。'
-    github_config_warning: '服務器允許使用GitHub賬號登陸  (enable_github_logins), 但是 client id 和 secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">參考設定指南</a>。'
-    failing_emails_warning: "%{num_failed_jobs}個email任務失敗。請檢查config/environments/production.rb文件是否正確配置了config.action_mailer。<a href='/sidekiq/retries' target='_blank'>在Sidekiq中查看失敗的任務</a>。"
-    default_logo_warning: "你沒有自定義你的站點logo。請在<a href='/admin/site_settings'>站點設置</a>中配置logo_url、logo_small_url和favicon_url。"
-    contact_email_missing: "你沒有爲站點指定一個聯系郵箱。請在<a href='/admin/site_settings'>站點設置</a>配置contact_email。"
-    contact_email_invalid: "站點聯系郵箱不正確。請在<a href='/admin/site_settings'>站點設置</a>修改。"
-    title_nag: "站點標題在站點設置中仍爲缺省值。請在<a href='/admin/site_settings'>站點設置</a>中將其設置爲你的標題。"
+    rails_env_warning: "伺服器現在運行 %{env} 模式。"
+    host_names_warning: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
+    gc_warning: '伺服器正在使用的 ruby 可能僅啟用了預設的 垃圾回收設定 (garbage collection), 這個設定無法提供最佳效能。請瀏覽此效能設定的資訊: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
+    sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
+    queue_size_warning: '排定中的任務數量為%{queue_size}，任務較多。這可能是因為 Sidekiq 程序出現問題, 或者需要更多的 Sidekiq 程序。'
+    memory_warning: '伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體'
+    facebook_config_warning: '伺服器允許使用 Facebook 帳號登入 (enable_facebook_logins), 但未有設定 app id 及 app secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">設定教學指南</a>。'
+    cas_config_warning: '伺服器允許使用 CAS 登入 (enable_cas_logins), 但未有設定 主機名稱 (hostname) 及 網域名稱 (domain name)。'
+    twitter_config_warning: '伺服器允許使用 Twitter 帳號登入 (enable_twitter_logins), 但未有設定 key 和 secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">設定教學指南</a>。'
+    github_config_warning: '伺服器允許使用 GitHub 帳號登入  (enable_github_logins), 但未有設定 client id 和 secret values。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">設定教學指南</a>。'
+    failing_emails_warning: "%{num_failed_jobs}個 email 任務失敗。請檢查 config/environments/production.rb 內 config.action_mailer 項目是否已正確設定。<a href='/sidekiq/retries' target='_blank'>在 Sidekiq 中檢視失敗的任務</a>。"
+    default_logo_warning: "你沒有自訂你的網站 logo。請在<a href='/admin/site_settings'>網站設定</a>中更改 logo_url, logo_small_url 及 favicon_url。"
+    contact_email_missing: "你沒有為網站指定一個聯絡電郵。請在<a href='/admin/site_settings'>網站設定</a>中設定 contact_email。"
+    contact_email_invalid: "網站聯絡電郵不正確。請在<a href='/admin/site_settings'>網站設定</a>修改。"
+    title_nag: "正在使用預設的網站標題。請在<a href='/admin/site_settings'>網站設定</a>更改你的網站標題。"
+    consumer_email_warning: "您的網站正以Gmail或其他服務供應商郵件服務發送郵件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail限制每日郵件發送數量</a>. 請考慮使用其他電郵服務商來保證郵件能成功發送，例如 mandrill.com。"
 
   content_types:
     education_new_reply:
-      title: "新用戶培訓：第一個回複"
-      description: "在新用戶發表前兩個回複時，自動在編輯器上方彈出的幫助信息。"
+      title: "新用戶教學：第一個回覆"
+      description: "在新用戶發表首兩個回覆時, 自動在編輯器上方彈出的說明資訊。"
     education_new_topic:
-      title: "新用戶培訓：第一個主題"
-      description: "在新用戶發表前兩個主題時，自動在編輯器上方彈出的幫助信息。"
+      title: "新用戶教學：第一個主題"
+      description: "在新用戶發表首兩個主題時, 自動在編輯器上方彈出的說明資訊。"
     usage_tips:
       title: "新用戶提示"
-      description: "使用提示，關于對新用戶的必要論壇信息和關鍵指導信息。"
+      description: "對於新用戶的使用提示, 重要的論壇資訊及教學資訊。"
     welcome_user:
-      title: "歡迎：新用戶"
-      description: "當新用戶注冊後自動發送給他們的歡迎私信。"
+      title: "歡迎: 新用戶"
+      description: "當新用戶註冊後自動發送給他們的歡迎訊息。"
     welcome_invite:
-      title: "歡迎：受約用戶"
-      description: "當新用戶通過接受用戶邀請加入論壇後，自動發送給他們的歡迎私信。"
+      title: "歡迎: 受邀請用戶"
+      description: "當新用戶通過接受用戶邀請加入論壇後, 自動發送給他們的歡迎訊息。"
+
+    login_required_welcome_message:
+      title: "歡迎資訊: 請登入"
+      description: "歡迎資訊只會在已啟用'login required'時向未登入的用戶顯示"
+
+
     tos_user_content_license:
       title: "服務條款：內容授權"
-      description: "服務條款中關于論壇內容授權的相關條款。"
+      description: "服務條款中關於論壇內容授權的相關條款。"
     tos_miscellaneous:
       title: "服務條款：其它"
       description: "服務條款中其他條款。"
 
   site_settings:
-    default_locale: "此 論壇 - Discourse 實例的缺省語言 (ISO 639-1 代碼)"
-    min_post_length: "帖子最少字符數"
-    max_post_length: "帖子最大字符數"
-    min_topic_title_length: "標題最少字符數"
-    max_topic_title_length: "標題最大字符數"
-    min_search_term_length: "搜索條件最少字符數"
+    default_locale: "Discourse 執行個體 (instance) 的預設語言編碼 (ISO 639-1)"
+    min_post_length: "貼文最少字數"
+    max_post_length: "貼文最大字數"
+    min_topic_title_length: "標題最少字數"
+    max_topic_title_length: "標題最大字數"
+    min_search_term_length: "搜索內容最少字數"
+    min_private_message_title_length: "私人訊息標題最少字數"
+    allow_uncategorized_topics: "允許發表未分類的貼文"
     allow_duplicate_topic_titles: "允許主題有相同的標題"
-    unique_posts_mins: "幾分鍾之後才允許一個用戶再次發表包含相同內容的帖子"
-    enforce_global_nicknames: "強制昵稱必須唯一（警告：只在剛剛安裝完成時修改此設置）"
-    discourse_org_access_key: "訪問 discourse.org 上的 Discourse Hub 昵稱注冊表的訪問密匙（access key）"
-    educate_until_posts: "顯示彈出指導面板直到用戶發表了這麽多數量的帖子"
-    title: "本站點標題，用于 HTML 標題標簽（title）和其它地方"
-    contact_email: "可以與本站聯系的email地址。Discourse.org將會把重要更新的通知消息發送到該郵箱。"
-    company_full_name: "運行本站點的公司全稱，用于法律文檔，例如服務條款 /tos"
-    company_short_name: "運行本站點的公司短名，用于法律文檔，例如服務條款 /tos"
-    company_domain: "運行本站點的公司域名，用于法律文檔，例如服務條款 /tos"
-    queue_jobs: "如果失敗隊列在排隊，使用 Sidekiq 消息引擎對不同的工作排隊"
-    crawl_images: "允許從第三方獲取圖片來插入寬、高數值"
-    ninja_edit_window: "在多少秒鍾之內，對帖子的多次編輯不生成新版本"
-    max_image_width: "帖子中圖片允許的最大寬度"
+    unique_posts_mins: "使用者再次發表包含相同內容貼文的間隔時間"
+    enforce_global_nicknames: "強制暱稱 (nickname) 不能重覆 (警告：此功能只能在完成初始安裝時設定)"
+    discourse_org_access_key: "存取密匙 (access key) 用作登錄 discourse.org 上 Discourse Hub 的註冊表"
+    educate_until_posts: "顯示彈出指導面板直到用戶發表了這麼多數量的貼文"
+    title: "本網站標題，用於 HTML 標題標籤（title）和其它地方"
+    contact_email: "可以與本站聯繫的email地址。Discourse.org將會把重要更新的通知消息發送到該郵箱。"
+    company_full_name: "運行本網站的公司全稱，用於法律文檔，例如服務條款 /tos"
+    company_short_name: "運行本網站的公司短名，用於法律文檔，例如服務條款 /tos"
+    company_domain: "運行本網站的公司功能變數名稱，用於法律文檔，例如服務條款 /tos"
+    queue_jobs: "如果失敗佇列在排隊，使用 Sidekiq 消息引擎對不同的工作排隊"
+    crawl_images: "允許從協力廠商獲取圖片來插入寬、高數值"
+    ninja_edit_window: "在多少秒鐘之內，對貼文的多次編輯不建立新版本"
+    max_image_width: "貼文中圖片允許的最大寬度"
     category_featured_topics: "在分類 /categories 頁面每個分類顯示的主題數目"
-    add_rel_nofollow_to_user_content: "添加 rel nofollow 標簽到所有提交的用戶信息（以防止搜索引擎搜集），除了內部鏈接（包括父域名）。修改此設置將要求你更新所有已有的 markdown 標簽內容"
-    exclude_rel_nofollow_domains: "不添加 nofollow 標簽到一列逗號分割的域名 （使用父域名，例如 tld.com，將自動允許子域名，例如 sub.tld.com）"
+    add_rel_nofollow_to_user_content: "添加 rel nofollow 標籤到所有提交的使用者資訊（以防止搜尋引擎搜集），除了內部連結（包括父系網域名）。修改此設置將要求你更新所有已有的 markdown 標籤內容"
+    exclude_rel_nofollow_domains: "不添加 nofollow 標籤到一列逗號分割的功能變數名稱 （使用父系網域名，例如 tld.com，將自動允許子功能變數名稱，例如 sub.tld.com）"
 
-    post_excerpt_maxlength: "帖子摘要的最大字符長度"
-    post_onebox_maxlength: "一個 論壇 - Discourse 單廂帖（Onebox post）的最大字符長度"
-    category_post_template: "當你創建新分類時，分類的定義帖模板（創建新分類時會自動生成一個屬于該分類的新帖子）"
-    onebox_max_chars: "從外部網站導入到一個單廂帖（Onebox post）的最大字符數"
+    post_excerpt_maxlength: "貼文摘要最大的字數長度"
+    post_onebox_maxlength: "一個 論壇 - Discourse 單廂帖（Onebox post）最大的字數長度"
+    category_post_template: "當你建立新分類時，分類的定義帖範本（建立新分類時會自動建立一個屬於該分類的新貼文）"
+    onebox_max_chars: "從外部網站導入到一個單廂帖（Onebox post）的最大字數"
 
-    logo_url: "你的站點標志圖片，例如：http://example.com/logo.png"
-    logo_small_url: "你的站點的小號標志圖片，例如：http://example.com/logo-small.png，用于卷起主題列表時顯示"
-    favicon_url: "你的站點圖標（favicon），參考 http://zh.wikipedia.org/wiki/Favicon"
-    notification_email: "郵件回複地址，當發送系統郵件，例如通知用戶找回密碼、新用戶注冊等等時，所使用的發信人地址"
-    use_ssl: "使用 SSL 安全套接層來訪問本站嗎？"
-    summary_score_threshold: "將一個帖子包含到“優秀”帖子中所需的最小分值"
-    summary_posts_required: "在一個主題中啓用“優秀”模式所要求的最小帖子數量"
-    summary_likes_required: "在一個主題中啓用“優秀”模式所要求的最小贊數量"
-    summary_percent_filter: "當用戶點擊“優秀”，顯示前 % 幾的帖子"
-    enable_private_messages: "用戶創建私信和私下交流要達到的用戶級別"
+    logo_url: "你的網站標誌圖片，例如：http://example.com/logo.png"
+    logo_small_url: "你的網站的小號標誌圖片，例如：http://example.com/logo-small.png，用於卷起主題清單時顯示"
+    favicon_url: "你的網站圖示（favicon），參考 http://zh.wikipedia.org/wiki/Favicon"
+    notification_email: "郵件回覆位址，當發送系統郵件，例如通知使用者找回密碼、新使用者註冊等等時，所使用的發信人位址"
+    use_https: "使用 SSL 安全套接層來瀏覽本站嗎？"
+    summary_score_threshold: "將一個貼文包含到“優秀”貼文中所需的最小分值"
+    summary_posts_required: "在一個主題中啟用“優秀”模式所要求的最小貼文數量"
+    summary_likes_required: "在一個主題中啟用“優秀”模式所要求的最小讚好數量"
+    summary_percent_filter: "當使用者點擊“優秀”，顯示前 % 幾的貼文"
+    enable_private_messages: "用戶建立私人訊息和私下交流要達到的用戶級別"
 
-    enable_long_polling: "啓用消息總線使通知功能可以使用長輪詢（long polling）"
+    enable_long_polling: "啟用消息匯流排使通知功能可以使用長輪詢（long polling）"
     long_polling_interval: "長輪詢每次請求之間的時間間隔（單位 毫秒） "
-    polling_interval: "已登錄用戶客戶端輪詢時間間隔（單位 毫秒）"
-    anon_polling_interval: "匿名用戶客戶端輪詢時間間隔（單位 毫秒）"
+    polling_interval: "已登入用戶用戶端輪詢時間間隔（單位 毫秒）"
+    anon_polling_interval: "匿名使用者用戶端輪詢時間間隔（單位 毫秒）"
 
-    auto_track_topics_after: "經過多少毫秒之後一個主題就被自動追蹤的全局缺省設置，用戶可以覆蓋此設置（0爲始終，-1爲從不）"
-    new_topic_duration_minutes: "一個主題在多少分鍾之內被系統判斷爲新主題的全局缺省設置，用戶可以覆蓋此設置（-1爲始終，-2爲最後一次訪問）"
+    auto_track_topics_after: "經過多少毫秒之後一個主題就被自動追蹤的全域缺省設置，用戶可以覆蓋此設置（0為始終，-1為從不）"
+    new_topic_duration_minutes: "一個主題在多少分鐘之內被系統判斷為新主題的全域缺省設置，用戶可以覆蓋此設置（-1為始終，-2為最後一次瀏覽）"
 
-    flags_required_to_hide_post: "一個帖子累計多少個投訴之後會被自動隱藏，並向帖子作者發送私信通知（0爲從不）"
-    cooldown_minutes_after_hiding_posts: "當一個帖子因爲投訴而隱藏之後，用戶需要等待多少分鍾才能編輯該帖子"
+    flags_required_to_hide_post: "一個貼文累計多少個投訴之後會被自動隱藏，並向貼文作者發送私人訊息通知（0為從不）"
+    cooldown_minutes_after_hiding_posts: "當一個貼文因為投訴而隱藏之後，使用者需要等待多少分鐘才能編輯該貼文"
 
-    traditional_markdown_linebreaks: "在 Markdown 中使用傳統換行符，而不是用兩個尾隨空格來換行"
-    post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（贊、投訴等）所需等待的間隔秒數"
-    must_approve_users: "用戶必須獲得管理員批准方能訪問"
-    ga_tracking_code: "谷歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
-    ga_domain_name: "谷歌分析域名，例如：mysite.com；參考 http://google.com/analytics"
-    top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：latest|hot|read|favorited|unread|new|posted|categories"
-    post_menu: "確定在帖子菜單條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
-    share_links: "確定在分享對話框裏顯示哪些條目、以什麽順序顯示。例如 twitter|facebook|google+"
-    track_external_right_clicks: "追蹤外部鏈接的右鍵點擊（例如：在浏覽器新標簽打開），缺省是禁用的，因爲它會重寫URL"
-    topics_per_page: "在主題列表頁面，缺省載入多少個主題"
-    posts_per_page: "在主題頁面，返回多少個帖子"
-    site_contact_username: "論壇給用戶發送自動私信時使用的用戶名"
-    send_welcome_message: "給新用戶發送歡迎私信？"
-    suppress_reply_directly_below: "當一個帖子只有一個回複時，不顯示帖子回複數量"
-    allow_index_in_robots_txt: "允許搜索引擎索引站點內容（更新 robots.txt）"
-    email_domains_blacklist: "將一列豎線分隔的郵箱域名放入黑名單，例如：mailinator.com|trashmail.net"
-    email_domains_whitelist: "豎線 | 分隔的電子郵箱域名，用戶只能使用這些郵箱域名注冊。注意：用戶使用不包含在這個列表裏的郵箱域名，將無法成功注冊。"
-    version_checks: "訪問 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示版本信息"
+    traditional_markdown_linebreaks: "在 Markdown 中使用傳統分行符號，而不是用兩個尾隨空格來換行"
+    post_undo_action_window_mins: "允許用戶在貼文上進行撤銷操作（讚好、投訴等）所需等待的間隔秒數"
+    must_approve_users: "用戶必須獲得管理員批准方能瀏覽"
+    ga_tracking_code: "穀歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
+    ga_domain_name: "穀歌分析功能變數名稱，例如：mysite.com；參考 http://google.com/analytics"
+    top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：latest|hot|read|starred|unread|new|posted|categories"
+    post_menu: "確定在貼文功能表條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
+    share_links: "確定在分享對話方塊裡顯示哪些條目、以什麼順序顯示。例如 twitter|facebook|google+"
+    track_external_right_clicks: "追蹤外部連結的右鍵點擊（例如：在流覽器新標籤打開），缺省是禁用的，因為它會重寫URL"
+    topics_per_page: "在主題清單頁面，缺省載入多少個主題"
+    posts_per_page: "在主題頁面，返回多少個貼文"
+    site_contact_username: "論壇給用戶發送自動訊息時使用的用戶名"
+    send_welcome_message: "給新用戶發送歡迎訊息？"
+    suppress_reply_directly_below: "當一個貼文只有一個回覆時，不顯示貼文回覆數量"
+    allow_index_in_robots_txt: "允許搜尋引擎索引網站內容（更新 robots.txt）"
+    email_domains_blacklist: "將一列分隔號分隔的郵箱功能變數名稱放入黑名單，例如：mailinator.com|trashmail.net"
+    email_domains_whitelist: "分隔號 | 分隔的電子郵箱功能變數名稱，使用者只能使用這些郵箱功能變數名稱註冊。注意：用戶使用不包含在這個列表裡的郵箱功能變數名稱，將無法成功註冊。"
+    version_checks: "瀏覽 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示版本資訊"
 
-    port: "使用此 HTTP 端口而不是80端口。留空爲不使用，主要用于開發調試"
-    force_hostname: "指定 URL 裏的主機名。留空爲不使用，主要用于開發調試"
+    port: "使用此 HTTP 埠而不是80埠。留空為不使用，主要用於開發調試"
+    force_hostname: "指定 URL 裡的主機名稱。留空為不使用，主要用於開發調試"
 
     invite_expiry_days: "多少天以內用戶的邀請碼是有效的"
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
-    enable_google_logins: "啓用谷歌（Google）帳號驗證登錄"
-    enable_yahoo_logins: "啓用雅虎（Yahoo）帳號驗證登錄"
+    enable_google_logins: "啟用穀歌（Google）帳號驗證登入"
+    enable_yahoo_logins: "啟用雅虎（Yahoo）帳號驗證登入"
 
-    enable_twitter_logins: "啓用推特（Twitter）帳號驗證登錄，需要 twitter_consumer_key 和 twitter_consumer_secret"
-    twitter_consumer_key: "推特帳號驗證的客戶密匙（Consumer key），到 http://dev.twitter.com 來注冊獲取"
-    twitter_consumer_secret: "推特帳號驗證的客戶密碼（Consumer secret），到 http://dev.twitter.com 來注冊獲取"
+    enable_twitter_logins: "啟用推特（Twitter）帳號驗證登入，需要 twitter_consumer_key 和 twitter_consumer_secret"
+    twitter_consumer_key: "推特帳號驗證的客戶密匙（Consumer key），到 http://dev.twitter.com 來註冊獲取"
+    twitter_consumer_secret: "推特帳號驗證的客戶密碼（Consumer secret），到 http://dev.twitter.com 來註冊獲取"
 
-    enable_facebook_logins: "啓用臉書（Facebook）帳號驗證登錄，需要 facebook_app_id 和 facebook_app_secret"
-    facebook_app_id: "臉書帳號驗證的應用帳號（App id），到 https://developers.facebook.com/apps 來注冊獲取"
-    facebook_app_secret: "臉書帳號驗證的應用密碼（App secret），到 https://developers.facebook.com/apps 來注冊獲取"
+    enable_facebook_logins: "啟用臉書（Facebook）帳號驗證登入，需要 facebook_app_id 和 facebook_app_secret"
+    facebook_app_id: "臉書帳號驗證的應用帳號（App id），到 https://developers.facebook.com/apps 來註冊獲取"
+    facebook_app_secret: "臉書帳號驗證的應用密碼（App secret），到 https://developers.facebook.com/apps 來註冊獲取"
 
-    enable_github_logins: "啓用 Github 帳號驗證登錄，需要 github_client_id 和 github_client_secret"
-    github_client_id: "Github 帳號驗證的客戶端帳號（Client id），到 https://github.com/settings/applications 來注冊獲取"
-    github_client_secret: "Github 帳號驗證的客戶端密碼（Client secret），到 https://github.com/settings/applications 來注冊獲取"
+    enable_github_logins: "啟用 Github 帳號驗證登入，需要 github_client_id 和 github_client_secret"
+    github_client_id: "Github 帳號驗證的用戶端帳號（Client id），到 https://github.com/settings/applications 來註冊獲取"
+    github_client_secret: "Github 帳號驗證的用戶端密碼（Client secret），到 https://github.com/settings/applications 來註冊獲取"
 
-    enable_persona_logins: "啓用基于電子郵箱的 Mozilla Persona 帳號驗證登錄"
+    enable_persona_logins: "啟用基於電子郵箱的 Mozilla Persona 帳號驗證登入"
 
-    allow_import: "允許導入數據，這將替換全站數據。除非你計劃導入數據，否則請保持設置爲false"
+    allow_import: "允許導入資料，這將替換全站資料。除非你計畫導入資料，否則請保持設置為false"
 
-    active_user_rate_limit_secs: "更新“最後一次見到”數據的頻率，單位爲秒"
-    previous_visit_timeout_hours: "系統判斷一次訪問之後多少小時後爲“上一次”訪問"
+    active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"
+    previous_visit_timeout_hours: "系統判斷一次瀏覽之後多少小時後為“上一次”瀏覽"
 
-    rate_limit_create_topic: "在創建一個主題之後間隔多少秒你才能創建另一個主題"
-    rate_limit_create_post: "在創建一個帖子之後間隔多少秒你才能創建另一個帖子"
+    rate_limit_create_topic: "在建立一個主題之後間隔多少秒你才能建立另一個主題"
+    rate_limit_create_post: "在建立一個貼文之後間隔多少秒你才能建立另一個貼文"
 
-    max_likes_per_day: "每個用戶每天能標明贊數量的最大值"
+    max_likes_per_day: "每個用戶每天能標明讚好數量的最大值"
     max_flags_per_day: "每個用戶每天能做投訴數量的最大值"
-    max_bookmarks_per_day: "每個用戶每天能做書簽數量的最大值"
+    max_bookmarks_per_day: "每個使用者每天能做書籤數量的最大值"
     max_edits_per_day: "每個用戶每天能編輯的次數的最大值"
-    max_favorites_per_day: "每個用戶每天能收藏的主題數量的最大值"
-    max_topics_per_day: "每個用戶每天能創建的主題數量的最大值"
-    max_private_messages_per_day: "每個用戶每天能發私信數量的最大值"
+    max_stars_per_day: "每個使用者每天能收藏的主題數量的最大值"
+    max_topics_per_day: "每個使用者每天能建立的主題數量的最大值"
+    max_private_messages_per_day: "每個用戶每天最多可發私人訊息的數量"
 
     suggested_topics: "在一個主題底部顯示的推薦主題的數量"
 
     enable_s3_uploads: "上傳文件到 Amazon S3"
-    s3_upload_bucket: "Amazon S3 上上傳文件保存的 bucket name"
+    s3_upload_bucket: "Amazon S3 上上傳檔保存的 bucket name"
 
     default_invitee_trust_level: "受邀用戶的缺省用戶級別（0-5）"
     default_trust_level: "用戶的缺省用戶級別（0-5）"
 
-    basic_requires_topics_entered: "新用戶升級到初級用戶（1）所需要進入的主題數量"
-    basic_requires_read_posts: "新用戶升級到初級用戶（1）所需要閱讀的帖子數量"
-    basic_requires_time_spent_mins: "新用戶升級到初級用戶（1）所需要閱讀帖子耗費的分鍾數"
+    basic_requires_topics_entered: "新用戶升級到初級使用者（1）所需要進入的主題數量"
+    basic_requires_read_posts: "新用戶升級到初級使用者（1）所需要閱讀的貼文數量"
+    basic_requires_time_spent_mins: "新用戶升級到初級使用者（1）所需要閱讀貼文耗費的分鐘數"
 
     regular_requires_topics_entered: "一個初級用戶升級到常規用戶（2）所需進入的主題數量"
-    regular_requires_read_posts: "一個初級用戶升級到常規用戶（2）所需要閱讀的帖子數量"
-    regular_requires_time_spent_mins: "一個初級用戶升級到常規用戶（2）所需要閱讀帖子耗費的分鍾數"
-    regular_requires_days_visited: "一個初級用戶升級到常規用戶（2）所需要訪問站點的累計天數"
-    regular_requires_likes_received: "一個初級用戶升級到常規用戶（2）所需要獲得的贊數"
-    regular_requires_likes_given: "一個初級用戶升級到常規用戶（2）所需要投出的贊數"
-    regular_requires_topic_reply_count: "一個初級用戶升級到常規用戶（2）所需要回複的主題數量"
+    regular_requires_read_posts: "一個初級用戶升級到常規使用者（2）所需要閱讀的貼文數量"
+    regular_requires_time_spent_mins: "一個初級用戶升級到常規使用者（2）所需要閱讀貼文耗費的分鐘數"
+    regular_requires_days_visited: "一個初級用戶升級到常規使用者（2）所需要瀏覽網站的累計天數"
+    regular_requires_likes_received: "一個初級用戶升級到常規使用者（2）所需要獲得的讚好數"
+    regular_requires_likes_given: "一個初級用戶升級到常規使用者（2）所需要投出的讚好數"
+    regular_requires_topic_reply_count: "一個初級用戶升級到常規使用者（2）所需要回覆的主題數量"
 
-    newuser_max_links: "一個訪問者可以添加到一個帖子裏的鏈接數量"
-    newuser_max_images: "一個訪問者可以加入到一個帖子裏的圖片數量"
-    newuser_max_mentions_per_post: "一個訪問者可以在一個帖子裏使用 @name 提及的最大數量"
-    max_mentions_per_post: "你可以在一個帖子裏使用 @name 提及的最大數量"
+    newuser_max_links: "一個瀏覽者可以添加到一個貼文裡的連結數量"
+    newuser_max_images: "一個瀏覽者可以加入到一個貼文裡的圖片數量"
+    newuser_max_mentions_per_post: "一個瀏覽者可以在一個貼文裡使用 @name 提及的最大數量"
+    max_mentions_per_post: "你可以在一個貼文裡使用 @name 提及的最大數量"
 
-    email_time_window_mins: "等待多少分鍾才給用戶發送通知電子郵件，好讓他們有機會自己來浏覽"
-    flush_timings_secs: "刷新時間數據的頻率，以秒爲單位"
-    max_word_length: "在主題的標題中，允許的詞語長度的最大字符數"
-    title_min_entropy: "在主題的標題中，允許的最低熵值（單個字符）"
-    body_min_entropy: "在一個帖子內文中，允許的最低熵值（單個字符）"
+    email_time_window_mins: "等待多少分鐘才給使用者發送通知電子郵件，好讓他們有機會自己來流覽"
+    flush_timings_secs: "刷新時間資料的頻率，以秒為單位"
+    max_word_length: "在主題的標題中，允許的詞語長度的最大字數"
+    title_min_entropy: "在主題的標題中，允許的最低熵值（單字）"
+    body_min_entropy: "在一個貼文內文中，允許的最低熵值（單字）"
 
     title_fancy_entities: "轉換主題標題中的 HTML 實體"
 
-    min_title_similar_length: "開始檢查相似主題的帖子標題的最小長度"
-    min_body_similar_length: "開始檢查相似主題的帖子內容的最小長度"
+    min_title_similar_length: "開始檢查相似主題的貼文標題的最小長度"
+    min_body_similar_length: "開始檢查相似主題的貼文內容的最小長度"
 
-    category_colors: "設置分類顔色的用'|'分隔的十六進制色彩值列表"
-    max_image_size_kb: "允許用戶上傳的最大文件大小(以kB爲單位) - 確保在nginx(client_max_body_size), apache或代理服務中進行限制文件大小的配置."
-    max_similar_results: "當用戶撰寫新主題時，顯示多少類似主題給用戶"
+    category_colors: "設置分類顏色的用'|'分隔的十六進位色彩值列表"
+    max_image_size_kb: "允許用戶上傳的最大檔大小(以kB為單位) - 確保在nginx(client_max_body_size), apache或代理服務中進行限制檔大小的配置."
+    max_similar_results: "當使用者撰寫新主題時，顯示多少類似主題給使用者"
 
-    title_prettify: "防止常見標題裏的錯別字和錯誤，包括全部大寫，第一個字符小寫，多個！和？，結尾多余的. 等等。"
+    title_prettify: "防止常見標題裡的錯別字和錯誤，包括全部大寫，首字小寫，多個！和？，結尾多餘的. 等等。"
 
-    topic_views_heat_low: "多少浏覽量後主題的熱度變爲低。"
-    topic_views_heat_medium: "多少浏覽量後主題的熱度變爲中。"
-    topic_views_heat_high: "多少浏覽量後主題的熱度變爲高。"
+    topic_views_heat_low: "多少流覽量後主題的熱度變為低。"
+    topic_views_heat_medium: "多少流覽量後主題的熱度變為中。"
+    topic_views_heat_high: "多少流覽量後主題的熱度變為高。"
 
-    tos_url: "如果你想要使用一個部署在某個地方的服務條款文檔，那麽請在此填寫其完整URL地址。"
-    privacy_policy_url: "如果你想要使用一個部署在某個地方的隱私政策文檔，那麽請在此填寫其完整URL地址。"
+    tos_url: "如果你想要使用一個部署在某個地方的服務條款文檔，那麼請在此填寫其完整URL地址。"
+    privacy_policy_url: "如果你想要使用一個部署在某個地方的隱私政策文檔，那麼請在此填寫其完整URL地址。"
 
-    newuser_spam_host_threshold: "用戶在一篇帖子中能添加多少此指向同一主機的鏈接，取決于之前該用戶有`newuser_spam_host_threshold`篇帖子被認爲是垃圾帖。"
+    newuser_spam_host_threshold: "用戶在一篇貼文中能添加多少此指向同一主機的連結，取決於之前該使用者有`newuser_spam_host_threshold`篇貼文被認為是垃圾帖。"
 
   notification_types:
     mentioned: "%{display_username} 在 %{link} @到了你"
-    liked: "%{display_username} 在 %{link} 贊了你的帖子 "
-    replied: "%{display_username} 在 %{link} 回複了你的帖子"
-    quoted: "%{display_username} 在 %{link} 引用了你的帖子"
-    edited: "%{display_username} 在 %{link} 編輯了你的帖子"
+    liked: "%{display_username} 在 %{link} 讚好了你的貼文 "
+    replied: "%{display_username} 在 %{link} 回覆了你的貼文"
+    quoted: "%{display_username} 在 %{link} 引用了你的貼文"
+    edited: "%{display_username} 在 %{link} 編輯了你的貼文"
     posted: "%{display_username} 發表了 %{link}"
-    moved_post: "%{display_username} 把你的帖子移動到了 %{link}"
-    private_message: "%{display_username} 發送給你一條私信：%{link}"
-    invited_to_private_message: "%{display_username} 邀請你進行私信：%{link}"
+    moved_post: "%{display_username} 把你的貼文移動到了 %{link}"
+    private_message: "%{display_username} 發送給你一條訊息：%{link}"
+    invited_to_private_message: "%{display_username} 邀請你進行私人通訊：%{link}"
     invitee_accepted: "%{display_username} 接受了你的邀請"
 
   search:
@@ -587,87 +606,91 @@ zh_TW:
       user: '用戶'
 
   original_poster: "原始作者"
-  most_posts: "大部分帖子"
-  most_recent_poster: "當前大部分帖子作者"
+  most_posts: "大部分貼文"
+  most_recent_poster: "當前大部分貼文作者"
   frequent_poster: "頻繁發帖者"
 
   move_posts:
     moderator_post:
-      one: "我移動了一個帖子到一個新主題：%{topic_link}"
-      other: "我移動了 %{count} 個帖子到一個新主題：%{topic_link}"
+      one: "我移動了一個貼文到一個新主題：%{topic_link}"
+      other: "我移動了 %{count} 個貼文到一個新主題：%{topic_link}"
 
   topic_statuses:
     archived_enabled: "本主題已歸檔，即已經凍結，無法修改。"
     archived_disabled: "本主題已被解除歸檔，即不再凍結，可以修改。"
-    closed_enabled: "本主題已關閉，不再接受新的回複。"
-    closed_disabled: "本主題已開放，可以發表新的回複。"
+    closed_enabled: "本主題已關閉，不再接受新的回覆。"
+    closed_disabled: "本主題已開放，可以發表新的回覆。"
     autoclosed_enabled:
-      zero: "本主題爲創建一天後自動關閉，不允許添加新的回複。"
-      one: "本主題爲創建一天後自動關閉，不允許添加新的回複。"
-      other: "本主題爲創建{{count}}天自動關閉。不允許添加新回複。"
-    autoclosed_disabled: "本主題是開放的，可以添加新的回複。"
+      zero: "本主題為建立一天后自動關閉，不允許添加新的回覆。"
+      one: "本主題為建立一天后自動關閉，不允許添加新的回覆。"
+      other: "本主題為建立{{count}}天自動關閉。不允許添加新回覆。"
+    autoclosed_disabled: "本主題是開放的，可以添加新的回覆。"
     pinned_enabled: "本主題已置頂，它將始終顯示在它所屬分類的頂部。"
     pinned_disabled: "本主題已被解除置頂，它將不再顯示在它所屬分類的頂部。"
-    visible_enabled: "本主題可見，它將顯示在主題列表中。"
-    visible_disabled: "本主題不可見，它將不被顯示在主題列表中，只能通過一個直接鏈接來訪問。"
+    visible_enabled: "本主題可見，它將顯示在主題清單中。"
+    visible_disabled: "本主題不可見，它將不被顯示在主題清單中，只能通過一個直接連結來瀏覽。"
 
   login:
     not_approved: "你的帳號尚未獲得批准。一旦你的帳號獲得批准，你會收到一封電子郵件。"
     incorrect_username_email_or_password: "用戶名、電子郵箱或密碼不正確"
-    wait_approval: "謝謝注冊帳號。我們會在你的帳號獲得批准之後通知你。"
-    active: "你的帳號已經被激活，可以使用了。"
-    activate_email: "快完成了！我們發送了一封激活郵件<b>%{email}</b>給你，請按照郵件中的步驟來激活你的帳號。"
-    not_activated: "你還不能登錄。我們發送了一封激活郵件給你，請按照郵件中的步驟來激活你的帳號。"
+    wait_approval: "謝謝註冊帳號。我們會在你的帳號獲得批准之後通知你。"
+    active: "你的帳號已經被啟用，可以使用了。"
+    activate_email: "快完成了！我們發送了一封啟用郵件<b>%{email}</b>給你，請按照郵件中的步驟來啟用你的帳號。"
+    not_activated: "你還不能登入。我們發送了一封啟用郵件給你，請按照郵件中的步驟來啟用你的帳號。"
     errors: "%{errors}"
     not_available: "不可用，試試 %{suggestion}？"
-    something_already_taken: "出了一些問題，可能此用戶名或電子郵箱已經被注冊。試試 忘記密碼 鏈接吧。"
+    something_already_taken: "出了一些問題，可能此用戶名或電子郵箱已經被註冊。試試 忘記密碼 連結吧。"
     omniauth_error: "抱歉，在給你的 %{strategy} 帳號授權時發生了錯誤。有可能你沒有批准授權申請？"
-    omniauth_error_unknown: "在處理你的登錄過程中發生了錯誤，請重試。"
+    omniauth_error_unknown: "在處理你的登入過程中發生了錯誤，請重試。"
 
   user:
     username:
-      short: "必須超過 %{min} 個字符"
-      long: "必須少于 %{max} 個字符"
-      characters: "必須只包含字母和數字"
+      short: "必須超過 %{min} 字"
+      long: "必須少於 %{max} 字"
+      characters: "必須只包含字母和數位"
       unique: "必須是唯一的"
       blank: "必須存在"
-      must_begin_with_alphanumeric: "必須以字母或數字開頭"
+      must_begin_with_alphanumeric: "必須以字母或數位開頭"
     email:
-      not_allowed: "本站不允許使用該郵箱服務商提供的電子郵箱，請使用其它郵箱地址。"
-
+      not_allowed: "本站不允許使用該郵箱服務商提供的電子郵箱，請使用其它郵箱位址。"
+    attributes:
+            password:
+              common: "是5000個最常用的密碼之一。請使用一個更安全的密碼。"
+            ip_address:
+              signup_not_allowed: "你的 IP 已被遮罩， 禁止使用此 IP 註冊。"
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} 邀請你參與 %{site_name} 上的一個討論"
     text_body_template: |
       %{invitee_name} 邀請你加入 %{site_name} 網站上的討論主題 "%{topic_title}"。
 
-      如果你感興趣，請點擊下面的鏈接來訪問該討論：
+      如果你感興趣，請點擊下面的連結來瀏覽該討論：
 
-      [訪問 %{site_name}][1]
+      [瀏覽 %{site_name}][1]
 
-      你是被一個受信任的用戶邀請的，所以你可以不用登錄就直接發表回複。
+      你是被一個受信任的用戶邀請的，所以你可以不用登入就直接發表回覆。
 
       [1]: %{invite_link}
 
   test_mailer:
     subject_template: "[%{site_name}] 電子郵件發送測試"
     text_body_template: |
-      這是一封來自 %{site_name} 論壇的測試郵件。你可以通過浏覽器訪問該論壇：
+      這是一封來自 %{site_name} 論壇的測試郵件。你可以通過瀏覽器瀏覽該論壇：
 
       [*%{base_url}*][0]
 
       電子郵件分發可能會很複雜，但是你可以快速檢查如下幾點：
 
-      - 確定你會使用你的郵件客戶端查看 *電子郵件源代碼*，這樣你可以通過查看郵件頭來獲取重要線索。
+      - 確定你會使用你的郵件用戶端查看 *電子郵件原始程式碼*，這樣你可以通過查看郵件頭來獲取重要線索。
 
-      - **重要：** 你的ISP是否對你發送郵件的域名和IP作了反向DNS解析？你可以在此 [測試你的反向枚舉指針（PTR）記錄][2]。如果你的ISP沒有正確的反向DNS記錄，那麽很可能你的任何電子郵件都不會被成功發送。
+      - **重要：** 你的ISP是否對你發送郵件的功能變數名稱和IP作了反向DNS解析？你可以在此 [測試你的反向枚舉指標（PTR）記錄][2]。如果你的ISP沒有正確的反向DNS記錄，那麼很可能你的任何電子郵件都不會被成功發送。
 
-      - 你的域名的發件人策略框架（SPF）記錄是否正確？你可以在此 [測試你的SPF記錄][1]。
+      - 你的功能變數名稱的寄件者策略框架（SPF）記錄是否正確？你可以在此 [測試你的SPF記錄][1]。
 
-      - 你是否在你的電子郵件軟件中配置了 [域名密鑰身份識別郵件（DKIM）的電子郵件密鑰簽名][3]，並且把DKIM公匙輸入到了DNS記錄中？
+      - 你是否在你的電子郵件軟體中配置了 [功能變數名稱金鑰身份識別郵件（DKIM）的電子郵件金鑰簽名][3]，並且把DKIM公匙輸入到了DNS記錄中？
 
-      - 你是否檢查過你發送電子郵件的服務器IP [不在任何郵件黑名單中][4]？
+      - 你是否檢查過你發送電子郵件的伺服器IP [不在任何郵件黑名單中][4]？
 
-      - 你是否確認過你的郵件服務器 *確定無疑的* 在它的 HELO 消息中送出了完整的主機名？如果沒有，那麽會導致很多郵件服務商拒絕你的郵件。
+      - 你是否確認過你的郵件伺服器 *確定無疑的* 在它的 HELO 消息中送出了完整的主機名稱？如果沒有，那麼會導致很多郵件服務商拒絕你的郵件。
 
       我們衷心希望你收到這封郵件，發送測試成功！
 
@@ -684,65 +707,65 @@ zh_TW:
 
       ----
 
-      <small>在每封你發送的郵件底部應該都有取消訂閱的鏈接，讓我們模擬一下。這封郵件發送自 中華人民共和國 北京市海澱區中關村南大街3號 海澱資本中心 14層 公司名稱，郵編 100081。如果你不希望將來繼續收到我們的郵件，[點擊此處取消訂閱][5].</small>
+      <small>在每封你發送的郵件底部應該都有取消訂閱的連結，讓我們類比一下。這封郵件發送自 中華人民共和國 北京市海澱區中關村南大街3號 海澱資本中心 14層 公司名稱，郵編 100081。如果你不希望將來繼續收到我們的郵件，[點擊此處取消訂閱][5].</small>
 
   system_messages:
     post_hidden:
-      subject_template: "%{site_name} 提示：由于論壇用戶舉報，系統隱藏了你的帖子"
+      subject_template: "%{site_name} 提示：由於論壇使用者舉報，系統隱藏了你的貼文"
       text_body_template: |
         你好，
 
-        這是一封從 %{site_name} 自動發出的郵件，通知你下面的帖子由于論壇用戶的舉報而被隱藏不可見。
+        這是一封從 %{site_name} 自動發出的郵件，通知你下面的貼文由於論壇用戶的舉報而被隱藏不可見。
 
         %{base_url}%{url}
 
-        你的帖子是因爲被舉報而被隱藏的。請檢查你的帖子以了解爲何會收到他們的投訴。
+        你的貼文是因為被舉報而被隱藏的。請檢查你的貼文以瞭解為何會收到他們的投訴。
 
-        你可以在 %{edit_delay} 分鍾後開始編輯你的帖子，然後它會被自動取消隱藏。這將提高你的論壇級別積分。
+        你可以在 %{edit_delay} 分鐘後開始編輯你的貼文，然後它會被自動取消隱藏。這將提高你的論壇級別積分。
 
-        但是，如果帖子再次被網友投訴而隱藏，論壇版主將收到通知，這將可能導致進一步的措施，包括可能禁止你的用戶帳號。
+        但是，如果貼文再次被網友投訴而隱藏，論壇版主將收到通知，這將可能導致進一步的措施，包括可能禁止你的用戶帳號。
 
         需要更多指導，請查看我們的 [FAQ](%{base_url}/faq).
 
     usage_tips:
       text_body_template: |
-        這條私信包含了一些可以讓你快速開始的技巧提示：
+        這個訊息包含了一些可以讓你快速開始的技巧提示：
 
         ### 保持滾動
 
-        論壇 - Discourse 沒有所謂下一頁按鈕或者頁碼，要繼續閱讀帖子，只需要繼續向下滾動頁面，這樣更多的內容會自動加載！
+        論壇 - Discourse 沒有所謂下一頁按鈕或者頁碼，要繼續閱讀貼文，只需要繼續向下滾動頁面，這樣更多的內容會自動載入！
 
-        當新的回複進來時，它們會自動顯示在主題的底部。你不需要刷新頁面或者退出主題然後重新進入來查看新帖子。
+        當新的回覆進來時，它們會自動顯示在主題的底部。你不需要刷新頁面或者退出主題然後重新進入來查看新貼文。
 
-        ### 我怎麽回複？
+        ### 我怎麼回覆？
 
-        - 要回複一個帖子，點擊該帖子底部的回複按鈕。
+        - 要回覆一個貼文，點擊該貼文底部的回覆按鈕。
 
-        - 如果要回複整個主題的 *主旨*，而不是回複該主題裏某個特定的人或帖子，請使用該主題最底下的回複按鈕。
+        - 如果要回覆整個主題的 *主旨*，而不是回覆該主題裡某個特定的人或貼文，請使用該主題最底下的回覆按鈕。
 
-        - 如果你想把討論導向另一個方向，但是保持討論之間的聯系，請使用帖子右側的 回複爲新主題 按鈕。
+        - 如果你想把討論導向另一個方向，但是保持討論之間的聯繫，請使用貼文右側的 回覆為新主題 按鈕。
 
         ### 誰在跟我交談？
 
-        當有人回複你的帖子，引用你的內容，或者使用 @username 提及到你的時候，一個通知消息會顯示在頁面頂部。點擊通知消息的數目就可以查看是誰、在哪兒在跟你交談，交談。加入討論吧！
+        當有人回覆你的貼文，引用你的內容，或者使用 @username 提及到你的時候，一個通知消息會顯示在頁面頂部。點擊通知消息的數目就可以查看是誰、在哪兒在跟你交談，交談。加入討論吧！
 
         - 要提及某人的名字，輸入 `@` 符號，頁面會自動彈出可用人名。
 
-        - 要引用整個帖子，使用編輯器工具欄裏的 引用帖子 按鈕。
+        - 要引用整個貼文，使用編輯器工具列裡的 引用貼文 按鈕。
 
-        - 要引用帖子的部分內容，選中要引用的內容，然後點擊顯示在選擇區上的回複按鈕。
+        - 要引用貼文的部分內容，選中要引用的內容，然後點擊顯示在選擇區上的回覆按鈕。
 
-        ### 看那個帖子吧！
+        ### 看那個貼文吧！
 
-        要想讓別人知道你喜歡他們的帖子，請點擊帖子底部的 贊 按鈕。如果你看到某個有問題的帖子，請不要猶豫，點擊帖子底部的 投訴 小旗幟按鈕來引起論壇版主以及你的社區成員們的注意。
+        要想讓別人知道你喜歡他們的貼文，請點擊貼文底部的 讚好 按鈕。如果你看到某個有問題的貼文，請不要猶豫，點擊貼文底部的 投訴 小旗幟按鈕來引起論壇版主以及你的社區成員們的注意。
 
         ### 我在哪？
 
-        - 任何時候想要回到首頁，**點擊左上角的圖標**。
+        - 任何時候想要回到首頁，**點擊左上角的圖示**。
 
-        - 要搜索，訪問你的用戶頁面或者其他導航內容，點擊右上角的那些圖標。
+        - 要搜索，瀏覽你的使用者頁面或者其他導航內容，點擊右上角的那些圖示。
 
-        - 當閱讀一個主題時，你可以通過點擊頁面頂部的標題回到頂部；要去到 *底部*，點擊頁面底部的主題浏覽進度指示器裏的向下箭頭，或者點擊該主題第一帖下面的彙總信息裏的最後一帖區域。
+        - 當閱讀一個主題時，你可以通過點擊頁面頂部的標題回到頂部；要去到 *底部*，點擊頁面底部的主題流覽進度指示器裡的向下箭頭，或者點擊該主題第一帖下面的匯總資訊裡的最後一帖區域。
 
     welcome_user:
       subject_template: "歡迎來到 %{site_name}！"
@@ -753,7 +776,7 @@ zh_TW:
 
         %{new_user_tips}
 
-        我們始終相信 [文明的社會行爲](%{base_url}/faq)。
+        我們始終相信 [文明的社會行為](%{base_url}/faq)。
 
         好好享受你在論壇的時光吧！
 
@@ -762,33 +785,33 @@ zh_TW:
       text_body_template: |
         感謝你接受邀請到 %{site_name}，歡迎來到我們論壇參與討論！
 
-        我們爲你自動生成了一個用戶名：**%{username}**，不過你在任何時候都可以通過訪問 [你的用戶設置][prefs] 來修改它。
+        我們為你自動建立了一個用戶名：**%{username}**，不過你在任何時候都可以通過瀏覽 [你的用戶設置][prefs] 來修改它。
 
-        要再次登錄，或者：
+        要再次登入，或者：
 
-        1. 使用臉書（Facebook）、谷歌（Google）、推特（Twitter）或很多其他我們支持的驗證方式——不過你選擇的驗證方式必須指向到和你最初接收邀請的郵箱地址 **相同的郵箱地址**，否則我們就無法確定到底是不是你本人！
+        1. 使用臉書（Facebook）、穀歌（Google）、推特（Twitter）或很多其他我們支援的驗證方式——不過你選擇的驗證方式必須指向到和你最初接收邀請的郵箱位址 **相同的郵箱位址**，否則我們就無法確定到底是不是你本人！
 
-        2. 在 [你的用戶設置][prefs] 頁面爲 %{site_name} 創建一個密碼，然後使用該密碼來登錄。
+        2. 在 [你的用戶設置][prefs] 頁面為 %{site_name} 建立一個密碼，然後使用該密碼來登入。
 
         %{site_password}
 
         %{new_user_tips}
 
-        我們始終相信 [文明的社會行爲](%{base_url}/faq)。
+        我們始終相信 [文明的社會行為](%{base_url}/faq)。
 
         好好享受你在論壇的時光吧！
 
         [prefs]: %{user_preferences_url}
 
     export_succeeded:
-      subject_template: "導出成功"
-      text_body_template: "導出操作成功。"
+      subject_template: "匯出成功"
+      text_body_template: "匯出操作成功。"
 
     import_succeeded:
       subject_template: "導入成功"
       text_body_template: "導入操作成功。"
 
-  unsubscribe_link: "如果你希望取消這些郵件的訂閱，請訪問 [用戶設置](%{user_preferences_url})。"
+  unsubscribe_link: "如果你希望取消這些郵件的訂閱，請瀏覽 [用戶設置](%{user_preferences_url})。"
 
   user_notifications:
     unsubscribe:
@@ -800,18 +823,18 @@ zh_TW:
       text_body_template: |
         %{username} 邀請你在 %{site_name} 就 '%{topic_title}' 進行私下交流：
 
-        請訪問 %{base_url}%{url} 來查看該主題。
+        請瀏覽 %{base_url}%{url} 來查看該主題。
 
     user_replied:
-      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題回複了你的帖子"
+      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題回覆了你的貼文"
       text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 主題中回複了你的帖子：
+        %{username} 在 %{site_name} 的 '%{topic_title}' 主題中回覆了你的貼文：
 
         ---
         %{message}
 
         ---
-        請訪問 %{base_url}%{url} 來回複。
+        請瀏覽 %{base_url}%{url} 來回覆。
 
     user_quoted:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題引用了你的內容"
@@ -822,7 +845,7 @@ zh_TW:
         %{message}
 
         ---
-        請訪問 %{base_url}%{url} 來回複。
+        請瀏覽 %{base_url}%{url} 來回覆。
 
     user_mentioned:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題提及了你"
@@ -833,69 +856,70 @@ zh_TW:
         %{message}
 
         ---
-        請訪問 %{base_url}%{url} 來回複。
+        請瀏覽 %{base_url}%{url} 來回覆。
 
     user_posted:
-      subject_template: "[%{site_name}] %{subject_prefix}%{username} 在 '%{topic_title}' 主題發表了帖子"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} 在 '%{topic_title}' 主題發表了貼文"
       text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 主題中發表了帖子：
+        %{username} 在 %{site_name} 的 '%{topic_title}' 主題中發表了貼文：
 
         ---
         %{message}
 
         ---
-        請訪問 %{base_url}%{url} 來回複。
+        請瀏覽 %{base_url}%{url} 來回覆。
 
     digest:
-      why: "這裏是自從我們在 %{last_seen_at} 最後一次見到你之後，在 %{site_link} 發生的事情的簡單彙總。"
+      why: "這裡是自從我們在 %{last_seen_at} 最後一次見到你之後，在 %{site_link} 發生的事情的簡單匯總。"
       subject_template: "[%{site_name}] %{date} 的論壇動態"
-      new_activity: "在你的主題和帖子裏的動態："
-      new_topics: "新主題："
-      unsubscribe: "這封來自 %{site_link} 的彙總郵件是當我們有一段時間沒有見到你之後，作爲一個禮貌的通知發送給你的。\n如果你希望關閉它或者修改你的郵件設置，請訪問 %{unsubscribe_link}。"
+      new_activity: "在你的主題和貼文裡的動態："
+      top_topics: "我們喜歡的新主題："
+      other_new_topics: "其它新主題:"
+      unsubscribe: "這封來自 %{site_link} 的匯總郵件是當我們有一段時間沒有見到你之後，作為一個禮貌的通知發送給你的。\n如果你希望關閉它或者修改你的郵件設置，請瀏覽 %{unsubscribe_link}。"
       click_here: "點擊此處"
       from: "%{site_name} 摘要"
 
     forgot_password:
-      subject_template: "[%{site_name}] 密碼重置"
+      subject_template: "[%{site_name}] 密碼重設"
       text_body_template: |
-        有人請求重置你在 [%{site_name}](%{base_url}) 上的密碼。
+        有人請求重設你在 [%{site_name}](%{base_url}) 上的密碼。
 
         如果那不是你，你可以直接忽略本郵件。
 
-        點擊下面的鏈接來選擇一個新密碼：
+        點擊下面的連結來選擇一個新密碼：
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:
-      subject_template: "[%{site_name}] 確認你的新電子郵箱地址"
+      subject_template: "[%{site_name}] 確認你的新電子郵箱位址"
       text_body_template: |
-        點擊下面的鏈接來確認你在 %{site_name} 上的新電子郵箱地址：
+        點擊下面的連結來確認你在 %{site_name} 上的新電子郵箱位址：
 
         %{base_url}/users/authorize-email/%{email_token}
 
     signup:
-      subject_template: "[%{site_name}] 激活你的新帳號"
+      subject_template: "[%{site_name}] 啟用你的新帳號"
       text_body_template: |
         歡迎來到 %{site_name}！
 
-        點擊下面的鏈接來確認和激活你的新帳號：
+        點擊以下連結來確認和啟用你的新帳號：
         %{base_url}/users/activate-account/%{email_token}
 
-        如果上面的鏈接無法點擊，請拷貝該鏈接並粘貼到你的浏覽器的地址欄裏。
+        如果上面的連結無法點擊，請拷貝該連結並粘貼到你的流覽器的地址欄裡。
 
   discourse_hub:
-    access_token_problem: "告訴一個管理員：請更新站點設置以包含正確的 discourse_org_access_key。"
+    access_token_problem: "告訴一個管理員：請更新網站設定以包含正確的 discourse_org_access_key。"
 
   page_not_found:
     title: "你請求的頁面在本論壇不存在。可能我們能幫助你找到它，或者類似的其它主題："
     latest_topics: "熱門主題"
     recent_topics: "近期主題"
-    see_more: "查看更多"
+    see_more: "檢視更多"
     search_title: "搜索該主題"
-    search_google: "用谷歌（Google）搜索"
+    search_google: "以 Google 搜尋"
 
   terms_of_service:
     user_content_license: |
-      用戶的內容基于 [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US) 授權。. Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
+      使用者的內容基於 [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US) 授權。. Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
     miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
 
   deleted: '已刪除'
@@ -904,5 +928,5 @@ zh_TW:
     pasted_image_filename: ""
     images:
       fetch_failure: "抱歉，獲取圖片時發生錯誤。"
-      unknown_image_type: "抱歉，你上傳的文件似乎不是一張圖片。"
+      unknown_image_type: "抱歉，你上傳的檔似乎不是一張圖片。"
       size_not_found: "抱歉，我們無法獲取圖片大小，請檢查你的圖片是否已損壞。"

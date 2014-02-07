@@ -262,7 +262,6 @@ pt:
     logo_small_url: "O logo em pequeno para o teu site (aparece nas páginas dos tópicos) eg: http://example.com/logo-small.png"
     favicon_url: "Um favicon para o teu site"
     notification_email: "O endereço de email a ser usado para notificar os utilizadores de password esquecida, novas contas, etc."
-    use_ssl: "Deverá o site estár acessivel via SSL?"
     summary_score_threshold: "A pontuação mínima de um post para ser incluído no 'melhor de'"
     summary_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
     summary_likes_required: "Um tópico precisa deste número de gostos antes de ser ativado o mode 'melhor de'."
@@ -284,7 +283,7 @@ pt:
     post_undo_action_window_mins: "The window in which someone can reverse an action on a post (such as liking)"
     must_approve_users: "The owners of the forum must approve users before they gain access."
     ga_tracking_code: "Google analytics tracking code, see: http://google.com/analytics"
-    top_menu: "The order of the items in the top menu. Example latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "The order of the items in the top menu. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "The order of the items on the post menu."
     max_length_show_reply: "Embedded replies to posts won't be shown if they directly below and are below this length."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default cause it has to re-write urls, hurting usability"
@@ -322,7 +321,7 @@ pt:
     max_flags_per_day: "The maximum amount of flags a user can perform in a day"
     max_bookmarks_per_day: "The maximum amount of bookmarks a user can create in a day"
     max_edits_per_day: "The maximum amount of edits a user can perform in a day"
-    max_favorites_per_day: "The maximum amount of topics that can be favorited in a day"
+    max_stars_per_day: "The maximum amount of topics that can be starred in a day"
     max_topics_per_day: "The maximum amount of topics you can create in a day"
     max_private_messages_per_day: "The maximum amount of private messages you can send in a day"
 
@@ -379,7 +378,7 @@ pt:
     mentions: "Menções"
     quotes: "Citações"
     edits: "Edições"
-    favorites: "Favoritos"
+    starred: "Favoritos"
     sent_items: "Items Enviados"
     inbox: "Caixa de Entrada"
 
@@ -390,7 +389,7 @@ pt:
     responded_to: "respondeu a"
     mentioned: "mencionou"
     quoted: "citou"
-    favorited: "favoritou"
+    starred: "favoritou"
     edited: "editou"
 
   move_posts:

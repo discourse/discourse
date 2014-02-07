@@ -29,7 +29,14 @@ module UserNotificationsHelper
     "<a href='#{Discourse.base_url}'>#{@site_name}</a>"
   end
 
-  def email_excerpt(html)
-    raw Sanitize.clean(HTML_Truncator.truncate(html, 300), Sanitize::Config::RELAXED)
+  def email_excerpt(html, posts_count)
+    # If there's only one post, include the whole thing.
+    if posts_count == 1
+      return raw Sanitize.clean(html, Sanitize::Config::RELAXED)
+    else
+      # Otherwise, try just the first paragraph.
+      first_paragraph = Nokogiri::HTML(html).at('p')
+      return raw Sanitize.clean(first_paragraph.to_s, Sanitize::Config::RELAXED)
+    end
   end
 end

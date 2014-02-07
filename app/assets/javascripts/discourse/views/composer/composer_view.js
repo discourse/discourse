@@ -107,9 +107,14 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   keyDown: function(e) {
-    // If the user hit ESC
     if (e.which === 27) {
+      // ESC
       this.get('controller').hitEsc();
+      return false;
+    } else if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
+      // CTRL+ENTER or CMD+ENTER
+      this.get('controller').send('save');
+      return false;
     }
   },
 
@@ -183,11 +188,18 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
       dataSource: function(term) {
         return Discourse.UserSearch.search({
           term: term,
-          topicId: composerView.get('controller.controllers.topic.model.id')
+          topicId: composerView.get('controller.controllers.topic.model.id'),
+          include_groups: true
         });
       },
       key: "@",
-      transformComplete: function(v) { return v.username; }
+      transformComplete: function(v) {
+          if (v.username) {
+            return v.username;
+          } else {
+            return v.usernames.join(", @");
+          }
+        }
     });
 
     this.editor = editor = Discourse.Markdown.createEditor({

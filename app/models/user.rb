@@ -260,6 +260,10 @@ class User < ActiveRecord::Base
     !!@password_required
   end
 
+  def has_password?
+    password_hash.present?
+  end
+
   def password_validator
     PasswordValidator.new(attributes: :password).validate_each(self, :password, @raw_password)
   end
@@ -408,6 +412,7 @@ class User < ActiveRecord::Base
   def change_trust_level!(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
     self.trust_level = TrustLevel.levels[level]
+    self.bio_raw_will_change! # So it can get re-cooked based on the new trust level
     transaction do
       self.save!
       Group.user_trust_level_change!(self.id, self.trust_level)
@@ -526,7 +531,7 @@ class User < ActiveRecord::Base
 
   def cook
     if bio_raw.present?
-      self.bio_cooked = PrettyText.cook(bio_raw) if bio_raw_changed?
+      self.bio_cooked = PrettyText.cook(bio_raw, omit_nofollow: self.has_trust_level?(:leader)) if bio_raw_changed?
     else
       self.bio_cooked = nil
     end
@@ -606,8 +611,7 @@ class User < ActiveRecord::Base
   private
 
   def previous_visit_at_update_required?(timestamp)
-    seen_before? &&
-      (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
+    seen_before? && (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
   end
 
   def update_previous_visit(timestamp)

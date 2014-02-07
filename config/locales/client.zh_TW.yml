@@ -49,6 +49,7 @@ zh_TW:
         almost_x_years:
           one: "1年"
           other: "%{count}年"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 分鐘"
@@ -494,7 +495,7 @@ zh_TW:
     go_back: '返回'
     current_user: '去你的用戶頁面'
 
-    favorite:
+    starred:
       title: '收藏'
       help:
         star: '將此主題加入你的收藏列表'
@@ -502,7 +503,7 @@ zh_TW:
 
     topics:
       none:
-        favorited: "你尚未收藏任何主題。要收藏一個主題，點擊標題旁的星星圖標。"
+        starred: "你尚未收藏任何主題。要收藏一個主題，點擊標題旁的星星圖標。"
         unread: "你沒有未閱主題。"
         new: "你沒有新主題可讀。"
         read: "你尚未閱讀任何主題。"
@@ -517,13 +518,8 @@ zh_TW:
         read: "沒有更多已閱主題可看了。"
         new: "沒有更多新主題可看了。"
         unread: "沒有更多未閱主題可看了。"
-        favorited: "沒有更多收藏主題可看了。"
+        starred: "沒有更多收藏主題可看了。"
         category: "沒有更多 {{category}} 分類的主題了。"
-
-    rank_details:
-      toggle: 切換主題排名詳細
-      show: 顯示主題排名詳細信息
-      title: 主題排名詳細
 
     topic:
       create: '創建主題'
@@ -914,7 +910,7 @@ zh_TW:
       hot:
         title: "熱門"
         help: "最近最受歡迎的主題"
-      favorited:
+      starred:
         title: "收藏"
         help: "你收藏的主題"
       read:

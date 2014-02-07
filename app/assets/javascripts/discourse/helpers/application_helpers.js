@@ -7,9 +7,13 @@
 Handlebars.registerHelper('breakUp', function(property, hint, options) {
   var prop = Ember.Handlebars.get(this, property, options);
   if (!prop) return "";
-  hint = Ember.Handlebars.get(this, hint, options);
+  if (typeof(hint) === 'string') {
+    hint = Ember.Handlebars.get(this, hint, options);
+  } else {
+    hint = undefined;
+  }
 
-  return Discourse.Formatter.breakUp(prop, hint);
+  return new Handlebars.SafeString(Discourse.Formatter.breakUp(prop, hint));
 });
 
 /**
@@ -89,9 +93,9 @@ Handlebars.registerHelper('titledLinkTo', function(name, object) {
     options.hash.title = I18n.t(options.hash.titleKey);
   }
   if (arguments.length === 3) {
-    return Ember.Handlebars.helpers.linkTo.call(this, name, object, options);
+    return Ember.Handlebars.helpers['link-to'].call(this, name, object, options);
   } else {
-    return Ember.Handlebars.helpers.linkTo.call(this, name, options);
+    return Ember.Handlebars.helpers['link-to'].call(this, name, options);
   }
 });
 
@@ -196,12 +200,12 @@ Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
 }, 'avatar_template', 'uploaded_avatar_template', 'gravatar_template');
 
 /**
-  Nicely format a date without a binding since the date doesn't need to change.
+  Nicely format a date without binding or returning HTML
 
-  @method unboundDate
+  @method rawDate
   @for Handlebars
 **/
-Handlebars.registerHelper('unboundDate', function(property, options) {
+Handlebars.registerHelper('rawDate', function(property, options) {
   var dt = new Date(Ember.Handlebars.get(this, property, options));
   return Discourse.Formatter.longDate(dt);
 });
@@ -209,7 +213,7 @@ Handlebars.registerHelper('unboundDate', function(property, options) {
 /**
   Live refreshing age helper
 
-  @method unboundDate
+  @method unboundAge
   @for Handlebars
 **/
 Handlebars.registerHelper('unboundAge', function(property, options) {
@@ -301,12 +305,13 @@ Handlebars.registerHelper('number', function(property, options) {
 });
 
 /**
-  Display logic for dates.
+  Display logic for dates. It is unbound in Ember but will use jQuery to
+  update the dates on a regular interval.
 
-  @method date
+  @method unboundDate
   @for Handlebars
 **/
-Handlebars.registerHelper('date', function(property, options) {
+Handlebars.registerHelper('unboundDate', function(property, options) {
   var leaveAgo;
   if (property.hash) {
     if (property.hash.leaveAgo) {
@@ -322,7 +327,10 @@ Handlebars.registerHelper('date', function(property, options) {
     var date = new Date(val);
     return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', title: true, leaveAgo: leaveAgo}));
   }
+});
 
+Ember.Handlebars.registerBoundHelper('date', function(dt) {
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(new Date(dt), {format: 'medium', title: true }));
 });
 
 /**

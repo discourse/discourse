@@ -1,20 +1,19 @@
 {{#if category}}
-  <a href="#" {{action expand}} class="badge-category" {{bindAttr style="badgeStyle"}}>{{category.name}}</a>
+  <a href="#" {{action expand}} class="badge-category" {{bind-attr style="badgeStyle"}}>{{category.name}}</a>
 {{else}}
   {{#if noSubcategories}}
-    <a href='#' {{action expand}} class='badge-category home' {{bindAttr style="badgeStyle"}}>{{i18n categories.no_subcategory}}</i></a>
+    <a href='#' {{action expand}} class='badge-category home' {{bind-attr style="badgeStyle"}}>{{i18n categories.no_subcategory}}</i></a>
   {{else}}
-    <a href='#' {{action expand}} class='badge-category home' {{bindAttr style="badgeStyle"}}>{{allCategoriesLabel}}</i></a>
+    <a href='#' {{action expand}} class='badge-category home' {{bind-attr style="badgeStyle"}}>{{allCategoriesLabel}}</i></a>
   {{/if}}
-
 {{/if}}
 
 {{#if categories}}
-  <a href='#' {{action expand}} class='badge-category category-dropdown-button' {{bindAttr style="badgeStyle"}}><i {{bindAttr class="iconClass"}}></i></a>
-  <section {{bindAttr class="expanded::hidden :category-dropdown-menu"}} class='chooser'>
-    <div class='cat'><a {{bindAttr href=allCategoriesUrl}} class='badge-category home'>{{allCategoriesLabel}}</a></div>
+  <a href='#' {{action expand}} class='badge-category category-dropdown-button' {{bind-attr style="badgeStyle"}}><i {{bind-attr class="iconClass"}}></i></a>
+  <section {{bind-attr class="expanded::hidden :category-dropdown-menu"}} class='chooser'>
+    <div class='cat'><a {{bind-attr href=allCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{allCategoriesLabel}}</a></div>
     {{#if subCategory}}
-      <div class='cat'><a {{bindAttr href=noCategoriesUrl}} class='badge-category home'>{{i18n categories.no_subcategory}}</a></div>
+    <div class='cat'><a {{bind-attr href=noCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{i18n categories.no_subcategory}}</a></div>
     {{/if}}
     {{#each categories}}<div class='cat'>{{categoryLink this allowUncategorized=true}}</div>{{/each}}
   </section>

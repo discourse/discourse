@@ -269,7 +269,6 @@ class TopicView
 
   def unfiltered_posts
     result = @topic.posts
-    result = result.where(hidden: false) unless @user.try(:staff?)
     result = result.with_deleted if @user.try(:staff?)
     result
   end

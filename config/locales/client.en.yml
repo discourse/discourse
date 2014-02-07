@@ -49,6 +49,7 @@ en:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"
@@ -178,7 +179,7 @@ en:
       "6": "Replies"
       "7": "Mentions"
       "9": "Quotes"
-      "10": "Favorites"
+      "10": "Starred"
       "11": "Edits"
       "12": "Sent Items"
       "13": "Inbox"
@@ -229,11 +230,11 @@ en:
       suspended_reason: "Reason: "
       watch_new_topics: "Automatically watch all new topics posted on the forum"
       watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all topics in these categories"
+      watched_categories_instructions: "Same as Tracking, plus you will be notified of all new posts and topics."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically receive notifications for topics in these categories"
+      tracked_categories_instructions: "You will automatically track all new and existing topics providing you a count of unread and new posts"
       muted_categories: "Muted"
-      muted_categories_instructions: "You will automatically mute all topics in these categories"
+      muted_categories_instructions: "You will not be notified of anything about this topic, and it will not appear on your unread tab."
 
       messages:
         all: "All"
@@ -245,6 +246,7 @@ en:
         in_progress: "(sending email)"
         error: "(error)"
         action: "Send Password Reset Email"
+        set_password: "Set Password"
 
       change_about:
         title: "Change About Me"
@@ -352,8 +354,9 @@ en:
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed"
         pending: "Pending Invites"
-        topics_entered: "Topics Entered"
+        topics_entered: "Topics Viewed"
         posts_read_count: "Posts Read"
+        expired: "This invite has expired."
         rescind: "Remove Invitation"
         rescinded: "Invite removed"
         time_read: "Read Time"
@@ -386,6 +389,7 @@ en:
 
     loading: "Loading..."
     close: "Close"
+    assets_changed_confirm: "Discourse has been updated, would you like to refresh to get the latest version?"
     learn_more: "learn more..."
 
     year: 'year'
@@ -584,17 +588,18 @@ en:
 
     site_map: "go to another topic list or category"
     go_back: 'go back'
+    not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
 
-    favorite:
-      title: 'Favorite'
+    starred:
+      title: 'Starred'
       help:
-        star: 'add this topic to your favorites list'
-        unstar: 'remove this topic from your favorites list'
+        star: 'add this topic to your starred list'
+        unstar: 'remove this topic from your starred list'
 
     topics:
       none:
-        favorited: "You haven't favorited any topics yet. To favorite a topic, click or tap the star next to the title."
+        starred: "You haven't starred any topics yet. To star a topic, click or tap the star next to the title."
         unread: "You have no unread topics."
         new: "You have no new topics."
         read: "You haven't read any topics yet."
@@ -602,6 +607,7 @@ en:
         latest: "There are no latest topics. That's sad."
         hot: "There are no hot topics."
         category: "There are no {{category}} topics."
+        top: "There are no top topics."
       bottom:
         latest: "There are no more latest topics."
         hot: "There are no more hot topics."
@@ -609,13 +615,9 @@ en:
         read: "There are no more read topics."
         new: "There are no more new topics."
         unread: "There are no more unread topics."
-        favorited: "There are no more favorited topics."
+        starred: "There are no more starred topics."
         category: "There are no more {{category}} topics."
-
-    rank_details:
-      toggle: toggle topic rank details
-      show: show topic rank details
-      title: Topic Rank Details
+        top: "There are no more top topics."
 
     topic:
       filter_to: "Show {{post_count}} posts in topic"
@@ -713,15 +715,24 @@ en:
           "1_2": 'You will be notified only if someone mentions your @name or replies to your post.'
           "0": 'You are ignoring all notifications on this topic.'
           "0_2": 'You are ignoring all notifications on this topic.'
+        watching_pm:
+          title: "Watching"
+          description: "same as Tracking, plus you will be notified of all new posts."
         watching:
           title: "Watching"
           description: "same as Tracking, plus you will be notified of all new posts."
+        tracking_pm:
+          title: "Tracking"
+          description: "you will be notified of @name mentions and replies to your posts"
         tracking:
           title: "Tracking"
           description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
         regular:
           title: "Regular"
           description: "you will be notified only if someone mentions your @name or replies to your post."
+        muted_pm:
+          title: "Muted"
+          description: "you will not be notified of anything about this private message."
         muted:
           title: "Muted"
           description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
@@ -855,7 +866,7 @@ en:
         reply: "begin composing a reply to this post"
         like: "like this post"
         edit: "edit this post"
-        flag: "flag this post for attention or send a notification about it"
+        flag: "privately flag this post for attention or send a private notification about it"
         delete: "delete this post"
         undelete: "undelete this post"
         share: "share a link to this post"
@@ -1029,7 +1040,7 @@ en:
       parent: "Parent Category"
 
     flagging:
-      title: 'Why are you flagging this post?'
+      title: 'Why are you privately flagging this post?'
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Notify'
@@ -1076,15 +1087,17 @@ en:
     categories_list: "Categories List"
 
     filters:
+      with_topics: "%{filter} Topics"
+      with_category: "%{filter} %{category} Topics"
       latest:
         title: "Latest"
         help: "the most recent topics"
       hot:
         title: "Hot"
         help: "a selection of the hottest topics"
-      favorited:
-        title: "Favorited"
-        help: "topics you marked as favorites"
+      starred:
+        title: "Starred"
+        help: "topics you starred"
       read:
         title: "Read"
         help: "topics you've read, in the order that you last read them"
@@ -1116,12 +1129,21 @@ en:
       top:
         title: "Top"
         help: "a selection of the best topics"
+        yearly:
+          title: "Top Yearly"
+        monthly:
+          title: "Top Monthly"
+        weekly:
+          title: "Top Weekly"
+        daily:
+          title: "Top Daily"
         this_year: "This year"
         this_month: "This month"
         this_week: "This week"
         today: "Today"
+        other_periods: "see more top topics"
         redirect_reasons:
-          new_user: "Welcome! As a new visitor, we thought you might like to start with this list of the top discussion topics in the last year."
+          new_user: "Welcome! As a new visitor, we thought you might like to start with the top discussion topics."
           not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
@@ -1225,10 +1247,16 @@ en:
         selector_placeholder: "add users"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
-        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        alias_levels:
+          title: "Who can use this group as an alias?"
+          nobody: "Nobody"
+          only_admins: "Only admins"
+          mods_and_admins: "Only moderators and Admins"
+          members_mods_and_admins: "Only group members, moderators and admins"
+          everyone: "Everyone"
 
       api:
         generate_master: "Generate Master API Key"
@@ -1426,7 +1454,7 @@ en:
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
-        topics_entered: Topics Entered
+        topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
         approve: 'Approve'
@@ -1440,8 +1468,8 @@ en:
           one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
           other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
         delete_confirm: "Are you SURE you want to delete this user? This action is permanent!"
-        delete_and_block: "<b>Yes</b>, and <b>block</b> signups from this email and IP address"
-        delete_dont_block: "<b>Yes</b>, but <b>allow</b> signups from this email and IP address"
+        delete_and_block: "<b>Yes</b>, and <b>block</b> future signups from this email and IP address"
+        delete_dont_block: "<b>Yes</b>, just delete the user"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"
@@ -1499,7 +1527,7 @@ en:
         latest: '<b>g</b> then <b>l</b> Latest'
         new: '<b>g</b> then <b>n</b> New'
         unread: '<b>g</b> then <b>u</b> Unread'
-        favorited: '<b>g</b> then <b>f</b> Favorited'
+        starred: '<b>g</b> then <b>f</b> Starred'
         categories: '<b>g</b> then <b>c</b> Categories'
       navigation:
         title: 'Navigation'
@@ -1515,7 +1543,7 @@ en:
         help: '<b>?</b> Open keyboard shortcuts help'
       actions:
         title: 'Actions'
-        favorite: '<b>f</b> Favorite topic'
+        star: '<b>f</b> Star topic'
         share_topic: '<b>s</b> Share topic'
         share_post: '<b>shift s</b> Share post'
         reply_topic: '<b>r</b> Reply to topic'

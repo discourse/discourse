@@ -115,7 +115,7 @@ module FileStore
         aws_secret_access_key: SiteSetting.s3_secret_access_key,
         scheme: SiteSetting.scheme,
         # cf. https://github.com/fog/fog/issues/2381
-        path_style: dns_compatible?(s3_bucket, SiteSetting.use_ssl?),
+        path_style: dns_compatible?(s3_bucket, SiteSetting.use_https?),
       }
       options[:region] = SiteSetting.s3_region unless SiteSetting.s3_region.empty?
       options

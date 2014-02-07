@@ -29,8 +29,4 @@ describe Jobs::PeriodicalUpdates do
     calculator.expects(:calculate)
   end
 
-  it "refreshes hot topics" do
-    HotTopic.expects(:refresh!).once
-  end
-
 end

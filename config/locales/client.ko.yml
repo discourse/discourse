@@ -49,6 +49,7 @@ ko:
         almost_x_years:
           one:   "거의 1년"
           other: "거의 %{count}년"
+        date_year: "'YY M/D"
       medium:
         x_minutes:
           one: "1분"
@@ -561,7 +562,7 @@ ko:
     go_back: '돌아가기'
     current_user: '사용자 페이지로 이동'
 
-    favorite:
+    starred:
       title: '즐겨찾기'
       help:
         star: '즐겨찾기로 이 토픽을 추가'
@@ -569,7 +570,7 @@ ko:
 
     topics:
       none:
-        favorited: "아직 즐겨찾기가 없습니다. 토픽을 즐겨찾기하려면 제목 옆 별표를 눌러주세요."
+        starred: "아직 즐겨찾기가 없습니다. 토픽을 즐겨찾기하려면 제목 옆 별표를 눌러주세요."
         unread: "읽지 않은 토픽이 없습니다."
         new: "읽을 새로운 토픽이 없습니다."
         read: "아직 어떠한 토픽도 읽지 않았습니다."
@@ -584,13 +585,8 @@ ko:
         read: "더 이상 읽을 토픽이 없습니다"
         new: "더 이상 읽을 새로운 토픽이 없습니다."
         unread: "더 이상 읽지 않은 토픽이 없습니다"
-        favorited: "더 이상 읽을 즐겨찾기 토픽이 없습니다"
+        starred: "더 이상 읽을 즐겨찾기 토픽이 없습니다"
         category: "더 이상 {{category}}에 토픽이 없습니다"
-
-    rank_details:
-      toggle: 토픽의 랭킹 세부 사항을 토글합니다.
-      show: 토픽의 랭킹 세부 사항을 보여줍니다.
-      title: 토픽의 랭킹 세부 사항
 
     topic:
       filter_to: "이 토픽에서 {{username}}님의 {{post_count}}건의 게시물만 보기"
@@ -1028,7 +1024,7 @@ ko:
       hot:
         title: "인기 있는 글"
         help: "가장 인기있는 토픽 중 하나를 선택"
-      favorited:
+      starred:
         title: "즐겨찾기"
         help: "즐겨찾기로 표시한 게시글"
       read:

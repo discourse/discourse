@@ -1,6 +1,15 @@
 Discourse.Group = Discourse.Model.extend({
   loaded: false,
 
+
+  ALIAS_LEVELS : {
+    "nobody": 0,
+    "only_admins": 1,
+    "mods_and_admins": 2,
+    "members_mods_and_admins": 3,
+    "everyone": 99
+  },
+
   userCountDisplay: function(){
     var c = this.get('user_count');
     // don't display zero its ugly
@@ -35,6 +44,16 @@ Discourse.Group = Discourse.Model.extend({
     return usernames;
   }.property('users'),
 
+  validValues: function() {
+    return Em.A([
+      { name: I18n.t("admin.groups.alias_levels.nobody"), value: this.ALIAS_LEVELS.nobody},
+      { name: I18n.t("admin.groups.alias_levels.only_admins"), value: this.ALIAS_LEVELS.only_admins},
+      { name: I18n.t("admin.groups.alias_levels.mods_and_admins"), value: this.ALIAS_LEVELS.mods_and_admins},
+      { name: I18n.t("admin.groups.alias_levels.members_mods_and_admins"), value: this.ALIAS_LEVELS.members_mods_and_admins},
+      { name: I18n.t("admin.groups.alias_levels.everyone"), value: this.ALIAS_LEVELS.everyone}
+    ]);
+  }.property(),
+
   destroy: function(){
     if(!this.id) return;
 
@@ -58,6 +77,7 @@ Discourse.Group = Discourse.Model.extend({
     return Discourse.ajax("/admin/groups", {type: "POST", data: {
       group: {
         name: this.get('name'),
+        alias_level: this.get('alias_level'),
         usernames: this.get('usernames')
       }
     }}).then(function(resp) {
@@ -83,13 +103,13 @@ Discourse.Group = Discourse.Model.extend({
       data: {
         group: {
           name: this.get('name'),
+          alias_level: this.get('alias_level'),
           usernames: this.get('usernames')
         }
-      },
-      complete: function(){
-        group.set('disableSave', false);
       }
-    }).then(null, function(e){
+    }).then(function(){
+      group.set('disableSave', false);
+    }, function(e){
       var message = $.parseJSON(e.responseText).errors;
       bootbox.alert(message);
     });

@@ -336,7 +336,7 @@ de:
       title: "Lesezeichen"
       xaxis: "Tag"
       yaxis: "Zahl der Lesezeichen"
-    favorites:
+    starred:
       title: "Favoriten"
       xaxis: "Tag"
       yaxis: "Zahl der Favoriten"
@@ -486,7 +486,6 @@ de:
 
     notification_email: "Die Antwortadresse, die in Systemmails (zum Beispiel zur Passwortwiederherstellung, neuen Konten, etc.) eingetragen wird."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
-    use_ssl: "Soll die Seite via SSL nutzbar sein?"
     summary_score_threshold: "Der Minimalscore eines Beitrags, um zu den Top Beiträgen zu zählen."
     summary_posts_required: "Minimale Zahl der Beiträge zu einem Thema bevor der Modus 'Top Beiträge' aktiviert wird."
     summary_likes_required: "Minimale Zahl der „Gefällt mir“ in einem Thema, bevor der Modus 'Top Beiträge' aktiviert wird."
@@ -514,7 +513,7 @@ de:
     ga_domain_name: "Google Analytics Domänenname, zum Beispiel: mysite.com; siehe http://google.com/analytics"
     enable_escaped_fragments: "Aktiviere Umgehungslösung um älteren Suchmaschinen-Webcrawler zu helfen die Seite zu indexieren. ACHTUNG: Nur aktivieren falls wirklich nötig."
     enable_noscript_support: "Aktiviere standard Suchmaschinen-Webcrawler Unterstützung durch den noscript Tag"
-    top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Bestimme, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen. Beispiel: twitter|facebook|google+|email"
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
@@ -577,7 +576,7 @@ de:
     max_flags_per_day: "Maximale Zahl der Meldungen pro Nutzer pro Tag."
     max_bookmarks_per_day: "Maximale Zahl der Lesezeichen pro Nutzer pro Tag."
     max_edits_per_day: "Maximale Zahl der Bearbeitungen pro Nutzer pro Tag."
-    max_favorites_per_day: "Maximale Zahl der Favorisierungen pro Nutzer pro Tag."
+    max_stars_per_day: "Maximale Zahl der Favorisierungen pro Nutzer pro Tag."
     max_topics_per_day: "Maximale Zahl der Themen, die ein Nutzer pro Tag erstellen kann."
     max_private_messages_per_day: "Maximale Zahl privater Nachrichten, die ein Nutzer pro Tag verschicken kann."
 

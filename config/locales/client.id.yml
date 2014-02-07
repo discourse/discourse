@@ -164,7 +164,7 @@ id:
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed"
         pending: "Pending Invites"
-        topics_entered: "Topics Entered"
+        topics_entered: "Topics Viewed"
         posts_read_count: "Posts Read"
         rescind: "Remove Invitation"
         rescinded: "Invite removed"
@@ -325,13 +325,13 @@ id:
     go_back: 'go back'
     current_user: 'go to your user page'
 
-    favorite:
+    starred:
       title: 'Favorite'
-      help: 'add this topic to your favorites list'
+      help: 'add this topic to your starred topics list'
 
     topics:
       none:
-        favorited: "You haven't favorited any topics yet. To favorite a topic, click or tap the star next to the title."
+        starred: "You haven't starred any topics yet. To star a topic, click or tap the star next to the title."
         unread: "You have no unread topics to read."
         new: "You have no new topics to read."
         read: "You haven't read any topics yet."
@@ -344,7 +344,7 @@ id:
         read: "There are no more read topics to read."
         new: "There are no more new topics to read."
         unread: "There are no more unread topics to read."
-        favorited: "There are no more favorited topics to read."
+        starred: "There are no more favorited topics to read."
         category: "There are no more {{category}} topics."
 
     topic:
@@ -562,7 +562,7 @@ id:
       change_in_category_topic: "Edit Description"
 
     flagging:
-      title: 'Why are you flagging this post?'
+      title: 'Why are you privately flagging this post?'
       action: 'Flag Post'
       cant: "Sorry, you can't flag this post at this time."
       custom_placeholder: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
@@ -603,7 +603,7 @@ id:
       latest:
         title: "Latest"
         help: "the latest topics"
-      favorited:
+      starred:
         title: "Favorited"
         help: "topics you marked as favorites"
       read:
@@ -749,7 +749,7 @@ id:
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
-        topics_entered: Topics Entered
+        topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
         approve: 'Approve'

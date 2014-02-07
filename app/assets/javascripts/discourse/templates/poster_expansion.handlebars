@@ -1,14 +1,14 @@
 {{#if model}}
-  {{#linkTo 'user' user}}{{boundAvatar model imageSize="huge"}}{{/linkTo}}
+  {{#link-to 'user' user}}{{boundAvatar model imageSize="huge"}}{{/link-to}}
 
-  <h1 {{bindAttr class="staff new_user"}}><a {{bindAttr href="usernameUrl"}}>{{username}}</a></h1>
+  <h1 {{bind-attr class="staff new_user"}}><a {{bind-attr href="usernameUrl"}}>{{username}}</a></h1>
   {{#if showName}}
-    <h2><a {{bindAttr href="usernameUrl"}}>{{name}}</a></h2>
+    <h2><a {{bind-attr href="usernameUrl"}}>{{name}}</a></h2>
   {{/if}}
 
   {{#if user}}
-    <h3>{{i18n last_post}} {{date path="user.last_posted_at" leaveAgo="true"}}</h3>
-    <h3>{{i18n joined}} {{date path="user.created_at" leaveAgo="true"}}</h3>
+    <h3>{{i18n last_post}} {{unboundDate path="user.last_posted_at" leaveAgo="true"}}</h3>
+    <h3>{{i18n joined}} {{unboundDate path="user.created_at" leaveAgo="true"}}</h3>
 
     <div class='bottom'>
       {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}

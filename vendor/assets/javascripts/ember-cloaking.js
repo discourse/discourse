@@ -3,8 +3,8 @@
   /**
     Display a list of cloaked items
 
-    @class CloakedContainerView
-    @extends Ember.View
+    @class CloakedCollectionView
+    @extends Ember.CollectionView
     @namespace Ember
   **/
   Ember.CloakedCollectionView = Ember.CollectionView.extend({
@@ -136,9 +136,7 @@
         this.setProperties({topVisible: null, bottomVisible: null});
       }
 
-      var toCloak = childViews.slice(0, topView).concat(childViews.slice(bottomView+1)),
-          loadingView = childViews[bottomView + 1];
-
+      var toCloak = childViews.slice(0, topView).concat(childViews.slice(bottomView+1));
       Em.run.schedule('afterRender', function() {
         toUncloak.forEach(function (v) { v.uncloak(); });
         toCloak.forEach(function (v) { v.cloak(); });
@@ -148,7 +146,7 @@
         var checkView = childViews[j];
         if (!checkView.get('containedView')) {
           if (!checkView.get('loading')) {
-            checkView.$().html("<div class='spinner'>" + I18n.t('loading') + "</div>");
+            checkView.$().html(this.get('loadingHTML') || "Loading...");
           }
           return;
         }
@@ -171,10 +169,9 @@
     },
 
     willDestroyElement: function() {
-      $(document).bind('touchmove.ember-cloak');
-      $(window).bind('scroll.ember-cloak');
+      $(document).unbind('touchmove.ember-cloak');
+      $(window).unbind('scroll.ember-cloak');
     }
-
   });
 
 

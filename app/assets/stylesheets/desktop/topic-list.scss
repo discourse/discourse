@@ -13,6 +13,7 @@
     float: left;
     margin-bottom: 15px;
   }
+
   .btn {
     float: right;
     margin-left: 8px;
@@ -21,33 +22,30 @@
     font-weight: normal;
   }
 
-  a.badge-category {padding: 3px 12px;  font-size: 16px;
+  a.badge-category {
+    padding: 3px 12px;
+    font-size: 16px;
 
     &.category-dropdown-button {
-    padding: 3px 9px 2px 9px;
-
-    i {height: 20px;}
-
+      padding: 3px 9px;
+      i { height: 20px; }
     }
 
   }
 
   .badge-category {
-
     font-weight: normal;
     text-transform: capitalize;
-
-
   }
 
 }
 
-#category-filter {
+#navigation-bar {
   .has-icon span:before {
     margin-right: 4px;
     font: 15px/0.9 "FontAwesome";
   }
-  .has-icon .favorited:before {
+  .has-icon .starred:before {
     content: "\f005";
   }
   .has-icon .unread:before {
@@ -63,6 +61,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+  margin: 0 0 10px;
   a.title:visited:not(.badge-notification) {color: #888;}
 
   > tbody > tr {
@@ -136,18 +135,7 @@
     font-size: 14px;
     margin-top: 8px;
     color: $dark_gray;
-  }
-
-  .rank-details {
-    background-color: #eee;
-    padding: 6px;
-    margin-bottom: 5px;
-
-    p {
-      font-size: 12px;
-      margin: 0;
-      line-height: 14px;
-    }
+    word-break: break-word;
   }
 
   @include medium-width {
@@ -219,13 +207,18 @@
     width: 65px;
   }
   .activity {
-    width: 50px;
+    width: 60px;
   }
   .age {
     width: 60px;
   }
+  .with-year {
+    font-size: 85%;
+    white-space: nowrap;
+  }
 }
 
+#list-area .top-lists h2 { margin: 5px 0 10px; }
 
 #topic-list tbody tr.has-excerpt .star {
   vertical-align: top;

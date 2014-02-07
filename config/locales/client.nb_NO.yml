@@ -445,7 +445,7 @@ nb_NO:
     go_back: 'gå tilbake'
     current_user: 'go til din brukerside'
 
-    favorite:
+    starred:
       title: 'Favoritt'
       help:
         star: 'legg dette emnet til favorittlisten din'
@@ -453,7 +453,7 @@ nb_NO:
 
     topics:
       none:
-        favorited: "Du har ikke meket noen emner som favoritt enda. For å merke ett emne, klikk på stjernen ved siden av tittelen."
+        starred: "Du har ikke meket noen emner som favoritt enda. For å merke ett emne, klikk på stjernen ved siden av tittelen."
         unread: "Du har ingen uleste emner å lese."
         new: "Du har ingen nye emner å lese."
         read: "Du har ikke lest noen emner enda."
@@ -468,13 +468,8 @@ nb_NO:
         read: "Det er ikke noen leste emner igjen å lese."
         new: "Det er ikke noen nye emner igjen å lese."
         unread: "Det er ikke noen uleste emner igjen å lese."
-        favorited: "Det er ikke noen favorittemner igjen å lese."
+        starred: "Det er ikke noen favorittemner igjen å lese."
         category: "Det er ikke noen {{category}} emner igjen."
-
-    rank_details:
-      toggle: toggle topic rank details
-      show: show topic rank details
-      title: Topic Rank Details
 
     topic:
       create: 'Lag Emne'
@@ -864,7 +859,7 @@ nb_NO:
       hot:
         title: "Hot"
         help: "en seleksjon av de hotteste emnene"
-      favorited:
+      starred:
         title: "Favorisert"
         help: "emner du har markert som favoritter"
       read:

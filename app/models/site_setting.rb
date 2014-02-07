@@ -85,7 +85,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.scheme
-    use_ssl? ? "https" : "http"
+    use_https? ? "https" : "http"
   end
 
 end

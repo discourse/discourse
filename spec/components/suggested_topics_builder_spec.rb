@@ -37,6 +37,11 @@ describe SuggestedTopicsBuilder do
 
       builder.results.map(&:id).should == [2,3]
     end
+
+    it "inserts multiple results and puts topics in the correct order" do
+      builder.splice_results([fake_topic(2,1), fake_topic(3,2), fake_topic(4,1)], :high)
+      builder.results.map(&:id).should == [2,4,3]
+    end
   end
 
   it "has the correct defaults" do

@@ -15,7 +15,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :dynamic_favicon,
              :trust_level,
              :can_edit,
-             :can_invite_to_forum
+             :can_invite_to_forum,
+             :no_password
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -43,6 +44,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_invite_to_forum?
     scope.can_invite_to_forum?
+  end
+
+  def no_password
+    true
+  end
+
+  def include_no_password?
+    !object.has_password?
   end
 
 end

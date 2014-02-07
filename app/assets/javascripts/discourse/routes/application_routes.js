@@ -7,75 +7,83 @@
 Discourse.Route.buildRoutes(function() {
   var router = this;
 
+  // Generate static page routes
+  _.each(Discourse.StaticController.PAGES, function (page) {
+    router.route(page, { path: '/' + page });
+  });
+
   // Topic routes
   this.resource('topic', { path: '/t/:slug/:id' }, function() {
     this.route('fromParams', { path: '/' });
     this.route('fromParamsNear', { path: '/:nearPost' });
   });
 
-  // Generate static page routes
-  Discourse.StaticController.pages.forEach(function(p) {
-    router.route(p, { path: "/" + p });
-  });
-
-  // List routes
-  this.resource('list', { path: '/' }, function() {
+  this.resource('discovery', { path: '/' }, function() {
     router = this;
 
-    // Generate routes for all our filters
-    Discourse.ListController.filters.forEach(function(filter) {
-      router.route(filter, { path: "/" + filter });
-      router.route(filter, { path: "/" + filter + "/more" });
-      router.route(filter + "Category", { path: "/category/:slug/l/" + filter });
-      router.route(filter + "Category", { path: "/category/:slug/l/" + filter + "/more" });
-      router.route(filter + "Category", { path: "/category/:parentSlug/:slug/l/" + filter });
-      router.route(filter + "Category", { path: "/category/:parentSlug/:slug/l/" + filter + "/more" });
+    // top
+    this.route('top');
+    this.route('topCategory', { path: '/category/:slug/l/top' });
+    this.route('topCategoryNone', { path: '/category/:slug/none/l/top' });
+    this.route('topCategory', { path: '/category/:parentSlug/:slug/l/top' });
+
+    // top by periods
+    Discourse.Site.currentProp('periods').forEach(function(period) {
+      var top = 'top' + period.capitalize();
+      router.route(top, { path: '/top/' + period });
+      router.route(top, { path: '/top/' + period + '/more' });
+      router.route(top + 'Category', { path: '/category/:slug/l/top/' + period });
+      router.route(top + 'Category', { path: '/category/:slug/l/top/' + period + '/more' });
+      router.route(top + 'CategoryNone', { path: '/category/:slug/none/l/top/' + period });
+      router.route(top + 'CategoryNone', { path: '/category/:slug/none/l/top/' + period + '/more' });
+      router.route(top + 'Category', { path: '/category/:parentSlug/:slug/l/top/' + period });
+      router.route(top + 'Category', { path: '/category/:parentSlug/:slug/l/top/' + period + '/more' });
     });
 
-    // homepage
-    var homepage = Discourse.User.current() ?
-                   Discourse.User.currentProp("homepage") :
-                   Discourse.Utilities.defaultHomepage();
-    this.route(homepage, { path: '/' });
+    // filters
+    Discourse.Site.currentProp('filters').forEach(function(filter) {
+      router.route(filter, { path: '/' + filter });
+      router.route(filter, { path: '/' + filter + '/more' });
+      router.route(filter + 'Category', { path: '/category/:slug/l/' + filter });
+      router.route(filter + 'Category', { path: '/category/:slug/l/' + filter + '/more' });
+      router.route(filter + 'CategoryNone', { path: '/category/:slug/none/l/' + filter });
+      router.route(filter + 'CategoryNone', { path: '/category/:slug/none/l/' + filter + '/more' });
+      router.route(filter + 'Category', { path: '/category/:parentSlug/:slug/l/' + filter });
+      router.route(filter + 'Category', { path: '/category/:parentSlug/:slug/l/' + filter + '/more' });
+    });
 
-    // categories page
-    this.route('categories', { path: '/categories' });
+    this.route('categories');
 
-    // category
+    // default filter for a category
     this.route('category', { path: '/category/:slug' });
-    this.route('category', { path: '/category/:slug/more' });
     this.route('categoryNone', { path: '/category/:slug/none' });
-    this.route('categoryNone', { path: '/category/:slug/none/more' });
     this.route('category', { path: '/category/:parentSlug/:slug' });
-    this.route('category', { path: '/category/:parentSlug/:slug/more' });
 
-    // top page
-    this.route('top', { path: '/top' });
+    // homepage
+    var homepage = Discourse.User.current() ? Discourse.User.currentProp('homepage') : Discourse.Utilities.defaultHomepage();
+    this.route(homepage, { path: '/' });
   });
 
   // User routes
   this.resource('user', { path: '/users/:username' }, function() {
-    this.route('index', { path: '/'} );
-
     this.resource('userActivity', { path: '/activity' }, function() {
-      var self = this;
-      Object.keys(Discourse.UserAction.TYPES).forEach(function (userAction) {
-        self.route(userAction, { path: userAction.replace("_", "-") });
+      router = this;
+      _.map(Discourse.UserAction.TYPES, function (id, userAction) {
+        router.route(userAction, { path: userAction.replace('_', '-') });
       });
     });
 
     this.resource('userPrivateMessages', { path: '/private-messages' }, function() {
-      this.route('mine', { path: '/mine' });
-      this.route('unread', { path: '/unread' });
+      this.route('mine');
+      this.route('unread');
     });
 
-    this.resource('preferences', { path: '/preferences' }, function() {
-      this.route('username', { path: '/username' });
-      this.route('email', { path: '/email' });
+    this.resource('preferences', function() {
+      this.route('username');
+      this.route('email');
       this.route('about', { path: '/about-me' });
-      this.route('avatar', { path: '/avatar' });
     });
 
-    this.route('invited', { path: 'invited' });
+    this.route('invited');
   });
 });

@@ -762,20 +762,39 @@ describe User do
     context "with a user that has a link in their bio" do
       let(:user) { Fabricate.build(:user, bio_raw: "im sissy and i love http://ponycorns.com") }
 
-      before do
-        # Let's cook that bio up good
+      it "includes the link as nofollow if the user is not new" do
         user.send(:cook)
-      end
-
-      it "includes the link if the user is not new" do
         expect(user.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com' rel='nofollow'>http://ponycorns.com</a>")
         expect(user.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\" rel=\"nofollow\">http://ponycorns.com</a></p>")
       end
 
       it "removes the link if the user is new" do
         user.trust_level = TrustLevel.levels[:newuser]
+        user.send(:cook)
         expect(user.bio_excerpt).to eq("im sissy and i love http://ponycorns.com")
         expect(user.bio_processed).to eq("<p>im sissy and i love http://ponycorns.com</p>")
+      end
+
+      it "includes the link without nofollow if the user is trust level 3 or higher" do
+        user.trust_level = TrustLevel.levels[:leader]
+        user.send(:cook)
+        expect(user.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com'>http://ponycorns.com</a>")
+        expect(user.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\">http://ponycorns.com</a></p>")
+      end
+
+      it "removes nofollow from links in bio when trust level is increased" do
+        user.save
+        user.change_trust_level!(:leader)
+        expect(user.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com'>http://ponycorns.com</a>")
+        expect(user.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\">http://ponycorns.com</a></p>")
+      end
+
+      it "adds nofollow to links in bio when trust level is decreased" do
+        user.trust_level = TrustLevel.levels[:leader]
+        user.save
+        user.change_trust_level!(:regular)
+        expect(user.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com' rel='nofollow'>http://ponycorns.com</a>")
+        expect(user.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\" rel=\"nofollow\">http://ponycorns.com</a></p>")
       end
     end
 

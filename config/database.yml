@@ -33,15 +33,8 @@ profile:
   host_names:
     - "localhost"
 
-production:
-  pool: <%= GlobalSetting.db_pool %>
-  timeout: <%= GlobalSetting.db_timeout %>
-  adapter: postgresql
-  socket: <%= GlobalSetting.db_socket %>
-  host: <%= GlobalSetting.db_host %>
-  port: <%= GlobalSetting.db_port %>
-  database: <%= GlobalSetting.db_name %>
-  username: <%= GlobalSetting.db_username %>
-  password: <%= GlobalSetting.db_password %>
-  host_names:
-    - <%= GlobalSetting.hostname %>
+# You may be surprised production is not here, it is sourced from application.rb using a monkey patch
+# This is done for 2 reasons
+#
+# 1. we need to support blank settings correctly and rendering nothing in yaml/erb is a PITA
+# 2. why go from object -> yaml -> object, pointless

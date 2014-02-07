@@ -9,6 +9,7 @@
 Discourse.ApplicationRoute = Em.Route.extend({
 
   actions: {
+
     showLogin: function() {
       Discourse.Route.showModal(this, 'login');
       this.controllerFor('login').resetForm();
@@ -81,7 +82,16 @@ Discourse.ApplicationRoute = Em.Route.extend({
       }
 
     }
+  },
 
+  activate: function() {
+    this._super();
+    Em.run.next(function() {
+      // Support for callbacks once the application has activated
+      Discourse.ApplicationRoute.trigger('activate');
+    });
   }
 
 });
+
+RSVP.EventTarget.mixin(Discourse.ApplicationRoute);

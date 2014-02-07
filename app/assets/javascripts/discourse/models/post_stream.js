@@ -251,7 +251,7 @@ Discourse.PostStream = Em.Object.extend({
       self.setProperties({ loadingFilter: false, loaded: true });
 
       Discourse.URL.set('queryParams', self.get('streamFilters'));
-    }).fail(function(result) {
+    }).catch(function(result) {
       self.errorLoading(result);
     });
   },
@@ -347,7 +347,7 @@ Discourse.PostStream = Em.Object.extend({
   /**
     Prepend the previous window of posts to the stream. Call it when scrolling upwards.
 
-    @method appendMore
+    @method prependMore
     @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
   **/
   prependMore: function() {

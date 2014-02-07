@@ -220,7 +220,7 @@ SQL
     builder.exec
   end
 
-  def self.synchronize_favorites
+  def self.synchronize_starred
     exec_sql("
     DELETE FROM user_actions ua
     WHERE action_type = :star
@@ -248,7 +248,7 @@ SQL
 
   def self.ensure_consistency!
     self.synchronize_target_topic_ids
-    self.synchronize_favorites
+    self.synchronize_starred
   end
 
   protected

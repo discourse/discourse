@@ -54,7 +54,7 @@
         </tr>
 
         {{#each model}}
-          <tr {{bindAttr class="selected"}}>
+          <tr {{bind-attr class="selected"}}>
             {{#if controller.showApproval}}
               <td>
                 {{#if can_approve}}

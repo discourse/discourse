@@ -368,7 +368,7 @@ ko:
       title: "북마크들"
       xaxis: "일"
       yaxis: "새로운 북마크 수"
-    favorites:
+    starred:
       title: "즐겨찾기"
       xaxis: "일"
       yaxis: "새로운 즐겨찾기 수"
@@ -520,7 +520,6 @@ ko:
 
     notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
     email_custom_headers: "커스텀 이메일 해더의 pipe-delimited"
-    use_ssl: "Should the site be accessible via SSL? (NOT IMPLEMENTED, EXPERIMENTAL)"
     best_of_score_threshold: "The minimum score of a post to be included in the 'best of'"
     best_of_posts_required: "Minimum posts in a topic before 'best of' mode is enabled"
     best_of_likes_required: "Minimum likes in a topic before the 'best of' mode will be enabled"
@@ -553,7 +552,7 @@ ko:
     ga_domain_name: "Google analytics domain name, eg: mysite.com; see http://google.com/analytics"
     enable_escaped_fragments: "당신의 사이트의 오래된 정보를 검색하기 위한 웹크롤러 Workaround 솔루션을 활성. 주의: 꼭 필요할 때만 활성화"
     enable_noscript_support: "당신의 사이트를 검색하기 위한 noscript 테그를 이용한 일반적인 웹 크롤러를 활성화"
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "게시물 메뉴에 어떤 사항들이 무슨 순서로 올라올지 결정합니다. 예: 좋아요|수정|신고|삭제|공유|북마크|답글"
     share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
@@ -616,7 +615,7 @@ ko:
     max_flags_per_day: "Maximum number of flags per user per day"
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
     max_edits_per_day: "Maximum number of edits per user per day"
-    max_favorites_per_day: "Maximum number of topics that can be favorited per user per day"
+    max_stars_per_day: "Maximum number of topics that can be starred per user per day"
     max_topics_per_day: "Maximum number of topics a user can create per day"
     max_private_messages_per_day: "The maximum amount of private messages users can create per day"
 

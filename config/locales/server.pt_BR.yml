@@ -360,7 +360,7 @@ pt_BR:
       title: "Marcadores Adicionados"
       xaxis: "Dia"
       yaxis: "Número de novos marcadores adicionados"
-    favorites:
+    starred:
       title: "Favoritos"
       xaxis: "Dia"
       yaxis: "Número de novos favoritos"
@@ -512,7 +512,6 @@ pt_BR:
 
     notification_email: "O endereço de email a ser usado para notificar os utilizadores de password esquecida, novas contas, etc."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
-    use_ssl: "O site deve ser acessível via SSL?"
     summary_score_threshold: "A pontuação mínima de uma postagem para ser incluído no 'melhor de'"
     summary_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
     summary_likes_required: "Um tópico precisa deste número de curtidas antes de ser ativado o modo 'melhor de'."
@@ -545,7 +544,7 @@ pt_BR:
     ga_domain_name: "Nome de domínio no Google Analytics, exemplo: meusite.com; see http://google.com/analytics"
     enable_escaped_fragments: "Ativa solução alternativa que ajuda os mecanismos de busca antigos a indexarem o seu site. ALERTA: apenas ative se você realmente precisa disto."
     enable_noscript_support: "Ativar suporte a tag &lt;noscript&gt;"
-    top_menu: "A ordem dos items no menu de cima. Exemplo latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "A ordem dos items no menu de cima. Exemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "A ordem dos items no menu da postagem."
     share_links: "Determine quais ítens aparecerem no diálogo de compartilhar, e em que ordem. Por exemplo: twitter|facebook|google+|email"
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
@@ -608,7 +607,7 @@ pt_BR:
     max_flags_per_day: "Quantidade máxima de sinalizações que um usuário pode fazer por dia"
     max_bookmarks_per_day: "Quantidade máxima de marcadores que um usuário pode adicionar por dia"
     max_edits_per_day: "Quantidade máxima de edições que um usuário pode fazer por dia"
-    max_favorites_per_day: "Quantidade máxima de tópicos que um usuário pode favoritar por dia"
+    max_stars_per_day: "Quantidade máxima de tópicos que um usuário pode favoritar por dia"
     max_topics_per_day: "Quantidade máxima de tópicos que você pode criar por dia"
     max_private_messages_per_day: "Quantidade máxima de mensagens particulares que você pode enviar por dia"
 

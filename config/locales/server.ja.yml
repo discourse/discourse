@@ -354,7 +354,7 @@ ja:
       title: "ブックマーク"
       xaxis: "日"
       yaxis: "新規ブックマーク数"
-    favorites:
+    starred:
       title: "お気に入り"
       xaxis: "日"
       yaxis: "新規お気に入りの数"
@@ -506,7 +506,6 @@ ja:
 
     notification_email: "パスワードリセットや新規アカウント作成等をユーザに通知するシステムメールを送信するメールアドレス"
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
-    use_ssl: "SSL でのアクセスを有効にするか? (未実装、試験的)"
     best_of_score_threshold: "'best of' にポストが含まれるための最終スコア"
     best_of_posts_required: "'best of' モードが有効になる、トピック内の最小ポスト数"
     best_of_likes_required: "'best of' モードが有効になる、トピック内の最小「いいね!」数"
@@ -534,7 +533,7 @@ ja:
     ga_domain_name: "Google analytics のドメイン名。例: mysite.com; 参考 http://google.com/analytics"
     enable_escaped_fragments: "古いサーチエンジンクローラがあなたのサイトのインデックスを構築するのをサポートするワークアラウンドを有効にする。注意: 必要な場合のみ有効にすることを推奨。"
     enable_noscript_support: "noscript タグ経由でアクセスしてきた標準サーチエンジンクローラのサポートを有効にする"
-    top_menu: "ホームページナビゲーションに表示する項目を指定。例 latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "ホームページナビゲーションに表示する項目を指定。例 latest|new|unread|starred|categories|top|read|posted"
     post_menu: "ポストメニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
     share_links: "シェアダイアログに表示する項目を指定。例 twitter|facebook|google+|email"
     track_external_right_clicks: "右クリックされた外部リンクをトラックする (例: 新しいタブで開く)。URL のリライトを要するためデフォルトでは無効化されています"
@@ -601,7 +600,7 @@ ja:
     max_flags_per_day: "一日のうちにユーザがフラグを立てられる最大数"
     max_bookmarks_per_day: "一日のうちにユーザがブックマークできる最大数"
     max_edits_per_day: "一日のうちにユーザが編集できる最大数"
-    max_favorites_per_day: "一日のうちにユーザがお気に入り登録できる最大トピック数"
+    max_stars_per_day: "一日のうちにユーザがお気に入り登録できる最大トピック数"
     max_topics_per_day: "一日のうちにユーザが作成できるトピックの最大数"
     max_private_messages_per_day: "一日のうちにユーザが送信可能なプライベートメッセージの最大数"
 

@@ -13,13 +13,13 @@
       {{#if canSeePrivateMessages}}
         <h3><i class='fa fa-envelope'></i> {{i18n user.private_messages}}</h3>
         <ul class='action-list nav-stacked'>
-          <li {{bindAttr class=":noGlyph privateMessagesActive:active"}}>
+          <li {{bind-attr class=":noGlyph privateMessagesActive:active"}}>
             {{#link-to 'userPrivateMessages.index' model}}{{i18n user.messages.all}}<span class='fa fa-chevron-right'></span>{{/link-to}}
           </li>
-          <li {{bindAttr class=":noGlyph privateMessagesMineActive:active"}}>
+          <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
             {{#link-to 'userPrivateMessages.mine' model}}{{i18n user.messages.mine}}<span class='fa fa-chevron-right'></span>{{/link-to}}
           </li>
-          <li {{bindAttr class=":noGlyph privateMessagesUnreadActive:active"}}>
+          <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
             {{#link-to 'userPrivateMessages.unread' model}}{{i18n user.messages.unread}}<span class='fa fa-chevron-right'></span>{{/link-to}}
           </li>
         </ul>
@@ -33,7 +33,7 @@
     </section>
 
     <section class='user-main'>
-      <section {{bindAttr class="collapsedInfo :about"}}>
+      <section {{bind-attr class="collapsedInfo :about"}}>
 
         <div class='details'>
           <div class='primary'>
@@ -55,7 +55,7 @@
           <div class='secondary'>
             <dl>
               {{#if websiteName}}
-                <dt>{{i18n user.website}}</dt><dd><a {{bindAttr href="website"}} target="_blank">{{websiteName}}</a></dd>
+                <dt>{{i18n user.website}}</dt><dd><a {{bind-attr href="website"}} target="_blank">{{websiteName}}</a></dd>
               {{/if}}
               {{#if created_at}}
                 <dt>{{i18n user.created}}</dt><dd>{{date created_at}}</dd>
@@ -70,7 +70,7 @@
                 <dt>{{i18n user.invited_by}}</dt><dd>{{#link-to 'userActivity' invited_by}}{{invited_by.username}}{{/link-to}}</dd>
               {{/if}}
               {{#if email}}
-                <dt>{{i18n user.email.title}}</dt><dd {{bindAttr title="email"}}>{{email}}</dd>
+                <dt>{{i18n user.email.title}}</dt><dd {{bind-attr title="email"}}>{{email}}</dd>
               {{/if}}
               <dt>{{i18n user.trust_level}}</dt><dd>{{trustLevel.name}}</dd>
             </dl>
@@ -92,7 +92,7 @@
           {{/if}}
 
           {{#if currentUser.staff}}
-            <a {{bindAttr href="adminPath"}} class='btn right'><i class="fa fa-wrench"></i>{{i18n admin.user.show_admin_profile}}</a>
+            <a {{bind-attr href="adminPath"}} class='btn right'><i class="fa fa-wrench"></i>{{i18n admin.user.show_admin_profile}}</a>
           {{/if}}
 
           {{#if can_edit}}

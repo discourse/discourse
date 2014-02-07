@@ -586,7 +586,7 @@ da:
     go_back: 'gå tilbage'
     current_user: 'gå til brugerside'
 
-    favorite:
+    starred:
       title: 'Favorit'
       help:
         star: 'tilføj dette emne til din favorit-liste'
@@ -594,7 +594,7 @@ da:
 
     topics:
       none:
-        favorited: "Du har ikke nogen favorit-emner endnu. For at gøre et emne til favorit, tryk på stjernen ved siden af emnets titel."
+        starred: "Du har ikke nogen favorit-emner endnu. For at gøre et emne til favorit, tryk på stjernen ved siden af emnets titel."
         unread: "Du har ingen ulæste emner."
         new: "Du har ingen nye emner."
         read: "Du har ikke læst nogen emner endnu."
@@ -609,13 +609,8 @@ da:
         read: "Der er ikke flere læste emner."
         new: "Der er ikke flere nye emner."
         unread: "Der er ikke flere ulæste emner."
-        favorited: "Der er ikke flere favorit-emner."
+        starred: "Der er ikke flere favorit-emner."
         category: "Der er ikke flere emner i kategorien {{category}}."
-
-    rank_details:
-      toggle: vis/skjul detaljer om emnerang
-      show: vis detaljer om emnerang
-      title: Emnerang
 
     topic:
       filter_to: "Vis {{post_count}} indlæg i emnet"
@@ -1082,7 +1077,7 @@ da:
       hot:
         title: "Populære"
         help: "de mest populære emner"
-      favorited:
+      starred:
         title: "Favoritter"
         help: "emner du har markeret som favoritter"
       read:
@@ -1496,7 +1491,7 @@ da:
         latest: '<b>g</b> så <b>l</b> Seneste'
         new: '<b>g</b> så <b>n</b> Ny'
         unread: '<b>g</b> så <b>u</b> Ulæste'
-        favorited: '<b>g</b> så <b>f</b> Favoritter'
+        starred: '<b>g</b> så <b>f</b> Favoritter'
         categories: '<b>g</b> så <b>c</b> Kategorier'
       navigation:
         title: 'Navigation'
@@ -1512,7 +1507,7 @@ da:
         help: '<b>?</b> Åbn hjælp til tastaturgenveje'
       actions:
         title: 'Handlinger'
-        favorite: '<b>f</b> Markér emne som favorit'
+        star: '<b>f</b> Markér emne som favorit'
         share_topic: '<b>s</b> Del emne'
         share_post: '<b>shift s</b> Del indlæg'
         reply_topic: '<b>r</b> Svar på emne'

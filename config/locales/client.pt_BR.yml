@@ -49,6 +49,7 @@ pt_BR:
         almost_x_years:
           one: "1y"
           other: "%{count}y"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 minuto"
@@ -551,7 +552,7 @@ pt_BR:
     go_back: 'voltar atrás'
     current_user: 'ir para a sua página de usuário'
 
-    favorite:
+    starred:
       title: 'Favorito'
       help:
         star: 'adicionar este tópico a lista de favoritos'
@@ -559,7 +560,7 @@ pt_BR:
 
     topics:
       none:
-        favorited: "Você não favoritou nenhum tópico até agora. Para favoritar um tópico, clique ou toque na estrela ao lado do título."
+        starred: "Você não favoritou nenhum tópico até agora. Para favoritar um tópico, clique ou toque na estrela ao lado do título."
         unread: "Há tópicos não lidos."
         new: "Não há novos tópicos."
         read: "Você ainda não leu nenhum tópico."
@@ -574,13 +575,8 @@ pt_BR:
         read: "Não há mais tópicos lidos."
         new: "Não há mais tópicos novos."
         unread: "Não há mais tópicos não lidos."
-        favorited: "Não há mais tópicos favoritos."
+        starred: "Não há mais tópicos favoritos."
         category: "Não há mais tópicos na categoria {{category}}."
-
-    rank_details:
-      toggle: alternar detalhes do rank de tópicos
-      show: exibir rank de tópicos
-      title: Detalhes do Ranking de Tópicos
 
     topic:
       filter_to: "Mostrar apenas os {{post_count}} de {{username}} neste tópico"
@@ -1014,7 +1010,7 @@ pt_BR:
       hot:
         title: "Quente"
         help: "uma seleção dos tópicos mais quentes"
-      favorited:
+      starred:
         title: "Favoritos"
         help: "tópicos que marcaste como favorito"
       read:

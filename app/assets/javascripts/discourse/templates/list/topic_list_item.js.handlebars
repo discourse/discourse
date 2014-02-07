@@ -1,21 +1,10 @@
 {{#if controller.currentUser.id}}
   <td class='star'>
-    <a {{bindAttr class=":star :fa :fa-star starred:starred"}} {{action toggleStar this}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
+    <a {{bind-attr class=":star :fa :fa-star starred:starred"}} {{action toggleStar this}} href='#' {{bind-attr title="starTooltip"}}></a>
   </td>
 {{/if}}
 
 <td class='main-link clearfix'>
-
-  {{#if controller.rankDetailsVisible}}
-    <div class='rank-details'>
-      <p>{{rank_details.hot_topic_type}}</p>
-      <p>
-        ({{float rank_details.random_bias}} * {{float rank_details.random_multiplier}}) + ({{float rank_details.days_ago_bias}} * {{float rank_details.days_ago_multiplier}}) = <b>{{float rank_details.ranking_score}}</b>
-        <i class='fa fa-flask score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>
-      </p>
-    </div>
-  {{/if}}
-
   {{topicStatus topic=this}}
   {{{topicLink this}}}
   {{#if unread}}
@@ -30,7 +19,7 @@
 
   {{#if hasExcerpt}}
     <div class="topic-excerpt">
-      {{excerpt}}
+      {{{excerpt}}}
       {{#if excerptTruncated}}
         {{#unless canClearPin}}<a href="{{lastUnreadUrl}}">{{i18n read_more}}</a>{{/unless}}
       {{/if}}
@@ -41,7 +30,7 @@
   {{/if}}
 </td>
 
-{{#unless controller.category}}
+{{#unless controller.hideCategory}}
 <td class='category'>
   {{categoryLink category}}
 </td>
@@ -61,18 +50,18 @@
   {{/if}}
 </td>
 
-<td {{bindAttr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
+<td {{bind-attr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
 
 {{#if bumped}}
   <td class='num activity'>
-    <a href="{{url}}" {{{bindAttr class=":age ageCold"}}} title='{{i18n first_post}}: {{{unboundDate created_at}}}' >{{unboundAge created_at}}</a>
+    <a href="{{url}}" {{{bind-attr class=":age ageCold"}}} title='{{i18n first_post}}: {{{rawDate created_at}}}' >{{unboundAge created_at}}</a>
   </td>
   <td class='num activity last'>
-    <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
+    <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
   </td>
 {{else}}
   <td class='num activity'>
-    <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{unboundAge created_at}}</a>
+    <a href="{{url}}" {{{bind-attr class=":age ageCold"}}} title='{{i18n first_post}}: {{{rawDate created_at}}}'>{{unboundAge created_at}}</a>
   </td>
   <td class='activity'></td>
 {{/if}}

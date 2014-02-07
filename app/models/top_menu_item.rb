@@ -53,7 +53,7 @@ class TopMenuItem
 
   def matches_action?(action_name)
     return true if action_name == "index" && name == SiteSetting.homepage
-    return true if name == action_name
+    return true if action_name.start_with?(name)
     false
   end
 

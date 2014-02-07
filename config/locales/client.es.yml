@@ -51,6 +51,7 @@ es:
         almost_x_years:
           one:   "1a"
           other: "%{count}a"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 minuto"
@@ -489,13 +490,13 @@ es:
     go_back: 'volver'
     current_user: 'ir a tu página de usuario'
 
-    favorite:
+    starred:
       title: 'Favoritos'
       help: 'agregar este tema a tu lista de favoritos'
 
     topics:
       none:
-        favorited: "Todavía no has marcado ningún tema como favorito. Para marcar uno, haz click o toca con el dedo la estrella que está junto al título del tema."
+        starred: "Todavía no has marcado ningún tema como favorito. Para marcar uno, haz click o toca con el dedo la estrella que está junto al título del tema."
         unread: "No existen temas que sigas y que ya no hayas leído."
         new: "No tienes temas nuevos por leer."
         read: "Todavía no has leído ningún tema."
@@ -508,7 +509,7 @@ es:
         read: "No hay más temas leídos."
         new: "No hay temas nuevos para leer."
         unread: "No hay más temas que no hayas leídos."
-        favorited: "No hay más temas favoritos para leer."
+        starred: "No hay más temas favoritos para leer."
         category: "No hay más temas en la categoría {{category}}."
 
 
@@ -783,7 +784,7 @@ es:
       latest:
         title: "Populares"
         help: "los temas más recientes más populares"
-      favorited:
+      starred:
         title: "Favoritos"
         help: "temas que has marcado como favoritos"
       read:

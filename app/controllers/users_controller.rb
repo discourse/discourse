@@ -173,7 +173,10 @@ class UsersController < ApplicationController
       raise Discourse::InvalidParameters.new(:password) unless params[:password].present?
       @user.password = params[:password]
       @user.password_required!
-      logon_after_password_reset if @user.save
+      if @user.save
+        Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
+        logon_after_password_reset
+      end
     end
     render layout: 'no_js'
   end
@@ -264,7 +267,13 @@ class UsersController < ApplicationController
     user_fields = [:username, :use_uploaded_avatar, :upload_avatar_template, :uploaded_avatar_id]
     user_fields << :name if SiteSetting.enable_names?
 
-    render json: { users: results.as_json(only: user_fields, methods: :avatar_template) }
+    to_render = { users: results.as_json(only: user_fields, methods: :avatar_template) }
+
+    if params[:include_groups] == "true"
+      to_render[:groups] = Group.search_group(term, current_user).map {|m| {:name=>m.name, :usernames=> m.usernames.split(",")} }
+    end
+
+    render json: to_render
   end
 
   # [LEGACY] avatars in quotes/oneboxes might still be pointing to this route

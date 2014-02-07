@@ -63,13 +63,18 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     // Use replaceState to update the URL once it changes
     postChangedRoute: Discourse.debounce(function(currentPost) {
+      // do nothing if we are transitioning to another route
+      if (this.get("isTransitioning")) { return; }
+
       var topic = this.modelFor('topic');
       if (topic && currentPost) {
         var postUrl = topic.get('url');
         if (currentPost > 1) { postUrl += "/" + currentPost; }
         Discourse.URL.replaceState(postUrl);
       }
-    }, 1000)
+    }, 150),
+
+    willTransition: function() { this.set("isTransitioning", true); }
 
   },
 
@@ -83,6 +88,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
   activate: function() {
     this._super();
+    this.set("isTransitioning", false);
 
     var topic = this.modelFor('topic');
     Discourse.Session.currentProp('lastTopicIdViewed', parseInt(topic.get('id'), 10));

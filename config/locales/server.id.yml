@@ -321,7 +321,6 @@ id:
     logo_small_url: "The small logo for your site used when scrolling down on topics eg: http://example.com/logo-small.png"
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
     notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
-    use_ssl: "Should the site be accessible via SSL? (NOT IMPLEMENTED, EXPERIMENTAL)"
     summary_score_threshold: "The minimum score of a post to be included in the 'summary'"
     summary_posts_required: "Minimum posts in a topic before 'summary' mode is enabled"
     summary_likes_required: "Minimum likes in a topic before the 'summary' mode will be enabled"
@@ -343,7 +342,7 @@ id:
     post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
     must_approve_users: "Admins must approve all users before they gain access"
     ga_tracking_code: "Google analytics tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics are loaded by default on the topics list page"
@@ -393,7 +392,7 @@ id:
     max_flags_per_day: "Maximum number of flags per user per day"
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
     max_edits_per_day: "Maximum number of edits per user per day"
-    max_favorites_per_day: "Maximum number of topics that can be favorited per user per day"
+    max_stars_per_day: "Maximum number of topics that can be starred per user per day"
     max_topics_per_day: "Maximum number of topics a user can create per day"
     max_private_messages_per_day: "The maximum amount of private messages users can create per day"
 
@@ -457,7 +456,7 @@ id:
     mentions: "Mentions"
     quotes: "Quotes"
     edits: "Edits"
-    favorites: "Favorites"
+    starred: "Favorites"
     sent_items: "Sent Items"
     inbox: "Inbox"
 
@@ -468,7 +467,7 @@ id:
     responded_to: "replied to"
     mentioned: "mentioned"
     quoted: "quoted"
-    favorited: "favorited"
+    starred: "favorited"
     edited: "edited"
 
   move_posts:

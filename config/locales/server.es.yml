@@ -311,7 +311,6 @@ es:
     logo_small_url: "El pequeño logo para tu sitio utilizado cuando se hace scroll en un topic ej: http://example.com/logo-small.png"
     favicon_url: "Un favicon para tu sitio, ve http://en.wikipedia.org/wiki/Favicon"
     notification_email: "La dirección de emaul de respuesta utilizada cuando se envían emails del sistema tales como notificar a los usuarios de recuperación de contraseña, nuevas cuentas etc"
-    use_ssl: "¿Debería ser el sitio accesible por SSL? (NO IMPLEMENTADO, EXPERIMENTAL)"
     summary_score_threshold: "La mínima puntuación de un post para ser incluido en los 'summary'"
     summary_posts_required: "Mínimo número de posts en un topic antes de que el modo 'summary' sea activado "
     summary_likes_required: "Mínimo número de me gustas en un topic antes de que el modo 'summary' sea activado"
@@ -332,7 +331,7 @@ es:
     post_undo_action_window_mins: "Número de segundos en los que a los usuarios se les permite revertir la acción en un post (like, flag, etc)"
     must_approve_users: "Los administradores deben aprovar a todos los usuarios antes de tener acceso"
     ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
-    top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determinar que items aparecen en el menú de post y en qué orden. Ejemplo like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "Cuantos topics son cargados por defecto en la página de lista de topics"
@@ -382,7 +381,7 @@ es:
     max_flags_per_day: "Máximo número de flags por usuario por día"
     max_bookmarks_per_day: "Máximo número de bookmarks por usuario por día"
     max_edits_per_day: "Máximo número de ediciones por usuario por día"
-    max_favorites_per_day: "Máximos número de topics que pueden marcarse como favoritos por usuario por día"
+    max_stars_per_day: "Máximos número de topics que pueden marcarse como favoritos por usuario por día"
     max_topics_per_day: "Máximo número de topics que un usuario puede crear por día"
     max_private_messages_per_day: "Máximo número de mensajes privados que los usuarios pueden crear por día"
 
@@ -439,7 +438,7 @@ es:
     mentions: "Menciones"
     quotes: "Citas"
     edits: "Ediciones"
-    favorites: "Favoritos"
+    starred: "Favoritos"
     sent_items: "Items enviados"
     inbox: "Inbox"
 
@@ -450,7 +449,7 @@ es:
     responded_to: "respondido a"
     mentioned: "mecionado"
     quoted: "citado"
-    favorited: "favorited"
+    starred: "favorited"
     edited: "editado"
 
   move_posts:

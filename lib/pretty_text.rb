@@ -167,7 +167,7 @@ module PrettyText
     # we have a minor inconsistency
     cloned[:topicId] = opts[:topic_id]
     sanitized = markdown(text.dup, cloned)
-    sanitized = add_rel_nofollow_to_user_content(sanitized) if SiteSetting.add_rel_nofollow_to_user_content
+    sanitized = add_rel_nofollow_to_user_content(sanitized) if !cloned[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
     sanitized
   end
 

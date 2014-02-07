@@ -73,6 +73,17 @@ stripped from my reply?")
     end
   end
 
+  describe "It supports a non UTF-8 reply" do
+    let(:big5) { File.read("#{Rails.root}/spec/fixtures/emails/big5.eml") }
+    let(:receiver) { Email::Receiver.new(big5) }
+
+    it "processes correctly" do
+      I18n.expects(:t).with('user_notifications.previous_discussion').returns('媽！我上電視了！')
+      receiver.process
+      expect(receiver.body).to eq("媽！我上電視了！")
+    end
+  end
+
   describe "via" do
     let(:wrote) { File.read("#{Rails.root}/spec/fixtures/emails/via_line.eml") }
     let(:receiver) { Email::Receiver.new(wrote) }

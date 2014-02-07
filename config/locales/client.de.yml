@@ -49,6 +49,7 @@ de:
         almost_x_years:
           one:   "1J"
           other: "%{count}J"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 Minute"
@@ -541,7 +542,7 @@ de:
     go_back: 'Zurück'
     current_user: 'Gehe zu deinem Nutzerprofil'
 
-    favorite:
+    starred:
       title: 'Favoriten'
       help:
         star: 'Füge dieses Thema deinen Favoriten hinzu'
@@ -566,11 +567,6 @@ de:
         unread: "Das waren alle ungelesen Themen."
         favorited: "Das waren alle favorisierten Themen."
         category: "Das waren alle Themen der Kategorie {{category}}."
-
-    rank_details:
-      toggle: Themadetails
-      show: zeige Themadetails
-      title: Themadetails
 
     topic:
       create: 'Neues Thema'

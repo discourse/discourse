@@ -6,16 +6,16 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.StaticController.pages.forEach(function(page) {
+_.each(Discourse.StaticController.PAGES, function(page) {
 
-  Discourse[(page.capitalize()) + "Route"] = Discourse.Route.extend({
+  Discourse[page.capitalize() + "Route"] = Discourse.Route.extend({
 
     renderTemplate: function() {
       this.render('static');
     },
 
     setupController: function() {
-      var config_key = Discourse.StaticController.configs[page];
+      var config_key = Discourse.StaticController.CONFIGS[page];
       if (config_key && Discourse.SiteSettings[config_key].length > 0) {
         Discourse.URL.redirectTo(Discourse.SiteSettings[config_key]);
       } else {
@@ -26,5 +26,3 @@ Discourse.StaticController.pages.forEach(function(page) {
   });
 
 });
-
-

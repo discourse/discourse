@@ -23,12 +23,12 @@
   }
 }
 
-#category-filter {
+#navigation-bar {
   .has-icon span:before {
     margin-right: 4px;
     font: 15px/0.9 "FontAwesome";
   }
-  .has-icon .favorited:before {
+  .has-icon .starred:before {
     content: "\f005";
   }
   .has-icon .unread:before {
@@ -108,18 +108,7 @@
     font-size: 14px;
     margin-top: 8px;
     color: $dark_gray;
-  }
-
-  .rank-details {
-    background-color: #eee;
-    padding: 6px;
-    margin-bottom: 5px;
-
-    p {
-      font-size: 12px;
-      margin: 0;
-      line-height: 14px;
-    }
+    word-break: break-word;
   }
 
   .topic-statuses:empty {
@@ -155,6 +144,12 @@
     text-align: center;
     a:not(.badge-posts) {
       color: inherit;
+    }
+  }
+  .age {
+    white-space: nowrap;
+    .with-year {
+      font-size: 85%;
     }
   }
 }

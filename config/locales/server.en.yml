@@ -73,6 +73,7 @@ en:
   invalid_characters: "contains invalid characters"
   is_invalid: "is invalid; try to be a little more descriptive"
   next_page: "next page →"
+  page_num: "Page %{num}"
   by: "By"
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "RSS feed of '%{topic}'"
@@ -85,6 +86,7 @@ en:
   rss_description:
     latest: "Latest topics"
     hot: "Hot topics"
+  too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
 
   groups:
     errors:
@@ -185,6 +187,12 @@ en:
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
+
+  vip_category_name: "Lounge"
+  vip_category_description: "A category exclusive to members with trust level 3 and higher."
+
+  meta_category_name: "Meta"
+  meta_category_description: "A category to discuss issues related to this forum"
 
   category:
     topic_prefix: "Category definition for %{category}"
@@ -295,8 +303,10 @@ en:
   password_reset:
     no_token: "Sorry, your token has expired. Please try resetting your password again."
     choose_new: "Please choose a new password"
-    update: 'update password'
-    title: 'reset password'
+    choose: "Please choose a password"
+    update: 'Update Password'
+    save: 'Set Password'
+    title: 'Reset Password'
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
     continue: "Continue to %{site_name}"
@@ -399,10 +409,10 @@ en:
       title: "Bookmarks"
       xaxis: "Day"
       yaxis: "Number of new bookmarks"
-    favorites:
-      title: "Favorites"
+    starred:
+      title: "Starred"
       xaxis: "Day"
-      yaxis: "Number of new favorites"
+      yaxis: "Number of new starred topics"
     users_by_trust_level:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
@@ -544,6 +554,7 @@ en:
     download_remote_images_to_local: "Download a copy of remote images hotlinked in posts"
     download_remote_images_threshold: "Amount of minimum available disk space required to download remote images locally (in percent)"
     ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
+    post_edit_time_limit: "Amount of time in minutes in which posts can be edited and deleted by the author. Set to 0 to allow editing and deleting posts at any time."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view edit history."
     delete_removed_posts_after: "Number of hours after which posts removed by the author will be deleted."
     max_image_width: "Maximum allowed width of images in a post"
@@ -564,7 +575,7 @@ en:
 
     notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
     email_custom_headers: "A pipe-delimited list of custom email headers"
-    use_ssl: "Should the site be accessible via SSL? (NOT IMPLEMENTED, EXPERIMENTAL)"
+    use_https: "Should the full url for the site (Discourse.base_url) be http or https?"
     summary_score_threshold: "The minimum score of a post to be included in the 'summary'"
     summary_posts_required: "Minimum posts in a topic before 'summary' mode is enabled"
     summary_likes_required: "Minimum likes in a topic before the 'summary' mode will be enabled"
@@ -597,18 +608,19 @@ en:
     ga_domain_name: "Google analytics domain name, eg: mysite.com; see http://google.com/analytics"
     enable_escaped_fragments: "Enable workaround solution to help older search engine webcrawlers index your site. WARNING: enable only if you have to."
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    topics_per_page: "How many topics loaded by default on the topics list page"
+    topics_per_page: "How many topics loaded by default on the topics list page, and when loading more topics"
     posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
     site_contact_username: "Username for the author of automated private messages sent by the forum"
     send_welcome_message: "Do new users get a welcome private message?"
     suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
     suppress_reply_directly_above: "Don't show in-reply-to on a post when there is a single reply directly above"
 
-    topics_per_period_in_summary: "How many topics loaded by default on the top topics page"
+    topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
+    topics_per_period_in_top_page: "How many topics loaded on the top topics page"
 
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
@@ -664,7 +676,7 @@ en:
     max_flags_per_day: "Maximum number of flags per user per day"
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
     max_edits_per_day: "Maximum number of edits per user per day"
-    max_favorites_per_day: "Maximum number of topics that can be favorited per user per day"
+    max_stars_per_day: "Maximum number of topics that can be starred per user per day"
     max_topics_per_day: "Maximum number of topics a user can create per day"
     max_private_messages_per_day: "The maximum amount of private messages users can create per day"
 
@@ -857,7 +869,7 @@ en:
     username:
       short: "must be longer than %{min} characters"
       long: "must be shorter than %{max} characters"
-      characters: "must only include numbers and letters"
+      characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
       must_begin_with_alphanumeric: "must begin with a letter or number"
@@ -945,7 +957,7 @@ en:
 
       **New version: %{new_version}**
 
-      Please upgrade as soon as possible to get the latest fixes and new features.
+      Please upgrade as soon as possible to get the latest fixes and new features. Visit http://meta.discourse.org for discussion and news about Discourse.
 
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Updates Are Available"
@@ -957,6 +969,8 @@ en:
       **New version: %{new_version}**
 
       %{notes}
+
+      Visit http://meta.discourse.org for discussion and news about Discourse.
 
   system_messages:
     post_hidden:
@@ -1174,6 +1188,16 @@ en:
         ---
         %{respond_instructions}
 
+    user_posted_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+
     digest:
       why: "Here's a brief summary of the discussion on %{site_link} since we last saw you on %{last_seen_at}."
       subject_template: "[%{site_name}] Forum Activity for %{date}"
@@ -1197,6 +1221,16 @@ en:
         If it was not you, you can safely ignore this email.
 
         Click the following link to choose a new password:
+        %{base_url}/users/password-reset/%{email_token}
+
+    set_password:
+      subject_template: "[%{site_name}] Set Password"
+      text_body_template: |
+        Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
+
+        If you did not make this request, you can safely ignore this email.
+
+        Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:

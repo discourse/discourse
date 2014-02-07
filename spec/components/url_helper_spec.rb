@@ -25,6 +25,13 @@ describe UrlHelper do
       helper.is_local("/assets/javascripts/all.js").should be_true
     end
 
+    it "is true for plugin assets" do
+      store = stub
+      store.expects(:has_been_uploaded?).returns(false)
+      Discourse.stubs(:store).returns(store)
+      helper.is_local("/plugins/all.js").should be_true
+    end
+
   end
 
   describe "#absolute" do

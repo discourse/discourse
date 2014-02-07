@@ -28,6 +28,7 @@
               {{userSelector topicId=controller.controllers.topic.model.id
                              excludeCurrentUser="true"
                              id="private-message-users"
+                             include_groups="true"
                              class="span8"
                              placeholderKey="composer.users_placeholder"
                              tabindex="1"
@@ -50,6 +51,7 @@
               {{#if model.showAdminOptions}}
                 <button {{action toggleAdminOptions target="view"}} class="btn no-text show-admin-options" title='{{i18n composer.admin_options_title}}'><i class="fa fa-wrench"></i></button>
               {{/if}}
+              {{render additionalComposerButtons model}}
             {{/unless}}
           </div>
 
@@ -65,7 +67,7 @@
             {{popupInputTip validation=view.replyValidation shownAt=view.showReplyTip}}
           </div>
           <div class='preview-wrapper'>
-            <div id='wmd-preview' {{bindAttr class="hidePreview:hidden"}}></div>
+            <div id='wmd-preview' {{bind-attr class="hidePreview:hidden"}}></div>
           </div>
           {{#if currentUser}}
             <a href="#" {{action togglePreview}} class='toggle-preview'>{{{model.toggleText}}}</a>
@@ -80,7 +82,7 @@
 
         {{#if currentUser}}
           <div class='submit-panel'>
-            <button {{action save}} tabindex="4" {{bindAttr class=":btn :btn-primary :create model.cantSubmitPost:disabled"}}>{{model.saveText}}</button>
+            <button {{action save}} tabindex="4" {{bind-attr class=":btn :btn-primary :create model.cantSubmitPost:disabled"}}>{{model.saveText}}</button>
             <a href='#' {{action cancel}} class='cancel' tabindex="4">{{i18n cancel}}</a>
           </div>
         {{/if}}

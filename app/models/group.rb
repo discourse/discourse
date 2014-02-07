@@ -21,6 +21,16 @@ class Group < ActiveRecord::Base
     :trust_level_5 => 15
   }
 
+  ALIAS_LEVELS = {
+    :nobody => 0,
+    :only_admins => 1,
+    :mods_and_admins => 2,
+    :members_mods_and_admins => 3,
+    :everyone => 99
+  }
+
+  validate :alias_level, inclusion: { in: ALIAS_LEVELS.values}
+
   def self.trust_group_ids
     (10..19).to_a
   end
@@ -97,6 +107,28 @@ class Group < ActiveRecord::Base
 
   def self.[](name)
     lookup_group(name) || refresh_automatic_group!(name)
+  end
+
+  def self.search_group(name, current_user)
+    levels = [ALIAS_LEVELS[:everyone]]
+
+    if current_user.admin?
+      levels = [ALIAS_LEVELS[:everyone],
+                ALIAS_LEVELS[:only_admins],
+                ALIAS_LEVELS[:mods_and_admins],
+                ALIAS_LEVELS[:members_mods_and_admins]]
+    elsif current_user.moderator?
+      levels = [ALIAS_LEVELS[:everyone],
+                ALIAS_LEVELS[:mods_and_admins],
+                ALIAS_LEVELS[:members_mods_and_admins]]
+    end
+
+    Group.where("name LIKE :term_like AND (" +
+        " alias_level in (:levels)" +
+        " OR (alias_level = #{ALIAS_LEVELS[:everyone]} AND id in (" +
+            "SELECT group_id FROM group_users WHERE user_id= :user_id)" +
+          ")" +
+        ")", term_like: "#{name.downcase}%", levels: levels, user_id: current_user.id)
   end
 
   def self.lookup_group(name)

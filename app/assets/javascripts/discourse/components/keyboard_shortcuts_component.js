@@ -11,7 +11,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'g l': '/latest',
     'g n': '/new',
     'g u': '/unread',
-    'g f': '/favorited',
+    'g f': '/starred',
     'g c': '/categories',
     'g t': '/top'
   },
@@ -22,8 +22,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'd': 'article.selected button.delete',                        // delete selected post
     'e': 'article.selected button.edit',                          // edit selected post
 
-    // favorite topic
-    'f': '#topic-footer-buttons button.favorite, #topic-list tr.topic-list-item.selected a.star',
+    // star topic
+    'f': '#topic-footer-buttons button.star, #topic-list tr.topic-list-item.selected a.star',
 
     'l': 'article.selected button.like',                          // like selected post
     'm m': 'div.notification-options li[data-id="0"] a',          // mark topic as muted
@@ -141,7 +141,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   _changeSection: function(num) {
-    var $sections = $('#category-filter').find('li'),
+    var $sections = $('#navigation-bar').find('li'),
         index = $sections.index('.active');
 
     $sections.eq(index + num).find('a').click();

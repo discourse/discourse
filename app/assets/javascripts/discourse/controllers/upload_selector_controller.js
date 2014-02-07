@@ -8,8 +8,13 @@
   @module Discourse
 **/
 Discourse.UploadSelectorController = Discourse.Controller.extend(Discourse.ModalFunctionality, {
-  local: Em.computed.not("remote"),
-  remote: Em.computed.not("allowLocal"),
+  remote: Em.computed.not("local"),
+  local: false,
+
+  init: function() {
+    this._super();
+    this.set("local", this.get("allowLocal"));
+  },
 
   allowLocal: function() {
     return Discourse.SiteSettings.max_attachment_size_kb > 0;

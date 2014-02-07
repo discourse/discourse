@@ -65,7 +65,7 @@ Discourse.Ajax = Em.Mixin.create({
         // If it's a parseerror, don't reject
         if (xhr.status === 200) return args.success(xhr);
 
-        promise.reject(xhr);
+        Ember.run(promise, promise.reject, xhr);
         if (oldError) oldError(xhr);
       };
 

@@ -488,10 +488,12 @@ iframe {
 
 .contents .cooked {
   margin-right: 50px;
+  margin-top: 15px;
   word-wrap: break-word;
-  h1, h2, h3 {margin: 10px 0;}
-  ul, ol {margin: 15px 0 0 30px;}
+
+  h1, h2, h3, h4, h5, h6 { margin: 20px 0 10px; }
   li p {margin: 3px 0;}
+
 }
 
   a.mention {
@@ -507,11 +509,14 @@ iframe {
   }
 }
 
-
 .deleted {
   .topic-body {
   background-color: lighten(red, 45%);
   }
+}
+
+.post-hidden {
+  opacity: 0.5;
 }
 
 .moderator {
@@ -692,7 +697,6 @@ blockquote { /* solo quotes */
   }
   img, svg {
     max-width: 100%;
-    height: auto;
   }
 }
 

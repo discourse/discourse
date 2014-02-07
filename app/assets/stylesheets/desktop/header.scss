@@ -13,6 +13,8 @@
   z-index: 1000;
   box-shadow: 0 1px 5px rgba(70, 70, 70, .4);
   background-color: $white;
+  padding-right: 3px;
+  padding-top: 3px;
   .docked & {
     position: fixed;
   }
@@ -34,6 +36,8 @@
   .fa-home {
     font-size: 20px;
     line-height: 40px;
+    padding-right: 3px;
+    padding-top: 3px;
   }
   .panel {
     float: right;

@@ -47,6 +47,12 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path The path we are routing to.
   **/
   routeTo: function(path) {
+
+    if(Discourse.get("requiresRefresh")){
+      document.location.href = path;
+      return;
+    }
+
     var oldPath = window.location.pathname;
     path = path.replace(/https?\:\/\/[^\/]+/, '');
 
@@ -88,6 +94,23 @@ Discourse.URL = Em.Object.createWithMixins({
   redirectTo: function(url) {
     window.location = Discourse.getURL(url);
   },
+
+  /** 
+   * Determines whether a URL is internal or not
+   *
+   * @method isInternal
+   * @param {String} url
+  **/
+  isInternal: function(url) {
+    if (url && url.length) {
+      if (url.indexOf('/') === 0) { return true; }
+      if (url.indexOf(this.origin()) === 0) { return true; }
+      if (url.replace(/^http/, 'https').indexOf(this.origin()) === 0) { return true; }
+      if (url.replace(/^https/, 'http').indexOf(this.origin()) === 0) { return true; }
+    }
+    return false;
+  },
+
 
   /**
     @private
@@ -165,11 +188,11 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
-    var defaultFilter = "/" + Discourse.ListController.filters[0];
+    var defaultFilter = "/" + Discourse.Site.currentProp('filters')[0];
 
     if (path === "/" && (oldPath === "/" || oldPath === defaultFilter)) {
       // Refresh our list
-      this.controllerFor('list').refresh();
+      this.controllerFor('discoveryTopics').send('refresh');
       return true;
     }
 

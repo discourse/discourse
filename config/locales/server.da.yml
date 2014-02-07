@@ -403,7 +403,7 @@ da:
       title: "Bogmærker"
       xaxis: "Dag"
       yaxis: "Antal nye bogmærker"
-    favorites:
+    starred:
       title: "Favoritter"
       xaxis: "Dag"
       yaxis: "Antal nye favoritter"
@@ -567,7 +567,6 @@ da:
 
     notification_email: "Afsenderadressen som bruges til afsendelse af system-e-mails, som f.eks. beskeder til brugere om mistede adgangskoder, nye konti, etc."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
-    use_ssl: "Skal sitet være tilgængeligt via SSL? (IKKE IMPLEMENTERET, EKSPERIMENTELT)"
     summary_score_threshold: "Den mindste score for at et indlæg medtages i 'resuméet'."
     summary_posts_required: "Mindste antal indlæg i et emne før  'resumé'-tilstand aktiveres."
     summary_likes_required: "Mindste antal likes i et emne før  'resumé'-tilstand aktiveres."
@@ -600,7 +599,7 @@ da:
     ga_domain_name: "Google analytics domænenavn, f.eks.: example.com; se http://google.com/analytics."
     enable_escaped_fragments: "Aktivér workaround som kan hjælpe ældre webcrawlers med at indeksere sitet. ADVARSEL: aktivér kun hvis du har behov for det."
     enable_noscript_support: "Aktivér standard webcrawler søgemaskineunderstøttelse vha. noscript-tagget"
-    top_menu: "Angiv hvilke elementer der skal vises i hjemmesidenavigationen, og i hvilken rækkefølge. Eksempel: latest|hot|read|favorited|unread|new|posted|categories."
+    top_menu: "Angiv hvilke elementer der skal vises i hjemmesidenavigationen, og i hvilken rækkefølge. Eksempel: latest|new|unread|starred|categories|top|read|posted."
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge. Eksempel twitter|facebook|google+|email."
     track_external_right_clicks: "Spor højreklik på eksterne links (f.eks.: åbn i ny tab); deaktiveret som standard fordi den omskriver URLer"
@@ -611,7 +610,7 @@ da:
     suppress_reply_directly_below: "Vis ikke antallet af svar på et indlæg når der er et enkelt svar umiddelbart nedenfor"
     suppress_reply_directly_above: "Vis ikke “svar til“ på et indlæg når der er et enkelt svar umiddelbart nedenfor"
 
-    topics_per_period_in_summary: "Hvor mange emner der som standard indlæses på siden med populære emner."
+    topics_per_period_in_top_summary: "Hvor mange emner der som standard indlæses på siden med populære emner."
 
     allow_index_in_robots_txt: "Sitet skal indekseres af søgemaskiner (opdatér robots.txt)"
     email_domains_blacklist: "En liste af e-mail-domæner som ikke er tilladte, adskilt af pipe-tegn. Eksempel: mailinator.com|trashmail.net."
@@ -667,7 +666,7 @@ da:
     max_flags_per_day: "Maksimalt antal flag per bruger per dag."
     max_bookmarks_per_day: "Maksimalt antal bogmærker per bruger per dag."
     max_edits_per_day: "Maksimalt antal ændringer per bruger per dag."
-    max_favorites_per_day: "Maksimalt antal emner der kan vælges som favoritter per bruger per dag."
+    max_stars_per_day: "Maksimalt antal emner der kan vælges som favoritter per bruger per dag."
     max_topics_per_day: "Maksimal antal emner som en bruger kan oprette per dag."
     max_private_messages_per_day: "Maksimalt antal private beskeder som brugerne kan oprette per dag."
 

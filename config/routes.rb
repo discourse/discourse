@@ -106,7 +106,6 @@ Discourse::Application.routes.draw do
   get "email/unsubscribe/:key" => "email#unsubscribe", as: "email_unsubscribe"
   post "email/resubscribe/:key" => "email#resubscribe", as: "email_resubscribe"
 
-
   resources :session, id: USERNAME_ROUTE_FORMAT, only: [:create, :destroy] do
     collection do
       post "forgot_password"
@@ -195,18 +194,30 @@ Discourse::Application.routes.draw do
   end
   resources :user_actions
 
-  resources :categories, :except => :show
-  get "category/:id/show" => "categories#show"
-  post "category/:category_id/move" => "categories#move", as: "category_move"
-
-  get "category/:category.rss" => "list#category_feed", format: :rss, as: "category_feed"
-  get "category/:category" => "list#category", as: "category_list"
-  get "category/:category/none" => "list#category_none", as: "category_list_none"
-  get "category/:category/more" => "list#category", as: "category_list_more"
-
-  # We"ve renamed popular to latest. If people access it we want a permanent redirect.
+  # We've renamed popular to latest. If people access it we want a permanent redirect.
   get "popular" => "list#popular_redirect"
   get "popular/more" => "list#popular_redirect"
+
+  resources :categories, :except => :show
+  get "category/:id/show" => "categories#show"
+  post "category/:category_id/move" => "categories#move"
+  get "category/:category.rss" => "list#category_feed", format: :rss
+  get "category/:parent_category/:category.rss" => "list#category_feed", format: :rss
+  get "category/:category" => "list#latest_category"
+  get "category/:category/none" => "list#latest_category_none"
+  get "category/:parent_category/:category" => "list#latest_category"
+
+  get "top" => "list#top"
+  get "category/:category/l/top" => "list#top_category"
+  get "category/:category/none/l/top" => "list#top_category_none"
+  get "category/:parent_category/:category/l/top" => "list#top_category"
+
+  TopTopic.periods.each do |period|
+    get "top/#{period}" => "list#top_#{period}"
+    get "category/:category/l/top/#{period}" => "list#top_#{period}_category"
+    get "category/:category/none/l/top/#{period}" => "list#top_#{period}_category_none"
+    get "category/:parent_category/:category/l/top/#{period}" => "list#top_#{period}_category"
+  end
 
   Discourse.anonymous_filters.each do |filter|
     get "#{filter}.rss" => "list##{filter}_feed", format: :rss
@@ -215,26 +226,21 @@ Discourse::Application.routes.draw do
   Discourse.filters.each do |filter|
     get "#{filter}" => "list##{filter}"
     get "#{filter}/more" => "list##{filter}"
-
-    get "category/:category/l/#{filter}" => "list##{filter}"
-    get "category/:category/l/#{filter}/more" => "list##{filter}"
-    get "category/:parent_category/:category/l/#{filter}" => "list##{filter}"
-    get "category/:parent_category/:category/l/#{filter}/more" => "list##{filter}"
+    get "category/:category/l/#{filter}" => "list##{filter}_category"
+    get "category/:category/l/#{filter}/more" => "list##{filter}_category"
+    get "category/:category/none/l/#{filter}" => "list##{filter}_category_none"
+    get "category/:category/none/l/#{filter}/more" => "list##{filter}_category_none"
+    get "category/:parent_category/:category/l/#{filter}" => "list##{filter}_category"
+    get "category/:parent_category/:category/l/#{filter}/more" => "list##{filter}_category"
   end
-
-  get "top" => "list#top"
-  get "category/:category/l/top" => "list#top"
-  get "category/:parent_category/:category/l/top" => "list#top"
-
-  get "category/:parent_category/:category" => "list#category", as: "category_list_parent"
 
   get "search" => "search#query"
 
   # Topics resource
   get "t/:id" => "topics#show"
-  delete "t/:id" => "topics#destroy"
-  put "t/:id" => "topics#update"
   post "t" => "topics#create"
+  put "t/:id" => "topics#update"
+  delete "t/:id" => "topics#destroy"
   post "topics/timings"
   get "topics/similar_to"
   get "topics/created-by/:username" => "list#topics_by", as: "topics_by", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -243,6 +249,7 @@ Discourse::Application.routes.draw do
   get "topics/private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   get 'embed/comments' => 'embed#comments'
+  get 'embed/count' => 'embed#count'
 
   # Topic routes
   get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
@@ -276,7 +283,6 @@ Discourse::Application.routes.draw do
 
   get "raw/:topic_id(/:post_number)" => "posts#markdown"
 
-
   resources :invites
   delete "invites" => "invites#destroy"
 
@@ -298,6 +304,6 @@ Discourse::Application.routes.draw do
   # special case for categories
   root to: "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
   # special case for top
-  root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "list_top"
+  root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
 
 end

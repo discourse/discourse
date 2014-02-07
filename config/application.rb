@@ -8,10 +8,21 @@ require_relative '../lib/discourse_plugin_registry'
 require_relative '../app/models/global_setting'
 
 if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
   Bundler.require(*Rails.groups(assets: %w(development test profile)))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
+end
+
+# PATCH DB configuration
+class Rails::Application::Configuration
+
+  def database_configuration_with_global_config
+    if Rails.env == "production"
+      GlobalSetting.database_config
+    else
+      database_configuration_without_global_config
+    end
+  end
+
+  alias_method_chain :database_configuration, :global_config
 end
 
 module Discourse

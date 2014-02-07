@@ -125,12 +125,6 @@ In theory, you're not setting up with vagrant, either, and shouldn't need a vagr
 
 You should not need to alter `/usr/local/var/postgres/pg_hba.conf`
 
-### Loading seed data
-
-From the discource source tree:
-    
-    psql -d discourse_development < pg_dumps/development-image.sql
-
 ## Redis
 
     brew install redis
@@ -145,13 +139,48 @@ Homebrew loves you.
 
     brew install phantomjs
 
-## Now, test it out!
+### Setting up your Discourse
 
-Copy `config/database.yml.development-sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances. If you stuck to all the defaults above, chances are the samples will work out of the box!
+
+##  Check out the repository
+
+    git@github.com:discourse/discourse.git ~/discourse
+    cd ~/discourse # Navigate into the repository, and stay there for the rest of this how-to
+
+## Loading seed data
+
+From the discource source tree:
+    
+    psql -d discourse_development < pg_dumps/development-image.sql
+
+
+## What about the config files?
+
+If you've stuck to all the defaults above, the default `discourse.conf` and `redis.conf` should work out of the box. 
+
+## Install the needed gems
 
     bundle install # Yes, this DOES take a while. No, it's not really cloning all of rubygems :-)
+
+## Prepare your database
+
     rake db:migrate
     rake db:test:prepare
     rake db:seed_fu
-    bundle exec rspec # All specs should pass
 
+## Now, test it out!
+
+    bundle exec rspec 
+    
+All specs should pass
+
+## Deal with any problems which arise.
+
+Reset the environment as a possible solution to failed rspec tests.
+These commands assume an empty Discourse database, and an otherwise empty redis environment. CAREFUL HERE
+
+    RAILS_ENV=test rake db:drop db:create db:migrate
+    redis-cli flushall
+    bundle exec rspec # re-running to see if tests pass
+
+Search http://meta.discourse.org for solutions to other problems.

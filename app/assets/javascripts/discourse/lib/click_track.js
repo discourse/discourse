@@ -77,21 +77,23 @@ Discourse.ClickTrack = {
           post_id: postId,
           topic_id: topicId,
           redirect: false
-        }
+        },
+        dataType: 'html'
       });
       window.open(href, '_blank');
       return false;
     }
 
     // If we're on the same site, use the router and track via AJAX
-    if ((href.indexOf(Discourse.URL.origin()) === 0) && !href.match(/\/uploads\//i)) {
+    if (Discourse.URL.isInternal(href) && !href.match(/\/uploads\//i)) {
       Discourse.ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,
           topic_id: topicId,
           redirect: false
-        }
+        },
+        dataType: 'html'
       });
       Discourse.URL.routeTo(href);
       return false;

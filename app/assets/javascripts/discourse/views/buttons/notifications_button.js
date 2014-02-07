@@ -1,5 +1,5 @@
 /**
-  A button for favoriting a topic
+  A button to display notification options.
 
   @class NotificationsButton
   @extends Discourse.DropdownButtonView
@@ -12,13 +12,30 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
   longDescriptionBinding: 'topic.details.notificationReasonText',
   topic: Em.computed.alias('controller.model'),
   hidden: Em.computed.alias('topic.deleted'),
+  isPrivateMessage: Em.computed.alias('topic.isPrivateMessage'),
 
-  dropDownContent: [
-    [Discourse.Topic.NotificationLevel.WATCHING, 'topic.notifications.watching'],
-    [Discourse.Topic.NotificationLevel.TRACKING, 'topic.notifications.tracking'],
-    [Discourse.Topic.NotificationLevel.REGULAR, 'topic.notifications.regular'],
-    [Discourse.Topic.NotificationLevel.MUTE, 'topic.notifications.muted']
-  ],
+  dropDownContent: function() {
+    var contents = [], postfix = '';
+
+    if (this.get('isPrivateMessage')) { postfix = '_pm'; }
+
+    _.each([
+      ['WATCHING', 'watching'],
+      ['TRACKING', 'tracking'],
+      ['REGULAR', 'regular'],
+      ['MUTE', 'muted']
+    ], function(pair) {
+
+      if (postfix === '_pm' && pair[1] === 'regular') { return; }
+
+      contents.push([
+          Discourse.Topic.NotificationLevel[pair[0]],
+          'topic.notifications.' + pair[1] + postfix
+        ]);
+    });
+
+    return contents;
+  }.property(),
 
   text: function() {
     var key = (function() {

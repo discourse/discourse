@@ -1,20 +1,20 @@
-<div {{bindAttr class="loading:invisible"}}>
+<div {{bind-attr class="loading:invisible"}}>
   <ul class="nav nav-pills">
-    <li {{bindAttr class="generalSelected:active"}}>
+    <li {{bind-attr class="generalSelected:active"}}>
       <a href="#" {{action selectGeneral}}>{{i18n category.general}}</a>
     </li>
     {{#unless isUncategorized}}
-      <li {{bindAttr class="securitySelected:active"}}>
+      <li {{bind-attr class="securitySelected:active"}}>
         <a href="#" {{action selectSecurity}}>{{i18n category.security}}</a>
       </li>
-      <li {{bindAttr class="settingsSelected:active"}}>
+      <li {{bind-attr class="settingsSelected:active"}}>
         <a href="#" {{action selectSettings}}>{{i18n category.settings}}</a>
       </li>
     {{/unless}}
   </ul>
 
   <div class="modal-body">
-    <div {{bindAttr class=":modal-tab :general-tab generalSelected::invisible"}}>
+    <div {{bind-attr class=":modal-tab :general-tab generalSelected::invisible"}}>
       <form>
         <section class='field'>
           <label>{{i18n category.name}}</label>
@@ -45,7 +45,7 @@
         <section class='field'>
           <label>{{i18n category.badge_colors}}</label>
           <div class="category-color-editor">
-            <span class='badge-category' {{bindAttr style="colorStyle"}}>{{categoryName}}</span>
+            <span class='badge-category' {{bind-attr style="colorStyle"}}>{{categoryName}}</span>
 
             <div class='input-prepend input-append' style="margin-top: 10px;">
               <span class='color-title'>{{i18n category.background_color}}:</span>
@@ -63,7 +63,7 @@
       </form>
     </div>
     {{#unless isUncategorized}}
-      <div {{bindAttr class=":modal-tab :options-tab securitySelected::invisible"}}>
+      <div {{bind-attr class=":modal-tab :options-tab securitySelected::invisible"}}>
         <section class='field'>
           <ul class='permission-list'>
             {{#each permissions}}
@@ -86,7 +86,7 @@
           {{/if}}
         </section>
       </div>
-      <div {{bindAttr class=":modal-tab :options-tab settingsSelected::invisible"}}>
+      <div {{bind-attr class=":modal-tab :options-tab settingsSelected::invisible"}}>
         <section class='field'>
           <div class="auto-close-fields">
             <div>
@@ -102,8 +102,8 @@
           <label>{{i18n category.position}}</label>
           <span {{action disableDefaultPosition}}>{{textField value=position disabled=defaultPosition class="position-input"}}</span>
           &nbsp;{{i18n or}}&nbsp;
-          <button {{bindAttr class=":btn defaultPosition:btn-primary"}} {{action toggleDefaultPosition}}>
-            <span {{bindAttr class="defaultPosition::hidden"}}><i class="fa fa-check"></i></span>
+          <button {{bind-attr class=":btn defaultPosition:btn-primary"}} {{action toggleDefaultPosition}}>
+            <span {{bind-attr class="defaultPosition::hidden"}}><i class="fa fa-check"></i></span>
             {{i18n category.default_position}}
           </button>
         </section>
@@ -116,9 +116,9 @@
     {{/unless}}
   </div>
   <div class="modal-footer">
-    <button class='btn btn-primary' {{bindAttr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
+    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
     {{#if deleteVisible}}
-      <button class='btn btn-danger pull-right' {{bindAttr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
+      <button class='btn btn-danger pull-right' {{bind-attr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
     {{/if}}
   </div>
 </div>

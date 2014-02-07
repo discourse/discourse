@@ -11,7 +11,7 @@ Discourse.HeaderController = Discourse.Controller.extend({
   showExtraInfo: null,
   notifications: null,
 
-  showFavoriteButton: function() {
+  showStarButton: function() {
     return Discourse.User.current() && !this.get('topic.isPrivateMessage');
   }.property('topic.isPrivateMessage'),
 

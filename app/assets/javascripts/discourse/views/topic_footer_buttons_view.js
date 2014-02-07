@@ -25,15 +25,13 @@ Discourse.TopicFooterButtonsView = Discourse.ContainerView.extend({
         if (this.get('topic.details.can_invite_to')) {
           this.attachViewClass(Discourse.InviteReplyButton);
         }
-        this.attachViewClass(Discourse.FavoriteButton);
+        this.attachViewClass(Discourse.StarButton);
         this.attachViewClass(Discourse.ShareButton);
         this.attachViewClass(Discourse.ClearPinButton);
       }
       this.attachViewClass(Discourse.ReplyButton);
+      this.attachViewClass(Discourse.NotificationsButton);
 
-      if (!topic.get('isPrivateMessage')) {
-        this.attachViewClass(Discourse.NotificationsButton);
-      }
       this.trigger('additionalButtons', this);
     } else {
       // If not logged in give them a login control

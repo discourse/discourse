@@ -49,6 +49,7 @@ sv:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
+        date_year: "D MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"
@@ -569,7 +570,7 @@ sv:
     go_back: 'gå tillbaka'
     current_user: 'gå till din användarsida'
 
-    favorite:
+    starred:
       title: 'Favorit'
       help:
         star: 'lägg till denna tråd i din favoritlista'
@@ -577,7 +578,7 @@ sv:
 
     topics:
       none:
-        favorited: "Du har inte favoritmarkerat några trådar än. För att favoritmarkera en tråd, klicka eller tryck på stjärnan brevid titeln."
+        starred: "Du har inte favoritmarkerat några trådar än. För att favoritmarkera en tråd, klicka eller tryck på stjärnan brevid titeln."
         unread: "Du har inga olästa trådar att läsa."
         new: "Du har inga nya trådar att läsa."
         read: "Du har inte läst några trådar än."
@@ -592,13 +593,8 @@ sv:
         read: "Det finns inga fler lästa trådar att läsa."
         new: "Det finns inga fler nya trådar att läsa."
         unread: "Det finns inga fler oläsa trådar att läsa."
-        favorited: "Det finns inga fler favoritmarkerade trådar att läsa."
+        starred: "Det finns inga fler favoritmarkerade trådar att läsa."
         category: "Det finns inga fler {{category}}-trådar."
-
-    rank_details:
-      toggle: växla på/av trådranksdetaljer
-      show: visa trådranksdetaljer
-      title: Trådranksdetaljer
 
     topic:
       filter_to: "Visa {{post_count}} inlägg i tråden"
@@ -1062,7 +1058,7 @@ sv:
       hot:
         title: "Hett"
         help: "ett urval av de hetaste trådarna"
-      favorited:
+      starred:
         title: "Favoriter"
         help: "trådar du favoritmarkerat"
       read:

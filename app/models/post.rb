@@ -51,7 +51,9 @@ class Post < ActiveRecord::Base
   scope :public_posts, -> { joins(:topic).where('topics.archetype <> ?', Archetype.private_message) }
   scope :private_posts, -> { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
-
+  
+  delegate :username, to: :user
+  
   def self.hidden_reasons
     @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again, :new_user_spam_threshold_reached)
   end
@@ -133,7 +135,16 @@ class Post < ActiveRecord::Base
     return raw if cook_method == Post.cook_methods[:raw_html]
 
     # Default is to cook posts
-    Plugin::Filter.apply(:after_post_cook, self, post_analyzer.cook(*args))
+    cooked = if !self.user || !self.user.has_trust_level?(:leader)
+      post_analyzer.cook(*args)
+    else
+      # At trust level 3, we don't apply nofollow to links
+      cloned = args.dup
+      cloned[1] ||= {}
+      cloned[1][:omit_nofollow] = true
+      post_analyzer.cook(*cloned)
+    end
+    Plugin::Filter.apply( :after_post_cook, self, cooked )
   end
 
   # Sometimes the post is being edited by someone else, for example, a mod.
@@ -204,10 +215,6 @@ class Post < ActiveRecord::Base
     end
 
     cooked
-  end
-
-  def username
-    user.username
   end
 
   def external_id
@@ -410,6 +417,14 @@ class Post < ActiveRecord::Base
     post_revision.modifications.each do |attribute, change|
       attribute = "version" if attribute == "cached_version"
       write_attribute(attribute, change[0])
+    end
+  end
+
+  def edit_time_limit_expired?
+    if created_at && SiteSetting.post_edit_time_limit.to_i > 0
+      created_at < SiteSetting.post_edit_time_limit.to_i.minutes.ago
+    else
+      false
     end
   end
 

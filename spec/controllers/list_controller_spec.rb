@@ -8,7 +8,7 @@ describe ListController do
     @post = Fabricate(:post, user: @user)
 
     # forces tests down some code paths
-    SiteSetting.stubs(:top_menu).returns('latest,-video|new|unread|favorited|categories|category/beer')
+    SiteSetting.stubs(:top_menu).returns('latest,-video|new|unread|starred|categories|category/beer')
   end
 
   describe 'indexes' do
@@ -58,7 +58,7 @@ describe ListController do
 
       context 'with access to see the category' do
         before do
-          xhr :get, :category, category: category.slug
+          xhr :get, :latest_category, category: category.slug
         end
 
         it { should respond_with(:success) }
@@ -66,7 +66,7 @@ describe ListController do
 
       context 'with a link that includes an id' do
         before do
-          xhr :get, :category, category: "#{category.id}-#{category.slug}"
+          xhr :get, :latest_category, category: "#{category.id}-#{category.slug}"
         end
 
         it { should respond_with(:success) }
@@ -77,7 +77,7 @@ describe ListController do
         let!(:other_category) { Fabricate(:category, name: "#{category.id} name") }
 
         before do
-          xhr :get, :category, category: other_category.slug
+          xhr :get, :latest_category, category: other_category.slug
         end
 
         it { should respond_with(:success) }
@@ -92,7 +92,7 @@ describe ListController do
 
         context 'when parent and child are requested' do
           before do
-            xhr :get, :category, parent_category: category.slug, category: sub_category.slug
+            xhr :get, :latest_category, parent_category: category.slug, category: sub_category.slug
           end
 
           it { should respond_with(:success) }
@@ -100,7 +100,7 @@ describe ListController do
 
         context 'when child is requested with the wrong parent' do
           before do
-            xhr :get, :category, parent_category: 'not_the_right_slug', category: sub_category.slug
+            xhr :get, :latest_category, parent_category: 'not_the_right_slug', category: sub_category.slug
           end
 
           it { should_not respond_with(:success) }
@@ -175,15 +175,15 @@ describe ListController do
     end
   end
 
-  context 'favorited' do
+  context 'starred' do
     it 'raises an error when not logged in' do
-      lambda { xhr :get, :favorited }.should raise_error(Discourse::NotLoggedIn)
+      lambda { xhr :get, :starred }.should raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
       before do
         log_in_user(@user)
-        xhr :get, :favorited
+        xhr :get, :starred
       end
 
       it { should respond_with(:success) }

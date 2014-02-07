@@ -18,7 +18,8 @@ class TopicQuery
                      category
                      sort_order
                      no_subcategories
-                     sort_descending).map(&:to_sym)
+                     sort_descending
+                     status).map(&:to_sym)
 
   # Maps `sort_order` to a columns in `topics`
   SORTABLE_MAPPING = {
@@ -55,20 +56,14 @@ class TopicQuery
     create_list(:latest)
   end
 
-  # The favorited topics
-  def list_favorited
-    create_list(:favorited) {|topics| topics.where('tu.starred') }
+  # The starred topics
+  def list_starred
+    create_list(:starred) {|topics| topics.where('tu.starred') }
   end
 
   def list_read
     create_list(:read, unordered: true) do |topics|
       topics.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')
-    end
-  end
-
-  def list_hot
-    create_list(:hot, unordered: true) do |topics|
-      topics.joins(:hot_topic).order(TopicQuerySQL.order_hotness(@user))
     end
   end
 
@@ -87,9 +82,18 @@ class TopicQuery
   def list_top_for(period)
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
-      topics.joins(:top_topic)
-            .where("top_topics.#{score} > 1")
-            .order("top_topics.#{score} DESC, topics.bumped_at DESC")
+      topics = topics.joins(:top_topic).where("top_topics.#{score} > 0")
+      if period == :yearly && @user.try(:trust_level) == TrustLevel.levels[:newuser]
+        topics.order(TopicQuerySQL.order_top_with_pinned_category_for(score))
+      else
+        topics.order(TopicQuerySQL.order_top_for(score))
+      end
+    end
+  end
+
+  TopTopic.periods.each do |period|
+    define_method("list_top_#{period}") do
+      list_top_for(period)
     end
   end
 
@@ -128,7 +132,11 @@ class TopicQuery
   end
 
   def list_new_in_category(category)
-    create_list(:new_in_category, unordered: true) {|l| l.where(category_id: category.id).by_newest.first(25)}
+    create_list(:new_in_category, unordered: true) do |list|
+      list.where(category_id: category.id)
+          .by_newest
+          .first(25)
+    end
   end
 
   def self.new_filter(list, treat_as_new_topic_start_date)
@@ -241,6 +249,17 @@ class TopicQuery
 
       if options[:topic_ids]
         result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
+      end
+
+      if status = options[:status]
+        case status
+        when 'open'
+          result = result.where('NOT topics.closed AND NOT topics.archived')
+        when 'closed'
+          result = result.where('topics.closed')
+        when 'archived'
+          result = result.where('topics.archived')
+        end
       end
 
       guardian = Guardian.new(@user)

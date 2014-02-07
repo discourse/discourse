@@ -37,12 +37,10 @@ Discourse.StaticController = Discourse.Controller.extend({
 });
 
 Discourse.StaticController.reopenClass({
-  pages: ['faq', 'tos', 'privacy', 'login'],
-  configs: {
+  PAGES: ['faq', 'tos', 'privacy', 'login'],
+  CONFIGS: {
     'faq': 'faq_url',
     'tos': 'tos_url',
     'privacy': 'privacy_policy_url'
   }
 });
-
-
