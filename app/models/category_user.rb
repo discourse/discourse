@@ -67,3 +67,13 @@ SQL
   end
 
 end
+
+# == Schema Information
+#
+# Table name: category_users
+#
+#  id                 :integer          not null, primary key
+#  category_id        :integer          not null
+#  user_id            :integer          not null
+#  notification_level :integer          not null
+#

@@ -370,6 +370,9 @@ end
 #  latest_topic_id    :integer
 #  position           :integer
 #  parent_category_id :integer
+#  posts_year         :integer
+#  posts_month        :integer
+#  posts_week         :integer
 #
 # Indexes
 #

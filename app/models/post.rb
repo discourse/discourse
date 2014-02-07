@@ -488,7 +488,6 @@ end
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  reply_to_post_number    :integer
-#  version                 :integer          default(1), not null
 #  reply_count             :integer          default(0), not null
 #  quote_count             :integer          default(0), not null
 #  deleted_at              :datetime
@@ -517,6 +516,9 @@ end
 #  like_score              :integer          default(0), not null
 #  deleted_by_id           :integer
 #  edit_reason             :string(255)
+#  word_count              :integer
+#  version                 :integer          default(1), not null
+#  cook_method             :integer          default(1), not null
 #
 # Indexes
 #
