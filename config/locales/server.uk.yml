@@ -397,21 +397,21 @@ uk:
       long_form: 'flagged this as off-topic'
     spam:
       title: 'Спам'
-      description: 'This post is an advertisement. It is not useful or relevant to the current conversation, but promotional in nature.'
+      description: 'Цей допис є рекламою. Він не є корисним або доречним для цього обговорення, проте є рекламним за своєю суттю.'
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'Неприпустиме'
-      description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/faq">our community guidelines</a>.'
+      description: 'Цей допис має вміст, який адекватна людина вважатиме непристойним, образливим, або таким, що порушує <a href="/faq">правила нашої спільноти</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
       title: 'Сповістити {{username}}'
-      description: 'This post contains something I want to talk to this person directly and privately about.'
+      description: 'Цей допис містить щось таке, про що я хотів би поговорити з цією людиною особисто і безпосередньо.'
       long_form: 'notified user'
       email_title: 'Regarding your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Звернути увагу модераторів'
-      description: 'This post requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
+      description: 'Цей допис загалом потребує уваги модераторів згідно із <a href="/faq">Частими запитаннями</a>, <a href="%{tos_url}">Умовами використання</a>, або з іншої причини, не зазначеної вище.'
       long_form: 'notified moderators'
       email_title: 'A post in "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
@@ -450,9 +450,9 @@ uk:
 
   reports:
     visits:
-      title: "User Visits"
+      title: "Відвідини користувачів"
       xaxis: "День"
-      yaxis: "Number of visits"
+      yaxis: "Кількість відвідин"
     signups:
       title: "Користувачі"
       xaxis: "День"
@@ -510,10 +510,10 @@ uk:
       xaxis: "День"
       yaxis: "Кількість приватних повідомлень"
     top_referrers:
-      title: "Top Referrers"
-      xaxis: "User"
-      num_clicks: "Clicks"
-      num_topics: "Topics"
+      title: "Дали найбільше посилань"
+      xaxis: "Користувач"
+      num_clicks: "Переходи"
+      num_topics: "Теми"
     top_traffic_sources:
       title: "Головні джерела трафіку"
       xaxis: "Домен"
@@ -521,9 +521,9 @@ uk:
       num_topics: "Теми"
       num_users: "Користувачі"
     top_referred_topics:
-      title: "Top Referred Topics"
-      xaxis: "Topic"
-      num_clicks: "Clicks"
+      title: "Найбільше посилаються на"
+      xaxis: "Тема"
+      num_clicks: "Переходи"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -892,15 +892,15 @@ uk:
 
   move_posts:
     new_topic_moderator_post:
-      one:   "I moved a post to a new topic: %{topic_link}"
-      few:   "I moved %{count} posts to a new topic: %{topic_link}"
-      many:  "I moved %{count} posts to a new topic: %{topic_link}"
-      other: "I moved %{count} posts to a new topic: %{topic_link}"
+      one:   "Я переніс(перенесла) %{count} допис до нової теми: %{topic_link}"
+      few:   "Я переніс(перенесла) %{count} дописи до нової теми: %{topic_link}"
+      many:  "Я переніс(перенесла) %{count} дописів до нової теми: %{topic_link}"
+      other: "Я переніс(перенесла) %{count} дописів до нової теми: %{topic_link}"
     existing_topic_moderator_post:
-      one:   "I moved a post to an existing topic: %{topic_link}"
-      few:   "I moved %{count} posts to an existing topic: %{topic_link}"
-      many:  "I moved %{count} posts to an existing topic: %{topic_link}"
-      other: "I moved %{count} posts to an existing topic: %{topic_link}"
+      one:   "Я переніс(перенесла) %{count} допис до наявної теми: %{topic_link}"
+      few:   "Я переніс(перенесла) %{count} дописи до наявної теми: %{topic_link}"
+      many:  "Я переніс(перенесла) %{count} дописів до наявної теми: %{topic_link}"
+      other: "Я переніс(перенесла) %{count} дописів до наявної теми: %{topic_link}"
 
   topic_statuses:
     archived_enabled: "Цю тему тепер заархівовано. Вона заморожена і її жодним чином не можна змінити."
@@ -1055,21 +1055,21 @@ uk:
 
   system_messages:
     post_hidden:
-      subject_template: "Post hidden due to community flagging"
+      subject_template: "Допис приховано через скарги спільноти"
       text_body_template: |
-        Hello,
+        Привіт!
 
-        This is an automated message from %{site_name} to inform you that your post ...
+        Цим автоматичним повідомленням %{site_name} повідомляє Вас, що Ваш допис ...
 
         %{base_url}%{url}
 
-        ... was hidden due to community flagging.
+        ... було приховано через скарги спільноти.
 
-        Keep in mind that multiple community members flagged this post before it was hidden, so **please consider how you might revise your post to reflect their feedback.** You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your forum trust level.
+        Зверніть увагу, що на цей допис поскаржилося декілька членів спільноти перед тим, як його було приховано, тому **будь ласка, обміркуйте, як Ви могли би змінити свій допис, щоб врахувати їхній зворотній зв'язок**. Ви можете відредагувати свій допис через %{edit_delay} хвилин, і він автоматично з'явиться. Це збільшить Ваш Рівень довіри на форумі.
 
-        However, if the post is hidden by the community a second time, the moderators will be notified -- and there may be further action, including the possible suspension of your account.
+        Втім, у разі повторних скарг від спільноти на цей допис, про нього буде повідомлено модераторам - і тоді може послідувати жорсткіша реакція, включно із можливим призупиненням дії Вашого облікового запису.
 
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+        Для додаткових настанов, будь ласка, зверніться до наших [ЧаПів](%{base_url}/faq).
 
     usage_tips:
       text_body_template: |
@@ -1216,7 +1216,7 @@ uk:
   unsubscribe_link: "Щоб відписатися від цих листів, відідайте [сторінку своїх налаштувань](%{user_preferences_url})."
 
   user_notifications:
-    previous_discussion: "Previous Replies"
+    previous_discussion: "Попередні відповіді"
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
@@ -1359,12 +1359,12 @@ uk:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
 
   page_not_found:
-    title: "The page you requested doesn't exist or may have been deleted by a moderator."
-    popular_topics: "Popular topics"
-    recent_topics: "Recent topics"
-    see_more: "See More"
-    search_title: "Search for this topic"
-    search_google: "Search Google"
+    title: "Сторінка, яку Ви запитали, не існує, або її було видалено модератором."
+    popular_topics: "Популярні теми"
+    recent_topics: "Останні теми"
+    see_more: "Більше"
+    search_title: "Шукати цю тему"
+    search_google: "Шукати через Google"
 
   login_required:
     welcome_message: |

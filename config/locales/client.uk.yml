@@ -352,7 +352,7 @@ uk:
         title: "Пароль ще раз"
 
       last_posted: "Останній допис"
-      last_emailed: "Last Emailed"
+      last_emailed: "Останній електронний лист"
       last_seen: "Помічено"
       created: "Приєднався(лась)"
       log_out: "Вийти"
@@ -407,17 +407,17 @@ uk:
         user: "Запрошений користувач"
         none: "Запрошень не знайдено."
         truncated: "Показано перші {{count}} запрошень."
-        redeemed: "Redeemed Invites"
+        redeemed: "Погашені запрошення"
         redeemed_at: "Погашено"
-        pending: "Pending Invites"
+        pending: "Запрошення, що очікують"
         topics_entered: "Topics Viewed"
         posts_read_count: "Прочитано дописів"
         expired: "This invite has expired."
         rescind: "Видалити запрошення"
         rescinded: "Запрошення видалено"
-        time_read: "Read Time"
+        time_read: "Час читання"
         days_visited: "Days Visited"
-        account_age_days: "Account age in days"
+        account_age_days: "Вік облікового запису в днях"
         create: "Запросити друзів на цей форум"
 
       password:
@@ -769,13 +769,13 @@ uk:
       auto_close_remove: "Не закривати цю тему автоматично"
 
       progress:
-        title: topic progress
-        jump_top: jump to first post
-        jump_bottom: jump to last post
-        jump_bottom_with_number: "jump to post %{post_number}"
-        total: total posts
-        current: current post
-        position: "post %{current} of %{total}"
+        title: просування по темі
+        jump_top: перейти до першого допису
+        jump_bottom: перейти до останнього допису
+        jump_bottom_with_number: "перейти до допису %{post_number}"
+        total: всього дописів
+        current: поточний допис
+        position: "допис %{current} із %{total}"
 
       notifications:
         title: ''
@@ -794,13 +794,13 @@ uk:
           "0_2": 'Ви ігноруєте всі сповіщення з цієї теми.'
         watching_pm:
           title: "Слідкувати"
-          description: "same as Tracking, plus you will be notified of all new posts."
+          description: "те саме, що \"Стежити\", плюс Ви отримуватимете сповіщення про всі нові дописи."
         watching:
           title: "Слідкувати"
           description: "те саме, що \"Стежити\", плюс Ви отримуватимете сповіщення про всі нові дописи."
         tracking_pm:
           title: "Стежити"
-          description: "you will be notified of @name mentions and replies to your posts"
+          description: "Ви будете отримувати сповіщення про згадування Вашого @Імені та відповіді на Ваші дописи"
         tracking:
           title: "Стежити"
           description: "Ви будете отримувати сповіщення про згадування Вашого @Імені та відповіді на Ваші дописи, а також бачити кількість непрочитаних та нових дописів."
@@ -809,7 +809,7 @@ uk:
           description: "Ви будете отримувати сповіщення лише якщо хтось згадуватиме Ваше @Ім'я або відповідатиме на Ваш допис."
         muted_pm:
           title: "Ігнорувати"
-          description: "you will not be notified of anything about this private message." 
+          description: "Ви не будете отримувати жодних сповіщень з цієї приватної переписки." 
         muted:
           title: "Ігнорувати"
           description: "Ви не будете отримувати жодних сповіщень з цієї теми, і вона не буде відображатися у Вашій вкладці \"Непрочитані\"."
@@ -819,7 +819,7 @@ uk:
         delete: "Видалити тему"
         open: "Відкрити тему"
         close: "Закрити тему"
-        auto_close: "Auto Close"
+        auto_close: "Автоматичне закриття"
         unpin: "Відкріпити тему"
         pin: "Закріпити тему"
         unarchive: "Розархівувати тему"
@@ -1164,7 +1164,7 @@ uk:
       auto_close_units: "годин"
       edit_permissions: "Редагувати дозволи"
       add_permission: "Додати дозвіл"
-      this_year: "this year"
+      this_year: "цього року"
       position: "position"
       default_position: "Default Position"
       parent: "Батьківська категорія"
@@ -1173,7 +1173,7 @@ uk:
       title: 'Чому Ви приватно скаржитеся на цей допис?'
       action: 'Поскаржитися на допис'
       take_action: "Take Action"
-      notify_action: 'Notify'
+      notify_action: 'Сповістити'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
@@ -1342,17 +1342,17 @@ uk:
         old: "Старі"
         active: "Активні"
 
-        agree_hide: "Agree (hide post + send PM)"
-        agree_hide_title: "Hide this post and automatically send the user a private message urging them to edit it"
-        defer: "Defer"
-        defer_title: "No action is necessary at this time, defer any action on this flag until a later date, or never"
-        delete_post: "Delete Post"
-        delete_post_title: "Delete post; if the first post, delete the topic"
-        disagree_unhide: "Disagree (unhide post)"
-        disagree_unhide_title: "Remove any flags from this post and make the post visible again"
-        disagree: "Disagree"
-        disagree_title: "Disagree with flag, remove any flags from this post"
-        delete_spammer_title: "Delete the user and all its posts and topics."
+        agree_hide: "Згода (сховати допис + надіслати ПП)"
+        agree_hide_title: "Сховати цей допис і автоматично надіслати користувачу приватне повідомлення з переконливим проханням його відредагувати"
+        defer: "Відкласти"
+        defer_title: "Наразі жоднії дії непотрібні; відкласти будь-яку реакцію на цю скаргу на пізніше, або назавжди"
+        delete_post: "Видалити допис"
+        delete_post_title: "Видалити допис; якщо це - перший допис, видалити тему"
+        disagree_unhide: "Незгода (показати допис)"
+        disagree_unhide_title: "Зняти усі скарги з цього допису і зробити його знову видимим"
+        disagree: "Незгода"
+        disagree_title: "Не погодитися зі скаргою і зняти всі скарги з цього допису"
+        delete_spammer_title: "Видалити користувача і всі його дописи та теми."
 
         flagged_by: "Позначено"
         system: "System"
@@ -1449,7 +1449,7 @@ uk:
         send_test: "надіслати тестовий лист"
         sent_test: "надіслано!"
         delivery_method: "Спосіб доставки"
-        preview_digest: "Попередній перегляд Стислого викладу новин"
+        preview_digest: "Стислий виклад новин"
         preview_digest_desc: "Це - інструмент для попереднього перегляду вмісту листів зі стислим викладом новин, що надсилаються з Вашого форуму."
         refresh: "Оновити"
         format: "Формат"
@@ -1481,10 +1481,10 @@ uk:
           when: "Коли"
           context: "Контекст"
           details: "Деталі"
-          previous_value: "Previous"
-          new_value: "New"
+          previous_value: "Попереднє"
+          new_value: "Нове"
           diff: "Diff"
-          show: "Show"
+          show: "Показати"
           modal_title: "Details"
           no_previous: "There is no previous value."
           deleted: "No new value. The record was deleted."
@@ -1527,8 +1527,8 @@ uk:
       users:
         title: 'Користувачі'
         create: 'Add Admin User'
-        last_emailed: "Last Emailed"
-        not_found: "Sorry, that username doesn't exist in our system."
+        last_emailed: "Останній ел. лист"
+        not_found: "Даруйте, такого імені користувача немає в нашій системі."
         active: "Активний(а)"
         nav:
           new: "Нові"
@@ -1540,15 +1540,15 @@ uk:
           blocked: 'Заблоковані'
         approved: "Схвалено?"
         approved_selected:
-          one:   "approve user"
-          few:   "approve users ({{count}})"
-          many:  "approve users ({{count}})"
-          other: "approve users ({{count}})"
+          one:   "схвалити {{count}} користувача"
+          few:   "схвалити {{count}} користувачів"
+          many:  "схвалити {{count}} користувачів"
+          other: "схвалити {{count}} користувачів"
         reject_selected:
-          one:   "reject user"
-          few:   "reject users ({{count}})"
-          many:  "reject users ({{count}})"
-          other: "reject users ({{count}})"
+          one:   "відхилити {{count}} користувача"
+          few:   "відхилити {{count}} користувачів"
+          many:  "відхилити {{count}} користувачів"
+          other: "відхилити {{count}} користувачів"
         titles:
           active: 'Активні користувачі'
           new: 'Нові користувачі'
@@ -1563,15 +1563,15 @@ uk:
           blocked: 'Заблоковані користувачі'
           suspended: 'Призупинені користувачі'
         reject_successful:
-          one:   "Successfully rejected 1 user."
-          few:   "Successfully rejected %{count} users."
-          many:  "Successfully rejected %{count} users."
-          other: "Successfully rejected %{count} users."
+          one:   "Успішно відхилено %{count} користувача."
+          few:   "Успішно відхилено %{count} користувачів."
+          many:  "Успішно відхилено %{count} користувачів."
+          other: "Успішно відхилено %{count} користувачів."
         reject_failures:
-          one:   "Failed to reject 1 user."
-          few:   "Failed to reject %{count} users."
-          many:  "Failed to reject %{count} users."
-          other: "Failed to reject %{count} users."
+          one:   "Не вдалося відхилити %{count} користувача."
+          few:   "Не вдалося відхилити %{count} користувачів."
+          many:  "Не вдалося відхилити %{count} користувачів."
+          other: "Не вдалося відхилити %{count} користувачів."
 
       user:
         suspend_failed: "Щось трапилося під час призупинення цього користувача: {{error}}"
@@ -1582,7 +1582,7 @@ uk:
         suspend_reason: "Причина"
         suspended_by: "Призупинено"
         delete_all_posts: "Видалити всі дописи"
-        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
+        delete_all_posts_confirm: "Ви збираєтеся видалити %{posts} дописів і %{topics} тем. Ви впевнені?"
         suspend: "Призупинити"
         unsuspend: "Скасувати призупинення"
         suspended: "Призупинено?"
@@ -1601,28 +1601,28 @@ uk:
         grant_moderation: 'Grant Moderation'
         unblock: 'Розблокувати'
         block: 'Заблокувати'
-        reputation: Reputation
+        reputation: Репутація
         permissions: Дозволи
         activity: Активність
         like_count: Вподобань отримано
         private_topics_count: Приватних тем
         posts_read_count: Дописів прочитано
         post_count: Дописів створено
-        topics_entered: Topics Viewed
-        flags_given_count: Flags Given
-        flags_received_count: Flags Received
+        topics_entered: Тем переглянуто
+        flags_given_count: Скарг подано
+        flags_received_count: Скарг отримано
         approve: 'Схвалити'
         approved_by: "схвалено"
         approve_success: "Користувача схвалено і йому надіслано лист з інструкціями для активації."
-        approve_bulk_success: "Success! All selected users have been approved and notified."
-        time_read: "Read Time"
+        approve_bulk_success: "Успіх! Всіх обраних користувачів було схвалено та сповіщено про це."
+        time_read: "Час читання"
         delete: "Видалити користувача"
         delete_forbidden_because_staff: "Адмінів та модераторів видаляти не можна."
         delete_forbidden:
-          one:   "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
-          few:   "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
-          many:  "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
-          other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
+          one:   "Не можна видалити користувача, якщо він зареєструвався більше ніж %{count} день тому, або якщо в нього є дописи. Видаліть всі дописи перед тим, як видаляти користувача."
+          few:   "Не можна видалити користувача, якщо він зареєструвався більше ніж %{count} дні тому, або якщо в нього є дописи. Видаліть всі дописи перед тим, як видаляти користувача."
+          many:  "Не можна видалити користувача, якщо він зареєструвався більше ніж %{count} днів тому, або якщо в нього є дописи. Видаліть всі дописи перед тим, як видаляти користувача."
+          other: "Не можна видалити користувача, якщо він зареєструвався більше ніж %{count} днів тому, або якщо в нього є дописи. Видаліть всі дописи перед тим, як видаляти користувача."
         delete_confirm: "Ви ВПЕВНЕНІ, що хочете видалити цього користувача? Ця дія є незворотньою!"
         delete_and_block: "<b>Так</b>, і <b>заблокувати</b> реєстрацію з цієї скриньки та IP-адреси"
         delete_dont_block: "<b>Так</b>, просто видаліть користувача"
@@ -1637,26 +1637,26 @@ uk:
         deactivate_failed: "Під час деактивації користувача сталася помилка."
         unblock_failed: 'Під час розблокування користувача сталася помилка.'
         block_failed: 'Під час блокування користувача сталася помилка.'
-        deactivate_explanation: "Деактивований користувач має повторно підтвердити свою електонну скриньку."
+        deactivate_explanation: "Деактивований користувач має повторно підтвердити свою електронну скриньку."
         suspended_explanation: "Призупинений користувач не може увійти."
         block_explanation: "Заблокований користувач не може дописувати і розпочинати теми."
         trust_level_change_failed: "Під час зміни Рівня довіри користувача трапилася помилка."
         suspend_modal_title: "Призупинити користувача"
-        trust_level_2_users: "Trust Level 2 Users"
-        trust_level_3_requirements: "Trust Level 3 Requirements"
+        trust_level_2_users: "Користувачі з Рівнем довіри 2"
+        trust_level_3_requirements: "Вимоги для Рівня довіри 3"
         tl3_requirements:
-          title: "Requirements for Trust Level 3"
-          table_title: "In the last 100 days:"
-          value_heading: "Value"
-          requirement_heading: "Requirement"
-          visits: "Visits"
-          days: "days"
-          topics_with_replies: "Topics with Replies"
-          topics_replied_to: "Topics Replied To"
-          quality_content: "Quality Content"
-          reading: "Reading"
-          site_promotion: "Site Promotion"
-          flagged_posts: "Flagged Posts"
+          title: "Вимоги для Рівня довіри 3"
+          table_title: "Протягом останніх 100 днів:"
+          value_heading: "Значення"
+          requirement_heading: "Вимога"
+          visits: "Відвідини"
+          days: "днів"
+          topics_with_replies: "Теми з відповідями"
+          topics_replied_to: "Теми, на які відповів(ла)"
+          quality_content: "Якісні матеріали"
+          reading: "Читання"
+          site_promotion: "Просування сайту"
+          flagged_posts: "Оскаржені дописи"
 
       site_content:
         none: "Choose a type of content to begin editing."
