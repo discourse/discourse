@@ -275,7 +275,7 @@ SQL
       builder.where("t.archetype != :archetype", archetype: Archetype::private_message)
     end
 
-    unless guardian.is_staff?
+    unless guardian.is_admin?
       allowed = guardian.secure_category_ids
       if allowed.present?
         builder.where("( c.read_restricted IS NULL OR

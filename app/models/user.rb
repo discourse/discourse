@@ -482,7 +482,7 @@ class User < ActiveRecord::Base
 
 
   def secure_category_ids
-    cats = self.staff? ? Category.where(read_restricted: true) : secure_categories.references(:categories)
+    cats = self.admin? ? Category.where(read_restricted: true) : secure_categories.references(:categories)
     cats.pluck('categories.id').sort
   end
 
