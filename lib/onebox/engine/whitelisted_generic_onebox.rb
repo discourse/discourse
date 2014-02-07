@@ -89,7 +89,6 @@ module Onebox
           thestar.com
           thesun.co.uk
           thinkgeek.com
-          time.com
           tmz.com
           torontosun.com
           tumblr.com
