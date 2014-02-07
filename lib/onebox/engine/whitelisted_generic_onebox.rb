@@ -141,6 +141,7 @@ module Onebox
       end
 
       def rewrite_agnostic(html)
+        return html unless html
         uri = URI(@url)
         if WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.rewrites)
           html.gsub!(/https?:\/\//, '//')
