@@ -18,7 +18,8 @@ module Onebox
       end
 
       def url
-        "http://api.stackexchange.com/2.1/questions/#{match[:question]}?site=#{match[:domain]}"
+        domain = match[:subsubdomain] || match[:subdomain] || match[:domain]
+        "http://api.stackexchange.com/2.1/questions/#{match[:question]}?site=#{domain}"
       end
 
       def data
