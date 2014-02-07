@@ -45,7 +45,7 @@ module Scheduler
       end
 
       def wait_till_done
-        while !@queue.empty? && !@queue.num_waiting > 0
+        while !@queue.empty? && !(@queue.num_waiting > 0)
           sleep 0.001
         end
       end
