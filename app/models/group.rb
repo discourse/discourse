@@ -31,6 +31,24 @@ class Group < ActiveRecord::Base
 
   validate :alias_level, inclusion: { in: ALIAS_LEVELS.values}
 
+  def posts_for(guardian, before_post_id)
+    user_ids = group_users.map {|gu| gu.user_id}
+    result = Post.where(user_id: user_ids).includes(:user, :topic).references(:posts, :topics)
+    result = result.where('topics.archetype <> ?', Archetype.private_message)
+
+    unless guardian.is_staff?
+      allowed_ids = guardian.allowed_category_ids
+      if allowed_ids.length > 0
+        result = result.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
+      else
+        result = result.where('topics.category_id IS NULL')
+      end
+    end
+
+    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result.order('posts.created_at desc').limit(20)
+  end
+
   def self.trust_group_ids
     (10..19).to_a
   end
@@ -155,7 +173,6 @@ class Group < ActiveRecord::Base
       refresh_automatic_group!(name)
     end
   end
-
 
   def self.builtin
     Enum.new(:moderators, :admins, :trust_level_1, :trust_level_2)

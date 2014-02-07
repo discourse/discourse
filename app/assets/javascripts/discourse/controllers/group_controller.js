@@ -1,3 +1,11 @@
+/**
+  The basic controller for a group
+
+  @class GroupController
+  @extends Discourse.ObjectController
+  @namespace Discourse
+  @module Discourse
+**/
 Discourse.GroupController = Discourse.ObjectController.extend({
 
   // It would be nice if bootstrap marked action lists as selected when their links

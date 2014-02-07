@@ -126,8 +126,21 @@ Discourse.Group = Discourse.Model.extend({
       var message = $.parseJSON(e.responseText).errors;
       bootbox.alert(message);
     });
-  }
+  },
 
+  findPosts: function(opts) {
+    opts = opts || {};
+
+    var data = {};
+    if (opts.beforePostId) { data.before_post_id = opts.beforePostId; }
+
+    return Discourse.ajax("/groups/" + this.get('name') + "/posts.json", { data: data }).then(function (posts) {
+      return posts.map(function (p) {
+        p.user = Discourse.User.create(p.user);
+        return Em.Object.create(p);
+      });
+    });
+  }
 });
 
 Discourse.Group.reopenClass({

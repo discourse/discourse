@@ -165,6 +165,7 @@ Discourse::Application.routes.draw do
 
   resources :groups do
     get 'members'
+    get 'posts'
   end
 
   resources :posts do

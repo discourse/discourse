@@ -44,11 +44,12 @@
           <div class='bio'>{{{bio_cooked}}}</div>
 
           {{#if custom_groups}}
-          <div class='groups'>
-            {{#each custom_groups}}
-              {{#link-to 'group' this}}{{name}}{{/link-to}}
-            {{/each}}
-          </div>
+            <div class='groups'>
+              {{i18n groups.title count=custom_groups.length}}:
+              {{#each custom_groups}}
+                {{#link-to 'group' this}}{{name}}{{/link-to}}
+              {{/each}}
+            </div>
           {{/if}}
 
           {{#if isSuspended}}
