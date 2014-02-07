@@ -265,7 +265,7 @@ class TopicQuery
       end
 
       guardian = Guardian.new(@user)
-      unless guardian.is_staff?
+      if !guardian.is_admin?
         allowed_ids = guardian.allowed_category_ids
         if allowed_ids.length > 0
           result = result.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
