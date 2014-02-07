@@ -6,20 +6,20 @@ module Onebox
         return @raw if @raw
         response = fetch_response(url)
 
-				html_doc = Nokogiri::HTML(response.body)
+        html_doc = Nokogiri::HTML(response.body)
 
-				# Determine if we should use OEmbed or OpenGraph
-				oembed_alternate = html_doc.at("//link[@type='application/json+oembed']") || html_doc.at("//link[@type='text/json+oembed']")
-				if oembed_alternate
-					# If the oembed request fails, we can still try the opengraph below.
-					begin
-						@raw = Onebox::Helpers.symbolize_keys(::MultiJson.load(fetch_response(oembed_alternate['href']).body))
-					rescue Errno::ECONNREFUSED, Net::HTTPError, MultiJson::LoadError
-						@raw = nil
-					end
-				end
+        # Determine if we should use OEmbed or OpenGraph
+        oembed_alternate = html_doc.at("//link[@type='application/json+oembed']") || html_doc.at("//link[@type='text/json+oembed']")
+        if oembed_alternate
+          # If the oembed request fails, we can still try the opengraph below.
+          begin
+            @raw = Onebox::Helpers.symbolize_keys(::MultiJson.load(fetch_response(oembed_alternate['href']).body))
+          rescue Errno::ECONNREFUSED, Net::HTTPError, MultiJson::LoadError
+            @raw = nil
+          end
+        end
 
-				open_graph = OpenGraph.new(response.body, false)
+        open_graph = OpenGraph.new(response.body, false)
         if @raw
           @raw[:image] = open_graph.images.first if @raw[:image].nil? && open_graph && open_graph.images
 
@@ -29,7 +29,7 @@ module Onebox
         @raw = open_graph
       end
 
-			private
+      private
 
       def fetch_response(location, limit = 3)
         raise Net::HTTPError.new('HTTP redirect too deep', location) if limit == 0
