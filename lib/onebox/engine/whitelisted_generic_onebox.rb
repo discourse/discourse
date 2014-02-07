@@ -105,7 +105,6 @@ module Onebox
           wi.st
           wonderhowto.com
           wsj.com
-          youtube.com
           zappos.com
           zillow.com)
       end
@@ -121,7 +120,7 @@ module Onebox
       end
 
       def self.default_rewrites
-        %w(youtube.com)
+        %w()
       end
 
       def self.host_matches(uri, list)
