@@ -72,7 +72,7 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def count_with_subcategories(method)
-    object.subcategories.inject(object.send(method) || 0) { |sum,c| sum += c.send(method) }
+    object.subcategories.inject(object.send(method) || 0) { |sum,c| sum += (c.send(method) || 0) }
   end
 
 end
