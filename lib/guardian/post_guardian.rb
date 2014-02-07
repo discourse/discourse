@@ -100,7 +100,10 @@ module PostGuardain
   end
 
   def can_see_post?(post)
-    post.present? && (is_staff? || (!post.deleted_at.present? && can_see_topic?(post.topic)))
+    post.present? &&
+      (is_admin? ||
+      ((is_moderator? || !post.deleted_at.present?) &&
+        can_see_topic?(post.topic)))
   end
 
   def can_see_post_revision?(post_revision)
