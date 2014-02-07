@@ -753,7 +753,6 @@ nl:
     pop3s_polling_host: "De host voor POP3S"
     pop3s_polling_username: "De username voor het POP3S e-mailaccount"
     pop3s_polling_password: "Het wachtwoord voor het POP3S e-mailaccount"
-    enable_watch_new_topics: "Sta toe dat gebruikers alle nieuwe topics in de gaten houden (optioneel) via hun gebruikersinstellingen"
 
     minimum_topics_similar: "Hoeveel topics moeten er in de database staan voordat er vergelijkbare topics getoond worden?"
 

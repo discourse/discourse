@@ -268,21 +268,28 @@ describe TopicUser do
     tu.seen_post_count.should == 2
   end
 
-  describe "auto_watch_new_topic" do
+  describe "mailing_list_mode" do
 
-    it "auto watches topics when called" do
+    it "will receive email notification for every topic" do
+      SiteSetting.stubs(:enable_mailing_list_mode).returns(true)
+
       user1 = Fabricate(:user)
-      user2 = Fabricate(:user, watch_new_topics: true)
-      user3 = Fabricate(:user, watch_new_topics: true)
-      TopicUser.auto_watch_new_topic(topic.id)
+      user2 = Fabricate(:user, mailing_list_mode: true)
+      post = create_post
+      user3 = Fabricate(:user, mailing_list_mode: true)
+      create_post(topic_id: post.topic_id)
 
-      TopicUser.get(topic, user1).should == nil
+      # mails posts from earlier topics
+      tu = TopicUser.where(user_id: user3.id, topic_id: post.topic_id).first
+      tu.last_emailed_post_number.should == 2
 
-      tu = TopicUser.get(topic, user2)
-      tu.notification_level.should == TopicUser.notification_levels[:watching]
-      tu.notifications_reason_id.should == TopicUser.notification_reasons[:auto_watch]
+      # mails nothing to random users
+      tu = TopicUser.where(user_id: user1.id, topic_id: post.topic_id).first
+      tu.should be_nil
 
-      TopicUser.get(topic, user3).notification_level.should == TopicUser.notification_levels[:watching]
+      # mails other user
+      tu = TopicUser.where(user_id: user2.id, topic_id: post.topic_id).first
+      tu.last_emailed_post_number.should == 2
     end
   end
 

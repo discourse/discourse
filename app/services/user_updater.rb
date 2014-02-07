@@ -14,7 +14,7 @@ class UserUpdater
       :external_links_in_new_tab,
       :enable_quoting,
       :dynamic_favicon,
-      :watch_new_topics
+      :mailing_list_mode
   ]
 
   def initialize(actor, user)

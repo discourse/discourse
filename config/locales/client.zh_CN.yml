@@ -229,7 +229,6 @@ zh_CN:
       deleted: "（已删除）"
       suspended_notice: "该用户将被禁止登录，直至{{date}}."
       suspended_reason: "原因："
-      watch_new_topics: "自动关注论坛中所有新发表的主题"
       watched_categories: "已关注"
       watched_categories_instructions: "和跟踪相同，此外你还将收到新的帖子和主题的通知。"
       tracked_categories: "已跟踪"

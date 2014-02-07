@@ -230,7 +230,6 @@ de:
       deleted: "(gelöscht)"
       suspended_notice: "Diser Benutzer ist bis zum {{date}} susperndiert."
       suspended_reason: "Grund: "
-      watch_new_topics: "Automatische alle neuen Themen dieses Forums beobachten"
       watched_categories: "Beobachten"
       watched_categories_instructions: "Das selbe wie 'verfolgen', zusätzlich wirst du über alle neuen Beiträge und Themen informiert."
       tracked_categories: "Verfolgen"

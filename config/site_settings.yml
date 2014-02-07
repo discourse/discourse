@@ -232,7 +232,7 @@ email:
   pop3s_polling_port: 995
   pop3s_polling_username: ''
   pop3s_polling_password: ''
-  enable_watch_new_topics:
+  enable_mailing_list_mode:
     default: false
     client: true
 

@@ -233,7 +233,6 @@ nl:
       deleted: (verwijderd)
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
       suspended_reason: "Reden: "
-      watch_new_topics: "Houd alle nieuwe topics in het forum automatisch in de gaten"
       watched_categories: "In de gaten gehouden"
       watched_categories_instructions: "Zelfde als volgen, daarnaast zou je een notificatie ontvangen voor alle nieuwe berichten en topics"
       tracked_categories: "Gevolgd"

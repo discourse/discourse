@@ -229,7 +229,6 @@ fr:
       deleted: "(supprimé)"
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_reason: "Raison :"
-      watch_new_topics: "Surveiller automatiquement toutes les nouvelles discussions postées sur le forum"
       watched_categories: "Surveillées"
       watched_categories_instructions: "Vous allez surveiller automatiquement toutes les discussions de ces catégories"
       tracked_categories: "Suivies"

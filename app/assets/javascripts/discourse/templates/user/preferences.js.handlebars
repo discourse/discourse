@@ -83,6 +83,13 @@
     <div class="control-group">
       <label class="control-label">{{i18n user.email_settings}}</label>
       <div class="controls">
+        {{#if Discourse.SiteSettings.enable_mailing_list_mode}}
+          <label>
+            {{view Ember.Checkbox checkedBinding="mailing_list_mode"}}
+            {{i18n user.mailing_list_mode}}
+          </label>
+        {{/if}}
+
         <label>{{view Ember.Checkbox checkedBinding="email_digests"}}
         {{i18n user.email_digests.title}}</label>
 
@@ -115,15 +122,6 @@
         <label>{{i18n user.new_topic_duration.label}}</label>
         {{combobox valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
       </div>
-
-      {{#if Discourse.SiteSettings.enable_watch_new_topics}}
-      <div class="controls">
-        <label>
-          {{view Ember.Checkbox checkedBinding="watch_new_topics"}}
-          {{i18n user.watch_new_topics}}
-        </label>
-      </div>
-      {{/if}}
 
       <div class="controls">
         <label>{{view Ember.Checkbox checkedBinding="external_links_in_new_tab"}}

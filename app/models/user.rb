@@ -83,6 +83,7 @@ class User < ActiveRecord::Base
   attr_accessor :notification_channel_position
 
   scope :blocked, -> { where(blocked: true) } # no index
+  scope :not_blocked, -> { where(blocked: false) } # no index
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) } # no index
   scope :not_suspended, -> { where('suspended_till IS NULL') }
   # excluding fake users like the community user

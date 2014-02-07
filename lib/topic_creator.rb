@@ -39,7 +39,6 @@ class TopicCreator
       @topic.notifier.watch_topic!(id, nil)
     end
 
-    TopicUser.auto_watch_new_topic(@topic.id)
     CategoryUser.auto_watch_new_topic(@topic)
   end
 
