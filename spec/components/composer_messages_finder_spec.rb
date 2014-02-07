@@ -232,12 +232,12 @@ describe ComposerMessagesFinder do
       end
 
       it "doesn't notify a user it has already notified in this topic" do
-        UserHistory.create!(action: UserHistory.actions[:notitied_about_dominating_topic], topic_id: topic.id, target_user_id: user.id )
+        UserHistory.create!(action: UserHistory.actions[:notified_about_dominating_topic], topic_id: topic.id, target_user_id: user.id )
         finder.check_dominating_topic.should be_blank
       end
 
       it "notifies a user if the topic is different" do
-        UserHistory.create!(action: UserHistory.actions[:notitied_about_dominating_topic], topic_id: topic.id+1, target_user_id: user.id )
+        UserHistory.create!(action: UserHistory.actions[:notified_about_dominating_topic], topic_id: topic.id+1, target_user_id: user.id )
         finder.check_dominating_topic.should be_present
       end
 
@@ -256,6 +256,11 @@ describe ComposerMessagesFinder do
         finder.check_dominating_topic.should be_blank
       end
 
+      it "doesn't notify you in a private message" do
+        topic.update_column(:archetype, Archetype.private_message)
+        finder.check_dominating_topic.should be_blank
+      end
+
       context "success" do
         let!(:message) { finder.check_dominating_topic }
 
@@ -263,8 +268,8 @@ describe ComposerMessagesFinder do
           message.should be_present
         end
 
-        it "creates a notitied_about_dominating_topic log" do
-          UserHistory.exists_for_user?(user, :notitied_about_dominating_topic).should be_true
+        it "creates a notified_about_dominating_topic log" do
+          UserHistory.exists_for_user?(user, :notified_about_dominating_topic).should be_true
         end
 
       end
