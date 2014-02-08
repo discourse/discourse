@@ -54,11 +54,6 @@ Discourse.ShareView = Discourse.View.extend({
       var $currentTarget = $(e.currentTarget);
       var url = $currentTarget.data('share-url');
       var postNumber = $currentTarget.data('post-number');
-      // Relative urls
-
-      if (url.indexOf("/") === 0) {
-        url = window.location.protocol + "//" + window.location.host + url;
-      }
 
       var shareLinkWidth = $('#share-link').width();
       var x = e.pageX - (shareLinkWidth / 2);
