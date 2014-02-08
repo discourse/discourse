@@ -14,6 +14,14 @@ module Onebox
         match && match[3]
       end
 
+      def placeholder_html
+        if video_id
+          "<img src='http://i1.ytimg.com/vi/#{video_id}/hqdefault.jpg' width='480' height='270'>"
+        else
+          to_html
+        end
+      end
+
       def to_html
         if video_id
           # Avoid making HTTP requests if we are able to get the video ID from the
