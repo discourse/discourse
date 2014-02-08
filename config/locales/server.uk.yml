@@ -24,18 +24,18 @@ uk:
   via: "%{username} через %{site_name}"
   is_reserved: "is reserved"
 
-  site_under_maintenance: 'Site is currently undergoing maintenance.'
+  site_under_maintenance: 'Зараз на сайті проводяться технічні роботи.'
   operation_already_running: "An %{operation} is currently running. Can't start a new %{operation} job right now."
 
   too_many_replies:
-    one:   "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
-    few:   "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
-    many:  "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
-    other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
+    one:   "Просимо вибачити, але нові користувачі тимчасово обмежені до %{count} відповіді в тій самій темі."
+    few:   "Просимо вибачити, але нові користувачі тимчасово обмежені до %{count} відповідей в тій самій темі."
+    many:  "Просимо вибачити, але нові користувачі тимчасово обмежені до %{count} відповідей в тій самій темі."
+    other: "Просимо вибачити, але нові користувачі тимчасово обмежені до %{count} відповідей в тій самій темі."
 
   embed:
-    start_discussion: "Begin the Discussion"
-    continue: "Continue the Discussion"
+    start_discussion: "Розпочати обговорення"
+    continue: "Продовжити обговорення"
     more_replies:
       one:   "ще %{count} відповідь"
       few:   "ще %{count} відповіді"
@@ -53,64 +53,59 @@ uk:
       other: "%{count} відповідей"
 
   too_many_mentions:
-    zero:  "Sorry, you can't mention other users."
-    one:   "Sorry, you can only mention one other user in a post."
-    few:   "Sorry, you can only mention %{count} users in a post."
-    many:  "Sorry, you can only mention %{count} users in a post."
-    other: "Sorry, you can only mention %{count} users in a post."
+    one:   "Даруйте, Ви можете згадувати у дописі тільки %{count} користувача."
+    few:   "Даруйте, Ви можете згадувати у дописі тільки %{count} користувачів."
+    many:  "Даруйте, Ви можете згадувати у дописі тільки %{count} користувачів."
+    other: "Даруйте, Ви не можете згадувати інших користувачів."
   too_many_mentions_newuser:
-    zero:  "Sorry, new users can't mention other users."
-    one:   "Sorry, new users can only mention one other user in a post."
-    few:   "Sorry, new users can only mention %{count} users in a post."
-    many:  "Sorry, new users can only mention %{count} users in a post."
-    other: "Sorry, new users can only mention %{count} users in a post."
+    one:   "Даруйте, нові користувачі можуть згадувати в дописі тільки %{count} користувача."
+    few:   "Даруйте, нові користувачі можуть згадувати в дописі тільки %{count} користувачів."
+    many:  "Даруйте, нові користувачі можуть згадувати в дописі тільки %{count} користувачів."
+    other: "Даруйте, нові користувачі не можуть згадувати інших користувачів."
   too_many_images:
-    zero:  "Sorry, new users can't put images in posts."
-    one:   "Sorry, new users can only put one image in a post."
-    few:   "Sorry, new users can only put %{count} images in a post."
-    many:  "Sorry, new users can only put %{count} images in a post."
-    other: "Sorry, new users can only put %{count} images in a post."
+    one:   "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} зображення."
+    few:   "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} зображення."
+    many:  "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} зображень."
+    other: "Даруйте, нові користувачі не можуть вставляти зображення у дописи."
   too_many_attachments:
-    zero:  "Sorry, new users can't put attachments in posts."
-    one:   "Sorry, new users can only put one attachment in a post."
-    few:   "Sorry, new users can only put %{count} attachments in a post."
-    many:  "Sorry, new users can only put %{count} attachments in a post."
-    other: "Sorry, new users can only put %{count} attachments in a post."
+    one:   "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} прикріплення."
+    few:   "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} прикріплення."
+    many:  "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} прикріплень."
+    other: "Даруйте, нові користувачі не можуть вставляти прикріплення в дописи."
   too_many_links:
-    zero:  "Sorry, new users can't put links in posts."
-    one:   "Sorry, new users can only put one link in a post."
-    few:   "Sorry, new users can only put %{count} links in a post."
-    many:  "Sorry, new users can only put %{count} links in a post."
-    other: "Sorry, new users can only put %{count} links in a post."
-  spamming_host: "Sorry you cannot post a link to that host."
+    one:   "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} посилання."
+    few:   "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} посилання."
+    many:  "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} посилань."
+    other: "Даруйте, нові користувачі не можуть вставляти посилання в дописи."
+  spamming_host: "Даруйте, Ви не можете вставити посилання на цей хост."
 
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"
   invalid_characters: "contains invalid characters"
   is_invalid: "is invalid; try to be a little more descriptive"
   next_page: "next page →"
-  page_num: "Page %{num}"
+  page_num: "Сторінка %{num}"
   by: "By"
-  topics_in_category: "Topics in the '%{category}' category"
-  rss_posts_in_topic: "RSS feed of '%{topic}'"
-  rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
-  author_wrote: "%{author} wrote:"
-  num_posts: "Posts:"
-  num_participants: "Participants:"
+  topics_in_category: "Теми в категорії '%{category}'"
+  rss_posts_in_topic: "RSS-стрічка теми '%{topic}'"
+  rss_topics_in_category: "RSS-стрічка тем у категорії '%{category}'"
+  author_wrote: "%{author} написав(ла):"
+  num_posts: "Дописи:"
+  num_participants: "Учасники:"
   read_full_topic: "Read full topic"
   private_message_abbrev: "ПП"
   rss_description:
-    latest: "Latest topics"
-    hot: "Hot topics"
-  too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
+    latest: "Останні теми"
+    hot: "Гарячі теми"
+  too_late_to_edit: "Цей допис було створено надто давно. Його вже не можна редагувати або видалити."
 
   groups:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"
     default_names:
-      admins: "admins"
-      moderators: "moderators"
-      staff: "staff"
+      admins: "адміни"
+      moderators: "модератори"
+      staff: "персонал"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
@@ -119,64 +114,64 @@ uk:
 
   education:
     until_posts:
-      one:   "%{count} допис"
-      few:   "%{count} дописи"
-      many:  "%{count} дописів"
-      other: "%{count} дописів"
+      one:   "Вашого першого %{count} допису"
+      few:   "Ваших перших %{count} дописів"
+      many:  "Ваших перших %{count} дописів"
+      other: "Ваших перших %{count} дописів"
 
     'new-topic': |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+      Ласкаво просимо до сайту %{site_name} &mdash; **дякуємо за те, що Ви розпочали нове обговорення!**
 
-      - Does the title accurately describe your topic? Does it sound interesting?
+      - Чи точно назва описує Вашу тему? Чи є Ваша назва цікавою?
 
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+      - Про що вона? Кому вона буде цікавою? Чому вона важлива? Які віповіді Ви хочете отримати від спільноти?
 
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
+      - Включіть до своєї теми добрі ключові слова для пошуку, щоб її могли *знайти* інші. Щоб згрупувати її з іншими подібними темами, оберіть категорію.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      Для додаткових настанов, [перегляньте Часті Питання](/faq). Ця панель з'являтиметься тільки для %{education_posts_text}.
 
     'new-reply': |
-      Welcome to %{site_name} &mdash; **thanks for contributing!**
+      Ласкаво просимо до сайту %{site_name} &mdash; **дякуємо за долучення!**
 
-      - Does your reply improve the conversation in some way?
+      - Чи покращує Ваша відповідь обговорення у якийсь спосіб?
 
-      - Be kind to your fellow community members.
+      - Будьте ласкавими до своїх товаришів по спільноті.
 
-      - Constructive criticism is welcome, but criticize *ideas*, not people.
+      - Конструктивна критика вітається, але критикуйте *ідеї*, а не людей.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      Для додаткових настанов, [перегляньте Часті Питання](/faq). Ця панель з'являтиметься тільки для %{education_posts_text}.
 
     avatar: |
-      ### How about a new picture for your account?
+      ### Як щодо нового зображення для Вашого профілю?
 
-      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
+      Ви опублікували декілька тем та відповідей, але Ваша аватарка не є такою ж унікальною, як і Ви -- це звичайна аватарка, яку за замовчуванням отримують всі нові користувачі.
 
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
+      Чи не хотіли б Ви **[відвідати свій профіль](%{profile_path})** та завантажити зображення, що представляло б Вас?
 
-      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
+      Легше стежити за обговореннями спільноти і шукати цікавих людей в цих обговореннях, коли кожен має унікальну аватарку!
 
     sequential_replies: |
-      ### Consider replying to several posts at once
+      ### Спробуйте відповідати на декілька дописів одразу
 
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes or @name references to previous posts.
+      Замість декількох послідовних відповідей на тему, будь ласка, спробуйте використовувати одну відповідь, що включатиме цитати або посилання на @Імена користувачів з попередніх дописів.
 
-      You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
+      Ви можете відредагувати свою попередню відповідь, щоб додати цитату, виділивши текст і натиснувши кнопку <b>відповісти на цитату</b>, яка з'явиться над виділеним текстом.
 
-      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
+      Всім буде зручніше читати теми, в яких є мало великих відповідей, а не багато окремих маленьких відповідей.
 
     dominating_topic: |
-      ### Let others join the conversation
+      ### Дайте можливість іншим включитися до обговорення
 
-      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
+      Ця тема однозначно важлива для Вас &ndash; Ви опублікували тут більше %{percent}% відповідей.
 
-      Are you sure you're providing adequate time for other people to share their points of view, too?
+      Ви впевнені, що даєте достатньо часу для того, щоб інші люди також мали можливість поділитися своїми думками?
 
     too_many_replies: |
-      ### You have reached the reply limit for this topic
+      ### Ви досягли обмеження на кількість відповідей для цієї теми
 
-      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
+      Даруйте, але нові користувачі мають тимчасове обмеження до %{newuser_max_replies_per_topic} відповідей на одну тему.
 
-      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
+      Замість того, щоб додавати нову відповідь, спробуйте відредагувати свої старі відповіді, або відвідайте інші теми.
 
   activerecord:
     attributes:
@@ -198,7 +193,7 @@ uk:
         user:
           attributes:
             password:
-              common: "is one of the 5000 most common passwords. Please use a more secure password."
+              common: "є одним із 5000 найбільш популярних паролів. Будь ласка, оберіть більш безпечний пароль."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
 
@@ -214,8 +209,8 @@ uk:
 
   category:
     topic_prefix: "Визначення категорії %{category}"
-    replace_paragraph: "[Замініть цей перший параграф коротким описом Вашої нової категорії. Він з'являтиметься в області вибору категорій, тому намагайтеся, щоб він був коротшим за 200 символів. Поки Ви не відредагуєте цей текст або не створите тем, ця категорія не з'явиться на сторінці категорій.]"
-    post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
+    replace_paragraph: "[Замініть цей перший абзац коротким описом Вашої нової категорії. Він з'являтиметься в області вибору категорій, тому намагайтеся, щоб він був коротшим за 200 символів. Поки Ви не відредагуєте цей текст або не створите тем, ця категорія не з'явиться на сторінці категорій.]"
+    post_template: "%{replace_paragraph}\n\nВикористовуйте наступні абзаци для довшого опису, а також для того, щоб встановити якісь правила категорії.\n\nДеякі речі, які можна обговорити у відповідях на цей допис:\n\n- Для чого потрібна ця категорія? Чому людям слід обирати цю категорію для своїх тем?\n\n- Чим вона відрізняється від інших категорій, що в нас є?\n\n- Чи потрібна нам ця категорія?\n\n- Чи потрібно об'єднати цю категорію з якоюсь іншою, або розбити її на декілька?\n"
     errors:
       self_parent: "A subcategory's parent cannot be itself."
       depth: "You can't nest a subcategory under another."
@@ -234,19 +229,19 @@ uk:
 
 
   rate_limiter:
-    too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
+    too_many_requests: "У нас є обмеження щодо того, скільки разів за добу можна виконати цю дію. Будь ласка, зачекайте %{time_left} перед тим, як спробувати ще раз."
     hours:
-      one:   "%{count} година"
+      one:   "%{count} годину"
       few:   "%{count} години"
       many:  "%{count} годин"
       other: "%{count} годин"
     minutes:
-      one:   "%{count} хвилина"
+      one:   "%{count} хвилину"
       few:   "%{count} хвилини"
       many:  "%{count} хвилин"
       other: "%{count} хвилин"
     seconds:
-      one:   "%{count} секунда"
+      one:   "%{count} секунду"
       few:   "%{count} секунди"
       many:  "%{count} секунд"
       other: "%{count} секунд"
@@ -370,24 +365,24 @@ uk:
 
   password_reset:
     no_token: "Sorry, your token has expired. Please try resetting your password again."
-    choose_new: "Please choose a new password"
-    choose: "Please choose a password"
-    update: 'Update Password'
-    save: 'Set Password'
-    title: 'Reset Password'
-    success: "You successfully changed your password and are now logged in."
-    success_unapproved: "You successfully changed your password."
-    continue: "Continue to %{site_name}"
+    choose_new: "Будь ласка, оберіть новий пароль"
+    choose: "Будь ласка, оберіть пароль"
+    update: 'Оновити пароль'
+    save: 'Встановити пароль'
+    title: 'Скинути пароль'
+    success: "Ви успішно змінили свій пароль і зараз Ви в системі."
+    success_unapproved: "Ви успішно змінили свій пароль."
+    continue: "Продовжити у %{site_name}"
 
   change_email:
-    confirmed: "Your email has been updated."
+    confirmed: "Адресу вашої електронної скриньки оновлено."
     please_continue: "Please continue to %{link}"
-    error: "There was an error changing your email address. Perhaps the address is already in use?"
+    error: "Під час зміни адреси Вашої електронної скриньки трапилася помилка. Можливо, ця адреса вже використовується?"
 
   activation:
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
     please_continue: "Your new account is confirmed, and you are now logged in. Continue to %{link}"
-    welcome_to: "Welcome to %{site_name}!"
+    welcome_to: "Ласкаво просимо до сайту %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
 
   post_action_types:
@@ -429,12 +424,12 @@ uk:
       long_form: 'voted for this post'
 
   flagging:
-    you_must_edit: '<p>Your post was flagged by the community. Please see your private messages.</p>'
-    user_must_edit: '<p>Flagged content temporarily hidden.</p>'
+    you_must_edit: '<p>Ваш допис було оскаржено спільнотою. Будь ласка, перегляньте приватні повідомлення.</p>'
+    user_must_edit: '<p>Оскаржений вміст тимчасово приховано.</p>'
 
   archetypes:
     regular:
-      title: "Regular Topic"
+      title: "Звичайна тема"
 
   unsubscribed:
     title: 'Unsubscribed'
@@ -908,23 +903,20 @@ uk:
     closed_enabled: "Цю тему закрито. Нові відповіді заборонено."
     closed_disabled: "Цю тему відкрито. Нові відповіді дозволено."
     autoclosed_enabled_days:
-      zero:  "This topic was automatically closed after 1 day. New replies are no longer allowed."
       one:   "This topic was automatically closed after 1 day. New replies are no longer allowed."
       few:   "This topic was automatically closed after %{count} days. New replies are no longer allowed."
       many:  "This topic was automatically closed after %{count} days. New replies are no longer allowed."
-      other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
+      other: "This topic was automatically closed after 1 day. New replies are no longer allowed."
     autoclosed_enabled_hours:
-      zero:  "This topic was automatically closed after 1 hour. New replies are no longer allowed."
       one:   "This topic was automatically closed after 1 hour. New replies are no longer allowed."
       few:   "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
       many:  "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
-      other: "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
+      other: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
     autoclosed_enabled_minutes:
-      zero:  "This topic was automatically closed after 1 minute. New replies are no longer allowed."
       one:   "This topic was automatically closed after 1 minute. New replies are no longer allowed."
       few:   "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
       many:  "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
-      other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
+      other: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
     autoclosed_disabled: "Тепер ця тема відкрита. Дозволено нові відповіді."
     pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is either unpinned by a moderator, or the Clear Pin button is pressed."
     pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
@@ -976,11 +968,11 @@ uk:
   invite_forum_mailer:
     subject_template: "[%{site_name}] %{invitee_name} запросив(ла) Вас приєднатися до %{site_name}"
     text_body_template: |
-      %{invitee_name} запросив(ла) Вас до %{site_name}.
+      %{invitee_name} запросив(ла) Вас до сайту %{site_name}.
 
       Якщо Вас це цікавить, перейдіть за посиланням, щоб приєднатися:
 
-      [Завітати до %{site_name}][1]
+      [Завітати до сайту %{site_name}][1]
 
       Вас запросив довірений користувач, тому Ви матимете можливість приєднатися одразу, без входу до системи.
 
@@ -1112,7 +1104,7 @@ uk:
         - Під час читання теми натисніть заголовок вгорі сторінки, щоб повернутися на її початок ↑. Щоб перейти в *кінець* ↓, натисніть стрілочку вниз на індикаторі прогресу по темі внизу сторінки, або натисніть поле "Останній допис" в підсумку теми під першим дописом.
 
     welcome_user:
-      subject_template: "Ласкаво просимо до %{site_name}!"
+      subject_template: "Ласкаво просимо до сайту %{site_name}!"
       text_body_template: |
         Дякуємо за приєднання до %{site_name}, і вітаємо у нашому дискусійному форумі!
 
@@ -1123,7 +1115,7 @@ uk:
         Бажаємо приємного перебування на форумі!
 
     welcome_invite:
-      subject_template: "Ласкаво просимо до %{site_name}!"
+      subject_template: "Ласкаво просимо до сайту %{site_name}!"
       text_body_template: |
         Дякуємо за те, що Ви прийняли запрошення до %{site_name}, і вітаємо у нашому дискусійному форумі!
 
@@ -1167,13 +1159,13 @@ uk:
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 
     blocked_by_staff:
-      subject_template: "Account blocked"
+      subject_template: "Обліковий запис заблоковано"
       text_body_template: |
-        Hello,
+        Вітаємо!
 
-        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
+        Це - автоматичне повідомлення, надіслане сайтом %{site_name}, щоб повідомити Вас про те, що Ваш обліковий запис було заблоковано членом персоналу.
 
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+        Для додаткових настанов, будь ласка, зверніться до [Частих питань](%{base_url}/faq).
 
     user_automatically_blocked:
       subject_template: "New user %{username} blocked via flags"
@@ -1301,49 +1293,49 @@ uk:
         other: "%{count} дописів"
 
     forgot_password:
-      subject_template: "[%{site_name}] Password reset"
+      subject_template: "[%{site_name}] Скидання пароля"
       text_body_template: |
-        Somebody asked to reset your password on [%{site_name}](%{base_url}).
+        Хтось попросив скинути Ваш пароль на сайті [%{site_name}](%{base_url}).
 
-        If it was not you, you can safely ignore this email.
+        Якщо це були не Ви, можете спокійно проігнорувати цей лист.
 
-        Click the following link to choose a new password:
+        Перейдіть за посиланням, щоб обрати новий пароль:
         %{base_url}/users/password-reset/%{email_token}
 
     set_password:
-      subject_template: "[%{site_name}] Set Password"
+      subject_template: "[%{site_name}] Встановлення пароля"
       text_body_template: |
-        Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
+        Хтось попросив додати пароль до Вашого облікового запису на сайті [%{site_name}](%{base_url}). Замість цього, Ви можете входити в систему, використовуючи будь-який із підтримуваних онлайн-сервісів (Google, Facebook, і т. ін.), який поєднаний із цією перевіреною електронною скринькою.
 
-        If you did not make this request, you can safely ignore this email.
+        Якщо Ви не робили такого запиту, можете спокійно проігнорувати цей лист.
 
-        Click the following link to choose a password:
+        Перейдіть за посиланням, щоб обрати пароль:
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:
-      subject_template: "[%{site_name}] Confirm your new email address"
+      subject_template: "[%{site_name}] Підтвердіть свою електронну скриньку"
       text_body_template: |
-        Confirm your new email address for %{site_name} by clicking on the following link:
+        Підтвердіть свою нову електронну скриньку для сайту %{site_name}, перейшовши за посиланням:
 
         %{base_url}/users/authorize-email/%{email_token}
 
     signup_after_approval:
-      subject_template: "You've been approved on %{site_name}!"
+      subject_template: "Вас було схвалено на сайті %{site_name}!"
       text_body_template: |
-        Welcome to %{site_name}!
+        Ласкаво просимо до сайту %{site_name}!
 
-        You're approved to join %{site_name}, welcome to our discussion forum!
+        Ваше приєднання до сайту %{site_name} схвалено, вітаємо у нашому дискусійному форумі!
 
-        Click the following link to confirm and activate your new account:
+        Натисніть посилання, щоб підтвердити та активувати свій новий обліковий запис:
         %{base_url}/users/activate-account/%{email_token}
 
-        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+        Якщо наведене посилання не є клікабельним, спробуйте скопіювати та вставити його в адресний рядок Вашого веб-оглядача.
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        Ми завжди віримо у [цивілізовану поведінку у спільноті](%{base_url}/faq).
 
-        Enjoy your stay!
+        Бажаємо приємного перебування на форумі!
 
     signup:
       subject_template: "[%{site_name}] Активуйте свій новий обліковий запис"
@@ -1379,9 +1371,9 @@ uk:
   deleted: 'deleted'
 
   upload:
-    edit_reason: "We have downloaded copies of the remote images"
+    edit_reason: "Ми звантажили копії віддалених зображень"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
-    pasted_image_filename: "Pasted image"
+    pasted_image_filename: "Вставлене зображення"
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}%kb)."
     images:
