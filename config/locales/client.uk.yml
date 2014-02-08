@@ -237,7 +237,7 @@ uk:
       topics: "Нові теми"
       latest: "Останні"
       latest_by: "latest by"
-      toggle_ordering: "змінити напрям сортування"
+      toggle_ordering: "показати/сховати елемент керування для впорядкування"
       subcategories: "Підкатегорії:"
       topic_stats: "Кількість нових тем."
       topic_stat_sentence:
@@ -597,7 +597,7 @@ uk:
       help: "Markdown Editing Help"
       toggler: "показати або сховати панель редагування"
 
-      admin_options_title: "Optional staff settings for this topic"
+      admin_options_title: "Необов'язкові налаштування персоналу для цієї теми"
       auto_close_label: "Час автоматичного закриття теми:"
       auto_close_units: "(к-ть годин, час, або дата)"
       auto_close_examples: 'Приклади: 24, 17:00, 2013-11-22 14:00'
@@ -644,7 +644,7 @@ uk:
 
     site_map: "перейти до іншого переліку або категорії тем"
     go_back: 'повернутися назад'
-    not_logged_in_user: 'user page with summary of current activity and preferences'
+    not_logged_in_user: 'сторінка користувача з підсумком поточної діяльності та налаштуваннями'
     current_user: 'перейти до Вашої сторінки користувача'
 
     starred:
@@ -1000,16 +1000,16 @@ uk:
           like: "Скасувати вподобання"
           vote: "Відкликати голос"
         people:
-          off_topic: "{{icons}} позначив(ла) це як недотичне до теми"
-          spam: "{{icons}} позначив(ла) це як спам"
-          inappropriate: "{{icons}} позначив(ла) це як неприпустиме"
-          notify_moderators: "{{icons}} звернув увагу модераторів"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>звернув(ла) увагу модераторів</a>"
-          notify_user: "{{icons}} надіслав(ла) приватне повідомлення"
-          notify_user_with_url: "{{icons}} надіслав(ла) <a href='{{postUrl}}'>приватне повідомлення</a>"
-          bookmark: "{{icons}} лишив(ла) тут закладку"
-          like: "{{icons}} вподобав(ла) це"
-          vote: "{{icons}} проголосував(ла) за це"
+          off_topic: "Як недотичне до теми це позначили: {{icons}}"
+          spam: "Як спам це позначили: {{icons}}"
+          inappropriate: "Як неприпустиме це позначили: {{icons}}"
+          notify_moderators: "Звернули увагу модераторів: {{icons}}"
+          notify_moderators_with_url: "<a href='{{postUrl}}'>Звернули увагу модераторів</a>: {{icons}}"
+          notify_user: "Надіслали приватне повідомлення: {{icons}}"
+          notify_user_with_url: "Надіслали <a href='{{postUrl}}'>приватне повідомлення</a>: {{icons}}"
+          bookmark: "Лишили тут закладку: {{icons}}"
+          like: "Вподобали це: {{icons}}"
+          vote: "Проголосували за це: {{icons}}"
         by_you:
           off_topic: "Ви поскаржилися на це як на недотичне до теми"
           spam: "Ви поскаржилися на це як на спам"
