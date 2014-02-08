@@ -30,7 +30,8 @@ module Jobs
                   )', post.topic.category_id, CategoryUser.notification_levels[:muted])
           .each do |user|
             if Guardian.new(user).can_see?(post)
-              UserNotifications.mailing_list_notify(user, post).deliver
+              message = UserNotifications.mailing_list_notify(user, post)
+              Email::Sender.new(message, :mailing_list, user).send
             end
       end
 
