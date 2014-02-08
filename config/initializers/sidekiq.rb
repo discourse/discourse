@@ -5,6 +5,14 @@ Sidekiq.configure_server do |config|
 end
 
 if Sidekiq.server?
+
+  # warm up AR
+  RailsMultisite::ConnectionManagement.each_connection do
+    (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
+      table.classify.constantize.first rescue nil
+    end
+  end
+
   require 'scheduler/scheduler'
 
   manager = Scheduler::Manager.new
