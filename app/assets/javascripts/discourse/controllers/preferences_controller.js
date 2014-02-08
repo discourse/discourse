@@ -30,6 +30,12 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     return Discourse.SiteSettings.enable_names;
   }.property(),
 
+  availableLocales: function() {
+    return Discourse.SiteSettings.available_locales.split('|').map( function(s) {
+      return {name: s, value: s};
+    });
+  }.property(),
+
   digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
                       { name: I18n.t('user.email_digests.weekly'), value: 7 },
                       { name: I18n.t('user.email_digests.bi_weekly'), value: 14 }],

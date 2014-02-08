@@ -170,6 +170,7 @@ Discourse.User = Discourse.Model.extend({
                                'bio_raw',
                                'website',
                                'name',
+                               'locale',
                                'email_digests',
                                'email_direct',
                                'email_always',

@@ -67,6 +67,16 @@
     </div>
 
     <div class="control-group">
+      <label class="control-label">{{i18n user.locale.title}}</label>
+      <div class="controls">
+        {{combobox valueAttribute="value" content=availableLocales value=locale none="user.locale.default"}}
+      </div>
+      <div class='instructions'>
+        {{i18n user.locale.instructions}}
+      </div>
+    </div>
+
+    <div class="control-group">
       <label class="control-label">{{i18n user.bio}}</label>
       <div class="controls">
         {{pagedown value=bio_raw}}

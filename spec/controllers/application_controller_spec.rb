@@ -44,6 +44,19 @@ describe TopicsController do
 
   end
 
+  describe 'set_locale' do
+    it 'sets the one the user prefers' do
+      SiteSetting.stubs(:allow_user_locale).returns(true)
+
+      user = Fabricate(:user, locale: :fr)
+      log_in_user(user)
+
+      get :show, {topic_id: topic.id}
+
+      I18n.locale.should == :fr
+    end
+  end
+
 end
 
 describe 'api' do

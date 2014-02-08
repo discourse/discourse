@@ -325,6 +325,11 @@ en:
         enter_email: 'Username found. Enter matching email.'
         prefilled: "Email matches this registered username."
 
+      locale:
+        title: "Interface language"
+        instructions: "The language used by the forum interface. It will change when you refresh the page."
+        default: "(default)"
+
       password_confirmation:
         title: "Password Again"
 
