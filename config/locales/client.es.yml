@@ -92,6 +92,8 @@ es:
     show_more: "ver más"
     links: Enlaces
     faq: "FAQ"
+    mobile_view: "Versión móvil"
+    desktop_view: "Versión de escritorio"
     you: "Tú"
     ok: "Hecho"
     or: "o"
@@ -544,6 +546,8 @@ es:
       read_more_in_category: "Quieres leer mas? Consulta otros temas en {{catLink}} or {{latestLink}}."
       read_more: "¿Quieres seguir leyendo? {{catLink}} or {{latestLink}}."
       browse_all_categories: Ver todas las categorías
+      auto_close_save: "Guardar"
+      auto_close_remove: "No auto-cerrar este tema"
 
       view_latest_topics: ver los últimos temas
       suggest_create_topic: ¿Por qué no creas un tema?
@@ -597,6 +601,7 @@ es:
         reset_read: "Restablecer Datos"
         multi_select: "Selecciona los mensajes a mover"
         convert_to_topic: "Convertir en tema normal"
+        auto_close: "Auto-cierre"
 
       reply:
         title: 'Responder'
@@ -666,6 +671,7 @@ es:
       continue_discussion: "Continuando la discusión desde {{postLink}}:"
       follow_quote: "ir al mensaje citado"
       deleted_by_author: "(mensaje eliminado por el autor)"
+      deleted_by: "eliminado por"
 
       has_replies:
         one: "Respuesta"
@@ -782,6 +788,7 @@ es:
     categories_list: "Lista de categorías"
 
     filters:
+      with_topics: "Temas %{filter}"
       latest:
         title: "Populares"
         help: "los temas más recientes más populares"
@@ -987,6 +994,7 @@ es:
         suspend: "Banear"
         unsuspend: "Quitar ban"
         suspended: "Baneado?"
+        blocked: "Bloqueado?
         moderator: "Moderador?"
         admin: "Administrador?"
         show_admin_profile: "Administrador"
@@ -1010,7 +1018,8 @@ es:
         approve: 'Aprobar'
         approved_by: "aprobado por"
         time_read: "Tiempo de lectura"
-        
+        delete_forbidden_because_staff: "Administradores y moderadores no pueden ser eliminados"
+        trust_level_3_requirements: "Requerimientos para Nivel de confianza 3"
 
       site_content:
         none: "Elige un tipo de contenido para empezar a editar."
