@@ -300,12 +300,12 @@ en:
 
       name:
         title: "Name"
-        instructions: "The long version of your name. Publicly visible, and used for @name matching."
+        instructions: "The long version of your name; publicly visible."
         too_short: "Your name is too short."
         ok: "Your name looks good."
       username:
         title: "Username"
-        instructions: "Must be unique, no spaces. People can mention you as @username."
+        instructions: "Must be unique, no spaces, short. People can mention you as @username."
         short_instructions: "People can mention you as @{{username}}."
         available: "Your username is available."
         global_match: "Email matches the registered username."
