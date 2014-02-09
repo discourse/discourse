@@ -592,15 +592,15 @@ uk:
 
   site_settings:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
-    min_post_length: "Minimum post length in characters"
-    min_private_message_post_length: "Minimum post length in characters for private messages"
-    max_post_length: "Maximum post length in characters"
-    min_topic_title_length: "Minimum topic title length in characters"
-    max_topic_title_length: "Maximum topic title length in characters"
-    min_private_message_title_length: "Minimum title length for a private message in characters"
+    min_post_length: "Мінімальна довжина допису (в символах)"
+    min_private_message_post_length: "Мінімальна довжина допису (в символах) для приватних повідомлень"
+    max_post_length: "Максимальна довжина допису (в символах)"
+    min_topic_title_length: "Мінімальна довжина назви теми (в символах)"
+    max_topic_title_length: "Максимальна довжина назви теми (в символах)"
+    min_private_message_title_length: "Мінімальна довжина назви теми для приватних повідомлень (в символах)"
     min_search_term_length: "Minimum search term length in characters"
-    allow_uncategorized_topics: "Allow topics to be created without a category. NOTE: After changing this setting, all clients will need to reload their browsers for the change to take effect."
-    allow_duplicate_topic_titles: "Allow topics with identical titles"
+    allow_uncategorized_topics: "Дозволити створювати теми без категорії. ПРИМІТКА: Після зміни цього налаштування усім клієнтам доведеться перезавантажити свої оглядачі, щоб зміни вступили в силу."
+    allow_duplicate_topic_titles: "Дозволити теми з однаковими назвами"
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     enforce_global_nicknames: "Забезпечити глобальну унікальність псевдонімів (ПОПЕРЕДЖЕННЯ: змінюйте це тільки під час початкового налаштування)"
     discourse_org_access_key: "Ключ доступу, що використовується для доступу до глобального реєстру псевдонімів на discourse.org"
@@ -615,17 +615,17 @@ uk:
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     download_remote_images_to_local: "Download a copy of remote images hotlinked in posts"
     download_remote_images_threshold: "Amount of minimum available disk space required to download remote images locally (in percent)"
-    ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
-    post_edit_time_limit: "Amount of time in minutes in which posts can be edited and deleted by the author. Set to 0 to allow editing and deleting posts at any time."
-    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view edit history."
-    delete_removed_posts_after: "Number of hours after which posts removed by the author will be deleted."
+    ninja_edit_window: "Кількість секунд після публікації, протягом яких редагування не створює нової версії"
+    post_edit_time_limit: "Кількість часу в хвилинах, протягом якого автор може редагувати та видаляти свої дописи. Встановіть 0, щоб дозволити редагування та видалення дописів в будь-який час."
+    edit_history_visible_to_public: "Дозволити всім переглядати попередні версії редагованого допису. Якщо вимкнено, тільки члени персоналу можуть переглядати історію редагувань."
+    delete_removed_posts_after: "Кількість годин, після яких дописи, позначені на видалення автором, будуть видалені."
     max_image_width: "Maximum allowed width of images in a post"
     max_image_height: "Maximum allowed height of images in a post"
     category_featured_topics: "Кількість тем на одну категорію, що показуються на сторінці /categories. Після зміни цього значення, оновлення категорій займе до 15 хвилин."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
 
-    post_excerpt_maxlength: "Maximum length in chars of a post's excerpt"
+    post_excerpt_maxlength: "Максимальна довжина витягу із допису (у символах)"
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"
     category_post_template: "The category definition post template used when you create a new category"
     onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
@@ -636,13 +636,13 @@ uk:
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
 
     notification_email: "Адреса зворотньої електронної скриньки, що буде використовуватися при надсиланні системних повідомлень на кшталт сповіщень користувачів про загублені паролі, нові облікові записи і т. ін."
-    email_custom_headers: "A pipe-delimited list of custom email headers"
+    email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     use_https: "Should the full url for the site (Discourse.base_url) be http or https?"
     summary_score_threshold: "The minimum score of a post to be included in the 'summary'"
     summary_posts_required: "Minimum posts in a topic before 'summary' mode is enabled"
     summary_likes_required: "Minimum likes in a topic before the 'summary' mode will be enabled"
     summary_percent_filter: "When a user clicks summary, show the top % of posts"
-    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
+    enable_private_messages: "Дозволити Базовим користувам (Рівень довіри 1) створювати приватні повідомлення та відповідати на приватні повідомлення"
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
@@ -663,8 +663,8 @@ uk:
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "If a new user (i.e., registered in the last 24 hours) who started a topic and a new user who replies in that topic are at the same IP address, both their posts will automatically be flagged as spam."
 
-    traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
-    post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
+    traditional_markdown_linebreaks: "Використовувати звичайний розрив рядка в Markdown, який вимагає двох пробілів в кінці для розриву рядка"
+    post_undo_action_window_mins: "Кількість секунд, протягом яких користувачам дозволено скасувати дію над дописом (вподобання, скаргу тощо)"
     must_approve_users: "Адмін має схвалити користувача перед тим, як той отримає доступ"
     ga_tracking_code: "Код відстеження Google аналітики (ga.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_domain_name: "Доменне ім'я Google аналітики (ga.js), напр.: mysite.com; див. http://google.com/analytics"
@@ -680,8 +680,8 @@ uk:
     posts_per_page: "Скільки дописів завантажується за замовчуванням на сторінці теми, а також під час підвантаження решти дописів"
     site_contact_username: "Ім'я користувача для автора автоматизованих приватних повідомлень, що надсилаються форумом"
     send_welcome_message: "Do new users get a welcome private message?"
-    suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
-    suppress_reply_directly_above: "Don't show in-reply-to on a post when there is a single reply directly above"
+    suppress_reply_directly_below: "Не показувати кількість відповідей на дописі, коли є лише одна відповідь одразу після нього"
+    suppress_reply_directly_above: "Не показувати \"у-відповідь-на\" на дописі, коли є лише одна відповідь одразу після нього"
 
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
@@ -774,26 +774,26 @@ uk:
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 
-    newuser_max_links: "How many links a new user can add to a post"
-    newuser_max_images: "How many images a new user can add to a post"
-    newuser_max_attachments: "How many attachments a new user can add to a post"
-    newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post"
-    newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic"
-    max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
+    newuser_max_links: "Скільки посилань новий користувач може додати до допису"
+    newuser_max_images: "Скільки зображень новий користувач може додати до допису"
+    newuser_max_attachments: "Скільки прикріплень новий користувач може додати до допису"
+    newuser_max_mentions_per_post: "Максимальна кількість згадок @Імен користувачів, які новий користувач може використати в дописі"
+    newuser_max_replies_per_topic: "Максимальна кількість відповідей, які новий користувач може опублікувати в одному дописі"
+    max_mentions_per_post: "Максимальна кількість згадок @Імен користувачів, які можна використати в дописі"
 
     create_thumbnails: "Create thumbnails for lightboxed images"
 
-    email_time_window_mins: "How many minutes we wait before sending reply notification emails, to give users a chance to edit and finalize their posts"
-    email_posts_context: "How many prior replies to include as context in notification emails"
+    email_time_window_mins: "Скільки хвилин ми чекаємо перед тим, як надсилати сповіщення про відповідь на електронну скриньку, щоб дати користувачу можливість відредагувати та довершити свій допис"
+    email_posts_context: "Скільки попередніх відповідей включати в якості контексту в листи-сповіщення"
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
-    max_word_length: "The maximum allowed word length, in characters, in a topic title"
+    max_word_length: "Максимальна довжина назви теми (у символах)"
     title_min_entropy: "The minimum allowed entropy (unique characters, non-english count for more) required for a topic title"
     body_min_entropy: "The minimum allowed entropy (unique characters, non-english count for more) required for a post body"
 
-    title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
+    title_fancy_entities: "Перетворювати звичайні ASCII-символи на примхливі HTML-сутності у назвах тем, на кшталт SmartyPants http://daringfireball.net/projects/smartypants/"
 
-    min_title_similar_length: "The minimum length of a title before it will be checked for similar topics"
-    min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
+    min_title_similar_length: "Мінімальна довжина назви до того, як її буде перевірено на схожість з іншими темами"
+    min_body_similar_length: "Мінімальна довжина тіла допису до того, як його буде перевірено на схожість з іншими темами"
 
     category_colors: "Список шістнадцяткових значень кольорів, дозволених для категорій та розділених вертикальною рискою (|)"
 
@@ -802,7 +802,7 @@ uk:
     authorized_extensions: "A pipe (|) separated list of file extensions allowed for upload"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
 
-    title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
+    title_prettify: "Запобігати типовим опискам та помилкам, таким як: всі літери - великі, перша літера - мала, багаторазові ! та ?, надлишкові . в кінці, тощо."
 
     topic_views_heat_low: "The number of views after which a topic's heat level is low."
     topic_views_heat_medium: "The number of views after which a topic's heat level is medium."
@@ -815,15 +815,15 @@ uk:
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
     staff_like_weight: "Extra weighting factor given to likes when performed by staff."
 
-    reply_by_email_enabled: "Enable replying to topics via email"
-    reply_by_email_address: "Template for reply by email address in form, for example: %{reply_key}@reply.myforum.com"
+    reply_by_email_enabled: "Увімкнути відповідь на теми через електронну пошту"
+    reply_by_email_address: "Шаблон адреси електронної скриньки у формі для відповідей через електронну пошту, наприклад: %{reply_key}@reply.myforum.com"
 
     pop3s_polling_enabled: "Poll via POP3S for email replies"
     pop3s_polling_port: "The port to poll a POP3S account on"
     pop3s_polling_host: "The host to poll for email via POP3S"
     pop3s_polling_username: "The username for the POP3S account to poll for email"
     pop3s_polling_password: "The password for the POP3S account to poll for email"
-    enable_watch_new_topics: "Allow users to watch all new topics (optionally) via a user preference"
+    enable_watch_new_topics: "Дозволити користувачам слідкувати за всіма новими темами (необов'язково) через налаштування користвача"
 
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 
@@ -835,7 +835,7 @@ uk:
 
     allow_uploaded_avatars: "Allow users to upload their custom avatars"
     allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:regenerate rake task after changing that setting."
-    default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
+    default_digest_email_frequency: "Як часто користувачі отримують листи зі стислим викладом новин за замовчуванням. Вони можуть змінити це у своїх налаштуваннях."
     default_external_links_in_new_tab: "Відкривати нові посилання у новій вкладці. Користувачі можуть змінити це у своїх налаштуваннях."
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars"
@@ -849,10 +849,10 @@ uk:
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists"
 
     enable_names: "Дозволити користувачам показувати свої повні імена"
-    display_name_on_posts: "Also show a user's full name on their posts"
+    display_name_on_posts: "Показувати також повне ім'я користувача в його дописах"
     invites_shown: "Максимум запрошень, показуваних на сторінці користувача"
-    short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
+    short_progress_text_threshold: "Після того, як кількість дописів в темі перевищить це число, індикатор просування по темі показуватиме тільки номер поточного допису. Якщо Ви зміните ширину індикатора, Вам, ймовірно, знадобиться змінити це значення."
+    default_code_lang: "Мова програмування для підсвітки синтаксису, що за замовчуванням застосовуватиметься для блоків коду GitHub (lang-auto, ruby, python і т. ін.)"
 
     embeddable_host: "Host that can embed the comments from this Discourse forum"
     feed_polling_enabled: "Whether to import a RSS/ATOM feed as posts"
