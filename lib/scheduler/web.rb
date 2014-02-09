@@ -8,7 +8,15 @@ module Scheduler
         RailsMultisite::ConnectionManagement.with_connection("default") do
           @manager = Scheduler::Manager.without_runner
           @schedules = Scheduler::Manager.discover_schedules.sort do |a,b|
-            a.schedule_info.next_run <=> b.schedule_info.next_run
+            a_next = a.schedule_info.next_run
+            b_next = b.schedule_info.next_run
+            if a_next && b_next
+              a_next <=> b_next
+            elsif a_next
+              -1
+            else
+              1
+            end
           end
           erb File.read(File.join(VIEWS, 'scheduler.erb')), locals: {view_path: VIEWS}
         end
