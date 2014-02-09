@@ -55,6 +55,15 @@ describe TopicsController do
 
       I18n.locale.should == :fr
     end
+
+    it 'is sets the default locale when the setting not enabled' do
+      user = Fabricate(:user, locale: :fr)
+      log_in_user(user)
+
+      get :show, {topic_id: topic.id}
+
+      I18n.locale.should == :en
+    end
   end
 
 end

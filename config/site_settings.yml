@@ -24,6 +24,9 @@ basic:
   default_locale:
     default: 'en'
     enum: 'LocaleSiteSetting'
+  allow_user_locale:
+    client: true
+    default: false
   ga_tracking_code:
     client: true
     default: ''

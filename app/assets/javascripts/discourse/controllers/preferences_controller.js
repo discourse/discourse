@@ -11,6 +11,10 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     return Discourse.SiteSettings.allow_uploaded_avatars;
   }.property(),
 
+  allowUserLocale: function() {
+    return Discourse.SiteSettings.allow_user_locale;
+  }.property(),
+
   // By default we haven't saved anything
   saved: false,
 
