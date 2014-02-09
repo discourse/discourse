@@ -128,7 +128,7 @@ uk:
     show_more: "показати більше"
     links: Посилання
     faq: "Часті запитання"
-    privacy_policy: "Політика приватності"
+    privacy_policy: "Політика конфіденційності"
     mobile_view: "Вигляд для мобільного"
     desktop_view: "Вигляд для настільного комп'ютера"
     you: "Ви"
@@ -267,7 +267,7 @@ uk:
       invited_by: "Запрошений(а)"
       trust_level: "Рівень довіри"
       notifications: "Сповіщення"
-      dynamic_favicon: "Відображати сповіщення про вхідні повідомлення на піктограмі сайту (експериментальне)"
+      dynamic_favicon: "Відображати сповіщення про вхідні повідомлення на піктограмі сайта (експериментальне)"
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
       change: "змінити"
@@ -353,7 +353,7 @@ uk:
 
       last_posted: "Останній допис"
       last_emailed: "Останній електронний лист"
-      last_seen: "Помічено"
+      last_seen: "Помічено востаннє"
       created: "Приєднався(лась)"
       log_out: "Вийти"
       website: "Вебсайт"
@@ -407,8 +407,8 @@ uk:
         user: "Запрошений користувач"
         none: "Запрошень не знайдено."
         truncated: "Показано перші {{count}} запрошень."
-        redeemed: "Погашені запрошення"
-        redeemed_at: "Погашено"
+        redeemed: "Прийняті запрошення"
+        redeemed_at: "Прийнято"
         pending: "Запрошення, що очікують"
         topics_entered: "Тем переглянуто"
         posts_read_count: "Прочитано дописів"
@@ -475,7 +475,7 @@ uk:
 
     email: 'Електронна пошта'
     username: "Ім'я користувача"
-    last_seen: 'Помічено'
+    last_seen: 'Помічено востаннє'
     created: 'Створено'
     trust_level: 'Рівень довіри'
 
@@ -743,21 +743,21 @@ uk:
         UNREAD, plural,
         =0 {}
         one {
-          <a href='/unread'># непрочитана</a>
+          <a href='/unread'># непрочитана тема</a>
         } few {
-          <a href='/unread'># непрочитані</a>
+          <a href='/unread'># непрочитані теми</a>
         } many {
-          <a href='/unread'># непрочитаних</a>
+          <a href='/unread'># непрочитаних тем</a>
         } other {
-          <a href='/unread'># непрочитаних</a>
+          <a href='/unread'># непрочитаних тем</a>
         }
-        } {
+        }{
           NEW, plural,
             =0 {}
-            one { {BOTH, select, true{і } false {} other{}} <a href='/new'># нова</a> тема}
-            few { {BOTH, select, true{і } false {} other{}} <a href='/new'># нові</a> теми}
-            many { {BOTH, select, true{і } false {} other{}} <a href='/new'># нових</a> тем}
-            other { {BOTH, select, true{і } false {} other{}} <a href='/new'># нових</a> тем}
+            one { {BOTH, select, true{ і } false {} other{}} <a href='/new'># нова</a> тема}
+            few { {BOTH, select, true{ і } false {} other{}} <a href='/new'># нові</a> теми}
+            many { {BOTH, select, true{ і } false {} other{}} <a href='/new'># нових</a> тем}
+            other { {BOTH, select, true{ і } false {} other{}} <a href='/new'># нових</a> тем}
         }, або {CATEGORY, select, true {перегляньте інші теми у {catLink}} false {{latestLink}} other {}}."
 
       browse_all_categories: Переглянути всі категорії
@@ -866,7 +866,7 @@ uk:
         to_forum: "Ми надішлемо Вашому другові короткого листа, що міститиме посилання, яке дозволить йому приєднатися до форуму."
 
         email_placeholder: 'електронна скринька'
-        success: "Дякуємо! Ми надіслали запрошення на <b>{{email}}</b>. Ми дамо Вам знати, коли адресат погасить Ваше запрошення. Завітайте на вкладку Запрошення Вашого профілю, щоб відстежувати, кого Ви запросили."
+        success: "Дякуємо! Ми надіслали запрошення на <b>{{email}}</b>. Ми дамо Вам знати, коли адресат прийме Ваше запрошення. Завітайте на вкладку Запрошення Вашого профілю, щоб відстежувати, кого Ви запросили."
         error: "Вибачте, ми не змогли запросити цю особу. Можливо, вона вже є користувачем?"
 
       login_reply: 'Увійдіть, щоб відповісти'
@@ -1293,7 +1293,7 @@ uk:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "type to filter..."
+    type_to_filter: "введіть, щоб фільтрувати..."
 
     admin:
       title: 'Адміністратор Discourse'
@@ -1312,10 +1312,10 @@ uk:
         version_check_pending: "Здається, Ви нещодавно здійснили оновлення. Чудово!"
         installed_version: "Встановлена"
         latest_version: "Остання"
-        problems_found: "Some problems have been found with your installation of Discourse:"
-        last_checked: "Last checked"
-        refresh_problems: "Refresh"
-        no_problems: "No problems were found."
+        problems_found: "У Вашого екземпляра Discourse було виявлено деякі проблеми:"
+        last_checked: "Остання перевірка"
+        refresh_problems: "Оновити"
+        no_problems: "Не виявлено жодних проблем."
         moderators: 'Модератори:'
         admins: 'Адміни:'
         blocked: 'Заблоковані:'
@@ -1358,36 +1358,36 @@ uk:
 
         flagged_by: "Позначено"
         system: "System"
-        error: "Something went wrong"
+        error: "Щось трапилося"
         view_message: "Reply"
         no_results: "Скарг немає."
 
         summary:
           action_type_3:
-            one:   "недотичне x{{count}}"
-            few:   "недотичне x{{count}}"
-            many:  "недотичне x{{count}}"
-            other: "недотичне x{{count}}"
+            one:   "недотичне x {{count}}"
+            few:   "недотичне x {{count}}"
+            many:  "недотичне x {{count}}"
+            other: "недотичне x {{count}}"
           action_type_4:
-            one:   "неприпустиме x{{count}}"
-            few:   "неприпустиме x{{count}}"
-            many:  "неприпустиме x{{count}}"
-            other: "неприпустиме x{{count}}"
+            one:   "неприпустиме x {{count}}"
+            few:   "неприпустиме x {{count}}"
+            many:  "неприпустиме x {{count}}"
+            other: "неприпустиме x {{count}}"
           action_type_6:
-            one:   "custom x{{count}}"
-            few:   "custom x{{count}}"
-            many:  "custom x{{count}}"
-            other: "custom x{{count}}"
+            one:   "інше x {{count}}"
+            few:   "інше x {{count}}"
+            many:  "інше x {{count}}"
+            other: "інше x {{count}}"
           action_type_7:
-            one:   "custom x{{count}}"
-            few:   "custom x{{count}}"
-            many:  "custom x{{count}}"
-            other: "custom x{{count}}"
+            one:   "інше x {{count}}"
+            few:   "інше x {{count}}"
+            many:  "інше x {{count}}"
+            other: "інше x {{count}}"
           action_type_8:
-            one:   "спам x{{count}}"
-            few:   "спам x{{count}}"
-            many:  "спам x{{count}}"
-            other: "спам x{{count}}"
+            one:   "спам x {{count}}"
+            few:   "спам x {{count}}"
+            many:  "спам x {{count}}"
+            other: "спам x {{count}}"
 
       groups:
         title: "Групи"
@@ -1407,14 +1407,14 @@ uk:
           everyone: "Всі"
 
       api:
-        generate_master: "Generate Master API Key"
+        generate_master: "Згенерувати Головний ключ API"
         none: "Наразі немає жодного активного ключа API."
         user: "Користувач"
         title: "API"
         key: "Ключ API"
         generate: "Згенерувати"
         regenerate: "Перегенерувати"
-        revoke: "Revoke"
+        revoke: "Анулювати"
         confirm_regen: "Are you sure you want to replace that API Key with a new one?"
         confirm_revoke: "Are you sure you want to revoke that key?"
         info_html: "Your API key will allow you to create and update topics using JSON calls."
@@ -1493,7 +1493,7 @@ uk:
           actions:
             delete_user: "видалення користувача"
             change_trust_level: "зміна рівня довіри"
-            change_site_setting: "зміна налаштування сайту"
+            change_site_setting: "зміна налаштування сайта"
             change_site_customization: "change site customization"
             delete_site_customization: "delete site customization"
             suspend_user: "призупинення користувача"
@@ -1520,15 +1520,15 @@ uk:
             add: "Додати"
 
       impersonate:
-        title: "Impersonate User"
-        username_or_email: "Username or Email of User"
-        help: "Use this tool to impersonate a user account for debugging purposes."
-        not_found: "That user can't be found."
-        invalid: "Sorry, you may not impersonate that user."
+        title: "Втілитися у користувача"
+        username_or_email: "Ім'я користувача або електронна скринька"
+        help: "Використовуйте цей інструмент, щоб втілитися в інший обліковий запис для відлагоджувальних потреб."
+        not_found: "Цього користувача не вдалося знайти."
+        invalid: "Даруйте, Ви не можете втілитися в цього користувача."
 
       users:
         title: 'Користувачі'
-        create: 'Add Admin User'
+        create: 'Додати адміністратора'
         last_emailed: "Останній ел. лист"
         not_found: "Даруйте, такого імені користувача немає в нашій системі."
         active: "Активний(а)"
@@ -1594,13 +1594,13 @@ uk:
         show_admin_profile: "Адмін"
         edit_title: "Редагувати назву"
         save_title: "Зберегти назву"
-        refresh_browsers: "Force browser refresh"
+        refresh_browsers: "Примусово оновити оглядач"
         show_public_profile: "Показати публічний профіль"
-        impersonate: 'Impersonate'
-        revoke_admin: 'Revoke Admin'
-        grant_admin: 'Grant Admin'
-        revoke_moderation: 'Revoke Moderation'
-        grant_moderation: 'Grant Moderation'
+        impersonate: 'Втілитися'
+        revoke_admin: 'Відкликати адміністраторство'
+        grant_admin: 'Зробити адміністратором'
+        revoke_moderation: 'Відкликати модераторство'
+        grant_moderation: 'Зробити модератором'
         unblock: 'Розблокувати'
         block: 'Заблокувати'
         reputation: Репутація
@@ -1657,36 +1657,36 @@ uk:
           topics_replied_to: "Теми, на які відповів(ла)"
           quality_content: "Якісні матеріали"
           reading: "Читання"
-          site_promotion: "Просування сайту"
+          site_promotion: "Просування сайта"
           flagged_posts: "Оскаржені дописи"
 
       site_content:
-        none: "Choose a type of content to begin editing."
-        title: 'Content'
-        edit: "Edit Site Content"
+        none: "Виберіть тип вмісту, щоб почати його редагувати."
+        title: 'Вміст'
+        edit: "Редагування вмісту сайта"
 
       site_settings:
-        show_overriden: 'Only show overridden'
-        title: 'Settings'
-        reset: 'reset to default'
+        show_overriden: 'Показувати тільки перевизначені'
+        title: 'Налаштування'
+        reset: 'за замовчуванням'
         none: 'none'
         no_results: "Не знайдено результатів."
-        clear_filter: "Clear"
+        clear_filter: "Очистити"
         categories:
-          all_results: 'All'
-          required: 'Required'
-          basic: 'Basic Setup'
-          users: 'Users'
-          posting: 'Posting'
-          email: 'Email'
-          files: 'Files'
-          trust: 'Trust Levels'
-          security: 'Security'
+          all_results: 'Всі'
+          required: "Обов'язкові"
+          basic: 'Основні установки'
+          users: 'Користувачі'
+          posting: 'Опублікування'
+          email: 'Електронна пошта'
+          files: 'Файли'
+          trust: 'Рівні довіри'
+          security: 'Безпека'
           seo: 'SEO'
-          spam: 'Spam'
-          rate_limits: 'Rate Limits'
-          developer: 'Developer'
-          embedding: "Embedding"
+          spam: 'Спам'
+          rate_limits: 'Обмеження швидкості'
+          developer: 'Для розробників'
+          embedding: "Взаємодія"
           uncategorized: 'Без категорій'
 
     lightbox:
