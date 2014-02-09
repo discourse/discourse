@@ -120,7 +120,7 @@ uk:
       other: "Ваших перших %{count} дописів"
 
     'new-topic': |
-      Ласкаво просимо до сайту %{site_name} &mdash; **дякуємо за те, що Ви розпочали нове обговорення!**
+      Ласкаво просимо до сайта %{site_name} &mdash; **дякуємо за те, що Ви розпочали нове обговорення!**
 
       - Чи точно назва описує Вашу тему? Чи є Ваша назва цікавою?
 
@@ -131,7 +131,7 @@ uk:
       Для додаткових настанов, [перегляньте Часті Питання](/faq). Ця панель з'являтиметься тільки для %{education_posts_text}.
 
     'new-reply': |
-      Ласкаво просимо до сайту %{site_name} &mdash; **дякуємо за долучення!**
+      Ласкаво просимо до сайта %{site_name} &mdash; **дякуємо за долучення!**
 
       - Чи покращує Ваша відповідь обговорення у якийсь спосіб?
 
@@ -382,7 +382,7 @@ uk:
   activation:
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
     please_continue: "Your new account is confirmed, and you are now logged in. Continue to %{link}"
-    welcome_to: "Ласкаво просимо до сайту %{site_name}!"
+    welcome_to: "Ласкаво просимо до сайта %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
 
   post_action_types:
@@ -548,51 +548,50 @@ uk:
 
   content_types:
     education_new_reply:
-      title: "New User Education: First Replies"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
+      title: "Навчання новачка: Перші відповіді"
+      description: "Спливні настанови, що одразу автоматично відображаються над редактором, коли новий користувач починає вводити свої перші дві нові відповіді."
     education_new_topic:
-      title: "New User Education: First Topics"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
+      title: "Навчання новачка: Перші теми"
+      description: "Спливні настанови, що одразу автоматично відображаються над редактором, коли новий користувач починає вводити свої перші дві нові теми."
     usage_tips:
-      title: "New User Tips"
-      description: "Common usage tips, essential forum information, and key guidance intended for new users."
+      title: "Підказки для новачків"
+      description: "Загальні підказки щодо використання, важлива інформація про форум, а також ключові настанови, призначені для нових користувачів."
     welcome_user:
-      title: "Welcome: New User"
-      description: "A private message automatically sent to all new users when they sign up."
+      title: "Вітання: Новий користувач"
+      description: "Приватне повідомлення, що автоматично надсилається всім новим користувачам під час реєстрації."
     welcome_invite:
-      title: "Welcome: Invited User"
-      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
+      title: "Вітання: Запрошений користувач"
+      description: "Приватне повідомлення, що автоматично надсилається всім новим запрошеним користувачам, коли вони приймають запрошення взяти участь від іншого користувача."
     privacy_policy:
-      title: "Privacy Policy"
-      description: "Your site's privacy policy. Leave blank for default policy."
+      title: "Політика конфіденційності"
+      description: "Політика конфіденційності Вашого сайта. Залиште порожнім, щоб використовувати політику за замовчуванням."
     faq:
-      title: "FAQ"
-      description: "Your site's FAQ. Leave blank for the default FAQ."
+      title: "ЧаПи"
+      description: "Часті Питання Вашого сайта. Залиште порожнім, щоб використовувати ЧаПи за замовчуванням."
     login_required_welcome_message:
-      title: "Login Required: Welcome Message"
-      description: "Welcome message that is displayed to logged out users when
-        the 'login required' setting is enabled."
+      title: "Потрібно увійти: Вітальне повідомлення"
+      description: "Вітальне повідомлення, що відображається для користувачів, що вийшли, коли налаштування 'потрібен вхід' увімкнено."
     tos_user_content_license:
-      title: "Terms of Service: Content License"
-      description: "The text for the Content License section of the Terms of Service."
+      title: "Умови використання: Ліцензія користувацького Контенту"
+      description: "Текст розділу 'Ліцензія користувацького Контенту' Умов використання."
     tos_miscellaneous:
-      title: "Terms of Service: Miscellaneous"
-      description: "The text for the Miscellaneous section of the Terms of Service."
+      title: "Умови використання: Різне"
+      description: "Текст розділу 'Різне' Умов використання."
     login_required:
-      title: "Login Required: Homepage"
-      description: "The text displayed for unauthorized users when login is required on the site."
+      title: "Потрібно увійти: Головна сторінка"
+      description: "Текст, що відображається для неавторизованих користувачів, коли потрібен вхід на сайт."
     head:
       title: "HTML head"
-      description: "HTML that will be inserted inside the <head></head> tags"
+      description: "HTML-код, що буде вставлятися всередину теґів <head></head>"
     top:
-      title: "Top of the pages"
-      description: "HTML that will be added at the top of every pages (after the header, before the navigation or the topic title)."
+      title: "Верхній колонтитул сторінок"
+      description: "HTML-код, що буде додаватися на початку кожної сторінки (після заголовка, перед навігацією або назвою теми)."
     bottom:
-      title: "Bottom of the pages"
-      description: "HTML that will be added at the bottom of every pages"
+      title: "Нижній колонтитул сторінок"
+      description: "HTML-код, що буде додаватися внизу кожної сторінки"
 
   site_settings:
-    default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
+    default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     min_post_length: "Minimum post length in characters"
     min_private_message_post_length: "Minimum post length in characters for private messages"
     max_post_length: "Maximum post length in characters"
@@ -603,15 +602,15 @@ uk:
     allow_uncategorized_topics: "Allow topics to be created without a category. NOTE: After changing this setting, all clients will need to reload their browsers for the change to take effect."
     allow_duplicate_topic_titles: "Allow topics with identical titles"
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
-    enforce_global_nicknames: "Enforce global nickname uniqueness (WARNING: only change this during initial setup)"
-    discourse_org_access_key: "The access key used to access the Discourse Hub nickname registry at discourse.org"
+    enforce_global_nicknames: "Забезпечити глобальну унікальність псевдонімів (ПОПЕРЕДЖЕННЯ: змінюйте це тільки під час початкового налаштування)"
+    discourse_org_access_key: "Ключ доступу, що використовується для доступу до глобального реєстру псевдонімів на discourse.org"
     educate_until_posts: "Show pop-up composer education panel until the user has made this many posts"
-    title: "Title of this site, will be used in the title tag and elsewhere"
-    site_description: "Describe this forum in one sentence. This description will be used in the meta description tag."
-    contact_email: "The email address of someone who can be contacted about the site. Important notices from Discourse.org regarding critical updates may be sent to this address."
-    company_full_name: "The full name of the company that runs this site, used in legal documents like the /tos"
-    company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
-    company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
+    title: "Назва цього сайта, буде використовуватися в теґові title та інших місцях"
+    site_description: "Опишіть цей форум в одному реченні. Цей опис буде використано у теґові meta description."
+    contact_email: "Електронна скринька когось, з ким можна сконтактувати щодо сайта. Важливі повідомлення від Discourse.org, що стосуються критичних оновлень, можуть надсилатися на цю адресу."
+    company_full_name: "Повна назва компанії, що володіє сайтом; використовується у документах на кшталт Умов Використання"
+    company_short_name: "Скорочена назва компанії, що володіє сайтом; використовується у документах на кшталт Умов Використання"
+    company_domain: "Доменне ім'я, власником якого є компанія, що володіє сайтом; використовується у документах на кшталт Умов Використання"
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     download_remote_images_to_local: "Download a copy of remote images hotlinked in posts"
@@ -622,7 +621,7 @@ uk:
     delete_removed_posts_after: "Number of hours after which posts removed by the author will be deleted."
     max_image_width: "Maximum allowed width of images in a post"
     max_image_height: "Maximum allowed height of images in a post"
-    category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
+    category_featured_topics: "Кількість тем на одну категорію, що показуються на сторінці /categories. Після зміни цього значення, оновлення категорій займе до 15 хвилин."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
 
@@ -631,12 +630,12 @@ uk:
     category_post_template: "The category definition post template used when you create a new category"
     onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
 
-    logo_url: "The logo for your site eg: http://example.com/logo.png"
-    logo_small_url: "The small logo for your site used when scrolling down on topics eg: http://example.com/logo-small.png"
-    favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
-    apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
+    logo_url: "Логотип Вашого сайта, наприклад: http://example.com/logo.png"
+    logo_small_url: "Маленький логотип для Вашого сайта, який використовується при прокручуванні тем вниз, наприклад: http://example.com/logo-small.png"
+    favicon_url: "Піктограма Вашого сайта, див. http://uk.wikipedia.org/wiki/Favicon"
+    apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
 
-    notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
+    notification_email: "Адреса зворотньої електронної скриньки, що буде використовуватися при надсиланні системних повідомлень на кшталт сповіщень користувачів про загублені паролі, нові облікові записи і т. ін."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     use_https: "Should the full url for the site (Discourse.base_url) be http or https?"
     summary_score_threshold: "The minimum score of a post to be included in the 'summary'"
@@ -666,20 +665,20 @@ uk:
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
     post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
-    must_approve_users: "Admins must approve all users before they gain access"
-    ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
+    must_approve_users: "Адмін має схвалити користувача перед тим, як той отримає доступ"
+    ga_tracking_code: "Код відстеження Google аналітики (ga.js), напр.: UA-12345678-9; див. http://google.com/analytics"
+    ga_domain_name: "Доменне ім'я Google аналітики (ga.js), напр.: mysite.com; див. http://google.com/analytics"
+    ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
+    ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
     enable_escaped_fragments: "Enable workaround solution to help older search engine webcrawlers index your site. WARNING: enable only if you have to."
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
-    post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
+    top_menu: "Визначає, які елементи з'являються в навігації головної сторінки, та в якому порядку. Наприклад, latest|new|unread|starred|categories|top|read|posted"
+    post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
+    share_links: "Визначає, які елементи з'являються в діалозі поширення, та в якому порядку. Наприклад, twitter|facebook|google+|email"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    topics_per_page: "How many topics loaded by default on the topics list page, and when loading more topics"
-    posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
-    site_contact_username: "Username for the author of automated private messages sent by the forum"
+    topics_per_page: "Скільки тем за замовчуванням завантажується на сторінці з переліком тем, а також під час підвантаження решти тем"
+    posts_per_page: "Скільки дописів завантажується за замовчуванням на сторінці теми, а також під час підвантаження решти дописів"
+    site_contact_username: "Ім'я користувача для автора автоматизованих приватних повідомлень, що надсилаються форумом"
     send_welcome_message: "Do new users get a welcome private message?"
     suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
     suppress_reply_directly_above: "Don't show in-reply-to on a post when there is a single reply directly above"
@@ -696,38 +695,38 @@ uk:
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
 
-    invite_expiry_days: "How long user invitation keys are valid, in days"
+    invite_expiry_days: "Скільки днів ключі запрошення користувачів лишаються чинними"
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
-    invite_only: "Public registration is disabled, new users must be invited"
+    invite_only: "Публічна реєстрація вимкнена, нові користувачі мають бути запрошені"
 
-    login_required: "Require authentication to read posts"
+    login_required: "Для читання дописів потрібен вхід в систему"
 
-    min_password_length: "Minimum password length."
-    block_common_passwords: "Don't allow passwords that are in the 5000 most common passwords."
-    enable_local_logins: "Enable traditional, local username and password authentication"
-    enable_local_account_create: "Enable creating new local accounts"
-    enable_google_logins: "Enable Google authentication"
-    enable_yahoo_logins: "Enable Yahoo authentication"
+    min_password_length: "Мінімальна довжина пароля."
+    block_common_passwords: "Не дозволяти паролі, що належать до 5000 найбільш популярних паролів."
+    enable_local_logins: "Увімкнути традиційний вхід за допомогою локальних імені користувача та пароля"
+    enable_local_account_create: "Увімкнути створення нових локальних облікових записів"
+    enable_google_logins: "Увімкнути вхід через Google"
+    enable_yahoo_logins: "Увімкнути вхід через Yahoo"
 
-    enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
+    enable_twitter_logins: "Увімкнути вхід через Twitter; потребує twitter_consumer_key та twitter_consumer_secret"
+    twitter_consumer_key: "Consumer key для входу через Twitter, зареєстрований на http://dev.twitter.com"
+    twitter_consumer_secret: "Consumer secret для входу через Twitter, зареєстрований на http://dev.twitter.com"
 
-    enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
-    facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
+    enable_facebook_logins: "Увімкнути вхід через Facebook; потребує facebook_app_id та facebook_app_secret"
+    facebook_app_id: "App id для входу через Facebook, зареєстрований на https://developers.facebook.com/apps"
+    facebook_app_secret: "App secret для входу через Facebook, зареєстрований на https://developers.facebook.com/apps"
 
-    enable_cas_logins: "Enable CAS authentication"
-    cas_hostname: "Hostname for cas server"
-    cas_domainname: "Domain name generated email addresses for cas server"
+    enable_cas_logins: "Увімкнути вхід через CAS"
+    cas_hostname: "Назва хосту для сервера cas"
+    cas_domainname: "Електронні скриньки, згенеровані з доменним ім'ям для сервера cas"
 
-    enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
-    github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
-    github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
+    enable_github_logins: "Увімкнути вхід через Github; потребує github_client_id та github_client_secret"
+    github_client_id: "Client id для входу через Github, зареєстрований на https://github.com/settings/applications"
+    github_client_secret: "Client secret для входу через Github, зареєстрований на https://github.com/settings/applications"
 
-    enable_persona_logins: "Enable email-based authentication with Mozilla Persona"
+    enable_persona_logins: "Увімкнути вхід на основі електронної пошти через Mozilla Persona"
 
     allow_import: "Allow import, which can replace ALL site data; leave false unless you plan to do data imports"
 
@@ -745,7 +744,7 @@ uk:
     max_topics_per_day: "Maximum number of topics a user can create per day"
     max_private_messages_per_day: "The maximum amount of private messages users can create per day"
 
-    suggested_topics: "Number of suggested topics shown at the bottom of a topic"
+    suggested_topics: "Кількість пропонованих тем, що показуються внизу теми"
 
     clean_up_uploads: "Remove orphaned uploads to prevent illegal hosting. WARNING: you might want to make a backup of your /uploads directory before enabled this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
@@ -796,7 +795,7 @@ uk:
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics"
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
 
-    category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
+    category_colors: "Список шістнадцяткових значень кольорів, дозволених для категорій та розділених вертикальною рискою (|)"
 
     max_image_size_kb: "The maximum size of images we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
     max_attachment_size_kb: "The maximum size of files we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
@@ -828,30 +827,30 @@ uk:
 
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 
-    relative_date_duration: "Number of days after posting where post dates will be shown as relative instead of absolute. Examples: relative date: 7d, absolute date: 20 Feb"
-    delete_user_max_age: "The maximum age of a user, in days, which can be deleted by an admin."
-    delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
-    username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
-    email_editable: "Allow users to change their e-mail address after registration."
+    relative_date_duration: "Кількість днів після публікації, коли дати дописів будуть показуватися як відносні, а не абсолютні. Приклади: відносна дата: 7 д, абсолютна дата: 20 лют"
+    delete_user_max_age: "Максимальний вік користувача (в днях), якого може видалити адмін."
+    delete_all_posts_max: "Максимальне число дописів, які можна видалити за один раз кнопкою \"Видалити всі дописи\". Якщо користувач має більше дописів, ніж це число, їх не можна буде видалити за один раз, і користувача також."
+    username_change_period: "Кількість днів після реєстрації, протягом яких новим обліковим записам можна змінювати своє ім'я користувача (0 щоб заборонити зміну імені користувача)."
+    email_editable: "Дозволити користувачам змінювати свою електронну скриньку після реєстрації."
 
     allow_uploaded_avatars: "Allow users to upload their custom avatars"
     allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:regenerate rake task after changing that setting."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
-    default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
+    default_external_links_in_new_tab: "Відкривати нові посилання у новій вкладці. Користувачі можуть змінити це у своїх налаштуваннях."
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars"
     max_daily_gravatar_crawls: "The maximum amount of times Discourse will check gravatar for custom avatars in a day"
 
     sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
 
-    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
+    enable_mobile_theme: "Мобільні пристрої використовуватимуть тему, дружню для них, з можливістю перемикатися на повний сайт. Відключіть це, якщо хочете використовувати власну, повністю чутливу, таблицю стилів."
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before we consider it dominating."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists"
 
-    enable_names: "Allow users to show their full names"
+    enable_names: "Дозволити користувачам показувати свої повні імена"
     display_name_on_posts: "Also show a user's full name on their posts"
-    invites_shown: "Maximum invites shown on a user page"
+    invites_shown: "Максимум запрошень, показуваних на сторінці користувача"
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
 
@@ -968,11 +967,11 @@ uk:
   invite_forum_mailer:
     subject_template: "[%{site_name}] %{invitee_name} запросив(ла) Вас приєднатися до %{site_name}"
     text_body_template: |
-      %{invitee_name} запросив(ла) Вас до сайту %{site_name}.
+      %{invitee_name} запросив(ла) Вас до сайта %{site_name}.
 
       Якщо Вас це цікавить, перейдіть за посиланням, щоб приєднатися:
 
-      [Завітати до сайту %{site_name}][1]
+      [Завітати до сайта %{site_name}][1]
 
       Вас запросив довірений користувач, тому Ви матимете можливість приєднатися одразу, без входу до системи.
 
@@ -1099,12 +1098,12 @@ uk:
 
         - Щоб в будь-яку мить повернутися на головну сторінку, **натисніть логотип у верхньому лівому кутку**, або скористайтеся кнопкою "Назад" ← Вашого веб-оглядача.
 
-        - Для пошуку, профілю, або карти сайту натисніть піктограми у верхньому правому кутку.
+        - Для пошуку, профілю, або карти сайта натисніть піктограми у верхньому правому кутку.
 
         - Під час читання теми натисніть заголовок вгорі сторінки, щоб повернутися на її початок ↑. Щоб перейти в *кінець* ↓, натисніть стрілочку вниз на індикаторі прогресу по темі внизу сторінки, або натисніть поле "Останній допис" в підсумку теми під першим дописом.
 
     welcome_user:
-      subject_template: "Ласкаво просимо до сайту %{site_name}!"
+      subject_template: "Ласкаво просимо до сайта %{site_name}!"
       text_body_template: |
         Дякуємо за приєднання до %{site_name}, і вітаємо у нашому дискусійному форумі!
 
@@ -1115,7 +1114,7 @@ uk:
         Бажаємо приємного перебування на форумі!
 
     welcome_invite:
-      subject_template: "Ласкаво просимо до сайту %{site_name}!"
+      subject_template: "Ласкаво просимо до сайта %{site_name}!"
       text_body_template: |
         Дякуємо за те, що Ви прийняли запрошення до %{site_name}, і вітаємо у нашому дискусійному форумі!
 
@@ -1315,16 +1314,16 @@ uk:
     authorize_email:
       subject_template: "[%{site_name}] Підтвердіть свою електронну скриньку"
       text_body_template: |
-        Підтвердіть свою нову електронну скриньку для сайту %{site_name}, перейшовши за посиланням:
+        Підтвердіть свою нову електронну скриньку для сайта %{site_name}, перейшовши за посиланням:
 
         %{base_url}/users/authorize-email/%{email_token}
 
     signup_after_approval:
       subject_template: "Вас було схвалено на сайті %{site_name}!"
       text_body_template: |
-        Ласкаво просимо до сайту %{site_name}!
+        Ласкаво просимо до сайта %{site_name}!
 
-        Ваше приєднання до сайту %{site_name} схвалено, вітаємо у нашому дискусійному форумі!
+        Ваше приєднання до сайта %{site_name} схвалено, вітаємо у нашому дискусійному форумі!
 
         Натисніть посилання, щоб підтвердити та активувати свій новий обліковий запис:
         %{base_url}/users/activate-account/%{email_token}
