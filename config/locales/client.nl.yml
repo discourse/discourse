@@ -175,6 +175,15 @@ nl:
       sent_by_user: "Verzonden door <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Verzonden door <a href='{{userUrl}}'>jou</a>"
 
+    groups:
+      alias_levels:
+        title: "Wie kan deze groep als alias gebruiken?"
+        nobody: "Niemand"
+        only_admins: "Alleen admins"
+        mods_and_admins: "Alleen moderatoren and admins"
+        members_mods_and_admins: "Alleen leden van de groep, moderatoren en admins"
+        everyone: "Iedereen"
+
     user_action_groups:
       "1": "Likes gegeven"
       "2": "Likes ontvangen"
@@ -233,7 +242,6 @@ nl:
       deleted: (verwijderd)
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
       suspended_reason: "Reden: "
-      watch_new_topics: "Houd alle nieuwe topics in het forum automatisch in de gaten"
       watched_categories: "In de gaten gehouden"
       watched_categories_instructions: "Zelfde als volgen, daarnaast zou je een notificatie ontvangen voor alle nieuwe berichten en topics"
       tracked_categories: "Gevolgd"
@@ -1242,13 +1250,6 @@ nl:
         delete: Verwijder
         delete_confirm: Verwijder deze groepen?
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        alias_levels:
-          title: "Wie kan deze groep als alias gebruiken?"
-          nobody: "Niemand"
-          only_admins: "Alleen admins"
-          mods_and_admins: "Alleen moderatoren and admins"
-          members_mods_and_admins: "Alleen leden van de groep, moderatoren en admins"
-          everyone: "Iedereen"
 
       api:
         generate_master: Genereer Master API Key

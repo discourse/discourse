@@ -8,7 +8,7 @@ require_dependency 'email/message_builder'
 
 module Jobs
   class PollMailbox < Jobs::Scheduled
-    recurrence { hourly.minute_of_hour(0,5,10,15,20,25,30,35,40,45,50,55) }
+    every 5.minutes
     sidekiq_options retry: false
     include Email::BuildEmailHelper
 

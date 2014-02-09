@@ -1,7 +1,7 @@
 module Jobs
   # various consistency checks
   class EnsureDbConsistency < Jobs::Scheduled
-    recurrence { daily.hour_of_day(2) }
+    every 1.day
 
     def execute(args)
       TopicUser.ensure_consistency!

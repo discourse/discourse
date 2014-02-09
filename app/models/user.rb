@@ -83,6 +83,7 @@ class User < ActiveRecord::Base
   attr_accessor :notification_channel_position
 
   scope :blocked, -> { where(blocked: true) } # no index
+  scope :not_blocked, -> { where(blocked: false) } # no index
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) } # no index
   scope :not_suspended, -> { where('suspended_till IS NULL') }
   # excluding fake users like the community user
@@ -95,6 +96,10 @@ class User < ActiveRecord::Base
 
   def self.username_length
     3..15
+  end
+
+  def custom_groups
+    groups.where(automatic: false)
   end
 
   def self.username_available?(username)
@@ -481,7 +486,7 @@ class User < ActiveRecord::Base
 
 
   def secure_category_ids
-    cats = self.staff? ? Category.where(read_restricted: true) : secure_categories.references(:categories)
+    cats = self.admin? ? Category.where(read_restricted: true) : secure_categories.references(:categories)
     cats.pluck('categories.id').sort
   end
 
@@ -679,7 +684,7 @@ end
 #  flag_level                    :integer          default(0), not null
 #  ip_address                    :inet
 #  new_topic_duration_minutes    :integer
-#  external_links_in_new_tab     :boolean          default(FALSE), not null
+#  external_links_in_new_tab     :boolean          not null
 #  enable_quoting                :boolean          default(TRUE), not null
 #  moderator                     :boolean          default(FALSE)
 #  blocked                       :boolean          default(FALSE)
@@ -689,6 +694,7 @@ end
 #  uploaded_avatar_template      :string(255)
 #  uploaded_avatar_id            :integer
 #  email_always                  :boolean          default(FALSE), not null
+#  mailing_list_mode             :boolean          default(FALSE), not null
 #
 # Indexes
 #

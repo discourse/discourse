@@ -749,7 +749,6 @@ da:
     pop3s_polling_host: "Host til polling af POP3S-konto."
     pop3s_polling_username: "Brugernavn til polling af POP3S-konto."
     pop3s_polling_password: "Adgangskode til polling af POP3S-konto."
-    enable_watch_new_topics: "Lad brugerne overvåge alle nye emner (valgfrit) via en brugerindstilling"
 
     minimum_topics_similar: "Hvor emner der skal eksistere i databasen før der vises tilsvarende emner."
 

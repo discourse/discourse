@@ -229,7 +229,6 @@ da:
       deleted: "(slettet)"
       suspended_notice: "Denne bruger er suspenderet indtil {{date}}."
       suspended_reason: "Begrundelse: "
-      watch_new_topics: "Overvåg automatisk alle nye emner i forummet"
       watched_categories: "Overvåget"
       watched_categories_instructions: "Du overvåger automatisk alle emner i disse kategorier"
       tracked_categories: "Fulgt"

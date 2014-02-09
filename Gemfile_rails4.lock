@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/dysania/onebox.git
-  revision: 8dfb4adcadd9c706944ceec05b9b36f5cd6180e1
+  revision: 6a2f6e6a08f183a4df52f9a51187f566b8ae3a00
   specs:
     onebox (1.1.0)
       hexpress (~> 1.2)
@@ -138,7 +138,6 @@ GEM
     hiredis (0.4.5)
     httpauth (0.2.0)
     i18n (0.6.9)
-    ice_cube (0.11.1)
     image_optim (0.9.1)
       exifr (~> 1.1.3)
       fspath (~> 2.0.5)
@@ -337,10 +336,6 @@ GEM
       redis-namespace (>= 1.3.1)
     sidekiq-failures (0.2.2)
       sidekiq (>= 2.9.0)
-    sidetiq (0.4.3)
-      celluloid (>= 0.14.1)
-      ice_cube (~> 0.11.0)
-      sidekiq (~> 2.15.0)
     simple-rss (1.3.1)
     simplecov (0.7.1)
       multi_json (~> 1.0)
@@ -369,7 +364,7 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     temple (0.6.7)
-    therubyracer-discourse (0.12.0)
+    therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
       ref
     thin (1.6.1)
@@ -479,13 +474,12 @@ DEPENDENCIES
   shoulda
   sidekiq (= 2.15.1)
   sidekiq-failures
-  sidetiq (>= 0.3.6)
   simple-rss
   simplecov
   sinatra
   slim
   spork-rails
-  therubyracer-discourse
+  therubyracer
   thin
   timecop
   uglifier

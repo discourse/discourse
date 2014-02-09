@@ -157,7 +157,7 @@ module Discourse
     config.active_record.whitelist_attributes = false unless rails4?
 
     require 'auth'
-    Discourse.activate_plugins! unless Rails.env.test?
+    Discourse.activate_plugins! unless Rails.env.test? and ENV['LOAD_PLUGINS'] != "1"
 
     config.after_initialize do
       # So open id logs somewhere sane

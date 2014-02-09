@@ -19,12 +19,12 @@ var $buo = function() {
 
   // sam: my main concern here is mobile, but its an outlier, for now we support ie9, set conditionally and stuff with pushState
   if (window.ie === "new" || (window.history && window.history.pushState && !badAndroid)) {
-      return;
+    return;
   }
 
   // we don't ask Googlebot to update their browser
-  if (ua.indexOf('Googlebot') >= 0) {
-      return;
+  if (ua.indexOf('Googlebot') >= 0 || ua.indexOf('Mediapartners') >= 0 || ua.indexOf('AdsBot') >= 0) {
+    return;
   }
 
   // retrieve localized browser upgrade text
@@ -40,7 +40,7 @@ var $buo = function() {
   var style = ".buorg {position:absolute; z-index:111111; width:100%; top:0px; left:0px; background:#FDF2AB; text-align:left; font-family: sans-serif; color:#000; font-size: 14px;} .buorg div {padding: 8px;} .buorg a, .buorg a:visited {color:#E25600; text-decoration: underline;}";
 
   // insert the div and stylesheet into the DOM
-  document.body.insertBefore(div, document.body.firstChild);
+  document.body.appendChild(div); // put it last in the DOM so Googlebot doesn't include it in search excerpts
   document.getElementsByTagName("head")[0].appendChild(sheet);
   try {
     sheet.innerText = style;

@@ -232,7 +232,7 @@ email:
   pop3s_polling_port: 995
   pop3s_polling_username: ''
   pop3s_polling_password: ''
-  enable_watch_new_topics:
+  enable_mailing_list_mode:
     default: false
     client: true
 
@@ -365,14 +365,20 @@ embedding:
   embed_category: ''
   embed_post_limit: 100
 
-uncategorized:
+legal:
   tos_url:
     client: true
     default: ''
-  faq_url:
+  privacy_policy_url:
     client: true
     default: ''
-  privacy_policy_url:
+  tos_accept_required:
+    client: true
+    default: false
+
+uncategorized:
+
+  faq_url:
     client: true
     default: ''
 

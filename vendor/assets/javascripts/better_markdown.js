@@ -449,7 +449,7 @@
     if ( typeof jsonml === "string" )
       return jsonml;
 
-    if ( jsonml[0] == "__RAW" ) {
+    if ( jsonml[0] === "__RAW" ) {
       return jsonml[1];
     }
 
@@ -573,7 +573,7 @@
       jsonml[ 0 ] = "img";
 
       // grab this ref and clean up the attribute node
-      var ref = references[ attrs.ref ];
+      ref = references[ attrs.ref ];
 
       // if the reference exists, make the link
       if ( ref ) {
@@ -741,8 +741,7 @@
         block_search:
         do {
           // Now pull out the rest of the lines
-          var b = this.loop_re_over_block(
-                    re, block.valueOf(), function( m ) { ret.push( m[1] ); } );
+          var b = this.loop_re_over_block(re, block.valueOf(), function(m) { ret.push( m[1] ); });
 
           if ( b.length ) {
             // Case alluded to in first comment. push it back on as a new block
@@ -1036,7 +1035,7 @@
 
             var next_block = next[0] && next[0].valueOf() || "";
 
-            if ( next_block.match(is_list_re) || (next_block.match(/^ /) && (!next_block.match(/^ *\>/))) ) {
+            if ( next_block.match(is_list_re) ) {
               block = next.shift();
 
               // Check for an HR following a list: features/lists/hr_abutting
@@ -1107,7 +1106,6 @@
 
         // Strip off the leading "> " and re-process as a block.
         var input = block.replace( /^> ?/gm, "" ),
-            old_tree = this.tree,
             processedBlock = this.toTree( input, [ "blockquote" ] ),
             attr = extract_attr( processedBlock );
 
@@ -1151,8 +1149,7 @@
     inline: {
 
       __oneElement__: function oneElement( text, patterns_or_re, previous_nodes ) {
-        var m,
-            res;
+        var m, res;
 
         patterns_or_re = patterns_or_re || this.dialect.inline.__patterns__;
         var re = new RegExp( "([\\s\\S]*?)(" + (patterns_or_re.source || patterns_or_re) + ")" );
@@ -1167,7 +1164,6 @@
           return [ m[1].length, m[1] ];
         }
 
-        var res;
         if ( m[2] in this.dialect.inline ) {
           res = this.dialect.inline[ m[2] ].call(
                     this,
@@ -1362,10 +1358,10 @@
         if (m &&
             (/^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i.test(m[2]) ||
              /(\/[\w~,;\-\./?%&+#=]*)/.test(m[2]))) {
-          var attrs = create_attrs.call(this);
+          attrs = create_attrs.call(this);
           create_reference(attrs, m);
 
-          return [ m[0].length ]
+          return [ m[0].length ];
         }
 
         // [id]

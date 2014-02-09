@@ -199,4 +199,24 @@ describe SessionController do
 
   end
 
+  describe '.current' do
+    context "when not logged in" do
+      it "retuns 404" do
+        xhr :get, :current
+        response.should_not be_success
+      end
+    end
+
+    context "when logged in" do
+      let!(:user) { log_in }
+
+      it "returns the JSON for the user" do
+        xhr :get, :current
+        response.should be_success
+        json = ::JSON.parse(response.body)
+        json['current_user'].should be_present
+        json['current_user']['id'].should == user.id
+      end
+    end
+  end
 end

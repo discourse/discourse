@@ -116,6 +116,25 @@
     width: 680px;
   }
 
+  table.group-members {
+    width: 100%;
+    th.seen {
+      text-align: right;
+    }
+    td.avatar {
+      width: 60px;
+    }
+    td {
+      img {
+        margin-right: 10px;
+      }
+      span.last-seen-at {
+        float: right;
+        color: #999;
+      }
+    }
+  }
+
   .user-content {
     padding: 10px 8px;
     background-color: white;
@@ -191,6 +210,9 @@
 
         h1, h2 {margin-top: 10px;}
 
+        .group-link {
+          color: #aae;
+        }
         .bio {
           color: #ddd;
 

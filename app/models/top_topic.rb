@@ -95,3 +95,43 @@ class TopTopic < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: top_topics
+#
+#  id                  :integer          not null, primary key
+#  topic_id            :integer
+#  yearly_posts_count  :integer          default(0), not null
+#  yearly_views_count  :integer          default(0), not null
+#  yearly_likes_count  :integer          default(0), not null
+#  monthly_posts_count :integer          default(0), not null
+#  monthly_views_count :integer          default(0), not null
+#  monthly_likes_count :integer          default(0), not null
+#  weekly_posts_count  :integer          default(0), not null
+#  weekly_views_count  :integer          default(0), not null
+#  weekly_likes_count  :integer          default(0), not null
+#  daily_posts_count   :integer          default(0), not null
+#  daily_views_count   :integer          default(0), not null
+#  daily_likes_count   :integer          default(0), not null
+#  yearly_score        :float
+#  monthly_score       :float
+#  weekly_score        :float
+#  daily_score         :float
+#
+# Indexes
+#
+#  index_top_topics_on_daily_likes_count    (daily_likes_count)
+#  index_top_topics_on_daily_posts_count    (daily_posts_count)
+#  index_top_topics_on_daily_views_count    (daily_views_count)
+#  index_top_topics_on_monthly_likes_count  (monthly_likes_count)
+#  index_top_topics_on_monthly_posts_count  (monthly_posts_count)
+#  index_top_topics_on_monthly_views_count  (monthly_views_count)
+#  index_top_topics_on_topic_id             (topic_id) UNIQUE
+#  index_top_topics_on_weekly_likes_count   (weekly_likes_count)
+#  index_top_topics_on_weekly_posts_count   (weekly_posts_count)
+#  index_top_topics_on_weekly_views_count   (weekly_views_count)
+#  index_top_topics_on_yearly_likes_count   (yearly_likes_count)
+#  index_top_topics_on_yearly_posts_count   (yearly_posts_count)
+#  index_top_topics_on_yearly_views_count   (yearly_views_count)
+#

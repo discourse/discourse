@@ -171,6 +171,15 @@ zh_CN:
       sent_by_user: "发送人 <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "发送人 <a href='{{userUrl}}'>你</a>"
 
+    groups:
+      alias_levels:
+        title: "谁能把组名作为别名？"
+        nobody: "无"
+        only_admins: "仅管理员"
+        mods_and_admins: "仅版主与管理员"
+        members_mods_and_admins: "仅组员、版主与管理员"
+        everyone: "任何人"
+
     user_action_groups:
       "1": "给出的赞"
       "2": "收到的赞"
@@ -229,7 +238,6 @@ zh_CN:
       deleted: "（已删除）"
       suspended_notice: "该用户将被禁止登录，直至{{date}}."
       suspended_reason: "原因："
-      watch_new_topics: "自动关注论坛中所有新发表的主题"
       watched_categories: "已关注"
       watched_categories_instructions: "和跟踪相同，此外你还将收到新的帖子和主题的通知。"
       tracked_categories: "已跟踪"
@@ -1239,13 +1247,6 @@ zh_CN:
         delete: "删除"
         delete_confirm: "删除这个小组吗？"
         delete_failed: "无法删除小组。如果该小组是自动生成的，则不可删除。"
-        alias_levels:
-          title: "谁能把组名作为别名？"
-          nobody: "无"
-          only_admins: "仅管理员"
-          mods_and_admins: "仅版主与管理员"
-          members_mods_and_admins: "仅组员、版主与管理员"
-          everyone: "任何人"
 
       api:
         generate_master: "生成主API密钥"

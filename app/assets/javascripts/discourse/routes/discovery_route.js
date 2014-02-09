@@ -31,7 +31,6 @@ Discourse.DiscoveryRoute = Discourse.Route.extend({
       this.controllerFor('composer').open({
         categoryId: topicsController.get('category.id'),
         action: Discourse.Composer.CREATE_TOPIC,
-        draft: topicsController.get('draft'),
         draftKey: topicsController.get('draft_key'),
         draftSequence: topicsController.get('draft_sequence')
       });

@@ -41,6 +41,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   FUNCTION_BINDINGS: {
+    'home': 'goToFirstPost',
+    'end': 'goToLastPost',
     'j': 'selectDown',
     'k': 'selectUp',
     'u': 'goBack',
@@ -54,6 +56,14 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     _.each(this.PATH_BINDINGS, this._bindToPath, this);
     _.each(this.CLICK_BINDINGS, this._bindToClick, this);
     _.each(this.FUNCTION_BINDINGS, this._bindToFunction, this);
+  },
+
+  goToFirstPost: function() {
+    Discourse.__container__.lookup('controller:topic').send('jumpTop');
+  },
+
+  goToLastPost: function() {
+    Discourse.__container__.lookup('controller:topic').send('jumpBottom');
   },
 
   selectDown: function() {
@@ -77,7 +87,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   showHelpModal: function() {
-    Discourse.__container__.lookup('controller:application').send("showKeyboardShortcutsHelp");
+    Discourse.__container__.lookup('controller:application').send('showKeyboardShortcutsHelp');
   },
 
   _bindToPath: function(path, binding) {
@@ -88,11 +98,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
   _bindToClick: function(selector, binding) {
     binding = binding.split(',');
-    this.keyTrapper.bind(binding, function(e) {
-      if (!_.isUndefined(e) && _.isFunction(e.preventDefault)) {
-        e.preventDefault();
-      }
-
+    this.keyTrapper.bind(binding, function() {
       $(selector).click();
     });
   },

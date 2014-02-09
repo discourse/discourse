@@ -84,7 +84,6 @@ gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 
 gem 'redcarpet', require: false
 gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
-gem 'sidetiq', '>= 0.3.6'
 gem 'eventmachine'
 gem 'fast_xs'
 gem 'newrelic_rpm'
@@ -136,8 +135,7 @@ gem 'sidekiq-failures'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 
-# URGENT fix needed see: https://github.com/cowboyd/therubyracer/pull/280
-gem 'therubyracer-discourse', require: 'v8'
+gem 'therubyracer'
 gem 'thin', require: false
 gem 'highline', require: false
 gem 'rack-protection' # security

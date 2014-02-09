@@ -125,7 +125,7 @@ module PrettyText
 
     baked = nil
 
-    @mutex.synchronize do
+    protect do
       context = v8
       # we need to do this to work in a multi site environment, many sites, many settings
       decorate_context(context)
@@ -152,14 +152,12 @@ module PrettyText
 
   # leaving this here, cause it invokes v8, don't want to implement twice
   def self.avatar_img(avatar_template, size)
-    r = nil
-    @mutex.synchronize do
+    protect do
       v8['avatarTemplate'] = avatar_template
       v8['size'] = size
       decorate_context(v8)
-      r = v8.eval("Discourse.Utilities.avatarImg({ avatarTemplate: avatarTemplate, size: size });")
+      v8.eval("Discourse.Utilities.avatarImg({ avatarTemplate: avatarTemplate, size: size });")
     end
-    r
   end
 
   def self.cook(text, opts={})
@@ -238,12 +236,12 @@ module PrettyText
   def self.make_all_links_absolute(html)
     site_uri = nil
     doc = Nokogiri::HTML.fragment(html)
-    doc.css("a").each do |l|
-      href = l["href"].to_s
+    doc.css("a").each do |link|
+      href = link["href"].to_s
       begin
         uri = URI(href)
         site_uri ||= URI(Discourse.base_url)
-        l["href"] = "#{site_uri}#{l['href']}" unless uri.host.present?
+        link["href"] = "#{site_uri}#{link['href']}" unless uri.host.present?
       rescue URI::InvalidURIError
         # leave it
       end
@@ -252,6 +250,32 @@ module PrettyText
   end
 
   protected
+
+  class JavaScriptError < StandardError
+    attr_accessor :message, :backtrace
+
+    def initialize(message, backtrace)
+      @message = message
+      @backtrace = backtrace
+    end
+
+  end
+
+  def self.protect
+    rval = nil
+    @mutex.synchronize do
+      begin
+        rval = yield
+        # This may seem a bit odd, but we don't want to leak out
+        # objects that require locks on the v8 vm, to get a backtrace
+        # you need a lock, if this happens in the wrong spot you can
+        # deadlock a process
+      rescue V8::Error => e
+        raise JavaScriptError.new(e.message, e.backtrace)
+      end
+    end
+    rval
+  end
 
   def self.ctx_load(ctx, *files)
     files.each do |file|

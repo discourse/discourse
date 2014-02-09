@@ -17,31 +17,6 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   has_many :featured_users, serializer: BasicUserSerializer
   has_many :displayable_topics, serializer: ListableTopicSerializer, embed: :objects, key: :topics
 
-
-  def topics_week
-    object.topics_week || 0
-  end
-
-  def topics_month
-    object.topics_month || 0
-  end
-
-  def topics_year
-    object.topics_year || 0
-  end
-
-  def posts_week
-    object.posts_week || 0
-  end
-
-  def posts_month
-    object.posts_month || 0
-  end
-
-  def posts_year
-    object.posts_year || 0
-  end
-
   def is_uncategorized
     object.id == SiteSetting.uncategorized_category_id
   end
@@ -60,6 +35,44 @@ class CategoryDetailedSerializer < BasicCategorySerializer
 
   def include_subcategory_ids?
     subcategory_ids.present?
+  end
+
+  # Topic and post counts, including counts from the sub-categories:
+
+  def topics_day
+    count_with_subcategories(:topics_day)
+  end
+
+  def topics_week
+    count_with_subcategories(:topics_week)
+  end
+
+  def topics_month
+    count_with_subcategories(:topics_month)
+  end
+
+  def topics_year
+    count_with_subcategories(:topics_year)
+  end
+
+  def posts_day
+    count_with_subcategories(:posts_day)
+  end
+
+  def posts_week
+    count_with_subcategories(:posts_week)
+  end
+
+  def posts_month
+    count_with_subcategories(:posts_month)
+  end
+
+  def posts_year
+    count_with_subcategories(:posts_year)
+  end
+
+  def count_with_subcategories(method)
+    object.subcategories.inject(object.send(method) || 0) { |sum,c| sum += (c.send(method) || 0) }
   end
 
 end

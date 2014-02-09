@@ -291,8 +291,8 @@ describe Guardian do
         Guardian.new(user).can_create?(Category).should be_false
       end
 
-      it 'returns true when a moderator' do
-        Guardian.new(moderator).can_create?(Category).should be_true
+      it 'returns false when a moderator' do
+        Guardian.new(moderator).can_create?(Category).should be_false
       end
 
       it 'returns true when an admin' do
@@ -626,8 +626,8 @@ describe Guardian do
         Guardian.new(category.user).can_edit?(category).should be_false
       end
 
-      it 'returns true as a moderator' do
-        Guardian.new(moderator).can_edit?(category).should be_true
+      it 'returns false as a moderator' do
+        Guardian.new(moderator).can_edit?(category).should be_false
       end
 
       it 'returns true as an admin' do
@@ -863,8 +863,8 @@ describe Guardian do
         Guardian.new(user).can_delete?(category).should be_false
       end
 
-      it 'returns true when a moderator' do
-        Guardian.new(moderator).can_delete?(category).should be_true
+      it 'returns false when a moderator' do
+        Guardian.new(moderator).can_delete?(category).should be_false
       end
 
       it 'returns true when an admin' do

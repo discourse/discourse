@@ -6,6 +6,7 @@
 
 module Scheduler
   class Manager
+    extend Sidekiq::ExceptionHandler
     attr_accessor :random_ratio, :redis
 
 
@@ -18,13 +19,16 @@ module Scheduler
             klass = @queue.deq
             failed = false
             start = Time.now.to_f
+            info = @manager.schedule_info(klass)
             begin
+              info.prev_result = "RUNNING"
+              info.write!
               klass.new.perform
-            rescue
+            rescue => e
+              Scheduler::Manager.handle_exception(e)
               failed = true
             end
             duration = ((Time.now.to_f - start) * 1000).to_i
-            info = @manager.schedule_info(klass)
             info.prev_duration = duration
             info.prev_result = failed ? "FAILED" : "OK"
             info.write!
@@ -41,17 +45,32 @@ module Scheduler
       end
 
       def wait_till_done
-        while !@queue.empty? && !@queue.num_waiting == 1
+        while !@queue.empty? && !(@queue.num_waiting > 0)
           sleep 0.001
         end
       end
     end
 
-    def initialize(redis = nil)
+    def self.without_runner(redis=nil)
+      self.new(redis, true)
+    end
+
+    def initialize(redis = nil, skip_runner = false)
       @redis = $redis || redis
       @random_ratio = 0.1
-      @runner = Runner.new(self)
+      unless skip_runner
+        @runner = Runner.new(self)
+        self.class.current = self
+      end
       @manager_id = SecureRandom.hex
+    end
+
+    def self.current
+      @current
+    end
+
+    def self.current=(manager)
+      @current = manager
     end
 
     def schedule_info(klass)
@@ -78,10 +97,18 @@ module Scheduler
     def tick
       lock do
         (key, due), _ = redis.zrange Manager.queue_key, 0, 0, withscores: true
+        return unless key
         if due.to_i <= Time.now.to_i
-          klass = key.constantize
+          klass = begin
+                    key.constantize
+                  rescue NameError
+                    nil
+                  end
+          return unless klass
           info = schedule_info(klass)
           info.prev_run = Time.now.to_i
+          info.prev_result = "QUEUED"
+          info.prev_duration = -1
           info.next_run = nil
           info.schedule!
           @runner.enq(klass)
@@ -96,6 +123,7 @@ module Scheduler
 
     def stop!
       @runner.stop!
+      self.class.current = nil
     end
 
 
@@ -127,6 +155,14 @@ module Scheduler
       yield
     ensure
       redis.del Manager.lock_key
+    end
+
+    def self.discover_schedules
+      schedules = []
+      ObjectSpace.each_object(Scheduler::Schedule) do |schedule|
+        schedules << schedule if schedule.scheduled?
+      end
+      schedules
     end
 
     def self.lock_key

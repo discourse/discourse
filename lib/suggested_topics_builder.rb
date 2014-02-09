@@ -19,7 +19,7 @@ class SuggestedTopicsBuilder
 
     # Only add results if we don't have those topic ids already
     results = results.where('topics.id NOT IN (?)', @excluded_topic_ids)
-                     .where(closed: false, archived: false, visible: true)
+                     .where(visible: true)
                      .to_a
                      .reject { |topic| @category_topic_ids.include?(topic.id) }
 

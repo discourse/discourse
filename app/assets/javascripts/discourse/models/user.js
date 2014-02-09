@@ -178,7 +178,7 @@ Discourse.User = Discourse.Model.extend({
                                'digest_after_days',
                                'new_topic_duration_minutes',
                                'external_links_in_new_tab',
-                               'watch_new_topics',
+                               'mailing_list_mode',
                                'enable_quoting');
 
     _.each(['muted','watched','tracked'], function(s){
@@ -288,6 +288,11 @@ Discourse.User = Discourse.Model.extend({
         }));
       }
 
+      if (!Em.isEmpty(json.user.custom_groups)) {
+        json.user.custom_groups = json.user.custom_groups.map(function (g) {
+          return Discourse.Group.create(g);
+        });
+      }
       if (json.user.invited_by) {
         json.user.invited_by = Discourse.User.create(json.user.invited_by);
       }

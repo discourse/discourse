@@ -93,6 +93,17 @@ class UserNotifications < ActionMailer::Base
     notification_email(user, opts)
   end
 
+  def mailing_list_notify(user, post)
+    send_notification_email(
+      title: post.topic.title,
+      post: post,
+      from_alias: post.user.username,
+      allow_reply_by_email: true,
+      notification_type: "posted",
+      user: user
+    )
+  end
+
   protected
 
   def email_post_markdown(post)
@@ -127,12 +138,37 @@ class UserNotifications < ActionMailer::Base
     return unless @notification = opts[:notification]
     return unless @post = opts[:post]
 
-    username = @notification.data_hash[:display_username]
+    username = @notification.data_hash[:original_username]
     notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
+    return if SiteSetting.enable_mailing_list_mode &&
+       ["replied", "mentioned", "quoted", "posted"].include?(notification_type)
+
+    title = @notification.data_hash[:topic_title]
+    allow_reply_by_email = opts[:allow_reply_by_email]
+
+    send_notification_email(
+      title: title,
+      post: @post,
+      from_alias: username,
+      allow_reply_by_email: allow_reply_by_email,
+      notification_type: notification_type,
+      user: user
+    )
+
+  end
+
+  def send_notification_email(opts)
+    post = opts[:post]
+    title = opts[:title]
+    allow_reply_by_email = opts[:allow_reply_by_email]
+    from_alias = opts[:from_alias]
+    notification_type = opts[:notification_type]
+    user = opts[:user]
+
     context = ""
-    tu = TopicUser.get(@post.topic_id, user)
-    context_posts = self.class.get_context_posts(@post, tu)
+    tu = TopicUser.get(post.topic_id, user)
+    context_posts = self.class.get_context_posts(post, tu)
 
     # make .present? cheaper
     context_posts = context_posts.to_a
@@ -147,37 +183,36 @@ class UserNotifications < ActionMailer::Base
     html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
       template: 'email/notification',
       format: :html,
-      locals: { context_posts: context_posts, post: @post }
+      locals: { context_posts: context_posts, post: post }
     )
 
     template = "user_notifications.user_#{notification_type}"
-    if @post.topic.private_message?
+    if post.topic.private_message?
       template << "_pm"
     end
 
     email_opts = {
-      topic_title: @notification.data_hash[:topic_title],
-      message: email_post_markdown(@post),
-      url: @post.url,
-      post_id: @post.id,
-      topic_id: @post.topic_id,
+      topic_title: title,
+      message: email_post_markdown(post),
+      url: post.url,
+      post_id: post.id,
+      topic_id: post.topic_id,
       context: context,
-      username: username,
+      username: from_alias,
       add_unsubscribe_link: true,
-      allow_reply_by_email: opts[:allow_reply_by_email],
+      allow_reply_by_email: allow_reply_by_email,
       template: template,
       html_override: html,
       style: :notification
     }
 
     # If we have a display name, change the from address
-    if username.present?
-      email_opts[:from_alias] = username
+    if from_alias.present?
+      email_opts[:from_alias] = from_alias
     end
 
-    TopicUser.change(user.id, @post.topic_id, last_emailed_post_number: @post.post_number)
+    TopicUser.change(user.id, post.topic_id, last_emailed_post_number: post.post_number)
 
     build_email(user.email, email_opts)
   end
-
 end

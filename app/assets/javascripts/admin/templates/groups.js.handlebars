@@ -16,7 +16,7 @@
 
   <div class='content-editor'>
     {{#if model.active}}
-      {{#if model.active.loaded}}
+      {{#if model.active.loadedUsers}}
         {{#with model.active}}
           {{#if automatic}}
             <h3>{{name}}</h3>
@@ -31,9 +31,9 @@
             </div>
           </div>
           <div class="control-group">
-            <label class="control-label">{{i18n admin.groups.alias_levels.title}}</label>
+            <label class="control-label">{{i18n groups.alias_levels.title}}</label>
             <div class="controls">
-              {{combobox valueAttribute="value" value=alias_level content=validValues}}
+              {{combobox valueAttribute="value" value=alias_level content=controller.aliasLevelOptions}}
             </div>
           </div>
           <div class='controls'>

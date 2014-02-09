@@ -37,6 +37,20 @@ module RailsMultisite
       end
     end
 
+    def self.with_connection(db = "default")
+      old = current_db
+      connected = ActiveRecord::Base.connection_pool.connected?
+
+      establish_connection(:db => db)
+      rval = yield db
+      ActiveRecord::Base.connection_handler.clear_active_connections!
+
+      establish_connection(:db => old)
+      ActiveRecord::Base.connection_handler.clear_active_connections! unless connected
+
+      rval
+    end
+
     def self.each_connection
       old = current_db
       connected = ActiveRecord::Base.connection_pool.connected?
@@ -59,7 +73,7 @@ module RailsMultisite
     end
 
     def self.current_db
-      db = ActiveRecord::Base.connection_pool.spec.config[:db_key] || "default"
+      ActiveRecord::Base.connection_pool.spec.config[:db_key] || "default"
     end
 
     def self.config_filename=(config_filename)

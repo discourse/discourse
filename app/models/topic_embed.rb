@@ -85,3 +85,20 @@ class TopicEmbed < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: topic_embeds
+#
+#  id           :integer          not null, primary key
+#  topic_id     :integer          not null
+#  post_id      :integer          not null
+#  embed_url    :string(255)      not null
+#  content_sha1 :string(40)       not null
+#  created_at   :datetime
+#  updated_at   :datetime
+#
+# Indexes
+#
+#  index_topic_embeds_on_embed_url  (embed_url) UNIQUE
+#

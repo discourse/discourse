@@ -25,7 +25,7 @@ describe Scheduler::Manager do
     end
   end
 
-  let(:manager) { Scheduler::Manager.new }
+  let(:manager) { Scheduler::Manager.new(Redis.new) }
 
   before do
     $redis.del manager.class.queue_key
@@ -46,7 +46,7 @@ describe Scheduler::Manager do
 
       (0..5).map do
         Thread.new do
-          manager = Scheduler::Manager.new(Redis.new)
+          manager = Scheduler::Manager.new(DiscourseRedis.new)
           manager.blocking_tick
         end
       end.map(&:join)
@@ -59,6 +59,12 @@ describe Scheduler::Manager do
       info.prev_result.should == "OK"
     end
 
+  end
+
+  describe '#discover_schedules' do
+    it 'Discovers Testing::RandomJob' do
+      Scheduler::Manager.discover_schedules.should include(Testing::RandomJob)
+    end
   end
 
   describe '#next_run' do

@@ -135,8 +135,17 @@ class PostCreator
   end
 
   def after_post_create
-    if !@topic.private_message? && @post.post_number > 1 && @post.post_type != Post.types[:moderator_action]
-      TopicTrackingState.publish_unread(@post)
+    if !@topic.private_message? && @post.post_type != Post.types[:moderator_action]
+      if @post.post_number > 1
+        TopicTrackingState.publish_unread(@post)
+      end
+        if SiteSetting.enable_mailing_list_mode
+          Jobs.enqueue_in(
+              SiteSetting.email_time_window_mins.minutes,
+              :notify_mailing_list_subscribers,
+              post_id: @post.id
+          )
+        end
     end
   end
 

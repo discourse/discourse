@@ -53,10 +53,6 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
   weekly: Em.computed.equal('period', 'weekly'),
   daily: Em.computed.equal('period', 'daily'),
 
-  updateTitle: function(){
-    Discourse.notifyTitle(this.get('topicTrackingState.incomingCount'));
-  }.observes('topicTrackingState.incomingCount'),
-
   footerMessage: function() {
     if (!this.get('allLoaded')) { return; }
 

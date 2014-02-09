@@ -9,7 +9,7 @@
 Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   classNames: ['combobox category-combobox'],
   overrideWidths: true,
-  dataAttributes: ['name', 'color', 'text_color', 'description_text', 'topic_count'],
+  dataAttributes: ['name', 'color', 'text_color', 'description_text', 'topic_count', 'read_restricted'],
   valueBinding: Ember.Binding.oneWay('source'),
 
   content: Em.computed.filter('categories', function(c) {
@@ -36,7 +36,7 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
     if (!templateData.color) return text;
 
     var result = "<div class='badge-category' style='background-color: #" + templateData.color + '; color: #' +
-        templateData.text_color + ";'>" + templateData.name + "</div>";
+        templateData.text_color + ";'>" + (templateData.read_restricted === 'true' ? "<i class='fa fa-group'></i> " : "") + templateData.name + "</div>";
 
     result += " <div class='topic-count'>&times; " + templateData.topic_count + "</div>";
 

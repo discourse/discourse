@@ -333,14 +333,14 @@ Discourse.ComposerController = Discourse.Controller.extend({
   cancelComposer: function() {
     var self = this;
 
-    return Ember.Deferred.promise(function (promise) {
+    return new Ember.RSVP.Promise(function (resolve) {
       if (self.get('model.hasMetaData') || self.get('model.replyDirty')) {
         bootbox.confirm(I18n.t("post.abandon"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
           if (result) {
             self.destroyDraft();
             self.get('model').clearState();
             self.close();
-            promise.resolve();
+            resolve();
           }
         });
       } else {
@@ -348,7 +348,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
         self.destroyDraft();
         self.get('model').clearState();
         self.close();
-        promise.resolve();
+        resolve();
       }
     });
   },

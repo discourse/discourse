@@ -216,6 +216,8 @@ class PostsController < ApplicationController
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
     post_revision = PostRevision.where(post_id: post_id, number: revision).first
+    post_revision.post = find_post_from_params
+
     guardian.ensure_can_see!(post_revision)
     post_revision
   end

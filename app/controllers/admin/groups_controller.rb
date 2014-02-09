@@ -9,11 +9,6 @@ class Admin::GroupsController < Admin::AdminController
     render json: success_json
   end
 
-  def users
-    group = Group.find(params[:group_id].to_i)
-    render_serialized(group.users.order('username_lower asc').limit(200).to_a, BasicUserSerializer)
-  end
-
   def update
     group = Group.find(params[:id].to_i)
 

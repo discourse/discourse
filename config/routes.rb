@@ -1,5 +1,5 @@
 require "sidekiq/web"
-require "sidetiq/web"
+require_dependency "scheduler/web"
 
 require_dependency "admin_constraint"
 require_dependency "staff_constraint"
@@ -113,6 +113,7 @@ Discourse::Application.routes.draw do
     end
   end
 
+  get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
   get "composer-messages" => "composer_messages#index"
 
@@ -162,6 +163,11 @@ Discourse::Application.routes.draw do
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
   get "posts/:id/reply-history" => "posts#reply_history"
 
+  resources :groups do
+    get 'members'
+    get 'posts'
+  end
+
   resources :posts do
     put "bookmark"
     get "replies"
@@ -204,20 +210,20 @@ Discourse::Application.routes.draw do
   post "category/:category_id/move" => "categories#move"
   get "category/:category.rss" => "list#category_feed", format: :rss
   get "category/:parent_category/:category.rss" => "list#category_feed", format: :rss
-  get "category/:category" => "list#latest_category"
-  get "category/:category/none" => "list#latest_category_none"
-  get "category/:parent_category/:category" => "list#latest_category"
+  get "category/:category" => "list#category_latest"
+  get "category/:category/none" => "list#category_none_latest"
+  get "category/:parent_category/:category" => "list#parent_category_category_latest"
 
   get "top" => "list#top"
-  get "category/:category/l/top" => "list#top_category"
-  get "category/:category/none/l/top" => "list#top_category_none"
-  get "category/:parent_category/:category/l/top" => "list#top_category"
+  get "category/:category/l/top" => "list#category_top", as: "category_top"
+  get "category/:category/none/l/top" => "list#category_none_top", as: "category_none_top"
+  get "category/:parent_category/:category/l/top" => "list#parent_category_category_top", as: "parent_category_category_top"
 
   TopTopic.periods.each do |period|
     get "top/#{period}" => "list#top_#{period}"
-    get "category/:category/l/top/#{period}" => "list#top_#{period}_category"
-    get "category/:category/none/l/top/#{period}" => "list#top_#{period}_category_none"
-    get "category/:parent_category/:category/l/top/#{period}" => "list#top_#{period}_category"
+    get "category/:category/l/top/#{period}" => "list#category_top_#{period}", as: "category_top_#{period}"
+    get "category/:category/none/l/top/#{period}" => "list#category_none_top_#{period}", as: "category_none_top_#{period}"
+    get "category/:parent_category/:category/l/top/#{period}" => "list#parent_category_category_top_#{period}", as: "parent_category_category_top_#{period}"
   end
 
   Discourse.anonymous_filters.each do |filter|
@@ -227,12 +233,12 @@ Discourse::Application.routes.draw do
   Discourse.filters.each do |filter|
     get "#{filter}" => "list##{filter}"
     get "#{filter}/more" => "list##{filter}"
-    get "category/:category/l/#{filter}" => "list##{filter}_category"
-    get "category/:category/l/#{filter}/more" => "list##{filter}_category"
-    get "category/:category/none/l/#{filter}" => "list##{filter}_category_none"
-    get "category/:category/none/l/#{filter}/more" => "list##{filter}_category_none"
-    get "category/:parent_category/:category/l/#{filter}" => "list##{filter}_category"
-    get "category/:parent_category/:category/l/#{filter}/more" => "list##{filter}_category"
+    get "category/:category/l/#{filter}" => "list#category_#{filter}", as: "category_#{filter}"
+    get "category/:category/l/#{filter}/more" => "list#category_#{filter}"
+    get "category/:category/none/l/#{filter}" => "list#category_none_#{filter}", as: "category_none_#{filter}"
+    get "category/:category/none/l/#{filter}/more" => "list#category_none_#{filter}"
+    get "category/:parent_category/:category/l/#{filter}" => "list#parent_category_category_#{filter}", as: "parent_category_category_#{filter}"
+    get "category/:parent_category/:category/l/#{filter}/more" => "list#parent_category_category_#{filter}"
   end
 
   get "search" => "search#query"

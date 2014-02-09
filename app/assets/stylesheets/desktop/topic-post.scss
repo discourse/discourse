@@ -435,7 +435,6 @@ iframe {
     margin: 5px 0 0 0;
     font-size: 2em;
     line-height: 1.2em;
-    overflow: hidden;
   }
 
   a.star {
@@ -464,7 +463,25 @@ iframe {
     height: 45px;
   }
   
-  .contents { text-align: center;}
+  .contents { 
+
+    text-align: center;
+
+     a {
+      display: block; 
+      margin: 0 auto;
+      width: 45px;
+    }
+
+    h3 a {
+      display: inline;
+      width: auto;
+
+    }
+
+
+
+  }
   h3 { display: block; }
 
 }
@@ -978,6 +995,7 @@ a.attachment:before {
     color: rgba(0,0,0,0.05);
     font: 90px/1 FontAwesome;
     content: "\f05c";
+    z-index: -5;
 }
 
 .read_restricted .gutter:before {

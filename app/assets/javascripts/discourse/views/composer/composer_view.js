@@ -258,13 +258,9 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
       }
     });
 
-    // In case it's still bound somehow
-    $uploadTarget.fileupload('destroy');
-    $uploadTarget.off();
-
     $uploadTarget.fileupload({
-        url: Discourse.getURL('/uploads'),
-        dataType: 'json'
+      url: Discourse.getURL('/uploads'),
+      dataType: 'json'
     });
 
     // submit - this event is triggered for each upload
@@ -359,6 +355,12 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     return this.initEditor();
   },
 
+  childWillDestroyElement: function() {
+    var $uploadTarget = $('#reply-control');
+    $uploadTarget.fileupload('destroy');
+    $uploadTarget.off();
+  },
+
   toggleAdminOptions: function() {
     var $adminOpts = $('.admin-options-form'),
         $wmd = $('.wmd-controls'),
@@ -419,6 +421,10 @@ Discourse.NotifyingTextArea = Ember.TextArea.extend({
 
   didInsertElement: function() {
     return this.get('parent').childDidInsertElement(this);
+  },
+
+  willDestroyElement: function() {
+    return this.get('parent').childWillDestroyElement(this);
   }
 });
 

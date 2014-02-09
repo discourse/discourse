@@ -19,6 +19,7 @@ class TopicQuery
                      sort_order
                      no_subcategories
                      sort_descending
+                     no_definitions
                      status).map(&:to_sym)
 
   # Maps `sort_order` to a columns in `topics`
@@ -53,7 +54,7 @@ class TopicQuery
 
   # The latest view of topics
   def list_latest
-    create_list(:latest)
+    TopicList.new(:latest, @user, latest_results)
   end
 
   # The starred topics
@@ -121,8 +122,7 @@ class TopicQuery
   end
 
   def list_category(category)
-    create_list(:category, unordered: true) do |list|
-      list = list.where(category_id: category.id)
+    create_list(:category, unordered: true, category: category.id) do |list|
       if @user
         list.order(TopicQuerySQL.order_with_pinned_sql)
       else
@@ -132,10 +132,8 @@ class TopicQuery
   end
 
   def list_new_in_category(category)
-    create_list(:new_in_category, unordered: true) do |list|
-      list.where(category_id: category.id)
-          .by_newest
-          .first(25)
+    create_list(:new_in_category, unordered: true, category: category.id) do |list|
+      list.by_newest.first(25)
     end
   end
 
@@ -242,6 +240,11 @@ class TopicQuery
       result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
 
+      # Don't include the category topic unless restricted to that category
+      if options[:category].blank? || options[:no_definitions]
+        result = result.where('COALESCE(categories.topic_id, 0) <> topics.id')
+      end
+
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
       result = result.where.not(topics: {id: options[:except_topic_ids]}).references(:topics) if options[:except_topic_ids]
@@ -263,7 +266,7 @@ class TopicQuery
       end
 
       guardian = Guardian.new(@user)
-      unless guardian.is_staff?
+      if !guardian.is_admin?
         allowed_ids = guardian.allowed_category_ids
         if allowed_ids.length > 0
           result = result.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
@@ -278,8 +281,28 @@ class TopicQuery
 
     def new_results(options={})
       result = TopicQuery.new_filter(default_results(options), @user.treat_as_new_topic_start_date)
+      result = remove_muted_categories(result, @user)
       suggested_ordering(result, options)
     end
+
+    def latest_results(options={})
+      result = default_results(options)
+      remove_muted_categories(result, @user)
+    end
+
+    def remove_muted_categories(list, user)
+      if user
+        list = list.where("NOT EXISTS(
+                         SELECT 1 FROM category_users cu
+                         WHERE cu.user_id = ? AND
+                               cu.category_id = topics.category_id AND
+                               cu.notification_level = ?
+                         )", user.id, CategoryUser.notification_levels[:muted])
+      end
+
+      list
+    end
+
 
     def unread_results(options={})
       result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
@@ -289,7 +312,7 @@ class TopicQuery
     end
 
     def random_suggested(topic, count, excluded_topic_ids=[])
-      result = default_results(unordered: true, per_page: count)
+      result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)
       excluded_topic_ids += Category.pluck(:topic_id).compact
       result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 

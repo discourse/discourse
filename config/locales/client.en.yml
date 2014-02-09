@@ -61,6 +61,7 @@ en:
         x_days:
           one: "1 day"
           other: "%{count} days"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "1 min ago"
@@ -172,6 +173,20 @@ en:
       sent_by_user: "Sent by <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
 
+    groups:
+      title:
+        one: "group"
+        other: "groups"
+      members: "Members"
+      posts: "Posts"
+      alias_levels:
+        title: "Who can use this group as an alias?"
+        nobody: "Nobody"
+        only_admins: "Only admins"
+        mods_and_admins: "Only moderators and Admins"
+        members_mods_and_admins: "Only group members, moderators and admins"
+        everyone: "Everyone"
+
     user_action_groups:
       "1": "Likes Given"
       "2": "Likes Received"
@@ -196,7 +211,7 @@ en:
       latest: "Latest"
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
-      subcategories: "Subcategories:"
+      subcategories: "Subcategories"
       topic_stats: "The number of new topics."
       topic_stat_sentence:
         one: "%{count} new topic in the past %{unit}."
@@ -230,7 +245,7 @@ en:
       deleted: "(deleted)"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
-      watch_new_topics: "Automatically watch all new topics posted on the forum"
+      mailing_list_mode: "Receive an email every time a post is made on the forum (unless you have muted the topic or category)"
       watched_categories: "Watched"
       watched_categories_instructions: "Same as Tracking, plus you will be notified of all new posts and topics."
       tracked_categories: "Tracked"
@@ -285,12 +300,12 @@ en:
 
       name:
         title: "Name"
-        instructions: "The long version of your name. Publicly visible, and used for @name matching."
+        instructions: "The long version of your name; publicly visible."
         too_short: "Your name is too short."
         ok: "Your name looks good."
       username:
         title: "Username"
-        instructions: "Must be unique, no spaces. People can mention you as @username."
+        instructions: "Must be unique, no spaces, short. People can mention you as @username."
         short_instructions: "People can mention you as @{{username}}."
         available: "Your username is available."
         global_match: "Email matches the registered username."
@@ -594,7 +609,7 @@ en:
     current_user: 'go to your user page'
 
     starred:
-      title: 'Starred'
+      title: 'Star'
       help:
         star: 'add this topic to your starred list'
         unstar: 'remove this topic from your starred list'
@@ -1153,7 +1168,7 @@ en:
         today: "Today"
         other_periods: "see more top topics"
         redirect_reasons:
-          new_user: "Welcome! As a new visitor, we thought you might like to start with the top discussion topics."
+          new_user: "Welcome! As a new visitor, this will be your homepage until you've had some time to look around at the forum. Here's some of the most popular topics from the past."
           not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
@@ -1260,13 +1275,6 @@ en:
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        alias_levels:
-          title: "Who can use this group as an alias?"
-          nobody: "Nobody"
-          only_admins: "Only admins"
-          mods_and_admins: "Only moderators and Admins"
-          members_mods_and_admins: "Only group members, moderators and admins"
-          everyone: "Everyone"
 
       api:
         generate_master: "Generate Master API Key"
@@ -1539,6 +1547,7 @@ en:
           rate_limits: 'Rate Limits'
           developer: 'Developer'
           embedding: "Embedding"
+          legal: "Legal"
           uncategorized: 'Uncategorized'
 
     lightbox:

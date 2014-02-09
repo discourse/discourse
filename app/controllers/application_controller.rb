@@ -211,8 +211,10 @@ class ApplicationController < ActionController::Base
     def custom_html_json
       MultiJson.dump({
         top: SiteContent.content_for(:top),
-        bottom: SiteContent.content_for(:bottom),
-      })
+        bottom: SiteContent.content_for(:bottom)
+      }.merge(
+        (SiteSetting.tos_accept_required && !current_user) ? {tos_signup_form_message: SiteContent.content_for(:tos_signup_form_message)} : {}
+      ))
     end
 
     def render_json_error(obj)

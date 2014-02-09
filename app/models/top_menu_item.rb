@@ -32,7 +32,7 @@ class TopMenuItem
   attr_reader :name, :filter
 
   def has_filter?
-    !filter.nil?
+    filter.present?
   end
 
   def has_specific_category?
@@ -41,16 +41,6 @@ class TopMenuItem
 
   def specific_category
     name.split('/')[1]
-  end
-
-  def query_should_exclude_category?(action_name)
-    matches_action?(action_name) && has_filter?
-  end
-
-  def matches_action?(action_name)
-    return true if action_name == "index" && name == SiteSetting.homepage
-    return true if action_name.start_with?(name)
-    false
   end
 
   private

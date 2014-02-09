@@ -25,9 +25,24 @@ function buildTopicRoute(filter) {
       var period = filter.indexOf('/') > 0 ? filter.split('/')[1] : '',
           filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
 
-      Discourse.set('title', I18n.t('filters.with_topics', {filter: filterText}));
+      if (filter === Discourse.Utilities.defaultHomepage()) {
+        Discourse.set('title', '');
+      } else {
+        Discourse.set('title', I18n.t('filters.with_topics', {filter: filterText}));
+      }
 
       this.controllerFor('discoveryTopics').setProperties({ model: model, category: null, period: period });
+
+      // If there's a draft, open the create topic composer
+      if (model.draft) {
+        this.controllerFor('composer').open({
+          action: Discourse.Composer.CREATE_TOPIC,
+          draft: model.draft,
+          draftKey: model.draft_key,
+          draftSequence: model.draft_sequence
+        });
+      }
+
       this.controllerFor('navigationDefault').set('canCreateTopic', model.get('can_create_topic'));
     },
 
@@ -57,7 +72,7 @@ function buildCategoryRoute(filter, params) {
           filterMode = "category/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/" + filter,
           listFilter = "category/" + Discourse.Category.slugFor(model) + "/l/" + filter;
 
-      this.controllerFor('search').set('searchContext', model);
+      this.controllerFor('search').set('searchContext', model.get('searchContext'));
 
       var opts = { category: model, filterMode: filterMode };
       opts.noSubcategories = params && params.no_subcategories;

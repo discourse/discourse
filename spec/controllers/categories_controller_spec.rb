@@ -9,7 +9,7 @@ describe CategoriesController do
 
     describe "logged in" do
       before do
-        @user = log_in(:moderator)
+        @user = log_in(:admin)
       end
 
       it "raises an exception when they don't have permission to create it" do
@@ -106,7 +106,7 @@ describe CategoriesController do
       let(:valid_attrs) { {id: @category.id, name: "hello", color: "ff0", text_color: "fff"} }
 
       before do
-        @user = log_in(:moderator)
+        @user = log_in(:admin)
         @category = Fabricate(:category, user: @user)
       end
 

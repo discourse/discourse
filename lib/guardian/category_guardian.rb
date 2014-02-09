@@ -2,16 +2,16 @@
 module CategoryGuardian
   # Creating Method
   def can_create_category?(parent)
-    is_staff?
+    is_admin?
   end
 
   # Editing Method
   def can_edit_category?(category)
-    is_staff?
+    is_admin?
   end
 
   def can_delete_category?(category)
-    is_staff? && category.topic_count == 0 && !category.uncategorized?
+    is_admin? && category.topic_count == 0 && !category.uncategorized?
   end
 
   def can_see_category?(category)

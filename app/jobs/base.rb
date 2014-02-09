@@ -1,3 +1,5 @@
+require 'scheduler/scheduler'
+
 module Jobs
 
   def self.queued
@@ -147,7 +149,7 @@ module Jobs
   end
 
   class Scheduled < Base
-    include Sidetiq::Schedulable
+    extend Scheduler::Schedule
   end
 
   def self.enqueue(job_name, opts={})

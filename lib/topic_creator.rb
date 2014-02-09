@@ -13,14 +13,11 @@ class TopicCreator
   end
 
   def create
-    topic_params = setup
-    @topic = Topic.new(topic_params)
+    @topic = Topic.new(setup_topic_params)
 
-    setup_auto_close_time if @opts[:auto_close_time].present?
-
-    process_private_message if @opts[:archetype] == Archetype.private_message
+    setup_auto_close_time
+    process_private_message
     save_topic
-
     watch_topic
     auto_mute_topic
 
@@ -42,49 +39,53 @@ class TopicCreator
       @topic.notifier.watch_topic!(id, nil)
     end
 
-    TopicUser.auto_watch_new_topic(@topic.id)
     CategoryUser.auto_watch_new_topic(@topic)
   end
 
-  def setup
+  def setup_topic_params
     topic_params = {
       title: @opts[:title],
       user_id: @user.id,
       last_post_user_id: @user.id
     }
 
-    topic_params[:subtype] = @opts[:subtype] if @opts[:subtype].present?
-
-    if @opts[:archetype].present?
-      topic_params[:archetype] = @opts[:archetype]
-      # PM can't have a category
-      @opts.delete(:category) if topic_params[:archetype] == Archetype.private_message
+    [:subtype, :archetype, :meta_data].each do |key|
+      topic_params[key] = @opts[key] if @opts[key].present?
     end
 
-    # Temporary fix to allow older clients to create topics.
-    # When all clients are updated the category variable should
-    # be set directly to the contents of the if statement.
-    category = if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
-      Category.where(id: @opts[:category]).first
-    else
-      Category.where(name: @opts[:category]).first
-    end
+    category = find_category
 
     @guardian.ensure_can_create!(Topic,category)
 
     topic_params[:category_id] = category.id if category.present?
-    topic_params[:meta_data] = @opts[:meta_data] if @opts[:meta_data].present?
+
     topic_params[:created_at] = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
 
     topic_params
   end
 
+  def find_category
+    # PM can't have a category
+    @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
+
+    # Temporary fix to allow older clients to create topics.
+    # When all clients are updated the category variable should
+    # be set directly to the contents of the if statement.
+    if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
+      Category.where(id: @opts[:category]).first
+    else
+      Category.where(name: @opts[:category]).first
+    end
+  end
+
   def setup_auto_close_time
+    return unless @opts[:auto_close_time].present?
     return unless @guardian.can_moderate?(@topic)
     @topic.set_auto_close(@opts[:auto_close_time], @user)
   end
 
   def process_private_message
+    return unless @opts[:archetype] == Archetype.private_message
     @topic.subtype = TopicSubtype.user_to_user unless @topic.subtype
 
     unless @opts[:target_usernames].present? || @opts[:target_group_names].present?

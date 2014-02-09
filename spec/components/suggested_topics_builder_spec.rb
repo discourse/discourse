@@ -83,14 +83,14 @@ describe SuggestedTopicsBuilder do
 
     end
 
-    context "adding invalid status topics" do
+    context "adding topics that are not open" do
       let!(:archived_topic) { Fabricate(:topic, archived: true)}
       let!(:closed_topic) { Fabricate(:topic, closed: true)}
       let!(:invisible_topic) { Fabricate(:topic, visible: false)}
 
-      it "doesn't add archived, closed or invisible topics" do
+      it "adds archived and closed, but not invisible topics" do
         builder.add_results(Topic)
-        builder.size.should == 0
+        builder.size.should == 2
         builder.should_not be_full
       end
     end

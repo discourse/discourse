@@ -759,6 +759,7 @@ end
 #  auto_close_started_at   :datetime
 #  deleted_by_id           :integer
 #  participant_count       :integer          default(1)
+#  word_count              :integer
 #
 # Indexes
 #

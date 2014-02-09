@@ -11,8 +11,8 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
   // If we need to perform another search
   newSearchNeeded: function() {
     this.set('noResults', false);
-    var term = this.get('term');
-    if (term && term.length >= Discourse.SiteSettings.min_search_term_length) {
+    var term = (this.get('term') || '').trim();
+    if (term.length >= Discourse.SiteSettings.min_search_term_length) {
       this.set('loading', true);
       this.searchTerm(term, this.get('typeFilter'));
     } else {
@@ -57,6 +57,8 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
         self.set('urls', urls);
       }
 
+      self.set('loading', false);
+    }).catch(function() {
       self.set('loading', false);
     });
   }, 300),
