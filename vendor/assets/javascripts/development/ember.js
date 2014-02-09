@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.3.2+pre.773be0ec
+ * @version   1.3.2
  */
 
 
@@ -203,7 +203,7 @@ if (!Ember.testing) {
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.3.2+pre.773be0ec
+ * @version   1.3.2
  */
 
 
@@ -286,7 +286,7 @@ var define, requireModule, require, requirejs;
 
   @class Ember
   @static
-  @version 1.3.2+pre.773be0ec
+  @version 1.3.2
 */
 
 if ('undefined' === typeof Ember) {
@@ -313,10 +313,10 @@ Ember.toString = function() { return "Ember"; };
 /**
   @property VERSION
   @type String
-  @default '1.3.2+pre.773be0ec'
+  @default '1.3.2'
   @static
 */
-Ember.VERSION = '1.3.2+pre.773be0ec';
+Ember.VERSION = '1.3.2';
 
 /**
   Standard environmental variables. You can define these in a global `EmberENV`
@@ -1029,7 +1029,7 @@ Ember.guidFor = function guidFor(obj) {
 // META
 //
 
-var META_DESC = Ember.META_DESC = {
+var META_DESC = {
   writable:    true,
   configurable: false,
   enumerable:  false,
@@ -2505,7 +2505,7 @@ ObserverSet.prototype.clear = function() {
 
 
 (function() {
-var META_KEY = Ember.META_KEY,
+var metaFor = Ember.meta,
     guidFor = Ember.guidFor,
     tryFinally = Ember.tryFinally,
     sendEvent = Ember.sendEvent,
@@ -2536,10 +2536,10 @@ var META_KEY = Ember.META_KEY,
   @return {void}
 */
 function propertyWillChange(obj, keyName) {
-  var m = obj[META_KEY],
-      watching = (m && m.watching[keyName] > 0) || keyName === 'length',
-      proto = m && m.proto,
-      desc = m && m.descs[keyName];
+  var m = metaFor(obj, false),
+      watching = m.watching[keyName] > 0 || keyName === 'length',
+      proto = m.proto,
+      desc = m.descs[keyName];
 
   if (!watching) { return; }
   if (proto === obj) { return; }
@@ -2566,10 +2566,10 @@ Ember.propertyWillChange = propertyWillChange;
   @return {void}
 */
 function propertyDidChange(obj, keyName) {
-  var m = obj[META_KEY],
-      watching = (m && m.watching[keyName] > 0) || keyName === 'length',
-      proto = m && m.proto,
-      desc = m && m.descs[keyName];
+  var m = metaFor(obj, false),
+      watching = m.watching[keyName] > 0 || keyName === 'length',
+      proto = m.proto,
+      desc = m.descs[keyName];
 
   if (proto === obj) { return; }
 
@@ -2642,7 +2642,7 @@ function chainsWillChange(obj, keyName, m) {
 }
 
 function chainsDidChange(obj, keyName, m, suppressEvents) {
-  if (!(m && m.hasOwnProperty('chainWatchers') &&
+  if (!(m.hasOwnProperty('chainWatchers') &&
         m.chainWatchers[keyName])) {
     return;
   }
@@ -3645,11 +3645,11 @@ var metaFor = Ember.meta, // utils.js
     MANDATORY_SETTER = Ember.ENV.MANDATORY_SETTER,
     o_defineProperty = Ember.platform.defineProperty;
 
-Ember.watchKey = function(obj, keyName, meta) {
+Ember.watchKey = function(obj, keyName) {
   // can't watch length on Array - it is special...
   if (keyName === 'length' && typeOf(obj) === 'array') { return; }
 
-  var m = meta || metaFor(obj), watching = m.watching;
+  var m = metaFor(obj), watching = m.watching;
 
   // activate watching first time
   if (!watching[keyName]) {
@@ -3674,8 +3674,8 @@ Ember.watchKey = function(obj, keyName, meta) {
 };
 
 
-Ember.unwatchKey = function(obj, keyName, meta) {
-  var m = meta || metaFor(obj), watching = m.watching;
+Ember.unwatchKey = function(obj, keyName) {
+  var m = metaFor(obj), watching = m.watching;
 
   if (watching[keyName] === 1) {
     watching[keyName] = 0;
@@ -3718,8 +3718,7 @@ var metaFor = Ember.meta, // utils.js
     warn = Ember.warn,
     watchKey = Ember.watchKey,
     unwatchKey = Ember.unwatchKey,
-    FIRST_KEY = /^([^\.\*]+)/,
-    META_KEY = Ember.META_KEY;
+    FIRST_KEY = /^([^\.\*]+)/;
 
 function firstKey(path) {
   return path.match(FIRST_KEY)[0];
@@ -3753,24 +3752,24 @@ function addChainWatcher(obj, keyName, node) {
 
   if (!nodes[keyName]) { nodes[keyName] = []; }
   nodes[keyName].push(node);
-  watchKey(obj, keyName, m);
+  watchKey(obj, keyName);
 }
 
 var removeChainWatcher = Ember.removeChainWatcher = function(obj, keyName, node) {
   if (!obj || 'object' !== typeof obj) { return; } // nothing to do
 
-  var m = obj[META_KEY];
-  if (m && !m.hasOwnProperty('chainWatchers')) { return; } // nothing to do
+  var m = metaFor(obj, false);
+  if (!m.hasOwnProperty('chainWatchers')) { return; } // nothing to do
 
-  var nodes = m && m.chainWatchers;
+  var nodes = m.chainWatchers;
 
-  if (nodes && nodes[keyName]) {
+  if (nodes[keyName]) {
     nodes = nodes[keyName];
     for (var i = 0, l = nodes.length; i < l; i++) {
       if (nodes[i] === node) { nodes.splice(i, 1); }
     }
   }
-  unwatchKey(obj, keyName, m);
+  unwatchKey(obj, keyName);
 };
 
 // A ChainNode watches a single key on an object. If you provide a starting
@@ -3810,14 +3809,14 @@ var ChainNodePrototype = ChainNode.prototype;
 function lazyGet(obj, key) {
   if (!obj) return undefined;
 
-  var meta = obj[META_KEY];
+  var meta = metaFor(obj, false);
   // check if object meant only to be a prototype
-  if (meta && meta.proto === obj) return undefined;
+  if (meta.proto === obj) return undefined;
 
   if (key === "@each") return get(obj, key);
 
   // if a CP only return cached value
-  var desc = meta && meta.descs[key];
+  var desc = meta.descs[key];
   if (desc && desc._cacheable) {
     if (key in meta.cache) {
       return meta.cache[key];
@@ -4029,14 +4028,12 @@ ChainNodePrototype.didChange = function(events) {
 };
 
 Ember.finishChains = function(obj) {
-  // We only create meta if we really have to
-  var m = obj[META_KEY], chains = m && m.chains;
+  var m = metaFor(obj, false), chains = m.chains;
   if (chains) {
     if (chains.value() !== obj) {
-      metaFor(obj).chains = chains = chains.copy(obj);
-    } else {
-      chains.didChange(null);
+      m.chains = chains = chains.copy(obj);
     }
+    chains.didChange(null);
   }
 };
 
@@ -4058,8 +4055,8 @@ var metaFor = Ember.meta, // utils.js
 // get the chains for the current object. If the current object has
 // chains inherited from the proto they will be cloned and reconfigured for
 // the current object.
-function chainsFor(obj, meta) {
-  var m = meta || metaFor(obj), ret = m.chains;
+function chainsFor(obj) {
+  var m = metaFor(obj), ret = m.chains;
   if (!ret) {
     ret = m.chains = new ChainNode(null, null, obj);
   } else if (ret.value() !== obj) {
@@ -4068,26 +4065,26 @@ function chainsFor(obj, meta) {
   return ret;
 }
 
-Ember.watchPath = function(obj, keyPath, meta) {
+Ember.watchPath = function(obj, keyPath) {
   // can't watch length on Array - it is special...
   if (keyPath === 'length' && typeOf(obj) === 'array') { return; }
 
-  var m = meta || metaFor(obj), watching = m.watching;
+  var m = metaFor(obj), watching = m.watching;
 
   if (!watching[keyPath]) { // activate watching first time
     watching[keyPath] = 1;
-    chainsFor(obj, m).add(keyPath);
+    chainsFor(obj).add(keyPath);
   } else {
     watching[keyPath] = (watching[keyPath] || 0) + 1;
   }
 };
 
-Ember.unwatchPath = function(obj, keyPath, meta) {
-  var m = meta || metaFor(obj), watching = m.watching;
+Ember.unwatchPath = function(obj, keyPath) {
+  var m = metaFor(obj), watching = m.watching;
 
   if (watching[keyPath] === 1) {
     watching[keyPath] = 0;
-    chainsFor(obj, m).remove(keyPath);
+    chainsFor(obj).remove(keyPath);
   } else if (watching[keyPath] > 1) {
     watching[keyPath]--;
   }
@@ -4131,14 +4128,14 @@ function isKeyName(path) {
   @param obj
   @param {String} keyName
 */
-Ember.watch = function(obj, _keyPath, m) {
+Ember.watch = function(obj, _keyPath) {
   // can't watch length on Array - it is special...
   if (_keyPath === 'length' && typeOf(obj) === 'array') { return; }
 
   if (isKeyName(_keyPath)) {
-    watchKey(obj, _keyPath, m);
+    watchKey(obj, _keyPath);
   } else {
-    watchPath(obj, _keyPath, m);
+    watchPath(obj, _keyPath);
   }
 };
 
@@ -4149,14 +4146,14 @@ Ember.isWatching = function isWatching(obj, key) {
 
 Ember.watch.flushPending = Ember.flushPendingChains;
 
-Ember.unwatch = function(obj, _keyPath, m) {
+Ember.unwatch = function(obj, _keyPath) {
   // can't watch length on Array - it is special...
   if (_keyPath === 'length' && typeOf(obj) === 'array') { return; }
 
   if (isKeyName(_keyPath)) {
-    unwatchKey(obj, _keyPath, m);
+    unwatchKey(obj, _keyPath);
   } else {
-    unwatchPath(obj, _keyPath, m);
+    unwatchPath(obj, _keyPath);
   }
 };
 
@@ -4171,7 +4168,7 @@ Ember.unwatch = function(obj, _keyPath, m) {
   @param obj
 */
 Ember.rewatch = function(obj) {
-  var m = obj[META_KEY], chains = m && m.chains;
+  var m = metaFor(obj, false), chains = m.chains;
 
   // make sure the object has its own guid.
   if (GUID_KEY in obj && !obj.hasOwnProperty(GUID_KEY)) {
@@ -4297,7 +4294,7 @@ function addDependentKeys(desc, obj, keyName, meta) {
     // Increment the number of times depKey depends on keyName.
     keys[keyName] = (keys[keyName] || 0) + 1;
     // Watch the depKey
-    watch(obj, depKey, meta);
+    watch(obj, depKey);
   }
 }
 
@@ -4316,7 +4313,7 @@ function removeDependentKeys(desc, obj, keyName, meta) {
     // Increment the number of times depKey depends on keyName.
     keys[keyName] = (keys[keyName] || 0) - 1;
     // Watch the depKey
-    unwatch(obj, depKey, meta);
+    unwatch(obj, depKey);
   }
 }
 
@@ -4759,8 +4756,7 @@ Ember.computed = function(func) {
   @return {Object} the cached value
 */
 Ember.cacheFor = function cacheFor(obj, key) {
-  var meta = obj[META_KEY],
-      cache = meta && meta.cache;
+  var cache = metaFor(obj, false).cache;
 
   if (cache && key in cache) {
     return cache[key];
@@ -7134,13 +7130,11 @@ var Mixin, REQUIRED, Alias,
     a_slice = [].slice,
     o_create = Ember.create,
     defineProperty = Ember.defineProperty,
-    guidFor = Ember.guidFor,
-    metaFor = Ember.meta,
-    META_KEY = Ember.META_KEY;
+    guidFor = Ember.guidFor;
 
 
 function mixinsMeta(obj) {
-  var m = metaFor(obj, true), ret = m.mixins;
+  var m = Ember.meta(obj, true), ret = m.mixins;
   if (!ret) {
     ret = m.mixins = {};
   } else if (!m.hasOwnProperty('mixins')) {
@@ -7325,7 +7319,7 @@ function mergeMixins(mixins, m, descs, values, base, keys) {
     if (props === CONTINUE) { continue; }
 
     if (props) {
-      meta = metaFor(base);
+      meta = Ember.meta(base);
       if (base.willMergeMixin) { base.willMergeMixin(props); }
       concats = concatenatedMixinProperties('concatenatedProperties', props, values, base);
       mergings = concatenatedMixinProperties('mergedProperties', props, values, base);
@@ -7383,7 +7377,7 @@ function connectBindings(obj, m) {
 }
 
 function finishPartial(obj, m) {
-  connectBindings(obj, m || metaFor(obj));
+  connectBindings(obj, m || Ember.meta(obj));
   return obj;
 }
 
@@ -7430,7 +7424,7 @@ function replaceObserversAndListeners(obj, key, observerOrListener) {
 }
 
 function applyMixin(obj, mixins, partial) {
-  var descs = {}, values = {}, m = metaFor(obj),
+  var descs = {}, values = {}, m = Ember.meta(obj),
       key, value, desc, keys = [];
 
   // Go through all mixins and hashes passed in, and:
@@ -7642,8 +7636,7 @@ function _detect(curMixin, targetMixin, seen) {
 MixinPrototype.detect = function(obj) {
   if (!obj) { return false; }
   if (obj instanceof Mixin) { return _detect(obj, this, {}); }
-  var m = obj[META_KEY],
-      mixins = m && m.mixins;
+  var mixins = Ember.meta(obj, false).mixins;
   if (mixins) {
     return !!mixins[guidFor(this)];
   }
@@ -7682,8 +7675,7 @@ MixinPrototype.keys = function() {
 // returns the mixins currently applied to the specified object
 // TODO: Make Ember.mixin
 Mixin.mixins = function(obj) {
-  var m = obj[META_KEY],
-      mixins = m && m.mixins, ret = [];
+  var mixins = Ember.meta(obj, false).mixins, ret = [];
 
   if (!mixins) { return ret; }
 
@@ -9579,7 +9571,7 @@ define("rsvp/promise/all",
       ```
 
       @method all
-      @for Ember.RSVP.Promise
+      @for RSVP.Promise
       @param {Array} entries array of promises
       @param {String} label optional string for labeling the promise.
       Useful for tooling.
@@ -12215,7 +12207,6 @@ var set = Ember.set, get = Ember.get,
     guidFor = Ember.guidFor,
     generateGuid = Ember.generateGuid,
     meta = Ember.meta,
-    META_KEY = Ember.META_KEY,
     rewatch = Ember.rewatch,
     finishChains = Ember.finishChains,
     sendEvent = Ember.sendEvent,
@@ -12909,8 +12900,7 @@ var ClassMixin = Mixin.create({
     @param key {String} property name
   */
   metaForProperty: function(key) {
-    var meta = this.proto()[META_KEY],
-        desc = meta && meta.descs[key];
+    var desc = meta(this.proto(), false).descs[key];
 
     Ember.assert("metaForProperty() could not find a computed property with key '"+key+"'.", !!desc && desc instanceof Ember.ComputedProperty);
     return desc._meta || {};
@@ -25403,8 +25393,9 @@ Ember.Component = Ember.View.extend(Ember.TargetActionSupport, {
     set(this, 'controller', this);
   },
 
-  defaultLayout: function(context, options){
-    Ember.Handlebars.helpers['yield'].call(context, options);
+  defaultLayout: function(options){
+    options.data = {view: options._context};
+    Ember.Handlebars.helpers['yield'].apply(this, [options]);
   },
 
   // during render, isolate keywords
@@ -26510,6 +26501,33 @@ var handlebarsGet = Ember.Handlebars.get = function(root, path, options) {
   return value;
 };
 
+/**
+  This method uses `Ember.Handlebars.get` to lookup a value, then ensures
+  that the value is escaped properly.
+
+  If `unescaped` is a truthy value then the escaping will not be performed.
+
+  @method getEscaped
+  @for Ember.Handlebars
+  @param {Object} root The object to look up the property on
+  @param {String} path The path to be lookedup
+  @param {Object} options The template's option hash
+*/
+Ember.Handlebars.getEscaped = function(root, path, options) {
+  var result = handlebarsGet(root, path, options);
+
+  if (result === null || result === undefined) {
+    result = "";
+  } else if (!(result instanceof Handlebars.SafeString)) {
+    result = String(result);
+  }
+  if (!options.hash.unescaped){
+    result = Handlebars.Utils.escapeExpression(result);
+  }
+
+  return result;
+};
+
 Ember.Handlebars.resolveParams = function(context, params, options) {
   var resolvedParams = [], types = options.types, param, type;
 
@@ -27467,6 +27485,7 @@ Ember._HandlebarsBoundView = Ember._MetamorphView.extend({
 
 var get = Ember.get, set = Ember.set, fmt = Ember.String.fmt;
 var handlebarsGet = Ember.Handlebars.get, normalizePath = Ember.Handlebars.normalizePath;
+var handlebarsGetEscaped = Ember.Handlebars.getEscaped;
 var forEach = Ember.ArrayPolyfills.forEach;
 var o_create = Ember.create;
 
@@ -27474,20 +27493,6 @@ var EmberHandlebars = Ember.Handlebars, helpers = EmberHandlebars.helpers;
 
 function exists(value) {
   return !Ember.isNone(value);
-}
-
-function sanitizedHandlebarsGet(currentContext, property, options) {
-  var result = handlebarsGet(currentContext, property, options);
-  if (result === null || result === undefined) {
-    result = "";
-  } else if (!(result instanceof Handlebars.SafeString)) {
-    result = String(result);
-  }
-  if (!options.hash.unescaped){
-    result = Handlebars.Utils.escapeExpression(result);
-  }
-
-  return result;
 }
 
 // Binds a property into the DOM. This will create a hook in DOM that the
@@ -27560,7 +27565,7 @@ function bind(property, options, preserveContext, shouldDisplay, valueNormalizer
   } else {
     // The object is not observable, so just render it out and
     // be done with it.
-    data.buffer.push(handlebarsGet(currentContext, property, options));
+    data.buffer.push(handlebarsGetEscaped(currentContext, property, options));
   }
 }
 
@@ -27581,7 +27586,7 @@ function simpleBind(currentContext, property, options) {
         Ember.run.once(view, 'rerender');
       };
 
-      output = sanitizedHandlebarsGet(currentContext, property, options);
+      output = handlebarsGetEscaped(currentContext, property, options);
 
       data.buffer.push(output);
     } else {
@@ -27607,8 +27612,7 @@ function simpleBind(currentContext, property, options) {
   } else {
     // The object is not observable, so just render it out and
     // be done with it.
-    output = sanitizedHandlebarsGet(currentContext, property, options);
-
+    output = handlebarsGetEscaped(currentContext, property, options);
     data.buffer.push(output);
   }
 }
@@ -36178,7 +36182,7 @@ Ember.onLoad('Ember.Handlebars', function(Handlebars) {
       if (linkType === 'ID') {
         options.linkTextPath = linkTitle;
         options.fn = function() {
-          return Ember.Handlebars.get(context, linkTitle, options);
+          return Ember.Handlebars.getEscaped(context, linkTitle, options);
         };
       } else {
         options.fn = function() {
