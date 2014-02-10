@@ -609,7 +609,7 @@ position: relative;
   h3 {
     font-size: 13px;
     margin-top: 5px;
-    word-wrap: break-word;
+    overflow: hidden;
     line-height: 1.2em;
   }
 }
