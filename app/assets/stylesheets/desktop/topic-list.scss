@@ -58,16 +58,16 @@
 // --------------------------------------------------
 
 #topic-list {
-  border: 1px solid #ddd;
+  border: 1px solid $primary_lighter;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 0 10px;
-  a.title:visited:not(.badge-notification) {color: #888;}
+  a.title:visited:not(.badge-notification) {color: $primary_medium;}
 
   > tbody > tr {
     &:nth-child(even) {
-      background-color: #f8f8f8;
+      background-color: lighten($primary_lightest, 1%);
     }
     &.archived a {
       opacity: 0.6;
@@ -82,7 +82,7 @@
       }
     }
     &.highlighted {
-      background-color: $highlight;
+      background-color: $highlight_light;
     }
   }
   th,
@@ -102,7 +102,7 @@
     color: $topic-list-th-color;
     font-weight: bold;
     font-size: 13px;
-    background: #eee;
+    background: lighten($primary_lighter, 12%);
 
 
   }
@@ -116,7 +116,7 @@
     padding: 0;
     background: transparent;
     &:hover {
-      color: #999;
+      color: $primary_light;
     }
   }
 
@@ -135,7 +135,7 @@
     font-size: 16px;
 
     i.score {
-      color: green;
+      color: $success;
       cursor: pointer;
     }
   }
@@ -143,7 +143,7 @@
   .topic-excerpt {
     font-size: 14px;
     margin-top: 8px;
-    color: $dark_gray;
+    color: $primary_medium;
     word-break: break-word;
   }
 
@@ -202,7 +202,7 @@
   .sortable {
     cursor: pointer;
     &:hover {
-      background-color: #e6e6e6;
+      background-color: lighten($primary_lighter, 7%);
     }
     @include unselectable;
   }
@@ -313,7 +313,7 @@
   .featured-topic {
     margin: 6px 0;
     a.last-posted-at, a.last-posted-at:visited {
-      color: #888;
+      color: $primary_light;
     }
   }
 
@@ -355,7 +355,7 @@
 .category-list-item {
   margin-bottom: 10px;
   #topic-list tbody tr:nth-child(even) {
-    background-color: $white;
+    background-color: $secondary;
   }
   th .badge-category {
     float: left;
@@ -365,7 +365,7 @@
     float: left;
   }
   > footer {
-    border: 1px solid #ddd;
+    border: 1px solid $primary_lighter;
     border-top: 0;
     padding: 7px 10px;
     background-color: lighten($topic-list-th-background-color, 2%);
@@ -375,7 +375,7 @@
       color: lighten($topic-list-th-color, 5%);
       font-weight: bold;
       font-size: 12px;
-      text-shadow: 0 1px 0 $white;
+      text-shadow: 0 1px 0 $secondary;
     }
     figcaption {
       display: inline;
@@ -411,11 +411,11 @@
   width: 200px;
   margin: 0 auto;
   padding: 10px 0 10px 43px;
-  color: $white;
+  color: $secondary;
   font-size: 18px;
   line-height: 25px;
   background: {
-    color: $black;
+    color: $primary;
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
     position: 10px 50%;
@@ -429,8 +429,8 @@
 
 .list-controls {
   .home {
-    background-color: #eee;
-    color: #333;
+    background-color: $primary_lightest;
+    color: $primary;
   }
 
   .badge-category {
@@ -440,7 +440,7 @@
     float: left;
   }
   .category-dropdown-button {
-    border-left: 1px solid rgba(0, 0, 0, 0.15);
+    border-left: 1px solid rgba(0,0,0,0.15);
     font-size: 16px;
     width: 10px;
     text-align: center;
@@ -467,7 +467,7 @@
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: lighten($red, 10%);
+    color: lighten($highlight_danger, 10%);
     font-size: 13px;
     cursor: default;
   }
@@ -508,8 +508,8 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid #ccc;
-  background-color: white;
+  border: 1px solid $primary_lighter;
+  background-color: $secondary;
   max-height: 350px;
   padding: 8px 7px 0 7px;
   z-index: 100;
@@ -541,7 +541,7 @@ ol.category-breadcrumb {
   position: fixed;
   right: 20px;
   padding: 5px;
-  background-color: white;
+  background-color: $secondary;
   button {
     padding: 3px 0 3px 6px;
   }

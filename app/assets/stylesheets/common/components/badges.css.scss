@@ -21,12 +21,12 @@
 
 .badge-category {
   padding: 4px 6px;
-  color: $white;
+  color: $secondary;
   font-size: 12px;
   font-weight: bold;
   white-space: nowrap;
   &[href] {
-    color: $white;
+  color: $secondary;
   }
   &.restricted {
     div {
@@ -46,19 +46,19 @@ h1 a.badge-category div {vertical-align: top;}
   @extend %badge;
   padding: 4px;
   padding-top: 3px;
-  color: $white;
+  color: $secondary;
   font-size: 11px;
   min-width: 10px;
   text-align: center;
   background-color: $badge-notification-background-color;
   &[href] {
-    color: $white;
+  color: $secondary;
   }
 
   // New posts
 
   &.new-posts, &.unread-posts {
-    background-color: $blue;
+    background-color: $tertiary;
   }
 
   // Click count
@@ -92,10 +92,10 @@ h1 a.badge-category div {vertical-align: top;}
 .badge-group {
   @extend %badge;
   padding: 3px 5px;
-  color: $black;
-  text-shadow: 0 1px 0 rgba($white, 0.2);
+  color: $primary;
+  text-shadow: 0 1px 0 rgba($secondary, 0.2);
   background-color: #ddd;
   border-color: #aaa;
   font-size: 12px;
-  @include box-shadow(inset 0 1px 0 rgba($white, 0.52));
+  @include box-shadow(inset 0 1px 0 rgba($secondary, 0.52));
 }

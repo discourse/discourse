@@ -19,15 +19,15 @@ a.loading-onebox {
     margin-right: 10px;
     padding: 10px 0;
     display: block;
-    color: $black;
+    color: $primary;
     position: relative;
     border-bottom: 1px solid $inner_border;
     .info {
       a {
-        color: black;
+        color: $primary;
         text-decoration: none;
       }
-      background-color: $white;
+      background-color: $secondary;
       position: absolute;
       font-size: 14px;
       img.favicon {

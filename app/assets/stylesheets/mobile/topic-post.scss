@@ -1,15 +1,15 @@
 @import "common/foundation/variables";
 
 .gap {
-  background-color: #f9f9f9;
+  background-color: $primary_lightest;
   padding: 5px 15px;
-  color: #999;
+  color: $primary_lighter;
   text-align: center;
   margin: 0 10px;
 }
 
 .topic-post {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid $primary_lighter;
   padding: 6px 0 3px 0;
   &:first-of-type {
     border-top: none;
@@ -17,11 +17,11 @@
 }
 
 nav.post-controls {
-  background-color: #fff;
+  background-color: $secondary;
   padding: 0px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid $primary_lighter;
   margin-top: 10px;
-  button {color: #aaa;
+  button {color: $primary_lighter;
   border-radius: 4px;
   margin-right: 2px;
 
@@ -43,13 +43,13 @@ span.badge-posts {
 
 button.create {
   float: right !important;
-  border: 1px solid #888;
+  border: 1px solid $primary_light;
   margin-right: 0;
-  color: #888;
+  color: $primary_light;
   padding-right: 7px;
 }
  	.like {
-    border-right: 1px solid #ddd;
+    border-right: 1px solid $primary_lighter;
 }
 
 .create i {
@@ -63,10 +63,10 @@ button {
   padding: 8px 10px;
   vertical-align: top;
   background: transparent;
- 	border: 1px solid #ddd;
+ 	border: 1px solid $primary_lighter;
   float: left !important;
     &:last-of-type {
-      border-right: 1px solid #ddd;
+      border-right: 1px solid $primary_lighter;
     }
        &:hover {
         }
@@ -89,7 +89,7 @@ button {
             }
           }
           &.last-read {
-            color: $red;
+            color: $highlight_danger;
           }
           &.bookmarked {
             &:before {
@@ -146,17 +146,17 @@ a.star {
 
   border-radius: 5px;
   margin: 15px 10px 20px 10px;
-  border: 1px solid #ddd;
+  border: 1px solid $primary_lighter;
 
   h3 {
     margin-bottom: 4px;
-    color: #323232;
+    color: $primary;
     line-height: 23px;
   }
 
   h4 {
     margin: 0 0 3px 0;
-    color: #6c7376;
+    color: $primary_medium;
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
@@ -213,7 +213,7 @@ a.star {
       line-height: 20px;
     }
     .number {
-      color: #445a62;
+      color: $tertiary_dark;
     }
     .avatar + a {
       float: left;
@@ -223,11 +223,11 @@ a.star {
   .links,
   .information {
     padding: 7px 14px;
-    color: #000;
+    color: $primary;
   }
 
   .information {
-    border-top: 1px solid #d1d1d2;
+    border-top: 1px solid $primary_lighter;
   }
   .topic-links {
     .badge-notification {
@@ -238,15 +238,15 @@ a.star {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid #ddd;
-      border-left: 1px solid #e6e6e6;
+      border-bottom: 1px solid $primary_lighter;
+      border-left: 1px solid $primary_lightest;
       padding: 0 23px;
-      color: #444;
-      background: #ddd;
+      color: $primary;
+      background: $primary_lighter;
       &:hover {
-        background: #ccc;
-        color: #444;
-        border-bottom: 1px solid #ccc;
+        background: $primary_lighter;
+        color: $primary;
+        border-bottom: 1px solid $primary_lighter;
 
       }
       &.collapsed {
@@ -261,7 +261,7 @@ a.star {
 }
 
 #topic-footer-buttons {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid $primary_lighter;
   padding: 20px 10px 0 10px;
 }
 
@@ -285,8 +285,8 @@ a.star {
 
 
 span.post-count {
-  background: #000;
-  color: #fff;
+  background: $primary;
+  color: $secondary;
   opacity: .8;
 }
 
@@ -301,7 +301,7 @@ span.post-count {
 
 #topic-title {
   z-index: 1000;
-  background: #eee;
+  background: $primary_lightest;
   margin: 0 0 0 0 !important;
   padding: 15px 10px 15px 10px;
 }
@@ -312,20 +312,20 @@ span.post-count {
     height: auto;
   }
   &.moderator {
-    background-color: #eef0ff;
+    background-color: $tertiary_lightest;
   }
 }
 
 .quote-button {
   display: none;
   position: absolute;
-  background-color: #666;
-  color: #fff;
+  background-color: $primary_medium;
+  color: $secondary;
   padding: 10px;
   width: 90px;
 
   &:hover {
-    background-color: #999;
+    background-color: $primary_light;
     cursor: pointer;
   }
 }
@@ -410,11 +410,11 @@ iframe {
 }
 
 .deleted {
-  background-color: lighten(red, 45%);
+  background-color: $highlight_danger_light;
 }
 
 #show-topic-admin {
-  color: #7b7b7b;
+  color: $primary_medium;
   right: 0px;
   border-right: 0;
   padding-right: 4px;
@@ -434,7 +434,7 @@ iframe {
 }
 
 .new-user a {
-  color: $dark_gray;
+  color: $primary_medium;
 }
 
 .topic-meta-data {
@@ -459,7 +459,7 @@ blockquote {
 
 .quote-controls {
   float: right;
-  color: #323232;
+  color: $primary;
   a {
   margin: 0;
   }
@@ -467,7 +467,7 @@ blockquote {
     .quote-other-topic:before {
     display: inline-block;
     margin-left: 8px;
-    color: #323232;
+    color: $primary;
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;
@@ -482,8 +482,8 @@ blockquote {
 
 
 .quote .title {
-  border-left: 5px solid #bebebe;
-  background-color: #f1f1f1;
+  border-left: 5px solid $primary_light;
+  background-color: $primary_lightest;
   padding: 10px 10px 0 12px;
   clear: both;
   .avatar { margin-right: 7px; }

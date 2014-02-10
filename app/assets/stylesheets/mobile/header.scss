@@ -12,8 +12,8 @@
   position: absolute;
   top: 0;
   z-index: 1001;
-  background-color: #fff;
-  box-shadow: 0 0 3px #aaa;
+  background-color: $secondary;
+  box-shadow: 0 0 3px $primary_lighter;
 
   .docked & {
     position: fixed;
@@ -49,7 +49,7 @@
     float: left;
     display: none;
     a {
-      color: $black;
+      color: $primary;
       font-size: 14px;
       line-height: 40px;
     }
@@ -69,14 +69,14 @@
       &:first-child.active .icon {
       }
       &:last-child .icon {
-        border-right: 1px solid #ccc;
+        border-right: 1px solid $primary_lighter;
       }
     }
     .icon {
       display: block;
-      border-top: 1px solid #ccc;
-      border-bottom: 1px solid #ccc;
-      border-left: 1px solid #d6d6d6;
+      border-top: 1px solid $primary_lighter;
+      border-bottom: 1px solid $primary_lighter;
+      border-left: 1px solid $primary_light;
       padding: 3px;
       color: $nav-button-color;
       text-decoration: none;
@@ -92,10 +92,10 @@
     }
     .active .icon {
       position: relative;
-      color: #7b7b7b;
-      background-color: $white;
+      color: $primary_light;
+      background-color: $secondary;
       cursor: default;
-      @include box-shadow((6px 0 6px -6px rgba($black, 0.2), -6px 0 6px -6px rgba($black, 0.2), inset 0 13px 13px -13px rgba($black, 0.1)));
+      @include box-shadow((6px 0 6px -6px rgba($primary, 0.2), -6px 0 6px -6px rgba($primary, 0.2), inset 0 13px 13px -13px rgba($primary, 0.1)));
       &:after {
         display: block;
         position: absolute;
@@ -105,7 +105,7 @@
         width: 100%;
         height: 0;
         content: "";
-        border-top: 1px solid $white;
+        border-top: 1px solid $secondary;
       }
     }
     [class^="fa fa-"] {
@@ -126,15 +126,15 @@
     }
     .unread-notifications {
       right: -4px;
-      background-color: #0088CC;
+      background-color: $tertiary;
     }
     .unread-private-messages {
       left: -4px;
-      background-color: #00953A;
+      background-color: $success_dark;
     }
   }
   .flagged-posts {
-    background-color: #E53B2E;
+    background-color: $highlight_danger;
   }
 }
 
@@ -158,9 +158,9 @@
   right: 0;
   z-index: 1100;
   margin-top: -1px;
-  border: 1px solid #ccc;
-  background-color: $white;
-  @include box-shadow(0 1px 1px rgba($black, 0.2));
+  border: 1px solid $primary_lighter;
+  background-color: $secondary;
+  @include box-shadow(0 1px 1px rgba($primary, 0.2));
 
   // Common
 
@@ -177,7 +177,7 @@
     }
   }
   .heading {
-    color: #2d3234;
+    color: $tertiary_dark;
     font-weight: bold;
     font-size: 12px;
     line-height: 15px;
@@ -198,7 +198,7 @@
       background-color: $header-item-highlight;
     }
     .read {
-      background-color: $white;
+      background-color: $secondary;
     }
     .none {
       padding: 5px;
