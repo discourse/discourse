@@ -26,7 +26,7 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
 
   none: function() {
     if (Discourse.User.currentProp('staff') || Discourse.SiteSettings.allow_uncategorized_topics) {
-      return 'category.none';
+      return Discourse.Category.list().findBy('id', Discourse.Site.currentProp('uncategorized_category_id'));
     } else {
       return 'category.choose';
     }
