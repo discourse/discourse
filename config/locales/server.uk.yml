@@ -614,21 +614,21 @@ uk:
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     download_remote_images_to_local: "Download a copy of remote images hotlinked in posts"
-    download_remote_images_threshold: "Amount of minimum available disk space required to download remote images locally (in percent)"
+    download_remote_images_threshold: "Обсяг мінімального доступного місця на диску, необхідного для локального звантаження віддалених зображень (у відсотках)"
     ninja_edit_window: "Кількість секунд після публікації, протягом яких редагування не створює нової версії"
     post_edit_time_limit: "Кількість часу в хвилинах, протягом якого автор може редагувати та видаляти свої дописи. Встановіть 0, щоб дозволити редагування та видалення дописів в будь-який час."
     edit_history_visible_to_public: "Дозволити всім переглядати попередні версії редагованого допису. Якщо вимкнено, тільки члени персоналу можуть переглядати історію редагувань."
     delete_removed_posts_after: "Кількість годин, після яких дописи, позначені на видалення автором, будуть видалені."
-    max_image_width: "Maximum allowed width of images in a post"
-    max_image_height: "Maximum allowed height of images in a post"
+    max_image_width: "Максимальна дозволена ширина зображень у дописі"
+    max_image_height: "Максимальна дозволена висота зображень у дописі"
     category_featured_topics: "Кількість тем на одну категорію, що показуються на сторінці /categories. Після зміни цього значення, оновлення категорій займе до 15 хвилин."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
 
     post_excerpt_maxlength: "Максимальна довжина витягу із допису (у символах)"
-    post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"
+    post_onebox_maxlength: "Максимальна довжина вставленого допису Discourse"
     category_post_template: "The category definition post template used when you create a new category"
-    onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
+    onebox_max_chars: "Максимальна кількість символів, які при вставці посилання буде імпортовано в допис із зовнішнього сайта"
 
     logo_url: "Логотип Вашого сайта, наприклад: http://example.com/logo.png"
     logo_small_url: "Маленький логотип для Вашого сайта, який використовується при прокручуванні тем вниз, наприклад: http://example.com/logo-small.png"
@@ -749,11 +749,11 @@ uk:
     clean_up_uploads: "Remove orphaned uploads to prevent illegal hosting. WARNING: you might want to make a backup of your /uploads directory before enabled this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
-    enable_s3_uploads: "Place uploads on Amazon S3"
+    enable_s3_uploads: "Розміщувати завантаження на Amazon S3"
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase (cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)"
-    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
-    s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images"
-    s3_region: "The Amazon S3 region name that will be used to upload images"
+    s3_access_key_id: "Id Ключа доступу Amazon S3, що використовуватиметься для завантаження зображень"
+    s3_secret_access_key: "Секретний ключ доступу Amazon S3, що використовуватиметься для завантаження зображень"
+    s3_region: "Назва регіону Amazon S3, що використовуватиметься для завантаження зображень"
 
     enable_flash_video_onebox: "Enable embedding of swf and flv links in oneboxes. WARNING: may introduce a security risk"
 
@@ -797,9 +797,9 @@ uk:
 
     category_colors: "Список шістнадцяткових значень кольорів, дозволених для категорій та розділених вертикальною рискою (|)"
 
-    max_image_size_kb: "The maximum size of images we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
-    max_attachment_size_kb: "The maximum size of files we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
-    authorized_extensions: "A pipe (|) separated list of file extensions allowed for upload"
+    max_image_size_kb: "Максимальний розмір зображень, які ми дозволяємо користувачам завантажити, в КБ - налаштуйте обмеження також у nginx (client_max_body_size) / apache або проксі."
+    max_attachment_size_kb: ""Максимальний розмір файлів, які ми дозволяємо користувачам завантажити, в КБ - налаштуйте обмеження також у nginx (client_max_body_size) / apache або проксі."
+    authorized_extensions: "Список розширень файлів, дозволених до завантаження, розділених вертикальною рискою (|)"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
 
     title_prettify: "Запобігати типовим опискам та помилкам, таким як: всі літери - великі, перша літера - мала, багаторазові ! та ?, надлишкові . в кінці, тощо."
@@ -833,12 +833,12 @@ uk:
     username_change_period: "Кількість днів після реєстрації, протягом яких новим обліковим записам можна змінювати своє ім'я користувача (0 щоб заборонити зміну імені користувача)."
     email_editable: "Дозволити користувачам змінювати свою електронну скриньку після реєстрації."
 
-    allow_uploaded_avatars: "Allow users to upload their custom avatars"
-    allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:regenerate rake task after changing that setting."
+    allow_uploaded_avatars: "Дозволити користувачам завантажувати свої власні аватарки"
+    allow_animated_avatars: "Дозволити користувачам використовувати анімовані gif в якості аватарок. УВАГА: Ми дуже радимо запустити завдання rake avatars:regenerate після зміни цього налаштування."
     default_digest_email_frequency: "Як часто користувачі отримують листи зі стислим викладом новин за замовчуванням. Вони можуть змінити це у своїх налаштуваннях."
     default_external_links_in_new_tab: "Відкривати нові посилання у новій вкладці. Користувачі можуть змінити це у своїх налаштуваннях."
 
-    detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars"
+    detect_custom_avatars: "Перевіряти чи ні наявність завантаженої користувачем власної аватарки"
     max_daily_gravatar_crawls: "The maximum amount of times Discourse will check gravatar for custom avatars in a day"
 
     sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
