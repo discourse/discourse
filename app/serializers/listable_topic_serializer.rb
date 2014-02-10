@@ -29,18 +29,18 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def seen
-    object.user_data.present?
+    return true if !scope || !scope.user
+    return true if object.user_data && !object.user_data.last_read_post_number.nil?
+    return true if object.created_at < scope.user.treat_as_new_topic_start_date
+    false
   end
 
   def unseen
-    return false if scope.blank?
-    return false if scope.user.blank?
-    return false if object.user_data.present?
-    return false if object.created_at < scope.user.treat_as_new_topic_start_date
-    true
+    !seen
   end
 
   def last_read_post_number
+    return nil unless object.user_data
     object.user_data.last_read_post_number
   end
   alias :include_last_read_post_number? :seen
