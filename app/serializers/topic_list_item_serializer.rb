@@ -13,7 +13,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   def starred
     object.user_data.starred?
   end
-  alias :include_starred? :seen
+  alias :include_starred? :has_user_data
 
   def posters
     object.posters || []

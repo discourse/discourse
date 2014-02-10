@@ -43,17 +43,22 @@ class ListableTopicSerializer < BasicTopicSerializer
     return nil unless object.user_data
     object.user_data.last_read_post_number
   end
-  alias :include_last_read_post_number? :seen
+
+  def has_user_data
+    !!object.user_data
+  end
+
+  alias :include_last_read_post_number? :has_user_data
 
   def unread
     unread_helper.unread_posts
   end
-  alias :include_unread? :seen
+  alias :include_unread? :has_user_data
 
   def new_posts
     unread_helper.new_posts
   end
-  alias :include_new_posts? :seen
+  alias :include_new_posts? :has_user_data
 
   def include_excerpt?
     pinned
