@@ -611,7 +611,7 @@ uk:
     company_full_name: "Повна назва компанії, що володіє сайтом; використовується у документах на кшталт Умов Використання"
     company_short_name: "Скорочена назва компанії, що володіє сайтом; використовується у документах на кшталт Умов Використання"
     company_domain: "Доменне ім'я, власником якого є компанія, що володіє сайтом; використовується у документах на кшталт Умов Використання"
-    queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
+    queue_jobs: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! За замовчуванням, додавати завдання до черги в sidekiq. Якщо вимкнути, Ваш сайт зламається."
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     download_remote_images_to_local: "Download a copy of remote images hotlinked in posts"
     download_remote_images_threshold: "Обсяг мінімального доступного місця на диску, необхідного для локального звантаження віддалених зображень (у відсотках)"
@@ -692,8 +692,8 @@ uk:
     version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version is available."
 
-    port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
-    force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
+    port: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! Використовувати цей HTTP-порт замість звичайного порту 80. Лишіть порожнім, щоб використовувати значення за замовчуванням 80."
+    force_hostname: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! Вкажіть ім'я хосту в URL. Лишіть порожнім, щоб використовувати значення за замовчуванням."
 
     invite_expiry_days: "Скільки днів ключі запрошення користувачів лишаються чинними"
 
@@ -787,8 +787,8 @@ uk:
     email_posts_context: "Скільки попередніх відповідей включати в якості контексту в листи-сповіщення"
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
     max_word_length: "Максимальна довжина назви теми (у символах)"
-    title_min_entropy: "The minimum allowed entropy (unique characters, non-english count for more) required for a topic title"
-    body_min_entropy: "The minimum allowed entropy (unique characters, non-english count for more) required for a post body"
+    title_min_entropy: "Мінімальна дозволена ентропія (унікальні символи, неанглійські рахуються за декілька) для назви теми"
+    body_min_entropy: "Мінімальна дозволена ентропія (унікальні символи, неанглійські рахуються за декілька) для тіла допису"
 
     title_fancy_entities: "Перетворювати звичайні ASCII-символи на примхливі HTML-сутності у назвах тем, на кшталт SmartyPants http://daringfireball.net/projects/smartypants/"
 
@@ -854,12 +854,12 @@ uk:
     short_progress_text_threshold: "Після того, як кількість дописів в темі перевищить це число, індикатор просування по темі показуватиме тільки номер поточного допису. Якщо Ви зміните ширину індикатора, Вам, ймовірно, знадобиться змінити це значення."
     default_code_lang: "Мова програмування для підсвітки синтаксису, що за замовчуванням застосовуватиметься для блоків коду GitHub (lang-auto, ruby, python і т. ін.)"
 
-    embeddable_host: "Host that can embed the comments from this Discourse forum"
-    feed_polling_enabled: "Whether to import a RSS/ATOM feed as posts"
-    feed_polling_url: "URL of RSS/ATOM feed to import"
-    embed_by_username: "Discourse username of the user who creates the topics"
-    embed_category: "Category of created topics"
-    embed_post_limit: "Maximum number of posts to embed"
+    embeddable_host: "Хост, що може вбудовувати коментарі з цього форуму Discourse"
+    feed_polling_enabled: "Чи імпортувати RSS/ATOM-стрічку в якості дописів"
+    feed_polling_url: "URL RSS/ATOM-стрічки для імпорту"
+    embed_by_username: "Ім'я користувача Discourse, який створює теми"
+    embed_category: "Категорія створених тем"
+    embed_post_limit: "Максимальна кількість дописів для вставки"
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
