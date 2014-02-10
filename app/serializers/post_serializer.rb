@@ -77,7 +77,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def primary_group_name
-    return nil unless object.user
+    return nil unless object.user && @topic_view
     return @topic_view.primary_group_names[object.user.primary_group_id] if object.user.primary_group_id
   end
 
