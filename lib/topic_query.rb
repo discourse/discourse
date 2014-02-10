@@ -240,8 +240,8 @@ class TopicQuery
       result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
 
-      # Don't include the category topic unless restricted to that category
-      if options[:category].blank? || options[:no_definitions]
+      # Don't include the category topics if excluded
+      if options[:no_definitions]
         result = result.where('COALESCE(categories.topic_id, 0) <> topics.id')
       end
 
