@@ -2,6 +2,12 @@
 @import "common/foundation/variables";
 @import "common/foundation/mixins";
 
+.groups {
+  .group-link {
+    color: $tertiary_lightest;
+  }
+}
+
 .user-preferences {
   input.category-group {
     width: 500px;
@@ -210,9 +216,6 @@
 
         h1, h2 {margin-top: 10px;}
 
-        .group-link {
-          color: $tertiary_lightest;
-        }
         .bio {
           color: $primary_lighter;
 
