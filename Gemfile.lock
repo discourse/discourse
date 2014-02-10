@@ -104,7 +104,6 @@ GEM
     activesupport (3.2.12)
       i18n (~> 0.6)
       multi_json (~> 1.0)
-<<<<<<< HEAD
     addressable (2.3.5)
     airbrake (3.1.2)
       activesupport
@@ -113,13 +112,6 @@ GEM
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
     arel (3.0.3)
-=======
-    addressable (2.3.4)
-    airbrake (3.1.14)
-      builder
-      json
-    arel (3.0.2)
->>>>>>> Add Airbrake
     barber (0.4.2)
       ember-source
       execjs
@@ -198,16 +190,10 @@ GEM
       nokogiri (~> 1.5)
     httpauth (0.2.0)
     i18n (0.6.9)
-<<<<<<< HEAD
     ice_cube (0.11.1)
     image_optim (0.9.1)
       exifr (~> 1.1.3)
       fspath (~> 2.0.5)
-=======
-    ice_cube (0.11.0)
-    image_optim (0.8.0)
-      fspath (~> 2.0.3)
->>>>>>> Add Airbrake
       image_size (~> 1.1.2)
       in_threads (~> 1.2.0)
       progress (~> 3.0.0)
@@ -243,12 +229,8 @@ GEM
     minitest (5.1.0)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
-<<<<<<< HEAD
     mock_redis (0.10.0)
     msgpack (0.5.7)
-=======
-    mock_redis (0.8.1)
->>>>>>> Add Airbrake
     multi_json (1.8.2)
     multipart-post (1.2.0)
     mustache (0.99.5)
@@ -474,13 +456,8 @@ DEPENDENCIES
   active_attr
   active_model_serializers
   activerecord-postgres-hstore
-<<<<<<< HEAD
   airbrake (= 3.1.2)
   annotate
-=======
-  airbrake
-  annotate!
->>>>>>> Add Airbrake
   barber
   better_errors
   binding_of_caller

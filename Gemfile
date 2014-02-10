@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'rails_12factor', group: :production
+
 # monkey patching to support dual booting
 module Bundler::SharedHelpers
   def default_lockfile=(path)
