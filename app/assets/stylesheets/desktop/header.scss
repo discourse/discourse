@@ -11,8 +11,8 @@
   top: 0;
   left: 0;
   z-index: 1000;
-  box-shadow: 0 1px 5px rgba(70, 70, 70, .4);
-  background-color: $white;
+  box-shadow: 0 1px 5px $primary_lighter;
+  background-color: $secondary;
   padding-right: 3px;
   padding-top: 3px;
   .docked & {
@@ -46,7 +46,7 @@
   .current-username {
     float: left;
     a {
-      color: $black;
+      color: $primary;
       font-size: 14px;
       line-height: 40px;
     }
@@ -66,14 +66,14 @@
       &:first-child.active .icon {
       }
       &:last-child .icon {
-        border-right: 1px solid #ccc;
+        border-right: 1px solid $primary_lighter;
       }
     }
     .icon {
       display: block;
-      border-top: 1px solid #ccc;
-      border-bottom: 1px solid #ccc;
-      border-left: 1px solid #d6d6d6;
+      border-top: 1px solid $primary_lighter;
+      border-bottom: 1px solid $primary_lighter;
+      border-left: 1px solid $primary_lighter;
       padding: 3px;
       color: $nav-button-color;
       text-decoration: none;
@@ -90,9 +90,9 @@
     .active .icon {
       position: relative;
       color: #7b7b7b;
-      background-color: $white;
+      background-color: $secondary;
       cursor: default;
-      @include box-shadow((6px 0 6px -6px rgba($black, 0.2), -6px 0 6px -6px rgba($black, 0.2), inset 0 13px 13px -13px rgba($black, 0.1)));
+      @include box-shadow((6px 0 6px -6px rgba($primary, 0.2), -6px 0 6px -6px rgba($primary, 0.2), inset 0 13px 13px -13px rgba($primary, 0.1)));
       &:after {
         display: block;
         position: absolute;
@@ -102,7 +102,7 @@
         width: 100%;
         height: 0;
         content: "";
-        border-top: 1px solid $white;
+        border-top: 1px solid $secondary;
       }
     }
     [class^="fa fa-"] {
@@ -123,15 +123,15 @@
     }
     .unread-notifications {
       right: -4px;
-      background-color: #0088CC;
+      background-color: $tertiary;
     }
     .unread-private-messages {
       left: -4px;
-      background-color: #00953A;
+      background-color: $success;
     }
   }
   .flagged-posts {
-    background-color: #E53B2E;
+    background-color: $highlight_danger;
   }
 }
 
@@ -155,9 +155,9 @@
   right: 0;
   z-index: 1100;
   margin-top: -1px;
-  border: 1px solid #ccc;
-  background-color: $white;
-  @include box-shadow(0 3px 3px rgba($black, 0.2));
+  border: 1px solid $primary_lighter;
+  background-color: $secondary;
+  @include box-shadow(0 3px 3px $primary_lightest);
 
   // Common
 
@@ -174,15 +174,14 @@
     }
   }
   .heading {
-    border-top: 1px solid #c5c5c5;
-    border-bottom: 1px solid #c5c5c5;
-    color: #2d3234;
+    border-bottom: 1px solid $primary_lighter;
+    color: $primary;
     font-weight: bold;
     font-size: 12px;
     line-height: 15px;
-    text-shadow: 0 1px 0 $white;
-    background-color: #f5f6f7;
-    @include box-shadow(inset 0 1px 0 rgba($white, 0.8));
+    text-shadow: 0 1px 0 $secondary;
+    background-color: $secondary;
+    @include box-shadow(inset 0 1px 0 $primary_lighter);
   }
   .selected {
     background-color: $header-item-highlight;
@@ -192,13 +191,13 @@
 
   &#notifications-dropdown {
     .fa {
-      color: #777;
+      color: $primary_light;
     }
     li {
       background-color: $header-item-highlight;
     }
     .read {
-      background-color: $white;
+      background-color: $secondary;
     }
     .none {
       padding: 5px;
@@ -213,7 +212,7 @@
     margin: 5px;
     padding: 5px;
     &:focus {
-      @include box-shadow((inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 4px rgba(82, 168, 236, 0.6)));
+      @include box-shadow((inset 0 1px 1px $primary_lightest, 0 0 4px $primary_lighter));
     }
   }
   .searching {
@@ -221,7 +220,7 @@
     position: absolute;
     top: 13px;
     right: 13px;
-    color: #777;
+    color: $primary_light;
     font-size: 18px;
   }
   .no-results {

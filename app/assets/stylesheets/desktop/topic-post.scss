@@ -3,16 +3,16 @@
 @import "common/foundation/helpers";
 
 .gap {
-  background-color: #f9f9f9;
+  background-color: $primary_lightest;
   padding: 5px 10px;
   margin-bottom: 10px;
-  color: #999;
+  color: $primary_medium;
   cursor: pointer;
   text-align: center;
   width: 820px;
 
   &:hover {
-    background-color: #eee;
+    background-color: $primary_lightest;
   }
 
   @include medium-width {
@@ -42,9 +42,6 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
     border-top: none;
   }
 
-  &:last-of-type {
-    border-bottom: 1px solid #ddd;
-}
 
 .reply-to-tab {
   display: block;
@@ -52,10 +49,10 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   left: 120px;
   z-index: 400;
   padding: 5px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid lighten($primary_light, 20%);
   font-size: 12px;
   margin-left: -8px;
-  background: #fff;
+  background: $secondary;
 }
 
 .avoid-tab {
@@ -67,8 +64,8 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   .reply-new {
     .discourse-no-touch & {
      opacity:0;
-     transition: linear 0.15s;
-     -webkit-transition: linear 0.15s;
+     transition: linear 0.4s;
+     -webkit-transition: linear 0.4s;
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -77,8 +74,8 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
 section.post-menu-area, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
-       transition: linear 0.15s;
-    -webkit-transition: linear 0.15s;
+       transition: linear 0.4s;
+    -webkit-transition: linear 0.4s;
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -98,13 +95,13 @@ section.post-menu-area, .post-actions {
 
 nav.post-controls {
     padding: 0;
-    button {color: #aaa;
+    button {color: $primary_light;
     margin-right: 2px;
   }
 
   span.badge-posts {
     margin-right: 5px;
-    color: #aaa;
+    color: $primary_light;
   }
 
   .show-replies {
@@ -121,18 +118,18 @@ nav.post-controls {
 
   button.create {
     margin-right: 0;
-    color: darken(#e4f2f8, 35%);
-    background: #e4f2f8;
+    color: $tertiary;
+    background: $tertiary_lightest;
     padding: 8px 20px;
     margin-left: 10px;
 
-    &:hover {  color: darken(#e4f2f8, 45%);
-      background: darken(#e4f2f8, 10%);
+    &:hover {  color: $secondary;
+      background: $tertiary;
     }
 
     &:active {
-    @include linear-gradient(darken(#e4f2f8, 15%), darken(#e4f2f8, 10%));
-    @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+      background: $tertiary_lightest;
+    @include box-shadow(inset 0 1px 3px $primary_light);
 
     }
 
@@ -152,12 +149,12 @@ nav.post-controls {
     transition: all linear 0.15s;
     outline: none;
          &:hover {
-          background: #eee;
-          color: #888;
+          background: lighten($primary_light, 20%);
+          color: $primary_medium;
         }
 
         &:active {
-            @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+            @include box-shadow(inset 0 1px 3px $primary_lightest);
         }
 
         &.hidden {
@@ -168,12 +165,12 @@ nav.post-controls {
         }
 
         &.delete:hover {
-          background: #E53B2E;
-          color: #fff;
+          background: $highlight_danger;
+          color: $secondary;
         }
 
-        &.like:hover {color: #fa6c8d;
-          background: #fae9ed;
+        &.like:hover {color: $heart;
+          background: $heart_light;
         }
 
         &.bookmark {padding: 8px 11px; }
@@ -189,11 +186,11 @@ nav.post-controls {
             }
           }
           &.last-read {
-            color: #e45735;
+            color: $highlight_danger;
           }
           &.bookmarked {
             &:before {
-              color: $bookmarkColor;
+              color: $tertiary;
             }
           }
         }
@@ -201,14 +198,14 @@ nav.post-controls {
   }
 
   .embedded-posts {
-    background: #eee;
-    .quote .title {background: #ddd;}
-    blockquote {background: #ddd;}
+    background: $primary_lightest;
+    .quote .title {background: $primary_lighter;}
+    blockquote {background: $primary_lighter;}
     &.bottom { margin-top: -11px;}
     .topic-meta-data h5 {margin: 5px;}
     .topic-meta-data-inside {
     margin: -3px 0 0 0;
-    color: #aaa;
+    color: $primary_light;
     }
     .topic-meta-data {padding-top: 20px;}
   }
@@ -231,9 +228,11 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  border: 1px solid #ddd;
+  border: 1px solid lighten($primary_lighter, 10%);
 
-  button {border-radius: 0;}
+  .buttons .btn {border: 1px solid $primary_lightest !important;
+    &:hover {border: 1px solid $primary_lighter !important;}
+  }
 
   .topic-links li {
     word-wrap: break-word;
@@ -241,13 +240,13 @@ a.star {
 
   h3 {
     margin-bottom: 4px;
-    color: #323232;
+    color: $primary;
     line-height: 23px;
   }
 
   h4 {
     margin: 0 0 3px 0;
-    color: #6c7376;
+    color: $primary_medium;
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
@@ -298,7 +297,7 @@ a.star {
       line-height: 20px;
     }
     .number {
-      color: #445a62;
+      color: $tertiary_dark;
     }
     .avatar + a {
       float: left;
@@ -308,10 +307,10 @@ a.star {
   .links,
   .information {
     padding: 7px 14px;
-    color: #000;
+    color: $primary;
   }
   .information {
-    border-top: 1px solid #d1d1d2;
+    border-top: 1px solid $primary_light;
   }
 
 
@@ -331,20 +330,20 @@ a.star {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid #ddd;
-      border-left: 1px solid #e6e6e6;
+      border-bottom: 1px solid $primary_lighter;
+      border-left: 1px solid $primary_lighter;
       padding: 0 23px;
-      color: #444;
-      background: #eee;
+      color: $primary;
+      background: $primary_lightest;
       &:hover {
-        background: #ccc;
+        background: $primary_lighter;
         color: #444;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid $primary_lighter;
 
       }
 
       &:active {
-    @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+    @include box-shadow(inset 0 1px 3px $primary_lightest);
       }
 
       &.collapsed {
@@ -364,7 +363,7 @@ a.star {
   padding: 10px 10px 0 10px;
   p {
     line-height: 32px;
-    color: #888;
+    color: $primary_light;
   }
 
 }
@@ -373,12 +372,12 @@ a.star {
   clear: left;
   padding: 20px 10px 15px 10px;
 
-  .topics table tbody tr {background: #fff;}
+  .topics table tbody tr {background: $secondary;}
 
   table {
     box-shadow: none;
     border-radius: 0;
-    border-color: #ddd;
+    border-color: $primary_lighter;
     margin-top: 10px;
   }
 
@@ -388,8 +387,8 @@ a.star {
 }
 
 span.post-count {
-  background: #000;
-  color: #fff;
+  background: $primary;
+  color: $secondary;
   opacity: .8;
 }
 
@@ -405,13 +404,13 @@ span.post-count {
 .quote-button {
   display: none;
   position: absolute;
-  background-color: #666;
-  color: #fff;
+  background-color: $primary_medium;
+  color: $secondary;
   padding: 10px;
   z-index: 401;
 
   &:hover {
-    background-color: #999;
+    background-color: $primary_light;
     cursor: pointer;
   }
 }
@@ -454,7 +453,7 @@ iframe {
 .topic-meta-data {
   margin-bottom: 10px;
   width: 92px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid lighten($primary_lighter, 10%);
   padding-top: 30px;
 
   img {
@@ -520,8 +519,8 @@ iframe {
 
   a.mention {
     padding: 2px 4px;
-    color: #666;
-    background: #eee;
+    color: $primary;
+    background: $primary_lightest;
   }
 
 
@@ -533,7 +532,7 @@ iframe {
 
 .deleted {
   .topic-body {
-  background-color: lighten(red, 45%);
+  background-color: $highlight_danger_light;
   }
 }
 
@@ -543,7 +542,7 @@ iframe {
 
 .moderator {
   .topic-body {
-  background-color: lighten(yellow, 45%);
+  background-color: $highlight_light;
   }
 }
 
@@ -594,13 +593,13 @@ iframe {
 }
 
 .new-user a {
-  color: $dark_gray;
+  color: $primary_medium;
 }
 
 .staff a {
   padding: 2px;
   margin: -2px 0 0 0;
-  background-color: lighten(yellow, 35%);
+  background-color: $highlight_light;
 }
 
 .topic-meta-data {
@@ -617,7 +616,7 @@ position: relative;
 
 .user-title {
   margin-top: 8px;
-  color: #aaa;
+  color: $primary_light;
   overflow: hidden;
   font-size: 80%;
   line-height: 13px;
@@ -625,7 +624,7 @@ position: relative;
 
 .info-line {
   margin: 10px 0;
-  color: #666;
+  color: $primary_medium;
 }
 
 
@@ -633,7 +632,7 @@ blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
 
-    a.mention {background: #ddd;}
+    a.mention {background: $primary_lighter;}
     p:first-of-type {margin-top: 0;}
     p:last-of-type {margin-bottom: 0;}
 }
@@ -641,14 +640,14 @@ blockquote { /* solo quotes */
 .quote { /* quotes with attribution */
   margin-top: 14px;
   blockquote {margin-top: 0; padding-top: 0;
-  .onebox-result {background-color: #ddd;}
+  .onebox-result {background-color: $primary_lighter;}
 
 
   }
 
   .title {
-  border-left: 5px solid #bebebe;
-  background-color: #f1f1f1;
+  border-left: 5px solid $primary_lighter;
+  background-color: $primary_lightest;
   padding: 12px;
   .avatar { margin-right: 7px; }
   img {margin-top: -4px;}
@@ -661,7 +660,7 @@ blockquote { /* solo quotes */
 
 .quote-controls {
   float: right;
-  color: #aaa;
+  color: $primary_light;
   a {
   margin: 0;
   }
@@ -669,7 +668,7 @@ blockquote { /* solo quotes */
     .quote-other-topic:before {
     display: inline-block;
     margin-left: 8px;
-    color: #aaa;
+    color: $primary_light;
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;
@@ -707,19 +706,19 @@ blockquote { /* solo quotes */
       margin-bottom: 20px;
       margin-top: 2px;
     }
-    a {color: #aaa;}
+    a {color: $primary_light;}
     li {margin-bottom: 10px;}
   }
 }
 
 .topic-body {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid lighten($primary_lighter, 10%);
   float: left;
   position: relative;
   width: 720px;
   padding: 10px 10px 15px 20px;
   .highlighted {
-    background-color: lighten(yellow, 45%) !important;
+    background-color: $highlight_light !important;
   }
   img, svg {
     max-width: 100%;
@@ -763,27 +762,27 @@ blockquote { /* solo quotes */
   &.bottom .arrow {float: right; margin: 0 0 0 0;}
   &.top {margin-left: 112px;}
   .topic-body, .topic-meta-data {border: none;}
-  .row {border-top: 1px solid #ddd; padding-top: 7px;}
+  .row {border-top: 1px solid $primary_lighter; padding-top: 7px;}
   .reply:first-of-type .row {border-top: none;}
 }
 
 .contents.regular  {
 
 button.show-replies {
-  background: #eee;
+  background: $primary_lightest;
   padding-bottom: 20px;
-     &:hover {background: #ddd;
-  .badge-posts {color: #888;}
+     &:hover {background: $primary_lighter;
+  .badge-posts {color: $primary_medium;}
 
   }
 }
 
   &.bottom-round button.show-replies {
-  background: #eee;
+  background: $primary_lightest;
   margin-bottom: 0;
   padding-bottom: 8px;
-    &:hover {background: #ddd;
-       .badge-posts {color: #888;}
+    &:hover {background: $primary_lighter;
+       .badge-posts {color: $primary_medium;}
     }
   }
 
@@ -809,7 +808,7 @@ button.show-replies {
   width: 0;
   height: 0;
   vertical-align: middle;
-  border-top: 4px solid #000000;
+  border-top: 4px solid $primary;
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
@@ -826,9 +825,9 @@ button.show-replies {
   padding: 4px 0;
   margin: 1px 0 0;
   list-style: none;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  box-shadow: 0 1px 5px rgba(70, 70, 70, .4);
+  background-color: $secondary;
+  border: 1px solid $primary_light;
+  box-shadow: 0 1px 5px $primary_lightest;
   background-clip: padding-box;
   span {font-size: 12px;}
 .title {font-weight: bold; display: block; font-size: 14px;}
@@ -839,14 +838,14 @@ button.show-replies {
   clear: both;
   font-weight: normal;
   line-height: 18px;
-  color: #333333;
+  color: $primary;
 }
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  color: #ffffff;
+  color: $secondary;
   text-decoration: none;
-  background-color: #0088cc;
+  background-color: $tertiary;
 }
 .open {
   *z-index: 1000;
@@ -871,8 +870,8 @@ clear: both;
   position: fixed;
   z-index: 1000;
   left: 50%;
-  background-color: lighten($blue, 52%);
-  border: 1px solid lighten($blue, 40%);
+  background-color: $tertiary_lightest;
+  border: 1px solid $tertiary_light;
   padding: 5px;
   margin-bottom: 5px;
 
@@ -900,7 +899,7 @@ clear: both;
   }
   h3 {
     font-size: 25px;
-    color: $black;
+    color: $primary;
     margin-bottom: 5px;
     i {
       margin-right: 7px;
@@ -908,29 +907,29 @@ clear: both;
   }
   .btn {
     border: none;
-    color: $white;
+    color: $secondary;
     font-weight: normal;
 
-      color: #fff;
+      color: $secondary;
       background: $btn-primary-background-color;
 
     &[href] {
-      color: $white;
+      color: $secondary;
     }
     &:hover
     {
-      color: #fff;
+      color: $secondary;
       background: darken($btn-primary-background-color, 12%);
     }
     &:active {
       @include linear-gradient(darken($btn-primary-background-color, 18%), darken($btn-primary-background-color, 12%));
-      @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
-      color: #fff;
+      @include box-shadow(inset 0 1px 3px rgba($primary, 0.2));
+      color: $secondary;
     }
     &[disabled] {
-      text-shadow: 0 1px 0 rgba($black, 0.2);
+      text-shadow: 0 1px 0 rgba($primary, 0.2);
       @include linear-gradient($btn-primary-background-color, $btn-primary-background-color-dark);
-      @include box-shadow((inset 0 1px 0 rgba($white, 0.33), inset 0 -1px 2px rgba($black, 0.2)));
+      @include box-shadow((inset 0 1px 0 rgba($secondary, 0.33), inset 0 -1px 2px rgba($primary, 0.2)));
     }
   }
 }
@@ -939,8 +938,8 @@ clear: both;
     article.boxed {
       .select-posts {
         button.select-post {
-          background-color: $blue;
-          color: $white;
+          background-color: $tertiary;
+          color: $secondary;
         }
       }
       .topic-body {
@@ -963,12 +962,12 @@ clear: both;
       top: 4px;
 
       button {
-        background-color: #ddd;
-        border-top: 1px solid #fff;
-        border-left: 1px solid #fff;
-        border-bottom: 1px solid #aaa;
-        border-right: 1px solid #aaa;
-        color: #999;
+        background-color: $primary_lighter;
+        border-top: 1px solid $secondary;
+        border-left: 1px solid $secondary;
+        border-bottom: 1px solid $primary_light;
+        border-right: 1px solid $primary_light;
+        color: $primary_light;
 
       }
     }
@@ -992,7 +991,7 @@ a.attachment:before {
     position: absolute;
     top: 0;
     left: 10px;
-    color: rgba(0,0,0,0.05);
+    color: $primary_lightest;
     font: 90px/1 FontAwesome;
     content: "\f05c";
     z-index: -5;

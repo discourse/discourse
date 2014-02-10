@@ -8,8 +8,8 @@
   left: 20px;
   z-index: 990;
   @include border-radius-all(3px);
-  @include box-shadow(1px 1px 5px $darkish_gray);
-  background-color: $light_gray;
+  @include box-shadow(1px 1px 5px $primary_medium);
+  background-color: $primary_lighter;
   padding: 3px 7px 6px 7px;
   width: 300px;
   display: none;
@@ -33,7 +33,7 @@
     float: right;
     font-size: 20px;
     a {
-      color: $black;
+      color: $primary;
     }
   }
 }

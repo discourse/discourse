@@ -6,9 +6,9 @@
 // --------------------------------------------------
 
 html {
-  color: $black;
+  color: $primary;
   font: #{$base-font-size}/#{$base-line-height} $base-font-family;
-  background-color: #fff;
+  background-color: $secondary;
   overflow-y: scroll;
   -webkit-font-smoothing: subpixel-antialiased;
 }
@@ -42,7 +42,7 @@ hr {
   height: 1px;
   margin: 1em 0;
   border: 0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid $primary_lightest;
   padding: 0;
 }
 

@@ -20,8 +20,8 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  color: white;
-  background: black;
+  color: $secondary;
+  background: $primary;
   opacity: 0;
   @include transition(opacity .2s);
 
@@ -41,7 +41,7 @@
   .informations {
     margin: 6px;
     padding-right: 20px;
-    color: $dark_gray;
+    color: $primary_medium;
     font-size: 14px;
   }
 
