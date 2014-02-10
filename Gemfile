@@ -196,7 +196,11 @@ gem 'lru_redux'
 
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
-gem 'memory_profiler', require: false, platform: :mri_21
+begin
+  gem 'memory_profiler', require: false, platform: :mri_21
+rescue
+  puts "WARNING: you are running an old version of bundler, please run 'gem update bundler'"
+end
 
 # used for caching, optional
 gem 'rack-cors', require: false
