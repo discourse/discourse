@@ -994,7 +994,7 @@ es:
         suspend: "Banear"
         unsuspend: "Quitar ban"
         suspended: "Baneado?"
-        blocked: "Bloqueado?
+        blocked: "Bloqueado?"
         moderator: "Moderador?"
         admin: "Administrador?"
         show_admin_profile: "Administrador"
