@@ -461,15 +461,24 @@ iframe {
     width: 45px;
     height: 45px;
   }
-  
-  .contents { 
+
+  .contents {
 
     text-align: center;
 
-     a {
-      display: block; 
+    a {
+      display: block;
       margin: 0 auto;
       width: 45px;
+    }
+
+    a.user-group {
+      margin: 4px 0 0 0;
+      padding: 0px;
+      color: $primary_light;
+      font-size: 80%;
+      width: 100%;
+      line-height: 13px;
     }
 
     h3 a {
@@ -613,6 +622,7 @@ position: relative;
     line-height: 1.2em;
   }
 }
+
 
 .user-title {
   margin-top: 8px;

@@ -140,6 +140,29 @@ describe Admin::UsersController do
       end
     end
 
+    context '.primary_group' do
+      before do
+        @another_user = Fabricate(:coding_horror)
+      end
+
+      it "raises an error when the user doesn't have permission" do
+        Guardian.any_instance.expects(:can_change_primary_group?).with(@another_user).returns(false)
+        xhr :put, :primary_group, user_id: @another_user.id
+        response.should be_forbidden
+      end
+
+      it "returns a 404 if the user doesn't exist" do
+        xhr :put, :primary_group, user_id: 123123
+        response.should be_forbidden
+      end
+
+      it "chagnes the user's trust level" do
+        xhr :put, :primary_group, user_id: @another_user.id, primary_group_id: 2
+        @another_user.reload
+        @another_user.primary_group_id.should == 2
+      end
+    end
+
     context '.trust_level' do
       before do
         @another_user = Fabricate(:coding_horror)

@@ -12,12 +12,20 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   classNameBindings: ['postTypeClass',
                       'selected',
                       'post.hidden:post-hidden',
-                      'post.deleted'],
+                      'post.deleted',
+                      'groupNameClass'],
   postBinding: 'content',
 
   postTypeClass: function() {
     return this.get('post.post_type') === Discourse.Site.currentProp('post_types.moderator_action') ? 'moderator' : 'regular';
   }.property('post.post_type'),
+
+  groupNameClass: function() {
+    var primaryGroupName = this.get('post.primary_group_name');
+    if (primaryGroupName) {
+      return "group-" + primaryGroupName;
+    }
+  }.property('post.primary_group_name'),
 
   // If the cooked content changed, add the quote controls
   cookedChanged: function() {

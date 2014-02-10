@@ -29,6 +29,7 @@
           {{/if}}
 
           {{#if user_title}}<div class="user-title" {{action showPosterExpansion this}}>{{user_title}}</div>{{/if}}
+          {{#if primary_group_name}}<div><a href='/groups/{{unbound primary_group_name}}' class='user-group'>{{unbound primary_group_name}}</a></div>{{/if}}
         </div>
       {{else}}
         <div class="contents">

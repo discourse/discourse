@@ -23,10 +23,16 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
   afterModel: function(adminUser) {
     var controller = this.controllerFor('adminUser');
 
-    adminUser.loadDetails().then(function () {
+    return adminUser.loadDetails().then(function () {
       adminUser.setOriginalTrustLevel();
       controller.set('model', adminUser);
-      window.scrollTo(0, 0);
+    });
+  },
+
+  setupController: function(controller, model) {
+    controller.setProperties({
+      originalPrimaryGroupId: model.get('primary_group_id'),
+      model: model
     });
   },
 

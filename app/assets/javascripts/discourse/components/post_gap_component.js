@@ -25,7 +25,10 @@ Discourse.PostGapComponent = Ember.Component.extend({
     if (this.get('loading')) {
       buffer.push(I18n.t('loading'));
     } else {
-      buffer.push(I18n.t('post.gap', {count: this.get('gap.length')}));
+      var gapLength = this.get('gap.length');
+      if (gapLength) {
+        buffer.push(I18n.t('post.gap', {count: gapLength}));
+      }
     }
   },
 

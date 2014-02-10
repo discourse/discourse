@@ -1050,4 +1050,35 @@ describe User do
     end
   end
 
+  describe "primary_group_id" do
+    let!(:user) { Fabricate(:user) }
+
+    it "has no primary_group_id by default" do
+      user.primary_group_id.should be_nil
+    end
+
+    context "when the user has a group" do
+      let!(:group) { Fabricate(:group) }
+
+      before do
+        group.usernames = user.username
+        group.save
+        user.primary_group_id = group.id
+        user.save
+        user.reload
+      end
+
+      it "should allow us to use it as a primary group" do
+        user.primary_group_id.should == group.id
+
+        # If we remove the user from the group
+        group.usernames = ""
+        group.save
+
+        # It should unset it from the primary_group_id
+        user.reload
+        user.primary_group_id.should be_nil
+      end
+    end
+  end
 end

@@ -111,6 +111,22 @@ class TopicView
     filter_posts_paged(opts[:page].to_i)
   end
 
+  def primary_group_names
+    return @group_names if @group_names
+
+    primary_group_ids = Set.new
+    @posts.each do |p|
+      primary_group_ids << p.user.primary_group_id if p.user.try(:primary_group_id)
+    end
+
+    result = {}
+    unless primary_group_ids.empty?
+      Group.where(id: primary_group_ids.to_a).pluck(:id, :name).each do |g|
+        result[g[0]] = g[1]
+      end
+    end
+    result
+  end
 
   # Find the sort order for a post in the topic
   def sort_order_for_post_number(post_number)
