@@ -196,6 +196,7 @@ gem 'lru_redux'
 
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
+gem 'memory_profiler', require: false, platform: :mri_21
 
 # used for caching, optional
 gem 'rack-cors', require: false
