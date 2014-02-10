@@ -156,7 +156,7 @@ describe Admin::UsersController do
         response.should be_forbidden
       end
 
-      it "chagnes the user's trust level" do
+      it "changes the user's primary group" do
         xhr :put, :primary_group, user_id: @another_user.id, primary_group_id: 2
         @another_user.reload
         @another_user.primary_group_id.should == 2
