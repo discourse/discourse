@@ -25,7 +25,7 @@ describe Scheduler::Manager do
     end
   end
 
-  let(:manager) { Scheduler::Manager.new(Redis.new) }
+  let(:manager) { Scheduler::Manager.new(DiscourseRedis.new) }
 
   before do
     $redis.del manager.class.queue_key
