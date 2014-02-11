@@ -7,7 +7,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.ScrollTop, Discourse.LoadMore, {
+Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.LoadMore, {
   eyelineSelector: '.topic-list-item',
 
   actions: {
@@ -24,6 +24,15 @@ Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.ScrollTop, Disco
       });
     }
   },
+
+  _readjustScrollPosition: function() {
+    var scrollTo = Discourse.Session.currentProp('topicListScrollPosition');
+    if (scrollTo) {
+      Em.run.schedule('afterRender', function() {
+        $(window).scrollTop(scrollTo);
+      });
+    }
+  }.on('didInsertElement'),
 
   _updateTitle: function() {
     Discourse.notifyTitle(this.get('controller.topicTrackingState.incomingCount'));
