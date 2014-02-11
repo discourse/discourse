@@ -8,7 +8,9 @@ namespace :ep do
   
   task "monthly_report", [:email] => :environment do |t, args|
     puts "Generating a monthly report of user activity"
-    generate_report(30.days.ago, Time.now, args[:email])
+    start_date = Date.today.beginning_of_month.ago(1.month)
+    end_date = start_date.end_of_month
+    generate_report(start_date, end_date, args[:email])
   end
   
 private
