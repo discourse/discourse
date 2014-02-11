@@ -165,9 +165,31 @@ Discourse.PostMenuView = Discourse.View.extend({
 
   // Share button
   renderShare: function(post, buffer) {
+  
+  //Preparing complete url to be send 
+     var share_url=  window.location.protocol + "//" + window.location.host + post.get('shareUrl') ;
+	 
+       //Getting short url via goo.gl api	   
+	 $.ajax ({
+			url: 'https://www.googleapis.com/urlshortener/v1/url',
+			type: "POST",
+			async: false,
+			timeout: 30000,            
+			data: JSON.stringify({ longUrl : share_url }),
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			error: function(){
+				return true;
+				},
+			success: function(data){
+				share_url = data.id ;
+				}
+		});
+  
+  
     buffer.push("<button title=\"" +
                  I18n.t("post.controls.share") +
-                 "\" data-share-url=\"" + post.get('shareUrl') + "\" data-post-number=\"" + post.get('post_number') +
+                 "\" data-share-url=\"" + share_url + "\" data-post-number=\"" + post.get('post_number') +
                  "\" class='share'><i class=\"fa fa-link\"></i></button>");
   },
 
