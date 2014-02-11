@@ -687,7 +687,7 @@ uk:
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
 
     allow_index_in_robots_txt: "Сайт повинен індексуватися пошуковими системами (оновити robots.txt)"
-    email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
+    email_domains_blacklist: "Список заборонених поштових доменів, розділених вертикальною рискою. Наприклад: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users may register with. WARNING: Users with email domains other than those listed will not be allowed."
     version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version is available."
@@ -798,7 +798,7 @@ uk:
     category_colors: "Список шістнадцяткових значень кольорів, дозволених для категорій та розділених вертикальною рискою (|)"
 
     max_image_size_kb: "Максимальний розмір зображень, які ми дозволяємо користувачам завантажити, в КБ - налаштуйте обмеження також у nginx (client_max_body_size) / apache або проксі."
-    max_attachment_size_kb: ""Максимальний розмір файлів, які ми дозволяємо користувачам завантажити, в КБ - налаштуйте обмеження також у nginx (client_max_body_size) / apache або проксі."
+    max_attachment_size_kb: "Максимальний розмір файлів, які ми дозволяємо користувачам завантажити, в КБ - налаштуйте обмеження також у nginx (client_max_body_size) / apache або проксі."
     authorized_extensions: "Список розширень файлів, дозволених до завантаження, розділених вертикальною рискою (|)"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
 
