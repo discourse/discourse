@@ -402,13 +402,13 @@ uk:
       title: 'Сповістити {{username}}'
       description: 'Цей допис містить щось таке, про що я хотів би поговорити з цією людиною особисто і безпосередньо.'
       long_form: 'notified user'
-      email_title: 'Regarding your post in "%{title}"'
+      email_title: 'Щодо Вашого допису у темі "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Звернути увагу модераторів'
       description: 'Цей допис загалом потребує уваги модераторів згідно із <a href="/faq">Частими запитаннями</a>, <a href="%{tos_url}">Умовами використання</a>, або з іншої причини, не зазначеної вище.'
       long_form: 'notified moderators'
-      email_title: 'A post in "%{title}" requires moderator attention'
+      email_title: 'Допис у темі "%{title}" потребує уваги модератора'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Лишити закладку'
@@ -626,9 +626,9 @@ uk:
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
 
     post_excerpt_maxlength: "Максимальна довжина витягу із допису (у символах)"
-    post_onebox_maxlength: "Максимальна довжина вставленого допису Discourse"
+    post_onebox_maxlength: "Максимальна довжина допису Discourse, що з'явиться в onebox"
     category_post_template: "The category definition post template used when you create a new category"
-    onebox_max_chars: "Максимальна кількість символів, які при вставці посилання буде імпортовано в допис із зовнішнього сайта"
+    onebox_max_chars: "Максимальна кількість символів, які onebox імпортуватиме в допис із зовнішнього сайта"
 
     logo_url: "Логотип Вашого сайта, наприклад: http://example.com/logo.png"
     logo_small_url: "Маленький логотип для Вашого сайта, який використовується при прокручуванні тем вниз, наприклад: http://example.com/logo-small.png"
@@ -637,7 +637,7 @@ uk:
 
     notification_email: "Адреса зворотньої електронної скриньки, що буде використовуватися при надсиланні системних повідомлень на кшталт сповіщень користувачів про загублені паролі, нові облікові записи і т. ін."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
-    use_https: "Should the full url for the site (Discourse.base_url) be http or https?"
+    use_https: "Чи повинна повна адреса сайта (Discourse.base_url) використовувати https (чи просто http)?"
     summary_score_threshold: "The minimum score of a post to be included in the 'summary'"
     summary_posts_required: "Minimum posts in a topic before 'summary' mode is enabled"
     summary_likes_required: "Minimum likes in a topic before the 'summary' mode will be enabled"
@@ -670,8 +670,8 @@ uk:
     ga_domain_name: "Доменне ім'я Google аналітики (ga.js), напр.: mysite.com; див. http://google.com/analytics"
     ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
-    enable_escaped_fragments: "Enable workaround solution to help older search engine webcrawlers index your site. WARNING: enable only if you have to."
-    enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
+    enable_escaped_fragments: "Увімкнути обхідне рішення, що допоможе роботам старіших пошукових рушіїв індексувати Ваш сайт. УВАГА: вмикайте тільки якщо це необхідно."
+    enable_noscript_support: "Увімкнути стандартну підтримку пошукових роботів через теґ noscript"
     top_menu: "Визначає, які елементи з'являються в навігації головної сторінки, та в якому порядку. Наприклад, latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
     share_links: "Визначає, які елементи з'являються в діалозі поширення, та в якому порядку. Наприклад, twitter|facebook|google+|email"
@@ -686,7 +686,7 @@ uk:
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
 
-    allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
+    allow_index_in_robots_txt: "Сайт повинен індексуватися пошуковими системами (оновити robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users may register with. WARNING: Users with email domains other than those listed will not be allowed."
     version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
@@ -755,24 +755,24 @@ uk:
     s3_secret_access_key: "Секретний ключ доступу Amazon S3, що використовуватиметься для завантаження зображень"
     s3_region: "Назва регіону Amazon S3, що використовуватиметься для завантаження зображень"
 
-    enable_flash_video_onebox: "Enable embedding of swf and flv links in oneboxes. WARNING: may introduce a security risk"
+    enable_flash_video_onebox: "Увімкнути вбудовування swf- та flv-посилань в onebox. УВАГА: це може запровадити ризики для безпеки"
 
-    default_invitee_trust_level: "Default trust level (0-4) for invited users"
-    default_trust_level: "Default trust level (0-4) for users"
+    default_invitee_trust_level: "Рівень довіри (0-4) для запрошених користувачів за замовчуванням"
+    default_trust_level: "Рівень довіри (0-4) для користувачів за замовчуванням"
 
-    basic_requires_topics_entered: "How many topics a new user must enter before promotion to basic (1) trust level"
-    basic_requires_read_posts: "How many posts a new user must read before promotion to basic (1) trust level"
-    basic_requires_time_spent_mins: "How many minutes a new user must read posts before promotion to basic (1) trust level"
+    basic_requires_topics_entered: "Скільки тем має відвідати новий користувач перед тим, як просунутися до базового (1) рівня довіри"
+    basic_requires_read_posts: "Скільки дописів має прочитати новий користувач перед тим, як просунутися до базового (1) рівня довіри"
+    basic_requires_time_spent_mins: "Скільки хвилин має витратити новий користувач на читання дописів перед тим, як просунутися до базового (1) рівня довіри"
 
-    regular_requires_topics_entered: "How many topics a basic user must enter before promotion to regular (2) trust level"
-    regular_requires_read_posts: "How many posts a basic user must read before promotion to regular (2) trust level"
-    regular_requires_time_spent_mins: "How many minutes a basic user must read posts before promotion to regular (2) trust level"
-    regular_requires_days_visited: "How many days a basic user must visit the site before promotion to regular (2) trust level"
-    regular_requires_likes_received: "How many likes a basic user must receive before promotion to regular (2) trust level"
-    regular_requires_likes_given: "How many likes a basic user must cast before promotion to regular (2) trust level"
-    regular_requires_topic_reply_count: "How many topics a basic user must reply to before promotion to regular (2) trust level"
+    regular_requires_topics_entered: "Скільки тем має відвідати базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
+    regular_requires_read_posts: "Скільки дописів має прочитати базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
+    regular_requires_time_spent_mins: "Скільки хвилин має витратити базовий користувач на читання дописів перед тим, як просунутися до звичайного (2) рівня довіри"
+    regular_requires_days_visited: "Скільки днів має відвідувати сайт базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
+    regular_requires_likes_received: "Скільки вподобань має отримати базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
+    regular_requires_likes_given: "Скільки дописів має вподобати базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
+    regular_requires_topic_reply_count: "У скількох темах має відповісти базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
 
-    min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+    min_trust_to_create_topic: "Мінімальний рівень довіри, необхідний для створення нової теми."
 
     newuser_max_links: "Скільки посилань новий користувач може додати до допису"
     newuser_max_images: "Скільки зображень новий користувач може додати до допису"
