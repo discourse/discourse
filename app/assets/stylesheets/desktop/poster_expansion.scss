@@ -40,6 +40,16 @@
     margin-top: 0px;
     color: $primary_medium;
   }
+  .groups {
+    font-size: 13px;
+    font-weight: normal;
+    margin-top: 0px;
+    color: $primary_medium;
+
+    .group-link {
+      color: $primary;
+    }
+  }
 
   .bottom {
     clear: both;

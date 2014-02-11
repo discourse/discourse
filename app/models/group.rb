@@ -220,6 +220,7 @@ class Group < ActiveRecord::Base
     if @deletions
       @deletions.each do |gu|
         gu.destroy
+        User.update_all 'primary_group_id = NULL', ['id = ? AND primary_group_id = ?', gu.user_id, gu.group_id]
       end
     end
     @deletions = nil

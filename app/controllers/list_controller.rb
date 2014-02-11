@@ -40,6 +40,11 @@ class ListController < ApplicationController
       list_opts = build_topic_list_options
       list_opts.merge!(options) if options
       user = list_target_user
+
+      if filter == :latest && params[:category].blank?
+        list_opts[:no_definitions] = true
+      end
+
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = construct_url_with(list_opts)
       if Discourse.anonymous_filters.include?(filter)

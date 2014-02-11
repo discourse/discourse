@@ -388,7 +388,7 @@ Discourse.AdminUser.reopenClass({
   },
 
   find: function(username) {
-    return Discourse.ajax("/admin/users/" + username).then(function (result) {
+    return Discourse.ajax("/admin/users/" + username + ".json").then(function (result) {
       result.loadedDetails = true;
       return Discourse.AdminUser.create(result);
     });

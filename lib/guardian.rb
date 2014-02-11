@@ -133,6 +133,10 @@ class Guardian
     user && is_staff?
   end
 
+  def can_change_primary_group?(user)
+    user && is_staff?
+  end
+
   def can_change_trust_level?(user)
     user && is_staff?
   end

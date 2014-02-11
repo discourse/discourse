@@ -1267,6 +1267,8 @@ en:
             other: "spam x{{count}}"
 
       groups:
+        primary: "Primary Group"
+        no_primary: "(no primary group)"
         title: "Groups"
         edit: "Edit Groups"
         selector_placeholder: "add users"

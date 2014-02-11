@@ -10,6 +10,8 @@
     <h3>{{i18n last_post}} {{unboundDate path="user.last_posted_at" leaveAgo="true"}}</h3>
     <h3>{{i18n joined}} {{unboundDate path="user.created_at" leaveAgo="true"}}</h3>
 
+    {{groups-list groups=user.custom_groups}}
+
     <div class='bottom'>
       {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}
 

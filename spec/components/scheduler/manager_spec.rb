@@ -25,7 +25,7 @@ describe Scheduler::Manager do
     end
   end
 
-  let(:manager) { Scheduler::Manager.new(Redis.new) }
+  let(:manager) { Scheduler::Manager.new(DiscourseRedis.new) }
 
   before do
     $redis.del manager.class.queue_key
@@ -46,7 +46,7 @@ describe Scheduler::Manager do
 
       (0..5).map do
         Thread.new do
-          manager = Scheduler::Manager.new(Redis.new)
+          manager = Scheduler::Manager.new(DiscourseRedis.new)
           manager.blocking_tick
         end
       end.map(&:join)

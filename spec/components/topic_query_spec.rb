@@ -30,12 +30,12 @@ describe TopicQuery do
       # mods can see hidden topics
       TopicQuery.new(moderator).list_latest.topics.count.should == 1
       # admins can see all the topics
-      TopicQuery.new(admin).list_latest.topics.count.should == 2
+      TopicQuery.new(admin).list_latest.topics.count.should == 3
 
       group.add(user)
       group.save
 
-      TopicQuery.new(user).list_latest.topics.count.should == 1
+      TopicQuery.new(user).list_latest.topics.count.should == 2
 
     end
 
