@@ -518,8 +518,6 @@ zh_TW:
     github_client_id: "Github 帳號驗證的用戶端帳號（Client id），到 https://github.com/settings/applications 來註冊獲取"
     github_client_secret: "Github 帳號驗證的用戶端密碼（Client secret），到 https://github.com/settings/applications 來註冊獲取"
 
-    enable_persona_logins: "啟用基於電子郵箱的 Mozilla Persona 帳號驗證登入"
-
     allow_import: "允許導入資料，這將替換全站資料。除非你計畫導入資料，否則請保持設置為false"
 
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"

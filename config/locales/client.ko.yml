@@ -447,9 +447,6 @@ ko:
       github:
         title: "GitHub"
         message: "GitHub 인증 중(팝업 차단을 해제 하세요)"
-      persona:
-        title: "Persona"
-        message: "Mozilla Persona 인증 중(팝업 차단을 해제 하세요)"
 
     composer:
       posting_not_on_topic: "어떤 토픽에 답글을 작성하시겠습니까?"

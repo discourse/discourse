@@ -461,9 +461,6 @@ ru:
       github:
         title: 'с помощью GitHub'
         message: 'Вход с помощью учетной записи GitHub (всплывающие окна должны быть разрешены)'
-      persona:
-        title: 'с помощью Persona'
-        message: 'Вход с помощью учетной записи Mozilla Persona (всплывающие окна должны быть разрешены)'
     composer:
       posting_not_on_topic: 'В какой теме вы хотите ответить?'
       saving_draft_tip: сохранение

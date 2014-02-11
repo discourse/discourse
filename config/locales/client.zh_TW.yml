@@ -459,9 +459,6 @@ zh_TW:
       github:
         title: "使用 GitHub"
         message: "使用 GitHub 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
-      persona:
-        title: "使用 Persona"
-        message: "使用 Mozilla Persona 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
 
     composer:
       posting_not_on_topic: "你想要回覆哪個主題?"

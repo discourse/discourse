@@ -113,9 +113,6 @@ users:
     default: false
   github_client_id: ''
   github_client_secret: ''
-  enable_persona_logins:
-    client: true
-    default: false
   enforce_global_nicknames: false
   discourse_org_access_key: ''
   invite_expiry_days: 4

@@ -562,8 +562,6 @@ de:
     github_client_id: "Client-ID für Github Authentisierung, registriert auf https://github.com/settings/applications"
     github_client_secret: "Client Secret für Github Authentisierung, registriert auf https://github.com/settings/applications"
 
-    enable_persona_logins: "Aktiviere mailbasierte Authentisierung mit Mozilla Persona."
-
     allow_import: "Erlaube Datenimports. (WARNUNG: Hiermit können ALLE vorhandenen Daten überschrieben werden; immer auf 'false' lassen, es sei denn Du planst wirklich Datenimports)."
 
     active_user_rate_limit_secs: "Sekunden, nach denen das 'last_seen_at'-Feld aktualisiert wird."

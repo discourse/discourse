@@ -11,7 +11,6 @@ class Users::OmniauthCallbacksController < ApplicationController
     Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", trusted: true),
     Auth::GithubAuthenticator.new,
     Auth::TwitterAuthenticator.new,
-    Auth::PersonaAuthenticator.new,
     Auth::CasAuthenticator.new
   ]
 

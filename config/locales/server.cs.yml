@@ -588,8 +588,6 @@ cs:
     github_client_id: "'Client id' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
     github_client_secret: "'Client secret' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
 
-    enable_persona_logins: "Povolit autorizaci přes službu Mozilla Persona"
-
     allow_import: "Povolit import, kterým lze přepsat VŠECHNA data na tomto webu; nechte nastaveno na 'false', pokud neplánujete dělat importy dat"
 
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"

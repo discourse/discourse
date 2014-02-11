@@ -590,7 +590,6 @@ fr:
     enable_github_logins: "Active l'authentification GitHub, nécessite github_client_id et github_client_secret"
     github_client_id: "id client pour l'authentification Github, enregistré sur https://github.com/settings/applications"
     github_client_secret: "secret client  pour l'authentification Github, enregistré sur https://github.com/settings/applications"
-    enable_persona_logins: "Active l'authentification par e-mail avec Mozilla Persona"
     allow_import: "Autoriser l'importation qui remplacera TOUTES les données du site. Laisser non coché, sauf si vous prévoyez d'importer des données."
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'dernier_vu_a', en secondes."
     previous_visit_timeout_hours: "Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures."

@@ -652,8 +652,6 @@ da:
     github_client_id: "Client id til Github-login, oprettes på https://github.com/settings/applications."
     github_client_secret: "Client secret til Github-login, oprettes på at https://github.com/settings/applications."
 
-    enable_persona_logins: "Aktivér e-mail-baseret login med Mozilla Persona"
-
     allow_import: "Tillad import, som kan erstatte ALLE sitets data; slå fra med mindre du planlægger at importere data"
 
     active_user_rate_limit_secs: "Hvor ofte vi opdaterer feltet 'last_seen_at', i sekunder."

@@ -114,10 +114,6 @@ gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-github'
 gem 'omniauth-oauth2', require: false
-# abandoned gem hard to tell what is going on, multiple PRs upstream being ignored:
-# https://twitter.com/samsaffron/status/412372111710109696
-# we use: gem 'omniauth-browserid', git: 'https://github.com/samsaffron/omniauth-browserid.git', branch: 'observer_api'
-gem 'omniauth-browserid-discourse', require: 'omniauth-browserid'
 gem 'omniauth-cas'
 gem 'oj'
 # while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4

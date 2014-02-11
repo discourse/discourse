@@ -365,8 +365,6 @@ es:
     github_client_id: "Client id para la autenticación por Github, registrado en https://github.com/settings/applications"
     github_client_secret: "Client secret para la autenticación por Github, registrado en https://github.com/settings/applications"
 
-    enable_persona_logins: "Activar autenticación basada en email con Mozilla Persona"
-
     allow_import: "Permitir importación, la cual puede reemplazar TODOS los datos del sitio, déjalo a false hasta que planees ahcer importaciones de datos"
 
     active_user_rate_limit_secs: "Como de frecuentemente actualizaremos el campo 'last_seen_at', en segundos"

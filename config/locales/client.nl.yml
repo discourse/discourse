@@ -481,9 +481,6 @@ nl:
       github:
         title: met Github
         message: "Authenticatie met Github (zorg ervoor dat je popup blocker uit staat)"
-      persona:
-        title: met Persona
-        message: "Authenticatie met Mozilla Persona (zorg ervoor dat je popup blocker uit staat)"
 
     composer:
       posting_not_on_topic: "In welke topic wil je je antwoord plaatsen?"

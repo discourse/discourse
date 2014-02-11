@@ -196,10 +196,6 @@ GEM
     omniauth (1.1.4)
       hashie (>= 1.2, < 3)
       rack
-    omniauth-browserid-discourse (0.0.2)
-      faraday
-      multi_json
-      omniauth (~> 1.0)
     omniauth-cas (1.0.4)
       addressable (~> 2.3)
       nokogiri (~> 1.6)
@@ -434,7 +430,6 @@ DEPENDENCIES
   nokogiri
   oj
   omniauth
-  omniauth-browserid-discourse
   omniauth-cas
   omniauth-facebook
   omniauth-github

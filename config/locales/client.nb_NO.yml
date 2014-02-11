@@ -334,9 +334,6 @@ nb_NO:
       github:
         title: "med GitHub"
         message: "Autentiserer med GitHub (sørg for at du tillater pop-up vindu)"
-      persona:
-        title: "med Persona"
-        message: "Autentiserer med Mozilla Persona (sørg for at du tillater pop-up vindu)"
 
     composer:
       posting_not_on_topic: "Du svarer på emnet \"{{title}}\", men for øyeblikket ser du på et annet emne."

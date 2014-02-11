@@ -477,9 +477,6 @@ zh_CN:
       github:
         title: "使用 GitHub 帐号登录"
         message: "使用 GitHub 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
-      persona:
-        title: "使用 Persona 帐号登录"
-        message: "使用 Mozilla Persona 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
 
     composer:
       posting_not_on_topic: "你正在回复主题 \"{{title}}\"，但是当前你正在浏览的是另外一个主题。"

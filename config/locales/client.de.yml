@@ -480,9 +480,6 @@ de:
       github:
         title: "Mit GitHub"
         message: "Authentisierung via GitHub (stelle sicher, dass der Popup-Blocker deaktiviert ist)"
-      persona:
-        title: "Mit Persona"
-        message: "Authentisierung via Mozilla Persona (stelle sicher, dass der Popup-Blocker deaktiviert ist)"
 
     composer:
       posting_not_on_topic: "Du antwortest auf das Thema \"{{title}}\", betrachtest gerade aber ein anderes Thema."
