@@ -15,7 +15,6 @@ Discourse.TopList.reopenClass({
       var url = Discourse.getURL("/") + (filter || "top") + ".json";
       return Discourse.ajax(url);
     }).then(function (result) {
-
       var topList = Discourse.TopList.create({
         can_create_topic: result.can_create_topic,
         draft: result.draft,

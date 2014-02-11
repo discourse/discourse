@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryTopRoute = Discourse.Route.extend({
+Discourse.DiscoveryTopRoute = Discourse.Route.extend(Discourse.OpenComposer, {
   beforeModel: function() {
     this.controllerFor('navigationDefault').set('filterMode', 'top');
   },
@@ -35,7 +35,16 @@ Discourse.DiscoveryTopRoute = Discourse.Route.extend({
   renderTemplate: function() {
     this.render('navigation/default', { outlet: 'navigation-bar' });
     this.render('discovery/top', { outlet: 'list-container' });
+  },
+
+  actions: {
+
+    createTopic: function() {
+      this.openComposer(this.controllerFor('discoveryTop'));
+    }
+
   }
+
 });
 
 /**
@@ -46,7 +55,7 @@ Discourse.DiscoveryTopRoute = Discourse.Route.extend({
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend({
+Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend(Discourse.OpenComposer, {
   model: function(params) {
     return Discourse.Category.findBySlug(params.slug, params.parentSlug);
   },
@@ -97,7 +106,16 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend({
   deactivate: function() {
     this._super();
     this.controllerFor('search').set('searchContext', null);
+  },
+
+  actions: {
+
+    createTopic: function() {
+      this.openComposer(this.controllerFor('discoveryTop'));
+    }
+
   }
+
 });
 
 Discourse.DiscoveryTopCategoryNoneRoute = Discourse.DiscoveryTopCategoryRoute.extend({no_subcategories: true});

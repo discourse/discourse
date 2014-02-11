@@ -7,7 +7,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryRoute = Discourse.Route.extend({
+Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.OpenComposer, {
   actions: {
     loading: function() {
       this.controllerFor('discovery').set('loading', true);
@@ -27,13 +27,7 @@ Discourse.DiscoveryRoute = Discourse.Route.extend({
     },
 
     createTopic: function() {
-      var topicsController = this.controllerFor('discoveryTopics');
-      this.controllerFor('composer').open({
-        categoryId: topicsController.get('category.id'),
-        action: Discourse.Composer.CREATE_TOPIC,
-        draftKey: topicsController.get('draft_key'),
-        draftSequence: topicsController.get('draft_sequence')
-      });
+      this.openComposer(this.controllerFor('discoveryTopics'));
     },
 
     changeBulkTemplate: function(w) {
@@ -46,5 +40,6 @@ Discourse.DiscoveryRoute = Discourse.Route.extend({
       this.send('changeBulkTemplate', 'modal/bulk_actions_buttons');
     }
   }
+
 });
 
