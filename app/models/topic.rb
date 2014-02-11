@@ -108,6 +108,8 @@ class Topic < ActiveRecord::Base
   scope :visible, -> { where(visible: true) }
 
   scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
+  
+  scope :created_during, -> (start_time, end_time) { where(created_at: start_time..end_time) }
 
   scope :secured, lambda {|guardian=nil|
     ids = guardian.secure_category_ids if guardian

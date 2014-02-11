@@ -4,6 +4,7 @@ class TopicUser < ActiveRecord::Base
 
   scope :starred_since, lambda { |sinceDaysAgo| where('starred_at > ?', sinceDaysAgo.days.ago) }
   scope :by_date_starred, -> { group('date(starred_at)').order('date(starred_at)') }
+  scope :visited_during, -> (start_time, end_time) { where(last_visited_at: start_time..end_time) }
 
   scope :tracking, lambda { |topic_id|
     where(topic_id: topic_id)

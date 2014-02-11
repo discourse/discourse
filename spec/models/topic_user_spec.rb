@@ -247,5 +247,19 @@ describe TopicUser do
     tu.last_read_post_number.should == p2.post_number
     tu.seen_post_count.should == 2
   end
+  
+  it "can filter by date range" do
+    user = Fabricate(:user)
+    topic_1 = Fabricate(:topic)
+    topic_2 = Fabricate(:topic)
+    topic_3 = Fabricate(:topic)
+    out_of_range = TopicUser.create!(topic_id: topic_3.id, user_id: user.id, last_visited_at: 29.days.ago, first_visited_at: 29.days.ago)
+    
+    TopicUser.track_visit!(topic_1, user)
+    TopicUser.track_visit!(topic_2, user)
+
+    user.topic_users.visited_during(2.days.ago, DateTime.now).count.should == 2
+    user.topic_users.visited_during(30.days.ago, DateTime.now).count.should == 3    
+  end
 
 end

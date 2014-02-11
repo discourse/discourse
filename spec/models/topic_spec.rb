@@ -1100,6 +1100,19 @@ describe Topic do
       Topic.new(:category => nil).should_not be_read_restricted_category
     end
   end
+  
+  describe 'when looking for topics created during a period of time' do
+    it 'returns the correct topics given the date range' do
+      user = Fabricate(:user)
+      topic_1 = Fabricate(:topic, user: user, created_at: 15.days.ago)
+      topic_2 = Fabricate(:topic, user: user, created_at: 10.days.ago)
+      topic_3 = Fabricate(:topic, user: user, created_at: 5.days.ago)
+      user.topics.created_during(6.days.ago, DateTime.now).count.should == 1
+      user.topics.created_during(11.days.ago, DateTime.now).count.should == 2
+      user.topics.created_during(16.days.ago, DateTime.now).count.should == 3
+      user.topics.created_during(16.days.ago, 6.days.ago).count.should == 2
+    end
+  end
 
   describe 'trash!' do
     context "its category's topic count" do

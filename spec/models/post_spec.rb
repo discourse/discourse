@@ -52,6 +52,19 @@ describe Post do
         Post.with_user.first.user.should be_a User
       end
     end
+    
+    describe 'when looking for posts created during a period of time' do
+      it 'returns the correct posts given the date range' do
+        user = Fabricate(:user)
+        post_1 = Fabricate(:post, user: user, created_at: 15.days.ago)
+        post_2 = Fabricate(:post, user: user, created_at: 10.days.ago)
+        post_3 = Fabricate(:post, user: user, created_at: 5.days.ago)
+        user.posts.created_during(6.days.ago, DateTime.now).count.should == 1
+        user.posts.created_during(11.days.ago, DateTime.now).count.should == 2
+        user.posts.created_during(16.days.ago, DateTime.now).count.should == 3
+        user.posts.created_during(16.days.ago, 6.days.ago).count.should == 2
+      end
+    end
 
   end
 
