@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/laserlemon/vestal_versions
+  revision: beccc5744ec030664f003d61ffb617edefd7885b
+  specs:
+    vestal_versions (2.0.0)
+      activerecord (>= 3, < 5)
+      activesupport (>= 3, < 5)
+
+GIT
   remote: git://github.com/sporkrb/spork-rails.git
   revision: 3224f84d8c31fcb0894e9a43f6c3ac67e3aa0d71
   specs:
@@ -67,14 +75,6 @@ GIT
   specs:
     email_reply_parser (0.6)
 
-GIT
-  remote: https://github.com/zhangyuan/vestal_versions
-  revision: 0ea75ec4e269b5a9e609639919ade0f36381a446
-  specs:
-    vestal_versions (1.2.2)
-      activerecord (>= 3.0.0)
-      activesupport (>= 3.0.0)
-
 PATH
   remote: vendor/gems/discourse_emoji
   specs:
@@ -97,7 +97,7 @@ PATH
       rails (> 3.1)
 
 GEM
-  remote: https://rubygems.org/
+  remote: http://rubygems.org/
   specs:
     actionmailer (3.2.12)
       actionpack (= 3.2.12)

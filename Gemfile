@@ -64,7 +64,7 @@ gem 'ember-source', '1.0.0.rc6.2'
 gem 'handlebars-source', '1.0.12'
 gem 'barber'
 
-gem 'vestal_versions', git: 'https://github.com/zhangyuan/vestal_versions'
+gem 'vestal_versions', git: 'git://github.com/laserlemon/vestal_versions'
 
 gem 'message_bus', git: 'https://github.com/SamSaffron/message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
