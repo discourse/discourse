@@ -149,13 +149,13 @@
 
   @include medium-width {
     .main-link {
-      width: 300px;
+      max-width: 300px;
     }
   }
 
    @include small-width {
     .main-link {
-     width: 300px;
+     max-width: 300px;
 
     }
 
