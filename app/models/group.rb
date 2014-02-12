@@ -31,7 +31,7 @@ class Group < ActiveRecord::Base
 
   validate :alias_level, inclusion: { in: ALIAS_LEVELS.values}
 
-  def posts_for(guardian, before_post_id)
+  def posts_for(guardian, before_post_id=nil)
     user_ids = group_users.map {|gu| gu.user_id}
     result = Post.where(user_id: user_ids).includes(:user, :topic).references(:posts, :topics)
     result = result.where('topics.archetype <> ?', Archetype.private_message)
@@ -46,7 +46,7 @@ class Group < ActiveRecord::Base
     end
 
     result = result.where('posts.id < ?', before_post_id) if before_post_id
-    result.order('posts.created_at desc').limit(20)
+    result.order('posts.created_at desc')
   end
 
   def self.trust_group_ids
