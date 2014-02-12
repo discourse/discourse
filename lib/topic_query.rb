@@ -281,13 +281,14 @@ class TopicQuery
 
     def new_results(options={})
       result = TopicQuery.new_filter(default_results(options), @user.treat_as_new_topic_start_date)
-      result = remove_muted_categories(result, @user)
+      result = remove_muted_categories(result, @user) unless options[:category].present?
       suggested_ordering(result, options)
     end
 
     def latest_results(options={})
       result = default_results(options)
-      remove_muted_categories(result, @user)
+      result = remove_muted_categories(result, @user) unless options[:category].present?
+      result
     end
 
     def remove_muted_categories(list, user)
