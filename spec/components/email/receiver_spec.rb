@@ -9,6 +9,16 @@ describe Email::Receiver do
     SiteSetting.stubs(:reply_by_email_address).returns("reply+%{reply_key}@appmail.adventuretime.ooo")
   end
 
+  describe "exception raised" do
+    it "returns error if it encountered an error processing" do
+      receiver = Email::Receiver.new("some email")
+      def receiver.parse_body
+        raise "ERROR HAPPENED!"
+      end
+      expect(receiver.process).to eq(Email::Receiver.results[:error])
+    end
+  end
+
   describe 'invalid emails' do
     it "returns unprocessable if the message is blank" do
       expect(Email::Receiver.new("").process).to eq(Email::Receiver.results[:unprocessable])
