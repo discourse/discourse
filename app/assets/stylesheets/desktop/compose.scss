@@ -17,7 +17,7 @@
 .composer-popup {
 
   @include box-shadow(3px 3px 3px rgba($primary, 0.14));
-  background: $highlight;
+  background: lighten($highlight, 8%);
 
   h3 {
     margin-bottom: 10px;
@@ -38,7 +38,6 @@
     opacity: 1.0;
   }
 
-  background-color: lighten($highlight, 40%);
   border: 1px solid darken($highlight, 10%);
   padding: 10px;
   width: 600px;
