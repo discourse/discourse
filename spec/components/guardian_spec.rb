@@ -876,7 +876,7 @@ describe Guardian do
         Guardian.new(moderator).can_delete?(category).should be_false
       end
 
-      it "can't be deleted if it is the Uncategorizied Category" do
+      it "can't be deleted if it is the Uncategorized Category" do
         uncategorized_cat_id = SiteSetting.uncategorized_category_id
         uncategorized_category = Category.find(uncategorized_cat_id)
         Guardian.new(admin).can_delete?(uncategorized_category).should be_false
