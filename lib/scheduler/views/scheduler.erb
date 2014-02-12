@@ -15,6 +15,7 @@
           <th style="width: 15%">Last Run</th>
           <th style="width: 15%">Last Result</th>
           <th style="width: 15%">Last Duration</th>
+          <th style="width: 15%">Last Owner</th>
           <th style="width: 15%">Next Run Due</th>
           <th style="width: 10%">Actions</th>
         </thead>
@@ -36,6 +37,9 @@
             </td>
             <td>
               <%= @info.prev_duration %>
+            </td>
+            <td>
+              <%= @info.current_owner %>
             </td>
             <td>
               <% next_run = @info.next_run %>

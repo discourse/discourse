@@ -3,7 +3,8 @@ module Scheduler
     attr_accessor :next_run,
                   :prev_run,
                   :prev_duration,
-                  :prev_result
+                  :prev_result,
+                  :current_owner
 
     def initialize(klass, manager)
       @klass = klass
@@ -21,10 +22,11 @@ module Scheduler
         @prev_run = data["prev_run"]
         @prev_result = data["prev_result"]
         @prev_duration = data["prev_duration"]
+        @current_owner = data["current_owner"]
       end
     rescue
       # corrupt redis
-      @next_run = @prev_run = @prev_result = @prev_duration = nil
+      @next_run = @prev_run = @prev_result = @prev_duration = @current_owner = nil
     end
 
     def valid?
@@ -57,14 +59,15 @@ module Scheduler
         next_run: @next_run,
         prev_run: @prev_run,
         prev_duration: @prev_duration,
-        prev_result: @prev_result
+        prev_result: @prev_result,
+        current_owner: @current_owner
       }.to_json
       redis.zadd Manager.queue_key, @next_run , @klass
     end
 
     def del!
       clear!
-      @next_run = @prev_run = @prev_result = @prev_duration = nil
+      @next_run = @prev_run = @prev_result = @prev_duration = @current_owner = nil
     end
 
     def key
