@@ -119,7 +119,7 @@
   </div>
   <div class="modal-footer">
     <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
-    {{#if deleteVisible}}
+    {{#if can_delete}}
       <button class='btn btn-danger pull-right' {{bind-attr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
     {{/if}}
   </div>

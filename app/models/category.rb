@@ -350,6 +350,10 @@ SQL
     self.where(id: slug.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
   end
 
+  def has_children?
+    id && Category.where(parent_category_id: id).exists?
+  end
+
   def uncategorized?
     id == SiteSetting.uncategorized_category_id
   end

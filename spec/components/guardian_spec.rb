@@ -882,6 +882,11 @@ describe Guardian do
         Guardian.new(admin).can_delete?(uncategorized_category).should be_false
       end
 
+      it "can't be deleted if it has children" do
+        category.expects(:has_children?).returns(true)
+        Guardian.new(admin).can_delete?(category).should be_false
+      end
+
     end
 
     context 'can_suspend?' do
