@@ -27,7 +27,9 @@ Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.LoadMore, {
 
   _readjustScrollPosition: function() {
     var scrollTo = Discourse.Session.currentProp('topicListScrollPosition');
-    if (scrollTo) {
+    if (Discourse.URL.get('router.url').indexOf('/more') === -1) { scrollTo = 0; }
+
+    if (typeof scrollTo !== "undefined") {
       Em.run.schedule('afterRender', function() {
         $(window).scrollTop(scrollTo);
       });
