@@ -86,13 +86,13 @@ body {
     color: $tertiary !important;
   }
   .heatmap-high {
-    color: lighten($highlight_danger, 50%) !important;
-  }
-  .heatmap-med {
     color: lighten($highlight_danger, 10%) !important;
   }
-  .heatmap-low {
+  .heatmap-med {
     color: $highlight_danger !important;
+  }
+  .heatmap-low {
+    color: darken($highlight_danger, 10%) !important;
   }
   #loading-message {
     position: absolute;
@@ -269,7 +269,7 @@ blockquote {
 .spinner {
   width: 100px;
   margin: 0 auto 30px auto;
-  background-color: $primary;
+  background-color: #000;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
   font-size: 15px;
