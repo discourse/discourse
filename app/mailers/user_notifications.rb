@@ -142,6 +142,7 @@ class UserNotifications < ActionMailer::Base
     notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
     return if SiteSetting.enable_mailing_list_mode &&
+      user.mailing_list_mode &&
        ["replied", "mentioned", "quoted", "posted"].include?(notification_type)
 
     title = @notification.data_hash[:topic_title]
