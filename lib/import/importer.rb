@@ -38,17 +38,13 @@ module Import
       validate_metadata
 
       extract_dump
-
       restore_dump
 
-      #----------- CRITICAL --------------
       switch_schema!
-      #----------- CRITICAL --------------
 
-      log "Finalizing restore..."
+      # TOFIX: MessageBus is busted...
 
       migrate_database
-
       reconnect_database
 
       extract_uploads
@@ -268,10 +264,10 @@ module Import
     def rollback
       log "Trying to rollback..."
       if BackupRestore.can_rollback?
-        log "Rolling back to previous working state..."
+        log "Rolling back..."
         BackupRestore.rename_schema("backup", "public")
       else
-        log "No backup schema was created yet!"
+        log "There was no need to rollback"
       end
     end
 

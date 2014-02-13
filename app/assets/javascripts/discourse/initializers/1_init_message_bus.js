@@ -30,8 +30,13 @@ Discourse.addInitializer(function() {
 
   Discourse.MessageBus.subscribe("/global/read-only", function (enabled) {
     Discourse.set("isReadOnly", enabled);
-    if (enabled && !Discourse.User.currentProp("hideReadOnlyAlert")) {
-      bootbox.alert(I18n.t("read_only_mode.enabled"));
+    if (enabled) {
+      if (!Discourse.User.currentProp("hideReadOnlyAlert")) {
+        bootbox.alert(I18n.t("read_only_mode.enabled"));
+      }
+    } else {
+      // force a reload
+      document.location.reload();
     }
   });
 
