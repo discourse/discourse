@@ -27,6 +27,8 @@ en:
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
 
+  read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+
   too_many_replies:
     one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."

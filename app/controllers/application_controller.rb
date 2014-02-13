@@ -87,8 +87,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::ReadOnly do
-    # can this happen on a not .json format?
-    render json: failed_json.merge(message: I18n.t("read_only_mode_enabled"))
+    render status: 405, json: failed_json.merge(message: I18n.t("read_only_mode_enabled"))
   end
 
   def rescue_discourse_actions(message, error)
@@ -283,8 +282,8 @@ class ApplicationController < ActionController::Base
     end
 
     def block_if_readonly_mode
-      return if request.put? && request.fullpath == "/admin/backups/readonly"
-      raise Discourse::ReadOnly.new unless request.get? || !Discourse.readonly_mode?
+      return if request.fullpath.start_with?("/admin/backups")
+      raise Discourse::ReadOnly.new if !request.get? && Discourse.readonly_mode?
     end
 
     def build_not_found_page(status=404, layout=false)
