@@ -63,6 +63,9 @@ Discourse.URL = Em.Object.createWithMixins({
       path = path.replace(rootURL, '');
     }
 
+    // Schedule a DOM cleanup event
+    Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
+
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path)) { return; }
     if (this.navigatedToListMore(oldPath, path)) { return; }
