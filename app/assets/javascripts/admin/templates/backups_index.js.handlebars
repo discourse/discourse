@@ -1,0 +1,29 @@
+<table>
+  <tr>
+    <th width="40%">{{i18n admin.backups.columns.filename}}</th>
+    <th width="30%">{{i18n admin.backups.columns.size}}</th>
+    <th>
+      {{#if status.canRollback}}
+        <button {{action rollback}} class="btn btn-rollback" title="{{i18n admin.backups.operations.rollback.title}}" {{bind-attr disabled=rollbackDisabled}}><i class="fa fa-ambulance fa-flip-horizontal"></i>{{i18n admin.backups.operations.rollback.text}}</button>
+      {{/if}}
+      <button {{action toggleReadOnlyMode}} class="btn" {{bind-attr title=readOnlyModeTitle}}><i class="fa fa-eye"></i>{{readOnlyModeText}}</button>
+    </th>
+  </tr>
+  {{#each backup in model}}
+    <tr>
+      <td>{{backup.filename}}</td>
+      <td>{{humanSize backup.size}}</td>
+      <td>
+        <a {{bind-attr href="backup.link"}} class="btn download" title="{{i18n admin.backups.operations.download.title}}"><i class="fa fa-download"></i>{{i18n admin.backups.operations.download.text}}</a>
+        <button {{action destroyBackup backup}} class="btn btn-danger" {{bind-attr disabled="status.isOperationRunning" title="destroyTitle"}}><i class="fa fa-trash-o"></i>{{i18n admin.backups.operations.destroy.text}}</button>
+        <button {{action startRestore backup}} class="btn" {{bind-attr disabled="restoreDisabled" title="restoreTitle"}}><i class="fa fa-undo"></i>{{i18n admin.backups.operations.restore.text}}</button>
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td>{{i18n admin.backups.none}}</td>
+      <td></td>
+      <td></td>
+    </tr>
+  {{/each}}
+</table>
