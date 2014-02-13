@@ -14,6 +14,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       this.controllerFor("adminBackups").set("isOperationRunning", false);
       bootbox.alert(I18n.t("admin.backups.operations.failed", { operation: log.operation }));
     } else if (log.message === "[SUCCESS]") {
+      Discourse.User.currentProp("hideReadOnlyAlert", false);
       this.controllerFor("adminBackups").set("isOperationRunning", false);
       if (log.operation === "restore") {
         // redirect to homepage when the restore is done (session might be lost)
@@ -53,6 +54,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
         I18n.t("yes_value"),
         function(confirmed) {
           if (confirmed) {
+            Discourse.User.currentProp("hideReadOnlyAlert", true);
             Discourse.Backup.start().then(function() {
               self.controllerFor("adminBackupsLogs").clear();
               self.controllerFor("adminBackups").set("isOperationRunning", true);
@@ -99,6 +101,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
         I18n.t("yes_value"),
         function(confirmed) {
           if (confirmed) {
+            Discourse.User.currentProp("hideReadOnlyAlert", true);
             backup.restore().then(function() {
               self.controllerFor("adminBackupsLogs").clear();
               self.controllerFor("adminBackups").set("isOperationRunning", true);

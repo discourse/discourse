@@ -55,7 +55,10 @@ Discourse.AdminBackupsIndexController = Ember.ArrayController.extend({
           I18n.t("no_value"),
           I18n.t("yes_value"),
           function(confirmed) {
-            if (confirmed) { self._toggleReadOnlyMode(true); }
+            if (confirmed) {
+              Discourse.User.currentProp("hideReadOnlyAlert", true);
+              self._toggleReadOnlyMode(true);
+            }
           }
         );
       } else {
