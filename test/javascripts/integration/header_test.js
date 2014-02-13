@@ -171,3 +171,22 @@ test("search dropdown", function() {
     equal(find("#search-dropdown .selected a").attr("href"), "another-url", "after clicking 'more of type' link, results are reloaded");
   });
 });
+
+test("user dropdown when logged in", function() {
+  expect(3);
+
+  var userDropdownSelector = "#user-dropdown";
+
+  visit("/")
+  .then(function() {
+    not(exists(userDropdownSelector + ":visible"), "initially user dropdown is closed");
+  })
+  .click("#current-user")
+  .then(function() {
+    var $userDropdown = $(userDropdownSelector);
+
+    ok(exists(userDropdownSelector + ":visible"), "is lazily rendered after user opens it");
+
+    ok(exists($userDropdown.find(".user-dropdown-links")), "has showing / hiding user-dropdown links correctly bound");
+  });
+});

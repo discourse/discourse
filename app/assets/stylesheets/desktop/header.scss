@@ -237,4 +237,16 @@
     background-color: transparent;
     line-height: 20px;
   }
+
+  &#user-dropdown {
+    width: 154px;
+  }
+
+  .btn {
+    padding: 2px 8px;
+    margin-bottom: 2px;
+    .fa {
+      margin-right: 5px;
+    }
+  }
 }

@@ -89,9 +89,16 @@
             <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
           {{/if}}
         </li>
-        <li class='current-user'>
+        <li class='current-user dropdown'>
           {{#if currentUser}}
-            {{#titledLinkTo 'userActivity.index' currentUser titleKey="current_user" class="icon"}}{{boundAvatar currentUser imageSize="medium" }}{{/titledLinkTo}}
+            <a class='icon'
+               data-dropdown="user-dropdown"
+               data-render="renderUserDropdown"
+               href="#"
+               title='{{i18n user.avatar.title}}'
+               id="current-user">
+                 {{boundAvatar currentUser imageSize="medium" }}
+            </a>
           {{else}}
             <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='fa fa-user' title='{{i18n not_logged_in_user}}'></i></div>
           {{/if}}
@@ -105,6 +112,8 @@
       {{#if view.renderSiteMap}}
         {{render siteMap}}
       {{/if}}
+
+      {{ render userDropdown }}
 
     </div>
   </div>
