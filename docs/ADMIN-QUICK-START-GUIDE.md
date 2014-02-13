@@ -18,7 +18,7 @@ From here, you'll be able to access the Admin functions, all of which are very i
 
 Go to the Required tab of the Settings tab in admin (`/admin/site_settings/category/required`) and change all the settings listed there.
 
-To add logos and favicons to your site, create a topic and add the photos to a post in that topic. Click the wrench on the right side of the page and click the Make Invisible button to hide the topic. After submitting the post with the logos for your site, right click on them to get their URLs. Add the URL of the larger logo to the `logo_url` setting, and URL of the smaller logo to the `logo_small_url` setting. Also update the `favicon_url`.
+To add logos and favicons to your site, create a topic and add the photos to a post in that topic. After submitting the post with the logos for your site, click the wrench on the right side of the topic and click the Make Invisible button to hide the topic. Right click on the images to get their URLs. Add the URL of the larger logo to the `logo_url` setting, and URL of the smaller logo to the `logo_small_url` setting. Also update the `favicon_url`.
 
 The admin dashboard at `/admin` is a useful place to check often. If problems are detected with your site settings or deployment, they will be reported there.
 
