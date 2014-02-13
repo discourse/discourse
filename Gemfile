@@ -72,7 +72,7 @@ gem 'redis', :require => ["redis", "redis/connection/hiredis"]
 gem 'active_model_serializers'
 
 
-gem 'onebox', git: 'https://github.com/dysania/onebox.git'
+gem 'onebox'
 
 gem 'ember-rails'
 gem 'ember-source', '~> 1.2.0.1'
