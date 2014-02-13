@@ -25,7 +25,7 @@ class UserDestroyer
               end
             end
           end
-          x = PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
+          PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
           if post.topic and post.post_number == 1
             Topic.unscoped.where(id: post.topic.id).update_all(user_id: nil)
           end

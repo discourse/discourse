@@ -56,11 +56,11 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_can_delete_account?
-    can_delete_account
+    scope.can_delete_user?(object)
   end
 
   def can_delete_account
-    scope.can_delete_user?(object)
+    true
   end
 
 end
