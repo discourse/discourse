@@ -65,7 +65,10 @@ class PostActionsController < ApplicationController
     def fetch_post_from_params
       params.require(:id)
 
-      post_id = if params[:flag_topic]
+      flag_topic = params[:flag_topic]
+      flag_topic = flag_topic && (flag_topic == true || flag_topic == "true")
+
+      post_id = if flag_topic
         begin
           Topic.find(params[:id]).posts.first.id
         rescue
