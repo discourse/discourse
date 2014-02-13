@@ -101,7 +101,8 @@ module Export
     def wait_for_sidekiq
       log "Waiting for sidekiq to finish running jobs..."
       iterations = 0
-      while (running = Sidekiq::Queue.all.map(&:size).sum) > 0
+      workers = Sidekiq::Workers.new
+      while (running = workers.size) > 0
         log "  Waiting for #{running} jobs..."
         sleep 2
         iterations += 1
