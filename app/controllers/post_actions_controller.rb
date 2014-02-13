@@ -12,7 +12,7 @@ class PostActionsController < ApplicationController
     args = {}
     args[:message] = params[:message] if params[:message].present?
     args[:take_action] = true if guardian.is_staff? and params[:take_action] == 'true'
-    args[:flag_topic] = true if params[:flag_topic]
+    args[:flag_topic] = true if params[:flag_topic] == 'true'
 
     post_action = PostAction.act(current_user, @post, @post_action_type_id, args)
 
