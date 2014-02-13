@@ -4,14 +4,14 @@
 @import "common/foundation/helpers";
 
 
-
-
 .admin-contents table {
-width: 100%;
-tr {text-align: left;}
-td, th {padding: 8px;}
-th {border-top: 1px solid $primary_lighter;}
-td {border-bottom: 1px solid $primary_lighter; border-top: 1px solid $primary_lighter;}
+  width: 100%;
+  tr {text-align: left;}
+  td, th {padding: 8px;}
+  th {border-top: 1px solid $primary_lighter;}
+  td {border-bottom: 1px solid $primary_lighter; border-top: 1px solid $primary_lighter;}
+  tr:hover { background-color: darken($secondary, 2.5%); }
+  tr.selected { background-color: lighten($tertiary, 58%); }
 }
 
 .content-list li a span.count {
@@ -148,10 +148,6 @@ td {border-bottom: 1px solid $primary_lighter; border-top: 1px solid $primary_li
     display: inline-block;
     margin-right: 5px;
   }
-  .btn {
-    background: $primary_lighter;
-    &:hover { background: $primary_lighter; }
-  }
 }
 
 .site-settings-nav {
@@ -243,12 +239,6 @@ section.details {
   bottom: 0;
   width: 1075px;
   border: 1px solid lighten($tertiary, 45%);
-}
-
-table {
-  tr.selected {
-    background-color: lighten($tertiary, 58%);
-  }
 }
 
 .display-row {
@@ -969,4 +959,30 @@ table.api-keys {
   .fa-times {
     color: $highlight_danger;
   }
+}
+
+// Backups
+// --------------------------------------------------
+
+$rollback: #3D9970;
+$rollback-dark: darken($rollback, 10%) !default;
+$rollback-darker: darken($rollback, 20%) !default;
+
+.btn-rollback {
+  color: $secondary;
+  background: $rollback;
+  &:hover {
+    background: $rollback-dark;
+  }
+  &:active {
+    @include linear-gradient($rollback-darker, $rollback-dark);
+  }
+  &[disabled] {
+    background: $rollback;
+  }
+}
+
+.admin-backups-logs {
+  max-height: 500px;
+  overflow: auto;
 }
