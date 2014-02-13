@@ -20,6 +20,7 @@ module Onebox
           ask.com
           battle.net
           bbc.co.uk
+          bbs.boingboing.net
           bestbuy.ca
           bestbuy.com
           blip.tv
