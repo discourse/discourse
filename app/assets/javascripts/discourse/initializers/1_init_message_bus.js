@@ -8,8 +8,9 @@ Discourse.addInitializer(function() {
 
   Discourse.MessageBus.alwaysLongPoll = Discourse.Environment === "development";
   Discourse.MessageBus.start();
+
   Discourse.MessageBus.subscribe("/global/asset-version", function(version){
-    Discourse.set("assetVersion",version);
+    Discourse.set("assetVersion", version);
 
     if(Discourse.get("requiresRefresh")) {
       // since we can do this transparently for people browsing the forum
@@ -24,5 +25,15 @@ Discourse.addInitializer(function() {
     }
 
   });
+
+  Discourse.set("isReadOnly", Discourse.Site.currentProp("is_readonly"));
+
+  Discourse.MessageBus.subscribe("/global/read-only", function (enabled) {
+    Discourse.set("isReadOnly", enabled);
+    if (enabled) {
+      bootbox.alert(I18n.t("read_only_mode_enabled"));
+    }
+  });
+
   Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus);
 }, true);

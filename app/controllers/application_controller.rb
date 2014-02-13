@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_mobile_view
   before_filter :inject_preview_style
   before_filter :disable_customization
-  before_filter :block_if_maintenance_mode
+  before_filter :block_if_readonly_mode
   before_filter :authorize_mini_profiler
   before_filter :store_incoming_links
   before_filter :preload_json
@@ -49,7 +49,6 @@ class ApplicationController < ActionController::Base
     end
     raise
   end
-
 
   # Some exceptions
   class RenderEmpty < Exception; end
@@ -85,6 +84,11 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::InvalidAccess do
     rescue_discourse_actions("[error: 'invalid access']", 403) # TODO: this breaks json responses
+  end
+
+  rescue_from Discourse::ReadOnly do
+    # can this happen on a not .json format?
+    render json: failed_json.merge(message: I18n.t("read_only_mode_enabled"))
   end
 
   def rescue_discourse_actions(message, error)
@@ -249,16 +253,6 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    def block_if_maintenance_mode
-      if Discourse.maintenance_mode?
-        if request.format.json?
-          render status: 503, json: failed_json.merge(message: I18n.t('site_under_maintenance'))
-        else
-          render status: 503, file: File.join( Rails.root, 'public', '503.html' ), layout: false
-        end
-      end
-    end
-
     def mini_profiler_enabled?
       defined?(Rack::MiniProfiler) && current_user.try(:admin?)
     end
@@ -286,6 +280,11 @@ class ApplicationController < ActionController::Base
       return if current_user || (request.format.json? && api_key_valid?)
 
       redirect_to :login if SiteSetting.login_required?
+    end
+
+    def block_if_readonly_mode
+      return if request.put? && request.fullpath == "/admin/backups/readonly"
+      raise Discourse::ReadOnly.new unless request.get? || !Discourse.readonly_mode?
     end
 
     def build_not_found_page(status=404, layout=false)

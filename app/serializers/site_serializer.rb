@@ -8,7 +8,8 @@ class SiteSerializer < ApplicationSerializer
              :periods,
              :top_menu_items,
              :anonymous_top_menu_items,
-             :uncategorized_category_id # this is hidden so putting it here
+             :uncategorized_category_id, # this is hidden so putting it here
+             :is_readonly
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :post_action_types, embed: :objects
@@ -43,6 +44,10 @@ class SiteSerializer < ApplicationSerializer
 
   def uncategorized_category_id
     SiteSetting.uncategorized_category_id
+  end
+
+  def is_readonly
+    Discourse.readonly_mode?
   end
 
 end
