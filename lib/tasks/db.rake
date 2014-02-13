@@ -13,7 +13,8 @@ task 'db:rebuild_indexes' => 'environment' do
     raise "Backup from a previous import exists. Drop them before running this job with rake import:remove_backup, or move them to another schema."
   end
 
-  Discourse.enable_maintenance_mode
+  Discourse.enable_readonly_mode
+
   backup_schema = Jobs::Importer::BACKUP_SCHEMA
   table_names = User.exec_sql("select table_name from information_schema.tables where table_schema = 'public'").map do |row|
     row['table_name']
@@ -73,6 +74,6 @@ task 'db:rebuild_indexes' => 'environment' do
     # Can we roll this back?
     raise
   ensure
-    Discourse.disable_maintenance_mode
+    Discourse.disable_readonly_mode
   end
 end
