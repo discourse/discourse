@@ -31,7 +31,7 @@ Discourse.addInitializer(function() {
   Discourse.MessageBus.subscribe("/global/read-only", function (enabled) {
     Discourse.set("isReadOnly", enabled);
     if (enabled && !Discourse.User.currentProp("hideReadOnlyAlert")) {
-      bootbox.alert(I18n.t("read_only_mode_enabled"));
+      bootbox.alert(I18n.t("read_only_mode.enabled"));
     }
   });
 

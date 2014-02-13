@@ -411,7 +411,10 @@ en:
     loading: "Loading..."
     close: "Close"
     assets_changed_confirm: "Discourse has been updated, would you like to refresh to get the latest version?"
-    read_only_mode_enabled: "An administrator has enabled read-only mode. You can continue to browse the site but interations won't work properly."
+    read_only_mode:
+      enabled: "An administrator has enabled read-only mode. You can continue to browse the site but interations won't work properly."
+      login_disabled: "Login is disabled while the site is in read only mode."
+
     learn_more: "learn more..."
 
     year: 'year'
