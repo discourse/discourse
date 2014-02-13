@@ -91,7 +91,7 @@ class Notification < ActiveRecord::Base
 
   def self.recent_report(user, count = nil)
 
-    notifications = user.notifications.recent(count).includes(:topic)
+    notifications = user.notifications.recent(count).includes(:topic).to_a
 
     if notifications.present?
       notifications += user.notifications
@@ -99,17 +99,19 @@ class Notification < ActiveRecord::Base
         .where(read: false, notification_type: Notification.types[:private_message])
         .where('id < ?', notifications.last.id)
         .limit(count)
-    end
 
-    notifications.sort do |x,y|
-      if x.unread_pm? && !y.unread_pm?
-        -1
-      elsif y.unread_pm? && !x.unread_pm?
-        1
-      else
-        y.created_at <=> x.created_at
-      end
-    end.take(count)
+      notifications.sort do |x,y|
+        if x.unread_pm? && !y.unread_pm?
+          -1
+        elsif y.unread_pm? && !x.unread_pm?
+          1
+        else
+          y.created_at <=> x.created_at
+        end
+      end.take(count)
+    else
+      []
+    end
 
   end
 
