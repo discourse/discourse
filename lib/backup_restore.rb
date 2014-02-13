@@ -131,6 +131,7 @@ module BackupRestore
     $redis.client.reconnect
     Rails.cache.reconnect
     MessageBus.after_fork
+    Sidekiq.instance_variable_set(:@redis, nil)
   end
 
   def self.backup_tables_count
