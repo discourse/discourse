@@ -2,12 +2,15 @@ require_dependency 'guardian/category_guardian'
 require_dependency 'guardian/ensure_magic'
 require_dependency 'guardian/post_guardian'
 require_dependency 'guardian/topic_guardian'
+require_dependency 'guardian/user_guardian'
+
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
   include EnsureMagic
   include CategoryGuardian
   include PostGuardain
   include TopicGuardian
+  include UserGuardian
 
   class AnonymousUser
     def blank?; true; end
@@ -141,18 +144,6 @@ class Guardian
     user && is_staff?
   end
 
-  def can_block_user?(user)
-    user && is_staff? && not(user.staff?)
-  end
-
-  def can_unblock_user?(user)
-    user && is_staff?
-  end
-
-  def can_delete_user?(user)
-    user && is_staff? && !user.admin? && user.created_at > SiteSetting.delete_user_max_age.to_i.days.ago
-  end
-
   # Support sites that have to approve users
   def can_access_forum?
     return true unless SiteSetting.must_approve_users?
@@ -182,22 +173,6 @@ class Guardian
 
   def can_see_private_messages?(user_id)
     is_admin? || (authenticated? && @user.id == user_id)
-  end
-
-  def can_edit_user?(user)
-    is_me?(user) || is_staff?
-  end
-
-  def can_edit_username?(user)
-    return true if is_staff?
-    return false if SiteSetting.username_change_period <= 0
-    is_me?(user) && (user.post_count == 0 || user.created_at > SiteSetting.username_change_period.days.ago)
-  end
-
-  def can_edit_email?(user)
-    return true if is_staff?
-    return false unless SiteSetting.email_editable?
-    can_edit?(user)
   end
 
   def can_send_private_message?(target)

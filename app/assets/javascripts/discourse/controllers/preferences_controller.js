@@ -21,6 +21,12 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     return false;
   }.property('saving', 'name', 'email'),
 
+  deleteDisabled: function() {
+    if (!this.get('can_delete_account')) return true;
+    if (this.get('saving')) return true;
+    if (this.get('deleting')) return true;
+  }.property('deleting', 'saving', 'can_delete_account'),
+
   canEditName: function() {
     return Discourse.SiteSettings.enable_names;
   }.property(),
@@ -90,6 +96,35 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
           });
         });
       }
+    },
+
+    delete: function() {
+      this.set('deleting', true);
+      var self = this,
+          message = I18n.t('user.delete_account_confirm'),
+          model = this.get('model'),
+          buttons = [{
+        "label": I18n.t("cancel"),
+        "class": "cancel-inline",
+        "link":  true,
+        "callback": function() {
+          self.set('deleting', false);
+        }
+      }, {
+        "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("user.delete_account"),
+        "class": "btn btn-danger",
+        "callback": function() {
+          model.delete().then(function() {
+            bootbox.alert(I18n.t('user.deleted_yourself'), function() {
+              window.location.pathname = Discourse.getURL('/');
+            });
+          }, function() {
+            bootbox.alert(I18n.t('user.delete_yourself_not_allowed'));
+            self.set('deleting', false);
+          });
+        }
+      }];
+      bootbox.dialog(message, buttons, {"classes": "delete-account"});
     }
   }
 

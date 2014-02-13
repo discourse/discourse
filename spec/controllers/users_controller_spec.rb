@@ -1233,4 +1233,35 @@ describe UsersController do
     end
 
   end
+
+  describe '.destroy' do
+    it 'raises an error when not logged in' do
+      lambda { xhr :delete, :destroy, username: 'nobody' }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'while logged in' do
+      let!(:user) { log_in }
+
+      it 'raises an error when you cannot delete your account' do
+        Guardian.any_instance.stubs(:can_delete_user?).returns(false)
+        UserDestroyer.any_instance.expects(:destroy).never
+        xhr :delete, :destroy, username: user.username
+        response.should be_forbidden
+      end
+
+      it "raises an error when you try to delete someone else's account" do
+        UserDestroyer.any_instance.expects(:destroy).never
+        xhr :delete, :destroy, username: Fabricate(:user).username
+        response.should be_forbidden
+      end
+
+      it "deletes your account when you're allowed to" do
+        Guardian.any_instance.stubs(:can_delete_user?).returns(true)
+        UserDestroyer.any_instance.expects(:destroy).with(user, anything).returns(user)
+        xhr :delete, :destroy, username: user.username
+        response.should be_success
+      end
+    end
+  end
+
 end

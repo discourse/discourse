@@ -118,7 +118,7 @@ Discourse::Application.routes.draw do
   get "session/csrf" => "session#csrf"
   get "composer-messages" => "composer_messages#index"
 
-  resources :users, except: [:show, :update] do
+  resources :users, except: [:show, :update, :destroy] do
     collection do
       get "check_username"
       get "is_local_username"
@@ -157,6 +157,7 @@ Discourse::Application.routes.draw do
   post "users/:username/send_activation_email" => "users#send_activation_email", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: {site: /\w+/, id: /\d+/, sha: /[a-z0-9]{15,16}/i, extension: /\w{2,}/}
   post "uploads" => "uploads#create"

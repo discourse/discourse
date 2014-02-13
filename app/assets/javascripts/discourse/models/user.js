@@ -375,7 +375,22 @@ Discourse.User = Discourse.Model.extend({
 
   updateWatchedCategories: function() {
     this.set("watchedCategories", Discourse.Category.findByIds(this.watched_category_ids));
-  }.observes("watched_category_ids")
+  }.observes("watched_category_ids"),
+
+  canDeleteAccount: function() {
+    return this.get('can_delete_account') && ((this.get('reply_count')||0) + (this.get('topic_count')||0)) <= 1;
+  }.property('can_delete_account', 'reply_count', 'topic_count'),
+
+  delete: function() {
+    if (this.get('can_delete_account')) {
+      return Discourse.ajax("/users/" + this.get('username'), {
+        type: 'DELETE',
+        data: {context: window.location.pathname}
+      });
+    } else {
+      return Ember.RSVP.reject(I18n.t('user.delete_yourself_not_allowed'));
+    }
+  }
 
 });
 

@@ -3,16 +3,17 @@ class UserDestroyer
 
   class PostsExistError < RuntimeError; end
 
-  def initialize(staff)
-    @staff = staff
-    raise Discourse::InvalidParameters.new('staff user is nil') unless @staff and @staff.is_a?(User)
-    raise Discourse::InvalidAccess unless @staff.staff?
+  def initialize(actor)
+    @actor = actor
+    raise Discourse::InvalidParameters.new('acting user is nil') unless @actor and @actor.is_a?(User)
+    @guardian = Guardian.new(actor)
   end
 
   # Returns false if the user failed to be deleted.
   # Returns a frozen instance of the User if the delete succeeded.
   def destroy(user, opts={})
     raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
+    @guardian.ensure_can_delete_user!(user)
     raise PostsExistError if !opts[:delete_posts] && user.post_count != 0
     User.transaction do
       if opts[:delete_posts]
@@ -24,12 +25,11 @@ class UserDestroyer
               end
             end
           end
-          PostDestroyer.new(@staff, post).destroy
+          x = PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
           if post.topic and post.post_number == 1
             Topic.unscoped.where(id: post.topic.id).update_all(user_id: nil)
           end
         end
-        raise PostsExistError if user.reload.post_count != 0
       end
       user.destroy.tap do |u|
         if u
@@ -55,7 +55,7 @@ class UserDestroyer
             end
           end
 
-          StaffActionLogger.new(@staff).log_user_deletion(user, opts.slice(:context))
+          StaffActionLogger.new(@actor == user ? Discourse.system_user : @actor).log_user_deletion(user, opts.slice(:context))
           DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
         end

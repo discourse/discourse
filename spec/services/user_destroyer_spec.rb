@@ -15,18 +15,6 @@ describe UserDestroyer do
     it 'raises an error when user is not a User' do
       expect { UserDestroyer.new(5) }.to raise_error(Discourse::InvalidParameters)
     end
-
-    it 'raises an error when user is a regular user' do
-      expect { UserDestroyer.new( Fabricate(:user) ) }.to raise_error(Discourse::InvalidAccess)
-    end
-
-    it 'returns an instance of UserDestroyer when user is a moderator' do
-      UserDestroyer.new( Fabricate(:moderator) ).should be_a(UserDestroyer)
-    end
-
-    it 'returns an instance of UserDestroyer when user is an admin' do
-      UserDestroyer.new( Fabricate(:admin) ).should be_a(UserDestroyer)
-    end
   end
 
   describe 'destroy' do
@@ -41,6 +29,10 @@ describe UserDestroyer do
 
     it 'raises an error when user is not a User' do
       expect { UserDestroyer.new(@admin).destroy('nothing') }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when regular user tries to delete another user' do
+      expect { UserDestroyer.new(@user).destroy(Fabricate(:user)) }.to raise_error(Discourse::InvalidAccess)
     end
 
     shared_examples "successfully destroy a user" do
@@ -86,6 +78,13 @@ describe UserDestroyer do
       end
     end
 
+    context 'user deletes self' do
+      let(:destroy_opts) { {delete_posts: true} }
+      subject(:destroy) { UserDestroyer.new(@user).destroy(@user, destroy_opts) }
+
+      include_examples "successfully destroy a user"
+    end
+
     context 'user has posts' do
       let!(:topic_starter) { Fabricate(:user) }
       let!(:topic) { Fabricate(:topic, user: topic_starter) }
@@ -116,29 +115,45 @@ describe UserDestroyer do
 
       context "delete_posts is true" do
         let(:destroy_opts) { {delete_posts: true} }
-        subject(:destroy) { UserDestroyer.new(@admin).destroy(@user, destroy_opts) }
 
-        include_examples "successfully destroy a user"
-        include_examples "email block list"
+        context "staff deletes user" do
+          subject(:destroy) { UserDestroyer.new(@admin).destroy(@user, destroy_opts) }
 
-        it "deletes the posts" do
-          destroy
-          post.reload.deleted_at.should_not be_nil
-          post.user_id.should be_nil
+          include_examples "successfully destroy a user"
+          include_examples "email block list"
+
+          it "deletes the posts" do
+            destroy
+            post.reload.deleted_at.should_not be_nil
+            post.user_id.should be_nil
+          end
+
+          it "does not delete topics started by others in which the user has replies" do
+            destroy
+            topic.reload.deleted_at.should be_nil
+            topic.user_id.should_not be_nil
+          end
+
+          it "deletes topics started by the deleted user" do
+            spammer_topic = Fabricate(:topic, user: @user)
+            spammer_post = Fabricate(:post, user: @user, topic: spammer_topic)
+            destroy
+            spammer_topic.reload.deleted_at.should_not be_nil
+            spammer_topic.user_id.should be_nil
+          end
         end
 
-        it "does not delete topics started by others in which the user has replies" do
-          destroy
-          topic.reload.deleted_at.should be_nil
-          topic.user_id.should_not be_nil
-        end
+        context "users deletes self" do
+          subject(:destroy) { UserDestroyer.new(@user).destroy(@user, destroy_opts) }
 
-        it "deletes topics started by the deleted user" do
-          spammer_topic = Fabricate(:topic, user: @user)
-          spammer_post = Fabricate(:post, user: @user, topic: spammer_topic)
-          destroy
-          spammer_topic.reload.deleted_at.should_not be_nil
-          spammer_topic.user_id.should be_nil
+          include_examples "successfully destroy a user"
+          include_examples "email block list"
+
+          it "deletes the posts" do
+            destroy
+            post.reload.deleted_at.should_not be_nil
+            post.user_id.should be_nil
+          end
         end
       end
     end

@@ -354,11 +354,9 @@
   }
 }
 
-.flagging-delete-spammer, .delete-all-posts {
-  .modal-footer .cancel {
-    text-decoration: underline;
-    margin-left: 10px;
-  }
+.modal-footer .cancel-inline {
+  text-decoration: underline;
+  margin-left: 10px;
 }
 
 .permission-list{

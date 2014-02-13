@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect, :avatar]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_avatar, :toggle_avatar]
+  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_avatar, :toggle_avatar, :destroy]
   before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -339,6 +339,13 @@ class UsersController < ApplicationController
     user.save!
 
     render nothing: true
+  end
+
+  def destroy
+    @user = fetch_user_from_params
+    guardian.ensure_can_delete_user!(@user)
+    UserDestroyer.new(current_user).destroy(@user, {delete_posts: true, context: params[:context]})
+    render json: success_json
   end
 
   private

@@ -1118,31 +1118,50 @@ describe Guardian do
 
   describe "can_delete_user?" do
     it "is false without a logged in user" do
-      Guardian.new(nil).can_delete_user?(user).should be_false
+      Guardian.new(nil).can_delete_user?(user).should == false
     end
 
     it "is false without a user to look at" do
-      Guardian.new(admin).can_delete_user?(nil).should be_false
+      Guardian.new(admin).can_delete_user?(nil).should == false
     end
 
     it "is false for regular users" do
-      Guardian.new(user).can_delete_user?(coding_horror).should be_false
+      Guardian.new(user).can_delete_user?(coding_horror).should == false
+    end
+
+    context "delete myself" do
+      let(:myself) { Fabricate.build(:user, created_at: 6.months.ago) }
+      subject      { Guardian.new(myself).can_delete_user?(myself) }
+
+      it "is true to delete myself and I have never made a post" do
+        subject.should == true
+      end
+
+      it "is true to delete myself and I have only made 1 post" do
+        myself.stubs(:post_count).returns(1)
+        subject.should == true
+      end
+
+      it "is false to delete myself and I have made 2 posts" do
+        myself.stubs(:post_count).returns(2)
+        subject.should == false
+      end
     end
 
     shared_examples "can_delete_user examples" do
       let(:deletable_user) { Fabricate.build(:user, created_at: 5.minutes.ago) }
 
       it "is true if user is not an admin and is not too old" do
-        Guardian.new(actor).can_delete_user?(deletable_user).should be_true
+        Guardian.new(actor).can_delete_user?(deletable_user).should == true
       end
 
       it "is false if user is an admin" do
-        Guardian.new(actor).can_delete_user?(another_admin).should be_false
+        Guardian.new(actor).can_delete_user?(another_admin).should == false
       end
 
       it "is false if user is too old" do
         SiteSetting.stubs(:delete_user_max_age).returns(7)
-        Guardian.new(actor).can_delete_user?(Fabricate(:user, created_at: 8.days.ago)).should be_false
+        Guardian.new(actor).can_delete_user?(Fabricate(:user, created_at: 8.days.ago)).should == false
       end
     end
 
