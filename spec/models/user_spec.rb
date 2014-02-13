@@ -24,7 +24,6 @@ describe User do
   it { should have_one(:facebook_user_info).dependent(:destroy) }
   it { should have_one(:twitter_user_info).dependent(:destroy) }
   it { should have_one(:github_user_info).dependent(:destroy) }
-  it { should have_one(:cas_user_info).dependent(:destroy) }
   it { should have_one(:oauth2_user_info).dependent(:destroy) }
   it { should have_one(:user_stat).dependent(:destroy) }
   it { should belong_to(:approved_by) }

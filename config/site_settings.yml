@@ -103,11 +103,6 @@ users:
     default: true
   facebook_app_id: ''
   facebook_app_secret: ''
-  enable_cas_logins:
-    client: true
-    default: false
-  cas_hostname: ''
-  cas_domainname: ''
   enable_github_logins:
     client: true
     default: false

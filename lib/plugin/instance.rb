@@ -216,7 +216,7 @@ class Plugin::Instance
       spec = Gem::Specification.load spec_file
       spec.activate
       unless opts[:require] == false
-        require name
+        require opts[:require_name] ? opts[:require_name] : name
       end
     else
       puts "You are specifying the gem #{name} in #{path}, however it does not exist!"
