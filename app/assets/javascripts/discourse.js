@@ -62,7 +62,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     return Discourse.SiteSettings.post_menu.split("|").map(function(i) {
       return (i.replace(/\+/, '').capitalize());
     });
-  }.property('Discourse.SiteSettings.post_menu'),
+  }.property(),
 
   notifyTitle: function(count) {
     this.set('notifyCount', count);
