@@ -2,13 +2,14 @@ require_dependency "backup_restore"
 
 class Admin::BackupsController < Admin::AdminController
 
-  skip_before_filter :check_xhr, only: [:index, :show]
+  skip_before_filter :check_xhr, only: [:index, :show, :logs]
 
   def index
     respond_to do |format|
       format.html do
         store_preloaded("backups", MultiJson.dump(serialize_data(Backup.all, BackupSerializer)))
         store_preloaded("operations_status", MultiJson.dump(BackupRestore.operations_status))
+        store_preloaded("logs", MultiJson.dump(BackupRestore.logs))
         render "default/empty"
       end
       format.json do
@@ -55,6 +56,7 @@ class Admin::BackupsController < Admin::AdminController
 
   def logs
     store_preloaded("operations_status", MultiJson.dump(BackupRestore.operations_status))
+    store_preloaded("logs", MultiJson.dump(BackupRestore.logs))
     render "default/empty"
   end
 

@@ -16,12 +16,15 @@ describe Admin::BackupsController do
 
       context "html format" do
 
-        it "preloads both backups and operations_status" do
+        it "preloads important data" do
           Backup.expects(:all).returns([])
           subject.expects(:store_preloaded).with("backups", "[]")
 
           BackupRestore.expects(:operations_status).returns({})
           subject.expects(:store_preloaded).with("operations_status", "{}")
+
+          BackupRestore.expects(:logs).returns([])
+          subject.expects(:store_preloaded).with("logs", "[]")
 
           xhr :get, :index, format: :html
 
@@ -134,15 +137,17 @@ describe Admin::BackupsController do
 
     describe ".logs" do
 
-      it "preloads operations_status" do
+      it "preloads important data" do
         BackupRestore.expects(:operations_status).returns({})
         subject.expects(:store_preloaded).with("operations_status", "{}")
+
+        BackupRestore.expects(:logs).returns([])
+        subject.expects(:store_preloaded).with("logs", "[]")
 
         xhr :get, :logs, format: :html
 
         response.should be_success
       end
-
     end
 
     describe ".restore" do

@@ -7,6 +7,7 @@ module BackupRestore
 
   DUMP_FILE = "dump.sql"
   METADATA_FILE = "meta.json"
+  LOGS_CHANNEL = "/admin/backups/logs"
 
   def self.backup!(user_id, publish_to_message_bus = false)
     exporter = Export::Exporter.new(user_id, publish_to_message_bus)
@@ -32,8 +33,10 @@ module BackupRestore
   end
 
   def self.mark_as_running!
-    # TODO: should acquire a lock and raise an exception if already running!
+    # TODO: for more safety, it should acquire a lock
+    #       and raise an exception if already running!
     $redis.set(running_key, "1")
+    save_start_logs_message_id
   end
 
   def self.is_operation_running?
@@ -57,6 +60,11 @@ module BackupRestore
       is_operation_running: is_operation_running?,
       can_rollback: can_rollback?,
     }
+  end
+
+  def self.logs
+    id = start_logs_message_id
+    MessageBus.backlog(LOGS_CHANNEL, id).map { |m| m.data }
   end
 
   def self.current_version
@@ -94,6 +102,19 @@ module BackupRestore
 
   def self.clear_shutdown_signal!
     $redis.del(shutdown_signal_key)
+  end
+
+  def self.save_start_logs_message_id
+    id = MessageBus.last_id(LOGS_CHANNEL)
+    $redis.set(start_logs_message_id_key, id)
+  end
+
+  def self.start_logs_message_id
+    $redis.get(start_logs_message_id_key).to_i
+  end
+
+  def self.start_logs_message_id_key
+    "start_logs_message_id"
   end
 
   def self.start!(runner)

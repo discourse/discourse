@@ -296,7 +296,7 @@ module Export
     def publish_log(message)
       return unless @publish_to_message_bus
       data = { timestamp: Time.now, operation: "backup", message: message }
-      MessageBus.publish("/admin/backups/logs", data, user_ids: [@user_id])
+      MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
     end
 
   end
