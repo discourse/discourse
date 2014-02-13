@@ -223,10 +223,6 @@ GEM
     omniauth (1.1.4)
       hashie (>= 1.2, < 3)
       rack
-    omniauth-cas (1.0.4)
-      addressable (~> 2.3)
-      nokogiri (~> 1.6)
-      omniauth (~> 1.1.0)
     omniauth-facebook (1.4.1)
       omniauth-oauth2 (~> 1.1.0)
     omniauth-github (1.1.1)
@@ -445,7 +441,6 @@ DEPENDENCIES
   nokogiri
   oj
   omniauth
-  omniauth-cas
   omniauth-facebook
   omniauth-github
   omniauth-oauth2
