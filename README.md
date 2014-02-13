@@ -10,6 +10,14 @@ onebox
 
 Onebox is a library for turning media URLs into simple HTML previews of the resource.
 
+Onebox currently has support for page, image, and video URLs for many popular sites.
+
+It's great if you want users to input URLs and have your application convert them into
+rich previews for display. For example, a link to a YouTube video would be automatically
+converted into a video player.
+
+It was originally created for [Discourse](http://discourse.org) but has since been
+extracted into this convenient gem for all to use!
 
 Usage
 =====
@@ -66,10 +74,14 @@ preview = Onebox.preview(url)
 ```
 
 
-Setup
-=====
+Adding Support for a new URL
+============================
 
-  1. Create new onebox engine
+  1. Check if the site supports [oEmbed](http://oembed.com/) or [Open Graph](https://developers.facebook.com/docs/opengraph/).
+     If it does, you can probably get away with just whitelisting the URL in `Onebox::Engine::WhitelistedGenericOnebox`.
+     If the site does not support open standards, you can create a new engine.
+
+  2. Create new onebox engine
 
     ``` ruby
     # in lib/onebox/engine/name_onebox.rb
@@ -95,7 +107,7 @@ Setup
     end
     ```
 
-  2. Create new onebox spec
+  3. Create new onebox spec
 
     ``` ruby
     # in spec/lib/onebox/engine/name_spec.rb
@@ -127,7 +139,7 @@ Setup
     end
     ```
 
-  3. Create new handlebars template
+  4. Create new handlebars template
 
     ``` html
     # in templates/name.handlebars
@@ -141,52 +153,18 @@ Setup
     </div>
     ```
 
-  4. Create new fixture from HTML response
+  5. Create new fixture from HTML response
 
     ``` bash
     curl --output spec/fixtures/oneboxname.response -L -X -GET http://example.com
     ```
 
-  5. Require in Engine module
+  6. Require in Engine module
 
     ``` ruby
     # in lib/onebox/engine/engine.rb
     require_relative "engine/name_onebox"
     ```
-
-Onebox currently has support for page, image, and video URLs from these sites:
-
-  - Amazon
-  - Android App Store
-  - Apple Store
-  - BlipTV
-  - Clikthrough
-  - College Humor
-  - Dailymotion
-  - Dotsub
-  - Flickr
-  - Funny or Die
-  - GitHub
-    - Blob
-    - Commit
-    - Gist
-    - Pull Request
-  - Hulu
-  - Imgur
-  - Kinomap
-  - NFB
-  - Open Graph
-  - Qik
-  - Revision
-  - Rotten Tomatoes
-  - Slideshare
-  - SmugMug
-  - SoundCloud
-  - Stack Exchange
-  - TED
-  - Twitter
-  - Wikipedia
-  - yFrog
 
 
 Installing
@@ -194,7 +172,7 @@ Installing
 
 Add this line to your application's Gemfile:
 
-    gem "onebox". "~> 1.0"
+    gem "onebox". "~> 1.2"
 
 And then execute:
 
