@@ -24,8 +24,8 @@ ja:
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
 
-  site_under_maintenance: 'このサイトは現在メンテナンス中です。'
-  operation_already_running: "%{operation} が現在起動中のため、新たな %{operation} ジョブをスタートできません。"
+  backup:
+    operation_already_running: "%{operation} が現在起動中のため、新たな %{operation} ジョブをスタートできません。"
 
   too_many_mentions:
     zero: "申し訳ありませんが、このポストにおいて他のユーザをメンションできません。"

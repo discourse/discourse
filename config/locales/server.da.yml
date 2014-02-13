@@ -24,8 +24,8 @@ da:
   via: "%{username} via %{site_name}"
   is_reserved: "er reservet"
 
-  site_under_maintenance: 'Sitet bliver vedligeholdt i øjeblikket.'
-  operation_already_running: "Der kører allerede en %{operation}. Kan ikke starte et nyt %{operation} job lige nu."
+  backup:
+    operation_already_running: "Der kører allerede en %{operation}. Kan ikke starte et nyt %{operation} job lige nu."
 
   too_many_replies:
     one: "Beklager, men nye brugere kan kun skrive 1 svar i hvert emne til at starte med."

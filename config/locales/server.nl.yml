@@ -27,8 +27,8 @@ nl:
   via: "%{username} via %{site_name}"
   is_reserved: is gereserveerd
 
-  site_under_maintenance: De site is momenteel in onderhoud.
-  operation_already_running: "Er draait al een %{operation}. Kan nu niet een nieuwe %{operation} starten."
+  backup:
+    operation_already_running: "Er draait al een %{operation}. Kan nu niet een nieuwe %{operation} starten."
 
   too_many_replies:
     one: "Sorry, nieuwe gebruikers mogen één reactie plaatsen in hetzelfde topic."

@@ -24,8 +24,8 @@ ko:
   via: "%{site_name}의 %{username}"
   is_reserved: "예약됨"
 
-  site_under_maintenance: '사이트가 현재 유지보수 중입니다.'
-  operation_already_running: "현재 %{operation} 작업중입니다. %{operation} 작업을 지금 시작할 수 없습니다."
+  backup:
+    operation_already_running: "현재 %{operation} 작업중입니다. %{operation} 작업을 지금 시작할 수 없습니다."
 
   too_many_mentions:
     zero: "죄송합니다. 당신은 다른 사용자를 언급할 수 없습니다."

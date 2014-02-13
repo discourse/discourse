@@ -17,8 +17,8 @@ pseudo:
     ƀéšť νíéŵéď ŵíťĥ ǰáνáŠčříƿť éɳáƀłéď ]]'
   via: '[[ %{username} νíá %{site_name} ]]'
   is_reserved: '[[ íš řéšéřνéď ]]'
-  site_under_maintenance: '[[ Šíťé íš čůřřéɳťłý ůɳďéřǧóíɳǧ ɱáíɳťéɳáɳčé. ]]'
-  operation_already_running: '[[ Áɳ %{operation} íš čůřřéɳťłý řůɳɳíɳǧ. Čáɳ''ť šťářť
+  backup:
+    operation_already_running: '[[ Áɳ %{operation} íš čůřřéɳťłý řůɳɳíɳǧ. Čáɳ''ť šťářť
     á ɳéŵ %{operation} ʲóƀ říǧĥť ɳóŵ. ]]'
   too_many_replies: '[[ Šóřřý ýóů čáɳ''ť řéƿłý áɳý ɱóřé ťíɱéš íɳ ťĥáť ťóƿíč. ]]'
   too_many_mentions:

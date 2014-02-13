@@ -24,8 +24,8 @@ ru:
   powered_by_html: 'При поддержке <a href="http://www.discourse.org">Discourse</a>, лучше всего использовать с включенным JavaScript'
   via: '%{username} на %{site_name}'
   is_reserved: 'зарезервировано'
-  site_under_maintenance: 'В данный момент сайт находится на обслуживании.'
-  operation_already_running: 'Действие %{operation} уже выполняется.  Невозможно начать новое действие %{operation} прямо сейчас.'
+  backup:
+    operation_already_running: 'Действие %{operation} уже выполняется.  Невозможно начать новое действие %{operation} прямо сейчас.'
   too_many_mentions:
     zero: 'Извините, но вы не можете упоминать других пользователей.'
     one: 'Извините, но вы можете упоминать только одного пользователя в сообщении.'

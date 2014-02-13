@@ -24,8 +24,8 @@ cs:
   via: "%{username} přes %{site_name}"
   is_reserved: "je rezervováno"
 
-  site_under_maintenance: 'Na webu v tuto chvíli probíhají úpravy.'
-  operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
+  backup:
+    operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
 
   too_many_mentions:
     zero: "Bohužel, nemůžete zmiňovat ostatní uživatele."

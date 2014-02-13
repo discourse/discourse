@@ -18,8 +18,8 @@ it:
   via: "%{username} via %{site_name}"
   is_reserved: "è riservato"
 
-  site_under_maintenance: 'Il sito è momentaneamente in manutenzione.'
-  operation_already_running: "Una %{operation} è in esecuzione. Non è possibile avviare una nuova %{operation} adesso."
+  backup:
+    operation_already_running: "Una %{operation} è in esecuzione. Non è possibile avviare una nuova %{operation} adesso."
 
   too_many_mentions:
     zero: "Spiacente, non puoi menzionare altri utenti."

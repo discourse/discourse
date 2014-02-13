@@ -24,8 +24,8 @@ pt_BR:
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
 
-  site_under_maintenance: 'Este site está sob manutenção no momento.'
-  operation_already_running: "Uma tarefa %{operation} está rodando atualmente. Impossível iniciar uma nova tarefa %{operation} agora."
+  backup:
+    operation_already_running: "Uma tarefa %{operation} está rodando atualmente. Impossível iniciar uma nova tarefa %{operation} agora."
 
   too_many_mentions:
     zero: "Desculpe, você não pode mencionar outros usuários."

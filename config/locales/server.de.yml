@@ -24,8 +24,8 @@ de:
   via: "%{username} via %{site_name}"
   is_reserved: "ist reserviert"
 
-  site_under_maintenance: 'Die Seite wird momentan gewartet.'
-  operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
+  backup:
+    operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
 
   too_many_mentions:
     zero: "Entschuldige, du kannst andere Nutzer nicht erwähnen."

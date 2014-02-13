@@ -18,8 +18,8 @@ zh_TW:
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留權利"
 
-  site_under_maintenance: '網站維護中。'
-  operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
+  backup:
+    operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
 
   too_many_mentions:
     zero: "抱歉, 你無法提及(@)用戶。"
