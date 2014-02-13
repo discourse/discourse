@@ -22,7 +22,7 @@ module BackupRestore
     raise BackupRestore::OperationRunningError if BackupRestore.is_operation_running?
     if can_rollback?
       rename_schema("backup", "public")
-      establish_app
+      after_fork
     end
   end
 
