@@ -160,7 +160,8 @@ module Export
 
       [ "PGPASSWORD=#{password}",           # pass the password to pg_dump
         "pg_dump",                          # the pg_dump command
-        "--exclude-schema=backup,restore",  # exclude both backup & restore schemes
+        "--exclude-schema=backup",          # exclude backup schema
+        "--exclude-schema=restore",         # exclude restore schema
         "--file='#{@dump_filename}'",       # output to the dump.sql file
         "--no-owner",                       # do not output commands to set ownership of objects
         "--no-privileges",                  # prevent dumping of access privileges
