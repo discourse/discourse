@@ -71,7 +71,7 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
       puts '', 'The filename argument was missing.', ''
       usage
     rescue Import::ImportDisabledError
-      puts '', 'Imports are not allowed.', 'An admin needs to set allow_import to true in the site settings before imports can be run.', ''
+      puts '', 'Imports are not allowed.', 'An admin needs to set allow_restore to true in the site settings before imports can be run.', ''
       puts 'Import cancelled.', ''
     end
   end

@@ -498,7 +498,7 @@ it:
     github_client_id: "Client id per autenticazione Github, ottenibile da https://github.com/settings/applications"
     github_client_secret: "Client secret per autenticazione Github, ottenibile da https://github.com/settings/applications"
 
-    allow_import: "Abilita l'importazione, che può sostituire TUTTI i dati presenti nel sito; non modificare se non hai intenzione di importare dati"
+    allow_restore: "Abilita l'importazione, che può sostituire TUTTI i dati presenti nel sito; non modificare se non hai intenzione di importare dati"
 
     active_user_rate_limit_secs: "Quanto frequentemente viene aggiornato il campo 'last_seen_at' field, in secondi"
     previous_visit_timeout_hours: "Durata di una visita prima che venga considerata la visita 'precedente', in ore"

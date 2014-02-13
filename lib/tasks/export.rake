@@ -16,7 +16,7 @@ task 'import', [:input_filename] => :environment do |t, args|
     puts '', 'The filename argument was missing.', '', 'Usage:', ''
     puts '  rake import[/path/to/export.json.gz]', ''
   rescue Import::ImportDisabledError
-    puts '', 'Imports are not allowed.', 'An admin needs to set allow_import to true in the site settings before imports can be run.', ''
+    puts '', 'Imports are not allowed.', 'An admin needs to set allow_restore to true in the site settings before imports can be run.', ''
     puts 'Import cancelled.', ''
   end
 end
@@ -48,12 +48,12 @@ end
 
 desc 'Allow imports'
 task 'import:enable' => :environment do |t|
-  SiteSetting.allow_import = true
+  SiteSetting.allow_restore = true
   puts 'Imports are now permitted.  Disable them with rake import:disable'
 end
 
 desc 'Forbid imports'
 task 'import:disable' => :environment do |t|
-  SiteSetting.allow_import = false
+  SiteSetting.allow_restore = false
   puts 'Imports are now forbidden.'
 end

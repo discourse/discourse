@@ -518,7 +518,7 @@ zh_TW:
     github_client_id: "Github 帳號驗證的用戶端帳號（Client id），到 https://github.com/settings/applications 來註冊獲取"
     github_client_secret: "Github 帳號驗證的用戶端密碼（Client secret），到 https://github.com/settings/applications 來註冊獲取"
 
-    allow_import: "允許導入資料，這將替換全站資料。除非你計畫導入資料，否則請保持設置為false"
+    allow_restore: "允許導入資料，這將替換全站資料。除非你計畫導入資料，否則請保持設置為false"
 
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"
     previous_visit_timeout_hours: "系統判斷一次瀏覽之後多少小時後為“上一次”瀏覽"

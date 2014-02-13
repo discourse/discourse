@@ -588,7 +588,7 @@ ru:
     enable_github_logins: 'Разрешить идентификацию с Github, требует github_client_id и github_client_secret'
     github_client_id: 'Клиентский id для идентификации с Github, зарегистрированный на https://github.com/settings/applications'
     github_client_secret: 'Клиентский секрет для идентификации с Github, зарегистрированный на https://github.com/settings/applications'
-    allow_import: 'Позволить импорт, который может заменить ВСЕ данные сайта. Оставьте false, если не планируете импортировать данные'
+    allow_restore: 'Позволить импорт, который может заменить ВСЕ данные сайта. Оставьте false, если не планируете импортировать данные'
     active_user_rate_limit_secs: 'Как часто мы обновляем поле ''last_seen_at'', в секундах'
     previous_visit_timeout_hours: 'Как долго должно длиться посещение сайта, чтобы мы посчитали его «предыдущим посещением», в часах'
     rate_limit_create_topic: 'После создания темы пользователи должны выждать указанное количество секунд перед созданием новой темы'
