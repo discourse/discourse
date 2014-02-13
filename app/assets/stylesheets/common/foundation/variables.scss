@@ -37,7 +37,7 @@ $success: green !default;
 
 
 $primary_medium: lighten($primary, 35%) !default; //dark grey
-$primary_light: lighten($primary, 50%) !default; // grey 
+$primary_light: lighten($primary, 50%) !default; // grey
 $primary_lighter: lighten($primary, 60%) !default; //light grey
 $primary_lightest: lighten($primary, 76%) !default; //lighter grey
 
@@ -46,7 +46,7 @@ $tertiary_light: lighten($tertiary, 30%) !default; // light blue
 $tertiary_dark: darken($tertiary, 10%) !default; // dark blue
 
 $highlight_danger_light: lighten($highlight_danger, 35%) !default; //lightest red
-$highlight_danger_dark: darken($highlight_danger, 30%) !default; //dark red
+$highlight_danger_dark: darken($highlight_danger, 10%) !default; //dark red
 $highlight_danger_darker: darken($highlight_danger, 60%) !default; //dark red
 
 $heart_light: lighten($heart, 22%) !default; //light pink
@@ -147,7 +147,7 @@ $modal-close-button-color: $primary_light;
 
 $nav-like-button-color-hover: $heart !default;
 $nav-like-button-background-color-hover: $heart_light !default;
-$nav-like-button-color-active: $heart_dark !default; 
+$nav-like-button-color-active: $heart_dark !default;
 $nav-like-button-background-color-active: $heart_light !default;
 
 // Topic list
