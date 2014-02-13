@@ -21,11 +21,8 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     return false;
   }.property('saving', 'name', 'email'),
 
-  deleteDisabled: function() {
-    if (!this.get('can_delete_account')) return true;
-    if (this.get('saving')) return true;
-    if (this.get('deleting')) return true;
-  }.property('deleting', 'saving', 'can_delete_account'),
+  cannotDeleteAccount: Em.computed.not('can_delete_account'),
+  deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
 
   canEditName: function() {
     return Discourse.SiteSettings.enable_names;
