@@ -12,6 +12,7 @@
   td {border-bottom: 1px solid $primary_lighter; border-top: 1px solid $primary_lighter;}
   tr:hover { background-color: darken($secondary, 2.5%); }
   tr.selected { background-color: lighten($tertiary, 58%); }
+  .filters input { margin-bottom: 0px; }
 }
 
 .content-list li a span.count {

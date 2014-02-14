@@ -1382,7 +1382,7 @@ en:
       email:
         title: "Email"
         settings: "Settings"
-        logs: "Logs"
+        sent: "Sent"
         skipped: "Skipped"
         sent_at: "Sent At"
         time: "Time"
@@ -1402,6 +1402,15 @@ en:
         last_seen_user: "Last Seen User:"
         reply_key: "Reply Key"
         skip_reason: "Skip Reason"
+        logs:
+          none: "No logs found."
+          filters:
+            title: "Filter"
+            user_placeholder: "username"
+            address_placeholder: "em@il.com"
+            type_placeholder: "digest, signup..."
+            reply_key_placeholder: ""
+            skip_reason_placeholder: "reason"
 
       logs:
         title: "Logs"

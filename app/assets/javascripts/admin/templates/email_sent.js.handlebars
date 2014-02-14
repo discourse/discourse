@@ -9,7 +9,15 @@
     </tr>
   </thead>
 
-  {{#if model.length}}
+  <tr class="filters">
+    <td>{{i18n admin.email.logs.filters.title}}</td>
+    <td>{{textField value=filter.user placeholderKey="admin.email.logs.filters.user_placeholder"}}</td>
+    <td>{{textField value=filter.address placeholderKey="admin.email.logs.filters.address_placeholder"}}</td>
+    <td>{{textField value=filter.type placeholderKey="admin.email.logs.filters.type_placeholder"}}</td>
+    <td>{{textField value=filter.reply_key placeholderKey="admin.email.logs.filters.reply_key_placeholder"}}</td>
+  </tr>
+
+  {{#if model}}
     {{#groupedEach model}}
       <tr>
         <td>{{unboundDate created_at}}</td>
@@ -26,6 +34,8 @@
         <td>{{reply_key}}</td>
       </tr>
     {{/groupedEach}}
+  {{else}}
+    <tr><td colspan="5">{{i18n admin.email.logs.none}}</td></tr>
   {{/if}}
 
 </table>
