@@ -119,6 +119,8 @@ Discourse::Application.routes.draw do
         put "readonly" => "backups#readonly"
       end
     end
+    
+    get "memory_stats"=> "diagnostics#memory_stats", constraints: AdminConstraint.new
 
   end # admin namespace
 
