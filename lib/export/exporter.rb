@@ -153,12 +153,15 @@ module Export
 
     def build_pg_dump_command
       db_conf = Rails.configuration.database_configuration[Rails.env]
-      host = db_conf["host"] || "localhost"
+      host = db_conf["host"]
       password = db_conf["password"]
       username = db_conf["username"] || "postgres"
       database = db_conf["database"]
 
-      [ "PGPASSWORD=#{password}",           # pass the password to pg_dump
+      password_argument = "PGPASSWORD=#{password}" if password.present?
+      host_argument     = "--host=#{host}"         if host.present?
+
+      [ password_argument,                  # pass the password to pg_dump
         "pg_dump",                          # the pg_dump command
         "--exclude-schema=backup",          # exclude backup schema
         "--exclude-schema=restore",         # exclude restore schema
@@ -166,7 +169,7 @@ module Export
         "--no-owner",                       # do not output commands to set ownership of objects
         "--no-privileges",                  # prevent dumping of access privileges
         "--verbose",                        # specifies verbose mode
-        "--host=#{host}",                   # the hostname to connect to
+        host_argument,                      # the hostname to connect to
         "--username=#{username}",           # the username to connect as
         database                            # the name of the database to dump
       ].join(" ")
