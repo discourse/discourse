@@ -4,6 +4,7 @@ require_dependency 'discourse'
 require_dependency 'custom_renderer'
 require_dependency 'archetype'
 require_dependency 'rate_limiter'
+require_dependency 'googlebot_detection'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
@@ -35,6 +36,12 @@ class ApplicationController < ActionController::Base
   before_filter :preload_json
   before_filter :check_xhr
   before_filter :redirect_to_login_if_required
+
+  layout :set_layout
+
+  def set_layout
+    GooglebotDetection.googlebot?(request.user_agent) ? 'googlebot' : 'application'
+  end
 
   rescue_from Exception do |exception|
     unless [ActiveRecord::RecordNotFound,
