@@ -524,6 +524,7 @@ en:
       cancel: "Cancel"
       create_topic: "Create Topic"
       create_pm: "Create Private Message"
+      title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
       title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
