@@ -26,9 +26,6 @@ a {
   &:hover {
     color: $link-color-hover;
   }
-  &:focus {
-    outline: 0;
-  }
   &:active {
     color: $link-color-active;
   }
