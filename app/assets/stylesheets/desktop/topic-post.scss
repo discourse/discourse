@@ -147,7 +147,6 @@ nav.post-controls {
     border: none;
     margin-left: 3px;
     transition: all linear 0.15s;
-    outline: none;
          &:hover {
           background: lighten($primary_light, 20%);
           color: $primary_medium;
@@ -803,7 +802,6 @@ button.show-replies {
 
 .btn-group .dropdown-toggle:active,
 .btn-group.open .dropdown-toggle {
-  outline: 0;
 }
 
 .dropdown {
@@ -814,7 +812,6 @@ button.show-replies {
 }
 .dropdown-toggle:active,
 .open .dropdown-toggle {
-  outline: 0;
 }
 .caret {
   display: inline-block;

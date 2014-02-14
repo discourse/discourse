@@ -423,18 +423,9 @@ body {
       height: auto;
     }
     &:focus {
-      outline: thin dotted $primary;
-      outline: 5px auto -webkit-focus-ring-color;
-      outline-offset: -2px;
     }
   }
-  input {
-    &[type="file"]:focus, &[type="radio"]:focus, &[type="checkbox"]:focus {
-      outline: thin dotted $primary;
-      outline: 5px auto -webkit-focus-ring-color;
-      outline-offset: -2px;
-    }
-  }
+ 
   .radio, .checkbox {
     min-height: 18px;
     padding-left: 18px;
