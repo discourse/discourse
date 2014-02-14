@@ -812,12 +812,6 @@ html4.ATTRIBS = {
   'a::tabindex': 0,
   'a::target': 10,
   'a::type': 0,
-  'audio::controls': 0,
-  'audio::loop': 0,
-  'audio::mediagroup': 5,
-  'audio::muted': 0,
-  'audio::preload': 0,
-  'audio::src': 1,
   'bdo::dir': 0,
   'blockquote::cite': 1,
   'br::clear': 0,
@@ -903,15 +897,6 @@ html4.ATTRIBS = {
   'track::srclang': 0,
   'ul::compact': 0,
   'ul::type': 0,
-  'video::controls': 0,
-  'video::height': 0,
-  'video::loop': 0,
-  'video::mediagroup': 5,
-  'video::muted': 0,
-  'video::poster': 1,
-  'video::preload': 0,
-  'video::src': 1,
-  'video::width': 0
 };
 html4[ 'ATTRIBS' ] = html4.ATTRIBS;
 html4.eflags = {
@@ -932,7 +917,6 @@ html4.ELEMENTS = {
   'acronym': 0,
   'address': 0,
   'aside': 0,
-  'audio': 0,
   'b': 0,
   'base': 274,
   'bdi': 0,
@@ -1003,7 +987,6 @@ html4.ELEMENTS = {
   'script': 84,
   'section': 0,
   'small': 0,
-  'source': 2,
   'span': 0,
   'strike': 0,
   'strong': 0,
@@ -1025,7 +1008,6 @@ html4.ELEMENTS = {
   'u': 0,
   'ul': 0,
   'var': 0,
-  'video': 0,
   'wbr': 2
 };
 html4[ 'ELEMENTS' ] = html4.ELEMENTS;
