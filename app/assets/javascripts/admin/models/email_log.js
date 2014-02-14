@@ -20,7 +20,7 @@ Discourse.EmailLog.reopenClass({
 
   findAll: function(filter) {
     var result = Em.A();
-    Discourse.ajax("/admin/email/logs.json", {
+    Discourse.ajax("/admin/email/" + (filter === 'skipped' ? 'skipped' : 'logs') + ".json", {
       data: { filter: filter }
     }).then(function(logs) {
       _.each(logs,function(log) {

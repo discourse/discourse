@@ -68,6 +68,7 @@ Discourse::Application.routes.draw do
       collection do
         post "test"
         get "logs"
+        get "skipped"
         get "preview-digest" => "email#preview_digest"
       end
     end

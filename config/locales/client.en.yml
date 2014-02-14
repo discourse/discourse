@@ -1382,6 +1382,7 @@ en:
         title: "Email"
         settings: "Settings"
         logs: "Logs"
+        skipped: "Skipped"
         sent_at: "Sent At"
         user: "User"
         email_type: "Email Type"
@@ -1398,6 +1399,7 @@ en:
         text: "text"
         last_seen_user: "Last Seen User:"
         reply_key: "Reply Key"
+        skip_reason: "Skip Reason"
 
       logs:
         title: "Logs"
