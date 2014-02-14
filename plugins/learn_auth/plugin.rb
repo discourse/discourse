@@ -7,6 +7,7 @@ require 'auth/oauth2_authenticator'
 
 class LearnAuthenticator < ::Auth::OAuth2Authenticator
   def after_authenticate(auth_token)
+    auth_token[:uid] = auth_token[:uid].to_s
     result = super
     populate_result_with_auth_info(result, auth_token)
     set_permissions(result.user, result.extra_data)
