@@ -49,7 +49,7 @@ describe "i18n integrity checks" do
         line.strip!
         next if line.start_with? "#"
         next if line.start_with? "---"
-        next if line..blank?
+        next if line.blank?
         line.should eq locale
         break
       end
