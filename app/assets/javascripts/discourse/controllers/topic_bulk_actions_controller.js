@@ -46,6 +46,10 @@ Discourse.TopicBulkActionsController = Ember.ArrayController.extend(Discourse.Mo
       this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal full');
     },
 
+    showNotificationLevel: function() {
+      this.send('changeBulkTemplate', 'modal/bulk_notification_level');
+    },
+
     closeTopics: function() {
       this.forEachPerformed({type: 'close'}, function(t) {
         t.set('closed', true);
