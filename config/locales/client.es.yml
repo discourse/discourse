@@ -823,20 +823,34 @@ es:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "type to filter..."
+    type_to_filter: "Tipea para filtrar..."
 
     admin:
       title: 'Administrador'
 
       dashboard:
         title: "Panel"
-        welcome: "Bienvenido a la sección de administración."
-        version: "Versión instalada"
+        last_updated: "Última actualización del panel:"
+        version: "Versión"
         up_to_date: "Está ejecutando la última versión de Discourse."
         critical_available: "Actualización crítica disponible."
         updates_available: "Hay actualizaciones disponibles."
         please_upgrade: "Por favor actualice!"
+        no_check_performed: "No se han comprobado actualizaciones. Asegúrate que Sidekiq está corriendo."
+        stale_data: "No se han comprobado actualizaciones últimamente. Asegúrate que Sidekiq está corriendo."
+        version_check_pending: "Parece que has actualizado recientemente. Fantástico!"
+        installed_version: "Versión instalada"
         latest_version: "Última versión"
+        problems_found: "Se han encontrado algunos problemas con tu instalación de Discourse:"
+        refresh_problems: "Refrescar"
+        last_checked: "Última comprobación"
+        no_problems: "No se han encontrado problemas."
+        moderators: 'Moderadores:'
+        admins: 'Administradores:'
+        blocked: 'Bloqueados:'
+        suspended: 'Suspendidos:'
+        private_messages_short: "MPs"
+        private_messages_title: "Mensajes Privados"
 
         reports:
           today: "Hoy"
@@ -846,58 +860,126 @@ es:
           all_time: "Todo el tiempo"
           7_days_ago: "Hace 7 Días"
           30_days_ago: "Hace 30 Días"
+          7_days_ago: "Hace 7 Días"
+          30_days_ago: "Hace 30 Días"
+          all: "Todos"
+          view_table: "Ver como Tabla"
+          view_chart: "Ver como Gráfico de Barras"
+
+      commits:
+        latest_changes: "Últimos cambios: por favor actualiza a menudo!"
+        by: "por"
 
       flags:
-        title: "Reportes"
+        title: "Banderas"
         old: "Antiguo"
         active: "Activo"
-        clear: "Limpiar Reportes"
-        clear_title: "descartar todos los reportes en este mensaje (will unhide hidden posts)"
-        delete: "Eliminar Mensaje"
-        delete_title: "eliminar mensaje (si es el primer mensaje eliminar tema)"
-        flagged_by: "Reportado por"
 
+        agree_hide: "De acuerdo (ocultar + enviar MP)"
+        agree_hide_title: "Ocultar este mensaje y automáticamente enviar al usuario un mensaje privado instándolo a editarlo"
+        defer: "Aplazar"
+        defer_title: "Ninguna acción es necesaria en este momento, aplazar cualquier acción en esta bandera hasta una fecha posterior, o nunca"
+        delete_post: "Eliminar Mensaje"
+        delete_post_title: "Elimina el mensaje; si es el primer mensaje, elimina el tema"
+        disagree_unhide: "En desacuerdo (hacer mensaje visible)"
+        disagree_unhide_title: "Remover cualquier bandera de este mensaje y hacerlo visible nuevamente"
+        disagree: "En desacuerdo"
+        disagree_title: "En desacuerdo con la bandera, eliminar las banderas de este mensaje"
+        delete_spammer_title: "Eliminar el usuario y todos sus mensajes y temas."
+        clear_topic_flags: "Hecho"
+        clear_topic_flags_title: "Este tema ha sido investigado y los problemas han sido resueltos. Haz click en Hecho para remover las banderas."
+
+        flagged_by: "Reportado por"
+        system: "Sistema"
+        error: "Algo salió mal"
+        view_message: "Responder"
+        no_results: "No hay banderas."
+        topic_flagged: "Este <strong>tema</strong> has sido reportado."
+        visit_topic: "Visita el tema para investigar y tomar una acción."
+
+        summary:
+          action_type_3:
+            one: "fuera de tema"
+            other: "fuera de tema x{{count}}"
+          action_type_4:
+            one: "inapropiado"
+            other: "inapropiado x{{count}}"
+          action_type_6:
+            one: "personalizado"
+            other: "personalizado x{{count}}"
+          action_type_7:
+            one: "personalizado"
+            other: "personalizado x{{count}}"
+          action_type_8:
+            one: "spam"
+            other: "spam x{{count}}"
       groups:
-        title: "Groups"
-        edit: "Edit Groups"
-        selector_placeholder: "add users"
-        name_placeholder: "Group name, no spaces, same as username rule"
-        about: "Edit your group membership and names here"
-        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
-        delete: "Delete"
-        delete_confirm: "Delete this group?"
-        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        primary: "Grupo Principal"
+        no_primary: "(No hay un grupo principal)"
+        title: "Grupos"
+        edit: "Editar Grupos"
+        selector_placeholder: "Agregar usuarios"
+        name_placeholder: "Nombre del grupo, sin espacios"
+        about: "Edita tus membresías a grupos y nombres aquí"
+        delete: "Eliminar"
+        delete_confirm: "Eliminar este grupo?"
+        delete_failed: "Imposible eliminar grupo. Si éste es un grupo automático, no puede ser destruido."
 
       api:
+        generate_master: "Generar API Key Maestra"
+        none: "No hay ninguna API Key activa en este momento."
+        user: "Usuario"
         title: "API"
         long_title: "API Information"
         key: "Key"
-        generate: "Generate API Key"
-        regenerate: "Regenerate API Key"
-        info_html: "Your API key will allow you to create and update topics using JSON calls."
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
+        generate: "Generar"
+        regenerate: "Regenerar"
+        revoke: "Revocar"
+        confirm_regen: "Seguro que deseas reemplazar esa API Key por una nueva?"
+        confirm_revoke: "Seguro que deseas revocar esa API Key?"
+        info_html: "Tu API Key te permitirá crear y actualizar temas usando llamadas JSON."
+        all_users: "Todos los Usuarios"
+        note_html: "Mantén esta Key en <strong>secreto</strong>, cualquier usuario que la tenga podría crear mensajes arbitrarios en el foro como cualquier otro usuario."
 
       customize:
         title: "Personalizar"
+        long_title: "Personalizaciones del Sitio"
         header: "Encabezado"
         css: "Hoja de estilo"
+        mobile_header: "Encabezado móvil"
+        mobile_css: "Hoja de estilo móvil"
         override_default: "No incluir hoja de estilo estándar"
         enabled: "Activado?"
         preview: "vista previa"
         undo_preview: "deshacer vista previa"
         save: "Guardar"
+        new: "Nuevo"
+        new_style: "Nuevo Estilo"
         delete: "Eliminar"
         delete_confirm: "Eliminar esta personalización?"
+        about: "La personalización del sitio te permite modificar las hojas de estilo y los encabezados del mismo. Elige uno o agrega uno nuevo para comenzar a editar."
 
       email:
         title: "Email"
+        settings: "Ajustes"
+        logs: "Logs"
         sent_at: "Enviado a"
+        user: "Usuario"
         email_type: "Email"
         to_address: "A dirección"
-        test_email_address: "dirección de email para probar"
+        test_email_address: "dirección de email de prueba"
         send_test: "enviar mensaje de prueba"
         sent_test: "enviado!"
-        
+        delivery_method: "Método de entrega"
+        preview_digest: "Vista previa de Resumen"
+        preview_digest_desc: "Esta es una herramienta para previsualizar el contenido de los emails de resumen enviados desde tu foro."
+        refresh: "Actualizar"
+        format: "Formato"
+        html: "html"
+        text: "text"
+        last_seen_user: "Último usuario visto:"
+        reply_key: "Key de Respuesta"
+      
       logs:
         title: "Logs"
         action: "Acción"
@@ -905,70 +987,70 @@ es:
         last_match_at: "Última coincidencia"
         match_count: "Coincidencias"
         ip_address: "IP"
-        delete: 'Borrar'
+        delete: 'Eliminar'
         edit: 'Editar'
         save: 'Guardar'
         screened_actions:
           block: "bloquear"
           do_nothing: "no hacer nada"
         staff_actions:
-          title: "Acciones de Moderación"
-          instructions: "Haz click en nombres de usuarios y acciones para filtrar la lista. Haz click en los avatares para ir a las páginas del los usuarios."
+          title: "Acciones del Staff"
+          instructions: "Haz click en nombres de usuario y acciones para filtrar la lista. Haz click en los avatares para ir a las páginas del los usuarios."
           clear_filters: "Mostrar todo"
-          staff_user: "Staff User"
-          target_user: "Target User"
-          subject: "Subject"
-          when: "When"
-          context: "Context"
-          details: "Details"
-          previous_value: "Previous"
-          new_value: "New"
+          staff_user: "Usuario del Staff"
+          target_user: "Usuario Objetivo"
+          subject: "Asunto"
+          when: "Cuándo"
+          context: "Contexto"
+          details: "Detalles"
+          previous_value: "Previo"
+          new_value: "Nuevo"
           diff: "Diff"
-          show: "Show"
-          modal_title: "Details"
-          no_previous: "There is no previous value."
-          deleted: "No new value. The record was deleted."
+          show: "Ver"
+          modal_title: "Detalles"
+          no_previous: "No hay un valor anterior."
+          deleted: "No hay valores nuevos. El registro ha sido eliminado."
           actions:
-            delete_user: "delete user"
-            change_trust_level: "change trust level"
-            change_site_setting: "change site setting"
-            change_site_customization: "change site customization"
-            delete_site_customization: "delete site customization"
-            suspend_user: "suspend user"
-            unsuspend_user: "unsuspend user"
+            delete_user: "Eliminar usuario"
+            change_trust_level: "Cambiar nivel de confianza"
+            change_site_setting: "Cambiar ajuste del sitio"
+            change_site_customization: "Cambiar personalización del sitio"
+            delete_site_customization: "Eliminar personalización del sitio"
+            suspend_user: "Suspender usuario"
+            unsuspend_user: "Des-suspender usuario"
         screened_emails:
-          title: "Screened Emails"
-          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
-          email: "Email Address"
+          title: "Emails filtrados"
+          description: "Cuando alguien trata de crear una nueva cuenta, las siguientes direcciones de correo electrónico serán comprobadas y el registro será bloqueado, o se realizará alguna otra acción."
+          email: "Dirección de email"
         screened_urls:
-          title: "Screened URLs"
-          description: "The URLs listed here were used in posts by users who have been identified as spammers."
+          title: "URLs filtradas"
+          description: "Las URLs listadas aquí han sido usadas en mensajes por usuarios que han sido identificados como spammers."
           url: "URL"
-          domain: "Domain"
+          domain: "Dominio"
         screened_ips:
-          title: "Screened IPs"
-          description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
-          delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
+          title: "IPs Filtradas"
+          description: 'Direcciones IP que están siendo observadas. Usa "Permitir" to habilitar Direcciones IP.'
+          delete_confirm: "Estás seguro que deseas remover la regla para %{ip_address}?"
           actions:
-            block: "Block"
-            do_nothing: "Allow"
+            block: "Bloquear"
+            do_nothing: "Permitir"
           form:
-            label: "New:"
-            ip_address: "IP address"
-            add: "Add"
+            label: "Nueva:"
+            ip_address: "Dirección IP"
+            add: "Agregar"
 
       impersonate:
-        title: "Hacerse pasar por el Usuario"
-        username_or_email: "Nombre de usuario o Email de Usuario"
+        title: "Impersonar Usuario"
+        username_or_email: "Nombre de usuario o Email "
         help: "Utilice esta herramienta para suplantar una cuenta de usuario con fines de depuración."
-        not_found: "Dicho usuario no puede ser encontrado."
-        invalid: "Lo sentimos, usted no puede hacerse pasar por ese usuario."
+        not_found: "El usuario no puede ser encontrado."
+        invalid: "Lo sentimos, usted no puede impersonar a ese usuario."
 
       users:
         title: 'Usuarios'
-        create: 'Añadir Usuario como Administrador'
-        last_emailed: "Ultimo email enviado"
-        not_found: "Lo sentimos ese nombre de usuario no existe en el sistema."
+        create: 'Añadir Usuario Administrador'
+        last_emailed: "Último email enviado"
+        not_found: "Lo sentimos, ese usuario no existe."
         active: "Activo"
         nav:
           new: "Nuevo"
@@ -978,45 +1060,111 @@ es:
           moderators: "Moderadores"
           suspended: "Suspendidos"
           blocked: "Bloqueados"
-        approved: "Aprobado?"
+        approved: "Aprobado/s?"
         approved_selected:
           one: "aprobar usuario"
-          other: "aprobar usuarios ({{count}})"
+          other: "aprobar ({{count}}) usuarios"
+        reject_selected:
+          one: "rechazar usuario"
+          other: "rechazar ({{count}}) usuarios"
+        titles:
+          active: 'Usuarios Activos'
+          new: 'Usuarios nuevos'
+          pending: 'Usuarios Pendiente de Revisión'
+          newuser: 'Usuarios con Nivel de Confianza 0 (Nuevo)'
+          basic: 'Usuarios con Nivel de Confianza 1 (Básico)'
+          regular: 'Usuarios con Nivel de Confianza 2 (Regular)'
+          leader: 'Usuarios con Nivel de Confianza 3 (Líder)'
+          elder: 'Usuarios con Nivel de Confianza 4 (Anciano)'
+          admins: 'Administradores'
+          moderators: 'Moderadores'
+          blocked: 'Usuarios Bloqueados'
+          suspended: 'Usuarios Suspendidos'
+        reject_successful:
+          one: "1 usuario rechazado con éxito."
+          other: "%{count} usuarios rechazados con éxito."
+        reject_failures:
+          one: "Error al rechazar 1 usuario."
+          other: "Error al rechazar %{count} usuarios."
 
       user:
-        suspend_failed: "Algo salió mal baneando este usuario {{error}}"
-        unsuspend_failed: "Algo salió mal quitando ban a este usuario {{error}}"
-        suspend_duration: "¿Cuánto tiempo le gustaría aplicar ban al usuario? (days)"
+        suspend_failed: "Algo salió mal suspendiendo a este usuario {{error}}"
+        unsuspend_failed: "Algo salió mal quitando la suspensión a este usuario {{error}}"
+        suspend_duration: "Por cuánto tiempo estará este usuario suspendido?"
+        suspend_duration_units: "(días)"
+        suspend_reason_label: "¿Por qué estás suspendiendo? Este texto <b>será visible a todos </ b> en la página del perfil del usuario, y se muestra al usuario cuando intenta entrar. Sea breve."
+        suspend_reason: "Razón"
         delete_all_posts: "Eliminar todos los mensajes"
-        suspend: "Banear"
-        unsuspend: "Quitar ban"
-        suspended: "Baneado?"
-        blocked: "Bloqueado?"
+        delete_all_posts_confirm: "Estás a punto de eliminar %{posts} mensajes y %{topics} temas. Estás seguro?"
+        suspend: "Suspender"
+        unsuspend: "Quitar Suspensión"
+        suspended: "Suspendido?"
         moderator: "Moderador?"
         admin: "Administrador?"
+        blocked: "Bloqueado?"
         show_admin_profile: "Administrador"
         refresh_browsers: "Forzar recarga del navegador"
         show_public_profile: "Ver perfil público"
-        impersonate: 'Suplantar a'
+        impersonate: 'Impersonar a'
         revoke_admin: 'Revocar Administrador'
         grant_admin: 'Conceder Administración'
         revoke_moderation: 'Revocar Moderación'
         grant_moderation: 'Conceder Moderación'
+        unblock: 'Desbloquear'
+        block: 'Bloquear'
         reputation: Reputación
         permissions: Permisos
         activity: Actividad
         like_count: Me gusta Recibidos
-        private_topics_count: temas Privados
+        private_topics_count: Temas Privados
         posts_read_count: Mensajes Leídos
         post_count: Mensajes Creados
-        topics_entered: temas Ingresados
-        flags_given_count: Reportes Dados
+        topics_entered: Temas Ingresados
+        flags_given_count: Reportes Enviados
         flags_received_count: Reportes Recibidos
         approve: 'Aprobar'
         approved_by: "aprobado por"
+        approve_success: "Usuario aprobado y email enviado con instrucciones de activación."
         time_read: "Tiempo de lectura"
+        delete: "Eliminar Usuario"
         delete_forbidden_because_staff: "Administradores y moderadores no pueden ser eliminados"
-        trust_level_3_requirements: "Requerimientos para Nivel de confianza 3"
+        delete_forbidden:
+          one: "Usuarios no pueden ser eliminados si se han registrado hace más de %{count} día, o si tienen mensajes. Elimina todos sus mensajes antes de eliminar un usuario."
+          other: "Usuarios no pueden ser eliminados si se han registrado hace más de %{count} días, o si tienen mensajes. Elimina todos sus mensajes antes de eliminar un usuario."
+        delete_confirm: "Estás SEGURO que deseas eliminar este usuario? Esta acción es permanente!"
+        delete_and_block: "<b>Sí</b>, y <b>bloquear</b> futuros registros de este email y dirección IP"
+        delete_dont_block: "<b>Sí</b>, sólo elimina este usuario"
+        deleted: "El usuario ha sido eliminado."
+        delete_failed: "Ocurrió un error al eliminar el usuario. Asegúrate que todos sus mensajes han sido eliminados antes de eliminar al usuario."
+        send_activation_email: "Enviar email de activación"
+        activation_email_sent: "Un email de activación ha sido enviado."
+        send_activation_email_failed: "Ocurrió un error al enviar el email de activación. %{error}"
+        activate: "Activar Cuenta"
+        activate_failed: "Ocurrió un problema al activar el usuario."
+        deactivate_account: "Desactivar cuenta"
+        deactivate_failed: "Ocurrió un problema al desactivar el usuario."
+        unblock_failed: 'Ocurrió un problema al desbloquear el usuario.'
+        block_failed: 'Ocurrió un problema bloqueado al usuario.'
+        deactivate_explanation: "Un usuario desactivado debe revalidar su dirección de email."
+        suspended_explanation: "Un usuario suspendido no puede iniciar sesión."
+        block_explanation: "Un usuario bloqueado no puede publicar mensajes o crear temas."
+        trust_level_change_failed: "Ocurrió un problema cambiando el Nivel de Confianza del usuario."
+        suspend_modal_title: "Suspender Usuario"
+        trust_level_2_users: "Usuarios de Nivel de Confianza 2"
+        trust_level_3_requirements: "Requerimientos para Nivel de Confianza 3"
+        tl3_requirements:
+          title: "Requerimientos para Nivel de Confianza 3"
+          table_title: "En los últimos 100 días:"
+          value_heading: "Valor"
+          requirement_heading: "Requerimiento"
+          visits: "Visitas"
+          days: "días"
+          topics_with_replies: "Temas con Respuestas"
+          topics_replied_to: "Temas Respondidos"
+          quality_content: "Calidad del Contenido"
+          reading: "Leyendo"
+          site_promotion: "Promoción del Sitio"
+          flagged_posts: "Mensajes Reportados"
 
       site_content:
         none: "Elige un tipo de contenido para empezar a editar."
@@ -1025,5 +1173,67 @@ es:
 
       site_settings:
         show_overriden: 'Sólo mostrar lo sobreescrito'
-        title: 'Ajustes del Sitio'
-        reset: 'Reestabler los ajustes por defecto'
+        title: 'Ajustes'
+        reset: 'Reestablecer'
+        none: 'Ninguno'
+        no_results: "No hay resultados."
+        clear_filter: "Limpiar"
+        categories:
+          all_results: 'Todos'
+          required: 'Requeridos'
+          basic: 'Config. Básica'
+          users: 'Usuarios'
+          posting: 'Mensajes'
+          email: 'Email'
+          files: 'Archivos'
+          trust: 'Niveles de Confianza'
+          security: 'Seguridad'
+          seo: 'SEO'
+          spam: 'Spam'
+          rate_limits: 'Límites'
+          developer: 'Desarrollador'
+          embedding: "Embebido"
+          legal: "Legal"
+          uncategorized: 'Sin Categoría'
+
+    lightbox:
+      download: "Descargar"
+
+    keyboard_shortcuts_help:
+      title: 'Atajos de Teclado (experimental)'
+      jump_to:
+        title: 'Ir A'
+        home: '<b>g</b> seguido de <b>h</b> Home (Recientes)'
+        latest: '<b>g</b> seguido de <b>l</b> Reciente'
+        new: '<b>g</b> seguido de <b>n</b> Nuevo'
+        unread: '<b>g</b> seguido de <b>u</b> No Leído'
+        starred: '<b>g</b> seguido de <b>f</b> Favoritos'
+        categories: '<b>g</b> seguido de <b>c</b> Categorías'
+      navigation:
+        title: 'Navegación'
+        back: '<b>u</b> Atrás'
+        up_down: '<b>k</b>/<b>j</b> Mover selección abajo/arriba'
+        open: '<b>o</b> o <b>Enter</b> Abrir tema seleccionado'
+        next_prev: '<b>`</b>/<b>~</b> Sección anterior/siguiente'
+      application:
+        title: 'Aplicación'
+        create: '<b>c</b> Crear tema nuevo'
+        notifications: '<b>n</b> Abrir notificaciones'
+        search: '<b>/</b> Buscar'
+        help: '<b>?</b> Abrir ayuda para atajos de teclado'
+      actions:
+        title: 'Acciones'
+        star: '<b>f</b> Añadir estrella al tema'
+        share_topic: '<b>s</b> Compartir tema'
+        share_post: '<b>shift s</b> Compartir mensaje'
+        reply_topic: '<b>r</b> Responder al tema'
+        reply_post: '<b>shift r</b> Responder al mensaje'
+        like: '<b>l</b> Me gusta el mensaje'
+        flag: '<b>!</b> Reportar mensaje'
+        bookmark: '<b>b</b> Añadir mensaje a marcadores'
+        edit: '<b>e</b> Editar mensaje'
+        delete: '<b>d</b> Eliminar mensaje'
+        mark_muted: '<b>m</b> seguido de <b>m</b> Marcar tema como mudo'
+        mark_regular: '<b>m</b> seguido de <b>r</b> Marcar tema como regular'
+        mark_tracking: '<b>m</b> seguido de <b>t</b> Seguir tema'
+        mark_watching: '<b>m</b> seguido de <b>w</b> Observar tema'
