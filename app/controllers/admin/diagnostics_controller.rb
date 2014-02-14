@@ -4,6 +4,13 @@ class Admin::DiagnosticsController < Admin::AdminController
 
   def memory_stats
 
+    begin
+      # ruby 2.1
+      GC.start(full_mark: true)
+    rescue
+      GC.start
+    end
+
     stats = GC.stat.map{|k,v| "#{k}: #{v}"}
     counts = ObjectSpace.count_objects.map{|k,v| "#{k}: #{v}"}
 
