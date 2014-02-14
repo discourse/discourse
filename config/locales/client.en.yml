@@ -1384,6 +1384,7 @@ en:
         logs: "Logs"
         skipped: "Skipped"
         sent_at: "Sent At"
+        time: "Time"
         user: "User"
         email_type: "Email Type"
         to_address: "To Address"
