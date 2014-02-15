@@ -26,7 +26,7 @@
   bottom: 0;
   left: 0;
   z-index: 1040;
-  background-color: #000000;
+  background-color: $primary;
   &.fade {
     opacity: 0;
   }
@@ -50,13 +50,13 @@
 .modal-inner-container {
   max-width: 710px;
   margin: 0 auto;
-  background-color: #ffffff;
-  border: 1px solid #999;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  *border: 1px solid #999;
+  background-color: $secondary;
+  border: 1px solid $primary_light;
+  border: 1px solid $primary_lightest;
+  *border: 1px solid $primary_light;
   /* IE6-7 */
 
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 7px $primary;
   background-clip: padding-box;
 }
 .modal {
@@ -78,13 +78,13 @@
   width: 610px;
   height: auto;
   margin: -250px 0 0 -305px;
-  background-color: #ffffff;
-  border: 1px solid #999;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  *border: 1px solid #999;
+  background-color: $secondary;
+  border: 1px solid $primary_light;
+  border: 1px solid $primary_lightest;
+  *border: 1px solid $primary_light;
   /* IE6-7 */
 
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 7px $primary;
   background-clip: padding-box;
 }
 
@@ -107,7 +107,7 @@
 .modal-footer {
   margin: 0 15px;
   padding: 14px 0 15px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid $primary_lighter;
   *zoom: 1;
 }
 .modal-footer:before,
@@ -130,7 +130,7 @@
   margin-left: -1px;
 }
 .modal-header {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid $primary_lighter;
   h3 {
     color: $nav-pills-background-color-active;
     font-size: 20px;
@@ -152,11 +152,11 @@
 .modal {
   .nav {
     padding: 10px 30px;
-    background-color: #e6e6e6;
+    background-color: $primary_lightest;
     li > a {
       font-size: 14px;
     }
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid $primary_lighter;
 
   }
 
@@ -185,17 +185,17 @@
       height: 80px;
     }
     label {
-      color: $darkish_gray;
+      color: $primary_medium;
     }
     p {
-      color: $black;
+      color: $primary;
       font-size: 13px;
     }
     .archetype-option {
       margin-bottom: 20px;
     }
     .warning {
-      color: lighten($red, 10%) !important;
+      color: lighten($highlight_danger, 10%) !important;
     }
   }
   .password-confirmation {
@@ -236,11 +236,11 @@
       li {
         margin: 0 4px 8px 0;
         a {
-          color: #888;
+          color: $primary_light;
           cursor: pointer;
         }
         a:hover {
-          color: $black;
+          color: $primary;
         }
       }
     }
@@ -322,9 +322,9 @@
         font-weight: normal;
       }
       &.btn-reply-here {
-        @include linear-gradient(#ddd, #ddd);
+        @include linear-gradient($primary_lighter, $primary_lighter);
         text-shadow: none;
-        color: $darkish_gray;
+        color: $primary_medium;
       }
     }
     .cancel {
@@ -354,11 +354,9 @@
   }
 }
 
-.flagging-delete-spammer, .delete-all-posts {
-  .modal-footer .cancel {
-    text-decoration: underline;
-    margin-left: 10px;
-  }
+.modal-footer .cancel-inline {
+  text-decoration: underline;
+  margin-left: 10px;
 }
 
 .permission-list{

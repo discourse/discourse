@@ -240,8 +240,8 @@ class TopicQuery
       result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
 
-      # Don't include the category topic unless restricted to that category
-      if options[:category].blank? || options[:no_definitions]
+      # Don't include the category topics if excluded
+      if options[:no_definitions]
         result = result.where('COALESCE(categories.topic_id, 0) <> topics.id')
       end
 
@@ -281,13 +281,14 @@ class TopicQuery
 
     def new_results(options={})
       result = TopicQuery.new_filter(default_results(options), @user.treat_as_new_topic_start_date)
-      result = remove_muted_categories(result, @user)
+      result = remove_muted_categories(result, @user) unless options[:category].present?
       suggested_ordering(result, options)
     end
 
     def latest_results(options={})
       result = default_results(options)
-      remove_muted_categories(result, @user)
+      result = remove_muted_categories(result, @user) unless options[:category].present?
+      result
     end
 
     def remove_muted_categories(list, user)

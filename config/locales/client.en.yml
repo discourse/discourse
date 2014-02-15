@@ -252,6 +252,14 @@ en:
       tracked_categories_instructions: "You will automatically track all new and existing topics providing you a count of unread and new posts"
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about this topic, and it will not appear on your unread tab."
+      delete_account: "Delete My Account"
+      delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
+      deleted_yourself: "Your account has been deleted successfully."
+      delete_yourself_not_allowed: "You cannot delete your account right now. Contact an admin to do delete your account for you."
+      unread_message_count:
+        one: "Messages (1)"
+        other: "Messages ({{count}})"
+        zero: "Messages"
 
       messages:
         all: "All"
@@ -407,6 +415,10 @@ en:
     loading: "Loading..."
     close: "Close"
     assets_changed_confirm: "Discourse has been updated, would you like to refresh to get the latest version?"
+    read_only_mode:
+      enabled: "An administrator has enabled read-only mode. You can continue to browse the site but interations won't work properly."
+      login_disabled: "Login is disabled while the site is in read only mode."
+
     learn_more: "learn more..."
 
     year: 'year'
@@ -478,18 +490,12 @@ en:
       facebook:
         title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
-      cas:
-        title: "Log In with CAS"
-        message: "Authenticating with CAS (make sure pop up blockers are not enabled)"
       yahoo:
         title: "with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
-      persona:
-        title: "with Persona"
-        message: "Authenticating with Mozilla Persona (make sure pop up blockers are not enabled)"
 
     composer:
       posting_not_on_topic: "Which topic do you want to reply to?"
@@ -518,6 +524,7 @@ en:
       cancel: "Cancel"
       create_topic: "Create Topic"
       create_pm: "Create Private Message"
+      title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
       title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
@@ -790,6 +797,11 @@ en:
       share:
         title: 'Share'
         help: 'share a link to this topic'
+
+      flag_topic:
+        title: 'Flag'
+        help: 'privately flag this topic for attention or send a private notification about it'
+        success_message: 'You successfully flagged this topic.'
 
       inviting: "Inviting..."
 
@@ -1080,6 +1092,11 @@ en:
         more: "{{n}} to go..."
         left: "{{n}} remaining"
 
+    flagging_topic:
+      title: "Why are you privately flagging this topic?"
+      action: "Flag Topic"
+      notify_action: "Notify"
+
     topic_map:
       title: "Topic Summary"
       links_shown: "show all {{totalLinks}} links..."
@@ -1242,12 +1259,16 @@ en:
         disagree: "Disagree"
         disagree_title: "Disagree with flag, remove any flags from this post"
         delete_spammer_title: "Delete the user and all its posts and topics."
+        clear_topic_flags: "Done"
+        clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
 
         flagged_by: "Flagged by"
         system: "System"
         error: "Something went wrong"
         view_message: "Reply"
         no_results: "There are no flags."
+        topic_flagged: "This <strong>topic</strong> has been flagged."
+        visit_topic: "Visit the topic to investigate and take action."
 
         summary:
           action_type_3:
@@ -1267,6 +1288,8 @@ en:
             other: "spam x{{count}}"
 
       groups:
+        primary: "Primary Group"
+        no_primary: "(no primary group)"
         title: "Groups"
         edit: "Edit Groups"
         selector_placeholder: "add users"
@@ -1291,6 +1314,53 @@ en:
         all_users: "All Users"
         note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
 
+      backups:
+        title: "Backups"
+        menu:
+          backups: "Backups"
+          logs: "Logs"
+        none: "No backup available."
+        read_only:
+          enable:
+            title: "Enable the read-only mode"
+            text: "Enable read-only mode"
+            confirm: "Are you sure you want to enable the read-only mode?"
+          disable:
+            title: "Disable the read-only mode"
+            text: "Disable read-only mode"
+        logs:
+          none: "No logs yet..."
+        columns:
+          filename: "Filename"
+          size: "Size"
+        operations:
+          is_running: "An operation is currently running..."
+          failed: "The {{operation}} failed. Please check the logs."
+          cancel:
+            text: "Cancel"
+            title: "Cancel the current operation"
+            confirm: "Are you sure you want to cancel the current operation?"
+          backup:
+            text: "Backup"
+            title: "Create a backup"
+            confirm: "Are you sure you want to start a new backup?"
+          download:
+            text: "Download"
+            title: "Download the backup"
+          destroy:
+            text: "Delete"
+            title: "Remove the backup"
+            confirm: "Are you sure you want to destroy this backup?"
+          restore:
+            is_disabled: "Restore is disabled in the site settings."
+            text: "Restore"
+            title: "Restore the backup"
+            confirm: "Are your sure you want to restore this backup?"
+          rollback:
+            text: "Rollback"
+            title: "Rollback the database to previous working state"
+            confirm: "Are your sure you want to rollback the database to the previous working state?"
+
       customize:
         title: "Customize"
         long_title: "Site Customizations"
@@ -1312,8 +1382,11 @@ en:
       email:
         title: "Email"
         settings: "Settings"
-        logs: "Logs"
+        all: "All"
+        sent: "Sent"
+        skipped: "Skipped"
         sent_at: "Sent At"
+        time: "Time"
         user: "User"
         email_type: "Email Type"
         to_address: "To Address"
@@ -1329,6 +1402,16 @@ en:
         text: "text"
         last_seen_user: "Last Seen User:"
         reply_key: "Reply Key"
+        skipped_reason: "Skip Reason"
+        logs:
+          none: "No logs found."
+          filters:
+            title: "Filter"
+            user_placeholder: "username"
+            address_placeholder: "em@il.com"
+            type_placeholder: "digest, signup..."
+            reply_key_placeholder: ""
+            skipped_reason_placeholder: "reason"
 
       logs:
         title: "Logs"

@@ -413,7 +413,9 @@ Discourse.PostStream = Em.Object.extend({
     @param {Discourse.Post} the post we saved in the stream.
   **/
   commitPost: function(post) {
-    this.appendPost(post);
+    if (this.get('loadedAllPosts')) {
+      this.appendPost(post);
+    }
     this.get('stream').addObject(post.get('id'));
     this.set('stagingPost', false);
   },

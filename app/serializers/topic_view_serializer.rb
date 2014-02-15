@@ -35,7 +35,8 @@ class TopicViewSerializer < ApplicationSerializer
              :details,
              :highest_post_number,
              :last_read_post_number,
-             :deleted_by
+             :deleted_by,
+             :actions_summary
 
   # Define a delegator for each attribute of the topic we want
   attributes *topic_attributes
@@ -97,6 +98,7 @@ class TopicViewSerializer < ApplicationSerializer
     result[:can_invite_to] = true if scope.can_invite_to?(object.topic)
     result[:can_create_post] = true if scope.can_create?(Post, object.topic)
     result[:can_reply_as_new_topic] = true if scope.can_reply_as_new_topic?(object.topic)
+    result[:can_flag_topic] = actions_summary.any? { |a| a[:can_act] }
     result
   end
 
@@ -144,5 +146,17 @@ class TopicViewSerializer < ApplicationSerializer
     PinnedCheck.new(object.topic, object.topic_user).pinned?
   end
 
+  def actions_summary
+    result = []
+    return [] unless post = object.posts.try(:first)
+    PostActionType.topic_flag_types.each do |sym, id|
+      result << { id: id,
+                  count: 0,
+                  hidden: false,
+                  can_act: scope.post_can_act?(post, sym)}
+      # TODO: other keys? :can_clear_flags, :acted, :can_undo
+    end
+    result
+  end
 
 end

@@ -6,7 +6,7 @@ module Email
   class Receiver
 
     def self.results
-      @results ||= Enum.new(:unprocessable, :missing, :processed)
+      @results ||= Enum.new(:unprocessable, :missing, :processed, :error)
     end
 
     attr_reader :body, :reply_key, :email_log
@@ -53,6 +53,8 @@ module Email
         create_reply
       end
       Email::Receiver.results[:processed]
+    rescue
+      Email::Receiver.results[:error]
     end
 
     private

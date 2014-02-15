@@ -42,7 +42,7 @@ Discourse.AdminUser = Discourse.User.extend({
     var message = I18n.t('admin.user.delete_all_posts_confirm', {posts: user.get('post_count'), topics: user.get('topic_count')});
     var buttons = [{
       "label": I18n.t("composer.cancel"),
-      "class": "cancel",
+      "class": "cancel-inline",
       "link":  true,
       "callback": function() {
         user.set('can_delete_all_posts', true);
@@ -308,7 +308,7 @@ Discourse.AdminUser = Discourse.User.extend({
     var message = I18n.t('flagging.delete_confirm', {posts: user.get('post_count'), topics: user.get('topic_count'), email: user.get('email'), ip_address: user.get('ip_address')});
     var buttons = [{
       "label": I18n.t("composer.cancel"),
-      "class": "cancel",
+      "class": "cancel-inline",
       "link":  true
     }, {
       "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("flagging.yes_delete_spammer"),
@@ -388,7 +388,7 @@ Discourse.AdminUser.reopenClass({
   },
 
   find: function(username) {
-    return Discourse.ajax("/admin/users/" + username).then(function (result) {
+    return Discourse.ajax("/admin/users/" + username + ".json").then(function (result) {
       result.loadedDetails = true;
       return Discourse.AdminUser.create(result);
     });

@@ -17,6 +17,10 @@ class Site
     PostActionType.ordered
   end
 
+  def topic_flag_types
+    post_action_types.where(name_key: ['inappropriate', 'spam', 'notify_moderators'])
+  end
+
   def notification_types
     Notification.types
   end

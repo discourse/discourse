@@ -354,3 +354,7 @@ Handlebars.registerHelper('customHTML', function(property) {
   }
 
 });
+
+Ember.Handlebars.registerBoundHelper('humanSize', function(size) {
+  return new Handlebars.SafeString(I18n.toHumanSize(size));
+});

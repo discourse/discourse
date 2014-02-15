@@ -2,6 +2,12 @@
 @import "common/foundation/variables";
 @import "common/foundation/mixins";
 
+.groups {
+  .group-link {
+    color: $tertiary_lightest;
+  }
+}
+
 .user-preferences {
   input.category-group {
     width: 500px;
@@ -36,13 +42,13 @@
   }
 
   .static {
-    color: $black;
+    color: $primary;
     margin-top: 5px;
     margin-left: 5px;
     display: inline-block;
   }
   .instructions {
-    color: $dark_gray;
+    color: $primary_medium;
     margin-left: 160px;
     margin-top: 5px;
     margin-bottom: 10px;
@@ -51,12 +57,12 @@
     margin-left: 3px;
   }
   .instructions a[href] {
-    color: $darkish_gray;
+    color: $primary_medium;
   }
   .warning {
-    background-color: lighten($red, 10%);
+    background-color: lighten($highlight_danger, 10%);
     padding: 5px 8px;
-    color: $white;
+    color: $secondary;
     width: 520px;
   }
 
@@ -74,7 +80,7 @@
   float: left;
 
   h3 {
-    color: #666;
+    color: $primary_light;
     margin: 20px 0 10px 0;
   }
 
@@ -97,7 +103,7 @@
   h2 {
     a {
       font-size: 14px;
-      color: #999999;
+      color: $primary_light;
       cursor: pointer;
     }
   }
@@ -130,15 +136,15 @@
       }
       span.last-seen-at {
         float: right;
-        color: #999;
+        color: $primary_light;
       }
     }
   }
 
   .user-content {
     padding: 10px 8px;
-    background-color: white;
-    border: 1px solid #ddd;
+    background-color: $secondary;
+    border: 1px solid $primary_lighter;
     margin-bottom: 10px;
 
     .btn.right {
@@ -155,22 +161,22 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid #aaa;
+        border-bottom: 1px solid $primary_light;
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid $primary_lighter;
       }
     }
   }
 
   .about {
-    background-color: #444;
+    background-color: $primary;
     margin-bottom: 10px;
     overflow: hidden;
-    color: #fff;
+    color: $secondary;
 
 
     .details {
@@ -190,17 +196,17 @@
       }
 
       a[href] {
-        color: #fff;
+        color: $secondary;
       }
 
       img.avatar {
-        border: 3px solid #eee;
+        border: 3px solid $primary_lightest;
         margin-bottom: 4px;
-        background-color: white;
+        background-color: $secondary;
       }
 
       .suspended {
-        color: #f77;
+        color: $highlight_danger_light;
       }
 
       .primary {
@@ -210,14 +216,11 @@
 
         h1, h2 {margin-top: 10px;}
 
-        .group-link {
-          color: #aae;
-        }
         .bio {
-          color: #ddd;
+          color: $primary_lighter;
 
           a[href] {
-            color: #aae;
+            color: $tertiary_light;
           }
         }
 
@@ -225,26 +228,26 @@
 
       .secondary {
         float: right;
-        background-color: #222;
+        background-color: lighten($primary, 10%);
         text-align: right;
         padding: 0 10px;
         width: 20%;
 
         dd {
-          color: white;
+          color: $secondary;
           margin: 0 0 7px 0;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         dt {
-          color: #aaa;
+          color: $primary_lighter;
           margin: 0;
         }
       }
     }
 
     .controls {
-      background-color: #ddd;
+      background-color: $primary_lighter;
       padding: 12px;
       height: 30px;
 
@@ -272,7 +275,7 @@
         .avatar {
           float: left;
           margin-right: 10px;
-          border: 2px solid white;
+          border: 2px solid $secondary;
           width: 45px;
           height: 45px;
         }
@@ -296,14 +299,14 @@
       margin: 5px 0px;
       font-size: 13px;
       word-wrap: break-word;
-      color: lighten($black, 30%);
+      color: lighten($primary, 30%);
     }
     .item.moderator-action {
-      background-color: #eef0ff;
+      background-color: $tertiary_lightest;
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: #ffcece;
+      background-color: $highlight_danger_light;
     }
     .item.hidden {
       display: block;
@@ -311,20 +314,20 @@
     }
     .item {
       padding: 10px 8px;
-      background-color: white;
-      border: 1px solid #ddd;
+      background-color: $secondary;
+      border-bottom: 1px solid lighten($primary_lighter, 10%);
       margin-bottom: 10px;
     }
     .type {
-      color: lighten($black, 40%);
+      color: lighten($primary, 40%);
     }
     span.name {
-      color: lighten($black, 40%);
+      color: lighten($primary, 40%);
     }
     .time {
       display: block;
       float: right;
-      color: silver;
+      color: $primary_light;
       margin-right: 8px;
       font-size: 11px;
     }
@@ -338,7 +341,7 @@
       font-size: 14px;
     }
     .edit-reason {
-      background-color: #ffffcc;
+      background-color: $highlight_light;
       padding: 3px 5px 5px 5px;
     }
   }
@@ -353,7 +356,7 @@
   .fa {
     width: 15px;
     display: inline-block;
-    color: #777;
+    color: $primary_medium;
   }
   .avatar-wrapper {
     border: none;

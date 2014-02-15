@@ -70,10 +70,11 @@ describe UserNotifications do
   end
 
   describe '.user_replied' do
-    let!(:post) { Fabricate(:post) }
-    let!(:response) { Fabricate(:post, topic: post.topic)}
-    let!(:user) { Fabricate(:user) }
-    let!(:notification) { Fabricate(:notification, user: user) }
+    let(:post) { Fabricate(:post) }
+    let(:response) { Fabricate(:post, topic: post.topic)}
+    let(:user) { Fabricate(:user) }
+    let(:notification) { Fabricate(:notification, user: user) }
+
 
     it 'generates a correct email' do
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
@@ -87,6 +88,19 @@ describe UserNotifications do
       # side effect, topic user is updated with post number
       tu = TopicUser.get(post.topic_id, response.user)
       tu.last_emailed_post_number.should == response.post_number
+
+      # in mailing list mode user_replies is not sent through
+      SiteSetting.stubs(:enable_mailing_list_mode).returns(true)
+      response.user.mailing_list_mode = true
+      mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
+      mail.class.should == ActionMailer::Base::NullMail
+
+
+      response.user.mailing_list_mode = nil
+      mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
+
+      mail.class.should_not == ActionMailer::Base::NullMail
+
     end
   end
 

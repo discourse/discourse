@@ -28,7 +28,13 @@
           <h3 class="full-name"><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
           {{/if}}
 
-          {{#if user_title}}<div class="user-title" {{action showPosterExpansion this}}>{{user_title}}</div>{{/if}}
+          {{#if user_title}}
+            {{#if primary_group_name}}
+              <div class="user-title"><a href='/groups/{{unbound primary_group_name}}' class='user-group'>{{unbound user_title}}</a></div>
+            {{else}}
+              <div class="user-title" {{action showPosterExpansion this}}>{{unbound user_title}}</div>
+            {{/if}}
+          {{/if}}
         </div>
       {{else}}
         <div class="contents">

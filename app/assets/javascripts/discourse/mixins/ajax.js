@@ -72,14 +72,14 @@ Discourse.Ajax = Em.Mixin.create({
       // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
       // it will not be parsed as an object.
       if (!args.type) args.type = 'GET';
-      if ((!args.dataType) && (args.type === 'GET')) args.dataType = 'json';
+      if (!args.dataType && args.type.toUpperCase() === 'GET') args.dataType = 'json';
 
       $.ajax(Discourse.getURL(url), args);
     };
 
     // For cached pages we strip out CSRF tokens, need to round trip to server prior to sending the
     //  request (bypass for GET, not needed)
-    if(args.type && args.type !== 'GET' && !Discourse.Session.currentProp('csrfToken')){
+    if(args.type && args.type.toUpperCase() !== 'GET' && !Discourse.Session.currentProp('csrfToken')){
       return Ember.Deferred.promise(function(promise){
         $.ajax(Discourse.getURL('/session/csrf'))
            .success(function(result){
@@ -93,8 +93,3 @@ Discourse.Ajax = Em.Mixin.create({
   }
 
 });
-
-
-
-
-

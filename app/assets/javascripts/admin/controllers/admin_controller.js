@@ -6,4 +6,4 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminCustomizeController = Discourse.Controller.extend({});
+Discourse.AdminController = Discourse.Controller.extend({});

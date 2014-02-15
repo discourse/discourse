@@ -451,9 +451,6 @@ sv:
       github:
         title: "med GitHub"
         message: "Autentiserar med GitHub (kolla så att pop up-blockare inte är aktiverade)"
-      persona:
-        title: " med Persona"
-        message: "Autentiserar med Mozilla Persona (kolla så att pop up-blockare inte är aktiverade)"
 
     composer:
       posting_not_on_topic: "Du svarar på tråden \"{{title}}\", men du besöker just nu en annan tråd."

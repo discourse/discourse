@@ -24,8 +24,8 @@ ja:
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
 
-  site_under_maintenance: 'このサイトは現在メンテナンス中です。'
-  operation_already_running: "%{operation} が現在起動中のため、新たな %{operation} ジョブをスタートできません。"
+  backup:
+    operation_already_running: "%{operation} が現在起動中のため、新たな %{operation} ジョブをスタートできません。"
 
   too_many_mentions:
     zero: "申し訳ありませんが、このポストにおいて他のユーザをメンションできません。"
@@ -582,9 +582,7 @@ ja:
     github_client_id: "Github 認証用の client id。https://github.com/settings/applications で入手可能"
     github_client_secret: "Github 認証用の client secret。https://github.com/settings/applications で入手可能"
 
-    enable_persona_logins: "Mozilla Persona によるメールベース認証を有効にする"
-
-    allow_import: "インポートを有効にする。サイトの全データの上書きが可能になるため、データのインポートを予定していない場合は false にすることを推奨"
+    allow_restore: "インポートを有効にする。サイトの全データの上書きが可能になるため、データのインポートを予定していない場合は false にすることを推奨"
 
     active_user_rate_limit_secs: "'last_seen_at' フィールドを更新する頻度 (秒)"
     previous_visit_timeout_hours: "'previous' visit とみなす時間 (時間)"

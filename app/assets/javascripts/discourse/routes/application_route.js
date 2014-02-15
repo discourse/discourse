@@ -11,8 +11,12 @@ Discourse.ApplicationRoute = Em.Route.extend({
   actions: {
 
     showLogin: function() {
-      Discourse.Route.showModal(this, 'login');
-      this.controllerFor('login').resetForm();
+      if (Discourse.get("isReadOnly")) {
+        bootbox.alert(I18n.t("read_only_mode.login_disabled"));
+      } else {
+        Discourse.Route.showModal(this, 'login');
+        this.controllerFor('login').resetForm();
+      }
     },
 
     showCreateAccount: function() {

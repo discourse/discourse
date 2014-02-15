@@ -103,19 +103,11 @@ users:
     default: true
   facebook_app_id: ''
   facebook_app_secret: ''
-  enable_cas_logins:
-    client: true
-    default: false
-  cas_hostname: ''
-  cas_domainname: ''
   enable_github_logins:
     client: true
     default: false
   github_client_id: ''
   github_client_secret: ''
-  enable_persona_logins:
-    client: true
-    default: false
   enforce_global_nicknames: false
   discourse_org_access_key: ''
   invite_expiry_days: 4
@@ -221,6 +213,7 @@ posting:
 email:
   email_time_window_mins: 10
   email_posts_context: 5
+  digest_min_excerpt_length: 100
   default_digest_email_frequency:
     default: 7
     enum: 'DigestEmailSiteSetting'
@@ -416,7 +409,9 @@ uncategorized:
   summary_likes_required: 1
   summary_percent_filter: 20
   send_welcome_message: true
-  allow_import: false
+  allow_restore:
+    client: true
+    default: false
   educate_until_posts:
     client: true
     default: 2

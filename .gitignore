@@ -68,6 +68,7 @@ config/multisite1.yml
 config/fog_credentials.yml
 
 /public/uploads
+/public/backups
 /public/stylesheet-cache/*
 
 # Scripts used for downloading/refreshing db

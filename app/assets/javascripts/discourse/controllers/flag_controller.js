@@ -13,6 +13,30 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
     this.set('selected', null);
   },
 
+  flagsAvailable: function() {
+    if (!this.get('flagTopic')) {
+      return this.get('model.flagsAvailable');
+    } else {
+      var self = this,
+          lookup = Em.Object.create();
+
+      _.each(this.get("actions_summary"),function(a) {
+        var actionSummary;
+        a.flagTopic = self.get('model');
+        a.actionType = Discourse.Site.current().topicFlagTypeById(a.id);
+        actionSummary = Discourse.ActionSummary.create(a);
+        lookup.set(a.actionType.get('name_key'), actionSummary);
+      });
+      this.set('topicActionByName', lookup);
+
+      return Discourse.Site.currentProp('topic_flag_types').filter(function(item) {
+        return _.any(self.get("actions_summary"), function(a) {
+          return (a.id === item.get('id') && a.can_act);
+        });
+      });
+    }
+  }.property('post', 'flagTopic', 'actions_summary.@each.can_act'),
+
   submitEnabled: function() {
     var selected = this.get('selected');
     if (!selected) return false;
@@ -29,6 +53,8 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
 
   // Staff accounts can "take action"
   canTakeAction: function() {
+    if (this.get("flagTopic")) return false;
+
     // We can only take actions on non-custom flags
     if (this.get('selected.is_custom_flag')) return false;
     return Discourse.User.currentProp('staff');
@@ -36,9 +62,9 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
 
   submitText: function(){
     if (this.get('selected.is_custom_flag')) {
-      return I18n.t("flagging.notify_action");
+      return I18n.t(this.get('flagTopic') ? "flagging_topic.notify_action" : "flagging.notify_action");
     } else {
-      return I18n.t("flagging.action");
+      return I18n.t(this.get('flagTopic') ? "flagging_topic.action" : "flagging.action");
     }
   }.property('selected.is_custom_flag'),
 
@@ -50,7 +76,12 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
 
     createFlag: function(opts) {
       var self = this;
-      var postAction = this.get('actionByName.' + this.get('selected.name_key'));
+      var postAction; // an instance of ActionSummary
+      if (!this.get('flagTopic')) {
+        postAction = this.get('actionByName.' + this.get('selected.name_key'));
+      } else {
+        postAction = this.get('topicActionByName.' + this.get('selected.name_key'));
+      }
       var params = this.get('selected.is_custom_flag') ? {message: this.get('message')} : {};
 
       if (opts) params = $.extend(params, opts);
@@ -58,6 +89,7 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
       this.send('hideModal');
       postAction.act(params).then(function() {
         self.send('closeModal');
+        if (self.get('flagTopic')) { bootbox.alert(I18n.t('topic.flag_topic.success_message')); }
       }, function(errors) {
         self.send('showModal');
         self.displayErrors(errors);
@@ -70,6 +102,8 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
   },
 
   canDeleteSpammer: function() {
+    if (this.get("flagTopic")) return false;
+
     if (Discourse.User.currentProp('staff') && this.get('selected.name_key') === 'spam') {
       return this.get('userDetails.can_be_deleted') && this.get('userDetails.can_delete_all_posts');
     } else {

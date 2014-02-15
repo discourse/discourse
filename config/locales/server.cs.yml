@@ -24,8 +24,8 @@ cs:
   via: "%{username} přes %{site_name}"
   is_reserved: "je rezervováno"
 
-  site_under_maintenance: 'Na webu v tuto chvíli probíhají úpravy.'
-  operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
+  backup:
+    operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
 
   too_many_mentions:
     zero: "Bohužel, nemůžete zmiňovat ostatní uživatele."
@@ -588,9 +588,7 @@ cs:
     github_client_id: "'Client id' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
     github_client_secret: "'Client secret' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
 
-    enable_persona_logins: "Povolit autorizaci přes službu Mozilla Persona"
-
-    allow_import: "Povolit import, kterým lze přepsat VŠECHNA data na tomto webu; nechte nastaveno na 'false', pokud neplánujete dělat importy dat"
+    allow_restore: "Povolit import, kterým lze přepsat VŠECHNA data na tomto webu; nechte nastaveno na 'false', pokud neplánujete dělat importy dat"
 
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"

@@ -18,8 +18,8 @@ it:
   via: "%{username} via %{site_name}"
   is_reserved: "è riservato"
 
-  site_under_maintenance: 'Il sito è momentaneamente in manutenzione.'
-  operation_already_running: "Una %{operation} è in esecuzione. Non è possibile avviare una nuova %{operation} adesso."
+  backup:
+    operation_already_running: "Una %{operation} è in esecuzione. Non è possibile avviare una nuova %{operation} adesso."
 
   too_many_mentions:
     zero: "Spiacente, non puoi menzionare altri utenti."
@@ -498,9 +498,7 @@ it:
     github_client_id: "Client id per autenticazione Github, ottenibile da https://github.com/settings/applications"
     github_client_secret: "Client secret per autenticazione Github, ottenibile da https://github.com/settings/applications"
 
-    enable_persona_logins: "Abilita autenticazione email con Mozilla Persona"
-
-    allow_import: "Abilita l'importazione, che può sostituire TUTTI i dati presenti nel sito; non modificare se non hai intenzione di importare dati"
+    allow_restore: "Abilita l'importazione, che può sostituire TUTTI i dati presenti nel sito; non modificare se non hai intenzione di importare dati"
 
     active_user_rate_limit_secs: "Quanto frequentemente viene aggiornato il campo 'last_seen_at' field, in secondi"
     previous_visit_timeout_hours: "Durata di una visita prima che venga considerata la visita 'precedente', in ore"

@@ -11,7 +11,10 @@ module CategoryGuardian
   end
 
   def can_delete_category?(category)
-    is_admin? && category.topic_count == 0 && !category.uncategorized?
+    is_admin? &&
+    category.topic_count == 0 &&
+    !category.uncategorized? &&
+    !category.has_children?
   end
 
   def can_see_category?(category)

@@ -154,6 +154,12 @@ Discourse.Group.reopenClass({
     });
   },
 
+  findPostsCount: function(name) {
+    return Discourse.ajax("/groups/" + name + "/posts_count.json").then(function(g) {
+      return g.posts_count;
+    });
+  },
+
   find: function(name) {
     return Discourse.ajax("/groups/" + name + ".json").then(function(g) {
       return Discourse.Group.create(g.basic_group);

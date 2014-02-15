@@ -1,3 +1,4 @@
+@import "common/foundation/variables";
 
 .topic-meta-data {
   width: 100%;
@@ -44,7 +45,7 @@ a.edit-topic {font-size: 15px;}
 }
 
 .docked #topic-progress {
-	  box-shadow: 0 0 3px #aaa;
+	  box-shadow: 0 0 3px $primary_light;
 }
 
 #topic-progress-wrapper {
@@ -64,15 +65,15 @@ a.edit-topic {font-size: 15px;}
 
 #topic-progress {
 
-	  box-shadow: 0 0 3px #000;
+	  box-shadow: 0 0 3px $primary;
 
   position: relative;
   &.hidden {
     display: none;
   }
   border: none;
-  background-color: #ddd;
-  color: #666;
+  background-color: $primary_lighter;
+  color: $primary_medium;
   width: 130px;
   height: 34px;
   .nums {
@@ -91,7 +92,7 @@ a.edit-topic {font-size: 15px;}
     left: 4px;
     border: 0;
     background: none;
-    color: #666;
+    color: $primary_medium;
 
     width: 60px;
     text-align: left;
@@ -108,7 +109,7 @@ a.edit-topic {font-size: 15px;}
     &:disabled {
 
       cursor: default;
-  color: #666;
+  color: $primary_medium;
     }
   }
   h4 {
@@ -121,10 +122,10 @@ a.edit-topic {font-size: 15px;}
     top: 0px;
     bottom: 0px;
     width: 0px;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid $primary_lighter;
     // background-color: #d4eaf4;
     // background-color: #C5E8F7;
-    background-color: #C6F3B6;
+    background-color: $success_light;
   }
 }
 

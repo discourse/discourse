@@ -11,6 +11,9 @@ function buildTopicRoute(filter) {
     },
 
     model: function() {
+      // attempt to stop early cause we need this to be called before .sync
+      Discourse.ScreenTrack.current().stop();
+
       return Discourse.TopicList.list(filter).then(function(list) {
         var tracking = Discourse.TopicTrackingState.current();
         if (tracking) {

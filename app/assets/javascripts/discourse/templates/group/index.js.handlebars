@@ -1,5 +1,5 @@
 <div class='user-stream'>
-  {{#groupedEach model}}
+  {{#each model itemController="groupPost"}}
     <div class='item'>
       <div class='clearfix info'>
         {{#link-to 'user' user class="avatar-link"}}<div class='avatar-wrapper'>{{avatar user imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div>{{/link-to}}
@@ -7,10 +7,15 @@
         <span class="title">
           <a href="{{unbound url}}">{{unbound title}}</a>
         </span>
+        {{#if byName}}
+          <span class="title">
+            {{unbound byName}}
+          </span>
+        {{/if}}
       </div>
       <p class='excerpt'>
       {{{unbound cooked}}}
       </p>
     </div>
-  {{/groupedEach}}
+  {{/each}}
 </div>

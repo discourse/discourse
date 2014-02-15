@@ -437,9 +437,6 @@ pt_BR:
       github:
         title: "com GitHub"
         message: "Autenticando com GitHub (certifique-se de que os bloqueadores de popup estejam desativados)"
-      persona:
-        title: "com Persona"
-        message: "Autenticando com Mozilla Persona (certifique-se de que os bloqueadores de popup estejam desativados)"
 
     composer:
       posting_not_on_topic: "Qual tópico você gostaria de responder?"

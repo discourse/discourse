@@ -14,12 +14,14 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :private_topics_count,
              :can_delete_all_posts,
              :can_be_deleted,
-             :suspend_reason
+             :suspend_reason,
+             :primary_group_id
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :api_key, serializer: ApiKeySerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
   has_one :leader_requirements, serializer: LeaderRequirementsSerializer, embed: :objects
+  has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
 
   def can_revoke_admin
     scope.can_revoke_admin?(object)

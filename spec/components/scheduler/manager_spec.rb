@@ -23,19 +23,60 @@ describe Scheduler::Manager do
         sleep 0.001
       end
     end
+
+    class SuperLongJob
+      extend ::Scheduler::Schedule
+
+      every 10.minutes
+
+      def perform
+        sleep 1000
+      end
+    end
   end
 
-  let(:manager) { Scheduler::Manager.new(Redis.new) }
+  let(:manager) { Scheduler::Manager.new(DiscourseRedis.new) }
 
   before do
+    $redis.del manager.class.lock_key
     $redis.del manager.class.queue_key
+    manager.remove(Testing::RandomJob)
+    manager.remove(Testing::SuperLongJob)
   end
 
   after do
     manager.stop!
+    manager.remove(Testing::RandomJob)
+    manager.remove(Testing::SuperLongJob)
+  end
+
+  describe '#sync' do
+
+    it 'increases' do
+      Scheduler::Manager.seq.should == Scheduler::Manager.seq - 1
+    end
   end
 
   describe '#tick' do
+
+    it 'should recover from crashed manager' do
+
+      info = manager.schedule_info(Testing::SuperLongJob)
+      info.next_run = Time.now.to_i - 1
+      info.write!
+
+      manager.tick
+      manager.stop!
+
+      $redis.del manager.identity_key
+
+      manager = Scheduler::Manager.new(DiscourseRedis.new)
+      manager.reschedule_orphans!
+
+      info = manager.schedule_info(Testing::SuperLongJob)
+      info.next_run.should <= Time.now.to_i
+    end
+
     it 'should only run pending job once' do
 
       Testing::RandomJob.runs = 0
@@ -48,6 +89,7 @@ describe Scheduler::Manager do
         Thread.new do
           manager = Scheduler::Manager.new(DiscourseRedis.new)
           manager.blocking_tick
+          manager.stop!
         end
       end.map(&:join)
 

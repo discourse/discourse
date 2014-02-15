@@ -467,9 +467,6 @@ da:
       github:
         title: "med GitHub"
         message: "Logger ind med GitHub (kontrollér at pop-op-blokering ikke er aktiv)"
-      persona:
-        title: "med Persona"
-        message: "Logger ind med Mozilla Persona (kontrollér at pop-op-blokering ikke er aktiv)"
 
     composer:
       posting_not_on_topic: "Hvilket emne vil du svare på?"

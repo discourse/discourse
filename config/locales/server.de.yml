@@ -24,8 +24,8 @@ de:
   via: "%{username} via %{site_name}"
   is_reserved: "ist reserviert"
 
-  site_under_maintenance: 'Die Seite wird momentan gewartet.'
-  operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
+  backup:
+    operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
 
   too_many_mentions:
     zero: "Entschuldige, du kannst andere Nutzer nicht erwähnen."
@@ -562,9 +562,7 @@ de:
     github_client_id: "Client-ID für Github Authentisierung, registriert auf https://github.com/settings/applications"
     github_client_secret: "Client Secret für Github Authentisierung, registriert auf https://github.com/settings/applications"
 
-    enable_persona_logins: "Aktiviere mailbasierte Authentisierung mit Mozilla Persona."
-
-    allow_import: "Erlaube Datenimports. (WARNUNG: Hiermit können ALLE vorhandenen Daten überschrieben werden; immer auf 'false' lassen, es sei denn Du planst wirklich Datenimports)."
+    allow_restore: "Erlaube Datenimports. (WARNUNG: Hiermit können ALLE vorhandenen Daten überschrieben werden; immer auf 'false' lassen, es sei denn Du planst wirklich Datenimports)."
 
     active_user_rate_limit_secs: "Sekunden, nach denen das 'last_seen_at'-Feld aktualisiert wird."
     previous_visit_timeout_hours: "Stunden, die ein Besuch dauert bevor er als 'früherer' Besuch gezählt wird."

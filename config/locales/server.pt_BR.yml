@@ -24,8 +24,8 @@ pt_BR:
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
 
-  site_under_maintenance: 'Este site está sob manutenção no momento.'
-  operation_already_running: "Uma tarefa %{operation} está rodando atualmente. Impossível iniciar uma nova tarefa %{operation} agora."
+  backup:
+    operation_already_running: "Uma tarefa %{operation} está rodando atualmente. Impossível iniciar uma nova tarefa %{operation} agora."
 
   too_many_mentions:
     zero: "Desculpe, você não pode mencionar outros usuários."
@@ -593,9 +593,7 @@ pt_BR:
     github_client_id: "Client id para autenticação via Github, registrado em https://github.com/settings/applications"
     github_client_secret: "Client secret para autenticação via Github, registrado em https://github.com/settings/applications"
 
-    enable_persona_logins: "Ativar autenticação baseada em email com Mozilla Persona"
-
-    allow_import: "Permitir importar, vai substituir TODOS os dados do site. Deixe como falso a menos que você pretenda fazer importações."
+    allow_restore: "Permitir importar, vai substituir TODOS os dados do site. Deixe como falso a menos que você pretenda fazer importações."
 
     active_user_rate_limit_secs: "Qual a frequencia de atualização do campo 'última vez visto em', em segundos."
     previous_visit_timeout_hours: "Quanto tempo uma visita dura antes de considerarmos como 'última visita', em horas."

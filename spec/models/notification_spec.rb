@@ -205,6 +205,7 @@ describe Notification do
     end
   end
 
+
   describe 'ensure consistency' do
     it 'deletes notifications if post is missing or deleted' do
 
@@ -228,4 +229,46 @@ describe Notification do
     end
   end
 
+end
+
+# pulling this out cause I don't want an observer
+describe Notification do
+  describe '#recent_report' do
+    let(:user){ Fabricate(:user) }
+    let(:post){ Fabricate(:post) }
+
+    def fab(type, read)
+      @i ||= 0
+      @i += 1
+      Notification.create!(read: read, user_id: user.id, topic_id: post.topic_id, post_number: post.post_number, data: '[]',
+                           notification_type: type, created_at: @i.days.from_now)
+    end
+
+    def unread_pm
+      fab(Notification.types[:private_message], false)
+    end
+
+    def pm
+      fab(Notification.types[:private_message], true)
+    end
+
+    def regular
+      fab(Notification.types[:liked], true)
+    end
+
+
+
+    it 'orders stuff correctly' do
+      a = unread_pm
+          regular
+      c = pm
+      d = regular
+
+      # bumps unread pms to front of list
+
+      notifications = Notification.recent_report(user, 3)
+      notifications.map{|n| n.id}.should == [a.id, d.id, c.id]
+
+    end
+  end
 end

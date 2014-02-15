@@ -62,6 +62,14 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     return !_.every(this.get('post_actions'), function(action) { return action.name_key !== 'spam'; });
   }.property('post_actions.@each.name_key'),
 
+  topicFlagged: function() {
+    return _.any(this.get('post_actions'), function(action) { return action.targets_topic; });
+  }.property('post_actions.@each.targets_topic'),
+
+  postAuthorFlagged: function() {
+    return _.any(this.get('post_actions'), function(action) { return !action.targets_topic; });
+  }.property('post_actions.@each.targets_topic'),
+
   canDeleteAsSpammer: function() {
     return (Discourse.User.currentProp('staff') && this.get('flaggedForSpam') && this.get('user.can_delete_all_posts') && this.get('user.can_be_deleted'));
   }.property('flaggedForSpam'),

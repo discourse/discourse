@@ -427,9 +427,6 @@ ja:
       github:
         title: "with GitHub"
         message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"
-      persona:
-        title: "with Persona"
-        message: "Persona による認証 (ポップアップがブロックされていないことを確認してください)"
 
     composer:
       posting_not_on_topic: "回答したいトピックはどれですか?"

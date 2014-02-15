@@ -265,6 +265,10 @@ SQL
 
     unless guardian.can_see_deleted_posts?
       builder.where("p.deleted_at is null and p2.deleted_at is null and t.deleted_at is null")
+
+      current_user_id = -2
+      current_user_id = guardian.user.id if guardian.user
+      builder.where("NOT COALESCE(p.hidden, false) OR p.user_id = :current_user_id", current_user_id: current_user_id )
     end
 
     unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?

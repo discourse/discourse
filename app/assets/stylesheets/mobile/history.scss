@@ -11,7 +11,7 @@
   #revision-controls {
     float: left;
     .btn[disabled]:hover {
-      color: #534d4b;
+      color: $primary;
     }
   }
   #display-modes {
@@ -21,7 +21,7 @@
     }
   }
   #revision-details {
-    background-color: #eee;
+    background-color: $primary_lightest;
     padding: 5px;
     margin-top: 10px;
   }
@@ -56,63 +56,63 @@
   }
   ins, .diff-ins {
     code, img {
-      border: 2px solid #405A04;
+      border: 2px solid $success_dark;
     }
     img {
       opacity: .75;
       filter: alpha(opacity=75);
     }
     a {
-      color: #2D4003;
+      color: $success_dark;
       text-decoration: none;
     }
   }
   img.diff-ins, code.diff-ins {
-    border: 2px solid #405A04;
+    border: 2px solid $success_dark;
   }
   img.diff-ins {
     opacity: .75;
     filter: alpha(opacity=75);
   }
   .diff-ins {
-    background: #f9ffe1;
+    background: $success_light;
   }
   ins {
-    color: #405A04;
-    background: #D1E1AD;
+    color: $success_dark;
+    background: $success_light;
   }
   del, .diff-del {
     code, img {
-      border: 2px solid #A82400;
+      border: 2px solid $highlight_danger_dark;
     }
     img {
       opacity: .5;
       filter: alpha(opacity=50);
     }
     a {
-      color: #400E00;
+      color: $highlight_danger_dark;
       text-decoration: none;
     }
   }
   img.diff-del, code.diff-del {
-    border: 2px solid #A82400;
+    border: 2px solid $highlight_danger;
   }
   img.diff-del {
     opacity: .5;
     filter: alpha(opacity=50);
   }
   .diff-del {
-    background: #fff4f4;
+    background: $highlight_danger_light;
   }
   del {
-    color: #A82400;
-    background: #E5BDB2;
+    color: $highlight_danger_dark;
+    background: $highlight_danger_light;
   }
   span.date {
     font-weight: bold;
   }
   span.edit-reason {
-    background-color: #ffffcc;
+    background-color: $highlight;
     padding: 3px 5px 5px 5px;
   }
   .modal-header {

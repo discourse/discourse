@@ -7,6 +7,8 @@ require "optparse"
 @result_file = nil
 @iterations = 500
 @best_of = 1
+@mem_stats = false
+
 opts = OptionParser.new do |o|
   o.banner = "Usage: ruby bench.rb [options]"
 
@@ -21,6 +23,9 @@ opts = OptionParser.new do |o|
   end
   o.on("-b", "--best_of [NUM]", "Number of times to run the bench taking best as result") do |i|
     @best_of = i.to_i
+  end
+  o.on("-m", "--memory_stats") do
+    @mem_stats = true
   end
 end
 opts.parse!
@@ -211,6 +216,11 @@ begin
   }).merge(facts)
 
   puts results.to_yaml
+
+  if @mem_stats
+    puts
+    puts open("http://127.0.0.1:#{@port}/admin/memory_stats#{append}").read
+  end
 
   if @result_file
     File.open(@result_file,"wb") do |f|

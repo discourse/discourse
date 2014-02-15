@@ -3,10 +3,8 @@ require_dependency 'email/renderer'
 class Admin::EmailController < Admin::AdminController
 
   def index
-    render_json_dump({
-      delivery_method: delivery_method,
-      settings: delivery_settings
-    })
+    data = { delivery_method: delivery_method, settings: delivery_settings }
+    render_json_dump(data)
   end
 
   def test
@@ -15,9 +13,19 @@ class Admin::EmailController < Admin::AdminController
     render nothing: true
   end
 
-  def logs
-    @email_logs = EmailLog.limit(50).includes(:user).order('created_at desc').to_a
-    render_serialized(@email_logs, EmailLogSerializer)
+  def all
+    email_logs = filter_email_logs(EmailLog.all, params)
+    render_serialized(email_logs, EmailLogSerializer)
+  end
+
+  def sent
+    email_logs = filter_email_logs(EmailLog.sent, params)
+    render_serialized(email_logs, EmailLogSerializer)
+  end
+
+  def skipped
+    email_logs = filter_email_logs(EmailLog.skipped, params)
+    render_serialized(email_logs, EmailLogSerializer)
   end
 
   def preview_digest
@@ -27,6 +35,16 @@ class Admin::EmailController < Admin::AdminController
   end
 
   private
+
+  def filter_email_logs(email_logs, params)
+    email_logs = email_logs.limit(50).includes(:user).order("email_logs.created_at desc").references(:user)
+    email_logs = email_logs.where("users.username LIKE ?", "%#{params[:user]}%") if params[:user].present?
+    email_logs = email_logs.where("email_logs.to_address LIKE ?", "%#{params[:address]}%") if params[:address].present?
+    email_logs = email_logs.where("email_logs.email_type LIKE ?", "%#{params[:type]}%") if params[:type].present?
+    email_logs = email_logs.where("email_logs.reply_key LIKE ?", "%#{params[:reply_key]}%") if params[:reply_key].present?
+    email_logs = email_logs.where("email_logs.skipped_reason LIKE ?", "%#{params[:skipped_reason]}%") if params[:skipped_reason].present?
+    email_logs.to_a
+  end
 
   def delivery_settings
     action_mailer_settings

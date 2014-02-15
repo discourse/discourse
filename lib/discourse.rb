@@ -27,6 +27,9 @@ module Discourse
 
   class InvalidPost < Exception; end
 
+  # When read-only mode is enabled
+  class ReadOnly < Exception; end
+
   # Cross site request forgery
   class CSRF < Exception; end
 
@@ -138,18 +141,20 @@ module Discourse
     return base_url_no_prefix + base_uri
   end
 
-  def self.enable_maintenance_mode
-    $redis.set maintenance_mode_key, 1
+  def self.enable_readonly_mode
+    $redis.set readonly_mode_key, 1
+    MessageBus.publish(readonly_channel, true)
     true
   end
 
-  def self.disable_maintenance_mode
-    $redis.del maintenance_mode_key
+  def self.disable_readonly_mode
+    $redis.del readonly_mode_key
+    MessageBus.publish(readonly_channel, false)
     true
   end
 
-  def self.maintenance_mode?
-    !!$redis.get( maintenance_mode_key )
+  def self.readonly_mode?
+    !!$redis.get(readonly_mode_key)
   end
 
   def self.git_version
@@ -198,9 +203,12 @@ module Discourse
     Rails.configuration.action_controller.asset_host
   end
 
-private
-
-  def self.maintenance_mode_key
-    'maintenance_mode'
+  def self.readonly_mode_key
+    "readonly_mode"
   end
+
+  def self.readonly_channel
+    "/global/read-only"
+  end
+
 end

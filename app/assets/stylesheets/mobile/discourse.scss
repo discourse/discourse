@@ -7,7 +7,7 @@
 @import "../common/foundation/helpers";
 
 body {
-  background-color: #fff;
+  background-color: $secondary;
 }
 
 .container {
@@ -32,38 +32,38 @@ header {
 body {
 
   button.ok {
-    @include linear-gradient(lighten($green, 5%), $green);
-    color: $white;
+    @include linear-gradient(lighten($success, 5%), $success);
+    color: $secondary;
     @include hover {
-      @include linear-gradient(lighten($green, 10%), $green);
-      color: $white;
+      @include linear-gradient(lighten($success, 10%), $success);
+      color: $secondary;
     }
   }
   button.cancel {
-    @include linear-gradient(lighten($red, 5%), $red);
-    color: $white;
+    @include linear-gradient(lighten($highlight_danger, 5%), $highlight_danger);
+    color: $secondary;
     @include hover {
-      @include linear-gradient(lighten($red, 10%), $red);
-      color: $white;
+      @include linear-gradient(lighten($highlight_danger, 10%), $highlight_danger);
+      color: $secondary;
     }
   }
   .coldmap-high {
-    color: lighten($blue, 20%) !important;
+    color: lighten($tertiary, 20%) !important;
   }
   .coldmap-med {
-    color: lighten($blue, 10%) !important;
+    color: lighten($tertiary, 10%) !important;
   }
   .coldmap-low {
-    color: $blue !important;
+    color: $tertiary !important;
   }
   .heatmap-high {
-    color: lighten($red, 50%) !important;
+    color: lighten($highlight_danger, 50%) !important;
   }
   .heatmap-med {
-    color: lighten($red, 10%) !important;
+    color: lighten($highlight_danger, 10%) !important;
   }
   .heatmap-low {
-    color: $red !important;
+    color: $highlight_danger !important;
   }
   #loading-message {
     position: absolute;
@@ -71,7 +71,7 @@ body {
     text-align: center;
     top: 120px;
     left: 500px;
-    color: $darkish_gray;
+    color: $primary_medium;
   }
   .top-space {
     margin-top: 10px;
@@ -86,18 +86,18 @@ body {
       padding: 10px 10px 10px 10px;
     }
     &.white {
-      background-color: $white;
+      background-color: $secondary;
     }
   }
   #main {
     .fa-star.starred {
-      color: #fe1;
+      color: $highlight;
     }
     a.star {
       display: inline-block;
       font-size: 15px;
       line-height: 1;
-      color: #cacaca;
+      color: $primary_light;
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
@@ -146,7 +146,7 @@ body {
   }
   .message {
     @include border-radius-all(8px);
-    background-color: $white;
+    background-color: $secondary;
     padding: 14px;
     h2 {
       margin-bottom: 20px;
@@ -156,13 +156,12 @@ body {
     }
   }
   #footer {
-    background-color: $eggplant;
     .container {
       height: 50px;
       .contents {
         padding-top: 10px;
         a[href] {
-          color: $white;
+          color: $secondary;
         }
       }
     }
@@ -172,14 +171,14 @@ body {
   }
   .grippie {
     width: 100%;
-    border: 1px solid #dddddd;
+    border: 1px solid $primary_lighter;
     border-width: 1px 0px;
     cursor: row-resize;
     height: 11px;
     overflow: hidden;
-    background-color: #eeeeee;
+    background-color: $primary_lightest;
     display:block {}
-    background: image-url("grippie.png") #eeeeee no-repeat center 3px;
+    background: image-url("grippie.png") $primary_lightest no-repeat center 3px;
   }
 }
 
@@ -187,10 +186,10 @@ form {
   .tip {
     display: inline-block;
     &.good {
-      color: $green;
+      color: $success;
     }
     &.bad {
-      color: $red;
+      color: $highlight_danger;
     }
   }
 }
@@ -215,7 +214,7 @@ blockquote {
     display: inline-block;
     i {
       font-size: 15px;
-      color: darken($white, 60%);
+      color: darken($secondary, 60%);
     }
   }
 }
@@ -226,12 +225,12 @@ blockquote {
 
 #pagedown-editor {
   width: 540px;
-  background-color: $white;
+  background-color: $secondary;
   padding: 0 10px 13px 10px;
-  border: 1px solid $gray;
+  border: 1px solid $primary_light;
   .preview {
     margin-top: 8px;
-    border: 1px dashed $gray;
+    border: 1px dashed $primary_light;
     padding: 8px 8px 0 8px;
     p {
       margin: 0 0 10px 0;
@@ -245,13 +244,13 @@ blockquote {
 .spinner {
   width: 100px;
   margin: 0 auto 30px auto;
-  background-color: $black;
+  background-color: $primary;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
   font-size: 15px;
   line-height: 23px;
   text-align: center;
-  color: $white;
+  color: $secondary;
   background: {
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
@@ -265,9 +264,9 @@ blockquote {
 }
 
 .avatar-wrapper {
-  background-color: white;
+  background-color: $secondary;
   display: inline-block;
-  border: 1px solid #82786b;
+  border: 1px solid $primary_light;
   @include border-radius-all(5px);
   img {
     @include border-radius-all(4px);

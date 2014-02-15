@@ -27,9 +27,18 @@ describe Admin::EmailController do
     end
   end
 
-  context '.logs' do
+  context '.sent' do
     before do
-      xhr :get, :logs
+      xhr :get, :sent
+    end
+
+    subject { response }
+    it { should be_success }
+  end
+
+  context '.skipped' do
+    before do
+      xhr :get, :skipped
     end
 
     subject { response }

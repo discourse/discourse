@@ -67,7 +67,14 @@
           {{/if}}
 
           {{#unless postStream.loadingFilter}}
-            {{cloaked-collection cloakView="post" idProperty="post_number" defaultHeight="200" content=postStream.posts slackRatio=slackRatio loadingHTML=controller.loadingHTML}}
+            {{cloaked-collection cloakView="post"
+                                 idProperty="post_number"
+                                 defaultHeight="200"
+                                 content=postStream.posts
+                                 slackRatio=slackRatio
+                                 loadingHTML=controller.loadingHTML
+                                 preservesContext="true"
+                                 offsetFixed="header"}}
           {{/unless}}
 
           {{#if postStream.loadingBelow}}

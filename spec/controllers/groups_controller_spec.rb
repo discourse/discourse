@@ -18,6 +18,21 @@ describe GroupsController do
     end
   end
 
+  describe "posts_count" do
+    it "ensures the group can be seen" do
+      Guardian.any_instance.expects(:can_see?).with(group).returns(false)
+      xhr :get, :posts_count, group_id: group.name
+      response.should_not be_success
+    end
+
+    it "performs the query and responds with JSON" do
+      Guardian.any_instance.expects(:can_see?).with(group).returns(true)
+      Group.any_instance.expects(:posts_for).returns(Group.none)
+      xhr :get, :posts_count, group_id: group.name
+      response.should be_success
+    end
+  end
+
   describe "posts" do
     it "ensures the group can be seen" do
       Guardian.any_instance.expects(:can_see?).with(group).returns(false)
@@ -27,7 +42,7 @@ describe GroupsController do
 
     it "calls `posts_for` and responds with JSON" do
       Guardian.any_instance.expects(:can_see?).with(group).returns(true)
-      Group.any_instance.expects(:posts_for).returns([])
+      Group.any_instance.expects(:posts_for).returns(Group.none)
       xhr :get, :posts, group_id: group.name
       response.should be_success
     end

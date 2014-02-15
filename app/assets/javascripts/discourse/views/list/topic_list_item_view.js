@@ -2,7 +2,7 @@
   This view handles the rendering of a topic in a list
 
   @class TopicListItemView
-  @extends Discourse.View
+  @extends Discourse.GroupedView
   @namespace Discourse
   @module Discourse
 **/

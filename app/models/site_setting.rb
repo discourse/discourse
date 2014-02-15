@@ -56,6 +56,11 @@ class SiteSetting < ActiveRecord::Base
     @anonymous_menu_items ||= Set.new Discourse.anonymous_filters.map(&:to_s)
   end
 
+  def self.normalized_embeddable_host
+    return embeddable_host if embeddable_host.blank?
+    embeddable_host.sub(/^https?\:\/\//, '')
+  end
+
   def self.anonymous_homepage
     top_menu_items.map { |item| item.name }
                   .select { |item| anonymous_menu_items.include?(item) }

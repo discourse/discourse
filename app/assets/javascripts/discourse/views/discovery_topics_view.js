@@ -10,12 +10,6 @@
 Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.LoadMore, {
   eyelineSelector: '.topic-list-item',
 
-  _scrollTop: function() {
-    Em.run.schedule('afterRender', function() {
-      $(document).scrollTop(0);
-    });
-  }.on('didInsertElement'),
-
   actions: {
     loadMore: function() {
       var self = this;
@@ -30,6 +24,19 @@ Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.LoadMore, {
       });
     }
   },
+
+  _readjustScrollPosition: function() {
+    var scrollTo = Discourse.Session.currentProp('topicListScrollPosition'),
+        url = document.location.href;
+
+    if (url && url.indexOf('/more') === -1) { scrollTo = 0; }
+
+    if (typeof scrollTo !== "undefined") {
+      Em.run.schedule('afterRender', function() {
+        $(window).scrollTop(scrollTo);
+      });
+    }
+  }.on('didInsertElement'),
 
   _updateTitle: function() {
     Discourse.notifyTitle(this.get('controller.topicTrackingState.incomingCount'));

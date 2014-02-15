@@ -7,13 +7,13 @@ describe TopicRetriever do
   let(:topic_retriever) { TopicRetriever.new(embed_url) }
 
   it "does not call perform_retrieve when embeddable_host is not set" do
-    SiteSetting.expects(:embeddable_host).returns(nil)
+    SiteSetting.stubs(:embeddable_host).returns(nil)
     topic_retriever.expects(:perform_retrieve).never
     topic_retriever.retrieve
   end
 
   it "does not call perform_retrieve when embeddable_host is different than the host of the URL" do
-    SiteSetting.expects(:embeddable_host).returns("eviltuna.com")
+    SiteSetting.stubs(:embeddable_host).returns("eviltuna.com")
     topic_retriever.expects(:perform_retrieve).never
     topic_retriever.retrieve
   end
@@ -26,7 +26,7 @@ describe TopicRetriever do
 
   context "with a valid host" do
     before do
-      SiteSetting.expects(:embeddable_host).returns("eviltrout.com")
+      SiteSetting.stubs(:embeddable_host).returns("eviltrout.com")
     end
 
     it "calls perform_retrieve if it hasn't been retrieved recently" do

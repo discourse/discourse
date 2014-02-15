@@ -372,6 +372,21 @@ describe Category do
 
     end
 
+    describe ".query_parent_category" do
+      it "should return the parent category id given a parent slug" do
+        parent_category.name = "Amazing Category"
+        parent_category.id.should == Category.query_parent_category(parent_category.slug)
+      end
+    end
+
+    describe ".query_category" do
+      it "should return the category" do
+        category = Fabricate(:category, name: "Amazing Category", parent_category_id: parent_category.id, user: user)
+        parent_category.name = "Amazing Parent Category"
+        category.should == Category.query_category(category.slug, parent_category.id)
+      end
+    end
+
   end
 
 end
