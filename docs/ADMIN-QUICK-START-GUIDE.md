@@ -27,7 +27,7 @@ From here, you'll be able to access the Admin functions, all of which are very i
 
 ### Enable Twitter Logins
 
-1. From the Administrative console above, enter **Site Settings**.
+1. From the Admin console, visit User Settings, by clicking **Settings**, then **User**.
 2. Scroll down to the two text fields named:
 
   `twitter_consumer_key`  
@@ -38,7 +38,7 @@ From here, you'll be able to access the Admin functions, all of which are very i
 
 ### Enable Facebook Logins
 
-1. From the Administrative console above, enter **Site Settings**.
+1. From the Admin console, visit User Settings, by clicking **Settings**, then **User**.
 2. Scroll down to the two text fields named:
 
   `facebook_app_id`  
@@ -49,7 +49,7 @@ From here, you'll be able to access the Admin functions, all of which are very i
 
 ### Enable GitHub Logins<p>
 
-1. From the Administrative console above, enter **Site Settings**.
+1. From the Admin console, visit User Settings, by clicking **Settings**, then **User**.
 2. Scroll down to the two text fields named:
 
   `github_client_id`  
