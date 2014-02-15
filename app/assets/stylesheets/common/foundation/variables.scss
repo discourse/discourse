@@ -41,7 +41,7 @@ $primary_light: lighten($primary, 50%) !default; // grey
 $primary_lighter: lighten($primary, 60%) !default; //light grey
 $primary_lightest: lighten($primary, 76%) !default; //lighter grey
 
-$tertiary_lightest: lighten($tertiary, 55%) !default; //lighte blue
+$tertiary_lightest: lighten($tertiary, 50%) !default; //lighte blue
 $tertiary_light: lighten($tertiary, 30%) !default; // light blue
 $tertiary_dark: darken($tertiary, 10%) !default; // dark blue
 
