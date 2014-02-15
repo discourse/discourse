@@ -162,7 +162,7 @@ Adding Support for a new URL
   6. Require in Engine module
 
     ``` ruby
-    # in lib/onebox/engine/engine.rb
+    # in lib/onebox/engine.rb
     require_relative "engine/name_onebox"
     ```
 
