@@ -13,6 +13,11 @@ class Admin::EmailController < Admin::AdminController
     render nothing: true
   end
 
+  def all
+    email_logs = filter_email_logs(EmailLog.all, params)
+    render_serialized(email_logs, EmailLogSerializer)
+  end
+
   def sent
     email_logs = filter_email_logs(EmailLog.sent, params)
     render_serialized(email_logs, EmailLogSerializer)
@@ -37,7 +42,7 @@ class Admin::EmailController < Admin::AdminController
     email_logs = email_logs.where("email_logs.to_address LIKE ?", "%#{params[:address]}%") if params[:address].present?
     email_logs = email_logs.where("email_logs.email_type LIKE ?", "%#{params[:type]}%") if params[:type].present?
     email_logs = email_logs.where("email_logs.reply_key LIKE ?", "%#{params[:reply_key]}%") if params[:reply_key].present?
-    email_logs = email_logs.where("email_logs.skipped_reason LIKE ?", "%#{params[:reason]}%") if params[:reason].present?
+    email_logs = email_logs.where("email_logs.skipped_reason LIKE ?", "%#{params[:skipped_reason]}%") if params[:skipped_reason].present?
     email_logs.to_a
   end
 

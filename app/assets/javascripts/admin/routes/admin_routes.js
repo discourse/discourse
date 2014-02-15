@@ -16,6 +16,7 @@ Discourse.Route.buildRoutes(function() {
     });
 
     this.resource('adminEmail', { path: '/email'}, function() {
+      this.route('all');
       this.route('sent');
       this.route('skipped');
       this.route('previewDigest', { path: '/preview-digest' });

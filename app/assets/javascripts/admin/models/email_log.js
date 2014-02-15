@@ -22,7 +22,7 @@ Discourse.EmailLog.reopenClass({
 
   findAll: function(filter) {
     filter = filter || {};
-    var status = filter.status || "sent";
+    var status = filter.status || "all";
     filter = _.omit(filter, "status");
 
     return Discourse.ajax("/admin/email/" + status + ".json", { data: filter }).then(function(logs) {

@@ -23,5 +23,6 @@ Discourse.AdminEmailLogsRoute = Discourse.Route.extend({
 
 });
 
+Discourse.AdminEmailAllRoute = Discourse.AdminEmailLogsRoute.extend({ status: "all" });
 Discourse.AdminEmailSentRoute = Discourse.AdminEmailLogsRoute.extend({ status: "sent" });
 Discourse.AdminEmailSkippedRoute = Discourse.AdminEmailLogsRoute.extend({ status: "skipped" });
