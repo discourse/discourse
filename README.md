@@ -139,10 +139,10 @@ Adding Support for a new URL
     end
     ```
 
-  4. Create new handlebars template
+  4. Create new mustache template
 
     ``` html
-    # in templates/name.handlebars
+    # in templates/name.mustache
     <div class="onebox">
       <a href="{{url}}">
         <h1>{{name}}</h1>
