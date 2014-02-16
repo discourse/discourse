@@ -170,14 +170,15 @@ begin
   run "wget http://127.0.0.1:#{@port}/ -o /dev/null"
 
   tests = [
+    ["categories", "/categories"],
     ["home", "/"],
-    ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69"],
+    ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69"]
     # ["user", "/users/admin1/activity"],
-    ["categories", "/categories"]
   ]
 
-  tests += tests.map{|k,url| ["#{k}_admin", "#{url}#{append}"]}
-  tests.shuffle!
+  tests = tests.map{|k,url| ["#{k}_admin", "#{url}#{append}"]} + tests
+
+  # NOTE: we run the most expensive page first in the bench
 
   def best_of(a, b)
     return a unless b
