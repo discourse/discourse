@@ -915,15 +915,15 @@ en:
       [2]: https://watchmanmonitoring.zendesk.com/hc/articles/201912358-Getting-Started-in-the-Subscriber-Community
 
   invite_forum_mailer:
-    subject_template: "[Watchman Community] You are invited to join the Watchman Monitoring Community"
+    subject_template: "[Watchman Community] You've been invited to join the Watchman Monitoring Community."
     text_body_template: |
-      You are invited to join the Watchman Monitoring Community
+      You've been invited to join the Watchman Monitoring Community.
       
-      Click here to accept this invitation and be automatically logged in:
+      Click the link below to accept this invitation and be automatically logged in.
 
       [%{invite_link}][1]
 
-      Questions? Visit our support site at [https://support.watchmanmonitoring.com][2]
+      This invitation expires after 7 days. Questions? Visit our support site at [https://support.watchmanmonitoring.com][2]
 
       [1]: %{invite_link}
       [2]: https://watchmanmonitoring.zendesk.com/hc/articles/201912358-Getting-Started-in-the-Subscriber-Community
