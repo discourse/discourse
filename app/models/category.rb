@@ -357,6 +357,12 @@ SQL
   def uncategorized?
     id == SiteSetting.uncategorized_category_id
   end
+
+  def url
+    url = "/category"
+    url << "/#{parent_category.slug}" if parent_category_id
+    url << "/#{slug}"
+  end
 end
 
 # == Schema Information
