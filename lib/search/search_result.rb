@@ -24,7 +24,7 @@ class Search
     end
 
     def self.from_category(c)
-      SearchResult.new(type: :category, id: c.id, title: c.name, url: "/category/#{c.slug}").tap do |r|
+      SearchResult.new(type: :category, id: c.id, title: c.name, url: c.url).tap do |r|
         r.color = c.color
         r.text_color = c.text_color
       end
