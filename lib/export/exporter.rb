@@ -155,7 +155,7 @@ module Export
       db_conf = Rails.configuration.database_configuration[Rails.env]
       host = db_conf["host"]
       password = db_conf["password"]
-      username = db_conf["username"] || "postgres"
+      username = db_conf["username"] || ENV["USER"] || "postgres"
       database = db_conf["database"]
 
       password_argument = "PGPASSWORD=#{password}" if password.present?
