@@ -79,11 +79,19 @@ es:
     no_info_me: "<div class='missing-profile'>El campo 'Sobre mí' de tu perfil está actualmente en blanco, <a href='/users/%{username_lower}/preferences/about-me'>¿Te gustaría rellenarlo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} no ha introducido nada aún en el campo 'Sobre mí' de su perfil</div>"
 
+  vip_category_name: "Salón"
+  vip_category_description: "Una categoría exclusiva para miembros de un nivel de confianza de 3 o más."
+
+  meta_category_name: "Meta"
+  meta_category_description: "Discusión sobre este foro, su estructura, cómo funciona, y cómo podemos mejorarlo."
+
   category:
     topic_prefix: "Defeinición de categoría para %{category}"
     replace_paragraph: "[Reemplaza el primer párrafo con una descripción corta de tu nueva categoría. Esta guía aparecerá en el área de selección de categoría, por lo que trata de mantenerla por debajo de los 200 caracteres.]"
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
-
+    errors:
+      self_parent: "El padre de una subcategoría no puede ser él mismo."
+      depth: "No puedes anidar una subcategoría debajo de otra."
   trust_levels:
     newuser:
       title: "nuevo usuario"
@@ -91,12 +99,12 @@ es:
       title: "usuario básico"
     regular:
       title: "usuario regular"
-    experienced:
-      title: "usuario con experiencia"
-    advanced:
-      title: "usuario avanzado"
-    moderator:
-      title: "moderador"
+    leader:
+      title: "líder"
+    elder:
+      title: "anciano"
+    change_failed_explanation: "Intentaste degradar a un usuario %{user_name} a '%{new_trust_level}'. Sin embargo su nivel de confianza ya es '%{current_trust_level}'. %{user_name} seguirá en '%{current_trust_level}'"
+
 
   rate_limiter:
     too_many_requests: "Estas haciendo eso demasiado a menudo. Por favor espera %{time_left} antes de intentarlo de nuevo."
