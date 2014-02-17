@@ -157,6 +157,9 @@ describe Search do
           "_#{post4.id}",
           topic2.id]
 
+        # trigger expanded search
+        results = Search.new('birds', search_context: post1.topic).execute
+
       end
     end
 
