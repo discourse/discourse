@@ -235,13 +235,9 @@ module Export
 
       upload_directory = "uploads/" + @current_db
 
-      if Dir[upload_directory].present?
-
-        log "Archiving uploads..."
-        FileUtils.cd(File.join(Rails.root, "public")) do
-          `tar --append --file #{tar_filename} #{upload_directory}`
-        end
-
+      log "Archiving uploads..."
+      FileUtils.cd(File.join(Rails.root, "public")) do
+        `tar --append --file #{tar_filename} #{upload_directory}`
       end
 
       log "Gzipping archive..."
