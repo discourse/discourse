@@ -12,7 +12,8 @@ Discourse.AdminEmailLogsRoute = Discourse.Route.extend({
     return Discourse.EmailLog.findAll({ status: this.get("status") });
   },
 
-  setupController: function(controller) {
+  setupController: function(controller, model) {
+    this._super(controller, model);
     // resets the filters
     controller.set("filter", { status: this.get("status") });
   },
