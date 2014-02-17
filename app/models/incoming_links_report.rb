@@ -90,7 +90,6 @@ class IncomingLinksReport
     num_clicks = num_clicks.to_a.sort_by {|x| x[1]}.last(10).reverse # take the top 10
     report.data = []
     topics = Topic.select('id, slug, title').where('id in (?)', num_clicks.map {|z| z[0]})
-    topics = topics.all unless rails4?
     num_clicks.each do |topic_id, num_clicks_element|
       topic = topics.find {|t| t.id == topic_id}
       if topic
