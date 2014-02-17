@@ -11,59 +11,38 @@ module Bundler::SharedHelpers
 end
 
 module ::Kernel
-  def rails4?
-    !ENV["RAILS3"]
-  end
-
   def rails_master?
-    rails4? && ENV["RAILS_MASTER"]
+    ENV["RAILS_MASTER"]
   end
 end
 
-if rails4?
-  rails_version = rails_master? ? 'rails_master' : 'rails4'
+if rails_master?
+  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_master.lock")
+end
 
-  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_#{rails_version}.lock")
-
-  # Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
-  class Bundler::Dsl
-    # A bit messy, this can be called multiple times by bundler, avoid blowing the stack
-    unless self.method_defined? :to_definition_unpatched
-      alias_method :to_definition_unpatched, :to_definition
-    end
-    def to_definition(bad_lockfile, unlock)
-      to_definition_unpatched(Bundler::SharedHelpers.default_lockfile, unlock)
-    end
+# Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
+class Bundler::Dsl
+  # A bit messy, this can be called multiple times by bundler, avoid blowing the stack
+  unless self.method_defined? :to_definition_unpatched
+    alias_method :to_definition_unpatched, :to_definition
   end
-else
-  # Note to be deprecated, in place of a dual boot master
-  puts "Booting in Rails 3 mode"
+  def to_definition(bad_lockfile, unlock)
+    to_definition_unpatched(Bundler::SharedHelpers.default_lockfile, unlock)
+  end
 end
 
 # see: https://github.com/mbleigh/seed-fu/pull/54
 # taking forever to get changes upstream in seed-fu
 gem 'seed-fu-discourse', require: 'seed-fu'
 
-if rails4?
-  if rails_master?
-    gem 'rails', git: 'https://github.com/rails/rails.git'
-    gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
-  else
-    gem 'rails'
-    gem 'actionpack-action_caching'
-  end
-  gem 'rails-observers'
+if rails_master?
+  gem 'rails', git: 'https://github.com/rails/rails.git'
+  gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
 else
-  # we had pain with the 3.2.13 upgrade so monkey patch the security fix
-  # next time around we hope to upgrade
-  gem 'rails', '3.2.12'
-  gem 'strong_parameters' # remove when we upgrade to Rails 4
-  # we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
-  # REVIEW EVERY RELEASE
-  gem 'sprockets', git: 'https://github.com/SamSaffron/sprockets.git', branch: 'rails-compat'
-  gem 'activerecord-postgres-hstore'
-  gem 'active_attr'
+  gem 'rails'
+  gem 'actionpack-action_caching'
 end
+gem 'rails-observers'
 
 #gem 'redis-rails'
 gem 'hiredis'

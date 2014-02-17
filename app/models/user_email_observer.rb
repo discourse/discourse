@@ -60,11 +60,7 @@ class UserEmailObserver < ActiveRecord::Observer
   end
 
   def after_commit(notification)
-    transaction_includes_action = if rails4?
-      notification.send(:transaction_include_any_action?, [:create])
-    else
-      notification.send(:transaction_include_action?, :create)
-    end
+    transaction_includes_action = notification.send(:transaction_include_any_action?, [:create])
 
     delegate_to_email_user notification if transaction_includes_action
   end
