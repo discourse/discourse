@@ -61,9 +61,9 @@ On oldserver:
 On the new server:
 ```
     bundle install --without test --deployment
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake posts:rebake
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake db:migrate
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake assets:precompile
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake posts:rebake
 ```
 If the `rake db:migrate` step fails, you might have to run it twice.
 
