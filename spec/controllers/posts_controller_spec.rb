@@ -21,7 +21,7 @@ describe PostsController do
       response.should be_forbidden
     end
 
-    it 'suceeds' do
+    it 'succeeds' do
       xhr :get, :show, id: post.id
       response.should be_success
     end
@@ -62,7 +62,7 @@ describe PostsController do
       response.should be_forbidden
     end
 
-    it 'suceeds' do
+    it 'succeeds' do
       Post.any_instance.expects(:reply_history)
       xhr :get, :reply_history, id: post.id
       response.should be_success
