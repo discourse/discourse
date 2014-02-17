@@ -125,6 +125,41 @@ describe Search do
   context 'topics' do
     let(:topic) { Fabricate(:topic) }
 
+
+    context 'search within topic' do
+
+      def new_post(raw, topic)
+        Fabricate(:post, topic: topic, topic_id: topic.id, user: topic.user, raw: raw)
+      end
+
+      it 'displays multiple results within a topic' do
+        topic = Fabricate(:topic)
+        topic2 = Fabricate(:topic)
+
+        new_post('this is the other post I am posting', topic2)
+        post1 = new_post('this is the other post I am posting', topic)
+        post2 = new_post('this is my first post I am posting', topic)
+        post3 = new_post('this is a real long and complicated bla this is my second post I am Posting birds
+                         with more stuff bla bla', topic)
+        post4 = new_post('this is my fourth post I am posting', topic)
+        new_post('this is my fifth post I am posting', topic2)
+
+        results = Search.new('posting', search_context: post1.topic).execute.find do |r|
+          r[:type] == "topic"
+        end[:results]
+
+        results.find{|r| r[:title].include? 'birds'}.should_not be_nil
+
+        results.map{|r| r[:id]}.should == [
+          post1.topic_id,
+          "_#{post2.id}",
+          "_#{post3.id}",
+          "_#{post4.id}",
+          topic2.id]
+
+      end
+    end
+
     context 'searching the OP' do
       let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
       let(:result) { first_of_type(Search.new('hello', type_filter: 'topic').execute, 'topic') }

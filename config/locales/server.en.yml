@@ -828,6 +828,7 @@ en:
     invitee_accepted: "%{display_username} accepted your invitation"
 
   search:
+    within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: 'Categories'
       topic: 'Topics'
