@@ -14,7 +14,7 @@ Discourse::Application.routes.draw do
   match "/404", to: "exceptions#not_found", via: [:get, :post]
 
   mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
-  
+
   get "site" => "site#index"
 
   resources :forums
@@ -155,6 +155,7 @@ Discourse::Application.routes.draw do
   get "faq" => "static#show", id: "faq"
   get "tos" => "static#show", id: "tos"
   get "privacy" => "static#show", id: "privacy"
+  get "signup" => "list#latest"
 
   get "users/search/users" => "users#search_users"
   get "users/password-reset/:token" => "users#password_reset"
