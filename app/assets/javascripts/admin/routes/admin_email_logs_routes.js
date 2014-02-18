@@ -13,7 +13,7 @@ Discourse.AdminEmailLogsRoute = Discourse.Route.extend({
   },
 
   setupController: function(controller, model) {
-    this._super(controller, model);
+    controller.set("model", model);
     // resets the filters
     controller.set("filter", { status: this.get("status") });
   },
