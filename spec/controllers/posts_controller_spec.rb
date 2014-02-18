@@ -79,6 +79,16 @@ describe PostsController do
       let(:user) { log_in(:moderator) }
       let(:post) { Fabricate(:post, user: user, post_number: 2) }
 
+      it 'does not allow to destroy when edit time limit expired' do
+        Guardian.any_instance.stubs(:can_delete_post?).with(post).returns(false)
+        Post.any_instance.stubs(:edit_time_limit_expired?).returns(true)
+
+        xhr :delete, :destroy, id: post.id
+
+        response.status.should == 422
+        JSON.parse(response.body)['errors'].should include(I18n.t('too_late_to_edit'))
+      end
+
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_delete?).with(post).returns(false)
         xhr :delete, :destroy, id: post.id
@@ -193,6 +203,16 @@ describe PostsController do
           post: { raw: 'edited body', edit_reason: 'typo' },
           image_sizes: { 'http://image.com/image.jpg' => {'width' => 123, 'height' => 456} },
         }
+      end
+
+      it 'does not allow to update when edit time limit expired' do
+        Guardian.any_instance.stubs(:can_edit?).with(post).returns(false)
+        Post.any_instance.stubs(:edit_time_limit_expired?).returns(true)
+
+        xhr :put, :update, update_params
+
+        response.status.should == 422
+        JSON.parse(response.body)['errors'].should include(I18n.t('too_late_to_edit'))
       end
 
       it 'passes the image sizes through' do
