@@ -69,6 +69,9 @@ module Discourse
       config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
     end
 
+    # Avoid "wrong database connection" errors while initializing on precompile
+    config.assets.initialize_on_precompile = false
+
     # Activate observers that should always be running.
     config.active_record.observers = [
         :user_email_observer,
