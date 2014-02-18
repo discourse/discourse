@@ -133,6 +133,9 @@ describe Search do
       end
 
       it 'displays multiple results within a topic' do
+
+        SiteSetting.stubs(:min_posts_for_search_in_topic).returns(3)
+
         topic = Fabricate(:topic)
         topic2 = Fabricate(:topic)
 
@@ -143,6 +146,9 @@ describe Search do
                          with more stuff bla bla', topic)
         post4 = new_post('this is my fourth post I am posting', topic)
         new_post('this is my fifth post I am posting', topic2)
+
+        # update posts_count
+        topic.reload
 
         results = Search.new('posting', search_context: post1.topic).execute.find do |r|
           r[:type] == "topic"
@@ -159,6 +165,11 @@ describe Search do
 
         # trigger expanded search
         results = Search.new('birds', search_context: post1.topic).execute
+
+        SiteSetting.stubs(:min_posts_for_search_in_topic).returns(10)
+        results = Search.new('posting', search_context: post1.topic).execute.find do |r|
+          r[:type] == "topic"
+        end[:results].length.should == 2
 
       end
     end
