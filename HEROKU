@@ -10,7 +10,7 @@
 1. heroku addons:add heroku-postgresql:crane --version 9.2
 1. heroku addons:add sendgrid:starter
 1. heroku config:set REDIS_URL=`heroku config:get OPENREDIS_URL`
-1. heroku labs:enable user-env-compile
+1. heroku labs:enable buildpack-env-arg
 1. heroku labs:enable log-runtime-metrics
 1. heroku config:set SECRET_TOKEN=`openssl rand -base64 32`
 1. heroku config:set RAILS_ENV=production
