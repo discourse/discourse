@@ -235,7 +235,8 @@ Discourse.TopicView.reopenClass({
       new LockOn(holderId, {offsetCalculator: function() {
         var $header = $('header'),
             $title = $('#topic-title'),
-            expectedOffset = $title.height() - $header.find('.contents').height();
+            windowHeight = $(window).height() - $title.height(),
+            expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
 
         return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
       }}).lock();
