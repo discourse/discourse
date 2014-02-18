@@ -18,7 +18,22 @@ class ScreenedIpAddress < ActiveRecord::Base
   # In Rails 4.0.1, an exception is raised before validation happens, so we need this hack for
   # inet/cidr columns:
   def ip_address=(val)
-    write_attribute(:ip_address, val)
+    if val.nil?
+      self.errors.add(:ip_address, :invalid)
+      return
+    end
+
+    num_wildcards = val.count('*')
+    if num_wildcards == 0
+      write_attribute(:ip_address, val)
+    else
+      v = val.gsub(/\/.*/, '')
+      if v[v.index('*')..-1] =~ /[^\.\*]/
+        self.errors.add(:ip_address, :invalid)
+        return
+      end
+      write_attribute(:ip_address, "#{v.gsub('*', '0')}/#{32 - (num_wildcards * 8)}")
+    end
 
   # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
   # handle both exceptions
