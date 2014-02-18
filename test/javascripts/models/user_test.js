@@ -40,7 +40,7 @@ test("homepage when top is disabled", function() {
   equal(oldUser.get("homepage"), defaultHomepage, "long-time-no-see old user's homepage is default when top is disabled");
 });
 
-test("homepage when top is enabled and not enought topics", function() {
+test("homepage when top is enabled and not enough topics", function() {
   var newUser = Discourse.User.create({ trust_level: 0, last_seen_at: moment() }),
       oldUser = Discourse.User.create({ trust_level: 1, last_seen_at: moment() }),
       defaultHomepage = Discourse.Utilities.defaultHomepage();
