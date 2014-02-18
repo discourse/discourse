@@ -77,6 +77,7 @@ module Middleware::UnicornOobgc
   def process_client(client)
 
     if use_gctools?
+      super(client)
       GC::OOB.run
       return
     end
