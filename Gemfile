@@ -1,15 +1,5 @@
 source 'https://rubygems.org'
 
-# monkey patching to support dual booting
-module Bundler::SharedHelpers
-  def default_lockfile=(path)
-    @default_lockfile = path
-  end
-  def default_lockfile
-    @default_lockfile ||= Pathname.new("#{default_gemfile}.lock")
-  end
-end
-
 module ::Kernel
   def rails_master?
     ENV["RAILS_MASTER"]
@@ -17,11 +7,33 @@ module ::Kernel
 end
 
 if rails_master?
+  # monkey patching to support dual booting
+  module Bundler::SharedHelpers
+    def default_lockfile=(path)
+      @default_lockfile = path
+    end
+    def default_lockfile
+      @default_lockfile ||= Pathname.new("#{default_gemfile}.lock")
+    end
+  end
+
   Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_master.lock")
+
+  # Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
+  class Bundler::Dsl
+    # A bit messy, this can be called multiple times by bundler, avoid blowing the stack
+    unless self.method_defined? :to_definition_unpatched
+      alias_method :to_definition_unpatched, :to_definition
+    end
+    def to_definition(bad_lockfile, unlock)
+      to_definition_unpatched(Bundler::SharedHelpers.default_lockfile, unlock)
+    end
+  end
+
 end
 
 # Monkey patch bundler to support mri_21
-unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21 
+unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21
    STDERR.puts
    STDERR.puts "WARNING: --------------------------------------------------------------------------"
    STDERR.puts "You are running an old version of bundler, please update by running: gem install bundler"
@@ -51,17 +63,6 @@ unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21
         mri? && on_21?
       end
    end
-end
-
-# Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
-class Bundler::Dsl
-  # A bit messy, this can be called multiple times by bundler, avoid blowing the stack
-  unless self.method_defined? :to_definition_unpatched
-    alias_method :to_definition_unpatched, :to_definition
-  end
-  def to_definition(bad_lockfile, unlock)
-    to_definition_unpatched(Bundler::SharedHelpers.default_lockfile, unlock)
-  end
 end
 
 # see: https://github.com/mbleigh/seed-fu/pull/54
