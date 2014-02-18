@@ -142,7 +142,7 @@ GEM
     json (1.8.1)
     jwt (0.1.8)
       multi_json (>= 1.5)
-    kgio (2.8.1)
+    kgio (2.9.2)
     librarian (0.1.1)
       highline
       thor (~> 0.15)
@@ -376,7 +376,7 @@ GEM
     unf (0.1.3)
       unf_ext
     unf_ext (0.0.6)
-    unicorn (4.7.0)
+    unicorn (4.8.2)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
