@@ -12,6 +12,10 @@ Discourse.GroupRoute = Discourse.Route.extend({
     return Discourse.Group.find(params.name);
   },
 
+  serialize: function(model) {
+    return { name: model.get('name').toLowerCase() };
+  },
+
   afterModel: function(model) {
     var self = this;
     return Discourse.Group.findGroupCounts(model.get('name')).then(function (counts) {

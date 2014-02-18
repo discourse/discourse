@@ -16,6 +16,13 @@ describe GroupsController do
       response.should be_success
       ::JSON.parse(response.body)['basic_group']['id'].should == group.id
     end
+
+    it "works even with an upper case group name" do
+      Guardian.any_instance.expects(:can_see?).with(group).returns(true)
+      xhr :get, :show, id: group.name.upcase
+      response.should be_success
+      ::JSON.parse(response.body)['basic_group']['id'].should == group.id
+    end
   end
 
   describe "counts" do
