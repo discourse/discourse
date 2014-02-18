@@ -192,7 +192,7 @@ Discourse::Application.routes.draw do
   resources :groups do
     get 'members'
     get 'posts'
-    get 'posts_count'
+    get 'counts'
   end
 
   resources :posts do

@@ -14,15 +14,15 @@ Discourse.GroupRoute = Discourse.Route.extend({
 
   afterModel: function(model) {
     var self = this;
-    return Discourse.Group.findPostsCount(model.get('name')).then(function (c) {
-      self.set('postsCount', c);
+    return Discourse.Group.findGroupCounts(model.get('name')).then(function (counts) {
+      self.set('counts', counts);
     });
   },
 
   setupController: function(controller, model) {
     controller.setProperties({
       model: model,
-      postsCount: this.get('postsCount')
+      counts: this.get('counts')
     });
   }
 });

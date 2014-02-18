@@ -6,10 +6,11 @@ class GroupsController < ApplicationController
     render_serialized(group, BasicGroupSerializer)
   end
 
-  def posts_count
+  def counts
     group = Group.where(name: params.require(:group_id)).first
     guardian.ensure_can_see!(group)
-    render json: {posts_count: group.posts_for(guardian).count}
+    render json: {counts: { posts: group.posts_for(guardian).count,
+                            members: group.users.count } }
   end
 
   def posts
