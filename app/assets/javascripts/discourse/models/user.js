@@ -365,7 +365,7 @@ Discourse.User = Discourse.Model.extend({
       }
     }
     return Discourse.Utilities.defaultHomepage();
-  }.property("trust_level", "hasBeenSeenInTheLastMonth", "Discourse.Site.has_enough_topic_to_redirect_to_top_page"),
+  }.property("trust_level", "hasBeenSeenInTheLastMonth"),
 
   updateMutedCategories: function() {
     this.set("mutedCategories", Discourse.Category.findByIds(this.muted_category_ids));
