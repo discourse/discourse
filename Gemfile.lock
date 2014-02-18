@@ -115,6 +115,7 @@ GEM
       ruby-hmac
     formatador (0.2.4)
     fspath (2.0.5)
+    gctools (0.2.3)
     given_core (3.1.1)
       sorcerer (>= 0.3.7)
     guess_html_encoding (0.0.9)
@@ -349,6 +350,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    stackprof (0.2.5)
     temple (0.6.7)
     therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
@@ -404,6 +406,7 @@ DEPENDENCIES
   fastimage
   flamegraph
   fog (= 1.18.0)
+  gctools
   handlebars-source (~> 1.1.2)
   highline
   hiredis
@@ -462,6 +465,7 @@ DEPENDENCIES
   sinatra
   slim
   spork-rails
+  stackprof
   therubyracer
   thin
   timecop

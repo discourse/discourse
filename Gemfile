@@ -20,6 +20,39 @@ if rails_master?
   Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_master.lock")
 end
 
+# Monkey patch bundler to support mri_21
+unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21 
+   STDERR.puts
+   STDERR.puts "WARNING: --------------------------------------------------------------------------"
+   STDERR.puts "You are running an old version of bundler, please update by running: gem install bundler"
+   STDERR.puts
+   map = Bundler::Dependency::PLATFORM_MAP.dup
+   map[:mri_21] = Gem::Platform::RUBY
+   map.freeze
+   Bundler::Dependency.send(:remove_const, "PLATFORM_MAP")
+   Bundler::Dependency.const_set("PLATFORM_MAP", map)
+
+   Bundler::Dsl.send(:remove_const, "VALID_PLATFORMS")
+   Bundler::Dsl.const_set("VALID_PLATFORMS", map.keys.freeze)
+   class ::Bundler::CurrentRuby
+      def on_21?
+         RUBY_VERSION =~ /^2\.1/
+      end
+      def mri_21?
+        mri? && on_21?
+      end
+   end
+   class ::Bundler::Dependency
+      private
+      def on_21?
+         RUBY_VERSION =~ /^2\.1/
+      end
+      def mri_21?
+        mri? && on_21?
+      end
+   end
+end
+
 # Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
 class Bundler::Dsl
   # A bit messy, this can be called multiple times by bundler, avoid blowing the stack
@@ -180,6 +213,8 @@ gem 'rbtrace', require: false, platform: :mri
 # required for feed importing and embedding
 gem 'ruby-readability', require: false
 gem 'simple-rss', require: false
+gem 'gctools', require: false, platform: :mri_21
+gem 'stackprof', require: false, platform: :mri_21
 
 # perftools only works on 1.9 atm
 group :profile do
