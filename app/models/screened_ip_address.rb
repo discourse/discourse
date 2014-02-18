@@ -26,6 +26,21 @@ class ScreenedIpAddress < ActiveRecord::Base
     self.errors.add(:ip_address, :invalid)
   end
 
+  # Return a string with the ip address and mask in standard format. e.g., "127.0.0.0/8".
+  # Ruby's IPAddr class has no method for getting this.
+  def ip_address_with_mask
+    if ip_address
+      mask = ip_address.instance_variable_get(:@mask_addr).to_s(2).count('1')
+      if mask == 32
+        ip_address.to_s
+      else
+        "#{ip_address.to_s}/#{ip_address.instance_variable_get(:@mask_addr).to_s(2).count('1')}"
+      end
+    else
+      nil
+    end
+  end
+
   def self.match_for_ip_address(ip_address)
     # The <<= operator on inet columns means "is contained within or equal to".
     #

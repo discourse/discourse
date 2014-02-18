@@ -33,6 +33,20 @@ describe ScreenedIpAddress do
     end
   end
 
+  describe "ip_address_with_mask" do
+    it "returns nil when ip_address is nil" do
+      described_class.new.ip_address_with_mask.should be_nil
+    end
+
+    it "returns ip_address without mask if there is no mask" do
+      described_class.new(ip_address: "123.123.23.22").ip_address_with_mask.should == "123.123.23.22"
+    end
+
+    it "returns ip_address with mask" do
+      described_class.new(ip_address: "123.12.0.0/16").ip_address_with_mask.should == "123.12.0.0/16"
+    end
+  end
+
   describe '#watch' do
     context 'ip_address is not being watched' do
       it 'should create a new record' do
