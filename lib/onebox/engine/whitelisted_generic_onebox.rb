@@ -127,9 +127,14 @@ module Onebox
         !!list.find {|h| %r((^|\.)#{Regexp.escape(h)}$).match(uri.host) }
       end
 
+      def self.probable_wordpress(uri)
+        !!(uri.path =~ /\d{4}\/\d{2}\/\d{2}/)
+      end
+
       def self.===(other)
         if other.kind_of?(URI)
-          return WhitelistedGenericOnebox.host_matches(other, WhitelistedGenericOnebox.whitelist)
+          return WhitelistedGenericOnebox.host_matches(other, WhitelistedGenericOnebox.whitelist) ||
+                 WhitelistedGenericOnebox.probable_wordpress(other)
         else
           super
         end
@@ -150,7 +155,7 @@ module Onebox
       end
 
       def generic_html
-        return data[:html] if data[:html]
+        return data[:html] if data[:html] && data[:html] =~ /iframe/
         return html_for_video(data[:video]) if data[:video]
         return image_html if photo_type?
         return nil unless data[:title]
@@ -168,7 +173,10 @@ module Onebox
       end
 
       def data
-        return raw if raw.is_a?(Hash)
+        if raw.is_a?(Hash)
+          raw[:link] ||= link
+          return raw
+        end
 
         data_hash = { link: link, title: raw.title, description: raw.description }
         data_hash[:image] = raw.images.first if raw.images && raw.images.first
