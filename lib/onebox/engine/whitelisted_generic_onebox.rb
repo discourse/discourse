@@ -168,7 +168,7 @@ module Onebox
 
       def placeholder_html
         result = nil
-        result = image_html if data[:html] || data[:video] || photo_type?
+        result = image_html if (data[:html] && data[:html] =~ /iframe/) || data[:video] || photo_type?
         result || to_html
       end
 
@@ -183,7 +183,7 @@ module Onebox
         data_hash[:type] = raw.type if raw.type
 
         if raw.metadata && raw.metadata[:video] && raw.metadata[:video].first
-          data_hash[:video] = raw.metadata[:video].first 
+          data_hash[:video] = raw.metadata[:video].first
         end
 
         data_hash
