@@ -484,6 +484,7 @@ fr:
       description: "HTML qui sera ajouté au pied de toutes les pages"
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
+    allow_user_locale: "Permettre aux utilisateurs de choisir leur propre préférence de langue pour l'interface"
     min_post_length: "Longueur minimale des messages en nombre de caractères"
     min_private_message_post_length: "Longueur minimale des messages privés en nombre de caractères"
     max_post_length: "Longueur maximale des messages en nombres de caractères"

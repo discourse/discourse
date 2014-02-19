@@ -47,6 +47,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   private_attributes :email,
+                     :locale,
                      :email_digests,
                      :email_private_messages,
                      :email_direct,

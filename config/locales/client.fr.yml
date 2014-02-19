@@ -299,6 +299,11 @@ fr:
         enter_email: 'Pseudo trouvé. Entrez l''adresse email correspondante.'
         prefilled: "L'adresse email correspond à ce pseudo enregistré."
 
+      locale:
+        title: "Langue de l'interface"
+        instructions: "La langue utilisée dans l'interface du forum. Le changement se fait lorsque vous rechargez la page."
+        default: "(par défaut)"
+
       password_confirmation:
         title: "Confirmation"
 
