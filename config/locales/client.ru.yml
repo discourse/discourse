@@ -1198,7 +1198,7 @@ ru:
             many: 'СПАМ x{{count}}'
       groups:
         primary: "Первичная группа"
-        no_primary: "(нет первичных группа)"
+        no_primary: "(нет первичных групп)"
         title: Группы
         edit: 'Изменить группы'
         selector_placeholder: 'добавить пользователей'
