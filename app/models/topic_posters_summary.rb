@@ -7,7 +7,7 @@ class TopicPostersSummary
   end
 
   def summary
-    sorted_top_posters.map { |user| user ? new_topic_poster_for(user) : nil }.compact
+    sorted_top_posters.compact.map(&method(:new_topic_poster_for))
   end
 
   private
@@ -22,10 +22,9 @@ class TopicPostersSummary
 
   def descriptions_by_id
     @descriptions_by_id ||= begin
-      user_ids_with_descriptions.inject({}) do |descriptions, (id, description)|
+      user_ids_with_descriptions.each_with_object({}) do |(id, description), descriptions|
         descriptions[id] ||= []
         descriptions[id] << description
-        descriptions
       end
     end
   end
