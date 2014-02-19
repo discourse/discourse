@@ -208,7 +208,7 @@ module Discourse
   end
 
   def self.readonly_channel
-    "/global/read-only"
+    "/site/read-only"
   end
 
 end
