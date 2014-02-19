@@ -17,6 +17,8 @@ class GlobalSetting
   end
 
   def self.database_config
+    return {"production" => database_config_from_database_url }
+    # Discourse original code:
     hash = {"adapter" => "postgresql"}
     %w{pool timeout socket host port username password}.each do |s|
       if val = self.send("db_#{s}")
@@ -29,6 +31,21 @@ class GlobalSetting
     {"production" => hash}
   end
 
+  def self.database_config_from_database_url
+    begin
+      uri = URI.parse(ENV['DATABASE_URL'])
+    rescue URI::InvalidURIError
+      raise 'Invalid DATABASE_URL'
+    end
+    hash = {'adapter' => 'postgresql'}
+    hash['host'] = uri.host
+    hash['port'] = uri.port
+    hash['username'] = uri.user
+    hash['password'] = uri.password
+    hash['database'] = (uri.path || '').split('/')[1]
+    hash['host_names'] = [ hash['host'] ]
+    hash
+  end
 
   class BaseProvider
     def self.coerce(setting)
