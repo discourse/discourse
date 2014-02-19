@@ -224,7 +224,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   }.property(),
 
   jumpTopDisabled: function() {
-    return (this.get('progressPosition') <= 3);
+    return (this.get('progressPosition') < 2);
   }.property('progressPosition'),
 
   jumpBottomDisabled: function() {
