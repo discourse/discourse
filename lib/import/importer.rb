@@ -200,35 +200,30 @@ module Import
     end
 
     def build_psql_command
-      db_conf = Rails.configuration.database_configuration[Rails.env]
-      host = db_conf["host"]
-      password = db_conf["password"]
-      username = db_conf["username"] || ENV["USER"] || "postgres"
-      database = db_conf["database"]
+      db_conf = BackupRestore.database_configuration
 
-      password_argument = "PGPASSWORD=#{password}" if password.present?
-      host_argument     = "--host=#{host}"         if host.present?
+      password_argument = "PGPASSWORD=#{password}" if db_conf.password.present?
+      host_argument     = "--host=#{host}"         if db_conf.host.present?
 
-      [ password_argument,            # pass the password to psql
-        "psql",                       # the psql command
-        "--dbname='#{database}'",     # connect to database *dbname*
-        "--file='#{@dump_filename}'", # read the dump
-        "--single-transaction",       # all or nothing (also runs COPY commands faster)
-        host_argument,                # the hostname to connect to
-        "--username=#{username}"      # the username to connect as
+      [ password_argument,                # pass the password to psql
+        "psql",                           # the psql command
+        "--dbname='#{db_conf.database}'", # connect to database *dbname*
+        "--file='#{@dump_filename}'",     # read the dump
+        "--single-transaction",           # all or nothing (also runs COPY commands faster)
+        host_argument,                    # the hostname to connect to
+        "--username=#{db_conf.username}"  # the username to connect as
       ].join(" ")
     end
 
     def switch_schema!
       log "Switching schemas..."
 
-      sql = <<-SQL
-        BEGIN;
-          DROP SCHEMA IF EXISTS backup CASCADE;
-          ALTER SCHEMA public RENAME TO backup;
-          ALTER SCHEMA restore RENAME TO public;
-        COMMIT;
-      SQL
+      sql = [
+        "BEGIN;",
+        BackupRestore.move_tables_between_schemas_sql("public", "backup"),
+        BackupRestore.move_tables_between_schemas_sql("restore", "public"),
+        "COMMIT;"
+      ].join("\n")
 
       User.exec_sql(sql)
     end
@@ -268,7 +263,7 @@ module Import
       log "Trying to rollback..."
       if BackupRestore.can_rollback?
         log "Rolling back..."
-        BackupRestore.rename_schema("backup", "public")
+        BackupRestore.move_tables_between_schemas("backup", "public")
       else
         log "There was no need to rollback"
       end
