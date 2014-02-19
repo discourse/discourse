@@ -119,7 +119,9 @@ class PostsController < ApplicationController
   end
 
   def by_number
-    @post = Post.where(topic_id: params[:topic_id], post_number: params[:post_number]).first
+    finder = Post.where(topic_id: params[:topic_id], post_number: params[:post_number])
+    finder = finder.with_deleted if current_user.try(:staff?)
+    @post = finder.first
     guardian.ensure_can_see!(@post)
     @post.revert_to(params[:version].to_i) if params[:version].present?
     render_post_json(@post)

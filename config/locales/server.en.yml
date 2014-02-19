@@ -550,6 +550,7 @@ en:
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
+    allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum post length in characters"
     min_private_message_post_length: "Minimum post length in characters for private messages"
     max_post_length: "Maximum post length in characters"

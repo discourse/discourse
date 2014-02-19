@@ -39,16 +39,20 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
   end
 
   desc "backup", "Backup a discourse forum"
-  def backup
+  def backup(filename = nil)
     load_rails
-
     require "backup_restore"
     require "export/exporter"
 
-    puts 'Starting export...'
-    output_filename = Export::Exporter.new(Discourse.system_user).run
-    puts 'Export done.'
-    puts "Output file is in: #{output_filename}", ''
+    puts "Starting export..."
+    backup = Export::Exporter.new(Discourse.system_user.id).run
+    if filename.present?
+      puts "Moving '#{backup}' to '#{filename}'"
+      FileUtils.mv(backup, filename)
+      backup = filename
+    end
+    puts "Export done."
+    puts "Output file is in: #{backup}", ""
   end
 
   desc "export", "Backup a Discourse forum"
@@ -59,20 +63,19 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
   desc "restore", "Restore a Discourse backup"
   def restore(filename)
     load_rails
-
     require "backup_restore"
     require "import/importer"
 
     begin
-      puts "Starting import: #{filename}"
-      Import::Importer.new(Discourse.system_user, filename).run
-      puts 'Import done.'
+      puts "Starting restore: #{filename}"
+      Import::Importer.new(Discourse.system_user.id, filename).run
+      puts 'Restore done.'
     rescue Import::FilenameMissingError
       puts '', 'The filename argument was missing.', ''
       usage
     rescue Import::ImportDisabledError
-      puts '', 'Imports are not allowed.', 'An admin needs to set allow_restore to true in the site settings before imports can be run.', ''
-      puts 'Import cancelled.', ''
+      puts '', 'Restore are not allowed.', 'An admin needs to set allow_restore to true in the site settings before restores can be run.', ''
+      puts 'Restore cancelled.', ''
     end
   end
 

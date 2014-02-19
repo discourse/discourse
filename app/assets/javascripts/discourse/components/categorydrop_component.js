@@ -69,10 +69,6 @@ Discourse.CategoryDropComponent = Ember.Component.extend({
     }
   },
 
-  categoryChanged: function() {
-    this.close();
-  }.observes('category', 'parentCategory'),
-
   close: function() {
     $('html').off('click.category-drop');
     this.$('a[data-drop-close]').off('click.category-drop');

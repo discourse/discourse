@@ -23,6 +23,11 @@ class SiteSetting < ActiveRecord::Base
     load_settings(file)
   end
 
+  SiteSettingExtension.class_variable_get(:@@client_settings) << :available_locales
+
+  def self.available_locales
+    LocaleSiteSetting.values.map{ |e| e[:value] }.join('|')
+  end
 
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?
