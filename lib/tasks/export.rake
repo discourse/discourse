@@ -6,7 +6,7 @@ task 'export', [:output_filename] => :environment do |t, args|
   puts "Starting export..."
   backup = Export::Exporter.new(Discourse.system_user.id).run
   if args.output_filename.present?
-    puts "Moving '#{backup}' to '#{filename}'"
+    puts "Moving '#{backup}' to '#{args.output_filename}'"
     FileUtils.mv(backup, args.output_filename)
     backup = args.output_filename
   end
