@@ -75,7 +75,7 @@ if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
 else
-  gem 'rails'
+  gem 'rails', '~>4.0.3'
   gem 'actionpack-action_caching'
 end
 gem 'rails-observers'
