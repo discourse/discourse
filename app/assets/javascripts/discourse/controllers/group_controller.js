@@ -7,7 +7,7 @@
   @module Discourse
 **/
 Discourse.GroupController = Discourse.ObjectController.extend({
-  postsCount: null,
+  counts: null,
 
   // It would be nice if bootstrap marked action lists as selected when their links
   // were 'active' not the `li` tags.

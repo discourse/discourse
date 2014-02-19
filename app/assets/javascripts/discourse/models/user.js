@@ -354,12 +354,14 @@ Discourse.User = Discourse.Model.extend({
     @type {String}
   **/
   homepage: function() {
-    // top is the default for:
+    // when there are enough topics, /top is the default for
     //   - new users
     //   - long-time-no-see user (ie. > 1 month)
-    if (Discourse.SiteSettings.top_menu.indexOf("top") >= 0) {
-      if (this.get("trust_level") === 0 || !this.get("hasBeenSeenInTheLastMonth")) {
-        return "top";
+    if (Discourse.Site.currentProp("has_enough_topic_to_redirect_to_top_page")) {
+      if (Discourse.SiteSettings.top_menu.indexOf("top") >= 0) {
+        if (this.get("trust_level") === 0 || !this.get("hasBeenSeenInTheLastMonth")) {
+          return "top";
+        }
       }
     }
     return Discourse.Utilities.defaultHomepage();

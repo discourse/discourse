@@ -11,7 +11,6 @@ class TopicFeaturedUsers
 
   # Chooses which topic users to feature
   def choose(args={})
-    topic.reload unless rails4?
     clear
     update keys(args)
     update_participant_count

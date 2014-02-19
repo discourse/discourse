@@ -79,24 +79,32 @@ es:
     no_info_me: "<div class='missing-profile'>El campo 'Sobre mí' de tu perfil está actualmente en blanco, <a href='/users/%{username_lower}/preferences/about-me'>¿Te gustaría rellenarlo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} no ha introducido nada aún en el campo 'Sobre mí' de su perfil</div>"
 
+  vip_category_name: "Salón"
+  vip_category_description: "Una categoría exclusiva para miembros de un nivel de confianza de 3 o más."
+
+  meta_category_name: "Meta"
+  meta_category_description: "Discusión sobre este foro, su estructura, cómo funciona, y cómo podemos mejorarlo."
+
   category:
     topic_prefix: "Defeinición de categoría para %{category}"
     replace_paragraph: "[Reemplaza el primer párrafo con una descripción corta de tu nueva categoría. Esta guía aparecerá en el área de selección de categoría, por lo que trata de mantenerla por debajo de los 200 caracteres.]"
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
-
+    errors:
+      self_parent: "El padre de una subcategoría no puede ser él mismo."
+      depth: "No puedes anidar una subcategoría debajo de otra."
   trust_levels:
-    new:
+    newuser:
       title: "nuevo usuario"
     basic:
       title: "usuario básico"
     regular:
       title: "usuario regular"
-    experienced:
-      title: "usuario con experiencia"
-    advanced:
-      title: "usuario avanzado"
-    moderator:
-      title: "moderador"
+    leader:
+      title: "líder"
+    elder:
+      title: "anciano"
+    change_failed_explanation: "Intentaste degradar a un usuario %{user_name} a '%{new_trust_level}'. Sin embargo su nivel de confianza ya es '%{current_trust_level}'. %{user_name} seguirá en '%{current_trust_level}'"
+
 
   rate_limiter:
     too_many_requests: "Estas haciendo eso demasiado a menudo. Por favor espera %{time_left} antes de intentarlo de nuevo."
@@ -269,14 +277,138 @@ es:
       title: "Nuevos posts"
       xaxis: "día"
       yaxis: "Número de nuevos posts"
-    total_users:
-      title: "Usuarios totales"
+    likes:
+      title: "Me gusta"
       xaxis: "Día"
-      yaxis: "Número total de usuarios"
+      yaxis: "Número de nuevos 'me gusta'"
     flags:
       title: "Marcados"
       xaxis: "Día"
       yaxis: "Número de marcados"
+    bookmarks:
+      title: "Marcadores"
+      xaxis: "Día"
+      yaxis: "Número de nuevos marcadores"
+    starred:
+      title: "Favorito"
+      xaxis: "Día"
+      yaxis: "Número de temas nuevos favoritos"
+    users_by_trust_level:
+      title: "Usuarios por Nivel de Confianza"
+      xaxis: "Día"
+      yaxis: "Número de Usuarios"
+    emails:
+      title: "Correos Enviados"
+      xaxis: "Día"
+      yaxis: "Número de Correos"
+    user_to_user_private_messages:
+      title: "Usuario-a-Usuario"
+      xaxis: "Día"
+      yaxis: "Número de mensajes privados"
+    system_private_messages:
+      title: "Sistema"
+      xaxis: "Día"
+      yaxis: "Número de mensajes privados"
+    moderator_warning_private_messages:
+      title: "Advertencia del Moderador"
+      xaxis: "Día"
+      yaxis: "Número de mensajes privados"
+    notify_moderators_private_messages:
+      title: "Notificar a los Moderadores"
+      xaxis: "Día"
+      yaxis: "Número de mensajes privados"
+    notify_user_private_messages:
+      title: "Notificar Usuario"
+      xaxis: "Día"
+      yaxis: "Número de mensajes privados"
+    top_referrers:
+      title: "Los Mejores Recomendantes"
+      xaxis: "Usuario"
+      num_clicks: "Clicks"
+      num_topics: "Temas"
+    top_traffic_sources:
+      title: "Las Fuentes de Tráfico Más Altas"
+      xaxis: "Dominio"
+      num_clicks: "Clicks"
+      num_topics: "Temas"
+      num_users: "Usuarios"
+    top_referred_topics:
+      title: "Los Temas Referidos Más Altos"
+      xaxis: "Tema"
+      num_clicks: "Clicks"
+
+  dashboard:
+    rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
+    ruby_version_warning: "Tú estás utilizando una versión de Ruby 2.0.0 que es conocida por tener problemas. Actualiza al nivel de parche 247 o más nuevo."
+    host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
+    gc_warning: 'Tu servidor está usando recolección de residuos predeterminada por Ruby, que no te proveerá el mejor rendimiento. Lee este tema acerca de optimización del rendimiento: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
+    sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, por ejemplo el envío de correos, están realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
+    queue_size_warning: 'El número de tareas en espera es %{queue_size}, que es elevado. Esto podría indicar un problema con el proceso(s) de Sidekiq, o tal vez necesitas añadir más trabajadores de Sidekiq.'
+    memory_warning: 'Tu servidor está funcionando con menos de 1 GB de memoria total. Por lo menos 1 GB de memoria es recomendado.'
+    facebook_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Facebook (enable_facebook_logins), pero los valores id y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Revisa la guía para aprender más</a>.'
+    twitter_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Twitter (enable_twitter_logins), pero los valores clave y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Revisa la guía para aprender más</a>.'
+    github_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando GitHub (enable_github_logins), pero los valores de cliente clave y cliente secreto no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Revisa la guía para aprender más</a>.'
+    s3_config_warning: 'El servidor está configurado para permitir actualizar los archivos a s3, pero por lo menos una de las siguientes configuraciones no está realizada: s3_access_key_id, s3_secret_access_key o s3_upload_bucket. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa "How to set up image uploads to S3?" para aprender más</a>.'
+    image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">descárgate la última versión</a>.'
+    failing_emails_warning: 'Hay %{num_failed_jobs} de tareas de email que fallaron. Revisa tu archivo config/discourse.conf y asegúrate que la configuración del servidor de email esté correcta. <a href="/sidekiq/retries" target="_blank">Revisa las tareas fallidas en Sidekiq</a>.'
+    default_logo_warning: "No has personalizado los imágenes del logo para tu sitio. Actualiza logo_url, logo_small_url, y favicon_url en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    contact_email_missing: "No has proveido un correo de contacto para tu sitio. Por favor actualiza contact_email en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    contact_email_invalid: "La dirección email de contacto es inválida. Por favor actualiza contact_email en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    title_nag: "El título Site Setting todavía está configurado al valor predeterminado. Por favor actualízalo con el título de tu sitio en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    site_description_missing: "La site_description configuración está vacía. Escribe una breve descripción de este foro en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    consumer_email_warning: "Tu sitio está configurado para Utilizar Gmail (u otro servicio de email de consumidor) para enviar email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita la cantidad de emails que puedes enviar</a>. Considera usar un proveedor de servicio email como mandrill.com para asegurarte la entrega de los emails."
+    access_password_removal: "Tu sitio estaba usando la access_password configuración, que ha sido removida. Las login_required y must_approve_users configuraciones han sido habilitadas, que deberían ser usadas en su lugar. Las puedes cambiar en la <a href='/admin/site_settings'>Configuración del Sitio</a>. Asegúrate <a href='/admin/users/list/pending'>de aprobar los usuarios en la lista de Usuarios Pendientes</a>. (Este mensaje desaparecerá en 2 días.)"
+    site_contact_username_warning: "La site_contact_username configuración está vacía. Por favor actualízala en la <a href='/admin/site_settings'>Configuración del Sitio</a>. Configúrala al nombre de usuario de un administrador quien debe ser el enviador de mensajes de sistema."
+    notification_email_warning: "La configuración notification_email está vacía. Por favor actualízala en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    enforce_global_nicknames_warning: "La configuración enforce_global_nicknames ha sido chequeada, pero la de discourse_org_access_key está vacía. Una clave de acceso Discourse.org es requerida para usar la configuración enforce_global_nicknames. Por favor actualiza tu <a href='/admin/site_settings'>Configuración del Sitio</a>."
+
+  content_types:
+    education_new_reply:
+      title: "Educación de Nuevo Usuario: Primeras Respuestas"
+      description: "Un mensaje emergente de guia 'justo a tiempo' aparecerá automáticamente sobre el compositor cuando nuevos usuarios empiecen ingresar sus dos primeras respuestas."
+    education_new_topic:
+      title: "Educación de Nuevo Usuario: Primeros Temas"
+      description: "Un mensaje emergente de guia 'justo a tiempo' aparecerá automáticamente sobre el compositor cuando nuevos usuarios empiecen ingresar sus dos primeras respuestas."
+    usage_tips:
+      title: "Consejos para Nuevos Usuarios"
+      description: "Consejos de uso común, información esencial de foro, y guia importante para nuevos usuarios."
+    welcome_user:
+      title: "Bienvenido: Nuevo Usuario"
+      description: "Un mensaje privado enviado automáticamente a todos los nuevos usuarios cuando se registren."
+    welcome_invite:
+      title: "Bienvenido: Usuario Invitado"
+      description: "Un mensaje privado enviado automáticamente a todos los usuarios invitados cuando se acepten la invitación de otro usuario para participar."
+    privacy_policy:
+      title: "Política de Privacidad"
+      description: "Your site's privacy policy. Leave blank for default policy."
+      description: "La política de privacidad de tu sitio. Deja en blanco para política de privacidad predeterminada."
+    faq:
+      title: "Preguntas Frecuentes"
+      description: "Las preguntas frecuentes de tu sitio. Deja en blanco para las preguntas frecuentes predeterminadas."
+    login_required_welcome_message:
+      title: "Registro Requerido: Mensaje de Bienvenida"
+      description: "El mensaje de bienvenida que se muestra a los usuarios que han salido cuando la configuración de 'login required' está activada."
+    tos_user_content_license:
+      title: "Términos del Servicio: Licencia de Contenido"
+      description: "El texto para la sección de Licencia de Contenido de los Términos del Servicio."
+    tos_miscellaneous:
+      title: "Términos del Servicio: Misceláneo"
+      description: "El texto para la sección de Misceláneo de los Términos del Servicio."
+    login_required:
+      title: "Registro Requerido: Homepage"
+      description: "El texto mostrado para usuarios no autorizados cuando el registro es requerido en el sitio."
+    head:
+      title: "HTML head"
+      description: "HTML que va a ser insertado dentro de las <head></head> etiquetas"
+    top:
+      title: "Encabezado de página"
+      description: "HTML que va a ser añadido encima de cada página (después del header, y antes de la navegación o el título del tema)."
+    bottom:
+      title: "Base de la página"
+      description: "HTML que va a ser añadido en la base de cada página."
+    tos_signup_form_message:
+      title: "Página de Registro: Mensaje de Términos del Servicio"
+      description: "El mensaje que aparecerá junto un checkbox en la página de registro si la configuración del sitio 'tos_accept_required' está activada."
 
   site_settings:
     default_locale: "El lenguaje por defecto de la instancia de Discourse (ISO 639-1 Code)"
@@ -285,8 +417,8 @@ es:
     min_topic_title_length: "Mínimo número de caracteres en la longitud de un título"
     max_topic_title_length: "Máxima número de caracteres en la longitud de un título"
     min_search_term_length: "Mínima longitud de un término de búsqueda"
-    allow_duplicate_topic_titles: "Permitir topics con identico título"
-    unique_posts_mins: "Cuantos minutos antes de que un usuario pueda hacer un post con el mismo contenido de nuevo"
+    allow_duplicate_topic_titles: "Permitir temas con identico título"
+    unique_posts_mins: "Cuántos minutos antes de que un usuario pueda hacer un post con el mismo contenido de nuevo"
     enforce_global_nicknames: "Obligar unicidad en los nicknames (ADVERTENCIA: cambia solo esto en el setup inicial)"
     discourse_org_access_key: "La clave de acceso utilizada para acceder al 'Discourse Hub nickname registry' en discourse.org"
     educate_until_posts: "Mostrar el pop-up con el panel de educación hasta que el usuario haya hecho este número de posts"
@@ -321,7 +453,7 @@ es:
     polling_interval: "¿Qué a menusdo deben hacer poll los usuarios logados en milisegundos"
     anon_polling_interval: "¿Qué a menudo deben hacer poll los usuarios anónimos en milisegundos"
 
-    auto_track_topics_after: "Milisegundos globales por defecto antes de que un topic sea automaticamente trackeado, los usuarios pueden sobreescribirlo (0 para siempre, -1 para nunca)"
+    auto_track_topics_after: "Milisegundos globales por defecto antes de que un topic sea automáticamente trackeado, los usuarios pueden sobreescribirlo (0 para siempre, -1 para nunca)"
     new_topic_duration_minutes: "Minutos globales por defecto en los que un topic es considerado nuevo, los usuarios pueden sobreescribirlo (-1 para siempre, -2 para la última visita)"
 
     flags_required_to_hide_post: "Número de flags que causan que un post se oculte auomática un MP sea enviado al usuario (0 para nunca)"
@@ -334,8 +466,8 @@ es:
     top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determinar que items aparecen en el menú de post y en qué orden. Ejemplo like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    topics_per_page: "Cuantos topics son cargados por defecto en la página de lista de topics"
-    posts_per_page: "Cuantos posts son devueltos en una página de topic"
+    topics_per_page: "Cuántos topics son cargados por defecto en la página de lista de topics"
+    posts_per_page: "Cuántos posts son devueltos en una página de topic"
     site_contact_username: "Nombre de usuario para el autor de mensajes privados enviados por el foro"
     send_welcome_message: "¿Reciben los nuevos usuarios un mensaje privado de bienvenida?"
     suppress_reply_directly_below: "No mostrar el contador de respuestas en un pot cuando una única respuesta directamente debajo"
@@ -372,8 +504,8 @@ es:
 
     max_mentions_per_post: "Maximo número de notificaciones @name que se pueden usar en un post"
 
-    rate_limit_create_topic: "Cuantos segundos, después de crear un topic, deben pasar antes de poder crear otro topic"
-    rate_limit_create_post: "Cuantos segundos, después de crear un post, deben pasar antes de poder crear otro post"
+    rate_limit_create_topic: "Cuántos segundos, después de crear un topic, deben pasar antes de poder crear otro topic"
+    rate_limit_create_post: "Cuántos segundos, después de crear un post, deben pasar antes de poder crear otro post"
 
     max_likes_per_day: "Máximo número de likes por usuario por día"
     max_flags_per_day: "Máximo número de flags por usuario por día"
@@ -391,13 +523,12 @@ es:
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados"
     default_trust_level: "Nivel de confianza por defecto (0-4) para usuarios"
 
-    basic_requires_topics_entered: "Cuantos topics debe introducir un usuario antes de ser promocionado al nivel básico (1) de confianza"
-    basic_requires_read_posts: "Cuantos post debe un usuario leer antes de ser promocionado al nivel básico (1) de confianza"
-    basic_requires_time_spent_mins: "Cuantos minutos un usuario debe leer posts antes de ser promocionado al nivel básico (1) de confianza"
+    basic_requires_topics_entered: "Cuántos topics debe introducir un usuario antes de ser promocionado al nivel básico (1) de confianza"
+    basic_requires_read_posts: "Cuántos post debe un usuario leer antes de ser promocionado al nivel básico (1) de confianza"
+    basic_requires_time_spent_mins: "Cuántos minutos un usuario debe leer posts antes de ser promocionado al nivel básico (1) de confianza"
 
-    email_time_window_mins: "Cuantos minutos esperamos antes de enviar un mail a un usuario, para darles la oportunidad de verlo antes"
-    flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
-    max_word_length: "La máxima longitud de palabra permitida, en caracteres en el título de un topic"
+    email_time_window_mins: "Cuántos minutos esperamos antes de enviar un mail a un usuario, para darles la oportunidad de verlo antes"
+    flush_timings_secs: "Con cuánta frecuencia enviamos datos de coordinación de tiempo al servidor, está configurado para permitirord_length: 'La máxima longitud de palabra permitida, en caracteres en el título de un topic.'"
     title_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el título de un topic"
     body_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el cuerpo de un post"
     title_fancy_entities: "Convertir caracteres ASCII comunes en entidades HTML de adorno en el título de los topics, ala SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -554,7 +685,7 @@ es:
 
         Ten en cuenta que multiples miembros de la comunidad han marcado este post antes de que haya sido ocultado, por tanto considera como podrías revisar el post para reflejar su feedback.
 
-        Podrás editar el post después de %{edit_delay} minutos, y será automaticamente mostrado. Esto incrementara tu nivel de confianza en el foro.
+        Podrás editar el post después de %{edit_delay} minutos, y será automáticamente mostrado. Esto incrementara tu nivel de confianza en el foro.
 
         Sin embargo, si el post es ocultado por la comunidad una segunda vez, los moderadores serán notificados -- y habrá posibles consecuencias, como la posible suspensión de tu cuenta.
 
@@ -568,7 +699,7 @@ es:
 
         No hay botones de siguiente página o números de página - para leer más, solo sigue haciendo scroll y ¡Más contenido será cargado!
 
-        Conforme lleguen nuevas respuestas, estas aparecerán automaticamente al final del topic. No hay necesidad de refrescar la página o volver a entrar en el topic para ver nuevos posts.
+        Conforme lleguen nuevas respuestas, estas aparecerán automáticamente al final del topic. No hay necesidad de refrescar la página o volver a entrar en el topic para ver nuevos posts.
 
         ### ¿Cómo contesto?
 
@@ -616,7 +747,7 @@ es:
       text_body_template: |
         Gracias por aceptar tu invitación a %{site_name}, ¡Y bienvenido a nuestro foro de discusión!
 
-        Hemos generado automaticamente un nombre de usuario para ti: **%{username}**, pero puedes cambiarlo en cualquier momento visitando [your user profile][prefs].
+        Hemos generado automáticamente un nombre de usuario para ti: **%{username}**, pero puedes cambiarlo en cualquier momento visitando [your user profile][prefs].
 
         Para volver a hacer log in, puedes:
 

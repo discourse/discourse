@@ -437,4 +437,5 @@ uncategorized:
   meta_category_id:
     default: -1
     hidden: true
+  min_posts_for_search_in_topic: 10
 

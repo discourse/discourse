@@ -5,17 +5,10 @@ class Category < ActiveRecord::Base
   include Concern::Positionable
 
   belongs_to :topic, dependent: :destroy
-  if rails4?
-    belongs_to :topic_only_relative_url,
-                -> { select "id, title, slug" },
-                class_name: "Topic",
-                foreign_key: "topic_id"
-  else
-    belongs_to :topic_only_relative_url,
-                select: "id, title, slug",
-                class_name: "Topic",
-                foreign_key: "topic_id"
-  end
+  belongs_to :topic_only_relative_url,
+              -> { select "id, title, slug" },
+              class_name: "Topic",
+              foreign_key: "topic_id"
 
   belongs_to :user
   belongs_to :latest_post, class_name: "Post"
@@ -81,7 +74,7 @@ class Category < ActiveRecord::Base
 
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian && guardian.is_staff?
-      rails4? ? all : scoped
+      all
     else
       permission_types = permission_types.map{ |permission_type|
         CategoryGroup.permission_types[permission_type]
@@ -356,6 +349,12 @@ SQL
 
   def uncategorized?
     id == SiteSetting.uncategorized_category_id
+  end
+
+  def url
+    url = "/category"
+    url << "/#{parent_category.slug}" if parent_category_id
+    url << "/#{slug}"
   end
 end
 

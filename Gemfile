@@ -1,29 +1,23 @@
 source 'https://rubygems.org'
 
-# monkey patching to support dual booting
-module Bundler::SharedHelpers
-  def default_lockfile=(path)
-    @default_lockfile = path
-  end
-  def default_lockfile
-    @default_lockfile ||= Pathname.new("#{default_gemfile}.lock")
-  end
-end
-
 module ::Kernel
-  def rails4?
-    !ENV["RAILS3"]
-  end
-
   def rails_master?
-    rails4? && ENV["RAILS_MASTER"]
+    ENV["RAILS_MASTER"]
   end
 end
 
-if rails4?
-  rails_version = rails_master? ? 'rails_master' : 'rails4'
+if rails_master?
+  # monkey patching to support dual booting
+  module Bundler::SharedHelpers
+    def default_lockfile=(path)
+      @default_lockfile = path
+    end
+    def default_lockfile
+      @default_lockfile ||= Pathname.new("#{default_gemfile}.lock")
+    end
+  end
 
-  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_#{rails_version}.lock")
+  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_master.lock")
 
   # Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
   class Bundler::Dsl
@@ -35,35 +29,54 @@ if rails4?
       to_definition_unpatched(Bundler::SharedHelpers.default_lockfile, unlock)
     end
   end
-else
-  # Note to be deprecated, in place of a dual boot master
-  puts "Booting in Rails 3 mode"
+
+end
+
+# Monkey patch bundler to support mri_21
+unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21
+   STDERR.puts
+   STDERR.puts "WARNING: --------------------------------------------------------------------------"
+   STDERR.puts "You are running an old version of bundler, please update by running: gem install bundler"
+   STDERR.puts
+   map = Bundler::Dependency::PLATFORM_MAP.dup
+   map[:mri_21] = Gem::Platform::RUBY
+   map.freeze
+   Bundler::Dependency.send(:remove_const, "PLATFORM_MAP")
+   Bundler::Dependency.const_set("PLATFORM_MAP", map)
+
+   Bundler::Dsl.send(:remove_const, "VALID_PLATFORMS")
+   Bundler::Dsl.const_set("VALID_PLATFORMS", map.keys.freeze)
+   class ::Bundler::CurrentRuby
+      def on_21?
+         RUBY_VERSION =~ /^2\.1/
+      end
+      def mri_21?
+        mri? && on_21?
+      end
+   end
+   class ::Bundler::Dependency
+      private
+      def on_21?
+         RUBY_VERSION =~ /^2\.1/
+      end
+      def mri_21?
+        mri? && on_21?
+      end
+   end
 end
 
 # see: https://github.com/mbleigh/seed-fu/pull/54
 # taking forever to get changes upstream in seed-fu
 gem 'seed-fu-discourse', require: 'seed-fu'
 
-if rails4?
-  if rails_master?
-    gem 'rails', git: 'https://github.com/rails/rails.git'
-    gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
-  else
-    gem 'rails'
-    gem 'actionpack-action_caching'
-  end
-  gem 'rails-observers'
+if rails_master?
+  gem 'rails', git: 'https://github.com/rails/rails.git'
+  gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
 else
-  # we had pain with the 3.2.13 upgrade so monkey patch the security fix
-  # next time around we hope to upgrade
-  gem 'rails', '3.2.12'
-  gem 'strong_parameters' # remove when we upgrade to Rails 4
-  # we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
-  # REVIEW EVERY RELEASE
-  gem 'sprockets', git: 'https://github.com/SamSaffron/sprockets.git', branch: 'rails-compat'
-  gem 'activerecord-postgres-hstore'
-  gem 'active_attr'
+  gem 'rails'
+  gem 'actionpack-action_caching'
 end
+gem 'rails-observers'
 
 #gem 'redis-rails'
 gem 'hiredis'
@@ -202,6 +215,8 @@ gem 'rbtrace', require: false, platform: :mri
 # required for feed importing and embedding
 gem 'ruby-readability', require: false
 gem 'simple-rss', require: false
+gem 'gctools', require: false, platform: :mri_21
+gem 'stackprof', require: false, platform: :mri_21
 
 # perftools only works on 1.9 atm
 group :profile do

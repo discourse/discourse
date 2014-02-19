@@ -31,7 +31,9 @@ Discourse.TopicFooterButtonsView = Discourse.ContainerView.extend({
           this.attachViewClass(Discourse.FlagTopicButton);
         }
       }
-      this.attachViewClass(Discourse.ReplyButton);
+      if (this.get('topic.details.can_create_post')) {
+        this.attachViewClass(Discourse.ReplyButton);
+      }
       this.attachViewClass(Discourse.NotificationsButton);
 
       this.trigger('additionalButtons', this);

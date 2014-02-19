@@ -103,7 +103,7 @@ class Invite < ActiveRecord::Base
         filter: "%#{email_or_username.downcase}%"
       )
     else
-      rails4? ? all : scoped
+      all
     end
   end
 

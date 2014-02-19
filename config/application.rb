@@ -125,11 +125,6 @@ module Discourse
     config.pbkdf2_iterations = 64000
     config.pbkdf2_algorithm = "sha256"
 
-    # dumping rack lock cause the message bus does not work with it (throw :async, it catches Exception)
-    # see: https://github.com/sporkrb/spork/issues/66
-    # rake assets:precompile also fails
-    config.threadsafe! unless rails4? || $PROGRAM_NAME =~ /spork|rake/
-
     # rack lock is nothing but trouble, get rid of it
     # for some reason still seeing it in Rails 4
     config.middleware.delete Rack::Lock
@@ -153,9 +148,6 @@ module Discourse
     config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
-    # Since we are using strong_parameters, we can disable and remove attr_accessible.
-    config.active_record.whitelist_attributes = false unless rails4?
-
     require 'auth'
     Discourse.activate_plugins! unless Rails.env.test? and ENV['LOAD_PLUGINS'] != "1"
 
@@ -166,13 +158,6 @@ module Discourse
         plugins.each{|plugin| plugin.notify_after_initialize}
       end
     end
-
-    # This is not really required per-se, but we do not want to support
-    # XML params, we see errors in our logs about malformed XML and there
-    # absolutly no spot in our app were we use XML as opposed to JSON endpoints
-    #
-    # Rails 4 no longer includes this by default
-    ActionDispatch::ParamsParser::DEFAULT_PARSERS.delete(Mime::XML) unless rails4?
 
     if ENV['RBTRACE'] == "1"
       require 'rbtrace'

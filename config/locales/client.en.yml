@@ -627,6 +627,7 @@ en:
         actions: "Bulk Actions"
         change_category: "Change Category"
         close_topics: "Close Topics"
+        notification_level: "Change Notification Level"
         selected:
           one: "You have selected <b>1</b> topic."
           other: "You have selected <b>{{count}}</b> topics."

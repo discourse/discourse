@@ -155,7 +155,7 @@ module Export
       db_conf = Rails.configuration.database_configuration[Rails.env]
       host = db_conf["host"]
       password = db_conf["password"]
-      username = db_conf["username"] || "postgres"
+      username = db_conf["username"] || ENV["USER"] || "postgres"
       database = db_conf["database"]
 
       password_argument = "PGPASSWORD=#{password}" if password.present?
@@ -163,8 +163,7 @@ module Export
 
       [ password_argument,                  # pass the password to pg_dump
         "pg_dump",                          # the pg_dump command
-        "--exclude-schema=backup",          # exclude backup schema
-        "--exclude-schema=restore",         # exclude restore schema
+        "--schema=public",                  # only public schema
         "--file='#{@dump_filename}'",       # output to the dump.sql file
         "--no-owner",                       # do not output commands to set ownership of objects
         "--no-privileges",                  # prevent dumping of access privileges
@@ -236,13 +235,9 @@ module Export
 
       upload_directory = "uploads/" + @current_db
 
-      if Dir[upload_directory].present?
-
-        log "Archiving uploads..."
-        FileUtils.cd(File.join(Rails.root, "public")) do
-          `tar --append --file #{tar_filename} #{upload_directory}`
-        end
-
+      log "Archiving uploads..."
+      FileUtils.cd(File.join(Rails.root, "public")) do
+        `tar --append --file #{tar_filename} #{upload_directory}`
       end
 
       log "Gzipping archive..."

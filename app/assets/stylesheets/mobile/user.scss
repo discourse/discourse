@@ -3,6 +3,13 @@
 @import "../common/foundation/mixins";
 
 .user-preferences {
+  .control-group {
+    // border-bottom: 1px solid #e5e5e5;
+    padding: 8px 36px 8px 8px;
+  }
+  .control-label {
+    font-weight: bold;
+  }
   textarea {
     width: 530px;
     height: 100px;
@@ -15,8 +22,10 @@
   }
   .instructions {
     color: $primary_medium;
-    margin-left: 165px;
     margin-top: 5px;
+  }
+  .category-controls {
+    padding-top: 8px;
   }
   .avatar {
     margin-left: 3px;
@@ -32,11 +41,28 @@
     width: 520px;
   }
 
-  .other .controls {
+  .other .controls-dropdown {
     margin-top: 10px;
+    padding-left: 5px;
     select {
       width: 280px;
     }
+  }
+
+  .save-button {
+    width: 100%;
+    overflow: auto;
+    max-width: 200px;
+    button {
+      display: block;
+    }
+  }
+
+  .checkbox-label {
+    overflow: auto;
+    display: block;
+    width: 100%;
+    padding: 5px 8px;
   }
 }
 

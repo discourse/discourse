@@ -38,6 +38,29 @@ describe TopicsBulkAction do
     end
   end
 
+  describe "change_notification_level" do
+    let(:topic) { Fabricate(:topic) }
+
+    context "when the user can edit the topic" do
+      it "updates the notification level" do
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_notification_level', notification_level_id: 2)
+        topic_ids = tba.perform!
+        topic_ids.should == [topic.id]
+        TopicUser.get(topic, topic.user).notification_level.should == 2
+      end
+    end
+
+    context "when the user can't edit the topic" do
+      it "doesn't change the level" do
+        Guardian.any_instance.expects(:can_see?).returns(false)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_notification_level', notification_level_id: 2)
+        topic_ids = tba.perform!
+        topic_ids.should == []
+        TopicUser.get(topic, topic.user).should be_blank
+      end
+    end
+  end
+
   describe "close" do
     let(:topic) { Fabricate(:topic) }
 

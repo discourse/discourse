@@ -64,9 +64,7 @@ class GroupMessage
     $redis.setex(sent_recently_key, @opts[:limit_once_per].try(:to_i) || 86_400, 1) unless @opts[:limit_once_per] == false
   end
 
-  private
-
-    def sent_recently_key
-      "grpmsg:#{@group_name}:#{@message_type}:#{@opts[:user] ? @opts[:user].username : ''}"
-    end
+  def sent_recently_key
+    "grpmsg:#{@group_name}:#{@message_type}:#{@opts[:user] ? @opts[:user].username : ''}"
+  end
 end

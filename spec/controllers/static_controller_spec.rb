@@ -14,11 +14,7 @@ describe StaticController do
       end
 
       it "renders the file" do
-        if rails4?
-          response.should render_template('static/faq.en')
-        else
-          response.should render_template('faq')
-        end
+        response.should render_template('static/faq.en')
       end
     end
 
@@ -28,11 +24,7 @@ describe StaticController do
 
         context "when #{setting_name} site setting is NOT set" do
           it "renders the #{id} page" do
-            if rails4?
-              expect(subject).to render_template("static/#{id}.en")
-            else
-              expect(subject).to render_template(id)
-            end
+            expect(subject).to render_template("static/#{id}.en")
           end
         end
 

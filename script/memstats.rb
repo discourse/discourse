@@ -127,10 +127,18 @@ def get_commandline( pid )
   return commandline.join(' ')
 end
 
-
-puts "#{"Process:".ljust(20)} #{pid}"
-puts "#{"Command Line:".ljust(20)} #{get_commandline(pid)}"
-puts "Memory Summary:"
-totals.keys.sort.each do |k|
-  puts "  #{k.ljust(20)} #{format_number( totals[k] ).rjust(12)} kB"
+if ARGV.include? '--yaml'
+  require 'yaml'
+  puts Hash[*totals.map do |k,v|
+    [k + '_kb', v]
+  end.flatten].to_yaml
+else
+  puts "#{"Process:".ljust(20)} #{pid}"
+  puts "#{"Command Line:".ljust(20)} #{get_commandline(pid)}"
+  puts "Memory Summary:"
+  totals.keys.sort.each do |k|
+    puts "  #{k.ljust(20)} #{format_number( totals[k] ).rjust(12)} kB"
+  end
 end
+
+

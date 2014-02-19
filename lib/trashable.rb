@@ -17,10 +17,8 @@ module Trashable
       #
       scope = if rails_master?
         self.all
-      elsif rails4?
-        self.all.with_default_scope
       else
-        self.scoped.with_default_scope
+        self.all.with_default_scope
       end
 
       scope.where_values.delete(with_deleted_scope_sql)
@@ -28,11 +26,7 @@ module Trashable
     end
 
     def with_deleted_scope_sql
-      if rails4?
-        all.table[:deleted_at].eq(nil).to_sql
-      else
-        scoped.table[:deleted_at].eq(nil).to_sql
-      end
+      all.table[:deleted_at].eq(nil).to_sql
     end
   end
 

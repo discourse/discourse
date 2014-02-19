@@ -26,3 +26,15 @@ _.each(Discourse.StaticController.PAGES, function(page) {
   });
 
 });
+
+Discourse.LoginRoute.reopen({
+  beforeModel: function() {
+    if (!Discourse.SiteSettings.login_required) {
+      this.transitionTo('discovery.latest').then(function(e) {
+        Ember.run.next(function() {
+          e.send('showLogin');
+        });
+      });
+    }
+  }
+});

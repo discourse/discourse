@@ -46,6 +46,10 @@ class Search
     @search_context = @opts[:search_context]
     @limit = Search.per_facet * Search.facets.size
     @results = GroupedSearchResults.new(@opts[:type_filter])
+
+    if Topic === @search_context && @search_context.posts_count < SiteSetting.min_posts_for_search_in_topic
+      @search_context = nil
+    end
   end
 
   # Query a term
@@ -94,7 +98,7 @@ class Search
         extra_posts = posts_query(expected_topics * Search.burst_factor)
         extra_posts = extra_posts.where("posts.topic_id NOT in (?)", @results.topic_ids) if @results.topic_ids.present?
         extra_posts.each do |p|
-          @results.add_result(SearchResult.from_post(p))
+          @results.add_result(SearchResult.from_post(p, @search_context, @term))
         end
       end
     end
@@ -162,6 +166,9 @@ class Search
         elsif @search_context.is_a?(Category)
           # If the context is a category, restrict posts to that category
           posts = posts.order("CASE WHEN topics.category_id = #{@search_context.id} THEN 0 ELSE 1 END")
+        elsif @search_context.is_a?(Topic)
+          posts = posts.order("CASE WHEN topics.id = #{@search_context.id} THEN 0 ELSE 1 END,
+                               CASE WHEN topics.id = #{@search_context.id} THEN posts.post_number ELSE 999999 END")
         end
 
       end
@@ -192,16 +199,20 @@ class Search
 
     def topic_search
 
-      # If we have a user filter, search all posts by default with a higher limit
-      posts = if @search_context.present? and @search_context.is_a?(User)
-        posts_query(@limit * Search.burst_factor)
-      else
-        posts_query(@limit).where(post_number: 1)
-      end
+      posts = if @search_context.is_a?(User)
+                # If we have a user filter, search all posts by default with a higher limit
+                posts_query(@limit * Search.burst_factor)
+              elsif @search_context.is_a?(Topic)
+                posts_query(@limit).where('posts.post_number = 1 OR posts.topic_id = ?', @search_context.id)
+              else
+                posts_query(@limit).where(post_number: 1)
+              end
+
 
       posts.each do |p|
-        @results.add_result(SearchResult.from_post(p))
+        @results.add_result(SearchResult.from_post(p, @search_context, @term))
       end
+
     end
 
 end

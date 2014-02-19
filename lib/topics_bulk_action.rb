@@ -8,7 +8,7 @@ class TopicsBulkAction
   end
 
   def self.operations
-    %w(change_category close)
+    %w(change_category close change_notification_level)
   end
 
   def perform!
@@ -23,6 +23,15 @@ class TopicsBulkAction
       topics.each do |t|
         if guardian.can_edit?(t)
           @changed_ids << t.id if t.change_category(@operation[:category_name])
+        end
+      end
+    end
+
+    def change_notification_level
+      topics.each do |t|
+        if guardian.can_see?(t)
+          TopicUser.change(@user, t.id, notification_level: @operation[:notification_level_id].to_i)
+          @changed_ids << t.id
         end
       end
     end

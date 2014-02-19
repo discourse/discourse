@@ -12,6 +12,7 @@ module PrettyText
       if opts
         # TODO: server localisation has no parity with client
         # should be fixed
+        str = str.dup
         opts.each do |k,v|
           str.gsub!("{{#{k}}}", v)
         end

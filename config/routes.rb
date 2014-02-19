@@ -15,6 +15,8 @@ Discourse::Application.routes.draw do
 
   mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
 
+  get "site" => "site#index"
+
   resources :forums
   get "srv/status" => "forums#status"
 
@@ -153,6 +155,7 @@ Discourse::Application.routes.draw do
   get "faq" => "static#show", id: "faq"
   get "tos" => "static#show", id: "tos"
   get "privacy" => "static#show", id: "privacy"
+  get "signup" => "list#latest"
 
   get "users/search/users" => "users#search_users"
   get "users/password-reset/:token" => "users#password_reset"
@@ -190,7 +193,7 @@ Discourse::Application.routes.draw do
   resources :groups do
     get 'members'
     get 'posts'
-    get 'posts_count'
+    get 'counts'
   end
 
   resources :posts do

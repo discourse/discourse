@@ -1,6 +1,5 @@
 module MobileDetection
   def self.mobile_device?(user_agent)
-    # TODO: this is dumb. user agent matching is a doomed approach. a better solution is coming.
     user_agent =~ /Mobile|webOS|Nexus 7/ && !(user_agent =~ /iPad/)
   end
 
