@@ -16,7 +16,7 @@ Discourse.CategoryList = Ember.ArrayProxy.extend({
   moveCategory: function(categoryId, position){
     Discourse.ajax("/category/" + categoryId + "/move", {
       type: 'POST',
-      data: {position: position}
+      data: { position: position }
     });
   }
 });
@@ -55,31 +55,20 @@ Discourse.CategoryList.reopenClass({
     return categories;
   },
 
-  list: function(filter) {
-    var self = this,
-        finder = null;
+  list: function() {
+    var self = this;
 
-    if (filter === 'categories') {
-      finder = PreloadStore.getAndRemove("categories_list", function() {
-        return Discourse.ajax("/categories.json");
-      });
-    } else {
-      finder = Discourse.ajax("/" + filter + ".json");
-    }
-
-    return finder.then(function(result) {
-      var categoryList = Discourse.TopicList.create();
-      categoryList.setProperties({
+    return PreloadStore.getAndRemove("categories_list", function() {
+      return Discourse.ajax("/categories.json");
+    }).then(function(result) {
+      return Discourse.CategoryList.create({
+        categories: self.categoriesFrom(result),
         can_create_category: result.category_list.can_create_category,
         can_create_topic: result.category_list.can_create_topic,
-        categories: self.categoriesFrom(result),
         draft_key: result.category_list.draft_key,
-        draft_sequence: result.category_list.draft_sequence
+        draft_sequence: result.category_list.draft_sequence,
       });
-      return categoryList;
     });
   }
 
 });
-
-

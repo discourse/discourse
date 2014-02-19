@@ -53,6 +53,8 @@ fr:
         almost_x_years:
           one: "1y"
           other: "%{count}a"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"
@@ -133,7 +135,7 @@ fr:
       not_logged_in: "Désolé vous devez être connecté pour placer ce message dans vos signets."
       created: "Vous avez placé ce message dans vos signets."
       not_bookmarked: "Vous avez lu ce message; Cliquez pour le placer dans vos signets."
-      last_read: "Voici le dernier message que vous avez lu; cliquez pour l'ajouter à vos favoris."
+      last_read: "Voici le dernier message que vous avez lu; cliquez pour l'ajouter à vos signets."
 
     new_topics_inserted: "{{count}} nouvelles discussions."
     show_new_topics: "Cliquez pour afficher."
@@ -186,7 +188,7 @@ fr:
     categories:
       all: "toutes les catégories"
       all_subcategories: "avec sous-catégories"
-      no_subcategory: "sans sous-categories"
+      no_subcategory: "sans sous-catégorie"
       category: "Catégorie"
       posts: "Messages"
       topics: "Liste des discussions"
@@ -196,12 +198,12 @@ fr:
       subcategories: "Sous-catégories :"
       topic_stats: "Nombre de nouvelles discussions."
       topic_stat_sentence:
-        one: "%{count} nouvelle discussion en 1 %{unit}."
-        other: "%{count} nouvelles discussions en 1 %{unit}."
-      post_stats: "Nombre de nouveaux messages."
+        one: "%{count} nouvelle discussion depuis %{unit}."
+        other: "%{count} nouvelles discussions depuis %{unit}."
+      post_stats: "Le nombre de nouveaux messages."
       post_stat_sentence:
-        one: "%{count} nouveau message en 1 %{unit}."
-        other: "%{count} nouveaux messages en 1 %{unit}."
+        one: "%{count} nouveau message depuis %{unit}."
+        other: "%{count} nouveaux messages depuis %{unit}."
 
     user:
       said: "{{username}} a dit :"
@@ -227,9 +229,10 @@ fr:
       deleted: "(supprimé)"
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_reason: "Raison :"
-      watch_new_topics: "Suivre automatiquement toutes les nouvelles discussions sur le forum"
-      watched_categories: "Suivies"
-      watched_categories_instructions: "Vous allez suivre automatiquement toutes les discussions de ces catégories"
+      watched_categories: "Surveillées"
+      watched_categories_instructions: "Vous allez surveiller automatiquement toutes les discussions de ces catégories"
+      tracked_categories: "Suivies"
+      tracked_categories_instructions: "Vous allez recevoir automatiquement des notifications pour les discussions dans ces catégories"
       muted_categories: "Désactivées"
       muted_categories_instructions: "Vous allez désactiver automatiquement le suivi de toutes les discussions de ces catégories"
 
@@ -279,12 +282,12 @@ fr:
 
       name:
         title: "Nom"
-        instructions: "Votre nom complet (pas nécessairement unique). Utilisé aussi pour les recherches par @nom alternatives ; seulement affiché sur votre page utilisateur."
+        instructions: "La version longue de votre nom. Visible publiquement, et utilisée dans les mentions @nom."
         too_short: "Votre nom est trop court."
-        ok: "Votre nom à l'air sympa !."
+        ok: "Votre nom a l'air sympa !."
       username:
         title: "Pseudo"
-        instructions: "Doit être unique et ne pas contenir d'espace. Les gens pourrons vous mentionner avec @pseudo."
+        instructions: "Doit être unique et ne pas contenir d'espace. Les gens pourront vous mentionner avec @pseudo."
         short_instructions: "Les gens peuvent vous mentionner avec @{{username}}."
         available: "Votre pseudo est disponible."
         global_match: "L'adresse email correspond au pseudo enregistré."
@@ -362,9 +365,9 @@ fr:
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
-        common: "Votre mot de passe est trop courant."
+        common: "Ce mot de passe est trop commun."
         ok: "Votre mot de passe a l'air bon."
-        instructions: "Doit être d'aut moins %{count} caractères."
+        instructions: "Doit être d'au moins %{count} caractères."
 
       ip_address:
         title: "Dernières adresses IP"
@@ -464,9 +467,6 @@ fr:
       github:
         title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
-      persona:
-        title: "via Persona"
-        message: "Authentification via Mozilla Persona (assurez-vous que les popups ne soient pas bloquées)"
 
     composer:
       posting_not_on_topic: "A quelle discussion voulez-vous répondre ?"
@@ -493,7 +493,7 @@ fr:
       reply_here: "Répondre ici"
       reply: "Répondre"
       cancel: "Annuler"
-      create_topic: "Créer une Discussion"
+      create_topic: "Créer une discussion"
       create_pm: "Créer un Message Privé"
 
       users_placeholder: "Ajouter un utilisateur"
@@ -584,7 +584,7 @@ fr:
     go_back: 'retour'
     current_user: 'voir la page de l''utilisateur'
 
-    favorite:
+    starred:
       title: 'Favoris'
       help:
         star: 'ajouter cette discussion à vos favoris'
@@ -592,7 +592,7 @@ fr:
 
     topics:
       none:
-        favorited: "Vous n'avez aucune discussion favorite pour le moment. Pour ajouter une discussion aux favoris, cliquez sur l'étoile suivant le titre."
+        starred: "Vous n'avez aucune discussion favorite pour le moment. Pour ajouter une discussion aux favoris, cliquez sur l'étoile suivant le titre."
         unread: "Vous n'avez aucune discussion non lue."
         new: "Vous n'avez aucune discussion non lue."
         read: "Vous n'avez lu aucune discussion pour le moment."
@@ -607,13 +607,8 @@ fr:
         read: "Il n'y a plus de discussion à lire."
         new: "Il n'y a plus de discussion à lire."
         unread: "Il n'y a plus de discussion non lue à lire."
-        favorited: "Il n'y a plus de discussion favorites à lire."
+        starred: "Il n'y a plus de discussion favorites à lire."
         category: "Il n'y a plus de discussion sur {{category}} à lire."
-
-    rank_details:
-      toggle: afficher/cacher le détail du classement des discussions
-      show: afficher le détail du classement des discussions
-      title: Détail du classement des discussions
 
     topic:
       filter_to: "Afficher {{post_count}} messages dans cette discussion"
@@ -628,7 +623,7 @@ fr:
       unread_topics:
         one: '1 discussion non lue'
         other: '{{count}} discussions non lues'
-      title: 'discussions'
+      title: 'Discussion'
       loading_more: "Chargement de discussions supplémentaires..."
       loading: 'Chargement des discussions en cours...'
       invalid_access:
@@ -658,7 +653,23 @@ fr:
       read_more: "Vous voulez en lire plus? {{catLink}} or {{latestLink}}."
 
       # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
-      read_more_MF: "Il y a { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}} "
+      read_more_MF: "Il y a {
+        UNREAD, plural,
+        =0 {}
+        one {
+          <a href='/unread'>1 discussion non-lue</a>
+        } other {
+          <a href='/unread'># discussions non-lues</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one {
+              {BOTH, select, true{et } false {} other{}} <a href='/new'>1 nouvelle</a> discussion
+            } other {
+              {BOTH, select, true{et } false {} other{}} <a href='/new'># nouvelles</a> discussions
+            }
+        } à lire, ou {CATEGORY, select, true {allez voir les nouvelles discussions dans {catLink}} false {{latestLink}} other {}}."
 
       browse_all_categories: Voir toutes les catégories
 
@@ -686,10 +697,11 @@ fr:
       notifications:
         title: ''
         reasons:
-          '3_5': 'Vous recevrez des notifications car vous suivez automatiquement cette discussion.'
-          '3_2': 'Vous recevrez des notifications car vous suivez attentivement cette discussion.'
+          '3_6': 'Vous recevrez des notifications parce que vous surveillez cette catégorie.'
+          '3_5': 'Vous recevrez des notifications parce que vous avez commencé à surveiller cette discussion automatiquement.'
+          '3_2': 'Vous recevrez des notifications car vous surveillez cette discussion.'
           '3_1': 'Vous recevrez des notifications car vous avez créé cette discussion.'
-          '3': 'Vous recevrez des notifications car vous suivez cette discussion.'
+          '3': 'Vous recevrez des notifications car vous surveillez cette discussion.'
           '2_4': 'Vous recevrez des notifications car vous avez posté une réponse dans cette discussion.'
           '2_2': 'Vous recevrez des notifications car vous suivez cette discussion.'
           '2': 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">avez lu cette discussion</a>.'
@@ -698,10 +710,10 @@ fr:
           '0': 'Vous ignorez toutes les notifications de cette discussion.'
           '0_2': 'Vous ignorez toutes les notifications de cette discussion.'
         watching:
-          title: "Suivre attentivement"
-          description: "pareil que le suivi simple, plus une notification systématique pour chaque nouveau message."
+          title: "Surveiller"
+          description: "pareil que le Suivi, plus une notification systématique pour chaque nouveau message."
         tracking:
-          title: "Suivi simple"
+          title: "Suivi"
           description: "vous serez notifié des mentions de votre @pseudo et des réponses à vos messages, et en plus du nombre de messages non lus et des nouveaux messages."
         regular:
           title: "Normal"
@@ -752,7 +764,7 @@ fr:
         title: 'Inviter des amis à répondre'
         action: 'Envoyer l''invitation'
         help: 'envoyer des invitations à des amis pour qu''ils puissent participer à cette discussion en un simple clic'
-        to_topic: "Nous allons envoyer un mail à votre ami pour lui permettre de participer à cette conversation juste en cliquant sur un lien, sans qu'il ait à se connecter."
+        to_topic: "Nous allons envoyer un mail à votre ami pour lui permettre de participer à cette discussion juste en cliquant sur un lien, sans qu'il ait à se connecter."
         to_forum: "Nous allons envoyer un mail à votre ami pour lui permettre de participer au forum juste en cliquant sur un lien."
         email_placeholder: 'adresse email'
         success: "Merci ! Nous avons envoyé un mail à <b>{{email}}</b>. Nous vous informerons lorsqu'ils auront retourné votre invitation. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
@@ -802,7 +814,7 @@ fr:
       post_number: "message {{number}}"
       in_reply_to: "Réponse courte"
       last_edited_on: "message dernièrement édité le"
-      reply_as_new_topic: "Répondre dans une nouvelle conversation"
+      reply_as_new_topic: "Répondre dans une nouvelle discussion"
       continue_discussion: "Continuer la discussion suivante {{postLink}}:"
       follow_quote: "Voir le message cité"
       deleted_by_author:
@@ -859,14 +871,14 @@ fr:
           spam: "Le signaler également"
           inappropriate: "Le signaler également"
           custom_flag: "Le signaler également"
-          bookmark: "L'ajouter également en favoris"
+          bookmark: "L'ajouter également en signet"
           like: "L'aimer également"
           vote: "Votez pour lui également"
         undo:
           off_topic: "Annuler le signalement"
           spam: "Annuler le signalement"
           inappropriate: "Annuler le signalement"
-          bookmark: "L'enlever des favoris"
+          bookmark: "L'enlever des signets"
           like: "Annuler j'aime"
           vote: "Retirer votre vote"
         people:
@@ -875,9 +887,9 @@ fr:
           inappropriate: "{{icons}} l'ont signalé comme inapproprié"
           notify_moderators: "{{icons}} l'ont signalé pour modération"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>l'ont signalé pour modération</a>"
-          notify_user: "{{icons}} ont démarré une conversation privée"
-          notify_user_with_url: "{{icons}} ont démarré une <a href='{{postUrl}}'>conversation privée</a>"
-          bookmark: "{{icons}} l'ont ajouté à leurs favoris"
+          notify_user: "{{icons}} ont démarré une discussion privée"
+          notify_user_with_url: "{{icons}} ont démarré une <a href='{{postUrl}}'>discussion privée</a>"
+          bookmark: "{{icons}} l'ont ajouté à leurs signets"
           like: "{{icons}} l'ont aimé"
           vote: "{{icons}} ont voté pour"
         by_you:
@@ -885,8 +897,8 @@ fr:
           spam: "Vous l'avez signalé comme étant du spam"
           inappropriate: "Vous l'avez signalé comme inapproprié"
           notify_moderators: "Vous l'avez signalé pour modération"
-          notify_user: "Vous avez démarré une conversation privée avec cet utilisateur"
-          bookmark: "Vous l'avez ajouté à vos favoris"
+          notify_user: "Vous avez démarré une discussion privée avec cet utilisateur"
+          bookmark: "Vous l'avez ajouté à vos signets"
           like: "Vous l'avez aimé"
           vote: "Vous avez voté pour"
         by_you_and_others:
@@ -903,11 +915,11 @@ fr:
             one: "Vous et 1 autre personne l'avez signalé pour modération"
             other: "Vous et {{count}} autres personnes l'avez signalé pour modération"
           notify_user:
-            one: "Vous et 1 autre personne avez démarré une conversation privée avec cet utilisateur"
-            other: "Vous et {{count}} autres personnes avez démarré une conversation privée avec cet utilisateur"
+            one: "Vous et 1 autre personne avez démarré une discussion privée avec cet utilisateur"
+            other: "Vous et {{count}} autres personnes avez démarré une discussion privée avec cet utilisateur"
           bookmark:
-            one: "Vous et 1 autre personne l'avez ajouté à vos favoris"
-            other: "Vous et {{count}} autres personnes l'avez ajouté à vos favoris"
+            one: "Vous et 1 autre personne l'avez ajouté à vos signets"
+            other: "Vous et {{count}} autres personnes l'avez ajouté à vos signets"
           like:
             one: "Vous et 1 autre personne l'avez aimé"
             other: "Vous et {{count}} autres personnes l'avez aimé"
@@ -928,11 +940,11 @@ fr:
             one: "1 personne a signalé ceci pour modération"
             other: "{{count}} personnes ont signalé pour modération"
           notify_user:
-            one: "1 personne a démarré une conversation privée avec cet utilisateur"
-            other: "{{count}} personnes ont démarré une conversation privée avec cet utilisateur"
+            one: "1 personne a démarré une discussion privée avec cet utilisateur"
+            other: "{{count}} personnes ont démarré une discussion privée avec cet utilisateur"
           bookmark:
-            one: "1 personne a ajouté ceci à ses favoris"
-            other: "{{count}} personnes ont ajouté ceci à leurs favoris"
+            one: "1 personne a ajouté ceci à ses signets"
+            other: "{{count}} personnes ont ajouté ceci à leurs signets"
           like:
             one: "1 personne a aimé ceci"
             other: "{{count}} personnes ont aimé ceci"
@@ -956,7 +968,7 @@ fr:
           previous: "Révision précédente"
           next: "Révision suivante"
           last: "Dernière révision"
-          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> (sur un de total de {{total}})"
+          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Afficher le rendu avec les ajouts et les retraits en ligne"
@@ -980,7 +992,7 @@ fr:
       general: 'Général'
       settings: 'Paramètres'
       delete: 'Supprimer la catégorie'
-      create: 'Créer la catégorie'
+      create: 'Créer une catégorie'
       save: 'Enregistrer la catégorie'
       creation_error: Il y a eu une erreur lors de la création de la catégorie.
       save_error: Il y a eu une erreur lors de la sauvegarde de la catégorie.
@@ -998,13 +1010,12 @@ fr:
       list: "Liste des catégories"
       no_description: "Il n'y a pas de description pour cette catégorie."
       change_in_category_topic: "Editer la description"
-      hotness: "Buzz"
       already_used: 'Cette couleur est déjà utilisée par une autre catégorie'
       security: "Sécurité"
       auto_close_label: "Fermer automatiquement après :"
       auto_close_units: "heures"
       edit_permissions: "Editer les Permissions"
-      add_permission: "AJouter une Permission"
+      add_permission: "Ajouter une Permission"
       this_year: "cette année"
       position: "position"
       default_position: "Position par défaut"
@@ -1058,13 +1069,15 @@ fr:
     categories_list: "Liste des Catégories"
 
     filters:
+      with_topics: "Discussions %{filter}"
+      with_category: "Discussions %{filter} dans %{category}"
       latest:
         title: "Récentes"
         help: "discussions récentes"
       hot:
         title: "Populaires"
         help: "discussions populaires"
-      favorited:
+      starred:
         title: "Favoris"
         help: "discussions que vous avez ajoutées à vos favoris"
       read:
@@ -1096,16 +1109,15 @@ fr:
           other: "{{categoryName}} ({{count}})"
         help: "dernières discussions dans la catégorie {{categoryName}}"
       top:
-        title: "Top"
-        help: "sélection des meilleurs discussions"
+        title: "Le meilleur"
+        help: "une sélection des meilleurs discussions"
         this_year: "Cette année"
-        this_month: "Ce mois"
+        this_month: "Ce mois-ci"
         this_week: "Cette semaine"
         today: "Aujourd'hui"
         redirect_reasons:
-          new_user: "Vous êtes un nouvel utilisateur. Ceci sera pour le moment votre page d'accueil. Si vous ne savez pas par où commencer, voici une sélection des meilleures discussions."
-          not_seen_in_a_month: "Nous ne vous avons pas vu depuis plus d'un mois. Voici une sélection des meilleures discussions depuis que vous êtes parti."
-
+          new_user: "Bienvenue! En tant que nouveau visiteur, nous avons pensé que vous aimeriez commencer avec cette liste des meilleurs sujets de discussions de l'année dernière."
+          not_seen_in_a_month: "Bienvenue à nouveau! Nous ne vous avons pas vu depuis un moment, voici les meilleurs sujets de discussions depuis votre absence."
     browser_update: 'Malheureusement, <a href="http://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour afficher ce forum Discourse</a>. Merci <a href="http://browsehappy.com">de mettre à jour votre navigateur</a>.'
 
     permission_types:
@@ -1417,6 +1429,7 @@ fr:
         approve_bulk_success: "Bravo! Tous les utlisateurs sélectionnés ont été approuvés et notifiés."
         time_read: "Temps de lecture"
         delete: "Supprimer Utilisateur"
+        delete_forbidden_because_staff: "Administrateurs et modérateurs ne peuvent pas être supprimés."
         delete_forbidden:
           one: "Cet utilisateur ne peut pas être supprimé s'il s'est inscrit il y a plus de %{count} jour, ou s'il a des messages. Supprimez tous ses messages avant de supprimer cet utilisateur."
           other: "Cet utilisateur ne peut pas être supprimé s'il s'est inscrit il y a plus de %{count} jours, ou s'il a des messages. Supprimez tous ses messages avant de supprimer cet utilisateur."
@@ -1451,7 +1464,7 @@ fr:
         reset: 'rétablir par défaut'
         none: 'rien'
         no_results: "Aucun résultat trouvé."
-        clear_filter: "Afficher tout"
+        clear_filter: "Effacer"
         categories:
           all_results: 'Tout'
           required: 'Requis'
@@ -1466,7 +1479,46 @@ fr:
           spam: 'Spam'
           rate_limits: 'Limites des taux'
           developer: 'Développeur'
+          embedding: "Incorporer"
           uncategorized: 'Sans catégorie'
 
     lightbox:
       download: "télécharger"
+    keyboard_shortcuts_help:
+      title: 'Raccourcis Clavier'
+      jump_to:
+        title: 'Aller à'
+        home: '<b>g</b> puis <b>h</b> Orig (Les plus récentes)'
+        latest: '<b>g</b> puis <b>l</b> La plus récente'
+        new: '<b>g</b> puis <b>n</b> Nouvelles'
+        unread: '<b>g</b> puis <b>u</b> Non lues'
+        starred: '<b>g</b> puis <b>f</b> Favorites'
+        categories: '<b>g</b> puis <b>c</b> Catégories'
+      navigation:
+        title: 'Navigation'
+        back: '<b>u</b> Retour'
+        up_down: '<b>k</b>/<b>j</b> Déplacer la sélection haut/bas'
+        open: '<b>o</b> ou <b>Entrée</b> Ouvrir la discussion sélectionnée'
+        next_prev: '<b>`</b>/<b>~</b> Section Suivante/précédente'
+      application:
+        title: 'Application'
+        create: '<b>c</b> Créer une nouvelle discussion'
+        notifications: '<b>n</b> Ouvrir les notifications'
+        search: '<b>/</b> Rechercher'
+        help: '<b>?</b> Ouvrir l''aide des raccourcis clavier'
+      actions:
+        title: 'Actions'
+        starred: '<b>f</b> Ajouter une discussion aux favoris'
+        share_topic: '<b>s</b> Partager une discussion'
+        share_post: '<b>Maj s</b> Partager un message '
+        reply_topic: '<b>r</b> Répondre à une discussion'
+        reply_post: '<b>Maj r</b> Répondre à un message'
+        like: '<b>l</b> Aimer un message'
+        flag: '<b>!</b> Signaler un message'
+        bookmark: '<b>b</b> Ajouter ce message à vos signets'
+        edit: '<b>e</b> Editer un message'
+        delete: '<b>d</b> Supprimer un message'
+        mark_muted: '<b>m</b> puis <b>m</b> Marquer une discussion comme silencieuse'
+        mark_regular: '<b>m</b> then <b>r</b> Marquer la discussion comme normale'
+        mark_tracking: '<b>m</b> then <b>t</b> Marquer la discussion comme suivie'
+        mark_watching: '<b>m</b> puis <b>w</b> Marquer la discussion comme surveillée'

@@ -1,7 +1,6 @@
 # Post processing that we can do after a post has already been cooked.
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
-require_dependency "oneboxer"
 require_dependency 'url_helper'
 
 class CookedPostProcessor

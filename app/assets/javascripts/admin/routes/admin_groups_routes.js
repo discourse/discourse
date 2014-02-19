@@ -10,6 +10,11 @@ Discourse.AdminGroupsRoute = Discourse.Route.extend({
 
   model: function() {
     return Discourse.Group.findAll();
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    controller.set('aliasLevelOptions', Discourse.Group.aliasLevelOptions());
   }
 
 });

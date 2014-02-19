@@ -1,0 +1,10 @@
+<p>Choose the new category for the topics:</p>
+
+<p>{{categoryChooser value=newCategoryId}}</p>
+
+{{#if loading}}
+  <div class='loading'>{{i18n loading}}</div>
+{{else}}
+  <button class='btn' {{action changeCategory}}>Change Category</button>
+{{/if}}
+

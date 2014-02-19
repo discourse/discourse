@@ -16,14 +16,14 @@ task 'import', [:input_filename] => :environment do |t, args|
     puts '', 'The filename argument was missing.', '', 'Usage:', ''
     puts '  rake import[/path/to/export.json.gz]', ''
   rescue Import::ImportDisabledError
-    puts '', 'Imports are not allowed.', 'An admin needs to set allow_import to true in the site settings before imports can be run.', ''
+    puts '', 'Imports are not allowed.', 'An admin needs to set allow_restore to true in the site settings before imports can be run.', ''
     puts 'Import cancelled.', ''
   end
 end
 
 desc 'After a successful import, restore the backup tables'
 task 'import:rollback' => :environment do |t|
-  num_backup_tables = User.exec_sql("select count(*) as count from information_schema.tables where table_schema = 'backup'")[0]['count'].to_i
+  num_backup_tables = Import::backup_tables_count
 
   if User.exec_sql("select count(*) as count from information_schema.schemata where schema_name = 'backup'")[0]['count'].to_i <= 0
     puts "Backup tables don't exist!  An import was never performed or the backup tables were dropped.", "Rollback cancelled."
@@ -36,14 +36,24 @@ task 'import:rollback' => :environment do |t|
   end
 end
 
+desc 'After a successful import, drop the backup tables'
+task 'import:remove_backup' => :environment do |t|
+  if Import::backup_tables_count > 0
+    User.exec_sql("DROP SCHEMA IF EXISTS #{Jobs::Importer::BACKUP_SCHEMA} CASCADE")
+    puts "Backup tables dropped successfully."
+  else
+    puts "No backup found. Nothing was done."
+  end
+end
+
 desc 'Allow imports'
 task 'import:enable' => :environment do |t|
-  SiteSetting.allow_import = true
+  SiteSetting.allow_restore = true
   puts 'Imports are now permitted.  Disable them with rake import:disable'
 end
 
 desc 'Forbid imports'
 task 'import:disable' => :environment do |t|
-  SiteSetting.allow_import = false
+  SiteSetting.allow_restore = false
   puts 'Imports are now forbidden.'
 end

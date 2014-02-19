@@ -44,24 +44,28 @@ config/database.yml (as per the upgrade instructions)
 
 Take DB dump with:
 
-    pg_dump --no-owner -U user_name -W database_name
+    pg_dump --no-owner -U user_name -W database_name > backup_file_name.sql
 
 Copy it over to the new server
 
 Run as discourse user:
-
-* createdb discourse_prod
-* psql discourse_prod
- * \i discourse_dump_from_old_server.sql
-
+```
+createdb discourse_prod
+psql discourse_prod
+    \i backup_file_name.sql
+```
 On oldserver:
 
-* rsync -avz -e ssh public newserver:public
+`rsync -avz -e ssh public newserver:public`
 
+On the new server:
+```
     bundle install --without test --deployment
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake posts:rebake
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake db:migrate
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake assets:precompile
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake posts:rebake
+```
+If the `rake db:migrate` step fails, you might have to run it twice.
 
 Are you just testing your migration? Disable outgoing email by changing
 `config/environments/production.rb` and adding the following below the mail

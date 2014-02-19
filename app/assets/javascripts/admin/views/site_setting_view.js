@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.SiteSettingView = Discourse.View.extend({
+Discourse.SiteSettingView = Discourse.View.extend(Discourse.ScrollTop, {
   classNameBindings: [':row', ':setting', 'content.overridden'],
 
   templateName: function() {

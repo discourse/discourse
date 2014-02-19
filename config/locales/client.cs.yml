@@ -59,6 +59,8 @@ cs:
           one:   "1r"
           few:   "%{count}r"
           other: "%{count}let"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 minuta"
@@ -417,9 +419,6 @@ cs:
       github:
         title: "přes GitHub"
         message: "Autorizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"
-      persona:
-        title: "přes Persona"
-        message: "Autorizuji přes Mozilla Persona (ujistěte se, že nemáte zablokovaná popup okna)"
 
     composer:
       posting_not_on_topic: "Rozepsali jste odpověď na téma \"{{title}}\", ale nyní máte otevřené jiné téma."
@@ -531,7 +530,7 @@ cs:
     go_back: 'jít zpět'
     current_user: 'jít na vaši uživatelskou stránku'
 
-    favorite:
+    starred:
       title: 'Oblíbené'
       help:
         star: 'přidat toto téma do oblíbených'
@@ -539,7 +538,7 @@ cs:
 
     topics:
       none:
-        favorited: "Zatím nemáte žádná oblíbená témata. Pro přidání tématu do oblíbených, klikněte na hvězdičku vedle názvu tématu."
+        starred: "Zatím nemáte žádná oblíbená témata. Pro přidání tématu do oblíbených, klikněte na hvězdičku vedle názvu tématu."
         unread: "Nemáte žádná nepřečtená témata."
         new: "Nemáte žádná nová témata ke čtení."
         read: "Zatím jste nečetli žádná témata."
@@ -554,13 +553,8 @@ cs:
         read: "Nejsou tu žádná další přečtená témata."
         new: "Nejsou tu žádná další nová témata k přečtení."
         unread: "Nejsou tu žádná další nepřečtená témata."
-        favorited: "Nejsou tu žádná další oblíbená témata k přečtení."
+        starred: "Nejsou tu žádná další oblíbená témata k přečtení."
         category: "V kategorii {{category}} nejsou žádná další témata."
-
-    rank_details:
-      toggle: zobrazit/skrýt detaily bodování
-      show: zobrazit detaily bodování tématu
-      title: Detaily bodování tématu
 
     topic:
       create: 'Nové téma'
@@ -940,7 +934,6 @@ cs:
       list: "Seznam kategorií"
       no_description: "K této kategorii zatím není žádný popis."
       change_in_category_topic: "navštivte téma kategorie pro editaci jejího popisu"
-      hotness: "Popularita"
       already_used: 'Tato barva je již použita jinou kategorií'
       security: "Bezpečnost"
       auto_close_label: "Automaticky zavírat témata po:"
@@ -1001,7 +994,7 @@ cs:
       hot:
         title: "Populární"
         help: "populární témata z poslední doby"
-      favorited:
+      starred:
         title: "Oblíbená"
         help: "témata, která jste označili jako oblíbená"
       read:

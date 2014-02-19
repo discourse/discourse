@@ -60,8 +60,15 @@ class PostAlertObserver < ActiveRecord::Observer
   def after_create_post(post)
     if post.topic.private_message?
       # If it's a private message, notify the topic_allowed_users
-      post.topic.all_allowed_users.reject{ |a| a.id == post.user_id }.each do |a|
-        create_notification(a, Notification.types[:private_message], post)
+      post.topic.all_allowed_users.reject{ |user| user.id == post.user_id }.each do |user|
+        next if user.blank?
+
+        if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
+          next unless post.reply_to_post_number
+          next unless post.reply_to_post.user_id == user.id
+        end
+
+        create_notification(user, Notification.types[:private_message], post)
       end
     elsif post.post_type != Post.types[:moderator_action]
       # If it's not a private message and it's not an automatic post caused by a moderator action, notify the users
@@ -73,6 +80,36 @@ class PostAlertObserver < ActiveRecord::Observer
 
     def callback_for(action, model)
       "#{action}_#{model.class.name.underscore.gsub(/.+\//, '')}"
+    end
+
+    def unread_posts(user, topic)
+      Post.where('post_number > COALESCE((
+                 SELECT last_read_post_number FROM topic_users tu
+                 WHERE tu.user_id = ? AND tu.topic_id = ? ),0)',
+                  user.id, topic.id)
+          .where('reply_to_user_id = ? OR exists(
+              SELECT 1 from topic_users tu
+              WHERE tu.user_id = ? AND
+                tu.topic_id = ? AND
+                notification_level = ?
+              )', user.id, user.id, topic.id, TopicUser.notification_levels[:watching])
+          .where(topic_id: topic.id)
+    end
+
+    def first_unread_post(user, topic)
+      unread_posts(user, topic).order('post_number').first
+    end
+
+    def unread_count(user, topic)
+      unread_posts(user, topic).count
+    end
+
+    def destroy_notifications(user, type, topic)
+      return if user.blank?
+      return unless Guardian.new(user).can_see?(topic)
+
+      user.notifications.where(notification_type: type,
+                               topic_id: topic.id).destroy_all
     end
 
     def create_notification(user, type, post, opts={})
@@ -87,12 +124,40 @@ class PostAlertObserver < ActiveRecord::Observer
       # Don't notify the same user about the same notification on the same post
       return if user.notifications.exists?(notification_type: type, topic_id: post.topic_id, post_number: post.post_number)
 
+      collapsed = false
+
+      if  type == Notification.types[:replied] ||
+          type == Notification.types[:posted]
+
+        destroy_notifications(user, Notification.types[:replied] , post.topic)
+        destroy_notifications(user, Notification.types[:posted] , post.topic)
+        collapsed = true
+      end
+
+      if  type == Notification.types[:private_message]
+        destroy_notifications(user, type, post.topic)
+        collapsed = true
+      end
+
+      original_post = post
+      original_username = opts[:display_username] || post.username
+
+      if collapsed
+        post = first_unread_post(user,post.topic) || post
+        count = unread_count(user, post.topic)
+        opts[:display_username] = I18n.t('embed.replies', count: count) if count > 1
+      end
+
+      UserActionObserver.log_notification(original_post, user, type)
+
       # Create the notification
       user.notifications.create(notification_type: type,
                                 topic_id: post.topic_id,
                                 post_number: post.post_number,
                                 post_action_id: opts[:post_action_id],
                                 data: { topic_title: post.topic.title,
+                                        original_post_id: original_post.id,
+                                        original_username: original_username,
                                         display_username: opts[:display_username] || post.user.username }.to_json)
     end
 
@@ -124,11 +189,12 @@ class PostAlertObserver < ActiveRecord::Observer
       reply_to_user = post.reply_notification_target
       notify_users(reply_to_user, :replied, post)
 
-      exclude_user_ids = []
-      exclude_user_ids << post.user_id
+      exclude_user_ids = [] <<
+          post.user_id <<
+          extract_mentioned_users(post).map(&:id) <<
+          extract_quoted_users(post).map(&:id)
+
       exclude_user_ids << reply_to_user.id if reply_to_user.present?
-      exclude_user_ids << extract_mentioned_users(post).map(&:id)
-      exclude_user_ids << extract_quoted_users(post).map(&:id)
       exclude_user_ids.flatten!
       TopicUser
         .where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching])

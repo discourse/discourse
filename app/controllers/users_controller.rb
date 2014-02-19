@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect, :avatar]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_avatar, :toggle_avatar]
+  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_avatar, :toggle_avatar, :destroy]
   before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -173,7 +173,10 @@ class UsersController < ApplicationController
       raise Discourse::InvalidParameters.new(:password) unless params[:password].present?
       @user.password = params[:password]
       @user.password_required!
-      logon_after_password_reset if @user.save
+      if @user.save
+        Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
+        logon_after_password_reset
+      end
     end
     render layout: 'no_js'
   end
@@ -264,7 +267,13 @@ class UsersController < ApplicationController
     user_fields = [:username, :use_uploaded_avatar, :upload_avatar_template, :uploaded_avatar_id]
     user_fields << :name if SiteSetting.enable_names?
 
-    render json: { users: results.as_json(only: user_fields, methods: :avatar_template) }
+    to_render = { users: results.as_json(only: user_fields, methods: :avatar_template) }
+
+    if params[:include_groups] == "true"
+      to_render[:groups] = Group.search_group(term, current_user).map {|m| {:name=>m.name, :usernames=> m.usernames.split(",")} }
+    end
+
+    render json: to_render
   end
 
   # [LEGACY] avatars in quotes/oneboxes might still be pointing to this route
@@ -332,6 +341,13 @@ class UsersController < ApplicationController
     render nothing: true
   end
 
+  def destroy
+    @user = fetch_user_from_params
+    guardian.ensure_can_delete_user!(@user)
+    UserDestroyer.new(current_user).destroy(@user, {delete_posts: true, context: params[:context]})
+    render json: success_json
+  end
+
   private
 
     def honeypot_value
@@ -391,7 +407,8 @@ class UsersController < ApplicationController
         :name,
         :email,
         :password,
-        :username
+        :username,
+        :active
       ).merge(ip_address: request.ip)
     end
 end

@@ -59,17 +59,14 @@ class Topic < ActiveRecord::Base
                                      :if => Proc.new { |t|
                                            (t.new_record? || t.category_id_changed?) &&
                                            !SiteSetting.allow_uncategorized_topics &&
-                                           (t.archetype.nil? || t.archetype == Archetype.default)
+                                           (t.archetype.nil? || t.archetype == Archetype.default) &&
+                                           (!t.user_id || !t.user.staff?)
                                        }
 
 
   before_validation do
     self.sanitize_title
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
-  end
-
-  unless rails4?
-    serialize :meta_data, ActiveRecord::Coders::Hstore
   end
 
   belongs_to :category
@@ -81,7 +78,6 @@ class Topic < ActiveRecord::Base
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_users, through: :topic_allowed_users, source: :user
 
-  has_one :hot_topic
   has_one :top_topic
   belongs_to :user
   belongs_to :last_poster, class_name: 'User', foreign_key: :last_post_user_id
@@ -137,10 +133,10 @@ class Topic < ActiveRecord::Base
            WHERE #{condition[0]})", condition[1])
   }
 
-  # Helps us limit how many favorites can be made in a day
-  class FavoriteLimiter < RateLimiter
+  # Helps us limit how many topics can be starred in a day
+  class StarLimiter < RateLimiter
     def initialize(user)
-      super(user, "favorited:#{Date.today.to_s}", SiteSetting.max_favorites_per_day, 1.day.to_i)
+      super(user, "starred:#{Date.today.to_s}", SiteSetting.max_stars_per_day, 1.day.to_i)
     end
   end
 
@@ -547,9 +543,9 @@ class Topic < ActiveRecord::Base
                 WHERE id = ?", id
 
       if starred
-        FavoriteLimiter.new(user).performed!
+        StarLimiter.new(user).performed!
       else
-        FavoriteLimiter.new(user).rollback!
+        StarLimiter.new(user).rollback!
       end
     end
   end
@@ -759,6 +755,7 @@ end
 #  auto_close_started_at   :datetime
 #  deleted_by_id           :integer
 #  participant_count       :integer          default(1)
+#  word_count              :integer
 #
 # Indexes
 #

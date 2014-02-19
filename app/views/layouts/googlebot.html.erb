@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="<%= SiteSetting.default_locale %>">
+  <head>
+    <meta charset="utf-8">
+    <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="<%= SiteSetting.site_description %>" name="description">
+    <meta content="" name="author">
+
+    <%= canonical_link_tag %>
+
+    <link rel="icon" type="image/png" href="<%=SiteSetting.favicon_url%>">
+    <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
+
+    <%= render :partial => "common/special_font_face" %>
+    <%= render :partial => "common/discourse_stylesheet" %>
+    <%= discourse_csrf_tags %>
+    <%= raw SiteContent.content_for(:head) %>
+  </head>
+  <body>
+    <%- unless customization_disabled? %>
+      <%= SiteCustomization.custom_header(session[:preview_style]) %>
+    <%- end %>
+    <header class="d-header">
+      <div class="container">
+        <div class="contents">
+          <div class="row">
+            <div class="title span13">
+              <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div id="main-outlet" class="container">
+      <!-- preload-content: -->
+      <%= yield %>
+      <!-- :preload-content -->
+    </div>
+  </body>
+</html>

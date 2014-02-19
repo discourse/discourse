@@ -17,6 +17,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
   rejectedEmails: Em.A([]),
   rejectedPasswords: Em.A([]),
   prefilledUsername: null,
+  tosAccepted: false,
 
   resetForm: function() {
     this.setProperties({
@@ -36,12 +37,13 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
 
   submitDisabled: function() {
     if (this.get('formSubmitted')) return true;
+    if (this.get('tosAcceptRequired') && !this.get('tosAccepted')) return true;
     if (this.get('nameValidation.failed')) return true;
     if (this.get('emailValidation.failed')) return true;
     if (this.get('usernameValidation.failed')) return true;
     if (this.get('passwordValidation.failed')) return true;
     return false;
-  }.property('nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted'),
+  }.property('nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted', 'tosAccepted'),
 
   passwordRequired: function() {
     return (this.blank('authOptions.auth_provider') || this.blank('authOptions.email_valid') || !this.get('authOptions.email_valid'));
@@ -321,6 +323,10 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
       createAccountController.set('accountChallenge', json.challenge.split("").reverse().join(""));
     });
   },
+
+  tosAcceptRequired: function() {
+    return Discourse.SiteSettings.tos_accept_required;
+  }.property(),
 
   actions: {
     createAccount: function() {

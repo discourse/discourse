@@ -9,11 +9,12 @@ var cache = {};
 var cacheTopicId = null;
 var cacheTime = null;
 
-var debouncedSearch = Discourse.debouncePromise(function(term, topicId) {
+var debouncedSearch = Discourse.debouncePromise(function(term, topicId, include_groups) {
   return Discourse.ajax('/users/search/users', {
     data: {
       term: term,
-      topic_id: topicId
+      topic_id: topicId,
+      include_groups: include_groups
     }
   }).then(function (r) {
     cache[term] = r;
@@ -26,6 +27,7 @@ Discourse.UserSearch = {
 
   search: function(options) {
     var term = options.term || "";
+    var include_groups = options.include_groups || false;
     var exclude = options.exclude || [];
     var topicId = options.topicId;
     var limit = options.limit || 5;
@@ -46,21 +48,35 @@ Discourse.UserSearch = {
     cacheTopicId = topicId;
 
     var organizeResults = function(r) {
-      var result = [];
+      var users = [], groups = [], results = [];
       _.each(r.users,function(u) {
         if (exclude.indexOf(u.username) === -1) {
-          result.push(u);
+          users.push(u);
+          results.push(u);
         }
-        if (result.length > limit) return false;
+        if (results.length > limit) return false;
         return true;
       });
-      promise.resolve(result);
+
+      _.each(r.groups,function(g) {
+        if (results.length > limit) return false;
+        if (exclude.indexOf(g.name) === -1) {
+          groups.push(g);
+          results.push(g);
+        }
+        return true;
+      });
+
+      results.users = users;
+      results.groups = groups;
+
+      promise.resolve(results);
     };
 
     if (cache[term]) {
       organizeResults(cache[term]);
     } else {
-      debouncedSearch(term, topicId).then(organizeResults);
+      debouncedSearch(term, topicId, include_groups).then(organizeResults);
     }
     return promise;
   }

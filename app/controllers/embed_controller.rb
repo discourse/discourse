@@ -1,6 +1,8 @@
 class EmbedController < ApplicationController
   skip_before_filter :check_xhr
   skip_before_filter :preload_json
+  skip_before_filter :store_incoming_links
+
   before_filter :ensure_embeddable
 
   layout 'embed'
@@ -24,13 +26,30 @@ class EmbedController < ApplicationController
     discourse_expires_in 1.minute
   end
 
+  def count
+
+    urls = params[:embed_url].map {|u| u.sub(/#discourse-comments$/, '') } 
+    topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
+
+    by_url = {}
+    topic_embeds.each do |te|
+      url = te.embed_url 
+      url = "#{url}#discourse-comments" unless params[:embed_url].include?(url)
+      by_url[url] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
+    end
+
+    respond_to do |format|
+      format.js { render json: {counts: by_url}, callback: params[:callback] }
+    end
+  end
+
   private
 
     def ensure_embeddable
 
       if !(Rails.env.development? && current_user.try(:admin?))
-        raise Discourse::InvalidAccess.new('embeddable host not set') if SiteSetting.embeddable_host.blank?
-        raise Discourse::InvalidAccess.new('invalid referer host') if URI(request.referer || '').host != SiteSetting.embeddable_host
+        raise Discourse::InvalidAccess.new('embeddable host not set') if SiteSetting.normalized_embeddable_host.blank?
+        raise Discourse::InvalidAccess.new('invalid referer host') if URI(request.referer || '').host != SiteSetting.normalized_embeddable_host
       end
 
       response.headers['X-Frame-Options'] = "ALLOWALL"

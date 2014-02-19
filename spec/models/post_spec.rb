@@ -771,4 +771,20 @@ describe Post do
     end
   end
 
+  describe "cooking" do
+    let(:post) { Fabricate.build(:post, post_args.merge(raw: "please read my blog http://blog.example.com")) }
+
+    it "should add nofollow to links in the post for trust levels below 3" do
+      post.user.trust_level = 2
+      post.save
+      post.cooked.should =~ /nofollow/
+    end
+
+    it "should not add nofollow for trust level 3 and higher" do
+      post.user.trust_level = 3
+      post.save
+      (post.cooked =~ /nofollow/).should be_false
+    end
+  end
+
 end

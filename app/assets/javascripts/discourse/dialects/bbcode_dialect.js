@@ -57,8 +57,6 @@ replaceBBCode('ul', function(contents) { return ['ul'].concat(contents); });
 replaceBBCode('ol', function(contents) { return ['ol'].concat(contents); });
 replaceBBCode('li', function(contents) { return ['li'].concat(contents); });
 
-replaceBBCode('spoiler', function(contents) { return ['span', {'class': 'spoiler'}].concat(contents); });
-
 Discourse.Dialect.inlineBetween({
   start: '[img]',
   stop: '[/img]',
@@ -80,6 +78,18 @@ Discourse.Dialect.inlineBetween({
   emitter: function(contents) { return ['a', {href: contents, 'data-bbcode': true}, contents]; }
 });
 
+Discourse.Dialect.inlineBetween({
+  start: '[spoiler]',
+  stop: '[/spoiler]',
+  rawContents: true,
+  emitter: function(contents) {
+    if (/<img/i.test(contents)) {
+      return ['div', { 'class': 'spoiler' }, contents];
+    } else {
+      return ['span', { 'class': 'spoiler' }, contents];
+    }
+  }
+});
 
 replaceBBCodeParamsRaw("url", function(param, contents) {
   return ['a', {href: param, 'data-bbcode': true}, contents];
@@ -102,4 +112,3 @@ Discourse.Dialect.replaceBlock({
     return ['p', ['pre'].concat(blockContents.join("\n"))];
   }
 });
-

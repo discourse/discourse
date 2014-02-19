@@ -67,7 +67,7 @@ Discourse.ActivityFilterView = Ember.Component.extend({
         return "pencil";
       case Discourse.UserAction.TYPES.replies:
         return "reply";
-      case Discourse.UserAction.TYPES.favorites:
+      case Discourse.UserAction.TYPES.starred:
         return "star";
     }
   }.property("content.action_type")

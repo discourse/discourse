@@ -29,7 +29,7 @@ var formatDays = function(days) {
 };
 
 var shortDate = function(days){
-  return moment().subtract('days', days).format('D MMM');
+  return moment().subtract('days', days).format('MMM D');
 };
 
 test("formating medium length dates", function() {
@@ -40,7 +40,7 @@ test("formating medium length dates", function() {
   };
 
   var shortDateYear = function(days){
-    return moment().subtract('days', days).format('D MMM, YYYY');
+    return moment().subtract('days', days).format('D MMM YYYY');
   };
 
   leaveAgo = true;
@@ -65,7 +65,7 @@ test("formating medium length dates", function() {
   equal(strip(formatDays(4.85)), "4 days");
 
   equal(strip(formatDays(6)), shortDate(6));
-  equal(strip(formatDays(100)), shortDate(100)); // eg: 23 Jan
+  equal(strip(formatDays(100)), shortDate(100)); // eg: Jan 23
   equal(strip(formatDays(500)), shortDateYear(500));
 
   equal($(formatDays(0)).attr("title"), moment().format('MMMM D, YYYY h:mma'));
@@ -81,7 +81,7 @@ test("formating medium length dates", function() {
 
 test("formating tiny dates", function() {
   var shortDateYear = function(days){
-    return moment().subtract('days', days).format("D MMM 'YY");
+    return moment().subtract('days', days).format("MMM 'YY");
   };
 
   format = "tiny";

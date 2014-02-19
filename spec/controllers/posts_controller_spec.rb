@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe PostsController do
 
-
   describe 'short_link' do
     it 'logs the incoming link once' do
       IncomingLink.expects(:add).once.returns(true)
@@ -22,7 +21,7 @@ describe PostsController do
       response.should be_forbidden
     end
 
-    it 'suceeds' do
+    it 'succeeds' do
       xhr :get, :show, id: post.id
       response.should be_success
     end
@@ -63,7 +62,7 @@ describe PostsController do
       response.should be_forbidden
     end
 
-    it 'suceeds' do
+    it 'succeeds' do
       Post.any_instance.expects(:reply_history)
       xhr :get, :reply_history, id: post.id
       response.should be_success
@@ -79,6 +78,16 @@ describe PostsController do
 
       let(:user) { log_in(:moderator) }
       let(:post) { Fabricate(:post, user: user, post_number: 2) }
+
+      it 'does not allow to destroy when edit time limit expired' do
+        Guardian.any_instance.stubs(:can_delete_post?).with(post).returns(false)
+        Post.any_instance.stubs(:edit_time_limit_expired?).returns(true)
+
+        xhr :delete, :destroy, id: post.id
+
+        response.status.should == 422
+        JSON.parse(response.body)['errors'].should include(I18n.t('too_late_to_edit'))
+      end
 
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_delete?).with(post).returns(false)
@@ -196,6 +205,16 @@ describe PostsController do
         }
       end
 
+      it 'does not allow to update when edit time limit expired' do
+        Guardian.any_instance.stubs(:can_edit?).with(post).returns(false)
+        Post.any_instance.stubs(:edit_time_limit_expired?).returns(true)
+
+        xhr :put, :update, update_params
+
+        response.status.should == 422
+        JSON.parse(response.body)['errors'].should include(I18n.t('too_late_to_edit'))
+      end
+
       it 'passes the image sizes through' do
         Post.any_instance.expects(:image_sizes=)
         xhr :put, :update, update_params
@@ -214,7 +233,7 @@ describe PostsController do
       end
 
       it "raises an error when the user doesn't have permission to see the post" do
-        Guardian.any_instance.expects(:can_edit?).with(post).returns(false)
+        Guardian.any_instance.expects(:can_edit?).with(post).at_least_once.returns(false)
         xhr :put, :update, update_params
         response.should be_forbidden
       end
@@ -384,6 +403,66 @@ describe PostsController do
       end
 
     end
+  end
+
+  describe "revisions" do
+
+    let(:post_revision) { Fabricate(:post_revision) }
+
+    it "throws an exception when revision is < 2" do
+      expect {
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: 1
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    context "when edit history is not visible to the public" do
+
+      before { SiteSetting.stubs(:edit_history_visible_to_public).returns(false) }
+
+      it "ensures anonymous can not see the revisions" do
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_forbidden
+      end
+
+      it "ensures staff can see the revisions" do
+        log_in(:admin)
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_success
+      end
+
+      it "ensures poster can see the revisions" do
+        user = log_in(:active_user)
+        pr = Fabricate(:post_revision, user: user)
+        xhr :get, :revisions, post_id: pr.post_id, revision: pr.number
+        response.should be_success
+      end
+
+    end
+
+    context "when edit history is visible to everyone" do
+
+      before { SiteSetting.stubs(:edit_history_visible_to_public).returns(true) }
+
+      it "ensures anyone can see the revisions" do
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_success
+      end
+
+    end
+
+    context "deleted post" do
+      let(:admin) { log_in(:admin) }
+      let(:deleted_post) { Fabricate(:post, user: admin) }
+      let(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
+
+      before { deleted_post.trash!(admin) }
+
+      it "also work on deleted post" do
+        xhr :get, :revisions, post_id: deleted_post_revision.post_id, revision: deleted_post_revision.number
+        response.should be_success
+      end
+    end
+
   end
 
 end

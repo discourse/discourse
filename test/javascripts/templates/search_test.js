@@ -1,4 +1,4 @@
-var controller, oldSearchTextField, oldSearchResultsTypeView;
+var controller, oldSearchTextField, oldSearchResultsTypeView, oldViews;
 
 var SearchTextFieldStub = Ember.View.extend({
   classNames: ["search-text-field-stub"],
@@ -18,7 +18,6 @@ var setUpController = function(properties) {
 
 var appendView = function() {
   Ember.run(function() {
-    Discourse.advanceReadiness();
     Ember.View.create({
       container: Discourse.__container__,
       controller: controller,
@@ -42,6 +41,9 @@ module("Template: search", {
     oldSearchResultsTypeView = Discourse.SearchResultsTypeView;
     Discourse.SearchResultsTypeView = SearchResultsTypeViewStub;
 
+    oldViews = Ember.View.views;
+    Ember.View.views = {};
+
     controller = Ember.ArrayController.create();
   },
 
@@ -50,6 +52,8 @@ module("Template: search", {
 
     Discourse.SearchTextField = oldSearchTextField;
     Discourse.SearchResultsTypeView = oldSearchResultsTypeView;
+
+    Ember.View.views = oldViews;
   }
 });
 

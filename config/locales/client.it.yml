@@ -49,6 +49,8 @@ it:
         almost_x_years:
           one:   "1a"
           other: "%{count}a"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 minuto"
@@ -438,9 +440,6 @@ it:
       github:
         title: "con GitHub"
         message: "Autenticazione con GitHub (l'apertura di pop up deve essere permessa dal browser)"
-      persona:
-        title: "con Persona"
-        message: "Autenticazione con Mozilla Persona (l'apertura di pop up deve essere permessa dal browser)"
 
     composer:
       posting_not_on_topic: "Stai rispondendo al topic \"{{title}}\", ma al momento stai visualizzando un topic diverso."
@@ -552,7 +551,7 @@ it:
     go_back: 'torna indietro'
     current_user: 'vai alla tua pagina utente'
 
-    favorite:
+    starred:
       title: 'Preferito'
       help:
         star: 'aggiungi questo topic nella tua lista dei preferiti'
@@ -560,7 +559,7 @@ it:
 
     topics:
       none:
-        favorited: "Non hai alcun topic preferito. Per rendere un topic preferito, clicca la stella di fianco al titolo."
+        starred: "Non hai alcun topic preferito. Per rendere un topic preferito, clicca la stella di fianco al titolo."
         unread: "Non hai alcun topic non letto da leggere."
         new: "Non hai nuovi topic da leggere."
         read: "Non hai ancora letto alcun topic."
@@ -575,13 +574,8 @@ it:
         read: "Non ci sono altri topic da leggere."
         new: "Non ci sono altri nuovi topic da leggere."
         unread: "Non ci sono altri topic non letti da leggere."
-        favorited: "Non ci sono altri topic preferiti da leggere."
+        starred: "Non ci sono altri topic preferiti da leggere."
         category: "Non ci sono altri topic nella categoria {{category}} da leggere."
-
-    rank_details:
-      toggle: attica dettaglio classifica topic
-      show: mostra dettaglio classifica topic
-      title: Dettaglio Classifica Topic
 
     topic:
       create: 'Crea Topic'
@@ -907,7 +901,6 @@ it:
       list: "Lista Categorie"
       no_description: "Nessuna descrizione per questa categoria."
       change_in_category_topic: "Modifica Descrizione"
-      hotness: "Hotness"
       already_used: "Questo colore è già in uso da un'altra categoria"
       is_secure: "Categoria protetta?"
       add_group: "Aggiungi Gruppo"
@@ -965,7 +958,7 @@ it:
       hot:
         title: "Hot"
         help: "una selezione dei topic più attivi"
-      favorited:
+      starred:
         title: "Preferiti"
         help: "topic preferiti"
       read:

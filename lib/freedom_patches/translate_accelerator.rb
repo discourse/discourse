@@ -16,10 +16,10 @@ module I18n
       k = [args,config.locale,config.backend.object_id]
       t  = @cache.fetch(k){found=false}
       unless found
-        t = @cache[k] = translate_no_cache(*args)
+        t = @cache[k] = translate_no_cache(*args).freeze
       end
 
-      t.dup
+      t
     end
 
     alias_method :t, :translate

@@ -200,6 +200,18 @@ module SiteSettingExtension
     @last_message_sent = MessageBus.publish('/site_settings', {process: process_id})
   end
 
+  def has_setting?(name)
+    defaults.has_key?(name.to_sym) || defaults.has_key?("#{name}?".to_sym)
+  end
+
+  def set(name, value)
+    if has_setting?(name)
+      self.send("#{name}=", value)
+    else
+      raise ArgumentError.new("No setting named #{name} exists")
+    end
+  end
+
   protected
 
   def diff_hash(new_hash, old)

@@ -5,9 +5,11 @@
         {{#sortable-heading sortBy="default" sortOrder=sortOrder}}
           {{i18n topic.title}}
         {{/sortable-heading}}
-        {{#sortable-heading sortBy="category" sortOrder=sortOrder}}
-          {{i18n category_title}}
-        {{/sortable-heading}}
+        {{#unless controller.hideCategory}}
+          {{#sortable-heading sortBy="category" sortOrder=sortOrder}}
+            {{i18n category_title}}
+          {{/sortable-heading}}
+        {{/unless}}
         {{#sortable-heading sortBy="posts" number=true sortOrder=sortOrder}}
           {{i18n posts}}
         {{/sortable-heading}}
@@ -23,7 +25,7 @@
       </tr>
 
       {{#groupedEach topic in topics}}
-        <tr {{bindAttr class="archived"}}>
+        <tr {{bind-attr class="archived"}}>
           <td class='main-link'>
             {{topicStatus topic=topic}}
             <a class='title' href="{{unbound topic.lastUnreadUrl}}">{{{unbound topic.fancy_title}}}</a>
@@ -37,9 +39,13 @@
               <a href="{{unbound topic.lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='fa fa-asterisk'></i></a>
             {{/if}}
           </td>
+
+          {{#unless controller.hideCategory}}
           <td class="category">
             {{categoryLink topic.category}}
           </td>
+          {{/unless}}
+
           <td class='num posts'><a href="{{unbound topic.lastUnreadUrl}}" class='badge-posts'>{{number topic.posts_count numberKey="posts_long"}}</a></td>
 
           <td class='num likes'>
@@ -48,17 +54,17 @@
             {{/if}}
           </td>
 
-          <td {{bindAttr class=":num :views topic.viewsHeat"}}>{{number topic.views numberKey="views_long"}}</td>
+          <td {{bind-attr class=":num :views topic.viewsHeat"}}>{{number topic.views numberKey="views_long"}}</td>
           {{#if topic.bumped}}
             <td class='num activity'>
-              <a href="{{unbound topic.url}}" {{{bindAttr class=":age topic.ageCold"}}} title='{{i18n first_post}}: {{{unboundDate topic.created_at}}}' >{{unboundAge topic.created_at}}</a>
+              <a href="{{unbound topic.url}}" {{{bind-attr class=":age topic.ageCold"}}} title='{{i18n first_post}}: {{{rawDate topic.created_at}}}' >{{unboundAge topic.created_at}}</a>
             </td>
             <td class='num activity last'>
-              <a href="{{unbound topic.lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate topic.bumped_at}}}'>{{unboundAge topic.bumped_at}}</a>
+              <a href="{{unbound topic.lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{rawDate topic.bumped_at}}}'>{{unboundAge topic.bumped_at}}</a>
             </td>
           {{else}}
             <td class='num activity'>
-              <a href="{{unbound topic.url}}" class='age' title='{{i18n first_post}}: {{{unboundDate topic.created_at}}}'>{{unboundAge topic.created_at}}</a>
+              <a href="{{unbound topic.url}}" class='age' title='{{i18n first_post}}: {{{rawDate topic.created_at}}}'>{{unboundAge topic.created_at}}</a>
             </td>
             <td class="activity"></td>
           {{/if}}

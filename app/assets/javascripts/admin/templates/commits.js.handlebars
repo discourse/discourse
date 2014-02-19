@@ -9,10 +9,10 @@
     {{#each controller}}
       <li>
         <div class="left">
-          <img {{bindAttr src="gravatarUrl"}}>
+          <img {{bind-attr src="gravatarUrl"}}>
         </div>
         <div class="right">
-          <span class="commit-message"><a {{bindAttr href="commitUrl"}} target="_blank">{{ commit.message }}</a></span><br/>
+          <span class="commit-message"><a {{bind-attr href="commitUrl"}} target="_blank">{{ commit.message }}</a></span><br/>
           <span class="commit-meta">{{i18n admin.commits.by}} <span class="committer-name">{{ commit.author.name }}</span> - <span class="commit-time">{{{ timeAgo }}}</span></span>
         </div>
       </li>

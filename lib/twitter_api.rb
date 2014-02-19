@@ -24,6 +24,8 @@ class TwitterApi
       JSON.parse(twitter_get(tweet_uri_for id))
     end
 
+    alias_method :status, :tweet_for
+
     def raw_tweet_for(id)
       twitter_get(tweet_uri_for id)
     end

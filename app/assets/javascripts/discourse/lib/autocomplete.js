@@ -47,7 +47,6 @@ function mapKeyPressToActualCharacter(isShiftKey, characterCode) {
 }
 
 $.fn.autocomplete = function(options) {
-
   var autocompletePlugin = this;
 
   if (this.length === 0) return;
@@ -84,29 +83,31 @@ $.fn.autocomplete = function(options) {
   };
 
   var addInputSelectedItem = function(item) {
-    var transformed;
-    if (options.transformComplete) {
-      transformed = options.transformComplete(item);
-    }
-    if (options.single){
-      // dump what we have in single mode, just in case
-      inputSelectedItems = [];
-    }
-    var d = $("<div class='item'><span>" + (transformed || item) + "<a class='remove' href='#'><i class='fa fa-times'></i></a></span></div>");
-    var prev = me.parent().find('.item:last');
-    if (prev.length === 0) {
-      me.parent().prepend(d);
-    } else {
-      prev.after(d);
-    }
-    inputSelectedItems.push(item);
-    if (options.onChangeItems) {
-      options.onChangeItems(inputSelectedItems);
-    }
+    var transformed,
+        transformedItem = item;
 
-    d.find('a').click(function() {
+    if (options.transformComplete) { transformedItem = options.transformComplete(transformedItem); }
+    // dump what we have in single mode, just in case
+    if (options.single) { inputSelectedItems = []; }
+    if (!_.isArray(transformedItem)) { transformed = [transformedItem || item]; }
+
+    var divs = transformed.map(function(itm) {
+      var d = $("<div class='item'><span>" + itm + "<a class='remove' href='#'><i class='fa fa-times'></i></a></span></div>");
+      var prev = me.parent().find('.item:last');
+      if (prev.length === 0) {
+        me.parent().prepend(d);
+      } else {
+        prev.after(d);
+      }
+      inputSelectedItems.push(itm);
+      return d[0];
+    });
+
+    if (options.onChangeItems) { options.onChangeItems(inputSelectedItems); }
+
+    $(divs).find('a').click(function() {
       closeAutocomplete();
-      inputSelectedItems.splice($.inArray(item, inputSelectedItems), 1);
+      inputSelectedItems.splice($.inArray(transformedItem, inputSelectedItems), 1);
       $(this).parent().parent().remove();
       if (options.single) {
         me.show();

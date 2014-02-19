@@ -56,6 +56,10 @@ Discourse.CategoryDropComponent = Ember.Component.extend({
       var self = this,
           $dropdown = this.$()[0];
 
+      this.$('a[data-drop-close]').on('click.category-drop', function() {
+        self.close();
+      });
+
       $('html').on('click.category-drop', function(e) {
         var $target = $(e.target),
             closest = $target.closest($dropdown);
@@ -71,11 +75,13 @@ Discourse.CategoryDropComponent = Ember.Component.extend({
 
   close: function() {
     $('html').off('click.category-drop');
+    this.$('a[data-drop-close]').off('click.category-drop');
     this.set('expanded', false);
   },
 
   willDestroyElement: function() {
     $('html').off('click.category-drop');
+    this.$('a[data-drop-close]').off('click.category-drop');
   }
 
 });

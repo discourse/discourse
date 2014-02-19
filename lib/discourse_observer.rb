@@ -33,24 +33,13 @@ else
   # Outside of test mode, use after_commit
   class DiscourseObserver < ActiveRecord::Observer
     def after_commit(model)
-      if rails4?
-        if model.send(:transaction_include_any_action?, [:create])
-          after_create_delegator(model)
-        end
-
-        if model.send(:transaction_include_any_action?, [:destroy])
-          after_destroy_delegator(model)
-        end
-      else
-        if model.send(:transaction_include_action?, :create)
-          after_create_delegator(model)
-        end
-
-        if model.send(:transaction_include_action?, :destroy)
-          after_destroy_delegator(model)
-        end
+      if model.send(:transaction_include_any_action?, [:create])
+        after_create_delegator(model)
       end
 
+      if model.send(:transaction_include_any_action?, [:destroy])
+        after_destroy_delegator(model)
+      end
     end
   end
 

@@ -6,13 +6,13 @@ task 'assets:prestage' => :environment do |t|
   require "uri"
 
   def get_assets(path)
-    a = Dir.glob("#{Rails.root}/public/assets/#{path}*").map do |f|
+    Dir.glob("#{Rails.root}/public/assets/#{path}*").map do |f|
       if f =~ /[a-f0-9]{16}\.(css|js)$/
         "/assets/#{path}#{f.split('/')[-1]}"
       end
     end.compact
   end
-  
+
   # pre-stage css/js only for now
   assets = get_assets("locales/") + get_assets("")
   puts "pre staging: #{assets.join(' ')}"

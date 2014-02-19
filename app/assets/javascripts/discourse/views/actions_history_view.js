@@ -62,7 +62,7 @@ Discourse.ActionsHistoryComponent = Em.Component.extend({
     if (post.get('deleted')) {
       buffer.push("<div class='post-action'>" +
                   I18n.t("post.deleted_by") + " " +
-                  Discourse.Utilities.tinyAvatar(post.get('postDeletedBy.avatar_template')) +
+                  Discourse.Utilities.tinyAvatar(post.get('postDeletedBy.avatar_template'), {title: post.get('postDeletedBy.username')}) +
                   Discourse.Formatter.autoUpdatingRelativeAge(new Date(post.get('postDeletedAt'))) +
                   "</div>");
     }

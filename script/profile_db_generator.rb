@@ -56,6 +56,8 @@ end
 
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 
+SiteSetting.queue_jobs = false
+
 unless Rails.env == "profile"
   puts "This script should only be used in the profile environment"
   exit
@@ -104,3 +106,8 @@ puts "creating 2000 replies"
   putc "."
   PostCreator.create(users.sample, raw: sentence, topic_id: topic_ids.sample, skip_validations: true)
 end
+
+# no sidekiq so update some stuff
+Category.update_stats
+Jobs::PeriodicalUpdates.new.execute(nil)
+

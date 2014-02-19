@@ -7,9 +7,9 @@
   position: absolute;
   left: 20px;
   z-index: 990;
-  box-shadow: 0 2px 6px rgba(70, 70, 70, 0.4);
+  box-shadow: 0 2px 6px $primary_light;
   margin-top: -2px;
-  background-color: $white;
+  background-color: $secondary;
   padding: 12px 12px 5px 12px;
   max-width: 350px;
 
@@ -19,7 +19,7 @@
     margin-bottom: 8px;
 
     a {
-      color: #333;
+      color: $primary;
     }
   }
 
@@ -30,7 +30,7 @@
     margin-bottom: 5px;
 
     a {
-      color: #333;
+      color: $primary;
     }
   }
 
@@ -38,7 +38,17 @@
     font-size: 13px;
     font-weight: normal;
     margin-top: 0px;
-    color: #666;
+    color: $primary_medium;
+  }
+  .groups {
+    font-size: 13px;
+    font-weight: normal;
+    margin-top: 0px;
+    color: $primary_medium;
+
+    .group-link {
+      color: $primary;
+    }
   }
 
   .bottom {
@@ -57,7 +67,7 @@
 
   p.loading {
     margin-top: 30px;
-    color: #666;
+    color: $primary_medium;
   }
 
   .btn {
@@ -65,6 +75,6 @@
   }
 
   .new-user a {
-    color: $dark_gray;
+    color: $primary_medium;
   }
 }

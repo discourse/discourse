@@ -11,7 +11,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'g l': '/latest',
     'g n': '/new',
     'g u': '/unread',
-    'g f': '/favorited',
+    'g f': '/starred',
     'g c': '/categories',
     'g t': '/top'
   },
@@ -22,8 +22,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'd': 'article.selected button.delete',                        // delete selected post
     'e': 'article.selected button.edit',                          // edit selected post
 
-    // favorite topic
-    'f': '#topic-footer-buttons button.favorite, #topic-list tr.topic-list-item.selected a.star',
+    // star topic
+    'f': '#topic-footer-buttons button.star, #topic-list tr.topic-list-item.selected a.star',
 
     'l': 'article.selected button.like',                          // like selected post
     'm m': 'div.notification-options li[data-id="0"] a',          // mark topic as muted
@@ -41,6 +41,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   FUNCTION_BINDINGS: {
+    'home': 'goToFirstPost',
+    'end': 'goToLastPost',
     'j': 'selectDown',
     'k': 'selectUp',
     'u': 'goBack',
@@ -54,6 +56,14 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     _.each(this.PATH_BINDINGS, this._bindToPath, this);
     _.each(this.CLICK_BINDINGS, this._bindToClick, this);
     _.each(this.FUNCTION_BINDINGS, this._bindToFunction, this);
+  },
+
+  goToFirstPost: function() {
+    Discourse.__container__.lookup('controller:topic').send('jumpTop');
+  },
+
+  goToLastPost: function() {
+    Discourse.__container__.lookup('controller:topic').send('jumpBottom');
   },
 
   selectDown: function() {
@@ -77,7 +87,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   showHelpModal: function() {
-    Discourse.__container__.lookup('controller:application').send("showKeyboardShortcutsHelp");
+    Discourse.__container__.lookup('controller:application').send('showKeyboardShortcutsHelp');
   },
 
   _bindToPath: function(path, binding) {
@@ -88,11 +98,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
   _bindToClick: function(selector, binding) {
     binding = binding.split(',');
-    this.keyTrapper.bind(binding, function(e) {
-      if (!_.isUndefined(e) && _.isFunction(e.preventDefault)) {
-        e.preventDefault();
-      }
-
+    this.keyTrapper.bind(binding, function() {
       $(selector).click();
     });
   },
@@ -103,7 +109,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
-  _moveSelection: function(num) {
+  _moveSelection: function(direction) {
     var $articles = this._findArticles();
 
     if (typeof $articles === 'undefined') {
@@ -111,13 +117,23 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
 
     var $selected = $articles.filter('.selected'),
-        index = $articles.index($selected),
-        $article = $articles.eq(index + num);
+        index = $articles.index($selected);
+
+    // loop is not allowed
+    if (direction === -1 && index === 0) { return; }
+
+    var $article = $articles.eq(index + direction);
 
     if ($article.size() > 0) {
       $articles.removeClass('selected');
       $article.addClass('selected');
-      this._scrollList($article);
+
+      var rgx = new RegExp("post-cloak-(\\d+)").exec($article.parent()[0].id);
+      if (rgx === null || typeof rgx[1] === 'undefined') {
+          this._scrollList($article);
+      } else {
+          Discourse.TopicView.jumpToPost(rgx[1]);
+      }
     }
   },
 
@@ -140,10 +156,10 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
-  _changeSection: function(num) {
-    var $sections = $('#category-filter').find('li'),
+  _changeSection: function(direction) {
+    var $sections = $('#navigation-bar').find('li'),
         index = $sections.index('.active');
 
-    $sections.eq(index + num).find('a').click();
+    $sections.eq(index + direction).find('a').click();
   }
 });

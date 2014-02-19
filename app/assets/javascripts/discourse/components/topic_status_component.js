@@ -27,7 +27,7 @@ Discourse.TopicStatusComponent = Ember.Component.extend({
 
     renderIconIf('topic.closed', 'lock', 'locked');
     renderIconIf('topic.pinned', 'thumb-tack', 'pinned');
-    renderIconIf('topic.invisible', 'eye-close', 'invisible');
+    renderIconIf('topic.invisible', 'eye-slash', 'invisible');
   }
 });
 

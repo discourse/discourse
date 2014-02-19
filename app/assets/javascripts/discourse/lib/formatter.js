@@ -2,7 +2,7 @@ Discourse.Formatter = (function(){
 
   var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
       relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
-      shortDate, shortDateNoYear, tinyDateYear, breakUp;
+      shortDate, shortDateNoYear, tinyDateYear, breakUp, relativeAgeTinyShowsYear;
 
     /*
   * memoize.js
@@ -92,21 +92,20 @@ Discourse.Formatter = (function(){
   breakUp = cappedMemoize(breakUp, 100);
 
   shortDate = function(date){
-    return moment(date).shortDate();
+    return moment(date).format(I18n.t("dates.medium.date_year"));
   };
 
   shortDateNoYear = function(date) {
-    return moment(date).shortDateNoYear();
+    return moment(date).format(I18n.t("dates.tiny.date_month"));
   };
 
   tinyDateYear = function(date) {
-    return moment(date).format("D MMM 'YY");
+    return moment(date).format(I18n.t("dates.tiny.date_year"));
   };
 
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
   // TODO: locale support ?
-  toTitleCase = function toTitleCase(str)
-  {
+  toTitleCase = function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
@@ -114,7 +113,6 @@ Discourse.Formatter = (function(){
 
   longDate = function(dt) {
     if (!dt) return;
-
     return moment(dt).longDate();
   };
 
@@ -143,11 +141,17 @@ Discourse.Formatter = (function(){
       options.wrapInSpan = false;
     }
 
+    var relAge = relativeAge(date, options);
+
+    if (format === 'tiny' && relativeAgeTinyShowsYear(relAge)) {
+      append += " with-year";
+    }
+
     if (options.title) {
       append += "' title='" + longDate(date);
     }
 
-    return "<span class='relative-date" + append + "' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relativeAge(date, options)  + "</span>";
+    return "<span class='relative-date" + append + "' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relAge  + "</span>";
   };
 
 
@@ -194,6 +198,14 @@ Discourse.Formatter = (function(){
     }
 
     return formatted;
+  };
+
+  /*
+   * Returns true if the given tiny date string includes the year.
+   * Useful for checking if the string isn't so tiny.
+   */
+  relativeAgeTinyShowsYear = function(relativeAgeString) {
+    return relativeAgeString.match(/'[\d]{2}$/);
   };
 
   relativeAgeMediumSpan = function(distance, leaveAgo) {
@@ -247,7 +259,7 @@ Discourse.Formatter = (function(){
       if ((new Date()).getFullYear() !== date.getFullYear()) {
         displayDate = shortDate(date);
       } else {
-        displayDate = moment(date).shortDateNoYear();
+        displayDate = shortDateNoYear(date);
       }
     } else {
       displayDate = relativeAgeMediumSpan(distance, leaveAgo);

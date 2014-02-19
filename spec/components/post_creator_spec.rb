@@ -313,12 +313,16 @@ describe PostCreator do
       PostCreator.create(user, title: 'hi there welcome to my topic',
                                raw: "this is my awesome message @#{unrelated.username_lower}",
                                archetype: Archetype.private_message,
-                               target_usernames: [target_user1.username, target_user2.username].join(','))
+                               target_usernames: [target_user1.username, target_user2.username].join(','),
+                               category: 1)
     end
 
     it 'acts correctly' do
       post.topic.archetype.should == Archetype.private_message
       post.topic.topic_allowed_users.count.should == 3
+
+      # PMs can't have a category
+      post.topic.category.should be_nil
 
       # does not notify an unrelated user
       unrelated.notifications.count.should == 0

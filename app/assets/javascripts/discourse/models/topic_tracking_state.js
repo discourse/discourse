@@ -39,8 +39,9 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
   },
 
   updateSeen: function(topicId, highestSeen) {
+    if(!topicId || !highestSeen) { return; }
     var state = this.states["t" + topicId];
-    if(state && state.last_read_post_number < highestSeen) {
+    if(state && (!state.last_read_post_number || state.last_read_post_number < highestSeen)) {
       state.last_read_post_number = highestSeen;
       this.incrementMessageCount();
     }
@@ -84,8 +85,23 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
 
   sync: function(list, filter){
     var tracker = this;
+    var states = this.states;
 
     if(!list || !list.topics) { return; }
+
+    // compensate for delayed "new" topics
+    // client side we know they are not new, server side we think they are
+    for(var i=list.topics.length-1; i>=0; i--){
+      var state = states["t"+ list.topics[i].id];
+      if(state && state.last_read_post_number > 0){
+        if(filter === "new"){
+          list.topics.splice(i, 1);
+        } else {
+          list.topics[i].unseen = false;
+          list.topics[i].dont_sync = true;
+        }
+      }
+    }
 
     if(filter === "new" && !list.more_topics_url){
       // scrub all new rows and reload from list
@@ -112,10 +128,11 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
       if(topic.unseen) {
         row.last_read_post_number = null;
       } else if (topic.unread || topic.new_posts){
-        // subtle issue here
         row.last_read_post_number = topic.highest_post_number - ((topic.unread||0) + (topic.new_posts||0));
       } else {
-        delete tracker.states["t" + topic.id];
+        if(!topic.dont_sync) {
+          delete tracker.states["t" + topic.id];
+        }
         return;
       }
 
@@ -166,7 +183,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
   },
 
   lookupCount: function(name, category){
-    var categoryName = Em.get(category, "name");
+    var categoryName = category ? Em.get(category, "name") : null;
     if(name === "new") {
       return this.countNew(categoryName);
     } else if(name === "unread") {

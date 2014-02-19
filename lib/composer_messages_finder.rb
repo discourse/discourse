@@ -97,12 +97,13 @@ class ComposerMessagesFinder
     return unless replying? &&
                   @details[:topic_id] &&
                   (@user.post_count >= SiteSetting.educate_until_posts) &&
-                  !UserHistory.exists_for_user?(@user, :notitied_about_dominating_topic, topic_id: @details[:topic_id])
+                  !UserHistory.exists_for_user?(@user, :notified_about_dominating_topic, topic_id: @details[:topic_id])
 
     topic = Topic.where(id: @details[:topic_id]).first
     return if topic.blank? ||
               topic.user_id == @user.id ||
-              topic.posts_count < SiteSetting.summary_posts_required
+              topic.posts_count < SiteSetting.summary_posts_required ||
+              topic.archetype == Archetype.private_message
 
     posts_by_user = @user.posts.where(topic_id: topic.id).count
 
@@ -110,7 +111,7 @@ class ComposerMessagesFinder
     return if ratio < (SiteSetting.dominating_topic_minimum_percent.to_f / 100.0)
 
     # Log the topic notification
-    UserHistory.create!(action: UserHistory.actions[:notitied_about_dominating_topic],
+    UserHistory.create!(action: UserHistory.actions[:notified_about_dominating_topic],
                         target_user_id: @user.id,
                         topic_id: @details[:topic_id])
 

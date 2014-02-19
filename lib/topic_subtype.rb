@@ -9,8 +9,7 @@ class TopicSubtype
   end
 
   def attributes
-    {'id' => @id,
-     'options' => @options}
+    {'id' => @id, 'options' => @options }
   end
 
   def self.list

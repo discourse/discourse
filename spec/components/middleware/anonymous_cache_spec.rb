@@ -35,6 +35,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "returns cached data for cached requests" do
+      helper.is_mobile = true
       helper.cached.should be_nil
       helper.cache([200, {"HELLO" => "WORLD"}, ["hello ", "world"]])
       helper.cached.should == [200, {"HELLO" => "WORLD"}, ["hello world"]]

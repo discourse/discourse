@@ -49,6 +49,8 @@ da:
         almost_x_years:
           one:   "1å"
           other: "%{count}å"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"
@@ -227,7 +229,6 @@ da:
       deleted: "(slettet)"
       suspended_notice: "Denne bruger er suspenderet indtil {{date}}."
       suspended_reason: "Begrundelse: "
-      watch_new_topics: "Overvåg automatisk alle nye emner i forummet"
       watched_categories: "Overvåget"
       watched_categories_instructions: "Du overvåger automatisk alle emner i disse kategorier"
       tracked_categories: "Fulgt"
@@ -466,9 +467,6 @@ da:
       github:
         title: "med GitHub"
         message: "Logger ind med GitHub (kontrollér at pop-op-blokering ikke er aktiv)"
-      persona:
-        title: "med Persona"
-        message: "Logger ind med Mozilla Persona (kontrollér at pop-op-blokering ikke er aktiv)"
 
     composer:
       posting_not_on_topic: "Hvilket emne vil du svare på?"
@@ -586,7 +584,7 @@ da:
     go_back: 'gå tilbage'
     current_user: 'gå til brugerside'
 
-    favorite:
+    starred:
       title: 'Favorit'
       help:
         star: 'tilføj dette emne til din favorit-liste'
@@ -594,7 +592,7 @@ da:
 
     topics:
       none:
-        favorited: "Du har ikke nogen favorit-emner endnu. For at gøre et emne til favorit, tryk på stjernen ved siden af emnets titel."
+        starred: "Du har ikke nogen favorit-emner endnu. For at gøre et emne til favorit, tryk på stjernen ved siden af emnets titel."
         unread: "Du har ingen ulæste emner."
         new: "Du har ingen nye emner."
         read: "Du har ikke læst nogen emner endnu."
@@ -609,13 +607,8 @@ da:
         read: "Der er ikke flere læste emner."
         new: "Der er ikke flere nye emner."
         unread: "Der er ikke flere ulæste emner."
-        favorited: "Der er ikke flere favorit-emner."
+        starred: "Der er ikke flere favorit-emner."
         category: "Der er ikke flere emner i kategorien {{category}}."
-
-    rank_details:
-      toggle: vis/skjul detaljer om emnerang
-      show: vis detaljer om emnerang
-      title: Emnerang
 
     topic:
       filter_to: "Vis {{post_count}} indlæg i emnet"
@@ -1016,7 +1009,6 @@ da:
       list: "Kategoriliste"
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "besøg kategoriemnet for at redigere beskrivelsen"
-      hotness: "Popularitet"
       already_used: 'This color has been used by another category'
       security: "Sikkerhed"
       auto_close_label: "Luk automatisk emner efter:"
@@ -1082,7 +1074,7 @@ da:
       hot:
         title: "Populære"
         help: "de mest populære emner"
-      favorited:
+      starred:
         title: "Favoritter"
         help: "emner du har markeret som favoritter"
       read:
@@ -1496,7 +1488,7 @@ da:
         latest: '<b>g</b> så <b>l</b> Seneste'
         new: '<b>g</b> så <b>n</b> Ny'
         unread: '<b>g</b> så <b>u</b> Ulæste'
-        favorited: '<b>g</b> så <b>f</b> Favoritter'
+        starred: '<b>g</b> så <b>f</b> Favoritter'
         categories: '<b>g</b> så <b>c</b> Kategorier'
       navigation:
         title: 'Navigation'
@@ -1512,7 +1504,7 @@ da:
         help: '<b>?</b> Åbn hjælp til tastaturgenveje'
       actions:
         title: 'Handlinger'
-        favorite: '<b>f</b> Markér emne som favorit'
+        star: '<b>f</b> Markér emne som favorit'
         share_topic: '<b>s</b> Del emne'
         share_post: '<b>shift s</b> Del indlæg'
         reply_topic: '<b>r</b> Svar på emne'

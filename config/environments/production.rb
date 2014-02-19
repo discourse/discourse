@@ -15,12 +15,8 @@ Discourse::Application.configure do
   config.serve_static_assets = true
   config.static_cache_control = "public, max-age=2592000"
 
-  if rails4?
-    config.assets.js_compressor  = :uglifier
-    config.assets.css_compressor = :sass
-  else
-    config.assets.compress = true
-  end
+  config.assets.js_compressor  = :uglifier
+  config.assets.css_compressor = :sass
 
   # Assets should be compiled at build time (on Heroku)
   config.assets.compile = true

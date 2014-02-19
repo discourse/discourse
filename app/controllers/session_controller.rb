@@ -27,6 +27,9 @@ class SessionController < ApplicationController
         return
       end
 
+      # User signed on with username and password, so let's prevent the invite link
+      # from being used to log in (if one exists).
+      Invite.invalidate_for_email(user.email)
     else
       invalid_credentials
       return
@@ -50,6 +53,14 @@ class SessionController < ApplicationController
     end
     # always render of so we don't leak information
     render json: {result: "ok"}
+  end
+
+  def current
+    if current_user.present?
+      render_serialized(current_user, CurrentUserSerializer)
+    else
+      render nothing: true, status: 404
+    end
   end
 
   def destroy

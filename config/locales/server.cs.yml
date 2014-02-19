@@ -24,8 +24,8 @@ cs:
   via: "%{username} přes %{site_name}"
   is_reserved: "je rezervováno"
 
-  site_under_maintenance: 'Na webu v tuto chvíli probíhají úpravy.'
-  operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
+  backup:
+    operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
 
   too_many_mentions:
     zero: "Bohužel, nemůžete zmiňovat ostatní uživatele."
@@ -367,7 +367,7 @@ cs:
       title: "Záložky"
       xaxis: "Den"
       yaxis: "Počet nových záložek"
-    favorites:
+    starred:
       title: "Oblíbené"
       xaxis: "Den"
       yaxis: "Počet nových oblíbených témat"
@@ -513,7 +513,6 @@ cs:
 
     notification_email: "Návratová emailová adresa, která se použije u systémových emailů, jako jsou notifikace o zapomenutém heslu, nových účtech, atd."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
-    use_ssl: "Má být web přístupný přes SSL? (NEPODPOROVÁNO, EXPERIMENTÁLNÍ FUNKCE)"
     summary_score_threshold: "Minimální skóre příspěvku, aby byl zařazen mezi 'nejlepší'"
     summary_posts_required: "Minimální počet příspěvků v tématu, aby byl povolen mód 'nejlepší příspěvky'"
     summary_likes_required: "Minimální počet 'líbí se' v tématu, aby byl povolen mód 'nejlepší příspěvky'"
@@ -541,7 +540,7 @@ cs:
     ga_domain_name: "Doménové jméno pro Google analytics, např. mysite.com; viz http://google.com/analytics"
     enable_escaped_fragments: "Povolit alternativní řešení, které pomůže starým webovým robotům indexovat váš web. VAROVÁNÍ: povolte pouze v případě, že to opravdu potřebujete."
     enable_noscript_support: "Povolit podporu &lt;noscript&gt; tagu"
-    top_menu: "Určuje, které položky se zobrazí v navigaci na hlavní stránce a v jakém pořadí. Příklad: latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "Určuje, které položky se zobrazí v navigaci na hlavní stránce a v jakém pořadí. Příklad: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     share_links: "Určuje, které položky se zobrazí ve sdílecím dialogu a v jakém pořadí. Příklad: twitter|facebook|google+"
     track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
@@ -589,9 +588,7 @@ cs:
     github_client_id: "'Client id' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
     github_client_secret: "'Client secret' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
 
-    enable_persona_logins: "Povolit autorizaci přes službu Mozilla Persona"
-
-    allow_import: "Povolit import, kterým lze přepsat VŠECHNA data na tomto webu; nechte nastaveno na 'false', pokud neplánujete dělat importy dat"
+    allow_restore: "Povolit import, kterým lze přepsat VŠECHNA data na tomto webu; nechte nastaveno na 'false', pokud neplánujete dělat importy dat"
 
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"
@@ -603,7 +600,7 @@ cs:
     max_flags_per_day: "Maximální počet nahlášení, která smí uživatel za den zaslat"
     max_bookmarks_per_day: "Maximální počet záložek, které si smí uživatel za den nastavit"
     max_edits_per_day: "Maximální počet úprav, které smí uživatel za den udělat"
-    max_favorites_per_day: "Maximální počet témat, která si smí uživatel dát do oblíbených v jednom dni"
+    max_stars_per_day: "Maximální počet témat, která si smí uživatel dát do oblíbených v jednom dni"
     max_topics_per_day: "Maximální počet témat, který smí uživatel za den vytvořit"
     max_private_messages_per_day: "Maximální počet soukromých zpráv, které smí uživatel za den poslat"
 

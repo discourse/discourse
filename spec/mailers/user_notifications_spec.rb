@@ -4,6 +4,26 @@ describe UserNotifications do
 
   let(:user) { Fabricate(:admin) }
 
+  describe "#get_context_posts" do
+    it "does not include hidden/deleted/user_deleted posts in context" do
+      post = create_post
+      reply1 = create_post(topic: post.topic)
+      reply2 = create_post(topic: post.topic)
+      reply3 = create_post(topic: post.topic)
+      reply4 = create_post(topic: post.topic)
+
+      reply1.trash!
+
+      reply2.user_deleted = true
+      reply2.save
+
+      reply3.hidden = true
+      reply3.save
+
+      UserNotifications.get_context_posts(reply4, nil).count.should == 1
+    end
+  end
+
   describe ".signup" do
     subject { UserNotifications.signup(user) }
 
@@ -50,10 +70,11 @@ describe UserNotifications do
   end
 
   describe '.user_replied' do
-    let!(:post) { Fabricate(:post) }
-    let!(:response) { Fabricate(:post, topic: post.topic)}
-    let!(:user) { Fabricate(:user) }
-    let!(:notification) { Fabricate(:notification, user: user) }
+    let(:post) { Fabricate(:post) }
+    let(:response) { Fabricate(:post, topic: post.topic)}
+    let(:user) { Fabricate(:user) }
+    let(:notification) { Fabricate(:notification, user: user) }
+
 
     it 'generates a correct email' do
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
@@ -67,6 +88,19 @@ describe UserNotifications do
       # side effect, topic user is updated with post number
       tu = TopicUser.get(post.topic_id, response.user)
       tu.last_emailed_post_number.should == response.post_number
+
+      # in mailing list mode user_replies is not sent through
+      SiteSetting.stubs(:enable_mailing_list_mode).returns(true)
+      response.user.mailing_list_mode = true
+      mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
+      mail.class.should == ActionMailer::Base::NullMail
+
+
+      response.user.mailing_list_mode = nil
+      mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
+
+      mail.class.should_not == ActionMailer::Base::NullMail
+
     end
   end
 
@@ -103,7 +137,7 @@ describe UserNotifications do
                 topic: post.topic,
                 notification_type: Notification.types[notification_type],
                 post_number: post.post_number,
-                data: {display_username: username}.to_json )
+                data: {original_username: username}.to_json )
     end
 
     describe '.user_mentioned' do

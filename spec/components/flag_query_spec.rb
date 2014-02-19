@@ -7,6 +7,9 @@ describe FlagQuery do
 
   describe "flagged_posts_report" do
     it "operates correctly" do
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+
       post = create_post
       post2 = create_post
 
@@ -20,7 +23,7 @@ describe FlagQuery do
       PostAction.act(codinghorror, post2, PostActionType.types[:spam])
       PostAction.act(user2, post2, PostActionType.types[:spam])
 
-      posts, users = FlagQuery.flagged_posts_report("")
+      posts, users = FlagQuery.flagged_posts_report(admin, "")
       posts.count.should == 2
       first = posts.first
 
@@ -32,9 +35,19 @@ describe FlagQuery do
       second[:post_actions].count.should == 3
       second[:post_actions].first[:permalink].should == mod_message.related_post.topic.url
 
-      posts, users = FlagQuery.flagged_posts_report("",offset=1)
+      posts, users = FlagQuery.flagged_posts_report(admin, "", 1)
       posts.count.should == 1
 
+      # chuck post in category a mod can not see and make sure its missing
+      category = Fabricate(:category)
+      category.set_permissions(:admins => :full)
+      category.save
+      post2.topic.category_id = category.id
+      post2.topic.save
+
+      posts, users = FlagQuery.flagged_posts_report(moderator, "")
+
+      posts.count.should == 1
     end
   end
 end

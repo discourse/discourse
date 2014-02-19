@@ -49,6 +49,8 @@ ja:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1分"
@@ -425,9 +427,6 @@ ja:
       github:
         title: "with GitHub"
         message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"
-      persona:
-        title: "with Persona"
-        message: "Persona による認証 (ポップアップがブロックされていないことを確認してください)"
 
     composer:
       posting_not_on_topic: "回答したいトピックはどれですか?"
@@ -547,7 +546,7 @@ ja:
     go_back: '戻る'
     current_user: 'ユーザページに移動'
 
-    favorite:
+    starred:
       title: 'お気に入り'
       help:
         star: 'このトピックをお気に入りに登録'
@@ -555,7 +554,7 @@ ja:
 
     topics:
       none:
-        favorited: "お気に入り登録しているトピックがありません。お気に入り登録するには、タイトル横のスターをクリック/タップしてください。"
+        starred: "お気に入り登録しているトピックがありません。お気に入り登録するには、タイトル横のスターをクリック/タップしてください。"
         unread: "未読トピックはありません。"
         new: "新着トピックはありません。"
         read: "またトピックを一つも読んでいません。"
@@ -570,13 +569,8 @@ ja:
         read: "未読トピックは以上です。"
         new: "新規トピックは以上です。"
         unread: "未読のトピックは以上です。"
-        favorited: "お気に入りしたトピックは以上です。"
+        starred: "お気に入りしたトピックは以上です。"
         category: "{{category}} トピックは以上です。"
-
-    rank_details:
-      toggle: トピックランクの詳細をトグル
-      show: トピックランクの詳細を表示
-      title: トピックランクの詳細
 
     topic:
       create_in: '{{categoryName}} トピックを作成'
@@ -942,7 +936,6 @@ ja:
       list: "カテゴリをリストする"
       no_description: "このカテゴリの説明はありません。トピック定義を編集してください。"
       change_in_category_topic: "カテゴリ内容を編集"
-      hotness: "ホット度"
       already_used: 'この色は他のカテゴリで利用しています'
       security: "セキュリティ"
       auto_close_label: ""
@@ -1004,7 +997,7 @@ ja:
       hot:
         title: "ホット"
         help: "話題のトピック"
-      favorited:
+      starred:
         title: "お気に入り"
         help: "お気に入りしたトピック"
       read:

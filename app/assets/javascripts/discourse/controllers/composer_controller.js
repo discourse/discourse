@@ -283,7 +283,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       } else {
         opts.tested = true;
         if (!opts.ignoreIfChanged) {
-          this.cancelComposer().then(function() { self.open(opts); }).fail(function() { return promise.reject(); });
+          this.cancelComposer().then(function() { self.open(opts); }).catch(function() { return promise.reject(); });
         }
         return promise;
       }
@@ -304,10 +304,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
       if (composer) {
         composer.set('topic', opts.topic);
       }
+    } else {
+      composer = composer || Discourse.Composer.create();
+      composer.open(opts);
     }
-
-    composer = composer || Discourse.Composer.create();
-    composer.open(opts);
 
     this.set('model', composer);
     composer.set('composeState', Discourse.Composer.OPEN);
@@ -333,14 +333,14 @@ Discourse.ComposerController = Discourse.Controller.extend({
   cancelComposer: function() {
     var self = this;
 
-    return Ember.Deferred.promise(function (promise) {
+    return new Ember.RSVP.Promise(function (resolve) {
       if (self.get('model.hasMetaData') || self.get('model.replyDirty')) {
         bootbox.confirm(I18n.t("post.abandon"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
           if (result) {
             self.destroyDraft();
             self.get('model').clearState();
             self.close();
-            promise.resolve();
+            resolve();
           }
         });
       } else {
@@ -348,7 +348,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
         self.destroyDraft();
         self.get('model').clearState();
         self.close();
-        promise.resolve();
+        resolve();
       }
     });
   },

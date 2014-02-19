@@ -7,8 +7,7 @@ Discourse::Application.configure do
   config.cache_classes = false
 
   # Log error messages when you accidentally call methods on nil.
-  config.whiny_nils = true unless rails4?
-  config.eager_load = false if rails4?
+  config.eager_load = false
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
@@ -16,9 +15,6 @@ Discourse::Application.configure do
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
-
-  # Only use best-standards-support built into browsers
-  config.action_dispatch.best_standards_support = :builtin unless rails4?
 
   # Do not compress assets
   config.assets.compress = false
@@ -43,7 +39,9 @@ Discourse::Application.configure do
   config.enable_mini_profiler = true
 
   require 'middleware/turbo_dev'
+  require 'middleware/missing_avatars'
   config.middleware.insert 0, Middleware::TurboDev
+  config.middleware.insert 1, Middleware::MissingAvatars
 
   config.enable_anon_caching = false
 end

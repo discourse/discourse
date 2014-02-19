@@ -29,7 +29,7 @@ Discourse.StaticController = Discourse.Controller.extend({
       text = text.match(/<!-- preload-content: -->((?:.|[\n\r])*)<!-- :preload-content -->/)[1];
       this.set('content', text);
     } else {
-      return Discourse.ajax(path, {dataType: 'html'}).then(function (result) {
+      return Discourse.ajax(path + ".html", {dataType: 'html'}).then(function (result) {
         self.set('content', result);
       });
     }
@@ -37,12 +37,10 @@ Discourse.StaticController = Discourse.Controller.extend({
 });
 
 Discourse.StaticController.reopenClass({
-  pages: ['faq', 'tos', 'privacy', 'login'],
-  configs: {
+  PAGES: ['faq', 'tos', 'privacy', 'login'],
+  CONFIGS: {
     'faq': 'faq_url',
     'tos': 'tos_url',
     'privacy': 'privacy_policy_url'
   }
 });
-
-

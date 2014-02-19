@@ -9,23 +9,22 @@ class Admin::GroupsController < Admin::AdminController
     render json: success_json
   end
 
-  def users
-    group = Group.find(params[:group_id].to_i)
-    render_serialized(group.users.order('username_lower asc').limit(200).to_a, BasicUserSerializer)
-  end
-
   def update
     group = Group.find(params[:id].to_i)
+
     if group.automatic
-      can_not_modify_automatic
+      # we can only change the alias level on automatic groups
+      group.alias_level = params[:group][:alias_level]
     else
       group.usernames = params[:group][:usernames]
+      group.alias_level = params[:group][:alias_level]
       group.name = params[:group][:name] if params[:group][:name]
-      if group.save
-        render json: success_json
-      else
-        render_json_error group
-      end
+    end
+
+    if group.save
+      render json: success_json
+    else
+      render_json_error group
     end
   end
 

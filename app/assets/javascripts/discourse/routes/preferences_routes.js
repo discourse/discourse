@@ -11,12 +11,8 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
     return this.modelFor('user');
   },
 
-  renderTemplate: function() {
-    this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
-  },
-
-  setupController: function(controller, model) {
-    controller.set('model', model);
+  setupController: function(controller, user) {
+    controller.setProperties({ model: user, newNameInput: user.get('name') });
     this.controllerFor('user').set('indexStream', false);
   },
 
@@ -49,6 +45,12 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
       avatarSelector.send('closeModal');
     }
   }
+});
+
+Discourse.PreferencesIndexRoute = Discourse.RestrictedUserRoute.extend({
+  renderTemplate: function() {
+    this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
+  },
 });
 
 /**

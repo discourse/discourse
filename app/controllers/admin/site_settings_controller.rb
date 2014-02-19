@@ -10,8 +10,8 @@ class Admin::SiteSettingsController < Admin::AdminController
     params.require(:id)
     id = params[:id]
     value = params[id]
-    StaffActionLogger.new(current_user).log_site_setting_change(id, SiteSetting.send(id), value) if SiteSetting.respond_to?(id)
-    SiteSetting.send("#{id}=", value)
+    StaffActionLogger.new(current_user).log_site_setting_change(id, SiteSetting.send(id), value) if SiteSetting.has_setting?(id)
+    SiteSetting.set(id, value)
     render nothing: true
   end
 

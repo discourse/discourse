@@ -21,8 +21,6 @@ Discourse.GroupedView = Ember.View.extend(Discourse.Presence, {
   }
 });
 
-
-
 Discourse.View.reopenClass({
 
   /**

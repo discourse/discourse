@@ -1,6 +1,7 @@
 require_dependency 'topic_view'
 require_dependency 'promotion'
 require_dependency 'url_helper'
+require_dependency 'topics_bulk_action'
 
 class TopicsController < ApplicationController
   include UrlHelper
@@ -19,7 +20,8 @@ class TopicsController < ApplicationController
                                           :move_posts,
                                           :merge_topic,
                                           :clear_pin,
-                                          :autoclose]
+                                          :autoclose,
+                                          :bulk]
 
   before_filter :consider_user_for_promotion, only: :show
 
@@ -264,6 +266,15 @@ class TopicsController < ApplicationController
     @topic_view = TopicView.new(params[:topic_id])
     discourse_expires_in 1.minute
     render 'topics/show', formats: [:rss]
+  end
+
+  def bulk
+    topic_ids = params.require(:topic_ids).map {|t| t.to_i}
+    operation = params.require(:operation).symbolize_keys
+    raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
+    operator = TopicsBulkAction.new(current_user, topic_ids, operation)
+    changed_topic_ids = operator.perform!
+    render_json_dump topic_ids: changed_topic_ids
   end
 
   private

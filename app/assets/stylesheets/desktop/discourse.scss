@@ -13,6 +13,8 @@ body {
   min-width: $large-width;
 }
 
+
+
 .container {
   @extend .clearfix;
   max-width: $large-width;
@@ -59,38 +61,38 @@ header {
 body {
 
   button.ok {
-    @include linear-gradient(lighten($green, 5%), $green);
-    color: $white;
+    @include linear-gradient(lighten($success, 5%), $success);
+    color: $secondary;
     @include hover {
-      @include linear-gradient(lighten($green, 10%), $green);
-      color: $white;
+      @include linear-gradient(lighten($success, 10%), $success);
+      color: $secondary;
     }
   }
   button.cancel {
-    @include linear-gradient(lighten($red, 5%), $red);
-    color: $white;
+    @include linear-gradient(lighten($highlight_danger, 5%), $highlight_danger);
+    color: $secondary;
     @include hover {
-      @include linear-gradient(lighten($red, 10%), $red);
-      color: $white;
+      @include linear-gradient(lighten($highlight_danger, 10%), $highlight_danger);
+      color: $secondary;
     }
   }
   .coldmap-high {
-    color: lighten($blue, 20%) !important;
+    color: lighten($tertiary, 20%) !important;
   }
   .coldmap-med {
-    color: lighten($blue, 10%) !important;
+    color: lighten($tertiary, 10%) !important;
   }
   .coldmap-low {
-    color: $blue !important;
+    color: $tertiary !important;
   }
   .heatmap-high {
-    color: lighten($red, 50%) !important;
+    color: lighten($highlight_danger, 10%) !important;
   }
   .heatmap-med {
-    color: lighten($red, 10%) !important;
+    color: $highlight_danger !important;
   }
   .heatmap-low {
-    color: $red !important;
+    color: darken($highlight_danger, 10%) !important;
   }
   #loading-message {
     position: absolute;
@@ -98,7 +100,7 @@ body {
     text-align: center;
     top: 120px;
     left: 500px;
-    color: $darkish_gray;
+    color: $primary_medium;
   }
   .top-space {
     margin-top: 10px;
@@ -112,22 +114,22 @@ body {
     .contents {
     }
     &.white {
-      background-color: $white;
+      background-color: $secondary;
     }
   }
   #main {
     .fa-star.starred {
-      color: #e45735;
+      color: $highlight_danger;
     }
     a.star {
-      color: #cacaca;
+      color: $primary_lighter;
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
       }
       &.starred {
-        color: #e45735;
-        text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+        color: $highlight_danger;
+        text-shadow: 0px 0px 3px $primary_light;
         @include hover {
           opacity: 1;
           &:before {
@@ -171,7 +173,7 @@ body {
   /**/
   .message {
     @include border-radius-all(8px);
-    background-color: $white;
+    background-color: $secondary;
     padding: 14px;
     h2 {
       margin-bottom: 20px;
@@ -181,13 +183,12 @@ body {
     }
   }
   #footer {
-    background-color: $eggplant;
     .container {
       height: 50px;
       .contents {
         padding-top: 10px;
         a[href] {
-          color: $white;
+          color: $secondary;
         }
       }
     }
@@ -197,14 +198,14 @@ body {
   }
   .grippie {
     width: 100%;
-    border: 1px solid #dddddd;
+    border: 1px solid $primary_lighter;
     border-width: 1px 0px;
     cursor: row-resize;
     height: 11px;
     overflow: hidden;
-    background-color: #eeeeee;
+    background-color: $primary_lightest;
     display:block {}
-    background: image-url("grippie.png") #eeeeee no-repeat center 3px;
+    background: image-url("grippie.png") $primary_lightest no-repeat center 3px;
   }
 }
 
@@ -212,10 +213,10 @@ form {
   .tip {
     display: inline-block;
     &.good {
-      color: $green;
+      color: $success;
     }
     &.bad {
-      color: $red;
+      color: $highlight_danger;
     }
   }
 }
@@ -224,7 +225,7 @@ blockquote {
   /* 13px left is intentional here to properly align with post quotes */
   padding: 10px 4px 4px 13px;
   background-color: $quote-background;
-  border-left: 5px solid darken($quote-background, 20%);
+  border-left: 5px solid $primary_lighter;
   p {
   }
 }
@@ -238,7 +239,7 @@ blockquote {
     margin: 0;
     i {
         font-size: 15px;
-      color: darken($white, 60%);
+      color: darken($secondary, 60%);
     }
   }
 }
@@ -249,12 +250,12 @@ blockquote {
 
 #pagedown-editor {
   width: 540px;
-  background-color: $white;
+  background-color: $secondary;
   padding: 0 10px 13px 10px;
-  border: 1px solid $gray;
+  border: 1px solid $primary_light;
   .preview {
     margin-top: 8px;
-    border: 1px dashed $gray;
+    border: 1px dashed $primary_light;
     padding: 8px 8px 0 8px;
     p {
       margin: 0 0 10px 0;
@@ -268,13 +269,13 @@ blockquote {
 .spinner {
   width: 100px;
   margin: 0 auto 30px auto;
-  background-color: $black;
+  background-color: #000;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
   font-size: 15px;
   line-height: 23px;
   text-align: center;
-  color: $white;
+  color: $secondary;
   background: {
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
@@ -288,9 +289,9 @@ blockquote {
 }
 
 .avatar-wrapper {
-  background-color: white;
+  background-color: $secondary;
   display: inline-block;
-  border: 1px solid #82786b;
+  border: 1px solid $primary_light;
   @include border-radius-all(5px);
   img {
     @include border-radius-all(4px);
@@ -308,7 +309,7 @@ blockquote {
 body {
 
   input, textarea, select {
-    color: #222222;
+    color: $primary;
   }
 
   code, pre {
@@ -351,7 +352,7 @@ body {
     margin-bottom: 9px;
     font-size: 13px;
     line-height: 18px;
-    color: #555555;
+    color: $primary;
   }
   input {
     &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
@@ -361,7 +362,7 @@ body {
       margin-bottom: 9px;
       font-size: 13px;
       line-height: 18px;
-      color: #555555;
+      color: $primary;
     }
   }
   input {
@@ -370,33 +371,33 @@ body {
   textarea {
     width: 210px;
     height: auto;
-    background-color: white;
-    border: 1px solid #cccccc;
+    background-color:$secondary;
+    border: 1px solid $primary_lighter;
     border-radius: 3px;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px $primary_lightest;
     -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
     transition: border linear 0.2s, box-shadow linear 0.2s;
   }
   input {
     &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
-      background-color: white;
-      border: 1px solid #cccccc;
+      background-color: $secondary;
+      border: 1px solid $primary_lighter;
       border-radius: 3px;
-      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      box-shadow: inset 0 1px 1px $primary_lightest;
       -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
       transition: border linear 0.2s, box-shadow linear 0.2s;
     }
   }
   textarea:focus {
-    border-color: rgba(82, 168, 236, 0.8);
+    border-color: $tertiary;
     outline: 0;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px $primary_lightest, 0 0 8px $tertiary;
   }
   input {
     &[type="text"]:focus, &[type="password"]:focus, &[type="datetime"]:focus, &[type="datetime-local"]:focus, &[type="date"]:focus, &[type="month"]:focus, &[type="time"]:focus, &[type="week"]:focus, &[type="number"]:focus, &[type="email"]:focus, &[type="url"]:focus, &[type="search"]:focus, &[type="tel"]:focus, &[type="color"]:focus {
-      border-color: rgba(82, 168, 236, 0.8);
+      border-color: $tertiary;
       outline: 0;
-      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+      box-shadow: inset 0 1px 1px $primary_lightest, 0 0 8px $tertiary;
     }
   }
 
@@ -417,23 +418,14 @@ body {
 
   select {
     width: 220px;
-    border: 1px solid #bbbbbb;
+    border: 1px solid $primary_lighter;
     &[multiple], &[size] {
       height: auto;
     }
     &:focus {
-      outline: thin dotted #333333;
-      outline: 5px auto -webkit-focus-ring-color;
-      outline-offset: -2px;
     }
   }
-  input {
-    &[type="file"]:focus, &[type="radio"]:focus, &[type="checkbox"]:focus {
-      outline: thin dotted #333333;
-      outline: 5px auto -webkit-focus-ring-color;
-      outline-offset: -2px;
-    }
-  }
+ 
   .radio, .checkbox {
     min-height: 18px;
     padding-left: 18px;
@@ -478,8 +470,8 @@ body {
   }
   input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
     cursor: not-allowed;
-    background-color: #eeeeee;
-    border-color: #dddddd;
+    background-color: $primary_lightest;
+    border-color: $primary_light;
   }
   input {
     &[type="radio"][disabled], &[type="checkbox"][disabled], &[type="radio"][readonly], &[type="checkbox"][readonly] {
@@ -489,66 +481,66 @@ body {
   .control-group {
     &.warning {
       > label {
-        color: #c09853;
+        color: $highlight_danger;
       }
       .checkbox, .radio, input, select, textarea {
-        color: #c09853;
-        border-color: #c09853;
+        color: $highlight_danger;
+        border-color: $highlight_danger;
       }
       .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
-        border-color: #a47e3c;
-        box-shadow: 0 0 6px #dbc59e;
+        border-color: $highlight_danger_dark;
+        box-shadow: 0 0 6px $highlight_danger_light;
       }
       .input-prepend .add-on, .input-append .add-on {
-        color: #c09853;
-        background-color: #fcf8e3;
-        border-color: #c09853;
+        color: $highlight_danger;
+        background-color: $highlight_danger_light;
+        border-color: $highlight_danger;
       }
     }
     &.error {
       > label {
-        color: #b94a48;
+        color: $highlight_danger;
       }
       .checkbox, .radio, input, select, textarea {
-        color: #b94a48;
-        border-color: #b94a48;
+        color: $highlight_danger;
+        border-color: $highlight_danger;
       }
       .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
-        border-color: #953b39;
-        box-shadow: 0 0 6px #d59392;
+        border-color: $highlight_danger_dark;
+        box-shadow: 0 0 6px $highlight_danger_light;
       }
       .input-prepend .add-on, .input-append .add-on {
-        color: #b94a48;
-        background-color: #f2dede;
-        border-color: #b94a48;
+        color: $highlight_danger;
+        background-color: $highlight_danger_light;
+        border-color: $highlight_danger_dark;
       }
     }
     &.success {
       > label {
-        color: #468847;
+        color: $success;
       }
       .checkbox, .radio, input, select, textarea {
-        color: #468847;
-        border-color: #468847;
+        color: $success;
+        border-color: $success;
       }
       .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
-        border-color: #356635;
-        box-shadow: 0 0 6px #7aba7b;
+        border-color: $success_dark;
+        box-shadow: 0 0 6px $success_light;
       }
       .input-prepend .add-on, .input-append .add-on {
-        color: #468847;
-        background-color: #dff0d8;
-        border-color: #468847;
+        color: $success;
+        background-color: $success_light;
+        border-color: $success;
       }
     }
   }
   input:focus:required:invalid, textarea:focus:required:invalid, select:focus:required:invalid {
-    color: #b94a48;
-    border-color: #ee5f5b;
+    color: $highlight_danger;
+    border-color: $highlight_danger;
   }
   input:focus:required:invalid:focus, textarea:focus:required:invalid:focus, select:focus:required:invalid:focus {
-    border-color: #e9322d;
-    box-shadow: 0 0 6px #f8b9b7;
+    border-color: $highlight_danger;
+    box-shadow: 0 0 6px $highlight_danger_light;
   }
 
   .input-prepend, .input-append {
@@ -573,18 +565,18 @@ body {
     font-weight: normal;
     line-height: 18px;
     text-align: center;
-    text-shadow: 0 1px 0 white;
+    text-shadow: 0 1px 0 $secondary;
     vertical-align: middle;
-    background-color: #eeeeee;
-    border: 1px solid #cccccc;
+    background-color: $primary_lightest;
+    border: 1px solid $primary_light;
   }
   .input-prepend .add-on, .input-append .add-on, .input-prepend .btn, .input-append .btn {
     margin-left: -1px;
     border-radius: 0;
   }
   .input-prepend .active, .input-append .active {
-    background-color: #a9dba9;
-    border-color: #46a546;
+    background-color: $success_light;
+    border-color: $success;
   }
   .input-prepend {
     .add-on, .btn {
@@ -667,8 +659,8 @@ body {
   .alert {
     padding: 8px 35px 8px 14px;
     margin-bottom: 18px;
-    background-color: #fcf8e3;
-    border: 1px solid #fbeed5;
+    background-color: $highlight_danger_light;
+    border: 1px solid $highlight_danger_light;
     color: #c09853;
   }
   .alert .close {
@@ -678,19 +670,19 @@ body {
     line-height: 18px;
   }
   .alert-success {
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
-    color: #468847;
+    background-color: $success_light;
+    border-color: $success_light;
+    color: $success_dark;
   }
   .alert-error {
-    background-color: #f2dede;
-    border-color: #eed3d7;
-    color: #b94a48;
+    background-color: $highlight_danger_light;
+    border-color: $highlight_danger_light;
+    color: $highlight_danger_dark;
   }
   .alert-info {
-    background-color: #d9edf7;
-    border-color: #bce8f1;
-    color: #3a87ad;
+    background-color: $tertiary_lightest;
+    border-color: $tertiary_lightest;
+    color: $tertiary_dark;
   }
   .alert {
     .close {
@@ -698,12 +690,12 @@ body {
       font-size: 20px;
       font-weight: bold;
       line-height: 18px;
-      color: black;
-      text-shadow: 0 1px 0 white;
+      color: $primary;
+      text-shadow: 0 1px 0 $secondary;
       opacity: 0.2;
       filter: alpha(opacity = 20);
       @include hover {
-        color: black;
+        color: $primary;
         text-decoration: none;
         cursor: pointer;
         opacity: 0.4;
@@ -721,7 +713,7 @@ body {
   .bootbox.modal {
     .modal-footer {
       a.btn-primary {
-        color: white;
+        color: $secondary;
       }
     }
   }

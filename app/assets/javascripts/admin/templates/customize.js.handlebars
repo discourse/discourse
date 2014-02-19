@@ -2,7 +2,7 @@
   <h3>{{i18n admin.customize.long_title}}</h3>
   <ul>
     {{#each model}}
-    <li><a {{action selectStyle this}} {{bindAttr class="this.selected:active"}}>{{this.description}}</a></li>
+    <li><a {{action selectStyle this}} {{bind-attr class="this.selected:active"}}>{{this.description}}</a></li>
     {{/each}}
   </ul>
   <button {{action newCustomization}} class='btn'>{{i18n admin.customize.new}}</button>
@@ -17,16 +17,16 @@
     <div class='admin-controls'>
       <ul class="nav nav-pills">
         <li>
-          <a {{bindAttr class="view.stylesheetActive:active"}}{{action selectStylesheet href="true" target="view"}}>{{i18n admin.customize.css}}</a>
+          <a {{bind-attr class="view.stylesheetActive:active"}}{{action selectStylesheet href="true" target="view"}}>{{i18n admin.customize.css}}</a>
         </li>
         <li>
-          <a {{bindAttr class="view.headerActive:active"}}{{action selectHeader href="true" target="view"}}>{{i18n admin.customize.header}}</a>
+          <a {{bind-attr class="view.headerActive:active"}}{{action selectHeader href="true" target="view"}}>{{i18n admin.customize.header}}</a>
         </li>
         <li>
-          <a {{bindAttr class="view.mobileStylesheetActive:active"}}{{action selectMobileStylesheet href="true" target="view"}}>{{i18n admin.customize.mobile_css}}</a>
+          <a {{bind-attr class="view.mobileStylesheetActive:active"}}{{action selectMobileStylesheet href="true" target="view"}}>{{i18n admin.customize.mobile_css}}</a>
         </li>
         <li>
-          <a {{bindAttr class="view.mobileHeaderActive:active"}}{{action selectMobileHeader href="true" target="view"}}>{{i18n admin.customize.mobile_header}}</a>
+          <a {{bind-attr class="view.mobileHeaderActive:active"}}{{action selectMobileHeader href="true" target="view"}}>{{i18n admin.customize.mobile_header}}</a>
         </li>
       </ul>
     </div>
@@ -51,14 +51,14 @@
     <span>{{i18n admin.customize.override_default}} {{view Ember.Checkbox checkedBinding="selectedItem.override_default_style"}}</span>
     <span>{{i18n admin.customize.enabled}}  {{view Ember.Checkbox checkedBinding="selectedItem.enabled"}}</span>
     {{#unless selectedItem.changed}}
-    <a class='preview-link' {{bindAttr href="selectedItem.previewUrl"}} target='_blank'>{{i18n admin.customize.preview}}</a>
+    <a class='preview-link' {{bind-attr href="selectedItem.previewUrl"}} target='_blank'>{{i18n admin.customize.preview}}</a>
     |
     <a href="/?preview-style=" target='_blank'>{{i18n admin.customize.undo_preview}}</a><br>
     {{/unless}}
   </div>
 
   <div class='buttons'>
-    <button {{action save}} {{bindAttr disabled="selectedItem.disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
+    <button {{action save}} {{bind-attr disabled="selectedItem.disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
     <span class='saving'>{{selectedItem.savingStatus}}</span>
     <a {{action destroy}} class='delete-link'>{{i18n admin.customize.delete}}</a>
   </div>

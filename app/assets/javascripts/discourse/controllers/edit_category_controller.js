@@ -20,6 +20,12 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     });
   }.property(),
 
+  // We can change the parent if there are no children
+  subCategories: function() {
+    if (Em.isEmpty(this.get('id'))) { return null; }
+    return Discourse.Category.list().filterBy('parent_category_id', this.get('id'));
+  }.property('model.id'),
+
   onShow: function() {
     this.changeSize();
     this.titleChanged();
@@ -51,10 +57,6 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     if (!this.get('color')) return true;
     return false;
   }.property('saving', 'name', 'color', 'deleting'),
-
-  deleteVisible: function() {
-    return (this.get('id') && this.get('topic_count') === 0 && !this.get("isUncategorizedCategory"));
-  }.property('id', 'topic_count'),
 
   deleteDisabled: function() {
     return (this.get('deleting') || this.get('saving') || false);
@@ -155,7 +157,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
         model.setProperties({slug: result.category.slug, id: result.category.id });
         Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(model));
 
-      }).fail(function(error) {
+      }).catch(function(error) {
         if (error && error.responseText) {
           self.flash($.parseJSON(error.responseText).errors[0]);
         } else {

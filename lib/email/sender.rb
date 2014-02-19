@@ -19,13 +19,13 @@ module Email
     end
 
     def send
-      return if @message.blank?
-      return if @message.to.blank?
+      return skip(I18n.t('email_log.message_blank')) if @message.blank?
+      return skip(I18n.t('email_log.message_to_blank')) if @message.to.blank?
 
       if @message.text_part
-        return if @message.text_part.body.to_s.blank?
+        return skip(I18n.t('email_log.text_part_body_blank')) if @message.text_part.body.to_s.blank?
       else
-        return if @message.body.to_s.blank?
+        return skip(I18n.t('email_log.body_blank')) if @message.body.to_s.blank?
       end
 
       @message.charset = 'UTF-8'
@@ -48,8 +48,6 @@ module Email
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
 
       # Set up the email log
-      to_address = @message.to
-      to_address = to_address.first if to_address.is_a?(Array)
       email_log = EmailLog.new(email_type: @email_type,
                                to_address: to_address,
                                user_id: @user.try(:id))
@@ -87,6 +85,13 @@ module Email
 
     end
 
+    def to_address
+      @to_address ||= begin
+        to = @message ? @message.to : nil
+        to.is_a?(Array) ? to.first : to
+      end
+    end
+
     def self.host_for(base_url)
       host = "localhost"
       if base_url.present?
@@ -103,12 +108,22 @@ module Email
       "\"#{site_name.gsub(/\"/, "'")}\" <discourse.forum.#{Slug.for(site_name)}.#{host}>"
     end
 
+
+
     private
 
     def header_value(name)
       header = @message.header[name]
       return nil unless header
       header.value
+    end
+
+    def skip(reason)
+      EmailLog.create(email_type: @email_type,
+                      to_address: to_address,
+                      user_id: @user.try(:id),
+                      skipped: true,
+                      skipped_reason: reason)
     end
 
   end

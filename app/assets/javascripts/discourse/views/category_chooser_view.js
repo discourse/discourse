@@ -9,7 +9,7 @@
 Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   classNames: ['combobox category-combobox'],
   overrideWidths: true,
-  dataAttributes: ['name', 'color', 'text_color', 'description_text', 'topic_count'],
+  dataAttributes: ['name', 'color', 'text_color', 'description_text', 'topic_count', 'read_restricted'],
   valueBinding: Ember.Binding.oneWay('source'),
 
   content: Em.computed.filter('categories', function(c) {
@@ -25,18 +25,22 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   },
 
   none: function() {
-    if (!Discourse.SiteSettings.allow_uncategorized_topics) {
+    if (Discourse.User.currentProp('staff') || Discourse.SiteSettings.allow_uncategorized_topics) {
+      if (this.get('rootNone')) {
+        return "category.none";
+      } else {
+        return Discourse.Category.list().findBy('id', Discourse.Site.currentProp('uncategorized_category_id'));
+      }
+    } else {
       return 'category.choose';
-    } else if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('showUncategorized')) {
-      return 'category.none';
     }
-  }.property('showUncategorized'),
+  }.property(),
 
   template: function(text, templateData) {
     if (!templateData.color) return text;
 
     var result = "<div class='badge-category' style='background-color: #" + templateData.color + '; color: #' +
-        templateData.text_color + ";'>" + templateData.name + "</div>";
+        templateData.text_color + ";'>" + (templateData.read_restricted === 'true' ? "<i class='fa fa-group'></i> " : "") + templateData.name + "</div>";
 
     result += " <div class='topic-count'>&times; " + templateData.topic_count + "</div>";
 

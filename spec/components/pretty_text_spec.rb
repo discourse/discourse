@@ -40,9 +40,6 @@ describe PrettyText do
         match_html "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
     end
 
-    it 'should add spoiler tags' do
-      PrettyText.cook("[spoiler]hello[/spoiler]").should match_html "<p><span class=\"spoiler\">hello</span></p>"
-    end
   end
 
   describe "rel nofollow" do
@@ -69,6 +66,10 @@ describe PrettyText do
 
     it "should not inject nofollow for bar.foo.com" do
       (PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).should be_true
+    end
+
+    it "should not inject nofollow if omit_nofollow option is given" do
+      (PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow/).should be_true
     end
   end
 

@@ -4,8 +4,8 @@
 @import "common/foundation/mixins";
 
 // hack, this needs to be done cleaner
-.private-message input.span8 {
-  width: 47%;
+#private-message-users {
+  width: 400px;
 }
 
 .composer-popup-container {
@@ -16,7 +16,8 @@
 
 .composer-popup {
 
-  @include box-shadow(3px 3px 3px rgba($black, 0.14));
+  @include box-shadow(3px 3px 3px rgba($primary, 0.14));
+  background: lighten($highlight, 8%);
 
   h3 {
     margin-bottom: 10px;
@@ -28,7 +29,7 @@
 
   a.close {
     float: right;
-    color: $black;
+    color: $primary;
     opacity: 0.5;
     font-size: 15px;
   }
@@ -37,8 +38,7 @@
     opacity: 1.0;
   }
 
-  background-color: lighten($yellow, 40%);
-  border: 1px solid darken($yellow, 10%);
+  border: 1px solid darken($highlight, 10%);
   padding: 10px;
   width: 600px;
   position: absolute;
@@ -56,15 +56,15 @@
 }
 
 .similar-topics {
-  background-color: #b5e8fd;
-  border: 1px solid darken(#b5e8fd, 10%);
+  background-color: $tertiary_light;
+  border: 1px solid darken($tertiary, 10%);
 
   a[href] {
     color: #000;
   }
 
   .posts-count {
-    color: darken(#b5e8fd, 50%);
+    color: darken($tertiary, 50%);
     font-size: 12px;
   }
 }
@@ -78,28 +78,28 @@
   z-index: 999999;
   position: absolute;
   width: 240px;
-  background-color: $white;
-  border: 1px solid $gray;
+  background-color: $secondary;
+  border: 1px solid $primary_light;
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     li {
-      border-bottom: 1px solid $light_gray;
+      border-bottom: 1px solid $primary_lighter;
       a[href] {
         padding: 5px;
         display: block;
         span.username {
-          color: lighten($black, 20);
+          color: lighten($primary, 20);
         }
         span.name {
           font-size: 11px;
         }
         &.selected {
-          background-color: $light_gray;
+          background-color: $primary_lighter;
         }
         @include hover {
-          background-color: $light_gray;
+          background-color: $primary_lighter;
           text-decoration: none;
         }
       }
@@ -120,13 +120,13 @@
   #file-uploading {
     left: 51%;
     font-size: 12px;
-    color: darken($gray, 40);
+    color: darken($primary_light, 40);
   }
   #draft-status {
     right: 51%;
-    color: lighten($black, 60);
+    color: $primary_medium;
     &.flash {
-      color: lighten($red, 20);
+      color: lighten($highlight_danger, 20);
     }
   }
   @include transition(height 0.4s ease);
@@ -144,7 +144,7 @@
     right: 13px;
     position: absolute;
     font-size: 15px;
-    color: $darkish_gray;
+    color: $primary_medium;
     text-decoration: none;
     &:before {
       font-family: "FontAwesome";
@@ -180,7 +180,7 @@
   &.draft {
     height: 40px !important;
     cursor: pointer;
-    border-top: 1px solid $gray;
+    border-top: 1px solid $primary_light;
     .draft-text {
       display: block;
     }
@@ -193,7 +193,7 @@
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid $gray;
+    border-top: 1px solid $primary_light;
     .saving-text {
       display: block;
     }
@@ -215,7 +215,7 @@
     height: 70px;
     text-indent: -9999em;
     background: {
-      color: $black;
+      color: $primary;
       image: image-url("spinner_96_w.gif");
       repeat: no-repeat;
       size: 35px;
@@ -245,8 +245,14 @@
       input#reply-title {
         padding: 7px 10px;
         margin: 6px 10px 3px 0;
+        color: $primary;
+
       }
-      input#reply-title { width: 400px; }
+      input#reply-title { 
+        width: 400px; 
+                color: $primary;
+
+      }
       .wmd-controls {
         @include transition(top 0.3s ease);
         top: 100px;
@@ -299,17 +305,18 @@
       }
     }
     #reply-title {
+      color: $primary;
       margin-right: 10px;
       float: left;
       &:disabled {
-        background-color: $light_gray;
+        background-color: $primary_lighter;
       }
     }
     #wmd-input:disabled {
-      background-color: $light_gray;
+      background-color: $primary_lighter;
     }
     #wmd-input, #wmd-preview {
-      color: $black;
+      color: $primary;
 
       video {
         max-width: 100%;
@@ -321,7 +328,7 @@
       }
     }
     #wmd-preview {
-      border: 1px dashed $gray;
+      border: 1px dashed $primary_light;
       overflow: auto;
       visibility: visible;
 
@@ -346,6 +353,10 @@
   .title-input, .category-input, .show-admin-options {
     position: relative;
     display: inline;
+  }
+  .show-admin-options {
+    vertical-align: top; 
+    margin-top: 8px;
   }
   .title-input .popup-tip {
     width: 300px;
@@ -373,8 +384,8 @@ div.ac-wrap.disabled {
 }
 
 div.ac-wrap {
-  background-color: $white;
-  border: 1px solid #cccccc;
+  background-color: $secondary;
+  border: 1px solid $primary_lighter;
   padding: 5px 10px;
   div.item {
     float: left;
@@ -395,12 +406,12 @@ div.ac-wrap {
       border-radius: 10px;
       width: 10px;
       display: inline-block;
-      border: 1px solid rgba(255, 255, 255, 0);
+      border: 1px solid $secondary;
       &:hover {
-        background-color: lighten($red, 45);
-        border: 1px solid lighten($red, 20);
+        background-color: lighten($highlight_danger, 45);
+        border: 1px solid lighten($highlight_danger, 20);
         text-decoration: none;
-        color: $white;
+        color: $highlight_danger;
       }
     }
   }
@@ -456,7 +467,7 @@ div.ac-wrap {
       min-height: 100%;
       padding: 7px;
       margin: 0;
-      background-color: $white;
+      background-color: $secondary;
       word-wrap: break-word;
 
       // set up proper header margins in post preview
@@ -502,7 +513,7 @@ div.ac-wrap {
     top: 0;
     position: absolute;
     border-bottom: 1px solid $inner_line;
-    background-color: $white;
+    background-color: $secondary;
     z-index: 100;
   }
 }
@@ -532,7 +543,7 @@ div.ac-wrap {
   }
   .examples {
     margin: 12px 0 0 17px;
-    color: $dark_gray;
+    color: $primary_medium;
   }
 }
 
@@ -551,8 +562,4 @@ div.ac-wrap {
   }
 }
 
-#reply-control button.btn.no-text {
-  margin: 7px 0 0 5px; // works in safari, but not chrome and firefox
-  position: relative;
-}
 

@@ -19,7 +19,12 @@ class TopicEmbed < ActiveRecord::Base
     # If there is no embed, create a topic, post and the embed.
     if embed.blank?
       Topic.transaction do
-        creator = PostCreator.new(user, title: title, raw: absolutize_urls(url, contents), skip_validations: true, cook_method: Post.cook_methods[:raw_html])
+        creator = PostCreator.new(user,
+                                  title: title,
+                                  raw: absolutize_urls(url, contents),
+                                  skip_validations: true,
+                                  cook_method: Post.cook_methods[:raw_html],
+                                  category: SiteSetting.embed_category)
         post = creator.create
         if post.present?
           TopicEmbed.create!(topic_id: post.topic_id,
@@ -46,7 +51,7 @@ class TopicEmbed < ActiveRecord::Base
 
     opts = opts || {}
     doc = Readability::Document.new(open(url).read,
-                                        tags: %w[div p code pre h1 h2 h3 b em i strong a img],
+                                        tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol],
                                         attributes: %w[href src])
 
     TopicEmbed.import(user, url, opts[:title] || doc.title, doc.content)
@@ -80,3 +85,20 @@ class TopicEmbed < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: topic_embeds
+#
+#  id           :integer          not null, primary key
+#  topic_id     :integer          not null
+#  post_id      :integer          not null
+#  embed_url    :string(255)      not null
+#  content_sha1 :string(40)       not null
+#  created_at   :datetime
+#  updated_at   :datetime
+#
+# Indexes
+#
+#  index_topic_embeds_on_embed_url  (embed_url) UNIQUE
+#

@@ -10,24 +10,27 @@
 Discourse.TopList = Discourse.Model.extend({});
 
 Discourse.TopList.reopenClass({
-  find: function() {
-    return PreloadStore.getAndRemove("top_list", function() {
-      return Discourse.ajax("/top.json");
+  find: function(filter) {
+    return PreloadStore.getAndRemove("top_lists", function() {
+      var url = Discourse.getURL("/") + (filter || "top") + ".json";
+      return Discourse.ajax(url);
     }).then(function (result) {
       var topList = Discourse.TopList.create({
         can_create_topic: result.can_create_topic,
-        yearly: Discourse.TopicList.from(result.yearly),
-        monthly: Discourse.TopicList.from(result.monthly),
-        weekly: Discourse.TopicList.from(result.weekly),
-        daily: Discourse.TopicList.from(result.daily)
+        draft: result.draft,
+        draft_key: result.draft_key,
+        draft_sequence: result.draft_sequence,
       });
-      // disable sorting
-      topList.setProperties({
-        "yearly.sortOrder": undefined,
-        "monthly.sortOrder": undefined,
-        "weekly.sortOrder": undefined,
-        "daily.sortOrder": undefined
+
+      Discourse.Site.currentProp('periods').forEach(function(period) {
+        // if there is a list for that period
+        if (result[period]) {
+          // instanciate a new topic list with no sorting
+          topList.set(period, Discourse.TopicList.from(result[period]));
+          topList.set(period + ".sortOrder", undefined);
+        }
       });
+
       return topList;
     });
   }

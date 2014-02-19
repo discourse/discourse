@@ -30,6 +30,12 @@ basic:
   ga_domain_name:
     client: true
     default: ''
+  ga_universal_tracking_code:
+    client: true
+    default: ''
+  ga_universal_domain_name:
+    client: true
+    default: 'auto'
   category_featured_topics:
     client: true
     default: 3
@@ -43,7 +49,7 @@ basic:
     default: true
   top_menu:
     client: true
-    default: 'latest|new|unread|favorited|categories'
+    default: 'latest|new|unread|starred|categories'
   post_menu:
     client: true
     default: 'like|edit|flag|delete|share|bookmark|reply'
@@ -56,8 +62,10 @@ basic:
   relative_date_duration:
     client: true
     default: 30
-  topics_per_period_in_summary:
-    default: 10
+  topics_per_period_in_top_summary:
+    default: 20
+  topics_per_period_in_top_page:
+    default: 50
 
 users:
   enable_local_logins:
@@ -95,22 +103,14 @@ users:
     default: true
   facebook_app_id: ''
   facebook_app_secret: ''
-  enable_cas_logins:
-    client: true
-    default: false
-  cas_hostname: ''
-  cas_domainname: ''
   enable_github_logins:
     client: true
     default: false
   github_client_id: ''
   github_client_secret: ''
-  enable_persona_logins:
-    client: true
-    default: false
   enforce_global_nicknames: false
   discourse_org_access_key: ''
-  invite_expiry_days: 14
+  invite_expiry_days: 4
   username_change_period: 3
   email_editable: true
   enable_names:
@@ -121,7 +121,7 @@ users:
     default: 30
   delete_user_max_age:
     client: true
-    default: 14
+    default: 60
   delete_all_posts_max: 15
   default_external_links_in_new_tab: false
 
@@ -164,6 +164,7 @@ posting:
     default: 15
   enable_private_messages: true
   ninja_edit_window: 300
+  post_edit_time_limit: 525600
   edit_history_visible_to_public:
     client: true
     default: true
@@ -212,6 +213,7 @@ posting:
 email:
   email_time_window_mins: 10
   email_posts_context: 5
+  digest_min_excerpt_length: 100
   default_digest_email_frequency:
     default: 7
     enum: 'DigestEmailSiteSetting'
@@ -223,7 +225,7 @@ email:
   pop3s_polling_port: 995
   pop3s_polling_username: ''
   pop3s_polling_password: ''
-  enable_watch_new_topics:
+  enable_mailing_list_mode:
     default: false
     client: true
 
@@ -292,7 +294,7 @@ trust:
 
 security:
   enable_flash_video_onebox: false
-  use_ssl: false
+  use_https: false
   enable_escaped_fragments:
     client: true
     default: false
@@ -335,7 +337,7 @@ rate_limits:
   max_bookmarks_per_day: 20
   max_flags_per_day: 20
   max_edits_per_day: 30
-  max_favorites_per_day: 20
+  max_stars_per_day: 20
 
 developer:
   force_hostname: ''
@@ -353,16 +355,23 @@ embedding:
   feed_polling_enabled: false
   feed_polling_url: ''
   embed_by_username: ''
+  embed_category: ''
   embed_post_limit: 100
 
-uncategorized:
+legal:
   tos_url:
     client: true
     default: ''
-  faq_url:
+  privacy_policy_url:
     client: true
     default: ''
-  privacy_policy_url:
+  tos_accept_required:
+    client: true
+    default: false
+
+uncategorized:
+
+  faq_url:
     client: true
     default: ''
 
@@ -400,7 +409,9 @@ uncategorized:
   summary_likes_required: 1
   summary_percent_filter: 20
   send_welcome_message: true
-  allow_import: false
+  allow_restore:
+    client: true
+    default: false
   educate_until_posts:
     client: true
     default: 2
@@ -420,5 +431,11 @@ uncategorized:
   suppress_uncategorized_badge:
     client: true
     default: true
-
+  lounge_category_id:
+    default: -1
+    hidden: true
+  meta_category_id:
+    default: -1
+    hidden: true
+  min_posts_for_search_in_topic: 10
 

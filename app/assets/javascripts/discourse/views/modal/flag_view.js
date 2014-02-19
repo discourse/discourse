@@ -8,7 +8,10 @@
 **/
 Discourse.FlagView = Discourse.ModalBodyView.extend({
   templateName: 'modal/flag',
-  title: I18n.t('flagging.title'),
+
+  title: function() {
+    return this.get('controller.flagTopic') ? I18n.t('flagging_topic.title') : I18n.t('flagging.title');
+  }.property('controller.flagTopic'),
 
   selectedChanged: function() {
     var flagView = this;

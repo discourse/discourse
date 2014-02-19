@@ -1,7 +1,14 @@
 module FlagQuery
-  def self.flagged_posts_report(filter, offset = 0, per_page = 25)
+  def self.flagged_posts_report(current_user, filter, offset = 0, per_page = 25)
 
     actions = flagged_post_actions(filter)
+
+    guardian = Guardian.new(current_user)
+
+    if !guardian.is_admin?
+      actions = actions.joins(:post => :topic)
+                  .where('category_id in (?)', guardian.allowed_category_ids)
+    end
 
     post_ids = actions
               .limit(per_page)
@@ -60,7 +67,7 @@ module FlagQuery
   protected
 
   def self.flagged_post_ids(filter, offset, limit)
-    sql = <<SQL
+    <<SQL
 
     SELECT p.id from posts p
     JOIN topics t ON t.id = p.topic_id

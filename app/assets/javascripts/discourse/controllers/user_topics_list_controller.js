@@ -7,6 +7,7 @@
   @module Discourse
 **/
 Discourse.UserTopicsListController = Discourse.ObjectController.extend({
+  hideCategory: false,
 
   actions: {
     loadMore: function() {

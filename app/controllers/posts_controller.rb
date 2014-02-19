@@ -63,6 +63,12 @@ class PostsController < ApplicationController
     post = post.with_deleted if guardian.is_staff?
     post = post.first
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
+
+    if too_late_to(:edit, post)
+      render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
+      return
+    end
+
     guardian.ensure_can_edit!(post)
 
     # to stay consistent with the create api,
@@ -127,6 +133,12 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
+
+    if too_late_to(:delete_post, post)
+      render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
+      return
+    end
+
     guardian.ensure_can_delete!(post)
 
     destroyer = PostDestroyer.new(current_user, post)
@@ -204,6 +216,8 @@ class PostsController < ApplicationController
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
     post_revision = PostRevision.where(post_id: post_id, number: revision).first
+    post_revision.post = find_post_from_params
+
     guardian.ensure_can_see!(post_revision)
     post_revision
   end
@@ -253,6 +267,10 @@ class PostsController < ApplicationController
         # TODO this does not feel right, we should name what meta_data is allowed
         whitelisted[:meta_data] = params[:meta_data]
     end
+  end
+
+  def too_late_to(action, post)
+    !guardian.send("can_#{action}?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
   end
 
 end

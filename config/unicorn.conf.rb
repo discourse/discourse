@@ -1,7 +1,7 @@
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
 
 # enable out of band gc out of the box, it is low risk and improves perf a lot
-ENV['UNICORN_ENABLE_OOBGC'] = "1"
+ENV['UNICORN_ENABLE_OOBGC'] ||= "1"
 
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
@@ -11,7 +11,7 @@ worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 working_directory discourse_path
 
 # listen "#{discourse_path}/tmp/sockets/unicorn.sock"
-listen 3000
+listen (ENV["UNICORN_PORT"] || 3000).to_i
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
 timeout 30

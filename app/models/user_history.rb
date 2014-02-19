@@ -18,7 +18,7 @@ class UserHistory < ActiveRecord::Base
                            :checked_for_custom_avatar,
                            :notified_about_avatar,
                            :notified_about_sequential_replies,
-                           :notitied_about_dominating_topic,
+                           :notified_about_dominating_topic,
                            :suspend_user,
                            :unsuspend_user)
   end

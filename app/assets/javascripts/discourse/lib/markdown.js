@@ -154,6 +154,7 @@ Discourse.Markdown = {
   **/
   sanitize: function(text) {
     if (!window.html_sanitize) return "";
+    text = text.replace(/<([^A-Za-z\/]|$)/g, "&lt;$1");
     return window.html_sanitize(text, Discourse.Markdown.urlAllowed, Discourse.Markdown.nameIdClassAllowed);
   },
 

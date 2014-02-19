@@ -39,11 +39,14 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     if (notifyCount > 0 && !Discourse.User.currentProp('dynamic_favicon')) {
       title = "(" + notifyCount + ") " + title;
     }
-    // chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
-    window.setTimeout(function() {
-      document.title = ".";
-      document.title = title;
-    }, 200);
+
+    if(title !== document.title) {
+      // chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
+      window.setTimeout(function() {
+        document.title = ".";
+        document.title = title;
+      }, 200);
+    }
   }.observes('title', 'hasFocus', 'notifyCount'),
 
   faviconChanged: function() {
@@ -59,7 +62,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     return Discourse.SiteSettings.post_menu.split("|").map(function(i) {
       return (i.replace(/\+/, '').capitalize());
     });
-  }.property('Discourse.SiteSettings.post_menu'),
+  }.property(),
 
   notifyTitle: function(count) {
     this.set('notifyCount', count);
@@ -86,9 +89,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   },
 
   loginRequired: function() {
-    return (
-      Discourse.SiteSettings.login_required && !Discourse.User.current()
-    );
+    return Discourse.SiteSettings.login_required && !Discourse.User.current();
   }.property(),
 
   redirectIfLoginRequired: function(route) {
@@ -127,7 +128,23 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
         }
       });
     }
-  }
+  },
+
+  requiresRefresh: function(){
+    var desired = Discourse.get("desiredAssetVersion");
+    return desired && Discourse.get("currentAssetVersion") !== desired;
+  }.property("currentAssetVersion", "desiredAssetVersion"),
+
+  assetVersion: function(prop, val) {
+    if(val) {
+      if(this.get("currentAssetVersion")){
+        this.set("desiredAssetVersion", val);
+      } else {
+        this.set("currentAssetVersion", val);
+      }
+    }
+    return this.get("currentAssetVersion");
+  }.property()
 
 });
 

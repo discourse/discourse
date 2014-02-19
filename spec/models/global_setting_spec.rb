@@ -31,4 +31,16 @@ describe GlobalSetting::FileProvider do
     f.unlink
   end
 
+  it "uses ERB" do
+    f = Tempfile.new('foo')
+    f.write("a = <%= 500 %>  # this is a comment\n")
+    f.close
+
+    provider = GlobalSetting::FileProvider.from(f.path)
+
+    provider.lookup(:a,"").should == 500
+
+    f.unlink
+  end
+
 end
