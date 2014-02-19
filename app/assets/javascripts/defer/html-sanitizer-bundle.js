@@ -916,6 +916,7 @@ html4.ELEMENTS = {
   'abbr': 0,
   'acronym': 0,
   'address': 0,
+  'article': 0,
   'aside': 0,
   'b': 0,
   'base': 274,
