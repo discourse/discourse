@@ -1,5 +1,46 @@
 require 'spec_helper'
 
+shared_examples 'finding and showing post' do
+  let(:user) { log_in }
+  let(:post) { Fabricate(:post, user: user) }
+
+  it 'ensures the user can see the post' do
+    Guardian.any_instance.expects(:can_see?).with(post).returns(false)
+    xhr :get, action, params
+    response.should be_forbidden
+  end
+
+  it 'succeeds' do
+    xhr :get, action, params
+    response.should be_success
+  end
+
+  context "deleted post" do
+
+    before do
+      post.trash!(user)
+    end
+
+    it "can't find deleted posts as an anonymous user" do
+      xhr :get, action, params
+      response.should be_forbidden
+    end
+
+    it "can't find deleted posts as a regular user" do
+      log_in(:user)
+      xhr :get, action, params
+      response.should be_forbidden
+    end
+
+    it "can find posts as a moderator" do
+      log_in(:moderator)
+      xhr :get, action, params
+      response.should be_success
+    end
+
+  end
+end
+
 describe PostsController do
 
   describe 'short_link' do
@@ -12,43 +53,16 @@ describe PostsController do
   end
 
   describe 'show' do
-    let(:user) { log_in }
-    let(:post) { Fabricate(:post, user: user) }
-
-    it 'ensures the user can see the post' do
-      Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-      xhr :get, :show, id: post.id
-      response.should be_forbidden
+    include_examples 'finding and showing post' do
+      let(:action) { :show }
+      let(:params) { {id: post.id} }
     end
+  end
 
-    it 'succeeds' do
-      xhr :get, :show, id: post.id
-      response.should be_success
-    end
-
-    context "deleted post" do
-
-      before do
-        post.trash!(user)
-      end
-
-      it "can't find deleted posts as an anonymous user" do
-        xhr :get, :show, id: post.id
-        response.should be_forbidden
-      end
-
-      it "can't find deleted posts as a regular user" do
-        log_in(:user)
-        xhr :get, :show, id: post.id
-        response.should be_forbidden
-      end
-
-      it "can find posts as a moderator" do
-        log_in(:moderator)
-        xhr :get, :show, id: post.id
-        response.should be_success
-      end
-
+  describe 'by_number' do
+    include_examples 'finding and showing post' do
+      let(:action) { :by_number }
+      let(:params) { {topic_id: post.topic_id, post_number: post.post_number} }
     end
   end
 
