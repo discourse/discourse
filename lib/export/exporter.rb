@@ -154,8 +154,8 @@ module Export
     def build_pg_dump_command
       db_conf = BackupRestore.database_configuration
 
-      password_argument = "PGPASSWORD=#{password}" if db_conf.password.present?
-      host_argument     = "--host=#{host}"         if db_conf.host.present?
+      password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
+      host_argument = "--host=#{db_conf.host}" if db_conf.host.present?
 
       [ password_argument,                  # pass the password to pg_dump
         "pg_dump",                          # the pg_dump command

@@ -202,8 +202,8 @@ module Import
     def build_psql_command
       db_conf = BackupRestore.database_configuration
 
-      password_argument = "PGPASSWORD=#{password}" if db_conf.password.present?
-      host_argument     = "--host=#{host}"         if db_conf.host.present?
+      password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
+      host_argument = "--host=#{db_conf.host}" if db_conf.host.present?
 
       [ password_argument,                # pass the password to psql
         "psql",                           # the psql command
