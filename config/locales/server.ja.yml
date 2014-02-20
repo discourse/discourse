@@ -531,7 +531,7 @@ ja:
     must_approve_users: "管理者が全てのユーザの承認を行う"
     ga_tracking_code: "Google analytics のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
     ga_domain_name: "Google analytics のドメイン名。例: mysite.com; 参考 http://google.com/analytics"
-    enable_escaped_fragments: "古いサーチエンジンクローラがあなたのサイトのインデックスを構築するのをサポートするワークアラウンドを有効にする。注意: 必要な場合のみ有効にすることを推奨。"
+    enable_escaped_fragments: "古いサーチエンジンクローラがあなたのサイトのインデックスを構築するのをサポートするワークアラウンドを有効にする"
     enable_noscript_support: "noscript タグ経由でアクセスしてきた標準サーチエンジンクローラのサポートを有効にする"
     top_menu: "ホームページナビゲーションに表示する項目を指定。例 latest|new|unread|starred|categories|top|read|posted"
     post_menu: "ポストメニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"

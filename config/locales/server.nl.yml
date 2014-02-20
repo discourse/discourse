@@ -600,7 +600,7 @@ nl:
     must_approve_users: "De eigenaars van een forum moeten de leden accepteren voordat zij toegang krijgen."
     ga_tracking_code: "Google analytics trackingcode, zie: http://google.com/analytics"
     ga_domain_name: "Google analytics domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
-    enable_escaped_fragments: "Schakel workaround in om oude crawlers je site te kunnen laten indexeren. WAARSCHUWING: gebruik dit alleen als je het echt nodig hebt."
+    enable_escaped_fragments: "Schakel workaround in om oude crawlers je site te kunnen laten indexeren."
     enable_noscript_support: "Ondersteun &lt;noscript&gt; tag"
     top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|new|unread|starred|categories|top|read|posted"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"

@@ -300,7 +300,7 @@ security:
   use_https: false
   enable_escaped_fragments:
     client: true
-    default: false
+    default: true
 
 seo:
   add_rel_nofollow_to_user_content: true

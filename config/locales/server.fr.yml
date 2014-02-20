@@ -550,7 +550,7 @@ fr:
     must_approve_users: "Les administrateurs du forum doivent approuver les utilisateurs avant qu'il y aient accès."
     ga_tracking_code: "Code de suivi de Google Analytics, par exemple : UA-12345678-9, voir: http://google.com/analytics"
     ga_domain_name: "Domaine suivi par Google Analytics, par exemple : monsite.com, voir: http://google.com/analytics"
-    enable_escaped_fragments: "Activer une solution de contournement afin d'aider d'ancien moteurs de recherche d'indexer votre site. ATTENTION : à activer seulement si vous le devez."
+    enable_escaped_fragments: "Activer une solution de contournement afin d'aider d'ancien moteurs de recherche d'indexer votre site."
     enable_noscript_support: "Activer le support des moteurs de recherches standards via le tag noscript"
     top_menu: "L'ordre des éléments dans le menu du haut. Exemple latest|new|unread|starred|categories|top|read|posted"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"

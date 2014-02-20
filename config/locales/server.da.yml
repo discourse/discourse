@@ -597,7 +597,7 @@ da:
     must_approve_users: "Admins skal godkende alle brugere før de får adgang"
     ga_tracking_code: "Google analytics sporingskode, f.eks.: UA-12345678-9; se http://google.com/analytics."
     ga_domain_name: "Google analytics domænenavn, f.eks.: example.com; se http://google.com/analytics."
-    enable_escaped_fragments: "Aktivér workaround som kan hjælpe ældre webcrawlers med at indeksere sitet. ADVARSEL: aktivér kun hvis du har behov for det."
+    enable_escaped_fragments: "Aktivér workaround som kan hjælpe ældre webcrawlers med at indeksere sitet."
     enable_noscript_support: "Aktivér standard webcrawler søgemaskineunderstøttelse vha. noscript-tagget"
     top_menu: "Angiv hvilke elementer der skal vises i hjemmesidenavigationen, og i hvilken rækkefølge. Eksempel: latest|new|unread|starred|categories|top|read|posted."
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."

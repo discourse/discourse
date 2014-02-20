@@ -542,7 +542,7 @@ pt_BR:
     must_approve_users: "Os proprietários do fórum tem que aprovar os usuários antes deles terem acesso."
     ga_tracking_code: "Código de rastreamento do Google Analytics, veja: http://google.com/analytics"
     ga_domain_name: "Nome de domínio no Google Analytics, exemplo: meusite.com; see http://google.com/analytics"
-    enable_escaped_fragments: "Ativa solução alternativa que ajuda os mecanismos de busca antigos a indexarem o seu site. ALERTA: apenas ative se você realmente precisa disto."
+    enable_escaped_fragments: "Ativa solução alternativa que ajuda os mecanismos de busca antigos a indexarem o seu site."
     enable_noscript_support: "Ativar suporte a tag &lt;noscript&gt;"
     top_menu: "A ordem dos items no menu de cima. Exemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "A ordem dos items no menu da postagem."

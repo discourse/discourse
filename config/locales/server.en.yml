@@ -629,7 +629,7 @@ en:
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
-    enable_escaped_fragments: "Enable workaround solution to help older search engine webcrawlers index your site. WARNING: enable only if you have to."
+    enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if a crawler is not detected."
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
