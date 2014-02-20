@@ -389,7 +389,7 @@ en:
 
   unsubscribed:
     title: 'Unsubscribed'
-    description: "You have been unsubscribed. We won't contact you again!"
+    description: "You have been unsubscribed from Watchman Monitoring Community forum emails."
     oops: "In case you didn't mean to do this, click below."
     not_found: "Error Unsubscribing"
     not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
@@ -1168,13 +1168,13 @@ en:
 
         [Please review them in the admin section](%{base_url}/admin/users/list/pending).
 
-  unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
+  unsubscribe_link: "Control which emails you receive in your [user preferences](%{user_preferences_url})."
 
   user_notifications:
     previous_discussion: "Previous Replies"
     unsubscribe:
       title: "Unsubscribe"
-      description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
+      description: "Control which emails you receive in your [user preferences](%{user_preferences_url})"
 
     reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
@@ -1244,7 +1244,7 @@ en:
       new_activity: "New activity on your topics and posts:"
       top_topics: "Recent posts the community enjoyed:"
       other_new_topics: "Other New Topics:"
-      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
+      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. Control which emails you receive in your [user preferences](%{user_preferences_url})"
       click_here: "click here"
       from: "[Watchman Community]Forum digest"
       read_more: "Read More"
