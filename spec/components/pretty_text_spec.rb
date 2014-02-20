@@ -92,6 +92,10 @@ describe PrettyText do
         PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100, markdown_images: true).should == "![car](http://cnn.com/a.gif)"
       end
 
+      it "should keep spoilers" do
+        PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100).should == "<span class='spoiler'>[image]</span>"
+        PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100).should == "<span class='spoiler'>spoiler</span>"
+      end
     end
 
     it "should have an option to strip links" do

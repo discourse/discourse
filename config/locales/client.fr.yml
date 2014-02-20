@@ -596,6 +596,15 @@ fr:
         unstar: 'enlever cette discussion de vos favoris'
 
     topics:
+      bulk:
+        toggle: "Basculer le mode actions en masse"
+        actions: "Actions en masse"
+        change_category: "Modifier la catégorie"
+        close_topics: "Fermer les discussions"
+        notification_level: "Modifier le niveau de notification"
+        selected:
+          one: "Vous avez sélectionné <b>1</b> discussion."
+          other: "Vous avez sélectionné <b>{{count}}</b> discussions."
       none:
         starred: "Vous n'avez aucune discussion favorite pour le moment. Pour ajouter une discussion aux favoris, cliquez sur l'étoile suivant le titre."
         unread: "Vous n'avez aucune discussion non lue."
