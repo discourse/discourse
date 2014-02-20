@@ -591,7 +591,7 @@ fr:
         unstar: 'enlever cette discussion de vos favoris'
 
     topics:
-       bulk:
+      bulk:
         toggle: "Basculer le mode actions en masse"
         actions: "Actions en masse"
         change_category: "Modifier la catégorie"
