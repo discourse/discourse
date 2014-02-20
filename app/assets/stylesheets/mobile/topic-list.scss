@@ -47,13 +47,13 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-top: 1px solid $primary_lighter;
-  border-bottom: 1px solid $primary_lighter;
+  border-top: 1px solid $primary_border_color;
+  border-bottom: 1px solid $primary_border_color;
 
   > tbody > tr {
-    background-color: $secondary;
+    background-color: $primary_background_color;
     &:nth-child(even) {
-      background-color: darken($secondary, 4%);
+      background-color: darken($primary_background_color, 4%);
     }
     &.archived a {
       opacity: 0.6;
@@ -64,7 +64,7 @@
       }
     }
     &.highlighted {
-      background-color: $highlight;
+      background-color: $highlight_background_color;
     }
   }
   th,
@@ -99,7 +99,7 @@
     font-size: 16px;
 
     i.score {
-      color: $success;
+      color: $success_text_color;
       cursor: pointer;
     }
   }
@@ -107,7 +107,7 @@
   .topic-excerpt {
     font-size: 14px;
     margin-top: 8px;
-    color: $primary_medium;
+    color: lighten($primary_text_color, 35%);
     word-break: break-word;
   }
 
@@ -188,7 +188,7 @@
     .featured-topic {
       margin: 8px 0;
       a.last-posted-at, a.last-posted-at:visited {
-        color: $primary_light;
+        color: lighten($primary_text_color, 50%);
       }
     }
   }
@@ -215,7 +215,7 @@
 .category-list-item {
   margin-bottom: 10px;
   #topic-list tbody tr:nth-child(even) {
-    background-color: $secondary;
+    background-color: $primary_background_color;
   }
   .badge-category {
     float: left;
@@ -230,14 +230,14 @@
     border-top: 0;
     padding: 7px 10px;
     background-color: lighten($topic-list-th-background-color, 2%);
-    @include box-shadow(0 1px 3px rgba($primary, 0.22));
+    @include box-shadow(0 1px 3px rgba($primary_shadow_color, 0.22));
     figure {
       float: left;
       margin: 3px 7px 0 0;
       color: lighten($topic-list-th-color, 5%);
       font-weight: bold;
       font-size: 12px;
-      text-shadow: 0 1px 0 $secondary;
+      text-shadow: 0 1px 0 $secondary_shadow_color;
     }
     figcaption {
       display: inline;
@@ -273,11 +273,11 @@
   width: 200px;
   margin: 0 auto;
   padding: 10px 0 10px 43px;
-  color: $secondary;
+  color: $tertiary_text_color;
   font-size: 18px;
   line-height: 25px;
   background: {
-    color: $primary;
+    color: $primary_text_color;
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
     position: 10px 50%;
@@ -291,8 +291,8 @@
 
 .list-controls {
   .home {
-    color: $primary;
-    background-color: $primary_lightest;
+    color: $primary_text_color;
+    background-color: lighten($secondary_background_color, 76%);
   }
 
   .badge-category {
@@ -325,7 +325,7 @@
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: lighten($highlight_danger, 10%);
+    color: lighten($warning_text_color, 10%);
     font-size: 13px;
     cursor: default;
   }
@@ -370,7 +370,7 @@ span.posted {
   width: 0;
   height: 0;
   vertical-align: middle;
-  border-top: 4px solid $primary;
+  border-top: 4px solid $primary_text_color;
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
@@ -387,8 +387,8 @@ span.posted {
   padding: 4px 0;
   margin: 1px 0 0;
   list-style: none;
-  background-color: $secondary;
-  border: 1px solid $primary_medium;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
   border: 1px solid rgba(0, 0, 0, 0.2);
   *border-right-width: 2px;
   *border-bottom-width: 2px;
@@ -405,14 +405,14 @@ span.posted {
   clear: both;
   font-weight: normal;
   line-height: 18px;
-  color: $primary;
+  color: $primary_text_color;
 }
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  color: $secondary;
+  color: $tertiary_text_color;
   text-decoration: none;
-  background-color: $tertiary;
+  background-color: $emphasis_text_color;
 }
 .open {
   *z-index: 1000;
@@ -447,8 +447,8 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid $primary_lighter;
-  background-color: $secondary;
+  border: 1px solid $primary_border_color;
+  background-color: $primary_background_color;
   width: 200px;
   height: 200px;
   padding: 8px 5px 0 7px;

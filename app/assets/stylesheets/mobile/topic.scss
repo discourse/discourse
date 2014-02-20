@@ -45,7 +45,7 @@ a.edit-topic {font-size: 15px;}
 }
 
 .docked #topic-progress {
-	  box-shadow: 0 0 3px $primary_light;
+	  box-shadow: 0 0 3px rbga($primary_shadow_color, .5);
 }
 
 #topic-progress-wrapper {
@@ -65,15 +65,15 @@ a.edit-topic {font-size: 15px;}
 
 #topic-progress {
 
-	  box-shadow: 0 0 3px $primary;
+	  box-shadow: 0 0 3px rbga($primary_shadow_color, .7);
 
   position: relative;
   &.hidden {
     display: none;
   }
   border: none;
-  background-color: $primary_lighter;
-  color: $primary_medium;
+  background-color: lighten($primary_background_color, 60%);
+  color: $primary_text_color;
   width: 130px;
   height: 34px;
   .nums {
@@ -92,7 +92,7 @@ a.edit-topic {font-size: 15px;}
     left: 4px;
     border: 0;
     background: none;
-    color: $primary_medium;
+    color: lighten($primary_text_color, 35%);
 
     width: 60px;
     text-align: left;
@@ -109,7 +109,7 @@ a.edit-topic {font-size: 15px;}
     &:disabled {
 
       cursor: default;
-  color: $primary_medium;
+    color: lighten($primary_text_color, 35%);
     }
   }
   h4 {
@@ -122,10 +122,10 @@ a.edit-topic {font-size: 15px;}
     top: 0px;
     bottom: 0px;
     width: 0px;
-    border-right: 1px solid $primary_lighter;
+    border-right: 1px solid $primary_border_color;
     // background-color: #d4eaf4;
     // background-color: #C5E8F7;
-    background-color: $success_light;
+    background-color: $success_background_color;
   }
 }
 
@@ -137,6 +137,6 @@ a.edit-topic {font-size: 15px;}
 
 .post-cloak:last-of-type {padding-bottom: 40px;}
 
-.heatmap-high {color: #f77 !important;}
-.heatmap-med {color: #a00 !important;}
-.heatmap-low {color: #700 !important;}
+.heatmap-high {color: $heatmap-high !important;}
+.heatmap-med {color: $heatmap-med !important;}
+.heatmap-low {color: $heatmap-low !important;}
