@@ -155,18 +155,19 @@ module Export
       db_conf = BackupRestore.database_configuration
 
       password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
-      host_argument = "--host=#{db_conf.host}" if db_conf.host.present?
+      host_argument     = "--host=#{db_conf.host}"         if db_conf.host.present?
+      username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
 
-      [ password_argument,                  # pass the password to pg_dump
-        "pg_dump",                          # the pg_dump command
-        "--schema=public",                  # only public schema
-        "--file='#{@dump_filename}'",       # output to the dump.sql file
-        "--no-owner",                       # do not output commands to set ownership of objects
-        "--no-privileges",                  # prevent dumping of access privileges
-        "--verbose",                        # specifies verbose mode
-        host_argument,                      # the hostname to connect to
-        "--username=#{db_conf.username}",   # the username to connect as
-        db_conf.database                    # the name of the database to dump
+      [ password_argument,            # pass the password to pg_dump (if any)
+        "pg_dump",                    # the pg_dump command
+        "--schema=public",            # only public schema
+        "--file='#{@dump_filename}'", # output to the dump.sql file
+        "--no-owner",                 # do not output commands to set ownership of objects
+        "--no-privileges",            # prevent dumping of access privileges
+        "--verbose",                  # specifies verbose mode
+        host_argument,                # the hostname to connect to (if any)
+        username_argument,            # the username to connect as (if any)
+        db_conf.database              # the name of the database to dump
       ].join(" ")
     end
 

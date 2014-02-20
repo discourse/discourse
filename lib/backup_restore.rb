@@ -94,6 +94,7 @@ module BackupRestore
         -- move all "source" tables to "destination" schema
         FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = '#{source}'
         LOOP
+          EXECUTE 'DROP TABLE IF EXISTS #{destination}.' || quote_ident(row.tablename) || ' CASCADE;';
           EXECUTE 'ALTER TABLE #{source}.' || quote_ident(row.tablename) || ' SET SCHEMA #{destination};';
         END LOOP;
       END$$;
@@ -104,8 +105,8 @@ module BackupRestore
 
   def self.database_configuration
     if Rails.env.production?
-      conn = RailsMultisite::ConnectionManagement
-      db_conf = DatabaseConfiguration.new(conn.current_host, conn.current_username, conn.current_password, conn.current_db)
+      db = ActiveRecord::Base.connection_pool.spec.config
+      db_conf = DatabaseConfiguration.new(db["host"], db["username"], db["password"], db["database"])
     else
       db = Rails.configuration.database_configuration[Rails.env]
       db_conf = DatabaseConfiguration.new(db["host"], db["username"], db["password"], db["database"])
