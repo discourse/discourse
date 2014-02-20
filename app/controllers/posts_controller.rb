@@ -128,9 +128,8 @@ class PostsController < ApplicationController
   end
 
   def reply_history
-    @post = Post.where(id: params[:id]).first
-    guardian.ensure_can_see!(@post)
-    render_serialized(@post.reply_history, PostSerializer)
+    post = find_post_from_params
+    render_serialized(post.reply_history, PostSerializer)
   end
 
   def destroy
