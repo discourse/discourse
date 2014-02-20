@@ -665,7 +665,7 @@ fr:
     pop3s_polling_password: "Le mot de passe pour le polling POPS3 par email"
     minimum_topics_similar: "Combien de topics ont besoin d'exister dans la base de données avant que des topics similaires soit présentés."
     relative_date_duration: "Nombre de jours après la création d'un message à partir desquels les dates seront affichées en absolu plutôt qu'en relatif. Exemple: relatif : 7j, absolut : 20 Fév"
-    delete_user_max_age: "L'age maximum d'un utilisateur, en jours, qui permet à un administrateur de le supprimer."
+    delete_user_max_post_age: "L'age maximum d'un utilisateur, en jours, qui permet à un administrateur de le supprimer."
     delete_all_posts_max: "Le nombre maximum de messages qui peuvent être supprimer en une seule fois avec le bouton Supprimer tous les messages. Si un utilisateur a plus que ce nombre de messages, les messages ses messages ne pourront pas être supprimé en une seul fois et l'utilisateur ne pourra pas être supprimé."
     username_change_period: "Le nombre de jours après l'enregistrement que les comptes peuvent changer leur nom d'utilisateur (0 pour empêcher le changement de pseudo)."
     email_editable: "Permettre aux utilisateurs de changer leur adresse e-mail après l'inscription."

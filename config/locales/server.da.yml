@@ -751,7 +751,7 @@ da:
     minimum_topics_similar: "Hvor emner der skal eksistere i databasen før der vises tilsvarende emner."
 
     relative_date_duration: "Antal dage efter oprettelse af et indlæg hvor datoer vises som relative i stedet for absolutte. Eksempler: relativ dato: 7d, absolut dato: 20 Feb."
-    delete_user_max_age: "Den maksimale alder af en bruger som kan slettes af en admin, i dage."
+    delete_user_max_post_age: "Den maksimale alder af en bruger som kan slettes af en admin, i dage."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
     username_change_period: "Antal dage efter oprettelsen hvor brugere kan ændre deres brugernavn (0 for ikke at tillade skift af brugernavn)."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."

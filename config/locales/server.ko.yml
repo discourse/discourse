@@ -698,7 +698,7 @@ ko:
     minimum_topics_similar: "비슷한 토픽을 검출하기 위해 필요한 데이터베이스의 토픽 수"
 
     relative_date_duration: "Number of days after posting where post dates will be shown as relative instead of absolute. Examples: relative date: 7d, absolute date: 20 Feb"
-    delete_user_max_age: "운영자에 의해 삭제될 수 있는 사용자의 최대 유지기간 수"
+    delete_user_max_post_age: "운영자에 의해 삭제될 수 있는 사용자의 최대 유지기간 수"
     delete_all_posts_max: "전체 게시글 지우기 버튼을 통해 한번에 삭제할 수 있는 최대 게시글 수. 만약 사용자가 이것보다 많은 게시글을 가지고 있으면 한번에 삭제 할 수 없다."
     username_change_period: "등록 후 사용자 이름 최소 유지 기간(0은 사용자 이름 변경을 막음)"
     email_editable: "등록 후 이메일 주소를 바꿀수 있는 있음"

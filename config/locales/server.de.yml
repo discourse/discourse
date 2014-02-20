@@ -654,7 +654,7 @@ de:
     minimum_topics_similar: "Wie viele Themen in der Datenbank existieren müssen, bevor ähnliche Themen angezeigt werden."
 
     relative_date_duration: "Anzahl von Tagen nach nach welchen das Beitragsdatum relativ und nicht absolut angezeigt wird. Beispiel: relatives Datum: 7T, absolutes Datum: 20 Feb"
-    delete_user_max_age: "Nach wievielen Tagen ein Benutzerkonto von einem Administrator gelöscht werden kann."
+    delete_user_max_post_age: "Nach wievielen Tagen ein Benutzerkonto von einem Administrator gelöscht werden kann."
     delete_all_posts_max: "Die maximale Anzahl von Beiträgen welche auf einmal gelöscht werden kann. Hat ein Benutzer mehr Beiträge, so können die Beiträge nicht auf einmal und der Benutzer nicht gelöscht werden."
     username_change_period: "Wie lange neu registrierte Benutzer ihren Benutzernamen ändern können."
 

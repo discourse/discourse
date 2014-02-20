@@ -52,7 +52,7 @@ module PostGuardain
   end
 
   def can_delete_all_posts?(user)
-    is_staff? && user && !user.admin? && user.created_at >= SiteSetting.delete_user_max_age.days.ago && user.post_count <= SiteSetting.delete_all_posts_max.to_i
+    is_staff? && user && !user.admin? && (user.first_post.nil? || user.first_post.created_at >= SiteSetting.delete_user_max_post_age.days.ago) && user.post_count <= SiteSetting.delete_all_posts_max.to_i
   end
 
   # Creating Method

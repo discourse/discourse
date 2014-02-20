@@ -755,7 +755,7 @@ nl:
     minimum_topics_similar: "Hoeveel topics moeten er in de database staan voordat er vergelijkbare topics getoond worden?"
 
     relative_date_duration: "Na hoeveel dagen de datum van een bericht relatief zijn in plaats van absoluut.Voorbeelden: relatieve datum: 7d, absolute datum: 20 feb"
-    delete_user_max_age: "Na hoeveel dagen na de inschrijving mag een admin een gebruiker nog verwijderen."
+    delete_user_max_post_age: "Na hoeveel dagen na de inschrijving mag een admin een gebruiker nog verwijderen."
     delete_all_posts_max: "Het maximaal aantal berichten dat ineens verwijderd kan worden met de 'Verwijder alle berichten'-knop. Als een gebruiker meer berichten heeft, kunnen de berichten niet in een keer verwijderd worden en kan de gebruiker dus niet verwijderd worden."
     username_change_period: "The number of days after registration that accounts can change their username (0 om wijziging niet toe te staan)."
     email_editable: Gebruikers mogen hun e-mailadres na registratie nog wijzigen.

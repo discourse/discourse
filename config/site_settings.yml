@@ -122,7 +122,7 @@ users:
   invites_shown:
     client: true
     default: 30
-  delete_user_max_age:
+  delete_user_max_post_age:
     client: true
     default: 60
   delete_all_posts_max: 15

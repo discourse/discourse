@@ -690,7 +690,7 @@ pt_BR:
     minimum_topics_similar: "Quantos tópicos precisam existir no banco de dados antes de um tópico similar ser apresentado."
 
     relative_date_duration: "Número de dias após a postagem a partir de quando as datas das postagens serão exibidas como relativas em vez de absolutas. Exemplos: data relativa: 7D, data absoluta: 20 de fevereiro"
-    delete_user_max_age: "Idade máxima, em dias, que um usuário pode ser removido por um admin."
+    delete_user_max_post_age: "Idade máxima, em dias, que um usuário pode ser removido por um admin."
     delete_all_posts_max: "Número máximo de posts que podem ser deletados de uma vez pelo botão Deletar Todos os Posts. Se um usuário tem mais posts que isso, os posts não pode ser removidos de uma vez  e o usuário não pode ser removido."
     username_change_period: "Número de dias após o registro que as contas podem trocar o username(0 impede a troca de username)"
     email_editable: "Permite que usuários mudem endereço de e-mail após cadastro"

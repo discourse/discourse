@@ -680,7 +680,7 @@ cs:
     minimum_topics_similar: "Kolik témat musí v databázi existovat, než se začne nabízet menu s podobnými tématy."
 
     relative_date_duration: "Počet dní od zaslání příspěvku, po které se budou datumy zobrazovat relativně namísto absolutně. Příklady: relativně: 7d, absolutně: 20. února"
-    delete_user_max_age: "Maximální stáří uživatele ve dnech, který může být smazán administrátorem."
+    delete_user_max_post_age: "Maximální stáří uživatele ve dnech, který může být smazán administrátorem."
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
 
 
