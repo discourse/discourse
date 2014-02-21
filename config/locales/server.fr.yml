@@ -521,7 +521,7 @@ fr:
     max_topic_title_length: "Longueur maximale des titres de discussion en nombre de caractères"
     min_private_message_title_length: "Longueur mimimale pour un titre de message privé en nombre de caractères"
     min_search_term_length: "Longueur mimimale du texte saisie avant de lancer une recherche"
-    allow_uncategorized_topics: "Permettre la création de discussions sans catégorie. NOTE :  Après la modification de ce paramètre tous les utilisateurs devront recharger leur navigateur pour que la modification prenne effet."
+    allow_uncategorized_topics: "Permettre la création de discussions sans catégorie."
     allow_duplicate_topic_titles: "Permettre la création de discussions avec le même titre"
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
     enforce_global_nicknames: "Imposer un pseudo global unique. (ATTENTION: fonctionne uniquement pendant la phase initiale de paramétrage)"

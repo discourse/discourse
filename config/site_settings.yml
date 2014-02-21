@@ -24,6 +24,7 @@ basic:
   default_locale:
     default: 'en'
     enum: 'LocaleSiteSetting'
+    refresh: true
   allow_user_locale:
     client: true
     default: false
@@ -180,6 +181,7 @@ posting:
   allow_uncategorized_topics:
     client: true
     default: true
+    refresh: true
   allow_duplicate_topic_titles: false
   min_title_similar_length:
     client: true
@@ -269,6 +271,7 @@ files:
   authorized_extensions:
     client: true
     default: '.jpg|.jpeg|.png|.gif'
+    refresh: true
   crawl_images:
     default:
       test: false
