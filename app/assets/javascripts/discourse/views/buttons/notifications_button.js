@@ -23,7 +23,7 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
       ['WATCHING', 'watching'],
       ['TRACKING', 'tracking'],
       ['REGULAR', 'regular'],
-      ['MUTE', 'muted']
+      ['MUTED', 'muted']
     ], function(pair) {
 
       if (postfix === '_pm' && pair[1] === 'regular') { return; }
@@ -42,7 +42,7 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
       switch (this.get('topic.details.notification_level')) {
         case Discourse.Topic.NotificationLevel.WATCHING: return 'watching';
         case Discourse.Topic.NotificationLevel.TRACKING: return 'tracking';
-        case Discourse.Topic.NotificationLevel.MUTE: return 'muted';
+        case Discourse.Topic.NotificationLevel.MUTED: return 'muted';
         default: return 'regular';
       }
     }).call(this);

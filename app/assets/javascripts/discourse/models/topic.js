@@ -313,7 +313,7 @@ Discourse.Topic.reopenClass({
     WATCHING: 3,
     TRACKING: 2,
     REGULAR: 1,
-    MUTE: 0
+    MUTED: 0
   },
 
   createActionSummary: function(result) {

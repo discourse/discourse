@@ -11,21 +11,33 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     return Discourse.SiteSettings.allow_uploaded_avatars;
   }.property(),
 
+  allowUserLocale: function() {
+    return Discourse.SiteSettings.allow_user_locale;
+  }.property(),
+
   // By default we haven't saved anything
   saved: false,
 
+  newNameInput: null,
+
   saveDisabled: function() {
     if (this.get('saving')) return true;
-    if (Discourse.SiteSettings.enable_names && this.blank('name')) return true;
+    if (Discourse.SiteSettings.enable_names && this.blank('newNameInput')) return true;
     if (this.blank('email')) return true;
     return false;
-  }.property('saving', 'name', 'email'),
+  }.property('saving', 'newNameInput', 'email'),
 
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
 
   canEditName: function() {
     return Discourse.SiteSettings.enable_names;
+  }.property(),
+
+  availableLocales: function() {
+    return Discourse.SiteSettings.available_locales.split('|').map( function(s) {
+      return {name: s, value: s};
+    });
   }.property(),
 
   digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
@@ -60,6 +72,7 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
 
       // Cook the bio for preview
       var model = this.get('model');
+      model.set('name', this.get('newNameInput'));
       return model.save().then(function() {
         // model was saved
         self.set('saving', false);

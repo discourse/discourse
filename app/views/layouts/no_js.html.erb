@@ -24,6 +24,11 @@
               <div class="title span13">
                 <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
               </div>
+              <% unless current_user %>
+                <div class='panel clearfix'>
+                  <a href="/login" class='btn btn-primary btn-small'><%= I18n.t('log_in') %></a>
+                </div>
+              <% end %>
             </div>
           </div>
         </div>

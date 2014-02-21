@@ -28,7 +28,7 @@ Discourse.addInitializer(function() {
 
   Discourse.set("isReadOnly", Discourse.Site.currentProp("is_readonly"));
 
-  Discourse.MessageBus.subscribe("/global/read-only", function (enabled) {
+  Discourse.MessageBus.subscribe("/site/read-only", function (enabled) {
     Discourse.set("isReadOnly", enabled);
     if (enabled) {
       if (!Discourse.User.currentProp("hideReadOnlyAlert")) {

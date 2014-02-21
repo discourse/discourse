@@ -11,8 +11,8 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
     return this.modelFor('user');
   },
 
-  setupController: function(controller, model) {
-    controller.set('model', model);
+  setupController: function(controller, user) {
+    controller.setProperties({ model: user, newNameInput: user.get('name') });
     this.controllerFor('user').set('indexStream', false);
   },
 

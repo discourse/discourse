@@ -11,7 +11,7 @@ class ScreenedIpAddressSerializer < ApplicationSerializer
   end
 
   def ip_address
-    object.ip_address.try(:to_s)
+    object.ip_address_with_mask
   end
 
 end

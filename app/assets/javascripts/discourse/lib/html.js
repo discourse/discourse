@@ -50,7 +50,7 @@ Discourse.HTML = {
         restricted = Em.get(category, 'read_restricted'),
         html = "<a href=\"" + Discourse.getURL("/category/") + Discourse.Category.slugFor(category) + "\" ";
 
-    html += "class=\"badge-category" + (restricted ? ' restricted' : '' ) + "\" ";
+    html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) + "\" ";
 
     // Add description if we have it
     if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";

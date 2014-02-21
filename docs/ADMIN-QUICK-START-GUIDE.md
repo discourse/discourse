@@ -25,7 +25,7 @@ The admin dashboard at `/admin` is a useful place to check often. If problems ar
 
 ### Enable Twitter Logins
 
-1. From the Administrative console above, enter **Site Settings**.
+1. From the Admin console, visit User Settings, by clicking **Settings**, then **User**.
 2. Scroll down to the two text fields named:
 
   `twitter_consumer_key`
@@ -36,7 +36,7 @@ The admin dashboard at `/admin` is a useful place to check often. If problems ar
 
 ### Enable Facebook Logins
 
-1. From the Administrative console above, enter **Site Settings**.
+1. From the Admin console, visit User Settings, by clicking **Settings**, then **User**.
 2. Scroll down to the two text fields named:
 
   `facebook_app_id`
@@ -47,7 +47,7 @@ The admin dashboard at `/admin` is a useful place to check often. If problems ar
 
 ### Enable GitHub Logins
 
-1. From the Administrative console above, enter **Site Settings**.
+1. From the Admin console, visit User Settings, by clicking **Settings**, then **User**.
 2. Scroll down to the two text fields named:
 
   `github_client_id`

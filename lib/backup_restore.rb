@@ -22,7 +22,7 @@ module BackupRestore
   def self.rollback!
     raise BackupRestore::OperationRunningError if BackupRestore.is_operation_running?
     if can_rollback?
-      rename_schema("backup", "public")
+      move_tables_between_schemas("backup", "public")
       after_fork
     end
   end
@@ -75,15 +75,43 @@ module BackupRestore
     User.exec_sql("SELECT 1 FROM pg_namespace WHERE nspname = 'backup'").count > 0
   end
 
-  def self.rename_schema(old_name, new_name)
-    sql = <<-SQL
-      BEGIN;
-        DROP SCHEMA IF EXISTS #{new_name} CASCADE;
-        ALTER SCHEMA #{old_name} RENAME TO #{new_name};
-      COMMIT;
-    SQL
+  def self.move_tables_between_schemas(source, destination)
+    User.exec_sql(move_tables_between_schemas_sql(source, destination))
+  end
 
-    User.exec_sql(sql)
+  def self.move_tables_between_schemas_sql(source, destination)
+    # TODO: Postgres 9.3 has "CREATE SCHEMA schema IF NOT EXISTS;"
+    <<-SQL
+      DO $$DECLARE row record;
+      BEGIN
+        -- create "destination" schema if it does not exists already
+        -- NOTE: DROP & CREATE SCHEMA is easier, but we don't wont to drop the public schema
+        -- ortherwise extensions (like hstore & pg_trgm) won't work anymore
+        IF NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '#{destination}')
+        THEN
+          CREATE SCHEMA #{destination};
+        END IF;
+        -- move all "source" tables to "destination" schema
+        FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = '#{source}'
+        LOOP
+          EXECUTE 'ALTER TABLE #{source}.' || quote_ident(row.tablename) || ' SET SCHEMA #{destination};';
+        END LOOP;
+      END$$;
+    SQL
+  end
+
+  DatabaseConfiguration = Struct.new(:host, :username, :password, :database)
+
+  def self.database_configuration
+    if Rails.env.production?
+      conn = RailsMultisite::ConnectionManagement
+      db_conf = DatabaseConfiguration.new(conn.current_host, conn.current_username, conn.current_password, conn.current_db)
+    else
+      db = Rails.configuration.database_configuration[Rails.env]
+      db_conf = DatabaseConfiguration.new(db["host"], db["username"], db["password"], db["database"])
+    end
+    db_conf.username ||= ENV["USER"] || "postgres"
+    db_conf
   end
 
   private

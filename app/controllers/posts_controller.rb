@@ -64,7 +64,7 @@ class PostsController < ApplicationController
     post = post.first
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
-    if !guardian.can_edit?(post) && post.user_id == current_user.id && post.edit_time_limit_expired?
+    if too_late_to(:edit, post)
       render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
       return
     end
@@ -119,7 +119,9 @@ class PostsController < ApplicationController
   end
 
   def by_number
-    @post = Post.where(topic_id: params[:topic_id], post_number: params[:post_number]).first
+    finder = Post.where(topic_id: params[:topic_id], post_number: params[:post_number])
+    finder = finder.with_deleted if current_user.try(:staff?)
+    @post = finder.first
     guardian.ensure_can_see!(@post)
     @post.revert_to(params[:version].to_i) if params[:version].present?
     render_post_json(@post)
@@ -134,7 +136,7 @@ class PostsController < ApplicationController
   def destroy
     post = find_post_from_params
 
-    if !guardian.can_delete_post?(post) && post.user_id == current_user.id && post.edit_time_limit_expired?
+    if too_late_to(:delete_post, post)
       render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
       return
     end
@@ -267,6 +269,10 @@ class PostsController < ApplicationController
         # TODO this does not feel right, we should name what meta_data is allowed
         whitelisted[:meta_data] = params[:meta_data]
     end
+  end
+
+  def too_late_to(action, post)
+    !guardian.send("can_#{action}?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
   end
 
 end

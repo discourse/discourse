@@ -31,7 +31,10 @@ Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.OpenComposer, {
     },
 
     changeBulkTemplate: function(w) {
-      this.render(w, {into: 'topicBulkActions', outlet: 'bulkOutlet', controller: 'topicBulkActions'});
+      var controllerName = w.replace('modal/', ''),
+          factory = this.container.lookupFactory('controller:' + controllerName);
+
+      this.render(w, {into: 'topicBulkActions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topicBulkActions'});
     },
 
     showBulkActions: function() {

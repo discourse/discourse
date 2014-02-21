@@ -20,6 +20,7 @@ en:
   posts: "posts"
   loading: "Loading"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  log_in: "Log In"
 
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
@@ -524,8 +525,7 @@ en:
       description: "Your site's FAQ. Leave blank for the default FAQ."
     login_required_welcome_message:
       title: "Login Required: Welcome Message"
-      description: "Welcome message that is displayed to logged out users when
-        the 'login required' setting is enabled."
+      description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
     tos_user_content_license:
       title: "Terms of Service: Content License"
       description: "The text for the Content License section of the Terms of Service."
@@ -537,19 +537,20 @@ en:
       description: "The text displayed for unauthorized users when login is required on the site."
     head:
       title: "HTML head"
-      description: "HTML that will be inserted inside the <head></head> tags"
+      description: "HTML that will be inserted inside the <head></head> tags."
     top:
       title: "Top of the pages"
-      description: "HTML that will be added at the top of every pages (after the header, before the navigation or the topic title)."
+      description: "HTML that will be added at the top of every page (after the header, before the navigation or the topic title)."
     bottom:
       title: "Bottom of the pages"
-      description: "HTML that will be added at the bottom of every pages"
+      description: "HTML that will be added at the bottom of every page."
     tos_signup_form_message:
       title: "Signup Form: Terms of Service Message"
       description: "The message that will appear beside a checkbox on the signup form if the tos_accept_required site setting is enabled."
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
+    allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum post length in characters"
     min_private_message_post_length: "Minimum post length in characters for private messages"
     max_post_length: "Maximum post length in characters"
@@ -800,6 +801,7 @@ en:
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before we consider it dominating."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists"
+    min_posts_for_search_in_topic: "Disable search within topic if topics have less than minimum number posts"
 
     enable_names: "Allow users to show their full names"
     display_name_on_posts: "Also show a user's full name on their posts"
@@ -828,6 +830,7 @@ en:
     invitee_accepted: "%{display_username} accepted your invitation"
 
   search:
+    within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: 'Categories'
       topic: 'Topics'

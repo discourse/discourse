@@ -325,6 +325,11 @@ en:
         enter_email: 'Username found. Enter matching email.'
         prefilled: "Email matches this registered username."
 
+      locale:
+        title: "Interface language"
+        instructions: "The language used by the forum interface. It will change when you refresh the page."
+        default: "(default)"
+
       password_confirmation:
         title: "Password Again"
 
@@ -416,7 +421,7 @@ en:
     close: "Close"
     assets_changed_confirm: "Discourse has been updated, would you like to refresh to get the latest version?"
     read_only_mode:
-      enabled: "An administrator has enabled read-only mode. You can continue to browse the site but interations won't work properly."
+      enabled: "An administrator has enabled read-only mode. You can continue to browse the site but interactions won't work properly."
       login_disabled: "Login is disabled while the site is in read only mode."
 
     learn_more: "learn more..."
@@ -627,6 +632,7 @@ en:
         actions: "Bulk Actions"
         change_category: "Change Category"
         close_topics: "Close Topics"
+        notification_level: "Change Notification Level"
         selected:
           one: "You have selected <b>1</b> topic."
           other: "You have selected <b>{{count}}</b> topics."

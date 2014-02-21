@@ -1,28 +1,33 @@
 class GroupsController < ApplicationController
 
   def show
-    group = Group.where(name: params.require(:id)).first
-    guardian.ensure_can_see!(group)
-    render_serialized(group, BasicGroupSerializer)
+    render_serialized(find_group(:id), BasicGroupSerializer)
   end
 
-  def posts_count
-    group = Group.where(name: params.require(:group_id)).first
-    guardian.ensure_can_see!(group)
-    render json: {posts_count: group.posts_for(guardian).count}
+  def counts
+    group = find_group(:group_id)
+    render json: {counts: { posts: group.posts_for(guardian).count,
+                            members: group.users.count } }
   end
 
   def posts
-    group = Group.where(name: params.require(:group_id)).first
-    guardian.ensure_can_see!(group)
+    group = find_group(:group_id)
     posts = group.posts_for(guardian, params[:before_post_id]).limit(20)
     render_serialized posts.to_a, GroupPostSerializer
   end
 
   def members
-    group = Group.where(name: params.require(:group_id)).first
-    guardian.ensure_can_see!(group)
+    group = find_group(:group_id)
     render_serialized(group.users.order('username_lower asc').limit(200).to_a, GroupUserSerializer)
+  end
+
+  private
+
+  def find_group(param_name)
+    name = params.require(param_name)
+    group = Group.where("lower(name) = ?", name.downcase).first
+    guardian.ensure_can_see!(group)
+    group
   end
 
 end

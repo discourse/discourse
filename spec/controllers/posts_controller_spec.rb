@@ -1,5 +1,46 @@
 require 'spec_helper'
 
+shared_examples 'finding and showing post' do
+  let(:user) { log_in }
+  let(:post) { Fabricate(:post, user: user) }
+
+  it 'ensures the user can see the post' do
+    Guardian.any_instance.expects(:can_see?).with(post).returns(false)
+    xhr :get, action, params
+    response.should be_forbidden
+  end
+
+  it 'succeeds' do
+    xhr :get, action, params
+    response.should be_success
+  end
+
+  context "deleted post" do
+
+    before do
+      post.trash!(user)
+    end
+
+    it "can't find deleted posts as an anonymous user" do
+      xhr :get, action, params
+      response.should be_forbidden
+    end
+
+    it "can't find deleted posts as a regular user" do
+      log_in(:user)
+      xhr :get, action, params
+      response.should be_forbidden
+    end
+
+    it "can find posts as a moderator" do
+      log_in(:moderator)
+      xhr :get, action, params
+      response.should be_success
+    end
+
+  end
+end
+
 describe PostsController do
 
   describe 'short_link' do
@@ -12,43 +53,16 @@ describe PostsController do
   end
 
   describe 'show' do
-    let(:user) { log_in }
-    let(:post) { Fabricate(:post, user: user) }
-
-    it 'ensures the user can see the post' do
-      Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-      xhr :get, :show, id: post.id
-      response.should be_forbidden
+    include_examples 'finding and showing post' do
+      let(:action) { :show }
+      let(:params) { {id: post.id} }
     end
+  end
 
-    it 'suceeds' do
-      xhr :get, :show, id: post.id
-      response.should be_success
-    end
-
-    context "deleted post" do
-
-      before do
-        post.trash!(user)
-      end
-
-      it "can't find deleted posts as an anonymous user" do
-        xhr :get, :show, id: post.id
-        response.should be_forbidden
-      end
-
-      it "can't find deleted posts as a regular user" do
-        log_in(:user)
-        xhr :get, :show, id: post.id
-        response.should be_forbidden
-      end
-
-      it "can find posts as a moderator" do
-        log_in(:moderator)
-        xhr :get, :show, id: post.id
-        response.should be_success
-      end
-
+  describe 'by_number' do
+    include_examples 'finding and showing post' do
+      let(:action) { :by_number }
+      let(:params) { {topic_id: post.topic_id, post_number: post.post_number} }
     end
   end
 
@@ -62,7 +76,7 @@ describe PostsController do
       response.should be_forbidden
     end
 
-    it 'suceeds' do
+    it 'succeeds' do
       Post.any_instance.expects(:reply_history)
       xhr :get, :reply_history, id: post.id
       response.should be_success
@@ -78,6 +92,16 @@ describe PostsController do
 
       let(:user) { log_in(:moderator) }
       let(:post) { Fabricate(:post, user: user, post_number: 2) }
+
+      it 'does not allow to destroy when edit time limit expired' do
+        Guardian.any_instance.stubs(:can_delete_post?).with(post).returns(false)
+        Post.any_instance.stubs(:edit_time_limit_expired?).returns(true)
+
+        xhr :delete, :destroy, id: post.id
+
+        response.status.should == 422
+        JSON.parse(response.body)['errors'].should include(I18n.t('too_late_to_edit'))
+      end
 
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_delete?).with(post).returns(false)
@@ -193,6 +217,16 @@ describe PostsController do
           post: { raw: 'edited body', edit_reason: 'typo' },
           image_sizes: { 'http://image.com/image.jpg' => {'width' => 123, 'height' => 456} },
         }
+      end
+
+      it 'does not allow to update when edit time limit expired' do
+        Guardian.any_instance.stubs(:can_edit?).with(post).returns(false)
+        Post.any_instance.stubs(:edit_time_limit_expired?).returns(true)
+
+        xhr :put, :update, update_params
+
+        response.status.should == 422
+        JSON.parse(response.body)['errors'].should include(I18n.t('too_late_to_edit'))
       end
 
       it 'passes the image sizes through' do
