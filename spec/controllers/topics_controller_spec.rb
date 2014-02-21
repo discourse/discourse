@@ -345,7 +345,7 @@ describe TopicsController do
       end
 
       it 'deletes the forum topic user record' do
-        PostTiming.expects(:destroy_for).with(@user.id, @topic.id)
+        PostTiming.expects(:destroy_for).with(@user.id, [@topic.id])
         xhr :delete, :destroy_timings, topic_id: @topic.id
       end
 

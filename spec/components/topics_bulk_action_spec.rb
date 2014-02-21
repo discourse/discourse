@@ -27,7 +27,7 @@ describe TopicsBulkAction do
     end
 
     context "when the user can't edit the topic" do
-      it "doesn't change the category" do 
+      it "doesn't change the category" do
         Guardian.any_instance.expects(:can_edit?).returns(false)
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_name: category.name)
         topic_ids = tba.perform!
@@ -38,10 +38,20 @@ describe TopicsBulkAction do
     end
   end
 
+  describe "reset_read" do
+    let(:topic) { Fabricate(:topic) }
+
+    it "delegates to PostTiming.destroy_for" do
+      tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'reset_read')
+      PostTiming.expects(:destroy_for).with(topic.user_id, [topic.id])
+      topic_ids = tba.perform!
+    end
+  end
+
   describe "change_notification_level" do
     let(:topic) { Fabricate(:topic) }
 
-    context "when the user can edit the topic" do
+    context "when the user can see the topic" do
       it "updates the notification level" do
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_notification_level', notification_level_id: 2)
         topic_ids = tba.perform!
@@ -50,7 +60,7 @@ describe TopicsBulkAction do
       end
     end
 
-    context "when the user can't edit the topic" do
+    context "when the user can't see the topic" do
       it "doesn't change the level" do
         Guardian.any_instance.expects(:can_see?).returns(false)
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_notification_level', notification_level_id: 2)
