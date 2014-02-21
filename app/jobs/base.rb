@@ -101,6 +101,7 @@ module Jobs
         end
 
       total_db_time = 0
+      exceptions = []
       dbs.each do |db|
         begin
           thread_exception = nil
@@ -137,8 +138,15 @@ module Jobs
           end
           t.join
 
-          raise thread_exception if thread_exception
+          exceptions << thread_exception
         end
+      end
+
+      if exceptions.length > 0
+        exceptions[1..-1].each do |exception|
+          Discourse.handle_exception(exception, opts)
+        end
+        raise exceptions[0]
       end
 
     ensure
