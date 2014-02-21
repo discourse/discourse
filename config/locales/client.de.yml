@@ -922,7 +922,7 @@ de:
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>haben es den Moderatoren gemeldet</a>"
           notify_user: "{{icons}} haben eine private Nachricht gesendet"
           notify_user_with_url: "{{icons}} haben eine  <a href='{{postUrl}}'>private Nachricht</a> gesendet"
-          bookmark: "{{icons}} haben dies als Lesezeichen"
+          bookmark: "{{icons}} haben das als Lesezeichen"
           like: "{{icons}} gefällt dies"
           vote: "{{icons}} haben dafür gestimmt"
         by_you:
@@ -1143,20 +1143,20 @@ de:
         help: "Aktuelle Themen in der Kategorie {{categoryName}}"
       top:
         title: "Topliste"
-        help: "Eine auswahl der besten Themen im letzten Jahr, Monat, Woche oder Tag"
+        help: "Eine Auswahl der besten Themen im letzten Jahr, Monat, Woche oder Tag"
         yearly:
-          title: "Top Jährlich"
+          title: "Top jährlich"
         monthly:
-          title: "Top Monatlich"
+          title: "Top monatlich"
         weekly:
-          title: "Top Wöchtenlich"
+          title: "Top wöchtenlich"
         daily:
-          title: "Top Täglich"
+          title: "Top täglich"
         this_year: "Dieses Jahr"
         this_month: "Dieser Monat"
         this_week: "Diese Woche"
         today: "Heute"
-        other_periods: "weitere top-Themen"
+        other_periods: "weitere Top-Themen"
         redirect_reasons:
           new_user: "Willkommen! Weil du neu bist, dachten wir uns, du möchtest dir vielleicht erst die Top-Themen ansehen."
           not_seen_in_a_month: "Willkommen zurück! Möchtest du dir vielleicht die neuesten Top-Themen ansehen?"
@@ -1353,15 +1353,15 @@ de:
           actions:
             delete_user: "Benutzer löschen"
             change_trust_level: "Vertrauensstufe ändern"
-            change_site_setting: "Seiten Einstellungen ändern"
-            change_site_customization: "Seiten Anpassungen ändern"
-            delete_site_customization: "Seiten Anpassungen löschen"
+            change_site_setting: "Seiteneinstellungen ändern"
+            change_site_customization: "Seitenanpassungen ändern"
+            delete_site_customization: "Seitenanpassungen löschen"
             suspend_user: "gesperrter Benutzer"
             unsuspend_user: "ungesperrter Benutzer"
         screened_emails:
-          title: "Geschützte Mails"
-          description: "Wen jemand ein Konto erstellt, werden die folgenden Mail überprüft und die Registration blockiert, oder eine andere Aktion ausgeführt."
-          email: "Mail Adresse"
+          title: "Geschützte E-Mails"
+          description: "Wen jemand ein Konto erstellt, werden die folgenden E-Mail überprüft und die Registration blockiert, oder eine andere Aktion ausgeführt."
+          email: "E-Mailadresse"
         screened_urls:
           title: "Geschützte URLs"
           description: "Die aufgelisteten URLs wurden in Beiträgen von identifizierten Spammen verwendet."
@@ -1468,7 +1468,7 @@ de:
         approve: 'Genehmigen'
         approved_by: "genehmigt von"
         approve_success: "Benutzer freigeschalten und Mail mit den Anweisungen zur Aktivierung gesendet."
-        approve_bulk_success: "Erfolg! Alle ausgewählten Benutzer wurden freigeschalten und
+        approve_bulk_success: "Erfolg! Alle ausgewählten Benutzer wurden freigeschaltet und
           benachrichtigt."
         time_read: "Lesezeit"
         delete: Benutzer löschen
@@ -1507,7 +1507,7 @@ de:
           topics_replied_to: "Auf Themen geantwortet"
           quality_content: "Qualitätscontent"
           reading: "Gelesen"
-          site_promotion: "Site Promotion"
+          site_promotion: "Werbung"
           flagged_posts: "Beiträge Geflaggt"
 
       site_content:
@@ -1530,13 +1530,13 @@ de:
           posting: 'Beiträge'
           email: 'E-Mail'
           files: 'Dateien'
-          trust: 'Trust Levels'
+          trust: 'Trust Level'
           security: 'Sicherheit'
           seo: 'SEO'
           spam: 'Spam'
-          rate_limits: 'Rate Limits'
-          developer: 'Developer'
-          embedding: "Embedding"
+          rate_limits: 'Abruflimits'
+          developer: 'Entwickler'
+          embedding: "Einbetten"
           uncategorized: 'Unkategorisiert'
 
     lightbox:
@@ -1576,7 +1576,7 @@ de:
         bookmark: '<b>b</b> Beitrag Bookmarken'
         edit: '<b>e</b> Beitrag editieren'
         delete: '<b>d</b> Beitrag löschen'
-        mark_muted: '<b>m</b> dann <b>m</b> Thema auf Ignirieren setzen'
+        mark_muted: '<b>m</b> dann <b>m</b> Thema auf Ignorieren setzen'
         mark_regular: '<b>m</b> dann <b>r</b> Thema auf normal zurücksetzen'
         mark_tracking: '<b>m</b> dann <b>t</b> Thema auf verfolgt setzen'
         mark_watching: '<b>m</b> dann <b>w</b> Thema auf beobachten setzen'
