@@ -60,7 +60,7 @@ module UserNotificationsHelper
     else
       # Otherwise, try just the first paragraph.
       para = first_paragraph_from(html)
-      raw Sanitize.clean(para, UserNotificationsHelper.sanitize_options)
+      raw Sanitize.clean(para.to_s, UserNotificationsHelper.sanitize_options)
     end
   end
 end
