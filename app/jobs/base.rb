@@ -138,7 +138,7 @@ module Jobs
           end
           t.join
 
-          exceptions << thread_exception
+          exceptions << thread_exception if thread_exception
         end
       end
 
