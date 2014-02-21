@@ -31,15 +31,19 @@ basic:
   ga_tracking_code:
     client: true
     default: ''
+    trim: true
   ga_domain_name:
     client: true
     default: ''
+    trim: true
   ga_universal_tracking_code:
     client: true
     default: ''
+    trim: true
   ga_universal_domain_name:
     client: true
     default: 'auto'
+    trim: true
   category_featured_topics:
     client: true
     default: 3
@@ -122,20 +126,34 @@ users:
   enable_twitter_logins:
     client: true
     default: true
-  twitter_consumer_key: ''
-  twitter_consumer_secret: ''
+  twitter_consumer_key:
+    default: ''
+    trim: true
+  twitter_consumer_secret:
+    default: ''
+    trim: true
   enable_facebook_logins:
     client: true
     default: true
-  facebook_app_id: ''
-  facebook_app_secret: ''
+  facebook_app_id:
+    default: ''
+    trim: true
+  facebook_app_secret:
+    default: ''
+    trim: true
   enable_github_logins:
     client: true
     default: false
-  github_client_id: ''
-  github_client_secret: ''
+  github_client_id:
+    default: ''
+    trim: true
+  github_client_secret:
+    default: ''
+    trim: true
   enforce_global_nicknames: false
-  discourse_org_access_key: ''
+  discourse_org_access_key:
+    default: ''
+    trim: true
   invite_expiry_days: 4
   username_change_period: 3
   email_editable: true
@@ -248,7 +266,9 @@ email:
   reply_by_email_enabled: false
   reply_by_email_address: ''
   pop3s_polling_enabled: false
-  pop3s_polling_host: ''
+  pop3s_polling_host:
+    default: ''
+    trim: true
   pop3s_polling_port: 995
   pop3s_polling_username: ''
   pop3s_polling_password: ''
@@ -287,12 +307,18 @@ files:
   clean_orphan_uploads_grace_period_hours: 1
   purge_deleted_uploads_grace_period_days: 30
   enable_s3_uploads: false
-  s3_access_key_id: ''
-  s3_secret_access_key: ''
+  s3_access_key_id:
+    default: ''
+    trim: true
+  s3_secret_access_key:
+    default: ''
+    trim: true
   s3_region:
     default: ''
     enum: 'S3RegionSiteSetting'
-  s3_upload_bucket: ''
+  s3_upload_bucket:
+    default: ''
+    trim: true
   allow_profile_backgrounds:
     client: true
     default: true

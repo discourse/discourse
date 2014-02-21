@@ -46,6 +46,10 @@ module SiteSettingExtension
     @refresh_settings ||= []
   end
 
+  def trimmed_settings
+    @trimmed_settings ||= []
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
     mutex.synchronize do
@@ -56,11 +60,14 @@ module SiteSettingExtension
         enum = opts[:enum]
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
       end
-      if opts[:hidden] == true
+      if opts[:hidden]
         hidden_settings << name
       end
-      if opts[:refresh] == true
+      if opts[:refresh]
         refresh_settings << name
+      end
+      if opts[:trim]
+        trimmed_settings << name
       end
       setup_methods(name, current_value)
     end
@@ -215,8 +222,13 @@ module SiteSettingExtension
     refresh_settings.include?(name.to_sym)
   end
 
+  def should_trim?(name)
+    trimmed_settings.include?(name.to_sym)
+  end
+
   def set(name, value)
     if has_setting?(name)
+      value.strip! if should_trim?(name)
       self.send("#{name}=", value)
       Discourse.request_refresh! if requires_refresh?(name)
     else
