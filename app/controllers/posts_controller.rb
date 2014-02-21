@@ -114,17 +114,12 @@ class PostsController < ApplicationController
 
   def show
     @post = find_post_from_params
-    @post.revert_to(params[:version].to_i) if params[:version].present?
-    render_post_json(@post)
+    display_post(@post)
   end
 
   def by_number
-    finder = Post.where(topic_id: params[:topic_id], post_number: params[:post_number])
-    finder = finder.with_deleted if current_user.try(:staff?)
-    @post = finder.first
-    guardian.ensure_can_see!(@post)
-    @post.revert_to(params[:version].to_i) if params[:version].present?
-    render_post_json(@post)
+    @post = find_post_from_params_by_number
+    display_post(@post)
   end
 
   def reply_history
@@ -201,16 +196,6 @@ class PostsController < ApplicationController
 
   protected
 
-  def find_post_from_params
-    finder = Post.where(id: params[:id] || params[:post_id])
-    # Include deleted posts if the user is staff
-    finder = finder.with_deleted if current_user.try(:staff?)
-
-    post = finder.first
-    guardian.ensure_can_see!(post)
-    post
-  end
-
   def find_post_revision_from_params
     post_id = params[:id] || params[:post_id]
     revision = params[:revision].to_i
@@ -272,6 +257,29 @@ class PostsController < ApplicationController
 
   def too_late_to(action, post)
     !guardian.send("can_#{action}?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
+  end
+
+  def display_post(post)
+    post.revert_to(params[:version].to_i) if params[:version].present?
+    render_post_json(post)
+  end
+
+  def find_post_from_params
+    by_id_finder = Post.where(id: params[:id] || params[:post_id])
+    find_post_using(by_id_finder)
+  end
+
+  def find_post_from_params_by_number
+    by_number_finder = Post.where(topic_id: params[:topic_id], post_number: params[:post_number])
+    find_post_using(by_number_finder)
+  end
+
+  def find_post_using(finder)
+    # Include deleted posts if the user is staff
+    finder = finder.with_deleted if current_user.try(:staff?)
+    post = finder.first
+    guardian.ensure_can_see!(post)
+    post
   end
 
 end
