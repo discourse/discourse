@@ -6,7 +6,6 @@
 
 module Scheduler
   class Manager
-    extend Sidekiq::ExceptionHandler
     attr_accessor :random_ratio, :redis
 
 
@@ -41,13 +40,13 @@ module Scheduler
       def keep_alive
         @manager.keep_alive
       rescue => ex
-        Scheduler::Manager.handle_exception(ex)
+        Discourse.handle_exception(ex)
       end
 
       def reschedule_orphans
         @manager.reschedule_orphans!
       rescue => ex
-        Scheduler::Manager.handle_exception(ex)
+        Discourse.handle_exception(ex)
       end
 
       def process_queue
@@ -62,7 +61,7 @@ module Scheduler
           @mutex.synchronize { info.write! }
           klass.new.perform
         rescue => e
-          Scheduler::Manager.handle_exception(e)
+          Discourse.handle_exception(e)
           failed = true
         end
         duration = ((Time.now.to_f - start) * 1000).to_i
@@ -73,7 +72,7 @@ module Scheduler
           @mutex.synchronize { info.write! }
         end
       rescue => ex
-        Scheduler::Manager.handle_exception(ex)
+        Discourse.handle_exception(ex)
       ensure
         @running = false
       end

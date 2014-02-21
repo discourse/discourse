@@ -4,6 +4,21 @@ require_dependency 'auth/default_current_user_provider'
 
 module Discourse
 
+  class SidekiqExceptionHandler
+    extend Sidekiq::ExceptionHandler
+  end
+
+  def self.handle_exception(ex, context=nil, parent_logger = nil)
+    context ||= {}
+    parent_logger ||= SidekiqExceptionHandler
+
+    cm = RailsMultisite::ConnectionManagement
+    parent_logger.handle_exception(ex, {
+      current_db: cm.current_db,
+      current_hostname: cm.current_hostname
+    }.merge(context))
+  end
+
   # Expected less matches than what we got in a find
   class TooManyMatches < Exception; end
 
