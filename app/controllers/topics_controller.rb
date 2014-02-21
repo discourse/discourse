@@ -265,7 +265,15 @@ class TopicsController < ApplicationController
   end
 
   def bulk
-    topic_ids = params.require(:topic_ids).map {|t| t.to_i}
+    if params[:topic_ids].present?
+      topic_ids = params[:topic_ids].map {|t| t.to_i}
+    elsif params[:filter] == 'unread'
+      tq = TopicQuery.new(current_user)
+      topic_ids = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics.pluck(:id)
+    else
+      raise ActionController::ParameterMissing.new(:topic_ids)
+    end
+
     operation = params.require(:operation).symbolize_keys
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
     operator = TopicsBulkAction.new(current_user, topic_ids, operation)

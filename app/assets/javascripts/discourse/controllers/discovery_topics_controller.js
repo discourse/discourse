@@ -28,6 +28,12 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
       this.send('loading');
       Discourse.TopicList.find(filter).then(function(list) {
         self.setProperties({ model: list, selected: [] });
+
+        var tracking = Discourse.TopicTrackingState.current();
+        if (tracking) {
+          tracking.sync(list, filter);
+        }
+
         self.send('loadingComplete');
       });
     },
@@ -43,12 +49,13 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
           operation = { type: 'change_notification_level',
                         notification_level: Discourse.Topic.NotificationLevel.REGULAR };
 
+      var promise;
       if (selected.length > 0) {
-        Discourse.Topic.bulkOperation(selected, operation).then(function() {
-          self.send('refresh');
-        });
+        promise = Discourse.Topic.bulkOperation(selected, operation);
       } else {
+        promise = Discourse.Topic.bulkOperationByFilter(this.get('filter'), operation);
       }
+      promise.then(function() { self.send('refresh'); });
     }
   },
 
