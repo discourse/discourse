@@ -233,7 +233,7 @@ module Import
       log "Migrating the database..."
       Discourse::Application.load_tasks
       ENV["VERSION"] = @current_version.to_s
-      Rake::Task["db:migrate:up"].invoke
+      Rake::Task["db:migrate"].invoke
     end
 
     def reconnect_database

@@ -84,45 +84,32 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
     restore(filename)
   end
 
-  desc "migrate", "Make sure all the posts are pointing to the new domain"
-  option :from, type: :array, required: true, banner: "http://previous.domain.com"
-  option :database, default: "default", aliases: :db
-  def migrate
-    verbose = options[:verbose]
-    database = options[:database]
-    from = options[:from].map { |f| schemaless f }
+  desc "rollback", "Rollback to the previous working state"
+  def rollback
+    load_rails
+    require "backup_restore"
 
-    begin
-      puts "loading rails..." if verbose
-      load_rails
+    puts 'Rolling back if needed..'
+    BackupRestore.rollback!
+    puts 'Done.'
+  end
 
-      puts "connecting to #{database}..." if verbose
-      RailsMultisite::ConnectionManagement.establish_connection(db: database)
+  desc "enable_restore", "Allow restore operations"
+  def enable_restore
+    load_rails
+    require "site_setting"
 
-      base_url = schemaless Discourse.base_url_no_prefix
+    SiteSetting.allow_restore = true
+    puts 'Restore are now permitted. Disable them with `disable_restore`'
+  end
 
-      puts "updating #{Post.count} posts to #{base_url}" if verbose
-      Post.find_each do |post|
-        raw, cooked = post.raw.dup, post.cooked.dup
-        from.each do |f|
-          raw.gsub!(f, base_url)
-          cooked.gsub!(f, base_url)
-        end
-        if raw != post.raw || cooked != post.cooked
-          Post.where(id: post.id).update_all(raw: raw, cooked: cooked)
-          putc "#" if verbose
-        else
-          putc "."
-        end
-      end
+  desc "disable_restore", "Forbid restore operations"
+  def disable_restore
+    load_rails
+    require "site_setting"
 
-    rescue => e
-      puts "Cannot connect to database: #{database}"
-      puts e
-      puts e.backtrace.join("\n")
-    end
-
-    puts "", "done!" if verbose
+    SiteSetting.allow_restore = false
+    puts 'Restore are now forbidden. Enable them with `enable_restore`'
   end
 
   private
