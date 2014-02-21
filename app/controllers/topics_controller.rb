@@ -49,10 +49,6 @@ class TopicsController < ApplicationController
 
     redirect_to_correct_topic && return if slugs_do_not_match
 
-    # render workaround pseudo-static HTML page for old crawlers which ignores <noscript>
-    # (see http://meta.discourse.org/t/noscript-tag-and-some-search-engines/8078)
-    return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.key?('_escaped_fragment_'))
-
     track_visit_to_topic
 
     if should_track_visit_to_topic?

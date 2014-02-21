@@ -357,6 +357,10 @@ class User < ActiveRecord::Base
     posts.count
   end
 
+  def first_post
+    posts.order('created_at ASC').first
+  end
+
   def flags_given_count
     PostAction.where(user_id: id, post_action_type_id: PostActionType.flag_types.values).count
   end

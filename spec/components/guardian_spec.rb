@@ -1149,19 +1149,26 @@ describe Guardian do
     end
 
     shared_examples "can_delete_user examples" do
-      let(:deletable_user) { Fabricate.build(:user, created_at: 5.minutes.ago) }
+      it "is true if user is not an admin and has never posted" do
+        Guardian.new(actor).can_delete_user?(Fabricate.build(:user, created_at: 100.days.ago)).should == true
+      end
 
-      it "is true if user is not an admin and is not too old" do
-        Guardian.new(actor).can_delete_user?(deletable_user).should == true
+      it "is true if user is not an admin and first post is not too old" do
+        user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:first_post).returns(Fabricate.build(:post, created_at: 9.days.ago))
+        SiteSetting.stubs(:delete_user_max_post_age).returns(10)
+        Guardian.new(actor).can_delete_user?(user).should == true
       end
 
       it "is false if user is an admin" do
         Guardian.new(actor).can_delete_user?(another_admin).should == false
       end
 
-      it "is false if user is too old" do
-        SiteSetting.stubs(:delete_user_max_age).returns(7)
-        Guardian.new(actor).can_delete_user?(Fabricate(:user, created_at: 8.days.ago)).should == false
+      it "is false if user's first post is too old" do
+        user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:first_post).returns(Fabricate.build(:post, created_at: 11.days.ago))
+        SiteSetting.stubs(:delete_user_max_post_age).returns(10)
+        Guardian.new(actor).can_delete_user?(user).should == false
       end
     end
 
@@ -1190,14 +1197,23 @@ describe Guardian do
     end
 
     shared_examples "can_delete_all_posts examples" do
-      it "is true if user is newer than delete_user_max_age days old" do
-        SiteSetting.expects(:delete_user_max_age).returns(10)
-        Guardian.new(actor).can_delete_all_posts?(Fabricate.build(:user, created_at: 9.days.ago)).should be_true
+      it "is true if user has no posts" do
+        SiteSetting.stubs(:delete_user_max_post_age).returns(10)
+        Guardian.new(actor).can_delete_all_posts?(Fabricate.build(:user, created_at: 100.days.ago)).should be_true
       end
 
-      it "is false if user is older than delete_user_max_age days old" do
-        SiteSetting.expects(:delete_user_max_age).returns(10)
-        Guardian.new(actor).can_delete_all_posts?(Fabricate.build(:user, created_at: 11.days.ago)).should be_false
+      it "is true if user's first post is newer than delete_user_max_post_age days old" do
+        user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:first_post).returns(Fabricate.build(:post, created_at: 9.days.ago))
+        SiteSetting.stubs(:delete_user_max_post_age).returns(10)
+        Guardian.new(actor).can_delete_all_posts?(user).should be_true
+      end
+
+      it "is false if user's first post is older than delete_user_max_post_age days old" do
+        user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:first_post).returns(Fabricate.build(:post, created_at: 11.days.ago))
+        SiteSetting.stubs(:delete_user_max_post_age).returns(10)
+        Guardian.new(actor).can_delete_all_posts?(user).should be_false
       end
 
       it "is false if user is an admin" do

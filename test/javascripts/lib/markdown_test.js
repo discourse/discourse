@@ -379,5 +379,11 @@ test("urlAllowed", function() {
   allowed("http://eviltrout.com/evil/trout", "allows full urls");
   allowed("https://eviltrout.com/evil/trout", "allows https urls");
   allowed("//eviltrout.com/evil/trout", "allows protocol relative urls");
+});
 
+test("images", function() {
+
+  cooked("[![folksy logo](http://folksy.com/images/folksy-colour.png)](http://folksy.com/)",
+         "<p><a href=\"http://folksy.com/\"><img src=\"http://folksy.com/images/folksy-colour.png\" alt=\"folksy logo\"/></a></p>",
+         "It allows images with links around them");
 });

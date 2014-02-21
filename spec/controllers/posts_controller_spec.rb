@@ -16,7 +16,6 @@ shared_examples 'finding and showing post' do
   end
 
   context "deleted post" do
-
     before do
       post.trash!(user)
     end
@@ -37,7 +36,6 @@ shared_examples 'finding and showing post' do
       xhr :get, action, params
       response.should be_success
     end
-
   end
 end
 
@@ -67,19 +65,26 @@ describe PostsController do
   end
 
   describe 'reply_history' do
-    let(:user) { log_in }
-    let(:post) { Fabricate(:post, user: user) }
-
-    it 'ensures the user can see the post' do
-      Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-      xhr :get, :reply_history, id: post.id
-      response.should be_forbidden
+    include_examples 'finding and showing post' do
+      let(:action) { :reply_history }
+      let(:params) { {id: post.id} }
     end
 
-    it 'succeeds' do
+    it 'asks post for reply history' do
       Post.any_instance.expects(:reply_history)
       xhr :get, :reply_history, id: post.id
-      response.should be_success
+    end
+  end
+
+  describe 'replies' do
+    include_examples 'finding and showing post' do
+      let(:action) { :replies }
+      let(:params) { {post_id: post.id} }
+    end
+
+    it 'asks post for replies' do
+      Post.any_instance.expects(:replies)
+      xhr :get, :replies, post_id: post.id
     end
   end
 
@@ -148,7 +153,6 @@ describe PostsController do
     end
   end
 
-
   describe 'destroy_many' do
     it 'raises an exception when not logged in' do
       lambda { xhr :delete, :destroy_many, post_ids: [123, 345] }.should raise_error(Discourse::NotLoggedIn)
@@ -200,7 +204,6 @@ describe PostsController do
     end
 
   end
-
 
   describe 'edit a post' do
 

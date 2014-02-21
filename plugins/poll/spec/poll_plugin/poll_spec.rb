@@ -18,6 +18,13 @@ describe PollPlugin::Poll do
     expect(poll.options).to eq(["Chitoge", "Onodera"])
   end
 
+  it "should fall back to using the first list if [poll] markup is not present" do
+    topic = create_topic(title: "This is not a poll topic")
+    post = create_post(topic: topic, raw: "Pick one.\n\n* Chitoge\n* Onodera")
+    poll = PollPlugin::Poll.new(post)
+    expect(poll.options).to eq(["Chitoge", "Onodera"])
+  end
+
   it "should get details correctly" do
     expect(poll.details).to eq({"Chitoge" => 0, "Onodera" => 0})
   end

@@ -35,7 +35,7 @@ if Sidekiq.server?
         manager.tick
       rescue => e
         # the show must go on
-        Scheduler::Manager.handle_exception(e)
+        Discourse.handle_exception(e)
       end
       sleep 1
     end

@@ -1572,8 +1572,11 @@ en:
         delete: "Delete User"
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_forbidden:
-          one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
-          other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
+          one: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} day old can't be deleted.)"
+          other: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} days old can't be deleted.)"
+        cant_delete_all_posts:
+          one: "Can't delete all posts. Some posts are older than %{count} day old."
+          other: "Can't delete all posts. Some posts are older than %{count} days old."
         delete_confirm: "Are you SURE you want to delete this user? This action is permanent!"
         delete_and_block: "<b>Yes</b>, and <b>block</b> future signups from this email and IP address"
         delete_dont_block: "<b>Yes</b>, just delete the user"

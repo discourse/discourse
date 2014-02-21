@@ -116,5 +116,24 @@ describe Discourse do
 
   end
 
+  context "#handle_exception" do
+    class TempLogger
+      attr_accessor :exception, :context
+      def handle_exception(exception, context)
+        self.exception = exception
+        self.context = context
+      end
+    end
+    
+    it "should not fail when called" do
+      logger = TempLogger.new
+      exception = StandardError.new
+
+      Discourse.handle_exception(exception, nil, logger)
+      logger.exception.should == exception
+      logger.context.keys.should == [:current_db, :current_hostname]
+    end
+  end
+
 end
 
