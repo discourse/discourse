@@ -34,7 +34,12 @@ function buildTopicRoute(filter) {
         Discourse.set('title', I18n.t('filters.with_topics', {filter: filterText}));
       }
 
-      this.controllerFor('discoveryTopics').setProperties({ model: model, category: null, period: period });
+      this.controllerFor('discoveryTopics').setProperties({
+        model: model,
+        category: null,
+        period: period,
+        selected: [],
+      });
 
       // If there's a draft, open the create topic composer
       if (model.draft) {
@@ -108,6 +113,7 @@ function buildCategoryRoute(filter, params) {
         model: topics,
         category: model,
         period: period,
+        selected: [],
         noSubcategories: params && !!params.no_subcategories
       });
 

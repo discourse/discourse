@@ -4,6 +4,10 @@
   </div>
 {{/if}}
 
+{{#if showDismissRead}}
+  <button class='btn dismiss-read' {{action dismissRead}}>{{i18n topics.bulk.dismiss_read}}</button>
+{{/if}}
+
 <div class='contents'>
   {{#if showTable}}
     <table id='topic-list'>

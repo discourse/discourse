@@ -628,6 +628,7 @@ en:
 
     topics:
       bulk:
+        dismiss_read: "Dismiss Read"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
         change_category: "Change Category"

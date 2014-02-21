@@ -27,7 +27,7 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
 
       this.send('loading');
       Discourse.TopicList.find(filter).then(function(list) {
-        self.set('model', list);
+        self.setProperties({ model: list, selected: [] });
         self.send('loadingComplete');
       });
     },
@@ -35,12 +35,31 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
     toggleBulkSelect: function() {
       this.toggleProperty('bulkSelectEnabled');
       this.get('selected').clear();
+    },
+
+    dismissRead: function() {
+      var self = this,
+          selected = this.get('selected'),
+          operation = { type: 'change_notification_level',
+                        notification_level: Discourse.Topic.NotificationLevel.REGULAR };
+
+      if (selected.length > 0) {
+        Discourse.Topic.bulkOperation(selected, operation).then(function() {
+          self.send('refresh');
+        });
+      } else {
+      }
     }
   },
+
 
   topicTrackingState: function() {
     return Discourse.TopicTrackingState.current();
   }.property(),
+
+  showDismissRead: function() {
+    return this.get('filter') === 'unread' && this.get('topics.length') > 0;
+  }.property('filter', 'topics.length'),
 
   canBulkSelect: Em.computed.alias('currentUser.staff'),
   hasTopics: Em.computed.gt('topics.length', 0),
