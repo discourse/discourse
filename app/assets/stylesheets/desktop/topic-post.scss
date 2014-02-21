@@ -3,16 +3,15 @@
 @import "common/foundation/helpers";
 
 .gap {
-  background-color: $primary_lightest;
+  background-color: lighten($secondary_background_color, 76%);
   padding: 5px 10px;
-  margin-bottom: 10px;
-  color: $primary_medium;
+  color: lighten($primary_text_color, 35%);
   cursor: pointer;
   text-align: center;
-  width: 820px;
+  width: 822px;
 
   &:hover {
-    background-color: $primary_lightest;
+    background-color: lighten($secondary_background_color, 76%);
   }
 
   @include medium-width {
@@ -49,10 +48,10 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   left: 120px;
   z-index: 400;
   padding: 5px 12px;
-  border: 1px solid lighten($primary_light, 20%);
+  border: 1px solid lighten($primary_border_color, 10%);
   font-size: 12px;
   margin-left: -8px;
-  background: $secondary;
+  background: $primary_background_color;
 }
 
 .avoid-tab {
@@ -95,13 +94,13 @@ section.post-menu-area, .post-actions {
 
 nav.post-controls {
     padding: 0;
-    button {color: $primary_light;
+    button {color: lighten($primary_text_color, 50%);
     margin-right: 2px;
   }
 
   span.badge-posts {
     margin-right: 5px;
-    color: $primary_light;
+    color: lighten($primary_text_color, 50%);
   }
 
   .show-replies {
@@ -118,18 +117,18 @@ nav.post-controls {
 
   button.create {
     margin-right: 0;
-    color: $tertiary;
-    background: $tertiary_lightest;
+    color: $link-color;
+    background: $emphasis_background_color;
     padding: 8px 20px;
     margin-left: 10px;
 
-    &:hover {  color: $secondary;
-      background: $tertiary;
+    &:hover {  color: $tertiary_text_color;
+      background: $emphasis_text_color;
     }
 
     &:active {
-      background: $tertiary_lightest;
-    @include box-shadow(inset 0 1px 3px $primary_light);
+      background: $emphasis_background_color;
+    @include box-shadow(inset 0 1px 3px rgba($primary_shadow_color, .3));
 
     }
 
@@ -148,12 +147,12 @@ nav.post-controls {
     margin-left: 3px;
     transition: all linear 0.15s;
          &:hover {
-          background: lighten($primary_light, 20%);
-          color: $primary_medium;
+          background: lighten($secondary_background_color, 76%);
+          color: $primary_text_color;
         }
 
         &:active {
-            @include box-shadow(inset 0 1px 3px $primary_lightest);
+            @include box-shadow(inset 0 1px 3px rgba($primary_shadow_color, .4));
         }
 
         &.hidden {
@@ -164,12 +163,12 @@ nav.post-controls {
         }
 
         &.delete:hover {
-          background: $highlight_danger;
-          color: $secondary;
+          background: $warning_text_color;
+          color: $tertiary_text_color;
         }
 
-        &.like:hover {color: $heart;
-          background: $heart_light;
+        &.like:hover {color: $like_color;
+          background: $like_background_color;
         }
 
         &.bookmark {padding: 8px 11px; }
@@ -185,11 +184,11 @@ nav.post-controls {
             }
           }
           &.last-read {
-            color: $highlight_danger;
+            color: $warning_text_color;
           }
           &.bookmarked {
             &:before {
-              color: $tertiary;
+              color: $link-color;
             }
           }
         }
@@ -197,14 +196,14 @@ nav.post-controls {
   }
 
   .embedded-posts {
-    background: $primary_lightest;
-    .quote .title {background: $primary_lighter;}
-    blockquote {background: $primary_lighter;}
+    background: lighten($secondary_background_color, 76%);
+    .quote .title {background: lighten($secondary_background_color, 60%);}
+    blockquote {background: lighten($secondary_background_color, 60%);}
     &.bottom { margin-top: -11px;}
     .topic-meta-data h5 {margin: 5px;}
     .topic-meta-data-inside {
     margin: -3px 0 0 0;
-    color: $primary_light;
+    color: $secondary_text_color;
     }
     .topic-meta-data {padding-top: 20px;}
   }
@@ -227,10 +226,10 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  border: 1px solid lighten($primary_lighter, 10%);
+  border: 1px solid lighten($primary_border_color, 10%);
 
-  .buttons .btn {border: 1px solid $primary_lightest !important;
-    &:hover {border: 1px solid $primary_lighter !important;}
+  .buttons .btn {
+    &:hover {border: 1px solid $primary_border_color !important;}
   }
 
   .topic-links li {
@@ -239,13 +238,13 @@ a.star {
 
   h3 {
     margin-bottom: 4px;
-    color: $primary;
+    color: $primary_text_color;
     line-height: 23px;
   }
 
   h4 {
     margin: 0 0 3px 0;
-    color: $primary_medium;
+    color: $secondary_text_color;
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
@@ -296,7 +295,7 @@ a.star {
       line-height: 20px;
     }
     .number {
-      color: $tertiary_dark;
+      color: $link-color;
     }
     .avatar + a {
       float: left;
@@ -306,10 +305,10 @@ a.star {
   .links,
   .information {
     padding: 7px 14px;
-    color: $primary;
+    color: $primary_text_color;
   }
   .information {
-    border-top: 1px solid $primary_light;
+    border-top: 1px solid $primary_border_color;
   }
 
 
@@ -329,20 +328,19 @@ a.star {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid $primary_lighter;
-      border-left: 1px solid $primary_lighter;
+      border-bottom: 1px solid lighten($secondary_background_color, 76%);
       padding: 0 23px;
-      color: $primary;
-      background: $primary_lightest;
+      color: $primary_text_color;
+      background: lighten($secondary_background_color, 76%);
       &:hover {
-        background: $primary_lighter;
-        color: #444;
-        border-bottom: 1px solid $primary_lighter;
+        background: lighten($secondary_background_color, 60%);
+        color: $primary_text_color;
+        border: none !important;
+        border-bottom: 1px solid lighten($secondary_background_color, 60%) !important;
 
       }
 
       &:active {
-    @include box-shadow(inset 0 1px 3px $primary_lightest);
       }
 
       &.collapsed {
@@ -362,7 +360,7 @@ a.star {
   padding: 10px 10px 0 10px;
   p {
     line-height: 32px;
-    color: $primary_light;
+    color: $secondary_text_color;
   }
 
 }
@@ -371,12 +369,12 @@ a.star {
   clear: left;
   padding: 20px 10px 15px 10px;
 
-  .topics table tbody tr {background: $secondary;}
+  .topics table tbody tr {background: $primary_background_color;}
 
   table {
     box-shadow: none;
     border-radius: 0;
-    border-color: $primary_lighter;
+    border-color: $primary_border_color;
     margin-top: 10px;
   }
 
@@ -386,8 +384,8 @@ a.star {
 }
 
 span.post-count {
-  background: $primary;
-  color: $secondary;
+  background: $secondary_background_color;
+  color: $tertiary_text_color;
   opacity: .8;
 }
 
@@ -403,13 +401,13 @@ span.post-count {
 .quote-button {
   display: none;
   position: absolute;
-  background-color: $primary_medium;
-  color: $secondary;
+  background-color: lighten($secondary_background_color, 50%);
+  color: $tertiary_text_color;
   padding: 10px;
   z-index: 401;
 
   &:hover {
-    background-color: $primary_light;
+    background-color: lighten($secondary_background_color, 50%);
     cursor: pointer;
   }
 }
@@ -452,7 +450,7 @@ iframe {
 .topic-meta-data {
   margin-bottom: 10px;
   width: 92px;
-  border-top: 1px solid lighten($primary_lighter, 10%);
+  border-top: 1px solid lighten($primary_border_color, 10%);
   padding-top: 30px;
 
   img {
@@ -469,10 +467,11 @@ iframe {
       display: block;
       margin: 0 auto;
       width: 45px;
+      display: inline;
     }
 
     a.user-group {
-      color: $primary_light;
+      color: lighten($primary_text_color, 50%);
       width: 100%;
     }
 
@@ -487,7 +486,7 @@ iframe {
       font-weight: normal;
       font-size: 12px;
       margin-top: 2px;
-      a {color: $primary;}
+      a {color: $primary_text_color;}
 
     }
   }
@@ -530,8 +529,8 @@ iframe {
 
   a.mention {
     padding: 2px 4px;
-    color: $primary;
-    background: $primary_lightest;
+    color: $primary_text_color;
+    background: lighten($secondary_background_color, 76%);
   }
 
 
@@ -543,7 +542,7 @@ iframe {
 
 .deleted {
   .topic-body {
-  background-color: $highlight_danger_light;
+  background-color: $warning_background_color;
   }
 }
 
@@ -553,7 +552,7 @@ iframe {
 
 .moderator {
   .topic-body {
-  background-color: $highlight_light;
+  background-color: $highlight_background_color;
   }
 }
 
@@ -604,13 +603,13 @@ iframe {
 }
 
 .new-user a {
-  color: $primary_medium;
+  color: $secondary_text_color;
 }
 
 .staff a {
   padding: 2px;
   margin: -2px 0 0 0;
-  background-color: $highlight_light;
+  background-color: $highlight_background_color;
 }
 
 .topic-meta-data {
@@ -628,7 +627,7 @@ position: relative;
 
 .user-title {
   margin-top: 8px;
-  color: $primary_light;
+  color: $secondary_text_color;
   overflow: hidden;
   font-size: 80%;
   line-height: 13px;
@@ -636,7 +635,7 @@ position: relative;
 
 .info-line {
   margin: 10px 0;
-  color: $primary_medium;
+  color: $secondary_text_color;
 }
 
 
@@ -644,7 +643,7 @@ blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
 
-    a.mention {background: $primary_lighter;}
+    a.mention {background: $secondary_text_color;}
     p:first-of-type {margin-top: 0;}
     p:last-of-type {margin-bottom: 0;}
 }
@@ -652,14 +651,14 @@ blockquote { /* solo quotes */
 .quote { /* quotes with attribution */
   margin-top: 14px;
   blockquote {margin-top: 0; padding-top: 0;
-  .onebox-result {background-color: $primary_lighter;}
+  .onebox-result {background-color: $secondary_text_color;}
 
 
   }
 
   .title {
-  border-left: 5px solid $primary_lighter;
-  background-color: $primary_lightest;
+  border-left: 5px solid $primary_border_color;
+  background-color: lighten($secondary_background_color, 76%);
   padding: 12px;
   .avatar { margin-right: 7px; }
   img {margin-top: -4px;}
@@ -672,7 +671,7 @@ blockquote { /* solo quotes */
 
 .quote-controls {
   float: right;
-  color: $primary_light;
+  color: $secondary_text_color;
   a {
   margin: 0;
   }
@@ -680,7 +679,7 @@ blockquote { /* solo quotes */
     .quote-other-topic:before {
     display: inline-block;
     margin-left: 8px;
-    color: $primary_light;
+    color: $secondary_text_color;
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;
@@ -718,19 +717,19 @@ blockquote { /* solo quotes */
       margin-bottom: 20px;
       margin-top: 2px;
     }
-    a {color: $primary_light;}
+    a {color: $secondary_text_color;}
     li {margin-bottom: 10px;}
   }
 }
 
 .topic-body {
-  border-top: 1px solid lighten($primary_lighter, 10%);
+  border-top: 1px solid lighten($primary_border_color, 10%);
   float: left;
   position: relative;
   width: 720px;
   padding: 10px 10px 15px 20px;
   .highlighted {
-    background-color: $highlight_light !important;
+    background-color: $highlight_background_color !important;
   }
   img, svg {
     max-width: 100%;
@@ -774,27 +773,27 @@ blockquote { /* solo quotes */
   &.bottom .arrow {float: right; margin: 0 0 0 0;}
   &.top {margin-left: 112px;}
   .topic-body, .topic-meta-data {border: none;}
-  .row {border-top: 1px solid $primary_lighter; padding-top: 7px;}
+  .row {border-top: 1px solid $primary_border_color; padding-top: 7px;}
   .reply:first-of-type .row {border-top: none;}
 }
 
 .contents.regular  {
 
 button.show-replies {
-  background: $primary_lightest;
+  background: lighten($secondary_background_color, 76%);
   padding-bottom: 20px;
-     &:hover {background: $primary_lighter;
-  .badge-posts {color: $primary_medium;}
+     &:hover {background: lighten($secondary_background_color, 76%);
+  .badge-posts {color: $secondary_text_color;}
 
   }
 }
 
   &.bottom-round button.show-replies {
-  background: $primary_lightest;
+  background: lighten($secondary_background_color, 76%);
   margin-bottom: 0;
   padding-bottom: 8px;
-    &:hover {background: $primary_lighter;
-       .badge-posts {color: $primary_medium;}
+    &:hover {background: lighten($secondary_background_color, 76%);
+       .badge-posts {color: $secondary_text_color;}
     }
   }
 
@@ -818,7 +817,7 @@ button.show-replies {
   width: 0;
   height: 0;
   vertical-align: middle;
-  border-top: 4px solid $primary;
+  border-top: 4px solid $primary_text_color;
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
@@ -835,9 +834,9 @@ button.show-replies {
   padding: 4px 0;
   margin: 1px 0 0;
   list-style: none;
-  background-color: $secondary;
-  border: 1px solid $primary_light;
-  box-shadow: 0 1px 5px $primary_lightest;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
+  box-shadow: 0 1px 5px rgba($primary_shadow_color, .4);
   background-clip: padding-box;
   span {font-size: 12px;}
 .title {font-weight: bold; display: block; font-size: 14px;}
@@ -848,14 +847,14 @@ button.show-replies {
   clear: both;
   font-weight: normal;
   line-height: 18px;
-  color: $primary;
+  color: $primary_text_color;
 }
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  color: $secondary;
+  color: $tertiary_text_color;
   text-decoration: none;
-  background-color: $tertiary;
+  background-color: $emphasis_text_color;
 }
 .open {
   *z-index: 1000;
@@ -880,8 +879,8 @@ clear: both;
   position: fixed;
   z-index: 1000;
   left: 50%;
-  background-color: $tertiary_lightest;
-  border: 1px solid $tertiary_light;
+  background-color: $emphasis_background_color;
+  border: 1px solid $emphasis_border_color;
   padding: 5px;
   margin-bottom: 5px;
 
@@ -909,7 +908,7 @@ clear: both;
   }
   h3 {
     font-size: 25px;
-    color: $primary;
+    color: $primary_text_color;
     margin-bottom: 5px;
     i {
       margin-right: 7px;
@@ -917,29 +916,29 @@ clear: both;
   }
   .btn {
     border: none;
-    color: $secondary;
+    color: $tertiary_text_color;
     font-weight: normal;
 
-      color: $secondary;
+      color: $tertiary_text_color;
       background: $btn-primary-background-color;
 
     &[href] {
-      color: $secondary;
+      color: $tertiary_text_color;
     }
     &:hover
     {
-      color: $secondary;
+      color: $tertiary_text_color;
       background: darken($btn-primary-background-color, 12%);
     }
     &:active {
       @include linear-gradient(darken($btn-primary-background-color, 18%), darken($btn-primary-background-color, 12%));
-      @include box-shadow(inset 0 1px 3px rgba($primary, 0.2));
-      color: $secondary;
+      @include box-shadow(inset 0 1px 3px rgba($primary_shadow_color, 0.2));
+      color: $tertiary_text_color;
     }
     &[disabled] {
-      text-shadow: 0 1px 0 rgba($primary, 0.2);
+      text-shadow: 0 1px 0 rgba($primary_shadow_color, 0.2);
       @include linear-gradient($btn-primary-background-color, $btn-primary-background-color-dark);
-      @include box-shadow((inset 0 1px 0 rgba($secondary, 0.33), inset 0 -1px 2px rgba($primary, 0.2)));
+      @include box-shadow((inset 0 1px 0 rgba($primary_shadow_color, 0.33), inset 0 -1px 2px rgba($primary_shadow_color, 0.2)));
     }
   }
 }
@@ -948,8 +947,8 @@ clear: both;
     article.boxed {
       .select-posts {
         button.select-post {
-          background-color: $tertiary;
-          color: $secondary;
+          background-color: $emphasis_background_color;
+          color: $tertiary_text_color;
         }
       }
       .topic-body {
@@ -972,12 +971,12 @@ clear: both;
       top: 4px;
 
       button {
-        background-color: $primary_lighter;
-        border-top: 1px solid $secondary;
-        border-left: 1px solid $secondary;
-        border-bottom: 1px solid $primary_light;
-        border-right: 1px solid $primary_light;
-        color: $primary_light;
+        background-color: lighten($secondary_background_color, 60%);
+        border-top: 1px solid $tertiary_border_color;
+        border-left: 1px solid $tertiary_border_color;
+        border-bottom: 1px solid $primary_border_color;
+        border-right: 1px solid $primary_border_color;
+        color: $secondary_text_color;
 
       }
     }
@@ -1001,7 +1000,7 @@ a.attachment:before {
     position: absolute;
     top: 0;
     left: 10px;
-    color: $primary_lightest;
+    color: lighten($primary_text_color, 76%);
     font: 90px/1 FontAwesome;
     content: "\f05c";
     z-index: -5;

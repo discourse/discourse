@@ -15,7 +15,7 @@
     height: 100px;
   }
   .static {
-    color: $primary;
+    color: $primary_text_color;
     margin-top: 5px;
     margin-left: 5px;
     display: inline-block;
@@ -31,13 +31,13 @@
     margin-left: 3px;
   }
   .instructions a[href] {
-    color: $primary_medium;
+    color: $secondary_text_color;
   }
   .warning {
     @include border-radius-all(6px);
-    background-color: lighten($highlight_danger, 10%);
+    background-color: $warning_background_color;
     padding: 5px 8px;
-    color: $secondary;
+    color: $primary_text_color;
     width: 520px;
   }
 
@@ -72,15 +72,15 @@
   display: block;
   width: 220px;
   min-height: 200px;
-  background-color: $primary_lightest;
-  color: $primary;
+  background-color: lighten($secondary_background_color, 76%);
+  color: $primary_text_color;
   word-wrap: break-word;
 }
 
 .user-navigation {
 
   h3 {
-    color: $primary_medium;
+    color: lighten($primary_text_color, 35%);
     padding-left: 5px;
   }
   .nav-stacked {
@@ -93,7 +93,7 @@
   .avatar {
     float: left;
     width: 45px;
-    background-color: $secondary;
+    background-color: $primary_background_color;
   }
 
   nav.buttons {
@@ -108,7 +108,7 @@
   h2 {
     a {
       font-size: 14px;
-      color: $primary_light;
+      color: $secondary_text_color;
       cursor: pointer;
     }
   }
@@ -119,10 +119,10 @@
   margin-bottom: 50px;
 
   .about {
-    background-color: $primary;
+    background-color: $secondary_background_color;
     margin-bottom: 10px;
     overflow: hidden;
-    color: $secondary;
+    color: $primary_text_color;
 
     .details {
       text-align: center;
@@ -140,32 +140,32 @@
       }
 
       a[href] {
-        color: $secondary;
+        color: $primary_text_color;
       }
 
       img.avatar {
-        border: 3px solid $primary_lightest;
+        border: 3px solid $primary_border_color;
         margin-bottom: 4px;
       }
 
       .secondary {
-        background-color: $primary;
+        background-color: $secondary_background_color;
         text-align: left;
         padding: 0 10px;
 
         dd {
-          color: $secondary;
+          color: $tertiary_text_color;
           margin: 0 0 7px 0;
         }
         dt {
-          color: $primary_light;
+          color: $secondary_text_color;
           margin: 0;
         }
       }
     }
 
     .controls {
-      background-color: $primary_lighter;
+      background-color: lighten($secondary_background_color, 60%);
       margin-top: 0px;
       padding: 10px 10px 0 10px;
 
@@ -193,7 +193,7 @@
         .avatar {
           float: left;
           margin-right: 10px;
-          border: 2px solid $secondary;
+          border: 2px solid $tertiary_border_color;
           width: 45px;
           height: 45px;
         }
@@ -218,14 +218,14 @@
       margin: 5px 0px;
       font-size: 13px;
       word-wrap: break-word;
-      color: lighten($primary, 30%);
+      color: lighten($primary_text_color, 30%);
     }
     .item.moderator-action {
-      background-color: $tertiary_lightest;
+      background-color: $emphasis_background_color;
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: $highlight_danger_light;
+      background-color: $warning_background_color;
     }
     .item.hidden {
       display: block;
@@ -233,19 +233,19 @@
     }
     .item {
       padding: 10px 8px;
-      background-color: $secondary;
-      border-bottom: 1px solid $primary_light;
+      background-color: $primary_background_color;
+      border-bottom: 1px solid $primary_border_color;
     }
     .type {
-      color: lighten($primary, 40%);
+      color: lighten($primary_text_color, 40%);
     }
     span.name {
-      color: lighten($primary, 40%);
+      color: lighten($primary_text_color, 40%);
     }
     .time {
       display: block;
       float: right;
-      color: $primary_light;
+      color: $secondary_text_color;
       margin-right: 8px;
       font-size: 11px;
     }
@@ -259,7 +259,7 @@
       font-size: 14px;
     }
     .edit-reason {
-      background-color: $highlight;
+      background-color: $highlight_background_color;
       padding: 3px 5px 5px 5px;
     }
   }
@@ -274,7 +274,7 @@
   .fa {
     width: 15px;
     display: inline-block;
-    color: $primary_medium;
+    color: lighten($primary_text_color, 35%);
   }
   .avatar-wrapper {
     border: none;

@@ -23,28 +23,28 @@ display: none;
   z-index: 999999;
   position: absolute;
   width: 240px;
-  background-color: $secondary;
-  border: 1px solid $primary_light;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     li {
-      border-bottom: 1px solid $primary_lighter;
+      border-bottom: 1px solid $primary_border_color;
       a[href] {
         padding: 5px;
         display: block;
         span.username {
-          color: lighten($primary, 20);
+          color: lighten($primary_text_color, 20%);
         }
         span.name {
           font-size: 11px;
         }
         &.selected {
-          background-color: $primary_lighter;
+          background-color: lighten($secondary_background_color, 60%);
         }
         @include hover {
-          background-color: $primary_lighter;
+          background-color: lighten($secondary_background_color, 60%);
           text-decoration: none;
         }
       }
@@ -65,13 +65,13 @@ display: none;
   #file-uploading {
     left: 51%;
     font-size: 12px;
-    color: darken($primary_light, 40);
+    color: darken($tertiary_text_color, 40%);
   }
   #draft-status {
     right: 0;
-    color: lighten($primary, 60);
+    color: lighten($primary_text_color, 60%);
     &.flash {
-      color: lighten($highlight_danger, 20);
+      color: $warning_text_color;
     }
   }
   @include transition(height 0.4s ease);
@@ -89,7 +89,7 @@ display: none;
     right: 13px;
     position: absolute;
     font-size: 15px;
-    color: $primary_medium;
+    color: lighten($primary_text_color, 35%);
     text-decoration: none;
     &:before {
       font-family: "FontAwesome";
@@ -127,7 +127,7 @@ display: none;
   &.draft {
     height: 60px !important;
     cursor: pointer;
-    border-top: 1px solid $primary_light;
+    border-top: 1px solid $primary_border_color;
     .draft-text {
       display: block;
           position: absolute;
@@ -142,7 +142,7 @@ display: none;
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid $primary_light;
+    border-top: 1px solid $primary_border_color;
     .saving-text {
       display: block;
     }
@@ -164,7 +164,7 @@ display: none;
     height: 70px;
     text-indent: -9999em;
     background: {
-      color: $primary;
+      color: $primary_text_color;
       image: image-url("spinner_96_w.gif");
       repeat: no-repeat;
       size: 35px;
@@ -236,14 +236,14 @@ display: none;
     #reply-title {
       margin-right: 10px;
       &:disabled {
-        background-color: $primary_lighter;
+        background-color: lighten($secondary_background_color, 60%);
       }
     }
     #wmd-input:disabled {
-      background-color: $primary_lighter;
+      background-color: lighten($secondary_background_color, 60%);
     }
     #wmd-input, #wmd-preview {
-      color: $primary;
+      color: $primary_text_color;
 
       video {
         max-width: 100%;
@@ -255,7 +255,7 @@ display: none;
       }
     }
     #wmd-preview {
-      border: 1px dashed $primary_light;
+      border: 1px dashed $primary_border_color;
       overflow: auto;
       visibility: visible;
       p {
@@ -307,8 +307,8 @@ div.ac-wrap.disabled {
 }
 
 div.ac-wrap {
-  background-color: $secondary;
-  border: 1px solid $primary_lighter;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
   padding: 5px 10px;
   @include border-radius-all(3px);
   div.item {
@@ -332,10 +332,10 @@ div.ac-wrap {
       display: inline-block;
       border: 1px solid rgba(255, 255, 255, 0);
       &:hover {
-        background-color: lighten($highlight_danger, 45);
-        border: 1px solid lighten($highlight_danger, 20);
+        background-color: $warning_background_color;
+        border: 1px solid $warning_border_color;
         text-decoration: none;
-        color: $secondary;
+        color: $emphasis_text_color;
       }
     }
   }
@@ -395,7 +395,7 @@ div.ac-wrap {
       min-height: 100%;
       padding: 7px;
       margin: 0;
-      background-color: $secondary;
+      background-color: $primary_background_color;
       word-wrap: break-word;
 
       // set up proper header margins in post preview
@@ -440,8 +440,8 @@ div.ac-wrap {
   #wmd-button-bar {
     top: 0;
     position: absolute;
-    border-bottom: 1px solid $inner_line;
-    background-color: $secondary;
+    border-bottom: 1px solid $primary_border_color;
+    background-color: $primary_background_color;
     z-index: 100;
   }
 }

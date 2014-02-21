@@ -11,7 +11,7 @@
   #revision-controls {
     float: left;
     .btn[disabled]:hover {
-      color: $primary;
+      color: $primary_text_color;
     }
   }
   #display-modes {
@@ -21,7 +21,7 @@
     }
   }
   #revision-details {
-    background-color: $primary_lightest;
+    background-color: lighten($secondary_background_color, 76%);
     padding: 5px;
     margin-top: 10px;
   }
@@ -56,63 +56,63 @@
   }
   ins, .diff-ins {
     code, img {
-      border: 2px solid $success_dark;
+      border: 2px solid $success_border_color;
     }
     img {
       opacity: .75;
       filter: alpha(opacity=75);
     }
     a {
-      color: $success_dark;
+      color: $success_text_color;
       text-decoration: none;
     }
   }
   img.diff-ins, code.diff-ins {
-    border: 2px solid $success_dark;
+    border: 2px solid $success_text_color;
   }
   img.diff-ins {
     opacity: .75;
     filter: alpha(opacity=75);
   }
   .diff-ins {
-    background: $success_light;
+    background: $success_background_color;
   }
   ins {
-    color: $success_dark;
-    background: $success_light;
+    color: $success_text_color;
+    background: $success_background_color;
   }
   del, .diff-del {
     code, img {
-      border: 2px solid $highlight_danger_dark;
+      border: 2px solid $warning_border_color;
     }
     img {
       opacity: .5;
       filter: alpha(opacity=50);
     }
     a {
-      color: $highlight_danger_dark;
+      color: $warning_text_color;
       text-decoration: none;
     }
   }
   img.diff-del, code.diff-del {
-    border: 2px solid $highlight_danger;
+    border: 2px solid $warning_border_color;
   }
   img.diff-del {
     opacity: .5;
     filter: alpha(opacity=50);
   }
   .diff-del {
-    background: $highlight_danger_light;
+    background: $warning_background_color;
   }
   del {
-    color: $highlight_danger_dark;
-    background: $highlight_danger_light;
+    color: $warning_text_color;
+    background: $warning_background_color;
   }
   span.date {
     font-weight: bold;
   }
   span.edit-reason {
-    background-color: $highlight;
+    background-color: $highlight_background_color;
     padding: 3px 5px 5px 5px;
   }
   .modal-header {
