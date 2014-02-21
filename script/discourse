@@ -112,6 +112,22 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
     puts 'Restore are now forbidden. Enable them with `enable_restore`'
   end
 
+  desc "enable_readonly", "Enable the readonly mode"
+  def enable_readonly
+    load_rails
+
+    Discourse.enable_readonly_mode
+    puts 'The site is now in readonly mode.'
+  end
+
+  desc "disable_readonly", "Disable the readonly mode"
+  def disable_readonly
+    load_rails
+
+    Discourse.disable_readonly_mode
+    puts 'The site is now fully operable.'
+  end
+
   private
 
   def load_rails
