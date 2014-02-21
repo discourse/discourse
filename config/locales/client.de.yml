@@ -93,7 +93,7 @@ de:
     joined: "Beigetreten"
     admin_title: "Administration"
     flags_title: "Meldungen"
-    show_more: "zeige mehr"
+    show_more: "Mehr anzeigen"
     links: Links
     faq: "FAQ"
     privacy_policy: "Datenschutzrichtlinie"
@@ -131,13 +131,13 @@ de:
       title: "Vorgeschlagene Themen"
 
     bookmarks:
-      not_logged_in: "Entschuldige, man muss angemeldet sein, um Lesezeichen zu setzen."
+      not_logged_in: "Entschuldige, du musst angemeldet sein, um Lesezeichen zu setzen."
       created: "Ein Lesezeichen zu diesem Beitrag wurde gesetzt."
       not_bookmarked: "Du hast diesen Beitrag gelesen; klicke, um ein Lesezeichen zu setzen."
       last_read: "Dies ist der letzte Beitrag, den Du gelesen hast."
 
     new_topics_inserted: "{{count}} neue Themen."
-    show_new_topics: "Hier klicken zum Anzeigen."
+    show_new_topics: "Klicken zum Anzeigen."
     preview: "Vorschau"
     cancel: "Abbrechen"
 
@@ -152,11 +152,11 @@ de:
     choose_topic:
       none_found: "Keine Themen gefunden."
       title:
-        search: "Suche Thema anhand Name, URL oder ID:"
-        placeholder: "Titel des Themas hier hinschreiben"
+        search: "Suche nach Thema anhand Name, URL oder ID:"
+        placeholder: "Titel des Themas eingeben"
 
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> hast auf <a href='{{topicUrl}}'>das Thema</a> geantwortet"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> hat auf <a href='{{topicUrl}}'>das Thema</a> geantwortet"
       you_posted_topic: "<a href='{{userUrl}}'>Du</a> hast auf <a href='{{topicUrl}}'>das Thema</a> geantwortet"
       user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> hat auf <a href='{{postUrl}}'>{{post_number}}</a> geantwortet"
       you_replied_to_post: "<a href='{{userUrl}}'>Du</a> hast auf <a href='{{postUrl}}'>{{post_number}}</a> geantwortet"
@@ -165,7 +165,7 @@ de:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> hat <a href='{{user2Url}}'>{{another_user}}</a> erwähnt"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> hat <a href='{{user2Url}}'>dich</a> erwähnt"
-      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> hat <a href='{{user2Url}}'>{{another_user}}</a> erwähnt"
+      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> hast <a href='{{user2Url}}'>{{another_user}}</a> erwähnt"
 
       posted_by_user: "Geschrieben von <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Geschrieben von <a href='{{userUrl}}'>dir</a>"
@@ -179,7 +179,7 @@ de:
         only_admins: "Nur Administatoren"
         mods_and_admins: "Nur Moderatoren und Administratoren"
         members_mods_and_admins: "Nur Gruppenmitglieder, Moderatoren und Administratoren"
-        everyone: "Everyone"
+        everyone: "Jeder"
 
     user_action_groups:
       "1": "„Gefällt mir“ gegeben"
@@ -204,7 +204,7 @@ de:
       topics: "Neue Themen"
       latest: "Neueste"
       latest_by: "latest by"
-      toggle_ordering: "Ordnungsreihenfolge ändern"
+      toggle_ordering: "Reihenfolge ändern"
       subcategories: "Unterkategorien:"
       topic_stats: "Die Anzahl der Themen."
       topic_stat_sentence:
@@ -237,7 +237,7 @@ de:
       moderator: "{{user}} ist Moderator"
       admin: "{{user}} ist Administrator"
       deleted: "(gelöscht)"
-      suspended_notice: "Diser Benutzer ist bis zum {{date}} susperndiert."
+      suspended_notice: "Diser Benutzer ist bis zum {{date}} suspendiert."
       suspended_reason: "Grund: "
       watched_categories: "Beobachten"
       watched_categories_instructions: "Das selbe wie 'verfolgen', zusätzlich wirst du über alle neuen Beiträge und Themen informiert."
@@ -269,9 +269,9 @@ de:
         invalid: "Dieser Benutzername ist ungültig, sie dürfen nur aus Zahlen und Buchstaben bestehen."
 
       change_email:
-        title: "Mailadresse ändern"
-        taken: "Entschuldige, diese Mailadresse ist nicht verfügbar."
-        error: "Beim ändern der Mailadresse ist ein Fehler aufgetreten. Möglicherweise wird diese Adresse schon benutzt."
+        title: "E-Mailadresse ändern"
+        taken: "Entschuldige, diese E-Mailadresse ist nicht verfügbar."
+        error: "Beim Ändern der E-Mailadresse ist ein Fehler aufgetreten. Möglicherweise wird diese Adresse schon benutzt."
         success: "Eine Bestätigungsmail wurde an diese Adresse verschickt. Bitte folge den darin enthaltenen Anweisungen."
 
       change_avatar:
@@ -281,14 +281,14 @@ de:
         uploaded_avatar: "Eigenes Bild"
         uploaded_avatar_empty: "Eigenes Bild hinzufügen"
         upload_title: "Lade dein Bild hoch"
-        image_is_not_a_square: "Achtung: wir haben den Bild angeschnitten, da es nicht rechteckig war."
+        image_is_not_a_square: "Achtung: wir haben dein Bild zugeschnitten, da es nicht quadratisch war."
 
       email:
         title: "Mail"
-        instructions: "Deine Mailadresse wird niemals öffentlich angezeigt."
-        ok: "In Ordnung. Wir schicken eine Mail zur Bestätigung."
-        invalid: "Bitte gib eine gültige Mailadresse ein."
-        authenticated: "Dein Mailadresse wurde von {{provider}} authentisiert."
+        instructions: "Deine E-Mailadresse wird niemals öffentlich angezeigt."
+        ok: "In Ordnung. Wir schicken eine E-Mail zur Bestätigung."
+        invalid: "Bitte gib eine gültige E-Mailadresse ein."
+        authenticated: "Deine E-Mailadresse wurde von {{provider}} authentisiert."
         frequency: "Wir mailen nur, falls Du längere Zeit nicht hier gewesen bist und wir etwas Neues für Dich haben."
 
       name:
@@ -307,28 +307,28 @@ de:
         too_short: "Der Benutzername ist zu kurz."
         too_long: "Der Benutzername ist zu lang."
         checking: "Prüfe Verfügbarkeit des Benutzernamens..."
-        enter_email: 'Benutzername gefunden. Gib die zugehörige Mailadresse ein.'
+        enter_email: 'Benutzername gefunden. Gib die zugehörige E-Mailadresse ein.'
         prefilled: "Die E-Mail gleicht dem eingetragenen Nutzernamen."
 
       password_confirmation:
         title: "Passwort wiederholen"
 
       last_posted: "Letzter Beitrag"
-      last_emailed: "Letzte Mail"
+      last_emailed: "Letzte E-Mail"
       last_seen: "Zuletzt gesehen"
       created: "Mitglied seit"
       log_out: "Abmelden"
       website: "Webseite"
-      email_settings: "Mail"
+      email_settings: "E-Mail"
       email_digests:
-        title: "Schicke eine Mail mit Neuigkeiten, wenn ich die Seite länger nicht besuche"
+        title: "Schicke eine E-Mail mit Neuigkeiten, wenn ich die Seite länger nicht besuche"
         daily: "täglich"
         weekly: "wöchentlich"
         bi_weekly: "alle zwei Wochen"
 
-      email_direct: "Schicke eine Mail, wenn jemand mich zitiert, auf meine Beiträge antwortet oder meinen @Namen erwähnt."
-      email_private_messages: "Schicke eine Mail, wenn jemand mir eine private Nachricht sendet."
-      email_always: "Schicke mir eine Mail, auch wenn ich aktiv im Forum bin"
+      email_direct: "Schicke eine E-Mail, wenn jemand mich zitiert, auf meine Beiträge antwortet oder meinen @Namen erwähnt."
+      email_private_messages: "Schicke eine E-Mail, wenn jemand mir eine private Nachricht sendet."
+      email_always: "Schicke mir eine E-Mail, auch wenn ich aktiv im Forum bin"
 
       other_settings: "Sonstiges"
       categories_settings: "Katgorien"
@@ -437,20 +437,20 @@ de:
       title: "Konto erstellen"
       action: "Jetzt erstellen!"
       invite: "Hast Du schon ein Benutzerkonto?"
-      failed: 'Etwas ist schief gelaufen, vielleicht gibt es die Mailadresse schon. Versuche den "Passwort vergessen"-Link.'
+      failed: 'Etwas ist schief gelaufen, vielleicht gibt es die E-Mailadresse schon. Versuche den "Passwort vergessen"-Link.'
 
     forgot_password:
       title: "Passwort vergessen"
       action: "Ich habe mein Passwort vergessen"
-      invite: "Gib deinen Nutzernamen ein und wir schicken Dir eine Mail zum Zurücksetzen des Passworts."
+      invite: "Gib deinen Nutzernamen ein und wir schicken Dir eine E-Mail zum Zurücksetzen des Passworts."
       reset: "Passwort zurücksetzen"
-      complete: "Du solltest bald eine Mail mit Instruktionen zum Zurücksetzen des Passworts erhalten."
+      complete: "Du solltest bald eine E-Mail mit Instruktionen zum Zurücksetzen des Passworts erhalten."
 
     login:
       title: "Anmelden"
       username: "Login"
       password: "Passwort"
-      email_placeholder: "Mailadresse oder Benutzername"
+      email_placeholder: "E-Mailadresse oder Benutzername"
       error: "Unbekannter Fehler"
       reset_password: 'Passwort zurücksetzen'
       logging_in: "Anmeldung läuft..."
@@ -1528,7 +1528,7 @@ de:
           basic: 'Basissetup'
           users: 'Benutzer'
           posting: 'Beiträge'
-          email: 'Email'
+          email: 'E-Mail'
           files: 'Dateien'
           trust: 'Trust Levels'
           security: 'Sicherheit'
