@@ -213,12 +213,12 @@ describe Notification do
       p = Fabricate(:post)
       p2 = Fabricate(:post)
 
-      Notification.create!(read: false, user_id: p.user_id, topic_id: p.topic_id, post_number: p.post_number, data: '[]',
+      Notification.create!(read: false, user_id: p.user_id, topic_id: p.topic_id, post_number: p.post_number, data: '{}',
                            notification_type: Notification.types[:private_message])
-      Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
+      Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '{}',
                            notification_type: Notification.types[:private_message])
 
-      Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
+      Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '{}',
                            notification_type: Notification.types[:liked])
       p2.trash!(p.user)
 
@@ -240,7 +240,8 @@ describe Notification do
     def fab(type, read)
       @i ||= 0
       @i += 1
-      Notification.create!(read: read, user_id: user.id, topic_id: post.topic_id, post_number: post.post_number, data: '[]',
+      Notification.create!(read: read, user_id: user.id, topic_id: post.topic_id,
+                           post_number: post.post_number, data: '{}',
                            notification_type: type, created_at: @i.days.from_now)
     end
 

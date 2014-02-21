@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect, :avatar]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_avatar, :toggle_avatar, :destroy]
+  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_avatar, :toggle_avatar, :destroy, :saw_notification]
   before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -113,6 +113,17 @@ class UsersController < ApplicationController
     render json: checker.check_username(username, email)
   rescue RestClient::Forbidden
     render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
+  end
+
+  def saw_notification
+    user = User.find(params[:id])
+    guardian.ensure_can_edit!(user)
+
+    if latest_notification_id = params[:last_notification_id]
+      user.saw_notification_id(latest_notification_id)
+      user.reload
+    end
+    render json: success_json
   end
 
   def user_from_params_or_current_user

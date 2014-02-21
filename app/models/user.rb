@@ -234,11 +234,19 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
+    serialized_notifications = ActiveModel::ArraySerializer.new(recent_notifications,
+                                   each_serializer: NotificationSerializer)
+
     MessageBus.publish("/notification/#{id}",
-                       {unread_notifications: unread_notifications,
-                        unread_private_messages: unread_private_messages},
-                       user_ids: [id] # only publish the notification to this user
+           { unread_notifications: unread_notifications,
+             unread_private_messages: unread_private_messages,
+             recent_notifications: serialized_notifications },
+             user_ids: [id] # only publish the notification to this user
     )
+  end
+
+  def recent_notifications
+    Notification.recent_report(self)
   end
 
   # A selection of people to autocomplete on @mention

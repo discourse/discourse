@@ -1,36 +1,28 @@
 module("Discourse.HeaderController");
 
 test("showNotifications action", function() {
-  var resolveRequestWith;
-  var request = new Ember.RSVP.Promise(function(resolve) {
-    resolveRequestWith = resolve;
-  });
-
 
   var controller = Discourse.HeaderController.create();
   var viewSpy = {
     showDropdownBySelector: sinon.spy()
   };
-  this.stub(Discourse, "ajax").withArgs("/notifications").returns(request);
+  var latest_notificaiton_id = 2, older_notificaion_id = 1;
+
   this.stub(Discourse.User, "current").returns(Discourse.User.create({
-    unread_notifications: 1
+    id: 1,
+    unread_notifications: 1,
+    recent_notifications: [{id: older_notificaion_id}, {id: latest_notificaiton_id}]
   }));
 
+  this.stub(Discourse, 'ajax');
 
   Ember.run(function() {
     controller.send("showNotifications", viewSpy);
   });
 
-  equal(controller.get("notifications"), null, "notifications are null before data has finished loading");
-  equal(Discourse.User.current().get("unread_notifications"), 1, "current user's unread notifications count is not zeroed before data has finished loading");
-  ok(viewSpy.showDropdownBySelector.notCalled, "dropdown with notifications is not shown before data has finished loading");
-
-
-  Ember.run(function() {
-    resolveRequestWith(["notification"]);
-  });
-
-  deepEqual(controller.get("notifications"), ["notification"], "notifications are set correctly after data has finished loading");
-  equal(Discourse.User.current().get("unread_notifications"), 0, "current user's unread notifications count is zeroed after data has finished loading");
-  ok(viewSpy.showDropdownBySelector.calledWith("#user-notifications"), "dropdown with notifications is shown after data has finished loading");
+  equal(Discourse.User.current().get("unread_notifications"), 0, "current user's unread notifications count is zeroed");
+  ok(viewSpy.showDropdownBySelector.calledWith("#user-notifications"), "dropdown with notifications is shown");
+  ok(Discourse.ajax.calledWith("/users/1/saw_notification",
+    { type: 'PUT', data: { last_notification_id: latest_notificaiton_id } }
+  ), "updates the server with the latest seen notificaion");
 });

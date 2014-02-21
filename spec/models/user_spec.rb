@@ -1080,4 +1080,25 @@ describe User do
       end
     end
   end
+
+  describe "#publish_notifications_state" do
+    let!(:user) { Fabricate(:user) }
+    it "publishes a message to the MessageBus" do
+
+      unread_pm = Fabricate(:private_message_notification, read: false, user: user)
+      unread_notification = Fabricate(:notification, read: false, user: user)
+
+      user.reload
+      serialized_notifications = "serialized_notifications"
+      ActiveModel::ArraySerializer.stubs(:new).returns(serialized_notifications)
+
+      MessageBus.expects(:publish).with("/notification/#{user.id}",
+               { unread_notifications: [unread_notification].count,
+                 unread_private_messages: [unread_pm].count,
+                 recent_notifications: serialized_notifications},
+                 { user_ids: [user.id] })
+
+      user.publish_notifications_state
+    end
+  end
 end

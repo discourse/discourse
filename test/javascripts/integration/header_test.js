@@ -50,13 +50,11 @@ test("logo", function() {
 });
 
 test("notifications dropdown", function() {
-  expect(4);
-
+  Ember.run(function(){
+  expect(3);
   var itemSelector = "#notifications-dropdown li";
-
-  Ember.run(function() {
-    Discourse.URL_FIXTURES["/notifications"] = [
-      {
+  var notification = {
+        id: 1,
         notification_type: 2, //replied
         read: true,
         post_number: 2,
@@ -66,14 +64,14 @@ test("notifications dropdown", function() {
           topic_title: "some title",
           display_username: "velesin"
         }
-      }
-    ];
-  });
+      };
+  var currentUser = Discourse.User.current();
+  currentUser.set('unread_notifications', 1);
+  currentUser.set('recent_notifications', [notification]);
+
+  Discourse.URL_FIXTURES["/users/" + currentUser.id + "/saw_notification"] = {success: 'OK'};
 
   visit("/")
-  .then(function() {
-    ok(!exists($(itemSelector)), "initially is empty");
-  })
   .click("#user-notifications")
   .then(function() {
     var $items = $(itemSelector);
@@ -81,6 +79,7 @@ test("notifications dropdown", function() {
     ok(exists($items), "is lazily populated after user opens it");
     ok($items.first().hasClass("read"), "correctly binds items' 'read' class");
     equal($items.first().html(), 'notifications.replied velesin <a href="/t/a-slug/1234/2">some title</a>', "correctly generates items' content");
+    });
   });
 });
 
