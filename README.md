@@ -14,10 +14,10 @@ To learn more about the philosophy and goals of the project, [visit discourse.or
 
 ## Screenshots
 
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-smallx.png)](http://bbs.boingboing.net)
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-smallx.png)](http://discuss.howtogeek.com)
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/new-relic-categories-smallx.png)](http://discuss.newrelic.com)
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-smallx.jpg)](https://talk.turtlerockstudios.com/)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-thumb.png)](http://bbs.boingboing.net)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-thumb.png)](http://discuss.howtogeek.com)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/new-relic-categories-thumb.png)](http://discuss.newrelic.com)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-thumb.jpg)](https://talk.turtlerockstudios.com/)
 
 ## Getting Started
 
@@ -35,7 +35,7 @@ If you're not here to hack on the open source code, but rather looking to set up
 
 Discourse is a **Civilized Discourse Construction Kit**, a free, flexible, fundamental building block for online discussion communities of any size, tiny to huge.
 
-- A **flattened, endlessly scrolling discussion**, avoiding the awkwardness of traditionally threaded and paginated discussion, where replies to be expanded in place for context.
+- A **flattened, endlessly scrolling discussion**, avoiding the awkwardness of traditionally threaded and paginated discussion, where replies can be expanded in place for context.
 
 - A **user trust system** that grants users rights to assist in governing the forum as they participate in good faith over time. The goal is for the forum to be nearly self-moderating in the absence of any formal moderators, although excellent moderators always accelerate the process greatly.
 
