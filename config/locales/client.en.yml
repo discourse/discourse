@@ -247,11 +247,11 @@ en:
       suspended_reason: "Reason: "
       mailing_list_mode: "Receive an email every time a post is made on the forum (unless you have muted the topic or category)"
       watched_categories: "Watched"
-      watched_categories_instructions: "Same as Tracking, plus you will be notified of all new posts and topics."
+      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically track all new and existing topics providing you a count of unread and new posts"
+      tracked_categories_instructions: "You will automatically track all new topics in these categories. The count of unread and new posts will appear next to the topic's listing."
       muted_categories: "Muted"
-      muted_categories_instructions: "You will not be notified of anything about this topic, and it will not appear on your unread tab."
+      muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Your account has been deleted successfully."
@@ -758,25 +758,25 @@ en:
           "0_2": 'You are ignoring all notifications on this topic.'
         watching_pm:
           title: "Watching"
-          description: "same as Tracking, plus you will be notified of all new posts."
+          description: "You will be notified of every new post in this private message. The count of unread and new posts will also appear next to the topic's listing."
         watching:
           title: "Watching"
-          description: "same as Tracking, plus you will be notified of all new posts."
+          description: "You will be notified of every new post in this topic. The count of unread and new posts will also appear next to the topic's listing."
         tracking_pm:
           title: "Tracking"
-          description: "you will be notified of @name mentions and replies to your posts"
+          description: "You will be notified only if someone mentions your @name or replies to your post. The count of unread and new posts will also appear next to the topic's listing."
         tracking:
           title: "Tracking"
-          description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
+          description: "You will be notified only if someone mentions your @name or replies to your post. The count of unread and new posts will also appear next to the topic's listing."
         regular:
           title: "Regular"
-          description: "you will be notified only if someone mentions your @name or replies to your post."
+          description: "You will be notified only if someone mentions your @name or replies to your post."
         muted_pm:
           title: "Muted"
-          description: "you will not be notified of anything about this private message."
+          description: "You will never be notified of anything about this private message."
         muted:
           title: "Muted"
-          description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
+          description: "You will never be notified of anything about this topic, and it will not appear on your unread tab."
 
       actions:
         recover: "Un-Delete Topic"
