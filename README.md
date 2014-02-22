@@ -107,7 +107,7 @@ Adding Support for a new URL
     end
     ```
 
-  3. Create new onebox spec
+  3. Create new onebox spec using [FakeWeb](https://github.com/chrisk/fakeweb)
 
     ``` ruby
     # in spec/lib/onebox/engine/name_spec.rb
@@ -153,7 +153,7 @@ Adding Support for a new URL
     </div>
     ```
 
-  5. Create new fixture from HTML response
+  5. Create new fixture from HTML response for your FakeWeb request(s)
 
     ``` bash
     curl --output spec/fixtures/oneboxname.response -L -X -GET http://example.com
