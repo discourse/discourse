@@ -47,7 +47,7 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
       var self = this,
           selected = this.get('selected'),
           operation = { type: 'change_notification_level',
-                        notification_level: Discourse.Topic.NotificationLevel.REGULAR };
+                        notification_level_id: Discourse.Topic.NotificationLevel.REGULAR };
 
       var promise;
       if (selected.length > 0) {
