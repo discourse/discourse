@@ -38,6 +38,10 @@ class TopicQuery
     @user = user
   end
 
+  def joined_topic_user(list=nil)
+    (list || Topic).joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
+  end
+
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic)
     builder = SuggestedTopicsBuilder.new(topic)
@@ -208,6 +212,7 @@ class TopicQuery
 
       result.order("topics.#{sort_column} #{sort_dir}")
     end
+
 
     # Create results based on a bunch of default options
     def default_results(options={})

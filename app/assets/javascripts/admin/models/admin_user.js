@@ -36,6 +36,14 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
+  deleteAllPostsExplanation: function() {
+    if (!this.get('can_delete_all_posts')) {
+      return I18n.t('admin.user.cant_delete_all_posts', {count: Discourse.SiteSettings.delete_user_max_post_age});
+    } else {
+      return null;
+    }
+  }.property('can_delete_all_posts'),
+
   deleteAllPosts: function() {
     this.set('can_delete_all_posts', false);
     var user = this;
@@ -243,7 +251,7 @@ Discourse.AdminUser = Discourse.User.extend({
       if (this.get('staff')) {
         return I18n.t('admin.user.delete_forbidden_because_staff');
       } else {
-        return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_age});
+        return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_post_age});
       }
     } else {
       return null;

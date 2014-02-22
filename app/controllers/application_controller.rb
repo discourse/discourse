@@ -4,7 +4,7 @@ require_dependency 'discourse'
 require_dependency 'custom_renderer'
 require_dependency 'archetype'
 require_dependency 'rate_limiter'
-require_dependency 'googlebot_detection'
+require_dependency 'crawler_detection'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
@@ -39,8 +39,12 @@ class ApplicationController < ActionController::Base
 
   layout :set_layout
 
+  def has_escaped_fragment?
+    SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
+  end
+
   def set_layout
-    GooglebotDetection.googlebot?(request.user_agent) ? 'googlebot' : 'application'
+    has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) ? 'crawler' : 'application'
   end
 
   rescue_from Exception do |exception|
@@ -104,7 +108,7 @@ class ApplicationController < ActionController::Base
       #       from the above rescue_from blocks will fail because that isn't valid json.
       render status: error, layout: false, text: (error == 404) ? build_not_found_page(error) : message
     else
-      render text: build_not_found_page(error, current_user ? 'application' : 'no_js')
+      render text: build_not_found_page(error, 'no_js')
     end
   end
 

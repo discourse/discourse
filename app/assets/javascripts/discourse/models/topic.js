@@ -420,6 +420,13 @@ Discourse.Topic.reopenClass({
         operation: operation
       }
     });
+  },
+
+  bulkOperationByFilter: function(filter, operation) {
+    return Discourse.ajax("/topics/bulk", {
+      type: 'PUT',
+      data: { filter: filter, operation: operation }
+    });
   }
 
 });

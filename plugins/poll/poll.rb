@@ -26,9 +26,10 @@ module ::PollPlugin
 
     def options
       cooked = PrettyText.cook(@post.raw, topic_id: @post.topic_id)
-      poll_div = Nokogiri::HTML(cooked).css(".poll-ui").first
-      if poll_div
-        poll_div.css("li").map {|x| x.children.to_s.strip }.uniq
+      parsed = Nokogiri::HTML(cooked)
+      poll_list = parsed.css(".poll-ui ul").first || parsed.css("ul").first
+      if poll_list
+        poll_list.css("li").map {|x| x.children.to_s.strip }.uniq
       else
         []
       end

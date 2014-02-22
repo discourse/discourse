@@ -203,15 +203,16 @@ module Import
       db_conf = BackupRestore.database_configuration
 
       password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
-      host_argument = "--host=#{db_conf.host}" if db_conf.host.present?
+      host_argument     = "--host=#{db_conf.host}"         if db_conf.host.present?
+      username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
 
-      [ password_argument,                # pass the password to psql
+      [ password_argument,                # pass the password to psql (if any)
         "psql",                           # the psql command
         "--dbname='#{db_conf.database}'", # connect to database *dbname*
         "--file='#{@dump_filename}'",     # read the dump
         "--single-transaction",           # all or nothing (also runs COPY commands faster)
-        host_argument,                    # the hostname to connect to
-        "--username=#{db_conf.username}"  # the username to connect as
+        host_argument,                    # the hostname to connect to (if any)
+        username_argument                 # the username to connect as (if any)
       ].join(" ")
     end
 
@@ -232,7 +233,7 @@ module Import
       log "Migrating the database..."
       Discourse::Application.load_tasks
       ENV["VERSION"] = @current_version.to_s
-      Rake::Task["db:migrate:up"].invoke
+      Rake::Task["db:migrate"].invoke
     end
 
     def reconnect_database

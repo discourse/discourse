@@ -987,3 +987,21 @@ $rollback-darker: darken($rollback, 20%) !default;
   max-height: 500px;
   overflow: auto;
 }
+
+
+button.ru {
+  position: relative;
+  min-width: 110px;
+}
+
+.ru-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(0, 175, 0, 0.3);
+}
+
+.is-uploading:hover .ru-progress {
+  background: rgba(200, 0, 0, 0.3);
+}

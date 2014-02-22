@@ -31,7 +31,7 @@ module UserGuardian
     if is_me?(user)
       user.post_count <= 1
     else
-      is_staff? && user.created_at > SiteSetting.delete_user_max_age.to_i.days.ago
+      is_staff? && (user.first_post.nil? || user.first_post.created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago)
     end
   end
 

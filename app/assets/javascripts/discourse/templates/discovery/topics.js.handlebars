@@ -65,6 +65,10 @@
     <div class='topics-loading'>{{i18n topic.loading_more}}</div>
   {{/if}}
   {{#if allLoaded}}
+    {{#if showDismissRead}}
+      <button class='btn dismiss-read' {{action dismissRead}}>{{i18n topics.bulk.dismiss_read}}</button>
+    {{/if}}
+
     <h3>
       {{#if latest}}
         {{footerMessage}}

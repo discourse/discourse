@@ -247,11 +247,11 @@ en:
       suspended_reason: "Reason: "
       mailing_list_mode: "Receive an email every time a post is made on the forum (unless you have muted the topic or category)"
       watched_categories: "Watched"
-      watched_categories_instructions: "Same as Tracking, plus you will be notified of all new posts and topics."
+      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically track all new and existing topics providing you a count of unread and new posts"
+      tracked_categories_instructions: "You will automatically track all new topics in these categories. The count of unread and new posts will appear next to the topic's listing."
       muted_categories: "Muted"
-      muted_categories_instructions: "You will not be notified of anything about this topic, and it will not appear on your unread tab."
+      muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Your account has been deleted successfully."
@@ -628,6 +628,8 @@ en:
 
     topics:
       bulk:
+        reset_read: "Reset Read"
+        dismiss_read: "Dismiss Read"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
         change_category: "Change Category"
@@ -756,25 +758,25 @@ en:
           "0_2": 'You are ignoring all notifications on this topic.'
         watching_pm:
           title: "Watching"
-          description: "same as Tracking, plus you will be notified of all new posts."
+          description: "You will be notified of every new post in this private message. The count of unread and new posts will also appear next to the topic's listing."
         watching:
           title: "Watching"
-          description: "same as Tracking, plus you will be notified of all new posts."
+          description: "You will be notified of every new post in this topic. The count of unread and new posts will also appear next to the topic's listing."
         tracking_pm:
           title: "Tracking"
-          description: "you will be notified of @name mentions and replies to your posts"
+          description: "You will be notified only if someone mentions your @name or replies to your post. The count of unread and new posts will also appear next to the topic's listing."
         tracking:
           title: "Tracking"
-          description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
+          description: "You will be notified only if someone mentions your @name or replies to your post. The count of unread and new posts will also appear next to the topic's listing."
         regular:
           title: "Regular"
-          description: "you will be notified only if someone mentions your @name or replies to your post."
+          description: "You will be notified only if someone mentions your @name or replies to your post."
         muted_pm:
           title: "Muted"
-          description: "you will not be notified of anything about this private message."
+          description: "You will never be notified of anything about this private message."
         muted:
           title: "Muted"
-          description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
+          description: "You will never be notified of anything about this topic, and it will not appear on your unread tab."
 
       actions:
         recover: "Un-Delete Topic"
@@ -1339,6 +1341,11 @@ en:
         columns:
           filename: "Filename"
           size: "Size"
+        upload:
+          text: "UPLOAD"
+          uploading: "UPLOADING"
+          success: "'{{filename}}' has successfully been uploaded."
+          error: "There has been an error ({{message}}) while uploading '{{filename}}'"
         operations:
           is_running: "An operation is currently running..."
           failed: "The {{operation}} failed. Please check the logs."
@@ -1572,8 +1579,11 @@ en:
         delete: "Delete User"
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_forbidden:
-          one: "Users can't be deleted if they registered more than %{count} day ago, or if they have posts. Delete all posts before trying to delete a user."
-          other: "Users can't be deleted if they registered more than %{count} days ago, or if they have posts. Delete all posts before trying to delete a user."
+          one: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} day old can't be deleted.)"
+          other: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} days old can't be deleted.)"
+        cant_delete_all_posts:
+          one: "Can't delete all posts. Some posts are older than %{count} day old."
+          other: "Can't delete all posts. Some posts are older than %{count} days old."
         delete_confirm: "Are you SURE you want to delete this user? This action is permanent!"
         delete_and_block: "<b>Yes</b>, and <b>block</b> future signups from this email and IP address"
         delete_dont_block: "<b>Yes</b>, just delete the user"

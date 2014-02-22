@@ -31,6 +31,67 @@ describe TopicsController do
     }.should change(IncomingLink, :count).by(1)
   end
 
+  describe "has_escaped_fragment?" do
+    render_views
+
+    context "when the SiteSetting is disabled" do
+      before do
+        SiteSetting.stubs(:enable_escaped_fragments?).returns(false)
+      end
+
+      it "uses the application layout even with an escaped fragment param" do
+        get :show, {'id' => topic.id, '_escaped_fragment_' => 'true'}
+        response.should render_template(layout: 'application')
+        assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
+      end
+    end
+
+    context "when the SiteSetting is enabled" do
+      before do
+        SiteSetting.stubs(:enable_escaped_fragments?).returns(true)
+      end
+
+      it "uses the application layout when there's no param" do
+        get :show, {'id' => topic.id}
+        response.should render_template(layout: 'application')
+        assert_select "meta[name=fragment]", true, "it has the meta tag"
+      end
+
+      it "uses the crawler layout when there's an _escaped_fragment_ param" do
+        get :show, {'id' => topic.id, '_escaped_fragment_' => 'true'}
+        response.should render_template(layout: 'crawler')
+        assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
+      end
+    end
+  end
+
+  describe "crawler" do
+    render_views
+
+    context "when not a crawler" do
+      before do
+        CrawlerDetection.expects(:crawler?).returns(false)
+      end
+      it "renders with the application layout" do
+        get :show, {'id' => topic.id}
+        response.should render_template(layout: 'application')
+        assert_select "meta[name=fragment]", true, "it has the meta tag"
+      end
+    end
+
+    context "when a crawler" do
+      before do
+        CrawlerDetection.expects(:crawler?).returns(true)
+      end
+      it "renders with the crawler layout" do
+        get :show, {'id' => topic.id}
+        response.should render_template(layout: 'crawler')
+        assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
+      end
+    end
+
+  end
+
   describe 'after inserting an incoming link' do
 
     it 'sets last link correctly' do

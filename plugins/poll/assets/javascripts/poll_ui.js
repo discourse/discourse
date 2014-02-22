@@ -97,7 +97,13 @@ Discourse.PostView.reopen({
     }
 
     var view = initializePollView(this);
-    view.replaceElement($post.find(".poll-ui:first"));
+
+    var pollContainer = $post.find(".poll-ui:first");
+    if (pollContainer.length == 0) {
+      pollContainer = $post.find("ul:first");
+    }
+
+    view.replaceElement(pollContainer);
     this.set('pollView', view);
 
   }.on('postViewInserted'),

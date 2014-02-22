@@ -49,10 +49,6 @@ class TopicsController < ApplicationController
 
     redirect_to_correct_topic && return if slugs_do_not_match
 
-    # render workaround pseudo-static HTML page for old crawlers which ignores <noscript>
-    # (see http://meta.discourse.org/t/noscript-tag-and-some-search-engines/8078)
-    return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.key?('_escaped_fragment_'))
-
     track_visit_to_topic
 
     if should_track_visit_to_topic?
@@ -92,7 +88,7 @@ class TopicsController < ApplicationController
   end
 
   def destroy_timings
-    PostTiming.destroy_for(current_user.id, params[:topic_id].to_i)
+    PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
     render nothing: true
   end
 
@@ -269,7 +265,15 @@ class TopicsController < ApplicationController
   end
 
   def bulk
-    topic_ids = params.require(:topic_ids).map {|t| t.to_i}
+    if params[:topic_ids].present?
+      topic_ids = params[:topic_ids].map {|t| t.to_i}
+    elsif params[:filter] == 'unread'
+      tq = TopicQuery.new(current_user)
+      topic_ids = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics.pluck(:id)
+    else
+      raise ActionController::ParameterMissing.new(:topic_ids)
+    end
+
     operation = params.require(:operation).symbolize_keys
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
     operator = TopicsBulkAction.new(current_user, topic_ids, operation)
