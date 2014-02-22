@@ -228,7 +228,7 @@ de:
       preferences: "Einstellungen"
       bio: "Über mich"
       invited_by: "Eingeladen von"
-      trust_level: "Stufe"
+      trust_level: "Vertrauenssstufe"
       notifications: "Benachrichtigungen"
       dynamic_favicon: "Zeige eingehende Nachrichten im Favicon"
       external_links_in_new_tab: "Öffne alle externen Links in neuen Tabs"
@@ -431,7 +431,7 @@ de:
     username: 'Benutzername'
     last_seen: 'Zuletzt gesehen'
     created: 'Erstellt'
-    trust_level: 'Stufe'
+    trust_level: 'Vertrauensstufe'
 
     create_account:
       title: "Konto erstellen"
@@ -568,7 +568,7 @@ de:
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} hat sich zu einem privaten Gespräch eingeladen: {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} hat deine Einladung akzeptiert"
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} hat einen Beitrag nach {{link}} verschoben"
-      total_flagged: "total markierte Einträge"
+      total_flagged: "total gemeldete Einträge"
 
     upload_selector:
       title: "Bild hochladen"
@@ -1468,8 +1468,7 @@ de:
         approve: 'Genehmigen'
         approved_by: "genehmigt von"
         approve_success: "Benutzer freigeschalten und Mail mit den Anweisungen zur Aktivierung gesendet."
-        approve_bulk_success: "Erfolg! Alle ausgewählten Benutzer wurden freigeschaltet und
-          benachrichtigt."
+        approve_bulk_success: "Erfolgreich! Alle ausgewählten Benutzer wurden freigeschaltet undbenachrichtigt."
         time_read: "Lesezeit"
         delete: Benutzer löschen
         delete_forbidden:
@@ -1494,10 +1493,10 @@ de:
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
         trust_level_change_failed: "Beim Wechsel der Vertrauensstufe ist ein Fehler aufgetreten."
         suspend_modal_title: "Gesperrter Benutzer"
-        trust_level_2_users: "Trust Level 2 Benutzer"
-        trust_level_3_requirements: "Trust Level 3 Vorraussetzungen"
+        trust_level_2_users: "Vertrauensstufe 2 Benutzer"
+        trust_level_3_requirements: "Vertrauensstufe 3 Vorraussetzungen"
         tl3_requirements:
-          title: "Vorraussetzungen für Trust Level 3"
+          title: "Vorraussetzungen für Vertrauensstufe 3"
           table_title: "In den lezten 100 Tagen:"
           value_heading: "Wert"
           requirement_heading: "Vorraussetzung"
@@ -1508,7 +1507,7 @@ de:
           quality_content: "Qualitätscontent"
           reading: "Gelesen"
           site_promotion: "Werbung"
-          flagged_posts: "Beiträge Geflaggt"
+          flagged_posts: "Beiträge gemeldet"
 
       site_content:
         none: "Wähle einen Inhaltstyp um mit dem Bearbeiten zu beginnen."
@@ -1530,7 +1529,7 @@ de:
           posting: 'Beiträge'
           email: 'E-Mail'
           files: 'Dateien'
-          trust: 'Trust Level'
+          trust: 'Vertrauensstufe'
           security: 'Sicherheit'
           seo: 'SEO'
           spam: 'Spam'
@@ -1540,10 +1539,10 @@ de:
           uncategorized: 'Unkategorisiert'
 
     lightbox:
-      download: "download"
+      download: "Download"
 
     keyboard_shortcuts_help:
-      title: 'Keyboard Shortcuts (experimentell)'
+      title: 'Tastaturkürzel (experimentell)'
       jump_to:
         title: 'Springe zu'
         home: '<b>g</b> dann <b>h</b> Home'
@@ -1563,20 +1562,20 @@ de:
         create: '<b>c</b> Neues Thema erstellen'
         notifications: '<b>n</b> Notifications öffnen'
         search: '<b>/</b> Suchen'
-        help: '<b>?</b> Tastaturshortcuts Hilfe'
+        help: '<b>?</b> Tastaturkürzel Hilfe'
       actions:
         title: 'Aktionen'
-        star: '<b>f</b> Thema Sternen'
-        share_topic: '<b>s</b> Theima teilen'
-        share_post: '<b>shift s</b> Beitrag teilen'
+        star: '<b>f</b> Thema bewerten'
+        share_topic: '<b>s</b> Thema teilen'
+        share_post: '<b>SHIFT+s</b> Beitrag teilen'
         reply_topic: '<b>r</b> Auf Thema antworten'
-        reply_post: '<b>shift r</b> Auf Beitrag antworten'
+        reply_post: '<b>SHIFT+r</b> Auf Beitrag antworten'
         like: '<b>l</b> Beitrag liken'
-        flag: '<b>!</b> Beitrag flaggen'
-        bookmark: '<b>b</b> Beitrag Bookmarken'
+        flag: '<b>!</b> Beitrag melden'
+        bookmark: '<b>b</b> Lesezeichen auf Beitrag setzen'
         edit: '<b>e</b> Beitrag editieren'
         delete: '<b>d</b> Beitrag löschen'
         mark_muted: '<b>m</b> dann <b>m</b> Thema auf Ignorieren setzen'
         mark_regular: '<b>m</b> dann <b>r</b> Thema auf normal zurücksetzen'
-        mark_tracking: '<b>m</b> dann <b>t</b> Thema auf verfolgt setzen'
+        mark_tracking: '<b>m</b> dann <b>t</b> Thema auf verfolgen setzen'
         mark_watching: '<b>m</b> dann <b>w</b> Thema auf beobachten setzen'
