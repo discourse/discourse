@@ -1341,6 +1341,11 @@ en:
         columns:
           filename: "Filename"
           size: "Size"
+        upload:
+          text: "UPLOAD"
+          uploading: "UPLOADING"
+          success: "'{{filename}}' has successfully been uploaded."
+          error: "There has been an error ({{message}}) while uploading '{{filename}}'"
         operations:
           is_running: "An operation is currently running..."
           failed: "The {{operation}} failed. Please check the logs."

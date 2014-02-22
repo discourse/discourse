@@ -71,10 +71,6 @@ module BackupRestore
     ActiveRecord::Migrator.current_version
   end
 
-  def self.can_rollback?
-    User.exec_sql("SELECT 1 FROM pg_namespace WHERE nspname = 'backup'").count > 0
-  end
-
   def self.move_tables_between_schemas(source, destination)
     User.exec_sql(move_tables_between_schemas_sql(source, destination))
   end
