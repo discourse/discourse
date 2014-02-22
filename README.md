@@ -14,10 +14,10 @@ To learn more about the philosophy and goals of the project, [visit discourse.or
 
 ## Screenshots
 
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-small.png)](http://bbs.boingboing.net)
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small.png)](http://discuss.howtogeek.com)
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/new-relic-categories-small.png)](http://discuss.newrelic.com)
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-small.jpg)](https://talk.turtlerockstudios.com/)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-smallx.png)](http://bbs.boingboing.net)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-smallx.png)](http://discuss.howtogeek.com)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/new-relic-categories-smallx.png)](http://discuss.newrelic.com)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-smallx.jpg)](https://talk.turtlerockstudios.com/)
 
 ## Getting Started
 
