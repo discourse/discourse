@@ -6,8 +6,7 @@ module Onebox
 
       matches do
         http
-        maybe("www.")
-        domain("ncbi.nlm.nih")
+        domain("www.ncbi.nlm.nih")
         tld("gov")
         has("/pubmed/")
       end
@@ -32,7 +31,10 @@ module Onebox
       end
 
       def date_of_xml(xml)
-        (xml.css("PubDate")[0].children).map{|x| x.content}.reverse.join(" ")
+        date_arr = (xml.css("PubDate")[0].children).map{|x| x.content}
+        date_arr = date_arr.select{|s| !s.match(/^\s+$/)}
+        date_arr = (date_arr.map{|s| s.split}).flatten
+        date_arr.sort.reverse.join(" ") # Reverse sort so month before year.
       end
 
       def data
