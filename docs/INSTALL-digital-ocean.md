@@ -39,7 +39,6 @@ It will ask your permission to connect, type `yes`, then it will ask for the roo
 **We highly recommend setting a SSH key, because you may need to access the Rails console for debugging purposes. This is only possible if you have SSH access preconfigured. This <i>cannot</i> be done after bootstrapping the app.**
 
     ssh-keygen -t rsa -C "your_email@example.com"
-    ssh-add id_rsa
 
 (We want the default settings, so when asked to enter a file in which to save the key, just press <kbd>enter</kbd>. Via [GitHub's SSH guide][ssh].)
 
