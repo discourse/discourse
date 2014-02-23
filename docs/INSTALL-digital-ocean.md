@@ -106,7 +106,7 @@ Notice that I renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this mean
 
 #Mail Setup
 
-**Email is critical to Discourse. We strongly recommend configuring mail settings before bootstrapping your app.**
+**Email is critical to Discourse. We strongly recommend configuring mail settings before bootstrapping.**
 
 - If you already have a mail server, put your existing mail server credentials in the `app.yml` file.
 
