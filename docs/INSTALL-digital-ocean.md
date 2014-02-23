@@ -2,7 +2,7 @@ The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud se
 
 The below guide assumes that you have no knowledge of Ruby/Rails or Linux shell, so it will be detailed. Feel free to skip steps which you are comfortable with.
 
-# Create new Digital Ocean Droplet
+# Create New Digital Ocean Droplet
 
 Discourse recommends a minimum of 1 GB Ram, so that's what we will go with. We'll use discourse as the Hostname.
 
@@ -14,7 +14,7 @@ We will install Discourse on Ubuntu 12.04.3 LTS x64. We always recommend using [
 
 Once you complete the above steps you will receive a mail from Digital Ocean with the root password to the Droplet. (However, if you use SSH keys, you may not need a password to log in.)
 
-# Access your newly created Droplet
+# Access Your Droplet
 
 Type the following command in your terminal:
 
