@@ -1,0 +1,1 @@
+class MyCurrentUserSerializer < CurrentUserSerializer; end
