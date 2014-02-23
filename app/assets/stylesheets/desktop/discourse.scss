@@ -323,6 +323,16 @@ body {
     text-rendering: optimizelegibility;
   }
 
+  .page-not-found {
+    margin: 20px 0 40px 0;
+
+  }
+
+  .page-not-found-search {
+    margin-top: 20px;
+  }
+
+  .popular-topics-title, .recent-topics-title {margin-bottom: 10px;}
 
   // this removes the unwanted top margin on a paragraph under a heading
   h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
