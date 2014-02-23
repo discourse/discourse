@@ -1,6 +1,6 @@
 The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. In this guide I'll assume that you are using [Digital Ocean][do], although these steps will work on other similar services.
 
-The below guide assumes that you have no knowledge of Ruby/Rails or Linux shell, so it will be detailed. Feel free to skip steps which you are comfortable with.
+The below guide assumes that you have no knowledge of Ruby/Rails or Linux shell, so it will be detailed. Feel free to skip steps you are comfortable with.
 
 # Create New Digital Ocean Droplet
 
@@ -109,7 +109,7 @@ I renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that I wan
 
 - If you already have a mail server, put your existing mail server credentials in the `app.yml` file.
 
-- Otherwise, create a free account on [**Mandrill**][man] (or [Mailgun][gun], or [Mailjet][jet]), and put your Mandrill credentials (available via the Mandrill dashboard) in the `app.yml` file. The settings you want to change are `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`.
+- Otherwise, create a free account on [**Mandrill**][man] (or [Mailgun][gun], or [Mailjet][jet]), and put your mail credentials (available via the Mandrill dashboard) in the `app.yml` file. The settings you want to change are `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`.
 
 # Add Your SSH Key
 
