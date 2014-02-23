@@ -662,7 +662,7 @@ es:
 
       [0]: %{base_url}
       [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/SuperTool.aspx
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
       [3]: http://www.dkim.org/
       [4]: http://whatismyipaddress.com/blacklist-check
       [5]: %{base_url}/unsubscribe
