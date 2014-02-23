@@ -4,27 +4,29 @@ The below guide assumes that you have no knowledge of Ruby/Rails or Linux shell,
 
 # Create New Digital Ocean Droplet
 
-Discourse recommends a minimum of 1 GB Ram, so that's what we will go with. We'll use discourse as the Hostname.
+Discourse recommends a minimum of 1 GB RAM. We'll use "discourse" as the Hostname.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3398/975dbf6267b4ad4f.png" width="690" height="475"> 
 
-We will install Discourse on Ubuntu 12.04.3 LTS x64. We always recommend using [the current LTS distribution][lts].
+Install Discourse on Ubuntu 12.04.3 LTS x64. We always recommend using [the current LTS distribution][lts].
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3399/f3fc67ee6aa90ea4.png" width="690" height="477"> 
 
-Once you complete the above steps you will receive a mail from Digital Ocean with the root password to the Droplet. (However, if you use SSH keys, you may not need a password to log in.)
+You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you use SSH keys, you may not need a password to log in.)
 
 # Access Your Droplet
 
-Type the following command in your terminal:
+Connect to your Droplet via SSH:
 
     ssh root@192.168.1.1
 
-Replace `192.168.1.1` with the IP address you got from Digital Ocean.
+(Alternately, use [Putty][put] on Windows)
+
+Replace `192.168.1.1` with the IP address of your Droplet.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2999/0934a0158459ec3f.png" width="571" height="130"> 
 
-It will ask your permission to connect, type `yes`, then it will ask for the root password, which was in the email Digital Ocean sent you when the Droplet was set up. Enter it.
+It will ask your permission to connect, type `yes`, then it will ask for the root password, which is in the email Digital Ocean sent you when the Droplet was set up. Enter it.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3000/8209c1e40c9d70a8.png" width="570" height="278"> 
 
@@ -91,7 +93,7 @@ Modify this newly copied `app.yml`:
 
     nano containers/app.yml
 
-(We recommend Nano because it works like a typical GUI text editor, just use your arrow keys. Hit <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit. However, feel free to use whatever text editor you like. In the below screenshot we use Vim.)
+(We recommend Nano because it works like a typical GUI text editor, just use your arrow keys. Hit <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit. However, feel free to choose whatever text editor you like. In the below screenshot we use Vim.)
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3006/ed9f51b3a44f2b86.png" width="572" height="451"> 
 
@@ -99,17 +101,17 @@ Modify the file as desired, but at minimum you should set `DISCOURSE_DEVELOPER_E
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2979/e6fedbde9b471880.png" width="565" height="172"> 
 
-Notice that I renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that I want to host my instance of Discourse on `http://discourse.techapj.com/`. You'll need to modify your DNS records to reflect the IP address and preferred domain name of your server.
+I renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that I want to host my instance of Discourse on `http://discourse.techapj.com/`. You'll need to modify your DNS records to reflect the IP address and preferred domain name of your server.
 
-#Mail Setup
+# Mail Setup
 
 **Email is critical to Discourse. We strongly recommend configuring mail settings before bootstrapping.**
 
 - If you already have a mail server, put your existing mail server credentials in the `app.yml` file.
 
-- Otherwise, create a free account on [**Mandrill**][man], and put your Mandrill credentials (available via the Mandrill dashboard) in the `app.yml` file. The settings you want to change are `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`.
+- Otherwise, create a free account on [**Mandrill**][man] (or [Mailgun][gun], or [Mailjet][jet]), and put your Mandrill credentials (available via the Mandrill dashboard) in the `app.yml` file. The settings you want to change are `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`.
 
-#Add Your SSH Key
+# Add Your SSH Key
 
 If you successfully generated the SSH key as described earlier, get it:
 
@@ -133,7 +135,7 @@ After that completes, start Discourse:
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3008/ced00cf4782f020c.png" width="568" height="137"> 
 
-Congratulations! You now have your own instance of Discourse, accessible via the domain name you entered in `app.yml` file at the time of setup.
+Congratulations! You now have your own instance of Discourse, accessible via the domain name you entered in `app.yml` earlier.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3397/ea8c3de3a4b7361d.png" width="690" height="207"> 
 
@@ -163,3 +165,6 @@ If anything needs to be improved in this guide, feel free to ask on [meta.discou
  [meta]: https://meta.discourse.org
    [do]: https://www.digitalocean.com/
   [lts]: https://wiki.ubuntu.com/LTS
+  [jet]: http://www.mailjet.com/pricing
+  [gun]: http://www.mailgun.com/
+  [put]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
