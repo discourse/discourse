@@ -64,8 +64,7 @@ Replace `192.168.1.1` with the IP address you got from Digital Ocean.
 Finish installing Docker:
 
     sudo sh -c "wget -qO- https://get.docker.io/gpg | apt-key add -"
-    sudo sh -c "echo deb http://get.docker.io/ubuntu docker main\
-    > /etc/apt/sources.list.d/docker.list"
+    sudo sh -c "echo deb http://get.docker.io/ubuntu docker main /etc/apt/sources.list.d/docker.list"
     sudo apt-get update
     sudo apt-get install lxc-docker
 
