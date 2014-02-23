@@ -63,7 +63,7 @@ Replace `192.168.1.1` with the IP address you got from Digital Ocean.
 
 Finish installing Docker:
 
-    'wget -qO- https://get.docker.io/ | sh'
+    wget -qO- https://get.docker.io/ | sh
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3004/e75967a1a8e27ea3.png" width="567" height="307"> 
 
