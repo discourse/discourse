@@ -6,11 +6,11 @@ The below guide assumes that you have no knowledge of Ruby/Rails or Linux shell,
 
 Discourse recommends a minimum of 1 GB Ram, so that's what we will go with. We'll use discourse as the Hostname.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/2997/c453053824cef71a.png" width="690" height="457"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/3398/975dbf6267b4ad4f.png" width="690" height="475"> 
 
 We will install Discourse on Ubuntu 12.04.3 LTS x64. We always recommend using [the current LTS distribution][lts].
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/2998/0084fb4e84c1d812.png" width="690" height="404"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/3399/f3fc67ee6aa90ea4.png" width="690" height="477"> 
 
 Once you complete the above steps you will receive a mail from Digital Ocean with the root password to the Droplet. (However, if you use SSH keys, you may not need a password to log in.)
 
