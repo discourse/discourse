@@ -27,10 +27,12 @@ fr:
   posts: "messages"
   loading: "Chargement"
   powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, le rendu est meilleur avec le JavaScript activé'
+  log_in: "Connexion"
   via: "%{username} via %{site_name}"
   is_reserved: "est réservé"
   backup:
-    operation_already_running: "Un %{operation} est en train de tourner. Impossible d'en démarrer un autre."
+    operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez démarrer un nouveau processus pour l'instant."
+  read_only_mode_enabled: "Le site est en mode lecture seule. Les interactions sont désactivées."
   too_many_replies:
     one: "Nous sommes désolés, mais les nouveaux utilisateurs sont limités temporairement à 1 réponse dans une même discussion."
     other: "Nous sommes désolés, mais les nouveaux utilisateurs sont limités temporairement à %{count} réponses dans une même discussion."
@@ -73,6 +75,7 @@ fr:
   invalid_characters: "contient des caractères invalides"
   is_invalid: "est invalide; essayez d'être plus précis"
   next_page: "page suivante →"
+  page_num: "Page %{num}"
   by: "Par"
   topics_in_category: "Discussions dans la catégorie '%{category}'"
   rss_posts_in_topic: "Flux RSS de '%{topic}'"
@@ -85,6 +88,7 @@ fr:
   rss_description:
     latest: "Discussions récentes"
     hot: "Discussions populaires"
+  too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   groups:
     errors:
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
@@ -167,8 +171,12 @@ fr:
   user_profile:
     no_info_me: "<div class='missing-profile'>Le champs A Propos de moi de votre profil est vide, <a href='/users/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} n'a pas encore renseigné le champ À propos de moi de son profil</div>"
+  vip_category_name: "Salon"
+  vip_category_description: "Une catégorie réservée aux membres avec un niveau de confiance 3 et plus."
+  meta_category_name: "Meta"
+  meta_category_description: "Discussion sur ce forum, son organisation, son fonctionnement, et comment nous pouvons l'améliorer."
   category:
-    topic_prefix: "Définition de la catégorie %{category}"
+    topic_prefix: "A propos de la catégorie %{category}"
     replace_paragraph: "[Remplacez ce premier paragraphe par une courte description de votre nouvelle catégorie. Ce texte apparaît dans la zone de sélection de catégorie, alors essayez de le maintenir en dessous de 200 caractères. Cette catégorie n'apparaîtra pas sur la page de des catégories tant que vous modifiez ce texte ou jusqu'à ce que vous créeriez des discussions.]"
     post_template: "%{replace_paragraph}\n\nUtilisez les paragraphes suivants pour une plus longue description, voire pour établir des règles. \n\nChoses à considérer avant toute réponse ou  discussion :⏎\n\n- A quoi sert cette catégorie ? Pourquoi les utilisateurs choisiraient-ils cette catégorie pour leur discussion ?\n\n- En quoi elle est différente des autres catégories que nous avons déjà ?\n\n- Avons-nous besoin de cette catégorie ?\n\n- Devrions-nous fusionner celle-ci avec une autre catégorie, ou la diviser en plusieurs catégories ?\n"
     errors:
@@ -271,8 +279,10 @@ fr:
   password_reset:
     no_token: "Désolé, votre jeton a expiré.  Veuillez retenter la réinitialisation de votre mot de passe."
     choose_new: "Veuillez choisir un autre mot de passe"
-    update: 'mettre le mot de passe à jour'
-    title: 'réinitialiser le mot de passe'
+    choose: "Veuillez choisir un mot de passe"
+    update: 'Mettre le mot de passe à jour'
+    save: 'Définir le mot de passe'
+    title: 'Réinitialiser le mot de passe'
     success: "Vous avez modifié votre mot de passe avec succès et vous êtes maintenant connecté."
     success_unapproved: "Vous avez modifié votre mot de passe avec succès."
     continue: "Continuez vers %{site_name}"
@@ -322,6 +332,21 @@ fr:
       title: 'Vote'
       description: 'Votez pour ce message'
       long_form: 'a voté pour ce message'
+  topic_flag_types:
+    spam:
+      title: 'Spam'
+      description: 'Ce message est une publicité. Il n''est pas utile ou pertinent pour ce site, mais de nature promotionnelle.'
+      long_form: 'signalé comme spam'
+    inappropriate:
+      title: 'Inapproprié'
+      description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation des <a href="/faq">règles de notre communauté</ a>.'
+      long_form: 'signalé comme inapproprié'
+    notify_moderators:
+      title: 'Avertir les modérateurs'
+      description: 'Ce message requiert l''attention de la modération d''après la <a href=''/faq''>FAQ</a>, <a href=''%{tos_url}''>TOS</a>, ou pour une autre raison non listée ici.'
+      long_form: 'signalé aux modérateurs'
+      email_title: 'Ce message "%{title}" requière l''attention d''un modérateur'
+      email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Votre message a atteint la limite de signalements. Vérifiez vos messages privés.</p>'
     user_must_edit: '<p>Contenu signalé temporairement masqué.</p>'
@@ -368,9 +393,9 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux signets"
     starred:
-      title: "Favoris"
+      title: "Étoilés"
       xaxis: "Jour"
-      yaxis: "Nombre de nouveaux favoris"
+      yaxis: "Nombre de nouvelles discussions étoilées"
     users_by_trust_level:
       title: "Utilisateurs par niveau de confiance"
       xaxis: "Niveau de confiance"
@@ -423,7 +448,6 @@ fr:
     queue_size_warning: 'Il y a %{queue_size} tâches dans la file d''attente, ce qui est beaucoup. Cela peut provenir d''un problème avec les processus Sidekiq, ou à un manque de processus Sidekiq travailleurs.'
     memory_warning: 'Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé.'
     facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href="/admin/site_settings">l''interface d''administration</a>, <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">voir le guide pour en savoir plus</a>.'
-    cas_config_warning: 'Le serveur est configuré pour permettre l''authentification via CAS (enable_cas_logins), mais les paramètres cas_hostname et cas_domainname ne sont pas renseignés.'
     twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans le <a href="/admin/site_settings">Paramétrage du Site</a>. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">voir le guide pour en savoir plus</a>.'
     github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l''interface d''administration</a>. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">voir le guide pour en savoir plus</a>.'
     s3_config_warning: 'Le serveur est configuré pour charger les fichiers vers s3, mais au moins un de ces paramètre n''est pas configuré : s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l''interface d''administration</a>. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir le guide "Comment charger les images sur S3 ?" pour en savoir plus</a>'
@@ -475,16 +499,19 @@ fr:
       description: "Texte affiché aux utilisateurs non autorisés quand la connexion est requise sur ce site."
     head:
       title: "HTML head"
-      description: "HTML qui sera inséré dans les balises <head></head>"
+      description: "HTML qui sera inséré dans les balises <head></head>."
     top:
       title: "Entête des pages"
       description: "HTML qui sera ajouté en haut de toutes les pages (après l'en-tête, avant la navigation ou le titre de la discussion)."
     bottom:
       title: "Pied des pages"
-      description: "HTML qui sera ajouté au pied de toutes les pages"
+      description: "HTML qui sera ajouté au pied de chaque page."
+    tos_signup_form_message:
+      title: "Formulaire d'inscription : Message des Conditions d'utilisation"
+      description: "Le message qui apparaît à côté d'une case à cocher sur le formulaire d'inscription si le paramètre de site tos_accept_required est activé."
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
-    allow_user_locale: "Permettre aux utilisateurs de choisir leur propre préférence de langue pour l'interface"
+    allow_user_locale: "Autoriser les utilisateurs à choisir leur langue de l'interface de préférence."
     min_post_length: "Longueur minimale des messages en nombre de caractères"
     min_private_message_post_length: "Longueur minimale des messages privés en nombre de caractères"
     max_post_length: "Longueur maximale des messages en nombres de caractères"
@@ -509,6 +536,7 @@ fr:
     download_remote_images_to_local: "Téléchargez une copie des images distantes référencées dans les messages"
     download_remote_images_threshold: "Quantité d'espace disque disponible minimum requise pour télécharger localement des images distantes  (en pour cent)"
     ninja_edit_window: "Temps d'édition avant de sauvegarder une nouvelle version, en secondes."
+    post_edit_time_limit: "Temps en minutes durant lequel les messages peuvent être modifiés et supprimés par l'auteur. Mettre à 0 pour permettre l'édition et la suppression des messages à tout moment."
     edit_history_visible_to_public: "Permettre à tout le monde de voir les versions précédentes d'un posté édité. Quand désactivé, seuls les membres de l'équipe peuvent consulter l'historique des éditions."
     delete_removed_posts_after: "Nombre d'heures après lesquelles des messages supprimés par leur auteur seront supprimés."
     max_image_width: "Largeur maximale des images d'un message"
@@ -518,7 +546,7 @@ fr:
     exclude_rel_nofollow_domains: "Une liste séparée par des virgules contenant les noms de domaines de premier niveau pour lesquels il faut ajouter un attribut nofollow (exemple.com va automatiquement fonctionner aussi avec sous.domaine.exemple.com)"
     post_excerpt_maxlength: "Longueur maximale d'un extrait de message"
     post_onebox_maxlength: "Longueur maximale d'un message emboîté."
-    category_post_template: "Le modèle de message de définition d'une catégorie utilisé lorsque vous créez une nouvelle catégorie"
+    category_post_template: "Le modèle de message utilisé lorsque vous créez une nouvelle catégorie"
     onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer d'un site externe dans un message."
     logo_url: "Le logo de votre site, par exemple : http://example.com/logo.png"
     logo_small_url: "La version minifiée du logo de votre site (affichée sur les pages de discussions) ex : http://example.com/logo-small.png"
@@ -526,6 +554,7 @@ fr:
     apple_touch_icon_url: "Icône utilisée pour les appareils d'Apple. Taille recommandée 144 px par 144 px."
     notification_email: "L'adresse email utilisée pour notifier les utilisateurs de mots de passe perdus, d'activation de compte, etc."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes d'email"
+    use_https: "L'URL complète du site (Discourse.base_url) doit être http ou https ?"
     summary_score_threshold: "Le score minimum d'un message pour être inclus dans le «résumé»"
     summary_posts_required: "Nombre minimum de messages dans une discussion avant que le mode «résumé» soit activé"
     summary_likes_required: "Nombre de J'aime minimum dans une discussion avant que le mode «Résumé» soit activé"
@@ -541,28 +570,31 @@ fr:
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir éditer un message masqué via notification"
     max_topics_in_first_day: "Le nombre maximum de discussions qu'un utilisateur est autorisé à créer lors de leur premier jour sur le site"
     max_replies_in_first_day: "Le nombre maximum de réponses qu'un utilisateur est autorisé à créer lors de leur premier jour sur le site"
-    num_flags_to_block_new_user: "Si un nouvel utilisateur obtient plusieurs signalements pour spam de la part de (n) différents utilisateurs, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
-    num_users_to_block_new_user: "Si un nouvel utilisateur obtient (x) signalements pour spam de la part (x) utilisateurs  différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
+    num_flags_to_block_new_user: "Si un nouvel utilisateur obtient plusieurs signalements pour spam de la part de num_users_to_block_new_user différents utilisateurs, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
+    num_users_to_block_new_user: "Si un nouvel utilisateur obtient num_flags_to_block_new_user signalements pour spam de la part nombreux utilisateurs différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     notify_mods_when_user_blocked: "Si un utilisateur est bloqué automatiquement, envoyer un message à tous les modérateurs."
     flag_sockpuppets: "Si un nouvel utilisateur (par exemple, enregistré dans les dernières 24 heures) a commencé une discussion et qu'un nouvel utilisateur répond à ce sujet et qu'ils ont tous les deux la même adresse IP, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans markdown, le wrapping est implicite sauf si suivi de 2 espaces"
     post_undo_action_window_mins: "Nombre de secondes pendant lesquelles un utilisateur peut annuler une action sur un message (j'aime, signaler, etc.)"
     must_approve_users: "Les administrateurs du forum doivent approuver les utilisateurs avant qu'il y aient accès."
-    ga_tracking_code: "Code de suivi de Google Analytics, par exemple : UA-12345678-9, voir: http://google.com/analytics"
-    ga_domain_name: "Domaine suivi par Google Analytics, par exemple : monsite.com, voir: http://google.com/analytics"
-    enable_escaped_fragments: "Activer une solution de contournement afin d'aider d'ancien moteurs de recherche d'indexer votre site."
+    ga_tracking_code: "Google Analytics (ga.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
+    ga_domain_name: "Google Analytics (ga.js) de noms de domaine, par exemple: monsite.com; voir http://google.com/analytics"
+    ga_universal_tracking_code: "Google Analytics Universal (analytics.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
+    ga_universal_domain_name: "Google Analytics Universal (analytics.js) nom de domaine, par exemple: monsite.com; voir http://google.com/analytics"
+    enable_escaped_fragments: "Revenir à l'API Ajax-Crawling de Google si un robot n'est pas détecté."
     enable_noscript_support: "Activer le support des moteurs de recherches standards via le tag noscript"
-    top_menu: "L'ordre des éléments dans le menu du haut. Exemple latest|new|unread|starred|categories|top|read|posted"
+    top_menu: "Déterminer les éléments qui apparaissent dans la navigation de la page d'accueil, et dans quel ordre. Exemple latest|new|unread|starred|categories|top|read|posted"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"
     share_links: "Liste ordonnée des boutons de partage. Exemple : twitter|facebook|google+|email"
     track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écrite de toutes les urls"
-    topics_per_page: "Combien de discussions chargées par défaut dans le page des discussions"
+    topics_per_page: "Combien de discussions chargées par défaut sur la page de la liste des discussions et lors du chargement des discussions supplémentaires"
     posts_per_page: "Combien de messages chargés par défaut sur la page d'un discussion, et combien lors du chargement des messages supplémentaires"
     site_contact_username: "Pseudo de l'auteur des messages privés automatisés envoyés par le forum"
     send_welcome_message: "Les nouveaux utilisateurs reçoivent-ils un message privé de bienvenue ?"
     suppress_reply_directly_below: "Ne pas afficher le nombre de réponses d'un message quand la seule réponse est juste en dessous"
     suppress_reply_directly_above: "Ne pas afficher 'en réponse à'  sur un message quand la seule réponse est juste en dessus"
-    topics_per_period_in_top_summary: "Combien de discussions chargées par défaut sur la page des meilleures discussions"
+    topics_per_period_in_top_summary: "Combien de discussions chargées sur le résumé des meilleures discussions"
+    topics_per_period_in_top_page: "Combien de discussions chargées sur la page principale des discussions"
     allow_index_in_robots_txt: "Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)"
     email_domains_blacklist: "Liste des domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines d'email autorisés, délimités par un pipe. ATTENTION : les utilisateurs ayant un email sur un autre domaine ne pourrons pas s'enregistrer."
@@ -585,13 +617,10 @@ fr:
     enable_facebook_logins: "Active l'authentification Facebook, nécessite facebook_app_id et  facebook_app_secret"
     facebook_app_id: "App id pour l'authentification Facebook, enregistrée sur https://developers.facebook.com/apps"
     facebook_app_secret: "App secret pour l'authentification Facebook, enregistré sur https://developers.facebook.com/apps"
-    enable_cas_logins: "Active l'authentification CAS"
-    cas_hostname: "Nom d'hôte du serveur CAS"
-    cas_domainname: "Le nom de domaine qui génerera des adresses email pour le serveur CAS"
     enable_github_logins: "Active l'authentification GitHub, nécessite github_client_id et github_client_secret"
     github_client_id: "id client pour l'authentification Github, enregistré sur https://github.com/settings/applications"
     github_client_secret: "secret client  pour l'authentification Github, enregistré sur https://github.com/settings/applications"
-    allow_restore: "Autoriser la restauration qui remplacera TOUTES les données du site. Laisser non coché, sauf si vous prévoyez de restaurer un backup."
+    allow_restore: "Autoriser la restauration, qui peut remplacer TOUTES les données du site! Laissez à faux, sauf si vous envisagez de faire restaurer une sauvegarde"
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'dernier_vu_a', en secondes."
     previous_visit_timeout_hours: "Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures."
     rate_limit_create_topic: "Après la création d'une discussion, les utilisateurs doivent attendre ce nombre de secondes avant de pouvoir créer une nouvelle discussion"
@@ -600,7 +629,7 @@ fr:
     max_flags_per_day: "Quantité maximale de signalements qu'un utilisateur peut effectuer en un jour"
     max_bookmarks_per_day: "Quantité maximale de signets qu'un utilisateur peut ajouter en un jour"
     max_edits_per_day: "Quantité maximale de modifications de messages qu'un utilisateur peut effectuer en un jour"
-    max_stars_per_day: "Quantité maximale de disscussions pouvant être mises en favoris en un jour"
+    max_stars_per_day: "Le nombre maximum de discussions qui peuvent être étoilées par utilisateur et par jour"
     max_topics_per_day: "Quantité maximale de discussions que vous pouvez créer en un jour"
     max_private_messages_per_day: "Quantité maximale de messages privés que vous pouvez envoyer en un jour"
     suggested_topics: "Nombre de discussions suggérées à la fin d'une discussion"
@@ -663,14 +692,16 @@ fr:
     pop3s_polling_host: "L'hôte utilisé pour le polling pour l'email via POP3S"
     pop3s_polling_username: "Le nom d'utilisateur pour le polling POPS3 par email"
     pop3s_polling_password: "Le mot de passe pour le polling POPS3 par email"
+    enable_mailing_list_mode: "Autoriser les utilisateurs à s'inscrire (optionnellement) au mode de liste de diffusion via une préférence de l'utilisateur"
     minimum_topics_similar: "Combien de topics ont besoin d'exister dans la base de données avant que des topics similaires soit présentés."
     relative_date_duration: "Nombre de jours après la création d'un message à partir desquels les dates seront affichées en absolu plutôt qu'en relatif. Exemple: relatif : 7j, absolut : 20 Fév"
-    delete_user_max_post_age: "L'age maximum d'un utilisateur, en jours, qui permet à un administrateur de le supprimer."
+    delete_user_max_post_age: "L'âge maximum du premier message d'un utilisateur, en jours, qui permet de supprimer un utilisateur."
     delete_all_posts_max: "Le nombre maximum de messages qui peuvent être supprimer en une seule fois avec le bouton Supprimer tous les messages. Si un utilisateur a plus que ce nombre de messages, les messages ses messages ne pourront pas être supprimé en une seul fois et l'utilisateur ne pourra pas être supprimé."
     username_change_period: "Le nombre de jours après l'enregistrement que les comptes peuvent changer leur nom d'utilisateur (0 pour empêcher le changement de pseudo)."
     email_editable: "Permettre aux utilisateurs de changer leur adresse e-mail après l'inscription."
     allow_uploaded_avatars: "Permettre aux utilisateurs de charger leurs propres avatars."
     allow_animated_avatars: "Permettre aux utilisateurs d'utiliser des avatars avec des gif animés. ATTENTION: il est hautement recommandé d'exécuter la tâche rake avatars:regenerate après avoir changé ce paramètre."
+    digest_min_excerpt_length: "Combien de caractères nous visons pour chaque message dans l'e-mail résumé"
     default_digest_email_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les emails par défaut. Ils peuvent changer ce paramétrage dans leur préférences."
     default_external_links_in_new_tab: "Les liens externes s'ouvrent dans un nouvel onglet. Les utilisateurs peuvent modifier ceci dans leurs préférences."
     detect_custom_avatars: "Vérifier ou pas que les utilisateurs ont envoyés des avatars personnalisés."
@@ -679,6 +710,7 @@ fr:
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui réponde à tous les types de clients."
     dominating_topic_minimum_percent: "Quel est le pourcentage de messages d'un utilisateur doit poster dans une discussion avant que nous considérions qu'il est dominant."
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des discussions"
+    min_posts_for_search_in_topic: "Désactiver la recherche dans les discussions si les discussions ont moins du minimum de messages"
     enable_names: "Permettre aux utilisateurs d'afficher leurs noms et prénoms"
     display_name_on_posts: "Afficher également le nom complet de l'utilisateur dans ses messages"
     invites_shown: "Nombre maximum d'invitations affichées sur une page utilisateur"
@@ -688,7 +720,9 @@ fr:
     feed_polling_enabled: "Si vous souhaitez importer un flux RSS/ATOM en tant que discussions"
     feed_polling_url: "URL du flux RSS/ATOM à importer"
     embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les discussions"
+    embed_category: "Catégorie de discussions créées"
     embed_post_limit: "Le nombre maximum de messages à incorporer"
+    tos_accept_required: "Si il est activé, les utilisateurs devront cocher une case sur le formulaire d'inscription pour confirmer qu'ils acceptent les conditions de service. Modifier \"Formulaire d'inscription : Message des Conditions d'utilisation» dans l'onglet Contenu pour modifier le message."
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
     liked: "%{display_username} a aimé votre message dans %{link}"
@@ -701,6 +735,7 @@ fr:
     invited_to_private_message: "%{display_username} vous a invité dans une conversation privée: %{link}"
     invitee_accepted: "%{display_username} a accepté votre invitation"
   search:
+    within_post: "#%{post_number} par %{username}: %{excerpt}"
     types:
       category: 'Catégories'
       topic: 'Discussions'
@@ -756,7 +791,7 @@ fr:
     username:
       short: "doit avoir plus de %{min} caractères"
       long: "doit avoir moins de %{max} caractères"
-      characters: "ne doit contenir que des chiffres et des lettres"
+      characters: "doit inclure uniquement des chiffres, lettres et caractères de soulignement"
       unique: "doit être unique"
       blank: "doit être présent"
       must_begin_with_alphanumeric: "doit commencer par une lettre ou un nombre"
@@ -835,7 +870,7 @@ fr:
 
       **Nouvelle version: %{new_version}**
 
-      S'il vous plait faites une mise à jour dès que possible pour obtenir les derniers correctifs et les nouvelles fonctionnalités.
+      S'il vous plait faites une mise à jour dès que possible pour obtenir les derniers correctifs et les nouvelles fonctionnalités. Visitez http://meta.discourse.org pour discuter et lire les nouvelles au sujet de Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Des mise à jour sont disponibles"
     text_body_template: |
@@ -846,6 +881,8 @@ fr:
       **Nouvelle version: %{new_version}**
 
       %{notes}
+
+      Visitez http://meta.discourse.org pour discuter et lire les nouvelles au sujet de Discourse.
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
@@ -998,12 +1035,13 @@ fr:
     reply_by_email: "Pour répondre, répondre à cet email ou visitez %{base_url}%{url} dans votre navigateur."
     visit_link_to_respond: "Pour répondre, visitez %{base_url}%{url} dans votre navigateur."
     posted_by: "Posté par %{username} le %{post_date}"
-    user_invited_to_private_message:
+    user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} vous a invité(e) à une conversation privée '%{topic_title}'"
-      text_body_template: |
+      text_body_template: |+
         %{username} vous a invité(e) à une conversation privée '%{topic_title}' sur %{site_name}:
 
-                Merci de visiter ce lien pour voir la discussion: %{base_url}%{url}
+        Merci de visiter ce lien pour voir la discussion: %{base_url}%{url}
+
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1040,6 +1078,15 @@ fr:
 
         ---
         %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{site_name}] [MP] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     digest:
       why: "Voici un bref résumé de ce qui s'est passé sur %{site_link} depuis la dernière fois que nous vous avons vu(e) le %{last_seen_at}."
       subject_template: "[%{site_name}] Activité du Forum pour %{date}"
@@ -1062,6 +1109,9 @@ fr:
 
                 Cliquez sur le lien ci-dessous pour choisir un nouveau mot de passe :
                 %{base_url}/users/password-reset/%{email_token}
+    set_password:
+      subject_template: "[%{site_name}] Définir le mot de passe"
+      text_body_template: "Quelqu'un a demandé d'ajouter un mot de passe à votre compte sur  [%{site_name}](%{base_url}). Alternativement, vous pouvez vous connecter en utilisant un service en ligne pris en charge (Google, Facebook, etc) déjà associé à cette adresse e-mail validée. \n\nSi vous n'avez pas fait cette demande, vous pouvez ignorer cet e-mail. \n\nCliquez sur le lien suivant pour choisir un mot de passe: \n%{base_url}/users/password-reset/%{email_token}\n"
     authorize_email:
       subject_template: "[%{site_name}] Confirmation de votre nouvelle adresse mail"
       text_body_template: |
@@ -1097,7 +1147,7 @@ fr:
   discourse_hub:
     access_token_problem: "Informer un administateur : Veuillez mettre à jour les paramètres du site pour inclure la discourse_org_access_key correcte."
   page_not_found:
-    title: "La page que vous avez demandée n'existe pas ou a peut-être été supprimée par un modérateur."
+    title: "La page que vous avez demandé n'existe pas ou est privée."
     popular_topics: "Discussions populaires"
     recent_topics: "Discussions récentes"
     see_more: "Voir plus"
@@ -1110,8 +1160,9 @@ fr:
   terms_of_service:
     user_content_license: |
       Les contributions utilisateurs sont soumises à la licence [Creative Commons Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 3.0 France](http://creativecommons.org/licenses/by-nc-sa/3.0/fr/). Sans limiter la portée de ces déclarations ou garanties, %{company_short_name} a le droit (néanmoins pas l'obligation) de, (i) refuser ou retirer tout contenu à la seule discrétion de %{company_short_name}, qui selon l'opinion raisonnable de %{company_short_name}, ne respecte pas la politique de %{company_short_name} ou est peut être considéré comme dangereux ou répréhensible, (ii) ou mettre fin ou empêcher l'accès au site web à n'importe quelle personne ou entité pour n'importe quel raison, et ce à la seule discrétion de %{company_short_name}. %{company_short_name} n'a pas obligation de rembourser les montants précédemment payés.
-    miscellaneous: "Le présent document a pour objet de définir les modalités et conditions dans lesquelles d’une part,  %{company_short_name}, ci-après dénommé l’EDITEUR, met à la disposition de ses utilisateurs le site, et les services disponibles sur le site et d’autre part, la manière par laquelle l’utilisateur accède au site et utilise ses services.\n\nToute connexion au site est subordonnée au respect des présentes conditions.\n\nPour l’utilisateur, le simple accès au site de l’EDITEUR à l’adresse URL suivante %{base_url} implique l’acceptation de l’ensemble des conditions décrites ci-après.\n\nLiens hypertextes\n\nLe site  %{base_url} peut contenir des liens hypertextes vers d’autres sites présents sur le réseau Internet. Les liens vers ces autres ressources vous font quitter le site %{base_url}\n\nIl est possible de créer un lien vers la page de présentation de ce site sans autorisation expresse de l’EDITEUR. Aucune autorisation ou demande d’information préalable ne peut être exigée par l’éditeur à l’égard d’un site qui souhaite établir un lien vers le site de l’éditeur. Il convient toutefois d’afficher ce site dans une nouvelle fenêtre du navigateur. Cependant, l’EDITEUR se réserve le droit de demander la suppression d’un lien qu’il estime non conforme à l’objet du site %{base_url}\n\nResponsabilité de l’éditeur\n\nLes informations et/ou documents figurant sur ce site et/ou accessibles par ce site proviennent de sources considérées comme étant fiables.\n\nToutefois, ces informations et/ou documents sont susceptibles de contenir des inexactitudes techniques et des erreurs typographiques.\n\nL’EDITEUR se réserve le droit de les corriger, dès que ces erreurs sont portées à sa connaissance.\n\nIl est fortement recommandé de vérifier l’exactitude et la pertinence des informations et/ou documents mis à disposition sur ce site.\n\nLes informations et/ou documents disponibles sur ce site sont susceptibles d’être modifiés à tout moment, et peuvent avoir fait l’objet de mises à jour. En particulier, ils peuvent avoir fait l’objet d’une mise à jour entre le moment de leur téléchargement et celui où l’utilisateur en prend connaissance.\n\nL’utilisation des informations et/ou documents disponibles sur ce site se fait sous l’entière et seule responsabilité de l’utilisateur, qui assume la totalité des conséquences pouvant en découler, sans que l’EDITEUR puisse être recherché à ce titre, et sans recours contre ce dernier.\n\nL’EDITEUR ne pourra en aucun cas être tenu responsable de tout dommage de quelque nature qu’il soit résultant de l’interprétation ou de l’utilisation des informations et/ou documents disponibles sur ce site.\n\nAccès au site\n\nL’éditeur s’efforce de permettre l’accès au site 24 heures sur 24, 7 jours sur 7, sauf en cas de force majeure ou d’un événement hors du contrôle de l’EDITEUR, et sous réserve des éventuelles pannes et interventions de readonly nécessaires au bon fonctionnement du site et des services.\n\nPar conséquent, l’EDITEUR ne peut garantir une disponibilité du site et/ou des services, une fiabilité des transmissions et des performances en terme de temps de réponse ou de qualité. Il n’est prévu aucune assistance technique vis à vis de l’utilisateur que ce soit par des moyens électronique ou téléphonique.\n\nLa responsabilité de l’éditeur ne saurait être engagée en cas d’impossibilité d’accès à ce site et/ou d’utilisation des services.\n\nPar ailleurs, l’EDITEUR peut être amené à interrompre le site ou une partie des services, à tout moment sans préavis, le tout sans droit à indemnités. L’utilisateur reconnaît et accepte que l’EDITEUR ne soit pas responsable des interruptions, et des conséquences qui peuvent en découler pour l’utilisateur ou tout tiers.\n\nModification des conditions d’utilisation\n\nL’EDITEUR se réserve la possibilité de modifier, à tout moment et sans préavis, les présentes conditions d’utilisation afin de les adapter aux évolutions du site et/ou de son exploitation.\n\nRègles d'usage d'Internet\n\nL’utilisateur déclare accepter les caractéristiques et les limites d’Internet, et notamment reconnaît que :\n\nL’EDITEUR n’assume aucune responsabilité sur les services accessibles par Internet et n’exerce aucun contrôle de quelque forme que ce soit sur la nature et les caractéristiques des données qui pourraient transiter par l’intermédiaire de son centre serveur.\n\nL’utilisateur reconnaît que les données circulant sur Internet ne sont pas protégées notamment contre les détournements éventuels. La présence du logo %{logo_url} institue une présomption simple de validité. La communication de toute information jugée par l’utilisateur de nature sensible ou confidentielle se fait à ses risques et périls.\n\nL’utilisateur reconnaît que les données circulant sur Internet peuvent être réglementées en termes d’usage ou être protégées par un droit de propriété.\n\nL’utilisateur est seul responsable de l’usage des données qu’il consulte, interroge et transfère sur Internet.\n\nL’utilisateur reconnaît que l’EDITEUR ne dispose d’aucun moyen de contrôle sur le contenu des services accessibles sur Internet\n\nDroit applicable\n\nTant le présent site que les modalités et conditions de son utilisation sont régis par le droit français, quel que soit le lieu d’utilisation. En cas de contestation éventuelle, et après l’échec de toute tentative de recherche d’une solution amiable, les tribunaux français seront seuls compétents pour connaître de ce litige.\n\nPour toute question relative aux présentes conditions d’utilisation du site,\
+    miscellaneous: "Le présent document a pour objet de définir les modalités et conditions dans lesquelles d’une part,  %{company_short_name}, ci-après dénommé l’EDITEUR, met à la disposition de ses utilisateurs le site, et les services disponibles sur le site et d’autre part, la manière par laquelle l’utilisateur accède au site et utilise ses services.\n\nToute connexion au site est subordonnée au respect des présentes conditions.\n\nPour l’utilisateur, le simple accès au site de l’EDITEUR à l’adresse URL suivante %{base_url} implique l’acceptation de l’ensemble des conditions décrites ci-après.\n\nLiens hypertextes\n\nLe site  %{base_url} peut contenir des liens hypertextes vers d’autres sites présents sur le réseau Internet. Les liens vers ces autres ressources vous font quitter le site %{base_url}\n\nIl est possible de créer un lien vers la page de présentation de ce site sans autorisation expresse de l’EDITEUR. Aucune autorisation ou demande d’information préalable ne peut être exigée par l’éditeur à l’égard d’un site qui souhaite établir un lien vers le site de l’éditeur. Il convient toutefois d’afficher ce site dans une nouvelle fenêtre du navigateur. Cependant, l’EDITEUR se réserve le droit de demander la suppression d’un lien qu’il estime non conforme à l’objet du site %{base_url}\n\nResponsabilité de l’éditeur\n\nLes informations et/ou documents figurant sur ce site et/ou accessibles par ce site proviennent de sources considérées comme étant fiables.\n\nToutefois, ces informations et/ou documents sont susceptibles de contenir des inexactitudes techniques et des erreurs typographiques.\n\nL’EDITEUR se réserve le droit de les corriger, dès que ces erreurs sont portées à sa connaissance.\n\nIl est fortement recommandé de vérifier l’exactitude et la pertinence des informations et/ou documents mis à disposition sur ce site.\n\nLes informations et/ou documents disponibles sur ce site sont susceptibles d’être modifiés à tout moment, et peuvent avoir fait l’objet de mises à jour. En particulier, ils peuvent avoir fait l’objet d’une mise à jour entre le moment de leur téléchargement et celui où l’utilisateur en prend connaissance.\n\nL’utilisation des informations et/ou documents disponibles sur ce site se fait sous l’entière et seule responsabilité de l’utilisateur, qui assume la totalité des conséquences pouvant en découler, sans que l’EDITEUR puisse être recherché à ce titre, et sans recours contre ce dernier.\n\nL’EDITEUR ne pourra en aucun cas être tenu responsable de tout dommage de quelque nature qu’il soit résultant de l’interprétation ou de l’utilisation des informations et/ou documents disponibles sur ce site.\n\nAccès au site\n\nL’éditeur s’efforce de permettre l’accès au site 24 heures sur 24, 7 jours sur 7, sauf en cas de force majeure ou d’un événement hors du contrôle de l’EDITEUR, et sous réserve des éventuelles pannes et interventions de maintenance nécessaires au bon fonctionnement du site et des services.\n\nPar conséquent, l’EDITEUR ne peut garantir une disponibilité du site et/ou des services, une fiabilité des transmissions et des performances en terme de temps de réponse ou de qualité. Il n’est prévu aucune assistance technique vis à vis de l’utilisateur que ce soit par des moyens électronique ou téléphonique.\n\nLa responsabilité de l’éditeur ne saurait être engagée en cas d’impossibilité d’accès à ce site et/ou d’utilisation des services.\n\nPar ailleurs, l’EDITEUR peut être amené à interrompre le site ou une partie des services, à tout moment sans préavis, le tout sans droit à indemnités. L’utilisateur reconnaît et accepte que l’EDITEUR ne soit pas responsable des interruptions, et des conséquences qui peuvent en découler pour l’utilisateur ou tout tiers.\n\nModification des conditions d’utilisation\n\nL’EDITEUR se réserve la possibilité de modifier, à tout moment et sans préavis, les présentes conditions d’utilisation afin de les adapter aux évolutions du site et/ou de son exploitation.\n\nRègles d'usage d'Internet\n\nL’utilisateur déclare accepter les caractéristiques et les limites d’Internet, et notamment reconnaît que :\n\nL’EDITEUR n’assume aucune responsabilité sur les services accessibles par Internet et n’exerce aucun contrôle de quelque forme que ce soit sur la nature et les caractéristiques des données qui pourraient transiter par l’intermédiaire de son centre serveur.\n\nL’utilisateur reconnaît que les données circulant sur Internet ne sont pas protégées notamment contre les détournements éventuels. La présence du logo %{logo_url} institue une présomption simple de validité. La communication de toute information jugée par l’utilisateur de nature sensible ou confidentielle se fait à ses risques et périls.\n\nL’utilisateur reconnaît que les données circulant sur Internet peuvent être réglementées en termes d’usage ou être protégées par un droit de propriété.\n\nL’utilisateur est seul responsable de l’usage des données qu’il consulte, interroge et transfère sur Internet.\n\nL’utilisateur reconnaît que l’EDITEUR ne dispose d’aucun moyen de contrôle sur le contenu des services accessibles sur Internet\n\nDroit applicable\n\nTant le présent site que les modalités et conditions de son utilisation sont régis par le droit français, quel que soit le lieu d’utilisation. En cas de contestation éventuelle, et après l’échec de toute tentative de recherche d’une solution amiable, les tribunaux français seront seuls compétents pour connaître de ce litige.\n\nPour toute question relative aux présentes conditions d’utilisation du site,\
       \ vous pouvez nous écrire à l’adresse suivante : xxxx"
+    signup_form_message: 'J''ai lu et j''accepte les <a href="/tos" target="_blank">Conditions d''utilisation</ a>.'
   deleted: 'supprimé'
   upload:
     edit_reason: "Nous avons téléchargé des copies des images distantes"
@@ -1127,3 +1178,17 @@ fr:
   flag_reason:
     sockpuppet: "Un nouvel utilisateur a créé une discussion et un autre nouvel utilisateur avec la même adresse IP a répondu. Voir le paramétrage du site flag_sockpuppets."
     spam_hosts: "Cet utilisateur a essayé de créer plusieurs messages avec des liens vers le même domaine. Voir le paramétrage du site newuser_spam_host_threshold."
+  email_log:
+    no_user: "Impossible de trouver l'utilisateur avec l'id %{user_id}"
+    suspended_not_pm: "L'utilisateur est suspendu et l'e-mail n'est pas un message privé"
+    seen_recently: "L'utilisateur a été vu récemment"
+    post_not_found: "Impossible de trouver le message avec l'id %{post_id}"
+    notification_already_read: "La notification e-mail a déjà été lue"
+    topic_nil: "post.topic est nul"
+    post_deleted: "le message a été supprimé par l'auteur"
+    user_suspended: "l'utilisateur a été suspendu"
+    already_read: "l'utilisateur a déjà lu ce message"
+    message_blank: "le message est vide"
+    message_to_blank: "message.to est vide"
+    text_part_body_blank: "text_part.body est vide"
+    body_blank: "body est vide"
