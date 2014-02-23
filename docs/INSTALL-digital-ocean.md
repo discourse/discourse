@@ -94,7 +94,7 @@ Modify this newly copied `app.yml`:
 
     nano containers/app.yml
 
-(We recommend Nano because it works like a typical GUI text editor, just use your arrow keys. Hit <kbd>Ctrl</kbd><kbd>O</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit. However, feel free to use whatever text editor you like. In the below screenshot we use Vim.)
+(We recommend Nano because it works like a typical GUI text editor, just use your arrow keys. Hit <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit. However, feel free to use whatever text editor you like. In the below screenshot we use Vim.)
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3006/ed9f51b3a44f2b86.png" width="572" height="451"> 
 
