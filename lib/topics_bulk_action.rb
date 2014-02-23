@@ -8,7 +8,7 @@ class TopicsBulkAction
   end
 
   def self.operations
-    %w(change_category close change_notification_level)
+    %w(change_category close change_notification_level reset_read)
   end
 
   def perform!
@@ -18,6 +18,10 @@ class TopicsBulkAction
   end
 
   private
+
+    def reset_read
+      PostTiming.destroy_for(@user.id, @topic_ids)
+    end
 
     def change_category
       topics.each do |t|

@@ -121,6 +121,8 @@ Discourse::Application.routes.draw do
         get "cancel" => "backups#cancel"
         get "rollback" => "backups#rollback"
         put "readonly" => "backups#readonly"
+        get "upload" => "backups#check_chunk"
+        post "upload" => "backups#upload_chunk"
       end
     end
 

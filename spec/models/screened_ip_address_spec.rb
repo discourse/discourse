@@ -66,6 +66,9 @@ describe ScreenedIpAddress do
       test_good_value("210.56.12.12", "210.56.12.12")
       test_good_value("210.56.0.0/16", "210.56.0.0/16")
       test_good_value("fc00::/7", "fc00::/7")
+      test_good_value(IPAddr.new("94.99.101.228"), "94.99.101.228")
+      test_good_value(IPAddr.new("94.99.0.0/16"), "94.99.0.0/16")
+      test_good_value(IPAddr.new("fc00::/7"), "fc00::/7")
     end
 
     it "translates * characters" do

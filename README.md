@@ -12,6 +12,13 @@ Whenever you need ...
 
 To learn more about the philosophy and goals of the project, [visit discourse.org](http://www.discourse.org).
 
+## Screenshots
+
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-small2.png)](http://bbs.boingboing.net)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small2.png)](http://discuss.howtogeek.com)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/new-relic-categories-small2.png)](http://discuss.newrelic.com)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-small2.jpg)](https://talk.turtlerockstudios.com/)
+
 ## Getting Started
 
 1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. This beginner's guide is also adequate for developers ready to sink their teeth quickly; it's the easiest way to hack on Discourse!
@@ -28,7 +35,7 @@ If you're not here to hack on the open source code, but rather looking to set up
 
 Discourse is a **Civilized Discourse Construction Kit**, a free, flexible, fundamental building block for online discussion communities of any size, tiny to huge.
 
-- A **flattened, endlessly scrolling discussion**, avoiding the awkwardness of traditionally threaded and paginated discussion, where replies to be expanded in place for context.
+- A **flattened, endlessly scrolling discussion**, avoiding the awkwardness of traditionally threaded and paginated discussion, where replies can be expanded in place for context.
 
 - A **user trust system** that grants users rights to assist in governing the forum as they participate in good faith over time. The goal is for the forum to be nearly self-moderating in the absence of any formal moderators, although excellent moderators always accelerate the process greatly.
 

@@ -7,7 +7,7 @@
   @module Discourse
 **/
 Discourse.BulkNotificationLevelController = Em.Controller.extend({
-  needs: ['topicBulkActions', 'discoveryTopics'],
+  needs: ['topicBulkActions'],
 
   notificationLevelId: null,
 
@@ -27,17 +27,9 @@ Discourse.BulkNotificationLevelController = Em.Controller.extend({
 
   actions: {
     changeNotificationLevel: function() {
-      var self = this;
-
-      this.get('controllers.topicBulkActions').perform({
+      this.get('controllers.topicBulkActions').performAndRefresh({
         type: 'change_notification_level',
         notification_level_id: this.get('notificationLevelId')
-      }).then(function(topics) {
-        if (topics) {
-          // Tell current route to reload
-          self.get('controllers.discoveryTopics').send('refresh');
-          self.send('closeModal');
-        }
       });
     }
   }

@@ -23,6 +23,8 @@ class ScreenedIpAddress < ActiveRecord::Base
       return
     end
 
+    return write_attribute(:ip_address, val) if val.is_a?(IPAddr)
+
     num_wildcards = val.count('*')
     if num_wildcards == 0
       write_attribute(:ip_address, val)
