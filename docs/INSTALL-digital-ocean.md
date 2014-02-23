@@ -1,4 +1,4 @@
-The deployment of Discourse is simple thanks to the [Docker Image][dd], all you need is SSH access to a virtual cloud server. In this guide I'll assume that you are using [Digital Ocean][do], although these steps will work on other cloud servers as well.
+The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. In this guide I'll assume that you are using [Digital Ocean][do], although these steps will work on other similar services.
 
 The below guide assumes that you have no knowledge of Ruby/Rails or Linux shell, so it will be detailed. Feel free to skip steps which you are comfortable with.
 
@@ -140,7 +140,7 @@ Congratulations! You now have your own instance of Discourse, accessible via the
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3397/ea8c3de3a4b7361d.png" width="690" height="207"> 
 
-You can also access it by visiting the server IP address directly, e.g. `192.168.1.1`.
+You can also access it by visiting the server IP address directly, e.g. `http://192.168.1.1`.
 
 # Access Admin
 
