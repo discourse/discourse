@@ -142,7 +142,7 @@ Congratulations! You now have your own instance of Discourse, accessible via the
 
 You can also access it by visiting the server IP address directly, e.g. `http://192.168.1.1`.
 
-# Access Admin
+# Log In and Become Admin
 
 Sign into your Discourse instance. If you configured `DISCOURSE_DEVELOPER_EMAILS` and your email matches, your account will be made Admin by default.
 
