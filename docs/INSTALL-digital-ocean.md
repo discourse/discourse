@@ -89,7 +89,7 @@ Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3005/5c253f4657e2133f.png" width="571" height="56"> 
 
-Modify this newly copied `app.yml`:
+Edit `app.yml`:
 
     nano containers/app.yml
 
@@ -97,7 +97,7 @@ Modify this newly copied `app.yml`:
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3006/ed9f51b3a44f2b86.png" width="572" height="451"> 
 
-Modify the file as desired, but at minimum you should set `DISCOURSE_DEVELOPER_EMAILS` and `DISCOURSE_HOSTNAME`.
+Edit as desired, but at minimum set `DISCOURSE_DEVELOPER_EMAILS` and `DISCOURSE_HOSTNAME`.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2979/e6fedbde9b471880.png" width="565" height="172"> 
 
