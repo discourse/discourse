@@ -1,4 +1,4 @@
-The deployment of Discourse is simple thanks to the [Docker Image][1], all you need is SSH access to a virtual cloud server. In this guide I'll assume that you are using [Digital Ocean][do], although these steps will work on other cloud servers as well.
+The deployment of Discourse is simple thanks to the [Docker Image][dd], all you need is SSH access to a virtual cloud server. In this guide I'll assume that you are using [Digital Ocean][do], although these steps will work on other cloud servers as well.
 
 The below guide assumes that you have no knowledge of Ruby/Rails or Linux shell, so it will be detailed. Feel free to skip steps which you are comfortable with.
 
@@ -8,11 +8,11 @@ Discourse recommends a minimum of 1 GB Ram, so that's what we will go with. We'l
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2997/c453053824cef71a.png" width="690" height="457"> 
 
-We will install Discourse on Ubuntu 12.04.3 x64 LTS as this is [recommended][2] in [official documentation][3].
+We will install Discourse on Ubuntu 12.04.3 LTS x64. We always recommend using [the current LTS distribution][lts].
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2998/0084fb4e84c1d812.png" width="690" height="404"> 
 
-Once you complete the above steps you will receive a mail from Digital Ocean with the root password to the Droplet. However, note that if you use SSH keys, you may not need a password to log in.
+Once you complete the above steps you will receive a mail from Digital Ocean with the root password to the Droplet. (However, if you use SSH keys, you may not need a password to log in.)
 
 # Access your newly created Droplet
 
@@ -24,13 +24,11 @@ Replace `192.168.1.1` with the IP address you got from Digital Ocean.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2999/0934a0158459ec3f.png" width="571" height="130"> 
 
-It will ask your permission to connect, type `yes`, then it will ask for the root password, which was in the email Digital Ocean sent you when the Droplet was set up. Type the root password in to log in to your newly installed Ubuntu Server.
+It will ask your permission to connect, type `yes`, then it will ask for the root password, which was in the email Digital Ocean sent you when the Droplet was set up. Enter it.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3000/8209c1e40c9d70a8.png" width="570" height="278"> 
 
 # Install Git
-
-To install Git:
 
     sudo apt-get install git
 
@@ -40,12 +38,10 @@ To install Git:
 
 **We highly recommend setting a SSH key, because you may need to access the Rails console for debugging purposes. This is only possible if you have SSH access preconfigured. This <i>cannot</i> be done after bootstrapping the app.**
 
-Generate the SSH key:
-
     ssh-keygen -t rsa -C "your_email@example.com"
     ssh-add id_rsa
 
-(We want the default settings, so when asked to enter a file in which to save the key, just press <kbd>enter</kbd>. Via [GitHub's SSH guide][7].)
+(We want the default settings, so when asked to enter a file in which to save the key, just press <kbd>enter</kbd>. Via [GitHub's SSH guide][ssh].)
 
 # Install Docker
 
@@ -78,17 +74,15 @@ Finish installing Docker:
 
 # Install Discourse
 
-Congratulations! You now have a brand new Ubuntu Server with Docker installed. Now let's install Discourse.
-
 Create a `/var/docker` folder where all the Docker related stuff will reside:
 
     mkdir /var/docker
 
-Clone the [Official Discourse Docker Image][4] into the `/var/docker` folder:
+Clone the [Official Discourse Docker Image][dd] into this `/var/docker` folder:
 
     git clone https://github.com/SamSaffron/discourse_docker.git /var/docker
 
-Switch to the directory:
+Switch to your Docker directory:
 
     cd /var/docker
 
@@ -98,11 +92,11 @@ Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3005/5c253f4657e2133f.png" width="571" height="56"> 
 
-Modify the newly copied `app.yml` with our default variables:
+Modify this newly copied `app.yml`:
 
     nano containers/app.yml
 
-(We recommend Nano because it works like a typical GUI text editor, just use your arrow keys. Hit <kbd>Ctrl</kbd><kbd>O</kbd> to save and <kbd>Ctrl</kbd>-<kbd>X</kbd> to exit. However, you can use whatever text editor you like. In the below screenshot we use Vim.)
+(We recommend Nano because it works like a typical GUI text editor, just use your arrow keys. Hit <kbd>Ctrl</kbd><kbd>O</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit. However, feel free to use whatever text editor you like. In the below screenshot we use Vim.)
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3006/ed9f51b3a44f2b86.png" width="572" height="451"> 
 
@@ -110,17 +104,17 @@ Modify the file as desired, but at minimum you should set `DISCOURSE_DEVELOPER_E
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2979/e6fedbde9b471880.png" width="565" height="172"> 
 
-Notice that I renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that I want to host my instance of Discourse on `http://discourse.techapj.com/`. You'll need to modify your DNS records appropriately to reflect the IP address of your server.
+Notice that I renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that I want to host my instance of Discourse on `http://discourse.techapj.com/`. You'll need to modify your DNS records to reflect the IP address and preferred domain name of your server.
 
 #Mail Setup
 
-**Email is critical to Discourse. We strongly recommend setting mail settings before bootstrapping your app.**
+**Email is critical to Discourse. We strongly recommend configuring mail settings before bootstrapping your app.**
 
 - If you already have a mail server, put your existing mail server credentials in the `app.yml` file.
 
-- Otherwise, create a free account on [**Mandrill**][6], and put your Mandrill credentials (available via the Mandrill dashboard) in the above file. The settings you want to change are `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`.
+- Otherwise, create a free account on [**Mandrill**][man], and put your Mandrill credentials (available via the Mandrill dashboard) in the `app.yml` file. The settings you want to change are `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`.
 
-#Add SSH Key
+#Add Your SSH Key
 
 If you successfully generated the SSH key as described earlier, get it:
 
@@ -144,17 +138,17 @@ After that completes, start Discourse:
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3008/ced00cf4782f020c.png" width="568" height="137"> 
 
-Congratulations! You have your own live instance of Discourse running on the host you provided in `app.yml` file at the time of setup.
+Congratulations! You now have your own instance of Discourse, accessible via the domain name you entered in `app.yml` file at the time of setup.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3397/ea8c3de3a4b7361d.png" width="690" height="207"> 
 
-You can also access your instance of Discourse by visiting the IP address directly, e.g. 192.168.1.1.
+You can also access it by visiting the server IP address directly, e.g. `192.168.1.1`.
 
 # Access Admin
 
 Sign into your Discourse instance. If you configured `DISCOURSE_DEVELOPER_EMAILS` and your email matches, your account will be made Admin by default.
 
-If your account was not made admin (reported by some users), try SSH'ing into your container (assuming you entered your SSH key in the `app.yml` file):
+If your account was not made admin, try SSH'ing into your container (assuming you entered your SSH key in the `app.yml` file):
 
     ./launcher ssh my_container
     sudo -iu discourse
@@ -164,16 +158,13 @@ If your account was not made admin (reported by some users), try SSH'ing into yo
     u.admin = true
     u.save
 
-Voilà, you are now the admin of your own Discourse installation!
+This will manually make the first user an admin.
 
-If anything needs to be improved in this guide, feel free to ask on [meta.discourse.org][8], or even better, submit a pull request.
+If anything needs to be improved in this guide, feel free to ask on [meta.discourse.org][meta], or even better, submit a pull request.
 
-  [1]: https://github.com/discourse/discourse_docker
-  [2]: https://github.com/discourse/discourse_docker#important-before-you-start
-  [3]: https://github.com/discourse/discourse_docker#about
-  [4]: https://github.com/discourse/discourse_docker
-  [5]: https://meta.discourse.org/t/error-while-deploying-discourse-to-digital-ocean-using-docker/12126/27
-  [6]: https://mandrillapp.com
-  [7]: https://help.github.com/articles/generating-ssh-keys
-  [8]: https://meta.discourse.org
- [do]: https://www.digitalocean.com/
+   [dd]: https://github.com/discourse/discourse_docker
+  [man]: https://mandrillapp.com
+  [ssh]: https://help.github.com/articles/generating-ssh-keys
+ [meta]: https://meta.discourse.org
+   [do]: https://www.digitalocean.com/
+  [lts]: https://wiki.ubuntu.com/LTS
