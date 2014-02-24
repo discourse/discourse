@@ -1426,10 +1426,10 @@ zh_CN:
         suspend_failed: "禁止此用户时发生了错误 {{error}}"
         unsuspend_failed: "解禁此用户时发生了错误 {{error}}"
         suspend_duration: "该用户将被禁止多久？"
-        ban_duration_units: "（天）"
-        ban_reason_label: "为什么禁止该用户？该理由将公开显示在用户个人页面上，当其尝试登入时，也看到这条理由。尽量简洁。"
-        ban_reason: "禁止的理由"
-        banned_by: "禁止操作者："
+        suspend_duration_units: "（天）"
+        suspend_reason_label: "为什么禁止该用户？该理由将公开显示在用户个人页面上，当其尝试登入时，也看到这条理由。尽量简洁。"
+        suspend_reason: "禁止的理由"
+        suspended_by: "禁止操作者："
         delete_all_posts: "删除所有帖子"
         delete_all_posts_confirm: "你将删除 %{posts} 个帖子和 %{topics} 个主题，确认吗？"
         suspend: "禁止"
@@ -1470,6 +1470,9 @@ zh_CN:
         delete_forbidden:
           one: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
           other: "用户已注册 %{count} 天或已有发帖后，则无法被删除。请先删除该用户的所有发帖后再试。"
+        cant_delete_all_posts:
+          one: "无法删除所有帖子。有些帖子已经存在超过%{count}天。"
+          other: "无法删除所有帖子。有些帖子已经存在超过%{count}天。"
         delete_confirm: "你确定要永久地从本站删除此用户？该操作无法撤销！"
         delete_and_block: "<b>确定</b>，并<b>阻止</b>该邮件地址和IP地址再次注册。"
         delete_dont_block: "<b>确定</b>，但<b>允许</b>该邮件地址和IP地址再次注册。"
@@ -1517,6 +1520,7 @@ zh_CN:
           rate_limits: '速度限制'
           developer: '开发者'
           embedding: "嵌入"
+          legal: "合法"
           uncategorized: '未分类'
 
     lightbox:
