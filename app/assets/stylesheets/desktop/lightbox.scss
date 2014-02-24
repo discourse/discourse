@@ -6,7 +6,7 @@
   display: inline-block;
 
   &:hover .meta {
-    background: $primary_light;
+    background: lighten($secondary_background_color, 60%);
     opacity: 1;
     @include transition(opacity .5s);
   }
@@ -20,8 +20,8 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  color: $secondary;
-  background: $primary;
+  color: $tertiary_text_color;
+  background: $secondary_background_color;
   opacity: 0;
   @include transition(opacity .2s);
 
@@ -41,7 +41,7 @@
   .informations {
     margin: 6px;
     padding-right: 20px;
-    color: $primary_medium;
+    color: lighten($primary_text_color, 35%);
     font-size: 14px;
   }
 
