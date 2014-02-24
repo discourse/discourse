@@ -4,7 +4,7 @@
 
 .groups {
   .group-link {
-    color: $tertiary_lightest;
+    color: $link_color;
   }
 }
 
@@ -42,13 +42,13 @@
   }
 
   .static {
-    color: $primary;
+    color: $primary_text_color;
     margin-top: 5px;
     margin-left: 5px;
     display: inline-block;
   }
   .instructions {
-    color: $primary_medium;
+    color: $primary_text_color;
     margin-left: 160px;
     margin-top: 5px;
     margin-bottom: 10px;
@@ -57,12 +57,12 @@
     margin-left: 3px;
   }
   .instructions a[href] {
-    color: $primary_medium;
+    color: $link_color;
   }
   .warning {
-    background-color: lighten($highlight_danger, 10%);
+    background-color: $warning_background_color;
     padding: 5px 8px;
-    color: $secondary;
+    color: $primary_background_color;
     width: 520px;
   }
 
@@ -72,10 +72,6 @@
       width: 280px;
     }
   }
-
-  #save-button-top {
-    float: right;
-  }
 }
 
 .user-navigation {
@@ -84,7 +80,7 @@
   float: left;
 
   h3 {
-    color: $primary_light;
+    color: $primary_text_color;
     margin: 20px 0 10px 0;
   }
 
@@ -107,7 +103,7 @@
   h2 {
     a {
       font-size: 14px;
-      color: $primary_light;
+      color: $link_color;
       cursor: pointer;
     }
   }
@@ -140,15 +136,15 @@
       }
       span.last-seen-at {
         float: right;
-        color: $primary_light;
+        color: $secondary_text_color;
       }
     }
   }
 
   .user-content {
     padding: 10px 8px;
-    background-color: $secondary;
-    border: 1px solid $primary_lighter;
+    background-color: $primary_background_color;
+    border: 1px solid $primary_border_color;
     margin-bottom: 10px;
 
     .btn.right {
@@ -165,22 +161,22 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid $primary_light;
+        border-bottom: 1px solid $primary_border_color;
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid $primary_lighter;
+        border-bottom: 1px solid $primary_border_color;
       }
     }
   }
 
   .about {
-    background-color: $primary;
+    background-color: $secondary_background_color;
     margin-bottom: 10px;
     overflow: hidden;
-    color: $secondary;
+    color: $secondary_text_color;
 
 
     .details {
@@ -197,20 +193,21 @@
         font-size: 20px;
         margin-bottom: 6px;
         font-weight: normal;
+        margin-top: 5px;
       }
 
       a[href] {
-        color: $secondary;
+        color: $secondary_link_color;
       }
 
       img.avatar {
-        border: 3px solid $primary_lightest;
-        margin-bottom: 4px;
-        background-color: $secondary;
+        border: 3px solid $primary_border_color;
+        margin-bottom: 10px;
+        background-color: $secondary_background_color;
       }
 
       .suspended {
-        color: $highlight_danger_light;
+        color: $warning_text_color;
       }
 
       .primary {
@@ -218,13 +215,13 @@
         float: left;
         width: 75%;
 
-        h1, h2 {margin-top: 10px;}
+        h1, h2 {}
 
         .bio {
-          color: $primary_lighter;
+          color: $secondary_text_color;
 
           a[href] {
-            color: $tertiary_light;
+            color: $link_color;
           }
         }
 
@@ -232,26 +229,26 @@
 
       .secondary {
         float: right;
-        background-color: lighten($primary, 10%);
+        background-color: $tertiary_background_color;
         text-align: right;
         padding: 0 10px;
         width: 20%;
 
         dd {
-          color: $secondary;
+          color: $secondary_text_color;
           margin: 0 0 7px 0;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         dt {
-          color: $primary_lighter;
+          color: $secondary_text_color;
           margin: 0;
         }
       }
     }
 
     .controls {
-      background-color: $primary_lighter;
+      background-color: $tertiary_background_color;
       padding: 12px;
       height: 30px;
 
@@ -279,7 +276,7 @@
         .avatar {
           float: left;
           margin-right: 10px;
-          border: 2px solid $secondary;
+          border: 2px solid $secondary_border_color;
           width: 45px;
           height: 45px;
         }
@@ -303,35 +300,34 @@
       margin: 5px 0px;
       font-size: 13px;
       word-wrap: break-word;
-      color: lighten($primary, 30%);
+      color: $primary_text_color;
     }
     .item.moderator-action {
-      background-color: $tertiary_lightest;
+      background-color: $moderator_background_color;
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: $highlight_danger_light;
+      background-color: $warning_background_color;
     }
     .item.hidden {
       display: block;
       opacity: 0.4;
     }
     .item {
-      padding: 10px 8px;
-      background-color: $secondary;
-      border-bottom: 1px solid lighten($primary_lighter, 10%);
-      margin-bottom: 10px;
+      padding: 20px 8px 15px 8px;
+      background-color: $primary_background_color;
+      border-bottom: 1px solid lighten($primary_border_color, 10%);
     }
     .type {
-      color: lighten($primary, 40%);
+      color: $primary_text_color;
     }
     span.name {
-      color: lighten($primary, 40%);
+      color: $secondary_text_color;
     }
     .time {
       display: block;
       float: right;
-      color: $primary_light;
+      color: $secondary_text_color;
       margin-right: 8px;
       font-size: 11px;
     }
@@ -345,7 +341,7 @@
       font-size: 14px;
     }
     .edit-reason {
-      background-color: $highlight_light;
+      background-color: $moderator_background_color;
       padding: 3px 5px 5px 5px;
     }
   }
@@ -360,7 +356,7 @@
   .fa {
     width: 15px;
     display: inline-block;
-    color: $primary_medium;
+    color: $secondary_text_color;
   }
   .avatar-wrapper {
     border: none;
