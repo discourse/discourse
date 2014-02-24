@@ -39,13 +39,20 @@ shared_examples 'finding and showing post' do
   end
 end
 
+shared_examples 'action requires login' do |method, action, params|
+  it 'raises an exception when not logged in' do
+    lambda { xhr method, action, params }.should raise_error(Discourse::NotLoggedIn)
+  end
+end
+
 describe PostsController do
 
   describe 'short_link' do
+    let(:post) { Fabricate(:post) }
+
     it 'logs the incoming link once' do
       IncomingLink.expects(:add).once.returns(true)
-      p = Fabricate(:post)
-      get :short_link, post_id: p.id, user_id: 999
+      get :short_link, post_id: post.id, user_id: 999
       response.should be_redirect
     end
   end
@@ -89,9 +96,7 @@ describe PostsController do
   end
 
   describe 'delete a post' do
-    it 'raises an exception when not logged in' do
-      lambda { xhr :delete, :destroy, id: 123 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :delete, :destroy, id: 123
 
     describe 'when logged in' do
 
@@ -125,9 +130,7 @@ describe PostsController do
   end
 
   describe 'recover a post' do
-    it 'raises an exception when not logged in' do
-      lambda { xhr :put, :recover, post_id: 123 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :put, :recover, post_id: 123
 
     describe 'when logged in' do
 
@@ -154,9 +157,7 @@ describe PostsController do
   end
 
   describe 'destroy_many' do
-    it 'raises an exception when not logged in' do
-      lambda { xhr :delete, :destroy_many, post_ids: [123, 345] }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :delete, :destroy_many, post_ids: [123, 345]
 
     describe 'when logged in' do
 
@@ -207,9 +208,7 @@ describe PostsController do
 
   describe 'edit a post' do
 
-    it 'raises an exception when not logged in' do
-      lambda { xhr :put, :update, id: 2 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :put, :update, id: 2
 
     describe 'when logged in' do
 
@@ -271,9 +270,7 @@ describe PostsController do
 
   describe 'bookmark a post' do
 
-    it 'raises an exception when not logged in' do
-      lambda { xhr :put, :bookmark, post_id: 2 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :put, :bookmark, post_id: 2
 
     describe 'when logged in' do
 
@@ -301,9 +298,7 @@ describe PostsController do
 
   describe 'creating a post' do
 
-    it 'raises an exception when not logged in' do
-      lambda { xhr :post, :create }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :post, :create
 
     describe 'when logged in' do
 
