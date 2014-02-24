@@ -215,7 +215,7 @@ class ApplicationController < ActionController::Base
   private
 
     def preload_anonymous_data
-      store_preloaded("site", Site.cached_json(guardian))
+      store_preloaded("site", Site.json_for(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
       store_preloaded("customHTML", custom_html_json)
     end

@@ -54,12 +54,7 @@ class Site
     Archetype.list.reject { |t| t.id == Archetype.private_message }
   end
 
-  def cache_key
-    k = "site_json_cats_"
-    k << @guardian.secure_category_ids.join("_") if @guardian
-  end
-
-  def self.cached_json(guardian)
+  def self.json_for(guardian)
 
     if guardian.anonymous? && SiteSetting.login_required
       return {
@@ -72,7 +67,4 @@ class Site
     MultiJson.dump(SiteSerializer.new(site, root: false))
   end
 
-  def self.invalidate_cache
-    Discourse.cache.delete_by_family("site")
-  end
 end
