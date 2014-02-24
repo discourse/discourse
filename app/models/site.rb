@@ -43,9 +43,13 @@ class Site
 
       allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
 
+      by_id = {}
       categories.each do |category|
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
+        by_id[category.id] = category
       end
+
+      categories.reject! {|c| c.parent_category_id && !by_id[c.parent_category_id]}
       categories
     end
   end
