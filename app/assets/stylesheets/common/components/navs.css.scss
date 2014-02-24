@@ -40,7 +40,7 @@
     }
     &.active > a, > a.active {
       border-color: darken($nav-pills-background-color-active, 10%);
-      color: #fff;
+      color: $tertiary_text_color;
       background-color: $nav-pills-background-color-active;
     }
   }
@@ -56,7 +56,7 @@
   padding: 0;
   overflow: hidden;
   background-color: $nav-stacked-background-color;
-  @include box-shadow(0 1px 0 $secondary);
+  @include box-shadow(0 1px 0 $secondary_shadow_color);
   > li {
     border-bottom: 1px solid $nav-stacked-divider-color;
     &:last-of-type {
@@ -73,7 +73,7 @@
   }
   .active > a,
   .active .fa-chevron-right {
-    color: $secondary;
+    color: $tertiary_text_color;
     background-color: $nav-stacked-background-color-active;
   }
   .count {
