@@ -7,11 +7,16 @@ module Onebox
       matches_regexp /^https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\/.+$/
 
       def to_html
-        rewrite_agnostic(append_embed_wmode(raw[:html]))
+        rewrite_agnostic(append_params(raw[:html]))
       end
 
-      def append_embed_wmode(html)
-        html.gsub /(src="[^"]+)/, '\1&wmode=opaque'
+      def append_params(html)
+        result = html.dup
+        result.gsub! /(src="[^"]+)/, '\1&wmode=opaque'
+        if url =~ /t=(\d+)/
+          result.gsub! /(src="[^"]+)/, '\1&start=' + Regexp.last_match[1]
+        end
+        result
       end
 
       def rewrite_agnostic(html)
