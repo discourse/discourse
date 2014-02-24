@@ -21,6 +21,6 @@
     line-height: 18px;
   }
   .description {
-    color: $primary_medium;
+    color: lighten($primary_text_color, 35%);
   }
 }
