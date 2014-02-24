@@ -1,12 +1,4 @@
 ## App Setup
-> TODO build an admin UI for this, get it out of discourse_defaults.conf
-
-Enable new topic creation via email by setting this value to "true"
-`allow_new_topics_from_email = `
-
-Set the default category for new threads by entering the category number here
-`default_categories_id = `
-
 
 ## Admin UI Setup
 

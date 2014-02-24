@@ -31,6 +31,15 @@ module Email
       discourse_email_parser
 
       return Email::Receiver.results[:unprocessable] if @body.blank?
+
+      if SiteSetting.email_in and @message.to.first == SiteSetting.email_in_address
+        @user = User.find_by_email(@message.from.first)
+        return Email::Receiver.results[:unprocessable] if @user.blank? or not @user.has_trust_level?(TrustLevel.levels[SiteSetting.email_in_min_trust.to_i])
+
+        create_new_topic
+        return Email::Receiver.results[:processed]
+      end
+
       @reply_key = @message.to.first
 
       # Extract the `reply_key` from the format the site has specified
@@ -39,19 +48,12 @@ module Email
         @reply_key.gsub!(t, "") if t.present?
       end
 
-      # Look up the email log for the reply key, or create a new post if there is none
-      # Enabled when config/discourse.conf contains "allow_new_topics_from_email = true"
+      # Look up the email log for the reply key
       @email_log = EmailLog.for(reply_key)
-      if @email_log.blank?
-     	return Email::Receiver.results[:unprocessable] if GlobalSetting.allow_new_topics_from_email == false
-        @subject = @message.subject
-        @user_info = User.find_by_email(@message.from.first)
-        return Email::Receiver.results[:unprocessable] if @user_info.blank?
-        Rails.logger.debug "Creating post from #{@message.from.first} with subject #{@subject}"
-        create_new
-      else
-        create_reply
-      end
+      return Email::Receiver.results[:missing] if @email_log.blank?
+       
+      create_reply
+
       Email::Receiver.results[:processed]
     rescue
       Email::Receiver.results[:error]
@@ -137,20 +139,25 @@ module Email
 
       creator.create
     end
-    def create_new
-      # Try to create a new topic with the body and subject
-      # looking to config/discourse.conf to set category 
-      if defined? GlobalSetting.default_categories_id
-        @categoryID = 1
-      else 
-        @categoryID = GlobalSetting.default_categories_id
-      end
-      creator = PostCreator.new(@user_info,
-                                title: @subject,
-                                raw: @body,
-                                category: @categoryID,
-                                cooking_options: {traditional_markdown_linebreaks: true})
-      creator.create
+
+    def create_new_topic
+      # Try to post the body as a reply
+      topic_creator = TopicCreator.new(@user,
+                                       Guardian.new(@user), 
+                                       category: SiteSetting.email_in_category.to_i,
+                                       title: @message.subject)
+
+      topic = topic_creator.create
+      post_creator = PostCreator.new(@user,
+                                     raw: @body,
+                                     topic_id: topic.id,
+                                     cooking_options: {traditional_markdown_linebreaks: true})
+
+      post_creator.create
+      EmailLog.create(email_type: "topic_via_incoming_email",
+            to_address: SiteSetting.email_in_address,
+            topic_id: topic.id, user_id: @user.id)
+      topic
     end
 
   end

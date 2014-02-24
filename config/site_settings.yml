@@ -235,6 +235,12 @@ email:
   pop3s_polling_port: 995
   pop3s_polling_username: ''
   pop3s_polling_password: ''
+  email_in: false
+  email_in_address: ''
+  email_in_min_trust:
+    default: 3
+    enum: 'MinTrustToCreateTopicSetting'
+  email_in_category: -1
   enable_mailing_list_mode:
     default: false
     client: true
