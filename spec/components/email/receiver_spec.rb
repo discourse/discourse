@@ -7,6 +7,7 @@ describe Email::Receiver do
 
   before do
     SiteSetting.stubs(:reply_by_email_address).returns("reply+%{reply_key}@appmail.adventuretime.ooo")
+    SiteSetting.stubs(:email_in).returns(false)
   end
 
   describe "exception raised" do
@@ -204,5 +205,100 @@ greatest show ever created. Everyone should watch it.
 
   end
 
+  describe "processes a valid incoming email" do
+    before do
+      SiteSetting.stubs(:email_in_address).returns("discourse-in@appmail.adventuretime.ooo")
+      SiteSetting.stubs(:email_in_category).returns("42")
+      SiteSetting.stubs(:email_in).returns(true)
+    end
+
+    let(:incoming_email) { File.read("#{Rails.root}/spec/fixtures/emails/valid_incoming.eml") }
+    let(:receiver) { Email::Receiver.new(incoming_email) }
+    let(:user) { Fabricate.build(:user, id: 3456) }
+    let(:subject) { "We should have a post-by-email-feature." }
+    let(:email_body) {
+"Hey folks,
+
+I was thinking. Wouldn't it be great if we could post topics via email? Yes it would!
+
+Jakie" }
+
+    describe "email from non user" do
+
+      before do
+        User.expects(:find_by_email).returns(nil)
+      end
+
+      let!(:result) { receiver.process }
+
+      it "returns unprocessable" do
+        expect(result).to eq(Email::Receiver.results[:unprocessable])
+      end
+
+    end
+
+    describe "email from untrusted user" do
+      before do
+        User.expects(:find_by_email).with(
+              "jake@adventuretime.ooo").returns(user)
+        SiteSetting.stubs(:email_in_min_trust).returns(TrustLevel.levels[:elder].to_s)
+      end
+
+      let!(:result) { receiver.process }
+
+      it "returns unprocessable" do
+        expect(result).to eq(Email::Receiver.results[:unprocessable])
+      end
+
+    end
+
+    describe "with proper user" do
+
+      before do
+        SiteSetting.stubs(:email_in_min_trust).returns(TrustLevel.levels[:newuser].to_s)
+        User.expects(:find_by_email).with(
+              "jake@adventuretime.ooo").returns(user)
+
+        topic_creator = mock()
+        TopicCreator.expects(:new).with(instance_of(User),
+                                        instance_of(Guardian),
+                                        has_entries(title: subject,
+                                                    category: 42))
+                                 .returns(topic_creator)
+
+        topic_creator.expects(:create).returns(topic_creator)
+        topic_creator.expects(:id).twice.returns(12345)
+
+
+        post_creator = mock
+        PostCreator.expects(:new).with(instance_of(User),
+                                       has_entries(raw: email_body,
+                                                   topic_id: 12345,
+                                                   cooking_options: {traditional_markdown_linebreaks: true}))
+                                 .returns(post_creator)
+
+        post_creator.expects(:create)
+
+        EmailLog.expects(:create).with(has_entries(
+                              email_type: 'topic_via_incoming_email',
+                              to_address: "discourse-in@appmail.adventuretime.ooo",
+                              user_id: 3456,
+                              topic_id: 12345
+                              ))
+      end
+
+      let!(:result) { receiver.process }
+
+      it "returns a processed result" do
+        expect(result).to eq(Email::Receiver.results[:processed])
+      end
+
+      it "extracts the body" do
+        expect(receiver.body).to eq(email_body)
+      end
+
+    end
+
+  end
 
 end
