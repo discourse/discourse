@@ -89,7 +89,7 @@ $.fn.autocomplete = function(options) {
     if (options.transformComplete) { transformedItem = options.transformComplete(transformedItem); }
     // dump what we have in single mode, just in case
     if (options.single) { inputSelectedItems = []; }
-    if (!_.isArray(transformedItem)) { transformed = [transformedItem || item]; }
+    transformed = _.isArray(transformedItem) ? transformedItem : [transformedItem || item];
 
     var divs = transformed.map(function(itm) {
       var d = $("<div class='item'><span>" + itm + "<a class='remove' href='#'><i class='fa fa-times'></i></a></span></div>");

@@ -4,6 +4,14 @@ Discourse.UserSelector = Discourse.TextField.extend({
     var userSelectorView = this,
         selected = [];
 
+    function excludedUsernames() {
+      var exclude = selected;
+      if (userSelectorView.get('excludeCurrentUser')) {
+        exclude = exclude.concat([Discourse.User.currentProp('username')]);
+      }
+      return exclude;
+    }
+
     $(this.get('element')).val(this.get('usernames')).autocomplete({
       template: Discourse.UserSelector.templateFunction(),
 
@@ -12,14 +20,10 @@ Discourse.UserSelector = Discourse.TextField.extend({
       allowAny: this.get('allowAny'),
 
       dataSource: function(term) {
-        var exclude = selected;
-        if (userSelectorView.get('excludeCurrentUser')) {
-          exclude = exclude.concat([Discourse.User.currentProp('username')]);
-        }
         return Discourse.UserSearch.search({
           term: term,
           topicId: userSelectorView.get('topicId'),
-          exclude: exclude,
+          exclude: excludedUsernames(),
           include_groups: userSelectorView.get('include_groups')
         });
       },
@@ -28,7 +32,11 @@ Discourse.UserSelector = Discourse.TextField.extend({
         if (v.username) {
           return v.username;
         } else {
-          return v.usernames;
+          var excludes = excludedUsernames();
+          return v.usernames.filter(function(item){
+                // include only, those not found in the exclude list
+                return excludes.indexOf(item) === -1;
+              });
         }
       },
 
