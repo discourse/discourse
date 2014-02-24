@@ -113,13 +113,13 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = find_post_from_params
-    display_post(@post)
+    post = find_post_from_params
+    display_post(post)
   end
 
   def by_number
-    @post = find_post_from_params_by_number
-    display_post(@post)
+    post = find_post_from_params_by_number
+    display_post(post)
   end
 
   def reply_history
