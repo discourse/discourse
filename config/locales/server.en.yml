@@ -1107,6 +1107,18 @@ en:
       subject_template: "Import completed successfully"
       text_body_template: "The import was successful."
 
+    email_reject_notification:
+      subject_template: "Message posting failed"
+      text_body_template: |
+        This is an automated message to inform you that the user a message failed to meet topic criteria.
+
+        Please review the following message.
+
+        From - %{from}
+        
+        Contents - %{body}.
+        
+
     too_many_spam_flags:
       subject_template: "New account blocked"
       text_body_template: |

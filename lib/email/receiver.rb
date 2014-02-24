@@ -39,12 +39,19 @@ module Email
         @reply_key.gsub!(t, "") if t.present?
       end
 
-      # Look up the email log for the reply key
+      # Look up the email log for the reply key, or create a new post if there is none
+      # Enabled when config/discourse.conf contains "allow_new_topics_from_email = true"
       @email_log = EmailLog.for(reply_key)
-      return Email::Receiver.results[:missing] if @email_log.blank?
-
-      create_reply
-
+      if @email_log.blank?
+     	return Email::Receiver.results[:unprocessable] if GlobalSetting.allow_new_topics_from_email == false
+        @subject = @message.subject
+        @user_info = User.find_by_email(@message.from.first)
+        return Email::Receiver.results[:unprocessable] if @user_info.blank?
+        Rails.logger.debug "Creating post from #{@message.from.first} with subject #{@subject}"
+        create_new
+      else
+        create_reply
+      end
       Email::Receiver.results[:processed]
     rescue
       Email::Receiver.results[:error]
@@ -128,6 +135,21 @@ module Email
                                 reply_to_post_number: @email_log.post.post_number,
                                 cooking_options: {traditional_markdown_linebreaks: true})
 
+      creator.create
+    end
+    def create_new
+      # Try to create a new topic with the body and subject
+      # looking to config/discourse.conf to set category 
+      if defined? GlobalSetting.default_categories_id
+        @categoryID = 1
+      else 
+        @categoryID = GlobalSetting.default_categories_id
+      end
+      creator = PostCreator.new(@user_info,
+                                title: @subject,
+                                raw: @body,
+                                category: @categoryID,
+                                cooking_options: {traditional_markdown_linebreaks: true})
       creator.create
     end
 
