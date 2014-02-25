@@ -127,6 +127,10 @@ module Onebox
         !!list.find {|h| %r((^|\.)#{Regexp.escape(h)}$).match(uri.host) }
       end
 
+      def self.probable_discourse(uri)
+        !!(uri.path =~ /\/t\/[^\/]+\/\d+(\/\d+)?(\?.*)?$/)
+      end
+
       def self.probable_wordpress(uri)
         !!(uri.path =~ /\d{4}\/\d{2}\/\d{2}/)
       end
@@ -134,7 +138,8 @@ module Onebox
       def self.===(other)
         if other.kind_of?(URI)
           return WhitelistedGenericOnebox.host_matches(other, WhitelistedGenericOnebox.whitelist) ||
-                 WhitelistedGenericOnebox.probable_wordpress(other)
+                 WhitelistedGenericOnebox.probable_wordpress(other) ||
+                 WhitelistedGenericOnebox.probable_discourse(other)
         else
           super
         end
