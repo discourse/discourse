@@ -1,6 +1,6 @@
-The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. In this guide I'll assume that you are using [Digital Ocean][do], although these steps will work on other similar services.
+The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. We will use [Digital Ocean][do], although these steps will work on other similar services.
 
-The below guide assumes that you have no knowledge of Ruby/Rails or Linux shell, so it will be detailed. Feel free to skip steps you are comfortable with.
+This guide assumes that you have no knowledge of Ruby/Rails or Linux shell. Feel free to skip steps you are comfortable with.
 
 # Create New Digital Ocean Droplet
 
@@ -26,7 +26,7 @@ Replace `192.168.1.1` with the IP address of your Droplet.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2999/0934a0158459ec3f.png" width="571" height="130"> 
 
-It will ask your permission to connect, type `yes`, then it will ask for the root password, which is in the email Digital Ocean sent you when the Droplet was set up. Enter it.
+You will be asked for permission to connect, type `yes`, then the root password, which is in the email Digital Ocean sent you when the Droplet was set up. Enter it.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3000/8209c1e40c9d70a8.png" width="570" height="278"> 
 
@@ -38,7 +38,7 @@ It will ask your permission to connect, type `yes`, then it will ask for the roo
 
 # Generate SSH Key
 
-**We highly recommend setting a SSH key, because you may need to access the Rails console for debugging purposes. This is only possible if you have SSH access preconfigured. This <i>cannot</i> be done after bootstrapping the app.**
+**We strongly recommend setting a SSH key because you may need to access the Rails console for debugging purposes. This <i>cannot</i> be done after bootstrapping the app.**
 
     ssh-keygen -t rsa -C "your_email@example.com"
 
@@ -57,11 +57,9 @@ Reboot the server:
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3003/d3cc759ced335d25.png" width="532" height="155"> 
 
-This will log you out from your SSH session, so SSH in again:
+This will log you out from your SSH session, so reconnect:
 
     ssh root@192.168.1.1
-
-Replace `192.168.1.1` with the IP address you got from Digital Ocean.
 
 Finish installing Docker:
 
@@ -79,7 +77,7 @@ Clone the [Official Discourse Docker Image][dd] into this `/var/docker` folder:
 
     git clone https://github.com/SamSaffron/discourse_docker.git /var/docker
 
-Switch to your Docker directory:
+Switch to your Docker folder:
 
     cd /var/docker
 
@@ -101,7 +99,7 @@ Edit as desired, but at minimum set `DISCOURSE_DEVELOPER_EMAILS` and `DISCOURSE_
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2979/e6fedbde9b471880.png" width="565" height="172"> 
 
-I renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that I want to host my instance of Discourse on `http://discourse.techapj.com/`. You'll need to modify your DNS records to reflect the IP address and preferred domain name of your server.
+I renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that I want to host my instance of Discourse on `http://discourse.techapj.com/`. You'll need to modify your DNS records to reflect the IP address and preferred URL address of your server.
 
 # Mail Setup
 
