@@ -222,19 +222,19 @@ module Export
 
       log "Archiving metadata..."
       FileUtils.cd(File.dirname(@meta_filename)) do
-        `tar --append --file #{tar_filename} #{File.basename(@meta_filename)}`
+        `tar --append --dereference --file #{tar_filename} #{File.basename(@meta_filename)}`
       end
 
       log "Archiving data dump..."
       FileUtils.cd(File.dirname(@dump_filename)) do
-        `tar --append --file #{tar_filename} #{File.basename(@dump_filename)}`
+        `tar --append --dereference --file #{tar_filename} #{File.basename(@dump_filename)}`
       end
 
       upload_directory = "uploads/" + @current_db
 
       log "Archiving uploads..."
       FileUtils.cd(File.join(Rails.root, "public")) do
-        `tar --append --file #{tar_filename} #{upload_directory}`
+        `tar --append --dereference --file #{tar_filename} #{upload_directory}`
       end
 
       log "Gzipping archive..."
