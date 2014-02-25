@@ -6,7 +6,8 @@ if Topic.where('id NOT IN (SELECT topic_id from categories where topic_id is not
   puts "Seeding welcome topics"
 
   welcome = File.read(Rails.root + 'docs/ADMIN-QUICK-START-GUIDE.md')
-  PostCreator.create(Discourse.system_user, raw: welcome, title: "Discourse Admin Quick Start Guide" ,skip_validations: true)
+  post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Discourse Admin Quick Start Guide", skip_validations: true)
+  post.topic.update_column('visible', false)
 
   welcome = File.read(Rails.root + 'docs/WELCOME-TO-DISCOURSE.md')
   post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Welcome to Discourse", skip_validations: true)
