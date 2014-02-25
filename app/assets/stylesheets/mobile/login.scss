@@ -26,6 +26,8 @@
   textarea, input, select {font-size: 16px; clear: left; margin-top: 0;}
 }
 
+a#new-account-link { white-space:nowrap; }
+
 // Create account
 
 #new-account-link {
@@ -36,4 +38,13 @@ a#forgot-password-link {clear: left; float: left; }
 
 .btn-primary {margin-bottom: 10px; font-size: 15; clear: left; float: left;}
 
-a#new-account-link { white-space:nowrap; }
+.create-account .modal-body {
+  input[type=text], input[type=password] {
+    display: inline-block;
+  }
+  tr.input {
+    td.label {
+      padding-top: 10px;
+    }
+  }
+}
