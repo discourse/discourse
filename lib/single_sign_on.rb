@@ -43,7 +43,7 @@ class SingleSignOn
   end
 
   def sign(payload)
-    Digest::SHA2.hexdigest(payload + sso_secret)
+    OpenSSL::HMAC.hexdigest("sha256", sso_secret, payload)
   end
 
 
