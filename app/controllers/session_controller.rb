@@ -31,7 +31,11 @@ class SessionController < ApplicationController
     sso.expire_nonce!
 
     if user = sso.lookup_or_create_user
-      log_on_user user
+      if SiteSetting.must_approve_users? && !user.approved?
+        # TODO: need an awaiting approval message here
+      else
+        log_on_user user
+      end
       redirect_to return_path
     else
       render text: "unable to log on user", status: 500
