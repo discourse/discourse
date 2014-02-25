@@ -13,11 +13,11 @@ describe SessionController do
       SiteSetting.stubs("sso_secret").returns(@sso_secret)
     end
 
-    def get_sso
+    def get_sso(return_path)
       nonce = SecureRandom.hex
       dso = DiscourseSingleSignOn.new
       dso.nonce = nonce
-      dso.register_nonce
+      dso.register_nonce(return_path)
 
       sso = SingleSignOn.new
       sso.nonce = nonce
@@ -26,7 +26,7 @@ describe SessionController do
     end
 
     it 'can take over an account' do
-      sso = get_sso
+      sso = get_sso("/")
       user = Fabricate(:user)
       sso.email = user.email
       sso.external_id = "abc"
@@ -41,14 +41,14 @@ describe SessionController do
     end
 
     it 'allows you to create an account' do
-      sso = get_sso
+      sso = get_sso('/a/')
       sso.external_id = '666' # the number of the beast
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
 
       get :sso_login, Rack::Utils.parse_query(sso.payload)
-      response.should redirect_to('/')
+      response.should redirect_to('/a/')
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
@@ -61,9 +61,8 @@ describe SessionController do
 
     it 'allows login to existing account with valid nonce' do
 
-      sso = get_sso
+      sso = get_sso('/hello/world')
       sso.external_id = '997'
-      sso.return_url = '/hello/world'
 
       user = Fabricate(:user)
       user.create_single_sign_on_record(external_id: '997', last_payload: '')
