@@ -120,7 +120,7 @@ module Onebox
       end
 
       def self.default_rewrites
-        %w()
+        %w(slideshare.net)
       end
 
       def self.host_matches(uri, list)
