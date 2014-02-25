@@ -10,6 +10,10 @@ describe PluginStore do
     PluginStore.get("my_plugin", k)
   end
 
+  def remove_row(k)
+    PluginStore.remove("my_plugin", k)
+  end
+
   it "sets strings correctly" do
     set("hello", "world")
     expect(get("hello")).to eq("world")
@@ -46,4 +50,11 @@ describe PluginStore do
     # ensure indiff access holds
     expect(result[:hi]).to eq("there")
   end
+
+  it "removes correctly" do
+    set("hello", true)
+    remove_row("hello")
+    expect(get("hello")).to eq(nil)
+  end
+
 end

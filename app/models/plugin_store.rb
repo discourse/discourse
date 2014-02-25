@@ -22,6 +22,13 @@ class PluginStore
     row.save
   end
 
+  def self.remove(plugin_name, key)
+    if row = PluginStoreRow.where(plugin_name: plugin_name, key: key).first
+      row.destroy
+    end
+  end
+
+
   protected
 
 
