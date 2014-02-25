@@ -1,4 +1,7 @@
-# Official Discourse Install Guide
+> # Warning: This Guide is Deprecated
+> We only support Docker based installs now. Please see [our **official install guide**](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md) for supported install instructions.
+
+# Discourse Ubuntu Install Guide
 
 ## Recommended Server Hardware
 
