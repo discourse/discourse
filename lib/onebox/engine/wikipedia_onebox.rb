@@ -22,6 +22,7 @@ module Onebox
         unless paras.empty?
           cnt = 0
           while text.length < Onebox::LayoutSupport.max_text && cnt <= 3
+            break if cnt >= paras.size
             text << " " unless cnt == 0
             paragraph = paras[cnt].inner_text[0..Onebox::LayoutSupport.max_text]
             paragraph.gsub!(/\[\d+\]/mi, "")
@@ -36,7 +37,7 @@ module Onebox
           title: raw.css("html body h1").inner_text,
           description: text
         }
-        img = raw.css(".infobox .image img")
+        img = raw.css(".image img")
         if img && img.first
           result[:image] = img.first["src"]
         end
