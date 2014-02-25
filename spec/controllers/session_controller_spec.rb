@@ -11,6 +11,12 @@ describe SessionController do
       SiteSetting.stubs("enable_sso").returns(true)
       SiteSetting.stubs("sso_url").returns(@sso_url)
       SiteSetting.stubs("sso_secret").returns(@sso_secret)
+
+      # We have 2 options, either fabricate an admin or don't
+      # send welcome messages
+      Fabricate(:admin)
+      # skip for now
+      # SiteSetting.stubs("send_welcome_message").returns(false)
     end
 
     def get_sso(return_path)
