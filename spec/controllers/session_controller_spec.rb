@@ -57,6 +57,7 @@ describe SessionController do
       logged_on_user.username.should == 'sam'
 
       logged_on_user.single_sign_on_record.external_id.should == "666"
+      logged_on_user.active.should == true
     end
 
     it 'allows login to existing account with valid nonce' do

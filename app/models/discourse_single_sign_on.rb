@@ -66,6 +66,12 @@ class DiscourseSingleSignOn < SingleSignOn
       end
     end
 
+    if sso_record && (user = sso_record.user) && !user.active
+      user.active = true
+      user.save
+      user.enqueue_welcome_message('welcome_user')
+    end
+
     sso_record && sso_record.user
   end
 end
