@@ -46,7 +46,8 @@ class ListController < ApplicationController
       end
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
-      list.more_topics_url = construct_url_with(list_opts)
+      list.more_topics_url = construct_next_url_with(list_opts)
+      list.prev_topics_url = construct_prev_url_with(list_opts)
       if Discourse.anonymous_filters.include?(filter)
         @description = SiteSetting.site_description
         @rss = filter
@@ -92,8 +93,8 @@ class ListController < ApplicationController
       guardian.ensure_can_see_private_messages!(target_user.id) unless action == :topics_by
       list = generate_list_for(action.to_s, target_user, list_opts)
       url_prefix = "topics" unless action == :topics_by
-      url  = construct_url_with(list_opts, url_prefix)
-      list.more_topics_url = url_for(url)
+      list.more_topics_url = url_for(construct_next_url_with(list_opts, url_prefix))
+      list.prev_topics_url = url_for(construct_prev_url_with(list_opts, url_prefix))
       respond(list)
     end
   end
@@ -163,7 +164,8 @@ class ListController < ApplicationController
       top_options[:per_page] = SiteSetting.topics_per_period_in_top_page
       user = list_target_user
       list = TopicQuery.new(user, top_options).public_send("list_top_#{period}")
-      list.more_topics_url = construct_url_with(top_options)
+      list.more_topics_url = construct_next_url_with(top_options)
+      list.prev_topics_url = construct_prev_url_with(top_options)
       respond(list)
     end
 
@@ -202,16 +204,25 @@ class ListController < ApplicationController
   end
 
   def next_page_params(opts = nil)
+    page_params(opts).merge(page: params[:page].to_i + 1)
+  end
+
+  def prev_page_params(opts = nil)
+    page_params(opts).merge(page: params[:page].to_i > 1 ? (params[:page].to_i - 1) : 0)
+  end
+
+
+  private
+
+  def page_params(opts = nil)
     opts ||= {}
-    route_params = { format: 'json', page: params[:page].to_i + 1 }
+    route_params = {format: 'json'}
     route_params[:category]        = @category.slug if @category
     route_params[:parent_category] = @category.parent_category.slug if @category && @category.parent_category
     route_params[:sort_order]      = opts[:sort_order] if opts[:sort_order].present?
     route_params[:sort_descending] = opts[:sort_descending] if opts[:sort_descending].present?
     route_params
   end
-
-  private
 
   def set_category
     slug_or_id = params.fetch(:category)
@@ -269,9 +280,14 @@ class ListController < ApplicationController
     TopicQuery.new(current_user, opts).send("list_#{action}", target_user)
   end
 
-  def construct_url_with(opts, url_prefix = nil)
+  def construct_next_url_with(opts, url_prefix = nil)
     method = url_prefix.blank? ? "#{action_name}_path" : "#{url_prefix}_#{action_name}_path"
     public_send(method, opts.merge(next_page_params(opts)))
+  end
+
+  def construct_prev_url_with(opts, url_prefix = nil)
+    method = url_prefix.blank? ? "#{action_name}_path" : "#{url_prefix}_#{action_name}_path"
+    public_send(method, opts.merge(prev_page_params(opts)))
   end
 
   def generate_top_lists(options)

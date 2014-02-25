@@ -4,6 +4,7 @@ class TopicList
   include ActiveModel::Serialization
 
   attr_accessor :more_topics_url,
+                :prev_topics_url,
                 :draft,
                 :draft_key,
                 :draft_sequence,
