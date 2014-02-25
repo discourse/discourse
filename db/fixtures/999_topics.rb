@@ -9,6 +9,6 @@ if Topic.where('id NOT IN (SELECT topic_id from categories where topic_id is not
   PostCreator.create(Discourse.system_user, raw: welcome, title: "Discourse Admin Quick Start Guide" ,skip_validations: true)
 
   welcome = File.read(Rails.root + 'docs/WELCOME-TO-DISCOURSE.md')
-  post = PostCreator.create(Discourse.system_user, category: 'Meta', raw: welcome, title: "Welcome to Discourse", skip_validations: true)
+  post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Welcome to Discourse", skip_validations: true)
   post.topic.update_pinned(true)
 end

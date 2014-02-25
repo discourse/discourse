@@ -54,7 +54,7 @@ class CategoryList
     # Find a list of all categories to associate the topics with
     def find_categories
       @categories = Category
-                        .includes(:featured_users)
+                        .includes(:featured_users, subcategories: [:topic_only_relative_url])
                         .secured(@guardian)
                         .order('position asc')
                         .order('COALESCE(categories.posts_week, 0) DESC')

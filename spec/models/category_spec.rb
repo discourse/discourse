@@ -145,25 +145,6 @@ describe Category do
     end
   end
 
-  describe 'caching' do
-    it "invalidates the site cache on creation" do
-      Site.expects(:invalidate_cache).once
-      Fabricate(:category)
-    end
-
-    it "invalidates the site cache on update" do
-      cat = Fabricate(:category)
-      Site.expects(:invalidate_cache).once
-      cat.update_attributes(name: 'new name')
-    end
-
-    it "invalidates the site cache on destroy" do
-      cat = Fabricate(:category)
-      Site.expects(:invalidate_cache).once
-      cat.destroy
-    end
-  end
-
   describe 'non-english characters' do
     let(:category) { Fabricate(:category, name: "電車男") }
 
