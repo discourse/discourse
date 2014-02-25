@@ -1,12 +1,49 @@
 class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
+  skip_before_filter :check_xhr, only: ['sso', 'sso_login']
 
   def csrf
     render json: {csrf: form_authenticity_token }
   end
 
+  def sso
+    if SiteSetting.enable_sso
+      redirect_to DiscourseSingleSignOn.generate_url
+    else
+      render nothing: true, status: 404
+    end
+  end
+
+  def sso_login
+    unless SiteSetting.enable_sso
+      render nothing: true, status: 404
+      return
+    end
+
+    sso = DiscourseSingleSignOn.parse(request.query_string)
+    if !sso.nonce_valid?
+      render text: "Timeout expired, please try logging in again.", status: 500
+      return
+    end
+
+    sso.expire_nonce!
+
+    if user = sso.lookup_or_create_user
+      log_on_user user
+      redirect_to sso.return_url || "/"
+    else
+      render text: "unable to log on user", status: 500
+    end
+  end
+
   def create
+
+    if SiteSetting.enable_sso
+      render nothing: true, status: 500
+      return
+    end
+
     params.require(:login)
     params.require(:password)
 
@@ -45,6 +82,11 @@ class SessionController < ApplicationController
 
   def forgot_password
     params.require(:login)
+
+    if SiteSetting.enable_sso
+      render nothing: true, status: 500
+      return
+    end
 
     user = User.find_by_username_or_email(params[:login])
     if user.present?

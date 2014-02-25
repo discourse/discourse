@@ -46,6 +46,7 @@
       </div>
     </div>
 
+    {{#unless Discourse.SiteSettings.enable_sso }}
     <div class="control-group">
       <label class="control-label">{{i18n user.password.title}}</label>
       <div class="controls">
@@ -59,6 +60,7 @@
         {{passwordProgress}}
       </div>
     </div>
+    {{/unless}}
 
     <div class="control-group">
       <label class="control-label">{{i18n user.avatar.title}}</label>

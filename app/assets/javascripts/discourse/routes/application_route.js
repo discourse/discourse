@@ -14,8 +14,12 @@ Discourse.ApplicationRoute = Em.Route.extend({
       if (Discourse.get("isReadOnly")) {
         bootbox.alert(I18n.t("read_only_mode.login_disabled"));
       } else {
-        Discourse.Route.showModal(this, 'login');
-        this.controllerFor('login').resetForm();
+        if(Discourse.SiteSettings.enable_sso) {
+          window.location = Discourse.getURL('/session/sso');
+        } else {
+          Discourse.Route.showModal(this, 'login');
+          this.controllerFor('login').resetForm();
+        }
       }
     },
 
