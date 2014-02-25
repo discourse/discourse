@@ -150,6 +150,10 @@ module Onebox
         data[:type] =~ /photo/ || data[:type] =~ /image/
       end
 
+      def article_type?
+        data[:type] == "article"
+      end
+
       def rewrite_agnostic(html)
         return html unless html
         uri = URI(@url)
@@ -161,6 +165,7 @@ module Onebox
 
       def generic_html
         return data[:html] if data[:html] && data[:html] =~ /iframe/
+        return layout.to_html if article_type?
         return html_for_video(data[:video]) if data[:video]
         return image_html if photo_type?
         return nil unless data[:title]
@@ -173,6 +178,7 @@ module Onebox
 
       def placeholder_html
         result = nil
+        return to_html if article_type?
         result = image_html if (data[:html] && data[:html] =~ /iframe/) || data[:video] || photo_type?
         result || to_html
       end
