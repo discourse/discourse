@@ -208,7 +208,7 @@ class ListController < ApplicationController
   end
 
   def prev_page_params(opts = nil)
-    page_params(opts).merge(page: params[:page].to_i > 1 ? (params[:page].to_i - 1) : 0)
+    page_params(opts).merge(page: params[:page].to_i > 1 ? (params[:page].to_i - 1) : 1)
   end
 
 
