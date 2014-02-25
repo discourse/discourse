@@ -1,10 +1,4 @@
-
-Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].each {|f|
-  require_dependency(f.split('/')[-3..-1].join('/'))
-}
-
 module Oneboxer
-
 
   # keep reloaders happy
   unless defined? Oneboxer::Result
