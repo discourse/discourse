@@ -71,6 +71,13 @@ basic:
     default: 50
 
 users:
+  enable_sso:
+    client: true
+    default: false
+  sso_url:
+    default: ''
+  sso_secret:
+    defalt: ''
   enable_local_logins:
     client: true
     default: true

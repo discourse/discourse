@@ -199,6 +199,11 @@ nav.post-controls {
     background: lighten($secondary_background_color, 76%);
     .quote .title {background: lighten($secondary_background_color, 60%);}
     blockquote {background: lighten($secondary_background_color, 60%);}
+    .onebox {
+    background: lighten($secondary_background_color, 60%); 
+    border-left: 5px solid lighten($secondary_background_color, 35%);
+    .quote-controls, .quote-controls a {color: $link-color;} 
+    }
     &.bottom { margin-top: -11px;}
     .topic-meta-data h5 {margin: 5px;}
     .topic-meta-data-inside {
@@ -468,6 +473,7 @@ iframe {
       margin: 0 auto;
       width: 45px;
       display: inline;
+      word-wrap: break-word;
     }
 
     a.user-group {
