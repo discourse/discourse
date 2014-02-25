@@ -4,7 +4,7 @@ This guide assumes that you have no knowledge of Ruby/Rails or Linux shell. Feel
 
 # Create New Digital Ocean Droplet
 
-Discourse requires a minimum of 1 GB RAM. 2 GB RAM is recommended. We'll use "discourse" as the Hostname.
+Discourse requires a minimum of 1 GB RAM, and 2 GB RAM is recommended. We'll use "discourse" as the Hostname.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3398/975dbf6267b4ad4f.png" width="690" height="475"> 
 
