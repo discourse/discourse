@@ -4,10 +4,16 @@ module Onebox
       @url = link
     end
 
+    def ordered_engines
+      @ordered_engines ||= Engine.engines.sort_by do |e|
+        e.respond_to?(:priority) ? e.priority : 100
+      end
+    end
+
     def oneboxed
       uri = URI(@url)
 
-      Engine.engines.select do |engine|
+      ordered_engines.select do |engine|
         engine === uri
       end.first
     rescue URI::InvalidURIError

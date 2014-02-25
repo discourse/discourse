@@ -77,6 +77,10 @@ module Onebox
         end
       end
 
+      def priority
+        100
+      end
+
       def matches(&block)
         matches_regexp(Hexpress.new(&block).to_r)
       end
