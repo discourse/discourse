@@ -5,7 +5,7 @@
 </div>
 
 <% if @list.topics.length > 0 %>
-<p><a href="<%= @list.more_topics_url.sub('.json?','?') %>"><%= t 'next_page'%></a></p>
+<p><a href="<%= @list.more_topics_url.sub('.json?','?') %>" rel="next"><%= t 'next_page'%></a></p>
 <% end %>
 
 <p><%= t 'powered_by_html' %></p>
