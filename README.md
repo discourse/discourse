@@ -21,11 +21,11 @@ To learn more about the philosophy and goals of the project, [visit discourse.or
 
 ## Getting Started
 
-1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. This beginner's guide is also adequate for developers ready to sink their teeth quickly; it's the easiest way to hack on Discourse!
+1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. 
 
 2. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md).
 
-Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). And if you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
+Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
 ## Setting up a Discourse Forum
 
@@ -84,12 +84,12 @@ accepts contributions from the public. We'd like you to be a part of that commun
 
 Before contributing to Discourse, please:
 
-1. Review the [**VISION**](#vision) statement, to confirm that you understand the focus of the project,
-2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla), to confirm you've read and acknowledged the legal aspects of your contributions, and
-3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which houses all of the necessary info to:
-   - submit bugs,
-   - request new features, and
-   - step you through the entire process of preparing your code for a Pull Request.
+1. Please read the complete mission statements on [discourse.org](http://www.discourse.org).
+2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla)
+3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which covers:
+   - submitting bugs
+   - requesting new features
+   - preparing your code for a Pull Request
 4. Not sure what to work on? [**We've got some ideas!**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
 
 We look forward to seeing your cool stuff!
