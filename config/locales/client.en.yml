@@ -474,7 +474,7 @@ en:
       title: "Log In"
       username: "Login"
       password: "Password"
-      email_placeholder: "email address or username"
+      email_placeholder: "email or username"
       error: "Unknown error"
       reset_password: 'Reset Password'
       logging_in: "Logging In..."
