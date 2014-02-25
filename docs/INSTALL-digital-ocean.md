@@ -65,8 +65,6 @@ Finish installing Docker:
 
     sudo wget -qO- https://get.docker.io/ | sh
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3004/e75967a1a8e27ea3.png" width="567" height="307"> 
-
 # Install Discourse
 
 Create a `/var/docker` folder where all the Docker related stuff will reside:
