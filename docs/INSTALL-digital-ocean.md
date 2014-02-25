@@ -75,7 +75,7 @@ Create a `/var/docker` folder where all the Docker related stuff will reside:
 
 Clone the [Official Discourse Docker Image][dd] into this `/var/docker` folder:
 
-    git clone https://github.com/SamSaffron/discourse_docker.git /var/docker
+    git clone https://github.com/discourse/discourse_docker.git /var/docker
 
 Switch to your Docker folder:
 
