@@ -164,7 +164,7 @@ $warning_border_color: lighten($red, 20%);
 $success_border_color: $green;
 
 $primary_text_color: $black;
-$secondary_text_color: lighten($black, 50%);
+$secondary_text_color: lighten($black, 40%);
 $tertiary_text_color: $white;
 $warning_text_color: $red;
 $success_text_color: $green;
@@ -196,7 +196,7 @@ $moderator_background_color: lighten($yellow, 30%) !default;
 $emphasis_background_color: lighten($blue, 45%);
 $success_background_color: lighten($green, 50%);
 $warning_background_color: lighten($red, 30%);
-$highlight_background_color: lighten($yellow, 25%);
+$highlight_background_color: lighten($yellow, 23%);
 $like_background_color: lighten($pink, 25%);
 
 $heatmap-high: lighten($red, 10%);
