@@ -174,12 +174,6 @@ Homebrew loves you.
     git@github.com:discourse/discourse.git ~/discourse
     cd ~/discourse # Navigate into the repository, and stay there for the rest of this how-to
 
-### Loading seed data
-
-From the discource source tree:
-
-    psql -d discourse_development < pg_dumps/development-image.sql
-
 ### What about the config files?
 
 If you've stuck to all the defaults above, the default `discourse.conf` and `redis.conf` should work out of the box.
