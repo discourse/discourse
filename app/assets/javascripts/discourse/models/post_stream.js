@@ -176,7 +176,7 @@ Discourse.PostStream = Em.Object.extend({
 
 
   /**
-    Cancel any active filters on the stream and refresh it.
+    Cancel any active filters on the stream.
 
     @method cancelFilter
     @returns {Ember.Deferred} a promise that resolves when the filter has been cancelled.
@@ -184,7 +184,6 @@ Discourse.PostStream = Em.Object.extend({
   cancelFilter: function() {
     this.set('summary', false);
     this.get('userFilters').clear();
-    return this.refresh();
   },
 
   /**
