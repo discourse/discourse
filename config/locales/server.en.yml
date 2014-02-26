@@ -928,12 +928,11 @@ en:
     text_body_template: |
       You've been invited to join the Watchman Monitoring Community, our primary means of communication for:
       
-      Release Notes  
-      Maintenance Notifications  
-      Feature Requests  
-      Future Plans  
-      
-      
+       - Release Notes  
+       - Maintenance Notifications  
+       - Feature Requests  
+       - Future Plans  
+            
       Click the link below to accept this invitation and be automatically logged in.
 
       [%{invite_link}][1]
@@ -1179,13 +1178,13 @@ en:
 
         [Please review them in the admin section](%{base_url}/admin/users/list/pending).
 
-  unsubscribe_link: "Control which emails you receive in your [user preferences](%{user_preferences_url})."
+  unsubscribe_link: "Control the emails you receive at https://community.watchmanmonitoring.com/email_preferences."
 
   user_notifications:
     previous_discussion: "Previous Replies"
     unsubscribe:
       title: "Unsubscribe"
-      description: "Control which emails you receive in your [user preferences](%{user_preferences_url})"
+      description: "Control the emails you receive at https://community.watchmanmonitoring.com/email_preferences"
 
     reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
@@ -1255,7 +1254,7 @@ en:
       new_activity: "New activity on your topics and posts:"
       top_topics: "Recent posts the community enjoyed:"
       other_new_topics: "Other New Topics:"
-      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. Control which emails you receive in your [user preferences](%{user_preferences_url})"
+      unsubscribe: "This summary email is sent as a courtesy notification from the Watchman Monitoring Community when we haven't seen you in a while. Control the emails you receive at https://community.watchmanmonitoring.com/email_preferences"
       click_here: "click here"
       from: "[Watchman Community]Forum digest"
       read_more: "Read More"
