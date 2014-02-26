@@ -28,7 +28,7 @@ Vagrant.configure("2") do |config|
   config.vm.network :forwarded_port, guest: 1080, host: 4080 # Mailcatcher
 
   nfs_setting = RUBY_PLATFORM =~ /darwin/ || RUBY_PLATFORM =~ /linux/
-  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", :nfs => nfs_setting
+  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", type: { nfs_version: 4 }, nfs: nfs_setting
 
   config.vm.provision :shell, :inline => "apt-get -qq update && apt-get -qq -y install ruby1.9.3 build-essential && gem install chef --no-rdoc --no-ri --conservative"
 
