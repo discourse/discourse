@@ -99,6 +99,10 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     return I18n.t('category.delete');
   }.property(),
 
+  showDescription: function() {
+    return !this.get('isUncategorized') && this.get('id');
+  }.property('isUncategorized', 'id'),
+
   actions: {
 
     selectGeneral: function() {
