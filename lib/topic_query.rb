@@ -222,54 +222,52 @@ class TopicQuery
       # Start with a list of all topics
       result = Topic
 
-      if @user
-        result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
-      end
-
-      category_id = nil
-      if options[:category].present?
-        category_id  = options[:category].to_i
-        category_id = Category.where(slug: options[:category]).pluck(:id).first if category_id == 0
-
-        if category_id
-          if options[:no_subcategories]
-            result = result.where('categories.id = ?', category_id)
-          else
-            result = result.where('categories.id = ? or categories.parent_category_id = ?', category_id, category_id)
-          end
-          result = result.references(:categories)
-        end
-      end
-
+      result = filter_categories(result, options) if options[:category].present?
       result = apply_ordering(result, options)
-      result = result.listable_topics.includes(category: :topic_only_relative_url)
-      result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
+      result = paginate_results(result, options)
 
-      # Don't include the category topics if excluded
-      if options[:no_definitions]
-        result = result.where('COALESCE(categories.topic_id, 0) <> topics.id')
-      end
+      result = filter_topic(result, options)
+      result = filter_status(result, options[:status])
+      result = filter_guardian(result)
 
-      result = result.limit(options[:per_page]) unless options[:limit] == false
-      result = result.visible if options[:visible] || @user.nil? || @user.regular?
-      result = result.where.not(topics: {id: options[:except_topic_ids]}).references(:topics) if options[:except_topic_ids]
-      result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
+      result
+    end
 
-      if options[:topic_ids]
-        result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
-      end
+    def category_from_options(category)
+      category_id = nil
+      category_id = category.to_i
+      category_id = Category.where(slug: category).pluck(:id).first if category_id == 0
 
-      if status = options[:status]
-        case status
-        when 'open'
-          result = result.where('NOT topics.closed AND NOT topics.archived')
-        when 'closed'
-          result = result.where('topics.closed')
-        when 'archived'
-          result = result.where('topics.archived')
+      category_id
+    end
+
+    def filter_categories(result, options)
+      if category_id = category_from_options(options[:category])
+        if options[:no_subcategories]
+          result = result.where('categories.id = ?', category_id)
+        else
+          result = result.where('categories.id = ? or categories.parent_category_id = ?', category_id, category_id)
         end
+        result = result.references(:categories)
       end
 
+      result
+    end
+
+    def filter_status(result, status)
+      case status
+      when 'open'
+        result = result.where('NOT topics.closed AND NOT topics.archived')
+      when 'closed'
+        result = result.where('topics.closed')
+      when 'archived'
+        result = result.where('topics.archived')
+      end
+
+      result
+    end
+
+    def filter_guardian(result)
       guardian = Guardian.new(@user)
       if !guardian.is_admin?
         allowed_ids = guardian.allowed_category_ids
@@ -280,6 +278,35 @@ class TopicQuery
         end
         result = result.references(:categories)
       end
+
+      result
+    end
+
+    def filter_topic(result, options)
+      if @user
+        result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
+      end
+
+      result = result.listable_topics.includes(category: :topic_only_relative_url)
+      result = result.where.not(topics: {id: options[:except_topic_ids]}).references(:topics) if options[:except_topic_ids]
+      result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
+
+      # Don't include the category topics if excluded
+      if options[:no_definitions]
+        result = result.where('COALESCE(categories.topic_id, 0) <> topics.id')
+      end
+
+      if options[:topic_ids]
+        result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
+      end
+
+      result
+    end
+
+    def paginate_results(result, options)
+      result = result.limit(options[:per_page]) unless options[:limit] == false
+      result = result.visible if options[:visible] || @user.nil? || @user.regular?
+      result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
 
       result
     end
