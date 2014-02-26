@@ -61,6 +61,7 @@ zh_CN:
         x_days:
           one:   "1天"
           other: "%{count}天"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one:   "1分钟前"
@@ -109,6 +110,7 @@ zh_CN:
     daily: "每天"
     weekly: "每周"
     every_two_weeks: "每两周"
+    max: "最大"
     character_count:
       one: "{{count}}个字符"
       other: "{{count}}个字符"
@@ -172,6 +174,11 @@ zh_CN:
       sent_by_you: "发送人 <a href='{{userUrl}}'>你</a>"
 
     groups:
+      title:
+        one: "组"
+        other: "组"
+      members: "成员"
+      posts: "帖子"
       alias_levels:
         title: "谁能把组名作为别名？"
         nobody: "无"
@@ -238,13 +245,17 @@ zh_CN:
       deleted: "（已删除）"
       suspended_notice: "该用户将被禁止登录，直至{{date}}."
       suspended_reason: "原因："
+      mailing_list_mode: "每次论坛中出现回帖就发送邮件(除非你把它屏蔽了)"
       watched_categories: "已关注"
       watched_categories_instructions: "和跟踪相同，此外你还将收到新的帖子和主题的通知。"
       tracked_categories: "已跟踪"
       tracked_categories_instructions: "你将自动跟踪所有新的和已有的主题，并会显示新的和未读帖子的数量。"
       muted_categories: "免打扰"
       muted_categories_instructions: "你不会收到任何通知，也不会显示未读数量。"
-
+      delete_account: "删除我的帐号"
+      delete_account_confirm: "您真的要删除自己的账号吗？一朝悔改不可回头！"
+      deleted_yourself: "您的帐号已被成功删除"
+      delete_yourself_not_allowed: "您目前不能删除自己的帐号。联系管理员来做这件事。"
       unread_message_count:
         one: "消息（1）"
         other: "消息（{{count}}）"
@@ -260,6 +271,7 @@ zh_CN:
         in_progress: "（正在发送电子邮件）"
         error: "（错误）"
         action: "发送密码重置邮件"
+        set_password: "设置密码"
 
       change_about:
         title: "更改个人简介"
@@ -312,6 +324,11 @@ zh_CN:
         checking: "查看用户名是否可用……"
         enter_email: '找到用户名，请输入对应电子邮箱。'
         prefilled: "电子邮箱与用户名匹配。"
+
+      locale:
+        title: "界面语言"
+        instructions: "论坛界面使用的语言，设置后刷新起效。"
+        default: "（默认）"
 
       password_confirmation:
         title: "请再次输入密码"
@@ -369,6 +386,7 @@ zh_CN:
         pending: "待定邀请"
         topics_entered: "已查看的主题"
         posts_read_count: "已读的帖子"
+        expired: "该邀请码已过期。"
         rescind: "删除邀请"
         rescinded: "邀请已删除"
         time_read: "阅读时间"
@@ -402,6 +420,10 @@ zh_CN:
     loading: "载入中……"
     close: "关闭"
     assets_changed_confirm: "Discourse已更新，是否刷新以获取最新版本？"
+    read_only_mode:
+      enabled: "一位管理员开启了只读模式，你可以继续浏览但是参与功能不会正常工作。"
+      login_disabled: "只读模式下不允许登录。"
+
     learn_more: "了解更多……"
 
     year: '年'
@@ -473,9 +495,6 @@ zh_CN:
       facebook:
         title: "使用Facebook帐号登录"
         message: "使用Facebook帐号验证登录（请确保没有禁止浏览器弹出对话框）"
-      cas:
-        title: "使用CAS登录"
-        message: "使用CAS（单点登录）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       yahoo:
         title: "使用Yahoo帐号登录"
         message: "使用Yahoo帐号验证登录（请确保没有禁止浏览器弹出对话框）"
@@ -510,6 +529,7 @@ zh_CN:
       cancel: "取消"
       create_topic: "创建主题"
       create_pm: "创建私信"
+      title: "或者按下Ctrl+Enter"
 
       users_placeholder: "添加一个用户"
       title_placeholder: "为什么需要编辑？"
@@ -618,6 +638,7 @@ zh_CN:
         selected:
           one: "你选择了<b>一</b>个帖子。"
           other: "你选择了<b>{{count}}</b>个帖子。"
+
       none:
         starred: "你尚未收藏任何主题。要收藏一个主题，点击标题旁的星星图标。"
         unread: "你没有未阅主题。"
@@ -735,15 +756,24 @@ zh_CN:
           "1_2": '仅当有人 @name 提及了你或回复了你的帖子，你才会收到相关通知。'
           "0": '你将忽略关于此主题的所有通知。'
           "0_2": '你将忽略关于此主题的所有通知。'
+        watching_pm:
+          title: "关注"
+          description: "一旦有新私信发表，你都会收到通知。"
         watching:
           title: "关注"
-          description: "与追踪一样，额外的是一旦有新帖子发表，你都会收到通知。"
+          description: "一旦有新帖子发表，你都会收到通知。"
+        tracking_pm:
+          title: 追踪
+          description: "关于你的未阅帖子、@name 提及与对你的私信的回复，你都会收到通知。"
         tracking:
           title: "追踪"
           description: "关于你的未阅帖子、@name 提及与对你的帖子的回复，你都会收到通知。"
         regular:
           title: "常规"
           description: "只有当有人 @name 提及你或者回复你的帖子时，你才会收到通知。"
+        muted_pm:
+          title: "防打扰"
+          description: "你不会收到关于此私信的任何通知。"
         muted:
           title: "防打扰"
           description: "你不会收到关于此主题的任何通知，也不会在你的未阅选项卡中显示。"
@@ -775,6 +805,11 @@ zh_CN:
       share:
         title: '分享'
         help: '分享一个到本帖的链接'
+
+      flag_topic:
+        title: '报告'
+        help: '私下报告本帖以引起注意或者发送一条匿名通知'
+        success_message: '你已成功报告本帖。'
 
       inviting: "邀请中……"
 
@@ -1065,6 +1100,11 @@ zh_CN:
         more: "还差 {{n}} 个……"
         left: "还剩下 {{n}}"
 
+    flagging_topic:
+      title: "为何要私下报告本帖？"
+      action: "报告帖子"
+      notify_action: "通知"
+
     topic_map:
       title: "主题概要"
       links_shown: "显示所有 {{totalLinks}} 个链接……"
@@ -1227,12 +1267,16 @@ zh_CN:
         disagree: "不批准"
         disagree_title: "不批准此帖的报告，并清除此贴的任何报告"
         delete_spammer_title: "删除该用户及其所有帖子和主题。"
+        clear_topic_flags: "完成"
+        clear_topic_flags_title: "这个主题已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
 
         flagged_by: "报告者为"
         system: "系统"
         error: "出错了"
         view_message: "查看消息"
         no_results: "没有报告"
+        topic_flagged: "这个<strong>主题</strong>已被报告。"
+        visit_topic: "进入主题以展开和组织紧张而有序的调查和行动。"
 
         summary:
           action_type_3:
@@ -1252,6 +1296,8 @@ zh_CN:
             other: "垃圾 x{{count}}"
 
       groups:
+        primary: "主键组"
+        no_primary: "(无主键组)"
         title: "群组"
         edit: "编辑群组"
         selector_placeholder: "添加用户"
@@ -1276,6 +1322,58 @@ zh_CN:
         all_users: "所有用户"
         note_html: "请<strong>安全地</strong>保管好本密钥，任何拥有该密钥的用户可以使用它以论坛任何用户的名义来发帖。"
 
+      backups:
+        title: "备份"
+        menu:
+          backups: "备份"
+          logs: "日志"
+        none: "无可用备份"
+        read_only:
+          enable:
+            title: "启用只读模式"
+            text: "打开只读模式"
+            confirm: "您确定要打开只读模式吗？"
+          disable:
+            title: "禁用只读模式"
+            text: "关闭只读模式"
+        logs:
+          none: "暂无日志"
+        columns:
+          filename: "文件名"
+          size: "大小"
+        upload:
+          text: "上传"
+          uploading: "正在上传"
+          success: "'{{filename}}'已成功上传。"
+          error: "在上传的'{{filename}}'过程中出现错误：({{message}})"
+        operations:
+          is_running: "已有操作正在执行"
+          failed: "执行{{operation}}失败。请检查日志。"
+          cancel:
+            text: "取消"
+            title: "取消当前操作"
+            confirm: "您确定要取消当前操作吗？"
+          backup:
+            text: "备份"
+            title: "建立一个备份"
+            confirm: "您确定要建立一个备份吗？"
+          download:
+            text: "下载"
+            title: "下载该备份"
+          destroy:
+            text: "删除"
+            title: "删除备份"
+            confirm: "您确定要删除该备份吗？"
+          restore:
+            is_disabled: "网站设置不允许重置。"
+            text: "重置"
+            title: "重置该备份"
+            confirm: "您确定要重置该备份吗？"
+          rollback:
+            text: "回滚"
+            title: "将数据库回滚到之前的工作状态"
+            confirm: "您确定要将数据库回滚到之前的工作状态吗？"
+
       customize:
         title: "定制"
         long_title: "站点定制"
@@ -1297,8 +1395,11 @@ zh_CN:
       email:
         title: "电子邮件"
         settings: "设置"
-        logs: "日志"
+        all: "所有"
+        sent: "已发送"
+        skipped: "跳过"
         sent_at: "发送时间"
+        time: "时间"
         user: "用户"
         email_type: "邮件类型"
         to_address: "目的地址"
@@ -1314,6 +1415,16 @@ zh_CN:
         text: "text"
         last_seen_user: "用户最后登录时间:"
         reply_key: "回复关键字"
+        skipped_reason: "跳过理由"
+        logs:
+          none: "未发现日志。"
+          filters:
+            title: "过滤器"
+            user_placeholder: "username"
+            address_placeholder: "em@il.com"
+            type_placeholder: "digest, signup..."
+            reply_key_placeholder: ""
+            skipped_reason_placeholder: "理由"
 
       logs:
         title: "日志"
@@ -1351,8 +1462,8 @@ zh_CN:
             change_site_setting: "更改站点设置"
             change_site_customization: "更改站点自定义"
             delete_site_customization: "删除站点自定义"
-            ban_user: "禁止用户"
-            unban_user: "解禁用户"
+            suspend_user: "禁止用户"
+            unsuspend_user: "解禁用户"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
