@@ -64,7 +64,11 @@
     .fa-thumb-tack { margin-top: -1px; }
   }
   .chzn-container { vertical-align: middle; }
+  .private-message-glyph { display: none; }
 }
+
+.private-message-glyph { color: lighten($primary_text_color, 60%); }
+.private_message #topic-title .private-message-glyph { display: inline; }
 
 #topic-closing-info {
   border-top: 1px solid lighten($primary_border_color, 10%) ;

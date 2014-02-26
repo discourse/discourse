@@ -26,19 +26,19 @@
 
 #topic-title {
   margin-bottom: 20px;
-margin: 0 60px 10px 20px;
-line-height: 1.7em;
+  margin: 0 60px 10px 20px;
+  line-height: 1.7em;
 
-h1 {
-  font-size: 1.5em;
-  margin:0;
-
-a.edit-topic {font-size: 15px;}
-
+  h1 {
+    font-size: 1.5em;
+    margin:0;
+    a.edit-topic {font-size: 15px;}
+  }
+  .private-message-glyph { display: none; }
 }
 
-
-}
+.private-message-glyph { color: lighten($primary_text_color, 60%); }
+.private_message #topic-title .private-message-glyph { display: inline; }
 
 #topic-closing-info {
   margin-left: 10px;

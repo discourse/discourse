@@ -19,6 +19,7 @@
             <button class='btn btn-small' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
           {{else}}
             <h1>
+              <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
               {{#if category.parentCategory}}
                 {{boundCategoryLink category.parentCategory}}
               {{/if}}
