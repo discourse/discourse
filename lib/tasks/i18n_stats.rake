@@ -84,10 +84,6 @@ task "i18n:stats" => :environment do
   end
 
   def get_plurals(locale)
-    if locale == "pseudo"
-      locale = "en"
-    end
-
     I18n.t("i18n.plural.keys", :locale => locale).map { |x| x.to_s }
   end
 
