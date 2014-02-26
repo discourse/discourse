@@ -94,21 +94,21 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::InvalidAccess do
-    rescue_discourse_actions("[error: 'invalid access']", 403) # TODO: this breaks json responses
+    rescue_discourse_actions("[error: 'invalid access']", 403, true) # TODO: this breaks json responses
   end
 
   rescue_from Discourse::ReadOnly do
     render status: 405, json: failed_json.merge(message: I18n.t("read_only_mode_enabled"))
   end
 
-  def rescue_discourse_actions(message, error)
+  def rescue_discourse_actions(message, error, include_ember=false)
     if request.format && request.format.json?
       # TODO: this doesn't make sense. Stuffing an html page into a json response will cause
       #       $.parseJSON to fail in the browser. Also returning text like "[error: 'invalid access']"
       #       from the above rescue_from blocks will fail because that isn't valid json.
       render status: error, layout: false, text: (error == 404) ? build_not_found_page(error) : message
     else
-      render text: build_not_found_page(error, 'no_js')
+      render text: build_not_found_page(error, include_ember ? 'application' : 'no_js')
     end
   end
 
