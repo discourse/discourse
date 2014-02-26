@@ -558,6 +558,7 @@ iframe {
 .moderator {
   .topic-body {
   background-color: $highlight_background_color;
+  border-bottom: 10px solid $highlight_background_color;
   }
 }
 
@@ -630,7 +631,7 @@ position: relative;
 
 
 .user-title {
-  margin-top: 8px;
+  margin-top: 5px;
   color: $secondary_text_color;
   overflow: hidden;
   font-size: 80%;
