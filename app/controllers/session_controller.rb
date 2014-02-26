@@ -9,7 +9,7 @@ class SessionController < ApplicationController
 
   def sso
     if SiteSetting.enable_sso
-      redirect_to DiscourseSingleSignOn.generate_url
+      redirect_to DiscourseSingleSignOn.generate_url(params[:return_path] || '/')
     else
       render nothing: true, status: 404
     end
@@ -27,11 +27,16 @@ class SessionController < ApplicationController
       return
     end
 
+    return_path = sso.return_path
     sso.expire_nonce!
 
     if user = sso.lookup_or_create_user
-      log_on_user user
-      redirect_to sso.return_url || "/"
+      if SiteSetting.must_approve_users? && !user.approved?
+        # TODO: need an awaiting approval message here
+      else
+        log_on_user user
+      end
+      redirect_to return_path
     else
       render text: "unable to log on user", status: 500
     end

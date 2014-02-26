@@ -341,18 +341,13 @@ Ember.Handlebars.registerBoundHelper('date', function(dt) {
 });
 
 /**
-  Look for custom html content in the preload store.
+  Look for custom html content using `Discourse.HTML`
 
   @method customHTML
   @for Handlebars
 **/
 Handlebars.registerHelper('customHTML', function(property) {
-  var html = PreloadStore.get("customHTML");
-
-  if (html && html[property] && html[property].length) {
-    return new Handlebars.SafeString(html[property]);
-  }
-
+  return Discourse.HTML.getCustomHTML(property);
 });
 
 Ember.Handlebars.registerBoundHelper('humanSize', function(size) {

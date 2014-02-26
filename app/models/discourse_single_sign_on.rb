@@ -8,22 +8,25 @@ class DiscourseSingleSignOn < SingleSignOn
     SiteSetting.sso_secret
   end
 
-  def self.generate_url(return_url="/")
+  def self.generate_url(return_path="/")
     sso = new
-    sso.return_url = return_url
     sso.nonce = SecureRandom.hex
-    sso.register_nonce
+    sso.register_nonce(return_path)
     sso.to_url
   end
 
-  def register_nonce
+  def register_nonce(return_path)
     if nonce
-      $redis.setex(nonce_key, NONCE_EXPIRY_TIME, payload)
+      $redis.setex(nonce_key, NONCE_EXPIRY_TIME, return_path)
     end
   end
 
   def nonce_valid?
     nonce && $redis.get(nonce_key).present?
+  end
+
+  def return_path
+    $redis.get(nonce_key) || "/"
   end
 
   def expire_nonce!
@@ -61,6 +64,12 @@ class DiscourseSingleSignOn < SingleSignOn
                                             external_id: external_id)
         end
       end
+    end
+
+    if sso_record && (user = sso_record.user) && !user.active
+      user.active = true
+      user.save
+      user.enqueue_welcome_message('welcome_user')
     end
 
     sso_record && sso_record.user

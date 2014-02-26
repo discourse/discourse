@@ -1,7 +1,9 @@
 module("Discourse.HTML");
 
+var html = Discourse.HTML;
+
 test("categoryLink without a category", function() {
-  blank(Discourse.HTML.categoryLink(), "it returns no HTML");
+  blank(html.categoryLink(), "it returns no HTML");
 });
 
 test("Regular categoryLink", function() {
@@ -12,7 +14,7 @@ test("Regular categoryLink", function() {
         color: 'ff0',
         text_color: 'f00'
       }),
-      tag = parseHTML(Discourse.HTML.categoryLink(category))[0];
+      tag = parseHTML(html.categoryLink(category))[0];
 
   equal(tag.name, 'a', 'it creates an `a` tag');
   equal(tag.attributes['class'], 'badge-category', 'it has the correct class');
@@ -26,7 +28,7 @@ test("Regular categoryLink", function() {
 
 test("undefined color", function() {
   var noColor = Discourse.Category.create({ name: 'hello', id: 123 }),
-      tag = parseHTML(Discourse.HTML.categoryLink(noColor))[0];
+      tag = parseHTML(html.categoryLink(noColor))[0];
 
   blank(tag.attributes.style, "it has no color style because there are no colors");
 });
@@ -35,7 +37,18 @@ test("allowUncategorized", function() {
   var uncategorized = Discourse.Category.create({name: 'uncategorized', id: 345});
   this.stub(Discourse.Site, 'currentProp').withArgs('uncategorized_category_id').returns(345);
 
-  blank(Discourse.HTML.categoryLink(uncategorized), "it doesn't return HTML for uncategorized by default");
-  present(Discourse.HTML.categoryLink(uncategorized, {allowUncategorized: true}), "it returns HTML");
+  blank(html.categoryLink(uncategorized), "it doesn't return HTML for uncategorized by default");
+  present(html.categoryLink(uncategorized, {allowUncategorized: true}), "it returns HTML");
 });
 
+
+test("customHTML", function() {
+  blank(html.getCustomHTML('evil'), "there is no custom HTML for a key by default");
+
+  html.setCustomHTML('evil', 'trout');
+  equal(html.getCustomHTML('evil'), 'trout', 'it retrieves the custom html');
+
+  PreloadStore.store('customHTML', {cookie: 'monster'});
+  equal(html.getCustomHTML('cookie'), 'monster', 'it returns HTML fragments from the PreloadStore');
+
+});

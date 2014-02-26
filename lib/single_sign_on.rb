@@ -1,5 +1,5 @@
 class SingleSignOn
-  ACCESSORS = [:nonce, :return_url, :name, :username, :email, :about_me, :external_id]
+  ACCESSORS = [:nonce, :name, :username, :email, :about_me, :external_id]
   FIXNUMS = []
   NONCE_EXPIRY_TIME = 10.minutes
 
@@ -43,7 +43,7 @@ class SingleSignOn
   end
 
   def sign(payload)
-    Digest::SHA2.hexdigest(payload + sso_secret)
+    OpenSSL::HMAC.hexdigest("sha256", sso_secret, payload)
   end
 
 
