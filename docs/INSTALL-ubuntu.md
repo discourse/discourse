@@ -125,7 +125,6 @@ Install RVM
     # As 'discourse'
     # Install RVM
      \curl -s -S -L https://get.rvm.io | bash -s stable
-     
     # Refresh your profile
     . ~/.rvm/scripts/rvm
 
@@ -141,10 +140,10 @@ Install missing packages
 
     rvm --autolibs=read-fail requirements
 
-    # For instance, if prompted with `libreadline6-dev libsqlite3-dev sqlite3 autoconf' etc
-    # Install the missing packages with this command, run as your user:
-    # sudo apt-get install libreadline6-dev libsqlite3-dev sqlite3 autoconf
-    # Repeat the autolibs test until you see "Requirements installation successful" 
+    # If prompted with `libreadline6-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake bison pkg-config libffi-dev' etc
+    # Fix with this command, run as your user:
+    # sudo apt-get install -dev libreadline6-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake bison pkg-config libffi-dev
+    # repeat the autolibs test until "Requirements installation successful" 
 
 
 Build and install ruby
