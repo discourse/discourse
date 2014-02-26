@@ -6,13 +6,4 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryTopView = Discourse.View.extend({
-
-  didInsertElement: function() {
-    this._super();
-    Em.run.schedule('afterRender', function() {
-      $('document').scrollTop(0);
-    });
-  },
-
-});
+Discourse.DiscoveryTopView = Discourse.View.extend(Discourse.ScrollTop);
