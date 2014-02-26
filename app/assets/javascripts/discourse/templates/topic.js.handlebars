@@ -12,7 +12,9 @@
           {{/if}}
 
           {{#if editingTopic}}
-            {{categoryChooser valueAttribute="id" value=newCategoryId source=category_id}}
+            {{#unless isPrivateMessage}}
+              {{categoryChooser valueAttribute="id" value=newCategoryId source=category_id}}
+            {{/unless}}
             {{textField id='edit-title' value=newTitle}}
 
             <button class='btn btn-primary btn-small' {{action finishedEditingTopic}}><i class='fa fa-check'></i></button>
