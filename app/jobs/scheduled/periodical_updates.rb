@@ -21,8 +21,6 @@ module Jobs
       # Update the scores of posts
       ScoreCalculator.new.calculate
 
-      # Refresh Top Topics
-      TopTopic.refresh!
 
       # Automatically close stuff that we missed
       Topic.auto_close
