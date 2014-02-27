@@ -89,7 +89,6 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
       this.send('hideModal');
       postAction.act(params).then(function() {
         self.send('closeModal');
-        if (self.get('flagTopic')) { bootbox.alert(I18n.t('topic.flag_topic.success_message')); }
       }, function(errors) {
         self.send('showModal');
         self.displayErrors(errors);
