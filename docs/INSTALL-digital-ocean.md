@@ -32,7 +32,7 @@ You will be asked for permission to connect, type `yes`, then the root password,
 
 # Install Git
 
-    sudo apt-get install git
+    apt-get install git
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3002/eafbf14df8eee832.png" width="572" height="263"> 
 
@@ -46,14 +46,14 @@ You will be asked for permission to connect, type `yes`, then the root password,
 
 # Install Docker
 
-    sudo apt-get update
-    sudo apt-get install linux-image-generic-lts-raring linux-headers-generic-lts-raring
+    apt-get update
+    apt-get install linux-image-generic-lts-raring linux-headers-generic-lts-raring
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3001/e94722e882f28994.png" width="566" height="339"> 
 
 Reboot the server:
 
-    sudo reboot
+    reboot
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3003/d3cc759ced335d25.png" width="532" height="155"> 
 
@@ -63,7 +63,7 @@ This will log you out from your SSH session, so reconnect:
 
 Finish installing Docker:
 
-    sudo wget -qO- https://get.docker.io/ | sh
+    wget -qO- https://get.docker.io/ | sh
 
 # Install Discourse
 
@@ -119,7 +119,7 @@ Copy the entire output and paste it into the `ssh_key` setting in the `app.yml` 
 
 Be sure to save the `app.yml` file, and begin bootstrapping Discourse:
 
-    sudo ./launcher bootstrap app
+    ./launcher bootstrap app
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3007/c0596ad3d330ae71.png" width="567" height="138"> 
 
@@ -127,7 +127,7 @@ This command may take some time, so be prepared to wait. It is automagically con
 
 After that completes, start Discourse:
 
-    sudo ./launcher start app
+    ./launcher start app
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3008/ced00cf4782f020c.png" width="568" height="137"> 
 
