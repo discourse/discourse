@@ -5,6 +5,7 @@ class CategorySerializer < BasicCategorySerializer
              :auto_close_hours,
              :group_permissions,
              :position,
+             :email_in,
              :can_delete
 
   def group_permissions
@@ -33,6 +34,10 @@ class CategorySerializer < BasicCategorySerializer
 
   def include_can_delete?
     scope && scope.can_delete?(object)
+  end
+
+  def include_email_in?
+    scope && scope.can_edit?(object)
   end
 
 end

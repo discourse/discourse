@@ -105,6 +105,18 @@
           </div>
         </section>
 
+        {{#if controller.emailInEnabled}}
+          <section class='field'>
+            <div class="email-in-fields">
+              <div>
+                <i class="fa fa-envelope-o"></i>
+                {{i18n category.email_in}}
+                {{textField value=email_in}}
+              </div>
+            </div>
+          </section>
+        {{/if}}
+
         <section class='field'>
           <label>{{i18n category.position}}</label>
           <span {{action disableDefaultPosition}}>{{textField value=position disabled=defaultPosition class="position-input"}}</span>

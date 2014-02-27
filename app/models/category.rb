@@ -335,6 +335,10 @@ SQL
     self.where(id: slug.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
   end
 
+  def self.find_by_email(email)
+    self.where(email_in: Email.downcase(email)).first
+  end
+
   def has_children?
     id && Category.where(parent_category_id: id).exists?
   end
