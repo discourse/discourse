@@ -6,6 +6,7 @@ class CategorySerializer < BasicCategorySerializer
              :group_permissions,
              :position,
              :email_in,
+             :email_in_allow_strangers,
              :can_delete
 
   def group_permissions
@@ -37,6 +38,10 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def include_email_in?
+    scope && scope.can_edit?(object)
+  end
+
+  def include_email_in_allow_strangers?
     scope && scope.can_edit?(object)
   end
 

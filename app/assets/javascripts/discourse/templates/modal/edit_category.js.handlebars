@@ -113,6 +113,12 @@
                 {{i18n category.email_in}}
                 {{textField value=email_in}}
               </div>
+              <div>
+                <label class="checkbox-label">
+                  {{view Ember.Checkbox checkedBinding="email_in_allow_strangers"}}
+                  {{i18n category.email_in_allow_strangers}}
+                </label>
+              </div>
             </div>
           </section>
         {{/if}}
