@@ -904,10 +904,7 @@ en:
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
 
-      abandon:
-        confirm: "Are you sure you want to abandon your post?"
-        yes_value: "Yes, abandon"
-        no_value: "No, keep"
+      abandon: "Are you sure you want to abandon your post?"
 
       archetypes:
         save: 'Save Options'
