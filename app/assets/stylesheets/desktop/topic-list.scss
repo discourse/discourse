@@ -364,6 +364,8 @@
   }
   .posters {
     float: left;
+    display: block;
+    width: 165px;
   }
   > footer {
     border: 1px solid $primary_border_color;
