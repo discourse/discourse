@@ -9,8 +9,8 @@ module Jobs
 
     def execute(args)
       # Update the average times
-      Post.calculate_avg_time
-      Topic.calculate_avg_time
+      Post.calculate_avg_time(1.day.ago)
+      Topic.calculate_avg_time(1.day.ago)
 
       # Feature topics in categories
       CategoryFeaturedTopic.feature_topics
@@ -19,8 +19,7 @@ module Jobs
       UserStat.update_view_counts
 
       # Update the scores of posts
-      ScoreCalculator.new.calculate
-
+      ScoreCalculator.new.calculate(1.day.ago)
 
       # Automatically close stuff that we missed
       Topic.auto_close

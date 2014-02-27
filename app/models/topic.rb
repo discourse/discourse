@@ -362,15 +362,25 @@ class Topic < ActiveRecord::Base
   end
 
   # This calculates the geometric mean of the posts and stores it with the topic
-  def self.calculate_avg_time
-    exec_sql("UPDATE topics
+  def self.calculate_avg_time(min_topic_age=nil)
+    builder = SqlBuilder.new("UPDATE topics
               SET avg_time = x.gmean
               FROM (SELECT topic_id,
                            round(exp(avg(ln(avg_time)))) AS gmean
                     FROM posts
                     WHERE avg_time > 0 AND avg_time IS NOT NULL
                     GROUP BY topic_id) AS x
-              WHERE x.topic_id = topics.id AND (topics.avg_time <> x.gmean OR topics.avg_time IS NULL)")
+              /*where*/")
+
+    builder.where("x.topic_id = topics.id AND
+                  (topics.avg_time <> x.gmean OR topics.avg_time IS NULL)")
+
+    if min_topic_age
+      builder.where("topics.bumped_at > :bumped_at",
+                   bumped_at: min_topic_age)
+    end
+
+    builder.exec
   end
 
   def changed_to_category(cat)

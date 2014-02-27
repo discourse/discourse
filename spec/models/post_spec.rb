@@ -787,4 +787,12 @@ describe Post do
     end
   end
 
+  describe "calculate_avg_time" do
+
+    it "should not crash" do
+      Post.calculate_avg_time
+      Post.calculate_avg_time(1.day.ago)
+    end
+  end
+
 end
