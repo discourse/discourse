@@ -15,6 +15,20 @@ module Email
       @raw = raw
     end
 
+    def is_in_email?
+      if SiteSetting.email_in and SiteSetting.email_in_address == @message.to.first
+        @category_id = SiteSetting.email_in_category.to_i
+        return true
+      end
+
+      category = Category.find_by_email(@message.to.first)
+      return false if not category
+
+      @category_id = category.id
+      return true
+
+    end
+
     def process
       return Email::Receiver.results[:unprocessable] if @raw.blank?
 
@@ -32,7 +46,7 @@ module Email
 
       return Email::Receiver.results[:unprocessable] if @body.blank?
 
-      if SiteSetting.email_in and @message.to.first == SiteSetting.email_in_address
+      if is_in_email?
         @user = User.find_by_email(@message.from.first)
         return Email::Receiver.results[:unprocessable] if @user.blank? or not @user.has_trust_level?(TrustLevel.levels[SiteSetting.email_in_min_trust.to_i])
 
@@ -51,7 +65,7 @@ module Email
       # Look up the email log for the reply key
       @email_log = EmailLog.for(reply_key)
       return Email::Receiver.results[:missing] if @email_log.blank?
-       
+
       create_reply
 
       Email::Receiver.results[:processed]
@@ -144,7 +158,7 @@ module Email
       # Try to post the body as a reply
       topic_creator = TopicCreator.new(@user,
                                        Guardian.new(@user), 
-                                       category: SiteSetting.email_in_category.to_i,
+                                       category: @category_id,
                                        title: @message.subject)
 
       topic = topic_creator.create
@@ -155,7 +169,7 @@ module Email
 
       post_creator.create
       EmailLog.create(email_type: "topic_via_incoming_email",
-            to_address: SiteSetting.email_in_address,
+            to_address: @message.to.first,
             topic_id: topic.id, user_id: @user.id)
       topic
     end

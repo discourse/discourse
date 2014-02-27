@@ -1078,6 +1078,7 @@ en:
       security: "Security"
       auto_close_label: "Auto-close topics after:"
       auto_close_units: "hours"
+      email_in: "Custom incoming email address:"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
       this_year: "this year"
