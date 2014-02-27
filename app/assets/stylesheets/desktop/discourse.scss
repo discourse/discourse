@@ -35,6 +35,10 @@ body {
   .full-width {
     width: $medium-width;
   }
+  .extra-info-wrapper {
+  max-width: 720px !important;
+}
+
 }
 
 /**/
@@ -48,6 +52,9 @@ body {
   .full-width {
     width: $small-width;
   }
+    .extra-info-wrapper {
+  max-width: 680px !important;
+}
 }
 
 a.no-href {
