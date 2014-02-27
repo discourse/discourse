@@ -4,7 +4,7 @@ module Jobs
 
   # This job will run on a regular basis to update statistics and denormalized data.
   # If it does not run, the site will not function properly.
-  class PeriodicalUpdates < Jobs::Scheduled
+  class Daily < Jobs::Scheduled
     every 1.day
 
     def execute(args)
