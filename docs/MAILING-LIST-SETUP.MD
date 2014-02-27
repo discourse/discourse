@@ -13,6 +13,8 @@ Once that is in place, you can enable the "email_in"-feature globally in the sam
 
 Once "email_in" is enabled globally a new configuration option appears in your category settings dialog allowing you to specify an email-address for that category. Emails going to the previously configured inbox to that email-address will be posted in this category instead of the default configuration. **Attention** User-Permissions and the minimum trust levels still apply.
 
+Additionally, by checking the "accept non-user emails"-checkbox in the category settings, emails to the given email but from unknown email-addresses will be posted in the category by the System-User in a quoted fashion, showing the original email-address and content in the quotes.
+
 ### Troubleshooting
 
 You might want to allow users to opt-in to receive all posts via email with the option on the bottom:

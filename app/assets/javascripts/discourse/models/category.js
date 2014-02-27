@@ -67,6 +67,7 @@ Discourse.Category = Discourse.Model.extend({
         auto_close_hours: this.get('auto_close_hours'),
         position: this.get('position'),
         email_in: this.get('email_in'),
+        email_in_allow_strangers: this.get('email_in_allow_strangers'),
         parent_category_id: this.get('parent_category_id')
       },
       type: this.get('id') ? 'PUT' : 'POST'

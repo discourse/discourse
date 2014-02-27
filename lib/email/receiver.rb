@@ -16,6 +16,7 @@ module Email
     end
 
     def is_in_email?
+      @allow_strangers = false
       if SiteSetting.email_in and SiteSetting.email_in_address == @message.to.first
         @category_id = SiteSetting.email_in_category.to_i
         return true
@@ -25,6 +26,7 @@ module Email
       return false if not category
 
       @category_id = category.id
+      @allow_strangers = category.email_in_allow_strangers
       return true
 
     end
@@ -48,6 +50,11 @@ module Email
 
       if is_in_email?
         @user = User.find_by_email(@message.from.first)
+        if @user.blank? and @allow_strangers
+          wrap_body_in_quote
+          @user = Discourse.system_user
+        end
+
         return Email::Receiver.results[:unprocessable] if @user.blank? or not @user.has_trust_level?(TrustLevel.levels[SiteSetting.email_in_min_trust.to_i])
 
         create_new_topic
@@ -74,6 +81,12 @@ module Email
     end
 
     private
+
+    def wrap_body_in_quote
+      @body = "[quote=\"#{@message.from.first}\"]
+#{@body}
+[/quote]"
+    end
 
     def parse_body
       html = nil
