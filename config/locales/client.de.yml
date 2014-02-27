@@ -97,8 +97,8 @@ de:
     links: Links
     faq: "FAQ"
     privacy_policy: "Datenschutzrichtlinie"
-    mobile_view: "Mobilansicht"
-    desktop_view: "Desktopansicht"
+    mobile_view: "Mobile Ansicht"
+    desktop_view: "Desktop Ansicht"
     you: "Du"
     or: "oder"
     now: "gerade eben"
@@ -176,7 +176,7 @@ de:
       alias_levels:
         title: "Wer kann diese Gruppe als Alias verwenden?"
         nobody: "Niemand"
-        only_admins: "Nur Administatoren"
+        only_admins: "Nur Administratoren"
         mods_and_admins: "Nur Moderatoren und Administratoren"
         members_mods_and_admins: "Nur Gruppenmitglieder, Moderatoren und Administratoren"
         everyone: "Jeder"
@@ -199,7 +199,7 @@ de:
       all: "Alle Kategorien"
       all_subcategories: "Alle Unterkategorien"
       no_subcategory: "Keine Unterkategorie"
-      category: "Katgorie"
+      category: "Kategorie"
       posts: "Neue Beiträge"
       topics: "Neue Themen"
       latest: "Neueste"
@@ -228,7 +228,7 @@ de:
       preferences: "Einstellungen"
       bio: "Über mich"
       invited_by: "Eingeladen von"
-      trust_level: "Vertrauenssstufe"
+      trust_level: "Vertrauensstufe"
       notifications: "Benachrichtigungen"
       dynamic_favicon: "Zeige eingehende Nachrichten im Favicon"
       external_links_in_new_tab: "Öffne alle externen Links in neuen Tabs"
@@ -237,7 +237,7 @@ de:
       moderator: "{{user}} ist Moderator"
       admin: "{{user}} ist Administrator"
       deleted: "(gelöscht)"
-      suspended_notice: "Diser Benutzer ist bis zum {{date}} suspendiert."
+      suspended_notice: "Dieser Benutzer ist bis zum {{date}} suspendiert."
       suspended_reason: "Grund: "
       watched_categories: "Beobachten"
       watched_categories_instructions: "Das selbe wie 'verfolgen', zusätzlich wirst du über alle neuen Beiträge und Themen informiert."
@@ -512,7 +512,7 @@ de:
       users_placeholder: "Nutzer hinzufügen"
       title_placeholder: "Gib hier den Titel ein. In einem Satz: Worum geht es?"
       edit_reason_placeholder: "warum editierst du?"
-      show_edit_reason: "(editiergrund hinzufügen)"
+      show_edit_reason: "(Editiergrund hinzufügen)"
       reply_placeholder: "Gib hier deinen Text ein. Benutze Markdown oder BBCode zur Textformatierung. Um ein Bild einzufügen ziehe es hierhin oder füge es per Tastenkombination ein."
       view_new_post: "Betrachte deinen neuen Beitrag."
       saving: "Speichert..."
@@ -556,7 +556,7 @@ de:
 
     notifications:
       title: "Benachrichtigung über @Name-Erwähnungen, Antworten auf deine Themen und Beiträge, Private Nachrichten, etc."
-      none: "Du hast aktuell keine Benachrichtiungen."
+      none: "Du hast aktuell keine Benachrichtigungen."
       more: "Zeige frühere Benachrichtigungen"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
@@ -661,7 +661,7 @@ de:
         title: "Thema nicht gefunden"
         description: "Entschuldige, wir konnten das Thema nicht finden. Möglicherweise wurde es von einem Moderator entfernt."
       unread_posts:
-        one: "Du hast einen ungelesenen Beiträg zu diesem Thema"
+        one: "Du hast einen ungelesenen Beitrag zu diesem Thema"
         other: "Du hast {{count}} ungelesene Beiträge zu diesem Thema"
       new_posts:
         one: "Es gibt einen neuen Beitrag zu diesem Thema seit Du es das letzte mal gelesen hast"
@@ -796,7 +796,7 @@ de:
         action: 'Einladung senden'
         help: 'Sendet Freunden eine Einladung, so dass mit einem Klick auf dieses Thema antworten können.'
         to_topic: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht direkt auf dieses Thema zu antworten. Hierfür ist kein Login erforderlich."
-        to_forum: "Wir senden deinem Freund eine kurze Email, die ihm ermlicht dem Forum beizutreten"
+        to_forum: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht dem Forum beizutreten"
 
         email_placeholder: 'Mailadresse'
         success: "Danke! Wir haben deine Einladung an <b>{{email}}</b> verschickt. Wir lassen Dich wissen, sobald die Einladung eingelöst wird. In deinem Nutzerprofil kannst Du alle deine Einladungen überwachen."
@@ -820,8 +820,8 @@ de:
           other: "Du bist dabei, ein neues Thema zu erstellen und die <b>{{count}}</b> ausgewählten Beiträge dorthin zu verschieben."
 
       merge_topic:
-        title: "Themes zusammenführen"
-        action: "Themes zusammenführen"
+        title: "Themen zusammenführen"
+        action: "Themen zusammenführen"
         error: "Beim Zusammenführen der Themen ist ein Fehler passiert."
         instructions:
           one: "Bitte wähle das Thema in welches du den Beitrag verschieben möchtest."
@@ -913,7 +913,7 @@ de:
           inappropriate: "Meldung widerrufen"
           bookmark: "Lesezeichen entfernen"
           like: "Gefällt mir nicht mehr"
-          vote: "Stimme wiederrufen"
+          vote: "Stimme widerrufen"
         people:
           off_topic: "{{icons}} haben es als am Thema vorbei gemeldet"
           spam: "{{icons}} haben es als Werbung gemeldet"
@@ -1149,7 +1149,7 @@ de:
         monthly:
           title: "Top monatlich"
         weekly:
-          title: "Top wöchtenlich"
+          title: "Top wöchentlich"
         daily:
           title: "Top täglich"
         this_year: "Dieses Jahr"
@@ -1263,7 +1263,7 @@ de:
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         delete: "Löschen"
-        delete_confirm: "Diese gruppe löschen?"
+        delete_confirm: "Diese Gruppe löschen?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
 
       api:
@@ -1276,7 +1276,7 @@ de:
         regenerate: "API-Schlüssel neu generieren"
         revoke: "Widerrufen"
         confirm_regen: "Bist du sicher, dass du den API Key mit einem neuen ersetzen willst?"
-        confirm_revoke: "Bist du dir sicher, dass du den API Key wiederrufen willst?"
+        confirm_revoke: "Bist du dir sicher, dass du den API Key widerrufen willst?"
         info_html: "Dein API-Schlüssel erlaubt Dir das Erstellen und Bearbeiten von Themen via JSON aufrufen."
         all_users: "Alle Benutzer"
         note_html: "Behalte deinen <strong>Schlüssel</strong> geheim, jeder Benutzer mit diesem Schlüssel kann beliebige Beiträge unter jedem Benutzer im Forum erstellen."
@@ -1317,7 +1317,7 @@ de:
         format: "Format"
         html: "html"
         text: "text"
-        last_seen_user: "Letzer Benutzer:"
+        last_seen_user: "Letzter Benutzer:"
         reply_key: "Antwort-Schlüssel"
 
       logs:
@@ -1335,7 +1335,7 @@ de:
           do_nothing: "nichts machen"
         staff_actions:
           title: "Mitarbeiter Aktion"
-          instructions: "Kilcke auf die Benutzernamen und Aktionen um die Liste zu filtern. Klicke den Avatar um die Benutzerseite zu sehen."
+          instructions: "Klicke auf die Benutzernamen und Aktionen um die Liste zu filtern. Klicke den Avatar um die Benutzerseite zu sehen."
           clear_filters: "Alles anzeigen"
           staff_user: "Mitarbeiter"
           target_user: "Zielnutzer"
@@ -1369,7 +1369,7 @@ de:
           domain: "Domain"
         screened_ips:
           title: "Geschützte IPs"
-          description: 'IP-Adressen die beobachtet werden wollen. Benuzte "Erlauben" um IPs zu whitelisten.'
+          description: 'IP-Adressen die beobachtet werden wollen. Benutze "Erlauben" um IPs zu whitelisten.'
           delete_confirm: "Sicher, dass du die Rege für %{ip_address} aufheben willst?"
           actions:
             block: "Blockieren"
@@ -1497,7 +1497,7 @@ de:
         trust_level_3_requirements: "Vertrauensstufe 3 Vorraussetzungen"
         tl3_requirements:
           title: "Vorraussetzungen für Vertrauensstufe 3"
-          table_title: "In den lezten 100 Tagen:"
+          table_title: "In den letzten 100 Tagen:"
           value_heading: "Wert"
           requirement_heading: "Vorraussetzung"
           visits: "Visits"
@@ -1523,7 +1523,7 @@ de:
         clear_filter: "Zurücksetzen"
         categories:
           all_results: 'Alle'
-          required: 'Benötgt'
+          required: 'Benötigt'
           basic: 'Basissetup'
           users: 'Benutzer'
           posting: 'Beiträge'
@@ -1553,7 +1553,7 @@ de:
         categories: '<b>g</b> dann <b>c</b> Kategorien'
       navigation:
         title: 'Navigation'
-        back: '<b>u</b> Zurük'
+        back: '<b>u</b> Zurück'
         up_down: '<b>k</b>/<b>j</b> Ausgewähltes nach oben/unten bewegen'
         open: '<b>o</b> or <b>Enter</b> Thema öffnen'
         next_prev: '<b>`</b>/<b>~</b> Nächster/Vorheriger Abschnitt'
