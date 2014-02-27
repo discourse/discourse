@@ -1,4 +1,9 @@
-{{customHTML "top"}}
+<div class='container'>
+  {{customHTML "top"}}
+  {{#if Discourse.isReadOnly}}
+    <div class="alert alert-info">{{i18n "read_only_mode.enabled"}}</div>
+  {{/if}}
+</div>
 
 <div class='list-controls'>
   <div class="container">
