@@ -33,7 +33,7 @@ Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.LoadMore, {
 
     if (typeof scrollTo !== "undefined") {
       Em.run.schedule('afterRender', function() {
-        $(window).scrollTop(scrollTo);
+        $(window).scrollTop(scrollTo+1);
       });
     }
   }.on('didInsertElement'),
