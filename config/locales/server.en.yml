@@ -774,6 +774,8 @@ en:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
+
+    white_listed_spam_host_domains: "A comma delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain"
     staff_like_weight: "Extra weighting factor given to likes when performed by staff."
 
     reply_by_email_enabled: "Enable replying to topics via email"

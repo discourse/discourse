@@ -333,6 +333,7 @@ spam:
   notify_mods_when_user_blocked: false
   flag_sockpuppets: true
   newuser_spam_host_threshold: 3
+  white_listed_spam_host_domains: ""
 
 rate_limits:
   unique_posts_mins:

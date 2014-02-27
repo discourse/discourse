@@ -795,4 +795,24 @@ describe Post do
     end
   end
 
+
+  describe "has_host_spam" do
+    it "correctly detects host spam" do
+      post = Fabricate(:post, raw: "hello from my site http://www.somesite.com
+                       http://#{GlobalSetting.hostname} ")
+
+      post.total_hosts_usage.should == {"www.somesite.com" => 1}
+      post.acting_user.trust_level = 0
+
+      post.has_host_spam?.should == false
+
+      SiteSetting.stubs(:newuser_spam_host_threshold).returns(1)
+
+      post.has_host_spam?.should == true
+
+      SiteSetting.stubs(:white_listed_spam_host_domains).returns("bla.com,boo.com , somesite.com ")
+      post.has_host_spam?.should == false
+    end
+  end
+
 end

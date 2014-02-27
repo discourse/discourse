@@ -158,8 +158,29 @@ class Post < ActiveRecord::Base
     @acting_user = pu
   end
 
+  def whitelisted_spam_hosts
+
+    hosts = SiteSetting
+              .white_listed_spam_host_domains
+              .split(",")
+              .map{|h| h.strip}
+              .reject{|h| !h.include?(".")}
+
+    hosts << GlobalSetting.hostname
+
+  end
+
   def total_hosts_usage
     hosts = linked_hosts.clone
+    whitelisted = whitelisted_spam_hosts
+
+    hosts.reject! do |h|
+      whitelisted.any? do |w|
+        h.end_with?(w)
+      end
+    end
+
+    return hosts if hosts.length == 0
 
     TopicLink.where(domain: hosts.keys, user_id: acting_user.id)
              .group(:domain, :post_id)
