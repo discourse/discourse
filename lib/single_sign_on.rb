@@ -39,12 +39,6 @@ class SingleSignOn
       val = val.to_i if FIXNUMS.include? k
       sso.send("#{k}=", val)
     end
-    
-    # if we have a username, set the external_username attribute
-    unless sso.username.nil?
-      sso.external_username = sso.username
-    end
-    
     sso
   end
 
