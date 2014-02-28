@@ -60,7 +60,20 @@ Discourse.User = Discourse.Model.extend({
 
     return this.get('website').split("/")[2];
   }.property('website'),
+  
+  /**
+    This user's profile background(in CSS).
 
+    @property websiteName
+    @type {String}
+  **/
+  profileBackground: function() {
+    var background = this.get('profile_background');
+    if(Em.isEmpty(background) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
+    
+    return 'background-image: url(' + background + ')';
+  }.property('profile_background'),
+  
   statusIcon: function() {
     var desc;
     if(this.get('admin')) {
@@ -314,6 +327,22 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/toggle", {
       type: 'PUT',
       data: { use_uploaded_avatar: useUploadedAvatar }
+    });
+  },
+  
+  /*
+    Clear profile background
+    
+    @method clearProfileBackground
+    @returns {Promise} the result of the clear profile background request
+  */
+  clearProfileBackground: function() {
+    var user = this;
+    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/profile_background/clear", {
+      type: 'PUT',
+      data: { }
+    }).then(function() {
+      user.set('profile_background', null);
     });
   },
 
