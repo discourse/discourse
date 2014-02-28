@@ -8,8 +8,12 @@
   };
 
   LockOn.prototype.elementTop = function() {
-    var offsetCalculator = this.options.offsetCalculator;
-    return $(this.selector).offset().top - (offsetCalculator ? offsetCalculator() : 0);
+    var offsetCalculator = this.options.offsetCalculator,
+        selected = $(this.selector);
+
+    if (selected && selected.offset && selected.offset()) {
+      return selected.offset().top - (offsetCalculator ? offsetCalculator() : 0);
+    }
   };
 
   LockOn.prototype.lock = function() {
@@ -25,6 +29,12 @@
 
       var top = self.elementTop(),
           scrollTop = $(window).scrollTop();
+
+      if (typeof(top) === "undefined") {
+        $('body,html').off(scrollEvents)
+        clearInterval(interval);
+        return;
+      }
 
       if ((top !== previousTop) || (scrollTop !== top)) {
         $(window).scrollTop(top);
