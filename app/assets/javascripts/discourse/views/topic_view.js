@@ -71,12 +71,12 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     }
   }.observes('controller.enteredAt'),
 
-  didInsertElement: function() {
+  _inserted: function() {
     this.bindScrolling({name: 'topic-view'});
 
-    var topicView = this;
+    var self = this;
     $(window).resize('resize.discourse-on-scroll', function() {
-      topicView.scrolled();
+      self.scrolled();
     });
 
     // This get seems counter intuitive, but it's to trigger the observer on
@@ -88,10 +88,10 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       if ($(e.target).hasClass('mention')) { return false; }
       return Discourse.ClickTrack.trackClick(e);
     });
-  },
+  }.on('didInsertElement'),
 
   // This view is being removed. Shut down operations
-  willDestroyElement: function() {
+  _destroyed: function() {
     this.unbindScrolling('topic-view');
     $(window).unbind('resize.discourse-on-scroll');
 
@@ -102,7 +102,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
     // this happens after route exit, stuff could have trickled in
     this.set('controller.controllers.header.showExtraInfo', false);
-  },
+  }.on('willDestroyElement'),
 
   debounceLoadSuggested: Discourse.debounce(function(){
     if (this.get('isDestroyed') || this.get('isDestroying')) { return; }

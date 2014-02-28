@@ -95,6 +95,8 @@
       @method scrolled
     **/
     scrolled: function() {
+      if (!this.get('scrollingEnabled')) { return; }
+
       var childViews = this.get('childViews');
       if ((!childViews) || (childViews.length === 0)) { return; }
 
@@ -189,11 +191,18 @@
       $(window).bind('scroll.ember-cloak', onScrollMethod);
       this.addObserver('wrapperTop', self, onScrollMethod);
       this.addObserver('wrapperHeight', self, onScrollMethod);
+
+      this.set('scrollingEnabled', true);
     }.on('didInsertElement'),
 
-    _endEvents: function() {
+    cleanUp: function() {
       $(document).unbind('touchmove.ember-cloak');
       $(window).unbind('scroll.ember-cloak');
+      this.set('scrollingEnabled', false);
+    },
+
+    _endEvents: function() {
+      this.cleanUp();
     }.on('willDestroyElement')
   });
 
