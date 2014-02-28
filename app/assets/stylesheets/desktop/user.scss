@@ -40,6 +40,19 @@
       width: 440px;
     }
   }
+  
+  #profile-background-preview {
+    height: 270px;
+    
+    background-position: center center;
+    background-size: cover;
+    
+    background-color: $secondary_background_color;
+  }
+  
+  #profile-background-controls {
+    padding: 10px;
+  }
 
   .static {
     color: $primary_text_color;
@@ -174,6 +187,9 @@
 
   .about {
     background-color: $secondary_background_color;
+    background-size: cover;
+    background-position: center center;
+
     margin-bottom: 10px;
     overflow: hidden;
     color: $secondary_text_color;
