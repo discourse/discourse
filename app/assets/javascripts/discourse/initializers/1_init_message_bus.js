@@ -26,18 +26,10 @@ Discourse.addInitializer(function() {
 
   });
 
+  // initialize read-only mode and subscribe to updates via the message bus
   Discourse.set("isReadOnly", Discourse.Site.currentProp("is_readonly"));
-
   Discourse.MessageBus.subscribe("/site/read-only", function (enabled) {
     Discourse.set("isReadOnly", enabled);
-    if (enabled) {
-      if (!Discourse.User.currentProp("hideReadOnlyAlert")) {
-        bootbox.alert(I18n.t("read_only_mode.enabled"));
-      }
-    } else {
-      // force a reload
-      document.location.reload();
-    }
   });
 
   Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus);
