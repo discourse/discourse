@@ -855,7 +855,10 @@ nl:
         image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen afbeeldingen uploaden."
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen bestanden uploaden."
 
-      abandon: Weet je zeker dat je het schrijven van dit bericht wil afbreken?
+      abandon:
+        confirm: Weet je zeker dat je het schrijven van dit bericht wil afbreken?
+        no_value: Nee
+        yes_value: Ja
 
       archetypes:
         save: Bewaar instellingen

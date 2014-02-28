@@ -896,7 +896,10 @@ fr:
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'image."
         attachment_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer de fichier."
 
-      abandon: "Voulez-vous vraiment abandonner ce message ?"
+      abandon:
+        confirm: "Voulez-vous vraiment abandonner ce message ?"
+        no_value: "Non"
+        yes_value: "Oui"
 
       archetypes:
         save: 'Sauvegarder les options'
