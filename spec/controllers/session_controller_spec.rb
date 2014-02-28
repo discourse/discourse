@@ -69,31 +69,27 @@ describe SessionController do
       logged_on_user.active.should == true
     end
     
-    describe 'login to existing account' do
-      it 'allows login to existing account with valid nonce' do
+    it 'allows login to existing account with valid nonce' do
+      sso = get_sso('/hello/world')
+      sso.external_id = '997'
 
-        sso = get_sso('/hello/world')
-        sso.external_id = '997'
+      user = Fabricate(:user)
+      user.create_single_sign_on_record(external_id: '997', last_payload: '')
 
-        user = Fabricate(:user)
-        user.create_single_sign_on_record(external_id: '997', last_payload: '')
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
 
-        get :sso_login, Rack::Utils.parse_query(sso.payload)
+      user.single_sign_on_record.reload
+      user.single_sign_on_record.last_payload.should == sso.unsigned_payload
 
-        user.single_sign_on_record.reload
-        user.single_sign_on_record.last_payload.should == sso.unsigned_payload
+      response.should redirect_to('/hello/world')
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
-        response.should redirect_to('/hello/world')
-        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      user.id.should == logged_on_user.id
 
-        user.id.should == logged_on_user.id
-
-        # nonce is bad now
-        get :sso_login, Rack::Utils.parse_query(sso.payload)
-        response.code.should == '500'
-
-      end
-    end  
+      # nonce is bad now
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      response.code.should == '500'
+    end
     
     describe 'local attribute ovveride from SSO payload' do
       before do
