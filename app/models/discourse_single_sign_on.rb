@@ -44,6 +44,23 @@ class DiscourseSingleSignOn < SingleSignOn
     sso_record = SingleSignOnRecord.where(external_id: external_id).first
     if sso_record && sso_record.user
       sso_record.last_payload = unsigned_payload
+      
+      if SiteSetting.sso_overrides_email
+        # set the user's email to whatever came in the payload
+        if email
+          sso_record.user.email = email
+        end
+      end
+      
+      if SiteSetting.sso_overrides_username
+        # if the user's external username has changed
+        # run it through the UserNameSuggester to override it
+        if sso_record.external_username != username
+          sso_record.user.username = UserNameSuggester.suggest(external_username || name || email)
+          sso_record.external_username = username
+        end
+      end
+      
       sso_record.save
     else
       user = User.where(email: Email.downcase(email)).first
@@ -58,10 +75,12 @@ class DiscourseSingleSignOn < SingleSignOn
         if sso_record = user.single_sign_on_record
           sso_record.last_payload = unsigned_payload
           sso_record.external_id = external_id
+          sso_record.external_username = external_username
           sso_record.save!
         else
           sso_record = user.create_single_sign_on_record(last_payload: unsigned_payload,
-                                            external_id: external_id)
+                                            external_id: external_id,
+                                            external_username: username)
         end
       end
     end
