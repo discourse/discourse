@@ -107,6 +107,8 @@ We renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that we w
 
 - Otherwise, create a free account on [**Mandrill**][man] (or [Mailgun][gun], or [Mailjet][jet]), and put your mail credentials (available via the Mandrill dashboard) in the `app.yml` file. The settings you want to change are `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`.
 
+- Be sure you remove the comment character `#` from the beginning of these mail configuration lines!
+
 # Add Your SSH Key
 
 If you successfully generated the SSH key as described earlier, get it:
