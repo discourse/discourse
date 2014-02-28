@@ -9,7 +9,13 @@ class TopicTrackingState
 
   CHANNEL = "/user-tracking"
 
-  attr_accessor :user_id, :topic_id, :highest_post_number, :last_read_post_number, :created_at, :category_name
+  attr_accessor :user_id,
+                :topic_id,
+                :highest_post_number,
+                :last_read_post_number,
+                :created_at,
+                :category_name,
+                :notification_level
 
   def self.publish_new(topic)
 
@@ -57,7 +63,7 @@ class TopicTrackingState
 
   end
 
-  def self.publish_read(topic_id, last_read_post_number, user_id)
+  def self.publish_read(topic_id, last_read_post_number, user_id, notification_level=nil)
 
     highest_post_number = Topic.where(id: topic_id).pluck(:highest_post_number).first
 
@@ -67,7 +73,8 @@ class TopicTrackingState
       payload: {
         last_read_post_number: last_read_post_number,
         highest_post_number: highest_post_number,
-        topic_id: topic_id
+        topic_id: topic_id,
+        notification_level: notification_level
       }
     }
 
@@ -104,7 +111,13 @@ class TopicTrackingState
     new = TopicQuery.new_filter(Topic, "xxx").where_values.join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause)
 
     sql = <<SQL
-    SELECT u.id AS user_id, topics.id AS topic_id, topics.created_at, highest_post_number, last_read_post_number, c.name AS category_name
+    SELECT u.id AS user_id,
+           topics.id AS topic_id,
+           topics.created_at,
+           highest_post_number,
+           last_read_post_number,
+           c.name AS category_name,
+           tu.notification_level
     FROM users u
     FULL OUTER JOIN topics ON 1=1
     LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
@@ -120,12 +133,17 @@ class TopicTrackingState
               JOIN group_users gu ON gu.user_id = u.id AND cg.group_id = gu.group_id
               WHERE c2.read_restricted )
           )
+          AND NOT EXISTS( SELECT 1 FROM category_users cu
+                          WHERE cu.user_id = u.id AND
+                               cu.category_id = topics.category_id AND
+                               cu.notification_level = #{CategoryUser.notification_levels[:muted]})
 
 SQL
 
     if topic_id
       sql << " AND topics.id = :topic_id"
     end
+    sql << " ORDER BY topics.bumped_at DESC LIMIT 500"
 
     SqlBuilder.new(sql)
       .map_exec(TopicTrackingState, user_ids: user_ids, topic_id: topic_id)

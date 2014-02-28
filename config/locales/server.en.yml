@@ -27,6 +27,8 @@ en:
 
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
+    backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
+    not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
 
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
 
@@ -197,6 +199,11 @@ en:
 
   meta_category_name: "Meta"
   meta_category_description: "Discussion about this forum, its organization, how it works, and how we can improve it."
+
+  staff_category_name: "Staff"
+  staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
+
+  assets_topic_body: "This is a topic to store forum assets used in the forum design. Don't delete it!"
 
   category:
     topic_prefix: "About the %{category} category"
@@ -772,6 +779,8 @@ en:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
+
+    white_listed_spam_host_domains: "A comma delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain"
     staff_like_weight: "Extra weighting factor given to likes when performed by staff."
 
     reply_by_email_enabled: "Enable replying to topics via email"

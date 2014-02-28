@@ -679,6 +679,7 @@ en:
       invalid_access:
         title: "Topic is private"
         description: "Sorry, you don't have access to that topic!"
+        login_required: "You need to log in to see that topic."
       server_error:
         title: "Topic failed to load"
         description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, let us know."
@@ -1345,7 +1346,7 @@ en:
           text: "UPLOAD"
           uploading: "UPLOADING"
           success: "'{{filename}}' has successfully been uploaded."
-          error: "There has been an error ({{message}}) while uploading '{{filename}}'"
+          error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
           is_running: "An operation is currently running..."
           failed: "The {{operation}} failed. Please check the logs."

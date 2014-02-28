@@ -1,4 +1,9 @@
-{{customHTML "top"}}
+<div class='container'>
+  {{customHTML "top"}}
+  {{#if Discourse.isReadOnly}}
+    <div class="alert alert-info">{{i18n "read_only_mode.enabled"}}</div>
+  {{/if}}
+</div>
 
 {{#if postStream.loaded}}
 
@@ -12,13 +17,18 @@
           {{/if}}
 
           {{#if editingTopic}}
-            {{categoryChooser valueAttribute="id" value=newCategoryId source=category_id}}
+            {{#if isPrivateMessage}}
+              <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
+            {{else}}
+              {{categoryChooser valueAttribute="id" value=newCategoryId source=category_id}}
+            {{/if}}
             {{textField id='edit-title' value=newTitle}}
 
             <button class='btn btn-primary btn-small' {{action finishedEditingTopic}}><i class='fa fa-check'></i></button>
             <button class='btn btn-small' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
           {{else}}
             <h1>
+              <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
               {{#if category.parentCategory}}
                 {{boundCategoryLink category.parentCategory}}
               {{/if}}
@@ -120,9 +130,11 @@
       {{#if message}}
         <div class="message">
           <h2>{{message}}</h2>
+          {{#unless currentUser}}
+            <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
+          {{/unless}}
         </div>
       {{/if}}
-
     </div>
   {{else}}
     <div class='container'>

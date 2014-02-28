@@ -32,7 +32,13 @@
 
 h1 .topic-statuses .topic-status i {margin-right: 5px;}
 
-.logo-small {margin-right: 8px;}
+.logo-small {
+  margin-right: 8px;
+  width: auto;
+  max-width: 80px;
+  height: auto;
+  max-height: 40px;
+  }
 
 .post-cloak {
   padding: 0;
@@ -428,6 +434,7 @@ iframe {
 .extra-info-wrapper {
   float: left;
   width: 78%;
+  max-width: 800px;
   .topic-statuses {margin-right: 5px;}
 }
 
@@ -492,7 +499,7 @@ iframe {
       font-weight: normal;
       font-size: 12px;
       margin-top: 2px;
-      a {color: $primary_text_color;}
+      a {color: $secondary_text_color;}
 
     }
   }
@@ -558,6 +565,7 @@ iframe {
 .moderator {
   .topic-body {
   background-color: $highlight_background_color;
+  border-bottom: 10px solid $highlight_background_color;
   }
 }
 
@@ -612,7 +620,6 @@ iframe {
 }
 
 .staff a {
-  padding: 2px;
   margin: -2px 0 0 0;
   background-color: $highlight_background_color;
 }
@@ -631,7 +638,7 @@ position: relative;
 
 
 .user-title {
-  margin-top: 8px;
+  margin-top: 5px;
   color: $secondary_text_color;
   overflow: hidden;
   font-size: 80%;
@@ -648,7 +655,7 @@ blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
 
-    a.mention {background: $secondary_text_color;}
+    a.mention {background: lighten($secondary_background_color, 60%);}
     p:first-of-type {margin-top: 0;}
     p:last-of-type {margin-bottom: 0;}
 }
@@ -771,6 +778,7 @@ blockquote { /* solo quotes */
 
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
+  a.mention {background: lighten($secondary_background_color, 60%);}
   &.bottom {
     &.hidden {display: block; opacity: 0; }
 

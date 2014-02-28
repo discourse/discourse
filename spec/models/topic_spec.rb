@@ -1318,4 +1318,11 @@ describe Topic do
     end
 
   end
+
+  describe "calculate_avg_time" do
+    it "does not explode" do
+      Topic.calculate_avg_time
+      Topic.calculate_avg_time(1.day.ago)
+    end
+  end
 end

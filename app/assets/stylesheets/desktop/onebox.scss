@@ -39,6 +39,8 @@ a.loading-onebox {
       }
     }
   }
+
+ 
   .onebox-result-body {
     padding-top: 5px;
     img {
@@ -113,7 +115,7 @@ aside.onebox {
   .onebox-body {
     clear: both;
 
-    h3 {
+    h3, h4 {
       font-size: 1.17em;
       margin: 10px 0 !important;
     }
