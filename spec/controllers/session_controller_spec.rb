@@ -35,15 +35,17 @@ describe SessionController do
       sso = get_sso("/")
       user = Fabricate(:user)
       sso.email = user.email
-      sso.external_id = "abc"
+      sso.external_id = 'abc'
+      sso.username = 'sam'
 
       get :sso_login, Rack::Utils.parse_query(sso.payload)
 
       response.should redirect_to('/')
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       logged_on_user.email.should == user.email
-
+      
       logged_on_user.single_sign_on_record.external_id.should == "abc"
+      logged_on_user.single_sign_on_record.external_username.should == 'sam'
     end
 
     it 'allows you to create an account' do
@@ -63,32 +65,89 @@ describe SessionController do
       logged_on_user.username.should == 'sam'
 
       logged_on_user.single_sign_on_record.external_id.should == "666"
+      logged_on_user.single_sign_on_record.external_username.should == 'sam'
       logged_on_user.active.should == true
     end
+    
+    describe 'login to existing account' do
+      it 'allows login to existing account with valid nonce' do
 
-    it 'allows login to existing account with valid nonce' do
+        sso = get_sso('/hello/world')
+        sso.external_id = '997'
 
-      sso = get_sso('/hello/world')
-      sso.external_id = '997'
+        user = Fabricate(:user)
+        user.create_single_sign_on_record(external_id: '997', last_payload: '')
 
-      user = Fabricate(:user)
-      user.create_single_sign_on_record(external_id: '997', last_payload: '')
+        get :sso_login, Rack::Utils.parse_query(sso.payload)
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+        user.single_sign_on_record.reload
+        user.single_sign_on_record.last_payload.should == sso.unsigned_payload
 
-      user.single_sign_on_record.reload
-      user.single_sign_on_record.last_payload.should == sso.unsigned_payload
+        response.should redirect_to('/hello/world')
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
-      response.should redirect_to('/hello/world')
-      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        user.id.should == logged_on_user.id
 
-      user.id.should == logged_on_user.id
+        # nonce is bad now
+        get :sso_login, Rack::Utils.parse_query(sso.payload)
+        response.code.should == '500'
 
-      # nonce is bad now
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
-      response.code.should == '500'
-
-    end
+      end
+    end  
+    
+    describe 'local attribute ovveride from SSO payload' do
+      before do
+        SiteSetting.stubs("sso_overrides_email").returns(true)
+        SiteSetting.stubs("sso_overrides_username").returns(true)
+        
+        @user = Fabricate(:user)
+        @username_before = @user.username
+        
+        @sso = get_sso('/hello/world')
+        @sso.external_id = '997'
+        @reversed_name = @user.username.reverse
+        @sso.username = @reversed_name
+        @sso.email = "#{@reversed_name}@garbage.org"
+        
+        @user.create_single_sign_on_record(external_id: '997', external_username: @user.username, last_payload: '')
+      end
+      
+      it 'stores the external username' do
+        get :sso_login, Rack::Utils.parse_query(@sso.payload)
+        
+        @user.single_sign_on_record.reload
+        @user.single_sign_on_record.external_username.should == @sso.username
+      end
+      
+      it 'overrides username and email' do
+        get :sso_login, Rack::Utils.parse_query(@sso.payload)
+        
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      
+        logged_on_user.username.should == @reversed_name
+        logged_on_user.email.should == "#{@reversed_name}@garbage.org"
+      end
+    
+      it 'does not change a matching username for an existing account' do
+        @sso.username = @user.username
+        
+        get :sso_login, Rack::Utils.parse_query(@sso.payload)
+        
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        logged_on_user.username.should == @username_before
+      end
+      
+      it 'does not change username for an unchanged external username' do
+        @user.single_sign_on_record.external_username = @sso.username
+        @user.single_sign_on_record.save
+        
+        get :sso_login, Rack::Utils.parse_query(@sso.payload)
+    
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        logged_on_user.username.should == @username_before
+        logged_on_user.single_sign_on_record.external_username.should_not == logged_on_user.username
+      end
+    end  
   end
 
   describe '.create' do

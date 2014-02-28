@@ -42,28 +42,8 @@ class DiscourseSingleSignOn < SingleSignOn
 
   def lookup_or_create_user
     sso_record = SingleSignOnRecord.where(external_id: external_id).first
-    if sso_record && sso_record.user
+    if sso_record && user = sso_record.user
       sso_record.last_payload = unsigned_payload
-      
-      if SiteSetting.sso_overrides_email
-        # set the user's email to whatever came in the payload
-        if email
-          sso_record.user.email = email
-        end
-      end
-      
-      # the user's external username has changed
-      if SiteSetting.sso_overrides_username && username != sso_record.external_username
-        # run it through the UserNameSuggester to override it
-        sso_record.user.username = UserNameSuggester.suggest(username || name || email)  
-        sso_record.external_username = username
-      end
-      
-      if sso_record.user.changed?
-        sso_record.user.save
-      end
-      
-      sso_record.save
     else
       user = User.where(email: Email.downcase(email)).first
 
@@ -77,8 +57,6 @@ class DiscourseSingleSignOn < SingleSignOn
         if sso_record = user.single_sign_on_record
           sso_record.last_payload = unsigned_payload
           sso_record.external_id = external_id
-          sso_record.external_username = external_username
-          sso_record.save!
         else
           sso_record = user.create_single_sign_on_record(last_payload: unsigned_payload,
                                             external_id: external_id,
@@ -86,11 +64,37 @@ class DiscourseSingleSignOn < SingleSignOn
         end
       end
     end
+    
+    if !user.new_record?
+      # if the user isn't new or it's attached to the SSO record we might be overriding username or email
+      if SiteSetting.sso_overrides_email && user.email != email
+        # set the user's email to whatever came in the payload
+        user.email = email
+      end
+      
+      if SiteSetting.sso_overrides_username && username != sso_record.external_username && user.username != username
+        # we have an external username change, and the user's current username doesn't match
+        # run it through the UserNameSuggester to override it
+        user.username = UserNameSuggester.suggest(username || name || email)  
+      end
+      
+      # change external username and save the single sign on record
+      sso_record.external_username = username
+    end
 
     if sso_record && (user = sso_record.user) && !user.active
       user.active = true
       user.save
       user.enqueue_welcome_message('welcome_user')
+    end
+    
+    if user.changed?
+      # if we overrode attribute and the user was already active we need to save now
+      user.save!
+    end
+    
+    if sso_record.changed?
+      sso_record.save!
     end
 
     sso_record && sso_record.user
