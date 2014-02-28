@@ -84,6 +84,9 @@ users:
   sso_overrides_username:
     client: true
     default: false
+  sso_overrides_name:
+    client: true
+    default: false
   enable_local_logins:
     client: true
     default: true
