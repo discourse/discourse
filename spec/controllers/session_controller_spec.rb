@@ -99,36 +99,51 @@ describe SessionController do
       before do
         SiteSetting.stubs("sso_overrides_email").returns(true)
         SiteSetting.stubs("sso_overrides_username").returns(true)
+        SiteSetting.stubs("sso_overrides_name").returns(true)
         
         @user = Fabricate(:user)
+        
         @username_before = @user.username
+        @name_before = @user.name
+        @email_before = @user.email
         
         @sso = get_sso('/hello/world')
         @sso.external_id = '997'
-        @reversed_name = @user.username.reverse
-        @sso.username = @reversed_name
-        @sso.email = "#{@reversed_name}@garbage.org"
         
-        @user.create_single_sign_on_record(external_id: '997', external_username: @user.username, last_payload: '')
+        @reversed_username = @user.username.reverse
+        @sso.username = @reversed_username
+        
+        @sso.email = "#{@reversed_username}@garbage.org"
+        @reversed_name = @user.name.reverse
+        
+        @sso.name = @reversed_name
+        
+        @suggested_username = UserNameSuggester.suggest(@sso.username || @sso.name || @sso.email)
+        @suggested_name = User.suggest_name(@sso.name || @sso.username || @sso.email) 
+        
+        @user.create_single_sign_on_record(external_id: '997', last_payload: '')
       end
       
-      it 'stores the external username' do
+      it 'stores the external attributes' do
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
         
         @user.single_sign_on_record.reload
         @user.single_sign_on_record.external_username.should == @sso.username
+        @user.single_sign_on_record.external_email.should == @sso.email
+        @user.single_sign_on_record.external_name.should == @sso.name
       end
       
-      it 'overrides username and email' do
+      it 'overrides attributes' do
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
         
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       
-        logged_on_user.username.should == @reversed_name
-        logged_on_user.email.should == "#{@reversed_name}@garbage.org"
+        logged_on_user.username.should == @suggested_username
+        logged_on_user.email.should == "#{@reversed_username}@garbage.org"
+        logged_on_user.name.should == @suggested_name
       end
     
-      it 'does not change a matching username for an existing account' do
+      it 'does not change matching attributes for an existing account' do
         @sso.username = @user.username
         
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
@@ -137,15 +152,18 @@ describe SessionController do
         logged_on_user.username.should == @username_before
       end
       
-      it 'does not change username for an unchanged external username' do
+      it 'does not change attributes for unchanged external attributes' do
         @user.single_sign_on_record.external_username = @sso.username
+        @user.single_sign_on_record.external_email = @sso.email
+        @user.single_sign_on_record.external_name = @sso.name
         @user.single_sign_on_record.save
         
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
     
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
         logged_on_user.username.should == @username_before
-        logged_on_user.single_sign_on_record.external_username.should_not == logged_on_user.username
+        logged_on_user.email.should == @email_before
+        logged_on_user.name.should == @name_before
       end
     end  
   end

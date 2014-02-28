@@ -60,14 +60,16 @@ class DiscourseSingleSignOn < SingleSignOn
         else
           sso_record = user.create_single_sign_on_record(last_payload: unsigned_payload,
                                             external_id: external_id,
-                                            external_username: username)
+                                            external_username: username,
+                                            external_email: email,
+                                            external_name: name)
         end
       end
     end
     
     if !user.new_record?
       # if the user isn't new or it's attached to the SSO record we might be overriding username or email
-      if SiteSetting.sso_overrides_email && user.email != email
+      if SiteSetting.sso_overrides_email && email != sso_record.external_email
         # set the user's email to whatever came in the payload
         user.email = email
       end
@@ -78,8 +80,16 @@ class DiscourseSingleSignOn < SingleSignOn
         user.username = UserNameSuggester.suggest(username || name || email)  
       end
       
-      # change external username and save the single sign on record
+      if SiteSetting.sso_overrides_name && name != sso_record.external_name && user.name != name
+        # we have an external name change, and the user's current name doesn't match
+        # run it through the name suggester to override it
+        user.name = User.suggest_name(name || username || email)
+      end
+      
+      # change external attributes for sso record
       sso_record.external_username = username
+      sso_record.external_email = email
+      sso_record.external_name = name
     end
 
     if sso_record && (user = sso_record.user) && !user.active
