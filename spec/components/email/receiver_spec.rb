@@ -10,23 +10,13 @@ describe Email::Receiver do
     SiteSetting.stubs(:email_in).returns(false)
   end
 
-  describe "exception raised" do
-    it "returns error if it encountered an error processing" do
-      receiver = Email::Receiver.new("some email")
-      def receiver.parse_body
-        raise "ERROR HAPPENED!"
-      end
-      expect(receiver.process).to eq(Email::Receiver.results[:error])
-    end
-  end
-
   describe 'invalid emails' do
-    it "returns unprocessable if the message is blank" do
-      expect(Email::Receiver.new("").process).to eq(Email::Receiver.results[:unprocessable])
+    it "raises EmptyEmailError if the message is blank" do
+      expect { Email::Receiver.new("").process }.to raise_error(Email::Receiver::EmptyEmailError)
     end
 
-    it "returns unprocessable if the message is not an email" do
-      expect(Email::Receiver.new("asdf" * 30).process).to eq(Email::Receiver.results[:unprocessable])
+    it "raises EmailUnparsableError if the message is not an email" do
+      expect { Email::Receiver.new("asdf" * 30).process}.to raise_error(Email::Receiver::EmptyEmailError)
     end
   end
 
@@ -35,7 +25,7 @@ describe Email::Receiver do
     let(:receiver) { Email::Receiver.new(reply_below) }
 
     it "processes correctly" do
-      receiver.process
+      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
       expect(receiver.body).to eq(
 "So presumably all the quoted garbage and my (proper) signature will get
 stripped from my reply?")
@@ -47,7 +37,7 @@ stripped from my reply?")
     let(:receiver) { Email::Receiver.new(reply_below) }
 
     it "processes correctly" do
-      receiver.process
+      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
       expect(receiver.body).to eq("The EC2 instance - I've seen that there tends to be odd and " +
                                   "unrecommended settings on the Bitnami installs that I've checked out.")
     end
@@ -58,7 +48,7 @@ stripped from my reply?")
     let(:receiver) { Email::Receiver.new(attachment) }
 
     it "processes correctly" do
-      expect(receiver.process).to eq(Email::Receiver.results[:unprocessable])
+      expect { receiver.process}.to raise_error(Email::Receiver::EmptyEmailError)
       expect(receiver.body).to be_blank
     end
   end
@@ -68,7 +58,7 @@ stripped from my reply?")
     let(:receiver) { Email::Receiver.new(dutch) }
 
     it "processes correctly" do
-      receiver.process
+      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
       expect(receiver.body).to eq("Dit is een antwoord in het Nederlands.")
     end
   end
@@ -79,7 +69,7 @@ stripped from my reply?")
 
     it "processes correctly" do
       I18n.expects(:t).with('user_notifications.previous_discussion').returns('כלטוב')
-      receiver.process
+      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
       expect(receiver.body).to eq("שלום")
     end
   end
@@ -90,7 +80,7 @@ stripped from my reply?")
 
     it "processes correctly" do
       I18n.expects(:t).with('user_notifications.previous_discussion').returns('媽！我上電視了！')
-      receiver.process
+      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
       expect(receiver.body).to eq("媽！我上電視了！")
     end
   end
@@ -100,7 +90,7 @@ stripped from my reply?")
     let(:receiver) { Email::Receiver.new(wrote) }
 
     it "removes via lines if we know them" do
-      receiver.process
+      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
       expect(receiver.body).to eq("Hello this email has content!")
     end
   end
@@ -110,7 +100,7 @@ stripped from my reply?")
     let(:receiver) { Email::Receiver.new(wrote) }
 
     it "processes correctly" do
-      receiver.process
+      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
       expect(receiver.body).to eq("Thanks!")
     end
   end
@@ -120,7 +110,7 @@ stripped from my reply?")
     let(:receiver) { Email::Receiver.new(previous) }
 
     it "processes correctly" do
-      receiver.process
+      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
       expect(receiver.body).to eq("This will not include the previous discussion that is present in this email.")
     end
   end
@@ -130,7 +120,7 @@ stripped from my reply?")
     let(:receiver) { Email::Receiver.new(paragraphs) }
 
     it "processes correctly" do
-      receiver.process
+      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
       expect(receiver.body).to eq(
 "Is there any reason the *old* candy can't be be kept in silos while the new candy
 is imported into *new* silos?
@@ -161,10 +151,8 @@ greatest show ever created. Everyone should watch it.
         EmailLog.expects(:for).returns(nil)
       end
 
-      let!(:result) { receiver.process }
-
-      it "returns missing" do
-        expect(result).to eq(Email::Receiver.results[:missing])
+      it "raises EmailLogNotFoundError" do
+        expect{ receiver.process }.to raise_error(Email::Receiver::EmailLogNotFound)
       end
 
     end
@@ -184,10 +172,6 @@ greatest show ever created. Everyone should watch it.
       end
 
       let!(:result) { receiver.process }
-
-      it "returns a processed result" do
-        expect(result).to eq(Email::Receiver.results[:processed])
-      end
 
       it "extracts the body" do
         expect(receiver.body).to eq(reply_body)
@@ -229,10 +213,8 @@ Jakie" }
         User.expects(:find_by_email).returns(nil)
       end
 
-      let!(:result) { receiver.process }
-
-      it "returns unprocessable" do
-        expect(result).to eq(Email::Receiver.results[:unprocessable])
+      it "raises user not found error" do
+        expect { receiver.process }.to raise_error(Email::Receiver::UserNotFoundError)
       end
 
     end
@@ -244,10 +226,8 @@ Jakie" }
         SiteSetting.stubs(:email_in_min_trust).returns(TrustLevel.levels[:elder].to_s)
       end
 
-      let!(:result) { receiver.process }
-
-      it "returns unprocessable" do
-        expect(result).to eq(Email::Receiver.results[:unprocessable])
+      it "raises untrusted user error" do
+        expect { receiver.process }.to raise_error(Email::Receiver::UserNotSufficientTrustLevelError)
       end
 
     end
@@ -289,10 +269,6 @@ Jakie" }
 
       let!(:result) { receiver.process }
 
-      it "returns a processed result" do
-        expect(result).to eq(Email::Receiver.results[:processed])
-      end
-
       it "extracts the body" do
         expect(receiver.body).to eq(email_body)
       end
@@ -327,10 +303,8 @@ Jakie" }
         Category.expects(:find_by_email).returns(nil)
       end
 
-      let!(:result) { receiver.process }
-
-      it "returns missing" do
-        expect(result).to eq(Email::Receiver.results[:missing])
+      it "raises EmailLogNotFoundError" do
+        expect{ receiver.process }.to raise_error(Email::Receiver::EmailLogNotFound)
       end
 
     end
@@ -343,10 +317,8 @@ Jakie" }
               "discourse-in@appmail.adventuretime.ooo").returns(category)
       end
 
-      let!(:result) { receiver.process }
-
-      it "returns unprocessable" do
-        expect(result).to eq(Email::Receiver.results[:unprocessable])
+      it "raises UserNotFoundError" do
+        expect{ receiver.process }.to raise_error(Email::Receiver::UserNotFoundError)
       end
 
     end
@@ -360,10 +332,8 @@ Jakie" }
         SiteSetting.stubs(:email_in_min_trust).returns(TrustLevel.levels[:elder].to_s)
       end
 
-      let!(:result) { receiver.process }
-
-      it "returns unprocessable" do
-        expect(result).to eq(Email::Receiver.results[:unprocessable])
+      it "raises untrusted user error" do
+        expect { receiver.process }.to raise_error(Email::Receiver::UserNotSufficientTrustLevelError)
       end
 
     end
@@ -408,10 +378,6 @@ Jakie" }
 
       let!(:result) { receiver.process }
 
-      it "returns a processed result" do
-        expect(result).to eq(Email::Receiver.results[:processed])
-      end
-
       it "extracts the body" do
         expect(receiver.body).to eq(email_body)
       end
@@ -449,10 +415,8 @@ Jakie
               "discourse-in@appmail.adventuretime.ooo").returns(non_inbox_email_category)
       end
 
-      let!(:result) { receiver.process }
-
-      it "returns unprocessable" do
-        expect(result).to eq(Email::Receiver.results[:unprocessable])
+      it "raises UserNotFoundError" do
+        expect{ receiver.process }.to raise_error(Email::Receiver::UserNotFoundError)
       end
 
     end
@@ -494,10 +458,6 @@ Jakie
       end
 
       let!(:result) { receiver.process }
-
-      it "returns a processed result" do
-        expect(result).to eq(Email::Receiver.results[:processed])
-      end
 
       it "extracts the body" do
         expect(receiver.body).to eq(email_body)

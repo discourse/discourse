@@ -5,9 +5,12 @@
 module Email
   class Receiver
 
-    def self.results
-      @results ||= Enum.new(:unprocessable, :missing, :processed, :error)
-    end
+    class ProcessingError < StandardError; end
+    class EmailUnparsableError < ProcessingError; end
+    class EmptyEmailError < ProcessingError; end
+    class UserNotFoundError < ProcessingError; end
+    class UserNotSufficientTrustLevelError < ProcessingError; end
+    class EmailLogNotFound < ProcessingError; end
 
     attr_reader :body, :reply_key, :email_log
 
@@ -32,21 +35,21 @@ module Email
     end
 
     def process
-      return Email::Receiver.results[:unprocessable] if @raw.blank?
+      raise EmptyEmailError if @raw.blank?
 
       @message = Mail::Message.new(@raw)
 
 
       # First remove the known discourse stuff.
       parse_body
-      return Email::Receiver.results[:unprocessable] if @body.blank?
+      raise EmptyEmailError if @body.blank?
 
       # Then run the github EmailReplyParser on it in case we didn't catch it
       @body = EmailReplyParser.read(@body).visible_text.force_encoding('UTF-8')
 
       discourse_email_parser
 
-      return Email::Receiver.results[:unprocessable] if @body.blank?
+      raise EmailUnparsableError if @body.blank?
 
       if is_in_email?
         @user = User.find_by_email(@message.from.first)
@@ -55,29 +58,25 @@ module Email
           @user = Discourse.system_user
         end
 
-        return Email::Receiver.results[:unprocessable] if @user.blank? or not @user.has_trust_level?(TrustLevel.levels[SiteSetting.email_in_min_trust.to_i])
+        raise UserNotFoundError if @user.blank?
+        raise UserNotSufficientTrustLevelError.new @user if not @user.has_trust_level?(TrustLevel.levels[SiteSetting.email_in_min_trust.to_i])
 
         create_new_topic
-        return Email::Receiver.results[:processed]
+      else
+        @reply_key = @message.to.first
+
+        # Extract the `reply_key` from the format the site has specified
+        tokens = SiteSetting.reply_by_email_address.split("%{reply_key}")
+        tokens.each do |t|
+          @reply_key.gsub!(t, "") if t.present?
+        end
+
+        # Look up the email log for the reply key
+        @email_log = EmailLog.for(reply_key)
+        raise EmailLogNotFound if @email_log.blank?
+
+        create_reply
       end
-
-      @reply_key = @message.to.first
-
-      # Extract the `reply_key` from the format the site has specified
-      tokens = SiteSetting.reply_by_email_address.split("%{reply_key}")
-      tokens.each do |t|
-        @reply_key.gsub!(t, "") if t.present?
-      end
-
-      # Look up the email log for the reply key
-      @email_log = EmailLog.for(reply_key)
-      return Email::Receiver.results[:missing] if @email_log.blank?
-
-      create_reply
-
-      Email::Receiver.results[:processed]
-    rescue
-      Email::Receiver.results[:error]
     end
 
     private
