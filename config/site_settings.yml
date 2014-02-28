@@ -78,6 +78,15 @@ users:
     default: ''
   sso_secret:
     defalt: ''
+  sso_overrides_email:
+    client: true
+    default: false
+  sso_overrides_username:
+    client: true
+    default: false
+  sso_overrides_name:
+    client: true
+    default: false
   enable_local_logins:
     client: true
     default: true
