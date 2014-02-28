@@ -12,20 +12,11 @@ class TopTopic < ActiveRecord::Base
 
   def self.refresh!
     transaction do
-      # clean up the table
-      exec_sql("DELETE FROM top_topics")
-      # insert the list of all the visible topics
-      exec_sql("INSERT INTO top_topics (topic_id)
-                SELECT id
-                FROM topics
-                WHERE deleted_at IS NULL
-                AND visible
-                AND archetype <> :private_message
-                AND NOT archived",
-                private_message: Archetype::private_message)
-
+      # update the topics list
+      remove_invisible_topics
+      add_new_visible_topics
+      # update the denormalized data
       TopTopic.periods.each do |period|
-        # update all the counter caches
         TopTopic.sort_orders.each do |sort|
           TopTopic.send("update_#{sort}_count_for", period)
         end
@@ -35,14 +26,45 @@ class TopTopic < ActiveRecord::Base
     end
   end
 
+  def self.remove_invisible_topics
+    exec_sql("WITH invisible_topics AS (
+                SELECT id
+                FROM topics
+                WHERE deleted_at IS NOT NULL
+                   OR NOT visible
+                   OR archetype = :private_message
+                   OR archived
+              )
+              DELETE FROM top_topics
+              WHERE topic_id IN (SELECT id FROM invisible_topics)",
+              private_message: Archetype::private_message)
+  end
+
+  def self.add_new_visible_topics
+    exec_sql("WITH visible_topics AS (
+              SELECT t.id
+              FROM topics t
+              LEFT JOIN top_topics tt ON t.id = tt.topic_id
+              WHERE t.deleted_at IS NULL
+                AND t.visible
+                AND t.archetype <> :private_message
+                AND NOT t.archived
+                AND tt.topic_id IS NULL
+            )
+            INSERT INTO top_topics (topic_id)
+            SELECT id
+            FROM visible_topics",
+              private_message: Archetype::private_message)
+  end
+
   def self.update_posts_count_for(period)
     sql = "SELECT topic_id, GREATEST(COUNT(*), 1) AS count
            FROM posts
            WHERE created_at >= :from
-           AND deleted_at IS NULL
-           AND NOT hidden
-           AND post_type = #{Post.types[:regular]}
-           AND user_id <> #{Discourse.system_user.id}
+             AND deleted_at IS NULL
+             AND NOT hidden
+             AND post_type = #{Post.types[:regular]}
+             AND user_id <> #{Discourse.system_user.id}
            GROUP BY topic_id"
 
     TopTopic.update_top_topics(period, "posts", sql)
@@ -61,8 +83,8 @@ class TopTopic < ActiveRecord::Base
     sql = "SELECT topic_id, GREATEST(SUM(like_count), 1) AS count
            FROM posts
            WHERE created_at >= :from
-           AND deleted_at IS NULL
-           AND NOT hidden
+             AND deleted_at IS NULL
+             AND NOT hidden
            GROUP BY topic_id"
 
     TopTopic.update_top_topics(period, "likes", sql)
