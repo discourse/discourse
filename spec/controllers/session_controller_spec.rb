@@ -103,10 +103,6 @@ describe SessionController do
         
         @user = Fabricate(:user)
         
-        @username_before = @user.username
-        @name_before = @user.name
-        @email_before = @user.email
-        
         @sso = get_sso('/hello/world')
         @sso.external_id = '997'
         
@@ -145,11 +141,15 @@ describe SessionController do
     
       it 'does not change matching attributes for an existing account' do
         @sso.username = @user.username
+        @sso.name = @user.name
+        @sso.email = @user.email
         
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
         
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-        logged_on_user.username.should == @username_before
+        logged_on_user.username.should == @user.username
+        logged_on_user.name.should == @user.name
+        logged_on_user.email.should == @user.email
       end
       
       it 'does not change attributes for unchanged external attributes' do
@@ -161,9 +161,9 @@ describe SessionController do
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
     
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-        logged_on_user.username.should == @username_before
-        logged_on_user.email.should == @email_before
-        logged_on_user.name.should == @name_before
+        logged_on_user.username.should == @user.username
+        logged_on_user.email.should == @user.email
+        logged_on_user.name.should == @user.name
       end
     end  
   end
