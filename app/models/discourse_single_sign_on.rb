@@ -52,13 +52,15 @@ class DiscourseSingleSignOn < SingleSignOn
         end
       end
       
-      if SiteSetting.sso_overrides_username
-        # if the user's external username has changed
+      # the user's external username has changed
+      if SiteSetting.sso_overrides_username && username != sso_record.external_username
         # run it through the UserNameSuggester to override it
-        if sso_record.external_username != username
-          sso_record.user.username = UserNameSuggester.suggest(external_username || name || email)
-          sso_record.external_username = username
-        end
+        sso_record.user.username = UserNameSuggester.suggest(username || name || email)  
+        sso_record.external_username = username
+      end
+      
+      if sso_record.user.changed?
+        sso_record.user.save
       end
       
       sso_record.save
