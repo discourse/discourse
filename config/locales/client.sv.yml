@@ -821,7 +821,10 @@ sv:
         image_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp filer."
 
-      abandon: "Är du säker på att du vill överge ditt inlägg?"
+      abandon:
+        confirm: "Är du säker på att du vill överge ditt inlägg?"
+        no_value: "Nej"
+        yes_value: "Ja"
 
       archetypes:
         save: 'Spara Inställningar'

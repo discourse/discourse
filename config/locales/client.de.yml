@@ -873,7 +873,10 @@ de:
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
 
-      abandon: "Willst Du diesen Beitrag wirklich verwerfen?"
+      abandon:
+        confirm: "Willst Du diesen Beitrag wirklich verwerfen?"
+        no_value: "Nein"
+        yes_value: "Ja"
 
       archetypes:
         save: 'Speicheroptionen'

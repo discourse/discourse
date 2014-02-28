@@ -772,7 +772,10 @@ cs:
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
 
-      abandon: "Opravdu chcete opustit váš příspěvek?"
+      abandon:
+        confirm: "Opravdu chcete opustit váš příspěvek?"
+        no_value: "Ne"
+        yes_value: "Ano"
 
       archetypes:
         save: 'Uložit nastavení'

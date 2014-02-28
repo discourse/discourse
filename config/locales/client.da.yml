@@ -839,7 +839,10 @@ da:
         image_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade billeder."
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade vedhæftede filer."
 
-      abandon: "Er du sikker på, at du vil droppe dit indlæg?"
+      abandon:
+        confirm: "Er du sikker på, at du vil droppe dit indlæg?"
+        no_value: "Nej"
+        yes_value: "Ja"
 
       archetypes:
         save: 'Gem indstillinger'

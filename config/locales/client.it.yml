@@ -759,7 +759,10 @@ it:
         image_too_large: "Spiacenti, il file che stai cercando di caricare è troppo grande (la dimensione massima è {{max_size_kb}}kb), per favore ridimensionalo e prova di nuovo."
         too_many_uploads: "Spiacenti, puoi caricare un'immagine per volta."
 
-      abandon: "Sei sicuro di voler abbandonare il tuo post?"
+      abandon:
+        confirm: "Sei sicuro di voler abbandonare il tuo post?"
+        no_value: "No"
+        yes_value: "Si"
 
       archetypes:
         save: 'Opzioni di Salvataggio'

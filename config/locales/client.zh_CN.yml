@@ -868,7 +868,10 @@ zh_CN:
         image_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传附件。"
 
-      abandon: "你确定要丢弃你的帖子吗？"
+      abandon:
+        confirm: "你确定要丢弃你的帖子吗？"
+        no_value: "否"
+        yes_value: "是"
 
       archetypes:
         save: '保存选项'

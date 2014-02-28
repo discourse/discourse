@@ -745,7 +745,10 @@ es:
         edit: "Lo sentimos, hubo un error al editar tu publicación. Por favor, inténtalo de nuevo."
         upload: "Lo sentimos, hubo un error al subir el archivo. Por favor, inténtalo de nuevo."
 
-      abandon: "¿Estás seguro que deseas abandonar tu publicación?"
+      abandon:
+        confirm: "¿Estás seguro que deseas abandonar tu publicación?"
+        no_value: "No"
+        yes_value: "Sí"
 
       archetypes:
         save: 'Guardar opciones'

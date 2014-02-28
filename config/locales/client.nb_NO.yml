@@ -655,7 +655,10 @@ nb_NO:
         image_too_large: "Beklager, filen du prøve å laste opp er for stor (maks størrelse er {{max_size_kb}}kb), vennligst reduser størrelsen og prøv igjen."
         too_many_uploads: "Beklager, du kan bare laste opp ett bilde om gangen."
 
-      abandon: "Er du sikker på at du vil forlate innlegget ditt?"
+      abandon:
+        confirm: "Er du sikker på at du vil forlate innlegget ditt?"
+        no_value: "Nei"
+        yes_value: "Ja"
 
       archetypes:
         save: 'Lagre Alternativene'
