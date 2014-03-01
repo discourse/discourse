@@ -24,7 +24,6 @@ public/plugins/*
 /public/assets/*
 /bundle/*
 
-config/database.yml
 config/discourse.pill
 config/discourse.conf
 
