@@ -10,7 +10,7 @@ Whenever you need ...
 
 ... consider Discourse.
 
-To learn more about the philosophy and goals of the project, [visit discourse.org](http://www.discourse.org).
+To learn more about the philosophy and goals of the project, [visit **discourse.org**](http://www.discourse.org).
 
 ## Screenshots
 
@@ -18,6 +18,9 @@ To learn more about the philosophy and goals of the project, [visit discourse.or
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small2.png)](http://discuss.howtogeek.com)
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/new-relic-categories-small2.png)](http://discuss.newrelic.com)
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-small2.jpg)](https://talk.turtlerockstudios.com/)
+[![](https://raw.github.com/discourse/discourse-docimages/master/readme/nexus-7-mobile-discourse-small3.png)](http://discuss.atom.io)
+[![](https://raw.github.com/discourse/discourse-docimages/master/readme/iphone-5s-mobile-discourse-small4.png)](http://discourse.soylent.me)
+
 
 ## Getting Started
 
@@ -43,22 +46,24 @@ Discourse is a **Civilized Discourse Construction Kit**, a free, flexible, funda
 
 - A **contemporary, robust technology stack**, free of legacy PHP and MySQL constraints.
 
-Internet discussion belongs to everyone, not just huge corporate websites. Our goal is to **foster an active community of contributors**, all of whom commit to free, simple, pleasant to use online discussion software that can thrive in an Internet age dominated by micro-blogging and diminishing attention spans. 
+Internet discussion belongs to everyone, not just huge corporate websites. 
+
+## Requirements
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
-Up-to-date desktop browsers:
+Desktop browsers:
   - Internet Explorer 9.0 (may not be fully functional), 10.0+
   - Firefox 16+
   - Google Chrome 23+
   - Safari 5+
 
-Latest generation of tablets:
+Tablets:
   - iPad 2+
   - Android 4.1+
   - Windows 8
 
-Modern mobile/smartphones:
+Smartphones:
   - iOS 6+
   - Android 4.1+
   - Windows Phone 8
@@ -92,11 +97,7 @@ Before contributing to Discourse, please:
    - preparing your code for a Pull Request
 4. Not sure what to work on? [**We've got some ideas!**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
 
-We look forward to seeing your cool stuff!
-
-## Having Problems getting set up?
-
-Before contacting us for help, please review our [Troubleshooting Guide](docs/TROUBLESHOOTING.md).
+We look forward to seeing your pull requests!
 
 ## The Discourse Team
 
