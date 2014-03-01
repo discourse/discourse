@@ -202,7 +202,7 @@ gem 'lru_redux'
 
 # IMPORTANT: mini profiler monkey patches, so it better be required last
 #  If you want to amend mini profiler to do the monkey patches in the railstie
-#  we are open to it. by deferring require to the initializer we can configure disourse installs without it
+#  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
