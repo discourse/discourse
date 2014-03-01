@@ -21,7 +21,7 @@ test("is able to nuke the store", function() {
 
 test("can listen on browser events", function() {
   var storageKey = "test", oldValue = "oldValue", newValue = "newValue";
-  ok(store.set({key: storageKey, value: oldValue}), 'store.set returned false');
+  store.set({key: storageKey, value: oldValue});
 
   store.listen(storageKey, function(oldArg, newArg){
     equal(oldArg, oldValue);

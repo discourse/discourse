@@ -4,8 +4,8 @@
 **/
 Discourse.addInitializer(function() {
 
-  // Default to true
-  this.set('hasFocus', true);
+  // Default to current state
+  this.set('hasFocus', document.hasFocus());
 
   var self = this;
   $(window).focus(function() {
