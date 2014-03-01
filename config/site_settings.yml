@@ -305,6 +305,7 @@ trust:
 security:
   enable_flash_video_onebox: false
   use_https: false
+  cors_header: ""
   enable_escaped_fragments:
     client: true
     default: true

@@ -27,6 +27,7 @@ class ApplicationController < ActionController::Base
   end
 
   before_filter :set_locale
+  before_filter :set_cors
   before_filter :set_mobile_view
   before_filter :inject_preview_style
   before_filter :disable_customization
@@ -110,6 +111,12 @@ class ApplicationController < ActionController::Base
     else
       render text: build_not_found_page(error, include_ember ? 'application' : 'no_js')
     end
+  end
+
+  def set_cors
+    return unless SiteSetting.cors_header
+    return unless request.format && request.format.json?
+    response.headers['Access-Control-Allow-Origin'] = SiteSetting.cors_header
   end
 
   def set_locale
