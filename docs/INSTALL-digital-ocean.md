@@ -135,7 +135,7 @@ After that completes, start Discourse:
 
 Congratulations! You now have your own instance of Discourse, accessible via the domain name you entered in `app.yml` earlier.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3507/d01eee7415f860f2.png" width="690" height="291" 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/3507/d01eee7415f860f2.png" width="690" height="291">
 
 You can also access it by visiting the server IP address directly, e.g. `http://192.168.1.1`.
 
