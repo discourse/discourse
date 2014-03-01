@@ -38,7 +38,6 @@ If you want to set up a Discourse forum for production use, see our [**Discourse
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
-Desktop browsers:
   - Internet Explorer 9.0 (may not be fully functional), 10.0+
   - Firefox 16+
   - Google Chrome 23+
@@ -56,8 +55,6 @@ Smartphones:
 
 ## Built With
 
-Discourse is built from the following open source components:
-
 - [Ruby on Rails](https://github.com/rails/rails) - Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
 - [Ember.js](https://github.com/emberjs/ember.js) - Our front end is an Ember.js app that communicates with the Rails API.
 - [PostgreSQL](http://www.postgresql.org/) - Our main data store is in Postgres.
@@ -73,9 +70,9 @@ Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https
 Discourse is **100% free** and **open-source**. We encourage and support an active, healthy community that
 accepts contributions from the public. We'd like you to be a part of that community.
 
-Before contributing to Discourse, please:
+Before contributing to Discourse:
 
-1. Please read the complete mission statements on [discourse.org](http://www.discourse.org).
+1. Please read the complete mission statements on [**discourse.org**](http://www.discourse.org). Yes we actually believe this stuff, and you should too.
 2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla)
 3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which covers:
    - submitting bugs
