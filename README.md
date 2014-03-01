@@ -34,20 +34,6 @@ Before you get started, ensure you have the following minimum versions: [Ruby 1.
 
 If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md). 
 
-## Vision
-
-Discourse is a **Civilized Discourse Construction Kit**, a free, flexible, fundamental building block for online discussion communities of any size, tiny to huge.
-
-- A **flattened, endlessly scrolling discussion**, avoiding the awkwardness of traditionally threaded and paginated discussion, where replies can be expanded in place for context.
-
-- A **user trust system** that grants users rights to assist in governing the forum as they participate in good faith over time. The goal is for the forum to be nearly self-moderating in the absence of any formal moderators, although excellent moderators always accelerate the process greatly.
-
-- An **advanced JavaScript app** which runs in modern browsers and works identically on desktop and tablet and smartphone without the need for a native app.
-
-- A **contemporary, robust technology stack**, free of legacy PHP and MySQL constraints.
-
-Internet discussion belongs to everyone, not just huge corporate websites. 
-
 ## Requirements
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
