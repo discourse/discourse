@@ -15,9 +15,13 @@
   <% end %>
 <% end %>
 
+
 <% if @topic_view.next_page %>
   <p>
-    <b><%= link_to(t('next_page').html_safe, @topic_view.next_page_path ) %></b>
+    <% if params[:page].to_i > 1 %>
+      <a href="" rel="prev"><%= t 'prev_page'%></a> &nbsp;
+    <% end %>
+    <b><a href="<%= @topic_view.next_page_path %>" rel="next"><%= t 'next_page'%></a></b>
   </p>
 <% end %>
 
