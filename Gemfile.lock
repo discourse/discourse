@@ -1,7 +1,24 @@
+GIT
+  remote: https://github.com/callahad/omniauth-browserid.git
+  revision: af62d667626c1622de6fe13b60849c3640765ab1
+  branch: observer_api
+  specs:
+    omniauth-browserid (0.0.2)
+      faraday
+      multi_json
+      omniauth (~> 1.0)
+
 PATH
   remote: vendor/gems/discourse_plugin
   specs:
     discourse_plugin (0.0.1)
+
+PATH
+  remote: vendor/gems/omniauth-lessonplanet
+  specs:
+    omniauth-lessonplanet (0.0.1)
+      omniauth (~> 1.0)
+      omniauth-oauth2
 
 PATH
   remote: vendor/gems/rails_multisite
@@ -172,6 +189,7 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.8.0)
+    newrelic_rpm (3.7.2.195)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     oauth (0.4.7)
@@ -185,6 +203,10 @@ GEM
     omniauth (1.2.1)
       hashie (>= 1.2, < 3)
       rack (~> 1.0)
+    omniauth-cas (0.0.3)
+      addressable (~> 2.2)
+      nokogiri (~> 1.5)
+      omniauth (~> 1.0)
     omniauth-facebook (1.6.0)
       omniauth-oauth2 (~> 1.1)
     omniauth-github (1.1.1)
@@ -253,6 +275,11 @@ GEM
       sprockets-rails (~> 2.0.0)
     rails-observers (0.1.2)
       activemodel (~> 4.0)
+    rails_12factor (0.0.2)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.2)
+    rails_stdout_logging (0.0.3)
     railties (4.0.3)
       actionpack (= 4.0.3)
       activesupport (= 4.0.3)
@@ -424,11 +451,15 @@ DEPENDENCIES
   mock_redis
   multi_json
   mustache
+  newrelic_rpm
   nokogiri
   oj
   omniauth
+  omniauth-browserid!
+  omniauth-cas
   omniauth-facebook
   omniauth-github
+  omniauth-lessonplanet!
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
@@ -444,6 +475,7 @@ DEPENDENCIES
   rack-protection
   rails
   rails-observers
+  rails_12factor
   rails_multisite!
   rake
   rb-fsevent
