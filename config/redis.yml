@@ -1,12 +1,13 @@
 defaults: &defaults
-  uri: <%= uri = URI.parse(ENV['REDIS_URL'] || ENV['OPENREDIS_URL'] || ENV['REDISCLOUD_URL'] || ENV['REDISGREEN_URL'] || ENV['REDISTOGO_URL'] || "redis://localhost:6379") %>
-  host: <%= uri.host %>
-  port: <%= uri.port %>
-  password: <%= uri.password %>
-  db: 0
-  cache_db: 2
+  host: <%= GlobalSetting.redis_host %>
+  port: <%= GlobalSetting.redis_port %>
+  password: <%= GlobalSetting.redis_password %>
+  db: <%= GlobalSetting.redis_db %>
 
 development:
+  <<: *defaults
+
+profile:
   <<: *defaults
 
 test:
@@ -15,8 +16,6 @@ test:
 
 staging:
   <<: *defaults
-  db: 0
-  cache_db: 0
 
 production:
   <<: *defaults

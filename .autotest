@@ -1,5 +1,0 @@
-Autotest.add_hook :initialize do |autotest|
-  %w{.git .svn .hg .DS_Store db log tmp vendor ._*}.each do |exception| 
-      autotest.add_exception(exception) 
-   end
-end

@@ -66,7 +66,9 @@ Discourse.PosterExpansionController = Discourse.ObjectController.extend({
     },
 
     cancelFilter: function() {
-      this.get('postStream').cancelFilter();
+      var postStream = this.get('postStream');
+      postStream.cancelFilter();
+      postStream.refresh();
       this.close();
     }
   }

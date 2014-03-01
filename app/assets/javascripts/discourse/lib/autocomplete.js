@@ -47,7 +47,6 @@ function mapKeyPressToActualCharacter(isShiftKey, characterCode) {
 }
 
 $.fn.autocomplete = function(options) {
-
   var autocompletePlugin = this;
 
   if (this.length === 0) return;
@@ -74,7 +73,6 @@ $.fn.autocomplete = function(options) {
   var isInput = this[0].tagName === "INPUT";
   var inputSelectedItems = [];
 
-
   var closeAutocomplete = function() {
     if (div) {
       div.hide().remove();
@@ -85,29 +83,31 @@ $.fn.autocomplete = function(options) {
   };
 
   var addInputSelectedItem = function(item) {
-    var transformed;
-    if (options.transformComplete) {
-      transformed = options.transformComplete(item);
-    }
-    if (options.single){
-      // dump what we have in single mode, just in case
-      inputSelectedItems = [];
-    }
-    var d = $("<div class='item'><span>" + (transformed || item) + "<a href='#'><i class='icon-remove'></i></a></span></div>");
-    var prev = me.parent().find('.item:last');
-    if (prev.length === 0) {
-      me.parent().prepend(d);
-    } else {
-      prev.after(d);
-    }
-    inputSelectedItems.push(item);
-    if (options.onChangeItems) {
-      options.onChangeItems(inputSelectedItems);
-    }
+    var transformed,
+        transformedItem = item;
 
-    d.find('a').click(function() {
+    if (options.transformComplete) { transformedItem = options.transformComplete(transformedItem); }
+    // dump what we have in single mode, just in case
+    if (options.single) { inputSelectedItems = []; }
+    transformed = _.isArray(transformedItem) ? transformedItem : [transformedItem || item];
+
+    var divs = transformed.map(function(itm) {
+      var d = $("<div class='item'><span>" + itm + "<a class='remove' href='#'><i class='fa fa-times'></i></a></span></div>");
+      var prev = me.parent().find('.item:last');
+      if (prev.length === 0) {
+        me.parent().prepend(d);
+      } else {
+        prev.after(d);
+      }
+      inputSelectedItems.push(itm);
+      return d[0];
+    });
+
+    if (options.onChangeItems) { options.onChangeItems(inputSelectedItems); }
+
+    $(divs).find('a').click(function() {
       closeAutocomplete();
-      inputSelectedItems.splice($.inArray(item, inputSelectedItems), 1);
+      inputSelectedItems.splice($.inArray(transformedItem, inputSelectedItems), 1);
       $(this).parent().parent().remove();
       if (options.single) {
         me.show();
@@ -115,6 +115,7 @@ $.fn.autocomplete = function(options) {
       if (options.onChangeItems) {
         options.onChangeItems(inputSelectedItems);
       }
+      return false;
     });
   };
 
@@ -141,7 +142,6 @@ $.fn.autocomplete = function(options) {
 
   if (isInput) {
     var width = this.width();
-    var height = this.height();
     wrap = this.wrap("<div class='ac-wrap clearfix" + (disabled ? " disabled": "") +  "'/>").parent();
     wrap.width(width);
     if(options.single) {
@@ -159,6 +159,11 @@ $.fn.autocomplete = function(options) {
         addInputSelectedItem(x);
       }
     });
+    if(options.items) {
+      _.each(options.items, function(item){
+        addInputSelectedItem(item);
+      });
+    }
     this.val("");
     completeStart = 0;
     wrap.click(function() {
@@ -226,7 +231,13 @@ $.fn.autocomplete = function(options) {
   };
 
   var updateAutoComplete = function(r) {
+
     if (completeStart === null) return;
+
+    if (r && r.then && typeof(r.then) === "function") {
+      r.then(updateAutoComplete);
+      return;
+    }
 
     autocompleteOptions = r;
     if (!r || r.length === 0) {
@@ -258,7 +269,7 @@ $.fn.autocomplete = function(options) {
       if (!prevChar || /\s/.test(prevChar)) {
         completeStart = completeEnd = caretPosition;
         var term = "";
-        options.dataSource(term).then(updateAutoComplete);
+        updateAutoComplete(options.dataSource(term));
       }
     }
   });
@@ -305,7 +316,7 @@ $.fn.autocomplete = function(options) {
             completeStart = c;
             caretPosition = completeEnd = initial;
             term = me[0].value.substring(c + 1, initial);
-            options.dataSource(term).then(updateAutoComplete);
+            updateAutoComplete(options.dataSource(term));
             return true;
           }
         }
@@ -396,7 +407,7 @@ $.fn.autocomplete = function(options) {
             }
           }
 
-          options.dataSource(term).then(updateAutoComplete);
+          updateAutoComplete(options.dataSource(term));
           return true;
       }
     }

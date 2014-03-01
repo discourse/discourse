@@ -55,15 +55,27 @@ class UserStat < ActiveRecord::Base
   MAX_TIME_READ_DIFF = 100
   # attempt to add total read time to user based on previous time this was called
   def update_time_read!
-    last_seen_key = "user-last-seen:#{id}"
-    last_seen = $redis.get(last_seen_key)
-    if last_seen.present?
+    if last_seen = last_seen_cached
       diff = (Time.now.to_f - last_seen.to_f).round
       if diff > 0 && diff < MAX_TIME_READ_DIFF
         UserStat.where(user_id: id, time_read: time_read).update_all ["time_read = time_read + ?", diff]
       end
     end
-    $redis.set(last_seen_key, Time.now.to_f)
+    cache_last_seen(Time.now.to_f)
+  end
+
+  private
+
+  def last_seen_key
+    @last_seen_key ||= "user-last-seen:#{id}"
+  end
+
+  def last_seen_cached
+    $redis.get(last_seen_key)
+  end
+
+  def cache_last_seen(val)
+    $redis.set(last_seen_key, val)
   end
 
 end

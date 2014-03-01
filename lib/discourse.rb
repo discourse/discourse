@@ -4,6 +4,21 @@ require_dependency 'auth/default_current_user_provider'
 
 module Discourse
 
+  class SidekiqExceptionHandler
+    extend Sidekiq::ExceptionHandler
+  end
+
+  def self.handle_exception(ex, context=nil, parent_logger = nil)
+    context ||= {}
+    parent_logger ||= SidekiqExceptionHandler
+
+    cm = RailsMultisite::ConnectionManagement
+    parent_logger.handle_exception(ex, {
+      current_db: cm.current_db,
+      current_hostname: cm.current_hostname
+    }.merge(context))
+  end
+
   # Expected less matches than what we got in a find
   class TooManyMatches < Exception; end
 
@@ -25,18 +40,55 @@ module Discourse
   # When ImageMagick is missing
   class ImageMagickMissing < Exception; end
 
+  class InvalidPost < Exception; end
+
+  # When read-only mode is enabled
+  class ReadOnly < Exception; end
+
   # Cross site request forgery
   class CSRF < Exception; end
 
+  def self.filters
+    @filters ||= [:latest, :unread, :new, :starred, :read, :posted]
+  end
+
+  def self.anonymous_filters
+    @anonymous_filters ||= [:latest]
+  end
+
+  def self.logged_in_filters
+    @logged_in_filters ||= Discourse.filters - Discourse.anonymous_filters
+  end
+
+  def self.top_menu_items
+    @top_menu_items ||= Discourse.filters + [:category, :categories, :top]
+  end
+
+  def self.anonymous_top_menu_items
+    @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
+  end
+
   def self.activate_plugins!
     @plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
-    @plugins.each do |plugin|
-      plugin.activate!
-    end
+    @plugins.each { |plugin| plugin.activate! }
   end
 
   def self.plugins
     @plugins
+  end
+
+  def self.assets_digest
+    @assets_digest ||= begin
+      digest = Digest::MD5.hexdigest(ActionView::Base.assets_manifest.assets.values.sort.join)
+
+      channel = "/global/asset-version"
+      message = MessageBus.last_message(channel)
+
+      unless message && message.data == digest
+        MessageBus.publish channel, digest
+      end
+      digest
+    end
   end
 
   def self.authenticators
@@ -87,7 +139,7 @@ module Discourse
     default_port = 80
     protocol = "http"
 
-    if SiteSetting.use_ssl?
+    if SiteSetting.use_https?
       protocol = "https"
       default_port = 443
     end
@@ -104,18 +156,20 @@ module Discourse
     return base_url_no_prefix + base_uri
   end
 
-  def self.enable_maintenance_mode
-    $redis.set maintenance_mode_key, 1
+  def self.enable_readonly_mode
+    $redis.set readonly_mode_key, 1
+    MessageBus.publish(readonly_channel, true)
     true
   end
 
-  def self.disable_maintenance_mode
-    $redis.del maintenance_mode_key
+  def self.disable_readonly_mode
+    $redis.del readonly_mode_key
+    MessageBus.publish(readonly_channel, false)
     true
   end
 
-  def self.maintenance_mode?
-    !!$redis.get( maintenance_mode_key )
+  def self.readonly_mode?
+    !!$redis.get(readonly_mode_key)
   end
 
   def self.git_version
@@ -134,7 +188,7 @@ module Discourse
 
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
-    user = User.where(username_lower: SiteSetting.site_contact_username).first if SiteSetting.site_contact_username.present?
+    user = User.where(username_lower: SiteSetting.site_contact_username.downcase).first if SiteSetting.site_contact_username.present?
     user ||= User.admins.real.order(:id).first
   end
 
@@ -172,9 +226,12 @@ module Discourse
     Rails.configuration.action_controller.asset_host
   end
 
-private
-
-  def self.maintenance_mode_key
-    'maintenance_mode'
+  def self.readonly_mode_key
+    "readonly_mode"
   end
+
+  def self.readonly_channel
+    "/site/read-only"
+  end
+
 end

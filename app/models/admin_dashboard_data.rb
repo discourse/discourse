@@ -11,7 +11,7 @@ class AdminDashboardData
     'users_by_trust_level',
     'likes',
     'bookmarks',
-    'favorites',
+    'starred',
     'emails',
     'user_to_user_private_messages',
     'system_private_messages',
@@ -40,7 +40,9 @@ class AdminDashboardData
       site_description_check,
       access_password_removal,
       site_contact_username_check,
-      notification_email_check ].compact
+      notification_email_check,
+      enforce_global_nicknames_check
+    ].compact
   end
 
   def self.fetch_stats
@@ -59,7 +61,7 @@ class AdminDashboardData
     AdminDashboardData.new.problems
   end
 
-  def as_json
+  def as_json(options = nil)
     @json ||= {
       reports: REPORTS.map { |type| Report.find(type).as_json },
       admins: User.admins.count,
@@ -147,7 +149,7 @@ class AdminDashboardData
   end
 
   def site_description_check
-    return I18n.t('dashboard.site_description_missing') if !SiteSetting.site_description.present?
+    I18n.t('dashboard.site_description_missing') if !SiteSetting.site_description.present?
   end
 
   def send_consumer_email_check
@@ -166,6 +168,9 @@ class AdminDashboardData
     I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
   end
 
+  def enforce_global_nicknames_check
+    I18n.t('dashboard.enforce_global_nicknames_warning') if SiteSetting.enforce_global_nicknames and !SiteSetting.discourse_org_access_key.present?
+  end
 
   # TODO: generalize this method of putting i18n keys with expiry in redis
   #       that should be reported on the admin dashboard:

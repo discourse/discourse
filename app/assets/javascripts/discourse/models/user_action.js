@@ -16,7 +16,7 @@ var UserActionTypes = {
   replies: 6,
   mentions: 7,
   quotes: 9,
-  favorites: 10,
+  starred: 10,
   edits: 11,
   messages_sent: 12,
   messages_received: 13
@@ -74,7 +74,7 @@ Discourse.UserAction = Discourse.Model.extend({
     var descriptionKey = this.get('descriptionKey');
     if (!descriptionKey) { return; }
 
-    var icon = this.get('isPM') ? '<i class="icon icon-envelope" title="{{i18n user.stream.private_message}}"></i>' : '';
+    var icon = this.get('isPM') ? '<i class="fa fa-envelope" title="{{i18n user.stream.private_message}}"></i>' : '';
 
     return new Handlebars.SafeString(icon + " " + I18n.t("user_action." + descriptionKey, {
       userUrl: this.get('userUrl'),
@@ -85,7 +85,7 @@ Discourse.UserAction = Discourse.Model.extend({
       post_number: '#' + this.get('reply_to_post_number'),
       user1Url: this.get('userUrl'),
       user2Url: this.get('targetUserUrl'),
-      another_user: this.get('target_name')
+      another_user: this.get('targetDisplayName')
     }));
 
   }.property('descriptionKey'),
@@ -99,6 +99,9 @@ Discourse.UserAction = Discourse.Model.extend({
   }.property('target_username'),
 
   presentName: Em.computed.any('name', 'username'),
+  targetDisplayName: Em.computed.any('target_name', 'target_username'),
+  actingDisplayName: Em.computed.any('acting_name', 'acting_username'),
+
 
   targetUserUrl: Discourse.computed.url('target_username', '/users/%@'),
   usernameLower: function() {
@@ -128,10 +131,10 @@ Discourse.UserAction = Discourse.Model.extend({
     var groups = this.get("childGroups");
     if (!groups) {
       groups = {
-        likes: Discourse.UserActionGroup.create({ icon: "icon-heart" }),
-        stars: Discourse.UserActionGroup.create({ icon: "icon-star" }),
-        edits: Discourse.UserActionGroup.create({ icon: "icon-pencil" }),
-        bookmarks: Discourse.UserActionGroup.create({ icon: "icon-bookmark" })
+        likes: Discourse.UserActionGroup.create({ icon: "fa fa-heart" }),
+        stars: Discourse.UserActionGroup.create({ icon: "fa fa-star" }),
+        edits: Discourse.UserActionGroup.create({ icon: "fa fa-pencil" }),
+        bookmarks: Discourse.UserActionGroup.create({ icon: "fa fa-bookmark" })
       };
     }
     this.set("childGroups", groups);
@@ -141,7 +144,7 @@ Discourse.UserAction = Discourse.Model.extend({
         case UserActionTypes.likes_given:
         case UserActionTypes.likes_received:
           return "likes";
-        case UserActionTypes.favorites:
+        case UserActionTypes.starred:
           return "stars";
         case UserActionTypes.edits:
           return "edits";
@@ -170,7 +173,7 @@ Discourse.UserAction = Discourse.Model.extend({
     this.setProperties({
       username: this.get('acting_username'),
       avatar_template: this.get('acting_avatar_template'),
-      name: this.get('acting_name')
+      name: this.get('actingDisplayName')
     });
   }
 });
@@ -215,14 +218,14 @@ Discourse.UserAction.reopenClass({
 
   TO_COLLAPSE: [UserActionTypes.likes_given,
                 UserActionTypes.likes_received,
-                UserActionTypes.favorites,
+                UserActionTypes.starred,
                 UserActionTypes.edits,
                 UserActionTypes.bookmarks],
 
   TO_SHOW: [
     UserActionTypes.likes_given,
     UserActionTypes.likes_received,
-    UserActionTypes.favorites,
+    UserActionTypes.starred,
     UserActionTypes.edits,
     UserActionTypes.bookmarks,
     UserActionTypes.messages_sent,

@@ -1,3 +1,5 @@
+require_dependency "mobile_detection"
+
 module Middleware
   class AnonymousCache
 
@@ -10,8 +12,25 @@ module Middleware
         @env = env
       end
 
+      def is_mobile=(val)
+        @is_mobile = val ? :true : :false
+      end
+
+      def is_mobile?
+        @is_mobile ||=
+          begin
+            session = @env["rack.session"]
+            # don't initialize params until later otherwise
+            # you get a broken params on the request
+            params = {}
+            user_agent  = @env["HTTP_USER_AGENT"]
+
+            MobileDetection.resolve_mobile_view!(user_agent,params,session) ? :true : :false
+          end == :true
+      end
+
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
+        @cache_key ||= "ANON_CACHE_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}"
       end
 
       def cache_key_body

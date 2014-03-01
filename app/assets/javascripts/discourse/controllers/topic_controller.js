@@ -8,7 +8,6 @@
 **/
 Discourse.TopicController = Discourse.ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
-  summaryCollapsed: true,
   needs: ['header', 'modal', 'composer', 'quoteButton'],
   allPostsSelected: false,
   editingTopic: false,
@@ -30,13 +29,9 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       Discourse.URL.routeTo(this.get('lastPostUrl'));
     },
 
-    toggleSummary: function() {
-      this.toggleProperty('summaryCollapsed');
-    },
-
     selectAll: function() {
-      var posts = this.get('postStream.posts');
-      var selectedPosts = this.get('selectedPosts');
+      var posts = this.get('postStream.posts'),
+          selectedPosts = this.get('selectedPosts');
       if (posts) {
         selectedPosts.addObjects(posts);
       }
@@ -184,7 +179,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       this.get('content').toggleStar();
     },
 
-
     /**
       Clears the pin from a topic for the currently logged in user
 
@@ -206,13 +200,13 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     },
 
     replyAsNewTopic: function(post) {
-      var composerController = this.get('controllers.composer');
-      var promise = composerController.open({
-        action: Discourse.Composer.CREATE_TOPIC,
-        draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY
-      });
-      var postUrl = "" + location.protocol + "//" + location.host + (post.get('url'));
-      var postLink = "[" + (this.get('title')) + "](" + postUrl + ")";
+      var composerController = this.get('controllers.composer'),
+          promise = composerController.open({
+            action: Discourse.Composer.CREATE_TOPIC,
+            draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY
+          }),
+          postUrl = "" + location.protocol + "//" + location.host + (post.get('url')),
+          postLink = "[" + (this.get('title')) + "](" + postUrl + ")";
 
       promise.then(function() {
         Discourse.Post.loadQuote(post.get('id')).then(function(q) {
@@ -222,15 +216,21 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         });
       });
     }
+
   },
 
+  slackRatio: function() {
+    return Discourse.Capabilities.currentProp('slackRatio');
+  }.property(),
+
   jumpTopDisabled: function() {
-    return (this.get('progressPosition') === 1);
-  }.property('postStream.filteredPostsCount', 'progressPosition'),
+    return (this.get('progressPosition') < 2);
+  }.property('progressPosition'),
 
   jumpBottomDisabled: function() {
-    return this.get('progressPosition') >= this.get('postStream.filteredPostsCount');
-  }.property('postStream.filteredPostsCount', 'progressPosition'),
+    return this.get('progressPosition') >= this.get('postStream.filteredPostsCount') ||
+           this.get('progressPosition') >= this.get('highest_post_number');
+  }.property('postStream.filteredPostsCount', 'highest_post_number', 'progressPosition'),
 
   canMergeTopic: function() {
     if (!this.get('details.can_move_posts')) return false;
@@ -274,8 +274,9 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   streamPercentage: function() {
     if (!this.get('postStream.loaded')) { return 0; }
-    if (this.get('postStream.filteredPostsCount') === 0) { return 0; }
-    return this.get('progressPosition') / this.get('postStream.filteredPostsCount');
+    if (this.get('postStream.highest_post_number') === 0) { return 0; }
+    var perc = this.get('progressPosition') / this.get('postStream.filteredPostsCount');
+    return (perc > 1.0) ? 1.0 : perc;
   }.property('postStream.loaded', 'progressPosition', 'postStream.filteredPostsCount'),
 
   multiSelectChanged: function() {
@@ -291,6 +292,18 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     if (this.get('postStream.filteredPostsCount') < 2) return true;
     return false;
   }.property('postStream.loaded', 'currentPost', 'postStream.filteredPostsCount'),
+
+  hugeNumberOfPosts: function() {
+    return (this.get('postStream.filteredPostsCount') >= Discourse.SiteSettings.short_progress_text_threshold);
+  }.property('highest_post_number'),
+
+  jumpToBottomTitle: function() {
+    if (this.get('hugeNumberOfPosts')) {
+      return I18n.t('topic.progress.jump_bottom_with_number', {post_number: this.get('highest_post_number')});
+    } else {
+      return I18n.t('topic.progress.jump_bottom');
+    }
+  }.property('hugeNumberOfPosts', 'highest_post_number'),
 
   deselectPost: function(post) {
     this.get('selectedPosts').removeObject(post);
@@ -312,9 +325,13 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return false;
   },
 
-  showFavoriteButton: function() {
+  showStarButton: function() {
     return Discourse.User.current() && !this.get('isPrivateMessage');
   }.property('isPrivateMessage'),
+
+  loadingHTML: function() {
+    return "<div class='spinner'>" + I18n.t('loading') + "</div>";
+  }.property(),
 
   recoverTopic: function() {
     this.get('content').recover();
@@ -414,15 +431,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return false;
   },
 
-  clearFlags: function(actionType) {
-    actionType.clearFlags();
-  },
-
-  // Who acted on a particular post / action type
-  whoActed: function(actionType) {
-    actionType.loadUsers();
-  },
-
   recoverPost: function(post) {
     post.recover();
   },
@@ -455,7 +463,15 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         }
       ]);
     } else {
-      post.destroy(user);
+      post.destroy(user).then(null, function(e) {
+        post.undoDeleteState();
+        var response = $.parseJSON(e.responseText);
+        if (response && response.errors) {
+          bootbox.alert(response.errors[0]);
+        } else {
+          bootbox.alert(I18n.t('generic_error'));
+        }
+      });
     }
   },
 
@@ -475,19 +491,80 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     }
   },
 
-  removeAllowedUser: function(username) {
-    var self = this;
-    bootbox.dialog(I18n.t("private_message_info.remove_allowed_user", {name: username}), [
-      {label: I18n.t("no_value"),
-       'class': 'btn-danger rightg'},
-      {label: I18n.t("yes_value"),
-       'class': 'btn-primary',
-        callback: function() {
-          self.get('details').removeAllowedUser(username);
+  // If our current post is changed, notify the router
+  _currentPostChanged: function() {
+    var currentPost = this.get('currentPost');
+    if (currentPost) {
+      this.send('postChangedRoute', currentPost);
+    }
+  }.observes('currentPost'),
+
+  sawObjects: function(posts) {
+    if (posts) {
+      var self = this,
+          lastReadPostNumber = this.get('last_read_post_number');
+
+      posts.forEach(function(post) {
+        var postNumber = post.get('post_number');
+        if (postNumber > lastReadPostNumber) {
+          lastReadPostNumber = postNumber;
         }
-      }
-    ]);
+        post.set('read', true);
+      });
+      self.set('last_read_post_number', lastReadPostNumber);
+
+    }
+  },
+
+  /**
+    Called the the topmost visible post on the page changes.
+
+    @method topVisibleChanged
+    @params {Discourse.Post} post that is at the top
+  **/
+  topVisibleChanged: function(post) {
+    var postStream = this.get('postStream'),
+        firstLoadedPost = postStream.get('firstLoadedPost');
+
+    this.set('currentPost', post.get('post_number'));
+
+    if (post.get('post_number') === 1) { return; }
+
+    if (firstLoadedPost && firstLoadedPost === post) {
+      // Note: jQuery shouldn't be done in a controller, but how else can we
+      // trigger a scroll after a promise resolves in a controller? We need
+      // to do this to preserve upwards infinte scrolling.
+      var $body = $('body'),
+          $elem = $('#post-cloak-' + post.get('post_number')),
+          distToElement = $body.scrollTop() - $elem.position().top;
+
+      postStream.prependMore().then(function() {
+        Em.run.next(function () {
+          $elem = $('#post-cloak-' + post.get('post_number'));
+          $('html, body').scrollTop($elem.position().top + distToElement);
+        });
+      });
+    }
+  },
+
+  /**
+    Called the the bottommost visible post on the page changes.
+
+    @method bottomVisibleChanged
+    @params {Discourse.Post} post that is at the bottom
+  **/
+  bottomVisibleChanged: function(post) {
+    var postStream = this.get('postStream'),
+        lastLoadedPost = postStream.get('lastLoadedPost'),
+        index = postStream.get('stream').indexOf(post.get('id'))+1;
+
+    this.set('progressPosition', index);
+
+    if (lastLoadedPost && lastLoadedPost === post) {
+      postStream.appendMore();
+    }
   }
+
 
 });
 

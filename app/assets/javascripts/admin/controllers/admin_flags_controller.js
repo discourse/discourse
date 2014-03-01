@@ -17,29 +17,33 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
     **/
     disagreeFlags: function(item) {
       var adminFlagsController = this;
-      item.disagreeFlags().then((function() {
+      item.disagreeFlags().then(function() {
         adminFlagsController.removeObject(item);
-      }), function() {
+      }, function() {
         bootbox.alert(I18n.t("admin.flags.error"));
       });
     },
 
     agreeFlags: function(item) {
       var adminFlagsController = this;
-      item.agreeFlags().then((function() {
+      item.agreeFlags().then(function() {
         adminFlagsController.removeObject(item);
-      }), function() {
+      }, function() {
         bootbox.alert(I18n.t("admin.flags.error"));
       });
     },
 
     deferFlags: function(item) {
       var adminFlagsController = this;
-      item.deferFlags().then((function() {
+      item.deferFlags().then(function() {
         adminFlagsController.removeObject(item);
-      }), function() {
+      }, function() {
         bootbox.alert(I18n.t("admin.flags.error"));
       });
+    },
+
+    doneTopicFlags: function(item) {
+      this.send('disagreeFlags', item);
     },
 
     /**
@@ -50,9 +54,9 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
     **/
     deletePost: function(post) {
       var adminFlagsController = this;
-      post.deletePost().then((function() {
+      post.deletePost().then(function() {
         adminFlagsController.removeObject(post);
-      }), function() {
+      }, function() {
         bootbox.alert(I18n.t("admin.flags.error"));
       });
     },

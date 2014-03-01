@@ -1,7 +1,7 @@
 module Jobs
 
   class CategoryStats < Jobs::Scheduled
-    recurrence { daily.hour_of_day(4) }
+    every 4.hours
 
     def execute(args)
       Category.update_stats

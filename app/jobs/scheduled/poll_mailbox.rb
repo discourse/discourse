@@ -6,7 +6,7 @@ require_dependency 'email/receiver'
 
 module Jobs
   class PollMailbox < Jobs::Scheduled
-    recurrence { minutely }
+    every 5.minutes
     sidekiq_options retry: false
 
     def execute(args)

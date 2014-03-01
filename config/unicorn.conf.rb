@@ -1,5 +1,8 @@
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
 
+# enable out of band gc out of the box, it is low risk and improves perf a lot
+ENV['UNICORN_ENABLE_OOBGC'] ||= "1"
+
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
 # tune down if not enough ram
@@ -8,7 +11,7 @@ worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 working_directory discourse_path
 
 # listen "#{discourse_path}/tmp/sockets/unicorn.sock"
-listen 3000
+listen (ENV["UNICORN_PORT"] || 3000).to_i
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
 timeout 30
@@ -39,8 +42,33 @@ before_fork do |server, worker|
   unless initialized
     # load up the yaml for the localization bits, in master process
     I18n.t(:posts)
+
+    # load up all models and schema
+    (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
+      table.classify.constantize.first rescue nil
+    end
+
+    # router warm up
+    Rails.application.routes.recognize_path('abc') rescue nil
+
     # get rid of rubbish so we don't share it
     GC.start
+
+    initialized = true
+
+    supervisor = ENV['UNICORN_SUPERVISOR_PID'].to_i
+    if supervisor > 0
+      Thread.new do
+        while true
+          unless File.exists?("/proc/#{supervisor}")
+            puts "Kill self supervisor is gone"
+            Process.kill "TERM", Process.pid
+          end
+          sleep 2
+        end
+      end
+    end
+
   end
 
   ActiveRecord::Base.connection.disconnect!

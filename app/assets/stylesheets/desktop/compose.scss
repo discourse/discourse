@@ -4,8 +4,8 @@
 @import "common/foundation/mixins";
 
 // hack, this needs to be done cleaner
-.private-message input.span8 {
-  width: 47%;
+#private-message-users {
+  width: 400px;
 }
 
 .composer-popup-container {
@@ -16,15 +16,20 @@
 
 .composer-popup {
 
-  @include box-shadow(3px 3px 3px rgba($black, 0.14));
+  @include box-shadow(3px 3px 3px rgba($primary_shadow_color, 0.14));
+  background: lighten($highlight, 15%);
+
+  h3 {
+    margin-bottom: 10px;
+  }
 
   p {
-    margin: 0 0 10px 0;
+    margin-bottom: 10px;
   }
 
   a.close {
     float: right;
-    color: $black;
+    color: $primary_text_color;
     opacity: 0.5;
     font-size: 15px;
   }
@@ -33,8 +38,7 @@
     opacity: 1.0;
   }
 
-  background-color: lighten($yellow, 40%);
-  border: 1px solid darken($yellow, 10%);
+  border: 1px solid $highlight_border_color;
   padding: 10px;
   width: 600px;
   position: absolute;
@@ -52,15 +56,15 @@
 }
 
 .similar-topics {
-  background-color: #b5e8fd;
-  border: 1px solid darken(#b5e8fd, 10%);
+  background-color: $emphasis_background_color;
+  border: 1px solid $emphasis_background_color;
 
   a[href] {
     color: #000;
   }
 
   .posts-count {
-    color: darken(#b5e8fd, 50%);
+    color: darken($link_color, 40%);
     font-size: 12px;
   }
 }
@@ -74,28 +78,28 @@
   z-index: 999999;
   position: absolute;
   width: 240px;
-  background-color: $white;
-  border: 1px solid $gray;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     li {
-      border-bottom: 1px solid $light_gray;
+      border-bottom: 1px solid $primary_border_color;
       a[href] {
         padding: 5px;
         display: block;
         span.username {
-          color: lighten($black, 20);
+          color: $primary_text_color;
         }
         span.name {
           font-size: 11px;
         }
         &.selected {
-          background-color: $light_gray;
+          background-color: lighten($secondary_background_color, 60%);
         }
         @include hover {
-          background-color: $light_gray;
+          background-color: lighten($secondary_background_color, 60%);
           text-decoration: none;
         }
       }
@@ -116,13 +120,13 @@
   #file-uploading {
     left: 51%;
     font-size: 12px;
-    color: darken($gray, 40);
+    color: $secondary_text_color;
   }
   #draft-status {
     right: 51%;
-    color: lighten($black, 60);
+    color: $primary_text_color;
     &.flash {
-      color: lighten($red, 20);
+      color: $warning_text_color;
     }
   }
   @include transition(height 0.4s ease);
@@ -140,7 +144,7 @@
     right: 13px;
     position: absolute;
     font-size: 15px;
-    color: $darkish_gray;
+    color: $primary_text_color;
     text-decoration: none;
     &:before {
       font-family: "FontAwesome";
@@ -176,7 +180,7 @@
   &.draft {
     height: 40px !important;
     cursor: pointer;
-    border-top: 1px solid $gray;
+    border-top: 1px solid $primary_border_color;
     .draft-text {
       display: block;
     }
@@ -189,7 +193,7 @@
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid $gray;
+    border-top: 1px solid $primary_border_color;
     .saving-text {
       display: block;
     }
@@ -211,7 +215,7 @@
     height: 70px;
     text-indent: -9999em;
     background: {
-      color: $black;
+      color: $primary_text_color;
       image: image-url("spinner_96_w.gif");
       repeat: no-repeat;
       size: 35px;
@@ -241,7 +245,12 @@
       input#reply-title {
         padding: 7px 10px;
         margin: 6px 10px 3px 0;
-        width: 400px;
+        color: $primary_text_color;
+
+      }
+      input#reply-title { 
+        width: 400px; 
+                color: $primary_text_color;
 
       }
       .wmd-controls {
@@ -254,6 +263,7 @@
     padding: 10px;
     min-width: 1280px;
     .form-element {
+      display: inline-block;
       .chzn-container {
         width: 400px;
         margin-top: 6px;
@@ -283,18 +293,30 @@
         }
       }
     }
+    .edit-reason-input {
+      display: inline-block;
+      position: absolute;
+      margin-left: 10px;
+      top: 18px;
+      #edit-reason {
+        margin: 0;
+        padding: 5px;
+        float: left;
+      }
+    }
     #reply-title {
+      color: $primary_text_color;
       margin-right: 10px;
       float: left;
       &:disabled {
-        background-color: $light_gray;
+        background-color: lighten($secondary_background_color, 60%);
       }
     }
     #wmd-input:disabled {
-      background-color: $light_gray;
+      background-color: lighten($primary_background_color, 60%);
     }
     #wmd-input, #wmd-preview {
-      color: $black;
+      color: $primary_text_color;
 
       video {
         max-width: 100%;
@@ -306,7 +328,7 @@
       }
     }
     #wmd-preview {
-      border: 1px dashed $gray;
+      border: 1px dashed $primary_border_color;
       overflow: auto;
       visibility: visible;
 
@@ -323,10 +345,23 @@
       display: block;
       bottom: 8px;
     }
+    .auto-close-fields .examples {
+      margin-top: 0;
+      padding-bottom: 8px;
+    }
   }
-  .title-input, .category-input {
+  .title-input, .category-input, .show-admin-options {
     position: relative;
     display: inline;
+  }
+  .show-admin-options {
+    vertical-align: top; 
+    margin-top: 8px;
+    background: lighten($secondary_background_color, 60%);
+  &:hover {    
+    color: $tertiary_text_color;
+    background: lighten($secondary_background_color, 35%);
+  }
   }
   .title-input .popup-tip {
     width: 300px;
@@ -354,10 +389,9 @@ div.ac-wrap.disabled {
 }
 
 div.ac-wrap {
-  background-color: $white;
-  border: 1px solid #cccccc;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
   padding: 5px 10px;
-  @include border-radius-all(3px);
   div.item {
     float: left;
     margin-right: 10px;
@@ -369,7 +403,7 @@ div.ac-wrap {
       line-height: 22px;
       vertical-align: bottom;
     }
-    a {
+    a.remove {
       margin-left: 4px;
       font-size: 10px;
       line-height: 10px;
@@ -377,12 +411,12 @@ div.ac-wrap {
       border-radius: 10px;
       width: 10px;
       display: inline-block;
-      border: 1px solid rgba(255, 255, 255, 0);
+      border: 1px solid $primary_border_color;
       &:hover {
-        background-color: lighten($red, 45);
-        border: 1px solid lighten($red, 20);
+        background-color: $warning_background_color;
+        border: 1px solid $warning_border_color;
         text-decoration: none;
-        color: $white;
+        color: $warning_text_color;
       }
     }
   }
@@ -438,12 +472,12 @@ div.ac-wrap {
       min-height: 100%;
       padding: 7px;
       margin: 0;
-      background-color: $white;
+      background-color: $primary_background_color;
       word-wrap: break-word;
 
       // set up proper header margins in post preview
       h1, h2, h3, h4, h5, h6 {
-        margin: 20px 0 10px;
+        margin: 30px 0 10px;
       }
     }
     #wmd-input {
@@ -454,7 +488,8 @@ div.ac-wrap {
       min-height: 100%;
       @include box-sizing(border-box);
       border: 0;
-      border-top: 36px solid transparent;
+      border-top: 30px solid transparent;
+      box-shadow: none;
       @include border-radius-all(0);
       transition: none;
     }
@@ -478,16 +513,13 @@ div.ac-wrap {
     .preview-wrapper {
       padding-left: 5px;
       float: right;
-      img, svg {
-        max-width: 100%;
-      }
     }
   }
   #wmd-button-bar {
     top: 0;
     position: absolute;
-    border-bottom: 1px solid $inner_line;
-    background-color: $white;
+    border-bottom: 1px solid $primary_border_color;
+    background-color: $primary_background_color;
     z-index: 100;
   }
 }
@@ -509,11 +541,16 @@ div.ac-wrap {
 
 .admin-options-form {
   display: none;
+  margin-top: -15px;
 }
 
 .auto-close-fields {
   input {
-    width: 50px;
+    width: 150px;
+  }
+  .examples {
+    margin: 10px 0 0 0;
+    color: $primary_text_color;
   }
 }
 
@@ -522,7 +559,7 @@ div.ac-wrap {
     margin: 0;
   }
   .auto-close-fields {
-    i.icon-time {
+    i.fa-clock-o {
       font-size: 16px;
       line-height: 8px;
     }
@@ -532,8 +569,4 @@ div.ac-wrap {
   }
 }
 
-#reply-control button.btn.no-text {
-  margin: 7px 0 0 5px;
-  position: absolute;
-}
 

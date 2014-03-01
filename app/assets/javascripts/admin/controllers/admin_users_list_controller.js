@@ -132,7 +132,7 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
       var message = I18n.t("admin.users.reject_successful", {count: result.success});
       if (result.failed > 0) {
         message += ' ' + I18n.t("admin.users.reject_failures", {count: result.failed});
-        message += ' ' + I18n.t("admin.user.delete_forbidden", {count: Discourse.SiteSettings.delete_user_max_age});
+        message += ' ' + I18n.t("admin.user.delete_forbidden", {count: Discourse.SiteSettings.delete_user_max_post_age});
       }
       bootbox.alert(message);
       controller.refreshUsers();

@@ -59,6 +59,8 @@ cs:
           one:   "1r"
           few:   "%{count}r"
           other: "%{count}let"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 minuta"
@@ -166,7 +168,7 @@ cs:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> zmínil uživatele <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> zmínil <a href='{{user2Url}}'>vás</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Vy</a> jste znínil uživatele <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Vy</a> jste znínil uživatele <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Odesláno uživatel <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Odesláno <a href='{{userUrl}}'>vámi</a>"
@@ -355,8 +357,7 @@ cs:
     unmute: Zrušit ignorování
     last_post: Poslední příspěvek
 
-    best_of:
-      title: "Nejlepší příspěvky"
+    summary:
       enabled_description: Právě máte zobrazeny "nejlepší příspěvky" tohoto tématu.
       description: "V tomto tématu je <b>{{count}}</b> příspěvků. A to už je hodně! Nechcete ušetřit čas při čtení tím, že zobrazíte pouze příspěvky, které mají nejvíce interakcí a odpovědí?"
       enable: 'Přepnout na "nejlepší příspěvky"'
@@ -418,9 +419,6 @@ cs:
       github:
         title: "přes GitHub"
         message: "Autorizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"
-      persona:
-        title: "přes Persona"
-        message: "Autorizuji přes Mozilla Persona (ujistěte se, že nemáte zablokovaná popup okna)"
 
     composer:
       posting_not_on_topic: "Rozepsali jste odpověď na téma \"{{title}}\", ale nyní máte otevřené jiné téma."
@@ -496,15 +494,15 @@ cs:
       none: "V tuto chvíli nemáte žádná oznámení."
       more: "zobrazit starší oznámení"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='soukromá zpráva'></i> {{username}} vám zaslal soukromou zprávu: {{link}}"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='soukromá zpráva'></i> {{username}} vám zaslal soukromou zprávu: {{link}}"
       invited_to_private_message: "{{username}} vás pozval do soukromé konverzace: {{link}}"
-      invitee_accepted: "<i title='přijetí pozvánky' class='icon icon-signin'></i> {{username}} přijal vaši pozvánku"
-      moved_post: "<i title='přesunutý příspěvek' class='icon icon-arrow-right'></i> {{username}} přesunul příspěvek do {{link}}"
+      invitee_accepted: "<i title='přijetí pozvánky' class='fa fa-sign-in'></i> {{username}} přijal vaši pozvánku"
+      moved_post: "<i title='přesunutý příspěvek' class='fa fa-arrow-right'></i> {{username}} přesunul příspěvek do {{link}}"
       total_flagged: "celkem nahlášeno příspěvků"
 
     upload_selector:
@@ -532,7 +530,7 @@ cs:
     go_back: 'jít zpět'
     current_user: 'jít na vaši uživatelskou stránku'
 
-    favorite:
+    starred:
       title: 'Oblíbené'
       help:
         star: 'přidat toto téma do oblíbených'
@@ -540,7 +538,7 @@ cs:
 
     topics:
       none:
-        favorited: "Zatím nemáte žádná oblíbená témata. Pro přidání tématu do oblíbených, klikněte na hvězdičku vedle názvu tématu."
+        starred: "Zatím nemáte žádná oblíbená témata. Pro přidání tématu do oblíbených, klikněte na hvězdičku vedle názvu tématu."
         unread: "Nemáte žádná nepřečtená témata."
         new: "Nemáte žádná nová témata ke čtení."
         read: "Zatím jste nečetli žádná témata."
@@ -555,13 +553,8 @@ cs:
         read: "Nejsou tu žádná další přečtená témata."
         new: "Nejsou tu žádná další nová témata k přečtení."
         unread: "Nejsou tu žádná další nepřečtená témata."
-        favorited: "Nejsou tu žádná další oblíbená témata k přečtení."
+        starred: "Nejsou tu žádná další oblíbená témata k přečtení."
         category: "V kategorii {{category}} nejsou žádná další témata."
-
-    rank_details:
-      toggle: zobrazit/skrýt detaily bodování
-      show: zobrazit detaily bodování tématu
-      title: Detaily bodování tématu
 
     topic:
       create: 'Nové téma'
@@ -714,25 +707,10 @@ cs:
       login_reply: 'Přihlaste se, chcete-li odpovědět'
 
       filters:
-        user: "{{n_posts}} {{by_n_users}}."
         n_posts:
           one: "Je zobrazen pouze 1 příspěvek"
           few: "Jsou zobrazeny pouze {{count}} příspěvky"
           other: "Je zobrazeno pouze {{count}} příspěvků"
-        by_n_users:
-          one: "od 1 vybraného uživatele"
-          few: "od {{count}} vybraného uživatele"
-          other: "od {{count}} vybraných uživatelů"
-
-        best_of: "{{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
-          one: "Je zobrazen 1 nejlepší příspěvek"
-          few: "Jsou zobrazeny {{count}} nejlepší příspěvky"
-          other: "Je zobrazeno {{count}} nejlepších příspěvků"
-        of_n_posts:
-          one: "z celkem 1 příspěvku v tématu"
-          few: "z celkem {{count}} příspěvků v tématu"
-          other: "z celkem {{count}} příspěvků v tématu"
         cancel: "Zobrazí znovu všechny příspěvky v tomto tématu."
 
       split_topic:
@@ -956,7 +934,6 @@ cs:
       list: "Seznam kategorií"
       no_description: "K této kategorii zatím není žádný popis."
       change_in_category_topic: "navštivte téma kategorie pro editaci jejího popisu"
-      hotness: "Popularita"
       already_used: 'Tato barva je již použita jinou kategorií'
       security: "Bezpečnost"
       auto_close_label: "Automaticky zavírat témata po:"
@@ -979,11 +956,10 @@ cs:
         more: "ještě {{n}}..."
         left: "{{n}} zbývá"
 
-    topic_summary:
+    topic_map:
       title: "Souhrn tématu"
       links_shown: "zobrazit všech {{totalLinks}} odkazů..."
       clicks: "počet kliknutí"
-      topic_link: "odkaz na téma"
 
     topic_statuses:
       locked:
@@ -1004,7 +980,7 @@ cs:
     activity: "Aktivita"
     likes: "Líbí se"
     likes_long: "je zde {{number}} 'líbí se' v tomto tématu"
-    top_contributors: "Účastníci"
+    users: "Účastníci"
     category_title: "Kategorie"
     history: "Historie"
     changed_by: "od uživatele {{author}}"
@@ -1018,7 +994,7 @@ cs:
       hot:
         title: "Populární"
         help: "populární témata z poslední doby"
-      favorited:
+      starred:
         title: "Oblíbená"
         help: "témata, která jste označili jako oblíbená"
       read:

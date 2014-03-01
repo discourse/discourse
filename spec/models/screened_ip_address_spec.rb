@@ -33,6 +33,62 @@ describe ScreenedIpAddress do
     end
   end
 
+  describe "ip_address_with_mask" do
+    it "returns nil when ip_address is nil" do
+      described_class.new.ip_address_with_mask.should be_nil
+    end
+
+    it "returns ip_address without mask if there is no mask" do
+      described_class.new(ip_address: "123.123.23.22").ip_address_with_mask.should == "123.123.23.22"
+    end
+
+    it "returns ip_address with mask" do
+      described_class.new(ip_address: "123.12.0.0/16").ip_address_with_mask.should == "123.12.0.0/16"
+    end
+  end
+
+  describe "ip_address=" do
+    let(:record) { described_class.new }
+
+    def test_good_value(arg, expected)
+      record.ip_address = arg
+      record.ip_address_with_mask.should == expected
+    end
+
+    def test_bad_value(arg)
+      r = described_class.new
+      r.ip_address = arg
+      r.should_not be_valid
+      r.errors[:ip_address].should be_present
+    end
+
+    it "handles valid ip addresses" do
+      test_good_value("210.56.12.12", "210.56.12.12")
+      test_good_value("210.56.0.0/16", "210.56.0.0/16")
+      test_good_value("fc00::/7", "fc00::/7")
+      test_good_value(IPAddr.new("94.99.101.228"), "94.99.101.228")
+      test_good_value(IPAddr.new("94.99.0.0/16"), "94.99.0.0/16")
+      test_good_value(IPAddr.new("fc00::/7"), "fc00::/7")
+    end
+
+    it "translates * characters" do
+      test_good_value("123.*.*.*",     "123.0.0.0/8")
+      test_good_value("123.12.*.*",    "123.12.0.0/16")
+      test_good_value("123.12.1.*",    "123.12.1.0/24")
+      test_good_value("123.12.*.*/16", "123.12.0.0/16")
+    end
+
+    it "handles bad input" do
+      test_bad_value(nil)
+      test_bad_value("123.123")
+      test_bad_value("my house")
+      test_bad_value("123.*.1.12")
+      test_bad_value("*.123.*.12")
+      test_bad_value("*.*.*.12")
+      test_bad_value("123.*.1.12/8")
+    end
+  end
+
   describe '#watch' do
     context 'ip_address is not being watched' do
       it 'should create a new record' do
@@ -108,8 +164,6 @@ describe ScreenedIpAddress do
     it "doesn't block fc00::/7 addresses (IPv6)" do
       described_class.watch('fd12:db8::ff00:42:8329').action_type.should == described_class.actions[:do_nothing]
     end
-
-
   end
 
   describe '#should_block?' do

@@ -1,4 +1,3 @@
-require 'discourse'
 require 'spec_helper'
 
 describe TopicLinkClick do
@@ -56,7 +55,7 @@ describe TopicLinkClick do
       context 'clicking on your own link' do
         it "should not record the click" do
           lambda {
-            TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1', user_id: @post.user_id)
+            TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.0', user_id: @post.user_id)
           }.should_not change(TopicLinkClick, :count)
         end
       end
@@ -69,13 +68,7 @@ describe TopicLinkClick do
 
         it 'creates a click' do
           @click.should be_present
-        end
-
-        it 'has the topic_link id' do
           @click.topic_link.should == @topic_link
-        end
-
-        it "returns the url clicked on" do
           @url.should == @topic_link.url
         end
 
@@ -86,25 +79,32 @@ describe TopicLinkClick do
         end
       end
 
-      context 'with a valid url and topic_id' do
+      context 'with a HTTPS version of the same URL' do
         before do
-          @url = TopicLinkClick.create_from(url: @topic_link.url, topic_id: @topic.id, ip: '127.0.0.1')
+          @url = TopicLinkClick.create_from(url: 'https://twitter.com', topic_id: @topic.id, ip: '127.0.0.3')
           @click = TopicLinkClick.last
         end
 
         it 'creates a click' do
           @click.should be_present
-        end
-
-        it 'has the topic_link id' do
           @click.topic_link.should == @topic_link
-        end
-
-        it "returns the url linked to" do
-          @url.should == @topic_link.url
+          @url.should == 'https://twitter.com'
         end
       end
 
+      context 'with a valid url and topic_id' do
+        before do
+          @url = TopicLinkClick.create_from(url: @topic_link.url, topic_id: @topic.id, ip: '127.0.0.3')
+          @click = TopicLinkClick.last
+        end
+
+        it 'creates a click' do
+          @click.should be_present
+          @click.topic_link.should == @topic_link
+          @url.should == @topic_link.url
+        end
+
+      end
 
     end
 

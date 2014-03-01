@@ -42,4 +42,33 @@ describe Jobs::FeatureTopicUsers do
 
   end
 
+  context "participant count" do
+
+    let!(:post) { create_post }
+    let(:topic) { post.topic }
+
+
+    it "it works as expected" do
+
+      # It has 1 participant after creation
+      topic.participant_count.should == 1
+
+      # It still has 1 after featuring
+      Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
+      topic.reload.participant_count.should == 1
+
+      # If the OP makes another post, it's still 1.
+      create_post(topic: topic, user: post.user)
+      Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
+      topic.reload.participant_count.should == 1
+
+      # If another users posts, it's 2.
+      create_post(topic: topic, user: Fabricate(:evil_trout))
+      Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
+      topic.reload.participant_count.should == 2
+
+    end
+
+  end
+
 end

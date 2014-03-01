@@ -16,23 +16,9 @@ Discourse.Route = Em.Route.extend({
 
     @method activate
   **/
-  activate: function(router, context) {
+  activate: function() {
     this._super();
-
-    // Close mini profiler
-    $('.profiler-results .profiler-result').remove();
-
-    // Close some elements that may be open
-    $('.d-dropdown').hide();
-    $('header ul.icons li').removeClass('active');
-    $('[data-toggle="dropdown"]').parent().removeClass('open');
-    // close the lightbox
-    if ($.magnificPopup && $.magnificPopup.instance) { $.magnificPopup.instance.close(); }
-
-    Discourse.set('notifyCount',0);
-
-    var hideDropDownFunction = $('html').data('hide-dropdown');
-    if (hideDropDownFunction) return hideDropDownFunction();
+    Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
   }
 
 });
@@ -46,6 +32,26 @@ Discourse.Route.reopenClass({
       if (oldBuilder) oldBuilder.call(this);
       return builder.call(this);
     };
+  },
+
+  cleanDOM: function() {
+    // Close mini profiler
+    $('.profiler-results .profiler-result').remove();
+
+    // Close some elements that may be open
+    $('.d-dropdown').hide();
+    $('header ul.icons li').removeClass('active');
+    $('[data-toggle="dropdown"]').parent().removeClass('open');
+    // close the lightbox
+    if ($.magnificPopup && $.magnificPopup.instance) { $.magnificPopup.instance.close(); }
+
+    // Remove any link focus
+    $('a').blur();
+
+    Discourse.set('notifyCount',0);
+
+    var hideDropDownFunction = $('html').data('hide-dropdown');
+    if (hideDropDownFunction) { hideDropDownFunction(); }
   },
 
   /**

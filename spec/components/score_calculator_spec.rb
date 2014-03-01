@@ -34,29 +34,29 @@ describe ScoreCalculator do
 
   end
 
-  context 'best_of' do
+  context 'summary' do
 
     it "won't update the site settings when the site settings don't match" do
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
-      topic.has_best_of.should be_false
+      topic.has_summary.should be_false
     end
 
-    it "removes the best_of flag if the topic no longer qualifies" do
-      topic.update_column(:has_best_of, true)
+    it "removes the summary flag if the topic no longer qualifies" do
+      topic.update_column(:has_summary, true)
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
-      topic.has_best_of.should be_false
+      topic.has_summary.should be_false
     end
 
     it "won't update the site settings when the site settings don't match" do
-      SiteSetting.expects(:best_of_likes_required).returns(0)
-      SiteSetting.expects(:best_of_posts_required).returns(1)
-      SiteSetting.expects(:best_of_score_threshold).returns(100)
+      SiteSetting.expects(:summary_likes_required).returns(0)
+      SiteSetting.expects(:summary_posts_required).returns(1)
+      SiteSetting.expects(:summary_score_threshold).returns(100)
 
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
-      topic.has_best_of.should be_true
+      topic.has_summary.should be_true
     end
 
   end

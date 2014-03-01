@@ -7,6 +7,7 @@ class ComposerMessagesFinder
 
   def find
     check_education_message ||
+    check_new_user_many_replies ||
     check_avatar_notification ||
     check_sequential_replies ||
     check_dominating_topic
@@ -30,6 +31,12 @@ class ComposerMessagesFinder
     end
 
     nil
+  end
+
+  # New users have a limited number of replies in a topic
+  def check_new_user_many_replies
+    return unless replying? && @user.posted_too_much_in_topic?(@details[:topic_id])
+    {templateName: 'composer/education', body: PrettyText.cook(I18n.t('education.too_many_replies', newuser_max_replies_per_topic: SiteSetting.newuser_max_replies_per_topic)) }
   end
 
   # Should a user be contacted to update their avatar?
@@ -90,12 +97,13 @@ class ComposerMessagesFinder
     return unless replying? &&
                   @details[:topic_id] &&
                   (@user.post_count >= SiteSetting.educate_until_posts) &&
-                  !UserHistory.exists_for_user?(@user, :notitied_about_dominating_topic, topic_id: @details[:topic_id])
+                  !UserHistory.exists_for_user?(@user, :notified_about_dominating_topic, topic_id: @details[:topic_id])
 
     topic = Topic.where(id: @details[:topic_id]).first
     return if topic.blank? ||
               topic.user_id == @user.id ||
-              topic.posts_count < SiteSetting.best_of_posts_required
+              topic.posts_count < SiteSetting.summary_posts_required ||
+              topic.archetype == Archetype.private_message
 
     posts_by_user = @user.posts.where(topic_id: topic.id).count
 
@@ -103,7 +111,7 @@ class ComposerMessagesFinder
     return if ratio < (SiteSetting.dominating_topic_minimum_percent.to_f / 100.0)
 
     # Log the topic notification
-    UserHistory.create!(action: UserHistory.actions[:notitied_about_dominating_topic],
+    UserHistory.create!(action: UserHistory.actions[:notified_about_dominating_topic],
                         target_user_id: @user.id,
                         topic_id: @details[:topic_id])
 

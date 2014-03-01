@@ -7,15 +7,38 @@
   @module Discourse
 **/
 Discourse.PreferencesController = Discourse.ObjectController.extend({
+  allowAvatarUpload: function() {
+    return Discourse.SiteSettings.allow_uploaded_avatars;
+  }.property(),
+
+  allowUserLocale: function() {
+    return Discourse.SiteSettings.allow_user_locale;
+  }.property(),
+
   // By default we haven't saved anything
   saved: false,
 
+  newNameInput: null,
+
   saveDisabled: function() {
     if (this.get('saving')) return true;
-    if (this.blank('name')) return true;
+    if (Discourse.SiteSettings.enable_names && this.blank('newNameInput')) return true;
     if (this.blank('email')) return true;
     return false;
-  }.property('saving', 'name', 'email'),
+  }.property('saving', 'newNameInput', 'email'),
+
+  cannotDeleteAccount: Em.computed.not('can_delete_account'),
+  deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
+
+  canEditName: function() {
+    return Discourse.SiteSettings.enable_names;
+  }.property(),
+
+  availableLocales: function() {
+    return Discourse.SiteSettings.available_locales.split('|').map( function(s) {
+      return {name: s, value: s};
+    });
+  }.property(),
 
   digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
                       { name: I18n.t('user.email_digests.weekly'), value: 7 },
@@ -35,6 +58,7 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
                             { name: I18n.t('user.new_topic_duration.after_n_days', { count: 1 }), value: 60 * 24 },
                             { name: I18n.t('user.new_topic_duration.after_n_days', { count: 2 }), value: 60 * 48 },
                             { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 1 }), value: 7 * 60 * 24 },
+                            { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 2 }), value: 2 * 7 * 60 * 24 },
                             { name: I18n.t('user.new_topic_duration.last_here'), value: -2 }],
 
   saveButtonText: function() {
@@ -44,18 +68,18 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
   actions: {
     save: function() {
       var self = this;
-      this.set('saving', true);
-      this.set('saved', false);
+      this.setProperties({ saving: true, saved: false });
 
       // Cook the bio for preview
       var model = this.get('model');
+      model.set('name', this.get('newNameInput'));
       return model.save().then(function() {
         // model was saved
         self.set('saving', false);
         if (Discourse.User.currentProp('id') === model.get('id')) {
           Discourse.User.currentProp('name', model.get('name'));
         }
-        self.set('bio_cooked', Discourse.Markdown.cook(self.get('bio_raw')));
+        self.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(self.get('bio_raw'))));
         self.set('saved', true);
       }, function() {
         // model failed to save
@@ -82,6 +106,35 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
           });
         });
       }
+    },
+
+    delete: function() {
+      this.set('deleting', true);
+      var self = this,
+          message = I18n.t('user.delete_account_confirm'),
+          model = this.get('model'),
+          buttons = [{
+        "label": I18n.t("cancel"),
+        "class": "cancel-inline",
+        "link":  true,
+        "callback": function() {
+          self.set('deleting', false);
+        }
+      }, {
+        "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("user.delete_account"),
+        "class": "btn btn-danger",
+        "callback": function() {
+          model.delete().then(function() {
+            bootbox.alert(I18n.t('user.deleted_yourself'), function() {
+              window.location.pathname = Discourse.getURL('/');
+            });
+          }, function() {
+            bootbox.alert(I18n.t('user.delete_yourself_not_allowed'));
+            self.set('deleting', false);
+          });
+        }
+      }];
+      bootbox.dialog(message, buttons, {"classes": "delete-account"});
     }
   }
 

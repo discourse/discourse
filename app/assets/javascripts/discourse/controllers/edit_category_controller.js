@@ -12,6 +12,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
   securitySelected: Ember.computed.equal('selectedTab', 'security'),
   settingsSelected: Ember.computed.equal('selectedTab', 'settings'),
   foregroundColors: ['FFFFFF', '000000'],
+  defaultPosition:  false,
 
   parentCategories: function() {
     return Discourse.Category.list().filter(function (c) {
@@ -19,9 +20,16 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     });
   }.property(),
 
+  // We can change the parent if there are no children
+  subCategories: function() {
+    if (Em.isEmpty(this.get('id'))) { return null; }
+    return Discourse.Category.list().filterBy('parent_category_id', this.get('id'));
+  }.property('model.id'),
+
   onShow: function() {
     this.changeSize();
     this.titleChanged();
+    this.set('defaultPosition', this.get('position') === null);
   },
 
   changeSize: function() {
@@ -49,10 +57,6 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     if (!this.get('color')) return true;
     return false;
   }.property('saving', 'name', 'color', 'deleting'),
-
-  deleteVisible: function() {
-    return (this.get('id') && this.get('topic_count') === 0);
-  }.property('id', 'topic_count'),
 
   deleteDisabled: function() {
     return (this.get('deleting') || this.get('saving') || false);
@@ -95,6 +99,10 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     return I18n.t('category.delete');
   }.property(),
 
+  showDescription: function() {
+    return !this.get('isUncategorized') && this.get('id');
+  }.property('isUncategorized', 'id'),
+
   actions: {
 
     selectGeneral: function() {
@@ -127,6 +135,17 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
       this.get('model').removePermission(permission);
     },
 
+    toggleDefaultPosition: function() {
+      this.toggleProperty('defaultPosition');
+    },
+
+    disableDefaultPosition: function() {
+      this.set('defaultPosition', false);
+      Em.run.schedule('afterRender', function() {
+        this.$('.position-input').focus();
+      });
+    },
+
     saveCategory: function() {
       var self = this,
           model = this.get('model'),
@@ -134,6 +153,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
 
       this.set('saving', true);
       model.set('parentCategory', parentCategory);
+      if (this.get('defaultPosition')) { model.set('position', 'default'); }
 
       self.set('saving', false);
       this.get('model').save().then(function(result) {
@@ -141,7 +161,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
         model.setProperties({slug: result.category.slug, id: result.category.id });
         Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(model));
 
-      }).fail(function(error) {
+      }).catch(function(error) {
         if (error && error.responseText) {
           self.flash($.parseJSON(error.responseText).errors[0]);
         } else {

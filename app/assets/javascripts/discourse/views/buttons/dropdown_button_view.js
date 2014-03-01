@@ -10,7 +10,7 @@ Discourse.DropdownButtonView = Discourse.View.extend({
   classNameBindings: [':btn-group', 'hidden'],
   shouldRerender: Discourse.View.renderIfChanged('text', 'longDescription'),
 
-  didInsertElement: function(e) {
+  didInsertElement: function() {
     // If there's a click handler, call it
     if (this.clicked) {
       var dropDownButtonView = this;
@@ -22,7 +22,7 @@ Discourse.DropdownButtonView = Discourse.View.extend({
     }
   },
 
-  willDestroyElement: function(e) {
+  willDestroyElement: function() {
     this.$('ul li').off('click.dropdown-button');
   },
 

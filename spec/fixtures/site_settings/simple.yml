@@ -1,0 +1,9 @@
+category1:
+  title: 'My Site'
+  contact_email: 'webmaster@example.com'
+
+category2:
+  ninja_edit_window: true
+
+category3:
+  reply_by_email_address: ''

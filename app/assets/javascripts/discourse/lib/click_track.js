@@ -38,10 +38,9 @@ Discourse.ClickTrack = {
         userId = $link.data('user-id');
 
     if (!userId) userId = $article.data('user-id');
-    var ownLink = userId && (userId === Discourse.User.currentProp('id'));
 
-    // Build a Redirect URL
-    var trackingUrl = Discourse.getURL("/clicks/track?url=" + encodeURIComponent(href));
+    var ownLink = userId && (userId === Discourse.User.currentProp('id')),
+        trackingUrl = Discourse.getURL("/clicks/track?url=" + encodeURIComponent(href));
     if (postId && (!$link.data('ignore-post-id'))) {
       trackingUrl += "&post_id=" + encodeURI(postId);
     }
@@ -78,21 +77,23 @@ Discourse.ClickTrack = {
           post_id: postId,
           topic_id: topicId,
           redirect: false
-        }
+        },
+        dataType: 'html'
       });
       window.open(href, '_blank');
       return false;
     }
 
     // If we're on the same site, use the router and track via AJAX
-    if ((href.indexOf(Discourse.URL.origin()) === 0) && !href.match(/\/uploads\//i)) {
+    if (Discourse.URL.isInternal(href) && !$link.hasClass('attachment')) {
       Discourse.ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,
           topic_id: topicId,
           redirect: false
-        }
+        },
+        dataType: 'html'
       });
       Discourse.URL.routeTo(href);
       return false;

@@ -21,10 +21,10 @@ describe Topic do
   it { should have_many :topic_allowed_users }
   it { should have_many :allowed_users }
   it { should have_many :invites }
+  it { should have_many :topic_revisions }
+  it { should have_many :revisions }
 
   it { should rate_limit }
-
-  it_behaves_like "a versioned model"
 
   context 'slug' do
 
@@ -554,7 +554,7 @@ describe Topic do
         it 'puts the autoclose duration in the moderator post' do
           @topic.created_at = 7.days.ago
           Timecop.freeze(2.days.ago) do
-            @topic.set_auto_close(2)
+            @topic.set_auto_close(48)
           end
           @topic.update_status(status, true, @user)
           expect(@topic.posts.last.raw).to include "closed after 2 days"
@@ -581,7 +581,7 @@ describe Topic do
       end
 
       it 'triggers the rate limiter' do
-        Topic::FavoriteLimiter.any_instance.expects(:performed!)
+        Topic::StarLimiter.any_instance.expects(:performed!)
         @topic.toggle_star(@user, true)
       end
     end
@@ -600,7 +600,7 @@ describe Topic do
       end
 
       it 'rolls back the rate limiter' do
-        Topic::FavoriteLimiter.any_instance.expects(:rollback!)
+        Topic::StarLimiter.any_instance.expects(:rollback!)
         @topic.toggle_star(@user, false)
       end
 
@@ -712,7 +712,7 @@ describe Topic do
 
     it 'is a regular topic by default' do
       topic.archetype.should == Archetype.default
-      topic.has_best_of.should be_false
+      topic.has_summary.should be_false
       topic.percent_rank.should == 1.0
       topic.should be_visible
       topic.pinned_at.should be_blank
@@ -734,22 +734,24 @@ describe Topic do
     end
   end
 
-  describe 'versions' do
+  describe 'revisions' do
     let(:topic) { Fabricate(:topic) }
 
-    it "has version 1 by default" do
-      topic.version.should == 1
+    it "has no revisions by default" do
+      topic.revisions.size.should == 1
     end
 
     context 'changing title' do
+
       before do
         topic.title = "new title for the topic"
         topic.save
       end
 
-      it "creates a new version" do
-        topic.version.should == 2
+      it "creates a new revision" do
+        topic.revisions.size.should == 2
       end
+
     end
 
     context 'changing category' do
@@ -759,8 +761,8 @@ describe Topic do
         topic.change_category(category.name)
       end
 
-      it "creates a new version" do
-        topic.version.should == 2
+      it "creates a new revision" do
+        topic.revisions.size.should == 2
       end
 
       context "removing a category" do
@@ -768,8 +770,8 @@ describe Topic do
           topic.change_category(nil)
         end
 
-        it "creates a new version" do
-          topic.version.should == 3
+        it "creates a new revision" do
+          topic.revisions.size.should == 3
         end
       end
 
@@ -781,8 +783,8 @@ describe Topic do
         topic.save
       end
 
-      it "doesn't craete a new version" do
-        topic.version.should == 1
+      it "doesn't create a new version" do
+        topic.revisions.size.should == 1
       end
     end
 
@@ -932,8 +934,8 @@ describe Topic do
       context 'auto_close_at is set' do
         it 'queues a job to close the topic' do
           Timecop.freeze(Time.zone.now) do
-            Jobs.expects(:enqueue_at).with(7.days.from_now, :close_topic, all_of( has_key(:topic_id), has_key(:user_id) ))
-            Fabricate(:topic, auto_close_days: 7, user: Fabricate(:admin))
+            Jobs.expects(:enqueue_at).with(7.hours.from_now, :close_topic, all_of( has_key(:topic_id), has_key(:user_id) ))
+            Fabricate(:topic, auto_close_hours: 7, user: Fabricate(:admin))
           end
         end
 
@@ -942,7 +944,7 @@ describe Topic do
           Jobs.expects(:enqueue_at).with do |datetime, job_name, job_args|
             job_args[:user_id] == topic_creator.id
           end
-          Fabricate(:topic, auto_close_days: 7, user: topic_creator)
+          Fabricate(:topic, auto_close_hours: 7, user: topic_creator)
         end
 
         it 'when auto_close_user_id is set, it will use it as the topic closer' do
@@ -951,19 +953,19 @@ describe Topic do
           Jobs.expects(:enqueue_at).with do |datetime, job_name, job_args|
             job_args[:user_id] == topic_closer.id
           end
-          Fabricate(:topic, auto_close_days: 7, auto_close_user: topic_closer, user: topic_creator)
+          Fabricate(:topic, auto_close_hours: 7, auto_close_user: topic_closer, user: topic_creator)
         end
 
         it "ignores the category's default auto-close" do
           Timecop.freeze(Time.zone.now) do
-            Jobs.expects(:enqueue_at).with(7.days.from_now, :close_topic, all_of( has_key(:topic_id), has_key(:user_id) ))
-            Fabricate(:topic, auto_close_days: 7, user: Fabricate(:admin), category_id: Fabricate(:category, auto_close_days: 2).id)
+            Jobs.expects(:enqueue_at).with(7.hours.from_now, :close_topic, all_of( has_key(:topic_id), has_key(:user_id) ))
+            Fabricate(:topic, auto_close_hours: 7, user: Fabricate(:admin), category_id: Fabricate(:category, auto_close_hours: 2).id)
           end
         end
 
         it 'sets the time when auto_close timer starts' do
           Timecop.freeze(Time.zone.now) do
-            topic = Fabricate(:topic, auto_close_days: 7, user: Fabricate(:admin))
+            topic = Fabricate(:topic, auto_close_hours: 7, user: Fabricate(:admin))
             expect(topic.auto_close_started_at).to eq(Time.zone.now)
           end
         end
@@ -1048,26 +1050,95 @@ describe Topic do
         Timecop.freeze(Time.zone.now) do
           mod = Fabricate(:moderator)
           # NOTE, only moderators can auto-close, if missing system user is used
-          topic = Fabricate(:topic, category: Fabricate(:category, auto_close_days: 14), user: mod)
+          topic = Fabricate(:topic, category: Fabricate(:category, auto_close_hours: 14), user: mod)
           Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
           topic.auto_close_at = 12.hours.from_now
-          topic.save.should be_true
+          topic.save
+
+          topic.reload
+          topic.closed.should == false
+
+          Timecop.freeze(24.hours.from_now) do
+            Topic.auto_close
+            topic.reload
+            topic.closed.should == true
+          end
+
         end
       end
     end
   end
 
+  describe "auto_close_hours=" do
+    subject(:topic) { Fabricate.build(:topic) }
+
+    it 'can take a number' do
+      Timecop.freeze(Time.zone.now) do
+        topic.auto_close_hours = 2
+        topic.auto_close_at.should be_within_one_second_of(2.hours.from_now)
+      end
+    end
+
+    it 'can take nil' do
+      topic.auto_close_hours = nil
+      topic.auto_close_at.should be_nil
+    end
+  end
+
   describe 'set_auto_close' do
     let(:topic)         { Fabricate.build(:topic) }
-    let(:closing_topic) { Fabricate.build(:topic, auto_close_days: 5) }
+    let(:closing_topic) { Fabricate.build(:topic, auto_close_hours: 5) }
     let(:admin)         { Fabricate.build(:user, id: 123) }
 
     before { Discourse.stubs(:system_user).returns(admin) }
 
-    it 'sets auto_close_at' do
+    it 'can take a number of hours as an integer' do
       Timecop.freeze(Time.zone.now) do
-        topic.set_auto_close(3, admin)
+        topic.set_auto_close(72, admin)
         expect(topic.auto_close_at).to eq(3.days.from_now)
+      end
+    end
+
+    it 'can take a number of hours as a string' do
+      Timecop.freeze(Time.zone.now) do
+        topic.set_auto_close('18', admin)
+        expect(topic.auto_close_at).to eq(18.hours.from_now)
+      end
+    end
+
+    it "can take a time later in the day" do
+      Timecop.freeze(Time.zone.local(2013,11,20,8,0)) do
+        topic.set_auto_close('13:00', admin)
+        topic.auto_close_at.should == Time.zone.local(2013,11,20,13,0)
+      end
+    end
+
+    it "can take a time for the next day" do
+      Timecop.freeze(Time.zone.local(2013,11,20,8,0)) do
+        topic.set_auto_close('5:00', admin)
+        topic.auto_close_at.should == Time.zone.local(2013,11,21,5,0)
+      end
+    end
+
+    it "can take a timestamp for a future time" do
+      Timecop.freeze(Time.zone.local(2013,11,20,8,0)) do
+        topic.set_auto_close('2013-11-22 5:00', admin)
+        topic.auto_close_at.should == Time.zone.local(2013,11,22,5,0)
+      end
+    end
+
+    it "sets a validation error when given a timestamp in the past" do
+      Timecop.freeze(Time.zone.local(2013,11,20,8,0)) do
+        topic.set_auto_close('2013-11-19 5:00', admin)
+        topic.auto_close_at.should == Time.zone.local(2013,11,19,5,0)
+        topic.errors[:auto_close_at].should be_present
+      end
+    end
+
+    it "can take a timestamp with timezone" do
+      Timecop.freeze(Time.utc(2013,11,20,12,0)) do
+        topic.set_auto_close('2013-11-25T01:35:00-08:00', admin)
+        topic.auto_close_at.should == Time.utc(2013,11,25,9,35)
       end
     end
 
@@ -1092,20 +1163,20 @@ describe Topic do
       expect(staff_topic.auto_close_user_id).to eq(999)
     end
 
-    it 'clears auto_close_at if num_days is nil' do
+    it 'clears auto_close_at if arg is nil' do
       closing_topic.set_auto_close(nil)
       expect(closing_topic.auto_close_at).to be_nil
     end
 
-    it 'clears auto_close_started_at if num_days is nil' do
+    it 'clears auto_close_started_at if arg is nil' do
       closing_topic.set_auto_close(nil)
       expect(closing_topic.auto_close_started_at).to be_nil
     end
 
     it 'updates auto_close_at if it was already set to close' do
       Timecop.freeze(Time.zone.now) do
-        closing_topic.set_auto_close(14)
-        expect(closing_topic.auto_close_at).to eq(14.days.from_now)
+        closing_topic.set_auto_close(48)
+        expect(closing_topic.auto_close_at).to eq(2.days.from_now)
       end
     end
 
@@ -1246,5 +1317,12 @@ describe Topic do
       end
     end
 
+  end
+
+  describe "calculate_avg_time" do
+    it "does not explode" do
+      Topic.calculate_avg_time
+      Topic.calculate_avg_time(1.day.ago)
+    end
   end
 end

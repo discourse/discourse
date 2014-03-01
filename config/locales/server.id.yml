@@ -76,7 +76,7 @@ id:
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
 
   category:
-    topic_prefix: "Category definition for %{category}"
+    topic_prefix: "About the %{category} category"
     replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters.]"
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
 
@@ -321,11 +321,10 @@ id:
     logo_small_url: "The small logo for your site used when scrolling down on topics eg: http://example.com/logo-small.png"
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
     notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
-    use_ssl: "Should the site be accessible via SSL? (NOT IMPLEMENTED, EXPERIMENTAL)"
-    best_of_score_threshold: "The minimum score of a post to be included in the 'best of'"
-    best_of_posts_required: "Minimum posts in a topic before 'best of' mode is enabled"
-    best_of_likes_required: "Minimum likes in a topic before the 'best of' mode will be enabled"
-    best_of_percent_filter: "When a user clicks best of, show the top % of posts"
+    summary_score_threshold: "The minimum score of a post to be included in the 'summary'"
+    summary_posts_required: "Minimum posts in a topic before 'summary' mode is enabled"
+    summary_likes_required: "Minimum likes in a topic before the 'summary' mode will be enabled"
+    summary_percent_filter: "When a user clicks summary, show the top % of posts"
     enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
 
     enable_long_polling: "Message bus used for notification can use long polling"
@@ -343,7 +342,7 @@ id:
     post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
     must_approve_users: "Admins must approve all users before they gain access"
     ga_tracking_code: "Google analytics tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics are loaded by default on the topics list page"
@@ -377,9 +376,7 @@ id:
     github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
 
-    enable_persona_logins: "Enable email-based authentication with Mozilla Persona"
-
-    allow_import: "Allow import, which can replace ALL site data; leave false unless you plan to do data imports"
+    allow_restore: "Allow import, which can replace ALL site data; leave false unless you plan to do data imports"
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
@@ -393,7 +390,7 @@ id:
     max_flags_per_day: "Maximum number of flags per user per day"
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
     max_edits_per_day: "Maximum number of edits per user per day"
-    max_favorites_per_day: "Maximum number of topics that can be favorited per user per day"
+    max_stars_per_day: "Maximum number of topics that can be starred per user per day"
     max_topics_per_day: "Maximum number of topics a user can create per day"
     max_private_messages_per_day: "The maximum amount of private messages users can create per day"
 
@@ -457,7 +454,7 @@ id:
     mentions: "Mentions"
     quotes: "Quotes"
     edits: "Edits"
-    favorites: "Favorites"
+    starred: "Favorites"
     sent_items: "Sent Items"
     inbox: "Inbox"
 
@@ -468,7 +465,7 @@ id:
     responded_to: "replied to"
     mentioned: "mentioned"
     quoted: "quoted"
-    favorited: "favorited"
+    starred: "favorited"
     edited: "edited"
 
   move_posts:
@@ -552,7 +549,7 @@ id:
 
       [0]: %{base_url}
       [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/SuperTool.aspx
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
       [3]: http://www.dkim.org/
       [4]: http://whatismyipaddress.com/blacklist-check
       [5]: %{base_url}/unsubscribe

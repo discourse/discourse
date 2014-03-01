@@ -126,7 +126,12 @@ Discourse.Composer = Discourse.Model.extend({
     // reply is always required
     if (this.get('missingReplyCharacters') > 0) return true;
 
-    if (this.get('canCategorize') && !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('categoryId')) return true;
+    if (this.get('canCategorize') &&
+        !Discourse.SiteSettings.allow_uncategorized_topics &&
+        !this.get('categoryId') &&
+        !Discourse.User.currentProp('staff')) {
+      return true;
+    }
 
     return false;
   }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
@@ -361,6 +366,11 @@ Discourse.Composer = Discourse.Model.extend({
           loading: false
         });
       });
+    } else if (opts.action === REPLY && opts.quote) {
+      this.setProperties({
+        reply: opts.quote,
+        originalText: opts.quote
+      });
     }
     if (opts.title) { this.set('title', opts.title); }
     this.set('originalText', opts.draft ? '' : this.get('reply'));
@@ -384,7 +394,8 @@ Discourse.Composer = Discourse.Model.extend({
       originalText: null,
       reply: null,
       post: null,
-      title: null
+      title: null,
+      editReason: null
     });
   },
 
@@ -407,13 +418,15 @@ Discourse.Composer = Discourse.Model.extend({
 
     post.setProperties({
       raw: this.get('reply'),
+      editReason: opts.editReason,
       imageSizes: opts.imageSizes,
       cooked: $('#wmd-preview').html()
     });
     this.set('composeState', CLOSED);
 
     return Ember.Deferred.promise(function(promise) {
-      post.save(function(savedPost) {
+      post.save(function(result) {
+        post.updateFromPost(result);
         composer.clearState();
       }, function(error) {
         var response = $.parseJSON(error.responseText);
@@ -436,7 +449,6 @@ Discourse.Composer = Discourse.Model.extend({
         postStream = this.get('topic.postStream'),
         addedToStream = false;
 
-
     // Build the post object
     var createdPost = Discourse.Post.create({
       raw: this.get('reply'),
@@ -458,7 +470,7 @@ Discourse.Composer = Discourse.Model.extend({
       moderator: currentUser.get('moderator'),
       yours: true,
       newPost: true,
-      auto_close_days: this.get('auto_close_days')
+      auto_close_time: Discourse.Utilities.timestampFromAutocloseString(this.get('auto_close_time'))
     });
 
     // If we're in a topic, we can append the post instantly.
@@ -480,8 +492,7 @@ Discourse.Composer = Discourse.Model.extend({
 
       composer.set('composeState', SAVING);
       createdPost.save(function(result) {
-        var addedPost = false,
-            saving = true;
+        var saving = true;
 
         createdPost.updateFromJson(result);
 

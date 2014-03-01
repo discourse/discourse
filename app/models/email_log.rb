@@ -6,17 +6,25 @@ class EmailLog < ActiveRecord::Base
   belongs_to :post
   belongs_to :topic
 
+  scope :sent,    -> { where(skipped: false) }
+  scope :skipped, -> { where(skipped: true) }
+
   after_create do
-    # Update last_emailed_at if the user_id is present
-    User.where(id: user_id).update_all("last_emailed_at = CURRENT_TIMESTAMP") if user_id.present?
+    # Update last_emailed_at if the user_id is present and email was sent
+    User.where(id: user_id).update_all("last_emailed_at = CURRENT_TIMESTAMP") if user_id.present? and !skipped
   end
 
   def self.count_per_day(sinceDaysAgo = 30)
-    where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
+    where('created_at > ? and skipped = false', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
   end
 
   def self.for(reply_key)
     EmailLog.where(reply_key: reply_key).first
+  end
+
+  def self.last_sent_email_address
+    where(email_type: 'signup').order('created_at DESC')
+                               .first.try(:to_address)
   end
 
 end

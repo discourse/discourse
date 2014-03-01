@@ -8,15 +8,11 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.LoadMore = Em.Mixin.create(Discourse.Scrolling, {
+Discourse.LoadMore = Em.Mixin.create(Ember.ViewTargetActionSupport, Discourse.Scrolling, {
 
-  scrolled: function(e) {
+  scrolled: function() {
     var eyeline = this.get('eyeline');
     if (eyeline) { eyeline.update(); }
-  },
-
-  loadMore: function() {
-    console.error('loadMore() not defined');
   },
 
   didInsertElement: function() {
@@ -24,9 +20,9 @@ Discourse.LoadMore = Em.Mixin.create(Discourse.Scrolling, {
     var eyeline = new Discourse.Eyeline(this.get('eyelineSelector'));
     this.set('eyeline', eyeline);
 
-    var paginatedTopicListView = this;
+    var self = this;
     eyeline.on('sawBottom', function() {
-      paginatedTopicListView.loadMore();
+      self.send('loadMore');
     });
     this.bindScrolling();
   },

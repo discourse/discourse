@@ -36,25 +36,25 @@ Discourse.Category = Discourse.Model.extend({
   }.property('name'),
 
   unreadUrl: function() {
-    return this.get('url') + '/unread';
+    return this.get('url') + '/l/unread';
   }.property('url'),
 
   newUrl: function() {
-    return this.get('url') + '/new';
+    return this.get('url') + '/l/new';
   }.property('url'),
 
   style: function() {
-    return "background-color: #" + (this.get('category.color')) + "; color: #" + (this.get('category.text_color')) + ";";
+    return "background-color: #" + this.get('category.color') + "; color: #" + this.get('category.text_color') + ";";
   }.property('color', 'text_color'),
 
   moreTopics: function() {
     return this.get('topic_count') > Discourse.SiteSettings.category_featured_topics;
   }.property('topic_count'),
 
-  save: function(args) {
+  save: function() {
     var url = "/categories";
     if (this.get('id')) {
-      url = "/categories/" + (this.get('id'));
+      url = "/categories/" + this.get('id');
     }
 
     return Discourse.ajax(url, {
@@ -62,10 +62,9 @@ Discourse.Category = Discourse.Model.extend({
         name: this.get('name'),
         color: this.get('color'),
         text_color: this.get('text_color'),
-        hotness: this.get('hotness'),
         secure: this.get('secure'),
         permissions: this.get('permissionsForUpdate'),
-        auto_close_days: this.get('auto_close_days'),
+        auto_close_hours: this.get('auto_close_hours'),
         position: this.get('position'),
         parent_category_id: this.get('parent_category_id')
       },
@@ -81,7 +80,7 @@ Discourse.Category = Discourse.Model.extend({
     return rval;
   }.property("permissions"),
 
-  destroy: function(callback) {
+  destroy: function() {
     return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
   },
 
@@ -111,17 +110,68 @@ Discourse.Category = Discourse.Model.extend({
   }.property(),
 
   latestTopic: function(){
-    return this.get("topics")[0];
+    var topics = this.get('topics');
+    if (topics && topics.length) {
+      return topics[0];
+    }
   }.property("topics"),
 
+  featuredTopics: function() {
+    var topics = this.get('topics');
+    if (topics && topics.length) {
+      return topics.slice(0, Discourse.SiteSettings.category_featured_topics || 2);
+    }
+  }.property('topics'),
+
+  topicTrackingState: function(){
+    return Discourse.TopicTrackingState.current();
+  }.property(),
+
   unreadTopics: function(){
-    return Discourse.TopicTrackingState.current().countUnread(this.get('name'));
-  }.property('Discourse.TopicTrackingState.current.messageCount'),
+    return this.get('topicTrackingState').countUnread(this.get('name'));
+  }.property('topicTrackingState.messageCount'),
 
   newTopics: function(){
-    return Discourse.TopicTrackingState.current().countNew(this.get('name'));
-  }.property('Discourse.TopicTrackingState.current.messageCount')
+    return this.get('topicTrackingState').countNew(this.get('name'));
+  }.property('topicTrackingState.messageCount'),
 
+  topicStatsTitle: function() {
+    var string = I18n.t('categories.topic_stats');
+    _.each(this.get('topicCountStats'), function(stat) {
+      string += ' ' + I18n.t('categories.topic_stat_sentence', {count: stat.value, unit: stat.unit});
+    }, this);
+    return string;
+  }.property('post_count'),
+
+  postStatsTitle: function() {
+    var string = I18n.t('categories.post_stats');
+    _.each(this.get('postCountStats'), function(stat) {
+      string += ' ' + I18n.t('categories.post_stat_sentence', {count: stat.value, unit: stat.unit});
+    }, this);
+    return string;
+  }.property('post_count'),
+
+  topicCountStats: function() {
+    return this.countStats('topics');
+  }.property('posts_year', 'posts_month', 'posts_week', 'posts_day'),
+
+  postCountStats: function() {
+    return this.countStats('posts');
+  }.property('posts_year', 'posts_month', 'posts_week', 'posts_day'),
+
+  countStats: function(prefix) {
+    var stats = [], val;
+    _.each(['day', 'week', 'month', 'year'], function(unit) {
+      val = this.get(prefix + '_' + unit);
+      if (val > 0) stats.pushObject({value: val, unit: I18n.t(unit)});
+      if (stats.length === 2) return false;
+    }, this);
+    return stats;
+  },
+
+  isUncategorizedCategory: function() {
+    return this.get('id') === Discourse.Site.currentProp("uncategorized_category_id");
+  }.property('id')
 });
 
 Discourse.Category.reopenClass({
@@ -144,13 +194,29 @@ Discourse.Category.reopenClass({
   },
 
   list: function() {
-    return Discourse.Site.currentProp('categories');
+    return Discourse.Site.currentProp('sortedCategories');
   },
 
   findSingleBySlug: function(slug) {
     return Discourse.Category.list().find(function(c) {
       return Discourse.Category.slugFor(c) === slug;
     });
+  },
+
+  // TODO: optimise, slow for no real reason
+  findById: function(id){
+    return Discourse.Category.list().findBy('id', id);
+  },
+
+  findByIds: function(ids){
+    var categories = [];
+    _.each(ids, function(id){
+      var found = Discourse.Category.findById(id);
+      if(found){
+        categories.push(found);
+      }
+    });
+    return categories;
   },
 
   findBySlug: function(slug, parentSlug) {
@@ -161,6 +227,8 @@ Discourse.Category.reopenClass({
     if (parentSlug) {
       var parentCategory = Discourse.Category.findSingleBySlug(parentSlug);
       if (parentCategory) {
+        if (slug === 'none') { return parentCategory; }
+
         category = categories.find(function(item) {
           return item && item.get('parentCategory') === parentCategory && Discourse.Category.slugFor(item) === (parentSlug + "/" + slug);
         });

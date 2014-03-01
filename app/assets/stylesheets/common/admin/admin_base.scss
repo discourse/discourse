@@ -4,24 +4,26 @@
 @import "common/foundation/helpers";
 
 
-
-
 .admin-contents table {
-width: 100%;
-tr {text-align: left;}
-td, th {padding: 8px;}
-th {border-top: 1px solid #ddd;}
-td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
+  width: 100%;
+  tr {text-align: left;}
+  td, th {padding: 8px;}
+  th {border-top: 1px solid $primary_border_color;}
+  td {border-bottom: 1px solid $primary_border_color; border-top: 1px solid $primary_border_color;}
+  td:last-of-type {border-bottom: none;}
+  tr:hover { background-color: darken($primary_background_color, 2.5%); }
+  tr.selected { background-color: lighten($tertiary_background_color, 58%); }
+  .filters input { margin-bottom: 0px; }
 }
 
 .content-list li a span.count {
   font-size: 12px;
   float: right;
   margin-right: 10px;
-  background-color: #eee;
+  background-color: lighten($secondary_background_color, 76%);
   padding: 2px 5px;
   border-radius: 5px;
-  color: #555;
+  color: $secondary_text_color;
 }
 
 .admin-content {
@@ -30,7 +32,10 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
     padding: 8px;
 
     p {
-      margin-left: 6px;
+    }
+
+    .ace-wrapper {
+      height: 400px;
     }
   }
 
@@ -50,11 +55,11 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
 
       .bar {
         margin-top: 5px;
-        background-color: $blue;
+        background-color: $emphasis_background_color;
         display: inline-block;
         text-align: right;
         padding-right: 8px;
-        color: $white;
+        color: $tertiary_text_color;
       }
     }
   }
@@ -63,13 +68,13 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
 .admin-loading {
   width: 100px;
   margin: 0 auto 30px auto;
-  background-color: $black;
+  background-color: $secondary_background_color;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
   font-size: 15px;
   line-height: 23px;
   text-align: center;
-  color: $white;
+  color: $tertiary_text_color;
   background: {
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
@@ -78,20 +83,21 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
   };
 }
 
+.admin-container {
+  margin-top: 20px;
+}
+
 .admin-controls {
-  @include border-radius-all(5px);
-  background-color: darken($white, 5%);
-  border: 1px solid darken($white, 10%);
+  background-color: darken($primary_background_color, 5%);
   padding: 10px 10px 3px 0px;
-  margin-bottom: 20px;
   height: 35px;
   .nav.nav-pills {
     li.active {
       a {
-        border-color: darken($dark_gray, 10%);
-        background-color: $dark_gray;
+        border-color: darken($primary_border_color, 10%);
+        background-color: $tertiary_background_color;
         &:hover {
-          background-color: $dark_gray;
+          background-color: $tertiary_background_color;
         }
       }
     }
@@ -99,14 +105,14 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
   h1 {
     font-size: 20px;
     line-height: 25px;
-    color: $darkish_gray;
+    color: $secondary_text_color;
   }
   .controls {
     margin-left: 10px;
   }
   button {
     margin-right: 5px;
-    margin-left: 5px;
+    
   }
   input[type=text] {
     display: inline-block;
@@ -143,12 +149,58 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
   }
 }
 
+.site-settings-nav {
+  width: 200px;
+  margin-top: 30px;
+  .nav-stacked {
+    border-right: none;
+  }
+  li a.active {
+    color: $tertiary_text_color;
+    background-color: $nav-stacked-background-color-active;
+  }
+}
+
+.site-settings-detail {
+  width: 850px;
+  @include medium-width { width: 740px; }
+  @include small-width  { width: 700px; }
+  min-height: 800px;
+  margin-left: 0;
+  border-left: solid 1px lighten($nav-stacked-border-color, 5%);
+  padding: 30px 0 30px 30px;
+}
+
 .settings {
   .setting {
     padding-bottom: 20px;
+
+    .setting-label {
+      float: left;
+      width: 196px;
+      @include medium-width { width: 176px; }
+      @include small-width  { width: 166px; }
+      margin-right: 12px;
+    }
+    .setting-value {
+      float: left;
+      width: 450px;
+      @include medium-width { width: 360px; }
+      @include small-width  { width: 330px; }
+    }
+    .setting-controls {
+      float: left;
+      width: 144px;
+    }
+    .input-setting-string {
+      width: 404px;
+      @include medium-width { width: 314px; }
+      @include small-width  { width: 284px; }
+    }
+
     .desc {
       padding-top: 3px;
-      color: darken($white, 40%);
+      color: darken($secondary_text_color, 40%);
     }
 
     h3 {
@@ -159,11 +211,11 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
 
   .setting.overridden {
     input[type=text] {
-      background-color: lighten($yellow, 40%);
+      background-color: lighten($highlight_background_color, 40%);
     }
 
     h3 {
-      color: darken($yellow, 20%);
+      color: darken($highlight_text_color, 30%);
     }
   }
 }
@@ -171,40 +223,33 @@ td {border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;}
 section.details {
   h1 {
     font-size: 15px;
-    background-color: $gray;
-    color: $white;
+    background-color: lighten($secondary_background_color, 50%);
+    color: $tertiary_text_color;
     padding: 0 10px;
     margin: 0px 0 5px 0;
   }
 }
 
 #selected-controls {
-  background-color: lighten($blue, 50%);
+  background-color: lighten($emphasis_background_color, 50%);
   padding: 8px;
   min-height: 27px;
   position: fixed;
   bottom: 0;
   width: 1075px;
-  border: 1px solid lighten($blue, 45%);
-}
-
-table {
-  tr.selected {
-    background-color: lighten($blue, 58%);
-  }
+  border: 1px solid lighten($emphasis_border_color, 45%);
 }
 
 .display-row {
-  height: 30px;
   line-height: 30px;
   padding: 5px;
   &:nth-of-type(1) {
     border-top: 0;
   }
   &.highlight-danger {
-    background-color: #ffe5e5;
+    background-color: $warning_background_color;
   }
-  border-top: 1px solid #dddddd;
+  border-top: 1px solid $primary_border_color;
   &:before, &:after {
     display: table;
     content: "";
@@ -235,6 +280,9 @@ table {
   }
 
   .controls {
+    width: 600px;
+    float: left;
+    margin-left: 12px;
     .btn {
       margin-right: 5px;
     }
@@ -258,7 +306,7 @@ table {
       margin-top: 5px;
     }
     .preview-link {
-      margin-left: 30px;
+      margin-left: 15px;
     }
     padding-left: 10px;
     width: 65%;
@@ -283,7 +331,7 @@ table {
       float: right;
       margin-top: 7px;
       span {
-        margin-right: 20px;
+        margin-right: 10px;
       }
     }
     .buttons {
@@ -293,7 +341,7 @@ table {
         padding: 5px 0 0 0;
         margin-left: 10px;
         width: 80px;
-        color: $dark_gray;
+        color: $secondary_text_color;
       }
     }
   }
@@ -303,20 +351,20 @@ table {
 .admin-flags {
 
   tr.hidden-post td.excerpt { opacity: 0.4;  }
-  tr.deleted td.excerpt { opacity: 0.8; background-color: #ffcece; }
+  tr.deleted td.excerpt { opacity: 0.8; background-color: $warning_background_color; }
   td.message {
-    padding: 4px 0;
-    background-color: #f8f8e0;
+    padding: 4px 8px;
+    background-color: $highlight_background_color;
   }
   td { vertical-align: top; }
   th { text-align: left; }
-  .user { width: 40px; }
+  .user { width: 40px; padding-top: 12px; }
   .excerpt {
     max-width: 740px;
     width: 740px;
-    padding: 0 10px 10px 0;
+    padding: 8px;
     word-wrap: break-word;
-    .icon,h3 { display: inline-block; }
+    .fa,h3 { display: inline-block; }
 
   }
   .flaggers {
@@ -370,7 +418,7 @@ table {
     width: 20px;
   }
 
-  .version-notes .icon {
+  .version-notes .fa {
     vertical-align: bottom;
   }
 
@@ -381,23 +429,23 @@ table {
     display: none;
   }
 
-  .icon {
+  .fa {
     font-size: 26px;
   }
 
   .up-to-date {
-    color: green;
+    color: $success_text_color;
   }
   .updates-available {
-    color: #FF9500;
+    color: $warning_text_color;
   }
   .critical-updates-available {
-    color: red;
+    color: $warning_text_color;
   }
 }
 
 .update-nag {
-  i.icon {
+  i.fa {
     font-size: 20px;
   }
 }
@@ -434,25 +482,25 @@ table.api-keys {
     width: 100%;
 
     .title {
-      i.icon {
-        color: #444;
+      i.fa {
+        color: $primary_text_color;
       }
     }
 
     th {
       font-weight: normal;
       text-align: center;
-      background-color: #e4e4e4;
+      background-color: lighten($secondary_background_color, 76%);
     }
     th.title {
       text-align: left;
     }
     thead {
       tr:hover > td {
-        background-color: $white;
+        background-color: $primary_background_color;
       }
       tr:hover > th {
-        background-color: #e4e4e4;
+        background-color: lighten($secondary_background_color, 60%);
       }
     }
 
@@ -465,13 +513,13 @@ table.api-keys {
       }
 
       &.trending-up {
-        color: green;
+        color: $success_text_color;
         i.up {
           display: inline;
         }
       }
       &.trending-down {
-        color: red;
+        color: $warning_text_color;
         i.down {
           display: inline;
         }
@@ -487,20 +535,20 @@ table.api-keys {
 
   &.detected-problems {
     @include border-radius-all(5px);
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: lighten($secondary_background_color, 76%);
+    border: 1px solid $primary_border_color;
     margin-bottom: 20px;
     margin-top: 10px;
-    box-shadow: inset 0 0 10px #bbb;
+    box-shadow: inset 0 0 10px rgba($primary_border_color, .4);
 
     .look-here {
       float: left;
       margin: 20px 20px 0 20px;
 
-      .icon {
+      .fa {
         font-size: 32px;
         vertical-align: middle;
-        color: $darkish_gray;
+        color: $secondary_text_color
       }
     }
 
@@ -513,8 +561,11 @@ table.api-keys {
       .actions {
         text-align: right;
       }
+      .btn {
+        background-color: lighten($secondary_background_color, 60%);
     }
   }
+}
 
   &.totals {
     table {
@@ -549,7 +600,7 @@ table.api-keys {
 
 
 .commits-widget {
-  border: solid 1px #ccc;
+  border: solid 1px $primary_border_color;
   width: 500px;
   height: 180px;
   margin-bottom: 36px;
@@ -569,7 +620,7 @@ table.api-keys {
     list-style: none;
   }
   a {
-    color: #222;
+    color: $primary_text_color;
     text-decoration: none;
   }
   a:hover {
@@ -577,11 +628,11 @@ table.api-keys {
   }
 
   .header {
-    color: #222;
+    color: $primary_text_color;
     font-weight: bold;
     height: 30px;
-    border-bottom: solid 1px #ccc;
-    @include linear-gradient(#f1f1f1, #e1e1e1);
+    border-bottom: solid 1px $primary_border_color;
+    background-color: lighten($secondary_background_color, 60%);
     cursor: pointer;
 
     h1 {
@@ -604,9 +655,8 @@ table.api-keys {
       @extend .clearfix;
       line-height: 1.0em;
       padding: 6px 8px;
-      border-bottom: solid 1px #ccc;
-      @include linear-gradient(#f6f6f6, #eee);
-
+      border-bottom: solid 1px $primary_border_color;
+    background-color: lighten($secondary_background_color, 76%);
       .left {
         float: left;
       }
@@ -616,25 +666,25 @@ table.api-keys {
 
       img {
         margin-top: 2px;
-        border: solid 1px #ccc;
+        border: solid 1px $primary_border_color;
         padding: 2px;
-        background-color: white;
+        background-color: $primary_background_color;
       }
 
       .commit-message {
-        color: #222;
+        color: $primary_text_color;
         font-size: 12px;
         font-weight: bold;
       }
 
       .commit-meta {
-        color: #555;
+        color: $secondary_text_color;
         font-size: 12px;
       }
 
       .committer-name {
         font-weight: bold;
-        color: #333;
+        color: $primary_text_color;
       }
     }
     li:last-child {
@@ -647,18 +697,18 @@ table.api-keys {
     width: 6px;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: #d1d1d1;
+    background-color: lighten($secondary_background_color, 60%);
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
-    border-left: solid 1px #ddd;
+    border-left: solid 1px $primary_border_color;
   }
 }
 
 .content-list {
 
   h3 {
-    color: $darkish_gray;
+    color: $primary_text_color;
     font-size: 15px;
     padding-left: 5px;
   }
@@ -668,22 +718,22 @@ table.api-keys {
     margin: 0;
 
     li {
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid $primary_border_color;
     }
 
     li a {
       display: block;
       padding: 10px;
-      color: $dark_gray;
+      color: $primary_text_color;
 
       &:hover {
         background-color: #eee;
-        color: $dark_gray;
+        color: $primary_text_color;
       }
 
       &.active {
         font-weight: bold;
-        color: $black;
+        color: $primary_text_color;
       }
     }
   }
@@ -699,7 +749,7 @@ table.api-keys {
   margin-left: 20px;
 
   p.description {
-    color: $dark_gray;
+    color: $secondary_text_color;
   }
 
   .controls {
@@ -752,7 +802,7 @@ table.api-keys {
   }
   .btn {
     padding: 2px 8px;
-    .icon {
+    .fa {
       margin-right: 2px;
     }
   }
@@ -834,13 +884,16 @@ table.api-keys {
   margin: 0 0 20px 6px;
   a.filter {
     display: inline-block;
-    background-color: #ddd;
+    background-color: lighten($secondary_background_color, 60%);
     padding: 3px 10px;
     border-radius: 3px;
-    margin-left: 5px;
-    color: #444;
+    
+    color: $primary_text_color;
     &:hover {
-      color: $link-color-hover;
+      color: $primary_text_color;
+      background-color: lighten($secondary_background_color, 76%);
+
+
     }
     .label {
       font-weight: bold;
@@ -867,12 +920,12 @@ table.api-keys {
 }
 
 .staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses {
-  margin-left: 5px;
-  border-bottom: dotted 1px #ddd;
+  
+  border-bottom: dotted 1px $primary_border_color;
 
   .heading-container {
     width: 100%;
-    background-color: #e4e4e4;
+    background-color: lighten($secondary_background_color, 76%);
   }
   .col.heading {
     font-weight: bold;
@@ -886,12 +939,12 @@ table.api-keys {
     overflow-x: hidden;
   }
   .col.first {
-    margin-left: 5px;
+    
   }
 
   .ember-list-item-view {
     width: 100%;
-    border-top: solid 1px #ddd;
+    border-top: solid 1px $primary_border_color;
   }
 }
 
@@ -899,4 +952,57 @@ table.api-keys {
   .modal-tab {
     width: 95%;
   }
+}
+
+.leader-requirements {
+  .fa-check {
+    color: $success_text_color;
+  }
+  .fa-times {
+    color: $warning_text_color;
+  }
+}
+
+// Backups
+// --------------------------------------------------
+
+$rollback: #3D9970;
+$rollback-dark: darken($rollback, 10%) !default;
+$rollback-darker: darken($rollback, 20%) !default;
+
+.btn-rollback {
+  color: $tertiary_text_color;
+  background: $rollback;
+  &:hover {
+    background: $rollback-dark;
+  }
+  &:active {
+    @include linear-gradient($rollback-darker, $rollback-dark);
+  }
+  &[disabled] {
+    background: $rollback;
+  }
+}
+
+.admin-backups-logs {
+  max-height: 500px;
+  overflow: auto;
+}
+
+
+button.ru {
+  position: relative;
+  min-width: 110px;
+}
+
+.ru-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(0, 175, 0, 0.3);
+}
+
+.is-uploading:hover .ru-progress {
+  background: rgba(200, 0, 0, 0.3);
 }

@@ -6,7 +6,7 @@ module Email
   class Receiver
 
     def self.results
-      @results ||= Enum.new(:unprocessable, :missing, :processed)
+      @results ||= Enum.new(:unprocessable, :missing, :processed, :error)
     end
 
     attr_reader :body, :reply_key, :email_log
@@ -46,6 +46,8 @@ module Email
       create_reply
 
       Email::Receiver.results[:processed]
+    rescue
+      Email::Receiver.results[:error]
     end
 
     private
@@ -57,21 +59,34 @@ module Email
       if @message.multipart?
         @message.parts.each do |p|
           if p.content_type =~ /text\/plain/
-            @body = p.body.to_s
+            @body = p.charset ? p.body.decoded.force_encoding(p.charset).encode("UTF-8").to_s : p.body.to_s
             return @body
           elsif p.content_type =~ /text\/html/
-            html = p.body.to_s
+            html = p.charset ? p.body.decoded.force_encoding(p.charset).encode("UTF-8").to_s : p.body.to_s
           end
         end
       end
 
-      html = @message.body.to_s if @message.content_type =~ /text\/html/
+      if @message.content_type =~ /text\/html/
+        if defined? @message.charset
+          html = @message.body.decoded.force_encoding(@message.charset).encode("UTF-8").to_s 
+        else
+          html = @message.body.to_s
+        end
+      end
       if html.present?
         @body = scrub_html(html)
         return @body
       end
 
-      @body = @message.body.to_s.strip
+      @body = @message.charset ? @message.body.decoded.force_encoding(@message.charset).encode("UTF-8").to_s.strip : @message.body.to_s
+
+      # Certain trigger phrases that means we didn't parse correctly
+      @body = nil if @body =~ /Content\-Type\:/ ||
+                     @body =~ /multipart\/alternative/ ||
+                     @body =~ /text\/plain/
+
+      @body
     end
 
     def scrub_html(html)
@@ -87,10 +102,10 @@ module Email
     end
 
     def discourse_email_parser
-      lines = @body.lines.to_a
+      lines = @body.scrub.lines.to_a
       range_end = 0
 
-      email_year = lines.each_with_index do |l, idx|
+      lines.each_with_index do |l, idx|
         break if l =~ /\A\s*\-{3,80}\s*\z/ ||
                  l =~ Regexp.new("\\A\\s*" + I18n.t('user_notifications.previous_discussion') + "\\s*\\Z") ||
                  (l =~ /via #{SiteSetting.title}(.*)\:$/) ||

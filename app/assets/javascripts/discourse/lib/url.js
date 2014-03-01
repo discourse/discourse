@@ -20,7 +20,6 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path The path we are replacing our history state with.
   **/
   replaceState: function(path) {
-
     if (window.history &&
         window.history.pushState &&
         window.history.replaceState &&
@@ -32,7 +31,7 @@ Discourse.URL = Em.Object.createWithMixins({
         // which triggers a replaceState even though the topic hasn't fully loaded yet!
         Em.run.next(function() {
           var location = Discourse.URL.get('router.location');
-          if (location.replaceURL) { location.replaceURL(path); }
+          if (location && location.replaceURL) { location.replaceURL(path); }
         });
     }
   },
@@ -49,15 +48,23 @@ Discourse.URL = Em.Object.createWithMixins({
   **/
   routeTo: function(path) {
 
-    var oldPath = window.location.pathname;
-    path = path.replace(/https?\:\/\/[^\/]+/, '');
+    if(Discourse.get("requiresRefresh")){
+      document.location.href = path;
+      return;
+    }
 
-    // If the URL is absolute, remove rootURL
+    var oldPath = window.location.pathname;
+    path = path.replace(/(https?\:)?\/\/[^\/]+/, '');
+
+    // handle prefixes
     if (path.match(/^\//)) {
       var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
       rootURL = rootURL.replace(/\/$/, '');
       path = path.replace(rootURL, '');
     }
+
+    // Schedule a DOM cleanup event
+    Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
 
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path)) { return; }
@@ -67,11 +74,8 @@ Discourse.URL = Em.Object.createWithMixins({
     if (path.match(/^\/?users\/[^\/]+$/)) {
       path += "/activity";
     }
-    // Be wary of looking up the router. In this case, we have links in our
-    // HTML, say form compiled markdown posts, that need to be routed.
-    var router = this.get('router');
-    router.router.updateURL(path);
-    return router.handleURL(path);
+
+    return this.handleURL(path);
   },
 
   /**
@@ -90,6 +94,23 @@ Discourse.URL = Em.Object.createWithMixins({
   redirectTo: function(url) {
     window.location = Discourse.getURL(url);
   },
+
+  /**
+   * Determines whether a URL is internal or not
+   *
+   * @method isInternal
+   * @param {String} url
+  **/
+  isInternal: function(url) {
+    if (url && url.length) {
+      if (url.indexOf('/') === 0) { return true; }
+      if (url.indexOf(this.origin()) === 0) { return true; }
+      if (url.replace(/^http/, 'https').indexOf(this.origin()) === 0) { return true; }
+      if (url.replace(/^https/, 'http').indexOf(this.origin()) === 0) { return true; }
+    }
+    return false;
+  },
+
 
   /**
     @private
@@ -120,7 +141,6 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToPost: function(oldPath, path) {
-
     var newMatches = this.TOPIC_REGEXP.exec(path),
         newTopicId = newMatches ? newMatches[2] : null;
 
@@ -133,15 +153,22 @@ Discourse.URL = Em.Object.createWithMixins({
         Discourse.URL.replaceState(path);
 
         var topicController = Discourse.__container__.lookup('controller:topic'),
-            opts = {};
+            opts = {},
+            postStream = topicController.get('postStream');
 
         if (newMatches[3]) opts.nearPost = newMatches[3];
-        var postStream = topicController.get('postStream');
+        if (path.match(/last$/)) { opts.nearPost = topicController.get('highest_post_number'); }
+        var closest = opts.nearPost || 1;
+
         postStream.refresh(opts).then(function() {
           topicController.setProperties({
-            currentPost: opts.nearPost || 1,
-            progressPosition: opts.nearPost || 1
+            currentPost: closest,
+            progressPosition: closest,
+            highlightOnInsert: closest,
+            enteredAt: new Date().getTime().toString()
           });
+        }).then(function() {
+          Discourse.TopicView.jumpToPost(closest);
         });
 
         // Abort routing, we have replaced our state.
@@ -162,12 +189,15 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
+    var homepage = Discourse.User.current() ? Discourse.User.currentProp('homepage') : Discourse.Utilities.defaultHomepage();
 
-    var defaultFilter = "/" + Discourse.ListController.filters[0];
-
-    if (path === "/" && (oldPath === "/" || oldPath === defaultFilter)) {
-      // Refresh our list
-      this.controllerFor('list').refresh();
+    if (path === "/" && (oldPath === "/" || oldPath === "/" + homepage)) {
+      // refresh the list
+      switch (homepage) {
+        case "top" :       { this.controllerFor('discoveryTop').send('refresh'); break; }
+        case "categories": { this.controllerFor('discoveryCategories').send('refresh'); break; }
+        default:           { this.controllerFor('discoveryTopics').send('refresh'); break; }
+      }
       return true;
     }
 
@@ -209,7 +239,21 @@ Discourse.URL = Em.Object.createWithMixins({
   **/
   controllerFor: function(name) {
     return Discourse.__container__.lookup('controller:' + name);
-  }
+  },
 
+  /**
+    @private
+
+    Be wary of looking up the router. In this case, we have links in our
+    HTML, say form compiled markdown posts, that need to be routed.
+
+    @method handleURL
+    @param {String} path the url to handle
+  **/
+  handleURL: function(path) {
+    var router = this.get('router');
+    router.router.updateURL(path);
+    return router.handleURL(path);
+  }
 
 });

@@ -18,8 +18,8 @@ it:
   via: "%{username} via %{site_name}"
   is_reserved: "è riservato"
 
-  site_under_maintenance: 'Il sito è momentaneamente in manutenzione.'
-  operation_already_running: "Una %{operation} è in esecuzione. Non è possibile avviare una nuova %{operation} adesso."
+  backup:
+    operation_already_running: "Una %{operation} è in esecuzione. Non è possibile avviare una nuova %{operation} adesso."
 
   too_many_mentions:
     zero: "Spiacente, non puoi menzionare altri utenti."
@@ -319,7 +319,7 @@ it:
       title: "Segnalibri"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi segnalibri"
-    favorites:
+    starred:
       title: "Favoriti"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi favoriti"
@@ -440,11 +440,10 @@ it:
     logo_small_url: "La versione piccola del logo del tuo sito (usata durante lo scroll) es: http://example.com/logo-small.png"
     favicon_url: "La favicon del tuo sito, per informazioni http://en.wikipedia.org/wiki/Favicon"
     notification_email: "L'indirizzo email usato quando vengono inviate email di sistema come la notifica agli utenti di recupero password o nuovo account"
-    use_ssl: "Il sito è accessibile tramite SSL?"
-    best_of_score_threshold: "Il punteggio  minimo di un post per essere inserito nei 'best of'"
-    best_of_posts_required: "Numero di post in un topic prima che la modalità 'best of' venga attivata"
-    best_of_likes_required: "Numero minimo di likes in un topic prima che la modalità 'best of' venga attivata"
-    best_of_percent_filter: "Quando un utente clicca best of, mostra i primi % post"
+    summary_score_threshold: "Il punteggio  minimo di un post per essere inserito nei 'summary'"
+    summary_posts_required: "Numero di post in un topic prima che la modalità 'summary' venga attivata"
+    summary_likes_required: "Numero minimo di likes in un topic prima che la modalità 'summary' venga attivata"
+    summary_percent_filter: "Quando un utente clicca summary, mostra i primi % post"
     enable_private_messages: "Autorizza gli utenti trust level 1 a creare messaggi privati e conversazioni"
 
     enable_long_polling: "Message bus used for notification can use long polling"
@@ -463,7 +462,7 @@ it:
     must_approve_users: "Gli amministratori devono autorizzare ogni utente prima che esso abbia accesso"
     ga_tracking_code: "Codice Google Analytics per il tracking, es: UA-12345678-9; per informazioni http://google.com/analytics"
     ga_domain_name: "Nome del Dominio Google analytics, esempio: miosito.com; see http://google.com/analytics"
-    top_menu: "Determina quali elementi vengono mostrati nella navigazione in homepage, ed in quale ordine. Esempio latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "Determina quali elementi vengono mostrati nella navigazione in homepage, ed in quale ordine. Esempio latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determina quali elementi vengono mostrati nel menù del post, ed in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
     share_links: "Determina quali elementi vengono mostrati nella dialog di condivisione e in quale ordine. Esempio twitter|facebook|google+"
     track_external_right_clicks: "Traccia i link esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché viene fatto il rewrite delle URL"
@@ -499,9 +498,7 @@ it:
     github_client_id: "Client id per autenticazione Github, ottenibile da https://github.com/settings/applications"
     github_client_secret: "Client secret per autenticazione Github, ottenibile da https://github.com/settings/applications"
 
-    enable_persona_logins: "Abilita autenticazione email con Mozilla Persona"
-
-    allow_import: "Abilita l'importazione, che può sostituire TUTTI i dati presenti nel sito; non modificare se non hai intenzione di importare dati"
+    allow_restore: "Abilita l'importazione, che può sostituire TUTTI i dati presenti nel sito; non modificare se non hai intenzione di importare dati"
 
     active_user_rate_limit_secs: "Quanto frequentemente viene aggiornato il campo 'last_seen_at' field, in secondi"
     previous_visit_timeout_hours: "Durata di una visita prima che venga considerata la visita 'precedente', in ore"
@@ -513,7 +510,7 @@ it:
     max_flags_per_day: "Numero massimo di segnalazioni che un utente può fare in un giorno"
     max_bookmarks_per_day: "Numero massimo di segnalibri che un utente può fare in un giorno"
     max_edits_per_day: "Numero massimo di modifiche in un giorno"
-    max_favorites_per_day: "Numero massimo topic preferiti da un utente in un giorno"
+    max_stars_per_day: "Numero massimo topic preferiti da un utente in un giorno"
     max_topics_per_day: "Numero massimo di topic che un utente può creare in un giorno"
     max_private_messages_per_day: "Numero massimo di messaggi privati che un utente può creare in un giorno"
 
@@ -677,7 +674,7 @@ it:
 
       [0]: %{base_url}
       [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/SuperTool.aspx
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
       [3]: http://www.dkim.org/
       [4]: http://whatismyipaddress.com/blacklist-check
       [5]: %{base_url}/unsubscribe

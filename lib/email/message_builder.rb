@@ -69,7 +69,7 @@ module Email
 
     def body
       body = @opts[:body]
-      body = I18n.t("#{@opts[:template]}.text_body_template", template_args) if @opts[:template]
+      body = I18n.t("#{@opts[:template]}.text_body_template", template_args).dup if @opts[:template]
 
       if @opts[:add_unsubscribe_link]
         body << "\n"

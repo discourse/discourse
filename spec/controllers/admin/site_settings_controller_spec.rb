@@ -25,30 +25,34 @@ describe Admin::SiteSettingsController do
 
     context 'update' do
 
-      it 'requires a value parameter' do
-        lambda { xhr :put, :update, id: 'test_setting' }.should raise_error(ActionController::ParameterMissing)
+      before do
+        SiteSetting.setting(:test_setting, "default")
       end
 
       it 'sets the value when the param is present' do
         SiteSetting.expects(:'test_setting=').with('hello').once
-        xhr :put, :update, id: 'test_setting', value: 'hello'
+        xhr :put, :update, id: 'test_setting', test_setting: 'hello'
       end
 
       it 'allows value to be a blank string' do
         SiteSetting.expects(:'test_setting=').with('').once
-        xhr :put, :update, id: 'test_setting', value: ''
+        xhr :put, :update, id: 'test_setting', test_setting: ''
       end
 
       it 'logs the change' do
         SiteSetting.stubs(:test_setting).returns('previous')
         SiteSetting.expects(:'test_setting=').with('hello').once
         StaffActionLogger.any_instance.expects(:log_site_setting_change).with('test_setting', 'previous', 'hello')
-        xhr :put, :update, id: 'test_setting', value: 'hello'
+        xhr :put, :update, id: 'test_setting', test_setting: 'hello'
+      end
+
+      it 'fails when a setting does not exist' do
+        expect {
+          xhr :put, :update, id: 'provider', provider: 'gotcha'
+        }.to raise_error(ArgumentError)
       end
     end
 
   end
-
-
 
 end

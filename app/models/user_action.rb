@@ -97,7 +97,8 @@ SELECT
   coalesce(p.cooked, p2.cooked) cooked,
   CASE WHEN coalesce(p.deleted_at, p2.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
   p.hidden,
-  p.post_type
+  p.post_type,
+  p.edit_reason
 FROM user_actions as a
 JOIN topics t on t.id = a.target_topic_id
 LEFT JOIN posts p on p.id = a.target_post_id
@@ -219,7 +220,7 @@ SQL
     builder.exec
   end
 
-  def self.synchronize_favorites
+  def self.synchronize_starred
     exec_sql("
     DELETE FROM user_actions ua
     WHERE action_type = :star
@@ -247,7 +248,7 @@ SQL
 
   def self.ensure_consistency!
     self.synchronize_target_topic_ids
-    self.synchronize_favorites
+    self.synchronize_starred
   end
 
   protected
@@ -262,8 +263,16 @@ SQL
 
   def self.apply_common_filters(builder,user_id,guardian,ignore_private_messages=false)
 
+    # We never return deleted topics in activity
+    builder.where("t.deleted_at is null")
+
+    # We will return deleted posts though if the user can see it
     unless guardian.can_see_deleted_posts?
-      builder.where("p.deleted_at is null and p2.deleted_at is null and t.deleted_at is null")
+      builder.where("p.deleted_at is null and p2.deleted_at is null")
+
+      current_user_id = -2
+      current_user_id = guardian.user.id if guardian.user
+      builder.where("NOT COALESCE(p.hidden, false) OR p.user_id = :current_user_id", current_user_id: current_user_id )
     end
 
     unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
@@ -274,7 +283,7 @@ SQL
       builder.where("t.archetype != :archetype", archetype: Archetype::private_message)
     end
 
-    unless guardian.is_staff?
+    unless guardian.is_admin?
       allowed = guardian.secure_category_ids
       if allowed.present?
         builder.where("( c.read_restricted IS NULL OR

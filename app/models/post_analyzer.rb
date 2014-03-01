@@ -1,3 +1,5 @@
+require_dependency 'oneboxer'
+
 class PostAnalyzer
 
   def initialize(raw, topic_id)

@@ -29,7 +29,6 @@ Discourse.ApiKey = Discourse.Model.extend({
     @returns {Promise} a promise that resolves when the key has been revoked
   **/
   revoke: function() {
-    var self = this;
     return Discourse.ajax('/admin/api/key', {type: 'DELETE', data: {id: this.get('id')}});
   }
 

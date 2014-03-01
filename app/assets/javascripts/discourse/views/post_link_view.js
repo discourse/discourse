@@ -14,7 +14,7 @@ Discourse.PostLinkView = Discourse.View.extend({
   render: function(buffer) {
     var clicks;
     buffer.push("<a href='" + this.get('content.url') + "' class='track-link'>");
-    buffer.push("<i class='icon icon-arrow-" + this.direction() + "'></i>");
+    buffer.push("<i class='fa fa-arrow-" + this.direction() + "'></i>");
     buffer.push(this.get('content.title'));
     if (clicks = this.get('content.clicks')) {
       buffer.push("<span class='badge badge-notification clicks'>" + clicks + "</span>");

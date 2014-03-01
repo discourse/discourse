@@ -9,6 +9,8 @@ class UserHistory < ActiveRecord::Base
 
   scope :only_staff_actions, ->{ where("action IN (?)", UserHistory.staff_action_ids) }
 
+  before_save :set_admin_only
+
   def self.actions
     @actions ||= Enum.new( :delete_user,
                            :change_trust_level,
@@ -18,7 +20,7 @@ class UserHistory < ActiveRecord::Base
                            :checked_for_custom_avatar,
                            :notified_about_avatar,
                            :notified_about_sequential_replies,
-                           :notitied_about_dominating_topic,
+                           :notified_about_dominating_topic,
                            :suspend_user,
                            :unsuspend_user)
   end
@@ -36,6 +38,10 @@ class UserHistory < ActiveRecord::Base
 
   def self.staff_action_ids
     @staff_action_ids ||= staff_actions.map { |a| actions[a] }
+  end
+
+  def self.admin_only_action_ids
+    @admin_only_action_ids ||= [actions[:change_site_setting]]
   end
 
   def self.with_filters(filters)
@@ -61,6 +67,18 @@ class UserHistory < ActiveRecord::Base
     result = self.where(target_user_id: user.id, action: UserHistory.actions[action_type])
     result = result.where(topic_id: opts[:topic_id]) if opts[:topic_id]
     result.exists?
+  end
+
+  def self.staff_action_records(viewer, opts={})
+    query = self.with_filters(opts.slice(:action_name, :acting_user, :target_user, :subject)).only_staff_actions.limit(200).order('id DESC').includes(:acting_user, :target_user)
+    query = query.where(admin_only: false) unless viewer && viewer.admin?
+    query
+  end
+
+
+  def set_admin_only
+    self.admin_only = UserHistory.admin_only_action_ids.include?(self.action)
+    self
   end
 
   def new_value_is_json?

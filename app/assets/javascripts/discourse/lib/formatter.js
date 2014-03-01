@@ -1,62 +1,111 @@
-/*jshint onecase:true */
-
 Discourse.Formatter = (function(){
 
   var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
       relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
-      shortDate, shortDateNoYear, tinyDateYear, breakUp;
+      shortDate, shortDateNoYear, tinyDateYear, breakUp, relativeAgeTinyShowsYear;
 
-  breakUp = function(string, maxLength){
-    if(string.length <= maxLength) {
-      return string;
-    }
+    /*
+  * memoize.js
+  * by @philogb and @addyosmani
+  * with further optimizations by @mathias
+  * and @DmitryBaranovsk
+  * perf tests: http://bit.ly/q3zpG3
+  * Released under an MIT license.
+  *
+  * modified with cap by Sam
+  */
+  var cappedMemoize = function ( fn, max ) {
+      fn.maxMemoize = max;
+      fn.memoizeLength = 0;
 
-    var firstPart = string.substr(0, maxLength);
-
-    // work backward to split stuff like ABPoop to AB Poop
-    var i;
-    for(i=firstPart.length-1;i>0;i--){
-      if(firstPart[i].match(/[A-Z]/)){
-        break;
-      }
-    }
-
-    // work forwards to split stuff like ab111 to ab 111
-    if(i===0) {
-      for(i=1;i<firstPart.length;i++){
-        if(firstPart[i].match(/[^a-z]/)){
-          break;
-        }
-      }
-    }
-
-    if (i > 0 && i < firstPart.length) {
-      var offset = 0;
-      if(string[i] === "_") {
-        offset = 1;
-      }
-      return string.substr(0, i + offset) + " " + string.substring(i + offset);
-    } else {
-      return firstPart + " " + string.substr(maxLength);
-    }
+      return function () {
+          var args = Array.prototype.slice.call(arguments),
+              hash = "",
+              i = args.length;
+          var currentArg = null;
+          while (i--) {
+              currentArg = args[i];
+              hash += (currentArg === new Object(currentArg)) ?
+              JSON.stringify(currentArg) : currentArg;
+              if(!fn.memoize) {
+                fn.memoize = {};
+              }
+          }
+          if (hash in fn.memoize) {
+            return fn.memoize[hash];
+          } else {
+            fn.memoizeLength++;
+            if(fn.memoizeLength > max) {
+              fn.memoizeLength = 0;
+              fn.memoize = {};
+            }
+            var result = fn.apply(this, args);
+            fn.memoize[hash] = result;
+            return result;
+          }
+      };
   };
 
+  breakUp = function(str, hint){
+    var rval = [];
+    var prev = str[0];
+    var cur;
+    var brk = "<wbr>&#8203;";
+
+    var hintPos = [];
+    if(hint) {
+      hint = hint.toLowerCase().split(/\s+/).reverse();
+      var current = 0;
+      while(hint.length > 0) {
+        var word = hint.pop();
+        if(word !== str.substr(current, word.length).toLowerCase()) {
+          break;
+        }
+        current += word.length;
+        hintPos.push(current);
+      }
+    }
+
+    rval.push(prev);
+    for (var i=1;i<str.length;i++) {
+      cur = str[i];
+      if(prev.match(/[^0-9]/) && cur.match(/[0-9]/)){
+        rval.push(brk);
+      } else if(i>1 && prev.match(/[A-Z]/) && cur.match(/[a-z]/)){
+        rval.pop();
+        rval.push(brk);
+        rval.push(prev);
+      } else if(prev.match(/[^A-Za-z0-9]/) && cur.match(/[a-zA-Z0-9]/)){
+        rval.push(brk);
+      } else if(hintPos.indexOf(i) > -1) {
+        rval.push(brk);
+      }
+
+      rval.push(cur);
+      prev = cur;
+    }
+
+    return rval.join("");
+
+  };
+
+  breakUp = cappedMemoize(breakUp, 100);
+
   shortDate = function(date){
-    return moment(date).shortDate();
+    return moment(date).format(I18n.t("dates.medium.date_year"));
   };
 
   shortDateNoYear = function(date) {
-    return moment(date).shortDateNoYear();
+    return moment(date).format(I18n.t("dates.tiny.date_month"));
   };
 
   tinyDateYear = function(date) {
-    return moment(date).format("D MMM 'YY");
+    return moment(date).format(I18n.t("dates.tiny.date_year"));
   };
 
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
   // TODO: locale support ?
-  toTitleCase = function toTitleCase(str)
-  {
+  toTitleCase = function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
@@ -64,7 +113,6 @@ Discourse.Formatter = (function(){
 
   longDate = function(dt) {
     if (!dt) return;
-
     return moment(dt).longDate();
   };
 
@@ -93,15 +141,21 @@ Discourse.Formatter = (function(){
       options.wrapInSpan = false;
     }
 
+    var relAge = relativeAge(date, options);
+
+    if (format === 'tiny' && relativeAgeTinyShowsYear(relAge)) {
+      append += " with-year";
+    }
+
     if (options.title) {
       append += "' title='" + longDate(date);
     }
 
-    return "<span class='relative-date" + append + "' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relativeAge(date, options)  + "</span>";
+    return "<span class='relative-date" + append + "' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relAge  + "</span>";
   };
 
 
-  relativeAgeTiny = function(date, options){
+  relativeAgeTiny = function(date){
     var format = "tiny";
     var distance = Math.round((new Date() - date) / 1000);
     var distanceInMinutes = Math.round(distance / 60.0);
@@ -146,6 +200,14 @@ Discourse.Formatter = (function(){
     return formatted;
   };
 
+  /*
+   * Returns true if the given tiny date string includes the year.
+   * Useful for checking if the string isn't so tiny.
+   */
+  relativeAgeTinyShowsYear = function(relativeAgeString) {
+    return relativeAgeString.match(/'[\d]{2}$/);
+  };
+
   relativeAgeMediumSpan = function(distance, leaveAgo) {
     var formatted, distanceInMinutes;
 
@@ -176,7 +238,7 @@ Discourse.Formatter = (function(){
   };
 
   relativeAgeMedium = function(date, options){
-    var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo, val;
+    var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo;
     var wrapInSpan = options.wrapInSpan === false ? false : true;
 
     leaveAgo = options.leaveAgo;
@@ -197,7 +259,7 @@ Discourse.Formatter = (function(){
       if ((new Date()).getFullYear() !== date.getFullYear()) {
         displayDate = shortDate(date);
       } else {
-        displayDate = moment(date).shortDateNoYear();
+        displayDate = shortDateNoYear(date);
       }
     } else {
       displayDate = relativeAgeMediumSpan(distance, leaveAgo);
@@ -232,6 +294,7 @@ Discourse.Formatter = (function(){
     updateRelativeAge: updateRelativeAge,
     toTitleCase: toTitleCase,
     shortDate: shortDate,
-    breakUp: breakUp
+    breakUp: breakUp,
+    cappedMemoize: cappedMemoize
   };
 })();

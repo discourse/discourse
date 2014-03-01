@@ -3,49 +3,53 @@
     <div>
       <form>
       <table>
-      <tr>
-          <td style="width:80px"><label for='new-account-name'>{{i18n user.name.title}}</label></td>
+      <tr class="input">
+          <td style="width:80px" class="label"><label for='new-account-name'>{{i18n user.name.title}}</label></td>
           <td style="width:496px">
           {{textField value=accountName id="new-account-name" autofocus="autofocus"}}
           &nbsp;{{inputTip validation=nameValidation}}
           </td>
       </tr>
-      <tr>
+      <tr class="instructions">
         <td></td>
         <td><label>{{i18n user.name.instructions}}</label></td>
       </tr>
 
-      <tr>
-            <td><label for='new-account-email'>{{i18n user.email.title}}</label></td>
+      <tr class="input">
+            <td class="label"><label for='new-account-email'>{{i18n user.email.title}}</label></td>
             <td>
-            {{input value=accountEmail id="new-account-email"}}
+            {{input value=accountEmail id="new-account-email" disabled=emailValidated}}
             &nbsp;{{inputTip validation=emailValidation}}
             </td>
       </tr>
-      <tr>
+      <tr class="instructions">
         <td></td>
         <td><label>{{i18n user.email.instructions}}</label></td>
       </tr>
 
-      <tr>
-            <td><label for='new-account-username'>{{i18n user.username.title}}</label></td>
+      <tr class="input">
+            <td class="label"><label for='new-account-username'>{{i18n user.username.title}}</label></td>
             <td>
             {{input value=accountUsername id="new-account-username" maxlength="15"}}
             &nbsp;{{inputTip validation=usernameValidation}}
             </td>
       </tr>
-      <tr>
+      <tr class="instructions">
         <td></td>
         <td><label>{{i18n user.username.instructions}}</label></td>
       </tr>
 
       {{#if passwordRequired}}
-      <tr>
-          <td><label for='new-account-password'>{{i18n user.password.title}}</label></td>
+      <tr class="input">
+          <td class="label"><label for='new-account-password'>{{i18n user.password.title}}</label></td>
           <td>
           {{input type="password" value=accountPassword id="new-account-password"}}
           &nbsp;{{inputTip validation=passwordValidation}}
           </td>
+      </tr>
+      <tr class="instructions">
+        <td></td>
+        <td><label>{{passwordInstructions}}</label></td>
       </tr>
       {{/if}}
 
@@ -63,6 +67,17 @@
   </div>
 
   <div class="modal-footer">
-    <button class='btn btn-large btn-primary' {{bindAttr disabled="submitDisabled"}} {{action createAccount}}>{{i18n create_account.title}}</button>
+    {{#if tosAcceptRequired}}
+      <div class="tos-agree">
+        {{input type="checkbox" checked=tosAccepted}}
+        {{customHTML "tos_signup_form_message"}}
+      </div>
+    {{/if}}
+    <button class='btn btn-large btn-primary' {{bind-attr disabled="submitDisabled"}} {{action createAccount}}>{{i18n create_account.title}}</button>
+    {{#if formSubmitted}}
+      &nbsp; <i class='fa fa-spinner fa-spin'></i>
+    {{else}}
+      &nbsp; <a {{action showLogin}}>{{i18n cancel}}</a>
+    {{/if}}
   </div>
 {{/unless}}

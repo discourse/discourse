@@ -1,16 +1,52 @@
 require "socket"
 require "csv"
 require "yaml"
+require "optparse"
 
-def run(command)
-  system(command, out: $stdout, err: :out)
+@include_env = false
+@result_file = nil
+@iterations = 500
+@best_of = 1
+@mem_stats = false
+@unicorn = false
+
+opts = OptionParser.new do |o|
+  o.banner = "Usage: ruby bench.rb [options]"
+
+  o.on("-n", "--with_default_env", "Include recommended Discourse env") do
+    @include_env = true
+  end
+  o.on("-o", "--output [FILE]", "Output results to this file") do |f|
+    @result_file = f
+  end
+  o.on("-i", "--iterations [ITERATIONS]", "Number of iterations to run the bench for") do |i|
+    @iterations = i.to_i
+  end
+  o.on("-b", "--best_of [NUM]", "Number of times to run the bench taking best as result") do |i|
+    @best_of = i.to_i
+  end
+  o.on("-m", "--memory_stats") do
+    @mem_stats = true
+  end
+  o.on("-u", "--unicorn", "Use unicorn to serve pages as opposed to thin") do
+    @unicorn = true
+  end
+end
+opts.parse!
+
+def run(command, opt = nil)
+  if opt == :quiet
+    system(command, out: "/dev/null", err: :out)
+  else
+    system(command, out: $stdout, err: :out)
+  end
 end
 
 begin
   require 'facter'
 rescue LoadError
   run "gem install facter"
-  puts "just installed the facter gem, please re-run script"
+  puts "please rerun script"
   exit
 end
 
@@ -36,7 +72,7 @@ sudo apt-get install redis-server
 end
 
 puts "Running bundle"
-if !run("bundle")
+if !run("bundle", :quiet)
   puts "Quitting, some of the gems did not install"
   prereqs
   exit
@@ -44,7 +80,8 @@ end
 
 puts "Ensuring config is setup"
 
-unless %x{which ab > /dev/null 2>&1}
+%x{which ab > /dev/null 2>&1}
+unless $? == 0
   abort "Apache Bench is not installed. Try: apt-get install apache2-utils or brew install ab"
 end
 
@@ -61,19 +98,19 @@ end
 
 ENV["RAILS_ENV"] = "profile"
 
-if ARGV.include?("--noenv")
-  puts "Running with default environment"
-  ENV.delete "RUBY_GC_MALLOC_LIMIT"
+
+if @include_env
+  puts "Running with tuned environment"
+  ENV["RUBY_GC_MALLOC_LIMIT"] = "50_000_000"
   ENV.delete "RUBY_HEAP_SLOTS_GROWTH_FACTOR"
   ENV.delete "RUBY_HEAP_MIN_SLOTS"
   ENV.delete "RUBY_FREE_MIN"
 else
-  # Github settings
-  puts "Running with tuned environment"
-  ENV["RUBY_GC_MALLOC_LIMIT"] = "1000000000"
-  ENV["RUBY_HEAP_SLOTS_GROWTH_FACTOR"] = "1.25"
-  ENV["RUBY_HEAP_MIN_SLOTS"] = "800000"
-  ENV["RUBY_FREE_MIN"] = "600000"
+  # clean env
+  puts "Running with the following custom environment"
+  %w{RUBY_GC_MALLOC_LIMIT RUBY_HEAP_MIN_SLOTS RUBY_FREE_MIN}.each do |w|
+    puts "#{w}: #{ENV[w]}"
+  end
 end
 
 def port_available? port
@@ -107,9 +144,11 @@ api_key = `bundle exec rake api_key:get`.split("\n")[-1]
 
 def bench(path)
   puts "Running apache bench warmup"
-  `ab -n 100 "http://127.0.0.1:#{@port}#{path}"`
+  add = ""
+  add = "-c 3 " if @unicorn
+  `ab #{add} -n 10 "http://127.0.0.1:#{@port}#{path}"`
   puts "Benchmarking #{path}"
-  `ab -n 100 -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
+  `ab -n #{@iterations} -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
   CSV.foreach("tmp/ab.csv") do |percent, time|
@@ -124,23 +163,49 @@ begin
   puts "precompiling assets"
   run("bundle exec rake assets:precompile")
 
-  pid = spawn("bundle exec thin start -p #{@port}")
+  pid = if @unicorn
+          ENV['UNICORN_PORT'] = @port.to_s
+          spawn("bundle exec unicorn -c config/unicorn.conf.rb")
+        else
+          spawn("bundle exec thin start -p #{@port}")
+        end
 
   while port_available? @port
     sleep 1
   end
 
   puts "Starting benchmark..."
-
-  # asset precompilation is a dog, wget to force it
-  run "wget http://127.0.0.1:#{@port}/ -o tmp/test.html"
-  home_page = bench("/")
-  topic_page = bench("/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69")
-
   append = "?api_key=#{api_key}&api_username=admin1"
 
-  home_page_admin = bench("/#{append}")
-  topic_page_admin = bench("/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69#{append}")
+  # asset precompilation is a dog, wget to force it
+  run "wget http://127.0.0.1:#{@port}/ -o /dev/null"
+
+  tests = [
+    ["categories", "/categories"],
+    ["home", "/"],
+    ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69"]
+    # ["user", "/users/admin1/activity"],
+  ]
+
+  tests = tests.map{|k,url| ["#{k}_admin", "#{url}#{append}"]} + tests
+
+  # NOTE: we run the most expensive page first in the bench
+
+  def best_of(a, b)
+    return a unless b
+    return b unless a
+
+    a[50] < b[50] ? a : b
+  end
+
+
+  results = {}
+  @best_of.times do
+    tests.each do |name, url|
+      results[name] = best_of(bench(url),results[name])
+    end
+  end
+
 
   puts "Your Results: (note for timings- percentile is first, duration is second in millisecs)"
 
@@ -154,15 +219,41 @@ begin
 
   run("RAILS_ENV=profile bundle exec rake assets:clean")
 
-  puts({
-    "home_page" => home_page,
-    "topic_page" => topic_page,
-    "home_page_admin" => home_page_admin,
-    "topic_page_admin" => topic_page_admin,
+  def get_mem(pid)
+    YAML.load `ruby script/memstats.rb #{pid} --yaml`
+  end
+
+
+  mem = get_mem(pid)
+
+  results = results.merge({
     "timings" => @timings,
     "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
-    "rails4?" => ENV["RAILS4"] == "1"
-  }.merge(facts).to_yaml)
+    "rss_kb" => mem["rss_kb"],
+    "pss_kb" => mem["pss_kb"]
+  }).merge(facts)
+
+  if @unicorn
+    child_pids = `ps --ppid #{pid} | awk '{ print $1; }' | grep -v PID`.split("\n")
+    child_pids.each do |child|
+      mem = get_mem(child)
+      results["rss_kb_#{child}"] = mem["rss_kb"]
+      results["pss_kb_#{child}"] = mem["pss_kb"]
+    end
+  end
+
+  puts results.to_yaml
+
+  if @mem_stats
+    puts
+    puts open("http://127.0.0.1:#{@port}/admin/memory_stats#{append}").read
+  end
+
+  if @result_file
+    File.open(@result_file,"wb") do |f|
+      f.write(results)
+    end
+  end
 
 
   # TODO include Facter.to_hash ... for all facts

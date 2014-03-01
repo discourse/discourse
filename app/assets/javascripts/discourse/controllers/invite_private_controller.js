@@ -39,7 +39,7 @@ Discourse.InvitePrivateController = Discourse.ObjectController.extend(Discourse.
         if(result && result.user) {
           self.get('model.details.allowed_users').pushObject(result.user);
         }
-      }).fail(function() {
+      }).catch(function() {
         self.setProperties({error: true, saving: false});
       });
       return false;

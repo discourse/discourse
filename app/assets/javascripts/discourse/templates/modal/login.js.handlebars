@@ -38,24 +38,29 @@
     </form>
   {{/if}}
   {{authMessage}}
-  <div id='login-alert' {{bindAttr class="alertClass"}}>{{alert}}</div>
+  <div id='login-alert' {{bind-attr class="alertClass"}}>{{alert}}</div>
 </div>
 <div class="modal-footer">
-  {{#if authenticate}}
-    {{i18n login.authenticating}}
-  {{/if}}
   {{#if Discourse.SiteSettings.enable_local_logins}}
     <button class='btn btn-large btn-primary'
-      {{bindAttr disabled="loginDisabled"}}
+      {{bind-attr disabled="loginDisabled"}}
       {{action login}}>
-        <i class="icon-unlock"></i>&nbsp;{{loginButtonText}}
+        <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
     </button>
 
-    {{#unless Discourse.SiteSettings.invite_only}}
+    {{#if showSignupLink}}
       &nbsp; {{i18n create_account.invite}}
-      <a id="new-account-link" {{action showCreateAccount}}>
+      <a id="new-account-link" {{action createAccount}}>
         {{i18n create_account.action}}
       </a>
-    {{/unless}}
+    {{/if}}
+  {{/if}}
+
+  {{#if authenticate}}
+    &nbsp; {{i18n login.authenticating}}
+  {{/if}}
+
+  {{#if showSpinner}}
+    &nbsp; <i class='fa fa-spinner fa-spin'></i>
   {{/if}}
 </div>

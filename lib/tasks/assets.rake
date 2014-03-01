@@ -1,22 +1,41 @@
-task 'assets:precompile' => 'environment' do
-  # see: https://github.com/rails/sprockets-rails/issues/49
-  # a decision was made no longer to copy non-digested assets
-  # this breaks stuff like the emoji plugin. We could fix it,
-  # but its a major pain with little benefit.
-  if rails4?
-    puts "> Copying non-digested versions of assets"
-    assets = Dir.glob(File.join(Rails.root, 'public/assets/**/*'))
-    regex = /(-{1}[a-z0-9]{32}*\.{1}){1}/
-    assets.each do |file|
-      next if File.directory?(file) || file !~ regex
+task 'assets:precompile:before' do
 
-      source = file.split('/')
-      source.push(source.pop.gsub(regex, '.'))
-
-      non_digested = File.join(source)
-      FileUtils.cp(file, non_digested)
-    end
-    puts "> Removing cache"
-    `rm -fr tmp/cache`
+  unless %w{profile production}.include? Rails.env
+    raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
   end
+
+  # Ensure we ALWAYS do a clean build
+  # We use many .erbs that get out of date quickly, especially with plugins
+  puts "Purging temp files"
+  `rm -fr #{Rails.root}/tmp/cache`
+
+  # in the past we applied a patch that removed asset postfixes, but it is terrible practice
+  # leaving very complicated build issues
+  # https://github.com/rails/sprockets-rails/issues/49
+
+  # let's make precompile faster using redis magic
+  require 'sprockets'
+  require 'digest/sha1'
+
+  module ::Sprockets
+    class UglifierCompressor
+      def evaluate(context, locals, &block)
+
+        digest = Digest::SHA1.hexdigest(data)
+        key = "SPROCKETS_#{digest}"
+
+        if compiled = $redis.get(key)
+          $redis.expire(key, 1.week)
+        else
+          compiled = Uglifier.new(:comments => :none).compile(data)
+          $redis.setex(key, 1.week, compiled)
+        end
+        compiled
+      end
+    end
+  end
+
 end
+
+task 'assets:precompile' => 'assets:precompile:before'
+

@@ -13,9 +13,8 @@ Discourse.AdminApiController = Ember.ArrayController.extend({
       Generates a master api key
 
       @method generateMasterKey
-      @param {Discourse.ApiKey} the key to regenerate
     **/
-    generateMasterKey: function(key) {
+    generateMasterKey: function() {
       var self = this;
       Discourse.ApiKey.generateMasterKey().then(function (key) {
         self.get('model').pushObject(key);

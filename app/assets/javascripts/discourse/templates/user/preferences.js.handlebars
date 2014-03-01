@@ -2,12 +2,18 @@
 
   <form class="form-horizontal">
 
+    <div class="control-group save-button" id='save-button-top'>
+      <div class="controls">
+        {{partial 'user/preferences/saveButton'}}
+      </div>
+    </div>
+
     <div class="control-group">
       <label class="control-label">{{i18n user.username.title}}</label>
       <div class="controls">
         <span class='static'>{{username}}</span>
         {{#if can_edit_username}}
-          {{#link-to "preferences.username" class="btn pad-left"}}<i class="icon-pencil"></i>{{/link-to}}
+          {{#link-to "preferences.username" class="btn pad-left"}}<i class="fa fa-pencil"></i>{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -15,22 +21,24 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <label class="control-label">{{i18n user.name.title}}</label>
-      <div class="controls">
-        {{textField value=name classNames="input-xxlarge"}}
+    {{#if canEditName}}
+      <div class="control-group">
+        <label class="control-label">{{i18n user.name.title}}</label>
+        <div class="controls">
+          {{textField value=newNameInput classNames="input-xxlarge"}}
+        </div>
+        <div class='instructions'>
+          {{i18n user.name.instructions}}
+        </div>
       </div>
-      <div class='instructions'>
-        {{i18n user.name.instructions}}
-      </div>
-    </div>
+    {{/if}}
 
     <div class="control-group">
       <label class="control-label">{{i18n user.email.title}}</label>
       <div class="controls">
         <span class='static'>{{email}}</span>
         {{#if can_edit_email}}
-          {{#link-to "preferences.email" class="btn pad-left"}}<i class="icon-pencil"></i>{{/link-to}}
+          {{#link-to "preferences.email" class="btn pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -38,20 +46,45 @@
       </div>
     </div>
 
+    {{#unless Discourse.SiteSettings.enable_sso }}
     <div class="control-group">
       <label class="control-label">{{i18n user.password.title}}</label>
       <div class="controls">
-        <a href="#" {{action changePassword}} class='btn'><i class="icon icon-envelope"></i>{{i18n user.change_password.action}}</a> {{passwordProgress}}
+        <a href="#" {{action changePassword}} class='btn'><i class="fa fa-envelope"></i>
+          {{#if no_password}}
+            {{i18n user.change_password.set_password}}
+          {{else}}
+            {{i18n user.change_password.action}}
+          {{/if}}
+        </a>
+        {{passwordProgress}}
       </div>
     </div>
+    {{/unless}}
 
     <div class="control-group">
       <label class="control-label">{{i18n user.avatar.title}}</label>
       <div class="controls">
         {{boundAvatar model imageSize="large"}}
-        <button {{action showAvatarSelector}} class="btn pad-left"><i class="icon-pencil"></i></button>
+        {{#if allowAvatarUpload}}
+          <button {{action showAvatarSelector}} class="btn pad-left no-text"><i class="fa fa-pencil"></i></button>
+        {{else}}
+          <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn no-text"><i class="fa fa-pencil"></i></a>
+        {{/if}}
       </div>
     </div>
+
+    {{#if allowUserLocale}}
+      <div class="control-group">
+        <label class="control-label">{{i18n user.locale.title}}</label>
+        <div class="controls">
+          {{combobox valueAttribute="value" content=availableLocales value=locale none="user.locale.default"}}
+        </div>
+        <div class='instructions'>
+          {{i18n user.locale.instructions}}
+        </div>
+      </div>
+    {{/if}}
 
     <div class="control-group">
       <label class="control-label">{{i18n user.bio}}</label>
@@ -70,7 +103,14 @@
     <div class="control-group">
       <label class="control-label">{{i18n user.email_settings}}</label>
       <div class="controls">
-        <label>{{view Ember.Checkbox checkedBinding="email_digests"}}
+        {{#if Discourse.SiteSettings.enable_mailing_list_mode}}
+          <label class="checkbox-label">
+            {{view Ember.Checkbox checkedBinding="mailing_list_mode"}}
+            {{i18n user.mailing_list_mode}}
+          </label>
+        {{/if}}
+
+        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_digests"}}
         {{i18n user.email_digests.title}}</label>
 
         {{#if email_digests}}
@@ -78,11 +118,11 @@
             {{combobox valueAttribute="value" content=digestFrequencies value=digest_after_days}}
           </div>
         {{/if}}
-        <label>{{view Ember.Checkbox checkedBinding="email_private_messages"}}
+        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_private_messages"}}
         {{i18n user.email_private_messages}}</label>
-        <label>{{view Ember.Checkbox checkedBinding="email_direct"}}
+        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_direct"}}
         {{i18n user.email_direct}}</label>
-        <label>{{view Ember.Checkbox checkedBinding="email_always"}}
+        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_always"}}
         {{i18n user.email_always}}</label>
       </div>
       <div class='instructions'>
@@ -93,25 +133,27 @@
     <div class="control-group other">
 
       <label class="control-label">{{i18n user.other_settings}}</label>
-      <div class="controls">
+      <div class="controls controls-dropdown">
         <label>{{i18n user.auto_track_topics}}</label>
         {{combobox valueAttribute="value" content=autoTrackDurations value=auto_track_topics_after_msecs}}
       </div>
 
-      <div class="controls">
+      <div class="controls controls-dropdown">
         <label>{{i18n user.new_topic_duration.label}}</label>
         {{combobox valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
       </div>
 
       <div class="controls">
-        <label>{{view Ember.Checkbox checkedBinding="external_links_in_new_tab"}}
+        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="external_links_in_new_tab"}}
         {{i18n user.external_links_in_new_tab}}</label>
-        <label>{{view Ember.Checkbox checkedBinding="enable_quoting"}}
+      </div>
+      <div class="controls">
+        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="enable_quoting"}}
         {{i18n user.enable_quoting}}</label>
       </div>
 
       <div class="controls">
-        <label>
+        <label class='checkbox-label'>
           {{view Ember.Checkbox checkedBinding="dynamic_favicon"}}
           {{i18n user.dynamic_favicon}}
         </label>
@@ -119,12 +161,39 @@
 
     </div>
 
+    <div class="control-group category">
+      <label class="control-label">{{i18n user.categories_settings}}</label>
+      <div class="controls category-controls">
+        <label>{{i18n user.watched_categories}}</label>
+        {{category-group categories=watchedCategories}}
+      </div>
+      <div class="instructions">{{i18n user.watched_categories_instructions}}</div>
+      <div class="controls category-controls">
+        <label>{{i18n user.tracked_categories}}</label>
+        {{category-group categories=trackedCategories}}
+      </div>
+      <div class="instructions">{{i18n user.tracked_categories_instructions}}</div>
+      <div class="controls category-controls">
+        <label>{{i18n user.muted_categories}}</label>
+        {{category-group categories=mutedCategories}}
+      </div>
+      <div class="instructions">{{i18n user.muted_categories_instructions}}</div>
+    </div>
+
     <div class="control-group">
       <div class="controls">
-          <button {{action save}} {{bindAttr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
-          {{#if saved}}{{i18n saved}}{{/if}}
+        {{partial 'user/preferences/saveButton'}}
       </div>
     </div>
+
+    {{#if canDeleteAccount}}
+      <div class="control-group delete-account">
+        <hr/>
+        <div class="controls">
+            <button {{action delete}} {{bind-attr disabled="deleteDisabled"}} class="btn btn-danger"><i class="fa fa-trash-o"></i> {{i18n user.delete_account}}</button>
+        </div>
+      </div>
+    {{/if}}
 
   </form>
 </section>

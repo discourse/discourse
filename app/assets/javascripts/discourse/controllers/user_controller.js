@@ -15,7 +15,7 @@ Discourse.UserController = Discourse.ObjectController.extend({
   collapsedInfo: Em.computed.not('indexStream'),
 
   canSeePrivateMessages: function() {
-    return this.get('viewingSelf') || Discourse.User.currentProp('staff');
+    return this.get('viewingSelf') || Discourse.User.currentProp('admin');
   }.property('viewingSelf'),
 
   privateMessageView: function() {

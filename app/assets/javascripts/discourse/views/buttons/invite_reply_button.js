@@ -13,7 +13,7 @@ Discourse.InviteReplyButton = Discourse.ButtonView.extend({
   disabled: Em.computed.or('controller.archived', 'controller.closed', 'controller.deleted'),
 
   renderIcon: function(buffer) {
-    buffer.push("<i class='icon icon-group'></i>");
+    buffer.push("<i class='fa fa-users'></i>");
   },
 
   click: function() {

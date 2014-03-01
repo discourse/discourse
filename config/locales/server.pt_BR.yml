@@ -24,8 +24,8 @@ pt_BR:
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
 
-  site_under_maintenance: 'Este site está sob manutenção no momento.'
-  operation_already_running: "Uma tarefa %{operation} está rodando atualmente. Impossível iniciar uma nova tarefa %{operation} agora."
+  backup:
+    operation_already_running: "Uma tarefa %{operation} está rodando atualmente. Impossível iniciar uma nova tarefa %{operation} agora."
 
   too_many_mentions:
     zero: "Desculpe, você não pode mencionar outros usuários."
@@ -360,7 +360,7 @@ pt_BR:
       title: "Marcadores Adicionados"
       xaxis: "Dia"
       yaxis: "Número de novos marcadores adicionados"
-    favorites:
+    starred:
       title: "Favoritos"
       xaxis: "Dia"
       yaxis: "Número de novos favoritos"
@@ -512,11 +512,10 @@ pt_BR:
 
     notification_email: "O endereço de email a ser usado para notificar os utilizadores de password esquecida, novas contas, etc."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
-    use_ssl: "O site deve ser acessível via SSL?"
-    best_of_score_threshold: "A pontuação mínima de uma postagem para ser incluído no 'melhor de'"
-    best_of_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
-    best_of_likes_required: "Um tópico precisa deste número de curtidas antes de ser ativado o modo 'melhor de'."
-    best_of_percent_filter: "Quando um usuário clicar em Os Melhores, exibir os % posts"
+    summary_score_threshold: "A pontuação mínima de uma postagem para ser incluído no 'melhor de'"
+    summary_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
+    summary_likes_required: "Um tópico precisa deste número de curtidas antes de ser ativado o modo 'melhor de'."
+    summary_percent_filter: "Quando um usuário clicar em Os Melhores, exibir os % posts"
     enable_private_messages: "permitir membros a ter conversas com mensagens particulares"
 
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
@@ -543,9 +542,9 @@ pt_BR:
     must_approve_users: "Os proprietários do fórum tem que aprovar os usuários antes deles terem acesso."
     ga_tracking_code: "Código de rastreamento do Google Analytics, veja: http://google.com/analytics"
     ga_domain_name: "Nome de domínio no Google Analytics, exemplo: meusite.com; see http://google.com/analytics"
-    enable_escaped_fragments: "Ativa solução alternativa que ajuda os mecanismos de busca antigos a indexarem o seu site. ALERTA: apenas ative se você realmente precisa disto."
+    enable_escaped_fragments: "Ativa solução alternativa que ajuda os mecanismos de busca antigos a indexarem o seu site."
     enable_noscript_support: "Ativar suporte a tag &lt;noscript&gt;"
-    top_menu: "A ordem dos items no menu de cima. Exemplo latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "A ordem dos items no menu de cima. Exemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "A ordem dos items no menu da postagem."
     share_links: "Determine quais ítens aparecerem no diálogo de compartilhar, e em que ordem. Por exemplo: twitter|facebook|google+|email"
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
@@ -594,9 +593,7 @@ pt_BR:
     github_client_id: "Client id para autenticação via Github, registrado em https://github.com/settings/applications"
     github_client_secret: "Client secret para autenticação via Github, registrado em https://github.com/settings/applications"
 
-    enable_persona_logins: "Ativar autenticação baseada em email com Mozilla Persona"
-
-    allow_import: "Permitir importar, vai substituir TODOS os dados do site. Deixe como falso a menos que você pretenda fazer importações."
+    allow_restore: "Permitir importar, vai substituir TODOS os dados do site. Deixe como falso a menos que você pretenda fazer importações."
 
     active_user_rate_limit_secs: "Qual a frequencia de atualização do campo 'última vez visto em', em segundos."
     previous_visit_timeout_hours: "Quanto tempo uma visita dura antes de considerarmos como 'última visita', em horas."
@@ -608,14 +605,14 @@ pt_BR:
     max_flags_per_day: "Quantidade máxima de sinalizações que um usuário pode fazer por dia"
     max_bookmarks_per_day: "Quantidade máxima de marcadores que um usuário pode adicionar por dia"
     max_edits_per_day: "Quantidade máxima de edições que um usuário pode fazer por dia"
-    max_favorites_per_day: "Quantidade máxima de tópicos que um usuário pode favoritar por dia"
+    max_stars_per_day: "Quantidade máxima de tópicos que um usuário pode favoritar por dia"
     max_topics_per_day: "Quantidade máxima de tópicos que você pode criar por dia"
     max_private_messages_per_day: "Quantidade máxima de mensagens particulares que você pode enviar por dia"
 
     suggested_topics: "Quantidade de tópicos sugeridos que você verá na parte debaixo dos tópicos"
 
     clean_up_uploads: "Remove envios(uploads) orfãos para previnir hospedagem ilegal. AVISO: Você pode querer fazer um backup do seu diretório /uploads antes de habilitar essa configuração."
-    uploads_grace_period_in_hours: "Carência (em horas), antes que um envio(upload) órfão é removido."
+    clean_orphan_uploads_grace_period_hours: "Carência (em horas), antes que um envio(upload) órfão é removido."
     enable_s3_uploads: "Enviar arquivos recebidos para o s3"
     s3_upload_bucket: "Bucket do s3 para qual enviar"
     s3_access_key_id: "Access key da Amazon S3 que será usada para envio de imagens"
@@ -662,7 +659,6 @@ pt_BR:
     min_body_similar_length: "Tamanho mínimo do corpo de uma postagem antes de ele ser checado por tópicos similares"
 
     category_colors: "Lista separada por barra (|) das cores em hexadecimal permitidas para as categorias"
-    enable_wide_category_list: "Habilitar lista de categorias tradicional com largura total"
 
     max_image_size_kb: "Tamanho máximo de imagens que os usuários podem enviar em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
     max_attachment_size_kb: "Tamanho máximo de arquivos que os usuários podem enviar em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
@@ -694,7 +690,7 @@ pt_BR:
     minimum_topics_similar: "Quantos tópicos precisam existir no banco de dados antes de um tópico similar ser apresentado."
 
     relative_date_duration: "Número de dias após a postagem a partir de quando as datas das postagens serão exibidas como relativas em vez de absolutas. Exemplos: data relativa: 7D, data absoluta: 20 de fevereiro"
-    delete_user_max_age: "Idade máxima, em dias, que um usuário pode ser removido por um admin."
+    delete_user_max_post_age: "Idade máxima, em dias, que um usuário pode ser removido por um admin."
     delete_all_posts_max: "Número máximo de posts que podem ser deletados de uma vez pelo botão Deletar Todos os Posts. Se um usuário tem mais posts que isso, os posts não pode ser removidos de uma vez  e o usuário não pode ser removido."
     username_change_period: "Número de dias após o registro que as contas podem trocar o username(0 impede a troca de username)"
     email_editable: "Permite que usuários mudem endereço de e-mail após cadastro"

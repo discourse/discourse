@@ -335,7 +335,7 @@
       // __foo__ is reserved and not a pattern
       if ( i.match( /^__.*__$/) )
         continue;
-      var l = i.replace( /([\\.*+?|()\[\]{}])/g, "\\$1" )
+      var l = i.replace( /([\\.*+?^$|()\[\]{}])/g, "\\$1" )
                .replace( /\n/, "\\n" );
       patterns.push( i.length === 1 ? l : "(?:" + l + ")" );
     }
@@ -449,7 +449,7 @@
     if ( typeof jsonml === "string" )
       return jsonml;
 
-    if ( jsonml[0] == "__RAW" ) {
+    if ( jsonml[0] === "__RAW" ) {
       return jsonml[1];
     }
 
@@ -573,7 +573,7 @@
       jsonml[ 0 ] = "img";
 
       // grab this ref and clean up the attribute node
-      var ref = references[ attrs.ref ];
+      ref = references[ attrs.ref ];
 
       // if the reference exists, make the link
       if ( ref ) {
@@ -643,7 +643,8 @@
   var DialectHelpers = {};
   DialectHelpers.inline_until_char = function( text, want ) {
     var consumed = 0,
-        nodes = [];
+        nodes = [],
+        patterns = this.dialect.inline.__patterns__.replace('|_|', '|');
 
     while ( true ) {
       if ( text.charAt( consumed ) === want ) {
@@ -654,10 +655,10 @@
 
       if ( consumed >= text.length ) {
         // No closing char found. Abort.
-        return null;
+        return [consumed, null, nodes];
       }
 
-      var res = this.dialect.inline.__oneElement__.call(this, text.substr( consumed ) );
+      var res = this.dialect.inline.__oneElement__.call(this, text.substr( consumed ), patterns );
       consumed += res[ 0 ];
       // Add any returned nodes.
       nodes.push.apply( nodes, res.slice( 1 ) );
@@ -679,6 +680,9 @@
       mk_block = MarkdownHelpers.mk_block,
       isEmpty = MarkdownHelpers.isEmpty,
       inline_until_char = DialectHelpers.inline_until_char;
+
+  // A robust regexp for matching URLs. Thakns: https://gist.github.com/dperini/729294
+  var urlRegexp = /(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?/i.source;
 
   /**
    * Gruber dialect
@@ -737,8 +741,7 @@
         block_search:
         do {
           // Now pull out the rest of the lines
-          var b = this.loop_re_over_block(
-                    re, block.valueOf(), function( m ) { ret.push( m[1] ); } );
+          var b = this.loop_re_over_block(re, block.valueOf(), function(m) { ret.push( m[1] ); });
 
           if ( b.length ) {
             // Case alluded to in first comment. push it back on as a new block
@@ -1001,7 +1004,12 @@
             } // tight_search
 
             if ( li_accumulate.length ) {
-              add( last_li, loose, this.processInline( li_accumulate ), nl );
+              var contents = this.processBlock(li_accumulate, []),
+                  firstBlock = contents[0];
+
+              firstBlock.shift();
+              contents.splice.apply(contents, [0, 1].concat(firstBlock));
+              add( last_li, loose, contents, nl );
 
               // Let's not creating a trailing \n after content in the li
               if(last_li[last_li.length-1] === "\n") {
@@ -1027,7 +1035,7 @@
 
             var next_block = next[0] && next[0].valueOf() || "";
 
-            if ( next_block.match(is_list_re) || (next_block.match(/^ /) && (!next_block.match(/^ *\>/))) ) {
+            if ( next_block.match(is_list_re) ) {
               block = next.shift();
 
               // Check for an HR following a list: features/lists/hr_abutting
@@ -1098,7 +1106,6 @@
 
         // Strip off the leading "> " and re-process as a block.
         var input = block.replace( /^> ?/gm, "" ),
-            old_tree = this.tree,
             processedBlock = this.toTree( input, [ "blockquote" ] ),
             attr = extract_attr( processedBlock );
 
@@ -1142,8 +1149,7 @@
     inline: {
 
       __oneElement__: function oneElement( text, patterns_or_re, previous_nodes ) {
-        var m,
-            res;
+        var m, res;
 
         patterns_or_re = patterns_or_re || this.dialect.inline.__patterns__;
         var re = new RegExp( "([\\s\\S]*?)(" + (patterns_or_re.source || patterns_or_re) + ")" );
@@ -1158,7 +1164,6 @@
           return [ m[1].length, m[1] ];
         }
 
-        var res;
         if ( m[2] in this.dialect.inline ) {
           res = this.dialect.inline[ m[2] ].call(
                     this,
@@ -1210,6 +1215,9 @@
 
       "![": function image( text ) {
 
+        // Without this guard V8 crashes hard on the RegExp
+        if (text.indexOf('(') >= 0 && text.indexOf(')') === -1) { return; }
+
         // Unlike images, alt text is plain text only. no other elements are
         // allowed in there
 
@@ -1218,8 +1226,11 @@
         //
         // First attempt to use a strong URL regexp to catch things like parentheses. If it misses, use the
         // old one.
-        var m = text.match( /^!\[(.*?)][ \t]*\(((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))\)([ \t])*(["'].*["'])?/ ) ||
-                text.match( /^!\[(.*?)\][ \t]*\([ \t]*([^")]*?)(?:[ \t]+(["'])(.*?)\3)?[ \t]*\)/ );
+        var origMatcher = /^!\[(.*?)\][ \t]*\([ \t]*([^")]*?)(?:[ \t]+(["'])(.*?)\3)?[ \t]*\)/;
+            m = text.match(new RegExp("^!\\[(.*?)][ \\t]*\\((" + urlRegexp + ")\\)([ \\t])*([\"'].*[\"'])?")) ||
+                text.match(origMatcher);
+
+        if (m && m[2].indexOf(")]") !== -1) { m = text.match(origMatcher); }
 
         if ( m ) {
           if ( m[2] && m[2][0] === "<" && m[2][m[2].length-1] === ">" )
@@ -1249,13 +1260,24 @@
 
       "[": function link( text ) {
 
+        var open = 1;
+        for (var i=0; i<text.length; i++) {
+          var c = text.charAt(i);
+          if (c === '[') { open++; }
+          if (c === ']') { open--; }
+
+          if (open > 3) { return [1, "["]; }
+        }
+
         var orig = String(text);
         // Inline content is possible inside `link text`
         var res = inline_until_char.call( this, text.substr(1), "]" );
 
         // No closing ']' found. Just consume the [
-        if ( !res )
-          return [ 1, "[" ];
+        if ( !res[1] ) {
+          var size = res[0] + 1;
+          return [ size, text.charAt(0) + res[2].join('') ];
+        }
 
         var consumed = 1 + res[ 0 ],
             children = res[ 1 ],
@@ -1309,10 +1331,16 @@
           return [ consumed, link ];
         }
 
+        m = text.match(new RegExp("^\\((" + urlRegexp + ")\\)"));
+        if (m && m[1]) {
+          consumed += m[0].length;
+          link = ["link", {href: m[1]}].concat(children);
+          return [consumed, link];
+        }
+
         // [Alt text][id]
         // [Alt text] [id]
         m = text.match( /^\s*\[(.*?)\]/ );
-
         if ( m ) {
 
           consumed += m[ 0 ].length;
@@ -1333,10 +1361,10 @@
         if (m &&
             (/^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i.test(m[2]) ||
              /(\/[\w~,;\-\./?%&+#=]*)/.test(m[2]))) {
-          var attrs = create_attrs.call(this);
+          attrs = create_attrs.call(this);
           create_reference(attrs, m);
 
-          return [ m[0].length ]
+          return [ m[0].length ];
         }
 
         // [id]

@@ -28,7 +28,14 @@ describe ClicksController do
           xhr :get, :track, url: 'http://discourse.org', post_id: 123
           response.should_not be_redirect
         end
+      end
 
+      context "with a query string" do
+        it "tries again without the query if it fails" do
+          TopicLinkClick.expects(:create_from).with(has_entries('url' => 'http://discourse.org/?hello=123')).returns(nil)
+          TopicLinkClick.expects(:create_from).with(has_entries('url' => 'http://discourse.org/')).returns(nil)
+          xhr :get, :track, url: 'http://discourse.org/?hello=123', post_id: 123
+        end
       end
 
       context 'with a post_id' do

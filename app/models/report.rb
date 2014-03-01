@@ -11,7 +11,7 @@ class Report
     @prev30Days = nil
   end
 
-  def as_json
+  def as_json(options = nil)
     {
      type: self.type,
      title: I18n.t("reports.#{self.type}.title"),
@@ -81,7 +81,7 @@ class Report
     end
   end
 
-  def self.report_favorites(report)
+  def self.report_starred(report)
     basic_report_about report, Topic, :starred_counts_per_day
     query = TopicUser.where(starred: true)
     report.total = query.count

@@ -22,9 +22,8 @@ class SiteCustomization < ActiveRecord::Base
           error.gsub!("'", '\27 ')
 
           self.send("#{stylesheet_attr}_baked=",
-  "#main {display: none;}
-  footer {white-space: pre; margin-left: 100px;}
-  footer:after{ content: '#{error}' }")
+  "footer { white-space: pre; }
+  footer:after { content: '#{error}' }")
         end
       end
     end

@@ -41,6 +41,12 @@
   }
 }
 
+@mixin mobile-portrait      { @media only screen and (max-width : 320px) { @content; } }
+@mixin not-mobile-portrait  { @media only screen and (min-width : 321px) { @content; } }
+@mixin mobile-landscape     { @media only screen and (min-width : 321px) and (max-width : 959px) { @content; } }
+@mixin not-tablet-landscape { @media only screen and (max-width : 959px) { @content; } }
+@mixin tablet-landscape     { @media only screen and (min-width : 960px) { @content; } }
+
 // CSS3 properties
 // --------------------------------------------------
 

@@ -12,10 +12,10 @@ class Search
     def topic_ids
       topic_results = @by_type[:topic]
       return Set.new if topic_results.blank?
-      return topic_results.result_ids
+      return topic_results.results.map{|r| r.topic_id}
     end
 
-    def as_json
+    def as_json(options = nil)
       @by_type.values.map do |grouped_result|
         grouped_result.as_json
       end

@@ -1,15 +1,23 @@
 class UsernameCheckerService
 
   def check_username(username, email)
-    validator = UsernameValidator.new(username)
-    if !validator.valid_format?
-      {errors: validator.errors}
-    elsif !SiteSetting.call_discourse_hub?
-      check_username_locally(username)
-    else
-      check_username_with_hub_server(username, email)
+    if username && username.length > 0
+      validator = UsernameValidator.new(username)
+      if !validator.valid_format?
+        {errors: validator.errors}
+      elsif !SiteSetting.call_discourse_hub?
+        check_username_locally(username)
+      else
+        check_username_with_hub_server(username, email)
+      end
+    elsif email and SiteSetting.call_discourse_hub?
+      username_from_hub = DiscourseHub.nickname_for_email(email)
+      if username_from_hub && User.username_available?(username_from_hub)
+        {suggestion: username_from_hub}
+      else
+        {suggestion: nil}
+      end
     end
-
   end
 
   # Contact the Discourse Hub server

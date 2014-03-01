@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 require 'spec_helper'
 require 'email/receiver'
 
@@ -5,6 +7,16 @@ describe Email::Receiver do
 
   before do
     SiteSetting.stubs(:reply_by_email_address).returns("reply+%{reply_key}@appmail.adventuretime.ooo")
+  end
+
+  describe "exception raised" do
+    it "returns error if it encountered an error processing" do
+      receiver = Email::Receiver.new("some email")
+      def receiver.parse_body
+        raise "ERROR HAPPENED!"
+      end
+      expect(receiver.process).to eq(Email::Receiver.results[:error])
+    end
   end
 
   describe 'invalid emails' do
@@ -40,6 +52,16 @@ stripped from my reply?")
     end
   end
 
+  describe "it ignores messages it can't parse due to containing weird terms" do
+    let(:attachment) { File.read("#{Rails.root}/spec/fixtures/emails/attachment.eml") }
+    let(:receiver) { Email::Receiver.new(attachment) }
+
+    it "processes correctly" do
+      expect(receiver.process).to eq(Email::Receiver.results[:unprocessable])
+      expect(receiver.body).to be_blank
+    end
+  end
+
   describe "it supports a dutch reply" do
     let(:dutch) { File.read("#{Rails.root}/spec/fixtures/emails/dutch.eml") }
     let(:receiver) { Email::Receiver.new(dutch) }
@@ -58,6 +80,17 @@ stripped from my reply?")
       I18n.expects(:t).with('user_notifications.previous_discussion').returns('כלטוב')
       receiver.process
       expect(receiver.body).to eq("שלום")
+    end
+  end
+
+  describe "It supports a non UTF-8 reply" do
+    let(:big5) { File.read("#{Rails.root}/spec/fixtures/emails/big5.eml") }
+    let(:receiver) { Email::Receiver.new(big5) }
+
+    it "processes correctly" do
+      I18n.expects(:t).with('user_notifications.previous_discussion').returns('媽！我上電視了！')
+      receiver.process
+      expect(receiver.body).to eq("媽！我上電視了！")
     end
   end
 

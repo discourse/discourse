@@ -16,30 +16,28 @@ def rebake_post(post,opts)
   )
 
   if cooked != post.cooked
-    Post.exec_sql(
-      'update posts set cooked = ? where id = ?', cooked, post.id
-    )
+    Post.exec_sql('update posts set cooked = ? where id = ?', cooked, post.id)
     post.cooked = cooked
     putc "#"
   else
     putc "."
   end
 
+  # Extracts urls from the body
   TopicLink.extract_from post
   # make sure we trigger the post process
-  post.trigger_post_process
+  post.trigger_post_process(true)
+
 rescue => e
   puts "\n\nFailed to bake topic_id #{post.topic_id} post_id #{post.id} #{e}\n#{e.backtrace.join("\n")} \n\n"
 end
 
 def rebake_posts(opts = {})
   RailsMultisite::ConnectionManagement.each_connection do |db|
-    puts "Re baking post markdown for #{db} , changes are denoted with # , no change with ."
+    puts "Re baking post markdown for #{db}, changes are denoted with #, no change with ."
 
     total = 0
-    Post.select([
-      :id, :user_id, :cooked, :raw, :topic_id, :post_number
-    ]).each do |post|
+    Post.find_each do |post|
       rebake_post(post,opts)
       total += 1
     end

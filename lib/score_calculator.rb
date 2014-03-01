@@ -16,23 +16,61 @@ class ScoreCalculator
   end
 
   # Calculate the score for all posts based on the weightings
-  def calculate
+  def calculate(min_topic_age=nil)
 
-    # First update the scores of the posts
-    exec_sql(post_score_sql, @weightings)
+    update_posts_score(min_topic_age)
 
-    # Update the percent rankings of the posts
-    exec_sql("UPDATE posts SET percent_rank = x.percent_rank
+    update_posts_rank(min_topic_age)
+
+    update_topics_rank(min_topic_age)
+
+    update_topics_percent_rank(min_topic_age)
+
+  end
+
+
+  private
+
+  def update_posts_score(min_topic_age)
+    components = []
+    @weightings.keys.each { |k| components << "COALESCE(#{k.to_s}, 0) * :#{k.to_s}" }
+    components = components.join(" + ")
+
+    builder = SqlBuilder.new(
+      "UPDATE posts SET score = x.score
+       FROM (SELECT id, #{components} as score FROM posts) AS x
+       /*where*/"
+
+    )
+
+    builder.where("x.id = posts.id
+                  AND (posts.score IS NULL OR x.score <> posts.score)", @weightings)
+
+    filter_topics(builder, min_topic_age)
+
+    builder.exec
+  end
+
+  def update_posts_rank(min_topic_age)
+
+    builder = SqlBuilder.new("UPDATE posts SET percent_rank = x.percent_rank
               FROM (SELECT id, percent_rank()
                     OVER (PARTITION BY topic_id ORDER BY SCORE DESC) as percent_rank
                     FROM posts) AS x
-              WHERE x.id = posts.id AND
+                   /*where*/")
+
+    builder.where("x.id = posts.id AND
                (posts.percent_rank IS NULL OR x.percent_rank <> posts.percent_rank)")
 
 
-    # Update the topics
-    exec_sql "UPDATE topics AS t
-              SET has_best_of = (t.like_count >= :likes_required AND
+    filter_topics(builder, min_topic_age)
+
+    builder.exec
+  end
+
+  def update_topics_rank(min_topic_age)
+    builder = SqlBuilder.new("UPDATE topics AS t
+              SET has_summary = (t.like_count >= :likes_required AND
                                  t.posts_count >= :posts_required AND
                                  x.max_score >= :score_required),
                   score = x.avg_score
@@ -41,43 +79,59 @@ class ScoreCalculator
                            AVG(p.score) AS avg_score
                     FROM posts AS p
                     GROUP BY p.topic_id) AS x
-              WHERE x.topic_id = t.id AND
+                    /*where*/")
+
+    builder.where("x.topic_id = t.id AND
                         (
                           (t.score <> x.avg_score OR t.score IS NULL) OR
-                          (t.has_best_of IS NULL OR t.has_best_of <> (
+                          (t.has_summary IS NULL OR t.has_summary <> (
                             t.like_count >= :likes_required AND
                             t.posts_count >= :posts_required AND
                             x.max_score >= :score_required
                           ))
                         )
   ",
-              likes_required: SiteSetting.best_of_likes_required,
-              posts_required: SiteSetting.best_of_posts_required,
-              score_required: SiteSetting.best_of_score_threshold
+              likes_required: SiteSetting.summary_likes_required,
+              posts_required: SiteSetting.summary_posts_required,
+              score_required: SiteSetting.summary_score_threshold)
 
-    # Update percentage rank of topics
-    exec_sql("UPDATE topics SET percent_rank = x.percent_rank
+    if min_topic_age
+      builder.where("t.bumped_at > :bumped_at ",
+                   bumped_at: min_topic_age)
+    end
+
+    builder.exec
+  end
+
+  def update_topics_percent_rank(min_topic_age)
+
+    builder = SqlBuilder.new("UPDATE topics SET percent_rank = x.percent_rank
           FROM (SELECT id, percent_rank()
                 OVER (ORDER BY SCORE DESC) as percent_rank
                 FROM topics) AS x
-          WHERE x.id = topics.id AND (topics.percent_rank <> x.percent_rank OR topics.percent_rank IS NULL)")
+                /*where*/")
+
+    builder.where("x.id = topics.id AND (topics.percent_rank <> x.percent_rank OR topics.percent_rank IS NULL)")
+
+
+    if min_topic_age
+      builder.where("topics.bumped_at > :bumped_at ",
+                   bumped_at: min_topic_age)
+    end
+
+
+    builder.exec
   end
 
 
-  private
-
-    def exec_sql(sql, params=nil)
-      ActiveRecord::Base.exec_sql(sql, params)
+  def filter_topics(builder, min_topic_age)
+    if min_topic_age
+      builder.where('posts.topic_id IN
+                    (SELECT id FROM topics WHERE bumped_at > :bumped_at)',
+                   bumped_at: min_topic_age)
     end
 
-    # Generate a SQL statement to update the scores of all posts
-    def post_score_sql
-      components = []
-      @weightings.keys.each { |k| components << "COALESCE(#{k.to_s}, 0) * :#{k.to_s}" }
-      components = components.join(" + ")
+    builder
+  end
 
-      "UPDATE posts SET score = x.score
-       FROM (SELECT id, #{components} as score FROM posts) AS x
-       WHERE x.id = posts.id AND (posts.score IS NULL OR x.score <> posts.score)"
-    end
 end

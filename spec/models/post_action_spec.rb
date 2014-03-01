@@ -269,6 +269,21 @@ describe PostAction do
       post.hidden.should be_true
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached_again]
     end
+
+    it "can flag the topic instead of a post" do
+      post1 = create_post
+      post2 = create_post(topic: post1.topic)
+      post_action = PostAction.act(Fabricate(:user), post1, PostActionType.types[:spam], {flag_topic: true})
+      post_action.targets_topic.should == true
+    end
+
+    it "will flag the first post if you flag a topic but there is only one post in the topic" do
+      post = create_post
+      post_action = PostAction.act(Fabricate(:user), post, PostActionType.types[:spam], {flag_topic: true})
+      post_action.targets_topic.should == false
+      post_action.post_id.should == post.id
+    end
+
   end
 
   it "prevents user to act twice at the same time" do

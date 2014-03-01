@@ -13,6 +13,7 @@
     float: left;
     margin-bottom: 15px;
   }
+
   .btn {
     float: right;
     margin-left: 8px;
@@ -21,33 +22,31 @@
     font-weight: normal;
   }
 
-  a.badge-category {padding: 3px 12px;  font-size: 16px; 
+  a.badge-category {
+    padding: 3px 12px;
+    font-size: 16px;
 
-    &.category-dropdown-button {    
-    padding: 3px 9px 2px 9px;
-
-    i {height: 20px;}
-
+    &.category-dropdown-button {
+      height: 24px;
+      padding: 3px 9px;
+      i { height: 20px; }
     }
 
   }
 
   .badge-category {
-
     font-weight: normal;
     text-transform: capitalize;
-
-
   }
 
 }
 
-#category-filter {
+#navigation-bar {
   .has-icon span:before {
     margin-right: 4px;
     font: 15px/0.9 "FontAwesome";
   }
-  .has-icon .favorited:before {
+  .has-icon .starred:before {
     content: "\f005";
   }
   .has-icon .unread:before {
@@ -59,15 +58,16 @@
 // --------------------------------------------------
 
 #topic-list {
-  border: 1px solid #ddd;
+  border: 1px solid $primary_border_color;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  a.title:visited:not(.badge-notification) {color: #888;}
+  margin: 0 0 10px;
+  a.title:visited:not(.badge-notification) {color: lighten($primary_text_color, 35%);}
 
-  tbody tr {
+  > tbody > tr {
     &:nth-child(even) {
-      background-color: #f8f8f8;
+      background-color: lighten($secondary_background_color, 77%);
     }
     &.archived a {
       opacity: 0.6;
@@ -82,7 +82,7 @@
       }
     }
     &.highlighted {
-      background-color: $highlight;
+      background-color: $highlight_background_color;
     }
   }
   th,
@@ -102,7 +102,8 @@
     color: $topic-list-th-color;
     font-weight: bold;
     font-size: 13px;
-    background: #eee;
+    background: lighten($secondary_background_color, 70%);
+
 
   }
   td {
@@ -111,10 +112,18 @@
     font-size: 14px;
   }
 
+  button.bulk-select {
+    padding: 0;
+    background: transparent;
+    &:hover {
+      color: lighten($primary_text_color, 35%);
+    }
+  }
+
   .star {
     width: 20px;
     padding-right: 0;
-    .icon-star {
+    .fa-star {
       position: relative;
     }
     + .main-link {
@@ -126,7 +135,7 @@
     font-size: 16px;
 
     i.score {
-      color: green;
+      color: $success_text_color;
       cursor: pointer;
     }
   }
@@ -134,31 +143,25 @@
   .topic-excerpt {
     font-size: 14px;
     margin-top: 8px;
-    color: $dark_gray;
-  }
-
-  .rank-details {
-    background-color: #eee;
-    padding: 6px;
-    margin-bottom: 5px;
-
-    p {
-      font-size: 12px;
-      margin: 0;
-      line-height: 14px;
-    }
+    color: lighten($primary_text_color, 35%);
+    word-break: break-word;
+    padding-right: 20px;
   }
 
   @include medium-width {
     .main-link {
-      width: 380px;
+      max-width: 300px;
     }
   }
-  @include small-width {
+
+   @include small-width {
     .main-link {
-      width: 335px;
+     max-width: 300px;
+
     }
+
   }
+
   .topic-statuses:empty {
     display: none;
   }
@@ -177,7 +180,7 @@
     width: 140px;
   }
   .posters {
-    width: 150px;
+    min-width: 150px;
     > a {
       float: left;
       margin-right: 4px;
@@ -197,16 +200,34 @@
       color: inherit;
     }
   }
+  .sortable {
+    cursor: pointer;
+    &:hover {
+      background-color: lighten($secondary_background_color, 60%);
+    }
+    @include unselectable;
+  }
   .likes {
-    width: 50px;
+    width: 65px;
+  }
+  .views {
+    width: 65px;
+  }
+  .posts {
+    width: 65px;
   }
   .activity {
-    width: 50px;
+    width: 60px;
   }
   .age {
     width: 60px;
   }
+  .with-year {
+    white-space: nowrap;
+  }
 }
+
+#list-area .top-lists h2 { margin: 5px 0 10px; }
 
 #topic-list tbody tr.has-excerpt .star {
   vertical-align: top;
@@ -214,14 +235,14 @@
 }
 
 #topic-list.categories {
-  th.latest {
+  th.posts {
     position: relative;
   }
   th .toggle-admin {
     position: absolute;
     padding: 3px 8px;
     font-size: 12px;
-    right: 5px;
+    right: -35px;
     top: 4px;
   }
   th.latest, td.latest {
@@ -230,21 +251,45 @@
   th.num {
     width: 45px;
   }
+  th.stats {
+    width: 90px;
+  }
+  td.latest {
+    vertical-align: top;
+    padding: 8px;
+  }
+  td.category {
+    vertical-align: top;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  td.stats {
+    .unit {
+      font-size: 11px;
+    }
+  }
+  table.categoryStats {
+    td {
+      padding: 2px;
+      vertical-align: bottom;
+      line-height: 17px;
+      &.value { text-align: right; }
+      &.unit  { text-align: left; }
+    }
+  }
   .last-user-info {
     font-size: 12px;
-    margin-top: 3px;
-  }
-  tbody td {
-    padding-bottom: 20px;
   }
 
-  td.category {
-    padding-top: 15px;
+  .has-description {
+    td.category {
+      padding-top: 15px;
+    }
   }
 
   .category{
     position: relative;
-    width: 55%;
+    width: 45%;
 
     .subcategories {
       margin-top: 10px;
@@ -253,11 +298,9 @@
         padding: 4px;
       }
     }
-
     .featured-users {
-      position: absolute;
-      right: 18px;
-      top: 3px;
+      float: right;
+      margin-right: 13px;
     }
     .category-description {
       margin-top: 10px;
@@ -266,6 +309,18 @@
       padding: 6px 10px;
       font-size: 14px;
     }
+  }
+
+  .featured-topic {
+    margin: 6px 0;
+    a.last-posted-at, a.last-posted-at:visited {
+      color: lighten($primary_text_color, 50%);
+    }
+  }
+
+  .badge-category {
+    display: inline-block;
+    margin-top: 1px;
   }
 }
 
@@ -301,7 +356,7 @@
 .category-list-item {
   margin-bottom: 10px;
   #topic-list tbody tr:nth-child(even) {
-    background-color: $white;
+    background-color: $primary_background_color;
   }
   th .badge-category {
     float: left;
@@ -309,9 +364,11 @@
   }
   .posters {
     float: left;
+    display: block;
+    width: 165px;
   }
   > footer {
-    border: 1px solid #ddd;
+    border: 1px solid $primary_border_color;
     border-top: 0;
     padding: 7px 10px;
     background-color: lighten($topic-list-th-background-color, 2%);
@@ -321,7 +378,6 @@
       color: lighten($topic-list-th-color, 5%);
       font-weight: bold;
       font-size: 12px;
-      text-shadow: 0 1px 0 $white;
     }
     figcaption {
       display: inline;
@@ -357,11 +413,11 @@
   width: 200px;
   margin: 0 auto;
   padding: 10px 0 10px 43px;
-  color: $white;
+  color: $primary_background_color;
   font-size: 18px;
   line-height: 25px;
   background: {
-    color: $black;
+    color: $primary_text_color;
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
     position: 10px 50%;
@@ -375,8 +431,8 @@
 
 .list-controls {
   .home {
-    background-color: #eee;
-    color: #333;
+    background-color: lighten($secondary_background_color, 76%);
+    color: $primary_text_color;
   }
 
   .badge-category {
@@ -386,7 +442,7 @@
     float: left;
   }
   .category-dropdown-button {
-    border-left: 1px solid rgba(0, 0, 0, 0.15);
+    border-left: 1px solid rgba(0,0,0,0.15);
     font-size: 16px;
     width: 10px;
     text-align: center;
@@ -400,6 +456,9 @@
 #list-area {
   margin-bottom: 300px;
 
+  h2 {
+    margin: 20px 0 10px;
+  }
 
 .topic-statuses .topic-status i {font-size: 15px;}
 
@@ -410,7 +469,7 @@
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: lighten($red, 10%);
+    color: lighten($warning_text_color, 10%);
     font-size: 13px;
     cursor: default;
   }
@@ -451,13 +510,13 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid #ccc;
-  background-color: white;
-  height: 200px;
+  border: 1px solid $primary_border_color;
+  background-color: $primary_background_color;
+  max-height: 350px;
   padding: 8px 7px 0 7px;
   z-index: 100;
   margin-top: 30px;
-  min-width: 116px;
+  min-width: 138px;
 
 
   a.badge-category {
@@ -472,8 +531,6 @@ ol.category-breadcrumb {
 
     text-align: center;
     margin-right: 20px;
-
-
   }
 
 
@@ -482,3 +539,17 @@ ol.category-breadcrumb {
   }
 }
 
+#bulk-select {
+  position: fixed;
+  right: 20px;
+  padding: 5px;
+  background-color: $primary_background_color;
+  button {
+    padding: 3px 0 3px 6px;
+  }
+}
+
+button.dismiss-read {
+  float: right;
+  margin-bottom: 5px;
+}

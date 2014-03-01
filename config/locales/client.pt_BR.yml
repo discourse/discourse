@@ -49,6 +49,8 @@ pt_BR:
         almost_x_years:
           one: "1y"
           other: "%{count}y"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 minuto"
@@ -162,7 +164,7 @@ pt_BR:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mencionou <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mencionou <a href='{{user2Url}}'>você</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Você</a> mencionou <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Você</a> mencionou <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Postado por <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Postado por <a href='{{userUrl}}'>você</a>"
@@ -371,8 +373,7 @@ pt_BR:
     unmute: Reativar
     last_post: Último post
 
-    best_of:
-      title: "Melhor De"
+    summary:
       enabled_description: "Você está vendo somente as melhores postagens neste tópico. Para ver todas as postagens de novo clique abaixo."
       description: "Há <b>{{count}}</b> postagen neste tópico. Isso é muito! Gostaria de poupar tempo alterando a vista para mostrar apenas as postagens com mais interações e respostas?"
       enable: 'Alternar para visualização "Os Melhores"'
@@ -436,9 +437,6 @@ pt_BR:
       github:
         title: "com GitHub"
         message: "Autenticando com GitHub (certifique-se de que os bloqueadores de popup estejam desativados)"
-      persona:
-        title: "com Persona"
-        message: "Autenticando com Mozilla Persona (certifique-se de que os bloqueadores de popup estejam desativados)"
 
     composer:
       posting_not_on_topic: "Qual tópico você gostaria de responder?"
@@ -514,15 +512,15 @@ pt_BR:
       none: "Não há notifcações neste momento."
       more: "ver notificações antigas"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} enviou uma mensagem particular para você: {{link}}"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} enviou uma mensagem particular para você: {{link}}"
       invited_to_private_message: "{{username}} convidou você para uma conversa privada: {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} aceitou o seu convite"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moveu a postagem para {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} aceitou o seu convite"
+      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} moveu a postagem para {{link}}"
       total_flagged: "postagens sinalizadas totais"
 
     upload_selector:
@@ -552,7 +550,7 @@ pt_BR:
     go_back: 'voltar atrás'
     current_user: 'ir para a sua página de usuário'
 
-    favorite:
+    starred:
       title: 'Favorito'
       help:
         star: 'adicionar este tópico a lista de favoritos'
@@ -560,7 +558,7 @@ pt_BR:
 
     topics:
       none:
-        favorited: "Você não favoritou nenhum tópico até agora. Para favoritar um tópico, clique ou toque na estrela ao lado do título."
+        starred: "Você não favoritou nenhum tópico até agora. Para favoritar um tópico, clique ou toque na estrela ao lado do título."
         unread: "Há tópicos não lidos."
         new: "Não há novos tópicos."
         read: "Você ainda não leu nenhum tópico."
@@ -575,13 +573,8 @@ pt_BR:
         read: "Não há mais tópicos lidos."
         new: "Não há mais tópicos novos."
         unread: "Não há mais tópicos não lidos."
-        favorited: "Não há mais tópicos favoritos."
+        starred: "Não há mais tópicos favoritos."
         category: "Não há mais tópicos na categoria {{category}}."
-
-    rank_details:
-      toggle: alternar detalhes do rank de tópicos
-      show: exibir rank de tópicos
-      title: Detalhes do Ranking de Tópicos
 
     topic:
       filter_to: "Mostrar apenas os {{post_count}} de {{username}} neste tópico"
@@ -739,21 +732,9 @@ pt_BR:
       login_reply: 'Entre com sua conta para responder'
 
       filters:
-        user: "Você está vendo apenas {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 postagem"
           other: "{{count}} postagens"
-        by_n_users:
-          one: "feito por 1 usuário específico"
-          other: "feito por {count}} usuários específicos"
-
-        best_of: "Você está vendo apenas {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
-          one: "1 melhor postagem"
-          other: "{{count}} melhores postagens"
-        of_n_posts:
-          one: "de 1 no tópico"
-          other: "de {{count}} no tópico"
         cancel: "Mostrar novamente todas as postagens deste tópico."
 
       split_topic:
@@ -965,7 +946,6 @@ pt_BR:
       list: "Lista de Categorias"
       no_description: "Não há descrição para esta categoria, edite a definição do tópico."
       change_in_category_topic: "Editar Descrição"
-      hotness: "Mais Quente"
       already_used: 'Esta cor já foi usada para outra categoria'
       security: "Segurança"
       auto_close_label: "Fechar automaticamente tópicos depois de:"
@@ -989,11 +969,10 @@ pt_BR:
         more: "{{n}} em falta..."
         left: "{{n}} restantes"
 
-    topic_summary:
+    topic_map:
       title: "Sumário do Tópico"
       links_shown: "mostrar todos os {{totalLinks}} links..."
       clicks: "clicks"
-      topic_link: "link do tópico"
 
     topic_statuses:
       locked:
@@ -1014,7 +993,7 @@ pt_BR:
     activity: "Atividade"
     likes: "Curtidas"
     likes_long: "há {{number}} curtidas neste tópico"
-    top_contributors: "Participantes"
+    users: "Participantes"
     category_title: "Categoria"
     history: "Histórico"
     changed_by: "por {{author}}"
@@ -1028,7 +1007,7 @@ pt_BR:
       hot:
         title: "Quente"
         help: "uma seleção dos tópicos mais quentes"
-      favorited:
+      starred:
         title: "Favoritos"
         help: "tópicos que marcaste como favorito"
       read:

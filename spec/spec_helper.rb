@@ -5,6 +5,7 @@ end
 
 require 'rubygems'
 require 'spork'
+require 'rbtrace'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
@@ -98,7 +99,7 @@ Spork.prefork do
     end
 
     config.before(:all) do
-      DiscoursePluginRegistry.clear
+      DiscoursePluginRegistry.clear if ENV['LOAD_PLUGINS'] != "1"
       Discourse.current_user_provider = TestCurrentUserProvider
       Discourse.session_syncronizer = TestSessionSyncronizer
 

@@ -5,7 +5,7 @@
 
   @class PreloadStore
 **/
-PreloadStore = {
+window.PreloadStore = {
   data: {},
 
   /**

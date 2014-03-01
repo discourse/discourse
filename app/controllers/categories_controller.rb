@@ -9,10 +9,8 @@ class CategoriesController < ApplicationController
   def index
     @description = SiteSetting.site_description
 
-    wide_mode = SiteSetting.enable_wide_category_list
-
     options = {}
-    options[:latest_post_only] = params[:latest_post_only] || wide_mode
+    options[:latest_posts] = params[:latest_posts] || SiteSetting.category_featured_topics
 
     @list = CategoryList.new(guardian,options)
     @list.draft_key = Draft::NEW_TOPIC
@@ -59,7 +57,9 @@ class CategoriesController < ApplicationController
   def update
     guardian.ensure_can_edit!(@category)
     json_result(@category, serializer: CategorySerializer) { |cat|
-      cat.move_to(category_params[:position].to_i) if category_params[:position]
+      if category_params[:position]
+        category_params[:position] == 'default' ? cat.use_default_position : cat.move_to(category_params[:position].to_i)
+      end
       category_params.delete(:position)
       cat.update_attributes(category_params)
     }
@@ -90,7 +90,7 @@ class CategoriesController < ApplicationController
           end
         end
 
-        params.permit(*required_param_keys, :position, :hotness, :parent_category_id, :auto_close_days, :permissions => [*p.try(:keys)])
+        params.permit(*required_param_keys, :position, :parent_category_id, :auto_close_hours, :permissions => [*p.try(:keys)])
       end
     end
 

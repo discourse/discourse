@@ -11,16 +11,16 @@ class TopicFeaturedUsers
 
   # Chooses which topic users to feature
   def choose(args={})
-    topic.reload unless rails4?
     clear
     update keys(args)
+    update_participant_count
     topic.save
   end
 
   def user_ids
-    [topic.featured_user1_id, 
-     topic.featured_user2_id, 
-     topic.featured_user3_id, 
+    [topic.featured_user1_id,
+     topic.featured_user2_id,
+     topic.featured_user3_id,
      topic.featured_user4_id].uniq.compact
   end
 
@@ -47,5 +47,9 @@ class TopicFeaturedUsers
       user_keys.each_with_index do |user_id, i|
         topic.send("featured_user#{i+1}_id=", user_id)
       end
+    end
+
+    def update_participant_count
+      topic.participant_count = topic.posts.count('distinct user_id')
     end
 end

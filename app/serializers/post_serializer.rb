@@ -1,13 +1,13 @@
 class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
-  attr_accessor :topic_slug
-  attr_accessor :topic_view
-  attr_accessor :parent_post
-  attr_accessor :add_raw
-  attr_accessor :single_post_link_counts
-  attr_accessor :draft_sequence
-  attr_accessor :post_actions
+  attr_accessor :topic_slug,
+                :topic_view,
+                :parent_post,
+                :add_raw,
+                :single_post_link_counts,
+                :draft_sequence,
+                :post_actions
 
   attributes :post_number,
              :post_type,
@@ -23,6 +23,7 @@ class PostSerializer < BasicPostSerializer
              :topic_slug,
              :topic_id,
              :display_username,
+             :primary_group_name,
              :version,
              :can_edit,
              :can_delete,
@@ -43,7 +44,8 @@ class PostSerializer < BasicPostSerializer
              :trust_level,
              :deleted_at,
              :deleted_by,
-             :user_deleted
+             :user_deleted,
+             :edit_reason
 
 
   def moderator?
@@ -74,6 +76,11 @@ class PostSerializer < BasicPostSerializer
     object.user.try(:name)
   end
 
+  def primary_group_name
+    return nil unless object.user && @topic_view
+    return @topic_view.primary_group_names[object.user.primary_group_id] if object.user.primary_group_id
+  end
+
   def link_counts
     return @single_post_link_counts if @single_post_link_counts.present?
 
@@ -95,10 +102,6 @@ class PostSerializer < BasicPostSerializer
 
   def score
     object.score || 0
-  end
-
-  def version
-    object.cached_version
   end
 
   def user_title

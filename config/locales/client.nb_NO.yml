@@ -94,7 +94,7 @@ nb_NO:
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> nevnte <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> nevnte <a href='{{user2Url}}'>deg</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> nevnte <a href='{{user2Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> nevnte <a href='{{user2Url}}'>{{another_user}}</a>"
 
       posted_by_user: "Postet av <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Postet av <a href='{{userUrl}}'>deg</a>"
@@ -272,8 +272,7 @@ nb_NO:
     unmute: "Udemp"
     last_post: "Siste Innlegg"
 
-    best_of:
-      title: "De Beste"
+    summary:
       enabled_description: "Du er for øyeblikket i De Beste modus i dette emnet."
       description: "Det er <b>{{count}}</b> innlegg i dette emnet. Det er mange! Will du spare tid ved å vise bare de beste innleggene?"
       enable: 'Bytt til "De Beste" modus'
@@ -335,9 +334,6 @@ nb_NO:
       github:
         title: "med GitHub"
         message: "Autentiserer med GitHub (sørg for at du tillater pop-up vindu)"
-      persona:
-        title: "med Persona"
-        message: "Autentiserer med Mozilla Persona (sørg for at du tillater pop-up vindu)"
 
     composer:
       posting_not_on_topic: "Du svarer på emnet \"{{title}}\", men for øyeblikket ser du på et annet emne."
@@ -413,15 +409,15 @@ nb_NO:
       none: "Du har ingen notifikasjoner akkurat nå."
       more: "se gamle notifikasjoner"
       mentioned: "<span title='omtalt' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='sitert' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='besvart' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='innlegg' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='redigert' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='likt' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='private melding'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='icon icon-envelope-alt' title='invitert til private melding'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} aksepterte din invitasjon"
-      moved_post: "<i title='flyttet innlegg' class='icon icon-arrow-right'></i> {{username}} flyttet til {{link}}"
+      quoted: "<i title='sitert' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='besvart' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='innlegg' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='redigert' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='likt' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='private melding'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='fa fa-envelope-o' title='invitert til private melding'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} aksepterte din invitasjon"
+      moved_post: "<i title='flyttet innlegg' class='fa fa-arrow-right'></i> {{username}} flyttet til {{link}}"
       total_flagged: "totalt markerte innlegg"
 
     upload_selector:
@@ -446,7 +442,7 @@ nb_NO:
     go_back: 'gå tilbake'
     current_user: 'go til din brukerside'
 
-    favorite:
+    starred:
       title: 'Favoritt'
       help:
         star: 'legg dette emnet til favorittlisten din'
@@ -454,7 +450,7 @@ nb_NO:
 
     topics:
       none:
-        favorited: "Du har ikke meket noen emner som favoritt enda. For å merke ett emne, klikk på stjernen ved siden av tittelen."
+        starred: "Du har ikke meket noen emner som favoritt enda. For å merke ett emne, klikk på stjernen ved siden av tittelen."
         unread: "Du har ingen uleste emner å lese."
         new: "Du har ingen nye emner å lese."
         read: "Du har ikke lest noen emner enda."
@@ -469,13 +465,8 @@ nb_NO:
         read: "Det er ikke noen leste emner igjen å lese."
         new: "Det er ikke noen nye emner igjen å lese."
         unread: "Det er ikke noen uleste emner igjen å lese."
-        favorited: "Det er ikke noen favorittemner igjen å lese."
+        starred: "Det er ikke noen favorittemner igjen å lese."
         category: "Det er ikke noen {{category}} emner igjen."
-
-    rank_details:
-      toggle: toggle topic rank details
-      show: show topic rank details
-      title: Topic Rank Details
 
     topic:
       create: 'Lag Emne'
@@ -609,21 +600,9 @@ nb_NO:
       login_reply: 'Logg Inn for å Svare'
 
       filters:
-        user: "Du ser bare på {{n_posts}} {{by_n_users}}."
         n_posts:
           one: "1 innlegg"
           other: "{{count}} innlegg"
-        by_n_users:
-          one: "skrevet av 1 spesifikk bruker"
-          other: "skrevet av {{count}} spesifikke brukere"
-
-        best_of: "Du ser på {{n_best_posts}} {{of_n_posts}}."
-        n_best_posts:
-          one: "1 beste innlegg"
-          other: "{{count}} beste innlegg"
-        of_n_posts:
-          one: "av 1 i emnet"
-          other: "av {{count}} i emnet"
         cancel: "Vis alle innlegg i dette emnet igjen."
 
       split_topic:
@@ -818,7 +797,6 @@ nb_NO:
       list: "List Kategorier"
       no_description: "Det er ingen beskrivelse på denne kategorien."
       change_in_category_topic: "Rediger Beskrivelse"
-      hotness: "Temperatur"
       already_used: 'Denne fargen er i bruk av en annen kategori'
       is_secure: "Sikker kategori?"
       add_group: "Legg til Gruppe"
@@ -840,11 +818,10 @@ nb_NO:
         more: "{{n}} igjen..."
         left: "{{n}} gjenstående"
 
-    topic_summary:
+    topic_map:
       title: "Emneoppsummering"
       links_shown: "vis alle {{totalLinks}} linker..."
       clicks: "klikk"
-      topic_link: "emnelink"
 
     topic_statuses:
       locked:
@@ -864,7 +841,7 @@ nb_NO:
     views_long: "dette emnet har blit sett {{number}} ganger"
     activity: "Aktivitet"
     likes: "Likes"
-    top_contributors: "Deltakere"
+    users: "Deltakere"
     category_title: "Kategori"
     history: "Historie"
     changed_by: "av {{author}}"
@@ -878,7 +855,7 @@ nb_NO:
       hot:
         title: "Hot"
         help: "en seleksjon av de hotteste emnene"
-      favorited:
+      starred:
         title: "Favorisert"
         help: "emner du har markert som favoritter"
       read:

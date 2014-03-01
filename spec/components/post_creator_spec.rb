@@ -187,11 +187,10 @@ describe PostCreator do
     end
 
     context 'when auto-close param is given' do
-      it 'ensures the user can auto-close the topic' do
+      it 'ensures the user can auto-close the topic, but ignores auto-close param silently' do
         Guardian.any_instance.stubs(:can_moderate?).returns(false)
-        expect {
-          PostCreator.new(user, basic_topic_params.merge(auto_close_days: 2)).create
-        }.to raise_error(Discourse::InvalidAccess)
+        post = PostCreator.new(user, basic_topic_params.merge(auto_close_time: 2)).create
+        post.topic.auto_close_at.should be_nil
       end
     end
   end
@@ -314,12 +313,16 @@ describe PostCreator do
       PostCreator.create(user, title: 'hi there welcome to my topic',
                                raw: "this is my awesome message @#{unrelated.username_lower}",
                                archetype: Archetype.private_message,
-                               target_usernames: [target_user1.username, target_user2.username].join(','))
+                               target_usernames: [target_user1.username, target_user2.username].join(','),
+                               category: 1)
     end
 
     it 'acts correctly' do
       post.topic.archetype.should == Archetype.private_message
       post.topic.topic_allowed_users.count.should == 3
+
+      # PMs can't have a category
+      post.topic.category.should be_nil
 
       # does not notify an unrelated user
       unrelated.notifications.count.should == 0
@@ -395,5 +398,17 @@ describe PostCreator do
       creator.errors.should be_nil
     end
   end
+
+  describe "word_count" do
+    it "has a word count" do
+      creator = PostCreator.new(user, title: 'some inspired poetry for a rainy day', raw: 'mary had a little lamb, little lamb, little lamb. mary had a little lamb')
+      post = creator.create
+      post.word_count.should == 14
+
+      post.topic.reload
+      post.topic.word_count.should == 14
+    end
+  end
+
 end
 

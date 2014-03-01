@@ -40,7 +40,7 @@
     }
     &.active > a, > a.active {
       border-color: darken($nav-pills-background-color-active, 10%);
-      color: #fff;
+      color: $tertiary_text_color;
       background-color: $nav-pills-background-color-active;
     }
   }
@@ -56,7 +56,7 @@
   padding: 0;
   overflow: hidden;
   background-color: $nav-stacked-background-color;
-  @include box-shadow(0 1px 0 $white);
+  @include box-shadow(0 1px 0 $secondary_shadow_color);
   > li {
     border-bottom: 1px solid $nav-stacked-divider-color;
     &:last-of-type {
@@ -72,15 +72,15 @@
     }
   }
   .active > a,
-  .active .icon-chevron-right {
-    color: $white;
+  .active .fa-chevron-right {
+    color: $tertiary_text_color;
     background-color: $nav-stacked-background-color-active;
   }
   .count {
     font-size: 12px;
     line-height: 16px;
   }
-  .icon-chevron-right {
+  .fa-chevron-right {
     float: right;
     margin: 0;
     color: $nav-stacked-chevron-color;
@@ -94,5 +94,6 @@
     text-align: center;
     position: absolute;
     left: 2px;
+    line-height: 20px;
   }
 }

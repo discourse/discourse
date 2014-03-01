@@ -5,6 +5,7 @@ class Validators::PostValidator < ActiveModel::Validator
     presence(record)
     stripped_length(record)
     raw_quality(record)
+    max_posts_validator(record)
     max_mention_validator(record)
     max_images_validator(record)
     max_attachments_validator(record)
@@ -37,6 +38,12 @@ class Validators::PostValidator < ActiveModel::Validator
       add_error_if_count_exceeded(post, :too_many_mentions, post.raw_mentions.size, SiteSetting.max_mentions_per_post)
     else
       add_error_if_count_exceeded(post, :too_many_mentions_newuser, post.raw_mentions.size, SiteSetting.newuser_max_mentions_per_post)
+    end
+  end
+
+  def max_posts_validator(post)
+    if post.new_record? && post.acting_user.present? && post.acting_user.posted_too_much_in_topic?(post.topic_id)
+      post.errors.add(:base, I18n.t(:too_many_replies, count: SiteSetting.newuser_max_replies_per_topic))
     end
   end
 

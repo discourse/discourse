@@ -79,8 +79,8 @@ Vagrant version 1.1.2. With this Vagrantfile:
     su - vagrant -c "rvm install 2.0.0-turbo"
     su - vagrant -c "rvm use 2.0.0-turbo --default"
 
-    echo "gem: --no-rdoc --no-ri" >> /etc/gemrc
-    su - vagrant -c "echo 'gem: --no-rdoc --no-ri' >> ~/.gemrc"
+    echo "gem: --no-document" >> /etc/gemrc
+    su - vagrant -c "echo 'gem: --no-document' >> ~/.gemrc"
 
 ## Postgres 9.1
 

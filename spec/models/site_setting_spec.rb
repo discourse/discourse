@@ -30,6 +30,23 @@ describe SiteSetting do
     end
   end
 
+  describe "normalized_embeddable_host" do
+    it 'returns the `embeddable_host` value' do
+      SiteSetting.stubs(:embeddable_host).returns("eviltrout.com")
+      SiteSetting.normalized_embeddable_host.should == "eviltrout.com"
+    end
+
+    it 'strip http from `embeddable_host` value' do
+      SiteSetting.stubs(:embeddable_host).returns("http://eviltrout.com")
+      SiteSetting.normalized_embeddable_host.should == "eviltrout.com"
+    end
+
+    it 'strip https from `embeddable_host` value' do
+      SiteSetting.stubs(:embeddable_host).returns("https://eviltrout.com")
+      SiteSetting.normalized_embeddable_host.should == "eviltrout.com"
+    end
+  end
+
   describe 'topic_title_length' do
     it 'returns a range of min/max topic title length' do
       SiteSetting.topic_title_length.should ==
@@ -106,6 +123,20 @@ describe SiteSetting do
         SiteSetting.authorized_images.should == ["png", "jpeg", "bmp"]
       end
 
+    end
+
+  end
+
+  describe "scheme" do
+
+    it "returns http when ssl is disabled" do
+      SiteSetting.expects(:use_https).returns(false)
+      SiteSetting.scheme.should == "http"
+    end
+
+    it "returns https when using ssl" do
+      SiteSetting.expects(:use_https).returns(true)
+      SiteSetting.scheme.should == "https"
     end
 
   end

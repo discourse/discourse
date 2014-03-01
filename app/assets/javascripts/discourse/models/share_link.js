@@ -59,10 +59,10 @@ Discourse.ShareLink.reopenClass({
   },
 
   iconClasses: {
-    twitter: 'icon-twitter',
-    facebook: 'icon-facebook-sign',
-    'google+': 'icon-google-plus',
-    email: 'icon-envelope'
+    twitter: 'fa-twitter',
+    facebook: 'fa-facebook-square',
+    'google+': 'fa-google-plus',
+    email: 'fa-envelope'
   },
 
   popupHeights: {

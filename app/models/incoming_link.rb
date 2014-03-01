@@ -18,8 +18,12 @@ class IncomingLink < ActiveRecord::Base
     end
 
     if request.referer.present?
-      host = URI.parse(request.referer).host
-      referer = request.referer[0..999]
+      begin
+        host = URI.parse(request.referer).host
+        referer = request.referer[0..999]
+      rescue URI::InvalidURIError
+        # bad uri, skip
+      end
     end
 
     if host != request.host && (user_id || referer)
@@ -39,7 +43,8 @@ class IncomingLink < ActiveRecord::Base
   # Internal: Extract the domain from link.
   def extract_domain
     if referer.present?
-      self.domain = URI.parse(self.referer).host
+      # We may get a junk URI, just deal with it
+      self.domain = URI.parse(self.referer).host rescue nil
       self.referer = nil unless self.domain
     end
   end
@@ -52,8 +57,9 @@ class IncomingLink < ActiveRecord::Base
       begin
         # TODO achieve same thing with no exception
         params = Rails.application.routes.recognize_path(parsed.path)
-        self.topic_id = params[:topic_id]
-        self.post_number = params[:post_number]
+        if self.topic_id = params[:topic_id]
+          self.post_number = params[:post_number] || 1
+        end
       rescue ActionController::RoutingError
         # If we can't route to the url, that's OK. Don't save those two fields.
       end
@@ -101,7 +107,7 @@ end
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  user_id         :integer
-#  ip_address      :string
+#  ip_address      :inet
 #  current_user_id :integer
 #
 # Indexes
@@ -110,4 +116,3 @@ end
 #  index_incoming_links_on_created_at_and_domain   (created_at,domain)
 #  index_incoming_links_on_created_at_and_user_id  (created_at,user_id)
 #
-

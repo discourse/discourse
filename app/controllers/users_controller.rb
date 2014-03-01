@@ -1,13 +1,14 @@
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
-require_dependency 'user_activator'
+require_dependency 'avatar_upload_service'
 
 class UsersController < ApplicationController
 
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect, :avatar]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_avatar, :toggle_avatar]
+  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_avatar, :toggle_avatar, :destroy]
+  before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
   #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
@@ -40,10 +41,10 @@ class UsersController < ApplicationController
   end
 
   def update
-    user = User.where(username_lower: params[:username].downcase).first
+    user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
     json_result(user, serializer: UserSerializer) do |u|
-      updater = UserUpdater.new(user)
+      updater = UserUpdater.new(current_user, user)
       updater.update(params)
     end
   end
@@ -65,29 +66,17 @@ class UsersController < ApplicationController
   end
 
   def invited
-    params.require(:username)
-    params.permit(:filter)
+    inviter = fetch_user_from_params
 
-    by_user = fetch_user_from_params
-
-    invited = Invite.where(invited_by_id: by_user.id)
-                    .includes(:user => :user_stat)
-                    .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
-                           'user_stats.time_read DESC',
-                           'invites.redeemed_at DESC')
-                    .limit(SiteSetting.invites_shown)
-                    .references('user_stats')
-
-    unless guardian.can_see_pending_invites_from?(by_user)
-      invited = invited.where('invites.user_id IS NOT NULL')
+    invites = if guardian.can_see_pending_invites_from?(inviter)
+      Invite.find_all_invites_from(inviter)
+    else
+      Invite.find_redeemed_invites_from(inviter)
     end
 
-    if params[:filter].present?
-      invited = invited.where('(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)', filter: "%#{params[:filter].downcase}%")
-                       .references(:users)
-    end
+    invites = invites.filter_by(params[:filter])
 
-    render_serialized(invited.to_a, InviteSerializer)
+    render_serialized(invites.to_a, InviteSerializer)
   end
 
   def is_local_username
@@ -108,7 +97,10 @@ class UsersController < ApplicationController
   # Used for checking availability of a username and will return suggestions
   # if the username is not available.
   def check_username
-    params.require(:username)
+    if !params[:username].present?
+      params.require(:username) if !params[:email].present?
+      return render(json: success_json) unless SiteSetting.call_discourse_hub?
+    end
     username = params[:username]
 
     target_user = user_from_params_or_current_user
@@ -118,7 +110,7 @@ class UsersController < ApplicationController
 
     checker = UsernameCheckerService.new
     email = params[:email] || target_user.try(:email)
-    render(json: checker.check_username(username, email))
+    render json: checker.check_username(username, email)
   rescue RestClient::Forbidden
     render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
   end
@@ -127,19 +119,40 @@ class UsersController < ApplicationController
     params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
   end
 
-
   def create
-    return fake_success_response if suspicious? params
+    user = User.new(user_params)
 
-    user = User.new_from_params(params)
-    user.ip_address = request.ip
-    auth = authenticate_user(user, params)
-    register_nickname(user)
+    authentication = UserAuthenticator.new(user, session)
+    authentication.start
 
-    user.save ? user_create_successful(user, auth) : user_create_failed(user)
+    activation = UserActivator.new(user, request, session, cookies)
+    activation.start
 
+    if user.save
+      authentication.finish
+      activation.finish
+
+      render json: {
+        success: true,
+        active: user.active?,
+        message: activation.message
+      }
+    else
+      render json: {
+        success: false,
+        message: I18n.t(
+          'login.errors',
+          errors: user.errors.full_messages.join("\n")
+        ),
+        errors: user.errors.to_hash,
+        values: user.attributes.slice('name', 'username', 'email')
+      }
+    end
   rescue ActiveRecord::StatementInvalid
-    render json: { success: false, message: I18n.t("login.something_already_taken") }
+    render json: {
+      success: false,
+      message: I18n.t("login.something_already_taken")
+    }
   rescue DiscourseHub::NicknameUnavailable => e
     render json: e.response_message
   rescue RestClient::Forbidden
@@ -156,24 +169,30 @@ class UsersController < ApplicationController
     @user = EmailToken.confirm(params[:token])
     if @user.blank?
       flash[:error] = I18n.t('password_reset.no_token')
-    else
-      if request.put? && params[:password].present?
-        @user.password = params[:password]
-        if @user.save
-
-          if Guardian.new(@user).can_access_forum?
-            # Log in the user
-            log_on_user(@user)
-            flash[:success] = I18n.t('password_reset.success')
-          else
-            @requires_approval = true
-            flash[:success] = I18n.t('password_reset.success_unapproved')
-          end
-        end
+    elsif request.put?
+      raise Discourse::InvalidParameters.new(:password) unless params[:password].present?
+      @user.password = params[:password]
+      @user.password_required!
+      if @user.save
+        Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
+        logon_after_password_reset
       end
     end
     render layout: 'no_js'
   end
+
+  def logon_after_password_reset
+    message = if Guardian.new(@user).can_access_forum?
+                # Log in the user
+                log_on_user(@user)
+                'password_reset.success'
+              else
+                @requires_approval = true
+                'password_reset.success_unapproved'
+              end
+
+    flash[:success] = I18n.t(message)
+   end
 
   def change_email
     params.require(:email)
@@ -229,11 +248,13 @@ class UsersController < ApplicationController
   def send_activation_email
     @user = fetch_user_from_params
     @email_token = @user.email_tokens.unconfirmed.active.first
-    if @user
-      @email_token ||= @user.email_tokens.create(email: @user.email)
-      Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
-    end
+    enqueue_activation_email if @user
     render nothing: true
+  end
+
+  def enqueue_activation_email
+    @email_token ||= @user.email_tokens.create(email: @user.email)
+    Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
   end
 
   def search_users
@@ -246,7 +267,13 @@ class UsersController < ApplicationController
     user_fields = [:username, :use_uploaded_avatar, :upload_avatar_template, :uploaded_avatar_id]
     user_fields << :name if SiteSetting.enable_names?
 
-    render json: { users: results.as_json(only: user_fields, methods: :avatar_template) }
+    to_render = { users: results.as_json(only: user_fields, methods: :avatar_template) }
+
+    if params[:include_groups] == "true"
+      to_render[:groups] = Group.search_group(term, current_user).map {|m| {:name=>m.name, :usernames=> m.usernames.split(",")} }
+    end
+
+    render json: to_render
   end
 
   # [LEGACY] avatars in quotes/oneboxes might still be pointing to this route
@@ -280,38 +307,18 @@ class UsersController < ApplicationController
     # Only allow url uploading for API users
     # TODO: Does not protect from huge uploads
     # https://github.com/discourse/discourse/pull/1512
-    if file.is_a?(String) && is_api?
-      adapted   = ::UriAdapter.new(file)
-      file      = adapted.build_uploaded_file
-      filesize  = adapted.file_size
-    elsif file.is_a?(String)
-      return render status: 422, text: I18n.t("upload.images.unknown_image_type")
-    end
-
     # check the file size (note: this might also be done in the web server)
-    filesize ||= File.size(file.tempfile)
-    max_size_kb = SiteSetting.max_image_size_kb * 1024
+    avatar        = build_avatar_from(file)
+    avatar_policy = AvatarUploadPolicy.new(avatar)
 
-    if filesize > max_size_kb
-      return render status: 413,
-                    text: I18n.t("upload.images.too_large",
-                                  max_size_kb: max_size_kb)
+    if avatar_policy.too_big?
+      return render status: 413, text: I18n.t("upload.images.too_large",
+                                              max_size_kb: avatar_policy.max_size_kb)
     end
 
-    unless SiteSetting.authorized_image?(file)
-      return render status: 422, text: I18n.t("upload.images.unknown_image_type")
-    end
+    raise FastImage::UnknownImageType unless SiteSetting.authorized_image?(avatar.file)
 
-    upload = Upload.create_for(user.id, file, filesize)
-    user.update_avatar(upload)
-
-    Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
-
-    render json: {
-      url: upload.url,
-      width: upload.width,
-      height: upload.height,
-    }
+    upload_avatar_for(user, avatar)
 
   rescue Discourse::InvalidParameters
     render status: 422, text: I18n.t("upload.images.unknown_image_type")
@@ -334,6 +341,13 @@ class UsersController < ApplicationController
     render nothing: true
   end
 
+  def destroy
+    @user = fetch_user_from_params
+    guardian.ensure_can_delete_user!(@user)
+    UserDestroyer.new(current_user).destroy(@user, {delete_posts: true, context: params[:context]})
+    render json: success_json
+  end
+
   private
 
     def honeypot_value
@@ -350,65 +364,51 @@ class UsersController < ApplicationController
       challenge
     end
 
+    def build_avatar_from(file)
+      source = if file.is_a?(String)
+                 is_api? ? :url : (raise FastImage::UnknownImageType)
+               else
+                 :image
+               end
+      AvatarUploadService.new(file, source)
+    end
+
+    def upload_avatar_for(user, avatar)
+      upload = Upload.create_for(user.id, avatar.file, avatar.filesize)
+      user.upload_avatar(upload)
+
+      Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
+      render json: { url: upload.url, width: upload.width, height: upload.height }
+    end
+
+    def respond_to_suspicious_request
+      if suspicious?(params)
+        render(
+          json: {
+            success: true,
+            active: false,
+            message: I18n.t("login.activate_email", email: params[:email])
+          }
+        )
+      end
+    end
+
     def suspicious?(params)
       honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
     end
 
-    def fake_success_response
-      render(
-        json: {
-          success: true,
-          active: false,
-          message: I18n.t("login.activate_email", email: params[:email])
-        }
-      )
-    end
-
     def honeypot_or_challenge_fails?(params)
       params[:password_confirmation] != honeypot_value ||
-      params[:challenge] != challenge_value.try(:reverse)
+        params[:challenge] != challenge_value.try(:reverse)
     end
 
-    def valid_session_authentication?(auth, email)
-      auth && auth[:email] == email && auth[:email_valid]
+    def user_params
+      params.permit(
+        :name,
+        :email,
+        :password,
+        :username,
+        :active
+      ).merge(ip_address: request.ip)
     end
-
-    def create_third_party_auth_records(user, auth)
-      return unless auth && auth[:authenticator_name]
-
-      authenticator = Users::OmniauthCallbacksController.find_authenticator(auth[:authenticator_name])
-      authenticator.after_create_account(user, auth)
-    end
-
-    def register_nickname(user)
-      if user.valid? && SiteSetting.call_discourse_hub?
-        DiscourseHub.register_nickname(user.username, user.email)
-      end
-    end
-
-    def user_create_successful(user, auth)
-      activator = UserActivator.new(user, request, session, cookies)
-      create_third_party_auth_records(user, auth)
-
-      # Clear authentication session.
-      session[:authentication] = nil
-      render json: { success: true, active: user.active?, message: activator.activation_message }
-    end
-
-    def user_create_failed(user)
-      render json: {
-        success: false,
-        message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n")),
-        errors: user.errors.to_hash,
-        values: user.attributes.slice("name", "username", "email")
-      }
-    end
-
-    def authenticate_user(user, params)
-      auth = session[:authentication]
-      user.active = true if valid_session_authentication?(auth, params[:email])
-      user.password_required! unless auth
-      auth
-    end
-
 end

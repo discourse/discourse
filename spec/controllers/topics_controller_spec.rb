@@ -345,7 +345,7 @@ describe TopicsController do
       end
 
       it 'deletes the forum topic user record' do
-        PostTiming.expects(:destroy_for).with(@user.id, @topic.id)
+        PostTiming.expects(:destroy_for).with(@user.id, [@topic.id])
         xhr :delete, :destroy_timings, topic_id: @topic.id
       end
 
@@ -583,8 +583,20 @@ describe TopicsController do
       end
 
       context 'and the user is not logged in' do
+        let(:api_key) { topic.user.generate_api_key(topic.user) }
+
         it 'redirects to the login page' do
           get :show, topic_id: topic.id, slug: topic.slug
+          expect(response).to redirect_to login_path
+        end
+
+        it 'shows the topic if valid api key is provided' do
+          get :show, topic_id: topic.id, slug: topic.slug, api_key: api_key.key
+          expect(response).to be_successful
+        end
+
+        it 'redirects to the login page if invalid key is provided' do
+          get :show, topic_id: topic.id, slug: topic.slug, api_key: "bad"
           expect(response).to redirect_to login_path
         end
       end
@@ -739,12 +751,12 @@ describe TopicsController do
   describe 'autoclose' do
 
     it 'needs you to be logged in' do
-      lambda { xhr :put, :autoclose, topic_id: 99, auto_close_days: 3}.should raise_error(Discourse::NotLoggedIn)
+      lambda { xhr :put, :autoclose, topic_id: 99, auto_close_time: '24'}.should raise_error(Discourse::NotLoggedIn)
     end
 
     it 'needs you to be an admin or mod' do
       user = log_in
-      xhr :put, :autoclose, topic_id: 99, auto_close_days: 3
+      xhr :put, :autoclose, topic_id: 99, auto_close_time: '24'
       response.should be_forbidden
     end
 
@@ -755,16 +767,48 @@ describe TopicsController do
       end
 
       it "can set a topic's auto close time" do
-        Topic.any_instance.expects(:set_auto_close).with("3", @admin)
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: 3
+        Topic.any_instance.expects(:set_auto_close).with("24", @admin)
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: '24'
+        json = ::JSON.parse(response.body)
+        json.should have_key('auto_close_at')
       end
 
       it "can remove a topic's auto close time" do
         Topic.any_instance.expects(:set_auto_close).with(nil, anything)
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: nil
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: nil
       end
     end
 
   end
 
+  describe "bulk" do
+    it 'needs you to be logged in' do
+      lambda { xhr :put, :bulk }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    describe "when logged in" do
+      let!(:user) { log_in }
+      let(:operation) { {type: 'change_category', category_id: '1'} }
+      let(:topic_ids) { [1,2,3] }
+
+      it "requires a list of topic_ids or filter" do
+        lambda { xhr :put, :bulk, operation: operation }.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it "requires an operation param" do
+        lambda { xhr :put, :bulk, topic_ids: topic_ids}.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it "requires a type field for the operation param" do
+        lambda { xhr :put, :bulk, topic_ids: topic_ids, operation: {}}.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it "delegates work to `TopicsBulkAction`" do
+        topics_bulk_action = mock
+        TopicsBulkAction.expects(:new).with(user, topic_ids, operation).returns(topics_bulk_action)
+        topics_bulk_action.expects(:perform!)
+        xhr :put, :bulk, topic_ids: topic_ids, operation: operation
+      end
+    end
+  end
 end

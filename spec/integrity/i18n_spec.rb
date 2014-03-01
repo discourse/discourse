@@ -46,9 +46,10 @@ describe "i18n integrity checks" do
     Dir["#{Rails.root}/config/locales/*.yml"].each do |f|
       locale = /.*\.([^.]{2,})\.yml$/.match(f)[1] + ':'
       IO.foreach(f) do |line|
+        line.strip!
         next if line.start_with? "#"
         next if line.start_with? "---"
-        next if line.strip!.blank?
+        next if line.blank?
         line.should eq locale
         break
       end

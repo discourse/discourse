@@ -12,3 +12,4 @@ hostsfile_entry 'main site' do
   hostname node['vagrant_host']['hostname']
   action :create_if_missing
 end
+

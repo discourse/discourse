@@ -54,29 +54,59 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
   app.working_dir = rails_root
   sockdir = "#{rails_root}/tmp/sockets"
   File.directory? sockdir or FileUtils.mkdir_p sockdir
+
+  # Discourse is set to use Thin as its WebServer, here is its running scripts.
   num_webs.times do |i|
     app.process("thin-#{i}") do |process|
-      process.start_command  = "bundle exec thin start -e production -t 0 --socket #{sockdir}/thin.#{i}.sock --pid #{rails_root}/tmp/pids/thin#{i}.pid --log #{rails_root}/log/thin-#{i}.log --daemonize"
+      process.start_command  = "bundle exec thin start -e production -t 0 --socket #{sockdir}/thin.#{i}.sock --pid #{rails_root}/tmp/pids/thin-#{i}.pid --log #{rails_root}/log/thin-#{i}.log --daemonize"
+
+      process.stop_command  = "bundle exec thin stop --pid #{rails_root}/tmp/pids/thin-#{i}.pid"
 
       # Alternatively, you can start with a port number instead of a socket. If you do that, then you MUST update
       # the upstream section in the nginx config to match.
       # The nginx.sample.conf file assumes you're using sockets.
-      # process.start_command  = "bundle exec thin start -e production -t 0 -p #{9040 + i} -P #{rails_root}/tmp/pids/thin#{i}.pid -d"
+      # process.start_command  = "bundle exec thin start -e production -t 0 -p #{9040 + i} -P #{rails_root}/tmp/pids/thin-#{i}.pid -d"
 
-      process.pid_file = "#{rails_root}/tmp/pids/thin#{i}.pid"
+      process.pid_file = "#{rails_root}/tmp/pids/thin-#{i}.pid"
+
       process.start_grace_time = 30.seconds
-      process.stop_grace_time = 10.seconds
+      process.stop_grace_time = 30.seconds
       process.restart_grace_time = 10.seconds
+      
       process.group = "thins"
       process.uid = user
       process.gid = group
+      
       process.daemonize = false
-      process.stdout = process.stderr = "#{rails_root}/log/thin#{i}.log"
+      process.stdout = process.stderr = "#{rails_root}/log/thin-#{i}.log"
+      
       # Thanks to: http://www.garrensmith.com/2012/09/24/Staying-up-with-Unicorn-Upstart-Bluepill.html
       # If the amount of memory is exceeded 3 times out of 5, restart
       process.checks :mem_usage, :every => 1.minutes, :below => 750.megabytes, :times => [3, 5]
     end
   end
+
+  # You can use Puma as WebServer as well, please use the scripts below.
+  #app.process("puma") do |process|
+  #  process.start_command  = "puma -e production -C #{rails_root}/config/puma.rb"
+  #
+  #    # Puma's Setting file is located in config/puma.rb, if you want to edit them, go to puma.rb.
+  #    # the upstream section in the nginx config to match.
+  #    # The nginx.sample.conf file assumes you're using sockets.
+  #    
+  #  process.pid_file = "#{rails_root}/tmp/pids/puma.pid"
+  #  process.start_grace_time = 30.seconds
+  #  process.stop_grace_time = 10.seconds
+  #  process.restart_grace_time = 10.seconds
+  #  process.group = "pumas"
+  #  process.uid = user
+  #  process.gid = group
+  #  process.daemonize = false
+  #  process.stdout = process.stderr = "#{rails_root}/log/puma.log"
+  #    # Thanks to: http://www.garrensmith.com/2012/09/24/Staying-up-with-Unicorn-Upstart-Bluepill.html
+  #    # If the amount of memory is exceeded 3 times out of 5, restart
+  #  process.checks :mem_usage, :every => 1.minutes, :below => 750.megabytes, :times => [3, 5]
+  #end
 
 #debug instance
 #    app.process("thin-debug") do |process|

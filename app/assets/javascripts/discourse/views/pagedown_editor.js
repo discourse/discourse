@@ -1,4 +1,4 @@
-/*global Markdown:true assetPath:true */
+/*global assetPath:true */
 
 /**
   A control to support using PageDown as an Ember view.

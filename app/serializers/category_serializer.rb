@@ -1,6 +1,11 @@
 class CategorySerializer < BasicCategorySerializer
 
-  attributes :read_restricted, :available_groups, :auto_close_days, :group_permissions, :position
+  attributes :read_restricted,
+             :available_groups,
+             :auto_close_hours,
+             :group_permissions,
+             :position,
+             :can_delete
 
   def group_permissions
     @group_permissions ||= begin
@@ -19,6 +24,15 @@ class CategorySerializer < BasicCategorySerializer
 
   def available_groups
     Group.order(:name).pluck(:name) - group_permissions.map{|g| g[:group_name]}
+  end
+
+
+  def can_delete
+    true
+  end
+
+  def include_can_delete?
+    scope && scope.can_delete?(object)
   end
 
 end

@@ -12,12 +12,16 @@
   }
 }
 
+.lightbox-wrapper {
+  display: inline-block;
+}
+
 .meta {
   position: absolute;
   bottom: 0;
   width: 100%;
-  color: white;
-  background: black;
+  color: $tertiary_text_color;
+  background: $secondary_background_color;
   opacity: 0;
   @include transition(opacity .2s);
 
@@ -37,7 +41,7 @@
   .informations {
     margin: 6px;
     padding-right: 20px;
-    color: $dark_gray;
+    color: $secondary_text_color;
     font-size: 14px;
   }
 

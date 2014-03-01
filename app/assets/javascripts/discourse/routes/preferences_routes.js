@@ -11,12 +11,8 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
     return this.modelFor('user');
   },
 
-  renderTemplate: function() {
-    this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
-  },
-
-  setupController: function(controller, model) {
-    controller.set('model', model);
+  setupController: function(controller, user) {
+    controller.setProperties({ model: user, newNameInput: user.get('name') });
     this.controllerFor('user').set('indexStream', false);
   },
 
@@ -51,6 +47,12 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
   }
 });
 
+Discourse.PreferencesIndexRoute = Discourse.RestrictedUserRoute.extend({
+  renderTemplate: function() {
+    this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
+  },
+});
+
 /**
   The route for editing a user's "About Me" bio.
 
@@ -73,7 +75,7 @@ Discourse.PreferencesAboutRoute = Discourse.RestrictedUserRoute.extend({
   },
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet
-  exit: function() {
+  deactivate: function() {
     this._super();
     this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
   },
@@ -119,7 +121,7 @@ Discourse.PreferencesEmailRoute = Discourse.RestrictedUserRoute.extend({
   },
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet
-  exit: function() {
+  deactivate: function() {
     this._super();
     this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
   }
@@ -143,7 +145,7 @@ Discourse.PreferencesUsernameRoute = Discourse.RestrictedUserRoute.extend({
   },
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet
-  exit: function() {
+  deactivate: function() {
     this._super();
     this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
   },

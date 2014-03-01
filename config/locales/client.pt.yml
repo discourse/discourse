@@ -206,8 +206,7 @@ pt:
     unmute: Reativar
     last_post: Último post
 
-    best_of:
-      title: "Melhor De"
+    summary:
       description: "Há <b>{{count}}</b> posts neste tópico. Isso é muito! Gostarias de poupar tempo alterando a vista para mostrar apenas os posts com mais interações e respostas?"
       button: 'Alterar para a vista "Melhor De"'
 
@@ -289,15 +288,15 @@ pt:
       none: "Não tens notifcações neste momento.."
       more: "ver notificações antigas"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} enviou-te uma mensagem privada: {{link}}"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} enviou-te uma mensagem privada: {{link}}"
       invited_to_private_message: "{{username}} convidou-te para uma conversa privada: {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} aceitou o teu convite"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moveu o post para {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} aceitou o teu convite"
+      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} moveu o post para {{link}}"
 
     upload_selector:
       from_my_computer: "Do meu dispositivo"
@@ -316,12 +315,12 @@ pt:
     go_back: 'voltar atrás'
     current_user: 'ir para a tua página de utilizador'
 
-    favorite:
+    starred:
       title: 'Favorito'
       help: 'adicionar este tópico à tua lista de favoritos'
 
     topics:
-      no_favorited: "Ainda não marcaste nenhum tópico como favorito. Para marcar um tópico como favorito, clica na estrela à beira do título."
+      no_starred: "Ainda não marcaste nenhum tópico como favorito. Para marcar um tópico como favorito, clica na estrela à beira do título."
       no_unread: "Não tens tópicos ainda não lidos para ler."
       no_new: "Não tens novos tópicos para ler."
       no_read: "Ainda não leste nenhum tópico."
@@ -431,7 +430,7 @@ pt:
 
       filters:
         user: "Estás a ver apenas os posts de um utilizador especifico."
-        best_of: "Estás a ver apenas os posts em 'Melhor De'."
+        summary: "Estás a ver apenas os posts em 'Melhor De'."
         cancel: "Mostrar todos os posts neste tópico outra vez."
 
       move_selected:
@@ -537,7 +536,7 @@ pt:
         more: "{{n}} em falta..."
         left: "{{n}} restantes"
 
-    topic_summary:
+    topic_map:
       title: "Sumário do Tópico"
       links_shown: "mostrar todos os {{totalLinks}} links..."
 
@@ -559,7 +558,7 @@ pt:
     views_long: "este tópico foi visto {{number}} vezes"
     activity: "Atividade"
     likes: "Gostos"
-    top_contributors: "Participantes"
+    users: "Participantes"
     category_title: "Categoria"
 
     categories_list: "Lista de Categorias"
@@ -568,7 +567,7 @@ pt:
       latest:
         title: "Populares"
         help: "os tópicos recentes mais populares"
-      favorited:
+      starred:
         title: "Favoritos"
         help: "tópicos que marcaste como favorito"
       read:

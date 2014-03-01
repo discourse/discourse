@@ -19,7 +19,7 @@ Discourse.Dialect.replaceBlock({
   stop: '```',
   emitter: function(blockContents, matches) {
 
-    var klass = 'lang-auto';
+    var klass = Discourse.SiteSettings.default_code_lang;
     if (matches[1] && acceptableCodeClasses.indexOf(matches[1]) !== -1) {
       klass = matches[1];
     }
@@ -29,7 +29,20 @@ Discourse.Dialect.replaceBlock({
 
 // Ensure that content in a code block is fully escaped. This way it's not white listed
 // and we can use HTML and Javascript examples.
-Discourse.Dialect.postProcessTag('code', function (contents) {
-  return Handlebars.Utils.escapeExpression(contents.replace(/^ +| +$/g,''));
-});
+Discourse.Dialect.on('parseNode', function (event) {
+  var node = event.node,
+      path = event.path;
 
+  if (node[0] === 'code') {
+    var contents = node[node.length-1],
+        regexp;
+
+    if (path && path[path.length-1] && path[path.length-1][0] && path[path.length-1][0] === "pre") {
+      regexp = / +$/g;
+
+    } else {
+      regexp = /^ +| +$/g;
+    }
+    node[node.length-1] = Handlebars.Utils.escapeExpression(contents.replace(regexp,''));
+  }
+});

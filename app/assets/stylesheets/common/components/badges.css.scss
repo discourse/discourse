@@ -21,14 +21,31 @@
 
 .badge-category {
   padding: 4px 6px;
-  color: $white;
+  color: $tertiary_text_color;
   font-size: 12px;
   font-weight: bold;
   white-space: nowrap;
   &[href] {
-    color: $white;
+  color: $tertiary_text_color;
+  }
+  &.restricted {
+    div {
+      display: inline-block;
+      margin: 0;
+    }
   }
 }
+
+.d-dropdown .badge-category {
+&.restricted {
+    div {
+      display: inline-block;
+      margin: 0;
+      padding-right: 6px;
+    }
+}}
+
+h1 a.badge-category div {vertical-align: top;}
 
 
 // Notification badge
@@ -36,29 +53,32 @@
 
 .badge-notification {
   @extend %badge;
-  margin-left: 3px;
   padding: 4px;
   padding-top: 3px;
-  color: $white;
+  color: $tertiary_text_color;
   font-size: 11px;
   min-width: 10px;
   text-align: center;
   background-color: $badge-notification-background-color;
   &[href] {
-    color: $white;
+  color: $tertiary_text_color;
   }
 
   // New posts
 
-  &.new-posts {
-    background-color: $blue;
+  &.new-posts, &.unread-posts {
+    background-color: $emphasis_text_color;
   }
 
   // Click count
 
   &.clicks {
     font-weight: normal;
-    background-color: rgba($black, 0.15)
+    background-color: #ddd;
+    top: -1px;  
+    color: #888;
+    position: relative;
+    margin-left: 2px;
   }
 }
 
@@ -81,10 +101,10 @@
 .badge-group {
   @extend %badge;
   padding: 3px 5px;
-  color: $black;
-  text-shadow: 0 1px 0 rgba($white, 0.2);
+  color: $primary_text_color;
+  text-shadow: 0 1px 0 rgba($secondary_shadow_color, 0.2);
   background-color: #ddd;
   border-color: #aaa;
   font-size: 12px;
-  @include box-shadow(inset 0 1px 0 rgba($white, 0.52));
+  @include box-shadow(inset 0 1px 0 rgba($secondary_shadow_color, 0.52));
 }

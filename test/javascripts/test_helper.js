@@ -13,6 +13,7 @@
 //= require jquery.ui.widget.js
 //= require handlebars.js
 //= require development/ember.js
+//= require message-bus.js
 
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
@@ -20,36 +21,9 @@
 
 // Pagedown customizations
 //= require ../../app/assets/javascripts/pagedown_custom.js
-
-// The rest of the vendored JS
-//= require LAB.js
-//= require Markdown.Converter.js
-//= require Markdown.Editor.js
-//= require better_markdown.js
-//= require bootbox.js
-//= require bootstrap-alert.js
-//= require bootstrap-button.js
-//= require bootstrap-dropdown.js
-//= require bootstrap-modal.js
-//= require bootstrap-transition.js
-//= require browser-update.js
-//= require chosen.jquery.js
-//= require ember-renderspeed.js
-//= require favcount.js
-//= require jquery.ba-replacetext.js
-//= require jquery.ba-resize.min.js
-//= require jquery.color.js
-//= require jquery.cookie.js
-//= require jquery.fileupload.js
-//= require jquery.iframe-transport.js
-//= require jquery.putcursoratend.js
-//= require jquery.tagsinput.js
-//= require lodash.js
-//= require md5.js
-//= require modernizr.custom.95264.js
-//= require mousetrap.js
-//= require rsvp.js
-//= require show-html.js
+//
+//= require vendor
+//
 //= require htmlparser.js
 
 // Stuff we need to load first
@@ -92,6 +66,9 @@ $.ajax = function() {
   return oldAjax.apply(this, arguments);
 };
 
+// Stop the message bus so we don't get ajax calls
+Discourse.MessageBus.stop();
+
 // Trick JSHint into allow document.write
 var d = document;
 d.write('<div id="ember-testing-container"><div id="ember-testing"></div></div>');
@@ -100,7 +77,8 @@ d.write('<style>#ember-testing-container { position: absolute; background: white
 Discourse.rootElement = '#ember-testing';
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
-Discourse.bindDOMEvents();
+Discourse.runInitializers();
+Discourse.start();
 
 Discourse.Router.map(function() {
   Discourse.routeBuilder.call(this);

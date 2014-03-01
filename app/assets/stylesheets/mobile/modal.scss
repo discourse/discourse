@@ -17,6 +17,9 @@
     z-index: 2070;
   }
 
+  // Prevent background scrolling when a modal is open
+  overflow: hidden;
+  position: fixed;
 }
 
 .modal-backdrop {
@@ -26,7 +29,7 @@
   bottom: 0;
   left: 0;
   z-index: 1040;
-  background-color: #000000;
+  background-color: $secondary_background_color;
   &.fade {
     opacity: 0;
   }
@@ -51,10 +54,10 @@
 .modal-inner-container {
   max-width: 100%;
   margin: 0 auto;
-  background-color: #ffffff;
-  border: 1px solid #999;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  *border: 1px solid #999;
+  *border: 1px solid $primary_border_color;
   /* IE6-7 */
 
   @include border-radius-all (6px);
@@ -81,14 +84,14 @@
   overflow: auto;
   width: 100%;
   height: auto;
-  background-color: #ffffff;
-  border: 1px solid #999;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  *border: 1px solid #999;
+  *border: 1px solid $primary_border_color;
   /* IE6-7 */
 
   @include border-radius-all (6px);
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 7px rgba($primary_shadow_color, 0.3);
   background-clip: padding-box;
 }
 
@@ -113,7 +116,7 @@
   padding: 14px 0 15px;
   border-top: 1px solid #ddd;
   @include border-radius-all(0 0 6px 6px);
-  @include box-shadow (inset 0 1px 0 #ffffff);
+  @include box-shadow (inset 0 1px 0 rgba($primary_shadow_color, .8));
   *zoom: 1;
 }
 .modal-footer:before,
@@ -153,11 +156,11 @@
 .modal {
   .nav {
     padding: 10px 30px;
-    background-color: #e6e6e6;
+    background-color: lighten($secondary_background_color, 76%);
     li > a {
       font-size: 14px;
     }
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid $primary_border_color;
 
   }
   &.hidden {
@@ -169,17 +172,17 @@
       height: 80px;
     }
     label {
-      color: $darkish_gray;
+      color: $secondary_text_color;
     }
     p {
-      color: $black;
+      color: $primary_text_color;
       font-size: 13px;
     }
     .archetype-option {
       margin-bottom: 20px;
     }
     .warning {
-      color: lighten($red, 10%) !important;
+      color: $warning_text_color !important;
     }
   }
   .password-confirmation {
@@ -287,9 +290,9 @@
         font-weight: normal;
       }
       &.btn-reply-here {
-        @include linear-gradient(#ddd, #ddd);
+        background: lighten($secondary_background_color, 60%);
         text-shadow: none;
-        color: $darkish_gray;
+        color: $secondary_text_color;
       }
     }
     .cancel {
@@ -338,7 +341,7 @@
   .permission {
     margin-left: 20px;
   }
-  .icon-remove-sign {
+  .fa-times-circle {
     margin-left: 5px;
   }
   li {

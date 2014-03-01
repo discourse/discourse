@@ -70,10 +70,11 @@ Discourse.ActionSummary = Discourse.Model.extend({
     return Discourse.ajax("/post_actions", {
       type: 'POST',
       data: {
-        id: this.get('post.id'),
+        id: this.get('flagTopic') ? this.get('flagTopic.id') : this.get('post.id'),
         post_action_type_id: this.get('id'),
         message: opts.message,
-        take_action: opts.takeAction
+        take_action: opts.takeAction,
+        flag_topic: this.get('flagTopic') ? true : false
       }
     }).then(null, function (error) {
       actionSummary.removeAction();

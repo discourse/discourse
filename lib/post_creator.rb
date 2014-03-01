@@ -2,6 +2,7 @@
 #
 require_dependency 'rate_limiter'
 require_dependency 'topic_creator'
+require_dependency 'post_jobs_enqueuer'
 
 class PostCreator
 
@@ -51,7 +52,6 @@ class PostCreator
   def create
     @topic = nil
     @post = nil
-    @new_topic = false
 
     Post.transaction do
       setup_topic
@@ -70,19 +70,10 @@ class PostCreator
       @post.save_reply_relationships
     end
 
-    if @spam
-      GroupMessage.create( Group[:moderators].name,
-                           :spam_post_blocked,
-                           { user: @user,
-                             limit_once_per: 24.hours,
-                             message_params: {domains: @post.linked_hosts.keys.join(', ')} } )
-    elsif @post && !@post.errors.present?
-      SpamRulesEnforcer.enforce!(@post)
-    end
-
+    handle_spam
     track_latest_on_category
-
     enqueue_jobs
+
     @post
   end
 
@@ -92,10 +83,9 @@ class PostCreator
   end
 
   def self.before_create_tasks(post)
-    if post.reply_to_post_number.present?
-      post.reply_to_user_id ||= Post.select(:user_id).where(topic_id: post.topic_id, post_number: post.reply_to_post_number).first.try(:user_id)
-    end
+    set_reply_user_id(post)
 
+    post.word_count = post.raw.scan(/\w+/).size
     post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?)
 
     cooking_options = post.cooking_options || {}
@@ -107,16 +97,31 @@ class PostCreator
     post.last_version_at ||= Time.now
   end
 
+  def self.set_reply_user_id(post)
+    return unless post.reply_to_post_number.present?
+
+    post.reply_to_user_id ||= Post.select(:user_id).where(topic_id: post.topic_id, post_number: post.reply_to_post_number).first.try(:user_id)
+  end
 
   protected
 
-  def track_latest_on_category
-    if @post && @post.errors.count == 0 && @topic && @topic.category_id
-      Category.where(id: @topic.category_id).update_all(latest_post_id: @post.id)
-      if @post.post_number == 1
-        Category.where(id: @topic.category_id).update_all(latest_topic_id: @topic.id)
-      end
+  def handle_spam
+    if @spam
+      GroupMessage.create( Group[:moderators].name,
+                           :spam_post_blocked,
+                           { user: @user,
+                             limit_once_per: 24.hours,
+                             message_params: {domains: @post.linked_hosts.keys.join(', ')} } )
+    elsif @post && !@post.errors.present? && !@opts[:skip_validations]
+      SpamRulesEnforcer.enforce!(@post)
     end
+  end
+
+  def track_latest_on_category
+    return unless @post && @post.errors.count == 0 && @topic && @topic.category_id
+
+    Category.where(id: @topic.category_id).update_all(latest_post_id: @post.id)
+    Category.where(id: @topic.category_id).update_all(latest_topic_id: @topic.id) if @post.post_number == 1
   end
 
   def ensure_in_allowed_users
@@ -132,25 +137,6 @@ class PostCreator
       topic.category.secure_group_ids
     end
   end
-
-  def after_post_create
-    if !@topic.private_message? && @post.post_number > 1 && @post.post_type != Post.types[:moderator_action]
-      TopicTrackingState.publish_unread(@post)
-    end
-  end
-
-  def after_topic_create
-    # Don't publish invisible topics
-    return unless @topic.visible?
-
-    return if @topic.private_message? || @post.post_type == Post.types[:moderator_action]
-
-    @topic.posters = @topic.posters_summary
-    @topic.posts_count = 1
-
-    TopicTrackingState.publish_new(@topic)
-  end
-
 
   def clear_possible_flags(topic)
     # at this point we know the topic is a PM and has been replied to ... check if we need to clear any flags
@@ -174,7 +160,7 @@ class PostCreator
   private
 
   def setup_topic
-    if @opts[:topic_id].blank?
+    if new_topic?
       topic_creator = TopicCreator.new(@user, guardian, @opts)
 
       begin
@@ -185,8 +171,6 @@ class PostCreator
         @errors = topic_creator.errors
         raise ex
       end
-
-      @new_topic = true
     else
       topic = Topic.where(id: @opts[:topic_id]).first
       guardian.ensure_can_create!(Post, topic)
@@ -198,6 +182,7 @@ class PostCreator
     # Update attributes on the topic - featured users and last posted.
     attrs = {last_posted_at: @post.created_at, last_post_user_id: @post.user_id}
     attrs[:bumped_at] = @post.created_at unless @post.no_bump
+    attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
     @topic.update_attributes(attrs)
   end
 
@@ -207,12 +192,13 @@ class PostCreator
                             reply_to_post_number: @opts[:reply_to_post_number])
 
     # Attributes we pass through to the post instance if present
-    [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes].each do |a|
+    [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method].each do |a|
       post.send("#{a}=", @opts[a]) if @opts[a].present?
     end
 
     post.extract_quoted_post_numbers
     post.created_at = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
+
     @post = post
   end
 
@@ -237,9 +223,9 @@ class PostCreator
   end
 
   def consider_clearing_flags
-    if @topic.private_message? && @post.post_number > 1 && @topic.user_id != @post.user_id
-      clear_possible_flags(@topic)
-    end
+    return unless @topic.private_message? && @post.post_number > 1 && @topic.user_id != @post.user_id
+
+    clear_possible_flags(@topic)
   end
 
   def update_user_counts
@@ -254,16 +240,16 @@ class PostCreator
   end
 
   def publish
-    if @post.post_number > 1
-      MessageBus.publish("/topic/#{@post.topic_id}",{
-                      id: @post.id,
-                      created_at: @post.created_at,
-                      user: BasicUserSerializer.new(@post.user).as_json(root: false),
-                      post_number: @post.post_number
-                    },
-                    group_ids: secure_group_ids(@topic)
-      )
-    end
+    return unless @post.post_number > 1
+
+    MessageBus.publish("/topic/#{@post.topic_id}",{
+                    id: @post.id,
+                    created_at: @post.created_at,
+                    user: BasicUserSerializer.new(@post.user).as_json(root: false),
+                    post_number: @post.post_number
+                  },
+                  group_ids: secure_group_ids(@topic)
+    )
   end
 
   def extract_links
@@ -271,26 +257,24 @@ class PostCreator
   end
 
   def track_topic
-    unless @opts[:auto_track] == false
-      TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
-      # Update topic user data
-      TopicUser.change(@post.user.id,
-                       @post.topic.id,
-                       posted: true,
-                       last_read_post_number: @post.post_number,
-                       seen_post_count: @post.post_number)
-    end
+    return if @opts[:auto_track] == false
+
+    TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
+    # Update topic user data
+    TopicUser.change(@post.user.id,
+                     @post.topic.id,
+                     posted: true,
+                     last_read_post_number: @post.post_number,
+                     seen_post_count: @post.post_number)
   end
 
   def enqueue_jobs
-    if @post && !@post.errors.present?
-      # We need to enqueue jobs after the transaction. Otherwise they might begin before the data has
-      # been comitted.
-      topic_id = @opts[:topic_id] || @topic.try(:id)
-      Jobs.enqueue(:feature_topic_users, topic_id: @topic.id) if topic_id.present?
-      @post.trigger_post_process
-      after_post_create
-      after_topic_create if @new_topic
-    end
+    return unless @post && !@post.errors.present?
+    PostJobsEnqueuer.new(@post, @topic, new_topic?).enqueue_jobs
   end
+
+  def new_topic?
+    @opts[:topic_id].blank?
+  end
+
 end

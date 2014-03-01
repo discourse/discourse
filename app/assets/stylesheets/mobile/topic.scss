@@ -1,3 +1,4 @@
+@import "common/foundation/variables";
 
 .topic-meta-data {
   width: 100%;
@@ -25,26 +26,26 @@
 
 #topic-title {
   margin-bottom: 20px;
-margin: 0 60px 10px 20px;
-line-height: 1.7em;
+  margin: 0 60px 10px 20px;
+  line-height: 1.7em;
 
-h1 {
-  font-size: 1.5em;
-  margin:0;
-
-a.edit-topic {font-size: 15px;}
-
+  h1 {
+    font-size: 1.5em;
+    margin:0;
+    a.edit-topic {font-size: 15px;}
+  }
+  .private-message-glyph { display: none; }
 }
 
-
-}
+.private-message-glyph { color: lighten($primary_text_color, 60%); }
+.private_message #topic-title .private-message-glyph { display: inline; }
 
 #topic-closing-info {
   margin-left: 10px;
 }
 
 .docked #topic-progress {
-	  box-shadow: 0 0 3px #aaa;
+	  box-shadow: 0 0 3px rbga($primary_shadow_color, .5);
 }
 
 #topic-progress-wrapper {
@@ -64,15 +65,15 @@ a.edit-topic {font-size: 15px;}
 
 #topic-progress {
 
-	  box-shadow: 0 0 3px #000;
+	  box-shadow: 0 0 3px rbga($primary_shadow_color, .7);
 
   position: relative;
   &.hidden {
     display: none;
   }
   border: none;
-  background-color: #ddd;
-  color: #666;
+  background-color: lighten($primary_background_color, 60%);
+  color: $primary_text_color;
   width: 130px;
   height: 34px;
   .nums {
@@ -91,7 +92,7 @@ a.edit-topic {font-size: 15px;}
     left: 4px;
     border: 0;
     background: none;
-    color: #666;
+    color: lighten($primary_text_color, 35%);
 
     width: 60px;
     text-align: left;
@@ -108,7 +109,7 @@ a.edit-topic {font-size: 15px;}
     &:disabled {
 
       cursor: default;
-  color: #666;
+    color: lighten($primary_text_color, 35%);
     }
   }
   h4 {
@@ -121,10 +122,10 @@ a.edit-topic {font-size: 15px;}
     top: 0px;
     bottom: 0px;
     width: 0px;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid $primary_border_color;
     // background-color: #d4eaf4;
     // background-color: #C5E8F7;
-    background-color: #C6F3B6;
+    background-color: $success_background_color;
   }
 }
 
@@ -134,8 +135,8 @@ a.edit-topic {font-size: 15px;}
   position: absolute;
 }
 
-.topic-post:last-of-type {padding-bottom: 40px;}
+.post-cloak:last-of-type {padding-bottom: 40px;}
 
-.heatmap-high {color: #f77 !important;}
-.heatmap-med {color: #a00 !important;}
-.heatmap-low {color: #700 !important;}
+.heatmap-high {color: $heatmap-high !important;}
+.heatmap-med {color: $heatmap-med !important;}
+.heatmap-low {color: $heatmap-low !important;}

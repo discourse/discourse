@@ -12,6 +12,7 @@ class PostAction < ActiveRecord::Base
   belongs_to :user
   belongs_to :post_action_type
   belongs_to :related_post, class_name: 'Post'
+  belongs_to :target_user, class_name: 'User'
 
   rate_limit :post_action_rate_limiter
 
@@ -123,12 +124,18 @@ class PostAction < ActiveRecord::Base
 
     related_post_id = create_message_for_post_action(user,post,post_action_type_id,opts)
 
+    targets_topic = if opts[:flag_topic] and post.topic
+      post.topic.reload
+      post.topic.posts_count != 1
+    end
+
     create( post_id: post.id,
             user_id: user.id,
             post_action_type_id: post_action_type_id,
             message: opts[:message],
             staff_took_action: opts[:take_action] || false,
-            related_post_id: related_post_id )
+            related_post_id: related_post_id,
+            targets_topic: !!targets_topic )
   rescue ActiveRecord::RecordNotUnique
     # can happen despite being .create
     # since already bookmarked
@@ -319,6 +326,7 @@ end
 #  staff_took_action   :boolean          default(FALSE), not null
 #  defer               :boolean
 #  defer_by            :integer
+#  targets_topic       :boolean          default(FALSE)
 #
 # Indexes
 #

@@ -56,8 +56,8 @@ Discourse.PostMenuView = Discourse.View.extend({
     buffer.push("<span class='badge-posts'>" + reply_count + "</span>");
     buffer.push(I18n.t("post.has_replies", { count: reply_count }));
 
-    var icon = (this.get('post.replies.length') > 0) ? 'icon-chevron-up' : 'icon-chevron-down';
-    return buffer.push("<i class='icon " + icon + "'></i></button>");
+    var icon = (this.get('post.replies.length') > 0) ? 'fa-chevron-up' : 'fa-chevron-down';
+    return buffer.push("<i class='fa " + icon + "'></i></button>");
   },
 
   clickReplies: function() {
@@ -86,7 +86,7 @@ Discourse.PostMenuView = Discourse.View.extend({
         if (!topic.get('details.can_delete')) { return; }
         label = "topic.actions.delete";
         action = "deleteTopic";
-        icon = "trash";
+        icon = "trash-o";
       }
 
     } else {
@@ -101,13 +101,13 @@ Discourse.PostMenuView = Discourse.View.extend({
         if (!post.get('can_delete')) { return; }
         label = "post.controls.delete";
         action = "delete";
-        icon = "trash";
+        icon = "trash-o";
       }
     }
 
     buffer.push("<button title=\"" +
                 I18n.t(label) +
-                "\" data-action=\"" + action + "\" class=\"delete\"><i class=\"icon-" + icon + "\"></i></button>");
+                "\" data-action=\"" + action + "\" class=\"delete\"><i class=\"fa fa-" + icon + "\"></i></button>");
   },
 
   clickDeleteTopic: function() {
@@ -131,7 +131,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (!post.get('actionByName.like.can_act')) return;
     buffer.push("<button title=\"" +
                 (I18n.t("post.controls.like")) +
-                "\" data-action=\"like\" class='like'><i class=\"icon-heart\"></i></button>");
+                "\" data-action=\"like\" class='like'><i class=\"fa fa-heart\"></i></button>");
   },
 
   clickLike: function() {
@@ -144,7 +144,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (!this.present('post.flagsAvailable')) return;
     buffer.push("<button title=\"" +
                 (I18n.t("post.controls.flag")) +
-                "\" data-action=\"flag\" class='flag'><i class=\"icon-flag\"></i></button>");
+                "\" data-action=\"flag\" class='flag'><i class=\"fa fa-flag\"></i></button>");
   },
 
   clickFlag: function() {
@@ -156,7 +156,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (!post.get('can_edit')) return;
     buffer.push("<button title=\"" +
                  (I18n.t("post.controls.edit")) +
-                 "\" data-action=\"edit\" class='edit'><i class=\"icon-pencil\"></i></button>");
+                 "\" data-action=\"edit\" class='edit'><i class=\"fa fa-pencil\"></i></button>");
   },
 
   clickEdit: function() {
@@ -168,7 +168,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     buffer.push("<button title=\"" +
                  I18n.t("post.controls.share") +
                  "\" data-share-url=\"" + post.get('shareUrl') + "\" data-post-number=\"" + post.get('post_number') +
-                 "\" class='share'><i class=\"icon-link\"></i></button>");
+                 "\" class='share'><i class=\"fa fa-link\"></i></button>");
   },
 
   // Reply button
@@ -176,7 +176,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (!this.get('controller.model.details.can_create_post')) return;
     buffer.push("<button title=\"" +
                  (I18n.t("post.controls.reply")) +
-                 "\" class='create' data-action=\"reply\"><i class='icon-reply'></i><span class='btn-text'>" +
+                 "\" class='create' data-action=\"reply\"><i class='fa fa-reply'></i><span class='btn-text'>" +
                  (I18n.t("topic.reply.title")) + "</span></button>");
   },
 

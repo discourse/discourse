@@ -27,9 +27,18 @@ describe Admin::EmailController do
     end
   end
 
-  context '.logs' do
+  context '.sent' do
     before do
-      xhr :get, :logs
+      xhr :get, :sent
+    end
+
+    subject { response }
+    it { should be_success }
+  end
+
+  context '.skipped' do
+    before do
+      xhr :get, :skipped
     end
 
     subject { response }
@@ -43,7 +52,9 @@ describe Admin::EmailController do
 
     context 'with an email address' do
       it 'enqueues a test email job' do
-        Jobs.expects(:enqueue).with(:test_email, to_address: 'eviltrout@test.domain')
+        job_mock = mock
+        Jobs::TestEmail.expects(:new).returns(job_mock)
+        job_mock.expects(:execute).with(to_address: 'eviltrout@test.domain')
         xhr :post, :test, email_address: 'eviltrout@test.domain'
       end
     end
