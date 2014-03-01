@@ -15,7 +15,7 @@ Discourse.PosterExpansionView = Discourse.View.extend({
   // Position the expansion when the post changes
   _visibleChanged: function() {
     var post = this.get('controller.model'),
-        self = this;
+        div = this.$();
 
     Em.run.schedule('afterRender', function() {
       if (post) {
@@ -25,8 +25,14 @@ Discourse.PosterExpansionView = Discourse.View.extend({
 
         if (position) {
           position.left += $avatar.width() + 5;
-          self.$().css(position);
+          div.css(position);
         }
+
+        var maxWidth = div.width();
+        if (maxWidth < 250) {
+          maxWidth = 250;
+        }
+        div.css({ maxWidth: maxWidth });
       }
     });
 

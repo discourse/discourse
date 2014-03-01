@@ -11,9 +11,10 @@
   margin-top: -2px;
   background-color: $primary_background_color;
   padding: 12px 12px 5px 12px;
-  max-width: 350px;
 
   h1 {
+    display: inline-block;
+    min-width: 120px;
     font-size: 30px;
     line-height: 33px;
     margin-bottom: 8px;
