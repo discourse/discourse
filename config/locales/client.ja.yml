@@ -786,7 +786,10 @@ ja:
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
 
-      abandon: "編集中のポストを破棄してもよろしいですか?"
+      abandon:
+        confirm: "編集中のポストを破棄してもよろしいですか?"
+        no_value: "いいえ"
+        yes_value: "はい"
 
       archetypes:
         save: '保存オプション'

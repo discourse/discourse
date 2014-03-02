@@ -889,7 +889,10 @@ ru:
         upload_not_authorized: 'К сожалению, вы не можете загрузить файл данного типа (список разрешенных типов файлов: {{authorized_extensions}}).'
         image_upload_not_allowed_for_new_user: 'К сожалению, загрузка изображений недоступна новым пользователям.'
         attachment_upload_not_allowed_for_new_user: 'К сожалению, загрузка файлов недоступна новым пользователям.'
-      abandon: 'Удалить сохраненный черновик?'
+      abandon:
+        confirm: 'Удалить сохраненный черновик?'
+        no_value: "Нет"
+        yes_value: "Да"
       archetypes:
         save: 'Параметры сохранения'
       controls:

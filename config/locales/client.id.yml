@@ -499,7 +499,10 @@ id:
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
 
-      abandon: "Are you sure you want to abandon your post?"
+      abandon:
+        confirm: "Are you sure you want to abandon your post?"
+        no_value: "Tidak"
+        yes_value: "Ya"
 
       archetypes:
         save: 'Save Options'

@@ -470,7 +470,10 @@ pt:
         edit: "Desculpa, houve um erro ao editar o teu post. Por favor tenta outra vez."
         upload: "Desculpa, houve um erro ao enviar esse ficheiro. Por favor tenta otura vez."
 
-      abandon: "De certeza que queres abandonar o teu post?"
+      abandon:
+        confirm: "De certeza que queres abandonar o teu post?"
+        no_value: "Não"
+        yes_value: "Sim"
 
       archetypes:
         save: 'Guardar as Opções'

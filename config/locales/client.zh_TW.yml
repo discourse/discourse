@@ -904,7 +904,10 @@ zh_TW:
         image_upload_not_allowed_for_new_user: "抱歉，新用戶不可上傳圖片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用戶不可上傳附件。"
 
-      abandon: "你確定要捨棄你的貼文嗎?"
+      abandon:
+        confirm: "你確定要捨棄你的貼文嗎?"
+        no_value: "否"
+        yes_value: "是"
 
       archetypes:
         save: '儲存選項'
