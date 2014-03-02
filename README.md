@@ -12,7 +12,7 @@ Whenever you need ...
 
 To learn more about the philosophy and goals of the project, [visit **discourse.org**](http://www.discourse.org).
 
-## Screenshotsb
+## Screenshots
 
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-small2.png)](http://bbs.boingboing.net)
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small2.png)](http://discuss.howtogeek.com)
