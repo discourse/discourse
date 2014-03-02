@@ -26,39 +26,35 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. 
 
-2. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md).
+2. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md). 
 
 Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
 ## Setting up a Discourse Forum
 
-If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md). 
+If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
+
+If you're looking for business class hosting, see [discourse.org/buy](http://www.discourse.org/buy/).
 
 ## Requirements
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
-  - Internet Explorer 9.0 (may not be fully functional), 10.0+
-  - Firefox 16+
-  - Google Chrome 23+
-  - Safari 5+
+| Browsers | Tablets |  Smartphones |
+| -------- | ------- | ----------- |
+| Safari 5+| iPad 2+ |  iOS 6+ | 
+| Google Chrome 23+ |  Android 4.1+ | Android 4.1+ |
+| Internet Explorer 10+ | Windows 8 | Windows Phone 8 |
+| Firefox 16+ | |
 
-Tablets:
-  - iPad 2+
-  - Android 4.1+
-  - Windows 8
-
-Smartphones:
-  - iOS 6+
-  - Android 4.1+
-  - Windows Phone 8
+Internet Explorer 9.0 is technically supported, but it is our absolute minimum spec browser and may not be fully functional.
 
 ## Built With
 
-- [Ruby on Rails](https://github.com/rails/rails) - Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
-- [Ember.js](https://github.com/emberjs/ember.js) - Our front end is an Ember.js app that communicates with the Rails API.
-- [PostgreSQL](http://www.postgresql.org/) - Our main data store is in Postgres.
-- [Redis](http://redis.io/) - We use Redis for our job queue, rate limiting, as a cache and for transient data.
+- [Ruby on Rails](https://github.com/rails/rails) &mdash; Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
+- [Ember.js](https://github.com/emberjs/ember.js) &mdash; Our front end is an Ember.js app that communicates with the Rails API.
+- [PostgreSQL](http://www.postgresql.org/) &mdash; Our main data store is in Postgres.
+- [Redis](http://redis.io/) &mdash; We use Redis for our job queue, rate limiting, as a cache and for transient data.
 
 Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https://github.com/discourse/discourse/blob/master/Gemfile).
 
@@ -72,12 +68,9 @@ accepts contributions from the public. We'd like you to be a part of that commun
 
 Before contributing to Discourse:
 
-1. Please read the complete mission statements on [**discourse.org**](http://www.discourse.org). Yes we actually believe this stuff, and you should too.
-2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla)
-3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which covers:
-   - submitting bugs
-   - requesting new features
-   - preparing your code for a Pull Request
+1. Please read the complete mission statements on [**discourse.org**](http://www.discourse.org). Yes we actually believe this stuff; you should too.
+2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla).
+3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which covers submitting bugs, requesting new features, preparing your code for a pull request, etc.
 4. Not sure what to work on? [**We've got some ideas!**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
 
 We look forward to seeing your pull requests!
