@@ -1394,7 +1394,7 @@ zh_TW:
         about: "網站客製化可以修改網站的樣式與標頭，請選擇或新增一個樣式進行編輯。"
 
       email:
-        title: "電子郵件"
+        title: "電郵"
         settings: "設定"
         all: "所有"
         sent: "送出"
@@ -1417,7 +1417,7 @@ zh_TW:
         last_seen_user: "最近出現的用戶:"
         reply_key: "回覆金鑰"
         skipped_reason: "跳過原因"
-        logs: "記錄"
+        logs:
           none: "找不到記錄。"
           filters:
             title: "過濾"
