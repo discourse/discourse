@@ -12,7 +12,7 @@ Whenever you need ...
 
 To learn more about the philosophy and goals of the project, [visit **discourse.org**](http://www.discourse.org).
 
-## Screenshots
+## Screenshotsb
 
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-small2.png)](http://bbs.boingboing.net)
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small2.png)](http://discuss.howtogeek.com)
@@ -51,10 +51,10 @@ Internet Explorer 9.0 is technically supported, but it is our absolute minimum s
 
 ## Built With
 
-- [Ruby on Rails](https://github.com/rails/rails) - Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
-- [Ember.js](https://github.com/emberjs/ember.js) - Our front end is an Ember.js app that communicates with the Rails API.
-- [PostgreSQL](http://www.postgresql.org/) - Our main data store is in Postgres.
-- [Redis](http://redis.io/) - We use Redis for our job queue, rate limiting, as a cache and for transient data.
+- [Ruby on Rails](https://github.com/rails/rails) &mdash; Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
+- [Ember.js](https://github.com/emberjs/ember.js) &mdash; Our front end is an Ember.js app that communicates with the Rails API.
+- [PostgreSQL](http://www.postgresql.org/) &mdash; Our main data store is in Postgres.
+- [Redis](http://redis.io/) &mdash; We use Redis for our job queue, rate limiting, as a cache and for transient data.
 
 Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https://github.com/discourse/discourse/blob/master/Gemfile).
 
