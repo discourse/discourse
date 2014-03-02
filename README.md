@@ -40,20 +40,14 @@ If you're looking for business class hosting, see [discourse.org/buy](http://www
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
-  - Internet Explorer 9.0 (may not be fully functional), 10.0+
-  - Firefox 16+
-  - Google Chrome 23+
-  - Safari 5+
+| Broswers | Tablets |  Smartphones |
+| -------- | ------- | ----------- |
+| Safari 5+| iPad 2+ |  iOS 6+ | 
+| Google Chrome 23+ |  Android 4.1+ | Android 4.1+ |
+| Internet Explorer 10+ | Windows 8 | Windows Phone 8 |
+| Firefox 16+ | |
 
-Tablets:
-  - iPad 2+
-  - Android 4.1+
-  - Windows 8
-
-Smartphones:
-  - iOS 6+
-  - Android 4.1+
-  - Windows Phone 8
+Internet Explorer 9.0 is technically supported, but it is our absolute minimum spec browser and may not be fully functional.
 
 ## Built With
 
