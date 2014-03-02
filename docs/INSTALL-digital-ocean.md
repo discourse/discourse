@@ -4,9 +4,9 @@ This guide assumes that you have no knowledge of Ruby/Rails or Linux shell. Feel
 
 # Create New Digital Ocean Droplet
 
-Discourse requires a minimum of 1 GB RAM, and 2 GB RAM is recommended. We'll use "discourse" as the Hostname.
+Discourse requires a minimum of 1 GB RAM, however **2 GB RAM is strongly recommended**. We'll use "discourse" as the Hostname.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3398/975dbf6267b4ad4f.png" width="690" height="475"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/3506/a6b550bd2b05b76b.png" width="638" height="500"> 
 
 Install Discourse on Ubuntu 12.04.3 LTS x64. We always recommend using [the current LTS distribution][lts].
 
@@ -135,7 +135,7 @@ After that completes, start Discourse:
 
 Congratulations! You now have your own instance of Discourse, accessible via the domain name you entered in `app.yml` earlier.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3397/ea8c3de3a4b7361d.png" width="690" height="207"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/3507/d01eee7415f860f2.png" width="690" height="291">
 
 You can also access it by visiting the server IP address directly, e.g. `http://192.168.1.1`.
 

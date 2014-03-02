@@ -15,15 +15,15 @@ Alternately, you can try the [unofficial Heroku install guide][heroku], the [uno
 ### Hardware
 
 - Dual core CPU recommended
-- 2 GB RAM recommended
+- 2 GB RAM *strongly* recommended
  
-We highly recommend you enable swap (for a total of 4 GB, so 2 GB swap with 2 GB RAM, and 3 GB swap with 1 GB ram, etc).
+We also recommend you [enable swap][swap] for a total of 4 GB, so 2 GB swap with 2 GB RAM, and 3 GB swap with 1 GB ram, etc.
 
 ### Software
 
-1. [Postgres 9.1+](http://www.postgresql.org/download/)
-2. [Redis 2.6+](http://redis.io/download)
-3. [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/) (we recommend 2.0.0-p353 or higher)
+- [Postgres 9.1+](http://www.postgresql.org/download/)
+- [Redis 2.6+](http://redis.io/download)
+- [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/) (we recommend 2.0.0-p353 or higher)
 
 
 [do]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-digital-ocean.md
@@ -32,3 +32,4 @@ We highly recommend you enable swap (for a total of 4 GB, so 2 GB swap with 2 GB
 [cloud66]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud66.md
 [heroku]: https://github.com/discourse/discourse/blob/master/docs/install-HEROKU.md
 [ubuntu]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md
+[swap]: https://www.digitalocean.com/community/articles/how-to-add-swap-on-ubuntu-12-04
