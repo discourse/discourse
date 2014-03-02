@@ -576,7 +576,7 @@ zh_TW:
     go_back: '返回'
     current_user: '到你的用戶頁面'
 
-    favorite:
+    starred:
       title: '收藏'
       help:
         star: '將此主題加入你的收藏列表'
@@ -584,7 +584,7 @@ zh_TW:
 
     topics:
       none:
-        favorited: "你尚未收藏任何主題，要收藏主題請按標題前面的星號。"
+        starred: "你尚未收藏任何主題，要收藏主題請按標題前面的星號。"
         unread: "你沒有未讀的主題。"
         new: "你沒有新的主題。"
         read: "你尚未閱讀任何主題。"
@@ -599,7 +599,7 @@ zh_TW:
         read: "已經沒有其它已讀的主題了。"
         new: "已經沒有其它新主題了。"
         unread: "已經沒有其它未讀的主題了。"
-        favorited: "已經沒有其它收藏的主題了。"
+        starred: "已經沒有其它收藏的主題了。"
         category: "{{category}} 類別已經沒有其它主題了。"
 
     rank_details:
@@ -1063,13 +1063,15 @@ zh_TW:
     categories_list: "類別清單"
 
     filters:
+      with_topics: "%{filter} Topics"
+      with_category: "%{filter} %{category} 類別"
       latest:
         title: "最近"
         help: "最近的主題"
       hot:
         title: "熱門"
         help: "最熱門的主題"
-      favorited:
+      starred:
         title: "收藏"
         help: "你收藏的主題"
       read:
