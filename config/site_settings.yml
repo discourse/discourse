@@ -320,7 +320,7 @@ seo:
 spam:
   email_domains_blacklist:
     client: true
-    default: 'mailinator.com'
+    default: 'mailinator.com|mailcatch.com|3d180.com|blackbookdate.info|fun-4-u.info|mailmetrash.com|mailnesia.com|onlinehomecareers.net|trashmail.ws|vegeterianegypt.com|webmail.de|yourinvesting.net|mailtothis.com'
   email_domains_whitelist:
     client: true
     default: ''
