@@ -40,7 +40,7 @@ If you're looking for business class hosting, see [discourse.org/buy](http://www
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
-| Broswers | Tablets |  Smartphones |
+| Browsers | Tablets |  Smartphones |
 | -------- | ------- | ----------- |
 | Safari 5+| iPad 2+ |  iOS 6+ | 
 | Google Chrome 23+ |  Android 4.1+ | Android 4.1+ |
