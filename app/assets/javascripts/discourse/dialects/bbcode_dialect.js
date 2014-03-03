@@ -4,13 +4,27 @@
   @method replaceBBCode
   @param {tag} tag the tag we want to match
   @param {function} emitter the function that creates JsonML for the tag
+  @param {Object} hash of options to pass to `inlineBetween`
 **/
-function replaceBBCode(tag, emitter) {
-  Discourse.Dialect.inlineBetween({
-    start: "[" + tag + "]",
-    stop: "[/" + tag + "]",
-    emitter: emitter
-  });
+function replaceBBCode(tag, emitter, opts) {
+  opts = opts || {};
+  opts = _.merge(opts, { start: "[" + tag + "]", stop: "[/" + tag + "]", emitter: emitter });
+  Discourse.Dialect.inlineBetween(opts);
+
+  tag = tag.toUpperCase();
+  opts = _.merge(opts, { start: "[" + tag + "]", stop: "[/" + tag + "]", emitter: emitter });
+  Discourse.Dialect.inlineBetween(opts);
+}
+
+/**
+  Shortcut to call replaceBBCode with `rawContents` as true.
+
+  @method replaceBBCode
+  @param {tag} tag the tag we want to match
+  @param {function} emitter the function that creates JsonML for the tag
+**/
+function rawBBCode(tag, emitter) {
+  replaceBBCode(tag, emitter, { rawContents: true });
 }
 
 /**
@@ -57,37 +71,14 @@ replaceBBCode('ul', function(contents) { return ['ul'].concat(contents); });
 replaceBBCode('ol', function(contents) { return ['ol'].concat(contents); });
 replaceBBCode('li', function(contents) { return ['li'].concat(contents); });
 
-Discourse.Dialect.inlineBetween({
-  start: '[img]',
-  stop: '[/img]',
-  rawContents: true,
-  emitter: function(contents) { return ['img', {href: contents}]; }
-});
-
-Discourse.Dialect.inlineBetween({
-  start: '[email]',
-  stop: '[/email]',
-  rawContents: true,
-  emitter: function(contents) { return ['a', {href: "mailto:" + contents, 'data-bbcode': true}, contents]; }
-});
-
-Discourse.Dialect.inlineBetween({
-  start: '[url]',
-  stop: '[/url]',
-  rawContents: true,
-  emitter: function(contents) { return ['a', {href: contents, 'data-bbcode': true}, contents]; }
-});
-
-Discourse.Dialect.inlineBetween({
-  start: '[spoiler]',
-  stop: '[/spoiler]',
-  rawContents: true,
-  emitter: function(contents) {
-    if (/<img/i.test(contents)) {
-      return ['div', { 'class': 'spoiler' }, contents];
-    } else {
-      return ['span', { 'class': 'spoiler' }, contents];
-    }
+rawBBCode('img', function(contents) { return ['img', {href: contents}]; });
+rawBBCode('email', function(contents) { return ['a', {href: "mailto:" + contents, 'data-bbcode': true}, contents]; });
+rawBBCode('url', function(contents) { return ['a', {href: contents, 'data-bbcode': true}, contents]; });
+rawBBCode('spoiler', function(contents) {
+  if (/<img/i.test(contents)) {
+    return ['div', { 'class': 'spoiler' }, contents];
+  } else {
+    return ['span', { 'class': 'spoiler' }, contents];
   }
 });
 
