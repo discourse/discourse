@@ -237,7 +237,11 @@
   }
 
   &#user-dropdown {
-    width: 155px;
+    width: 116px;
+    .user-dropdown-links {
+    text-align: right;
+
+    }
   }
 
   .btn {
