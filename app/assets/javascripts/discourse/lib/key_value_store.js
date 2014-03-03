@@ -8,16 +8,18 @@
 Discourse.KeyValueStore = {
   initialized: false,
   context: "",
+  listeners: {},
 
   init: function(ctx) {
     this.initialized = true;
     this.context = ctx;
+    window.onstorage = this.handleStorageEvent.bind(this);
   },
 
   abandonLocal: function() {
     var i, k;
     if (!(localStorage && this.initialized)) {
-      return;
+      return false;
     }
     i = localStorage.length - 1;
     while (i >= 0) {
@@ -46,6 +48,41 @@ Discourse.KeyValueStore = {
       return null;
     }
     return localStorage[this.context + key];
+  },
+
+  // listens on the key being changed.
+  // callback will be called with arguments (oldValue, newValue)
+  // returns true on success, false if callback is not a function
+  listen: function(key, callback) {
+    if (typeof(callback) !== 'function') {
+      return false;
+    }
+    if (this.listeners[key] === undefined) {
+      this.listeners[key] = [callback];
+    } else {
+      this.listeners[key].push(callback);
+    }
+    return true;
+  },
+
+  handleStorageEvent: function(event) {
+    var key = event.key;
+    if (key.indexOf(this.context) === 0) {
+      key = key.substring(this.context.length);
+    } else {
+      // Not our context, not our responsibility
+      return true;
+    }
+    var targets = this.listeners[key];
+    if (!targets) {
+      return false;
+    }
+    Em.run(function() {
+      targets.forEach(function(listener){
+        listener(event.oldValue, event.newValue);
+      });
+    });
+    return false;
   }
 };
 

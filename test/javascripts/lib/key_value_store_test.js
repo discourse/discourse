@@ -18,3 +18,20 @@ test("is able to nuke the store", function() {
   equal(store.get("bob1"), void 0);
   equal(localStorage.a, "1");
 });
+
+test("can listen on browser events", function() {
+  var storageKey = "test", oldValue = "oldValue", newValue = "newValue";
+  store.set({key: storageKey, value: oldValue});
+
+  store.listen(storageKey, function(oldArg, newArg){
+    equal(oldArg, oldValue);
+    equal(newArg, newValue);
+  });
+
+  // emulate event in different window
+  equal(typeof(window.onstorage), 'function');
+  window.onstorage({
+    key: store.context+storageKey,
+    oldValue: oldValue,
+    newValue: newValue});
+});
