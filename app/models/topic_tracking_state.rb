@@ -84,8 +84,8 @@ class TopicTrackingState
 
   def self.treat_as_new_topic_clause
     User.where("CASE
-                  WHEN COALESCE(u.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
-                  WHEN COALESCE(u.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(u.previous_visit_at,u.created_at)
+                  WHEN COALESCE(u.new_topic_duration_minutes, :default_duration) = :always THEN us.new_since
+                  WHEN COALESCE(u.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(u.previous_visit_at,us.new_since)
                   ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(u.new_topic_duration_minutes, :default_duration))
                END",
                 now: DateTime.now,
@@ -119,6 +119,7 @@ class TopicTrackingState
            c.name AS category_name,
            tu.notification_level
     FROM users u
+    INNER JOIN user_stats AS us ON us.user_id = u.id
     FULL OUTER JOIN topics ON 1=1
     LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
     LEFT JOIN categories c ON c.id = topics.category_id
