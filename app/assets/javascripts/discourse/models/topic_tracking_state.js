@@ -145,6 +145,15 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
       .length;
   },
 
+  resetNew: function() {
+    var self = this;
+    Object.keys(this.states).forEach(function (id) {
+      if (self.states[id].last_read_post_number === null) {
+        delete self.states[id];
+      }
+    });
+  },
+
   countUnread: function(category_name){
     return _.chain(this.states)
       .where(function(topic){

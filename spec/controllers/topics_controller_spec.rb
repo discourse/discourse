@@ -811,4 +811,25 @@ describe TopicsController do
       end
     end
   end
+
+
+  describe 'reset_new' do
+    it 'needs you to be logged in' do
+      lambda { xhr :put, :reset_new }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    let(:user) { log_in(:user) }
+
+    it "updates the `new_since` date" do
+      old_date = 2.years.ago
+
+      user.user_stat.update_column(:new_since, old_date)
+
+      xhr :put, :reset_new
+      user.reload
+      user.user_stat.new_since.to_date.should_not == old_date.to_date
+
+    end
+
+  end
 end
