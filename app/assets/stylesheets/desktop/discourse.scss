@@ -35,9 +35,7 @@ body {
   .full-width {
     width: $medium-width;
   }
-  .extra-info-wrapper {
-  max-width: 720px !important;
-}
+
 
 }
 
@@ -52,9 +50,7 @@ body {
   .full-width {
     width: $small-width;
   }
-    .extra-info-wrapper {
-  max-width: 680px !important;
-}
+
 }
 
 a.no-href {
@@ -441,7 +437,7 @@ body {
     &:focus {
     }
   }
- 
+
   .radio, .checkbox {
     min-height: 18px;
     padding-left: 18px;
@@ -793,4 +789,3 @@ body {
 .offset1 {
   margin-left: 64px;
 }
-

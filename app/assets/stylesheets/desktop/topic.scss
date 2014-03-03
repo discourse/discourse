@@ -1,7 +1,10 @@
 @import "common/foundation/variables";
 @import "common/foundation/mixins";
 
-.post-info a {color: lighten($primary_text_color, 50%);}
+.post-info a {
+  color: lighten($primary_text_color, 50%);
+  padding-right: 5px;
+}
 
 .topic-meta-data-inside {
   float: right;
@@ -100,7 +103,7 @@
 
 a.reply-new {
   position: absolute;
-  color: lighten($primary_text_color, 35%); 
+  color: lighten($primary_text_color, 35%);
   margin-top: -2px;}
 a:hover.reply-new {
   color: $link-color;
@@ -112,7 +115,7 @@ a:hover.reply-new {
 
 #topic-progress {
   position: relative;
-  left: 302px;
+  left: 345px;
   &.hidden {
     display: none;
   }
