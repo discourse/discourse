@@ -35,7 +35,7 @@
               {{boundCategoryLink category}}
               {{#if details.loaded}}
                 {{topicStatus topic=model}}
-                <a href='{{unbound url}}'>
+                <a href='{{unbound url}}' {{action jumpTop}}>
                   {{#if topicSaving}}
                     {{fancy_title}}
                   {{else}}
