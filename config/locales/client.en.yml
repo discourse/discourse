@@ -630,6 +630,7 @@ en:
       bulk:
         reset_read: "Reset Read"
         dismiss_read: "Dismiss Read"
+        mark_seen: "Mark Seen"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
         change_category: "Change Category"

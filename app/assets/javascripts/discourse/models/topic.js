@@ -428,7 +428,12 @@ Discourse.Topic.reopenClass({
       type: 'PUT',
       data: { filter: filter, operation: operation }
     });
+  },
+
+  resetNew: function() {
+    return Discourse.ajax("/topics/reset-new", {type: 'PUT'});
   }
+
 
 });
 
