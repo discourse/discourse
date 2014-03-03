@@ -10,6 +10,10 @@ describe TopicQuery do
   let(:moderator) { Fabricate(:moderator) }
   let(:admin) { Fabricate(:admin) }
 
+  before do
+    # We use a time in a the past to avoid conflicting dates in tests
+    user.user_stat.update_column(:new_since, 1.minute.ago)
+  end
 
   context 'secure category' do
     it "filters categories out correctly" do
