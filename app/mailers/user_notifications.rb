@@ -211,6 +211,10 @@ class UserNotifications < ActionMailer::Base
       email_opts[:from_alias] = from_alias
     end
 
+    if tu
+      email_opts[:notification_level] = tu.notification_level
+    end
+
     TopicUser.change(user.id, post.topic_id, last_emailed_post_number: post.post_number)
 
     build_email(user.email, email_opts)
