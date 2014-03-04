@@ -47,7 +47,6 @@ module Jobs
         unless pop.mails.empty?
           pop.each do |mail|
 <<<<<<< HEAD
-<<<<<<< HEAD
             if Email::Receiver.new(mail.pop).process == Email::Receiver.results[:processed]
               mail.delete
             else
@@ -57,9 +56,6 @@ module Jobs
                 clientMessage = RejectionMailer.send_rejection(@message.from, @message.body)
                 Email::Sender.new(clientMessage, :email_reject_notification).send
             end
-=======
-            handle_mail mail.pop
->>>>>>> upstream/master
 =======
             handle_mail mail.pop
 >>>>>>> upstream/master
