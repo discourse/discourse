@@ -60,6 +60,10 @@ class CategoriesController < ApplicationController
       if category_params[:position]
         category_params[:position] == 'default' ? cat.use_default_position : cat.move_to(category_params[:position].to_i)
       end
+      if category_params.key? :email_in and category_params[:email_in].length == 0
+        # properly null the value so the database constrain doesn't catch us
+        category_params[:email_in] = nil
+      end
       category_params.delete(:position)
       cat.update_attributes(category_params)
     }
