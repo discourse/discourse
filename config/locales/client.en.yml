@@ -2,6 +2,9 @@
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -630,6 +633,7 @@ en:
       bulk:
         reset_read: "Reset Read"
         dismiss_read: "Dismiss Read"
+        dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
         change_category: "Change Category"
@@ -735,8 +739,8 @@ en:
 
       progress:
         title: topic progress
-        jump_top: jump to first post
-        jump_bottom: jump to last post
+        jump_top: jump to first post (home key)
+        jump_bottom: jump to last post (end key)
         jump_bottom_with_number: "jump to post %{post_number}"
         total: total posts
         current: current post
@@ -904,7 +908,10 @@ en:
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
 
-      abandon: "Are you sure you want to abandon your post?"
+      abandon:
+        confirm: "Are you sure you want to abandon your post?"
+        no_value: "No, keep"
+        yes_value: "Yes, abandon"
 
       archetypes:
         save: 'Save Options'
@@ -1078,6 +1085,8 @@ en:
       security: "Security"
       auto_close_label: "Auto-close topics after:"
       auto_close_units: "hours"
+      email_in: "Custom incoming email address:"
+      email_in_allow_strangers: "Accept emails from non-users (aka strangers)"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
       this_year: "this year"

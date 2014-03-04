@@ -59,11 +59,27 @@ class TopicView
     @last_post ||= @posts.last
   end
 
+  def prev_page
+    if @page && @page > 1
+      @page - 1
+    else
+      nil
+    end
+  end
+
   def next_page
     @next_page ||= begin
       if last_post && (@topic.highest_post_number > last_post.post_number)
         @page + 1
       end
+    end
+  end
+
+  def prev_page_path
+    if prev_page > 1
+      "#{@topic.relative_url}?page=#{prev_page}"
+    else
+      @topic.relative_url
     end
   end
 

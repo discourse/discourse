@@ -22,6 +22,10 @@ class EmailToken < ActiveRecord::Base
     1.week.ago
   end
 
+  def self.confirm_valid_after
+    1.day.ago
+  end
+
   def self.unconfirmed
     where(confirmed: false)
   end
@@ -38,7 +42,7 @@ class EmailToken < ActiveRecord::Base
     return unless token.present?
     return unless token.length/2 == EmailToken.token_length
 
-    email_token = EmailToken.where("token = ? and expired = FALSE and created_at >= ?", token, EmailToken.valid_after).includes(:user).first
+    email_token = EmailToken.where("token = ? and expired = FALSE AND ((NOT confirmed AND created_at >= ?) OR (confirmed AND created_at >= ?))", token, EmailToken.valid_after, EmailToken.confirm_valid_after).includes(:user).first
     return if email_token.blank?
 
     user = email_token.user

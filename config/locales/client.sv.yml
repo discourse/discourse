@@ -2,6 +2,9 @@
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -821,7 +824,10 @@ sv:
         image_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp filer."
 
-      abandon: "Är du säker på att du vill överge ditt inlägg?"
+      abandon:
+        confirm: "Är du säker på att du vill överge ditt inlägg?"
+        no_value: "Nej"
+        yes_value: "Ja"
 
       archetypes:
         save: 'Spara Inställningar'

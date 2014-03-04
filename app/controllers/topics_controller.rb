@@ -21,7 +21,8 @@ class TopicsController < ApplicationController
                                           :merge_topic,
                                           :clear_pin,
                                           :autoclose,
-                                          :bulk]
+                                          :bulk,
+                                          :reset_new]
 
   before_filter :consider_user_for_promotion, only: :show
 
@@ -279,6 +280,11 @@ class TopicsController < ApplicationController
     operator = TopicsBulkAction.new(current_user, topic_ids, operation)
     changed_topic_ids = operator.perform!
     render_json_dump topic_ids: changed_topic_ids
+  end
+
+  def reset_new
+    current_user.user_stat.update_column(:new_since, Time.now)
+    render nothing: true
   end
 
   private

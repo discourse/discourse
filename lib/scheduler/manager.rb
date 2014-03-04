@@ -184,7 +184,11 @@ module Scheduler
         return unless key
         if due.to_i <= Time.now.to_i
           klass = get_klass(key)
-          return unless klass
+          unless klass
+            # corrupt key, nuke it (renamed job or something)
+            redis.zrem Manager.queue_key, key
+            return
+          end
           info = schedule_info(klass)
           info.prev_run = Time.now.to_i
           info.prev_result = "QUEUED"

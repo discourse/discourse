@@ -59,6 +59,13 @@ describe Scheduler::Manager do
 
   describe '#tick' do
 
+    it 'should nuke missing jobs' do
+      $redis.zadd Scheduler::Manager.queue_key, Time.now.to_i - 1000, "BLABLA"
+      manager.tick
+      $redis.zcard(Scheduler::Manager.queue_key).should == 0
+
+    end
+
     it 'should recover from crashed manager' do
 
       info = manager.schedule_info(Testing::SuperLongJob)

@@ -2,6 +2,9 @@
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -807,7 +810,10 @@ ko:
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
         attachment_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 파일 첨부를 업로드 하실 수 없습니다."
 
-      abandon: "게시물 작성을 취소 하시겠습니까?"
+      abandon:
+        confirm: "게시물 작성을 취소 하시겠습니까?"
+        no_value: "아니오"
+        yes_value: "예"
 
       archetypes:
         save: '옵션 저장'
@@ -1410,6 +1416,3 @@ ko:
           rate_limits: '제한'
           developer: '개발자'
           uncategorized: '카테고리 없음'
-
-
-

@@ -464,14 +464,14 @@ class User < ActiveRecord::Base
 
   def treat_as_new_topic_start_date
     duration = new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
-    case duration
+    [case duration
       when User::NewTopicDuration::ALWAYS
         created_at
       when User::NewTopicDuration::LAST_VISIT
-        previous_visit_at || created_at
+        previous_visit_at || user_stat.new_since
       else
         duration.minutes.ago
-    end
+    end, user_stat.new_since].max
   end
 
   def readable_name
@@ -563,7 +563,7 @@ class User < ActiveRecord::Base
   end
 
   def create_user_stat
-    stat = UserStat.new
+    stat = UserStat.new(new_since: Time.now)
     stat.user_id = id
     stat.save!
   end

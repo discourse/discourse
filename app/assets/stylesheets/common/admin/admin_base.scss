@@ -10,7 +10,6 @@
   td, th {padding: 8px;}
   th {border-top: 1px solid $primary_border_color;}
   td {border-bottom: 1px solid $primary_border_color; border-top: 1px solid $primary_border_color;}
-  td:last-of-type {border-bottom: none;}
   tr:hover { background-color: darken($primary_background_color, 2.5%); }
   tr.selected { background-color: lighten($tertiary_background_color, 58%); }
   .filters input { margin-bottom: 0px; }
@@ -112,7 +111,7 @@
   }
   button {
     margin-right: 5px;
-    
+
   }
   input[type=text] {
     display: inline-block;
@@ -887,7 +886,7 @@ table.api-keys {
     background-color: lighten($secondary_background_color, 60%);
     padding: 3px 10px;
     border-radius: 3px;
-    
+
     color: $primary_text_color;
     &:hover {
       color: $primary_text_color;
@@ -920,7 +919,7 @@ table.api-keys {
 }
 
 .staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses {
-  
+
   border-bottom: dotted 1px $primary_border_color;
 
   .heading-container {
@@ -939,7 +938,7 @@ table.api-keys {
     overflow-x: hidden;
   }
   .col.first {
-    
+
   }
 
   .ember-list-item-view {
