@@ -123,24 +123,23 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     var self = this,
         link_counts = this.get('post.link_counts');
 
-    if (link_counts) {
-      _.each(link_counts, function(lc) {
-        if (lc.clicks > 0) {
-          self.$(".cooked a[href]").each(function() {
-            var link = $(this);
-            if (link.attr('href') === lc.url) {
-              // don't display badge counts on category badge
-              if (link.closest('.badge-category').length === 0) {
-                // nor in oneboxes (except when we force it)
-                if (link.closest(".onebox-result").length === 0 || link.hasClass("track-link")) {
-                  link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_map.clicks") + "'>" + lc.clicks + "</span>");
-                }
-              }
-            }
-          });
+    if (!link_counts) return;
+
+    link_counts.forEach(function(lc) {
+      if (!lc.clicks || lc.clicks < 1) return;
+
+      self.$(".cooked a[href]").each(function() {
+        var link = $(this);
+        if (link.attr('href') === lc.url) {
+          // don't display badge counts on category badge
+          if (link.closest('.badge-category').length === 0 && (link.closest(".onebox-result").length === 0 || link.hasClass("track-link"))) {
+            link.append("<span class='badge badge-notification clicks' title='" +
+                        I18n.t("topic_map.clicks") +
+                        "'>" + Discourse.Formatter.number(lc.clicks) + "</span>");
+          }
         }
       });
-    }
+    });
   },
 
   actions: {
