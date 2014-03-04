@@ -19,7 +19,7 @@ class EmailToken < ActiveRecord::Base
   end
 
   def self.valid_after
-    1.week.ago
+    1.day.ago
   end
 
   def self.unconfirmed
