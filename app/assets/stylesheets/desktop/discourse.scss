@@ -2,9 +2,9 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-@import "common/foundation/helpers";
+@import "../common/foundation/variables";
+@import "../common/foundation/mixins";
+@import "../common/foundation/helpers";
 
 
 html {font-size: 14px/19px;}
