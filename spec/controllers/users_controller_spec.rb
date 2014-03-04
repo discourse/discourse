@@ -537,6 +537,16 @@ describe UsersController do
     end
   end
 
+  context ".saw_notification" do
+    let!(:user) { log_in }
+    it "updates the user's last seen notification" do
+      notification_id = "1"
+      User.any_instance.expects(:saw_notification_id).with(notification_id)
+      xhr :put, :saw_notification, id: user.id, last_notification_id: notification_id
+      response.should be_success
+    end
+  end
+
   context '.check_username' do
     before do
       DiscourseHub.stubs(:nickname_available?).returns([true, nil])

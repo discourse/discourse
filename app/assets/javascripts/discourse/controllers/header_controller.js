@@ -9,10 +9,10 @@
 Discourse.HeaderController = Discourse.Controller.extend({
   topic: null,
   showExtraInfo: null,
-  notifications: null,
+  notifications: Ember.computed.alias('currentUser.recent_notifications'),
 
   showStarButton: function() {
-    return Discourse.User.current() && !this.get('topic.isPrivateMessage');
+    return this.get('currentUser') && !this.get('topic.isPrivateMessage');
   }.property('topic.isPrivateMessage'),
 
   actions: {
@@ -23,13 +23,21 @@ Discourse.HeaderController = Discourse.Controller.extend({
     },
 
     showNotifications: function(headerView) {
-      var self = this;
+      headerView.showDropdownBySelector("#user-notifications");
+      this.set("currentUser.unread_notifications", 0);
 
-      Discourse.ajax("/notifications").then(function(result) {
-        self.set("notifications", result);
-        self.set("currentUser.unread_notifications", 0);
-        headerView.showDropdownBySelector("#user-notifications");
-      });
+      var notifications = this.get('notifications');
+      if ( notifications && notifications.length > 0 ) {
+
+        var last_notification = _.max(notifications, function (notification) {
+          return notification.id;
+        });
+        Discourse.ajax("/users/" + this.get("currentUser.id") + "/saw_notification", {
+          type: 'PUT',
+          data: { last_notification_id: last_notification.id }
+        });
+      }
+      return false;
     }
   }
 

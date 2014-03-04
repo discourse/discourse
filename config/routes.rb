@@ -151,6 +151,9 @@ Discourse::Application.routes.draw do
       get "check_username"
       get "is_local_username"
     end
+    member do
+      put "saw_notification"
+    end
   end
 
   resources :static

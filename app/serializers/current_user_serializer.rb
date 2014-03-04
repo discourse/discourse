@@ -19,6 +19,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :no_password,
              :can_delete_account
 
+  has_many :recent_notifications, class_name: :notifications, embed: :object
+
   def include_site_flagged_posts_count?
     object.staff?
   end

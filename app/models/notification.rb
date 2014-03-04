@@ -89,9 +89,8 @@ class Notification < ActiveRecord::Base
     Post.where(topic_id: topic_id, post_number: post_number).first
   end
 
-  def self.recent_report(user, count = nil)
-    count ||= 10
-    notifications = user.notifications.recent(count).includes(:topic).to_a
+  def self.recent_report(user, count = 10)
+    notifications = user.notifications.recent(count).includes(:topic)
 
     if notifications.present?
       notifications += user.notifications
@@ -122,12 +121,7 @@ class Notification < ActiveRecord::Base
   protected
 
   def refresh_notification_count
-    user_id = user.id
-    MessageBus.publish("/notification/#{user_id}",
-      {unread_notifications: user.unread_notifications,
-       unread_private_messages: user.unread_private_messages},
-      user_ids: [user_id] # only publish the notification to this user
-    )
+    user.publish_notifications_state
   end
 
 end

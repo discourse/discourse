@@ -17,6 +17,7 @@ Discourse.addInitializer(function() {
       });
     }
     bus.subscribe("/notification/" + user.get('id'), (function(data) {
+      user.set('recent_notifications', data.recent_notifications);
       user.set('unread_notifications', data.unread_notifications);
       user.set('unread_private_messages', data.unread_private_messages);
     }), user.notification_channel_position);
