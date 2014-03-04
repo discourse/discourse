@@ -29,9 +29,9 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
   // If the cooked content changed, add the quote controls
   cookedChanged: function() {
-    var postView = this;
+    var self = this;
     Em.run.schedule('afterRender', function() {
-      postView.insertQuoteControls();
+      self.insertQuoteControls();
     });
   }.observes('post.cooked'),
 
@@ -120,13 +120,13 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   // Show how many times links have been clicked on
   showLinkCounts: function() {
 
-    var postView = this;
-    var link_counts = this.get('post.link_counts');
+    var self = this,
+        link_counts = this.get('post.link_counts');
 
     if (link_counts) {
       _.each(link_counts, function(lc) {
         if (lc.clicks > 0) {
-          postView.$(".cooked a[href]").each(function() {
+          self.$(".cooked a[href]").each(function() {
             var link = $(this);
             if (link.attr('href') === lc.url) {
               // don't display badge counts on category badge
