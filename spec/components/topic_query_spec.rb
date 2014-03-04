@@ -3,17 +3,12 @@ require 'topic_view'
 
 describe TopicQuery do
 
-  let(:user) { Fabricate(:coding_horror) }
+  let!(:user) { Fabricate(:coding_horror) }
   let(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
 
   let(:moderator) { Fabricate(:moderator) }
   let(:admin) { Fabricate(:admin) }
-
-  before do
-    # We use a time in a the past to avoid conflicting dates in tests
-    user.user_stat.update_column(:new_since, 1.minute.ago)
-  end
 
   context 'secure category' do
     it "filters categories out correctly" do
