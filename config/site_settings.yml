@@ -102,6 +102,9 @@ users:
   must_approve_users:
     client: true
     default: false
+  min_username_length:
+    client: true
+    default: 3
   min_password_length:
     client: true
     default: 8

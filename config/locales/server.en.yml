@@ -672,7 +672,9 @@ en:
     invite_only: "Public registration is disabled, new users must be invited"
 
     login_required: "Require authentication to read posts"
-
+    
+    min_username_length: "Minimum username length. (Does not apply if global nickname uniqueness is forced)"
+    
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 5000 most common passwords."
 
