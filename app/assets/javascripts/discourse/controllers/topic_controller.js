@@ -22,7 +22,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   actions: {
     jumpTop: function() {
-      Discourse.URL.routeTo(this.get('url'));
+      Discourse.URL.routeTo(this.get('firstPostUrl'));
     },
 
     jumpBottom: function() {
