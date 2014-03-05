@@ -255,9 +255,6 @@ email:
     default: 3
     enum: 'MinTrustToCreateTopicSetting'
   email_in_category: -1
-  enable_mailing_list_mode:
-    default: false
-    client: true
 
 files:
   max_image_size_kb:

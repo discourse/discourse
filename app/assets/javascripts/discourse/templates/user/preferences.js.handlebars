@@ -103,12 +103,6 @@
     <div class="control-group">
       <label class="control-label">{{i18n user.email_settings}}</label>
       <div class="controls">
-        {{#if Discourse.SiteSettings.enable_mailing_list_mode}}
-          <label class="checkbox-label">
-            {{view Ember.Checkbox checkedBinding="mailing_list_mode"}}
-            {{i18n user.mailing_list_mode}}
-          </label>
-        {{/if}}
 
         <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_digests"}}
         {{i18n user.email_digests.title}}</label>
@@ -120,8 +114,12 @@
         {{/if}}
         <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_private_messages"}}
         {{i18n user.email_private_messages}}</label>
+
         <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_direct"}}
         {{i18n user.email_direct}}</label>
+        <label class="checkbox-label">
+          {{view Ember.Checkbox checkedBinding="mailing_list_mode"}}
+          {{i18n user.mailing_list_mode}}</label>
         <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_always"}}
         {{i18n user.email_always}}</label>
       </div>

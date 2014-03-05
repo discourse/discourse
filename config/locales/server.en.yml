@@ -803,7 +803,6 @@ en:
     email_in_address: "The email address the users can post new topics to. None means users can't post globally."
     email_in_min_trust: "The minimum trust level an users needs to have to be allowed to post new topics via email"
     email_in_category: "The category new emails are posted into"
-    enable_mailing_list_mode: "Allow users to (optionally) opt-in to mailing list mode via a user preference"
 
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 

@@ -271,8 +271,6 @@ describe TopicUser do
   describe "mailing_list_mode" do
 
     it "will receive email notification for every topic" do
-      SiteSetting.stubs(:enable_mailing_list_mode).returns(true)
-
       user1 = Fabricate(:user)
       user2 = Fabricate(:user, mailing_list_mode: true)
       post = create_post

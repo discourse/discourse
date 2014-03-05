@@ -32,13 +32,11 @@ class PostJobsEnqueuer
       TopicTrackingState.publish_unread(@post)
     end
 
-    if SiteSetting.enable_mailing_list_mode
-      Jobs.enqueue_in(
-          SiteSetting.email_time_window_mins.minutes,
-          :notify_mailing_list_subscribers,
-          post_id: @post.id
-      )
-    end
+    Jobs.enqueue_in(
+        SiteSetting.email_time_window_mins.minutes,
+        :notify_mailing_list_subscribers,
+        post_id: @post.id
+    )
   end
 
   def after_topic_create
