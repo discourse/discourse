@@ -41,6 +41,9 @@ class CategoriesController < ApplicationController
   end
 
   def show
+    if Category.topic_create_allowed(guardian).where(id: @category.id).exists?
+      @category.permission = CategoryGroup.permission_types[:full]
+    end
     render_serialized(@category, CategorySerializer)
   end
 
