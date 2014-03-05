@@ -285,6 +285,30 @@ section.details {
   }
 }
 
+// Badges area
+.badges {
+  .content-list ul {
+    margin-bottom: 10px;
+  }
+
+  .current-badge {
+    margin: 20px;
+  }
+
+  .form-horizontal {
+    label {
+      font-weight: bold;
+    }
+    & > div {
+      margin-top: 10px;
+    }
+    .delete-link {
+      margin-left: 15px;
+      margin-top: 5px;
+    }
+  }
+}
+
 // Customise area
 .customize {
   .nav.nav-pills {

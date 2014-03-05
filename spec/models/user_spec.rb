@@ -10,6 +10,7 @@ describe User do
   it { should have_many(:user_open_ids).dependent(:destroy) }
   it { should have_many(:user_actions).dependent(:destroy) }
   it { should have_many(:post_actions).dependent(:destroy) }
+  it { should have_many(:user_badges).dependent(:destroy) }
   it { should have_many(:email_logs).dependent(:destroy) }
   it { should have_many(:post_timings) }
   it { should have_many(:topic_allowed_users).dependent(:destroy) }
