@@ -300,6 +300,9 @@ en:
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
         image_is_not_a_square: "Warning: we've cropped your image; it is not square."
+      
+      change_profile_background:
+        title: "Change Profile Background"
 
       email:
         title: "Email"

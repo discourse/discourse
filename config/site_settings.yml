@@ -287,6 +287,9 @@ files:
     default: ''
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket: ''
+  allow_profile_backgrounds:
+    client: true
+    default: true
   allow_uploaded_avatars:
     client: true
     default: true
