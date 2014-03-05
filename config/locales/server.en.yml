@@ -33,6 +33,7 @@ en:
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
 
+  not_logged_in: "You need to be logged in to do that."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
 
   too_many_replies:
