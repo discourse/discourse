@@ -69,6 +69,9 @@ basic:
     default: 20
   topics_per_period_in_top_page:
     default: 50
+  redirect_new_users_to_top_page_duration:
+    client: true
+    default: 7
 
 users:
   enable_sso:

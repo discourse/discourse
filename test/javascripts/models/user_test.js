@@ -56,11 +56,12 @@ test("homepage when top is enabled and not enough topics", function() {
 });
 
 test("homepage when top is enabled and has enough topics", function() {
-  var newUser = Discourse.User.create({ trust_level: 0, last_seen_at: moment() }),
-      oldUser = Discourse.User.create({ trust_level: 1, last_seen_at: moment() }),
+  var newUser = Discourse.User.create({ trust_level: 0, last_seen_at: moment(), created_at: moment().subtract("day", 6) }),
+      oldUser = Discourse.User.create({ trust_level: 1, last_seen_at: moment(), created_at: moment().subtract("month", 2) }),
       defaultHomepage = Discourse.Utilities.defaultHomepage();
 
   Discourse.SiteSettings.top_menu = "latest|top";
+  Discourse.SiteSettings.redirect_new_users_to_top_page_duration = 7;
   Discourse.Site.currentProp("has_enough_topic_to_redirect_to_top_page", true);
 
   equal(newUser.get("homepage"), "top", "new user's homepage is top when top is enabled");
@@ -68,6 +69,17 @@ test("homepage when top is enabled and has enough topics", function() {
 
   oldUser.set("last_seen_at", moment().subtract('month', 2));
   equal(oldUser.get("homepage"), "top", "long-time-no-see old user's homepage is top when top is enabled");
+});
+
+test("new user's homepage when top is enabled, there's enough topics and duration is over", function() {
+  var newUser = Discourse.User.create({ trust_level: 0, last_seen_at: moment(), created_at: moment().subtract("month", 1) }),
+      defaultHomepage = Discourse.Utilities.defaultHomepage();
+
+  Discourse.SiteSettings.top_menu = "latest|top";
+  Discourse.SiteSettings.redirect_new_users_to_top_page_duration = 7;
+  Discourse.Site.currentProp("has_enough_topic_to_redirect_to_top_page", true);
+
+  equal(newUser.get("homepage"), defaultHomepage, "new user's homepage is default when redirect duration is over");
 });
 
 

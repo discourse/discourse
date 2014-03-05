@@ -656,6 +656,7 @@ en:
 
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
+    redirect_new_users_to_top_page_duration: "Number of days during which new users are automatically redirect to the top page"
 
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
@@ -673,9 +674,9 @@ en:
     invite_only: "Public registration is disabled, new users must be invited"
 
     login_required: "Require authentication to read posts"
-    
+
     min_username_length: "Minimum username length. (Does not apply if global nickname uniqueness is forced)"
-    
+
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 5000 most common passwords."
 
@@ -821,9 +822,9 @@ en:
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars"
     max_daily_gravatar_crawls: "The maximum amount of times Discourse will check gravatar for custom avatars in a day"
-    
+
     allow_profile_backgrounds: "Allows users to upload profile backgrounds"
-    
+
     sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
 
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
