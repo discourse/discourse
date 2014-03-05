@@ -5,7 +5,7 @@
 # rvm wrapper $(rvm current) bootup bundle
 #
 
-description "Discoure process"
+description "Discourse process"
 setuid discourse
 respawn
 respawn limit 3 30
