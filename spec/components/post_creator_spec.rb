@@ -133,11 +133,13 @@ describe PostCreator do
       it 'queues up post processing job when saved' do
         Jobs.expects(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         creator.create
       end
 
       it 'passes the invalidate_oneboxes along to the job if present' do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
+        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
         creator.opts[:invalidate_oneboxes] = true
         creator.create
@@ -145,6 +147,7 @@ describe PostCreator do
 
       it 'passes the image_sizes along to the job if present' do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
+        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
         creator.opts[:image_sizes] = {'http://an.image.host/image.jpg' => {'width' => 17, 'height' => 31}}
         creator.create
