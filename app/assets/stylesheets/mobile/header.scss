@@ -64,10 +64,6 @@
     list-style: none;
     > li {
       float: left;
-      &:first-child .icon {
-      }
-      &:first-child.active .icon {
-      }
       &:last-child .icon {
         border-right: 1px solid $primary_border_color;
       }
