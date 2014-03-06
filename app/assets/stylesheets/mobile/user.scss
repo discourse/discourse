@@ -64,7 +64,7 @@
     width: 100%;
     padding: 5px 8px;
   }
-  
+
   #profile-background-preview {
     height: 150px;
     background-position: center center;
@@ -175,7 +175,7 @@
 
     .controls {
       background-color: lighten($secondary_background_color, 60%);
-      margin-top: 0px;
+      margin-top: 0;
       padding: 10px 10px 0 10px;
 
       .btn {
@@ -224,7 +224,7 @@
 
   .user-stream {
     .excerpt {
-      margin: 5px 0px;
+      margin: 5px 0;
       font-size: 13px;
       word-wrap: break-word;
       color: lighten($primary_text_color, 30%);
