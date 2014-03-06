@@ -52,7 +52,7 @@
   position: fixed;
   width: 0;
   right: 0;
-  bottom: 0px;
+  bottom: 0;
   z-index: 500;
   margin-right: 140px;
   outline: 1px solid transparent;
@@ -119,9 +119,9 @@
   }
   .bg {
     position: absolute;
-    top: 0px;
-    bottom: 0px;
-    width: 0px;
+    top: 0;
+    bottom: 0;
+    width: 0;
     border-right: 1px solid $primary_border_color;
     // background-color: #d4eaf4;
     // background-color: #C5E8F7;

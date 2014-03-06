@@ -18,7 +18,7 @@
 
 nav.post-controls {
   background-color: $primary_background_color;
-  padding: 0px;
+  padding: 0;
   border-right: 1px solid $primary_border_color;
   margin-top: 10px;
   button {color: lighten($primary_text_color, 35%);
@@ -409,7 +409,7 @@ iframe {
 
 #show-topic-admin {
   color: lighten($primary_text_color, 35%);
-  right: 0px;
+  right: 0;
   border-right: 0;
   padding-right: 4px;
   padding-left: 5px;

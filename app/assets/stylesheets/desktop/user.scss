@@ -231,18 +231,18 @@
         float: left;
         width: 75%;
         color: $tertiary_text_color;
-        text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+        text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
         h1, h2 {font-weight: bold;}
 
         .bio {
           color: $tertiary_text_color;
-          text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+          text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
           a[href] {
             color: $tertiary_text_color;
             text-decoration: underline;
-            text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+            text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
           }
         }
@@ -318,7 +318,7 @@
 
   .user-stream {
     .excerpt {
-      margin: 5px 0px;
+      margin: 5px 0;
       font-size: 13px;
       word-wrap: break-word;
       color: $primary_text_color;
