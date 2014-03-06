@@ -623,7 +623,7 @@ zh_TW:
     not_logged_in_user: '用戶頁面包含目前活動及喜好的總結'
     current_user: '到你的用戶頁面'
 
-    favorite:
+    starred:
       title: '收藏'
       help:
         star: '將此討論話題加入你的收藏列表'
