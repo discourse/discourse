@@ -6,7 +6,11 @@ require_dependency 'user_name_suggester'
 class Users::OmniauthCallbacksController < ApplicationController
 
   BUILTIN_AUTH = [
-    Auth::LessonPlanetAuthenticator.new
+    Auth::FacebookAuthenticator.new,
+    Auth::OpenIdAuthenticator.new("google", "https://www.google.com/accounts/o8/id", trusted: true),
+    Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", trusted: true),
+    Auth::GithubAuthenticator.new,
+    Auth::TwitterAuthenticator.new
   ]
 
   skip_before_filter :redirect_to_login_if_required
@@ -14,7 +18,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   layout false
 
   def self.types
-    @types ||= Enum.new(:lessonplanet, :facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
+    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
   end
 
   # need to be able to call this

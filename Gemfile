@@ -228,8 +228,5 @@ group :profile do
 end
 
 # Lesson Planet Additions
-gem 'omniauth-browserid', git: 'https://github.com/callahad/omniauth-browserid.git', branch: 'observer_api'
-gem 'omniauth-cas'
-gem 'omniauth-lessonplanet', path: 'vendor/gems/omniauth-lessonplanet'
 gem 'newrelic_rpm'
 gem 'rails_12factor', group: :production

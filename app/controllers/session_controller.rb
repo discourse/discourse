@@ -2,6 +2,7 @@ class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
   skip_before_filter :check_xhr, only: ['sso', 'sso_login']
+  skip_before_filter :sync_main_app_session
 
   def csrf
     render json: {csrf: form_authenticity_token }
