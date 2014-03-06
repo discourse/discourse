@@ -11,8 +11,8 @@ module Onebox
       @record = Onebox::Helpers.symbolize_keys(record)
 
       # Fix any relative paths
-      if record[:image] && record[:image] =~ /^\/[^\/]/
-        record[:image] = "#{uri.scheme}://#{uri.host}/#{record[:image]}"
+      if @record[:image] && @record[:image] =~ /^\/[^\/]/
+        @record[:image] = "#{uri.scheme}://#{uri.host}/#{@record[:image]}"
       end
 
       @md5 = Digest::MD5.new

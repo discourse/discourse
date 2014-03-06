@@ -18,7 +18,7 @@ module Onebox
       end
 
       def url
-        domain = match[:subsubdomain] || match[:subdomain] || match[:domain]
+        domain = URI(@url).host
         "http://api.stackexchange.com/2.1/questions/#{match[:question]}?site=#{domain}"
       end
 

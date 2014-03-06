@@ -1,6 +1,8 @@
 module Onebox
   module Helpers
     def self.symbolize_keys(hash)
+      return {} if hash.nil?
+
       hash.inject({}){|result, (key, value)|
         new_key = case key
                   when String then key.to_sym
