@@ -300,6 +300,9 @@ zh_TW:
         uploaded_avatar_empty: "新增一張自訂圖片"
         upload_title: "上傳你的圖片"
         image_is_not_a_square: "警告: 我們裁切了你的圖片，因為該圖片不是正方形的。"
+        
+      change_profile_background:
+        title: "設定背景圖案"  
 
       email:
         title: "電子郵件"
@@ -632,7 +635,8 @@ zh_TW:
     topics:
       bulk:
         reset_read: "重設閱讀"
-        dismiss_read: "取消閱讀"
+        dismiss_read: "設定未讀帖子為已讀"
+        dismiss_new: "設定新帖子為已讀"
         toggle: "批量切換選擇討論話題"
         actions: "批量操作"
         change_category: "改變分類"
@@ -800,20 +804,20 @@ zh_TW:
 
       reply:
         title: '回覆'
-        help: '開始編寫對此討論話題的回覆'
+        help: '回覆此討論話題'
 
       clear_pin:
         title: "取消置頂"
-        help: "取消討論話題的置頂狀態，它將不會出現在你的討論話題列表的最上面。"
+        help: "取消討論話題的置頂狀態。"
 
       share:
         title: '分享'
         help: '分享此討論話題的連結'
 
       flag_topic:
-        title: '標籤'
-        help: '私下地標籤關注此討論話題或傳送有關它的私人關注。'
-        success_message: '你成功標籤此討論話題。'
+        title: '舉報'
+        help: '舉報有問題的討論話題，或以短訊通知管理員作出跟進'
+        success_message: '已舉報此討論話題。'
 
       inviting: "正在邀請..."
 
@@ -1084,6 +1088,8 @@ zh_TW:
       security: "安全性"
       auto_close_label: "自動關閉討論話題的期限:"
       auto_close_units: "小時"
+      email_in: "自訂外來電郵地址:"
+      email_in_allow_strangers: "接受來自非用戶 (陌生人) 的電郵"
       edit_permissions: "編輯權限"
       add_permission: "新增權限"
       this_year: "今年"
