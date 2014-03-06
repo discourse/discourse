@@ -337,13 +337,21 @@ Ember.Handlebars.registerBoundHelper('date', function(dt) {
 });
 
 /**
-  Look for custom html content using `Discourse.HTML`
+  Look for custom html content using `Discourse.HTML`. If none exists, look for a template
+  to render with that name.
 
   @method customHTML
   @for Handlebars
 **/
-Handlebars.registerHelper('customHTML', function(property) {
-  return Discourse.HTML.getCustomHTML(property);
+Handlebars.registerHelper('customHTML', function(name, contextString, options) {
+  var html = Discourse.HTML.getCustomHTML(name);
+  if (html) { return html; }
+
+  var container = (options || contextString).data.keywords.controller.container;
+
+  if (container.lookup('template:' + name)) {
+    return Ember.Handlebars.helpers.render.apply(this, arguments);
+  }
 });
 
 Ember.Handlebars.registerBoundHelper('humanSize', function(size) {
