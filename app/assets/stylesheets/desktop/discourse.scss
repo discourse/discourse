@@ -13,8 +13,6 @@ body {
   min-width: $large-width;
 }
 
-
-
 .container {
   @extend .clearfix;
   max-width: $large-width;
@@ -35,11 +33,7 @@ body {
   .full-width {
     width: $medium-width;
   }
-
-
 }
-
-/**/
 
 
 @include small-width {
@@ -50,7 +44,6 @@ body {
   .full-width {
     width: $small-width;
   }
-
 }
 
 a.no-href {
@@ -79,6 +72,12 @@ body {
       color: $tertiary_text_color;
     }
   }
+
+  // tab focus in firefox
+  button:focus::-moz-focus-inner {
+  border: 1px dotted;
+  }
+
   .coldmap-high {
     color: $coldmap-high !important;
   }
