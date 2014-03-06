@@ -350,7 +350,7 @@ Handlebars.registerHelper('customHTML', function(name, contextString, options) {
   var container = (options || contextString).data.keywords.controller.container;
 
   if (container.lookup('template:' + name)) {
-    return Ember.Handlebars.helpers.render.apply(this, arguments);
+    return Ember.Handlebars.helpers.partial.apply(this, arguments);
   }
 });
 
