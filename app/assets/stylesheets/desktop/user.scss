@@ -40,16 +40,16 @@
       width: 440px;
     }
   }
-  
+
   #profile-background-preview {
     height: 270px;
-    
+
     background-position: center center;
     background-size: cover;
-    
+
     background-color: $secondary_background_color;
   }
-  
+
   #profile-background-controls {
     padding: 10px;
   }
@@ -217,7 +217,7 @@
       }
 
       img.avatar {
-        border: 3px solid $primary_border_color;
+        border: 3px solid $tertiary_border_color;
         margin-bottom: 10px;
         background-color: $secondary_background_color;
       }
@@ -230,14 +230,20 @@
         margin-top: 20px;
         float: left;
         width: 75%;
+        color: $tertiary_text_color;
+        text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
 
-        h1, h2 {}
+        h1, h2 {font-weight: bold;}
 
         .bio {
-          color: $secondary_text_color;
+          color: $tertiary_text_color;
+          text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
 
           a[href] {
-            color: $link_color;
+            color: $tertiary_text_color;
+            text-decoration: underline;
+            text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+
           }
         }
 
@@ -245,19 +251,18 @@
 
       .secondary {
         float: right;
-        background-color: $tertiary_background_color;
+        background-color: rgba($tertiary_background_color, .9);
         text-align: right;
-        padding: 0 10px;
-        width: 20%;
+        padding: 0 20px;
 
         dd {
-          color: $secondary_text_color;
+          color: rgba($tertiary_text_color, .7);
           margin: 0 0 7px 0;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         dt {
-          color: $secondary_text_color;
+          color: rgba($tertiary_text_color, .7);
           margin: 0;
         }
       }
@@ -292,7 +297,7 @@
         .avatar {
           float: left;
           margin-right: 10px;
-          border: 2px solid $secondary_border_color;
+          border: 2px solid $tertiary_border_color;
           width: 45px;
           height: 45px;
         }
