@@ -19,7 +19,7 @@
           {{boundCategoryLink topic.category}}
           {{#if topic.details.loaded}}
             {{topicStatus topic=topic}}
-            <a class='topic-link' href='{{unbound topic.url}}'>{{{topic.fancy_title}}}</a>
+            <a class='topic-link' href='{{unbound topic.url}}' {{action jumpToTopPost}}>{{{topic.fancy_title}}}</a>
           {{else}}
             {{#if topic.errorLoading}}
               {{topic.errorTitle}}

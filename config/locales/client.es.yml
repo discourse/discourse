@@ -87,7 +87,7 @@ es:
     yes_value: "Sí"
     of_value: "de"
     generic_error: "Lo sentimos, ha ocurrido un error."
-    log_in: "Ingreso"
+    log_in: "Iniciar sesión"
     age: "Edad"
     last_post: "Última Publicación"
     admin_title: "Admin"
@@ -109,7 +109,7 @@ es:
     weekly: "cada semana"
     every_two_weeks: "cada dos semanas"
     character_count:
-      one: "{{count}} caracter"
+      one: "{{count}} carácter"
       other: "{{count}} caracteres"
 
     suggested_topics:
@@ -126,7 +126,7 @@ es:
     preview: "vista previa"
     cancel: "cancelar"
 
-    save: "Guardar Cambios"
+    save: "Guardar cambios"
     saving: "Guardando..."
     saved: "¡Guardado!"
 
@@ -422,14 +422,14 @@ es:
       failed: "Algo salió mal, tal vez este email ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
 
     forgot_password:
-      title: "Olvidé mi Contraseña"
+      title: "Olvidé mi contraseña"
       action: "Olvidé mi contraseña"
       invite: "Introduce tu nombre de usuario o tu dirección de email, y te enviaremos un correo electrónico para cambiar tu contraseña."
       reset: "Cambiar Contraseña"
       complete: "Dentro de poco deberías recibir un email con las instrucciones para cambiar tu contraseña."
 
     login:
-      title: "Iniciar Sesión"
+      title: "Iniciar sesión"
       username: "Nombre de usuario"
       password: "Contraseña"
       email_placeholder: "dirección de email o nombre de usuario"
@@ -860,7 +860,7 @@ es:
       with_topics: "Temas de %{filter}"
       with_category: "Temas de %{filter} %{category}"
       latest:
-        title: "Los Más Recientes"
+        title: "Los más recientes"
         help: "los temas con publicaciones más recientes"
       hot:
         title: "Popular"
@@ -888,7 +888,7 @@ es:
           other: "Nuevos ({{count}})"
         help: "temas nuevos desde su última visita"
       posted:
-        title: "Mis Mensajes"
+        title: "Mis mensajes"
         help: "temas que has publicado"
       category:
         title:
@@ -897,16 +897,16 @@ es:
           other: "{{categoryName}} ({{count}})"
         help: "últimos temas en el {{categoryName}} categoría"
       top:
-        title: "De Los Mejores Temas"
+        title: "De los mejores temas"
         help: "una selección de los temas más populares en el último año, mes, semana, o día"
         yearly:
-          title: "De Los Mejores Temas del Año"
+          title: "De los mejores temas del año"
         monthly:
-          title: "De Los Mejores Temas del Mes"
+          title: "De los mejores temas del mes"
         weekly:
-          title: "De Los Mejores Temas de la Semana"
+          title: "De los mejores temas de la semana"
         daily:
-          title: "De Los Mejores Temas del Día"
+          title: "De los Mejores temas del día"
         this_year: "Este año"
         this_month: "Este mes"
         this week: "Esta semana"
@@ -1055,82 +1055,82 @@ es:
             one: "spam"
             other: "spam x{{count}}"
       groups:
-        primary: "Grupo Primario"
-        no_primary: "(ningún grupo primario)"
+        primary: "Grupo principal"
+        no_primary: "(ningún grupo principal)"
         title: "Grupos"
-        edit: "Editar Grupos"
+        edit: "Editar grupos"
         selector_placeholder: "añadir usuarios"
         name_placeholder: "Nombre del grupo, sin espacios, al igual que la regla del nombre usuario"
-        about: "Editar tu membresía de grupo y nombres aquí"
+        about: "Edita tu membresía de grupo y nombres aquí"
         delete: "Borrar"
         delete_confirm: "Borrar este grupo?"
         delete_failed: "No se pudo borrar el grupo. Si este es un grupo automático, no se puede destruir."
 
       api:
-        generate_master: "Generar Clave Maestra de API"
+        generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."
         user: "Usuario"
         title: "API"
         key: "Clave de API"
-        generate: "Generar Clave de API"
-        regenerate: "Regenerar Clave de API"
+        generate: "Generar clave de API"
+        regenerate: "Regenerar clave de API"
         revoke: "Revocar"
         confirm_regen: "Estás seguro que quieres reemplazar esa Clave de API con una nueva?"
         confirm_revoke: "Estás seguro que quieres revocar esa clave?"
         info_html: "Tu clave de API te permitirá crear y actualizar temas usando llamadas a JSON."
         all_users: "Todos Los Usuarios"
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
+        note_html: "Esta llave es <strong>secreta</strong>. Mantenla en un lugar seguro. Con ella cualquier usuario puede crear contenido con otra identidad."
 
       backups:
-        title: "Respaldos"
+        title: "Copia de seguridad"
         menu:
-          backups: "Respaldos"
+          backups: "Copia de seguridad"
           logs: "Registros"
-        none: "Ningún respaldo disponible."
+        none: "Ninguna copia disponible."
         read_only:
           enable:
             title: "Habilitar el modo de 'solo-lectura'"
             text: "Habilitar el modo de 'solo-lectura'"
-            confirm: "Estás seguro que quieres habilitar el modo de 'solo-lectura'?"
+            confirm: "¿Estás seguro que quieres habilitar el modo de 'solo-lectura'?"
           disable:
             title: "Deshabilitar el modo de 'solo-lectura'"
             text: "Deshabilitar el modo de 'solo-lectura'"
         logs:
           none: "Ningún registro hasta ahora..."
         columns:
-          filename: "Nombre de archivo"
+          filename: "Nombre del archivo"
           size: "Tamaño"
         operations:
-          is_running: "Actualmente una operación está corriendo..."
-          failed: "La {{operation}} falló. Por favor revisa tus registros."
+          is_running: "Actualmente una operación se está procesando..."
+          failed: "La {{operation}} falló. Por favor revisa los logs"
           cancel:
             text: "Cancelar"
             title: "Cancelar la operación actual"
-            confirm: "Estás seguro que quieres cancelar la operación actual?"
+            confirm: "¿Estás seguro que quieres cancelar la operación actual?"
           backup:
             text: "Respaldo"
-            title: "Crear un respaldo"
-            confirm: "Estás seguro que quieres empezar un nuevo respaldo?"
+            title: "Crear una copia de seguridad"
+            confirm: "¿Estás seguro que quieres empezar una nueva copia de seguridad?"
           download:
             text: "Descargar"
-            title: "Descargar el respaldo"
+            title: "Descargar la copia de seguridad"
           destroy:
             text: "Borrar"
-            title: "Remover el respaldo"
-            confirm: "Estás seguro que quieres borrar este respaldo?"
+            title: "Borrar la copia de seguridad"
+            confirm: "¿Estás seguro que quieres borrar esta copia?"
           restore:
             is_disabled: "Restaurar está deshabilitado en la configuración del sitio."
             text: "Restaurar"
-            title: "Restaurar el respaldo"
-            confirm: "Estás seguro que quieres restaurar el respaldo?"
+            title: "Restaurar la copia de seguridad"
+            confirm: "¿Estás seguro que quieres restaurar esta copia de seguridad?"
           rollback:
             text: "Deshacer"
             title: "Regresar la base de datos al estado funcional anterior"
-            confirm: "Estás seguro que quieres regresar la base de datos al estado funcional anterior?"
+            confirm: "¿Estás seguro que quieres regresar la base de datos al estado funcional anterior?"
 
       customize:
         title: "Personalizar"
-        long_title: "Personalizaciones del Sitio"
+        long_title: "Personalizaciones del sitio"
         header: "Encabezado"
         css: "Hoja de estilo"
         mobile_header: "Encabezado móvil"
@@ -1143,7 +1143,7 @@ es:
         new: "Nuevo"
         new_style: "Nuevo Estilo"
         delete: "Eliminar"
-        delete_confirm: "Eliminar esta personalización?"
+        delete_confirm: "¿Eliminar esta personalización?"
         about: "La personalización del sitio te permite modificar las hojas de estilo y los encabezados del mismo. Elige uno o agrega uno nuevo para comenzar a editar."
 
       email:
@@ -1165,7 +1165,7 @@ es:
         html: "html"
         text: "texto"
         last_seen_user: "Último usuario visto:"
-        reply_key: "Key de Respuesta"
+        reply_key: "Key de respuesta"
 
       logs:
         title: "Logs"
@@ -1181,11 +1181,11 @@ es:
           block: "bloquear"
           do_nothing: "no hacer nada"
         staff_actions:
-          title: "Acciones del Staff"
+          title: "Acciones del staff"
           instructions: "Haz click en nombres de usuario y acciones para filtrar la lista. Haz click en los avatares para ir a las páginas del los usuarios."
           clear_filters: "Mostrar todo"
-          staff_user: "Usuario Administrador"
-          target_user: "Usuario Enfocado"
+          staff_user: "Usuario administrador"
+          target_user: "Usuario enfocado"
           subject: "Sujeto"
           when: "Cuándo"
           context: "Contexto"
@@ -1206,16 +1206,16 @@ es:
             suspend_user: "suspender usuario"
             unsuspend_user: "desbloquear usuario"
         screened_emails:
-          title: "Correos Bloqueados"
+          title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
-          email: "Correo Electrónico"
+          email: "Correo electrónico"
         screened_urls:
-          title: "URLs Bloqueados"
-          description: "Los URLs listados aquí fueron usados en las publicaciones por los usuarios, quienes han sido identificados como spammers."
+          title: "URLs bloqueadas"
+          description: "Las URLs listados aquí fueron usados en las publicaciones por los usuarios, quienes han sido identificados como spammers."
           url: "URL"
           domain: "Dominio"
         screened_ips:
-          title: "IPs Bloqueados"
+          title: "IPs bloqueadas"
           description: 'Direcciones IP que están siendo observadas. Usa "Permitir" para permitir direcciones IP.'
           delete_confirm: "Estás seguro que quieres remover el bloqueo para %{ip_address}?"
           actions:
@@ -1255,18 +1255,18 @@ es:
           one: "rechazar usuario"
           other: "rechazar ({{count}}) usuarios"
         titles:
-          active: 'Usuarios Activos'
+          active: 'Usuarios activos'
           new: 'Usuarios nuevos'
-          pending: 'Usuarios Pendiente de Revisión'
-          newuser: 'Usuarios con Nivel de Confianza 0 (Nuevo)'
-          basic: 'Usuarios con Nivel de Confianza 1 (Básico)'
-          regular: 'Usuarios con Nivel de Confianza 2 (Regular)'
-          leader: 'Usuarios con Nivel de Confianza 3 (Líder)'
-          elder: 'Usuarios con Nivel de Confianza 4 (Anciano)'
+          pending: 'Usuarios pendientes de revisión'
+          newuser: 'Usuarios con nivel de confianza 0 (Nuevo)'
+          basic: 'Usuarios con nivel de confianza 1 (Básico)'
+          regular: 'Usuarios con nivel de confianza 2 (Regular)'
+          leader: 'Usuarios con nivel de confianza 3 (Líder)'
+          elder: 'Usuarios con nivel de confianza 4 (Anciano)'
           admins: 'Administradores'
           moderators: 'Moderadores'
-          blocked: 'Usuarios Bloqueados'
-          suspended: 'Usuarios Suspendidos'
+          blocked: 'Usuarios bloqueados'
+          suspended: 'Usuarios suspendidos'
         reject_successful:
           one: "1 usuario rechazado con éxito."
           other: "%{count} usuarios rechazados con éxito."
@@ -1286,38 +1286,38 @@ es:
         delete_all_posts_confirm: "Estás a punto de borrar %{posts} publicaciones y %{topics} temas. Estás seguro?"
         suspend: "Suspender"
         unsuspend: "Quitar ban"
-        suspended: "Baneado?"
-        moderator: "Moderador?"
-        admin: "Administrador?"
-        blocked: "Bloqueado?"
+        suspended: "¿Baneado?"
+        moderator: "¿Moderador?"
+        admin: "¿Administrador?"
+        blocked: "¿Bloqueado?"
         show_admin_profile: "Administrador"
-        edit_title: "Editar Título"
-        save_title: "Guardar Título"
+        edit_title: "Editar título"
+        save_title: "Guardar título"
         refresh_browsers: "Forzar recarga del navegador"
         show_public_profile: "Ver perfil público"
         impersonate: 'Impersonar a'
-        revoke_admin: 'Revocar Administrador'
-        grant_admin: 'Conceder Administración'
-        revoke_moderation: 'Revocar Moderación'
-        grant_moderation: 'Conceder Moderación'
+        revoke_admin: 'Revocar administrador'
+        grant_admin: 'Conceder administración'
+        revoke_moderation: 'Revocar moderación'
+        grant_moderation: 'Conceder moderación'
         unblock: 'Desbloquear'
         block: 'Bloquear'
-        reputation: Reputación
-        permissions: Permisos
-        activity: Actividad
-        like_count: Número de 'Me gusta' Recibidos
-        private_topics_count: Temas Privados
-        posts_read_count: Mensajes Leídos
-        post_count: Mensajes Creados
-        topics_entered: Temas Ingresados
-        flags_given_count: Reportes Enviados
-        flags_received_count: Reportes Recibidos
+        reputation: 'Reputación'
+        permissions: 'Permisos'
+        activity: 'Actividad'
+        like_count: 'Número de "Me gusta" recibidos'
+        private_topics_count: 'Temas privados'
+        posts_read_count: 'Mensajes leídos'
+        post_count: 'Mensajes creados'
+        topics_entered: 'Temas ingresados'
+        flags_given_count: 'Reportes enviados'
+        flags_received_count: 'Reportes recibidos'
         approve: 'Aprobar'
         approved_by: "aprobado por"
         approve_success: "Usuario aprobado y email enviado con instrucciones para la activación."
         approve_bulk_success: "Exito! Todos los usuarios seleccionados han sido aprobados y notificados."
         time_read: "Tiempo de lectura"
-        delete: "Borrar Usuario"
+        delete: "Borrar usuario"
         delete_forbidden_because_staff: "Administradores y moderadores no pueden ser eliminados"
         delete_forbidden:
           one: "Los usuarios no se pueden borrar si han sido registrados hace más de %{count} día, o si tienen publicaciones. Borra todas publicaciones antes de tratar de borrar un usuario."
@@ -1327,12 +1327,12 @@ es:
         delete_dont_block: "<b>Sí</b>, solamente borrar el usuario"
         deleted: "El usuario fue borrado."
         delete_failed: "Ha habido un error al borrar ese usuario. Asegúrate que todos las publicaciones han sido borrados antes de tratando de borrar este usuario."
-        send_activation_email: "Enviar Correo de Activación"
+        send_activation_email: "Enviar correo de activación"
         activation_email_sent: "Un correo de activación ha sido enviado."
         send_activation_email_failed: "Ha habido un problema enviando otro correo de activación. %{error}"
         activate: "Activar Cuenta"
         activate_failed: "Ha habido un problem activando el usuario."
-        deactivate_account: "Desactivar Cuenta"
+        deactivate_account: "Desactivar cuenta"
         deactivate_failed: "Ha habido un problema desactivando el usuario."
         unblock_failed: 'Ha habido un problema desbloqueando el usuario.'
         block_failed: 'Ha habido un problema bloqueando el usuario.'
@@ -1341,21 +1341,21 @@ es:
         block_explanation: "Un usuario bloqueado no puede crear publicaciones ni empezer temas."
         trust_level_change_failed: "Ha habido un problema cambiando el nivel de confianza del usuario."
         suspend_modal_title: "Suspender Usuario"
-        trust_level_2_users: "Usuarios del Nivel de Confianza 2"
-        trust_level_3_requirements: "Requerimientos para Nivel de confianza 3"
+        trust_level_2_users: "Usuarios del nivel de Confianza 2"
+        trust_level_3_requirements: "Requerimientos para nivel de confianza 3"
         tl3_requirements:
-          title: "Requerimientos para el Nivel de Confianza 3"
+          title: "Requerimientos para el nivel de confianza 3"
           table_title: "En los últimos 100 días:"
           value_heading: "Valor"
           requirement_heading: "Requerimiento"
           visits: "Visitas"
           days: "días"
-          topics_with_replies: "Temas con Respuestas"
-          topics_replied_to: "Temas Respondidos A"
-          quality_content: "Contenido de Calidad"
+          topics_with_replies: "Temas con respuestas"
+          topics_replied_to: "Temas respondidos A"
+          quality_content: "Contenido de calidad"
           reading: "Leyendo"
-          site_promotion: "Promoción del Sitio"
-          flagged_posts: "Publicaciones Marcadas"
+          site_promotion: "Promoción del sitio"
+          flagged_posts: "Publicaciones marcadas"
 
       site_content:
         none: "Elige un tipo de contenido para empezar a editar."
@@ -1363,18 +1363,18 @@ es:
         edit: "Editar contenido del sitio"
 
       site_settings:
-        show_overriden: 'Sólo mostrar lo sobreescrito'
-        title: 'Ajustes del Sitio'
-        reset: 'Reestabler los ajustes por defecto'
+        show_overriden: 'Sólo mostrar lo personalizado'
+        title: 'Ajustes del sitio'
+        reset: 'Reestabler valor por defecto'
         none: 'ninguno'
         no_results: "Ningun resultado encontrado"
-        clear_filter: "Limpiar"
+        clear_filter: "Limpiar filtro"
         categories:
           all_results: 'Todo'
           required: 'Requerido'
-          basic: 'Setup Básico'
+          basic: 'Configuración básica'
           users: 'Usuarios'
-          posting: 'Posteando'
+          posting: 'Publicar'
           email: 'Email'
           files: 'Archivos'
           trust: 'Niveles de confianza'
@@ -1385,7 +1385,7 @@ es:
           developer: 'Desarrollador'
           embedding: "Embebido"
           legal: "Legal"
-          uncategorized: 'No clasificados'
+          uncategorized: 'Sin clasificar'
 
           lightbox:
             download: "descargar"

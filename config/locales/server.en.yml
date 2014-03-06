@@ -33,6 +33,7 @@ en:
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
 
+  not_logged_in: "You need to be logged in to do that."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
 
   too_many_replies:
@@ -655,6 +656,7 @@ en:
 
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
+    redirect_new_users_to_top_page_duration: "Number of days during which new users are automatically redirect to the top page"
 
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
@@ -673,12 +675,17 @@ en:
 
     login_required: "Require authentication to read posts"
 
+    min_username_length: "Minimum username length. (Does not apply if global nickname uniqueness is forced)"
+
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 5000 most common passwords."
 
     enable_sso: "Enable single sign on via an external site"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
+    sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
+    sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
+    sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
 
     enable_local_logins: "Enable traditional, local username and password authentication"
     enable_local_account_create: "Enable creating new local accounts"
@@ -798,7 +805,6 @@ en:
     email_in_address: "The email address the users can post new topics to. None means users can't post globally."
     email_in_min_trust: "The minimum trust level an users needs to have to be allowed to post new topics via email"
     email_in_category: "The category new emails are posted into"
-    enable_mailing_list_mode: "Allow users to (optionally) opt-in to mailing list mode via a user preference"
 
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 
@@ -816,6 +822,8 @@ en:
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars"
     max_daily_gravatar_crawls: "The maximum amount of times Discourse will check gravatar for custom avatars in a day"
+
+    allow_profile_backgrounds: "Allows users to upload profile backgrounds"
 
     sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
 

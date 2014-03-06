@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect, :avatar]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_avatar, :toggle_avatar, :destroy]
+  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :toggle_avatar, :clear_profile_background, :destroy]
   before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -297,8 +297,16 @@ class UsersController < ApplicationController
     size = 128 if size > 128
     size
   end
-
+  
   def upload_avatar
+    params[:user_image_type] = "avatar"
+    
+    upload_user_image
+
+  end
+  
+  def upload_user_image
+    params.require(:user_image_type)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
@@ -308,17 +316,26 @@ class UsersController < ApplicationController
     # TODO: Does not protect from huge uploads
     # https://github.com/discourse/discourse/pull/1512
     # check the file size (note: this might also be done in the web server)
-    avatar        = build_avatar_from(file)
-    avatar_policy = AvatarUploadPolicy.new(avatar)
+    img        = build_user_image_from(file)
+    upload_policy = AvatarUploadPolicy.new(img)
 
-    if avatar_policy.too_big?
+    if upload_policy.too_big?
       return render status: 413, text: I18n.t("upload.images.too_large",
-                                              max_size_kb: avatar_policy.max_size_kb)
+                                              max_size_kb: upload_policy.max_size_kb)
     end
 
-    raise FastImage::UnknownImageType unless SiteSetting.authorized_image?(avatar.file)
-
-    upload_avatar_for(user, avatar)
+    raise FastImage::UnknownImageType unless SiteSetting.authorized_image?(img.file)
+    
+    upload_type = params[:user_image_type]
+    
+    if upload_type == "avatar"
+      upload_avatar_for(user, img)
+    elsif upload_type == "profile_background"
+      upload_profile_background_for(user, img)
+    else
+      render status: 422, text: ""
+    end
+    
 
   rescue Discourse::InvalidParameters
     render status: 422, text: I18n.t("upload.images.unknown_image_type")
@@ -340,7 +357,17 @@ class UsersController < ApplicationController
 
     render nothing: true
   end
-
+  
+  def clear_profile_background
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    
+    user.profile_background = ""
+    user.save!
+    
+    render nothing: true
+  end
+  
   def destroy
     @user = fetch_user_from_params
     guardian.ensure_can_delete_user!(@user)
@@ -364,7 +391,7 @@ class UsersController < ApplicationController
       challenge
     end
 
-    def build_avatar_from(file)
+    def build_user_image_from(file)
       source = if file.is_a?(String)
                  is_api? ? :url : (raise FastImage::UnknownImageType)
                else
@@ -380,7 +407,17 @@ class UsersController < ApplicationController
       Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
       render json: { url: upload.url, width: upload.width, height: upload.height }
     end
-
+    
+    def upload_profile_background_for(user, background)
+      upload = Upload.create_for(user.id, background.file, background.filesize)
+      user.profile_background = upload.url
+      user.save!
+      
+      # TODO: maybe add a resize job here
+      
+      render json: { url: upload.url, width: upload.width, height: upload.height }
+    end
+    
     def respond_to_suspicious_request
       if suspicious?(params)
         render(

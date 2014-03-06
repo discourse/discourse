@@ -1092,55 +1092,65 @@ describe UsersController do
     end
   end
 
-  describe '.upload_avatar' do
+  describe '.upload_user_image' do
 
     it 'raises an error when not logged in' do
-      lambda { xhr :put, :upload_avatar, username: 'asdf' }.should raise_error(Discourse::NotLoggedIn)
+      lambda { xhr :put, :upload_user_image, username: 'asdf' }.should raise_error(Discourse::NotLoggedIn)
     end
+    
 
     context 'while logged in' do
 
       let!(:user) { log_in }
 
-      let(:avatar) do
+      let(:user_image) do
         ActionDispatch::Http::UploadedFile.new({
           filename: 'logo.png',
           tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo.png")
         })
       end
+      
+      it 'raises an error without a user_image_type param' do
+        lambda { xhr :put, :upload_user_image, username: user.username }.should raise_error(ActionController::ParameterMissing)
+      end
 
       describe "with uploaded file" do
-
-        it 'raises an error when you don\'t have permission to upload an avatar' do
+      
+        it 'raises an error when you don\'t have permission to upload an user image' do
           Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
-          xhr :post, :upload_avatar, username: user.username
+          xhr :post, :upload_user_image, username: user.username, user_image_type: "avatar"
           response.should be_forbidden
         end
 
         it 'rejects large images' do
           AvatarUploadPolicy.any_instance.stubs(:too_big?).returns(true)
-          xhr :post, :upload_avatar, username: user.username, file: avatar
+          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "avatar"
           response.status.should eq 413
         end
 
         it 'rejects unauthorized images' do
           SiteSetting.stubs(:authorized_image?).returns(false)
-          xhr :post, :upload_avatar, username: user.username, file: avatar
+          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "avatar"
+          response.status.should eq 422
+        end
+        
+        it 'rejects requests with unknown user_image_type' do
+          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "asdf"
           response.status.should eq 422
         end
 
-        it 'is successful' do
+        it 'is successful for avatars' do
           upload = Fabricate(:upload)
           Upload.expects(:create_for).returns(upload)
-          # enqueues the avatar generator job
+          # enqueues the user_image generator job
           Jobs.expects(:enqueue).with(:generate_avatars, { user_id: user.id, upload_id: upload.id })
-          xhr :post, :upload_avatar, username: user.username, file: avatar
+          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "avatar"
           user.reload
           # erase the previous template
           user.uploaded_avatar_template.should == nil
           # link to the right upload
           user.uploaded_avatar.id.should == upload.id
-          # automatically set "use_uploaded_avatar"
+          # automatically set "use_uploaded_user_image"
           user.use_uploaded_avatar.should == true
           # returns the url, width and height of the uploaded image
           json = JSON.parse(response.body)
@@ -1148,10 +1158,26 @@ describe UsersController do
           json['width'].should == 100
           json['height'].should == 200
         end
+        
+        it 'is successful for profile backgrounds' do
+          upload = Fabricate(:upload)
+          Upload.expects(:create_for).returns(upload)
+          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "profile_background"
+          user.reload
+          
+          user.profile_background.should == "/uploads/default/1/1234567890123456.jpg"
+          
+          # returns the url, width and height of the uploaded image
+          json = JSON.parse(response.body)
+          json['url'].should == "/uploads/default/1/1234567890123456.jpg"
+          json['width'].should == 100
+          json['height'].should == 200
+        end
+        
       end
 
       describe "with url" do
-        let(:avatar_url) { "http://cdn.discourse.org/assets/logo.png" }
+        let(:user_image_url) { "http://cdn.discourse.org/assets/logo.png" }
 
         before :each do
           UsersController.any_instance.stubs(:is_api?).returns(true)
@@ -1161,40 +1187,63 @@ describe UsersController do
           before :each do
             UriAdapter.any_instance.stubs(:open).returns StringIO.new(fixture_file("images/logo.png"))
           end
-
+          
           it 'rejects large images' do
             AvatarUploadPolicy.any_instance.stubs(:too_big?).returns(true)
-            xhr :post, :upload_avatar, username: user.username, file: avatar_url
+            xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
             response.status.should eq 413
           end
 
           it 'rejects unauthorized images' do
             SiteSetting.stubs(:authorized_image?).returns(false)
-            xhr :post, :upload_avatar, username: user.username, file: avatar_url
+            xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
+            response.status.should eq 422
+          end
+          
+          it 'rejects requests with unknown user_image_type' do
+            xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "asdf"
             response.status.should eq 422
           end
 
-          it 'is successful' do
+          it 'is successful for avatars' do
             upload = Fabricate(:upload)
             Upload.expects(:create_for).returns(upload)
-            # enqueues the avatar generator job
+            # enqueues the user_image generator job
             Jobs.expects(:enqueue).with(:generate_avatars, { user_id: user.id, upload_id: upload.id })
-            xhr :post, :upload_avatar, username: user.username, file: avatar_url
+            xhr :post, :upload_avatar, username: user.username, file: user_image_url, user_image_type: "avatar"
             user.reload
+            # erase the previous template
             user.uploaded_avatar_template.should == nil
+            # link to the right upload
             user.uploaded_avatar.id.should == upload.id
+            # automatically set "use_uploaded_user_image"
             user.use_uploaded_avatar.should == true
-
             # returns the url, width and height of the uploaded image
             json = JSON.parse(response.body)
             json['url'].should == "/uploads/default/1/1234567890123456.jpg"
             json['width'].should == 100
             json['height'].should == 200
           end
+          
+          it 'is successful for profile backgrounds' do
+            upload = Fabricate(:upload)
+            Upload.expects(:create_for).returns(upload)
+            xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
+            user.reload
+            
+            user.profile_background.should == "/uploads/default/1/1234567890123456.jpg"
+            
+            # returns the url, width and height of the uploaded image
+            json = JSON.parse(response.body)
+            json['url'].should == "/uploads/default/1/1234567890123456.jpg"
+            json['width'].should == 100
+            json['height'].should == 200
+          end
+          
         end
 
         it "should handle malformed urls" do
-          xhr :post, :upload_avatar, username: user.username, file: "foobar"
+          xhr :post, :upload_user_image, username: user.username, file: "foobar", user_image_type: "profile_background"
           response.status.should eq 422
         end
 
@@ -1232,6 +1281,32 @@ describe UsersController do
 
     end
 
+  end
+  
+  describe '.clear_profile_background' do
+  
+    it 'raises an error when not logged in' do
+      lambda { xhr :put, :clear_profile_background, username: 'asdf' }.should raise_error(Discourse::NotLoggedIn)
+    end
+    
+    context 'while logged in' do
+
+      let!(:user) { log_in }
+
+      it 'raises an error when you don\'t have permission to clear the profile background' do
+        Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
+        xhr :put, :clear_profile_background, username: user.username
+        response.should be_forbidden
+      end
+
+      it 'it successful' do
+        xhr :put, :clear_profile_background, username: user.username
+        user.reload.profile_background.should == ""
+        response.should be_success
+      end
+
+    end
+    
   end
 
   describe '.destroy' do

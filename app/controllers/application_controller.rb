@@ -86,7 +86,13 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
-    redirect_to "/"
+
+    if request.get?
+      redirect_to "/"
+    else
+      render status: 403, json: failed_json.merge(message: I18n.t(:not_logged_in))
+    end
+
   end
 
   rescue_from Discourse::NotFound do

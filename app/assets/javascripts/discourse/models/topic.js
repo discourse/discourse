@@ -68,7 +68,7 @@ Discourse.Topic = Discourse.Model.extend({
   // Helper to build a Url with a post number
   urlForPostNumber: function(postNumber) {
     var url = this.get('url');
-    if (postNumber && (postNumber > 1)) {
+    if (postNumber && (postNumber > 0)) {
       if (postNumber >= this.get('highest_post_number')) {
         url += "/last";
       } else {
@@ -90,6 +90,10 @@ Discourse.Topic = Discourse.Model.extend({
   lastPostUrl: function() {
     return this.urlForPostNumber(this.get('highest_post_number'));
   }.property('url', 'highest_post_number'),
+
+  firstPostUrl: function () {
+    return this.urlForPostNumber(1);
+  }.property('url'),
 
   lastPosterUrl: function() {
     return Discourse.getURL("/users/") + this.get("last_poster.username");

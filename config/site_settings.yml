@@ -69,6 +69,9 @@ basic:
     default: 20
   topics_per_period_in_top_page:
     default: 50
+  redirect_new_users_to_top_page_duration:
+    client: true
+    default: 7
 
 users:
   enable_sso:
@@ -78,6 +81,15 @@ users:
     default: ''
   sso_secret:
     defalt: ''
+  sso_overrides_email:
+    client: true
+    default: false
+  sso_overrides_username:
+    client: true
+    default: false
+  sso_overrides_name:
+    client: true
+    default: false
   enable_local_logins:
     client: true
     default: true
@@ -93,6 +105,9 @@ users:
   must_approve_users:
     client: true
     default: false
+  min_username_length:
+    client: true
+    default: 3
   min_password_length:
     client: true
     default: 8
@@ -243,9 +258,6 @@ email:
     default: 3
     enum: 'MinTrustToCreateTopicSetting'
   email_in_category: -1
-  enable_mailing_list_mode:
-    default: false
-    client: true
 
 files:
   max_image_size_kb:
@@ -278,6 +290,9 @@ files:
     default: ''
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket: ''
+  allow_profile_backgrounds:
+    client: true
+    default: true
   allow_uploaded_avatars:
     client: true
     default: true

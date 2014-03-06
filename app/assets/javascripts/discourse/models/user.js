@@ -61,6 +61,19 @@ Discourse.User = Discourse.Model.extend({
     return this.get('website').split("/")[2];
   }.property('website'),
 
+  /**
+    This user's profile background(in CSS).
+
+    @property websiteName
+    @type {String}
+  **/
+  profileBackground: function() {
+    var background = this.get('profile_background');
+    if(Em.isEmpty(background) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
+
+    return 'background-image: url(' + background + ')';
+  }.property('profile_background'),
+
   statusIcon: function() {
     var desc;
     if(this.get('admin')) {
@@ -317,6 +330,22 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
+  /*
+    Clear profile background
+
+    @method clearProfileBackground
+    @returns {Promise} the result of the clear profile background request
+  */
+  clearProfileBackground: function() {
+    var user = this;
+    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/profile_background/clear", {
+      type: 'PUT',
+      data: { }
+    }).then(function() {
+      user.set('profile_background', null);
+    });
+  },
+
   /**
     Determines whether the current user is allowed to upload a file.
 
@@ -344,9 +373,15 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
-  hasBeenSeenInTheLastMonth: function() {
-    return moment().diff(moment(this.get('last_seen_at')), 'month', true) < 1.0;
+  hasNotBeenSeenInTheLastMonth: function() {
+    return moment().diff(moment(this.get("last_seen_at")), "month", true) >= 1.0;
   }.property("last_seen_at"),
+
+  shouldBeRedirectToTopPage: function() {
+    if (this.get("trust_level") > 0) { return false; }
+    var duration = Discourse.SiteSettings.redirect_new_users_to_top_page_duration;
+    return moment().diff(moment(this.get("created_at")), "days", true) < duration;
+  }.property("trust_level", "created_at"),
 
   /**
     Homepage of the user
@@ -360,13 +395,13 @@ Discourse.User = Discourse.Model.extend({
     //   - long-time-no-see user (ie. > 1 month)
     if (Discourse.Site.currentProp("has_enough_topic_to_redirect_to_top_page")) {
       if (Discourse.SiteSettings.top_menu.indexOf("top") >= 0) {
-        if (this.get("trust_level") === 0 || !this.get("hasBeenSeenInTheLastMonth")) {
+        if (this.get("shouldBeRedirectToTopPage") || this.get("hasNotBeenSeenInTheLastMonth")) {
           return "top";
         }
       }
     }
     return Discourse.Utilities.defaultHomepage();
-  }.property("trust_level", "hasBeenSeenInTheLastMonth"),
+  }.property("shouldBeRedirectToTopPage", "hasNotBeenSeenInTheLastMonth"),
 
   updateMutedCategories: function() {
     this.set("mutedCategories", Discourse.Category.findByIds(this.muted_category_ids));
