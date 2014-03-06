@@ -77,6 +77,8 @@ class Topic < ActiveRecord::Base
   has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_users, through: :topic_allowed_users, source: :user
+  
+  has_many :metadata, class_name: 'TopicMeta', dependent: :destroy
 
   has_one :top_topic
   belongs_to :user
@@ -297,6 +299,14 @@ class Topic < ActiveRecord::Base
   def meta_data_string(key)
     return unless meta_data.present?
     meta_data[key.to_s]
+  end
+  
+  # Only return client-enabled metadata for the serializer
+  def meta
+    metadata.where(client: true).all.inject({}) do |hsh, mkv|
+      hsh[mkv.key] = mkv.value
+      hsh
+    end
   end
 
   def self.listable_count_per_day(sinceDaysAgo=30)

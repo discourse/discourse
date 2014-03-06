@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
   has_many :invites, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :uploads
+  has_many :metadata, class_name: 'UserMeta', dependent: :destroy
 
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
@@ -386,6 +387,14 @@ class User < ActiveRecord::Base
     return false if staff? || Topic.where(id: topic_id, user_id: id).exists?
 
     trust_level == TrustLevel.levels[:newuser] && (Post.where(topic_id: topic_id, user_id: id).count >= SiteSetting.newuser_max_replies_per_topic)
+  end
+  
+  # Only return client-enabled metadata for the serializer
+  def meta
+    metadata.where(client: true).all.inject({}) do |hsh, mkv|
+      hsh[mkv.key] = mkv.value
+      hsh
+    end
   end
 
   def bio_excerpt

@@ -45,7 +45,8 @@ class PostSerializer < BasicPostSerializer
              :deleted_at,
              :deleted_by,
              :user_deleted,
-             :edit_reason
+             :edit_reason,
+             :meta
 
 
   def moderator?

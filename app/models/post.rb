@@ -36,6 +36,8 @@ class Post < ActiveRecord::Base
 
   has_many :post_revisions
   has_many :revisions, foreign_key: :post_id, class_name: 'PostRevision'
+  
+  has_many :metadata, class_name: 'PostMeta', dependent: :destroy
 
   validates_with ::Validators::PostValidator
 
@@ -301,6 +303,13 @@ class Post < ActiveRecord::Base
 
   def url
     Post.url(topic.slug, topic.id, post_number)
+  end
+  
+  def meta
+    metadata.where(client: true).all.inject({}) do |hsh, mkv|
+      hsh[mkv.key] = mkv.value
+      hsh
+    end
   end
 
   def self.url(slug, topic_id, post_number)
