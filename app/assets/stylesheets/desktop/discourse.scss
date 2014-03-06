@@ -113,8 +113,6 @@ body {
   .boxed {
     height: 100%;
     @include border-radius-all(5px);
-    .contents {
-    }
     &.white {
       background-color: $primary_background_color;
     }
@@ -227,8 +225,6 @@ blockquote {
   padding: 10px 4px 4px 13px;
   background-color: $quote-background;
   border-left: 5px solid $primary_border_color;
-  p {
-  }
 }
 
 .topic-statuses {
@@ -432,8 +428,6 @@ body {
     border: 1px solid $primary_border_color;
     &[multiple], &[size] {
       height: auto;
-    }
-    &:focus {
     }
   }
 

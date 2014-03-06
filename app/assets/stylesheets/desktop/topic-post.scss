@@ -357,9 +357,6 @@ a.star {
 
       }
 
-      &:active {
-      }
-
       &.collapsed {
         border-bottom: 0;
         padding-bottom: 1px;
@@ -849,18 +846,11 @@ button.show-replies {
 
 }
 
-.btn-group .dropdown-toggle:active,
-.btn-group.open .dropdown-toggle {
-}
-
 .dropdown {
   position: relative;
 }
 .dropdown-toggle {
   *margin-bottom: -3px;
-}
-.dropdown-toggle:active,
-.open .dropdown-toggle {
 }
 .caret {
   display: inline-block;
@@ -1002,8 +992,6 @@ clear: both;
         }
       }
       .topic-body {
-        .contents {
-        }
         .contents:after {
           display: none;
         }
