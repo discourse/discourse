@@ -88,6 +88,7 @@ class ComposerMessagesFinder
 
     {templateName: 'composer/education',
      wait_for_typing: true,
+     extraClass: 'urgent',
      body: PrettyText.cook(I18n.t('education.sequential_replies')) }
   end
 
@@ -118,6 +119,7 @@ class ComposerMessagesFinder
 
     {templateName: 'composer/education',
      wait_for_typing: true,
+     extraClass: 'urgent',
      body: PrettyText.cook(I18n.t('education.dominating_topic', percent: (ratio * 100).round)) }
   end
 
