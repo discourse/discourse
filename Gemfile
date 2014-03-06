@@ -215,7 +215,7 @@ gem 'puma', require: false
 
 gem 'unicorn-worker-killer'
 gem 'font_assets'
-gem 'newrelic_rpm'
+gem 'newrelic_rpm', '~>3.7.3'
 gem 'honeybadger'
 
 gem 'rbtrace', require: false, platform: :mri

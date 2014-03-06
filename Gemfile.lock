@@ -176,7 +176,7 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.8.0)
-    newrelic_rpm (3.7.2.195)
+    newrelic_rpm (3.7.3.199)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     oauth (0.4.7)
@@ -436,7 +436,7 @@ DEPENDENCIES
   mock_redis
   multi_json
   mustache
-  newrelic_rpm
+  newrelic_rpm (~> 3.7.3)
   nokogiri
   oj
   omniauth
