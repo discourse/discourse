@@ -68,10 +68,6 @@ button {
     &:last-of-type {
       border-right: 1px solid $primary_border_color
     }
-       &:hover {
-        }
-        &:active {
-        }
         &.hidden {
           display: none;
         }
@@ -248,8 +244,6 @@ a.star {
         color: $primary_text_color;
         border-bottom: 1px solid $primary_border_color;
 
-      }
-      &.collapsed {
       }
       .fa {
         margin: 0;
