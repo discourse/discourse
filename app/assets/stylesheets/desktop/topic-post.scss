@@ -849,9 +849,6 @@ button.show-replies {
 .dropdown {
   position: relative;
 }
-.dropdown-toggle {
-  *margin-bottom: -3px;
-}
 .caret {
   display: inline-block;
   width: 0;
@@ -895,9 +892,6 @@ button.show-replies {
   color: $tertiary_text_color;
   text-decoration: none;
   background-color: $emphasis_text_color;
-}
-.open {
-  *z-index: 1000;
 }
 .open > .dropdown-menu {
   display: block;
