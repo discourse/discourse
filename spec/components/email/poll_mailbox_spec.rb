@@ -11,10 +11,12 @@ describe Jobs::PollMailbox do
 
     let!(:poller) { Jobs::PollMailbox.new }
     let!(:receiver) { mock }
+    let!(:email_string) { "EMAIL AS A STRING" }
     let!(:email) { mock }
 
     before do
-      Email::Receiver.expects(:new).with(email).returns(receiver)
+      email.stubs(:pop).returns(email_string)
+      Email::Receiver.expects(:new).with(email_string).returns(receiver)
     end
 
     describe "all goes fine" do
@@ -33,7 +35,7 @@ describe Jobs::PollMailbox do
         receiver.expects(:process).raises(Email::Receiver::UserNotSufficientTrustLevelError)
         email.expects(:delete)
 
-        Mail::Message.expects(:new).returns(email)
+        Mail::Message.expects(:new).with(email_string).returns(email)
 
         email.expects(:from)
         email.expects(:body)
@@ -42,7 +44,7 @@ describe Jobs::PollMailbox do
         senderMock = mock
         RejectionMailer.expects(:send_trust_level).returns(clientMessage)
         Email::Sender.expects(:new).with(
-              clientMessage, :email_reject_trust_level).returns(senderMock)
+          clientMessage, :email_reject_trust_level).returns(senderMock)
         senderMock.expects(:send)
       end
 
