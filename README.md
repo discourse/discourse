@@ -15,7 +15,7 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 ## Screenshots
 
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-small2.png)](http://bbs.boingboing.net)
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small2.png)](http://discuss.howtogeek.com)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small2.png?breakcache=1)](http://discuss.howtogeek.com)
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/new-relic-categories-small2.png)](http://discuss.newrelic.com)
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-small2.jpg)](https://talk.turtlerockstudios.com/)
 [![](https://raw.github.com/discourse/discourse-docimages/master/readme/nexus-7-mobile-discourse-small3.png)](http://discuss.atom.io)
@@ -71,7 +71,7 @@ Before contributing to Discourse:
 1. Please read the complete mission statements on [**discourse.org**](http://www.discourse.org). Yes we actually believe this stuff; you should too.
 2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla).
 3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which covers submitting bugs, requesting new features, preparing your code for a pull request, etc.
-4. Not sure what to work on? [**We've got some ideas!**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
+4. Not sure what to work on? [**We've got some ideas.**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
 
 We look forward to seeing your pull requests!
 
