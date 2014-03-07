@@ -21,7 +21,7 @@ nav.post-controls {
   padding: 0;
   border-right: 1px solid $primary_border_color;
   margin-top: 10px;
-  button {color: lighten($primary_text_color, 35%);}
+  button {color: lighten($primary_text_color, 35%);
   border-radius: 4px;
   margin-right: 2px;
 
@@ -48,8 +48,8 @@ button.create {
   color: lighten($primary_text_color, 35%);
   padding-right: 7px;
 }
-.like {
-  border-right: 1px solid $primary_border_color;
+  .like {
+    border-right: 1px solid $primary_border_color;
 }
 
 .create i {
@@ -65,36 +65,36 @@ button {
   background: transparent;
   border: 1px solid $primary_border_color;
   float: left !important;
-  &:last-of-type {
-    border-right: 1px solid $primary_border_color
-  }
-  &.hidden {
-    display: none;
-  }
-  &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
-    float: right;
-  }
-  .read-icon {
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f02e";
+    &:last-of-type {
+      border-right: 1px solid $primary_border_color
     }
-    &.unseen {
-      &:before {
-        content: "\f097";
+        &.hidden {
+          display: none;
+        }
+        &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
+          float: right;
+        }
+        .read-icon {
+          &:before {
+            font-family: "FontAwesome";
+            content: "\f02e";
+          }
+          &.unseen {
+            &:before {
+              content: "\f097";
+            }
+          }
+          &.last-read {
+            color: $warning_text_color;
+          }
+          &.bookmarked {
+            &:before {
+              color: $bookmarkColor;
+            }
+          }
+        }
       }
     }
-    &.last-read {
-      color: $warning_text_color;
-    }
-    &.bookmarked {
-      &:before {
-        color: $bookmarkColor;
-      }
-    }
-  }
-}
-
 
 
 
@@ -182,7 +182,7 @@ a.star {
       font-weight: normal;
       font-size: 11px;
       line-height: 14px;
-    }
+          }
   }
 
   .avatar {
@@ -262,15 +262,15 @@ a.star {
 #suggested-topics {
   clear: left;
   padding: 20px 10px 15px 10px;
-  th.views, td.views, td.activity, th.activity, th.likes, td.likes {
+    th.views, td.views, td.activity, th.activity, th.likes, td.likes {
     display: none;
-  }
+    }
 
-  a.badge-category {
+   a.badge-category {
     font-size: 10px;
-  }
+    }
 
-  .title {
+   .title {
     font-size: 14px; line-height: 8px;
   }
 
@@ -344,7 +344,7 @@ iframe {
   display: block;
 }
 
-.dropdown-menu li {
+.dropdown-menu li  {
   margin: 5px 0;
 }
 
@@ -375,15 +375,15 @@ iframe {
   width: 265px;
   margin-left: -4px;
 
-  h3 {
-    margin: 5px 0;
-  }
+    h3 {
+      margin: 5px 0;
+    }
 
-  input[type=text] {
-    font-size: 16px;
-    width: 92%;
-    margin-bottom: 10px;
-  }
+    input[type=text] {
+      font-size: 16px;
+      width: 92%;
+      margin-bottom: 10px;
+    }
 }
 
 #selected-posts {
@@ -456,23 +456,23 @@ blockquote {
   float: right;
   color: $primary_text_color;
   a {
-    margin: 0;
+  margin: 0;
   }
-  .back:before,
-  .quote-other-topic:before {
+    .back:before,
+    .quote-other-topic:before {
     display: inline-block;
     margin-left: 8px;
     color: $primary_text_color;
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;
-  }
-  .back:before {
+    }
+    .back:before {
     content: "\f062";
-  }
-  .quote-other-topic:before {
+    }
+    .quote-other-topic:before {
     content: "\f061";
-  }
+    }
 }
 
 
@@ -486,6 +486,5 @@ blockquote {
 
 .gutter { display: none; }
 
-.posts-wrapper {
-  position: relative;
+.posts-wrapper {  position: relative;
 }
