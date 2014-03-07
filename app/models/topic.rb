@@ -92,7 +92,6 @@ class Topic < ActiveRecord::Base
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
 
-  has_many :topic_revisions
   has_many :revisions, foreign_key: :topic_id, class_name: 'TopicRevision'
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -189,13 +188,20 @@ class Topic < ActiveRecord::Base
 
   end
 
+  # TODO move into PostRevisor or TopicRevisor
   def save_revision
-    TopicRevision.create!(
-      user_id: acting_user.id,
-      topic_id: id,
-      number: TopicRevision.where(topic_id: id).count + 2,
-      modifications: changes.extract!(:category, :title)
-    )
+    if first_post_id = posts.where(post_number: 1).pluck(:id).first
+
+      number = PostRevision.where(post_id: first_post_id).count + 2
+      PostRevision.create!(
+        user_id: acting_user.id,
+        post_id: first_post_id,
+        number: number,
+        modifications: changes.extract!(:category_id, :title)
+      )
+
+      Post.update_all({version: number}, id: first_post_id)
+    end
   end
 
   def should_create_new_version?
