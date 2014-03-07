@@ -1121,7 +1121,9 @@ en:
     topic_map:
       title: "Topic Summary"
       links_shown: "show all {{totalLinks}} links..."
-      clicks: "clicks"
+      clicks:
+        one: "1 click"
+        other: "%{count} clicks"
 
     topic_statuses:
       locked:
