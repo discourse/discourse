@@ -498,7 +498,7 @@ ja:
     max_topic_title_length: "トピックタイトルの最大文字数"
     min_private_message_title_length: "プライベートメッセージタイトルの最小文字数"
     min_search_term_length: "検索語の最小文字数"
-    allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。注意: 設定変更を反映させるためには、すべてのクライアントのブラウザをリロードする必要があります。"
+    allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。"
     allow_duplicate_topic_titles: "トピックタイトルの重複を許可するか"
     unique_posts_mins: "同じ内容のポストを再投稿可能にする時間 (分)"
     enforce_global_nicknames: "ニックネームのグローバルユニーク性を強制する (警告: この設定は初回セットアップ時にのみ変更してください)"
