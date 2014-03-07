@@ -53,6 +53,7 @@ basic:
     default: true
   top_menu:
     client: true
+    refresh: true
     default: 'latest|new|unread|starred|categories'
   post_menu:
     client: true
