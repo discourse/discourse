@@ -271,19 +271,6 @@ class Post < ActiveRecord::Base
     Post.excerpt(cooked, maxlength, options)
   end
 
-
-  # A list of versions including the initial version
-  def all_versions
-    result = []
-    result << { number: 1, display_username: user.username, created_at: created_at }
-    versions.order(:number).includes(:user).each do |v|
-      if v.user.present?
-        result << { number: v.number, display_username: v.user.username, created_at: v.created_at }
-      end
-    end
-    result
-  end
-
   def is_first_post?
     post_number == 1
   end
