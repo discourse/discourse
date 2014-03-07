@@ -371,7 +371,7 @@ a.star {
 }
 
 #topic-footer-buttons {
-  padding: 10px 10px 0 10px;
+  padding: 10px 10px 0 0;
   p {
     line-height: 32px;
     color: $secondary_text_color;
@@ -381,7 +381,7 @@ a.star {
 
 #suggested-topics {
   clear: left;
-  padding: 20px 10px 15px 10px;
+  padding: 20px 0 15px 0;
 
   .topics table tbody tr {background: $primary_background_color;}
 
