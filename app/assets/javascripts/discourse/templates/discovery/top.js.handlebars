@@ -1,7 +1,7 @@
 <div class="top-lists">
-  {{#if redirectedToTopPageReason}}
+  {{#if currentUser.should_be_redirected_to_top}}
     <div class="alert alert-info">
-      {{redirectedToTopPageReason}}
+      {{currentUser.redirected_to_top_reason}}
     </div>
   {{/if}}
   {{#if content.yearly}}

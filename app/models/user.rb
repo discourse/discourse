@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
     ALWAYS = -1
     LAST_VISIT = -2
   end
-  
+
   GLOBAL_USERNAME_LENGTH_RANGE = 3..15
 
   def self.username_length
@@ -551,6 +551,23 @@ class User < ActiveRecord::Base
 
   def leader_requirements
     @lq ||= LeaderRequirements.new(self)
+  end
+
+  def should_be_redirected_to_top
+    redirected_to_top_reason.present?
+  end
+
+  def redirected_to_top_reason
+    # top must be in the top_menu
+    return unless SiteSetting.top_menu =~ /top/i
+    # there should be enough topics
+    return unless SiteSetting.has_enough_topics_to_redirect_to_top
+    # new users
+    return I18n.t('redirected_to_top_reasons.new_user') if trust_level == 0 &&
+      created_at > SiteSetting.redirect_new_users_to_top_page_duration.days.ago
+    # long-time-no-see user
+    return I18n.t('redirected_to_top_reasons.not_seen_in_a_month') if last_seen_at < 1.month.ago
+    nil
   end
 
   protected
