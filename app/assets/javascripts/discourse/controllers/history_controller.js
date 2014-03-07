@@ -38,7 +38,45 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
   displayingSideBySide: Em.computed.equal("viewMode", "side_by_side"),
   displayingSideBySideMarkdown: Em.computed.equal("viewMode", "side_by_side_markdown"),
 
-  diff: function() { return this.get(this.get("viewMode")); }.property("inline", "side_by_side", "side_by_side_markdown", "viewMode"),
+  category_diff: function() {
+    var viewMode = this.get("viewMode");
+    var changes = this.get("category_changes");
+
+    var prevCategory = Discourse.Category.findById(changes.previous_category_id);
+    var curCategory = Discourse.Category.findById(changes.current_category_id);
+
+    var raw = "";
+
+    prevCategory = Discourse.HTML.categoryLink(prevCategory);
+    curCategory = Discourse.HTML.categoryLink(curCategory);
+
+    if(viewMode === "side_by_side_markdown" || viewMode === "side_by_side") {
+      raw = "<div class='span8'>" + prevCategory +  "</div> <div class='span8 offset1'>" + curCategory +  "</div>";
+    } else {
+      var diff;
+      if(curCategory === prevCategory){
+        diff = curCategory;
+      } else {
+        diff = "<del>" + prevCategory + "</del> " + "<ins>" + curCategory + "</ins>";
+      }
+      raw = "<div class='inline-diff'>" + diff +  "</div>";
+    }
+
+    return raw;
+
+  }.property("inline", "side_by_side", "side_by_side_markdown", "viewMode"),
+
+  title_diff: function() {
+    var viewMode = this.get("viewMode");
+    if(viewMode === "side_by_side_markdown") {
+      viewMode = "side_by_side";
+    }
+    return this.get("title_changes." + viewMode);
+  }.property("inline", "side_by_side", "side_by_side_markdown", "viewMode"),
+
+  body_diff: function() {
+    return this.get("body_changes." + this.get("viewMode"));
+  }.property("inline", "side_by_side", "side_by_side_markdown", "viewMode"),
 
   actions: {
     loadFirstVersion: function() { this.refresh(this.get("post_id"), 2); },

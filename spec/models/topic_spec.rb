@@ -7,23 +7,6 @@ describe Topic do
 
   it { should validate_presence_of :title }
 
-  it { should belong_to :category }
-  it { should belong_to :user }
-  it { should belong_to :last_poster }
-  it { should belong_to :featured_user1 }
-  it { should belong_to :featured_user2 }
-  it { should belong_to :featured_user3 }
-  it { should belong_to :featured_user4 }
-
-  it { should have_many :posts }
-  it { should have_many :topic_users }
-  it { should have_many :topic_links }
-  it { should have_many :topic_allowed_users }
-  it { should have_many :allowed_users }
-  it { should have_many :invites }
-  it { should have_many :topic_revisions }
-  it { should have_many :revisions }
-
   it { should rate_limit }
 
   context 'slug' do
@@ -735,10 +718,11 @@ describe Topic do
   end
 
   describe 'revisions' do
-    let(:topic) { Fabricate(:topic) }
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
 
     it "has no revisions by default" do
-      topic.revisions.size.should == 1
+      post.revisions.size.should == 0
     end
 
     context 'changing title' do
@@ -749,7 +733,7 @@ describe Topic do
       end
 
       it "creates a new revision" do
-        topic.revisions.size.should == 2
+        post.revisions.size.should == 1
       end
 
     end
@@ -762,7 +746,7 @@ describe Topic do
       end
 
       it "creates a new revision" do
-        topic.revisions.size.should == 2
+        post.revisions.size.should == 1
       end
 
       context "removing a category" do
@@ -771,7 +755,12 @@ describe Topic do
         end
 
         it "creates a new revision" do
-          topic.revisions.size.should == 3
+          post.revisions.size.should == 2
+          last_rev = post.revisions.order(:number).last
+          last_rev.previous("category_id").should == category.id
+          last_rev.current("category_id").should == SiteSetting.uncategorized_category_id
+          post.reload
+          post.version.should == 3
         end
       end
 
@@ -784,7 +773,7 @@ describe Topic do
       end
 
       it "doesn't create a new version" do
-        topic.revisions.size.should == 1
+        post.revisions.size.should == 0
       end
     end
 
@@ -1210,7 +1199,7 @@ describe Topic do
   describe 'secured' do
     it 'can remove secure groups' do
       category = Fabricate(:category, read_restricted: true)
-      topic = Fabricate(:topic, category: category)
+      Fabricate(:topic, category: category)
 
       Topic.secured(Guardian.new(nil)).count.should == 0
       Topic.secured(Guardian.new(Fabricate(:admin))).count.should == 2
