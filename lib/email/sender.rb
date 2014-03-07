@@ -9,6 +9,8 @@
 require_dependency 'email/renderer'
 require 'uri'
 
+SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
+
 module Email
   class Sender
 
@@ -77,12 +79,15 @@ module Email
       @message.header['X-Discourse-Post-Id'] = nil
       @message.header['X-Discourse-Reply-Key'] = nil
 
-      @message.deliver
+      begin
+        @message.deliver
+      rescue SMTP_CLIENT_ERRORS => e
+        return skip(e.message)
+      end
 
       # Save and return the email log
       email_log.save!
       email_log
-
     end
 
     def to_address
