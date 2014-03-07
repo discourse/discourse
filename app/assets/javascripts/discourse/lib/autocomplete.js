@@ -31,19 +31,16 @@ shiftMap[32] = " ";
 function mapKeyPressToActualCharacter(isShiftKey, characterCode) {
   if ( characterCode === 27 || characterCode === 8 || characterCode === 9 || characterCode === 20 || characterCode === 16 || characterCode === 17 || characterCode === 91 || characterCode === 13 || characterCode === 92 || characterCode === 18 ) { return false; }
 
-  if (isShiftKey) {
-    if ( characterCode >= 65 && characterCode <= 90 ) {
-      return String.fromCharCode(characterCode);
-    } else {
-      return shiftMap[characterCode];
-    }
-  } else {
-    if ( characterCode >= 65 && characterCode <= 90 ) {
-      return String.fromCharCode(characterCode).toLowerCase();
-    } else {
-      return String.fromCharCode(characterCode);
-    }
+  // Lookup non-letter keypress while holding shift
+  if (isShiftKey && ( characterCode < 65 || characterCode > 90 )) {
+    return shiftMap[characterCode];
   }
+
+  var stringValue = String.fromCharCode(characterCode);
+  if ( !isShiftKey ) {
+    stringValue = stringValue.toLowerCase();
+  }
+  return stringValue;
 }
 
 $.fn.autocomplete = function(options) {
