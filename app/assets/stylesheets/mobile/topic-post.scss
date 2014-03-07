@@ -48,7 +48,7 @@ button.create {
   color: lighten($primary_text_color, 35%);
   padding-right: 7px;
 }
- 	.like {
+  .like {
     border-right: 1px solid $primary_border_color;
 }
 
@@ -58,12 +58,12 @@ button.create {
 
 
 button {
-	border: none;
+  border: none;
   font-size: 16px;
   padding: 8px 10px;
   vertical-align: top;
   background: transparent;
- 	border: 1px solid $primary_border_color;
+  border: 1px solid $primary_border_color;
   float: left !important;
     &:last-of-type {
       border-right: 1px solid $primary_border_color
@@ -127,7 +127,7 @@ a.star {
 }
 
 #main a.star.starred {
-	text-shadow: none !important;
+  text-shadow: none !important;
 }
 
 .topic-map {

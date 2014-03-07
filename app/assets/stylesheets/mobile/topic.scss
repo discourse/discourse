@@ -45,7 +45,7 @@
 }
 
 .docked #topic-progress {
-	  box-shadow: 0 0 3px rbga($primary_shadow_color, .5);
+  box-shadow: 0 0 3px rbga($primary_shadow_color, .5);
 }
 
 #topic-progress-wrapper {
@@ -65,7 +65,7 @@
 
 #topic-progress {
 
-	  box-shadow: 0 0 3px rbga($primary_shadow_color, .7);
+  box-shadow: 0 0 3px rbga($primary_shadow_color, .7);
 
   position: relative;
   &.hidden {
