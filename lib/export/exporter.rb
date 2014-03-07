@@ -71,7 +71,7 @@ module Export
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
       @archive_directory = File.join(Rails.root, "public", "backups", @current_db)
-      @archive_basename = File.join(@archive_directory, @timestamp)
+      @archive_basename = File.join(@archive_directory, "#{SiteSetting.title.parameterize}-#{@timestamp}")
     end
 
     def listen_for_shutdown_signal
