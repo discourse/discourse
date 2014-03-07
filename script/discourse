@@ -128,6 +128,14 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
     puts 'The site is now fully operable.'
   end
 
+  desc "request_refresh", "Ask all clients to refresh the browser"
+  def request_refresh
+    load_rails
+
+    Discourse.request_refresh!
+    puts 'Requests sent. Clients will refresh on next navigation.'
+  end
+
   private
 
   def load_rails
