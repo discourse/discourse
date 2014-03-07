@@ -12,16 +12,7 @@ class Auth::LpCurrentUserProvider < Auth::DefaultCurrentUserProvider
     unset_cookies(cookies)
   end
 
-  def has_auth_cookie?
-    request = Rack::Request.new(@env)
-    logged_in?(request)
-  end
-
   private
-
-  def logged_in?(request)
-    request.cookies[LpSession::SESSION_COOKIE_NAME].present? || request.cookies[LpSession::NOONCE_COOKIE_NAME].present?
-  end
 
   def set_cookies(cookies)
     cookies[:forums_session_nonce] = cookies[LpSession::NOONCE_COOKIE_NAME]
