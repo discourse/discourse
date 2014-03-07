@@ -72,12 +72,9 @@ basic:
   relative_date_duration:
     client: true
     default: 30
-  topics_per_period_in_top_summary:
-    default: 20
-  topics_per_period_in_top_page:
-    default: 50
-  redirect_new_users_to_top_page_duration:
-    default: 7
+  topics_per_period_in_top_summary: 20
+  topics_per_period_in_top_page: 50
+  redirect_new_users_to_top_page_duration: 7
   enable_badges:
     client: true
     default: false
@@ -86,19 +83,11 @@ users:
   enable_sso:
     client: true
     default: false
-  sso_url:
-    default: ''
-  sso_secret:
-    defalt: ''
-  sso_overrides_email:
-    client: true
-    default: false
-  sso_overrides_username:
-    client: true
-    default: false
-  sso_overrides_name:
-    client: true
-    default: false
+  sso_url: ''
+  sso_secret: ''
+  sso_overrides_email: false
+  sso_overrides_username: false
+  sso_overrides_name: false
   enable_local_logins:
     client: true
     default: true
@@ -317,8 +306,7 @@ files:
     default:
       test: false
       default: true
-  download_remote_images_threshold:
-    default: 20
+  download_remote_images_threshold: 20
 
 trust:
   default_trust_level: 0
@@ -340,25 +328,17 @@ trust:
 security:
   enable_flash_video_onebox: false
   use_https: false
-  enable_escaped_fragments:
-    client: true
-    default: true
+  enable_escaped_fragments: true
 
 seo:
   add_rel_nofollow_to_user_content: true
   exclude_rel_nofollow_domains: ''
   allow_index_in_robots_txt: true
-  enable_noscript_support:
-    client: true
-    default: true
+  enable_noscript_support: true
 
 spam:
-  email_domains_blacklist:
-    client: true
-    default: 'mailinator.com'
-  email_domains_whitelist:
-    client: true
-    default: ''
+  email_domains_blacklist: 'mailinator.com'
+  email_domains_whitelist: ''
   flags_required_to_hide_post: 3
   cooldown_minutes_after_hiding_posts: 10
   max_topics_in_first_day: 5
@@ -472,9 +452,7 @@ uncategorized:
   summary_likes_required: 1
   summary_percent_filter: 20
   send_welcome_message: true
-  educate_until_posts:
-    client: true
-    default: 2
+  educate_until_posts: 2
   max_similar_results: 7
   topic_views_heat_low:
     client: true
