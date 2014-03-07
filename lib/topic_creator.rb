@@ -55,7 +55,7 @@ class TopicCreator
 
     category = find_category
 
-    @guardian.ensure_can_create!(Topic,category)
+    @guardian.ensure_can_create!(Topic, category)
 
     topic_params[:category_id] = category.id if category.present?
 

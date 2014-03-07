@@ -192,7 +192,7 @@ module PrettyText
         else
           l["rel"] = "nofollow"
         end
-      rescue URI::InvalidURIError
+      rescue URI::InvalidURIError, URI::InvalidComponentError
         # add a nofollow anyway
         l["rel"] = "nofollow"
       end
