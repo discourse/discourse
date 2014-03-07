@@ -153,14 +153,7 @@ class SiteCustomization < ActiveRecord::Base
     [[:desktop, 'stylesheet_baked'], [:mobile, 'mobile_stylesheet_baked']].each do |target, baked_attr|
       path = stylesheet_fullpath(target)
       dir = cache_fullpath
-
-      begin
-        FileUtils.mkdir_p(dir)
-      rescue
-        # subtle issue, this happens if "uploads" is a symlink
-        Errno::EEXIST
-      end
-
+      FileUtils.mkdir_p(dir)
       unless File.exists?(path)
         File.open(path, "w") do |f|
           f.puts self.send(baked_attr)
