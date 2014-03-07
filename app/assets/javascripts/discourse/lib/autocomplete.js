@@ -398,10 +398,8 @@ $.fn.autocomplete = function(options) {
             term += (e.shiftKey) ? "|" : "]";
           } else if (e.which === 222) {
             term += (e.shiftKey) ? "\"" : "'";
-          } else {
-            if (e.which !== 8) {
-              term += ",";
-            }
+          } else if (e.which !== 8) {
+            term += ",";
           }
 
           updateAutoComplete(options.dataSource(term));
