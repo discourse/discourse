@@ -15,7 +15,7 @@ module Onebox
       end
 
       def to_html
-        "<script src=\"http://gist.github.com/#{match[:sha]}.js\"></script>"
+        "<script src=\"//gist.github.com/#{match[:sha]}.js\"></script>"
       end
 
       private
