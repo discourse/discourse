@@ -554,7 +554,6 @@ body {
   .input-prepend input, .input-append input, .input-prepend select, .input-append select {
     position: relative;
     margin-bottom: 0;
-    *margin-left: 0;
     vertical-align: middle;
     border-radius: 0 3px 3px 0;
   }
@@ -614,7 +613,6 @@ body {
 
   .form-horizontal input, .form-horizontal textarea, .form-horizontal select,  .form-horizontal .input-prepend, .form-horizontal .input-append {
     display: inline-block;
-    *display: inline;
     margin-bottom: 0;
   }
   .form-horizontal .hide {
@@ -627,7 +625,6 @@ body {
   .form-horizontal {
     .control-group {
       margin-bottom: 18px;
-      *zoom: 1;
       &:before {
         display: table;
         content: "";
@@ -650,13 +647,7 @@ body {
       font-weight: bold;
     }
     .controls {
-      *display: inline-block;
-      *padding-left: 20px;
       margin-left: 160px;
-      *margin-left: 0;
-      &:first-child {
-        *padding-left: 160px;
-      }
     }
   }
 
@@ -724,9 +715,6 @@ body {
 
 /* bootstrap colums */
 
-.row {
-  *zoom: 1;
-}
 .row:before,
 .row:after {
   display: table;
