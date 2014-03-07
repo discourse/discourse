@@ -90,8 +90,6 @@ describe PostCreator do
           reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
 
-        topic_id = created_post.topic_id
-
 
         messages.map{|m| m.channel}.sort.should == [ "/new",
                                                      "/users/#{admin.username}",
@@ -110,7 +108,6 @@ describe PostCreator do
         p = nil
         messages = MessageBus.track_publish do
           p = creator.create
-          topic_id = p.topic_id
         end
 
         latest = messages.find{|m| m.channel == "/new"}
@@ -397,7 +394,7 @@ describe PostCreator do
   context 'disable validations' do
     it 'can save a post' do
       creator = PostCreator.new(user, raw: 'q', title: 'q', skip_validations: true)
-      post = creator.create
+      creator.create
       creator.errors.should be_nil
     end
   end
