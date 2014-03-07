@@ -20,10 +20,11 @@ module Jobs
 
     def handle_mail(mail)
       begin
-        Email::Receiver.new(mail).process
+        mail_string = mail.pop
+        Email::Receiver.new(mail_string).process
       rescue Email::Receiver::UserNotSufficientTrustLevelError => e
         # inform the user about the rejection
-        @message = Mail::Message.new(mail)
+        @message = Mail::Message.new(mail_string)
         clientMessage = RejectionMailer.send_trust_level(@message.from, @message.body)
         email_sender = Email::Sender.new(clientMessage, :email_reject_trust_level)
         email_sender.send
@@ -46,7 +47,7 @@ module Jobs
                       SiteSetting.pop3s_polling_password) do |pop|
         unless pop.mails.empty?
           pop.each do |mail|
-            handle_mail mail.pop
+            handle_mail(mail)
           end
         end
       end
