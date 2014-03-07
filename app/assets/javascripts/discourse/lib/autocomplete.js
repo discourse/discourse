@@ -265,8 +265,7 @@ $.fn.autocomplete = function(options) {
       var prevChar = me.val().charAt(caretPosition - 1);
       if (!prevChar || /\s/.test(prevChar)) {
         completeStart = completeEnd = caretPosition;
-        var term = "";
-        updateAutoComplete(options.dataSource(term));
+        updateAutoComplete(options.dataSource(""));
       }
     }
   });
