@@ -1,0 +1,16 @@
+app/assets/javascripts/defer/html-sanitizer-bundle.js
+app/assets/javascripts/locales/
+lib/autospec/run-qunit.js
+lib/headless-ember.js
+lib/javascripts/locale/
+lib/javascripts/messageformat.js
+lib/javascripts/moment.js
+lib/javascripts/moment_locale/
+plugins/poll/assets/javascripts/poll_ui.js
+public/javascripts/
+spec/phantom_js/smoke_test.js
+test/javascripts/helpers/assertions.js
+test/javascripts/helpers/parse_html.js
+test/javascripts/helpers/qunit_helpers.js
+test/javascripts/test_helper.js
+vendor/
