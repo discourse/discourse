@@ -28,9 +28,9 @@ Discourse.PosterExpansionView = Discourse.View.extend({
           div.css(position);
         }
 
-        var maxWidth = div.width();
-        if (maxWidth < 250) {
-          maxWidth = 250;
+        var maxWidth = $('#poster-expansion img').outerWidth() + $('#poster-expansion h1').outerWidth();
+        if (maxWidth < 300) {
+          maxWidth = 300;
         }
         div.css({ maxWidth: maxWidth });
       }
