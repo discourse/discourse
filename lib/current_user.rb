@@ -8,10 +8,9 @@ module CurrentUser
     Discourse.current_user_provider.new(env).current_user
   end
 
-
   # can be used to pretend current user does no exist, for CSRF attacks
   def clear_current_user
-    @current_user_provider = Discourse.current_user_provider.new({})
+    @current_user_provider = nil
   end
 
   def log_on_user(user)
