@@ -6,7 +6,6 @@ lib/javascripts/locale/
 lib/javascripts/messageformat.js
 lib/javascripts/moment.js
 lib/javascripts/moment_locale/
-plugins/poll/assets/javascripts/poll_ui.js
 public/javascripts/
 spec/phantom_js/smoke_test.js
 test/javascripts/helpers/assertions.js
