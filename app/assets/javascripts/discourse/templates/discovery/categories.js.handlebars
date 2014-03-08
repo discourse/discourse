@@ -20,10 +20,10 @@
                 {{#if controller.ordering}}<i class="fa fa-bars"></i>{{/if}}
                 {{categoryLink this allowUncategorized=true}}
                 {{#if unreadTopics}}
-                  <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
+                  <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}} Unread</a>
                 {{/if}}
                 {{#if newTopics}}
-                  <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='fa fa-asterisk'></i></a>
+                  <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} New</a>
                 {{/if}}
               </div>
               <div class='featured-users'>
@@ -47,7 +47,7 @@
                     <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                   {{/if}}
                   {{#if newTopics}}
-                    <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='fa fa-asterisk'></i></a>
+                    <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} New</a>
                   {{/if}}
                 {{/each}}
               </div>
@@ -59,13 +59,13 @@
                 {{topicStatus topic=this}}
                 <a class='title' href="{{unbound lastUnreadUrl}}">{{{unbound fancy_title}}}</a>
                 {{#if unread}}
-                  <a href="{{unbound lastUnreadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unread}}</a>
+                  <a href="{{unbound lastUnreadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unread}} Unread</a>
                 {{/if}}
                 {{#if new_posts}}
-                  <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="new_posts"}}'>{{new_posts}}</a>
+                  <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="new_posts"}}'>{{new_posts}} New</a>
                 {{/if}}
                 {{#if unseen}}
-                  <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='fa fa-asterisk'></i></a>
+                  <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'>New</a>
                 {{/if}}
 
                 {{#if controller.latestTopicOnly}}
