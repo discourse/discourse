@@ -11,11 +11,37 @@ class SiteCustomization < ActiveRecord::Base
     true
   end
 
+  def compile_stylesheet(scss)
+    stylesheets_path = Rails.root.join('app', 'assets', 'stylesheets')
+
+    # Get the sprockets environment. We need to do this because in production
+    # Rails.application.assets returns Sprockets::Index which does not compile
+    # assets.
+    sprockets = Rails.application.assets
+    if sprockets.is_a?(Sprockets::Index)
+      sprockets = sprockets.instance_variable_get('@environment')
+    end
+
+    file_path = stylesheets_path.join('custom_stylesheet.scss')
+
+    File.open(file_path, 'w') do |f|
+      f.write scss
+    end
+
+    begin
+      compiled = sprockets.find_asset('custom_stylesheet').body
+    ensure
+      FileUtils.rm file_path
+    end
+
+    compiled
+  end
+
   before_save do
     ['stylesheet', 'mobile_stylesheet'].each do |stylesheet_attr|
       if self.send("#{stylesheet_attr}_changed?")
         begin
-          self.send("#{stylesheet_attr}_baked=", Sass.compile(self.send(stylesheet_attr)))
+          self.send("#{stylesheet_attr}_baked=", compile_stylesheet(self.send(stylesheet_attr)))
         rescue Sass::SyntaxError => e
           error = e.sass_backtrace_str("custom stylesheet")
           error.gsub!("\n", '\A ')
