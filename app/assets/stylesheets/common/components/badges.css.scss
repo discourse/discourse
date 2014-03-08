@@ -67,7 +67,9 @@ h1 a.badge-category div {vertical-align: top;}
   // New posts
 
   &.new-posts, &.unread-posts {
-    background-color: $emphasis_text_color;
+    background-color: $emphasis_background_color;
+    color: $emphasis_text_color;
+    font-weight: normal;
   }
 
   // Click count
@@ -75,7 +77,7 @@ h1 a.badge-category div {vertical-align: top;}
   &.clicks {
     font-weight: normal;
     background-color: #ddd;
-    top: -1px;  
+    top: -1px;
     color: #888;
     position: relative;
     margin-left: 2px;
