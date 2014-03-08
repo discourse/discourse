@@ -1,40 +1,28 @@
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
 if (!Array.prototype.indexOf) {
-  Array.prototype.indexOf = function(searchElement /*, fromIndex */) {
-    "use strict";
-
-    if (this === void 0 || this === null) {
-      throw new TypeError();
+  Array.prototype.indexOf = function (searchElement, fromIndex) {
+    if ( this === undefined || this === null ) {
+      throw new TypeError( '"this" is null or not defined' );
     }
 
-    var t = Object(this);
-    var len = t.length >>> 0;
+    var length = this.length >>> 0; // Hack to convert object.length to a UInt32
 
-    if (len === 0) {
-      return -1;
+    fromIndex = +fromIndex || 0;
+
+    if (Math.abs(fromIndex) === Infinity) {
+      fromIndex = 0;
     }
 
-    var n = 0;
-    if (arguments.length > 0) {
-      n = Number(arguments[1]);
-      if (n !== n) { // shortcut for verifying if it's NaN
-        n = 0;
-      } else if (n !== 0 && n !== (Infinity) && n !== -(Infinity)) {
-        n = (n > 0 || -1) * Math.floor(Math.abs(n));
+    if (fromIndex < 0) {
+      fromIndex += length;
+      if (fromIndex < 0) {
+        fromIndex = 0;
       }
     }
 
-    if (n >= len) {
-      return -1;
-    }
-
-    var k = n >= 0
-          ? n
-          : Math.max(len - Math.abs(n), 0);
-
-    for (; k < len; k++) {
-      if (k in t && t[k] === searchElement) {
-        return k;
+    for (;fromIndex < length; fromIndex++) {
+      if (this[fromIndex] === searchElement) {
+        return fromIndex;
       }
     }
 
