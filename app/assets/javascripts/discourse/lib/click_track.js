@@ -1,3 +1,5 @@
+var ACCEPTABLE_BLOCKING_MS = 100;
+
 /**
   Used for tracking when the user clicks on a link
 
@@ -17,21 +19,16 @@ Discourse.ClickTrack = {
     var $link = $(e.currentTarget);
     if ($link.hasClass('lightbox')) return true;
 
-    e.preventDefault();
-
     // We don't track clicks on quote back buttons
-    if ($link.hasClass('back') || $link.hasClass('quote-other-topic')) return true;
-
-    // Remove the href, put it as a data attribute
-    if (!$link.data('href')) {
-      $link.addClass('no-href');
-      $link.data('href', $link.attr('href'));
-      $link.attr('href', null);
-      // Don't route to this URL
-      $link.data('auto-route', true);
+    if ($link.hasClass('back') || $link.hasClass('quote-other-topic')) {
+        e.preventDefault();
+        return true;
     }
 
-    var href = $link.data('href'),
+    // Don't route to this URL
+    $link.data('auto-route', true);
+
+    var href = $link.attr('href'),
         $article = $link.closest('article'),
         postId = $article.data('post-id'),
         topicId = $('#topic').data('topic-id'),
@@ -66,35 +63,35 @@ Discourse.ClickTrack = {
     if (e.which === 3) {
       var destination = Discourse.SiteSettings.track_external_right_clicks ? trackingUrl : href;
       $link.attr('href', destination);
+      e.preventDefault();
       return true;
+    }
+
+    function trackClick(sync) {
+      Discourse.ajax("/clicks/track", {
+        data: {
+          url: href,
+          post_id: postId,
+          topic_id: topicId,
+          async: !sync,
+          timeout: (sync) ? ACCEPTABLE_BLOCKING_MS : $.ajaxSetup().timeout,
+          redirect: false
+        },
+        dataType: 'html'
+      });
     }
 
     // if they want to open in a new tab, do an AJAX request
     if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) {
-      Discourse.ajax("/clicks/track", {
-        data: {
-          url: href,
-          post_id: postId,
-          topic_id: topicId,
-          redirect: false
-        },
-        dataType: 'html'
-      });
-      window.open(href, '_blank');
-      return false;
+      trackClick(true);
+      return true;
     }
+
+    e.preventDefault();
 
     // If we're on the same site, use the router and track via AJAX
     if (Discourse.URL.isInternal(href) && !$link.hasClass('attachment')) {
-      Discourse.ajax("/clicks/track", {
-        data: {
-          url: href,
-          post_id: postId,
-          topic_id: topicId,
-          redirect: false
-        },
-        dataType: 'html'
-      });
+      trackClick(false);
       Discourse.URL.routeTo(href);
       return false;
     }
