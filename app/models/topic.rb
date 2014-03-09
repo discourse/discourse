@@ -395,19 +395,11 @@ class Topic < ActiveRecord::Base
     Topic.transaction do
       old_category = category
 
-      if category_id.present? && category_id != cat.id
-        Category.where(['id = ?', category_id]).update_all 'topic_count = topic_count - 1'
-      end
+      update_category_topic_count_by(-1) if category_id != cat.id
 
-      success = true
-      if self.category_id != cat.id
-        self.category_id = cat.id
-        success = save
-      end
-
-      if success
+      if try_update_category_id(cat.id)
         CategoryFeaturedTopic.feature_topics_for(old_category)
-        Category.where(id: cat.id).update_all 'topic_count = topic_count + 1'
+        update_category_topic_count_by(1, cat.id)
         CategoryFeaturedTopic.feature_topics_for(cat) unless old_category.try(:id) == cat.try(:id)
       else
         return false
@@ -454,7 +446,6 @@ class Topic < ActiveRecord::Base
     return false unless cat
     changed_to_category(cat)
   end
-
 
   def remove_allowed_user(username)
     user = User.where(username: username).first
@@ -656,25 +647,8 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  # Valid arguments for the auto close time:
-  #  * An integer, which is the number of hours from now to close the topic.
-  #  * A time, like "12:00", which is the time at which the topic will close in the current day
-  #    or the next day if that time has already passed today.
-  #  * A timestamp, like "2013-11-25 13:00", when the topic should close.
-  #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
-  #  * nil, to prevent the topic from automatically closing.
   def set_auto_close(arg, by_user=nil)
-    if arg.is_a?(String) && matches = /^([\d]{1,2}):([\d]{1,2})$/.match(arg.strip)
-      now = Time.zone.now
-      self.auto_close_at = Time.zone.local(now.year, now.month, now.day, matches[1].to_i, matches[2].to_i)
-      self.auto_close_at += 1.day if self.auto_close_at < now
-    elsif arg.is_a?(String) && arg.include?('-') && timestamp = Time.zone.parse(arg)
-      self.auto_close_at = timestamp
-      self.errors.add(:auto_close_at, :invalid) if timestamp < Time.zone.now
-    else
-      num_hours = arg.to_i
-      self.auto_close_at = (num_hours > 0 ? num_hours.hours.from_now : nil)
-    end
+    set_auto_close_at_from_argument(arg)
 
     unless self.auto_close_at.nil?
       self.auto_close_started_at ||= Time.zone.now
@@ -686,6 +660,7 @@ class Topic < ActiveRecord::Base
     else
       self.auto_close_started_at = nil
     end
+
     self
   end
 
@@ -703,9 +678,67 @@ class Topic < ActiveRecord::Base
 
   private
 
-  def update_category_topic_count_by(num)
-    if category_id.present?
-      Category.where(['id = ?', category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+  # Valid arguments for the auto close time:
+  #  * An integer, which is the number of hours from now to close the topic.
+  #  * A time, match hh:mm(:ss), which is the time at which the topic will close in the current day
+  #    or the next day if that time has already passed today.
+  #  * A timestamp, like "2013-11-25 13:00", when the topic should close.
+  #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
+  #  * nil, to prevent the topic from automatically closing.
+  def set_auto_close_at_from_argument(arg)
+    if arg.nil?
+      self.auto_close_at = nil
+      return
+    end
+
+    if arg.is_a?(String) && matches = /^([01]?\d|2[0-3]):([0-5]?\d)(?::([0-5]?\d))?$/.match(arg.strip)
+      set_auto_close_at_from_time(matches)
+    elsif arg.is_a?(String) && arg.include?('-') && timestamp = Time.zone.parse(arg)
+      set_auto_close_at_from_timestamp(timestamp)
+    else
+      set_auto_close_ad_from_others(arg)
+    end
+  end
+
+  def invalid_auto_close_at
+    self.errors.add(:auto_close_at, :invalid)
+  end
+
+  def set_auto_close_at_from_time(matches)
+    now = Time.zone.now
+    self.auto_close_at = Time.zone.local(now.year, now.month, now.day, matches[1].to_i, matches[2].to_i, matches[3].to_i)
+    self.auto_close_at += 1.day if self.auto_close_at < now
+  end
+
+  def set_auto_close_at_from_timestamp(timestamp)
+    if timestamp < Time.zone.now
+      invalid_auto_close_at
+    else
+      self.auto_close_at = timestamp
+    end
+  end
+
+  def set_auto_close_ad_from_others(arg)
+    num_hours = arg.to_i
+    if num_hours > 0
+      self.auto_close_at = num_hours.hours.from_now
+    else
+      invalid_auto_close_at
+    end
+  end
+
+  def try_update_category_id(category_id)
+    if self.category_id != category_id
+      self.category_id = category_id
+      save
+    else
+      true
+    end
+  end
+
+  def update_category_topic_count_by(num, id=category_id)
+    if id.present?
+      Category.where(['id = ?', id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
     end
   end
 
