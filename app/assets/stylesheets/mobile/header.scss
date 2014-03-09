@@ -122,7 +122,8 @@
     }
     .unread-notifications {
       right: -4px;
-      background-color: $tertiary_text_color;
+      background-color: $emphasis_background_color;
+      color: $emphasis_text_color;
     }
     .unread-private-messages {
       left: -4px;
