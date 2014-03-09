@@ -16,7 +16,7 @@ describe Topic do
     let(:title) { "hello world topic" }
     let(:slug) { "hello-world-slug" }
 
-    it "returns a Slug for a title" do
+    it "returns a slug for a title" do
       Slug.expects(:for).with(title).returns(slug)
       Fabricate.build(:topic, title: title).slug.should == slug
     end
@@ -526,25 +526,6 @@ describe Topic do
     context 'autoclosed' do
       let(:status) { 'autoclosed' }
       it_should_behave_like 'a status that closes a topic'
-
-      context 'topic was set to close when it was created' do
-        it 'puts the autoclose duration in the moderator post' do
-          @topic.created_at = 3.days.ago
-          @topic.update_status(status, true, @user)
-          expect(@topic.posts.last.raw).to include "closed after 3 days"
-        end
-      end
-
-      context 'topic was set to close after it was created' do
-        it 'puts the autoclose duration in the moderator post' do
-          @topic.created_at = 7.days.ago
-          Timecop.freeze(2.days.ago) do
-            @topic.set_auto_close(48)
-          end
-          @topic.update_status(status, true, @user)
-          expect(@topic.posts.last.raw).to include "closed after 2 days"
-        end
-      end
     end
   end
 
@@ -1083,75 +1064,105 @@ describe Topic do
 
     before { Discourse.stubs(:system_user).returns(admin) }
 
-    it 'can take a number of hours as an integer' do
-      Timecop.freeze(now) do
-        topic.set_auto_close(72, admin)
-        expect(topic.auto_close_at).to eq(3.days.from_now)
+    context 'can take' do
+      it 'a number of hours as an integer' do
+        Timecop.freeze(now) do
+          topic.set_auto_close(72, admin)
+          expect(topic.auto_close_at).to eq(3.days.from_now)
+        end
+      end
+
+      it 'a string' do
+        Timecop.freeze(now) do
+          topic.set_auto_close('18', admin)
+          expect(topic.auto_close_at).to eq(18.hours.from_now)
+        end
+      end
+
+      it 'a time later in the day' do
+        Timecop.freeze(now) do
+          topic.set_auto_close('13:00', admin)
+          topic.auto_close_at.should == Time.zone.local(2013,11,20,13,0)
+        end
+      end
+
+      it 'a time for the next day' do
+        Timecop.freeze(now) do
+          topic.set_auto_close('5:00', admin)
+          topic.auto_close_at.should == Time.zone.local(2013,11,21,5,0)
+        end
+      end
+
+      it 'can take a timestamp for a future time' do
+        Timecop.freeze(now) do
+          topic.set_auto_close('2013-11-22 5:00', admin)
+          topic.auto_close_at.should == Time.zone.local(2013,11,22,5,0)
+        end
+      end
+
+      it 'can take a timestamp with timezone' do
+        Timecop.freeze(now) do
+          topic.set_auto_close('2013-11-25T01:35:00-08:00', admin)
+          topic.auto_close_at.should == Time.utc(2013,11,25,9,35)
+        end
       end
     end
 
-    it 'can take a number of hours as a string' do
-      Timecop.freeze(now) do
-        topic.set_auto_close('18', admin)
-        expect(topic.auto_close_at).to eq(18.hours.from_now)
+    describe 'given a illegal argument when auto_close_at' do
+      it 'is not set' do
+        Timecop.freeze(now) do
+          topic.set_auto_close('2011-11-25T01:35:00-08:00', admin)
+          expect(topic.auto_close_at).to be_nil
+        end
+      end
+
+      it 'is set' do
+        Timecop.freeze(now) do
+          closing_topic.set_auto_close('2011-11-25T01:35:00-08:00', admin)
+          expect(closing_topic.auto_close_at).to eq 5.hours.from_now
+        end
       end
     end
 
-    it "can take a time later in the day" do
-      Timecop.freeze(now) do
-        topic.set_auto_close('13:00', admin)
-        topic.auto_close_at.should == Time.zone.local(2013,11,20,13,0)
+    context 'show a validation error when given' do
+      it 'a non-positive number' do
+        Timecop.freeze(now) do
+          topic.set_auto_close(0, admin)
+          topic.errors[:auto_close_at].should be_present
+        end
+      end
+
+      it 'a timestamp in the past' do
+        Timecop.freeze(now) do
+          topic.set_auto_close('2013-11-19 5:00', admin)
+          topic.errors[:auto_close_at].should be_present
+        end
       end
     end
 
-    it "can take a time for the next day" do
-      Timecop.freeze(now) do
-        topic.set_auto_close('5:00', admin)
-        topic.auto_close_at.should == Time.zone.local(2013,11,21,5,0)
+    context 'sets auto_close_user to' do
+      it 'given user if it is a staff user' do
+        topic.set_auto_close(3, admin)
+        expect(topic.auto_close_user_id).to eq(admin.id)
       end
-    end
 
-    it "can take a timestamp for a future time" do
-      Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-22 5:00', admin)
-        topic.auto_close_at.should == Time.zone.local(2013,11,22,5,0)
+      context 'system user if' do
+        it 'given user is not staff' do
+          topic.set_auto_close(3, Fabricate.build(:user, id: 444))
+          expect(topic.auto_close_user_id).to eq(admin.id)
+        end
+
+        it 'user is not given and topic creator is not staff' do
+          topic.set_auto_close(3)
+          expect(topic.auto_close_user_id).to eq(admin.id)
+        end
       end
-    end
 
-    it "sets a validation error when given a timestamp in the past" do
-      Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-19 5:00', admin)
-        topic.auto_close_at.should == Time.zone.local(2013,11,19,5,0)
-        topic.errors[:auto_close_at].should be_present
+      it 'topic creator if it is a staff user' do
+        staff_topic = Fabricate.build(:topic, user: Fabricate.build(:admin, id: 999))
+        staff_topic.set_auto_close(3)
+        expect(staff_topic.auto_close_user_id).to eq(999)
       end
-    end
-
-    it "can take a timestamp with timezone" do
-      Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-25T01:35:00-08:00', admin)
-        topic.auto_close_at.should == Time.utc(2013,11,25,9,35)
-      end
-    end
-
-    it 'sets auto_close_user to given user if it is a staff user' do
-      topic.set_auto_close(3, admin)
-      expect(topic.auto_close_user_id).to eq(admin.id)
-    end
-
-    it 'sets auto_close_user to system user if given user is not staff' do
-      topic.set_auto_close(3, Fabricate.build(:user, id: 444))
-      expect(topic.auto_close_user_id).to eq(admin.id)
-    end
-
-    it 'sets auto_close_user to system_user if user is not given and topic creator is not staff' do
-      topic.set_auto_close(3)
-      expect(topic.auto_close_user_id).to eq(admin.id)
-    end
-
-    it 'sets auto_close_user to topic creator if it is a staff user' do
-      staff_topic = Fabricate.build(:topic, user: Fabricate.build(:admin, id: 999))
-      staff_topic.set_auto_close(3)
-      expect(staff_topic.auto_close_user_id).to eq(999)
     end
 
     it 'clears auto_close_at if arg is nil' do
