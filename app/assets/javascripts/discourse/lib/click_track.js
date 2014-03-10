@@ -67,23 +67,22 @@ Discourse.ClickTrack = {
       return true;
     }
 
-    function trackClick(sync) {
+    function trackClick() {
       Discourse.ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,
           topic_id: topicId,
-          async: !sync,
-          timeout: (sync) ? ACCEPTABLE_BLOCKING_MS : $.ajaxSetup().timeout,
+          async: true,
           redirect: false
         },
         dataType: 'html'
       });
     }
 
-    // if they want to open in a new tab, do an AJAX request
+    // if they want to open in a new tab, do an AJAX request and let the event through
     if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) {
-      trackClick(true);
+      trackClick();
       return true;
     }
 
@@ -91,7 +90,7 @@ Discourse.ClickTrack = {
 
     // If we're on the same site, use the router and track via AJAX
     if (Discourse.URL.isInternal(href) && !$link.hasClass('attachment')) {
-      trackClick(false);
+      trackClick();
       Discourse.URL.routeTo(href);
       return false;
     }
