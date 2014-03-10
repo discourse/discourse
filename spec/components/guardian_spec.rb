@@ -1350,6 +1350,25 @@ describe Guardian do
         Guardian.new(user).can_edit_username?(user).should be_false
       end
     end
+
+    context 'when SSO username override is active' do
+      before do
+        SiteSetting.stubs(:enable_sso).returns(true)
+        SiteSetting.stubs(:sso_overrides_username).returns(true)
+      end
+
+      it "is false for admins" do
+        Guardian.new(admin).can_edit_username?(admin).should be_false
+      end
+
+      it "is false for moderators" do
+        Guardian.new(moderator).can_edit_username?(moderator).should be_false
+      end
+
+      it "is false for users" do
+        Guardian.new(user).can_edit_username?(user).should be_false
+      end
+    end
   end
 
   describe "can_edit_email?" do
@@ -1404,7 +1423,25 @@ describe Guardian do
         Guardian.new(moderator).can_edit_email?(user).should be_true
       end
     end
-  end
 
+    context 'when SSO email override is active' do
+      before do
+        SiteSetting.stubs(:enable_sso).returns(true)
+        SiteSetting.stubs(:sso_overrides_email).returns(true)
+      end
+
+      it "is false for admins" do
+        Guardian.new(admin).can_edit_email?(admin).should be_false
+      end
+
+      it "is false for moderators" do
+        Guardian.new(moderator).can_edit_email?(moderator).should be_false
+      end
+
+      it "is false for users" do
+        Guardian.new(user).can_edit_email?(user).should be_false
+      end
+    end
+  end
 end
 
