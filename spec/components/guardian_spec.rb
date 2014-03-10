@@ -71,6 +71,11 @@ describe Guardian do
         user.trust_level = TrustLevel.levels[:new]
         Guardian.new(user).post_can_act?(post, :off_topic).should be_false
       end
+
+      it "returns false for a new user flagging with notify_user" do
+        user.trust_level = TrustLevel.levels[:new]
+        Guardian.new(user).post_can_act?(post, :notify_user).should be_false # because new users can't send private messages
+      end
     end
   end
 
