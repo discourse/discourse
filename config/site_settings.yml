@@ -47,7 +47,9 @@ basic:
   posts_per_page:
     client: true
     default: 20
-  suggested_topics: 5
+  suggested_topics:
+    client: true
+    default: 5
   enable_mobile_theme:
     client: true
     default: true
