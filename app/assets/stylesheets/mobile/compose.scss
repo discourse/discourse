@@ -78,7 +78,7 @@ display: none;
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: rgba($composer_background, 0.96);
+  background-color: $composer_background;
   bottom: 0;
   font-size: 14px;
   position: fixed;
