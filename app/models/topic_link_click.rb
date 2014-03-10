@@ -12,10 +12,9 @@ class TopicLinkClick < ActiveRecord::Base
   def self.create_from(args={})
 
     # If the URL is absolute, allow HTTPS and HTTP versions of it
-    
     if args[:url] =~ /^http/
       http_url = args[:url].sub(/^https/, 'http')
-      https_url = args[:url].sub(/^http/, 'https')
+      https_url = args[:url].sub(/^http\:/, 'https:')
       link = TopicLink.select([:id, :user_id]).where('url = ? OR url = ?', http_url, https_url)
     else
       link = TopicLink.select([:id, :user_id]).where(url: args[:url])
@@ -39,7 +38,6 @@ class TopicLinkClick < ActiveRecord::Base
     end
 
     return args[:url] if (args[:user_id] && (link.user_id == args[:user_id]))
-
 
     # Rate limit the click counts to once in 24 hours
     rate_key = "link-clicks:#{link.id}:#{args[:user_id] || args[:ip]}"
