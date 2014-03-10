@@ -5,7 +5,7 @@ var notificationFixture = {
   topic_id: 1234,
   slug: "a-slug",
   data: {
-  topic_title: "some title",
+    topic_title: "some title",
     display_username: "velesin"
   }
 };

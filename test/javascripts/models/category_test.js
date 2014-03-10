@@ -11,18 +11,24 @@ test('slugFor', function(){
   slugFor(Discourse.Category.create({id: 456}), "456-category", "It returns id-category for undefined slugs");
 
   var parentCategory = Discourse.Category.create({id: 345, slug: 'darth'});
-  slugFor(Discourse.Category.create({slug: 'luke', parentCategory: parentCategory}),
-          "darth/luke",
-          "it uses the parent slug before the child");
+  slugFor(
+    Discourse.Category.create({slug: 'luke', parentCategory: parentCategory}),
+    "darth/luke",
+    "it uses the parent slug before the child"
+  );
 
-  slugFor(Discourse.Category.create({id: 555, parentCategory: parentCategory}),
-          "darth/555-category",
-          "it uses the parent slug before the child and then uses id");
+  slugFor(
+    Discourse.Category.create({id: 555, parentCategory: parentCategory}),
+    "darth/555-category",
+    "it uses the parent slug before the child and then uses id"
+  );
 
   parentCategory.set('slug', null);
-  slugFor(Discourse.Category.create({id: 555, parentCategory: parentCategory}),
-        "345-category/555-category",
-        "it uses the parent before the child and uses ids for both");
+  slugFor(
+    Discourse.Category.create({id: 555, parentCategory: parentCategory}),
+    "345-category/555-category",
+    "it uses the parent before the child and uses ids for both"
+  );
 });
 
 
@@ -40,9 +46,10 @@ test('findBySlug', function() {
 });
 
 test('findByIds', function(){
-  var categories =  [
-        Discourse.Category.create({id: 1}),
-        Discourse.Category.create({id: 2})];
+  var categories = [
+    Discourse.Category.create({id: 1}),
+    Discourse.Category.create({id: 2})
+  ];
 
   this.stub(Discourse.Category, 'list').returns(categories);
   deepEqual(Discourse.Category.findByIds([1,2,3]), categories);

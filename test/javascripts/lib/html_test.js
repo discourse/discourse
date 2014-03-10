@@ -8,13 +8,13 @@ test("categoryLink without a category", function() {
 
 test("Regular categoryLink", function() {
   var category = Discourse.Category.create({
-        name: 'hello',
-        id: 123,
-        description: 'cool description',
-        color: 'ff0',
-        text_color: 'f00'
-      }),
-      tag = parseHTML(html.categoryLink(category))[0];
+    name: 'hello',
+    id: 123,
+    description: 'cool description',
+    color: 'ff0',
+    text_color: 'f00'
+  }),
+  tag = parseHTML(html.categoryLink(category))[0];
 
   equal(tag.name, 'a', 'it creates an `a` tag');
   equal(tag.attributes['class'], 'badge-category', 'it has the correct class');

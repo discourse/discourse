@@ -17,17 +17,17 @@
     var top = 0;
     if(obj.offsetParent)
     {
-        while(1)
-        {
-          top += obj.offsetTop;
-          if(!obj.offsetParent)
-            break;
-          obj = obj.offsetParent;
-        }
+      while(1)
+      {
+        top += obj.offsetTop;
+        if(!obj.offsetParent)
+          break;
+        obj = obj.offsetParent;
+      }
     }
     else if(obj.y)
     {
-        top += obj.y;
+      top += obj.y;
     }
     return top;
   }

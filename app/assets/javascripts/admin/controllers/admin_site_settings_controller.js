@@ -52,7 +52,8 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
         matchesGroupedByCategory.pushObject({
           nameKey: settingsCategory.nameKey,
           name: settingsCategory.name,
-          siteSettings: matches});
+          siteSettings: matches
+        });
       }
     });
 

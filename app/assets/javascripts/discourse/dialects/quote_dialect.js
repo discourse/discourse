@@ -56,14 +56,28 @@ Discourse.Dialect.replaceBlock({
       return ['p', ['aside', params, contents ]];
     }
 
-    return ['p', ['aside', params,
-                   ['div', {'class': 'title'},
-                     ['div', {'class': 'quote-controls'}],
-                     avatarImg ? ['__RAW', avatarImg] : "",
-                     username ? I18n.t('user.said', {username: username}) : ""
-                   ],
-                   contents
-                ]];
+    return [
+      'p',
+      [
+        'aside',
+        params,
+        [
+          'div',
+          {
+            'class': 'title'
+          },
+          [
+            'div',
+            {
+              'class': 'quote-controls'
+            }
+          ],
+          avatarImg ? ['__RAW', avatarImg] : "",
+          username ? I18n.t('user.said', {username: username}) : ""
+        ],
+        contents
+      ]
+    ];
   }
 });
 

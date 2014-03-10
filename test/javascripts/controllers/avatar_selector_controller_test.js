@@ -12,17 +12,20 @@ test("avatarTemplate", function() {
 
   equal(avatarSelectorController.get("avatarTemplate"),
         avatarSelector.get("gravatar_template"),
-        "we are using gravatar by default");
+        "we are using gravatar by default"
+  );
 
   avatarSelectorController.send('useUploadedAvatar');
 
   equal(avatarSelectorController.get("avatarTemplate"),
         avatarSelector.get("uploaded_avatar_template"),
-        "calling useUploadedAvatar switches to using the uploaded avatar");
+        "calling useUploadedAvatar switches to using the uploaded avatar"
+  );
 
   avatarSelectorController.send('useGravatar');
 
   equal(avatarSelectorController.get("avatarTemplate"),
         avatarSelector.get("gravatar_template"),
-       "calling useGravatar switches to using gravatar");
+        "calling useGravatar switches to using gravatar"
+  );
 });

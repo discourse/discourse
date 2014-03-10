@@ -216,11 +216,13 @@ Discourse.UserAction.reopenClass({
   TYPES: UserActionTypes,
   TYPES_INVERTED: InvertedActionTypes,
 
-  TO_COLLAPSE: [UserActionTypes.likes_given,
-                UserActionTypes.likes_received,
-                UserActionTypes.starred,
-                UserActionTypes.edits,
-                UserActionTypes.bookmarks],
+  TO_COLLAPSE: [
+    UserActionTypes.likes_given,
+    UserActionTypes.likes_received,
+    UserActionTypes.starred,
+    UserActionTypes.edits,
+    UserActionTypes.bookmarks
+  ],
 
   TO_SHOW: [
     UserActionTypes.likes_given,

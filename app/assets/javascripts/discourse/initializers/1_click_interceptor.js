@@ -21,7 +21,7 @@ Discourse.addInitializer(function() {
         $currentTarget.hasClass('lightbox') ||
         href.indexOf("mailto:") === 0 ||
         (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i")))) {
-       return;
+      return;
     }
 
     e.preventDefault();

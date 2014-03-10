@@ -13,35 +13,35 @@ var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
 * modified with cap by Sam
 */
 var cappedMemoize = function ( fn, max ) {
-    fn.maxMemoize = max;
-    fn.memoizeLength = 0;
+  fn.maxMemoize = max;
+  fn.memoizeLength = 0;
 
-    return function () {
-        var args = Array.prototype.slice.call(arguments),
-            hash = "",
-            i = args.length;
-        var currentArg = null;
-        while (i--) {
-            currentArg = args[i];
-            hash += (currentArg === new Object(currentArg)) ?
-            JSON.stringify(currentArg) : currentArg;
-            if(!fn.memoize) {
-              fn.memoize = {};
-            }
-        }
-        if (hash in fn.memoize) {
-          return fn.memoize[hash];
-        } else {
-          fn.memoizeLength++;
-          if(fn.memoizeLength > max) {
-            fn.memoizeLength = 0;
-            fn.memoize = {};
-          }
-          var result = fn.apply(this, args);
-          fn.memoize[hash] = result;
-          return result;
-        }
-    };
+  return function () {
+    var args = Array.prototype.slice.call(arguments),
+        hash = "",
+        i = args.length;
+    var currentArg = null;
+    while (i--) {
+      currentArg = args[i];
+      hash += (currentArg === new Object(currentArg)) ?
+      JSON.stringify(currentArg) : currentArg;
+      if(!fn.memoize) {
+        fn.memoize = {};
+      }
+    }
+    if (hash in fn.memoize) {
+      return fn.memoize[hash];
+    } else {
+      fn.memoizeLength++;
+      if(fn.memoizeLength > max) {
+        fn.memoizeLength = 0;
+        fn.memoize = {};
+      }
+      var result = fn.apply(this, args);
+      fn.memoize[hash] = result;
+      return result;
+    }
+  };
 };
 
 breakUp = function(str, hint){

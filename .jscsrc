@@ -1,0 +1,9 @@
+{
+  "validateIndentation": 2,
+  "excludeFiles": [
+    "app/assets/javascripts/defer/html-sanitizer-bundle.js",
+    "lib/javascripts/",
+    "public/javascripts/ace/",
+    "vendor/"
+  ]
+}

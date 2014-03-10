@@ -129,6 +129,6 @@ page.runTests = function(){
 };
 
 page.open(system.args[1], function (status) {
-    console.log("Opened " + system.args[1]);
-    page.runTests();
+  console.log("Opened " + system.args[1]);
+  page.runTests();
 });

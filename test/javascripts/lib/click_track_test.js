@@ -22,7 +22,8 @@ module("Discourse.ClickTrack", {
       '    <a id="same-site" href="http://discuss.domain.com">forum</a>',
       '    <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>',
       '  </article>',
-      '</div>'].join("\n"));
+      '</div>'
+    ].join("\n"));
   },
 
   teardown: function() {

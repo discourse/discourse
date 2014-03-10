@@ -144,8 +144,8 @@ Discourse.TopicList.reopenClass({
 
         var topics = _(topic_ids)
           .map(function(id){
-                  return newTopics.find(function(t){ return t.id === id; });
-                })
+            return newTopics.find(function(t){ return t.id === id; });
+          })
           .compact()
           .value();
 

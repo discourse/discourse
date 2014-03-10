@@ -82,10 +82,10 @@ Discourse.Ajax = Em.Mixin.create({
     if(args.type && args.type.toUpperCase() !== 'GET' && !Discourse.Session.currentProp('csrfToken')){
       return Ember.Deferred.promise(function(promise){
         $.ajax(Discourse.getURL('/session/csrf'))
-           .success(function(result){
-              Discourse.Session.currentProp('csrfToken', result.csrf);
-              performAjax(promise);
-           });
+          .success(function(result){
+            Discourse.Session.currentProp('csrfToken', result.csrf);
+            performAjax(promise);
+          });
       });
     } else {
       return Ember.Deferred.promise(performAjax);

@@ -95,8 +95,10 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
 
         var height = loginMethod.get("frameHeight") || 400;
         var width = loginMethod.get("frameWidth") || 800;
-        var w = window.open(Discourse.getURL("/auth/" + name), "_blank",
-            "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
+        var w = window.open(
+            Discourse.getURL("/auth/" + name), "_blank",
+            "menubar=no,status=no,height=" + height + ",width=" + width + ",left=" + left + ",top=" + top
+        );
         var self = this;
         var timer = setInterval(function() {
           if(w.closed) {

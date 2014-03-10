@@ -15,7 +15,8 @@ test('basic bbcode', function() {
   format("[email]eviltrout@mailinator.com[/email]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports [email] without a title");
   format("[b]evil [i]trout[/i][/b]",
          "<span class=\"bbcode-b\">evil <span class=\"bbcode-i\">trout</span></span>",
-         "allows embedding of tags");
+         "allows embedding of tags"
+  );
   format("[EMAIL]eviltrout@mailinator.com[/EMAIL]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports upper case bbcode");
 });
 
@@ -50,10 +51,12 @@ test('tags with arguments', function() {
 test("size tags", function() {
   format("[size=35]BIG [b]whoop[/b][/size]",
          "<span class=\"bbcode-size-35\">BIG <span class=\"bbcode-b\">whoop</span></span>",
-         "supports [size=]");
+         "supports [size=]"
+  );
   format("[size=asdf]regular[/size]",
          "<span class=\"bbcode-size-1\">regular</span>",
-         "it only supports numbers in bbcode");
+         "it only supports numbers in bbcode"
+  );
 });
 
 test("quotes", function() {
@@ -77,27 +80,33 @@ test("quotes", function() {
 
   formatQuote("  lorem \t  ",
               "[quote=\"eviltrout, post:1, topic:2\"]\nlorem\n[/quote]\n\n",
-              "trims white spaces before & after the quoted contents");
+              "trims white spaces before & after the quoted contents"
+  );
 
   formatQuote("lorem ipsum",
               "[quote=\"eviltrout, post:1, topic:2, full:true\"]\nlorem ipsum\n[/quote]\n\n",
-              "marks quotes as full when the quote is the full message");
+              "marks quotes as full when the quote is the full message"
+  );
 
   formatQuote("**lorem** ipsum",
               "[quote=\"eviltrout, post:1, topic:2, full:true\"]\n**lorem** ipsum\n[/quote]\n\n",
-               "keeps BBCode formatting");
+               "keeps BBCode formatting"
+  );
 
   formatQuote("this is <not> a bug",
               "[quote=\"eviltrout, post:1, topic:2\"]\nthis is &lt;not&gt; a bug\n[/quote]\n\n",
-              "it escapes the contents of the quote");
+              "it escapes the contents of the quote"
+  );
 
   format("[quote]test[/quote]",
          "<aside class=\"quote\"><blockquote><p>test</p></blockquote></aside>",
-         "it supports quotes without params");
+         "it supports quotes without params"
+  );
 
   format("[quote]\n*test*\n[/quote]",
          "<aside class=\"quote\"><blockquote><p><em>test</em></p></blockquote></aside>",
-         "it doesn't insert a new line for italics");
+         "it doesn't insert a new line for italics"
+  );
 
 });
 
@@ -106,17 +115,20 @@ test("quote formatting", function() {
   format("[quote=\"EvilTrout, post:123, topic:456, full:true\"][sam][/quote]",
           "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">" +
           "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote><p>[sam]</p></blockquote></aside>",
-          "it allows quotes with [] inside");
+          "it allows quotes with [] inside"
+  );
 
   format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]",
          "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
          "</div><blockquote><p>abc</p></blockquote></aside>",
-         "renders quotes properly");
+         "renders quotes properly"
+  );
 
   format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]\nhello",
          "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
          "</div><blockquote><p>abc</p></blockquote></aside></p>\n\n<p>hello",
-         "handles new lines properly");
+         "handles new lines properly"
+  );
 
 });
 
@@ -125,7 +137,8 @@ test("quotes with trailing formatting", function() {
   equal(cooked,
         "<p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">" +
         "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote><p>hello</p></blockquote></aside></p>\n\n<p><em>Test</em></p>",
-        "it allows trailing formatting");
+        "it allows trailing formatting"
+  );
 });
 
 

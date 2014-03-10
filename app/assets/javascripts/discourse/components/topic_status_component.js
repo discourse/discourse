@@ -17,10 +17,10 @@ Discourse.TopicStatusComponent = Ember.Component.extend({
 
     var self = this,
         renderIconIf = function(conditionProp, name, key) {
-      if (!self.get(conditionProp)) { return; }
-      var title = I18n.t("topic_statuses." + key + ".help");
-      buffer.push("<span title='" + title + "' class='topic-status'><i class='fa fa-" + name + "'></i></span>");
-    };
+          if (!self.get(conditionProp)) { return; }
+          var title = I18n.t("topic_statuses." + key + ".help");
+          buffer.push("<span title='" + title + "' class='topic-status'><i class='fa fa-" + name + "'></i></span>");
+        };
 
     // Allow a plugin to add a custom icon to a topic
     this.trigger('addCustomIcon', buffer);

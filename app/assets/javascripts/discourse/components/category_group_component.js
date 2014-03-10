@@ -32,15 +32,15 @@ Discourse.CategoryGroupComponent = Ember.Component.extend({
 
 Discourse.CategoryGroupComponent.reopenClass({
   templateFunction: function(){
-      this.compiled = this.compiled || Handlebars.compile("<div class='autocomplete'>" +
-                                    "<ul>" +
-                                    "{{#each options}}" +
-                                      "<li>" +
-                                          "{{categoryLinkRaw this allowUncategorized=true}}" +
-                                      "</li>" +
-                                      "{{/each}}" +
-                                    "</ul>" +
-                                  "</div>");
-      return this.compiled;
-    }
+    this.compiled = this.compiled || Handlebars.compile("<div class='autocomplete'>" +
+                                  "<ul>" +
+                                  "{{#each options}}" +
+                                    "<li>" +
+                                        "{{categoryLinkRaw this allowUncategorized=true}}" +
+                                    "</li>" +
+                                    "{{/each}}" +
+                                  "</ul>" +
+                                "</div>");
+    return this.compiled;
+  }
 });

@@ -18,9 +18,11 @@ test('instance', function() {
 test('create categories', function() {
 
   var site = Discourse.Site.create({
-    categories: [{ id: 1234, name: 'Test'},
-                 { id: 3456, name: 'Test Subcategory', parent_category_id: 1234},
-                 { id: 3456, name: 'Invalid Subcategory', parent_category_id: 6666}]
+    categories: [
+      { id: 1234, name: 'Test'},
+      { id: 3456, name: 'Test Subcategory', parent_category_id: 1234},
+      { id: 3456, name: 'Invalid Subcategory', parent_category_id: 6666}
+    ]
   });
 
   var categories = site.get('categories');

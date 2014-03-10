@@ -21,18 +21,18 @@ Discourse.URL = Em.Object.createWithMixins({
   **/
   replaceState: function(path) {
     if (window.history &&
-        window.history.pushState &&
-        window.history.replaceState &&
-        !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/) &&
-        (window.location.pathname !== path)) {
+      window.history.pushState &&
+      window.history.replaceState &&
+      !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/) &&
+      (window.location.pathname !== path)) {
 
-        // Always use replaceState in the next runloop to prevent weird routes changing
-        // while URLs are loading. For example, while a topic loads it sets `currentPost`
-        // which triggers a replaceState even though the topic hasn't fully loaded yet!
-        Em.run.next(function() {
-          var location = Discourse.URL.get('router.location');
-          if (location && location.replaceURL) { location.replaceURL(path); }
-        });
+      // Always use replaceState in the next runloop to prevent weird routes changing
+      // while URLs are loading. For example, while a topic loads it sets `currentPost`
+      // which triggers a replaceState even though the topic hasn't fully loaded yet!
+      Em.run.next(function() {
+        var location = Discourse.URL.get('router.location');
+        if (location && location.replaceURL) { location.replaceURL(path); }
+      });
     }
   },
 

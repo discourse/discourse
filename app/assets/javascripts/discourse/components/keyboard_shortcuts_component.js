@@ -136,9 +136,9 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
       var rgx = new RegExp("post-cloak-(\\d+)").exec($article.parent()[0].id);
       if (rgx === null || typeof rgx[1] === 'undefined') {
-          this._scrollList($article);
+        this._scrollList($article);
       } else {
-          Discourse.TopicView.jumpToPost(rgx[1]);
+        Discourse.TopicView.jumpToPost(rgx[1]);
       }
     }
   },

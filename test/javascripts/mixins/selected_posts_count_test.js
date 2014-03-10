@@ -27,7 +27,7 @@ test("when all posts are selected and there is topic with a posts_count", functi
   var testObj = buildTestObj({
     allPostsSelected: true,
     topic: Discourse.Topic.create({ posts_count: 3456 })
-   });
+  });
 
   equal(testObj.get('selectedPostsCount'), 3456, "It returns the topic's posts_count");
 });

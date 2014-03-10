@@ -20,7 +20,8 @@ Discourse.PostMenuView = Discourse.View.extend({
     'post.bookmarkTooltip',
     'post.shareUrl',
     'post.topic.deleted_at',
-    'post.replies.length'),
+    'post.replies.length'
+  ),
 
   render: function(buffer) {
     var post = this.get('post');
