@@ -103,7 +103,7 @@ class ComposerMessagesFinder
     topic = Topic.where(id: @details[:topic_id]).first
     return if topic.blank? ||
               topic.user_id == @user.id ||
-              topic.posts_count < SiteSetting.summary_posts_required ||
+              topic.posts_count < SiteSetting.dominating_topic_posts_required ||
               topic.archetype == Archetype.private_message
 
     posts_by_user = @user.posts.where(topic_id: topic.id).count
