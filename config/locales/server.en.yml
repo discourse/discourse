@@ -1058,9 +1058,9 @@ en:
 
         - To reply to a specific post, use the Reply button on that post.
 
-        - If you want to reply to the overall *theme* of the topic, rather than any specific post in the topic, use the Reply button at the very bottom of the topic.
+        - To reply to the overall *theme* of the topic, rather than any specific person or post in the topic, use the Reply button at the very bottom of the topic.
 
-        - If you want to take the conversation in a different direction, but keep them linked together, use Reply as New Topic to the right of the post.
+        - To take the conversation in a different direction, but keep them linked together, use Reply as New Topic to the right of the post.
 
         ### Who is talking to me?
 
@@ -1068,13 +1068,13 @@ en:
 
         - To mention someone's name, start typing `@` and an autocompleter will pop up.
 
-        - To quote just a section of a post, select it, then click the Reply button that appears over your selection.
+        - To quote just a section of a post, select it, then press the Reply button that appears over your selection.
 
         - To quote an entire post, use the Import Quote button on the editor toolbar.
 
         ### Look at that post!
 
-        To let someone know that you enjoyed their post, click the like ♥ button at the bottom of the post. If you see a problem with a post, don't hesitate to click the flag button and let the moderators – and your fellow community members – know about it.
+        To let someone know that you enjoyed their post, click the like ♥ button at the bottom of the post. If you see a problem with a post, don't hesitate to click the flag button and privately let our staff know about it.
 
         ### Where am I?
 
@@ -1082,7 +1082,9 @@ en:
 
         - For search, your user page, or the sitemap, click on the **icons at the upper right**.
 
-        - While reading a topic, move to the top ↑ by clicking the topic title, or press the <kbd>home</kbd> key. To reach the *bottom* ↓, click the down arrow on the topic progress indicator at the bottom of the page, or press the <kbd>end</kbd> key.
+        - While reading a topic, move to the top ↑ by clicking the topic title, or press the <kbd>home</kbd> key. To reach the *bottom* ↓, press the down arrow on the topic progress indicator at the bottom of the page, or press the <kbd>end</kbd> key.
+
+        - Use times as entry shortcuts. You can always enter at the top of a topic via the first post date, and the bottom via the last post date.
 
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
