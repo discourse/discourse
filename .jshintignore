@@ -9,6 +9,5 @@ lib/javascripts/moment_locale/
 public/javascripts/
 spec/phantom_js/smoke_test.js
 test/javascripts/helpers/assertions.js
-test/javascripts/helpers/parse_html.js
 test/javascripts/test_helper.js
 vendor/
