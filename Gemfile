@@ -226,3 +226,7 @@ group :profile do
   # if you need to profile, uncomment out this line
   # gem 'rack-perftools_profiler', require: 'rack/perftools_profiler', platform: :mri_19
 end
+
+# Lesson Planet Additions
+gem 'newrelic_rpm'
+gem 'rails_12factor', group: :production

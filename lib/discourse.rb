@@ -222,6 +222,14 @@ module Discourse
     @current_user_provider = val
   end
 
+  def self.session_syncronizer
+    @session_syncronizer || LpSession
+  end
+
+  def self.session_syncronizer=(val)
+    @session_syncronizer = val
+  end
+
   def self.asset_host
     Rails.configuration.action_controller.asset_host
   end

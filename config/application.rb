@@ -106,7 +106,7 @@ module Discourse
         :twitter_consumer_secret,
         :facebook_app_secret,
         :github_client_secret,
-        :discourse_org_access_key,
+        :discourse_org_access_key
     ]
 
     # Enable the asset pipeline

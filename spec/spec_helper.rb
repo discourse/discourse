@@ -76,9 +76,32 @@ Spork.prefork do
       end
     end
 
+    class TestSessionSyncronizer
+      attr_reader :controller, :cookies, :session, :logged_in_forum, :logged_in_lessonplanet
+
+      def initialize(controller)
+        @controller = controller
+        @logged_in_forum = true
+        @logged_in_lessonplanet = true
+      end
+
+      def sync
+
+      end
+
+      def create(oauth_token)
+
+      end
+
+      def destroy
+
+      end
+    end
+
     config.before(:all) do
       DiscoursePluginRegistry.clear if ENV['LOAD_PLUGINS'] != "1"
       Discourse.current_user_provider = TestCurrentUserProvider
+      Discourse.session_syncronizer = TestSessionSyncronizer
 
       # a bit odd, but this setting is actually preloaded
       SiteSetting.defaults[:uncategorized_category_id] = SiteSetting.uncategorized_category_id

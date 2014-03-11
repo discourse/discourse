@@ -11,7 +11,14 @@ BACKUP_ROUTE_FORMAT = /[a-zA-Z0-9\-_]*\d{4}(-\d{2}){2}-\d{6}\.tar\.gz/i unless d
 
 Discourse::Application.routes.draw do
 
+  namespace :lp do
+    resources :posts, only: :create
+    resources :topics, only: :index
+  end
+
   match "/404", to: "exceptions#not_found", via: [:get, :post]
+
+  get '/lessonplanet-logout' => 'lp_session#destroy', as: :destroy_lp_session
 
   mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
 

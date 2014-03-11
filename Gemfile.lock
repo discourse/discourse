@@ -172,6 +172,7 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.8.0)
+    newrelic_rpm (3.7.2.195)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     oauth (0.4.7)
@@ -253,6 +254,11 @@ GEM
       sprockets-rails (~> 2.0.0)
     rails-observers (0.1.2)
       activemodel (~> 4.0)
+    rails_12factor (0.0.2)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.2)
+    rails_stdout_logging (0.0.3)
     railties (4.0.3)
       actionpack (= 4.0.3)
       activesupport (= 4.0.3)
@@ -424,6 +430,7 @@ DEPENDENCIES
   mock_redis
   multi_json
   mustache
+  newrelic_rpm
   nokogiri
   oj
   omniauth
@@ -444,6 +451,7 @@ DEPENDENCIES
   rack-protection
   rails
   rails-observers
+  rails_12factor
   rails_multisite!
   rake
   rb-fsevent

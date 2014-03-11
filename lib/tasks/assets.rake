@@ -1,6 +1,6 @@
 task 'assets:precompile:before' do
 
-  unless %w{profile production}.include? Rails.env
+  unless %w{profile production staging}.include? Rails.env
     raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
   end
 
