@@ -1,3 +1,5 @@
+/* global asyncTest */
+/* exported integration, testController, controllerFor, asyncTestDiscourse, fixture */
 function integration(name, lifecycle) {
   module("Integration: " + name, {
     setup: function() {
@@ -27,7 +29,7 @@ function testController(klass, model) {
 }
 
 function controllerFor(controller, model) {
-  var controller = Discourse.__container__.lookup('controller:' + controller);
+  controller = Discourse.__container__.lookup('controller:' + controller);
   if (model) { controller.set('model', model ); }
   return controller;
 }
