@@ -68,7 +68,7 @@ Discourse.Topic = Discourse.Model.extend({
   // Helper to build a Url with a post number
   urlForPostNumber: function(postNumber) {
     var url = this.get('url');
-    if (postNumber && (postNumber > 1)) {
+    if (postNumber && (postNumber > 0)) {
       if (postNumber >= this.get('highest_post_number')) {
         url += "/last";
       } else {
@@ -90,6 +90,10 @@ Discourse.Topic = Discourse.Model.extend({
   lastPostUrl: function() {
     return this.urlForPostNumber(this.get('highest_post_number'));
   }.property('url', 'highest_post_number'),
+
+  firstPostUrl: function () {
+    return this.urlForPostNumber(1);
+  }.property('url'),
 
   lastPosterUrl: function() {
     return Discourse.getURL("/users/") + this.get("last_poster.username");
@@ -113,25 +117,6 @@ Discourse.Topic = Discourse.Model.extend({
     }
     return this.get('new_posts');
   }.property('new_posts', 'id'),
-
-  // The coldmap class for the age of the topic
-  ageCold: function() {
-    var createdAt, daysSinceEpoch, lastPost, lastPostDays, nowDays;
-    if (!(createdAt = this.get('created_at'))) return;
-    if (!(lastPost = this.get('last_posted_at'))) lastPost = createdAt;
-    daysSinceEpoch = function(dt) {
-      // 1000 * 60 * 60 * 24 = days since epoch
-      return dt.getTime() / 86400000;
-    };
-
-    // Show heat on age
-    nowDays = daysSinceEpoch(new Date());
-    lastPostDays = daysSinceEpoch(new Date(lastPost));
-    if (nowDays - lastPostDays > 60) return 'coldmap-high';
-    if (nowDays - lastPostDays > 30) return 'coldmap-med';
-    if (nowDays - lastPostDays > 14) return 'coldmap-low';
-    return null;
-  }.property('age', 'created_at', 'last_posted_at'),
 
   viewsHeat: function() {
     var v = this.get('views');
@@ -428,7 +413,12 @@ Discourse.Topic.reopenClass({
       type: 'PUT',
       data: { filter: filter, operation: operation }
     });
+  },
+
+  resetNew: function() {
+    return Discourse.ajax("/topics/reset-new", {type: 'PUT'});
   }
+
 
 });
 

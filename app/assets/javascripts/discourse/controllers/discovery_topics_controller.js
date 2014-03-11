@@ -43,6 +43,15 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
       this.get('selected').clear();
     },
 
+    resetNew: function() {
+      var self = this;
+
+      Discourse.TopicTrackingState.current().resetNew();
+      Discourse.Topic.resetNew().then(function() {
+        self.send('refresh');
+      });
+    },
+
     dismissRead: function() {
       var self = this,
           selected = this.get('selected'),
@@ -66,6 +75,10 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
 
   showDismissRead: function() {
     return this.get('filter') === 'unread' && this.get('topics.length') > 0;
+  }.property('filter', 'topics.length'),
+
+  showResetNew: function() {
+    return this.get('filter') === 'new' && this.get('topics.length') > 0;
   }.property('filter', 'topics.length'),
 
   canBulkSelect: Em.computed.alias('currentUser.staff'),

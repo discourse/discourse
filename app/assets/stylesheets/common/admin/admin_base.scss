@@ -10,10 +10,9 @@
   td, th {padding: 8px;}
   th {border-top: 1px solid $primary_border_color;}
   td {border-bottom: 1px solid $primary_border_color; border-top: 1px solid $primary_border_color;}
-  td:last-of-type {border-bottom: none;}
   tr:hover { background-color: darken($primary_background_color, 2.5%); }
   tr.selected { background-color: lighten($tertiary_background_color, 58%); }
-  .filters input { margin-bottom: 0px; }
+  .filters input { margin-bottom: 0; }
 }
 
 .content-list li a span.count {
@@ -30,9 +29,6 @@
   margin-bottom: 50px;
   .admin-contents {
     padding: 8px;
-
-    p {
-    }
 
     .ace-wrapper {
       height: 400px;
@@ -89,7 +85,7 @@
 
 .admin-controls {
   background-color: darken($primary_background_color, 5%);
-  padding: 10px 10px 3px 0px;
+  padding: 10px 10px 3px 0;
   height: 35px;
   .nav.nav-pills {
     li.active {
@@ -112,7 +108,7 @@
   }
   button {
     margin-right: 5px;
-    
+
   }
   input[type=text] {
     display: inline-block;
@@ -226,7 +222,7 @@ section.details {
     background-color: lighten($secondary_background_color, 50%);
     color: $tertiary_text_color;
     padding: 0 10px;
-    margin: 0px 0 5px 0;
+    margin: 0 0 5px 0;
   }
 }
 
@@ -582,9 +578,9 @@ table.api-keys {
   }
 
   &.trust-levels {
-    margin-bottom: 0px;
+    margin-bottom: 0;
     table {
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
     td.value {
       width: 45px;
@@ -887,7 +883,7 @@ table.api-keys {
     background-color: lighten($secondary_background_color, 60%);
     padding: 3px 10px;
     border-radius: 3px;
-    
+
     color: $primary_text_color;
     &:hover {
       color: $primary_text_color;
@@ -920,7 +916,7 @@ table.api-keys {
 }
 
 .staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses {
-  
+
   border-bottom: dotted 1px $primary_border_color;
 
   .heading-container {
@@ -937,9 +933,6 @@ table.api-keys {
     vertical-align: top;
     overflow-y: auto;
     overflow-x: hidden;
-  }
-  .col.first {
-    
   }
 
   .ember-list-item-view {

@@ -18,20 +18,49 @@ task 'assets:precompile:before' do
   require 'digest/sha1'
 
   module ::Sprockets
-    class UglifierCompressor
-      def evaluate(context, locals, &block)
 
-        digest = Digest::SHA1.hexdigest(data)
-        key = "SPROCKETS_#{digest}"
-
-        if compiled = $redis.get(key)
-          $redis.expire(key, 1.week)
-        else
-          compiled = Uglifier.new(:comments => :none).compile(data)
-          $redis.setex(key, 1.week, compiled)
-        end
-        compiled
+    def self.cache_compiled(type, data)
+      digest = Digest::SHA1.hexdigest(data)
+      key = "SPROCKETS_#{type}_#{digest}"
+      if compiled = $redis.get(key)
+        $redis.expire(key, 1.week)
+      else
+        compiled = yield
+        $redis.setex(key, 1.week, compiled)
       end
+      compiled
+    end
+
+    class SassCompressor
+      def evaluate(context, locals, &block)
+        ::Sprockets.cache_compiled("sass", data) do
+           # HACK, SASS compiler will degrade to aweful perf with huge files
+           # Bypass if larger than 200kb, ensure assets are minified prior
+           if context.pathname &&
+              context.pathname.to_s =~ /.css$/ &&
+              data.length > 200.kilobytes
+             puts "Skipped minifying #{context.pathname} cause it is larger than 200KB, minify in source control or avoid large CSS files"
+             data
+           else
+             ::Sass::Engine.new(data, {
+                :syntax => :scss,
+                :cache => false,
+                :read_cache => false,
+                :style => :compressed
+              }).render
+           end
+        end
+      end
+    end
+
+    class UglifierCompressor
+
+      def evaluate(context, locals, &block)
+        ::Sprockets.cache_compiled("uglifier", data) do
+           Uglifier.new(:comments => :none).compile(data)
+        end
+      end
+
     end
   end
 

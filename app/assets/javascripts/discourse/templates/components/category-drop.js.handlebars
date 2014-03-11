@@ -14,7 +14,7 @@
 {{/if}}
 
 {{#if categories}}
-  <a href='#' {{action expand}} class='badge-category category-dropdown-button' {{bind-attr style="badgeStyle"}}><i {{bind-attr class="iconClass"}}></i></a>
+  <a href='#' {{action expand}} {{bind-attr class="dropdownButtonClass" style="badgeStyle"}}><i {{bind-attr class="iconClass"}}></i></a>
   <section {{bind-attr class="expanded::hidden :category-dropdown-menu"}} class='chooser'>
     <div class='cat'><a {{bind-attr href=allCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{allCategoriesLabel}}</a></div>
     {{#if subCategory}}

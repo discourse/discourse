@@ -1,6 +1,9 @@
 # encoding: utf-8
 # This file contains content for the server portion of Discourse used by Ruby
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -485,7 +488,7 @@ ko:
     max_topic_title_length: "토픽 제목의 최대 글자 개수"
     min_private_message_title_length: "개인 메시지 제목에서 필요한 최소 제목 길이"
     min_search_term_length: "Minimum search term length in characters"
-    allow_uncategorized_topics: "카테고리없이 토픽이 생성되는 것을 허용한다. 참고: 이 세팅을 바꾼후에는 모든 사용자들이 새로고침을 하여야 합니다."
+    allow_uncategorized_topics: "카테고리없이 토픽이 생성되는 것을 허용한다."
     allow_duplicate_topic_titles: "똑같은 제목을 가진 토픽을 허용"
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     enforce_global_nicknames: "Enforce global nickname uniqueness (WARNING: only change this during initial setup)"

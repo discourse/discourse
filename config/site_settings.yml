@@ -24,6 +24,7 @@ basic:
   default_locale:
     default: 'en'
     enum: 'LocaleSiteSetting'
+    refresh: true
   allow_user_locale:
     client: true
     default: false
@@ -46,13 +47,16 @@ basic:
   posts_per_page:
     client: true
     default: 20
-  suggested_topics: 5
+  suggested_topics:
+    client: true
+    default: 5
   enable_mobile_theme:
     client: true
     default: true
   top_menu:
     client: true
-    default: 'latest|new|unread|starred|categories'
+    refresh: true
+    default: 'latest|new|unread|starred|categories|top'
   post_menu:
     client: true
     default: 'like|edit|flag|delete|share|bookmark|reply'
@@ -69,6 +73,8 @@ basic:
     default: 20
   topics_per_period_in_top_page:
     default: 50
+  redirect_new_users_to_top_page_duration:
+    default: 7
 
 users:
   enable_sso:
@@ -78,6 +84,15 @@ users:
     default: ''
   sso_secret:
     defalt: ''
+  sso_overrides_email:
+    client: true
+    default: false
+  sso_overrides_username:
+    client: true
+    default: false
+  sso_overrides_name:
+    client: true
+    default: false
   enable_local_logins:
     client: true
     default: true
@@ -93,6 +108,9 @@ users:
   must_approve_users:
     client: true
     default: false
+  min_username_length:
+    client: true
+    default: 3
   min_password_length:
     client: true
     default: 8
@@ -165,6 +183,7 @@ posting:
   allow_uncategorized_topics:
     client: true
     default: true
+    refresh: true
   allow_duplicate_topic_titles: false
   min_title_similar_length:
     client: true
@@ -235,9 +254,14 @@ email:
   pop3s_polling_port: 995
   pop3s_polling_username: ''
   pop3s_polling_password: ''
-  enable_mailing_list_mode:
+  email_in:
     default: false
     client: true
+  email_in_address: ''
+  email_in_min_trust:
+    default: 3
+    enum: 'MinTrustToCreateTopicSetting'
+  email_in_category: -1
 
 files:
   max_image_size_kb:
@@ -249,6 +273,7 @@ files:
   authorized_extensions:
     client: true
     default: '.jpg|.jpeg|.png|.gif'
+    refresh: true
   crawl_images:
     default:
       test: false
@@ -270,6 +295,9 @@ files:
     default: ''
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket: ''
+  allow_profile_backgrounds:
+    client: true
+    default: true
   allow_uploaded_avatars:
     client: true
     default: true

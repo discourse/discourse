@@ -2,9 +2,11 @@
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
-
 
 id:
   js:
@@ -383,8 +385,8 @@ id:
 
       progress:
         title: topic progress
-        jump_top: jump to first post
-        jump_bottom: jump to last post
+        jump_top: jump to first post (home key)
+        jump_bottom: jump to last post (end key)
         total: total posts
         current: current post
 
@@ -499,7 +501,10 @@ id:
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
 
-      abandon: "Are you sure you want to abandon your post?"
+      abandon:
+        confirm: "Are you sure you want to abandon your post?"
+        no_value: "Tidak"
+        yes_value: "Ya"
 
       archetypes:
         save: 'Save Options'

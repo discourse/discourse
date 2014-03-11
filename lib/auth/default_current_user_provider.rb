@@ -12,6 +12,7 @@ class Auth::DefaultCurrentUserProvider
     @request = Rack::Request.new(env)
   end
 
+
   # our current user, return nil if none is found
   def current_user
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
@@ -31,8 +32,10 @@ class Auth::DefaultCurrentUserProvider
     end
 
     if current_user
-      current_user.update_last_seen!
-      current_user.update_ip_address!(request.ip)
+
+      Jobs.enqueue(:update_user_info,
+                    user_id: current_user.id,
+                    ip: request.ip)
     end
 
     # possible we have an api call, impersonate

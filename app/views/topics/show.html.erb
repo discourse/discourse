@@ -15,11 +15,15 @@
   <% end %>
 <% end %>
 
-<% if @topic_view.next_page %>
-  <p>
-    <b><%= link_to(t('next_page').html_safe, @topic_view.next_page_path ) %></b>
-  </p>
-<% end %>
+
+<p>
+  <% if @topic_view.prev_page %>
+    <%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev' %>
+  <% end %>
+  <% if @topic_view.next_page %>
+    <b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next'  %></b>
+  <% end %>
+</p>
 
 
 <p><%= t 'powered_by_html' %></p>

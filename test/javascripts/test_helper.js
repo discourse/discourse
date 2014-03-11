@@ -1,5 +1,5 @@
 /*jshint maxlen:250 */
-/*global count:true find:true document:true equal:true sinon:true */
+/*global document, sinon, console, QUnit */
 
 //= require env
 

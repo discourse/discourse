@@ -11,9 +11,8 @@
   top: 0;
   left: 0;
   z-index: 1000;
-  box-shadow: 0 1px 3px rgba($primary_shadow_color, .2);
+  border-bottom: 1px solid $primary_border_color;
   background-color: $primary_background_color;
-  padding-right: 3px;
   padding-top: 3px;
   .docked & {
     position: fixed;
@@ -32,6 +31,7 @@
   }
   #site-logo {
     max-width: 122px;
+    max-height: 40px;
   }
   .fa-home {
     font-size: 20px;
@@ -46,12 +46,13 @@
   .current-username {
     float: left;
     a {
-      color: $primary_text_color;
+      color: $secondary_text_color;
       font-size: 14px;
-      line-height: 40px;
+      display:block;
+      margin-top: 10px;
     }
     button {
-      margin-top: 8px;
+      margin-top: 9px;
     }
   }
   .icons {
@@ -61,26 +62,24 @@
     list-style: none;
     > li {
       float: left;
-      &:first-child .icon {
-      }
-      &:first-child.active .icon {
-      }
-      &:last-child .icon {
-        border-right: 1px solid $primary_border_color;
-      }
     }
     .icon {
       display: block;
-      border-top: 1px solid $primary_border_color;
-      border-bottom: 1px solid $primary_border_color;
-      border-left: 1px solid $primary_border_color;
       padding: 3px;
       color: $nav-button-color;
       text-decoration: none;
       cursor: pointer;
+      border-top: 1px solid transparent;
+      border-left: 1px solid transparent;
+      border-right: 1px solid transparent;
+
+
       &:hover {
         color: $nav-button-color-hover;
         background-color: $nav-button-background-color-hover;
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
       }
       &:active {
         color: $nav-button-color-active;
@@ -92,7 +91,9 @@
       color: #7b7b7b;
       background-color: $primary_background_color;
       cursor: default;
-      @include box-shadow((6px 0 6px -6px rgba($primary_shadow_color, 0.2), -6px 0 6px -6px rgba($primary_shadow_color, 0.2), inset 0 13px 13px -13px rgba($primary_shadow_color, 0.1)));
+      border-top: 1px solid $primary_border_color;
+      border-left: 1px solid $primary_border_color;
+      border-right: 1px solid $primary_border_color;
       &:after {
         display: block;
         position: absolute;
@@ -103,6 +104,9 @@
         height: 0;
         content: "";
         border-top: 1px solid $tertiary_border_color;
+      }
+      &:hover {
+      border-bottom: none;
       }
     }
     [class^="fa fa-"] {
@@ -140,7 +144,7 @@
 }
 
 #main-outlet {
-  padding-top: 75px;
+  padding-top: 80px;
 }
 
 // Dropdowns
@@ -154,10 +158,9 @@
   top: 100%;
   right: 0;
   z-index: 1100;
-  margin-top: -1px;
   border: 1px solid $primary_border_color;
   background-color: $primary_background_color;
-  @include box-shadow(0 3px 3px rgba($primary_shadow_color, .4));
+  @include box-shadow(0 2px 2px rgba($primary_shadow_color, .4));
 
   // Common
 
@@ -210,8 +213,6 @@
     height: 22px;
     margin: 5px;
     padding: 5px;
-    &:focus {
-    }
   }
   .searching {
     display: block;
@@ -237,7 +238,11 @@
   }
 
   &#user-dropdown {
-    width: 155px;
+    width: 118px;
+    .user-dropdown-links {
+    text-align: right;
+
+    }
   }
 
   .btn {

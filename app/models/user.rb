@@ -94,8 +94,14 @@ class User < ActiveRecord::Base
     LAST_VISIT = -2
   end
 
+  GLOBAL_USERNAME_LENGTH_RANGE = 3..15
+
   def self.username_length
-    3..15
+    if SiteSetting.enforce_global_nicknames
+      GLOBAL_USERNAME_LENGTH_RANGE
+    else
+      SiteSetting.min_username_length.to_i..GLOBAL_USERNAME_LENGTH_RANGE.end
+    end
   end
 
   def custom_groups
@@ -464,14 +470,14 @@ class User < ActiveRecord::Base
 
   def treat_as_new_topic_start_date
     duration = new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
-    case duration
+    [case duration
       when User::NewTopicDuration::ALWAYS
         created_at
       when User::NewTopicDuration::LAST_VISIT
-        previous_visit_at || created_at
+        previous_visit_at || user_stat.new_since
       else
         duration.minutes.ago
-    end
+    end, user_stat.new_since].max
   end
 
   def readable_name
@@ -547,6 +553,23 @@ class User < ActiveRecord::Base
     @lq ||= LeaderRequirements.new(self)
   end
 
+  def should_be_redirected_to_top
+    redirected_to_top_reason.present?
+  end
+
+  def redirected_to_top_reason
+    # top must be in the top_menu
+    return unless SiteSetting.top_menu =~ /top/i
+    # there should be enough topics
+    return unless SiteSetting.has_enough_topics_to_redirect_to_top
+    # new users
+    return I18n.t('redirected_to_top_reasons.new_user') if trust_level == 0 &&
+      created_at > SiteSetting.redirect_new_users_to_top_page_duration.days.ago
+    # long-time-no-see user
+    return I18n.t('redirected_to_top_reasons.not_seen_in_a_month') if last_seen_at < 1.month.ago
+    nil
+  end
+
   protected
 
   def cook
@@ -563,7 +586,7 @@ class User < ActiveRecord::Base
   end
 
   def create_user_stat
-    stat = UserStat.new
+    stat = UserStat.new(new_since: Time.now)
     stat.user_id = id
     stat.save!
   end

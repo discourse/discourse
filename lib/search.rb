@@ -86,6 +86,9 @@ class Search
 
       add_more_topics_if_expected
       @results
+    rescue ActiveRecord::StatementInvalid
+      # In the event of a PG:Error return nothing, it is likely they used a foreign language whose
+      # locale is not supported by postgres
     end
 
     # Add more topics if we expected them

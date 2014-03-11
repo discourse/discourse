@@ -2,6 +2,9 @@
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -49,7 +52,7 @@ de:
         almost_x_years:
           one:   "1J"
           other: "%{count}J"
-        date_month: "MMM D"
+        date_month: "D. MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -873,7 +876,10 @@ de:
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
 
-      abandon: "Willst Du diesen Beitrag wirklich verwerfen?"
+      abandon:
+        confirm: "Willst Du diesen Beitrag wirklich verwerfen?"
+        no_value: "Nein"
+        yes_value: "Ja"
 
       archetypes:
         save: 'Speicheroptionen'

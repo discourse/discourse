@@ -358,9 +358,6 @@ span.posted {
 .dropdown {
   position: relative;
 }
-.dropdown-toggle {
-  *margin-bottom: -3px;
-}
 .dropdown-toggle:active,
 .open .dropdown-toggle {
   outline: 0;
@@ -390,8 +387,6 @@ span.posted {
   background-color: $primary_background_color;
   border: 1px solid $primary_border_color;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  *border-right-width: 2px;
-  *border-bottom-width: 2px;
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
@@ -414,12 +409,9 @@ span.posted {
   text-decoration: none;
   background-color: $emphasis_text_color;
 }
-.open {
-  *z-index: 1000;
-}
 .open > .dropdown-menu {
   display: block;
-clear: both;
+  clear: both;
 }
 .fade {
   opacity: 0;
@@ -458,7 +450,7 @@ ol.category-breadcrumb {
   .badge-category {
     font-size: 13px;
     line-height: 26px;
-    padding: 0px 8px;
+    padding: 0 8px;
     float: none;
   }
 

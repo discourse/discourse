@@ -90,7 +90,6 @@ describe UserNotifications do
       tu.last_emailed_post_number.should == response.post_number
 
       # in mailing list mode user_replies is not sent through
-      SiteSetting.stubs(:enable_mailing_list_mode).returns(true)
       response.user.mailing_list_mode = true
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
       mail.class.should == ActionMailer::Base::NullMail

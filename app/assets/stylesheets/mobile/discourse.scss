@@ -26,8 +26,6 @@ a.no-href {
   cursor: pointer;
 }
 
-header {
-}
 
 body {
 
@@ -77,7 +75,7 @@ body {
     margin-top: 10px;
   }
   ul.breadcrumb {
-    margin: 0 10px 0px 10px;
+    margin: 0 10px 0 10px;
   }
   .boxed {
     height: 100%;
@@ -104,7 +102,7 @@ body {
       }
       &.starred {
         color: #fe1;
-        text-shadow: 0px 0px 3px rgba($primary_shadow_color, 0.5);
+        text-shadow: 0 0 3px rgba($primary_shadow_color, 0.5);
         @include hover {
           opacity: 1;
           &:before {
@@ -172,12 +170,12 @@ body {
   .grippie {
     width: 100%;
     border: 1px solid $primary_border_color;
-    border-width: 1px 0px;
+    border-width: 1px 0;
     cursor: row-resize;
     height: 11px;
     overflow: hidden;
     background-color: lighten($secondary_background_color, 76%);
-    display:block {}
+    display: block;
     background: image-url("grippie.png") lighten($secondary_background_color, 76%) no-repeat center 3px;
   }
 }

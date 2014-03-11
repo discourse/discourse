@@ -2,7 +2,10 @@
 # Esse arquivo contém o conteúdo para a parte client do Discouse,
 # enviado para a app Javascript.
 #
-# Para validar esse arquivo YAML após altera-lo, cole em:
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
+# To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
 pt_BR:
@@ -49,7 +52,7 @@ pt_BR:
         almost_x_years:
           one: "1y"
           other: "%{count}y"
-        date_month: "MMM D"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -796,7 +799,10 @@ pt_BR:
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuários não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, novos usuários não podem enviar arquivos."
 
-      abandon: "Tem certeza que quer abandonar o seu post?"
+      abandon:
+        confirm: "Tem certeza que quer abandonar o seu post?"
+        no_value: "Não"
+        yes_value: "Sim"
 
       archetypes:
         save: 'Guardar as Opções'

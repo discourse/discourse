@@ -6,6 +6,9 @@
 # contributed by Vincent Veldkamp (vincent@retroga.me)
 # and Sander Datema (info@sanderdatema.nl)
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -53,7 +56,7 @@ nl:
         almost_x_years:
           one:   1j
           other: "%{count}j"
-        date_month: "MMM D"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -855,7 +858,10 @@ nl:
         image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen afbeeldingen uploaden."
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen bestanden uploaden."
 
-      abandon: Weet je zeker dat je het schrijven van dit bericht wil afbreken?
+      abandon:
+        confirm: Weet je zeker dat je het schrijven van dit bericht wil afbreken?
+        no_value: Nee
+        yes_value: Ja
 
       archetypes:
         save: Bewaar instellingen

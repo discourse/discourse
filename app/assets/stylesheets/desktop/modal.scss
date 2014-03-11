@@ -7,9 +7,6 @@
   .dropdown-menu {
      z-index: 2050;
   }
-  .dropdown.open {
-    *z-index: 2050;
-  }
   .popover {
     z-index: 2060;
   }
@@ -53,8 +50,6 @@
   background-color: $primary_background_color;
   border: 1px solid $primary_border_color;
   border: 1px solid lighten($primary_border_color, 10%);
-  *border: 1px solid $primary_border_color;
-  /* IE6-7 */
 
   box-shadow: 0 3px 7px rgba($primary_shadow_color, .8);
   background-clip: padding-box;
@@ -79,10 +74,8 @@
   height: auto;
   margin: -250px 0 0 -305px;
   background-color: $primary_background_color;
-border: 1px solid $primary_border_color;
+  border: 1px solid $primary_border_color;
   border: 1px solid lighten($primary_border_color, 10%);
-  *border: 1px solid $primary_border_color;
-  /* IE6-7 */
 
   box-shadow: 0 3px 7px rgba($primary_shadow_color, .8);
   background-clip: padding-box;
@@ -108,7 +101,6 @@ border: 1px solid $primary_border_color;
   margin: 0 15px;
   padding: 14px 0 15px;
   border-top: 1px solid $primary_border_color;
-  *zoom: 1;
 }
 .modal-footer:before,
 .modal-footer:after {
@@ -139,7 +131,7 @@ border: 1px solid $primary_border_color;
   .close {
     float: right;
     font-size: 20px;
-    margin: 10px 10px 0px;
+    margin: 10px 10px 0;
     text-decoration: none;
     color: $modal-close-button-color;
     cursor: pointer;

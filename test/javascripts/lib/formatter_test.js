@@ -29,7 +29,7 @@ var formatDays = function(days) {
 };
 
 var shortDate = function(days){
-  return moment().subtract('days', days).format('MMM D');
+  return moment().subtract('days', days).format('D MMM');
 };
 
 test("formating medium length dates", function() {
@@ -198,4 +198,11 @@ test("breakUp", function(){
   equal(b("HRCBob"), "HRC<wbr>&#8203;Bob");
   equal(b("bobmarleytoo","Bob Marley Too"), "bob<wbr>&#8203;marley<wbr>&#8203;too");
 
+});
+
+test("number", function() {
+  equal(Discourse.Formatter.number(123), "123", "it returns a string version of the number");
+  equal(Discourse.Formatter.number("123"), "123", "it works with a string command");
+  equal(Discourse.Formatter.number(NaN), "0", "it reeturns 0 for NaN");
+  equal(Discourse.Formatter.number(3333), "3.3K", "it abbreviates thousands");
 });

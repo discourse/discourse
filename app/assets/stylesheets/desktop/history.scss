@@ -24,6 +24,9 @@
   }
   #revisions {
     word-wrap: break-word;
+    .row, table {
+      margin-top: 10px;
+    }
   }
   img {
     max-width: 670px;
@@ -37,7 +40,7 @@
     font-size: 12px;
     width: 100%;
     border-collapse: collapse;
-    border-spacing: 0px;
+    border-spacing: 0;
     td {
       width: 50%;
       vertical-align: top;

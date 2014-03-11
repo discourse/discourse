@@ -5,15 +5,17 @@
 
 #poster-expansion {
   position: absolute;
+  width: 460px;
   left: 20px;
   z-index: 990;
   box-shadow: 0 2px 6px $primary_border_color;
   margin-top: -2px;
   background-color: $primary_background_color;
   padding: 12px 12px 5px 12px;
-  max-width: 350px;
 
   h1 {
+    display: inline-block;
+    min-width: 120px;
     font-size: 30px;
     line-height: 33px;
     margin-bottom: 8px;
@@ -37,13 +39,13 @@
   h3 {
     font-size: 13px;
     font-weight: normal;
-    margin-top: 0px;
+    margin-top: 0;
     color: $secondary_text_color;
   }
   .groups {
     font-size: 13px;
     font-weight: normal;
-    margin-top: 0px;
+    margin-top: 0;
     color: $secondary_text_color;
 
     .group-link {

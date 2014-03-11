@@ -37,7 +37,6 @@ class PostAlertObserver < ActiveRecord::Observer
 
     post = post_action.post
     return if post_action.user.blank?
-    return if post.topic.private_message?
 
     create_notification(post.user,
                         Notification.types[:liked],

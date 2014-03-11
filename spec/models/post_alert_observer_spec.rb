@@ -96,13 +96,25 @@ describe PostAlertObserver do
   context 'private message' do
     let(:user) { Fabricate(:user) }
     let(:mention_post) { Fabricate(:post, user: user, raw: 'Hello @eviltrout')}
-    let(:topic) { mention_post.topic }
+    let(:topic) do
+      topic = mention_post.topic
+      topic.update_column :archetype, Archetype.private_message
+      topic
+    end
 
     it "won't notify someone who can't see the post" do
       lambda {
         Guardian.any_instance.expects(:can_see?).with(instance_of(Post)).returns(false)
         mention_post
       }.should_not change(evil_trout.notifications, :count)
+    end
+
+    it 'creates like notifications' do
+      other_user = Fabricate(:user)
+      topic.allowed_users << user << other_user
+      lambda {
+        PostAction.act(other_user, mention_post, PostActionType.types[:like])
+      }.should change(user.notifications, :count)
     end
   end
 

@@ -7,6 +7,9 @@ describe UserStat do
   it "is created automatically when a user is created" do
     user = Fabricate(:evil_trout)
     user.user_stat.should be_present
+
+    # It populates the `new_since` field by default
+    user.user_stat.new_since.should be_present
   end
 
   context '#update_view_counts' do

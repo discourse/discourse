@@ -2,6 +2,9 @@
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -49,7 +52,7 @@ it:
         almost_x_years:
           one:   "1a"
           other: "%{count}a"
-        date_month: "MMM D"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -759,7 +762,10 @@ it:
         image_too_large: "Spiacenti, il file che stai cercando di caricare è troppo grande (la dimensione massima è {{max_size_kb}}kb), per favore ridimensionalo e prova di nuovo."
         too_many_uploads: "Spiacenti, puoi caricare un'immagine per volta."
 
-      abandon: "Sei sicuro di voler abbandonare il tuo post?"
+      abandon:
+        confirm: "Sei sicuro di voler abbandonare il tuo post?"
+        no_value: "No"
+        yes_value: "Si"
 
       archetypes:
         save: 'Opzioni di Salvataggio'

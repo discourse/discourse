@@ -8,10 +8,12 @@
 # <Thomas BENTKOWSKI> "thomasbentkowski@gmail.com"
 # <Julien DUMETIER> "julien@dumetier.net"
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
-# encoding: utf-8
-#
+
 fr:
   dates:
     short_date_no_year: "D MMM"
@@ -519,7 +521,7 @@ fr:
     max_topic_title_length: "Longueur maximale des titres de discussion en nombre de caractères"
     min_private_message_title_length: "Longueur mimimale pour un titre de message privé en nombre de caractères"
     min_search_term_length: "Longueur mimimale du texte saisie avant de lancer une recherche"
-    allow_uncategorized_topics: "Permettre la création de discussions sans catégorie. NOTE :  Après la modification de ce paramètre tous les utilisateurs devront recharger leur navigateur pour que la modification prenne effet."
+    allow_uncategorized_topics: "Permettre la création de discussions sans catégorie."
     allow_duplicate_topic_titles: "Permettre la création de discussions avec le même titre"
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
     enforce_global_nicknames: "Imposer un pseudo global unique. (ATTENTION: fonctionne uniquement pendant la phase initiale de paramétrage)"
@@ -692,7 +694,6 @@ fr:
     pop3s_polling_host: "L'hôte utilisé pour le polling pour l'email via POP3S"
     pop3s_polling_username: "Le nom d'utilisateur pour le polling POPS3 par email"
     pop3s_polling_password: "Le mot de passe pour le polling POPS3 par email"
-    enable_mailing_list_mode: "Autoriser les utilisateurs à s'inscrire (optionnellement) au mode de liste de diffusion via une préférence de l'utilisateur"
     minimum_topics_similar: "Combien de topics ont besoin d'exister dans la base de données avant que des topics similaires soit présentés."
     relative_date_duration: "Nombre de jours après la création d'un message à partir desquels les dates seront affichées en absolu plutôt qu'en relatif. Exemple: relatif : 7j, absolut : 20 Fév"
     delete_user_max_post_age: "L'âge maximum du premier message d'un utilisateur, en jours, qui permet de supprimer un utilisateur."

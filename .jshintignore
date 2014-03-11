@@ -1,0 +1,8 @@
+app/assets/javascripts/defer/html-sanitizer-bundle.js
+lib/javascripts/locale/
+lib/javascripts/messageformat.js
+lib/javascripts/moment.js
+lib/javascripts/moment_locale/
+public/javascripts/
+spec/phantom_js/smoke_test.js
+vendor/

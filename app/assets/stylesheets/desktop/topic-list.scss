@@ -11,7 +11,7 @@
 .list-controls {
   .nav {
     float: left;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
   }
 
   .btn {
@@ -63,6 +63,7 @@
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 0 10px;
+  a.title {color: $primary_text_color;}
   a.title:visited:not(.badge-notification) {color: lighten($primary_text_color, 35%);}
 
   > tbody > tr {
@@ -87,7 +88,7 @@
   }
   th,
   td {
-    padding: 9px 5px;
+    padding: 12px 5px;
     line-height: 1.25;
     text-align: left;
     vertical-align: middle;
@@ -141,11 +142,12 @@
   }
 
   .topic-excerpt {
-    font-size: 14px;
+    font-size: 13px;
     margin-top: 8px;
     color: lighten($primary_text_color, 35%);
     word-break: break-word;
-    padding-right: 20px;
+    padding-right: 50px;
+    line-height: 1.4;
   }
 
   @include medium-width {
@@ -174,10 +176,11 @@
   }
   .badge-notification {
     position: relative;
-    top: -1px;
+    top: -2px;
   }
   .category {
-    width: 140px;
+    padding: 0 20px 0 20px;
+    min-width: 80px;
   }
   .posters {
     min-width: 150px;

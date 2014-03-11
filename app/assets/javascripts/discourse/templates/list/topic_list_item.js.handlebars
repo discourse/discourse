@@ -20,7 +20,7 @@
     <a href="{{lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="displayNewPosts"}}'>{{displayNewPosts}}</a>
   {{/if}}
   {{#if unseen}}
-    <a href="{{lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='fa fa-asterisk'></i></a>
+    <a href="{{lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'>{{i18n filters.new.lower_title}}</a>
   {{/if}}
 
   {{#if hasExcerpt}}
@@ -58,14 +58,14 @@
 
 {{#if bumped}}
   <td class='num activity'>
-    <a href="{{url}}" {{{bind-attr class=":age ageCold"}}} title='{{i18n first_post}}: {{{rawDate created_at}}}' >{{unboundAge created_at}}</a>
+    <a href="{{url}}" class="{{coldAgeClass created_at}}" title='{{i18n first_post}}: {{{rawDate created_at}}}' >{{unboundAge created_at}}</a>
   </td>
   <td class='num activity last'>
-    <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
+    <a href="{{lastPostUrl}}" class="{{coldAgeClass bumped_at}}" title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
   </td>
 {{else}}
   <td class='num activity'>
-    <a href="{{url}}" {{{bind-attr class=":age ageCold"}}} title='{{i18n first_post}}: {{{rawDate created_at}}}'>{{unboundAge created_at}}</a>
+    <a href="{{url}}" class="{{coldAgeClass created_at}}" title='{{i18n first_post}}: {{{rawDate created_at}}}'>{{unboundAge created_at}}</a>
   </td>
   <td class='activity'></td>
 {{/if}}

@@ -90,8 +90,6 @@ describe PostCreator do
           reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
 
-        topic_id = created_post.topic_id
-
 
         messages.map{|m| m.channel}.sort.should == [ "/new",
                                                      "/users/#{admin.username}",
@@ -110,7 +108,6 @@ describe PostCreator do
         p = nil
         messages = MessageBus.track_publish do
           p = creator.create
-          topic_id = p.topic_id
         end
 
         latest = messages.find{|m| m.channel == "/new"}
@@ -133,11 +130,13 @@ describe PostCreator do
       it 'queues up post processing job when saved' do
         Jobs.expects(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         creator.create
       end
 
       it 'passes the invalidate_oneboxes along to the job if present' do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
+        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
         creator.opts[:invalidate_oneboxes] = true
         creator.create
@@ -145,6 +144,7 @@ describe PostCreator do
 
       it 'passes the image_sizes along to the job if present' do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
+        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
         creator.opts[:image_sizes] = {'http://an.image.host/image.jpg' => {'width' => 17, 'height' => 31}}
         creator.create
@@ -394,7 +394,7 @@ describe PostCreator do
   context 'disable validations' do
     it 'can save a post' do
       creator = PostCreator.new(user, raw: 'q', title: 'q', skip_validations: true)
-      post = creator.create
+      creator.create
       creator.errors.should be_nil
     end
   end

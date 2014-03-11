@@ -92,7 +92,6 @@ class Topic < ActiveRecord::Base
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
 
-  has_many :topic_revisions
   has_many :revisions, foreign_key: :topic_id, class_name: 'TopicRevision'
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -189,13 +188,20 @@ class Topic < ActiveRecord::Base
 
   end
 
+  # TODO move into PostRevisor or TopicRevisor
   def save_revision
-    TopicRevision.create!(
-      user_id: acting_user.id,
-      topic_id: id,
-      number: TopicRevision.where(topic_id: id).count + 2,
-      modifications: changes.extract!(:category, :title)
-    )
+    if first_post_id = posts.where(post_number: 1).pluck(:id).first
+
+      number = PostRevision.where(post_id: first_post_id).count + 2
+      PostRevision.create!(
+        user_id: acting_user.id,
+        post_id: first_post_id,
+        number: number,
+        modifications: changes.extract!(:category_id, :title)
+      )
+
+      Post.update_all({version: number}, id: first_post_id)
+    end
   end
 
   def should_create_new_version?
@@ -658,11 +664,11 @@ class Topic < ActiveRecord::Base
   #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
   #  * nil, to prevent the topic from automatically closing.
   def set_auto_close(arg, by_user=nil)
-    if arg.is_a?(String) and matches = /^([\d]{1,2}):([\d]{1,2})$/.match(arg.strip)
+    if arg.is_a?(String) && matches = /^([\d]{1,2}):([\d]{1,2})$/.match(arg.strip)
       now = Time.zone.now
       self.auto_close_at = Time.zone.local(now.year, now.month, now.day, matches[1].to_i, matches[2].to_i)
       self.auto_close_at += 1.day if self.auto_close_at < now
-    elsif arg.is_a?(String) and arg.include?('-') and timestamp = Time.zone.parse(arg)
+    elsif arg.is_a?(String) && arg.include?('-') && timestamp = Time.zone.parse(arg)
       self.auto_close_at = timestamp
       self.errors.add(:auto_close_at, :invalid) if timestamp < Time.zone.now
     else
@@ -672,7 +678,7 @@ class Topic < ActiveRecord::Base
 
     unless self.auto_close_at.nil?
       self.auto_close_started_at ||= Time.zone.now
-      if by_user and by_user.staff?
+      if by_user && by_user.staff?
         self.auto_close_user = by_user
       else
         self.auto_close_user ||= (self.user.staff? ? self.user : Discourse.system_user)

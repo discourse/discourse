@@ -1,6 +1,9 @@
 # encoding: utf-8
 # This file contains content for the server portion of Discourse used by Ruby
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -30,6 +33,7 @@ en:
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
 
+  not_logged_in: "You need to be logged in to do that."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
 
   too_many_replies:
@@ -566,11 +570,11 @@ en:
     max_topic_title_length: "Maximum topic title length in characters"
     min_private_message_title_length: "Minimum title length for a private message in characters"
     min_search_term_length: "Minimum search term length in characters"
-    allow_uncategorized_topics: "Allow topics to be created without a category. NOTE: After changing this setting, all clients will need to reload their browsers for the change to take effect."
+    allow_uncategorized_topics: "Allow topics to be created without a category."
     allow_duplicate_topic_titles: "Allow topics with identical titles"
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
-    enforce_global_nicknames: "Enforce global nickname uniqueness (WARNING: only change this during initial setup)"
-    discourse_org_access_key: "The access key used to access the Discourse Hub nickname registry at discourse.org"
+    enforce_global_nicknames: "Enforce global username uniqueness (WARNING: only change this during initial setup)"
+    discourse_org_access_key: "The access key used to access the Discourse Hub username registry at discourse.org"
     educate_until_posts: "Show pop-up composer education panel until the user has made this many posts"
     title: "Title of this site, will be used in the title tag and elsewhere"
     site_description: "Describe this forum in one sentence. This description will be used in the meta description tag."
@@ -604,7 +608,7 @@ en:
 
     notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
     email_custom_headers: "A pipe-delimited list of custom email headers"
-    use_https: "Should the full url for the site (Discourse.base_url) be http or https?"
+    use_https: "Should the full url for the site (Discourse.base_url) be http or https? DO NOT ENABLE THIS UNLESS HTTPS IS ALREADY SET UP AND WORKING!"
     summary_score_threshold: "The minimum score of a post to be included in the 'summary'"
     summary_posts_required: "Minimum posts in a topic before 'summary' mode is enabled"
     summary_likes_required: "Minimum likes in a topic before the 'summary' mode will be enabled"
@@ -652,6 +656,7 @@ en:
 
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
+    redirect_new_users_to_top_page_duration: "Number of days during which new users are automatically redirect to the top page"
 
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
@@ -670,12 +675,17 @@ en:
 
     login_required: "Require authentication to read posts"
 
+    min_username_length: "Minimum username length. (Does not apply if global nickname uniqueness is forced)"
+
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 5000 most common passwords."
 
     enable_sso: "Enable single sign on via an external site"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
+    sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
+    sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
+    sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
 
     enable_local_logins: "Enable traditional, local username and password authentication"
     enable_local_account_create: "Enable creating new local accounts"
@@ -791,7 +801,10 @@ en:
     pop3s_polling_host: "The host to poll for email via POP3S"
     pop3s_polling_username: "The username for the POP3S account to poll for email"
     pop3s_polling_password: "The password for the POP3S account to poll for email"
-    enable_mailing_list_mode: "Allow users to (optionally) opt-in to mailing list mode via a user preference"
+    email_in: "Allow users to post new topics via email"
+    email_in_address: "The email address the users can post new topics to. None means users can't post globally."
+    email_in_min_trust: "The minimum trust level an users needs to have to be allowed to post new topics via email"
+    email_in_category: "The category new emails are posted into"
 
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 
@@ -809,6 +822,8 @@ en:
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars"
     max_daily_gravatar_crawls: "The maximum amount of times Discourse will check gravatar for custom avatars in a day"
+
+    allow_profile_backgrounds: "Allows users to upload profile backgrounds"
 
     sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
 
@@ -855,6 +870,10 @@ en:
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
   frequent_poster: "Frequent Poster"
+
+  redirected_to_top_reasons:
+    new_user: "Welcome! As a new visitor, this will be your homepage until you've had some time to look around at the forum. Here's some of the most popular topics from the past."
+    not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
 
   move_posts:
     new_topic_moderator_post:
@@ -1031,39 +1050,41 @@ en:
 
         ### Keep scrolling
 
-        There are no next page buttons or page numbers – to read more, just keep scrolling down, and more content will load!
+        There are no next page buttons or page numbers – to read more, just keep scrolling down!
 
-        As new replies come in, they will appear automatically at the bottom of the topic. No need to refresh the page or re-enter the topic to see new posts.
+        As new replies come in, they will appear automatically at the bottom of the topic.
 
         ### How do I reply?
 
-        - To reply to a specific post, use the Reply button at the bottom of that post.
+        - To reply to a specific post, use the Reply button on that post.
 
-        - If you want to reply to the overall *theme* of the topic, rather than any specific post in the topic, use the Reply button at the very bottom of the topic.
+        - To reply to the overall *theme* of the topic, rather than any specific person or post in the topic, use the Reply button at the very bottom of the topic.
 
-        - If you want to take the conversation in a different direction, but keep them linked together, use Reply as New Topic to the right of the post.
+        - To take the conversation in a different direction, but keep them linked together, use Reply as New Topic to the right of the post.
 
         ### Who is talking to me?
 
-        When someone replies to your post, quotes you, or mentions your @username, a notification ➀ will appear at the top of the page. Click or tap that notification number to see who's talking to you, and where. Join the conversation!
+        When someone replies to your post, quotes you, or mentions your @username, a number ➀ will appear over a conversation button at the top of the page. Use it see who's talking to you, and where.
 
         - To mention someone's name, start typing `@` and an autocompleter will pop up.
 
-        - To quote just a section of a post, select it, then click the Reply button that appears over the highlight.
+        - To quote just a section of a post, select it, then use the Reply button that appears over your selection.
 
-        - To quote an entire post, use the Import Quote button on the composer toolbar.
+        - To quote an entire post, use the Import Quote button on the editor toolbar.
 
         ### Look at that post!
 
-        To let someone know that you enjoyed their post, click the like ♥ button at the bottom of the post. If you see a problem with a post, don't hesitate to click the flag button and let the moderators – and your fellow community members – know about it.
+        To let someone know that you enjoyed their post, use the like ♥ button at the bottom of the post. If you see a problem with a post, don't hesitate to use the flag button and privately let our staff know about it.
 
         ### Where am I?
 
-        - To get back to the home page at any time, **click the logo at the upper left** or use the back ← button on your browser.
+        - To get back to the home page at any time, **use the logo at the upper left** or the back ← button on your browser.
 
-        - For search, your user page, or the sitemap, click on the icons at the upper right.
+        - For search, your user page, or the sitemap, use the **icon buttons at the upper right**.
 
-        - While reading a topic, move to the top ↑ by clicking its title at the top of the page. To reach the *bottom* ↓, click the down arrow on the topic progress indicator at the bottom of the page, or click the last post field on the topic summary under the first post.
+        - While reading a topic, move to the top ↑ by clicking its title at the top of the page, or press the <kbd>home</kbd> key. To reach the *bottom* ↓, use the down arrow on the topic progress indicator at the bottom of the page, or press the <kbd>end</kbd> key.
+
+        - Use times as entry shortcuts. You can always enter at the top of a topic via the first post date, and the bottom via the last post date.
 
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
@@ -1106,6 +1127,24 @@ en:
     import_succeeded:
       subject_template: "Import completed successfully"
       text_body_template: "The import was successful."
+
+    email_error_notification:
+      subject_template: "Error parsing email"
+      text_body_template: |
+        This is an automated message to inform you that parsing the following incoming email failed.
+
+        Please review the following message.
+
+        Error - %{error}
+
+        %{source}
+
+    email_reject_trust_level:
+      subject_template: "Message rejected"
+      text_body_template: |
+        The message you've send to %{to} was rejected by the system.
+
+        You do not have the required trust to post new topics to this email address.
 
     too_many_spam_flags:
       subject_template: "New account blocked"

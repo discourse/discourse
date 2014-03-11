@@ -4,7 +4,7 @@
       <td class="radio"><input type="radio" name="poll" {{bind-attr checked=checked disabled=controller.loading}}></td>
       <td class="option">
         <div class="option">
-          {{option}}
+          {{{ option }}}
         </div>
         {{#if controller.showResults}}
           <div class="result">{{i18n poll.voteCount count=votes}}</div>

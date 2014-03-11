@@ -3,13 +3,12 @@ require 'topic_view'
 
 describe TopicQuery do
 
-  let(:user) { Fabricate(:coding_horror) }
+  let!(:user) { Fabricate(:coding_horror) }
   let(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
 
   let(:moderator) { Fabricate(:moderator) }
   let(:admin) { Fabricate(:admin) }
-
 
   context 'secure category' do
     it "filters categories out correctly" do
