@@ -47,12 +47,7 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
     if(viewMode === "side_by_side_markdown" || viewMode === "side_by_side") {
       raw = "<div class='span8'>" + prevCategory +  "</div> <div class='span8 offset1'>" + curCategory +  "</div>";
     } else {
-      var diff;
-      if(curCategory === prevCategory){
-        diff = curCategory;
-      } else {
-        diff = "<del>" + prevCategory + "</del> " + "<ins>" + curCategory + "</ins>";
-      }
+      var diff = "<del>" + prevCategory + "</del> " + "<ins>" + curCategory + "</ins>";
       raw = "<div class='inline-diff'>" + diff +  "</div>";
     }
 
