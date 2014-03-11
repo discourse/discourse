@@ -1,6 +1,6 @@
 # encoding: utf-8
 #
-# French translation - Traduction française
+# French translation - Traduction franÃ§aise
 #
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
@@ -19,5 +19,5 @@ fr:
         other: "%{count} votes"
 
       results:
-        show: "Voir les résultats"
-        hide: "Cacher les résultats"
+        show: "Voir les rÃ©sultats"
+        hide: "Cacher les rÃ©sultats"
