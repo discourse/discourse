@@ -1,5 +1,4 @@
 app/assets/javascripts/defer/html-sanitizer-bundle.js
-app/assets/javascripts/locales/
 lib/autospec/run-qunit.js
 lib/headless-ember.js
 lib/javascripts/locale/
