@@ -16,7 +16,7 @@ class Auth::LpCurrentUserProvider < Auth::DefaultCurrentUserProvider
 
   def set_cookies(cookies)
     cookies[:forums_session_nonce] = cookies[LpSession::NOONCE_COOKIE_NAME]
-    cookies[LpSession::SESSION_COOKIE_NAME]   = { value: '1', domain: cookies_domain } if cookies[LpSession::SESSION_COOKIE_NAME].blank?
+    cookies[LpSession::SESSION_COOKIE_NAME] = { value: '1', domain: cookies_domain } if cookies[LpSession::SESSION_COOKIE_NAME].blank?
   end
 
   def unset_cookies(cookies)

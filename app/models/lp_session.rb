@@ -51,7 +51,7 @@ class LpSession
   end
 
   def logged_in_as_different_user?
-    different_cookies = cookies[NOONCE_COOKIE_NAME].present? && (cookies[NOONCE_COOKIE_NAME] != cookies[NOONCE_COOKIE_NAME])
+    different_cookies = cookies[NOONCE_COOKIE_NAME].present? && (cookies[NOONCE_COOKIE_NAME] != cookies[:forums_session_nonce])
     logged_in_forum && logged_in_lessonplanet && different_cookies
   end
 end
