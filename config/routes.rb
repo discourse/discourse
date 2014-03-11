@@ -18,9 +18,7 @@ Discourse::Application.routes.draw do
 
   match "/404", to: "exceptions#not_found", via: [:get, :post]
 
-  get '/lessonplanet-login' => 'lp_session#new', as: :new_lp_session
   get '/lessonplanet-logout' => 'lp_session#destroy', as: :destroy_lp_session
-  get '/auth/lessonplanet/callback' => 'lp_session#create'
 
   mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
 

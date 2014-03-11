@@ -1,24 +1,7 @@
-GIT
-  remote: https://github.com/callahad/omniauth-browserid.git
-  revision: af62d667626c1622de6fe13b60849c3640765ab1
-  branch: observer_api
-  specs:
-    omniauth-browserid (0.0.2)
-      faraday
-      multi_json
-      omniauth (~> 1.0)
-
 PATH
   remote: vendor/gems/discourse_plugin
   specs:
     discourse_plugin (0.0.1)
-
-PATH
-  remote: vendor/gems/omniauth-lessonplanet
-  specs:
-    omniauth-lessonplanet (0.0.1)
-      omniauth (~> 1.0)
-      omniauth-oauth2
 
 PATH
   remote: vendor/gems/rails_multisite
@@ -203,10 +186,6 @@ GEM
     omniauth (1.2.1)
       hashie (>= 1.2, < 3)
       rack (~> 1.0)
-    omniauth-cas (0.0.3)
-      addressable (~> 2.2)
-      nokogiri (~> 1.5)
-      omniauth (~> 1.0)
     omniauth-facebook (1.6.0)
       omniauth-oauth2 (~> 1.1)
     omniauth-github (1.1.1)
@@ -455,11 +434,8 @@ DEPENDENCIES
   nokogiri
   oj
   omniauth
-  omniauth-browserid!
-  omniauth-cas
   omniauth-facebook
   omniauth-github
-  omniauth-lessonplanet!
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter

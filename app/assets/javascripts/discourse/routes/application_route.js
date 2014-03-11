@@ -15,8 +15,6 @@ Discourse.ApplicationRoute = Em.Route.extend({
         bootbox.alert(I18n.t("read_only_mode.login_disabled"));
       } else {
         if(Discourse.SiteSettings.enable_sso) {
-          // TODO: Use this instead of what we used to do
-          //    document.location.href='/lessonplanet-login';
           var returnPath = encodeURIComponent(window.location.pathname);
           window.location = Discourse.getURL('/session/sso?return_path=' + returnPath);
         } else {

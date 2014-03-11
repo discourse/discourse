@@ -78,7 +78,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       // Reloading will refresh unbound properties
       Discourse.KeyValueStore.abandonLocal();
       // window.location.pathname = Discourse.getURL('/');
-      document.location.href='/lessonplanet-logout';
+      document.location.href = '/lessonplanet-logout';
     });
   },
 
