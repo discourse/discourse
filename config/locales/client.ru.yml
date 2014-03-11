@@ -72,7 +72,7 @@ ru:
           other: '%{count}лет'
           few: '%{count}лет'
           many: '%{count}лет'
-        date_month: 'MMM D'
+        date_month: 'D MMM'
         date_year: 'MMM ''YY'
       medium:
         x_minutes:
