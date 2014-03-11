@@ -1,6 +1,6 @@
 # encoding: utf-8
 #
-# French translation - Traduction française
+# French translation - Traduction franÃ§aise
 #
 # This file contains content for the server portion of Discourse used by Ruby
 #
@@ -13,5 +13,5 @@
 fr:
   poll:
     must_contain_poll_options: "doit contenir une liste de choix pour le sondage"
-    cannot_have_modified_options: "ne peut pas être modifié car il contient un sondage publié depuis plus de 5 minutes"
+    cannot_have_modified_options: "ne peut pas Ãªtre modifiÃ© car il contient un sondage publiÃ© depuis plus de 5 minutes"
     prefix: "Sondage:"
