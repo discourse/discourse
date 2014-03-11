@@ -385,8 +385,10 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
                 var image = new Image();
                 image.onload = function() {
                   // Create a new canvas.
-                  var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas'),
-                      ctx = canvas.getContext('2d');
+                  var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+                  canvas.height = image.height;
+                  canvas.width = image.width;
+                  var ctx = canvas.getContext('2d');
                   ctx.drawImage(image, 0, 0);
 
                   canvas.toBlob(function(blob) {
