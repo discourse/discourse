@@ -23,12 +23,14 @@
     </div>
     <div id="revisions">
       {{#if title_changes}}
-        <h2>{{{title_diff}}}</h2>
+        <div class="row">
+          <h2>{{{title_diff}}}</h2>
+        </div>
       {{/if}}
       {{#if category_changes}}
-      <div class="category-diff">
-        {{{category_diff}}}
-      </div>
+        <div class="row">
+          {{{category_diff}}}
+        </div>
       {{/if}}
       {{{body_diff}}}
     </div>

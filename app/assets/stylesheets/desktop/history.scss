@@ -24,6 +24,9 @@
   }
   #revisions {
     word-wrap: break-word;
+    .row, table {
+      margin-top: 10px;
+    }
   }
   img {
     max-width: 670px;
