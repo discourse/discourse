@@ -38,6 +38,8 @@ module Export
 
       create_archive
 
+      remove_old
+
       notify_user
     rescue SystemExit
       log "Backup process was cancelled!"
@@ -238,6 +240,11 @@ module Export
       log "Notifying '#{@user.username}' of the success of the backup..."
       # NOTE: will only notify if @user != Discourse.site_contact_user
       SystemMessage.create(@user, :export_succeeded)
+    end
+
+    def remove_old
+      log "Removing old backups..."
+      Backup.remove_old
     end
 
     def clean_up

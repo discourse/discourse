@@ -712,6 +712,7 @@ en:
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
 
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to do restore a backup"
+    maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"

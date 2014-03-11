@@ -1665,6 +1665,7 @@ en:
           embedding: "Embedding"
           legal: "Legal"
           uncategorized: 'Uncategorized'
+          backups: "Backups"
 
     lightbox:
       download: "download"

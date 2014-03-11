@@ -2,32 +2,29 @@ class Backup
   include UrlHelper
   include ActiveModel::SerializerSupport
 
-  attr_reader :filename, :size, :path, :link
+  attr_reader :filename
+  attr_accessor :size, :path, :link
 
   def initialize(filename)
     @filename = filename
-    @path = File.join(Backup.base_directory, filename)
-    @link = schemaless "#{Discourse.base_url}/admin/backups/#{filename}"
-    @size = File.size(@path)
   end
 
   def self.all
     backups = Dir.glob(File.join(Backup.base_directory, "*.tar.gz"))
-    backups.sort.reverse.map { |backup| Backup.new(File.basename(backup)) }
+    backups.sort.reverse.map { |backup| Backup.create_from_filename(File.basename(backup)) }
   end
 
   def self.[](filename)
     path = File.join(Backup.base_directory, filename)
     if File.exists?(path)
-      Backup.new(filename)
+      Backup.create_from_filename(filename)
     else
       nil
     end
   end
 
-  def self.remove(filename)
-    path = File.join(Backup.base_directory, filename)
-    File.delete(path) if File.exists?(path)
+  def remove
+    File.delete(@path) if File.exists?(path)
   end
 
   def self.base_directory
@@ -36,6 +33,20 @@ class Backup
 
   def self.chunk_path(identifier, filename, chunk_number)
     File.join(Backup.base_directory, "tmp", identifier, "#{filename}.part#{chunk_number}")
+  end
+
+  def self.create_from_filename(filename)
+    Backup.new(filename).tap do |b|
+      b.path = File.join(Backup.base_directory, b.filename)
+      b.link = b.schemaless "#{Discourse.base_url}/admin/backups/#{b.filename}"
+      b.size = File.size(b.path)
+    end
+  end
+
+  def self.remove_old
+    all_backups = Backup.all
+    return unless all_backups.size > SiteSetting.maximum_backups
+    all_backups[SiteSetting.maximum_backups..-1].each {|b| b.remove}
   end
 
 end
