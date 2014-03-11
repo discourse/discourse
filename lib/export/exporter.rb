@@ -238,7 +238,7 @@ module Export
       end
 
       log "Gzipping archive..."
-      `gzip #{tar_filename}`
+      `gzip --best #{tar_filename}`
     end
 
     def notify_user
