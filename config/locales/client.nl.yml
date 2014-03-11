@@ -56,7 +56,7 @@ nl:
         almost_x_years:
           one:   1j
           other: "%{count}j"
-        date_month: "MMM D"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
