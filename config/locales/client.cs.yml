@@ -62,7 +62,7 @@ cs:
           one: 1r
           few: '%{count}r'
           other: '%{count}let'
-        date_month: MMM D
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:

@@ -52,7 +52,7 @@ it:
         almost_x_years:
           one:   "1a"
           other: "%{count}a"
-        date_month: "MMM D"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
