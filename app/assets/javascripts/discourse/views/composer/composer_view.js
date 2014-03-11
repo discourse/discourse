@@ -11,14 +11,16 @@
 Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   templateName: 'composer',
   elementId: 'reply-control',
-  classNameBindings: ['model.creatingPrivateMessage:private-message',
-                      'composeState',
-                      'model.loading',
-                      'model.canEditTitle:edit-title',
-                      'postMade',
-                      'model.creatingTopic:topic',
-                      'model.showPreview',
-                      'model.hidePreview'],
+  classNameBindings: [
+    'model.creatingPrivateMessage:private-message',
+    'composeState',
+    'model.loading',
+    'model.canEditTitle:edit-title',
+    'postMade',
+    'model.creatingTopic:topic',
+    'model.showPreview',
+    'model.hidePreview'
+  ],
 
   model: Em.computed.alias('controller.model'),
 
@@ -136,7 +138,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
       'max-width:' + Discourse.SiteSettings.max_image_width + 'px;' +
       'max-height:' + Discourse.SiteSettings.max_image_height + 'px;' +
       '}</style>'
-     ).appendTo('head');
+    ).appendTo('head');
   },
 
   click: function() {
@@ -194,12 +196,12 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
       },
       key: "@",
       transformComplete: function(v) {
-          if (v.username) {
-            return v.username;
-          } else {
-            return v.usernames.join(", @");
-          }
+        if (v.username) {
+          return v.username;
+        } else {
+          return v.usernames.join(", @");
         }
+      }
     });
 
     this.editor = editor = Discourse.Markdown.createEditor({

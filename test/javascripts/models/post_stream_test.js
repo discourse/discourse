@@ -175,8 +175,10 @@ test("nextWindow", function() {
   blank(postStream.get('nextWindow'), 'With no posts loaded, the window is blank');
 
   postStream.updateFromJson({ posts: [{id: 1}, {id: 2}] });
-  deepEqual(postStream.get('nextWindow'), [3,5,8,9,10],
-            "If we've loaded the first 2 posts, the window should be the 5 after that");
+  deepEqual(
+    postStream.get('nextWindow'), [3,5,8,9,10],
+    "If we've loaded the first 2 posts, the window should be the 5 after that"
+  );
 
   postStream.updateFromJson({ posts: [{id: 13}] });
   deepEqual(postStream.get('nextWindow'), [14, 15, 16], "Boundary check: stop at the end.");
@@ -192,8 +194,10 @@ test("previousWindow", function() {
   blank(postStream.get('previousWindow'), 'With no posts loaded, the window is blank');
 
   postStream.updateFromJson({ posts: [{id: 11}, {id: 13}] });
-  deepEqual(postStream.get('previousWindow'), [3, 5, 8, 9, 10],
-            "If we've loaded in the middle, it's the previous 5 posts");
+  deepEqual(
+    postStream.get('previousWindow'), [3, 5, 8, 9, 10],
+    "If we've loaded in the middle, it's the previous 5 posts"
+  );
 
   postStream.updateFromJson({ posts: [{id: 3}] });
   deepEqual(postStream.get('previousWindow'), [1, 2], "Boundary check: stop at the beginning.");

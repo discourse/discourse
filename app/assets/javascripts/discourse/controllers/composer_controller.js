@@ -335,15 +335,19 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
     return new Ember.RSVP.Promise(function (resolve) {
       if (self.get('model.hasMetaData') || self.get('model.replyDirty')) {
-        bootbox.confirm(I18n.t("post.abandon.confirm"), I18n.t("post.abandon.no_value"),
-            I18n.t("post.abandon.yes_value"), function(result) {
-          if (result) {
-            self.destroyDraft();
-            self.get('model').clearState();
-            self.close();
-            resolve();
+        bootbox.confirm(
+          I18n.t("post.abandon.confirm"),
+          I18n.t("post.abandon.no_value"),
+          I18n.t("post.abandon.yes_value"),
+          function(result) {
+            if (result) {
+              self.destroyDraft();
+              self.get('model').clearState();
+              self.close();
+              resolve();
+            }
           }
-        });
+        );
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         self.destroyDraft();

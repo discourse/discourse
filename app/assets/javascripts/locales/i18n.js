@@ -116,7 +116,7 @@ I18n.lookup = function(scope, options) {
     }
 
     if (!messages && this.isValidNode(options, "defaultValue")) {
-        messages = options.defaultValue;
+      messages = options.defaultValue;
     }
   }
 
@@ -378,7 +378,7 @@ I18n.toNumber = function(number, options) {
 
   if (options.strip_insignificant_zeros) {
     var regex = {
-        separator: new RegExp(options.separator.replace(/\./, "\\.") + "$")
+      separator: new RegExp(options.separator.replace(/\./, "\\.") + "$")
       , zeros: /0+$/
     };
 

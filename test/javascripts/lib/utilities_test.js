@@ -117,20 +117,28 @@ test("avatarUrl", function() {
 
 test("avatarImg", function() {
   var avatarTemplate = "/path/to/avatar/{size}.png";
-  equal(Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny'}),
-        "<img width='20' height='20' src='/path/to/avatar/20.png' class='avatar'>",
-        "it returns the avatar html");
+  equal(
+    Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny'}),
+    "<img width='20' height='20' src='/path/to/avatar/20.png' class='avatar'>",
+    "it returns the avatar html"
+  );
 
-  equal(Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', title: 'evilest trout'}),
-        "<img width='20' height='20' src='/path/to/avatar/20.png' class='avatar' title='evilest trout'>",
-        "it adds a title if supplied");
+  equal(
+    Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', title: 'evilest trout'}),
+    "<img width='20' height='20' src='/path/to/avatar/20.png' class='avatar' title='evilest trout'>",
+    "it adds a title if supplied"
+  );
 
-  equal(Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', extraClasses: 'evil fish'}),
-        "<img width='20' height='20' src='/path/to/avatar/20.png' class='avatar evil fish'>",
-        "it adds extra classes if supplied");
+  equal(
+    Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', extraClasses: 'evil fish'}),
+    "<img width='20' height='20' src='/path/to/avatar/20.png' class='avatar evil fish'>",
+    "it adds extra classes if supplied"
+  );
 
-  blank(Discourse.Utilities.avatarImg({avatarTemplate: "", size: 'tiny'}),
-        "it doesn't render avatars for invalid avatar template");
+  blank(
+    Discourse.Utilities.avatarImg({avatarTemplate: "", size: 'tiny'}),
+    "it doesn't render avatars for invalid avatar template"
+  );
 });
 
 test("defaultHomepage", function() {

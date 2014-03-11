@@ -9,11 +9,13 @@
 Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   classNames: ['topic-post', 'clearfix'],
   templateName: 'post',
-  classNameBindings: ['postTypeClass',
-                      'selected',
-                      'post.hidden:post-hidden',
-                      'post.deleted',
-                      'groupNameClass'],
+  classNameBindings: [
+    'postTypeClass',
+    'selected',
+    'post.hidden:post-hidden',
+    'post.deleted',
+    'groupNameClass'
+  ],
   postBinding: 'content',
 
   postTypeClass: function() {

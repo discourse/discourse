@@ -179,21 +179,23 @@ Discourse.User = Discourse.Model.extend({
   **/
   save: function() {
     var user = this;
-    var data = this.getProperties('auto_track_topics_after_msecs',
-                               'bio_raw',
-                               'website',
-                               'name',
-                               'locale',
-                               'email_digests',
-                               'email_direct',
-                               'email_always',
-                               'email_private_messages',
-                               'dynamic_favicon',
-                               'digest_after_days',
-                               'new_topic_duration_minutes',
-                               'external_links_in_new_tab',
-                               'mailing_list_mode',
-                               'enable_quoting');
+    var data = this.getProperties(
+      'auto_track_topics_after_msecs',
+      'bio_raw',
+      'website',
+      'name',
+      'locale',
+      'email_digests',
+      'email_direct',
+      'email_always',
+      'email_private_messages',
+      'dynamic_favicon',
+      'digest_after_days',
+      'new_topic_duration_minutes',
+      'external_links_in_new_tab',
+      'mailing_list_mode',
+      'enable_quoting'
+    );
 
     _.each(['muted','watched','tracked'], function(s){
       var cats = user.get(s + 'Categories').map(function(c){ return c.get('id')});
@@ -487,9 +489,9 @@ Discourse.User.reopenClass(Discourse.Singleton, {
 
     var insertAt = 0;
     result.forEach(function(item, index){
-     if(item.action_type === Discourse.UserAction.TYPES.topics || item.action_type === Discourse.UserAction.TYPES.posts){
-       insertAt = index + 1;
-     }
+      if(item.action_type === Discourse.UserAction.TYPES.topics || item.action_type === Discourse.UserAction.TYPES.posts){
+        insertAt = index + 1;
+      }
     });
     if(responses.count > 0) {
       result.insertAt(insertAt, responses);

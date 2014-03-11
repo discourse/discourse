@@ -7,12 +7,14 @@ test("sync", function () {
   state.states["t111"] = {last_read_post_number: null};
 
   state.updateSeen(111, 7);
-  var list = {topics: [{
-    highest_post_number: null,
-    id: 111,
-    unread: 10,
-    new_posts: 10
-    }]};
+  var list = {
+    topics: [{
+      highest_post_number: null,
+      id: 111,
+      unread: 10,
+      new_posts: 10
+    }]
+  };
 
   state.sync(list, "new");
 

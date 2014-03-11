@@ -13,10 +13,12 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   templateName: 'topic',
   topicBinding: 'controller.model',
   userFiltersBinding: 'controller.userFilters',
-  classNameBindings: ['controller.multiSelect:multi-select',
-                      'topic.archetype',
-                      'topic.category.read_restricted:read_restricted',
-                      'topic.deleted:deleted-topic'],
+  classNameBindings: [
+    'controller.multiSelect:multi-select',
+    'topic.archetype',
+    'topic.category.read_restricted:read_restricted',
+    'topic.deleted:deleted-topic'
+  ],
   menuVisible: true,
   SHORT_POST: 1200,
 

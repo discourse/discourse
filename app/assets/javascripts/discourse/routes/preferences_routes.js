@@ -23,7 +23,8 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
       var avatarSelector = this.modelFor('user').getProperties(
         'username', 'email',
         'has_uploaded_avatar', 'use_uploaded_avatar',
-        'gravatar_template', 'uploaded_avatar_template');
+        'gravatar_template', 'uploaded_avatar_template'
+      );
       this.controllerFor('avatarSelector').setProperties(avatarSelector);
     },
 

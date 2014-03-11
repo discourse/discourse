@@ -29,9 +29,9 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
       if (postfix === '_pm' && pair[1] === 'regular') { return; }
 
       contents.push([
-          Discourse.Topic.NotificationLevel[pair[0]],
-          'topic.notifications.' + pair[1] + postfix
-        ]);
+        Discourse.Topic.NotificationLevel[pair[0]],
+        'topic.notifications.' + pair[1] + postfix
+      ]);
     });
 
     return contents;

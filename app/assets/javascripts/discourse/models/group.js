@@ -7,12 +7,12 @@
   @module Discourse
 **/
 var ALIAS_LEVELS = {
-    nobody: 0,
-    only_admins: 1,
-    mods_and_admins: 2,
-    members_mods_and_admins: 3,
-    everyone: 99
-  },
+  nobody: 0,
+  only_admins: 1,
+  mods_and_admins: 2,
+  members_mods_and_admins: 3,
+  everyone: 99
+},
   aliasLevelOptions = [
     { name: I18n.t("groups.alias_levels.nobody"), value: ALIAS_LEVELS.nobody},
     { name: I18n.t("groups.alias_levels.mods_and_admins"), value: ALIAS_LEVELS.mods_and_admins},

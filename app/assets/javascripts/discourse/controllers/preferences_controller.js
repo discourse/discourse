@@ -40,26 +40,32 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     });
   }.property(),
 
-  digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
-                      { name: I18n.t('user.email_digests.weekly'), value: 7 },
-                      { name: I18n.t('user.email_digests.bi_weekly'), value: 14 }],
+  digestFrequencies: [
+    { name: I18n.t('user.email_digests.daily'), value: 1 },
+    { name: I18n.t('user.email_digests.weekly'), value: 7 },
+    { name: I18n.t('user.email_digests.bi_weekly'), value: 14 }
+  ],
 
-  autoTrackDurations: [{ name: I18n.t('user.auto_track_options.never'), value: -1 },
-                       { name: I18n.t('user.auto_track_options.always'), value: 0 },
-                       { name: I18n.t('user.auto_track_options.after_n_seconds', { count: 30 }), value: 30000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 1 }), value: 60000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 2 }), value: 120000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 3 }), value: 180000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 4 }), value: 240000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 5 }), value: 300000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 10 }), value: 600000 }],
+  autoTrackDurations: [
+    { name: I18n.t('user.auto_track_options.never'), value: -1 },
+    { name: I18n.t('user.auto_track_options.always'), value: 0 },
+    { name: I18n.t('user.auto_track_options.after_n_seconds', { count: 30 }), value: 30000 },
+    { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 1 }), value: 60000 },
+    { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 2 }), value: 120000 },
+    { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 3 }), value: 180000 },
+    { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 4 }), value: 240000 },
+    { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 5 }), value: 300000 },
+    { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 10 }), value: 600000 }
+  ],
 
-  considerNewTopicOptions: [{ name: I18n.t('user.new_topic_duration.not_viewed'), value: -1 },
-                            { name: I18n.t('user.new_topic_duration.after_n_days', { count: 1 }), value: 60 * 24 },
-                            { name: I18n.t('user.new_topic_duration.after_n_days', { count: 2 }), value: 60 * 48 },
-                            { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 1 }), value: 7 * 60 * 24 },
-                            { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 2 }), value: 2 * 7 * 60 * 24 },
-                            { name: I18n.t('user.new_topic_duration.last_here'), value: -2 }],
+  considerNewTopicOptions: [
+    { name: I18n.t('user.new_topic_duration.not_viewed'), value: -1 },
+    { name: I18n.t('user.new_topic_duration.after_n_days', { count: 1 }), value: 60 * 24 },
+    { name: I18n.t('user.new_topic_duration.after_n_days', { count: 2 }), value: 60 * 48 },
+    { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 1 }), value: 7 * 60 * 24 },
+    { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 2 }), value: 2 * 7 * 60 * 24 },
+    { name: I18n.t('user.new_topic_duration.last_here'), value: -2 }
+  ],
 
   saveButtonText: function() {
     return this.get('saving') ? I18n.t('saving') : I18n.t('save');
@@ -113,27 +119,29 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
       var self = this,
           message = I18n.t('user.delete_account_confirm'),
           model = this.get('model'),
-          buttons = [{
-        "label": I18n.t("cancel"),
-        "class": "cancel-inline",
-        "link":  true,
-        "callback": function() {
-          self.set('deleting', false);
-        }
-      }, {
-        "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("user.delete_account"),
-        "class": "btn btn-danger",
-        "callback": function() {
-          model.delete().then(function() {
-            bootbox.alert(I18n.t('user.deleted_yourself'), function() {
-              window.location.pathname = Discourse.getURL('/');
-            });
-          }, function() {
-            bootbox.alert(I18n.t('user.delete_yourself_not_allowed'));
-            self.set('deleting', false);
-          });
-        }
-      }];
+          buttons = [
+            {
+              "label": I18n.t("cancel"),
+              "class": "cancel-inline",
+              "link":  true,
+              "callback": function() {
+                self.set('deleting', false);
+              }
+            }, {
+              "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("user.delete_account"),
+              "class": "btn btn-danger",
+              "callback": function() {
+                model.delete().then(function() {
+                  bootbox.alert(I18n.t('user.deleted_yourself'), function() {
+                    window.location.pathname = Discourse.getURL('/');
+                  });
+                }, function() {
+                  bootbox.alert(I18n.t('user.delete_yourself_not_allowed'));
+                  self.set('deleting', false);
+                });
+              }
+            }
+          ];
       bootbox.dialog(message, buttons, {"classes": "delete-account"});
     }
   }

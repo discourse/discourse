@@ -34,9 +34,9 @@ Discourse.UserSelector = Discourse.TextField.extend({
         } else {
           var excludes = excludedUsernames();
           return v.usernames.filter(function(item){
-                // include only, those not found in the exclude list
-                return excludes.indexOf(item) === -1;
-              });
+            // include only, those not found in the exclude list
+            return excludes.indexOf(item) === -1;
+          });
         }
       },
 
@@ -73,31 +73,33 @@ Handlebars.registerHelper("showMax", function(context, block) {
 Discourse.UserSelector.reopenClass({
   // I really want to move this into a template file, but I need a handlebars template here, not an ember one
   templateFunction: function() {
-      this.compiled = this.compiled || Handlebars.compile(
-        "<div class='autocomplete'>" +
-          "<ul>" +
-          "{{#each options.users}}" +
-            "<li>" +
-                "<a href='#'>{{avatar this imageSize=\"tiny\"}} " +
-                "<span class='username'>{{this.username}}</span> " +
-                "<span class='name'>{{this.name}}</span></a>" +
-            "</li>" +
-          "{{/each}}" +
-          "{{#if options.groups}}" +
-            "{{#if options.users}}<hr>{{/if}}"+
-              "{{#each options.groups}}" +
-                "<li>" +
-                  "<a href=''><i class='icon-group'></i>" +
-                    "<span class='username'>{{this.name}}</span> " +
-                    "<span class='name'>{{showMax this.usernames max=3}}</span>" +
-                  "</a>" +
-                "</li>" +
-              "{{/each}}" +
-            "{{/if}}" +
-          "</ul>" +
-        "</div>");
-      return this.compiled;
-    }
+    this.compiled = this.compiled || Handlebars.compile(
+      "<div class='autocomplete'>" +
+        "<ul>" +
+        "{{#each options.users}}" +
+          "<li>" +
+              "<a href='#'>{{avatar this imageSize=\"tiny\"}} " +
+              "<span class='username'>{{this.username}}</span> " +
+              "<span class='name'>{{this.name}}</span></a>" +
+          "</li>" +
+        "{{/each}}" +
+        "{{#if options.groups}}" +
+          "{{#if options.users}}<hr>{{/if}}"+
+            "{{#each options.groups}}" +
+              "<li>" +
+                "<a href=''><i class='icon-group'></i>" +
+                  "<span class='username'>{{this.name}}</span> " +
+                  "<span class='name'>{{showMax this.usernames max=3}}</span>" +
+                "</a>" +
+              "</li>" +
+            "{{/each}}" +
+          "{{/if}}" +
+        "</ul>" +
+      "</div>"
+    );
+
+    return this.compiled;
+  }
 });
 
 Discourse.View.registerHelper('userSelector', Discourse.UserSelector);

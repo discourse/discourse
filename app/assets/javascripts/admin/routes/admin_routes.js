@@ -49,9 +49,9 @@ Discourse.Route.buildRoutes(function() {
       this.resource('adminUser', { path: '/:username' }, function() {
         this.route('leaderRequirements', { path: '/leader_requirements' });
       });
-      this.resource('adminUsersList', { path: '/list' }, function() {
-        _.each(['active', 'new', 'pending', 'admins', 'moderators', 'blocked', 'suspended',
-                'newuser', 'basic', 'regular', 'leaders', 'elders'], function(x) {
+      this.resource('adminUsersList', { path: '/list' }, function() { _.each(
+        ['active', 'new', 'pending', 'admins', 'moderators', 'blocked', 'suspended',
+        'newuser', 'basic', 'regular', 'leaders', 'elders'], function(x) {
           this.route(x, { path: '/' + x });
         }, this);
       });

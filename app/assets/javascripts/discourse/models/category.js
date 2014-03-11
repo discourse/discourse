@@ -14,17 +14,18 @@ Discourse.Category = Discourse.Model.extend({
 
     this.set("permissions", Em.A(_.map(this.group_permissions, function(elem){
       return {
-                group_name: elem.group_name,
-                permission: Discourse.PermissionType.create({id: elem.permission_type})
+        group_name: elem.group_name,
+        permission: Discourse.PermissionType.create({id: elem.permission_type})
       };
     })));
   },
 
   availablePermissions: function(){
-    return [  Discourse.PermissionType.create({id: Discourse.PermissionType.FULL}),
-              Discourse.PermissionType.create({id: Discourse.PermissionType.CREATE_POST}),
-              Discourse.PermissionType.create({id: Discourse.PermissionType.READONLY})
-           ];
+    return [
+      Discourse.PermissionType.create({id: Discourse.PermissionType.FULL}),
+      Discourse.PermissionType.create({id: Discourse.PermissionType.CREATE_POST}),
+      Discourse.PermissionType.create({id: Discourse.PermissionType.READONLY})
+    ];
   }.property(),
 
   searchContext: function() {

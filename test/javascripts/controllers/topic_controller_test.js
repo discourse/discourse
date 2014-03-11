@@ -4,9 +4,11 @@ var buildTopic = function() {
   return Discourse.Topic.create({
     title: "Qunit Test Topic",
     participants: [
-      {id: 1234,
-       post_count: 4,
-       username: "eviltrout"}
+      {
+        id: 1234,
+        post_count: 4,
+        username: "eviltrout"
+      }
     ]
   });
 };
