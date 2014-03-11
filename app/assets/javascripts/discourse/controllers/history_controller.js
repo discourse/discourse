@@ -12,17 +12,11 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
   viewMode: "side_by_side",
 
   refresh: function(postId, postVersion) {
-    this.setProperties({
-      loading: true,
-      viewMode: Discourse.Mobile.mobileView ? "inline" : "side_by_side"
-    });
+    this.set("loading", true);
 
     var self = this;
     Discourse.Post.loadRevision(postId, postVersion).then(function (result) {
-      self.setProperties({
-        loading: false,
-        model: result
-      });
+      self.setProperties({ loading: false, model: result });
     });
   },
 
@@ -46,9 +40,9 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
     var curCategory = Discourse.Category.findById(changes.current_category_id);
 
     var raw = "";
-
-    prevCategory = Discourse.HTML.categoryLink(prevCategory);
-    curCategory = Discourse.HTML.categoryLink(curCategory);
+    var opts = { allowUncategorized: true };
+    prevCategory = Discourse.HTML.categoryLink(prevCategory, opts);
+    curCategory = Discourse.HTML.categoryLink(curCategory, opts);
 
     if(viewMode === "side_by_side_markdown" || viewMode === "side_by_side") {
       raw = "<div class='span8'>" + prevCategory +  "</div> <div class='span8 offset1'>" + curCategory +  "</div>";
@@ -64,7 +58,7 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
 
     return raw;
 
-  }.property("inline", "side_by_side", "side_by_side_markdown", "viewMode"),
+  }.property("viewMode", "category_changes"),
 
   title_diff: function() {
     var viewMode = this.get("viewMode");
@@ -72,11 +66,11 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
       viewMode = "side_by_side";
     }
     return this.get("title_changes." + viewMode);
-  }.property("inline", "side_by_side", "side_by_side_markdown", "viewMode"),
+  }.property("viewMode", "title_changes"),
 
   body_diff: function() {
     return this.get("body_changes." + this.get("viewMode"));
-  }.property("inline", "side_by_side", "side_by_side_markdown", "viewMode"),
+  }.property("viewMode", "body_changes"),
 
   actions: {
     loadFirstVersion: function() { this.refresh(this.get("post_id"), 2); },
