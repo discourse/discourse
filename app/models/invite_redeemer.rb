@@ -12,8 +12,8 @@ InviteRedeemer = Struct.new(:invite) do
   def self.create_user_from_invite(invite)
     username = UserNameSuggester.suggest(invite.email)
 
-    DiscourseHub.nickname_operation do
-      match, available, suggestion = DiscourseHub.nickname_match?(username, invite.email)
+    DiscourseHub.username_operation do
+      match, available, suggestion = DiscourseHub.username_match?(username, invite.email)
       username = suggestion unless match || available
     end
 
@@ -28,7 +28,7 @@ InviteRedeemer = Struct.new(:invite) do
     end
     user.save!
 
-    DiscourseHub.nickname_operation { DiscourseHub.register_nickname(username, invite.email) }
+    DiscourseHub.username_operation { DiscourseHub.register_username(username, invite.email) }
 
     user
   end
