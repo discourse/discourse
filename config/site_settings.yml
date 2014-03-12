@@ -238,6 +238,7 @@ posting:
   default_code_lang:
     client: true
     default: "lang-auto"
+  warn_reviving_old_topic_age: 180
 
 email:
   email_time_window_mins: 10

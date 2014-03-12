@@ -170,6 +170,13 @@ en:
 
       Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
 
+    reviving_old_topic: |
+      ### Revive this topic?
+
+      The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
+
+      Are you sure you want to continue this old conversation?
+
   activerecord:
     attributes:
       category:
@@ -838,6 +845,7 @@ en:
     invites_shown: "Maximum invites shown on a user page"
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
+    warn_reviving_old_topic_age: "When someone starts replying to a topic older than this many days, a warning will be displayed to discourage the user from reviving an old discussion. Disable by setting to 0."
 
     embeddable_host: "Host that can embed the comments from this Discourse forum"
     feed_polling_enabled: "Whether to import a RSS/ATOM feed as posts"
