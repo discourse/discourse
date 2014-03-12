@@ -85,6 +85,7 @@ module Discourse
         :user_email_observer,
         :user_action_observer,
         :post_alert_observer,
+        :feed_observer,
         :search_observer
     ]
 
