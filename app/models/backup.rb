@@ -25,6 +25,25 @@ class Backup
 
   def remove
     File.delete(@path) if File.exists?(path)
+    after_remove_hook
+  end
+
+  def after_create_hook
+    upload_to_s3 if SiteSetting.enable_s3_backups?
+  end
+
+  def after_remove_hook
+    remove_from_s3 if SiteSetting.enable_s3_backups?
+  end
+
+  def upload_to_s3
+    return unless fog_directory
+    fog_directory.files.create(key: @filename, public: false, body: File.read(@path))
+  end
+
+  def remove_from_s3
+    return unless fog
+    fog.delete_object(SiteSetting.s3_backup_bucket, @filename)
   end
 
   def self.base_directory
@@ -48,5 +67,24 @@ class Backup
     return unless all_backups.size > SiteSetting.maximum_backups
     all_backups[SiteSetting.maximum_backups..-1].each {|b| b.remove}
   end
+
+  private
+
+    def fog
+      return @fog if @fog
+      return unless SiteSetting.s3_access_key_id.present? &&
+                    SiteSetting.s3_secret_access_key.present? &&
+                    SiteSetting.s3_backup_bucket.present?
+      require 'fog'
+      @fog = Fog::Storage.new(provider: 'AWS',
+                              aws_access_key_id: SiteSetting.s3_access_key_id,
+                              aws_secret_access_key: SiteSetting.s3_secret_access_key)
+    end
+
+    def fog_directory
+      return @fog_directory if @fog_directory
+      return unless fog
+      @fog_directory ||= fog.directories.get(SiteSetting.s3_backup_bucket)
+    end
 
 end

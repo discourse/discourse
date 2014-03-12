@@ -419,6 +419,11 @@ backups:
   backup_daily:
     client: false
     default: false
+  enable_s3_backups:
+    client: false
+    default: false
+  s3_backup_bucket:
+    client: false
 
 uncategorized:
 

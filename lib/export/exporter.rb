@@ -38,6 +38,8 @@ module Export
 
       create_archive
 
+      after_create_hook
+
       remove_old
 
       notify_user
@@ -234,6 +236,12 @@ module Export
 
       log "Gzipping archive..."
       `gzip --best #{tar_filename}`
+    end
+
+    def after_create_hook
+      log "Executing the after_create_hook for the backup"
+      backup = Backup.create_from_filename("#{File.basename(@archive_basename)}.tar.gz")
+      backup.after_create_hook
     end
 
     def notify_user
