@@ -288,8 +288,6 @@ describe ComposerMessagesFinder do
     end
 
     context "a reply" do
-      let(:finder) { described_class.new(user, composerAction: 'reply') }
-
       context "warn_reviving_old_topic_age is 180 days" do
         before do
           SiteSetting.stubs(:warn_reviving_old_topic_age).returns(180)
