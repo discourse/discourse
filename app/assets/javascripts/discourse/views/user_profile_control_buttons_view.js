@@ -7,7 +7,6 @@
  @module Discourse
  **/
 Discourse.UserProfileControlButtonsView = Discourse.ContainerView.extend({
-  //elementId: 'user-profile-control-buttons',
 
   init: function() {
     this._super();
@@ -18,6 +17,9 @@ Discourse.UserProfileControlButtonsView = Discourse.ContainerView.extend({
   createButtons: function() {
     var user = this.get('user');
     var currentUser = Discourse.User.current();
+
+    this.trigger('additionalPrimaryUserControlButtons', this);
+
     if (currentUser) {
       if((user.id != currentUser.id)){
         if (user.can_send_private_message_to_user){
@@ -36,10 +38,10 @@ Discourse.UserProfileControlButtonsView = Discourse.ContainerView.extend({
       if(user.can_edit){
         this.attachViewClass(Discourse.UserPreferencesButton);
       }
-
-//      this.trigger('additionalButtons', this);
     }
 
     this.attachViewClass(Discourse.UserInvitedButton);
+
+    this.trigger('additionalUserControlButtons', this);
   }
 });
