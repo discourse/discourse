@@ -122,9 +122,6 @@ module Export
     def dump_public_schema
       log "Dumping the public schema of the database..."
 
-      pg_dump_command = build_pg_dump_command
-      log "Running: #{pg_dump_command}"
-
       logs = Queue.new
       pg_dump_running = true
 
@@ -151,7 +148,7 @@ module Export
       raise "pg_dump failed" unless $?.success?
     end
 
-    def build_pg_dump_command
+    def pg_dump_command
       db_conf = BackupRestore.database_configuration
 
       password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
@@ -174,14 +171,10 @@ module Export
     def update_dump
       log "Updating dump for more awesomeness..."
 
-      sed_command = build_sed_command
-
-      log "Running: #{sed_command}"
-
       `#{sed_command}`
     end
 
-    def build_sed_command
+    def sed_command
       # in order to limit the downtime when restoring as much as possible
       # we force the restoration to happen in the "restore" schema
 
