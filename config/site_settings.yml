@@ -416,6 +416,9 @@ backups:
   maximum_backups:
     client: true
     default: 7
+  backup_daily:
+    client: false
+    default: false
 
 uncategorized:
 
