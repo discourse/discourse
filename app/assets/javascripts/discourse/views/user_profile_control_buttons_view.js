@@ -18,8 +18,6 @@ Discourse.UserProfileControlButtonsView = Discourse.ContainerView.extend({
     var user = this.get('user');
     var currentUser = Discourse.User.current();
 
-    this.trigger('additionalPrimaryUserControlButtons', this);
-
     if (currentUser) {
       if((user.id != currentUser.id)){
         if (user.can_send_private_message_to_user){
