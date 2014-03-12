@@ -125,7 +125,6 @@ Install RVM
     # As 'discourse'
     # Install RVM
      \curl -s -S -L https://get.rvm.io | bash -s stable
-
     # Refresh your profile
     . ~/.rvm/scripts/rvm
 

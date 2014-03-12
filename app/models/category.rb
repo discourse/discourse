@@ -63,6 +63,9 @@ class Category < ActiveRecord::Base
       scoped_to_permissions(guardian, [:create_post, :full])
     end
   }
+
+  scope :featured_users, ->{ includes(:featured_users) }
+
   delegate :post_template, to: 'self.class'
 
   # permission is just used by serialization
@@ -146,6 +149,14 @@ SQL
                          posts_year = (#{posts_year}),
                          posts_month = (#{posts_month}),
                          posts_week = (#{posts_week})")
+  end
+
+  def self.ordered_list(guardian)
+    self.secured(guardian)
+    .order('position asc')
+    .order('COALESCE(categories.posts_week, 0) DESC')
+    .order('COALESCE(categories.posts_month, 0) DESC')
+    .order('COALESCE(categories.posts_year, 0) DESC')
   end
 
   def visible_posts
@@ -331,8 +342,8 @@ SQL
   end
 
   def self.query_category(slug, parent_category_id)
-    self.where(slug: slug, parent_category_id: parent_category_id).includes(:featured_users).first ||
-    self.where(id: slug.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+    self.where(slug: slug, parent_category_id: parent_category_id).featured_users.first ||
+    self.where(id: slug.to_i, parent_category_id: parent_category_id).featured_users.first
   end
 
   def self.find_by_email(email)
