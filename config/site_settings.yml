@@ -75,6 +75,7 @@ basic:
     default: 50
   redirect_new_users_to_top_page_duration:
     default: 7
+  pubsubhubbub_hub: 'https://pubsubhubbub.superfeedr.com/'
 
 users:
   enable_sso:
