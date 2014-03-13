@@ -382,9 +382,12 @@ a.star {
 #suggested-topics {
   clear: left;
   padding: 20px 0 15px 0;
-
-  .topics table tbody tr {background: $primary_background_color;}
-
+  #topic-list > tbody > tr:nth-child(even) {
+    background-color: lighten($secondary_background_color, 77%);
+  }
+  #topic-list > tbody > tr:nth-child(odd) {
+    background-color: $primary_background_color;
+  }
   table {
     box-shadow: none;
     border-radius: 0;
