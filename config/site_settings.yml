@@ -239,6 +239,7 @@ posting:
   default_code_lang:
     client: true
     default: "lang-auto"
+  warn_reviving_old_topic_age: 180
 
 email:
   email_time_window_mins: 10
@@ -409,6 +410,22 @@ legal:
     client: true
     default: false
 
+backups:
+  allow_restore:
+    client: true
+    default: false
+  maximum_backups:
+    client: true
+    default: 7
+  backup_daily:
+    client: false
+    default: false
+  enable_s3_backups:
+    client: false
+    default: false
+  s3_backup_bucket:
+    client: false
+
 uncategorized:
 
   faq_url:
@@ -449,9 +466,6 @@ uncategorized:
   summary_likes_required: 1
   summary_percent_filter: 20
   send_welcome_message: true
-  allow_restore:
-    client: true
-    default: false
   educate_until_posts:
     client: true
     default: 2

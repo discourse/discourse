@@ -53,13 +53,13 @@ describe UserDestroyer do
 
       it 'should unregister the nickname as the discourse hub if hub integration is enabled' do
         SiteSetting.stubs(:call_discourse_hub?).returns(true)
-        DiscourseHub.expects(:unregister_nickname).with(@user.username)
+        DiscourseHub.expects(:unregister_username).with(@user.username)
         destroy
       end
 
       it 'should not try to unregister the nickname as the discourse hub if hub integration is disabled' do
         SiteSetting.stubs(:call_discourse_hub?).returns(false)
-        DiscourseHub.expects(:unregister_nickname).never
+        DiscourseHub.expects(:unregister_username).never
         destroy
       end
     end
@@ -108,7 +108,7 @@ describe UserDestroyer do
         end
 
         it 'should not unregister the user at the discourse hub' do
-          DiscourseHub.expects(:unregister_nickname).never
+          DiscourseHub.expects(:unregister_username).never
           destroy rescue nil
         end
       end
@@ -192,7 +192,7 @@ describe UserDestroyer do
         end
 
         it 'should not unregister the user at the discourse hub' do
-          DiscourseHub.expects(:unregister_nickname).never
+          DiscourseHub.expects(:unregister_username).never
           destroy rescue nil
         end
       end

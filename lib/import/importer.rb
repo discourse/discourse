@@ -167,9 +167,6 @@ module Import
     def restore_dump
       log "Restoring dump file... (can be quite long)"
 
-      psql_command = build_psql_command
-      log "Running: #{psql_command}"
-
       logs = Queue.new
       psql_running = true
       has_error = false
@@ -199,7 +196,7 @@ module Import
       raise "psql failed" if has_error
     end
 
-    def build_psql_command
+    def psql_command
       db_conf = BackupRestore.database_configuration
 
       password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?

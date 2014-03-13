@@ -31,7 +31,8 @@ class TopicViewSerializer < ApplicationSerializer
              :draft_sequence,
              :starred,
              :posted,
-             :pinned,
+             :pinned,    # Is topic pinned and viewer hasn't cleared the pin?
+             :pinned_at, # Ignores clear pin
              :details,
              :highest_post_number,
              :last_read_post_number,
@@ -144,6 +145,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def pinned
     PinnedCheck.new(object.topic, object.topic_user).pinned?
+  end
+
+  def pinned_at
+    object.topic.pinned_at
   end
 
   def actions_summary
