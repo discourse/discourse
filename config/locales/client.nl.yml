@@ -989,7 +989,7 @@ nl:
            previous: "Vorige revisie"
            next: "Volgende revisie"
            last: "Laatste revisie"
-           comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> / {{total}}"
+           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
          displays:
            inline:
              title: "Toon de het gerenderde bericht met wijzigingen als één geheel"

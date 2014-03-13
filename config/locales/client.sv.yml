@@ -955,7 +955,7 @@ sv:
           previous: "Tidigare revision"
           next: "Nästa revision"
           last: "Sista revisionen"
-          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> (av {{total}})"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> (av {{total}})"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
