@@ -11,7 +11,7 @@ describe PubSubHubbubHub do
   end
 
   describe '#ping' do
-    it 'should send a POST request to the settinsg\'s hub with the right params' do
+    it 'should send a POST request to the settings\'s hub with the right params' do
       urls = ['a', 'b', 'c']
       hub = 'h'
       mock_hub_site_setting = mock("pubsubhubbub_hub")
