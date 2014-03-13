@@ -8,6 +8,7 @@ describe Guardian do
   let(:moderator) { build(:moderator) }
   let(:admin) { build(:admin) }
   let(:leader) { build(:user, trust_level: 3) }
+  let(:elder)  { build(:user, trust_level: 4) }
   let(:another_admin) { build(:admin) }
   let(:coding_horror) { build(:coding_horror) }
 
@@ -259,7 +260,6 @@ describe Guardian do
     end
 
     describe 'a Post' do
-
       let(:another_admin) { Fabricate(:admin) }
       it 'correctly handles post visibility' do
         post = Fabricate(:post)
@@ -279,8 +279,43 @@ describe Guardian do
         Guardian.new(user).can_see?(post).should be_false
         Guardian.new(admin).can_see?(post).should be_true
       end
+    end
 
+    describe 'a PostRevision' do
+      let(:post_revision) { Fabricate(:post_revision) }
 
+      context 'edit_history_visible_to_public is true' do
+        before { SiteSetting.stubs(:edit_history_visible_to_public).returns(true) }
+
+        it 'is false for nil' do
+          Guardian.new.can_see?(nil).should be_false
+        end
+
+        it 'is true if not logged in' do
+          Guardian.new.can_see?(post_revision).should == true
+        end
+
+        it 'is true when logged in' do
+          Guardian.new(Fabricate(:user)).can_see?(post_revision).should == true
+        end
+      end
+
+      context 'edit_history_visible_to_public is false' do
+        before { SiteSetting.stubs(:edit_history_visible_to_public).returns(false) }
+
+        it 'is true for staff' do
+          Guardian.new(Fabricate(:admin)).can_see?(post_revision).should == true
+          Guardian.new(Fabricate(:moderator)).can_see?(post_revision).should == true
+        end
+
+        it 'is true for trust level 4' do
+          Guardian.new(Fabricate(:elder)).can_see?(post_revision).should == true
+        end
+
+        it 'is false for trust level lower than 4' do
+          Guardian.new(Fabricate(:leader)).can_see?(post_revision).should == false
+        end
+      end
     end
   end
 
@@ -549,6 +584,10 @@ describe Guardian do
 
       it 'returns true as an admin' do
         Guardian.new(admin).can_edit?(post).should be_true
+      end
+
+      it 'returns true as a trust level 4 user' do
+        Guardian.new(elder).can_edit?(post).should be_true
       end
 
       context 'post is older than post_edit_time_limit' do

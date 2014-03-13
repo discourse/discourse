@@ -55,7 +55,7 @@
           <div class='topic-meta-data-inside'>
             {{#if hasHistory}}
               <div class='post-info edits'>
-                {{#if canViewEditHistory}}
+                {{#if can_view_edit_history}}
                   <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{i18n post.last_edited_on}} {{rawDate updated_at}}">
                     {{editCount}}
                     <i class='fa fa-pencil'></i>

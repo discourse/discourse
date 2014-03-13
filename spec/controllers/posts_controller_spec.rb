@@ -431,7 +431,13 @@ describe PostsController do
 
       before { SiteSetting.stubs(:edit_history_visible_to_public).returns(false) }
 
-      it "ensures anonymous can not see the revisions" do
+      it "ensures anonymous cannot see the revisions" do
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_forbidden
+      end
+
+      it "ensures regular user cannot see the revisions" do
+        u = log_in(:user)
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
         response.should be_forbidden
       end
@@ -444,8 +450,15 @@ describe PostsController do
 
       it "ensures poster can see the revisions" do
         user = log_in(:active_user)
-        pr = Fabricate(:post_revision, user: user)
+        post = Fabricate(:post, user: user)
+        pr = Fabricate(:post_revision, user: user, post: post)
         xhr :get, :revisions, post_id: pr.post_id, revision: pr.number
+        response.should be_success
+      end
+
+      it "ensures trust level 4 can see the revisions" do
+        log_in(:elder)
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
         response.should be_success
       end
 
