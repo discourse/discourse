@@ -131,7 +131,7 @@ $nav-like-button-background-color-active: lighten($pink, 22%) !default;
 // --------------------------------------------------
 
 $topic-list-border-color: lighten($black, 50%) !default;
-$topic-list-th-color: $black !default;
+$topic-list-th-color: lighten($black, 35%) !default;
 $topic-list-th-border-color: lighten($black, 50%) !default;
 $topic-list-th-background-color: lighten($black, 76%) !default;
 $topic-list-td-color: lighten($black, 35%) !default;
@@ -155,7 +155,7 @@ $controls_active: darken($blue, 10%);
 // Basics
 // --------------------------------------------------
 
-$primary_border_color: lighten($black, 60%);
+$primary_border_color: lighten($black, 70%);
 $secondary_border_color: lighten($black, 76%);
 $tertiary_border_color: $white;
 $highlight_border_color: $yellow;
