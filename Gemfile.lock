@@ -234,7 +234,7 @@ GEM
       railties
     rack (1.5.2)
     rack-cors (0.2.9)
-    rack-mini-profiler (0.9.0)
+    rack-mini-profiler (0.9.1)
       rack (>= 1.1.3)
     rack-openid (1.3.1)
       rack (>= 1.1.0)
