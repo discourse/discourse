@@ -54,7 +54,7 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   left: 120px;
   z-index: 400;
   padding: 5px 12px;
-  border: 1px solid lighten($primary_border_color, 10%);
+  border: 1px solid $primary_border_color;
   font-size: 12px;
   margin-left: -8px;
   background: $primary_background_color;
@@ -243,7 +243,7 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  border: 1px solid lighten($primary_border_color, 10%);
+  border: 1px solid $primary_border_color;
 
   .buttons .btn {
     &:hover {border: 1px solid $primary_border_color !important;}
@@ -482,7 +482,7 @@ iframe {
 .topic-meta-data {
   margin-bottom: 10px;
   width: 92px;
-  border-top: 1px solid lighten($primary_border_color, 10%);
+  border-top: 1px solid $primary_border_color;
   padding-top: 30px;
 
   img {
@@ -754,7 +754,7 @@ blockquote { /* solo quotes */
 }
 
 .topic-body {
-  border-top: 1px solid lighten($primary_border_color, 10%);
+  border-top: 1px solid $primary_border_color;
   float: left;
   position: relative;
   padding: 10px 0 15px 0;

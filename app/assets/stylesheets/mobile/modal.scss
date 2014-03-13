@@ -14,10 +14,9 @@
     z-index: 2070;
   }
 
-  // Prevent background scrolling when a modal is open
-  overflow: hidden;
-  position: fixed;
 }
+
+.modal-open #main {overflow:hidden;}
 
 .modal-backdrop {
   position: fixed;

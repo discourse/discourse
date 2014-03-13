@@ -8,6 +8,9 @@
 #
 require_dependency 'email/renderer'
 require 'uri'
+require 'net/smtp'
+
+SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
 
 SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
 

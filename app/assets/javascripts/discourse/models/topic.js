@@ -134,12 +134,24 @@ Discourse.Topic = Discourse.Model.extend({
 
   toggleStatus: function(property) {
     this.toggleProperty(property);
-    if (property === 'closed' && this.get('closed')) {
+    this.saveStatus(property, this.get(property) ? true : false);
+  },
+
+  setStatus: function(property, value) {
+    this.set(property, value);
+    this.saveStatus(property, value);
+  },
+
+  saveStatus: function(property, value) {
+    if (property === 'closed' && value === true) {
       this.set('details.auto_close_at', null);
+    }
+    if (property === 'pinned') {
+      this.set('pinned_at', value ? moment() : null);
     }
     return Discourse.ajax(this.get('url') + "/status", {
       type: 'PUT',
-      data: {status: property, enabled: this.get(property) ? 'true' : 'false' }
+      data: {status: property, enabled: value ? 'true' : 'false' }
     });
   },
 

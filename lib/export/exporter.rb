@@ -38,6 +38,10 @@ module Export
 
       create_archive
 
+      after_create_hook
+
+      remove_old
+
       notify_user
     rescue SystemExit
       log "Backup process was cancelled!"
@@ -122,9 +126,6 @@ module Export
     def dump_public_schema
       log "Dumping the public schema of the database..."
 
-      pg_dump_command = build_pg_dump_command
-      log "Running: #{pg_dump_command}"
-
       logs = Queue.new
       pg_dump_running = true
 
@@ -151,7 +152,7 @@ module Export
       raise "pg_dump failed" unless $?.success?
     end
 
-    def build_pg_dump_command
+    def pg_dump_command
       db_conf = BackupRestore.database_configuration
 
       password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
@@ -174,14 +175,10 @@ module Export
     def update_dump
       log "Updating dump for more awesomeness..."
 
-      sed_command = build_sed_command
-
-      log "Running: #{sed_command}"
-
       `#{sed_command}`
     end
 
-    def build_sed_command
+    def sed_command
       # in order to limit the downtime when restoring as much as possible
       # we force the restoration to happen in the "restore" schema
 
@@ -241,10 +238,21 @@ module Export
       `gzip --best #{tar_filename}`
     end
 
+    def after_create_hook
+      log "Executing the after_create_hook for the backup"
+      backup = Backup.create_from_filename("#{File.basename(@archive_basename)}.tar.gz")
+      backup.after_create_hook
+    end
+
     def notify_user
       log "Notifying '#{@user.username}' of the success of the backup..."
       # NOTE: will only notify if @user != Discourse.site_contact_user
       SystemMessage.create(@user, :export_succeeded)
+    end
+
+    def remove_old
+      log "Removing old backups..."
+      Backup.remove_old
     end
 
     def clean_up

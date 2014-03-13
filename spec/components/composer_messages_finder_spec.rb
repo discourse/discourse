@@ -14,6 +14,7 @@ describe ComposerMessagesFinder do
       finder.expects(:check_avatar_notification).once
       finder.expects(:check_sequential_replies).once
       finder.expects(:check_dominating_topic).once
+      finder.expects(:check_reviving_old_topic).once
       finder.find
     end
 
@@ -275,6 +276,50 @@ describe ComposerMessagesFinder do
       end
     end
 
+  end
+
+  context '.check_reviving_old_topic' do
+    let(:user)  { Fabricate(:user) }
+    let(:topic) { Fabricate(:topic) }
+
+    it "does not give a message without a topic id" do
+      described_class.new(user, composerAction: 'createTopic').check_reviving_old_topic.should be_blank
+      described_class.new(user, composerAction: 'reply').check_reviving_old_topic.should be_blank
+    end
+
+    context "a reply" do
+      context "warn_reviving_old_topic_age is 180 days" do
+        before do
+          SiteSetting.stubs(:warn_reviving_old_topic_age).returns(180)
+        end
+
+        it "does not notify if last post is recent" do
+          topic = Fabricate(:topic, last_posted_at: 1.hour.ago)
+          described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic.should be_blank
+        end
+
+        it "notifies if last post is old" do
+          topic = Fabricate(:topic, last_posted_at: 181.days.ago)
+          described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic.should_not be_blank
+        end
+      end
+
+      context "warn_reviving_old_topic_age is 0" do
+        before do
+          SiteSetting.stubs(:warn_reviving_old_topic_age).returns(0)
+        end
+
+        it "does not notify if last post is new" do
+          topic = Fabricate(:topic, last_posted_at: 1.hour.ago)
+          described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic.should be_blank
+        end
+
+        it "does not notify if last post is old" do
+          topic = Fabricate(:topic, last_posted_at: 365.days.ago)
+          described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic.should be_blank
+        end
+      end
+    end
   end
 
 end

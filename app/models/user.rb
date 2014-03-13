@@ -166,7 +166,7 @@ class User < ActiveRecord::Base
     self.username = new_username
 
     if current_username.downcase != new_username.downcase && valid?
-      DiscourseHub.nickname_operation { DiscourseHub.change_nickname(current_username, new_username) }
+      DiscourseHub.username_operation { DiscourseHub.change_username(current_username, new_username) }
     end
 
     save

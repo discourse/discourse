@@ -17,6 +17,13 @@
   #display-modes {
     text-align: right;
   }
+  #revision-loading {
+    float: left;
+    margin: 5px 0 0 10px;
+    .fa {
+      margin-right: 7px;
+    }
+  }
   #revision-details {
     background-color: lighten($secondary_background_color, 76%);
     padding: 5px;

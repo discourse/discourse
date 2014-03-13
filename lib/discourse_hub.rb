@@ -3,9 +3,9 @@ require_dependency 'version'
 
 module DiscourseHub
 
-  class NicknameUnavailable < RuntimeError
-    def initialize(nickname)
-      @nickname = nickname
+  class UsernameUnavailable < RuntimeError
+    def initialize(username)
+      @username = username
     end
 
     def response_message
@@ -14,7 +14,7 @@ module DiscourseHub
         message: I18n.t(
           "login.errors",
           errors:I18n.t(
-            "login.not_available", suggestion: UserNameSuggester.suggest(@nickname)
+            "login.not_available", suggestion: UserNameSuggester.suggest(@username)
           )
         )
       }
@@ -22,41 +22,41 @@ module DiscourseHub
 
   end
 
-  def self.nickname_available?(nickname)
-    json = get('/users/nickname_available', {nickname: nickname})
+  def self.username_available?(username)
+    json = get('/users/username_available', {username: username})
     [json['available'], json['suggestion']]
   end
 
-  def self.nickname_match?(nickname, email)
-    json = get('/users/nickname_match', {nickname: nickname, email: email})
+  def self.username_match?(username, email)
+    json = get('/users/username_match', {username: username, email: email})
     [json['match'], json['available'] || false, json['suggestion']]
   end
 
-  def self.nickname_for_email(email)
-    json = get('/users/nickname_match', {email: email})
+  def self.username_for_email(email)
+    json = get('/users/username_match', {email: email})
     json['suggestion']
   end
 
-  def self.register_nickname(nickname, email)
-    json = post('/users', {nickname: nickname, email: email})
+  def self.register_username(username, email)
+    json = post('/users', {username: username, email: email})
     if json.has_key?('success')
       true
     else
-      raise NicknameUnavailable.new(nickname)  # TODO: report ALL the errors
+      raise UsernameUnavailable.new(username)  # TODO: report ALL the errors
     end
   end
 
-  def self.unregister_nickname(nickname)
-    json = delete('/memberships/' + nickname)
+  def self.unregister_username(username)
+    json = delete('/memberships/' + username)
     json.has_key?('success')
   end
 
-  def self.change_nickname(current_nickname, new_nickname)
-    json = put("/users/#{current_nickname}/nickname", {nickname: new_nickname})
+  def self.change_username(current_username, new_username)
+    json = put("/users/#{current_username}/username", {username: new_username})
     if json.has_key?('success')
       true
     else
-      raise NicknameUnavailable.new(new_nickname)  # TODO: report ALL the errors
+      raise UsernameUnavailable.new(new_username)  # TODO: report ALL the errors
     end
   end
 
@@ -118,11 +118,11 @@ module DiscourseHub
     [:json, 'application/vnd.discoursehub.v1']
   end
 
-  def self.nickname_operation
+  def self.username_operation
     if SiteSetting.call_discourse_hub?
       begin
         yield
-      rescue DiscourseHub::NicknameUnavailable
+      rescue DiscourseHub::UsernameUnavailable
         false
       rescue => e
         Rails.logger.error e.message + "\n" + e.backtrace.join("\n")

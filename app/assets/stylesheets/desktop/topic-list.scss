@@ -11,7 +11,7 @@
 .list-controls {
   .nav {
     float: left;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }
 
   .btn {
@@ -58,16 +58,16 @@
 // --------------------------------------------------
 
 #topic-list {
-  border: 1px solid $primary_border_color;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 0 10px;
+  border: 1px solid $primary_border_color;
   a.title {color: $primary_text_color;}
   a.title:visited:not(.badge-notification) {color: lighten($primary_text_color, 35%);}
 
   > tbody > tr {
-    &:nth-child(even) {
+    &:nth-child(odd) {
       background-color: lighten($secondary_background_color, 77%);
     }
     &.archived a {
@@ -101,10 +101,9 @@
   }
   th {
     color: $topic-list-th-color;
-    font-weight: bold;
-    font-size: 13px;
-    background: lighten($secondary_background_color, 70%);
-
+    font-weight: normal;
+    font-size: 14px;
+    button i.fa {color: $topic-list-th-color;}
 
   }
   td {
@@ -206,7 +205,7 @@
   .sortable {
     cursor: pointer;
     &:hover {
-      background-color: lighten($secondary_background_color, 60%);
+      background-color: lighten($secondary_background_color, 76%);
     }
     @include unselectable;
   }

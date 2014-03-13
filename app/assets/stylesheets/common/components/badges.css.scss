@@ -11,7 +11,6 @@
 %badge {
   display: inline-block;
   font-weight: bold;
-  line-height: 1;
   white-space: nowrap;
   @include border-radius-all(10px);
 }
@@ -54,10 +53,10 @@ h1 a.badge-category div {vertical-align: top;}
 .badge-notification {
   @extend %badge;
   padding: 4px;
-  padding-top: 3px;
   color: $tertiary_text_color;
   font-size: 11px;
-  min-width: 10px;
+  line-height: 1;
+  min-width: 11px;
   text-align: center;
   background-color: $badge-notification-background-color;
   &[href] {
@@ -67,12 +66,12 @@ h1 a.badge-category div {vertical-align: top;}
   // New posts
 
   &.new-posts, &.unread-posts {
-    background-color: $emphasis_text_color;
+    background-color: lighten($emphasis_text_color, 20%);
     color: $tertiary_text_color;
     font-weight: normal;
   }
 
-  
+
 
   // Click count
 

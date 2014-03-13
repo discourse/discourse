@@ -925,7 +925,7 @@ es:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "categorías a ser filtradas..."
+    type_to_filter: "filtrar opciones..."
 
     admin:
       title: 'Administrador de Discourse'
@@ -945,31 +945,31 @@ es:
         version_check_pending: "Parece que has actualizado recientemente. Fantástico!"
         installed_version: "Instalado"
         latest_version: "Última versión"
-        problems_found: "Algunos problemas han sido encontrados en tu instalación de Discourse"
-        last_checked: "Ultima vez revisado"
+        problems_found: "Hemos encontrado algunos problemas con tu instalación de Discourse"
+        last_checked: "Ultima comprobación"
         refresh_problems: "Refrescar"
         no_problems: "Ningun problema ha sido encontrado."
         moderators: "Moderadores:"
         admins: "Administradores:"
-        blocked: "Bloqueado:"
-        suspended: "Suspendido:"
+        blocked: "Bloqueados:"
+        suspended: "Suspendidos:"
         private_messages_short: "PMs"
         private_messages_title: "Mensajes Privados"
 
         reports:
           today: "Hoy"
           yesterday: "Ayer"
-          last_7_days: "Últimos 7 Días"
-          last_30_days: "Últimos 30 Días"
+          last_7_days: "Últimos 7 días"
+          last_30_days: "Últimos 30 días"
           all_time: "Todo el tiempo"
-          7_days_ago: "Hace 7 Días"
-          30_days_ago: "Hace 30 Días"
+          7_days_ago: "Hace 7 días"
+          30_days_ago: "Hace 30 días"
           all: "Todo"
           view_table: "Ver como tabla"
-          view_chart: "Ver como grafico de tablas"
+          view_chart: "Ver como gráfico de tablas"
 
       commits:
-        latest_changes: "Ultimos cambios: por favor actualiza más a menudo!"
+        latest_changes: "Ultimos cambios: por favor actualiza a menudo!"
         by: "por"
 
       flags:
@@ -1061,7 +1061,7 @@ es:
         edit: "Editar grupos"
         selector_placeholder: "añadir usuarios"
         name_placeholder: "Nombre del grupo, sin espacios, al igual que la regla del nombre usuario"
-        about: "Edita tu membresía de grupo y nombres aquí"
+        about: "Edita aquí las membresias y grupos"
         delete: "Borrar"
         delete_confirm: "Borrar este grupo?"
         delete_failed: "No se pudo borrar el grupo. Si este es un grupo automático, no se puede destruir."
@@ -1078,14 +1078,14 @@ es:
         confirm_regen: "Estás seguro que quieres reemplazar esa Clave de API con una nueva?"
         confirm_revoke: "Estás seguro que quieres revocar esa clave?"
         info_html: "Tu clave de API te permitirá crear y actualizar temas usando llamadas a JSON."
-        all_users: "Todos Los Usuarios"
+        all_users: "Todos los usuarios"
         note_html: "Esta llave es <strong>secreta</strong>. Mantenla en un lugar seguro. Con ella cualquier usuario puede crear contenido con otra identidad."
 
       backups:
         title: "Copia de seguridad"
         menu:
           backups: "Copia de seguridad"
-          logs: "Registros"
+          logs: "Logs"
         none: "Ninguna copia disponible."
         read_only:
           enable:
@@ -1096,10 +1096,15 @@ es:
             title: "Deshabilitar el modo de 'solo-lectura'"
             text: "Deshabilitar el modo de 'solo-lectura'"
         logs:
-          none: "Ningún registro hasta ahora..."
+          none: "No hay información de momento..."
         columns:
           filename: "Nombre del archivo"
           size: "Tamaño"
+        upload:
+          text: "Subir"
+          uploading: "SUBIENDO"
+          success: "El archivo '{{filename}}' se ha subido correctamente."
+          error: "Ha ocurrido un error al subir el archivo '{{filename}}': {{message}}"
         operations:
           is_running: "Actualmente una operación se está procesando..."
           failed: "La {{operation}} falló. Por favor revisa los logs"
@@ -1108,7 +1113,7 @@ es:
             title: "Cancelar la operación actual"
             confirm: "¿Estás seguro que quieres cancelar la operación actual?"
           backup:
-            text: "Respaldo"
+            text: "Crear copia"
             title: "Crear una copia de seguridad"
             confirm: "¿Estás seguro que quieres empezar una nueva copia de seguridad?"
           download:
