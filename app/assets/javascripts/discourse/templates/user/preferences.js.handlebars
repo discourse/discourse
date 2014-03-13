@@ -25,7 +25,11 @@
       <div class="control-group">
         <label class="control-label">{{i18n user.name.title}}</label>
         <div class="controls">
-          {{textField value=newNameInput classNames="input-xxlarge"}}
+          {{#if can_edit_name}}
+            {{textField value=newNameInput classNames="input-xxlarge"}}
+          {{else}}
+            <span class='static'>{{name}}</span>
+          {{/if}}
         </div>
         <div class='instructions'>
           {{i18n user.name.instructions}}
@@ -73,7 +77,7 @@
         {{/if}}
       </div>
     </div>
-    
+
     {{#if Discourse.SiteSettings.allow_profile_backgrounds}}
     <div class="control-group">
       <label class="control-label">{{i18n user.change_profile_background.title}}</label>
