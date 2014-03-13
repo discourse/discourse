@@ -22,11 +22,13 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
 
   createdAtDate: function() { return moment(this.get("created_at")).format("LLLL"); }.property("created_at"),
 
-  previousVersionNumber: function() { return this.get("version") - 1; }.property("version"),
-  currentVersionNumber: Em.computed.alias("version"),
+  previousVersion: function() { return this.get("version") - 1; }.property("version"),
 
-  isFirstVersion: Em.computed.equal("version", 2),
-  isLastVersion: Discourse.computed.propertyEqual("version", "revisions_count"),
+  displayGoToFirst: Em.computed.gt("version", 3),
+  displayGoToPrevious: Em.computed.gt("version", 2),
+  displayRevisions: Em.computed.gt("revisions_count", 2),
+  displayGoToNext: function() { return this.get("version") < this.get("revisions_count"); }.property("version", "revisions_count"),
+  displayGoToLast: function() { return this.get("version") < this.get("revisions_count") - 1; }.property("version", "revisions_count"),
 
   displayingInline: Em.computed.equal("viewMode", "inline"),
   displayingSideBySide: Em.computed.equal("viewMode", "side_by_side"),
