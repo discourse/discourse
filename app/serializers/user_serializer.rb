@@ -20,7 +20,8 @@ class UserSerializer < BasicUserSerializer
              :admin,
              :title,
              :suspend_reason,
-             :suspended_till
+             :suspended_till,
+             :meta
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
