@@ -480,6 +480,7 @@ uncategorized:
     default: 5000
   minimum_topics_similar: 50
   sequential_replies_threshold: 2
+  dominating_topic_posts_required: 25
   dominating_topic_minimum_percent: 20
   suppress_uncategorized_badge:
     client: true
