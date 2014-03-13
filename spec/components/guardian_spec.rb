@@ -1487,5 +1487,116 @@ describe Guardian do
       end
     end
   end
+
+  describe 'can_edit_name?' do
+    it 'is false without a logged in user' do
+      Guardian.new(nil).can_edit_name?(build(:user, created_at: 1.minute.ago)).should be_false
+    end
+
+    it "is false for regular users to edit another user's name" do
+      Guardian.new(build(:user)).can_edit_name?(build(:user, created_at: 1.minute.ago)).should be_false
+    end
+
+    context 'for a new user' do
+      let(:target_user) { build(:user, created_at: 1.minute.ago) }
+
+      it 'is true for the user to change their own name' do
+        Guardian.new(target_user).can_edit_name?(target_user).should be_true
+      end
+
+      it 'is true for moderators' do
+        Guardian.new(moderator).can_edit_name?(user).should be_true
+      end
+
+      it 'is true for admins' do
+        Guardian.new(admin).can_edit_name?(user).should be_true
+      end
+    end
+
+    context 'when name is disabled in preferences' do
+      before do
+        SiteSetting.stubs(:enable_names).returns(false)
+      end
+
+      it 'is false for the user to change their own name' do
+        Guardian.new(user).can_edit_name?(user).should be_false
+      end
+
+      it 'is false for moderators' do
+        Guardian.new(moderator).can_edit_name?(user).should be_false
+      end
+
+      it 'is false for admins' do
+        Guardian.new(admin).can_edit_name?(user).should be_false
+      end
+    end
+
+    context 'when name is enabled in preferences' do
+      before do
+        SiteSetting.stubs(:enable_names).returns(true)
+      end
+
+      context 'when SSO is disabled' do
+        before do
+          SiteSetting.stubs(:enable_sso).returns(false)
+          SiteSetting.stubs(:sso_overrides_name).returns(false)
+        end
+
+        it 'is true for admins' do
+          Guardian.new(admin).can_edit_name?(admin).should be_true
+        end
+
+        it 'is true for moderators' do
+          Guardian.new(moderator).can_edit_name?(moderator).should be_true
+        end
+
+        it 'is true for users' do
+          Guardian.new(user).can_edit_name?(user).should be_true
+        end
+      end
+
+      context 'when SSO is enabled' do
+        before do
+          SiteSetting.stubs(:enable_sso).returns(true)
+        end
+
+        context 'when SSO name override is active' do
+          before do
+            SiteSetting.stubs(:sso_overrides_name).returns(true)
+          end
+
+          it 'is false for admins' do
+            Guardian.new(admin).can_edit_name?(admin).should be_false
+          end
+
+          it 'is false for moderators' do
+            Guardian.new(moderator).can_edit_name?(moderator).should be_false
+          end
+
+          it 'is false for users' do
+            Guardian.new(user).can_edit_name?(user).should be_false
+          end
+        end
+
+        context 'when SSO name override is not active' do
+          before do
+            SiteSetting.stubs(:sso_overrides_name).returns(false)
+          end
+
+          it 'is true for admins' do
+            Guardian.new(admin).can_edit_name?(admin).should be_true
+          end
+
+          it 'is true for moderators' do
+            Guardian.new(moderator).can_edit_name?(moderator).should be_true
+          end
+
+          it 'is true for users' do
+            Guardian.new(user).can_edit_name?(user).should be_true
+          end
+        end
+      end
+    end
+  end
 end
 
