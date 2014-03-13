@@ -1015,28 +1015,38 @@ en:
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
   new_version_mailer:
-    subject_template: "[%{site_name}] Updates Are Available"
+    subject_template: "[%{site_name}] update available"
     text_body_template: |
-      A new version of Discourse is available.
+      A new version of Discourse is available:
 
       Your version: %{installed_version}
+      New version: **%{new_version}**
 
-      **New version: %{new_version}**
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      Please upgrade as soon as possible to get the latest fixes and new features. Visit http://meta.discourse.org for discussion and news about Discourse.
+      - Upgrade by visiting `\admin\docker`, refreshing the page a few times, and pressing the "upgrade" button.
+
+      - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
 
   new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] Updates Are Available"
+    subject_template: "[%{site_name}] update available"
     text_body_template: |
-      A new version of Discourse is available. Please upgrade as soon as possible to get the latest fixes and new features.
+      A new version of Discourse is available:
 
       Your version: %{installed_version}
+      New version: **%{new_version}**
 
-      **New version: %{new_version}**
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Upgrade by visiting `\admin\docker`, refreshing the page a few times, and pressing the "upgrade" button.
+
+      - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
+
+      ### Release notes
 
       %{notes}
 
-      Visit http://meta.discourse.org for discussion and news about Discourse.
+
 
   system_messages:
     post_hidden:
