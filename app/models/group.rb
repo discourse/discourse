@@ -34,7 +34,8 @@ class Group < ActiveRecord::Base
   def posts_for(guardian, before_post_id=nil)
     user_ids = group_users.map {|gu| gu.user_id}
     result = Post.where(user_id: user_ids).includes(:user, :topic).references(:posts, :topics)
-    result = result.where('topics.archetype <> ?', Archetype.private_message)
+                 .where('topics.archetype <> ?', Archetype.private_message)
+                 .where(post_type: Post.types[:regular])
 
     unless guardian.is_staff?
       allowed_ids = guardian.allowed_category_ids
