@@ -19,13 +19,13 @@ Discourse.UserProfileControlButtonsView = Discourse.ContainerView.extend({
     var currentUser = Discourse.User.current();
 
     if (currentUser) {
-      if((user.id != currentUser.id)){
+      if((user.id !== currentUser.id)){
         if (user.can_send_private_message_to_user){
           this.attachViewClass(Discourse.PrivateMessageButton);
         }
       }
 
-      if (user.id == currentUser.id){
+      if (user.id === currentUser.id){
         this.attachViewClass(Discourse.LogoutButton);
       }
 
