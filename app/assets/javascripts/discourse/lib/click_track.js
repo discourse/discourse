@@ -17,21 +17,7 @@ Discourse.ClickTrack = {
     var $link = $(e.currentTarget);
     if ($link.hasClass('lightbox')) return true;
 
-    e.preventDefault();
-
-    // We don't track clicks on quote back buttons
-    if ($link.hasClass('back') || $link.hasClass('quote-other-topic')) return true;
-
-    // Remove the href, put it as a data attribute
-    if (!$link.data('href')) {
-      $link.addClass('no-href');
-      $link.data('href', $link.attr('href'));
-      $link.attr('href', null);
-      // Don't route to this URL
-      $link.data('auto-route', true);
-    }
-
-    var href = $link.data('href'),
+    var href = $link.attr('href') || $link.data('href'),
         $article = $link.closest('article'),
         postId = $article.data('post-id'),
         topicId = $('#topic').data('topic-id'),
@@ -83,8 +69,21 @@ Discourse.ClickTrack = {
         },
         dataType: 'html'
       });
-      window.open(href, '_blank');
-      return false;
+      return true;
+    }
+
+    e.preventDefault();
+
+    // We don't track clicks on quote back buttons
+    if ($link.hasClass('back') || $link.hasClass('quote-other-topic')) return true;
+
+    // Remove the href, put it as a data attribute
+    if (!$link.data('href')) {
+      $link.addClass('no-href');
+      $link.data('href', $link.attr('href'));
+      $link.attr('href', null);
+      // Don't route to this URL
+      $link.data('auto-route', true);
     }
 
     // If we're on the same site, use the router and track via AJAX
