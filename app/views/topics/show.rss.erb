@@ -4,7 +4,7 @@
     <% topic_url = Discourse.base_url + @topic_view.relative_url %>
     <% lang = SiteSetting.find_by_name('default_locale').try(:value) %>
     <% site_email = SiteSetting.find_by_name('contact_email').try(:value) %>
-    <% hub = SiteSetting.pubsubhubbub_hub || 'https://pubsubhubbub.superfeedr.com/' %>
+    <% hub = SiteSetting.pubsubhubbub_hub %>
     <title><%= @topic_view.title %></title>
     <link><%= topic_url %></link>
     <description><%= @topic_view.posts.first.raw %></description>
@@ -12,7 +12,9 @@
     <lastBuildDate><%= @topic_view.topic.created_at.rfc2822 %></lastBuildDate>
     <category><%= @topic_view.topic.category.name %></category>
     <atom:link href="<%= topic_url %>.rss" rel="self" type="application/rss+xml" />
+    <% if hub %>
     <atom:link href="<%= hub %>" rel="hub" />
+    <% end %>
     <% @topic_view.recent_posts.each do |post| %>
       <% next unless post.user %>
       <item>
