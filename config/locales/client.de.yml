@@ -64,6 +64,7 @@ de:
         x_days:
           one: "1 Tag"
           other: "%{count} Tage"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "vor einer Minute"
@@ -176,6 +177,11 @@ de:
       sent_by_you: "Gesendet von <a href='{{userUrl}}'>dir</a>"
 
     groups:
+      title:
+        one: "Gruppe"
+        other: "Gruppen"
+      members: "Mitglieder"
+      posts: "Beiträge"
       alias_levels:
         title: "Wer kann diese Gruppe als Alias verwenden?"
         nobody: "Niemand"
@@ -242,12 +248,21 @@ de:
       deleted: "(gelöscht)"
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} suspendiert."
       suspended_reason: "Grund: "
+      mailing_list_mode: "Erhalte eine Email jedes mal wenn ein Beitrag im Forum gepostet wurde (außer du hast das Thema oder die Kategorie ignoriert)"
       watched_categories: "Beobachten"
       watched_categories_instructions: "Das selbe wie 'verfolgen', zusätzlich wirst du über alle neuen Beiträge und Themen informiert."
       tracked_categories: "Verfolgen"
       tracked_categories_instructions: "Du verfolgst alle bereits bestehenden und neuen Themen. Hierdurch kann dir die Anzahl der ungelesenen Beiträge angezeigt werden"
       muted_categories: "Ignorieren"
       muted_categories_instructions: "Du wirst über nichts mehr in diesem Thema informiert, und er wird nicht auf deinem Ungelesen-Tab angezeigt werden."
+      delete_account: "Loesche mein Nutzerkonto"
+      delete_account_confirm: "Bist du sicher, dass du dein Nutzerkonto permanent löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden!"
+      deleted_yourself: "Dein Nutzerkonto wurde erfolgreich gelöscht."
+      delete_yourself_not_allowed: "Du kannst im Moment dein Nutzerkonto nicht löschen. Kontaktiere einen Administrator dein Nutzerkonto für dich zu löschen."
+      unread_message_count:
+        one: "Nachrichten (1)"
+        other: "Nachrichten ({{count}})"
+        zero: "Nachrichten"
 
       messages:
         all: "Alle"
@@ -286,6 +301,9 @@ de:
         upload_title: "Lade dein Bild hoch"
         image_is_not_a_square: "Achtung: wir haben dein Bild zugeschnitten, da es nicht quadratisch war."
 
+      change_profile_background:
+        title: "Ändere deinen Profilhintergrund"
+
       email:
         title: "Mail"
         instructions: "Deine E-Mailadresse wird niemals öffentlich angezeigt."
@@ -312,6 +330,11 @@ de:
         checking: "Prüfe Verfügbarkeit des Benutzernamens..."
         enter_email: 'Benutzername gefunden. Gib die zugehörige E-Mailadresse ein.'
         prefilled: "Die E-Mail gleicht dem eingetragenen Nutzernamen."
+
+      locale:
+        title: "Oberflächensprache"
+        instructions: "Die Sprache der Forumsoberfläche. Diese Änderung tritt nach dem Neuladen der Seite in Kraft."
+        default: "(Standard)"
 
       password_confirmation:
         title: "Passwort wiederholen"
@@ -403,6 +426,10 @@ de:
     loading: "Lädt..."
     close: "Schließen"
     assets_changed_confirm: "Discourse wurde upgedated, möchten Sie neu laden, um die neueste Version zu bekommen?"
+    read_only_mode:
+      enabled: "Ein Administrator hat den Nur-Lesen Modus aktiviert. Du kannst weiterhin die Webseite durchstöbern, aber Interaktionen werden nicht ordnungsgemäß funktionieren."
+      login_disabled: "Login ist deaktiviert während sich die Seite im Nur-Lesen Modus befindet."
+
     learn_more: "Erfahre mehr..."
 
     year: 'Jahr(e)'
@@ -511,6 +538,7 @@ de:
       cancel: "Abbrechen"
       create_topic: "Thema erstellen"
       create_pm: "Private Nachricht erstellen"
+      title: "Oder drücke Strg+Eingabe"
 
       users_placeholder: "Nutzer hinzufügen"
       title_placeholder: "Gib hier den Titel ein. In einem Satz: Worum geht es?"
@@ -784,6 +812,11 @@ de:
         title: 'Teilen'
         help: 'Teile einen Link zu diesem Thema'
 
+      flag_topic:
+        title: 'Melden'
+        help: 'Melde dieses Thema vertraulich zur Kenntnisnahme oder versende eine private Benachrichtigung darüber.'
+        success_message: 'Du hast dieses Thema erfolgreich gemeldet.'
+
       inviting: "Einladung verschicken..."
 
       invite_private:
@@ -1053,6 +1086,8 @@ de:
       security: "Sicherheit"
       auto_close_label: "Thema automatisch schließen nach:"
       auto_close_units: "Stunden"
+      email_in: "Benutzerdefinierte Email Adresse:"
+      email_in_allow_strangers: "Akzeptiere Emails von nicht registrierten Nutzern (aka Fremde)"
       edit_permissions: "Berechtigung bearbeiten"
       add_permission: "Berechtigung hinzufügen"
       this_year: "dieses Jahr"
@@ -1076,10 +1111,17 @@ de:
         more: "{{n}} weitere..."
         left: "{{n}} übrig"
 
+    flagging_topic:
+      title: "Warum meldest du dieses Thema vertraulich?"
+      action: "Melde Thema"
+      notify_action: "Benachrichtige"
+
     topic_map:
       title: "Zusammenfassung des Themas"
       links_shown: "Zeige alle {{totalLinks}} Links..."
-      clicks: "Klicks"
+      clicks:
+        one: "1 Klick"
+        other: "%{count} Klicks"
 
     topic_statuses:
       locked:
@@ -1133,6 +1175,11 @@ de:
           other: "Ungelesen ({{count}})"
         help: "Verfolgte Themen mit ungelesenen Beiträgen"
       new:
+        lower_title_with_count:
+          zero: ""
+          one: "1 neu"
+          other: "{{count}} neu"
+        lower_title: "neu"
         title:
           zero: "Neu"
           one: "Neu (1)"
@@ -1232,18 +1279,22 @@ de:
         defer: "Später"
         defer_title: "Ignoriere diese Meldung vorerst"
         delete_post: "Beitrag löschen"
-        delete_post_title: Beitrag löschen (löscht Thema, falls es der erste Beitrag ist)"
+        delete_post_title: "Beitrag löschen (löscht Thema, falls es der erste Beitrag ist)"
         disagree_unhide: "Ablehnen (macht Beitrag wieder sichtbar)"
         disagree_unhide_title: "Verwerfe alle Meldungen über diesen Beitrag (blendet verstecke Beiträge ein)"
         disagree: "Ablehnen"
         disagree_title: "Meldung ablehnen, alle Meldungen über diesen Beitrag annullieren"
         delete_spammer_title: "Lösche den Benutzer und alle seine Beiträge und Themen."
+        clear_topic_flags: "Erledigt"
+        clear_topic_flags_title: "Das Thema wurde untersucht und Probleme beseitigt. Klicke auf 'Erledigt' um die Markierungen zu entfernen."
 
         flagged_by: "Gemeldet von"
         system: "System"
         error: "Etwas ist schief gelaufen"
         view_message: "Nachricht zeigen"
         no_results: "Es gibt keine Meldungen."
+        topic_flagged: "Dieses <strong>Thema</strong> wurde gemeldet."
+        visit_topic: "Besuche das Thema um den Vorfall zu untersuchen und einzugreifen."
 
         summary:
           action_type_3:
@@ -1263,6 +1314,8 @@ de:
             other: "Spam x{{count}}"
 
       groups:
+        primary: "Hauptgruppe"
+        no_primary: "(keine Hauptgruppe)"
         title: "Gruppen"
         edit: "Gruppen bearbeiten"
         selector_placeholder: "Benutzer hinzufügen"
@@ -1287,6 +1340,58 @@ de:
         all_users: "Alle Benutzer"
         note_html: "Behalte deinen <strong>Schlüssel</strong> geheim, jeder Benutzer mit diesem Schlüssel kann beliebige Beiträge unter jedem Benutzer im Forum erstellen."
 
+      backups:
+        title: "Backups"
+        menu:
+          backups: "Backups"
+          logs: "Logs"
+        none: "Kein Backup verfügbar."
+        read_only:
+          enable:
+            title: "Aktiviere den Nur-Lesen Modus"
+            text: "Aktiviere Nur-Lesen Modus"
+            confirm: "Bist du sicher, dass du den Nur-Lesen Modus aktivieren möchtest?"
+          disable:
+            title: "Deaktiviere den Nur-Lesen Modus"
+            text: "Deaktiviere Nur-Lesen Modus"
+        logs:
+          none: "Noch keine Logs verfügbar..."
+        columns:
+          filename: "Dateiname"
+          size: "Größe"
+        upload:
+          text: "Hochladen"
+          uploading: "Lädt hoch"
+          success: "'{{filename}}' wurde erfolgreich hochgeladen."
+          error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
+        operations:
+          is_running: "Ein Vorgang läuft gerade..."
+          failed: "Der Vorgang '{{operation}}' ist fehlgeschlagen. Bitte überprüfe die Logs."
+          cancel:
+            text: "Abbrechen"
+            title: "Bricht den aktuellen Vorgang ab"
+            confirm: "Bist du sicher, dass du den aktuellen Vorgang abbrechen möchtest?"
+          backup:
+            text: "Backup"
+            title: "Erstellt ein Backup"
+            confirm: "Bist du sicher, dass du ein neues Backup starten möchtest?"
+          download:
+            text: "Download"
+            title: "Download des Backups"
+          destroy:
+            text: "Löschen"
+            title: "Löscht das Backup"
+            confirm: "Bist du sicher, dass du das Backup löschen möchtest?"
+          restore:
+            is_disabled: "Wiederherstellung ist in den Einstellungen deaktiviert."
+            text: "Wiederherstellen"
+            title: "Wiederherstellung des Backups"
+            confirm: "Bist du sicher, dass du dieses Backup wiederherstellen möchtest?"
+          rollback:
+            text: "Zurücksetzen"
+            title: "Setzt die Datenbank auf den letzten funktionierenden Zustand zurück"
+            confirm: "Bist du sicher, dass du die Datenbank auf den letzten funktionierenden Zustand zurücksetzen möchtest?"
+
       customize:
         title: "Personalisieren"
         long_title: "Seite personalisieren"
@@ -1308,8 +1413,11 @@ de:
       email:
         title: "Mailprotokoll"
         settings: "Einstellungen"
-        logs: "Protokolle"
+        all: "Alle"
+        sent: "Gesendet"
+        skipped: "Übersprungen"
         sent_at: "Gesendet am"
+        time: "Zeit"
         user: "Benutzer"
         email_type: "Mailtyp"
         to_address: "Empfänger"
@@ -1325,6 +1433,16 @@ de:
         text: "text"
         last_seen_user: "Letzter Benutzer:"
         reply_key: "Antwort-Schlüssel"
+        skipped_reason: "Grund des Überspringens"
+        logs:
+          none: "Keine Protokolle gefunden."
+          filters:
+            title: "Filter"
+            user_placeholder: "Benutzername"
+            address_placeholder: "em@il.com"
+            type_placeholder: "authentifizieren, registrieren..."
+            reply_key_placeholder: ""
+            skipped_reason_placeholder: "Grund"
 
       logs:
         title: "Logs"
@@ -1542,6 +1660,7 @@ de:
           rate_limits: 'Abruflimits'
           developer: 'Entwickler'
           embedding: "Einbetten"
+          legal: "Rechtliches"
           uncategorized: 'Unkategorisiert'
 
     lightbox:
