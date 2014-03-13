@@ -15,8 +15,7 @@ describe PubSubHubbubHub do
       urls = ['a', 'b', 'c']
       hub = 'h'
       mock_hub_site_setting = mock("pubsubhubbub_hub")
-      SiteSetting.expects(:find_by_name).with('pubsubhubbub_hub').returns(mock_hub_site_setting)
-      mock_hub_site_setting.expects(:try).with(:value).returns(hub)
+      SiteSetting.expects(:pubsubhubbub_hub).returns(hub)
       RestClient.expects(:post).with(hub, {:"hub.mode" => 'publish', :"hub.topic" => urls})
       PubSubHubbubHub.ping(urls)
     end
