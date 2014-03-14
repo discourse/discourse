@@ -697,7 +697,7 @@ sv:
 
         To log in again, either:
 
-        1. Use Facebook, Google, Twitter, or many other supported credentials -- but that credential must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
+        1. Log in however you like -- but that login must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
 
         2. Create a unique password for %{site_name} on [your user profile][prefs], then log in with that.
 
