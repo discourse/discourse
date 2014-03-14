@@ -624,7 +624,7 @@ id:
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
-        Thanks for joining %{site_name}, and welcome to our discussion forum!
+        Thanks for joining %{site_name}, and welcome!
 
         %{new_user_tips}
 
@@ -635,7 +635,7 @@ id:
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
-        Thanks for accepting your invitation to %{site_name}, and welcome to our discussion forum!
+        Thanks for accepting your invitation to %{site_name}, and welcome!
 
         We've automatically generated a username for you: **%{username}**, but you can change that any time by visiting [your user profile][prefs].
 

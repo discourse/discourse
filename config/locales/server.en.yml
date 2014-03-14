@@ -1111,7 +1111,7 @@ en:
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
-        Thanks for joining %{site_name}, and welcome to our discussion forum!
+        Thanks for joining %{site_name}, and welcome!
 
         %{new_user_tips}
 
@@ -1122,7 +1122,7 @@ en:
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
-        Thanks for accepting your invitation to %{site_name}, and welcome to our discussion forum!
+        Thanks for accepting your invitation to %{site_name}, and welcome!
 
         We've automatically generated a username for you: **%{username}**, but you can change that any time by visiting [your user profile][prefs].
 
@@ -1341,7 +1341,7 @@ en:
       text_body_template: |
         Welcome to %{site_name}!
 
-        You're approved to join %{site_name}, welcome to our discussion forum!
+        You're approved to join %{site_name}, welcome!
 
         Click the following link to confirm and activate your new account:
         %{base_url}/users/activate-account/%{email_token}
