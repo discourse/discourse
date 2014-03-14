@@ -89,9 +89,7 @@ One of the default topics you get is [Welcome to Discourse](/t/welcome-to-discou
 - What can they find here?
 - Why should they visit here?
 
-Edit this topic and write a **brief introduction for your forum** that explains what the heck is going on here – so new users who find your forum will have some idea what they're getting into, and what the purpose of your forum is.
-
-Don't write a novel because nobody will read it. What is the "elevator pitch" for your forum? How would you describe this forum to a stranger on an elevator when you have about 1 minute to talk?
+Edit this topic and write a **brief introduction for your forum** that explains what the heck is going on here. Don't write a novel because nobody will read it. What is the "elevator pitch" for your forum? How would you describe this forum to a stranger on an elevator when you have about 1 minute to talk?
 
 Also, you should know that **pinning topics works a little differently in Discourse** compared to other forums.
 
@@ -155,6 +153,6 @@ Here is some example HTML that would go into the "Header" section within "Custom
 
 ### Need more Help?
 
-This guide is a work in progress and we will be continually improving it with your feedback.
+This guide is a [work in progress](https://github.com/discourse/discourse/blob/master/docs/ADMIN-QUICK-START-GUIDE.md) and we will be continually improving it with your feedback.
 
 For more assistance on configuring and running your Discourse forum, see [the support category](http://meta.discourse.org/category/support) or [the hosting category](http://meta.discourse.org/category/hosting) on [meta.discourse.org](http://meta.discourse.org).
