@@ -45,7 +45,7 @@ You can also edit categories to only be visible to certain groups of users.
 
 ### Enable Logins
 
-By default, people can log in here with local accounts, Google, or Yahoo. Want people to log in here with &hellip;
+By default, people can log in here with local accounts, Google, or Yahoo. Some common forms of login require a bit of additional configuration: &hellip;
 
 - **Twitter** &rarr; [walkthrough with screenshots](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395)
 - **Facebook** &rarr; [walkthrough with screenshots](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)
