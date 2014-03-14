@@ -63,13 +63,11 @@ test("does not track clicks on quote buttons", function() {
   ok(track(generateClickEventOn('.quote-other-topic')));
 });
 
-test("removes the href and put it as a data attribute", function() {
+test("disables routing", function() {
   track(generateClickEventOn('a'));
 
   var $link = fixture('a').first();
-  ok($link.hasClass('no-href'));
-  equal($link.data('href'), 'http://www.google.com');
-  blank($link.attr('href'));
+  equal($link.attr('href'), 'http://www.google.com');
   ok($link.data('auto-route'));
   ok(Discourse.URL.redirectTo.calledOnce);
 });

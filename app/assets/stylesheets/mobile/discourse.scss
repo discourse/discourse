@@ -22,7 +22,7 @@ body {
 
 
 
-a.no-href {
+a:link, a:visited {
   cursor: pointer;
 }
 
