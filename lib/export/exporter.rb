@@ -19,22 +19,25 @@ module Export
 
       listen_for_shutdown_signal
 
+      ensure_directory_exists(@tmp_directory)
+      ensure_directory_exists(@archive_directory)
+
+      write_metadata
+
+      ### READ-ONLY / START ###
       enable_readonly_mode
 
       pause_sidekiq
       wait_for_sidekiq
 
-      ensure_directory_exists(@tmp_directory)
-
-      write_metadata
-
       dump_public_schema
 
-      update_dump
+      disable_readonly_mode
+      ### READ-ONLY / END ###
 
       log "Finalizing backup..."
 
-      ensure_directory_exists(@archive_directory)
+      update_dump
 
       create_archive
 
@@ -268,7 +271,7 @@ module Export
       log "Cleaning stuff up..."
       remove_tmp_directory
       unpause_sidekiq
-      disable_readonly_mode
+      disable_readonly_mode if Discourse.readonly_mode?
       mark_export_as_not_running
       log "Finished!"
     end
