@@ -49,7 +49,7 @@ By default, people can log in here with local accounts, Google, or Yahoo. Want p
 
 - **Twitter** &rarr; [walkthrough with screenshots](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395)
 - **Facebook** &rarr; [walkthrough with screenshots](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)
-- **GitHub** &rarr; [walkthrough with screenshots](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)
+- **GitHub** &rarr; [walkthrough with screenshots](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745)
 
 ### Creating New Categories
 
@@ -96,7 +96,7 @@ Don't write a novel because nobody will read it. What is the "elevator pitch" fo
 Also, you should know that **pinning topics works a little differently in Discourse** compared to other forums.
 
 - Users can hide pins on topics once they have read them, so they don't stay pinned forever for everyone.
-- Pinned topics with a category will only "stick" to the top of their category
+- Pinned topics with a category will only "stick" to the top of their category.
 - Pinned topics with no category are pinned to the top of all topic lists.
 
 ### Set your Terms of Service and Content Licensing
@@ -147,7 +147,7 @@ Here is some example HTML that would go into the "Header" section within "Custom
 
 ### Maintenance
 
-- If your forum is expected to grow at all, be sure you have at least 2 GB of memory available to your Discourse server. You might be able to squeak by with less, but we don't recommend it, unless you are an expert. 
+- If your forum is expected to grow at all, be sure you have at least 2 GB of memory available to your Discourse instance. You might be able to squeak by with less, but we don't recommend it, unless you are an expert. 
 
 - Hopefully you are running [in our Docker container install](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md); it's the only one we can officially support. That will guarantee you have the correct version of Ruby and all recommended optimizations from the Discourse team.
 
