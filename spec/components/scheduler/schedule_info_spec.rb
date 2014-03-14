@@ -83,6 +83,7 @@ describe Scheduler::ScheduleInfo do
     end
 
     it "will have a due date at the appropriate time if blank" do
+      pending
       @info.next_run.should be_nil
       @info.schedule!
       @info.valid?.should be_true
