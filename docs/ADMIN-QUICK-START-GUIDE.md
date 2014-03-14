@@ -17,7 +17,7 @@ You can access the Discourse admin dashboard at any time via the menu:
 
 Go to the [Required tab](/admin/site_settings/category/required) of the Settings and change all the items there to taste.
 
-By default you get the same standard generic "penciled in" Discourse logo everyone gets. That's not cool. You know what's cool? Your own logos and favicons. Look for the [**Assets for the forum design**](/t/assets-for-the-forum-design) topic. Upload your logos and favicon to that topic. (Note that you may need to edit the `authorized_extensions` setting to upload certain filetypes.)
+By default you get the same standard generic "penciled in" Discourse logo everyone gets. That's not cool. You know what's cool? Your own logos and favicons. Look for the [**Assets for the forum design**](/t/assets-for-the-forum-design/5) topic. Upload your logos and favicon to that topic. (Note that you may need to edit the `authorized_extensions` setting to upload certain filetypes.)
 
 Right click on the images in the post to get their URLs:
 
@@ -27,9 +27,9 @@ Right click on the images in the post to get their URLs:
 
 The admin dashboard will warn you about any essential settings you're missing. It's also a useful place to see:
 
-- If problems are detected with your site settings or deployment.
-- If a new version of Discourse has been released.
-- General stats and metrics about the health of your forum.
+- If problems are detected with your site settings or deployment
+- If a new version of Discourse has been released
+- General stats and metrics about the health of your forum
 
 ### Is this private or public?
 
@@ -41,52 +41,23 @@ If you want a more private forum, be sure to check out these settings:
 - `login_required`
 - `invite_only`
 
-### Enable Twitter Logins
+You can also edit categories to only be visible to certain groups of users.
 
-1. From the Admin console, visit [User Settings][us], by clicking **Settings**, then **Users**.
+### Enable Logins
 
-2. Scroll down to the two text fields named:
+By default, people can log in here with local accounts, Google, or Yahoo. Want people to log in here with &hellip;
 
-     `twitter_consumer_key`  
-     `twitter_consumer_secret`
-
-3. Enter in your respective **API key** and **API secret** that is issued to you via dev.twitter.com. If you are unsure of what your key/secret is, or you have yet to obtain one, visit the Twitter Dev API FAQ on [how to obtain these keys](https://dev.twitter.com/docs/faq#7447).
-
-4. In the Twitter settings, the callback url must use the path `/auth/twitter/callback` at your domain. e.g., `http://discuss.example.com/auth/twitter/callback`
-
-### Enable Facebook Logins
-
-1. From the Admin console, visit [User Settings][us], by clicking **Settings**, then **User**.
-
-2. Scroll down to the two text fields named:
-
-     `facebook_app_id`  
-     `facebook_app_secret`
-
-3. Enter in your respective **App Id** and **App Secret** that is issued to you via [developers.facebook.com](http://developers.facebook.com). If you are unsure of what your id/secret is, or you have yet to obtain one, visit the [Facebook Developers :: Access Tokens and Types](https://developers.facebook.com/docs/concepts/login/access-tokens-and-types/) page for more information.
-
-4. In the Facebook App settings, you must add a platform of type website, and make sure Client OAuth Login is enabled, with the Valid OAuth Redirect URIs set to use the path `/auth/facebook/callback` at your site domain. e.g., `http://discuss.example.com/auth/facebook/callback`.
-
-### Enable GitHub Logins
-
-1. From the Admin console, visit User Settings, by clicking **Settings**, then **User**.
-
-2. Scroll down to the two text fields named:
-
-     `github_client_id`   
-     `github_client_secret`
-
-3. Enter in your respective **id** and **secret** that is issued to you via https://github.com/settings/applications/new. If you are unsure of what your id/secret is, or you have yet to obtain one, visit the [GitHub Developers :: Applications](https://github.com/settings/applications/) page for more information.
-
-4. Be sure to set the Callback URL to use the path `/auth/github/callback` at your site domain. e.g., `http://discuss.example.com/auth/github/callback`.
+- **Twitter** &rarr; [walkthrough with screenshots](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395)
+- **Facebook** &rarr; [walkthrough with screenshots](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)
+- **GitHub** &rarr; [walkthrough with screenshots](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)
 
 ### Creating New Categories
 
 You'll have three categories by default
 
-1. [meta](/category/meta) -- general discussion about the site itself. [It's important!](https://meta.discourse.org/t/what-is-meta/5249)
-2. [lounge](/category/lounge) -- a perk for users at trust level 3 and higher
-3. [staff](/category/staff) -- for staff (admins and moderators), visible only to staff
+1. [meta](/category/meta) – general discussion about the site itself. [It's important!](https://meta.discourse.org/t/what-is-meta/5249)
+2. [lounge](/category/lounge) – a perk for users at trust level 3 and higher
+3. [staff](/category/staff) – for staff (admins and moderators), visible only to staff
 
 Don't create too many categories initially, as it may overwhelm your audience. You can always add more later, and easily recategorize topics as they emerge.
 
@@ -96,9 +67,9 @@ Every category has an initial "About the {foo} category" topic created alongside
 
 ### Configure File Uploads
 
-Image uploads should work fine out of the box stored locally. You can also can configure it so that images users upload go to Amazon S3 by [following this howto.](http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229).
+Image uploads should work fine out of the box stored locally. You can also can configure it so that images users upload go to Amazon S3 by [following this howto](http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229).
 
-Attaching other file types is supported too, read [the announcement](http://meta.discourse.org/t/new-attachments/8609) for details.
+Attaching file types other than images to posts is also supported, read [the announcement](http://meta.discourse.org/t/new-attachments/8609) for details.
 
 ### Test Email
 
@@ -112,15 +83,13 @@ If you want to enable replying to topics via email, see the email settings secti
 
 ### Edit the Welcome topic
 
-One of the default topics you get is [Welcome to Discourse](/t/welcome-to-discourse). This topic has no category, and it is pinned, so it will appear on the homepage for all new users. 
-
-The welcome topic is hugely important -- it tells visitors 
+One of the default topics you get is [Welcome to Discourse](/t/welcome-to-discourse). This topic will appear on the homepage for all new users. Your welcome topic is hugely important – it tells visitors
 
 - Who is this forum for? 
 - What can they find here?
 - Why should they visit here?
 
-Edit this topic and write a **brief introduction for your forum** that explains what the heck is going on here -- so new users who find your forum will have some idea what they're getting into, and what the purpose of your forum is.
+Edit this topic and write a **brief introduction for your forum** that explains what the heck is going on here – so new users who find your forum will have some idea what they're getting into, and what the purpose of your forum is.
 
 Don't write a novel because nobody will read it. What is the "elevator pitch" for your forum? How would you describe this forum to a stranger on an elevator when you have about 1 minute to talk?
 
@@ -188,6 +157,4 @@ Here is some example HTML that would go into the "Header" section within "Custom
 
 This guide is a work in progress and we will be continually improving it with your feedback.
 
-For more assistance on configuring and running your Discourse forum, see [the support category](http://meta.discourse.org/category/support) or [the hosting category](http://meta.discourse.org/category/hosting) on meta.discourse.org.
-
-[us]: /admin/site_settings/category/users
+For more assistance on configuring and running your Discourse forum, see [the support category](http://meta.discourse.org/category/support) or [the hosting category](http://meta.discourse.org/category/hosting) on [meta.discourse.org](http://meta.discourse.org).
