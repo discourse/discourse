@@ -19,6 +19,13 @@ module UserGuardian
     can_edit?(user)
   end
 
+  def can_edit_name?(user)
+    return false if not(SiteSetting.enable_names?)
+    return false if (SiteSetting.sso_overrides_name? && SiteSetting.enable_sso?)
+    return true if is_staff?
+    can_edit?(user)
+  end
+
   def can_block_user?(user)
     user && is_staff? && not(user.staff?)
   end
