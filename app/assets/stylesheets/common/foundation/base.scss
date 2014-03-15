@@ -53,6 +53,11 @@ dd {
   padding: 0;
 }
 
+
+.cooked ul, .cooked ol, .cooked dd {
+  clear: both;  
+}
+
 li {
   > ul,
   > ol {
