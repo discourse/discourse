@@ -16,6 +16,7 @@
     <%= render :partial => "common/discourse_stylesheet" %>
     <%= discourse_csrf_tags %>
     <%= raw SiteContent.content_for(:head) %>
+    <%= yield :head %>
   </head>
   <body>
     <%- unless customization_disabled? %>
