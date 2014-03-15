@@ -37,6 +37,8 @@ class PostJobsEnqueuer
         :notify_mailing_list_subscribers,
         post_id: @post.id
     )
+
+    Jobs.enqueue(:pubsubhubbub_ping, post_id: @topic.id)
   end
 
   def after_topic_create
@@ -48,6 +50,8 @@ class PostJobsEnqueuer
     @topic.posts_count = 1
 
     TopicTrackingState.publish_new(@topic)
+
+    Jobs.enqueue(:pubsubhubbub_ping, topic_id: @topic.id)
   end
 
   def skip_after_create?
