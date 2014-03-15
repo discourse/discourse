@@ -36,7 +36,6 @@ describe Admin::BackupsController do
       context "json format" do
 
         it "returns a list of all the backups" do
-          File.stubs(:size).returns(42)
           Backup.expects(:all).returns([Backup.new("backup1"), Backup.new("backup2")])
 
           xhr :get, :index, format: :json
@@ -104,9 +103,7 @@ describe Admin::BackupsController do
       it "uses send_file to transmit the backup" do
         controller.stubs(:render) # we need this since we're stubing send_file
 
-        File.stubs(:size).returns(42)
         backup = Backup.new("backup42")
-
         Backup.expects(:[]).with(backup_filename).returns(backup)
         subject.expects(:send_file).with(backup.path)
 
@@ -125,12 +122,20 @@ describe Admin::BackupsController do
 
     describe ".destroy" do
 
-      it "removes the backup" do
-        Backup.expects(:remove).with(backup_filename)
+      let(:b) { Backup.new(backup_filename) }
 
+      it "removes the backup if found" do
+        Backup.expects(:[]).with(backup_filename).returns(b)
+        b.expects(:remove)
         xhr :delete, :destroy, id: backup_filename
-
         response.should be_success
+      end
+
+      it "doesn't remove the backup if not found" do
+        Backup.expects(:[]).with(backup_filename).returns(nil)
+        b.expects(:remove).never
+        xhr :delete, :destroy, id: backup_filename
+        response.should_not be_success
       end
 
     end

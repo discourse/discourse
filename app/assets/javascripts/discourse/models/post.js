@@ -64,32 +64,6 @@ Discourse.Post = Discourse.Model.extend({
   hasHistory: Em.computed.gt('version', 1),
   postElementId: Discourse.computed.fmt('post_number', 'post_%@'),
 
-  // The class for the read icon of the post. It starts with read-icon then adds 'seen' or
-  // 'last-read' if the post has been seen or is the highest post number seen so far respectively.
-  bookmarkClass: function() {
-    var result = 'read-icon';
-    if (this.get('bookmarked')) return result + ' bookmarked';
-
-    var topic = this.get('topic');
-    if (topic && topic.get('last_read_post_number') === this.get('post_number')) {
-      return result + ' last-read';
-    }
-
-    return result + (this.get('read') ? ' seen' : ' unseen');
-  }.property('read', 'topic.last_read_post_number', 'bookmarked'),
-
-  // Custom tooltips for the bookmark icons
-  bookmarkTooltip: function() {
-    if (this.get('bookmarked')) return I18n.t('bookmarks.created');
-    if (!this.get('read')) return "";
-
-    var topic = this.get('topic');
-    if (topic && topic.get('last_read_post_number') === this.get('post_number')) {
-      return I18n.t('bookmarks.last_read');
-    }
-    return I18n.t('bookmarks.not_bookmarked');
-  }.property('read', 'topic.last_read_post_number', 'bookmarked'),
-
   bookmarkedChanged: function() {
     Discourse.ajax("/posts/" + this.get('id') + "/bookmark", {
       type: 'PUT',
@@ -376,14 +350,7 @@ Discourse.Post = Discourse.Model.extend({
     var topic = this.get('topic');
     return !topic.isReplyDirectlyBelow(this);
 
-  }.property('reply_count'),
-
-  canViewEditHistory: function() {
-    return (Discourse.SiteSettings.edit_history_visible_to_public ||
-            (Discourse.User.current() &&
-              (Discourse.User.current().get('staff') || Discourse.User.current().get('id') === this.get('user_id'))));
-  }.property()
-
+  }.property('reply_count')
 });
 
 Discourse.Post.reopenClass({
@@ -423,7 +390,7 @@ Discourse.Post.reopenClass({
 
   loadRevision: function(postId, version) {
     return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function (result) {
-      return Discourse.Post.create(result);
+      return Em.Object.create(result);
     });
   },
 

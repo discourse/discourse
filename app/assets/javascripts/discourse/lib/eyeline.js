@@ -38,6 +38,9 @@ Discourse.Eyeline.prototype.update = function() {
         elemBottom = elemTop + $elem.height(),
         markSeen = false;
 
+    // Make sure the element is visible
+    if (!$elem.is(':visible')) return true;
+
     // It's seen if...
     // ...the element is vertically within the top and botom
     if ((elemTop <= docViewBottom) && (elemTop >= docViewTop)) markSeen = true;

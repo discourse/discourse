@@ -229,20 +229,20 @@
       .primary {
         margin-top: 20px;
         float: left;
-        width: 75%;
+        width: 65%;
         color: $tertiary_text_color;
-        text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+        text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
         h1, h2 {font-weight: bold;}
 
         .bio {
           color: $tertiary_text_color;
-          text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+          text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
           a[href] {
             color: $tertiary_text_color;
             text-decoration: underline;
-            text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+            text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
           }
         }
@@ -254,6 +254,7 @@
         background-color: rgba($tertiary_background_color, .9);
         text-align: right;
         padding: 0 20px;
+        max-width: 165px;
 
         dd {
           color: rgba($tertiary_text_color, .7);
@@ -318,7 +319,7 @@
 
   .user-stream {
     .excerpt {
-      margin: 5px 0px;
+      margin: 5px 0;
       font-size: 13px;
       word-wrap: break-word;
       color: $primary_text_color;
@@ -337,7 +338,7 @@
     .item {
       padding: 20px 8px 15px 8px;
       background-color: $primary_background_color;
-      border-bottom: 1px solid lighten($primary_border_color, 10%);
+      border-bottom: 1px solid $primary_border_color;
     }
     .type {
       color: $primary_text_color;

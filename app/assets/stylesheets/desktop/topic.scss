@@ -55,7 +55,7 @@
     }
   }
   h1 {
-    font-size: 2em;
+    font-size: 1.8em;
     margin: 0;
     line-height: 1.2em;
     overflow: hidden;
@@ -74,7 +74,7 @@
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 #topic-closing-info {
-  border-top: 1px solid lighten($primary_border_color, 10%) ;
+  border-top: 1px solid $primary_border_color;
   padding-top: 10px;
   height: 20px;
 }
@@ -83,7 +83,7 @@
   position: fixed;
   right: 50%;
   width: 0;
-  bottom: 0px;
+  bottom: 0;
   z-index: 500;
   outline: 1px solid transparent;
 }
@@ -166,9 +166,9 @@ a:hover.reply-new {
   }
   .bg {
     position: absolute;
-    top: 0px;
-    bottom: 0px;
-    width: 0px;
+    top: 0;
+    bottom: 0;
+    width: 0;
     border-right: 1px solid  $primary_border_color;
     // background-color: #d4eaf4;
     // background-color: #C5E8F7;
@@ -178,8 +178,6 @@ a:hover.reply-new {
 }
 
 #topic-progress-wrapper.docked {
-  #topic-progress {
-  }
   position: absolute;
   bottom: -70px;
 

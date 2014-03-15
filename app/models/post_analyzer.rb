@@ -75,7 +75,7 @@ class PostAnalyzer
       begin
         uri = URI.parse(u)
         host = uri.host
-        @linked_hosts[host] ||= 1
+        @linked_hosts[host] ||= 1 unless host.nil?
       rescue URI::InvalidURIError
         # An invalid URI does not count as a raw link.
         next
@@ -90,10 +90,10 @@ class PostAnalyzer
     return [] unless @raw.present?
     return @raw_links if @raw_links.present?
 
-    # Don't include @mentions in the link count
     @raw_links = []
 
     cooked_document.search("a").each do |l|
+      # Don't include @mentions in the link count
       next if l.attributes['href'].nil? || link_is_a_mention?(l)
       url = l.attributes['href'].to_s
       @raw_links << url

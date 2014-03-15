@@ -18,7 +18,7 @@
 
 nav.post-controls {
   background-color: $primary_background_color;
-  padding: 0px;
+  padding: 0;
   border-right: 1px solid $primary_border_color;
   margin-top: 10px;
   button {color: lighten($primary_text_color, 35%);
@@ -48,7 +48,7 @@ button.create {
   color: lighten($primary_text_color, 35%);
   padding-right: 7px;
 }
- 	.like {
+  .like {
     border-right: 1px solid $primary_border_color;
 }
 
@@ -58,20 +58,16 @@ button.create {
 
 
 button {
-	border: none;
+  border: none;
   font-size: 16px;
   padding: 8px 10px;
   vertical-align: top;
   background: transparent;
- 	border: 1px solid $primary_border_color;
+  border: 1px solid $primary_border_color;
   float: left !important;
     &:last-of-type {
       border-right: 1px solid $primary_border_color
     }
-       &:hover {
-        }
-        &:active {
-        }
         &.hidden {
           display: none;
         }
@@ -131,7 +127,7 @@ a.star {
 }
 
 #main a.star.starred {
-	text-shadow: none !important;
+  text-shadow: none !important;
 }
 
 .topic-map {
@@ -248,8 +244,6 @@ a.star {
         color: $primary_text_color;
         border-bottom: 1px solid $primary_border_color;
 
-      }
-      &.collapsed {
       }
       .fa {
         margin: 0;
@@ -415,7 +409,7 @@ iframe {
 
 #show-topic-admin {
   color: lighten($primary_text_color, 35%);
-  right: 0px;
+  right: 0;
   border-right: 0;
   padding-right: 4px;
   padding-left: 5px;

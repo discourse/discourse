@@ -23,7 +23,7 @@
                   <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                 {{/if}}
                 {{#if newTopics}}
-                  <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='fa fa-asterisk'></i></a>
+                  <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{i18n filters.new.lower_title_with_count count="newTopics"}}</a>
                 {{/if}}
               </div>
               <div class='featured-users'>
@@ -47,7 +47,7 @@
                     <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                   {{/if}}
                   {{#if newTopics}}
-                    <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}} <i class='fa fa-asterisk'></i></a>
+                    <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}}</a>
                   {{/if}}
                 {{/each}}
               </div>
@@ -65,7 +65,7 @@
                   <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="new_posts"}}'>{{new_posts}}</a>
                 {{/if}}
                 {{#if unseen}}
-                  <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='fa fa-asterisk'></i></a>
+                  <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'>{{i18n filters.new.lower_title}}</a>
                 {{/if}}
 
                 {{#if controller.latestTopicOnly}}

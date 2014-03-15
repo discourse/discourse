@@ -42,6 +42,10 @@ module SiteSettingExtension
     @hidden_settings ||= []
   end
 
+  def refresh_settings
+    @refresh_settings ||= []
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
     mutex.synchronize do
@@ -54,6 +58,9 @@ module SiteSettingExtension
       end
       if opts[:hidden] == true
         hidden_settings << name
+      end
+      if opts[:refresh] == true
+        refresh_settings << name
       end
       setup_methods(name, current_value)
     end
@@ -204,9 +211,14 @@ module SiteSettingExtension
     defaults.has_key?(name.to_sym) || defaults.has_key?("#{name}?".to_sym)
   end
 
+  def requires_refresh?(name)
+    refresh_settings.include?(name.to_sym)
+  end
+
   def set(name, value)
     if has_setting?(name)
       self.send("#{name}=", value)
+      Discourse.request_refresh! if requires_refresh?(name)
     else
       raise ArgumentError.new("No setting named #{name} exists")
     end

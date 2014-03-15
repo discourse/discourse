@@ -56,7 +56,7 @@ display: none;
   .toggle-preview, #draft-status, #file-uploading {
     position: absolute;
     bottom: -31px;
-    margin-top: 0px;
+    margin-top: 0;
   }
   .toggle-preview {
     right: 5px;
@@ -77,9 +77,9 @@ display: none;
   @include transition(height 0.4s ease);
   width: 100%;
   z-index: 1039;
-  height: 0px;
-  background-color: rgba($composer_background, 0.96);
-  bottom: 0px;
+  height: 0;
+  background-color: $composer_background;
+  bottom: 0;
   font-size: 14px;
   position: fixed;
   .toggler {
@@ -122,7 +122,7 @@ display: none;
     }
   }
   &.closed {
-    height: 0px !important;
+    height: 0 !important;
   }
   &.draft {
     height: 60px !important;
@@ -385,7 +385,7 @@ div.ac-wrap {
     // this removes the topmost margin;
     // if we don't have this, all posts would have extra space at the top
     #wmd-preview > *:first-child {
-      margin-top: 0px !important;
+      margin-top: 0 !important;
     }
 
     #wmd-input, #wmd-preview {
@@ -444,10 +444,6 @@ div.ac-wrap {
     background-color: $primary_background_color;
     z-index: 100;
   }
-}
-
-.control-row.reply-area {
-
 }
 
 @media screen and (min-width: 1550px) {

@@ -17,6 +17,13 @@
   #display-modes {
     text-align: right;
   }
+  #revision-loading {
+    float: left;
+    margin: 5px 0 0 10px;
+    .fa {
+      margin-right: 7px;
+    }
+  }
   #revision-details {
     background-color: lighten($secondary_background_color, 76%);
     padding: 5px;
@@ -24,6 +31,9 @@
   }
   #revisions {
     word-wrap: break-word;
+    .row, table {
+      margin-top: 10px;
+    }
   }
   img {
     max-width: 670px;
@@ -37,7 +47,7 @@
     font-size: 12px;
     width: 100%;
     border-collapse: collapse;
-    border-spacing: 0px;
+    border-spacing: 0;
     td {
       width: 50%;
       vertical-align: top;

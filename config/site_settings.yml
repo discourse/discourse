@@ -24,6 +24,7 @@ basic:
   default_locale:
     default: 'en'
     enum: 'LocaleSiteSetting'
+    refresh: true
   allow_user_locale:
     client: true
     default: false
@@ -46,13 +47,16 @@ basic:
   posts_per_page:
     client: true
     default: 20
-  suggested_topics: 5
+  suggested_topics:
+    client: true
+    default: 5
   enable_mobile_theme:
     client: true
     default: true
   top_menu:
     client: true
-    default: 'latest|new|unread|starred|categories'
+    refresh: true
+    default: 'latest|new|unread|starred|top|categories'
   post_menu:
     client: true
     default: 'like|edit|flag|delete|share|bookmark|reply'
@@ -70,7 +74,6 @@ basic:
   topics_per_period_in_top_page:
     default: 50
   redirect_new_users_to_top_page_duration:
-    client: true
     default: 7
 
 users:
@@ -180,6 +183,7 @@ posting:
   allow_uncategorized_topics:
     client: true
     default: true
+    refresh: true
   allow_duplicate_topic_titles: false
   min_title_similar_length:
     client: true
@@ -234,6 +238,7 @@ posting:
   default_code_lang:
     client: true
     default: "lang-auto"
+  warn_reviving_old_topic_age: 180
 
 email:
   email_time_window_mins: 10
@@ -269,6 +274,7 @@ files:
   authorized_extensions:
     client: true
     default: '.jpg|.jpeg|.png|.gif'
+    refresh: true
   crawl_images:
     default:
       test: false
@@ -403,6 +409,22 @@ legal:
     client: true
     default: false
 
+backups:
+  allow_restore:
+    client: true
+    default: false
+  maximum_backups:
+    client: true
+    default: 7
+  backup_daily:
+    client: false
+    default: false
+  enable_s3_backups:
+    client: false
+    default: false
+  s3_backup_bucket:
+    client: false
+
 uncategorized:
 
   faq_url:
@@ -443,9 +465,6 @@ uncategorized:
   summary_likes_required: 1
   summary_percent_filter: 20
   send_welcome_message: true
-  allow_restore:
-    client: true
-    default: false
   educate_until_posts:
     client: true
     default: 2

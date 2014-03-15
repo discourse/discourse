@@ -98,6 +98,13 @@ class SiteSetting < ActiveRecord::Base
     use_https? ? "https" : "http"
   end
 
+  def self.has_enough_topics_to_redirect_to_top
+    Topic.listable_topics
+         .visible
+         .where('topics.id NOT IN (SELECT COALESCE(topic_id, 0) FROM categories)')
+         .count > SiteSetting.topics_per_period_in_top_page
+  end
+
 end
 
 # == Schema Information

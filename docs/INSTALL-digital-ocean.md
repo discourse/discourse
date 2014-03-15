@@ -155,6 +155,19 @@ If your account was not made admin, try SSH'ing into your container (assuming yo
 
 This will manually make the first user an admin.
 
+# Post-Install Maintenance
+
+We believe most small and medium size Discourse installs will be fine with the recommended 2 GB of RAM. However, if you are using the absolute minimum 1 GB of RAM, or your forum is growing you may want to [set up a swap file](https://www.digitalocean.com/community/articles/how-to-add-swap-on-ubuntu-12-04) just in case.
+
+To **upgrade Discourse to the latest version**, visit `/admin/docker`, refresh the page a few times (yes, seriously) and then press the Upgrade button at the top. View the live output at the bottom of your browser to see when things are complete. You should see:
+
+
+    Killed sidekiq
+    Restarting unicorn pid: 37
+
+
+Then you know it's complete. (Yes, we will be improving this process soon!)
+
 If anything needs to be improved in this guide, feel free to ask on [meta.discourse.org][meta], or even better, submit a pull request.
 
    [dd]: https://github.com/discourse/discourse_docker

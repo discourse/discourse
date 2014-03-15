@@ -199,7 +199,6 @@ test("category links part is rendered correctly", function() {
   ok($firstCategoryNewTopicsLink.hasClass("badge") && $firstCategoryNewTopicsLink.hasClass("badge-notification"), "the new topics link has correct classes");
   equal($firstCategoryNewTopicsLink.attr("title"), "topic.new_topics 20", "the new topics link has correct title");
   notEqual($firstCategoryNewTopicsLink.text().indexOf("20"), -1, "the new topics link contains correct text");
-  ok(exists($firstCategoryNewTopicsLink.find(".fa-asterisk")), "the new topics link contains correct icon");
 
   var $firstCategoryAllTopicsCount = $categories.first().find(".topics-count");
   ok(!exists($firstCategoryAllTopicsCount), "the count of all topics is not shown");

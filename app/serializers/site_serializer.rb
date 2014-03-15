@@ -9,8 +9,7 @@ class SiteSerializer < ApplicationSerializer
              :top_menu_items,
              :anonymous_top_menu_items,
              :uncategorized_category_id, # this is hidden so putting it here
-             :is_readonly,
-             :has_enough_topic_to_redirect_to_top_page
+             :is_readonly
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :post_action_types, embed: :objects
@@ -49,14 +48,6 @@ class SiteSerializer < ApplicationSerializer
 
   def is_readonly
     Discourse.readonly_mode?
-  end
-
-  def has_enough_topic_to_redirect_to_top_page
-    Topic.listable_topics
-         .visible
-         .includes(:category).references(:category)
-         .where('COALESCE(categories.topic_id, 0) <> topics.id')
-         .count > SiteSetting.topics_per_period_in_top_page
   end
 
 end

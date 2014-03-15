@@ -1,28 +1,35 @@
 <div class="modal-body">
-  {{#if loading}}
-    {{i18n loading}}
-  {{else}}
-    <div>
-      <div id="revision-controls">
-        <button class="btn standard" title="{{i18n post.revisions.controls.first}}" {{action loadFirstVersion}} {{bind-attr disabled=isFirstVersion}}><i class="fa fa-fast-backward"></i></button>
-        <button class="btn standard" title="{{i18n post.revisions.controls.previous}}" {{action loadPreviousVersion}} {{bind-attr disabled=isFirstVersion}}><i class="fa fa-backward"></i></button>
-        {{{i18n post.revisions.controls.comparing_previous_to_current_out_of_total previous=previousVersionNumber current=currentVersionNumber total=revisions_count}}}
-        <button class="btn standard" title="{{i18n post.revisions.controls.next}}" {{action loadNextVersion}} {{bind-attr disabled=isLastVersion}}><i class="fa fa-forward"></i></button>
-        <button class="btn standard" title="{{i18n post.revisions.controls.last}}" {{action loadLastVersion}} {{bind-attr disabled=isLastVersion}}><i class="fa fa-fast-forward"></i></button>
+  <div>
+    <div id="revision-controls">
+      {{#if displayGoToFirst}}<button class="btn standard" title="{{i18n post.revisions.controls.first}}" {{bind-attr disabled=loading}} {{action loadFirstVersion}}><i class="fa fa-fast-backward"></i></button>{{/if}}
+      {{#if displayGoToPrevious}}<button class="btn standard" title="{{i18n post.revisions.controls.previous}}" {{bind-attr disabled=loading}} {{action loadPreviousVersion}}><i class="fa fa-backward"></i></button>{{/if}}
+      {{#if displayRevisions}}{{{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="version" totalBinding="revisions_count"}}}{{/if}}
+      {{#if displayGoToNext}}<button class="btn standard" title="{{i18n post.revisions.controls.next}}" {{bind-attr disabled=loading}} {{action loadNextVersion}}><i class="fa fa-forward"></i></button>{{/if}}
+      {{#if displayGoToLast}}<button class="btn standard" title="{{i18n post.revisions.controls.last}}" {{bind-attr disabled=loading}} {{action loadLastVersion}}><i class="fa fa-fast-forward"></i></button>{{/if}}
+    </div>
+    {{#if loading}}<div id='revision-loading'><i class='fa fa-spinner fa-spin'></i>{{i18n loading}}</div>{{/if}}
+    <div id="display-modes">
+      <button {{bind-attr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n post.revisions.displays.inline.title}}" {{action displayInline}}>{{{i18n post.revisions.displays.inline.button}}}</button>
+      {{#unless Discourse.Mobile.mobileView}}
+        <button {{bind-attr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side.title}}" {{action displaySideBySide}}>{{{i18n post.revisions.displays.side_by_side.button}}}</button>
+        <button {{bind-attr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side_markdown.title}}" {{action displaySideBySideMarkdown}}>{{{i18n post.revisions.displays.side_by_side_markdown.button}}}</button>
+      {{/unless}}
+    </div>
+  </div>
+  <div id="revision-details">
+    {{i18n post.revisions.details.edited_by}} {{avatar this imageSize="small"}} {{username}} <span class="date">{{date created_at}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
+  </div>
+  <div id="revisions">
+    {{#if title_changes}}
+      <div class="row">
+        <h2>{{{title_diff}}}</h2>
       </div>
-      <div id="display-modes">
-        <button {{bind-attr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n post.revisions.displays.inline.title}}" {{action displayInline}}>{{{i18n post.revisions.displays.inline.button}}}</button>
-        {{#unless Discourse.Mobile.mobileView}}
-          <button {{bind-attr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side.title}}" {{action displaySideBySide}}>{{{i18n post.revisions.displays.side_by_side.button}}}</button>
-          <button {{bind-attr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side_markdown.title}}" {{action displaySideBySideMarkdown}}>{{{i18n post.revisions.displays.side_by_side_markdown.button}}}</button>
-        {{/unless}}
+    {{/if}}
+    {{#if category_changes}}
+      <div class="row">
+        {{{category_diff}}}
       </div>
-    </div>
-    <div id="revision-details">
-      {{i18n post.revisions.details.edited_by}} {{avatar this imageSize="small"}} {{username}} <span class="date">{{unboundDate path="created_at" leaveAgo="true"}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
-    </div>
-    <div id="revisions">
-      {{{diff}}}
-    </div>
-  {{/if}}
+    {{/if}}
+    {{{body_diff}}}
+  </div>
 </div>

@@ -285,12 +285,6 @@ class TopicQuery
       result
     end
 
-    def new_results(options={})
-      result = TopicQuery.new_filter(default_results(options), @user.treat_as_new_topic_start_date)
-      result = remove_muted_categories(result, @user) unless options[:category].present?
-      suggested_ordering(result, options)
-    end
-
     def latest_results(options={})
       result = default_results(options)
       result = remove_muted_categories(result, @user) unless options[:category].present?
@@ -315,6 +309,12 @@ class TopicQuery
       result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
                          .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
+      suggested_ordering(result, options)
+    end
+
+    def new_results(options={})
+      result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
+      result = remove_muted_categories(result, @user) unless options[:category].present?
       suggested_ordering(result, options)
     end
 

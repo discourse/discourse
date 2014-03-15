@@ -1002,7 +1002,7 @@ zh_CN:
           previous: "前一次修改"
           next: "下一次修改"
           last: "上一次修改"
-          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "在生成的结果中显示增加和删除的内容"

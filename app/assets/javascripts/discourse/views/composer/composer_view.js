@@ -321,6 +321,92 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
       Discourse.Utilities.displayErrorForUpload(data);
     });
 
+    // contenteditable div hack for getting image paste to upload working in
+    // Firefox. This is pretty dangerous because it can potentially break
+    // Ctrl+v to paste so we should be conservative about what browsers this runs
+    // in.
+    var uaMatch = navigator.userAgent.match(/Firefox\/(\d+)\.\d/);
+    if (uaMatch && parseInt(uaMatch[1]) >= 26) {
+      self.$().append( Ember.$("<div id='contenteditable' contenteditable='true' style='height: 0; width: 0; overflow: hidden'></div>") );
+      self.$().off('keydown.contenteditable');
+      self.$().on('keydown.contenteditable', function(event) {
+        // Catch Ctrl+v / Cmd+v and hijack focus to a contenteditable div. We can't
+        // use the onpaste event because for some reason the paste isn't resumed
+        // after we switch focus, probably because it is being executed too late.
+        if ((event.ctrlKey || event.metaKey) && (event.keyCode === 86)) {
+          // Save the current textarea selection.
+          var textarea = self.$("textarea")[0],
+              selectionStart = textarea.selectionStart,
+              selectionEnd   = textarea.selectionEnd;
+
+          // Focus the contenteditable div.
+          var contentEditableDiv = self.$('#contenteditable');
+          contentEditableDiv.focus();
+
+          // The paste doesn't finish immediately and we don't have any onpaste
+          // event, so wait for 100ms which _should_ be enough time.
+          setTimeout(function() {
+            var pastedImg  = contentEditableDiv.find('img');
+
+            if ( pastedImg.length === 1 ) {
+              pastedImg.remove();
+            }
+
+            // For restoring the selection.
+            textarea.focus();
+            var textareaContent = $(textarea).val(),
+                startContent = textareaContent.substring(0, selectionStart),
+                endContent = textareaContent.substring(selectionEnd);
+
+            var restoreSelection = function(pastedText) {
+              $(textarea).val( startContent + pastedText + endContent );
+              textarea.selectionStart = selectionStart + pastedText.length;
+              textarea.selectionEnd = textarea.selectionStart;
+            };
+
+            if (contentEditableDiv.html().length > 0) {
+              // If the image wasn't the only pasted content we just give up and
+              // fall back to the original pasted text.
+              contentEditableDiv.find("br").replaceWith("\n");
+              restoreSelection(contentEditableDiv.text());
+            } else {
+              // Depending on how the image is pasted in, we may get either a
+              // normal URL or a data URI. If we get a data URI we can convert it
+              // to a Blob and upload that, but if it is a regular URL that
+              // operation is prevented for security purposes. When we get a regular
+              // URL let's just create an <img> tag for the image.
+              var imageSrc = pastedImg.attr('src');
+
+              if (imageSrc.match(/^data:image/)) {
+                // Restore the cursor position, and remove any selected text.
+                restoreSelection("");
+
+                // Create a Blob to upload.
+                var image = new Image();
+                image.onload = function() {
+                  // Create a new canvas.
+                  var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+                  canvas.height = image.height;
+                  canvas.width = image.width;
+                  var ctx = canvas.getContext('2d');
+                  ctx.drawImage(image, 0, 0);
+
+                  canvas.toBlob(function(blob) {
+                    $uploadTarget.fileupload('add', {files: blob});
+                  });
+                };
+                image.src = imageSrc;
+              } else {
+                restoreSelection("<img src='" + imageSrc + "'>");
+              }
+            }
+
+            contentEditableDiv.html('');
+          }, 100);
+        }
+      });
+    }
+
     // I hate to use Em.run.later, but I don't think there's a way of waiting for a CSS transition
     // to finish.
     return Em.run.later(jQuery, (function() {

@@ -12,7 +12,7 @@ class UserActivator
   end
 
   def start
-    register_nickname
+    register_username
   end
 
   def finish
@@ -35,9 +35,9 @@ class UserActivator
     end
   end
 
-  def register_nickname
+  def register_username
     if user.valid? && @settings.call_discourse_hub?
-      @hub.register_nickname(user.username, user.email)
+      @hub.register_username(user.username, user.email)
     end
   end
 end

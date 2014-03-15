@@ -962,7 +962,7 @@ ja:
           previous: "一つ前のリビジョン"
           next: "次のリビジョン"
           last: "最後のリビジョン"
-          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> ({{total}}のうち)"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> ({{total}}のうち)"
         displays:
           inline:
             title: "追加・削除箇所をインラインで表示"

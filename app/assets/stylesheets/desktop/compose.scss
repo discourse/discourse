@@ -18,6 +18,12 @@
 
   @include box-shadow(3px 3px 3px rgba($primary_shadow_color, 0.14));
   background: lighten($highlight, 15%);
+  border: 1px solid $highlight_border_color;
+
+  &.urgent {
+    background: lighten($warning_border_color, 15%);
+    border: 1px solid $warning_border_color;
+  }
 
   h3 {
     margin-bottom: 10px;
@@ -38,7 +44,6 @@
     opacity: 1.0;
   }
 
-  border: 1px solid $highlight_border_color;
   padding: 10px;
   width: 600px;
   position: absolute;
@@ -111,7 +116,7 @@
   .toggle-preview, #draft-status, #file-uploading {
     position: absolute;
     bottom: -31px;
-    margin-top: 0px;
+    margin-top: 0;
   }
   .toggle-preview {
     right: 5px;
@@ -132,9 +137,9 @@
   @include transition(height 0.4s ease);
   width: 100%;
   z-index: 1039;
-  height: 0px;
+  height: 0;
   background-color: rgba($composer_background, 0.96);
-  bottom: 0px;
+  bottom: 0;
   font-size: 14px;
   position: fixed;
   .toggler {
@@ -175,7 +180,7 @@
     }
   }
   &.closed {
-    height: 0px !important;
+    height: 0 !important;
   }
   &.draft {
     height: 40px !important;
@@ -248,8 +253,8 @@
         color: $primary_text_color;
 
       }
-      input#reply-title { 
-        width: 400px; 
+      input#reply-title {
+        width: 400px;
                 color: $primary_text_color;
 
       }
@@ -355,10 +360,10 @@
     display: inline;
   }
   .show-admin-options {
-    vertical-align: top; 
+    vertical-align: top;
     margin-top: 8px;
     background: lighten($secondary_background_color, 60%);
-  &:hover {    
+  &:hover {
     color: $tertiary_text_color;
     background: lighten($secondary_background_color, 35%);
   }
@@ -462,7 +467,7 @@ div.ac-wrap {
     // this removes the topmost margin;
     // if we don't have this, all posts would have extra space at the top
     #wmd-preview > *:first-child {
-      margin-top: 0px !important;
+      margin-top: 0 !important;
     }
 
     #wmd-input, #wmd-preview {

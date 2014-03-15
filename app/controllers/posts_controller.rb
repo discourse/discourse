@@ -178,6 +178,7 @@ class PostsController < ApplicationController
 
   def revisions
     post_revision = find_post_revision_from_params
+    guardian.ensure_can_see!(post_revision)
     post_revision_serializer = PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
     render_json_dump(post_revision_serializer)
   end

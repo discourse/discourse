@@ -6,6 +6,7 @@ class ComposerMessagesFinder
   end
 
   def find
+    check_reviving_old_topic ||
     check_education_message ||
     check_new_user_many_replies ||
     check_avatar_notification ||
@@ -88,6 +89,7 @@ class ComposerMessagesFinder
 
     {templateName: 'composer/education',
      wait_for_typing: true,
+     extraClass: 'urgent',
      body: PrettyText.cook(I18n.t('education.sequential_replies')) }
   end
 
@@ -118,7 +120,23 @@ class ComposerMessagesFinder
 
     {templateName: 'composer/education',
      wait_for_typing: true,
+     extraClass: 'urgent',
      body: PrettyText.cook(I18n.t('education.dominating_topic', percent: (ratio * 100).round)) }
+  end
+
+  def check_reviving_old_topic
+    return unless @details[:topic_id]
+
+    topic = Topic.where(id: @details[:topic_id]).first
+
+    return if topic.nil? ||
+              SiteSetting.warn_reviving_old_topic_age < 1 ||
+              topic.last_posted_at > SiteSetting.warn_reviving_old_topic_age.days.ago
+
+    {templateName: 'composer/education',
+     wait_for_typing: false,
+     extraClass: 'urgent',
+     body: PrettyText.cook(I18n.t('education.reviving_old_topic', days: (Time.zone.now - topic.last_posted_at).round / 1.day)) }
   end
 
   private

@@ -123,14 +123,23 @@ module Import
 
     def wait_for_sidekiq
       log "Waiting for sidekiq to finish running jobs..."
-      iterations = 0
-      workers = Sidekiq::Workers.new
-      while (running = workers.size) > 0
-        log "  Waiting for #{running} jobs..."
+      iterations = 1
+      while sidekiq_has_running_jobs?
+        log "Waiting for sidekiq to finish running jobs... ##{iterations}"
         sleep 5
         iterations += 1
-        raise "Sidekiq did not finish running all the jobs in the allowed time!" if iterations >= 20
+        raise "Sidekiq did not finish running all the jobs in the allowed time!" if iterations > 6
       end
+    end
+
+    def sidekiq_has_running_jobs?
+      Sidekiq::Workers.new.each do |process_id, thread_id, worker|
+        payload = worker.try(:payload)
+        return true if payload.try(:all_sites)
+        return true if payload.try(:current_site_id) == @current_db
+      end
+
+      false
     end
 
     def copy_archive_to_tmp_directory
@@ -167,9 +176,6 @@ module Import
     def restore_dump
       log "Restoring dump file... (can be quite long)"
 
-      psql_command = build_psql_command
-      log "Running: #{psql_command}"
-
       logs = Queue.new
       psql_running = true
       has_error = false
@@ -199,7 +205,7 @@ module Import
       raise "psql failed" if has_error
     end
 
-    def build_psql_command
+    def psql_command
       db_conf = BackupRestore.database_configuration
 
       password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?

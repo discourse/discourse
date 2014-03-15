@@ -153,7 +153,7 @@ class UsersController < ApplicationController
       success: false,
       message: I18n.t("login.something_already_taken")
     }
-  rescue DiscourseHub::NicknameUnavailable => e
+  rescue DiscourseHub::UsernameUnavailable => e
     render json: e.response_message
   rescue RestClient::Forbidden
     render json: { errors: [I18n.t("discourse_hub.access_token_problem")] }

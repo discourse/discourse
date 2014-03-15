@@ -72,7 +72,7 @@ ru:
           other: '%{count}лет'
           few: '%{count}лет'
           many: '%{count}лет'
-        date_month: 'MMM D'
+        date_month: 'D MMM'
         date_year: 'MMM ''YY'
       medium:
         x_minutes:
@@ -1054,7 +1054,7 @@ ru:
           previous: 'Предыдущая версия'
           next: 'Следующая версия'
           last: 'Последняя версия'
-          comparing_previous_to_current_out_of_total: '<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> / {{total}}'
+          comparing_previous_to_current_out_of_total: '<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}'
         displays:
           inline:
             title: 'Отобразить сообщение с включенными добавлениями и удалениями.'

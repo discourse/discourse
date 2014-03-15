@@ -118,25 +118,6 @@ Discourse.Topic = Discourse.Model.extend({
     return this.get('new_posts');
   }.property('new_posts', 'id'),
 
-  // The coldmap class for the age of the topic
-  ageCold: function() {
-    var createdAt, daysSinceEpoch, lastPost, lastPostDays, nowDays;
-    if (!(createdAt = this.get('created_at'))) return;
-    if (!(lastPost = this.get('last_posted_at'))) lastPost = createdAt;
-    daysSinceEpoch = function(dt) {
-      // 1000 * 60 * 60 * 24 = days since epoch
-      return dt.getTime() / 86400000;
-    };
-
-    // Show heat on age
-    nowDays = daysSinceEpoch(new Date());
-    lastPostDays = daysSinceEpoch(new Date(lastPost));
-    if (nowDays - lastPostDays > 60) return 'coldmap-high';
-    if (nowDays - lastPostDays > 30) return 'coldmap-med';
-    if (nowDays - lastPostDays > 14) return 'coldmap-low';
-    return null;
-  }.property('age', 'created_at', 'last_posted_at'),
-
   viewsHeat: function() {
     var v = this.get('views');
     if( v >= Discourse.SiteSettings.topic_views_heat_high )   return 'heatmap-high';
@@ -153,12 +134,24 @@ Discourse.Topic = Discourse.Model.extend({
 
   toggleStatus: function(property) {
     this.toggleProperty(property);
-    if (property === 'closed' && this.get('closed')) {
+    this.saveStatus(property, this.get(property) ? true : false);
+  },
+
+  setStatus: function(property, value) {
+    this.set(property, value);
+    this.saveStatus(property, value);
+  },
+
+  saveStatus: function(property, value) {
+    if (property === 'closed' && value === true) {
       this.set('details.auto_close_at', null);
+    }
+    if (property === 'pinned') {
+      this.set('pinned_at', value ? moment() : null);
     }
     return Discourse.ajax(this.get('url') + "/status", {
       type: 'PUT',
-      data: {status: property, enabled: this.get(property) ? 'true' : 'false' }
+      data: {status: property, enabled: value ? 'true' : 'false' }
     });
   },
 

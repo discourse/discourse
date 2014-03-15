@@ -29,7 +29,7 @@ class TopicLinkSerializer < ApplicationSerializer
   end
 
   def clicks
-    object['clicks'] || 0
+    object['clicks'].to_i
   end
 
   def user_id

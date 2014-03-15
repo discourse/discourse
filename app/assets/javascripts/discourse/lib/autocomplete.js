@@ -31,19 +31,16 @@ shiftMap[32] = " ";
 function mapKeyPressToActualCharacter(isShiftKey, characterCode) {
   if ( characterCode === 27 || characterCode === 8 || characterCode === 9 || characterCode === 20 || characterCode === 16 || characterCode === 17 || characterCode === 91 || characterCode === 13 || characterCode === 92 || characterCode === 18 ) { return false; }
 
-  if (isShiftKey) {
-    if ( characterCode >= 65 && characterCode <= 90 ) {
-      return String.fromCharCode(characterCode);
-    } else {
-      return shiftMap[characterCode];
-    }
-  } else {
-    if ( characterCode >= 65 && characterCode <= 90 ) {
-      return String.fromCharCode(characterCode).toLowerCase();
-    } else {
-      return String.fromCharCode(characterCode);
-    }
+  // Lookup non-letter keypress while holding shift
+  if (isShiftKey && ( characterCode < 65 || characterCode > 90 )) {
+    return shiftMap[characterCode];
   }
+
+  var stringValue = String.fromCharCode(characterCode);
+  if ( !isShiftKey ) {
+    stringValue = stringValue.toLowerCase();
+  }
+  return stringValue;
 }
 
 $.fn.autocomplete = function(options) {
@@ -268,8 +265,7 @@ $.fn.autocomplete = function(options) {
       var prevChar = me.val().charAt(caretPosition - 1);
       if (!prevChar || /\s/.test(prevChar)) {
         completeStart = completeEnd = caretPosition;
-        var term = "";
-        updateAutoComplete(options.dataSource(term));
+        updateAutoComplete(options.dataSource(""));
       }
     }
   });
@@ -401,10 +397,8 @@ $.fn.autocomplete = function(options) {
             term += (e.shiftKey) ? "|" : "]";
           } else if (e.which === 222) {
             term += (e.shiftKey) ? "\"" : "'";
-          } else {
-            if (e.which !== 8) {
-              term += ",";
-            }
+          } else if (e.which !== 8) {
+            term += ",";
           }
 
           updateAutoComplete(options.dataSource(term));

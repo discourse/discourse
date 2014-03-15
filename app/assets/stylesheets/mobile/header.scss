@@ -64,10 +64,6 @@
     list-style: none;
     > li {
       float: left;
-      &:first-child .icon {
-      }
-      &:first-child.active .icon {
-      }
       &:last-child .icon {
         border-right: 1px solid $primary_border_color;
       }
@@ -126,7 +122,8 @@
     }
     .unread-notifications {
       right: -4px;
-      background-color: $tertiary_text_color;
+      background-color: $emphasis_background_color;
+      color: $emphasis_text_color;
     }
     .unread-private-messages {
       left: -4px;

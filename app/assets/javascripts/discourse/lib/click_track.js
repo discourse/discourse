@@ -56,7 +56,10 @@ Discourse.ClickTrack = {
         if ($link.closest('.badge-category').length === 0) {
           // nor in oneboxes (except when we force it)
           if ($link.closest(".onebox-result").length === 0 || $link.hasClass("track-link")) {
-            $badge.html(parseInt($badge.html(), 10) + 1);
+            var html = $badge.html();
+            if (/^\d+$/.test(html)) {
+              $badge.html(parseInt(html, 10) + 1);
+            }
           }
         }
       }

@@ -16,6 +16,33 @@ Handlebars.registerHelper('breakUp', function(property, hint, options) {
   return new Handlebars.SafeString(Discourse.Formatter.breakUp(prop, hint));
 });
 
+// helper function for dates
+function daysSinceEpoch(dt) {
+  // 1000 * 60 * 60 * 24 = days since epoch
+  return dt.getTime() / 86400000;
+}
+
+/**
+  Converts a date to a coldmap class
+
+  @method coldDate
+**/
+Handlebars.registerHelper('coldAgeClass', function(property, options) {
+  var dt = Em.Handlebars.get(this, property, options);
+
+  if (!dt) { return 'age'; }
+
+  // Show heat on age
+  var nowDays = daysSinceEpoch(new Date()),
+      epochDays = daysSinceEpoch(new Date(dt));
+  if (nowDays - epochDays > 60) return 'age coldmap-high';
+  if (nowDays - epochDays > 30) return 'age coldmap-med';
+  if (nowDays - epochDays > 14) return 'age coldmap-low';
+
+  return 'age';
+});
+
+
 /**
   Truncates long strings
 
@@ -337,13 +364,21 @@ Ember.Handlebars.registerBoundHelper('date', function(dt) {
 });
 
 /**
-  Look for custom html content using `Discourse.HTML`
+  Look for custom html content using `Discourse.HTML`. If none exists, look for a template
+  to render with that name.
 
   @method customHTML
   @for Handlebars
 **/
-Handlebars.registerHelper('customHTML', function(property) {
-  return Discourse.HTML.getCustomHTML(property);
+Handlebars.registerHelper('customHTML', function(name, contextString, options) {
+  var html = Discourse.HTML.getCustomHTML(name);
+  if (html) { return html; }
+
+  var container = (options || contextString).data.keywords.controller.container;
+
+  if (container.lookup('template:' + name)) {
+    return Ember.Handlebars.helpers.partial.apply(this, arguments);
+  }
 });
 
 Ember.Handlebars.registerBoundHelper('humanSize', function(size) {

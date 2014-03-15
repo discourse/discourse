@@ -302,7 +302,7 @@ class ListController < ApplicationController
     topic_query = TopicQuery.new(current_user, options)
 
     if current_user.present?
-      periods = [best_period_for(current_user.previous_visit_at)]
+      periods = [ListController.best_period_for(current_user.previous_visit_at)]
     else
       periods = TopTopic.periods
     end
@@ -312,7 +312,7 @@ class ListController < ApplicationController
     top
   end
 
-  def best_period_for(date)
+  def self.best_period_for(date)
     date ||= 1.year.ago
     return :yearly  if date < 180.days.ago
     return :monthly if date <  35.days.ago

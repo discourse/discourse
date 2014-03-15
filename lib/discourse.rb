@@ -172,6 +172,14 @@ module Discourse
     !!$redis.get(readonly_mode_key)
   end
 
+  def self.request_refresh!
+    # Causes refresh on next click for all clients
+    #
+    # This is better than `MessageBus.publish "/file-change", ["refresh"]` because
+    # it spreads the refreshes out over a time period
+    MessageBus.publish '/global/asset-version', 'clobber'
+  end
+
   def self.git_version
     return $git_version if $git_version
 
