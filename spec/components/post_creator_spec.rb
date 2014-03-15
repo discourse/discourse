@@ -131,6 +131,8 @@ describe PostCreator do
         Jobs.expects(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:post_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:pubsubhubbub_ping, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:pubsubhubbub_ping, has_key(:topic_id))
         creator.create
       end
 
@@ -138,6 +140,8 @@ describe PostCreator do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
+        Jobs.expects(:enqueue).with(:pubsubhubbub_ping, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:pubsubhubbub_ping, has_key(:topic_id))
         creator.opts[:invalidate_oneboxes] = true
         creator.create
       end
@@ -146,6 +150,8 @@ describe PostCreator do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
+        Jobs.expects(:enqueue).with(:pubsubhubbub_ping, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:pubsubhubbub_ping, has_key(:topic_id))
         creator.opts[:image_sizes] = {'http://an.image.host/image.jpg' => {'width' => 17, 'height' => 31}}
         creator.create
       end
