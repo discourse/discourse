@@ -124,6 +124,8 @@ module ::PollPlugin
     end
 
     def set_vote!(user, option)
+      return if @post.topic.closed?
+
       # Get the user's current vote.
       vote = get_vote(user)
       vote = nil unless details.keys.include? vote

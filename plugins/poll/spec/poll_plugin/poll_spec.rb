@@ -50,6 +50,14 @@ describe PollPlugin::Poll do
     poll.details["Onodera"].should eq(1)
   end
 
+  it "should not set votes on closed polls" do
+    poll.set_vote!(user, "Onodera")
+    post.topic.closed = true
+    post.topic.save!
+    poll.set_vote!(user, "Chitoge")
+    poll.get_vote(user).should eq("Onodera")
+  end
+
   it "should serialize correctly" do
     poll.serialize(user).should eq({options: poll.details, selected: nil})
     poll.set_vote!(user, "Onodera")

@@ -1,7 +1,7 @@
 <table>
   {{#each poll.options}}
     <tr {{bind-attr class=checked:active}} {{action selectOption option}}>
-      <td class="radio"><input type="radio" name="poll" {{bind-attr checked=checked disabled=controller.loading}}></td>
+      <td class="radio"><input type="radio" name="poll" {{bind-attr checked=checked disabled=controller.disableRadio}}></td>
       <td class="option">
         <div class="option">
           {{{ option }}}
