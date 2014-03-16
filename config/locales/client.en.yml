@@ -668,7 +668,7 @@ en:
         top: "There are no more top topics."
 
     topic:
-      filter_to: "Show {{post_count}} posts in topic"
+      filter_to: "{{post_count}} posts in topic"
       create: 'Create Topic'
       create_long: 'Create a new Topic'
       private_message: 'Start a private message'

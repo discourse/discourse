@@ -46,6 +46,8 @@ You will be asked for permission to connect, type `yes`, then the root password,
 
 # Install Docker
 
+Update to a newer kernel:
+
     apt-get update
     apt-get install linux-image-generic-lts-raring linux-headers-generic-lts-raring
 
@@ -107,7 +109,11 @@ We renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that we w
 
 - Otherwise, create a free account on [**Mandrill**][man] (or [Mailgun][gun], or [Mailjet][jet]), and put your mail credentials (available via the Mandrill dashboard) in the `app.yml` file. The settings you want to change are `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`.
 
-- Be sure you remove the comment character `#` from the beginning of these mail configuration lines!
+- Be sure you remove the comment character and space `# ` from the beginning of these mail configuration lines!
+
+- Don't forget to set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) up for your domain name. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
+
+- The name of your droplet is your reverse PTR record, so rename your droplet to `forum.example.com` so the PTR record correctly reflects your domain name.
 
 # Add Your SSH Key
 

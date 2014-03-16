@@ -762,7 +762,7 @@ blockquote { /* solo quotes */
   position: relative;
   padding: 10px 0 15px 0;
   .highlighted {
-    background-color: $highlight_background_color !important;
+    background-color: $emphasis_background_color !important;
   }
   img, svg {
     max-width: 100%;
