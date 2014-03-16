@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   has_many :user_open_ids, dependent: :destroy
   has_many :user_actions, dependent: :destroy
   has_many :post_actions, dependent: :destroy
+  has_many :user_badges, dependent: :destroy
   has_many :email_logs, dependent: :destroy
   has_many :post_timings
   has_many :topic_allowed_users, dependent: :destroy

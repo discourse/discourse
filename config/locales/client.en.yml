@@ -1667,6 +1667,18 @@ en:
           uncategorized: 'Uncategorized'
           backups: "Backups"
 
+      badges:
+        title: Badges
+        new_badge: New Badge
+        new: New
+        name: Name
+        display_name: Display Name
+        description: Description
+        badge_type: Badge Type
+        save: Save
+        delete: Delete
+        delete_confirm: Are you sure you want to delete this badge?
+
     lightbox:
       download: "download"
 
@@ -1708,3 +1720,8 @@ en:
         mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
         mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
         mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
+
+    badges:
+      example_badge:
+        name: Example Badge
+        description: This is a generic example badge.

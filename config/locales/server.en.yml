@@ -665,6 +665,8 @@ en:
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
     redirect_new_users_to_top_page_duration: "Number of days during which new users are automatically redirect to the top page"
 
+    enable_badges: "Enable the badge system (experimental)"
+
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users may register with. WARNING: Users with email domains other than those listed will not be allowed."
@@ -1418,3 +1420,9 @@ en:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
+
+  badges:
+    types:
+      gold: Gold
+      silver: Silver
+      bronze: Bronze
