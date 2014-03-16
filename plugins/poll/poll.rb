@@ -24,6 +24,29 @@ module ::PollPlugin
       topic.title =~ /^#{I18n.t('poll.prefix')}/i
     end
 
+    # Called during validation of poll posts. Discourse already restricts edits to
+    # the OP and staff, we want to make sure that:
+    #
+    # * OP cannot edit options after 5 minutes.
+    # * Staff can only edit options after 5 minutes, not add/remove.
+    def ensure_can_be_edited!
+      # Return if this is a new post or the options were not modified.
+      return if @post.id.nil? || (options.sort == details.keys.sort)
+
+      # First 5 minutes -- allow any modification.
+      return unless @post.created_at < 5.minutes.ago
+
+      if User.find(@post.last_editor_id).staff?
+        # Allow editing options, but not adding or removing.
+        if options.length != details.keys.length
+          @post.errors.add(:poll_options, I18n.t('poll.cannot_add_or_remove_options'))
+        end
+      else
+        # Regular user, tell them to contact a moderator.
+        @post.errors.add(:poll_options, I18n.t('poll.cannot_have_modified_options'))
+      end
+    end
+
     def options
       cooked = PrettyText.cook(@post.raw, topic_id: @post.topic_id)
       parsed = Nokogiri::HTML(cooked)
@@ -32,6 +55,58 @@ module ::PollPlugin
         poll_list.css("li").map {|x| x.children.to_s.strip }.uniq
       else
         []
+      end
+    end
+
+    def update_options!
+      return unless self.is_poll?
+      return if details && details.keys.sort == options.sort
+
+      if details.try(:length) == options.length
+
+        # Assume only renaming, no reordering. Preserve votes.
+        old_details = self.details
+        old_options = old_details.keys
+        new_details = {}
+        new_options = self.options
+        rename = {}
+
+        0.upto(options.length-1) do |i|
+          new_details[ new_options[i] ] = old_details[ old_options[i] ]
+
+          if new_options[i] != old_options[i]
+            rename[ old_options[i] ] = new_options[i]
+          end
+        end
+        self.set_details! new_details
+
+        # Update existing user votes.
+        # Accessing PluginStoreRow directly isn't a very nice approach but there's
+        # no way around it unfortunately.
+        # TODO: Probably want to move this to a background job.
+        PluginStoreRow.where(plugin_name: "poll", value: rename.keys).where('key LIKE ?', vote_key_prefix+"%").find_each do |row|
+          # This could've been done more efficiently using `update_all` instead of
+          # iterating over each individual vote, however this will be needed in the
+          # future once we support multiple choice polls.
+          row.value = rename[ row.value ]
+          row.save
+        end
+
+      else
+
+        # Options were added or removed.
+        new_options = self.options
+        new_details = self.details || {}
+        new_details.each do |key, value|
+          unless new_options.include? key
+            new_details.delete(key)
+          end
+        end
+        new_options.each do |key|
+          new_details[key] ||= 0
+        end
+        self.set_details! new_details
+
       end
     end
 
@@ -49,6 +124,8 @@ module ::PollPlugin
     end
 
     def set_vote!(user, option)
+      return if @post.topic.closed?
+
       # Get the user's current vote.
       vote = get_vote(user)
       vote = nil unless details.keys.include? vote
@@ -71,8 +148,12 @@ module ::PollPlugin
       "poll_options_#{@post.id}"
     end
 
+    def vote_key_prefix
+      "poll_vote_#{@post.id}_"
+    end
+
     def vote_key(user)
-      "poll_vote_#{@post.id}_#{user.id}"
+      "#{vote_key_prefix}#{user.id}"
     end
   end
 end
