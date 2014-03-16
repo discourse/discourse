@@ -6,8 +6,7 @@
 load File.expand_path("../poll.rb", __FILE__)
 
 # Without this line we can't lookup the constant inside the after_initialize blocks,
-# probably because all of this is instance_eval'd inside an instance of
-# Plugin::Instance.
+# because all of this is instance_eval'd inside an instance of Plugin::Instance.
 PollPlugin = PollPlugin
 
 after_initialize do
@@ -64,8 +63,6 @@ after_initialize do
   # Starting a topic title with "Poll:" will create a poll topic. If the title
   # starts with "poll:" but the first post doesn't contain a list of options in
   # it we need to raise an error.
-  # Need to add an error when:
-  # * there is no list of options.
   Post.class_eval do
     validate :poll_options
     def poll_options
@@ -77,30 +74,15 @@ after_initialize do
         self.errors.add(:raw, I18n.t('poll.must_contain_poll_options'))
       end
 
-      if self.created_at and self.created_at < 5.minutes.ago and poll.options.sort != poll.details.keys.sort
-        self.errors.add(:raw, I18n.t('poll.cannot_have_modified_options'))
-      end
+      poll.ensure_can_be_edited!
     end
   end
 
   # Save the list of options to PluginStore after the post is saved.
   Post.class_eval do
-    after_save :save_poll_options_to_topic_metadata
-    def save_poll_options_to_topic_metadata
-      poll = PollPlugin::Poll.new(self)
-      if poll.is_poll?
-        details = poll.details || {}
-        new_options = poll.options
-        details.each do |key, value|
-          unless new_options.include? key
-            details.delete(key)
-          end
-        end
-        new_options.each do |key|
-          details[key] ||= 0
-        end
-        poll.set_details! details
-      end
+    after_save :save_poll_options_to_plugin_store
+    def save_poll_options_to_plugin_store
+      PollPlugin::Poll.new(self).update_options!
     end
   end
 
