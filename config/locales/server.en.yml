@@ -1343,7 +1343,7 @@ en:
       text_body_template: |
         Welcome to %{site_name}!
 
-        You're approved to join %{site_name}, welcome!
+        A staff member approved your account on %{site_name}.
 
         Click the following link to confirm and activate your new account:
         %{base_url}/users/activate-account/%{email_token}
