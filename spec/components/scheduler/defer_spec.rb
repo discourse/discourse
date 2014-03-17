@@ -23,6 +23,26 @@ describe Scheduler::Defer do
     @defer.stop!
   end
 
+  it "recovers from a crash / fork" do
+    s = nil
+    @defer.stop!
+    wait_for(10) do
+      @defer.stopped?
+    end
+    # hack allow thread to die
+    sleep 0.005
+
+    @defer.later do
+      s = "good"
+    end
+
+    wait_for(10) do
+      s == "good"
+    end
+
+    s.should == "good"
+  end
+
   it "can queue jobs properly" do
     s = nil
 
