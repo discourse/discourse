@@ -36,14 +36,6 @@ You will be asked for permission to connect, type `yes`, then the root password,
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3002/eafbf14df8eee832.png" width="572" height="263"> 
 
-# Generate SSH Key
-
-**We strongly recommend setting a SSH key because you may need to access the Rails console for debugging purposes. This <i>cannot</i> be done after bootstrapping the app.**
-
-    ssh-keygen -t rsa -C "your_email@example.com"
-
-(We want the default settings, so when asked to enter a file in which to save the key, just press <kbd>enter</kbd>. Via [GitHub's SSH guide][ssh].)
-
 # Install Docker
 
 Update to a newer kernel:
@@ -99,7 +91,7 @@ Edit as desired, but at minimum set `DISCOURSE_DEVELOPER_EMAILS` and `DISCOURSE_
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2979/e6fedbde9b471880.png" width="565" height="172"> 
 
-We renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that we want to host our instance of Discourse on `http://discourse.techapj.com/`. You'll need to modify your DNS records to reflect the IP address and preferred URL address of your server.
+If you set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want to host our instance of Discourse on `http://discourse.example.com/`. You'll need to change your DNS records to reflect the IP address and preferred URL address of your server.
 
 # Mail Setup
 
@@ -113,15 +105,7 @@ We renamed `DISCOURSE_HOSTNAME` to `discourse.techapj.com`, this means that we w
 
 - Don't forget to set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) up for your domain name. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
 
-- The name of your droplet is your reverse PTR record, so rename your droplet to `forum.example.com` so the PTR record correctly reflects your domain name.
-
-# Add Your SSH Key
-
-If you successfully generated the SSH key as described earlier, get it:
-
-    cat ~/.ssh/id_rsa.pub
-
-Copy the entire output and paste it into the `ssh_key` setting in the `app.yml` file.
+- The name of your droplet is your reverse PTR record, so rename your droplet to `discourse.example.com` so the PTR record correctly reflects your domain name.
 
 # Bootstrap Discourse
 
@@ -147,19 +131,7 @@ You can also access it by visiting the server IP address directly, e.g. `http://
 
 # Log In and Become Admin
 
-Sign into your Discourse instance. If you configured `DISCOURSE_DEVELOPER_EMAILS` and your email matches, your account will be made Admin by default.
-
-If your account was not made admin, try SSH'ing into your container (assuming you entered your SSH key in the `app.yml` file):
-
-    ./launcher ssh my_container
-    sudo -iu discourse
-    cd /var/www/discourse
-    RAILS_ENV=production bundle exec rails c
-    u = User.last
-    u.admin = true
-    u.save
-
-This will manually make the first user an admin.
+Sign into your Discourse instance. There should be a reminder visible on the site about which email was used for the  `DISCOURSE_DEVELOPER_EMAILS` address. Be sure you log in with that email, and your account will be made Admin by default.
 
 # Post-Install Maintenance
 
