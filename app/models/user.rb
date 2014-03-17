@@ -567,7 +567,7 @@ class User < ActiveRecord::Base
     return I18n.t('redirected_to_top_reasons.new_user') if trust_level == 0 &&
       created_at > SiteSetting.redirect_new_users_to_top_page_duration.days.ago
     # long-time-no-see user
-    return I18n.t('redirected_to_top_reasons.not_seen_in_a_month') if last_seen_at < 1.month.ago
+    return I18n.t('redirected_to_top_reasons.not_seen_in_a_month') if last_seen_at && last_seen_at < 1.month.ago
     nil
   end
 
