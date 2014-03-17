@@ -12,5 +12,5 @@ en:
   poll:
     must_contain_poll_options: "must contain a list of poll options"
     cannot_have_modified_options: "cannot be modified after the first five minutes. Contact a moderator if you need to change them."
-    cannot_add_or_remove_options: "can only be edited, not added or removed. If you need to add or remove options you should lock this thread and create a new one."
+    cannot_add_or_remove_options: "can only be edited, not added or removed. If you need to add or remove options you should lock this topic and create a new one."
     prefix: "Poll:"
