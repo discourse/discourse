@@ -48,7 +48,7 @@ Discourse.Badge = Discourse.Model.extend({
   translatedDescription: function() {
     var i18nKey = "badges." + this.get('i18nNameKey') + ".description",
         translation = I18n.t(i18nKey);
-    if (translation.match(new RegExp(i18nKey))) {
+    if (translation.indexOf(i18nKey) !== -1) {
       translation = null;
     }
     return translation;
