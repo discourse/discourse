@@ -25,7 +25,7 @@
         cloaks: cloakView,
         preservesContext: this.get('preservesContext') === "true",
         cloaksController: this.get('itemController'),
-        defaultHeight: this.get('defaultHeight') || 100,
+        defaultHeight: this.get('defaultHeight'),
 
         init: function() {
           this._super();
@@ -191,6 +191,7 @@
       $(window).bind('scroll.ember-cloak', onScrollMethod);
       this.addObserver('wrapperTop', self, onScrollMethod);
       this.addObserver('wrapperHeight', self, onScrollMethod);
+      this.scrollTriggered();
 
       this.set('scrollingEnabled', true);
     }.on('didInsertElement'),
@@ -219,7 +220,7 @@
 
     init: function() {
       this._super();
-      this.uncloak();
+      this.cloak();
     },
 
     /**
@@ -246,8 +247,8 @@
             factory = Ember.generateControllerFactory(container, controllerName, model);
 
             // inform developer about typo
-            Ember.Logger.warn('ember-cloacking: can\'t lookup controller by name "' + controllerFullName + '".');
-            Ember.Logger.warn('ember-cloacking: using ' + factory.toString() + '.');
+            Ember.Logger.warn('ember-cloaking: can\'t lookup controller by name "' + controllerFullName + '".');
+            Ember.Logger.warn('ember-cloaking: using ' + factory.toString() + '.');
           }
 
           controller = factory.create({
@@ -300,6 +301,21 @@
       }
     },
 
+
+    didInsertElement: function(){
+      if (!this.get('containedView')) {
+        // setting default height
+        // but do not touch if height already defined
+        if(!this.$().height()){
+          var defaultHeight = 100;
+          if(this.get('defaultHeight')) {
+            defaultHeight = this.get('defaultHeight');
+          }
+
+          this.$().css('height', defaultHeight);
+        }
+      }
+     },
 
     /**
       Render the cloaked view if applicable.
