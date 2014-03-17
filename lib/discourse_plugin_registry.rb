@@ -6,12 +6,17 @@ class DiscoursePluginRegistry
   class << self
     attr_accessor :javascripts
     attr_accessor :server_side_javascripts
+    attr_accessor :admin_javascripts
     attr_accessor :stylesheets
     attr_accessor :handlebars
 
     # Default accessor values
     def javascripts
       @javascripts ||= Set.new
+    end
+
+    def admin_javascripts
+      @admin_javascripts ||= Set.new
     end
 
     def server_side_javascripts
