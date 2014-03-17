@@ -71,6 +71,26 @@ class Guardian
     end
   end
 
+  def can_create?(klass, parent=nil)
+    return false unless authenticated? && klass
+
+    # If no parent is provided, we look for a can_create_klass?
+    # custom method.
+    #
+    # If a parent is provided, we look for a method called
+    # can_create_klass_on_parent?
+    target = klass.name.underscore
+    if parent.present?
+      return false unless can_see?(parent)
+      target << "_on_#{parent.class.name.underscore}"
+    end
+    create_method = :"can_create_#{target}?"
+
+    return send(create_method, parent) if respond_to?(create_method)
+
+    true
+  end
+
   # Can the user edit the obj
   def can_edit?(obj)
     can_do?(:edit, obj)
@@ -82,7 +102,7 @@ class Guardian
   end
 
   def can_moderate?(obj)
-    obj && is_staff?
+    obj && authenticated? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(:elder)))
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?

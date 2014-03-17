@@ -409,6 +409,10 @@ describe Guardian do
         it "allows new posts from admins" do
           Guardian.new(admin).can_create?(Post, topic).should be_true
         end
+
+        it "allows new posts from elders" do
+          Guardian.new(elder).can_create?(Post, topic).should be_true
+        end
       end
 
       context 'archived topic' do
@@ -726,6 +730,10 @@ describe Guardian do
 
       it 'returns true when an admin' do
         Guardian.new(admin).can_moderate?(topic).should be_true
+      end
+
+      it 'returns true when trust level 4' do
+        Guardian.new(elder).can_moderate?(topic).should be_true
       end
 
     end
