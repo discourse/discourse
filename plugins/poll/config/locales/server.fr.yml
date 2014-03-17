@@ -11,7 +11,12 @@
 # http://yamllint.com/
 
 fr:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Les options du sondage"
   poll:
-    must_contain_poll_options: "doit contenir une liste de choix pour le sondage"
-    cannot_have_modified_options: "ne peut pas être modifié car il contient un sondage publié depuis plus de 5 minutes"
+    must_contain_poll_options: "doit contenir une liste d'options pour le sondage"
+    cannot_have_modified_options: "ne peuvent pas être modifiés après 5 minutes. Merci de contacter un moderateur, si vous souhaitez les modifier"
+    cannot_add_or_remove_options: "peuvent seulement être modifiés. Si vous souhaitez en supprimer ou en ajouter, veuillez créer un nouveau sujet."
     prefix: "Sondage\\s?:"

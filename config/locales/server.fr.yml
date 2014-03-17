@@ -165,6 +165,8 @@ fr:
         name: "Nom de catégorie"
       post:
         raw: "Corps"
+      user:
+        ip_address: ""
     errors:
       messages:
         is_invalid: "n'est pas valide; merci d'être plus descriptif"
@@ -611,6 +613,7 @@ fr:
     topics_per_period_in_top_summary: "Combien de sujets chargés sur le résumé des meilleures sujets"
     topics_per_period_in_top_page: "Combien de sujets chargés sur la page principale des sujets"
     redirect_new_users_to_top_page_duration: "Nombre de jours durant lesquels un nouvel utilisateur sera automatiquement redirigé vers la page \"top\""
+    enable_badges: "Activer le système de badge (expérimental)"
     allow_index_in_robots_txt: "Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)"
     email_domains_blacklist: "Liste des domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines d'email autorisés, délimités par un pipe. ATTENTION : les utilisateurs ayant un email sur un autre domaine ne pourrons pas s'enregistrer."
@@ -644,7 +647,10 @@ fr:
     github_client_id: "id client pour l'authentification Github, enregistré sur https://github.com/settings/applications"
     github_client_secret: "secret client  pour l'authentification Github, enregistré sur https://github.com/settings/applications"
     allow_restore: "Autoriser la restauration, qui peut remplacer TOUTES les données du site! Laissez à faux, sauf si vous envisagez de faire restaurer une sauvegarde"
+    maximum_backups: "Nombre maximum de sauvegardes à conserver sur le disque. Les anciennes sauvegardes seront automatiquement supprimées."
     backup_daily: "Créer automatiquement une sauvegarde du site chaque jour"
+    enable_s3_backups: "Envoyer votre sauvegarde à S3 lorsqu'elle est terminée. Assurez-vous d'avoir bien remplis vos identifiants S3."
+    s3_backup_bucket: "Bucket distant qui contiendra les sauvegardes. ATTENTION: Vérifié que c'est un bucket privée"
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'dernier_vu_a', en secondes."
     previous_visit_timeout_hours: "Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre ce nombre de secondes avant de pouvoir en créer un nouveau"
@@ -943,12 +949,49 @@ fr:
         Cependant, si le message est  signalé par la communauté une seconde fois, les modérateurs seront informés (et ils pourront prendre d'autres mesures y compris l'éventuelle suspension de votre compte.)
 
         Pour plus d'informations, merci de vous en référer à la  [FAQ](%{base_url}/faq).
+    usage_tips:
+      text_body_template: |
+        Ce message privé contient quelques astuces pour vous aider à démarrer rapidement :
+
+        ### Continuez à descendre
+
+        Il n'y a pas de bouton Page Suivante ni de numéro de page. Pour continuer à lire, vous avez juste à descendre.
+
+        Lorsque de nouvelles réponses arrivent, elles apparaissent automatiquement en bas du sujet.
+
+        ### Comment je réponds ?
+
+        - Pour répondre à un message spécifique, utilisez le bouton "Répondre" sur le message.
+
+        - Si vous voulez répondre au thème global du sujet, plutôt qu'à une personne en particulier, utilisez le bouton "Réponse" tout en bas du sujet.
+
+        - Si vous voulez continuer le sujet dans une section différente, mais garder le lien entre votre sujet et le message qui vous l'a inspiré, utilisez la fonction "Répondre en créant un nouveau sujet" qui se trouve à droite de chaque message.
+
+        ### Qui me parle ?
+
+        Quand quelqu'un répond à votre message, vous cite, ou mentionne votre @pseudo, une notification ➀ apparaît en haut de la page. Cliquez ou touchez le chiffre des notifications pour voir qui vous parle, et où.
+
+        - Pour mentionner le pseudo d'un utilisateur, commencez à taper `@` et une liste d'auto-complétion apparaîtra.
+
+        - Pour citer un message entier, utiliser le bouton "Citer" dans la barre d'édition.
+
+        - Pour citer uniquement une portion de message, surlignez-là et cliquez ensuite sur le bouton "Répondre" qui apparaît au survol de la sélection.
+
+        ### Regarde ce message !
+
+        Pour faire savoir à quelqu'un que vous avez apprécié son message, cliquez sur le bouton J'aime ♥ en bas du message. Si vous voyez un problème avec un message, n'hésitez pas à cliquer sur le bouton Signalez pour avertir les modérateurs et les autres membres.
+
+        ### Où suis-je ?
+
+        - Pour retourner à la page d'accueil à tout moment, cliquez sur l'**icône en haut à gauche.**
+
+        - Pour effectuer une recherche, visiter votre profil, ou naviguer, cliquez sur les **icônes en haut à droite**.
+
+        - Pendant que vous consultez un sujet, vous pouvez retourner au début ↑ en cliquant sur son titre situé en haut de l'écran ou en appuyant sur la touche <kbd>home</kbd>. Pour atteindre la *fin* ↓, cliquez sur la flèche vers le bas sur l’indicateur de progression en bas de la page, ou appuyez sur la touche <kbd>fin</kbd>, ou cliquez sur le champ "dernier message" dans le résumé du sujet, sous le premier message.
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
-        Salut !
-
-        Merci d'avoir rejoint %{site_name}, et bienvenue sur notre forum de discussion !
+        Merci d'avoir rejoint %{site_name}, et bienvenue !
 
         %{new_user_tips}
 
@@ -958,13 +1001,13 @@ fr:
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
-        Merci d'avoir accepté l'invitation sur %{site_name}, et bienvenue sur notre forum de discussion !
+        Merci d'avoir accepté l'invitation sur %{site_name}, et bienvenue !
 
         Nous vous avons automatiquement généré un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].
 
         Pour vous reconnecter, vous pouvez :
 
-        1. Utiliser Facebook, Google, Twitter ou de nombreux autres fournisseurs d'informations supportés (mais ces fournisseurs doivent utiliser la **même adresse email** que l'invitation que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître).
+        1. Utiliser votre identifiant préféré -- mais votre **adresse email** devra être la même que celle de l'invitation que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.
 
         2. Créer un mot de passe unique pour %{site_name} sur votre [page de profil utilisateur][prefs], et vous connecter avec
 
@@ -1146,7 +1189,7 @@ fr:
       text_body_template: |
         Bienvenue sur %{site_name} !
 
-        Vous avez été approuvé pour rejoindre %{site_name}, bienvenue sur notre forum de discussion!
+        Vous avez été approuvé pour rejoindre %{site_name}, bienvenue !
 
         Cliquez sur le lien suivant pour confirmer et activer votre nouveau compte :
         %{base_url}/users/activate-account/%{email_token}
@@ -1215,3 +1258,8 @@ fr:
     message_to_blank: "message.to est vide"
     text_part_body_blank: "text_part.body est vide"
     body_blank: "body est vide"
+  badges:
+    types:
+      gold: Or
+      silver: Argent
+      bronze: Bronze

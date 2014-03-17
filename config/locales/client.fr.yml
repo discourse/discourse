@@ -609,7 +609,7 @@ fr:
         category: "Il n'y a plus de sujet sur {{category}} à lire."
         top: "Il n'y a plus de meilleurs sujets."
     topic:
-      filter_to: "Afficher {{post_count}} messages dans ce sujet"
+      filter_to: "{{post_count}} messages sur ce sujet"
       create: 'Créer votre sujet'
       create_long: 'Créer un nouveau sujet'
       private_message: 'Commencer un message privé'
@@ -670,6 +670,7 @@ fr:
         current: message courant
         position: "message %{current} sur %{total}"
       notifications:
+        title: ''
         reasons:
           '3_6': 'Vous recevrez des notifications parce que vous surveillez cette catégorie.'
           '3_5': 'Vous recevrez des notifications parce que vous avez commencé à surveiller ce sujet automatiquement.'
@@ -744,9 +745,9 @@ fr:
         title: 'Inviter des Amis'
         action: 'Envoyer l''invitation'
         help: 'envoyer des invitations à des amis pour qu''ils puissent participer à ce sujet en un simple clic'
-        to_topic: "Nous allons envoyer un mail à votre ami pour lui permettre de participer à cette conversation juste en cliquant sur un lien, sans qu'il ait à se connecter."
-        to_forum: "Nous allons envoyer un mail à votre ami pour lui permettre de participer au forum juste en cliquant sur un lien."
-        email_placeholder: 'adresse email'
+        to_topic: "Nous allons envoyer un mail à votre ami pour qu'il réponde à ce sujet en cliquant sur un lien, sans qu'il ait à se connecter."
+        to_forum: "Nous allons envoyer un mail à votre ami pour lui permettre de participer au forum juste en cliquant sur un lien, sans qu'il ait à se connecter."
+        email_placeholder: 'nom@exemple.com'
         success: "Merci ! Nous avons envoyé un mail à <b>{{email}}</b>. Nous vous informerons lorsqu'ils auront retourné votre invitation. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être est -elle déjà un utilisateur ?"
       login_reply: 'Connectez-vous pour répondre'
@@ -1065,6 +1066,7 @@ fr:
         help: "sujets que vous suivez ou suivez attentivement avec des messages non lus"
       new:
         lower_title_with_count:
+          zero: ""
           one: "1 nouveau"
           other: "{{count}} nouveaux"
         lower_title: "nouveau"
@@ -1309,6 +1311,7 @@ fr:
             user_placeholder: "nom d'utilisateur"
             address_placeholder: "em@il.com"
             type_placeholder: "résumé, inscription..."
+            reply_key_placeholder: ""
             skipped_reason_placeholder: "raison"
       logs:
         title: "Journaux"
@@ -1528,6 +1531,17 @@ fr:
           legal: "Légal"
           uncategorized: 'Sans catégorie'
           backups: "Sauvegardes"
+      badges:
+        title: Badges
+        new_badge: Nouveau Badge
+        new: Nouveau
+        name: Nom
+        display_name: Nom affiché
+        description: Description
+        badge_type: Type de badge
+        save: Sauvegarder
+        delete: Supprimer
+        delete_confirm: Etes vous sûr de vouloir supprimer ce badge ?
     lightbox:
       download: "télécharger"
     keyboard_shortcuts_help:
@@ -1568,3 +1582,7 @@ fr:
         mark_regular: '<b>m</b> then <b>r</b> Marquer le suivi du sujet comme normale'
         mark_tracking: '<b>m</b> then <b>t</b> Marquer le sujet comme suivi'
         mark_watching: '<b>m</b> puis <b>w</b> Marquer le sujet comme surveillé'
+    badges:
+      example_badge:
+        name: Exemple de badge
+        description: Ceci est un badge d'exemple.
