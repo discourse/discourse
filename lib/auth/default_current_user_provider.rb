@@ -33,9 +33,12 @@ class Auth::DefaultCurrentUserProvider
 
     if current_user
 
-      Jobs.enqueue(:update_user_info,
-                    user_id: current_user.id,
-                    ip: request.ip)
+      u = current_user
+      Scheduler::Defer.later do
+        u.update_last_seen!
+        u.update_ip_address!(request.ip)
+      end
+
     end
 
     # possible we have an api call, impersonate
