@@ -17,6 +17,7 @@ class PostRevisor
     post_process_post
     update_topic_word_counts
     @post.advance_draft_sequence
+    PostAlerter.new.after_save_post(@post)
 
     true
   end

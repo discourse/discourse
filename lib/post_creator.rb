@@ -64,10 +64,12 @@ class PostCreator
       track_topic
       update_topic_stats
       update_user_counts
+
       publish
       ensure_in_allowed_users if guardian.is_staff?
       @post.advance_draft_sequence
       @post.save_reply_relationships
+      PostAlerter.new.after_save_post(@post)
     end
 
     handle_spam
