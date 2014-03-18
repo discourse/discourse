@@ -1,5 +1,31 @@
 class PostAlerter
 
+  def self.post_created(post)
+    alerter = PostAlerter.new
+    alerter.after_create_post(post)
+    alerter.after_save_post(post)
+    post
+  end
+
+  def after_create_post(post)
+    if post.topic.private_message?
+      # If it's a private message, notify the topic_allowed_users
+      post.topic.all_allowed_users.reject{ |user| user.id == post.user_id }.each do |user|
+        next if user.blank?
+
+        if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
+          next unless post.reply_to_post_number
+          next unless post.reply_to_post.user_id == user.id
+        end
+
+        create_notification(user, Notification.types[:private_message], post)
+      end
+    elsif post.post_type != Post.types[:moderator_action]
+      # If it's not a private message and it's not an automatic post caused by a moderator action, notify the users
+      notify_post_users(post)
+    end
+  end
+
   def after_save_post(post)
     return if post.topic.private_message?
 

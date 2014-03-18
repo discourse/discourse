@@ -210,8 +210,7 @@ describe PostRevisor do
       before do
         SiteSetting.stubs(:newuser_max_images).returns(0)
         url = "http://i.imgur.com/FGg7Vzu.gif"
-        # this test is problamatic, it leaves state in the onebox cache
-        Oneboxer.stubs(:onebox).with(url, anything).returns("<img src='#{url}'>")
+        Oneboxer.stubs(:cached_onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(post.user, "So, post them here!\n#{url}")
       end
 

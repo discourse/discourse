@@ -20,29 +20,37 @@ describe Notification do
     let(:coding_horror) { Fabricate(:coding_horror) }
 
     describe 'replies' do
+      def process_alerts(post)
+        PostAlerter.post_created(post)
+      end
 
-      let(:post) { Fabricate(:post, post_args.merge(raw: "Hello @CodingHorror")) }
+      let(:post) {
+        process_alerts(Fabricate(:post, post_args.merge(raw: "Hello @CodingHorror")))
+      }
+
 
       it 'notifies the poster on reply' do
         lambda {
-          @reply = Fabricate(:basic_reply, user: coding_horror, topic: post.topic)
+          reply = Fabricate(:basic_reply, user: coding_horror, topic: post.topic)
+          process_alerts(reply)
         }.should change(post.user.notifications, :count).by(1)
       end
 
       it "doesn't notify the poster when they reply to their own post" do
         lambda {
-          @reply = Fabricate(:basic_reply, user: post.user, topic: post.topic)
+          reply = Fabricate(:basic_reply, user: post.user, topic: post.topic)
+          process_alerts(reply)
         }.should_not change(post.user.notifications, :count).by(1)
       end
     end
 
     describe 'watching' do
       it "does notify watching users of new posts" do
-        post = Fabricate(:post, post_args)
+        post = PostAlerter.post_created(Fabricate(:post, post_args))
         user2 = Fabricate(:coding_horror)
         post_args[:topic].notify_watch!(user2)
         lambda {
-          Fabricate(:post, user: post.user, topic: post.topic)
+          PostAlerter.post_created(Fabricate(:post, user: post.user, topic: post.topic))
         }.should change(user2.notifications, :count).by(1)
       end
     end
@@ -126,6 +134,7 @@ describe Notification do
     before do
       @topic = Fabricate(:private_message_topic)
       @post = Fabricate(:post, topic: @topic, user: @topic.user)
+      PostAlerter.post_created(@post)
       @target = @post.topic.topic_allowed_users.reject{|a| a.user_id == @post.user_id}[0].user
     end
 
@@ -255,8 +264,6 @@ describe Notification do
     def regular
       fab(Notification.types[:liked], true)
     end
-
-
 
     it 'orders stuff correctly' do
       a = unread_pm

@@ -69,12 +69,15 @@ class PostCreator
       ensure_in_allowed_users if guardian.is_staff?
       @post.advance_draft_sequence
       @post.save_reply_relationships
-      PostAlerter.new.after_save_post(@post)
     end
 
-    handle_spam
-    track_latest_on_category
-    enqueue_jobs
+    if @post
+      PostAlerter.post_created(@post)
+
+      handle_spam
+      track_latest_on_category
+      enqueue_jobs
+    end
 
     @post
   end
