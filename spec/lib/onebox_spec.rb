@@ -1,6 +1,11 @@
 require "spec_helper"
 
 describe Onebox do
+
+  before do
+    fake("http://www.amazon.com", response("amazon"))
+  end
+
   describe ".preview" do
     let(:url) { "http://www.amazon.com" }
     it "creates a cache that responds as expected" do
