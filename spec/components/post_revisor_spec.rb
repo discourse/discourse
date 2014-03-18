@@ -271,5 +271,21 @@ describe PostRevisor do
         end
       end
     end
+
+    describe "topic excerpt" do
+      it "topic excerpt is updated only if first post is revised" do
+        revisor = described_class.new(post)
+        first_post = topic.posts.by_post_number.first
+        expect {
+          revisor.revise!(first_post.user, 'Edit the first post', revised_at: first_post.updated_at + 10.seconds)
+          topic.reload
+        }.to change { topic.excerpt }
+        second_post = Fabricate(:post, post_args.merge(post_number: 2, topic_id: topic.id))
+        expect {
+          described_class.new(second_post).revise!(second_post.user, 'Edit the 2nd post')
+          topic.reload
+        }.to_not change { topic.excerpt }
+      end
+    end
   end
 end

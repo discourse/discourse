@@ -188,6 +188,7 @@ class PostCreator
     attrs = {last_posted_at: @post.created_at, last_post_user_id: @post.user_id}
     attrs[:bumped_at] = @post.created_at unless @post.no_bump
     attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
+    attrs[:excerpt] = @post.excerpt(220, strip_links: true) if new_topic?
     @topic.update_attributes(attrs)
   end
 

@@ -184,6 +184,16 @@ describe PostCreator do
 
         user2.user_stat.reload.topic_reply_count.should == 1
       end
+
+      it 'sets topic excerpt if first post, but not second post' do
+        first_post = creator.create
+        topic = first_post.topic.reload
+        topic.excerpt.should be_present
+        expect {
+          PostCreator.new(first_post.user, topic_id: first_post.topic_id, raw: "this is the second post").create
+          topic.reload
+        }.to_not change { topic.excerpt }
+      end
     end
 
     context 'when auto-close param is given' do

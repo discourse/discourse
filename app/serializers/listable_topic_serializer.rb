@@ -64,11 +64,6 @@ class ListableTopicSerializer < BasicTopicSerializer
     pinned
   end
 
-  def excerpt
-    # excerpt should be hoisted into topic, this is an N+1 query ... yuck
-    object.posts.by_post_number.first.try(:excerpt, 220, strip_links: true) || nil
-  end
-
   def pinned
     PinnedCheck.new(object, object.user_data).pinned?
   end
