@@ -35,4 +35,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "mocha", "~> 0.14"
   spec.add_development_dependency "rubocop", "~> 0.11"
   spec.add_development_dependency "twitter", "~> 4.8"
+  spec.add_development_dependency "guard-rspec", "~> 4.2.8"
+  # listen current is a bit broken
+  # http://stackoverflow.com/questions/21319753/readline-seems-to-be-broken
+  spec.add_development_dependency "listen", "= 2.6.0"
 end
