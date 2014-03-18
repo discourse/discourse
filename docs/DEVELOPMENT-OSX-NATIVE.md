@@ -12,7 +12,7 @@ If you don't already have a Ruby environment that's tuned to your liking, you ca
 
 1. Install XCode and/or the XCode Command Line Tools from [Apple's developer site](https://developer.apple.com/downloads/index.action). This should also install Git.
 2. Clone the Discourse repo and cd into it.
-3. Run `scripts/osx_dev`.
+3. Run `script/osx_dev`.
 4. Review `log/osx_dev.log` to make sure everything finished successfully.
 
 Of course, it is good to understand what the script is doing and why. The rest of this guide goes through what's happening.
