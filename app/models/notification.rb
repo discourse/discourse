@@ -27,7 +27,8 @@ class Notification < ActiveRecord::Base
   def self.types
     @types ||= Enum.new(
       :mentioned, :replied, :quoted, :edited, :liked, :private_message,
-      :invited_to_private_message, :invitee_accepted, :posted, :moved_post
+      :invited_to_private_message, :invitee_accepted, :posted, :moved_post,
+      :linked
     )
   end
 

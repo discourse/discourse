@@ -26,6 +26,13 @@ describe DiscoursePluginRegistry do
     end
   end
 
+  context '#admin_javascripts' do
+    it 'defaults to an empty Set' do
+      DiscoursePluginRegistry.admin_javascripts = nil
+      DiscoursePluginRegistry.admin_javascripts.should == Set.new
+    end
+  end
+
   context '.register_css' do
     before do
       registry.register_css('hello.css')

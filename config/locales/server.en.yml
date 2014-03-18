@@ -507,6 +507,7 @@ en:
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
     s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+    s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/discourse.conf file and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
     default_logo_warning: "You haven't customized the logo images for your site. Update logo_url, logo_small_url, and favicon_url in the <a href='/admin/site_settings'>Site Settings</a>."
@@ -609,6 +610,7 @@ en:
     onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
 
     logo_url: "The logo for your site eg: http://example.com/logo.png"
+    digest_logo_url: "The logo used in your site's email digest. If left blank `logo_url` will be used. eg: http://example.com/logo.png"
     logo_small_url: "The small logo for your site used when scrolling down on topics eg: http://example.com/logo-small.png"
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
@@ -664,6 +666,8 @@ en:
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
     redirect_new_users_to_top_page_duration: "Number of days during which new users are automatically redirect to the top page"
+
+    enable_badges: "Enable the badge system (experimental)"
 
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
@@ -870,6 +874,7 @@ en:
     private_message: "%{display_username} sent you a private message: %{link}"
     invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
+    linked: "%{display_username} linked you in %{link}"
 
   search:
     within_post: "#%{post_number} by %{username}: %{excerpt}"
@@ -1015,28 +1020,38 @@ en:
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
   new_version_mailer:
-    subject_template: "[%{site_name}] Updates Are Available"
+    subject_template: "[%{site_name}] update available"
     text_body_template: |
-      A new version of Discourse is available.
+      A new version of Discourse is available:
 
       Your version: %{installed_version}
+      New version: **%{new_version}**
 
-      **New version: %{new_version}**
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      Please upgrade as soon as possible to get the latest fixes and new features. Visit http://meta.discourse.org for discussion and news about Discourse.
+      - Upgrade by visiting `\admin\docker`, refreshing the page a few times, and pressing the "upgrade" button.
+
+      - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
 
   new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] Updates Are Available"
+    subject_template: "[%{site_name}] update available"
     text_body_template: |
-      A new version of Discourse is available. Please upgrade as soon as possible to get the latest fixes and new features.
+      A new version of Discourse is available:
 
       Your version: %{installed_version}
+      New version: **%{new_version}**
 
-      **New version: %{new_version}**
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Upgrade by visiting `\admin\docker`, refreshing the page a few times, and pressing the "upgrade" button.
+
+      - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
+
+      ### Release notes
 
       %{notes}
 
-      Visit http://meta.discourse.org for discussion and news about Discourse.
+
 
   system_messages:
     post_hidden:
@@ -1101,7 +1116,7 @@ en:
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
-        Thanks for joining %{site_name}, and welcome to our discussion forum!
+        Thanks for joining %{site_name}, and welcome!
 
         %{new_user_tips}
 
@@ -1112,13 +1127,13 @@ en:
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
-        Thanks for accepting your invitation to %{site_name}, and welcome to our discussion forum!
+        Thanks for accepting your invitation to %{site_name}, and welcome!
 
         We've automatically generated a username for you: **%{username}**, but you can change that any time by visiting [your user profile][prefs].
 
         To log in again, either:
 
-        1. Use Facebook, Google, Twitter, or many other supported credentials -- but that credential must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
+        1. Log in however you like -- but that login must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
 
         2. Create a unique password for %{site_name} on [your user profile][prefs], then log in with that.
 
@@ -1331,7 +1346,7 @@ en:
       text_body_template: |
         Welcome to %{site_name}!
 
-        You're approved to join %{site_name}, welcome to our discussion forum!
+        A staff member approved your account on %{site_name}.
 
         Click the following link to confirm and activate your new account:
         %{base_url}/users/activate-account/%{email_token}
@@ -1408,3 +1423,9 @@ en:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
+
+  badges:
+    types:
+      gold: Gold
+      silver: Silver
+      bronze: Bronze

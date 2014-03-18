@@ -24,6 +24,10 @@ Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
     return Discourse.SiteSettings.must_approve_users;
   }.property(),
 
+  showBadges: function() {
+    return Discourse.SiteSettings.enable_badges;
+  }.property(),
+
   primaryGroupDirty: Discourse.computed.propertyNotEqual('originalPrimaryGroupId', 'primary_group_id'),
 
   actions: {

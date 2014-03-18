@@ -10,6 +10,7 @@
 Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   loading: false,
   viewMode: "side_by_side",
+  revisionsTextKey: "post.revisions.controls.comparing_previous_to_current_out_of_total",
 
   refresh: function(postId, postVersion) {
     this.set("loading", true);
@@ -37,6 +38,8 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
   category_diff: function() {
     var viewMode = this.get("viewMode");
     var changes = this.get("category_changes");
+
+    if (changes === null) { return; }
 
     var prevCategory = Discourse.Category.findById(changes.previous_category_id);
     var curCategory = Discourse.Category.findById(changes.current_category_id);

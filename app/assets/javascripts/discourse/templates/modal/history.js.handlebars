@@ -3,7 +3,7 @@
     <div id="revision-controls">
       {{#if displayGoToFirst}}<button class="btn standard" title="{{i18n post.revisions.controls.first}}" {{bind-attr disabled=loading}} {{action loadFirstVersion}}><i class="fa fa-fast-backward"></i></button>{{/if}}
       {{#if displayGoToPrevious}}<button class="btn standard" title="{{i18n post.revisions.controls.previous}}" {{bind-attr disabled=loading}} {{action loadPreviousVersion}}><i class="fa fa-backward"></i></button>{{/if}}
-      {{#if displayRevisions}}{{{i18n post.revisions.controls.comparing_previous_to_current_out_of_total previous=previousVersion current=version total=revisions_count}}}{{/if}}
+      {{#if displayRevisions}}{{{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="version" totalBinding="revisions_count"}}}{{/if}}
       {{#if displayGoToNext}}<button class="btn standard" title="{{i18n post.revisions.controls.next}}" {{bind-attr disabled=loading}} {{action loadNextVersion}}><i class="fa fa-forward"></i></button>{{/if}}
       {{#if displayGoToLast}}<button class="btn standard" title="{{i18n post.revisions.controls.last}}" {{bind-attr disabled=loading}} {{action loadLastVersion}}><i class="fa fa-fast-forward"></i></button>{{/if}}
     </div>
@@ -17,7 +17,7 @@
     </div>
   </div>
   <div id="revision-details">
-    {{i18n post.revisions.details.edited_by}} {{avatar this imageSize="small"}} {{username}} <span class="date">{{unboundDate path="created_at" leaveAgo="true"}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
+    {{i18n post.revisions.details.edited_by}} {{avatar this imageSize="small"}} {{username}} <span class="date">{{date created_at}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
   </div>
   <div id="revisions">
     {{#if title_changes}}

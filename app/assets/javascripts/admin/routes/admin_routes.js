@@ -57,5 +57,7 @@ Discourse.Route.buildRoutes(function() {
       });
     });
 
+    this.route('badges');
+
   });
 });

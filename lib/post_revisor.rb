@@ -14,9 +14,11 @@ class PostRevisor
     @post.acting_user = @user
     revise_post
     update_category_description
+    update_topic_excerpt
     post_process_post
     update_topic_word_counts
     @post.advance_draft_sequence
+    PostAlerter.new.after_save_post(@post)
 
     true
   end
@@ -104,6 +106,10 @@ class PostRevisor
       category.update_column(:description, new_description)
       @category_changed = category
     end
+  end
+
+  def update_topic_excerpt
+    @post.topic.update_column(:excerpt, @post.excerpt(220, strip_links: true)) if @post.post_number == 1
   end
 
   def post_process_post

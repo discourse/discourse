@@ -390,7 +390,7 @@ Discourse.Post.reopenClass({
 
   loadRevision: function(postId, version) {
     return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function (result) {
-      return Discourse.Post.create(result);
+      return Em.Object.create(result);
     });
   },
 

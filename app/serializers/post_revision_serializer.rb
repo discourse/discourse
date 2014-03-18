@@ -40,7 +40,7 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def edit_reason
-    object.lookup("edit_reason",1)
+    object.lookup("edit_reason", 1)
   end
 
   def user

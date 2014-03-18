@@ -3,40 +3,6 @@ require_dependency 'user'
 
 describe User do
 
-  it { should have_many(:posts) }
-  it { should have_many(:notifications).dependent(:destroy) }
-  it { should have_many(:topic_users).dependent(:destroy) }
-  it { should have_many(:topics) }
-  it { should have_many(:user_open_ids).dependent(:destroy) }
-  it { should have_many(:user_actions).dependent(:destroy) }
-  it { should have_many(:post_actions).dependent(:destroy) }
-  it { should have_many(:email_logs).dependent(:destroy) }
-  it { should have_many(:post_timings) }
-  it { should have_many(:topic_allowed_users).dependent(:destroy) }
-  it { should have_many(:topics_allowed) }
-  it { should have_many(:email_tokens).dependent(:destroy) }
-  it { should have_many(:views) }
-  it { should have_many(:user_visits).dependent(:destroy) }
-  it { should have_many(:invites).dependent(:destroy) }
-  it { should have_many(:topic_links).dependent(:destroy) }
-  it { should have_many(:uploads) }
-
-  it { should have_one(:facebook_user_info).dependent(:destroy) }
-  it { should have_one(:twitter_user_info).dependent(:destroy) }
-  it { should have_one(:github_user_info).dependent(:destroy) }
-  it { should have_one(:oauth2_user_info).dependent(:destroy) }
-  it { should have_one(:user_stat).dependent(:destroy) }
-  it { should belong_to(:approved_by) }
-
-  it { should have_many(:group_users).dependent(:destroy) }
-  it { should have_many(:groups) }
-  it { should have_many(:secure_categories) }
-
-  it { should have_one(:user_search_data).dependent(:destroy) }
-  it { should have_one(:api_key).dependent(:destroy) }
-
-  it { should belong_to(:uploaded_avatar).dependent(:destroy) }
-
   it { should validate_presence_of :username }
   it { should validate_presence_of :email }
 
@@ -1166,7 +1132,7 @@ describe User do
       end
 
       it "should have a reason for long-time-no-see users" do
-        user.expects(:last_seen_at).returns(2.months.ago)
+        user.last_seen_at = 2.months.ago
         user.redirected_to_top_reason.should == I18n.t('redirected_to_top_reasons.not_seen_in_a_month')
       end
     end

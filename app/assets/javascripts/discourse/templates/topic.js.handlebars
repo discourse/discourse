@@ -150,7 +150,7 @@
   {{render quoteButton}}
 {{/if}}
 
-{{#if currentUser.staff}}
+{{#if currentUser.canManageTopic}}
   {{render topicAdminMenu content}}
 {{/if}}
 

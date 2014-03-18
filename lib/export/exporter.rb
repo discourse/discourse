@@ -19,22 +19,25 @@ module Export
 
       listen_for_shutdown_signal
 
+      ensure_directory_exists(@tmp_directory)
+      ensure_directory_exists(@archive_directory)
+
+      write_metadata
+
+      ### READ-ONLY / START ###
       enable_readonly_mode
 
       pause_sidekiq
       wait_for_sidekiq
 
-      ensure_directory_exists(@tmp_directory)
-
-      write_metadata
-
       dump_public_schema
 
-      update_dump
+      disable_readonly_mode
+      ### READ-ONLY / END ###
 
       log "Finalizing backup..."
 
-      ensure_directory_exists(@archive_directory)
+      update_dump
 
       create_archive
 
@@ -104,14 +107,23 @@ module Export
 
     def wait_for_sidekiq
       log "Waiting for sidekiq to finish running jobs..."
-      iterations = 0
-      workers = Sidekiq::Workers.new
-      while (running = workers.size) > 0
-        log "  Waiting for #{running} jobs..."
-        sleep 2
+      iterations = 1
+      while sidekiq_has_running_jobs?
+        log "Waiting for sidekiq to finish running jobs... ##{iterations}"
+        sleep 5
         iterations += 1
-        raise "Sidekiq did not finish running all the jobs in the allowed time!" if iterations >= 15
+        raise "Sidekiq did not finish running all the jobs in the allowed time!" if iterations > 6
       end
+    end
+
+    def sidekiq_has_running_jobs?
+      Sidekiq::Workers.new.each do |process_id, thread_id, worker|
+        payload = worker.try(:payload)
+        return true if payload.try(:all_sites)
+        return true if payload.try(:current_site_id) == @current_db
+      end
+
+      false
     end
 
     def write_metadata
@@ -259,7 +271,7 @@ module Export
       log "Cleaning stuff up..."
       remove_tmp_directory
       unpause_sidekiq
-      disable_readonly_mode
+      disable_readonly_mode if Discourse.readonly_mode?
       mark_export_as_not_running
       log "Finished!"
     end

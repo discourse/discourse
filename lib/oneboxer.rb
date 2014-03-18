@@ -22,13 +22,24 @@ module Oneboxer
   def self.preview(url, options=nil)
     options ||= {}
     Oneboxer.invalidate(url) if options[:invalidate_oneboxes]
-    Onebox.preview(url, cache: Rails.cache).placeholder_html
+    onebox_raw(url).placeholder_html
   end
 
   def self.onebox(url, options=nil)
     options ||= {}
     Oneboxer.invalidate(url) if options[:invalidate_oneboxes]
-    Onebox.preview(url, cache: Rails.cache).to_s
+    onebox_raw(url).to_s
+  end
+
+  def self.cached_onebox(url)
+    Rails.cache.read(onebox_cache_key(url))
+      .to_s
+  end
+
+  def self.cached_preview(url)
+    Rails.cache.read(onebox_cache_key(url))
+      .try(:placeholder_html)
+      .to_s
   end
 
   def self.oneboxer_exists_for_url?(url)
@@ -36,7 +47,7 @@ module Oneboxer
   end
 
   def self.invalidate(url)
-    Rails.cache.delete(url)
+    Rails.cache.delete(onebox_cache_key(url))
   end
 
   # Parse URLs out of HTML, returning the document when finished.
@@ -80,6 +91,17 @@ module Oneboxer
     end
 
     Result.new(doc, changed)
+  end
+
+  private
+  def self.onebox_cache_key(url)
+    "onebox_#{url}"
+  end
+
+  def self.onebox_raw(url)
+    Rails.cache.fetch(onebox_cache_key(url)){
+      Onebox.preview(url, cache: {})
+    }
   end
 
 end

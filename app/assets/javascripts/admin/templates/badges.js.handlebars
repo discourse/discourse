@@ -1,0 +1,62 @@
+<div class="badges">
+
+  <div class='content-list span6'>
+    <h3>{{i18n admin.badges.title}}</h3>
+    <ul>
+      {{#each}}
+      <li>
+        <a {{action selectBadge this}} {{bind-attr class="selected:active"}}>
+          {{displayName}}
+          {{#if newBadge}}
+          (*)
+          {{/if}}
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+    <button {{action newBadge}} class='btn'>{{i18n admin.badges.new}}</button>
+  </div>
+
+  {{#if selectedItem}}
+  {{#with selectedItem}}
+  <div class='current-badge span12'>
+    <form class="form-horizontal">
+      <div>
+        <label for="name">{{i18n admin.badges.name}}</label>
+        {{input type="text" name="name" value=name}}
+      </div>
+
+      {{#if controller.showDisplayName}}
+      <div>
+        <strong>{{i18n admin.badges.display_name}}</strong>
+        {{displayName}}
+      </div>
+      {{/if}}
+
+      <div>
+        <label for="badge_type_id">{{i18n admin.badges.badge_type}}</label>
+        {{view Ember.Select name="badge_type_id" value=badge_type_id
+                            content=controller.badgeTypes
+                            optionValuePath="content.id"
+                            optionLabelPath="content.name"}}
+      </div>
+
+      <div>
+        <label for="description">{{i18n admin.badges.description}}</label>
+        {{#if controller.canEditDescription}}
+          {{textarea name="description" value=description}}
+        {{else}}
+          {{textarea name="description" value=translatedDescription disabled=true}}
+        {{/if}}
+      </div>
+
+      <div class='buttons'>
+        <button {{action save}} {{bind-attr disabled=disableSave}} class='btn btn-primary'>{{i18n admin.badges.save}}</button>
+        <a {{action destroy}} class='delete-link'>{{i18n admin.badges.delete}}</a>
+      </div>
+    </form>
+  </div>
+  {{/with}}
+  {{/if}}
+
+</div>

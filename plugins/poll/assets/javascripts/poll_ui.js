@@ -38,8 +38,14 @@ var PollController = Discourse.Controller.extend({
   poll: null,
   showResults: false,
 
+  disableRadio: Em.computed.any('poll.post.topic.closed', 'loading'),
+
   actions: {
     selectOption: function(option) {
+      if (this.get('disableRadio')) {
+        return;
+      }
+
       if (!this.get('currentUser.id')) {
         this.get('postController').send('showLogin');
         return;
