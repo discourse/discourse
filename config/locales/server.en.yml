@@ -610,6 +610,7 @@ en:
     onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
 
     logo_url: "The logo for your site eg: http://example.com/logo.png"
+    digest_logo_url: "The logo used in your site's email digest. If left blank `logo_url` will be used. eg: http://example.com/logo.png"
     logo_small_url: "The small logo for your site used when scrolling down on topics eg: http://example.com/logo-small.png"
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."

@@ -12,6 +12,9 @@ required:
   logo_small_url:
     client: true
     default: '/images/d-logo-sketch-small.png'
+  digest_logo_url:
+    client: false
+    default: ''
   favicon_url:
     client: true
     default: '/images/default-favicon.ico'
