@@ -15,6 +15,10 @@ describe CrawlerDetection do
       described_class.crawler?("(compatible; Mediapartners-Google/2.1; +http://www.google.com/bot.html)").should == true
       described_class.crawler?("Mediapartners-Google").should == true
       described_class.crawler?("AdsBot-Google (+http://www.google.com/adsbot.html)").should == true
+      described_class.crawler?("Twitterbot").should == true
+      described_class.crawler?("facebookexternalhit/1.1 (+http(s)://www.facebook.com/externalhit_uatext.php)").should == true
+      described_class.crawler?("Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)").should == true
+      described_class.crawler?("Baiduspider+(+http://www.baidu.com/search/spider.htm)").should == true
     end
 
     it "returns false for non-crawler user agents" do

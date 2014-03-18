@@ -14,4 +14,4 @@ fr:
   poll:
     must_contain_poll_options: "doit contenir une liste de choix pour le sondage"
     cannot_have_modified_options: "ne peut pas être modifié car il contient un sondage publié depuis plus de 5 minutes"
-    prefix: "Sondage:"
+    prefix: "Sondage\\s?:"

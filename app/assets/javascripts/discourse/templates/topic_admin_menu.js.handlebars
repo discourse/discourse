@@ -58,9 +58,11 @@
       </li>
       {{/if}}
 
+      {{#if currentUser.staff}}
       <li>
         <button class='btn btn-admin' {{action resetRead}}><i class='fa fa-times'></i> {{i18n topic.actions.reset_read}}</button>
       </li>
+      {{/if}}
     </ul>
   </div>
 {{else}}

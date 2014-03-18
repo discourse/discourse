@@ -75,6 +75,9 @@ basic:
     default: 50
   redirect_new_users_to_top_page_duration:
     default: 7
+  enable_badges:
+    client: true
+    default: false
 
 users:
   enable_sso:

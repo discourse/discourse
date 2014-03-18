@@ -336,6 +336,12 @@
   </div>
 </section>
 
+{{#if showBadges}}
+<section class='details'>
+  <h1>{{i18n admin.badges.title}}</h1>
+</section>
+{{/if}}
+
 <section>
   <hr/>
   <button {{bind-attr class=":btn :btn-danger :pull-right deleteForbidden:hidden"}} {{action destroy target="content"}} {{bind-attr disabled="deleteForbidden"}}>

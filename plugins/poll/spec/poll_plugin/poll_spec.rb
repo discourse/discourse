@@ -50,6 +50,14 @@ describe PollPlugin::Poll do
     poll.details["Onodera"].should eq(1)
   end
 
+  it "should not set votes on closed polls" do
+    poll.set_vote!(user, "Onodera")
+    post.topic.closed = true
+    post.topic.save!
+    poll.set_vote!(user, "Chitoge")
+    poll.get_vote(user).should eq("Onodera")
+  end
+
   it "should serialize correctly" do
     poll.serialize(user).should eq({options: poll.details, selected: nil})
     poll.set_vote!(user, "Onodera")
@@ -62,5 +70,20 @@ describe PollPlugin::Poll do
     post = create_post(topic: topic, raw: "no options in the content")
     poll = PollPlugin::Poll.new(post)
     poll.serialize(user).should eq(nil)
+  end
+
+  it "stores poll options to plugin store" do
+    poll.set_vote!(user, "Onodera")
+    poll.stubs(:options).returns(["Chitoge", "Onodera", "Inferno Cop"])
+    poll.update_options!
+    poll.details.keys.sort.should eq(["Chitoge", "Inferno Cop", "Onodera"])
+    poll.details["Inferno Cop"].should eq(0)
+    poll.details["Onodera"].should eq(1)
+
+    poll.stubs(:options).returns(["Chitoge", "Onodera v2", "Inferno Cop"])
+    poll.update_options!
+    poll.details.keys.sort.should eq(["Chitoge", "Inferno Cop", "Onodera v2"])
+    poll.details["Onodera v2"].should eq(1)
+    poll.get_vote(user).should eq("Onodera v2")
   end
 end
