@@ -17,11 +17,7 @@ $black: #333 !default;
 $white: #fff !default;
 
 $blue: #00aaff !default;
-
 $yellow: lighten(#FFFF00, 15%) !default;
-$light_yellow: lighten($yellow, 20%) !default;
-$lightest_yellow: lighten($yellow, 30%) !default;
-
 $red: #e45735 !default;
 $pink: #fa6c8d !default;
 $green: #009900 !default;
@@ -143,13 +139,6 @@ $quote-background: lighten($black, 76%);
 
 $topicMenuColor: darken($white, 80%);
 $bookmarkColor: $blue;
-
-$tag_color: lighten($blue, 50%);
-$post_footer: lighten($black, 76%);
-
-$controls: lighten($black, 35%);
-$controls_hover: $blue;
-$controls_active: darken($blue, 10%);
 
 
 // Basics

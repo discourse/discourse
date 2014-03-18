@@ -19,11 +19,12 @@
 // --------------------------------------------------
 
 .badge-category {
-  padding: 4px 6px;
+  padding: 2px 6px;
   color: $tertiary_text_color;
   font-size: 12px;
   font-weight: bold;
   white-space: nowrap;
+  display: inline-block;
   &[href] {
   color: $tertiary_text_color;
   }
@@ -40,7 +41,6 @@
     div {
       display: inline-block;
       margin: 0;
-      padding-right: 6px;
     }
 }}
 
