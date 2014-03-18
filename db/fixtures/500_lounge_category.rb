@@ -16,7 +16,8 @@ unless Rails.env.test?
         raw: I18n.t('vip_category_description'),
         title: I18n.t('category.topic_prefix', category: lounge.name),
         category: lounge.name,
-        archetype: Archetype.default
+        archetype: Archetype.default,
+        skip_validations: true
       )
       post = creator.create
 
