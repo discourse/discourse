@@ -80,7 +80,7 @@ gem 'rails-observers'
 
 #gem 'redis-rails'
 gem 'hiredis'
-gem 'redis', :require => ["redis", "redis/connection/hiredis"]
+gem 'redis', require:  ["redis", "redis/connection/hiredis"]
 
 gem 'active_model_serializers'
 
