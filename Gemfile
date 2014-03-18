@@ -186,6 +186,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'librarian', '>= 0.0.25', require: false
   gem 'annotate'
+  gem 'foreman'
 end
 
 # Gem that enables support for plugins. It is required.
