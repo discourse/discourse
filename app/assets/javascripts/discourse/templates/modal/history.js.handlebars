@@ -1,11 +1,11 @@
 <div class="modal-body">
   <div>
     <div id="revision-controls">
-      {{#if displayGoToFirst}}<button class="btn standard" title="{{i18n post.revisions.controls.first}}" {{bind-attr disabled=loading}} {{action loadFirstVersion}}><i class="fa fa-fast-backward"></i></button>{{/if}}
-      {{#if displayGoToPrevious}}<button class="btn standard" title="{{i18n post.revisions.controls.previous}}" {{bind-attr disabled=loading}} {{action loadPreviousVersion}}><i class="fa fa-backward"></i></button>{{/if}}
-      {{#if displayRevisions}}{{{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="version" totalBinding="revisions_count"}}}{{/if}}
-      {{#if displayGoToNext}}<button class="btn standard" title="{{i18n post.revisions.controls.next}}" {{bind-attr disabled=loading}} {{action loadNextVersion}}><i class="fa fa-forward"></i></button>{{/if}}
-      {{#if displayGoToLast}}<button class="btn standard" title="{{i18n post.revisions.controls.last}}" {{bind-attr disabled=loading}} {{action loadLastVersion}}><i class="fa fa-fast-forward"></i></button>{{/if}}
+      <button title="{{i18n post.revisions.controls.first}}" {{bind-attr class=":btn :standard displayGoToFirst::invisible" disabled=loading}} {{action loadFirstVersion}}><i class="fa fa-fast-backward"></i></button>
+      <button title="{{i18n post.revisions.controls.previous}}" {{bind-attr class=":btn :standard displayGoToPrevious::invisible" disabled=loading}} {{action loadPreviousVersion}}><i class="fa fa-backward"></i></button>
+      <div id="revision-numbers" {{bind-attr class="displayRevisions::invisible"}}>{{{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="version" totalBinding="revisions_count"}}}</div>
+      <button title="{{i18n post.revisions.controls.next}}" {{bind-attr class=":btn :standard displayGoToNext::invisible" disabled=loading}} {{action loadNextVersion}}><i class="fa fa-forward"></i></button>
+      <button title="{{i18n post.revisions.controls.last}}" {{bind-attr class=":btn :standard displayGoToLast::invisible" disabled=loading}} {{action loadLastVersion}}><i class="fa fa-fast-forward"></i></button>
     </div>
     {{#if loading}}<div id='revision-loading'><i class='fa fa-spinner fa-spin'></i>{{i18n loading}}</div>{{/if}}
     <div id="display-modes">
