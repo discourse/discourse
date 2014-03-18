@@ -403,6 +403,7 @@ embedding:
   embed_by_username: ''
   embed_category: ''
   embed_post_limit: 100
+  embed_truncate: false
 
 legal:
   tos_url:

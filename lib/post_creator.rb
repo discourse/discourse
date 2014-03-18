@@ -209,6 +209,7 @@ class PostCreator
   end
 
   def rollback_if_host_spam_detected
+    return if @opts[:skip_validations]
     if @post.has_host_spam?
       @post.errors.add(:base, I18n.t(:spamming_host))
       @errors = @post.errors

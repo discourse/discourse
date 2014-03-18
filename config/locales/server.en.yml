@@ -49,7 +49,7 @@ en:
 
     loading: "Loading Discussion..."
     permalink: "Permalink"
-    imported_from: "Discussion topic for the original blog entry at: %{link}"
+    imported_from: "This is a companion discussion topic for the original blog entry at: %{link}"
     in_reply_to: "in reply to %{username}"
     replies:
       one: "1 reply"
@@ -859,6 +859,7 @@ en:
     feed_polling_enabled: "Whether to import a RSS/ATOM feed as posts"
     feed_polling_url: "URL of RSS/ATOM feed to import"
     embed_by_username: "Discourse username of the user who creates the topics"
+    embed_truncate: "Truncate the imported posts"
     embed_category: "Category of created topics"
     embed_post_limit: "Maximum number of posts to embed"
     tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
