@@ -12,6 +12,7 @@ require "cgi"
 module Onebox
   DEFAULTS = {
     cache: Moneta.new(:Memory, expires: true, serializer: :json),
+    connect_timeout: 5,
     timeout: 10,
     load_paths: [File.join(Gem::Specification.find_by_name("onebox").gem_dir, "templates")]
   }
