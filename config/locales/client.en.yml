@@ -1414,6 +1414,8 @@ en:
         title: "Email"
         settings: "Settings"
         all: "All"
+        sending_test: "Sending test Email..."
+        test_error: "There was an issue sending email. Please check your settings and try again."
         sent: "Sent"
         skipped: "Skipped"
         sent_at: "Sent At"
