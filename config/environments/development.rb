@@ -44,5 +44,6 @@ Discourse::Application.configure do
   config.middleware.insert 1, Middleware::MissingAvatars
 
   config.enable_anon_caching = false
+  require 'rbtrace'
 end
 
