@@ -12,9 +12,10 @@ Discourse.ModalBodyView = Discourse.View.extend({
   didInsertElement: function() {
     var self = this;
 
-    $('#discourse-modal').modal('show');
+    var $discourseModal = $('#discourse-modal');
 
-    $('#discourse-modal').one("hide", function () {
+    $discourseModal.modal('show');
+    $discourseModal.one("hide", function () {
       self.get("controller").send("closeModal");
     });
 

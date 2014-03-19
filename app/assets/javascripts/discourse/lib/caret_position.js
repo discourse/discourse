@@ -71,8 +71,6 @@ $.fn.caretPosition = function(options) {
     "line-height": important("line-height")
   });
 
-  before = void 0;
-  after = void 0;
   pos = options && (options.pos || options.pos === 0) ? options.pos : getCaret(textarea[0]);
   val = textarea.val().replace("\r", "");
   if (options && options.key) {

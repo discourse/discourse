@@ -504,7 +504,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     var $uploadTarget = $('#reply-control');
     $uploadTarget.fileupload('destroy');
     $uploadTarget.off();
-  },
+  }
 });
 
 // not sure if this is the right way, keeping here for now, we could use a mixin perhaps

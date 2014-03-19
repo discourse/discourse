@@ -44,8 +44,7 @@ Discourse.UserInvitedController = Ember.ArrayController.extend({
     @property showSearch
   **/
   showSearch: function() {
-    if (Em.isNone(this.get('searchTerm')) && this.get('model.length') === 0) { return false; }
-    return true;
+    return !(Em.isNone(this.get('searchTerm')) && this.get('model.length') === 0);
   }.property('searchTerm', 'model.length'),
 
   /**

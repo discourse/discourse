@@ -103,11 +103,10 @@ Discourse.Post = Discourse.Model.extend({
   }.property('updated_at'),
 
   flagsAvailable: function() {
-    var post = this,
-        flags = Discourse.Site.currentProp('flagTypes').filter(function(item) {
+    var post = this;
+    return Discourse.Site.currentProp('flagTypes').filter(function(item) {
       return post.get("actionByName." + (item.get('name_key')) + ".can_act");
     });
-    return flags;
   }.property('actions_summary.@each.can_act'),
 
   actionsHistory: function() {

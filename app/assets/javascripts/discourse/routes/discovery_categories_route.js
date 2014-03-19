@@ -45,5 +45,5 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend({
       }));
       this.controllerFor('editCategory').set('selectedTab', 'general');
     }
-  },
+  }
 });

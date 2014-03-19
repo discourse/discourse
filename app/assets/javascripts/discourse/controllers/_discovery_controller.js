@@ -20,5 +20,5 @@ Discourse.DiscoveryController = Discourse.ObjectController.extend({
   showMoreDailyUrl: function() { return this.showMoreUrl('daily'); }.property('category', 'noSubcategories'),
   showMoreWeeklyUrl: function() { return this.showMoreUrl('weekly'); }.property('category', 'noSubcategories'),
   showMoreMonthlyUrl: function() { return this.showMoreUrl('monthly'); }.property('category', 'noSubcategories'),
-  showMoreYearlyUrl: function() { return this.showMoreUrl('yearly'); }.property('category', 'noSubcategories'),
+  showMoreYearlyUrl: function() { return this.showMoreUrl('yearly'); }.property('category', 'noSubcategories')
 });

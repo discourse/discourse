@@ -22,7 +22,7 @@ module Jobs
       begin
         mail_string = mail.pop
         Email::Receiver.new(mail_string).process
-      rescue Email::Receiver::UserNotSufficientTrustLevelError => e
+      rescue Email::Receiver::UserNotSufficientTrustLevelError
         # inform the user about the rejection
         @message = Mail::Message.new(mail_string)
         clientMessage = RejectionMailer.send_trust_level(@message.from, @message.body)

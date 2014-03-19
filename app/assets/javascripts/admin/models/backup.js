@@ -85,6 +85,5 @@ Discourse.Backup.reopenClass({
         window.location.pathname = Discourse.getURL("/");
       }
     });
-  },
-
+  }
 });

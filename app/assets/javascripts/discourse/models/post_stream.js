@@ -179,7 +179,6 @@ Discourse.PostStream = Em.Object.extend({
     Cancel any active filters on the stream.
 
     @method cancelFilter
-    @returns {Ember.Deferred} a promise that resolves when the filter has been cancelled.
   **/
   cancelFilter: function() {
     this.set('summary', false);
@@ -373,8 +372,8 @@ Discourse.PostStream = Em.Object.extend({
     `undoPost` when it fails.
 
     @method stagePost
-    @param {Discourse.Post} the post to stage in the stream
-    @param {Discourse.User} the user creating the post
+    @param {Discourse.Post} post the post to stage in the stream
+    @param {Discourse.User} user the user creating the post
   **/
   stagePost: function(post, user) {
 

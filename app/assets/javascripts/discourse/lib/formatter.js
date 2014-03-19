@@ -237,7 +237,7 @@ relativeAgeMediumSpan = function(distance, leaveAgo) {
 
 relativeAgeMedium = function(date, options){
   var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo;
-  var wrapInSpan = options.wrapInSpan === false ? false : true;
+  var wrapInSpan = options.wrapInSpan !== false;
 
   leaveAgo = options.leaveAgo;
   var distance = Math.round((new Date() - date) / 1000);

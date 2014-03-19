@@ -162,7 +162,7 @@ Discourse.TopicList.reopenClass({
     Stitch together side loaded topic data
 
     @method topicsFrom
-    @param {Object} JSON object with topic data
+    @param {Object} result JSON object with topic data
     @returns {Array} the list of topics
   **/
   topicsFrom: function(result) {
@@ -204,8 +204,8 @@ Discourse.TopicList.reopenClass({
     Lists topics on a given menu item
 
     @method list
-    @param {Object} The menu item to filter to
-    @param {Object} Any additional params
+    @param {Object} filter The menu item to filter to
+    @param {Object} params Any additional params to pass to TopicList.find()
     @returns {Promise} a promise that resolves to the list of topics
   **/
   list: function(filter, params) {
