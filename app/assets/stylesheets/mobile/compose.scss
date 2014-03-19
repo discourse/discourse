@@ -53,12 +53,12 @@ display: none;
 }
 
 #reply-control {
-  .toggle-preview, #draft-status, #file-uploading {
+  .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
     position: absolute;
     bottom: -31px;
     margin-top: 0;
   }
-  .toggle-preview {
+  .toggle-preview, .mobile-file-upload {
     right: 5px;
     text-decoration: underline;
   }

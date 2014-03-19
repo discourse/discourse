@@ -76,6 +76,10 @@
               <div id="file-uploading">
                 {{i18n upload_selector.uploading}} {{view.uploadProgress}}% <a id="cancel-file-upload">{{i18n cancel}}</a>
               </div>
+            {{else}}
+              {{#if Discourse.Mobile.mobileView}}
+                <a {{action showUploadSelector view}} class='mobile-file-upload'>{{i18n upload}}</a>
+              {{/if}}
             {{/if}}
           {{/if}}
         </div>
