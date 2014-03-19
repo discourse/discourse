@@ -151,33 +151,6 @@ SQL
     self.topic_id ? query.where(['topics.id <> ?', self.topic_id]) : query
   end
 
-  # def topics_day
-  #   if val = $redis.get(topics_day_key)
-  #     val.to_i
-  #   else
-  #     val = self.topics.where(['topics.id <> ?', self.topic_id]).created_since(1.day.ago).visible.count
-  #     $redis.setex topics_day_key, 30.minutes.to_i, val
-  #     val
-  #   end
-  # end
-
-  # def topics_day_key
-  #   "topics_day:cat-#{self.id}"
-  # end
-
-  # def posts_day
-  #   if val = $redis.get(posts_day_key)
-  #     val.to_i
-  #   else
-  #     val = self.visible_posts.created_since(1.day.ago).count
-  #     $redis.setex posts_day_key, 30.minutes.to_i, val
-  #     val
-  #   end
-  # end
-
-  # def posts_day_key
-  #   "posts_day:cat-#{self.id}"
-  # end
 
   # Internal: Generate the text of post prompting to enter category
   # description.
