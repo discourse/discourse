@@ -129,8 +129,7 @@ it:
 
       Per ulteriori informazioni, [guarda le FAQ](/faq). Questo pannello apparirà solo per il tuo primo %{education_posts_text}.
     avatar: "### Che ne dici di una nuova immagine per il tuo account?\n\nHai pubblicato alcuni topic e post, ma il tuo avatar non è personalizzato. Non è unico come te, insomma. \n\nPerchè non **[visiti il tuo profilo utente](%{profile_path})** e carichi un'immagine custom che ti rappresenta?\n\nÈ più facile seguire le discussioni della community e trovare persone interessanti se tutti hanno un avatar unico!\n"
-    sequential_replies: "### Considera la possibilità di rispondere a più post contemporaneamente\n\nPiuttosto che pubblicare tante risposte sequenziali in un solo topic, considera l'inserimento di una sola risposta con quote o riferimenti @name ai post precedenti. \n\nPuoi modificare le tue risposte precedenti per aggiungere un quote evidenziando il testo e selezionando il bottone che compare.\n\nI topic con meno risposte, ma approfondite, sono migliori di\
-      \ quelli con tante risposte superficiali.\n"
+    sequential_replies: "### Considera la possibilità di rispondere a più post contemporaneamente\n\nPiuttosto che pubblicare tante risposte sequenziali in un solo topic, considera l'inserimento di una sola risposta con quote o riferimenti @name ai post precedenti. \n\nPuoi modificare le tue risposte precedenti per aggiungere un quote evidenziando il testo e selezionando il bottone che compare.\n\nI topic con meno risposte, ma approfondite, sono migliori di quelli con tante risposte superficiali.\n"
     dominating_topic: |
       ### Permetti ad altri di partecipare alla conversazione
 
@@ -143,6 +142,12 @@ it:
       Spiacenti, ma i nuovi utenti sono limitati a %{newuser_max_replies_per_topic} risposte nello stesso topic.
 
       Invece di aggiungere una nuova risposta, valuta l'ipotesi di modificare le tue precedenti o di partecipare a un altro topic.
+    reviving_old_topic: |
+      ### Resuscitare questo topic?
+
+      L'ultima risposta a questo topic è ormai di %{days} giorni fa. La tua risposta farà tornare il topic in cima alla lista e tutti gli utenti coinvolti verranno notificati.
+
+      Sei davvero sicuro di voler continuare questo vecchio topic?
   activerecord:
     attributes:
       category:
@@ -173,11 +178,13 @@ it:
   meta_category_description: "Discussioni circa questo forum, la sua organizzazione, come funziona e come migliorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoria privata per discussioni tra lo staff. I topic sono visibili solo agli amministratori e ai moderatori."
+  assets_topic_body: "Questo è un topic per utilizzato per salvare i file utilizzati nel design del forum. Non cancellarlo!"
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "[Usa questo primo paragrafo per una breve descrizione della categoria. Cerca di stare sotto i 200 caratteri.]"
     post_template: "%{replace_paragraph}\n\nUsa lo spazio sottostante per una descrizione più estesa, ed anche per stabilire delle regole per la conversazione!"
     errors:
+      self_parent: "La categoria-genitore di una sottocategoria non può essere se stessa."
       depth: "Non puoi creare una sottocategoria sotto un'altra."
   trust_levels:
     newuser:
@@ -448,6 +455,7 @@ it:
     twitter_config_warning: 'Il server è configurato per consentire la registrazione e il login via Twitter (enable_twitter_logins), ma la chiave e il secret non sono impostati. Vai su <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna le impostazioni. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Leggi questa guida per saperne di più</a>.'
     github_config_warning: 'Il server è configurato per consentire la registrazione e il login via GitHub (enable_github_logins), ma il client id e i valori secret non sono impostati. Vai su <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna le impostazioni. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Leggi questa guida per saperne di più</a>.'
     s3_config_warning: 'Il server è configurato per caricare file a s3, ma almeno uno dei seguenti parametri non è impostato: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Vai <a href="/admin/site_settings">alle impostazioni del sito</a> e aggiorna i parametri. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
+    s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno uno dei seguenti campi non è impostato: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Vai sulle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i relativi campi. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Guarda "Come impostare il caricamento di immagini su S3?" per informazioni</a>.'
     image_magick_warning: 'Il server è configurato per creare thumbnail di immagini di ampie dimensioni, ma ImageMagick non è installato. Installa ImageMagick usando il tuo Package Manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
     failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il tuo file config/environments/production.rb e accertati che le impostazioni config.action_mailer siano corrette. <a href="/sidekiq/retries" target="_blank">Guarda i job falliti in Sidekiq</a>.'
     default_logo_warning: "Non hai personalizzato le immagini dei logo per il tuo sito. Aggiorna logo_url, logo_small_url, e favicon_url nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
@@ -546,6 +554,7 @@ it:
     category_post_template: "Il template utilizzato durante la creazione di una nuova categoria"
     onebox_max_chars: "Massimo numero di caratteri che un onebox può importare nel post da un sito esterno"
     logo_url: "Il logo del tuo sito es: http://example.com/logo.png"
+    digest_logo_url: "Il logo sarà utilizzato nelle email di riepilogo. Se lasciato in bianco, sarà utilizzato il campo `logo_url`. es:http://example.com/logo.png"
     logo_small_url: "La versione piccola del logo del tuo sito (usata durante lo scroll) es: http://example.com/logo-small.png"
     favicon_url: "La favicon del tuo sito, per informazioni http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Icona usata per dispositivi mobile Apple. La dimensione consigliata è 144 x 144 pixel."
@@ -578,6 +587,7 @@ it:
     ga_domain_name: "Nome del Dominio Google analytics, esempio: miosito.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Codice di tracking Google Universal Analytics (analytics.js), es: UA-12345678-9; leggi http://google.com/analytics"
     ga_universal_domain_name: "Nome di dominio Google Universal Analytics (analytics.js), es: mysite.com; leggi http://google.com/analytics"
+    enable_escaped_fragments: "Utilizza l'API Ajax-Crawling di Google se non è rilevato alcun crawler"
     enable_noscript_support: "Abilità il tipico supporto ai webcrawler dei motori di ricerca attraverso il tag Noscript"
     top_menu: "Determina quali elementi vengono mostrati nella navigazione in homepage, ed in quale ordine. Esempio latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determina quali elementi vengono mostrati nel menù del post, ed in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
@@ -588,7 +598,11 @@ it:
     site_contact_username: "Username dell'autore dei messaggi privati automatizzati spediti dal forum"
     send_welcome_message: "I nuovi utenti ricevono un messaggio di benvenuto?"
     suppress_reply_directly_below: "Non mostrare il numero di risposte ad un post quando c'è una singola risposta appena sotto"
+    suppress_reply_directly_above: "Non mostrare \"in risposta a \" su un post se c'è una sola risposta sopra"
+    topics_per_period_in_top_summary: "Numero dei topic caricati nel riassunto dei topic più importanti"
+    topics_per_period_in_top_page: "Numero dei topic caricati nella pagina Top"
     redirect_new_users_to_top_page_duration: "Numero di giorni in cui i nuovi utenti sono automaticamente reindirizzati alla pagina top"
+    enable_badges: "Attiva il sistema targhette (sperimentale)"
     allow_index_in_robots_txt: "Il sito è indicizzabile dai motori di ricerta (aggiorna robots.txt)"
     email_domains_blacklist: "Lista di domini separati da pipe (\\\"|\\\"). Gli indirizzi email appartenenti a questi domini non saranno autorizzati. Esempio mailinator.com|trashmail.net\""
     email_domains_whitelist: "Lista di domini separati da pipe (\"|\"). Gli utenti saranno autorizzati a registrarsi SOLO con questi domini. ATTENZIONE: Utenti con indirizzi email diversi da quelli listati non saranno accettati."
@@ -604,6 +618,10 @@ it:
     block_common_passwords: "Non permettere password nell'elenco delle 5000 più comuni."
     enable_sso: "Attiva SSO tramite un sito esterno "
     sso_url: "Indirizzo SSO endpoint"
+    sso_secret: "Stringa segreta utilizzata per criptare/decriptare le informazioni SSO, assicurati che sia lungo almeno 10 caratteri"
+    sso_overrides_email: "Sostituisce le email locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per le email locali)"
+    sso_overrides_username: "Sostituisce gli username locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle differenze dei requisiti di lunghezza)"
+    sso_overrides_name: "Sostituisce i nomi locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per i nomi locali)"
     enable_local_logins: "Abilita l'autenticazione locale di username e password"
     enable_local_account_create: "Permetti di creare nuovi account locali"
     enable_google_logins: "Abilita l'autenticazione via Google"
@@ -696,9 +714,11 @@ it:
     pop3s_polling_password: "La password dell'account POP3S per la recezione di email"
     email_in: "Permetti agli utenti di creare nuovi topic via email"
     email_in_address: "L'indirizzo email al quale l'utente può inviare nuovi topic. Se vuoto gli utenti non potranno postare globalmente."
+    email_in_min_trust: "Il Livello minimo che un utente deve avere per poter postare nuovi topic via email"
     email_in_category: "La categoria in cui le nuove email vengono postate"
     minimum_topics_similar: "Quanti topic devono esistere nel database prima che quelli simili vengano presentati."
     relative_date_duration: "Dopo quanti giorni dalla pubblicazione del post le date verranno mostrate in termini relativi anzichè assoluti. Per esempio, 7d anzichè 20 feb."
+    delete_user_max_post_age: "I giorni di permanenza sul forum oltre i quali un post non può più essere eliminato dall'utente"
     delete_all_posts_max: "Massimo numero di post che possono essere eliminati contemporaneamente con il pulsante Cancella tutti i post. Se un utente ha più post attivi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
     username_change_period: "Numero di giorni (dall'iscrizione) dopo i quali è possibile modificare lo username. Digita 0 per non permettere cambi di username"
     email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione"
@@ -714,6 +734,7 @@ it:
     enable_mobile_theme: "I dispositivi mobile usano un tema apposito, con possibilità di passare alla visualizzazione desktop. Disabilita questa opzione se vuoi usare un foglio di stile custom e completamente responsive."
     dominating_topic_minimum_percent: "Che percentuale di post un utente deve pubblicare nello stesso post per essere considerato \"dominante\"?"
     suppress_uncategorized_badge: "Non mostrare il badge per i topic senza categoria nella lista dei topic"
+    min_posts_for_search_in_topic: "Disabilita la ricerca all'interno dei topic se i topic hanno meno di un certo numero di post"
     enable_names: "Permetti agli utenti di mostrare i loro nomi completi"
     display_name_on_posts: "Mostra anche il nome completo dell'utente nei suoi post"
     invites_shown: "Numero massimo di inviti mostrati nella pagina dell'utente"
@@ -738,6 +759,7 @@ it:
     private_message: "%{display_username} ti ha mandato un messaggio privato: %{link}"
     invited_to_private_message: "%{display_username} ti ha invitato in un messaggio privato: %{link}"
     invitee_accepted: "%{display_username} ha accettato il tuo invito"
+    linked: "%{display_username} ti ha linkato in %{link}"
   search:
     within_post: "#%{post_number} di %{username}: %{excerpt}"
     types:
@@ -824,6 +846,44 @@ it:
     text_body_template: "%{invitee_name} ti ha invitato a %{site_name}.\n\nSe sei interessato, clicca sul link più in basso.\n\n[Visita %{site_name}][1]\n\nSei stato invitato da un utente meritevole di fiducia, per cui puoi partecipare immediatamente, anche senza login. \n\n[1]: %{invite_link}\n\n"
   test_mailer:
     subject_template: "[%{site_name}] Test Invio Email"
+    text_body_template: |
+      Questa è un'email di prova inviata dal tuo forum %{site_name} su:
+
+      [**%{base_url}**][0]
+
+      Il recapito di email è complesso. Ecco alcune cose importanti che dovresti controllare prima:
+
+      - Impara a visualizzare il *contenuto originale delle email* nel tuo client email, in questo modo potrai controllare la presenza di eventuali errori. In Gmail puoi usare il tasto "Mostra Originale" presente nel menù a tendina di ogni email.
+
+      - **IMPORTANTE:** Il tuo ISP ha un record DNS inverso per associare il nome del dominio e l'indirizzo ip dal quale invii le email? [Controlla il tuo record inverso PTR][2] qui. Se il tuo ISP non inserisce il record DNS inverso appropriato è molto improbabile che le tue email verranno recapitate.
+
+      - Il record SPF del tuo dominio è corretto? [Controlla il tuo record SPF][1] qui.
+
+      - Controlla che gli IP del tuo server mail [non siano su qualche blacklist][4].
+
+      - Controlla che il tuo server email stia *effettivamente* inviando un hostname che abbia una risoluzione nel DNS nel suo messaggio HELO. Se questo non avviene, è molto provabile che le tue email verranno scartate da molte caselle email.
+
+      - Configura la [firma delle email via DKIM][3] nel tuo software email e inserisci la tua chiave pubblica DKIM nei tuoi record DNS. Questa non è una condizione richiesta, ma migliorerà significativamente il recapito di email.
+
+      (Il modo *semplice* è quello di [registrarsi su Mandrill][6], che ha un generoso piano gratuito che andrà bene per i forum più piccoli. Attenzione che dovrai comunque impostare i tuoi record SPF e DKIM nel DNS!)
+
+      Speriamo tu abbia ricevuto questo test di recapito email!
+
+      Buona fortuna,
+
+      I tuoi amici di [Discourse](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [5]: %{base_url}/unsubscribe
+      [6]: http://mandrill.com
+
+      ----
+
+      <small>Dovrebbe esserci un footer di rimozione della registrazione su ogni email che invii, quindi simuliamone uno. Questa email è stata inviata da Nome dell'azienda, Via principale, 55, Città, Italia, 12345. Se non vuoi ricevere più email di questo tipo,  [clicca qui][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Aggiornamenti disponibili"
     text_body_template: |
@@ -871,10 +931,79 @@ it:
         Ricordati che se il post dovesse venir nascosto dagli utenti una seconda volta, i moderatori verranno notificati -- e potrebbero esserci delle conseguenze, fra cui la possibile sospensione del tuo account.
 
         Per ulteriori informazioni, fai riferimento alle nostre [FAQ](%{base_url}/faq).
+    usage_tips:
+      text_body_template: |
+        Questo messaggio privato contiene alcuni consigli veloci per iniziare:
+
+        ### Continua a scorrere
+
+        Non c'è nessun pulsante Avanti o numero di pagina -- per continuare a leggere, semplicemente scorri, e verranno caricati più contenuti!
+
+        Non appena nuove risposte vengono postate, verranno automaticamente mostrate in fondo al topic. Non c'è bisogno di aggiornare la pagina per vedere i nuovi post.
+
+        ### Come rispondo?
+
+        - Per rispondere ad uno specifico post, usa il tasto Rispondi sotto a quel post
+
+        - Se vuoi rispondere all'argomento *generale* del topic, piuttosto che ad una persona specifica, utilizza il pulsante Rispondi proprio in fondo al topic.
+
+        - Se vuoi portare la conversazione in una direzione differente, ma mantenere una connessione con quella corrente, utilizza "Rispondi come nuovo Topic" alla destra del post.
+
+        ### Chi sta parlando con me?
+
+        Quando qualcuno risponde ad un tuo post o ti cita, o menziona il tuo @username, un numero ➀ apparirà sul tasto di conversazione nella barra in alto. Usalo per vedere chi ti sta parlando e dove.
+
+        - Per menzionare il nome di un utente, comincia a scrivere `@` ed un popup ti aiuterà con l'auto-completamento dell'username.
+
+        - Per citare solo una sezione del post, selezionala e utilizza il tasto che apparirà sopra la tua selezione.
+
+        - Per citare un intero post, utilizza il primo tasto a forma di nuvoletta nella barra dell'editor di testo.
+
+        ### Guarda quel Post!
+
+        Per far sapere a qualcuno che ti è piaciuto il suo post, utilizza il tasto mi piace ♥ in fondo al post. Se vedi un problema col post, non esitare ad utilizzare il tasto di segnalazione per allertare in modo privato il nostro staff.
+
+        ### Dove sono!?
+
+        - Per tornare alla home page in qualsiasi momento **usa il logo in alto a sinistra** oppure il tasto indietro ← del tuo browser.
+
+        - Per cercare, per andare alla tua pagina o per utilizzare la mappa del sito, usa i **tasti in alto a destra**.
+
+        - Mentre leggi un topic, spostati in cima  ↑ cliccando sul nome del topic nella barra in alto, o premi il tasto <kbd>↑</kbd> in basso. Per raggiungere il  *fondo* ↓, utilizza la freccia in basso sull'indicatore di progresso in basso o clicca "ultimo post" nel sommario del primo post.
+
+        - Utilizza il tempo di pubblicazione del post come link per rimandare direttamente a quel post. Chiunque utilizzi quel post, vedrà subito il post interessato.
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
+      text_body_template: |
+        Grazie per esserti unito a %{site_name}, benvenuto nel nostro forum!
+
+        %{new_user_tips}
+
+        Qui puoi leggere le nostre [FAQ](%{base_url}/faq).
+
+        Goditi la permanenza!
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
+      text_body_template: |
+        Grazie per aver accettato l'invito a %{site_name}, benvenuto nel nostro forum!
+
+        Abbiamo generato un username automaticamente per te: **%{username}**, ma puoi cambiarlo in ogni momento visitando [il tuo profilo][prefs].
+
+        Per fare il login puoi:
+
+        1. Usare Facebook, Google, Twitter, o molti altri sistemi supportati -- nota che l'email utilizzata deve comunque **essere la stessa** dalla quale hai ricevuto il messaggio di invito. Altrimenti non saremmo in grado di stabilire che sei veramente tu!
+
+        2. Creare una password per %{site_name} nel [tuo profilo][prefs], per poi effettuare il log in con quella.
+
+        %{site_password}
+
+        %{new_user_tips}
+
+        Crediamo nel [comportamento civilizzato della community](%{base_url}/faq) in ogni momento.
+
+        Goditi la permanenza!
+
+        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Esportazione completata con successo"
       text_body_template: "L'esportazione è stata eseguita correttamente."
@@ -1034,6 +1163,21 @@ it:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Puoi partecipare a %{site_name}!"
+      text_body_template: |
+        Benvenuto su %{site_name}!
+
+        Un membro dello staff ha approvato il tuo account su %{site_name}.
+
+        Clicca il link seguente per confermare e attivare il tuo nuovo account:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Se il link qui sopra non è cliccabile, prova a copiarlo e ad incollarlo nella barra degli indirizzi di un web browser.
+
+        %{new_user_tips}
+
+        Clicca qui per leggere le nostre [FAQ](%{base_url}/faq).
+
+        Buona permanenza!
     signup:
       subject_template: "[%{site_name}] Attiva il tuo nuovo account"
       text_body_template: |
@@ -1057,6 +1201,9 @@ it:
       #[Benvenuto a %{title}](#welcome)
       Questo forum di discussione richiede un account per visualizzare %{title}. Crea un account o effettua il login per continuare.
   terms_of_service:
+    user_content_license: |
+      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
+    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
     signup_form_message: 'Ho letto e accetto i <a href="/tos" target="_blank">Termini del Servizio</a>.'
   deleted: 'cancellato'
   upload:
@@ -1087,3 +1234,9 @@ it:
     message_to_blank: "message.to è vuoto"
     text_part_body_blank: "text_part.body è vuoto"
     body_blank: "il corpo è vuoto"
+  badges:
+    types:
+      gold: "Oro"
+      silver: "Argento"
+      bronze: "Bronzo"
+
