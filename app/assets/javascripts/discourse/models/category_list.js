@@ -66,7 +66,7 @@ Discourse.CategoryList.reopenClass({
         can_create_category: result.category_list.can_create_category,
         can_create_topic: result.category_list.can_create_topic,
         draft_key: result.category_list.draft_key,
-        draft_sequence: result.category_list.draft_sequence,
+        draft_sequence: result.category_list.draft_sequence
       });
     });
   }

@@ -31,7 +31,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
     }).then(function (status) {
       return Discourse.BackupStatus.create({
         isOperationRunning: status.is_operation_running,
-        canRollback: status.can_rollback,
+        canRollback: status.can_rollback
       });
     });
   },
@@ -160,7 +160,6 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
 
     uploadError: function(filename, message) {
       bootbox.alert(I18n.t("admin.backups.upload.error", { filename: filename, message: message }));
-    },
+    }
   }
-
 });
