@@ -65,16 +65,10 @@
     list-style: none;
     > li {
       float: left;
-      &:last-child .icon {
-        border-right: 1px solid $primary_border_color;
-      }
     }
     .icon {
       display: block;
-      border-top: 1px solid $primary_border_color;
-      border-bottom: 1px solid $primary_border_color;
-      border-left: 1px solid $primary_border_color;
-      padding: 3px;
+      padding: 4px;
       color: $nav-button-color;
       text-decoration: none;
       cursor: pointer;
