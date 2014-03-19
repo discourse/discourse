@@ -207,7 +207,8 @@ Discourse.PostMenuView = Discourse.View.extend({
     }
 
     buffer.push("<button title=\"" + tooltip +
-                "\" data-action=\"bookmark\" class='bookmark'><div class='" + iconClass +
+                "\" data-action=\"bookmark\" class='" + buttonClass +
+                "'><div class='" + iconClass +
                 "'></div></button>");
   },
 
