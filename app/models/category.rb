@@ -141,60 +141,6 @@ SQL
     end
   end
 
-  # Internal: Update category stats: # of topics and posts in past year, month, week for
-  # all categories.
-  def self.update_stats_OLD
-    topics = Topic
-               .select("COUNT(*) topic_count")
-               .where("topics.category_id = categories.id")
-               .where("categories.topic_id <> topics.id OR categories.topic_id is null")
-               .visible
-
-    topics_with_post_count = Topic
-                              .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
-                              .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
-                              .group("topics.category_id")
-                              .visible.to_sql
-
-    topics_year = topics.created_since(1.year.ago).to_sql
-    topics_month = topics.created_since(1.month.ago).to_sql
-    topics_week = topics.created_since(1.week.ago).to_sql
-    topics_day = topics.created_since(1.day.ago).to_sql
-
-
-    Category.exec_sql <<SQL
-    UPDATE categories c
-    SET   topic_count = x.topic_count,
-          post_count = x.post_count
-    FROM (#{topics_with_post_count}) x
-    WHERE x.category_id = c.id AND
-          (c.topic_count <> x.topic_count OR c.post_count <> x.post_count)
-
-SQL
-
-    posts = Post.select("count(*) post_count")
-                .joins(:topic)
-                .where('topics.category_id = categories.id')
-                .where('topics.visible = true')
-                .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
-                .where('posts.deleted_at IS NULL')
-                .where('posts.user_deleted = false')
-
-    posts_year = posts.created_since(1.year.ago).to_sql
-    posts_month = posts.created_since(1.month.ago).to_sql
-    posts_week = posts.created_since(1.week.ago).to_sql
-    posts_day = posts.created_since(1.day.ago).to_sql
-
-    # TODO don't update unchanged data
-    Category.update_all("topics_year = (#{topics_year}),
-                         topics_month = (#{topics_month}),
-                         topics_week = (#{topics_week}),
-                         topics_day = (#{topics_day}),
-                         posts_year = (#{posts_year}),
-                         posts_month = (#{posts_month}),
-                         posts_week = (#{posts_week}),
-                         posts_day = (#{posts_day})")
-  end
 
   def visible_posts
     query = Post.joins(:topic)
