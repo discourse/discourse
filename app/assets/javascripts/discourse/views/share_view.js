@@ -39,8 +39,9 @@ Discourse.ShareView = Discourse.View.extend({
   }.observes('controller.link'),
 
   didInsertElement: function() {
-    var shareView = this;
-    $('html').on('mousedown.outside-share-link', function(e) {
+    var shareView = this,
+        $html = $('html');
+    $html.on('mousedown.outside-share-link', function(e) {
       // Use mousedown instead of click so this event is handled before routing occurs when a
       // link is clicked (which is a click event) while the share dialog is showing.
       if (shareView.$().has(e.target).length !== 0) { return; }
@@ -49,9 +50,10 @@ Discourse.ShareView = Discourse.View.extend({
       return true;
     });
 
-    $('html').on('click.discoure-share-link', '[data-share-url]', function(e) {
+    $html.on('click.discoure-share-link', '[data-share-url]', function(e) {
       e.preventDefault();
-      var $currentTarget = $(e.currentTarget);
+      var $currentTarget = $(e.currentTarget),
+          $shareLink = $('#share-link');
       var url = $currentTarget.data('share-url');
       var postNumber = $currentTarget.data('post-number');
       // Relative urls
@@ -60,7 +62,7 @@ Discourse.ShareView = Discourse.View.extend({
         url = window.location.protocol + "//" + window.location.host + url;
       }
 
-      var shareLinkWidth = $('#share-link').width();
+      var shareLinkWidth = $shareLink.width();
       var x = e.pageX - (shareLinkWidth / 2);
       if (x < 25) {
         x = 25;
@@ -70,12 +72,12 @@ Discourse.ShareView = Discourse.View.extend({
       }
 
       var header = $('.d-header');
-      var y = e.pageY - ($('#share-link').height() + 20);
+      var y = e.pageY - ($shareLink.height() + 20);
       if (y < header.offset().top + header.height()) {
         y = e.pageY + 10;
       }
 
-      $('#share-link').css({
+      $shareLink.css({
         left: "" + x + "px",
         top: "" + y + "px"
       });
@@ -84,7 +86,7 @@ Discourse.ShareView = Discourse.View.extend({
       return false;
     });
 
-    $('html').on('keydown.share-view', function(e){
+    $html.on('keydown.share-view', function(e){
       if (e.keyCode === 27) {
         shareView.get('controller').send('close');
       }
@@ -92,9 +94,10 @@ Discourse.ShareView = Discourse.View.extend({
   },
 
   willDestroyElement: function() {
-    $('html').off('click.discoure-share-link');
-    $('html').off('mousedown.outside-share-link');
-    $('html').off('keydown.share-view');
+    var $html = $('html');
+    $html.off('click.discoure-share-link');
+    $html.off('mousedown.outside-share-link');
+    $html.off('keydown.share-view');
   }
 
 });
