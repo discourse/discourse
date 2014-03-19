@@ -35,7 +35,7 @@ Discourse.UserSearch = {
     var promise = Ember.Deferred.create();
 
     // TODO site setting for allowed regex in username
-    if (term.match(/[^a-zA-Z0-9\_\.]/)) {
+    if (term.match(/[^a-zA-Z0-9_\.]/)) {
       promise.resolve([]);
       return promise;
     }
