@@ -19,21 +19,17 @@
 // --------------------------------------------------
 
 .badge-category {
-  padding: 2px 6px;
+  padding: 6px;
   color: $tertiary_text_color;
   font-size: 12px;
   font-weight: bold;
   white-space: nowrap;
   display: inline-block;
+  line-height: 1;
   &[href] {
   color: $tertiary_text_color;
   }
-  &.restricted {
-    div {
-      display: inline-block;
-      margin: 0;
-    }
-  }
+
 }
 
 .d-dropdown .badge-category {

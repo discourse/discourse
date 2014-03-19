@@ -41,7 +41,7 @@
   .star {
     font-size: 20px;
     margin-top: 8px;
-    margin-right: 8px;
+    margin-right: 6px;
   }
   #edit-title { width: 500px; }
   .category-combobox {
@@ -59,7 +59,7 @@
     margin: 0;
     line-height: 1.2em;
     overflow: hidden;
-    a.badge-category { vertical-align: top; }
+    a.badge-category { vertical-align: top; margin-top: 4px; }
     a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
   }
   .topic-statuses {

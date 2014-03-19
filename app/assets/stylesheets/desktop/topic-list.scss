@@ -11,7 +11,7 @@
 .list-controls {
   .nav {
     float: left;
-    margin-bottom: 22px;
+    margin-bottom: 18px;
   }
 
   .btn {
@@ -62,7 +62,6 @@
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 0 10px;
-  border: 1px solid $primary_border_color;
   a.title {color: $primary_text_color;}
   a.title:visited:not(.badge-notification) {color: lighten($primary_text_color, 35%);}
 
@@ -432,6 +431,8 @@
 // --------------------------------------------------
 
 .list-controls {
+  border-bottom: 1px solid $primary_border_color;
+
   .home {
     background-color: lighten($secondary_background_color, 76%);
     color: $primary_text_color;
@@ -530,16 +531,14 @@ ol.category-breadcrumb {
     text-transform: none;
     width: 100%;
     min-width: 102px;
-
     text-align: center;
     margin-right: 20px;
+    margin-bottom: 7px;
   }
 
-
-  div {
-    margin-bottom: 10px;
-  }
 }
+
+.top-lists {margin-top: 20px;}
 
 #bulk-select {
   position: fixed;
