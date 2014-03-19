@@ -1,0 +1,16 @@
+# encoding: utf-8
+# This file contains content for the server portion of Discourse used by Ruby
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+es:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Opciones de la encuesta"
+  poll:
+    must_contain_poll_options: "debe que contener una lista con las respuestas de la encuesta"
+    cannot_have_modified_options: "no se pueden modificar las respuestas de la encuesta pasados 5 minutos"
+    cannot_add_or_remove_options: "solo se puede modificar, no se pueden añadir o quitar. Si necesitas añadir o quitar respuestas debes bloquear este tema y crear una encuesta nueva."
+    prefix: "Encuesta:"
