@@ -14,6 +14,9 @@
           <li>{{#link-to 'adminSiteContents'}}{{i18n admin.site_content.title}}{{/link-to}}</li>
         {{/if}}
         <li>{{#link-to 'adminUsersList'}}{{i18n admin.users.title}}{{/link-to}}</li>
+        {{#if showBadges}}
+          <li>{{#link-to 'admin.badges'}}{{i18n admin.badges.title}}{{/link-to}}</li>
+        {{/if}}
         {{#if currentUser.admin}}
           <li>{{#link-to 'admin.groups'}}{{i18n admin.groups.title}}{{/link-to}}</li>
         {{/if}}
@@ -24,7 +27,6 @@
           <li>{{#link-to 'admin.customize'}}{{i18n admin.customize.title}}{{/link-to}}</li>
           <li>{{#link-to 'admin.api'}}{{i18n admin.api.title}}{{/link-to}}</li>
           <li>{{#link-to 'admin.backups'}}{{i18n admin.backups.title}}{{/link-to}}</li>
-          <li>{{#link-to 'admin.badges'}}{{i18n admin.badges.title}}{{/link-to}}</li>
         {{/if}}
       </ul>
 
