@@ -16,8 +16,7 @@ class Auth::DefaultCurrentUserProvider
   # our current user, return nil if none is found
   def current_user
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
-
-    request = Rack::Request.new(@env)
+    request = ActionDispatch::Request.new(@env)
 
     auth_token = request.cookies[TOKEN_COOKIE]
 
