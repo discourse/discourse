@@ -306,6 +306,25 @@ section.details {
       margin-left: 15px;
       margin-top: 5px;
     }
+
+    input, textarea, select {
+      width: 350px;
+    }
+
+    textarea {
+      height: 200px;
+    }
+  }
+
+  .buttons {
+    float: left;
+    width: 200px;
+    .saving {
+      padding: 5px 0 0 0;
+      margin-left: 10px;
+      width: 80px;
+      color: $secondary_text_color;
+    }
   }
 }
 
