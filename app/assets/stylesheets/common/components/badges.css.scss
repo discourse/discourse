@@ -18,18 +18,31 @@
 // Category badge
 // --------------------------------------------------
 
-.badge-category {
-  padding: 6px;
-  color: $tertiary_text_color;
+.badge-category, .badge-category-parent {
   font-size: 12px;
   font-weight: bold;
   white-space: nowrap;
   display: inline-block;
   line-height: 1;
+}
+
+.badge-category {
+  padding: 6px;
+  color: $tertiary_text_color;
   &[href] {
   color: $tertiary_text_color;
   }
+}
 
+.badge-category-parent {
+  padding: 6px 2px;
+  width: 2px;
+  .category-name {
+    display: none;
+  }
+  &:before {
+    content: "\a0";
+  }
 }
 
 .d-dropdown .badge-category {

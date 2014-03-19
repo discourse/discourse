@@ -83,7 +83,8 @@ Discourse.HTML = {
     var name = Em.get(category, 'name'),
         description = Em.get(category, 'description'),
         restricted = Em.get(category, 'read_restricted'),
-        html = "<a href=\"" + Discourse.getURL("/category/") + Discourse.Category.slugFor(category) + "\" ";
+        url = Discourse.getURL("/category/") + Discourse.Category.slugFor(category),
+        html = "<a href=\"" + url + "\" ";
 
     html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) + "\" ";
 
@@ -99,6 +100,15 @@ Discourse.HTML = {
       html += "><div><i class='fa fa-group'></i> " + name + "</div></a>";
     } else {
       html += ">" + name + "</a>";
+    }
+
+    if (opts.showParent && category.get('parent_category_id')) {
+      var parent = Discourse.Category.findById(category.get('parent_category_id'));
+      html = "<a class='badge-category-parent' style=\"" + (Discourse.HTML.categoryStyle(parent)||'') +
+             "\" href=\"" + url + "\"><span class='category-name'>" +
+             (Em.get(parent, 'read_restricted') ? "<i class='fa fa-group'></i> " : "") +
+             Em.get(parent, 'name') + "</span></a>" +
+             html;
     }
 
     return html;
