@@ -6,9 +6,15 @@ class TopicEmbed < ActiveRecord::Base
   validates_presence_of :embed_url
   validates_presence_of :content_sha1
 
+  def self.normalize_url(url)
+    url.sub(/\/$/, '')
+  end
+
   # Import an article from a source (RSS/Atom/Other)
   def self.import(user, url, title, contents)
     return unless url =~ /^https?\:\/\//
+
+    url = normalize_url(url)
 
     if SiteSetting.embed_truncate
       contents = first_paragraph_from(contents)
@@ -53,6 +59,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.import_remote(user, url, opts=nil)
     require 'ruby-readability'
 
+    url = normalize_url(url)
     opts = opts || {}
     doc = Readability::Document.new(open(url).read,
                                         tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol],
@@ -63,6 +70,7 @@ class TopicEmbed < ActiveRecord::Base
 
   # Convert any relative URLs to absolute. RSS is annoying for this.
   def self.absolutize_urls(url, contents)
+    url = normalize_url(url)
     uri = URI(url)
     prefix = "#{uri.scheme}://#{uri.host}"
     prefix << ":#{uri.port}" if uri.port != 80 && uri.port != 443
@@ -84,6 +92,7 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.topic_id_for_embed(embed_url)
+    embed_url = normalize_url(embed_url)
     TopicEmbed.where(embed_url: embed_url).pluck(:topic_id).first
   end
 
