@@ -22,7 +22,8 @@ class UserHistory < ActiveRecord::Base
                            :notified_about_sequential_replies,
                            :notified_about_dominating_topic,
                            :suspend_user,
-                           :unsuspend_user)
+                           :unsuspend_user,
+                           :facebook_no_email)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
