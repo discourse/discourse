@@ -143,11 +143,11 @@ class PostAlerter
 
   def extract_linked_users(post)
     post.topic_links.map do |link|
-      post = link.link_post
-      if !post && topic = link.link_topic
-        post = topic.posts(post_number: 1).first
+      linked_post = link.link_post
+      if !linked_post && topic = link.link_topic
+        linked_post = topic.posts(post_number: 1).first
       end
-      post && post.user
+      linked_post && post.user_id != linked_post.user_id && linked_post.user
     end.compact
   end
 
