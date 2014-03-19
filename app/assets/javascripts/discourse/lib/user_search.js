@@ -54,8 +54,7 @@ Discourse.UserSearch = {
           users.push(u);
           results.push(u);
         }
-        if (results.length > limit) return false;
-        return true;
+        return results.length <= limit;
       });
 
       _.each(r.groups,function(g) {

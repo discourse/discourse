@@ -120,10 +120,10 @@ function parseTree(tree, path, insideCounts) {
 **/
 function invalidBoundary(args, prev) {
 
-  if (!args.wordBoundary && !args.spaceBoundary) { return; }
+  if (!args.wordBoundary && !args.spaceBoundary) { return false; }
 
   var last = prev[prev.length - 1];
-  if (typeof last !== "string") { return; }
+  if (typeof last !== "string") { return false; }
 
   if (args.wordBoundary && (last.match(/(\w|\/)$/))) { return true; }
   if (args.spaceBoundary && (!last.match(/\s$/))) { return true; }
@@ -149,10 +149,9 @@ Discourse.Dialect = {
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
     dialect.options = opts;
-    var tree = parser.toHTMLTree(text, 'Discourse'),
-        html = parser.renderJsonML(parseTree(tree));
+    var tree = parser.toHTMLTree(text, 'Discourse');
 
-    return html;
+    return parser.renderJsonML(parseTree(tree));
   },
 
   /**
