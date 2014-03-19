@@ -97,9 +97,53 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def self.update_stats
+    topics_with_post_count = Topic
+                              .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
+                              .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
+                              .group("topics.category_id")
+                              .visible.to_sql
+
+    Category.exec_sql <<SQL
+    UPDATE categories c
+    SET   topic_count = x.topic_count,
+          post_count = x.post_count
+    FROM (#{topics_with_post_count}) x
+    WHERE x.category_id = c.id AND
+          (c.topic_count <> x.topic_count OR c.post_count <> x.post_count)
+
+SQL
+
+    # Yes, there are a lot of queries happening below.
+    # Performing a lot of queries is actually faster than using one big update
+    # statement with sub-selects on large databases with many categories,
+    # topics, and posts.
+    #
+    # The old method with the one query is here:
+    # https://github.com/discourse/discourse/blob/5f34a621b5416a53a2e79a145e927fca7d5471e8/app/models/category.rb
+    #
+    # If you refactor this, test performance on a large database.
+
+    Category.all.each do |c|
+      topics = c.topics.where(['topics.id <> ?', c.topic_id]).visible
+      c.topics_year  = topics.created_since(1.year.ago).count
+      c.topics_month = topics.created_since(1.month.ago).count
+      c.topics_week  = topics.created_since(1.week.ago).count
+      c.topics_day   = topics.created_since(1.day.ago).count
+
+      posts = c.visible_posts
+      c.posts_year  = posts.created_since(1.year.ago).count
+      c.posts_month = posts.created_since(1.month.ago).count
+      c.posts_week  = posts.created_since(1.week.ago).count
+      c.posts_day   = posts.created_since(1.day.ago).count
+
+      c.save if c.changed?
+    end
+  end
+
   # Internal: Update category stats: # of topics and posts in past year, month, week for
   # all categories.
-  def self.update_stats
+  def self.update_stats_OLD
     topics = Topic
                .select("COUNT(*) topic_count")
                .where("topics.category_id = categories.id")
@@ -115,6 +159,7 @@ class Category < ActiveRecord::Base
     topics_year = topics.created_since(1.year.ago).to_sql
     topics_month = topics.created_since(1.month.ago).to_sql
     topics_week = topics.created_since(1.week.ago).to_sql
+    topics_day = topics.created_since(1.day.ago).to_sql
 
 
     Category.exec_sql <<SQL
@@ -138,14 +183,17 @@ SQL
     posts_year = posts.created_since(1.year.ago).to_sql
     posts_month = posts.created_since(1.month.ago).to_sql
     posts_week = posts.created_since(1.week.ago).to_sql
+    posts_day = posts.created_since(1.day.ago).to_sql
 
     # TODO don't update unchanged data
     Category.update_all("topics_year = (#{topics_year}),
                          topics_month = (#{topics_month}),
                          topics_week = (#{topics_week}),
+                         topics_day = (#{topics_day}),
                          posts_year = (#{posts_year}),
                          posts_month = (#{posts_month}),
-                         posts_week = (#{posts_week})")
+                         posts_week = (#{posts_week}),
+                         posts_day = (#{posts_day})")
   end
 
   def visible_posts
@@ -157,33 +205,33 @@ SQL
     self.topic_id ? query.where(['topics.id <> ?', self.topic_id]) : query
   end
 
-  def topics_day
-    if val = $redis.get(topics_day_key)
-      val.to_i
-    else
-      val = self.topics.where(['topics.id <> ?', self.topic_id]).created_since(1.day.ago).visible.count
-      $redis.setex topics_day_key, 30.minutes.to_i, val
-      val
-    end
-  end
+  # def topics_day
+  #   if val = $redis.get(topics_day_key)
+  #     val.to_i
+  #   else
+  #     val = self.topics.where(['topics.id <> ?', self.topic_id]).created_since(1.day.ago).visible.count
+  #     $redis.setex topics_day_key, 30.minutes.to_i, val
+  #     val
+  #   end
+  # end
 
-  def topics_day_key
-    "topics_day:cat-#{self.id}"
-  end
+  # def topics_day_key
+  #   "topics_day:cat-#{self.id}"
+  # end
 
-  def posts_day
-    if val = $redis.get(posts_day_key)
-      val.to_i
-    else
-      val = self.visible_posts.created_since(1.day.ago).count
-      $redis.setex posts_day_key, 30.minutes.to_i, val
-      val
-    end
-  end
+  # def posts_day
+  #   if val = $redis.get(posts_day_key)
+  #     val.to_i
+  #   else
+  #     val = self.visible_posts.created_since(1.day.ago).count
+  #     $redis.setex posts_day_key, 30.minutes.to_i, val
+  #     val
+  #   end
+  # end
 
-  def posts_day_key
-    "posts_day:cat-#{self.id}"
-  end
+  # def posts_day_key
+  #   "posts_day:cat-#{self.id}"
+  # end
 
   # Internal: Generate the text of post prompting to enter category
   # description.
