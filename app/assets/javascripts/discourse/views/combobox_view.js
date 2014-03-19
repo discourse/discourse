@@ -42,7 +42,7 @@ Discourse.ComboboxView = Discourse.View.extend({
         if (val) { val = val.toString(); }
 
         var selectedText = (val === selected) ? "selected" : "";
-        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self.buildData(o) + ">" + Em.get(o, nameProperty) + "</option>");
+        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self.buildData(o) + ">" + Handlebars.Utils.escapeExpression(Em.get(o, nameProperty)) + "</option>");
       });
     }
   },
