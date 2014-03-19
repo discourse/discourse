@@ -29,7 +29,7 @@ class UserBadgesController < ApplicationController
       return
     end
 
-    BadgeGranter.revoke(user_badge)
+    BadgeGranter.revoke(user_badge, revoked_by: current_user)
     render json: success_json
   end
 
