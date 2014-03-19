@@ -69,7 +69,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       Destroys a backup
 
       @method destroyBackup
-      @param {Discourse.Backup} the backup to destroy
+      @param {Discourse.Backup} backup the backup to destroy
     **/
     destroyBackup: function(backup) {
       var self = this;
@@ -91,7 +91,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       Start a restore and redirect the user to the logs tab
 
       @method startRestore
-      @param {Discourse.Backup} the backup to restore
+      @param {Discourse.Backup} backup the backup to restore
     **/
     startRestore: function(backup) {
       var self = this;

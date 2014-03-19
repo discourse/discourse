@@ -25,7 +25,7 @@ Discourse.AdminApiController = Ember.ArrayController.extend({
       Creates an API key instance with internal user object
 
       @method regenerateKey
-      @param {Discourse.ApiKey} the key to regenerate
+      @param {Discourse.ApiKey} key the key to regenerate
     **/
     regenerateKey: function(key) {
       bootbox.confirm(I18n.t("admin.api.confirm_regen"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
@@ -39,7 +39,7 @@ Discourse.AdminApiController = Ember.ArrayController.extend({
       Revokes an API key
 
       @method revokeKey
-      @param {Discourse.ApiKey} the key to revoke
+      @param {Discourse.ApiKey} key the key to revoke
     **/
     revokeKey: function(key) {
       var self = this;

@@ -143,6 +143,7 @@ Discourse.Dialect = {
 
     @method cook
     @param {String} text the raw text to cook
+    @param {Object} opts hash of options
     @returns {String} the cooked text
   **/
   cook: function(text, opts) {
@@ -288,9 +289,8 @@ Discourse.Dialect = {
     the other helpers such as `replaceBlock` so consider using them first!
 
     @method registerBlock
-    @param {String} the name of the block handler
-    @param {Function} the handler
-
+    @param {String} name the name of the block handler
+    @param {Function} handler the handler
   **/
   registerBlock: function(name, handler) {
     dialect.block[name] = handler;

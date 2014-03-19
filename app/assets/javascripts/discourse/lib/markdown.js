@@ -13,10 +13,10 @@ Discourse.Markdown = {
   validIframes: [],
 
   /**
-    Whitelists classes for sanitization
+    Whitelists more classes for sanitization.
 
+    @param {...String} var_args Classes to whitelist
     @method whiteListClass
-    @param {String} val The value to whitelist. Can supply more than one argument
   **/
   whiteListClass: function() {
     var args = Array.prototype.slice.call(arguments),
@@ -113,7 +113,10 @@ Discourse.Markdown = {
     Checks to see if a URL is allowed in the cooked content
 
     @method urlAllowed
-    @param {String} url Url to check
+    @param {String} uri Url to check
+    @param {Number} effect ignored
+    @param {Number} ltype ignored
+    @param {Object} hints an object with hints, used to check if this url is from an iframe
     @return {String} url to insert in the cooked content
   **/
   urlAllowed: function (uri, effect, ltype, hints) {

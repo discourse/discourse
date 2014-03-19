@@ -40,7 +40,7 @@ Discourse.ApiKey.reopenClass({
     Creates an API key instance with internal user object
 
     @method create
-    @param {Object} the properties to create
+    @param {...} var_args the properties to initialize this with
     @returns {Discourse.ApiKey} the ApiKey instance
   **/
   create: function() {
