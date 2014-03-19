@@ -61,6 +61,7 @@ Discourse::Application.routes.draw do
       put "unblock"
       put "trust_level"
       put "primary_group"
+      get "badges"
       get "leader_requirements"
     end
 

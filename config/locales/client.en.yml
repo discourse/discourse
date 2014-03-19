@@ -1678,9 +1678,19 @@ en:
         display_name: Display Name
         description: Description
         badge_type: Badge Type
+        granted_by: Granted By
+        granted_at: Granted At
         save: Save
         delete: Delete
         delete_confirm: Are you sure you want to delete this badge?
+        revoke: Revoke
+        revoke_confirm: Are you sure you want to revoke this badge?
+        edit_badges: Edit Badges
+        grant_badge: Grant Badge
+        granted_badges: Granted Badges
+        grant: Grant
+        no_user_badges: "%{name} has not been granted any badges."
+        no_badges: There are no badges that can be granted.
 
     lightbox:
       download: "download"

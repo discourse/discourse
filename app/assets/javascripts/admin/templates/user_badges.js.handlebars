@@ -1,0 +1,61 @@
+<div class='admin-controls'>
+  <div class='span15'>
+    <ul class='nav nav-pills'>
+      <li>{{#link-to 'adminUser' user}}<i class="fa fa-caret-left"></i> &nbsp;{{user.username}}{{/link-to}}</li>
+    </ul>
+  </div>
+</div>
+
+{{#if loading}}
+  <div class='spinner'>{{i18n loading}}</div>
+{{else}}
+  <div class='admin-container user-badges'>
+    <h2>{{i18n admin.badges.grant_badge}}</h2>
+    {{#if noBadges}}
+      <p>{{i18n admin.badges.no_badges}}</p>
+    {{else}}
+      <br>
+      {{combobox valueAttribute="id" value=controller.selectedBadgeId content=controller.badges}}
+      <button class='btn btn-primary' {{action grantBadge controller.selectedBadgeId}}>{{i18n admin.badges.grant}}</button>
+    {{/if}}
+
+    <br>
+    <br>
+
+    <h2>{{i18n admin.badges.granted_badges}}</h2>
+    <br>
+
+    <table>
+      <tr>
+        <th>{{i18n admin.badges.name}}</th>
+        <th>{{i18n admin.badges.badge_type}}</th>
+        <th>{{i18n admin.badges.granted_by}}</th>
+        <th>{{i18n admin.badges.granted_at}}</th>
+        <th></th>
+      </tr>
+
+      {{#each}}
+        <tr>
+          <td>{{badge.displayName}}</td>
+          <td>{{badge.badge_type.name}}</td>
+          <td>
+            {{#link-to 'adminUser' badge.granted_by}}
+              {{avatar granted_by imageSize="tiny"}}
+              {{granted_by.username}}
+            {{/link-to}}
+          </td>
+          <td>{{unboundAgeWithTooltip granted_at}}</td>
+          <td>
+            <button class='btn' {{action revokeBadge this}}>{{i18n admin.badges.revoke}}</button>
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="5">
+            <p>{{i18n admin.badges.no_user_badges name=user.username}}</p>
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+{{/if}}
