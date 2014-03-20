@@ -1,11 +1,23 @@
 //= require ./vendor/normalize
 //= require ./common/foundation/base
 
+@import "./common/foundation/variables";
+
 article.post {
   border-bottom: 1px solid #ddd;
 
   &.deleted {
     background-color: #ffe5e5;
+  }
+
+  blockquote {
+    padding: 10px 8px 10px 13px;
+    margin: 0 0 10px 0;
+    background-color: $quote-background;
+    border-left: 5px solid darken($quote-background, 20%);
+    p {
+      margin: 0 0 10px 0;
+    }
   }
 
   .post-date {
