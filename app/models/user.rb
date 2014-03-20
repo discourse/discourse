@@ -723,6 +723,9 @@ end
 #  uploaded_avatar_id            :integer
 #  email_always                  :boolean          default(FALSE), not null
 #  mailing_list_mode             :boolean          default(FALSE), not null
+#  primary_group_id              :integer
+#  locale                        :string(10)
+#  profile_background            :string(255)
 #
 # Indexes
 #

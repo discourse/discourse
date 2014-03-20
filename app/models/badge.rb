@@ -19,6 +19,5 @@ end
 #
 # Indexes
 #
-#  index_badges_on_badge_type_id  (badge_type_id)
-#  index_badges_on_name           (name) UNIQUE
+#  index_badges_on_name  (name) UNIQUE
 #

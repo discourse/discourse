@@ -772,11 +772,12 @@ end
 #  deleted_by_id           :integer
 #  participant_count       :integer          default(1)
 #  word_count              :integer
+#  excerpt                 :string(1000)
 #
 # Indexes
 #
-#  idx_topics_user_id_deleted_at                                (user_id)
-#  index_forum_threads_on_bumped_at                             (bumped_at)
-#  index_topics_on_deleted_at_and_visible_and_archetype_and_id  (deleted_at,visible,archetype,id)
-#  index_topics_on_id_and_deleted_at                            (id,deleted_at)
+#  idx_topics_front_page              (deleted_at,visible,archetype,category_id,id)
+#  idx_topics_user_id_deleted_at      (user_id)
+#  index_forum_threads_on_bumped_at   (bumped_at)
+#  index_topics_on_id_and_deleted_at  (id,deleted_at)
 #

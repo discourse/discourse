@@ -109,6 +109,7 @@ end
 #  previous_value :text
 #  new_value      :text
 #  topic_id       :integer
+#  admin_only     :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -117,4 +118,3 @@ end
 #  index_staff_action_logs_on_target_user_id_and_id          (target_user_id,id)
 #  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
 #
-
