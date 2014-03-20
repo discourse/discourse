@@ -10,7 +10,7 @@
 <%- if @topic_view.posts.present? %>
   <%- @topic_view.posts.each do |post| %>
     <article class='post<%- if post.trashed? %> deleted<% end %>' id='post-<%= post.id.to_s %>'>
-      <%= link_to post.created_at.strftime("%e %b %Y"), post.url, class: 'post-date', target: "_blank" %>
+      <%= link_to embed_post_date(post.created_at), post.url, class: 'post-date', target: "_blank" %>
       <%- if post.reply_to_post.present? %>
         <%= link_to I18n.t('embed.in_reply_to', username: post.reply_to_post.username), post.reply_to_post.url, 'data-link-to-post' => post.reply_to_post.id.to_s, :class => 'in-reply-to' %>
       <%- end %>
