@@ -40,6 +40,12 @@
 .private-message-glyph { color: lighten($primary_text_color, 60%); }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
+.notification-options {
+  clear: both;
+  float: left;
+  margin-top: 0px;
+}
+
 #topic-closing-info {
   margin-left: 10px;
 }
@@ -56,12 +62,7 @@
   z-index: 500;
   margin-right: 140px;
   outline: 1px solid transparent;
-
-
 }
-
-
-
 
 #topic-progress {
 
