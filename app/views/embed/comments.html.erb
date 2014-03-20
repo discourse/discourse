@@ -16,7 +16,7 @@
       <%- end %>
 
       <div class='author'>
-        <img src='<%= post.user.small_avatar_url %>'>
+        <a href='/users/<%= post.username %>' target="_blank"><img src='<%= post.user.small_avatar_url %>'></a>
         <h3 class='username'>
           <a href='/users/<%= post.username %>' target="_blank" class='<% if post.user.staff? %>staff<% end %><% if post.user.new_user? %>new-user<% end %>'><%= post.user.username %></a>
         </h3>
