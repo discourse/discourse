@@ -47,10 +47,18 @@ article.post {
 
     h3 {
       text-align: center;
-      color: #4a6b82;
+      color: #0088cc;
       font-size: 13px;
       margin: 0;
       word-wrap: break-word;
+
+      a.staff {
+        background-color: #ffffc2;
+      }
+
+      a.new-user {
+        color: lighten($primary_text_color, 35%);
+      }
     }
   }
 

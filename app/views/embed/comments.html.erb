@@ -17,7 +17,9 @@
 
       <div class='author'>
         <img src='<%= post.user.small_avatar_url %>'>
-        <h3 class='username'><%= post.user.username %></h3>
+        <h3 class='username'>
+          <a href='/users/<%= post.username %>' target="_blank" class='<% if post.user.staff? %>staff<% end %><% if post.user.new_user? %>new-user<% end %>'><%= post.user.username %></a>
+        </h3>
       </div>
       <div class='cooked'>
         <%= raw post.cooked %>
