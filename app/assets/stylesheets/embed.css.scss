@@ -17,6 +17,10 @@ article.post {
     .avatar { margin-right: 7px; }
   }
 
+  ol, ul {
+    clear: none;
+  }
+
   blockquote {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
