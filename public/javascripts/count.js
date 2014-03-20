@@ -28,7 +28,7 @@
       var byUrl = result.counts;
       for (var i=0; i<links.length; i++) {
         var link = links[i],
-            linkCount = byUrl[link];
+            linkCount = byUrl[link] || byUrl[link.replace(/\/#/, '#')];
 
         if (linkCount) {
           var t = document.createTextNode(" (" + linkCount + ")");
