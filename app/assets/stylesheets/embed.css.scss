@@ -10,11 +10,18 @@ article.post {
     background-color: #ffe5e5;
   }
 
+  .quote .title {
+    border-left: 5px solid $primary_border_color;
+    background-color: lighten($secondary_background_color, 76%);
+    padding: 10px 10px 0 12px;
+    .avatar { margin-right: 7px; }
+  }
+
   blockquote {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
     background-color: $quote-background;
-    border-left: 5px solid darken($quote-background, 20%);
+    border-left: 5px solid $primary_border_color;
     p {
       margin: 0 0 10px 0;
     }
