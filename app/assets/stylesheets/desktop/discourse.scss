@@ -265,7 +265,7 @@ blockquote {
 
 .spinner {
   width: 100px;
-  margin: 0 auto 30px auto;
+  margin: 20px auto 30px auto;
   background-color: #000;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
@@ -279,7 +279,34 @@ blockquote {
     position: 10px 8px;
     size: 25px;
   };
+  -webkit-animation: spinner .25s;
+  animation: spinner .25s;
 }
+
+//loading spinner drop-in animation
+@-webkit-keyframes spinner {
+  0% {
+      margin: 0px auto 30px auto;
+      opacity: 0;
+    }
+    100% {
+    margin: 20px auto 30px auto;
+      opacity: 1;
+    }
+}@keyframes modal {
+    0% {
+        margin: 0px auto 30px auto;
+        opacity: 0;
+      }
+      100% {
+      margin: 20px auto 30px auto;
+        opacity: 1;
+      }
+}
+
+
+
+
 
 .avatar {
   @include border-radius-all(2px);
