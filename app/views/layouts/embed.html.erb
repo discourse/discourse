@@ -2,6 +2,7 @@
 <html>
   <head>
     <%= stylesheet_link_tag 'embed' %>
+    <%= javascript_include_tag 'break_string' %>
 
     <script>
       (function() {
@@ -43,6 +44,16 @@
           for (i=0; i<cookedLinks.length; i++) {
             cookedLinks[i].target = "_blank";
           }
+
+          // Adjust all names
+          var names = document.querySelectorAll('.username');
+          for (i=0; i<names.length; i++) {
+            var username = names[i].innerHTML;
+            if (username) {
+              names[i].innerHTML = new BreakString(username).break();
+            }
+          }
+
         };
 
       })();

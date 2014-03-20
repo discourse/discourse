@@ -38,3 +38,4 @@
 //= require show-html.js
 //= require lock-on.js
 //= require ember-cloaking
+//= require break_string
