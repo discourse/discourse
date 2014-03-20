@@ -13,6 +13,10 @@ class UserAuthenticator
     end
   end
 
+  def has_authenticator?
+    !!authenticator
+  end
+
   def finish
     if authenticator
       authenticator.after_create_account(@user, @session)

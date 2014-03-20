@@ -128,6 +128,10 @@ class UsersController < ApplicationController
     activation = UserActivator.new(user, request, session, cookies)
     activation.start
 
+    # just assign a password if we have an authenticator and no password
+    # this is the case for Twitter
+    user.password = SecureRandom.hex if user.password.blank? && authentication.has_authenticator?
+
     if user.save
       authentication.finish
       activation.finish
