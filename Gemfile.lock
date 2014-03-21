@@ -368,7 +368,7 @@ GEM
       eventmachine (>= 1.0.0)
       rack (>= 1.0.0)
     thor (0.18.1)
-    thread_safe (0.3.0)
+    thread_safe (0.2.0)
       atomic (>= 1.1.7, < 2)
     tilt (1.4.1)
     timecop (0.7.1)
