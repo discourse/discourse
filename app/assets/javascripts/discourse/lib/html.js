@@ -104,11 +104,11 @@ Discourse.HTML = {
 
     if (opts.showParent && category.get('parent_category_id')) {
       var parent = Discourse.Category.findById(category.get('parent_category_id'));
-      html = "<a class='badge-category-parent' style=\"" + (Discourse.HTML.categoryStyle(parent)||'') +
+      html = "<span class='badge-wrapper'><a class='badge-category-parent' style=\"" + (Discourse.HTML.categoryStyle(parent)||'') +
              "\" href=\"" + url + "\"><span class='category-name'>" +
              (Em.get(parent, 'read_restricted') ? "<i class='fa fa-group'></i> " : "") +
              Em.get(parent, 'name') + "</span></a>" +
-             html;
+             html + "</span>";
     }
 
     return html;
