@@ -77,6 +77,18 @@
     </div>
   </div>
 
+  {{#if showBadges}}
+    <div class='display-row'>
+      <div class='field'>{{i18n admin.badges.title}}</div>
+      <div class='value'>
+        TODO featured badges
+      </div>
+      <div class='controls'>
+        {{#link-to 'adminUser.badges' this class="btn"}}{{i18n admin.badges.edit_badges}}{{/link-to}}
+      </div>
+    </div>
+  {{/if}}
+
 </section>
 
 
@@ -335,12 +347,6 @@
     <div class='value'>{{{days_visited}}}</div>
   </div>
 </section>
-
-{{#if showBadges}}
-<section class='details'>
-  <h1>{{i18n admin.badges.title}}</h1>
-</section>
-{{/if}}
 
 <section>
   <hr/>

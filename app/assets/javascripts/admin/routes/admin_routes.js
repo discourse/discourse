@@ -47,6 +47,7 @@ Discourse.Route.buildRoutes(function() {
 
     this.resource('adminUsers', { path: '/users' }, function() {
       this.resource('adminUser', { path: '/:username' }, function() {
+        this.route('badges');
         this.route('leaderRequirements', { path: '/leader_requirements' });
       });
       this.resource('adminUsersList', { path: '/list' }, function() {

@@ -24,11 +24,13 @@ describe BadgeGranter do
 
     it 'sets granted_by if the option is present' do
       admin = Fabricate(:admin)
+      StaffActionLogger.any_instance.expects(:log_badge_grant).once
       user_badge = BadgeGranter.grant(badge, user, granted_by: admin)
       user_badge.granted_by.should eq(admin)
     end
 
     it 'defaults granted_by to the system user' do
+      StaffActionLogger.any_instance.expects(:log_badge_grant).never
       user_badge = BadgeGranter.grant(badge, user)
       user_badge.granted_by_id.should eq(Discourse.system_user.id)
     end
@@ -47,11 +49,13 @@ describe BadgeGranter do
 
   describe 'revoke' do
 
+    let(:admin) { Fabricate(:admin) }
     let!(:user_badge) { BadgeGranter.grant(badge, user) }
 
     it 'revokes the badge and decrements grant_count' do
       badge.reload.grant_count.should eq(1)
-      BadgeGranter.revoke(user_badge)
+      StaffActionLogger.any_instance.expects(:log_badge_revoke).with(user_badge)
+      BadgeGranter.revoke(user_badge, revoked_by: admin)
       UserBadge.where(user: user, badge: badge).first.should_not be_present
       badge.reload.grant_count.should eq(0)
     end

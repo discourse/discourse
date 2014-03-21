@@ -36,6 +36,7 @@ describe UserBadgesController do
     it 'grants badges from staff' do
       admin = Fabricate(:admin)
       log_in_user admin
+      StaffActionLogger.any_instance.expects(:log_badge_grant).once
       xhr :post, :create, badge_id: badge.id, username: user.username
       response.status.should == 200
       user_badge = UserBadge.where(user: user, badge: badge).first
@@ -51,6 +52,7 @@ describe UserBadgesController do
 
     it 'grants badges from master api calls' do
       api_key = Fabricate(:api_key)
+      StaffActionLogger.any_instance.expects(:log_badge_grant).never
       xhr :post, :create, badge_id: badge.id, username: user.username, api_key: api_key.key
       response.status.should == 200
       user_badge = UserBadge.where(user: user, badge: badge).first
@@ -71,6 +73,7 @@ describe UserBadgesController do
 
     it 'revokes the badge' do
       log_in :admin
+      StaffActionLogger.any_instance.expects(:log_badge_revoke).once
       xhr :delete, :destroy, id: @user_badge.id
       response.status.should == 200
       UserBadge.where(id: @user_badge.id).first.should be_nil

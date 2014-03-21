@@ -74,6 +74,24 @@ class StaffActionLogger
     }))
   end
 
+  def log_badge_grant(user_badge, opts={})
+    raise Discourse::InvalidParameters.new('user_badge is nil') unless user_badge
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:grant_badge],
+      target_user_id: user_badge.user_id,
+      details: user_badge.badge.name
+    }))
+  end
+
+  def log_badge_revoke(user_badge, opts={})
+    raise Discourse::InvalidParameters.new('user_badge is nil') unless user_badge
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:revoke_badge],
+      target_user_id: user_badge.user_id,
+      details: user_badge.badge.name
+    }))
+  end
+
   private
 
   def params(opts)
