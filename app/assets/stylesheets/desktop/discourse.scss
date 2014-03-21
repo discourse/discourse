@@ -283,27 +283,14 @@ blockquote {
   animation: spinner .25s;
 }
 
-//loading spinner drop-in animation
+//loading spinner fade-in
 @-webkit-keyframes spinner {
-  0% {
-      margin: 0px auto 30px auto;
-      opacity: 0;
-    }
-    100% {
-    margin: 20px auto 30px auto;
-      opacity: 1;
-    }
-}@keyframes modal {
-    0% {
-        margin: 0px auto 30px auto;
-        opacity: 0;
-      }
-      100% {
-      margin: 20px auto 30px auto;
-        opacity: 1;
-      }
+    from {opacity: 0}
+    to {opacity: 1}
+}@keyframes fade {
+    from {opacity: 0}
+    to {opacity: 1}
 }
-
 
 
 
