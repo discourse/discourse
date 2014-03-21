@@ -1,7 +1,7 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
+@import "../common/foundation/variables";
+@import "../common/foundation/mixins";
 
 .modal.history-modal {
   .modal-inner-container {
