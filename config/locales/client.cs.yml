@@ -835,9 +835,9 @@ cs:
       deleted_by: odstranil
       expand_collapse: rozbalit/sbalit
       gap:
-        one: 1 post omitted
+        one: 1 post hidden
         few: '{{count}} příspěvek vynechán'
-        other: '{{count}} posts omitted'
+        other: '{{count}} posts hidden'
       has_replies:
         one: Odpovědět
         few: Odpovědi
