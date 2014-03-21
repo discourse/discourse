@@ -26,24 +26,26 @@ SiteSetting.default_external_links_in_new_tab = true
 #
 # LessonPlanet API
 #
-User.seed do |u|
-  u.name = "Lesson Planet"
-  u.username = ENV['API_USERNAME']
-  u.username_lower = ENV['API_USERNAME'].downcase
-  u.email = "member_services@lessonplanet.com"
-  u.password = SecureRandom.hex
-  # TODO localize this, its going to require a series of hacks
-  u.bio_raw = "Not a real person. A global user for system notifications and other system tasks."
-  u.active = true
-  u.admin = true
-  u.moderator = true
-  u.email_direct = false
-  u.approved = true
-  u.email_private_messages = false
-  u.trust_level = TrustLevel.levels[:elder]
+user = User.where(username_lower: ENV['API_USERNAME'].downcase).first
+if user.blank?
+  user = User.seed do |u|
+    u.name = "Lesson Planet"
+    u.username = ENV['API_USERNAME']
+    u.username_lower = ENV['API_USERNAME'].downcase
+    u.email = "member_services@lessonplanet.com"
+    u.password = SecureRandom.hex
+    # TODO localize this, its going to require a series of hacks
+    u.bio_raw = "Not a real person. A global user for system notifications and other system tasks."
+    u.active = true
+    u.admin = true
+    u.moderator = true
+    u.email_direct = false
+    u.approved = true
+    u.email_private_messages = false
+    u.trust_level = TrustLevel.levels[:elder]
+  end.first
 end
 
-user = User.where(username_lower: ENV['API_USERNAME'].downcase).first
 if user
   api_key = ApiKey.where(user_id: user.id).first_or_initialize
   api_key.update(key: ENV['API_KEY'], created_by: user)
