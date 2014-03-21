@@ -199,19 +199,19 @@ module Export
       #  - create the "restore" schema
       #  - prepend the "restore" schema into the search_path
 
-      regexp = "^SET search_path = public, pg_catalog;$"
+      regexp = "SET search_path = public, pg_catalog;"
 
       replacement = [ "DROP SCHEMA IF EXISTS restore CASCADE;",
                       "CREATE SCHEMA restore;",
                       "SET search_path = restore, public, pg_catalog;",
-                    ].join("\\n")
+                    ].join(" ")
 
       # we only want to replace the VERY first occurence of the search_path command
-      expression = "0,/#{regexp}/s//#{replacement}/"
+      expression = "1,/^#{regexp}$/s/#{regexp}/#{replacement}/"
 
       # I tried to use the --in-place argument but it was SLOOOWWWWwwwwww
       # so I output the result into another file and rename it back afterwards
-      [ "sed --expression='#{expression}' < #{@dump_filename} > #{@dump_filename}.tmp",
+      [ "sed -e '#{expression}' < #{@dump_filename} > #{@dump_filename}.tmp",
         "&&",
         "mv #{@dump_filename}.tmp #{@dump_filename}",
       ].join(" ")
