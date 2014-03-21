@@ -68,15 +68,15 @@ class UsersController < ApplicationController
   def invited
     inviter = fetch_user_from_params
 
-    invites = if guardian.can_see_pending_invites_from?(inviter)
+    invites = if guardian.can_see_invite_details?(inviter)
       Invite.find_all_invites_from(inviter)
     else
       Invite.find_redeemed_invites_from(inviter)
     end
 
     invites = invites.filter_by(params[:filter])
-
-    render_serialized(invites.to_a, InviteSerializer)
+    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer),
+                     can_see_invite_details: guardian.can_see_invite_details?(inviter)
   end
 
   def is_local_username

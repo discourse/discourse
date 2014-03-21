@@ -176,7 +176,7 @@ class Guardian
     @user.approved?
   end
 
-  def can_see_pending_invites_from?(user)
+  def can_see_invite_details?(user)
     is_me?(user)
   end
 

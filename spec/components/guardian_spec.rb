@@ -1108,18 +1108,18 @@ describe Guardian do
     end
   end
 
-  context "can_see_pending_invites_from?" do
+  context "can_see_invite_details?" do
 
     it 'is false without a logged in user' do
-      Guardian.new(nil).can_see_pending_invites_from?(user).should be_false
+      Guardian.new(nil).can_see_invite_details?(user).should be_false
     end
 
     it 'is false without a user to look at' do
-      Guardian.new(user).can_see_pending_invites_from?(nil).should be_false
+      Guardian.new(user).can_see_invite_details?(nil).should be_false
     end
 
     it 'is true when looking at your own invites' do
-      Guardian.new(user).can_see_pending_invites_from?(user).should be_true
+      Guardian.new(user).can_see_invite_details?(user).should be_true
     end
   end
 

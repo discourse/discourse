@@ -835,7 +835,7 @@ describe UsersController do
 
       xhr :get, :invited, username: inviter.username, filter: 'billybob'
 
-      invites = JSON.parse(response.body)
+      invites = JSON.parse(response.body)['invites']
       expect(invites).to have(1).item
       expect(invites.first).to include('email' => 'billybob@example.com')
     end
@@ -857,7 +857,7 @@ describe UsersController do
 
       xhr :get, :invited, username: inviter.username, filter: 'billybob'
 
-      invites = JSON.parse(response.body)
+      invites = JSON.parse(response.body)['invites']
       expect(invites).to have(1).item
       expect(invites.first).to include('email' => 'billybob@example.com')
     end
@@ -870,7 +870,7 @@ describe UsersController do
 
           xhr :get, :invited, username: inviter.username
 
-          invites = JSON.parse(response.body)
+          invites = JSON.parse(response.body)['invites']
           expect(invites).to be_empty
         end
       end
@@ -883,7 +883,7 @@ describe UsersController do
 
           xhr :get, :invited, username: inviter.username
 
-          invites = JSON.parse(response.body)
+          invites = JSON.parse(response.body)['invites']
           expect(invites).to have(1).item
           expect(invites.first).to include('email' => invite.email)
         end
@@ -898,13 +898,13 @@ describe UsersController do
             inviter = Fabricate(:user)
             invite = Fabricate(:invite, invited_by: inviter)
             stub_guardian(user) do |guardian|
-              guardian.stubs(:can_see_pending_invites_from?).
+              guardian.stubs(:can_see_invite_details?).
                 with(inviter).returns(true)
             end
 
             xhr :get, :invited, username: inviter.username
 
-            invites = JSON.parse(response.body)
+            invites = JSON.parse(response.body)['invites']
             expect(invites).to have(1).item
             expect(invites.first).to include("email" => invite.email)
           end
@@ -917,14 +917,14 @@ describe UsersController do
             invitee = Fabricate(:user)
             Fabricate(:invite, invited_by: inviter)
             stub_guardian(user) do |guardian|
-              guardian.stubs(:can_see_pending_invites_from?).
+              guardian.stubs(:can_see_invite_details?).
                 with(inviter).returns(false)
             end
 
             xhr :get, :invited, username: inviter.username
 
-            invites = JSON.parse(response.body)
-            expect(invites).to be_empty
+            json = JSON.parse(response.body)['invites']
+            expect(json).to be_empty
           end
         end
       end
@@ -938,7 +938,7 @@ describe UsersController do
 
           xhr :get, :invited, username: inviter.username
 
-          invites = JSON.parse(response.body)
+          invites = JSON.parse(response.body)['invites']
           expect(invites).to have(1).item
           expect(invites.first).to include('email' => invite.email)
         end
