@@ -62,6 +62,7 @@
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 0 10px;
+  border-top: 1px solid $primary-border-color;
   a.title {color: $primary_text_color;}
   a.title:visited:not(.badge-notification) {color: lighten($primary_text_color, 35%);}
 
@@ -431,7 +432,6 @@
 // --------------------------------------------------
 
 .list-controls {
-  border-bottom: 1px solid $primary_border_color;
 
   .home {
     background-color: lighten($secondary_background_color, 76%);
@@ -537,8 +537,6 @@ ol.category-breadcrumb {
   }
 
 }
-
-.top-lists {margin-top: 20px;}
 
 #bulk-select {
   position: fixed;

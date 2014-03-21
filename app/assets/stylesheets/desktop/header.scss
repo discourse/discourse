@@ -11,7 +11,7 @@
   top: 0;
   left: 0;
   z-index: 1000;
-  border-bottom: 1px solid $primary_border_color;
+  box-shadow: 1px 0 4px rgba($primary_text_color, .45);
   background-color: $primary_background_color;
   padding-top: 3px;
   .docked & {
