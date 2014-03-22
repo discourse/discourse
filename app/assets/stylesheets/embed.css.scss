@@ -67,6 +67,9 @@ article.post {
     margin-left: 100px;
     word-wrap: break-word;
 
+    img {
+      max-width:100%;
+    }
     p {
       margin: 0 0 1em 0;
     }
