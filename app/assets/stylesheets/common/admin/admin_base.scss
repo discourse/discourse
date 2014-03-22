@@ -196,7 +196,9 @@
 
     .desc {
       padding-top: 3px;
-      color: darken($secondary_text_color, 40%);
+      color: lighten($secondary_text_color, 20%);
+      font-size: 80%;
+      line-height: 1.4em;
     }
 
     h3 {
