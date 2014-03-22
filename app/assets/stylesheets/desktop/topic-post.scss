@@ -4,11 +4,11 @@
 
 .gap {
   background-color: lighten($secondary_background_color, 76%);
-  padding: 5px 10px;
+  padding: 5px 0;
   color: lighten($primary_text_color, 35%);
   cursor: pointer;
   text-align: center;
-  width: 822px;
+  width: 80%;
 
   &:hover {
     background-color: lighten($secondary_background_color, 76%);
@@ -106,26 +106,30 @@ section.post-menu-area, .post-actions {
 
 nav.post-controls {
     padding: 0;
-    button {color: lighten($primary_text_color, 50%);
+    button {
+    color: lighten($primary_text_color, 50%);
     margin-right: 2px;
   }
 
   span.badge-posts {
     margin-right: 5px;
-    color: lighten($primary_text_color, 50%);
+    transition: all linear 0.15s;
   }
 
   .show-replies {
+    background: lighten($secondary_background_color, 76%);
+    padding: 8px 15px;
+    padding-bottom: 20px;
+    margin-left: 0;
+    span.badge-posts {color: lighten($primary_text_color, 50%);}
+    &:hover {
+      background: lighten($secondary_background_color, 76%);
+      span.badge-posts {color: $primary_text_color;}
+    }
     i {
       margin-left: 5px;
     }
   }
-
-  button.show-replies {
-    padding: 8px 15px;
-    margin-left: 0;
-  }
-
 
   button.create {
     margin-right: 0;
@@ -209,13 +213,11 @@ nav.post-controls {
 
   .embedded-posts {
     background: lighten($secondary_background_color, 76%);
-    .quote .title {background: lighten($secondary_background_color, 60%);}
-    blockquote {background: lighten($secondary_background_color, 60%);}
-    .onebox {
-    background: lighten($secondary_background_color, 60%);
-    border-left: 5px solid lighten($secondary_background_color, 35%);
-    .quote-controls, .quote-controls a {color: $link-color;}
+    .quote .title, blockquote, .onebox, .onebox-result {
+      background: lighten($secondary_background_color, 70%);
+      border-left: 5px solid lighten($secondary_background_color, 60%);
     }
+
     &.bottom { margin-top: -11px;}
     .topic-meta-data h5 {margin: 5px;}
     .topic-meta-data-inside {
@@ -224,6 +226,16 @@ nav.post-controls {
     }
     .topic-meta-data {padding-top: 20px;}
   }
+
+.bottom-round nav.post-controls .show-replies {
+background: lighten($secondary_background_color, 76%);
+margin-bottom: 0;
+padding-bottom: 8px;
+  &:hover {background: lighten($secondary_background_color, 76%);
+  }
+}
+
+
 
 .post-action {
   .relative-date {
@@ -328,7 +340,6 @@ a.star {
     border-top: 1px solid $primary_border_color;
   }
 
-
 .participants { // PMs //
   .user {float: left; margin: 7px 20px 7px 0;}
 }
@@ -354,7 +365,7 @@ a.star {
         color: $primary_text_color;
         border: none !important;
         border-bottom: 1px solid lighten($secondary_background_color, 60%) !important;
-
+        span.badge-posts {color: $primary_text_color;}
       }
 
       &.collapsed {
@@ -451,15 +462,12 @@ iframe {
 }
 }
 
-/**/
-
 
 @include small-width {
     .extra-info-wrapper {
   max-width: 680px;
 }
 }
-
 
 .extra-info {
   h1 {
@@ -629,10 +637,7 @@ iframe {
 }
 
 .topic-admin-menu {
-
   h3 {margin-top: 0;}
-
-
 }
 
 .deleted-user-avatar {
@@ -679,7 +684,7 @@ blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
 
-    a.mention {background: lighten($secondary_background_color, 60%);}
+    a.mention {background: lighten($secondary_background_color, 70%);}
     p:first-of-type {margin-top: 0;}
     p:last-of-type {margin-bottom: 0;}
 }
@@ -701,9 +706,6 @@ blockquote { /* solo quotes */
 
 }
 }
-
-
-
 
 .quote-controls {
   float: right;
@@ -727,8 +729,6 @@ blockquote { /* solo quotes */
     content: "\f061";
     }
 }
-
-
 
 .gutter {
   float: left;
@@ -770,9 +770,7 @@ blockquote { /* solo quotes */
   }
 }
 
-
 .bottom-round.contents.regular {
-
  -webkit-transition: background-color .25s linear;
  transition: background-color .25s linear;
 
@@ -800,7 +798,7 @@ blockquote { /* solo quotes */
 
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
-  a.mention {background: lighten($secondary_background_color, 60%);}
+  a.mention {background: lighten($secondary_background_color, 70%);}
   &.bottom {
     .topic-meta-data {padding-left: 13px;}
     &.hidden {display: block; opacity: 0; }
@@ -826,28 +824,6 @@ blockquote { /* solo quotes */
   .topic-body, .topic-meta-data {border: none;}
   .row {border-top: 1px solid $primary_border_color; padding-top: 7px;}
   .reply:first-of-type .row {border-top: none;}
-}
-
-.contents.regular  {
-
-button.show-replies {
-  background: lighten($secondary_background_color, 76%);
-  padding-bottom: 20px;
-     &:hover {background: lighten($secondary_background_color, 76%);
-  .badge-posts {color: $secondary_text_color;}
-
-  }
-}
-
-  &.bottom-round button.show-replies {
-  background: lighten($secondary_background_color, 76%);
-  margin-bottom: 0;
-  padding-bottom: 8px;
-    &:hover {background: lighten($secondary_background_color, 76%);
-       .badge-posts {color: $secondary_text_color;}
-    }
-  }
-
 }
 
 .dropdown {
@@ -1018,7 +994,6 @@ clear: both;
     }
   }
 }
-
 
 a.attachment:before {
   display: inline-block;
