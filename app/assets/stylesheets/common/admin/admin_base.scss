@@ -196,7 +196,7 @@
 
     .desc {
       padding-top: 3px;
-      color: lighten($secondary_text_color, 20%);
+      color: $secondary_text_color;
       font-size: 80%;
       line-height: 1.4em;
     }
@@ -584,7 +584,7 @@ table.api-keys {
 
     .look-here {
       float: left;
-      margin: 20px 20px 0 20px;
+      margin: 20px 10px 0 10px;
 
       .fa {
         font-size: 32px;
@@ -595,7 +595,7 @@ table.api-keys {
 
     .problem-messages {
       float: left;
-      width: 355px;
+      width: 395px;
       a {
         text-decoration: underline;
       }
@@ -604,7 +604,10 @@ table.api-keys {
       }
       .btn {
         background-color: lighten($secondary_background_color, 60%);
-    }
+      }
+      ul {
+        margin-left: 0;
+      }
   }
 }
 

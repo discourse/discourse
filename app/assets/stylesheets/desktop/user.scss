@@ -61,7 +61,7 @@
     display: inline-block;
   }
   .instructions {
-    color: lighten($secondary_text_color, 20%);
+    color: $secondary_text_color;
     margin-left: 160px;
     margin-top: 5px;
     margin-bottom: 10px;
