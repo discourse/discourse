@@ -809,7 +809,7 @@ en:
     staff_like_weight: "Extra weighting factor given to likes when performed by staff."
 
     reply_by_email_enabled: "Enable replying to topics via email"
-    reply_by_email_address: "Template for reply by email address in form, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
+    reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
 
     pop3s_polling_enabled: "Poll via POP3S for email replies"
     pop3s_polling_port: "The port to poll a POP3S account on"
