@@ -61,10 +61,12 @@
     display: inline-block;
   }
   .instructions {
-    color: $primary_text_color;
+    color: lighten($secondary_text_color, 20%);
     margin-left: 160px;
     margin-top: 5px;
     margin-bottom: 10px;
+    font-size: 80%;
+    line-height: 1.4em;
   }
   .avatar {
     margin-left: 3px;
