@@ -129,6 +129,8 @@ class ComposerMessagesFinder
 
     topic = Topic.where(id: @details[:topic_id]).first
 
+    return unless replying?
+
     return if topic.nil? ||
               SiteSetting.warn_reviving_old_topic_age < 1 ||
               topic.last_posted_at > SiteSetting.warn_reviving_old_topic_age.days.ago
