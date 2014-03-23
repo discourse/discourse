@@ -9,7 +9,7 @@ module EmbedHelper
       if dt.year == current.year
         dt.strftime("%e %b")
       else
-        dt.strftime("%e %b %Y")
+        dt.strftime("%b '%y")
       end
     end
   end
