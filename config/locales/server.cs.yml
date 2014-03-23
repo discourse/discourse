@@ -797,7 +797,7 @@ cs:
   most_recent_poster: Poslední zasilatel
   frequent_poster: Častý zasilatel
   redirected_to_top_reasons:
-    new_user: "Welcome! As a new visitor, this will be your homepage until you've had some time to look around at the forum. Here's some of the most popular topics from the past."
+    new_user: "Welcome! As a new visitor, this will be your homepage until you've had some time to look around. Here's some of the most popular topics from the past."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
   move_posts:
     new_topic_moderator_post:
