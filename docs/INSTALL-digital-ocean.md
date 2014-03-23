@@ -135,7 +135,7 @@ Sign into your Discourse instance. There should be a reminder visible on the sit
 
 # Post-Install Maintenance
 
-We believe most small and medium size Discourse installs will be fine with the recommended 2 GB of RAM. However, if you are using the absolute minimum 1 GB of RAM, or your forum is growing you may want to [set up a swap file](https://www.digitalocean.com/community/articles/how-to-add-swap-on-ubuntu-12-04) just in case.
+We believe most small and medium size Discourse installs will be fine with the recommended 2 GB of RAM. However, if you are using the absolute minimum 1 GB of RAM, or your forum is growing you may want to [set up a swap file](https://meta.discourse.org/t/create-a-swapfile-for-your-linux-server/13880) just in case.
 
 To **upgrade Discourse to the latest version**, visit `/admin/docker`, refresh the page a few times (yes, seriously) and then press the Upgrade button at the top. View the live output at the bottom of your browser to see when things are complete. You should see:
 
@@ -145,6 +145,16 @@ To **upgrade Discourse to the latest version**, visit `/admin/docker`, refresh t
 
 
 Then you know it's complete. (Yes, we will be improving this process soon!)
+
+# Other Optional Stuff
+
+Do you want...
+
+- Users to log in via Facebook? [Configure Facebook logins](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394).
+
+- Users to log in via Twitter? [Configure Twitter logins](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395/last).
+
+- Users to post reples via email? [Configure reply via email](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
 
 If anything needs to be improved in this guide, feel free to ask on [meta.discourse.org][meta], or even better, submit a pull request.
 
