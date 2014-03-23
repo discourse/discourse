@@ -43,7 +43,7 @@ A: It will be rejected, and a notification email sent to the moderator. Check yo
 
 
 
-Q: Who did this?  
+Q: Who did this?
 
 A: @therealx, @yesthatallen and @ligthyear
 
