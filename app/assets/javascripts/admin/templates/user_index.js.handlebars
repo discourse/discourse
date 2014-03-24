@@ -102,8 +102,8 @@
         {{#if approved}}
           {{i18n admin.user.approved_by}}
 
-          {{#link-to 'adminUser' approved_by}}{{avatar approved_by imageSize="small"}}{{/link-to}}
-          {{#link-to 'adminUser' approved_by}}{{approved_by.username}}{{/link-to}}
+          {{#link-to 'adminUser' approvedBy}}{{avatar approvedBy imageSize="small"}}{{/link-to}}
+          {{#link-to 'adminUser' approvedBy}}{{approvedBy.username}}{{/link-to}}
         {{else}}
           {{i18n no_value}}
         {{/if}}
@@ -260,7 +260,6 @@
   <div class='display-row highlight-danger'>
     <div class='field'>{{i18n admin.user.suspended_by}}</div>
     <div class='value'>
-      <!-- TODO: Why don't these links work? -->
       {{#link-to 'adminUser' suspendedBy}}{{avatar suspendedBy imageSize="tiny"}}{{/link-to}}
       {{#link-to 'adminUser' suspendedBy}}{{suspendedBy.username}}{{/link-to}}
     </div>

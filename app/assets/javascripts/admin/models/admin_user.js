@@ -359,9 +359,15 @@ Discourse.AdminUser = Discourse.User.extend({
 
   suspendedBy: function() {
     if (this.get('suspended_by')) {
-      return Discourse.User.create(this.get('suspended_by'));
+      return Discourse.AdminUser.create(this.get('suspended_by'));
     }
-  }.property('suspended_by')
+  }.property('suspended_by'),
+
+  approvedBy: function() {
+    if (this.get('approved_by')) {
+      return Discourse.AdminUser.create(this.get('approved_by'));
+    }
+  }.property('approved_by')
 
 });
 
