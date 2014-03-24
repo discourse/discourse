@@ -361,7 +361,9 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       }
 
       var postStream = topicController.get('postStream');
-      if (data.type === "revised"){
+      if (data.type === "revised" || data.type === "acted"){
+        // TODO we could update less data for "acted"
+        // (only post actions)
         postStream.triggerChangedPost(data.id, data.updated_at);
         return;
       }

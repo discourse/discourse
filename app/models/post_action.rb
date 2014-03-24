@@ -20,6 +20,7 @@ class PostAction < ActiveRecord::Base
 
   after_save :update_counters
   after_save :enforce_rules
+  after_save :notify_subscribers
 
   def self.update_flagged_posts_count
     posts_flagged_count = PostAction.joins(post: :topic)
@@ -136,6 +137,7 @@ class PostAction < ActiveRecord::Base
             staff_took_action: opts[:take_action] || false,
             related_post_id: related_post_id,
             targets_topic: !!targets_topic )
+
   rescue ActiveRecord::RecordNotUnique
     # can happen despite being .create
     # since already bookmarked
@@ -257,6 +259,18 @@ class PostAction < ActiveRecord::Base
   def enforce_rules
     PostAction.auto_hide_if_needed(post, post_action_type_key)
     SpamRulesEnforcer.enforce!(post.user) if post_action_type_key == :spam
+  end
+
+  def notify_subscribers
+    if (is_like? || is_flag?) && post
+      MessageBus.publish("/topic/#{post.topic_id}",{
+                      id: post.id,
+                      post_number: post.post_number,
+                      type: "acted"
+                    },
+                    group_ids: post.topic.secure_group_ids
+      )
+    end
   end
 
   def self.auto_hide_if_needed(post, post_action_type)
