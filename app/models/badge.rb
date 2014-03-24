@@ -1,5 +1,6 @@
 class Badge < ActiveRecord::Base
   belongs_to :badge_type
+  has_many :user_badges, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
   validates :badge_type, presence: true
