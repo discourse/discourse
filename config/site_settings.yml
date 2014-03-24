@@ -479,6 +479,9 @@ uncategorized:
   global_notice:
     default: ""
     client: true
+  has_login_hint:
+    default: false
+    hidden: true
 
   # Category IDs
   lounge_category_id:

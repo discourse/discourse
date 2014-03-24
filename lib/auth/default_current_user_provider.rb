@@ -78,7 +78,8 @@ class Auth::DefaultCurrentUserProvider
         !user.admin &&
         Rails.configuration.respond_to?(:developer_emails) &&
         Rails.configuration.developer_emails.include?(user.email)
-      user.update_column(:admin, true)
+      user.admin = true
+      user.save
     end
   end
 
