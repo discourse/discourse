@@ -7,6 +7,8 @@ if User.limit(20).count < 20 && User.where(admin: true).count == 1
       emails = GlobalSetting.developer_emails.split(",")
       if emails.length > 1
         emails = emails[0..-2].join(' , ') << " or #{emails[-1]} "
+      else
+        emails = emails[0]
       end
       "Congratulations, you installed Discourse! An administrator should now log in with #{emails} to finalize configuration."
     end
