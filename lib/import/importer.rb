@@ -48,8 +48,6 @@ module Import
       reconnect_database
 
       extract_uploads
-
-      notify_user
     rescue SystemExit
       log "Restore process was cancelled!"
       rollback
@@ -60,6 +58,7 @@ module Import
     else
       @success = true
     ensure
+      notify_user
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
@@ -95,6 +94,7 @@ module Import
       @tar_filename = @archive_filename[0...-3]
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+      @logs << []
     end
 
     def listen_for_shutdown_signal
@@ -256,16 +256,6 @@ module Import
       end
     end
 
-    def notify_user
-      if user = User.where(email: @user_info[:email]).first
-        log "Notifying '#{user.username}' of the success of the restore..."
-        # NOTE: will only notify if user != Discourse.site_contact_user
-        SystemMessage.create(user, :import_succeeded)
-      else
-        log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
-      end
-    end
-
     def rollback
       log "Trying to rollback..."
       if BackupRestore.can_rollback?
@@ -273,6 +263,20 @@ module Import
         BackupRestore.move_tables_between_schemas("backup", "public")
       else
         log "There was no need to rollback"
+      end
+    end
+
+    def notify_user
+      if user = User.where(email: @user_info[:email]).first
+        log "Notifying '#{user.username}' of the end of the restore..."
+        # NOTE: will only notify if user != Discourse.site_contact_user
+        if @success
+          SystemMessage.create(user, :import_succeeded)
+        else
+          SystemMessage.create(user, :import_failed, logs: @logs.join("\n"))
+        end
+      else
+        log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
       end
     end
 
@@ -315,12 +319,17 @@ module Import
     def log(message)
       puts(message) rescue nil
       publish_log(message) rescue nil
+      save_log(message)
     end
 
     def publish_log(message)
       return unless @publish_to_message_bus
       data = { timestamp: Time.now, operation: "restore", message: message }
       MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
+    end
+
+    def save_log(message)
+      @logs << "[#{Time.now}] #{message}"
     end
 
   end

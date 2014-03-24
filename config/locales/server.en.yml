@@ -1154,9 +1154,31 @@ en:
       subject_template: "Export completed successfully"
       text_body_template: "The export was successful."
 
+    export_failed:
+      subject_template: "Export failed"
+      text_body_template: |
+        The export has failed.
+
+        Here's the log:
+
+        ```
+        %{logs}
+        ```
+
     import_succeeded:
       subject_template: "Import completed successfully"
       text_body_template: "The import was successful."
+
+    import_failed:
+      subject_template: "Import failed"
+      text_body_template: |
+        The import has failed.
+
+        Here's the log:
+
+        ```
+        %{logs}
+        ```
 
     email_error_notification:
       subject_template: "Error parsing email"
