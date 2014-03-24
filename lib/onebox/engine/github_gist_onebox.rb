@@ -1,3 +1,5 @@
+# This is broken, document.write is only allowed on load
+# See: http://stackoverflow.com/questions/9154026/jquery-dynamically-load-a-gist-embed
 module Onebox
   module Engine
     class GithubGistOnebox
