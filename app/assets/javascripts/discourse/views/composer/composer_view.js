@@ -328,8 +328,8 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     var uaMatch = navigator.userAgent.match(/Firefox\/(\d+)\.\d/);
     if (uaMatch && parseInt(uaMatch[1]) >= 24) {
       self.$().append( Ember.$("<div id='contenteditable' contenteditable='true' style='height: 0; width: 0; overflow: hidden'></div>") );
-      self.$().off('keydown.contenteditable');
-      self.$().on('keydown.contenteditable', function(event) {
+      self.$("textarea").off('keydown.contenteditable');
+      self.$("textarea").on('keydown.contenteditable', function(event) {
         // Catch Ctrl+v / Cmd+v and hijack focus to a contenteditable div. We can't
         // use the onpaste event because for some reason the paste isn't resumed
         // after we switch focus, probably because it is being executed too late.
