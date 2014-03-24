@@ -37,12 +37,6 @@ class PostRevisor
     )
   end
 
-  def secure_group_ids(topic)
-    @secure_group_ids ||= if topic.category && topic.category.read_restricted?
-      topic.category.secure_group_ids
-    end
-  end
-
   def should_revise?
     @post.raw != @new_raw
   end
