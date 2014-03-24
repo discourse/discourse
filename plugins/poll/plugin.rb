@@ -47,6 +47,15 @@ after_initialize do
 
         poll.set_vote!(current_user, params[:option])
 
+        MessageBus.publish("/topic/#{post.topic_id}", {
+                        id: post.id,
+                        post_number: post.post_number,
+                        updated_at: Time.now,
+                        type: "revised"
+                      },
+                      group_ids: post.topic.secure_group_ids
+        )
+
         render json: poll.serialize(current_user)
       end
     end
