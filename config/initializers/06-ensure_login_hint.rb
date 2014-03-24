@@ -2,13 +2,13 @@
 if User.limit(20).count < 20 && User.where(admin: true).count == 1
   notice =
     if GlobalSetting.developer_emails.blank?
-      "No developer email addresses defined, logging in <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>will be tricky.</a>"
+      "Welcome to your new Discourse instance! Unfortunately, no administrator emails were defined during setup, so finalizing the configuration <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>may be difficult</a>."
     else
       emails = GlobalSetting.developer_emails.split(",")
       if emails.length > 1
         emails = emails[0..-2].join(' , ') << " or #{emails[-1]} "
       end
-      "Please create an account or login with #{emails}"
+      "Welcome to your new Discourse instance! An administrator should now log in with #{emails} to finalize configuration."
     end
 
   if notice != SiteSetting.global_notice
