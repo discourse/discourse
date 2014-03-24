@@ -1,8 +1,10 @@
 The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. We will use [Digital Ocean][do], although these steps will work on other similar services.
 
-This guide assumes that you have no knowledge of Ruby/Rails or Linux shell. Feel free to skip steps you are comfortable with.
+This guide assumes that you have no knowledge of Ruby/Rails or Linux shell. 
 
 # Create New Digital Ocean Droplet
+
+[Sign up for Digital Ocean][do], update billing info, then begin creating your new cloud server (Droplet).
 
 Discourse requires a minimum of 1 GB RAM, however **2 GB RAM is strongly recommended**. We'll use "discourse" as the Hostname.
 
@@ -12,7 +14,7 @@ Install Discourse on Ubuntu 12.04.3 LTS x64. We always recommend using [the curr
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3399/f3fc67ee6aa90ea4.png" width="690" height="477"> 
 
-You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you use SSH keys, you may not need a password to log in.)
+You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you know how to use SSH keys, you may not need a password to log in.)
 
 # Access Your Droplet
 
@@ -156,13 +158,15 @@ Do you want...
 
 - Users to post reples via email? [Configure reply via email](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
 
+- Automatic daily backups? [Configure backups](https://meta.discourse.org/t/hot-off-the-presses-automated-backup-support/13805)
+
 If anything needs to be improved in this guide, feel free to ask on [meta.discourse.org][meta], or even better, submit a pull request.
 
    [dd]: https://github.com/discourse/discourse_docker
   [man]: https://mandrillapp.com
   [ssh]: https://help.github.com/articles/generating-ssh-keys
  [meta]: https://meta.discourse.org
-   [do]: https://www.digitalocean.com/
+   [do]: https://www.digitalocean.com/?refcode=5fa48ac82415
   [lts]: https://wiki.ubuntu.com/LTS
   [jet]: http://www.mailjet.com/pricing
   [gun]: http://www.mailgun.com/
