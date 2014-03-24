@@ -701,6 +701,12 @@ class Topic < ActiveRecord::Base
     @acting_user = u
   end
 
+  def secure_group_ids
+    @secure_group_ids ||= if self.category && self.category.read_restricted?
+      self.category.secure_group_ids
+    end
+  end
+
   private
 
   def update_category_topic_count_by(num)

@@ -510,6 +510,21 @@ Discourse.PostStream = Em.Object.extend({
     }
   },
 
+  triggerChangedPost: function(postId, updatedAt) {
+    if (!postId) { return; }
+
+    var postIdentityMap = this.get('postIdentityMap'),
+        existing = postIdentityMap.get(postId),
+        postStream = this;
+
+    if (existing && existing.updated_at !== updatedAt) {
+      var url = "/posts/" + postId;
+      Discourse.ajax(url).then(function(p){
+        postStream.storePost(Discourse.Post.create(p));
+      });
+    }
+  },
+
   /**
     Returns the "thread" of posts in the history of a post.
 

@@ -137,12 +137,6 @@ class PostCreator
     end
   end
 
-  def secure_group_ids(topic)
-    @secure_group_ids ||= if topic.category && topic.category.read_restricted?
-      topic.category.secure_group_ids
-    end
-  end
-
   def clear_possible_flags(topic)
     # at this point we know the topic is a PM and has been replied to ... check if we need to clear any flags
     #
@@ -255,7 +249,7 @@ class PostCreator
                     user: BasicUserSerializer.new(@post.user).as_json(root: false),
                     post_number: @post.post_number
                   },
-                  group_ids: secure_group_ids(@topic)
+                  group_ids: @topic.secure_group_ids
     )
   end
 

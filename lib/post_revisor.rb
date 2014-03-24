@@ -19,11 +19,29 @@ class PostRevisor
     update_topic_word_counts
     @post.advance_draft_sequence
     PostAlerter.new.after_save_post(@post)
+    publish_revision
 
     true
   end
 
   private
+
+  def publish_revision
+    MessageBus.publish("/topic/#{@post.topic_id}",{
+                    id: @post.id,
+                    post_number: @post.post_number,
+                    updated_at: @post.updated_at,
+                    type: "revised"
+                  },
+                  group_ids: @post.topic.secure_group_ids
+    )
+  end
+
+  def secure_group_ids(topic)
+    @secure_group_ids ||= if topic.category && topic.category.read_restricted?
+      topic.category.secure_group_ids
+    end
+  end
 
   def should_revise?
     @post.raw != @new_raw
