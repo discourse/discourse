@@ -104,9 +104,9 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = @category.name
-    @link = "#{Discourse.base_url}/category/#{@category.slug}"
+    @link = "#{Discourse.base_url}/category/#{@category.slug_for_url}"
     @description = "#{I18n.t('topics_in_category', category: @category.name)} #{@category.description}"
-    @atom_link = "#{Discourse.base_url}/category/#{@category.slug}.rss"
+    @atom_link = "#{Discourse.base_url}/category/#{@category.slug_for_url}.rss"
     @topic_list = TopicQuery.new.list_new_in_category(@category)
 
     render 'list', formats: [:rss]
@@ -222,8 +222,8 @@ class ListController < ApplicationController
   def page_params(opts = nil)
     opts ||= {}
     route_params = {format: 'json'}
-    route_params[:category]        = @category.slug if @category
-    route_params[:parent_category] = @category.parent_category.slug if @category && @category.parent_category
+    route_params[:category]        = @category.slug_for_url if @category
+    route_params[:parent_category] = @category.parent_category.slug_for_url if @category && @category.parent_category
     route_params[:sort_order]      = opts[:sort_order] if opts[:sort_order].present?
     route_params[:sort_descending] = opts[:sort_descending] if opts[:sort_descending].present?
     route_params

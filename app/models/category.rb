@@ -186,6 +186,10 @@ SQL
     end
   end
 
+  def slug_for_url
+    slug.present? ? self.slug : "#{self.id}-category"
+  end
+
   def publish_categories_list
     MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new(Category.latest).as_json})
   end
