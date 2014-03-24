@@ -476,6 +476,10 @@ uncategorized:
   sequential_replies_threshold: 2
   dominating_topic_minimum_percent: 20
 
+  global_notice:
+    default: ""
+    client: true
+
   # Category IDs
   lounge_category_id:
     default: -1

@@ -1,9 +1,5 @@
 <div class="container">
-  {{#if Discourse.isReadOnly}}
-    <div class="row">
-      <div class="alert alert-info">{{i18n "read_only_mode.enabled"}}</div>
-    </div>
-  {{/if}}
+  {{Discourse.globalNotice}}
   <div class="row">
     <div class="full-width">
 
