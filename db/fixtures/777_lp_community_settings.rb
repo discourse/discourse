@@ -19,7 +19,7 @@ SiteSetting.enable_names                      = true
 # General
 #
 SiteSetting.enable_local_account_create       = false
-SiteSetting.enforce_global_nicknames          = true
+SiteSetting.enforce_global_nicknames          = false
 SiteSetting.default_external_links_in_new_tab = true
 
 
