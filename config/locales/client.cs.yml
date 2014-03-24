@@ -718,18 +718,18 @@ cs:
       notifications:
         title: ""
         reasons:
-          3_6: Budete dostávat oznámení, protože hlídáte tuhle kategorii.
-          3_5: Budete dostávat oznámení, protože jste tohle téma automaticky začali hlídat.
-          3_2: Budete dostávat oznámení, protože hlídáte toto téma.
-          3_1: Budete dostávat oznámení, protože jste autorem totoho tématu.
-          3: Budete dostávat oznámení, protože hlídáte toto téma.
-          2_4: Budete dostávat oznámení, protože jste zaslal odpověď do tohoto tématu.
-          2_2: Budete dostávat oznámení, protože sledujete toto téma.
-          2: 'Budete dostávat oznámení, protože <a href="/users/{{username}}/preferences">jste četli toto téma</a>.'
-          1: Dostanete oznámení, jestliže vás někdo zmíní pomocí @name nebo odpoví na váš příspěvek.
-          1_2: Dostanete oznámení, jestliže vás někdo zmíní pomocí @name nebo odpoví na váš příspěvek.
-          0: Ignorujete všechna oznámení z tohoto tématu.
-          0_2: Ignorujete všechna oznámení z tohoto tématu.
+          '3_6': Budete dostávat oznámení, protože hlídáte tuhle kategorii.
+          '3_5': Budete dostávat oznámení, protože jste tohle téma automaticky začali hlídat.
+          '3_2': Budete dostávat oznámení, protože hlídáte toto téma.
+          '3_1': Budete dostávat oznámení, protože jste autorem totoho tématu.
+          '3': Budete dostávat oznámení, protože hlídáte toto téma.
+          '2_4': Budete dostávat oznámení, protože jste zaslal odpověď do tohoto tématu.
+          '2_2': Budete dostávat oznámení, protože sledujete toto téma.
+          '2': 'Budete dostávat oznámení, protože <a href="/users/{{username}}/preferences">jste četli toto téma</a>.'
+          '1': Dostanete oznámení, jestliže vás někdo zmíní pomocí @name nebo odpoví na váš příspěvek.
+          '1_2': Dostanete oznámení, jestliže vás někdo zmíní pomocí @name nebo odpoví na váš příspěvek.
+          '0': Ignorujete všechna oznámení z tohoto tématu.
+          '0_2': Ignorujete všechna oznámení z tohoto tématu.
         watching_pm:
           title: Hlídání
           description: Na každý nový příspěvek v téhle soukromé zprávě budete upozorněni. Kromě toho uvidíte ve výpisu počet nových a nepřečtených příspěvků.
