@@ -46,6 +46,10 @@ module SiteSettingExtension
     @refresh_settings ||= []
   end
 
+  def no_strip_settings
+    @no_strip_settings ||= []
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
     mutex.synchronize do
@@ -61,6 +65,9 @@ module SiteSettingExtension
       end
       if opts[:refresh] == true
         refresh_settings << name
+      end
+      if opts[:strip] == false
+        no_strip_settings << name
       end
 
       current[name] = current_value
@@ -228,8 +235,13 @@ module SiteSettingExtension
     refresh_settings.include?(name.to_sym)
   end
 
+  def should_strip?(name)
+    !no_strip_settings.include?(name.to_sym)
+  end
+
   def set(name, value)
     if has_setting?(name)
+      value.strip! if should_strip?(name) && value.is_a?(String)
       self.send("#{name}=", value)
       Discourse.request_refresh! if requires_refresh?(name)
     else
