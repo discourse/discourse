@@ -872,6 +872,8 @@ en:
         select_replies: 'select +replies'
         delete: delete selected
         cancel: cancel selecting
+        select_all: select all
+        deselect_all: deselect all
         description:
           one: You have selected <b>1</b> post.
           other: "You have selected <b>{{count}}</b> posts."

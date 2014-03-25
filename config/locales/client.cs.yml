@@ -810,6 +810,8 @@ cs:
         select: označit
         selected: 'označeno ({{count}})'
         select_replies: vybrat +odpovědi
+        select_all: vybrat vše
+        deselect_all: zrušit výběr
         delete: odstranit označené
         cancel: zrušit označování
         description:
