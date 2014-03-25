@@ -121,12 +121,12 @@ aside.onebox {
     }
 
     a[href] {
-      color: $link_color;
+      color: $link-color;
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: $link_color;
+      color: $link-color;
     }
 
     img {
