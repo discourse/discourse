@@ -48,15 +48,8 @@
               {{#if model.archetype.hasOptions}}
                 <button class='btn' {{action showOptions}}>{{i18n topic.options}}</button>
               {{/if}}
-              {{#if model.showAdminOptions}}
-                <button {{action toggleAdminOptions target="view"}} class="btn no-text show-admin-options" title='{{i18n composer.admin_options_title}}'><i class="fa fa-wrench"></i></button>
-              {{/if}}
               {{render additionalComposerButtons model}}
             {{/unless}}
-          </div>
-
-          <div class="admin-options-form">
-            {{auto-close-form autoCloseTime=model.auto_close_time}}
           </div>
         {{/if}}
 

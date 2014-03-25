@@ -52,11 +52,6 @@ Discourse.Composer = Discourse.Model.extend({
   canEditTitle: Em.computed.or('creatingTopic', 'creatingPrivateMessage', 'editingFirstPost'),
   canCategorize: Em.computed.and('canEditTitle', 'notCreatingPrivateMessage'),
 
-  showAdminOptions: function() {
-    if (this.get('creatingTopic') && Discourse.User.currentProp('staff')) return true;
-    return false;
-  }.property('canEditTitle'),
-
   // Determine the appropriate title for this action
   actionTitle: function() {
     var topic = this.get('topic');
