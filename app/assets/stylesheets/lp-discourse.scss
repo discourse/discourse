@@ -1,0 +1,199 @@
+// Mixins: Single side border-radius
+
+@mixin border-top-radius($radius) {
+  border-top-right-radius: $radius;
+   border-top-left-radius: $radius;
+}
+@mixin border-right-radius($radius) {
+  border-bottom-right-radius: $radius;
+     border-top-right-radius: $radius;
+}
+@mixin border-bottom-radius($radius) {
+  border-bottom-right-radius: $radius;
+   border-bottom-left-radius: $radius;
+}
+@mixin border-left-radius($radius) {
+  border-bottom-left-radius: $radius;
+     border-top-left-radius: $radius;
+}
+
+// Vertical gradient, from top to bottom
+//
+// Creates two color stops, start and end, by specifying a color and position for each color stop.
+// Color stops are not available in IE9 and below.
+@mixin gradient-vertical($start-color: #555, $end-color: #333, $start-percent: 0%, $end-percent: 100%) {
+  background-image: -webkit-linear-gradient(top, $start-color $start-percent, $end-color $end-percent);  // Safari 5.1-6, Chrome 10+
+  background-image: -o-linear-gradient(top, $start-color $start-percent, $end-color $end-percent);  // Opera 12
+  background-image: linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=0); // IE9 and down
+}
+
+// Grays
+$gray-darker:            #282827;
+$gray-dark:              #53524f;
+$gray:                   #8c8b86;
+$gray-light:             #d3d1cc;
+$gray-lighter:           #f0efec;
+
+$brand-primary: rgb(24, 89, 143);
+$brand-action: rgb(242, 145, 33);
+
+$border-radius:         2px;
+
+.d-header {
+  padding-top: 0;
+  @include gradient-vertical($gray-lighter, darken($gray-lighter, 3%));
+  border-bottom: 1px solid $gray-light;
+  border-top: 1px solid $gray-light;
+}
+
+.d-header #site-logo{
+  max-width: 320px;
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+body #main a.star.starred { color: $brand-action; }
+body #main .fa-star.starred { color: $brand-action; }
+
+.nav-pills li {
+  a { border-radius: $border-radius; }
+  &.active a, 
+  a.active { background-color: $brand-primary; }
+  a:hover {
+    background-color: rgb(220,234,245);
+    color: $brand-primary;
+  }
+}
+
+a.badge-category { border-radius: $border-radius; }
+li.has-drop > a { @include border-right-radius(0); }
+li.has-drop > a.category-dropdown-button {
+  @include border-left-radius(0);
+  @include border-right-radius($border-radius);
+}
+
+.btn { border-radius: $border-radius; }
+nav.buttons button.btn { border-radius: 0; }
+
+.btn-primary {
+    color: white;
+    background-color: #18598f;
+    border-color: #144b79
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active {
+    color: white;
+    background-color: #12436c;
+    border-color: #0c2b45
+}
+
+.open .btn-primary.dropdown-toggle {
+    color: white;
+    background-color: #12436c;
+    border-color: #0c2b45
+}
+
+.btn-primary:active, .btn-primary.active {
+    background-image: none
+}
+
+.open .btn-primary.dropdown-toggle {
+    background-image: none
+}
+
+.nav-stacked .active > a, .nav-stacked .active .fa-chevron-right { background-color: $brand-primary; }
+
+.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus,
+.btn-primary.disabled:active, .btn-primary.disabled.active, .btn-primary[disabled],
+.btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled]:active,
+.btn-primary[disabled].active, fieldset[disabled] .btn-primary,
+fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus,
+fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary.active {
+    background-color: #18598f;
+    border-color: #144b79
+}
+
+.btn-danger {
+    color: white;
+    background-color: #f29121;
+    border-color: #ec850e
+}
+
+.btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active {
+    color: white;
+    background-color: #dd7d0d;
+    border-color: #b2640a
+}
+
+.open .btn-danger.dropdown-toggle {
+    color: white;
+    background-color: #dd7d0d;
+    border-color: #b2640a
+}
+
+.btn-danger:active, .btn-danger.active {
+    background-image: none
+}
+
+.open .btn-danger.dropdown-toggle {
+    background-image: none
+}
+
+.btn-danger.disabled, .btn-danger.disabled:hover, .btn-danger.disabled:focus,
+.btn-danger.disabled:active, .btn-danger.disabled.active, .btn-danger[disabled],
+.btn-danger[disabled]:hover, .btn-danger[disabled]:focus, .btn-danger[disabled]:active,
+.btn-danger[disabled].active, fieldset[disabled] .btn-danger, fieldset[disabled] .btn-danger:hover,
+fieldset[disabled] .btn-danger:focus, fieldset[disabled] .btn-danger:active,
+fieldset[disabled] .btn-danger.active {
+    background-color: #f29121;
+    border-color: #ec850e
+}
+
+nav.post-controls button {
+  border-radius: $border-radius;
+  &.create {
+    background-color: rgb(220,234,245);
+    color: $brand-primary;
+    &:hover {
+      color: white;
+      background-color: $brand-primary;
+    }
+  }
+  .read-icon .last-read { color: $brand-action; }
+  .read-icon.bookmarked::before { color: $brand-primary; }
+}
+
+a, a:hover, a:visited {
+  color: $brand-primary;
+}
+a.reply-new {
+  i {
+    background-color: transparent;
+    border: none;
+  }
+}
+a:hover.reply-new {
+  color: $brand-primary;
+  i {
+    background-color: transparent;
+    border: none;
+  }
+}
+#topic-list {
+  border: none;
+  a.title {
+    color: $brand-primary;
+    font-weight: 500;
+  }
+  a.title:visited:not(.badge-notification) {
+    color: $gray;
+    font-weight: 200;
+  }
+}
+#topic-progress .bg {
+  background-color: #dff0d8;
+}

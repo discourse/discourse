@@ -84,7 +84,7 @@
     <div class='span5 gutter'>
       {{collection contentBinding="internalLinks" itemViewClass="Discourse.PostLinkView" tagName="ul" classNames="post-links"}}
       {{#if topic.details.can_reply_as_new_topic}}
-        <a href='#' class='reply-new' {{action replyAsNewTopic this}}><i class='fa fa-plus'></i>{{i18n post.reply_as_new_topic}}</a>
+        <a href='#' class='reply-new' {{action replyAsNewTopic this}}><i class='fa fa-plus-square-o' style='font-size: 14px;'></i>{{i18n post.reply_as_new_topic}}</a>
       {{/if}}
     </div>
   </div>
