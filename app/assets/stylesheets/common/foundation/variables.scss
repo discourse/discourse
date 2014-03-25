@@ -37,13 +37,7 @@ $base-line-height: 19px !default;
 $base-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $base-background-color: lighten($black, 60%) !default;
 
-// Links
-// --------------------------------------------------
 
-$link-color: $blue !default;
-$link-color-visited: darken($blue, 10%) !default;
-$link-color-hover: darken($blue, 10%) !default;
-$link-color-active: darken($blue, 10%) !default;
 
 // Badges
 // --------------------------------------------------
@@ -170,8 +164,15 @@ $highlight: $yellow;
 
 $link_color:  darken($blue, 10%);
 $secondary_link_color: $white;
+
 $muted-link-color: lighten($black, 35%);
 $muted-important-link-color: lighten($black, 35%);
+
+$link-color-visited: darken($blue, 10%) !default;
+$link-color-hover: darken($blue, 10%) !default;
+$link-color-active: darken($blue, 10%) !default;
+
+
 
 $attention_bg: lighten($blue, 50%);
 $attention_fg: $blue;
