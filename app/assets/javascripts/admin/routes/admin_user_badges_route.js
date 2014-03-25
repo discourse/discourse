@@ -19,9 +19,10 @@ Discourse.AdminUserBadgesRoute = Discourse.Route.extend({
     Discourse.Badge.findAll().then(function(badges) {
       controller.set('badges', badges);
       if (badges.length > 0) {
-        controller.set('selectedBadgeId', badges[0].get('id'));
-      } else {
-        controller.set('noBadges', true);
+        var grantableBadges = controller.get('grantableBadges');
+        if (grantableBadges.length > 0) {
+          controller.set('selectedBadgeId', grantableBadges[0].get('id'));
+        }
       }
       controller.set('loading', false);
     });
