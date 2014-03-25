@@ -1,4 +1,6 @@
 class Lp::UsersController < UsersController
+  skip_before_filter :respond_to_suspicious_request, only: [:create]
+
   def create
     resp = { errors: [], user: nil }
 
@@ -8,6 +10,7 @@ class Lp::UsersController < UsersController
         user_params[:name]     = User.suggest_name(user_params[:name] || user_params[:username] || user_params[:email])
         user_params[:username] = UserNameSuggester.suggest(user_params[:username] || user_params[:name] || user_params[:email])
 
+        # create or update
         new_user = User.where(email: Email.downcase(user_params[:email])).first_or_initialize do |u|
           u.name       = user_params[:name]
           u.username   = user_params[:username]

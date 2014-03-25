@@ -47,7 +47,9 @@
           {{boundAvatar model imageSize="huge"}}
           <h1>{{username}} {{{statusIcon}}}</h1>
           <h2>{{name}}</h2>
-
+          {{#if can_edit}}
+            <a href="{{unbound lpEditProfilePath}}" class="btn btn-small" style="color: #333;"><i class='fa fa-cog'></i>Edit</a>
+          {{/if}}
           <div class='bio'>{{{bio_cooked}}}</div>
 
           {{groups-list groups=custom_groups}}
