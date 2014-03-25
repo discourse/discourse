@@ -1,92 +1,126 @@
-// github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+/*
 
-pre {
-  code {
-    display: block;
-    padding: 5px 10px;
-    color: #333333;
-    background: #f1f1ff;
-    font-size: 14px;
-    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
-    max-height: 500px;
-  }
-  .comment, .template_comment, .diff .header, .javadoc {
-    color: #999988;
-    font-style: italic;
-  }
-  .keyword, .css .keyword, .winutils, .javascript .title, .nginx .title, .subst, .request, .status {
-    color: #333333;
-    font-weight: bold;
-  }
-  .number, .hexcolor, .ruby .constant {
-    color: #009999;
-  }
-  .string, .tag .value, .phpdoc, .tex .formula {
-    color: #dd1144;
-  }
-  .title, .id {
-    color: #990000;
-    font-weight: bold;
-  }
-  .javascript .title, .lisp .title, .clojure .title, .subst {
-    font-weight: normal;
-  }
-  .class .title, .haskell .type, .vhdl .literal, .tex .command {
-    color: #445588;
-    font-weight: bold;
-  }
-  .tag {
-    color: navy;
-    font-weight: normal;
-    .title {
-      color: navy;
-      font-weight: normal;
-    }
-  }
-  .rules .property, .django .keyword {
-    color: navy;
-    font-weight: normal;
-  }
-  .attribute, .variable, .lisp .body {
-    color: teal;
-  }
-  .regexp {
-    color: #009926;
-  }
-  .class {
-    color: #445588;
-    font-weight: bold;
-  }
-  .symbol, .ruby .string, .lisp .keyword, .tex .special, .input_number {
-    color: #990073;
-  }
-  .built_in, .lisp .title, .clojure .built_in {
-    color: #0086b3;
-  }
-  .preprocessor, .pi, .doctype, .shebang, .cdata {
-    color: #999999;
-    font-weight: bold;
-  }
-  .deletion {
-    background: #ffdddd;
-  }
-  .addition {
-    background: #ddffdd;
-  }
-  .diff .change {
-    background: #0086b3;
-  }
-  .chunk {
-    color: #aaaaaa;
-  }
-  .tex .formula {
-    opacity: 0.5;
-  }
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+
+.hljs {
+  display: block;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
 }
 
-p > code, li > code {
-  margin: 0 2px;
-  padding: 2px 5px;
-  background-color: #f1f1ff;
-  border-radius: 3px;
+.hljs-comment,
+.hljs-template_comment,
+.diff .hljs-header,
+.hljs-javadoc {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.css .rule .hljs-keyword,
+.hljs-winutils,
+.javascript .hljs-title,
+.nginx .hljs-title,
+.hljs-subst,
+.hljs-request,
+.hljs-status {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number,
+.hljs-hexcolor,
+.ruby .hljs-constant {
+  color: #099;
+}
+
+.hljs-string,
+.hljs-tag .hljs-value,
+.hljs-phpdoc,
+.tex .hljs-formula {
+  color: #d14;
+}
+
+.hljs-title,
+.hljs-id,
+.coffeescript .hljs-params,
+.scss .hljs-preprocessor {
+  color: #900;
+  font-weight: bold;
+}
+
+.javascript .hljs-title,
+.lisp .hljs-title,
+.clojure .hljs-title,
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-class .hljs-title,
+.haskell .hljs-type,
+.vhdl .hljs-literal,
+.tex .hljs-command {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-tag .hljs-title,
+.hljs-rules .hljs-property,
+.django .hljs-tag .hljs-keyword {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-attribute,
+.hljs-variable,
+.lisp .hljs-body {
+  color: #008080;
+}
+
+.hljs-regexp {
+  color: #009926;
+}
+
+.hljs-symbol,
+.ruby .hljs-symbol .hljs-string,
+.lisp .hljs-keyword,
+.tex .hljs-special,
+.hljs-prompt {
+  color: #990073;
+}
+
+.hljs-built_in,
+.lisp .hljs-title,
+.clojure .hljs-built_in {
+  color: #0086b3;
+}
+
+.hljs-preprocessor,
+.hljs-pragma,
+.hljs-pi,
+.hljs-doctype,
+.hljs-shebang,
+.hljs-cdata {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.diff .hljs-change {
+  background: #0086b3;
+}
+
+.hljs-chunk {
+  color: #aaa;
 }

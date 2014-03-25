@@ -17,7 +17,7 @@ Discourse.SyntaxHighlighting = {
   **/
   apply: function($elem) {
     $('pre code[class]', $elem).each(function(i, e) {
-      return $LAB.script("/javascripts/highlight-handlebars.pack.js").wait(function() {
+      return $LAB.script("/javascripts/highlight.pack.js").wait(function() {
         return hljs.highlightBlock(e);
       });
     });
