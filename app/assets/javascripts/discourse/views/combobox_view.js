@@ -58,6 +58,10 @@ Discourse.ComboboxView = Discourse.View.extend({
     $combo.trigger("liszt:updated");
   }.observes('value'),
 
+  contentChanged: function() {
+    this.rerender();
+  }.observes('content.@each'),
+
   didInsertElement: function() {
     var $elem = this.$(),
         self = this;
@@ -80,6 +84,11 @@ Discourse.ComboboxView = Discourse.View.extend({
     $elem.chosen().change(function(e) {
       self.set('value', $(e.target).val());
     });
+  },
+
+  willClearRender: function() {
+    var chosenId = this.$().attr('id') + "_chzn";
+    Ember.$("#" + chosenId).remove();
   }
 
 });
