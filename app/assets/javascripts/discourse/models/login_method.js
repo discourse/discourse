@@ -45,7 +45,7 @@ Discourse.LoginMethod.reopenClass({
           params.frameWidth = 850;
           params.frameHeight = 500;
         } else if (name === "facebook") {
-          params.frameHeight = 420;
+          params.frameHeight = 450;
         }
 
         methods.pushObject(Discourse.LoginMethod.create(params));
