@@ -9,7 +9,7 @@
 Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   classNames: ['combobox category-combobox'],
   overrideWidths: true,
-  dataAttributes: ['name', 'color', 'text_color', 'description_text', 'topic_count', 'read_restricted'],
+  dataAttributes: ['id', 'description_text'],
   valueBinding: Ember.Binding.oneWay('source'),
 
   content: Em.computed.filter('categories', function(c) {
@@ -37,12 +37,12 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   }.property(),
 
   template: function(text, templateData) {
-    if (!templateData.color) return text;
+    var category = Discourse.Category.findById(parseInt(templateData.id,10));
+    if (!category) return text;
 
-    var result = "<div class='badge-category' style='background-color: #" + templateData.color + '; color: #' +
-        templateData.text_color + ";'>" + (templateData.read_restricted === 'true' ? "<i class='fa fa-group'></i> " : "") + templateData.name + "</div>";
+    var result = Discourse.HTML.categoryBadge(category, {showParent: true, link: false});
 
-    result += " <div class='topic-count'>&times; " + templateData.topic_count + "</div>";
+    result += " <div class='topic-count'>&times; " + category.get('topic_count') + "</div>";
 
     var description = templateData.description_text;
     // TODO wtf how can this be null?

@@ -62,16 +62,17 @@ Discourse.HTML = {
   },
 
   /**
-    Create a badge-like category link
+    Create a category badge
 
-    @method categoryLink
+    @method categoryBadge
     @param {Discourse.Category} category the category whose link we want
     @param {Object} opts The options for the category link
-      @param {Boolean} opts.allowUncategorized Whether we allow rendering of the uncategorized category
-      @param {Boolean} opts.showParent Whether to visually show whether category is a sub-category
+      @param {Boolean} opts.allowUncategorized Whether we allow rendering of the uncategorized category (default false)
+      @param {Boolean} opts.showParent Whether to visually show whether category is a sub-category (default false)
+      @param {Boolean} opts.link Whether this category badge should link to the category (default true)
     @returns {String} the html category badge
   **/
-  categoryLink: function(category, opts) {
+  categoryBadge: function(category, opts) {
     opts = opts || {};
 
     if ((!category) ||
@@ -85,7 +86,8 @@ Discourse.HTML = {
         description = Em.get(category, 'description'),
         restricted = Em.get(category, 'read_restricted'),
         url = Discourse.getURL("/category/") + Discourse.Category.slugFor(category),
-        html = "<a href=\"" + url + "\" ";
+        elem = (opts.link === false ? 'span' : 'a'),
+        html = "<" + elem + " href=\"" + (opts.link === false ? '' : url) + "\" ";
 
     html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) + "\" ";
 
@@ -100,15 +102,15 @@ Discourse.HTML = {
     if (restricted) {
       html += "><div><i class='fa fa-group'></i> " + name + "</div></a>";
     } else {
-      html += ">" + name + "</a>";
+      html += ">" + name + "</" + elem + ">";
     }
 
     if (opts.showParent && category.get('parent_category_id')) {
       var parent = Discourse.Category.findById(category.get('parent_category_id'));
-      html = "<span class='badge-wrapper'><a class='badge-category-parent' style=\"" + (Discourse.HTML.categoryStyle(parent)||'') +
-             "\" href=\"" + url + "\"><span class='category-name'>" +
+      html = "<span class='badge-wrapper'><" + elem + " class='badge-category-parent' style=\"" + (Discourse.HTML.categoryStyle(parent)||'') +
+             "\" href=\"" + (opts.link === false ? '' : url) + "\"><span class='category-name'>" +
              (Em.get(parent, 'read_restricted') ? "<i class='fa fa-group'></i> " : "") +
-             Em.get(parent, 'name') + "</span></a>" +
+             Em.get(parent, 'name') + "</span></" + elem + ">" +
              html + "</span>";
     }
 

@@ -76,17 +76,14 @@ Handlebars.registerHelper('topicLink', function(property, options) {
 function categoryLinkHTML(category, options) {
   var categoryOptions = {};
   if (options.hash) {
-    if (options.hash.allowUncategorized) {
-      categoryOptions.allowUncategorized = true;
-    }
-    if (options.hash.showParent) {
-      categoryOptions.showParent = true;
-    }
+    if (options.hash.allowUncategorized) { categoryOptions.allowUncategorized = true; }
+    if (options.hash.showParent) { categoryOptions.showParent = true; }
+    if (options.hash.link !== undefined) { categoryOptions.link = options.hash.link; }
     if (options.hash.categories) {
       categoryOptions.categories = Em.Handlebars.get(this, options.hash.categories, options);
     }
   }
-  return new Handlebars.SafeString(Discourse.HTML.categoryLink(category, categoryOptions));
+  return new Handlebars.SafeString(Discourse.HTML.categoryBadge(category, categoryOptions));
 }
 
 /**
@@ -104,10 +101,10 @@ Handlebars.registerHelper('categoryLinkRaw', function(property, options) {
 });
 
 Handlebars.registerHelper('categoryBadge', function(property, options) {
-  var category = Em.Handlebars.get(this, property, options),
-      style = Discourse.HTML.categoryStyle(category);
-  return new Handlebars.SafeString("<span class='badge-category' style='" + style + "'>" + category.get('name') + "</span>");
+  options.hash.link = false;
+  return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
 });
+
 
 /**
   Produces a bound link to a category
