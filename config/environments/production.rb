@@ -31,7 +31,7 @@ Discourse::Application.configure do
   # the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = true
 
-  # See environment.rb for Sendgrid config
+  # See environment.rb for SMTP config
   # if GlobalSetting.smtp_address
   #   settings = {
   #     address:              GlobalSetting.smtp_address,
