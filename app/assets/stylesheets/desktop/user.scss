@@ -4,7 +4,7 @@
 
 .groups {
   .group-link {
-    color: $link_color;
+    color: $link-color;
   }
 }
 
@@ -72,7 +72,7 @@
     margin-left: 3px;
   }
   .instructions a[href] {
-    color: $link_color;
+    color: $link-color;
   }
   .warning {
     background-color: $warning_background_color;
@@ -118,7 +118,7 @@
   h2 {
     a {
       font-size: 14px;
-      color: $link_color;
+      color: $link-color;
       cursor: pointer;
     }
   }

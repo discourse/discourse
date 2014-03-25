@@ -40,10 +40,13 @@ $base-background-color: lighten($black, 60%) !default;
 // Links
 // --------------------------------------------------
 
-$link-color: $blue !default;
+$link-color: darken($blue, 10%) !default;
 $link-color-visited: darken($blue, 10%) !default;
 $link-color-hover: darken($blue, 10%) !default;
 $link-color-active: darken($blue, 10%) !default;
+$secondary_link_color: $white;
+$muted-link-color: lighten($black, 35%);
+$muted-important-link-color: lighten($black, 35%);
 
 // Badges
 // --------------------------------------------------
@@ -167,11 +170,6 @@ $warning_shadow_color: lighten($red, 20%);
 $success_shadow_color: $green;
 
 $highlight: $yellow;
-
-$link_color:  darken($blue, 10%);
-$secondary_link_color: $white;
-$muted-link-color: lighten($black, 35%);
-$muted-important-link-color: lighten($black, 35%);
 
 $attention_bg: lighten($blue, 50%);
 $attention_fg: $blue;
