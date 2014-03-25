@@ -6,6 +6,7 @@ require_dependency 'text_sentinel'
 require_dependency 'text_cleaner'
 require_dependency 'trashable'
 require_dependency 'archetype'
+require_dependency 'topics/auto_closer'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -656,37 +657,20 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  # Valid arguments for the auto close time:
-  #  * An integer, which is the number of hours from now to close the topic.
-  #  * A time, like "12:00", which is the time at which the topic will close in the current day
-  #    or the next day if that time has already passed today.
-  #  * A timestamp, like "2013-11-25 13:00", when the topic should close.
-  #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
-  #  * nil, to prevent the topic from automatically closing.
   def set_auto_close(arg, by_user=nil)
-    if arg.is_a?(String) && matches = /^([\d]{1,2}):([\d]{1,2})$/.match(arg.strip)
-      now = Time.zone.now
-      self.auto_close_at = Time.zone.local(now.year, now.month, now.day, matches[1].to_i, matches[2].to_i)
-      self.auto_close_at += 1.day if self.auto_close_at < now
-    elsif arg.is_a?(String) && arg.include?('-') && timestamp = Time.zone.parse(arg)
-      self.auto_close_at = timestamp
-      self.errors.add(:auto_close_at, :invalid) if timestamp < Time.zone.now
-    else
-      num_hours = arg.to_i
-      self.auto_close_at = (num_hours > 0 ? num_hours.hours.from_now : nil)
-    end
+    Topics::AutoCloser.get_closer_method(arg).(self)
 
-    unless self.auto_close_at.nil?
+    if auto_closes?
       self.auto_close_started_at ||= Time.zone.now
-      if by_user && by_user.staff?
-        self.auto_close_user = by_user
-      else
-        self.auto_close_user ||= (self.user.staff? ? self.user : Discourse.system_user)
-      end
-    else
-      self.auto_close_started_at = nil
+      user = by_user if by_user && by_user.staff?
+      user ||= (self.user.staff? ? self.user : Discourse.system_user)
+      self.auto_close_user = user
     end
     self
+  end
+
+  def auto_closes?
+    auto_close_at
   end
 
   def read_restricted_category?
