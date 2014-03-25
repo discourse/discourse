@@ -1,3 +1,17 @@
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: " "; // 1
+    display: table; // 2
+  }
+  &:after {
+    clear: both;
+  }
+}
+@mixin navbar-vertical-align($element-height) {
+  margin-top: (($navbar-height - $element-height) / 2);
+  margin-bottom: (($navbar-height - $element-height) / 2);
+}
 // Mixins: Single side border-radius
 
 @mixin border-top-radius($radius) {
@@ -15,6 +29,44 @@
 @mixin border-left-radius($radius) {
   border-bottom-left-radius: $radius;
      border-top-left-radius: $radius;
+}
+
+@mixin button-variant($color, $background, $border) {
+  color: $color;
+  background-color: $background;
+  border-color: $border;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active,
+  .open &.dropdown-toggle {
+    color: $color;
+    background-color: darken($background, 10%);
+        border-color: darken($border, 12%);
+  }
+  &:active,
+  &.active,
+  .open &.dropdown-toggle {
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      background-color: $background;
+          border-color: $border;
+    }
+  }
+
+  .badge {
+    color: $background;
+    background-color: $color;
+  }
 }
 
 // Vertical gradient, from top to bottom
@@ -39,7 +91,68 @@ $gray-lighter:           #f0efec;
 $brand-primary: rgb(24, 89, 143);
 $brand-action: rgb(242, 145, 33);
 
-$border-radius:         2px;
+$border-radius:             3px;
+
+$grid-gutter-width:         30px;
+$font-size-base:            14px;
+$font-size-large:           ceil(($font-size-base * 1.25)); // ~18px
+$font-size-small:           ceil(($font-size-base * 0.85)); // ~12px
+
+$line-height-base:          1.428571429; // 20/14
+$line-height-large:         1.33;
+$line-height-small:         1.5;
+
+$line-height-computed:      floor(($font-size-base * $line-height-base)); // ~20px
+
+$padding-base-vertical:     6px;
+$padding-large-vertical:    10px;
+$padding-large-horizontal:  16px;
+
+$padding-small-vertical:    5px;
+$padding-small-horizontal:  10px;
+
+$input-height-base:         ($line-height-computed + ($padding-base-vertical * 2) + 2);
+$input-height-large:        (ceil($font-size-large * $line-height-large) + ($padding-large-vertical * 2) + 2);
+$input-height-small:        (floor($font-size-small * $line-height-small) + ($padding-small-vertical * 2) + 2);
+
+// Basics of a navbar
+$navbar-height:                    50px;
+$navbar-margin-bottom:             $line-height-computed;
+$navbar-padding-horizontal:        floor(($grid-gutter-width / 2));
+$navbar-padding-vertical:          (($navbar-height - $line-height-computed) / 2);
+
+$navbar-default-color:             white;
+$navbar-default-bg:                $brand-primary;
+$navbar-default-border:            darken($navbar-default-bg, 6.5%);
+
+// Navbar links
+$navbar-default-link-color:                white;
+$navbar-default-link-hover-color:          white;
+$navbar-default-link-hover-bg:             darken($navbar-default-bg, 6.5%);
+$navbar-default-link-active-color:         white;
+$navbar-default-link-active-bg:            darken($navbar-default-bg, 6.5%);
+$navbar-default-link-disabled-color:       #ccc;
+$navbar-default-link-disabled-bg:          transparent;
+
+// Navbar brand label
+$navbar-default-brand-color:               $navbar-default-link-color;
+$navbar-default-brand-hover-color:         darken($navbar-default-brand-color, 10%);
+$navbar-default-brand-hover-bg:            transparent;
+
+// Navbar toggle
+$navbar-default-toggle-hover-bg:           #ddd;
+$navbar-default-toggle-icon-bar-bg:        #888;
+$navbar-default-toggle-border-color:       #ddd;
+
+/* Create the action button */
+$btn-action-color:                 #fff;
+$btn-action-bg:                    $brand-action;
+$btn-action-border:                darken($btn-action-bg, 5%);
+
+.btn-action {
+ @include button-variant($btn-action-color, $btn-action-bg, $btn-action-border); 
+}
+.btn[href].btn-action { color: white; }
 
 .d-header {
   padding-top: 0;
@@ -196,4 +309,107 @@ a:hover.reply-new {
 }
 #topic-progress .bg {
   background-color: #dff0d8;
+}
+
+.nav {
+  margin-bottom: 0;
+  padding-left: 0; // Override default ul/ol
+  list-style: none;
+  @include clearfix();
+
+  > li {
+    position: relative;
+    display: block;
+
+    > a {
+      position: relative;
+      display: block;
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}
+.navbar {
+  position: relative;
+  min-height: $navbar-height; // Ensure a navbar always shows (e.g., without a .navbar-brand in collapsed mode)
+  margin-bottom: 0;
+  border: 1px solid transparent;
+
+  // Prevent floats from breaking the navbar
+  @include clearfix();
+}
+.navbar-nav {
+  margin: ($navbar-padding-vertical / 2) (-$navbar-padding-horizontal);
+
+  > li > a {
+    padding: 10px 15px;
+    line-height: $line-height-computed;
+  }
+
+  // Uncollapse the nav
+  float: left;
+  margin: 0;
+
+  > li {
+    float: left;
+    > a {
+      padding-top:    $navbar-padding-vertical;
+      padding-bottom: $navbar-padding-vertical;
+    }
+  }
+
+  &.navbar-right:last-child {
+    margin-right: -$navbar-padding-horizontal;
+  }
+}
+.navbar-btn {
+  @include navbar-vertical-align($input-height-base);
+
+  &.btn-sm {
+    @include navbar-vertical-align($input-height-small);
+  }
+  &.btn-xs {
+    @include navbar-vertical-align(22);
+  }
+}
+.navbar-default {
+  background-color: $navbar-default-bg;
+  border-color: $navbar-default-border;
+
+  .navbar-text {
+    color: $navbar-default-color;
+  }
+
+  .navbar-nav {
+    > li > a {
+      color: $navbar-default-link-color;
+
+      &:hover,
+      &:focus {
+        color: $navbar-default-link-hover-color;
+        background-color: $navbar-default-link-hover-bg;
+      }
+    }
+    > .active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $navbar-default-link-active-color;
+        background-color: $navbar-default-link-active-bg;
+      }
+    }
+    > .disabled > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $navbar-default-link-disabled-color;
+        background-color: $navbar-default-link-disabled-bg;
+      }
+    }
+  }
+}
+.navbar-right {
+  float: right;
 }
