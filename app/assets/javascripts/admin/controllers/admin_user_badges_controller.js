@@ -13,6 +13,36 @@ Discourse.AdminUserBadgesController = Ember.ArrayController.extend({
   sortProperties: ['granted_at'],
   sortAscending: false,
 
+  /**
+    Array of badges that have not been granted to this user.
+
+    @property grantableBadges
+    @type {Boolean}
+  **/
+  grantableBadges: function() {
+    var granted = {};
+    this.get('model').forEach(function(userBadge) {
+      granted[userBadge.get('badge_id')] = true;
+    });
+
+    var badges = [];
+    this.get('badges').forEach(function(badge) {
+      if (!granted[badge.get('id')]) {
+        badges.push(badge);
+      }
+    });
+
+    return badges;
+  }.property('badges.@each', 'model.@each'),
+
+  /**
+    Whether there are any badges that can be granted.
+
+    @property noBadges
+    @type {Boolean}
+  **/
+  noBadges: Em.computed.empty('grantableBadges'),
+
   actions: {
 
     /**
@@ -25,6 +55,10 @@ Discourse.AdminUserBadgesController = Ember.ArrayController.extend({
       var self = this;
       Discourse.UserBadge.grant(badgeId, this.get('user.username')).then(function(userBadge) {
         self.pushObject(userBadge);
+        Ember.run.next(function() {
+          // Update the selected badge ID after the combobox has re-rendered.
+          self.set('selectedBadgeId', self.get('grantableBadges')[0].get('id'));
+        });
       }, function() {
         // Failure
         bootbox.alert(I18n.t('generic_error'));

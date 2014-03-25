@@ -15,7 +15,7 @@
       <p>{{i18n admin.badges.no_badges}}</p>
     {{else}}
       <br>
-      {{combobox valueAttribute="id" value=controller.selectedBadgeId content=controller.badges}}
+      {{combobox valueAttribute="id" value=controller.selectedBadgeId content=controller.grantableBadges}}
       <button class='btn btn-primary' {{action grantBadge controller.selectedBadgeId}}>{{i18n admin.badges.grant}}</button>
     {{/if}}
 
