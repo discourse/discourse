@@ -94,7 +94,7 @@ module Import
       @tar_filename = @archive_filename[0...-3]
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
-      @logs << []
+      @logs = []
     end
 
     def listen_for_shutdown_signal
