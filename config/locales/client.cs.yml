@@ -602,7 +602,7 @@ cs:
     topics:
       bulk:
         reset_read: reset přečteného
-        dismiss_read: Dismiss Read
+        dismiss_read: Dismiss Unread
         dismiss_new: Odbýt nové
         toggle: toggle bulk selection of topics
         actions: Hromadné akce
