@@ -68,6 +68,7 @@ Discourse.HTML = {
     @param {Discourse.Category} category the category whose link we want
     @param {Object} opts The options for the category link
       @param {Boolean} opts.allowUncategorized Whether we allow rendering of the uncategorized category
+      @param {Boolean} opts.showParent Whether to visually show whether category is a sub-category
     @returns {String} the html category badge
   **/
   categoryLink: function(category, opts) {
