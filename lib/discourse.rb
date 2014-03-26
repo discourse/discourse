@@ -86,7 +86,7 @@ module Discourse
       @AppInfo=appArray
   end
 
-  def sef.AppInfo
+  def self.AppInfo
     @AppInfo
   end
 
