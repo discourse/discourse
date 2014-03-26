@@ -71,6 +71,10 @@
     background-size: cover;
     background-color: $secondary_background_color;
   }
+
+  .bio-composer #wmd-quote-post {
+    display: none;
+  }
 }
 
 #about-me {
