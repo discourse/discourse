@@ -2,18 +2,11 @@
 
 **Note: This is a work in progress!**
 
-## Known Discourse Plugins
 
-If you have an active plugin that isn't list here, please submit a pull request to add it!
+# List of plugins
 
-**Official Discourse Plugins**
-- [Discourse Poll Plugin](https://github.com/discourse/discourse/tree/master/plugins/poll)
-- [Discourse Emoji Plugin](https://github.com/discourse/discourse/tree/master/plugins/emoji)
+[Discourse Plugins](https://meta.discourse.org/category/extensibility/plugin)
 
-**Community Plugins**
-- [Google AdSense Plugin](https://github.com/discoursehosting/discourse-adsense)
-
-
-
+Our main area for plugins is at the Discourse Plugin page. You can discuss and list plugins here.
 
 
