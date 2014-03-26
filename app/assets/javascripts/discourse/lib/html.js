@@ -100,7 +100,7 @@ Discourse.HTML = {
     }
 
     if (restricted) {
-      html += "><div><i class='fa fa-group'></i> " + name + "</div></a>";
+      html += "><div><i class='fa fa-group'></i> " + name + "</div></" + elem + ">";
     } else {
       html += ">" + name + "</" + elem + ">";
     }
