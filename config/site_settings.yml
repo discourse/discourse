@@ -96,9 +96,6 @@ users:
   enable_local_logins:
     client: true
     default: true
-  enable_local_account_create:
-    client: true
-    default: true
   min_username_length:
     client: true
     default: 3

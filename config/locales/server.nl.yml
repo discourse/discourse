@@ -701,7 +701,6 @@ nl:
     sso_overrides_name: "Gebruikt de naam die gebruikt wordt bij de SSO service i.p.v. de lokaal opgegeven naam. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale namen)"
 
     enable_local_logins: Zet lokaal inloggen aan
-    enable_local_account_create: Zet lokaal account aanmaken aan
     enable_google_logins: Zet inloggen met Google aan
     enable_yahoo_logins: "Zet inloggen met Yahoo! aan"
 
@@ -1165,7 +1164,7 @@ nl:
         Bekijk het volgende bericht.
 
         Fout - %{error}
-        
+
         %{source}
 
     email_reject_trust_level:
@@ -1295,9 +1294,9 @@ nl:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{message}
- 
+
         %{context}
- 
+
         ---
         %{respond_instructions}
 

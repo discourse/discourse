@@ -584,7 +584,6 @@ ko:
     login_required: "게시글을 읽기 위해서 인증이 필요함"
 
     enable_local_logins: "전통적인 로컬 사용자이름과 패스워드 인증을 활성화"
-    enable_local_account_create: "새로운 로컬 계정 만들기 활성화"
     enable_google_logins: "Enable Google authentication"
     enable_yahoo_logins: "Enable Yahoo authentication"
 
