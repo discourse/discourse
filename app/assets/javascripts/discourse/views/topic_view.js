@@ -189,7 +189,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     }
 
     if (category) {
-      opts.catLink = Discourse.HTML.categoryLink(category, {showParent: true});
+      opts.catLink = Discourse.HTML.categoryBadge(category, {showParent: true});
     } else {
       opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
     }
