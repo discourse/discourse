@@ -47,7 +47,7 @@ class Search
     @limit = Search.per_facet * Search.facets.size
     @results = GroupedSearchResults.new(@opts[:type_filter])
 
-    if Topic === @search_context && @search_context.posts_count < SiteSetting.min_posts_for_search_in_topic
+    if @search_context.is_a?(Topic) && @search_context.posts_count < SiteSetting.min_posts_for_search_in_topic
       @search_context = nil
     end
   end

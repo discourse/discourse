@@ -197,7 +197,7 @@ class Guardian
   end
 
   def can_send_private_message?(target)
-    (User === target || Group === target) &&
+    (target.is_a?(Group) || target.is_a?(User)) &&
     # User is authenticated
     authenticated? &&
     # Can't send message to yourself
@@ -221,7 +221,7 @@ class Guardian
   end
 
   def is_me?(other)
-    other && authenticated? && User === other && @user == other
+    other && authenticated? && other.is_a?(User) && @user == other
   end
 
   def is_not_me?(other)
