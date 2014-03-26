@@ -36,6 +36,7 @@
   }
 
   table.report {
+    margin-top: 20px;
     tr {
       th:nth-of-type(1) {
         width: 20%;
@@ -51,7 +52,7 @@
 
       .bar {
         margin-top: 5px;
-        background-color: $emphasis_background_color;
+        background-color: $emphasis_text_color;
         display: inline-block;
         text-align: right;
         padding-right: 8px;
