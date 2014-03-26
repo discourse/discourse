@@ -12,7 +12,8 @@ describe Auth::OpenIdAuthenticator do
     auth = Auth::OpenIdAuthenticator.new("test", "id", trusted: true)
 
     user = Fabricate(:user)
-    result = auth.after_authenticate(info: {email: user.email}, extra: {identity_url: 'abc'})
+    response = OpenStruct.new(identity_url: 'abc')
+    result = auth.after_authenticate(info: {email: user.email}, extra: {response: response})
     result.user.should == user
   end
 end
