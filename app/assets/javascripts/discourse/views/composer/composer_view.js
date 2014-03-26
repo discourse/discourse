@@ -449,19 +449,6 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     this._unbindUploadTarget();
   },
 
-  toggleAdminOptions: function() {
-    var $adminOpts = $('.admin-options-form'),
-        $wmd = $('.wmd-controls'),
-        wmdTop = parseInt($wmd.css('top'),10);
-    if( $adminOpts.is(':visible') ) {
-      $wmd.css('top', wmdTop - parseInt($adminOpts.css('height'),10) + 'px' );
-      $adminOpts.hide();
-    } else {
-      $adminOpts.show();
-      $wmd.css('top', wmdTop + parseInt($adminOpts.css('height'),10) + 'px' );
-    }
-  },
-
   titleValidation: function() {
     var titleLength = this.get('model.titleLength'),
         missingChars = this.get('model.missingTitleCharacters'),
