@@ -123,6 +123,12 @@ class UsersController < ApplicationController
     user = User.new(user_params)
 
     authentication = UserAuthenticator.new(user, session)
+
+    if !authentication.has_authenticator? && !SiteSetting.enable_local_logins
+      render nothing: true, status: 500
+      return
+    end
+
     authentication.start
 
     activation = UserActivator.new(user, request, session, cookies)

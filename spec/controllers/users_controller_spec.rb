@@ -115,7 +115,7 @@ describe UsersController do
 
       end
 
-      context 'reponse' do
+      context 'response' do
         before do
           Guardian.any_instance.expects(:can_access_forum?).returns(true)
           EmailToken.expects(:confirm).with('asdfasdf').returns(user)
@@ -295,18 +295,20 @@ describe UsersController do
     end
 
     context 'when creating a non active user (unconfirmed email)' do
-      it 'enqueues a signup email' do
+
+      it 'returns a 500 when local logins are disabled' do
+        SiteSetting.expects(:enable_local_logins).returns(false)
+        post_user
+
+        expect(response.status).to eq(500)
+      end
+
+      it 'creates a user correctly' do
         Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
-        post_user
-      end
-
-      it 'does not enqueue a welcome email' do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user').never
-        post_user
-      end
 
-      it 'indicates the user is not active in the response' do
         post_user
+
         expect(JSON.parse(response.body)['active']).to be_false
       end
 
@@ -1199,7 +1201,7 @@ describe UsersController do
             xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
             response.status.should eq 422
           end
-          
+
           it 'rejects requests with unknown user_image_type' do
             xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "asdf"
             response.status.should eq 422
@@ -1224,22 +1226,20 @@ describe UsersController do
             json['width'].should == 100
             json['height'].should == 200
           end
-          
+
           it 'is successful for profile backgrounds' do
             upload = Fabricate(:upload)
             Upload.expects(:create_for).returns(upload)
             xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
             user.reload
-            
             user.profile_background.should == "/uploads/default/1/1234567890123456.jpg"
-            
+
             # returns the url, width and height of the uploaded image
             json = JSON.parse(response.body)
             json['url'].should == "/uploads/default/1/1234567890123456.jpg"
             json['width'].should == 100
             json['height'].should == 200
           end
-          
         end
 
         it "should handle malformed urls" do
@@ -1282,13 +1282,13 @@ describe UsersController do
     end
 
   end
-  
+
   describe '.clear_profile_background' do
-  
+
     it 'raises an error when not logged in' do
       lambda { xhr :put, :clear_profile_background, username: 'asdf' }.should raise_error(Discourse::NotLoggedIn)
     end
-    
+
     context 'while logged in' do
 
       let!(:user) { log_in }
@@ -1306,7 +1306,6 @@ describe UsersController do
       end
 
     end
-    
   end
 
   describe '.destroy' do
