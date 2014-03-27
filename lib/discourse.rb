@@ -78,16 +78,15 @@ module Discourse
   end
 
   # Generate a list of the different application versions. Gets run on app startup. Populates list for /admin/docker 
-  def self.generateAppInfo
-      appArray=Array.new(3)
-      appArray[0]="Ruby Version: "+ "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
-      appArray[1]="PostgreSQL Version: " + `psql --version`
-      appArray[2]="Redis Version: " +`redis-server --version`
-      @AppInfo=appArray
+  def self.generate_app_info
+      @app_info=Array.new(3)
+      app_info[0]="Ruby Version: "+ "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
+      app_info[1]="PostgreSQL Version: " + `psql --version`
+      app_info[2]="Redis Version: " +`redis-server --version`
   end
 
-  def self.AppInfo
-    @AppInfo
+  def self.app_info
+    @app_info
   end
 
   def self.assets_digest
