@@ -634,7 +634,6 @@ fr:
     sso_overrides_username: "Surcharger les noms locaux avec les noms externes d'un SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les noms d'utilisateur)"
     sso_overrides_name: "Surcharger les pseudos locaux avec les pseudos externes d'un SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les pseudos)"
     enable_local_logins: "Activer l'authentification traditionnelle, avec pseudo local et mot de passe"
-    enable_local_account_create: "Activer la création de nouveaux comptes locaux"
     enable_google_logins: "Active l'authentification Google"
     enable_yahoo_logins: "Active l'authentification Yahoo"
     enable_twitter_logins: "Active l'authentification Twitter, nécessite twitter_consumer_key et  twitter_consumer_secret"

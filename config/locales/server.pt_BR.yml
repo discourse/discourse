@@ -607,7 +607,6 @@ pt_BR:
     sso_overrides_username: "Substitui nome de usuário local com nome de usuário do site externo do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido a diferenças nos requerimentos de comprimento de nome de usuário)"
     sso_overrides_name: "Substitui nome local com o nome do site externo do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido à normalização de nomes locais)"
     enable_local_logins: "Ativar autenticação local"
-    enable_local_account_create: "Ativar criação de conta local"
     enable_google_logins: "Ativar autenticação pelo Google"
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"

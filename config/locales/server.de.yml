@@ -545,7 +545,6 @@ de:
     login_required: "Zum Lesen der Beiträge must du angemeldet sein"
 
     enable_local_logins: "Aktiviere lokale Authentisierung"
-    enable_local_account_create: "Aktiviere lokale Kontoerstellung"
     enable_google_logins: "Aktiviere Google Authentisierung."
     enable_yahoo_logins: "Aktiviere Yahoo Authentisierung."
 

@@ -655,7 +655,6 @@ cs:
     sso_overrides_username: 'Přepisuje místní uživatelské jméno tím z dat SSO (VAROVÁNÍ: kvůli rozdílnostem v požadavcích na uživatelské jméno může dojít k nesrovnalostem)'
     sso_overrides_name: 'Přepisuje místní jméno tím z dat SSO (VAROVÁNÍ: kvůli normalizování místního jména může dojít k nesrovnalostem)'
     enable_local_logins: Povolit lokální autentizaci
-    enable_local_account_create: Povolit lokální vytváření účtů
     enable_google_logins: Povolit přihlašování přes Google
     enable_yahoo_logins: Povolit přihlašování přes Yahoo
     enable_twitter_logins: "Povolit přihlašování přes Twitter, vyžaduje správně nastavené 'twitter_consumer_key' a 'twitter_consumer_secret'"
