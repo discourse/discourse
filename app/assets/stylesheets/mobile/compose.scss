@@ -68,7 +68,7 @@ display: none;
     color: darken($tertiary_text_color, 40%);
   }
   #draft-status {
-    right: 0;
+    right: 70px;
     color: lighten($primary_text_color, 60%);
     &.flash {
       color: $warning_text_color;
