@@ -134,6 +134,10 @@ Discourse.Markdown = {
     if(/^(https?:)?\/\/[\w\.\-]+/i.test(url)) { return url; }
     // relative urls
     if(/^\/[\w\.\-]+/i.test(url)) { return url; }
+    // anchors
+    if(/^#[\w\.\-]+/i.test(url)) { return url; }
+    // mailtos
+    if(/^mailto:[\w\.\-@]+/i.test(url)) { return url; }
   },
 
   /**
