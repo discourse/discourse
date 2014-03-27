@@ -200,7 +200,7 @@ class Topic < ActiveRecord::Base
         modifications: changes.extract!(:category_id, :title)
       )
 
-      Post.update_all({version: number}, id: first_post_id)
+      Post.where(id: first_post_id).update_all(version: number)
     end
   end
 
