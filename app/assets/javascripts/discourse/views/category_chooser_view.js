@@ -40,7 +40,7 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
     var category = Discourse.Category.findById(parseInt(templateData.id,10));
     if (!category) return text;
 
-    var result = Discourse.HTML.categoryBadge(category, {showParent: true, link: false});
+    var result = Discourse.HTML.categoryBadge(category, {showParent: true, link: false, allowUncategorized: true});
 
     result += " <div class='topic-count'>&times; " + category.get('topic_count') + "</div>";
 
