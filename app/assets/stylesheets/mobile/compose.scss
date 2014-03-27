@@ -117,9 +117,6 @@ display: none;
   // The various states
   &.open {
     height: 300px;
-    .grippie {
-      display: block;
-    }
   }
   &.closed {
     height: 0 !important;
@@ -187,7 +184,7 @@ display: none;
   // When the post is new (new topic) the sizings are different
   &.edit-title {
     &.open {
-      height: 400px;
+      height: 300px;
     }
     .contents {
       input#reply-title {

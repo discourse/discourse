@@ -167,17 +167,6 @@ body {
   .clear-transitions {
     @include transition(none !important);
   }
-  .grippie {
-    width: 100%;
-    border: 1px solid $primary_border_color;
-    border-width: 1px 0;
-    cursor: row-resize;
-    height: 11px;
-    overflow: hidden;
-    background-color: lighten($secondary_background_color, 76%);
-    display: block;
-    background: image-url("grippie.png") lighten($secondary_background_color, 76%) no-repeat center 3px;
-  }
 }
 
 form {
