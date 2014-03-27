@@ -14,12 +14,12 @@ class TopicEmbed < ActiveRecord::Base
   def self.import(user, url, title, contents)
     return unless url =~ /^https?\:\/\//
 
-    url = normalize_url(url)
-
     if SiteSetting.embed_truncate
       contents = first_paragraph_from(contents)
     end
     contents << "\n<hr>\n<small>#{I18n.t('embed.imported_from', link: "<a href='#{url}'>#{url}</a>")}</small>\n"
+
+    url = normalize_url(url)
 
     embed = TopicEmbed.where("lower(embed_url) = ?", url).first
     content_sha1 = Digest::SHA1.hexdigest(contents)
