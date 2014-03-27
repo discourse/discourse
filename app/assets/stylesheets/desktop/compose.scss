@@ -138,7 +138,7 @@
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: rgba($composer_background, 0.96);
+  background-color: rgba($composer_background_color, 0.96);
   bottom: 0;
   font-size: 14px;
   position: fixed;
@@ -572,5 +572,3 @@ div.ac-wrap {
     }
   }
 }
-
-
