@@ -344,7 +344,6 @@ div.ac-wrap {
     font-size: 16px;
   }
 }
-#reply-control .wmd-controls #wmd-input {font-size: 16px;}
 
 #reply-control.edit-title.private-message {
   .wmd-controls {
@@ -387,7 +386,7 @@ div.ac-wrap {
       margin-top: 0 !important;
     }
 
-    #wmd-input, #wmd-preview {
+    #wmd-input, #wmd-preview-scroller, #wmd-preview {
       @include box-sizing(border-box);
       width: 100%;
       height: 100%;
@@ -401,8 +400,11 @@ div.ac-wrap {
       h1, h2, h3, h4, h5, h6 {
         margin: 30px 0 10px;
       }
+      p {
+        margin-top: 19px;
+      }
     }
-    #wmd-input {
+    #wmd-input, #wmd-preview-scroller {
       position: absolute;
       left: 0;
       top: 0;
@@ -413,6 +415,17 @@ div.ac-wrap {
       border-top: 36px solid transparent;
       @include border-radius-all(0);
       transition: none;
+      font-size: 16px;
+    }
+    #wmd-preview-scroller {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: normal;
+      overflow: scroll;
+      visibility: hidden;
+      .marker, .caret {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
     .textarea-wrapper, .preview-wrapper {
       position: relative;
