@@ -32,18 +32,17 @@ And as some emails may have the same subject, allow duplicate titles might be an
 
 ## FAQ
 
-Q: Why is this needed?
+**Q: Why is this needed?**
 
-A: No matter how good a forum is, sometimes members need to ask a question and all they have is their mail client.
-
-
-Q: What if a message is received from an email address which doesn't belong to an approved, registered user?
-
-A: It will be rejected, and a notification email sent to the moderator. Check your POP mailbox to see the rejected email content.
+ >A: No matter how good a forum is, sometimes members need to ask a question and all they have is their mail client.
 
 
+**Q: What if a message is received from an email address which doesn't belong to an approved, registered user?**
 
-Q: Who did this?  
+ >A: It will be rejected, and a notification email sent to the moderator. Check your POP mailbox to see the rejected email content.
 
-A: @therealx, @yesthatallen and @ligthyear
+
+**Q: Who did this?** 
+
+ >A: @therealx, @yesthatallen and @ligthyear
 
