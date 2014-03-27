@@ -1,10 +1,8 @@
-# Discourse Plugin Architecture
-
-**Note: This is a work in progress!**
-
 
 # List of Discourse Plugins
 
-A list of the Discourse plugins is available at Discourses [plugin discussion page](https://meta.discourse.org/category/extensibility/plugin)
+If you just want to get some plugins for your Discourse instance, check out [the plugin category](https://meta.discourse.org/category/extensibility/plugin) at meta. This is the most up to date place for plugin discussion and listing.
 
-This is the most up to date place for plugin discussion and listing.
+# Discourse Plugin Architecture
+
+**Note: This is a work in progress!**
