@@ -16,9 +16,6 @@ display: none;
 display: none;
 }
 
-
-
-
 .autocomplete {
   z-index: 999999;
   position: absolute;
@@ -181,24 +178,25 @@ display: none;
     float: none;
   }
 
-  // When the post is new (new topic) the sizings are different
+  // if this is a new topic, make room for the category field in the editor on
+  // a small screen mobile device
   &.edit-title {
     &.open {
-      height: 300px;
+      height: 280px;
     }
     .contents {
       input#reply-title {
         padding: 7px 10px;
-        margin: 6px 10px 3px 0;
+        margin: 6px 10px 0 0;
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
-        top: 135px;
+        top: 120px;
       }
     }
   }
   .contents {
-    padding: 10px;
+    padding: 10px 10px 0 10px;
     min-width: 1280px;
     .form-element {
       .chzn-container {
