@@ -29,26 +29,76 @@ $twitter: #00bced !default;
 $yahoo: #810293 !default;
 $github: #6d6d6d !default;
 
-// Base
+// Fonts
 // --------------------------------------------------
 
 $base-font-size: 14px !default;
 $base-line-height: 19px !default;
 $base-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$base-background-color: lighten($black, 60%) !default;
 
-
-
-// Badges
+// Broad general variables
 // --------------------------------------------------
 
-// Notification badge
+$primary_border_color: lighten($black, 70%);
+$secondary_border_color: lighten($black, 76%);
+$tertiary_border_color: $white;
+$highlight_border_color: $yellow;
+$emphasis_border_color: $blue;
+$warning_border_color: lighten($red, 20%);
+$success_border_color: $green;
 
-$badge-notification-background-color: lighten($black, 35%) !default;
+$primary_background_color: $white;
+$secondary_background_color: $black;
+$tertiary_background_color: lighten($black, 10%);
+$moderator_background_color: lighten($yellow, 30%) !default;
+$emphasis_background_color: lighten($blue, 45%);
+$success_background_color: lighten($green, 50%);
+$warning_background_color: lighten($red, 30%);
+$highlight_background_color: lighten($yellow, 23%);
+$like_background_color: lighten($pink, 25%);
+$composer_background_color: lighten($black, 70%);
+$notification_badge_background_color: lighten($black, 35%) !default;
 
-// Posts badge
+$primary_text_color: $black;
+$secondary_text_color: lighten($black, 40%);
+$tertiary_text_color: $white;
+$warning_text_color: $red;
+$success_text_color: $green;
+$emphasis_text_color: $blue;
+$highlight_text_color: $yellow;
+$like_color: $pink;
 
-$badge-posts-color: lighten($black, 35%) !default;
+$primary_shadow_color: $black;
+$secondary_shadow_color: $white;
+$warning_shadow_color: lighten($red, 20%);
+$success_shadow_color: $green;
+
+$highlight: $yellow;
+$header_item_highlight: lighten($blue, 45%);
+
+$link_color:  darken($blue, 10%);
+$secondary_link_color: $white;
+
+$muted-link-color: lighten($black, 35%);
+$muted-important-link-color: lighten($black, 35%);
+
+$link-color-visited: darken($blue, 10%) !default;
+$link-color-hover: darken($blue, 10%) !default;
+$link-color-active: darken($blue, 10%) !default;
+
+$heatmap_high: lighten($red, 10%);
+$heatmap_med: $red;
+$heatmap_low: darken($red, 10%);
+
+$coldmap_high: lighten($blue, 10%);
+$coldmap_med: $blue;
+$coldmap_low: darken($blue, 10%);
+
+
+
+
+// Specific element variables
+// --------------------------------------------------
 
 // Buttons
 // --------------------------------------------------
@@ -133,70 +183,3 @@ $quote-background: lighten($black, 76%);
 
 $topicMenuColor: darken($white, 80%);
 $bookmarkColor: $blue;
-
-
-// Basics
-// --------------------------------------------------
-
-$primary_border_color: lighten($black, 70%);
-$secondary_border_color: lighten($black, 76%);
-$tertiary_border_color: $white;
-$highlight_border_color: $yellow;
-$emphasis_border_color: $blue;
-$warning_border_color: lighten($red, 20%);
-$success_border_color: $green;
-
-$primary_text_color: $black;
-$secondary_text_color: lighten($black, 40%);
-$tertiary_text_color: $white;
-$warning_text_color: $red;
-$success_text_color: $green;
-$emphasis_text_color: $blue;
-$highlight_text_color: $yellow;
-$like_color: $pink;
-
-$primary_shadow_color: $black;
-$secondary_shadow_color: $white;
-$warning_shadow_color: lighten($red, 20%);
-$success_shadow_color: $green;
-
-$highlight: $yellow;
-
-$link_color:  darken($blue, 10%);
-$secondary_link_color: $white;
-
-$muted-link-color: lighten($black, 35%);
-$muted-important-link-color: lighten($black, 35%);
-
-$link-color-visited: darken($blue, 10%) !default;
-$link-color-hover: darken($blue, 10%) !default;
-$link-color-active: darken($blue, 10%) !default;
-
-
-
-$attention_bg: lighten($blue, 50%);
-$attention_fg: $blue;
-
-$header-item-highlight: lighten($blue, 45%);
-
-$primary_background_color: $white;
-$secondary_background_color: $black;
-$tertiary_background_color: lighten($black, 10%);
-$moderator_background_color: lighten($yellow, 30%) !default;
-$emphasis_background_color: lighten($blue, 45%);
-$success_background_color: lighten($green, 50%);
-$warning_background_color: lighten($red, 30%);
-$highlight_background_color: lighten($yellow, 23%);
-$like_background_color: lighten($pink, 25%);
-
-$heatmap-high: lighten($red, 10%);
-$heatmap-med: $red;
-$heatmap-low: darken($red, 10%);
-
-$coldmap-high: lighten($blue, 10%);
-$coldmap-med: $blue;
-$coldmap-low: darken($blue, 10%);
-
-//Composer
-
-$composer_background: lighten($black, 70%);
