@@ -295,10 +295,6 @@
 
     .subcategories {
       margin-top: 10px;
-      .badge-category {
-        font-size: 12px;
-        padding: 4px;
-      }
     }
     .featured-users {
       float: right;
@@ -307,7 +303,7 @@
     .category-description {
       margin-top: 10px;
     }
-    .badge-category {
+    .badge-category.bigger {
       padding: 6px 10px;
       font-size: 14px;
     }

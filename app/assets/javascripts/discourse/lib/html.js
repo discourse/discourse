@@ -70,6 +70,7 @@ Discourse.HTML = {
       @param {Boolean} opts.allowUncategorized Whether we allow rendering of the uncategorized category (default false)
       @param {Boolean} opts.showParent Whether to visually show whether category is a sub-category (default false)
       @param {Boolean} opts.link Whether this category badge should link to the category (default true)
+      @param {String}  opts.extraClasses add this string to the class attribute of the badge
     @returns {String} the html category badge
   **/
   categoryBadge: function(category, opts) {
@@ -87,9 +88,11 @@ Discourse.HTML = {
         restricted = Em.get(category, 'read_restricted'),
         url = Discourse.getURL("/category/") + Discourse.Category.slugFor(category),
         elem = (opts.link === false ? 'span' : 'a'),
+        extraClasses = (opts.extraClasses ? (' ' + opts.extraClasses) : ''),
         html = "<" + elem + " href=\"" + (opts.link === false ? '' : url) + "\" ";
 
-    html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) + "\" ";
+    html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) +
+            extraClasses + "\" ";
 
     // Add description if we have it
     if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
@@ -107,7 +110,7 @@ Discourse.HTML = {
 
     if (opts.showParent && category.get('parent_category_id')) {
       var parent = Discourse.Category.findById(category.get('parent_category_id'));
-      html = "<span class='badge-wrapper'><" + elem + " class='badge-category-parent' style=\"" + (Discourse.HTML.categoryStyle(parent)||'') +
+      html = "<span class='badge-wrapper'><" + elem + " class='badge-category-parent" + extraClasses + "' style=\"" + (Discourse.HTML.categoryStyle(parent)||'') +
              "\" href=\"" + (opts.link === false ? '' : url) + "\"><span class='category-name'>" +
              (Em.get(parent, 'read_restricted') ? "<i class='fa fa-group'></i> " : "") +
              Em.get(parent, 'name') + "</span></" + elem + ">" +

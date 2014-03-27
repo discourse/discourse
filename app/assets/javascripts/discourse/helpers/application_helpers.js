@@ -79,6 +79,7 @@ function categoryLinkHTML(category, options) {
     if (options.hash.allowUncategorized) { categoryOptions.allowUncategorized = true; }
     if (options.hash.showParent) { categoryOptions.showParent = true; }
     if (options.hash.link !== undefined) { categoryOptions.link = options.hash.link; }
+    if (options.hash.extraClasses) { categoryOptions.extraClasses = options.hash.extraClasses; }
     if (options.hash.categories) {
       categoryOptions.categories = Em.Handlebars.get(this, options.hash.categories, options);
     }
