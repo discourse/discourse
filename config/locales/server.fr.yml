@@ -7,6 +7,7 @@
 # <Maxime QUANDALLE> "maxime@quandalle.com"
 # <Thomas BENTKOWSKI> "thomasbentkowski@gmail.com"
 # <Julien DUMETIER> "julien@dumetier.net"
+# <Sebastien MIQUEROLLE> "s.miquerolle@gmail.com"
 #
 # To work with us on translations, see:
 # https://www.transifex.com/projects/p/discourse-pt-br/
@@ -49,7 +50,7 @@ fr:
       other: "%{count} réponses supplémentaires"
     loading: "Chargement de la discussion..."
     permalink: "Lien permanent"
-    imported_from: "Sujet en provenance de l'article du blog : %{link}"
+    imported_from: "Il s'agit d'un sujet en provenance de l'article : %{link}"
     in_reply_to: "en réponse à %{username}"
     replies:
       one: "1 réponse"
@@ -464,10 +465,11 @@ fr:
     sidekiq_warning: 'Sidekiq n''est pas lancé. De nombreuses tâches, comme l''envoie d''e-mails, sont executées de manière asynchrome par sidekiq. Assurez-vous d''avoir au moins un processus sidekiq de lancé. <a href="https://github.com/mperham/sidekiq">En savoir plus sur sidekiq</a>.'
     queue_size_warning: 'Il y a %{queue_size} tâches dans la file d''attente, ce qui est beaucoup. Cela peut provenir d''un problème avec les processus Sidekiq, ou à un manque de processus Sidekiq travailleurs.'
     memory_warning: 'Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé.'
-    facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href="/admin/site_settings">l''interface d''administration</a>, <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">voir le guide pour en savoir plus</a>.'
-    twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans le <a href="/admin/site_settings">Paramétrage du Site</a>. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">voir le guide pour en savoir plus</a>.'
-    github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l''interface d''administration</a>. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">voir le guide pour en savoir plus</a>.'
+    facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
+    twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramétres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voir le guide pour en savoir plus</a>.'
+    github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Allez dans les <a href=\"/admin/site_settings\">Paramètres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voir le guide pour en savoir plus</a>.'
     s3_config_warning: 'Le serveur est configuré pour charger les fichiers vers s3, mais au moins un de ces paramètre n''est pas configuré : s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l''interface d''administration</a>. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir le guide "Comment charger les images sur S3 ?" pour en savoir plus</a>'
+    s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Allez dans les <a href="/admin/site_settings">Paramètres du site</a> et mettez les à jour. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir "Comment mettre en place une sauvegarde sur S3?" pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou bien allez  ici <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pour télécharger la dernière version</a>.'
     failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois d''email en erreur. Vérifiez votre fichier config/discourse.conf et assurez-vous de la conformité des paramètres du serveur de mail. <a href="/sidekiq/retries" target="_blank">Regarder les processus en échec dans  Sidekiq</a>.'
     default_logo_warning: "Vous n'avez pas changé le logo de votre site. Merci de mettre à jour les <a href='/admin/site_settings'>paramètres du site</a> suivant : logo_url, logo_small_url et favicon_url."
@@ -566,6 +568,7 @@ fr:
     category_post_template: "Le modèle de message utilisé lorsque vous créez une nouvelle catégorie"
     onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer d'un site externe dans un message."
     logo_url: "Le logo de votre site, par exemple : http://example.com/logo.png"
+    digest_logo_url: "Le logo qui sera utilisé dans les emails de votre site. Si non renseigné, alors `logo_url` sera utilisé, par exemple : http://example.com/logo.png"
     logo_small_url: "La version minifiée du logo de votre site lorsque vous faites défilez vers le bas les messages d'un sujet ex : http://example.com/logo-small.png"
     favicon_url: "Le favicon de votre site, voir http://fr.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Icône utilisée pour les appareils d'Apple. Taille recommandée 144 px par 144 px."
@@ -716,7 +719,7 @@ fr:
     white_listed_spam_host_domains: "Une liste des domaines exclus des hôtes testés comme spam séparé par des virgules, les nouveaux utilisateurs seront en mesure de créer un nombre illimité de messages avec des liens vers ce domaine"
     staff_like_weight: "Poids supplémentaire donné aux Likes du staff lors d'une recherche."
     reply_by_email_enabled: "Activer répondre aux sujets via email"
-    reply_by_email_address: "Modèle pour la réponse par adresse email par exemple : %{reply_key}@reply.myforum.com"
+    reply_by_email_address: "Modèle pour la réponse par adresse email entrante; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     pop3s_polling_enabled: "Utiliser le polling via POP3S pour les réponses par email"
     pop3s_polling_port: "Le port à utiliser pour le polling sur le POPS3"
     pop3s_polling_host: "L'hôte utilisé pour le polling pour l'email via POP3S"
@@ -745,6 +748,7 @@ fr:
     dominating_topic_minimum_percent: "Quel est le pourcentage de messages d'un utilisateur doit poster dans un sujet avant que nous considérions qu'il est dominant."
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets"
     min_posts_for_search_in_topic: "Désactiver la recherche dans les sujets si les sujets ont moins du minimum de messages"
+    global_notice: "Affiche un bandeau global pour tout les utilisateurs du site, laissez vide pour le caché (HTML autorisé)"
     enable_names: "Permettre aux utilisateurs d'afficher leurs noms et prénoms"
     display_name_on_posts: "Afficher également le nom complet de l'utilisateur dans ses messages"
     invites_shown: "Nombre maximum d'invitations affichées sur une page utilisateur"
@@ -755,6 +759,7 @@ fr:
     feed_polling_enabled: "Si vous souhaitez importer un flux RSS/ATOM en tant que messages"
     feed_polling_url: "URL du flux RSS/ATOM à importer"
     embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets"
+    embed_truncate: "Tronquer les messages importés"
     embed_category: "Catégorie des sujets créés"
     embed_post_limit: "Le nombre maximum de messages à incorporer"
     tos_accept_required: "Si il est activé, les utilisateurs devront cocher une case sur le formulaire d'inscription pour confirmer qu'ils acceptent les conditions de service. Modifier \"Formulaire d'inscription : Message des Conditions d'utilisation» dans l'onglet Contenu pour modifier le message."
@@ -769,6 +774,7 @@ fr:
     private_message: "%{display_username} vous a envoyé un message privé: %{link}"
     invited_to_private_message: "%{display_username} vous a invité dans une conversation privée: %{link}"
     invitee_accepted: "%{display_username} a accepté votre invitation"
+    linked: "%{display_username} a mentionné l'un de vos messages : %{link}"
   search:
     within_post: "#%{post_number} par %{username}: %{excerpt}"
     types:
@@ -780,7 +786,7 @@ fr:
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur fréquent"
   redirected_to_top_reasons:
-    new_user: "Bienvenue! En tant que nouveau visiteur, ceci sera votre page d'accueil jusqu'à ce que vous ayez pris le temps de faire un peu le tour du forum. Pour vous, une sélection des sujets les plus populaires."
+    new_user: "Bienvenue! En tant que nouveau visiteur, ceci sera votre page d'accueil jusqu'à ce que vous ayez pris le temps de faire un peu le tour du forum. Retrouvez ici une sélection des sujets les plus populaires."
     not_seen_in_a_month: "Bon retour parmi nous! Nous ne vous avons pas vu depuis un moment, voici les meilleurs sujets de discussions depuis votre absence."
   move_posts:
     new_topic_moderator_post:
@@ -1022,9 +1028,29 @@ fr:
     export_succeeded:
       subject_template: "Export terminé avec succès"
       text_body_template: "L'export a réussi."
+    export_failed:
+      subject_template: "Echec de l'export"
+      text_body_template: |
+        L'export a échoué.
+
+        Voici le détail:
+
+        ```
+        %{logs}
+        ```
     import_succeeded:
       subject_template: "Import terminé avec succès"
       text_body_template: "L'import a réussi."
+    import_failed:
+      subject_template: "Echec de l'import"
+      text_body_template: |
+        L'import a échoué.
+
+        Voici le détail:
+
+        ```
+        %{logs}
+        ```
     email_error_notification:
       subject_template: "Erreur d'analyse de l'email"
       text_body_template: |
@@ -1188,7 +1214,7 @@ fr:
       text_body_template: |
         Bienvenue sur %{site_name} !
 
-        Vous avez été approuvé pour rejoindre %{site_name}, bienvenue !
+        Un membre de l'équipe a approuvé votre compte sur %{site_name}.
 
         Cliquez sur le lien suivant pour confirmer et activer votre nouveau compte :
         %{base_url}/users/activate-account/%{email_token}
