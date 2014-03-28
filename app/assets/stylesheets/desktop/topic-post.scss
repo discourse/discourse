@@ -596,8 +596,7 @@ iframe {
 
 .moderator {
   .topic-body {
-  background-color: $highlight_background_color;
-  border-bottom: 10px solid $highlight_background_color;
+    background-color: $highlight_background_color;
   }
 }
 
@@ -762,8 +761,8 @@ blockquote { /* solo quotes */
   float: left;
   position: relative;
   padding: 10px 0 15px 0;
-  .highlighted {
-    background-color: $emphasis_background_color !important;
+  &.highlighted {
+    background-color: $emphasis_background_color;
   }
   img, svg {
     max-width: 100%;
@@ -771,9 +770,8 @@ blockquote { /* solo quotes */
 }
 
 .bottom-round.contents.regular {
- -webkit-transition: background-color .25s linear;
- transition: background-color .25s linear;
-
+  -webkit-transition: background-color .25s linear;
+  transition: background-color .25s linear;
 }
 
 .posts-wrapper {
