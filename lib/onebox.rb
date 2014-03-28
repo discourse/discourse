@@ -2,12 +2,13 @@ require "open-uri"
 require "multi_json"
 require "nokogiri"
 require "mustache"
-require "opengraph_parser"
 require "hexpress"
 require "hexpress/web"
 require "ostruct"
 require "moneta"
 require "cgi"
+require "net/http"
+require "digest"
 
 module Onebox
   DEFAULTS = {
