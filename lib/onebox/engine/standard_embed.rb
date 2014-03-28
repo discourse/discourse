@@ -66,6 +66,10 @@ module Onebox
         http = Net::HTTP.new(uri.host, uri.port)
         http.open_timeout = Onebox.options.connect_timeout
         http.read_timeout = Onebox.options.timeout
+        if uri.is_a?(URI::HTTPS)
+          http.use_ssl = true
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
         response = http.request_get(uri.request_uri)
 
         case response
