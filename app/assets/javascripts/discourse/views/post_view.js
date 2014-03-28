@@ -209,7 +209,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     // If we're meant to highlight a post
     if ((highlightNumber > 1) && (highlightNumber === postNumber)) {
       this.set('controller.highlightOnInsert', null);
-      var $contents = $('.topic-body .contents', $post),
+      var $contents = $('.topic-body', $post),
           origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
 
       $contents.data("orig-color", origColor);
