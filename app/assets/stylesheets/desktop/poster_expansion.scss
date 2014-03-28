@@ -65,7 +65,7 @@
   }
 
   p.loading {
-    margin-top: 30px;
+    margin-top: 45px;
     color: $secondary_text_color;
   }
 
@@ -75,5 +75,48 @@
 
   .new-user a {
     color: $secondary_text_color;
+  }
+
+  &.show-badges {
+    width: 560px;
+
+    .names {
+      width: 250px;
+      float: left;
+    }
+
+    .metadata {
+      float: right;
+      max-width: 180px;
+    }
+
+    h2 {
+      line-height: 15px;
+    }
+
+    .badge-section {
+      h3 {
+        line-height: 43px;
+        color: $primary_text_color;
+        font-size: 14px;
+        margin-bottom: -8px;
+      }
+
+      .badge, .more-badges {
+        font-size: 12px;
+        margin: 0;
+        line-height: 16px;
+        display: inline-block;
+      }
+
+      .badge {
+        padding: 3px 8px;
+        border: 1px solid $secondary-border-color;
+      }
+
+      .more-badges {
+        padding: 4px 8px;
+      }
+    }
   }
 }

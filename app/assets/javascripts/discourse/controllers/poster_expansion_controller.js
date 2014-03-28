@@ -20,6 +20,16 @@ Discourse.PosterExpansionController = Discourse.ObjectController.extend({
 
   hasUserFilters: Em.computed.gt('postStream.userFilters.length', 0),
 
+  showBadges: function() {
+    return Discourse.SiteSettings.enable_badges;
+  }.property(),
+
+  moreBadgesCount: function() {
+    return this.get('user.badge_count') - this.get('user.featured_user_badges.length');
+  }.property('user.badge_count', 'user.featured_user_badges.@each'),
+
+  showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
+
   show: function(post) {
 
     // Don't show on mobile

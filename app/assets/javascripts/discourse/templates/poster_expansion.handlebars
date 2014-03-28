@@ -1,16 +1,31 @@
 {{#if model}}
   {{#link-to 'user' user}}{{boundAvatar model imageSize="huge"}}{{/link-to}}
 
-  <h1 {{bind-attr class="staff new_user"}}><a {{bind-attr href="usernameUrl"}}>{{username}}</a></h1>
-  {{#if showName}}
-    <h2><a {{bind-attr href="usernameUrl"}}>{{name}}</a></h2>
-  {{/if}}
+  <div class="names">
+    <h1 {{bind-attr class="staff new_user"}}><a {{bind-attr href="usernameUrl"}}>{{username}}</a></h1>
+    {{#if showName}}
+      <h2><a {{bind-attr href="usernameUrl"}}>{{name}}</a></h2>
+    {{/if}}
+  </div>
 
   {{#if user}}
-    <h3>{{i18n last_post}} {{unboundDate path="user.last_posted_at" leaveAgo="true"}}</h3>
-    <h3>{{i18n joined}} {{unboundDate path="user.created_at" leaveAgo="true"}}</h3>
+    <div class="metadata">
+      <h3>{{i18n last_post}} {{unboundDate path="user.last_posted_at" leaveAgo="true"}}</h3>
+      <h3>{{i18n joined}} {{unboundDate path="user.created_at" leaveAgo="true"}}</h3>
+      {{groups-list groups=user.custom_groups}}
+    </div>
 
-    {{groups-list groups=user.custom_groups}}
+    {{#if showBadges}}
+      <div class="badge-section">
+        <h3>{{i18n badges.badge_count count=user.badge_count}}</h3>
+        {{#each user.featured_user_badges}}
+          <span class="badge">{{badge.name}}</span>
+        {{/each}}
+        {{#if showMoreBadges}}
+          <span class="btn more-badges">{{i18n badges.more_badges count=moreBadgesCount}}</span>
+        {{/if}}
+      </div>
+    {{/if}}
 
     <div class='bottom'>
       {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}

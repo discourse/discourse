@@ -1745,6 +1745,12 @@ en:
         mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
 
     badges:
+      badge_count:
+        one:   "1 Badge"
+        other: "%{count} Badges"
+      more_badges:
+        one:   "+1 More"
+        other: "+%{count} More"
       example_badge:
         name: Example Badge
         description: This is a generic example badge.
