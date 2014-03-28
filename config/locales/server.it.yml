@@ -893,7 +893,7 @@ it:
 
       - Scopri le novità tramite il [changelog su GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Aggiorna visitando la pagina `\admin\docker` e premendo il tasto "Upgrade" dopo aver ricaricato un po' di volte la pagina.
+      - Aggiorna visitando la pagina `/admin/docker` e premendo il tasto "Upgrade Discourse" dopo aver ricaricato un po' di volte la pagina.
 
       - Visita http://meta.discourse.org per novità, discussioni e supporto per Discourse.
   new_version_mailer_with_notes:
@@ -906,7 +906,7 @@ it:
 
       - Scopri le novità tramite il [changelog su GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Aggiorna visitando la pagina `\admin\docker` e premendo il tasto "Upgrade" dopo aver ricaricato un po' di volte la pagina.
+      - Aggiorna visitando la pagina `/admin/docker` e premendo il tasto "Upgrade Discourse" dopo aver ricaricato un po' di volte la pagina.
 
       - Visita http://meta.discourse.org per novità, discussioni e supporto per Discourse.
 

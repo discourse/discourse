@@ -915,7 +915,7 @@ fr:
 
       - Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Mettez à jour en allant sur `\admin\docker`, rafraîchir la page et appuyer sur le bouton "upgrade".
+      - Mettez à jour en allant sur `/admin/docker`, rafraîchir la page et appuyer sur le bouton "Upgrade Discourse".
 
       - Visitez http://meta.discourse.org pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.
   new_version_mailer_with_notes:
@@ -928,7 +928,7 @@ fr:
 
       - Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Mettez à jour en allant sur `\admin\docker`, rafraîchir la page et appuyer sur le bouton "upgrade".
+      - Mettez à jour en allant sur `/admin/docker`, rafraîchir la page et appuyer sur le bouton "Upgrade Discourse".
 
       - Visitez http://meta.discourse.org pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.
 

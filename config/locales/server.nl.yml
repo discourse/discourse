@@ -1032,7 +1032,7 @@ nl:
 
       - Kijk wat er nieuw is in de [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Ga naar `\admin\docker`, herlaad de pagina een aantal keren en druk dan op de "upgrade" knop.
+      - Ga naar `/admin/docker`, herlaad de pagina een aantal keren en druk dan op de "Upgrade Discourse" knop.
 
       - Ga naar http://meta.discourse.org voor nieuws, discussies over en support voor Discourse.
 
@@ -1046,7 +1046,7 @@ nl:
 
       - Kijk wat er nieuw is in de [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Ga naar `\admin\docker`, herlaad de pagina een aantal keren en druk dan op de "upgrade" knop.
+      - Ga naar `/admin/docker`, herlaad de pagina een aantal keren en druk dan op de "Upgrade Discourse" knop.
 
       - Ga naar http://meta.discourse.org voor nieuws, discussies over en support voor Discourse.
 
