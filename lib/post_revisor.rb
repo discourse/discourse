@@ -64,7 +64,7 @@ class PostRevisor
       @post.version += 1
       @post.last_version_at = get_revised_at
       update_post
-      EditRateLimiter.new(@post.user).performed! unless @opts[:bypass_rate_limiter] == true
+      EditRateLimiter.new(@user).performed! unless @opts[:bypass_rate_limiter] == true
       bump_topic unless @opts[:bypass_bump]
     end
   end
