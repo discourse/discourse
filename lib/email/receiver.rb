@@ -37,7 +37,7 @@ module Email
     def process
       raise EmptyEmailError if @raw.blank?
 
-      @message = Mail::Message.new(@raw)
+      @message = Mail.new(@raw)
 
 
       # First remove the known discourse stuff.
@@ -92,13 +92,11 @@ module Email
 
       # If the message is multipart, find the best type for our purposes
       if @message.multipart?
-        @message.parts.each do |p|
-          if p.content_type =~ /text\/plain/
-            @body = p.charset ? p.body.decoded.force_encoding(p.charset).encode("UTF-8").to_s : p.body.to_s
-            return @body
-          elsif p.content_type =~ /text\/html/
-            html = p.charset ? p.body.decoded.force_encoding(p.charset).encode("UTF-8").to_s : p.body.to_s
-          end
+        if p = @message.text_part
+          @body = p.charset ? p.body.decoded.force_encoding(p.charset).encode("UTF-8").to_s : p.body.to_s
+          return @body
+        elsif p = @message.html_part
+          html = p.charset ? p.body.decoded.force_encoding(p.charset).encode("UTF-8").to_s : p.body.to_s
         end
       end
 
@@ -109,6 +107,7 @@ module Email
           html = @message.body.to_s
         end
       end
+
       if html.present?
         @body = scrub_html(html)
         return @body

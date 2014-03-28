@@ -43,16 +43,6 @@ stripped from my reply?")
     end
   end
 
-  describe "it ignores messages it can't parse due to containing weird terms" do
-    let(:attachment) { File.read("#{Rails.root}/spec/fixtures/emails/attachment.eml") }
-    let(:receiver) { Email::Receiver.new(attachment) }
-
-    it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::EmptyEmailError)
-      expect(receiver.body).to be_blank
-    end
-  end
-
   describe "it supports a dutch reply" do
     let(:dutch) { File.read("#{Rails.root}/spec/fixtures/emails/dutch.eml") }
     let(:receiver) { Email::Receiver.new(dutch) }
@@ -185,6 +175,18 @@ greatest show ever created. Everyone should watch it.
         expect(receiver.reply_key).to eq(reply_key)
       end
 
+    end
+
+    describe "email with attachments" do
+      it "can find the message and create a post" do
+        User.stubs(:find_by_email).returns(user)
+        EmailLog.stubs(:for).returns(email_log)
+        attachment_email = File.read("#{Rails.root}/spec/fixtures/emails/attachment.eml")
+        r = Email::Receiver.new(attachment_email)
+        r.expects(:create_reply)
+        expect { r.process }.to_not raise_error
+        expect(r.body).to eq("here is an image attachment")
+      end
     end
 
   end
