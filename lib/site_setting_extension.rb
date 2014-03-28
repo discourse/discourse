@@ -22,8 +22,8 @@ module SiteSettingExtension
   end
 
   def current
-    @@containers ||= {}
-    @@containers[provider.current_site] ||= {}
+    @containers ||= {}
+    @containers[provider.current_site] ||= {}
   end
 
   def defaults
@@ -62,6 +62,8 @@ module SiteSettingExtension
       if opts[:refresh] == true
         refresh_settings << name
       end
+
+      current[name] = current_value
       setup_methods(name, current_value)
     end
   end
@@ -69,12 +71,12 @@ module SiteSettingExtension
   # just like a setting, except that it is available in javascript via DiscourseSession
   def client_setting(name, default = nil, opts = {})
     setting(name, default, opts)
-    @@client_settings ||= []
-    @@client_settings << name
+    @client_settings ||= []
+    @client_settings << name
   end
 
   def client_settings
-    @@client_settings
+    @client_settings ||= []
   end
 
   def settings_hash
@@ -92,7 +94,7 @@ module SiteSettingExtension
   end
 
   def client_settings_json_uncached
-    MultiJson.dump(Hash[*@@client_settings.map{|n| [n, self.send(n)]}.flatten])
+    MultiJson.dump(Hash[*@client_settings.map{|n| [n, self.send(n)]}.flatten])
   end
 
   # Retrieve all settings
@@ -125,24 +127,24 @@ module SiteSettingExtension
       ensure_listen_for_changes
       old = current
 
-      all_settings = provider.all
-      new_hash =  Hash[*(all_settings.map{|s| [s.name.intern, convert(s.value,s.data_type)]}.to_a.flatten)]
+      new_hash =  Hash[*(provider.all.map{ |s|
+        [s.name.intern, convert(s.value,s.data_type)]
+      }.to_a.flatten)]
 
-      # add defaults
+      # add defaults, cause they are cached
       new_hash = defaults.merge(new_hash)
+
       changes,deletions = diff_hash(new_hash, old)
 
       if deletions.length > 0 || changes.length > 0
-        @current = new_hash
         changes.each do |name, val|
-          setup_methods name, val
+          current[name] = val
         end
         deletions.each do |name,val|
-          setup_methods name, defaults[name]
+          current[name] = defaults[name]
         end
       end
-
-      Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
+      clear_cache!
     end
   end
 
@@ -176,16 +178,18 @@ module SiteSettingExtension
   end
 
   def process_id
-    @@process_id ||= SecureRandom.uuid
+    @process_id ||= SecureRandom.uuid
   end
 
   def after_fork
-    @@process_id = nil
+    @process_id = nil
+    ensure_listen_for_changes
   end
 
   def remove_override!(name)
     provider.destroy(name)
     current[name] = defaults[name]
+    clear_cache!
   end
 
   def add_override!(name,val)
@@ -208,6 +212,9 @@ module SiteSettingExtension
     end
 
     provider.save(name, val, type)
+    current[name] = convert(val, type)
+    clear_cache!
+
     @last_message_sent = MessageBus.publish('/site_settings', {process: process_id})
   end
 
@@ -229,6 +236,10 @@ module SiteSettingExtension
   end
 
   protected
+
+  def clear_cache!
+    Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
+  end
 
   def diff_hash(new_hash, old)
     changes = []
@@ -277,14 +288,16 @@ module SiteSettingExtension
 
   def setup_methods(name, current_value)
 
-    # trivial multi db support, we can optimize this later
-    current[name] = current_value
     clean_name = name.to_s.sub("?", "")
 
     eval "define_singleton_method :#{clean_name} do
-      c = @@containers[provider.current_site]
-      c = c[name] if c
-      c
+      c = @containers[provider.current_site]
+      if c
+        c[name]
+      else
+        refresh!
+        current[name]
+      end
     end
 
     define_singleton_method :#{clean_name}? do
@@ -293,7 +306,6 @@ module SiteSettingExtension
 
     define_singleton_method :#{clean_name}= do |val|
       add_override!(:#{name}, val)
-      refresh!
     end
     "
   end
