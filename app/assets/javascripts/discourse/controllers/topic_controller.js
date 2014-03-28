@@ -265,6 +265,11 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return (this.get('selectedPostsCount') > 0);
   }.property('selectedPostsCount'),
 
+  canChangeOwner: function() {
+    if (!Discourse.User.current().admin) return false;
+    return !!this.get('selectedPostsUsername');
+  }.property('selectedPostsUsername'),
+
   categories: function() {
     return Discourse.Category.list();
   }.property(),

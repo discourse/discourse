@@ -910,6 +910,9 @@ en:
       one: "I moved a post to an existing topic: %{topic_link}"
       other: "I moved %{count} posts to an existing topic: %{topic_link}"
 
+  change_owner:
+    post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
+
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."

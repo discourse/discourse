@@ -314,6 +314,16 @@ class Post < ActiveRecord::Base
     PostRevisor.new(self).revise!(updated_by, new_raw, opts)
   end
 
+  def set_owner(new_user, actor)
+    revise(actor, self.raw, {
+        new_user: new_user,
+        changed_owner: true,
+        edit_reason: I18n.t('change_owner.post_revision_text',
+                            old_user: self.user.username_lower,
+                            new_user: new_user.username_lower)
+    })
+  end
+
   before_create do
     PostCreator.before_create_tasks(self)
   end
@@ -472,7 +482,7 @@ class Post < ActiveRecord::Base
   end
 
   def save_revision
-    modifications = changes.extract!(:raw, :cooked, :edit_reason)
+    modifications = changes.extract!(:raw, :cooked, :edit_reason, :user_id)
     # make sure cooked is always present (oneboxes might not change the cooked post)
     modifications["cooked"] = [self.cooked, self.cooked] unless modifications["cooked"].present?
     PostRevision.create!(

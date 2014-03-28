@@ -41,6 +41,17 @@ class PostRevision < ActiveRecord::Base
     }
   end
 
+  def user_changes
+    prev = previous("user_id")
+    cur = current("user_id")
+    return if prev == cur
+
+    {
+        previous_user: User.where(id: prev).first,
+        current_user: User.where(id: cur).first
+    }
+  end
+
   def previous(field)
     lookup_with_fallback(field, 0)
   end

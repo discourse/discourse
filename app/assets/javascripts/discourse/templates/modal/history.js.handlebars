@@ -30,6 +30,11 @@
         {{{category_diff}}}
       </div>
     {{/if}}
+    {{#if user_changes}}
+      <div class="row">
+          {{boundAvatar user_changes.previous imageSize="small"}} {{user_changes.previous.username}} → {{boundAvatar user_changes.current imageSize="small"}} {{user_changes.current.username}}
+      </div>
+    {{/if}}
     {{{body_diff}}}
   </div>
 </div>

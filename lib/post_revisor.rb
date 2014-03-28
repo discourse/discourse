@@ -10,6 +10,7 @@ class PostRevisor
 
   # Recognized options:
   #  :edit_reason User-supplied edit reason
+  #  :new_user New owner of the post
   #  :revised_at changes the date of the revision
   #  :force_new_version bypass ninja-edit window
   #  :bypass_bump do not bump the topic, even if last post
@@ -45,7 +46,7 @@ class PostRevisor
   end
 
   def should_revise?
-    @post.raw != @new_raw
+    @post.raw != @new_raw || @opts[:changed_owner]
   end
 
   def revise_post
@@ -63,6 +64,7 @@ class PostRevisor
   def should_create_new_version?
     @post.last_editor_id != @editor.id ||
     get_revised_at - @post.last_version_at > SiteSetting.ninja_edit_window.to_i ||
+    @opts[:changed_owner] == true ||
     @opts[:force_new_version] == true
   end
 
@@ -93,6 +95,7 @@ class PostRevisor
     @post.word_count = @new_raw.scan(/\w+/).size
     @post.last_editor_id = @editor.id
     @post.edit_reason = @opts[:edit_reason] if @opts[:edit_reason]
+    @post.user_id = @opts[:new_user].id if @opts[:new_user]
 
     if @editor == @post.user && @post.hidden && @post.hidden_reason_id == Post.hidden_reasons[:flag_threshold_reached]
       @post.hidden = false

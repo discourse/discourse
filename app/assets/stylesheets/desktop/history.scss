@@ -35,6 +35,8 @@
     word-wrap: break-word;
     .row, table {
       margin-top: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dotted;
     }
   }
   img {

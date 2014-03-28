@@ -622,13 +622,6 @@ iframe {
     }
 }
 
-#selected-posts {
-  padding-left: 20px;
-  .btn {
-    margin-bottom: 10px;
-  }
-}
-
 .post-select {
   float: right;
   margin-right: 20px;
@@ -914,8 +907,9 @@ blockquote { /* solo quotes */
 
 #selected-posts {
 
+  padding-left: 20px;
   margin-left: 330px;
-  width: 12%;
+  width: 200px;
   position: fixed;
   z-index: 1000;
   left: 50%;
@@ -927,7 +921,7 @@ blockquote { /* solo quotes */
 
 
   button {
-    width: 160px;
+    width: 180px;
     margin: 4px auto;
     display: inline-block;
     text-align: left;
@@ -958,9 +952,8 @@ blockquote { /* solo quotes */
     border: none;
     color: $tertiary_text_color;
     font-weight: normal;
-
-      color: $tertiary_text_color;
-      background: $btn-primary-background-color;
+    margin-bottom: 10px;
+    background: $btn-primary-background-color;
 
     &[href] {
       color: $tertiary_text_color;
