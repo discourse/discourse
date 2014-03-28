@@ -70,9 +70,9 @@ categories = {
     visual_performing_arts: { name: 'Visual & Performing Arts', color: '800080', id: 115 }
 }
 categories.values.each do |category|
-  unless Category.where(id: category[:id]).exists?
-    Category.create id: category[:id], name: category[:name], user_id: Discourse.system_user.id, color: category[:color], text_color: 'ffffff'
-  end
+  category = Category.find_or_initialize_by id: category[:id]
+  category.attributes = { name: category[:name], user_id: Discourse.system_user.id, color: category[:color], text_color: 'ffffff' }
+  category.save!
 end
 # Update auto_increment field
 Category.exec_sql "SELECT setval('categories_id_seq', (SELECT MAX(id) from categories));"
