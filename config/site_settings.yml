@@ -259,6 +259,7 @@ email:
     default: 3
     enum: 'MinTrustToCreateTopicSetting'
   email_in_category: -1
+  email_prefix: ''
 
 files:
   max_image_size_kb:
