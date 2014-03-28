@@ -234,4 +234,17 @@ module Discourse
     "/site/read-only"
   end
 
+  # all forking servers must call this
+  # after fork, otherwise Discourse will be
+  # in a bad state
+  def self.after_fork
+    SiteSetting.after_fork
+    ActiveRecord::Base.establish_connection
+    $redis.client.reconnect
+    Rails.cache.reconnect
+    MessageBus.after_fork
+    # /!\ HACK /!\ force sidekiq to create a new connection to redis
+    Sidekiq.instance_variable_set(:@redis, nil)
+  end
+
 end

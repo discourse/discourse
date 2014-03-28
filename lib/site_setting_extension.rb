@@ -179,6 +179,10 @@ module SiteSettingExtension
     @@process_id ||= SecureRandom.uuid
   end
 
+  def after_fork
+    @@process_id = nil
+  end
+
   def remove_override!(name)
     provider.destroy(name)
     current[name] = defaults[name]

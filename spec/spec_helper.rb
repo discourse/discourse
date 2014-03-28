@@ -98,9 +98,7 @@ end
 
 Spork.each_run do
   # This code will be run each time you run your specs.
-  $redis.client.reconnect
-  Rails.cache.reconnect
-  MessageBus.after_fork
+  Discourse.after_fork
 end
 
 # --- Instructions ---
