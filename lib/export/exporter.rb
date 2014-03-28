@@ -79,6 +79,7 @@ module Export
       @archive_directory = File.join(Rails.root, "public", "backups", @current_db)
       @archive_basename = File.join(@archive_directory, "#{SiteSetting.title.parameterize}-#{@timestamp}")
       @logs = []
+      @readonly_mode_was_enabled = Discourse.readonly_mode?
     end
 
     def listen_for_shutdown_signal
@@ -96,6 +97,7 @@ module Export
     end
 
     def enable_readonly_mode
+      return if @readonly_mode_was_enabled
       log "Enabling readonly mode..."
       Discourse.enable_readonly_mode
     end
@@ -293,6 +295,7 @@ module Export
     end
 
     def disable_readonly_mode
+      return if @readonly_mode_was_enabled
       log "Disabling readonly mode..."
       Discourse.disable_readonly_mode
     end
