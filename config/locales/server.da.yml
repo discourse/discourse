@@ -185,7 +185,7 @@ da:
         user:
           attributes:
             password:
-              common: "er én af de 5000 mest almindelige adgangskoder. Brug venligst en mere sikker adgangskode."
+              common: "er én af de 10000 mest almindelige adgangskoder. Brug venligst en mere sikker adgangskode."
             ip_address:
               signup_not_allowed: "Tilmelding er ikke tilladt fra den aktuelle adresse."
 
@@ -633,7 +633,7 @@ da:
     login_required: "Kræv godkendelse for at læse indlæg"
 
     min_password_length: "Mindste adgangskodelængde."
-    block_common_passwords: "Tillad ikke adgangskoder som er blandt de 5000 med almindelige adgangskoder"
+    block_common_passwords: "Tillad ikke adgangskoder som er blandt de 10000 med almindelige adgangskoder"
     enable_local_logins: "Aktivér traditionel, lokal godkendelse med brugernavn og adgangskode"
     enable_google_logins: "Aktivér Google-login"
     enable_yahoo_logins: "Aktivér Yahoo-login"
