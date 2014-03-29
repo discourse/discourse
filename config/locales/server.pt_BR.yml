@@ -153,7 +153,7 @@ pt_BR:
         user:
           attributes:
             password:
-              common: "é uma das 5000 mais comuns senhas. Por favor, use uma senha mais segura."
+              common: "é uma das 10000 mais comuns senhas. Por favor, use uma senha mais segura."
             ip_address:
               signup_not_allowed: "Cadastro não é permitido a partir desta conta."
   user_profile:
@@ -599,7 +599,7 @@ pt_BR:
     login_required: "Exigir autenticação para ler as postagens"
     min_username_length: "Comprimento mínimo do nome de usuário. (Não se aplica caso exclusividade global de apelido está forçada)"
     min_password_length: "Comprimento mínimo da senha."
-    block_common_passwords: "Não permitir senhas que estejam nas 5000 mais comuns senhas."
+    block_common_passwords: "Não permitir senhas que estejam nas 10000 mais comuns senhas."
     enable_sso: "Ativar logon único através de um site externo"
     sso_url: "URL destino do logon único"
     sso_secret: "Cadeia secreta usada para criptografar/descriptografar informações SSO, certifique-se que tenha 10 caracteres ou mais"

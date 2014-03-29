@@ -200,7 +200,7 @@ nl:
         user:
           attributes:
             password:
-              common: "is een van de 5000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
+              common: "is een van de 10000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
             ip_address:
               signup_not_allowed: Inschrijven vanaf dit account is niet toegestaan.
 
@@ -690,7 +690,7 @@ nl:
     min_username_length: "Minimum lengte gebruikersnaam. (Geldt niet als globaal unieke gebruikersnamen actief is)"
 
     min_password_length: "Minimum lengte wachtwoord."
-    block_common_passwords: "Weiger wachtwoorden uit de lijst van 5000 meest gebruikte wachtwoorden."
+    block_common_passwords: "Weiger wachtwoorden uit de lijst van 10000 meest gebruikte wachtwoorden."
 
 
     enable_sso: "Gebruikers kunnen inloggen via een andere site (Single Sign On)"

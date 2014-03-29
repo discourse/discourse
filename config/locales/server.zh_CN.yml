@@ -656,7 +656,7 @@ zh_CN:
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
     attributes:
             password:
-              common: "是5000个最常用的密码之一。请使用一个更安全的密码。"
+              common: "是10000个最常用的密码之一。请使用一个更安全的密码。"
             ip_address:
               signup_not_allowed: "你的 IP 已被屏蔽， 禁止使用此 IP 注册。"
   invite_mailer:

@@ -166,7 +166,7 @@ it:
         user:
           attributes:
             password:
-              common: "è una delle 5000 password più comuni in assoluto. Usane una più sicura."
+              common: "è una delle 10000 password più comuni in assoluto. Usane una più sicura."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa per questo account."
   user_profile:
@@ -615,7 +615,7 @@ it:
     login_required: "Autenticazione necessaria per la lettura dei post"
     min_username_length: "Lunghezza minima username. (Non si applica se  è forzata l'unicità globale dei nickname)"
     min_password_length: "Massima lunghezza della password."
-    block_common_passwords: "Non permettere password nell'elenco delle 5000 più comuni."
+    block_common_passwords: "Non permettere password nell'elenco delle 10000 più comuni."
     enable_sso: "Attiva SSO tramite un sito esterno "
     sso_url: "Indirizzo SSO endpoint"
     sso_secret: "Stringa segreta utilizzata per criptare/decriptare le informazioni SSO, assicurati che sia lungo almeno 10 caratteri"
