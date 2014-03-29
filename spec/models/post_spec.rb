@@ -810,7 +810,7 @@ describe Post do
 
       post.has_host_spam?.should == true
 
-      SiteSetting.stubs(:white_listed_spam_host_domains).returns("bla.com,boo.com , somesite.com ")
+      SiteSetting.stubs(:white_listed_spam_host_domains).returns("bla.com|boo.com | somesite.com ")
       post.has_host_spam?.should == false
     end
   end

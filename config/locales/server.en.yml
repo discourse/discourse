@@ -606,7 +606,7 @@ en:
     max_image_height: "Maximum allowed height of images in a post"
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
+    exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
 
     post_excerpt_maxlength: "Maximum length in chars of a post's excerpt"
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"
@@ -809,7 +809,7 @@ en:
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
 
-    white_listed_spam_host_domains: "A comma delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain"
+    white_listed_spam_host_domains: "A pipe-delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain"
     staff_like_weight: "Extra weighting factor given to likes when performed by staff."
 
     reply_by_email_enabled: "Enable replying to topics via email"

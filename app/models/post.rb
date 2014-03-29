@@ -163,9 +163,9 @@ class Post < ActiveRecord::Base
 
     hosts = SiteSetting
               .white_listed_spam_host_domains
-              .split(",")
+              .split('|')
               .map{|h| h.strip}
-              .reject{|h| !h.include?(".")}
+              .reject{|h| !h.include?('.')}
 
     hosts << GlobalSetting.hostname
 
