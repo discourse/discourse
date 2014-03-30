@@ -174,6 +174,7 @@ Discourse.PostStream = Em.Object.extend({
     return stream.slice(lastIndex+1, lastIndex+Discourse.SiteSettings.posts_per_page+1);
   }.property('lastLoadedPost', 'stream.@each'),
 
+  hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
 
   /**
     Cancel any active filters on the stream.
@@ -253,8 +254,6 @@ Discourse.PostStream = Em.Object.extend({
       self.errorLoading(result);
     });
   },
-  hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
-
 
   /**
     Fill in a gap of posts before a particular post

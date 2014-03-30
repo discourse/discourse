@@ -51,29 +51,6 @@ Discourse.Category = Discourse.Model.extend({
     return this.get('topic_count') > Discourse.SiteSettings.category_featured_topics;
   }.property('topic_count'),
 
-  save: function() {
-    var url = "/categories";
-    if (this.get('id')) {
-      url = "/categories/" + this.get('id');
-    }
-
-    return Discourse.ajax(url, {
-      data: {
-        name: this.get('name'),
-        color: this.get('color'),
-        text_color: this.get('text_color'),
-        secure: this.get('secure'),
-        permissions: this.get('permissionsForUpdate'),
-        auto_close_hours: this.get('auto_close_hours'),
-        position: this.get('position'),
-        email_in: this.get('email_in'),
-        email_in_allow_strangers: this.get('email_in_allow_strangers'),
-        parent_category_id: this.get('parent_category_id')
-      },
-      type: this.get('id') ? 'PUT' : 'POST'
-    });
-  },
-
   permissionsForUpdate: function() {
     var rval = {};
     _.each(this.get("permissions"), function(p) {
@@ -81,21 +58,6 @@ Discourse.Category = Discourse.Model.extend({
     });
     return rval;
   }.property("permissions"),
-
-  destroy: function() {
-    return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
-  },
-
-  addPermission: function(permission) {
-    this.get("permissions").addObject(permission);
-    this.get("availableGroups").removeObject(permission.group_name);
-  },
-
-
-  removePermission: function(permission) {
-    this.get("permissions").removeObject(permission);
-    this.get("availableGroups").addObject(permission.group_name);
-  },
 
   // note, this is used in a data attribute, data attributes get downcased
   //  to avoid confusion later on using this naming here.
@@ -161,6 +123,33 @@ Discourse.Category = Discourse.Model.extend({
     return this.countStats('posts');
   }.property('posts_year', 'posts_month', 'posts_week', 'posts_day'),
 
+  isUncategorizedCategory: function() {
+    return this.get('id') === Discourse.Site.currentProp("uncategorized_category_id");
+  }.property('id'),
+
+  save: function() {
+    var url = "/categories";
+    if (this.get('id')) {
+      url = "/categories/" + this.get('id');
+    }
+
+    return Discourse.ajax(url, {
+      data: {
+        name: this.get('name'),
+        color: this.get('color'),
+        text_color: this.get('text_color'),
+        secure: this.get('secure'),
+        permissions: this.get('permissionsForUpdate'),
+        auto_close_hours: this.get('auto_close_hours'),
+        position: this.get('position'),
+        email_in: this.get('email_in'),
+        email_in_allow_strangers: this.get('email_in_allow_strangers'),
+        parent_category_id: this.get('parent_category_id')
+      },
+      type: this.get('id') ? 'PUT' : 'POST'
+    });
+  },
+
   countStats: function(prefix) {
     var stats = [], val;
     _.each(['day', 'week', 'month', 'year'], function(unit) {
@@ -171,9 +160,19 @@ Discourse.Category = Discourse.Model.extend({
     return stats;
   },
 
-  isUncategorizedCategory: function() {
-    return this.get('id') === Discourse.Site.currentProp("uncategorized_category_id");
-  }.property('id')
+  destroy: function() {
+    return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
+  },
+
+  addPermission: function(permission) {
+    this.get("permissions").addObject(permission);
+    this.get("availableGroups").removeObject(permission.group_name);
+  },
+
+  removePermission: function(permission) {
+    this.get("permissions").removeObject(permission);
+    this.get("availableGroups").addObject(permission.group_name);
+  },
 });
 
 Discourse.Category.reopenClass({

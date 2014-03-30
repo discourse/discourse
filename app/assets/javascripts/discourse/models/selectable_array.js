@@ -31,5 +31,4 @@ Discourse.SelectableArray = Em.ArrayProxy.extend({
 
     this._super(object);
   }
-
 });

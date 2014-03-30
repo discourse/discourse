@@ -9,6 +9,11 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     this.states = {};
   },
 
+  hasIncoming: function() {
+    var count = this.get('incomingCount');
+    return count && count > 0;
+  }.property('incomingCount'),
+
   establishChannels: function() {
     var tracker = this;
 
@@ -73,11 +78,6 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     this.filter = filter;
     this.set("incomingCount", 0);
   },
-
-  hasIncoming: function() {
-    var count = this.get('incomingCount');
-    return count && count > 0;
-  }.property('incomingCount'),
 
   removeTopic: function(topic_id) {
     delete this.states["t" + topic_id];

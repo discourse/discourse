@@ -1,11 +1,3 @@
-/**
-  A data model representing actions users have taken
-
-  @class UserAction
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 
 var UserActionTypes = {
   likes_given: 1,
@@ -27,7 +19,51 @@ _.each(UserActionTypes, function(k, v) {
   InvertedActionTypes[k] = v;
 });
 
+/**
+  A data model representing actions users have taken
+
+  @class UserAction
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
 Discourse.UserAction = Discourse.Model.extend({
+
+  presentName: Em.computed.any('name', 'username'),
+  targetDisplayName: Em.computed.any('target_name', 'target_username'),
+  actingDisplayName: Em.computed.any('acting_name', 'acting_username'),
+
+  targetUserUrl: Discourse.computed.url('target_username', '/users/%@'),
+  usernameLower: function() {
+    return this.get('username').toLowerCase();
+  }.property('username'),
+
+  userUrl: Discourse.computed.url('usernameLower', '/users/%@'),
+
+  postUrl: function() {
+    return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
+  }.property(),
+
+  replyUrl: function() {
+    return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('reply_to_post_number'));
+  }.property(),
+
+  sameUser: function() {
+    return this.get('username') === Discourse.User.currentProp('username');
+  }.property('username'),
+
+  targetUser: function() {
+    return this.get('target_username') === Discourse.User.currentProp('username');
+  }.property('target_username'),
+
+  replyType: Em.computed.equal('action_type', UserActionTypes.replies),
+  postType: Em.computed.equal('action_type', UserActionTypes.posts),
+  topicType: Em.computed.equal('action_type', UserActionTypes.topics),
+  messageSentType: Em.computed.equal('action_type', UserActionTypes.messages_sent),
+  messageReceivedType: Em.computed.equal('action_type', UserActionTypes.messages_received),
+  mentionType: Em.computed.equal('action_type', UserActionTypes.mentions),
+  isPM: Em.computed.or('messageSentType', 'messageReceivedType'),
+  postReplyType: Em.computed.or('postType', 'replyType'),
 
   /**
     Return an i18n key we will use for the description text of a user action.
@@ -87,45 +123,18 @@ Discourse.UserAction = Discourse.Model.extend({
       user2Url: this.get('targetUserUrl'),
       another_user: this.get('targetDisplayName')
     }));
-
   }.property('descriptionKey'),
 
-  sameUser: function() {
-    return this.get('username') === Discourse.User.currentProp('username');
-  }.property('username'),
-
-  targetUser: function() {
-    return this.get('target_username') === Discourse.User.currentProp('username');
-  }.property('target_username'),
-
-  presentName: Em.computed.any('name', 'username'),
-  targetDisplayName: Em.computed.any('target_name', 'target_username'),
-  actingDisplayName: Em.computed.any('acting_name', 'acting_username'),
-
-
-  targetUserUrl: Discourse.computed.url('target_username', '/users/%@'),
-  usernameLower: function() {
-    return this.get('username').toLowerCase();
-  }.property('username'),
-
-  userUrl: Discourse.computed.url('usernameLower', '/users/%@'),
-
-  postUrl: function() {
-    return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
-  }.property(),
-
-  replyUrl: function() {
-    return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('reply_to_post_number'));
-  }.property(),
-
-  replyType: Em.computed.equal('action_type', UserActionTypes.replies),
-  postType: Em.computed.equal('action_type', UserActionTypes.posts),
-  topicType: Em.computed.equal('action_type', UserActionTypes.topics),
-  messageSentType: Em.computed.equal('action_type', UserActionTypes.messages_sent),
-  messageReceivedType: Em.computed.equal('action_type', UserActionTypes.messages_received),
-  mentionType: Em.computed.equal('action_type', UserActionTypes.mentions),
-  isPM: Em.computed.or('messageSentType', 'messageReceivedType'),
-  postReplyType: Em.computed.or('postType', 'replyType'),
+  children: function() {
+    var g = this.get("childGroups");
+    var rval = [];
+    if (g) {
+      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
+        return i.get("items") && i.get("items").length > 0;
+      });
+    }
+    return rval;
+  }.property("childGroups"),
 
   addChild: function(action) {
     var groups = this.get("childGroups");
@@ -157,17 +166,6 @@ Discourse.UserAction = Discourse.Model.extend({
       current.push(action);
     }
   },
-
-  children: function() {
-    var g = this.get("childGroups");
-    var rval = [];
-    if (g) {
-      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
-        return i.get("items") && i.get("items").length > 0;
-      });
-    }
-    return rval;
-  }.property("childGroups"),
 
   switchToActing: function() {
     this.setProperties({
@@ -231,5 +229,4 @@ Discourse.UserAction.reopenClass({
     UserActionTypes.messages_sent,
     UserActionTypes.messages_received
   ]
-
 });

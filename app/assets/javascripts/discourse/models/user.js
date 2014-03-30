@@ -137,6 +137,57 @@ Discourse.User = Discourse.Model.extend({
   }.property('suspended_till'),
 
   /**
+    The user's stat count, excluding PMs.
+
+    @property statsCountNonPM
+    @type {Integer}
+  **/
+  statsCountNonPM: function() {
+    if (this.blank('statsExcludingPms')) return 0;
+    var count = 0;
+    _.each(this.get('statsExcludingPms'), function(val) {
+      count += val.count;
+    });
+    return count;
+  }.property('statsExcludingPms.@each.count'),
+
+  /**
+    The user's stats, excluding PMs.
+
+    @property statsExcludingPms
+    @type {Array}
+  **/
+  statsExcludingPms: function() {
+    if (this.blank('stats')) return [];
+    return this.get('stats').rejectProperty('isPM');
+  }.property('stats.@each.isPM'),
+
+  /**
+    This user's stats, only including PMs.
+
+    @property statsPmsOnly
+    @type {Array}
+  **/
+  statsPmsOnly: function() {
+    if (this.blank('stats')) return [];
+    return this.get('stats').filterProperty('isPM');
+  }.property('stats.@each.isPM'),
+
+  /**
+    Homepage of the user
+
+    @property homepage
+    @type {String}
+  **/
+  homepage: function() {
+    return this.get("should_be_redirected_to_top") ? "top" : Discourse.Utilities.defaultHomepage();
+  }.property("should_be_redirected_to_top"),
+
+  canDeleteAccount: function() {
+    return this.get('can_delete_account') && ((this.get('reply_count')||0) + (this.get('topic_count')||0)) <= 1;
+  }.property('can_delete_account', 'reply_count', 'topic_count'),
+
+  /**
     Changes this user's username.
 
     @method changeUsername
@@ -253,44 +304,6 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
-  /**
-  The user's stat count, excluding PMs.
-
-    @property statsCountNonPM
-    @type {Integer}
-  **/
-  statsCountNonPM: function() {
-    if (this.blank('statsExcludingPms')) return 0;
-    var count = 0;
-    _.each(this.get('statsExcludingPms'), function(val) {
-      count += val.count;
-    });
-    return count;
-  }.property('statsExcludingPms.@each.count'),
-
-  /**
-  The user's stats, excluding PMs.
-
-    @property statsExcludingPms
-    @type {Array}
-  **/
-  statsExcludingPms: function() {
-    if (this.blank('stats')) return [];
-    return this.get('stats').rejectProperty('isPM');
-  }.property('stats.@each.isPM'),
-
-  /**
-  This user's stats, only including PMs.
-
-    @property statsPmsOnly
-    @type {Array}
-  **/
-  statsPmsOnly: function() {
-    if (this.blank('stats')) return [];
-    return this.get('stats').filterProperty('isPM');
-  }.property('stats.@each.isPM'),
-
-
   findDetails: function() {
     var user = this;
 
@@ -376,15 +389,16 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
-  /**
-    Homepage of the user
-
-    @property homepage
-    @type {String}
-  **/
-  homepage: function() {
-    return this.get("should_be_redirected_to_top") ? "top" : Discourse.Utilities.defaultHomepage();
-  }.property("should_be_redirected_to_top"),
+  delete: function() {
+    if (this.get('can_delete_account')) {
+      return Discourse.ajax("/users/" + this.get('username'), {
+        type: 'DELETE',
+        data: {context: window.location.pathname}
+      });
+    } else {
+      return Ember.RSVP.reject(I18n.t('user.delete_yourself_not_allowed'));
+    }
+  },
 
   updateMutedCategories: function() {
     this.set("mutedCategories", Discourse.Category.findByIds(this.muted_category_ids));
@@ -396,23 +410,7 @@ Discourse.User = Discourse.Model.extend({
 
   updateWatchedCategories: function() {
     this.set("watchedCategories", Discourse.Category.findByIds(this.watched_category_ids));
-  }.observes("watched_category_ids"),
-
-  canDeleteAccount: function() {
-    return this.get('can_delete_account') && ((this.get('reply_count')||0) + (this.get('topic_count')||0)) <= 1;
-  }.property('can_delete_account', 'reply_count', 'topic_count'),
-
-  delete: function() {
-    if (this.get('can_delete_account')) {
-      return Discourse.ajax("/users/" + this.get('username'), {
-        type: 'DELETE',
-        data: {context: window.location.pathname}
-      });
-    } else {
-      return Ember.RSVP.reject(I18n.t('user.delete_yourself_not_allowed'));
-    }
-  }
-
+  }.observes("watched_category_ids")
 });
 
 Discourse.User.reopenClass(Discourse.Singleton, {
@@ -502,7 +500,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
   },
 
   /**
-  Creates a new account over POST
+    Creates a new account over POST
 
     @method createAccount
     @param {String} name This user's name

@@ -16,7 +16,6 @@ Discourse.Invite = Discourse.Model.extend({
     });
     this.set('rescinded', true);
   }
-
 });
 
 Discourse.Invite.reopenClass({

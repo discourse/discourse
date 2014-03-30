@@ -13,6 +13,8 @@ Discourse.UserStream = Discourse.Model.extend({
     this.setProperties({ itemsLoaded: 0, content: [] });
   },
 
+  baseUrl: Discourse.computed.url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
+
   filterParam: function() {
     var filter = this.get('filter');
     if (filter === Discourse.UserAction.TYPES.replies) {
@@ -22,8 +24,6 @@ Discourse.UserStream = Discourse.Model.extend({
     }
     return filter;
   }.property('filter'),
-
-  baseUrl: Discourse.computed.url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
 
   filterBy: function(filter) {
     if (this.get('loaded') && (this.get('filter') === filter)) { return Ember.RSVP.resolve(); }

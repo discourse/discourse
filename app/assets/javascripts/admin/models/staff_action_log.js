@@ -27,21 +27,21 @@ Discourse.StaffActionLog = Discourse.Model.extend({
     return formatted;
   }.property('ip_address', 'email'),
 
-  format: function(label, propertyName) {
-    if (this.get(propertyName)) {
-      return ('<b>' + I18n.t(label) + ':</b> ' + this.get(propertyName) + '<br/>');
-    } else {
-      return '';
-    }
-  },
-
   useModalForDetails: function() {
     return (this.get('details') && this.get('details').length > 100);
   }.property('action_name'),
 
   useCustomModalForDetails: function() {
     return _.contains(['change_site_customization', 'delete_site_customization'], this.get('action_name'));
-  }.property('action_name')
+  }.property('action_name'),
+
+  format: function(label, propertyName) {
+    if (this.get(propertyName)) {
+      return ('<b>' + I18n.t(label) + ':</b> ' + this.get(propertyName) + '<br/>');
+    } else {
+      return '';
+    }
+  }
 });
 
 Discourse.StaffActionLog.reopenClass({

@@ -72,6 +72,21 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     return (Discourse.User.currentProp('staff') && this.get('flaggedForSpam') && this.get('user.can_delete_all_posts') && this.get('user.can_be_deleted'));
   }.property('flaggedForSpam'),
 
+  postHidden: Em.computed.alias('hidden'),
+
+  extraClasses: function() {
+    var classes = [];
+    if (this.get('hidden')) {
+      classes.push('hidden-post');
+    }
+    if (this.get('deleted')) {
+      classes.push('deleted');
+    }
+    return classes.join(' ');
+  }.property(),
+
+  deleted: Em.computed.or('deleted_at', 'topic_deleted_at'),
+
   deletePost: function() {
     if (this.get('post_number') === 1) {
       return Discourse.ajax('/t/' + this.topic_id, { type: 'DELETE', cache: false });
@@ -90,23 +105,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
 
   agreeFlags: function() {
     return Discourse.ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false });
-  },
-
-  postHidden: Em.computed.alias('hidden'),
-
-  extraClasses: function() {
-    var classes = [];
-    if (this.get('hidden')) {
-      classes.push('hidden-post');
-    }
-    if (this.get('deleted')) {
-      classes.push('deleted');
-    }
-    return classes.join(' ');
-  }.property(),
-
-  deleted: Em.computed.or('deleted_at', 'topic_deleted_at')
-
+  }
 });
 
 Discourse.FlaggedPost.reopenClass({

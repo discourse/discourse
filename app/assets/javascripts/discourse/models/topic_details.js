@@ -10,6 +10,25 @@
 Discourse.TopicDetails = Discourse.Model.extend({
   loaded: false,
 
+  fewParticipants: function() {
+    if (!this.present('participants')) return null;
+    return this.get('participants').slice(0, 3);
+  }.property('participants'),
+
+
+  notificationReasonText: function() {
+    var level = this.get('notification_level');
+    if (typeof level !== 'number') {
+      level = 1;
+    }
+
+    var localeString = "topic.notifications.reasons." + level;
+    if (typeof this.get('notifications_reason_id') === 'number') {
+      localeString += "_" + this.get('notifications_reason_id');
+    }
+    return I18n.t(localeString, { username: Discourse.User.currentProp('username_lower') });
+  }.property('notification_level', 'notifications_reason_id'),
+
   updateFromJson: function(details) {
     if (details.allowed_users) {
       details.allowed_users = details.allowed_users.map(function(u) {
@@ -34,26 +53,6 @@ Discourse.TopicDetails = Discourse.Model.extend({
     this.setProperties(details);
     this.set('loaded', true);
   },
-
-  fewParticipants: function() {
-    if (!this.present('participants')) return null;
-    return this.get('participants').slice(0, 3);
-  }.property('participants'),
-
-
-  notificationReasonText: function() {
-    var level = this.get('notification_level');
-    if (typeof level !== 'number') {
-      level = 1;
-    }
-
-    var localeString = "topic.notifications.reasons." + level;
-    if (typeof this.get('notifications_reason_id') === 'number') {
-      localeString += "_" + this.get('notifications_reason_id');
-    }
-    return I18n.t(localeString, { username: Discourse.User.currentProp('username_lower') });
-  }.property('notification_level', 'notifications_reason_id'),
-
 
   updateNotifications: function(v) {
     this.set('notification_level', v);

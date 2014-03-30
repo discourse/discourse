@@ -11,16 +11,8 @@ Discourse.LoginMethod = Ember.Object.extend({
 // Note, you can add login methods by adding to the list
 //  just Em.get("Discourse.LoginMethod.all") and then
 //  pushObject for any new methods
+// Or call Discourse.LoginMethod.register
 Discourse.LoginMethod.reopenClass({
-  register: function(method) {
-    if (this.methods) {
-      this.methods.pushObject(method);
-    } else {
-      this.preRegister = this.preRegister || [];
-      this.preRegister.push(method);
-    }
-  },
-
   all: function() {
     if (this.methods) { return this.methods; }
 
@@ -28,7 +20,7 @@ Discourse.LoginMethod.reopenClass({
 
     /*
      * enable_google_logins etc.
-     * */
+     */
 
     [ "google",
       "facebook",
@@ -59,5 +51,14 @@ Discourse.LoginMethod.reopenClass({
       delete this.preRegister;
     }
     return methods;
-  }.property()
+  }.property(),
+
+  register: function(method) {
+    if (this.methods) {
+      this.methods.pushObject(method);
+    } else {
+      this.preRegister = this.preRegister || [];
+      this.preRegister.push(method);
+    }
+  }
 });

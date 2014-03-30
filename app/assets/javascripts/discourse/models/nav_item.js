@@ -90,5 +90,4 @@ Discourse.NavItem.reopenClass({
       return i !== null && !(category && i.get("name").indexOf("categor") === 0);
     });
   }
-
 });

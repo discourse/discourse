@@ -34,6 +34,14 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     return changed;
   }.property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'mobile_stylesheet', 'mobile_header', 'originals'),
 
+  previewUrl: function() {
+    return "/?preview-style=" + this.get('key');
+  }.property('key'),
+
+  disableSave: function() {
+    return !this.get('changed') || this.get('saving');
+  }.property('changed'),
+
   startTrackingChanges: function() {
     var _this = this;
     var originals = {};
@@ -44,13 +52,12 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     this.set('originals', originals);
   },
 
-  previewUrl: function() {
-    return "/?preview-style=" + this.get('key');
-  }.property('key'),
-
-  disableSave: function() {
-    return !this.get('changed') || this.get('saving');
-  }.property('changed'),
+  destroy: function() {
+    if (!this.id) return;
+    return Discourse.ajax("/admin/site_customizations/" + this.id, {
+      type: 'DELETE'
+    });
+  },
 
   save: function() {
     this.set('savingStatus', I18n.t('saving'));
@@ -79,15 +86,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       siteCustomization.startTrackingChanges();
     });
 
-  },
-
-  destroy: function() {
-    if (!this.id) return;
-    return Discourse.ajax("/admin/site_customizations/" + this.id, {
-      type: 'DELETE'
-    });
   }
-
 });
 
 var SiteCustomizations = Ember.ArrayProxy.extend({

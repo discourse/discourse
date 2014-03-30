@@ -3,32 +3,6 @@ Discourse.Report = Discourse.Model.extend({
     return "/admin/reports/" + this.get('type');
   }.property('type'),
 
-  valueAt: function(numDaysAgo) {
-    if (this.data) {
-      var wantedDate = moment().subtract('days', numDaysAgo).format('YYYY-MM-DD');
-      var item = this.data.find(function(d) { return d.x === wantedDate; } );
-      if (item) {
-        return item.y;
-      }
-    }
-    return 0;
-  },
-
-  sumDays: function(startDaysAgo, endDaysAgo) {
-    if (this.data) {
-      var earliestDate = moment().subtract('days', endDaysAgo).startOf('day');
-      var latestDate = moment().subtract('days', startDaysAgo).startOf('day');
-      var d, sum = 0;
-      _.each(this.data, function(datum) {
-        d = moment(datum.x);
-        if (d >= earliestDate && d <= latestDate) {
-          sum += datum.y;
-        }
-      });
-      return sum;
-    }
-  },
-
   todayCount: function() {
     return this.valueAt(0);
   }.property('data'),
@@ -100,6 +74,44 @@ Discourse.Report = Discourse.Model.extend({
     }
   }.property('type'),
 
+  yesterdayCountTitle: function() {
+    return this.changeTitle(this.valueAt(1), this.valueAt(2), 'two days ago');
+  }.property('data'),
+
+  sevenDayCountTitle: function() {
+    return this.changeTitle(this.sumDays(1, 7), this.sumDays(8, 14), 'two weeks ago');
+  }.property('data'),
+
+  thirtyDayCountTitle: function() {
+    return this.changeTitle(this.sumDays(1, 30), this.get('prev30Days'), 'in the previous 30 day period');
+  }.property('data'),
+
+  valueAt: function(numDaysAgo) {
+    if (this.data) {
+      var wantedDate = moment().subtract('days', numDaysAgo).format('YYYY-MM-DD');
+      var item = this.data.find(function(d) { return d.x === wantedDate; } );
+      if (item) {
+        return item.y;
+      }
+    }
+    return 0;
+  },
+
+  sumDays: function(startDaysAgo, endDaysAgo) {
+    if (this.data) {
+      var earliestDate = moment().subtract('days', endDaysAgo).startOf('day');
+      var latestDate = moment().subtract('days', startDaysAgo).startOf('day');
+      var d, sum = 0;
+      _.each(this.data, function(datum) {
+        d = moment(datum.x);
+        if (d >= earliestDate && d <= latestDate) {
+          sum += datum.y;
+        }
+      });
+      return sum;
+    }
+  },
+
   percentChangeString: function(val1, val2) {
     var val = ((val1 - val2) / val2) * 100;
     if (isNaN(val) || !isFinite(val)) {
@@ -119,20 +131,7 @@ Discourse.Report = Discourse.Model.extend({
     }
     title += 'Was ' + val2 + ' ' + prevPeriodString + '.';
     return title;
-  },
-
-  yesterdayCountTitle: function() {
-    return this.changeTitle(this.valueAt(1), this.valueAt(2), 'two days ago');
-  }.property('data'),
-
-  sevenDayCountTitle: function() {
-    return this.changeTitle(this.sumDays(1, 7), this.sumDays(8, 14), 'two weeks ago');
-  }.property('data'),
-
-  thirtyDayCountTitle: function() {
-    return this.changeTitle(this.sumDays(1, 30), this.get('prev30Days'), 'in the previous 30 day period');
-  }.property('data')
-
+  }
 });
 
 Discourse.Report.reopenClass({

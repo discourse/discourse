@@ -32,6 +32,22 @@ Discourse.Group = Discourse.Model.extend({
     }
   }.property('user_count'),
 
+  usernames: function(key, value) {
+    var users = this.get('users');
+    if (arguments.length > 1) {
+      this.set('_usernames', value);
+    } else {
+      var usernames = "";
+      if (users) {
+        usernames = users.map(function(user) {
+          return user.get('username');
+        }).join(',');
+      }
+      this.set('_usernames', usernames);
+    }
+    return this.get('_usernames');
+  }.property('users.@each.username'),
+
   // TODO: Refactor so adminGroups doesn't store the groups inside itself either.
   findMembers: function() {
     return Discourse.ajax('/groups/' + this.get('name') + '/members').then(function(result) {
@@ -51,22 +67,6 @@ Discourse.Group = Discourse.Model.extend({
     }
     return Ember.RSVP.resolve(this);
   },
-
-  usernames: function(key, value) {
-    var users = this.get('users');
-    if (arguments.length > 1) {
-      this.set('_usernames', value);
-    } else {
-      var usernames = "";
-      if (users) {
-        usernames = users.map(function(user) {
-          return user.get('username');
-        }).join(',');
-      }
-      this.set('_usernames', usernames);
-    }
-    return this.get('_usernames');
-  }.property('users.@each.username'),
 
   destroy: function() {
     if (!this.id) return;

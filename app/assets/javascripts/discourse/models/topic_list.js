@@ -1,6 +1,5 @@
 
 function finderFor(filter, params) {
-
   return function() {
     var url = Discourse.getURL("/") + filter + ".json";
 
@@ -32,6 +31,10 @@ function finderFor(filter, params) {
   @module Discourse
 **/
 Discourse.TopicList = Discourse.Model.extend({
+  sortOrder: function() {
+    return Discourse.SortOrder.create();
+  }.property(),
+
   forEachNew: function(topics, callback) {
     var topicIds = [];
     _.each(this.get('topics'), function(topic) {
@@ -44,37 +47,6 @@ Discourse.TopicList = Discourse.Model.extend({
       }
     });
   },
-
-  sortOrder: function() {
-    return Discourse.SortOrder.create();
-  }.property(),
-
-  /**
-    If the sort order changes, replace the topics in the list with the new
-    order.
-
-    @observes sortOrder
-  **/
-  _sortOrderChanged: function() {
-    var self = this,
-        sortOrder = this.get('sortOrder'),
-        params = this.get('params');
-
-    params.sort_order = sortOrder.get('order');
-    params.sort_descending = sortOrder.get('descending');
-
-    this.set('loaded', false);
-    var finder = finderFor(this.get('filter'), params);
-    finder().then(function(result) {
-      var newTopics = Discourse.TopicList.topicsFrom(result),
-          topics = self.get('topics');
-
-      topics.clear();
-      topics.pushObjects(newTopics);
-      self.setProperties({ loaded: true, more_topics_url: result.topic_list.more_topics_url });
-    });
-
-  }.observes('sortOrder.order', 'sortOrder.descending'),
 
   loadMore: function() {
     if (this.get('loadingMore')) { return Ember.RSVP.resolve(); }
@@ -108,7 +80,6 @@ Discourse.TopicList = Discourse.Model.extend({
     }
   },
 
-
   // loads topics with these ids "before" the current topics
   loadBefore: function(topic_ids) {
     var topicList = this,
@@ -128,7 +99,35 @@ Discourse.TopicList = Discourse.Model.extend({
         });
         Discourse.Session.currentProp('topicList', topicList);
       });
-  }
+  },
+
+
+  /**
+    If the sort order changes, replace the topics in the list with the new
+    order.
+
+    @observes sortOrder
+  **/
+  _sortOrderChanged: function() {
+    var self = this,
+        sortOrder = this.get('sortOrder'),
+        params = this.get('params');
+
+    params.sort_order = sortOrder.get('order');
+    params.sort_descending = sortOrder.get('descending');
+
+    this.set('loaded', false);
+    var finder = finderFor(this.get('filter'), params);
+    finder().then(function(result) {
+      var newTopics = Discourse.TopicList.topicsFrom(result),
+          topics = self.get('topics');
+
+      topics.clear();
+      topics.pushObjects(newTopics);
+      self.setProperties({ loaded: true, more_topics_url: result.topic_list.more_topics_url });
+    });
+
+  }.observes('sortOrder.order', 'sortOrder.descending')
 });
 
 Discourse.TopicList.reopenClass({
