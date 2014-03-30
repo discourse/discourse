@@ -8,21 +8,20 @@
 **/
 Discourse.FlaggedPost = Discourse.Post.extend({
 
-  summary: function(){
+  summary: function() {
     return _(this.post_actions)
-      .groupBy(function(a){ return a.post_action_type_id; })
-      .map(function(v,k){
+      .groupBy(function(a) { return a.post_action_type_id; })
+      .map(function(v, k) {
         return I18n.t('admin.flags.summary.action_type_' + k, {count: v.length});
       })
       .join(',');
   }.property(),
 
   flaggers: function() {
-    var r,
-      _this = this;
-    r = [];
+    var r = [],
+        self = this;
     _.each(this.post_actions, function(action) {
-      var user = _this.userLookup[action.user_id];
+      var user = self.userLookup[action.user_id];
       var flagType = I18n.t('admin.flags.summary.action_type_' + action.post_action_type_id, {count: 1});
       r.push({user: user, flagType: flagType, flaggedAt: action.created_at});
     });
@@ -30,16 +29,15 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   }.property(),
 
   messages: function() {
-    var r,
-      _this = this;
-    r = [];
-    _.each(this.post_actions,function(action) {
+    var r = [],
+        self = this;
+    _.each(this.post_actions, function(action) {
       if (action.message) {
         r.push({
-          user: _this.userLookup[action.user_id],
+          user: self.userLookup[action.user_id],
           message: action.message,
           permalink: action.permalink,
-          bySystemUser: (action.user_id === -1 ? true : false)
+          bySystemUser: action.user_id === -1
         });
       }
     });
@@ -101,7 +99,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     if (this.get('hidden')) {
       classes.push('hidden-post');
     }
-    if (this.get('deleted')){
+    if (this.get('deleted')) {
       classes.push('deleted');
     }
     return classes.join(' ');
@@ -113,17 +111,16 @@ Discourse.FlaggedPost = Discourse.Post.extend({
 
 Discourse.FlaggedPost.reopenClass({
   findAll: function(filter, offset) {
-
     offset = offset || 0;
 
     var result = Em.A();
     result.set('loading', true);
     return Discourse.ajax('/admin/flags/' + filter + '.json?offset=' + offset).then(function(data) {
       var userLookup = {};
-      _.each(data.users,function(user) {
+      _.each(data.users, function(user) {
         userLookup[user.id] = Discourse.AdminUser.create(user);
       });
-      _.each(data.posts,function(post) {
+      _.each(data.posts, function(post) {
         var f = Discourse.FlaggedPost.create(post);
         f.userLookup = userLookup;
         result.pushObject(f);
@@ -133,5 +130,3 @@ Discourse.FlaggedPost.reopenClass({
     });
   }
 });
-
-

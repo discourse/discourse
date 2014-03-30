@@ -10,7 +10,7 @@ Discourse.Site = Discourse.Model.extend({
 
   notificationLookup: function() {
     var result = [];
-    _.each(this.get('notification_types'), function(v,k) {
+    _.each(this.get('notification_types'), function(v, k) {
       result[v] = k;
     });
     return result;
@@ -63,7 +63,7 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
       });
 
       // Associate the categories with their parents
-      result.categories.forEach(function (c) {
+      result.categories.forEach(function(c) {
         if (c.get('parent_category_id')) {
           c.set('parentCategory', byId[c.get('parent_category_id')]);
         }
@@ -71,7 +71,7 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     }
 
     if (result.trust_levels) {
-      result.trustLevels = result.trust_levels.map(function (tl) {
+      result.trustLevels = result.trust_levels.map(function(tl) {
         return Discourse.TrustLevel.create(tl);
       });
 
@@ -80,7 +80,7 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
 
     if (result.post_action_types) {
       result.postActionByIdLookup = Em.Object.create();
-      result.post_action_types = _.map(result.post_action_types,function(p) {
+      result.post_action_types = _.map(result.post_action_types, function(p) {
         var actionType = Discourse.PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
         return actionType;
@@ -89,7 +89,7 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
 
     if (result.topic_flag_types) {
       result.topicFlagByIdLookup = Em.Object.create();
-      result.topic_flag_types = _.map(result.topic_flag_types,function(p) {
+      result.topic_flag_types = _.map(result.topic_flag_types, function(p) {
         var actionType = Discourse.PostActionType.create(p);
         result.topicFlagByIdLookup.set("action" + p.id, actionType);
         return actionType;
@@ -97,7 +97,7 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     }
 
     if (result.archetypes) {
-      result.archetypes = _.map(result.archetypes,function(a) {
+      result.archetypes = _.map(result.archetypes, function(a) {
         return Discourse.Archetype.create(a);
       });
     }
@@ -105,5 +105,3 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     return result;
   }
 });
-
-

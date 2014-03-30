@@ -6,7 +6,6 @@
   @namespace Discourse
   @module Discourse
 **/
-
 Discourse.AdminDashboard = Discourse.Model.extend({});
 
 Discourse.AdminDashboard.reopenClass({

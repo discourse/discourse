@@ -1,11 +1,4 @@
-/**
-  The data model for a Group
 
-  @class Group
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 var ALIAS_LEVELS = {
     nobody: 0,
     only_admins: 1,
@@ -14,19 +7,27 @@ var ALIAS_LEVELS = {
     everyone: 99
   },
   aliasLevelOptions = [
-    { name: I18n.t("groups.alias_levels.nobody"), value: ALIAS_LEVELS.nobody},
-    { name: I18n.t("groups.alias_levels.mods_and_admins"), value: ALIAS_LEVELS.mods_and_admins},
-    { name: I18n.t("groups.alias_levels.members_mods_and_admins"), value: ALIAS_LEVELS.members_mods_and_admins},
-    { name: I18n.t("groups.alias_levels.everyone"), value: ALIAS_LEVELS.everyone}
+    {name: I18n.t("groups.alias_levels.nobody"), value: ALIAS_LEVELS.nobody},
+    {name: I18n.t("groups.alias_levels.mods_and_admins"), value: ALIAS_LEVELS.mods_and_admins},
+    {name: I18n.t("groups.alias_levels.members_mods_and_admins"), value: ALIAS_LEVELS.members_mods_and_admins},
+    {name: I18n.t("groups.alias_levels.everyone"), value: ALIAS_LEVELS.everyone}
   ];
 
+/**
+  The data model for a Group
+
+  @class Group
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
 Discourse.Group = Discourse.Model.extend({
   loadedUsers: false,
 
-  userCountDisplay: function(){
+  userCountDisplay: function() {
     var c = this.get('user_count');
     // don't display zero its ugly
-    if(c > 0) {
+    if (c > 0) {
       return c;
     }
   }.property('user_count'),
@@ -34,13 +35,13 @@ Discourse.Group = Discourse.Model.extend({
   // TODO: Refactor so adminGroups doesn't store the groups inside itself either.
   findMembers: function() {
     return Discourse.ajax('/groups/' + this.get('name') + '/members').then(function(result) {
-      return result.map(function(u) { return Discourse.User.create(u) });
+      return result.map(function(u) { return Discourse.User.create(u); });
     });
   },
 
   loadUsers: function() {
     var id = this.get('id');
-    if(id && !this.get('loadedUsers')) {
+    if (id && !this.get('loadedUsers')) {
       var self = this;
       return this.findMembers().then(function(users) {
         self.set('users', users);
@@ -57,7 +58,7 @@ Discourse.Group = Discourse.Model.extend({
       this.set('_usernames', value);
     } else {
       var usernames = "";
-      if(users) {
+      if (users) {
         usernames = users.map(function(user) {
           return user.get('username');
         }).join(',');
@@ -67,14 +68,14 @@ Discourse.Group = Discourse.Model.extend({
     return this.get('_usernames');
   }.property('users.@each.username'),
 
-  destroy: function(){
-    if(!this.id) return;
+  destroy: function() {
+    if (!this.id) return;
 
     var self = this;
     this.set('disableSave', true);
 
     return Discourse.ajax("/admin/groups/" + this.get('id'), {type: "DELETE"})
-      .then(function(){
+      .then(function() {
         return true;
       }, function() {
         self.set('disableSave', false);
@@ -83,7 +84,7 @@ Discourse.Group = Discourse.Model.extend({
       });
   },
 
-  create: function(){
+  create: function() {
     var self = this;
     self.set('disableSave', true);
 
@@ -96,18 +97,17 @@ Discourse.Group = Discourse.Model.extend({
     }}).then(function(resp) {
       self.set('disableSave', false);
       self.set('id', resp.id);
-    }, function (error) {
+    }, function(error) {
       self.set('disableSave', false);
       if (error && error.responseText) {
         bootbox.alert($.parseJSON(error.responseText).errors);
-      }
-      else {
+      } else {
         bootbox.alert(I18n.t('generic_error'));
       }
     });
   },
 
-  save: function(){
+  save: function() {
     var self = this;
     self.set('disableSave', true);
 
@@ -120,9 +120,9 @@ Discourse.Group = Discourse.Model.extend({
           usernames: this.get('usernames')
         }
       }
-    }).then(function(){
+    }).then(function() {
       self.set('disableSave', false);
-    }, function(e){
+    }, function(e) {
       var message = $.parseJSON(e.responseText).errors;
       bootbox.alert(message);
     });
@@ -134,8 +134,8 @@ Discourse.Group = Discourse.Model.extend({
     var data = {};
     if (opts.beforePostId) { data.before_post_id = opts.beforePostId; }
 
-    return Discourse.ajax("/groups/" + this.get('name') + "/posts.json", { data: data }).then(function (posts) {
-      return posts.map(function (p) {
+    return Discourse.ajax("/groups/" + this.get('name') + "/posts.json", { data: data }).then(function(posts) {
+      return posts.map(function(p) {
         p.user = Discourse.User.create(p.user);
         return Em.Object.create(p);
       });
@@ -144,10 +144,10 @@ Discourse.Group = Discourse.Model.extend({
 });
 
 Discourse.Group.reopenClass({
-  findAll: function(){
-    return Discourse.ajax("/admin/groups.json").then(function(groups){
+  findAll: function() {
+    return Discourse.ajax("/admin/groups.json").then(function(groups) {
       var list = Discourse.SelectableArray.create();
-      _.each(groups,function(group){
+      _.each(groups, function(group) {
         list.addObject(Discourse.Group.create(group));
       });
       return list;
@@ -155,7 +155,7 @@ Discourse.Group.reopenClass({
   },
 
   findGroupCounts: function(name) {
-    return Discourse.ajax("/groups/" + name + "/counts.json").then(function (result) {
+    return Discourse.ajax("/groups/" + name + "/counts.json").then(function(result) {
       return Em.Object.create(result.counts);
     });
   },

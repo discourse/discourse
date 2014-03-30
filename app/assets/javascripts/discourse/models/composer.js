@@ -29,7 +29,7 @@ Discourse.Composer = Discourse.Model.extend({
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
 
-  privateMessage: function(){
+  privateMessage: function() {
     return this.get('creatingPrivateMessage') || this.get('topic.archetype') === 'private_message';
   }.property('creatingPrivateMessage', 'topic'),
 
@@ -198,7 +198,7 @@ Discourse.Composer = Discourse.Model.extend({
     @property minimumPostLength
   **/
   minimumPostLength: function() {
-    if( this.get('privateMessage') ) {
+    if (this.get('privateMessage')) {
       return Discourse.SiteSettings.min_private_message_post_length;
     } else {
       return Discourse.SiteSettings.min_post_length;
@@ -370,7 +370,7 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   save: function(opts) {
-    if( !this.get('cantSubmitPost') ) {
+    if (!this.get('cantSubmitPost')) {
       return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
     }
   },
@@ -525,8 +525,7 @@ Discourse.Composer = Discourse.Model.extend({
           } else if (parsedJSON.failed) {
             parsedError = parsedJSON.message;
           }
-        }
-        catch(ex) {
+        } catch(ex) {
           parsedError = "Unknown error saving post, try again. Error: " + error.status + " " + error.statusText;
         }
         promise.reject(parsedError);

@@ -12,20 +12,20 @@ Discourse.TopicDetails = Discourse.Model.extend({
 
   updateFromJson: function(details) {
     if (details.allowed_users) {
-      details.allowed_users = details.allowed_users.map(function (u) {
+      details.allowed_users = details.allowed_users.map(function(u) {
         return Discourse.User.create(u);
       });
     }
 
     if (details.suggested_topics) {
-      details.suggested_topics = details.suggested_topics.map(function (st) {
+      details.suggested_topics = details.suggested_topics.map(function(st) {
         return Discourse.Topic.create(st);
       });
     }
 
     if (details.participants) {
       var topic = this.get('topic');
-      details.participants = details.participants.map(function (p) {
+      details.participants = details.participants.map(function(p) {
         p.topic = topic;
         return Em.Object.create(p);
       });
@@ -43,7 +43,7 @@ Discourse.TopicDetails = Discourse.Model.extend({
 
   notificationReasonText: function() {
     var level = this.get('notification_level');
-    if(typeof level !== 'number'){
+    if (typeof level !== 'number') {
       level = 1;
     }
 

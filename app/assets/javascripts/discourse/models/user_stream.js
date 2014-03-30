@@ -38,7 +38,7 @@ Discourse.UserStream = Discourse.Model.extend({
 
   findItems: function() {
     var userStream = this;
-    if(this.get('loading')) { return Ember.RSVP.reject(); }
+    if (this.get('loading')) { return Ember.RSVP.reject(); }
 
     this.set('loading', true);
 
@@ -51,7 +51,7 @@ Discourse.UserStream = Discourse.Model.extend({
       userStream.set('loading', false);
     };
 
-    return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
+    return Discourse.ajax(url, {cache: 'false'}).then(function(result) {
       if (result && result.user_actions) {
         var copy = Em.A();
         result.user_actions.forEach(function(action) {

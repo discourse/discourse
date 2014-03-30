@@ -26,11 +26,9 @@ Discourse.EmailLog.reopenClass({
     filter = _.omit(filter, "status");
 
     return Discourse.ajax("/admin/email/" + status + ".json", { data: filter }).then(function(logs) {
-      return _.map(logs, function (log) {
+      return _.map(logs, function(log) {
         return Discourse.EmailLog.create(log);
       });
     });
   }
 });
-
-

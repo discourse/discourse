@@ -23,7 +23,7 @@ var UserActionTypes = {
 };
 
 var InvertedActionTypes = {};
-_.each(UserActionTypes, function (k, v) {
+_.each(UserActionTypes, function(k, v) {
   InvertedActionTypes[k] = v;
 });
 
@@ -233,6 +233,3 @@ Discourse.UserAction.reopenClass({
   ]
 
 });
-
-
-

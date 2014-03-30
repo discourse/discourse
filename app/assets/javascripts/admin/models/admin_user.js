@@ -16,7 +16,7 @@ Discourse.AdminUser = Discourse.User.extend({
   **/
   generateApiKey: function() {
     var self = this;
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/generate_api_key", {type: 'POST'}).then(function (result) {
+    return Discourse.ajax("/admin/users/" + this.get('id') + "/generate_api_key", {type: 'POST'}).then(function(result) {
       var apiKey = Discourse.ApiKey.create(result.api_key);
       self.set('api_key', apiKey);
       return apiKey;
@@ -31,7 +31,7 @@ Discourse.AdminUser = Discourse.User.extend({
   **/
   revokeApiKey: function() {
     var self = this;
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/revoke_api_key", {type: 'DELETE'}).then(function () {
+    return Discourse.ajax("/admin/users/" + this.get('id') + "/revoke_api_key", {type: 'DELETE'}).then(function() {
       self.set('api_key', null);
     });
   },
@@ -59,7 +59,7 @@ Discourse.AdminUser = Discourse.User.extend({
       "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("admin.user.delete_all_posts"),
       "class": "btn btn-danger",
       "callback": function() {
-        Discourse.ajax("/admin/users/" + (user.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(){
+        Discourse.ajax("/admin/users/" + (user.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function() {
           user.set('post_count', 0);
         });
       }
@@ -127,7 +127,7 @@ Discourse.AdminUser = Discourse.User.extend({
     Discourse.ajax("/admin/users/" + this.id + "/trust_level", {
       type: 'PUT',
       data: {level: this.get('trustLevel.id')}
-    }).then(function () {
+    }).then(function() {
       // succeeded
       window.location.reload();
     }, function(e) {
@@ -283,7 +283,7 @@ Discourse.AdminUser = Discourse.User.extend({
           }
         }
       }, function() {
-        Discourse.AdminUser.find( user.get('username') ).then(function(u){ user.mergeAttributes(u); });
+        Discourse.AdminUser.find( user.get('username') ).then(function(u) { user.mergeAttributes(u); });
         bootbox.alert(I18n.t("admin.user.delete_failed"));
       });
     };
@@ -297,13 +297,13 @@ Discourse.AdminUser = Discourse.User.extend({
     }, {
       "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_dont_block'),
       "class": "btn",
-      "callback": function(){
+      "callback": function() {
         performDestroy(false);
       }
     }, {
       "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_and_block'),
       "class": "btn",
-      "callback": function(){
+      "callback": function() {
         performDestroy(true);
       }
     }];
@@ -345,7 +345,7 @@ Discourse.AdminUser = Discourse.User.extend({
     var model = this;
     if (model.get('loadedDetails')) { return Ember.RSVP.resolve(model); }
 
-    return Discourse.AdminUser.find(model.get('username_lower')).then(function (result) {
+    return Discourse.AdminUser.find(model.get('username_lower')).then(function(result) {
       model.setProperties(result);
       model.set('loadedDetails', true);
     });
@@ -393,7 +393,7 @@ Discourse.AdminUser.reopenClass({
   },
 
   bulkReject: function(users) {
-    _.each(users, function(user){
+    _.each(users, function(user) {
       user.set('can_approve', false);
       user.set('selected', false);
     });
@@ -408,7 +408,7 @@ Discourse.AdminUser.reopenClass({
   },
 
   find: function(username) {
-    return Discourse.ajax("/admin/users/" + username + ".json").then(function (result) {
+    return Discourse.ajax("/admin/users/" + username + ".json").then(function(result) {
       result.loadedDetails = true;
       return Discourse.AdminUser.create(result);
     });

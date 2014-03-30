@@ -70,7 +70,7 @@ Discourse.Post = Discourse.Model.extend({
       data: {
         bookmarked: this.get('bookmarked') ? true : false
       }
-    }).then(null, function (error) {
+    }).then(null, function(error) {
       if (error && error.responseText) {
         bootbox.alert($.parseJSON(error.responseText).errors[0]);
       } else {
@@ -191,7 +191,7 @@ Discourse.Post = Discourse.Model.extend({
       can_delete: false
     });
 
-    return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data){
+    return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data) {
       post.setProperties({
         cooked: data.cooked,
         raw: data.raw,
@@ -271,7 +271,7 @@ Discourse.Post = Discourse.Model.extend({
   **/
   updateFromPost: function(otherPost) {
     var post = this;
-    Object.keys(otherPost).forEach(function (key) {
+    Object.keys(otherPost).forEach(function(key) {
       var value = otherPost[key];
       if (typeof value !== "function") {
         post.set(key, value);
@@ -291,8 +291,8 @@ Discourse.Post = Discourse.Model.extend({
 
     // Update all the properties
     var post = this;
-    _.each(obj, function(val,key) {
-      if (key !== 'actions_summary'){
+    _.each(obj, function(val, key) {
+      if (key !== 'actions_summary') {
         if (val) {
           post.set(key, val);
         }
@@ -303,7 +303,7 @@ Discourse.Post = Discourse.Model.extend({
     this.set('actions_summary', Em.A());
     if (obj.actions_summary) {
       var lookup = Em.Object.create();
-      _.each(obj.actions_summary,function(a) {
+      _.each(obj.actions_summary, function(a) {
         var actionSummary;
         a.post = post;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
@@ -323,7 +323,7 @@ Discourse.Post = Discourse.Model.extend({
     var parent = this;
     return Discourse.ajax("/posts/" + (this.get('id')) + "/replies").then(function(loaded) {
       var replies = parent.get('replies');
-      _.each(loaded,function(reply) {
+      _.each(loaded, function(reply) {
         var post = Discourse.Post.create(reply);
         post.set('topic', parent.get('topic'));
         replies.pushObject(post);
@@ -388,24 +388,22 @@ Discourse.Post.reopenClass({
   },
 
   loadRevision: function(postId, version) {
-    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function (result) {
+    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function(result) {
       return Em.Object.create(result);
     });
   },
 
   loadQuote: function(postId) {
-    return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
+    return Discourse.ajax("/posts/" + postId + ".json").then(function(result) {
       var post = Discourse.Post.create(result);
       return Discourse.Quote.build(post, post.get('raw'));
     });
   },
 
   load: function(postId) {
-    return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
+    return Discourse.ajax("/posts/" + postId + ".json").then(function(result) {
       return Discourse.Post.create(result);
     });
   }
 
 });
-
-

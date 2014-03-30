@@ -31,7 +31,7 @@ Discourse.SiteContent = Discourse.Model.extend({
 Discourse.SiteContent.reopenClass({
 
   find: function(type) {
-    return Discourse.ajax("/admin/site_contents/" + type).then(function (data) {
+    return Discourse.ajax("/admin/site_contents/" + type).then(function(data) {
       return Discourse.SiteContent.create(data.site_content);
     });
   }

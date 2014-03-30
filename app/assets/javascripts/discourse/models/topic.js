@@ -36,7 +36,7 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   searchContext: function() {
-    return ({ type: 'topic', id: this.get('id') });
+    return { type: 'topic', id: this.get('id') };
   }.property('id'),
 
   category: function() {
@@ -52,7 +52,7 @@ Discourse.Topic = Discourse.Model.extend({
     return null;
   }.property('category_id', 'categoryName'),
 
-  shareUrl: function(){
+  shareUrl: function() {
     var user = Discourse.User.current();
     return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
   }.property('url'),
@@ -91,7 +91,7 @@ Discourse.Topic = Discourse.Model.extend({
     return this.urlForPostNumber(this.get('highest_post_number'));
   }.property('url', 'highest_post_number'),
 
-  firstPostUrl: function () {
+  firstPostUrl: function() {
     return this.urlForPostNumber(1);
   }.property('url'),
 
@@ -120,9 +120,9 @@ Discourse.Topic = Discourse.Model.extend({
 
   viewsHeat: function() {
     var v = this.get('views');
-    if( v >= Discourse.SiteSettings.topic_views_heat_high )   return 'heatmap-high';
-    if( v >= Discourse.SiteSettings.topic_views_heat_medium ) return 'heatmap-med';
-    if( v >= Discourse.SiteSettings.topic_views_heat_low )    return 'heatmap-low';
+    if (v >= Discourse.SiteSettings.topic_views_heat_high)   return 'heatmap-high';
+    if (v >= Discourse.SiteSettings.topic_views_heat_medium) return 'heatmap-med';
+    if (v >= Discourse.SiteSettings.topic_views_heat_low)    return 'heatmap-low';
     return null;
   }.property('views'),
 
@@ -178,7 +178,7 @@ Discourse.Topic = Discourse.Model.extend({
       url: "" + (this.get('url')) + "/star",
       type: 'PUT',
       data: { starred: topic.get('starred') ? true : false }
-    }).then(null, function (error) {
+    }).then(null, function(error) {
       topic.toggleProperty('starred');
 
       if (error && error.responseText) {
@@ -251,7 +251,7 @@ Discourse.Topic = Discourse.Model.extend({
     keys.removeObject('post_stream');
 
     var topic = this;
-    keys.forEach(function (key) {
+    keys.forEach(function(key) {
       topic.set(key, json[key]);
     });
 
@@ -297,7 +297,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   excerptTruncated: function() {
     var e = this.get('excerpt');
-    return( e && e.substr(e.length - 8,8) === '&hellip;' );
+    return (e && e.substr(e.length - 8, 8) === '&hellip;');
   }.property('excerpt'),
 
   readLastPost: Discourse.computed.propertyEqual('last_read_post_number', 'highest_post_number'),
@@ -342,7 +342,7 @@ Discourse.Topic.reopenClass({
     @returns A promise that will resolve to the topics
   **/
   findSimilarTo: function(title, body) {
-    return Discourse.ajax("/topics/similar_to", { data: {title: title, raw: body} }).then(function (results) {
+    return Discourse.ajax("/topics/similar_to", { data: {title: title, raw: body} }).then(function(results) {
       if (Array.isArray(results)) {
         return results.map(function(topic) { return Discourse.Topic.create(topic); });
       } else {
@@ -391,7 +391,7 @@ Discourse.Topic.reopenClass({
     var promise = Discourse.ajax("/t/" + topicId + "/merge-topic", {
       type: 'POST',
       data: {destination_topic_id: destinationTopicId}
-    }).then(function (result) {
+    }).then(function(result) {
       if (result.success) return result;
       promise.reject(new Error("error merging topic"));
     });
@@ -402,7 +402,7 @@ Discourse.Topic.reopenClass({
     var promise = Discourse.ajax("/t/" + topicId + "/move-posts", {
       type: 'POST',
       data: opts
-    }).then(function (result) {
+    }).then(function(result) {
       if (result.success) return result;
       promise.reject(new Error("error moving posts topic"));
     });
@@ -430,7 +430,4 @@ Discourse.Topic.reopenClass({
     return Discourse.ajax("/topics/reset-new", {type: 'PUT'});
   }
 
-
 });
-
-

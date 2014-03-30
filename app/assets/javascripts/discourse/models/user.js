@@ -69,23 +69,23 @@ Discourse.User = Discourse.Model.extend({
   **/
   profileBackground: function() {
     var background = this.get('profile_background');
-    if(Em.isEmpty(background) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
+    if (Em.isEmpty(background) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
 
     return 'background-image: url(' + background + ')';
   }.property('profile_background'),
 
   statusIcon: function() {
     var desc;
-    if(this.get('admin')) {
+    if (this.get('admin')) {
       desc = I18n.t('user.admin', {user: this.get("name")});
       return '<i class="fa fa-trophy" title="' + desc +  '" alt="' + desc + '"></i>';
     }
-    if(this.get('moderator')){
+    if (this.get('moderator')) {
       desc = I18n.t('user.moderator', {user: this.get("name")});
       return '<i class="fa fa-magic" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     return null;
-  }.property('admin','moderator'),
+  }.property('admin', 'moderator'),
 
   /**
     Path to this user.
@@ -198,10 +198,10 @@ Discourse.User = Discourse.Model.extend({
                                'mailing_list_mode',
                                'enable_quoting');
 
-    _.each(['muted','watched','tracked'], function(s){
-      var cats = user.get(s + 'Categories').map(function(c){ return c.get('id')});
+    _.each(['muted', 'watched', 'tracked'], function(s) {
+      var cats = user.get(s + 'Categories').map(function(c) { return c.get('id'); });
       // HACK: denote lack of categories
-      if(cats.length === 0) { cats = [-1]; }
+      if (cats.length === 0) { cats = [-1]; }
       data[s + '_category_ids'] = cats;
     });
 
@@ -209,7 +209,7 @@ Discourse.User = Discourse.Model.extend({
       data: data,
       type: 'PUT'
     }).then(function(data) {
-      user.set('bio_excerpt',data.user.bio_excerpt);
+      user.set('bio_excerpt', data.user.bio_excerpt);
 
       _.each([
         'enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon'
@@ -296,17 +296,17 @@ Discourse.User = Discourse.Model.extend({
 
     return PreloadStore.getAndRemove("user_" + user.get('username'), function() {
       return Discourse.ajax("/users/" + user.get('username') + '.json');
-    }).then(function (json) {
+    }).then(function(json) {
 
       if (!Em.isEmpty(json.user.stats)) {
-        json.user.stats = Discourse.User.groupStats(_.map(json.user.stats,function(s) {
+        json.user.stats = Discourse.User.groupStats(_.map(json.user.stats, function(s) {
           if (s.count) s.count = parseInt(s.count, 10);
           return Discourse.UserActionStat.create(s);
         }));
       }
 
       if (!Em.isEmpty(json.user.custom_groups)) {
-        json.user.custom_groups = json.user.custom_groups.map(function (g) {
+        json.user.custom_groups = json.user.custom_groups.map(function(g) {
           return Discourse.Group.create(g);
         });
       }
@@ -450,7 +450,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     var discourseUserClass = this;
     return Discourse.ajax("/session/" + Discourse.User.currentProp('username'), {
       type: 'DELETE'
-    }).then(function () {
+    }).then(function() {
       discourseUserClass.currentUser = null;
     });
   },
@@ -482,7 +482,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
       action_type: Discourse.UserAction.TYPES.replies
     });
 
-    stats.filterProperty('isResponse').forEach(function (stat) {
+    stats.filterProperty('isResponse').forEach(function(stat) {
       responses.set('count', responses.get('count') + stat.get('count'));
     });
 
@@ -490,15 +490,15 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     result.pushObjects(stats.rejectProperty('isResponse'));
 
     var insertAt = 0;
-    result.forEach(function(item, index){
-     if(item.action_type === Discourse.UserAction.TYPES.topics || item.action_type === Discourse.UserAction.TYPES.posts){
+    result.forEach(function(item, index) {
+     if (item.action_type === Discourse.UserAction.TYPES.topics || item.action_type === Discourse.UserAction.TYPES.posts) {
        insertAt = index + 1;
      }
     });
-    if(responses.count > 0) {
+    if (responses.count > 0) {
       result.insertAt(insertAt, responses);
     }
-    return(result);
+    return result;
   },
 
   /**

@@ -35,8 +35,8 @@ Discourse.Invite.reopenClass({
     var data = {};
     if (!Em.isNone(filter)) { data.filter = filter; }
 
-    return Discourse.ajax("/users/" + user.get('username_lower') + "/invited.json", {data: data}).then(function (result) {
-      result.invites = result.invites.map(function (i) {
+    return Discourse.ajax("/users/" + user.get('username_lower') + "/invited.json", {data: data}).then(function(result) {
+      result.invites = result.invites.map(function(i) {
         return Discourse.Invite.create(i);
       });
 
@@ -45,5 +45,3 @@ Discourse.Invite.reopenClass({
   }
 
 });
-
-

@@ -105,12 +105,12 @@ Discourse.SiteSetting = Discourse.Model.extend({
 Discourse.SiteSetting.reopenClass({
 
   findAll: function() {
-    return Discourse.ajax("/admin/site_settings").then(function (settings) {
+    return Discourse.ajax("/admin/site_settings").then(function(settings) {
       // Group the results by category
       var categoryNames = [],
           categories = {},
           result = Em.A();
-      _.each(settings.site_settings,function(s) {
+      _.each(settings.site_settings, function(s) {
         s.originalValue = s.value;
         if (!categoryNames.contains(s.category)) {
           categoryNames.pushObject(s.category);
@@ -133,5 +133,3 @@ Discourse.SiteSetting.reopenClass({
   }
 
 });
-
-

@@ -14,5 +14,3 @@ Discourse.UserActionGroup = Discourse.Model.extend({
     return this.items.push(item);
   }
 });
-
-
