@@ -52,7 +52,7 @@ display: none;
 #reply-control {
   .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
     position: absolute;
-    bottom: -31px;
+    bottom: -37px;
     margin-top: 0;
   }
   .toggle-preview, .mobile-file-upload {
@@ -267,7 +267,7 @@ display: none;
     .submit-panel {
       position: absolute;
       display: block;
-      bottom: 8px;
+      bottom: 2px;
     }
   }
   .category-input {
@@ -377,7 +377,7 @@ div.ac-wrap {
     left: 10px;
     right: 10px;
     position: absolute;
-    top: 60px;
+    top: 40px;
     bottom: 54px;
     display: block;
 
