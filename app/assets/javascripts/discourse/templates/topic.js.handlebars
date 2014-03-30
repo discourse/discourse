@@ -22,8 +22,8 @@
             {{/if}}
             {{textField id='edit-title' value=newTitle}}
 
-            <button class='btn btn-primary btn-small' {{action finishedEditingTopic}}><i class='fa fa-check'></i></button>
-            <button class='btn btn-small' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
+            <button class='btn btn-primary btn-small no-text' {{action finishedEditingTopic}}><i class='fa fa-check'></i></button>
+            <button class='btn btn-small no-text' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
           {{else}}
             <h1>
               <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
