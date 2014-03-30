@@ -201,6 +201,9 @@
     a:not(.badge-posts) {
       color: inherit;
     }
+    a.badge-posts {
+      font-weight: bold;
+    }
   }
   .sortable {
     cursor: pointer;
