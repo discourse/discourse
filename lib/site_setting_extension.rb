@@ -14,7 +14,7 @@ module SiteSettingExtension
   end
 
   def types
-    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum)
+    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum, :list)
   end
 
   def mutex
@@ -38,6 +38,10 @@ module SiteSettingExtension
     @enums ||= {}
   end
 
+  def lists
+    @lists ||= []
+  end
+
   def hidden_settings
     @hidden_settings ||= []
   end
@@ -56,10 +60,13 @@ module SiteSettingExtension
         enum = opts[:enum]
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
       end
-      if opts[:hidden] == true
+      if opts[:list]
+        lists << name
+      end
+      if opts[:hidden]
         hidden_settings << name
       end
-      if opts[:refresh] == true
+      if opts[:refresh]
         refresh_settings << name
       end
 
@@ -261,6 +268,7 @@ module SiteSettingExtension
   def get_data_type(name,val)
     return types[:null] if val.nil?
     return types[:enum] if enums[name]
+    return types[:list] if lists.include? name
 
     case val
     when String
@@ -278,12 +286,14 @@ module SiteSettingExtension
     case type
     when types[:fixnum]
       value.to_i
-    when types[:string], types[:enum]
+    when types[:string], types[:list], types[:enum]
       value
     when types[:bool]
       value == true || value == "t" || value == "true"
     when types[:null]
       nil
+    else
+      raise ArgumentError.new :type
     end
   end
 
