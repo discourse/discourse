@@ -13,6 +13,8 @@ Discourse.UserStream = Discourse.Model.extend({
     this.setProperties({ itemsLoaded: 0, content: [] });
   },
 
+  baseUrl: Discourse.computed.url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
+
   filterParam: function() {
     var filter = this.get('filter');
     if (filter === Discourse.UserAction.TYPES.replies) {
@@ -22,8 +24,6 @@ Discourse.UserStream = Discourse.Model.extend({
     }
     return filter;
   }.property('filter'),
-
-  baseUrl: Discourse.computed.url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
 
   filterBy: function(filter) {
     if (this.get('loaded') && (this.get('filter') === filter)) { return Ember.RSVP.resolve(); }
@@ -38,7 +38,7 @@ Discourse.UserStream = Discourse.Model.extend({
 
   findItems: function() {
     var userStream = this;
-    if(this.get('loading')) { return Ember.RSVP.reject(); }
+    if (this.get('loading')) { return Ember.RSVP.reject(); }
 
     this.set('loading', true);
 
@@ -51,7 +51,7 @@ Discourse.UserStream = Discourse.Model.extend({
       userStream.set('loading', false);
     };
 
-    return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
+    return Discourse.ajax(url, {cache: 'false'}).then(function(result) {
       if (result && result.user_actions) {
         var copy = Em.A();
         result.user_actions.forEach(function(action) {

@@ -25,8 +25,8 @@ Discourse.ComposerMessage.reopenClass({
     if (topicId) { data.topic_id = topicId; }
     if (postId)  { data.post_id = postId; }
 
-    return Discourse.ajax('/composer-messages', { data: data }).then(function (messages) {
-      return messages.map(function (message) {
+    return Discourse.ajax('/composer-messages', { data: data }).then(function(messages) {
+      return messages.map(function(message) {
         return Discourse.ComposerMessage.create(message);
       });
     });

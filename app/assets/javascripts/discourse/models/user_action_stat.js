@@ -8,13 +8,13 @@
 **/
 Discourse.UserActionStat = Discourse.Model.extend({
 
+  description: Discourse.computed.i18n('action_type', 'user_action_groups.%@'),
+
   isPM: function() {
     var actionType = this.get('action_type');
     return actionType === Discourse.UserAction.TYPES.messages_sent ||
            actionType === Discourse.UserAction.TYPES.messages_received;
   }.property('action_type'),
-
-  description: Discourse.computed.i18n('action_type', 'user_action_groups.%@'),
 
   isResponse: function() {
     var actionType = this.get('action_type');
@@ -24,5 +24,3 @@ Discourse.UserActionStat = Discourse.Model.extend({
   }.property('action_type')
 
 });
-
-

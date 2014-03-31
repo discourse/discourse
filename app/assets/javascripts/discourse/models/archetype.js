@@ -18,5 +18,3 @@ Discourse.Archetype = Discourse.Model.extend({
   notDefault: Em.computed.not('isDefault')
 
 });
-
-

@@ -12,7 +12,7 @@ Discourse.SiteContentType.reopenClass({
   findAll: function() {
     return Discourse.ajax("/admin/site_content_types").then(function(data) {
       var contentTypes = Em.A();
-      data.forEach(function (ct) {
+      data.forEach(function(ct) {
         contentTypes.pushObject(Discourse.SiteContentType.create(ct));
       });
       return contentTypes;

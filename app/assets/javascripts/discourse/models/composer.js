@@ -20,6 +20,12 @@ var CLOSED = 'closed',
     REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic";
 
 Discourse.Composer = Discourse.Model.extend({
+  init: function() {
+    this._super();
+    var val = (Discourse.Mobile.mobileView ? false : (Discourse.KeyValueStore.get('composer.showPreview') || 'true'));
+    this.set('showPreview', val === 'true');
+    this.set('archetypeId', Discourse.Site.currentProp('default_archetype'));
+  },
 
   archetypes: function() {
     return Discourse.Site.currentProp('archetypes');
@@ -29,7 +35,7 @@ Discourse.Composer = Discourse.Model.extend({
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
 
-  privateMessage: function(){
+  privateMessage: function() {
     return this.get('creatingPrivateMessage') || this.get('topic.archetype') === 'private_message';
   }.property('creatingPrivateMessage', 'topic'),
 
@@ -39,14 +45,9 @@ Discourse.Composer = Discourse.Model.extend({
   viewOpen: Em.computed.equal('composeState', OPEN),
   viewDraft: Em.computed.equal('composeState', DRAFT),
 
-
   archetype: function() {
     return this.get('archetypes').findProperty('id', this.get('archetypeId'));
   }.property('archetypeId'),
-
-  archetypeChanged: function() {
-    return this.set('metaData', Em.Object.create());
-  }.observes('archetype'),
 
   editingFirstPost: Em.computed.and('editingPost', 'post.firstPost'),
   canEditTitle: Em.computed.or('creatingTopic', 'creatingPrivateMessage', 'editingFirstPost'),
@@ -161,7 +162,7 @@ Discourse.Composer = Discourse.Model.extend({
     return this.get('reply') !== this.get('originalText');
   }.property('reply', 'originalText'),
 
-/**
+  /**
     Number of missing characters in the title until valid.
 
     @property missingTitleCharacters
@@ -198,7 +199,7 @@ Discourse.Composer = Discourse.Model.extend({
     @property minimumPostLength
   **/
   minimumPostLength: function() {
-    if( this.get('privateMessage') ) {
+    if (this.get('privateMessage')) {
       return Discourse.SiteSettings.min_private_message_post_length;
     } else {
       return Discourse.SiteSettings.min_post_length;
@@ -225,38 +226,6 @@ Discourse.Composer = Discourse.Model.extend({
     while (Discourse.Quote.REGEXP.test(reply)) { reply = reply.replace(Discourse.Quote.REGEXP, ""); }
     return reply.replace(/\s+/img, " ").trim().length;
   }.property('reply'),
-
-
-  updateDraftStatus: function() {
-    var $title = $('#reply-title'),
-        $reply = $('#wmd-input');
-
-    // 'title' is focused
-    if ($title.is(':focus')) {
-      var titleDiff = this.get('missingTitleCharacters');
-      if (titleDiff > 0) {
-        this.flashDraftStatusForNewUser();
-        return this.set('draftStatus', I18n.t('composer.min_length.need_more_for_title', { n: titleDiff }));
-      }
-    // 'reply' is focused
-    } else if ($reply.is(':focus')) {
-      var replyDiff = this.get('missingReplyCharacters');
-      if (replyDiff > 0) {
-        return this.set('draftStatus', I18n.t('composer.min_length.need_more_for_reply', { n: replyDiff }));
-      }
-    }
-
-    // hide the counters if the currently focused text field is OK
-    this.set('draftStatus', null);
-
-  }.observes('missingTitleCharacters', 'missingReplyCharacters'),
-
-  init: function() {
-    this._super();
-    var val = (Discourse.Mobile.mobileView ? false : (Discourse.KeyValueStore.get('composer.showPreview') || 'true'));
-    this.set('showPreview', val === 'true');
-    this.set('archetypeId', Discourse.Site.currentProp('default_archetype'));
-  },
 
   /**
     Append text to the current reply
@@ -286,15 +255,19 @@ Discourse.Composer = Discourse.Model.extend({
     }
   },
 
-  /*
-     Open a composer
+  /**
+    Open a composer
+    TODO document better
 
-     opts:
-       action   - The action we're performing: edit, reply or createTopic
-       post     - The post we're replying to, if present
-       topic   - The topic we're replying to, if present
-       quote    - If we're opening a reply from a quote, the quote we're making
-  */
+    @param {Object} opts
+      {String} action   - The action we're performing: edit, reply or createTopic
+      {Post} post     - The post we're replying to, if present
+      {Topic} topic   - The topic we're replying to, if present
+      {String} quote    - If we're opening a reply from a quote, the quote we're making
+      {Boolean} tested - If false and the parameters are valid, set to true and return (?)
+      {Integer} postId - The ID of the post we're ??ing
+      {Integer} categoryId - the category of a new topic
+  **/
   open: function(opts) {
     if (!opts) opts = {};
     this.set('loading', false);
@@ -370,7 +343,7 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   save: function(opts) {
-    if( !this.get('cantSubmitPost') ) {
+    if (!this.get('cantSubmitPost')) {
       return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
     }
   },
@@ -525,8 +498,7 @@ Discourse.Composer = Discourse.Model.extend({
           } else if (parsedJSON.failed) {
             parsedError = parsedJSON.message;
           }
-        }
-        catch(ex) {
+        } catch(ex) {
           parsedError = "Unknown error saving post, try again. Error: " + error.status + " " + error.statusText;
         }
         promise.reject(parsedError);
@@ -572,8 +544,35 @@ Discourse.Composer = Discourse.Model.extend({
       $draftStatus.toggleClass('flash', true);
       setTimeout(function() { $draftStatus.removeClass('flash'); }, 250);
     }
-  }
+  },
 
+  archetypeChanged: function() {
+    return this.set('metaData', Em.Object.create());
+  }.observes('archetype'),
+
+  updateDraftStatus: function() {
+    var $title = $('#reply-title'),
+        $reply = $('#wmd-input');
+
+    // 'title' is focused
+    if ($title.is(':focus')) {
+      var titleDiff = this.get('missingTitleCharacters');
+      if (titleDiff > 0) {
+        this.flashDraftStatusForNewUser();
+        return this.set('draftStatus', I18n.t('composer.min_length.need_more_for_title', { n: titleDiff }));
+      }
+      // 'reply' is focused
+    } else if ($reply.is(':focus')) {
+      var replyDiff = this.get('missingReplyCharacters');
+      if (replyDiff > 0) {
+        return this.set('draftStatus', I18n.t('composer.min_length.need_more_for_reply', { n: replyDiff }));
+      }
+    }
+
+    // hide the counters if the currently focused text field is OK
+    this.set('draftStatus', null);
+
+  }.observes('missingTitleCharacters', 'missingReplyCharacters')
 });
 
 Discourse.Composer.reopenClass({

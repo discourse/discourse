@@ -6,13 +6,13 @@ Discourse.SelectableArray = Em.ArrayProxy.extend({
     this._super();
   },
 
-  selectIndex: function(index){
+  selectIndex: function(index) {
     this.select(this[index]);
   },
 
-  select: function(selected){
-    _.each(this.content,function(item){
-      if(item === selected){
+  select: function(selected) {
+    _.each(this.content, function(item) {
+      if (item === selected) {
         Em.set(item, "active", true);
       } else {
         if (item.get("active")) {
@@ -24,12 +24,11 @@ Discourse.SelectableArray = Em.ArrayProxy.extend({
   },
 
   removeObject: function(object) {
-    if(object === this.get("active")){
+    if (object === this.get("active")) {
       this.set("active", null);
       Em.set(object, "active", false);
     }
 
     this._super(object);
   }
-
 });

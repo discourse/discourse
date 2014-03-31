@@ -174,6 +174,7 @@ Discourse.PostStream = Em.Object.extend({
     return stream.slice(lastIndex+1, lastIndex+Discourse.SiteSettings.posts_per_page+1);
   }.property('lastLoadedPost', 'stream.@each'),
 
+  hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
 
   /**
     Cancel any active filters on the stream.
@@ -243,7 +244,7 @@ Discourse.PostStream = Em.Object.extend({
     opts = _.merge(opts, self.get('streamFilters'));
 
     // Request a topicView
-    return Discourse.PostStream.loadTopicView(topic.get('id'), opts).then(function (json) {
+    return Discourse.PostStream.loadTopicView(topic.get('id'), opts).then(function(json) {
       topic.updateFromJson(json);
       self.updateFromJson(json.post_stream);
       self.setProperties({ loadingFilter: false, loaded: true });
@@ -253,8 +254,6 @@ Discourse.PostStream = Em.Object.extend({
       self.errorLoading(result);
     });
   },
-  hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
-
 
   /**
     Fill in a gap of posts before a particular post
@@ -471,7 +470,7 @@ Discourse.PostStream = Em.Object.extend({
   removePosts: function(posts) {
     if (Em.isEmpty(posts)) { return; }
 
-    var postIds = posts.map(function (p) { return p.get('id'); });
+    var postIds = posts.map(function(p) { return p.get('id'); });
 
     this.get('stream').removeObjects(postIds);
     this.get('posts').removeObjects(posts);
@@ -519,7 +518,7 @@ Discourse.PostStream = Em.Object.extend({
 
     if (existing && existing.updated_at !== updatedAt) {
       var url = "/posts/" + postId;
-      Discourse.ajax(url).then(function(p){
+      Discourse.ajax(url).then(function(p) {
         postStream.storePost(Discourse.Post.create(p));
       });
     }
@@ -537,10 +536,10 @@ Discourse.PostStream = Em.Object.extend({
         url = "/posts/" + post.get('id') + "/reply-history.json";
 
     return Discourse.ajax(url).then(function(result) {
-      return result.map(function (p) {
+      return result.map(function(p) {
         return postStream.storePost(Discourse.Post.create(p));
       });
-    }).then(function (replyHistory) {
+    }).then(function(replyHistory) {
       post.set('replyHistory', replyHistory);
     });
   },
@@ -557,7 +556,7 @@ Discourse.PostStream = Em.Object.extend({
     if (!this.get('hasPosts')) { return; }
 
     var closest = null;
-    this.get('posts').forEach(function (p) {
+    this.get('posts').forEach(function(p) {
       if (closest === postNumber) { return; }
       if (!closest) { closest = p.get('post_number'); }
 
@@ -663,7 +662,7 @@ Discourse.PostStream = Em.Object.extend({
 
     // Load our unloaded posts by id
     return this.loadIntoIdentityMap(unloaded).then(function() {
-      return postIds.map(function (p) {
+      return postIds.map(function(p) {
         return postIdentityMap.get(p);
       });
     });
@@ -682,7 +681,7 @@ Discourse.PostStream = Em.Object.extend({
 
     // If we don't want any posts, return a promise that resolves right away
     if (Em.isEmpty(postIds)) {
-      return Ember.Deferred.promise(function (p) { p.resolve(); });
+      return Ember.Deferred.promise(function(p) { p.resolve(); });
     }
 
     var url = "/t/" + this.get('topic.id') + "/posts.json",
@@ -692,7 +691,7 @@ Discourse.PostStream = Em.Object.extend({
     return Discourse.ajax(url, {data: data}).then(function(result) {
       var posts = Em.get(result, "post_stream.posts");
       if (posts) {
-        posts.forEach(function (p) {
+        posts.forEach(function(p) {
           postStream.storePost(Discourse.Post.create(p));
         });
       }
@@ -752,7 +751,6 @@ Discourse.PostStream = Em.Object.extend({
     topic.set('errorTitle', I18n.t('topic.server_error.title'));
     topic.set('message', I18n.t('topic.server_error.description'));
   }
-
 });
 
 
@@ -786,7 +784,5 @@ Discourse.PostStream.reopenClass({
     return PreloadStore.getAndRemove("topic_" + topicId, function() {
       return Discourse.ajax(url + ".json", {data: opts});
     });
-
   }
-
 });

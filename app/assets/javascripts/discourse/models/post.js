@@ -64,22 +64,6 @@ Discourse.Post = Discourse.Model.extend({
   hasHistory: Em.computed.gt('version', 1),
   postElementId: Discourse.computed.fmt('post_number', 'post_%@'),
 
-  bookmarkedChanged: function() {
-    Discourse.ajax("/posts/" + this.get('id') + "/bookmark", {
-      type: 'PUT',
-      data: {
-        bookmarked: this.get('bookmarked') ? true : false
-      }
-    }).then(null, function (error) {
-      if (error && error.responseText) {
-        bootbox.alert($.parseJSON(error.responseText).errors[0]);
-      } else {
-        bootbox.alert(I18n.t('generic_error'));
-      }
-    });
-
-  }.observes('bookmarked'),
-
   internalLinks: function() {
     if (this.blank('link_counts')) return null;
     return this.get('link_counts').filterProperty('internal').filterProperty('title');
@@ -118,6 +102,25 @@ Discourse.Post = Discourse.Model.extend({
       return !i.get('hidden');
     });
   }.property('actions_summary.@each.users', 'actions_summary.@each.count'),
+
+  // Whether to show replies directly below
+  showRepliesBelow: function() {
+    var reply_count = this.get('reply_count');
+
+    // We don't show replies if there aren't any
+    if (reply_count === 0) return false;
+
+    // Always show replies if the setting `suppress_reply_directly_below` is false.
+    if (!Discourse.SiteSettings.suppress_reply_directly_below) return true;
+
+    // Always show replies if there's more than one
+    if (reply_count > 1) return true;
+
+    // If we have *exactly* one reply, we have to consider if it's directly below us
+    var topic = this.get('topic');
+    return !topic.isReplyDirectlyBelow(this);
+
+  }.property('reply_count'),
 
   // Save a post and call the callback when done.
   save: function(complete, error) {
@@ -176,7 +179,6 @@ Discourse.Post = Discourse.Model.extend({
     }
   },
 
-
   /**
     Recover a deleted post
 
@@ -191,7 +193,7 @@ Discourse.Post = Discourse.Model.extend({
       can_delete: false
     });
 
-    return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data){
+    return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data) {
       post.setProperties({
         cooked: data.cooked,
         raw: data.raw,
@@ -271,7 +273,7 @@ Discourse.Post = Discourse.Model.extend({
   **/
   updateFromPost: function(otherPost) {
     var post = this;
-    Object.keys(otherPost).forEach(function (key) {
+    Object.keys(otherPost).forEach(function(key) {
       var value = otherPost[key];
       if (typeof value !== "function") {
         post.set(key, value);
@@ -291,8 +293,8 @@ Discourse.Post = Discourse.Model.extend({
 
     // Update all the properties
     var post = this;
-    _.each(obj, function(val,key) {
-      if (key !== 'actions_summary'){
+    _.each(obj, function(val, key) {
+      if (key !== 'actions_summary') {
         if (val) {
           post.set(key, val);
         }
@@ -303,7 +305,7 @@ Discourse.Post = Discourse.Model.extend({
     this.set('actions_summary', Em.A());
     if (obj.actions_summary) {
       var lookup = Em.Object.create();
-      _.each(obj.actions_summary,function(a) {
+      _.each(obj.actions_summary, function(a) {
         var actionSummary;
         a.post = post;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
@@ -323,7 +325,7 @@ Discourse.Post = Discourse.Model.extend({
     var parent = this;
     return Discourse.ajax("/posts/" + (this.get('id')) + "/replies").then(function(loaded) {
       var replies = parent.get('replies');
-      _.each(loaded,function(reply) {
+      _.each(loaded, function(reply) {
         var post = Discourse.Post.create(reply);
         post.set('topic', parent.get('topic'));
         replies.pushObject(post);
@@ -332,24 +334,20 @@ Discourse.Post = Discourse.Model.extend({
     });
   },
 
-  // Whether to show replies directly below
-  showRepliesBelow: function() {
-    var reply_count = this.get('reply_count');
-
-    // We don't show replies if there aren't any
-    if (reply_count === 0) return false;
-
-    // Always show replies if the setting `suppress_reply_directly_below` is false.
-    if (!Discourse.SiteSettings.suppress_reply_directly_below) return true;
-
-    // Always show replies if there's more than one
-    if (reply_count > 1) return true;
-
-    // If we have *exactly* one reply, we have to consider if it's directly below us
-    var topic = this.get('topic');
-    return !topic.isReplyDirectlyBelow(this);
-
-  }.property('reply_count')
+  bookmarkedChanged: function() {
+    Discourse.ajax("/posts/" + this.get('id') + "/bookmark", {
+      type: 'PUT',
+      data: {
+        bookmarked: this.get('bookmarked') ? true : false
+      }
+    }).then(null, function(error) {
+      if (error && error.responseText) {
+        bootbox.alert($.parseJSON(error.responseText).errors[0]);
+      } else {
+        bootbox.alert(I18n.t('generic_error'));
+      }
+    });
+  }.observes('bookmarked')
 });
 
 Discourse.Post.reopenClass({
@@ -388,24 +386,22 @@ Discourse.Post.reopenClass({
   },
 
   loadRevision: function(postId, version) {
-    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function (result) {
+    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function(result) {
       return Em.Object.create(result);
     });
   },
 
   loadQuote: function(postId) {
-    return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
+    return Discourse.ajax("/posts/" + postId + ".json").then(function(result) {
       var post = Discourse.Post.create(result);
       return Discourse.Quote.build(post, post.get('raw'));
     });
   },
 
   load: function(postId) {
-    return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
+    return Discourse.ajax("/posts/" + postId + ".json").then(function(result) {
       return Discourse.Post.create(result);
     });
   }
 
 });
-
-

@@ -7,5 +7,3 @@
   @module Discourse
 **/
 Discourse.InputValidation = Discourse.Model.extend({});
-
-

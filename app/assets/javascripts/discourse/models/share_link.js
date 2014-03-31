@@ -20,7 +20,7 @@ Discourse.ShareLink = Discourse.Model.extend({
   }.property('target'),
 
   openInPopup: function() {
-    return( Discourse.ShareLink.shouldOpenInPopup[this.get('target')] );
+    return Discourse.ShareLink.shouldOpenInPopup[this.get('target')];
   }.property('target')
 
 });

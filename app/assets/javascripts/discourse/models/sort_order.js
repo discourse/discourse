@@ -26,5 +26,4 @@ Discourse.SortOrder = Ember.Object.extend({
       });
     }
   }
-
 });

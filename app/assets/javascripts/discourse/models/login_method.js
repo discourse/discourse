@@ -1,9 +1,9 @@
 Discourse.LoginMethod = Ember.Object.extend({
-  title: function(){
+  title: function() {
     return this.get("titleOverride") || I18n.t("login." + this.get("name") + ".title");
   }.property(),
 
-  message: function(){
+  message: function() {
     return this.get("messageOverride") || I18n.t("login." + this.get("name") + ".message");
   }.property()
 });
@@ -11,24 +11,16 @@ Discourse.LoginMethod = Ember.Object.extend({
 // Note, you can add login methods by adding to the list
 //  just Em.get("Discourse.LoginMethod.all") and then
 //  pushObject for any new methods
+// Or call Discourse.LoginMethod.register
 Discourse.LoginMethod.reopenClass({
-  register: function(method){
-    if(this.methods){
-      this.methods.pushObject(method);
-    } else {
-      this.preRegister = this.preRegister || [];
-      this.preRegister.push(method);
-    }
-  },
-
-  all: function(){
+  all: function() {
     if (this.methods) { return this.methods; }
 
     var methods = this.methods = Em.A();
 
     /*
      * enable_google_logins etc.
-     * */
+     */
 
     [ "google",
       "facebook",
@@ -36,7 +28,7 @@ Discourse.LoginMethod.reopenClass({
       "twitter",
       "yahoo",
       "github"
-    ].forEach(function(name){
+    ].forEach(function(name) {
       if (Discourse.SiteSettings["enable_" + name + "_logins"]) {
 
         var params = {name: name};
@@ -52,13 +44,21 @@ Discourse.LoginMethod.reopenClass({
       }
     });
 
-    if (this.preRegister){
-      this.preRegister.forEach(function(method){
+    if (this.preRegister) {
+      this.preRegister.forEach(function(method) {
         methods.pushObject(method);
       });
       delete this.preRegister;
     }
     return methods;
-  }.property()
-});
+  }.property(),
 
+  register: function(method) {
+    if (this.methods) {
+      this.methods.pushObject(method);
+    } else {
+      this.preRegister = this.preRegister || [];
+      this.preRegister.push(method);
+    }
+  }
+});

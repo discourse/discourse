@@ -35,7 +35,7 @@ Discourse.VersionCheck = Discourse.Model.extend({
   }.property('installed_sha'),
 
   shortSha: function() {
-    return this.get('installed_sha').substr(0,10);
+    return this.get('installed_sha').substr(0, 10);
   }.property('installed_sha')
 });
 

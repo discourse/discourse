@@ -55,32 +55,6 @@ Discourse.SiteSetting = Discourse.Model.extend({
     return val.toString() !== defaultVal.toString();
   }.property('value'),
 
-  /**
-    Reset the setting to its original value.
-
-    @method resetValue
-  **/
-  resetValue: function() {
-    this.set('value', this.get('originalValue'));
-  },
-
-  /**
-    Save the setting's value.
-
-    @method save
-  **/
-  save: function() {
-    // Update the setting
-    var setting = this, data = {};
-    data[this.get('setting')] = this.get('value');
-    return Discourse.ajax("/admin/site_settings/" + this.get('setting'), {
-      data: data,
-      type: 'PUT'
-    }).then(function() {
-      setting.set('originalValue', setting.get('value'));
-    });
-  },
-
   validValues: function() {
     var vals, setting;
     vals = Em.A();
@@ -98,19 +72,45 @@ Discourse.SiteSetting = Discourse.Model.extend({
   }.property('valid_values'),
 
   allowsNone: function() {
-    if ( _.indexOf(this.get('valid_values'), '') >= 0 ) return 'admin.site_settings.none';
-  }.property('valid_values')
+    if (_.indexOf(this.get('valid_values'), '') >= 0) return 'admin.site_settings.none';
+  }.property('valid_values'),
+
+  /**
+   Reset the setting to its original value.
+
+   @method resetValue
+   **/
+  resetValue: function() {
+    this.set('value', this.get('originalValue'));
+  },
+
+  /**
+   Save the setting's value.
+
+   @method save
+   **/
+  save: function() {
+    // Update the setting
+    var setting = this, data = {};
+    data[this.get('setting')] = this.get('value');
+    return Discourse.ajax("/admin/site_settings/" + this.get('setting'), {
+      data: data,
+      type: 'PUT'
+    }).then(function() {
+      setting.set('originalValue', setting.get('value'));
+    });
+  }
 });
 
 Discourse.SiteSetting.reopenClass({
 
   findAll: function() {
-    return Discourse.ajax("/admin/site_settings").then(function (settings) {
+    return Discourse.ajax("/admin/site_settings").then(function(settings) {
       // Group the results by category
       var categoryNames = [],
           categories = {},
           result = Em.A();
-      _.each(settings.site_settings,function(s) {
+      _.each(settings.site_settings, function(s) {
         s.originalValue = s.value;
         if (!categoryNames.contains(s.category)) {
           categoryNames.pushObject(s.category);
@@ -133,5 +133,3 @@ Discourse.SiteSetting.reopenClass({
   }
 
 });
-
-

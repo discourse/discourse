@@ -42,7 +42,7 @@ Discourse.Backup.reopenClass({
     return PreloadStore.getAndRemove("backups", function() {
       return Discourse.ajax("/admin/backups.json");
     }).then(function(backups) {
-      return backups.map(function (backup) { return Discourse.Backup.create(backup); });
+      return backups.map(function(backup) { return Discourse.Backup.create(backup); });
     });
   },
 

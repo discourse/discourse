@@ -10,7 +10,7 @@ Discourse.EmailSettings = Discourse.Model.extend({});
 
 Discourse.EmailSettings.reopenClass({
   find: function() {
-    return Discourse.ajax("/admin/email.json").then(function (settings) {
+    return Discourse.ajax("/admin/email.json").then(function(settings) {
       return Discourse.EmailSettings.create(settings);
     });
   }
