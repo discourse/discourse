@@ -31,6 +31,9 @@ class UserDestroyer
           end
         end
       end
+      user.post_actions.each do |post_action|
+        post_action.remove_act!(Discourse.system_user)
+      end
       user.destroy.tap do |u|
         if u
           if opts[:block_email]
