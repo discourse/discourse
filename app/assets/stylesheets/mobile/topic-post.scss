@@ -478,3 +478,7 @@ blockquote {
 
 .posts-wrapper {  position: relative;
 }
+
+.topic-body.highlighted {
+  background-color: $emphasis_background_color;
+}
