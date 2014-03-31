@@ -611,6 +611,7 @@ en:
       hint: "(you can also drag & drop into the editor to upload them)"
       hint_for_chrome: "(you can also drag and drop or paste images into the editor to upload them)"
       uploading: "Uploading"
+      image_link: "enter the link you want your image to point to"
 
     search:
       title: "search for topics, posts, users, or categories"
