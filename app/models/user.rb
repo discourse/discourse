@@ -560,6 +560,8 @@ class User < ActiveRecord::Base
   end
 
   def redirected_to_top_reason
+    # redirect is enabled
+    return unless SiteSetting.redirect_users_to_top_page
     # top must be in the top_menu
     return unless SiteSetting.top_menu =~ /top/i
     # there should be enough topics
