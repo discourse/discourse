@@ -235,6 +235,9 @@ posting:
     client: true
     default: "lang-auto"
   warn_reviving_old_topic_age: 180
+  autohighlight_all_code:
+    client: true
+    default: false
 
 email:
   email_time_window_mins: 10
