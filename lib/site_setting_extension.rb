@@ -214,8 +214,10 @@ module SiteSettingExtension
     provider.save(name, val, type)
     current[name] = convert(val, type)
     clear_cache!
+  end
 
-    @last_message_sent = MessageBus.publish('/site_settings', {process: process_id})
+  def notify_changed!
+    MessageBus.publish('/site_settings', {process: process_id})
   end
 
   def has_setting?(name)

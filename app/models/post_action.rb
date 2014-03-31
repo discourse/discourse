@@ -20,7 +20,7 @@ class PostAction < ActiveRecord::Base
 
   after_save :update_counters
   after_save :enforce_rules
-  after_save :notify_subscribers
+  after_commit :notify_subscribers
 
   def self.update_flagged_posts_count
     posts_flagged_count = PostAction.joins(post: :topic)
@@ -154,7 +154,10 @@ class PostAction < ActiveRecord::Base
 
   def remove_act!(user)
     trash!(user)
-    run_callbacks(:save)
+    # NOTE: save is called to ensure all callbacks are called
+    # trash will not trigger callbacks, and triggering after_commit
+    # is not trivial
+    save
   end
 
   def is_bookmark?
