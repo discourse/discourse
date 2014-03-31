@@ -81,7 +81,7 @@ class TopicQuery
   end
 
   def list_posted
-    create_list(:posted) {|l| l.where('tu.user_id IS NOT NULL') }
+    create_list(:posted) {|l| l.where('tu.posted') }
   end
 
   def list_top_for(period)
