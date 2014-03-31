@@ -49,7 +49,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   _updateTitle: function() {
     var title = this.get('topic.title');
-    if (title) return Discourse.set('title', title);
+    if (title) return Discourse.set('title', _.unescape(title));
   }.observes('topic.loaded', 'topic.title'),
 
   _composeChanged: function() {
