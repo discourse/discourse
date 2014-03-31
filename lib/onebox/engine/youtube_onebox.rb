@@ -4,7 +4,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp /^https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\/.+$/
+      matches_regexp(/^https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\/.+$/)
 
       # Try to get the video ID. Works for URLs of the form:
       # * https://www.youtube.com/watch?v=Z0UISCEe52Y

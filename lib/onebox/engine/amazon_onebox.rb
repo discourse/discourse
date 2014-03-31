@@ -5,12 +5,8 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches do
-        http
-        maybe("www.")
-        domain("amazon")
-        has(".").either("com", "ca").maybe("/")
-      end
+
+      matches_regexp(/^http:\/\/(?:www)\.amazon\.(com|ca)/)
 
       def url
         return "http://www.amazon.com/gp/aw/d/" + URI::encode(match[:id]) if match && match[:id]

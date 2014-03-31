@@ -5,12 +5,7 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches do
-        http
-        anything
-        domain("wikipedia")
-        either(".com", ".org")
-      end
+      matches_regexp(/^https?:\/\/.*wikipedia\.(com|org)/)
 
       private
 

@@ -4,14 +4,10 @@ module Onebox
       include Engine
       include LayoutSupport
 
-      matches do
-        http
-        maybe("www")
-        domain("github")
-        tld("com")
-        anything
-        with("/blob/")
-      end
+      MAX_LINES = 20
+      MAX_CHARS = 5000
+
+      matches_regexp(/^https?:\/\/(www\.)?github\.com.*\/blob\//)
 
       private
 
@@ -32,8 +28,14 @@ module Onebox
               contents = contents.split("\n")[from..to].join("\n")
             end
           end
-          if contents.length > 5000
-            contents = contents[0..5000]
+          if contents.length > MAX_CHARS
+            contents = contents[0..MAX_CHARS]
+            @truncated = true
+          end
+
+          split = contents.split("\n")
+          if split.length > MAX_LINES
+            contents = split[0..MAX_LINES].join("\n")
             @truncated = true
           end
           @raw = contents
