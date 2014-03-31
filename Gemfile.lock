@@ -208,16 +208,12 @@ GEM
     omniauth-twitter (1.0.1)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
-    onebox (1.2.8)
+    onebox (1.2.9)
       hexpress (~> 1.2)
       moneta (~> 0.7)
       multi_json (~> 1.7)
       mustache (~> 0.99)
       nokogiri (~> 1.6.1)
-      opengraph_parser (~> 0.2.3)
-    opengraph_parser (0.2.3)
-      addressable
-      nokogiri
     openid-redis-store (0.0.2)
       redis
       ruby-openid
