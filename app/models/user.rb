@@ -95,7 +95,7 @@ class User < ActiveRecord::Base
     LAST_VISIT = -2
   end
 
-  GLOBAL_USERNAME_LENGTH_RANGE = 3..15
+  GLOBAL_USERNAME_LENGTH_RANGE = 3..50
 
   def self.username_length
     if SiteSetting.enforce_global_nicknames
