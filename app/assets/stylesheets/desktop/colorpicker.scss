@@ -1,5 +1,8 @@
 // styles for the category badge color picker
 
+@import "../common/foundation/variables";
+@import "../common/foundation/mixins";
+
 .category-color-editor {
   input {
     width: 70px;

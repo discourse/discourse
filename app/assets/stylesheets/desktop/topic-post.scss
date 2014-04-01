@@ -1,3 +1,7 @@
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+@import "common/foundation/helpers";
+
 .gap {
   background-color: lighten($secondary_background_color, 76%);
   padding: 5px 0;

@@ -1,3 +1,6 @@
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+
 .post-info a {
   color: lighten($primary_text_color, 50%);
   padding-right: 5px;
