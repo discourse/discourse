@@ -4,7 +4,7 @@
 class DiscourseSassImporter < Sass::Importers::Filesystem
   GLOB = /\*|\[.+\]/
 
-  def initialize(root)
+  def initialize(*args)
     @root = Rails.root.join('app', 'assets', 'stylesheets').to_s
     @same_name_warnings = Set.new
   end
