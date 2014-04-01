@@ -103,12 +103,6 @@ Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
     host all all ::1/128 trust
     host all all 0.0.0.0/0 trust # wide-open
 
-Load the seed data (as vagrant user):
-
-    psql -d discourse_development < pg_dumps/development-image.sql
-
-(You may wish to try the `production-image.sql` file for a good seed for a production database.)
-
 ## Redis
 
     sudo su -

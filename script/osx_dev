@@ -87,10 +87,6 @@ fi
 
 brew services start redis
 
-## Load seed data ##
-echo "Loading seed data..."
-psql -d discourse_development < pg_dumps/development-image.sql
-
 ## Install gems ##
 echo "Installing gems..."
 bundle install

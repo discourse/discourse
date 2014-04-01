@@ -118,6 +118,16 @@ describe EmailToken do
         email_token.should be_confirmed
       end
 
+      it "can be confirmed again" do
+        EmailToken.stubs(:confirm_valid_after).returns(1.hour.ago)
+
+        EmailToken.confirm(email_token.token).should == user
+
+        # Unless `confirm_valid_after` has passed
+        EmailToken.stubs(:confirm_valid_after).returns(1.hour.from_now)
+        EmailToken.confirm(email_token.token).should be_blank
+      end
+
     end
 
 

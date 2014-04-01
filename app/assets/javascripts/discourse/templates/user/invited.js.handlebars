@@ -12,42 +12,46 @@
   </form>
   {{/if}}
 
-  {{#if model}}
+  {{#if model.invites}}
     <table class='table'>
       <tr>
         <th>{{i18n user.invited.user}}</th>
         <th>{{i18n user.invited.redeemed_at}}</th>
-        <th>{{i18n user.last_seen}}</th>
-        <th>{{i18n user.invited.topics_entered}}</th>
-        <th>{{i18n user.invited.posts_read_count}}</th>
-        <th>{{i18n user.invited.time_read}}</th>
-        <th>{{i18n user.invited.days_visited}}</th>
+        {{#if can_see_invite_details}}
+          <th>{{i18n user.last_seen}}</th>
+          <th>{{i18n user.invited.topics_entered}}</th>
+          <th>{{i18n user.invited.posts_read_count}}</th>
+          <th>{{i18n user.invited.time_read}}</th>
+          <th>{{i18n user.invited.days_visited}}</th>
+        {{/if}}
       </tr>
-      {{#each model}}
+      {{#each invite in model.invites}}
         <tr>
-          {{#if user}}
-          <td>
-            {{#link-to 'user' user}}{{avatar user imageSize="tiny"}}{{/link-to}}
-            {{#link-to 'user' user}}{{user.username}}{{/link-to}}
-          </td>
-          <td>{{unboundDate redeemed_at}}</td>
-          <td>{{unboundDate user.last_seen_at}}</td>
-          <td>{{number user.topics_entered}}</td>
-          <td>{{number user.posts_read_count}}</td>
-          <td>{{{unbound user.time_read}}}</td>
-          <td><span title="{{i18n user.invited.days_visited}}">{{{unbound user.days_visited}}}</span>
-              /
-              <span title="{{i18n user.invited.account_age_days}}">{{{unbound user.days_since_created}}}</span></td>
+          {{#if invite.user}}
+            <td>
+              {{#link-to 'user' invite.user}}{{avatar invite.user imageSize="tiny"}}{{/link-to}}
+              {{#link-to 'user' invite.user}}{{invite.user.username}}{{/link-to}}
+            </td>
+            <td>{{unboundDate invite.redeemed_at}}</td>
+            {{#if can_see_invite_details}}
+              <td>{{unboundDate invite.user.last_seen_at}}</td>
+              <td>{{number invite.user.topics_entered}}</td>
+              <td>{{number invite.user.posts_read_count}}</td>
+              <td>{{{unbound invite.user.time_read}}}</td>
+              <td><span title="{{i18n user.invited.days_visited}}">{{{unbound invite.user.days_visited}}}</span>
+                  /
+                <span title="{{i18n user.invited.account_age_days}}">{{{unbound invite.user.days_since_created}}}</span></td>
+            {{/if}}
           {{else}}
-            <td>{{unbound email}}</td>
+            <td>{{unbound invite.email}}</td>
             <td colspan='6'>
-              {{#if expired}}
+              {{#if invite.expired}}
                 {{i18n user.invited.expired}}
               {{/if}}
-              {{#if rescinded}}
+              {{#if invite.rescinded}}
                 {{i18n user.invited.rescinded}}
               {{else}}
-                <button class='btn' {{action rescind this}}>{{i18n user.invited.rescind}}</button>
+                <button class='btn' {{action rescind invite}}>{{i18n user.invited.rescind}}</button>
               {{/if}}
             </td>
           {{/if}}

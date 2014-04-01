@@ -2,6 +2,9 @@
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -21,7 +24,7 @@ ja:
             tb: TB
     dates:
       tiny:
-        half_a_minute: "< 1m"
+        half_a_minute: "< 1s"
         less_than_x_seconds:
           one:   "< 1s"
           other: "< %{count}s"
@@ -41,16 +44,14 @@ ja:
           one:   "1d"
           other: "%{count}d"
         about_x_years:
-          one:   "1y"
-          other: "%{count}y"
+          one:   "1d"
+          other: "%{count}d"
         over_x_years:
           one:   "> 1y"
           other: "> %{count}y"
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
-        date_month: "MMM D"
-        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1分"
@@ -90,6 +91,7 @@ ja:
     log_in: "ログイン"
     age: "経過"
     last_post: "最終投稿"
+    joined: "参加者"
     admin_title: "管理者"
     flags_title: "フラグ"
     show_more: "もっと見る"
@@ -184,10 +186,24 @@ ja:
       "12": "アイテム送信"
       "13": "インボックス"
 
+    categories:
+      all: "全てのカテゴリ"
+      all_subcategories: "全てのサブカテゴリ"
+      no_subcategory: "サブカテゴリなし"
+      category: "カテゴリ"
+      posts: "ポスト"
+      topics: "トピック"
+      latest: "最新ポスト"
+      latest_by: "latest by"
+      toggle_ordering: "カテゴリ並び替えモードをトグル"
+      subcategories: "サブカテゴリ:"
+      total_topics: "総トピック数: %{count}"
+      total_posts: "総ポスト数: %{count}"
     user:
       said: "{{username}} のコメント:"
       profile: "プロフィール"
-      mute: "Mute"
+      show_profile: "プロフィールを見る"
+      mute: "ミュート"
       edit: "プロフィールを編集"
       download_archive: "ポストのアーカイブをダウンロード"
       private_message: "プライベートメッセージ"
@@ -205,6 +221,8 @@ ja:
       moderator: "{{user}} はモデレータです"
       admin: "{{user}} は管理者です"
       deleted: "(削除済)"
+      suspended_notice: "このユーザは {{date}} までサスペンド状態です。"
+      suspended_reason: "理由: "
 
       messages:
         all: "すべて"
@@ -253,7 +271,7 @@ ja:
       name:
         title: "名前"
         instructions: "フルネーム。ユニークである必要はありません。@ユーザ名 によるマッチングの代わりに利用可能であり、あなたのページのみに表示されます。"
-        too_short: "名前が短すぎいます。"
+        too_short: "名前が短すぎます。"
         ok: "名前 OK。"
       username:
         title: "ユーザ名"
@@ -267,6 +285,7 @@ ja:
         too_long: "ユーザ名が長すぎます。"
         checking: "ユーザ名が利用可能か確認しています..."
         enter_email: 'ユーザ名が見つかりました。メールアドレスを入力してください。'
+        prefilled: "この登録ユーザにマッチするメールアドレスが見つかりました。"
 
       password_confirmation:
         title: "もう一度パスワードを入力してください。"
@@ -284,8 +303,9 @@ ja:
         weekly: "毎週"
         bi_weekly: "隔週"
 
-      email_direct: "ポストが引用されたり、回答を受けたり、 @ユーザ名 でメンションを受けた際にメール通知を受ける"
-      email_private_messages: "プライベートメッセージを受けた際にメール通知を受ける"
+      email_direct: "ポストが引用されたり、回答を受けたり、 @ユーザ名 でメンションを受けた際にメール通知を受け取る"
+      email_private_messages: "プライベートメッセージを受けた際にメール通知を受け取る"
+      email_always: "フォーラムにアクティブに参加している状態でも常にメール通知やダイジェストを受け取る"
 
       other_settings: "その他"
 
@@ -312,9 +332,11 @@ ja:
           other: "{{count}}分後"
 
       invited:
+        search: "招待履歴を検索するためにキーワードを入力してください..."
         title: "招待"
         user: "招待したユーザ"
-        none: "{{username}} はこのサイトに誰も招待していません。"
+        none: "誰も招待していません。"
+        truncated: "最初の {{count}} 個の招待履歴を表示しています。"
         redeemed: "受理された招待"
         redeemed_at: "受理日"
         pending: "保留中の招待"
@@ -325,11 +347,13 @@ ja:
         time_read: "リード時間"
         days_visited: "訪問日数"
         account_age_days: "アカウント有効日数"
+        create: "友人をこのフォーラムに招待"
 
       password:
         title: "パスワード"
         too_short: "パスワードが短すぎます。"
         ok: "パスワード OK。"
+        instructions: "%{count} 文字以上の長さにしてください。"
 
       ip_address:
         title: "最終 IP アドレス"
@@ -351,28 +375,30 @@ ja:
     close: "閉じる"
     learn_more: "より詳しく..."
 
-    year: 'ポスト/年'
+    year: '年'
     year_desc: '過去365日間に投稿されたトピック'
-    month: 'ポスト/月'
+    month: '月'
     month_desc: '過去30日間に投稿されたトピック'
-    week: 'ポスト/週'
+    week: '週'
     week_desc: '過去7日間に投稿されたトピック'
+    day: '日'
 
     first_post: 最初のポスト
     mute: ミュート
     unmute: ミュート解除
     last_post: 最終ポスト
 
-    best_of:
-      title: "ベストのみ"
-      enabled_description: "このトピックのベストポストのみが表示されています。すべてのポストを再度表示するには、下をクリックしてください。"
-      description: "このトピックには<b>{{count}}</b>個のポストがあります。ベストポストのみを表示しますか?"
-      enable: '"ベストのみ" 表示に切り替える'
-      disable: '"ベストのみ" 表示をキャンセルする'
+    summary:
+      enabled_description: "このトピックのサマリーを表示しています。全てのポストを見るには、下をクリックしてください。"
+      description: "<b>{{count}}</b> 個の回答があります。関連性の高い回答のみ表示しますか?"
+      description_time: "全てを確認するのに <b>{{readingTime}} 分</b> 前後を要する <b>{{count}}</b> 個の回答があります。関連性の高い回答のみを表示します?"
+      enable: 'このトピックを要訳する'
+      disable: '全てのポストを表示する'
 
     private_message_info:
       title: "プライベートメッセージ"
       invite: "友人を招待..."
+      remove_allowed_user: "このプライベートメッセージより本当に {{name}} を削除しますか?"
 
     email: 'メール'
     username: 'ユーザ名'
@@ -427,6 +453,9 @@ ja:
       github:
         title: "with GitHub"
         message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"
+      persona:
+        title: "with Persona"
+        message: "Persona による認証 (ポップアップがブロックされていないことを確認してください)"
 
     composer:
       posting_not_on_topic: "回答したいトピックはどれですか?"
@@ -456,8 +485,10 @@ ja:
       create_topic: "トピックを作成"
       create_pm: "プライベートメッセージの作成"
 
-      users_placeholder: "Add a user"
+      users_placeholder: "ユーザの追加"
       title_placeholder: "トピックのタイトルをここに入力してください。"
+      edit_reason_placeholder: "編集理由は何ですか?"
+      show_edit_reason: "(編集理由を追加)"
       reply_placeholder: "本文をここに入力してください。Markdown や BBCode を利用することもできます。画像をアップロードするにはドラッグまたはペーストしてください。"
       view_new_post: "新規ポストを見る。"
       saving: "保存中..."
@@ -494,8 +525,10 @@ ja:
       toggler: "編集パネルの表示/非表示"
 
       admin_options_title: "このトピックの詳細設定"
-      auto_close_label: "このトピックを"
-      auto_close_units: "日後に自動的に終了する"
+      auto_close_label: "このトピックを自動的に終了する時間:"
+      auto_close_units: "(何時間後か、自動終了する具体的な時間、またはタイムスタンプ)"
+      auto_close_examples: '例: 24, 17:00, 2013-11-22 14:00'
+      auto_close_error: "正しい値を入力してください。"
 
     notifications:
       title: "@ユーザ名 メンションやあなたのポストやトピックへの回答、プライベートメッセージなどの通知"
@@ -518,18 +551,12 @@ ja:
       title_with_attachments: "画像/ファイルをアップロード"
       from_my_computer: "このデバイスから"
       from_the_web: "Web から"
-      add_title: "画像を追加"
-      add_title_with_attachments: "画像/ファイルを追加"
-      remote_title: "リモートの画像"
-      remote_title_with_attachments: "リモートの画像/ファイル"
       remote_tip: "画像のアドレスを入力してください (例 http://example.com/image.jpg)。"
       remote_tip_with_attachments: "画像/ファイルのアドレスを入力してください (例 http://example.com/file.ext) (使用可能な拡張子: {{authorized_extensions}})."
-      local_title: "ローカルの画像"
-      local_title_with_attachments: "ローカルの画像/ファイル"
       local_tip: "クリックしてアップロードする画像を選択してください"
       local_tip_with_attachments: "クリックしてアップロードする画像/ファイルを選択してください (使用可能な拡張子: {{authorized_extensions}})"
-      upload_title: "画像をアップロード"
-      upload_title_with_attachments: "画像やファイルをアップロード"
+      hint: "(アップロードする画像をエディタにドラッグ&ドロップすることもできます)"
+      hint_for_chrome: "(アップロードする画像をエディタにドラッグ&ドロップまたは貼り付けることもできます)"
       uploading: "アップロード中"
 
     search:
@@ -546,7 +573,7 @@ ja:
     go_back: '戻る'
     current_user: 'ユーザページに移動'
 
-    starred:
+    favorite:
       title: 'お気に入り'
       help:
         star: 'このトピックをお気に入りに登録'
@@ -554,7 +581,7 @@ ja:
 
     topics:
       none:
-        starred: "お気に入り登録しているトピックがありません。お気に入り登録するには、タイトル横のスターをクリック/タップしてください。"
+        favorited: "お気に入り登録しているトピックがありません。お気に入り登録するには、タイトル横のスターをクリック/タップしてください。"
         unread: "未読トピックはありません。"
         new: "新着トピックはありません。"
         read: "またトピックを一つも読んでいません。"
@@ -569,16 +596,27 @@ ja:
         read: "未読トピックは以上です。"
         new: "新規トピックは以上です。"
         unread: "未読のトピックは以上です。"
-        starred: "お気に入りしたトピックは以上です。"
+        favorited: "お気に入りしたトピックは以上です。"
         category: "{{category}} トピックは以上です。"
 
+    rank_details:
+      toggle: トピックランクの詳細をトグル
+      show: トピックランクの詳細を表示
+      title: トピックランクの詳細
+
     topic:
-      create_in: '{{categoryName}} トピックを作成'
+      filter_to: "トピック内の{{post_count}}個のポストを表示"
       create: 'トピックを作成する'
       create_long: '新しいトピックの作成'
       private_message: 'プライベートメッセージを作成'
       list: 'トピック'
       new: '新規トピック'
+      new_topics:
+        one: '1個の新規トピック'
+        other: '{{count}}個の新規トピック'
+      unread_topics:
+        one: '1個の未読トピック'
+        other: '{{count}}個の未読トピック'
       title: 'トピック'
       loading_more: "さらにトピックを読み込み中..."
       loading: 'トピックを読み込み中...'
@@ -636,15 +674,16 @@ ja:
       auto_close_notice: "このトピックは%{timeLeft}で自動的に終了します。"
       auto_close_title: '自動終了設定'
       auto_close_save: "保存"
-      auto_close_cancel: "キャンセル"
       auto_close_remove: "このトピックを自動終了しない"
 
       progress:
         title: トピック進捗
         jump_top: 最初のポストにジャンプ
         jump_bottom: 最後のポストにジャンプ
+        jump_bottom_with_number: "ポスト%{post_number}にジャンプ"
         total: ポスト総数
         current: 現在のポスト
+        position: "ポスト%{current}/%{total}"
 
       notifications:
         title: ''
@@ -714,7 +753,9 @@ ja:
         title: '友人を招待して回答してもらう'
         action: 'メールで招待'
         help: 'このトピックにワンクリックで回答ができるように友人を招待メールを送る'
-        email: "このトピックに（ログインすることなく）ワンクリックで回答ができるようにあなたの友人にメールを送ります"
+        to_topic: "このトピックに（ログインすることなく）ワンクリックで回答ができるようにあなたの友人にメールを送ります。"
+        to_forum: "このフォーラムにワンクリックで参加できるようにあなたの友人にメールを送ります。"
+
         email_placeholder: 'メールアドレス'
         success: "ありがとうございます! <b>{{email}}</b> 宛に招待メールを送信しました。友人により招待が受理されたらお知らせします。招待した友人の一覧は、ユーザページの招待タブにて確認できます。"
         error: "申し訳ありませんが招待に失敗しました。既にユーザ登録済かもしれません。"
@@ -759,6 +800,7 @@ ja:
       reply_topic: "{{link}} に回答"
       quote_reply: "引用して回答"
       edit: "{{replyAvatar}} {{username}} による {{link}} を編集"
+      edit_reason: "理由: "
       post_number: "ポスト{{number}}"
       in_reply_to: "こちらへの回答"
       last_edited_on: "ポストの最終編集日"
@@ -770,6 +812,9 @@ ja:
         other: "(ポストは執筆者により取り下げられました。フラグがつかない場合%{count}時間後に自動的に削除されます)"
       deleted_by: "削除者"
       expand_collapse: "展開/折りたたみ"
+      gap:
+        one: "1個のポストを除外"
+        other: "{{count}}個のポストを除外"
 
       has_replies:
         one: "回答"
@@ -786,7 +831,10 @@ ja:
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
 
-      abandon: "編集中のポストを破棄してもよろしいですか?"
+      abandon:
+        confirm: "編集中のポストを破棄してもよろしいですか?"
+        no_value: "いいえ"
+        yes_value: "はい"
 
       archetypes:
         save: '保存オプション'
@@ -908,12 +956,32 @@ ja:
           one: "本当にこのポストを削除しますか?"
           other: "本当にこれらのポストを削除しますか?"
 
+      revisions:
+        controls:
+          first: "最初のリビジョン"
+          previous: "一つ前のリビジョン"
+          next: "次のリビジョン"
+          last: "最後のリビジョン"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> ({{total}}のうち)"
+        displays:
+          inline:
+            title: "追加・削除箇所をインラインで表示"
+            button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            title: "差分を横に並べて表示"
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "Markdown ソースの差分を横に並べて表示"
+            button: '<i class="fa fa-columns"></i> Markdown'
+        details:
+          edited_by: "編集者"
+
     category:
       can: 'can&hellip; '
       none: '(カテゴリなし)'
+      choose: 'カテゴリを選択&hellip;'
       edit: '編集'
       edit_long: "カテゴリを編集"
-      edit_uncategorized: "カテゴリなしを編集"
       view: 'カテゴリ内のトピックを見る'
       general: '一般'
       settings: '設定'
@@ -936,11 +1004,17 @@ ja:
       list: "カテゴリをリストする"
       no_description: "このカテゴリの説明はありません。トピック定義を編集してください。"
       change_in_category_topic: "カテゴリ内容を編集"
+      hotness: "ホット度"
       already_used: 'この色は他のカテゴリで利用しています'
       security: "セキュリティ"
-      auto_close_label: ""
+      auto_close_label: "トピックを自動的に閉じるまでの時間:"
+      auto_close_units: "時間"
       edit_permissions: "パーミッションを編集"
       add_permission: "パーミッションを追加"
+      this_year: "今年"
+      position: "ポジション"
+      default_position: "デフォルトポジション"
+      parent: "親カテゴリ"
 
     flagging:
       title: 'このポストにフラグをつける理由は何ですか?'
@@ -958,11 +1032,10 @@ ja:
         more: "あと{{n}}文字..."
         left: "残り{{n}}文字"
 
-    topic_summary:
-      title: "トピック要約"
-      links_shown: "{{totalLinks}} のリンクを全て表示..."
+    topic_map:
+      title: "トピックのサマリー"
+      links_shown: "全{{totalLinks}}リンクを表示..."
       clicks: "クリック"
-      topic_link: "トピックリンク"
 
     topic_statuses:
       locked:
@@ -983,7 +1056,7 @@ ja:
     activity: "アクティビティ"
     likes: "いいね！"
     likes_long: "このトピックには{{number}}つ「いいね！」がついています"
-    top_contributors: "主な参加者"
+    users: "ユーザ"
     category_title: "カテゴリ"
     history: "History"
     changed_by: "by {{author}}"
@@ -997,7 +1070,7 @@ ja:
       hot:
         title: "ホット"
         help: "話題のトピック"
-      starred:
+      favorited:
         title: "お気に入り"
         help: "お気に入りしたトピック"
       read:
@@ -1038,7 +1111,7 @@ ja:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "ファルタのタイプ..."
+    type_to_filter: "設定項目の絞り込み..."
 
     admin:
       title: 'Discourse 管理者'
@@ -1054,6 +1127,7 @@ ja:
         please_upgrade: "今すぐアップデートしてください!"
         no_check_performed: "アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
         stale_data: "最近アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
+        version_check_pending: "アップデートした直後のようですね。素晴らしい!"
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Discourse のインストールにいくつか問題が発見されました:"
@@ -1063,7 +1137,7 @@ ja:
         moderators: 'モデレータ:'
         admins: '管理者:'
         blocked: 'ブロック中:'
-        banned: '追放中:'
+        suspended: '停止中:'
         private_messages_short: "PMs"
         private_messages_title: "プライベートメッセージ"
 
@@ -1080,7 +1154,7 @@ ja:
           view_chart: "棒グラフ表示"
 
       commits:
-        latest_changes: "最新の更新内容: 定期的にアップデートしてください!"
+        latest_changes: "最新の更新内容:"
         by: "by"
 
       flags:
@@ -1101,6 +1175,7 @@ ja:
         delete_spammer_title: "ユーザを削除し、全てのポストとトピックを削除。"
 
         flagged_by: "フラグをたてた人"
+        system: "システム"
         error: "何かがうまくいきませんでした"
         view_message: "回答"
         no_results: "フラグはありません。"
@@ -1134,12 +1209,18 @@ ja:
         delete_failed: "グループの削除に失敗しました。自動作成グループを削除することはできません。"
 
       api:
+        generate_master: "マスターAPIキーを生成"
+        none: "現在アクティブなAPIキーが存在しません。"
+        user: "ユーザ"
         title: "API"
-        long_title: "API 情報"
         key: "Key"
         generate: "API キーを生成"
         regenerate: "API キーを再生成"
+        revoke: "無効化"
+        confirm_regen: "このAPIキーを新しいものに置き換えてもよろしいですか?"
+        confirm_revoke: "このキーを無効化しても本当によろしいですか?"
         info_html: "API キーを使うと、JSON 呼び出しでトピックの作成・更新を行うことが出来ます。"
+        all_users: "全てのユーザ"
         note_html: "このキーは<strong>秘密</strong>情報です。キーを知るユーザは、任意のユーザとして任意のポストを作成することができます。"
 
       customize:
@@ -1147,6 +1228,8 @@ ja:
         long_title: "サイトのカスタマイズ"
         header: "ヘッダ"
         css: "スタイルシート"
+        mobile_header: "モバイル向けヘッダ"
+        mobile_css: "モバイル向けスタイルシート"
         override_default: "標準のスタイルシートを読み込まない"
         enabled: "有効にする"
         preview: "プレビュー"
@@ -1186,6 +1269,9 @@ ja:
         last_match_at: "最終マッチ"
         match_count: "マッチ"
         ip_address: "IP"
+        delete: '削除'
+        edit: '編集'
+        save: '保存'
         screened_actions:
           block: "ブロック"
           do_nothing: "何もしない"
@@ -1212,14 +1298,28 @@ ja:
             change_site_setting: "サイトの設定を変更"
             change_site_customization: "サイトのカスタマイズ設定を変更"
             delete_site_customization: "サイトのカスタマイズ設定を削除"
+            suspend_user: "ユーザをサスペンドにする"
+            unsuspend_user: "ユーザのサスペンドを解除する"
         screened_emails:
           title: "ブロック対象アドレス"
           description: "新規アカウント作成時、次のメールアドレスからの登録をブロックする。"
           email: "メールアドレス"
         screened_urls:
-          title: "ブロック対象 URL"
+          title: "ブロック対象URL"
           description: "スパマーからのポストにおいて引用されていた URL のリスト。"
           url: "URL"
+          domain: "ドメイン"
+        screened_ips:
+          title: "スクリーン対象IP"
+          description: '監視中のIPアドレス。IPアドレスをホワイトリストに追加するには "許可" を利用してください。'
+          delete_confirm: "%{ip_address} のルールを本当に削除しますか?"
+          actions:
+            block: "ブロック"
+            do_nothing: "許可"
+          form:
+            label: "新規:"
+            ip_address: "IPアドレス"
+            add: "追加"
 
       impersonate:
         title: "ユーザになりすます"
@@ -1240,7 +1340,7 @@ ja:
           pending: "保留中"
           admins: '管理者'
           moderators: 'モデレータ'
-          banned: '追放中'
+          suspended: 'サスペンド中'
           blocked: 'ブロック中'
         approved: "承認?"
         approved_selected:
@@ -1261,7 +1361,7 @@ ja:
           admins: '管理者ユーザ'
           moderators: 'モデレータ'
           blocked: 'ブロック中のユーザ'
-          banned: '追放中のユーザ'
+          suspended: 'サスペンド中のユーザ'
         reject_successful:
           one: "1人のユーザの拒否に成功しました。"
           other: "%{count}人のユーザの拒否に成功しました。"
@@ -1270,14 +1370,18 @@ ja:
           other: "%{count}人のユーザの拒否に失敗しました。"
 
       user:
-        ban_failed: "ユーザ {{error}} の追放に失敗しました"
-        unban_failed: "ユーザ {{error}} の追放解除に失敗しました"
-        ban_duration: "ユーザを何日間追放しますか?"
+        suspend_failed: "ユーザのサスペンドに失敗しました {{error}}"
+        unsuspend_failed: "ユーザのサスペンド解除に失敗しました {{error}}"
+        suspend_duration: "ユーザを何日間サスペンドしますか?"
+        suspend_duration_units: "(日)"
+        suspend_reason_label: "サスペンドする理由を簡潔に説明してください。ここに書いた理由は、このユーザのプロファイルページにおいて<b>全員が閲覧可能な状態</b>で公開されます。またこのユーザがログインを試みた際にも表示されます。"
+        suspend_reason: "理由"
+        suspended_by: "サスペンドしたユーザ"
         delete_all_posts: "全てのポストを削除"
         delete_all_posts_confirm: "%{posts}個のポストと%{topics}個のトピックが削除されます。よろしいですか?"
-        ban: "追放"
-        unban: "追放解除"
-        banned: "追放中?"
+        suspend: "サスペンド"
+        unsuspend: "サスペンド解除"
+        suspended: "サスペンド中?"
         moderator: "モデレータ?"
         admin: "管理者?"
         blocked: "ブロック中?"
@@ -1327,9 +1431,10 @@ ja:
         unblock_failed: 'ユーザのブロック解除に失敗しました。'
         block_failed: 'ユーザのブロックに失敗しました。'
         deactivate_explanation: "アクティベート解除されたユーザは、メールで再アクティベートする必要があります。"
-        banned_explanation: "追放中のユーザはログインできません。"
+        suspended_explanation: "サスペンド中のユーザはログインできません。"
         block_explanation: "ブロック中のユーザはポストの投稿およびトピックの作成ができません。"
         trust_level_change_failed: "ユーザのトラストレベル変更に失敗しました。"
+        suspend_modal_title: "サスペンド中ユーザ"
 
       site_content:
         none: "編集するコンテンツのタイプを選択してください。"
@@ -1341,5 +1446,23 @@ ja:
         title: '設定'
         reset: 'デフォルトに戻す'
         none: 'なし'
+        no_results: "何も見つかりませんでした。."
+        categories:
+          all_results: '全て'
+          required: '必須設定'
+          basic: '基本設定'
+          users: 'ユーザ'
+          posting: 'ポスト'
+          email: 'メール'
+          files: 'ファイル'
+          trust: 'トラストレベル'
+          security: 'セキュリティ'
+          seo: 'SEO'
+          spam: 'スパム'
+          rate_limits: '投稿制限'
+          developer: '開発者向け'
+          uncategorized: 'その他'
 
+    lightbox:
+      download: "ダウンロード"
 

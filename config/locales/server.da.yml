@@ -1,6 +1,9 @@
 # encoding: utf-8
 # This file contains content for the server portion of Discourse used by Ruby
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -182,7 +185,7 @@ da:
         user:
           attributes:
             password:
-              common: "er én af de 5000 mest almindelige adgangskoder. Brug venligst en mere sikker adgangskode."
+              common: "er én af de 10000 mest almindelige adgangskoder. Brug venligst en mere sikker adgangskode."
             ip_address:
               signup_not_allowed: "Tilmelding er ikke tilladt fra den aktuelle adresse."
 
@@ -530,7 +533,7 @@ da:
     max_topic_title_length: "Maksimumlængde af emnetitel i tegn."
     min_private_message_title_length: "Minimumlængde af titel på privat besked i tegn."
     min_search_term_length: "Minimumlængde af søgeord i tegn."
-    allow_uncategorized_topics: "Tillad emner at blive oprettet uden en kategori. BEMÆRK: Efter ændring af denne indstilling skal alle klienter genindlæse siden for at ændringen slår igennem."
+    allow_uncategorized_topics: "Tillad emner at blive oprettet uden en kategori."
     allow_duplicate_topic_titles: "Tillad emner med identiske titler"
     unique_posts_mins: "Hvor mange minutter der skal gå før en bruger kan skrive et indlæg med det samme indhold igen."
     enforce_global_nicknames: "Gennemtving unikke øgenavne (ADVARSEL: skift kun dette under den første opsætning)"
@@ -597,7 +600,7 @@ da:
     must_approve_users: "Admins skal godkende alle brugere før de får adgang"
     ga_tracking_code: "Google analytics sporingskode, f.eks.: UA-12345678-9; se http://google.com/analytics."
     ga_domain_name: "Google analytics domænenavn, f.eks.: example.com; se http://google.com/analytics."
-    enable_escaped_fragments: "Aktivér workaround som kan hjælpe ældre webcrawlers med at indeksere sitet. ADVARSEL: aktivér kun hvis du har behov for det."
+    enable_escaped_fragments: "Aktivér workaround som kan hjælpe ældre webcrawlers med at indeksere sitet."
     enable_noscript_support: "Aktivér standard webcrawler søgemaskineunderstøttelse vha. noscript-tagget"
     top_menu: "Angiv hvilke elementer der skal vises i hjemmesidenavigationen, og i hvilken rækkefølge. Eksempel: latest|new|unread|starred|categories|top|read|posted."
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."
@@ -630,9 +633,8 @@ da:
     login_required: "Kræv godkendelse for at læse indlæg"
 
     min_password_length: "Mindste adgangskodelængde."
-    block_common_passwords: "Tillad ikke adgangskoder som er blandt de 5000 med almindelige adgangskoder"
+    block_common_passwords: "Tillad ikke adgangskoder som er blandt de 10000 med almindelige adgangskoder"
     enable_local_logins: "Aktivér traditionel, lokal godkendelse med brugernavn og adgangskode"
-    enable_local_account_create: "Aktivér oprettelse af nye lokale konti"
     enable_google_logins: "Aktivér Google-login"
     enable_yahoo_logins: "Aktivér Yahoo-login"
 
@@ -751,7 +753,7 @@ da:
     minimum_topics_similar: "Hvor emner der skal eksistere i databasen før der vises tilsvarende emner."
 
     relative_date_duration: "Antal dage efter oprettelse af et indlæg hvor datoer vises som relative i stedet for absolutte. Eksempler: relativ dato: 7d, absolut dato: 20 Feb."
-    delete_user_max_age: "Den maksimale alder af en bruger som kan slettes af en admin, i dage."
+    delete_user_max_post_age: "Den maksimale alder af en bruger som kan slettes af en admin, i dage."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
     username_change_period: "Antal dage efter oprettelsen hvor brugere kan ændre deres brugernavn (0 for ikke at tillade skift af brugernavn)."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."

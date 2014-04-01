@@ -93,5 +93,5 @@ end
 #  likes_given       :integer          default(0), not null
 #  likes_received    :integer          default(0), not null
 #  topic_reply_count :integer          default(0), not null
+#  new_since         :datetime         not null
 #
-

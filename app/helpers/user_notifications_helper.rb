@@ -26,7 +26,8 @@ module UserNotificationsHelper
   end
 
   def logo_url
-    logo_url = SiteSetting.logo_url
+    logo_url = SiteSetting.digest_logo_url
+    logo_url = SiteSetting.logo_url if logo_url.blank?
     if logo_url !~ /http(s)?\:\/\//
       logo_url = "#{Discourse.base_url}#{logo_url}"
     end
@@ -60,7 +61,7 @@ module UserNotificationsHelper
     else
       # Otherwise, try just the first paragraph.
       para = first_paragraph_from(html)
-      raw Sanitize.clean(para, UserNotificationsHelper.sanitize_options)
+      raw Sanitize.clean(para.to_s, UserNotificationsHelper.sanitize_options)
     end
   end
 end

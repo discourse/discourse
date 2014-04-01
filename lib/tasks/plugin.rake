@@ -45,7 +45,7 @@ end
 
 desc 'run plugin specs'
 task 'plugin:spec', :plugin do |t, args|
-  args.with_defaults(plugin: "**")
+  args.with_defaults(plugin: "*")
   ruby = `which ruby`.strip
   files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*.rb")
   if files.length > 0

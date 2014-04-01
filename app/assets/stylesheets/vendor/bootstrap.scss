@@ -24,7 +24,6 @@ img {
 }
 .row {
   margin-left: -12px;
-  *zoom: 1;
 }
 .row:before,
 .row:after {
@@ -118,9 +117,6 @@ input[type="submit"].btn::-moz-focus-inner {
 .dropdown {
   position: relative;
 }
-.dropdown-toggle {
-  *margin-bottom: -3px;
-}
 .dropdown-toggle:active,
 .open .dropdown-toggle {
   outline: 0;
@@ -149,8 +145,6 @@ input[type="submit"].btn::-moz-focus-inner {
   background-color: #ffffff;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  *border-right-width: 2px;
-  *border-bottom-width: 2px;
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
@@ -170,9 +164,6 @@ input[type="submit"].btn::-moz-focus-inner {
   color: #ffffff;
   text-decoration: none;
   background-color: #0088cc;
-}
-.open {
-  *z-index: 1000;
 }
 .open > .dropdown-menu {
   display: block;
@@ -475,7 +466,6 @@ body {
   .input-prepend input, .input-append input, .input-prepend select, .input-append select {
     position: relative;
     margin-bottom: 0;
-    *margin-left: 0;
     vertical-align: middle;
     border-radius: 0 3px 3px 0;
   }
@@ -536,7 +526,6 @@ body {
 
   .form-horizontal input, .form-horizontal textarea, .form-horizontal select,  .form-horizontal .input-prepend, .form-horizontal .input-append {
     display: inline-block;
-    *display: inline;
     margin-bottom: 0;
   }
   .form-horizontal .hide {
@@ -549,7 +538,6 @@ body {
   .form-horizontal {
     .control-group {
       margin-bottom: 18px;
-      *zoom: 1;
       &:before {
         display: table;
         content: "";
@@ -572,13 +560,7 @@ body {
       font-weight: bold;
     }
     .controls {
-      *display: inline-block;
-      *padding-left: 20px;
       margin-left: 160px;
-      *margin-left: 0;
-      &:first-child {
-        *padding-left: 160px;
-      }
     }
   }
 

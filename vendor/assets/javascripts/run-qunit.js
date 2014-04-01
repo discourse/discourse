@@ -30,7 +30,7 @@ page.open(args[0], function(status) {
   } else {
     page.evaluate(logQUnit);
 
-    var timeout = parseInt(args[1] || 60000, 10);
+    var timeout = parseInt(args[1] || 120000, 10);
     var start = Date.now();
     var interval = setInterval(function() {
       if (Date.now() > start + timeout) {

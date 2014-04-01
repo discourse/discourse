@@ -145,30 +145,12 @@ describe Category do
     end
   end
 
-  describe 'caching' do
-    it "invalidates the site cache on creation" do
-      Site.expects(:invalidate_cache).once
-      Fabricate(:category)
-    end
-
-    it "invalidates the site cache on update" do
-      cat = Fabricate(:category)
-      Site.expects(:invalidate_cache).once
-      cat.update_attributes(name: 'new name')
-    end
-
-    it "invalidates the site cache on destroy" do
-      cat = Fabricate(:category)
-      Site.expects(:invalidate_cache).once
-      cat.destroy
-    end
-  end
-
   describe 'non-english characters' do
     let(:category) { Fabricate(:category, name: "電車男") }
 
     it "creates a blank slug, this is OK." do
       category.slug.should be_blank
+      category.slug_for_url.should == "#{category.id}-category"
     end
   end
 
@@ -177,6 +159,7 @@ describe Category do
 
     it 'creates a blank slug' do
       category.slug.should be_blank
+      category.slug_for_url.should == "#{category.id}-category"
     end
   end
 
@@ -188,6 +171,7 @@ describe Category do
 
     it 'is created correctly' do
       @category.slug.should == 'amazing-category'
+      @category.slug_for_url.should == @category.slug
 
       @category.description.should be_blank
 
@@ -223,7 +207,9 @@ describe Category do
 
     describe "creating a new category with the same slug" do
       it "should have a blank slug" do
-        Fabricate(:category, name: "Amazing Categóry").slug.should be_blank
+        category = Fabricate(:category, name: "Amazing Categóry")
+        category.slug.should be_blank
+        category.slug_for_url.should == "#{category.id}-category"
       end
     end
 

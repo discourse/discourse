@@ -12,6 +12,7 @@ class Auth::DefaultCurrentUserProvider
     @request = Rack::Request.new(env)
   end
 
+
   # our current user, return nil if none is found
   def current_user
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
@@ -31,8 +32,13 @@ class Auth::DefaultCurrentUserProvider
     end
 
     if current_user
-      current_user.update_last_seen!
-      current_user.update_ip_address!(request.ip)
+
+      u = current_user
+      Scheduler::Defer.later do
+        u.update_last_seen!
+        u.update_ip_address!(request.ip)
+      end
+
     end
 
     # possible we have an api call, impersonate
@@ -72,7 +78,8 @@ class Auth::DefaultCurrentUserProvider
         !user.admin &&
         Rails.configuration.respond_to?(:developer_emails) &&
         Rails.configuration.developer_emails.include?(user.email)
-      user.update_column(:admin, true)
+      user.admin = true
+      user.save
     end
   end
 

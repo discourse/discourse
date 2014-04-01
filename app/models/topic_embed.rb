@@ -6,13 +6,22 @@ class TopicEmbed < ActiveRecord::Base
   validates_presence_of :embed_url
   validates_presence_of :content_sha1
 
+  def self.normalize_url(url)
+    url.downcase.sub(/\/$/, '').sub(/\-+/, '-')
+  end
+
   # Import an article from a source (RSS/Atom/Other)
   def self.import(user, url, title, contents)
     return unless url =~ /^https?\:\/\//
 
+    if SiteSetting.embed_truncate
+      contents = first_paragraph_from(contents)
+    end
     contents << "\n<hr>\n<small>#{I18n.t('embed.imported_from', link: "<a href='#{url}'>#{url}</a>")}</small>\n"
 
-    embed = TopicEmbed.where(embed_url: url).first
+    url = normalize_url(url)
+
+    embed = TopicEmbed.where("lower(embed_url) = ?", url).first
     content_sha1 = Digest::SHA1.hexdigest(contents)
     post = nil
 
@@ -34,6 +43,7 @@ class TopicEmbed < ActiveRecord::Base
         end
       end
     else
+      absolutize_urls(url, contents)
       post = embed.post
       # Update the topic if it changed
       if content_sha1 != embed.content_sha1
@@ -49,6 +59,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.import_remote(user, url, opts=nil)
     require 'ruby-readability'
 
+    url = normalize_url(url)
     opts = opts || {}
     doc = Readability::Document.new(open(url).read,
                                         tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol],
@@ -59,11 +70,12 @@ class TopicEmbed < ActiveRecord::Base
 
   # Convert any relative URLs to absolute. RSS is annoying for this.
   def self.absolutize_urls(url, contents)
+    url = normalize_url(url)
     uri = URI(url)
     prefix = "#{uri.scheme}://#{uri.host}"
     prefix << ":#{uri.port}" if uri.port != 80 && uri.port != 443
 
-    fragment = Nokogiri::HTML.fragment(contents)
+    fragment = Nokogiri::HTML.fragment("<div>#{contents}</div>")
     fragment.css('a').each do |a|
       href = a['href']
       if href.present? && href.start_with?('/')
@@ -76,14 +88,29 @@ class TopicEmbed < ActiveRecord::Base
         a['src'] = "#{prefix}/#{src.sub(/^\/+/, '')}"
       end
     end
-
-    fragment.to_html
+    fragment.at('div').inner_html
   end
 
   def self.topic_id_for_embed(embed_url)
-    TopicEmbed.where(embed_url: embed_url).pluck(:topic_id).first
+    embed_url = normalize_url(embed_url)
+    TopicEmbed.where("lower(embed_url) = ?", embed_url).pluck(:topic_id).first
   end
 
+  def self.first_paragraph_from(html)
+    doc = Nokogiri::HTML(html)
+
+    result = ""
+    doc.css('p').each do |p|
+      if p.text.present?
+        result << p.to_s
+        return result if result.size >= 100
+      end
+    end
+    return result unless result.blank?
+
+    # If there is no first paragaph, return the first div (onebox)
+    doc.css('div').first
+  end
 end
 
 # == Schema Information

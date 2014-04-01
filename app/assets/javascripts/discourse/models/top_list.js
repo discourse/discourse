@@ -19,7 +19,7 @@ Discourse.TopList.reopenClass({
         can_create_topic: result.can_create_topic,
         draft: result.draft,
         draft_key: result.draft_key,
-        draft_sequence: result.draft_sequence,
+        draft_sequence: result.draft_sequence
       });
 
       Discourse.Site.currentProp('periods').forEach(function(period) {

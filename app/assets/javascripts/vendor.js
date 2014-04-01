@@ -10,7 +10,6 @@
 //= require_tree ./discourse/ember
 //= require LAB.js
 //= require Markdown.Converter.js
-//= require Markdown.Editor.js
 //= require better_markdown.js
 //= require bootbox.js
 //= require bootstrap-alert.js
@@ -19,7 +18,6 @@
 //= require bootstrap-modal.js
 //= require bootstrap-transition.js
 //= require chosen.jquery.js
-//= require ember-renderspeed.js
 //= require favcount.js
 //= require jquery.ba-replacetext.js
 //= require jquery.ba-resize.min.js
@@ -39,3 +37,4 @@
 //= require show-html.js
 //= require lock-on.js
 //= require ember-cloaking
+//= require break_string

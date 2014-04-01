@@ -1,3 +1,4 @@
+/* exported exists, count, present, blank, containsInstance, not */
 // Test helpers
 function exists(selector) {
   return !!count(selector);

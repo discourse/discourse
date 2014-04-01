@@ -1,0 +1,17 @@
+# encoding: utf-8
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+it:
+  js:
+    poll:
+      voteCount:
+        one: "1 voto"
+        other: "%{count} voti"
+
+      results:
+        show: Mostra Risultati
+        hide: Nascondi Risultati

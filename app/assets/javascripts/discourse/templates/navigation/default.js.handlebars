@@ -4,6 +4,7 @@
   {{#each navItem in navItems}}
     {{navigation-item content=navItem filterMode=filterMode}}
   {{/each}}
+  {{customHTML "extraNavItem"}}
 </ul>
 
 {{#if canCreateTopic}}

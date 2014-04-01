@@ -58,8 +58,8 @@
     <div class='controls'>
       {{#if primaryGroupDirty}}
         <div>
-        <button class='btn ok' {{action savePrimaryGroup}}><i class='fa fa-check'></i></button>
-        <button class='btn cancel' {{action resetPrimaryGroup}}><i class='fa fa-times'></i></button>
+        <button class='btn ok no-text' {{action savePrimaryGroup}}><i class='fa fa-check'></i></button>
+        <button class='btn cancel no-text' {{action resetPrimaryGroup}}><i class='fa fa-times'></i></button>
         </div>
       {{/if}}
     </div>
@@ -77,6 +77,18 @@
     </div>
   </div>
 
+  {{#if showBadges}}
+    <div class='display-row'>
+      <div class='field'>{{i18n admin.badges.title}}</div>
+      <div class='value'>
+        TODO featured badges
+      </div>
+      <div class='controls'>
+        {{#link-to 'adminUser.badges' this class="btn"}}{{i18n admin.badges.edit_badges}}{{/link-to}}
+      </div>
+    </div>
+  {{/if}}
+
 </section>
 
 
@@ -90,8 +102,8 @@
         {{#if approved}}
           {{i18n admin.user.approved_by}}
 
-          {{#link-to 'adminUser' approved_by}}{{avatar approved_by imageSize="small"}}{{/link-to}}
-          {{#link-to 'adminUser' approved_by}}{{approved_by.username}}{{/link-to}}
+          {{#link-to 'adminUser' approvedBy}}{{avatar approvedBy imageSize="small"}}{{/link-to}}
+          {{#link-to 'adminUser' approvedBy}}{{approvedBy.username}}{{/link-to}}
         {{else}}
           {{i18n no_value}}
         {{/if}}
@@ -214,8 +226,8 @@
 
       {{#if dirty}}
         <div>
-        <button class='btn ok' {{action saveTrustLevel target="content"}}><i class='fa fa-check'></i></button>
-        <button class='btn cancel' {{action restoreTrustLevel target="content"}}><i class='fa fa-times'></i></button>
+        <button class='btn ok no-text' {{action saveTrustLevel target="content"}}><i class='fa fa-check'></i></button>
+        <button class='btn cancel no-text' {{action restoreTrustLevel target="content"}}><i class='fa fa-times'></i></button>
         </div>
       {{/if}}
     </div>
@@ -248,8 +260,8 @@
   <div class='display-row highlight-danger'>
     <div class='field'>{{i18n admin.user.suspended_by}}</div>
     <div class='value'>
-      {{#link-to 'adminUser' suspended_by}}{{avatar suspended_by imageSize="tiny"}}{{/link-to}}
-      {{#link-to 'adminUser' suspended_by}}{{suspended_by.username}}{{/link-to}}
+      {{#link-to 'adminUser' suspendedBy}}{{avatar suspendedBy imageSize="tiny"}}{{/link-to}}
+      {{#link-to 'adminUser' suspendedBy}}{{suspendedBy.username}}{{/link-to}}
     </div>
     <div class='controls'>
       <b>{{i18n admin.user.suspend_reason}}</b>:
@@ -305,6 +317,8 @@
           <i class='fa fa-trash-o'></i>
           {{i18n admin.user.delete_all_posts}}
         </button>
+      {{else}}
+        {{deleteAllPostsExplanation}}
       {{/if}}
     </div>
   </div>

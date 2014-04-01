@@ -1,6 +1,9 @@
 # encoding: utf-8
 # This file contains content for the server portion of Discourse used by Ruby
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -511,7 +514,7 @@ de:
     must_approve_users: "Administratoren müssen Nutzer freischalten, bevor sie Zugriff erlangen."
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
     ga_domain_name: "Google Analytics Domänenname, zum Beispiel: mysite.com; siehe http://google.com/analytics"
-    enable_escaped_fragments: "Aktiviere Umgehungslösung um älteren Suchmaschinen-Webcrawler zu helfen die Seite zu indexieren. ACHTUNG: Nur aktivieren falls wirklich nötig."
+    enable_escaped_fragments: "Aktiviere Umgehungslösung um älteren Suchmaschinen-Webcrawler zu helfen die Seite zu indexieren."
     enable_noscript_support: "Aktiviere standard Suchmaschinen-Webcrawler Unterstützung durch den noscript Tag"
     top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Bestimme, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
@@ -542,7 +545,6 @@ de:
     login_required: "Zum Lesen der Beiträge must du angemeldet sein"
 
     enable_local_logins: "Aktiviere lokale Authentisierung"
-    enable_local_account_create: "Aktiviere lokale Kontoerstellung"
     enable_google_logins: "Aktiviere Google Authentisierung."
     enable_yahoo_logins: "Aktiviere Yahoo Authentisierung."
 
@@ -654,7 +656,7 @@ de:
     minimum_topics_similar: "Wie viele Themen in der Datenbank existieren müssen, bevor ähnliche Themen angezeigt werden."
 
     relative_date_duration: "Anzahl von Tagen nach nach welchen das Beitragsdatum relativ und nicht absolut angezeigt wird. Beispiel: relatives Datum: 7T, absolutes Datum: 20 Feb"
-    delete_user_max_age: "Nach wievielen Tagen ein Benutzerkonto von einem Administrator gelöscht werden kann."
+    delete_user_max_post_age: "Nach wievielen Tagen ein Benutzerkonto von einem Administrator gelöscht werden kann."
     delete_all_posts_max: "Die maximale Anzahl von Beiträgen welche auf einmal gelöscht werden kann. Hat ein Benutzer mehr Beiträge, so können die Beiträge nicht auf einmal und der Benutzer nicht gelöscht werden."
     username_change_period: "Wie lange neu registrierte Benutzer ihren Benutzernamen ändern können."
 

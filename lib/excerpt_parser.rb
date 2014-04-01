@@ -49,8 +49,16 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
           include_tag(name, attributes)
           @in_a = true
         end
+
       when "aside"
         @in_quote = true
+
+      when "div", "span"
+        # Preserve spoilers
+        if attributes.any? {|x| x == ["class", "spoiler"] }
+          include_tag("span", attributes)
+          @in_spoiler = true
+        end
     end
   end
 
@@ -65,6 +73,9 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       characters(" ")
     when "aside"
       @in_quote = false
+    when "div", "span"
+      characters("</span>", false, false, false) if @in_spoiler
+      @in_spoiler = false
     end
   end
 

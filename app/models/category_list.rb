@@ -40,6 +40,7 @@ class CategoryList
       @topics_by_id = {}
 
       @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id))
+      @all_topics = @all_topics.includes(:last_poster) if include_latest_posts?
       @all_topics.each do |t|
         t.include_last_poster = true if include_latest_posts? # hint for serialization
         @topics_by_id[t.id] = t
@@ -54,7 +55,7 @@ class CategoryList
     # Find a list of all categories to associate the topics with
     def find_categories
       @categories = Category
-                        .includes(:featured_users)
+                        .includes(:featured_users, subcategories: [:topic_only_relative_url])
                         .secured(@guardian)
                         .order('position asc')
                         .order('COALESCE(categories.posts_week, 0) DESC')

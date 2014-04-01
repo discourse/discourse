@@ -1,0 +1,16 @@
+# encoding: utf-8
+# This file contains content for the server portion of Discourse used by Ruby
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+it:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Opzioni sondaggio"
+  poll:
+    must_contain_poll_options: "deve contenere una lista di opzioni per il sondaggio"
+    cannot_have_modified_options: "non possono essere modificate dopo i primi cinque minuti. Contatta un moderatore se hai bisogno di cambiarle."
+    cannot_add_or_remove_options: "non possono essere modificate, aggiunte o rimosse. Se vuoi aggiungere o rimuovere opzioni al sondaggio, devi bloccare questo topice crearne uno nuovo."
+    prefix: "Sondaggio:"

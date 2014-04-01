@@ -48,8 +48,6 @@ module Import
       reconnect_database
 
       extract_uploads
-
-      notify_user
     rescue SystemExit
       log "Restore process was cancelled!"
       rollback
@@ -60,6 +58,7 @@ module Import
     else
       @success = true
     ensure
+      notify_user
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
@@ -95,6 +94,8 @@ module Import
       @tar_filename = @archive_filename[0...-3]
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+      @logs = []
+      @readonly_mode_was_enabled = Discourse.readonly_mode?
     end
 
     def listen_for_shutdown_signal
@@ -112,6 +113,7 @@ module Import
     end
 
     def enable_readonly_mode
+      return if @readonly_mode_was_enabled
       log "Enabling readonly mode..."
       Discourse.enable_readonly_mode
     end
@@ -123,14 +125,23 @@ module Import
 
     def wait_for_sidekiq
       log "Waiting for sidekiq to finish running jobs..."
-      iterations = 0
-      workers = Sidekiq::Workers.new
-      while (running = workers.size) > 0
-        log "  Waiting for #{running} jobs..."
+      iterations = 1
+      while sidekiq_has_running_jobs?
+        log "Waiting for sidekiq to finish running jobs... ##{iterations}"
         sleep 5
         iterations += 1
-        raise "Sidekiq did not finish running all the jobs in the allowed time!" if iterations >= 20
+        raise "Sidekiq did not finish running all the jobs in the allowed time!" if iterations > 6
       end
+    end
+
+    def sidekiq_has_running_jobs?
+      Sidekiq::Workers.new.each do |process_id, thread_id, worker|
+        payload = worker.try(:payload)
+        return true if payload.try(:all_sites)
+        return true if payload.try(:current_site_id) == @current_db
+      end
+
+      false
     end
 
     def copy_archive_to_tmp_directory
@@ -167,9 +178,6 @@ module Import
     def restore_dump
       log "Restoring dump file... (can be quite long)"
 
-      psql_command = build_psql_command
-      log "Running: #{psql_command}"
-
       logs = Queue.new
       psql_running = true
       has_error = false
@@ -199,36 +207,32 @@ module Import
       raise "psql failed" if has_error
     end
 
-    def build_psql_command
-      db_conf = Rails.configuration.database_configuration[Rails.env]
-      host = db_conf["host"]
-      password = db_conf["password"]
-      username = db_conf["username"] || ENV["USER"] || "postgres"
-      database = db_conf["database"]
+    def psql_command
+      db_conf = BackupRestore.database_configuration
 
-      password_argument = "PGPASSWORD=#{password}" if password.present?
-      host_argument     = "--host=#{host}"         if host.present?
+      password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
+      host_argument     = "--host=#{db_conf.host}"         if db_conf.host.present?
+      username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
 
-      [ password_argument,            # pass the password to psql
-        "psql",                       # the psql command
-        "--dbname='#{database}'",     # connect to database *dbname*
-        "--file='#{@dump_filename}'", # read the dump
-        "--single-transaction",       # all or nothing (also runs COPY commands faster)
-        host_argument,                # the hostname to connect to
-        "--username=#{username}"      # the username to connect as
+      [ password_argument,                # pass the password to psql (if any)
+        "psql",                           # the psql command
+        "--dbname='#{db_conf.database}'", # connect to database *dbname*
+        "--file='#{@dump_filename}'",     # read the dump
+        "--single-transaction",           # all or nothing (also runs COPY commands faster)
+        host_argument,                    # the hostname to connect to (if any)
+        username_argument                 # the username to connect as (if any)
       ].join(" ")
     end
 
     def switch_schema!
       log "Switching schemas..."
 
-      sql = <<-SQL
-        BEGIN;
-          DROP SCHEMA IF EXISTS backup CASCADE;
-          ALTER SCHEMA public RENAME TO backup;
-          ALTER SCHEMA restore RENAME TO public;
-        COMMIT;
-      SQL
+      sql = [
+        "BEGIN;",
+        BackupRestore.move_tables_between_schemas_sql("public", "backup"),
+        BackupRestore.move_tables_between_schemas_sql("restore", "public"),
+        "COMMIT;"
+      ].join("\n")
 
       User.exec_sql(sql)
     end
@@ -237,7 +241,7 @@ module Import
       log "Migrating the database..."
       Discourse::Application.load_tasks
       ENV["VERSION"] = @current_version.to_s
-      Rake::Task["db:migrate:up"].invoke
+      Rake::Task["db:migrate"].invoke
     end
 
     def reconnect_database
@@ -254,23 +258,27 @@ module Import
       end
     end
 
-    def notify_user
-      if user = User.where(email: @user_info[:email]).first
-        log "Notifying '#{user.username}' of the success of the restore..."
-        # NOTE: will only notify if user != Discourse.site_contact_user
-        SystemMessage.create(user, :import_succeeded)
-      else
-        log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
-      end
-    end
-
     def rollback
       log "Trying to rollback..."
       if BackupRestore.can_rollback?
         log "Rolling back..."
-        BackupRestore.rename_schema("backup", "public")
+        BackupRestore.move_tables_between_schemas("backup", "public")
       else
         log "There was no need to rollback"
+      end
+    end
+
+    def notify_user
+      if user = User.where(email: @user_info[:email]).first
+        log "Notifying '#{user.username}' of the end of the restore..."
+        # NOTE: will only notify if user != Discourse.site_contact_user
+        if @success
+          SystemMessage.create(user, :import_succeeded)
+        else
+          SystemMessage.create(user, :import_failed, logs: @logs.join("\n"))
+        end
+      else
+        log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
       end
     end
 
@@ -296,6 +304,7 @@ module Import
     end
 
     def disable_readonly_mode
+      return if @readonly_mode_was_enabled
       log "Disabling readonly mode..."
       Discourse.disable_readonly_mode
     end
@@ -313,12 +322,17 @@ module Import
     def log(message)
       puts(message) rescue nil
       publish_log(message) rescue nil
+      save_log(message)
     end
 
     def publish_log(message)
       return unless @publish_to_message_bus
       data = { timestamp: Time.now, operation: "restore", message: message }
       MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
+    end
+
+    def save_log(message)
+      @logs << "[#{Time.now}] #{message}"
     end
 
   end

@@ -8,9 +8,11 @@ class UserSerializer < BasicUserSerializer
              :bio_cooked,
              :created_at,
              :website,
+             :profile_background,
              :can_edit,
              :can_edit_username,
              :can_edit_email,
+             :can_edit_name,
              :stats,
              :can_send_private_message_to_user,
              :bio_excerpt,
@@ -47,6 +49,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   private_attributes :email,
+                     :locale,
                      :email_digests,
                      :email_private_messages,
                      :email_direct,
@@ -89,6 +92,10 @@ class UserSerializer < BasicUserSerializer
 
   def can_edit_email
     scope.can_edit_email?(object)
+  end
+
+  def can_edit_name
+    scope.can_edit_name?(object)
   end
 
   def stats

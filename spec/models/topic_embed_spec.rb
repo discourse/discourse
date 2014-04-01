@@ -41,6 +41,17 @@ describe TopicEmbed do
         post.cooked.should =~ /new contents/
       end
 
+      it "Should leave uppercase Feed Entry URL untouched in content" do
+        cased_url = 'http://eviltrout.com/ABCD'
+        post = TopicEmbed.import(user, cased_url, title, "some random content")
+        post.cooked.should =~ /#{cased_url}/
+      end
+
+      it "Should leave lowercase Feed Entry URL untouched in content" do
+        cased_url = 'http://eviltrout.com/abcd'
+        post = TopicEmbed.import(user, cased_url, title, "some random content")
+        post.cooked.should =~ /#{cased_url}/
+      end
     end
 
   end

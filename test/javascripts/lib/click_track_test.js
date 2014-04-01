@@ -114,35 +114,39 @@ test("right clicks are tracked", function() {
   equal(fixture('a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42");
 });
 
+test("preventDefault is not called for right clicks", function() {
+  var clickEvent = generateClickEventOn('a');
+  clickEvent.which = 3;
+  this.stub(clickEvent, "preventDefault");
+  ok(track(clickEvent));
+  ok(!clickEvent.preventDefault.calledOnce);
+});
 
-var expectToOpenInANewTab = function(clickEvent) {
-  ok(!track(clickEvent));
-  ok(Discourse.ajax.calledOnce);
-  ok(window.open.calledOnce);
+var testOpenInANewTab = function(description, clickEventModifier) {
+  test(description, function() {
+    var clickEvent = generateClickEventOn('a');
+    clickEventModifier(clickEvent);
+    this.stub(clickEvent, "preventDefault");
+    ok(track(clickEvent));
+    ok(Discourse.ajax.calledOnce);
+    ok(!clickEvent.preventDefault.calledOnce);
+  });
 };
 
-test("it opens in a new tab when pressing shift", function() {
-  var clickEvent = generateClickEventOn('a');
+testOpenInANewTab("it opens in a new tab when pressing shift", function(clickEvent) {
   clickEvent.shiftKey = true;
-  expectToOpenInANewTab(clickEvent);
 });
 
-test("it opens in a new tab when pressing meta", function() {
-  var clickEvent = generateClickEventOn('a');
+testOpenInANewTab("it opens in a new tab when pressing meta", function(clickEvent) {
   clickEvent.metaKey = true;
-  expectToOpenInANewTab(clickEvent);
 });
 
-test("it opens in a new tab when pressing meta", function() {
-  var clickEvent = generateClickEventOn('a');
+testOpenInANewTab("it opens in a new tab when pressing ctrl", function(clickEvent) {
   clickEvent.ctrlKey = true;
-  expectToOpenInANewTab(clickEvent);
 });
 
-test("it opens in a new tab when pressing meta", function() {
-  var clickEvent = generateClickEventOn('a');
+testOpenInANewTab("it opens in a new tab on middle click", function(clickEvent) {
   clickEvent.which = 2;
-  expectToOpenInANewTab(clickEvent);
 });
 
 test("tracks via AJAX if we're on the same site", function() {

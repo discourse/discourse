@@ -1,4 +1,7 @@
-{{customHTML "top"}}
+<div class='container'>
+  {{customHTML "top"}}
+  {{Discourse.globalNotice}}
+</div>
 
 {{#if postStream.loaded}}
 
@@ -12,20 +15,25 @@
           {{/if}}
 
           {{#if editingTopic}}
-            {{categoryChooser valueAttribute="id" value=newCategoryId source=category_id}}
+            {{#if isPrivateMessage}}
+              <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
+            {{else}}
+              {{categoryChooser valueAttribute="id" value=newCategoryId source=category_id}}
+            {{/if}}
             {{textField id='edit-title' value=newTitle}}
 
-            <button class='btn btn-primary btn-small' {{action finishedEditingTopic}}><i class='fa fa-check'></i></button>
-            <button class='btn btn-small' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
+            <button class='btn btn-primary btn-small no-text' {{action finishedEditingTopic}}><i class='fa fa-check'></i></button>
+            <button class='btn btn-small no-text' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
           {{else}}
             <h1>
+              <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
               {{#if category.parentCategory}}
                 {{boundCategoryLink category.parentCategory}}
               {{/if}}
               {{boundCategoryLink category}}
               {{#if details.loaded}}
                 {{topicStatus topic=model}}
-                <a href='{{unbound url}}'>
+                <a href='{{unbound url}}' {{action jumpTop}}>
                   {{#if topicSaving}}
                     {{fancy_title}}
                   {{else}}
@@ -74,6 +82,7 @@
                                  slackRatio=slackRatio
                                  loadingHTML=controller.loadingHTML
                                  preservesContext="true"
+                                 uncloakDefault="true"
                                  offsetFixed="header"}}
           {{/unless}}
 
@@ -120,9 +129,11 @@
       {{#if message}}
         <div class="message">
           <h2>{{message}}</h2>
+          {{#unless currentUser}}
+            <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
+          {{/unless}}
         </div>
       {{/if}}
-
     </div>
   {{else}}
     <div class='container'>
@@ -138,7 +149,7 @@
   {{render quoteButton}}
 {{/if}}
 
-{{#if currentUser.staff}}
+{{#if currentUser.canManageTopic}}
   {{render topicAdminMenu content}}
 {{/if}}
 

@@ -46,7 +46,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
   }.property('nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted', 'tosAccepted'),
 
   passwordRequired: function() {
-    return (this.blank('authOptions.auth_provider') || this.blank('authOptions.email_valid') || !this.get('authOptions.email_valid'));
+    return this.blank('authOptions.auth_provider');
   }.property('authOptions.auth_provider'),
 
   passwordInstructions: function() {

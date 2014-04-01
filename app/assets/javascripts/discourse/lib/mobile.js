@@ -14,7 +14,7 @@ Discourse.Mobile = {
     this.mobileView = $html.hasClass('mobile-view');
 
     if (localStorage && localStorage.mobileView) {
-      var savedValue = (localStorage.mobileView === 'true' ? true : false);
+      var savedValue = (localStorage.mobileView === 'true');
       if (savedValue !== this.mobileView) {
         this.reloadPage(savedValue);
       }

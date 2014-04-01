@@ -21,7 +21,6 @@ Discourse.Eyeline.prototype.update = function() {
       docViewBottom = docViewTop + windowHeight,
       $elements = $(this.selector),
       atBottom = false,
-      foundElement = false,
       bottomOffset = $elements.last().offset(),
       self = this;
 
@@ -29,14 +28,14 @@ Discourse.Eyeline.prototype.update = function() {
     atBottom = (bottomOffset.top <= docViewBottom) && (bottomOffset.top >= docViewTop);
   }
 
-  // Whether we've seen any elements in this search
-  foundElement = false;
-
   return $elements.each(function(i, elem) {
     var $elem = $(elem),
         elemTop = $elem.offset().top,
         elemBottom = elemTop + $elem.height(),
         markSeen = false;
+
+    // Make sure the element is visible
+    if (!$elem.is(':visible')) return true;
 
     // It's seen if...
     // ...the element is vertically within the top and botom

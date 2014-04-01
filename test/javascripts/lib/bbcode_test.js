@@ -16,6 +16,7 @@ test('basic bbcode', function() {
   format("[b]evil [i]trout[/i][/b]",
          "<span class=\"bbcode-b\">evil <span class=\"bbcode-i\">trout</span></span>",
          "allows embedding of tags");
+  format("[EMAIL]eviltrout@mailinator.com[/EMAIL]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports upper case bbcode");
 });
 
 test('invalid bbcode', function() {

@@ -10,10 +10,14 @@
 Discourse.UploadSelectorController = Discourse.Controller.extend(Discourse.ModalFunctionality, {
   remote: Em.computed.not("local"),
   local: false,
+  showMore: false,
 
   init: function() {
     this._super();
-    this.set("local", this.get("allowLocal"));
+    this.setProperties({
+      local: this.get("allowLocal"),
+      showMore: false
+    });
   },
 
   allowLocal: function() {
@@ -21,8 +25,9 @@ Discourse.UploadSelectorController = Discourse.Controller.extend(Discourse.Modal
   }.property(),
 
   actions: {
-    useLocal: function() { this.set("local", true); },
-    useRemote: function() { this.set("local", false); }
+    useLocal: function() { this.setProperties({ local: true, showMore: false}); },
+    useRemote: function() { this.set("local", false); },
+    toggleShowMore: function() { this.toggleProperty("showMore"); }
   }
 
 });

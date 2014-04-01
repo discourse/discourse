@@ -34,7 +34,7 @@
   {{/if}}
 
   {{#if Discourse.SiteSettings.version_checks}}
-    {{ render 'admin/templates/version_checks' controller }}
+    {{partial 'admin/templates/version_checks'}}
   {{/if}}
 
   <div class="dashboard-stats trust-levels">

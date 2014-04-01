@@ -59,11 +59,17 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   goToFirstPost: function() {
-    Discourse.__container__.lookup('controller:topic').send('jumpTop');
+    this._jumpTo('jumpTop');
   },
 
   goToLastPost: function() {
-    Discourse.__container__.lookup('controller:topic').send('jumpBottom');
+    this._jumpTo('jumpBottom');
+  },
+
+  _jumpTo: function(direction) {
+    if ($('#topic-title').length) {
+      Discourse.__container__.lookup('controller:topic').send(direction);
+    }
   },
 
   selectDown: function() {

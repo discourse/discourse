@@ -42,7 +42,7 @@ Discourse.ComboboxView = Discourse.View.extend({
         if (val) { val = val.toString(); }
 
         var selectedText = (val === selected) ? "selected" : "";
-        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self.buildData(o) + ">" + Em.get(o, nameProperty) + "</option>");
+        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self.buildData(o) + ">" + Handlebars.Utils.escapeExpression(Em.get(o, nameProperty)) + "</option>");
       });
     }
   },
@@ -57,6 +57,10 @@ Discourse.ComboboxView = Discourse.View.extend({
     }
     $combo.trigger("liszt:updated");
   }.observes('value'),
+
+  contentChanged: function() {
+    this.rerender();
+  }.observes('content.@each'),
 
   didInsertElement: function() {
     var $elem = this.$(),
@@ -80,6 +84,11 @@ Discourse.ComboboxView = Discourse.View.extend({
     $elem.chosen().change(function(e) {
       self.set('value', $(e.target).val());
     });
+  },
+
+  willClearRender: function() {
+    var chosenId = this.$().attr('id') + "_chzn";
+    Ember.$("#" + chosenId).remove();
   }
 
 });

@@ -4,8 +4,14 @@
 <% end %>
 </div>
 
+
 <% if @list.topics.length > 0 %>
-<p><a href="<%= @list.more_topics_url.sub('.json?','?') %>"><%= t 'next_page'%></a></p>
+  <p>
+  <% if params[:page].to_i > 0 %>
+    <a href="<%= @list.prev_topics_url.sub('.json?','?') %>" rel="prev"><%= t 'prev_page'%></a> &nbsp;
+  <% end %>
+    <b><a href="<%= @list.more_topics_url.sub('.json?','?') %>" rel="next"><%= t 'next_page'%></a></b>
+  </p>
 <% end %>
 
 <p><%= t 'powered_by_html' %></p>

@@ -19,15 +19,15 @@ a.loading-onebox {
     margin-right: 10px;
     padding: 10px 0;
     display: block;
-    color: $primary;
+    color: $primary_text_color;
     position: relative;
-    border-bottom: 1px solid $inner_border;
+    border-bottom: 1px solid $primary_border_color;
     .info {
       a {
-        color: $primary;
+        color: $primary_text_color;
         text-decoration: none;
       }
-      background-color: $secondary;
+      background-color: $primary_background_color;
       position: absolute;
       font-size: 14px;
       img.favicon {
@@ -45,7 +45,7 @@ a.loading-onebox {
       margin-right: 10px;
     }
     h3, h4 {
-      margin: 0px !important;
+      margin: 0 !important;
     }
     img.thumbnail {
       max-width: 25%;

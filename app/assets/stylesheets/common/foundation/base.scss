@@ -6,9 +6,9 @@
 // --------------------------------------------------
 
 html {
-  color: $primary;
+  color: $primary_text_color;
   font: #{$base-font-size}/#{$base-line-height} $base-font-family;
-  background-color: $secondary;
+  background-color: $primary_background_color;
   overflow-y: scroll;
   -webkit-font-smoothing: subpixel-antialiased;
 }
@@ -39,7 +39,7 @@ hr {
   height: 1px;
   margin: 1em 0;
   border: 0;
-  border-top: 1px solid $primary_lightest;
+  border-top: 1px solid $primary_border_color;
   padding: 0;
 }
 
@@ -51,6 +51,11 @@ ol,
 dd {
   margin: 0 0 9px 25px;
   padding: 0;
+}
+
+
+.cooked ul, .cooked ol, .cooked dd {
+  clear: both;
 }
 
 li {

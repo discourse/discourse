@@ -10,7 +10,7 @@ module PostGuardain
     already_did_flagging      = taken.any? && (taken & PostActionType.flag_types.values).any?
 
     if  authenticated? && post
-      # we always allow flagging - NOTE: this does not seem true, see specs. (MVH)
+      # we allow flagging for trust level 1 and higher
       (is_flag && @user.has_trust_level?(:basic) && not(already_did_flagging)) ||
 
       # not a flagging action, and haven't done it already
@@ -21,6 +21,9 @@ module PostGuardain
 
       # don't like your own stuff
       not(action_key == :like && is_my_own?(post)) &&
+
+      # new users can't notify_user because they are not allowed to send private messages
+      not(action_key == :notify_user && !@user.has_trust_level?(:basic)) &&
 
       # no voting more than once on single vote topics
       not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
@@ -52,7 +55,7 @@ module PostGuardain
   end
 
   def can_delete_all_posts?(user)
-    is_staff? && user && !user.admin? && user.created_at >= SiteSetting.delete_user_max_age.days.ago && user.post_count <= SiteSetting.delete_all_posts_max.to_i
+    is_staff? && user && !user.admin? && (user.first_post.nil? || user.first_post.created_at >= SiteSetting.delete_user_max_post_age.days.ago) && user.post_count <= SiteSetting.delete_all_posts_max.to_i
   end
 
   # Creating Method
@@ -66,7 +69,7 @@ module PostGuardain
 
   # Editing Method
   def can_edit_post?(post)
-    is_staff? || (!post.topic.archived? && is_my_own?(post) && !post.user_deleted && !post.deleted_at && !post.edit_time_limit_expired?)
+    is_staff? || @user.has_trust_level?(:elder) || (!post.topic.archived? && is_my_own?(post) && !post.user_deleted && !post.deleted_at && !post.edit_time_limit_expired?)
   end
 
   # Deleting Methods
@@ -108,8 +111,15 @@ module PostGuardain
 
   def can_see_post_revision?(post_revision)
     return false if post_revision.nil?
+    can_view_post_revisions?(post_revision.post)
+  end
+
+  def can_view_post_revisions?(post)
+    return false if post.nil?
     return true if SiteSetting.edit_history_visible_to_public
-    authenticated? && (is_staff? || can_see_post?(post_revision.post))
+    authenticated? &&
+      (is_staff? || @user.has_trust_level?(:elder) || @user.id == post.user_id) &&
+      can_see_post?(post)
   end
 
   def can_vote?(post, opts={})

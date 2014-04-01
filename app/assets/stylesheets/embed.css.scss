@@ -1,11 +1,34 @@
 //= require ./vendor/normalize
 //= require ./common/foundation/base
 
+@import "./common/foundation/variables";
+
 article.post {
   border-bottom: 1px solid #ddd;
 
   &.deleted {
     background-color: #ffe5e5;
+  }
+
+  .quote .title {
+    border-left: 5px solid $primary_border_color;
+    background-color: lighten($secondary_background_color, 76%);
+    padding: 10px 10px 0 12px;
+    .avatar { margin-right: 7px; }
+  }
+
+  ol, ul {
+    clear: none;
+  }
+
+  blockquote {
+    padding: 10px 8px 10px 13px;
+    margin: 0 0 10px 0;
+    background-color: $quote-background;
+    border-left: 5px solid $primary_border_color;
+    p {
+      margin: 0 0 10px 0;
+    }
   }
 
   .post-date {
@@ -24,21 +47,38 @@ article.post {
 
     h3 {
       text-align: center;
-      color: #4a6b82;
+      color: #0088cc;
       font-size: 13px;
-      margin: 0;
+      margin: 5px 0 0 0;
       word-wrap: break-word;
+
+      a.staff {
+        background-color: #ffffc2;
+      }
+
+      a.new-user {
+        color: lighten($primary_text_color, 35%);
+      }
     }
   }
 
   .cooked {
     padding: 20px 0;
-    margin-left: 92px;
+    margin-left: 100px;
+    word-wrap: break-word;
 
+    img {
+      max-width:100%;
+    }
     p {
       margin: 0 0 1em 0;
     }
   }
+}
+
+img.emoji {
+  width: 20px;
+  height: 20px;
 }
 
 .post-replies {

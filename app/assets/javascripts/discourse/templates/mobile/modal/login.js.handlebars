@@ -55,7 +55,7 @@
     </button>
 
     {{#unless Discourse.SiteSettings.invite_only}}
-      &nbsp; {{i18n create_account.invite}}
+      {{i18n create_account.invite}}
       <a id="new-account-link" {{action showCreateAccount}}>
         {{i18n create_account.action}}
       </a>

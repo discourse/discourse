@@ -7,9 +7,6 @@
   .dropdown-menu {
      z-index: 2050;
   }
-  .dropdown.open {
-    *z-index: 2050;
-  }
   .popover {
     z-index: 2060;
   }
@@ -26,7 +23,7 @@
   bottom: 0;
   left: 0;
   z-index: 1040;
-  background-color: $primary;
+  background-color: $secondary_background_color;
   &.fade {
     opacity: 0;
   }
@@ -34,8 +31,20 @@
 
 .modal-backdrop,
 .modal-backdrop.fade.in {
+  -webkit-animation: fade .25s;
+  animation: fade .25s;
   opacity: 0.8;
   filter: alpha(opacity=80);
+}
+
+//fade in
+
+@-webkit-keyframes fade {
+    from {opacity: 0}
+    to {opacity: .8}
+}@keyframes fade {
+    from {opacity: 0}
+    to {opacity: .8}
 }
 
 .modal-outer-container {
@@ -50,13 +59,11 @@
 .modal-inner-container {
   max-width: 710px;
   margin: 0 auto;
-  background-color: $secondary;
-  border: 1px solid $primary_light;
-  border: 1px solid $primary_lightest;
-  *border: 1px solid $primary_light;
-  /* IE6-7 */
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
+  border: 1px solid lighten($primary_border_color, 10%);
 
-  box-shadow: 0 3px 7px $primary;
+  box-shadow: 0 3px 7px rgba($primary_shadow_color, .8);
   background-clip: padding-box;
 }
 .modal {
@@ -78,24 +85,30 @@
   width: 610px;
   height: auto;
   margin: -250px 0 0 -305px;
-  background-color: $secondary;
-  border: 1px solid $primary_light;
-  border: 1px solid $primary_lightest;
-  *border: 1px solid $primary_light;
-  /* IE6-7 */
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
+  border: 1px solid lighten($primary_border_color, 10%);
 
-  box-shadow: 0 3px 7px $primary;
+  box-shadow: 0 3px 7px rgba($primary_shadow_color, .8);
   background-clip: padding-box;
+
 }
 
-.modal.fade {
-  -webkit-transition: opacity .3s linear, top .3s ease-out;
-  transition: opacity .3s linear, top .3s ease-out;
-  top: -25%;
+.modal.in {
+-webkit-animation: modal .25s;
+animation: modal .25s;
 }
-.modal.fade.in {
-  top: 50%;
+
+//fade in and animate up
+
+@-webkit-keyframes modal {
+    from {opacity: 0}
+    to {opacity: 1}
+}@keyframes fade {
+    from {opacity: 0}
+    to {opacity: 1}
 }
+
 .modal-body {
   overflow-y: auto;
   max-height: 400px;
@@ -107,8 +120,7 @@
 .modal-footer {
   margin: 0 15px;
   padding: 14px 0 15px;
-  border-top: 1px solid $primary_lighter;
-  *zoom: 1;
+  border-top: 1px solid $primary_border_color;
 }
 .modal-footer:before,
 .modal-footer:after {
@@ -130,7 +142,7 @@
   margin-left: -1px;
 }
 .modal-header {
-  border-bottom: 1px solid $primary_lighter;
+  border-bottom: 1px solid $primary_border_color;
   h3 {
     color: $nav-pills-background-color-active;
     font-size: 20px;
@@ -139,7 +151,7 @@
   .close {
     float: right;
     font-size: 20px;
-    margin: 10px 10px 0px;
+    margin: 10px 10px 0;
     text-decoration: none;
     color: $modal-close-button-color;
     cursor: pointer;
@@ -152,11 +164,11 @@
 .modal {
   .nav {
     padding: 10px 30px;
-    background-color: $primary_lightest;
+    background-color: lighten($primary_background_color, 76%);
     li > a {
       font-size: 14px;
     }
-    border-bottom: 1px solid $primary_lighter;
+    border-bottom: 1px solid $primary_border_color;
 
   }
 
@@ -185,17 +197,17 @@
       height: 80px;
     }
     label {
-      color: $primary_medium;
+      color: lighten($primary_text_color, 35%);
     }
     p {
-      color: $primary;
+      color: $primary_text_color;
       font-size: 13px;
     }
     .archetype-option {
       margin-bottom: 20px;
     }
     .warning {
-      color: lighten($highlight_danger, 10%) !important;
+      color: $warning_text_color !important;
     }
   }
   .password-confirmation {
@@ -236,11 +248,11 @@
       li {
         margin: 0 4px 8px 0;
         a {
-          color: $primary_light;
+          color: lighten($primary_text_color, 50%);
           cursor: pointer;
         }
         a:hover {
-          color: $primary;
+          color: $primary_text_color;
         }
       }
     }
@@ -322,9 +334,9 @@
         font-weight: normal;
       }
       &.btn-reply-here {
-        @include linear-gradient($primary_lighter, $primary_lighter);
+        background: lighten($secondary_background_color, 60%);
         text-shadow: none;
-        color: $primary_medium;
+        color: lighten($primary_text_color, 35%);
       }
     }
     .cancel {

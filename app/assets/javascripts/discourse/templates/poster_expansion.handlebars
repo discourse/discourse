@@ -16,7 +16,7 @@
       {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}
 
       {{#if user.can_send_private_message_to_user}}
-        <button class='btn' {{action composePrivateMessage user}}><i class='fa fa-envelope'></i>{{i18n user.private_message}}</button>
+        <button class='btn btn-primary' {{action composePrivateMessage user}}><i class='fa fa-envelope'></i>{{i18n user.private_message}}</button>
       {{/if}}
 
       {{#link-to 'user' user class="btn"}}<i class='fa fa-user'></i>{{i18n user.show_profile}}{{/link-to}}

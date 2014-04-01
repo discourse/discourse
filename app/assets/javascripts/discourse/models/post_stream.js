@@ -176,15 +176,13 @@ Discourse.PostStream = Em.Object.extend({
 
 
   /**
-    Cancel any active filters on the stream and refresh it.
+    Cancel any active filters on the stream.
 
     @method cancelFilter
-    @returns {Ember.Deferred} a promise that resolves when the filter has been cancelled.
   **/
   cancelFilter: function() {
     this.set('summary', false);
     this.get('userFilters').clear();
-    return this.refresh();
   },
 
   /**
@@ -374,8 +372,8 @@ Discourse.PostStream = Em.Object.extend({
     `undoPost` when it fails.
 
     @method stagePost
-    @param {Discourse.Post} the post to stage in the stream
-    @param {Discourse.User} the user creating the post
+    @param {Discourse.Post} post the post to stage in the stream
+    @param {Discourse.User} user the user creating the post
   **/
   stagePost: function(post, user) {
 
@@ -509,6 +507,21 @@ Discourse.PostStream = Em.Object.extend({
     if (this.get('stream').indexOf(postId) === -1) {
       this.get('stream').addObject(postId);
       if (loadedAllPosts) { this.appendMore(); }
+    }
+  },
+
+  triggerChangedPost: function(postId, updatedAt) {
+    if (!postId) { return; }
+
+    var postIdentityMap = this.get('postIdentityMap'),
+        existing = postIdentityMap.get(postId),
+        postStream = this;
+
+    if (existing && existing.updated_at !== updatedAt) {
+      var url = "/posts/" + postId;
+      Discourse.ajax(url).then(function(p){
+        postStream.storePost(Discourse.Post.create(p));
+      });
     }
   },
 
@@ -727,7 +740,11 @@ Discourse.PostStream = Em.Object.extend({
     // If the result is 403 it means invalid access
     if (status === 403) {
       topic.set('errorTitle', I18n.t('topic.invalid_access.title'));
-      topic.set('message', I18n.t('topic.invalid_access.description'));
+      if (Discourse.User.current()) {
+        topic.set('message', I18n.t('topic.invalid_access.description'));
+      } else {
+        topic.set('message', I18n.t('topic.invalid_access.login_required'));
+      }
       return;
     }
 

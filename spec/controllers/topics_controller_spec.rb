@@ -345,7 +345,7 @@ describe TopicsController do
       end
 
       it 'deletes the forum topic user record' do
-        PostTiming.expects(:destroy_for).with(@user.id, @topic.id)
+        PostTiming.expects(:destroy_for).with(@user.id, [@topic.id])
         xhr :delete, :destroy_timings, topic_id: @topic.id
       end
 
@@ -791,7 +791,7 @@ describe TopicsController do
       let(:operation) { {type: 'change_category', category_id: '1'} }
       let(:topic_ids) { [1,2,3] }
 
-      it "requires a list of topic_ids" do
+      it "requires a list of topic_ids or filter" do
         lambda { xhr :put, :bulk, operation: operation }.should raise_error(ActionController::ParameterMissing)
       end
 
@@ -810,5 +810,26 @@ describe TopicsController do
         xhr :put, :bulk, topic_ids: topic_ids, operation: operation
       end
     end
+  end
+
+
+  describe 'reset_new' do
+    it 'needs you to be logged in' do
+      lambda { xhr :put, :reset_new }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    let(:user) { log_in(:user) }
+
+    it "updates the `new_since` date" do
+      old_date = 2.years.ago
+
+      user.user_stat.update_column(:new_since, old_date)
+
+      xhr :put, :reset_new
+      user.reload
+      user.user_stat.new_since.to_date.should_not == old_date.to_date
+
+    end
+
   end
 end

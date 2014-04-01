@@ -16,14 +16,14 @@ a.loading-onebox {
 .onebox-result {
   margin-top: 15px;
   padding: 12px 25px 12px 12px;
-  border-left: 5px solid $primary_light;
-  background: $primary_lightest;
+  border-left: 5px solid $primary_border_color;
+  background: lighten($secondary_background_color, 76%);
   font-size: 14px;
   > .source {
     margin-bottom: 12px;
     margin-right: 10px;
     display: block;
-    color: $primary;
+    color: $primary_text_color;
     position: relative;
     height: 20px;
     .info {
@@ -39,6 +39,8 @@ a.loading-onebox {
       }
     }
   }
+
+
   .onebox-result-body {
     padding-top: 5px;
     img {
@@ -49,7 +51,7 @@ a.loading-onebox {
       margin-right: 10px;
     }
     h3, h4 {
-      margin: 0px !important;
+      margin: 0 !important;
     }
     code {
       max-height: 400px;
@@ -92,13 +94,13 @@ a.loading-onebox {
 aside.onebox {
   margin-top: 15px;
   padding: 12px 25px 12px 12px;
-  border-left: 5px solid $primary_light;
-  background: $primary_lightest;
+  border-left: 5px solid $primary_border_color;
+  background: lighten($secondary_background_color, 76%);
   font-size: 14px;
 
   header {
     a[href] {
-      color: $primary;
+      color: $primary_text_color;
       text-decoration: none;
     }
   }
@@ -107,22 +109,24 @@ aside.onebox {
   @include onebox-favicon('twitterstatus', 'twitter');
   @include onebox-favicon('wikipedia', 'wikipedia');
   @include onebox-favicon('githubblob', 'github');
+  @include onebox-favicon('amazon', 'amazon');
 
 
   .onebox-body {
     clear: both;
 
-    h3 {
+    h3, h4 {
       font-size: 1.17em;
+      margin: 10px 0 !important;
     }
 
     a[href] {
-      color: $tertiary_dark;
+      color: $link_color;
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: $tertiary_dark;
+      color: $link_color;
     }
 
     img {
@@ -135,4 +139,8 @@ aside.onebox {
   }
 }
 
+.onebox-avatar {
+  height: 90px;
+  width: 90px;
+}
 

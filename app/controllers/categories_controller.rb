@@ -41,6 +41,9 @@ class CategoriesController < ApplicationController
   end
 
   def show
+    if Category.topic_create_allowed(guardian).where(id: @category.id).exists?
+      @category.permission = CategoryGroup.permission_types[:full]
+    end
     render_serialized(@category, CategorySerializer)
   end
 
@@ -59,6 +62,10 @@ class CategoriesController < ApplicationController
     json_result(@category, serializer: CategorySerializer) { |cat|
       if category_params[:position]
         category_params[:position] == 'default' ? cat.use_default_position : cat.move_to(category_params[:position].to_i)
+      end
+      if category_params.key? :email_in and category_params[:email_in].length == 0
+        # properly null the value so the database constrain doesn't catch us
+        category_params[:email_in] = nil
       end
       category_params.delete(:position)
       cat.update_attributes(category_params)
@@ -90,7 +97,7 @@ class CategoriesController < ApplicationController
           end
         end
 
-        params.permit(*required_param_keys, :position, :parent_category_id, :auto_close_hours, :permissions => [*p.try(:keys)])
+        params.permit(*required_param_keys, :position, :email_in, :email_in_allow_strangers, :parent_category_id, :auto_close_hours, :permissions => [*p.try(:keys)])
       end
     end
 

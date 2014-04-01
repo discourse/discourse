@@ -1,11 +1,11 @@
 <p>{{countI18n topic.multi_select.description countBinding="selectedPostsCount"}}</p>
 
 {{#if canSelectAll}}
-  <p><a href='#' {{action selectAll}}>select all</a></p>
+  <p><a href='#' {{action selectAll}}>{{i18n topic.multi_select.select_all}}</a></p>
 {{/if}}
 
 {{#if canDeselectAll}}
-  <p><a href='#' {{action deselectAll}}>deselect all</a></p>
+  <p><a href='#' {{action deselectAll}}>{{i18n topic.multi_select.deselect_all}}</a></p>
 {{/if}}
 
 {{#if canDeleteSelected}}

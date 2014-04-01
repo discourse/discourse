@@ -10,8 +10,7 @@
 
 %badge {
   display: inline-block;
-  font-weight: bold;
-  line-height: 1;
+  font-weight: normal;
   white-space: nowrap;
   @include border-radius-all(10px);
 }
@@ -19,20 +18,37 @@
 // Category badge
 // --------------------------------------------------
 
-.badge-category {
-  padding: 4px 6px;
-  color: $secondary;
+.badge-category, .badge-category-parent {
   font-size: 12px;
   font-weight: bold;
   white-space: nowrap;
-  &[href] {
-  color: $secondary;
+  display: inline-block;
+  line-height: 1;
+  i.fa {
+    font-size: 11px;
+    vertical-align: 1px;
   }
-  &.restricted {
-    div {
-      display: inline-block;
-      margin: 0;
-    }
+}
+.badge-wrapper {
+  white-space: nowrap;
+}
+
+.badge-category {
+  padding: 6px;
+  color: $tertiary_text_color;
+  &[href] {
+  color: $tertiary_text_color;
+  }
+}
+
+.badge-category-parent {
+  padding: 6px 2px;
+  width: 2px;
+  .category-name {
+    display: none;
+  }
+  &:before {
+    content: "\a0";
   }
 }
 
@@ -41,7 +57,6 @@
     div {
       display: inline-block;
       margin: 0;
-      padding-right: 6px;
     }
 }}
 
@@ -54,28 +69,32 @@ h1 a.badge-category div {vertical-align: top;}
 .badge-notification {
   @extend %badge;
   padding: 4px;
-  padding-top: 3px;
-  color: $secondary;
+  color: $tertiary_text_color;
   font-size: 11px;
-  min-width: 10px;
+  line-height: 1;
+  min-width: 11px;
   text-align: center;
-  background-color: $badge-notification-background-color;
+  background-color: $notification_badge_background_color;
   &[href] {
-  color: $secondary;
+  color: $tertiary_text_color;
   }
 
   // New posts
 
   &.new-posts, &.unread-posts {
-    background-color: $tertiary;
+    background-color: lighten($emphasis_text_color, 20%);
+    color: $tertiary_text_color;
+    font-weight: normal;
   }
+
+
 
   // Click count
 
   &.clicks {
     font-weight: normal;
     background-color: #ddd;
-    top: -1px;  
+    top: -1px;
     color: #888;
     position: relative;
     margin-left: 2px;
@@ -86,12 +105,11 @@ h1 a.badge-category div {vertical-align: top;}
 // --------------------------------------------------
 
 .badge-posts {
-  color: $badge-posts-color;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 14px;
   line-height: 1;
   &[href] {
-    color: $badge-posts-color;
+    color: $topic-list-td-color;
   }
 }
 
@@ -101,10 +119,10 @@ h1 a.badge-category div {vertical-align: top;}
 .badge-group {
   @extend %badge;
   padding: 3px 5px;
-  color: $primary;
-  text-shadow: 0 1px 0 rgba($secondary, 0.2);
+  color: $primary_text_color;
+  text-shadow: 0 1px 0 rgba($secondary_shadow_color, 0.2);
   background-color: #ddd;
   border-color: #aaa;
   font-size: 12px;
-  @include box-shadow(inset 0 1px 0 rgba($secondary, 0.52));
+  @include box-shadow(inset 0 1px 0 rgba($secondary_shadow_color, 0.52));
 }

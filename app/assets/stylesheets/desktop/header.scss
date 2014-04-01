@@ -11,9 +11,8 @@
   top: 0;
   left: 0;
   z-index: 1000;
-  box-shadow: 0 1px 5px $primary_lighter;
-  background-color: $secondary;
-  padding-right: 3px;
+  box-shadow: 0 2px 4px -2px rgba($primary_text_color, .45);
+  background-color: $primary_background_color;
   padding-top: 3px;
   .docked & {
     position: fixed;
@@ -31,7 +30,7 @@
     }
   }
   #site-logo {
-    max-width: 122px;
+    max-height: 40px;
   }
   .fa-home {
     font-size: 20px;
@@ -46,12 +45,13 @@
   .current-username {
     float: left;
     a {
-      color: $primary;
+      color: $secondary_text_color;
       font-size: 14px;
-      line-height: 40px;
+      display:block;
+      margin-top: 10px;
     }
     button {
-      margin-top: 8px;
+      margin-top: 9px;
     }
   }
   .icons {
@@ -61,26 +61,24 @@
     list-style: none;
     > li {
       float: left;
-      &:first-child .icon {
-      }
-      &:first-child.active .icon {
-      }
-      &:last-child .icon {
-        border-right: 1px solid $primary_lighter;
-      }
     }
     .icon {
       display: block;
-      border-top: 1px solid $primary_lighter;
-      border-bottom: 1px solid $primary_lighter;
-      border-left: 1px solid $primary_lighter;
       padding: 3px;
       color: $nav-button-color;
       text-decoration: none;
       cursor: pointer;
+      border-top: 1px solid transparent;
+      border-left: 1px solid transparent;
+      border-right: 1px solid transparent;
+
+
       &:hover {
         color: $nav-button-color-hover;
         background-color: $nav-button-background-color-hover;
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
       }
       &:active {
         color: $nav-button-color-active;
@@ -90,9 +88,11 @@
     .active .icon {
       position: relative;
       color: #7b7b7b;
-      background-color: $secondary;
+      background-color: $primary_background_color;
       cursor: default;
-      @include box-shadow((6px 0 6px -6px rgba($primary, 0.2), -6px 0 6px -6px rgba($primary, 0.2), inset 0 13px 13px -13px rgba($primary, 0.1)));
+      border-top: 1px solid $primary_border_color;
+      border-left: 1px solid $primary_border_color;
+      border-right: 1px solid $primary_border_color;
       &:after {
         display: block;
         position: absolute;
@@ -102,7 +102,10 @@
         width: 100%;
         height: 0;
         content: "";
-        border-top: 1px solid $secondary;
+        border-top: 1px solid $tertiary_border_color;
+      }
+      &:hover {
+      border-bottom: none;
       }
     }
     [class^="fa fa-"] {
@@ -123,15 +126,15 @@
     }
     .unread-notifications {
       right: -4px;
-      background-color: $tertiary;
+      background-color: $emphasis_text_color;
     }
     .unread-private-messages {
       left: -4px;
-      background-color: $success;
+      background-color: $success_text_color;
     }
   }
   .flagged-posts {
-    background-color: $highlight_danger;
+    background-color: $warning_text_color;
   }
 }
 
@@ -140,7 +143,7 @@
 }
 
 #main-outlet {
-  padding-top: 75px;
+  padding-top: 82px;
 }
 
 // Dropdowns
@@ -148,16 +151,14 @@
 
 .d-dropdown {
   display: none;
-  overflow: hidden;
   width: 320px;
   position: absolute;
   top: 100%;
   right: 0;
   z-index: 1100;
-  margin-top: -1px;
-  border: 1px solid $primary_lighter;
-  background-color: $secondary;
-  @include box-shadow(0 3px 3px $primary_lightest);
+  border: 1px solid $primary_border_color;
+  background-color: $primary_background_color;
+  @include box-shadow(0 2px 2px rgba($primary_shadow_color, .4));
 
   // Common
 
@@ -174,14 +175,13 @@
     }
   }
   .heading {
-    border-bottom: 1px solid $primary_lighter;
-    color: $primary;
+    border-top: 1px solid $primary_border_color;
+
+    border-bottom: 1px solid $primary_border_color;
+    color: $primary_text_color;
     font-weight: bold;
     font-size: 12px;
     line-height: 15px;
-    text-shadow: 0 1px 0 $secondary;
-    background-color: $secondary;
-    @include box-shadow(inset 0 1px 0 $primary_lighter);
   }
   .selected {
     background-color: $header-item-highlight;
@@ -191,13 +191,13 @@
 
   &#notifications-dropdown {
     .fa {
-      color: $primary_light;
+      color: lighten($primary_text_color, 50%);
     }
     li {
       background-color: $header-item-highlight;
     }
     .read {
-      background-color: $secondary;
+      background-color: $primary_background_color;
     }
     .none {
       padding: 5px;
@@ -211,16 +211,13 @@
     height: 22px;
     margin: 5px;
     padding: 5px;
-    &:focus {
-      @include box-shadow((inset 0 1px 1px $primary_lightest, 0 0 4px $primary_lighter));
-    }
   }
   .searching {
     display: block;
     position: absolute;
     top: 13px;
     right: 13px;
-    color: $primary_light;
+    color: lighten($primary_text_color, 50%);
     font-size: 18px;
   }
   .no-results {
@@ -239,7 +236,11 @@
   }
 
   &#user-dropdown {
-    width: 155px;
+    width: 118px;
+    .user-dropdown-links {
+    text-align: right;
+
+    }
   }
 
   .btn {

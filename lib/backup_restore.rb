@@ -22,7 +22,7 @@ module BackupRestore
   def self.rollback!
     raise BackupRestore::OperationRunningError if BackupRestore.is_operation_running?
     if can_rollback?
-      rename_schema("backup", "public")
+      move_tables_between_schemas("backup", "public")
       after_fork
     end
   end
@@ -71,19 +71,44 @@ module BackupRestore
     ActiveRecord::Migrator.current_version
   end
 
-  def self.can_rollback?
-    User.exec_sql("SELECT 1 FROM pg_namespace WHERE nspname = 'backup'").count > 0
+  def self.move_tables_between_schemas(source, destination)
+    User.exec_sql(move_tables_between_schemas_sql(source, destination))
   end
 
-  def self.rename_schema(old_name, new_name)
-    sql = <<-SQL
-      BEGIN;
-        DROP SCHEMA IF EXISTS #{new_name} CASCADE;
-        ALTER SCHEMA #{old_name} RENAME TO #{new_name};
-      COMMIT;
+  def self.move_tables_between_schemas_sql(source, destination)
+    # TODO: Postgres 9.3 has "CREATE SCHEMA schema IF NOT EXISTS;"
+    <<-SQL
+      DO $$DECLARE row record;
+      BEGIN
+        -- create "destination" schema if it does not exists already
+        -- NOTE: DROP & CREATE SCHEMA is easier, but we don't wont to drop the public schema
+        -- ortherwise extensions (like hstore & pg_trgm) won't work anymore
+        IF NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '#{destination}')
+        THEN
+          CREATE SCHEMA #{destination};
+        END IF;
+        -- move all "source" tables to "destination" schema
+        FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = '#{source}'
+        LOOP
+          EXECUTE 'DROP TABLE IF EXISTS #{destination}.' || quote_ident(row.tablename) || ' CASCADE;';
+          EXECUTE 'ALTER TABLE #{source}.' || quote_ident(row.tablename) || ' SET SCHEMA #{destination};';
+        END LOOP;
+      END$$;
     SQL
+  end
 
-    User.exec_sql(sql)
+  DatabaseConfiguration = Struct.new(:host, :username, :password, :database)
+
+  def self.database_configuration
+    config = Rails.env.production? ? ActiveRecord::Base.connection_pool.spec.config : Rails.configuration.database_configuration[Rails.env]
+    config = config.with_indifferent_access
+
+    DatabaseConfiguration.new(
+      config["host"],
+      config["username"] || ENV["USER"] || "postgres",
+      config["password"],
+      config["database"]
+    )
   end
 
   private
@@ -149,14 +174,7 @@ module BackupRestore
   end
 
   def self.after_fork
-    # reconnect to redis
-    $redis.client.reconnect
-    # reconnect the rails cache (uses redis)
-    Rails.cache.reconnect
-    # tells the message we've forked
-    MessageBus.after_fork
-    # /!\ HACK /!\ force sidekiq to create a new connection to redis
-    Sidekiq.instance_variable_set(:@redis, nil)
+    Discourse.after_fork
   end
 
   def self.backup_tables_count

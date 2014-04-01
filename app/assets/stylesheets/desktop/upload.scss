@@ -6,7 +6,7 @@
   position: relative;
   left: -5px;
   bottom: -5px;
-  text-shadow: 
+  text-shadow:
    -1px -1px 0 $btn-primary-background-color,
     1px 1px 0 $btn-primary-background-color,
     1px -1px 0 $btn-primary-background-color,
@@ -19,7 +19,7 @@
     padding-left: 10px;
   }
   .radios {
-    margin: 0 0 25px 0;
+    height: 60px;
     .inputs {
       float: right;
       width: 75%;
@@ -32,12 +32,15 @@
         line-height: 18px;
       }
       .description, .hint {
-        color: #9a9ea0;
+        color: $secondary_text_color;
       }
       .hint {
         font-style: italic;
         margin: 5px 0 0 0;
       }
     }
+  }
+  .radios:last-child {
+    height: 20px;
   }
 }

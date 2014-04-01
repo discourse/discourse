@@ -6,7 +6,7 @@
 
 #simple-container {
   @include border-radius-all(10px);
-  background-color: $secondary;
+  background-color: $primary_background_color;
   padding: 20px;
   width: 550px;
   margin: 0 auto;

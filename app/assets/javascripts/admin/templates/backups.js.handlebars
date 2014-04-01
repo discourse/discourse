@@ -6,6 +6,9 @@
     </ul>
   </div>
   <div class="pull-right">
+    {{#if canRollback}}
+      <button {{action rollback}} class="btn btn-rollback" title="{{i18n admin.backups.operations.rollback.title}}" {{bind-attr disabled="rollbackDisabled"}}><i class="fa fa-ambulance fa-flip-horizontal"></i>{{i18n admin.backups.operations.rollback.text}}</button>
+    {{/if}}
     {{#if isOperationRunning}}
       <button {{action cancelOperation}} class="btn btn-danger" title="{{i18n admin.backups.operations.cancel.title}}"><i class="fa fa-times"></i>{{i18n admin.backups.operations.cancel.text}}</button>
     {{else}}

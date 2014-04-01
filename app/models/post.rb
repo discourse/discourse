@@ -51,9 +51,9 @@ class Post < ActiveRecord::Base
   scope :public_posts, -> { joins(:topic).where('topics.archetype <> ?', Archetype.private_message) }
   scope :private_posts, -> { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
-  
+
   delegate :username, to: :user
-  
+
   def self.hidden_reasons
     @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again, :new_user_spam_threshold_reached)
   end
@@ -101,12 +101,13 @@ class Post < ActiveRecord::Base
 
   def store_unique_post_key
     if SiteSetting.unique_posts_mins > 0
-      $redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, "1")
+      $redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, id)
     end
   end
 
   def matches_recent_post?
-    $redis.exists(unique_post_key)
+    post_id = $redis.get(unique_post_key)
+    post_id != nil and post_id != id
   end
 
   def raw_hash
@@ -158,8 +159,29 @@ class Post < ActiveRecord::Base
     @acting_user = pu
   end
 
+  def whitelisted_spam_hosts
+
+    hosts = SiteSetting
+              .white_listed_spam_host_domains
+              .split(",")
+              .map{|h| h.strip}
+              .reject{|h| !h.include?(".")}
+
+    hosts << GlobalSetting.hostname
+
+  end
+
   def total_hosts_usage
     hosts = linked_hosts.clone
+    whitelisted = whitelisted_spam_hosts
+
+    hosts.reject! do |h|
+      whitelisted.any? do |w|
+        h.end_with?(w)
+      end
+    end
+
+    return hosts if hosts.length == 0
 
     TopicLink.where(domain: hosts.keys, user_id: acting_user.id)
              .group(:domain, :post_id)
@@ -250,19 +272,6 @@ class Post < ActiveRecord::Base
     Post.excerpt(cooked, maxlength, options)
   end
 
-
-  # A list of versions including the initial version
-  def all_versions
-    result = []
-    result << { number: 1, display_username: user.username, created_at: created_at }
-    versions.order(:number).includes(:user).each do |v|
-      if v.user.present?
-        result << { number: v.number, display_username: v.user.username, created_at: v.created_at }
-      end
-    end
-    result
-  end
-
   def is_first_post?
     post_number == 1
   end
@@ -311,9 +320,9 @@ class Post < ActiveRecord::Base
 
   # This calculates the geometric mean of the post timings and stores it along with
   # each post.
-  def self.calculate_avg_time
+  def self.calculate_avg_time(min_topic_age=nil)
     retry_lock_error do
-      exec_sql("UPDATE posts
+      builder = SqlBuilder.new("UPDATE posts
                 SET avg_time = (x.gmean / 1000)
                 FROM (SELECT post_timings.topic_id,
                              post_timings.post_number,
@@ -324,9 +333,18 @@ class Post < ActiveRecord::Base
                           AND p2.topic_id = post_timings.topic_id
                           AND p2.user_id <> post_timings.user_id
                       GROUP BY post_timings.topic_id, post_timings.post_number) AS x
-                WHERE x.topic_id = posts.topic_id
+                /*where*/")
+
+      builder.where("x.topic_id = posts.topic_id
                   AND x.post_number = posts.post_number
                   AND (posts.avg_time <> (x.gmean / 1000)::int OR posts.avg_time IS NULL)")
+
+      if min_topic_age
+        builder.where("posts.topic_id IN (SELECT id FROM topics where bumped_at > :bumped_at)",
+                     bumped_at: min_topic_age)
+      end
+
+      builder.exec
     end
   end
 
@@ -522,6 +540,7 @@ end
 #
 # Indexes
 #
+#  idx_posts_created_at_topic_id            (created_at,topic_id)
 #  idx_posts_user_id_deleted_at             (user_id)
 #  index_posts_on_reply_to_post_number      (reply_to_post_number)
 #  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE

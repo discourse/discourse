@@ -4,7 +4,7 @@ require_dependency 'discourse'
 require_dependency 'custom_renderer'
 require_dependency 'archetype'
 require_dependency 'rate_limiter'
-require_dependency 'googlebot_detection'
+require_dependency 'crawler_detection'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
@@ -42,8 +42,12 @@ class ApplicationController < ActionController::Base
 
   layout :set_layout
 
+  def has_escaped_fragment?
+    SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
+  end
+
   def set_layout
-    GooglebotDetection.googlebot?(request.user_agent) ? 'googlebot' : 'application'
+    has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) ? 'crawler' : 'application'
   end
 
   rescue_from Exception do |exception|
@@ -85,7 +89,13 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
-    redirect_to "/"
+
+    if request.get?
+      redirect_to "/"
+    else
+      render status: 403, json: failed_json.merge(message: I18n.t(:not_logged_in))
+    end
+
   end
 
   rescue_from Discourse::NotFound do
@@ -93,26 +103,30 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::InvalidAccess do
-    rescue_discourse_actions("[error: 'invalid access']", 403) # TODO: this breaks json responses
+    rescue_discourse_actions("[error: 'invalid access']", 403, true) # TODO: this breaks json responses
   end
 
   rescue_from Discourse::ReadOnly do
     render status: 405, json: failed_json.merge(message: I18n.t("read_only_mode_enabled"))
   end
 
-  def rescue_discourse_actions(message, error)
+  def rescue_discourse_actions(message, error, include_ember=false)
     if request.format && request.format.json?
       # TODO: this doesn't make sense. Stuffing an html page into a json response will cause
       #       $.parseJSON to fail in the browser. Also returning text like "[error: 'invalid access']"
       #       from the above rescue_from blocks will fail because that isn't valid json.
       render status: error, layout: false, text: (error == 404) ? build_not_found_page(error) : message
     else
-      render text: build_not_found_page(error, current_user ? 'application' : 'no_js')
+      render text: build_not_found_page(error, include_ember ? 'application' : 'no_js')
     end
   end
 
   def set_locale
-    I18n.locale = SiteSetting.default_locale
+    I18n.locale = if SiteSetting.allow_user_locale && current_user && current_user.locale.present?
+                    current_user.locale
+                  else
+                    SiteSetting.default_locale
+                  end
   end
 
   def store_preloaded(key, json)
@@ -220,7 +234,7 @@ class ApplicationController < ActionController::Base
   private
 
     def preload_anonymous_data
-      store_preloaded("site", Site.cached_json(guardian))
+      store_preloaded("site", Site.json_for(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
       store_preloaded("customHTML", custom_html_json)
     end

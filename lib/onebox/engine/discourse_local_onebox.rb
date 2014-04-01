@@ -5,6 +5,11 @@ module Onebox
 
       matches_regexp Regexp.new("^#{Discourse.base_url.gsub(".","\\.")}.*$", true)
 
+      # Use this onebox before others
+      def self.priority
+        1
+      end
+
       def to_html
         uri = URI::parse(@url)
         route = Rails.application.routes.recognize_path(uri.path)

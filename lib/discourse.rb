@@ -4,6 +4,21 @@ require_dependency 'auth/default_current_user_provider'
 
 module Discourse
 
+  class SidekiqExceptionHandler
+    extend Sidekiq::ExceptionHandler
+  end
+
+  def self.handle_exception(ex, context=nil, parent_logger = nil)
+    context ||= {}
+    parent_logger ||= SidekiqExceptionHandler
+
+    cm = RailsMultisite::ConnectionManagement
+    parent_logger.handle_exception(ex, {
+      current_db: cm.current_db,
+      current_hostname: cm.current_hostname
+    }.merge(context))
+  end
+
   # Expected less matches than what we got in a find
   class TooManyMatches < Exception; end
 
@@ -157,6 +172,14 @@ module Discourse
     !!$redis.get(readonly_mode_key)
   end
 
+  def self.request_refresh!
+    # Causes refresh on next click for all clients
+    #
+    # This is better than `MessageBus.publish "/file-change", ["refresh"]` because
+    # it spreads the refreshes out over a time period
+    MessageBus.publish '/global/asset-version', 'clobber'
+  end
+
   def self.git_version
     return $git_version if $git_version
 
@@ -208,7 +231,20 @@ module Discourse
   end
 
   def self.readonly_channel
-    "/global/read-only"
+    "/site/read-only"
+  end
+
+  # all forking servers must call this
+  # after fork, otherwise Discourse will be
+  # in a bad state
+  def self.after_fork
+    SiteSetting.after_fork
+    ActiveRecord::Base.establish_connection
+    $redis.client.reconnect
+    Rails.cache.reconnect
+    MessageBus.after_fork
+    # /!\ HACK /!\ force sidekiq to create a new connection to redis
+    Sidekiq.instance_variable_set(:@redis, nil)
   end
 
 end

@@ -71,6 +71,7 @@ module PrettyText
               "app/assets/javascripts/defer/html-sanitizer-bundle.js",
               "app/assets/javascripts/discourse/dialects/dialect.js",
               "app/assets/javascripts/discourse/lib/utilities.js",
+              "app/assets/javascripts/discourse/lib/html.js",
               "app/assets/javascripts/discourse/lib/markdown.js")
 
     Dir["#{Rails.root}/app/assets/javascripts/discourse/dialects/**.js"].each do |dialect|
@@ -191,7 +192,7 @@ module PrettyText
         else
           l["rel"] = "nofollow"
         end
-      rescue URI::InvalidURIError
+      rescue URI::InvalidURIError, URI::InvalidComponentError
         # add a nofollow anyway
         l["rel"] = "nofollow"
       end

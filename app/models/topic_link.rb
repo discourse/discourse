@@ -6,6 +6,7 @@ class TopicLink < ActiveRecord::Base
   belongs_to :user
   belongs_to :post
   belongs_to :link_topic, class_name: 'Topic'
+  belongs_to :link_post, class_name: 'Post'
 
   validates_presence_of :url
 
@@ -129,6 +130,11 @@ class TopicLink < ActiveRecord::Base
           # Skip linking to ourselves
           next if topic_id == post.topic_id
 
+          reflected_post = nil
+          if post_number && topic_id
+            reflected_post = Post.where(topic_id: topic_id, post_number: post_number.to_i).first
+          end
+
           added_urls << url
           TopicLink.create(post_id: post.id,
                            user_id: post.user_id,
@@ -136,7 +142,8 @@ class TopicLink < ActiveRecord::Base
                            url: url,
                            domain: parsed.host || Discourse.current_hostname,
                            internal: internal,
-                           link_topic_id: topic_id)
+                           link_topic_id: topic_id,
+                           link_post_id: reflected_post.try(:id))
 
           # Create the reflection if we can
           if topic_id.present?
@@ -145,11 +152,6 @@ class TopicLink < ActiveRecord::Base
             if topic && post.topic && post.topic.archetype != 'private_message' && topic.archetype != 'private_message'
 
               prefix = Discourse.base_url
-
-              reflected_post = nil
-              if post_number.present?
-                reflected_post = Post.where(topic_id: topic_id, post_number: post_number.to_i).first
-              end
 
               reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
 

@@ -14,7 +14,8 @@
 
     init: function() {
       var cloakView = this.get('cloakView'),
-          idProperty = this.get('idProperty');
+          idProperty = this.get('idProperty'),
+          uncloakDefault = !!this.get('uncloakDefault');
 
       // Set the slack ratio differently to allow for more or less slack in preloading
       var slackRatio = parseFloat(this.get('slackRatio'));
@@ -25,13 +26,18 @@
         cloaks: cloakView,
         preservesContext: this.get('preservesContext') === "true",
         cloaksController: this.get('itemController'),
-        defaultHeight: this.get('defaultHeight') || 100,
+        defaultHeight: this.get('defaultHeight'),
 
         init: function() {
           this._super();
 
           if (idProperty) {
             this.set('elementId', cloakView + '-cloak-' + this.get('content.' + idProperty));
+          }
+          if (uncloakDefault) {
+            this.uncloak();
+          } else {
+            this.cloak();
           }
         }
       }));
@@ -95,6 +101,8 @@
       @method scrolled
     **/
     scrolled: function() {
+      if (!this.get('scrollingEnabled')) { return; }
+
       var childViews = this.get('childViews');
       if ((!childViews) || (childViews.length === 0)) { return; }
 
@@ -189,11 +197,20 @@
       $(window).bind('scroll.ember-cloak', onScrollMethod);
       this.addObserver('wrapperTop', self, onScrollMethod);
       this.addObserver('wrapperHeight', self, onScrollMethod);
+      this.addObserver('content.@each', self, onScrollMethod);
+      this.scrollTriggered();
+
+      this.set('scrollingEnabled', true);
     }.on('didInsertElement'),
 
-    _endEvents: function() {
+    cleanUp: function() {
       $(document).unbind('touchmove.ember-cloak');
       $(window).unbind('scroll.ember-cloak');
+      this.set('scrollingEnabled', false);
+    },
+
+    _endEvents: function() {
+      this.cleanUp();
     }.on('willDestroyElement')
   });
 
@@ -207,11 +224,6 @@
   **/
   Ember.CloakedView = Ember.View.extend({
     attributeBindings: ['style'],
-
-    init: function() {
-      this._super();
-      this.uncloak();
-    },
 
     /**
       Triggers the set up for rendering a view that is cloaked.
@@ -237,8 +249,8 @@
             factory = Ember.generateControllerFactory(container, controllerName, model);
 
             // inform developer about typo
-            Ember.Logger.warn('ember-cloacking: can\'t lookup controller by name "' + controllerFullName + '".');
-            Ember.Logger.warn('ember-cloacking: using ' + factory.toString() + '.');
+            Ember.Logger.warn('ember-cloaking: can\'t lookup controller by name "' + controllerFullName + '".');
+            Ember.Logger.warn('ember-cloaking: using ' + factory.toString() + '.');
           }
 
           controller = factory.create({
@@ -291,6 +303,21 @@
       }
     },
 
+
+    didInsertElement: function(){
+      if (!this.get('containedView')) {
+        // setting default height
+        // but do not touch if height already defined
+        if(!this.$().height()){
+          var defaultHeight = 100;
+          if(this.get('defaultHeight')) {
+            defaultHeight = this.get('defaultHeight');
+          }
+
+          this.$().css('height', defaultHeight);
+        }
+      }
+     },
 
     /**
       Render the cloaked view if applicable.

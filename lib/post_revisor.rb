@@ -14,14 +14,28 @@ class PostRevisor
     @post.acting_user = @user
     revise_post
     update_category_description
+    update_topic_excerpt
     post_process_post
     update_topic_word_counts
     @post.advance_draft_sequence
+    PostAlerter.new.after_save_post(@post)
+    publish_revision
 
     true
   end
 
   private
+
+  def publish_revision
+    MessageBus.publish("/topic/#{@post.topic_id}",{
+                    id: @post.id,
+                    post_number: @post.post_number,
+                    updated_at: @post.updated_at,
+                    type: "revised"
+                  },
+                  group_ids: @post.topic.secure_group_ids
+    )
+  end
 
   def should_revise?
     @post.raw != @new_raw
@@ -104,6 +118,10 @@ class PostRevisor
       category.update_column(:description, new_description)
       @category_changed = category
     end
+  end
+
+  def update_topic_excerpt
+    @post.topic.update_column(:excerpt, @post.excerpt(220, strip_links: true)) if @post.post_number == 1
   end
 
   def post_process_post

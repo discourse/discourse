@@ -1,4 +1,7 @@
-# Official Discourse Install Guide
+> # Warning: This Guide is Deprecated
+> We only support Docker based installs now. Please see [our **official install guide**](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md) for supported install instructions.
+
+# Discourse Ubuntu Install Guide
 
 ## Recommended Server Hardware
 
@@ -122,7 +125,7 @@ Install RVM
     # As 'discourse'
     # Install RVM
      \curl -s -S -L https://get.rvm.io | bash -s stable
-     
+
     # Refresh your profile
     . ~/.rvm/scripts/rvm
 
@@ -133,7 +136,7 @@ Install missing packages
     # rvm requirements
 
     # NOTE: rvm will tell you which packages you (or your sysadmin) need
-    # to install during this step. As discourse does not have sudo 
+    # to install during this step. As discourse does not have sudo
     # permissions (likely the case), run:
 
     rvm --autolibs=read-fail requirements
@@ -141,7 +144,7 @@ Install missing packages
     # For instance, if prompted with `libreadline6-dev libsqlite3-dev sqlite3 autoconf' etc
     # Install the missing packages with this command, run as your user:
     # sudo apt-get install libreadline6-dev libsqlite3-dev sqlite3 autoconf
-    # Repeat the autolibs test until you see "Requirements installation successful" 
+    # Repeat the autolibs test until you see "Requirements installation successful"
 
 
 Build and install ruby
@@ -212,7 +215,7 @@ Not english? Set the default language as appropriate:
 
     # Not sure if your locale is supported? Check at the rails console:
     LocaleSiteSetting.values
-     => ["cs", "da", "de", "en", "es", "fr", "id", "it", "nb_NO", "nl", "pseudo", "pt", "ru", "sv", "zh_CN", "zh_TW"]
+     => ["cs", "da", "de", "en", "es", "fr", "id", "it", "nb_NO", "nl", "pt", "ru", "sv", "zh_CN", "zh_TW"]
 
 ## nginx setup
 

@@ -11,6 +11,10 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     return Discourse.SiteSettings.allow_uploaded_avatars;
   }.property(),
 
+  allowUserLocale: function() {
+    return Discourse.SiteSettings.allow_user_locale;
+  }.property(),
+
   // By default we haven't saved anything
   saved: false,
 
@@ -28,6 +32,12 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
 
   canEditName: function() {
     return Discourse.SiteSettings.enable_names;
+  }.property(),
+
+  availableLocales: function() {
+    return Discourse.SiteSettings.available_locales.split('|').map( function(s) {
+      return {name: s, value: s};
+    });
   }.property(),
 
   digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },

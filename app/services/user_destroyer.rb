@@ -31,6 +31,9 @@ class UserDestroyer
           end
         end
       end
+      user.post_actions.each do |post_action|
+        post_action.remove_act!(Discourse.system_user)
+      end
       user.destroy.tap do |u|
         if u
           if opts[:block_email]
@@ -56,7 +59,7 @@ class UserDestroyer
           end
 
           StaffActionLogger.new(@actor == user ? Discourse.system_user : @actor).log_user_deletion(user, opts.slice(:context))
-          DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?
+          DiscourseHub.unregister_username(user.username) if SiteSetting.call_discourse_hub?
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
         end
       end

@@ -6,7 +6,6 @@
 
 module Scheduler
   class Manager
-    extend Sidekiq::ExceptionHandler
     attr_accessor :random_ratio, :redis
 
 
@@ -41,13 +40,13 @@ module Scheduler
       def keep_alive
         @manager.keep_alive
       rescue => ex
-        Scheduler::Manager.handle_exception(ex)
+        Discourse.handle_exception(ex)
       end
 
       def reschedule_orphans
         @manager.reschedule_orphans!
       rescue => ex
-        Scheduler::Manager.handle_exception(ex)
+        Discourse.handle_exception(ex)
       end
 
       def process_queue
@@ -62,7 +61,7 @@ module Scheduler
           @mutex.synchronize { info.write! }
           klass.new.perform
         rescue => e
-          Scheduler::Manager.handle_exception(e)
+          Discourse.handle_exception(e)
           failed = true
         end
         duration = ((Time.now.to_f - start) * 1000).to_i
@@ -73,7 +72,7 @@ module Scheduler
           @mutex.synchronize { info.write! }
         end
       rescue => ex
-        Scheduler::Manager.handle_exception(ex)
+        Discourse.handle_exception(ex)
       ensure
         @running = false
       end
@@ -185,7 +184,11 @@ module Scheduler
         return unless key
         if due.to_i <= Time.now.to_i
           klass = get_klass(key)
-          return unless klass
+          unless klass
+            # corrupt key, nuke it (renamed job or something)
+            redis.zrem Manager.queue_key, key
+            return
+          end
           info = schedule_info(klass)
           info.prev_run = Time.now.to_i
           info.prev_result = "QUEUED"

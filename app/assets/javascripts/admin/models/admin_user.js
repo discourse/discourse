@@ -36,6 +36,14 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
+  deleteAllPostsExplanation: function() {
+    if (!this.get('can_delete_all_posts')) {
+      return I18n.t('admin.user.cant_delete_all_posts', {count: Discourse.SiteSettings.delete_user_max_post_age});
+    } else {
+      return null;
+    }
+  }.property('can_delete_all_posts'),
+
   deleteAllPosts: function() {
     this.set('can_delete_all_posts', false);
     var user = this;
@@ -243,7 +251,7 @@ Discourse.AdminUser = Discourse.User.extend({
       if (this.get('staff')) {
         return I18n.t('admin.user.delete_forbidden_because_staff');
       } else {
-        return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_age});
+        return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_post_age});
       }
     } else {
       return null;
@@ -347,7 +355,19 @@ Discourse.AdminUser = Discourse.User.extend({
     if (this.get('leader_requirements')) {
       return Discourse.LeaderRequirements.create(this.get('leader_requirements'));
     }
-  }.property('leader_requirements')
+  }.property('leader_requirements'),
+
+  suspendedBy: function() {
+    if (this.get('suspended_by')) {
+      return Discourse.AdminUser.create(this.get('suspended_by'));
+    }
+  }.property('suspended_by'),
+
+  approvedBy: function() {
+    if (this.get('approved_by')) {
+      return Discourse.AdminUser.create(this.get('approved_by'));
+    }
+  }.property('approved_by')
 
 });
 

@@ -352,6 +352,8 @@ test("sanitize", function() {
   equal(sanitize("<textarea>hullo</textarea>"), "hullo");
   equal(sanitize("<button>press me!</button>"), "press me!");
   equal(sanitize("<canvas>draw me!</canvas>"), "draw me!");
+
+  cooked("[the answer](javascript:alert(42))", "<p><a>the answer</a></p>", "it prevents XSS");
 });
 
 test("URLs in BBCode tags", function() {
@@ -379,5 +381,11 @@ test("urlAllowed", function() {
   allowed("http://eviltrout.com/evil/trout", "allows full urls");
   allowed("https://eviltrout.com/evil/trout", "allows https urls");
   allowed("//eviltrout.com/evil/trout", "allows protocol relative urls");
+});
 
+test("images", function() {
+
+  cooked("[![folksy logo](http://folksy.com/images/folksy-colour.png)](http://folksy.com/)",
+         "<p><a href=\"http://folksy.com/\"><img src=\"http://folksy.com/images/folksy-colour.png\" alt=\"folksy logo\"/></a></p>",
+         "It allows images with links around them");
 });

@@ -10,13 +10,16 @@
             <a {{bind-attr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
           {{/if}}
           <h1>
+            {{#if topic.isPrivateMessage}}
+              <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
+            {{/if}}
           {{#if topic.category.parentCategory}}
             {{boundCategoryLink topic.category.parentCategory}}
           {{/if}}
           {{boundCategoryLink topic.category}}
           {{#if topic.details.loaded}}
             {{topicStatus topic=topic}}
-            <a class='topic-link' href='{{unbound topic.url}}'>{{{topic.fancy_title}}}</a>
+            <a class='topic-link' href='{{unbound topic.url}}' {{action jumpToTopPost}}>{{{topic.fancy_title}}}</a>
           {{else}}
             {{#if topic.errorLoading}}
               {{topic.errorTitle}}

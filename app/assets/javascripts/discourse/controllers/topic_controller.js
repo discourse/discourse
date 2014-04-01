@@ -22,7 +22,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   actions: {
     jumpTop: function() {
-      Discourse.URL.routeTo(this.get('url'));
+      Discourse.URL.routeTo(this.get('firstPostUrl'));
     },
 
     jumpBottom: function() {
@@ -163,7 +163,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     },
 
     togglePinned: function() {
-      this.get('content').toggleStatus('pinned');
+      // Note that this is different than clearPin
+      this.get('content').setStatus('pinned', this.get('pinned_at') ? false : true);
     },
 
     toggleArchived: function() {
@@ -224,7 +225,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   }.property(),
 
   jumpTopDisabled: function() {
-    return (this.get('progressPosition') <= 3);
+    return (this.get('progressPosition') < 2);
   }.property('progressPosition'),
 
   jumpBottomDisabled: function() {
@@ -359,8 +360,16 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         return;
       }
 
+      var postStream = topicController.get('postStream');
+      if (data.type === "revised" || data.type === "acted"){
+        // TODO we could update less data for "acted"
+        // (only post actions)
+        postStream.triggerChangedPost(data.id, data.updated_at);
+        return;
+      }
+
       // Add the new post into the stream
-      topicController.get('postStream').triggerNewPostInStream(data.id);
+      postStream.triggerNewPostInStream(data.id);
     });
   },
 

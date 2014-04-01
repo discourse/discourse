@@ -8,7 +8,7 @@ module JsLocaleHelper
     # load plugins translations
     plugin_translations = {}
     Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
-      plugin_translations.merge! YAML::load(File.open(file))
+      plugin_translations.deep_merge! YAML::load(File.open(file))
     end
     # merge translations (plugin translations overwrite default translations)
     translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
@@ -43,7 +43,7 @@ module JsLocaleHelper
   end
 
   def self.moment_format_function(name)
-    format = I18n.t("dates." << name)
+    format = I18n.t("dates.#{name}")
     result = "moment.fn.#{name.camelize(:lower)} = function(){ return this.format('#{format}'); };\n"
   end
 

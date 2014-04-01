@@ -12,7 +12,7 @@ If you don't already have a Ruby environment that's tuned to your liking, you ca
 
 1. Install XCode and/or the XCode Command Line Tools from [Apple's developer site](https://developer.apple.com/downloads/index.action). This should also install Git.
 2. Clone the Discourse repo and cd into it.
-3. Run `scripts/osx_dev`.
+3. Run `script/osx_dev`.
 4. Review `log/osx_dev.log` to make sure everything finished successfully.
 
 Of course, it is good to understand what the script is doing and why. The rest of this guide goes through what's happening.
@@ -173,12 +173,6 @@ Homebrew loves you.
 
     git@github.com:discourse/discourse.git ~/discourse
     cd ~/discourse # Navigate into the repository, and stay there for the rest of this how-to
-
-### Loading seed data
-
-From the discource source tree:
-
-    psql -d discourse_development < pg_dumps/development-image.sql
 
 ### What about the config files?
 

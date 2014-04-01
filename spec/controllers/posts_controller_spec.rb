@@ -1,78 +1,102 @@
 require 'spec_helper'
 
+shared_examples 'finding and showing post' do
+  let(:user) { log_in }
+  let(:post) { Fabricate(:post, user: user) }
+
+  it 'ensures the user can see the post' do
+    Guardian.any_instance.expects(:can_see?).with(post).returns(false)
+    xhr :get, action, params
+    response.should be_forbidden
+  end
+
+  it 'succeeds' do
+    xhr :get, action, params
+    response.should be_success
+  end
+
+  context "deleted post" do
+    before do
+      post.trash!(user)
+    end
+
+    it "can't find deleted posts as an anonymous user" do
+      xhr :get, action, params
+      response.should be_forbidden
+    end
+
+    it "can't find deleted posts as a regular user" do
+      log_in(:user)
+      xhr :get, action, params
+      response.should be_forbidden
+    end
+
+    it "can find posts as a moderator" do
+      log_in(:moderator)
+      xhr :get, action, params
+      response.should be_success
+    end
+  end
+end
+
+shared_examples 'action requires login' do |method, action, params|
+  it 'raises an exception when not logged in' do
+    lambda { xhr method, action, params }.should raise_error(Discourse::NotLoggedIn)
+  end
+end
+
 describe PostsController do
 
   describe 'short_link' do
+    let(:post) { Fabricate(:post) }
+
     it 'logs the incoming link once' do
       IncomingLink.expects(:add).once.returns(true)
-      p = Fabricate(:post)
-      get :short_link, post_id: p.id, user_id: 999
+      get :short_link, post_id: post.id, user_id: 999
       response.should be_redirect
     end
   end
 
   describe 'show' do
-    let(:user) { log_in }
-    let(:post) { Fabricate(:post, user: user) }
-
-    it 'ensures the user can see the post' do
-      Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-      xhr :get, :show, id: post.id
-      response.should be_forbidden
+    include_examples 'finding and showing post' do
+      let(:action) { :show }
+      let(:params) { {id: post.id} }
     end
+  end
 
-    it 'succeeds' do
-      xhr :get, :show, id: post.id
-      response.should be_success
-    end
-
-    context "deleted post" do
-
-      before do
-        post.trash!(user)
-      end
-
-      it "can't find deleted posts as an anonymous user" do
-        xhr :get, :show, id: post.id
-        response.should be_forbidden
-      end
-
-      it "can't find deleted posts as a regular user" do
-        log_in(:user)
-        xhr :get, :show, id: post.id
-        response.should be_forbidden
-      end
-
-      it "can find posts as a moderator" do
-        log_in(:moderator)
-        xhr :get, :show, id: post.id
-        response.should be_success
-      end
-
+  describe 'by_number' do
+    include_examples 'finding and showing post' do
+      let(:action) { :by_number }
+      let(:params) { {topic_id: post.topic_id, post_number: post.post_number} }
     end
   end
 
   describe 'reply_history' do
-    let(:user) { log_in }
-    let(:post) { Fabricate(:post, user: user) }
-
-    it 'ensures the user can see the post' do
-      Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-      xhr :get, :reply_history, id: post.id
-      response.should be_forbidden
+    include_examples 'finding and showing post' do
+      let(:action) { :reply_history }
+      let(:params) { {id: post.id} }
     end
 
-    it 'succeeds' do
+    it 'asks post for reply history' do
       Post.any_instance.expects(:reply_history)
       xhr :get, :reply_history, id: post.id
-      response.should be_success
+    end
+  end
+
+  describe 'replies' do
+    include_examples 'finding and showing post' do
+      let(:action) { :replies }
+      let(:params) { {post_id: post.id} }
+    end
+
+    it 'asks post for replies' do
+      Post.any_instance.expects(:replies)
+      xhr :get, :replies, post_id: post.id
     end
   end
 
   describe 'delete a post' do
-    it 'raises an exception when not logged in' do
-      lambda { xhr :delete, :destroy, id: 123 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :delete, :destroy, id: 123
 
     describe 'when logged in' do
 
@@ -106,9 +130,7 @@ describe PostsController do
   end
 
   describe 'recover a post' do
-    it 'raises an exception when not logged in' do
-      lambda { xhr :put, :recover, post_id: 123 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :put, :recover, post_id: 123
 
     describe 'when logged in' do
 
@@ -134,11 +156,8 @@ describe PostsController do
     end
   end
 
-
   describe 'destroy_many' do
-    it 'raises an exception when not logged in' do
-      lambda { xhr :delete, :destroy_many, post_ids: [123, 345] }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :delete, :destroy_many, post_ids: [123, 345]
 
     describe 'when logged in' do
 
@@ -187,12 +206,9 @@ describe PostsController do
 
   end
 
-
   describe 'edit a post' do
 
-    it 'raises an exception when not logged in' do
-      lambda { xhr :put, :update, id: 2 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :put, :update, id: 2
 
     describe 'when logged in' do
 
@@ -254,9 +270,7 @@ describe PostsController do
 
   describe 'bookmark a post' do
 
-    it 'raises an exception when not logged in' do
-      lambda { xhr :put, :bookmark, post_id: 2 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :put, :bookmark, post_id: 2
 
     describe 'when logged in' do
 
@@ -284,9 +298,7 @@ describe PostsController do
 
   describe 'creating a post' do
 
-    it 'raises an exception when not logged in' do
-      lambda { xhr :post, :create }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :post, :create
 
     describe 'when logged in' do
 
@@ -419,7 +431,13 @@ describe PostsController do
 
       before { SiteSetting.stubs(:edit_history_visible_to_public).returns(false) }
 
-      it "ensures anonymous can not see the revisions" do
+      it "ensures anonymous cannot see the revisions" do
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_forbidden
+      end
+
+      it "ensures regular user cannot see the revisions" do
+        u = log_in(:user)
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
         response.should be_forbidden
       end
@@ -432,8 +450,15 @@ describe PostsController do
 
       it "ensures poster can see the revisions" do
         user = log_in(:active_user)
-        pr = Fabricate(:post_revision, user: user)
+        post = Fabricate(:post, user: user)
+        pr = Fabricate(:post_revision, user: user, post: post)
         xhr :get, :revisions, post_id: pr.post_id, revision: pr.number
+        response.should be_success
+      end
+
+      it "ensures trust level 4 can see the revisions" do
+        log_in(:elder)
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
         response.should be_success
       end
 

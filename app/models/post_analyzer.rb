@@ -11,18 +11,9 @@ class PostAnalyzer
   def cook(*args)
     cooked = PrettyText.cook(*args)
 
-    # cook all oneboxes, in the past we used to defer this
-    #  for some reason we decided to do this inline now
-    # TODO: discuss on http://meta.discourse.org what the correct thing is to do
-    #  keep in mind some oneboxes may take a long time to build
     result = Oneboxer.apply(cooked) do |url, elem|
       Oneboxer.invalidate(url) if args.last[:invalidate_oneboxes]
-      begin
-        Oneboxer.onebox url
-      rescue => e
-        Rails.logger.warn("Failed to cook onebox: #{e.message} #{e.backtrace}")
-        nil
-      end
+      Oneboxer.cached_onebox url
     end
 
     cooked = result.to_html if result.changed?
@@ -75,7 +66,7 @@ class PostAnalyzer
       begin
         uri = URI.parse(u)
         host = uri.host
-        @linked_hosts[host] ||= 1
+        @linked_hosts[host] ||= 1 unless host.nil?
       rescue URI::InvalidURIError
         # An invalid URI does not count as a raw link.
         next
@@ -90,10 +81,10 @@ class PostAnalyzer
     return [] unless @raw.present?
     return @raw_links if @raw_links.present?
 
-    # Don't include @mentions in the link count
     @raw_links = []
 
     cooked_document.search("a").each do |l|
+      # Don't include @mentions in the link count
       next if l.attributes['href'].nil? || link_is_a_mention?(l)
       url = l.attributes['href'].to_s
       @raw_links << url

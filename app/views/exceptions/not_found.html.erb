@@ -1,10 +1,10 @@
 <% local_domain = "#{request.protocol}#{request.host_with_port}" %>
 
-<p><%= t 'page_not_found.title' %></p>
+<h1 class="page-not-found"><%= t 'page_not_found.title' %></h1>
 
 <div class="row">
   <div class="span8">
-    <h2><%= t 'page_not_found.popular_topics' %></h2>
+    <h2 class="popular-topics-title"><%= t 'page_not_found.popular_topics' %></h2>
     <% @top_viewed.each do |t| %>
       <%= link_to t.title, t.relative_url %><br/>
     <% end %>
@@ -12,7 +12,7 @@
     <a href="/latest" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
   </div>
   <div class="span8">
-    <h2><%= t 'page_not_found.recent_topics' %></h2>
+    <h2 class="recent-topics-title"><%= t 'page_not_found.recent_topics' %></h2>
     <% @recent.each do |t| %>
       <%= link_to t.title, t.relative_url %><br/>
     <% end %>
@@ -23,7 +23,7 @@
 
 <div class="row">
   <div class="span10" style='padding-top: 20px'>
-    <h2><%= t 'page_not_found.search_title' %></h2>
+    <h2 class="page-not-found-search"><%= t 'page_not_found.search_title' %></h2>
     <p>
       <form action='//google.com' id='google-search' onsubmit="return google_button_clicked()">
         <input type="text" id='user-query' value="<%= @slug %>">

@@ -27,6 +27,7 @@ class UserUpdater
 
     user.bio_raw = attributes.fetch(:bio_raw) { user.bio_raw }
     user.name = attributes.fetch(:name) { user.name }
+    user.locale = attributes.fetch(:locale) { user.locale }
     user.digest_after_days = attributes.fetch(:digest_after_days) { user.digest_after_days }
 
     if attributes[:auto_track_topics_after_msecs]

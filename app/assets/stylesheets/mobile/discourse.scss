@@ -7,7 +7,7 @@
 @import "../common/foundation/helpers";
 
 body {
-  background-color: $secondary;
+  background-color: $primary_background_color;
 }
 
 .container {
@@ -26,44 +26,42 @@ a.no-href {
   cursor: pointer;
 }
 
-header {
-}
 
 body {
 
   button.ok {
-    @include linear-gradient(lighten($success, 5%), $success);
-    color: $secondary;
+   background: $success_background_color;
+    color: $emphasis_text_color;
     @include hover {
-      @include linear-gradient(lighten($success, 10%), $success);
-      color: $secondary;
+      background: darken($success_background_color, 10%);
+      color: $emphasis_text_color;
     }
   }
   button.cancel {
-    @include linear-gradient(lighten($highlight_danger, 5%), $highlight_danger);
-    color: $secondary;
+   background: $warning_background_color;
+    color: $emphasis_text_color;
     @include hover {
-      @include linear-gradient(lighten($highlight_danger, 10%), $highlight_danger);
-      color: $secondary;
+   background: $warning_background_color;
+      color: $emphasis_text_color;
     }
   }
   .coldmap-high {
-    color: lighten($tertiary, 20%) !important;
+    color: $coldmap-high !important;
   }
   .coldmap-med {
-    color: lighten($tertiary, 10%) !important;
+    color: $coldmap-med !important;
   }
   .coldmap-low {
-    color: $tertiary !important;
+    color: $coldmap-low !important;
   }
   .heatmap-high {
-    color: lighten($highlight_danger, 50%) !important;
+    color: $heatmap-high !important;
   }
   .heatmap-med {
-    color: lighten($highlight_danger, 10%) !important;
+    color: $heatmap-med !important;
   }
   .heatmap-low {
-    color: $highlight_danger !important;
+    color: $heatmap-low !important;
   }
   #loading-message {
     position: absolute;
@@ -71,13 +69,13 @@ body {
     text-align: center;
     top: 120px;
     left: 500px;
-    color: $primary_medium;
+    color: $secondary_text_color;
   }
   .top-space {
     margin-top: 10px;
   }
   ul.breadcrumb {
-    margin: 0 10px 0px 10px;
+    margin: 0 10px 0 10px;
   }
   .boxed {
     height: 100%;
@@ -86,25 +84,25 @@ body {
       padding: 10px 10px 10px 10px;
     }
     &.white {
-      background-color: $secondary;
+      background-color: $primary_background_color;
     }
   }
   #main {
     .fa-star.starred {
-      color: $highlight;
+      color: $highlight_text_color;
     }
     a.star {
       display: inline-block;
       font-size: 15px;
       line-height: 1;
-      color: $primary_light;
+      color: $secondary_text_color;
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
       }
       &.starred {
         color: #fe1;
-        text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+        text-shadow: 0 0 3px rgba($primary_shadow_color, 0.5);
         @include hover {
           opacity: 1;
           &:before {
@@ -146,7 +144,7 @@ body {
   }
   .message {
     @include border-radius-all(8px);
-    background-color: $secondary;
+    background-color: $primary_background_color;
     padding: 14px;
     h2 {
       margin-bottom: 20px;
@@ -161,7 +159,7 @@ body {
       .contents {
         padding-top: 10px;
         a[href] {
-          color: $secondary;
+          color: $primary_background_color;
         }
       }
     }
@@ -169,27 +167,16 @@ body {
   .clear-transitions {
     @include transition(none !important);
   }
-  .grippie {
-    width: 100%;
-    border: 1px solid $primary_lighter;
-    border-width: 1px 0px;
-    cursor: row-resize;
-    height: 11px;
-    overflow: hidden;
-    background-color: $primary_lightest;
-    display:block {}
-    background: image-url("grippie.png") $primary_lightest no-repeat center 3px;
-  }
 }
 
 form {
   .tip {
     display: inline-block;
     &.good {
-      color: $success;
+      color: $success_text_color;
     }
     &.bad {
-      color: $highlight_danger;
+      color: $warning_text_color;
     }
   }
 }
@@ -214,7 +201,7 @@ blockquote {
     display: inline-block;
     i {
       font-size: 15px;
-      color: darken($secondary, 60%);
+      color: darken($tertiary_text_color, 60%);
     }
   }
 }
@@ -225,12 +212,12 @@ blockquote {
 
 #pagedown-editor {
   width: 540px;
-  background-color: $secondary;
+  background-color: $primary_background_color;
   padding: 0 10px 13px 10px;
-  border: 1px solid $primary_light;
+  border: 1px solid $primary_border_color;
   .preview {
     margin-top: 8px;
-    border: 1px dashed $primary_light;
+    border: 1px dashed $primary_border_color;
     padding: 8px 8px 0 8px;
     p {
       margin: 0 0 10px 0;
@@ -244,13 +231,13 @@ blockquote {
 .spinner {
   width: 100px;
   margin: 0 auto 30px auto;
-  background-color: $primary;
+  background-color: $secondary_background_color;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
   font-size: 15px;
   line-height: 23px;
   text-align: center;
-  color: $secondary;
+  color: $tertiary_text_color;
   background: {
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
@@ -264,9 +251,9 @@ blockquote {
 }
 
 .avatar-wrapper {
-  background-color: $secondary;
+  background-color: $primary_background_color;
   display: inline-block;
-  border: 1px solid $primary_light;
+  border: 1px solid $primary_border_color;
   @include border-radius-all(5px);
   img {
     @include border-radius-all(4px);

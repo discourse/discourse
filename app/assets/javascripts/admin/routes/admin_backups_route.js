@@ -29,9 +29,9 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
     return PreloadStore.getAndRemove("operations_status", function() {
       return Discourse.ajax("/admin/backups/status.json");
     }).then(function (status) {
-      return Em.Object.create({
+      return Discourse.BackupStatus.create({
         isOperationRunning: status.is_operation_running,
-        canRollback: status.can_rollback,
+        canRollback: status.can_rollback
       });
     });
   },
@@ -57,7 +57,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
             Discourse.User.currentProp("hideReadOnlyAlert", true);
             Discourse.Backup.start().then(function() {
               self.controllerFor("adminBackupsLogs").clear();
-              self.controllerFor("adminBackups").set("isOperationRunning", true);
+              self.modelFor("adminBackups").set("isOperationRunning", true);
               self.transitionTo("admin.backups.logs");
             });
           }
@@ -69,7 +69,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       Destroys a backup
 
       @method destroyBackup
-      @param {Discourse.Backup} the backup to destroy
+      @param {Discourse.Backup} backup the backup to destroy
     **/
     destroyBackup: function(backup) {
       var self = this;
@@ -91,7 +91,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       Start a restore and redirect the user to the logs tab
 
       @method startRestore
-      @param {Discourse.Backup} the backup to restore
+      @param {Discourse.Backup} backup the backup to restore
     **/
     startRestore: function(backup) {
       var self = this;
@@ -104,7 +104,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
             Discourse.User.currentProp("hideReadOnlyAlert", true);
             backup.restore().then(function() {
               self.controllerFor("adminBackupsLogs").clear();
-              self.controllerFor("adminBackups").set("isOperationRunning", true);
+              self.modelFor("adminBackups").set("isOperationRunning", true);
               self.transitionTo("admin.backups.logs");
             });
           }
@@ -148,6 +148,18 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
         }
       );
     },
-  }
 
+    uploadSuccess: function(filename) {
+      var self = this;
+      bootbox.alert(I18n.t("admin.backups.upload.success", { filename: filename }), function() {
+        Discourse.Backup.find().then(function (backups) {
+          self.controllerFor("adminBackupsIndex").set("model", backups);
+        });
+      });
+    },
+
+    uploadError: function(filename, message) {
+      bootbox.alert(I18n.t("admin.backups.upload.error", { filename: filename, message: message }));
+    }
+  }
 });

@@ -1,0 +1,1 @@
+before_precompile: ./packaging/debian/setup.sh

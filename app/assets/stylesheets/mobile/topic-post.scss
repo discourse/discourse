@@ -1,15 +1,15 @@
 @import "common/foundation/variables";
 
 .gap {
-  background-color: $primary_lightest;
+  background-color: lighten($secondary_background_color, 76%);
   padding: 5px 15px;
-  color: $primary_lighter;
+  color: $secondary_text_color;
   text-align: center;
   margin: 0 10px;
 }
 
 .topic-post {
-  border-top: 1px solid $primary_lighter;
+  border-top: 1px solid $primary_border_color;
   padding: 6px 0 3px 0;
   &:first-of-type {
     border-top: none;
@@ -17,11 +17,11 @@
 }
 
 nav.post-controls {
-  background-color: $secondary;
-  padding: 0px;
-  border-right: 1px solid $primary_lighter;
+  background-color: $primary_background_color;
+  padding: 0;
+  border-right: 1px solid $primary_border_color;
   margin-top: 10px;
-  button {color: $primary_lighter;
+  button {color: lighten($primary_text_color, 35%);
   border-radius: 4px;
   margin-right: 2px;
 
@@ -43,13 +43,9 @@ span.badge-posts {
 
 button.create {
   float: right !important;
-  border: 1px solid $primary_light;
   margin-right: 0;
-  color: $primary_light;
-  padding-right: 7px;
-}
- 	.like {
-    border-right: 1px solid $primary_lighter;
+  color: $primary_text_color;
+  padding-right: 7px;}
 }
 
 .create i {
@@ -58,52 +54,42 @@ button.create {
 
 
 button {
-	border: none;
-  font-size: 16px;
+  border: none;
+  font-size: 17px;
   padding: 8px 10px;
   vertical-align: top;
   background: transparent;
- 	border: 1px solid $primary_lighter;
   float: left !important;
-    &:last-of-type {
-      border-right: 1px solid $primary_lighter;
+  &.hidden {
+    display: none;
+  }
+  &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
+    float: right;
+  }
+  .read-icon {
+    &:before {
+      font-family: "FontAwesome";
+      content: "\f02e";
     }
-       &:hover {
-        }
-        &:active {
-        }
-        &.hidden {
-          display: none;
-        }
-        &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
-          float: right;
-        }
-        .read-icon {
-          &:before {
-            font-family: "FontAwesome";
-            content: "\f02e";
-          }
-          &.unseen {
-            &:before {
-              content: "\f097";
-            }
-          }
-          &.last-read {
-            color: $highlight_danger;
-          }
-          &.bookmarked {
-            &:before {
-              color: $bookmarkColor;
-            }
-          }
-        }
+    &.unseen {
+      &:before {
+        content: "\f097";
       }
     }
+    &.last-read {
+      color: $warning_text_color;
+    }
+    &.bookmarked {
+      &:before {
+        color: $bookmarkColor;
+      }
+    }
+  }
+}
 
 
 
 .embedded-posts {
-
   .topic-meta-data h5 a {
     margin-left: 10px;
   }
@@ -131,7 +117,7 @@ a.star {
 }
 
 #main a.star.starred {
-	text-shadow: none !important;
+  text-shadow: none !important;
 }
 
 .topic-map {
@@ -146,17 +132,17 @@ a.star {
 
   border-radius: 5px;
   margin: 15px 10px 20px 10px;
-  border: 1px solid $primary_lighter;
+  border: 1px solid $primary_border_color;
 
   h3 {
     margin-bottom: 4px;
-    color: $primary;
+    color: $primary_text_color;
     line-height: 23px;
   }
 
   h4 {
     margin: 0 0 3px 0;
-    color: $primary_medium;
+    color: $secondary_text_color;
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
@@ -213,7 +199,7 @@ a.star {
       line-height: 20px;
     }
     .number {
-      color: $tertiary_dark;
+      color: $emphasis_text_color;
     }
     .avatar + a {
       float: left;
@@ -223,11 +209,11 @@ a.star {
   .links,
   .information {
     padding: 7px 14px;
-    color: $primary;
+    color: $primary_text_color;
   }
 
   .information {
-    border-top: 1px solid $primary_lighter;
+    border-top: 1px solid $primary_border_color;
   }
   .topic-links {
     .badge-notification {
@@ -238,18 +224,16 @@ a.star {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid $primary_lighter;
-      border-left: 1px solid $primary_lightest;
+      border-bottom: 1px solid $primary_border_color;
+      border-left: 1px solid $primary_border_color;
       padding: 0 23px;
-      color: $primary;
-      background: $primary_lighter;
+      color: $primary_text_color;
+      background: lighten($secondary_background_color, 60%);
       &:hover {
-        background: $primary_lighter;
-        color: $primary;
-        border-bottom: 1px solid $primary_lighter;
+        background: lighten($secondary_background_color, 60%);
+        color: $primary_text_color;
+        border-bottom: 1px solid $primary_border_color;
 
-      }
-      &.collapsed {
       }
       .fa {
         margin: 0;
@@ -261,7 +245,7 @@ a.star {
 }
 
 #topic-footer-buttons {
-  border-top: 1px solid $primary_lighter;
+  border-top: 1px solid $primary_border_color;
   padding: 20px 10px 0 10px;
 }
 
@@ -272,7 +256,7 @@ a.star {
     display: none;
     }
 
-   a.badge-category {
+   a.badge-category, a.badge-category-parent {
     font-size: 10px;
     }
 
@@ -285,8 +269,8 @@ a.star {
 
 
 span.post-count {
-  background: $primary;
-  color: $secondary;
+  background: $secondary_background_color;
+  color: $tertiary_text_color;
   opacity: .8;
 }
 
@@ -301,7 +285,7 @@ span.post-count {
 
 #topic-title {
   z-index: 1000;
-  background: $primary_lightest;
+  background: lighten($secondary_background_color, 76%);
   margin: 0 0 0 0 !important;
   padding: 15px 10px 15px 10px;
 }
@@ -312,20 +296,20 @@ span.post-count {
     height: auto;
   }
   &.moderator {
-    background-color: $tertiary_lightest;
+    background-color: $emphasis_background_color;
   }
 }
 
 .quote-button {
   display: none;
   position: absolute;
-  background-color: $primary_medium;
-  color: $secondary;
+  background-color: lighten($secondary_background_color, 35%);
+  color: $primary_text_color;
   padding: 10px;
   width: 90px;
 
   &:hover {
-    background-color: $primary_light;
+    background-color: lighten($secondary_background_color, 50%);
     cursor: pointer;
   }
 }
@@ -410,12 +394,12 @@ iframe {
 }
 
 .deleted {
-  background-color: $highlight_danger_light;
+  background-color: $warning_background_color;
 }
 
 #show-topic-admin {
-  color: $primary_medium;
-  right: 0px;
+  color: lighten($primary_text_color, 35%);
+  right: 0;
   border-right: 0;
   padding-right: 4px;
   padding-left: 5px;
@@ -434,7 +418,7 @@ iframe {
 }
 
 .new-user a {
-  color: $primary_medium;
+  color: lighten($primary_text_color, 35%);
 }
 
 .topic-meta-data {
@@ -460,7 +444,7 @@ blockquote {
 
 .quote-controls {
   float: right;
-  color: $primary;
+  color: $primary_text_color;
   a {
   margin: 0;
   }
@@ -468,7 +452,7 @@ blockquote {
     .quote-other-topic:before {
     display: inline-block;
     margin-left: 8px;
-    color: $primary;
+    color: $primary_text_color;
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;
@@ -483,8 +467,8 @@ blockquote {
 
 
 .quote .title {
-  border-left: 5px solid $primary_light;
-  background-color: $primary_lightest;
+  border-left: 5px solid $primary_border_color;
+  background-color: lighten($secondary_background_color, 76%);
   padding: 10px 10px 0 12px;
   clear: both;
   .avatar { margin-right: 7px; }
@@ -493,4 +477,8 @@ blockquote {
 .gutter { display: none; }
 
 .posts-wrapper {  position: relative;
+}
+
+.topic-body.highlighted {
+  background-color: $emphasis_background_color;
 }

@@ -1,12 +1,54 @@
 class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
+  skip_before_filter :check_xhr, only: ['sso', 'sso_login']
 
   def csrf
     render json: {csrf: form_authenticity_token }
   end
 
+  def sso
+    if SiteSetting.enable_sso
+      redirect_to DiscourseSingleSignOn.generate_url(params[:return_path] || '/')
+    else
+      render nothing: true, status: 404
+    end
+  end
+
+  def sso_login
+    unless SiteSetting.enable_sso
+      render nothing: true, status: 404
+      return
+    end
+
+    sso = DiscourseSingleSignOn.parse(request.query_string)
+    if !sso.nonce_valid?
+      render text: "Timeout expired, please try logging in again.", status: 500
+      return
+    end
+
+    return_path = sso.return_path
+    sso.expire_nonce!
+
+    if user = sso.lookup_or_create_user
+      if SiteSetting.must_approve_users? && !user.approved?
+        # TODO: need an awaiting approval message here
+      else
+        log_on_user user
+      end
+      redirect_to return_path
+    else
+      render text: "unable to log on user", status: 500
+    end
+  end
+
   def create
+
+    unless allow_local_auth?
+      render nothing: true, status: 500
+      return
+    end
+
     params.require(:login)
     params.require(:password)
 
@@ -46,6 +88,11 @@ class SessionController < ApplicationController
   def forgot_password
     params.require(:login)
 
+    unless allow_local_auth?
+      render nothing: true, status: 500
+      return
+    end
+
     user = User.find_by_username_or_email(params[:login])
     if user.present?
       email_token = user.email_tokens.create(email: user.email)
@@ -70,6 +117,10 @@ class SessionController < ApplicationController
   end
 
   private
+
+  def allow_local_auth?
+    !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+  end
 
   def login_not_approved_for?(user)
     SiteSetting.must_approve_users? && !user.approved? && !user.admin?

@@ -12,7 +12,6 @@ Discourse.ScrollTop = Em.Mixin.create({
     Em.run.schedule('afterRender', function() {
       $(document).scrollTop(0);
     });
-  }.on('didInsertElement'),
-
+  }.on('didInsertElement')
 });
 

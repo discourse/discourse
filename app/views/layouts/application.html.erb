@@ -7,6 +7,10 @@
     <meta content="<%= SiteSetting.site_description %>" name="description">
     <meta content="" name="author">
 
+    <%- if SiteSetting.enable_escaped_fragments? %>
+    <meta name="fragment" content="!">
+    <%- end %>
+
     <%= canonical_link_tag %>
 
     <link rel="icon" type="image/png" href="<%=SiteSetting.favicon_url%>">

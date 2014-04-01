@@ -11,7 +11,7 @@
 .list-controls {
   .nav {
     float: left;
-    margin-bottom: 15px;
+    margin-bottom: 18px;
   }
 
   .btn {
@@ -58,16 +58,17 @@
 // --------------------------------------------------
 
 #topic-list {
-  border: 1px solid $primary_lighter;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 0 10px;
-  a.title:visited:not(.badge-notification) {color: $primary_medium;}
+  border-top: 1px solid $primary-border-color;
+  a.title {color: $primary_text_color;}
+  a.title:visited:not(.badge-notification) {color: lighten($primary_text_color, 35%);}
 
   > tbody > tr {
-    &:nth-child(even) {
-      background-color: lighten($primary_lightest, 1%);
+    &:nth-child(odd) {
+      background-color: lighten($secondary_background_color, 77%);
     }
     &.archived a {
       opacity: 0.6;
@@ -82,12 +83,12 @@
       }
     }
     &.highlighted {
-      background-color: $highlight_light;
+      background-color: $emphasis_background_color;
     }
   }
   th,
   td {
-    padding: 9px 5px;
+    padding: 12px 5px;
     line-height: 1.25;
     text-align: left;
     vertical-align: middle;
@@ -100,10 +101,9 @@
   }
   th {
     color: $topic-list-th-color;
-    font-weight: bold;
-    font-size: 13px;
-    background: lighten($primary_lighter, 12%);
-
+    font-weight: normal;
+    font-size: 14px;
+    button i.fa {color: $topic-list-th-color;}
 
   }
   td {
@@ -116,7 +116,7 @@
     padding: 0;
     background: transparent;
     &:hover {
-      color: $primary_light;
+      color: lighten($primary_text_color, 35%);
     }
   }
 
@@ -135,16 +135,18 @@
     font-size: 16px;
 
     i.score {
-      color: $success;
+      color: $success_text_color;
       cursor: pointer;
     }
   }
 
   .topic-excerpt {
-    font-size: 14px;
+    font-size: 13px;
     margin-top: 8px;
-    color: $primary_medium;
+    color: lighten($primary_text_color, 35%);
     word-break: break-word;
+    padding-right: 50px;
+    line-height: 1.4;
   }
 
   @include medium-width {
@@ -173,10 +175,11 @@
   }
   .badge-notification {
     position: relative;
-    top: -1px;
+    top: -2px;
   }
   .category {
-    width: 140px;
+    padding: 0 20px 0 20px;
+    min-width: 80px;
   }
   .posters {
     min-width: 150px;
@@ -198,11 +201,14 @@
     a:not(.badge-posts) {
       color: inherit;
     }
+    a.badge-posts {
+      font-weight: bold;
+    }
   }
   .sortable {
     cursor: pointer;
     &:hover {
-      background-color: lighten($primary_lighter, 7%);
+      background-color: lighten($secondary_background_color, 76%);
     }
     @include unselectable;
   }
@@ -292,10 +298,6 @@
 
     .subcategories {
       margin-top: 10px;
-      .badge-category {
-        font-size: 12px;
-        padding: 4px;
-      }
     }
     .featured-users {
       float: right;
@@ -304,7 +306,7 @@
     .category-description {
       margin-top: 10px;
     }
-    .badge-category {
+    .badge-category.bigger {
       padding: 6px 10px;
       font-size: 14px;
     }
@@ -313,7 +315,7 @@
   .featured-topic {
     margin: 6px 0;
     a.last-posted-at, a.last-posted-at:visited {
-      color: $primary_light;
+      color: lighten($primary_text_color, 50%);
     }
   }
 
@@ -355,7 +357,7 @@
 .category-list-item {
   margin-bottom: 10px;
   #topic-list tbody tr:nth-child(even) {
-    background-color: $secondary;
+    background-color: $primary_background_color;
   }
   th .badge-category {
     float: left;
@@ -363,9 +365,11 @@
   }
   .posters {
     float: left;
+    display: block;
+    width: 165px;
   }
   > footer {
-    border: 1px solid $primary_lighter;
+    border: 1px solid $primary_border_color;
     border-top: 0;
     padding: 7px 10px;
     background-color: lighten($topic-list-th-background-color, 2%);
@@ -375,7 +379,6 @@
       color: lighten($topic-list-th-color, 5%);
       font-weight: bold;
       font-size: 12px;
-      text-shadow: 0 1px 0 $secondary;
     }
     figcaption {
       display: inline;
@@ -411,11 +414,11 @@
   width: 200px;
   margin: 0 auto;
   padding: 10px 0 10px 43px;
-  color: $secondary;
+  color: $primary_background_color;
   font-size: 18px;
   line-height: 25px;
   background: {
-    color: $primary;
+    color: $primary_text_color;
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
     position: 10px 50%;
@@ -428,9 +431,10 @@
 // --------------------------------------------------
 
 .list-controls {
+
   .home {
-    background-color: $primary_lightest;
-    color: $primary;
+    background-color: lighten($secondary_background_color, 76%);
+    color: $primary_text_color;
   }
 
   .badge-category {
@@ -467,7 +471,7 @@
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: lighten($highlight_danger, 10%);
+    color: lighten($warning_text_color, 10%);
     font-size: 13px;
     cursor: default;
   }
@@ -508,8 +512,8 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid $primary_lighter;
-  background-color: $secondary;
+  border: 1px solid $primary_border_color;
+  background-color: $primary_background_color;
   max-height: 350px;
   padding: 8px 7px 0 7px;
   z-index: 100;
@@ -526,23 +530,21 @@ ol.category-breadcrumb {
     text-transform: none;
     width: 100%;
     min-width: 102px;
-
     text-align: center;
     margin-right: 20px;
+    margin-bottom: 7px;
   }
 
-
-  div {
-    margin-bottom: 10px;
-  }
 }
 
 #bulk-select {
   position: fixed;
   right: 20px;
   padding: 5px;
-  background-color: $secondary;
-  button {
-    padding: 3px 0 3px 6px;
-  }
+  background-color: $primary_background_color;
+}
+
+button.dismiss-read {
+  float: right;
+  margin-bottom: 5px;
 }

@@ -2,17 +2,11 @@ Discourse.AdminBackupsIndexController = Ember.ArrayController.extend({
   needs: ["adminBackups"],
   status: Em.computed.alias("controllers.adminBackups"),
 
-  rollbackDisabled: Em.computed.not("rollbackEnabled"),
+  uploadText: function() { return I18n.t("admin.backups.upload.text"); }.property(),
 
-  rollbackEnabled: function() {
-    return this.get("status.canRollback") && this.get("restoreEnabled");
-  }.property("status.canRollback", "restoreEnabled"),
+  readOnlyModeDisabled: Em.computed.alias("status.isOperationRunning"),
 
-  restoreDisabled: Em.computed.not("restoreEnabled"),
-
-  restoreEnabled: function() {
-    return Discourse.SiteSettings.allow_restore && !this.get("status.isOperationRunning");
-  }.property("status.isOperationRunning"),
+  restoreDisabled: Em.computed.alias("status.restoreDisabled"),
 
   restoreTitle: function() {
     if (!Discourse.SiteSettings.allow_restore) {
@@ -23,6 +17,8 @@ Discourse.AdminBackupsIndexController = Ember.ArrayController.extend({
       return I18n.t("admin.backups.operations.restore.title");
     }
   }.property("status.isOperationRunning"),
+
+  destroyDisabled: Em.computed.alias("status.isOperationRunning"),
 
   destroyTitle: function() {
     if (this.get("status.isOperationRunning")) {
@@ -64,7 +60,7 @@ Discourse.AdminBackupsIndexController = Ember.ArrayController.extend({
       } else {
         this._toggleReadOnlyMode(false);
       }
-    },
+    }
 
   },
 
@@ -75,6 +71,5 @@ Discourse.AdminBackupsIndexController = Ember.ArrayController.extend({
     }).then(function() {
       Discourse.set("isReadOnly", enable);
     });
-  },
-
+  }
 });

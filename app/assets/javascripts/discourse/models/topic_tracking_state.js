@@ -103,26 +103,8 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
       }
     }
 
-    if(filter === "new" && !list.more_topics_url){
-      // scrub all new rows and reload from list
-      _.each(this.states, function(state){
-        if(state.last_read_post_number === null) {
-          tracker.removeTopic(state.topic_id);
-        }
-      });
-    }
-
-    if(filter === "unread" && !list.more_topics_url){
-      // scrub all new rows and reload from list
-      _.each(this.states, function(state){
-        if(state.last_read_post_number !== null) {
-          tracker.removeTopic(state.topic_id);
-        }
-      });
-    }
-
     _.each(list.topics, function(topic){
-      var row = {};
+      var row = tracker.states["t" + topic.id] || {};
 
       row.topic_id = topic.id;
       if(topic.unseen) {
@@ -142,7 +124,6 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
       }
 
       tracker.states["t" + topic.id] = row;
-
     });
 
     this.incrementMessageCount();
@@ -155,9 +136,22 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
   countNew: function(category_name){
     return _.chain(this.states)
       .where({last_read_post_number: null})
+      .where(function(topic) {
+        return topic.notification_level === null ||
+               topic.notification_level >= Discourse.Topic.NotificationLevel.TRACKING;
+      })
       .where(function(topic){ return topic.category_name === category_name || !category_name;})
       .value()
       .length;
+  },
+
+  resetNew: function() {
+    var self = this;
+    Object.keys(this.states).forEach(function (id) {
+      if (self.states[id].last_read_post_number === null) {
+        delete self.states[id];
+      }
+    });
   },
 
   countUnread: function(category_name){
@@ -166,6 +160,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
         return topic.last_read_post_number !== null &&
                topic.last_read_post_number < topic.highest_post_number;
       })
+      .where(function(topic) { return topic.notification_level >= Discourse.Topic.NotificationLevel.TRACKING})
       .where(function(topic){ return topic.category_name === category_name || !category_name;})
       .value()
       .length;

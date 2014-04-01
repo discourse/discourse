@@ -37,13 +37,15 @@ Discourse.LoginMethod.reopenClass({
       "yahoo",
       "github"
     ].forEach(function(name){
-      if(Discourse.SiteSettings["enable_" + name + "_logins"]){
+      if (Discourse.SiteSettings["enable_" + name + "_logins"]) {
 
         var params = {name: name};
 
-        if(name === "google") {
+        if (name === "google") {
           params.frameWidth = 850;
           params.frameHeight = 500;
+        } else if (name === "facebook") {
+          params.frameHeight = 450;
         }
 
         methods.pushObject(Discourse.LoginMethod.create(params));

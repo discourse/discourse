@@ -13,12 +13,12 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
     result = Auth::Result.new
 
     data = auth_token[:info]
-    identity_url = auth_token[:extra][:identity_url]
+    identity_url = auth_token[:extra][:response].identity_url
     result.email = email = data[:email]
 
     # If the auth supplies a name / username, use those. Otherwise start with email.
-    result.name = name = data[:name] || data[:email]
-    result.username = username = data[:nickname] || data[:email]
+    result.name = data[:name] || data[:email]
+    result.username = data[:nickname] || data[:email]
 
     user_open_id = UserOpenId.find_by_url(identity_url)
 
@@ -32,6 +32,7 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
       # note email may change by the time after_create_account runs
       email: email
     }
+
     result.email_valid = @opts[:trusted]
 
     result

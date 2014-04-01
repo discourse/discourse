@@ -28,7 +28,7 @@ class EmbedController < ApplicationController
 
   def count
 
-    urls = params[:embed_url].map {|u| u.sub(/#discourse-comments$/, '') } 
+    urls = params[:embed_url].map {|u| u.sub(/#discourse-comments$/, '').sub(/\/$/, '') }
     topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
 
     by_url = {}

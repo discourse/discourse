@@ -34,6 +34,14 @@ Discourse.CategoryDropComponent = Ember.Component.extend({
     return I18n.t('categories.all');
   }.property('category'),
 
+  dropdownButtonClass: function() {
+    var result = 'badge-category category-dropdown-button';
+    if (Em.isNone(this.get('category'))) {
+      result += ' home';
+    }
+    return result;
+  }.property('category'),
+
   badgeStyle: function() {
     var category = this.get('category');
     if (category) {
@@ -68,10 +76,6 @@ Discourse.CategoryDropComponent = Ember.Component.extend({
       });
     }
   },
-
-  categoryChanged: function() {
-    this.close();
-  }.observes('category', 'parentCategory'),
 
   close: function() {
     $('html').off('click.category-drop');

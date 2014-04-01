@@ -25,7 +25,11 @@
       <div class="control-group">
         <label class="control-label">{{i18n user.name.title}}</label>
         <div class="controls">
-          {{textField value=newNameInput classNames="input-xxlarge"}}
+          {{#if can_edit_name}}
+            {{textField value=newNameInput classNames="input-xxlarge"}}
+          {{else}}
+            <span class='static'>{{name}}</span>
+          {{/if}}
         </div>
         <div class='instructions'>
           {{i18n user.name.instructions}}
@@ -46,6 +50,7 @@
       </div>
     </div>
 
+    {{#unless Discourse.SiteSettings.enable_sso }}
     <div class="control-group">
       <label class="control-label">{{i18n user.password.title}}</label>
       <div class="controls">
@@ -59,6 +64,7 @@
         {{passwordProgress}}
       </div>
     </div>
+    {{/unless}}
 
     <div class="control-group">
       <label class="control-label">{{i18n user.avatar.title}}</label>
@@ -72,9 +78,41 @@
       </div>
     </div>
 
+    {{#if Discourse.SiteSettings.allow_profile_backgrounds}}
+    <div class="control-group">
+      <label class="control-label">{{i18n user.change_profile_background.title}}</label>
+      <div class="controls">
+        <input type="file" id="profile-background-input" accept="image/*" style="display:none" />
+        <div id="profile-background-preview" class="input-xxlarge" {{bind-attr style="profileBackground"}}>
+          <div id="profile-background-controls">
+          <button {{action showProfileBackgroundFileSelector}} class="btn pad-left no-text"><i class="fa fa-picture-o"></i></button>
+          {{#if profileBackground}}
+          <button {{action clearProfileBackground}} class="btn btn-danger pad-left no-text"><i class="fa fa-trash-o"></i></button>
+          {{/if}}
+          {{#if view.uploading}}
+          <span class="btn">{{i18n upload_selector.uploading}} {{view.uploadProgress}}%</span>
+          {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+    {{#if allowUserLocale}}
+      <div class="control-group">
+        <label class="control-label">{{i18n user.locale.title}}</label>
+        <div class="controls">
+          {{combobox valueAttribute="value" content=availableLocales value=locale none="user.locale.default"}}
+        </div>
+        <div class='instructions'>
+          {{i18n user.locale.instructions}}
+        </div>
+      </div>
+    {{/if}}
+
     <div class="control-group">
       <label class="control-label">{{i18n user.bio}}</label>
-      <div class="controls">
+      <div class="controls bio-composer">
         {{pagedown value=bio_raw}}
       </div>
     </div>
@@ -89,12 +127,6 @@
     <div class="control-group">
       <label class="control-label">{{i18n user.email_settings}}</label>
       <div class="controls">
-        {{#if Discourse.SiteSettings.enable_mailing_list_mode}}
-          <label class="checkbox-label">
-            {{view Ember.Checkbox checkedBinding="mailing_list_mode"}}
-            {{i18n user.mailing_list_mode}}
-          </label>
-        {{/if}}
 
         <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_digests"}}
         {{i18n user.email_digests.title}}</label>
@@ -106,8 +138,12 @@
         {{/if}}
         <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_private_messages"}}
         {{i18n user.email_private_messages}}</label>
+
         <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_direct"}}
         {{i18n user.email_direct}}</label>
+        <label class="checkbox-label">
+          {{view Ember.Checkbox checkedBinding="mailing_list_mode"}}
+          {{i18n user.mailing_list_mode}}</label>
         <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_always"}}
         {{i18n user.email_always}}</label>
       </div>

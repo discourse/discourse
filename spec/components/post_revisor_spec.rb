@@ -210,8 +210,7 @@ describe PostRevisor do
       before do
         SiteSetting.stubs(:newuser_max_images).returns(0)
         url = "http://i.imgur.com/FGg7Vzu.gif"
-        # this test is problamatic, it leaves state in the onebox cache
-        Oneboxer.stubs(:onebox).with(url, anything).returns("<img src='#{url}'>")
+        Oneboxer.stubs(:cached_onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(post.user, "So, post them here!\n#{url}")
       end
 
@@ -270,6 +269,22 @@ describe PostRevisor do
         it 'is a ninja edit, because the second poster posted again quickly' do
           post.revisions.size.should == 1
         end
+      end
+    end
+
+    describe "topic excerpt" do
+      it "topic excerpt is updated only if first post is revised" do
+        revisor = described_class.new(post)
+        first_post = topic.posts.by_post_number.first
+        expect {
+          revisor.revise!(first_post.user, 'Edit the first post', revised_at: first_post.updated_at + 10.seconds)
+          topic.reload
+        }.to change { topic.excerpt }
+        second_post = Fabricate(:post, post_args.merge(post_number: 2, topic_id: topic.id))
+        expect {
+          described_class.new(second_post).revise!(second_post.user, 'Edit the 2nd post')
+          topic.reload
+        }.to_not change { topic.excerpt }
       end
     end
   end

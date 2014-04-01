@@ -30,6 +30,13 @@ Discourse.HeaderController = Discourse.Controller.extend({
         self.set("currentUser.unread_notifications", 0);
         headerView.showDropdownBySelector("#user-notifications");
       });
+    },
+
+    jumpToTopPost: function () {
+      var topic = this.get('topic');
+      if (topic) {
+        Discourse.URL.routeTo(topic.get('firstPostUrl'));
+      }
     }
   }
 

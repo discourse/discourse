@@ -22,7 +22,7 @@ Discourse.AdminCustomizeView = Discourse.View.extend({
     selectStylesheet: function() { this.set('selected', 'stylesheet'); },
 
     selectMobileHeader:     function() { this.set('selected', 'mobileHeader'); },
-    selectMobileStylesheet: function() { this.set('selected', 'mobileStylesheet'); },
+    selectMobileStylesheet: function() { this.set('selected', 'mobileStylesheet'); }
   },
 
   didInsertElement: function() {

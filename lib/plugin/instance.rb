@@ -95,7 +95,12 @@ class Plugin::Instance
 
   def register_asset(file,opts=nil)
     full_path = File.dirname(path) << "/assets/" << file
-    assets << full_path
+    if opts == :admin
+      @admin_javascripts ||= []
+      @admin_javascripts << full_path
+    else
+      assets << full_path
+    end
     if opts == :server_side
       @server_side_javascripts ||= []
       @server_side_javascripts << full_path
@@ -165,6 +170,12 @@ class Plugin::Instance
       # TODO possibly amend this to a rails engine
       Rails.configuration.assets.paths << auto_generated_path
       Rails.configuration.assets.paths << File.dirname(path) + "/assets"
+    end
+
+    if @admin_javascripts
+      @admin_javascripts.each do |js|
+        DiscoursePluginRegistry.admin_javascripts << js
+      end
     end
 
     if @server_side_javascripts

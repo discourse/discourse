@@ -38,6 +38,10 @@ class TopicQuery
     @user = user
   end
 
+  def joined_topic_user(list=nil)
+    (list || Topic).joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
+  end
+
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic)
     builder = SuggestedTopicsBuilder.new(topic)
@@ -77,7 +81,7 @@ class TopicQuery
   end
 
   def list_posted
-    create_list(:posted) {|l| l.where('tu.user_id IS NOT NULL') }
+    create_list(:posted) {|l| l.where('tu.posted') }
   end
 
   def list_top_for(period)
@@ -209,6 +213,7 @@ class TopicQuery
       result.order("topics.#{sort_column} #{sort_dir}")
     end
 
+
     # Create results based on a bunch of default options
     def default_results(options={})
       options.reverse_merge!(@options)
@@ -219,6 +224,7 @@ class TopicQuery
 
       if @user
         result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
+                       .references('tu')
       end
 
       category_id = nil
@@ -279,12 +285,6 @@ class TopicQuery
       result
     end
 
-    def new_results(options={})
-      result = TopicQuery.new_filter(default_results(options), @user.treat_as_new_topic_start_date)
-      result = remove_muted_categories(result, @user) unless options[:category].present?
-      suggested_ordering(result, options)
-    end
-
     def latest_results(options={})
       result = default_results(options)
       result = remove_muted_categories(result, @user) unless options[:category].present?
@@ -298,7 +298,7 @@ class TopicQuery
                          WHERE cu.user_id = ? AND
                                cu.category_id = topics.category_id AND
                                cu.notification_level = ?
-                         )", user.id, CategoryUser.notification_levels[:muted])
+                         )", user.id, CategoryUser.notification_levels[:muted]).references('cu')
       end
 
       list
@@ -309,6 +309,12 @@ class TopicQuery
       result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
                          .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
+      suggested_ordering(result, options)
+    end
+
+    def new_results(options={})
+      result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
+      result = remove_muted_categories(result, @user) unless options[:category].present?
       suggested_ordering(result, options)
     end
 

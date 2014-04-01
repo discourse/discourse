@@ -15,7 +15,7 @@
       <% next unless post.user %>
       <item>
         <title><%= @topic_view.title %></title>
-        <author><%= "#{site_email} (@#{post.user.username}#{" #{post.user.name}" if post.user.name.present?})" -%></author>
+        <author><%= "no-reply@example.com (@#{post.user.username}#{" #{post.user.name}" if post.user.name.present?})" -%></author>
         <description><![CDATA[
           <% post_url = Discourse.base_url + post.url %>
           <p><%= t('author_wrote', author: link_to(post.user.name, userpage_url(post.user.username_lower))).html_safe %></p>
