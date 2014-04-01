@@ -180,7 +180,7 @@ fr:
         user:
           attributes:
             password:
-              common: "est un des 10000 mots de passe les plus communs. Veuillez utiliser un mot de passe plus sécurisé."
+              common: "est un des 5000 mots de passe les plus communs. Veuillez utiliser un mot de passe plus sécurisé."
             ip_address:
               signup_not_allowed: "L'inscription n'est pas autorisé à partir de ce compte."
   user_profile:
@@ -629,7 +629,7 @@ fr:
     login_required: "Requière une authentification pour les messages"
     min_username_length: "Taille minimum du nom d'utilisateur. (Ne s'applique pas si l'unicité des pseudos est forcée)"
     min_password_length: "Longueur minimale du mot de passe."
-    block_common_passwords: "Ne pas autoriser les mots de passe contenus dans la liste des 10000 mots de passe les plus communs."
+    block_common_passwords: "Ne pas autoriser les mots de passe contenus dans la liste des 5000 mots de passe les plus communs."
     enable_sso: "Activer l'authentification unique via un site externe"
     sso_url: "URL de l'authentification unique"
     sso_secret: "Chaîne de caractères secrète utilisée pour crypter/décrypter les informations SSO, assurez-vous qu'elle est de 10 caractères ou plus"

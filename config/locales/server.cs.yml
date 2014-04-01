@@ -176,7 +176,7 @@ cs:
         user:
           attributes:
             password:
-              common: je jedno z nejčastějších 10000 hesel. Zkuste vymyslet bezpečnější heslo.
+              common: je jedno z nejčastějších 5000 hesel. Zkuste vymyslet bezpečnější heslo.
             ip_address:
               signup_not_allowed: Registrace z této adresy není povolena.
   user_profile:
@@ -659,7 +659,7 @@ cs:
     login_required: Požadovat autentizaci pro prohlížení příspěvků
     min_username_length: Minimální délka uživatelského jména. (Nepoužije se pokud je vynucena unikátnost globálního uživatelského jména)
     min_password_length: Minimální povolená délka hesla.
-    block_common_passwords: Nepovolit heslo pokud je mezi 10000 nejběžnějšími.
+    block_common_passwords: Nepovolit heslo pokud je mezi 5000 nejběžnějšími.
     enable_sso: Povolit jednotné přihlášení přes externí web (single sign on, SSO)
     sso_url: URL pro single sign on
     sso_secret: Tajný kód pro šifrování a dešifrování informací pro SSO. Chcete zadat minimálně 10 znaků a víc
