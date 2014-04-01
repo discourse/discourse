@@ -33,6 +33,7 @@ describe TopicEmbed do
         # It converts relative URLs to absolute
         post.cooked.start_with?("hello world new post <a href=\"http://eviltrout.com/hello\">hello</a> <img src=\"http://eviltrout.com/images/wat.jpg\">").should be_true
 
+        post.topic.has_topic_embed?.should be_true
         TopicEmbed.where(topic_id: post.topic_id).should be_present
       end
 

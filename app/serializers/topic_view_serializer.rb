@@ -37,7 +37,8 @@ class TopicViewSerializer < ApplicationSerializer
              :highest_post_number,
              :last_read_post_number,
              :deleted_by,
-             :actions_summary
+             :actions_summary,
+             :expandable_first_post
 
   # Define a delegator for each attribute of the topic we want
   attributes *topic_attributes
@@ -162,6 +163,14 @@ class TopicViewSerializer < ApplicationSerializer
       # TODO: other keys? :can_clear_flags, :acted, :can_undo
     end
     result
+  end
+
+  def expandable_first_post
+    true
+  end
+
+  def include_expandable_first_post?
+    object.topic.expandable_first_post?
   end
 
 end

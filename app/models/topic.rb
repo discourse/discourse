@@ -707,6 +707,14 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def has_topic_embed?
+    TopicEmbed.where(topic_id: id).exists?
+  end
+
+  def expandable_first_post?
+    SiteSetting.embeddable_host.present? && SiteSetting.embed_truncate? && has_topic_embed?
+  end
+
   private
 
   def update_category_topic_count_by(num)
