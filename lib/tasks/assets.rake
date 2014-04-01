@@ -16,6 +16,9 @@ task 'assets:precompile:before' do
   # let's make precompile faster using redis magic
   require 'sprockets'
   require 'digest/sha1'
+  require_dependency 'discourse_sass_importer'
+
+  Sprockets::SassImporter = DiscourseSassImporter
 
   module ::Sprockets
 
@@ -35,10 +38,10 @@ task 'assets:precompile:before' do
       def evaluate(context, locals, &block)
         ::Sprockets.cache_compiled("sass", data) do
            # HACK, SASS compiler will degrade to aweful perf with huge files
-           # Bypass if larger than 200kb, ensure assets are minified prior
+           # Bypass if larger than 500kb, ensure assets are minified prior
            if context.pathname &&
               context.pathname.to_s =~ /.css$/ &&
-              data.length > 200.kilobytes
+              data.length > 500.kilobytes
              puts "Skipped minifying #{context.pathname} cause it is larger than 200KB, minify in source control or avoid large CSS files"
              data
            else
