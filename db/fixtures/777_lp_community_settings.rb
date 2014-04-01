@@ -21,7 +21,12 @@ SiteSetting.enable_names                      = true
 SiteSetting.enable_local_account_create       = false
 SiteSetting.enforce_global_nicknames          = false
 SiteSetting.default_external_links_in_new_tab = true
-
+SiteSetting.title                             = 'Lesson Planet Community Forums'
+SiteSetting.company_full_name                 = 'Education Planet, Inc., d/b/a Lesson Planet'
+SiteSetting.company_short_name                = 'Lesson Planet'
+SiteSetting.logo_url                          = '/images/lp-logo.png'
+SiteSetting.logo_small_url                    = '/images/lp-logo-small.png'
+SiteSetting.favicon_url                       = '/images/lp-favicon.ico'
 
 #
 # LessonPlanet API
@@ -70,9 +75,25 @@ categories = {
     visual_performing_arts: { name: 'Visual & Performing Arts', color: '800080', id: 115 }
 }
 categories.values.each do |category|
-  c = Category.find_or_initialize_by id: category[:id]
-  c.attributes = { name: category[:name], user_id: Discourse.system_user.id, color: category[:color], text_color: 'ffffff' }
-  c.save!
+  Category.seed(:id) do |c|
+    c.id = category[:id]
+    c.name = category[:name]
+    c.slug = Slug.for(category[:name])
+    c.user_id = Discourse.system_user.id
+    c.color = category[:color]
+    c.text_color = 'ffffff'
+  end
 end
 # Update auto_increment field
 Category.exec_sql "SELECT setval('categories_id_seq', (SELECT MAX(id) from categories));"
+
+uuid = '599ef8a5-9dec-4126-bede-ba48158cb86d'
+SiteCustomization.seed(:key) do |sc|
+  sc.name = 'Lesson Planet'
+  sc.enabled = true
+  sc.key = uuid
+  sc.position = 0
+  sc.user_id = Discourse.system_user.id
+  sc.stylesheet = File.read(Rails.root.join('db', 'fixtures', 'lp-style.scss'))
+  sc.header = File.read(Rails.root.join('db', 'fixtures', 'lp-header.html'))
+end
