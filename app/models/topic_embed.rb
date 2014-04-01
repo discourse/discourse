@@ -56,15 +56,18 @@ class TopicEmbed < ActiveRecord::Base
     post
   end
 
-  def self.import_remote(user, url, opts=nil)
+  def self.find_remote(url)
     require 'ruby-readability'
 
     url = normalize_url(url)
-    opts = opts || {}
-    doc = Readability::Document.new(open(url).read,
+    Readability::Document.new(open(url).read,
                                         tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol],
                                         attributes: %w[href src])
+  end
 
+  def self.import_remote(user, url, opts=nil)
+    opts = opts || {}
+    doc = find_remote(url)
     TopicEmbed.import(user, url, opts[:title] || doc.title, doc.content)
   end
 

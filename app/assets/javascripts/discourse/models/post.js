@@ -183,8 +183,8 @@ Discourse.Post = Discourse.Model.extend({
   **/
   expand: function() {
     var self = this;
-    return Discourse.ajax("/posts/" + this.get('id') + "/expand-embed").then(function(result) {
-      self.set('cooked', result.cooked);
+    return Discourse.ajax("/posts/" + this.get('id') + "/expand-embed").then(function(post) {
+      self.set('cooked', post.cooked);
     });
   },
 

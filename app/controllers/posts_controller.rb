@@ -144,7 +144,13 @@ class PostsController < ApplicationController
   end
 
   def expand_embed
-    render json: {cooked: "NEW COOKED CONTENT"}
+    post = find_post_from_params
+    content = Rails.cache.fetch("embed-topic:#{post.topic_id}", expires_in: 10.minutes) do
+      url = TopicEmbed.where(topic_id: post.topic_id).pluck(:embed_url).first
+      doc = TopicEmbed.find_remote(url)
+      doc.content
+    end
+    render json: {cooked: content}
   end
 
   def recover
