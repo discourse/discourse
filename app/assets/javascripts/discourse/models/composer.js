@@ -411,7 +411,7 @@ Discourse.Composer = Discourse.Model.extend({
       raw: this.get('reply'),
       editReason: opts.editReason,
       imageSizes: opts.imageSizes,
-      cooked: $('#wmd-preview').html()
+      cooked: this.getCookedHtml()
     });
     this.set('composeState', CLOSED);
 
@@ -448,7 +448,7 @@ Discourse.Composer = Discourse.Model.extend({
       topic_id: this.get('topic.id'),
       reply_to_post_number: post ? post.get('post_number') : null,
       imageSizes: opts.imageSizes,
-      cooked: $('#wmd-preview').html(),
+      cooked: this.getCookedHtml(),
       reply_count: 0,
       display_username: currentUser.get('name'),
       username: currentUser.get('username'),
@@ -532,6 +532,10 @@ Discourse.Composer = Discourse.Model.extend({
         promise.reject(parsedError);
       });
     });
+  },
+
+  getCookedHtml: function() {
+    return $('#wmd-preview').html().replace(/<span class="marker"><\/span>/g, '');
   },
 
   saveDraft: function() {

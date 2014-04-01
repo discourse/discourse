@@ -52,14 +52,6 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   refreshPreview: Discourse.debounce(function() {
     if (this.editor) {
       this.editor.refreshPreview();
-      // if the caret is on the last line ensure preview scrolled to bottom
-      var caretPosition = Discourse.Utilities.caretPosition(this.wmdInput[0]);
-      if (!this.wmdInput.val().substring(caretPosition).match(/\n/)) {
-        var $wmdPreview = $('#wmd-preview');
-        if ($wmdPreview.is(':visible')) {
-          $wmdPreview.scrollTop($wmdPreview[0].scrollHeight);
-        }
-      }
     }
   }, 30),
 
