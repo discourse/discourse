@@ -33,7 +33,7 @@ after_initialize do
 
         post = Post.find(params[:post_id])
         poll = PollPlugin::Poll.new(post)
-        unless poll.is_poll?
+        unless poll.has_poll_details?
           render status: 400, json: false
           return
         end
@@ -102,7 +102,7 @@ after_initialize do
       PollPlugin::Poll.new(object).serialize(scope.user)
     end
     def include_poll_details?
-      PollPlugin::Poll.new(object).is_poll?
+      PollPlugin::Poll.new(object).has_poll_details?
     end
   end
 end
