@@ -24,6 +24,18 @@ module ::PollPlugin
       topic.title =~ /^#{I18n.t('poll.prefix')}/i
     end
 
+    def has_poll_details?
+      if SiteSetting.allow_user_locale?
+        # If we allow users to select their locale of choice we cannot detect polls
+        # by the prefix, so we fall back to checking if the poll details is set in
+        # places to make sure polls are still accessible by users using a different
+        # locale than the one used by the topic creator.
+        not self.details.nil?
+      else
+        self.is_poll?
+      end
+    end
+
     # Called during validation of poll posts. Discourse already restricts edits to
     # the OP and staff, we want to make sure that:
     #
