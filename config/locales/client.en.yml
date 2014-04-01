@@ -891,6 +891,7 @@ en:
       reply_as_new_topic: "Reply as new Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
+      show_full: "Show Full Post"
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"

@@ -335,6 +335,7 @@ Discourse::Application.routes.draw do
 
   post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: {topic_id: /\d+/}
 
+  get "/posts/:id/expand-embed" => "posts#expand_embed"
   get "raw/:topic_id(/:post_number)" => "posts#markdown"
 
   resources :invites

@@ -27,6 +27,13 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     }
   }.property('post.primary_group_name'),
 
+  showExpandButton: function() {
+    if (this.get('controller.firstPostExpanded')) { return false; }
+
+    var post = this.get('post');
+    return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
+  }.property('post.post_number', 'controller.firstPostExpanded'),
+
   // If the cooked content changed, add the quote controls
   cookedChanged: function() {
     var self = this;

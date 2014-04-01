@@ -143,6 +143,10 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
+  def expand_embed
+    render json: {cooked: "NEW COOKED CONTENT"}
+  end
+
   def recover
     post = find_post_from_params
     guardian.ensure_can_recover_post!(post)

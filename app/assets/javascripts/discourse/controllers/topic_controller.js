@@ -216,9 +216,23 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
           }) + "\n\n" + q);
         });
       });
-    }
+    },
 
+    expandFirstPost: function(post) {
+      var self = this;
+      this.set('loadingExpanded', true);
+      post.expand().then(function() {
+        self.set('firstPostExpanded', true);
+      }).finally(function() {
+        self.set('loadingExpanded', false);
+      });
+    }
   },
+
+  showExpandButton: function() {
+    var post = this.get('post');
+    return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
+  }.property(),
 
   slackRatio: function() {
     return Discourse.Capabilities.currentProp('slackRatio');
