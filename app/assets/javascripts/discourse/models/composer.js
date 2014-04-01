@@ -161,7 +161,7 @@ Discourse.Composer = Discourse.Model.extend({
     return this.get('reply') !== this.get('originalText');
   }.property('reply', 'originalText'),
 
-/**
+  /**
     Number of missing characters in the title until valid.
 
     @property missingTitleCharacters
@@ -453,6 +453,7 @@ Discourse.Composer = Discourse.Model.extend({
       display_username: currentUser.get('name'),
       username: currentUser.get('username'),
       user_id: currentUser.get('id'),
+      avatar_template: currentUser.get('avatar_template'),
       metaData: this.get('metaData'),
       archetype: this.get('archetypeId'),
       post_type: Discourse.Site.currentProp('post_types.regular'),
