@@ -159,6 +159,17 @@ describe SiteSettingExtension do
         settings.set("test_str", "hi")
         settings.test_str.should == "hi"
       end
+
+      it "is stripped of whitespace" do
+        settings.set("test_str", "      hi              ")
+        settings.test_str.should == "hi"
+      end
+
+      it "is not stripped of whitespace if specified" do
+        settings.setting(:test2, "str", {strip: false})
+        settings.set("test2", "      hi              ")
+        settings.test2.should == "      hi              "
+      end
     end
   end
 
