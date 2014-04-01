@@ -155,12 +155,20 @@ describe SiteCustomization do
 
     it 'should compile scss' do
       c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '$black: #000; #a { color: $black; }', header: '')
-      c.stylesheet_baked.should == "#a {\n  color: black; }\n"
+      c.stylesheet_baked.should == "#a{color:#000}\n"
     end
 
     it 'should compile mobile scss' do
       c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '', header: '', mobile_stylesheet: '$black: #000; #a { color: $black; }', mobile_header: '')
-      c.mobile_stylesheet_baked.should == "#a {\n  color: black; }\n"
+      c.mobile_stylesheet_baked.should == "#a{color:#000}\n"
+    end
+
+    it 'should allow including discourse styles' do
+      c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '@import "desktop";', mobile_stylesheet: '@import "mobile";')
+      c.stylesheet_baked.should_not =~ /Syntax error/
+      c.stylesheet_baked.length.should > 1000
+      c.mobile_stylesheet_baked.should_not =~ /Syntax error/
+      c.mobile_stylesheet_baked.length.should > 1000
     end
 
     it 'should provide an awesome error on failure' do

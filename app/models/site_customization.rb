@@ -1,3 +1,5 @@
+require_dependency 'discourse_sass_importer'
+
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
   # placing this in uploads to ease deployment rules
@@ -12,29 +14,13 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   def compile_stylesheet(scss)
-    stylesheets_path = Rails.root.join('app', 'assets', 'stylesheets')
-
-    # Get the sprockets environment. We need to do this because in production
-    # Rails.application.assets returns Sprockets::Index which does not compile
-    # assets.
-    sprockets = Rails.application.assets
-    if sprockets.is_a?(Sprockets::Index)
-      sprockets = sprockets.instance_variable_get('@environment')
-    end
-
-    file_path = stylesheets_path.join('custom_stylesheet.scss')
-
-    File.open(file_path, 'w') do |f|
-      f.write scss
-    end
-
-    begin
-      compiled = sprockets.find_asset('custom_stylesheet').body
-    ensure
-      FileUtils.rm file_path
-    end
-
-    compiled
+    ::Sass::Engine.new(scss, {
+      syntax: :scss,
+      cache: false,
+      read_cache: false,
+      style: :compressed,
+      filesystem_importer: DiscourseSassImporter
+    }).render
   end
 
   before_save do
