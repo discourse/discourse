@@ -8,3 +8,4 @@ lib/javascripts/moment_locale/
 public/javascripts/
 spec/phantom_js/smoke_test.js
 vendor/
+test/javascripts/helpers/
