@@ -151,6 +151,8 @@ class PostsController < ApplicationController
       doc.content
     end
     render json: {cooked: content}
+  rescue
+    render_json_error I18n.t('errors.embed.load_from_remote')
   end
 
   def recover

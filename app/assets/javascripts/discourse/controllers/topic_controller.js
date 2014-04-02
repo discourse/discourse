@@ -223,6 +223,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       this.set('loadingExpanded', true);
       post.expand().then(function() {
         self.set('firstPostExpanded', true);
+      }).catch(function(error) {
+        bootbox.alert($.parseJSON(error.responseText).errors);
       }).finally(function() {
         self.set('loadingExpanded', false);
       });
