@@ -85,7 +85,7 @@ gem 'redis', require:  ["redis", "redis/connection/hiredis"]
 gem 'active_model_serializers'
 
 
-gem 'onebox'
+gem 'onebox', github: 'LessonPlanet/onebox', branch: 'add-lessonplanet'
 
 gem 'ember-rails'
 gem 'ember-source', '~> 1.2.0.1'
