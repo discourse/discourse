@@ -105,13 +105,13 @@ Discourse.User = Discourse.Model.extend({
 
 
   /**
-   Path to this user's preferences on lessonplanet.com with return_to community
+   Path to this user's preferences on lessonplanet.com with return to community
 
    @property lpEditProfilePath
    @type {String}
    **/
   lpEditProfilePath: function () {
-    return Discourse.Site.currentProp('lessonplanet_root_url') + "/profile/personal_info?return_to=" + Discourse.Site.currentProp('discourse_root_url') + this.get('path') + "/preferences"
+    return Discourse.Site.currentProp('lessonplanet_root_url') + "/profile/personal_info?crt=" + Discourse.Site.currentProp('discourse_root_url') + this.get('path') + "/preferences"
   }.property('lpEditProfilePath'),
 
   /**
