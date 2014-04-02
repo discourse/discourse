@@ -35,13 +35,13 @@ SiteSetting.favicon_url                       = '/images/lp-favicon.ico'
 user = User.where(username_lower: ENV['API_USERNAME'].downcase).first
 if user.blank?
   user = User.seed do |u|
-    u.name = "Lesson Planet"
+    u.name = 'Lesson Planet'
     u.username = ENV['API_USERNAME']
     u.username_lower = ENV['API_USERNAME'].downcase
-    u.email = "member_services@lessonplanet.com"
+    u.email = 'member_services@lessonplanet.com'
     u.password = SecureRandom.hex
     # TODO localize this, its going to require a series of hacks
-    u.bio_raw = "Not a real person. A global user for system notifications and other system tasks."
+    u.bio_raw = 'Not a real person. A global user for system notifications and other system tasks.'
     u.active = true
     u.admin = true
     u.moderator = true
