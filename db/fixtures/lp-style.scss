@@ -1,0 +1,415 @@
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: " "; // 1
+    display: table; // 2
+  }
+  &:after {
+    clear: both;
+  }
+}
+@mixin navbar-vertical-align($element-height) {
+  margin-top: (($navbar-height - $element-height) / 2);
+  margin-bottom: (($navbar-height - $element-height) / 2);
+}
+// Mixins: Single side border-radius
+
+@mixin border-top-radius($radius) {
+  border-top-right-radius: $radius;
+   border-top-left-radius: $radius;
+}
+@mixin border-right-radius($radius) {
+  border-bottom-right-radius: $radius;
+     border-top-right-radius: $radius;
+}
+@mixin border-bottom-radius($radius) {
+  border-bottom-right-radius: $radius;
+   border-bottom-left-radius: $radius;
+}
+@mixin border-left-radius($radius) {
+  border-bottom-left-radius: $radius;
+     border-top-left-radius: $radius;
+}
+
+@mixin button-variant($color, $background, $border) {
+  color: $color;
+  background-color: $background;
+  border-color: $border;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active,
+  .open &.dropdown-toggle {
+    color: $color;
+    background-color: darken($background, 10%);
+        border-color: darken($border, 12%);
+  }
+  &:active,
+  &.active,
+  .open &.dropdown-toggle {
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      background-color: $background;
+          border-color: $border;
+    }
+  }
+
+  .badge {
+    color: $background;
+    background-color: $color;
+  }
+}
+
+// Vertical gradient, from top to bottom
+//
+// Creates two color stops, start and end, by specifying a color and position for each color stop.
+// Color stops are not available in IE9 and below.
+@mixin gradient-vertical($start-color: #555, $end-color: #333, $start-percent: 0%, $end-percent: 100%) {
+  background-image: -webkit-linear-gradient(top, $start-color $start-percent, $end-color $end-percent);  // Safari 5.1-6, Chrome 10+
+  background-image: -o-linear-gradient(top, $start-color $start-percent, $end-color $end-percent);  // Opera 12
+  background-image: linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=0); // IE9 and down
+}
+
+// Grays
+$gray-darker:            #282827;
+$gray-dark:              #53524f;
+$gray:                   #8c8b86;
+$gray-light:             #d3d1cc;
+$gray-lighter:           #f0efec;
+
+$brand-primary: rgb(24, 89, 143);
+$brand-action: rgb(242, 145, 33);
+
+$border-radius:             3px;
+
+$grid-gutter-width:         30px;
+$font-size-base:            14px;
+$font-size-large:           ceil(($font-size-base * 1.25)); // ~18px
+$font-size-small:           ceil(($font-size-base * 0.85)); // ~12px
+
+$line-height-base:          1.428571429; // 20/14
+$line-height-large:         1.33;
+$line-height-small:         1.5;
+
+$line-height-computed:      floor(($font-size-base * $line-height-base)); // ~20px
+
+$padding-base-vertical:     6px;
+$padding-large-vertical:    10px;
+$padding-large-horizontal:  16px;
+
+$padding-small-vertical:    5px;
+$padding-small-horizontal:  10px;
+
+$input-height-base:         ($line-height-computed + ($padding-base-vertical * 2) + 2);
+$input-height-large:        (ceil($font-size-large * $line-height-large) + ($padding-large-vertical * 2) + 2);
+$input-height-small:        (floor($font-size-small * $line-height-small) + ($padding-small-vertical * 2) + 2);
+
+// Basics of a navbar
+$navbar-height:                    50px;
+$navbar-margin-bottom:             $line-height-computed;
+$navbar-padding-horizontal:        floor(($grid-gutter-width / 2));
+$navbar-padding-vertical:          (($navbar-height - $line-height-computed) / 2);
+
+$navbar-default-color:             white;
+$navbar-default-bg:                $brand-primary;
+$navbar-default-border:            darken($navbar-default-bg, 6.5%);
+
+// Navbar links
+$navbar-default-link-color:                white;
+$navbar-default-link-hover-color:          white;
+$navbar-default-link-hover-bg:             darken($navbar-default-bg, 6.5%);
+$navbar-default-link-active-color:         white;
+$navbar-default-link-active-bg:            darken($navbar-default-bg, 6.5%);
+$navbar-default-link-disabled-color:       #ccc;
+$navbar-default-link-disabled-bg:          transparent;
+
+// Navbar brand label
+$navbar-default-brand-color:               $navbar-default-link-color;
+$navbar-default-brand-hover-color:         darken($navbar-default-brand-color, 10%);
+$navbar-default-brand-hover-bg:            transparent;
+
+// Navbar toggle
+$navbar-default-toggle-hover-bg:           #ddd;
+$navbar-default-toggle-icon-bar-bg:        #888;
+$navbar-default-toggle-border-color:       #ddd;
+
+/* Create the action button */
+$btn-action-color:                 #fff;
+$btn-action-bg:                    $brand-action;
+$btn-action-border:                darken($btn-action-bg, 5%);
+
+.btn-action {
+ @include button-variant($btn-action-color, $btn-action-bg, $btn-action-border); 
+}
+.btn[href].btn-action { color: white; }
+
+.d-header {
+  padding-top: 0;
+  @include gradient-vertical($gray-lighter, darken($gray-lighter, 3%));
+  border-bottom: 1px solid $gray-light;
+  border-top: 1px solid $gray-light;
+}
+
+.d-header #site-logo{
+  max-width: 320px;
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+body #main a.star.starred { color: $brand-action; }
+body #main .fa-star.starred { color: $brand-action; }
+
+.nav-pills li {
+  a { border-radius: $border-radius; }
+  &.active a, 
+  a.active { background-color: $brand-primary; }
+  a:hover {
+    background-color: rgb(220,234,245);
+    color: $brand-primary;
+  }
+}
+
+a.badge-category { border-radius: $border-radius; }
+li.has-drop > a { @include border-right-radius(0); }
+li.has-drop > a.category-dropdown-button {
+  @include border-left-radius(0);
+  @include border-right-radius($border-radius);
+}
+
+.btn { border-radius: $border-radius; }
+nav.buttons button.btn { border-radius: 0; }
+
+.btn-primary {
+    color: white;
+    background-color: #18598f;
+    border-color: #144b79
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active {
+    color: white;
+    background-color: #12436c;
+    border-color: #0c2b45
+}
+
+.open .btn-primary.dropdown-toggle {
+    color: white;
+    background-color: #12436c;
+    border-color: #0c2b45
+}
+
+.btn-primary:active, .btn-primary.active {
+    background-image: none
+}
+
+.open .btn-primary.dropdown-toggle {
+    background-image: none
+}
+
+.nav-stacked .active > a, .nav-stacked .active .fa-chevron-right { background-color: $brand-primary; }
+
+.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus,
+.btn-primary.disabled:active, .btn-primary.disabled.active, .btn-primary[disabled],
+.btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled]:active,
+.btn-primary[disabled].active, fieldset[disabled] .btn-primary,
+fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus,
+fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary.active {
+    background-color: #18598f;
+    border-color: #144b79
+}
+
+.btn-danger {
+    color: white;
+    background-color: #f29121;
+    border-color: #ec850e
+}
+
+.btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active {
+    color: white;
+    background-color: #dd7d0d;
+    border-color: #b2640a
+}
+
+.open .btn-danger.dropdown-toggle {
+    color: white;
+    background-color: #dd7d0d;
+    border-color: #b2640a
+}
+
+.btn-danger:active, .btn-danger.active {
+    background-image: none
+}
+
+.open .btn-danger.dropdown-toggle {
+    background-image: none
+}
+
+.btn-danger.disabled, .btn-danger.disabled:hover, .btn-danger.disabled:focus,
+.btn-danger.disabled:active, .btn-danger.disabled.active, .btn-danger[disabled],
+.btn-danger[disabled]:hover, .btn-danger[disabled]:focus, .btn-danger[disabled]:active,
+.btn-danger[disabled].active, fieldset[disabled] .btn-danger, fieldset[disabled] .btn-danger:hover,
+fieldset[disabled] .btn-danger:focus, fieldset[disabled] .btn-danger:active,
+fieldset[disabled] .btn-danger.active {
+    background-color: #f29121;
+    border-color: #ec850e
+}
+
+nav.post-controls button {
+  border-radius: $border-radius;
+  &.create {
+    background-color: rgb(220,234,245);
+    color: $brand-primary;
+    &:hover {
+      color: white;
+      background-color: $brand-primary;
+    }
+  }
+  .read-icon .last-read { color: $brand-action; }
+  .read-icon.bookmarked::before { color: $brand-primary; }
+}
+
+a, a:hover, a:visited {
+  color: $brand-primary;
+}
+a.reply-new {
+  i {
+    background-color: transparent;
+    border: none;
+  }
+}
+a:hover.reply-new {
+  color: $brand-primary;
+  i {
+    background-color: transparent;
+    border: none;
+  }
+}
+#topic-list {
+  border: none;
+  a.title {
+    color: $brand-primary;
+    font-weight: 500;
+  }
+  a.title:visited:not(.badge-notification) {
+    color: $gray;
+    font-weight: 200;
+  }
+}
+#topic-progress .bg {
+  background-color: #dff0d8;
+}
+
+.nav {
+  margin-bottom: 0;
+  padding-left: 0; // Override default ul/ol
+  list-style: none;
+  @include clearfix();
+
+  > li {
+    position: relative;
+    display: block;
+
+    > a {
+      position: relative;
+      display: block;
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}
+.navbar {
+  position: relative;
+  min-height: $navbar-height; // Ensure a navbar always shows (e.g., without a .navbar-brand in collapsed mode)
+  margin-bottom: 0;
+  border: 1px solid transparent;
+
+  // Prevent floats from breaking the navbar
+  @include clearfix();
+}
+.navbar-nav {
+  margin: ($navbar-padding-vertical / 2) (-$navbar-padding-horizontal);
+
+  > li > a {
+    padding: 10px 15px;
+    line-height: $line-height-computed;
+  }
+
+  // Uncollapse the nav
+  float: left;
+  margin: 0;
+
+  > li {
+    float: left;
+    > a {
+      padding-top:    $navbar-padding-vertical;
+      padding-bottom: $navbar-padding-vertical;
+    }
+  }
+
+  &.navbar-right:last-child {
+    margin-right: -$navbar-padding-horizontal;
+  }
+}
+.navbar-btn {
+  @include navbar-vertical-align($input-height-base);
+
+  &.btn-sm {
+    @include navbar-vertical-align($input-height-small);
+  }
+  &.btn-xs {
+    @include navbar-vertical-align(22);
+  }
+}
+.navbar-default {
+  background-color: $navbar-default-bg;
+  border-color: $navbar-default-border;
+
+  .navbar-text {
+    color: $navbar-default-color;
+  }
+
+  .navbar-nav {
+    > li > a {
+      color: $navbar-default-link-color;
+
+      &:hover,
+      &:focus {
+        color: $navbar-default-link-hover-color;
+        background-color: $navbar-default-link-hover-bg;
+      }
+    }
+    > .active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $navbar-default-link-active-color;
+        background-color: $navbar-default-link-active-bg;
+      }
+    }
+    > .disabled > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $navbar-default-link-disabled-color;
+        background-color: $navbar-default-link-disabled-bg;
+      }
+    }
+  }
+}
+.navbar-right {
+  float: right;
+}
