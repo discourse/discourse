@@ -3,11 +3,11 @@ class CurrentUserSerializer < BasicUserSerializer
   attributes :name,
              :unread_notifications,
              :unread_private_messages,
-             :admin?,
+             :admin,
              :notification_channel_position,
              :site_flagged_posts_count,
-             :moderator?,
-             :staff?,
+             :moderator,
+             :staff,
              :reply_count,
              :topic_count,
              :enable_quoting,
@@ -21,7 +21,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :should_be_redirected_to_top,
              :redirected_to_top_reason
 
-  def include_site_flagged_posts_count?
+  def staff
     object.staff?
   end
 
@@ -45,28 +45,21 @@ class CurrentUserSerializer < BasicUserSerializer
     true
   end
 
-  def include_can_invite_to_forum?
-    scope.can_invite_to_forum?
-  end
-
   def no_password
     true
-  end
-
-  def include_no_password?
-    !object.has_password?
-  end
-
-  def include_can_delete_account?
-    scope.can_delete_user?(object)
   end
 
   def can_delete_account
     true
   end
 
-  def include_redirected_to_top_reason?
-    object.should_be_redirected_to_top
+  def filter(keys)
+    keys.delete(:site_flagged_posts_count) unless object.staff?
+    keys.delete(:can_invite_to_forum) unless scope.can_invite_to_forum?
+    keys.delete(:no_password) if object.has_password?
+    keys.delete(:can_delete_account) unless scope.can_delete_user?(object)
+    keys.delete(:redirected_to_top_reason) unless object.should_be_redirected_to_top
+    super(keys)
   end
 
 end

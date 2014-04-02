@@ -12,8 +12,11 @@ class TopicListSerializer < ApplicationSerializer
     scope.can_create?(Topic)
   end
 
-  def include_more_topics_url?
-    object.more_topics_url.present? && (object.topics.size == SiteSetting.topics_per_page)
+  def filter(keys)
+    unless object.more_topics_url.present? && (object.topics.size == SiteSetting.topics_per_page)
+      keys.delete(:more_topics_url)
+    end
+    super(keys)
   end
 
 end

@@ -55,10 +55,6 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     object.topics.count
   end
 
-  def include_api_key?
-    api_key.present?
-  end
-
   def suspended_by
     object.suspend_record.try(:acting_user)
   end
@@ -67,8 +63,9 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     object.leader_requirements
   end
 
-  def include_leader_requirements?
-    object.has_trust_level?(:regular)
+  def filter(keys)
+    keys.delete(:api_key) unless api_key.present?
+    keys.delete(:leader_requirements) unless object.has_trust_level?(:regular)
+    super(keys)
   end
-
 end

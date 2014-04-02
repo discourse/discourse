@@ -11,7 +11,9 @@ class EmailLogSerializer < ApplicationSerializer
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 
-  def include_skipped_reason?
-    object.skipped
+  def filter(keys)
+    keys.delete(:skipped_reason) unless object.skipped
+    super(keys)
   end
+
 end

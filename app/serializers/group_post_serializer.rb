@@ -21,8 +21,9 @@ class GroupPostSerializer < ApplicationSerializer
     object.user.try(:title)
   end
 
-  def include_user_long_name?
-    SiteSetting.enable_names?
+  def filter(keys)
+    keys.delete(:user_long_name) unless SiteSetting.enable_names?
+    super(keys)
   end
 end
 

@@ -13,7 +13,6 @@ class TopicListItemSerializer < ListableTopicSerializer
   def starred
     object.user_data.starred?
   end
-  alias :include_starred? :has_user_data
 
   def posters
     object.posters || []
@@ -21,6 +20,11 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def last_poster_username
     object.posters.find { |poster| poster.user.id == object.last_post_user_id }.try(:user).try(:username)
+  end
+
+  def filter(keys)
+    keys.delete(:starred) unless object.user_data
+    super(keys)
   end
 
 end

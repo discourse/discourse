@@ -14,27 +14,15 @@ class CategoryDetailedSerializer < BasicCategorySerializer
              :is_uncategorized,
              :subcategory_ids
 
-  has_many :featured_users, serializer: BasicUserSerializer
-  has_many :displayable_topics, serializer: ListableTopicSerializer, embed: :objects, key: :topics
+  has_many :featured_users, serializer: BasicUserSerializer, include: true
+  has_many :displayable_topics, serializer: ListableTopicSerializer, embed: :objects, root: :topics
 
   def is_uncategorized
     object.id == SiteSetting.uncategorized_category_id
   end
 
-  def include_is_uncategorized?
-    is_uncategorized
-  end
-
-  def include_displayable_topics?
-    return displayable_topics.present?
-  end
-
   def description_excerpt
     PrettyText.excerpt(description,300) if description
-  end
-
-  def include_subcategory_ids?
-    subcategory_ids.present?
   end
 
   # Topic and post counts, including counts from the sub-categories:
@@ -73,6 +61,13 @@ class CategoryDetailedSerializer < BasicCategorySerializer
 
   def count_with_subcategories(method)
     object.subcategories.inject(object.send(method) || 0) { |sum,c| sum += (c.send(method) || 0) }
+  end
+
+  def filter(keys)
+    keys.delete(:is_uncategorized) unless is_uncategorized
+    keys.delete(:displayable_topics) unless displayable_topics.present?
+    keys.delete(:subcategory_ids) unless subcategory_ids.present?
+    super(keys)
   end
 
 end

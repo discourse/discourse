@@ -20,9 +20,6 @@ class ListableTopicSerializer < BasicTopicSerializer
              :archived
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
-  def include_last_poster?
-    object.include_last_poster
-  end
 
   def bumped
     object.created_at < object.bumped_at
@@ -44,28 +41,27 @@ class ListableTopicSerializer < BasicTopicSerializer
     object.user_data.last_read_post_number
   end
 
-  def has_user_data
-    !!object.user_data
-  end
-
-  alias :include_last_read_post_number? :has_user_data
-
   def unread
     unread_helper.unread_posts
   end
-  alias :include_unread? :has_user_data
 
   def new_posts
     unread_helper.new_posts
   end
-  alias :include_new_posts? :has_user_data
-
-  def include_excerpt?
-    pinned
-  end
 
   def pinned
     PinnedCheck.new(object, object.user_data).pinned?
+  end
+
+  def filter(keys)
+    unless object.user_data
+      keys.delete(:last_read_post_number)
+      keys.delete(:unread)
+      keys.delete(:new_posts)
+    end
+    keys.delete(:excerpt) unless pinned
+    keys.delete(:last_poster) unless object.include_last_poster
+    super(keys)
   end
 
   protected

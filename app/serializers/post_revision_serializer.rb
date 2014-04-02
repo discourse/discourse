@@ -11,14 +11,6 @@ class PostRevisionSerializer < ApplicationSerializer
              :title_changes,
              :category_changes
 
-  def include_title_changes?
-    object.has_topic_data?
-  end
-
-  def include_category_changes?
-    object.has_topic_data?
-  end
-
   def version
     object.number
   end
@@ -48,4 +40,11 @@ class PostRevisionSerializer < ApplicationSerializer
     object.user || Discourse.system_user
   end
 
+  def filter(keys)
+    unless object.has_topic_data?
+      keys.delete(:title_changes)
+      keys.delete(:category_changes)
+    end
+    super(keys)
+  end
 end
