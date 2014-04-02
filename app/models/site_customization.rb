@@ -41,7 +41,8 @@ class SiteCustomization < ActiveRecord::Base
     end
   end
 
-  after_save do
+  # calls message bus, data must be committed
+  after_commit(on: :save) do
     if stylesheet_changed?
       File.delete(stylesheet_fullpath) if File.exists?(stylesheet_fullpath)
     end
@@ -55,10 +56,9 @@ class SiteCustomization < ActiveRecord::Base
       MessageBus.publish "/file-change/#{key}", stylesheet_hash
     end
     MessageBus.publish "/header-change/#{key}", header if header_changed?
-
   end
 
-  after_destroy do
+  after_commit(on: :destroy) do
     if File.exists?(stylesheet_fullpath)
       File.delete stylesheet_fullpath
     end
