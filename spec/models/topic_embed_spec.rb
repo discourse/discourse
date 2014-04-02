@@ -5,8 +5,6 @@ describe TopicEmbed do
   it { should belong_to :topic }
   it { should belong_to :post }
   it { should validate_presence_of :embed_url }
-  it { should validate_presence_of :content_sha1 }
-
 
   context '.import' do
 

@@ -4,7 +4,6 @@ class TopicEmbed < ActiveRecord::Base
   belongs_to :topic
   belongs_to :post
   validates_presence_of :embed_url
-  validates_presence_of :content_sha1
 
   def self.normalize_url(url)
     url.downcase.sub(/\/$/, '').sub(/\-+/, '-')
