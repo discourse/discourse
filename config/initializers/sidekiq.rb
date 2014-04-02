@@ -3,7 +3,7 @@ require "sidekiq/pausable"
 sidekiq_redis = { url: $redis.url, namespace: 'sidekiq' }
 
 Sidekiq.configure_client do |config|
-  config.redis = sidekiq_redis
+  config.redis = sidekiq_redis.merge(size: 1)
 end
 
 Sidekiq.configure_server do |config|
