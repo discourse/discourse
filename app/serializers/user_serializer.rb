@@ -23,17 +23,32 @@ class UserSerializer < BasicUserSerializer
              :suspend_reason,
              :suspended_till
 
+  PRIVATE_ATTRIBUTES = [
+    :email,
+    :locale,
+    :email_digests,
+    :email_private_messages,
+    :email_direct,
+    :email_always,
+    :digest_after_days,
+    :mailing_list_mode,
+    :auto_track_topics_after_msecs,
+    :new_topic_duration_minutes,
+    :external_links_in_new_tab,
+    :dynamic_favicon,
+    :enable_quoting,
+    :use_uploaded_avatar,
+    :has_uploaded_avatar,
+    :gravatar_template,
+    :uploaded_avatar_template,
+    :muted_category_ids,
+    :tracked_category_ids,
+    :watched_category_ids
+  ]
+  attributes(*PRIVATE_ATTRIBUTES)
+
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
-
-  def self.private_attributes(*attrs)
-    attributes(*attrs)
-    attrs.each do |attr|
-      define_method "include_#{attr}?" do
-        can_edit
-      end
-    end
-  end
 
   def bio_excerpt
     # If they have a bio return it
@@ -47,28 +62,6 @@ class UserSerializer < BasicUserSerializer
       I18n.t('user_profile.no_info_other', name: object.name)
     end
   end
-
-  private_attributes :email,
-                     :locale,
-                     :email_digests,
-                     :email_private_messages,
-                     :email_direct,
-                     :email_always,
-                     :digest_after_days,
-                     :mailing_list_mode,
-                     :auto_track_topics_after_msecs,
-                     :new_topic_duration_minutes,
-                     :external_links_in_new_tab,
-                     :dynamic_favicon,
-                     :enable_quoting,
-                     :use_uploaded_avatar,
-                     :has_uploaded_avatar,
-                     :gravatar_template,
-                     :uploaded_avatar_template,
-                     :muted_category_ids,
-                     :tracked_category_ids,
-                     :watched_category_ids
-
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.auto_track_topics_after
@@ -106,17 +99,6 @@ class UserSerializer < BasicUserSerializer
     User.gravatar_template(object.email)
   end
 
-  def include_suspended?
-    object.suspended?
-  end
-  def include_suspend_reason?
-    object.suspended?
-  end
-
-  def include_suspended_till?
-    object.suspended?
-  end
-
   def muted_category_ids
     CategoryUser.lookup(object, :muted).pluck(:category_id)
   end
@@ -127,5 +109,17 @@ class UserSerializer < BasicUserSerializer
 
   def watched_category_ids
     CategoryUser.lookup(object, :watching).pluck(:category_id)
+  end
+
+  def filter(keys)
+    unless can_edit
+      PRIVATE_ATTRIBUTES.each {|k| keys.delete(k) }
+    end
+    unless object.suspended?
+      keys.delete(:suspended)
+      keys.delete(:suspended_reason)
+      keys.delete(:suspended_till)
+    end
+    super(keys)
   end
 end

@@ -35,8 +35,8 @@ class PostSerializer < BasicPostSerializer
              :bookmarked,
              :raw,
              :actions_summary,
-             :moderator?,
-             :staff?,
+             :moderator,
+             :staff,
              :user_id,
              :draft_sequence,
              :hidden,
@@ -49,11 +49,11 @@ class PostSerializer < BasicPostSerializer
              :can_view_edit_history
 
 
-  def moderator?
+  def moderator
     object.user.try(:moderator?) || false
   end
 
-  def staff?
+  def staff
     object.user.try(:staff?) || false
   end
 
@@ -128,10 +128,6 @@ class PostSerializer < BasicPostSerializer
     BasicUserSerializer.new(object.deleted_by, root: false).as_json
   end
 
-  def include_deleted_by?
-    scope.is_staff? && object.deleted_by.present?
-  end
-
   # Summary of the actions taken on this post
   def actions_summary
     result = []
@@ -167,47 +163,41 @@ class PostSerializer < BasicPostSerializer
     result
   end
 
-  def include_draft_sequence?
-    @draft_sequence.present?
-  end
-
-  def include_slug_title?
-    @topic_slug.present?
-  end
-
-  def include_raw?
-    @add_raw.present?
-  end
-
-  def include_link_counts?
-    return true if @single_post_link_counts.present?
-
-    @topic_view.present? && @topic_view.link_counts.present? && @topic_view.link_counts[object.id].present?
-  end
-
-  def include_read?
-    @topic_view.present?
-  end
-
-  def include_reply_to_user?
-    object.quoteless? && object.reply_to_user
-  end
-
-  def include_bookmarked?
-    post_actions.present? && post_actions.keys.include?(PostActionType.types[:bookmark])
-  end
-
-  def include_display_username?
-    SiteSetting.enable_names?
-  end
-
   def can_view_edit_history
     scope.can_view_post_revisions?(object)
   end
 
+  def filter(keys)
+    keys.delete(:deleted_by) unless scope.is_staff? && object.deleted_by.present?
+    keys.delete(:draft_sequence) unless @draft_sequence.present?
+    keys.delete(:slug_title) unless @topic_slug.present?
+    keys.delete(:raw) unless @add_raw.present?
+    keys.delete(:link_counts) unless include_link_counts?
+    keys.delete(:read) unless @topic_view.present?
+    keys.delete(:reply_to_user) unless include_reply_to_user?
+    keys.delete(:bookmarked) unless include_bookmarked?
+    keys.delete(:display_username) unless SiteSetting.enable_names?
+    super(keys)
+  end
+
   private
 
-  def post_actions
-    @post_actions ||= (@topic_view.present? && @topic_view.all_post_actions.present?) ? @topic_view.all_post_actions[object.id] : nil
-  end
+    def post_actions
+      @post_actions ||= (@topic_view.present? && @topic_view.all_post_actions.present?) ? @topic_view.all_post_actions[object.id] : nil
+    end
+
+    def include_link_counts?
+      return true if @single_post_link_counts.present?
+
+      @topic_view.present? && @topic_view.link_counts.present? && @topic_view.link_counts[object.id].present?
+    end
+
+    def include_reply_to_user?
+      object.quoteless? && object.reply_to_user
+    end
+
+    def include_bookmarked?
+      post_actions.present? && post_actions.keys.include?(PostActionType.types[:bookmark])
+    end
+
 end

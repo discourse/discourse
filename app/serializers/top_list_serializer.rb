@@ -10,7 +10,7 @@ class TopListSerializer < ApplicationSerializer
   end
 
   TopTopic.periods.each do |period|
-    attribute period
+    attributes period
 
     define_method(period) do
       TopicListSerializer.new(object.send(period), scope: scope).as_json if object.send(period)
