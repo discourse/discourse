@@ -5,7 +5,7 @@ class SiteContentSerializer < ApplicationSerializer
              :description,
              :content,
              :format,
-             :allow_blank?
+             :allow_blank
 
   def title
     object.site_content_type.title
@@ -24,7 +24,7 @@ class SiteContentSerializer < ApplicationSerializer
     object.site_content_type.default_content
   end
 
-  def allow_blank?
+  def allow_blank
     object.site_content_type.allow_blank?
   end
 end

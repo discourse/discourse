@@ -82,7 +82,7 @@ gem 'rails-observers'
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
 
-gem 'active_model_serializers'
+gem 'active_model_serializers', '0.9.0.alpha1'
 
 
 gem 'onebox'

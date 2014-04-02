@@ -28,21 +28,17 @@ class CategorySerializer < BasicCategorySerializer
     Group.order(:name).pluck(:name) - group_permissions.map{|g| g[:group_name]}
   end
 
-
   def can_delete
     true
   end
 
-  def include_can_delete?
-    scope && scope.can_delete?(object)
-  end
-
-  def include_email_in?
-    scope && scope.can_edit?(object)
-  end
-
-  def include_email_in_allow_strangers?
-    scope && scope.can_edit?(object)
+  def filter(keys)
+    keys.delete(:can_delete) unless scope && scope.can_delete?(object)
+    unless scope && scope.can_edit?(object)
+      keys.delete(:email_in)
+      keys.delete(:email_in_allow_strangers)
+    end
+    super(keys)
   end
 
 end

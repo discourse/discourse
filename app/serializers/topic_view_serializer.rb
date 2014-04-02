@@ -127,7 +127,6 @@ class TopicViewSerializer < ApplicationSerializer
   def starred
     object.topic_user.starred?
   end
-  alias_method :include_starred?, :has_topic_user?
 
   def highest_post_number
     object.highest_post_number
@@ -136,12 +135,10 @@ class TopicViewSerializer < ApplicationSerializer
   def last_read_post_number
     object.topic_user.last_read_post_number
   end
-  alias_method :include_last_read_post_number?, :has_topic_user?
 
   def posted
     object.topic_user.posted?
   end
-  alias_method :include_posted?, :has_topic_user?
 
   def pinned
     PinnedCheck.new(object.topic, object.topic_user).pinned?
@@ -162,6 +159,15 @@ class TopicViewSerializer < ApplicationSerializer
       # TODO: other keys? :can_clear_flags, :acted, :can_undo
     end
     result
+  end
+
+  def filter(keys)
+    unless has_topic_user?
+      keys.delete(:starred)
+      keys.delete(:last_read_post_number)
+      keys.delete(:posted)
+    end
+    super(keys)
   end
 
 end

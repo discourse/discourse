@@ -22,8 +22,8 @@ GEM
       rack-test (~> 0.6.2)
     actionpack-action_caching (1.1.1)
       actionpack (>= 4.0.0, < 5.0)
-    active_model_serializers (0.8.1)
-      activemodel (>= 3.0)
+    active_model_serializers (0.9.0.alpha1)
+      activemodel (>= 3.2)
     activemodel (4.0.4)
       activesupport (= 4.0.4)
       builder (~> 3.1.0)
@@ -364,7 +364,7 @@ GEM
       eventmachine (>= 1.0.0)
       rack (>= 1.0.0)
     thor (0.18.1)
-    thread_safe (0.2.0)
+    thread_safe (0.3.1)
       atomic (>= 1.1.7, < 2)
     tilt (1.4.1)
     timecop (0.7.1)
@@ -390,7 +390,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-action_caching
-  active_model_serializers
+  active_model_serializers (= 0.9.0.alpha1)
   airbrake (= 3.1.2)
   annotate
   barber

@@ -78,8 +78,8 @@ describe PostsController do
     end
 
     it 'asks post for reply history' do
-      Post.any_instance.expects(:reply_history)
       xhr :get, :reply_history, id: post.id
+      response.should be_success
     end
   end
 
@@ -90,8 +90,8 @@ describe PostsController do
     end
 
     it 'asks post for replies' do
-      Post.any_instance.expects(:replies)
       xhr :get, :replies, post_id: post.id
+      response.should be_success
     end
   end
 
@@ -306,7 +306,7 @@ describe PostsController do
       let(:new_post) { Fabricate.build(:post, user: user) }
 
       it "raises an exception without a raw parameter" do
-	      lambda { xhr :post, :create }.should raise_error(ActionController::ParameterMissing)
+        lambda { xhr :post, :create }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'calls the post creator' do

@@ -48,18 +48,6 @@ class UserActionSerializer < ApplicationSerializer
     )
   end
 
-  def include_name?
-    SiteSetting.enable_names?
-  end
-
-  def include_target_name?
-    include_name?
-  end
-
-  def include_acting_name?
-    include_name?
-  end
-
   def slug
     Slug.for(object.title)
   end
@@ -70,6 +58,15 @@ class UserActionSerializer < ApplicationSerializer
 
   def edit_reason
     object.edit_reason if object.action_type == UserAction::EDIT
+  end
+
+  def filter(keys)
+    unless SiteSetting.enable_names?
+      keys.delete(:name)
+      keys.delete(:target_name)
+      keys.delete(:acting_name)
+    end
+    super(keys)
   end
 
   private
