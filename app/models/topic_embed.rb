@@ -10,6 +10,10 @@ class TopicEmbed < ActiveRecord::Base
     url.downcase.sub(/\/$/, '').sub(/\-+/, '-')
   end
 
+  def self.imported_from_html(url)
+    "\n<hr>\n<small>#{I18n.t('embed.imported_from', link: "<a href='#{url}'>#{url}</a>")}</small>\n"
+  end
+
   # Import an article from a source (RSS/Atom/Other)
   def self.import(user, url, title, contents)
     return unless url =~ /^https?\:\/\//
@@ -17,7 +21,7 @@ class TopicEmbed < ActiveRecord::Base
     if SiteSetting.embed_truncate
       contents = first_paragraph_from(contents)
     end
-    contents << "\n<hr>\n<small>#{I18n.t('embed.imported_from', link: "<a href='#{url}'>#{url}</a>")}</small>\n"
+    contents << imported_from_html(url)
 
     url = normalize_url(url)
 
@@ -60,15 +64,35 @@ class TopicEmbed < ActiveRecord::Base
     require 'ruby-readability'
 
     url = normalize_url(url)
-    Readability::Document.new(open(url).read,
-                                        tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol],
-                                        attributes: %w[href src])
+    original_uri = URI.parse(url)
+    doc = Readability::Document.new(open(url).read,
+                                        tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
+                                        attributes: %w[href src],
+                                        remove_empty_nodes: false)
+
+    tags = {'img' => 'src', 'script' => 'src', 'a' => 'href'}
+    title = doc.title
+    doc = Nokogiri::HTML(doc.content)
+    doc.search(tags.keys.join(',')).each do |node|
+      url_param = tags[node.name]
+      src = node[url_param]
+      unless (src.empty?)
+        uri = URI.parse(src)
+        unless uri.host
+          uri.scheme = original_uri.scheme
+          uri.host = original_uri.host
+          node[url_param] = uri.to_s
+        end
+      end
+    end
+
+    [title, doc.to_html]
   end
 
   def self.import_remote(user, url, opts=nil)
     opts = opts || {}
-    doc = find_remote(url)
-    TopicEmbed.import(user, url, opts[:title] || doc.title, doc.content)
+    title, body = find_remote(url)
+    TopicEmbed.import(user, url, opts[:title] || title, body)
   end
 
   # Convert any relative URLs to absolute. RSS is annoying for this.

@@ -76,9 +76,9 @@
         <div class='cooked'>{{{cooked}}}</div>
         {{#if view.showExpandButton}}
           {{#if controller.loadingExpanded}}
-            <button class="btn" disabled>{{i18n loading}}</button>
+            <button class="btn expand-post" disabled>{{i18n loading}}</button>
           {{else}}
-            <button {{action expandFirstPost this}} class='btn'>{{i18n post.show_full}}</button>
+            <button {{action expandFirstPost this}} class='btn expand-post'>{{i18n post.show_full}}</button>
           {{/if}}
         {{/if}}
         {{view Discourse.PostMenuView postBinding="this" postViewBinding="view"}}
