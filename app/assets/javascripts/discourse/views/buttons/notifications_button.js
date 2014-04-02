@@ -13,6 +13,7 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
   topic: Em.computed.alias('controller.model'),
   hidden: Em.computed.alias('topic.deleted'),
   isPrivateMessage: Em.computed.alias('topic.isPrivateMessage'),
+  activeItem: Em.computed.alias('topic.details.notification_level'),
 
   dropDownContent: function() {
     var contents = [], postfix = '';
@@ -20,17 +21,18 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
     if (this.get('isPrivateMessage')) { postfix = '_pm'; }
 
     _.each([
-      ['WATCHING', 'watching'],
-      ['TRACKING', 'tracking'],
-      ['REGULAR', 'regular'],
-      ['MUTED', 'muted']
+      ['WATCHING', 'watching', 'fa fa-circle heatmap-high'],
+      ['TRACKING', 'tracking', 'fa fa-circle heatmap-low'],
+      ['REGULAR', 'regular', ''],
+      ['MUTED', 'muted', 'fa fa-times-circle']
     ], function(pair) {
 
       if (postfix === '_pm' && pair[1] === 'regular') { return; }
 
       contents.push([
           Discourse.Topic.NotificationLevel[pair[0]],
-          'topic.notifications.' + pair[1] + postfix
+          'topic.notifications.' + pair[1] + postfix,
+          pair[2]
         ]);
     });
 
