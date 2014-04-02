@@ -6,7 +6,7 @@ class TopicListSerializer < ApplicationSerializer
              :draft_key,
              :draft_sequence
 
-  has_many :topics, serializer: TopicListItemSerializer, embed: :objects
+  has_many :topics, serializer: TopicListItemSerializer, embed: :objects, include: true
 
   def can_create_topic
     scope.can_create?(Topic)

@@ -8,7 +8,7 @@ class TopicListItemSerializer < ListableTopicSerializer
              :last_poster_username,
              :category_id
 
-  has_many :posters, serializer: TopicPosterSerializer, embed: :objects
+  has_many :posters, serializer: TopicPosterSerializer, embed: :objects, include: true
 
   def starred
     object.user_data.starred?

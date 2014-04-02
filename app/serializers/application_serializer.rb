@@ -1,3 +1,7 @@
 class ApplicationSerializer < ActiveModel::Serializer
-  embed :ids, include: true
+  embed :ids
+
+  def filter(keys)
+    keys
+  end
 end

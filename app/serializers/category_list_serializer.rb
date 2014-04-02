@@ -6,7 +6,7 @@ class CategoryListSerializer < ApplicationSerializer
              :draft_key,
              :draft_sequence
 
-  has_many :categories, serializer: CategoryDetailedSerializer, embed: :objects
+  has_many :categories, serializer: CategoryDetailedSerializer, embed: :objects, include: true
 
   def can_create_category
     scope.can_create?(Category)
