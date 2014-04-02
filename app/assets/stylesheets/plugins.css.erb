@@ -1,6 +1,6 @@
 <%
   # Empty file used to trigger recompilation
-  require_asset(DiscoursePluginRegistry.last_changed_marker(:css))
+  depend_on(DiscoursePluginRegistry.last_changed_marker(:css))
 
   DiscoursePluginRegistry.stylesheets.each do |css|
     require_asset(css)

@@ -1,6 +1,6 @@
 <%
   # Empty file used to trigger recompilation
-  require_asset(DiscoursePluginRegistry.last_changed_marker(:js))
+  depend_on(DiscoursePluginRegistry.last_changed_marker(:js))
 
   DiscoursePluginRegistry.javascripts.each { |js| require_asset(js) }
   DiscoursePluginRegistry.handlebars.each { |hb| require_asset(hb) }
