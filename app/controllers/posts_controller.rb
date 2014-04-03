@@ -5,7 +5,7 @@ require_dependency 'distributed_memoizer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :expand_embed]
 
   skip_before_filter :store_incoming_links, only: [:short_link]
   skip_before_filter :check_xhr, only: [:markdown,:short_link]
@@ -144,14 +144,7 @@ class PostsController < ApplicationController
   end
 
   def expand_embed
-    post = find_post_from_params
-    content = Rails.cache.fetch("embed-topic:#{post.topic_id}", expires_in: 10.minutes) do
-      url = TopicEmbed.where(topic_id: post.topic_id).pluck(:embed_url).first
-      title, body = TopicEmbed.find_remote(url)
-      body << TopicEmbed.imported_from_html(url)
-      body
-    end
-    render json: {cooked: content}
+    render json: {cooked: TopicEmbed.expanded_for(find_post_from_params) }
   rescue
     render_json_error I18n.t('errors.embed.load_from_remote')
   end
