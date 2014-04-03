@@ -256,6 +256,9 @@ class PostsController < ApplicationController
       # php seems to be sending this incorrectly, don't fight with it
       params[:skip_validations] = params[:skip_validations].to_s == "true"
       permitted << :skip_validations
+
+      # We allow `embed_url` via the API
+      permitted << :embed_url
     end
 
     params.require(:raw)

@@ -64,6 +64,7 @@ class PostCreator
       track_topic
       update_topic_stats
       update_user_counts
+      create_embedded_topic
 
       publish
       ensure_in_allowed_users if guardian.is_staff?
@@ -81,7 +82,6 @@ class PostCreator
 
     @post
   end
-
 
   def self.create(user, opts)
     PostCreator.new(user, opts).create
@@ -109,6 +109,14 @@ class PostCreator
   end
 
   protected
+
+  # You can supply an `embed_url` for a post to set up the embedded relationship.
+  # This is used by the wp-discourse plugin to associate a remote post with a
+  # discourse post.
+  def create_embedded_topic
+    return unless @opts[:embed_url].present?
+    TopicEmbed.create!(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
+  end
 
   def handle_spam
     if @spam

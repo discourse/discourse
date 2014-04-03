@@ -420,5 +420,19 @@ describe PostCreator do
     end
   end
 
+  describe "embed_url" do
+
+    let(:embed_url) { "http://eviltrout.com/stupid-url" }
+
+    it "creates the topic_embed record" do
+      creator = PostCreator.new(user,
+                                embed_url: embed_url,
+                                title: 'Reviews of Science Ovens',
+                                raw: 'Did you know that you can use microwaves to cook your dinner? Science!')
+      post = creator.create
+      TopicEmbed.where(embed_url: embed_url).exists?.should be_true
+    end
+  end
+
 end
 
