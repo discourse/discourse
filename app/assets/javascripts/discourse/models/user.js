@@ -75,13 +75,15 @@ Discourse.User = Discourse.Model.extend({
   }.property('profile_background'),
 
   statusIcon: function() {
-    var desc;
+    var name = Handlebars.Utils.escapeExpression(this.get('name')),
+        desc;
+
     if(this.get('admin')) {
-      desc = I18n.t('user.admin', {user: this.get("name")});
+      desc = I18n.t('user.admin', {user: name});
       return '<i class="fa fa-trophy" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     if(this.get('moderator')){
-      desc = I18n.t('user.moderator', {user: this.get("name")});
+      desc = I18n.t('user.moderator', {user: name});
       return '<i class="fa fa-magic" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     return null;
