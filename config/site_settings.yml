@@ -496,3 +496,4 @@ uncategorized:
     default: -1
     hidden: true
 
+  notify_about_flags_after: 48
