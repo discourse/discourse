@@ -871,10 +871,13 @@
 
         var prevScrollPosition = $(panels.input).scrollTop();
         var caretMarkerPosition = 0;
-        var markerPositions = {
-          scroller: [0, paneContentHeight(panels.previewScroller)],
-          preview: [0, paneContentHeight(panels.preview)]
-        };
+        var markerPositions;
+        if (panels.previewScroller) {
+          markerPositions = {
+            scroller: [0, paneContentHeight(panels.previewScroller)],
+            preview: [0, paneContentHeight(panels.preview)]
+          };
+        }
 
         var getCaretPosition = function() {
           return Discourse.Utilities.caretPosition(panels.input);
@@ -1040,9 +1043,11 @@
 
             Ember.run(function() {
               pushPreviewHtml(previewText, previewScrollerText);
-              cacheMarkerPositions();
-              cacheCaretMarkerPosition();
-              syncScroll(true);
+              if (panels.previewScroller) {
+                cacheMarkerPositions();
+                cacheCaretMarkerPosition();
+                syncScroll(true);
+              }
             });
         };
 
@@ -1149,12 +1154,16 @@
             };
 
             ieSafeSet(panels.preview, previewText);
-            ieSafeSet(panels.previewScroller, previewScrollerText);
+            if (panels.previewScroller) {
+              ieSafeSet(panels.previewScroller, previewScrollerText);
+            }
         }
 
         var nonSuckyBrowserPreviewSet = function (previewText, previewScrollerText) {
             panels.preview.innerHTML = previewText;
-            panels.previewScroller.innerHTML = previewScrollerText;
+            if (panels.previewScroller) {
+              panels.previewScroller.innerHTML = previewScrollerText;
+            }
         }
 
         var previewSetter;
@@ -1204,7 +1213,9 @@
             // TODO: make option to disable. We don't need this in discourse
             // setupEvents(panels.input, applyTimeout);
 
-            setupScrollSync();
+            if (panels.previewScroller) {
+              setupScrollSync();
+            }
 
             makePreviewHtml();
 
