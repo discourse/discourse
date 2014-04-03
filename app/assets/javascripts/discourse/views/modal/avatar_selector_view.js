@@ -40,11 +40,14 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
     });
 
     // when a file has been selected
-    $upload.on("fileuploadadd", function () {
+    $upload.on('fileuploadsubmit', function (e, data) {
+      var result = Discourse.Utilities.validateUploadedFiles(data.files);
       self.setProperties({
-        uploading: true,
+        uploadProgress: 0,
+        uploading: result,
         imageIsNotASquare: false
       });
+      return result;
     });
 
     // when there is a progression for the upload
