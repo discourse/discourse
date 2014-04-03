@@ -488,6 +488,7 @@ div.ac-wrap {
       p {
         margin-top: 19px;
       }
+      blockquote p:first-of-type {margin-top: 0px;}
     }
     #wmd-input, #wmd-preview-scroller {
       position: absolute;
