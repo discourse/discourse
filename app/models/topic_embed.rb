@@ -6,7 +6,7 @@ class TopicEmbed < ActiveRecord::Base
   validates_presence_of :embed_url
 
   def self.normalize_url(url)
-    url.downcase.sub(/\/$/, '').sub(/\-+/, '-')
+    url.downcase.sub(/\/$/, '').sub(/\-+/, '-').strip
   end
 
   def self.imported_from_html(url)
