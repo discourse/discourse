@@ -1,4 +1,4 @@
-The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. We will use [Digital Ocean][do], although these steps will work on other similar services.
+The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. We will use [Digital Ocean][do], although these steps may work on other cloud providers.
 
 This guide assumes that you have no knowledge of Ruby/Rails or Linux shell. 
 
@@ -32,15 +32,7 @@ You will be asked for permission to connect, type `yes`, then the root password,
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3000/8209c1e40c9d70a8.png" width="570" height="278"> 
 
-# Install Git
-
-    apt-get install git
-
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3002/eafbf14df8eee832.png" width="572" height="263"> 
-
-# Install Docker
-
-Update to a newer kernel:
+# Update the kernel
 
     apt-get update
     apt-get install linux-image-generic-lts-raring linux-headers-generic-lts-raring
@@ -57,7 +49,13 @@ This will log you out from your SSH session, so reconnect:
 
     ssh root@192.168.1.1
 
-Finish installing Docker:
+# Install Git
+
+    apt-get install git
+
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/3002/eafbf14df8eee832.png" width="572" height="263"> 
+
+# Install Docker
 
     wget -qO- https://get.docker.io/ | sh
 
@@ -107,7 +105,7 @@ If you set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want 
 
 - Don't forget to set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) up for your domain name. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
 
-- The name of your droplet is your reverse PTR record, so rename your droplet to `discourse.example.com` so the PTR record correctly reflects your domain name.
+- The name of your droplet is your reverse PTR record; rename your droplet to `discourse.example.com` so the PTR record correctly reflects your domain name.
 
 # Bootstrap Discourse
 
@@ -117,7 +115,7 @@ Be sure to save the `app.yml` file, and begin bootstrapping Discourse:
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3007/c0596ad3d330ae71.png" width="567" height="138"> 
 
-This command may take some time, so be prepared to wait. It is automagically configuring your Discourse environment.
+This command may take 10+ minutes, so be prepared to wait. It is automagically configuring your Discourse environment.
 
 After that completes, start Discourse:
 
