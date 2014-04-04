@@ -210,7 +210,7 @@ Discourse.Utilities = {
     Check the extension of the file against the list of authorized extensions
 
     @method isAuthorizedUpload
-    @param {File} files The file we want to upload
+    @param {File} file The file we want to upload
   **/
   isAuthorizedUpload: function(file) {
     var extensions = Discourse.SiteSettings.authorized_extensions;

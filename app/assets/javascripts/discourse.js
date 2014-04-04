@@ -143,7 +143,25 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       }
     }
     return this.get("currentAssetVersion");
-  }.property()
+  }.property(),
+
+  globalNotice: function(){
+    var notices = [];
+
+    if(this.get("isReadOnly")){
+      notices.push(I18n.t("read_only_mode.enabled"));
+    }
+
+    if(!_.isEmpty(Discourse.SiteSettings.global_notice)){
+      notices.push(Discourse.SiteSettings.global_notice);
+    }
+
+    if(notices.length > 0) {
+      return new Handlebars.SafeString(_.map(notices, function(text) {
+        return "<div class='row'><div class='alert alert-info'>" + text + "</div></div>";
+      }).join(""));
+    }
+  }.property("isReadOnly")
 
 });
 

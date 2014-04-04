@@ -2,11 +2,11 @@ module("Discourse.HTML");
 
 var html = Discourse.HTML;
 
-test("categoryLink without a category", function() {
-  blank(html.categoryLink(), "it returns no HTML");
+test("categoryBadge without a category", function() {
+  blank(html.categoryBadge(), "it returns no HTML");
 });
 
-test("Regular categoryLink", function() {
+test("Regular categoryBadge", function() {
   var category = Discourse.Category.create({
         name: 'hello',
         id: 123,
@@ -14,7 +14,7 @@ test("Regular categoryLink", function() {
         color: 'ff0',
         text_color: 'f00'
       }),
-      tag = parseHTML(html.categoryLink(category))[0];
+      tag = parseHTML(html.categoryBadge(category))[0];
 
   equal(tag.name, 'a', 'it creates an `a` tag');
   equal(tag.attributes['class'], 'badge-category', 'it has the correct class');
@@ -28,7 +28,7 @@ test("Regular categoryLink", function() {
 
 test("undefined color", function() {
   var noColor = Discourse.Category.create({ name: 'hello', id: 123 }),
-      tag = parseHTML(html.categoryLink(noColor))[0];
+      tag = parseHTML(html.categoryBadge(noColor))[0];
 
   blank(tag.attributes.style, "it has no color style because there are no colors");
 });
@@ -37,8 +37,8 @@ test("allowUncategorized", function() {
   var uncategorized = Discourse.Category.create({name: 'uncategorized', id: 345});
   this.stub(Discourse.Site, 'currentProp').withArgs('uncategorized_category_id').returns(345);
 
-  blank(html.categoryLink(uncategorized), "it doesn't return HTML for uncategorized by default");
-  present(html.categoryLink(uncategorized, {allowUncategorized: true}), "it returns HTML");
+  blank(html.categoryBadge(uncategorized), "it doesn't return HTML for uncategorized by default");
+  present(html.categoryBadge(uncategorized, {allowUncategorized: true}), "it returns HTML");
 });
 
 

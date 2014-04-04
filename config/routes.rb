@@ -61,6 +61,7 @@ Discourse::Application.routes.draw do
       put "unblock"
       put "trust_level"
       put "primary_group"
+      get "badges"
       get "leader_requirements"
     end
 
@@ -123,6 +124,12 @@ Discourse::Application.routes.draw do
         put "readonly" => "backups#readonly"
         get "upload" => "backups#check_chunk"
         post "upload" => "backups#upload_chunk"
+      end
+    end
+
+    resources :badges, constraints: AdminConstraint.new do
+      collection do
+        get "types" => "badges#badge_types"
       end
     end
 
@@ -235,6 +242,8 @@ Discourse::Application.routes.draw do
   end
   resources :user_actions
 
+  resources :user_badges, only: [:index, :create, :destroy]
+
   # We've renamed popular to latest. If people access it we want a permanent redirect.
   get "popular" => "list#popular_redirect"
   get "popular/more" => "list#popular_redirect"
@@ -326,6 +335,7 @@ Discourse::Application.routes.draw do
 
   post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: {topic_id: /\d+/}
 
+  get "/posts/:id/expand-embed" => "posts#expand_embed"
   get "raw/:topic_id(/:post_number)" => "posts#markdown"
 
   resources :invites

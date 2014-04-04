@@ -69,7 +69,7 @@ describe PostMover do
 
           new_topic.category.should == category
           topic.featured_user1_id.should be_blank
-          new_topic.posts.should =~ [p2, p4]
+          new_topic.posts.by_post_number.should =~ [p2, p4]
 
           new_topic.reload
           new_topic.posts_count.should == 2
@@ -89,7 +89,7 @@ describe PostMover do
           topic.featured_user1_id.should be_blank
           topic.like_count.should == 0
           topic.posts_count.should == 2
-          topic.posts.should =~ [p1, p3]
+          topic.posts.by_post_number.should =~ [p1, p3]
           topic.highest_post_number.should == p3.post_number
 
           # both the like and was_liked user actions should be correct
@@ -133,7 +133,7 @@ describe PostMover do
           topic.featured_user1_id.should be_blank
           topic.like_count.should == 0
           topic.posts_count.should == 2
-          topic.posts.should =~ [p1, p3]
+          topic.posts.by_post_number.should =~ [p1, p3]
           topic.highest_post_number.should == p3.post_number
 
           # Should update last reads
@@ -148,7 +148,7 @@ describe PostMover do
         it "copies the OP, doesn't delete it" do
           new_topic.should be_present
           new_topic.posts.reload
-          new_topic.posts.first.raw.should == p1.raw
+          new_topic.posts.by_post_number.first.raw.should == p1.raw
 
           new_topic.reload
           new_topic.posts_count.should == 2
@@ -167,7 +167,7 @@ describe PostMover do
           p2.topic_id == new_topic.id
 
           topic.reload
-          topic.posts.should =~ [p1, p3, p4]
+          topic.posts.by_post_number.should =~ [p1, p3, p4]
           topic.highest_post_number.should == p4.post_number
         end
 

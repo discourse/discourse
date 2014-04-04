@@ -43,7 +43,7 @@ module JsLocaleHelper
   end
 
   def self.moment_format_function(name)
-    format = I18n.t("dates." << name)
+    format = I18n.t("dates.#{name}")
     result = "moment.fn.#{name.camelize(:lower)} = function(){ return this.format('#{format}'); };\n"
   end
 

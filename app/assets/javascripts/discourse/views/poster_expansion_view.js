@@ -27,12 +27,6 @@ Discourse.PosterExpansionView = Discourse.View.extend({
           position.left += $avatar.width() + 5;
           div.css(position);
         }
-
-        var maxWidth = div.width();
-        if (maxWidth < 250) {
-          maxWidth = 250;
-        }
-        div.css({ maxWidth: maxWidth });
       }
     });
 

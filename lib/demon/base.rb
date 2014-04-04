@@ -118,11 +118,7 @@ class Demon::Base
   end
 
   def establish_app
-    ActiveRecord::Base.connection_handler.clear_active_connections!
-    ActiveRecord::Base.establish_connection
-    $redis.client.reconnect
-    Rails.cache.reconnect
-    MessageBus.after_fork
+    Discourse.after_fork
 
     Signal.trap("HUP") do
       begin

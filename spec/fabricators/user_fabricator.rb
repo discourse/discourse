@@ -60,5 +60,19 @@ Fabricator(:active_user, from: :user) do
   password 'myawesomepassword'
   trust_level TrustLevel.levels[:basic]
   active true
-  bio_raw "Don't as me about my dad!"
+  bio_raw "Don't ask me about my dad!"
+end
+
+Fabricator(:leader, from: :user) do
+  name 'Leader McLeaderman'
+  username { sequence(:username) { |i| "leader#{i}" } }
+  email { sequence(:email) { |i| "leader#{i}@leaderfun.com" } }
+  trust_level TrustLevel.levels[:leader]
+end
+
+Fabricator(:elder, from: :user) do
+  name 'Elder McElderson'
+  username { sequence(:username) { |i| "elder#{i}" } }
+  email { sequence(:email) { |i| "elder#{i}@elderfun.com" } }
+  trust_level TrustLevel.levels[:elder]
 end

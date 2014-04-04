@@ -47,6 +47,7 @@ Discourse.ActionsHistoryComponent = Em.Component.extend({
           var key = 'post.actions.people.' + c.get('actionType.name_key');
           if (postUrl) { key = key + "_with_url"; }
 
+          // TODO postUrl might be uninitialized? pick a good default
           buffer.push(" " + I18n.t(key, { icons: iconsHtml, postUrl: postUrl}) + ".");
         }
         renderActionIf('usersCollapsed', 'who-acted', c.get('description'));

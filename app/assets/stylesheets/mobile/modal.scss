@@ -1,8 +1,5 @@
 // base styles for every modal popup used in Discourse
 
-@import "../common/foundation/variables";
-@import "../common/foundation/mixins";
-
 .modal-open {
   .dropdown-menu {
      z-index: 2050;
@@ -14,10 +11,9 @@
     z-index: 2070;
   }
 
-  // Prevent background scrolling when a modal is open
-  overflow: hidden;
-  position: fixed;
 }
+
+.modal-open #main {overflow:hidden;}
 
 .modal-backdrop {
   position: fixed;
@@ -46,7 +42,7 @@
 .modal-middle-container {
   margin-top: 10%;
   max-width: 100%;
-
+  margin-bottom: 30px; // For iOS Safari issues
 }
 .modal-inner-container {
   max-width: 100%;
@@ -123,7 +119,7 @@
 // .modal-footer .btn + .btn {
 .modal-footer .btn {
   margin-right: 5px;
-  margin-bottom: 0;
+  margin-bottom: 5px;
 }
 .modal-footer .btn-group .btn + .btn {
   margin-left: -1px;

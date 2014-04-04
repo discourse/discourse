@@ -36,6 +36,7 @@
   }
 
   table.report {
+    margin-top: 20px;
     tr {
       th:nth-of-type(1) {
         width: 20%;
@@ -51,7 +52,7 @@
 
       .bar {
         margin-top: 5px;
-        background-color: $emphasis_background_color;
+        background-color: $emphasis_text_color;
         display: inline-block;
         text-align: right;
         padding-right: 8px;
@@ -196,7 +197,9 @@
 
     .desc {
       padding-top: 3px;
-      color: darken($secondary_text_color, 40%);
+      color: $secondary_text_color;
+      font-size: 80%;
+      line-height: 1.4em;
     }
 
     h3 {
@@ -276,11 +279,54 @@ section.details {
   }
 
   .controls {
-    width: 600px;
+    width: 480px;
     float: left;
     margin-left: 12px;
     .btn {
       margin-right: 5px;
+    }
+  }
+}
+
+// Badges area
+.badges {
+  .content-list ul {
+    margin-bottom: 10px;
+  }
+
+  .current-badge {
+    margin: 20px;
+  }
+
+  .form-horizontal {
+    label {
+      font-weight: bold;
+    }
+    & > div {
+      margin-top: 10px;
+    }
+    .delete-link {
+      margin-left: 15px;
+      margin-top: 5px;
+    }
+
+    input, textarea, select {
+      width: 350px;
+    }
+
+    textarea {
+      height: 200px;
+    }
+  }
+
+  .buttons {
+    float: left;
+    width: 200px;
+    .saving {
+      padding: 5px 0 0 0;
+      margin-left: 10px;
+      width: 80px;
+      color: $secondary_text_color;
     }
   }
 }
@@ -539,7 +585,7 @@ table.api-keys {
 
     .look-here {
       float: left;
-      margin: 20px 20px 0 20px;
+      margin: 20px 10px 0 10px;
 
       .fa {
         font-size: 32px;
@@ -550,7 +596,7 @@ table.api-keys {
 
     .problem-messages {
       float: left;
-      width: 355px;
+      width: 395px;
       a {
         text-decoration: underline;
       }
@@ -559,7 +605,10 @@ table.api-keys {
       }
       .btn {
         background-color: lighten($secondary_background_color, 60%);
-    }
+      }
+      ul {
+        margin-left: 0;
+      }
   }
 }
 
@@ -998,4 +1047,8 @@ button.ru {
 
 .is-uploading:hover .ru-progress {
   background: rgba(200, 0, 0, 0.3);
+}
+
+.invisible {
+  visibility: hidden;
 }

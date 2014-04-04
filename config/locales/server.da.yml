@@ -635,7 +635,6 @@ da:
     min_password_length: "Mindste adgangskodelængde."
     block_common_passwords: "Tillad ikke adgangskoder som er blandt de 5000 med almindelige adgangskoder"
     enable_local_logins: "Aktivér traditionel, lokal godkendelse med brugernavn og adgangskode"
-    enable_local_account_create: "Aktivér oprettelse af nye lokale konti"
     enable_google_logins: "Aktivér Google-login"
     enable_yahoo_logins: "Aktivér Yahoo-login"
 

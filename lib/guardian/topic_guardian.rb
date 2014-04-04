@@ -1,25 +1,5 @@
 #mixin for all guardian methods dealing with topic permisions
 module TopicGuardian
-  # Can the user create a topic in the forum
-  def can_create?(klass, parent=nil)
-    return false unless authenticated? && klass
-
-    # If no parent is provided, we look for a can_i_create_klass?
-    # custom method.
-    #
-    # If a parent is provided, we look for a method called
-    # can_i_create_klass_on_parent?
-    target = klass.name.underscore
-    if parent.present?
-      return false unless can_see?(parent)
-      target << "_on_#{parent.class.name.underscore}"
-    end
-    create_method = :"can_create_#{target}?"
-
-    return send(create_method, parent) if respond_to?(create_method)
-
-    true
-  end
 
   def can_remove_allowed_users?(topic)
     is_staff?
@@ -41,7 +21,7 @@ module TopicGuardian
     # No users can create posts on deleted topics
     return false if topic.trashed?
 
-    is_staff? || (not(topic.closed? || topic.archived? || topic.trashed?) && can_create_post?(topic))
+    is_staff? || (authenticated? && user.has_trust_level?(:elder)) || (not(topic.closed? || topic.archived? || topic.trashed?) && can_create_post?(topic))
   end
 
   # Editing Method

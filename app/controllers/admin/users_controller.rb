@@ -169,6 +169,9 @@ class Admin::UsersController < Admin::AdminController
     end
   end
 
+  def badges
+  end
+
   def leader_requirements
   end
 

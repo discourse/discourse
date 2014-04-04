@@ -1,14 +1,10 @@
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-@import "common/foundation/helpers";
-
 .gap {
   background-color: lighten($secondary_background_color, 76%);
-  padding: 5px 10px;
+  padding: 5px 0;
   color: lighten($primary_text_color, 35%);
   cursor: pointer;
   text-align: center;
-  width: 822px;
+  width: 80%;
 
   &:hover {
     background-color: lighten($secondary_background_color, 76%);
@@ -54,7 +50,7 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   left: 120px;
   z-index: 400;
   padding: 5px 12px;
-  border: 1px solid lighten($primary_border_color, 10%);
+  border: 1px solid $primary_border_color;
   font-size: 12px;
   margin-left: -8px;
   background: $primary_background_color;
@@ -106,26 +102,30 @@ section.post-menu-area, .post-actions {
 
 nav.post-controls {
     padding: 0;
-    button {color: lighten($primary_text_color, 50%);
+    button {
+    color: lighten($primary_text_color, 50%);
     margin-right: 2px;
   }
 
   span.badge-posts {
     margin-right: 5px;
-    color: lighten($primary_text_color, 50%);
+    transition: all linear 0.15s;
   }
 
   .show-replies {
+    background: lighten($secondary_background_color, 76%);
+    padding: 8px 15px;
+    padding-bottom: 20px;
+    margin-left: 0;
+    span.badge-posts {color: lighten($primary_text_color, 50%);}
+    &:hover {
+      background: lighten($secondary_background_color, 76%);
+      span.badge-posts {color: $primary_text_color;}
+    }
     i {
       margin-left: 5px;
     }
   }
-
-  button.show-replies {
-    padding: 8px 15px;
-    margin-left: 0;
-  }
-
 
   button.create {
     margin-right: 0;
@@ -209,13 +209,11 @@ nav.post-controls {
 
   .embedded-posts {
     background: lighten($secondary_background_color, 76%);
-    .quote .title {background: lighten($secondary_background_color, 60%);}
-    blockquote {background: lighten($secondary_background_color, 60%);}
-    .onebox {
-    background: lighten($secondary_background_color, 60%);
-    border-left: 5px solid lighten($secondary_background_color, 35%);
-    .quote-controls, .quote-controls a {color: $link-color;}
+    .quote .title, blockquote, .onebox, .onebox-result {
+      background: lighten($secondary_background_color, 70%);
+      border-left: 5px solid lighten($secondary_background_color, 60%);
     }
+
     &.bottom { margin-top: -11px;}
     .topic-meta-data h5 {margin: 5px;}
     .topic-meta-data-inside {
@@ -224,6 +222,16 @@ nav.post-controls {
     }
     .topic-meta-data {padding-top: 20px;}
   }
+
+.bottom-round nav.post-controls .show-replies {
+background: lighten($secondary_background_color, 76%);
+margin-bottom: 0;
+padding-bottom: 8px;
+  &:hover {background: lighten($secondary_background_color, 76%);
+  }
+}
+
+
 
 .post-action {
   .relative-date {
@@ -243,7 +251,7 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  border: 1px solid lighten($primary_border_color, 10%);
+  border: 1px solid $primary_border_color;
 
   .buttons .btn {
     &:hover {border: 1px solid $primary_border_color !important;}
@@ -328,7 +336,6 @@ a.star {
     border-top: 1px solid $primary_border_color;
   }
 
-
 .participants { // PMs //
   .user {float: left; margin: 7px 20px 7px 0;}
 }
@@ -354,7 +361,7 @@ a.star {
         color: $primary_text_color;
         border: none !important;
         border-bottom: 1px solid lighten($secondary_background_color, 60%) !important;
-
+        span.badge-posts {color: $primary_text_color;}
       }
 
       &.collapsed {
@@ -382,9 +389,12 @@ a.star {
 #suggested-topics {
   clear: left;
   padding: 20px 0 15px 0;
-
-  .topics table tbody tr {background: $primary_background_color;}
-
+  #topic-list > tbody > tr:nth-child(even) {
+    background-color: lighten($secondary_background_color, 77%);
+  }
+  #topic-list > tbody > tr:nth-child(odd) {
+    background-color: $primary_background_color;
+  }
   table {
     box-shadow: none;
     border-radius: 0;
@@ -403,6 +413,9 @@ span.post-count {
   opacity: .8;
 }
 
+button.expand-post {
+  margin-top: 10px;
+}
 
 #topic-footer-buttons {
   .btn {
@@ -444,11 +457,9 @@ iframe {
 
 @include medium-width {
   .extra-info-wrapper {
-  max-width: 720px;
+  max-width: 740px;
 }
 }
-
-/**/
 
 
 @include small-width {
@@ -457,24 +468,24 @@ iframe {
 }
 }
 
-
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
-    font-size: 2em;
+    font-size: 1.8em;
     line-height: 1.2em;
   }
 
   a.star {
     margin-right: 8px;
     font-size: 20px;
-    margin-top: 8px;
+    margin-top: 6px;
   }
 
   .topic-statuses {margin-top: -2px;}
 
   .badge-category {
     vertical-align: top;
+    margin-top: 4px;
   }
 
 }
@@ -482,7 +493,7 @@ iframe {
 .topic-meta-data {
   margin-bottom: 10px;
   width: 92px;
-  border-top: 1px solid lighten($primary_border_color, 10%);
+  border-top: 1px solid $primary_border_color;
   padding-top: 30px;
 
   img {
@@ -584,8 +595,7 @@ iframe {
 
 .moderator {
   .topic-body {
-  background-color: $highlight_background_color;
-  border-bottom: 10px solid $highlight_background_color;
+    background-color: $highlight_background_color;
   }
 }
 
@@ -625,10 +635,7 @@ iframe {
 }
 
 .topic-admin-menu {
-
   h3 {margin-top: 0;}
-
-
 }
 
 .deleted-user-avatar {
@@ -675,7 +682,7 @@ blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
 
-    a.mention {background: lighten($secondary_background_color, 60%);}
+    a.mention {background: lighten($secondary_background_color, 70%);}
     p:first-of-type {margin-top: 0;}
     p:last-of-type {margin-bottom: 0;}
 }
@@ -697,9 +704,6 @@ blockquote { /* solo quotes */
 
 }
 }
-
-
-
 
 .quote-controls {
   float: right;
@@ -723,8 +727,6 @@ blockquote { /* solo quotes */
     content: "\f061";
     }
 }
-
-
 
 .gutter {
   float: left;
@@ -754,24 +756,21 @@ blockquote { /* solo quotes */
 }
 
 .topic-body {
-  border-top: 1px solid lighten($primary_border_color, 10%);
+  border-top: 1px solid $primary_border_color;
   float: left;
   position: relative;
   padding: 10px 0 15px 0;
-  .highlighted {
-    background-color: $highlight_background_color !important;
+  &.highlighted {
+    background-color: $emphasis_background_color;
   }
   img, svg {
     max-width: 100%;
   }
 }
 
-
 .bottom-round.contents.regular {
-
- -webkit-transition: background-color .25s linear;
- transition: background-color .25s linear;
-
+  -webkit-transition: background-color .25s linear;
+  transition: background-color .25s linear;
 }
 
 .posts-wrapper {
@@ -796,7 +795,7 @@ blockquote { /* solo quotes */
 
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
-  a.mention {background: lighten($secondary_background_color, 60%);}
+  a.mention {background: lighten($secondary_background_color, 70%);}
   &.bottom {
     .topic-meta-data {padding-left: 13px;}
     &.hidden {display: block; opacity: 0; }
@@ -822,28 +821,6 @@ blockquote { /* solo quotes */
   .topic-body, .topic-meta-data {border: none;}
   .row {border-top: 1px solid $primary_border_color; padding-top: 7px;}
   .reply:first-of-type .row {border-top: none;}
-}
-
-.contents.regular  {
-
-button.show-replies {
-  background: lighten($secondary_background_color, 76%);
-  padding-bottom: 20px;
-     &:hover {background: lighten($secondary_background_color, 76%);
-  .badge-posts {color: $secondary_text_color;}
-
-  }
-}
-
-  &.bottom-round button.show-replies {
-  background: lighten($secondary_background_color, 76%);
-  margin-bottom: 0;
-  padding-bottom: 8px;
-    &:hover {background: lighten($secondary_background_color, 76%);
-       .badge-posts {color: $secondary_text_color;}
-    }
-  }
-
 }
 
 .dropdown {
@@ -1014,7 +991,6 @@ clear: both;
     }
   }
 }
-
 
 a.attachment:before {
   display: inline-block;

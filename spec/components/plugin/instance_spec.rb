@@ -3,6 +3,11 @@ require_dependency 'plugin/instance'
 
 describe Plugin::Instance do
 
+  after do
+    DiscoursePluginRegistry.javascripts.clear
+    DiscoursePluginRegistry.stylesheets.clear
+  end
+
   context "find_all" do
     it "can find plugins correctly" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")

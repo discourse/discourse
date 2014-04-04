@@ -352,6 +352,8 @@ test("sanitize", function() {
   equal(sanitize("<textarea>hullo</textarea>"), "hullo");
   equal(sanitize("<button>press me!</button>"), "press me!");
   equal(sanitize("<canvas>draw me!</canvas>"), "draw me!");
+
+  cooked("[the answer](javascript:alert(42))", "<p><a>the answer</a></p>", "it prevents XSS");
 });
 
 test("URLs in BBCode tags", function() {

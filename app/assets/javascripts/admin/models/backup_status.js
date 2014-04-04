@@ -12,6 +12,5 @@ Discourse.BackupStatus = Discourse.Model.extend({
 
   restoreEnabled: function() {
     return Discourse.SiteSettings.allow_restore && !this.get("isOperationRunning");
-  }.property("isOperationRunning"),
-
+  }.property("isOperationRunning")
 });

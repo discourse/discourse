@@ -184,6 +184,16 @@ describe PostCreator do
 
         user2.user_stat.reload.topic_reply_count.should == 1
       end
+
+      it 'sets topic excerpt if first post, but not second post' do
+        first_post = creator.create
+        topic = first_post.topic.reload
+        topic.excerpt.should be_present
+        expect {
+          PostCreator.new(first_post.user, topic_id: first_post.topic_id, raw: "this is the second post").create
+          topic.reload
+        }.to_not change { topic.excerpt }
+      end
     end
 
     context 'when auto-close param is given' do
@@ -407,6 +417,20 @@ describe PostCreator do
 
       post.topic.reload
       post.topic.word_count.should == 14
+    end
+  end
+
+  describe "embed_url" do
+
+    let(:embed_url) { "http://eviltrout.com/stupid-url" }
+
+    it "creates the topic_embed record" do
+      creator = PostCreator.new(user,
+                                embed_url: embed_url,
+                                title: 'Reviews of Science Ovens',
+                                raw: 'Did you know that you can use microwaves to cook your dinner? Science!')
+      post = creator.create
+      TopicEmbed.where(embed_url: embed_url).exists?.should be_true
     end
   end
 

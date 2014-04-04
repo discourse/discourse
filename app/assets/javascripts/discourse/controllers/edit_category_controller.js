@@ -70,6 +70,19 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     return "background-color: #" + (this.get('color')) + "; color: #" + (this.get('text_color')) + ";";
   }.property('color', 'text_color'),
 
+  parentStyle: function() {
+    if (this.get('parent_category_id')) {
+      var parent = Discourse.Category.list().findBy('id', parseInt(this.get('parent_category_id'), 10));
+      if (parent) {
+        return 'background-color: #' + parent.get('color') + ';';
+      } else {
+        return 'display: none';
+      }
+    } else {
+      return 'display: none;';
+    }
+  }.property('parent_category_id'),
+
   // background colors are available as a pipe-separated string
   backgroundColors: function() {
     var categories = Discourse.Category.list();

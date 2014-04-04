@@ -48,21 +48,15 @@
               {{#if model.archetype.hasOptions}}
                 <button class='btn' {{action showOptions}}>{{i18n topic.options}}</button>
               {{/if}}
-              {{#if model.showAdminOptions}}
-                <button {{action toggleAdminOptions target="view"}} class="btn no-text show-admin-options" title='{{i18n composer.admin_options_title}}'><i class="fa fa-wrench"></i></button>
-              {{/if}}
               {{render additionalComposerButtons model}}
             {{/unless}}
-          </div>
-
-          <div class="admin-options-form">
-            {{auto-close-form autoCloseTime=model.auto_close_time}}
           </div>
         {{/if}}
 
         <div class='wmd-controls'>
           <div class='textarea-wrapper'>
             <div class='wmd-button-bar' id='wmd-button-bar'></div>
+            <div id='wmd-preview-scroller'></div>
             {{view Discourse.NotifyingTextArea parentBinding="view" tabindex="3" valueBinding="model.reply" id="wmd-input" placeholderKey="composer.reply_placeholder"}}
             {{popupInputTip validation=view.replyValidation shownAt=view.showReplyTip}}
           </div>
@@ -76,6 +70,10 @@
               <div id="file-uploading">
                 {{i18n upload_selector.uploading}} {{view.uploadProgress}}% <a id="cancel-file-upload">{{i18n cancel}}</a>
               </div>
+            {{else}}
+              {{#if Discourse.Mobile.mobileView}}
+                <a {{action showUploadSelector view}} class='mobile-file-upload'>{{i18n upload}}</a>
+              {{/if}}
             {{/if}}
           {{/if}}
         </div>

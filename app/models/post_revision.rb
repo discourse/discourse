@@ -7,42 +7,38 @@ class PostRevision < ActiveRecord::Base
   serialize :modifications, Hash
 
   def body_changes
-    changes_for("cooked", "raw")
+    cooked_diff = DiscourseDiff.new(previous("cooked"), current("cooked"))
+    raw_diff = DiscourseDiff.new(previous("raw"), current("raw"))
+
+    {
+      inline: cooked_diff.inline_html,
+      side_by_side: cooked_diff.side_by_side_html,
+      side_by_side_markdown: raw_diff.side_by_side_markdown
+    }
   end
 
   def category_changes
+    prev = previous("category_id")
+    cur = current("category_id")
+    return if prev == cur
+
     {
-      previous_category_id: previous("category_id"),
-      current_category_id: current("category_id"),
+      previous_category_id: prev,
+      current_category_id: cur,
     }
   end
 
   def title_changes
-    changes_for("title", nil, true)
-  end
-
-  def changes_for(name, markdown=nil, wrap=false)
-    prev = previous(name)
-    cur = current(name)
-
-    if wrap
-      prev = "<div>#{CGI::escapeHTML(prev)}</div>"
-      cur = "<div>#{CGI::escapeHTML(cur)}</div>"
-    end
+    prev = "<div>#{CGI::escapeHTML(previous("title"))}</div>"
+    cur = "<div>#{CGI::escapeHTML(current("title"))}</div>"
+    return if prev == cur
 
     diff = DiscourseDiff.new(prev, cur)
 
-    result = {
+    {
       inline: diff.inline_html,
       side_by_side: diff.side_by_side_html
     }
-
-    if markdown
-      diff = DiscourseDiff.new(previous(markdown), current(markdown))
-      result[:side_by_side_markdown] = diff.side_by_side_markdown
-    end
-
-    result
   end
 
   def previous(field)
@@ -54,12 +50,9 @@ class PostRevision < ActiveRecord::Base
   end
 
   def previous_revisions
-    @previous_revs ||=
-      PostRevision.where("post_id = ? AND number < ?",
-                              post_id,        number
-                      )
-                .order("number desc")
-                .to_a
+    @previous_revs ||= PostRevision.where("post_id = ? AND number < ?", post_id, number)
+                                   .order("number desc")
+                                   .to_a
   end
 
   def has_topic_data?

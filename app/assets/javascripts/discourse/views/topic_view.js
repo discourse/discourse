@@ -49,7 +49,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   _updateTitle: function() {
     var title = this.get('topic.title');
-    if (title) return Discourse.set('title', title);
+    if (title) return Discourse.set('title', _.unescape(title));
   }.observes('topic.loaded', 'topic.title'),
 
   _composeChanged: function() {
@@ -107,22 +107,20 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   debounceLoadSuggested: Discourse.debounce(function(){
     if (this.get('isDestroyed') || this.get('isDestroying')) { return; }
 
-    var incoming = this.get('topicTrackingState.newIncoming');
-    var suggested = this.get('topic.details.suggested_topics');
-    var topicId = this.get('topic.id');
+    var incoming = this.get('topicTrackingState.newIncoming'),
+        suggested = this.get('topic.details.suggested_topics'),
+        topicId = this.get('topic.id');
 
     if(suggested) {
-
-      var existing = _.invoke(suggested, 'get', 'id');
-
-      var lookup = _.chain(incoming)
-        .last(5)
-        .reverse()
-        .union(existing)
-        .uniq()
-        .without(topicId)
-        .first(5)
-        .value();
+      var existing = _.invoke(suggested, 'get', 'id'),
+          lookup = _.chain(incoming)
+                    .last(Discourse.SiteSettings.suggested_topics)
+                    .reverse()
+                    .union(existing)
+                    .uniq()
+                    .without(topicId)
+                    .first(Discourse.SiteSettings.suggested_topics)
+                    .value();
 
       Discourse.TopicList.loadTopics(lookup, "").then(function(topics){
         suggested.clear();
@@ -191,7 +189,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     }
 
     if (category) {
-      opts.catLink = Discourse.HTML.categoryLink(category);
+      opts.catLink = Discourse.HTML.categoryBadge(category, {showParent: true});
     } else {
       opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
     }

@@ -1,0 +1,11 @@
+app/assets/javascripts/defer/html-sanitizer-bundle.js
+app/assets/javascripts/discourse/lib/Markdown.Editor.js
+jsapp/lib/Markdown.Editor.js
+lib/javascripts/locale/
+lib/javascripts/messageformat.js
+lib/javascripts/moment.js
+lib/javascripts/moment_locale/
+public/javascripts/
+spec/phantom_js/smoke_test.js
+vendor/
+test/javascripts/helpers/

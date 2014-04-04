@@ -120,10 +120,10 @@ function parseTree(tree, path, insideCounts) {
 **/
 function invalidBoundary(args, prev) {
 
-  if (!args.wordBoundary && !args.spaceBoundary) { return; }
+  if (!args.wordBoundary && !args.spaceBoundary) { return false; }
 
   var last = prev[prev.length - 1];
-  if (typeof last !== "string") { return; }
+  if (typeof last !== "string") { return false; }
 
   if (args.wordBoundary && (last.match(/(\w|\/)$/))) { return true; }
   if (args.spaceBoundary && (!last.match(/\s$/))) { return true; }
@@ -143,15 +143,15 @@ Discourse.Dialect = {
 
     @method cook
     @param {String} text the raw text to cook
+    @param {Object} opts hash of options
     @returns {String} the cooked text
   **/
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
     dialect.options = opts;
-    var tree = parser.toHTMLTree(text, 'Discourse'),
-        html = parser.renderJsonML(parseTree(tree));
+    var tree = parser.toHTMLTree(text, 'Discourse');
 
-    return html;
+    return parser.renderJsonML(parseTree(tree));
   },
 
   /**
@@ -288,9 +288,8 @@ Discourse.Dialect = {
     the other helpers such as `replaceBlock` so consider using them first!
 
     @method registerBlock
-    @param {String} the name of the block handler
-    @param {Function} the handler
-
+    @param {String} name the name of the block handler
+    @param {Function} handler the handler
   **/
   registerBlock: function(name, handler) {
     dialect.block[name] = handler;

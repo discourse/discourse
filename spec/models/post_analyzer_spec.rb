@@ -17,8 +17,8 @@ describe PostAnalyzer do
 
     before { Oneboxer.stubs(:onebox) }
 
-    it 'fetches the onebox for any urls in the post' do
-      Oneboxer.expects(:onebox).with url
+    it 'fetches the cached onebox for any urls in the post' do
+      Oneboxer.expects(:cached_onebox).with url
       post_analyzer.cook(*args)
     end
 

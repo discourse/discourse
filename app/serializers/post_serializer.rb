@@ -45,7 +45,8 @@ class PostSerializer < BasicPostSerializer
              :deleted_at,
              :deleted_by,
              :user_deleted,
-             :edit_reason
+             :edit_reason,
+             :can_view_edit_history
 
 
   def moderator?
@@ -198,6 +199,10 @@ class PostSerializer < BasicPostSerializer
 
   def include_display_username?
     SiteSetting.enable_names?
+  end
+
+  def can_view_edit_history
+    scope.can_view_post_revisions?(object)
   end
 
   private

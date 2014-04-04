@@ -14,7 +14,7 @@ var Poll = Discourse.Model.extend({
       options.push(Ember.Object.create({
         option: option,
         votes: json["options"][option],
-        checked: (option == selectedOption)
+        checked: (option === selectedOption)
       }));
     });
     this.set('options', options);
@@ -22,7 +22,7 @@ var Poll = Discourse.Model.extend({
 
   saveVote: function(option) {
     this.get('options').forEach(function(opt) {
-      opt.set('checked', opt.get('option') == option);
+      opt.set('checked', opt.get('option') === option);
     });
 
     return Discourse.ajax("/poll", {
@@ -38,8 +38,14 @@ var PollController = Discourse.Controller.extend({
   poll: null,
   showResults: false,
 
+  disableRadio: Em.computed.any('poll.post.topic.closed', 'loading'),
+
   actions: {
     selectOption: function(option) {
+      if (this.get('disableRadio')) {
+        return;
+      }
+
       if (!this.get('currentUser.id')) {
         this.get('postController').send('showLogin');
         return;
@@ -99,7 +105,7 @@ Discourse.PostView.reopen({
     var view = initializePollView(this);
 
     var pollContainer = $post.find(".poll-ui:first");
-    if (pollContainer.length == 0) {
+    if (pollContainer.length === 0) {
       pollContainer = $post.find("ul:first");
     }
 

@@ -1,8 +1,5 @@
 // styles that apply to the reply pane that slides up to compose replies
 
-@import "../common/foundation/variables";
-@import "../common/foundation/mixins";
-
 // hack, this needs to be done cleaner
 .private-message input.span8 {
   width: 47%;
@@ -15,9 +12,6 @@ display: none;
 .composer-popup {
 display: none;
 }
-
-
-
 
 .autocomplete {
   z-index: 999999;
@@ -53,12 +47,12 @@ display: none;
 }
 
 #reply-control {
-  .toggle-preview, #draft-status, #file-uploading {
+  .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
     position: absolute;
-    bottom: -31px;
+    bottom: -37px;
     margin-top: 0;
   }
-  .toggle-preview {
+  .toggle-preview, .mobile-file-upload {
     right: 5px;
     text-decoration: underline;
   }
@@ -68,7 +62,7 @@ display: none;
     color: darken($tertiary_text_color, 40%);
   }
   #draft-status {
-    right: 0;
+    right: 70px;
     color: lighten($primary_text_color, 60%);
     &.flash {
       color: $warning_text_color;
@@ -78,7 +72,7 @@ display: none;
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: rgba($composer_background, 0.96);
+  background-color: $composer_background_color;
   bottom: 0;
   font-size: 14px;
   position: fixed;
@@ -117,9 +111,6 @@ display: none;
   // The various states
   &.open {
     height: 300px;
-    .grippie {
-      display: block;
-    }
   }
   &.closed {
     height: 0 !important;
@@ -184,24 +175,25 @@ display: none;
     float: none;
   }
 
-  // When the post is new (new topic) the sizings are different
+  // if this is a new topic, make room for the category field in the editor on
+  // a small screen mobile device
   &.edit-title {
     &.open {
-      height: 400px;
+      height: 280px;
     }
     .contents {
       input#reply-title {
         padding: 7px 10px;
-        margin: 6px 10px 3px 0;
+        margin: 6px 10px 0 0;
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
-        top: 135px;
+        top: 120px;
       }
     }
   }
   .contents {
-    padding: 10px;
+    padding: 10px 10px 0 10px;
     min-width: 1280px;
     .form-element {
       .chzn-container {
@@ -272,7 +264,7 @@ display: none;
     .submit-panel {
       position: absolute;
       display: block;
-      bottom: 8px;
+      bottom: 2px;
     }
   }
   .category-input {
@@ -349,13 +341,16 @@ div.ac-wrap {
     font-size: 16px;
   }
 }
-#reply-control .wmd-controls #wmd-input {font-size: 16px;}
 
 #reply-control.edit-title.private-message {
   .wmd-controls {
     @include transition(top 0.3s ease);
-    top: 140px;
+    top: 120px;
   }
+}
+
+#reply-control.topic #wmd-quote-post {
+  display: none;
 }
 
 #reply-control {
@@ -378,7 +373,7 @@ div.ac-wrap {
     left: 10px;
     right: 10px;
     position: absolute;
-    top: 60px;
+    top: 40px;
     bottom: 54px;
     display: block;
 
@@ -388,7 +383,7 @@ div.ac-wrap {
       margin-top: 0 !important;
     }
 
-    #wmd-input, #wmd-preview {
+    #wmd-input, #wmd-preview-scroller, #wmd-preview {
       @include box-sizing(border-box);
       width: 100%;
       height: 100%;
@@ -402,8 +397,11 @@ div.ac-wrap {
       h1, h2, h3, h4, h5, h6 {
         margin: 30px 0 10px;
       }
+      p {
+        margin-top: 19px;
+      }
     }
-    #wmd-input {
+    #wmd-input, #wmd-preview-scroller {
       position: absolute;
       left: 0;
       top: 0;
@@ -414,6 +412,17 @@ div.ac-wrap {
       border-top: 36px solid transparent;
       @include border-radius-all(0);
       transition: none;
+      font-size: 16px;
+    }
+    #wmd-preview-scroller {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: normal;
+      overflow: scroll;
+      visibility: hidden;
+      .marker, .caret {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
     .textarea-wrapper, .preview-wrapper {
       position: relative;
@@ -454,11 +463,6 @@ div.ac-wrap {
       right: auto;
     }
   }
-}
-
-.admin-options-form {
-  margin-top: 8px;
-  display: none;
 }
 
 .auto-close-fields {

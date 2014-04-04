@@ -68,15 +68,15 @@ class UsersController < ApplicationController
   def invited
     inviter = fetch_user_from_params
 
-    invites = if guardian.can_see_pending_invites_from?(inviter)
+    invites = if guardian.can_see_invite_details?(inviter)
       Invite.find_all_invites_from(inviter)
     else
       Invite.find_redeemed_invites_from(inviter)
     end
 
     invites = invites.filter_by(params[:filter])
-
-    render_serialized(invites.to_a, InviteSerializer)
+    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer),
+                     can_see_invite_details: guardian.can_see_invite_details?(inviter)
   end
 
   def is_local_username
@@ -123,10 +123,20 @@ class UsersController < ApplicationController
     user = User.new(user_params)
 
     authentication = UserAuthenticator.new(user, session)
+
+    if !authentication.has_authenticator? && !SiteSetting.enable_local_logins
+      render nothing: true, status: 500
+      return
+    end
+
     authentication.start
 
     activation = UserActivator.new(user, request, session, cookies)
     activation.start
+
+    # just assign a password if we have an authenticator and no password
+    # this is the case for Twitter
+    user.password = SecureRandom.hex if user.password.blank? && authentication.has_authenticator?
 
     if user.save
       authentication.finish
@@ -153,7 +163,7 @@ class UsersController < ApplicationController
       success: false,
       message: I18n.t("login.something_already_taken")
     }
-  rescue DiscourseHub::NicknameUnavailable => e
+  rescue DiscourseHub::UsernameUnavailable => e
     render json: e.response_message
   rescue RestClient::Forbidden
     render json: { errors: [I18n.t("discourse_hub.access_token_problem")] }

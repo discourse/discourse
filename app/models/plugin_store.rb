@@ -31,14 +31,24 @@ class PluginStore
 
 
   def self.determine_type(value)
-    value.is_a?(Hash) ? "JSON" : value.class.to_s
+    value.is_a?(Hash) || value.is_a?(Array) ? "JSON" : value.class.to_s
+  end
+
+  def self.map_json(item)
+    if item.is_a? Hash
+      ActiveSupport::HashWithIndifferentAccess.new item
+    elsif item.is_a? Array
+      item.map { |subitem| map_json subitem}
+    else
+      item
+    end
   end
 
   def self.cast_value(type, value)
     case type
     when "Fixnum" then value.to_i
     when "TrueClass", "FalseClass" then value == "true"
-    when "JSON" then ActiveSupport::HashWithIndifferentAccess.new(::JSON.parse(value))
+    when "JSON" then map_json(::JSON.parse(value))
     else value
     end
   end

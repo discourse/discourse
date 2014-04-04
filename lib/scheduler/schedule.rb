@@ -1,4 +1,12 @@
 module Scheduler::Schedule
+
+  def daily(options=nil)
+    if options
+      @daily = options
+    end
+    @daily
+  end
+
   def every(duration=nil)
     if duration
       @every = duration
@@ -15,6 +23,6 @@ module Scheduler::Schedule
   end
 
   def scheduled?
-    !!@every
+    !!@every || !!@daily
   end
 end

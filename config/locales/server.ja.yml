@@ -597,7 +597,6 @@ ja:
     login_required: "ポストを読むのにログインを必須にする"
 
     enable_local_logins: "従来型のローカルユーザ名とパスワードによる認証を有効にする"
-    enable_local_account_create: "新規ローカルアカウントの作成を有効にする"
     enable_google_logins: "Google 認証を有効にする"
     enable_yahoo_logins: "Yahoo 認証を有効にする"
 

@@ -22,7 +22,8 @@ Discourse.PageTracker = Ember.Object.extend(Ember.Evented, {
         self = this;
 
     router.on('didTransition', function() {
-      self.trigger('change', this.get('url'));
+      var router = this;
+      self.trigger('change', router.get('url'));
     });
     this.set('started', true);
   }

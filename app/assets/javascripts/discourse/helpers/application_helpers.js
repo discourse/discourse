@@ -16,6 +16,33 @@ Handlebars.registerHelper('breakUp', function(property, hint, options) {
   return new Handlebars.SafeString(Discourse.Formatter.breakUp(prop, hint));
 });
 
+// helper function for dates
+function daysSinceEpoch(dt) {
+  // 1000 * 60 * 60 * 24 = days since epoch
+  return dt.getTime() / 86400000;
+}
+
+/**
+  Converts a date to a coldmap class
+
+  @method coldDate
+**/
+Handlebars.registerHelper('coldAgeClass', function(property, options) {
+  var dt = Em.Handlebars.get(this, property, options);
+
+  if (!dt) { return 'age'; }
+
+  // Show heat on age
+  var nowDays = daysSinceEpoch(new Date()),
+      epochDays = daysSinceEpoch(new Date(dt));
+  if (nowDays - epochDays > 60) return 'age coldmap-high';
+  if (nowDays - epochDays > 30) return 'age coldmap-med';
+  if (nowDays - epochDays > 14) return 'age coldmap-low';
+
+  return 'age';
+});
+
+
 /**
   Truncates long strings
 
@@ -49,14 +76,15 @@ Handlebars.registerHelper('topicLink', function(property, options) {
 function categoryLinkHTML(category, options) {
   var categoryOptions = {};
   if (options.hash) {
-    if (options.hash.allowUncategorized) {
-      categoryOptions.allowUncategorized = true;
-    }
+    if (options.hash.allowUncategorized) { categoryOptions.allowUncategorized = true; }
+    if (options.hash.showParent) { categoryOptions.showParent = true; }
+    if (options.hash.link !== undefined) { categoryOptions.link = options.hash.link; }
+    if (options.hash.extraClasses) { categoryOptions.extraClasses = options.hash.extraClasses; }
     if (options.hash.categories) {
       categoryOptions.categories = Em.Handlebars.get(this, options.hash.categories, options);
     }
   }
-  return new Handlebars.SafeString(Discourse.HTML.categoryLink(category, categoryOptions));
+  return new Handlebars.SafeString(Discourse.HTML.categoryBadge(category, categoryOptions));
 }
 
 /**
@@ -74,10 +102,10 @@ Handlebars.registerHelper('categoryLinkRaw', function(property, options) {
 });
 
 Handlebars.registerHelper('categoryBadge', function(property, options) {
-  var category = Em.Handlebars.get(this, property, options),
-      style = Discourse.HTML.categoryStyle(category);
-  return new Handlebars.SafeString("<span class='badge-category' style='" + style + "'>" + category.get('name') + "</span>");
+  options.hash.link = false;
+  return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
 });
+
 
 /**
   Produces a bound link to a category

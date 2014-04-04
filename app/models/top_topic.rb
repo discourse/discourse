@@ -102,7 +102,14 @@ class TopTopic < ActiveRecord::Base
               SET #{period}_score = CASE
                                       WHEN #{period}_views_count = 0 THEN 0
                                       ELSE log(#{period}_views_count) + (#{period}_posts_count * #{period}_likes_count)
-                                    END")
+                                    END
+             WHERE
+                  #{period}_score <> CASE
+                                      WHEN #{period}_views_count = 0 THEN 0
+                                      ELSE log(#{period}_views_count) + (#{period}_posts_count * #{period}_likes_count)
+                                    END
+
+               ")
   end
 
   def self.start_of(period)
@@ -119,7 +126,8 @@ class TopTopic < ActiveRecord::Base
               SET #{period}_#{sort}_count = c.count
               FROM top_topics tt
               INNER JOIN (#{inner_join}) c ON tt.topic_id = c.topic_id
-              WHERE tt.topic_id = top_topics.topic_id",
+              WHERE tt.topic_id = top_topics.topic_id
+                AND tt.#{period}_#{sort}_count <> c.count",
               from: start_of(period))
   end
 

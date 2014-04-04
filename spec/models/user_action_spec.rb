@@ -149,8 +149,13 @@ describe UserAction do
   end
 
   describe 'when a user posts a new topic' do
+    def process_alerts(post)
+      PostAlerter.post_created(post)
+    end
+
     before do
       @post = Fabricate(:old_post)
+      process_alerts(@post)
     end
 
     describe 'topic action' do
@@ -173,6 +178,8 @@ describe UserAction do
         @other_user = Fabricate(:coding_horror)
         @mentioned = Fabricate(:admin)
         @response = Fabricate(:post, reply_to_post_number: 1, topic: @post.topic, user: @other_user, raw: "perhaps @#{@mentioned.username} knows how this works?")
+
+        process_alerts(@response)
       end
 
       it 'should log user actions correctly' do

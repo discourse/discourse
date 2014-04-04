@@ -2,6 +2,9 @@ language: ruby
 rvm:
   - 2.0.0
   - 2.1.1
+before_install:
+  - npm i -g jshint
+  - jshint .
 before_script:
   - psql -c 'create database discourse_test;' -U postgres
   - export DISCOURSE_HOSTNAME=www.example.com

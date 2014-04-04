@@ -1,8 +1,6 @@
 <div class='container'>
   {{customHTML "top"}}
-  {{#if Discourse.isReadOnly}}
-    <div class="alert alert-info">{{i18n "read_only_mode.enabled"}}</div>
-  {{/if}}
+  {{Discourse.globalNotice}}
 </div>
 
 {{#if postStream.loaded}}
@@ -24,8 +22,8 @@
             {{/if}}
             {{textField id='edit-title' value=newTitle}}
 
-            <button class='btn btn-primary btn-small' {{action finishedEditingTopic}}><i class='fa fa-check'></i></button>
-            <button class='btn btn-small' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
+            <button class='btn btn-primary btn-small no-text' {{action finishedEditingTopic}}><i class='fa fa-check'></i></button>
+            <button class='btn btn-small no-text' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
           {{else}}
             <h1>
               <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
@@ -84,6 +82,7 @@
                                  slackRatio=slackRatio
                                  loadingHTML=controller.loadingHTML
                                  preservesContext="true"
+                                 uncloakDefault="true"
                                  offsetFixed="header"}}
           {{/unless}}
 
@@ -150,7 +149,7 @@
   {{render quoteButton}}
 {{/if}}
 
-{{#if currentUser.staff}}
+{{#if currentUser.canManageTopic}}
   {{render topicAdminMenu content}}
 {{/if}}
 

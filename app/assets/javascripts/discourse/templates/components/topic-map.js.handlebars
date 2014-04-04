@@ -7,7 +7,7 @@
 <section {{bind-attr class=":map mapCollapsed"}}>
   <ul class="clearfix">
     <li>
-      <a href='{{unbound topic.url}}' {{bind-attr class=topic.ageCold}}>
+      <a href='{{unbound topic.url}}' class='{{coldAgeClass topic.created_at}}'>
       <h4>{{i18n created}}</h4>
       {{avatar details.created_by imageSize="tiny"}}
       {{unboundDate topic.created_at}}

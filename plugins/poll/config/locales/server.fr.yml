@@ -1,0 +1,22 @@
+# encoding: utf-8
+#
+# French translation - Traduction française
+#
+# This file contains content for the server portion of Discourse used by Ruby
+#
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+fr:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Les options du sondage"
+  poll:
+    must_contain_poll_options: "doit contenir une liste d'options pour le sondage"
+    cannot_have_modified_options: "ne peuvent pas être modifiés après 5 minutes. Merci de contacter un moderateur, si vous souhaitez les modifier"
+    cannot_add_or_remove_options: "peuvent seulement être modifiés. Si vous souhaitez en supprimer ou en ajouter, veuillez créer un nouveau sujet."
+    prefix: "Sondage\\s?:"

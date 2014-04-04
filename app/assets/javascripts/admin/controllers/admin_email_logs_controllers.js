@@ -13,8 +13,7 @@ Discourse.AdminEmailSentController = Discourse.Controller.extend({
     Discourse.EmailLog.findAll(this.get("filter")).then(function(logs) {
       self.set("model", logs);
     });
-  }, 250).observes("filter.user", "filter.address", "filter.type", "filter.reply_key"),
-
+  }, 250).observes("filter.user", "filter.address", "filter.type", "filter.reply_key")
 });
 
   /**
@@ -32,8 +31,7 @@ Discourse.AdminEmailSkippedController = Discourse.Controller.extend({
     Discourse.EmailLog.findAll(this.get("filter")).then(function(logs) {
       self.set("model", logs);
     });
-  }, 250).observes("filter.user", "filter.address", "filter.type", "filter.skipped_reason"),
-
+  }, 250).observes("filter.user", "filter.address", "filter.type", "filter.skipped_reason")
 });
 
 

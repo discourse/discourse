@@ -31,14 +31,21 @@ Discourse.AdminEmailIndexController = Discourse.Controller.extend({
       @method sendTestEmail
     **/
     sendTestEmail: function() {
-      this.set('sentTestEmail', false);
+      this.setProperties({
+        sendingEmail: true,
+        sentTestEmail: false
+      });
 
-      var adminEmailLogsController = this;
+      var self = this;
       Discourse.ajax("/admin/email/test", {
         type: 'POST',
         data: { email_address: this.get('testEmailAddress') }
       }).then(function () {
-        adminEmailLogsController.set('sentTestEmail', true);
+        self.set('sentTestEmail', true);
+      }).catch(function () {
+        bootbox.alert(I18n.t('admin.email.test_error'));
+      }).finally(function() {
+        self.set('sendingEmail', false);
       });
 
     }

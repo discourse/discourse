@@ -1,11 +1,7 @@
-<li>
-  {{category-drop category=firstCategory categories=parentCategories}}
-</li>
+{{category-drop category=firstCategory categories=parentCategories}}
 
 {{#if childCategories}}
-  <li>
-    {{category-drop category=secondCategory parentCategory=firstCategory categories=childCategories subCategory="true" noSubcategories=noSubcategories}}
-  </li>
+  {{category-drop category=secondCategory parentCategory=firstCategory categories=childCategories subCategory="true" noSubcategories=noSubcategories}}
 {{/if}}
 
 <div class='clear'></div>

@@ -1,6 +1,3 @@
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
@@ -11,7 +8,7 @@
 .list-controls {
   .nav {
     float: left;
-    margin-bottom: 15px;
+    margin-bottom: 18px;
   }
 
   .btn {
@@ -58,15 +55,16 @@
 // --------------------------------------------------
 
 #topic-list {
-  border: 1px solid $primary_border_color;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 0 10px;
+  border-top: 1px solid $primary-border-color;
+  a.title {color: $primary_text_color;}
   a.title:visited:not(.badge-notification) {color: lighten($primary_text_color, 35%);}
 
   > tbody > tr {
-    &:nth-child(even) {
+    &:nth-child(odd) {
       background-color: lighten($secondary_background_color, 77%);
     }
     &.archived a {
@@ -82,12 +80,12 @@
       }
     }
     &.highlighted {
-      background-color: $highlight_background_color;
+      background-color: $emphasis_background_color;
     }
   }
   th,
   td {
-    padding: 9px 5px;
+    padding: 12px 5px;
     line-height: 1.25;
     text-align: left;
     vertical-align: middle;
@@ -100,10 +98,9 @@
   }
   th {
     color: $topic-list-th-color;
-    font-weight: bold;
-    font-size: 13px;
-    background: lighten($secondary_background_color, 70%);
-
+    font-weight: normal;
+    font-size: 14px;
+    button i.fa {color: $topic-list-th-color;}
 
   }
   td {
@@ -141,11 +138,12 @@
   }
 
   .topic-excerpt {
-    font-size: 14px;
+    font-size: 13px;
     margin-top: 8px;
     color: lighten($primary_text_color, 35%);
     word-break: break-word;
-    padding-right: 20px;
+    padding-right: 50px;
+    line-height: 1.4;
   }
 
   @include medium-width {
@@ -174,10 +172,11 @@
   }
   .badge-notification {
     position: relative;
-    top: -1px;
+    top: -2px;
   }
   .category {
-    width: 140px;
+    padding: 0 20px 0 20px;
+    min-width: 80px;
   }
   .posters {
     min-width: 150px;
@@ -199,11 +198,14 @@
     a:not(.badge-posts) {
       color: inherit;
     }
+    a.badge-posts {
+      font-weight: bold;
+    }
   }
   .sortable {
     cursor: pointer;
     &:hover {
-      background-color: lighten($secondary_background_color, 60%);
+      background-color: lighten($secondary_background_color, 76%);
     }
     @include unselectable;
   }
@@ -293,10 +295,6 @@
 
     .subcategories {
       margin-top: 10px;
-      .badge-category {
-        font-size: 12px;
-        padding: 4px;
-      }
     }
     .featured-users {
       float: right;
@@ -305,7 +303,7 @@
     .category-description {
       margin-top: 10px;
     }
-    .badge-category {
+    .badge-category.bigger {
       padding: 6px 10px;
       font-size: 14px;
     }
@@ -430,6 +428,7 @@
 // --------------------------------------------------
 
 .list-controls {
+
   .home {
     background-color: lighten($secondary_background_color, 76%);
     color: $primary_text_color;
@@ -528,15 +527,11 @@ ol.category-breadcrumb {
     text-transform: none;
     width: 100%;
     min-width: 102px;
-
     text-align: center;
     margin-right: 20px;
+    margin-bottom: 7px;
   }
 
-
-  div {
-    margin-bottom: 10px;
-  }
 }
 
 #bulk-select {
@@ -544,9 +539,6 @@ ol.category-breadcrumb {
   right: 20px;
   padding: 5px;
   background-color: $primary_background_color;
-  button {
-    padding: 3px 0 3px 6px;
-  }
 }
 
 button.dismiss-read {

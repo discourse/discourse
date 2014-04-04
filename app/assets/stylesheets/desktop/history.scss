@@ -1,8 +1,5 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 .modal.history-modal {
   .modal-inner-container {
     min-width: 960px;
@@ -14,8 +11,20 @@
       color: lighten($primary_text_color, 35%);
     }
   }
+  #revision-numbers {
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+  }
   #display-modes {
     text-align: right;
+  }
+  #revision-loading {
+    float: left;
+    margin: 5px 0 0 10px;
+    .fa {
+      margin-right: 7px;
+    }
   }
   #revision-details {
     background-color: lighten($secondary_background_color, 76%);
@@ -24,6 +33,9 @@
   }
   #revisions {
     word-wrap: break-word;
+    .row, table {
+      margin-top: 10px;
+    }
   }
   img {
     max-width: 670px;

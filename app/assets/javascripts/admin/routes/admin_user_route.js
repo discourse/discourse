@@ -8,8 +8,8 @@
 **/
 Discourse.AdminUserRoute = Discourse.Route.extend({
 
-  serialize: function(params) {
-    return { username: Em.get(params, 'username').toLowerCase() };
+  serialize: function(model) {
+    return { username: model.get('username').toLowerCase() };
   },
 
   model: function(params) {

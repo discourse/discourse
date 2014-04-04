@@ -150,6 +150,7 @@ describe Category do
 
     it "creates a blank slug, this is OK." do
       category.slug.should be_blank
+      category.slug_for_url.should == "#{category.id}-category"
     end
   end
 
@@ -158,6 +159,7 @@ describe Category do
 
     it 'creates a blank slug' do
       category.slug.should be_blank
+      category.slug_for_url.should == "#{category.id}-category"
     end
   end
 
@@ -169,6 +171,7 @@ describe Category do
 
     it 'is created correctly' do
       @category.slug.should == 'amazing-category'
+      @category.slug_for_url.should == @category.slug
 
       @category.description.should be_blank
 
@@ -204,7 +207,9 @@ describe Category do
 
     describe "creating a new category with the same slug" do
       it "should have a blank slug" do
-        Fabricate(:category, name: "Amazing Categóry").slug.should be_blank
+        category = Fabricate(:category, name: "Amazing Categóry")
+        category.slug.should be_blank
+        category.slug_for_url.should == "#{category.id}-category"
       end
     end
 

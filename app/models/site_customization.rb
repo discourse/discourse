@@ -1,3 +1,5 @@
+require_dependency 'discourse_sass_importer'
+
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
   # placing this in uploads to ease deployment rules
@@ -11,11 +13,21 @@ class SiteCustomization < ActiveRecord::Base
     true
   end
 
+  def compile_stylesheet(scss)
+    ::Sass::Engine.new(scss, {
+      syntax: :scss,
+      cache: false,
+      read_cache: false,
+      style: :compressed,
+      filesystem_importer: DiscourseSassImporter
+    }).render
+  end
+
   before_save do
     ['stylesheet', 'mobile_stylesheet'].each do |stylesheet_attr|
       if self.send("#{stylesheet_attr}_changed?")
         begin
-          self.send("#{stylesheet_attr}_baked=", Sass.compile(self.send(stylesheet_attr)))
+          self.send("#{stylesheet_attr}_baked=", compile_stylesheet(self.send(stylesheet_attr)))
         rescue Sass::SyntaxError => e
           error = e.sass_backtrace_str("custom stylesheet")
           error.gsub!("\n", '\A ')

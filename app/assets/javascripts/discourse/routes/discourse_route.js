@@ -46,7 +46,7 @@ Discourse.Route.reopenClass({
     if ($.magnificPopup && $.magnificPopup.instance) { $.magnificPopup.instance.close(); }
 
     // Remove any link focus
-    $('a').blur();
+    $(document.activeElement).blur();
 
     Discourse.set('notifyCount',0);
 

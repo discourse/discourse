@@ -81,8 +81,11 @@ If you haven't already, download Discourse and create a new branch for your Hero
         ```
 
         Also, you'll need to add a commit to get the precompiled assets onto Heroku.
-            git add public/assets
-            git push heroku heroku:master
+        
+        ```bash
+        git add public/assets
+        git push heroku heroku:master
+        ```
 
 8. Push your heroku branch to Heroku.
 

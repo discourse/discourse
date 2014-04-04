@@ -8,6 +8,7 @@
 #
 require_dependency 'email/renderer'
 require 'uri'
+require 'net/smtp'
 
 SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
 
@@ -81,7 +82,7 @@ module Email
 
       begin
         @message.deliver
-      rescue SMTP_CLIENT_ERRORS => e
+      rescue *SMTP_CLIENT_ERRORS => e
         return skip(e.message)
       end
 

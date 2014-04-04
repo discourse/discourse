@@ -1,6 +1,5 @@
 module Jobs
 
-  # Asynchronously send an email to a user
   class ViewTracker < Jobs::Base
     def execute(args)
       topic_id = args[:topic_id]
@@ -14,4 +13,5 @@ module Jobs
       end
     end
   end
+  
 end

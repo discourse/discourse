@@ -4,7 +4,14 @@
   @method replaceBBCode
   @param {tag} tag the tag we want to match
   @param {function} emitter the function that creates JsonML for the tag
-  @param {Object} hash of options to pass to `inlineBetween`
+  @param {Object} opts options to pass to Discourse.Dialect.inlineBetween
+    @param {Function} [opts.emitter] The function that will be called with the contents and returns JsonML.
+    @param {String} [opts.start] The starting token we want to find
+    @param {String} [opts.stop] The ending token we want to find
+    @param {String} [opts.between] A shortcut for when the `start` and `stop` are the same.
+    @param {Boolean} [opts.rawContents] If true, the contents between the tokens will not be parsed.
+    @param {Boolean} [opts.wordBoundary] If true, the match must be on a word boundary
+    @param {Boolean} [opts.spaceBoundary] If true, the match must be on a sppace boundary
 **/
 function replaceBBCode(tag, emitter, opts) {
   opts = opts || {};

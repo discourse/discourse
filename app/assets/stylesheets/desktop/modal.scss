@@ -1,8 +1,5 @@
 // base styles for every modal popup used in Discourse
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 .modal-open {
   .dropdown-menu {
      z-index: 2050;
@@ -31,8 +28,20 @@
 
 .modal-backdrop,
 .modal-backdrop.fade.in {
+  -webkit-animation: fade .25s;
+  animation: fade .25s;
   opacity: 0.8;
   filter: alpha(opacity=80);
+}
+
+//fade in
+
+@-webkit-keyframes fade {
+    from {opacity: 0}
+    to {opacity: .8}
+}@keyframes fade {
+    from {opacity: 0}
+    to {opacity: .8}
 }
 
 .modal-outer-container {
@@ -79,16 +88,24 @@
 
   box-shadow: 0 3px 7px rgba($primary_shadow_color, .8);
   background-clip: padding-box;
+
 }
 
-.modal.fade {
-  -webkit-transition: opacity .3s linear, top .3s ease-out;
-  transition: opacity .3s linear, top .3s ease-out;
-  top: -25%;
+.modal.in {
+-webkit-animation: modal .25s;
+animation: modal .25s;
 }
-.modal.fade.in {
-  top: 50%;
+
+//fade in and animate up
+
+@-webkit-keyframes modal {
+    from {opacity: 0}
+    to {opacity: 1}
+}@keyframes fade {
+    from {opacity: 0}
+    to {opacity: 1}
 }
+
 .modal-body {
   overflow-y: auto;
   max-height: 400px;

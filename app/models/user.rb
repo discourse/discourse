@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   has_many :user_open_ids, dependent: :destroy
   has_many :user_actions, dependent: :destroy
   has_many :post_actions, dependent: :destroy
+  has_many :user_badges, dependent: :destroy
   has_many :email_logs, dependent: :destroy
   has_many :post_timings
   has_many :topic_allowed_users, dependent: :destroy
@@ -66,6 +67,7 @@ class User < ActiveRecord::Base
   after_initialize :set_default_external_links_in_new_tab
 
   after_save :update_tracked_topics
+  after_save :clear_global_notice_if_needed
 
   after_create :create_email_token
   after_create :create_user_stat
@@ -166,7 +168,7 @@ class User < ActiveRecord::Base
     self.username = new_username
 
     if current_username.downcase != new_username.downcase && valid?
-      DiscourseHub.nickname_operation { DiscourseHub.change_nickname(current_username, new_username) }
+      DiscourseHub.username_operation { DiscourseHub.change_username(current_username, new_username) }
     end
 
     save
@@ -558,6 +560,8 @@ class User < ActiveRecord::Base
   end
 
   def redirected_to_top_reason
+    # redirect is enabled
+    return unless SiteSetting.redirect_users_to_top_page
     # top must be in the top_menu
     return unless SiteSetting.top_menu =~ /top/i
     # there should be enough topics
@@ -566,7 +570,7 @@ class User < ActiveRecord::Base
     return I18n.t('redirected_to_top_reasons.new_user') if trust_level == 0 &&
       created_at > SiteSetting.redirect_new_users_to_top_page_duration.days.ago
     # long-time-no-see user
-    return I18n.t('redirected_to_top_reasons.not_seen_in_a_month') if last_seen_at < 1.month.ago
+    return I18n.t('redirected_to_top_reasons.not_seen_in_a_month') if last_seen_at && last_seen_at < 1.month.ago
     nil
   end
 
@@ -583,6 +587,13 @@ class User < ActiveRecord::Base
   def update_tracked_topics
     return unless auto_track_topics_after_msecs_changed?
     TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
+  end
+
+  def clear_global_notice_if_needed
+    if admin && SiteSetting.has_login_hint
+      SiteSetting.has_login_hint = false
+      SiteSetting.global_notice = ""
+    end
   end
 
   def create_user_stat
@@ -722,6 +733,9 @@ end
 #  uploaded_avatar_id            :integer
 #  email_always                  :boolean          default(FALSE), not null
 #  mailing_list_mode             :boolean          default(FALSE), not null
+#  primary_group_id              :integer
+#  locale                        :string(10)
+#  profile_background            :string(255)
 #
 # Indexes
 #

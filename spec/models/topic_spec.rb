@@ -529,20 +529,24 @@ describe Topic do
 
       context 'topic was set to close when it was created' do
         it 'puts the autoclose duration in the moderator post' do
-          @topic.created_at = 3.days.ago
-          @topic.update_status(status, true, @user)
-          expect(@topic.posts.last.raw).to include "closed after 3 days"
+          freeze_time(Time.new(2000,1,1)) do
+            @topic.created_at = 3.days.ago
+            @topic.update_status(status, true, @user)
+            expect(@topic.posts.last.raw).to include "closed after 3 days"
+          end
         end
       end
 
       context 'topic was set to close after it was created' do
         it 'puts the autoclose duration in the moderator post' do
-          @topic.created_at = 7.days.ago
-          Timecop.freeze(2.days.ago) do
-            @topic.set_auto_close(48)
+          freeze_time(Time.new(2000,1,1)) do
+            @topic.created_at = 7.days.ago
+            freeze_time(2.days.ago) do
+              @topic.set_auto_close(48)
+            end
+            @topic.update_status(status, true, @user)
+            expect(@topic.posts.last.raw).to include "closed after 2 days"
           end
-          @topic.update_status(status, true, @user)
-          expect(@topic.posts.last.raw).to include "closed after 2 days"
         end
       end
     end
@@ -1315,5 +1319,36 @@ describe Topic do
       Topic.calculate_avg_time
       Topic.calculate_avg_time(1.day.ago)
     end
+  end
+
+  describe "expandable_first_post?" do
+    let(:topic) { Fabricate.build(:topic) } 
+
+    before do
+      SiteSetting.stubs(:embeddable_host).returns("http://eviltrout.com")
+      SiteSetting.stubs(:embed_truncate?).returns(true)
+      topic.stubs(:has_topic_embed?).returns(true)
+    end
+
+    it "is true with the correct settings and topic_embed" do
+      topic.expandable_first_post?.should be_true
+    end
+
+    it "is false if embeddable_host is blank" do
+      SiteSetting.stubs(:embeddable_host).returns(nil)
+      topic.expandable_first_post?.should be_false
+    end
+
+    it "is false if embed_truncate? is false" do
+      SiteSetting.stubs(:embed_truncate?).returns(false)
+      topic.expandable_first_post?.should be_false
+    end
+
+    it "is false if has_topic_embed? is false" do
+      topic.stubs(:has_topic_embed?).returns(false)
+      topic.expandable_first_post?.should be_false
+    end
+
+
   end
 end

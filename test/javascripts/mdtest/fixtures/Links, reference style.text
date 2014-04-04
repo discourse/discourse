@@ -56,7 +56,7 @@ In this case, [this](/somethingelse/) points to something else.
 
 Backslashing should suppress \[this] and [this\].
 
-[this]: foo
+[this]: #foo
 
 
 * * *

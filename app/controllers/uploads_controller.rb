@@ -30,17 +30,21 @@ class UploadsController < ApplicationController
   end
 
   def show
-    return render nothing: true, status: 404 unless Discourse.store.internal?
+    RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
 
-    id = params[:id].to_i
-    url = request.fullpath
+      return render nothing: true, status: 404 unless Discourse.store.internal?
 
-    # the "url" parameter is here to prevent people from scanning the uploads using the id
-    upload = Upload.where(id: id, url: url).first
+      id = params[:id].to_i
+      url = request.fullpath
 
-    return render nothing: true, status: 404 unless upload
+      # the "url" parameter is here to prevent people from scanning the uploads using the id
+      upload = Upload.where(id: id, url: url).first
 
-    send_file(Discourse.store.path_for(upload), filename: upload.original_filename)
+      return render nothing: true, status: 404 unless upload
+
+      send_file(Discourse.store.path_for(upload), filename: upload.original_filename)
+
+    end
   end
 
 end
