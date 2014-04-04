@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'dotenv-rails', :groups => [:development, :test]
+
 module ::Kernel
   def rails_master?
     ENV["RAILS_MASTER"]
