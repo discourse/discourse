@@ -60,6 +60,7 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   @include small-width {
   left: 103px;
   }
+  a {color: $secondary_text_color;}
 }
 
 .avoid-tab {
@@ -507,11 +508,11 @@ iframe {
     text-align: center;
 
     a {
-      display: block;
       margin: 0 auto;
       width: 45px;
-      display: inline;
       word-wrap: break-word;
+      color: $primary_text_color;
+      line-height: 1.3;
     }
 
     a.user-group {
@@ -520,7 +521,6 @@ iframe {
     }
 
     h3 a {
-      display: inline;
       width: auto;
 
     }
