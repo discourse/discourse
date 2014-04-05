@@ -184,7 +184,7 @@ Discourse.Post = Discourse.Model.extend({
   expand: function() {
     var self = this;
     return Discourse.ajax("/posts/" + this.get('id') + "/expand-embed").then(function(post) {
-      self.set('cooked', post.cooked);
+      self.set('cooked', "<section class='expanded-embed'>" + post.cooked + "</section>" );
     });
   },
 
