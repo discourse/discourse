@@ -18,6 +18,8 @@ class TopicLink < ActiveRecord::Base
 
   validate :link_to_self
 
+  after_commit :crawl_link_title
+
   # Make sure a topic can't link to itself
   def link_to_self
     errors.add(:base, "can't link to the same topic") if (topic_id == link_topic_id)
@@ -27,17 +29,18 @@ class TopicLink < ActiveRecord::Base
 
     # Sam: complicated reports are really hard in AR
     builder = SqlBuilder.new("SELECT ftl.url,
-                     ft.title,
+                     COALESCE(ft.title, ftl.title) AS title,
                      ftl.link_topic_id,
                      ftl.reflection,
                      ftl.internal,
+                     ftl.domain,
                      MIN(ftl.user_id) AS user_id,
                      SUM(clicks) AS clicks
               FROM topic_links AS ftl
               LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
               LEFT JOIN categories AS c ON c.id = ft.category_id
               /*where*/
-              GROUP BY ftl.url, ft.title, ftl.link_topic_id, ftl.reflection, ftl.internal
+              GROUP BY ftl.url, ft.title, ftl.title, ftl.link_topic_id, ftl.reflection, ftl.internal, ftl.domain
               ORDER BY clicks DESC")
 
     builder.where('ftl.topic_id = :topic_id', topic_id: topic_id)
@@ -58,9 +61,10 @@ class TopicLink < ActiveRecord::Base
                       l.post_id,
                       l.url,
                       l.clicks,
-                      t.title,
+                      COALESCE(t.title, l.title) AS title,
                       l.internal,
-                      l.reflection
+                      l.reflection,
+                      l.domain
               FROM topic_links l
               LEFT JOIN topics t ON t.id = l.link_topic_id
               LEFT JOIN categories AS c ON c.id = t.category_id
@@ -87,6 +91,7 @@ class TopicLink < ActiveRecord::Base
   def self.extract_from(post)
     return unless post.present?
 
+    added_urls = []
     TopicLink.transaction do
 
       added_urls = []
@@ -183,6 +188,11 @@ class TopicLink < ActiveRecord::Base
         TopicLink.delete_all ["post_id = :post_id OR link_post_id = :post_id", post_id: post.id]
       end
     end
+  end
+
+  # Crawl a link's title after it's saved
+  def crawl_link_title
+    Jobs.enqueue(:crawl_topic_link, topic_link_id: id)
   end
 end
 

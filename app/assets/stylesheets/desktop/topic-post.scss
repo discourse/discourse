@@ -286,6 +286,11 @@ a.star {
     list-style: none;
   }
 
+  span.domain {
+    font-size: 10px;
+    color: $secondary_text_color;
+  }
+
   .avatars {
     > div {
       float: left;
