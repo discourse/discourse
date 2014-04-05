@@ -95,7 +95,7 @@ If you set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want 
 
 # Mail Setup
 
-**Email is critical to Discourse. We strongly recommend configuring mail settings before bootstrapping.**
+**Email is critical to notifications in Discourse. If you do not configure email before bootstrapping you will have a broken site.**
 
 - If you already have a mail server, put your existing mail server credentials in the `app.yml` file.
 
@@ -115,7 +115,7 @@ Be sure to save the `app.yml` file, and begin bootstrapping Discourse:
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3007/c0596ad3d330ae71.png" width="567" height="138"> 
 
-This command may take 10+ minutes, so be prepared to wait. It is automagically configuring your Discourse environment.
+This command can take up to 8 minutes. It is automagically configuring your Discourse environment.
 
 After that completes, start Discourse:
 
