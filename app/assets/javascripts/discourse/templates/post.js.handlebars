@@ -22,19 +22,21 @@
       {{#unless userDeleted}}
         <div {{bind-attr class=":contents byTopicCreator:topic-creator :trigger-expansion"}}>
           <a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{avatar this imageSize="large"}}</a>
-          <h3 {{bind-attr class="staff new_user"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{{breakUp username name}}}</a></h3>
+          <div class="names">
+            <h3 {{bind-attr class="staff new_user :username"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{{breakUp username name}}}</a></h3>
 
-          {{#if showName}}
-          <h3 class="full-name"><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
-          {{/if}}
-
-          {{#if user_title}}
-            {{#if primary_group_name}}
-              <div class="user-title"><a href='/groups/{{unbound primary_group_name}}' class='user-group'>{{unbound user_title}}</a></div>
-            {{else}}
-              <div class="user-title" {{action showPosterExpansion this}}>{{unbound user_title}}</div>
+            {{#if showName}}
+            <h3 class="full-name"><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
             {{/if}}
-          {{/if}}
+
+            {{#if user_title}}
+              {{#if primary_group_name}}
+                <div class="user-title"><a href='/groups/{{unbound primary_group_name}}' class='user-group'>{{unbound user_title}}</a></div>
+              {{else}}
+                <div class="user-title" {{action showPosterExpansion this}}>{{unbound user_title}}</div>
+              {{/if}}
+            {{/if}}
+          </div>
         </div>
       {{else}}
         <div class="contents">
