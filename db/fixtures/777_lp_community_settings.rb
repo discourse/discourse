@@ -72,7 +72,7 @@ categories = {
     programs: { name: 'Programs', color: 'ED207B', id: 111 },
     science: { name: 'Science', color: '25AAE1', id: 112 },
     social_studies: { name: 'Social Studies', color: 'AB9364', id: 113 },
-    technology: { name: 'Technology', color: 'D2691E', id: 114 },
+    technology: { name: 'Technology & Engineering', color: 'D2691E', id: 114 },
     visual_performing_arts: { name: 'Visual & Performing Arts', color: '800080', id: 115 }
 }
 categories.values.each do |category|
