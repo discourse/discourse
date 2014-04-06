@@ -54,13 +54,13 @@ h1 .topic-statuses .topic-status i {margin-right: 5px;}
   font-size: 12px;
   margin-left: -8px;
   background: $primary_background_color;
+  color: $secondary_text_color;
   @include medium-width {
   left: 107px;
   }
   @include small-width {
   left: 103px;
   }
-  a {color: $secondary_text_color;}
 }
 
 .avoid-tab {
@@ -512,6 +512,7 @@ iframe {
       width: 45px;
       word-wrap: break-word;
       color: $primary_text_color;
+      font-weight: 500;
       line-height: 1.3;
     }
 
