@@ -511,8 +511,8 @@ iframe {
       margin: 0 auto;
       width: 45px;
       word-wrap: break-word;
-      color: $primary_text_color;
-      font-weight: 500;
+      color: lighten($primary_text_color, 10%);
+      font-weight: bold;
       line-height: 1.3;
     }
 
