@@ -28,6 +28,7 @@ SiteSetting.company_short_name                = 'Lesson Planet'
 SiteSetting.logo_url                          = '/images/lp-logo.png'
 SiteSetting.logo_small_url                    = '/images/lp-logo-small.png'
 SiteSetting.favicon_url                       = '/images/lp-favicon.ico'
+SiteSetting.site_description                  = 'THIS IS WHERE THE SITE DESCRIPTION APPEARS'
 
 #
 # LessonPlanet API
