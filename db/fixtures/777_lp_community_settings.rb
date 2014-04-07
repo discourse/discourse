@@ -30,7 +30,11 @@ SiteSetting.logo_url                          = '/images/lp-logo.png'
 SiteSetting.logo_small_url                    = '/images/lp-logo-small.png'
 SiteSetting.favicon_url                       = '/images/lp-favicon.ico'
 SiteSetting.site_description                  = 'Lesson Planet\'s Community is a forum where teachers can have discussions about teaching & what it means to be a teacher.'
-
+SiteSetting.enable_facebook_logins            = false
+SiteSetting.enable_twitter_logins             = false
+SiteSetting.enable_yahoo_logins               = false
+SiteSetting.enable_google_logins              = false
+SiteSetting.site_contact_username             = ENV['API_USERNAME']
 #
 # LessonPlanet API
 #
