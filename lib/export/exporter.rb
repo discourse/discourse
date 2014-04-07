@@ -144,6 +144,7 @@ module Export
       pg_dump_running = true
 
       Thread.new do
+        RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
         while pg_dump_running
           message = logs.pop.strip
           log(message) unless message.blank?
