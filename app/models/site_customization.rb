@@ -21,6 +21,11 @@ class SiteCustomization < ActiveRecord::Base
       style: :compressed,
       filesystem_importer: DiscourseSassImporter
     }).render
+
+  rescue => e
+    puts e.backtrace.join("\n") unless Sass::SyntaxError === e
+
+    raise e
   end
 
   before_save do
