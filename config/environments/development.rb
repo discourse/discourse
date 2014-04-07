@@ -49,5 +49,9 @@ Discourse::Application.configure do
   if emails = GlobalSetting.developer_emails
     config.developer_emails = emails.split(",")
   end
+
+  # disk IO is slow in a vm, use Redis instead
+  require 'sass/plugin'
+  Sass::Plugin.options[:cache_store] = ActiveSupport::Cache::RedisStore.new
 end
 
