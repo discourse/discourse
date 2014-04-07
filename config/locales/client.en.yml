@@ -140,6 +140,10 @@ en:
       not_bookmarked: "You've read this post; click to bookmark it."
       last_read: "This is the last post you've read; click to bookmark it."
 
+    error:
+      autocatch: "An error has occured. The server said:"
+      autocatch_nomessage: "Sorry, an error has occured."
+
     new_topics_inserted: "{{count}} new topics."
     show_new_topics: "Click to show."
     preview: "preview"

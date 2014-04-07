@@ -10,6 +10,57 @@
 Discourse.Ajax = Em.Mixin.create({
 
   /**
+   A generic error handler for .ajax() calls that chains promise failures, for
+   use when no better context-sensitive error handler is available (e.g.
+   flash() in a modal) and the promise is returned to another function.
+
+   To use, provide Discourse.genericErrorRethrow as the second arg of the then()
+   call. Example:
+
+   <code>
+   return Discourse.ajax('/path', { options }).then(function(result) {
+      // transform result
+    }, Discourse.genericErrorRethrow);
+   </code>
+
+   Example 2:
+
+   <code>
+   return Discourse.ajax('/path', { options }).catch(Discourse.genericErrorRethrow);
+   </code>
+  **/
+  genericErrorRethrow: function(error) {
+    Discourse.genericErrorCaught(error);
+    throw error;
+  },
+
+  /**
+    A generic error handler for .ajax() calls, for use when no better context-
+    sensitive error handler is available (e.g. flash() in a modal).
+
+    To use, provide Discourse.genericErrorCaught as the second arg of the
+    then() call. Example:
+
+    <code>
+    Discourse.ajax('/path', { options }).then(function(result) {
+      // ...
+    }, Discourse.genericErrorCaught);
+    </code>
+  **/
+  genericErrorCaught: function(error) {
+    if (error.responseJSON) {
+      var $message = $("<p>" + I18n.t('error.autocatch') + "</p>"),
+          $list = $("<ul></ul>");
+      error.responseJSON.errors.forEach(function(msg) {
+        $list.append("<li>" + msg + "</li>");
+      });
+      bootbox.alert($message.append($list));
+    } else {
+      bootbox.alert(I18n.t('error.autocatch_nomessage'));
+    }
+  },
+
+  /**
     Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
     for performance reasons. Also automatically adjusts the URL to support installs
     in subfolders.
@@ -69,23 +120,22 @@ Discourse.Ajax = Em.Mixin.create({
         if (oldError) oldError(xhr);
       };
 
-      // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
-      // it will not be parsed as an object.
+      // We default to JSON for local requests.
       if (!args.type) args.type = 'GET';
-      if (!args.dataType && args.type.toUpperCase() === 'GET') args.dataType = 'json';
+      if (!args.dataType && url.indexOf('http') !== 0) args.dataType = 'json';
 
       $.ajax(Discourse.getURL(url), args);
     };
 
     // For cached pages we strip out CSRF tokens, need to round trip to server prior to sending the
     //  request (bypass for GET, not needed)
-    if(args.type && args.type.toUpperCase() !== 'GET' && !Discourse.Session.currentProp('csrfToken')){
-      return Ember.Deferred.promise(function(promise){
+    if (args.type && args.type.toUpperCase() !== 'GET' && !Discourse.Session.currentProp('csrfToken')) {
+      return Ember.Deferred.promise(function(promise) {
         $.ajax(Discourse.getURL('/session/csrf'))
-           .success(function(result){
+            .success(function(result) {
               Discourse.Session.currentProp('csrfToken', result.csrf);
               performAjax(promise);
-           });
+            });
       });
     } else {
       return Ember.Deferred.promise(performAjax);
