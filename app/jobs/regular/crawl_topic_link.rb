@@ -58,7 +58,7 @@ module Jobs
         # Using exceptions for flow control is really bad, but there really seems to
         # be no sane way to get a stream to stop reading in Excon (or Net::HTTP for
         # that matter!)
-        raise ReadEnough.new if result.size > 1024
+        raise ReadEnough.new if result.size > 1024 * 10
       end
       Excon.get(uri.to_s, response_block: streamer, read_timeout: 20, headers: CrawlTopicLink.request_headers(uri))
       result
@@ -71,24 +71,24 @@ module Jobs
       raise Discourse::InvalidParameters.new(:topic_link_id) unless args[:topic_link_id].present?
 
       begin
-      topic_link = TopicLink.where(id: args[:topic_link_id], internal: false, crawled_at: nil).first
-      return if topic_link.blank?
+        topic_link = TopicLink.where(id: args[:topic_link_id], internal: false, crawled_at: nil).first
+        return if topic_link.blank?
 
-      crawled = false
+        crawled = false
 
-      result = CrawlTopicLink.fetch_beginning(topic_link.url)
-      doc = Nokogiri::HTML(result)
-      if doc
-        title = doc.at('title').try(:inner_text)
-        if title.present?
-          title.gsub!(/\n/, ' ')
-          title.gsub!(/ +/, ' ')
-          title.strip!
+        result = CrawlTopicLink.fetch_beginning(topic_link.url)
+        doc = Nokogiri::HTML(result)
+        if doc
+          title = doc.at('title').try(:inner_text)
           if title.present?
-            crawled = topic_link.update_attributes(title: title[0..255], crawled_at: Time.now)
+            title.gsub!(/\n/, ' ')
+            title.gsub!(/ +/, ' ')
+            title.strip!
+            if title.present?
+              crawled = topic_link.update_attributes(title: title[0..255], crawled_at: Time.now)
+            end
           end
         end
-      end
       rescue Exception
         # If there was a connection error, do nothing
       ensure
