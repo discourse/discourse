@@ -11,7 +11,11 @@
   }
 
   @include medium-width {
-    width: 800px;
+    width: 795px;
+  }
+
+  @include small-width {
+    width: 815px;
   }
 }
 
