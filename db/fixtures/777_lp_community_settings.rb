@@ -29,12 +29,13 @@ SiteSetting.contact_email                     = 'MemberServices@lessonplanet.com
 SiteSetting.logo_url                          = '/images/lp-logo.png'
 SiteSetting.logo_small_url                    = '/images/lp-logo-small.png'
 SiteSetting.favicon_url                       = '/images/lp-favicon.ico'
+SiteSetting.site_description                  = 'Lesson Planet\'s teacher forum'
 
 #
 # LessonPlanet API
 #
 
-User.seed(:email, :username_lower) do |u|
+User.seed(:username_lower) do |u|
   u.name                   = 'Lesson Planet'
   u.username               = ENV['API_USERNAME']
   u.username_lower         = ENV['API_USERNAME'].downcase
