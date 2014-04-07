@@ -5,7 +5,8 @@ require_dependency 'plugin/auth_provider'
 
 class Plugin::Instance
 
-  attr_reader :auth_providers, :assets
+  attr_reader :auth_providers, :assets, :admin_javascripts,
+              :server_side_javascripts, :styles, :mobile_styles
   attr_accessor :path, :metadata
 
   def self.find_all(parent_path)
@@ -93,11 +94,14 @@ class Plugin::Instance
     @javascripts << js
   end
 
-  def register_asset(file,opts=nil)
+  def register_asset(file, opts=nil)
     full_path = File.dirname(path) << "/assets/" << file
     if opts == :admin
       @admin_javascripts ||= []
       @admin_javascripts << full_path
+    elsif opts == :mobile
+      @mobile_styles ||= []
+      @mobile_styles << full_path
     else
       assets << full_path
     end
@@ -175,6 +179,12 @@ class Plugin::Instance
     if @admin_javascripts
       @admin_javascripts.each do |js|
         DiscoursePluginRegistry.admin_javascripts << js
+      end
+    end
+
+    if @mobile_styles
+      @mobile_styles.each do |style|
+        DiscoursePluginRegistry.mobile_stylesheets << style
       end
     end
 

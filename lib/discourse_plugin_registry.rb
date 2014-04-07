@@ -8,6 +8,7 @@ class DiscoursePluginRegistry
     attr_accessor :server_side_javascripts
     attr_accessor :admin_javascripts
     attr_accessor :stylesheets
+    attr_accessor :mobile_stylesheets
     attr_accessor :handlebars
 
     # Default accessor values
@@ -27,6 +28,9 @@ class DiscoursePluginRegistry
       @stylesheets ||= Set.new
     end
 
+    def mobile_stylesheets
+      @mobile_stylesheets ||= Set.new
+    end
     def handlebars
       @handlebars ||= Set.new
     end
@@ -58,6 +62,10 @@ class DiscoursePluginRegistry
     self.class.stylesheets
   end
 
+  def mobile_stylesheets
+    self.class.mobile_stylesheets
+  end
+
   def handlebars
     self.class.handlebars
   end
@@ -66,6 +74,7 @@ class DiscoursePluginRegistry
     self.javascripts = nil
     self.server_side_javascripts = nil
     self.stylesheets = nil
+    self.mobile_stylesheets = nil
     self.handlebars = nil
   end
 

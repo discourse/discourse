@@ -15,6 +15,13 @@ describe DiscoursePluginRegistry do
     end
   end
 
+  context '#mobile_stylesheets' do
+    it 'defaults to an empty Set' do
+      registry.mobile_stylesheets = nil
+      registry.mobile_stylesheets.should == Set.new
+    end
+  end
+
   context '#javascripts' do
     it 'defaults to an empty Set' do
       registry.javascripts = nil
