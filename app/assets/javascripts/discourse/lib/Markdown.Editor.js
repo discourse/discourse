@@ -920,8 +920,8 @@
           return {
             scrollerStart: markerPositions.scroller[startMarkerIndex],
             scrollerEnd: markerPositions.scroller[endMarkerIndex],
-            previewStart: markerPositions.preview[startMarkerIndex],
-            previewEnd: markerPositions.preview[endMarkerIndex]
+            previewStart: markerPositions.preview[startMarkerIndex] || markerPositions.preview[markerPositions.preview.length-1],
+            previewEnd: markerPositions.preview[endMarkerIndex] || markerPositions.preview[markerPositions.preview.length-1]
           };
         };
 
@@ -974,7 +974,6 @@
 
         // Adds event listeners to elements
         var setupEvents = function (inputElem, listener) {
-          
             util.addEvent(inputElem, "input", listener);
             inputElem.onpaste = listener;
             inputElem.ondrop = listener;
@@ -1025,20 +1024,32 @@
 
             if (scrollSyncOn) {
               var caretPosition = getCaretPosition();
-              text = text.slice(0, caretPosition) + '~~caret~~' + text.slice(caretPosition);
-              text = text.replace(/(\n|\r|\r\n)(\n|\r|\r\n)+/g, "$&~~marker~~$1$1");
 
-              previewText = converter.makeHtml(text.replace('~~caret~~', ''))
-                .replace(/<p>~~marker~~<\/p>/g, '<span class="marker"></span>')
-                .replace(/~~marker~~/g, '<span class="marker"></span>');
+              var caret = "465c94fb53b6304c4f57";
+              var marker = "468c94fb53b6304c4f58";
 
-              previewScrollerText = text
+              // add last marker
+              text = text + marker;
+
+              var addMarkers = function(text) {
+                return text.replace(/(\s*)(\n|\n|\r|\r\n)/g, function(m, spaces, newline) {
+                  return marker + spaces + "\n";
+                });
+              }
+
+              previewText = converter.makeHtml(addMarkers(text))
+                .replace(new RegExp(marker, 'g'), '<span class="marker"></span>');
+
+              var withCaret = text.slice(0, caretPosition) + caret + text.slice(caretPosition);
+
+              previewScrollerText = addMarkers(withCaret)
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
-                .replace(/(\n|\r|\r\n)/g, '<br>')
-                .replace('~~caret~~', '<span class="caret"></span>')
-                .replace(/~~marker~~<br><br>/g, '<span class="marker"></span>');
+                .replace(/(\n|\n\r|\r\n)/g, '<br>')
+                .replace(caret, '<span class="caret"></span>')
+                .replace(new RegExp(marker, 'g'), '<span class="marker"></span>');
+
             } else {
               previewText = converter.makeHtml(text);
             }
