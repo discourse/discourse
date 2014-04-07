@@ -45,6 +45,9 @@ module Jobs
 
     # Fetch the beginning of a HTML document at a url
     def self.fetch_beginning(url)
+      # Never crawl in test mode
+      return if Rails.env.test?
+
       uri = final_uri(url)
       return "" unless uri
 
@@ -66,6 +69,8 @@ module Jobs
 
     def execute(args)
       raise Discourse::InvalidParameters.new(:topic_link_id) unless args[:topic_link_id].present?
+
+      begin
       topic_link = TopicLink.where(id: args[:topic_link_id], internal: false, crawled_at: nil).first
       return if topic_link.blank?
 
@@ -84,10 +89,11 @@ module Jobs
           end
         end
       end
-    rescue Exception
-      # If there was a connection error, do nothing
-    ensure
-      topic_link.update_column(:crawled_at, Time.now) if !crawled && topic_link.present?
+      rescue Exception
+        # If there was a connection error, do nothing
+      ensure
+        topic_link.update_column(:crawled_at, Time.now) if !crawled && topic_link.present?
+      end
     end
 
   end
