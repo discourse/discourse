@@ -25,34 +25,33 @@ SiteSetting.default_external_links_in_new_tab = true
 SiteSetting.title                             = 'Lesson Planet Community Forums'
 SiteSetting.company_full_name                 = 'Education Planet, Inc., d/b/a Lesson Planet'
 SiteSetting.company_short_name                = 'Lesson Planet'
+SiteSetting.contact_email                     = 'MemberServices@lessonplanet.com'
 SiteSetting.logo_url                          = '/images/lp-logo.png'
 SiteSetting.logo_small_url                    = '/images/lp-logo-small.png'
 SiteSetting.favicon_url                       = '/images/lp-favicon.ico'
-SiteSetting.site_description                  = 'THIS IS WHERE THE SITE DESCRIPTION APPEARS'
+SiteSetting.site_description                  = 'Lesson Planet\'s teacher forum'
 
 #
 # LessonPlanet API
 #
-user = User.where(username_lower: ENV['API_USERNAME'].downcase).first
-if user.blank?
-  user = User.seed do |u|
-    u.name = 'Lesson Planet'
-    u.username = ENV['API_USERNAME']
-    u.username_lower = ENV['API_USERNAME'].downcase
-    u.email = 'memberservices@lessonplanet.com'
-    u.password = SecureRandom.hex
-    # TODO localize this, its going to require a series of hacks
-    u.bio_raw = 'Not a real person. A global user for system notifications and other system tasks.'
-    u.active = true
-    u.admin = true
-    u.moderator = true
-    u.email_direct = false
-    u.approved = true
-    u.email_private_messages = false
-    u.trust_level = TrustLevel.levels[:elder]
-  end.first
+
+User.seed(:username_lower) do |u|
+  u.name                   = 'Lesson Planet'
+  u.username               = ENV['API_USERNAME']
+  u.username_lower         = ENV['API_USERNAME'].downcase
+  u.email                  = 'MemberServices@lessonplanet.com'
+  u.password               = SecureRandom.hex
+  u.bio_raw                = 'Not a real person. A global user for system notifications and other system tasks.'
+  u.active                 = true
+  u.admin                  = true
+  u.moderator              = true
+  u.email_direct           = false
+  u.approved               = true
+  u.email_private_messages = false
+  u.trust_level            = TrustLevel.levels[:elder]
 end
 
+user = User.find_by_username(ENV['API_USERNAME'])
 if user
   api_key = ApiKey.where(user_id: user.id).first_or_initialize
   api_key.update(key: ENV['API_KEY'], created_by: user)
