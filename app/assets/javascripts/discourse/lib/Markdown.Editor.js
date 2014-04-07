@@ -861,7 +861,7 @@
         var oldInputText;
         var maxDelay = 3000;
         var startType = "delayed"; // The other legal value is "manual"
-        var scrollSyncOn = !!panels.previewScroller;
+        var scrollSyncOn = false && !!panels.previewScroller;
 
         var paneContentHeight = function(pane) {
           var $pane = $(pane);
