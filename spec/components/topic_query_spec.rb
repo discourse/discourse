@@ -101,6 +101,7 @@ describe TopicQuery do
                         posts_count: 5,
                         participant_count: 12,
                         pinned_at: 10.minutes.ago,
+                        pinned_globally: true,
                         bumped_at: 10.minutes.ago)
     end
     let!(:archived_topic) do

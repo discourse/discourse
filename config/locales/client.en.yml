@@ -796,6 +796,7 @@ en:
         auto_close: "Auto Close"
         unpin: "Un-Pin Topic"
         pin: "Pin Topic"
+        pin_globally: "Pin Topic Globally"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
         invisible: "Make Invisible"

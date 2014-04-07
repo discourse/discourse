@@ -618,8 +618,9 @@ class Topic < ActiveRecord::Base
     TopicUser.change(user.id, id, cleared_pinned_at: Time.now)
   end
 
-  def update_pinned(status)
+  def update_pinned(status, global=false)
     update_column(:pinned_at, status ? Time.now : nil)
+    update_column(:pinned_globally, global)
   end
 
   def draft_key

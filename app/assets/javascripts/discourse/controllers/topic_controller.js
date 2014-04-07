@@ -167,6 +167,11 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       this.get('content').setStatus('pinned', this.get('pinned_at') ? false : true);
     },
 
+    togglePinnedGlobally: function() {
+      // Note that this is different than clearPin
+      this.get('content').setStatus('pinned_globally', this.get('pinned_at') ? false : true);
+    },
+
     toggleArchived: function() {
       this.get('content').toggleStatus('archived');
     },

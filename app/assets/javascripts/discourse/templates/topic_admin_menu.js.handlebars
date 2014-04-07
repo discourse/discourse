@@ -33,6 +33,7 @@
           <button {{action togglePinned}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.unpin}}</button>
         {{else}}
           <button {{action togglePinned}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.pin}}</button>
+          <button {{action togglePinnedGlobally}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.pin_globally}}</button>
         {{/if}}
       </li>
 
