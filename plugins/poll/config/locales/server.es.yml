@@ -14,3 +14,4 @@ es:
     cannot_have_modified_options: "no se pueden modificar las respuestas de la encuesta pasados 5 minutos"
     cannot_add_or_remove_options: "solo se puede modificar, no se pueden añadir o quitar. Si necesitas añadir o quitar respuestas debes bloquear este tema y crear una encuesta nueva."
     prefix: "Encuesta:"
+    closed_prefix: "Encuesta Cerrada:"
