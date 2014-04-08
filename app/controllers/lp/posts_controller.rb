@@ -17,8 +17,8 @@ class Lp::PostsController < PostsController
         unless topic_post.present?
           topic_user = params[:topic_email].present? ? User.find_by_email(params[:topic_email]) : current_user
           topic_post_creator = PostCreator.new(topic_user, topic_post_params)
-          topic_post_creator.created_at = params[:created_at] if params[:created_at].present?
           topic_post = topic_post_creator.create
+          topic_post.update_column :created_at, params[:created_at] if topic_post.persisted? && params[:created_at].present?
           resp[:errors] << topic_post_creator.errors.full_messages if topic_post_creator.errors.present?
         end
 
