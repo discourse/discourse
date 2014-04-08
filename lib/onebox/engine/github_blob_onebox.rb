@@ -43,7 +43,10 @@ module Onebox
       end
 
       def data
-        @data ||= {title: link, link: link, content: raw, truncated: @truncated}
+        @data ||= {title: link.sub(/^https?\:\/\//, ''),
+                   link: link,
+                   content: raw,
+                   truncated: @truncated}
       end
     end
   end
