@@ -75,4 +75,35 @@ class DiscoursePluginRegistry
     plugin.setup
   end
 
+  def self.last_changed_marker(format)
+    "#{Rails.root}/plugins/.plugindata/assets/last_changed.#{format}"
+  end
+
+  def self.touch_js_marker
+    path = last_changed_marker(:js)
+    touch(path, Time.now)
+  end
+
+  def self.touch_css_marker
+    path = last_changed_marker(:css)
+    touch(path, Time.now)
+  end
+
+  private
+
+  # from FileUtils gem
+  # http://apidock.com/ruby/FileUtils/touch/class#source
+  def self.touch(path, time)
+    created = false
+    begin
+      File.utime(time, time, path)
+    rescue Errno::ENOENT
+      raise if created
+      File.open(path, 'a') {
+        ;
+      }
+      created = true
+      retry
+    end
+  end
 end

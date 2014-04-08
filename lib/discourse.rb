@@ -71,6 +71,11 @@ module Discourse
   def self.activate_plugins!
     @plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
     @plugins.each { |plugin| plugin.activate! }
+
+    if Rails.env.development?
+      DiscoursePluginRegistry.touch_css_marker
+      DiscoursePluginRegistry.touch_js_marker
+    end
   end
 
   def self.plugins

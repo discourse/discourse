@@ -15,6 +15,9 @@ task 'plugin:install', :repo do |t, args|
     FileUtils.rm_rf(plugin_path)
     abort('Unable to clone plugin')
   end
+
+  DiscoursePluginRegistry.touch_js_marker
+  DiscoursePluginRegistry.touch_css_marker
 end
 
 desc 'update all plugins'
@@ -41,6 +44,9 @@ task 'plugin:update', :plugin do |t, args|
 
   update_status = system('git --git-dir "' + plugin_path + '/.git" --work-tree "' + plugin_path + '" pull')
   abort('Unable to pull latest version of plugin') unless update_status
+
+  DiscoursePluginRegistry.touch_js_marker
+  DiscoursePluginRegistry.touch_css_marker
 end
 
 desc 'run plugin specs'

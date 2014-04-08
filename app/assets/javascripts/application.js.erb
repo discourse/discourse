@@ -3,7 +3,6 @@
 require_asset ("./main_include.js")
 
 # Include plugin javascripts/handlebars templates
-DiscoursePluginRegistry.javascripts.each { |js| require_asset(js) }
-DiscoursePluginRegistry.handlebars.each { |hb| require_asset(hb) }
+require_asset ("./plugins.js")
 
 %>
