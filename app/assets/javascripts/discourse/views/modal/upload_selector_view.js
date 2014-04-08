@@ -51,7 +51,7 @@ Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
         var imageLink = $('#link-input').val();
         var composerView = this.get('controller.composerView');
         if (this.get("controller.showMore") && imageLink.length > 3) {
-          composerView.addMarkdown("<a href='" + imageLink + "'>\n  <img src='" + imageUrl + "'>\n</a>");
+          composerView.addMarkdown("[![](" + imageUrl +")](" + imageLink + ")");
         } else {
           composerView.addMarkdown(imageUrl);
         }
