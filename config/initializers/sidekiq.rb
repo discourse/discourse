@@ -7,7 +7,7 @@ Sidekiq.configure_client do |config|
 end
 
 Sidekiq.configure_server do |config|
-  config.redis = sidekiq_redis.merge(size: ENV.fetch('SIDEKIQ_WORKERS', 1) + 2)
+  config.redis = sidekiq_redis.merge(size: ENV.fetch('SIDEKIQ_WORKERS', 1).to_i + 2)
   # add our pausable middleware
   config.server_middleware do |chain|
     chain.add Sidekiq::Pausable
