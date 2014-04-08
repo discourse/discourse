@@ -1,12 +1,12 @@
 <%- unless SiteCustomization.override_default_style(session[:preview_style]) %>
   <% if mobile_view? %>
     <%= stylesheet_link_tag "mobile" %>
+    <%= stylesheet_link_tag "plugins_mobile" %>
   <% else %>
     <%= stylesheet_link_tag "desktop" %>
+    <%= stylesheet_link_tag "plugins" %>
   <% end %>
 <%- end %>
-
-<%= stylesheet_link_tag "plugins" %>
 
 <%- if staff? %>
   <%= stylesheet_link_tag "admin"%>
