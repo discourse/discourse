@@ -14,6 +14,7 @@ class CookedPostProcessor
     @previous_cooked = (@post.cooked || "").dup
     @doc = Nokogiri::HTML::fragment(post.cooked)
     @size_cache = {}
+    @elems = [{ tag: 'a', attr: 'href' }, { tag: 'img', attr: 'src' }]
   end
 
   def post_process(bypass_bump = false)
@@ -27,21 +28,17 @@ class CookedPostProcessor
   def keep_reverse_index_up_to_date
     upload_ids = Set.new
 
-    @doc.search("a").each do |a|
-      href = a["href"].to_s
-      if upload = Upload.get_from_url(href)
-        upload_ids << upload.id
+    @elems.each do |elem|
+      @doc.search(elem[:tag]).each do |tag|
+        attr = tag[elem[:attr]].to_s
+        if upload = Upload.get_from_url(attr)
+          upload_ids << upload.id
+        end
       end
     end
-
-    @doc.search("img").each do |img|
-      src = img["src"].to_s
-      if upload = Upload.get_from_url(src)
-        upload_ids << upload.id
-      end
-    end
-
+    
     values = upload_ids.map{ |u| "(#{@post.id},#{u})" }.join(",")
+
     PostUpload.transaction do
       PostUpload.delete_all(post_id: @post.id)
       if upload_ids.length > 0
@@ -207,14 +204,11 @@ class CookedPostProcessor
   end
 
   def optimize_urls
-    @doc.search("a").each do |a|
-      href = a["href"].to_s
-      a["href"] = schemaless absolute(href) if is_local(href)
-    end
-
-    @doc.search("img").each do |img|
-      src = img["src"].to_s
-      img["src"] = schemaless absolute(src) if is_local(src)
+    @elems.each do |elem|
+      @doc.search(elem[:tag]).each do |tag|
+        attr = tag[elem[:attr]].to_s
+        tag[elem[:attr]] = schemaless absolute(attr) if is_local(attr)
+      end
     end
   end
 
