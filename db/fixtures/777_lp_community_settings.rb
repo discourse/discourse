@@ -19,6 +19,7 @@ SiteSetting.enable_names                      = true
 #
 # General
 #
+SiteSetting.force_hostname                    = ENV['APP_HOST']
 SiteSetting.enable_local_account_create       = false
 SiteSetting.enforce_global_nicknames          = false
 SiteSetting.default_external_links_in_new_tab = true
@@ -26,6 +27,7 @@ SiteSetting.title                             = 'Lesson Planet Community Forums'
 SiteSetting.company_full_name                 = 'Education Planet, Inc., d/b/a Lesson Planet'
 SiteSetting.company_short_name                = 'Lesson Planet'
 SiteSetting.contact_email                     = 'MemberServices@lessonplanet.com'
+SiteSetting.notification_email                = 'MemberServices@lessonplanet.com'
 SiteSetting.logo_url                          = '/images/lp-logo.png'
 SiteSetting.logo_small_url                    = '/images/lp-logo-small.png'
 SiteSetting.favicon_url                       = '/images/lp-favicon.ico'
@@ -35,6 +37,8 @@ SiteSetting.enable_twitter_logins             = false
 SiteSetting.enable_yahoo_logins               = false
 SiteSetting.enable_google_logins              = false
 SiteSetting.site_contact_username             = ENV['API_USERNAME']
+SiteSetting.company_domain                    = 'www.lessonplanet.com'
+
 #
 # LessonPlanet API
 #
