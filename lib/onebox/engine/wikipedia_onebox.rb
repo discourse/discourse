@@ -33,8 +33,14 @@ module Onebox
           description: text
         }
         img = raw.css(".image img")
-        if img && img.first
-          result[:image] = img.first["src"]
+        if img && img.size > 0
+          img.each do |i|
+            src = i["src"]
+            if src !~ /Question_book/
+              result[:image] = src
+              break
+            end
+          end
         end
 
         result
