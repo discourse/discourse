@@ -29,6 +29,10 @@ module Jobs
       return if uri.blank? || uri.host.blank?
       headers = CrawlTopicLink.request_headers(uri)
       head = Excon.head(url, read_timeout: 20, headers: headers)
+
+      # If the site does not allow HEAD, just try the url
+      return uri if head.status == 405
+
       if head.status == 200
         uri = nil unless header_for(head, 'content-type') =~ /text\/html/
         return uri
@@ -41,6 +45,15 @@ module Jobs
       end
 
       nil
+    end
+
+    def self.max_chunk_size(uri)
+      # Amazon leaves the title until very late. Normally it's a bad idea to make an exception for
+      # one host but amazon is a big one.
+      return 80 if uri.host =~ /amazon\.(com|ca|co.uk)$/
+
+      # Default is 10k
+      10
     end
 
     # Fetch the beginning of a HTML document at a url
@@ -58,7 +71,7 @@ module Jobs
         # Using exceptions for flow control is really bad, but there really seems to
         # be no sane way to get a stream to stop reading in Excon (or Net::HTTP for
         # that matter!)
-        raise ReadEnough.new if result.size > 1024 * 10
+        raise ReadEnough.new if result.size > (CrawlTopicLink.max_chunk_size(uri) * 1024)
       end
       Excon.get(uri.to_s, response_block: streamer, read_timeout: 20, headers: CrawlTopicLink.request_headers(uri))
       result
