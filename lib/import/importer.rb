@@ -24,11 +24,6 @@ module Import
 
       listen_for_shutdown_signal
 
-      enable_readonly_mode
-
-      pause_sidekiq
-      wait_for_sidekiq
-
       ensure_directory_exists(@tmp_directory)
 
       copy_archive_to_tmp_directory
@@ -40,12 +35,22 @@ module Import
       extract_dump
       restore_dump
 
+      ### READ-ONLY / START ###
+      enable_readonly_mode
+
+      pause_sidekiq
+      wait_for_sidekiq
+
       switch_schema!
 
       # TOFIX: MessageBus is busted...
 
       migrate_database
       reconnect_database
+      reload_site_settings
+
+      disable_readonly_mode
+      ### READ-ONLY / END ###
 
       extract_uploads
     rescue SystemExit
@@ -183,6 +188,7 @@ module Import
       has_error = false
 
       Thread.new do
+        RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
         while psql_running
           message = logs.pop.strip
           has_error ||= (message =~ /ERROR:/)
@@ -246,7 +252,12 @@ module Import
 
     def reconnect_database
       log "Reconnecting to the database..."
-      ActiveRecord::Base.establish_connection
+      RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
+    end
+
+    def reload_site_settings
+      log "Reloading site settings..."
+      SiteSetting.refresh!
     end
 
     def extract_uploads
@@ -286,7 +297,7 @@ module Import
       log "Cleaning stuff up..."
       remove_tmp_directory
       unpause_sidekiq
-      disable_readonly_mode
+      disable_readonly_mode if Discourse.readonly_mode?
       mark_import_as_not_running
       log "Finished!"
     end
