@@ -40,6 +40,15 @@ SiteSetting.site_contact_username             = ENV['API_USERNAME']
 SiteSetting.company_domain                    = 'www.lessonplanet.com'
 
 #
+# Files
+#
+SiteSetting.enable_s3_uploads                 = true
+SiteSetting.s3_access_key_id                  = ENV['S3_ACCESS_KEY_ID']
+SiteSetting.s3_secret_access_key              = ENV['S3_SECRET_ACCESS_KEY']
+SiteSetting.s3_region                         = ENV['S3_REGION']
+SiteSetting.s3_upload_bucket                  = ENV['S3_UPLOAD_BUCKET']
+
+#
 # LessonPlanet API
 #
 
@@ -67,29 +76,29 @@ end
 
 # Categories
 categories = {
-    classroom_support: { name: 'Classroom Support', color: 'BF1E2E', id: 100 },
+    classroom_support:        { name: 'Classroom Support', color: 'BF1E2E', id: 100 },
     college_career_readiness: { name: 'College & Career Readiness', color: 'F1592A', id: 102 },
-    common_core_standards: { name: 'Common Core & Standards', color: 'F7941D', id: 103 },
-    english_language_arts: { name: 'English Language Arts', color: '9EB83B', id: 104 },
-    health: { name: 'Health', color: '3AB54A', id: 105 },
-    homeschool: { name: 'Homeschool', color: '12A89D', id: 106 },
-    languages: { name: 'Languages', color: '25AAE2', id: 107 },
-    lifestyle: { name: 'Lifestyle', color: '0E76BD', id: 108 },
-    math: { name: 'Math', color: '652D90', id: 109 },
-    physical_education: { name: 'Physical Education', color: '92278F', id: 110 },
-    programs: { name: 'Programs', color: 'ED207B', id: 111 },
-    science: { name: 'Science', color: '25AAE1', id: 112 },
-    social_studies: { name: 'Social Studies', color: 'AB9364', id: 113 },
-    technology: { name: 'Technology & Engineering', color: 'D2691E', id: 114 },
-    visual_performing_arts: { name: 'Visual & Performing Arts', color: '800080', id: 115 }
+    common_core_standards:    { name: 'Common Core & Standards', color: 'F7941D', id: 103 },
+    english_language_arts:    { name: 'English Language Arts', color: '9EB83B', id: 104 },
+    health:                   { name: 'Health', color: '3AB54A', id: 105 },
+    homeschool:               { name: 'Homeschool', color: '12A89D', id: 106 },
+    languages:                { name: 'Languages', color: '25AAE2', id: 107 },
+    lifestyle:                { name: 'Lifestyle', color: '0E76BD', id: 108 },
+    math:                     { name: 'Math', color: '652D90', id: 109 },
+    physical_education:       { name: 'Physical Education', color: '92278F', id: 110 },
+    programs:                 { name: 'Programs', color: 'ED207B', id: 111 },
+    science:                  { name: 'Science', color: '25AAE1', id: 112 },
+    social_studies:           { name: 'Social Studies', color: 'AB9364', id: 113 },
+    technology:               { name: 'Technology & Engineering', color: 'D2691E', id: 114 },
+    visual_performing_arts:   { name: 'Visual & Performing Arts', color: '800080', id: 115 }
 }
 categories.values.each do |category|
   Category.seed(:id) do |c|
-    c.id = category[:id]
-    c.name = category[:name]
-    c.slug = Slug.for(category[:name])
-    c.user_id = Discourse.system_user.id
-    c.color = category[:color]
+    c.id         = category[:id]
+    c.name       = category[:name]
+    c.slug       = Slug.for(category[:name])
+    c.user_id    = Discourse.system_user.id
+    c.color      = category[:color]
     c.text_color = 'ffffff'
   end
 end
@@ -98,11 +107,11 @@ Category.exec_sql "SELECT setval('categories_id_seq', (SELECT MAX(id) from categ
 
 uuid = '599ef8a5-9dec-4126-bede-ba48158cb86d'
 SiteCustomization.seed(:key) do |sc|
-  sc.name = 'Lesson Planet'
-  sc.enabled = true
-  sc.key = uuid
-  sc.position = 0
-  sc.user_id = Discourse.system_user.id
+  sc.name       = 'Lesson Planet'
+  sc.enabled    = true
+  sc.key        = uuid
+  sc.position   = 0
+  sc.user_id    = Discourse.system_user.id
   sc.stylesheet = File.read(Rails.root.join('db', 'fixtures', 'lp-style.scss'))
-  sc.header = File.read(Rails.root.join('db', 'fixtures', 'lp-header.html'))
+  sc.header     = File.read(Rails.root.join('db', 'fixtures', 'lp-header.html'))
 end
