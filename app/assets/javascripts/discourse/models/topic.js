@@ -409,6 +409,17 @@ Discourse.Topic.reopenClass({
     return promise;
   },
 
+  changeOwners: function(topicId, opts) {
+    var promise = Discourse.ajax("/t/" + topicId + "/change-owner", {
+      type: 'POST',
+      data: opts
+    }).then(function (result) {
+      if (result.success) return result;
+      promise.reject(new Error("error changing ownership of posts"));
+    });
+    return promise;
+  },
+
   bulkOperation: function(topics, operation) {
     return Discourse.ajax("/topics/bulk", {
       type: 'PUT',

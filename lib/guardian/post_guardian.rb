@@ -125,4 +125,8 @@ module PostGuardain
   def can_vote?(post, opts={})
     post_can_act?(post,:vote, opts)
   end
+
+  def can_change_post_owner?
+    is_admin?
+  end
 end

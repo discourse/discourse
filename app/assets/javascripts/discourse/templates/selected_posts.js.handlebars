@@ -18,5 +18,8 @@
 {{#if canMergeTopic}}
   <button class='btn' {{action mergeTopic}}><i class='fa fa-sign-out'></i> {{i18n topic.merge_topic.action}}</button>
 {{/if}}
+{{#if canChangeOwner}}
+  <button class='btn' {{action changeOwner}}><i class='fa fa-user'></i> {{i18n topic.change_owner.action}}</button>
+{{/if}}
 
 <p class='cancel'><a href='#' {{action toggleMultiSelect}}>{{i18n topic.multi_select.cancel}}</a></p>
