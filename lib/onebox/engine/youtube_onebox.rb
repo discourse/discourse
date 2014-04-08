@@ -9,8 +9,9 @@ module Onebox
       # Try to get the video ID. Works for URLs of the form:
       # * https://www.youtube.com/watch?v=Z0UISCEe52Y
       # * http://youtu.be/afyK1HSFfgw
+      # * https://www.youtube.com/embed/vsF0K3Ou1v0
       def video_id
-        match = @url.match(/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})$/)
+        match = @url.match(/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_\-]{11})$/)
         match && match[3]
       end
 
