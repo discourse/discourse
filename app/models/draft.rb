@@ -29,10 +29,12 @@ class Draft < ActiveRecord::Base
 
   protected
 
-  def self.find_draft(user,key)
-    user_id = user
-    user_id = user.id if User === user
-    Draft.where(user_id: user_id, draft_key: key).first
+  def self.find_draft(user, key)
+    if user.is_a?(User)
+      find_by(user_id: user.id, draft_key: key)
+    else
+      find_by(user_id: user, draft_key: key)
+    end
   end
 end
 

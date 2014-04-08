@@ -199,7 +199,7 @@ module SiteSettingExtension
       val = (val == "t" || val == "true") ? 't' : 'f'
     end
 
-    if type == types[:fixnum] && !(Fixnum === val)
+    if type == types[:fixnum] && !val.is_a?(Fixnum)
       val = val.to_i
     end
 

@@ -96,13 +96,13 @@ module JsLocaleHelper
   end
 
   def self.strip_out_message_formats!(hash, prefix = "", rval = {})
-    if Hash === hash
-      hash.each do |k,v|
-        if Hash === v
-          rval.merge!(strip_out_message_formats!(v, prefix + (prefix.length > 0 ? "." : "") << k, rval))
-        elsif k.to_s().end_with?("_MF")
-          rval[prefix + (prefix.length > 0 ? "." : "") << k] = v
-          hash.delete(k)
+    if hash.is_a?(Hash)
+      hash.each do |key, value|
+        if value.is_a?(Hash)
+          rval.merge!(strip_out_message_formats!(value, prefix + (prefix.length > 0 ? "." : "") << key, rval))
+        elsif key.to_s.end_with?("_MF")
+          rval[prefix + (prefix.length > 0 ? "." : "") << key] = value
+          hash.delete(key)
         end
       end
     end
