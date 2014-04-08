@@ -109,6 +109,23 @@ describe Email::MessageBuilder do
       expect(message_with_header_args.header_args['X-Discourse-Topic-Id']).to eq('1234')
     end
 
+    context "with reply_key" do
+      let(:message_with_header_args_and_reply) { Email::MessageBuilder.new(to_address,
+                                                                           body: 'hello world',
+                                                                           topic_id: 1234,
+                                                                           add_unsubscribe_link: true,
+                                                                           notification_level: 1,
+                                                                           post_id: 4567) }
+
+      it "usually doesn't have a reply key" do
+        expect(message_with_header_args.header_args['X-Discourse-Reply-Key']).to be(nil)
+      end
+
+      it "sets reply key" do
+        expect(message_with_header_args_and_reply.header_args['X-Discourse-Reply-Key']).to be_present
+      end
+    end
+
   end
 
   context "unsubscribe link" do
@@ -136,6 +153,40 @@ describe Email::MessageBuilder do
 
       it "has the user preferences url in the body" do
         expect(message_with_unsubscribe.body).to match(builder.template_args[:user_preferences_url])
+      end
+
+    end
+
+    context "with notification_level" do
+      let(:message_with_regular) { Email::MessageBuilder.new(to_address,
+                                                                body: 'hello world',
+                                                                html_override: "Hello World <br> %{unsubscribe_link}",
+                                                                notification_level: 1,
+                                                                add_unsubscribe_link: true)}
+
+      let(:message_with_watching) { Email::MessageBuilder.new(to_address,
+                                                                body: 'hello world',
+                                                                html_override: "Hello World <br> %{unsubscribe_link}",
+                                                                notification_level: 3,
+                                                                add_unsubscribe_link: true)}
+
+      let(:message_with_tracking) { Email::MessageBuilder.new(to_address,
+                                                                body: 'hello world',
+                                                                html_override: "Hello World <br> %{unsubscribe_link}",
+                                                                notification_level: 2,
+                                                                add_unsubscribe_link: true)}
+
+
+      it "html shows tracking level" do
+         expect(message_with_regular.html_part.body.raw_source).to match("topic from .*Regular.* to ")
+         expect(message_with_tracking.html_part.body.raw_source).to match("topic from .*Tracking.* to ")
+         expect(message_with_watching.html_part.body.raw_source).to match("topic from .*Watching.* to ")
+      end
+
+      it "text shows classic url" do
+        expect(message_with_regular.body).to_not match("topic from .*Regular.* to ")
+        expect(message_with_tracking.body).to_not match("topic from .*Tracking.* to ")
+        expect(message_with_watching.body).to_not match("topic from .*Watching.* to ")
       end
 
     end

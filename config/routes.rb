@@ -221,7 +221,9 @@ Discourse::Application.routes.draw do
 
   get "p/:post_id/:user_id" => "posts#short_link"
 
-  resources :notifications
+  get "/notifications/set/:reply_key/:notification_level" => "notifications#set_from_email"
+
+  resources :notifications, only: [:index]
 
   match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: [:get, :post]
   match "/auth/failure", to: "users/omniauth_callbacks#failure", via: [:get, :post]

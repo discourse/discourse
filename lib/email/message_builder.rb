@@ -50,8 +50,14 @@ module Email
           html_override.gsub!("%{respond_instructions}", respond_instructions)
         end
 
-        unsubscribe_link = PrettyText.cook(I18n.t('unsubscribe_link', template_args)).html_safe
-        html_override.gsub!("%{unsubscribe_link}",unsubscribe_link)
+        if @opts.key? :notification_level
+          notification_level = TopicUser.notification_levels[@opts[:notification_level]].to_s
+          template_args[:action_key] = reply_key
+          unsubscribe = PrettyText.cook(I18n.t('change_notification_level.from_' + notification_level, template_args)).html_safe
+        else
+          unsubscribe = PrettyText.cook(I18n.t('unsubscribe_link', template_args)).html_safe
+        end
+        html_override.gsub!("%{unsubscribe_link}", unsubscribe)
       end
 
       styled = Email::Styles.new(html_override)
@@ -91,6 +97,7 @@ module Email
       result = {}
       if @opts[:add_unsubscribe_link]
         result['List-Unsubscribe'] = "<#{template_args[:user_preferences_url]}>" if @opts[:add_unsubscribe_link]
+        result['X-Discourse-Reply-Key'] = reply_key if @opts.key? :notification_level
       end
 
       result['X-Discourse-Post-Id'] = @opts[:post_id].to_s if @opts[:post_id]

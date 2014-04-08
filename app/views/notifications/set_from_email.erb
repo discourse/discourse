@@ -1,0 +1,10 @@
+<div id='simple-container'>
+  <div class='alert alert-info'>
+    <p>
+      <h2><%= t 'notification.level_changed_successful' %></h2>
+    </p>
+    <p><%= raw t('notification.level_changed', topic_title: @topic.title, notification_level: @notification_level) %>
+    </p>
+    <p><%= link_to(t('notification.continue_to_topic'), @topic.relative_url) %></p>
+  </div>
+</div>
