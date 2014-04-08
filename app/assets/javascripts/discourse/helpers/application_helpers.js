@@ -402,7 +402,7 @@ Handlebars.registerHelper('link-domain', function(property, options) {
       if (!Em.isEmpty(domain)) {
         var s = domain.split('.');
         domain = s[s.length-2] + "." + s[s.length-1];
-        return new Handlebars.SafeString("<span class='domain'>(" + domain + ")</span>");
+        return new Handlebars.SafeString("<span class='domain'>" + domain + "</span>");
       }
     }
   }
