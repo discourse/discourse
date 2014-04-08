@@ -194,6 +194,40 @@
       @include medium-width { width: 314px; }
       @include small-width  { width: 284px; }
     }
+    .input-setting-list {
+      width: 408px;
+      padding: 1px;
+      background-color: white;
+      border: 1px solid #e6e6e6;
+      border-radius: 3px;
+      box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
+      -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+      transition: border linear 0.2s, box-shadow linear 0.2s;
+
+      .list-input-item {
+        width: 90px;
+        margin: 2px 1px;
+        background-color: white;
+        border: 1px solid #e6e6e6;
+        border-radius: 3px;
+        box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
+        -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+        transition: border linear 0.2s, box-shadow linear 0.2s;
+
+        &:focus {
+          border-color: #00aaff;
+          outline: 0;
+          box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3), 0 0 8px #00aaff;
+        }
+      }
+
+      .btn.list-add-value {
+        margin: 0px 3px;
+        padding: 4px 10px;
+        color: $link-color;
+      }
+    }
+
 
     .desc {
       padding-top: 3px;

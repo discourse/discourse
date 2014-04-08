@@ -53,15 +53,19 @@ basic:
   top_menu:
     client: true
     refresh: true
+    list: true
     default: 'latest|new|unread|starred|top|categories'
   post_menu:
     client: true
+    list: true
     default: 'like|edit|flag|delete|share|bookmark|reply'
   share_links:
     client: true
+    list: true
     default: 'twitter|facebook|google+|email'
   category_colors:
     client: true
+    list: true
     default: 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890'
   enable_mobile_theme:
     client: true
@@ -276,6 +280,7 @@ files:
     client: true
     default: '.jpg|.jpeg|.png|.gif'
     refresh: true
+    list: true
   crawl_images:
     default:
       test: false
@@ -340,9 +345,15 @@ security:
 
 spam:
   add_rel_nofollow_to_user_content: true
-  exclude_rel_nofollow_domains: ''
-  email_domains_blacklist: 'mailinator.com'
-  email_domains_whitelist: ''
+  exclude_rel_nofollow_domains:
+    default: ''
+    list: true
+  email_domains_blacklist:
+    default: 'mailinator.com'
+    list: true
+  email_domains_whitelist:
+    default: ''
+    list: true
   flags_required_to_hide_post: 3
   cooldown_minutes_after_hiding_posts: 10
   num_flags_to_block_new_user: 3
@@ -350,7 +361,9 @@ spam:
   notify_mods_when_user_blocked: false
   flag_sockpuppets: true
   newuser_spam_host_threshold: 3
-  white_listed_spam_host_domains: ""
+  white_listed_spam_host_domains:
+    default: ''
+    list: true
 
 rate_limits:
   unique_posts_mins:

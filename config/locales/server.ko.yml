@@ -509,7 +509,7 @@ ko:
     max_image_height: "게시글에서 허용하는 이미지 최대 높이"
     category_featured_topics: "Number of topics displayed per category in the /categories page"
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown"
-    exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
+    exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
 
     post_excerpt_maxlength: "Maximum length in chars of a post's excerpt"
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"

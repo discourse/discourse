@@ -742,7 +742,7 @@ cs:
     tos_url: "Pokud máte dokument 'Podmínky Používání' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
     newuser_spam_host_threshold: "Kolikrát smí uživatel zaslat odkaz na stejný server v rámci příspěvků z nastavení 'newuser_spam_host_posts', než budou příspěvky považovány za spam."
-    white_listed_spam_host_domains: A comma delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain
+    white_listed_spam_host_domains: A pipe-delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain
     staff_like_weight: "Extra hodnota pro 'líbí se' od uživatelů, kteří jsou součástí personálu webu."
     reply_by_email_enabled: Jestli toto fórum umožňuje odpovědi emailem
     reply_by_email_address: 'Šablona emailé adresy pro odpověď emailem, např. %{reply_key}@reply.myforum.com'
