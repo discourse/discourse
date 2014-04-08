@@ -53,11 +53,10 @@ end
 #  id          :integer          not null, primary key
 #  category_id :integer
 #  user_id     :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  created_at  :datetime
+#  updated_at  :datetime
 #
 # Indexes
 #
 #  index_category_featured_users_on_category_id_and_user_id  (category_id,user_id) UNIQUE
 #
-

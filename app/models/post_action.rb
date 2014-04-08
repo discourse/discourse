@@ -335,8 +335,8 @@ end
 #  user_id             :integer          not null
 #  post_action_type_id :integer          not null
 #  deleted_at          :datetime
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
+#  created_at          :datetime
+#  updated_at          :datetime
 #  deleted_by_id       :integer
 #  message             :text
 #  related_post_id     :integer
@@ -350,4 +350,3 @@ end
 #  idx_unique_actions             (user_id,post_action_type_id,post_id,deleted_at) UNIQUE
 #  index_post_actions_on_post_id  (post_id)
 #
-

@@ -13,11 +13,10 @@ end
 #  provider   :string(255)      not null
 #  email      :string(255)
 #  name       :string(255)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  created_at :datetime
+#  updated_at :datetime
 #
 # Indexes
 #
 #  index_oauth2_user_infos_on_uid_and_provider  (uid,provider) UNIQUE
 #
-

@@ -52,8 +52,8 @@ end
 #
 #  category_id :integer          not null
 #  topic_id    :integer          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  created_at  :datetime
+#  updated_at  :datetime
 #  rank        :integer          default(0), not null
 #  id          :integer          not null, primary key
 #
@@ -62,4 +62,3 @@ end
 #  cat_featured_threads                                    (category_id,topic_id) UNIQUE
 #  index_category_featured_topics_on_category_id_and_rank  (category_id,rank)
 #
-

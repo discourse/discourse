@@ -14,4 +14,3 @@ end
 #
 #  idx_search_user  (search_data)
 #
-

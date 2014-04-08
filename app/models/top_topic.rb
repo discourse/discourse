@@ -151,10 +151,10 @@ end
 #  daily_posts_count   :integer          default(0), not null
 #  daily_views_count   :integer          default(0), not null
 #  daily_likes_count   :integer          default(0), not null
-#  yearly_score        :float
-#  monthly_score       :float
-#  weekly_score        :float
-#  daily_score         :float
+#  yearly_score        :float            default(0.0)
+#  monthly_score       :float            default(0.0)
+#  weekly_score        :float            default(0.0)
+#  daily_score         :float            default(0.0)
 #
 # Indexes
 #

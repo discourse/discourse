@@ -108,8 +108,8 @@ end
 #  width             :integer
 #  height            :integer
 #  url               :string(255)      not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  created_at        :datetime
+#  updated_at        :datetime
 #  sha1              :string(40)
 #  origin            :string(1000)
 #
