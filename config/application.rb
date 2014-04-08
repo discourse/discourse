@@ -151,6 +151,8 @@ module Discourse
     require 'auth'
     Discourse.activate_plugins! unless Rails.env.test? and ENV['LOAD_PLUGINS'] != "1"
 
+    Discourse.generate_app_info
+
     config.after_initialize do
       # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger
