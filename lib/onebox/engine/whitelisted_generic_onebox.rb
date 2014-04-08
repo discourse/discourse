@@ -218,7 +218,14 @@ module Onebox
       end
 
       def html_for_video(video)
-        video_url = video[:_value]
+        if video.is_a?(String)
+          video_url = video
+        elsif video.is_a?(Hash)
+          video_url = video[:_value]
+        else
+          return
+        end
+
 
         if video_url
           html = "<iframe src=\"#{video_url}\" frameborder=\"0\" title=\"#{data[:title]}\""
@@ -232,7 +239,7 @@ module Onebox
       end
 
       def append_attribute(attribute, html, video)
-        if video[attribute] && video[attribute].first
+        if video.is_a?(Hash) && video[attribute] && video[attribute].first
           val = video[attribute].first[:_value]
           html << " #{attribute.to_s}=\"#{val}\""
         end
