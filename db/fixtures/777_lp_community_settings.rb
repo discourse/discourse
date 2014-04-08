@@ -37,7 +37,15 @@ SiteSetting.enable_twitter_logins             = false
 SiteSetting.enable_yahoo_logins               = false
 SiteSetting.enable_google_logins              = false
 SiteSetting.site_contact_username             = ENV['API_USERNAME']
-SiteSetting.company_domain                    = 'www.lessonplanet.com'
+SiteSetting.company_domain                    = Addressable::URI.parse(ENV['LESSON_PLANET_ROOT_URL']).host
+
+# Rate limiting
+SiteSetting.unique_posts_mins                 = 5
+SiteSetting.rate_limit_create_topic           = 5
+SiteSetting.rate_limit_create_post            = 5
+SiteSetting.max_topics_per_day                = 20
+SiteSetting.title_min_entropy                 = 10
+SiteSetting.body_min_entropy                  = 7
 
 #
 # Files
@@ -113,5 +121,5 @@ SiteCustomization.seed(:key) do |sc|
   sc.position   = 0
   sc.user_id    = Discourse.system_user.id
   sc.stylesheet = File.read(Rails.root.join('db', 'fixtures', 'lp-style.scss'))
-  sc.header     = File.read(Rails.root.join('db', 'fixtures', 'lp-header.html'))
+  sc.header     = File.read(Rails.root.join('db', 'fixtures', 'lp-header.html')).gsub('LESSON_PLANET_ROOT_URL', ENV['LESSON_PLANET_ROOT_URL'].gsub('https', 'http'))
 end
