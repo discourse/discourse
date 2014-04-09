@@ -266,7 +266,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   }.property('selectedPostsCount'),
 
   canChangeOwner: function() {
-    if (!Discourse.User.current().admin) return false;
+    if (!Discourse.User.current() || !Discourse.User.current().admin) return false;
     return !!this.get('selectedPostsUsername');
   }.property('selectedPostsUsername'),
 
