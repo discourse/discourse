@@ -72,7 +72,7 @@ toTitleCase = function toTitleCase(str) {
 
 longDate = function(dt) {
   if (!dt) return;
-  return moment(dt).longDate();
+  return moment(dt).format('llll');
 };
 
 updateRelativeAge = function(elems) {
