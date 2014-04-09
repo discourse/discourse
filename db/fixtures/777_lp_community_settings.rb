@@ -22,7 +22,7 @@ SiteSetting.enable_names                      = true
 # General
 #
 SiteSetting.force_hostname                    = ENV['APP_HOST']
-SiteSetting.enable_local_account_create       = false
+SiteSetting.enable_local_logins               = false
 SiteSetting.enforce_global_nicknames          = false
 SiteSetting.default_external_links_in_new_tab = true
 SiteSetting.title                             = 'Lesson Planet Community Forums'
@@ -128,3 +128,7 @@ SiteCustomization.seed(:key) do |sc|
   sc.stylesheet = File.read(Rails.root.join('db', 'fixtures', 'lp-style.scss'))
   sc.header     = File.read(Rails.root.join('db', 'fixtures', 'lp-header.html')).gsub('LESSON_PLANET_ROOT_URL', ENV['LESSON_PLANET_ROOT_URL'].gsub('https', 'http'))
 end
+
+sc         = SiteContent.where(content_type: :faq).first_or_initialize
+sc.content = File.read(Rails.root.join('db', 'fixtures', 'lp-faq.html'))
+sc.save!
