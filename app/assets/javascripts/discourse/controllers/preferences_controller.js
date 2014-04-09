@@ -15,6 +15,10 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     return Discourse.SiteSettings.allow_user_locale;
   }.property(),
 
+  selectedCategories: function(){
+    return [].concat(this.get("watchedCategories"), this.get("trackedCategories"), this.get("mutedCategories"));
+  }.property("watchedCategories", "trackedCategories", "mutedCategories"),
+
   // By default we haven't saved anything
   saved: false,
 

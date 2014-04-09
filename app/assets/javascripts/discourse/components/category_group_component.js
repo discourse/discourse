@@ -11,7 +11,8 @@ Discourse.CategoryGroupComponent = Ember.Component.extend({
         return Discourse.Category.list().filter(function(category){
           var regex = new RegExp(term, "i");
           return category.get("name").match(regex) &&
-            !_.contains(self.get('categories'), category);
+            !_.contains(self.get('blacklist') || [], category) &&
+            !_.contains(self.get('categories'), category) ;
         });
       },
       onChangeItems: function(items) {
