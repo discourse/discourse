@@ -1,13 +1,3 @@
-# encoding: utf-8
-# This file contains content for the client portion of Discourse, sent out
-# to the Javascript app.
-#
-# To work with us on translations, see:
-# https://www.transifex.com/projects/p/discourse-pt-br/
-#
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
-
 it:
   js:
     number:
@@ -93,7 +83,7 @@ it:
     log_in: "Accedi"
     age: "Età"
     joined: "Partecipa da"
-    admin_title: "Amministra"
+    admin_title: "Amministrazione"
     flags_title: "Segnalazioni"
     show_more: "Altro"
     links: Link
@@ -385,7 +375,7 @@ it:
         sent_by: "Inviato da"
         private_message: "Messaggio privato"
         the_topic: "il topic"
-    loading: "Caricamento..."
+    loading: " Caricamento..."
     close: "Chiudi"
     assets_changed_confirm: "Discourse è stato aggiornato, vuoi preparati a passare alla nuova versione?"
     read_only_mode:
@@ -530,7 +520,7 @@ it:
     notifications:
       title: "notifiche di quando @name viene citato, se ci sono risposte ai tuoi post, messaggi privati ecc."
       none: "Non hai notifiche al momento"
-      more: "Visualizza le notifiche passate"
+      more: "Visualizza le notifiche precedenti"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
       replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
@@ -548,13 +538,14 @@ it:
       title_with_attachments: "Aggiungi un'immagine o un file"
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal web"
-      remote_tip: "entra l'indirizzo di un'immagine nel formato http://example.com/image.jpg"
-      remote_tip_with_attachments: "inserisci l'indirizzo di un'immagine o un file nel formato http://example.com/file.ext (estensioni permesse: {{authorized_extensions}})."
+      remote_tip: "link all'immagine http://example.com/image.jpg"
+      remote_tip_with_attachments: "link all'immagine o al file http://example.com/file.ext (estensioni permesse: {{authorized_extensions}})."
       local_tip: "Clicca per selezionare un'immagine dal tuo dispositivo."
       local_tip_with_attachments: "Clicca per selezionare un'immagine o un file dal tuo dispositivo (estensioni permesse: {{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
       hint_for_chrome: "(puoi anche trascinare o incollare le immagini nell'editor per caricarle)"
       uploading: "In caricamento"
+      image_link: "Il link a cui la tua immagine punterà"
     search:
       title: "Cerca per discussioni, post, utenti o categorie"
       placeholder: "Digita qui il testo da cercare"
@@ -575,7 +566,7 @@ it:
     topics:
       bulk:
         reset_read: "Cancella dati lettura"
-        dismiss_read: "Ignora Lettura"
+        dismiss_read: "Ignora elementi non letti"
         dismiss_new: "Abbandona"
         toggle: "Attiva/disattiva la selezione multipla dei topic"
         actions: "Azioni in serie"
@@ -619,7 +610,7 @@ it:
         one: '1 topic non letto'
         other: '{{count}} topic non letti'
       title: 'Topic'
-      loading_more: "Carico più conversazioni..."
+      loading_more: "Carico altri topic..."
       loading: 'Carico il topic'
       invalid_access:
         title: "Il topic è privato"
@@ -667,7 +658,6 @@ it:
         current: Post corrente
         position: "post %{current} of %{total}"
       notifications:
-        title: ''
         reasons:
           '3_6': 'Riceverai notifiche perchè stai monitorando questa categoria.'
           '3_5': 'Riceverai notifiche poichè hai iniziato a controllare questo topic automaticamente.'
@@ -710,12 +700,13 @@ it:
         auto_close: "Chiudi automaticamente"
         unpin: "Non più in evidenza"
         pin: "Metti in evidenza il topic"
+        pin_globally: "Metti in evidenza globalmente"
         unarchive: "Ripristina il topic dall'archivio"
         archive: "Archivia il topic"
         invisible: "Rendi invisibile"
         visible: "Rendi visibile"
         reset_read: "Cancella i dati già letti"
-        multi_select: "Seleziona i post da spostare"
+        multi_select: "Seleziona Post"
         convert_to_topic: "Converti in un topic regolare"
       reply:
         title: 'Rispondi'
@@ -768,12 +759,23 @@ it:
         instructions:
           one: "Per favore scegli il topic di destinazione per questo post."
           other: "Per favore scegli il topic di destinazione per questi <b>{{count}}</b> post."
+      change_owner:
+        title: "Cambia Proprietario dei Post"
+        action: "cambia proprietà"
+        error: "Si è verificato un errore durante il cambio di proprietà dei post."
+        label: "Nuovo Proprietario dei Post"
+        placeholder: "nome utente del nuovo proprietario"
+        instructions:
+          one: "Seleziona il nuovo proprietario del post di <b>{{old_user}}</b>."
+          other: "Seleziona il nuovo proprietario dei {{count}} post di <b>{{old_user}}</b>."
       multi_select:
         select: 'Scegli'
         selected: 'selezionati ({{count}})'
         select_replies: 'seleziona+risposte'
         delete: Elimina i messaggi selezionati
         cancel: Cancella la selezione
+        select_all: Seleziona tutto
+        deselect_all: Deseleziona tutto
         description:
           one: Hai selezionato 1 post.
           other: Hai selezionato <b>{{count}}</b> post.
@@ -789,14 +791,15 @@ it:
       reply_as_new_topic: "Rispondi come nuovo topic"
       continue_discussion: "Continua la discussione da {{postLink}}:"
       follow_quote: "Vai alla risposta evidenziata"
+      show_full: "Mostra Post Completo"
       deleted_by_author:
         one: "(post eliminato dall'autore, sarà automaticamente cancellato in %{count} ore se non contrassegnato)"
         other: "(post eliminato dall'autore, verrà automaticamente cancellato in %{count} ore se non contrassegnato)"
       deleted_by: "cancellato da"
       expand_collapse: "Espandi/Raggruppa"
       gap:
-        one: "1 post omesso"
-        other: "{{count}} post omessi"
+        one: "1 post nascosto"
+        other: "{{count}} post nascosti"
       has_replies:
         one: "Risposta"
         other: "Risposte"
@@ -992,7 +995,7 @@ it:
       title: 'Perchè vuoi contrassegnare questo post?'
       action: 'Contrassegna il post'
       take_action: "Procedi"
-      notify_action: 'Notifica'
+      notify_action: 'Messaggio privato'
       delete_spammer: "Cancella lo spammer"
       delete_confirm: "Stai per eliminare <b>%{posts}</b> post e <b>%{topics}</b> topic di questo utente, rimuovere il suo account, bloccare le iscrizioni da questo indirizzo IP <b>%{ip_address}</b>, e aggiungere il suo indirizzo email <b>%{email}</b> all'elenco di quelli bloccati. Sei sicuro che questo utente sia davvero uno spammer?"
       yes_delete_spammer: "Sì, cancella lo spammer"
@@ -1006,7 +1009,7 @@ it:
     flagging_topic:
       title: "Perchè vuoi contrassegnare questo topic?"
       action: "Contrassegna il topic"
-      notify_action: "Notifica"
+      notify_action: "Messaggio privato"
     topic_map:
       title: "Sunto del topic"
       links_shown: "mostra tutti {{totalLinks}} i link..."
@@ -1108,7 +1111,7 @@ it:
       moderator: 'Moderatore'
       dashboard:
         title: "Dashboard"
-        last_updated: "Ultimo aggiornamento alla dashboard:"
+        last_updated: "Ultimo aggiornamento dashboard:"
         version: "Versione"
         up_to_date: "Sei aggiornato!"
         critical_available: "È disponibile un aggiornamento essenziale"
@@ -1118,10 +1121,10 @@ it:
         stale_data: "Non è stato effettuato un controllo recente sugli aggiornamenti. Assicurati che sidekiq sia attivo."
         version_check_pending: "Sembra che tu abbia aggiornato di recente. Ottimo!"
         installed_version: "Installata"
-        latest_version: "Più recenti"
+        latest_version: "Nuova"
         problems_found: "Si sono verificati dei problemi con la tua installazione di Discourse:"
         last_checked: "Ultimo controllo"
-        refresh_problems: "Refresh"
+        refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato"
         moderators: 'Moderatori:'
         admins: 'Amministratori:'
@@ -1146,7 +1149,7 @@ it:
       flags:
         title: "Segnalazioni"
         old: "Passate"
-        active: "Attivo"
+        active: "Attive"
         agree_hide: "D'accordo (oscura il post e invia PM)"
         agree_hide_title: "Oscura questo post e automaticamente segnala all'utente la necessità di modificarlo via PM"
         defer: "Segnala"
@@ -1160,7 +1163,7 @@ it:
         delete_spammer_title: "Cancella questo utente, tutti i suoi post e le conversazioni"
         clear_topic_flags: "Fatto"
         clear_topic_flags_title: "Il topic è stato esaminato e i problemi risolti. Clicca Fatto per rimuovere i contrassegni."
-        flagged_by: "Contrassegnato da"
+        flagged_by: "Segnalato da"
         system: "sistema"
         error: "Qualcosa non ha funzionato"
         view_message: "Rispondi"
@@ -1188,15 +1191,18 @@ it:
         no_primary: "(nessun gruppo primario)"
         title: "Gruppi"
         edit: "Modifica i gruppi"
+        refresh: "Aggiorna"
+        new: "Nuovo"
         selector_placeholder: "Aggiungi utenti"
         name_placeholder: "Nome del gruppo, senza spazi. Stesse regole dello username"
         about: "Modifica qui la tua appartenenza ai gruppi e i nomi"
+        group_members: "Membri del gruppo"
         delete: "Cancella"
         delete_confirm: "Cancella questo gruppo?"
         delete_failed: "Impossibile cancellare il gruppo. Se questo è un gruppo automatico, non può essere eliminato."
       api:
         generate_master: "Genera una Master API Key"
-        none: "Non ci sono API keys attive al momento."
+        none: "Non ci sono chiavi API attive al momento."
         user: "Utente"
         title: "API"
         key: "Chiave API"
@@ -1216,8 +1222,8 @@ it:
         none: "Nessun backup disponibile."
         read_only:
           enable:
-            title: "Abilita la modalità di sola lettura."
-            text: "Abilita la modalità di sola lettura."
+            title: "Abilita modalità sola lettura"
+            text: "Abilita modalità sola lettura"
             confirm: "Sicuro di voler attivare la modalità di sola lettura?"
           disable:
             title: "Disattiva la modalità di sola lettura"
@@ -1264,14 +1270,14 @@ it:
         long_title: "Personalizzazioni del sito"
         header: "Testata"
         css: "Foglio di stile"
-        mobile_header: "Intestazione ver mobile"
-        mobile_css: "Foglio di stile versione Mobile"
+        mobile_header: "Testata Mobile"
+        mobile_css: "Foglio di stile Mobile"
         override_default: "Non includere fogli di stile standard"
         enabled: "Attivo?"
         preview: "anteprima"
         undo_preview: "Rifai la preview"
         save: "Salva"
-        new: "Nuovi"
+        new: "Nuovo"
         new_style: "Nuovo stile"
         delete: "Cancella"
         delete_confirm: "Cancella questa personalizzazione?"
@@ -1348,12 +1354,14 @@ it:
             delete_site_customization: "Elimina la personalizzazione del sito"
             suspend_user: "utente sospeso"
             unsuspend_user: "utente riattivato"
+            grant_badge: "assegna targhetta"
+            revoke_badge: "revoca targhetta"
         screened_emails:
           title: "Email scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, i seguenti indirizzi email vengono controllati e la registrazione viene bloccata, o eseguita qualche altra azione."
           email: "Indirizzo email"
         screened_urls:
-          title: "IP scansionati"
+          title: "URL scansionati"
           description: "Gli URL seguenti sono stati usati da utenti identificati come spammer"
           url: "URL"
           domain: "Dominio"
@@ -1382,11 +1390,11 @@ it:
         active: "Attivo"
         nav:
           new: "Nuovi"
-          active: "Attivo"
+          active: "Attivi"
           pending: "In attesa"
           admins: 'Amministratori'
           moderators: 'Moderatori'
-          suspended: 'Sospeso'
+          suspended: 'Sospesi'
           blocked: 'Bloccati'
         approved: "Approvato?"
         approved_selected:
@@ -1536,9 +1544,19 @@ it:
         display_name: Visualizza Nome
         description: Descrizione
         badge_type: Tipo di Targhetta
+        granted_by: Assegnata da
+        granted_at: Assegnata il
         save: Salva
         delete: Cancella
         delete_confirm: Sei sicuro di voler eliminare questa targhetta?
+        revoke: Revoca
+        revoke_confirm: Sei sicuro di voler revocare questa targhetta?
+        edit_badges: Modifica Targhette
+        grant_badge: Assegna Targhetta
+        granted_badges: Targhette Assegnate
+        grant: Assegna
+        no_user_badges: "%{name} non ha ricevuto alcuna targhetta."
+        no_badges: Non ci sono targhette da assegnare.
     lightbox:
       download: "Scaricamento"
     keyboard_shortcuts_help:
@@ -1581,5 +1599,5 @@ it:
         mark_watching: '<b>m</b> quindi <b>w</b> Contrassegna il topic come "sotto osservazione"'
     badges:
       example_badge:
-        name: 'Targhetta Esempio'
-        description: 'Questa è una targhetta generica di esempio'
+        name: Targhetta Esempio
+        description: Questa è una targhetta generica d'esempio

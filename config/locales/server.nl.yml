@@ -1,15 +1,3 @@
-# encoding: utf-8
-# This file contains content for the server portion of Discourse used by Ruby
-#
-# Dutch translation for Discourse
-# contributed by Sander Datema (info@sanderdatema.nl)
-#
-# To work with us on translations, see:
-# https://www.transifex.com/projects/p/discourse-pt-br/
-#
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
-
 nl:
   dates:
     short_date_no_year: "D MMM"
@@ -20,44 +8,35 @@ nl:
       short: "%d-%m-%Y"
       short_no_year: "%-d %B"
       date_only: "%-d %b %Y"
-
-  title: Discourse
-  topics: Topics
-  posts: berichten
-  loading: Laden
+  title: "Discourse"
+  topics: "Topics"
+  posts: "berichten"
+  loading: "Laden"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, werkt het beste met JavaScript ingeschakeld'
   log_in: "Inloggen"
-
   via: "%{username} via %{site_name}"
-  is_reserved: is gereserveerd
-
+  is_reserved: "is gereserveerd"
   backup:
     operation_already_running: "Er draait al een %{operation}. Kan nu niet een nieuwe %{operation} starten."
     backup_file_should_be_tar_gz: "Het backupbestand moet een .tar.gz archief zijn."
     not_enough_space_on_disk: "Er is niet voldoende ruimte op de schijf vrij om deze backup te uploaden."
-
   not_logged_in: "Om dat te kunnen doen moet je ingelogd zijn."
   read_only_mode_enabled: "De site is in read only modus. Interactie is niet mogelijk."
-
   too_many_replies:
     one: "Sorry, nieuwe gebruikers mogen één reactie plaatsen in hetzelfde topic."
     other: "Sorry, nieuwe gebruikers mogen %{count} reacties plaatsen in hetzelfde topic."
-
   embed:
     start_discussion: "Begin de discussie"
     continue: "Ga verder met de discussie"
     more_replies:
       one: "Nog 1 reactie"
       other: "Nog %{count} reacties"
-
     loading: "Discussie laden..."
     permalink: "Permalink"
-    imported_from: "Topic voor de oorspronkelijke blokpost: %{link}"
     in_reply_to: "in reactie op %{username}"
     replies:
       one: "1 reactie"
       other: "%{count} reacties"
-
   too_many_mentions:
     zero: "Sorry, je kan niet verwijzen naar andere leden."
     one: "Sorry, je kan naar één ander lid verwijzen in een bericht."
@@ -79,15 +58,14 @@ nl:
     one: "Sorry, nieuwe leden kunnen één links in een bericht opnemen."
     other: "Sorry, nieuwe leden kunnen %{count} links in een bericht opnemen."
   spamming_host: "Sorry, je kan niet linken naar die host."
-
-  just_posted_that: lijkt teveel op het bericht dat je net geschreven hebt
-  has_already_been_used: is al eens gebruikt
-  invalid_characters: bevat ongeldige tekens
+  just_posted_that: "lijkt teveel op het bericht dat je net geschreven hebt"
+  has_already_been_used: "is al eens gebruikt"
+  invalid_characters: "bevat ongeldige tekens"
   is_invalid: "is niet geldig; probeer het iets beter te omschrijven"
-  next_page: volgende pagina →
+  next_page: "volgende pagina →"
   prev_page: "← vorige pagina"
   page_num: "Pagina %{num}"
-  by: Door
+  by: "Door"
   topics_in_category: "Topics in de categorie '%{category}'"
   rss_posts_in_topic: "RSS feed van '%{topic}'"
   rss_topics_in_category: "RSS fees van topics in de categorie '%{category}'"
@@ -95,15 +73,14 @@ nl:
   num_posts: "Berichten:"
   num_participants: "Deelnemers:"
   read_full_topic: "Lees volledige topic"
-  private_message_abbrev: PB
+  private_message_abbrev: "PB"
   rss_description:
-    latest: Nieuwste topics
-    hot: Hot topics
+    latest: "Nieuwste topics"
+    hot: "Hot topics"
   too_late_to_edit: "Dat bericht is lang geleden geschreven. Het kan niet meer gewijzigd of verwijderd worden."
-
   groups:
     errors:
-      can_not_modify_automatic: Je kunt automatische groepen niet wijzigen
+      can_not_modify_automatic: "Je kunt automatische groepen niet wijzigen"
     default_names:
       admins: "admins"
       moderators: "moderators"
@@ -113,13 +90,11 @@ nl:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
       trust_level_5: "trust_level_5"
-
   education:
     until_posts:
-      one: één bericht
+      one: "één bericht"
       other: "%{count} berichten"
-
-    'new-topic': |
+    new-topic: |
       Welkom op %{site_name} &mdash; **bedankt voor het starten van een nieuwe conversatie!**
 
       - Geeft de titel een duidelijke beschrijving van het onderwerp, klinkt het interessant?
@@ -129,8 +104,7 @@ nl:
       - Probeer de juiste (zoek)woorden te kiezen zodat anderen je topic kunnen **vinden*. Als het in een categorie moet zijn, kies dan een toepasselijke categorie.
 
       Voor meer informatie, [bekijk onze Veel Gestelde Vragen](/faq). Deze tekst zal alleen verschijnen bij je eerste %{education_posts_text}.
-
-    'new-reply': |
+    new-reply: |
       Welkom op %{site_name} &mdash; **bedankt voor je bijdrage!**
 
       - Geeft je reactie een nuttige bijdrage aan de conversatie, hoe klein dan ook?
@@ -140,7 +114,6 @@ nl:
       - Je mag best kritisch zijn, maar onthoud dat je kritiek moet geven op *ideeën*, niet op mensen.
 
       Voor meer informatie, [bekijk onze Veel Gestelde Vragen](/faq). Deze tekst zal alleen verschijnen bij je eerste %{education_posts_text}.
-
     avatar: |
       ### Wat dacht je van een nieuwe afbeelding voor je account?
 
@@ -149,7 +122,6 @@ nl:
       Heb je al overwogen **[om naar je profielpagina te gaan](%{profile_path})** om een nieuwe afbeelding van jou te uploaden?
 
       Het is makkelijker om conversaties te volgen en interessante mensen te vinden als iedereen een unieke avatar heeft!
-
     sequential_replies: |
       ### Overweeg om op meerdere berichten ineens te reageren
 
@@ -158,40 +130,34 @@ nl:
       Je kan je vorige reactie wijzigen en er een citaat aan toevoegen door de betreffende tekst te selecteren en op de <b>citeer</b> knop te drukken die dan verschijnt.
 
       Het is voor iedereen makkelijker om topics te lezen met minder losstaande reacties.
-
     dominating_topic: |
       ### Laat anderen meedoen in de conversatie
 
       Deze topic is duidelijk belangrijk voor je &ndash; meer dan %{percent}% van de reacties zijn van jou.
 
       Hou je in de gaten dat anderen ook de ruimte krijgen om hun visie te geven?
-
     too_many_replies: |
       ### Je hebt de reactielimiet bereikt voor deze topic
 
       Sorry, maar nieuwe gebruikers mogen tijdelijk niet meer dan %{newuser_max_replies_per_topic} reacties plaatsen in hetzelfde topic.
 
       Overweeg een eerdere reactie te wijzigen in plaats van nog een nieuwe reactie te plaatsen.
-
     reviving_old_topic: |
       ### Oude topic weer ophalen?
 
       De laatste reactie op dit bericht was meer dan %{days} dagen geleden. Als je nu een reactie plaatst, zal deze topic weer bovenaan de lijst verschijnen en zal iedereen die meedeed aan deze topic bericht krijgen.
 
       Weet je zeker dat je verder wil gaan met deze oude topic?
-
   activerecord:
     attributes:
       category:
-        name: Naam categorie
+        name: "Naam categorie"
       post:
-        raw: Inhoud
-      user:
-        ip_address: ""
+        raw: "Inhoud"
     errors:
       messages:
         is_invalid: "is ongeldig; probeer wat uitgebreider te zijn"
-        has_already_been_used: is al gebruikt
+        has_already_been_used: "is al gebruikt"
       models:
         topic:
           attributes:
@@ -199,26 +165,18 @@ nl:
               cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
         user:
           attributes:
-            password:
-              common: "is een van de 5000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
             ip_address:
-              signup_not_allowed: Inschrijven vanaf dit account is niet toegestaan.
-
+              signup_not_allowed: "Inschrijven vanaf dit account is niet toegestaan."
   user_profile:
     no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences/about-me'>zou je deze willen invullen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} heeft nog niks in zijn of haar Over Mij-profielveld ingevuld</div>"
-
   vip_category_name: "Lounge"
   vip_category_description: "Een categorie exclusief voor leden met trust level 3 en hoger."
-
   meta_category_name: "Meta"
   meta_category_description: "Discussies over dit forum, de organisatie, hoe het werk en hoe het verbeterd kan worden."
-
   staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor admins en moderatoren."
-
   assets_topic_body: "Dit is een topic om forum assets voor het forum design in op te slaan. Verwijder deze niet!"
-
   category:
     topic_prefix: "Over de categorie %{category}"
     replace_paragraph: "[Vervang deze eerste regel met een korte omschrijving van je nieuwe categorie. Deze regel verschijnt in het selectiemenu als iemand een categorie kiest, dus hou het kort (max. 200 tekens). Deze categorie zal niet in de lijst verschijnen totdat je deze tekst wijzigt of zelf een topic in de categorie plaatst.]"
@@ -228,163 +186,154 @@ nl:
       depth: "Je kan een subcategorie niet onder een andere subcategorie hangen."
   trust_levels:
     newuser:
-      title: nieuw lid
+      title: "nieuw lid"
     basic:
-      title: lid
+      title: "lid"
     regular:
-      title: regulier lid
+      title: "regulier lid"
     leader:
-      title: leider
+      title: "leider"
     elder:
-      title: emiritus
+      title: "emiritus"
     change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trust level is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'"
-
-
   rate_limiter:
     too_many_requests: "Je doet dat te vaak. Wacht %{time_left} voordat je dit opnieuw probeert."
     hours:
-      one: 1 uur
+      one: "1 uur"
       other: "%{count} uren"
     minutes:
-      one: 1 minuut
+      one: "1 minuut"
       other: "%{count} minuten"
     seconds:
-      one: 1 seconde
+      one: "1 seconde"
       other: "%{count} seconden"
-
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one:   "< 1s"
+        one: "< 1s"
         other: "< %{count}s"
       x_seconds:
-        one:   "1s"
+        one: "1s"
         other: "%{count}s"
       less_than_x_minutes:
-        one:   "< 1m"
+        one: "< 1m"
         other: "< %{count}m"
       x_minutes:
-        one:   "1m"
+        one: "1m"
         other: "%{count}m"
       about_x_hours:
-        one:   "1u"
+        one: "1u"
         other: "%{count}u"
       x_days:
-        one:   "1d"
+        one: "1d"
         other: "%{count}d"
       about_x_months:
-        one:   "1mnd"
+        one: "1mnd"
         other: "%{count}mnd"
       x_months:
-        one:   "1mnd"
+        one: "1mnd"
         other: "%{count}mnd"
       about_x_years:
-        one:   "1j"
+        one: "1j"
         other: "%{count}j"
       over_x_years:
-        one:   "> 1j"
+        one: "> 1j"
         other: "> %{count}j"
       almost_x_years:
-        one:   "1j"
+        one: "1j"
         other: "%{count}j"
-
     distance_in_words_verbose:
-      half_a_minute: zonet
+      half_a_minute: "zonet"
       less_than_x_seconds:
-        one:   nu
-        other: nu
+        one: "nu"
+        other: "nu"
       x_seconds:
-        one:   1 seconde geleden
+        one: "1 seconde geleden"
         other: "%{count} seconden geleden"
       less_than_x_minutes:
-        one:   minder dan 1 minuut geleden
+        one: "minder dan 1 minuut geleden"
         other: "minder dan %{count} minuten geleden"
       x_minutes:
-        one:   1 minuut geleden
+        one: "1 minuut geleden"
         other: "%{count} minuten geleden"
       about_x_hours:
-        one:   1 uur geleden
+        one: "1 uur geleden"
         other: "%{count} uren geleden"
       x_days:
-        one:   1 dag geleden
+        one: "1 dag geleden"
         other: "%{count} dagen geleden"
       about_x_months:
-        one:   ongeveer 1 maand geleden
+        one: "ongeveer 1 maand geleden"
         other: "ongeveer %{count} maanden geleden"
       x_months:
-        one:   1 maand geleden
+        one: "1 maand geleden"
         other: "%{count} maanden geleden"
       about_x_years:
-        one:   ongeveer 1 jaar geleden
+        one: "ongeveer 1 jaar geleden"
         other: "ongeveer %{count} jaar geleden"
       over_x_years:
-        one:   meer dan 1 jaar geleden
+        one: "meer dan 1 jaar geleden"
         other: "meer dan %{count} jaren geleden"
       almost_x_years:
-        one:   bijna 1 jaar geleden
+        one: "bijna 1 jaar geleden"
         other: "bijna %{count} jaren geleden"
-
   password_reset:
     no_token: "Sorry, je token is verlopen. Probeer je wachtwoord opnieuw te herstellen."
-    choose_new: Kies een nieuw wachtwoord
-    choose: Kies een wachtwoord
-    update: Wijzig wachtwoord
-    save: Bewaar wachtwoord
-    title: Herstel wachtwoord
-    success: Je hebt met succes je wachtwoord aangepast en bent nu ingelogd.
-    success_unapproved: Je hebt met succes je wachtwoord aangepast.
+    choose_new: "Kies een nieuw wachtwoord"
+    choose: "Kies een wachtwoord"
+    update: 'Wijzig wachtwoord'
+    save: 'Bewaar wachtwoord'
+    title: 'Herstel wachtwoord'
+    success: "Je hebt met succes je wachtwoord aangepast en bent nu ingelogd."
+    success_unapproved: "Je hebt met succes je wachtwoord aangepast."
     continue: "Ga verder naar %{site_name}"
-
   change_email:
-    confirmed: Je e-mailadres is aangepast.
+    confirmed: "Je e-mailadres is aangepast."
     please_continue: "Ga verder via %{link}"
-    error: Er ging iets mis bij het wijzigen van je e-mailadres. Wellicht is deze al in gebruik?
-
+    error: "Er ging iets mis bij het wijzigen van je e-mailadres. Wellicht is deze al in gebruik?"
   activation:
     already_done: "Sorry, de link voor je account te activeren is niet langer geldig. Wellicht is je account al geactiveerd?"
     please_continue: "Je nieuwe account is geactiveerd en je bent nu ingelogd. Ga verder via %{link}"
     welcome_to: "Welkom bij %{site_name}!"
-    approval_required: Een moderator moet je nieuwe account handmatig activeren voordat je toegang krijgt tot dit forum. Je krijgt een e-mail van ons wanneer je account is goedgekeurd!
-
+    approval_required: "Een moderator moet je nieuwe account handmatig activeren voordat je toegang krijgt tot dit forum. Je krijgt een e-mail van ons wanneer je account is goedgekeurd!"
   post_action_types:
     off_topic:
-      title: Off-topic
+      title: 'Off-topic'
       description: 'Dit bericht wijkt erg af van het onderwerp van deze discussie, en moet wellicht naar een ander topic worden verplaatst.'
-      long_form: heeft dit als off-topic gemeld
+      long_form: 'heeft dit als off-topic gemeld'
     spam:
-      title: Spam
+      title: 'Spam'
       description: 'Dit bericht is in principe een advertentie zonder dit écht duidelijk te maken aan de leden. Het is niet relevant met betrekking tot de huidige discussie, maar is puur promotioneel in aard.'
-      long_form: heeft dit als spam gemeld
+      long_form: 'heeft dit als spam gemeld'
     inappropriate:
-      title: Ongepast
+      title: 'Ongepast'
       description: 'Dit bericht bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/faq">de regels</a> zijn.'
-      long_form: heeft dit als ongepast gemeld
+      long_form: 'heeft dit als ongepast gemeld'
     notify_user:
-      title: "Licht {{username}} in"
-      description: "Ik wil je graag over iets in je bericht spreken, privé"
-      long_form: persoon ingelicht
-      email_title: "Betreft je bericht in '%{title}'"
+      title: 'Licht {{username}} in'
+      description: 'Ik wil je graag over iets in je bericht spreken, privé'
+      long_form: 'persoon ingelicht'
+      email_title: 'Betreft je bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: "Licht moderatoren in"
-      description: "Dit bericht moet door een moderator bekeken worden. Dit vanwege de <a href='/faq'>FAQ</a>, <a href='%{tos_url}'>TOS</a> of een andere reden hier nog niet genoemd."
-      long_form: moderatoren ingelicht
-      email_title: "Graag aandacht voor een bericht in '%{title}'"
+      title: 'Licht moderatoren in'
+      description: 'Dit bericht moet door een moderator bekeken worden. Dit vanwege de <a href=''/faq''>FAQ</a>, <a href=''%{tos_url}''>TOS</a> of een andere reden hier nog niet genoemd.'
+      long_form: 'moderatoren ingelicht'
+      email_title: 'Graag aandacht voor een bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: Favoriet
-      description: Voeg deze post toe aan je favorieten
-      long_form: heeft deze post toegevoegd aan zijn favorieten
+      title: 'Favoriet'
+      description: 'Voeg deze post toe aan je favorieten'
+      long_form: 'heeft deze post toegevoegd aan zijn favorieten'
     like:
-      title: Leuk
-      description: Vind dit bericht leuk
-      long_form: vindt dit bericht leuk
+      title: 'Leuk'
+      description: 'Vind dit bericht leuk'
+      long_form: 'vindt dit bericht leuk'
     vote:
-      title: Stem
-      description: Stem op dit bericht
-      long_form: heeft op dit bericht gestemd
-
+      title: 'Stem'
+      description: 'Stem op dit bericht'
+      long_form: 'heeft op dit bericht gestemd'
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -400,111 +349,105 @@ nl:
       long_form: 'lichtte moderators in'
       email_title: 'De topic "%{title}" moet door een moderator worden bekeken'
       email_body: "%{link}\n\n%{message}"
-
   flagging:
     you_must_edit: '<p>Je bericht heeft het maximaal aantal moderatie-meldingen gekregen. Check je privé-berichten.</p>'
     user_must_edit: '<p>Gemelde inhoud verborgen.</p>'
-
   archetypes:
     regular:
-      title: Standaard topic
-
+      title: "Standaard topic"
   unsubscribed:
-    title: Uitgeschreven
-    description: Je hebt je uitgeschreven. Je krijgt geen mails meer van ons!
+    title: 'Uitgeschreven'
+    description: "Je hebt je uitgeschreven. Je krijgt geen mails meer van ons!"
     oops: "Als dat niet de bedoeling was, klik dan hieronder."
-    not_found: Fout bij het uitschrijven
+    not_found: "Fout bij het uitschrijven"
     not_found_description: "Sorry, we hebben je niet uit kunnen schrijven. Het is mogelijk dat de link in je e-mail is verlopen."
-
   resubscribe:
-    action: Opnieuw inschrijven
-    title: Opnieuw ingeschreven!
-    description: Je bent opnieuw ingeschreven.
-
+    action: "Opnieuw inschrijven"
+    title: "Opnieuw ingeschreven!"
+    description: "Je bent opnieuw ingeschreven."
   reports:
     visits:
-      title: Bezoeken
-      xaxis: Dag
-      yaxis: Aantal bezoeken
+      title: "Bezoeken"
+      xaxis: "Dag"
+      yaxis: "Aantal bezoeken"
     signups:
-      title: Leden
-      xaxis: Dag
-      yaxis: Aantal leden
+      title: "Leden"
+      xaxis: "Dag"
+      yaxis: "Aantal leden"
     topics:
-      title: Topics
-      xaxis: Dag
-      yaxis: Aantal nieuwe topics
+      title: "Topics"
+      xaxis: "Dag"
+      yaxis: "Aantal nieuwe topics"
     posts:
-      title: Berichten
-      xaxis: Dag
-      yaxis: Aantal nieuwe berichten
+      title: "Berichten"
+      xaxis: "Dag"
+      yaxis: "Aantal nieuwe berichten"
     likes:
-      title: Leuk
-      xaxis: Dag
+      title: "Leuk"
+      xaxis: "Dag"
       yaxis: "Aantal nieuwe 'leuk gevonden'"
     flags:
-      title: Markeringen
-      xaxis: Dag
-      yaxis: Aantal markeringen
+      title: "Markeringen"
+      xaxis: "Dag"
+      yaxis: "Aantal markeringen"
     bookmarks:
-      title: Bladwijzers
-      xaxis: Dag
-      yaxis: Aantal nieuwe bladwijzers
+      title: "Bladwijzers"
+      xaxis: "Dag"
+      yaxis: "Aantal nieuwe bladwijzers"
     starred:
-      title: Met ster
-      xaxis: Dag
-      yaxis: Aantal nieuwe topics met ster
+      title: "Met ster"
+      xaxis: "Dag"
+      yaxis: "Aantal nieuwe topics met ster"
     users_by_trust_level:
-      title: Leden per trustlevel
-      xaxis: Trustlevel
-      yaxis: Aantal leden
+      title: "Leden per trustlevel"
+      xaxis: "Trustlevel"
+      yaxis: "Aantal leden"
     emails:
-      title: E-mails verzonden
-      xaxis: Dag
-      yaxis: Aantal e-mails
+      title: "E-mails verzonden"
+      xaxis: "Dag"
+      yaxis: "Aantal e-mails"
     user_to_user_private_messages:
-      title: Lid-naar-lid
-      xaxis: Dag
-      yaxis: Aantal privé-berichten
+      title: "Lid-naar-lid"
+      xaxis: "Dag"
+      yaxis: "Aantal privé-berichten"
     system_private_messages:
-      title: Systeem
-      xaxis: Dag
-      yaxis: Aantal privé-berichten
+      title: "Systeem"
+      xaxis: "Dag"
+      yaxis: "Aantal privé-berichten"
     moderator_warning_private_messages:
-      title: Moderatiewaarschuwing
-      xaxis: Dag
-      yaxis: Aantal privé-berichten
+      title: "Moderatiewaarschuwing"
+      xaxis: "Dag"
+      yaxis: "Aantal privé-berichten"
     notify_moderators_private_messages:
-      title: Licht moderators in
-      xaxis: Dag
-      yaxis: Aantal privé-berichten
+      title: "Licht moderators in"
+      xaxis: "Dag"
+      yaxis: "Aantal privé-berichten"
     notify_user_private_messages:
-      title: Licht persoon in
-      xaxis: Dag
-      yaxis: Aantal privé-berichten
+      title: "Licht persoon in"
+      xaxis: "Dag"
+      yaxis: "Aantal privé-berichten"
     top_referrers:
-      title: Top verwijzingen
-      xaxis: Lid
-      num_clicks: Clicks
-      num_topics: Topics
+      title: "Top verwijzingen"
+      xaxis: "Lid"
+      num_clicks: "Clicks"
+      num_topics: "Topics"
     top_traffic_sources:
-      title: Top trafficbronnen
-      xaxis: Domein
-      num_clicks: Clicks
-      num_topics: Topics
-      num_users: Leden
+      title: "Top trafficbronnen"
+      xaxis: "Domein"
+      num_clicks: "Clicks"
+      num_topics: "Topics"
+      num_users: "Leden"
     top_referred_topics:
-      title: Top doorverwezen topics
-      xaxis: Topic
-      num_clicks: Clicks
-
+      title: "Top doorverwezen topics"
+      xaxis: "Topic"
+      num_clicks: "Clicks"
   dashboard:
     rails_env_warning: "Je server draait in %{env} modus."
-    ruby_version_warning: Je gebruikt een versie van Ruby 2.0.0 met problemen. Upgrade naar patch level 247 of later.
+    ruby_version_warning: "Je gebruikt een versie van Ruby 2.0.0 met problemen. Upgrade naar patch level 247 of later."
     host_names_warning: "Het bestand config/database.yml heeft localhost als standaard hostname. Werk dat bij naar de hostname van je site."
     gc_warning: 'Je server gebruikt de standaard ruby garbage collection instellingen, en daarmee krijg je niet de beste prestaties. Lees deze topic over instellingen voor prestaties: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq draait niet. Veel taken, zoals het versturen van e-mails, worden asynchroon uitgevoerd door sidekiq. Zorg ervoor dat er altijd een sidekiq process draait. <a href="https://github.com/mperham/sidekiq">Hier is meer informatie over sidekiq</a>.'
-    queue_size_warning: "Het aantal taken in de wachtrij (%{queue_size}_ is best hoog. Dit kan duiden op problemen met het Sidekiq proces. Of je moet meer Sidekiq workers toevoegen."
+    queue_size_warning: 'Het aantal taken in de wachtrij (%{queue_size}_ is best hoog. Dit kan duiden op problemen met het Sidekiq proces. Of je moet meer Sidekiq workers toevoegen.'
     memory_warning: 'Jouw server draait met minder dan 1 GB aan geheugen. Ten minste 1 GB geheugen is aanbevolen.'
     facebook_config_warning: 'De server is geconfigureerd om registratie en inloggen via Facebook mogelijk te maken (enable_facebook_logins), maar er zijn geen app id en app secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
     twitter_config_warning: 'De server is geconfigureerd om registratie en inloggen via Twitter mogelijk te maken (enable_twitter_logins), maar er zijn geen key en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
@@ -522,16 +465,15 @@ nl:
     site_contact_username_warning: "De instelling site_contact_username is leeg. Werk deze bij in <a href='/admin/site_settings'>de Instellingen</a>. Stel het in op de gebruikersnaam van een admin die als afzender van de systeemberichten zal worden wordt gebruikt."
     notification_email_warning: "De instelling notification_email is leeg. Werk deze bij in <a href='/admin/site_settings'>de Instellingen</a>."
     enforce_global_nicknames_warning: "De instelling enforce_global_nicknames is geselecteerd, maar de discourse_org_access_key is niet ingevuld. Een Discourse.org access key is nodig omvoor de enforce_global_nicknames instelling. Werk je <a href='/admin/site_settings'>instellingen</a> bij."
-
   content_types:
     education_new_reply:
       title: "Uitleg voor nieuw lid: Eerste reacties"
-      description: Popup verschijnt automatisch als een nieuw lid zijn eerste twee reacties schrijft.
+      description: "Popup verschijnt automatisch als een nieuw lid zijn eerste twee reacties schrijft."
     education_new_topic:
       title: "Uitleg voor nieuwe leden: Eerste topics"
-      description: Popup verschijnt automatisch als een nieuw lid zijn eerste twee topics schrijft.
+      description: "Popup verschijnt automatisch als een nieuw lid zijn eerste twee topics schrijft."
     usage_tips:
-      title: Tips voor nieuwe leden
+      title: "Tips voor nieuwe leden"
       description: "Algemene gebruikstips, essentiële informatie over het forum en uitleg voor nieuwe leden."
     welcome_user:
       title: "Welkom: Nieuw lid"
@@ -540,20 +482,20 @@ nl:
       title: "Welkom: Uitgenodigd lid"
       description: "Een privé-bericht dat automatisch naar alle nieuwe leden wordt gestuurd als ze ingaan op de uitnodiging om aan het forum deel te nemen door een ander lid."
     privacy_policy:
-      title: Privacy Policy
+      title: "Privacy Policy"
       description: "De privacy policy van je site. Laat leeg voor de standaar privacy policy."
     faq:
-      title: FAQ
-      description: De FAQ van je site. Laat leeg voor de standaard FAQ.
+      title: "FAQ"
+      description: "De FAQ van je site. Laat leeg voor de standaard FAQ."
     login_required_welcome_message:
       title: "Inloggen vereist: Welkomstbericht"
       description: "Welcomstbericht dat getoond wordt aan uitgelogde gebruikers als 'login required' is ingesteld."
     tos_user_content_license:
       title: "Algemene voorwaarden: Inhoudslicensie"
-      description: De tekst van de Inhoudslicentie van de Algemene Voorwaarden.
+      description: "De tekst van de Inhoudslicentie van de Algemene Voorwaarden."
     tos_miscellaneous:
       title: "Terms of Service: Overig"
-      description: De overige teksten van de Algemene Voorwaarden.
+      description: "De overige teksten van de Algemene Voorwaarden."
     login_required:
       title: "Inloggen nodig: Homepage"
       description: "De tekst die getoond wordt als men moet inloggen om naar het forum te kunnen gaan."
@@ -569,52 +511,48 @@ nl:
     tos_signup_form_message:
       title: "Inschijfformulier: algemene voorwaarden"
       description: "Het bericht dat getoond wordt met een checkbox op het inschrijfformulier als de tos_accept_required-instelling actief is."
-
   site_settings:
-    default_locale: De standaard taal van dit Discourse forum (ISO 639-1 code)
+    default_locale: "De standaard taal van dit Discourse forum (ISO 639-1 code)"
     allow_user_locale: "Gebruikers kunnen zelf een taal instellen voor de interface van de site"
-    min_post_length: Minimum lengte van een bericht in tekens
-    min_private_message_post_length: Minimum lengte van een privé-bericht in tekens
-    max_post_length: Maximum lengte van een bericht in tekens
-    min_topic_title_length: Minimum lengte van een topic-titel
-    max_topic_title_length: Maximum lengte van een topic-titel
-    min_private_message_title_length: Minimum lengte van de titel van een privebericht in tekens
-    min_search_term_length: Minimum lengte van een zoekterm in tekens
-    allow_uncategorized_topics: Sta topics zonder categorie toe
-    allow_duplicate_topic_titles: Sta topics met dezelfde titels toe
-    unique_posts_mins: Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen
+    min_post_length: "Minimum lengte van een bericht in tekens"
+    min_private_message_post_length: "Minimum lengte van een privé-bericht in tekens"
+    max_post_length: "Maximum lengte van een bericht in tekens"
+    min_topic_title_length: "Minimum lengte van een topic-titel"
+    max_topic_title_length: "Maximum lengte van een topic-titel"
+    min_private_message_title_length: "Minimum lengte van de titel van een privebericht in tekens"
+    min_search_term_length: "Minimum lengte van een zoekterm in tekens"
+    allow_uncategorized_topics: "Sta topics zonder categorie toe"
+    allow_duplicate_topic_titles: "Sta topics met dezelfde titels toe"
+    unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
     enforce_global_nicknames: "Dwing globaal unieke gebruikersnamen af (N.B.: verander dit alleen bij het opzetten van je forum)."
     discourse_org_access_key: "De toegangscode voor het discourse.org gebruikersnaamregister"
-    educate_until_posts: Laat een popup zien totdat een lid dit aantal berichten geplaatst heeft
+    educate_until_posts: "Laat een popup zien totdat een lid dit aantal berichten geplaatst heeft"
     title: "Titel van deze website, wordt gebruikt in de paginatitel en elders"
-    site_description: Omschrijf dit forum in een zin. Deze wordt getoond in de meta tag.
-    contact_email: E-mailadres van een contactpersoon van deze site. Belangrijke updates van Discourse.org worden naar dit adres gestuurd.
+    site_description: "Omschrijf dit forum in een zin. Deze wordt getoond in de meta tag."
+    contact_email: "E-mailadres van een contactpersoon van deze site. Belangrijke updates van Discourse.org worden naar dit adres gestuurd."
     company_full_name: "De volledige naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     company_short_name: "De korte naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     company_domain: "De domeinnaam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     queue_jobs: "DEVELOPERS ONLY! WARNING! Zet verschillende taken in een queue binnen sidekiq, bij 'false' worden taken ineens uitgevoerd"
-    crawl_images: Zet het ophalen van afbeeldingen van externe bronnen aan
-    download_remote_images_to_local: Download a kopie van externe afbeeldingen met een hotlink in een bericht
+    crawl_images: "Zet het ophalen van afbeeldingen van externe bronnen aan"
+    download_remote_images_to_local: "Download a kopie van externe afbeeldingen met een hotlink in een bericht"
     download_remote_images_threshold: "Minimum schijfruimte vereist om externe afbeeldingen lokaal te downloaden (percentage)"
     ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in seconden."
     post_edit_time_limit: "Na hoeveel minuten berichten nog gewijzigd of verwijderd mogen worden door de schrijver. Stel in op 0 om wijzigen en verwijderen voor onbepaalde tijd toe te staan."
     edit_history_visible_to_public: "Iedereen mag eerdere versies van een bericht zien. Wanneer aangevinkt kan alleen de staf de eerdere versies van een bericht zien."
     delete_removed_posts_after: "Na dit aantal uren zal een door een gebruiker verwijderd bericht ook echt helemaal verwijderd worden (in plaats van alleen verborgen)."
-    max_image_width: Maximale breedte van een afbeelding in een bericht
-    max_image_height: Maximale hoogte van een afbeelding in een bericht
-    category_featured_topics: Aantal topics dat wordt weergegeven in de categorielijst. An het wijzigen van dit getal kan het tot 15 minuten duren voordat de lijst is bijgewerkt.
+    max_image_width: "Maximale breedte van een afbeelding in een bericht"
+    max_image_height: "Maximale hoogte van een afbeelding in een bericht"
+    category_featured_topics: "Aantal topics dat wordt weergegeven in de categorielijst. An het wijzigen van dit getal kan het tot 15 minuten duren voordat de lijst is bijgewerkt."
     add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle leden-content behalve voor interne links (inclusief parent domeinen). NB: Als je dit verandert, moet je ook alle 'baked markdown' updaten met \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Een kommagescheiden lijst van domeinen waar 'nofollow' niet is toegevoegd (voorbeelddomein.com zal automatisch sub.voorbeelddomein.com toestaan)."
-
-    post_excerpt_maxlength: Maximale lengte in tekens van een uittreksel van een bericht
+    post_excerpt_maxlength: "Maximale lengte in tekens van een uittreksel van een bericht"
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed' bericht."
-    category_post_template: De berichttemplate die gebruikt wordt als je een nieuwe categorie aanmaakt
-
+    category_post_template: "De berichttemplate die gebruikt wordt als je een nieuwe categorie aanmaakt"
+    onebox_max_chars: "Het maximaal aantal tekens dat een 'onebox' zal importeren van een externe website in het bericht."
     logo_url: "Het logo van je site. Bijv: http://example.com/logo.png"
     logo_small_url: "Het kleine logo van je site (wordt weergegeven na scrollen op topic-pagina's). Bijv: http://example.com/logo-small.png"
     favicon_url: "Een favicon voor je site. Zie http://nl.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Icoon voor Apple touch devices. Aanbevolen grootte is 144px bij 144px."
-
     notification_email: "Het afzenderadres dat wordt gebruikt voor mails waarmee leden op de hoogte worden gesteld van verloren wachtwoorden, nieuwe accounts etc."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
     use_https: "Gebruik http of https voor de volledige url van de site (Discourse.base_url)? GEBRUIK DIT NIET ALS HTTPS NOG NIET OPGEZET IS!"
@@ -623,26 +561,20 @@ nl:
     summary_likes_required: "Minimum aantal 'vind ik leuk' nodig voordat de samenvattingsmodus mogelijk wordt."
     summary_percent_filter: "Als iemand op samenvatting klikt, laat dan de top % van de berichten zien"
     enable_private_messages: "Sta nieuwe leden (trustlevel 1) toe privé-berichten te maken en er op te reageren"
-
     enable_long_polling: "De 'message bus' die gebruikt wordt voor notificaties kan 'long polling' gebruiken."
     long_polling_interval: "Het interval in milliseconden voor dat een nieuwe 'long poll' wordt uitgestuurd"
     polling_interval: "Hoe vaak een cliënt een 'poll' moet uitvoeren in milliseconden"
     anon_polling_interval: "Hoe vaak een anonieme client een 'poll' moet uitvoeren in milliseconden"
-
     auto_track_topics_after: "Hoeveel milliseconden het moet duren voordat een topic automatisch bijgehouden wordt (0 voor altijd, -1 voor nooit)"
     new_topic_duration_minutes: "Hoeveel minuten kan een topic als nieuw beschouwd worden (-1 voor altijd, -2 voor laatste bezoek)"
-
     flags_required_to_hide_post: "Berichten zullen automatisch worden verborgen zodra het aantal meldingen maximaal dit aantal is (0 voor nooit)"
     cooldown_minutes_after_hiding_posts: "Hoeveel minuten moet iemand wachten voordat zij hun bericht kunnen wijzigen nadat het is verborgen door meldingen"
-
     max_topics_in_first_day: "Het maximum aantal topics dat een gebruiker mag maken tijdens hun eerste dag op de site"
     max_replies_in_first_day: "Het maximum aantal reacties dat een gebruiker mag schrijven tijdens hun eerste dag op de site"
-
     num_flags_to_block_new_user: "Als de berichten van een nieuwe gebruiker dit aantal spammarkeringen krijgen van num_users_to_block_new_user verschillende gebruikers, verberg dan alle berichten van deze gebruiker en houdt nieuwe berichten tegen. 0 om deze mogelijkheid uit te zetten."
     num_users_to_block_new_user: "Als de berichten van een nieuwe gebruiker num_flags_to_block_new_user spammarkeringen krijgen van andere gebruikers, verberg dan alle berichten van deze gebruiker en houdt nieuwe berichten tegen. 0 om deze mogelijkheid uit te zetten."
     notify_mods_when_user_blocked: "Als een gebruiker automatisch geblokkeerd is, stuur dan een bericht naar alle moderatoren."
     flag_sockpuppets: "Als een nieuwe gebruiker (bijv. geregistreerd in de afgelopen 24 uur) reageert op de topic van een andere nieuwe gebruiker, maar wel van hetzelfde IP-adres dan, worden beide berichten automatisch gemarkeerd als spam."
-
     traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, gebruik 2 spaties voor een nieuw regeleinde"
     post_undo_action_window_mins: "Het tijdsbestek waarin iemand een actie binnen een bericht kan terugdraaien (zoals 'vind ik leuk')"
     must_approve_users: "De eigenaars van een forum moeten de leden accepteren voordat zij toegang krijgen."
@@ -662,99 +594,71 @@ nl:
     send_welcome_message: "Krijgen nieuwe leden een welkomst-privé-bericht?"
     suppress_reply_directly_below: "Laat geen reactieteller zien bij een bericht als er maar één reactie onder staat"
     suppress_reply_directly_above: "Laat geen 'in antwoord op' zien bij een bericht als er maar één reactie boven staat"
-
     topics_per_period_in_top_summary: "Hoeveel topics moeten er geladen worden op de top-topics samenvatting"
     topics_per_period_in_top_page: "Hoeveel topics moeten er geladen worden op de top-topics pagina"
     redirect_new_users_to_top_page_duration: "Het aantal dagen dat nieuwe gebruikers automatisch naar de toppagina doorgestuurd worden"
-
     enable_badges: "Activeer het badgesysteem (experimenteel)"
-
     allow_index_in_robots_txt: "De site zou geïndexeerd mogen worden door zoekmachines (update robots.txt)"
     email_domains_blacklist: "Een lijst met e-maildomeinen gescheiden door een |-teken van domeinen die niet worden toegestaan. Voorbeeld: mailinator.com|trashmail.net"
     email_domains_whitelist: "Een lijst met e-maildomeinen gescheiden door een |-teken van domeinen die wel worden toegestaan. N.B.: als je hier iets opgeeft, zijn andere domeinen NIET toegestaan."
     version_checks: "Ping de Discourse-hub voor versieupdates and laat versiemeldingen zien in het /admin dashboard"
-    new_version_emails: Stuur een e-mail naar het contact-email adres als er een nieuwe versie beschikbaar is.
-
+    new_version_emails: "Stuur een e-mail naar het contact-email adres als er een nieuwe versie beschikbaar is."
     port: "DEVELOPER ONLY! WARNING! Mocht je een specifieke poort willen toewijzen aan de URL. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     force_hostname: "DEVELOPER ONLY! WARNING! Mocht je een specifieke hostname willen toewijzen. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
-
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
-
-    # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
-
     invite_only: "Registratie is niet mogelijk, alleen toegang op uitnodiging."
-
-    login_required: Inloggen vereist om berichten te kunnen lezen
-
+    login_required: "Inloggen vereist om berichten te kunnen lezen"
     min_username_length: "Minimum lengte gebruikersnaam. (Geldt niet als globaal unieke gebruikersnamen actief is)"
-
     min_password_length: "Minimum lengte wachtwoord."
-    block_common_passwords: "Weiger wachtwoorden uit de lijst van 5000 meest gebruikte wachtwoorden."
-
-
     enable_sso: "Gebruikers kunnen inloggen via een andere site (Single Sign On)"
     sso_url: "URL van single sign on eindpunt"
     sso_secret: "Geheime tekenreeks voor het encrypten/decrypten van SSO informatie, zorg er voor dat het 10 tekens of langer is"
     sso_overrides_email: "Gebruikt het mailadres van de SSO service i.p.v. het lokaal opgegegeven adres. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale mailadressen)"
     sso_overrides_username: "Gebruikt de gebruikersnaam van de SSO service i.p.v. de lokaal gekozen gebruikersnaam. (WAARSCHUWING: er kunnen discrepanties ontstaan door verschillen in eisen aan bijv. de lengte van de gebruikersnaam)"
     sso_overrides_name: "Gebruikt de naam die gebruikt wordt bij de SSO service i.p.v. de lokaal opgegeven naam. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale namen)"
-
-    enable_local_logins: Zet lokaal inloggen aan
-    enable_google_logins: Zet inloggen met Google aan
+    enable_local_logins: "Zet lokaal inloggen aan"
+    enable_google_logins: "Zet inloggen met Google aan"
     enable_yahoo_logins: "Zet inloggen met Yahoo! aan"
-
-    enable_twitter_logins: Zet inloggen met Twitter aan. Hiervoor heb je een twitter_consumer_key en twitter_consumer_secret nodig.
+    enable_twitter_logins: "Zet inloggen met Twitter aan. Hiervoor heb je een twitter_consumer_key en twitter_consumer_secret nodig."
     twitter_consumer_key: "consumer_key (registreer op dev.twitter.com)"
     twitter_consumer_secret: "consumer secret (registreer op dev.twitter.com)"
-
-    enable_facebook_logins: Zet inloggen met Facebook aan. Hiervoor heb je een facebook_app_id en facebook_app_secret nodig.
+    enable_facebook_logins: "Zet inloggen met Facebook aan. Hiervoor heb je een facebook_app_id en facebook_app_secret nodig."
     facebook_app_id: "app_id (registreer op https://developers.facebook.com/apps)"
     facebook_app_secret: "app_secret (registreer op https://developers.facebook.com/apps)"
-
-    enable_github_logins: Zet inloggen met Github aan. Hiervoor heb je een github_client_id en github_client_secret nodig.
+    enable_github_logins: "Zet inloggen met Github aan. Hiervoor heb je een github_client_id en github_client_secret nodig."
     github_client_id: "github_client_id (registreer op https://github.com/settings/applications)"
     github_client_secret: "github_client_secret (registreer op https://github.com/settings/applications)"
-
     allow_restore: "Sta herstellen van data toe, waarbij ALLE site-data vervangen wordt. Zet op 'false' tenzij je een backup terug wil zetten."
     maximum_backups: "Het maximum aantal backups om te bewaren. Oudere backups worden automatisch verwijderd."
     backup_daily: "Maak automatisch elke dag een backup"
     enable_s3_backups: "Upload voltooide backups naar S3. Zorg ervoor dat je je S3 logingegevens hebt ingevuld."
     s3_backup_bucket: "De S3 bucket voor de backups. WAARSCHUWING: zorg er voor dat dit een privébucket is."
-
     active_user_rate_limit_secs: "Hoe vaak we het 'last_seen_at'-veld updaten, in seconden."
     previous_visit_timeout_hours: "Hoe lang een bezoek duurt voordat we het als het 'vorige' bezoek beschouwen, in uren."
-
-    rate_limit_create_topic: Hoeveel seconden voordat je een ander topic kan aanmaken
-    rate_limit_create_post: Hoeveel seconden voordat je een ander bericht kan aanmaken
-
-    max_likes_per_day: Het maximaal aantal keren per dag dat een lid berichten leuk kan vinden
-    max_flags_per_day: Het maximaal aantal moderatie-meldingen dat een lid per dag kan geven
-    max_bookmarks_per_day: Het maximaal aantal favorieten dat een lid per dag kan aanmaken
-    max_edits_per_day: Het maximaal aantal bewerkingen dat een lid per dag kan maken
-    max_stars_per_day: Het maximaal aantal topics dat met een ster gemarkeerd kan worden binnen een dag
-    max_topics_per_day: Het maximaal aantal topics dat je kan aanmaken op een dag
-    max_private_messages_per_day: Het maximaal aantal privé-berichten dat je per dag kan versturen
-
-    suggested_topics: Het aantal aanbevolen topics dat is weergegeven aan de onderkant van een topic
-
+    rate_limit_create_topic: "Hoeveel seconden voordat je een ander topic kan aanmaken"
+    rate_limit_create_post: "Hoeveel seconden voordat je een ander bericht kan aanmaken"
+    max_likes_per_day: "Het maximaal aantal keren per dag dat een lid berichten leuk kan vinden"
+    max_flags_per_day: "Het maximaal aantal moderatie-meldingen dat een lid per dag kan geven"
+    max_bookmarks_per_day: "Het maximaal aantal favorieten dat een lid per dag kan aanmaken"
+    max_edits_per_day: "Het maximaal aantal bewerkingen dat een lid per dag kan maken"
+    max_stars_per_day: "Het maximaal aantal topics dat met een ster gemarkeerd kan worden binnen een dag"
+    max_topics_per_day: "Het maximaal aantal topics dat je kan aanmaken op een dag"
+    max_private_messages_per_day: "Het maximaal aantal privé-berichten dat je per dag kan versturen"
+    suggested_topics: "Het aantal aanbevolen topics dat is weergegeven aan de onderkant van een topic"
     clean_up_uploads: "Verwijder weesbestanden om illegale hosting te voorkomen. LET OP: maak een backup van je /uploads directory voordat je deze instelling activeert."
-    clean_orphan_uploads_grace_period_hours: Na hoeveel uur een weesbestand voor verwijderding gemarkeerd wordt.
-    purge_deleted_uploads_grace_period_days: Na hoeveel uur een weesbestand definitief verwijderd wordt.
-    enable_s3_uploads: Of we uploads op Amazon S3 willen zetten of niet
+    clean_orphan_uploads_grace_period_hours: "Na hoeveel uur een weesbestand voor verwijderding gemarkeerd wordt."
+    purge_deleted_uploads_grace_period_days: "Na hoeveel uur een weesbestand definitief verwijderd wordt."
+    enable_s3_uploads: "Of we uploads op Amazon S3 willen zetten of niet"
     s3_upload_bucket: "De 'bucket' waarin we onze uploads naar Amazon S3 willen zetten"
     s3_access_key_id: "De Amazon S3 access key id dat wordt gebruikt om afbeeldingen te uploaden"
     s3_secret_access_key: "De Amazon S3 secret access key dat wordt gebruikt om afbeeldingen te uploaden"
     s3_region: "De Amazon S3 region name dat wordt gebruikt om afbeeldingen te uploaden"
-
     enable_flash_video_onebox: "Ondersteun het embedden van swf en flv links in oneboxes (let op, dit kan onveilig zijn)"
-
     default_invitee_trust_level: "Het standaard trustlevel (0-4) voor uitgenodigde leden"
     default_trust_level: "Het standaard trustlevel (0-4) voor leden"
-
     basic_requires_topics_entered: "Hoeveel topics een lid moet aanmaken voordat deze naar het basisniveau gepromoveerd wordt."
     basic_requires_read_posts: "Hoeveel posts een lid gelezen moet hebben voordat deze naar het basisniveau gepromoveerd wordt"
     basic_requires_time_spent_mins: "Hoeveel minuten een lid heeft moeten doorbrengen met het lezen van berichten voordat deze naar het basisniveau gepromoveerd wordt"
-
     regular_requires_topics_entered: "Hoeveel topics een nieuw lid moet plaatsen voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
     regular_requires_read_posts: "Hoeveel berichten een nieuw lid moet lezen voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
     regular_requires_time_spent_mins: "Hoeveel minuten een nieuw lid berichten moet lezen voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
@@ -762,55 +666,39 @@ nl:
     regular_requires_likes_received: "Hoeveel keer een nieuw lid een 'vind ik leuk' moet ontvangen voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
     regular_requires_likes_given: "Hoeveel keer een nieuw lid berichten leuk moet vinden voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
     regular_requires_topic_reply_count: "Op hoeveel topics een nieuw lid moet reageren voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
-
     min_trust_to_create_topic: "Het minimale trust level dat nodig is om een topic te mogen maken."
-
-    newuser_max_links: Hoeveel links een nieuw lid in een bericht kan plaatsen
-    newuser_max_images: Hoeveel afbeeldingen een nieuw lid in een bericht kan plaatsen
-    newuser_max_images: Hoeveel bestanden een nieuw lid in een bericht kan plaatsen
+    newuser_max_links: "Hoeveel links een nieuw lid in een bericht kan plaatsen"
+    newuser_max_images: "Hoeveel bestanden een nieuw lid in een bericht kan plaatsen"
+    newuser_max_attachments: "Hoeveel bijlagen een nieuwe gebruiker aan een bericht kan toevoegen"
     newuser_max_mentions_per_post: "Maximum aantal @naam notificaties dat een nieuw lid in een bericht kan gebruiken"
     newuser_max_replies_per_topic: "Maximum aantal reacties dat een nieuw lid in een topic mag plaatsen"
     max_mentions_per_post: "Maximum aantal @naam notificaties dat je in een bericht kan gebruiken"
-
     create_thumbnails: "Maak thumbnails agbeeldingen in een lightbox"
-
     email_time_window_mins: "Hoeveel minuten we wachten met het sturen van een e-mail naar een persoon, om ze een kans te geven het eerst op de site te kunnen lezen."
     email_posts_context: "Hoeveel eerdere reacties op een bericht in een notificatiemail worden getoond"
     flush_timings_secs: "Hoe vaak we timing-data naar de server sturen, in seconden."
     max_word_length: "De maximumlengte van een woord in een topictitel"
     title_min_entropy: "De minimale entropie (unieke tekens) die een topictitel moet bevatten"
     body_min_entropy: "De minimale entropie (unieke tekens) die de inhoud van een post moet bevatten"
-
     title_fancy_entities: "Converteer algemene ASCII-tekens naar fancy HTML in topictitels, zoals SmartyPants (http://daringfireball.net/projects/smartypants)"
-
-    min_title_similar_length: De minimale lengte die een titel van een topic moet hebben voordat er wordt gezocht naar vergelijkbare topics
-    min_body_similar_length: De minimale lengte die de inhoud van een bericht moet hebben voordat er wordt gezocht naar vergelijkbare topics
-
+    min_title_similar_length: "De minimale lengte die een titel van een topic moet hebben voordat er wordt gezocht naar vergelijkbare topics"
+    min_body_similar_length: "De minimale lengte die de inhoud van een bericht moet hebben voordat er wordt gezocht naar vergelijkbare topics"
     category_colors: "Een lijst, gescheiden door een pipe (|), van hexadecimal kleurwaardes die gebruikt kunnen worden voor categorien"
-
     max_image_size_kb: "De maximale afbeeldingsgrootte die we toestaan voor uploads, in kB. Zorg er voor dat deze limiet ook ingesteld is in nginx (client_max_body_size) / apache of een proxy."
     max_attachment_size_kb: "De maximale bestandsgrootte die we toestaan voor uploads, in kB. Zorg er voor dat deze limiet ook ingesteld is in nginx (client_max_body_size) / apache of een proxy."
     authorized_extensions: "Een met pipes (|) gescheiden lijst van bestandsextensies die mogen worden geupload"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
-
     title_prettify: "Voorkom veel voorkomende fouten in titels (alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
-
     topic_views_heat_low: "Het aantal keer dat een topic bekeken moet zijn om een laag 'heat' level te hebben."
     topic_views_heat_medium: "Het aantal keer dat een topic bekeken moet zijn om een medium 'heat' level te hebben."
     topic_views_heat_high: "Het aantal keer dat een topic bekeken moet zijn om een hoog 'heat' level te hebben."
-
     faq_url: "Heb je je FAQ ergens extern staan, geef hier dan de volledige url op."
     tos_url: "Heb je je Algemene Voorwaarden ergens extern staan, geef hier dan de volledige url op."
     privacy_policy_url: "Heb je je Privacy Voorwaarden ergens extern staan, geef hier dan de volledige url op."
-
     newuser_spam_host_threshold: "Hoe vaak kan een gebruiker linken naar dezelfde host in hun `newuser_spam_host_posts` berichten voordat deze links als spam gezien worden."
-
-    white_listed_spam_host_domains: "Een kommagescheiden lijst met domeinen die niet op spam gecontrolleerd worden, nieuwe gebruikers kunnen ongelimiteerd links plaatsen naar deze domainen"
     staff_like_weight: "Extra weegfactor voor likes gegeven door de staf."
-
     reply_by_email_enabled: "Ondersteuning voor antwoorden per e-mail"
     reply_by_email_address: "Template voor antwoorden per e-mail, bijvoorbeeld: %{reply_key}@reageer.mijnforum.nl"
-
     pop3s_polling_enabled: "Mail ophalen via POP3S?"
     pop3s_polling_port: "De poort voor POP3S"
     pop3s_polling_host: "De host voor POP3S"
@@ -820,49 +708,39 @@ nl:
     email_in_address: "Het emailadres waarnaar nieuwe topics gemaild kunnen worden. Leeg laten betekent dat gebruikers niet globaal kunnen plaatsen."
     email_in_min_trust: "Het minium trustlevel dat een gebruiker moet hebben om nieuwe topics te kunnen mailen"
     email_in_category: "De categorie waar nieuwe mails in geplaatst worden"
-
     minimum_topics_similar: "Hoeveel topics moeten er in de database staan voordat er vergelijkbare topics getoond worden?"
-
     relative_date_duration: "Na hoeveel dagen de datum van een bericht relatief zijn in plaats van absoluut.Voorbeelden: relatieve datum: 7d, absolute datum: 20 feb"
     delete_user_max_post_age: "Na hoeveel dagen na het eerste bericht van een gebruiker mag een admin deze gebruiker nog verwijderen."
     delete_all_posts_max: "Het maximaal aantal berichten dat ineens verwijderd kan worden met de 'Verwijder alle berichten'-knop. Als een gebruiker meer berichten heeft, kunnen de berichten niet in een keer verwijderd worden en kan de gebruiker dus niet verwijderd worden."
     username_change_period: "The number of days after registration that accounts can change their username (0 om wijziging niet toe te staan)."
-    email_editable: Gebruikers mogen hun e-mailadres na registratie nog wijzigen.
-
+    email_editable: "Gebruikers mogen hun e-mailadres na registratie nog wijzigen."
     allow_uploaded_avatars: "Sta toe dat avatars geupload kunnen worden"
     allow_animated_avatars: "Gebruikers mogen een animated GIF gebruiken als avatar. LET OP: draai de rake task avatars:regenerate nadat je deze instelling hebt geactiveerd."
     digest_min_excerpt_length: "Hoeveel karakters er ongeveer per bericht getoond wordt in de mail digest"
     default_digest_email_frequency: "Hoe vaak ontvangen gebruikers standaard de digestmails. Ze kunnen dit in hun eigen instellingen nog aanpassen."
     default_external_links_in_new_tab: "Open externe links in a nieuwe tab. Gebruikers kunnen dit wijzigen in hun instellingen."
-
     detect_custom_avatars: "Check of gebruikers een eigen avatar geupload hebben"
     max_daily_gravatar_crawls: "Het maximum aantal keren per dag dat Discourse checkt of er nieuwe Gravatars zijn"
-
     allow_profile_backgrounds: "Gebruikers mogen een profielachtergrond instellen"
-
     sequential_replies_threshold: "Het aantal reacties dat een gebruiker achter elkaar moet plaatsen in een topic om een melding te krijgen"
-
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobiel-vriendelijke theme met de mogelijkheid te schakelen naar de volledige site. Schakel deze optie uit als je een eigen stylesheet wil gebruiken die volledig responsive is."
-
     dominating_topic_minimum_percent: "Vanaf welk percentage berichten dat een gebruiker plaatst in een topic vinden we de gebruiker dominant?"
     suppress_uncategorized_badge: "Laat de badge niet zien voor topics zonder categorie"
     min_posts_for_search_in_topic: "Als topics minder dan minimum aantal berichten hebben, is zoeken niet mogelijk"
-
     enable_names: "Gebruikers mogen hun volledige naam laten zien"
     display_name_on_posts: "Laat de volledige naam van een gebruiker ook bij zijn berichten zien"
-    invites_shown: Maximum uitnodigingen op gebruikerspagina
+    invites_shown: "Maximum uitnodigingen op gebruikerspagina"
     short_progress_text_threshold: "Als het aantal berichten in een topic meer is dan dit aantal zal de voortgangsbalk alleen het nummer van het huidige bericht tonen. Als je de breedte van de voortgangsbalk verandert, moet je dit getal misschien ook aanpassen."
     default_code_lang: "Standaard programmeertaal die gebruikt wordt voor syntax highlighting van GitHub codeblokken (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Als iemand wil reageren in een topic van meer dan dit aantal dagen oud, geef dan een waarschuwing om de gebruiker te ontmoedigen de reactie te plaatsen. Zet op 0 om deze waarschuwing uit te zetten."
-
     embeddable_host: "Welke hostmag reacties van dit forum embedden"
     feed_polling_enabled: "Importeer RSS/ATOM feed als berichten"
     feed_polling_url: "URL van RSS/ATOM te importere feed"
     embed_by_username: "Discourse gebruikersnaam van de gebruiker die de topics maakt"
+    embed_truncate: "Kort de geïmporteerde berichten in"
     embed_category: "Categorie van gemaakte topics"
     embed_post_limit: "Maximum aantal berichten op te embedden"
     tos_accept_required: "Gebruikers moeten een vinkje zetten bij het inschrijven om aan te geven dat ze akkoord gaan met de algemene voorwaarden als deze optie actief is. Ga naar 'Inschijfformulier: Algemene Voorwaarden' in de Inhoud tab om het bericht te wijzigen."
-
   notification_types:
     mentioned: "%{display_username} heeft je genoemd in %{link}"
     liked: "%{display_username} vond je bericht in %{link} leuk"
@@ -875,23 +753,19 @@ nl:
     invited_to_private_message: "%{display_username} heeft je uitgenodigd voor een privé-bericht: %{link}"
     invitee_accepted: "%{display_username} heeft je uitnodiging geaccepteerd"
     linked: "%{display_username} heeft je gelinkt in %{link}"
-
   search:
     within_post: "#%{post_number} door %{username}: %{excerpt}"
     types:
-      category: Categorien
-      topic: Topics
-      user: Leden
-
-  original_poster: Oorspronkelijk geplaatst door
-  most_posts: Meer berichten
-  most_recent_poster: Meest recente schrijver
-  frequent_poster: Frequente schrijver
-
+      category: 'Categorien'
+      topic: 'Topics'
+      user: 'Leden'
+  original_poster: "Oorspronkelijk geplaatst door"
+  most_posts: "Meer berichten"
+  most_recent_poster: "Meest recente schrijver"
+  frequent_poster: "Frequente schrijver"
   redirected_to_top_reasons:
     new_user: "Welkom! Omdat je een nieuwe bezoeker bent zal dit je homepage zijn tot je een tijdje rond hebt kunnen kijken op de site. Hier zijn de meest populaire topics van de afgelopen tijd"
     not_seen_in_a_month: "Welkom terug! We hebben je een tijdje niet gezien. Dit is een overzicht van de topics die zijn gemaakt sinds je weg was."
-
   move_posts:
     new_topic_moderator_post:
       one: "Ik heb een bericht naar een nieuwe topic verplaatst: %{topic_link}"
@@ -899,7 +773,6 @@ nl:
     existing_topic_moderator_post:
       one: "Ik heb een bericht naar een bestaande topic verplaatst: %{topic_link}"
       other: "Ik heb %{count} berichten naar een bestaande topic verplaatst: %{topic_link}"
-
   topic_statuses:
     archived_enabled: "Deze topic is nu gearchiveerd en kan niet meer veranderd worden."
     archived_disabled: "Deze topic is niet langer gearchiveerd en kan weer veranderd worden."
@@ -922,7 +795,6 @@ nl:
     pinned_disabled: "Deze topic is niet langer gepind en zal niet meer bovenaan de lijst van topics in zijn categorie staan."
     visible_enabled: "Deze topic is nu zichtbaar en zal weer worden weergegeven in topiclijsten."
     visible_disabled: "Deze topic is nu onzichtbaar en zal niet worden weergegeven in topiclijsten, en kan alleen via een directe link worden bezocht."
-
   login:
     not_approved: "Je account is nog niet goedgekeurd. Je zal via de mail een bericht van ons ontvangen wanneer je in kan loggen."
     incorrect_username_email_or_password: "Incorrecte gebruikersnaam, e-mailadres of wachtwoord"
@@ -937,21 +809,19 @@ nl:
     something_already_taken: "Er ging iets mis, misschien zijn de gebruikersnaam en/of e-mailadres al in gebruik? Gebruik dan de 'wachtwoord vergeten' link"
     omniauth_error: "Sorry, er was een fout met je %{strategy} account. Wellicht heb je de autorisatie niet goedgekeurd?"
     omniauth_error_unknown: "Er is iets misgegaan bij het inloggen. Probeer het opnieuw."
-
   user:
     username:
       short: "moet langer zijn dan %{min} tekens"
       long: "moet korter zijn dan %{max} tekens"
       characters: "mag alleen nummers, letters en underscores bevatten"
-      unique: moet uniek zijn
-      blank: mag niet leeg zijn
+      unique: "moet uniek zijn"
+      blank: "mag niet leeg zijn"
       must_begin_with_alphanumeric: "moet met een letter of nummer beginnen"
     email:
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
-      blocked: is niet toegestaan.
+      blocked: "is niet toegestaan."
     ip_address:
-      blocked: is geblokkeerd.
-
+      blocked: "is geblokkeerd."
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} heeft je uitgenodigd om op een privé-bericht te reageren op %{site_name}"
     text_body_template: |
@@ -964,7 +834,6 @@ nl:
       Je bent uitgenodigd door een regulier lid, dus je kan direct een reactie achterlaten zonder in te hoeven loggen.
 
       [1]: %{invite_link}
-
   invite_forum_mailer:
     subject_template: "[%{site_name}] %{invitee_name} heeft je uitgenodigd voor %{site_name}"
     text_body_template: |
@@ -977,7 +846,6 @@ nl:
       Je bent uitgenodigd door een vertrouwde gebruiker, daarom kun je je direct inschrijven zonder in te hoeven loggen.
 
       [1]: %{invite_link}
-
   test_mailer:
     subject_template: "[%{site_name}] E-mail Bezorgtest"
     text_body_template: |
@@ -1020,7 +888,6 @@ nl:
       ----
 
       <small>Er zou een unsubscribe footer op elke email die je verstuurt moeten zitten zodat men direct kan afmelden mocht men deze mails niet willen ontvangen. Dus laten we er eentje opzetten!
-
   new_version_mailer:
     subject_template: "[%{site_name}] Update beschikbaar"
     text_body_template: |
@@ -1034,7 +901,6 @@ nl:
       - Ga naar `/admin/docker`, herlaad de pagina een aantal keren en druk dan op de "Upgrade Discourse" knop.
 
       - Ga naar http://meta.discourse.org voor nieuws, discussies over en support voor Discourse.
-
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update beschikbaar"
     text_body_template: |
@@ -1052,7 +918,6 @@ nl:
       ### Release notes
 
       %{notes}
-
   system_messages:
     post_hidden:
       subject_template: "Bericht van %{site_name}: je bericht is verborgen wegens meldingen uit de community"
@@ -1070,7 +935,6 @@ nl:
         Echter, als het bericht een tweede keer wordt verborgen door de community, wordt er een moderator ingelicht. Zij kunnen verdere actie ondernemen, waaronder een mogelijke schorsing van je account.
 
         Voor extra duiding verwijzen wij je graag door naar onze [Veel gestelde Vragen](%{base_url}/faq).
-
     usage_tips:
       text_body_template: |
         Dit privé-bericht heeft een paar tips om je een eind op weg te helpen:
@@ -1112,7 +976,6 @@ nl:
         - Wanneer je een topic leest, kan je naar boven scrollen (↑) door op de topictitel bovenaan de pagina te klikken of op <kbd>home</kbd> te drukken. Om de *onderkant* (↓) te bereiken klik je op de pijl naar beneden aan de onderkant van de pagina of druk op <kbd>end</kbd>.
 
         - Gebruik tijd als shortcuts. Klik op de tijd van het eerste bericht van een topic om naar het begin van de topic te gaan en op de tijd van het laatste bericht om naar het eind te gaan.
-
     welcome_user:
       subject_template: "Welkom bij %{site_name}!"
       text_body_template: |
@@ -1123,7 +986,6 @@ nl:
         We geloven altijd in [beschaafd gemeenschappelijk gedrag](%{base_url}/faq).
 
         Geniet van je verblijf!
-
     welcome_invite:
       subject_template: "Welkom bij %{site_name}!"
       text_body_template: |
@@ -1146,15 +1008,32 @@ nl:
         Geniet van je verblijf!
 
         [prefs]: %{user_preferences_url}
-
     export_succeeded:
-      subject_template: Export succesvol uitgevoerd
-      text_body_template: De export was succesvol uitgevoerd.
+      subject_template: "Export succesvol uitgevoerd"
+      text_body_template: "De export was succesvol uitgevoerd."
+    export_failed:
+      subject_template: "Export mislukt"
+      text_body_template: |
+        De export is mislukt.
 
+        Hier is het log:
+
+        ```
+        %{logs}
+        ```
     import_succeeded:
-      subject_template: Import succesvol uitgevoerd
-      text_body_template: De import was succesvol uitgevoerd.
+      subject_template: "Import succesvol uitgevoerd"
+      text_body_template: "De import was succesvol uitgevoerd."
+    import_failed:
+      subject_template: "Import mislukt"
+      text_body_template: |
+        De import is mislukt.
 
+        Hier is het log:
+
+        ```
+        %{logs}
+        ```
     email_error_notification:
       subject_template: "Fout bij verwerking mail"
       text_body_template: |
@@ -1165,16 +1044,14 @@ nl:
         Fout - %{error}
 
         %{source}
-
     email_reject_trust_level:
       subject_template: "Bericht geweigerd"
       text_body_template: |
         Het bericht dat je naar %{to} hebt verzonden is door het systeem geweigerd.
 
         Je hebt (nog) niet het vereiste vertrouwenslevel om nieuwe topics naar dit adres te kunnen mailen.
-
     too_many_spam_flags:
-      subject_template: Account geblokkeerd
+      subject_template: "Account geblokkeerd"
       text_body_template: |
         Hallo,
 
@@ -1183,7 +1060,6 @@ nl:
         Uit voorzorg is je nieuwe account geblokkeerd waardoor je geen berichten meer kan plaatsen tot iemand van de staf je account opnieuw beoordeeld.
 
         Kijk voor verdere uitleg in de [FAQ](%{base_url}/faq).
-
     blocked_by_staff:
       subject_template: "Account geblokkeerd"
       text_body_template: |
@@ -1192,7 +1068,6 @@ nl:
         Dit is een automatisch bericht van %{site_name} om je te informeren dat je account geblokkeerd is door de staf.
 
         Kijk voor verdere uitleg in de [FAQ](%{base_url}/faq).
-
     user_automatically_blocked:
       subject_template: "Nieuwe gebruiker %{username} is door meldingen geblokkeerd"
       text_body_template: |
@@ -1201,7 +1076,6 @@ nl:
         Kijk hier voor [de markeringen](/admin/flags). Als %{username} ten onrechte geblokkeerd is, klik dan op de deblokkeerdknop op [de beheerpagina van deze gebruiker](%{user_url}).
 
         De drempel hiervoor kan ingesteld worden met de `block_new_user` instelling.
-
     spam_post_blocked:
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd door herhaalde links"
       text_body_template: |
@@ -1210,16 +1084,14 @@ nl:
         Bekijk de gebruiker [hier](%{user_url}).
 
         De drempel hiervoor kan ingesteld worden met de `newuser_spam_host_threshold` instelling.
-
     unblocked:
-      subject_template: Account gedeblokkeerd
+      subject_template: "Account gedeblokkeerd"
       text_body_template: |
         HAllo,
 
         Dit is een automatisch bericht van %{site_name} om je te informeren dat je account gedeblokkeerd is.
 
         Je kunt weer berichten plaatsen
-
     pending_users_reminder:
       subject_template:
         one: "1 gebruiker wacht op goedkeuring"
@@ -1228,27 +1100,21 @@ nl:
         Er zijn nieuwe gebruikers die zich hebben ingeschreven en wachten op goedkeuring (of afwijzing) voor zij het forum op kunnen.
 
         [Beoordeel deze gebruikers in het admingedeelte](/admin/users/list/pending).
-
   unsubscribe_link: "Om deze e-mails niet langer willen ontvangen, ga naar [je gebruikersinstellingen](%{user_preferences_url})."
-
   user_notifications:
-    previous_discussion: Vorige reacties
+    previous_discussion: "Vorige reacties"
     unsubscribe:
-      title: Uitschrijven
+      title: "Uitschrijven"
       description: "Niet geïnteresseerd in deze e-mails? Geen probleem! Klik hieronder om direct uitgeschreven te worden:"
-
     reply_by_email: "Beantwoord deze mail om te reageren op dit forumbericht, of ga naar %{base_url}%{url} in je browser."
     visit_link_to_respond: "Ga naar %{base_url}%{url} in je browser om te reageren."
-
     posted_by: "Geplaatst door %{username} op %{post_date}"
-
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} heeft je uitgenodigd voor een privé-gesprek '%{topic_title}'"
       text_body_template: |
         %{username} heeft je uitgenodigd voor een privé-gesprek '%{topic_title}' op %{site_name}:
 
         Bezoek deze link om de topic te bekijken: %{base_url}%{url}
-
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1258,7 +1124,6 @@ nl:
 
         ---
         %{respond_instructions}
-
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1268,7 +1133,6 @@ nl:
 
         ---
         %{respond_instructions}
-
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1278,7 +1142,6 @@ nl:
 
         ---
         %{respond_instructions}
-
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1288,7 +1151,6 @@ nl:
 
         ---
         %{respond_instructions}
-
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
@@ -1298,22 +1160,19 @@ nl:
 
         ---
         %{respond_instructions}
-
     digest:
       why: "Hier is een korte samenvatting van de gesprekken op %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
       subject_template: "[%{site_name}] Forumactiviteit op %{date}"
       new_activity: "Nieuwe reacties op je topics en berichten:"
       top_topics: "Veel besproken topics:"
-      new_topics: "Nieuwe topics:"
+      other_new_topics: "Andere nieuwe topics:"
       unsubscribe: "Deze samenvatting wordt door %{site_link} verstuurd als we je 7 dagen hebben gemist op onze site. Mocht je dit uit willen zetten, of je e-mailvoorkeur willen veranderen, %{unsubscribe_link}."
-      click_here: klik hier
+      click_here: "klik hier"
       from: "%{site_name} Digest"
-      read_more: Lees verder
-
+      read_more: "Lees verder"
       posts:
-        one: één bericht
+        one: "één bericht"
         other: "%{count} berichten"
-
     forgot_password:
       subject_template: "[%{site_name}] Wachtwoord herstellen"
       text_body_template: |
@@ -1323,8 +1182,6 @@ nl:
 
         Klik op de volgende link om een nieuw wachtwoord te kiezen:
         %{base_url}/users/password-reset/%{email_token}
-
-
     set_password:
       subject_template: "[%{site_name}] Stel wachtwoord in"
       text_body_template: |
@@ -1334,14 +1191,12 @@ nl:
 
         Klik op de volgende link om een wachtwoord in te stellen:
         %{base_url}/users/password-reset/%{email_token}
-
     authorize_email:
       subject_template: "[%{site_name}] Bevestig je nieuwe e-mailadres"
       text_body_template: |
         Bevestig je nieuwe e-mailadres voor %{site_name} door op de volgende link te klikken:
 
         %{base_url}/users/authorize-email/%{email_token}
-
     signup_after_approval:
       subject_template: "Je inschrijving op %{site_name} is geaccepteerd!"
       text_body_template: |
@@ -1359,7 +1214,6 @@ nl:
         Wij geloven in [een beschaafde community](%{base_url}/faq).
 
         Veel plezier!
-
     signup:
       subject_template: "[%{site_name}] Activeer je nieuwe account"
       text_body_template: |
@@ -1369,47 +1223,39 @@ nl:
         %{base_url}/users/activate-account/%{email_token}
 
         Mocht je de bovenstaande link niet kunnen aanklikken, probeer deze dan te kopiëren en te plakken in de adresbalk van je web browser.
-
   discourse_hub:
     access_token_problem: "Zeg dit tegen een beheerder: Zou je de Instellingen kunnen updaten zodat de juiste discourse_org_access_key is inbegrepen?"
-
   page_not_found:
     title: "De opgevraagde pagina bestaat niet op dit forum of is privé."
-    populair_topics: Populaire topics
-    recent_topics: Recente topics
-    see_more: Meer
-    search_title: Zoek deze topic
-    search_google: Zoek met Google
-
+    popular_topics: "Populaire topics"
+    recent_topics: "Recente topics"
+    see_more: "Meer"
+    search_title: "Zoek deze topic"
+    search_google: "Zoek met Google"
   login_required:
     welcome_message: |
       #[Welkom op het forum %{title}](#welcome)
       Leuk dat je interesse hebt in %{title}. Maak een account of log in om verder te gaan.
-
   terms_of_service:
     user_content_license: |
       User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
     miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
     signup_form_message: 'Ik heb de <a href="/tos" target="_blank">Algemene Voorwaarden</a> gelezen en ga hiermee akkoord.'
-
   deleted: 'verwijderd'
-
   upload:
     edit_reason: "We hebben kopieën van de externe afbeeldingen gedownload"
-    unauthorized: 'Sorry, je mag dat bestand niet uploaden (toegestane extensies: %{authorized_extensions}).'
-    pasted_image_filename: Geplakte afbeelding
-    attachment:
-      too_large: "Het bestand dat je wil uploaden is te groot (maximum grootte is %{max_size_kb}%kb)."
+    unauthorized: "Sorry, je mag dat bestand niet uploaden (toegestane extensies: %{authorized_extensions})."
+    pasted_image_filename: "Geplakte afbeelding"
+    attachments:
+      too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is %{max_size_kb}%kb)."
     images:
       too_large: "De afbeelding die je wil uploaden is te groot (maximum grootte is %{max_size_kb}%kb). Verklein de afbeelding en probeer het opnieuw."
       fetch_failure: "Er ging iets mis bij het opvragen van de afbeelding."
       unknown_image_type: "Het bestand dat je wil uploaden is geen afbeelding."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
-
   flag_reason:
     sockpuppet: "Een nieuwe gebruiker maakte een nieuwe topic en een andere gebruiker reageerde - vanaf hetzelfde IP-adres. Zie de flag_sockpuppets instelling."
     spam_hosts: "Deze gebruiker probeerde om meerdere berichten met links naar hetzelfde domein te plaatsen. Zie de newuser_spam_host_threshold instelling."
-
   email_log:
     no_user: "Kan geen gebruiker met id %{user_id} vinden"
     suspended_not_pm: "Gebruiker is geschorst en email is geen privébericht"
@@ -1424,7 +1270,6 @@ nl:
     message_to_blank: "bericht.aan is leeg"
     text_part_body_blank: "text_part.body is leeg"
     body_blank: "geen tekst"
-
   badges:
     types:
       gold: Goud

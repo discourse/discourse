@@ -873,7 +873,7 @@ es:
           inappropriate: "Informar de esto también"
           custom_flag: "Informar de esto también"
           bookmark: "Guardarlo como favorito tambien"
-          like: "Hacer \'Me gusta\' también"
+          like: "Hacer 'Me gusta' también"
           vote: "Votar por esto también"
         undo: "Deshacer {{alsoName}}"
         by_you_and_others:
@@ -1406,7 +1406,7 @@ es:
         reputation: "Reputación"
         permissions: "Permisos"
         activity: "Actividad"
-        like_count: "Número de \'Me gusta\' recibidos"
+        like_count: "Número de 'Me gusta' recibidos"
         private_topics_count: "Temas privados"
         posts_read_count: "Mensajes leídos"
         post_count: "Mensajes creados"

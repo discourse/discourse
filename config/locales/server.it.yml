@@ -1,12 +1,3 @@
-# encoding: utf-8
-# This file contains content for the server portion of Discourse used by Ruby
-#
-# To work with us on translations, see:
-# https://www.transifex.com/projects/p/discourse-pt-br/
-#
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
-
 it:
   dates:
     short_date_no_year: "D MMM"
@@ -25,6 +16,9 @@ it:
   log_in: "Accedi"
   via: "%{username} via %{site_name}"
   is_reserved: "è riservato"
+  errors:
+    embed:
+      load_from_remote: "Si è verificato un errore nel caricamento del post."
   backup:
     operation_already_running: "Una %{operation} è in esecuzione. Non è possibile avviare una nuova %{operation} adesso."
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
@@ -42,7 +36,7 @@ it:
       other: "%{count} risposte ulteriori"
     loading: "Caricamento della discussione..."
     permalink: "Permalink"
-    imported_from: "Topic di discussione a: %{link}"
+    imported_from: "Questo è un topic collegato all'originale su: %{link}"
     in_reply_to: "in risposta a %{username}"
     replies:
       one: "1 risposta"
@@ -451,9 +445,9 @@ it:
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molti task, come l''invio di email, sono eseguiti in maniera asincrona da sidekiq. Perfavore assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq">Leggi di più su sidekiq qui</a>.'
     queue_size_warning: 'Il numero di job in coda è %{queue_size}, che è alto. Questo indica un problema con i processi Sidekiq, oppure dovresti aggiungere altri Sidekiq worker.'
     memory_warning: 'Il tuo server ha meno di 1 GB di memoria. È raccomandato avere a disposizione almeno 1 GB di memoria.'
-    facebook_config_warning: 'Il server è configurato per consentire la registrazione e il login via Facebook (enable_facebook_logins), ma l''app id e i valori app secret non sono impostati. Vai su <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna le impostazioni. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Leggi questa guida per saperne di più</a>.'
-    twitter_config_warning: 'Il server è configurato per consentire la registrazione e il login via Twitter (enable_twitter_logins), ma la chiave e il secret non sono impostati. Vai su <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna le impostazioni. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Leggi questa guida per saperne di più</a>.'
-    github_config_warning: 'Il server è configurato per consentire la registrazione e il login via GitHub (enable_github_logins), ma il client id e i valori secret non sono impostati. Vai su <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna le impostazioni. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Leggi questa guida per saperne di più</a>.'
+    facebook_config_warning: 'Il server è configurato per accettare registrazioni e login con Facebook (enable_facebook_logins), tuttavia i parametri segreti non sono impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
+    twitter_config_warning: 'Il server è configurato per accettare registrazioni e login con Twitter (enable_twitter_logins), tuttavia la chiave e i parametri segreti non sono impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Leggi questa guida per saperne di più</a>.'
+    github_config_warning: 'Il server è configurato per accettare registrazioni e login con GitHub (enable_github_logins), tuttavia il client id e i valori segreti non sono impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Leggi questa guida per saperne di più</a>.'
     s3_config_warning: 'Il server è configurato per caricare file a s3, ma almeno uno dei seguenti parametri non è impostato: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Vai <a href="/admin/site_settings">alle impostazioni del sito</a> e aggiorna i parametri. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
     s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno uno dei seguenti campi non è impostato: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Vai sulle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i relativi campi. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Guarda "Come impostare il caricamento di immagini su S3?" per informazioni</a>.'
     image_magick_warning: 'Il server è configurato per creare thumbnail di immagini di ampie dimensioni, ma ImageMagick non è installato. Installa ImageMagick usando il tuo Package Manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
@@ -548,7 +542,6 @@ it:
     max_image_height: "Massima altezza delle immagini in un post"
     category_featured_topics: "Numero di topic mostrati per categoira nella pagina /categories"
     add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Modificare questa opzione comporta l'aggiornamento di tutto il contenuto markdown salvato"
-    exclude_rel_nofollow_domains: "Lista di domini separati da virgola per i quali nofollow non è aggiunto (dominio.com abilita automaticamente anche sub.dominio.com)"
     post_excerpt_maxlength: "Lunghezza massima dell'estratto di un post (caratteri)"
     post_onebox_maxlength: "Lunghezza massima di un post oneboxed (caratteri)"
     category_post_template: "Il template utilizzato durante la creazione di una nuova categoria"
@@ -600,6 +593,7 @@ it:
     suppress_reply_directly_above: "Non mostrare \"in risposta a \" su un post se c'è una sola risposta sopra"
     topics_per_period_in_top_summary: "Numero dei topic caricati nel riassunto dei topic più importanti"
     topics_per_period_in_top_page: "Numero dei topic caricati nella pagina Top"
+    redirect_users_to_top_page: "Indirizza automaticamente i nuovi utenti e gli utenti che non si connettono da un bel po' alla pagina top"
     redirect_new_users_to_top_page_duration: "Numero di giorni in cui i nuovi utenti sono automaticamente reindirizzati alla pagina top"
     enable_badges: "Attiva il sistema targhette (sperimentale)"
     allow_index_in_robots_txt: "Il sito è indicizzabile dai motori di ricerta (aggiorna robots.txt)"
@@ -701,10 +695,9 @@ it:
     tos_url: "Se hai un documento dei Termini di Servizio ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
     privacy_policy_url: "Se hai un documento sulle Politiche di Privacy ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
     newuser_spam_host_threshold: "Il numero delle volte che un nuovo utente può postare un link verso lo stesso host compreso nel `newuser_spam_host_posts` post prima che venga considerato spam."
-    white_listed_spam_host_domains: "Una lista separata da virgole di domini esclusi dal controllo antispam, i nuovi utenti potranno creare un numero illimitato di post con link a questo dominio"
     staff_like_weight: "Peso extra attribuito ai Like quando effettuato dallo staff"
     reply_by_email_enabled: "Permetti la risposta ai topic via email"
-    reply_by_email_address: "Template per rispondere via email nei forum, per esempio: %{reply_key}@reply.myforum.com"
+    reply_by_email_address: "Template di risposta via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
     pop3s_polling_enabled: "Sondaggio via POP3S per risposte in email"
     pop3s_polling_port: "La porta di connessione all'account POP3S"
     pop3s_polling_host: "L'host per verificare la presenza di email via POP3S"
@@ -714,6 +707,7 @@ it:
     email_in_address: "L'indirizzo email al quale l'utente può inviare nuovi topic. Se vuoto gli utenti non potranno postare globalmente."
     email_in_min_trust: "Il Livello minimo che un utente deve avere per poter postare nuovi topic via email"
     email_in_category: "La categoria in cui le nuove email vengono postate"
+    email_prefix: "Il [label] utilizzato nell'oggetto delle email. Di default sarà 'title' se non impostato"
     minimum_topics_similar: "Quanti topic devono esistere nel database prima che quelli simili vengano presentati."
     relative_date_duration: "Dopo quanti giorni dalla pubblicazione del post le date verranno mostrate in termini relativi anzichè assoluti. Per esempio, 7d anzichè 20 feb."
     delete_user_max_post_age: "I giorni di permanenza sul forum oltre i quali un post non può più essere eliminato dall'utente"
@@ -733,19 +727,23 @@ it:
     dominating_topic_minimum_percent: "Che percentuale di post un utente deve pubblicare nello stesso post per essere considerato \"dominante\"?"
     suppress_uncategorized_badge: "Non mostrare il badge per i topic senza categoria nella lista dei topic"
     min_posts_for_search_in_topic: "Disabilita la ricerca all'interno dei topic se i topic hanno meno di un certo numero di post"
+    global_notice: "Mostra un banner globale a tutti gli utenti del sito, lascia vuoto per nasconderlo (E' permesso HTML)"
     enable_names: "Permetti agli utenti di mostrare i loro nomi completi"
     display_name_on_posts: "Mostra anche il nome completo dell'utente nei suoi post"
     invites_shown: "Numero massimo di inviti mostrati nella pagina dell'utente"
     short_progress_text_threshold: "Quando il numero di post (nello stesso topic) supera questo valore, la progress bar mostrerà solo il numero del post corrente. Se si modifica la lunghezza della progress bar, è preferibile cambiare anche questo valore."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Quando qualcuno inizia a rispondere ad un topic più vecchio di questo numero di giorni, verrà mostrato un avviso che scoraggerà l'utente dal resuscitare una vecchia discussione. Disabilita impostando 0"
+    autohighlight_all_code: "Colora la sintassi del codice nei blocchi di testo preformattato, anche se non è stato specificato il linguaggio di programmazione."
     embeddable_host: "Host che possono integrare i commenti da questo forum di Discourse"
     feed_polling_enabled: "Se importare un feed RSS/ATOM come post"
     feed_polling_url: "URL dei feed RSS/ATOM da importare"
     embed_by_username: "Username Discourse dell'utente che crea i topic"
+    embed_truncate: "Tronca i post importati"
     embed_category: "Categoria dei topic creati"
     embed_post_limit: "Numero massimo di post da incorporare"
     tos_accept_required: "Se abilitato, gli utenti dovranno accettare i Termini del Servizio durante l'iscrizione. Modifica 'Signup Form: Terms of Service Message' nel tab dei contenuti per editare il messaggio."
+    notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo molte ore, invia un'email all'email contact_email. Imposta 0 per disattivare."
   notification_types:
     mentioned: "%{display_username} ti ha menzionato in %{link}"
     liked: "a %{display_username} è piaciuto il tuo post in %{link}"
@@ -769,7 +767,7 @@ it:
   most_recent_poster: "Ultimo poster"
   frequent_poster: "Utente assiduo"
   redirected_to_top_reasons:
-    new_user: "Benvenuto! Come nuovo utente, questa sarà la tua homepage finchè non avrai avuto tempo per consultare un po' il forum. Questa è una selezione dei topic più popolari degli ultimi giorni."
+    new_user: "Benvenuto! Come nuovo utente, questa sarà la tua homepage finché non avrai avuto il tempo di dare un'occhiata in giro. Questa è una selezione dei topic più popolari."
     not_seen_in_a_month: "Bentornato! Non ti si vede da un po'. Queste sono le discussioni più importanti da quando te ne sei andato."
   move_posts:
     new_topic_moderator_post:
@@ -798,6 +796,8 @@ it:
     autoclosed_disabled: "Questo topic è ora aperto. Sono permesse nuove risposte."
     pinned_enabled: "Questo topic è stato evidenziato. Sarà mostrato in cima alla sua categoria. Può essere rimosso da un moderatore, o dagli utenti cliccando sul tasto \"Non più in evidenza\"."
     pinned_disabled: "Questo topic è stato unpinned. Non sarà più mostrato in cima alla sua categoria."
+    pinned_globally_enabled: "Questo topic è ora in evidenza globalmente. Apparirà in cima alla sua categoria e su tutte le liste dei topic finché non sarà rimosso dall'evidenza da un moderatore, o finché non verrà premuto il tasto \"Rimuovi Pin\"."
+    pinned_globally_disabled: "Questo topic non è più in evidenza. Non apparirà più in cima alla sua categoria."
     visible_enabled: "Questo topic è stato reso visibile. Sarà mostrato nella lista dei topic."
     visible_disabled: "Questo topic è stato reso invisibile. Non verrà più mostrato nella lista dei topic. Sarà possibile accedervi solo tramite link diretto."
   login:
@@ -892,7 +892,7 @@ it:
 
       - Scopri le novità tramite il [changelog su GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Aggiorna visitando la pagina `/admin/docker` e premendo il tasto "Upgrade Discourse" dopo aver ricaricato un po' di volte la pagina.
+      - Per aggiornare visita `/admin/docker` e ricarica la pagina un po' di volte finché non apparirà un tasto "Upgrade Discourse". Premilo per avviare l'aggiornamento.
 
       - Visita http://meta.discourse.org per novità, discussioni e supporto per Discourse.
   new_version_mailer_with_notes:
@@ -905,13 +905,23 @@ it:
 
       - Scopri le novità tramite il [changelog su GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Aggiorna visitando la pagina `/admin/docker` e premendo il tasto "Upgrade Discourse" dopo aver ricaricato un po' di volte la pagina.
+      - Aggiorna visitando la pagina `\admin\docker` e premendo il tasto "Upgrade" dopo aver ricaricato un po' di volte la pagina.
 
       - Visita http://meta.discourse.org per novità, discussioni e supporto per Discourse.
 
       ### Note di rilascio
 
       %{notes}
+  flags_reminder:
+    flags_were_submitted:
+      one: "Ci sono segnalazioni che sono state inviate oltre 1 ora fa"
+      other: "Ci sono segnalazioni che sono state inviate oltre %{count} ore fa"
+    please_review: "Per favore, revisionale."
+    post_number: "post"
+    how_to_disable: "Disattiva questa email modificando l'impostazione changing the notify_about_flags_after setting a 0"
+    subject_template:
+      one: "1 segnalazione è in attesa di essere revisionata"
+      other: "%{count} segnalazioni sono in attesa di essere revisionate"
   system_messages:
     post_hidden:
       subject_template: "Post nascosto a causa di segnalazioni dalla community"
@@ -1005,9 +1015,29 @@ it:
     export_succeeded:
       subject_template: "Esportazione completata con successo"
       text_body_template: "L'esportazione è stata eseguita correttamente."
+    export_failed:
+      subject_template: "Esportazione fallita"
+      text_body_template: |
+        L'esportazione è fallita.
+
+        Ecco il log:
+
+        ```
+        %{logs}
+        ```
     import_succeeded:
       subject_template: "Importazione completata con successo"
       text_body_template: "L'importazione è stata eseguita correttamente."
+    import_failed:
+      subject_template: "Importazione fallita"
+      text_body_template: |
+        L'importazione è fallita.
+
+        Ecco il log:
+
+        ```
+        %{logs}
+        ```
     email_error_notification:
       subject_template: "Errore nella lettura dell'email"
       text_body_template: |
@@ -1234,7 +1264,6 @@ it:
     body_blank: "il corpo è vuoto"
   badges:
     types:
-      gold: "Oro"
-      silver: "Argento"
-      bronze: "Bronzo"
-
+      gold: Oro
+      silver: Argento
+      bronze: Bronzo

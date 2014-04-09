@@ -1,0 +1,23 @@
+[main]
+host = https://www.transifex.com
+
+[discourse-pt-br.clientenyml]
+file_filter = config/locales/client.<lang>.yml
+source_file = config/locales/client.en.yml
+source_lang = en
+trans.es_ES = config/locales/client.es.yml
+trans.fr_FR = config/locales/client.fr.yml
+trans.ko_KR = config/locales/client.ko.yml
+trans.pt_PT = config/locales/client.pt.yml
+type = YML
+
+[discourse-pt-br.serverenyml]
+file_filter = config/locales/server.<lang>.yml
+source_file = config/locales/server.en.yml
+source_lang = en
+trans.es_ES = config/locales/server.es.yml
+trans.fr_FR = config/locales/server.fr.yml
+trans.ko_KR = config/locales/server.ko.yml
+trans.pt_PT = config/locales/server.pt.yml
+type = YML
+

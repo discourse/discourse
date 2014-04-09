@@ -538,8 +538,6 @@ pt_BR:
       title_with_attachments: "Adicionar uma imagem ou arquivo"
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da internet"
-      remote_tip: "digite o endereço de um arquivo na forma http://exemplo.com/imagem.jpg"
-      remote_tip_with_attachments: "digite o endereço de uma imagem ou um arquivo na forma http://exemplo.com.br/arquivo.ext (extensões permitidas: {{authorized_extensions}})."
       local_tip: "clique para selecionar um arquivo do seu dispositivo"
       local_tip_with_attachments: "clique para selecionar uma imagem ou arquivo do seu dispositivo (extensões permitidas: {{authorized_extensions}})"
       hint: "(Você também pode arrastar e soltar para o editor para carregá-las)"
@@ -565,7 +563,7 @@ pt_BR:
     topics:
       bulk:
         reset_read: "Redefinir Lido"
-        dismiss_read: "Dispensar Lido"
+        dismiss_read: "Descartar Não Lidas"
         dismiss_new: "Dispensar Nova"
         toggle: "alternar a seleção em massa de tópicos"
         actions: "Ações em Massa"
@@ -704,7 +702,6 @@ pt_BR:
         invisible: "Tornar Invisível"
         visible: "Tornar Visível"
         reset_read: "Repor Data de Leitura"
-        multi_select: "Selecionar Postagens para Mover"
         convert_to_topic: "Converter para Tópico Regular"
       reply:
         title: 'Responder'
@@ -731,6 +728,8 @@ pt_BR:
         title: 'Convidar Amigos'
         action: 'Email de Convite'
         help: 'envie convites aos seus amigos para que eles possam responder a este tópico com um simples clique.'
+        to_topic: "Enviaremos um breve e-mail permitindo ao seu amigo responder imediatamente este tópico clicando em um link, sem necessidade de login."
+        to_forum: "Enviaremos um e-mail breve permitindo que o seu amigo participe clicando em um link, sem necessidade de login."
         email_placeholder: 'name@example.com'
         success: "Obrigado! Enviamos um convite para <b>{{email}}</b>. Você saberá quando eles utilizarem o convite. Você pode ir até a seção de Convites na sua página de usuário para saber quem você já convidou."
         error: "Desculpe não podíamos convidar essa pessoa. Talvez já seja um usuário?"
@@ -761,6 +760,8 @@ pt_BR:
         select_replies: 'selecione +respostas'
         delete: apagar selecionados
         cancel: cancelar seleção
+        select_all: selecionar tudo
+        deselect_all: deselecionar tudo
         description:
           one: <b>1</b> postagem selecionada.
           other: <b>{{count}}</b> postagens selecionadas.
@@ -776,11 +777,15 @@ pt_BR:
       reply_as_new_topic: "Responder como um novo Tópico"
       continue_discussion: "Continuar a discussão desde {{postLink}}:"
       follow_quote: "ir para a postagem citada"
+      show_full: "Exibir mensagem completa"
       deleted_by_author:
         one: "(postagens abandonadas pelo autor, serão removidas automaticamente em %{count} hora a menos que forem sinalizadas)"
         other: "(postagens abandonadas pelo autor, serão removidas automaticamente em %{count} horas a menos que forem sinalizadas)"
       deleted_by: "apagado por"
       expand_collapse: "expandir/encolher"
+      gap:
+        one: "1 mensagem oculta"
+        other: "{{count}} mensagens ocultas"
       has_replies:
         one: "Resposta"
         other: "Respostas"
@@ -976,7 +981,7 @@ pt_BR:
       title: 'Por que você está sinalizando como privada esta mensagem?'
       action: 'Sinalizar Postagem'
       take_action: "Tomar Atitude"
-      notify_action: 'Notificar'
+      notify_action: 'Mensagem privada'
       delete_spammer: "Apagar Spammer"
       delete_confirm: "Você está prestes a excluir <b>%{posts}</b> mensagens e <b>%{topics}</b> tópicos deste usuário, removendo a conta, bloqueando cadastro a partir do endereço IP <b>%{ip_address}</b> e adicionando o e-mail dele <b>%{email}</b> em uma lista de bloqueio permanente. Você tem certeza que este usuário é realmente um spammer?"
       yes_delete_spammer: "Sim, Apagar Spammer"
@@ -990,7 +995,7 @@ pt_BR:
     flagging_topic:
       title: "Por que você está sinalizando privativamente este tópico?"
       action: "Sinalizar Tópico"
-      notify_action: "Notificar"
+      notify_action: "Mensagem privada"
     topic_map:
       title: "Resumo do Tópico"
       links_shown: "exibir todos os {{totalLinks}} links..."
@@ -1172,9 +1177,12 @@ pt_BR:
         no_primary: "(sem grupo primário)"
         title: "Grupos"
         edit: "Editar Grupos"
+        refresh: "Atualizar"
+        new: "Novo"
         selector_placeholder: "adicionar usuários"
         name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
         about: "Editar participação no grupo e nomes aqui"
+        group_members: "Membros do grupo"
         delete: "Apagar"
         delete_confirm: "Apagar este grupos?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
@@ -1264,6 +1272,8 @@ pt_BR:
         title: "Email"
         settings: "Settings"
         all: "Todas"
+        sending_test: "Enviando e-mail de teste..."
+        test_error: "Houve um problema de envio de e-mail. Verifique as configurações e tente novamente."
         sent: "Enviado"
         skipped: "Ignorado"
         sent_at: "Enviado para "
@@ -1330,6 +1340,8 @@ pt_BR:
             delete_site_customization: "remover personalização do site"
             suspend_user: "suspender usuário"
             unsuspend_user: "readmitir usuário"
+            grant_badge: "conceder emblema"
+            revoke_badge: "revogar emblema"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de email serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -1510,6 +1522,27 @@ pt_BR:
           legal: "Jurídico"
           uncategorized: 'Sem categoria'
           backups: "Backups"
+      badges:
+        title: Emblemas
+        new_badge: Novo Emblema
+        new: Novo
+        name: Nome
+        display_name: Nome de Exibição
+        description: Descrição
+        badge_type: Tipo de Emblema
+        granted_by: Concedido Por
+        granted_at: Concedido Em
+        save: Salvar
+        delete: Excluir
+        delete_confirm: Tem certeza de que deseja excluir este emblema?
+        revoke: Revogar
+        revoke_confirm: Tem certeza de que deseja revogar este emblema?
+        edit_badges: Editar Emblemas
+        grant_badge: Conceder Emblema
+        granted_badges: Emblemas Concedidos
+        grant: Conceder
+        no_user_badges: "%{name} não teve nenhum emblema concedido."
+        no_badges: Não há emblemas que podem ser concedidos.
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
@@ -1550,3 +1583,7 @@ pt_BR:
         mark_regular: '<b>m</b> em seguida <b>r</b> Marca tópico como normal'
         mark_tracking: '<b>m</b> em seguida <b>t</b> Marca tópico como monitorado'
         mark_watching: '<b>m</b> em seguida <b>w</b> Marca o tópico para acompanhamento'
+    badges:
+      example_badge:
+        name: Emblema de Exemplo
+        description: Este é um exemplo genérico de emblema.
