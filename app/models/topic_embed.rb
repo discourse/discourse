@@ -76,11 +76,15 @@ class TopicEmbed < ActiveRecord::Base
       url_param = tags[node.name]
       src = node[url_param]
       unless (src.empty?)
-        uri = URI.parse(src)
-        unless uri.host
-          uri.scheme = original_uri.scheme
-          uri.host = original_uri.host
-          node[url_param] = uri.to_s
+        begin
+          uri = URI.parse(src)
+          unless uri.host
+            uri.scheme = original_uri.scheme
+            uri.host = original_uri.host
+            node[url_param] = uri.to_s
+          end
+        rescue URI::InvalidURIError
+          # If there is a mistyped URL, just do nothing
         end
       end
     end
