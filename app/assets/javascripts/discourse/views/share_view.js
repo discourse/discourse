@@ -53,6 +53,7 @@ Discourse.ShareView = Discourse.View.extend({
     $html.on('click.discoure-share-link', '[data-share-url]', function(e) {
       e.preventDefault();
       var $currentTarget = $(e.currentTarget),
+          $currentTargetOffset = $currentTarget.offset(),
           $shareLink = $('#share-link');
       var url = $currentTarget.data('share-url');
       var postNumber = $currentTarget.data('post-number');
@@ -63,7 +64,7 @@ Discourse.ShareView = Discourse.View.extend({
       }
 
       var shareLinkWidth = $shareLink.width();
-      var x = e.pageX - (shareLinkWidth / 2);
+      var x = $currentTargetOffset.left - (shareLinkWidth / 2);
       if (x < 25) {
         x = 25;
       }
@@ -72,9 +73,9 @@ Discourse.ShareView = Discourse.View.extend({
       }
 
       var header = $('.d-header');
-      var y = e.pageY - ($shareLink.height() + 20);
+      var y = $currentTargetOffset.top - ($shareLink.height() + 20);
       if (y < header.offset().top + header.height()) {
-        y = e.pageY + 10;
+        y = $currentTargetOffset.top + 10;
       }
 
       $shareLink.css({
