@@ -87,27 +87,7 @@
         </div>
 
         <section class='controls'>
-          {{#if can_send_private_message_to_user}}
-            <button class='btn btn-primary' {{action composePrivateMessage}}>
-              <i class='fa fa-envelope'></i>
-              {{i18n user.private_message}}
-            </button>
-          {{/if}}
-
-          {{#if viewingSelf}}
-            <button {{action "logout"}} class='btn btn-danger right'><i class='fa fa-sign-out'></i>{{i18n user.log_out}}</button>
-          {{/if}}
-
-          {{#if currentUser.staff}}
-            <a {{bind-attr href="adminPath"}} class='btn right'><i class="fa fa-wrench"></i>{{i18n admin.user.show_admin_profile}}</a>
-          {{/if}}
-
-          {{#if can_edit}}
-            {{#link-to 'preferences' class="btn right"}}<i class='fa fa-cog'></i>{{i18n user.preferences}}{{/link-to}}
-          {{/if}}
-
-          {{#link-to 'user.invited' class="btn right"}}<i class='fa fa-envelope-o'></i>{{i18n user.invited.title}}{{/link-to}}
-
+          {{view Discourse.UserProfileControlButtonsView userBinding="model"}}
         </section>
       </section>
 
