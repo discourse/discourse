@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Preview do
 
   before do
-    fake("http://www.amazon.com", response("amazon"))
+    fake("http://www.amazon.com/product", response("amazon"))
     FakeWeb.register_uri(:get, "http://www.amazon.com/404-url", status: 404)
     FakeWeb.register_uri(:get, "http://www.amazon.com/500-url", status: 500)
     FakeWeb.register_uri(:get, "http://www.amazon.com/error-url", status: 500)
@@ -12,7 +12,7 @@ describe Onebox::Preview do
     FakeWeb.register_uri(:get, "http://www.amazon.com/error-connecting", exception: Errno::ECONNREFUSED)
   end
 
-  let(:preview) { described_class.new("http://www.amazon.com") }
+  let(:preview) { described_class.new("http://www.amazon.com/product") }
 
   describe "#to_s" do
     it "returns some html if given a valid url" do

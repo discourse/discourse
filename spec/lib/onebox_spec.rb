@@ -7,7 +7,7 @@ describe Onebox do
   end
 
   describe ".preview" do
-    let(:url) { "http://www.amazon.com" }
+    let(:url) { "http://www.amazon.com/product" }
     it "creates a cache that responds as expected" do
       preview = Onebox.preview(url)
       cache = preview.cache
