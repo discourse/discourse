@@ -4,7 +4,7 @@
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
 # tune down if not enough ram
-worker_processes Integer(ENV["UNICORN_WORKERS"] || 2)
+worker_processes Integer(ENV['UNICORN_WORKERS'] || 2)
 
 working_directory discourse_path
 
