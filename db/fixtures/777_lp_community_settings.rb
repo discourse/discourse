@@ -40,6 +40,8 @@ SiteSetting.enable_yahoo_logins               = false
 SiteSetting.enable_google_logins              = false
 SiteSetting.site_contact_username             = ENV['API_USERNAME']
 SiteSetting.company_domain                    = Addressable::URI.parse(ENV['LESSON_PLANET_ROOT_URL']).host
+SiteSetting.privacy_policy_url                = "#{ENV['LESSON_PLANET_ROOT_URL'].gsub('https', 'http')}/us/privacy_policy"
+SiteSetting.tos_url                           = "#{ENV['LESSON_PLANET_ROOT_URL'].gsub('https', 'http')}/us/terms_of_use"
 
 # Rate limiting
 SiteSetting.unique_posts_mins                 = 5
@@ -53,10 +55,10 @@ SiteSetting.body_min_entropy                  = 7
 # Files
 #
 if ENV['S3_ACCESS_KEY_ID'].present?
-  SiteSetting.s3_access_key_id                  = ENV['S3_ACCESS_KEY_ID']
-  SiteSetting.s3_secret_access_key              = ENV['S3_SECRET_ACCESS_KEY']
-  SiteSetting.s3_region                         = ENV['S3_REGION']
-  SiteSetting.s3_upload_bucket                  = ENV['S3_UPLOAD_BUCKET']
+  SiteSetting.s3_access_key_id     = ENV['S3_ACCESS_KEY_ID']
+  SiteSetting.s3_secret_access_key = ENV['S3_SECRET_ACCESS_KEY']
+  SiteSetting.s3_region            = ENV['S3_REGION']
+  SiteSetting.s3_upload_bucket     = ENV['S3_UPLOAD_BUCKET']
 end
 
 #
