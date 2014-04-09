@@ -806,8 +806,8 @@ sv:
       deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
       gap:
-        one: "1 post omitted"
-        other: "{{count}} posts omitted"
+        one: "1 post hidden"
+        other: "{{count}} posts hidden"
 
       has_replies:
         one: "Svara"

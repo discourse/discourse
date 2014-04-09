@@ -150,4 +150,38 @@ describe StaffActionLogger do
       log_record.target_user.should == user
     end
   end
+
+  describe "log_badge_grant" do
+    let(:user) { Fabricate(:user) }
+    let(:badge) { Fabricate(:badge) }
+    let(:user_badge) { BadgeGranter.grant(badge, user) }
+
+    it "raises an error when argument is missing" do
+      expect { logger.log_badge_grant(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      log_record = logger.log_badge_grant(user_badge)
+      log_record.should be_valid
+      log_record.target_user.should == user
+      log_record.details.should == badge.name
+    end
+  end
+
+  describe "log_badge_revoke" do
+    let(:user) { Fabricate(:user) }
+    let(:badge) { Fabricate(:badge) }
+    let(:user_badge) { BadgeGranter.grant(badge, user) }
+
+    it "raises an error when argument is missing" do
+      expect { logger.log_badge_revoke(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      log_record = logger.log_badge_revoke(user_badge)
+      log_record.should be_valid
+      log_record.target_user.should == user
+      log_record.details.should == badge.name
+    end
+  end
 end

@@ -64,6 +64,7 @@ class PostCreator
       track_topic
       update_topic_stats
       update_user_counts
+      create_embedded_topic
 
       publish
       ensure_in_allowed_users if guardian.is_staff?
@@ -81,7 +82,6 @@ class PostCreator
 
     @post
   end
-
 
   def self.create(user, opts)
     PostCreator.new(user, opts).create
@@ -110,6 +110,14 @@ class PostCreator
 
   protected
 
+  # You can supply an `embed_url` for a post to set up the embedded relationship.
+  # This is used by the wp-discourse plugin to associate a remote post with a
+  # discourse post.
+  def create_embedded_topic
+    return unless @opts[:embed_url].present?
+    TopicEmbed.create!(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
+  end
+
   def handle_spam
     if @spam
       GroupMessage.create( Group[:moderators].name,
@@ -134,12 +142,6 @@ class PostCreator
 
     unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
       @topic.topic_allowed_users.create!(user_id: @user.id)
-    end
-  end
-
-  def secure_group_ids(topic)
-    @secure_group_ids ||= if topic.category && topic.category.read_restricted?
-      topic.category.secure_group_ids
     end
   end
 
@@ -209,6 +211,7 @@ class PostCreator
   end
 
   def rollback_if_host_spam_detected
+    return if @opts[:skip_validations]
     if @post.has_host_spam?
       @post.errors.add(:base, I18n.t(:spamming_host))
       @errors = @post.errors
@@ -254,7 +257,7 @@ class PostCreator
                     user: BasicUserSerializer.new(@post.user).as_json(root: false),
                     post_number: @post.post_number
                   },
-                  group_ids: secure_group_ids(@topic)
+                  group_ids: @topic.secure_group_ids
     )
   end
 

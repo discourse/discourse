@@ -604,13 +604,14 @@ en:
       title_with_attachments: "Add an image or a file"
       from_my_computer: "From my device"
       from_the_web: "From the web"
-      remote_tip: "enter address of an image in the form http://example.com/image.jpg"
-      remote_tip_with_attachments: "enter address of an image or a file in the form http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
+      remote_tip: "link to image http://example.com/image.jpg"
+      remote_tip_with_attachments: "link to image or file http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
       local_tip: "click to select an image from your device"
       local_tip_with_attachments: "click to select an image or a file from your device (allowed extensions: {{authorized_extensions}})"
       hint: "(you can also drag & drop into the editor to upload them)"
       hint_for_chrome: "(you can also drag and drop or paste images into the editor to upload them)"
       uploading: "Uploading"
+      image_link: "link your image will point to"
 
     search:
       title: "search for topics, posts, users, or categories"
@@ -636,7 +637,7 @@ en:
     topics:
       bulk:
         reset_read: "Reset Read"
-        dismiss_read: "Dismiss Read"
+        dismiss_read: "Dismiss Unread"
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
@@ -682,7 +683,7 @@ en:
         one: '1 unread topic'
         other: '{{count}} unread topics'
       title: 'Topic'
-      loading_more: "Loading more Topics..."
+      loading_more: "Loading more topics..."
       loading: 'Loading topic...'
       invalid_access:
         title: "Topic is private"
@@ -795,12 +796,13 @@ en:
         auto_close: "Auto Close"
         unpin: "Un-Pin Topic"
         pin: "Pin Topic"
+        pin_globally: "Pin Topic Globally"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
         invisible: "Make Invisible"
         visible: "Make Visible"
         reset_read: "Reset Read Data"
-        multi_select: "Select Posts to Move"
+        multi_select: "Select Posts"
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
@@ -866,12 +868,25 @@ en:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
 
+      change_owner:
+        title: "Change Owner of Posts"
+        action: "change ownership"
+        error: "There was an error changing the ownership of the posts."
+        label: "New Owner of Posts"
+        placeholder: "username of new owner"
+        instructions:
+          one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
+          other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
+        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
+
       multi_select:
         select: 'select'
         selected: 'selected ({{count}})'
         select_replies: 'select +replies'
         delete: delete selected
         cancel: cancel selecting
+        select_all: select all
+        deselect_all: deselect all
         description:
           one: You have selected <b>1</b> post.
           other: "You have selected <b>{{count}}</b> posts."
@@ -888,14 +903,15 @@ en:
       reply_as_new_topic: "Reply as new Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
+      show_full: "Show Full Post"
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
       gap:
-        one: "1 post omitted"
-        other: "{{count}} posts omitted"
+        one: "1 post hidden"
+        other: "{{count}} posts hidden"
 
       has_replies:
         one: "Reply"
@@ -1102,7 +1118,7 @@ en:
       title: 'Why are you privately flagging this post?'
       action: 'Flag Post'
       take_action: "Take Action"
-      notify_action: 'Notify'
+      notify_action: 'Private message'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
@@ -1117,7 +1133,7 @@ en:
     flagging_topic:
       title: "Why are you privately flagging this topic?"
       action: "Flag Topic"
-      notify_action: "Notify"
+      notify_action: "Private message"
 
     topic_map:
       title: "Topic Summary"
@@ -1318,9 +1334,12 @@ en:
         no_primary: "(no primary group)"
         title: "Groups"
         edit: "Edit Groups"
+        refresh: "Refresh"
+        new: "New"
         selector_placeholder: "add users"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
+        group_members: "Group members"
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
@@ -1484,6 +1503,8 @@ en:
             delete_site_customization: "delete site customization"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
+            grant_badge: "grant badge"
+            revoke_badge: "revoke badge"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -1661,6 +1682,7 @@ en:
           files: 'Files'
           trust: 'Trust Levels'
           security: 'Security'
+          onebox: "Onebox"
           seo: 'SEO'
           spam: 'Spam'
           rate_limits: 'Rate Limits'
@@ -1678,9 +1700,19 @@ en:
         display_name: Display Name
         description: Description
         badge_type: Badge Type
+        granted_by: Granted By
+        granted_at: Granted At
         save: Save
         delete: Delete
         delete_confirm: Are you sure you want to delete this badge?
+        revoke: Revoke
+        revoke_confirm: Are you sure you want to revoke this badge?
+        edit_badges: Edit Badges
+        grant_badge: Grant Badge
+        granted_badges: Granted Badges
+        grant: Grant
+        no_user_badges: "%{name} has not been granted any badges."
+        no_badges: There are no badges that can be granted.
 
     lightbox:
       download: "download"

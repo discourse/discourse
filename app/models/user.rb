@@ -67,6 +67,7 @@ class User < ActiveRecord::Base
   after_initialize :set_default_external_links_in_new_tab
 
   after_save :update_tracked_topics
+  after_save :clear_global_notice_if_needed
 
   after_create :create_email_token
   after_create :create_user_stat
@@ -199,7 +200,7 @@ class User < ActiveRecord::Base
   def approve(approved_by, send_mail=true)
     self.approved = true
 
-    if Fixnum === approved_by
+    if approved_by.is_a?(Fixnum)
       self.approved_by_id = approved_by
     else
       self.approved_by = approved_by
@@ -559,6 +560,8 @@ class User < ActiveRecord::Base
   end
 
   def redirected_to_top_reason
+    # redirect is enabled
+    return unless SiteSetting.redirect_users_to_top_page
     # top must be in the top_menu
     return unless SiteSetting.top_menu =~ /top/i
     # there should be enough topics
@@ -584,6 +587,13 @@ class User < ActiveRecord::Base
   def update_tracked_topics
     return unless auto_track_topics_after_msecs_changed?
     TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
+  end
+
+  def clear_global_notice_if_needed
+    if admin && SiteSetting.has_login_hint
+      SiteSetting.has_login_hint = false
+      SiteSetting.global_notice = ""
+    end
   end
 
   def create_user_stat
@@ -678,8 +688,8 @@ end
 #
 #  id                            :integer          not null, primary key
 #  username                      :string(20)       not null
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
+#  created_at                    :datetime
+#  updated_at                    :datetime
 #  name                          :string(255)
 #  bio_raw                       :text
 #  seen_notification_id          :integer          default(0), not null
@@ -723,6 +733,9 @@ end
 #  uploaded_avatar_id            :integer
 #  email_always                  :boolean          default(FALSE), not null
 #  mailing_list_mode             :boolean          default(FALSE), not null
+#  locale                        :string(10)
+#  primary_group_id              :integer
+#  profile_background            :string(255)
 #
 # Indexes
 #

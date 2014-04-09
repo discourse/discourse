@@ -163,7 +163,7 @@ cs:
       post:
         raw: Tělo
       user:
-        ip_address: Upozornění
+        ip_address: ""
     errors:
       messages:
         is_invalid: je neplatné; zkuste se vyjádřit více popisně
@@ -192,7 +192,10 @@ cs:
   category:
     topic_prefix: 'Definice kategorie pro %{category}'
     replace_paragraph: '[Nahraďte tento první odstavec krátkých popisem nové kategorie. Zkuste se vejít do 200 znaků.]'
-    post_template: '%{replace_paragraph}\\n\\nPoužijte toto místo níže pro delší popis a stanovení pravidel diskuze!'
+    post_template: |
+      %{replace_paragraph}\
+      \
+      Použijte toto místo níže pro delší popis a stanovení pravidel diskuze!
     errors:
       self_parent: Těžko může být kategorie podkategorie sama sebe.
       depth: Nemůžete vnořovat podkategorie pod sebe.
@@ -352,13 +355,19 @@ cs:
       description: Tento příspěvek obsahuje něco, kvůli čemu chci s tímto člověkem mluvím přímo a soukromě.
       long_form: informoval uživatele
       email_title: 'Ohledně vašeho příspěvku v tématu "%{title}"'
-      email_body: '%{link}\\n\\n%{message}'
+      email_body: |
+        %{link}\
+        \
+        %{message}
     notify_moderators:
       title: Upozornit moderátory
       description: 'Příspěvek by měl vidět moderátor kvůli porušení <a href="/faq">FAQ</a>, <a href="/tos">Podmínek používání</a> nebo kvůli jinému důvodu.'
       long_form: označil příspěvek pro moderátora
       email_title: 'Příspěvek v tématu "%{title}" vyžaduje pozornost moderátora'
-      email_body: '%{link}\\n\\n%{message}'
+      email_body: |
+        %{link}\
+        \
+        %{message}
     bookmark:
       title: Záložka
       description: Přidat záložku k tomuto příspěvku
@@ -385,7 +394,10 @@ cs:
       description: 'This topic requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
       long_form: označil příspěvek pro moderátora
       email_title: 'The topic "%{title}" requires moderator attention'
-      email_body: '%{link}\\n\\n%{message}'
+      email_body: |
+        %{link}\
+        \
+        %{message}
   flagging:
     you_must_edit: '<p>Váš příspěvek byl již několikrát nahlášen jako závadný. Další informace najdete v soukromých zprávách.</p>'
     user_must_edit: '<p>Nahlášený obsah je skrytý.</p>'
@@ -586,7 +598,6 @@ cs:
     post_excerpt_maxlength: Maximální délka zkrácené verze příspěvku ve znacích
     post_onebox_maxlength: "Maximální délka příspěvku v 'oneboxu'"
     category_post_template: Šablona definice kategorie, která se použije při vytváření nové kategorie
-    onebox_max_chars: "Maximální počet znaků, které může 'onebox' naimportovat z externího webu"
     logo_url: Logo vašeho webu, např. http://example.com/logo.png
     logo_small_url: Malé logo, které se použije pokud odskrolujete dolů v tématu, např. http://example.com/logo-small.png
     favicon_url: Favicona vašeho webu, viz http://en.wikipedia.org/wiki/Favicon
@@ -655,7 +666,6 @@ cs:
     sso_overrides_username: 'Přepisuje místní uživatelské jméno tím z dat SSO (VAROVÁNÍ: kvůli rozdílnostem v požadavcích na uživatelské jméno může dojít k nesrovnalostem)'
     sso_overrides_name: 'Přepisuje místní jméno tím z dat SSO (VAROVÁNÍ: kvůli normalizování místního jména může dojít k nesrovnalostem)'
     enable_local_logins: Povolit lokální autentizaci
-    enable_local_account_create: Povolit lokální vytváření účtů
     enable_google_logins: Povolit přihlašování přes Google
     enable_yahoo_logins: Povolit přihlašování přes Yahoo
     enable_twitter_logins: "Povolit přihlašování přes Twitter, vyžaduje správně nastavené 'twitter_consumer_key' a 'twitter_consumer_secret'"
@@ -731,7 +741,7 @@ cs:
     tos_url: "Pokud máte dokument 'Podmínky Používání' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
     newuser_spam_host_threshold: "Kolikrát smí uživatel zaslat odkaz na stejný server v rámci příspěvků z nastavení 'newuser_spam_host_posts', než budou příspěvky považovány za spam."
-    white_listed_spam_host_domains: A comma delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain
+    white_listed_spam_host_domains: A pipe-delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain
     staff_like_weight: "Extra hodnota pro 'líbí se' od uživatelů, kteří jsou součástí personálu webu."
     reply_by_email_enabled: Jestli toto fórum umožňuje odpovědi emailem
     reply_by_email_address: 'Šablona emailé adresy pro odpověď emailem, např. %{reply_key}@reply.myforum.com'
@@ -797,7 +807,7 @@ cs:
   most_recent_poster: Poslední zasilatel
   frequent_poster: Častý zasilatel
   redirected_to_top_reasons:
-    new_user: "Welcome! As a new visitor, this will be your homepage until you've had some time to look around at the forum. Here's some of the most popular topics from the past."
+    new_user: "Welcome! As a new visitor, this will be your homepage until you've had time to look around at the forum. Here's some of the most popular topics from the past."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
   move_posts:
     new_topic_moderator_post:
@@ -1168,7 +1178,9 @@ cs:
       new_activity: 'Nová aktivita ve vašich tématech a příspěvcích:'
       top_topics: 'Poslední příspěvky, které si komunita oblíbila:'
       other_new_topics: 'Other New Topics:'
-      unsubscribe: 'Tento souhrnný email je zaslán jako oznámení od %{site_link}, pokud jste se nepřihlásili v poslední době.\\nPokud nechcete tento souhrn dostávat, navštivte %{unsubscribe_link}.'
+      unsubscribe: |
+        Tento souhrnný email je zaslán jako oznámení od %{site_link}, pokud jste se nepřihlásili v poslední době.\
+        Pokud nechcete tento souhrn dostávat, navštivte %{unsubscribe_link}.
       click_here: klikněte zde
       from: 'souhrn z %{site_name}'
       read_more: Číst dále

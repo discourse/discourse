@@ -5,7 +5,7 @@ require_dependency 'distributed_memoizer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :expand_embed]
 
   skip_before_filter :store_incoming_links, only: [:short_link]
   skip_before_filter :check_xhr, only: [:markdown,:short_link]
@@ -143,6 +143,12 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
+  def expand_embed
+    render json: {cooked: TopicEmbed.expanded_for(find_post_from_params) }
+  rescue
+    render_json_error I18n.t('errors.embed.load_from_remote')
+  end
+
   def recover
     post = find_post_from_params
     guardian.ensure_can_recover_post!(post)
@@ -212,6 +218,10 @@ class PostsController < ApplicationController
   def render_post_json(post)
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)
     post_serializer.add_raw = true
+    counts = PostAction.counts_for([post], current_user)
+    if counts && counts = counts[post.id]
+      post_serializer.post_actions = counts
+    end
     render_json_dump(post_serializer)
   end
 
@@ -246,6 +256,9 @@ class PostsController < ApplicationController
       # php seems to be sending this incorrectly, don't fight with it
       params[:skip_validations] = params[:skip_validations].to_s == "true"
       permitted << :skip_validations
+
+      # We allow `embed_url` via the API
+      permitted << :embed_url
     end
 
     params.require(:raw)

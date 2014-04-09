@@ -5,8 +5,6 @@ describe TopicEmbed do
   it { should belong_to :topic }
   it { should belong_to :post }
   it { should validate_presence_of :embed_url }
-  it { should validate_presence_of :content_sha1 }
-
 
   context '.import' do
 
@@ -33,6 +31,7 @@ describe TopicEmbed do
         # It converts relative URLs to absolute
         post.cooked.start_with?("hello world new post <a href=\"http://eviltrout.com/hello\">hello</a> <img src=\"http://eviltrout.com/images/wat.jpg\">").should be_true
 
+        post.topic.has_topic_embed?.should be_true
         TopicEmbed.where(topic_id: post.topic_id).should be_present
       end
 
@@ -41,6 +40,17 @@ describe TopicEmbed do
         post.cooked.should =~ /new contents/
       end
 
+      it "Should leave uppercase Feed Entry URL untouched in content" do
+        cased_url = 'http://eviltrout.com/ABCD'
+        post = TopicEmbed.import(user, cased_url, title, "some random content")
+        post.cooked.should =~ /#{cased_url}/
+      end
+
+      it "Should leave lowercase Feed Entry URL untouched in content" do
+        cased_url = 'http://eviltrout.com/abcd'
+        post = TopicEmbed.import(user, cased_url, title, "some random content")
+        post.cooked.should =~ /#{cased_url}/
+      end
     end
 
   end

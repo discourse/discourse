@@ -264,6 +264,21 @@ describe UserDestroyer do
         category.topic.user_id.should == Discourse.system_user.id
       end
     end
+
+    context 'user liked things' do
+      before do
+        @topic = Fabricate(:topic, user: Fabricate(:user))
+        @post = Fabricate(:post, user: @topic.user, topic: @topic)
+        @like = PostAction.act(@user, @post, PostActionType.types[:like])
+      end
+
+      it 'should destroy the like' do
+        expect {
+          UserDestroyer.new(@admin).destroy(@user, {delete_posts: true})
+        }.to change { PostAction.count }.by(-1)
+        @post.reload.like_count.should == 0
+      end
+    end
   end
 
 end

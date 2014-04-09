@@ -6,10 +6,7 @@ describe PostAlerter do
 
   def create_post_with_alerts(args={})
     post = Fabricate(:post, args)
-    alerter = PostAlerter.new
-    alerter.after_create_post(post)
-    alerter.after_save_post(post)
-    post
+    PostAlerter.post_created(post)
   end
 
   context 'quotes' do
@@ -32,6 +29,21 @@ describe PostAlerter do
       lambda {
         Fabricate(:post, topic: topic, user: topic.user, raw: '[quote="Bruce Wayne, post:1"]whatup[/quote]')
       }.should_not change(topic.user.notifications, :count).by(1)
+    end
+  end
+
+  context 'linked' do
+    it "will notify correctly on linking" do
+      post1 = create_post
+      user = post1.user
+      create_post(raw: "my magic topic\n##{Discourse.base_url}#{post1.url}")
+
+      user.notifications.count.should == 1
+
+      create_post(user: user, raw: "my magic topic\n##{Discourse.base_url}#{post1.url}")
+
+      user.reload
+      user.notifications.count.should == 1
     end
   end
 

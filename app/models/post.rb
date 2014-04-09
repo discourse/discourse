@@ -163,9 +163,9 @@ class Post < ActiveRecord::Base
 
     hosts = SiteSetting
               .white_listed_spam_host_domains
-              .split(",")
+              .split('|')
               .map{|h| h.strip}
-              .reject{|h| !h.include?(".")}
+              .reject{|h| !h.include?('.')}
 
     hosts << GlobalSetting.hostname
 
@@ -312,6 +312,16 @@ class Post < ActiveRecord::Base
 
   def revise(updated_by, new_raw, opts = {})
     PostRevisor.new(self).revise!(updated_by, new_raw, opts)
+  end
+
+  def set_owner(new_user, actor)
+    revise(actor, self.raw, {
+        new_user: new_user,
+        changed_owner: true,
+        edit_reason: I18n.t('change_owner.post_revision_text',
+                            old_user: self.user.username_lower,
+                            new_user: new_user.username_lower)
+    })
   end
 
   before_create do
@@ -472,7 +482,7 @@ class Post < ActiveRecord::Base
   end
 
   def save_revision
-    modifications = changes.extract!(:raw, :cooked, :edit_reason)
+    modifications = changes.extract!(:raw, :cooked, :edit_reason, :user_id)
     # make sure cooked is always present (oneboxes might not change the cooked post)
     modifications["cooked"] = [self.cooked, self.cooked] unless modifications["cooked"].present?
     PostRevision.create!(
@@ -503,8 +513,8 @@ end
 #  post_number             :integer          not null
 #  raw                     :text             not null
 #  cooked                  :text             not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
+#  created_at              :datetime
+#  updated_at              :datetime
 #  reply_to_post_number    :integer
 #  reply_count             :integer          default(0), not null
 #  quote_count             :integer          default(0), not null
@@ -540,7 +550,8 @@ end
 #
 # Indexes
 #
+#  idx_posts_created_at_topic_id            (created_at,topic_id)
 #  idx_posts_user_id_deleted_at             (user_id)
 #  index_posts_on_reply_to_post_number      (reply_to_post_number)
-#  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE
+#  index_posts_on_topic_id_and_post_number  (topic_id,post_number)
 #

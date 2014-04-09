@@ -79,14 +79,19 @@ Discourse.Badge = Discourse.Model.extend({
     @returns {Promise} A promise that resolves to the updated `Discourse.Badge`
   **/
   save: function() {
+    this.set('savingStatus', I18n.t('saving'));
+    this.set('saving', true);
+
     var url = "/admin/badges",
         requestType = "POST",
         self = this;
+
     if (!this.get('newBadge')) {
       // We are updating an existing badge.
       url += "/" + this.get('id');
       requestType = "PUT";
     }
+
     return Discourse.ajax(url, {
       type: requestType,
       data: {
@@ -96,6 +101,8 @@ Discourse.Badge = Discourse.Model.extend({
       }
     }).then(function(json) {
       self.updateFromJson(json);
+      self.set('savingStatus', I18n.t('saved'));
+      self.set('saving', false);
       return self;
     });
   },

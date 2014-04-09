@@ -28,6 +28,10 @@ en:
   via: "%{username} via The Lesson Planet Community"
   is_reserved: "is reserved"
 
+  errors:
+    embed:
+      load_from_remote: "There was an error loading that post."
+
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -49,7 +53,7 @@ en:
 
     loading: "Loading Discussion..."
     permalink: "Permalink"
-    imported_from: "Discussion topic for the original blog entry at: %{link}"
+    imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "in reply to %{username}"
     replies:
       one: "1 reply"
@@ -507,9 +511,9 @@ en:
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
-    facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">See this guide to learn more</a>.'
-    twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">See this guide to learn more</a>.'
-    github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
+    facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
+    twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
+    github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
     s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
@@ -606,12 +610,12 @@ en:
     max_image_height: "Maximum allowed height of images in a post"
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
+    exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
 
     post_excerpt_maxlength: "Maximum length in chars of a post's excerpt"
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"
+    onebox_domains_whitelist: "A list of domains to whitelist for oneboxing. (Example: eviltrout.com)"
     category_post_template: "The post template used when you create a new category"
-    onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
 
     logo_url: "The logo for your site eg: http://example.com/logo.png"
     digest_logo_url: "The logo used in your site's email digest. If left blank `logo_url` will be used. eg: http://example.com/logo.png"
@@ -669,6 +673,7 @@ en:
 
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
+    redirect_users_to_top_page: "Automatically redirect new & long-time-no-see users to top page"
     redirect_new_users_to_top_page_duration: "Number of days during which new users are automatically redirect to the top page"
 
     enable_badges: "Enable the badge system (experimental)"
@@ -703,7 +708,6 @@ en:
     sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
 
     enable_local_logins: "Enable traditional, local username and password authentication"
-    enable_local_account_create: "Enable creating new local accounts"
     enable_google_logins: "Enable Google authentication"
     enable_yahoo_logins: "Enable Yahoo authentication"
 
@@ -809,11 +813,11 @@ en:
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
 
-    white_listed_spam_host_domains: "A comma delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain"
+    white_listed_spam_host_domains: "A pipe-delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain"
     staff_like_weight: "Extra weighting factor given to likes when performed by staff."
 
     reply_by_email_enabled: "Enable replying to topics via email"
-    reply_by_email_address: "Template for reply by email address in form, for example: %{reply_key}@reply.myforum.com"
+    reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
 
     pop3s_polling_enabled: "Poll via POP3S for email replies"
     pop3s_polling_port: "The port to poll a POP3S account on"
@@ -824,6 +828,7 @@ en:
     email_in_address: "The email address the users can post new topics to. None means users can't post globally."
     email_in_min_trust: "The minimum trust level an users needs to have to be allowed to post new topics via email"
     email_in_category: "The category new emails are posted into"
+    email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set"
 
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 
@@ -852,20 +857,25 @@ en:
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists"
     min_posts_for_search_in_topic: "Disable search within topic if topics have less than minimum number posts"
 
+    global_notice: "Display a global banner to all users of the site, change to blank to hide it (HTML is allowed)"
+
     enable_names: "Allow users to show their full names"
     display_name_on_posts: "Also show a user's full name on their posts"
     invites_shown: "Maximum invites shown on a user page"
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic older than this many days, a warning will be displayed to discourage the user from reviving an old discussion. Disable by setting to 0."
+    autohighlight_all_code: "Apply code highlighting to all preformatted code blocks even when they didn't specify the language"
 
     embeddable_host: "Host that can embed the comments from this Discourse forum"
     feed_polling_enabled: "Whether to import a RSS/ATOM feed as posts"
     feed_polling_url: "URL of RSS/ATOM feed to import"
     embed_by_username: "Discourse username of the user who creates the topics"
+    embed_truncate: "Truncate the imported posts"
     embed_category: "Category of created topics"
     embed_post_limit: "Maximum number of posts to embed"
     tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
+    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
@@ -893,7 +903,7 @@ en:
   frequent_poster: "Frequent Poster"
 
   redirected_to_top_reasons:
-    new_user: "Welcome! As a new visitor, this will be your homepage until you've had some time to look around at the forum. Here's some of the most popular topics from the past."
+    new_user: "Welcome! As a new visitor, this will be your homepage until you've had time to look around. Here's some of the most popular topics from the past."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
 
   move_posts:
@@ -903,6 +913,9 @@ en:
     existing_topic_moderator_post:
       one: "I moved a post to an existing topic: %{topic_link}"
       other: "I moved %{count} posts to an existing topic: %{topic_link}"
+
+  change_owner:
+    post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
 
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
@@ -924,6 +937,9 @@ en:
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is either unpinned by a moderator, or the Clear Pin button is pressed."
     pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
+
+    pinned_globally_enabled: "This topic is now pinned globally. It will appear at the top of its category and all topic lists until it is either unpinned by a moderator, or the Clear Pin button is pressed."
+    pinned_globally_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
     visible_enabled: "This topic is now visible. It will be displayed in topic lists."
     visible_disabled: "This topic is now invisible. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
 
@@ -1033,7 +1049,7 @@ en:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Upgrade by visiting `\admin\docker`, refreshing the page a few times, and pressing the "upgrade" button.
+      - Upgrade by visiting `/admin/docker`, refreshing the page a few times, and pressing the "Upgrade Discourse" button.
 
       - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
 
@@ -1047,7 +1063,7 @@ en:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Upgrade by visiting `\admin\docker`, refreshing the page a few times, and pressing the "upgrade" button.
+      - Upgrade by visiting `/admin/docker`, refreshing the page a few times, and pressing the "Upgrade Discourse" button.
 
       - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
 
@@ -1055,7 +1071,16 @@ en:
 
       %{notes}
 
-
+  flags_reminder:
+    flags_were_submitted:
+      one: "There are flags that were submitted over 1 hour ago."
+      other: "There are flags that were submitted over %{count} hours ago."
+    please_review: "Please review them."
+    post_number: "post"
+    how_to_disable: "Disable this email by changing the notify_about_flags_after setting to 0."
+    subject_template:
+      one: "1 flag is waiting to be handled"
+      other: "%{count} flags are waiting to be handled"
 
   system_messages:
     post_hidden:
@@ -1143,9 +1168,31 @@ en:
       subject_template: "Export completed successfully"
       text_body_template: "The export was successful."
 
+    export_failed:
+      subject_template: "Export failed"
+      text_body_template: |
+        The export has failed.
+
+        Here's the log:
+
+        ```
+        %{logs}
+        ```
+
     import_succeeded:
       subject_template: "Import completed successfully"
       text_body_template: "The import was successful."
+
+    import_failed:
+      subject_template: "Import failed"
+      text_body_template: |
+        The import has failed.
+
+        Here's the log:
+
+        ```
+        %{logs}
+        ```
 
     email_error_notification:
       subject_template: "Error parsing email"

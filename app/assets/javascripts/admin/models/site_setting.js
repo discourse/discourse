@@ -32,6 +32,15 @@ Discourse.SiteSetting = Discourse.Model.extend({
   }.property('value'),
 
   /**
+    The name of the setting. Basically, underscores in the setting key are replaced with spaces.
+
+    @property settingName
+  **/
+  settingName: function() {
+    return this.get('setting').replace(/\_/g, ' ');
+  }.property('setting'),
+
+  /**
     Has the user changed the setting? If so we should save it.
 
     @property dirty

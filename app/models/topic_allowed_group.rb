@@ -18,4 +18,3 @@ end
 #  index_topic_allowed_groups_on_group_id_and_topic_id  (group_id,topic_id) UNIQUE
 #  index_topic_allowed_groups_on_topic_id_and_group_id  (topic_id,group_id) UNIQUE
 #
-

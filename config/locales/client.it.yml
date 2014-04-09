@@ -385,7 +385,7 @@ it:
         sent_by: "Inviato da"
         private_message: "Messaggio privato"
         the_topic: "il topic"
-    loading: "In caricamento..."
+    loading: "Caricamento..."
     close: "Chiudi"
     assets_changed_confirm: "Discourse è stato aggiornato, vuoi preparati a passare alla nuova versione?"
     read_only_mode:
@@ -542,6 +542,7 @@ it:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} ha accettato il tuo invito"
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} spostato {{link}}"
       total_flagged: "Numero totale di post segnalati"
+      linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
     upload_selector:
       title: "Aggiungi un'immagine"
       title_with_attachments: "Aggiungi un'immagine o un file"
@@ -573,6 +574,8 @@ it:
         unstar: 'Elimina questo topic dalla lista dei preferiti'
     topics:
       bulk:
+        reset_read: "Cancella dati lettura"
+        dismiss_read: "Ignora Lettura"
         dismiss_new: "Abbandona"
         toggle: "Attiva/disattiva la selezione multipla dei topic"
         actions: "Azioni in serie"
@@ -664,6 +667,7 @@ it:
         current: Post corrente
         position: "post %{current} of %{total}"
       notifications:
+        title: ''
         reasons:
           '3_6': 'Riceverai notifiche perchè stai monitorando questa categoria.'
           '3_5': 'Riceverai notifiche poichè hai iniziato a controllare questo topic automaticamente.'
@@ -723,7 +727,7 @@ it:
         title: 'Condividi'
         help: 'Condividi un link a questo topic'
       flag_topic:
-        title: 'Contrassegno'
+        title: 'Segnala'
         help: 'Contrassegna questo topic o invia una notifica'
         success_message: 'Hai contrassegnato questo topic con successo'
       inviting: "Sto invitando..."
@@ -1077,7 +1081,7 @@ it:
           other: "{{categoryName}} ({{count}})"
         help: "Ultimi topic nella categoria {{categoryName}}"
       top:
-        title: "In alto"
+        title: "Top"
         help: "una selezione dei migliori topic dell'ultimo anno, mese, settimana o giorno"
         yearly:
           title: "Migliori dell'anno"
@@ -1276,6 +1280,8 @@ it:
         title: "Email"
         settings: "Impostazioni"
         all: "Tutto"
+        sending_test: "Invio email di prova..."
+        test_error: "C'è stato un errore durante l'invio dell'email. Controlla le impostazioni e riprova."
         sent: "Inviato"
         skipped: "Salta"
         sent_at: "Inviato a"
@@ -1287,7 +1293,7 @@ it:
         send_test: "Invia una email di prova"
         sent_test: "Inviata!"
         delivery_method: "Metodo di consegna"
-        preview_digest: "Anteprima della selezione"
+        preview_digest: "Anteprima Riassunto"
         preview_digest_desc: "Questo è uno strumento per vedere un'anteprima del contenuto delle email inviate dal tuo forum."
         refresh: "Aggiorna"
         format: "Formato"
@@ -1522,6 +1528,17 @@ it:
           legal: "Legale"
           uncategorized: 'Non categorizzato'
           backups: "Backup"
+      badges:
+        title: Targhette
+        new_badge: Nuova Targhetta
+        new: Nuovo
+        name: Nome
+        display_name: Visualizza Nome
+        description: Descrizione
+        badge_type: Tipo di Targhetta
+        save: Salva
+        delete: Cancella
+        delete_confirm: Sei sicuro di voler eliminare questa targhetta?
     lightbox:
       download: "Scaricamento"
     keyboard_shortcuts_help:
@@ -1562,3 +1579,7 @@ it:
         mark_regular: '<b>m</b> then <b>r</b> Contrassegna il topic come regolare'
         mark_tracking: '<b>m</b> then <b>t</b> Contrassegna il topic come "Seguito"'
         mark_watching: '<b>m</b> quindi <b>w</b> Contrassegna il topic come "sotto osservazione"'
+    badges:
+      example_badge:
+        name: 'Targhetta Esempio'
+        description: 'Questa è una targhetta generica di esempio'

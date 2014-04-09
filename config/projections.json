@@ -26,6 +26,9 @@
   "app/serializers/*.rb": {
     "command": "serializer"
   },
+  "app/services/*.rb": {
+    "command": "service"
+  },
   "config/*": {
     "command": "config"
   }

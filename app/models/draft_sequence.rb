@@ -37,4 +37,3 @@ end
 #
 #  index_draft_sequences_on_user_id_and_draft_key  (user_id,draft_key) UNIQUE
 #
-

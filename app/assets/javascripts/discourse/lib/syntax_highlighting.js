@@ -16,8 +16,9 @@ Discourse.SyntaxHighlighting = {
     @param {jQuery.selector} $elem The element we want to apply our highlighting to
   **/
   apply: function($elem) {
-    $('pre code[class]', $elem).each(function(i, e) {
-      return $LAB.script("/javascripts/highlight-handlebars.pack.js").wait(function() {
+    var selector = Discourse.SiteSettings.autohighlight_all_code ? 'pre code' : 'pre code[class]';
+    $(selector, $elem).each(function(i, e) {
+      return $LAB.script("/javascripts/highlight.pack.js").wait(function() {
         return hljs.highlightBlock(e);
       });
     });

@@ -1320,4 +1320,35 @@ describe Topic do
       Topic.calculate_avg_time(1.day.ago)
     end
   end
+
+  describe "expandable_first_post?" do
+    let(:topic) { Fabricate.build(:topic) } 
+
+    before do
+      SiteSetting.stubs(:embeddable_host).returns("http://eviltrout.com")
+      SiteSetting.stubs(:embed_truncate?).returns(true)
+      topic.stubs(:has_topic_embed?).returns(true)
+    end
+
+    it "is true with the correct settings and topic_embed" do
+      topic.expandable_first_post?.should be_true
+    end
+
+    it "is false if embeddable_host is blank" do
+      SiteSetting.stubs(:embeddable_host).returns(nil)
+      topic.expandable_first_post?.should be_false
+    end
+
+    it "is false if embed_truncate? is false" do
+      SiteSetting.stubs(:embed_truncate?).returns(false)
+      topic.expandable_first_post?.should be_false
+    end
+
+    it "is false if has_topic_embed? is false" do
+      topic.stubs(:has_topic_embed?).returns(false)
+      topic.expandable_first_post?.should be_false
+    end
+
+
+  end
 end

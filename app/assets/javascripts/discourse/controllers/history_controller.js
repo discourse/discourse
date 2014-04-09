@@ -46,8 +46,8 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
 
     var raw = "";
     var opts = { allowUncategorized: true };
-    prevCategory = Discourse.HTML.categoryLink(prevCategory, opts);
-    curCategory = Discourse.HTML.categoryLink(curCategory, opts);
+    prevCategory = Discourse.HTML.categoryBadge(prevCategory, opts);
+    curCategory = Discourse.HTML.categoryBadge(curCategory, opts);
 
     if(viewMode === "side_by_side_markdown" || viewMode === "side_by_side") {
       raw = "<div class='span8'>" + prevCategory +  "</div> <div class='span8 offset1'>" + curCategory +  "</div>";

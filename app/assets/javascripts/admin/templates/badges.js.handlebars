@@ -8,7 +8,7 @@
         <a {{action selectBadge this}} {{bind-attr class="selected:active"}}>
           {{displayName}}
           {{#if newBadge}}
-          (*)
+            ({{i18n filters.new.lower_title}})
           {{/if}}
         </a>
       </li>
@@ -19,7 +19,7 @@
 
   {{#if selectedItem}}
   {{#with selectedItem}}
-  <div class='current-badge span12'>
+  <div class='current-badge span13'>
     <form class="form-horizontal">
       <div>
         <label for="name">{{i18n admin.badges.name}}</label>
@@ -51,7 +51,8 @@
       </div>
 
       <div class='buttons'>
-        <button {{action save}} {{bind-attr disabled=disableSave}} class='btn btn-primary'>{{i18n admin.badges.save}}</button>
+        <button {{action save}} {{bind-attr disabled=controller.disableSave}} class='btn btn-primary'>{{i18n admin.badges.save}}</button>
+        <span class='saving'>{{savingStatus}}</span>
         <a {{action destroy}} class='delete-link'>{{i18n admin.badges.delete}}</a>
       </div>
     </form>

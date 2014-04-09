@@ -44,8 +44,6 @@ module Export
       after_create_hook
 
       remove_old
-
-      notify_user
     rescue SystemExit
       log "Backup process was cancelled!"
     rescue Exception => ex
@@ -55,6 +53,7 @@ module Export
       @success = true
       "#{@archive_basename}.tar.gz"
     ensure
+      notify_user
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
@@ -79,6 +78,8 @@ module Export
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
       @archive_directory = File.join(Rails.root, "public", "backups", @current_db)
       @archive_basename = File.join(@archive_directory, "#{SiteSetting.title.parameterize}-#{@timestamp}")
+      @logs = []
+      @readonly_mode_was_enabled = Discourse.readonly_mode?
     end
 
     def listen_for_shutdown_signal
@@ -96,6 +97,7 @@ module Export
     end
 
     def enable_readonly_mode
+      return if @readonly_mode_was_enabled
       log "Enabling readonly mode..."
       Discourse.enable_readonly_mode
     end
@@ -142,6 +144,7 @@ module Export
       pg_dump_running = true
 
       Thread.new do
+        RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
         while pg_dump_running
           message = logs.pop.strip
           log(message) unless message.blank?
@@ -199,19 +202,19 @@ module Export
       #  - create the "restore" schema
       #  - prepend the "restore" schema into the search_path
 
-      regexp = "^SET search_path = public, pg_catalog;$"
+      regexp = "SET search_path = public, pg_catalog;"
 
       replacement = [ "DROP SCHEMA IF EXISTS restore CASCADE;",
                       "CREATE SCHEMA restore;",
                       "SET search_path = restore, public, pg_catalog;",
-                    ].join("\\n")
+                    ].join(" ")
 
       # we only want to replace the VERY first occurence of the search_path command
-      expression = "0,/#{regexp}/s//#{replacement}/"
+      expression = "1,/^#{regexp}$/s/#{regexp}/#{replacement}/"
 
       # I tried to use the --in-place argument but it was SLOOOWWWWwwwwww
       # so I output the result into another file and rename it back afterwards
-      [ "sed --expression='#{expression}' < #{@dump_filename} > #{@dump_filename}.tmp",
+      [ "sed -e '#{expression}' < #{@dump_filename} > #{@dump_filename}.tmp",
         "&&",
         "mv #{@dump_filename}.tmp #{@dump_filename}",
       ].join(" ")
@@ -256,15 +259,19 @@ module Export
       backup.after_create_hook
     end
 
-    def notify_user
-      log "Notifying '#{@user.username}' of the success of the backup..."
-      # NOTE: will only notify if @user != Discourse.site_contact_user
-      SystemMessage.create(@user, :export_succeeded)
-    end
-
     def remove_old
       log "Removing old backups..."
       Backup.remove_old
+    end
+
+    def notify_user
+      log "Notifying '#{@user.username}' of the end of the backup..."
+      # NOTE: will only notify if @user != Discourse.site_contact_user
+      if @success
+        SystemMessage.create(@user, :export_succeeded)
+      else
+        SystemMessage.create(@user, :export_failed, logs: @logs.join("\n"))
+      end
     end
 
     def clean_up
@@ -289,6 +296,7 @@ module Export
     end
 
     def disable_readonly_mode
+      return if @readonly_mode_was_enabled
       log "Disabling readonly mode..."
       Discourse.disable_readonly_mode
     end
@@ -306,12 +314,17 @@ module Export
     def log(message)
       puts(message) rescue nil
       publish_log(message) rescue nil
+      save_log(message)
     end
 
     def publish_log(message)
       return unless @publish_to_message_bus
       data = { timestamp: Time.now, operation: "backup", message: message }
       MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
+    end
+
+    def save_log(message)
+      @logs << "[#{Time.now}] #{message}"
     end
 
   end

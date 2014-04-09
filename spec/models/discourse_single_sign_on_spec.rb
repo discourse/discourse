@@ -10,7 +10,7 @@ describe DiscourseSingleSignOn do
     SiteSetting.stubs("sso_secret").returns(@sso_secret)
   end
 
-  it "can fill in data on way back" do
+  def make_sso
     sso = SingleSignOn.new
     sso.sso_url = "http://meta.discorse.org/topics/111"
     sso.sso_secret = "supersecret"
@@ -19,17 +19,38 @@ describe DiscourseSingleSignOn do
     sso.username = "sam"
     sso.name = "sam saffron"
     sso.external_id = "100"
+    sso
+  end
 
-    url, payload = sso.to_url.split("?")
-    url.should == sso.sso_url
-    parsed = SingleSignOn.parse(payload, "supersecret")
-
+  def test_parsed(parsed, sso)
     parsed.nonce.should == sso.nonce
     parsed.email.should == sso.email
     parsed.username.should == sso.username
     parsed.name.should == sso.name
     parsed.external_id.should == sso.external_id
+  end
 
+  it "can fill in data on way back" do
+    sso = make_sso
+
+    url, payload = sso.to_url.split("?")
+    url.should == sso.sso_url
+    parsed = SingleSignOn.parse(payload, "supersecret")
+
+    test_parsed(parsed, sso)
+  end
+
+  it "handles sso_url with query params" do
+    sso = make_sso
+    sso.sso_url = "http://tcdev7.wpengine.com/?action=showlogin"
+
+    sso.to_url.split('?').size.should == 2
+
+    url, payload = sso.to_url.split("?")
+    url.should == "http://tcdev7.wpengine.com/"
+    parsed = SingleSignOn.parse(payload, "supersecret")
+
+    test_parsed(parsed, sso)
   end
 
   it "validates nonce" do

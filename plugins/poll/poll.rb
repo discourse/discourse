@@ -21,7 +21,19 @@ module ::PollPlugin
         return false
       end
 
-      topic.title =~ /^#{I18n.t('poll.prefix')}/i
+      topic.title =~ /^(#{I18n.t('poll.prefix')}|#{I18n.t('poll.closed_prefix')})/i
+    end
+
+    def has_poll_details?
+      if SiteSetting.allow_user_locale?
+        # If we allow users to select their locale of choice we cannot detect polls
+        # by the prefix, so we fall back to checking if the poll details is set in
+        # places to make sure polls are still accessible by users using a different
+        # locale than the one used by the topic creator.
+        not self.details.nil?
+      else
+        self.is_poll?
+      end
     end
 
     # Called during validation of poll posts. Discourse already restricts edits to
@@ -45,6 +57,10 @@ module ::PollPlugin
         # Regular user, tell them to contact a moderator.
         @post.errors.add(:poll_options, I18n.t('poll.cannot_have_modified_options'))
       end
+    end
+
+    def is_closed?
+      @post.topic.closed? || (@post.topic.title =~ /^#{I18n.t('poll.closed_prefix')}/i) === 0
     end
 
     def options
@@ -124,7 +140,7 @@ module ::PollPlugin
     end
 
     def set_vote!(user, option)
-      return if @post.topic.closed?
+      return if is_closed?
 
       # Get the user's current vote.
       vote = get_vote(user)
@@ -140,7 +156,7 @@ module ::PollPlugin
 
     def serialize(user)
       return nil if details.nil?
-      {options: details, selected: get_vote(user)}
+      {options: details, selected: get_vote(user), closed: is_closed?}
     end
 
     private

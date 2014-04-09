@@ -90,78 +90,72 @@ describe SessionController do
       get :sso_login, Rack::Utils.parse_query(sso.payload)
       response.code.should == '500'
     end
-    
-    describe 'local attribute ovveride from SSO payload' do
+
+    describe 'local attribute override from SSO payload' do
       before do
         SiteSetting.stubs("sso_overrides_email").returns(true)
         SiteSetting.stubs("sso_overrides_username").returns(true)
         SiteSetting.stubs("sso_overrides_name").returns(true)
-        
+
         @user = Fabricate(:user)
-        
+
         @sso = get_sso('/hello/world')
         @sso.external_id = '997'
-        
+
         @reversed_username = @user.username.reverse
         @sso.username = @reversed_username
-        
         @sso.email = "#{@reversed_username}@garbage.org"
         @reversed_name = @user.name.reverse
-        
         @sso.name = @reversed_name
-        
+
         @suggested_username = UserNameSuggester.suggest(@sso.username || @sso.name || @sso.email)
         @suggested_name = User.suggest_name(@sso.name || @sso.username || @sso.email) 
-        
         @user.create_single_sign_on_record(external_id: '997', last_payload: '')
       end
-      
+
       it 'stores the external attributes' do
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
-        
         @user.single_sign_on_record.reload
         @user.single_sign_on_record.external_username.should == @sso.username
         @user.single_sign_on_record.external_email.should == @sso.email
         @user.single_sign_on_record.external_name.should == @sso.name
       end
-      
+
       it 'overrides attributes' do
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
-        
+
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-      
         logged_on_user.username.should == @suggested_username
         logged_on_user.email.should == "#{@reversed_username}@garbage.org"
         logged_on_user.name.should == @suggested_name
       end
-    
+
       it 'does not change matching attributes for an existing account' do
         @sso.username = @user.username
         @sso.name = @user.name
         @sso.email = @user.email
-        
+
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
-        
+
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
         logged_on_user.username.should == @user.username
         logged_on_user.name.should == @user.name
         logged_on_user.email.should == @user.email
       end
-      
+
       it 'does not change attributes for unchanged external attributes' do
         @user.single_sign_on_record.external_username = @sso.username
         @user.single_sign_on_record.external_email = @sso.email
         @user.single_sign_on_record.external_name = @sso.name
         @user.single_sign_on_record.save
-        
+
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
-    
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
         logged_on_user.username.should == @user.username
         logged_on_user.email.should == @user.email
         logged_on_user.name.should == @user.name
       end
-    end  
+    end
   end
 
   describe '.create' do
@@ -195,21 +189,22 @@ describe SessionController do
       end
 
       describe 'success by username' do
-        before do
+        it 'logs in correctly' do
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
+
           user.reload
-        end
 
-        it 'sets a session id' do
           session[:current_user_id].should == user.id
-        end
-
-        it 'gives the user an auth token' do
           user.auth_token.should be_present
-        end
-
-        it 'sets a cookie with the auth token' do
           cookies[:_t].should == user.auth_token
+        end
+      end
+
+      describe 'local logins disabled' do
+        it 'fails' do
+          SiteSetting.stubs(:enable_local_logins).returns(false)
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          response.status.to_i.should == 500
         end
       end
 
@@ -348,6 +343,12 @@ describe SessionController do
 
     context 'for an existing username' do
       let(:user) { Fabricate(:user) }
+
+      it "returns a 500 if local logins are disabled" do
+        SiteSetting.stubs(:enable_local_logins).returns(false)
+        xhr :post, :forgot_password, login: user.username
+        response.code.to_i.should == 500
+      end
 
       it "generates a new token for a made up username" do
         lambda { xhr :post, :forgot_password, login: user.username}.should change(EmailToken, :count)

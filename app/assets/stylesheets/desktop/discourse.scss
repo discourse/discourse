@@ -2,11 +2,6 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-@import "common/foundation/helpers";
-
-
 html {font-size: 14px/19px;}
 
 body {
@@ -265,7 +260,7 @@ blockquote {
 
 .spinner {
   width: 100px;
-  margin: 0 auto 30px auto;
+  margin: 10px auto 30px auto;
   background-color: #000;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
@@ -279,7 +274,21 @@ blockquote {
     position: 10px 8px;
     size: 25px;
   };
+  -webkit-animation: spinner .25s;
+  animation: spinner .25s;
 }
+
+//loading spinner fade-in
+@-webkit-keyframes spinner {
+    from {opacity: 0}
+    to {opacity: 1}
+}@keyframes fade {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
+
+
 
 .avatar {
   @include border-radius-all(2px);

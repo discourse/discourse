@@ -69,6 +69,7 @@ Discourse::Application.routes.draw do
       put "unblock"
       put "trust_level"
       put "primary_group"
+      get "badges"
       get "leader_requirements"
     end
 
@@ -338,10 +339,12 @@ Discourse::Application.routes.draw do
   post "t/:topic_id/invite" => "topics#invite", constraints: {topic_id: /\d+/}
   post "t/:topic_id/move-posts" => "topics#move_posts", constraints: {topic_id: /\d+/}
   post "t/:topic_id/merge-topic" => "topics#merge_topic", constraints: {topic_id: /\d+/}
+  post "t/:topic_id/change-owner" => "topics#change_post_owners", constraints: {topic_id: /\d+/}
   delete "t/:topic_id/timings" => "topics#destroy_timings", constraints: {topic_id: /\d+/}
 
   post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: {topic_id: /\d+/}
 
+  get "/posts/:id/expand-embed" => "posts#expand_embed"
   get "raw/:topic_id(/:post_number)" => "posts#markdown"
 
   resources :invites

@@ -52,14 +52,6 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   refreshPreview: Discourse.debounce(function() {
     if (this.editor) {
       this.editor.refreshPreview();
-      // if the caret is on the last line ensure preview scrolled to bottom
-      var caretPosition = Discourse.Utilities.caretPosition(this.wmdInput[0]);
-      if (!this.wmdInput.val().substring(caretPosition).match(/\n/)) {
-        var $wmdPreview = $('#wmd-preview');
-        if ($wmdPreview.is(':visible')) {
-          $wmdPreview.scrollTop($wmdPreview[0].scrollHeight);
-        }
-      }
     }
   }, 30),
 
@@ -328,8 +320,8 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     var uaMatch = navigator.userAgent.match(/Firefox\/(\d+)\.\d/);
     if (uaMatch && parseInt(uaMatch[1]) >= 24) {
       self.$().append( Ember.$("<div id='contenteditable' contenteditable='true' style='height: 0; width: 0; overflow: hidden'></div>") );
-      self.$().off('keydown.contenteditable');
-      self.$().on('keydown.contenteditable', function(event) {
+      self.$("textarea").off('keydown.contenteditable');
+      self.$("textarea").on('keydown.contenteditable', function(event) {
         // Catch Ctrl+v / Cmd+v and hijack focus to a contenteditable div. We can't
         // use the onpaste event because for some reason the paste isn't resumed
         // after we switch focus, probably because it is being executed too late.
@@ -449,19 +441,6 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     this._unbindUploadTarget();
   },
 
-  toggleAdminOptions: function() {
-    var $adminOpts = $('.admin-options-form'),
-        $wmd = $('.wmd-controls'),
-        wmdTop = parseInt($wmd.css('top'),10);
-    if( $adminOpts.is(':visible') ) {
-      $wmd.css('top', wmdTop - parseInt($adminOpts.css('height'),10) + 'px' );
-      $adminOpts.hide();
-    } else {
-      $adminOpts.show();
-      $wmd.css('top', wmdTop + parseInt($adminOpts.css('height'),10) + 'px' );
-    }
-  },
-
   titleValidation: function() {
     var titleLength = this.get('model.titleLength'),
         missingChars = this.get('model.missingTitleCharacters'),
@@ -504,7 +483,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     var $uploadTarget = $('#reply-control');
     $uploadTarget.fileupload('destroy');
     $uploadTarget.off();
-  },
+  }
 });
 
 // not sure if this is the right way, keeping here for now, we could use a mixin perhaps

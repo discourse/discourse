@@ -14,7 +14,8 @@
 
     init: function() {
       var cloakView = this.get('cloakView'),
-          idProperty = this.get('idProperty');
+          idProperty = this.get('idProperty'),
+          uncloakDefault = !!this.get('uncloakDefault');
 
       // Set the slack ratio differently to allow for more or less slack in preloading
       var slackRatio = parseFloat(this.get('slackRatio'));
@@ -32,6 +33,11 @@
 
           if (idProperty) {
             this.set('elementId', cloakView + '-cloak-' + this.get('content.' + idProperty));
+          }
+          if (uncloakDefault) {
+            this.uncloak();
+          } else {
+            this.cloak();
           }
         }
       }));
@@ -191,6 +197,7 @@
       $(window).bind('scroll.ember-cloak', onScrollMethod);
       this.addObserver('wrapperTop', self, onScrollMethod);
       this.addObserver('wrapperHeight', self, onScrollMethod);
+      this.addObserver('content.@each', self, onScrollMethod);
       this.scrollTriggered();
 
       this.set('scrollingEnabled', true);
@@ -217,11 +224,6 @@
   **/
   Ember.CloakedView = Ember.View.extend({
     attributeBindings: ['style'],
-
-    init: function() {
-      this._super();
-      this.cloak();
-    },
 
     /**
       Triggers the set up for rendering a view that is cloaked.

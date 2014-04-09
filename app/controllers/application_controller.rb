@@ -5,10 +5,12 @@ require_dependency 'custom_renderer'
 require_dependency 'archetype'
 require_dependency 'rate_limiter'
 require_dependency 'crawler_detection'
+require_dependency 'json_error'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
   include CanonicalURL::ControllerExtensions
+  include JsonError
 
   serialization_scope :guardian
 
@@ -253,11 +255,7 @@ class ApplicationController < ActionController::Base
     end
 
     def render_json_error(obj)
-      if obj.present?
-        render json: MultiJson.dump(errors: obj.errors.full_messages), status: 422
-      else
-        render json: MultiJson.dump(errors: [I18n.t('js.generic_error')]), status: 422
-      end
+      render json: MultiJson.dump(create_errors_json(obj)), status: 422
     end
 
     def success_json

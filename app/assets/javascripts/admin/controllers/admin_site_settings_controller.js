@@ -40,6 +40,7 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
         if (self.get('onlyOverridden') && !item.get('overridden')) return false;
         if (filter) {
           if (item.get('setting').toLowerCase().indexOf(filter) > -1) return true;
+          if (item.get('setting').toLowerCase().replace(/_/g, ' ').indexOf(filter) > -1) return true;
           if (item.get('description').toLowerCase().indexOf(filter) > -1) return true;
           if (item.get('value').toLowerCase().indexOf(filter) > -1) return true;
           return false;

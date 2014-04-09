@@ -561,7 +561,6 @@ da:
     post_excerpt_maxlength: "Maksimal længde af indlæggets resumé i tegn."
     post_onebox_maxlength: "Maksimal længde af et oneboxed Discourse-indlæg."
     category_post_template: "Kategoriskabelonen som bruges når du opretter en ny kategori."
-    onebox_max_chars: "Det maksimale antal tegn som en onebox importerer fra et eksternt site til et indlæg."
 
     logo_url: "Sitets logo, f.eks.: http://example.com/logo.png."
     logo_small_url: "Sitets lille logo, som bruges når man scroller ned i emner, f.eks.: http://example.com/logo-small.png"
@@ -635,7 +634,6 @@ da:
     min_password_length: "Mindste adgangskodelængde."
     block_common_passwords: "Tillad ikke adgangskoder som er blandt de 5000 med almindelige adgangskoder"
     enable_local_logins: "Aktivér traditionel, lokal godkendelse med brugernavn og adgangskode"
-    enable_local_account_create: "Aktivér oprettelse af nye lokale konti"
     enable_google_logins: "Aktivér Google-login"
     enable_yahoo_logins: "Aktivér Yahoo-login"
 

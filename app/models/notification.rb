@@ -142,8 +142,8 @@ end
 #  user_id           :integer          not null
 #  data              :string(1000)     not null
 #  read              :boolean          default(FALSE), not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  created_at        :datetime
+#  updated_at        :datetime
 #  topic_id          :integer
 #  post_number       :integer
 #  post_action_id    :integer
@@ -153,4 +153,3 @@ end
 #  index_notifications_on_post_action_id          (post_action_id)
 #  index_notifications_on_user_id_and_created_at  (user_id,created_at)
 #
-

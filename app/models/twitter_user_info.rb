@@ -10,12 +10,11 @@ end
 #  user_id         :integer          not null
 #  screen_name     :string(255)      not null
 #  twitter_user_id :integer          not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  created_at      :datetime
+#  updated_at      :datetime
 #
 # Indexes
 #
 #  index_twitter_user_infos_on_twitter_user_id  (twitter_user_id) UNIQUE
 #  index_twitter_user_infos_on_user_id          (user_id) UNIQUE
 #
-

@@ -8,21 +8,22 @@
 **/
 
 var UserActionTypes = {
-  likes_given: 1,
-  likes_received: 2,
-  bookmarks: 3,
-  topics: 4,
-  posts: 5,
-  replies: 6,
-  mentions: 7,
-  quotes: 9,
-  starred: 10,
-  edits: 11,
-  messages_sent: 12,
-  messages_received: 13
-};
+      likes_given: 1,
+      likes_received: 2,
+      bookmarks: 3,
+      topics: 4,
+      posts: 5,
+      replies: 6,
+      mentions: 7,
+      quotes: 9,
+      starred: 10,
+      edits: 11,
+      messages_sent: 12,
+      messages_received: 13
+    },
+    esc = Handlebars.Utils.escapeExpression,
+    InvertedActionTypes = {};
 
-var InvertedActionTypes = {};
 _.each(UserActionTypes, function (k, v) {
   InvertedActionTypes[k] = v;
 });
@@ -81,11 +82,11 @@ Discourse.UserAction = Discourse.Model.extend({
       replyUrl: this.get('replyUrl'),
       postUrl: this.get('postUrl'),
       topicUrl: this.get('replyUrl'),
-      user: this.get('presentName'),
+      user: esc(this.get('presentName')),
       post_number: '#' + this.get('reply_to_post_number'),
       user1Url: this.get('userUrl'),
       user2Url: this.get('targetUserUrl'),
-      another_user: this.get('targetDisplayName')
+      another_user: esc(this.get('targetDisplayName'))
     }));
 
   }.property('descriptionKey'),

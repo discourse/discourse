@@ -26,6 +26,14 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
   **/
   canEditDescription: Em.computed.none('selectedItem.translatedDescription'),
 
+  /**
+    Disable saving if the currently selected item is being saved.
+
+    @property disableSave
+    @type {Boolean}
+  **/
+  disableSave: Em.computed.alias('selectedItem.saving'),
+
   actions: {
 
     /**
@@ -57,11 +65,9 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
       @method save
     **/
     save: function() {
-      var badge = this.get('selectedItem');
-      badge.set('disableSave', true);
-      badge.save().then(function() {
-        badge.set('disableSave', false);
-      });
+      if (!this.get('disableSave')) {
+        this.get('selectedItem').save();
+      }
     },
 
     /**

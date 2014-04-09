@@ -31,6 +31,8 @@ describe PollPlugin::PollController, type: :controller do
   end
 
   it "should save votes correctly" do
+    MessageBus.expects(:publish).times(4)
+
     log_in_user user1
     xhr :put, :vote, post_id: post.id, option: "Chitoge", use_route: :poll
     PollPlugin::Poll.new(post).get_vote(user1).should eq("Chitoge")

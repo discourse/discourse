@@ -23,7 +23,7 @@ class SiteSetting < ActiveRecord::Base
     load_settings(file)
   end
 
-  SiteSettingExtension.class_variable_get(:@@client_settings) << :available_locales
+  client_settings << :available_locales
 
   def self.available_locales
     LocaleSiteSetting.values.map{ |e| e[:value] }.join('|')
@@ -115,7 +115,6 @@ end
 #  name       :string(255)      not null
 #  data_type  :integer          not null
 #  value      :text
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  created_at :datetime
+#  updated_at :datetime
 #
-

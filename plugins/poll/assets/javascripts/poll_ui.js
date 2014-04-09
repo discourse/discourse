@@ -38,7 +38,7 @@ var PollController = Discourse.Controller.extend({
   poll: null,
   showResults: false,
 
-  disableRadio: Em.computed.any('poll.post.topic.closed', 'loading'),
+  disableRadio: Em.computed.any('poll.post.poll_details.closed', 'loading'),
 
   actions: {
     selectOption: function(option) {

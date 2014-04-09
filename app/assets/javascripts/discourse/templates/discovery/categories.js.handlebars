@@ -18,7 +18,7 @@
             <div>
               <div class="pull-left">
                 {{#if controller.ordering}}<i class="fa fa-bars"></i>{{/if}}
-                {{categoryLink this allowUncategorized=true}}
+                {{categoryLink this allowUncategorized=true extraClasses="bigger"}}
                 {{#if unreadTopics}}
                   <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                 {{/if}}
@@ -42,7 +42,7 @@
               <div class='subcategories'>
                 {{i18n categories.subcategories}}
                 {{#each subcategories}}
-                  {{categoryLink this}}
+                  {{categoryLink this showParent=true}}
                   {{#if unreadTopics}}
                     <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                   {{/if}}

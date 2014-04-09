@@ -355,7 +355,19 @@ Discourse.AdminUser = Discourse.User.extend({
     if (this.get('leader_requirements')) {
       return Discourse.LeaderRequirements.create(this.get('leader_requirements'));
     }
-  }.property('leader_requirements')
+  }.property('leader_requirements'),
+
+  suspendedBy: function() {
+    if (this.get('suspended_by')) {
+      return Discourse.AdminUser.create(this.get('suspended_by'));
+    }
+  }.property('suspended_by'),
+
+  approvedBy: function() {
+    if (this.get('approved_by')) {
+      return Discourse.AdminUser.create(this.get('approved_by'));
+    }
+  }.property('approved_by')
 
 });
 

@@ -1,8 +1,5 @@
 // styles that apply to the reply pane that slides up to compose replies
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 // hack, this needs to be done cleaner
 #private-message-users {
   width: 400px;
@@ -138,7 +135,7 @@
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: rgba($composer_background, 0.96);
+  background-color: rgba($composer_background_color, 0.96);
   bottom: 0;
   font-size: 14px;
   position: fixed;
@@ -443,6 +440,10 @@ div.ac-wrap {
   }
 }
 
+#reply-control.topic #wmd-quote-post {
+  display: none;
+}
+
 #reply-control {
   &.hide-preview {
     .wmd-controls {
@@ -470,7 +471,7 @@ div.ac-wrap {
       margin-top: 0 !important;
     }
 
-    #wmd-input, #wmd-preview {
+    #wmd-input, #wmd-preview-scroller, #wmd-preview {
       @include box-sizing(border-box);
       width: 100%;
       height: 100%;
@@ -484,8 +485,12 @@ div.ac-wrap {
       h1, h2, h3, h4, h5, h6 {
         margin: 30px 0 10px;
       }
+      p {
+        margin-top: 19px;
+      }
+      blockquote p:first-of-type {margin-top: 0px;}
     }
-    #wmd-input {
+    #wmd-input, #wmd-preview-scroller {
       position: absolute;
       left: 0;
       top: 0;
@@ -497,6 +502,18 @@ div.ac-wrap {
       box-shadow: none;
       @include border-radius-all(0);
       transition: none;
+    }
+    #wmd-preview-scroller {
+      font-size: 13px;
+      line-height: 18px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: normal;
+      overflow: scroll;
+      visibility: hidden;
+      .marker, .caret {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
     .textarea-wrapper, .preview-wrapper {
       position: relative;
@@ -544,18 +561,13 @@ div.ac-wrap {
   }
 }
 
-.admin-options-form {
-  display: none;
-  margin-top: -15px;
-}
-
 .auto-close-fields {
   input {
     width: 150px;
   }
   .examples {
     margin: 10px 0 0 0;
-    color: $primary_text_color;
+    color: $secondary_text_color;
   }
 }
 
@@ -573,5 +585,3 @@ div.ac-wrap {
     }
   }
 }
-
-

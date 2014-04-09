@@ -609,7 +609,6 @@ nl:
     post_excerpt_maxlength: Maximale lengte in tekens van een uittreksel van een bericht
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed' bericht."
     category_post_template: De berichttemplate die gebruikt wordt als je een nieuwe categorie aanmaakt
-    onebox_max_chars: "Het maximaal aantal tekens dat een 'onebox' zal importeren van een externe website in het bericht."
 
     logo_url: "Het logo van je site. Bijv: http://example.com/logo.png"
     logo_small_url: "Het kleine logo van je site (wordt weergegeven na scrollen op topic-pagina's). Bijv: http://example.com/logo-small.png"
@@ -701,7 +700,6 @@ nl:
     sso_overrides_name: "Gebruikt de naam die gebruikt wordt bij de SSO service i.p.v. de lokaal opgegeven naam. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale namen)"
 
     enable_local_logins: Zet lokaal inloggen aan
-    enable_local_account_create: Zet lokaal account aanmaken aan
     enable_google_logins: Zet inloggen met Google aan
     enable_yahoo_logins: "Zet inloggen met Yahoo! aan"
 
@@ -1033,7 +1031,7 @@ nl:
 
       - Kijk wat er nieuw is in de [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Ga naar `\admin\docker`, herlaad de pagina een aantal keren en druk dan op de "upgrade" knop.
+      - Ga naar `/admin/docker`, herlaad de pagina een aantal keren en druk dan op de "Upgrade Discourse" knop.
 
       - Ga naar http://meta.discourse.org voor nieuws, discussies over en support voor Discourse.
 
@@ -1047,7 +1045,7 @@ nl:
 
       - Kijk wat er nieuw is in de [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Ga naar `\admin\docker`, herlaad de pagina een aantal keren en druk dan op de "upgrade" knop.
+      - Ga naar `/admin/docker`, herlaad de pagina een aantal keren en druk dan op de "Upgrade Discourse" knop.
 
       - Ga naar http://meta.discourse.org voor nieuws, discussies over en support voor Discourse.
 
@@ -1165,7 +1163,7 @@ nl:
         Bekijk het volgende bericht.
 
         Fout - %{error}
-        
+
         %{source}
 
     email_reject_trust_level:
@@ -1295,9 +1293,9 @@ nl:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{message}
- 
+
         %{context}
- 
+
         ---
         %{respond_instructions}
 

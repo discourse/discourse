@@ -67,6 +67,10 @@ Discourse.TopicRoute = Discourse.Route.extend({
       Discourse.Route.showModal(this, 'splitTopic', this.modelFor('topic'));
     },
 
+    changeOwner: function() {
+      Discourse.Route.showModal(this, 'changeOwner', this.modelFor('topic'));
+    },
+
     // Use replaceState to update the URL once it changes
     postChangedRoute: Discourse.debounce(function(currentPost) {
       // do nothing if we are transitioning to another route

@@ -76,14 +76,15 @@ Handlebars.registerHelper('topicLink', function(property, options) {
 function categoryLinkHTML(category, options) {
   var categoryOptions = {};
   if (options.hash) {
-    if (options.hash.allowUncategorized) {
-      categoryOptions.allowUncategorized = true;
-    }
+    if (options.hash.allowUncategorized) { categoryOptions.allowUncategorized = true; }
+    if (options.hash.showParent) { categoryOptions.showParent = true; }
+    if (options.hash.link !== undefined) { categoryOptions.link = options.hash.link; }
+    if (options.hash.extraClasses) { categoryOptions.extraClasses = options.hash.extraClasses; }
     if (options.hash.categories) {
       categoryOptions.categories = Em.Handlebars.get(this, options.hash.categories, options);
     }
   }
-  return new Handlebars.SafeString(Discourse.HTML.categoryLink(category, categoryOptions));
+  return new Handlebars.SafeString(Discourse.HTML.categoryBadge(category, categoryOptions));
 }
 
 /**
@@ -101,10 +102,10 @@ Handlebars.registerHelper('categoryLinkRaw', function(property, options) {
 });
 
 Handlebars.registerHelper('categoryBadge', function(property, options) {
-  var category = Em.Handlebars.get(this, property, options),
-      style = Discourse.HTML.categoryStyle(category);
-  return new Handlebars.SafeString("<span class='badge-category' style='" + style + "'>" + category.get('name') + "</span>");
+  options.hash.link = false;
+  return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
 });
+
 
 /**
   Produces a bound link to a category
@@ -383,4 +384,26 @@ Handlebars.registerHelper('customHTML', function(name, contextString, options) {
 
 Ember.Handlebars.registerBoundHelper('humanSize', function(size) {
   return new Handlebars.SafeString(I18n.toHumanSize(size));
+});
+
+/**
+  Renders the domain for a link if it's not internal and has a title.
+
+  @method link-domain
+  @for Handlebars
+**/
+Handlebars.registerHelper('link-domain', function(property, options) {
+  var link = Em.get(this, property, options);
+  if (link) {
+    var internal = Em.get(link, 'internal'),
+        hasTitle = (!Em.isEmpty(Em.get(link, 'title')));
+    if (hasTitle && !internal) {
+      var domain = Em.get(link, 'domain');
+      if (!Em.isEmpty(domain)) {
+        var s = domain.split('.');
+        domain = s[s.length-2] + "." + s[s.length-1];
+        return new Handlebars.SafeString("<span class='domain'>" + domain + "</span>");
+      }
+    }
+  }
 });

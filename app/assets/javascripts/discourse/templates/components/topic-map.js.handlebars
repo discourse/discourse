@@ -65,6 +65,7 @@
                 {{#if title}}{{title}}{{else}}{{shortenUrl url}}{{/if}}
                 {{#unless internal}}<i class='fa fa-external-link'></i>{{/unless}}
               </a>
+              {{link-domain this}}
             </li>
           {{/groupedEach}}
         </ul>

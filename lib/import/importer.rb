@@ -24,11 +24,6 @@ module Import
 
       listen_for_shutdown_signal
 
-      enable_readonly_mode
-
-      pause_sidekiq
-      wait_for_sidekiq
-
       ensure_directory_exists(@tmp_directory)
 
       copy_archive_to_tmp_directory
@@ -40,16 +35,24 @@ module Import
       extract_dump
       restore_dump
 
+      ### READ-ONLY / START ###
+      enable_readonly_mode
+
+      pause_sidekiq
+      wait_for_sidekiq
+
       switch_schema!
 
       # TOFIX: MessageBus is busted...
 
       migrate_database
       reconnect_database
+      reload_site_settings
+
+      disable_readonly_mode
+      ### READ-ONLY / END ###
 
       extract_uploads
-
-      notify_user
     rescue SystemExit
       log "Restore process was cancelled!"
       rollback
@@ -60,6 +63,7 @@ module Import
     else
       @success = true
     ensure
+      notify_user
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
@@ -95,6 +99,8 @@ module Import
       @tar_filename = @archive_filename[0...-3]
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+      @logs = []
+      @readonly_mode_was_enabled = Discourse.readonly_mode?
     end
 
     def listen_for_shutdown_signal
@@ -112,6 +118,7 @@ module Import
     end
 
     def enable_readonly_mode
+      return if @readonly_mode_was_enabled
       log "Enabling readonly mode..."
       Discourse.enable_readonly_mode
     end
@@ -181,6 +188,7 @@ module Import
       has_error = false
 
       Thread.new do
+        RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
         while psql_running
           message = logs.pop.strip
           has_error ||= (message =~ /ERROR:/)
@@ -244,7 +252,12 @@ module Import
 
     def reconnect_database
       log "Reconnecting to the database..."
-      ActiveRecord::Base.establish_connection
+      RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
+    end
+
+    def reload_site_settings
+      log "Reloading site settings..."
+      SiteSetting.refresh!
     end
 
     def extract_uploads
@@ -253,16 +266,6 @@ module Import
         FileUtils.cd(File.join(Rails.root, "public")) do
           `tar --extract --keep-newer-files --file #{@tar_filename} uploads/`
         end
-      end
-    end
-
-    def notify_user
-      if user = User.where(email: @user_info[:email]).first
-        log "Notifying '#{user.username}' of the success of the restore..."
-        # NOTE: will only notify if user != Discourse.site_contact_user
-        SystemMessage.create(user, :import_succeeded)
-      else
-        log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
       end
     end
 
@@ -276,11 +279,25 @@ module Import
       end
     end
 
+    def notify_user
+      if user = User.where(email: @user_info[:email]).first
+        log "Notifying '#{user.username}' of the end of the restore..."
+        # NOTE: will only notify if user != Discourse.site_contact_user
+        if @success
+          SystemMessage.create(user, :import_succeeded)
+        else
+          SystemMessage.create(user, :import_failed, logs: @logs.join("\n"))
+        end
+      else
+        log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
+      end
+    end
+
     def clean_up
       log "Cleaning stuff up..."
       remove_tmp_directory
       unpause_sidekiq
-      disable_readonly_mode
+      disable_readonly_mode if Discourse.readonly_mode?
       mark_import_as_not_running
       log "Finished!"
     end
@@ -298,6 +315,7 @@ module Import
     end
 
     def disable_readonly_mode
+      return if @readonly_mode_was_enabled
       log "Disabling readonly mode..."
       Discourse.disable_readonly_mode
     end
@@ -315,12 +333,17 @@ module Import
     def log(message)
       puts(message) rescue nil
       publish_log(message) rescue nil
+      save_log(message)
     end
 
     def publish_log(message)
       return unless @publish_to_message_bus
       data = { timestamp: Time.now, operation: "restore", message: message }
       MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
+    end
+
+    def save_log(message)
+      @logs << "[#{Time.now}] #{message}"
     end
 
   end

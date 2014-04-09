@@ -70,6 +70,17 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     return "background-color: #" + (this.get('color')) + "; color: #" + (this.get('text_color')) + ";";
   }.property('color', 'text_color'),
 
+  categoryBadgePreview: function() {
+    var c = Discourse.Category.create({
+      name: this.get('categoryName'),
+      color: this.get('color'),
+      text_color: this.get('text_color'),
+      parent_category_id: parseInt(this.get('parent_category_id'),10),
+      read_restricted: this.get('model.read_restricted')
+    });
+    return Discourse.HTML.categoryBadge(c, {showParent: true, link: false});
+  }.property('parent_category_id', 'categoryName', 'color', 'text_color'),
+
   // background colors are available as a pipe-separated string
   backgroundColors: function() {
     var categories = Discourse.Category.list();

@@ -23,7 +23,7 @@ Discourse.CategoryGroupComponent = Ember.Component.extend({
       },
       template: Discourse.CategoryGroupComponent.templateFunction(),
       transformComplete: function(category) {
-        return Discourse.HTML.categoryLink(category, {allowUncategorized: true});
+        return Discourse.HTML.categoryBadge(category, {allowUncategorized: true});
       }
     });
   }

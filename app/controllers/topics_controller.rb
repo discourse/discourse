@@ -22,7 +22,8 @@ class TopicsController < ApplicationController
                                           :clear_pin,
                                           :autoclose,
                                           :bulk,
-                                          :reset_new]
+                                          :reset_new,
+                                          :change_post_owners]
 
   before_filter :consider_user_for_promotion, only: :show
 
@@ -242,6 +243,37 @@ class TopicsController < ApplicationController
     render_topic_changes(dest_topic)
   end
 
+  def change_post_owners
+    params.require(:post_ids)
+    params.require(:topic_id)
+    params.require(:username)
+
+    guardian.ensure_can_change_post_owner!
+
+    topic = Topic.find(params[:topic_id].to_i)
+    new_user = User.find_by_username(params[:username])
+    ids = params[:post_ids].to_a
+
+    unless new_user && topic && ids
+      render json: failed_json, status: 422
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      ids.each do |id|
+        post = Post.find(id)
+        if post.is_first_post?
+          topic.user = new_user # Update topic owner (first avatar)
+        end
+        post.set_owner(new_user, current_user)
+      end
+    end
+
+    topic.update_statistics
+
+    render json: success_json
+  end
+
   def clear_pin
     topic = Topic.where(id: params[:topic_id].to_i).first
     guardian.ensure_can_see!(topic)
@@ -365,7 +397,7 @@ class TopicsController < ApplicationController
   end
 
   def check_for_status_presence(key, attr)
-    invalid_param(key) unless %w(visible closed pinned archived).include?(attr)
+    invalid_param(key) unless %w(pinned_globally visible closed pinned archived).include?(attr)
   end
 
   def invalid_param(key)

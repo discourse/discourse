@@ -8,7 +8,7 @@ class CategoryFeaturedUser < ActiveRecord::Base
 
   def self.feature_users_in(category_or_category_id)
     category_id =
-      if Fixnum === category_or_category_id
+      if category_or_category_id.is_a?(Fixnum)
         category_or_category_id
       else
         category_or_category_id.id
@@ -53,11 +53,10 @@ end
 #  id          :integer          not null, primary key
 #  category_id :integer
 #  user_id     :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  created_at  :datetime
+#  updated_at  :datetime
 #
 # Indexes
 #
 #  index_category_featured_users_on_category_id_and_user_id  (category_id,user_id) UNIQUE
 #
-

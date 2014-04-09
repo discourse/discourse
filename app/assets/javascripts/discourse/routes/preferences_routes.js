@@ -57,7 +57,7 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
 Discourse.PreferencesIndexRoute = Discourse.RestrictedUserRoute.extend({
   renderTemplate: function() {
     this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
-  },
+  }
 });
 
 /**

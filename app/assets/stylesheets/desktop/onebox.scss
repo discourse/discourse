@@ -1,6 +1,3 @@
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 a.loading-onebox {
   background: {
     image: image-url("spinner_96.gif");
@@ -139,4 +136,8 @@ aside.onebox {
   }
 }
 
+.onebox-avatar {
+  height: 90px;
+  width: 90px;
+}
 

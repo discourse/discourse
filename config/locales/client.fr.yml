@@ -5,6 +5,7 @@
 # Pour toute question contactez
 # <Maxime QUANDALLE> "maxime@quandalle.com"
 # <Julien DUMETIER> "julien@dumetier.net"
+# <Sebastien MIQUEROLLE> "s.miquerolle@gmail.com"
 #
 # To work with us on translations, see:
 # https://www.transifex.com/projects/p/discourse-pt-br/
@@ -546,6 +547,7 @@ fr:
       invitee_accepted: "<i title='a accepté votre invitation' class='fa fa-envelope-o'></i> {{username}} a accepté votre invitation"
       moved_post: "<i title='message déplacée' class='fa fa-arrow-right'></i> {{username}} a déplacé {{link}}"
       total_flagged: "Nombre total de messages signalés"
+      linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -578,7 +580,7 @@ fr:
     topics:
       bulk:
         reset_read: "Réinitialiser la lecture"
-        dismiss_read: "Ignorer Lecture"
+        dismiss_read: "Ignorer les sujets non-lus"
         dismiss_new: "Ignorer Nouveaux"
         toggle: "activer la sélection multiple des sujets"
         actions: "Actions sur sélection multiple"
@@ -777,6 +779,8 @@ fr:
         select_replies: 'selectionner +réponses'
         delete: supprimer la sélection
         cancel: annuler la sélection
+        select_all: tout sélectionner
+        deselect_all: tout désélectionner
         description:
           one: vous avez sélectionné <b>1</b> message.
           other: Vous avez sélectionné <b>{{count}}</b> messages.
@@ -798,8 +802,8 @@ fr:
       deleted_by: "supprimé par"
       expand_collapse: "étendre/réduire"
       gap:
-        one: "1 message masqué"
-        other: "{{count}} messages masqués"
+        one: "1 message caché"
+        other: "{{count}} messages cachés"
       has_replies:
         one: "Réponse"
         other: "Réponses"
@@ -995,7 +999,7 @@ fr:
       title: 'Pourquoi signalez vous secrètement ce message ?'
       action: 'Signaler ce message'
       take_action: "Signaler"
-      notify_action: 'Notifier'
+      notify_action: 'Message privé'
       delete_spammer: "Supprimer le spammeur"
       delete_confirm: "Vous vous apprêtez à supprimer <b>%{posts}</b> messages et  <b>%{topics}</b> sujets de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>%{ip_address}</b> et à ajouter son email <b>%{email}</b> à la liste des utilisateurs bloqués. Etes-vous sûr que cet utilisateur est un spammeur ?"
       yes_delete_spammer: "Oui, supprimer le spammeur"
@@ -1009,7 +1013,7 @@ fr:
     flagging_topic:
       title: "Pourquoi signalez-vous secrètement ce sujet ?"
       action: "Signaler Sujet"
-      notify_action: "Notifier"
+      notify_action: "Message privé"
     topic_map:
       title: "Résumé du sujet"
       links_shown: "montrer les {{totalLinks}} liens..."
@@ -1284,6 +1288,8 @@ fr:
         title: "Email"
         settings: "Paramètres"
         all: "Tous"
+        sending_test: "Envoi en cours de l'email de test..."
+        test_error: "Il y a eu un problème avec l'envoi de l'email. Veuillez vérifier vos paramètres et réessayer."
         sent: "Envoyé"
         skipped: "Passé"
         sent_at: "Envoyer à"
@@ -1351,6 +1357,8 @@ fr:
             delete_site_customization: "Supprimer la personnalisation du site"
             suspend_user: "suspendre l'utilisateur"
             unsuspend_user: "retirer la suspension de l'utilisateur"
+            grant_badge: "accorder le badge"
+            revoke_badge: "retirer le badge"
         screened_emails:
           title: "Emails affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses mail suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -1539,9 +1547,19 @@ fr:
         display_name: Nom affiché
         description: Description
         badge_type: Type de badge
+        granted_by: Accorder par
+        granted_at: Accorder depuis
         save: Sauvegarder
         delete: Supprimer
         delete_confirm: Etes vous sûr de vouloir supprimer ce badge ?
+        revoke: Retirer
+        revoke_confirm: Etes vous sur de vouloir retirer ce badge à cet utilisateur ?
+        edit_badges: Modifier les badges
+        grant_badge: Accorder le badge
+        granted_badges: Badges accordés
+        grant: Accorder
+        no_user_badges: "%{name} ne s'est vu accordé aucun badge."
+        no_badges: Il n'y a aucun badge qui peuvent être accorder.
     lightbox:
       download: "télécharger"
     keyboard_shortcuts_help:

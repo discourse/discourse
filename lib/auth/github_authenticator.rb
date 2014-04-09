@@ -32,7 +32,7 @@ class Auth::GithubAuthenticator < Auth::Authenticator
     end
 
     result.user = user
-    result.email_valid = true
+    result.email_valid = false
 
     result
   end

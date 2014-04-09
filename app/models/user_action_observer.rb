@@ -46,8 +46,8 @@ class UserActionObserver < ActiveRecord::Observer
           UserAction::EDIT
       end
 
-    # like is skipped
-    return unless action && post && user
+    # skip any invalid items, eg failed to save post and so on
+    return unless action && post && user && post.id
 
     row = {
         action_type: action,

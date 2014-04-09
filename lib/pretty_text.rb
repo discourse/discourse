@@ -175,7 +175,7 @@ module PrettyText
     whitelist = []
 
     domains = SiteSetting.exclude_rel_nofollow_domains
-    whitelist = domains.split(",") if domains.present?
+    whitelist = domains.split('|') if domains.present?
 
     site_uri = nil
     doc = Nokogiri::HTML.fragment(html)

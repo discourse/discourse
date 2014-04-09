@@ -155,7 +155,7 @@ gem 'rack-protection' # security
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-  gem 'sass-rails'
+  gem 'sass-rails', '~> 4.0.2'
   gem 'uglifier'
 end
 
@@ -188,6 +188,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'librarian', '>= 0.0.25', require: false
   gem 'annotate'
+  gem 'foreman', require: false
 end
 
 # Gem that enables support for plugins. It is required.

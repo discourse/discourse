@@ -168,8 +168,7 @@ Discourse.Topic = Discourse.Model.extend({
     if (!wordCount) return;
 
     // Avg for 500 words per minute when you account for skimming
-    var minutes = Math.floor(wordCount / 500.0);
-    return minutes;
+    return Math.floor(wordCount / 500.0);
   }.property('word_count'),
 
   toggleStar: function() {
@@ -406,6 +405,17 @@ Discourse.Topic.reopenClass({
     }).then(function (result) {
       if (result.success) return result;
       promise.reject(new Error("error moving posts topic"));
+    });
+    return promise;
+  },
+
+  changeOwners: function(topicId, opts) {
+    var promise = Discourse.ajax("/t/" + topicId + "/change-owner", {
+      type: 'POST',
+      data: opts
+    }).then(function (result) {
+      if (result.success) return result;
+      promise.reject(new Error("error changing ownership of posts"));
     });
     return promise;
   },

@@ -193,7 +193,7 @@ class Group < ActiveRecord::Base
     deletions = Set.new(deletions.map{|d| map[d]})
 
     @deletions = []
-    group_users.delete_if do |gu|
+    group_users.each do |gu|
       @deletions << gu if deletions.include?(gu.user_id)
     end
 
@@ -221,7 +221,7 @@ class Group < ActiveRecord::Base
     if @deletions
       @deletions.each do |gu|
         gu.destroy
-        User.update_all 'primary_group_id = NULL', ['id = ? AND primary_group_id = ?', gu.user_id, gu.group_id]
+        User.where('id = ? AND primary_group_id = ?', gu.user_id, gu.group_id).update_all 'primary_group_id = NULL'
       end
     end
     @deletions = nil
@@ -235,8 +235,8 @@ end
 #
 #  id          :integer          not null, primary key
 #  name        :string(255)      not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  created_at  :datetime
+#  updated_at  :datetime
 #  automatic   :boolean          default(FALSE), not null
 #  user_count  :integer          default(0), not null
 #  alias_level :integer          default(0)

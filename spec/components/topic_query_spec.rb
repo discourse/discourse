@@ -101,6 +101,7 @@ describe TopicQuery do
                         posts_count: 5,
                         participant_count: 12,
                         pinned_at: 10.minutes.ago,
+                        pinned_globally: true,
                         bumped_at: 10.minutes.ago)
     end
     let!(:archived_topic) do
@@ -352,7 +353,40 @@ describe TopicQuery do
       it "includes the posted topic" do
         topics.include?(other_users_topic).should be_true
       end
+    end
 
+    context "topic you haven't posted in" do
+      let(:other_users_topic) { create_post(user: creator).topic }
+
+      it "does not include the topic" do
+        topics.should be_blank
+      end
+
+      context "but interacted with" do
+        it "is not included if starred" do
+          other_users_topic.toggle_star(user, true)
+
+          topics.should be_blank
+        end
+
+        it "is not included if read" do
+          TopicUser.update_last_read(user, other_users_topic.id, 0, 0)
+
+          topics.should be_blank
+        end
+
+        it "is not included if muted" do
+          other_users_topic.notify_muted!(user)
+
+          topics.should be_blank
+        end
+
+        it "is not included if tracking" do
+          other_users_topic.notify_tracking!(user)
+
+          topics.should be_blank
+        end
+      end
     end
   end
 

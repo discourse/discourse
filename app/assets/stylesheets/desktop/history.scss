@@ -1,8 +1,5 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 .modal.history-modal {
   .modal-inner-container {
     min-width: 960px;
@@ -13,6 +10,11 @@
     .btn[disabled]:hover {
       color: lighten($primary_text_color, 35%);
     }
+  }
+  #revision-numbers {
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
   }
   #display-modes {
     text-align: right;
@@ -33,6 +35,8 @@
     word-wrap: break-word;
     .row, table {
       margin-top: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dotted;
     }
   }
   img {

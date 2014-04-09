@@ -2,7 +2,7 @@ class UserBadgesController < ApplicationController
   def index
     params.require(:username)
     user = fetch_user_from_params
-    render json: user.user_badges
+    render_serialized(user.user_badges, UserBadgeSerializer, root: "user_badges")
   end
 
   def create
@@ -17,7 +17,7 @@ class UserBadgesController < ApplicationController
     badge = fetch_badge_from_params
     user_badge = BadgeGranter.grant(badge, user, granted_by: current_user)
 
-    render json: user_badge
+    render_serialized(user_badge, UserBadgeSerializer, root: "user_badge")
   end
 
   def destroy
@@ -29,7 +29,7 @@ class UserBadgesController < ApplicationController
       return
     end
 
-    BadgeGranter.revoke(user_badge)
+    BadgeGranter.revoke(user_badge, revoked_by: current_user)
     render json: success_json
   end
 

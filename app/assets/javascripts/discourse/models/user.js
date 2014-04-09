@@ -75,13 +75,15 @@ Discourse.User = Discourse.Model.extend({
   }.property('profile_background'),
 
   statusIcon: function() {
-    var desc;
+    var name = Handlebars.Utils.escapeExpression(this.get('name')),
+        desc;
+
     if(this.get('admin')) {
-      desc = I18n.t('user.admin', {user: this.get("name")});
+      desc = I18n.t('user.admin', {user: name});
       return '<i class="fa fa-trophy" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     if(this.get('moderator')){
-      desc = I18n.t('user.moderator', {user: this.get("name")});
+      desc = I18n.t('user.moderator', {user: name});
       return '<i class="fa fa-magic" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     return null;
@@ -472,6 +474,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     @method checkUsername
     @param {String} username A username to check
     @param {String} email An email address to check
+    @param {Number} forUserId user id - provide when changing username
   **/
   checkUsername: function(username, email, forUserId) {
     return Discourse.ajax('/users/check_username', {
@@ -483,7 +486,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     Groups the user's statistics
 
     @method groupStats
-    @param {Array} Given stats
+    @param {Array} stats Given stats
     @returns {Object}
   **/
   groupStats: function(stats) {
@@ -518,6 +521,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     @param {String} name This user's name
     @param {String} email This user's email
     @param {String} password This user's password
+    @param {String} username This user's username
     @param {String} passwordConfirm This user's confirmed password
     @param {String} challenge
     @returns Result of ajax call

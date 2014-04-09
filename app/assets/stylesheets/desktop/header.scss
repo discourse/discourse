@@ -1,6 +1,3 @@
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 // --------------------------------------------------
 // Discourse header
 // --------------------------------------------------
@@ -11,7 +8,7 @@
   top: 0;
   left: 0;
   z-index: 1000;
-  border-bottom: 1px solid $primary_border_color;
+  box-shadow: 0 2px 4px -2px rgba($primary_text_color, .45);
   background-color: $primary_background_color;
   padding-top: 3px;
   .docked & {
@@ -30,7 +27,6 @@
     }
   }
   #site-logo {
-    max-width: 122px;
     max-height: 40px;
   }
   .fa-home {
@@ -58,7 +54,7 @@
   .icons {
     float: left;
     text-align: center;
-    margin: 0 0 0 15px;
+    margin: 0 0 0 5px;
     list-style: none;
     > li {
       float: left;
@@ -152,7 +148,6 @@
 
 .d-dropdown {
   display: none;
-  overflow: hidden;
   width: 320px;
   position: absolute;
   top: 100%;
