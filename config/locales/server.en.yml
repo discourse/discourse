@@ -130,15 +130,17 @@ en:
       These tips will only appear for the first two times you start a new conversation. For more guidance, [see our FAQ](/faq).
 
     'new-reply': |
-      Welcome to %{site_name} &mdash; **thanks for contributing!**
+      Thanks for contributing to Lesson Planet Community!
 
-      - Does your reply improve the conversation in some way?
+      Tips for participating:
 
-      - Be kind to your fellow community members.
+      - Post with purpose. Does your comment improve the conversation?
 
-      - Constructive criticism is welcome, but criticize *ideas*, not people.
+      - Please be kind and respectful.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      - Constructive criticism is welcome, but criticize ideas, not people.
+
+      These tips will only appear the first two times you reply to a conversation. For more guidance, [see our FAQ](/faq).
 
     avatar: |
       ### How about a new picture for your account?
