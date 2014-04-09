@@ -150,6 +150,21 @@ To **upgrade Discourse to the latest version**, visit `/admin/docker`, refresh t
 
 Then you know it's complete. (Yes, we will be improving this process soon!)
 
+The `launcher` command in the `/var/docker` folder can be used for various kinds of maintenance:
+
+```
+Usage: launcher COMMAND CONFIG
+Commands:
+    start:      Start/initialize a container
+    stop:       Stop a running container
+    restart:    Restart a container
+    destroy:    Stop and remove a container
+    ssh:        Start a bash shell in a running container
+    logs:       Docker logs for container
+    bootstrap:  Bootstrap a container for the config based on a template
+    rebuild:    Rebuild a container (destroy old, bootstrap, start new)
+```
+
 # Other Optional Stuff
 
 Do you want...
