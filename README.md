@@ -42,7 +42,7 @@ Discourse is built for the *next* 10 years of the Internet, so our requirements 
 
 | Browsers | Tablets |  Smartphones |
 | -------- | ------- | ----------- |
-| Safari 5+| iPad 2+ |  iOS 6+ | 
+| Safari 5.1+| iPad 2+ |  iOS 6+ | 
 | Google Chrome 23+ |  Android 4.1+ | Android 4.1+ |
 | Internet Explorer 10+ | Windows 8 | Windows Phone 8 |
 | Firefox 16+ | |
