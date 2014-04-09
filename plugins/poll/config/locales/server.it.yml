@@ -14,3 +14,4 @@ it:
     cannot_have_modified_options: "non possono essere modificate dopo i primi cinque minuti. Contatta un moderatore se hai bisogno di cambiarle."
     cannot_add_or_remove_options: "non possono essere modificate, aggiunte o rimosse. Se vuoi aggiungere o rimuovere opzioni al sondaggio, devi bloccare questo topice crearne uno nuovo."
     prefix: "Sondaggio:"
+    closed_prefix: "Sondaggio Chiuso:"
