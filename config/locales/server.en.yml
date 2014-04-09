@@ -117,15 +117,17 @@ en:
       other: "%{count} posts"
 
     'new-topic': |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+      Welcome to %{site_name} &mdash; Thanks for starting a new conversation!
 
-      - Does the title accurately describe your topic? Does it sound interesting?
+      Tips for lively conversation:
 
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+      - Aim for a title that is accurate and interesting.
 
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
+      - Include words in your title that could help other interested teachers find it.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      - Choose a category to group your conversation with related topics.
+
+      These tips will only appear for the first two times you start a new conversation. For more guidance, [see our FAQ](/faq).
 
     'new-reply': |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
