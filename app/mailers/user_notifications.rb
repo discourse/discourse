@@ -17,6 +17,7 @@ class UserNotifications < ActionMailer::Base
     build_email(user.email,
                 template: 'user_notifications.signup_after_approval',
                 email_token: opts[:email_token],
+                name: user.name,
                 new_user_tips: SiteContent.content_for(:usage_tips))
   end
 
