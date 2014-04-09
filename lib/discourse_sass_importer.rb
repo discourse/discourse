@@ -35,7 +35,20 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
   end
 
   def find(name, options)
-    if name =~ GLOB
+    if name == "plugins" || name == "plugins_mobile"
+      if name == "plugins"
+        stylesheets = DiscoursePluginRegistry.stylesheets
+      elsif name == "plugins_mobile"
+        stylesheets = DiscoursePluginRegistry.mobile_stylesheets
+      end
+      contents = ""
+      stylesheets.each {|css| contents << File.read(css) }
+      Sass::Engine.new(contents, options.merge(
+        filename: "#{name}.scss",
+        importer: self,
+        syntax: :scss
+      ))
+    elsif name =~ GLOB
       nil # globs must be relative
     else
       engine_from_path(name, root, options)
