@@ -1682,6 +1682,7 @@ en:
           files: 'Files'
           trust: 'Trust Levels'
           security: 'Security'
+          onebox: "Onebox"
           seo: 'SEO'
           spam: 'Spam'
           rate_limits: 'Rate Limits'

@@ -610,6 +610,7 @@ en:
 
     post_excerpt_maxlength: "Maximum length in chars of a post's excerpt"
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"
+    onebox_domains_whitelist: "A list of domains to whitelist for oneboxing. (Example: eviltrout.com)"
     category_post_template: "The post template used when you create a new category"
 
     logo_url: "The logo for your site eg: http://example.com/logo.png"

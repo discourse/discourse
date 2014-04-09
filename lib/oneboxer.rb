@@ -99,9 +99,23 @@ module Oneboxer
     "onebox__#{url}"
   end
 
+  def self.add_discourse_whitelists
+    # Add custom domain whitelists
+    if SiteSetting.onebox_domains_whitelist.present?
+      domains = SiteSetting.onebox_domains_whitelist.split('|')
+      whitelist = Onebox::Engine::WhitelistedGenericOnebox.whitelist
+      whitelist.concat(domains)
+      whitelist.uniq!
+    end
+  end
+
   def self.onebox_raw(url)
     Rails.cache.fetch(onebox_cache_key(url)){
       begin
+
+        # This might be able to move to whenever the SiteSetting changes?
+        Oneboxer.add_discourse_whitelists
+
         r = Onebox.preview(url, cache: {})
         {
           onebox: r.to_s,

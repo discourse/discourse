@@ -228,7 +228,6 @@ posting:
     default: -1
     hidden: true
   post_excerpt_maxlength: 300
-  post_onebox_maxlength: 500
   display_name_on_posts:
     client: true
     default: false
@@ -336,11 +335,17 @@ trust:
   regular_requires_topic_reply_count: 3
 
 security:
-  enable_flash_video_onebox: false
   use_https: false
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   enable_noscript_support: true
+
+onebox:
+  enable_flash_video_onebox: false
+  post_onebox_maxlength: 500
+  onebox_domains_whitelist:
+    default: ''
+    list: true
 
 spam:
   add_rel_nofollow_to_user_content: true
