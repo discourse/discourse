@@ -8,3 +8,6 @@
 @import "common/components/*";
 @import "common/admin/*";
 @import "common/input_tip";
+
+/* This file doesn't actually exist, it is injected by DiscourseSassImporter. */
+@import "plugins";

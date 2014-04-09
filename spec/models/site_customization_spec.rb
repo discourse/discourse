@@ -163,30 +163,12 @@ describe SiteCustomization do
       c.mobile_stylesheet_baked.should == "#a{color:#000}\n"
     end
 
-    pending 'should allow including discourse styles' do
+    it 'should allow including discourse styles' do
       c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '@import "desktop";', mobile_stylesheet: '@import "mobile";')
       c.stylesheet_baked.should_not =~ /Syntax error/
       c.stylesheet_baked.length.should > 1000
       c.mobile_stylesheet_baked.should_not =~ /Syntax error/
       c.mobile_stylesheet_baked.length.should > 1000
-
-      # Vikhyat, this is giving me an anurism
-      #
-      # SiteCustomisation is not initializing sprockets and sprockets enviroment, they are required for asset helpers to function properly
-      # in travis we see this failure quite often:
-      #
-      # /home/travis/.rvm/gems/ruby-2.1.1/gems/sprockets-2.11.0/lib/sprockets/sass_functions.rb:63:in `sprockets_context'
-      # /home/travis/.rvm/gems/ruby-2.1.1/gems/sass-rails-4.0.2/lib/sass/rails/helpers.rb:23:in `asset_url'
-      # /home/travis/.rvm/gems/ruby-2.1.1/gems/sass-3.2.16/lib/sass/script/funcall.rb:113:in `_perform'
-      # /home/travis/.rvm/gems/ruby-2.1.1/gems/sass-3.2.16/lib/sass/script/node.rb:40:in `perform'
-      # eg: https://travis-ci.org/discourse/discourse/jobs/22413830
-      #
-      # This makes sense cause our compile_stylesheet method does not specify sprockets: { context: ctx, environment: ctx.environment }
-      # Thing is, where do you even get this magic context object from and how do you generate it, perhaps Rails.application.assets.context_class.new ...
-      # I dunno, its all voodoo to me
-      #
-      # The "sometimes" failing thing also needs to be determined, this should either always fail or never fail, its a strong indicator that a bunch
-      # of caching is happening, please resolve and re-enable the test
     end
 
     it 'should provide an awesome error on failure' do
