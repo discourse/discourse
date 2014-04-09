@@ -24,16 +24,15 @@ module Jobs
         Email::Receiver.new(mail_string).process
       rescue Email::Receiver::UserNotSufficientTrustLevelError
         # inform the user about the rejection
-        @message = Mail::Message.new(mail_string)
-        clientMessage = RejectionMailer.send_trust_level(@message.from, @message.body)
-        email_sender = Email::Sender.new(clientMessage, :email_reject_trust_level)
-        email_sender.send
+        message = Mail::Message.new(mail_string)
+        client_message = RejectionMailer.send_trust_level(message.from, message.body)
+        Email::Sender.new(client_message, :email_reject_trust_level).send
       rescue Email::Receiver::ProcessingError
         # all other ProcessingErrors are ok to be dropped
       rescue StandardError => e
-        # Inform Admins about error
-        GroupMessage.create(Group[:admins].name, :email_error_notification,
-            {limit_once_per: false, message_params: {source: mail, error: e}})
+        # inform admins about the error
+        data = { limit_once_per: false, message_params: { source: mail, error: e }}
+        GroupMessage.create(Group[:admins].name, :email_error_notification, data)
       ensure
         mail.delete
       end
@@ -51,6 +50,10 @@ module Jobs
           end
         end
       end
+    rescue Net::POPAuthenticationError => e
+      # inform admins about the error (1 message per hour to prevent too much SPAM)
+      data = { limit_once_per: 1.hour, message_params: { error: e }}
+      GroupMessage.create(Group[:admins].name, :email_error_notification, data)
     end
 
   end
