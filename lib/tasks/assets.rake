@@ -16,9 +16,6 @@ task 'assets:precompile:before' do
   # let's make precompile faster using redis magic
   require 'sprockets'
   require 'digest/sha1'
-  require_dependency 'discourse_sass_importer'
-
-  Sprockets::SassImporter = DiscourseSassImporter
 
   module ::Sprockets
 

@@ -32,7 +32,7 @@ class SiteCustomization < ActiveRecord::Base
       filesystem_importer: DiscourseSassImporter,
       sprockets: {
         context: context,
-        environment: env
+        environment: context.environment
       }
     }).render
 

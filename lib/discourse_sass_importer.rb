@@ -4,7 +4,11 @@
 class DiscourseSassImporter < Sass::Importers::Filesystem
   GLOB = /\*|\[.+\]/
 
+  # Depending upon where this is passed we might either be passed a string as the
+  # first argument or a sprockets context. If the first argument is a sprockets
+  # context we store it and use it to mark dependencies.
   def initialize(*args)
+    @context = args.first unless args.first.is_a? String
     @root = Rails.root.join('app', 'assets', 'stylesheets').to_s
     @same_name_warnings = Set.new
   end
@@ -48,6 +52,7 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
   def glob_imports(glob, base_pathname, options)
     contents = ""
     each_globbed_file(glob, base_pathname.dirname, options) do |filename|
+      depend_on(filename)
       unless File.directory?(filename)
         contents << "@import #{Pathname.new(filename).relative_path_from(base_pathname.dirname).to_s.inspect};\n"
       end
@@ -61,6 +66,21 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
   end
 
   private
+
+    def depend_on(filename)
+      if @context
+        @context.depend_on(filename)
+        @context.depend_on(globbed_file_parent(filename))
+      end
+    end
+
+    def globbed_file_parent(filename)
+      if File.directory?(filename)
+        File.expand_path('..', filename)
+      else
+        File.dirname(filename)
+      end
+    end
 
     def engine_from_path(name, dir, options)
       full_filename, syntax = Sass::Util.destructure(find_real_file(dir, name, options))
