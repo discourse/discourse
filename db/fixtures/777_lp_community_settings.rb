@@ -2,7 +2,9 @@
 # Configure Discourse Settings with Lesson Planet Community Settings (rake db:seed_fu)
 #
 
+#
 # Load the latest settings
+#
 SiteSetting.refresh!
 
 #
