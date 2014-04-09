@@ -6,7 +6,7 @@ This guide assumes that you have no knowledge of Ruby/Rails or Linux shell.
 
 [Sign up for Digital Ocean][do], update billing info, then begin creating your new cloud server (Droplet).
 
-Discourse requires a minimum of 1 GB RAM, however **2 GB RAM is strongly recommended**. We'll use "discourse" as the Hostname.
+Discourse requires a minimum of 1 GB RAM for small communities; we recommend 2 GB RAM for medium communities. We'll use "discourse" as the Hostname.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3506/a6b550bd2b05b76b.png" width="638" height="500"> 
 
@@ -49,6 +49,12 @@ This will log you out from your SSH session, so reconnect:
 
     ssh root@192.168.1.1
 
+# Set up Swap (if needed)
+
+- If you're using the minimum 1 GB install, you *must* [set up a swap file](https://meta.discourse.org/t/create-a-swapfile-for-your-linux-server/13880) of 1 GB minimum. 
+
+- If you're using 2 GB+ memory, you can probably get by without a swap file.
+
 # Install Git
 
     apt-get install git
@@ -83,15 +89,15 @@ Edit `app.yml`:
 
     nano containers/app.yml
 
-(We recommend Nano because it works like a typical GUI text editor, just use your arrow keys. Hit <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit. However, feel free to choose whatever text editor you like. In the below screenshot we use Vim.)
+(We recommend Nano because it works like a typical GUI text editor, just use your arrow keys. Hit <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit. However, feel free to choose whatever text editor you like.)
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3006/ed9f51b3a44f2b86.png" width="572" height="451"> 
+- Edit as desired, but at minimum you must set `DISCOURSE_DEVELOPER_EMAILS` and `DISCOURSE_HOSTNAME`. 
 
-Edit as desired, but at minimum set `DISCOURSE_DEVELOPER_EMAILS` and `DISCOURSE_HOSTNAME`.
+- If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 so you have more memory room.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2979/e6fedbde9b471880.png" width="565" height="172"> 
 
-If you set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want to host our instance of Discourse on `http://discourse.example.com/`. You'll need to change your DNS records to reflect the IP address and preferred URL address of your server.
+If you set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want to host our instance of Discourse on `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
 
 # Mail Setup
 
@@ -134,8 +140,6 @@ You can also access it by visiting the server IP address directly, e.g. `http://
 Sign into your Discourse instance. There should be a reminder visible on the site about which email was used for the  `DISCOURSE_DEVELOPER_EMAILS` address. Be sure you log in with that email, and your account will be made Admin by default.
 
 # Post-Install Maintenance
-
-We believe most small and medium size Discourse installs will be fine with the recommended 2 GB of RAM. However, if you are using the absolute minimum 1 GB of RAM, or your forum is growing you may want to [set up a swap file](https://meta.discourse.org/t/create-a-swapfile-for-your-linux-server/13880) just in case.
 
 To **upgrade Discourse to the latest version**, visit `/admin/docker`, refresh the page a few times (yes, seriously) and then press the Upgrade button at the top. View the live output at the bottom of your browser to see when things are complete. You should see:
 
