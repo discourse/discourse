@@ -566,7 +566,6 @@ fr:
     post_excerpt_maxlength: "Longueur maximale d'un extrait de message"
     post_onebox_maxlength: "Longueur maximale d'un message emboîté."
     category_post_template: "Le modèle de message utilisé lorsque vous créez une nouvelle catégorie"
-    onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer d'un site externe dans un message."
     logo_url: "Le logo de votre site, par exemple : http://example.com/logo.png"
     digest_logo_url: "Le logo qui sera utilisé dans les emails de votre site. Si non renseigné, alors `logo_url` sera utilisé, par exemple : http://example.com/logo.png"
     logo_small_url: "La version minifiée du logo de votre site lorsque vous faites défilez vers le bas les messages d'un sujet ex : http://example.com/logo-small.png"

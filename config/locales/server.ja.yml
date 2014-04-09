@@ -526,7 +526,6 @@ ja:
     post_excerpt_maxlength: "ポスト引用の最大文字数"
     post_onebox_maxlength: "oneboxed Discourse ポストの最大長"
     category_post_template: "新規カテゴリ作成時におけるカテゴリ定義ポストのテンプレート"
-    onebox_max_chars: "onebox が外部 Web サイトよりポストにインポートする最大文字数"
 
     logo_url: "サイトのロゴ。例: http://example.com/logo.png"
     logo_small_url: "トピックスクロール時に表示するサイトの小さなロゴ。例: http://example.com/logo-small.png"

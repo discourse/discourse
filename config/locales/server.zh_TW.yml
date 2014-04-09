@@ -456,7 +456,6 @@ zh_TW:
     post_excerpt_maxlength: "貼文摘要最大的字數長度"
     post_onebox_maxlength: "一個 論壇 - Discourse 單廂帖（Onebox post）最大的字數長度"
     category_post_template: "當你建立新分類時，分類的定義帖範本（建立新分類時會自動建立一個屬於該分類的新貼文）"
-    onebox_max_chars: "從外部網站導入到一個單廂帖（Onebox post）的最大字數"
 
     logo_url: "你的網站標誌圖片，例如：http://example.com/logo.png"
     logo_small_url: "你的網站的小號標誌圖片，例如：http://example.com/logo-small.png，用於卷起主題清單時顯示"

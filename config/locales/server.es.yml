@@ -452,7 +452,6 @@ es:
     post_excerpt_maxlength: "Número máximo de caracteres del resumen de un post"
     post_onebox_maxlength: "Longitud máxima de un post encuadrado"
     category_post_template: "The category definition post template used when you create a new category"
-    onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
 
     logo_url: "El logo para tu sitio ej: http://example.com/logo.png"
     logo_small_url: "El logo para tu sitio, en pequeño,  utilizado cuando se hace scroll en un topic ej: http://example.com/logo-small.png"

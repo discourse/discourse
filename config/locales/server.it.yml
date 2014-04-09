@@ -552,7 +552,6 @@ it:
     post_excerpt_maxlength: "Lunghezza massima dell'estratto di un post (caratteri)"
     post_onebox_maxlength: "Lunghezza massima di un post oneboxed (caratteri)"
     category_post_template: "Il template utilizzato durante la creazione di una nuova categoria"
-    onebox_max_chars: "Massimo numero di caratteri che un onebox può importare nel post da un sito esterno"
     logo_url: "Il logo del tuo sito es: http://example.com/logo.png"
     digest_logo_url: "Il logo sarà utilizzato nelle email di riepilogo. Se lasciato in bianco, sarà utilizzato il campo `logo_url`. es:http://example.com/logo.png"
     logo_small_url: "La versione piccola del logo del tuo sito (usata durante lo scroll) es: http://example.com/logo-small.png"

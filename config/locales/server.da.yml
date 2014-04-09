@@ -561,7 +561,6 @@ da:
     post_excerpt_maxlength: "Maksimal længde af indlæggets resumé i tegn."
     post_onebox_maxlength: "Maksimal længde af et oneboxed Discourse-indlæg."
     category_post_template: "Kategoriskabelonen som bruges når du opretter en ny kategori."
-    onebox_max_chars: "Det maksimale antal tegn som en onebox importerer fra et eksternt site til et indlæg."
 
     logo_url: "Sitets logo, f.eks.: http://example.com/logo.png."
     logo_small_url: "Sitets lille logo, som bruges når man scroller ned i emner, f.eks.: http://example.com/logo-small.png"
