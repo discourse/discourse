@@ -5,20 +5,30 @@ Allows you to add a poll to the first post of a topic.
 # Usage
 
 1. Make your topic title start with "Poll: "
-2. Include a list in your post. The **first list** will be used.
-  * If you don't want it to be the first list, do this:
+2. Include a list in your post (the **first list** will be used)
 
-   ```
-   Intro Text
-   
-    - Some list
-    - Some list con't
-   
-   Here are your choices:
-   
-   [poll]
-    - Option 1
-    - Option 2
-   [/poll]
-   ```
+## Closing the poll
 
+Change the start of the topic title from "Poll: " to "Closed Poll: "
+
+_Note: closing a topic will also close the poll._
+
+## Specifying the list to be used for the poll
+
+If you have multiple lists in your post and the first list is _not_
+the one you want to use for the poll, you can identify the 
+list to be used like this:
+
+```
+Intro Text
+   
+- Item one
+- Item two
+   
+Here are your choices:
+   
+[poll]
+- Option 1
+- Option 2
+[/poll]
+```
