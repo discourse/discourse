@@ -117,26 +117,30 @@ en:
       other: "%{count} posts"
 
     'new-topic': |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+      Welcome to %{site_name} &mdash; Thanks for starting a new conversation!
 
-      - Does the title accurately describe your topic? Does it sound interesting?
+      Tips for lively conversation:
 
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+      - Aim for a title that is accurate and interesting.
 
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
+      - Include words in your title that could help other interested teachers find it.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      - Choose a category to group your conversation with related topics.
+
+      These tips will only appear for the first two times you start a new conversation. For more guidance, [see our FAQ](/faq).
 
     'new-reply': |
-      Welcome to %{site_name} &mdash; **thanks for contributing!**
+      Thanks for contributing to Lesson Planet Community!
 
-      - Does your reply improve the conversation in some way?
+      Tips for participating:
 
-      - Be kind to your fellow community members.
+      - Post with purpose. Does your comment improve the conversation?
 
-      - Constructive criticism is welcome, but criticize *ideas*, not people.
+      - Please be kind and respectful.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      - Constructive criticism is welcome, but criticize ideas, not people.
+
+      These tips will only appear the first two times you reply to a conversation. For more guidance, [see our FAQ](/faq).
 
     avatar: |
       ### How about a new picture for your account?
@@ -1073,56 +1077,44 @@ en:
 
     usage_tips:
       text_body_template: |
-        This private message has a few quick tips to get you started:
-
         ### Keep scrolling
-
-        There are no next page buttons or page numbers – to read more, just keep scrolling down!
-
-        As new replies come in, they will appear automatically at the bottom of the topic.
+        There are no "next page" buttons or page numbers. To read more, just keep scrolling down.
+        As new replies come in, they will appear automatically at the bottom of each topic.
 
         ### How do I reply?
-
-        - To reply to a specific post, use the Reply button on that post.
-
-        - To reply to the overall *theme* of the topic, rather than any specific person or post in the topic, use the Reply button at the very bottom of the topic.
-
-        - To take the conversation in a different direction, but keep them linked together, use Reply as New Topic to the right of the post.
+        - To reply to a specific post, use the Reply button at the bottom of that post.
+        - If you want to reply to the overall theme of the topic, rather than any specific post in the topic, use the Reply button at the very bottom of the topic.
+        - If you want to take the conversation in a different direction, but keep them linked together, use Reply as New Topic to the right of the post.
 
         ### Who is talking to me?
+        When someone replies to your post, quotes you, or mentions your @username, a notification ➀ will appear at the top of the page. Click or tap that notification number to see who's talking to you, and which topic they are responding to.
 
-        When someone replies to your post, quotes you, or mentions your @username, a number ➀ will appear over a conversation button at the top of the page. Use it see who's talking to you, and where.
+        ### How do I address specific Community members, or posts?
+        - To mention someone's name, start typing @ and an autocompleter will pop up.
+        - To quote just a section of a post, select it, then click the Reply button that appears over the highlight.
+        - To quote an entire post, use the Import Quote button on the toolbar inside the box where you're writing your message.
 
-        - To mention someone's name, start typing `@` and an autocompleter will pop up.
-
-        - To quote just a section of a post, select it, then use the Reply button that appears over your selection.
-
-        - To quote an entire post, use the Import Quote button on the editor toolbar.
-
-        ### Look at that post!
-
-        To let someone know that you enjoyed their post, use the like ♥ button at the bottom of the post. If you see a problem with a post, don't hesitate to use the flag button and privately let our staff know about it.
+        ### What if I like, or dislike, something?
+        To let others know that you enjoyed what they said, click the like ♥ button at the bottom of the post. If you see a problem with a post, don't hesitate to click the flag button and let the moderators – and your fellow community members – know about it.
 
         ### Where am I?
-
-        - To get back to the home page at any time, **use the logo at the upper left** or the back ← button on your browser.
-
-        - For search, your user page, or the sitemap, use the **icon buttons at the upper right**.
-
-        - While reading a topic, move to the top ↑ by clicking its title at the top of the page, or press the <kbd>home</kbd> key. To reach the *bottom* ↓, use the down arrow on the topic progress indicator at the bottom of the page, or press the <kbd>end</kbd> key.
-
-        - Use times as entry shortcuts. You can always enter at the top of a topic via the first post date, and the bottom via the last post date.
+        - To get back to the %{site_name} home page at any time, click the logo at the upper left or use the back ← button on your browser.
+        - To search for topics or keywords, or to see your profile or account information, click on the tabs at the upper right.
+        - While reading a topic, move to the top by clicking its title at the top of the page. To reach the bottom, click the down arrow on the topic progress indicator at the bottom right of the page, or click "Last post" on the topic summary under the first post.
 
     welcome_user:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "Welcome! Tips to Get You Started"
       text_body_template: |
-        Thanks for joining %{site_name}, and welcome!
+        Hi %{name},
+
+        We're happy you're part of %{site_name}! Here are a few quick tips to get you started using our teacher discussion forum:
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        We are committed to keeping %{site_name} a safe, fun, professional environment where educators can openly discuss issues related to teacher life, both in and outside the classroom.
 
-        Enjoy your stay!
+        Enjoy the Conversation,
+        The Lesson Planet Team
 
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"

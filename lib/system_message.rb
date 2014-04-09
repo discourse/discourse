@@ -35,6 +35,7 @@ class SystemMessage
       new_user_tips: SiteContent.content_for(:usage_tips),
       site_password: "",
       base_url: Discourse.base_url,
+      name: @recipient.name,
     }
   end
 
