@@ -89,16 +89,27 @@ module Jobs
 
         crawled = false
 
-        result = CrawlTopicLink.fetch_beginning(topic_link.url)
-        doc = Nokogiri::HTML(result)
-        if doc
-          title = doc.at('title').try(:inner_text)
-          if title.present?
-            title.gsub!(/\n/, ' ')
-            title.gsub!(/ +/, ' ')
-            title.strip!
+        # Special case: Images
+        # If the link is to an image, put the filename as the title
+        if topic_link.url =~ /\.(jpg|gif|png)$/
+          uri = URI(topic_link.url)
+          filename = File.basename(uri.path)
+          crawled = (TopicLink.where(id: topic_link.id).update_all(["title = ?, crawled_at = CURRENT_TIMESTAMP", filename]) == 1)
+        end
+
+        unless crawled
+          # Fetch the beginning of the document to find the title
+          result = CrawlTopicLink.fetch_beginning(topic_link.url)
+          doc = Nokogiri::HTML(result)
+          if doc
+            title = doc.at('title').try(:inner_text)
             if title.present?
-              crawled = (TopicLink.where(id: topic_link.id).update_all(['title = ?, crawled_at = CURRENT_TIMESTAMP', title[0..255]]) == 1)
+              title.gsub!(/\n/, ' ')
+              title.gsub!(/ +/, ' ')
+              title.strip!
+              if title.present?
+                crawled = (TopicLink.where(id: topic_link.id).update_all(['title = ?, crawled_at = CURRENT_TIMESTAMP', title[0..255]]) == 1)
+              end
             end
           end
         end
