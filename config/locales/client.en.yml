@@ -1147,7 +1147,7 @@ en:
         help: "This topic is closed; it no longer accepts new replies"
       unpinned:
         title: "Unpinned"
-        help: "This topic is unpinned; it will displayed in default ordering"
+        help: "This topic is unpinned; it will display in default order"
       pinned_globally:
         title: "Pinned Globally"
         help: "This topic is pinned globally; it will display at the top of all lists"
