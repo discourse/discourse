@@ -98,14 +98,14 @@ module Jobs
             title.gsub!(/ +/, ' ')
             title.strip!
             if title.present?
-              crawled = topic_link.update_attributes(title: title[0..255], crawled_at: Time.now)
+              crawled = (TopicLink.where(id: topic_link.id).update_all(['title = ?, crawled_at = CURRENT_TIMESTAMP', title[0..255]]) == 1)
             end
           end
         end
       rescue Exception
         # If there was a connection error, do nothing
       ensure
-        topic_link.update_column(:crawled_at, Time.now) if !crawled && topic_link.present?
+        TopicLink.where(id: topic_link.id).update_all('crawled_at = CURRENT_TIMESTAMP') if !crawled && topic_link.present?
       end
     end
 
