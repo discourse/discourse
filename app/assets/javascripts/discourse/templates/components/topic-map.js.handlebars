@@ -63,7 +63,6 @@
               <span class='badge badge-notification clicks' title='{{i18n topic_map.clicks count=clicks}}'>{{clicks}}</span>
               <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
                 {{#if title}}{{title}}{{else}}{{shortenUrl url}}{{/if}}
-                {{#unless internal}}<i class='fa fa-external-link'></i>{{/unless}}
               </a>
               {{link-domain this}}
             </li>
