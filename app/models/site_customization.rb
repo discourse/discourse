@@ -14,10 +14,11 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   def compile_stylesheet(scss)
-    # Get the sprockets environment. In production Rails.application.assets is a
-    # Sprockets::Index instead of Sprockets::Environment, there is no cleaner way
-    # to get the environment from the index.
     env = Rails.application.assets
+
+    # In production Rails.application.assets is a Sprockets::Index
+    #  instead of Sprockets::Environment, there is no cleaner way
+    #  to get the environment from the index.
     if env.is_a?(Sprockets::Index)
       env = env.instance_variable_get('@environment')
     end
