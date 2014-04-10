@@ -13,14 +13,15 @@ Discourse.TopicStatusComponent = Ember.Component.extend({
   shouldRerender: Discourse.View.renderIfChanged('topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned'),
 
   didInsertElement: function(){
-    var topic = this.get('topic');
-
-    // could be passed in a controller
-    if(topic.constructor.toString() !== 'Discourse.Topic') {
-      topic = topic.get('model');
-    }
+    var self = this;
 
     this.$('a').click(function(){
+      var topic = self.get('topic');
+
+      // could be passed in a controller
+      if(topic.constructor && topic.constructor.toString() !== 'Discourse.Topic') {
+        topic = topic.get('model');
+      }
       // only pin unpin for now
       if (topic.get('pinned')) {
         topic.clearPin();
