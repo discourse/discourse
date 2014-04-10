@@ -558,6 +558,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     @params {Discourse.Post} post that is at the top
   **/
   topVisibleChanged: function(post) {
+    if (!post) { return; }
+
     var postStream = this.get('postStream'),
         firstLoadedPost = postStream.get('firstLoadedPost');
 
@@ -589,6 +591,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     @params {Discourse.Post} post that is at the bottom
   **/
   bottomVisibleChanged: function(post) {
+    if (!post) { return; }
+
     var postStream = this.get('postStream'),
         lastLoadedPost = postStream.get('lastLoadedPost'),
         index = postStream.get('stream').indexOf(post.get('id'))+1;
