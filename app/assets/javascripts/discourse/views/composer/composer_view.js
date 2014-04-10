@@ -221,7 +221,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     this.loadingChanged();
 
     var saveDraft = Discourse.debounce((function() {
-      return self.get('controller').saveDraft();
+      self.get('controller').saveDraft();
     }), 2000);
 
     $wmdInput.keyup(function() {
