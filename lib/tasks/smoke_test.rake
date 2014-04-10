@@ -17,9 +17,12 @@ task "smoke:test" => :environment do
     raise "TRIVIAL GET FAILED WITH #{res.code}"
   end
 
-  results = `#{phantom_path} #{Rails.root}/spec/phantom_js/smoke_test.js #{url}`
+  results = ""
+  IO.popen("#{phantom_path} #{Rails.root}/spec/phantom_js/smoke_test.js #{url}").each do |line|
+    puts line
+    results << line
+  end
 
-  puts results
   if results !~ /ALL PASSED/
     raise "FAILED"
   end
