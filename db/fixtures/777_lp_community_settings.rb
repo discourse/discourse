@@ -55,6 +55,7 @@ SiteSetting.body_min_entropy                  = 7
 # Files
 #
 if ENV['S3_ACCESS_KEY_ID'].present?
+  SiteSetting.enable_s3_uploads    = true
   SiteSetting.s3_access_key_id     = ENV['S3_ACCESS_KEY_ID']
   SiteSetting.s3_secret_access_key = ENV['S3_SECRET_ACCESS_KEY']
   SiteSetting.s3_region            = ENV['S3_REGION']
