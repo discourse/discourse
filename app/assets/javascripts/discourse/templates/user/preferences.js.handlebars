@@ -187,17 +187,17 @@
       <label class="control-label">{{i18n user.categories_settings}}</label>
       <div class="controls category-controls">
         <label>{{i18n user.watched_categories}}</label>
-        {{category-group categories=watchedCategories}}
+        {{category-group categories=watchedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n user.watched_categories_instructions}}</div>
       <div class="controls category-controls">
         <label>{{i18n user.tracked_categories}}</label>
-        {{category-group categories=trackedCategories}}
+        {{category-group categories=trackedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n user.tracked_categories_instructions}}</div>
       <div class="controls category-controls">
         <label>{{i18n user.muted_categories}}</label>
-        {{category-group categories=mutedCategories}}
+        {{category-group categories=mutedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n user.muted_categories_instructions}}</div>
     </div>
