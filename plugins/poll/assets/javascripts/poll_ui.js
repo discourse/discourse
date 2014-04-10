@@ -36,7 +36,7 @@ var Poll = Discourse.Model.extend({
 
 var PollController = Discourse.Controller.extend({
   poll: null,
-  showResults: false,
+  showResults: Em.computed.oneWay('poll.post.poll_details.closed'),
 
   disableRadio: Em.computed.any('poll.post.poll_details.closed', 'loading'),
 
