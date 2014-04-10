@@ -474,7 +474,6 @@ ru:
     post_excerpt_maxlength: "Максимальное количество символов выдержки из сообщения"
     post_onebox_maxlength: "Максимальная длина oneboxed Discourse сообщения"
     category_post_template: "Шаблон новой категории"
-    onebox_max_chars: "Максимальное количество символов, которое onebox импортирует в сообщение с внешнего источника"
     logo_url: "Логотип вашего сайта, например: http://example.com/logo.png"
     logo_small_url: "Уменьшенный логотип вашего сайта, используется при прокрутке списка тем, например: http://example.com/logo-small.png"
     favicon_url: "favicon вашего сайта, дополнительная информация: http://en.wikipedia.org/wiki/Favicon"
