@@ -28,33 +28,57 @@ describe Plugin::Instance do
   end
 
   context "register asset" do
-    it "does register css properly" do
+    it "does register general css properly" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_asset("test.css")
-      plugin.assets.count.should == 1
       plugin.register_asset("test2.css")
-      plugin.assets.count.should == 2
 
+      plugin.send :register_assets!
+
+      DiscoursePluginRegistry.mobile_stylesheets.count.should == 2
+      DiscoursePluginRegistry.stylesheets.count.should == 2
     end
-    it "does register mobile css properly" do
+
+    it "registers desktop css properly" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_asset("test.css", :desktop)
+      plugin.send :register_assets!
+
+      DiscoursePluginRegistry.mobile_stylesheets.count.should == 0
+      DiscoursePluginRegistry.stylesheets.count.should == 1
+    end
+
+    it "registers mobile css properly" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_asset("test.css", :mobile)
-      plugin.assets.count.should == 0
-      plugin.mobile_styles.count.should == 1
+      plugin.send :register_assets!
+
+      DiscoursePluginRegistry.mobile_stylesheets.count.should == 1
+      DiscoursePluginRegistry.stylesheets.count.should == 0
     end
-    it "does register admin javascript properly" do
+
+    it "registers admin javascript properly" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_asset("my_admin.js", :admin)
-      plugin.assets.count.should == 0
-      plugin.admin_javascripts.count.should == 1
+
+      plugin.send :register_assets!
+
+      DiscoursePluginRegistry.admin_javascripts.count.should == 1
+      DiscoursePluginRegistry.javascripts.count.should == 0
+      DiscoursePluginRegistry.server_side_javascripts.count.should == 0
     end
-    it "does register server side javascript properly" do
+
+    it "registers server side javascript properly" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_asset("my_admin.js", :server_side)
-      # server side is both in assets and in server_side
-      plugin.assets.count.should == 1
-      plugin.server_side_javascripts.count.should == 1
+
+      plugin.send :register_assets!
+
+      DiscoursePluginRegistry.server_side_javascripts.count.should == 1
+      DiscoursePluginRegistry.javascripts.count.should == 1
+      DiscoursePluginRegistry.admin_javascripts.count.should == 0
     end
+
   end
 
 
@@ -74,7 +98,7 @@ describe Plugin::Instance do
 
       # calls ensure_assets! make sure they are there
       plugin.assets.count.should == 1
-      plugin.assets.each do |a|
+      plugin.assets.each do |a, opts|
         File.exists?(a).should be_true
       end
 
@@ -85,16 +109,17 @@ describe Plugin::Instance do
     it "finds all the custom assets" do
       plugin = Plugin::Instance.new
       plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
-      # two styles
+
       plugin.register_asset("test.css")
       plugin.register_asset("test2.scss")
-      # one javascript
+      plugin.register_asset("mobile.css", :mobile)
+      plugin.register_asset("desktop.css", :desktop)
+      plugin.register_asset("desktop2.css", :desktop)
+
       plugin.register_asset("code.js")
-      # one mobile
-      plugin.register_asset("test.css", :mobile)
-      # a server side
+
       plugin.register_asset("server_side.js", :server_side)
-      # and two admin
+
       plugin.register_asset("my_admin.js", :admin)
       plugin.register_asset("my_admin2.js", :admin)
 
@@ -103,8 +128,8 @@ describe Plugin::Instance do
       DiscoursePluginRegistry.javascripts.count.should == 3
       DiscoursePluginRegistry.admin_javascripts.count.should == 2
       DiscoursePluginRegistry.server_side_javascripts.count.should == 1
-      DiscoursePluginRegistry.stylesheets.count.should == 2
-      DiscoursePluginRegistry.mobile_stylesheets.count.should == 1
+      DiscoursePluginRegistry.stylesheets.count.should == 4
+      DiscoursePluginRegistry.mobile_stylesheets.count.should == 3
     end
   end
 
