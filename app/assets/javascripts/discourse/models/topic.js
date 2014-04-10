@@ -271,12 +271,35 @@ Discourse.Topic = Discourse.Model.extend({
 
     // Clear the pin optimistically from the object
     topic.set('pinned', false);
+    topic.set('unpinned', true);
 
     Discourse.ajax("/t/" + this.get('id') + "/clear-pin", {
       type: 'PUT'
     }).then(null, function() {
       // On error, put the pin back
       topic.set('pinned', true);
+      topic.set('unpinned', false);
+    });
+  },
+
+  /**
+    Re-pins a topic with a cleared pin
+
+    @method rePin
+  **/
+  rePin: function() {
+    var topic = this;
+
+    // Clear the pin optimistically from the object
+    topic.set('pinned', true);
+    topic.set('unpinned', false);
+
+    Discourse.ajax("/t/" + this.get('id') + "/re-pin", {
+      type: 'PUT'
+    }).then(null, function() {
+      // On error, put the pin back
+      topic.set('pinned', true);
+      topic.set('unpinned', false);
     });
   },
 

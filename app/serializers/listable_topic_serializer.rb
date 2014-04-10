@@ -14,6 +14,7 @@ class ListableTopicSerializer < BasicTopicSerializer
              :unread,
              :new_posts,
              :pinned,
+             :unpinned,
              :excerpt,
              :visible,
              :closed,
@@ -65,7 +66,11 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def pinned
-    PinnedCheck.new(object, object.user_data).pinned?
+    PinnedCheck.pinned?(object, object.user_data)
+  end
+
+  def unpinned
+    PinnedCheck.unpinned?(object, object.user_data)
   end
 
   protected
