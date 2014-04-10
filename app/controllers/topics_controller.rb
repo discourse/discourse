@@ -20,6 +20,7 @@ class TopicsController < ApplicationController
                                           :move_posts,
                                           :merge_topic,
                                           :clear_pin,
+                                          :re_pin,
                                           :autoclose,
                                           :bulk,
                                           :reset_new,
@@ -278,6 +279,13 @@ class TopicsController < ApplicationController
     topic = Topic.where(id: params[:topic_id].to_i).first
     guardian.ensure_can_see!(topic)
     topic.clear_pin_for(current_user)
+    render nothing: true
+  end
+
+  def re_pin
+    topic = Topic.where(id: params[:topic_id].to_i).first
+    guardian.ensure_can_see!(topic)
+    topic.re_pin_for(current_user)
     render nothing: true
   end
 
