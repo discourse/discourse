@@ -563,8 +563,7 @@ Discourse.Composer = Discourse.Model.extend({
     var composer = this;
 
     // try to save the draft
-    return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data)
-      .then(function() {
+    Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data).then(function() {
         composer.set('draftStatus', I18n.t('composer.saved_draft_tip'));
       }, function() {
         composer.set('draftStatus', I18n.t('composer.drafts_offline'));
