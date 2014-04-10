@@ -29,6 +29,8 @@ Discourse.DropdownButtonView = Discourse.View.extend({
 
   render: function(buffer) {
     var self = this;
+    var descriptionKey = self.get('descriptionKey') || 'description';
+
     buffer.push("<h4 class='title'>" + self.get('title') + "</h4>");
     buffer.push("<button class='btn standard dropdown-toggle' data-toggle='dropdown'>");
     buffer.push(self.get('text'));
@@ -40,7 +42,7 @@ Discourse.DropdownButtonView = Discourse.View.extend({
           textKey = row[1],
           iconClass = row[2],
           title = I18n.t(textKey + ".title"),
-          description = I18n.t(textKey + ".description"),
+          description = I18n.t(textKey + "." + descriptionKey),
           className = (self.get('activeItem') === id? 'disabled': '');
 
       buffer.push("<li data-id=\"" + id + "\" class=\"" + className + "\"><a href='#'>");

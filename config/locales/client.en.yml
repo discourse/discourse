@@ -1144,15 +1144,20 @@ en:
 
     topic_statuses:
       locked:
-        help: "this topic is closed; it no longer accepts new replies"
+        help: "This topic is closed; it no longer accepts new replies"
       unpinned:
-        help: "this topic is unpinned; it will displayed in default ordering"
+        title: "Unpinned"
+        help: "This topic is unpinned; it will displayed in default ordering"
+      pinned_globally:
+        title: "Pinned Globally"
+        help: "This topic is pinned globally; it will display at the top of all lists"
       pinned:
-        help: "this topic is pinned; it will display at the top of its category"
+        title: "Pinned"
+        help: "This topic is pinned; it will display at the top of its category"
       archived:
-        help: "this topic is archived; it is frozen and cannot be changed"
+        help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
-        help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "This topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
     posts: "Posts"
     posts_long: "there are {{number}} posts in this topic"

@@ -32,6 +32,7 @@ class TopicViewSerializer < ApplicationSerializer
              :starred,
              :posted,
              :unpinned,
+             :pinned_globally,
              :pinned,    # Is topic pinned and viewer hasn't cleared the pin?
              :pinned_at, # Ignores clear pin
              :details,
@@ -144,6 +145,10 @@ class TopicViewSerializer < ApplicationSerializer
     object.topic_user.posted?
   end
   alias_method :include_posted?, :has_topic_user?
+
+  def pinned_globally
+    object.topic.pinned_globally
+  end
 
   def pinned
     PinnedCheck.pinned?(object.topic, object.topic_user)
