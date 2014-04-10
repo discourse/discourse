@@ -579,7 +579,7 @@ en:
       admin_options_title: "Optional staff settings for this topic"
       auto_close_label: "Auto-close topic time:"
       auto_close_units: "(# of hours, a time, or a timestamp)"
-      auto_close_examples: 'Examples: 24, 17:00, 2013-11-22 14:00'
+      auto_close_examples: 'enter absolute time or number of hours — 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Please enter a valid value."
 
     notifications:
