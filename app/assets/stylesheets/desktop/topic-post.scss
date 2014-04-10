@@ -295,6 +295,8 @@ a.star {
     color: $secondary_text_color;
   }
 
+
+
   .avatars {
     > div {
       float: left;
@@ -326,11 +328,10 @@ a.star {
       }
     }
     a, .number {
-      font-weight: bold;
       line-height: 20px;
     }
-    .number {
-      color: $link-color;
+    .number, i {
+      color: $secondary_text_color;
     }
     .avatar + a {
       float: left;
@@ -462,6 +463,7 @@ iframe {
   width: 78%;
   max-width: 800px;
   .topic-statuses {margin-right: 5px;}
+  .topic-link {color: $primary_text_color;}
 }
 
 
