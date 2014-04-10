@@ -1,3 +1,4 @@
 .fa-thumb-tack.unpinned {
   @include fa-icon-rotate(315deg, 1);
+  color: $secondary_text_color;
 }
