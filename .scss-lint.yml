@@ -1,0 +1,56 @@
+exclude:
+  - "app/assets/stylesheets/vendor/**"
+
+linters:
+  StringQuotes:
+    enabled: false
+  Indentation:
+    enabled: false
+  Comment:
+    enabled: false
+  LeadingZero:
+    enabled: false
+  EmptyLineBetweenBlocks:
+    enabled: false
+  SelectorDepth:
+    enabled: false
+  CapitalizationInSelector:
+    enabled: false
+  NameFormat:
+    enabled: false
+  UrlFormat:
+    enabled: false
+  ZeroUnit:
+    enabled: false
+  BorderZero:
+    enabled: false
+  Shorthand:
+    enabled: false
+  PropertySortOrder:
+    enabled: false
+  SpaceAfterPropertyColon:
+    enabled: false
+  DuplicateProperty:
+    enabled: false
+  SingleLinePerSelector:
+    enabled: false
+  HexFormat:
+    enabled: false
+  SpaceBeforeBrace:
+    enabled: false
+  ColorKeyword:
+    enabled: false
+  DeclarationOrder:
+    enabled: false
+  TrailingSemicolonAfterPropertyValue:
+    enabled: false
+  SpaceAfterComma:
+    enabled: false
+  IdWithExtraneousSelector:
+    enabled: false
+  PlaceholderInExtend:
+    enabled: false
+  SpaceBetweenParens:
+    enabled: false
+  FinalNewline:
+    enabled: false
