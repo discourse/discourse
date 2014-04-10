@@ -30,7 +30,9 @@
   margin-left: 0;
 }
 
-h1 .topic-statuses .topic-status i {margin-right: 5px;}
+h1 .topic-statuses .topic-status i {
+  font-size: 20px;
+}
 
 .logo-small {
   margin-right: 8px;
@@ -295,6 +297,8 @@ a.star {
     color: $secondary_text_color;
   }
 
+
+
   .avatars {
     > div {
       float: left;
@@ -326,11 +330,10 @@ a.star {
       }
     }
     a, .number {
-      font-weight: bold;
       line-height: 20px;
     }
-    .number {
-      color: $link-color;
+    .number, i {
+      color: $secondary_text_color;
     }
     .avatar + a {
       float: left;
@@ -461,7 +464,13 @@ iframe {
   float: left;
   width: 78%;
   max-width: 800px;
-  .topic-statuses {margin-right: 5px;}
+  .topic-statuses {
+  i {  color: $primary_text_color;
+}
+  .unpinned {  color: $secondary_text_color;}
+
+  }
+  .topic-link {color: $primary_text_color;}
 }
 
 
@@ -486,12 +495,14 @@ iframe {
   }
 
   a.star {
-    margin-right: 8px;
+    margin-right: 7px;
     font-size: 20px;
     margin-top: 6px;
   }
 
-  .topic-statuses {margin-top: -2px;}
+  .topic-statuses {
+    margin-top: -2px;
+  }
 
   .badge-category {
     vertical-align: top;

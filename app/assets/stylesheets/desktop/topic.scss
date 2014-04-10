@@ -37,7 +37,7 @@
   margin-bottom: 20px;
   .star {
     font-size: 20px;
-    margin-top: 8px;
+    margin-top: 6px;
     margin-right: 6px;
   }
   #edit-title { width: 500px; }
@@ -56,12 +56,15 @@
     margin: 0;
     line-height: 1.2em;
     overflow: hidden;
+    a {color: $primary_text_color;}
     a.badge-category { vertical-align: top; margin-top: 4px; }
     a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
   }
   .topic-statuses {
     margin-top: -2px;
-    .fa-thumb-tack { margin-top: -1px; }
+    .fa-thumb-tack { padding-left: 3px;
+ }
+
   }
   .chzn-container { vertical-align: middle; }
   .private-message-glyph { display: none; }
@@ -178,13 +181,6 @@ a:hover.reply-new {
   position: absolute;
   bottom: -70px;
 
-}
-
-.topic-statuses .topic-status {
-  padding: 0;
-  i {
-    font-size:20px;
-  }
 }
 
 #suggested-topics .topic-statuses .topic-status {
