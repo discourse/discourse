@@ -215,9 +215,9 @@
         transition: border linear 0.2s, box-shadow linear 0.2s;
 
         &:focus {
-          border-color: #00aaff;
+          border-color: #0af;
           outline: 0;
-          box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3), 0 0 8px #00aaff;
+          box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3), 0 0 8px #0af;
         }
       }
 
@@ -1042,7 +1042,7 @@ table.api-keys {
 // Backups
 // --------------------------------------------------
 
-$rollback: #3D9970;
+$rollback: #3d9970;
 $rollback-dark: darken($rollback, 10%) !default;
 $rollback-darker: darken($rollback, 20%) !default;
 

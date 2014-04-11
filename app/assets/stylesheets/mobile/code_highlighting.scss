@@ -4,35 +4,35 @@ pre {
   code {
     display: block;
     padding: 5px 10px;
-    color: #333333;
+    color: #333;
     background: #f1f1ff;
     font-size: 14px;
     font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
     max-height: 500px;
   }
   .comment, .template_comment, .diff .header, .javadoc {
-    color: #999988;
+    color: #998;
     font-style: italic;
   }
   .keyword, .css .keyword, .winutils, .javascript .title, .nginx .title, .subst, .request, .status {
-    color: #333333;
+    color: #333;
     font-weight: bold;
   }
   .number, .hexcolor, .ruby .constant {
-    color: #009999;
+    color: #099;
   }
   .string, .tag .value, .phpdoc, .tex .formula {
-    color: #dd1144;
+    color: #d14;
   }
   .title, .id {
-    color: #990000;
+    color: #900;
     font-weight: bold;
   }
   .javascript .title, .lisp .title, .clojure .title, .subst {
     font-weight: normal;
   }
   .class .title, .haskell .type, .vhdl .literal, .tex .command {
-    color: #445588;
+    color: #458;
     font-weight: bold;
   }
   .tag {
@@ -54,7 +54,7 @@ pre {
     color: #009926;
   }
   .class {
-    color: #445588;
+    color: #458;
     font-weight: bold;
   }
   .symbol, .ruby .string, .lisp .keyword, .tex .special, .input_number {
@@ -64,20 +64,20 @@ pre {
     color: #0086b3;
   }
   .preprocessor, .pi, .doctype, .shebang, .cdata {
-    color: #999999;
+    color: #999;
     font-weight: bold;
   }
   .deletion {
-    background: #ffdddd;
+    background: #fdd;
   }
   .addition {
-    background: #ddffdd;
+    background: #dfd;
   }
   .diff .change {
     background: #0086b3;
   }
   .chunk {
-    color: #aaaaaa;
+    color: #aaa;
   }
   .tex .formula {
     opacity: 0.5;

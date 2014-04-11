@@ -33,8 +33,6 @@ linters:
       - "app/assets/stylesheets/mobile/topic-list.scss"
   SingleLinePerSelector:
     enabled: false
-  HexFormat:
-    enabled: false
   SpaceBeforeBrace:
     allow_single_line_padding: true
   DeclarationOrder:
@@ -44,3 +42,7 @@ linters:
   PlaceholderInExtend:
     # Used for clearfix extending
     enabled: false
+  ZeroUnit:
+    exclude:
+      # False positive filed as https://github.com/causes/scss-lint/issues/128
+      - "app/assets/stylesheets/common/admin/admin_base.scss"
