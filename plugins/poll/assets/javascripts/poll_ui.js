@@ -7,6 +7,10 @@ var Poll = Discourse.Model.extend({
     this.updateFromJson(this.get('post.poll_details'));
   }.observes('post.poll_details'),
 
+  fetchNewPostDetails: function() {
+    this.get('post.topic.postStream').triggerChangedPost(this.get('post.id'), this.get('post.topic.updated_at'));
+  }.observes('post.topic.title'),
+
   updateFromJson: function(json) {
     var selectedOption = json["selected"];
 
