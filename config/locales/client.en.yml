@@ -425,7 +425,7 @@ en:
 
     loading: "Loading..."
     close: "Close"
-    assets_changed_confirm: "Members have added to the conversation since you were last active on this page. Would you like to see the latest posts?"
+    assets_changed_confirm: "Lesson Planet Community has been updated, would you like to refresh to get the latest version?"
     read_only_mode:
       enabled: "An administrator has enabled read-only mode. You can continue to browse the site but interactions won't work properly."
       login_disabled: "Login is disabled while the site is in read only mode."
