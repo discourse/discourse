@@ -21,3 +21,42 @@ trans.ko_KR = config/locales/server.ko.yml
 trans.pt_PT = config/locales/server.pt.yml
 type = YML
 
+[discourse-pt-br.403html]
+file_filter = public/403.<lang>.html
+source_file = public/403.html
+source_lang = en
+# trans.es_ES = public/403.es.html
+trans.fr_FR = public/403.fr.html
+# trans.ko_KR = public/403.ko.html
+# trans.pt_PT = public/403.pt.html
+type = HTML
+
+[discourse-pt-br.422html]
+file_filter = public/422.<lang>.html
+source_file = public/422.html
+source_lang = en
+# trans.es_ES = public/422.es.html
+trans.fr_FR = public/422.fr.html
+# trans.ko_KR = public/422.ko.html
+# trans.pt_PT = public/422.pt.html
+type = HTML
+
+[discourse-pt-br.500html]
+file_filter = public/500.<lang>.html
+source_file = public/500.html
+source_lang = en
+# trans.es_ES = public/500.es.html
+trans.fr_FR = public/500.fr.html
+# trans.ko_KR = public/500.ko.html
+# trans.pt_PT = public/500.pt.html
+type = HTML
+
+[discourse-pt-br.503html]
+file_filter = public/503.<lang>.html
+source_file = public/503.html
+source_lang = en
+# trans.es_ES = public/503.es.html
+trans.fr_FR = public/503.fr.html
+# trans.ko_KR = public/503.ko.html
+# trans.pt_PT = public/503.pt.html
+type = HTML
