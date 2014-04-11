@@ -62,10 +62,10 @@ h1 .topic-statuses .topic-status i {
   background: $primary_background_color;
   color: $secondary_text_color;
   @include medium-width {
-  left: 107px;
+    left: 107px;
   }
   @include small-width {
-  left: 103px;
+    left: 103px;
   }
 }
 
@@ -805,6 +805,7 @@ blockquote { /* solo quotes */
 .row:before, .row:after {display: table; content: "";}
 .row:after {clear: both;}
 
+
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
   a.mention {background: lighten($secondary_background_color, 70%);}
@@ -1002,7 +1003,7 @@ blockquote { /* solo quotes */
       }
     }
   }
- article.boxed {
+  article.boxed {
     position: relative;
     line-height: 21px;
 
@@ -1019,7 +1020,6 @@ blockquote { /* solo quotes */
         border-bottom: 1px solid $primary_border_color;
         border-right: 1px solid $primary_border_color;
         color: $secondary_text_color;
-
       }
     }
   }
