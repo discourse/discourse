@@ -1145,6 +1145,8 @@ en:
     topic_statuses:
       locked:
         help: "This topic is closed; it no longer accepts new replies"
+      archived:
+        help: "This topic is archived; it no longer accepts new replies"
       unpinned:
         title: "Unpinned"
         help: "This topic is unpinned; it will display in default order"

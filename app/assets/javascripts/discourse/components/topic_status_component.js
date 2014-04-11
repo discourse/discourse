@@ -9,8 +9,8 @@
 Discourse.TopicStatusComponent = Ember.Component.extend({
   classNames: ['topic-statuses'],
 
-  hasDisplayableStatus: Em.computed.or('topic.closed', 'topic.pinned', 'topic.unpinned', 'topic.invisible', 'topic.archetypeObject.notDefault'),
-  shouldRerender: Discourse.View.renderIfChanged('topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned'),
+  hasDisplayableStatus: Em.computed.or('topic.archived','topic.closed', 'topic.pinned', 'topic.unpinned', 'topic.invisible', 'topic.archetypeObject.notDefault'),
+  shouldRerender: Discourse.View.renderIfChanged('topic.archived','topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned'),
 
   didInsertElement: function(){
     var self = this;
@@ -18,10 +18,6 @@ Discourse.TopicStatusComponent = Ember.Component.extend({
     this.$('a').click(function(){
       var topic = self.get('topic');
 
-      // could be passed in a controller
-      if(topic.constructor && topic.constructor.toString() !== 'Discourse.Topic') {
-        topic = topic.get('model');
-      }
       // only pin unpin for now
       if (topic.get('pinned')) {
         topic.clearPin();
@@ -56,6 +52,7 @@ Discourse.TopicStatusComponent = Ember.Component.extend({
     };
 
     renderIconIf('topic.closed', 'lock', 'locked');
+    renderIconIf('topic.archived', 'lock', 'archived');
     renderIconIf('topic.pinned', 'thumb-tack', 'pinned', togglePin);
     renderIconIf('topic.unpinned', 'thumb-tack unpinned', 'unpinned', togglePin);
     renderIconIf('topic.invisible', 'eye-slash', 'invisible');
