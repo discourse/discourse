@@ -30,7 +30,11 @@ linters:
   PropertySortOrder:
     enabled: false
   DuplicateProperty:
-    enabled: false
+  # Excludes required because of false positives with rgba fallbacks
+    exclude:
+      - "app/assets/stylesheets/desktop/modal.scss"
+      - "app/assets/stylesheets/mobile/modal.scss"
+      - "app/assets/stylesheets/mobile/topic-list.scss"
   SingleLinePerSelector:
     enabled: false
   HexFormat:
