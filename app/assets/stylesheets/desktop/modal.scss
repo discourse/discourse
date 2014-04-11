@@ -157,7 +157,7 @@
     color: $modal-close-button-color;
     cursor: pointer;
     &:hover {
-      color: darken($modal-close-button-color,20);
+      color: darken($modal-close-button-color, 20);
     }
   }
 }

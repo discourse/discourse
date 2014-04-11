@@ -45,8 +45,6 @@ linters:
     enabled: false
   TrailingSemicolonAfterPropertyValue:
     enabled: false
-  SpaceAfterComma:
-    enabled: false
   IdWithExtraneousSelector:
     enabled: false
   PlaceholderInExtend:
