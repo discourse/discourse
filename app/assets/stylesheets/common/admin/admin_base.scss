@@ -222,7 +222,7 @@
       }
 
       .btn.list-add-value {
-        margin: 0px 3px;
+        margin: 0 3px;
         padding: 4px 10px;
         color: $link-color;
       }
@@ -718,7 +718,7 @@ table.api-keys {
       font-size: 18px;
       margin: 5px 0 0 8px;
       display: inline-block;
-      line-height: 1.0em;
+      line-height: 1em;
     }
   }
 
@@ -732,7 +732,7 @@ table.api-keys {
 
     li {
       @extend .clearfix;
-      line-height: 1.0em;
+      line-height: 1em;
       padding: 6px 8px;
       border-bottom: solid 1px $primary_border_color;
       background-color: lighten($secondary_background_color, 76%);

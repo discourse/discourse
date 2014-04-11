@@ -23,8 +23,6 @@ linters:
     enabled: false
   UrlFormat:
     enabled: false
-  ZeroUnit:
-    enabled: false
   BorderZero:
     enabled: false
   Shorthand:
