@@ -53,5 +53,3 @@ linters:
     enabled: false
   PlaceholderInExtend:
     enabled: false
-  SpaceBetweenParens:
-    enabled: false

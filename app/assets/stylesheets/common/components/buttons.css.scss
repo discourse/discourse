@@ -49,7 +49,7 @@
     color: #fff;
   }
   &:active {
-    @include linear-gradient( darken(#aaa, 8%), #aaa);
+    @include linear-gradient(darken(#aaa, 8%), #aaa);
   }
   &[disabled] {
     background: $btn-default-background-color;
