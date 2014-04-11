@@ -569,7 +569,7 @@ iframe {
   display: block;
 }
 
-.dropdown-menu li  {
+.dropdown-menu li {
   margin: 5px 0;
 }
 
@@ -977,8 +977,7 @@ blockquote { /* solo quotes */
     &[href] {
       color: $tertiary_text_color;
     }
-    &:hover
-    {
+    &:hover {
       color: $tertiary_text_color;
       background: darken($btn-primary-background-color, 12%);
     }

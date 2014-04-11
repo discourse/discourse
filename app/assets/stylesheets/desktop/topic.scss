@@ -24,7 +24,7 @@
   margin-top: 20px;
 }
 
-.post-info  {
+.post-info {
   display: inline-block;
 }
 
@@ -242,18 +242,17 @@ sub {
 figure {
   margin: 0;
 }
-fieldset{
+fieldset {
   border: 1px solid $primary_border_color;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em;
 }
-legend{
+legend {
   border: 0;
   padding: 0;
 }
 
-kbd
-{
+kbd {
   background-color: $primary_background_color;
   border: 1px solid $primary_border_color;
   border-radius: 3px;

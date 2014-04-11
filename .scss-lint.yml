@@ -40,7 +40,7 @@ linters:
   HexFormat:
     enabled: false
   SpaceBeforeBrace:
-    enabled: false
+    allow_single_line_padding: true
   ColorKeyword:
     enabled: false
   DeclarationOrder:
