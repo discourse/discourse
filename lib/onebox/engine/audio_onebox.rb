@@ -1,6 +1,6 @@
 module Onebox
   module Engine
-    class VideoOnebox
+    class AudioOnebox
       include Engine
 
       matches_regexp /^https?:\/\/.*\.(mp3|ogg|wav)$/
