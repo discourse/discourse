@@ -75,7 +75,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
       var replyControl = $('#reply-control');
       var h = replyControl.height() || 0;
       var sizePx = "" + h + "px";
-      $('.topic-area').css('padding-bottom', sizePx);
+      $('#main-outlet').css('padding-bottom', sizePx);
       $('.composer-popup').css('bottom', sizePx);
     });
   }.observes('model.composeState'),
@@ -438,6 +438,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   childWillDestroyElement: function() {
+    $('#main-outlet').css('padding-bottom', 0);
     this._unbindUploadTarget();
   },
 
