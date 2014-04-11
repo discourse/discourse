@@ -692,6 +692,7 @@ de:
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit diesem Thema und es wird nicht in deiner Liste ungelesener Themen auftauchen."
+        title: "Benachrichtigungen"
       actions:
         recover: "Löschen rückgängig machen"
         delete: "Thema entfernen"
@@ -699,6 +700,7 @@ de:
         close: "Thema schließen"
         auto_close: "Automatisch schließen"
         unpin: "Pin entfernen"
+        multi_select: "Beiträge auswählen"
         pin: "Pin setzen"
         pin_globally: "Pinne das Thema global"
         unarchive: "Thema de-archivieren"
@@ -1011,6 +1013,13 @@ de:
         help: "Dieses Thema ist geschlossen; Antworten werde nicht länger angenommen"
       pinned:
         help: "Dieses Thema ist angepinnt; es wird immer am Anfang seiner Kategorie auftauchen"
+        title: "Angepinnt"
+      unpinned:
+        title: "Nicht angepinnt"
+        help: "Dieses Thema ist nicht angepinnt; es wird nicht immer am Anfang seiner Kategorie auftauchen"
+      pinned_globally:
+        title: "Global angepinnt"
+        help: "Dieses Thema ist global angepinnt; es wird immer am Anfang der Seite angezeigt"
       archived:
         help: "Dieses Thema ist archiviert; es ist eingefroren und kann nicht mehr geändert werden"
       invisible:
@@ -1521,6 +1530,7 @@ de:
           seo: 'SEO'
           spam: 'Spam'
           rate_limits: 'Abruflimits'
+          onebox: "Onebox"
           developer: 'Entwickler'
           embedding: "Einbetten"
           legal: "Rechtliches"
