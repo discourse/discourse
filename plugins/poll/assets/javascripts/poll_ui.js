@@ -1,12 +1,17 @@
 var Poll = Discourse.Model.extend({
   post: null,
   options: [],
+  closed: false,
 
   postObserver: function() {
-    this.updateOptionsFromJson(this.get('post.poll_details'));
+    this.updateFromJson(this.get('post.poll_details'));
   }.observes('post.poll_details'),
 
-  updateOptionsFromJson: function(json) {
+  fetchNewPostDetails: function() {
+    this.get('post.topic.postStream').triggerChangedPost(this.get('post.id'), this.get('post.topic.updated_at'));
+  }.observes('post.topic.title'),
+
+  updateFromJson: function(json) {
     var selectedOption = json["selected"];
 
     var options = [];
@@ -18,6 +23,8 @@ var Poll = Discourse.Model.extend({
       }));
     });
     this.set('options', options);
+
+    this.set('closed', json.closed);
   },
 
   saveVote: function(option) {
@@ -29,16 +36,16 @@ var Poll = Discourse.Model.extend({
       type: "PUT",
       data: {post_id: this.get('post.id'), option: option}
     }).then(function(newJSON) {
-      this.updateOptionsFromJson(newJSON);
+      this.updateFromJson(newJSON);
     }.bind(this));
   }
 });
 
 var PollController = Discourse.Controller.extend({
   poll: null,
-  showResults: Em.computed.oneWay('poll.post.poll_details.closed'),
+  showResults: Em.computed.oneWay('poll.closed'),
 
-  disableRadio: Em.computed.any('poll.post.poll_details.closed', 'loading'),
+  disableRadio: Em.computed.any('poll.closed', 'loading'),
 
   actions: {
     selectOption: function(option) {
@@ -80,7 +87,7 @@ function initializePollView(self) {
   var pollDetails = post.get('poll_details');
 
   var poll = Poll.create({post: post});
-  poll.updateOptionsFromJson(pollDetails);
+  poll.updateFromJson(pollDetails);
 
   var pollController = PollController.create({
     poll: poll,
