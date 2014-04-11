@@ -135,16 +135,8 @@ class UserSerializer < BasicUserSerializer
     object.user_badges.count
   end
 
-  def include_badge_count?
-    SiteSetting.enable_badges?
-  end
-
   def featured_user_badges
     # The three rarest badges this user has received should be featured.
     object.user_badges.joins(:badge).order('badges.grant_count ASC').includes(:granted_by, badge: :badge_type).limit(3)
-  end
-
-  def include_featured_user_badges?
-    SiteSetting.enable_badges?
   end
 end
