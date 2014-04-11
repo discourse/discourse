@@ -1162,6 +1162,11 @@ zh_TW:
           other: "未讀 ({{count}})"
         help: "追蹤有未讀帖子的討論話題"
       new:
+        lower_title_with_count:
+          zero: ""
+          one: "1 個新話題"
+          other: "{{count}} 個新話題"
+        lower_title: "新話題"
         title:
           zero: "新討論話題"
           one: "新討論話題 (1)"
