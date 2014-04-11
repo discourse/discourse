@@ -18,7 +18,7 @@ en:
       short_no_year: "%B %-d"
       date_only: "%b %-d, %Y"
 
-  title: "Discourse"
+  title: "Lesson Planet Community"
   topics: "Topics"
   posts: "posts"
   loading: "Loading"
@@ -1025,7 +1025,7 @@ en:
 
       Good luck,
 
-      Your friends at [Discourse](http://www.discourse.org)
+      Your friends at [The Lesson Planet Community](http://community.lessonplanet.com)
 
       [0]: %{base_url}
       [1]: http://www.kitterman.com/spf/validate.html
@@ -1042,7 +1042,7 @@ en:
   new_version_mailer:
     subject_template: "[The Lesson Planet Community] update available"
     text_body_template: |
-      A new version of Discourse is available:
+      A new version of Lesson Planet Community is available:
 
       Your version: %{installed_version}
       New version: **%{new_version}**
@@ -1056,7 +1056,7 @@ en:
   new_version_mailer_with_notes:
     subject_template: "[The Lesson Planet Community] update available"
     text_body_template: |
-      A new version of Discourse is available:
+      A new version of Lesson Planet Community is available:
 
       Your version: %{installed_version}
       New version: **%{new_version}**
