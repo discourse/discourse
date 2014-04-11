@@ -16,10 +16,39 @@ zh_CN:
         half_a_minute: "< 1m"
         less_than_x_seconds:
           other: "< %{count}s"
+        x_seconds:
+          other: "%{count}s"
+        less_than_x_minutes:
+          other: "< %{count}m"
+        x_minutes:
+          other: "%{count}m"
+        about_x_hours:
+          other: "%{count}h"
+        x_days:
+          other: "%{count}d"
+        about_x_years:
+          other: "%{count}y"
+        over_x_years:
+          other: "> %{count}y"
+        almost_x_years:
+          other: "%{count}y"
         date_month: "MMMDo"
         date_year: "YY-MM-D"
       medium:
+        x_minutes:
+          other: "%{count} 分"
+        x_hours:
+          other: "%{count} 小时"
+        x_days:
+          other: "%{count} 天"
         date_year: "YYYY年MMMDo"
+      medium_with_ago:
+        x_minutes:
+          other: "%{count} 分钟前"
+        x_hours:
+          other: "%{count} 小时前"
+        x_days:
+          other: "%{count} 天前"
     share:
       topic: '分享本主题的链接'
       post: '分享 #%{postNumber} 帖的链接'
@@ -458,7 +487,7 @@ zh_CN:
       admin_options_title: "本主题可选设置"
       auto_close_label: "自动关闭主题时间："
       auto_close_units: "（可以是小时数，具体时间，或某个时间戳）"
-      auto_close_examples: '例如：24, 17:00, 2013-11-22 14:00'
+      auto_close_examples: '输入绝对时间或者小时数——24, 17:00, 2013-11-22 14:00'
       auto_close_error: "请输入有效值。"
     notifications:
       title: "使用 @用户名称 提及到您，回复您的帖子和主题，私信等等的通知消息"
@@ -481,11 +510,14 @@ zh_CN:
       title_with_attachments: "上传图片或文件"
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
+      remote_tip: "链接图片 http://example.com/image.jpg"
+      remote_tip_with_attachments: "链接图片或文件 http://example.com/file.ext（支持的格式：{{authorized_extensions}}）。"
       local_tip: "点击从您的设备中选择一张图片。"
       local_tip_with_attachments: "点击从您的设备中选择图片或文件（支持的格式： {{authorized_extensions}}）。"
       hint: "（您也可以通过拖放至编辑器的方式来上传）"
       hint_for_chrome: "（您也可以通过拖放或复制粘帖至编辑器的方式来上传）"
       uploading: "上传中"
+      image_link: "链接您的图片到"
     search:
       title: "搜索主题、帖子、用户或分类"
       placeholder: "在此输入您的搜索条件"
@@ -634,11 +666,13 @@ zh_CN:
         auto_close: "自动关闭"
         unpin: "解除主题置顶"
         pin: "置顶主题"
+        pin_globally: "全局置顶主题"
         unarchive: "解除主题存档"
         archive: "存档主题"
         invisible: "使不可见"
         visible: "使可见"
         reset_read: "重置阅读数据"
+        multi_select: "选择帖子"
         convert_to_topic: "转换到常规主题"
       reply:
         title: '回复'
@@ -688,6 +722,14 @@ zh_CN:
         error: "合并主题时发生错误。"
         instructions:
           other: "请选择一个主题以便移动这 <b>{{count}}</b> 个帖子。"
+      change_owner:
+        title: "更改帖子所有者"
+        action: "更改所有权"
+        error: "更改帖子所有权时发生错误。"
+        label: "帖子的新拥有者"
+        placeholder: "新所有者的用户名"
+        instructions:
+          other: "请选择<b>{{old_user}}</b>创建的这 {{count}} 个帖子的新所有者。"
       multi_select:
         select: '选择'
         selected: '已选择（{{count}}）'
@@ -710,6 +752,7 @@ zh_CN:
       reply_as_new_topic: "回复为新主题"
       continue_discussion: "从 {{postLink}} 继续讨论："
       follow_quote: "跳转至所引用的帖子"
+      show_full: "显示所有帖子"
       deleted_by_author:
         other: "（帖子被作者撤销，如无标记，将在 %{count} 小时后被自动删除）"
       deleted_by: "删除者为"
@@ -744,6 +787,8 @@ zh_CN:
         share: "分享一个到本帖的链接"
         more: "更多"
         delete_replies:
+          confirm:
+            other: "您也想要删除 {{count}} 个直接回复这个帖子的回复么？"
           yes_value: "是，删除回复"
           no_value: "否，仅删除该帖"
       actions:
@@ -907,15 +952,24 @@ zh_CN:
     topic_map:
       title: "主题概要"
       links_shown: "显示所有 {{totalLinks}} 个链接..."
+      clicks:
+        other: "%{count} 次点击"
     topic_statuses:
       locked:
-        help: "本主题已关闭，不再接受新的回复"
+        help: "本主题已关闭；不再接受新的回复"
+      unpinned:
+        title: "解除置顶"
+        help: "主题已经解除置顶；它将以默认顺序显示"
+      pinned_globally:
+        title: "全局置顶"
+        help: "本主题已置顶；它将始终显示在它所属分类的顶部"
       pinned:
-        help: "本主题已置顶，它将始终显示在它所属分类的顶部"
+        title: "置顶"
+        help: "本主题已置顶；它将始终显示在它所属分类的顶部"
       archived:
-        help: "本主题已归档，即已经冻结，无法修改"
+        help: "本主题已归档；即已经冻结，无法修改"
       invisible:
-        help: "本主题不可见，它将不被显示在主题列表中，只能通过一个直接链接来访问"
+        help: "本主题不可见；它将不被显示在主题列表中，只能通过一个直接链接来访问"
     posts: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
     original_post: "原始帖"
@@ -1302,6 +1356,8 @@ zh_CN:
           suspended: '被禁用户'
         reject_successful:
           other: "成功拒绝 %{count} 个用户。"
+        reject_failures:
+          other: "成功拒绝 %{count} 个用户。"
       user:
         suspend_failed: "禁止此用户时发生了错误 {{error}}"
         unsuspend_failed: "解禁此用户时发生了错误 {{error}}"
@@ -1349,6 +1405,8 @@ zh_CN:
         delete_forbidden_because_staff: "不能删除管理员和版主。"
         delete_forbidden:
           other: "用户如果有帖子将不能删除。在试图尝试删除一个用户前删除所有的帖子（%{count} 天前的帖子不能被删除）"
+        cant_delete_all_posts:
+          other: "不能删除所有帖子。一些帖子发表于 %{count} 天前。"
         delete_confirm: "您确定要永久地从本站删除此用户？该操作无法撤销！"
         delete_and_block: "<b>确定</b>，并<b>阻止</b>该邮件地址和IP地址再次注册。"
         delete_dont_block: "<b>确定</b>，但<b>允许</b>该邮件地址和IP地址再次注册。"
@@ -1404,6 +1462,7 @@ zh_CN:
           files: '文件'
           trust: '信任等级'
           security: '安全性'
+          onebox: "Onebox"
           seo: '搜索引擎优化'
           spam: '垃圾信息'
           rate_limits: '速度限制'

@@ -514,7 +514,6 @@ nl:
       admin_options_title: "Optionele stafinstellingen voor deze topic"
       auto_close_label: "Sluit topic automatisch:"
       auto_close_units: "(# uren, een tijd of een volledige datum en tijd)"
-      auto_close_examples: 'Voorbeelden: 24, 17:00, 22-11-2013 14:00'
       auto_close_error: "Vul een geldige waarde in."
     notifications:
       title: "notificaties van @naam vermeldingen, reacties op je berichten en topics, privé-berichten, etc."
@@ -998,15 +997,6 @@ nl:
       clicks:
         one: "1 click"
         other: "%{count} clicks"
-    topic_statuses:
-      locked:
-        help: "deze topic is gesloten; nieuwe reacties worden niet langer geaccepteerd"
-      pinned:
-        help: "deze topic is gepind; het zal bovenaan de lijst van topics in zijn categorie staan."
-      archived:
-        help: "deze topic is gearchiveerd; het is bevroren en kan niet meer veranderd worden"
-      invisible:
-        help: "deze topic is onzichtbaar; het zal niet worden weergegeven in topiclijsten en kan alleen via een directe link bezocht worden"
     posts: "Berichten"
     posts_long: "er zijn {{number}} berichten in deze topic"
     original_post: "Originele bericht"

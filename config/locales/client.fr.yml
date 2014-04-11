@@ -515,7 +515,7 @@ fr:
       admin_options_title: "Paramètres optionnels pour ce sujet"
       auto_close_label: "Heure de fermeture automatique de ce sujet:"
       auto_close_units: "(# Nombre d'heures, une heure, ou un horodatage)"
-      auto_close_examples: 'Exemples: 24, 17:00, 2013-11-22 14:00'
+      auto_close_examples: 'saisir une date absolu ou un nombre d''heures  — 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Merci de saisir une valeur valide"
     notifications:
       title: "Notification des mentions de votre @pseudo, réponses à vos sujets et messages, etc."
@@ -765,6 +765,10 @@ fr:
         error: "Il y a eu une erreur durant le changement d'auteur."
         label: "Nouvel auteur des messages"
         placeholder: "pseudo du nouvel auteur"
+        instructions:
+          one: "Veuillez choisir un nouvel auteur pour le message de <b>{{old_user}}</b>."
+          other: "Veuillez choisir un nouvel auteur pour les {{count}} messages de <b>{{old_user}}</b>."
+        instructions_warn: "Aucune notification à propos de ce message ne seront transféré rétroactivement à ce nouvel auteur. <br>Attention: Actuellement, aucune donnée lié au message n'est transféré vers le nouvel auteur. A utiliser avec précaution."
       multi_select:
         select: 'sélectionner'
         selected: '({{count}}) sélectionnés'
@@ -1015,13 +1019,20 @@ fr:
         other: "%{count} clics"
     topic_statuses:
       locked:
-        help: "ce sujet est clos; il n'accepte plus de nouvelles réponses"
+        help: "Ce sujet est fermé; il n'accepte plus de nouvelles réponses"
+      unpinned:
+        title: "Désépinglé"
+        help: "Ce sujet est désépinglé; il sera affiché dans l'ordre par défaut"
+      pinned_globally:
+        title: "Épingler globalement"
+        help: "Ce sujet est épinglé globalement; il s'affichera en haut de toutes les listes de sujets"
       pinned:
-        help: "ce sujet est épinglée, il s'affichera en haut de sa catégorie"
+        title: "Épingler"
+        help: "Ce sujet est épinglé; il s'affichera en haut de sa catégorie"
       archived:
-        help: "ce sujet est archivé, il est gelé et ne peut être modifié"
+        help: "Ce sujet est archivé; il est gelé et ne peut être modifié"
       invisible:
-        help: "ce sujet est invisible, il ne sera pas affiché dans la liste des sujets et est seulement accessible via un lien direct"
+        help: "Ce sujet est invisible; Il ne sera pas affiché dans la liste des sujets et sera seulement accessible via un lien direct"
     posts: "Messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
     original_post: "Message original"
@@ -1525,6 +1536,7 @@ fr:
           files: 'Fichiers'
           trust: 'Niveaux Confiance'
           security: 'Sécurité'
+          onebox: "Onebox"
           seo: 'SEO'
           spam: 'Spam'
           rate_limits: 'Limites des taux'

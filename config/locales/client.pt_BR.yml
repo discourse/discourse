@@ -515,7 +515,6 @@ pt_BR:
       admin_options_title: "Configurações opcionais de staff para este tópico"
       auto_close_label: "Tempo para Auto Fechamento do tópico:"
       auto_close_units: "(# de horas, um horário ou data e hora por extenso)"
-      auto_close_examples: 'Exemplos: 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Por favor, digite um valor válido."
     notifications:
       title: "notificações de menção de @nome, respostas às suas postagens e tópicos, mensagens privadas, etc"
@@ -1002,15 +1001,6 @@ pt_BR:
       clicks:
         one: "1 clique"
         other: "%{count} cliques"
-    topic_statuses:
-      locked:
-        help: "este tópico está fechado; não serão aceitas mais respostas"
-      pinned:
-        help: "este tópico está fixado; irá ser mostrado no topo da sua categoria"
-      archived:
-        help: "este tópico está arquivado; está congelado e não pode ser alterado"
-      invisible:
-        help: "este tópico está invisível; não aparecerá na listagem dos tópicos, e pode apenas ser acessado por link direto"
     posts: "Postagens"
     posts_long: "há {{number}} postagens neste tópico"
     original_post: "Postagem Original"

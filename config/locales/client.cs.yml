@@ -543,7 +543,6 @@ cs:
       admin_options_title: "Volitelné administrační nastavení tématu"
       auto_close_label: "Automaticky zavřít téma:"
       auto_close_units: "(# hodin, čas, nebo datum)"
-      auto_close_examples: 'Příklady: 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Zadejte prosím platnou hodnotu."
     notifications:
       title: "oznámení o zmínkách pomocí @jméno, odpovědi na vaše příspěvky a témata, soukromé zprávy, atd."
@@ -1060,15 +1059,6 @@ cs:
         one: "1 kliknutí"
         few: "%{count} kliknutí"
         other: "%{count} kliknutí"
-    topic_statuses:
-      locked:
-        help: "toto téma je uzavřené; další odpovědi nejsou přijímány"
-      pinned:
-        help: "toto téma je připevněné; bude se zobrazovat na vrcholu seznamu ve své kategorii"
-      archived:
-        help: "toto téma je archivováno; je zmraženo a nelze ho již měnit"
-      invisible:
-        help: "toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
     posts: "Příspěvků"
     posts_long: "v tomto tématu je {{number}} příspěvků"
     original_post: "Původní příspěvek"

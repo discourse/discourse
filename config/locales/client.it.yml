@@ -515,7 +515,6 @@ it:
       admin_options_title: "Impostazioni opzionali per questo topic"
       auto_close_label: "Momento di auto chiusura del topic:"
       auto_close_units: "(# ore, tempo, o timestamp)"
-      auto_close_examples: 'Esempi: 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Per favore immetti un valore valido."
     notifications:
       title: "notifiche di quando @name viene citato, se ci sono risposte ai tuoi post, messaggi privati ecc."
@@ -1016,15 +1015,6 @@ it:
       clicks:
         one: "1 click"
         other: "%{count} click"
-    topic_statuses:
-      locked:
-        help: "questo topic è chiuso; non accetta nuove risposte"
-      pinned:
-        help: "questo topic è evidenziato; apparirà in cima a questa categoria"
-      archived:
-        help: "questo topic è archiviato; è bloccato e non può essere modificato"
-      invisible:
-        help: "questo topic è invisibile; non verrà mostrato nella lista dei topic e può essere visualizzato solo tramite un link diretto"
     posts: "Post"
     posts_long: "Ci sono {{number}} post in questo topic"
     original_post: "Post originale"

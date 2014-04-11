@@ -515,7 +515,7 @@ de:
       admin_options_title: "Optionale Moderator-Einstellungen für dieses Thema"
       auto_close_label: "Schließe das Thema automatisch nach:"
       auto_close_units: "Tage"
-      auto_close_examples: 'Beispiele: 24, 17:00, 2013-11-22 14:00'
+      auto_close_examples: 'Gib eine Zeit, Datum oder Anzahl von Stunden an — 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Bitte einen gültigen Wert eingeben."
     notifications:
       title: "Benachrichtigung über @name-Erwähnungen, Antworten auf deine Beiträge und Themen, private Nachrichten etc."
@@ -706,6 +706,7 @@ de:
         invisible: "Unsichtbar machen"
         visible: "Sichtbar machen"
         reset_read: "Gelesene Daten zurücksetzen"
+        multi_select: "Beiträge auswählen"
         convert_to_topic: "Thema auf normal setzen"
       reply:
         title: 'Antworten'
@@ -758,6 +759,16 @@ de:
         instructions:
           one: "Bitte wähle das Thema in welches du den Beitrag verschieben möchtest."
           other: "Bitte wähle das Thema in welches du die <b>{{count}}</b> Beiträge verschieben möchtest."
+      change_owner:
+        title: "Eigentümer der Beiträge ändern"
+        action: "Ändere Eigentümer"
+        error: "Ein Fehler ist während der Änderung des Eigentümers der Beiträge aufgetreten."
+        label: "Neuer Eigentümer der Beiträge"
+        placeholder: "Benutzername des neuen Besitzers"
+        instructions:
+          one: "Bitte wähle den neuen Eigentümer für den Beitrag von <b>{{old_user}}</b>."
+          other: "Bitte wähle den neuen Eigentümer für {{count}} Beiträge von <b>{{old_user}}</b>."
+        instructions_warn: "Bitte beachte, dass alle Benachrichtigungen für diesen Beitrag nicht rückwirkend auf den neuen Benutzer übertragen werden.<br>Warnung: Aktuell werden keine Daten, die mit dem Beitrag zusammenhängen an den neuen Benutzer übertragen. Mit Bedacht verwenden."
       multi_select:
         select: 'Ausgewählt'
         selected: 'Ausgewählt ({{count}})'
@@ -839,7 +850,7 @@ de:
           vote: "Stimme auch dafür"
         undo:
           off_topic: "Meldung widerrufen"
-          spam: "Meldung widerrufen\""
+          spam: "Meldung widerrufen"
           inappropriate: "Meldung widerrufen"
           bookmark: "Lesezeichen entfernen"
           like: "Gefällt mir nicht mehr"
@@ -867,7 +878,7 @@ de:
         by_you_and_others:
           off_topic:
             one: "Du und eine weitere Person haben das als am Thema vorbei gemeldet"
-            other: "Du und {{count}} weitere Personen haben das als am Thema vorbei gemeldet\""
+            other: "Du und {{count}} weitere Personen haben das als am Thema vorbei gemeldet"
           spam:
             one: "Du und eine weitere Person haben das als Werbung gemeldet"
             other: "Du und {{count}} weitere Personen haben das als Werbung gemeldet"
@@ -1009,7 +1020,14 @@ de:
     topic_statuses:
       locked:
         help: "Dieses Thema ist geschlossen; Antworten werde nicht länger angenommen"
+      unpinned:
+        title: "Nicht gepinnt"
+        help: "Dieses Thema ist nicht angepinnt; es wird in der normalen Reihenfolge angezeigt"
+      pinned_globally:
+        title: "Global gepinnt"
+        help: "Dieses Thema ist global angepinnt; es wird immer am Anfang aller Listen auftauchen"
       pinned:
+        title: "Angepinnt"
         help: "Dieses Thema ist angepinnt; es wird immer am Anfang seiner Kategorie auftauchen"
       archived:
         help: "Dieses Thema ist archiviert; es ist eingefroren und kann nicht mehr geändert werden"
@@ -1518,6 +1536,7 @@ de:
           files: 'Dateien'
           trust: 'Vertrauensstufe'
           security: 'Sicherheit'
+          onebox: "Onebox"
           seo: 'SEO'
           spam: 'Spam'
           rate_limits: 'Abruflimits'

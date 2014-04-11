@@ -509,7 +509,6 @@ sv:
       admin_options_title: "Valfria personalinställningar för den här tråden"
       auto_close_label: "Tid för att automatiskt stänga tråden:"
       auto_close_units: "(# timmar, en tid, eller en timestamp)"
-      auto_close_examples: 'Exempel: 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Vänligen ange ett giltigt värde."
     notifications:
       title: "notifikationer med omnämnanden av @namn, svar på dina inlägg och trådar, privata meddelanden, etc"
@@ -977,15 +976,6 @@ sv:
     topic_map:
       title: "Sammanfattning av tråd"
       links_shown: "visa alla {{totalLinks}} länkar..."
-    topic_statuses:
-      locked:
-        help: "denna tråd är låst; den accepterar inte längre nya svar"
-      pinned:
-        help: "denna tråd är nålad; den kommer att visas högst upp i sin kategori"
-      archived:
-        help: "denna tråd är arkiverad; den är frusen och kan inte ändras"
-      invisible:
-        help: "denna tråd är osynlig; den kommer inte att visas i trådlistor, och kan endast besökas via direktlänkar"
     posts: "Inlägg"
     posts_long: "{{number}} inlägg i den här tråden"
     original_post: "Originalinlägg"

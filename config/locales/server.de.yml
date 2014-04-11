@@ -15,8 +15,13 @@ de:
   powered_by_html: 'Basiert auf <a href="http://www.discourse.org">Discourse</a>, funktioniert am besten mit aktiviertem JavaScript'
   via: "%{username} via %{site_name}"
   is_reserved: "ist reserviert"
+  errors:
+    embed:
+      load_from_remote: "Beim Laden des Beitrags ist ein Fehler aufgetreten."
   backup:
     operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
+    not_enough_space_on_disk: "Es gibt nicht genügend freien Festplattenspeicher um dieses Backup hochzuladen."
+  not_logged_in: "Du musst eingeloggt sein um das zu machen."
   read_only_mode_enabled: "Die Seite befindet sich im Nur-Lesen Modus. Interaktionen sind deaktiviert."
   embed:
     start_discussion: "Beginne die Diskussion"
@@ -48,12 +53,15 @@ de:
   invalid_characters: "enthält ungültige Zeichen"
   is_invalid: "ist ungültig; bitte ein wenig anschaulicher"
   next_page: "Nächste Seite →"
+  prev_page: "← vorherige Seite"
   page_num: "Seite %{num}"
   by: "Von"
   topics_in_category: "Themen in der Kategorie '%{category}'"
   rss_posts_in_topic: "RSS-Feed von '%{topic}'"
   rss_topics_in_category: "RSS-Feed von Themen in der Kategorie '%{category}'"
   author_wrote: "%{author} schrieb:"
+  num_posts: "Beiträge:"
+  num_participants: "Teilnehmer:"
   read_full_topic: "Lese das vollständige Thema"
   private_message_abbrev: "PN"
   rss_description:
@@ -114,9 +122,12 @@ de:
           attributes:
             password:
               common: "ist eines der 5000 meist verwendeten Passwörter. Bitte verwende ein sichereres Passwort."
+            ip_address:
+              signup_not_allowed: "Anmelden ist von diesem Benutzerkonto nicht erlaubt."
   user_profile:
     no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest Du es ausfüllen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hat noch nichts in das 'Über mich'-Feld des Nutzerprofils eingetragen</div>"
+  vip_category_name: "Lounge"
   category:
     topic_prefix: "Definition der Kategorie %{category}"
     replace_paragraph: "[Ersetze den ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Bitte benutze weniger als 200 Zeichen.]"
@@ -218,6 +229,7 @@ de:
   password_reset:
     no_token: "Entschuldige, Du kommst zu spät. Bitte setze dein Passwort erneut zurück."
     choose_new: "Bitte wähle ein neues Passwort"
+    choose: "Bitte wähle ein Passwort"
     update: 'Passwort updaten'
     save: 'Setze Passwort'
     title: 'Passwort zurücksetzen'
@@ -273,8 +285,10 @@ de:
   topic_flag_types:
     spam:
       title: 'Spam'
+      long_form: 'als Spam gemeldet'
     inappropriate:
       title: 'Unangemessen'
+      long_form: 'als unangemessen gemeldet'
     notify_moderators:
       title: 'Moderatoren benachrichtigen'
       long_form: 'dies wurde den Moderatoren gemeldet'
@@ -431,8 +445,11 @@ de:
       title: "HTML Kopf"
     top:
       description: "HTML das am Anfang jeder Seite hinzugefügt wird (Nach dem Header, vor der Navigation oder dem Thementitel)."
+    bottom:
+      description: "HTML Code der am Ende jeder Seite eingefügt wird."
   site_settings:
     default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
+    allow_user_locale: "Erlaube Benutzern ihre eigene Interfacesprache zu wählen"
     min_post_length: "Minimale Beitragslänge in Zeichen."
     min_private_message_post_length: "Minimale Beitragslänge in Zeichen für private Nachrichten"
     max_post_length: "Maximale Beitragslänge in Zeichen."
@@ -447,6 +464,7 @@ de:
     discourse_org_access_key: "Der Zugangscode für das Discourse Hub Benutzernamensregister auf discourse.org"
     educate_until_posts: "Zahl der Beiträge, die ein Nutzer verfassen muss, damit kein Hilfetext beim Erstellen von Themen und Beiträgen eingeblendet wird."
     title: "Seitentitel, der im Title-Tag und an anderen Stellen verwendet wird."
+    site_description: "Beschreibe dieses Forum in einem Satz. Diese Beschreibung wird im meta description tag verwendet."
     contact_email: "Die Mail von jemandem der für die Seite zuständig ist. Wichtige Nachrichten von Discourse.org betreffend kritischen Sicherheitsupdates werden an diese Adresse gesendet."
     company_full_name: "Voller Name des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     company_short_name: "Kurzname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
@@ -465,7 +483,6 @@ de:
     post_excerpt_maxlength: "Maximale Länge des Zitates eines Beitrags in Zeichen."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags."
     category_post_template: "Die Beitragsvorlage zur Kategoriedefinition beim erstellen einer neuen Kategorie."
-    onebox_max_chars: "Maximale Zahl der Zeichen, die eine Onebox von einer externen Webseite in einen Beitrag lädt."
     logo_url: "Das Logo deiner Seite, zum Beispiel: http://example.com/logo.png"
     logo_small_url: "Kleines Logo deiner Seite, das beim Herunterscrollen in einem Thema gezeigt wird, zum Beispiel: http://example.com/logo-small.png"
     favicon_url: "Das Favicon deiner Seite, siehe http://de.wikipedia.org/wiki/Favicon"
@@ -507,6 +524,7 @@ de:
     send_welcome_message: "Bekommen neue Nutzer eine Willkommensnachricht?"
     suppress_reply_directly_below: "Zeige die Zahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Zeige 'In Antwort auf' nicht, falls der Beitrag direkt über der einzigen Antwort folgt."
+    enable_badges: "Aktiviere das Abzeichen-System (experimentell)"
     allow_index_in_robots_txt: "Diese Seite soll durch Suchmaschinen indiziert werden (aktualisiert robots.txt)."
     email_domains_blacklist: "Eine durch senkrechte Striche getrennte Liste von unerlaubten Maildomains. Beispiel: mailinator.com|trashmail.net"
     email_domains_whitelist: "Eine durch senkrechte Striche getrennte Liste von erlaubte Maildomains. WARNUNG: Benutzer mit Mailadressen anderer Domains können sich nicht registrieren."
@@ -518,6 +536,8 @@ de:
     invite_only: "Die Registration ist deaktiviert und du kannst nur durch eine Einladung beitreten"
     login_required: "Zum Lesen der Beiträge must du angemeldet sein"
     min_password_length: "Minimale Länge des Passworts."
+    enable_sso: "Aktiviere Single Sign On mittels einer externen Seite"
+    sso_url: "URL des Single Sign On Endpunkts"
     enable_local_logins: "Aktiviere lokale Authentisierung"
     enable_google_logins: "Aktiviere Google Authentisierung."
     enable_yahoo_logins: "Aktiviere Yahoo Authentisierung."
@@ -531,6 +551,7 @@ de:
     github_client_id: "Client-ID für Github Authentisierung, registriert auf https://github.com/settings/applications"
     github_client_secret: "Client Secret für Github Authentisierung, registriert auf https://github.com/settings/applications"
     allow_restore: "Erlaube Datenimports. (WARNUNG: Hiermit können ALLE vorhandenen Daten überschrieben werden; immer auf 'false' lassen, es sei denn Du planst wirklich Datenimports)."
+    backup_daily: "Erstelle jeden Tag automatisch ein Backup"
     active_user_rate_limit_secs: "Sekunden, nach denen das 'last_seen_at'-Feld aktualisiert wird."
     previous_visit_timeout_hours: "Stunden, die ein Besuch dauert bevor er als 'früherer' Besuch gezählt wird."
     rate_limit_create_topic: "Sekunden Wartezeit nach Erstellung eines Themas, bevor man ein neues Thema erstellen kann."
@@ -599,17 +620,22 @@ de:
     pop3s_polling_host: "Der Host für die POP3S Anfrage"
     pop3s_polling_username: "Der Benutzername für die POP3S Anfrage"
     pop3s_polling_password: "Das Passwort für die POP3S Anfrage"
+    email_in: "Erlaube Benutzern neue Themen via Email zu posten"
     minimum_topics_similar: "Wie viele Themen in der Datenbank existieren müssen, bevor ähnliche Themen angezeigt werden."
     relative_date_duration: "Anzahl von Tagen nach nach welchen das Beitragsdatum relativ und nicht absolut angezeigt wird. Beispiel: relatives Datum: 7T, absolutes Datum: 20 Feb"
     delete_user_max_post_age: "Nach wievielen Tagen ein Benutzerkonto von einem Administrator gelöscht werden kann."
     delete_all_posts_max: "Die maximale Anzahl von Beiträgen welche auf einmal gelöscht werden kann. Hat ein Benutzer mehr Beiträge, so können die Beiträge nicht auf einmal und der Benutzer nicht gelöscht werden."
     username_change_period: "Wie lange neu registrierte Benutzer ihren Benutzernamen ändern können."
+    email_editable: "Erlaube Benutzern ihre Emailadresse nach der Registrierung zu ändern."
     allow_uploaded_avatars: "Erlaube das Hochladen eines eigenen Avatars"
     allow_animated_avatars: "Erlaube den Benutzern animierte GIFs als Avatar zu benutzen"
     default_digest_email_frequency: "Wie oft man Zusammenfassungen per Mail standardmässig erhält. Diese Einstellung kann von jedem geändert werden."
+    detect_custom_avatars: "Ob überprüft wird, dass Benutzer benutzerdefinierte Avatare hochgeladen haben"
+    allow_profile_backgrounds: "Erlaube Benutzern Profilhintergründe hochzuladen"
     enable_names: "Erlaube Benutzern ihren vollen Namen zu zeigen"
     display_name_on_posts: "Zeige auch den vollen Namen eines Benutzers bei seinen Beiträgen"
     invites_shown: "Maximale Anzahl an Einladungen, die auf der Benutzerseite angezeigt werden"
+    embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden"
   notification_types:
     mentioned: "%{display_username} hat Dich in %{link} erwähnt."
     liked: "%{display_username} gefällt deinen Beitrag in %{link}."
@@ -634,11 +660,15 @@ de:
     existing_topic_moderator_post:
       one: "Ich habe den Beitrag in ein vorhandenes Thema verschoben: %{topic_link}"
       other: "Ich hab %{count} Beiträge in ein vorhandenes Thema verschoben: %{topic_link}"
+  change_owner:
+    post_revision_text: "Eigentümer geändert von %{old_user} zu %{new_user}"
   topic_statuses:
     archived_enabled: "Dieses Thema ist nun archiviert. Es ist eingefroren und kann in keiner Weise mehr verändert werden."
     archived_disabled: "Dieses Thema wurde aus dem Archiv geholt. Es ist nicht länger eingefroren und kann verändert werden."
     closed_enabled: "Dieses Thema ist nun geschlossen. Es ist nicht länger möglich, auf dieses Thema zu antworten."
     closed_disabled: "Dieses Thema ist nun geöffnet. Es ist wieder möglich, auf dieses Thema zu antworten."
+    autoclosed_enabled_days:
+      zero: "Dieses Thema wurde automatisch nach 1 Tag geschlossen. Neue Antworten sind nicht länger erlaubt."
     autoclosed_disabled: "Dieses Thema ist nun offen. Neue Beiträge werden angenommen."
     pinned_enabled: "Dieses Thema ist nun angepinnt. In seiner Kategorie wird es nun oben aufgelistet, solange der Pin nicht von einem Moderator gelöst wird, oder nicht jeder Nutzer auf 'Pin lösen' klickt."
     pinned_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
@@ -826,9 +856,17 @@ de:
     export_succeeded:
       subject_template: "Export erfolgreich abgeschlossen"
       text_body_template: "Der Export war erfolgreich."
+    export_failed:
+      subject_template: "Export fehlgeschlagen"
     import_succeeded:
       subject_template: "Import erfolgreich abgeschlossen"
       text_body_template: "Der Import war erfolgreich."
+    import_failed:
+      subject_template: "Import fehlgeschlagen"
+    email_error_notification:
+      subject_template: "Fehler beim Parsen der Email"
+    email_reject_trust_level:
+      subject_template: "Nachricht abgelehnt"
     too_many_spam_flags:
       subject_template: "Benutzerkonto gesperrt"
       text_body_template: |
@@ -932,6 +970,9 @@ de:
       click_here: "klicke hier"
       from: "%{site_name} Übersicht"
       read_more: "Weiterlesen"
+      posts:
+        one: "1 Beitrag"
+        other: "%{count} Beiträge"
     forgot_password:
       subject_template: "[%{site_name}] Passwort zurückgesetzt"
       text_body_template: |
@@ -1007,3 +1048,10 @@ de:
   email_log:
     no_user: "Kann Benutzer mit ID %{user_id} nicht finden "
     suspended_not_pm: "Benutzer ist gesperrt und Email ist keine private Nachricht"
+    notification_already_read: "Die Benachrichtigung dieser Mail wurde bereits gelesen"
+    message_blank: "Nachricht ist leer"
+  badges:
+    types:
+      gold: Gold
+      silver: Silber
+      bronze: Bronze
