@@ -5,6 +5,10 @@ require_dependency 'search'
 
 describe Search do
 
+  class TextHelper
+    extend ActionView::Helpers::TextHelper
+  end
+
   before do
     ActiveRecord::Base.observers.enable :search_observer
   end
@@ -175,13 +179,14 @@ describe Search do
     end
 
     context 'searching the OP' do
-      let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
-      let(:result) { first_of_type(Search.new('hello', type_filter: 'topic').execute, 'topic') }
+      let!(:post) { Fabricate(:post_with_long_raw_content, topic: topic, user: topic.user) }
+      let(:result) { first_of_type(Search.new('hundred', type_filter: 'topic', include_blurbs: true).execute, 'topic') }
 
       it 'returns a result correctly' do
         result.should be_present
         result[:title].should == topic.title
         result[:url].should == topic.relative_url
+        result[:blurb].should == TextHelper.excerpt(post.raw, 'hundred', radius: 100)
       end
     end
 

@@ -8,9 +8,12 @@ class SearchController < ApplicationController
 
   def query
     params.require(:term)
-
+    
     search_args = {guardian: guardian}
     search_args[:type_filter] = params[:type_filter] if params[:type_filter].present?
+    if params[:include_blurbs].present?
+      search_args[:include_blurbs] = params[:include_blurbs] == "true"
+    end
 
     search_context = params[:search_context]
     if search_context.present?
