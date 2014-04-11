@@ -103,7 +103,7 @@ body {
     margin-top: 10px;
   }
   ul.breadcrumb {
-    margin: 0 10px 0 10px;
+    margin: 0 10px;
   }
   .boxed {
     height: 100%;
@@ -242,14 +242,14 @@ blockquote {
 #pagedown-editor {
   width: 540px;
   background-color: $primary_background_color;
-  padding: 0 10px 13px 10px;
+  padding: 0 10px 13px;
   border: 1px solid $primary_border_color;
   .preview {
     margin-top: 8px;
     border: 1px dashed $primary_border_color;
-    padding: 8px 8px 0 8px;
+    padding: 8px 8px 0;
     p {
-      margin: 0 0 10px 0;
+      margin: 0 0 10px;
     }
   }
   .preview.hidden {
@@ -259,7 +259,7 @@ blockquote {
 
 .spinner {
   width: 100px;
-  margin: 10px auto 30px auto;
+  margin: 10px auto 30px;
   background-color: #000;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
@@ -340,7 +340,7 @@ body {
   }
 
   .page-not-found {
-    margin: 20px 0 40px 0;
+    margin: 20px 0 40px;
 
   }
 

@@ -23,11 +23,11 @@ article.post {
 
   blockquote {
     padding: 10px 8px 10px 13px;
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
     background-color: $quote-background;
     border-left: 5px solid $primary_border_color;
     p {
-      margin: 0 0 10px 0;
+      margin: 0 0 10px;
     }
   }
 
@@ -49,7 +49,7 @@ article.post {
       text-align: center;
       color: #0088cc;
       font-size: 13px;
-      margin: 5px 0 0 0;
+      margin: 5px 0 0;
       word-wrap: break-word;
 
       a.staff {
@@ -71,7 +71,7 @@ article.post {
       max-width: 100%;
     }
     p {
-      margin: 0 0 1em 0;
+      margin: 0 0 1em;
     }
   }
 }
@@ -100,7 +100,7 @@ img.emoji {
 }
 
 header {
-  padding: 10px 10px 20px 10px;
+  padding: 10px 10px 20px;
   font-size: 18px;
   border-bottom: 1px solid #ddd;
 }

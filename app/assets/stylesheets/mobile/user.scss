@@ -166,7 +166,7 @@
 
         dd {
           color: $tertiary_text_color;
-          margin: 0 0 7px 0;
+          margin: 0 0 7px;
         }
         dt {
           color: $secondary_text_color;
@@ -178,7 +178,7 @@
     .controls {
       background-color: lighten($secondary_background_color, 60%);
       margin-top: 0;
-      padding: 10px 10px 0 10px;
+      padding: 10px 10px 0;
 
       .btn {
         margin-bottom: 10px;
@@ -271,7 +271,7 @@
     }
     .edit-reason {
       background-color: $highlight_background_color;
-      padding: 3px 5px 5px 5px;
+      padding: 3px 5px 5px;
     }
   }
 }

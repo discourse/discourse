@@ -8,7 +8,7 @@
 
 .topic-post {
   border-top: 1px solid $primary_border_color;
-  padding: 6px 0 3px 0;
+  padding: 6px 0 3px;
   &:first-of-type {
     border-top: none;
   }
@@ -123,7 +123,7 @@ a.star {
 .topic-map {
 
   .btn {
-    border-radius: 0 4px 0 4px;
+    border-radius: 0 4px;
   }
 
   .topic-links li {
@@ -131,7 +131,7 @@ a.star {
   }
 
   border-radius: 5px;
-  margin: 15px 10px 20px 10px;
+  margin: 15px 10px 20px;
   border: 1px solid $primary_border_color;
 
   h3 {
@@ -141,7 +141,7 @@ a.star {
   }
 
   h4 {
-    margin: 0 0 3px 0;
+    margin: 0 0 3px;
     color: $secondary_text_color;
     font-weight: normal;
     font-size: 12px;
@@ -246,12 +246,12 @@ a.star {
 
 #topic-footer-buttons {
   border-top: 1px solid $primary_border_color;
-  padding: 20px 10px 0 10px;
+  padding: 20px 10px 0;
 }
 
 #suggested-topics {
   clear: left;
-  padding: 20px 10px 15px 10px;
+  padding: 20px 10px 15px;
   th.views, td.views, td.activity, th.activity, th.likes, td.likes {
     display: none;
   }
@@ -286,8 +286,8 @@ span.post-count {
 #topic-title {
   z-index: 1000;
   background: lighten($secondary_background_color, 76%);
-  margin: 0 0 0 0 !important;
-  padding: 15px 10px 15px 10px;
+  margin: 0 !important;
+  padding: 15px 10px;
 }
 
 .topic-post {

@@ -64,7 +64,7 @@
 
 .admin-loading {
   width: 100px;
-  margin: 0 auto 30px auto;
+  margin: 0 auto 30px;
   background-color: $secondary_background_color;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
@@ -259,7 +259,7 @@ section.details {
     background-color: lighten($secondary_background_color, 50%);
     color: $tertiary_text_color;
     padding: 0 10px;
-    margin: 0 0 5px 0;
+    margin: 0 0 5px;
   }
 }
 
@@ -357,7 +357,7 @@ section.details {
     float: left;
     width: 200px;
     .saving {
-      padding: 5px 0 0 0;
+      padding: 5px 0 0;
       margin-left: 10px;
       width: 80px;
       color: $secondary_text_color;
@@ -414,7 +414,7 @@ section.details {
       float: left;
       width: 200px;
       .saving {
-        padding: 5px 0 0 0;
+        padding: 5px 0 0;
         margin-left: 10px;
         width: 80px;
         color: $secondary_text_color;
@@ -619,7 +619,7 @@ table.api-keys {
 
     .look-here {
       float: left;
-      margin: 20px 10px 0 10px;
+      margin: 20px 10px 0;
 
       .fa {
         font-size: 32px;

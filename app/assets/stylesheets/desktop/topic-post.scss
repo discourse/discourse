@@ -224,7 +224,7 @@ nav.post-controls {
   &.bottom { margin-top: -11px;}
   .topic-meta-data h5 {margin: 5px;}
   .topic-meta-data-inside {
-    margin: -3px 0 0 0;
+    margin: -3px 0 0;
     color: $secondary_text_color;
   }
   .topic-meta-data {padding-top: 20px;}
@@ -258,7 +258,7 @@ a.star {
 }
 
 .topic-map {
-  margin: 20px 0 0 0;
+  margin: 20px 0 0;
   border: 1px solid $primary_border_color;
 
   .buttons .btn {
@@ -276,7 +276,7 @@ a.star {
   }
 
   h4 {
-    margin: 0 0 3px 0;
+    margin: 0 0 3px;
     color: $secondary_text_color;
     font-weight: normal;
     font-size: 12px;
@@ -405,7 +405,7 @@ a.star {
 
 #suggested-topics {
   clear: left;
-  padding: 20px 0 15px 0;
+  padding: 20px 0 15px;
   #topic-list > tbody > tr:nth-child(even) {
     background-color: lighten($secondary_background_color, 77%);
   }
@@ -496,7 +496,7 @@ iframe {
 
 .extra-info {
   h1 {
-    margin: 5px 0 0 0;
+    margin: 5px 0 0;
     font-size: 1.8em;
     line-height: 1.2em;
   }
@@ -666,7 +666,7 @@ a.mention {
 }
 
 .staff a {
-  margin: -2px 0 0 0;
+  margin: -2px 0 0;
   background-color: $highlight_background_color;
 }
 
@@ -778,7 +778,7 @@ blockquote { /* solo quotes */
   border-top: 1px solid $primary_border_color;
   float: left;
   position: relative;
-  padding: 10px 0 15px 0;
+  padding: 10px 0 15px;
   &.highlighted {
     background-color: $emphasis_background_color;
   }
@@ -821,7 +821,9 @@ blockquote { /* solo quotes */
     &.hidden {display: block; opacity: 0; }
 
   }
-  &.bottom .arrow {float: right; margin: 0 0 0 0;}
+  &.bottom .arrow {
+    float: right; margin: 0;
+  }
   &.top {
 
     margin-left: 112px;
@@ -954,10 +956,10 @@ blockquote { /* solo quotes */
   }
   p {
     font-size: 13px;
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
   }
   p.cancel {
-    margin: 10px 0 0 0;
+    margin: 10px 0 0;
   }
   h3 {
     font-size: 25px;

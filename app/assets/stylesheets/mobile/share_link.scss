@@ -7,7 +7,7 @@
   @include border-radius-all(3px);
   @include box-shadow(1px 1px 5px rgba($primary_shadow_color, .6));
   background-color: lighten($primary_background_color, 60%);
-  padding: 3px 7px 6px 7px;
+  padding: 3px 7px 6px;
   width: 300px;
   display: none;
   &.visible {

@@ -98,7 +98,7 @@
 
   h3 {
     color: $primary_text_color;
-    margin: 20px 0 10px 0;
+    margin: 20px 0 10px;
   }
 
   .map {
@@ -262,7 +262,7 @@
 
         dd {
           color: rgba($tertiary_text_color, .7);
-          margin: 0 0 7px 0;
+          margin: 0 0 7px;
           overflow: hidden;
           text-overflow: ellipsis;
         }
@@ -340,7 +340,7 @@
       opacity: 0.4;
     }
     .item {
-      padding: 20px 8px 15px 8px;
+      padding: 20px 8px 15px;
       background-color: $primary_background_color;
       border-bottom: 1px solid $primary_border_color;
     }
@@ -368,7 +368,7 @@
     }
     .edit-reason {
       background-color: $moderator_background_color;
-      padding: 3px 5px 5px 5px;
+      padding: 3px 5px 5px;
     }
   }
 }

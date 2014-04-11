@@ -97,7 +97,7 @@
 .modal-body {
   overflow-y: auto;
   max-height: 400px;
-  padding: 10px 15px 10px 15px;
+  padding: 10px 15px;
 }
 .modal-form {
   margin-bottom: 0;
@@ -136,7 +136,7 @@
     float: right;
     font-size: 24px;
     padding: 15px; // more pixels to touch
-    margin: -15px 0 0 0;
+    margin: -15px 0 0;
     text-decoration: none;
     color: $modal-close-button-color;
     cursor: pointer;

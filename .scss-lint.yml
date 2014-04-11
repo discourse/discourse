@@ -21,11 +21,7 @@ linters:
     enabled: false
   NameFormat:
     enabled: false
-  UrlFormat:
-    enabled: false
   BorderZero:
-    enabled: false
-  Shorthand:
     enabled: false
   PropertySortOrder:
     enabled: false
@@ -48,4 +44,5 @@ linters:
   IdWithExtraneousSelector:
     enabled: false
   PlaceholderInExtend:
+    # Used for clearfix extending
     enabled: false
