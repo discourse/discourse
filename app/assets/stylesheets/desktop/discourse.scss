@@ -198,7 +198,7 @@ body {
     height: 11px;
     overflow: hidden;
     background-color: lighten($secondary_background_color, 60%);
-    display:block;
+    display: block;
     background: image-url("grippie.png") lighten($secondary_background_color, 76%) no-repeat center 3px;
   }
 }
@@ -388,7 +388,7 @@ body {
   textarea {
     width: 210px;
     height: auto;
-    background-color:$primary_background_color;
+    background-color: $primary_background_color;
     border: 1px solid $primary_border_color;
     border-radius: 3px;
     box-shadow: inset 0 1px 1px rgba($primary_shadow_color, .3);

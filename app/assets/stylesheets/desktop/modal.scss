@@ -47,12 +47,12 @@
 }
 
 .modal-outer-container {
-  display:table;
-  width:100%;
-  height:100%;
+  display: table;
+  width: 100%;
+  height: 100%;
 }
 .modal-middle-container {
-  display:table-cell;
+  display: table-cell;
   vertical-align: middle;
 }
 .modal-inner-container {
@@ -373,7 +373,7 @@
 }
 
 .permission-list{
-  list-style:none;
+  list-style: none;
   margin: 0 0 30px;
   padding: 0;
   .name {

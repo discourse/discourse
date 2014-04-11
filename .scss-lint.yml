@@ -29,8 +29,6 @@ linters:
     enabled: false
   PropertySortOrder:
     enabled: false
-  SpaceAfterPropertyColon:
-    enabled: false
   DuplicateProperty:
     enabled: false
   SingleLinePerSelector:

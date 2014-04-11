@@ -3,11 +3,10 @@
   position: relative;
   left: -5px;
   bottom: -5px;
-  text-shadow:
-   -1px -1px 0 $btn-primary-background-color,
-    1px 1px 0 $btn-primary-background-color,
-    1px -1px 0 $btn-primary-background-color,
-    -1px 1px 0 $btn-primary-background-color;
+  text-shadow: -1px -1px 0 $btn-primary-background-color,
+                1px 1px 0 $btn-primary-background-color,
+                1px -1px 0 $btn-primary-background-color,
+               -1px 1px 0 $btn-primary-background-color;
 }
 
 .upload-selector {

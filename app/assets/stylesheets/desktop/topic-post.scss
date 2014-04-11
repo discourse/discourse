@@ -77,7 +77,7 @@ h1 .topic-statuses .topic-status i {
   .gutter {
     .reply-new {
       .discourse-no-touch & {
-        opacity:0;
+        opacity: 0;
         transition: opacity linear 0.4s;
         -webkit-transition: opacity linear 0.4s;
       }
@@ -102,7 +102,7 @@ h1 .topic-statuses .topic-status i {
   &:hover .gutter {
     .reply-new,
     .track-link {
-      opacity:1;
+      opacity: 1;
     }
   }
 }

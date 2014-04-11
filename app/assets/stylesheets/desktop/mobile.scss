@@ -2,8 +2,12 @@
 and (min-device-width : 320px)
 and (max-device-width : 540px) {
   #reply-control {
-    .toggle-preview { display:none; }
-    #reply-title { width: 250px; }
+    .toggle-preview {
+      display: none;
+    }
+    #reply-title {
+      width: 250px;
+    }
     .wmd-controls {
       #wmd-input {
         width: 100%;
