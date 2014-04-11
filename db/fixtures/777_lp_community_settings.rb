@@ -89,6 +89,7 @@ if user
 end
 
 # Categories
+Category.find(SiteSetting.uncategorized_category_id).update_attribute :name, 'Miscellaneous'
 categories = {
     classroom_support:        { name: 'Classroom Support', color: 'BF1E2E', id: 100 },
     college_career_readiness: { name: 'College & Career Readiness', color: 'F1592A', id: 102 },
