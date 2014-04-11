@@ -21,7 +21,7 @@ module ::PollPlugin
         return false
       end
 
-      topic.title =~ /^(#{I18n.t('poll.prefix')}|#{I18n.t('poll.closed_prefix')})/i
+      topic.title =~ /^(#{I18n.t('poll.prefix').strip}|#{I18n.t('poll.closed_prefix').strip})\s?:/i
     end
 
     def has_poll_details?
