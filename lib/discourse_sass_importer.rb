@@ -42,7 +42,13 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
         stylesheets = DiscoursePluginRegistry.mobile_stylesheets
       end
       contents = ""
-      stylesheets.each {|css| contents << "@import '#{css}';" }
+      stylesheets.each do |css_file|
+        if css_file =~ /\.scss$/
+          contents << "@import '#{css_file}';"
+        else
+          contents << File.read(css_file)
+        end
+      end
       Sass::Engine.new(contents, options.merge(
         filename: "#{name}.scss",
         importer: self,
