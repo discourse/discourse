@@ -47,6 +47,7 @@ module Onebox
           etsy.com
           findery.com
           flickr.com
+          folksy.com
           forbes.com
           foxnews.com
           funnyordie.com
