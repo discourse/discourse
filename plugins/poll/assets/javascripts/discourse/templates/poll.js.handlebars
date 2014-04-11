@@ -14,10 +14,12 @@
   {{/each}}
 </table>
 
-<button {{action toggleShowResults}}>
+<button {{action toggleShowResults}} class="btn btn-small">
   {{#if showResults}}
+    <i class="fa fa-eye-slash"></i>
     {{i18n poll.results.hide}}
   {{else}}
+    <i class="fa fa-eye"></i>
     {{i18n poll.results.show}}
   {{/if}}
 </button>

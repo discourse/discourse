@@ -147,4 +147,8 @@ register_css <<CSS
   border: none;
 }
 
+.poll-ui button i.fa {
+  margin-right: 2px;
+}
+
 CSS
