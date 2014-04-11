@@ -696,8 +696,8 @@ a.mention {
   color: $secondary_text_color;
 }
 
-
-blockquote { /* solo quotes */
+// solo quotes
+blockquote {
   margin: 14px 0;
   padding: 12px;
 
@@ -706,7 +706,8 @@ blockquote { /* solo quotes */
   p:last-of-type {margin-bottom: 0;}
 }
 
-.quote { /* quotes with attribution */
+// quotes with attribution
+.quote {
   margin-top: 14px;
   blockquote {
     margin-top: 0;

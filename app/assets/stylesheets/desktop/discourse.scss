@@ -164,7 +164,6 @@ body {
     }
   }
 
-  /**/
   .message {
     @include border-radius-all(8px);
     background-color: $primary_background_color;
@@ -216,7 +215,7 @@ form {
 }
 
 blockquote {
-  /* 13px left is intentional here to properly align with post quotes */
+  // 13px left is intentional here to properly align with post quotes
   padding: 10px 4px 4px 13px;
   background-color: $quote-background;
   border-left: 5px solid $primary_border_color;
@@ -318,7 +317,7 @@ blockquote {
 }
 
 
-/* bootstrap carryover */
+// Bootstrap carryover
 
 
 body {
@@ -731,7 +730,7 @@ body {
   }
 }
 
-/* bootstrap colums */
+// Bootstrap columns
 
 .row:before,
 .row:after {

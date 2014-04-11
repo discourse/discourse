@@ -10,7 +10,9 @@ linters:
   Indentation:
     width: 2
   Comment:
-    enabled: false
+    exclude:
+      - "app/assets/stylesheets/desktop/code_highlighting.scss"
+      - "test/stylesheets/test_helper.css"
   LeadingZero:
     enabled: false
   EmptyLineBetweenBlocks:
