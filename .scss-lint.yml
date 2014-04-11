@@ -23,8 +23,6 @@ linters:
     enabled: false
   NameFormat:
     enabled: false
-  BorderZero:
-    enabled: false
   PropertySortOrder:
     enabled: false
   DuplicateProperty:

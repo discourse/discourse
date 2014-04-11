@@ -10,7 +10,7 @@
   border-top: 1px solid $primary_border_color;
   padding: 6px 0 3px;
   &:first-of-type {
-    border-top: none;
+    border-top: 0;
   }
 }
 
@@ -54,7 +54,7 @@ nav.post-controls {
 
 
 button {
-  border: none;
+  border: 0;
   font-size: 17px;
   padding: 8px 10px;
   vertical-align: top;

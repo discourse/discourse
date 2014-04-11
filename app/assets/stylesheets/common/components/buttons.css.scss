@@ -36,7 +36,7 @@
 // --------------------------------------------------
 
 .btn {
-  border: none;
+  border: 0;
   color: $primary_text_color;
   font-weight: normal;
   background: lighten($secondary_background_color, 73%);
@@ -68,7 +68,7 @@
 // --------------------------------------------------
 
 .btn-primary {
-  border: none;
+  border: 0;
   font-weight: normal;
   color: #fff;
   background: $btn-primary-background-color;

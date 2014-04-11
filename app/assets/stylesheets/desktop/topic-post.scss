@@ -46,7 +46,7 @@ h1 .topic-statuses .topic-status i {
   padding: 0;
 
   &:first-of-type {
-    border-top: none;
+    border-top: 0;
   }
 
 
@@ -141,7 +141,8 @@ nav.post-controls {
     padding: 8px 20px;
     margin-left: 10px;
 
-    &:hover {  color: $tertiary_text_color;
+    &:hover {
+      color: $tertiary_text_color;
       background: $emphasis_text_color;
     }
 
@@ -162,7 +163,7 @@ nav.post-controls {
     padding: 8px 10px;
     vertical-align: top;
     background: transparent;
-    border: none;
+    border: 0;
     margin-left: 3px;
     transition: all linear 0.15s;
     &:hover {
@@ -840,10 +841,19 @@ blockquote {
       max-width: 720px;
     }
   }
-  &.top.span14 {padding-left: 0;}
-  .topic-body, .topic-meta-data {border: none;}
-  .row {border-top: 1px solid $primary_border_color; padding-top: 7px;}
-  .reply:first-of-type .row {border-top: none;}
+  &.top.span14 {
+    padding-left: 0;
+  }
+  .topic-body, .topic-meta-data {
+    border: 0;
+  }
+  .row {
+    border-top: 1px solid $primary_border_color;
+    padding-top: 7px;
+  }
+  .reply:first-of-type .row {
+    border-top: 0;
+  }
 }
 
 .dropdown {
@@ -971,7 +981,7 @@ blockquote {
     }
   }
   .btn {
-    border: none;
+    border: 0;
     color: $tertiary_text_color;
     font-weight: normal;
     margin-bottom: 10px;

@@ -118,7 +118,7 @@ a:hover.reply-new {
   &.hidden {
     display: none;
   }
-  border: none;
+  border: 0;
   background-color: lighten($primary_text_color, 70%);
   color: lighten($primary_text_color, 35%);
   width: 130px;

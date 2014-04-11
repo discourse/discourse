@@ -150,7 +150,7 @@
   width: 200px;
   margin-top: 30px;
   .nav-stacked {
-    border-right: none;
+    border-right: 0;
   }
   li a.active {
     color: $tertiary_text_color;
@@ -767,7 +767,7 @@ table.api-keys {
       }
     }
     li:last-child {
-      border: none;
+      border: 0;
     }
   }
 

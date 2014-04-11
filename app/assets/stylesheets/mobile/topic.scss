@@ -70,7 +70,7 @@
   &.hidden {
     display: none;
   }
-  border: none;
+  border: 0;
   background-color: lighten($primary_background_color, 60%);
   color: $primary_text_color;
   width: 130px;

@@ -102,7 +102,7 @@
         border-top: 1px solid $tertiary_border_color;
       }
       &:hover {
-        border-bottom: none;
+        border-bottom: 0;
       }
     }
     [class^="fa fa-"] {
