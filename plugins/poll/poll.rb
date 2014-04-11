@@ -143,15 +143,17 @@ module ::PollPlugin
       return if is_closed?
 
       # Get the user's current vote.
-      vote = get_vote(user)
-      vote = nil unless details.keys.include? vote
+      DistributedMutex.new(details_key).synchronize do
+        vote = get_vote(user)
+        vote = nil unless details.keys.include? vote
 
-      new_details = details.dup
-      new_details[vote] -= 1 if vote
-      new_details[option] += 1
+        new_details = details.dup
+        new_details[vote] -= 1 if vote
+        new_details[option] += 1
 
-      ::PluginStore.set("poll", vote_key(user), option)
-      set_details! new_details
+        ::PluginStore.set("poll", vote_key(user), option)
+        set_details! new_details
+      end
     end
 
     def serialize(user)
