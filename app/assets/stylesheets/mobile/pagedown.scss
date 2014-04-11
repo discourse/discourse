@@ -26,7 +26,7 @@
   height: 20px;
   margin-right: 8px;
   margin-left: 5px;
-  background-color: silver;
+  background-color: #c0c0c0;
   display: inline-block;
   float: left;
 }
@@ -50,7 +50,7 @@
   background-image: none !important;
   background-position: 0 0;
   background-repeat: repeat;
-  background-color: white;
+  background-color: #fff;
   padding: 4px;
 }
 
@@ -113,12 +113,12 @@
 }
 
 .wmd-prompt-background {
-  background-color: black;
+  background-color: #000;
 }
 
 .wmd-prompt-dialog {
   border: 1px solid #999999;
-  background-color: whitesmoke;
+  background-color: #f5f5f5;
 }
 
 .wmd-prompt-dialog > div {
@@ -128,7 +128,7 @@
 
 .wmd-prompt-dialog > form > input[type="text"] {
   border: 1px solid #999999;
-  color: black;
+  color: #000;
 }
 
 .wmd-prompt-dialog > form > input[type="button"] {

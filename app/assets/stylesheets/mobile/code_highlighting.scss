@@ -36,19 +36,19 @@ pre {
     font-weight: bold;
   }
   .tag {
-    color: navy;
+    color: #000080;
     font-weight: normal;
     .title {
-      color: navy;
+      color: #000080;
       font-weight: normal;
     }
   }
   .rules .property, .django .keyword {
-    color: navy;
+    color: #000080;
     font-weight: normal;
   }
   .attribute, .variable, .lisp .body {
-    color: teal;
+    color: #008080;
   }
   .regexp {
     color: #009926;

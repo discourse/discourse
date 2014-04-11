@@ -37,8 +37,6 @@ linters:
     enabled: false
   SpaceBeforeBrace:
     allow_single_line_padding: true
-  ColorKeyword:
-    enabled: false
   DeclarationOrder:
     enabled: false
   IdWithExtraneousSelector:
