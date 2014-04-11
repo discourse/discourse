@@ -55,5 +55,3 @@ linters:
     enabled: false
   SpaceBetweenParens:
     enabled: false
-  FinalNewline:
-    enabled: false
