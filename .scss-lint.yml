@@ -6,7 +6,7 @@ exclude:
 
 linters:
   StringQuotes:
-    enabled: false
+    style: double_quotes
   Indentation:
     width: 2
   Comment:

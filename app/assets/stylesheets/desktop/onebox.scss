@@ -102,11 +102,11 @@ aside.onebox {
     }
   }
 
-  @include onebox-favicon('stackexchange', 'stackexchange');
-  @include onebox-favicon('twitterstatus', 'twitter');
-  @include onebox-favicon('wikipedia', 'wikipedia');
-  @include onebox-favicon('githubblob', 'github');
-  @include onebox-favicon('amazon', 'amazon');
+  @include onebox-favicon("stackexchange", "stackexchange");
+  @include onebox-favicon("twitterstatus", "twitter");
+  @include onebox-favicon("wikipedia", "wikipedia");
+  @include onebox-favicon("githubblob", "github");
+  @include onebox-favicon("amazon", "amazon");
 
 
   .onebox-body {
