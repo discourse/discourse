@@ -11,17 +11,20 @@ Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.OpenComposer, {
   actions: {
     loading: function() {
       var controller = this.controllerFor('discovery');
-      
+
+      // If we're already loading don't do anything
+      if (controller.get('loading')) { return; }
+
+      controller.set('loading', true);
       controller.set('scheduledSpinner', Ember.run.later(controller, function() {
-        this.set('loading', true);
+        this.set('loadingSpinner', true);
       },500));
     },
 
     loadingComplete: function() {
       var controller = this.controllerFor('discovery');
-
       Ember.run.cancel(controller.get('scheduledSpinner'));
-      controller.set('loading', false);
+      controller.setProperties({ loading: false, loadingSpinner: false });
     },
 
     didTransition: function() {

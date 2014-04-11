@@ -7,6 +7,7 @@
   @module Discourse
 **/
 Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
+  needs: ['discovery'],
   bulkSelectEnabled: false,
   selected: [],
 
@@ -24,6 +25,9 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
     refresh: function() {
       var filter = this.get('model.filter'),
           self = this;
+
+      // Don't refresh if we're still loading
+      if (this.get('controllers.discovery.loading')) { return; }
 
       this.send('loading');
       Discourse.TopicList.find(filter).then(function(list) {
