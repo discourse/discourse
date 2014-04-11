@@ -96,7 +96,7 @@ Discourse.Badge = Discourse.Model.extend({
       requestType = "PUT";
     }
 
-    return Discourse.ajax(url, {
+    return Discourse.ajaxUncaughtError(url, {
       type: requestType,
       data: {
         name: this.get('name'),
@@ -119,7 +119,7 @@ Discourse.Badge = Discourse.Model.extend({
   **/
   destroy: function() {
     if (this.get('newBadge')) return Ember.RSVP.resolve();
-    return Discourse.ajax("/admin/badges/" + this.get('id'), {
+    return Discourse.ajaxUncaughtError("/admin/badges/" + this.get('id'), {
       type: "DELETE"
     });
   }
@@ -168,7 +168,7 @@ Discourse.Badge.reopenClass({
     @returns {Promise} a promise that resolves to an array of `Discourse.Badge`
   **/
   findAll: function() {
-    return Discourse.ajax('/badges.json').then(function(badgesJson) {
+    return Discourse.ajaxUncaughtError('/badges.json').then(function(badgesJson) {
       return Discourse.Badge.createFromJson(badgesJson);
     });
   },
@@ -181,7 +181,7 @@ Discourse.Badge.reopenClass({
     @returns {Promise} a promise that resolves to a `Discourse.Badge`
   **/
   findById: function(id) {
-    return Discourse.ajax("/badges/" + id).then(function(badgeJson) {
+    return Discourse.ajaxUncaughtError("/badges/" + id).then(function(badgeJson) {
       return Discourse.Badge.createFromJson(badgeJson);
     });
   }

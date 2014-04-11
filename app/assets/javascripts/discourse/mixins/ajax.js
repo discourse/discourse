@@ -67,7 +67,7 @@ Discourse.Ajax = Em.Mixin.create({
 
     @method ajax
   **/
-  ajax: function() {
+  ajaxUncaughtError: function() {
     var url, args;
 
     if (arguments.length === 1) {

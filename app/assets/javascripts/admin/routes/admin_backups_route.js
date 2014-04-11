@@ -27,7 +27,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
 
   model: function() {
     return PreloadStore.getAndRemove("operations_status", function() {
-      return Discourse.ajax("/admin/backups/status.json");
+      return Discourse.ajaxUncaughtError("/admin/backups/status.json");
     }).then(function (status) {
       return Discourse.BackupStatus.create({
         isOperationRunning: status.is_operation_running,

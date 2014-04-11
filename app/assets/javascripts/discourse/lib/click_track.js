@@ -60,7 +60,7 @@ Discourse.ClickTrack = {
 
     // if they want to open in a new tab, do an AJAX request
     if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) {
-      Discourse.ajax("/clicks/track", {
+      Discourse.ajaxUncaughtError("/clicks/track", {
         data: {
           url: href,
           post_id: postId,
@@ -88,7 +88,7 @@ Discourse.ClickTrack = {
 
     // If we're on the same site, use the router and track via AJAX
     if (Discourse.URL.isInternal(href) && !$link.hasClass('attachment')) {
-      Discourse.ajax("/clicks/track", {
+      Discourse.ajaxUncaughtError("/clicks/track", {
         data: {
           url: href,
           post_id: postId,

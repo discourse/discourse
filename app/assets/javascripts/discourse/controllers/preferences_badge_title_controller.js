@@ -47,7 +47,7 @@ Discourse.PreferencesBadgeTitleController = Ember.ArrayController.extend({
       self.set('saved', false);
       self.set('saving', true);
 
-      Discourse.ajax("/users/" + self.get('user.username_lower') + "/preferences/badge_title", {
+      Discourse.ajaxUncaughtError("/users/" + self.get('user.username_lower') + "/preferences/badge_title", {
         type: "PUT",
         data: {
           user_badge_id: self.get('selectedUserBadgeId')

@@ -11,7 +11,7 @@ Discourse.AdminGroupsController = Ember.Controller.extend({
       var self = this;
 
       self.set('refreshingAutoGroups', true);
-      Discourse.ajax('/admin/groups/refresh_automatic_groups', {type: 'POST'}).then(function() {
+      Discourse.ajaxUncaughtError('/admin/groups/refresh_automatic_groups', {type: 'POST'}).then(function() {
         return Discourse.Group.findAll().then(function(groups) {
           self.set('model', groups);
           self.set('refreshingAutoGroups', false);

@@ -318,7 +318,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
 
   fetchConfirmationValue: function() {
     var createAccountController = this;
-    return Discourse.ajax('/users/hp.json').then(function (json) {
+    return Discourse.ajaxUncaughtError('/users/hp.json').then(function (json) {
       createAccountController.set('accountPasswordConfirm', json.value);
       createAccountController.set('accountChallenge', json.challenge.split("").reverse().join(""));
     });

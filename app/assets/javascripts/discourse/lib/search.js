@@ -31,7 +31,7 @@ Discourse.Search = {
       };
     }
 
-    return Discourse.ajax('/search', { data: data });
+    return Discourse.ajaxUncaughtError('/search', { data: data });
   }
 
 };

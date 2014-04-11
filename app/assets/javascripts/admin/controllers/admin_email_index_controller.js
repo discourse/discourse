@@ -37,7 +37,7 @@ Discourse.AdminEmailIndexController = Discourse.Controller.extend({
       });
 
       var self = this;
-      Discourse.ajax("/admin/email/test", {
+      Discourse.ajaxUncaughtError("/admin/email/test", {
         type: 'POST',
         data: { email_address: this.get('testEmailAddress') }
       }).then(function () {

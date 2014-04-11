@@ -32,7 +32,7 @@ var Poll = Discourse.Model.extend({
       opt.set('checked', opt.get('option') === option);
     });
 
-    return Discourse.ajax("/poll", {
+    return Discourse.ajaxUncaughtError("/poll", {
       type: "PUT",
       data: {post_id: this.get('post.id'), option: option}
     }).then(function(newJSON) {
@@ -73,7 +73,7 @@ var PollController = Discourse.Controller.extend({
 
     toggleClosePoll: function() {
       this.set('loading', true);
-      return Discourse.ajax("/poll/toggle_close", {
+      return Discourse.ajaxUncaughtError("/poll/toggle_close", {
         type: "PUT",
         data: {post_id: this.get('poll.post.id')}
       }).then(function(topicJson) {

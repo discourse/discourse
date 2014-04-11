@@ -65,7 +65,7 @@ Discourse.Post = Discourse.Model.extend({
   postElementId: Discourse.computed.fmt('post_number', 'post_%@'),
 
   bookmarkedChanged: function() {
-    Discourse.ajax("/posts/" + this.get('id') + "/bookmark", {
+    Discourse.ajaxUncaughtError("/posts/" + this.get('id') + "/bookmark", {
       type: 'PUT',
       data: {
         bookmarked: this.get('bookmarked') ? true : false
@@ -124,7 +124,7 @@ Discourse.Post = Discourse.Model.extend({
     var self = this;
     if (!this.get('newPost')) {
       // We're updating a post
-      return Discourse.ajax("/posts/" + (this.get('id')), {
+      return Discourse.ajaxUncaughtError("/posts/" + (this.get('id')), {
         type: 'PUT',
         dataType: 'json',
         data: {
@@ -163,7 +163,7 @@ Discourse.Post = Discourse.Model.extend({
         Ember.keys(metaData).forEach(function(key) { data.meta_data[key] = metaData.get(key); });
       }
 
-      return Discourse.ajax("/posts", {
+      return Discourse.ajaxUncaughtError("/posts", {
         type: 'POST',
         data: data
       }).then(function(result) {
@@ -183,7 +183,7 @@ Discourse.Post = Discourse.Model.extend({
   **/
   expand: function() {
     var self = this;
-    return Discourse.ajax("/posts/" + this.get('id') + "/expand-embed").then(function(post) {
+    return Discourse.ajaxUncaughtError("/posts/" + this.get('id') + "/expand-embed").then(function(post) {
       self.set('cooked', "<section class='expanded-embed'>" + post.cooked + "</section>" );
     });
   },
@@ -202,7 +202,7 @@ Discourse.Post = Discourse.Model.extend({
       can_delete: false
     });
 
-    return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data){
+    return Discourse.ajaxUncaughtError("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data){
       post.setProperties({
         cooked: data.cooked,
         raw: data.raw,
@@ -270,7 +270,7 @@ Discourse.Post = Discourse.Model.extend({
   **/
   destroy: function(deletedBy) {
     this.setDeletedState(deletedBy);
-    return Discourse.ajax("/posts/" + (this.get('id')), { type: 'DELETE' });
+    return Discourse.ajaxUncaughtError("/posts/" + (this.get('id')), { type: 'DELETE' });
   },
 
   /**
@@ -332,7 +332,7 @@ Discourse.Post = Discourse.Model.extend({
     this.set('replies', []);
 
     var parent = this;
-    return Discourse.ajax("/posts/" + (this.get('id')) + "/replies").then(function(loaded) {
+    return Discourse.ajaxUncaughtError("/posts/" + (this.get('id')) + "/replies").then(function(loaded) {
       var replies = parent.get('replies');
       _.each(loaded,function(reply) {
         var post = Discourse.Post.create(reply);
@@ -389,7 +389,7 @@ Discourse.Post.reopenClass({
   },
 
   deleteMany: function(selectedPosts, selectedReplies) {
-    return Discourse.ajax("/posts/destroy_many", {
+    return Discourse.ajaxUncaughtError("/posts/destroy_many", {
       type: 'DELETE',
       data: {
         post_ids: selectedPosts.map(function(p) { return p.get('id'); }),
@@ -399,20 +399,20 @@ Discourse.Post.reopenClass({
   },
 
   loadRevision: function(postId, version) {
-    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function (result) {
+    return Discourse.ajaxUncaughtError("/posts/" + postId + "/revisions/" + version + ".json").then(function (result) {
       return Em.Object.create(result);
     });
   },
 
   loadQuote: function(postId) {
-    return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
+    return Discourse.ajaxUncaughtError("/posts/" + postId + ".json").then(function (result) {
       var post = Discourse.Post.create(result);
       return Discourse.Quote.build(post, post.get('raw'));
     });
   },
 
   load: function(postId) {
-    return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
+    return Discourse.ajaxUncaughtError("/posts/" + postId + ".json").then(function (result) {
       return Discourse.Post.create(result);
     });
   }

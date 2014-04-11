@@ -10,7 +10,7 @@ var cacheTopicId = null;
 var cacheTime = null;
 
 var debouncedSearch = Discourse.debouncePromise(function(term, topicId, include_groups) {
-  return Discourse.ajax('/users/search/users', {
+  return Discourse.ajaxUncaughtError('/users/search/users', {
     data: {
       term: term,
       topic_id: topicId,

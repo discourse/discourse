@@ -67,7 +67,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
     // Create our post action
     var actionSummary = this;
 
-    return Discourse.ajax("/post_actions", {
+    return Discourse.ajaxUncaughtError("/post_actions", {
       type: 'POST',
       data: {
         id: this.get('flagTopic') ? this.get('flagTopic.id') : this.get('post.id'),
@@ -88,7 +88,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
     this.removeAction();
 
     // Remove our post action
-    return Discourse.ajax("/post_actions/" + (this.get('post.id')), {
+    return Discourse.ajaxUncaughtError("/post_actions/" + (this.get('post.id')), {
       type: 'DELETE',
       data: {
         post_action_type_id: this.get('id')
@@ -98,7 +98,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   clearFlags: function() {
     var actionSummary = this;
-    return Discourse.ajax("/post_actions/clear_flags", {
+    return Discourse.ajaxUncaughtError("/post_actions/clear_flags", {
       type: "POST",
       data: {
         post_action_type_id: this.get('id'),
@@ -112,7 +112,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   loadUsers: function() {
     var actionSummary = this;
-    Discourse.ajax("/post_actions/users", {
+    Discourse.ajaxUncaughtError("/post_actions/users", {
       data: {
         id: this.get('post.id'),
         post_action_type_id: this.get('id')

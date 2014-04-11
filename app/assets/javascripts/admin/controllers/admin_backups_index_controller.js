@@ -65,7 +65,7 @@ Discourse.AdminBackupsIndexController = Ember.ArrayController.extend({
   },
 
   _toggleReadOnlyMode: function(enable) {
-    Discourse.ajax("/admin/backups/readonly", {
+    Discourse.ajaxUncaughtError("/admin/backups/readonly", {
       type: "PUT",
       data: { enable: enable }
     }).then(function() {

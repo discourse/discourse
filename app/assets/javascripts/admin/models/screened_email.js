@@ -15,7 +15,7 @@ Discourse.ScreenedEmail = Discourse.Model.extend({
 
 Discourse.ScreenedEmail.reopenClass({
   findAll: function() {
-    return Discourse.ajax("/admin/logs/screened_emails.json").then(function(screened_emails) {
+    return Discourse.ajaxUncaughtError("/admin/logs/screened_emails.json").then(function(screened_emails) {
       return screened_emails.map(function(b) {
         return Discourse.ScreenedEmail.create(b);
       });

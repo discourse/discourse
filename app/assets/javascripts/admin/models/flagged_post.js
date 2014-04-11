@@ -76,22 +76,22 @@ Discourse.FlaggedPost = Discourse.Post.extend({
 
   deletePost: function() {
     if (this.get('post_number') === 1) {
-      return Discourse.ajax('/t/' + this.topic_id, { type: 'DELETE', cache: false });
+      return Discourse.ajaxUncaughtError('/t/' + this.topic_id, { type: 'DELETE', cache: false });
     } else {
-      return Discourse.ajax('/posts/' + this.id, { type: 'DELETE', cache: false });
+      return Discourse.ajaxUncaughtError('/posts/' + this.id, { type: 'DELETE', cache: false });
     }
   },
 
   disagreeFlags: function() {
-    return Discourse.ajax('/admin/flags/disagree/' + this.id, { type: 'POST', cache: false });
+    return Discourse.ajaxUncaughtError('/admin/flags/disagree/' + this.id, { type: 'POST', cache: false });
   },
 
   deferFlags: function() {
-    return Discourse.ajax('/admin/flags/defer/' + this.id, { type: 'POST', cache: false });
+    return Discourse.ajaxUncaughtError('/admin/flags/defer/' + this.id, { type: 'POST', cache: false });
   },
 
   agreeFlags: function() {
-    return Discourse.ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false });
+    return Discourse.ajaxUncaughtError('/admin/flags/agree/' + this.id, { type: 'POST', cache: false });
   },
 
   postHidden: Em.computed.alias('hidden'),
@@ -118,7 +118,7 @@ Discourse.FlaggedPost.reopenClass({
 
     var result = Em.A();
     result.set('loading', true);
-    return Discourse.ajax('/admin/flags/' + filter + '.json?offset=' + offset).then(function(data) {
+    return Discourse.ajaxUncaughtError('/admin/flags/' + filter + '.json?offset=' + offset).then(function(data) {
       var userLookup = {};
       _.each(data.users,function(user) {
         userLookup[user.id] = Discourse.AdminUser.create(user);
