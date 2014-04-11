@@ -1,11 +1,14 @@
 exclude:
+  - "app/assets/stylesheets/common/foundation/**"
+  - "app/assets/stylesheets/desktop/magnific-popup.scss"
+  - "app/assets/stylesheets/mobile/magnific-popup.scss"
   - "app/assets/stylesheets/vendor/**"
 
 linters:
   StringQuotes:
     enabled: false
   Indentation:
-    enabled: false
+    width: 2
   Comment:
     enabled: false
   LeadingZero:

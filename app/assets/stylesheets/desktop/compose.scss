@@ -252,7 +252,7 @@
       }
       input#reply-title {
         width: 400px;
-                color: $primary_text_color;
+        color: $primary_text_color;
 
       }
       .wmd-controls {
@@ -360,10 +360,10 @@
     vertical-align: top;
     margin-top: 8px;
     background: lighten($secondary_background_color, 60%);
-  &:hover {
-    color: $tertiary_text_color;
-    background: lighten($secondary_background_color, 35%);
-  }
+    &:hover {
+      color: $tertiary_text_color;
+      background: lighten($secondary_background_color, 35%);
+    }
   }
   .title-input .popup-tip {
     width: 300px;

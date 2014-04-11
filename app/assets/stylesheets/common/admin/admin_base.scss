@@ -451,9 +451,9 @@ section.details {
     }
   }
   .action {
-     button { margin: 4px; }
-     text-align: right;
-     padding-bottom: 20px;
+    button { margin: 4px; }
+    text-align: right;
+    padding-bottom: 20px;
   }
 }
 
@@ -735,7 +735,7 @@ table.api-keys {
       line-height: 1.0em;
       padding: 6px 8px;
       border-bottom: solid 1px $primary_border_color;
-    background-color: lighten($secondary_background_color, 76%);
+      background-color: lighten($secondary_background_color, 76%);
       .left {
         float: left;
       }

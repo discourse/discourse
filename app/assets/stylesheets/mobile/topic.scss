@@ -108,7 +108,7 @@
     &:disabled {
 
       cursor: default;
-    color: lighten($primary_text_color, 35%);
+      color: lighten($primary_text_color, 35%);
     }
   }
   h4 {

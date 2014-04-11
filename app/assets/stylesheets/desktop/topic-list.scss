@@ -155,9 +155,9 @@
     }
   }
 
-   @include small-width {
+  @include small-width {
     .main-link {
-     max-width: 300px;
+      max-width: 300px;
 
     }
 

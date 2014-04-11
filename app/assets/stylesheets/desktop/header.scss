@@ -102,7 +102,7 @@
         border-top: 1px solid $tertiary_border_color;
       }
       &:hover {
-      border-bottom: none;
+        border-bottom: none;
       }
     }
     [class^="fa fa-"] {
@@ -235,7 +235,7 @@
   &#user-dropdown {
     width: 118px;
     .user-dropdown-links {
-    text-align: right;
+      text-align: right;
 
     }
   }

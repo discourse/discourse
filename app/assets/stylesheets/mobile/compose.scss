@@ -6,11 +6,11 @@
 }
 
 .composer-popup-container {
-display: none;
+  display: none;
 }
 
 .composer-popup {
-display: none;
+  display: none;
 }
 
 .autocomplete {
@@ -121,8 +121,8 @@ display: none;
     border-top: 1px solid $primary_border_color;
     .draft-text {
       display: block;
-          position: absolute;
-          margin-right: 40px;
+      position: absolute;
+      margin-right: 40px;
     }
     .toggler {
       &:before {
