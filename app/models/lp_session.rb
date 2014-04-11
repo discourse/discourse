@@ -5,8 +5,7 @@ class LpSession
     def lp_user_id_from_cookie(cookies)
       cookie = cookies[SESSION_COOKIE_NAME]
       if cookie.present?
-        # need to decrypt and verify session cookie
-        # to check if use is logged in on lessonplanet.com ain site.
+        # need to decrypt to get the contents
         unescaped_content = URI.unescape(cookie)
         secret_key_base   = ENV['SECRET_KEY_BASE']
         key_generator     = ActiveSupport::KeyGenerator.new(secret_key_base, iterations: 1000)
