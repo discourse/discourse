@@ -28,6 +28,7 @@
 
   .filename {
     margin: 5px;
+
     &:before {
       font-family: "FontAwesome";
       content: "\F03E";
@@ -46,6 +47,7 @@
     position: absolute;
     bottom: 4px;
     right: 7px;
+
     &:before {
       font-family: "FontAwesome";
       content: "\F065";

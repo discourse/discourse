@@ -19,24 +19,31 @@
   width: 240px;
   background-color: $primary_background_color;
   border: 1px solid $primary_border_color;
+
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
+
     li {
       border-bottom: 1px solid $primary_border_color;
+
       a[href] {
         padding: 5px;
         display: block;
+
         span.username {
           color: lighten($primary_text_color, 20%);
         }
+
         span.name {
           font-size: 11px;
         }
+
         &.selected {
           background-color: lighten($secondary_background_color, 60%);
         }
+
         @include hover {
           background-color: lighten($secondary_background_color, 60%);
           text-decoration: none;
@@ -47,27 +54,6 @@
 }
 
 #reply-control {
-  .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
-    position: absolute;
-    bottom: -37px;
-    margin-top: 0;
-  }
-  .toggle-preview, .mobile-file-upload {
-    right: 5px;
-    text-decoration: underline;
-  }
-  #file-uploading {
-    left: 51%;
-    font-size: 12px;
-    color: darken($tertiary_text_color, 40%);
-  }
-  #draft-status {
-    right: 70px;
-    color: lighten($primary_text_color, 60%);
-    &.flash {
-      color: $warning_text_color;
-    }
-  }
   @include transition(height 0.4s ease);
   width: 100%;
   z-index: 1039;
@@ -76,6 +62,33 @@
   bottom: 0;
   font-size: 14px;
   position: fixed;
+
+  .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
+    position: absolute;
+    bottom: -37px;
+    margin-top: 0;
+  }
+
+  .toggle-preview, .mobile-file-upload {
+    right: 5px;
+    text-decoration: underline;
+  }
+
+  #file-uploading {
+    left: 51%;
+    font-size: 12px;
+    color: darken($tertiary_text_color, 40%);
+  }
+
+  #draft-status {
+    right: 70px;
+    color: lighten($primary_text_color, 60%);
+
+    &.flash {
+      color: $warning_text_color;
+    }
+  }
+
   .toggler {
     display: block;
     width: 13px;
@@ -85,45 +98,56 @@
     font-size: 15px;
     color: lighten($primary_text_color, 35%);
     text-decoration: none;
+
     &:before {
       font-family: "FontAwesome";
       content: "\f078";
     }
   }
+
   a.cancel {
     text-decoration: underline;
     padding-left: 7px;
     float: left;
     margin-top: 6px;
   }
+
   .control-row {
     margin: 0 0 0 5px;
   }
+
   .saving-text {
     display: none;
   }
+
   .draft-text {
     display: none;
   }
+
   .grippie {
     display: none;
   }
+
   // The various states
   &.open {
     height: 300px;
   }
+
   &.closed {
     height: 0 !important;
   }
+
   &.draft {
     height: 60px !important;
     cursor: pointer;
     border-top: 1px solid $primary_border_color;
+
     .draft-text {
       display: block;
       position: absolute;
       margin-right: 40px;
     }
+
     .toggler {
       &:before {
         font-family: "FontAwesome";
@@ -131,12 +155,15 @@
       }
     }
   }
+
   &.saving {
     height: 40px !important;
     border-top: 1px solid $primary_border_color;
+
     .saving-text {
       display: block;
     }
+
     .toggler {
       &:before {
         font-family: "FontAwesome";
@@ -144,6 +171,7 @@
       }
     }
   }
+
   .spinner {
     position: absolute;
     @include fades-in(0.25s);
@@ -162,12 +190,14 @@
       position: 17px 17px;
     };
   }
+
   &.loading {
     .spinner {
       z-index: 1000;
       @include visible;
     }
   }
+
   .reply-area {
     max-width: 1500px;
     margin-left: auto;
@@ -181,32 +211,39 @@
     &.open {
       height: 280px;
     }
+
     .contents {
       input#reply-title {
         padding: 7px 10px;
         margin: 6px 10px 0 0;
       }
+
       .wmd-controls {
         @include transition(top 0.3s ease);
         top: 120px;
       }
     }
   }
+
   .contents {
     padding: 10px 10px 0;
     min-width: 1280px;
+
     .form-element {
       .chzn-container {
         width: 400px;
         margin-top: 6px;
+
         a {
           padding-top: 4px;
           height: 28px;
         }
+
         b {
           margin-top: 4px;
         }
       }
+
       .category-combobox {
         width: 430px;
         @include medium-width { width: 285px; }
@@ -218,6 +255,7 @@
           @include medium-width { width: 283px; }
           @include small-width { width: 218px; }
         }
+
         .chzn-search input {
           width: 378px;
           @include medium-width { width: 233px; }
@@ -225,15 +263,19 @@
         }
       }
     }
+
     #reply-title {
       margin-right: 10px;
+
       &:disabled {
         background-color: lighten($secondary_background_color, 60%);
       }
     }
+
     #wmd-input:disabled {
       background-color: lighten($secondary_background_color, 60%);
     }
+
     #wmd-input, #wmd-preview {
       color: $primary_text_color;
 
@@ -246,53 +288,62 @@
         max-width: 100%;
       }
     }
+
     #wmd-preview {
       border: 1px dashed $primary_border_color;
       overflow: auto;
       visibility: visible;
+
       p {
         margin-top: 0;
       }
+
       &.hidden {
         width: 0;
         visibility: hidden;
       }
     }
+
     #wmd-input {
       bottom: 35px;
     }
+
     .submit-panel {
       position: absolute;
       display: block;
       bottom: 2px;
     }
   }
+
   .category-input {
     display: inline;
   }
+
   .title-input .popup-tip {
     width: 240px;
     right: 5px;
   }
+
   .category-input .popup-tip {
     width: 240px;
     right: 5px;
   }
+
   .textarea-wrapper .popup-tip {
     top: 28px;
   }
+
   button.btn.no-text {
     margin: 7px 0 0 5px;
     position: absolute;
   }
 }
 
-
-
 div.ac-wrap.disabled {
   input {
     display: none;
   }
+
   .item a {
     display: none;
   }
@@ -303,10 +354,12 @@ div.ac-wrap {
   border: 1px solid $primary_border_color;
   padding: 5px 10px;
   @include border-radius-all(3px);
+
   div.item {
     float: left;
     margin-right: 10px;
     margin-bottom: 5px;
+
     span {
       padding-left: 5px;
       height: 22px;
@@ -314,6 +367,7 @@ div.ac-wrap {
       line-height: 22px;
       vertical-align: bottom;
     }
+
     a {
       margin-left: 4px;
       font-size: 10px;
@@ -323,6 +377,7 @@ div.ac-wrap {
       width: 10px;
       display: inline-block;
       border: 1px solid rgba(255, 255, 255, 0);
+
       &:hover {
         background-color: $warning_background_color;
         border: 1px solid $warning_border_color;
@@ -331,6 +386,7 @@ div.ac-wrap {
       }
     }
   }
+
   input[type="text"] {
     float: left;
     margin-top: 5px;
@@ -354,21 +410,22 @@ div.ac-wrap {
 }
 
 #reply-control {
-
-
   &.hide-preview {
     .wmd-controls {
       #wmd-input {
         width: 100%;
       }
+
       .preview-wrapper {
         display: none;
       }
+
       .textarea-wrapper {
         width: 100%;
       }
     }
   }
+
   .wmd-controls {
     left: 10px;
     right: 10px;
@@ -397,10 +454,12 @@ div.ac-wrap {
       h1, h2, h3, h4, h5, h6 {
         margin: 30px 0 10px;
       }
+
       p {
         margin-top: 19px;
       }
     }
+
     #wmd-input, #wmd-preview-scroller {
       position: absolute;
       left: 0;
@@ -414,16 +473,19 @@ div.ac-wrap {
       transition: none;
       font-size: 16px;
     }
+
     #wmd-preview-scroller {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-weight: normal;
       overflow: scroll;
       visibility: hidden;
+
       .marker, .caret {
         display: inline-block;
         vertical-align: top;
       }
     }
+
     .textarea-wrapper, .preview-wrapper {
       position: relative;
       @include box-sizing(border-box);
@@ -433,19 +495,23 @@ div.ac-wrap {
       padding: 0;
       width: 50%;
     }
+
     .textarea-wrapper {
       padding-right: 5px;
       float: left;
+
       .popup-tip {
         margin-top: 3px;
         right: 4px;
       }
     }
+
     .preview-wrapper {
       padding-left: 5px;
       float: right;
     }
   }
+
   #wmd-button-bar {
     top: 0;
     position: absolute;
@@ -475,11 +541,13 @@ div.ac-wrap {
   form {
     margin: 0;
   }
+
   .auto-close-fields {
     i.fa-clock-o {
       font-size: 16px;
       line-height: 8px;
     }
+
     input {
       margin: 0;
     }

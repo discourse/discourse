@@ -14,7 +14,10 @@ article.post {
     border-left: 5px solid $primary_border_color;
     background-color: lighten($secondary_background_color, 76%);
     padding: 10px 10px 0 12px;
-    .avatar { margin-right: 7px; }
+
+    .avatar {
+      margin-right: 7px;
+    }
   }
 
   ol, ul {
@@ -26,6 +29,7 @@ article.post {
     margin: 0 0 10px;
     background-color: $quote-background;
     border-left: 5px solid $primary_border_color;
+
     p {
       margin: 0 0 10px;
     }
@@ -42,7 +46,6 @@ article.post {
     padding: 20px 0;
     width: 92px;
     float: left;
-
     text-align: center;
 
     h3 {
@@ -70,6 +73,7 @@ article.post {
     img {
       max-width: 100%;
     }
+
     p {
       margin: 0 0 1em;
     }

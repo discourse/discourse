@@ -15,8 +15,6 @@ linters:
       - "test/stylesheets/test_helper.css"
   LeadingZero:
     enabled: false
-  EmptyLineBetweenBlocks:
-    enabled: false
   SelectorDepth:
     enabled: false
   CapitalizationInSelector:
@@ -33,8 +31,6 @@ linters:
       - "app/assets/stylesheets/mobile/topic-list.scss"
   SingleLinePerSelector:
     enabled: false
-  SpaceBeforeBrace:
-    allow_single_line_padding: true
   DeclarationOrder:
     enabled: false
   IdWithExtraneousSelector:

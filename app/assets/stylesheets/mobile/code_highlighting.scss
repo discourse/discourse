@@ -10,75 +10,96 @@ pre {
     font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
     max-height: 500px;
   }
+
   .comment, .template_comment, .diff .header, .javadoc {
     color: #998;
     font-style: italic;
   }
+
   .keyword, .css .keyword, .winutils, .javascript .title, .nginx .title, .subst, .request, .status {
     color: #333;
     font-weight: bold;
   }
+
   .number, .hexcolor, .ruby .constant {
     color: #099;
   }
+
   .string, .tag .value, .phpdoc, .tex .formula {
     color: #d14;
   }
+
   .title, .id {
     color: #900;
     font-weight: bold;
   }
+
   .javascript .title, .lisp .title, .clojure .title, .subst {
     font-weight: normal;
   }
+
   .class .title, .haskell .type, .vhdl .literal, .tex .command {
     color: #458;
     font-weight: bold;
   }
+
   .tag {
     color: #000080;
     font-weight: normal;
+
     .title {
       color: #000080;
       font-weight: normal;
     }
   }
+
   .rules .property, .django .keyword {
     color: #000080;
     font-weight: normal;
   }
+
   .attribute, .variable, .lisp .body {
     color: #008080;
   }
+
   .regexp {
     color: #009926;
   }
+
   .class {
     color: #458;
     font-weight: bold;
   }
+
   .symbol, .ruby .string, .lisp .keyword, .tex .special, .input_number {
     color: #990073;
   }
+
   .built_in, .lisp .title, .clojure .built_in {
     color: #0086b3;
   }
+
   .preprocessor, .pi, .doctype, .shebang, .cdata {
     color: #999;
     font-weight: bold;
   }
+
   .deletion {
     background: #fdd;
   }
+
   .addition {
     background: #dfd;
   }
+
   .diff .change {
     background: #0086b3;
   }
+
   .chunk {
     color: #aaa;
   }
+
   .tex .formula {
     opacity: 0.5;
   }

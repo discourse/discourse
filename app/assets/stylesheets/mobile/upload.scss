@@ -10,10 +10,12 @@
   input[type="text"] {
     width: 520px;
   }
+
   input[type="file"] {
     font-size: 14px;
     line-height: 18px;
   }
+
   .description {
     color: lighten($primary_text_color, 35%);
   }

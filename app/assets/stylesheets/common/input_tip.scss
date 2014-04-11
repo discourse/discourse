@@ -8,14 +8,17 @@
   z-index: 101;
   @include border-radius-all(2px);
   border: solid 1px #955;
+
   &.bad {
     background-color: #b66;
     color: #fff;
     box-shadow: 1px 1px 5px #777, inset 0 0 9px #b55;
   }
+
   &.hide, &.good {
     display: none;
   }
+
   .close {
     float: right;
     color: $primary_text_color;
@@ -24,6 +27,7 @@
     margin-left: 4px;
     cursor: pointer;
   }
+
   .close:hover {
     opacity: 1.0;
   }

@@ -11,6 +11,7 @@ a.loading-onebox {
 
 .onebox-result {
   font-size: 14px;
+
   > .source {
     margin-bottom: 10px;
     margin-right: 10px;
@@ -19,41 +20,51 @@ a.loading-onebox {
     color: $primary_text_color;
     position: relative;
     border-bottom: 1px solid $primary_border_color;
+
     .info {
+      background-color: $primary_background_color;
+      font-size: 14px;
+      position: absolute;
+
       a {
         color: $primary_text_color;
         text-decoration: none;
       }
-      background-color: $primary_background_color;
-      position: absolute;
-      font-size: 14px;
+
       img.favicon {
         margin-right: 3px;
       }
     }
   }
+
   .onebox-result-body {
     padding-top: 5px;
     font-family: Georgia, Times, "Times New Roman", serif;
+
     img {
       max-width: 100px;
       max-height: 80%;
       float: left;
       margin-right: 10px;
     }
+
     h3, h4 {
       margin: 0 !important;
     }
+
     img.thumbnail {
       max-width: 25%;
       height: auto;
     }
+
     code {
       max-height: 400px;
     }
+
     .metrics {
       clear: both;
       padding-bottom: 25px;
+
       .metric {
         display: inline-block;
         padding-left: 33px;
@@ -70,6 +81,7 @@ a.loading-onebox {
       float: none;
       margin-right: 7px;
     }
+
     img.popcorn {
       float: none;
       margin-left: 20px;

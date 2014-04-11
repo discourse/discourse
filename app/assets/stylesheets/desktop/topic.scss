@@ -13,12 +13,14 @@
   @include unselectable;
   clear: both;
   text-align: right;
+
   .post-action {
     display: inline-block;
     margin-left: 10px;
     margin-top: 10px;
   }
 }
+
 .post-menu-area {
   margin-bottom: 10px;
   margin-top: 20px;
@@ -28,49 +30,83 @@
   display: inline-block;
 }
 
-.edits {margin-right: 5px;}
+.edits {
+  margin-right: 5px;
+}
 
 #topic-title {
   z-index: 1000;
   padding: 14px 0 8px;
   margin-bottom: 20px;
+
   .star {
     font-size: 20px;
     margin-top: 6px;
     margin-right: 6px;
   }
-  #edit-title { width: 500px; }
+
+  #edit-title {
+    width: 500px;
+  }
+
   .category-combobox {
     width: 250px;
+
     .chzn-drop {
       left: -9000px;
       width: 248px;
     }
+
     .chzn-search input {
       width: 198px;
     }
   }
+
   h1 {
     font-size: 1.8em;
     margin: 0;
     line-height: 1.2em;
     overflow: hidden;
-    a {color: $primary_text_color;}
-    a.badge-category { vertical-align: top; margin-top: 4px; }
-    a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
+
+    a {
+      color: $primary_text_color;
+    }
+
+    a.badge-category {
+      vertical-align: top;
+      margin-top: 4px;
+    }
+
+    a.edit-topic {
+      font-size: 15px;
+      position: absolute;
+      margin-left: 8px; }
   }
+
   .topic-statuses {
     margin-top: -2px;
-    .fa-thumb-tack { padding-left: 3px;
- }
 
+    .fa-thumb-tack {
+      padding-left: 3px;
+    }
   }
-  .chzn-container { vertical-align: middle; }
-  .private-message-glyph { display: none; }
+
+  .chzn-container {
+    vertical-align: middle;
+  }
+
+  .private-message-glyph {
+    display: none;
+  }
 }
 
-.private-message-glyph { color: lighten($primary_text_color, 60%); }
-.private_message #topic-title .private-message-glyph { display: inline; }
+.private-message-glyph {
+  color: lighten($primary_text_color, 60%);
+}
+
+.private_message #topic-title .private-message-glyph {
+  display: inline;
+}
 
 #topic-closing-info {
   border-top: 1px solid $primary_border_color;
@@ -103,9 +139,12 @@
 a.reply-new {
   position: absolute;
   color: lighten($primary_text_color, 35%);
-  margin-top: -2px;}
+  margin-top: -2px;
+}
+
 a:hover.reply-new {
   color: $link-color;
+
   i {background: $emphasis_background_color;
     border: 1px solid $emphasis_border_color;
     padding: 2px 4px;
@@ -115,14 +154,15 @@ a:hover.reply-new {
 #topic-progress {
   position: relative;
   left: 345px;
-  &.hidden {
-    display: none;
-  }
   border: 0;
   background-color: lighten($primary_text_color, 70%);
   color: lighten($primary_text_color, 35%);
   width: 130px;
   height: 34px;
+
+  &.hidden {
+    display: none;
+  }
 
   .nums {
     position: relative;
@@ -131,6 +171,7 @@ a:hover.reply-new {
     text-align: center;
     z-index: 1;
   }
+
   button {
     padding: 3px 1px 0 0;
     cursor: pointer;
@@ -145,32 +186,35 @@ a:hover.reply-new {
     text-align: left;
     height: 30px;
     margin: 0;
+
     i {
       font-size: 18px;
     }
+
     &:nth-of-type(2) {
       right: 4px;
       left: auto;
       text-align: right;
     }
+
     &:disabled {
       cursor: default;
       color: lighten($primary_text_color, 35%);
     }
   }
+
   h4 {
     display: inline;
     font-size: 18px;
     line-height: 15px;
   }
+
   .bg {
     position: absolute;
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid  $primary_border_color;
-    // background-color: #d4eaf4;
-    // background-color: #C5E8F7;
+    border-right: 1px solid $primary_border_color;
     background-color: $success_background_color;
     transition: width .75s;
   }
@@ -179,21 +223,27 @@ a:hover.reply-new {
 #topic-progress-wrapper.docked {
   position: absolute;
   bottom: -70px;
-
 }
 
 #suggested-topics .topic-statuses .topic-status {
   padding: 0;
+
   i {
     font-size: 15px;
   }
 }
 
-.heatmap-high {color: $heatmap-high !important;}
-.heatmap-med {color: $heatmap-med !important;}
-.heatmap-low {color: $heatmap-low !important;}
+.heatmap-high {
+  color: $heatmap-high !important;
+}
 
+.heatmap-med {
+  color: $heatmap-med !important;
+}
 
+.heatmap-low {
+  color: $heatmap-low !important;
+}
 
 #topic-filter {
   background-color: $highlight_background_color;
@@ -211,6 +261,7 @@ code, kbd, pre, samp {
   font-family: monospace, serif;
   font-size: 1em;
 }
+
 pre {
   code {
     white-space: pre-wrap;
@@ -221,32 +272,40 @@ pre {
     max-height: 500px;
   }
 }
+
 q {
   quotes: "\201C" "\201D" "\2018" "\2019";
 }
+
 small {
   font-size: 80%;
 }
+
 sub, sup {
   font-size: 75%;
   line-height: 0;
   position: relative;
   vertical-align: baseline;
 }
+
 sup {
   top: -0.5em;
 }
+
 sub {
   bottom: -0.25em;
 }
+
 figure {
   margin: 0;
 }
+
 fieldset {
   border: 1px solid $primary_border_color;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em;
 }
+
 legend {
   border: 0;
   padding: 0;

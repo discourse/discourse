@@ -4,13 +4,14 @@
   .dropdown-menu {
     z-index: 2050;
   }
+
   .popover {
     z-index: 2060;
   }
+
   .tooltip {
     z-index: 2070;
   }
-
 }
 
 .modal-open #main {
@@ -25,6 +26,7 @@
   left: 0;
   z-index: 1040;
   background-color: $secondary_background_color;
+
   &.fade {
     opacity: 0;
   }
@@ -41,11 +43,13 @@
   width: 100%;
   height: 100%;
 }
+
 .modal-middle-container {
   margin-top: 10%;
   max-width: 100%;
   margin-bottom: 30px; // For iOS Safari issues
 }
+
 .modal-inner-container {
   max-width: 100%;
   margin: 0 auto;
@@ -57,6 +61,7 @@
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   background-clip: padding-box;
 }
+
 .modal {
   position: fixed;
   top: 0;
@@ -65,9 +70,6 @@
   z-index: 1050;
   overflow: auto;
 }
-
-
-
 
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
 .bootbox.modal {
@@ -91,17 +93,21 @@
   transition: opacity .3s linear, top .3s ease-out;
   top: -25%;
 }
+
 .modal.fade.in {
   top: 50%;
 }
+
 .modal-body {
   overflow-y: auto;
   max-height: 400px;
   padding: 10px 15px;
 }
+
 .modal-form {
   margin-bottom: 0;
 }
+
 .modal-footer {
   margin: 0 15px;
   padding: 14px 0 15px;
@@ -109,29 +115,35 @@
   @include border-radius-all(0 0 6px 6px);
   @include box-shadow (inset 0 1px 0 rgba($primary_shadow_color, .8));
 }
+
 .modal-footer:before,
 .modal-footer:after {
   display: table;
   content: "";
 }
+
 .modal-footer:after {
   clear: both;
 }
+
 // an ember metamorph is inserted between btn's sometimes, breaking this rule, but only on mobile for some reason:
 // .modal-footer .btn + .btn {
 .modal-footer .btn {
   margin-right: 5px;
   margin-bottom: 5px;
 }
+
 .modal-footer .btn-group .btn + .btn {
   margin-left: -1px;
 }
+
 .modal-header {
   h3 {
     color: $nav-pills-background-color-active;
     font-size: 15px;
     padding: 0 0 0 20px;
   }
+
   .close {
     float: right;
     font-size: 24px;
@@ -147,34 +159,41 @@
   .nav {
     padding: 10px 30px;
     background-color: lighten($secondary_background_color, 76%);
+    border-bottom: 1px solid $primary_border_color;
+
     li > a {
       font-size: 14px;
     }
-    border-bottom: 1px solid $primary_border_color;
-
   }
+
   &.hidden {
     display: none;
   }
+
   .modal-body {
     textarea {
       width: 99%;
       height: 80px;
     }
+
     label {
       color: $secondary_text_color;
     }
+
     p {
       color: $primary_text_color;
       font-size: 13px;
     }
+
     .archetype-option {
       margin-bottom: 20px;
     }
+
     .warning {
       color: $warning_text_color !important;
     }
   }
+
   .password-confirmation {
     display: none;
   }
@@ -201,6 +220,7 @@
 
   form {
     margin-top: 20px;
+
     input[type=text] {
       width: 500px;
     }
@@ -226,15 +246,20 @@
     position: relative;
     height: 350px;
   }
+
   &.small .modal-body {
     height: 310px;
   }
+
   .secure-category-options {
     margin: 10px 0 0 16px;
+
     .badge-list {
       margin: 10px 0;
+
       li {
         margin: 0 4px 8px 0;
+
         a {
           color: #888;
           cursor: pointer;
@@ -251,13 +276,13 @@
   }
 }
 
-
 .modal-tab {
   position: absolute;
 }
 
 .invite-modal {
   overflow: visible;
+
   .ember-text-field {
     width: 550px;
   }
@@ -266,6 +291,7 @@
 .reply-where-modal {
   width: 370px;
   margin-left: -185px;
+
   .modal-footer {
     .btn {
       text-align: left;
@@ -275,16 +301,19 @@
       margin-bottom: 10px;
       display: block;
       margin-left: 0;
+
       .topic-title {
         font-size: 13px;
         font-weight: normal;
       }
+
       &.btn-reply-here {
         background: lighten($secondary_background_color, 60%);
         text-shadow: none;
         color: $secondary_text_color;
       }
     }
+
     .cancel {
       text-decoration: underline;
       float: right;
@@ -304,6 +333,7 @@
       display: inline-block;
       margin-left: 0;
     }
+
     .cancel {
       text-decoration: underline;
       display: block;
@@ -323,17 +353,21 @@
   list-style: none;
   margin: 0 0 30px;
   padding: 0;
+
   .name {
     margin-right: 20px;
     display: inline-block;
     min-width: 100px;
   }
+
   .permission {
     margin-left: 20px;
   }
+
   .fa-times-circle {
     margin-left: 5px;
   }
+
   li {
     margin-bottom: 10px;
   }

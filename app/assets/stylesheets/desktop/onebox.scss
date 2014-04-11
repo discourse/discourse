@@ -9,13 +9,13 @@ a.loading-onebox {
   padding-left: 25px;
 }
 
-
 .onebox-result {
   margin-top: 15px;
   padding: 12px 25px 12px 12px;
   border-left: 5px solid $primary_border_color;
   background: lighten($secondary_background_color, 76%);
   font-size: 14px;
+
   > .source {
     margin-bottom: 12px;
     margin-right: 10px;
@@ -23,14 +23,17 @@ a.loading-onebox {
     color: $primary_text_color;
     position: relative;
     height: 20px;
+
     .info {
+      font-size: 14px;
+      position: absolute;
+
       a {
         color: #000;
         text-decoration: none;
         padding-right: 10px;
       }
-      position: absolute;
-      font-size: 14px;
+
       img.favicon {
         margin-right: 3px;
       }
@@ -40,6 +43,7 @@ a.loading-onebox {
 
   .onebox-result-body {
     padding-top: 5px;
+
     img {
       max-height: 80%;
       max-width: 25%;
@@ -47,15 +51,19 @@ a.loading-onebox {
       float: left;
       margin-right: 10px;
     }
+
     h3, h4 {
       margin: 0 !important;
     }
+
     code {
       max-height: 400px;
     }
+
     .metrics {
       clear: both;
       padding-bottom: 25px;
+
       .metric {
         display: inline-block;
         padding-left: 33px;
@@ -72,6 +80,7 @@ a.loading-onebox {
       float: none;
       margin-right: 7px;
     }
+
     img.popcorn {
       float: none;
       margin-left: 20px;
@@ -140,4 +149,3 @@ aside.onebox {
   height: 90px;
   width: 90px;
 }
-
