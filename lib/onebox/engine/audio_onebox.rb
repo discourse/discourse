@@ -1,9 +1,9 @@
 module Onebox
   module Engine
-    class VideoOnebox
+    class AudioOnebox
       include Engine
 
-      matches_regexp /^https?:\/\/.*\.mp3$/
+      matches_regexp /^(https?:)?\/\/.*\.(mp3|ogg|wav)(\?.*)?$/
 
       def to_html
         "<audio controls><source src='#{@url}'><a href='#{@url}'>#{@url}</a></audio>"
@@ -11,5 +11,3 @@ module Onebox
     end
   end
 end
-
-
