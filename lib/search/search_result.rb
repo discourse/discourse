@@ -41,11 +41,11 @@ class Search
       end
     end
 
-    def self.from_topic(t, custom_blurb, custom_title=nil)
+    def self.from_topic(t, custom_title=nil, custom_blurb=nil)
       SearchResult.new(type: :topic, topic_id: t.id, id: t.id, title: custom_title || t.title, url: t.relative_url, blurb: custom_blurb)
     end
 
-    def self.from_post(p, context, term)
+    def self.from_post(p, context, term, include_blurbs = false)
       custom_title =
         if context && context.id == p.topic_id
           # TODO: rewrite this
@@ -59,12 +59,14 @@ class Search
                  excerpt: excerpt
                 )
         end
-      #add a blurb from the post to the search results
-      custom_blurb = TextHelper.excerpt(p.raw, term.split(/\s+/)[0], radius: 100)
-      custom_blurb = TextHelper.truncate(p.raw, length: 200) if excerpt.blank?
+      if include_blurbs
+        #add a blurb from the post to the search results
+        custom_blurb = TextHelper.excerpt(p.raw, term.split(/\s+/)[0], radius: 100)
+        custom_blurb = TextHelper.truncate(p.raw, length: 200) if custom_blurb.blank?
+      end
       if p.post_number == 1
         # we want the topic link when it's the OP
-        SearchResult.from_topic(p.topic, custom_blurb, custom_title)
+        SearchResult.from_topic(p.topic, custom_title, custom_blurb)
       elsif context && context.id == p.topic_id
         SearchResult.new(type: :topic, topic_id: p.topic_id, id: "_#{p.id}", title: custom_title, url: p.url, blurb: custom_blurb)
       else
