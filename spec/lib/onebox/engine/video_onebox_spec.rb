@@ -17,6 +17,14 @@ describe Onebox::Engine::VideoOnebox do
     Onebox.preview('http://video.webmfiles.org/big-buck-bunny_trailer.webm').to_s.should match(/<video/)
   end
 
+  it "supports URLs with query parameters" do
+    Onebox.preview('http://video.webmfiles.org/big-buck-bunny_trailer.webm?foo=bar').to_s.should match(/<video/)
+  end
+
+  it "supports protocol relative URLs" do
+    Onebox.preview('//video.webmfiles.org/big-buck-bunny_trailer.webm').to_s.should match(/<video/)
+  end
+
   it "includes a fallback direct link to the video" do
     Onebox.preview('http://download.wavetlan.com/svv/dev/test.mp4').to_s.should match(/<a.*mp4/)
   end
