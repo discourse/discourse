@@ -1,4 +1,4 @@
-The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. We will use [Digital Ocean][do], although these steps may work on other cloud providers.
+The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. We will use [Digital Ocean][do], although these steps may work on other cloud providers. Docker does not support OpenVZ/Virtuozzo.
 
 This guide assumes that you have no knowledge of Ruby/Rails or Linux shell. 
 
