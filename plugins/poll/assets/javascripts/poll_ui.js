@@ -44,7 +44,6 @@ var Poll = Discourse.Model.extend({
 var PollController = Discourse.Controller.extend({
   poll: null,
   showResults: Em.computed.oneWay('poll.closed'),
-
   disableRadio: Em.computed.any('poll.closed', 'loading'),
 
   actions: {
@@ -67,6 +66,18 @@ var PollController = Discourse.Controller.extend({
 
     toggleShowResults: function() {
       this.set('showResults', !this.get('showResults'));
+    },
+
+    toggleClosePoll: function() {
+      this.set('loading', true);
+      return Discourse.ajax("/poll/toggle_close", {
+        type: "PUT",
+        data: {post_id: this.get('poll.post.id')}
+      }).then(function(topicJson) {
+        this.set('poll.post.topic.title', topicJson.basic_topic.title);
+        this.set('poll.post.topic.fancy_title', topicJson.basic_topic.title);
+        this.set('loading', false);
+      }.bind(this));
     }
   }
 });

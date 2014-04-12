@@ -24,6 +24,18 @@
   {{/if}}
 </button>
 
+{{#if poll.post.topic.details.can_edit}}
+  <button {{action toggleClosePoll}} class="btn btn-small">
+    {{#if poll.closed}}
+      <i class="fa fa-unlock-alt"></i>
+      {{i18n poll.open_poll}}
+    {{else}}
+      <i class="fa fa-lock"></i>
+      {{i18n poll.close_poll}}
+    {{/if}}
+  </button>
+{{/if}}
+
 {{#if loading}}
   <i class="fa fa-spin fa-spinner"></i>
 {{/if}}

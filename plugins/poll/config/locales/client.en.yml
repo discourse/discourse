@@ -15,3 +15,6 @@ en:
       results:
         show: Show Results
         hide: Hide Results
+
+      close_poll: "Close Poll"
+      open_poll: "Open Poll"
