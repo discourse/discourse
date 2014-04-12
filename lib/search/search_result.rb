@@ -45,7 +45,7 @@ class Search
       SearchResult.new(type: :topic, topic_id: t.id, id: t.id, title: custom_title || t.title, url: t.relative_url, blurb: custom_blurb)
     end
 
-    def self.from_post(p, context, term, include_blurbs = false)
+    def self.from_post(p, context, term, include_blurbs=false)
       custom_title =
         if context && context.id == p.topic_id
           # TODO: rewrite this

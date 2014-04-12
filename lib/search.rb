@@ -44,7 +44,7 @@ class Search
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new
     @search_context = @opts[:search_context]
-    @include_blurbs = @opts[:include_blurbs]
+    @include_blurbs = @opts[:include_blurbs] || false
     @limit = Search.per_facet * Search.facets.size
     @results = GroupedSearchResults.new(@opts[:type_filter])
 
