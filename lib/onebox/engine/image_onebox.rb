@@ -3,7 +3,7 @@ module Onebox
     class ImageOnebox
       include Engine
 
-      matches_regexp /^(https?:)?\/\/.+\.(png|jpg|jpeg|gif|bmp|tif|tiff)$/i
+      matches_regexp /^(https?:)?\/\/.+\.(png|jpg|jpeg|gif|bmp|tif|tiff)(\?.*)?$/i
 
       def to_html
         "<a href='#{@url}' target='_blank'><img src='#{@url}'></a>"
