@@ -24,7 +24,7 @@
   {{/if}}
 </button>
 
-{{#if poll.post.topic.details.can_edit}}
+{{#if controller.showToggleClosePoll}}
   <button {{action toggleClosePoll}} class="btn btn-small">
     {{#if poll.closed}}
       <i class="fa fa-unlock-alt"></i>

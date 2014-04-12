@@ -45,6 +45,9 @@ var PollController = Discourse.Controller.extend({
   poll: null,
   showResults: Em.computed.oneWay('poll.closed'),
   disableRadio: Em.computed.any('poll.closed', 'loading'),
+  showToggleClosePoll: function() {
+    return this.get('poll.post.topic.details.can_edit') && !Discourse.SiteSettings.allow_user_locale;
+  }.property('poll.post.topic.details.can_edit'),
 
   actions: {
     selectOption: function(option) {

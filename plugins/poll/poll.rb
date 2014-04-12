@@ -60,7 +60,7 @@ module ::PollPlugin
     end
 
     def is_closed?
-      @post.topic.closed? || (@post.topic.title =~ /^#{I18n.t('poll.closed_prefix')}/i) === 0
+      @post.topic.closed? || (!SiteSetting.allow_user_locale? && (@post.topic.title =~ /^#{I18n.t('poll.closed_prefix')}/i) === 0)
     end
 
     def options
