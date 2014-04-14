@@ -202,6 +202,14 @@ describe Topic do
       Topic.similar_to(nil, nil).should be_blank
     end
 
+    context "with a category definition" do
+      let!(:category) { Fabricate(:category) }
+
+      it "excludes the category definition topic from similar_to" do
+        Topic.similar_to('category definition for', "no body").should be_blank
+      end
+    end
+
     context 'with a similar topic' do
       let!(:topic) { Fabricate(:topic, title: "Evil trout is the dude who posted this topic") }
 

@@ -319,13 +319,21 @@ class Topic < ActiveRecord::Base
     return [] unless raw.present?
 
     # For now, we only match on title. We'll probably add body later on, hence the API hook
-    Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) AS similarity", title: title]))
-         .visible
-         .where(closed: false, archived: false)
-         .secured(Guardian.new(user))
-         .listable_topics
-         .limit(SiteSetting.max_similar_results)
-         .order('similarity desc')
+    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) AS similarity", title: title]))
+                     .visible
+                     .where(closed: false, archived: false)
+                     .secured(Guardian.new(user))
+                     .listable_topics
+                     .limit(SiteSetting.max_similar_results)
+                     .order('similarity desc')
+
+    # Exclude category definitions from similar topic suggestions
+    exclude_topic_ids = Category.pluck(:topic_id).compact!
+    if exclude_topic_ids.present?
+      similar = similar.where("topics.id NOT IN (?)", exclude_topic_ids)
+    end
+
+    similar
   end
 
   def update_status(status, enabled, user)
