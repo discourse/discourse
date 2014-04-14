@@ -22,7 +22,7 @@ class Lp::UsersController < UsersController
           u.created_at = user_params[:created_at]
           u.updated_at = user_params[:updated_at]
         end
-        new_user.bio_raw = user_params[:user_bio] || ''
+        new_user.bio_raw = params[:user_bio] || ''
 
         new_user.save!
 
