@@ -10,7 +10,7 @@
 Discourse.ShareLink = Discourse.Model.extend({
 
   href: function() {
-    return Discourse.ShareLink.urlFor(this.get('target'), this.get('link'), this.get('topicTitle'));
+    return Discourse.ShareLink.urlFor[this.get('target')](this.get('link'), this.get('topicTitle'));
   }.property('target', 'link', 'topicTitle'),
 
   title: Discourse.computed.i18n('target', 'share.%@'),
@@ -20,58 +20,65 @@ Discourse.ShareLink = Discourse.Model.extend({
   }.property('target'),
 
   openInPopup: function() {
-    return( this.get('target') !== 'email' );
+    return( Discourse.ShareLink.shouldOpenInPopup[this.get('target')] );
   }.property('target')
 
 });
 
 Discourse.ShareLink.reopenClass({
+  supportedTargets: [],
+  urlFor: {},
+  iconClasses: {},
+  popupHeights: {},
+  shouldOpenInPopup: {},
 
-  supportedTargets: ['twitter', 'facebook', 'google+', 'email'],
-
-  urlFor: function(target,link,title) {
-    switch(target) {
-      case 'twitter':
-        return this.twitterUrl(link,title);
-      case 'facebook':
-        return this.facebookUrl(link,title);
-      case 'google+':
-        return this.googlePlusUrl(link);
-      case 'email':
-        return this.emailUrl(link,title);
-    }
-  },
-
-  twitterUrl: function(link, title) {
-    return ("http://twitter.com/intent/tweet?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(title) );
-  },
-
-  facebookUrl: function(link, title) {
-    return ("http://www.facebook.com/sharer.php?u=" + encodeURIComponent(link) + '&t=' + encodeURIComponent(title));
-  },
-
-  googlePlusUrl: function(link) {
-    return ("https://plus.google.com/share?url=" + encodeURIComponent(link));
-  },
-
-  emailUrl: function(link, title) {
-    return ("mailto:?to=&subject=" + encodeURIComponent('[' + Discourse.SiteSettings.title + '] ' + title) + "&body=" + encodeURIComponent(link));
-  },
-
-  iconClasses: {
-    twitter: 'icon-twitter',
-    facebook: 'icon-facebook-sign',
-    'google+': 'icon-google-plus',
-    email: 'icon-envelope'
-  },
-
-  popupHeights: {
-    twitter: 265,
-    facebook: 315,
-    'google+': 600
+  addTarget: function(id, object) {
+    var self = this;
+    self.supportedTargets.push(id);
+    self.urlFor[id] = object.generateUrl;
+    self.iconClasses[id] = object.iconClass;
+    self.popupHeights[id] = object.popupHeight || 315;
+    self.shouldOpenInPopup[id] = object.shouldOpenInPopup;
   },
 
   popupHeight: function(target) {
     return (this.popupHeights[target] || 315);
   }
 });
+
+(function() {
+  Discourse.ShareLink.addTarget('twitter', {
+    iconClass: 'fa-twitter',
+    generateUrl: function(link, title) {
+      return ("http://twitter.com/intent/tweet?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(title) );
+    },
+    shouldOpenInPopup: true,
+    popupHeight: 265
+  });
+
+  Discourse.ShareLink.addTarget('facebook', {
+    iconClass: 'fa-facebook-square',
+    generateUrl: function(link, title) {
+      return ("http://www.facebook.com/sharer.php?u=" + encodeURIComponent(link) + '&t=' + encodeURIComponent(title));
+    },
+    shouldOpenInPopup: true,
+    popupHeight: 315
+  });
+
+  Discourse.ShareLink.addTarget('google+', {
+    iconClass: 'fa-google-plus',
+    generateUrl: function(link) {
+      return ("https://plus.google.com/share?url=" + encodeURIComponent(link));
+    },
+    shouldOpenInPopup: true,
+    popupHeight: 600
+  });
+
+  Discourse.ShareLink.addTarget('email', {
+    iconClass: 'fa-envelope',
+    generateUrl: function(link, title) {
+      return ("mailto:?to=&subject=" + encodeURIComponent('[' + Discourse.SiteSettings.title + '] ' + title) + "&body=" + encodeURIComponent(link));
+    },
+    shouldOpenInPopup: false
+  });
+})();

@@ -15,7 +15,7 @@ class Pbkdf2
 
   def self.hash_password(password, salt, iterations, algorithm = "sha256")
 
-    h = OpenSSL::Digest::Digest.new(algorithm)
+    h = OpenSSL::Digest.new(algorithm)
 
     u = ret = prf(h, password, salt + [1].pack("N"))
 

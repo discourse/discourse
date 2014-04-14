@@ -35,6 +35,8 @@ describe FileStore::S3Store do
     SiteSetting.stubs(:s3_access_key_id).returns("s3_access_key_id")
     SiteSetting.stubs(:s3_secret_access_key).returns("s3_secret_access_key")
     Fog.mock!
+    Fog::Mock.reset
+    Fog::Mock.delay = 0
   end
 
   after(:each) { Fog.unmock! }
@@ -111,10 +113,10 @@ describe FileStore::S3Store do
     store.internal?.should == false
   end
 
-  describe ".absolute_avatar_template" do
+  describe ".avatar_template" do
 
     it "is present" do
-      store.absolute_avatar_template(avatar).should == "//s3_upload_bucket.s3.amazonaws.com/avatars/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98/{size}.jpg"
+      store.avatar_template(avatar).should == "//s3_upload_bucket.s3.amazonaws.com/avatars/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98/{size}.jpg"
     end
 
   end

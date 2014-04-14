@@ -1,0 +1,25 @@
+<section class="d-dropdown" id="site-map-dropdown">
+  <ul class="location-links">
+    {{#if showAdminLinks}}
+      <li>{{partial "siteMap/adminLink"}}</li>
+      <li>{{partial "siteMap/flaggedPostsLinks"}}</li>
+    {{/if}}
+    <li>{{partial "siteMap/latestTopicsLink"}}</li>
+    <li>{{partial "siteMap/faqLink"}}</li>
+    {{#if showMobileToggle}}
+      <li>{{partial "siteMap/mobileToggleLink"}}</li>
+    {{/if}}
+  </ul>
+
+  {{#if categories}}
+    <ul class="category-links">
+      <li class="heading" title="{{i18n filters.categories.help}}">
+        {{partial "siteMap/allCategoriesLink"}}
+      </li>
+
+      {{#each categories itemController=itemController}}
+        <li class="category">{{partial "siteMap/category"}}</li>
+      {{/each}}
+    </ul>
+  {{/if}}
+</section>

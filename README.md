@@ -10,64 +10,53 @@ Whenever you need ...
 
 ... consider Discourse.
 
-To learn more about the philosophy and goals of the project, [visit discourse.org](http://www.discourse.org).
+To learn more about the philosophy and goals of the project, [visit **discourse.org**](http://www.discourse.org).
+
+## Screenshots
+
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-small2.png)](http://bbs.boingboing.net)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small2.png?breakcache=1)](http://discuss.howtogeek.com)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/new-relic-categories-small2.png)](http://discuss.newrelic.com)
+[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-small2.jpg)](https://talk.turtlerockstudios.com/)
+[![](https://raw.github.com/discourse/discourse-docimages/master/readme/nexus-7-mobile-discourse-small3.png)](http://discuss.atom.io)
+[![](https://raw.github.com/discourse/discourse-docimages/master/readme/iphone-5s-mobile-discourse-small4.png)](http://discourse.soylent.me)
+
 
 ## Getting Started
 
-1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. This beginner's guide is also adequate for developers ready to sink their teeth quickly; it's the easiest way to hack on Discourse!
+1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. 
 
-2. Once you have Discourse up and running, be sure to load [the appropriate seed data](pg_dumps) on your forum, either the **developer** seed data, which is the same data you'll see on [try.discourse.org](http://try.discourse.org), or the **production** seed data which includes the [Discourse Admin Quick Start Guide](https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide) and meta guidance.
+2. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md). 
 
-3. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md).
-
-Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). And if you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
+Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
 ## Setting up a Discourse Forum
 
-If you're not here to hack on the open source code, but rather looking to set up a Discourse forum in a production environment, see our [**Discourse Install Guide**](/docs/INSTALL-ubuntu.md). Be warned, however, that Discourse is still very much beta, and you will probably need a background as a developer or system administrator to set it up successfully.
+If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
 
-## Vision
+If you're looking for business class hosting, see [discourse.org/buy](http://www.discourse.org/buy/).
 
-We think of Discourse as a **Civilized Discourse Construction Kit**, an open-source discussion platform that acts as a free, flexible, fundamental building block for online communities of any size, tiny to huge.
-
-Discourse is: 
-
-- A **flattened, endlessly scrolling discussion**, which avoids the awkwardness of traditionally threaded and paginated discussion, while still allowing replies to be expanded in place for context.
-
-- A **user trust system** that grants users rights to assist in moderating the forum as they participate in good faith over time. The goal is for the forum to be nearly self-moderating in the absence of any formal moderators, although excellent moderators do accelerate the process greatly.
-
-- An **advanced JavaScript app** which runs in modern browsers and works identically on desktop and tablet, without the need for a native app.
-
-- A **contemporary, robust technology stack**, free of legacy PHP and MySQL constraints.
-
-Our goal is to **foster an active community of contributors**, all of whom commit to free, simple, pleasant to use online discussion software that can thrive in an Internet age dominated by micro-blogging and diminishing attention spans. Internet discussion belongs to everyone, not just huge corporate websites.
+## Requirements
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
-1. Modern browsers on the desktop:
-  - Internet Explorer 9.0 (may not be fully functional), 10.0+
-  - Firefox 16+
-  - Google Chrome 23+
-  - Safari 5+
-2. The latest generation of tablets, 7" or larger:
-  - iPad 2+
-  - Android 4.1+
-  - Windows 8
-3. Modern small screen mobile/smartphones *as soon as possible*:
-  - Windows Phone 8
-  - iOS 6+
-  - Android 4.0+
+| Browsers | Tablets |  Smartphones |
+| -------- | ------- | ----------- |
+| Safari 5+| iPad 2+ |  iOS 6+ | 
+| Google Chrome 23+ |  Android 4.1+ | Android 4.1+ |
+| Internet Explorer 10+ | Windows 8 | Windows Phone 8 |
+| Firefox 16+ | |
+
+Internet Explorer 9.0 is technically supported, but it is our absolute minimum spec browser and may not be fully functional.
 
 ## Built With
 
-Discourse is built from the following open source components:
+- [Ruby on Rails](https://github.com/rails/rails) &mdash; Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
+- [Ember.js](https://github.com/emberjs/ember.js) &mdash; Our front end is an Ember.js app that communicates with the Rails API.
+- [PostgreSQL](http://www.postgresql.org/) &mdash; Our main data store is in Postgres.
+- [Redis](http://redis.io/) &mdash; We use Redis for our job queue, rate limiting, as a cache and for transient data.
 
-- [Ruby on Rails](https://github.com/rails/rails) - Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
-- [Ember.js](https://github.com/emberjs/ember.js) - Our front end is an Ember.js app that communicates with the Rails API.
-- [PostgreSQL](http://www.postgresql.org/) - Our main data store is in Postgres.
-- [Redis](http://redis.io/) - We use Redis for our job queue, rate limiting, as a cache and for transient data.
-
-Plus *lots* of Ruby Gems, a complete list of which is at [**SOFTWARE.MD**](docs/SOFTWARE.md).
+Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https://github.com/discourse/discourse/blob/master/Gemfile).
 
 ## Contributing
 
@@ -77,21 +66,14 @@ Plus *lots* of Ruby Gems, a complete list of which is at [**SOFTWARE.MD**](docs/
 Discourse is **100% free** and **open-source**. We encourage and support an active, healthy community that
 accepts contributions from the public. We'd like you to be a part of that community.
 
-Before contributing to Discourse, please:
+Before contributing to Discourse:
 
-1. Review the [**VISION**](#vision) statement, to confirm that you understand the focus of the project,
-2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla), to confirm you've read and acknowledged the legal aspects of your contributions, and
-3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which houses all of the necessary info to:
-   - submit bugs,
-   - request new features, and
-   - step you through the entire process of preparing your code for a Pull Request.
-4. Not sure what to work on? [**We've got some ideas!**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
+1. Please read the complete mission statements on [**discourse.org**](http://www.discourse.org). Yes we actually believe this stuff; you should too.
+2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla).
+3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which covers submitting bugs, requesting new features, preparing your code for a pull request, etc.
+4. Not sure what to work on? [**We've got some ideas.**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
 
-We look forward to seeing your cool stuff!
-
-## Having Problems getting set up?
-
-Before contacting us for help, please review our [Troubleshooting Guide](docs/TROUBLESHOOTING.md).
+We look forward to seeing your pull requests!
 
 ## The Discourse Team
 
@@ -100,7 +82,7 @@ The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/A
 
 ## Copyright / License
 
-Copyright 2013 Civilized Discourse Construction Kit, Inc.
+Copyright 2014 Civilized Discourse Construction Kit, Inc.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.

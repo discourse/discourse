@@ -1,42 +1,77 @@
 // styles that apply to the user page
-@import "../common/foundation/variables";
-@import "../common/foundation/mixins";
 
 .user-preferences {
+  .control-group {
+    // border-bottom: 1px solid #e5e5e5;
+    padding: 8px 36px 8px 8px;
+  }
+  .control-label {
+    font-weight: bold;
+  }
   textarea {
     width: 530px;
     height: 100px;
   }
   .static {
-    color: $black;
+    color: $primary_text_color;
     margin-top: 5px;
     margin-left: 5px;
     display: inline-block;
   }
   .instructions {
-    color: $dark_gray;
-    margin-left: 165px;
+    color: $secondary_text_color;
     margin-top: 5px;
+  }
+  .category-controls {
+    padding-top: 8px;
   }
   .avatar {
     margin-left: 3px;
   }
   .instructions a[href] {
-    color: $darkish_gray;
+    color: $secondary_text_color;
   }
   .warning {
     @include border-radius-all(6px);
-    background-color: lighten($red, 10%);
+    background-color: $warning_background_color;
     padding: 5px 8px;
-    color: $white;
+    color: $primary_text_color;
     width: 520px;
   }
 
-  .other .controls {
+  .other .controls-dropdown {
     margin-top: 10px;
+    padding-left: 5px;
     select {
       width: 280px;
     }
+  }
+
+  .save-button {
+    width: 100%;
+    overflow: auto;
+    max-width: 200px;
+    button {
+      display: block;
+    }
+  }
+
+  .checkbox-label {
+    overflow: auto;
+    display: block;
+    width: 100%;
+    padding: 5px 8px;
+  }
+
+  #profile-background-preview {
+    height: 150px;
+    background-position: center center;
+    background-size: cover;
+    background-color: $secondary_background_color;
+  }
+
+  .bio-composer #wmd-quote-post {
+    display: none;
   }
 }
 
@@ -46,28 +81,28 @@
   display: block;
   width: 220px;
   min-height: 200px;
-  background-color: #f8f8f8;
-  color: #444;
+  background-color: lighten($secondary_background_color, 76%);
+  color: $primary_text_color;
   word-wrap: break-word;
 }
 
 .user-navigation {
 
   h3 {
-    color: #666;
+    color: lighten($primary_text_color, 35%);
     padding-left: 5px;
   }
   .nav-stacked {
     border-left: 0;
     border-right: 0;
   }
-  .summary {
+  .map {
     height: 50px;
   }
   .avatar {
     float: left;
     width: 45px;
-    background-color: white;
+    background-color: $primary_background_color;
   }
 
   nav.buttons {
@@ -82,7 +117,7 @@
   h2 {
     a {
       font-size: 14px;
-      color: #999999;
+      color: $secondary_text_color;
       cursor: pointer;
     }
   }
@@ -93,10 +128,12 @@
   margin-bottom: 50px;
 
   .about {
-    background-color: #444;
+    background-color: $secondary_background_color;
+    background-position: center center;
+    background-size: cover;
     margin-bottom: 10px;
     overflow: hidden;
-    color: #fff;
+    color: $primary_text_color;
 
     .details {
       text-align: center;
@@ -114,33 +151,33 @@
       }
 
       a[href] {
-        color: #fff;
+        color: $primary_text_color;
       }
 
       img.avatar {
-        border: 3px solid #eee;
+        border: 3px solid $primary_border_color;
         margin-bottom: 4px;
       }
 
       .secondary {
-        background-color: #222;
+        background-color: $secondary_background_color;
         text-align: left;
         padding: 0 10px;
 
         dd {
-          color: white;
+          color: $tertiary_text_color;
           margin: 0 0 7px 0;
         }
         dt {
-          color: #aaa;
+          color: $secondary_text_color;
           margin: 0;
         }
       }
     }
 
     .controls {
-      background-color: #ddd;
-      margin-top: 0px;
+      background-color: lighten($secondary_background_color, 60%);
+      margin-top: 0;
       padding: 10px 10px 0 10px;
 
       .btn {
@@ -167,7 +204,7 @@
         .avatar {
           float: left;
           margin-right: 10px;
-          border: 2px solid white;
+          border: 2px solid $tertiary_border_color;
           width: 45px;
           height: 45px;
         }
@@ -189,17 +226,17 @@
 
   .user-stream {
     .excerpt {
-      margin: 5px 0px;
+      margin: 5px 0;
       font-size: 13px;
       word-wrap: break-word;
-      color: lighten($black, 30%);
+      color: lighten($primary_text_color, 30%);
     }
     .item.moderator-action {
-      background-color: #eef0ff;
+      background-color: $emphasis_background_color;
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: #ffcece;
+      background-color: $warning_background_color;
     }
     .item.hidden {
       display: block;
@@ -207,19 +244,19 @@
     }
     .item {
       padding: 10px 8px;
-      background-color: white;
-      border-bottom: 1px solid #b9b9b9;
+      background-color: $primary_background_color;
+      border-bottom: 1px solid $primary_border_color;
     }
     .type {
-      color: lighten($black, 40%);
+      color: lighten($primary_text_color, 40%);
     }
     span.name {
-      color: lighten($black, 40%);
+      color: lighten($primary_text_color, 40%);
     }
     .time {
       display: block;
       float: right;
-      color: silver;
+      color: $secondary_text_color;
       margin-right: 8px;
       font-size: 11px;
     }
@@ -232,6 +269,10 @@
       margin-bottom: 4px;
       font-size: 14px;
     }
+    .edit-reason {
+      background-color: $highlight_background_color;
+      padding: 3px 5px 5px 5px;
+    }
   }
 }
 
@@ -241,10 +282,10 @@
   .avatar-link {
     float: none;
   }
-  .icon {
+  .fa {
     width: 15px;
     display: inline-block;
-    color: #777;
+    color: lighten($primary_text_color, 35%);
   }
   .avatar-wrapper {
     border: none;

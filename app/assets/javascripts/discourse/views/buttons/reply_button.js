@@ -8,9 +8,7 @@
 **/
 Discourse.ReplyButton = Discourse.ButtonView.extend({
   classNames: ['btn', 'btn-primary', 'create'],
-  attributeBindings: ['disabled'],
   helpKey: 'topic.reply.help',
-  disabled: Em.computed.not('controller.model.details.can_create_post'),
 
   text: function() {
     var archetypeCapitalized = this.get('controller.content.archetype').capitalize();
@@ -21,7 +19,7 @@ Discourse.ReplyButton = Discourse.ButtonView.extend({
   }.property(),
 
   renderIcon: function(buffer) {
-    buffer.push("<i class='icon icon-plus'></i>");
+    buffer.push("<i class='fa fa-plus'></i>");
   },
 
   click: function() {

@@ -133,6 +133,11 @@ test("avatarImg", function() {
         "it doesn't render avatars for invalid avatar template");
 });
 
+test("defaultHomepage", function() {
+  Discourse.SiteSettings.top_menu = "latest|top|hot";
+  equal(Discourse.Utilities.defaultHomepage(), "latest", "default homepage is the first item in the top_menu site setting");
+});
+
 module("Discourse.Utilities.cropAvatar with animated avatars", {
   setup: function() { Discourse.SiteSettings.allow_animated_avatars = true; }
 });

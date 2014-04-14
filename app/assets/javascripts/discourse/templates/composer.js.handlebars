@@ -9,7 +9,18 @@
 
     {{#if model.viewOpen}}
       <div class='control-row reply-area'>
-        <div class='reply-to'>{{{model.actionTitle}}}:</div>
+        <div class='reply-to'>
+          {{{model.actionTitle}}}:
+          {{#if canEdit}}
+            {{#if showEditReason}}
+              <div class="edit-reason-input">
+                {{textField value=editReason tabindex="5" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+              </div>
+            {{else}}
+              <a {{action displayEditReason}}>{{i18n composer.show_edit_reason}}</a>
+            {{/if}}
+          {{/if}}
+        </div>
 
         {{#if model.canEditTitle}}
           <div class='form-element clearfix'>
@@ -17,6 +28,7 @@
               {{userSelector topicId=controller.controllers.topic.model.id
                              excludeCurrentUser="true"
                              id="private-message-users"
+                             include_groups="true"
                              class="span8"
                              placeholderKey="composer.users_placeholder"
                              tabindex="1"
@@ -24,7 +36,7 @@
             {{/if}}
 
             <div class="title-input">
-              {{textField value=model.title tabindex="2" id="reply-title" maxlength="255" class="span8" placeholderKey="composer.title_placeholder"}}
+              {{textField value=model.title tabindex="2" id="reply-title" maxlength="255" placeholderKey="composer.title_placeholder"}}
               {{popupInputTip validation=view.titleValidation shownAt=view.showTitleTip}}
             </div>
 
@@ -36,25 +48,20 @@
               {{#if model.archetype.hasOptions}}
                 <button class='btn' {{action showOptions}}>{{i18n topic.options}}</button>
               {{/if}}
-              {{#if model.showAdminOptions}}
-                <button {{action toggleAdminOptions target="view"}} class="btn no-text" title='{{i18n composer.admin_options_title}}'><i class="icon icon-wrench"></i></button>
-              {{/if}}
+              {{render additionalComposerButtons model}}
             {{/unless}}
-          </div>
-
-          <div class="admin-options-form">
-            {{autoCloseForm autoCloseDays=model.auto_close_days}}
           </div>
         {{/if}}
 
         <div class='wmd-controls'>
           <div class='textarea-wrapper'>
             <div class='wmd-button-bar' id='wmd-button-bar'></div>
+            <div id='wmd-preview-scroller'></div>
             {{view Discourse.NotifyingTextArea parentBinding="view" tabindex="3" valueBinding="model.reply" id="wmd-input" placeholderKey="composer.reply_placeholder"}}
             {{popupInputTip validation=view.replyValidation shownAt=view.showReplyTip}}
           </div>
           <div class='preview-wrapper'>
-            <div id='wmd-preview' {{bindAttr class="hidePreview:hidden"}}></div>
+            <div id='wmd-preview' {{bind-attr class="hidePreview:hidden"}}></div>
           </div>
           {{#if currentUser}}
             <a href="#" {{action togglePreview}} class='toggle-preview'>{{{model.toggleText}}}</a>
@@ -63,13 +70,17 @@
               <div id="file-uploading">
                 {{i18n upload_selector.uploading}} {{view.uploadProgress}}% <a id="cancel-file-upload">{{i18n cancel}}</a>
               </div>
+            {{else}}
+              {{#if Discourse.Mobile.mobileView}}
+                <a {{action showUploadSelector view}} class='mobile-file-upload'>{{i18n upload}}</a>
+              {{/if}}
             {{/if}}
           {{/if}}
         </div>
 
         {{#if currentUser}}
           <div class='submit-panel'>
-            <button {{action save}} tabindex="4" {{bindAttr class=":btn :btn-primary :create model.cantSubmitPost:disabled"}}>{{model.saveText}}</button>
+            <button {{action save}} tabindex="4" {{bind-attr class=":btn :btn-primary :create model.cantSubmitPost:disabled"}} title="{{i18n composer.title}}">{{model.saveText}}</button>
             <a href='#' {{action cancel}} class='cancel' tabindex="4">{{i18n cancel}}</a>
           </div>
         {{/if}}

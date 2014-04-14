@@ -25,9 +25,9 @@ module SiteContentClassMethods
     result = ""
     if site_content.blank?
       ct = find_content_type(content_type)
-      result = ct.default_content if ct.present?
+      result = ct.default_content.dup if ct.present?
     else
-      result = site_content.content
+      result = site_content.content.dup
     end
 
     result.gsub!(/\%\{[^}]+\}/) do |m|

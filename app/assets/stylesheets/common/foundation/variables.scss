@@ -2,181 +2,184 @@
 // Variables used throughout the theme
 // --------------------------------------------------
 
-// Base
+
+// Layout dimensions
 // --------------------------------------------------
 
-$base-font-size: 14px !default;
-$base-line-height: 19px !default;
-$base-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$base-background-color: #eee !default;
+$small-width: 950px !default;
+$medium-width: 995px !default;
+$large-width: 1110px !default;
 
-// Links
-
-$link-color: #006e97 !default;
-$link-color-visited: #4a6b82 !default;
-$link-color-hover: #0081b0 !default;
-$link-color-active: #005c7d !default;
-
-// Typography
-
-$hr-border-color: #cfcfcf !default;
-
-// Badges
+// Primary color variables
 // --------------------------------------------------
 
-// Notification badge
-
-$badge-notification-background-color: #999 !default;
-
-// Posts badge
-
-$badge-posts-color: #808080 !default;
-
-// Buttons
-// --------------------------------------------------
-
-// Default button
-
-$btn-default-color: #565656 !default;
-$btn-default-background-color: #eee !default;
-$btn-default-background-color-hover: #fafafa !default;
-
-// Primary button
-
-$btn-primary-border-color: #16617d !default;
-$btn-primary-background-color: #00aeef !default;
-$btn-primary-background-color-dark: #009dd8 !default;
-$btn-primary-background-color-light: #00b0f0 !default;
-
-// Danger button (delete, etc)
-
-$btn-danger-border-color: #7D1D16 !default;
-$btn-danger-background-color: #EE1C0B !default;
-$btn-danger-background-color-dark: #D81100 !default;
-$btn-danger-background-color-light: #EE1C0B !default;
-
-
-// Navigation menus
-// --------------------------------------------------
-
-// Pill nav
-
-$nav-pills-color: #534d4b !default;
-$nav-pills-color-hover: #e45735 !default;
-$nav-pills-border-color-hover: #f6d5cd !default;
-$nav-pills-background-color-hover: #fff0ed !default;
-$nav-pills-color-active: #ffeeea !default;
-$nav-pills-border-color-active: #ac3d22 !default;
-$nav-pills-background-color-active: #e45735 !default;
-
-// Stacked nav
-
-$nav-stacked-color: #534d4b !default;
-$nav-stacked-border-color: #ccc !default;
-$nav-stacked-background-color: #fafafa !default;
-$nav-stacked-divider-color: #e6e6e6 !default;
-$nav-stacked-chevron-color: #ccc !default;
-$nav-stacked-border-color-active: #f15b22 !default;
-$nav-stacked-background-color-active: #e45735 !default;
-
-// Button nav
-
-$nav-button-color: #7b7b7b !default;
-$nav-button-color-hover: #616161 !default;
-$nav-button-background-color-hover: #f2f2f2 !default;
-$nav-button-color-active: #474747 !default;
-$nav-button-background-color-active: #e0e0e0 !default;
-
-$nav-like-button-color-hover: #fa6c8d !default;
-$nav-like-button-background-color-hover: #fae9ed !default;
-$nav-like-button-color-active: #bd6377 !default;
-$nav-like-button-background-color-active: #fae9ed !default;
-
-// Modals
-// --------------------------------------------------
-
-// Header
-
-$modal-header-color: #e45735 !default;
-$modal-header-border-color: #b3b3b3 !default;
-$modal-close-button-color: #b4b4b4;
-
-// Topic list
-// --------------------------------------------------
-
-$topic-list-border-color: #bebebe !default;
-$topic-list-th-color: #534d4b !default;
-$topic-list-th-border-color: #b5b5b5 !default;
-$topic-list-th-background-color: #f6f6f6 !default;
-$topic-list-td-color: #808080 !default;
-$topic-list-td-border-color: #ededed !default;
-$topic-list-star-color: #eee !default;
-$topic-list-starred-color: #e45735 !default;
-
-// Generic
-// --------------------------------------------------
-
-// Colors
-
-$black: #000 !default;
+$black: #333 !default;
 $white: #fff !default;
+
+$blue: #00aaff !default;
+$yellow: lighten(#FFFF00, 15%) !default;
+$red: #e45735 !default;
+$pink: #fa6c8d !default;
+$green: #009900 !default;
+
 $google: #5b76f7 !default;
 $facebook: #3b5998 !default;
 $cas: #70BA61 !default;
 $twitter: #00bced !default;
 $yahoo: #810293 !default;
 $github: #6d6d6d !default;
-$persona: #606060 !default;
 
-// Layout dimensions
-
-$small-width: 950px !default;
-$medium-width: 995px !default;
-$large-width: 1110px !default;
-
-// Misc.
+// Fonts
 // --------------------------------------------------
 
-// Basic colors
+$base-font-size: 14px !default;
+$base-line-height: 19px !default;
+$base-font-family: Helvetica, Arial, sans-serif !default;
 
-$gray: #cccccc;
-$light_gray: #eeeeee;
-$darkish_gray: #666666;
-$dark_gray: #999999;
-$highlight: #ffff99;
-$highlight_light: #ffffdd;
-$red: #770000;
-$green: #007700;
-$blue: #0088cc;
-$bright_blue: #9999ff;
-$yellow: yellow;
-$eggplant: #5f5b65;
+// Broad general variables
+// --------------------------------------------------
 
-$link_color: darken($blue, 10%);
-$muted-link-color: #999;
-$muted-important-link-color: #5d5d5d;
+$primary_border_color: lighten($black, 70%);
+$secondary_border_color: lighten($black, 76%);
+$tertiary_border_color: $white;
+$highlight_border_color: $yellow;
+$emphasis_border_color: $blue;
+$warning_border_color: lighten($red, 20%);
+$success_border_color: $green;
 
-$quote-background: #f1f1f1;
+$primary_background_color: $white;
+$secondary_background_color: $black;
+$tertiary_background_color: lighten($black, 10%);
+$moderator_background_color: lighten($yellow, 30%) !default;
+$emphasis_background_color: lighten($blue, 45%);
+$success_background_color: lighten($green, 50%);
+$warning_background_color: lighten($red, 30%);
+$highlight_background_color: lighten($yellow, 23%);
+$like_background_color: lighten($pink, 25%);
+$composer_background_color: lighten($black, 70%);
+$notification_badge_background_color: lighten($black, 35%) !default;
 
-// Colors based on basics
+$primary_text_color: $black;
+$secondary_text_color: lighten($black, 40%);
+$tertiary_text_color: $white;
+$warning_text_color: $red;
+$success_text_color: $green;
+$emphasis_text_color: $blue;
+$highlight_text_color: $yellow;
+$like_color: $pink;
+
+$primary_shadow_color: $black;
+$secondary_shadow_color: $white;
+$warning_shadow_color: lighten($red, 20%);
+$success_shadow_color: $green;
+
+$highlight: $yellow;
+$header_item_highlight: lighten($blue, 45%);
+
+$link_color:  darken($blue, 10%);
+$secondary_link_color: $white;
+
+$muted-link-color: lighten($black, 35%);
+$muted-important-link-color: lighten($black, 35%);
+
+$link-color-visited: darken($blue, 10%) !default;
+$link-color-hover: darken($blue, 10%) !default;
+$link-color-active: darken($blue, 10%) !default;
+
+$heatmap_high: lighten($red, 10%);
+$heatmap_med: $red;
+$heatmap_low: darken($red, 10%);
+
+$coldmap_high: lighten($blue, 10%);
+$coldmap_med: $blue;
+$coldmap_low: darken($blue, 10%);
+
+
+
+
+// Specific element variables
+// --------------------------------------------------
+
+// Buttons
+// --------------------------------------------------
+
+// Default button
+
+$btn-default-color: $black !default;
+$btn-default-background-color:  lighten($black, 50%) !default;
+$btn-default-background-color-hover: lighten($black, 76%) !default;
+
+// Primary button
+
+$btn-primary-border-color: darken($blue, 10%) !default;
+$btn-primary-background-color: $blue !default;
+$btn-primary-background-color-dark: $blue !default;
+$btn-primary-background-color-light: lighten($blue, 30%) !default;
+
+// Danger button (delete, etc)
+
+$btn-danger-border-color: darken($red, 10%) !default;
+$btn-danger-background-color: $red !default;
+$btn-danger-background-color-dark: darken($red, 10%) !default;
+$btn-danger-background-color-light: $red !default;
+
+$btn-success-background: lighten($green, 5%);
+
+// Navigation menus
+// --------------------------------------------------
+
+// Pill nav
+
+$nav-pills-color: $black !default;
+$nav-pills-color-hover: $red !default;
+$nav-pills-border-color-hover: lighten($red, 35%) !default;
+$nav-pills-background-color-hover: lighten($red, 35%)  !default;
+$nav-pills-color-active: $red !default;
+$nav-pills-border-color-active: darken($red, 10%) !default;
+$nav-pills-background-color-active: $red !default;
+
+// Stacked nav
+
+$nav-stacked-color: $black !default;
+$nav-stacked-border-color: lighten($black, 60%) !default;
+$nav-stacked-background-color: lighten($black, 76%)  !default;
+$nav-stacked-divider-color: lighten($black, 60%) !default;
+$nav-stacked-chevron-color: lighten($black, 50%) !default;
+$nav-stacked-border-color-active: $red !default;
+$nav-stacked-background-color-active: $red !default;
+
+// Button nav
+
+$nav-button-color: lighten($black, 35%) !default;
+$nav-button-color-hover: $black !default;
+$nav-button-background-color-hover: lighten($black, 60%) !default;
+$nav-button-color-active: $black !default;
+$nav-button-background-color-active: lighten($black, 60%) !default;
+
+// Header
+
+$modal-header-color: $red !default;
+$modal-header-border-color: lighten($black, 50%) !default;
+$modal-close-button-color: lighten($black, 50%);
+
+$nav-like-button-color-hover: $pink !default;
+$nav-like-button-background-color-hover: lighten($pink, 22%) !default;
+$nav-like-button-color-active: darken($pink, 10%) !default;
+$nav-like-button-background-color-active: lighten($pink, 22%) !default;
+
+// Topic list
+// --------------------------------------------------
+
+$topic-list-border-color: lighten($black, 50%) !default;
+$topic-list-th-color: lighten($black, 35%) !default;
+$topic-list-th-border-color: lighten($black, 50%) !default;
+$topic-list-th-background-color: lighten($black, 76%) !default;
+$topic-list-td-color: lighten($black, 35%) !default;
+$topic-list-td-border-color: lighten($black, 60%) !default;
+$topic-list-star-color: lighten($black, 60%) !default;
+$topic-list-starred-color: $red !default;
+
+$quote-background: lighten($black, 76%);
 
 $topicMenuColor: darken($white, 80%);
-$bookmarkColor: #0088CC;
-
-$tag_color: #e1ecf9;
-
-$composer_background: #dcdfe0;
-
-$post_footer: #fafafa;
-$inner_border: #e4e4e4;
-$inner_line: #d4d4d4;
-
-$controls: #808080;
-$controls_hover: #2eaee5;
-$controls_active: #1d92c5;
-$heart: #fa6c8d;
-
-$attention_bg: #e4f2f8;
-$attention_fg: #1aaae4;
-
-$header-item-highlight: #ecf8f6;
+$bookmarkColor: $blue;

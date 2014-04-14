@@ -13,7 +13,7 @@ Discourse.ScreenedUrl = Discourse.Model.extend({
 });
 
 Discourse.ScreenedUrl.reopenClass({
-  findAll: function(filter) {
+  findAll: function() {
     return Discourse.ajax("/admin/logs/screened_urls.json").then(function(screened_urls) {
       return screened_urls.map(function(b) {
         return Discourse.ScreenedUrl.create(b);

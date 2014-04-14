@@ -11,19 +11,34 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   templateName: 'post',
   classNameBindings: ['postTypeClass',
                       'selected',
-                      'post.hidden:hidden',
-                      'post.deleted'],
+                      'post.hidden:post-hidden',
+                      'post.deleted',
+                      'groupNameClass'],
   postBinding: 'content',
 
   postTypeClass: function() {
     return this.get('post.post_type') === Discourse.Site.currentProp('post_types.moderator_action') ? 'moderator' : 'regular';
   }.property('post.post_type'),
 
+  groupNameClass: function() {
+    var primaryGroupName = this.get('post.primary_group_name');
+    if (primaryGroupName) {
+      return "group-" + primaryGroupName;
+    }
+  }.property('post.primary_group_name'),
+
+  showExpandButton: function() {
+    if (this.get('controller.firstPostExpanded')) { return false; }
+
+    var post = this.get('post');
+    return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
+  }.property('post.post_number', 'controller.firstPostExpanded'),
+
   // If the cooked content changed, add the quote controls
   cookedChanged: function() {
-    var postView = this;
+    var self = this;
     Em.run.schedule('afterRender', function() {
-      postView.insertQuoteControls();
+      self.insertQuoteControls();
     });
   }.observes('post.cooked'),
 
@@ -76,7 +91,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     // Only add the expand/contract control if it's not a full post
     var expandContract = "";
     if (!$aside.data('full')) {
-      expandContract = "<i class='icon-" + desc + "' title='" + I18n.t("post.expand_collapse") + "'></i>";
+      expandContract = "<i class='fa fa-" + desc + "' title='" + I18n.t("post.expand_collapse") + "'></i>";
       $aside.css('cursor', 'pointer');
     }
     $('.quote-controls', $aside).html("" + expandContract + navLink);
@@ -112,27 +127,26 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   // Show how many times links have been clicked on
   showLinkCounts: function() {
 
-    var postView = this;
-    var link_counts = this.get('post.link_counts');
+    var self = this,
+        link_counts = this.get('post.link_counts');
 
-    if (link_counts) {
-      _.each(link_counts, function(lc) {
-        if (lc.clicks > 0) {
-          postView.$(".cooked a[href]").each(function() {
-            var link = $(this);
-            if (link.attr('href') === lc.url) {
-              // don't display badge counts on category badge
-              if (link.closest('.badge-category').length === 0) {
-                // nor in oneboxes (except when we force it)
-                if (link.closest(".onebox-result").length === 0 || link.hasClass("track-link")) {
-                  link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
-                }
-              }
-            }
-          });
+    if (!link_counts) return;
+
+    link_counts.forEach(function(lc) {
+      if (!lc.clicks || lc.clicks < 1) return;
+
+      self.$(".cooked a[href]").each(function() {
+        var link = $(this);
+        if (link.attr('href') === lc.url) {
+          // don't display badge counts on category badge
+          if (link.closest('.badge-category').length === 0 && (link.closest(".onebox-result").length === 0 || link.hasClass("track-link"))) {
+            link.append("<span class='badge badge-notification clicks' title='" +
+                        I18n.t("topic_map.clicks", {count: lc.clicks}) +
+                        "'>" + Discourse.Formatter.number(lc.clicks) + "</span>");
+          }
         }
       });
-    }
+    });
   },
 
   actions: {
@@ -172,18 +186,17 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
   // Add the quote controls to a post
   insertQuoteControls: function() {
-    var postView = this;
-
+    var self = this;
     return this.$('aside.quote').each(function(i, e) {
       var $aside = $(e);
-      postView.updateQuoteElements($aside, 'chevron-down');
+      self.updateQuoteElements($aside, 'chevron-down');
       var $title = $('.title', $aside);
 
       // Unless it's a full quote, allow click to expand
       if (!($aside.data('full') || $title.data('has-quote-controls'))) {
         $title.on('click', function(e) {
           if ($(e.target).is('a')) return true;
-          postView.toggleQuote($aside);
+          self.toggleQuote($aside);
         });
         $title.data('has-quote-controls', true);
       }
@@ -191,17 +204,34 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   },
 
   willDestroyElement: function() {
-    Discourse.ScreenTrack.current().stopTracking(this.$().prop('id'));
+    Discourse.ScreenTrack.current().stopTracking(this.get('elementId'));
   },
 
   didInsertElement: function() {
     var $post = this.$(),
-        post = this.get('post');
+        post = this.get('post'),
+        postNumber = post.get('post_number'),
+        highlightNumber = this.get('controller.highlightOnInsert');
+
+    // If we're meant to highlight a post
+    if ((highlightNumber > 1) && (highlightNumber === postNumber)) {
+      this.set('controller.highlightOnInsert', null);
+      var $contents = $('.topic-body', $post),
+          origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
+
+      $contents.data("orig-color", origColor);
+      $contents
+        .addClass('highlighted')
+        .stop()
+        .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
+          $contents.removeClass('highlighted');
+        });
+    }
 
     this.showLinkCounts();
 
     // Track this post
-    Discourse.ScreenTrack.current().track(this.$().prop('id'), this.get('post.post_number'));
+    Discourse.ScreenTrack.current().track(this.$().prop('id'), postNumber);
 
     // Add syntax highlighting
     Discourse.SyntaxHighlighting.apply($post);
@@ -211,7 +241,5 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
     // Find all the quotes
     this.insertQuoteControls();
-
-    $post.addClass('ready');
   }
 });

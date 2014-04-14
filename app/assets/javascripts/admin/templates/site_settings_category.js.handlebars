@@ -1,0 +1,6 @@
+{{#if filteredContent.length}}
+  {{collection contentBinding="filteredContent" classNames="form-horizontal settings" itemViewClass="Discourse.SiteSettingView"}}
+{{else}}
+  <br/>
+  {{i18n admin.site_settings.no_results}}
+{{/if}}

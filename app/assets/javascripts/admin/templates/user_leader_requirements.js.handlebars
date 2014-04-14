@@ -1,0 +1,81 @@
+<div class='admin-controls'>
+  <div class='span15'>
+    <ul class="nav nav-pills">
+      <li>{{#link-to 'adminUser' this}}<i class="fa fa-caret-left"></i> &nbsp;{{username}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.regular'}}{{i18n admin.user.trust_level_2_users}}{{/link-to}}</li>
+    </ul>
+  </div>
+</div>
+
+<div class="admin-container leader-requirements">
+  <h2>{{username}} - {{i18n admin.user.tl3_requirements.title}}</h2>
+  <br/>
+  <p>{{i18n admin.user.tl3_requirements.table_title}}</p>
+
+  {{#with leaderRequirements}}
+    <table class="table" style="width: 50%;">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>{{i18n admin.user.tl3_requirements.value_heading}}</th>
+          <th>{{i18n admin.user.tl3_requirements.requirement_heading}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.visits}}</th>
+          <td><i {{bindAttr class=":fa met.days_visited:fa-check:fa-times"}}></i></td>
+          <td>
+            {{days_visited_percent}}% ({{days_visited}} / {{time_period}} {{i18n admin.user.tl3_requirements.days}})
+          </td>
+          <td>{{min_days_visited_percent}}%</td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.topics_with_replies}}</th>
+          <td><i {{bindAttr class=":fa met.topics_with_replies:fa-check:fa-times"}}></i></td>
+          <td>{{num_topics_with_replies}}</td>
+          <td>{{min_topics_with_replies}}</td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.topics_replied_to}}</th>
+          <td><i {{bindAttr class=":fa met.topics_replied_to:fa-check:fa-times"}}></i></td>
+          <td>{{num_topics_replied_to}}</td>
+          <td>{{min_topics_replied_to}}</td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.quality_content}}</th>
+          <td></td>
+          <td style="color: #ccc;">
+            TODO
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.reading}}</th>
+          <td></td>
+          <td  style="color: #ccc;">
+            TODO
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.site_promotion}}</th>
+          <td></td>
+          <td  style="color: #ccc;">
+            TODO
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.flagged_posts}}</th>
+          <td><i {{bindAttr class=":fa met.flagged_posts:fa-check:fa-times"}}></i></td>
+          <td>{{num_flagged_posts}}</td>
+          <td>{{max_flagged_posts}} {{i18n max}}</td>
+        </tr>
+      </tbody>
+    </table>
+  {{/with}}
+</div>
+
+

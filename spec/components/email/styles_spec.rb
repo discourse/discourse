@@ -30,7 +30,7 @@ describe Email::Styles do
     end
 
     it "adds a width and height to images with an emoji path" do
-      frag = basic_fragment("<img src='/assets/emoji/fish.png'>")
+      frag = basic_fragment("<img src='/plugins/emoji/fish.png' class='emoji'>")
       expect(frag.at("img")["width"]).to eq("20")
       expect(frag.at("img")["height"]).to eq("20")
     end
@@ -85,12 +85,6 @@ describe Email::Styles do
       expect(frag.at('li')['style']).to be_present
     end
 
-    it "removes pre tags but keeps their contents" do
-      style = Email::Styles.new("<pre>hello</pre>")
-      style.format_basic
-      style.format_html
-      expect(style.to_html).to eq("hello")
-    end
   end
 
 

@@ -11,41 +11,45 @@ Discourse.ComboboxView = Discourse.View.extend({
   classNames: ['combobox'],
   valueAttribute: 'id',
 
-  render: function(buffer) {
+  buildData: function(o) {
+    var data = "";
+    if (this.dataAttributes) {
+      this.dataAttributes.forEach(function(a) {
+        data += "data-" + a + "=\"" + o.get(a) + "\" ";
+      });
+    }
+    return data;
+  },
 
-    var nameProperty = this.get('nameProperty') || 'name';
+  render: function(buffer) {
+    var nameProperty = this.get('nameProperty') || 'name',
+        none = this.get('none');
 
     // Add none option if required
-    if (this.get('none')) {
-      buffer.push('<option value="">' + (I18n.t(this.get('none'))) + "</option>");
+    if (typeof none === "string") {
+      buffer.push('<option value="">' + I18n.t(none) + "</option>");
+    } else if (typeof none === "object") {
+      buffer.push("<option value=\"\" " + this.buildData(none) + ">" + Em.get(none, nameProperty) + "</option>");
     }
 
     var selected = this.get('value');
     if (selected) { selected = selected.toString(); }
 
     if (this.get('content')) {
-
-      var comboboxView = this;
-      _.each(this.get('content'),function(o) {
-        var val = o[comboboxView.get('valueAttribute')];
+      var self = this;
+      this.get('content').forEach(function(o) {
+        var val = o[self.get('valueAttribute')];
         if (val) { val = val.toString(); }
 
         var selectedText = (val === selected) ? "selected" : "";
-
-        var data = "";
-        if (comboboxView.dataAttributes) {
-          comboboxView.dataAttributes.forEach(function(a) {
-            data += "data-" + a + "=\"" + o.get(a) + "\" ";
-          });
-        }
-        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + data + ">" + Em.get(o, nameProperty) + "</option>");
+        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self.buildData(o) + ">" + Handlebars.Utils.escapeExpression(Em.get(o, nameProperty)) + "</option>");
       });
     }
   },
 
   valueChanged: function() {
-    var $combo = this.$();
-    var val = this.get('value');
+    var $combo = this.$(),
+        val = this.get('value');
     if (val !== undefined && val !== null) {
       $combo.val(val.toString());
     } else {
@@ -54,9 +58,13 @@ Discourse.ComboboxView = Discourse.View.extend({
     $combo.trigger("liszt:updated");
   }.observes('value'),
 
+  contentChanged: function() {
+    this.rerender();
+  }.observes('content.@each'),
+
   didInsertElement: function() {
-    var $elem = this.$();
-    var comboboxView = this;
+    var $elem = this.$(),
+        self = this;
 
     $elem.chosen({ template: this.template, disable_search_threshold: 5 });
     if (this.overrideWidths) {
@@ -74,8 +82,13 @@ Discourse.ComboboxView = Discourse.View.extend({
     }
 
     $elem.chosen().change(function(e) {
-      comboboxView.set('value', $(e.target).val());
+      self.set('value', $(e.target).val());
     });
+  },
+
+  willClearRender: function() {
+    var chosenId = this.$().attr('id') + "_chzn";
+    Ember.$("#" + chosenId).remove();
   }
 
 });

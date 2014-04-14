@@ -37,8 +37,7 @@ describe Concern::Positionable do
       TestItem.find(3).move_to(1)
       positions.should == [0,3,1,2,4]
 
-      # this is somewhat odd, but when there is not positioning
-      # not much we can do
+      # this is somewhat odd, but when there is no such position, not much we can do
       TestItem.find(1).move_to(5)
       positions.should == [0,3,2,4,1]
 
@@ -47,7 +46,34 @@ describe Concern::Positionable do
       item = TestItem.new
       item.id = 7
       item.save
-      item.position.should == 5
+      item.position.should be_nil
+    end
+
+    it "can set records to have null position" do
+      5.times do |i|
+        Topic.exec_sql("insert into test_items(id,position) values(#{i}, #{i})")
+      end
+
+      TestItem.find(2).use_default_position
+      TestItem.find(2).position.should be_nil
+
+      TestItem.find(1).move_to(4)
+      TestItem.order('id ASC').pluck(:position).should == [0,4,nil,2,3]
+    end
+
+    it "can maintain null positions when moving things around" do
+      5.times do |i|
+        Topic.exec_sql("insert into test_items(id,position) values(#{i}, null)")
+      end
+
+      TestItem.find(2).move_to(0)
+      TestItem.order('id asc').pluck(:position).should == [nil,nil,0,nil,nil]
+      TestItem.find(0).move_to(4)
+      TestItem.order('id asc').pluck(:position).should == [4,nil,0,nil,nil]
+      TestItem.find(2).move_to(1)
+      TestItem.order('id asc').pluck(:position).should == [4,nil,1,nil,nil]
+      TestItem.find(0).move_to(1)
+      TestItem.order('id asc').pluck(:position).should == [1,nil,2,nil,nil]
     end
   end
 end

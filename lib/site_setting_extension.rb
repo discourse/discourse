@@ -14,7 +14,7 @@ module SiteSettingExtension
   end
 
   def types
-    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum)
+    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum, :list)
   end
 
   def mutex
@@ -22,46 +22,68 @@ module SiteSettingExtension
   end
 
   def current
-    @@containers ||= {}
-    @@containers[provider.current_site] ||= {}
+    @containers ||= {}
+    @containers[provider.current_site] ||= {}
   end
 
   def defaults
     @defaults ||= {}
   end
 
+  def categories
+    @categories ||= {}
+  end
+
   def enums
     @enums ||= {}
+  end
+
+  def lists
+    @lists ||= []
   end
 
   def hidden_settings
     @hidden_settings ||= []
   end
 
-  def setting(name, default = nil, opts = {})
+  def refresh_settings
+    @refresh_settings ||= []
+  end
+
+  def setting(name_arg, default = nil, opts = {})
+    name = name_arg.to_sym
     mutex.synchronize do
       self.defaults[name] = default
+      categories[name] = opts[:category] || :uncategorized
       current_value = current.has_key?(name) ? current[name] : default
       if opts[:enum]
         enum = opts[:enum]
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
       end
-      if opts[:hidden] == true
+      if opts[:list]
+        lists << name
+      end
+      if opts[:hidden]
         hidden_settings << name
       end
+      if opts[:refresh]
+        refresh_settings << name
+      end
+
+      current[name] = current_value
       setup_methods(name, current_value)
     end
   end
 
   # just like a setting, except that it is available in javascript via DiscourseSession
-  def client_setting(name, default = nil)
-    setting(name,default)
-    @@client_settings ||= []
-    @@client_settings << name
+  def client_setting(name, default = nil, opts = {})
+    setting(name, default, opts)
+    @client_settings ||= []
+    @client_settings << name
   end
 
   def client_settings
-    @@client_settings
+    @client_settings ||= []
   end
 
   def settings_hash
@@ -79,7 +101,7 @@ module SiteSettingExtension
   end
 
   def client_settings_json_uncached
-    MultiJson.dump(Hash[*@@client_settings.map{|n| [n, self.send(n)]}.flatten])
+    MultiJson.dump(Hash[*@client_settings.map{|n| [n, self.send(n)]}.flatten])
   end
 
   # Retrieve all settings
@@ -93,7 +115,8 @@ module SiteSettingExtension
          description: description(s),
          default: v,
          type: type.to_s,
-         value: value.to_s}.merge( type == :enum ? {valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?} : {})
+         value: value.to_s,
+         category: categories[s]}.merge( type == :enum ? {valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?} : {})
       end
   end
 
@@ -111,24 +134,24 @@ module SiteSettingExtension
       ensure_listen_for_changes
       old = current
 
-      all_settings = provider.all
-      new_hash =  Hash[*(all_settings.map{|s| [s.name.intern, convert(s.value,s.data_type)]}.to_a.flatten)]
+      new_hash =  Hash[*(provider.all.map{ |s|
+        [s.name.intern, convert(s.value,s.data_type)]
+      }.to_a.flatten)]
 
-      # add defaults
+      # add defaults, cause they are cached
       new_hash = defaults.merge(new_hash)
+
       changes,deletions = diff_hash(new_hash, old)
 
       if deletions.length > 0 || changes.length > 0
-        @current = new_hash
         changes.each do |name, val|
-          setup_methods name, val
+          current[name] = val
         end
         deletions.each do |name,val|
-          setup_methods name, defaults[name]
+          current[name] = defaults[name]
         end
       end
-
-      Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
+      clear_cache!
     end
   end
 
@@ -162,12 +185,18 @@ module SiteSettingExtension
   end
 
   def process_id
-    @@process_id ||= SecureRandom.uuid
+    @process_id ||= SecureRandom.uuid
+  end
+
+  def after_fork
+    @process_id = nil
+    ensure_listen_for_changes
   end
 
   def remove_override!(name)
     provider.destroy(name)
     current[name] = defaults[name]
+    clear_cache!
   end
 
   def add_override!(name,val)
@@ -177,7 +206,7 @@ module SiteSettingExtension
       val = (val == "t" || val == "true") ? 't' : 'f'
     end
 
-    if type == types[:fixnum] && !(Fixnum === val)
+    if type == types[:fixnum] && !val.is_a?(Fixnum)
       val = val.to_i
     end
 
@@ -190,10 +219,36 @@ module SiteSettingExtension
     end
 
     provider.save(name, val, type)
-    @last_message_sent = MessageBus.publish('/site_settings', {process: process_id})
+    current[name] = convert(val, type)
+    clear_cache!
+  end
+
+  def notify_changed!
+    MessageBus.publish('/site_settings', {process: process_id})
+  end
+
+  def has_setting?(name)
+    defaults.has_key?(name.to_sym) || defaults.has_key?("#{name}?".to_sym)
+  end
+
+  def requires_refresh?(name)
+    refresh_settings.include?(name.to_sym)
+  end
+
+  def set(name, value)
+    if has_setting?(name)
+      self.send("#{name}=", value)
+      Discourse.request_refresh! if requires_refresh?(name)
+    else
+      raise ArgumentError.new("No setting named #{name} exists")
+    end
   end
 
   protected
+
+  def clear_cache!
+    Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
+  end
 
   def diff_hash(new_hash, old)
     changes = []
@@ -213,6 +268,7 @@ module SiteSettingExtension
   def get_data_type(name,val)
     return types[:null] if val.nil?
     return types[:enum] if enums[name]
+    return types[:list] if lists.include? name
 
     case val
     when String
@@ -230,26 +286,30 @@ module SiteSettingExtension
     case type
     when types[:fixnum]
       value.to_i
-    when types[:string], types[:enum]
+    when types[:string], types[:list], types[:enum]
       value
     when types[:bool]
       value == true || value == "t" || value == "true"
     when types[:null]
       nil
+    else
+      raise ArgumentError.new :type
     end
   end
 
 
   def setup_methods(name, current_value)
 
-    # trivial multi db support, we can optimize this later
-    current[name] = current_value
     clean_name = name.to_s.sub("?", "")
 
     eval "define_singleton_method :#{clean_name} do
-      c = @@containers[provider.current_site]
-      c = c[name] if c
-      c
+      c = @containers[provider.current_site]
+      if c
+        c[name]
+      else
+        refresh!
+        current[name]
+      end
     end
 
     define_singleton_method :#{clean_name}? do
@@ -258,7 +318,6 @@ module SiteSettingExtension
 
     define_singleton_method :#{clean_name}= do |val|
       add_override!(:#{name}, val)
-      refresh!
     end
     "
   end

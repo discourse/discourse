@@ -253,7 +253,7 @@ describe TopicLink do
     end
   end
 
-  describe 'counts_for and topic_summary' do
+  describe 'counts_for and topic_map' do
     it 'returns blank without posts' do
       TopicLink.counts_for(Guardian.new, nil, nil).should be_blank
     end
@@ -279,7 +279,7 @@ describe TopicLink do
         counts_for[post.id].find {|l| l[:url] == 'http://google.com'}[:clicks].should == 0
         counts_for[post.id].first[:clicks].should == 1
 
-        array = TopicLink.topic_summary(Guardian.new, post.topic_id)
+        array = TopicLink.topic_map(Guardian.new, post.topic_id)
         array.length.should == 4
         array[0]["clicks"].should == "1"
       end
@@ -292,7 +292,7 @@ describe TopicLink do
         post = Fabricate(:post, raw: "hello test topic #{url}")
         TopicLink.extract_from(post)
 
-        TopicLink.topic_summary(Guardian.new, post.topic_id).count.should == 1
+        TopicLink.topic_map(Guardian.new, post.topic_id).count.should == 1
         TopicLink.counts_for(Guardian.new, post.topic, [post]).length.should == 1
 
         category.set_permissions(:staff => :full)
@@ -300,8 +300,8 @@ describe TopicLink do
 
         admin = Fabricate(:admin)
 
-        TopicLink.topic_summary(Guardian.new, post.topic_id).count.should == 0
-        TopicLink.topic_summary(Guardian.new(admin), post.topic_id).count.should == 1
+        TopicLink.topic_map(Guardian.new, post.topic_id).count.should == 0
+        TopicLink.topic_map(Guardian.new(admin), post.topic_id).count.should == 1
 
         TopicLink.counts_for(Guardian.new, post.topic, [post]).length.should == 0
         TopicLink.counts_for(Guardian.new(admin), post.topic, [post]).length.should == 1

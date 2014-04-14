@@ -5,13 +5,12 @@ module Jobs
   # This job will run on a regular basis to update statistics and denormalized data.
   # If it does not run, the site will not function properly.
   class PeriodicalUpdates < Jobs::Scheduled
-    recurrence { hourly.minute_of_hour(3, 18, 33, 48) }
+    every 15.minutes
 
     def execute(args)
-
       # Update the average times
-      Post.calculate_avg_time
-      Topic.calculate_avg_time
+      Post.calculate_avg_time(1.day.ago)
+      Topic.calculate_avg_time(1.day.ago)
 
       # Feature topics in categories
       CategoryFeaturedTopic.feature_topics
@@ -20,11 +19,13 @@ module Jobs
       UserStat.update_view_counts
 
       # Update the scores of posts
-      ScoreCalculator.new.calculate
+      ScoreCalculator.new.calculate(1.day.ago)
 
-      # Refresh Hot Topics
-      HotTopic.refresh!
+      # Update the scores of topics
+      TopTopic.refresh!
 
+      # Automatically close stuff that we missed
+      Topic.auto_close
     end
 
   end

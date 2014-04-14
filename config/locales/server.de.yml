@@ -1,6 +1,9 @@
 # encoding: utf-8
 # This file contains content for the server portion of Discourse used by Ruby
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -24,8 +27,8 @@ de:
   via: "%{username} via %{site_name}"
   is_reserved: "ist reserviert"
 
-  site_under_maintenance: 'Die Seite wird momentan gewartet.'
-  operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
+  backup:
+    operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
 
   too_many_mentions:
     zero: "Entschuldige, du kannst andere Nutzer nicht erwähnen."
@@ -336,7 +339,7 @@ de:
       title: "Lesezeichen"
       xaxis: "Tag"
       yaxis: "Zahl der Lesezeichen"
-    favorites:
+    starred:
       title: "Favoriten"
       xaxis: "Tag"
       yaxis: "Zahl der Favoriten"
@@ -477,7 +480,6 @@ de:
     post_excerpt_maxlength: "Maximale Länge des Zitates eines Beitrags in Zeichen."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags."
     category_post_template: "Die Beitragsvorlage zur Kategoriedefinition beim erstellen einer neuen Kategorie."
-    onebox_max_chars: "Maximale Zahl der Zeichen, die eine Onebox von einer externen Webseite in einen Beitrag lädt."
 
     logo_url: "Das Logo deiner Seite, zum Beispiel: http://example.com/logo.png"
     logo_small_url: "Kleines Logo deiner Seite, das beim Herunterscrollen in einem Thema gezeigt wird, zum Beispiel: http://example.com/logo-small.png"
@@ -486,11 +488,10 @@ de:
 
     notification_email: "Die Antwortadresse, die in Systemmails (zum Beispiel zur Passwortwiederherstellung, neuen Konten, etc.) eingetragen wird."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
-    use_ssl: "Soll die Seite via SSL nutzbar sein?"
-    best_of_score_threshold: "Der Minimalscore eines Beitrags, um zu den Top Beiträgen zu zählen."
-    best_of_posts_required: "Minimale Zahl der Beiträge zu einem Thema bevor der Modus 'Top Beiträge' aktiviert wird."
-    best_of_likes_required: "Minimale Zahl der „Gefällt mir“ in einem Thema, bevor der Modus 'Top Beiträge' aktiviert wird."
-    best_of_percent_filter: "Prozentzahl der Top Beiträge, die gezeigt werden, wenn eine Nutzer in diese Ansicht wechselt."
+    summary_score_threshold: "Der Minimalscore eines Beitrags, um zu den Top Beiträgen zu zählen."
+    summary_posts_required: "Minimale Zahl der Beiträge zu einem Thema bevor der Modus 'Top Beiträge' aktiviert wird."
+    summary_likes_required: "Minimale Zahl der „Gefällt mir“ in einem Thema, bevor der Modus 'Top Beiträge' aktiviert wird."
+    summary_percent_filter: "Prozentzahl der Top Beiträge, die gezeigt werden, wenn eine Nutzer in diese Ansicht wechselt."
     enable_private_messages: "Erlaube Nutzern mit Stufe 1, private Nachrichten zu Gespräche."
 
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
@@ -512,9 +513,9 @@ de:
     must_approve_users: "Administratoren müssen Nutzer freischalten, bevor sie Zugriff erlangen."
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
     ga_domain_name: "Google Analytics Domänenname, zum Beispiel: mysite.com; siehe http://google.com/analytics"
-    enable_escaped_fragments: "Aktiviere Umgehungslösung um älteren Suchmaschinen-Webcrawler zu helfen die Seite zu indexieren. ACHTUNG: Nur aktivieren falls wirklich nötig."
+    enable_escaped_fragments: "Aktiviere Umgehungslösung um älteren Suchmaschinen-Webcrawler zu helfen die Seite zu indexieren."
     enable_noscript_support: "Aktiviere standard Suchmaschinen-Webcrawler Unterstützung durch den noscript Tag"
-    top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|hot|read|favorited|unread|new|posted|categories"
+    top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Bestimme, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen. Beispiel: twitter|facebook|google+|email"
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
@@ -543,7 +544,6 @@ de:
     login_required: "Zum Lesen der Beiträge must du angemeldet sein"
 
     enable_local_logins: "Aktiviere lokale Authentisierung"
-    enable_local_account_create: "Aktiviere lokale Kontoerstellung"
     enable_google_logins: "Aktiviere Google Authentisierung."
     enable_yahoo_logins: "Aktiviere Yahoo Authentisierung."
 
@@ -563,9 +563,7 @@ de:
     github_client_id: "Client-ID für Github Authentisierung, registriert auf https://github.com/settings/applications"
     github_client_secret: "Client Secret für Github Authentisierung, registriert auf https://github.com/settings/applications"
 
-    enable_persona_logins: "Aktiviere mailbasierte Authentisierung mit Mozilla Persona."
-
-    allow_import: "Erlaube Datenimports. (WARNUNG: Hiermit können ALLE vorhandenen Daten überschrieben werden; immer auf 'false' lassen, es sei denn Du planst wirklich Datenimports)."
+    allow_restore: "Erlaube Datenimports. (WARNUNG: Hiermit können ALLE vorhandenen Daten überschrieben werden; immer auf 'false' lassen, es sei denn Du planst wirklich Datenimports)."
 
     active_user_rate_limit_secs: "Sekunden, nach denen das 'last_seen_at'-Feld aktualisiert wird."
     previous_visit_timeout_hours: "Stunden, die ein Besuch dauert bevor er als 'früherer' Besuch gezählt wird."
@@ -577,7 +575,7 @@ de:
     max_flags_per_day: "Maximale Zahl der Meldungen pro Nutzer pro Tag."
     max_bookmarks_per_day: "Maximale Zahl der Lesezeichen pro Nutzer pro Tag."
     max_edits_per_day: "Maximale Zahl der Bearbeitungen pro Nutzer pro Tag."
-    max_favorites_per_day: "Maximale Zahl der Favorisierungen pro Nutzer pro Tag."
+    max_stars_per_day: "Maximale Zahl der Favorisierungen pro Nutzer pro Tag."
     max_topics_per_day: "Maximale Zahl der Themen, die ein Nutzer pro Tag erstellen kann."
     max_private_messages_per_day: "Maximale Zahl privater Nachrichten, die ein Nutzer pro Tag verschicken kann."
 
@@ -657,7 +655,7 @@ de:
     minimum_topics_similar: "Wie viele Themen in der Datenbank existieren müssen, bevor ähnliche Themen angezeigt werden."
 
     relative_date_duration: "Anzahl von Tagen nach nach welchen das Beitragsdatum relativ und nicht absolut angezeigt wird. Beispiel: relatives Datum: 7T, absolutes Datum: 20 Feb"
-    delete_user_max_age: "Nach wievielen Tagen ein Benutzerkonto von einem Administrator gelöscht werden kann."
+    delete_user_max_post_age: "Nach wievielen Tagen ein Benutzerkonto von einem Administrator gelöscht werden kann."
     delete_all_posts_max: "Die maximale Anzahl von Beiträgen welche auf einmal gelöscht werden kann. Hat ein Benutzer mehr Beiträge, so können die Beiträge nicht auf einmal und der Benutzer nicht gelöscht werden."
     username_change_period: "Wie lange neu registrierte Benutzer ihren Benutzernamen ändern können."
 

@@ -1,8 +1,8 @@
 {{#groupedEach model.content}}
-  <div {{bindAttr class=":item hidden deleted moderator_action"}}>
+  <div {{bind-attr class=":item hidden deleted moderator_action"}}>
     <div class='clearfix info'>
       <a href="{{unbound userUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
-      <span class='time'>{{date path="created_at" leaveAgo="true"}}</span>
+      <span class='time'>{{unboundDate path="created_at" leaveAgo="true"}}</span>
       <span class="title">
         <a href="{{unbound postUrl}}">{{unbound title}}</a>
       </span>
@@ -14,9 +14,10 @@
     {{#groupedEach children}}
       <div class='child-actions'>
         <i class="icon {{unbound icon}}"></i>
-      {{#groupedEach items}}
-        <a href="{{unbound userUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
-      {{/groupedEach}}
+        {{#groupedEach items}}
+          <a href="{{unbound userUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
+          {{#if edit_reason}} &mdash; <span class="edit-reason">{{unbound edit_reason}}</span>{{/if}}
+        {{/groupedEach}}
       </div>
     {{/groupedEach}}
   </div>

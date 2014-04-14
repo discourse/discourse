@@ -1,3 +1,4 @@
+/* exported exists, count, present, blank, containsInstance, not */
 // Test helpers
 function exists(selector) {
   return !!count(selector);
@@ -17,4 +18,8 @@ function blank(obj, text) {
 
 function containsInstance(collection, klass, text) {
   ok(klass.detectInstance(_.first(collection)), text);
+}
+
+function not(state, message) {
+  ok(!state, message);
 }

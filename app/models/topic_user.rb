@@ -20,7 +20,15 @@ class TopicUser < ActiveRecord::Base
     end
 
     def notification_reasons
-      @notification_reasons ||= Enum.new(:created_topic, :user_changed, :user_interacted, :created_post)
+      @notification_reasons ||= Enum.new(
+        :created_topic,
+        :user_changed,
+        :user_interacted,
+        :created_post,
+        :auto_watch,
+        :auto_watch_category,
+        :auto_mute_category
+      )
     end
 
     def auto_track(user_id, topic_id, reason)
@@ -58,10 +66,10 @@ class TopicUser < ActiveRecord::Base
       result
     end
 
-    def get(topic,user)
-      topic = topic.id if Topic === topic
-      user = user.id if User === user
-      TopicUser.where('topic_id = ? and user_id = ?', topic, user).first
+    def get(topic, user)
+      topic = topic.id if topic.is_a?(Topic)
+      user = user.id if user.is_a?(User)
+      TopicUser.find_by(topic_id: topic, user_id: user)
     end
 
     # Change attributes for a user (creates a record when none is present). First it tries an update
@@ -108,8 +116,8 @@ class TopicUser < ActiveRecord::Base
     end
 
     def track_visit!(topic,user)
-      topic_id = Topic === topic ? topic.id : topic
-      user_id = User === user ? user.id : topic
+      topic_id = topic.is_a?(Topic) ? topic.id : topic
+      user_id = user.is_a?(User) ? user.id : topic
 
       now = DateTime.now
       rows = TopicUser.where({topic_id: topic_id, user_id: user_id}).update_all({last_visited_at: now})
@@ -138,7 +146,7 @@ class TopicUser < ActiveRecord::Base
 
       # In case anyone seens "seen_post_count" and gets confused, like I do.
       # seen_post_count represents the highest_post_number of the topic when
-      # the user visited it. It may be out of alignement with last_read, meaning
+      # the user visited it. It may be out of alignment with last_read, meaning
       # ... user visited the topic but did not read the posts
       rows = exec_sql("UPDATE topic_users
                                     SET
@@ -173,7 +181,9 @@ class TopicUser < ActiveRecord::Base
         before_last_read = rows[0][2].to_i
 
         if before_last_read < post_number
-          TopicTrackingState.publish_read(topic_id, post_number, user.id)
+          # The user read at least one new post
+          TopicTrackingState.publish_read(topic_id, post_number, user.id, after)
+          user.update_posts_read!(post_number - before_last_read)
         end
 
         if before != after
@@ -182,14 +192,16 @@ class TopicUser < ActiveRecord::Base
       end
 
       if rows.length == 0
-        TopicTrackingState.publish_read(topic_id, post_number, user.id)
+        # The user read at least one post in a topic that they haven't viewed before.
+        args[:new_status] = notification_levels[:regular]
+        if (user.auto_track_topics_after_msecs || SiteSetting.auto_track_topics_after) == 0
+          args[:new_status] = notification_levels[:tracking]
+        end
+        TopicTrackingState.publish_read(topic_id, post_number, user.id, args[:new_status])
+        user.update_posts_read!(post_number)
 
-        args[:tracking] = notification_levels[:tracking]
-        args[:regular] = notification_levels[:regular]
-        args[:site_setting] = SiteSetting.auto_track_topics_after
         exec_sql("INSERT INTO topic_users (user_id, topic_id, last_read_post_number, seen_post_count, last_visited_at, first_visited_at, notification_level)
-                  SELECT :user_id, :topic_id, :post_number, ft.highest_post_number, :now, :now,
-                    case when coalesce(u.auto_track_topics_after_msecs, :site_setting) = 0 then :tracking else :regular end
+                  SELECT :user_id, :topic_id, :post_number, ft.highest_post_number, :now, :now, :new_status
                   FROM topics AS ft
                   JOIN users u on u.id = :user_id
                   WHERE ft.id = :topic_id
@@ -263,9 +275,9 @@ end
 #  cleared_pinned_at        :datetime
 #  unstarred_at             :datetime
 #  id                       :integer          not null, primary key
+#  last_emailed_post_number :integer
 #
 # Indexes
 #
-#  index_forum_thread_users_on_forum_thread_id_and_user_id  (topic_id,user_id) UNIQUE
+#  index_topic_users_on_topic_id_and_user_id  (topic_id,user_id) UNIQUE
 #
-

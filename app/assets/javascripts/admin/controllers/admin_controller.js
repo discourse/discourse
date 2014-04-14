@@ -6,4 +6,8 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminCustomizeController = Discourse.Controller.extend({});
+Discourse.AdminController = Discourse.Controller.extend({
+  showBadges: function() {
+    return this.get('currentUser.admin') && Discourse.SiteSettings.enable_badges;
+  }.property()
+});

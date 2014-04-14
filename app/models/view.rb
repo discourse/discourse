@@ -42,11 +42,10 @@ end
 #  parent_type :string(50)       not null
 #  viewed_at   :date             not null
 #  user_id     :integer
-#  ip_address  :string           not null
+#  ip_address  :inet             not null
 #
 # Indexes
 #
 #  index_views_on_parent_id_and_parent_type              (parent_id,parent_type)
 #  index_views_on_user_id_and_parent_type_and_parent_id  (user_id,parent_type,parent_id)
 #
-

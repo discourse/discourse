@@ -1,22 +1,70 @@
-task 'assets:precompile' => 'environment' do
-  # see: https://github.com/rails/sprockets-rails/issues/49
-  # a decision was made no longer to copy non-digested assets
-  # this breaks stuff like the emoji plugin. We could fix it,
-  # but its a major pain with little benefit.
-  if rails4?
-    puts "> Copying non-digested versions of assets"
-    assets = Dir.glob(File.join(Rails.root, 'public/assets/**/*'))
-    regex = /(-{1}[a-z0-9]{32}*\.{1}){1}/
-    assets.each do |file|
-      next if File.directory?(file) || file !~ regex
+task 'assets:precompile:before' do
 
-      source = file.split('/')
-      source.push(source.pop.gsub(regex, '.'))
-
-      non_digested = File.join(source)
-      FileUtils.cp(file, non_digested)
-    end
-    puts "> Removing cache"
-    `rm -fr tmp/cache`
+  unless %w{profile production staging}.include? Rails.env
+    raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
   end
+
+  # Ensure we ALWAYS do a clean build
+  # We use many .erbs that get out of date quickly, especially with plugins
+  puts "Purging temp files"
+  `rm -fr #{Rails.root}/tmp/cache`
+
+  # in the past we applied a patch that removed asset postfixes, but it is terrible practice
+  # leaving very complicated build issues
+  # https://github.com/rails/sprockets-rails/issues/49
+
+  # let's make precompile faster using redis magic
+  require 'sprockets'
+  require 'digest/sha1'
+
+  module ::Sprockets
+
+    def self.cache_compiled(type, data)
+      digest = Digest::SHA1.hexdigest(data)
+      key = "SPROCKETS_#{type}_#{digest}"
+      if compiled = $redis.get(key)
+        $redis.expire(key, 1.week)
+      else
+        compiled = yield
+        $redis.setex(key, 1.week, compiled)
+      end
+      compiled
+    end
+
+    class SassCompressor
+      def evaluate(context, locals, &block)
+        ::Sprockets.cache_compiled("sass", data) do
+           # HACK, SASS compiler will degrade to aweful perf with huge files
+           # Bypass if larger than 500kb, ensure assets are minified prior
+           if context.pathname &&
+              context.pathname.to_s =~ /.css$/ &&
+              data.length > 500.kilobytes
+             puts "Skipped minifying #{context.pathname} cause it is larger than 200KB, minify in source control or avoid large CSS files"
+             data
+           else
+             ::Sass::Engine.new(data, {
+                :syntax => :scss,
+                :cache => false,
+                :read_cache => false,
+                :style => :compressed
+              }).render
+           end
+        end
+      end
+    end
+
+    class UglifierCompressor
+
+      def evaluate(context, locals, &block)
+        ::Sprockets.cache_compiled("uglifier", data) do
+           Uglifier.new(:comments => :none).compile(data)
+        end
+      end
+
+    end
+  end
+
 end
+
+task 'assets:precompile' => 'assets:precompile:before'
+

@@ -6,7 +6,13 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.UserInvitedController = Ember.ArrayController.extend({
+Discourse.UserInvitedController = Ember.ObjectController.extend({
+  user: null,
+
+  init: function() {
+    this._super();
+    this.set('searchTerm', '');
+  },
 
   /**
     Observe the search term box with a debouncer and change the results.
@@ -44,9 +50,8 @@ Discourse.UserInvitedController = Ember.ArrayController.extend({
     @property showSearch
   **/
   showSearch: function() {
-    if (Em.isNone(this.get('searchTerm')) && this.get('model.length') === 0) { return false; }
-    return true;
-  }.property('searchTerm', 'model.length'),
+    return !(Em.isNone(this.get('searchTerm')) && this.get('invites.length') === 0);
+  }.property('searchTerm', 'invites.length'),
 
   /**
     Were the results limited by our `maxInvites`
@@ -54,8 +59,8 @@ Discourse.UserInvitedController = Ember.ArrayController.extend({
     @property truncated
   **/
   truncated: function() {
-    return this.get('model.length') === Discourse.SiteSettings.invites_shown;
-  }.property('model.length'),
+    return this.get('invites.length') === Discourse.SiteSettings.invites_shown;
+  }.property('invites.length'),
 
   actions: {
 

@@ -25,7 +25,6 @@ Discourse.UserRoute = Discourse.Route.extend({
   },
 
   model: function(params) {
-
     // If we're viewing the currently logged in user, return that object
     // instead.
     var currentUser = Discourse.User.current();
@@ -40,9 +39,9 @@ Discourse.UserRoute = Discourse.Route.extend({
     return this.modelFor('user').findDetails();
   },
 
-  serialize: function(params) {
-    if (!params) return {};
-    return { username: Em.get(params, 'username').toLowerCase() };
+  serialize: function(model) {
+    if (!model) return {};
+    return { username: model.get('username').toLowerCase() };
   },
 
   setupController: function(controller, user) {

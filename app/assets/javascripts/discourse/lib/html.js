@@ -1,11 +1,46 @@
 /**
-  Helpers to build HTML strings such as rich links to categories and topics.
+  Helpers to build HTML strings as well as custom fragments.
 
   @class HTML
   @namespace Discourse
   @module Discourse
 **/
+
+var customizations = {};
+
 Discourse.HTML = {
+
+  /**
+    Return a custom fragment of HTML by key. It can be registered via a plugin
+    using `setCustomHTML(key, html)`. This is used by a handlebars helper to find
+    the HTML content it wants. It will also check the `PreloadStore` for any server
+    side preloaded HTML.
+
+    @method getCustomHTML
+    @param {String} key to lookup
+  **/
+  getCustomHTML: function(key) {
+    var c = customizations[key];
+    if (c) {
+      return new Handlebars.SafeString(c);
+    }
+
+    var html = PreloadStore.get("customHTML");
+    if (html && html[key] && html[key].length) {
+      return new Handlebars.SafeString(html[key]);
+    }
+  },
+
+  /**
+    Set a fragment of HTML by key. It can then be looked up with `getCustomHTML(key)`.
+
+    @method setCustomHTML
+    @param {String} key to store the html
+    @param {String} html fragment to store
+  **/
+  setCustomHTML: function(key, html) {
+    customizations[key] = html;
+  },
 
   /**
     Returns the CSS styles for a category
@@ -27,23 +62,37 @@ Discourse.HTML = {
   },
 
   /**
-    Create a badge-like category link
+    Create a category badge
 
-    @method categoryLink
+    @method categoryBadge
     @param {Discourse.Category} category the category whose link we want
     @param {Object} opts The options for the category link
-      @param {Boolean} opts.allowUncategorized Whether we allow rendering of the uncategorized category
+      @param {Boolean} opts.allowUncategorized Whether we allow rendering of the uncategorized category (default false)
+      @param {Boolean} opts.showParent Whether to visually show whether category is a sub-category (default false)
+      @param {Boolean} opts.link Whether this category badge should link to the category (default true)
+      @param {String}  opts.extraClasses add this string to the class attribute of the badge
     @returns {String} the html category badge
   **/
-  categoryLink: function(category, opts) {
+  categoryBadge: function(category, opts) {
     opts = opts || {};
 
     if ((!category) ||
-        (!opts.allowUncategorized && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id"))) return "";
+          (!opts.allowUncategorized &&
+           Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id") &&
+           Discourse.SiteSettings.suppress_uncategorized_badge
+          )
+       ) return "";
 
     var name = Em.get(category, 'name'),
         description = Em.get(category, 'description'),
-        html = "<a href=\"" + Discourse.getURL("/category/") + Discourse.Category.slugFor(category) + "\" class=\"badge-category\" ";
+        restricted = Em.get(category, 'read_restricted'),
+        url = Discourse.getURL("/category/") + Discourse.Category.slugFor(category),
+        elem = (opts.link === false ? 'span' : 'a'),
+        extraClasses = (opts.extraClasses ? (' ' + opts.extraClasses) : ''),
+        html = "<" + elem + " href=\"" + (opts.link === false ? '' : url) + "\" ";
+
+    html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) +
+            extraClasses + "\" ";
 
     // Add description if we have it
     if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
@@ -52,7 +101,21 @@ Discourse.HTML = {
     if (categoryStyle) {
       html += "style=\"" + categoryStyle + "\" ";
     }
-    html += ">" + name + "</a>";
+
+    if (restricted) {
+      html += "><div><i class='fa fa-group'></i> " + name + "</div></" + elem + ">";
+    } else {
+      html += ">" + name + "</" + elem + ">";
+    }
+
+    if (opts.showParent && category.get('parent_category_id')) {
+      var parent = Discourse.Category.findById(category.get('parent_category_id'));
+      html = "<span class='badge-wrapper'><" + elem + " class='badge-category-parent" + extraClasses + "' style=\"" + (Discourse.HTML.categoryStyle(parent)||'') +
+             "\" href=\"" + (opts.link === false ? '' : url) + "\"><span class='category-name'>" +
+             (Em.get(parent, 'read_restricted') ? "<i class='fa fa-group'></i> " : "") +
+             Em.get(parent, 'name') + "</span></" + elem + ">" +
+             html + "</span>";
+    }
 
     return html;
   }

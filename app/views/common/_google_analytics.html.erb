@@ -4,7 +4,7 @@
   _gaq.push(['_setAccount', '<%= SiteSetting.ga_tracking_code %>']);
 
   <% if SiteSetting.ga_domain_name.present? %>
-    _gaq.push(['_setDomainName', '<%= SiteSetting.ga_domain_name %>']);
+    _gaq.push(['_setDomainName', '<%= SiteSetting.ga_domain_name.gsub(/^http(s)?:\/\//, '') %>']);
   <% end %>
 
   _gaq.push(['_setCustomVar', 1, 'Anonymous', <%= !current_user %>, 2]);

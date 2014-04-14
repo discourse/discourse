@@ -47,13 +47,12 @@ end
 #  action_type   :integer          not null
 #  match_count   :integer          default(0), not null
 #  last_match_at :datetime
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  ip_address    :string
+#  created_at    :datetime
+#  updated_at    :datetime
+#  ip_address    :inet
 #
 # Indexes
 #
 #  index_screened_urls_on_last_match_at  (last_match_at)
 #  index_screened_urls_on_url            (url) UNIQUE
 #
-

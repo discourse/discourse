@@ -54,59 +54,19 @@ class PostDestroyer
   # show up in the topic
   def staff_destroyed
     Post.transaction do
-
-      if @post.topic
-        # Update the last post id to the previous post if it exists
-        last_post = Post.where("topic_id = ? and id <> ?", @post.topic_id, @post.id).order('created_at desc').limit(1).first
-        if last_post.present?
-          @post.topic.update_attributes(last_posted_at: last_post.created_at,
-                                        last_post_user_id: last_post.user_id,
-                                        highest_post_number: last_post.post_number)
-
-          # If the poster doesn't have any other posts in the topic, clear their posted flag
-          unless Post.exists?(["topic_id = ? and user_id = ? and id <> ?", @post.topic_id, @post.user_id, @post.id])
-            TopicUser.where(topic_id: @post.topic_id, user_id: @post.user_id).update_all 'posted = false'
-          end
-        end
-
-        # Feature users in the topic
-        Jobs.enqueue(:feature_topic_users, topic_id: @post.topic_id, except_post_id: @post.id)
-      end
-
-      @post.post_actions.each do |pa|
-        pa.trash!(@user)
-      end
-
-      f = PostActionType.types.map{|k,v| ["#{k}_count", 0]}
-      Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
-
       @post.trash!(@user)
-
-      Topic.reset_highest(@post.topic_id) if @post.topic
-
+      if @post.topic
+        make_previous_post_the_last_one
+        clear_user_posted_flag
+        feature_users_in_the_topic
+        Topic.reset_highest(@post.topic_id)
+      end
+      trash_post_actions
       @post.update_flagged_posts_count
-
-      # Remove any reply records that point to deleted posts
-      post_ids = PostReply.where(reply_id: @post.id).pluck(:post_id)
-      PostReply.delete_all reply_id: @post.id
-
-      if post_ids.present?
-        Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
-      end
-
-      # Remove any notifications that point to this deleted post
-      Notification.delete_all topic_id: @post.topic_id, post_number: @post.post_number
-
+      remove_associated_replies
+      remove_associated_notifications
       @post.topic.trash!(@user) if @post.topic and @post.post_number == 1
-
-      if @post.topic && @post.topic.category && @post.id == @post.topic.category.latest_post_id
-        @post.topic.category.update_latest
-      end
-
-      if @post.post_number == 1 && @post.topic && @post.topic.category && @post.topic_id == @post.topic.category.latest_topic_id
-        @post.topic.category.update_latest
-      end
-
+      update_associated_category_latest_topic
     end
   end
 
@@ -124,9 +84,62 @@ class PostDestroyer
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true
-      @post.revise(@user, @post.versions.last.modifications["raw"][0], force_new_version: true)
+      @post.revise(@user, @post.revisions.last.modifications["raw"][0], force_new_version: true)
       @post.update_flagged_posts_count
     end
+  end
+
+
+  private
+
+  def make_previous_post_the_last_one
+    last_post = Post.where("topic_id = ? and id <> ?", @post.topic_id, @post.id).order('created_at desc').limit(1).first
+    if last_post.present?
+      @post.topic.update_attributes(
+          last_posted_at: last_post.created_at,
+          last_post_user_id: last_post.user_id,
+          highest_post_number: last_post.post_number
+      )
+    end
+  end
+
+  def clear_user_posted_flag
+    unless Post.exists?(["topic_id = ? and user_id = ? and id <> ?", @post.topic_id, @post.user_id, @post.id])
+      TopicUser.where(topic_id: @post.topic_id, user_id: @post.user_id).update_all 'posted = false'
+    end
+  end
+
+  def feature_users_in_the_topic
+    Jobs.enqueue(:feature_topic_users, topic_id: @post.topic_id, except_post_id: @post.id)
+  end
+
+  def trash_post_actions
+    @post.post_actions.each do |pa|
+      pa.trash!(@user)
+    end
+
+    f = PostActionType.types.map{|k,v| ["#{k}_count", 0]}
+    Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
+  end
+
+  def remove_associated_replies
+    post_ids = PostReply.where(reply_id: @post.id).pluck(:post_id)
+
+    if post_ids.present?
+      PostReply.delete_all reply_id: @post.id
+      Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
+    end
+  end
+
+  def remove_associated_notifications
+    Notification.delete_all topic_id: @post.topic_id, post_number: @post.post_number
+  end
+
+  def update_associated_category_latest_topic
+    return unless @post.topic && @post.topic.category
+    return unless @post.id == @post.topic.category.latest_post_id || (@post.post_number == 1 && @post.topic_id == @post.topic.category.latest_topic_id)
+
+    @post.topic.category.update_latest
   end
 
 end

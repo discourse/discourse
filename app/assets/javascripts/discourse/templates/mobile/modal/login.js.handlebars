@@ -41,7 +41,7 @@
     </form>
   {{/if}}
   {{authMessage}}
-  <div id='login-alert' {{bindAttr class="alertClass"}}>{{alert}}</div>
+  <div id='login-alert' {{bind-attr class="alertClass"}}>{{alert}}</div>
 </div>
 <div class="modal-footer">
   {{#if authenticate}}
@@ -49,13 +49,13 @@
   {{/if}}
   {{#if Discourse.SiteSettings.enable_local_logins}}
     <button class='btn btn-large btn-primary'
-      {{bindAttr disabled="loginDisabled"}}
+      {{bind-attr disabled="loginDisabled"}}
       {{action login}}>
-        <i class="icon-unlock"></i>&nbsp;{{loginButtonText}}
+        <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
     </button>
 
     {{#unless Discourse.SiteSettings.invite_only}}
-      &nbsp; {{i18n create_account.invite}}
+      {{i18n create_account.invite}}
       <a id="new-account-link" {{action showCreateAccount}}>
         {{i18n create_account.action}}
       </a>

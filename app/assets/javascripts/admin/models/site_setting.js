@@ -32,6 +32,15 @@ Discourse.SiteSetting = Discourse.Model.extend({
   }.property('value'),
 
   /**
+    The name of the setting. Basically, underscores in the setting key are replaced with spaces.
+
+    @property settingName
+  **/
+  settingName: function() {
+    return this.get('setting').replace(/\_/g, ' ');
+  }.property('setting'),
+
+  /**
     Has the user changed the setting? If so we should save it.
 
     @property dirty
@@ -71,9 +80,10 @@ Discourse.SiteSetting = Discourse.Model.extend({
   **/
   save: function() {
     // Update the setting
-    var setting = this;
-    return Discourse.ajax("/admin/site_settings/" + (this.get('setting')), {
-      data: { value: this.get('value') },
+    var setting = this, data = {};
+    data[this.get('setting')] = this.get('value');
+    return Discourse.ajax("/admin/site_settings/" + this.get('setting'), {
+      data: data,
       type: 'PUT'
     }).then(function() {
       setting.set('originalValue', setting.get('value'));
@@ -103,21 +113,25 @@ Discourse.SiteSetting = Discourse.Model.extend({
 
 Discourse.SiteSetting.reopenClass({
 
-  /**
-    Retrieve all settings from the server
-
-    @method findAll
-  **/
   findAll: function() {
-    var result = Em.A();
-    Discourse.ajax("/admin/site_settings").then(function (settings) {
+    return Discourse.ajax("/admin/site_settings").then(function (settings) {
+      // Group the results by category
+      var categoryNames = [],
+          categories = {},
+          result = Em.A();
       _.each(settings.site_settings,function(s) {
         s.originalValue = s.value;
-        result.pushObject(Discourse.SiteSetting.create(s));
+        if (!categoryNames.contains(s.category)) {
+          categoryNames.pushObject(s.category);
+          categories[s.category] = Em.A();
+        }
+        categories[s.category].pushObject(Discourse.SiteSetting.create(s));
       });
-      result.set('diags', settings.diags);
+      _.each(categoryNames, function(n) {
+        result.pushObject({nameKey: n, name: I18n.t('admin.site_settings.categories.' + n), siteSettings: categories[n]});
+      });
+      return result;
     });
-    return result;
   },
 
   update: function(key, value) {
@@ -126,6 +140,7 @@ Discourse.SiteSetting.reopenClass({
       data: { value: value }
     });
   }
+
 });
 
 

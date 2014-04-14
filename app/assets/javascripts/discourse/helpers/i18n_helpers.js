@@ -25,13 +25,21 @@ I18n.toHumanSize = function(number, options) {
 **/
 Ember.Handlebars.registerHelper('i18n', function(property, options) {
   // Resolve any properties
-  var params,
-    _this = this;
-  params = options.hash;
+  var params = options.hash,
+    self = this;
+
   _.each(params, function(value, key) {
-    params[key] = Em.Handlebars.get(_this, value, options);
+    params[key] = Em.Handlebars.get(self, value, options);
   });
+
   return I18n.t(property, params);
+});
+
+/**
+ Bound version of i18n helper.
+ **/
+Ember.Handlebars.registerBoundHelper("boundI18n", function(property, options) {
+  return new Handlebars.SafeString(I18n.t(property, options.hash));
 });
 
 /**

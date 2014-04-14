@@ -26,6 +26,16 @@ test("isAllowedToUploadAFile", function() {
   ok(user.isAllowedToUploadAFile("image"), "moderator can always upload a file");
 });
 
+test("homepage", function() {
+  var user = Discourse.User.create({ should_be_redirected_to_top: false });
+  var defaultHomepage = Discourse.Utilities.defaultHomepage();
+
+  equal(user.get("homepage"), defaultHomepage, "user's homepage is default when not redirected");
+
+  user.set("should_be_redirected_to_top", true);
+
+  equal(user.get("homepage"), "top", "user's homepage is top when redirected");
+});
 
 asyncTestDiscourse("findByUsername", function() {
   expect(3);

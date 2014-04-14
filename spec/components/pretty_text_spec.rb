@@ -40,15 +40,12 @@ describe PrettyText do
         match_html "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
     end
 
-    it 'should add spoiler tags' do
-      PrettyText.cook("[spoiler]hello[/spoiler]").should match_html "<p><span class=\"spoiler\">hello</span></p>"
-    end
   end
 
   describe "rel nofollow" do
     before do
       SiteSetting.stubs(:add_rel_nofollow_to_user_content).returns(true)
-      SiteSetting.stubs(:exclude_rel_nofollow_domains).returns("foo.com,bar.com")
+      SiteSetting.stubs(:exclude_rel_nofollow_domains).returns("foo.com|bar.com")
     end
 
     it "should inject nofollow in all user provided links" do
@@ -69,6 +66,10 @@ describe PrettyText do
 
     it "should not inject nofollow for bar.foo.com" do
       (PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).should be_true
+    end
+
+    it "should not inject nofollow if omit_nofollow option is given" do
+      (PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow/).should be_true
     end
   end
 
@@ -91,6 +92,10 @@ describe PrettyText do
         PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100, markdown_images: true).should == "![car](http://cnn.com/a.gif)"
       end
 
+      it "should keep spoilers" do
+        PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100).should == "<span class='spoiler'>[image]</span>"
+        PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100).should == "<span class='spoiler'>spoiler</span>"
+      end
     end
 
     it "should have an option to strip links" do
@@ -174,6 +179,35 @@ describe PrettyText do
 
     it "strips links but leaves the text content" do
       expect(PrettyText.strip_links("I'm the linked <a href='http://en.wikipedia.org/wiki/Batman'>batman</a>")).to eq("I'm the linked batman")
+    end
+  end
+
+  describe "make_all_links_absolute" do
+    let(:base_url) { "http://baseurl.net" }
+
+    before do
+      Discourse.stubs(:base_url).returns(base_url)
+    end
+
+    it "adds base url to relative links" do
+      html = "<p><a class=\"mention\" href=\"/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/users/trollol\">@trollol</a> what do you guys think? </p>"
+      output = described_class.make_all_links_absolute(html)
+      output.should == "<p><a class=\"mention\" href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>"
+    end
+
+    it "doesn't change external absolute links" do
+      html = "<p>Check out <a href=\"http://mywebsite.com/users/boss\">this guy</a>.</p>"
+      described_class.make_all_links_absolute(html).should == html
+    end
+
+    it "doesn't change internal absolute links" do
+      html = "<p>Check out <a href=\"#{base_url}/users/boss\">this guy</a>.</p>"
+      described_class.make_all_links_absolute(html).should == html
+    end
+
+    it "can tolerate invalid URLs" do
+      html = "<p>Check out <a href=\"not a real url\">this guy</a>.</p>"
+      expect { described_class.make_all_links_absolute(html) }.to_not raise_error
     end
   end
 

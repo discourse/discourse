@@ -1,8 +1,5 @@
 // styles that apply to the reply pane that slides up to compose replies
 
-@import "../common/foundation/variables";
-@import "../common/foundation/mixins";
-
 // hack, this needs to be done cleaner
 .private-message input.span8 {
   width: 47%;
@@ -16,35 +13,32 @@ display: none;
 display: none;
 }
 
-
-
-
 .autocomplete {
   z-index: 999999;
   position: absolute;
   width: 240px;
-  background-color: $white;
-  border: 1px solid $gray;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     li {
-      border-bottom: 1px solid $light_gray;
+      border-bottom: 1px solid $primary_border_color;
       a[href] {
         padding: 5px;
         display: block;
         span.username {
-          color: lighten($black, 20);
+          color: lighten($primary_text_color, 20%);
         }
         span.name {
           font-size: 11px;
         }
         &.selected {
-          background-color: $light_gray;
+          background-color: lighten($secondary_background_color, 60%);
         }
         @include hover {
-          background-color: $light_gray;
+          background-color: lighten($secondary_background_color, 60%);
           text-decoration: none;
         }
       }
@@ -53,33 +47,33 @@ display: none;
 }
 
 #reply-control {
-  .toggle-preview, #draft-status, #file-uploading {
+  .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
     position: absolute;
-    bottom: -31px;
-    margin-top: 0px;
+    bottom: -37px;
+    margin-top: 0;
   }
-  .toggle-preview {
+  .toggle-preview, .mobile-file-upload {
     right: 5px;
     text-decoration: underline;
   }
   #file-uploading {
     left: 51%;
     font-size: 12px;
-    color: darken($gray, 40);
+    color: darken($tertiary_text_color, 40%);
   }
   #draft-status {
-    right: 0;
-    color: lighten($black, 60);
+    right: 70px;
+    color: lighten($primary_text_color, 60%);
     &.flash {
-      color: lighten($red, 20);
+      color: $warning_text_color;
     }
   }
   @include transition(height 0.4s ease);
   width: 100%;
   z-index: 1039;
-  height: 0px;
-  background-color: rgba($composer_background, 0.96);
-  bottom: 0px;
+  height: 0;
+  background-color: $composer_background_color;
+  bottom: 0;
   font-size: 14px;
   position: fixed;
   .toggler {
@@ -89,7 +83,7 @@ display: none;
     right: 13px;
     position: absolute;
     font-size: 15px;
-    color: $darkish_gray;
+    color: lighten($primary_text_color, 35%);
     text-decoration: none;
     &:before {
       font-family: "FontAwesome";
@@ -117,17 +111,14 @@ display: none;
   // The various states
   &.open {
     height: 300px;
-    .grippie {
-      display: block;
-    }
   }
   &.closed {
-    height: 0px !important;
+    height: 0 !important;
   }
   &.draft {
     height: 60px !important;
     cursor: pointer;
-    border-top: 1px solid $gray;
+    border-top: 1px solid $primary_border_color;
     .draft-text {
       display: block;
           position: absolute;
@@ -142,7 +133,7 @@ display: none;
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid $gray;
+    border-top: 1px solid $primary_border_color;
     .saving-text {
       display: block;
     }
@@ -164,7 +155,7 @@ display: none;
     height: 70px;
     text-indent: -9999em;
     background: {
-      color: $black;
+      color: $primary_text_color;
       image: image-url("spinner_96_w.gif");
       repeat: no-repeat;
       size: 35px;
@@ -184,24 +175,25 @@ display: none;
     float: none;
   }
 
-  // When the post is new (new topic) the sizings are different
+  // if this is a new topic, make room for the category field in the editor on
+  // a small screen mobile device
   &.edit-title {
     &.open {
-      height: 400px;
+      height: 280px;
     }
     .contents {
       input#reply-title {
         padding: 7px 10px;
-        margin: 6px 10px 3px 0;
+        margin: 6px 10px 0 0;
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
-        top: 135px;
+        top: 120px;
       }
     }
   }
   .contents {
-    padding: 10px;
+    padding: 10px 10px 0 10px;
     min-width: 1280px;
     .form-element {
       .chzn-container {
@@ -236,14 +228,14 @@ display: none;
     #reply-title {
       margin-right: 10px;
       &:disabled {
-        background-color: $light_gray;
+        background-color: lighten($secondary_background_color, 60%);
       }
     }
     #wmd-input:disabled {
-      background-color: $light_gray;
+      background-color: lighten($secondary_background_color, 60%);
     }
     #wmd-input, #wmd-preview {
-      color: $black;
+      color: $primary_text_color;
 
       video {
         max-width: 100%;
@@ -255,7 +247,7 @@ display: none;
       }
     }
     #wmd-preview {
-      border: 1px dashed $gray;
+      border: 1px dashed $primary_border_color;
       overflow: auto;
       visibility: visible;
       p {
@@ -272,7 +264,7 @@ display: none;
     .submit-panel {
       position: absolute;
       display: block;
-      bottom: 8px;
+      bottom: 2px;
     }
   }
   .category-input {
@@ -307,8 +299,8 @@ div.ac-wrap.disabled {
 }
 
 div.ac-wrap {
-  background-color: $white;
-  border: 1px solid #cccccc;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
   padding: 5px 10px;
   @include border-radius-all(3px);
   div.item {
@@ -332,10 +324,10 @@ div.ac-wrap {
       display: inline-block;
       border: 1px solid rgba(255, 255, 255, 0);
       &:hover {
-        background-color: lighten($red, 45);
-        border: 1px solid lighten($red, 20);
+        background-color: $warning_background_color;
+        border: 1px solid $warning_border_color;
         text-decoration: none;
-        color: $white;
+        color: $emphasis_text_color;
       }
     }
   }
@@ -349,13 +341,16 @@ div.ac-wrap {
     font-size: 16px;
   }
 }
-#reply-control .wmd-controls #wmd-input {font-size: 16px;}
 
 #reply-control.edit-title.private-message {
   .wmd-controls {
     @include transition(top 0.3s ease);
-    top: 140px;
+    top: 120px;
   }
+}
+
+#reply-control.topic #wmd-quote-post {
+  display: none;
 }
 
 #reply-control {
@@ -378,32 +373,35 @@ div.ac-wrap {
     left: 10px;
     right: 10px;
     position: absolute;
-    top: 60px;
+    top: 40px;
     bottom: 54px;
     display: block;
 
     // this removes the topmost margin;
     // if we don't have this, all posts would have extra space at the top
     #wmd-preview > *:first-child {
-      margin-top: 0px !important;
+      margin-top: 0 !important;
     }
 
-    #wmd-input, #wmd-preview {
+    #wmd-input, #wmd-preview-scroller, #wmd-preview {
       @include box-sizing(border-box);
       width: 100%;
       height: 100%;
       min-height: 100%;
       padding: 7px;
       margin: 0;
-      background-color: $white;
+      background-color: $primary_background_color;
       word-wrap: break-word;
 
       // set up proper header margins in post preview
       h1, h2, h3, h4, h5, h6 {
-        margin: 20px 0 10px;
+        margin: 30px 0 10px;
+      }
+      p {
+        margin-top: 19px;
       }
     }
-    #wmd-input {
+    #wmd-input, #wmd-preview-scroller {
       position: absolute;
       left: 0;
       top: 0;
@@ -414,6 +412,17 @@ div.ac-wrap {
       border-top: 36px solid transparent;
       @include border-radius-all(0);
       transition: none;
+      font-size: 16px;
+    }
+    #wmd-preview-scroller {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: normal;
+      overflow: scroll;
+      visibility: hidden;
+      .marker, .caret {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
     .textarea-wrapper, .preview-wrapper {
       position: relative;
@@ -440,14 +449,10 @@ div.ac-wrap {
   #wmd-button-bar {
     top: 0;
     position: absolute;
-    border-bottom: 1px solid $inner_line;
-    background-color: $white;
+    border-bottom: 1px solid $primary_border_color;
+    background-color: $primary_background_color;
     z-index: 100;
   }
-}
-
-.control-row.reply-area {
-
 }
 
 @media screen and (min-width: 1550px) {
@@ -458,11 +463,6 @@ div.ac-wrap {
       right: auto;
     }
   }
-}
-
-.admin-options-form {
-  margin-top: 8px;
-  display: none;
 }
 
 .auto-close-fields {
@@ -476,7 +476,7 @@ div.ac-wrap {
     margin: 0;
   }
   .auto-close-fields {
-    i.icon-time {
+    i.fa-clock-o {
       font-size: 16px;
       line-height: 8px;
     }

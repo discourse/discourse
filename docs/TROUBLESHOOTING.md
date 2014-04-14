@@ -6,7 +6,7 @@ reaching out to the community for help:
 
 1. Are you running Ruby 1.9.3 or later?
 
-   Discourse is designed for Ruby 1.9.3 or later. You can check your version by typing 
+   Discourse is designed for Ruby 1.9.3 or later. We recommend 2.0.0 p353 or later. You can check your version by typing 
    `ruby -v` and checking the response.
 
 
@@ -32,13 +32,6 @@ reaching out to the community for help:
 
    Our schema changes fairly frequently. After checking out the source code, you should 
    run `rake db:migrate`
-
-
-6. Have you added the seed data?
-
-   We depend on some basic seed data being present in the database. You should run 
-   `rake db:seed_fu` to keep your database in sync.
-
 
 7. Do the tests pass?
 

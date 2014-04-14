@@ -4,7 +4,6 @@ defaults: &defaults
   port: <%= uri.port %>
   password: <%= uri.password %>
   db: 0
-  cache_db: 2
 
 development:
   <<: *defaults

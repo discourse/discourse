@@ -34,10 +34,10 @@ Discourse.Ajax = Em.Mixin.create({
     }
 
     if (args.success) {
-      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
+      Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
     }
     if (args.error) {
-      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
+      Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
     }
 
     // If we have URL_FIXTURES, load from there instead (testing)
@@ -59,31 +59,31 @@ Discourse.Ajax = Em.Mixin.create({
         // note: for bad CSRF we don't loop an extra request right away.
         //  this allows us to eliminate the possibility of having a loop.
         if (xhr.status === 403 && xhr.responseText === "['BAD CSRF']") {
-          Discourse.csrfToken = null;
+          Discourse.Session.current().set('csrfToken', null);
         }
 
         // If it's a parseerror, don't reject
         if (xhr.status === 200) return args.success(xhr);
 
-        promise.reject(xhr);
+        Ember.run(promise, promise.reject, xhr);
         if (oldError) oldError(xhr);
       };
 
       // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
       // it will not be parsed as an object.
       if (!args.type) args.type = 'GET';
-      if ((!args.dataType) && (args.type === 'GET')) args.dataType = 'json';
+      if (!args.dataType && args.type.toUpperCase() === 'GET') args.dataType = 'json';
 
       $.ajax(Discourse.getURL(url), args);
     };
 
     // For cached pages we strip out CSRF tokens, need to round trip to server prior to sending the
     //  request (bypass for GET, not needed)
-    if(args.type && args.type !== 'GET' && !Discourse.csrfToken){
+    if(args.type && args.type.toUpperCase() !== 'GET' && !Discourse.Session.currentProp('csrfToken')){
       return Ember.Deferred.promise(function(promise){
         $.ajax(Discourse.getURL('/session/csrf'))
            .success(function(result){
-              Discourse.csrfToken = result.csrf;
+              Discourse.Session.currentProp('csrfToken', result.csrf);
               performAjax(promise);
            });
       });
@@ -93,8 +93,3 @@ Discourse.Ajax = Em.Mixin.create({
   }
 
 });
-
-
-
-
-

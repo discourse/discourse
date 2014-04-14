@@ -1,0 +1,27 @@
+<p>
+  <%=t 'flags_reminder.flags_were_submitted', count: @hours %>
+  <a href="<%= Discourse.base_url + '/admin/flags/active' %>"><%=t 'flags_reminder.please_review' %></a>
+</p>
+
+<hr/>
+
+<table>
+  <tr>
+    <td></td>
+    <td><%=t 'flags_reminder.post_number' %></td>
+    <td></td>
+  </tr>
+  <% @posts.each do |post| %>
+  <tr>
+    <td><%= link_to post[:title], "#{Discourse.base_url}/t/#{post[:topic_slug]}/#{post[:topic_id]}/#{post[:post_number]}" %></td>
+    <td align="center"><%= post[:post_number] %></td>
+    <td><%= post[:reason_counts] %></td>
+  </tr>
+  <% end %>
+</table>
+
+<hr/>
+
+<p>
+  <%=t 'flags_reminder.how_to_disable' %>
+</p>

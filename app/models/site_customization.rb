@@ -1,3 +1,5 @@
+require_dependency 'discourse_sass_importer'
+
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
   # placing this in uploads to ease deployment rules
@@ -11,20 +13,48 @@ class SiteCustomization < ActiveRecord::Base
     true
   end
 
+  def compile_stylesheet(scss)
+    # Get the sprockets environment. In production Rails.application.assets is a
+    # Sprockets::Index instead of Sprockets::Environment, there is no cleaner way
+    # to get the environment from the index.
+    env = Rails.application.assets
+    if env.is_a?(Sprockets::Index)
+      env = env.instance_variable_get('@environment')
+    end
+
+    context = env.context_class.new(env, "custom.scss", "app/assets/stylesheets/custom.scss")
+
+    ::Sass::Engine.new(scss, {
+      syntax: :scss,
+      cache: false,
+      read_cache: false,
+      style: :compressed,
+      filesystem_importer: DiscourseSassImporter,
+      sprockets: {
+        context: context,
+        environment: context.environment
+      }
+    }).render
+
+  rescue => e
+    puts e.backtrace.join("\n") unless Sass::SyntaxError === e
+
+    raise e
+  end
+
   before_save do
     ['stylesheet', 'mobile_stylesheet'].each do |stylesheet_attr|
       if self.send("#{stylesheet_attr}_changed?")
         begin
-          self.send("#{stylesheet_attr}_baked=", Sass.compile(self.send(stylesheet_attr)))
+          self.send("#{stylesheet_attr}_baked=", compile_stylesheet(self.send(stylesheet_attr)))
         rescue Sass::SyntaxError => e
           error = e.sass_backtrace_str("custom stylesheet")
           error.gsub!("\n", '\A ')
           error.gsub!("'", '\27 ')
 
           self.send("#{stylesheet_attr}_baked=",
-  "#main {display: none;}
-  footer {white-space: pre; margin-left: 100px;}
-  footer:after{ content: '#{error}' }")
+  "footer { white-space: pre; }
+  footer:after { content: '#{error}' }")
         end
       end
     end
@@ -199,8 +229,8 @@ end
 #  user_id                 :integer          not null
 #  enabled                 :boolean          not null
 #  key                     :string(255)      not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
+#  created_at              :datetime
+#  updated_at              :datetime
 #  override_default_style  :boolean          default(FALSE), not null
 #  stylesheet_baked        :text             default(""), not null
 #  mobile_stylesheet       :text
@@ -211,4 +241,3 @@ end
 #
 #  index_site_customizations_on_key  (key)
 #
-

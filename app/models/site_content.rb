@@ -18,8 +18,12 @@ class SiteContent < ActiveRecord::Base
   add_content_type :tos_user_content_license, default_18n_key: 'terms_of_service.user_content_license'
   add_content_type :tos_miscellaneous, default_18n_key: 'terms_of_service.miscellaneous'
   add_content_type :login_required_welcome_message, default_18n_key: 'login_required.welcome_message'
+  add_content_type :tos_signup_form_message, default_18n_key: 'terms_of_service.signup_form_message', format: :html
   add_content_type :privacy_policy, allow_blank: true
   add_content_type :faq, allow_blank: true
+  add_content_type :top, allow_blank: true, format: :html
+  add_content_type :bottom, allow_blank: true, format: :html
+  add_content_type :head, allow_blank: true, format: :html
 
   def site_content_type
     @site_content_type ||= SiteContent.content_types.find {|t| t.content_type == content_type.to_sym}
@@ -33,11 +37,10 @@ end
 #
 #  content_type :string(255)      not null, primary key
 #  content      :text             not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  created_at   :datetime
+#  updated_at   :datetime
 #
 # Indexes
 #
 #  index_site_contents_on_content_type  (content_type) UNIQUE
 #
-

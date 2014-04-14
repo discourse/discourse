@@ -11,6 +11,7 @@ tags
 dump.rdb
 
 .sass-cache/*
+public/plugins/*
 
 # Ignore bundler config
 /bin
@@ -21,11 +22,10 @@ dump.rdb
 /coverage/*
 
 /public/assets/*
+/bundle/*
 
-config/database.yml
-config/redis.yml
 config/discourse.pill
-config/environments/production.rb
+config/discourse.conf
 
 # Ignore the default SQLite database and db dumps
 /db/*.sqlite3
@@ -38,6 +38,7 @@ config/environments/production.rb
 /tmp
 /plugins
 /logfile
+log/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 
@@ -53,7 +54,7 @@ config/environments/production.rb
 # Ignore gem that is copied in
 MiniProfiler/Ruby/rack-mini-profiler-2.0.1a.gem
 
-sublime-project.sublime-workspace
+discourse.sublime-workspace
 
 # Vim temp files
 *~
@@ -67,6 +68,7 @@ config/multisite1.yml
 config/fog_credentials.yml
 
 /public/uploads
+/public/backups
 /public/stylesheet-cache/*
 
 # Scripts used for downloading/refreshing db
@@ -91,3 +93,5 @@ config/version.rb
 .ruby-gemset
 .rbenv
 bundler_stubs/*
+
+vendor/bundle/*

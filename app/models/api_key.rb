@@ -20,3 +20,20 @@ class ApiKey < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: api_keys
+#
+#  id            :integer          not null, primary key
+#  key           :string(64)       not null
+#  user_id       :integer
+#  created_by_id :integer
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+# Indexes
+#
+#  index_api_keys_on_key      (key)
+#  index_api_keys_on_user_id  (user_id) UNIQUE
+#

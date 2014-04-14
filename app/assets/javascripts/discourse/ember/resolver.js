@@ -16,7 +16,15 @@ Discourse.Resolver = Ember.DefaultResolver.extend({
     @returns {Template} the template (if found)
   **/
   resolveTemplate: function(parsedName) {
-    return this.findMobileTemplate(parsedName) || this.findTemplate(parsedName) || Ember.TEMPLATES.not_found;
+    return this.findPluginTemplate(parsedName) ||
+           this.findMobileTemplate(parsedName) ||
+           this.findTemplate(parsedName) ||
+           Ember.TEMPLATES.not_found;
+  },
+
+  findPluginTemplate: function(parsedName) {
+    var pluginParsedName = this.parseName(parsedName.fullName.replace("template:", "template:javascripts/"));
+    return this.findTemplate(pluginParsedName);
   },
 
   findMobileTemplate: function(parsedName) {

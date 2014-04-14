@@ -26,7 +26,8 @@ class Invite < ActiveRecord::Base
   def user_doesnt_already_exist
     @email_already_exists = false
     return if email.blank?
-    if User.where("email = ?", Email.downcase(email)).exists?
+    u = User.where("email = ?", Email.downcase(email)).first
+    if u && u.id != self.user_id
       @email_already_exists = true
       errors.add(:email)
     end
@@ -40,8 +41,13 @@ class Invite < ActiveRecord::Base
     created_at < SiteSetting.invite_expiry_days.days.ago
   end
 
+  # link_valid? indicates whether the invite link can be used to log in to the site
+  def link_valid?
+    invalidated_at.nil?
+  end
+
   def redeem
-    InviteRedeemer.new(self).redeem unless expired? || destroyed?
+    InviteRedeemer.new(self).redeem unless expired? || destroyed? || !link_valid?
   end
 
 
@@ -50,7 +56,15 @@ class Invite < ActiveRecord::Base
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
   def self.invite_by_email(email, invited_by, topic=nil)
     lower_email = Email.downcase(email)
-    invite = Invite.with_deleted.where('invited_by_id = ? and email = ?', invited_by.id, lower_email).first
+    invite = Invite.with_deleted
+                   .where('invited_by_id = ? and email = ?', invited_by.id, lower_email)
+                   .order('created_at DESC')
+                   .first
+
+    if invite && invite.expired?
+      invite.destroy
+      invite = nil
+    end
 
     if invite.blank?
       invite = Invite.create(invited_by: invited_by, email: lower_email)
@@ -68,26 +82,59 @@ class Invite < ActiveRecord::Base
     invite
   end
 
+  def self.find_all_invites_from(inviter)
+    Invite.where(invited_by_id: inviter.id)
+          .includes(:user => :user_stat)
+          .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
+                 'user_stats.time_read DESC',
+                 'invites.redeemed_at DESC')
+          .limit(SiteSetting.invites_shown)
+          .references('user_stats')
+  end
+
+  def self.find_redeemed_invites_from(inviter)
+    find_all_invites_from(inviter).where('invites.user_id IS NOT NULL')
+  end
+
+  def self.filter_by(email_or_username)
+    if email_or_username
+      where(
+        '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)',
+        filter: "%#{email_or_username.downcase}%"
+      )
+    else
+      all
+    end
+  end
+
+  def self.invalidate_for_email(email)
+    i = Invite.where(email: Email.downcase(email)).first
+    if i
+      i.invalidated_at = Time.zone.now
+      i.save
+    end
+    i
+  end
 end
 
 # == Schema Information
 #
 # Table name: invites
 #
-#  id            :integer          not null, primary key
-#  invite_key    :string(32)       not null
-#  email         :string(255)      not null
-#  invited_by_id :integer          not null
-#  user_id       :integer
-#  redeemed_at   :datetime
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  deleted_at    :datetime
-#  deleted_by_id :integer
+#  id             :integer          not null, primary key
+#  invite_key     :string(32)       not null
+#  email          :string(255)      not null
+#  invited_by_id  :integer          not null
+#  user_id        :integer
+#  redeemed_at    :datetime
+#  created_at     :datetime
+#  updated_at     :datetime
+#  deleted_at     :datetime
+#  deleted_by_id  :integer
+#  invalidated_at :datetime
 #
 # Indexes
 #
 #  index_invites_on_email_and_invited_by_id  (email,invited_by_id) UNIQUE
 #  index_invites_on_invite_key               (invite_key) UNIQUE
 #
-

@@ -48,14 +48,15 @@ describe FileStore::LocalStore do
   describe ".remove_upload" do
 
     it "does not delete non uploaded" do
-      File.expects(:delete).never
+      FileUtils.expects(:mkdir_p).never
       upload = Upload.new
       upload.stubs(:url).returns("/path/to/file")
       store.remove_upload(upload)
     end
 
-    it "deletes the file locally" do
-      File.expects(:delete)
+    it "moves the file to the tombstone" do
+      FileUtils.expects(:mkdir_p)
+      FileUtils.expects(:move)
       upload = Upload.new
       upload.stubs(:url).returns("/uploads/default/42/253dc8edf9d4ada1.png")
       store.remove_upload(upload)
@@ -65,11 +66,12 @@ describe FileStore::LocalStore do
 
   describe ".remove_optimized_image" do
 
-    it "deletes the file locally" do
-      File.expects(:delete)
+    it "moves the file to the tombstone" do
+      FileUtils.expects(:mkdir_p)
+      FileUtils.expects(:move)
       oi = OptimizedImage.new
       oi.stubs(:url).returns("/uploads/default/_optimized/42/253dc8edf9d4ada1.png")
-      store.remove_upload(upload)
+      store.remove_optimized_image(upload)
     end
 
   end
@@ -120,10 +122,10 @@ describe FileStore::LocalStore do
     store.external?.should == false
   end
 
-  describe ".absolute_avatar_template" do
+  describe ".avatar_template" do
 
     it "is present" do
-      store.absolute_avatar_template(avatar).should == "http://test.localhost/uploads/default/avatars/e9d/71f/5ee7c92d6d/{size}.jpg"
+      store.avatar_template(avatar).should == "/uploads/default/avatars/e9d/71f/5ee7c92d6d/{size}.jpg"
     end
 
   end

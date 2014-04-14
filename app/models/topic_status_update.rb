@@ -14,17 +14,21 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
   private
 
   def change(status)
-    if status.pinned?
-      topic.update_pinned status.enabled?
+    if status.pinned? || status.pinned_globally?
+      topic.update_pinned status.enabled?, status.pinned_globally?
     elsif status.autoclosed?
       topic.update_column 'closed', status.enabled?
     else
       topic.update_column status.name, status.enabled?
     end
 
-    if status.manually_closing_topic? && topic.auto_close_at
+    if topic.auto_close_at && (status.reopening_topic? || status.manually_closing_topic?)
       topic.reload.set_auto_close(nil).save
     end
+
+    # pick up the changes right away as opposed to waiting for
+    # the schedule
+    CategoryFeaturedTopic.feature_topics_for(topic.category)
   end
 
   def create_moderator_post_for(status)
@@ -42,8 +46,17 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
 
   def message_for(status)
     if status.autoclosed?
-      num_days = topic.auto_close_started_at ? ((Time.zone.now - topic.auto_close_started_at) / 1.day).round : topic.age_in_days
-      I18n.t status.locale_key, count: num_days
+      num_minutes = topic.auto_close_started_at ? ((Time.zone.now - topic.auto_close_started_at) / 1.minute).round : topic.age_in_minutes
+      if num_minutes.minutes >= 2.days
+        I18n.t "#{status.locale_key}_days", count: (num_minutes.minutes / 1.day).round
+      else
+        num_hours = (num_minutes.minutes / 1.hour).round
+        if num_hours >= 2
+          I18n.t "#{status.locale_key}_hours", count: num_hours
+        else
+          I18n.t "#{status.locale_key}_minutes", count: num_minutes
+        end
+      end
     else
       I18n.t status.locale_key
     end
@@ -54,7 +67,7 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
   end
 
   Status = Struct.new(:name, :enabled) do
-    %w(pinned autoclosed closed).each do |status|
+    %w(pinned_globally pinned autoclosed closed).each do |status|
       define_method("#{status}?") { name == status }
     end
 

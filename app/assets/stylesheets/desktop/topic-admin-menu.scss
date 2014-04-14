@@ -1,20 +1,17 @@
 // Styles for the topic admin menu
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 #show-topic-admin {
   position: fixed;
   top: 70px;
   right: 10px;
-  z-index: 1000;
+  z-index: 999;
 }
 
 .topic-admin-menu {
-  background-color: $white;
+  background-color: $primary_background_color;
   width: 205px;
   padding: 10px;
-  border: 1px solid $gray;
+  border: 1px solid $primary_border_color;
   position: fixed;
   top: 70px;
   right: 10px;
@@ -28,5 +25,9 @@
   button {
     width: 200px;
     margin-bottom: 5px;
+
+    i {
+      width: 14px;
+    }
   }
 }

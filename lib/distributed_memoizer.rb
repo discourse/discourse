@@ -15,18 +15,25 @@ class DistributedMemoizer
 
       start = Time.new
       got_lock = false
-      while Time.new < start + MAX_WAIT && !got_lock
-        LOCK.synchronize do
-          got_lock = get_lock(redis,redis_lock_key)
-        end
-        sleep 0.001
-      end
 
-      unless result = redis.get(redis_key)
-        result = yield
-        redis.setex(redis_key, duration, result)
+      begin
+        while Time.new < start + MAX_WAIT && !got_lock
+          LOCK.synchronize do
+            got_lock = get_lock(redis,redis_lock_key)
+          end
+          sleep 0.001
+        end
+
+        unless result = redis.get(redis_key)
+          result = yield
+          redis.setex(redis_key, duration, result)
+        end
+
+      ensure
+        # NOTE: delete regardless so next one in does not need to wait MAX_WAIT
+        #   again
+        redis.del(redis_lock_key)
       end
-      redis.del(redis_lock_key)
     end
 
     result

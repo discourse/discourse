@@ -1,68 +1,62 @@
 class LpSession
+  SESSION_COOKIE_NAME = ENV['MAIN_SITE_COOKIE_NAME']
 
-  attr_reader :controller, :cookies, :session, :logged_in_forum, :logged_in_lessonplanet
+  class << self
+    def lp_user_id_from_cookie(cookies)
+      cookie = cookies[SESSION_COOKIE_NAME]
+      if cookie.present?
+        # need to decrypt to get the contents
+        unescaped_content = URI.unescape(cookie)
+        secret_key_base   = ENV['SECRET_KEY_BASE']
+        key_generator     = ActiveSupport::KeyGenerator.new(secret_key_base, iterations: 1000)
+        key_generator     = ActiveSupport::CachingKeyGenerator.new(key_generator)
+        secret            = key_generator.generate_key('encrypted cookie')
+        sign_secret       = key_generator.generate_key('signed encrypted cookie')
+        encryptor         = ActiveSupport::MessageEncryptor.new(secret, sign_secret)
+        data              = encryptor.decrypt_and_verify(unescaped_content)
 
-  def initialize(controller)
-    @controller = controller
-    @cookies = controller.send :cookies
-    @session = controller.session
-    @logged_in_forum = !!controller.current_user
-    @logged_in_lessonplanet = cookies[:lessonplanet_session].present?
-  end
+        if data['warden.user.user.key'].present?
+          data['warden.user.user.key'].first.first
+        end
+      end
+    end
 
-  def sync
-    if logged_in_forum && !logged_in_lessonplanet
-      destroy
-      controller.redirect_to controller.request.path
-    elsif logged_in_as_different_user? || (!logged_in_forum && logged_in_lessonplanet)
-      dance_oauth
+    def lp_user_id_from_session(session)
+      session[:lp_user_id]
+    end
+
+    def set_lp_user_id(session, cookies)
+      session[:lp_user_id] = lp_user_id_from_cookie(cookies)
     end
   end
 
-  def create(oauth_token)
-    user_info = LpUserInfo.find_or_create_from_oauth_token(oauth_token)
-    user = user_info.user
-    controller.log_on_user(user)
-    set_cookies(user_info)
+  attr_reader :controller, :cookies, :session, :logged_in_forum, :logged_in_lp, :lp_user_id
+
+  def initialize(controller)
+    @controller      = controller
+    @cookies         = controller.send :cookies
+    @session         = controller.session
+    @logged_in_forum = !!controller.current_user
+    @lp_user_id      = self.class.lp_user_id_from_cookie(cookies)
+    @logged_in_lp    = !!lp_user_id
   end
 
-  def destroy
-    unset_cookies
-    controller.reset_session
+  def sync
+    if logged_in_forum && !logged_in_lp
+      controller.log_off_user
+      controller.redirect_to controller.request.path
+    elsif (logged_in_forum && logged_in_as_different_user?) || (!logged_in_forum && logged_in_lp)
+      dance_sso
+    end
   end
 
   private
 
-  def dance_oauth
-    controller.redirect_to(controller.new_lp_session_path(:back_to => controller.request.path))
+  def dance_sso
+    controller.redirect_to(controller.session_sso_path(:return_path => controller.request.path))
   end
 
   def logged_in_as_different_user?
-    different_cookies = cookies[:lessonplanet_session_nonce].present? && (cookies[:lessonplanet_session_nonce] != cookies[:forums_session_nonce])
-    logged_in_forum && logged_in_lessonplanet && different_cookies
+    self.class.lp_user_id_from_session(session) != lp_user_id
   end
-
-  # cookies
-
-  def set_cookies(user_info)
-    cookies[:forums_session_nonce] = cookies[:lessonplanet_session_nonce]
-    cookies[:lessonplanet_session] = {value: '1', domain: lessonplanet_cookies_domain } if cookies[:lessonplanet_session].blank?
-
-    # Used by DevCenter::Logger middleware to track page visits.
-    creds = LpCredentials.new(email: user_info.user.email, lessonplanet_uid: user_info.lp_user_id)
-    cookies[:user_info] = creds.encrypt
-  end
-
-  def unset_cookies
-    cookies.delete(:forums_session_nonce)
-    cookies.delete('lessonplanet_session', :domain => lessonplanet_cookies_domain)
-    cookies.delete('lessonplanet_session_nonce', :domain => lessonplanet_cookies_domain)
-    cookies.delete(:user_info)
-    cookies.delete(:_t)
-  end
-
-  def lessonplanet_cookies_domain
-    '.lessonplanet.com'
-  end
-
 end

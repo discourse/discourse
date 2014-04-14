@@ -1,0 +1,27 @@
+<table>
+  {{#each poll.options}}
+    <tr {{bind-attr class=checked:active}} {{action selectOption option}}>
+      <td class="radio"><input type="radio" name="poll" {{bind-attr checked=checked disabled=controller.disableRadio}}></td>
+      <td class="option">
+        <div class="option">
+          {{{ option }}}
+        </div>
+        {{#if controller.showResults}}
+          <div class="result">{{i18n poll.voteCount count=votes}}</div>
+        {{/if}}
+      </td>
+    </tr>
+  {{/each}}
+</table>
+
+<button {{action toggleShowResults}}>
+  {{#if showResults}}
+    {{i18n poll.results.hide}}
+  {{else}}
+    {{i18n poll.results.show}}
+  {{/if}}
+</button>
+
+{{#if loading}}
+  <i class="fa fa-spin fa-spinner"></i>
+{{/if}}

@@ -35,22 +35,17 @@ Discourse.LoginMethod.reopenClass({
       "cas",
       "twitter",
       "yahoo",
-      "github",
-      "persona"
+      "github"
     ].forEach(function(name){
-      if(Discourse.SiteSettings["enable_" + name + "_logins"]){
+      if (Discourse.SiteSettings["enable_" + name + "_logins"]) {
 
         var params = {name: name};
 
-        if(name === "persona") {
-          params.customLogin = function(){
-            navigator.id.request();
-          };
-        }
-
-        if(name === "google") {
+        if (name === "google") {
           params.frameWidth = 850;
           params.frameHeight = 500;
+        } else if (name === "facebook") {
+          params.frameHeight = 450;
         }
 
         methods.pushObject(Discourse.LoginMethod.create(params));

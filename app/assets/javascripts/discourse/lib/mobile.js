@@ -1,12 +1,10 @@
 /**
-  A class that is responsible for logic related to mobile devices.
+  An object that is responsible for logic related to mobile devices.
 
-  @class Mobile
   @namespace Discourse
-  @module Discourse
+  @module Mobile
 **/
 Discourse.Mobile = {
-
   isMobileDevice: false,
   mobileView: false,
 
@@ -16,7 +14,7 @@ Discourse.Mobile = {
     this.mobileView = $html.hasClass('mobile-view');
 
     if (localStorage && localStorage.mobileView) {
-      var savedValue = (localStorage.mobileView === 'true' ? true : false);
+      var savedValue = (localStorage.mobileView === 'true');
       if (savedValue !== this.mobileView) {
         this.reloadPage(savedValue);
       }

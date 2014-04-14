@@ -1,38 +1,3 @@
-//= require_tree ./discourse/ember
-
-// The Vendored JS
-//= require LAB.js
-//= require Markdown.Converter.js
-//= require Markdown.Editor.js
-//= require better_markdown.js
-//= require bootbox.js
-//= require bootstrap-alert.js
-//= require bootstrap-button.js
-//= require bootstrap-dropdown.js
-//= require bootstrap-modal.js
-//= require bootstrap-transition.js
-//= require browser-update.js
-//= require chosen.jquery.js
-//= require ember-renderspeed.js
-//= require favcount.js
-//= require handlebars.js
-//= require jquery.ba-replacetext.js
-//= require jquery.ba-resize.min.js
-//= require jquery.color.js
-//= require jquery.cookie.js
-//= require jquery.fileupload.js
-//= require jquery.iframe-transport.js
-//= require jquery.putcursoratend.js
-//= require jquery.tagsinput.js
-//= require jquery.ui.widget.js
-//= require jquery.sortable.js
-//= require lodash.js
-//= require md5.js
-//= require modernizr.custom.95264.js
-//= require mousetrap.js
-//= require rsvp.js
-//= require show-html.js
-
 //= require ./discourse/helpers/i18n_helpers
 //= require ./discourse/mixins/ajax
 //= require ./discourse
@@ -54,6 +19,7 @@
 //= require ./discourse/controllers/controller
 //= require ./discourse/controllers/object_controller
 //= require ./discourse/views/modal/modal_body_view
+//= require ./discourse/views/modal/flag_view
 //= require ./discourse/views/combobox_view
 //= require ./discourse/views/buttons/button_view
 //= require ./discourse/views/buttons/dropdown_button_view
@@ -65,10 +31,10 @@
 //= require_tree ./discourse/controllers
 //= require_tree ./discourse/lib
 //= require_tree ./discourse/models
-//= require_tree ./discourse/views
 //= require_tree ./discourse/components
+//= require_tree ./discourse/views
 //= require_tree ./discourse/helpers
 //= require_tree ./discourse/templates
 //= require_tree ./discourse/routes
+//= require_tree ./discourse/initializers
 
-//= require browser-update.js

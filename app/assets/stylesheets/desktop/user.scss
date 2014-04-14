@@ -1,8 +1,25 @@
 // styles that apply to the user page
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
+
+.groups {
+  .group-link {
+    color: $link_color;
+  }
+}
 
 .user-preferences {
+  input.category-group {
+    width: 500px;
+  }
+
+  .autocomplete .badge-category {
+    margin: 2px;
+    font-weight: normal;
+  }
+
+  .autocomplete .badge-category.selected {
+    font-weight: bold;
+  }
+
   textarea {
     width: 530px;
     height: 100px;
@@ -22,27 +39,47 @@
     }
   }
 
+  .bio-composer #wmd-quote-post {
+    display: none;
+  }
+
+  #profile-background-preview {
+    height: 270px;
+
+    background-position: center center;
+    background-size: cover;
+
+    background-color: $secondary_background_color;
+  }
+
+  #profile-background-controls {
+    padding: 10px;
+  }
+
   .static {
-    color: $black;
+    color: $primary_text_color;
     margin-top: 5px;
     margin-left: 5px;
     display: inline-block;
   }
   .instructions {
-    color: $dark_gray;
-    margin-left: 165px;
+    color: $secondary_text_color;
+    margin-left: 160px;
     margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 80%;
+    line-height: 1.4em;
   }
   .avatar {
     margin-left: 3px;
   }
   .instructions a[href] {
-    color: $darkish_gray;
+    color: $link_color;
   }
   .warning {
-    background-color: lighten($red, 10%);
+    background-color: $warning_background_color;
     padding: 5px 8px;
-    color: $white;
+    color: $primary_background_color;
     width: 520px;
   }
 
@@ -60,11 +97,11 @@
   float: left;
 
   h3 {
-    color: #666;
+    color: $primary_text_color;
     margin: 20px 0 10px 0;
   }
 
-  .summary {
+  .map {
     height: 50px;
   }
   .avatar {
@@ -83,7 +120,7 @@
   h2 {
     a {
       font-size: 14px;
-      color: #999999;
+      color: $link_color;
       cursor: pointer;
     }
   }
@@ -102,10 +139,29 @@
     width: 680px;
   }
 
+  table.group-members {
+    width: 100%;
+    th.seen {
+      text-align: right;
+    }
+    td.avatar {
+      width: 60px;
+    }
+    td {
+      img {
+        margin-right: 10px;
+      }
+      span.last-seen-at {
+        float: right;
+        color: $secondary_text_color;
+      }
+    }
+  }
+
   .user-content {
     padding: 10px 8px;
-    background-color: white;
-    border: 1px solid #ddd;
+    background-color: $primary_background_color;
+    border: 1px solid $primary_border_color;
     margin-bottom: 10px;
 
     .btn.right {
@@ -122,22 +178,25 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid #aaa;
+        border-bottom: 1px solid $primary_border_color;
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid $primary_border_color;
       }
     }
   }
 
   .about {
-    background-color: #444;
+    background-color: $secondary_background_color;
+    background-size: cover;
+    background-position: center center;
+
     margin-bottom: 10px;
     overflow: hidden;
-    color: #fff;
+    color: $secondary_text_color;
 
 
     .details {
@@ -154,34 +213,41 @@
         font-size: 20px;
         margin-bottom: 6px;
         font-weight: normal;
+        margin-top: 5px;
       }
 
       a[href] {
-        color: #fff;
+        color: $secondary_link_color;
       }
 
       img.avatar {
-        border: 3px solid #eee;
-        margin-bottom: 4px;
-        background-color: white;
+        border: 3px solid $tertiary_border_color;
+        margin-bottom: 10px;
+        background-color: $secondary_background_color;
       }
 
       .suspended {
-        color: #f77;
+        color: $warning_text_color;
       }
 
       .primary {
         margin-top: 20px;
         float: left;
-        width: 75%;
+        width: 65%;
+        color: $tertiary_text_color;
+        text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
-        h1, h2 {margin-top: 10px;}
+        h1, h2 {font-weight: bold;}
 
         .bio {
-          color: #ddd;
+          color: $tertiary_text_color;
+          text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
           a[href] {
-            color: #aae;
+            color: $tertiary_text_color;
+            text-decoration: underline;
+            text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
+
           }
         }
 
@@ -189,26 +255,26 @@
 
       .secondary {
         float: right;
-        background-color: #222;
+        background-color: rgba($tertiary_background_color, .9);
         text-align: right;
-        padding: 0 10px;
-        width: 20%;
+        padding: 0 20px;
+        max-width: 165px;
 
         dd {
-          color: white;
+          color: rgba($tertiary_text_color, .7);
           margin: 0 0 7px 0;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         dt {
-          color: #aaa;
+          color: rgba($tertiary_text_color, .7);
           margin: 0;
         }
       }
     }
 
     .controls {
-      background-color: #ddd;
+      background-color: $tertiary_background_color;
       padding: 12px;
       height: 30px;
 
@@ -236,7 +302,7 @@
         .avatar {
           float: left;
           margin-right: 10px;
-          border: 2px solid white;
+          border: 2px solid $tertiary_border_color;
           width: 45px;
           height: 45px;
         }
@@ -257,38 +323,37 @@
 
   .user-stream {
     .excerpt {
-      margin: 5px 0px;
+      margin: 5px 0;
       font-size: 13px;
       word-wrap: break-word;
-      color: lighten($black, 30%);
+      color: $primary_text_color;
     }
     .item.moderator-action {
-      background-color: #eef0ff;
+      background-color: $moderator_background_color;
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: #ffcece;
+      background-color: $warning_background_color;
     }
     .item.hidden {
       display: block;
       opacity: 0.4;
     }
     .item {
-      padding: 10px 8px;
-      background-color: white;
-      border: 1px solid #ddd;
-      margin-bottom: 10px;
+      padding: 20px 8px 15px 8px;
+      background-color: $primary_background_color;
+      border-bottom: 1px solid $primary_border_color;
     }
     .type {
-      color: lighten($black, 40%);
+      color: $primary_text_color;
     }
     span.name {
-      color: lighten($black, 40%);
+      color: $secondary_text_color;
     }
     .time {
       display: block;
       float: right;
-      color: silver;
+      color: $secondary_text_color;
       margin-right: 8px;
       font-size: 11px;
     }
@@ -301,6 +366,10 @@
       margin-bottom: 4px;
       font-size: 14px;
     }
+    .edit-reason {
+      background-color: $moderator_background_color;
+      padding: 3px 5px 5px 5px;
+    }
   }
 }
 
@@ -310,10 +379,10 @@
   .avatar-link {
     float: none;
   }
-  .icon {
+  .fa {
     width: 15px;
     display: inline-block;
-    color: #777;
+    color: $secondary_text_color;
   }
   .avatar-wrapper {
     border: none;

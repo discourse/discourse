@@ -34,6 +34,7 @@ $.parseParams = function(query) {
     return params;
 };
 
+var popstateCallbacks = [];
 
 /**
   `Ember.DiscourseLocation` implements the location API using the browser's
@@ -216,13 +217,15 @@ Ember.DiscourseLocation = Ember.Object.extend({
     var guid = Ember.guidFor(this),
         self = this;
 
-    Ember.$(window).on('popstate.ember-location-'+guid, function(e) {
+    Ember.$(window).on('popstate.ember-location-'+guid, function() {
       // Ignore initial page load popstate event in Chrome
       if (!popstateFired) {
         popstateFired = true;
         if (self.getURL() === self._previousURL) { return; }
       }
-      callback(self.getURL());
+      var url = self.getURL();
+      popstateCallbacks.forEach(function(cb) { cb(url); });
+      callback(url);
     });
   },
 
@@ -253,3 +256,25 @@ Ember.DiscourseLocation = Ember.Object.extend({
 });
 
 Ember.Location.registerImplementation('discourse_location', Ember.DiscourseLocation);
+
+/**
+  Since we're using pushState/replaceState let's add extra hooks to cloakedView to
+  eject itself when the popState occurs. This results in better back button
+  behavior.
+**/
+Ember.CloakedCollectionView.reopen({
+  _watchForPopState: function() {
+    var self = this,
+        cb = function() {
+               self.cleanUp();
+               self.set('controller.postStream.loaded', false);
+             };
+    this.set('_callback', cb);
+    popstateCallbacks.addObject(cb);
+  }.on('didInsertElement'),
+
+  _disbandWatcher: function() {
+    popstateCallbacks.removeObject(this.get('_callback'));
+    this.set('_callback', null);
+  }.on('willDestroyElement')
+});

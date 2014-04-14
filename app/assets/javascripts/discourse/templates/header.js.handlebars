@@ -1,19 +1,25 @@
 <div class='container'>
   <div class='contents clearfix'>
 
-    {{discourse-logo minimized=showExtraInfo}}
+    {{home-logo minimized=showExtraInfo}}
 
     {{#if showExtraInfo}}
       <div class="extra-info-wrapper">
         <div class="extra-info">
-          {{#if showFavoriteButton}}
-            <a {{bindAttr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="topic.favoriteTooltip"}}></a>
+          {{#if showStarButton}}
+            <a {{bind-attr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
           {{/if}}
           <h1>
+            {{#if topic.isPrivateMessage}}
+              <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
+            {{/if}}
+          {{#if topic.category.parentCategory}}
+            {{boundCategoryLink topic.category.parentCategory}}
+          {{/if}}
           {{boundCategoryLink topic.category}}
           {{#if topic.details.loaded}}
             {{topicStatus topic=topic}}
-            <a class='topic-link' href='{{unbound topic.url}}'>{{{topic.fancy_title}}}</a>
+            <a class='topic-link' href='{{unbound topic.url}}' {{action jumpToTopPost}}>{{{topic.fancy_title}}}</a>
           {{else}}
             {{#if topic.errorLoading}}
               {{topic.errorTitle}}
@@ -30,7 +36,7 @@
       {{#unless showExtraInfo}}
         <div class='current-username'>
           {{#if currentUser}}
-            <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.name}}</a></span>
+            <span class='username'><a {{bind-attr href="currentUser.path"}}>{{currentUser.displayName}}</a></span>
           {{else}}
             <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/if}}
@@ -39,7 +45,7 @@
       <ul class='icons clearfix'>
         <li class='notifications'>
           {{#if currentUser}}
-            <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'><i class='icon-comment'></i></a>
+            <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'><i class='fa fa-comment'></i></a>
             {{#if currentUser.unread_notifications}}
               <a href='#' class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
             {{/if}}
@@ -47,20 +53,21 @@
               <a href='#' class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
           {{else}}
-            <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}'><i class='icon-comment'></i></a>
+            <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}'><i class='fa fa-comment'></i></a>
           {{/if}}
         </li>
         <li>
           {{#if Discourse.loginRequired}}
-            <a class='icon expand' href='#' {{action showLogin}}>
-              <i class='icon-search'></i>
+            <a id='search-button' class='icon expand' href='#' {{action showLogin}}>
+              <i class='fa fa-search'></i>
             </a>
           {{else}}
-            <a class='icon expand'
+            <a id='search-button'
+               class='icon expand'
                href='#'
                data-dropdown="search-dropdown"
                title='{{i18n search.title}}'>
-               <i class='icon-search'></i>
+               <i class='fa fa-search'></i>
             </a>
           {{/if}}
         </li>
@@ -69,89 +76,47 @@
             <a class='icon'
                href="#"
                {{action showLogin}}>
-               <i class='icon-reorder'></i>
+               <i class='fa fa-bars'></i>
             </a>
           {{else}}
             <a class='icon'
                data-dropdown="site-map-dropdown"
+               data-render="renderSiteMap"
                href="#"
-               title='{{i18n site_map}}'>
-               <i class='icon-reorder'></i>
+               title='{{i18n site_map}}'
+               id="site-map">
+               <i class='fa fa-bars'></i>
             </a>
           {{/if}}
           {{#if currentUser.site_flagged_posts_count}}
             <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
           {{/if}}
         </li>
-        <li class='current-user'>
+        <li class='current-user dropdown'>
           {{#if currentUser}}
-            {{#link-to 'userActivity.index' currentUser titleKey="current_user" class="icon"}}{{boundAvatar currentUser imageSize="medium" }}{{/link-to}}
+            <a class='icon'
+               data-dropdown="user-dropdown"
+               data-render="renderUserDropdown"
+               href="#"
+               title='{{i18n user.avatar.title}}'
+               id="current-user">
+                 {{boundAvatar currentUser imageSize="medium" }}
+            </a>
           {{else}}
-            <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='icon-user'></i></div>
+            <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='fa fa-user' title='{{i18n not_logged_in_user}}'></i></div>
           {{/if}}
         </li>
       </ul>
 
       {{render search}}
 
-      <section class='d-dropdown' id='notifications-dropdown'>
-        {{#if view.notifications}}
-          <ul>
-            {{#each view.notifications}}
-            <li class="{{unbound readClass}}">{{{unbound rendered}}}</li>
-            {{/each}}
-            <li class='read last'>
-              <a {{bindAttr href="currentUser.path"}}>{{i18n notifications.more}} &hellip;</a>
-            </li>
-          </ul>
-        {{else}}
-          <div class='none'>{{i18n notifications.none}}</div>
-        {{/if}}
-      </section>
+      {{render notifications notifications}}
 
-      <section class='d-dropdown' id='site-map-dropdown'>
-      <ul class="location-links">
-        {{#if currentUser.staff}}
-          <li><a href="/admin"><i class='icon icon-wrench'></i>{{i18n admin_title}}</a></li>
-          <li><a href="/admin/flags/active"><i class='icon icon-flag'></i>{{i18n flags_title}}</a>
-          {{#if currentUser.site_flagged_posts_count}}
-            <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
-          {{/if}}
-          </li>
-        {{/if}}
-        <li>
-          {{#titledLinkTo "list.latest" titleKey="filters.latest.help"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
-        </li>
-        <li>{{faqLink}}</li>
-        {{#if showMobileToggle}}
-          <li>
-            <a href="#" {{action toggleMobileView}}>
-              {{#if mobileView}}
-                {{i18n desktop_view}}
-              {{else}}
-                {{i18n mobile_view}}
-              {{/if}}
-            </a>
-          </li>
-        {{/if}}
-      </ul>
-
-      {{#if categories}}
-        <ul class="category-links">
-          <li class='heading' title="{{i18n filters.categories.help}}">
-            {{#link-to "list.categories"}}{{i18n filters.categories.title}}{{/link-to}}
-          </li>
-
-          {{#each categories}}
-            <li class='category'>
-              {{categoryLink this allowUncategorized=true}}
-              <b>{{unbound topic_count}}</b></a>
-            </li>
-          {{/each}}
-        </ul>
+      {{#if view.renderSiteMap}}
+        {{render siteMap}}
       {{/if}}
 
-    </section>
+      {{ render userDropdown }}
 
     </div>
   </div>

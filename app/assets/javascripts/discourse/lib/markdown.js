@@ -10,20 +10,29 @@
 Discourse.Markdown = {
 
   validClasses: {},
+  validIframes: [],
 
   /**
-    Whitelists classes for sanitization
+    Whitelists more classes for sanitization.
 
+    @param {...String} var_args Classes to whitelist
     @method whiteListClass
-    @param {String} val The value to whitelist. Can supply more than one argument
   **/
   whiteListClass: function() {
     var args = Array.prototype.slice.call(arguments),
         validClasses = Discourse.Markdown.validClasses;
 
-    args.forEach(function (a) {
-      validClasses[a] = true;
-    });
+    args.forEach(function (a) { validClasses[a] = true; });
+  },
+
+  /**
+    Whitelists iframes for sanitization
+
+    @method whiteListIframe
+    @param {Regexp} regexp The regexp to whitelist.
+  **/
+  whiteListIframe: function(regexp) {
+    Discourse.Markdown.validIframes.push(regexp);
   },
 
   /**
@@ -38,8 +47,7 @@ Discourse.Markdown = {
     if (!opts) opts = {};
 
     // Make sure we've got a string
-    if (!raw) return "";
-    if (raw.length === 0) return "";
+    if (!raw || raw.length === 0) return "";
 
     return this.markdownConverter(opts).makeHtml(raw);
   },
@@ -52,7 +60,6 @@ Discourse.Markdown = {
     @return {Markdown.Editor} the editor instance
   **/
   createEditor: function(converterOptions) {
-
     if (!converterOptions) converterOptions = {};
 
     // By default we always sanitize content in the editor
@@ -106,12 +113,31 @@ Discourse.Markdown = {
     Checks to see if a URL is allowed in the cooked content
 
     @method urlAllowed
-    @param {String} url Url to check
+    @param {String} uri Url to check
+    @param {Number} effect ignored
+    @param {Number} ltype ignored
+    @param {Object} hints an object with hints, used to check if this url is from an iframe
     @return {String} url to insert in the cooked content
   **/
-  urlAllowed: function (url) {
-    if(/^https?:\/\//.test(url)) { return url; }
-    if(/^\/\/?[\w\.\-]+/.test(url)) { return url; }
+  urlAllowed: function (uri, effect, ltype, hints) {
+    var url = typeof(uri) === "string" ? uri : uri.toString();
+
+    // whitelist some iframe only
+    if (hints && hints.XML_TAG === "iframe" && hints.XML_ATTR === "src") {
+      for (var i = 0, length = Discourse.Markdown.validIframes.length; i < length; i++) {
+        if(Discourse.Markdown.validIframes[i].test(url)) { return url; }
+      }
+      return;
+    }
+
+    // absolute urls
+    if(/^(https?:)?\/\/[\w\.\-]+/i.test(url)) { return url; }
+    // relative urls
+    if(/^\/[\w\.\-]+/i.test(url)) { return url; }
+    // anchors
+    if(/^#[\w\.\-]+/i.test(url)) { return url; }
+    // mailtos
+    if(/^mailto:[\w\.\-@]+/i.test(url)) { return url; }
   },
 
   /**
@@ -135,6 +161,7 @@ Discourse.Markdown = {
   **/
   sanitize: function(text) {
     if (!window.html_sanitize) return "";
+    text = text.replace(/<([^A-Za-z\/]|$)/g, "&lt;$1");
     return window.html_sanitize(text, Discourse.Markdown.urlAllowed, Discourse.Markdown.nameIdClassAllowed);
   },
 
@@ -149,11 +176,8 @@ Discourse.Markdown = {
 
     return {
       makeHtml: function(text) {
-
         text = Discourse.Dialect.cook(text, opts);
-        if (!text) return "";
-
-        return text;
+        return !text ? "" : text;
       }
     };
   }
@@ -162,3 +186,4 @@ Discourse.Markdown = {
 RSVP.EventTarget.mixin(Discourse.Markdown);
 
 Discourse.Markdown.whiteListClass("attachment");
+Discourse.Markdown.whiteListIframe(/^(https?:)?\/\/www\.google\.com\/maps\/embed\?.+/i);

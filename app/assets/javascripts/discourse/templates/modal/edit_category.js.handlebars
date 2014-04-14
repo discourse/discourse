@@ -1,20 +1,20 @@
-<div {{bindAttr class="loading:invisible"}}>
+<div {{bind-attr class="loading:invisible"}}>
   <ul class="nav nav-pills">
-    <li {{bindAttr class="generalSelected:active"}}>
+    <li {{bind-attr class="generalSelected:active"}}>
       <a href="#" {{action selectGeneral}}>{{i18n category.general}}</a>
     </li>
     {{#unless isUncategorized}}
-      <li {{bindAttr class="securitySelected:active"}}>
+      <li {{bind-attr class="securitySelected:active"}}>
         <a href="#" {{action selectSecurity}}>{{i18n category.security}}</a>
       </li>
-      <li {{bindAttr class="settingsSelected:active"}}>
+      <li {{bind-attr class="settingsSelected:active"}}>
         <a href="#" {{action selectSettings}}>{{i18n category.settings}}</a>
       </li>
     {{/unless}}
   </ul>
 
   <div class="modal-body">
-    <div {{bindAttr class=":modal-tab :general-tab generalSelected::invisible"}}>
+    <div {{bind-attr class=":modal-tab :general-tab generalSelected::invisible"}}>
       <form>
         <section class='field'>
           <label>{{i18n category.name}}</label>
@@ -22,11 +22,18 @@
         </section>
 
         <section class='field'>
-          <label>{{i18n category.parent}}</label>
-          {{categoryChooser valueAttribute="id" value=parent_category_id categories=parentCategories}}
+          {{#if subCategories}}
+            <label>{{i18n categories.subcategories}}</label>
+            {{#each subCategories}}
+              {{categoryBadge this}}
+            {{/each}}
+          {{else}}
+            <label>{{i18n category.parent}}</label>
+            {{categoryChooser valueAttribute="id" value=parent_category_id categories=parentCategories rootNone=true}}
+          {{/if}}
         </section>
 
-        {{#unless isUncategorized}}
+        {{#if showDescription}}
           <section class='field'>
             <label>{{i18n category.description}}</label>
 
@@ -40,12 +47,12 @@
               <button class="btn btn-small" {{action showCategoryTopic}}>{{i18n category.change_in_category_topic}}</button>
             {{/if}}
           </section>
-        {{/unless}}
+        {{/if}}
 
         <section class='field'>
           <label>{{i18n category.badge_colors}}</label>
           <div class="category-color-editor">
-            <span class='badge-category' {{bindAttr style="colorStyle"}}>{{categoryName}}</span>
+            {{{categoryBadgePreview}}}
 
             <div class='input-prepend input-append' style="margin-top: 10px;">
               <span class='color-title'>{{i18n category.background_color}}:</span>
@@ -63,7 +70,7 @@
       </form>
     </div>
     {{#unless isUncategorized}}
-      <div {{bindAttr class=":modal-tab :options-tab securitySelected::invisible"}}>
+      <div {{bind-attr class=":modal-tab :options-tab securitySelected::invisible"}}>
         <section class='field'>
           <ul class='permission-list'>
             {{#each permissions}}
@@ -72,7 +79,7 @@
                 {{{i18n "category.can"}}}
                 <span class="permission">{{permission.description}}</span>
                 {{#if controller.editingPermissions}}
-                  <a {{action removePermission this}}><i class="icon icon-remove-sign"></i></a>
+                  <a {{action removePermission this}}><i class="fa fa-times-circle"></i></a>
                 {{/if}}
               </li>
             {{/each}}
@@ -86,27 +93,52 @@
           {{/if}}
         </section>
       </div>
-      <div {{bindAttr class=":modal-tab :options-tab settingsSelected::invisible"}}>
+      <div {{bind-attr class=":modal-tab :options-tab settingsSelected::invisible"}}>
         <section class='field'>
-          {{autoCloseForm autoCloseDays=auto_close_days labelKey="category.auto_close_label"}}
+          <div class="auto-close-fields">
+            <div>
+              <i class="fa fa-clock-o"></i>
+              {{i18n category.auto_close_label}}
+              {{textField value=auto_close_hours}}
+              {{i18n category.auto_close_units}}
+            </div>
+          </div>
         </section>
+
+        {{#if controller.emailInEnabled}}
+          <section class='field'>
+            <div class="email-in-fields">
+              <div>
+                <i class="fa fa-envelope-o"></i>
+                {{i18n category.email_in}}
+                {{textField value=email_in}}
+              </div>
+              <div>
+                <label class="checkbox-label">
+                  {{view Ember.Checkbox checkedBinding="email_in_allow_strangers"}}
+                  {{i18n category.email_in_allow_strangers}}
+                </label>
+              </div>
+            </div>
+          </section>
+        {{/if}}
 
         <section class='field'>
           <label>{{i18n category.position}}</label>
-          {{textField value=position}}
-        </section>
-
-        <section class='field'>
-          <label>{{i18n category.hotness}}</label>
-          {{view Discourse.HotnessView hotnessBinding="hotness"}}
+          <span {{action disableDefaultPosition}}>{{textField value=position disabled=defaultPosition class="position-input"}}</span>
+          &nbsp;{{i18n or}}&nbsp;
+          <button {{bind-attr class=":btn defaultPosition:btn-primary"}} {{action toggleDefaultPosition}}>
+            <span {{bind-attr class="defaultPosition::hidden"}}><i class="fa fa-check"></i></span>
+            {{i18n category.default_position}}
+          </button>
         </section>
       </div>
     {{/unless}}
   </div>
   <div class="modal-footer">
-    <button class='btn btn-primary' {{bindAttr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
-    {{#if deleteVisible}}
-      <button class='btn btn-danger pull-right' {{bindAttr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="icon icon-trash"></i>{{deleteButtonTitle}}</button>
+    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
+    {{#if can_delete}}
+      <button class='btn btn-danger pull-right' {{bind-attr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
     {{/if}}
   </div>
 </div>

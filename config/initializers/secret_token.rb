@@ -2,6 +2,7 @@
 #  if you feel strongly that it does not belong there use ENV['SECRET_TOKEN']
 #
 token = ENV['SECRET_TOKEN']
+key_base = ENV['SECRET_KEY_BASE']
 unless token
   token = $redis.get('SECRET_TOKEN')
   unless token && token.length == 128
@@ -10,4 +11,5 @@ unless token
   end
 end
 
+Discourse::Application.config.secret_key_base = key_base
 Discourse::Application.config.secret_token = token

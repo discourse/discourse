@@ -1,0 +1,130 @@
+//= require ./vendor/normalize
+//= require ./common/foundation/base
+
+@import "./common/foundation/variables";
+
+article.post {
+  border-bottom: 1px solid #ddd;
+
+  &.deleted {
+    background-color: #ffe5e5;
+  }
+
+  .quote .title {
+    border-left: 5px solid $primary_border_color;
+    background-color: lighten($secondary_background_color, 76%);
+    padding: 10px 10px 0 12px;
+    .avatar { margin-right: 7px; }
+  }
+
+  ol, ul {
+    clear: none;
+  }
+
+  blockquote {
+    padding: 10px 8px 10px 13px;
+    margin: 0 0 10px 0;
+    background-color: $quote-background;
+    border-left: 5px solid $primary_border_color;
+    p {
+      margin: 0 0 10px 0;
+    }
+  }
+
+  .post-date {
+    float: right;
+    color: #aaa;
+    font-size: 12px;
+    margin: 4px 4px 0 0;
+  }
+
+  .author {
+    padding: 20px 0;
+    width: 92px;
+    float: left;
+
+    text-align: center;
+
+    h3 {
+      text-align: center;
+      color: #0088cc;
+      font-size: 13px;
+      margin: 5px 0 0 0;
+      word-wrap: break-word;
+
+      a.staff {
+        background-color: #ffffc2;
+      }
+
+      a.new-user {
+        color: lighten($primary_text_color, 35%);
+      }
+    }
+  }
+
+  .cooked {
+    padding: 20px 0;
+    margin-left: 100px;
+    word-wrap: break-word;
+
+    img {
+      max-width:100%;
+    }
+    p {
+      margin: 0 0 1em 0;
+    }
+  }
+}
+
+img.emoji {
+  width: 20px;
+  height: 20px;
+}
+
+.post-replies {
+  background-color: #eee;
+  padding: 5px;
+  display: inline-block;
+}
+
+.in-reply-to {
+  font-size: 13px;
+  margin-top: 4px;
+  display: inline-block;
+  color: #999;
+}
+
+.replies {
+  font-size: 15px;
+  color: #999;
+}
+
+header {
+  padding: 10px 10px 20px 10px;
+  font-size: 18px;
+  border-bottom: 1px solid #ddd;
+}
+
+footer {
+  font-size: 18px;
+
+  .logo {
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+
+  a[href].button {
+    margin: 10px 0 0 10px;
+  }
+}
+
+.logo {
+  float: right;
+  max-height: 30px;
+}
+
+a[href].button {
+  background-color: #eee;
+  padding: 5px;
+  display: inline-block;
+}

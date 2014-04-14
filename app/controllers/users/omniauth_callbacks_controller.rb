@@ -10,10 +10,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     Auth::OpenIdAuthenticator.new("google", "https://www.google.com/accounts/o8/id", trusted: true),
     Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", trusted: true),
     Auth::GithubAuthenticator.new,
-    Auth::TwitterAuthenticator.new,
-    Auth::PersonaAuthenticator.new,
-    Auth::CasAuthenticator.new,
-    Auth::LessonPlanetAuthenticator.new
+    Auth::TwitterAuthenticator.new
   ]
 
   skip_before_filter :redirect_to_login_if_required
@@ -21,7 +18,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   layout false
 
   def self.types
-    @types ||= Enum.new(:lessonplanet, :facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
+    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
   end
 
   # need to be able to call this
@@ -33,6 +30,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def complete
     auth = request.env["omniauth.auth"]
+    auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
 
@@ -85,8 +83,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     # log on any account that is active with forum access
     if Guardian.new(user).can_access_forum? && user.active
       log_on_user(user)
-      # don't carry around old auth info, perhaps move elsewhere
-      session[:authentication] = nil
+      Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
+      session[:authentication] = nil # don't carry around old auth info, perhaps move elsewhere
       @data.authenticated = true
     else
       if SiteSetting.must_approve_users? && !user.approved?

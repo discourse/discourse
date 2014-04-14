@@ -8,19 +8,19 @@ describe ListController do
     @post = Fabricate(:post, user: @user)
 
     # forces tests down some code paths
-    SiteSetting.stubs(:top_menu).returns('latest,-video|new|unread|favorited|categories|category/beer')
+    SiteSetting.stubs(:top_menu).returns('latest,-video|new|unread|starred|categories|category/beer')
   end
 
   describe 'indexes' do
 
-    [:latest, :hot].each do |filter|
+    Discourse.anonymous_filters.each do |filter|
       context "#{filter}" do
         before { xhr :get, filter }
         it { should respond_with(:success) }
       end
     end
 
-    [:favorited, :read, :posted, :unread, :new].each do |filter|
+    Discourse.logged_in_filters.each do |filter|
       context "#{filter}" do
         it { expect { xhr :get, filter }.to raise_error(Discourse::NotLoggedIn) }
       end
@@ -39,7 +39,7 @@ describe ListController do
 
   describe 'RSS feeds' do
 
-    [:latest, :hot].each do |filter|
+    Discourse.anonymous_filters.each do |filter|
 
       it 'renders RSS' do
         get "#{filter}_feed", format: :rss
@@ -56,15 +56,18 @@ describe ListController do
     context 'in a category' do
       let(:category) { Fabricate(:category) }
 
-      it "raises an invalid access error when the user can't see the category" do
-        Guardian.any_instance.expects(:can_see?).with(category).returns(false)
-        xhr :get, :category, category: category.slug
-        response.should be_forbidden
+      context 'without access to see the category' do
+        before do
+          Guardian.any_instance.expects(:can_see?).with(category).returns(false)
+          xhr :get, :category_latest, category: category.slug
+        end
+
+        it { should_not respond_with(:success) }
       end
 
       context 'with access to see the category' do
         before do
-          xhr :get, :category, category: category.slug
+          xhr :get, :category_latest, category: category.slug
         end
 
         it { should respond_with(:success) }
@@ -72,7 +75,7 @@ describe ListController do
 
       context 'with a link that includes an id' do
         before do
-          xhr :get, :category, category: "#{category.id}-#{category.slug}"
+          xhr :get, :category_latest, category: "#{category.id}-#{category.slug}"
         end
 
         it { should respond_with(:success) }
@@ -83,7 +86,7 @@ describe ListController do
         let!(:other_category) { Fabricate(:category, name: "#{category.id} name") }
 
         before do
-          xhr :get, :category, category: other_category.slug
+          xhr :get, :category_latest, category: other_category.slug
         end
 
         it { should respond_with(:success) }
@@ -98,7 +101,7 @@ describe ListController do
 
         context 'when parent and child are requested' do
           before do
-            xhr :get, :category, parent_category: category.slug, category: sub_category.slug
+            xhr :get, :category_latest, parent_category: category.slug, category: sub_category.slug
           end
 
           it { should respond_with(:success) }
@@ -106,15 +109,7 @@ describe ListController do
 
         context 'when child is requested with the wrong parent' do
           before do
-            xhr :get, :category, parent_category: 'not_the_right_slug', category: sub_category.slug
-          end
-
-          it { should_not respond_with(:success) }
-        end
-
-        context 'when child is requested without a parent' do
-          before do
-            xhr :get, :category, category: sub_category.slug
+            xhr :get, :category_latest, parent_category: 'not_the_right_slug', category: sub_category.slug
           end
 
           it { should_not respond_with(:success) }
@@ -189,23 +184,15 @@ describe ListController do
     end
   end
 
-  context 'hot' do
-    before do
-      xhr :get, :hot
-    end
-
-    it { should respond_with(:success) }
-  end
-
-  context 'favorited' do
+  context 'starred' do
     it 'raises an error when not logged in' do
-      lambda { xhr :get, :favorited }.should raise_error(Discourse::NotLoggedIn)
+      lambda { xhr :get, :starred }.should raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
       before do
         log_in_user(@user)
-        xhr :get, :favorited
+        xhr :get, :starred
       end
 
       it { should respond_with(:success) }
@@ -226,6 +213,33 @@ describe ListController do
 
       it { should respond_with(:success) }
     end
+  end
+
+  describe "best_period_for" do
+
+    it "returns yearly for more than 180 days" do
+      ListController.best_period_for(nil).should == :yearly
+      ListController.best_period_for(180.days.ago).should == :yearly
+    end
+
+    it "returns monthly when less than 180 days and more than 35 days" do
+      (35...180).each do |date|
+        ListController.best_period_for(date.days.ago).should == :monthly
+      end
+    end
+
+    it "returns weekly when less than 35 days and more than 8 days" do
+      (8...35).each do |date|
+        ListController.best_period_for(date.days.ago).should == :weekly
+      end
+    end
+
+    it "returns daily when less than 8 days" do
+      (0...8).each do |date|
+        ListController.best_period_for(date.days.ago).should == :daily
+      end
+    end
+
   end
 
 end

@@ -11,11 +11,10 @@ end
 #
 #  post_id    :integer
 #  reply_id   :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  created_at :datetime
+#  updated_at :datetime
 #
 # Indexes
 #
 #  index_post_replies_on_post_id_and_reply_id  (post_id,reply_id) UNIQUE
 #
-

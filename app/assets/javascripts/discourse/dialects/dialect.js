@@ -17,7 +17,6 @@ var parser = window.BetterMarkdown,
   @method initializeDialects
 **/
 function initializeDialects() {
-  Discourse.Dialect.trigger('register', {dialect: dialect, MD: MD});
   MD.buildBlockOrder(dialect.block);
   MD.buildInlinePatterns(dialect.inline);
   initialized = true;
@@ -30,8 +29,9 @@ function initializeDialects() {
   @method processTextNodes
   @param {Array} node the JsonML tree
   @param {Object} event the parse node event data
+  @param {Function} emitter the function to call on the text node
 **/
-function processTextNodes(node, event) {
+function processTextNodes(node, event, emitter) {
   if (node.length < 2) { return; }
 
   if (node[0] === '__RAW') {
@@ -47,12 +47,7 @@ function processTextNodes(node, event) {
         textContent = Discourse.Markdown.sanitize(textContent);
       }
 
-      var result = textContent;
-
-      for (var k=0; k<emitters.length; k++) {
-        result = emitters[k](result, event);
-      }
-
+      var result = emitter(textContent, event);
       if (result) {
         if (result instanceof Array) {
           for (var i=0; i<result.length; i++) {
@@ -85,7 +80,10 @@ function parseTree(tree, path, insideCounts) {
   if (tree instanceof Array) {
     var event = {node: tree, path: path, dialect: dialect, insideCounts: insideCounts || {}};
     Discourse.Dialect.trigger('parseNode', event);
-    processTextNodes(tree, event);
+
+    for (var j=0; j<emitters.length; j++) {
+      processTextNodes(tree, event, emitters[j]);
+    }
 
     path = path || [];
     insideCounts = insideCounts || {};
@@ -122,10 +120,10 @@ function parseTree(tree, path, insideCounts) {
 **/
 function invalidBoundary(args, prev) {
 
-  if (!args.wordBoundary && !args.spaceBoundary) { return; }
+  if (!args.wordBoundary && !args.spaceBoundary) { return false; }
 
   var last = prev[prev.length - 1];
-  if (typeof last !== "string") { return; }
+  if (typeof last !== "string") { return false; }
 
   if (args.wordBoundary && (last.match(/(\w|\/)$/))) { return true; }
   if (args.spaceBoundary && (!last.match(/\s$/))) { return true; }
@@ -145,15 +143,15 @@ Discourse.Dialect = {
 
     @method cook
     @param {String} text the raw text to cook
+    @param {Object} opts hash of options
     @returns {String} the cooked text
   **/
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
     dialect.options = opts;
-    var tree = parser.toHTMLTree(text, 'Discourse'),
-        html = parser.renderJsonML(parseTree(tree));
+    var tree = parser.toHTMLTree(text, 'Discourse');
 
-    return html;
+    return parser.renderJsonML(parseTree(tree));
   },
 
   /**
@@ -185,7 +183,7 @@ Discourse.Dialect = {
     @param {Function} emitter A function that emits the JsonML for the replacement.
   **/
   inlineReplace: function(token, emitter) {
-    this.registerInline(token, function(text, match, prev) {
+    this.registerInline(token, function() {
       return [token.length, emitter.call(this, token)];
     });
   },
@@ -200,6 +198,7 @@ Discourse.Dialect = {
       Discourse.Dialect.inlineRegexp({
         matcher: /((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/gm,
         spaceBoundary: true,
+        start: 'http',
 
         emitter: function(matches) {
           var url = matches[1];
@@ -214,7 +213,7 @@ Discourse.Dialect = {
       @param {String} [opts.start] The starting token we want to find
       @param {String} [opts.matcher] The regular expression to match
       @param {Boolean} [opts.wordBoundary] If true, the match must be on a word boundary
-      @param {Boolean} [opts.spaceBoundary] If true, the match must be on a sppace boundary
+      @param {Boolean} [opts.spaceBoundary] If true, the match must be on a space boundary
   **/
   inlineRegexp: function(args) {
     this.registerInline(args.start, function(text, match, prev) {
@@ -289,9 +288,8 @@ Discourse.Dialect = {
     the other helpers such as `replaceBlock` so consider using them first!
 
     @method registerBlock
-    @param {String} the name of the block handler
-    @param {Function} the handler
-
+    @param {String} name the name of the block handler
+    @param {Function} handler the handler
   **/
   registerBlock: function(name, handler) {
     dialect.block[name] = handler;

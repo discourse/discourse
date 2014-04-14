@@ -4,10 +4,13 @@ require_dependency 'discourse'
 require_dependency 'custom_renderer'
 require_dependency 'archetype'
 require_dependency 'rate_limiter'
+require_dependency 'crawler_detection'
+require_dependency 'json_error'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
   include CanonicalURL::ControllerExtensions
+  include JsonError
 
   serialization_scope :guardian
 
@@ -28,19 +31,32 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_filter :set_locale
   before_filter :set_mobile_view
   before_filter :inject_preview_style
-  before_filter :block_if_maintenance_mode
+  before_filter :disable_customization
+  before_filter :block_if_readonly_mode
   before_filter :authorize_mini_profiler
   before_filter :store_incoming_links
   before_filter :preload_json
   before_filter :check_xhr
-  before_filter :set_locale
   before_filter :redirect_to_login_if_required
 
+  layout :set_layout
+
+  def has_escaped_fragment?
+    SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
+  end
+
+  def set_layout
+    has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) ? 'crawler' : 'application'
+  end
+
   rescue_from Exception do |exception|
-    unless [ ActiveRecord::RecordNotFound, ActionController::RoutingError,
-             ActionController::UnknownController, AbstractController::ActionNotFound].include? exception.class
+    unless [ActiveRecord::RecordNotFound,
+            ActionController::RoutingError,
+            ActionController::UnknownController,
+            AbstractController::ActionNotFound].include? exception.class
       begin
         ErrorLog.report_async!(exception, self, request, current_user)
       rescue
@@ -49,7 +65,6 @@ class ApplicationController < ActionController::Base
     end
     raise
   end
-
 
   # Some exceptions
   class RenderEmpty < Exception; end
@@ -76,27 +91,44 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
-    redirect_to "/"
+
+    if request.get?
+      redirect_to "/"
+    else
+      render status: 403, json: failed_json.merge(message: I18n.t(:not_logged_in))
+    end
+
   end
 
   rescue_from Discourse::NotFound do
-    rescue_discourse_actions("[error: 'not found']", 404)
+    rescue_discourse_actions("[error: 'not found']", 404) # TODO: this breaks json responses
   end
 
   rescue_from Discourse::InvalidAccess do
-    rescue_discourse_actions("[error: 'invalid access']", 403)
+    rescue_discourse_actions("[error: 'invalid access']", 403, true) # TODO: this breaks json responses
   end
 
-  def rescue_discourse_actions(message, error)
+  rescue_from Discourse::ReadOnly do
+    render status: 405, json: failed_json.merge(message: I18n.t("read_only_mode_enabled"))
+  end
+
+  def rescue_discourse_actions(message, error, include_ember=false)
     if request.format && request.format.json?
+      # TODO: this doesn't make sense. Stuffing an html page into a json response will cause
+      #       $.parseJSON to fail in the browser. Also returning text like "[error: 'invalid access']"
+      #       from the above rescue_from blocks will fail because that isn't valid json.
       render status: error, layout: false, text: (error == 404) ? build_not_found_page(error) : message
     else
-      render text: build_not_found_page(error, 'no_js')
+      render text: build_not_found_page(error, include_ember ? 'application' : 'no_js')
     end
   end
 
   def set_locale
-    I18n.locale = SiteSetting.default_locale
+    I18n.locale = if SiteSetting.allow_user_locale && current_user && current_user.locale.present?
+                    current_user.locale
+                  else
+                    SiteSetting.default_locale
+                  end
   end
 
   def store_preloaded(key, json)
@@ -124,10 +156,13 @@ class ApplicationController < ActionController::Base
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
-
   def inject_preview_style
     style = request['preview-style']
     session[:preview_style] = style if style
+  end
+
+  def disable_customization
+    session[:disable_customization] = params[:customization] == "0" if params.has_key?(:customization)
   end
 
   def guardian
@@ -164,7 +199,7 @@ class ApplicationController < ActionController::Base
   # Our custom cache method
   def discourse_expires_in(time_length)
     return unless can_cache_content?
-    Middleware::AnonymousCache.anon_cache(request.env, 1.minute)
+    Middleware::AnonymousCache.anon_cache(request.env, time_length)
   end
 
   def fetch_user_from_params
@@ -199,8 +234,9 @@ class ApplicationController < ActionController::Base
   private
 
     def preload_anonymous_data
-      store_preloaded("site", Site.cached_json(guardian))
+      store_preloaded("site", Site.json_for(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
+      store_preloaded("customHTML", custom_html_json)
     end
 
     def preload_current_user_data
@@ -209,12 +245,17 @@ class ApplicationController < ActionController::Base
       store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
     end
 
+    def custom_html_json
+      MultiJson.dump({
+        top: SiteContent.content_for(:top),
+        bottom: SiteContent.content_for(:bottom)
+      }.merge(
+        (SiteSetting.tos_accept_required && !current_user) ? {tos_signup_form_message: SiteContent.content_for(:tos_signup_form_message)} : {}
+      ))
+    end
+
     def render_json_error(obj)
-      if obj.present?
-        render json: MultiJson.dump(errors: obj.errors.full_messages), status: 422
-      else
-        render json: MultiJson.dump(errors: [I18n.t('js.generic_error')]), status: 422
-      end
+      render json: MultiJson.dump(create_errors_json(obj)), status: 422
     end
 
     def success_json
@@ -238,16 +279,6 @@ class ApplicationController < ActionController::Base
         render json: MultiJson.dump(json)
       else
         render_json_error(obj)
-      end
-    end
-
-    def block_if_maintenance_mode
-      if Discourse.maintenance_mode?
-        if request.format.json?
-          render status: 503, json: failed_json.merge(message: I18n.t('site_under_maintenance'))
-        else
-          render status: 503, file: File.join( Rails.root, 'public', '503.html' ), layout: false
-        end
       end
     end
 
@@ -275,12 +306,19 @@ class ApplicationController < ActionController::Base
     end
 
     def redirect_to_login_if_required
-      redirect_to :login if SiteSetting.login_required? && !current_user
+      return if current_user || (request.format.json? && api_key_valid?)
+
+      redirect_to :login if SiteSetting.login_required?
+    end
+
+    def block_if_readonly_mode
+      return if request.fullpath.start_with?("/admin/backups")
+      raise Discourse::ReadOnly.new if !request.get? && Discourse.readonly_mode?
     end
 
     def build_not_found_page(status=404, layout=false)
-      @top_viewed = TopicQuery.top_viewed(10)
-      @recent = TopicQuery.recent(10)
+      @top_viewed = Topic.top_viewed(10)
+      @recent = Topic.recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.gsub!('-',' ')

@@ -12,6 +12,11 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
   authenticate: null,
   loggingIn: false,
 
+  resetForm: function() {
+    this.set('authenticate', null);
+    this.set('loggingIn', false);
+  },
+
   site: function() {
     return Discourse.Site.current();
   }.property(),
@@ -31,41 +36,82 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
     return this.get('loggingIn') || this.blank('loginName') || this.blank('loginPassword');
   }.property('loginName', 'loginPassword', 'loggingIn'),
 
-  login: function() {
-    this.set('loggingIn', true);
+  showSignupLink: function() {
+    return !Discourse.SiteSettings.invite_only && !this.get('loggingIn') && this.blank('authenticate');
+  }.property('loggingIn', 'authenticate'),
 
-    var loginController = this;
-    Discourse.ajax("/session", {
-      data: { login: this.get('loginName'), password: this.get('loginPassword') },
-      type: 'POST'
-    }).then(function (result) {
-      // Successful login
-      if (result.error) {
-        loginController.set('loggingIn', false);
-        if( result.reason === 'not_activated' ) {
-          loginController.send('showNotActivated', {
-            username: loginController.get('loginName'),
-            sentTo: result.sent_to_email,
-            currentEmail: result.current_email
-          });
+  showSpinner: function() {
+    return this.get('loggingIn') || this.get('authenticate');
+  }.property('loggingIn', 'authenticate'),
+
+  actions: {
+    login: function() {
+      this.set('loggingIn', true);
+
+      var loginController = this;
+      Discourse.ajax("/session", {
+        data: { login: this.get('loginName'), password: this.get('loginPassword') },
+        type: 'POST'
+      }).then(function (result) {
+        // Successful login
+        if (result.error) {
+          loginController.set('loggingIn', false);
+          if( result.reason === 'not_activated' ) {
+            loginController.send('showNotActivated', {
+              username: loginController.get('loginName'),
+              sentTo: result.sent_to_email,
+              currentEmail: result.current_email
+            });
+          }
+          loginController.flash(result.error, 'error');
+        } else {
+          // Trigger the browser's password manager using the hidden static login form:
+          var $hidden_login_form = $('#hidden-login-form');
+          $hidden_login_form.find('input[name=username]').val(loginController.get('loginName'));
+          $hidden_login_form.find('input[name=password]').val(loginController.get('loginPassword'));
+          $hidden_login_form.find('input[name=redirect]').val(window.location.href);
+          $hidden_login_form.submit();
         }
-        loginController.flash(result.error, 'error');
+
+      }, function() {
+        // Failed to login
+        loginController.flash(I18n.t('login.error'), 'error');
+        loginController.set('loggingIn', false);
+      });
+
+      return false;
+    },
+
+    externalLogin: function(loginMethod){
+      var name = loginMethod.get("name");
+      var customLogin = loginMethod.get("customLogin");
+
+      if(customLogin){
+        customLogin();
       } else {
-        // Trigger the browser's password manager using the hidden static login form:
-        var $hidden_login_form = $('#hidden-login-form');
-        $hidden_login_form.find('input[name=username]').val(loginController.get('loginName'));
-        $hidden_login_form.find('input[name=password]').val(loginController.get('loginPassword'));
-        $hidden_login_form.find('input[name=redirect]').val(window.location.href);
-        $hidden_login_form.submit();
+        this.set('authenticate', name);
+        var left = this.get('lastX') - 400;
+        var top = this.get('lastY') - 200;
+
+        var height = loginMethod.get("frameHeight") || 400;
+        var width = loginMethod.get("frameWidth") || 800;
+        var w = window.open(Discourse.getURL("/auth/" + name), "_blank",
+            "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
+        var self = this;
+        var timer = setInterval(function() {
+          if(w.closed) {
+            clearInterval(timer);
+            self.set('authenticate', null);
+          }
+        }, 1000);
       }
+    },
 
-    }, function(result) {
-      // Failed to login
-      loginController.flash(I18n.t('login.error'), 'error');
-      loginController.set('loggingIn', false);
-    });
-
-    return false;
+    createAccount: function() {
+      var createAccountController = this.get('controllers.createAccount');
+      createAccountController.resetForm();
+      this.send('showCreateAccount');
+    }
   },
 
   authMessage: (function() {
@@ -75,24 +121,6 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
       return method.get('message');
     }
   }).property('authenticate'),
-
-  externalLogin: function(loginMethod){
-    var name = loginMethod.get("name");
-    var customLogin = loginMethod.get("customLogin");
-
-    if(customLogin){
-      customLogin();
-    } else {
-      this.set('authenticate', name);
-      var left = this.get('lastX') - 400;
-      var top = this.get('lastY') - 200;
-
-      var height = loginMethod.get("frameHeight") || 400;
-      var width = loginMethod.get("frameWidth") || 800;
-      window.open(Discourse.getURL("/auth/" + name), "_blank",
-          "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
-    }
-  },
 
   authenticationComplete: function(options) {
     if (options.requires_invite) {
@@ -112,8 +140,8 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
     }
     // Reload the page if we're authenticated
     if (options.authenticated) {
-      if (window.location.pathname === '/login') {
-        window.location.pathname = '/';
+      if (window.location.pathname === Discourse.getURL('/login')) {
+        window.location.pathname = Discourse.getURL('/');
       } else {
         window.location.reload();
       }

@@ -9,9 +9,14 @@
 Discourse.EmailPreview = Discourse.Model.extend({});
 
 Discourse.EmailPreview.reopenClass({
-  findDigest: function(last_seen_at) {
-    return $.ajax("/admin/email/preview-digest.json", {
-      data: {last_seen_at: last_seen_at}
+  findDigest: function(lastSeenAt) {
+
+    if (Em.isEmpty(lastSeenAt)) {
+      lastSeenAt = moment().subtract('days',7).format('YYYY-MM-DD');
+    }
+
+    return Discourse.ajax("/admin/email/preview-digest.json", {
+      data: {last_seen_at: lastSeenAt}
     }).then(function (result) {
       return Discourse.EmailPreview.create(result);
     });

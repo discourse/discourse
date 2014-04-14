@@ -37,6 +37,11 @@ describe SuggestedTopicsBuilder do
 
       builder.results.map(&:id).should == [2,3]
     end
+
+    it "inserts multiple results and puts topics in the correct order" do
+      builder.splice_results([fake_topic(2,1), fake_topic(3,2), fake_topic(4,1)], :high)
+      builder.results.map(&:id).should == [2,4,3]
+    end
   end
 
   it "has the correct defaults" do
@@ -78,12 +83,23 @@ describe SuggestedTopicsBuilder do
 
     end
 
-    context "adding invalid status topics" do
+    context "adding topics that are not open" do
       let!(:archived_topic) { Fabricate(:topic, archived: true)}
       let!(:closed_topic) { Fabricate(:topic, closed: true)}
       let!(:invisible_topic) { Fabricate(:topic, visible: false)}
 
-      it "doesn't add archived, closed or invisible topics" do
+      it "adds archived and closed, but not invisible topics" do
+        builder.add_results(Topic)
+        builder.size.should == 2
+        builder.should_not be_full
+      end
+    end
+
+    context "category definition topics" do
+      let!(:category) { Fabricate(:category) }
+
+      it "doesn't add a category definition topic" do
+        category.topic_id.should be_present
         builder.add_results(Topic)
         builder.size.should == 0
         builder.should_not be_full

@@ -1,7 +1,10 @@
 require_dependency 'topic_view'
 require_dependency 'promotion'
+require_dependency 'url_helper'
+require_dependency 'topics_bulk_action'
 
 class TopicsController < ApplicationController
+  include UrlHelper
 
   before_filter :ensure_logged_in, only: [:timings,
                                           :destroy_timings,
@@ -17,7 +20,10 @@ class TopicsController < ApplicationController
                                           :move_posts,
                                           :merge_topic,
                                           :clear_pin,
-                                          :autoclose]
+                                          :autoclose,
+                                          :bulk,
+                                          :reset_new,
+                                          :change_post_owners]
 
   before_filter :consider_user_for_promotion, only: :show
 
@@ -45,10 +51,6 @@ class TopicsController < ApplicationController
 
     redirect_to_correct_topic && return if slugs_do_not_match
 
-    # render workaround pseudo-static HTML page for old crawlers which ignores <noscript>
-    # (see http://meta.discourse.org/t/noscript-tag-and-some-search-engines/8078)
-    return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.key?('_escaped_fragment_'))
-
     track_visit_to_topic
 
     if should_track_visit_to_topic?
@@ -57,7 +59,7 @@ class TopicsController < ApplicationController
 
     perform_show_response
 
-    canonical_url @topic_view.canonical_path
+    canonical_url absolute_without_cdn(@topic_view.canonical_path)
   end
 
   def wordpress
@@ -88,7 +90,7 @@ class TopicsController < ApplicationController
   end
 
   def destroy_timings
-    PostTiming.destroy_for(current_user.id, params[:topic_id].to_i)
+    PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
     render nothing: true
   end
 
@@ -101,13 +103,14 @@ class TopicsController < ApplicationController
     # TODO: we may need smarter rules about converting archetypes
     topic.archetype = "regular" if current_user.admin? && archetype == 'regular'
 
+    topic.acting_user = current_user
+
     success = false
     Topic.transaction do
-      success = topic.save
-      success = topic.change_category(params[:category]) if success
+      success = topic.save && topic.change_category(params[:category])
     end
-    # this is used to return the title to the client as it may have been
-    # changed by "TextCleaner"
+
+    # this is used to return the title to the client as it may have been changed by "TextCleaner"
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
   end
 
@@ -117,7 +120,7 @@ class TopicsController < ApplicationController
     title, raw = params[:title], params[:raw]
     [:title, :raw].each { |key| check_length_of(key, params[key]) }
 
-    # Only suggest similar topics if the site has a minimmum amount of topics present.
+    # Only suggest similar topics if the site has a minimum amount of topics present.
     topics = Topic.similar_to(title, raw, current_user).to_a if Topic.count_exceeds_minimum?
 
     render_serialized(topics, BasicTopicSerializer)
@@ -153,12 +156,15 @@ class TopicsController < ApplicationController
   end
 
   def autoclose
-    raise Discourse::InvalidParameters.new(:auto_close_days) unless params.has_key?(:auto_close_days)
-    @topic = Topic.where(id: params[:topic_id].to_i).first
-    guardian.ensure_can_moderate!(@topic)
-    @topic.set_auto_close(params[:auto_close_days], current_user)
-    @topic.save
-    render nothing: true
+    raise Discourse::InvalidParameters.new(:auto_close_time) unless params.has_key?(:auto_close_time)
+    topic = Topic.where(id: params[:topic_id].to_i).first
+    guardian.ensure_can_moderate!(topic)
+    topic.set_auto_close(params[:auto_close_time], current_user)
+    if topic.save
+      render json: success_json.merge!(auto_close_at: topic.auto_close_at)
+    else
+      render_json_error(topic)
+    end
   end
 
   def destroy
@@ -237,6 +243,37 @@ class TopicsController < ApplicationController
     render_topic_changes(dest_topic)
   end
 
+  def change_post_owners
+    params.require(:post_ids)
+    params.require(:topic_id)
+    params.require(:username)
+
+    guardian.ensure_can_change_post_owner!
+
+    topic = Topic.find(params[:topic_id].to_i)
+    new_user = User.find_by_username(params[:username])
+    ids = params[:post_ids].to_a
+
+    unless new_user && topic && ids
+      render json: failed_json, status: 422
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      ids.each do |id|
+        post = Post.find(id)
+        if post.is_first_post?
+          topic.user = new_user # Update topic owner (first avatar)
+        end
+        post.set_owner(new_user, current_user)
+      end
+    end
+
+    topic.update_statistics
+
+    render json: success_json
+  end
+
   def clear_pin
     topic = Topic.where(id: params[:topic_id].to_i).first
     guardian.ensure_can_see!(topic)
@@ -258,6 +295,28 @@ class TopicsController < ApplicationController
     @topic_view = TopicView.new(params[:topic_id])
     discourse_expires_in 1.minute
     render 'topics/show', formats: [:rss]
+  end
+
+  def bulk
+    if params[:topic_ids].present?
+      topic_ids = params[:topic_ids].map {|t| t.to_i}
+    elsif params[:filter] == 'unread'
+      tq = TopicQuery.new(current_user)
+      topic_ids = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics.pluck(:id)
+    else
+      raise ActionController::ParameterMissing.new(:topic_ids)
+    end
+
+    operation = params.require(:operation).symbolize_keys
+    raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
+    operator = TopicsBulkAction.new(current_user, topic_ids, operation)
+    changed_topic_ids = operator.perform!
+    render_json_dump topic_ids: changed_topic_ids
+  end
+
+  def reset_new
+    current_user.user_stat.update_column(:new_since, Time.now)
+    render nothing: true
   end
 
   private
@@ -338,7 +397,7 @@ class TopicsController < ApplicationController
   end
 
   def check_for_status_presence(key, attr)
-    invalid_param(key) unless %w(visible closed pinned archived).include?(attr)
+    invalid_param(key) unless %w(pinned_globally visible closed pinned archived).include?(attr)
   end
 
   def invalid_param(key)

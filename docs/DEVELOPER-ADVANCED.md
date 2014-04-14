@@ -79,8 +79,8 @@ Vagrant version 1.1.2. With this Vagrantfile:
     su - vagrant -c "rvm install 2.0.0-turbo"
     su - vagrant -c "rvm use 2.0.0-turbo --default"
 
-    echo "gem: --no-rdoc --no-ri" >> /etc/gemrc
-    su - vagrant -c "echo 'gem: --no-rdoc --no-ri' >> ~/.gemrc"
+    echo "gem: --no-document" >> /etc/gemrc
+    su - vagrant -c "echo 'gem: --no-document' >> ~/.gemrc"
 
 ## Postgres 9.1
 
@@ -102,12 +102,6 @@ Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
     host all all 127.0.0.1/32 trust
     host all all ::1/128 trust
     host all all 0.0.0.0/0 trust # wide-open
-
-Load the seed data (as vagrant user):
-
-    psql -d discourse_development < pg_dumps/development-image.sql
-
-(You may wish to try the `production-image.sql` file for a good seed for a production database.)
 
 ## Redis
 

@@ -29,10 +29,12 @@ class Draft < ActiveRecord::Base
 
   protected
 
-  def self.find_draft(user,key)
-    user_id = user
-    user_id = user.id if User === user
-    Draft.where(user_id: user_id, draft_key: key).first
+  def self.find_draft(user, key)
+    if user.is_a?(User)
+      find_by(user_id: user.id, draft_key: key)
+    else
+      find_by(user_id: user, draft_key: key)
+    end
   end
 end
 
@@ -44,12 +46,11 @@ end
 #  user_id    :integer          not null
 #  draft_key  :string(255)      not null
 #  data       :text             not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  created_at :datetime
+#  updated_at :datetime
 #  sequence   :integer          default(0), not null
 #
 # Indexes
 #
 #  index_drafts_on_user_id_and_draft_key  (user_id,draft_key)
 #
-

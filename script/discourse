@@ -1,0 +1,151 @@
+#!/usr/bin/env ruby
+
+require "thor"
+
+class DiscourseCLI < Thor
+  class_option :verbose, default: false, aliases: :v
+
+  desc "remap", "Remap a string sequence accross all tables"
+  def remap(from, to)
+    load_rails
+
+    puts "Rewriting all occurences of #{from} to #{to}"
+    puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
+    text = STDIN.gets
+    if text.strip != "YES"
+      puts "aborting."
+      exit
+    end
+
+    sql = "SELECT table_name, column_name
+FROM information_schema.columns
+WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%')"
+
+    cnn = ActiveRecord::Base.connection.raw_connection
+
+    results = cnn.async_exec(sql).to_a
+
+    results.each do |result|
+      table_name = result["table_name"]
+      column_name = result["column_name"]
+      puts "Remapping #{table_name} #{column_name}"
+      result = cnn.async_exec("UPDATE #{table_name}
+                      SET #{column_name} = replace(#{column_name}, $1, $2)
+                      WHERE NOT #{column_name} IS NULL
+                        AND #{column_name} <> replace(#{column_name}, $1, $2)", [from, to])
+      puts "#{result.cmd_tuples} rows affected!"
+    end
+
+  end
+
+  desc "backup", "Backup a discourse forum"
+  def backup(filename = nil)
+    load_rails
+    require "backup_restore"
+    require "export/exporter"
+
+    puts "Starting export..."
+    backup = Export::Exporter.new(Discourse.system_user.id).run
+    if filename.present?
+      puts "Moving '#{backup}' to '#{filename}'"
+      FileUtils.mv(backup, filename)
+      backup = filename
+    end
+    puts "Export done."
+    puts "Output file is in: #{backup}", ""
+  end
+
+  desc "export", "Backup a Discourse forum"
+  def export
+    backup
+  end
+
+  desc "restore", "Restore a Discourse backup"
+  def restore(filename)
+    load_rails
+    require "backup_restore"
+    require "import/importer"
+
+    begin
+      puts "Starting restore: #{filename}"
+      Import::Importer.new(Discourse.system_user.id, filename).run
+      puts 'Restore done.'
+    rescue Import::FilenameMissingError
+      puts '', 'The filename argument was missing.', ''
+      usage
+    rescue Import::ImportDisabledError
+      puts '', 'Restores are not allowed.', 'An admin needs to set allow_restore to true in the site settings before restores can be run.', ''
+      puts 'Restore cancelled.', ''
+    end
+  end
+
+  desc "import", "Restore a Discourse backup"
+  def import(filename)
+    restore(filename)
+  end
+
+  desc "rollback", "Rollback to the previous working state"
+  def rollback
+    load_rails
+    require "backup_restore"
+
+    puts 'Rolling back if needed..'
+    BackupRestore.rollback!
+    puts 'Done.'
+  end
+
+  desc "enable_restore", "Allow restore operations"
+  def enable_restore
+    load_rails
+    require "site_setting"
+
+    SiteSetting.allow_restore = true
+    puts 'Restore are now permitted. Disable them with `disable_restore`'
+  end
+
+  desc "disable_restore", "Forbid restore operations"
+  def disable_restore
+    load_rails
+    require "site_setting"
+
+    SiteSetting.allow_restore = false
+    puts 'Restore are now forbidden. Enable them with `enable_restore`'
+  end
+
+  desc "enable_readonly", "Enable the readonly mode"
+  def enable_readonly
+    load_rails
+
+    Discourse.enable_readonly_mode
+    puts 'The site is now in readonly mode.'
+  end
+
+  desc "disable_readonly", "Disable the readonly mode"
+  def disable_readonly
+    load_rails
+
+    Discourse.disable_readonly_mode
+    puts 'The site is now fully operable.'
+  end
+
+  desc "request_refresh", "Ask all clients to refresh the browser"
+  def request_refresh
+    load_rails
+
+    Discourse.request_refresh!
+    puts 'Requests sent. Clients will refresh on next navigation.'
+  end
+
+  private
+
+  def load_rails
+    require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+  end
+
+  def schemaless(url)
+    url.gsub(/^https?:/, "")
+  end
+
+end
+
+DiscourseCLI.start(ARGV)

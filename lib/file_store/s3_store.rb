@@ -49,7 +49,7 @@ module FileStore
 
       extension = File.extname(upload.original_filename)
       temp_file = Tempfile.new(["discourse-s3", extension])
-      url = (SiteSetting.use_ssl? ? "https:" : "http:") + upload.url
+      url = SiteSetting.scheme + ":" + upload.url
 
       File.open(temp_file.path, "wb") do |f|
         f.write(open(url, "rb", read_timeout: 5).read)
@@ -58,8 +58,13 @@ module FileStore
       temp_file
     end
 
-    def absolute_avatar_template(avatar)
-      "#{absolute_base_url}/avatars/#{avatar.sha1}/{size}#{avatar.extension}"
+    def avatar_template(avatar)
+      template = relative_avatar_template(avatar)
+      "#{absolute_base_url}/#{template}"
+    end
+
+    def purge_tombstone(grace_period)
+      update_tombstone_lifecycle(grace_period)
     end
 
     private
@@ -73,7 +78,11 @@ module FileStore
     end
 
     def get_path_for_avatar(file, avatar, size)
-      "avatars/#{avatar.sha1}/#{size}#{avatar.extension}"
+      relative_avatar_template(avatar).gsub("{size}", size.to_s)
+    end
+
+    def relative_avatar_template(avatar)
+      "avatars/#{avatar.sha1}/{size}#{avatar.extension}"
     end
 
     def store_file(file, path, filename = nil, content_type = nil)
@@ -99,24 +108,29 @@ module FileStore
       raise Discourse::SiteSettingMissing.new("s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
     end
 
-    def get_or_create_directory(bucket)
-      check_missing_site_settings
-
-      fog = Fog::Storage.new(s3_options)
-
-      directory = fog.directories.get(bucket)
-      directory = fog.directories.create(key: bucket) unless directory
-      directory
-    end
-
     def s3_options
       options = {
         provider: 'AWS',
         aws_access_key_id: SiteSetting.s3_access_key_id,
         aws_secret_access_key: SiteSetting.s3_secret_access_key,
+        scheme: SiteSetting.scheme,
+        # cf. https://github.com/fog/fog/issues/2381
+        path_style: dns_compatible?(s3_bucket, SiteSetting.use_https?),
       }
       options[:region] = SiteSetting.s3_region unless SiteSetting.s3_region.empty?
       options
+    end
+
+    def fog_with_options
+      check_missing_site_settings
+      Fog::Storage.new(s3_options)
+    end
+
+    def get_or_create_directory(bucket)
+      fog = fog_with_options
+      directory = fog.directories.get(bucket)
+      directory = fog.directories.create(key: bucket) unless directory
+      directory
     end
 
     def upload(file, unique_filename, filename=nil, content_type=nil)
@@ -132,11 +146,46 @@ module FileStore
     end
 
     def remove(unique_filename)
-      check_missing_site_settings
-
-      fog = Fog::Storage.new(s3_options)
-
+      fog = fog_with_options
+      # copy the file in tombstone
+      fog.copy_object(unique_filename, s3_bucket, tombstone_prefix + unique_filename, s3_bucket)
+      # delete the file
       fog.delete_object(s3_bucket, unique_filename)
+    end
+
+    def update_tombstone_lifecycle(grace_period)
+      # cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html
+      fog_with_options.put_bucket_lifecycle(s3_bucket, lifecycle(grace_period))
+    end
+
+    def lifecycle(grace_period)
+      {
+        "Rules" => [{
+          "Prefix" => tombstone_prefix,
+          "Enabled" => true,
+          "Expiration" => { "Days" => grace_period }
+        }]
+      }
+    end
+
+    def tombstone_prefix
+      "tombstone/"
+    end
+
+    # cf. https://github.com/aws/aws-sdk-core-ruby/blob/master/lib/aws/plugins/s3_bucket_dns.rb#L56-L78
+    def dns_compatible?(bucket_name, ssl)
+      if valid_subdomain?(bucket_name)
+        bucket_name.match(/\./) && ssl ? false : true
+      else
+        false
+      end
+    end
+
+    def valid_subdomain?(bucket_name)
+      bucket_name.size < 64 &&
+      bucket_name =~ /^[a-z0-9][a-z0-9.-]+[a-z0-9]$/ &&
+      bucket_name !~ /(\d+\.){3}\d+/ &&
+      bucket_name !~ /[.-]{2}/
     end
 
   end

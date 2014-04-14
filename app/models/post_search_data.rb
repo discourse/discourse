@@ -15,4 +15,3 @@ end
 #
 #  idx_search_post  (search_data)
 #
-

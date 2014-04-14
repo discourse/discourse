@@ -5,17 +5,10 @@ class Category < ActiveRecord::Base
   include Concern::Positionable
 
   belongs_to :topic, dependent: :destroy
-  if rails4?
-    belongs_to :topic_only_relative_url,
-                -> { select "id, title, slug" },
-                class_name: "Topic",
-                foreign_key: "topic_id"
-  else
-    belongs_to :topic_only_relative_url,
-                select: "id, title, slug",
-                class_name: "Topic",
-                foreign_key: "topic_id"
-  end
+  belongs_to :topic_only_relative_url,
+              -> { select "id, title, slug" },
+              class_name: "Topic",
+              foreign_key: "topic_id"
 
   belongs_to :user
   belongs_to :latest_post, class_name: "Post"
@@ -35,15 +28,14 @@ class Category < ActiveRecord::Base
   validate :parent_category_validator
 
   before_validation :ensure_slug
-  after_save :invalidate_site_cache
   before_save :apply_permissions
   after_create :create_category_definition
   after_create :publish_categories_list
-  after_destroy :invalidate_site_cache
   after_destroy :publish_categories_list
 
   has_one :category_search_data
   belongs_to :parent_category, class_name: 'Category'
+  has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
 
   scope :latest, ->{ order('topic_count desc') }
 
@@ -80,7 +72,7 @@ class Category < ActiveRecord::Base
 
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian && guardian.is_staff?
-      rails4? ? all : scoped
+      all
     else
       permission_types = permission_types.map{ |permission_type|
         CategoryGroup.permission_types[permission_type]
@@ -105,25 +97,12 @@ class Category < ActiveRecord::Base
     end
   end
 
-  # Internal: Update category stats: # of topics in past year, month, week for
-  # all categories.
   def self.update_stats
-    topics = Topic
-               .select("COUNT(*) topic_count")
-               .where("topics.category_id = categories.id")
-               .where("categories.topic_id <> topics.id")
-               .visible
-
     topics_with_post_count = Topic
                               .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
                               .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
                               .group("topics.category_id")
                               .visible.to_sql
-
-    topics_year = topics.created_since(1.year.ago).to_sql
-    topics_month = topics.created_since(1.month.ago).to_sql
-    topics_week = topics.created_since(1.week.ago).to_sql
-
 
     Category.exec_sql <<SQL
     UPDATE categories c
@@ -135,12 +114,43 @@ class Category < ActiveRecord::Base
 
 SQL
 
+    # Yes, there are a lot of queries happening below.
+    # Performing a lot of queries is actually faster than using one big update
+    # statement with sub-selects on large databases with many categories,
+    # topics, and posts.
+    #
+    # The old method with the one query is here:
+    # https://github.com/discourse/discourse/blob/5f34a621b5416a53a2e79a145e927fca7d5471e8/app/models/category.rb
+    #
+    # If you refactor this, test performance on a large database.
 
-    # TODO don't update unchanged data
-    Category.update_all("topics_year = (#{topics_year}),
-                         topics_month = (#{topics_month}),
-                         topics_week = (#{topics_week})")
+    Category.all.each do |c|
+      topics = c.topics.where(['topics.id <> ?', c.topic_id]).visible
+      c.topics_year  = topics.created_since(1.year.ago).count
+      c.topics_month = topics.created_since(1.month.ago).count
+      c.topics_week  = topics.created_since(1.week.ago).count
+      c.topics_day   = topics.created_since(1.day.ago).count
+
+      posts = c.visible_posts
+      c.posts_year  = posts.created_since(1.year.ago).count
+      c.posts_month = posts.created_since(1.month.ago).count
+      c.posts_week  = posts.created_since(1.week.ago).count
+      c.posts_day   = posts.created_since(1.day.ago).count
+
+      c.save if c.changed?
+    end
   end
+
+
+  def visible_posts
+    query = Post.joins(:topic)
+                .where(['topics.category_id = ?', self.id])
+                .where('topics.visible = true')
+                .where('posts.deleted_at IS NULL')
+                .where('posts.user_deleted = false')
+    self.topic_id ? query.where(['topics.id <> ?', self.topic_id]) : query
+  end
+
 
   # Internal: Generate the text of post prompting to enter category
   # description.
@@ -151,6 +161,7 @@ SQL
   def create_category_definition
     t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
     t.skip_callbacks = true
+    t.auto_close_hours = nil
     t.save!
     update_column(:topic_id, t.id)
     t.posts.create(raw: post_template, user: user)
@@ -175,10 +186,8 @@ SQL
     end
   end
 
-  # Categories are cached in the site json, so the caches need to be
-  # invalidated whenever the category changes.
-  def invalidate_site_cache
-    Site.invalidate_cache
+  def slug_for_url
+    slug.present? ? self.slug : "#{self.id}-category"
   end
 
   def publish_categories_list
@@ -267,11 +276,11 @@ SQL
     full = CategoryGroup.permission_types[:full]
 
     mapped = permissions.map do |group,permission|
-      group = group.id if Group === group
+      group = group.id if group.is_a?(Group)
 
       # subtle, using Group[] ensures the group exists in the DB
-      group = Group[group.to_sym].id unless Fixnum === group
-      permission = CategoryGroup.permission_types[permission] unless Fixnum === permission
+      group = Group[group.to_sym].id unless group.is_a?(Fixnum)
+      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Fixnum)
 
       [group, permission]
     end
@@ -286,33 +295,72 @@ SQL
 
     [read_restricted, mapped]
   end
+
+  def self.query_parent_category(parent_slug)
+    self.where(slug: parent_slug).pluck(:id).first ||
+    self.where(id: parent_slug.to_i).pluck(:id).first
+  end
+
+  def self.query_category(slug, parent_category_id)
+    self.where(slug: slug, parent_category_id: parent_category_id).includes(:featured_users).first ||
+    self.where(id: slug.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+  end
+
+  def self.find_by_email(email)
+    self.where(email_in: Email.downcase(email)).first
+  end
+
+  def has_children?
+    id && Category.where(parent_category_id: id).exists?
+  end
+
+  def uncategorized?
+    id == SiteSetting.uncategorized_category_id
+  end
+
+  def url
+    url = "/category"
+    url << "/#{parent_category.slug}" if parent_category_id
+    url << "/#{slug}"
+  end
 end
 
 # == Schema Information
 #
 # Table name: categories
 #
-#  id              :integer          not null, primary key
-#  name            :string(50)       not null
-#  color           :string(6)        default("AB9364"), not null
-#  topic_id        :integer
-#  topic_count     :integer          default(0), not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  user_id         :integer          not null
-#  topics_year     :integer
-#  topics_month    :integer
-#  topics_week     :integer
-#  slug            :string(255)      not null
-#  description     :text
-#  text_color      :string(6)        default("FFFFFF"), not null
-#  hotness         :float            default(5.0), not null
-#  read_restricted :boolean          default(FALSE), not null
-#  auto_close_days :float
+#  id                       :integer          not null, primary key
+#  name                     :string(50)       not null
+#  color                    :string(6)        default("AB9364"), not null
+#  topic_id                 :integer
+#  topic_count              :integer          default(0), not null
+#  created_at               :datetime
+#  updated_at               :datetime
+#  user_id                  :integer          not null
+#  topics_year              :integer          default(0)
+#  topics_month             :integer          default(0)
+#  topics_week              :integer          default(0)
+#  slug                     :string(255)      not null
+#  description              :text
+#  text_color               :string(6)        default("FFFFFF"), not null
+#  read_restricted          :boolean          default(FALSE), not null
+#  auto_close_hours         :float
+#  post_count               :integer          default(0), not null
+#  latest_post_id           :integer
+#  latest_topic_id          :integer
+#  position                 :integer
+#  parent_category_id       :integer
+#  posts_year               :integer          default(0)
+#  posts_month              :integer          default(0)
+#  posts_week               :integer          default(0)
+#  email_in                 :string(255)
+#  email_in_allow_strangers :boolean          default(FALSE)
+#  topics_day               :integer          default(0)
+#  posts_day                :integer          default(0)
 #
 # Indexes
 #
-#  index_categories_on_forum_thread_count  (topic_count)
-#  index_categories_on_name                (name) UNIQUE
+#  index_categories_on_email_in     (email_in) UNIQUE
+#  index_categories_on_name         (name) UNIQUE
+#  index_categories_on_topic_count  (topic_count)
 #
-

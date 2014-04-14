@@ -34,36 +34,4 @@ describe TopMenuItem do
     expect(items.last.specific_category).to eq('xyz')
   end
 
-  describe "matches_action?" do
-    it "does not match index on other pages" do
-      expect(TopMenuItem.new('xxxx').matches_action?("index")).to be_false
-    end
-
-    it "matches index on homepage" do
-      expect(items[0].matches_action?("index")).to be_true
-    end
-
-    it "matches current action" do
-      expect(items[1].matches_action?("two")).to be_true
-    end
-
-    it "does not match current action" do
-      expect(items[1].matches_action?("one")).to be_false
-    end
-  end
-
-  describe "query_should_exclude_category" do
-    before(:each) do
-      items[0].stubs(:matches_action?).returns(true)
-      items[0].stubs(:has_filter?).returns(true)
-    end
-
-    it "excludes category" do
-      expect(items[0].query_should_exclude_category?(nil, nil)).to be_true
-    end
-
-    it "does not exclude for json format" do
-      expect(items[0].query_should_exclude_category?(nil, 'json')).to be_false
-    end
-  end
 end

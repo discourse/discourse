@@ -9,25 +9,27 @@
 Discourse.EmailLog = Discourse.Model.extend({});
 
 Discourse.EmailLog.reopenClass({
+
   create: function(attrs) {
     attrs = attrs || {};
 
     if (attrs.user) {
       attrs.user = Discourse.AdminUser.create(attrs.user);
     }
+
     return this._super(attrs);
   },
 
   findAll: function(filter) {
-    var result = Em.A();
-    Discourse.ajax("/admin/email/logs.json", {
-      data: { filter: filter }
-    }).then(function(logs) {
-      _.each(logs,function(log) {
-        result.pushObject(Discourse.EmailLog.create(log));
+    filter = filter || {};
+    var status = filter.status || "all";
+    filter = _.omit(filter, "status");
+
+    return Discourse.ajax("/admin/email/" + status + ".json", { data: filter }).then(function(logs) {
+      return _.map(logs, function (log) {
+        return Discourse.EmailLog.create(log);
       });
     });
-    return result;
   }
 });
 

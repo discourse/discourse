@@ -11,7 +11,7 @@ Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
   classNames: ['upload-selector'],
 
   title: function() { return Discourse.UploadSelectorController.translate("title"); }.property(),
-  uploadIcon: function() { return Discourse.Utilities.allowsAttachments() ? "icon-file-alt" : "icon-picture"; }.property(),
+  uploadIcon: function() { return Discourse.Utilities.allowsAttachments() ? "fa-file-o" : "fa-picture-o"; }.property(),
 
   tip: function() {
     var source = this.get("controller.local") ? "local" : "remote";
@@ -47,7 +47,14 @@ Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
       if (this.get("controller.local")) {
         $('#reply-control').fileupload('add', { fileInput: $('#filename-input') });
       } else {
-        this.get('controller.composerView').addMarkdown($('#fileurl-input').val());
+        var imageUrl = $('#fileurl-input').val();
+        var imageLink = $('#link-input').val();
+        var composerView = this.get('controller.composerView');
+        if (this.get("controller.showMore") && imageLink.length > 3) {
+          composerView.addMarkdown("[![](" + imageUrl +")](" + imageLink + ")");
+        } else {
+          composerView.addMarkdown(imageUrl);
+        }
         this.get('controller').send('closeModal');
       }
     }

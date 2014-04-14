@@ -2,14 +2,14 @@
 <p>{{{i18n task.description}}}</p>
 
 {{#if controller.content.complete}}
-  <p><i class='icon-ok'></i> {{i18n task.complete completed_at="controller.content.completed_at"}}</p>
+  <p><i class='fa fa-check'></i> {{i18n task.complete completed_at="controller.content.completed_at"}}</p>
 
   {{#if controller.content.can_complete_task}}
     <button class='btn' {{action completeTask target="controller"}}>{{i18n task.reverse}}</button>
   {{/if}}
 {{else}}
   {{#if controller.content.can_complete_task}}
-    <button class='btn' {{action completeTask target="controller"}}><i class='icon-cog'></i> {{i18n task.complete_action}}</button>
+    <button class='btn' {{action completeTask target="controller"}}><i class='fa fa-cog'></i> {{i18n task.complete_action}}</button>
   {{/if}}
 {{/if}}
 

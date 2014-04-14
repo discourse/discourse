@@ -15,12 +15,11 @@ end
 #  id         :integer          not null, primary key
 #  topic_id   :integer          not null
 #  invite_id  :integer          not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  created_at :datetime
+#  updated_at :datetime
 #
 # Indexes
 #
 #  index_topic_invites_on_invite_id               (invite_id)
 #  index_topic_invites_on_topic_id_and_invite_id  (topic_id,invite_id) UNIQUE
 #
-

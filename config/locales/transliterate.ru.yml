@@ -2,6 +2,9 @@
 # This file contains content for the i18n transliteration map from
 # Russian Cyrillic to ASCII (ISO-9:1995 / GOST 7.79-2000, table B)
 #
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+#
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
@@ -53,8 +56,8 @@ ru:
         у: u
         Ф: F
         ф: f
-        Х: X
-        х: x
+        Х: H
+        х: h
         Ц: Cz
         ц: cz
         Ч: Ch

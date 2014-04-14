@@ -9,6 +9,8 @@ class UserHistory < ActiveRecord::Base
 
   scope :only_staff_actions, ->{ where("action IN (?)", UserHistory.staff_action_ids) }
 
+  before_save :set_admin_only
+
   def self.actions
     @actions ||= Enum.new( :delete_user,
                            :change_trust_level,
@@ -18,9 +20,12 @@ class UserHistory < ActiveRecord::Base
                            :checked_for_custom_avatar,
                            :notified_about_avatar,
                            :notified_about_sequential_replies,
-                           :notitied_about_dominating_topic,
+                           :notified_about_dominating_topic,
                            :suspend_user,
-                           :unsuspend_user)
+                           :unsuspend_user,
+                           :facebook_no_email,
+                           :grant_badge,
+                           :revoke_badge)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -31,11 +36,17 @@ class UserHistory < ActiveRecord::Base
                         :change_site_customization,
                         :delete_site_customization,
                         :suspend_user,
-                        :unsuspend_user]
+                        :unsuspend_user,
+                        :grant_badge,
+                        :revoke_badge]
   end
 
   def self.staff_action_ids
     @staff_action_ids ||= staff_actions.map { |a| actions[a] }
+  end
+
+  def self.admin_only_action_ids
+    @admin_only_action_ids ||= [actions[:change_site_setting]]
   end
 
   def self.with_filters(filters)
@@ -63,6 +74,18 @@ class UserHistory < ActiveRecord::Base
     result.exists?
   end
 
+  def self.staff_action_records(viewer, opts={})
+    query = self.with_filters(opts.slice(:action_name, :acting_user, :target_user, :subject)).only_staff_actions.limit(200).order('id DESC').includes(:acting_user, :target_user)
+    query = query.where(admin_only: false) unless viewer && viewer.admin?
+    query
+  end
+
+
+  def set_admin_only
+    self.admin_only = UserHistory.admin_only_action_ids.include?(self.action)
+    self
+  end
+
   def new_value_is_json?
     [UserHistory.actions[:change_site_customization], UserHistory.actions[:delete_site_customization]].include?(action)
   end
@@ -81,8 +104,8 @@ end
 #  acting_user_id :integer
 #  target_user_id :integer
 #  details        :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  created_at     :datetime
+#  updated_at     :datetime
 #  context        :string(255)
 #  ip_address     :string(255)
 #  email          :string(255)
@@ -90,12 +113,12 @@ end
 #  previous_value :text
 #  new_value      :text
 #  topic_id       :integer
+#  admin_only     :boolean          default(FALSE)
 #
 # Indexes
 #
-#  index_staff_action_logs_on_action_and_id                  (action,id)
-#  index_staff_action_logs_on_subject_and_id                 (subject,id)
-#  index_staff_action_logs_on_target_user_id_and_id          (target_user_id,id)
 #  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
+#  index_user_histories_on_action_and_id                     (action,id)
+#  index_user_histories_on_subject_and_id                    (subject,id)
+#  index_user_histories_on_target_user_id_and_id             (target_user_id,id)
 #
-

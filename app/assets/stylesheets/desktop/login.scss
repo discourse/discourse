@@ -1,8 +1,5 @@
 // style that apply to the login popup
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 #login-buttons {
   button {
     margin: 0 5px 5px 0;
@@ -14,13 +11,53 @@
 
 #login-form {
   a {
-    color: $dark_gray;
+    color: lighten($primary_text_color, 35%);
     cursor: pointer;
+  }
+}
+
+.login-modal {
+  .fa-spinner {
+    font-size: 18px;
   }
 }
 
 // Create account
 
 #new-account-link {
-	cursor: pointer;
+  cursor: pointer;
+}
+
+.create-account {
+  form {
+    margin-bottom: 0;
+  }
+  table {
+    width: 100%;
+  }
+  tr.input {
+    td {
+      padding-top: 10px;
+    }
+    input, label {
+      margin-bottom: 0;
+    }
+    .tip {
+      max-width: 340px;
+    }
+  }
+
+  tr.instructions {
+    label {
+      color: $secondary_text_color;
+    }
+  }
+
+  .fa-spinner {
+    font-size: 18px;
+  }
+
+  .tos-agree {
+    margin-bottom: 12px;
+  }
 }

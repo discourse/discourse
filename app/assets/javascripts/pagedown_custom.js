@@ -1,5 +1,3 @@
-/*global Markdown:true*/
-
 window.PagedownCustom = {
   insertButtons: [
     {

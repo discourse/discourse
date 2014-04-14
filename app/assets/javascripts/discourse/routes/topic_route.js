@@ -7,12 +7,10 @@
   @module Discourse
 **/
 Discourse.TopicRoute = Discourse.Route.extend({
-
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
   actions: {
     // Modals that can pop up within a topic
-
     showPosterExpansion: function(post) {
       this.controllerFor('posterExpansion').show(post);
     },
@@ -27,6 +25,12 @@ Discourse.TopicRoute = Discourse.Route.extend({
     showFlags: function(post) {
       Discourse.Route.showModal(this, 'flag', post);
       this.controllerFor('flag').setProperties({ selected: null });
+    },
+
+    showFlagTopic: function(topic) {
+      //Discourse.Route.showModal(this, 'flagTopic', topic);
+      Discourse.Route.showModal(this, 'flag', topic);
+      this.controllerFor('flag').setProperties({ selected: null, flagTopic: true });
     },
 
     showAutoClose: function() {
@@ -51,7 +55,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     showHistory: function(post) {
       Discourse.Route.showModal(this, 'history', post);
-      this.controllerFor('history').refresh();
+      this.controllerFor('history').refresh(post.get("id"), post.get("version"));
       this.controllerFor('modal').set('modalClass', 'history-modal');
     },
 
@@ -61,13 +65,36 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     splitTopic: function() {
       Discourse.Route.showModal(this, 'splitTopic', this.modelFor('topic'));
-    }
+    },
+
+    changeOwner: function() {
+      Discourse.Route.showModal(this, 'changeOwner', this.modelFor('topic'));
+    },
+
+    // Use replaceState to update the URL once it changes
+    postChangedRoute: Discourse.debounce(function(currentPost) {
+      // do nothing if we are transitioning to another route
+      if (this.get("isTransitioning")) { return; }
+
+      var topic = this.modelFor('topic');
+      if (topic && currentPost) {
+        var postUrl = topic.get('url');
+        if (currentPost > 1) { postUrl += "/" + currentPost; }
+        Discourse.URL.replaceState(postUrl);
+      }
+    }, 150),
+
+    willTransition: function() { this.set("isTransitioning", true); }
 
   },
 
   model: function(params) {
     var currentModel = this.modelFor('topic');
     if (currentModel && (currentModel.get('id') === parseInt(params.id, 10))) {
+      // If we've recovered the currentModel (for example, hitting the forward button and we
+      // popped it off the state), get rid of the `loaded` attribute we set when the back
+      // button was hit.
+      currentModel.set('postStream.loaded', true);
       return currentModel;
     }
     return Discourse.Topic.create(params);
@@ -75,6 +102,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
   activate: function() {
     this._super();
+    this.set("isTransitioning", false);
 
     var topic = this.modelFor('topic');
     Discourse.Session.currentProp('lastTopicIdViewed', parseInt(topic.get('id'), 10));
@@ -120,10 +148,13 @@ Discourse.TopicRoute = Discourse.Route.extend({
       editingTopic: false
     });
 
+    Discourse.TopicRoute.trigger('setupTopicController', this);
+
     this.controllerFor('header').setProperties({
       topic: model,
       showExtraInfo: false
     });
+
     this.controllerFor('composer').set('topic', model);
     Discourse.TopicTrackingState.current().trackIncoming('all');
     controller.subscribe();
@@ -134,4 +165,4 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
 });
 
-
+RSVP.EventTarget.mixin(Discourse.TopicRoute);

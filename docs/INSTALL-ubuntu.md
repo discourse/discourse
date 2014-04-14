@@ -1,4 +1,7 @@
-# Official Discourse Install Guide
+> # Warning: This Guide is Deprecated
+> We only support Docker based installs now. Please see [our **official install guide**](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md) for supported install instructions.
+
+# Discourse Ubuntu Install Guide
 
 ## Recommended Server Hardware
 
@@ -10,7 +13,7 @@ With 2 GB of memory and dual cores, you can run two instances of the thin server
 
 1 GB of memory, 3 GB of swap and a single core CPU are the minimums for a steady state, running Discourse forum &ndash; but it's simpler to just throw a bit more hardware at the problem if you can, particularly during the install.
 
-## Install Ubuntu Server 12.04 LTS with the package groups:
+## Install Ubuntu Server 12.04 LTS (or later) with the package groups:
 
 Yes, you can in theory pick the distro of your choice, but to keep this guide sane, we're picking one, and it's Ubuntu. Feel free to substitute the distro of your choice, the steps are mostly the same.
 
@@ -78,9 +81,8 @@ shiny). To install on Ubuntu:
     # Remove any existing versions of nginx
     sudo apt-get remove '^nginx.*$'
 
-    # Add nginx repo to sources.list
-    cat <<'EOF' | sudo tee -a /etc/apt/sources.list
-
+    # Setup a sources.list.d file for the nginx repository
+    cat << 'EOF' | sudo tee /etc/apt/sources.list.d/nginx.list
     deb http://nginx.org/packages/ubuntu/ precise nginx
     deb-src http://nginx.org/packages/ubuntu/ precise nginx
     EOF
@@ -122,27 +124,31 @@ Install RVM
 
     # As 'discourse'
     # Install RVM
-    \curl -s -S -L https://get.rvm.io | bash -s stable
-    . ~/.bash_profile
+     \curl -s -S -L https://get.rvm.io | bash -s stable
 
-    # rvm added shell initialization code to ~/.bash_profile,
-    # move it to ~/.profile instead
-    cat ~/.bash_profile >> ~/.profile
-    rm ~/.bash_profile
+    # Refresh your profile
+    . ~/.rvm/scripts/rvm
+
+Install missing packages
 
     # Install necessary packages for building ruby (this will only work if
     # you've given discourse sudo permissions, which is *not* the default)
     # rvm requirements
 
     # NOTE: rvm will tell you which packages you (or your sysadmin) need
-    # to install during this step. As discourse does not have sudo 
+    # to install during this step. As discourse does not have sudo
     # permissions (likely the case), run:
+
     rvm --autolibs=read-fail requirements
-    # repeat untill it fully executes 
 
-Continue with Discourse installation
+    # For instance, if prompted with `libreadline6-dev libsqlite3-dev sqlite3 autoconf' etc
+    # Install the missing packages with this command, run as your user:
+    # sudo apt-get install libreadline6-dev libsqlite3-dev sqlite3 autoconf
+    # Repeat the autolibs test until you see "Requirements installation successful"
 
-    # Build and install ruby
+
+Build and install ruby
+
     rvm install 2.0.0
 
     # Use installed ruby as default
@@ -151,10 +157,13 @@ Continue with Discourse installation
     # Install bundler
     gem install bundler
 
+Continue with Discourse installation
+
     # Pull down the latest code
+    # Now would be a great time to consider [forking](https://help.github.com/articles/fork-a-repo), if want to work from your own copy of discourse
+    #If you don't need to customize your installation, and want less hassle upgrading clone from Discourse's repo
     git clone git://github.com/discourse/discourse.git /var/www/discourse
     cd /var/www/discourse
-    git checkout master
 
     # To run on the most recent numbered release instead of bleeding-edge:
     #git checkout latest-release
@@ -168,31 +177,25 @@ Configure Discourse:
 
     # Run these commands as the discourse user
     cd /var/www/discourse/config
-    cp database.yml.production-sample database.yml
-    cp redis.yml.sample redis.yml
+    cp discourse_quickstart.conf discourse.conf
     cp discourse.pill.sample discourse.pill
-    cp environments/production.rb.sample environments/production.rb
 
-Edit /var/www/discourse/config/database.yml
+Editing /var/www/discourse/config/discourse.conf:
 
-- change production database name if appropriate
+Database/Hostname:
 - change database username/password if appropriate
-- if you are hosting multiple Discourse forums on the same server (multisite), set `db_id`
-- change `host_names` to the name you'll use to access the discourse site, e.g. "forum.example.com"
+- change `hostname` to the name you'll use to access the Discourse site, e.g. "forum.example.com"
 
-Edit /var/www/discourse/config/redis.yml
-
+Redis:
 - no changes if this is the only application using redis, but have a look
 
-Edit /var/www/discourse/config/discourse.pill
+E-mail:
+- browse through all the settings and be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))
+- If your users will come from "internal" [private unroutable IPs](https://en.wikipedia.org/wiki/Private_network) like 10.x.x.x or 192.168.x.x please [see this topic](http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607).
 
+Editing: /var/www/discourse/config/discourse.pill
 - change application name from 'discourse' if necessary
 - Ensure appropriate Bluepill.application line is uncommented
-
-Edit /var/www/discourse/config/environments/production.rb
-- browse througn all the settings
-- be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))
-- If your users will come from "internal" [private unroutable IPs](https://en.wikipedia.org/wiki/Private_network) like 10.x.x.x or 192.168.x.x please [see this topic](http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607).
 
 Initialize the database:
 
@@ -212,18 +215,15 @@ Not english? Set the default language as appropriate:
 
     # Not sure if your locale is supported? Check at the rails console:
     LocaleSiteSetting.values
-     => ["cs", "da", "de", "en", "es", "fr", "id", "it", "nb_NO", "nl", "pseudo", "pt", "ru", "sv", "zh_CN", "zh_TW"]
+     => ["cs", "da", "de", "en", "es", "fr", "id", "it", "nb_NO", "nl", "pt", "ru", "sv", "zh_CN", "zh_TW"]
 
 ## nginx setup
 
     # Run these commands as your normal login (e.g. "michael")
+    sudo cp /var/www/discourse/config/nginx.global.conf /etc/nginx/conf.d/local-server.conf
     sudo cp /var/www/discourse/config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
 
-Edit /etc/nginx/nginx.conf:
-
-- add: `server_names_hash_bucket_size 64;` to the `http` section
-
-If discourse will be the only site served by nginx, disable the nginx default
+If Discourse will be the only site served by nginx, disable the nginx default
 site:
 
 - `sudo mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.disabled`
@@ -233,8 +233,8 @@ Edit /etc/nginx/conf.d/discourse.conf
 
 - edit `server_name`. Example: `server_name cain.discourse.org test.cain.discourse.org;`
 - change socket count depending on your NUM_WEB count
-- change socket paths if discourse is installed to a different location
-- modify root location if discourse is installed to a different location
+- change socket paths if Discourse is installed to a different location
+- modify root location if Discourse is installed to a different location
 
 Reload nginx by running
 
@@ -279,7 +279,7 @@ Congratulations! You've got Discourse installed and running!
 
 ## Administrator account
 
-Now make yourself an administrator account. Browse to your discourse instance
+Now make yourself an administrator account. Browse to your Discourse instance
 and create an account by logging in normally, then run the commands:
 
     # Run these commands as the discourse user
@@ -349,9 +349,7 @@ Check the sample configuration files provided in the repo with the ones being us
 
     # Run these commands as the discourse user
     cd /var/www/discourse
-    diff -u config/discourse.pill.sample config/discourse.pill
-    diff -u config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
-    diff -u config/environments/production.rb.sample config/environments/production.rb
+    diff -u config/discourse_defaults.conf config/discourse.conf
 
 #### Example 1
 

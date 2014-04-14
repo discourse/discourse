@@ -1,8 +1,0 @@
-<h3><i class='icon icon-bullhorn'></i> {{i18n best_of.title}}</h3>
-{{#if postStream.bestOf}}
-  <p>{{{i18n best_of.enabled_description}}}</p>
-  <button class='btn' {{action toggleBestOf target="postStream"}}>{{i18n best_of.disable}}</button>
-{{else}}
-  <p>{{{i18n best_of.description count="posts_count"}}}</p>
-  <button class='btn' {{action toggleBestOf target="postStream"}}>{{i18n best_of.enable}}</button>
-{{/if}}

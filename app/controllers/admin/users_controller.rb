@@ -17,6 +17,7 @@ class Admin::UsersController < Admin::AdminController
                                     :block,
                                     :unblock,
                                     :trust_level,
+                                    :primary_group,
                                     :generate_api_key,
                                     :revoke_api_key]
 
@@ -94,6 +95,13 @@ class Admin::UsersController < Admin::AdminController
     render_serialized(@user, AdminUserSerializer)
   end
 
+  def primary_group
+    guardian.ensure_can_change_primary_group!(@user)
+    @user.primary_group_id = params[:primary_group_id]
+    @user.save!
+    render nothing: true
+  end
+
   def trust_level
     guardian.ensure_can_change_trust_level!(@user)
     logger = StaffActionLogger.new(current_user)
@@ -159,6 +167,12 @@ class Admin::UsersController < Admin::AdminController
     rescue UserDestroyer::PostsExistError
       raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
     end
+  end
+
+  def badges
+  end
+
+  def leader_requirements
   end
 
 

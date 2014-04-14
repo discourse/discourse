@@ -409,7 +409,7 @@ URI.prototype.setPath = function (newPath) {
 URI.prototype.setRawPath = function (newPath) {
   if (newPath) {
     newPath = String(newPath);
-    this.path_ = 
+    this.path_ =
       // Paths must start with '/' unless this is a path-relative URL.
       (!this.domain_ || /^\//.test(newPath)) ? newPath : '/' + newPath;
   } else {
@@ -812,35 +812,9 @@ html4.ATTRIBS = {
   'a::tabindex': 0,
   'a::target': 10,
   'a::type': 0,
-  'area::accesskey': 0,
-  'area::alt': 0,
-  'area::coords': 0,
-  'area::href': 1,
-  'area::nohref': 0,
-  'area::onblur': 2,
-  'area::onfocus': 2,
-  'area::shape': 0,
-  'area::tabindex': 0,
-  'area::target': 10,
-  'audio::controls': 0,
-  'audio::loop': 0,
-  'audio::mediagroup': 5,
-  'audio::muted': 0,
-  'audio::preload': 0,
-  'audio::src': 1,
   'bdo::dir': 0,
   'blockquote::cite': 1,
   'br::clear': 0,
-  'button::accesskey': 0,
-  'button::disabled': 0,
-  'button::name': 8,
-  'button::onblur': 2,
-  'button::onfocus': 2,
-  'button::tabindex': 0,
-  'button::type': 0,
-  'button::value': 0,
-  'canvas::height': 0,
-  'canvas::width': 0,
   'caption::align': 0,
   'col::align': 0,
   'col::char': 0,
@@ -854,13 +828,6 @@ html4.ATTRIBS = {
   'colgroup::span': 0,
   'colgroup::valign': 0,
   'colgroup::width': 0,
-  'command::checked': 0,
-  'command::command': 5,
-  'command::disabled': 0,
-  'command::icon': 1,
-  'command::label': 0,
-  'command::radiogroup': 0,
-  'command::type': 0,
   'data::value': 0,
   'del::cite': 1,
   'del::datetime': 0,
@@ -868,20 +835,6 @@ html4.ATTRIBS = {
   'dir::compact': 0,
   'div::align': 0,
   'dl::compact': 0,
-  'fieldset::disabled': 0,
-  'font::color': 0,
-  'font::face': 0,
-  'font::size': 0,
-  'form::accept': 0,
-  'form::action': 1,
-  'form::autocomplete': 0,
-  'form::enctype': 0,
-  'form::method': 0,
-  'form::name': 7,
-  'form::novalidate': 0,
-  'form::onreset': 2,
-  'form::onsubmit': 2,
-  'form::target': 10,
   'h1::align': 0,
   'h2::align': 0,
   'h3::align': 0,
@@ -898,6 +851,7 @@ html4.ATTRIBS = {
   'iframe::marginheight': 0,
   'iframe::marginwidth': 0,
   'iframe::width': 0,
+  'iframe::src': 1,
   'img::align': 0,
   'img::alt': 0,
   'img::border': 0,
@@ -906,38 +860,8 @@ html4.ATTRIBS = {
   'img::ismap': 0,
   'img::name': 7,
   'img::src': 1,
-  'img::usemap': 11,
   'img::vspace': 0,
   'img::width': 0,
-  'input::accept': 0,
-  'input::accesskey': 0,
-  'input::align': 0,
-  'input::alt': 0,
-  'input::autocomplete': 0,
-  'input::checked': 0,
-  'input::disabled': 0,
-  'input::inputmode': 0,
-  'input::ismap': 0,
-  'input::list': 5,
-  'input::max': 0,
-  'input::maxlength': 0,
-  'input::min': 0,
-  'input::multiple': 0,
-  'input::name': 8,
-  'input::onblur': 2,
-  'input::onchange': 2,
-  'input::onfocus': 2,
-  'input::onselect': 2,
-  'input::placeholder': 0,
-  'input::readonly': 0,
-  'input::required': 0,
-  'input::size': 0,
-  'input::src': 1,
-  'input::step': 0,
-  'input::tabindex': 0,
-  'input::type': 0,
-  'input::usemap': 11,
-  'input::value': 0,
   'ins::cite': 1,
   'ins::datetime': 0,
   'label::accesskey': 0,
@@ -948,10 +872,6 @@ html4.ATTRIBS = {
   'legend::align': 0,
   'li::type': 0,
   'li::value': 0,
-  'map::name': 7,
-  'menu::compact': 0,
-  'menu::label': 0,
-  'menu::type': 0,
   'meter::high': 0,
   'meter::low': 0,
   'meter::max': 0,
@@ -961,62 +881,19 @@ html4.ATTRIBS = {
   'ol::reversed': 0,
   'ol::start': 0,
   'ol::type': 0,
-  'optgroup::disabled': 0,
-  'optgroup::label': 0,
-  'option::disabled': 0,
-  'option::label': 0,
-  'option::selected': 0,
-  'option::value': 0,
-  'output::for': 6,
-  'output::name': 8,
   'p::align': 0,
   'pre::width': 0,
   'progress::max': 0,
   'progress::min': 0,
   'progress::value': 0,
   'q::cite': 1,
-  'select::autocomplete': 0,
-  'select::disabled': 0,
-  'select::multiple': 0,
-  'select::name': 8,
-  'select::onblur': 2,
-  'select::onchange': 2,
-  'select::onfocus': 2,
-  'select::required': 0,
-  'select::size': 0,
-  'select::tabindex': 0,
   'source::type': 0,
-  'textarea::accesskey': 0,
-  'textarea::autocomplete': 0,
-  'textarea::cols': 0,
-  'textarea::disabled': 0,
-  'textarea::inputmode': 0,
-  'textarea::name': 8,
-  'textarea::onblur': 2,
-  'textarea::onchange': 2,
-  'textarea::onfocus': 2,
-  'textarea::onselect': 2,
-  'textarea::placeholder': 0,
-  'textarea::readonly': 0,
-  'textarea::required': 0,
-  'textarea::rows': 0,
-  'textarea::tabindex': 0,
-  'textarea::wrap': 0,
   'track::default': 0,
   'track::kind': 0,
   'track::label': 0,
   'track::srclang': 0,
   'ul::compact': 0,
   'ul::type': 0,
-  'video::controls': 0,
-  'video::height': 0,
-  'video::loop': 0,
-  'video::mediagroup': 5,
-  'video::muted': 0,
-  'video::poster': 1,
-  'video::preload': 0,
-  'video::src': 1,
-  'video::width': 0
 };
 html4[ 'ATTRIBS' ] = html4.ATTRIBS;
 html4.eflags = {
@@ -1036,31 +913,22 @@ html4.ELEMENTS = {
   'abbr': 0,
   'acronym': 0,
   'address': 0,
-  'applet': 272,
-  'area': 2,
   'article': 0,
   'aside': 0,
-  'audio': 0,
   'b': 0,
   'base': 274,
-  'basefont': 274,
   'bdi': 0,
   'bdo': 0,
   'big': 0,
   'blockquote': 0,
   'body': 305,
   'br': 2,
-  'button': 0,
-  'canvas': 0,
   'caption': 0,
-  'center': 0,
   'cite': 0,
   'code': 0,
   'col': 2,
   'colgroup': 1,
-  'command': 2,
   'data': 0,
-  'datalist': 0,
   'dd': 1,
   'del': 0,
   'details': 0,
@@ -1071,12 +939,8 @@ html4.ELEMENTS = {
   'dl': 0,
   'dt': 1,
   'em': 0,
-  'fieldset': 0,
   'figcaption': 0,
   'figure': 0,
-  'font': 0,
-  'footer': 0,
-  'form': 0,
   'frame': 274,
   'frameset': 272,
   'h1': 0,
@@ -1093,7 +957,6 @@ html4.ELEMENTS = {
   'i': 0,
   'iframe': 4,
   'img': 2,
-  'input': 2,
   'ins': 0,
   'isindex': 274,
   'kbd': 0,
@@ -1102,10 +965,7 @@ html4.ELEMENTS = {
   'legend': 0,
   'li': 1,
   'link': 274,
-  'map': 0,
   'mark': 0,
-  'menu': 0,
-  'meta': 274,
   'meter': 0,
   'nav': 0,
   'nobr': 0,
@@ -1114,9 +974,6 @@ html4.ELEMENTS = {
   'noscript': 276,
   'object': 272,
   'ol': 0,
-  'optgroup': 0,
-  'option': 1,
-  'output': 0,
   'p': 1,
   'param': 274,
   'pre': 0,
@@ -1126,9 +983,7 @@ html4.ELEMENTS = {
   'samp': 0,
   'script': 84,
   'section': 0,
-  'select': 0,
   'small': 0,
-  'source': 2,
   'span': 0,
   'strike': 0,
   'strong': 0,
@@ -1139,7 +994,6 @@ html4.ELEMENTS = {
   'table': 272,
   'tbody': 273,
   'td': 273,
-  'textarea': 8,
   'tfoot': 1,
   'th': 273,
   'thead': 273,
@@ -1151,7 +1005,6 @@ html4.ELEMENTS = {
   'u': 0,
   'ul': 0,
   'var': 0,
-  'video': 0,
   'wbr': 2
 };
 html4[ 'ELEMENTS' ] = html4.ELEMENTS;
@@ -1174,10 +1027,7 @@ html4.ELEMENT_DOM_INTERFACES = {
   'blockquote': 'HTMLQuoteElement',
   'body': 'HTMLBodyElement',
   'br': 'HTMLBRElement',
-  'button': 'HTMLButtonElement',
-  'canvas': 'HTMLCanvasElement',
   'caption': 'HTMLTableCaptionElement',
-  'center': 'HTMLElement',
   'cite': 'HTMLElement',
   'code': 'HTMLElement',
   'col': 'HTMLTableColElement',
@@ -1198,7 +1048,6 @@ html4.ELEMENT_DOM_INTERFACES = {
   'fieldset': 'HTMLFieldSetElement',
   'figcaption': 'HTMLElement',
   'figure': 'HTMLElement',
-  'font': 'HTMLFontElement',
   'footer': 'HTMLElement',
   'form': 'HTMLFormElement',
   'frame': 'HTMLFrameElement',
@@ -1263,7 +1112,6 @@ html4.ELEMENT_DOM_INTERFACES = {
   'table': 'HTMLTableElement',
   'tbody': 'HTMLTableSectionElement',
   'td': 'HTMLTableDataCellElement',
-  'textarea': 'HTMLTextAreaElement',
   'tfoot': 'HTMLTableSectionElement',
   'th': 'HTMLTableHeaderCellElement',
   'thead': 'HTMLTableSectionElement',
@@ -1293,6 +1141,7 @@ html4.URIEFFECTS = {
   'command::icon': 1,
   'del::cite': 0,
   'form::action': 2,
+  'iframe::src': 1,
   'img::src': 1,
   'input::src': 1,
   'ins::cite': 0,
@@ -1315,6 +1164,7 @@ html4.LOADERTYPES = {
   'command::icon': 1,
   'del::cite': 2,
   'form::action': 2,
+  'iframe::src': 2,
   'img::src': 1,
   'input::src': 1,
   'ins::cite': 2,
@@ -1323,6 +1173,15 @@ html4.LOADERTYPES = {
   'video::src': 2
 };
 html4[ 'LOADERTYPES' ] = html4.LOADERTYPES;
+// NOTE: currently focused only on URI-type attributes
+html4.REQUIREDATTRIBUTES = {
+  "audio" : ["src"],
+  "form" : ["action"],
+  "iframe" : ["src"],
+  "image" : ["src"],
+  "video" : ["src"]
+};
+html4[ 'REQUIREDATTRIBUTES' ] = html4.REQUIREDATTRIBUTES;
 // export for Closure Compiler
 if (typeof window !== 'undefined') {
   window['html4'] = html4;
@@ -2194,8 +2053,7 @@ var html = (function(html4) {
    * @return {Array.<?string>} The sanitized attributes as a list of alternating
    *     names and values, where a null value means to omit the attribute.
    */
-  function sanitizeAttribs(tagName, attribs,
-    opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
+  function sanitizeAttribs(tagName, attribs, opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
     // TODO(felix8a): it's obnoxious that domado duplicates much of this
     // TODO(felix8a): maybe consistently enforce constraints like target=
     for (var i = 0; i < attribs.length; i += 2) {
@@ -2277,7 +2135,7 @@ var html = (function(html4) {
                 "XML_ATTR": attribName,
                 "XML_TAG": tagName
               }, opt_naiveUriRewriter);
-              if (opt_logger) {
+            if (opt_logger) {
               log(opt_logger, tagName, attribName, oldValue, value);
             }
             break;
@@ -2325,20 +2183,29 @@ var html = (function(html4) {
    * @return {function(string, Array.<?string>)} A tagPolicy suitable for
    *     passing to html.sanitize.
    */
-  function makeTagPolicy(
-    opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
+  function makeTagPolicy(opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
     return function(tagName, attribs) {
       if (!(html4.ELEMENTS[tagName] & html4.eflags['UNSAFE'])) {
-        return {
-          'attribs': sanitizeAttribs(tagName, attribs,
-            opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger)
-        };
+        var sanitizedAttribs = sanitizeAttribs(tagName, attribs, opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger);
+        var requiredAttributes = html4.REQUIREDATTRIBUTES[tagName];
+        if (requiredAttributes && missRequiredAttributes(sanitizedAttribs, requiredAttributes)) { return }
+        return { 'attribs': sanitizedAttribs };
       } else {
         if (opt_logger) {
           log(opt_logger, tagName, undefined, undefined, undefined);
         }
       }
     };
+  }
+
+  function missRequiredAttributes(sanitizedAttributes, requiredAttributes) {
+    var requiredAttributesWithValueCount = 0;
+    for (var i = 0, length = sanitizedAttributes.length; i < length; i += 2) {
+      var name = sanitizedAttributes[i];
+      var value = sanitizedAttributes[i + 1];
+      if (requiredAttributes.indexOf(name) > -1 && value && value.length > 0) { requiredAttributesWithValueCount++; }
+    }
+    return requiredAttributesWithValueCount != requiredAttributes.length;
   }
 
   /**
@@ -2364,10 +2231,8 @@ var html = (function(html4) {
    *     to attributes containing HTML names, element IDs, and space-separated
    *     lists of classes.  If not given, such attributes are left unchanged.
    */
-  function sanitize(inputHtml,
-    opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
-    var tagPolicy = makeTagPolicy(
-      opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger);
+  function sanitize(inputHtml, opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
+    var tagPolicy = makeTagPolicy(opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger);
     return sanitizeWithPolicy(inputHtml, tagPolicy);
   }
 

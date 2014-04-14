@@ -42,3 +42,15 @@ task 'plugin:update', :plugin do |t, args|
   update_status = system('git --git-dir "' + plugin_path + '/.git" --work-tree "' + plugin_path + '" pull')
   abort('Unable to pull latest version of plugin') unless update_status
 end
+
+desc 'run plugin specs'
+task 'plugin:spec', :plugin do |t, args|
+  args.with_defaults(plugin: "*")
+  ruby = `which ruby`.strip
+  files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*.rb")
+  if files.length > 0
+    sh "LOAD_PLUGINS=1 #{ruby} -S rspec #{files.join(' ')}"
+  else
+    abort "No specs found."
+  end
+end

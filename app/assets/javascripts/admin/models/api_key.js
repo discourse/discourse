@@ -29,7 +29,6 @@ Discourse.ApiKey = Discourse.Model.extend({
     @returns {Promise} a promise that resolves when the key has been revoked
   **/
   revoke: function() {
-    var self = this;
     return Discourse.ajax('/admin/api/key', {type: 'DELETE', data: {id: this.get('id')}});
   }
 
@@ -41,7 +40,7 @@ Discourse.ApiKey.reopenClass({
     Creates an API key instance with internal user object
 
     @method create
-    @param {Object} the properties to create
+    @param {...} var_args the properties to initialize this with
     @returns {Discourse.ApiKey} the ApiKey instance
   **/
   create: function() {

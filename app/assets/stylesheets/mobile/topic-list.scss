@@ -1,6 +1,3 @@
-@import "../common/foundation/variables";
-@import "../common/foundation/mixins";
-
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
@@ -23,12 +20,12 @@
   }
 }
 
-#category-filter {
+#navigation-bar {
   .has-icon span:before {
     margin-right: 4px;
     font: 15px/0.9 "FontAwesome";
   }
-  .has-icon .favorited:before {
+  .has-icon .starred:before {
     content: "\f005";
   }
   .has-icon .unread:before {
@@ -47,13 +44,13 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  border-top: 1px solid $primary_border_color;
+  border-bottom: 1px solid $primary_border_color;
 
-  tbody tr {
-    background-color: $white;
+  > tbody > tr {
+    background-color: $primary_background_color;
     &:nth-child(even) {
-      background-color: darken($white, 4%);
+      background-color: darken($primary_background_color, 4%);
     }
     &.archived a {
       opacity: 0.6;
@@ -64,7 +61,7 @@
       }
     }
     &.highlighted {
-      background-color: $highlight;
+      background-color: $highlight_background_color;
     }
   }
   th,
@@ -99,7 +96,7 @@
     font-size: 16px;
 
     i.score {
-      color: green;
+      color: $success_text_color;
       cursor: pointer;
     }
   }
@@ -107,19 +104,8 @@
   .topic-excerpt {
     font-size: 14px;
     margin-top: 8px;
-    color: $dark_gray;
-  }
-
-  .rank-details {
-    background-color: #eee;
-    padding: 6px;
-    margin-bottom: 5px;
-
-    p {
-      font-size: 12px;
-      margin: 0;
-      line-height: 14px;
-    }
+    color: lighten($primary_text_color, 35%);
+    word-break: break-word;
   }
 
   .topic-statuses:empty {
@@ -157,15 +143,76 @@
       color: inherit;
     }
   }
+  .age {
+    white-space: nowrap;
+  }
 }
 
 // Category list
 // --------------------------------------------------
 
+#topic-list.categories {
+  td.latest {
+    vertical-align: top;
+    padding: 5px;
+  }
+  td.category {
+    vertical-align: top;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .badge-category {
+    display: inline-block;
+    margin-top: 1px;
+  }
+  .category-description {
+    margin-top: 8px;
+  }
+  .featured-users {
+    @include mobile-portrait  {
+      margin-bottom: 10px;
+      padding-top: 8px;
+      clear: left;
+    }
+    @include not-mobile-portrait  {
+      float: right;
+    }
+  }
+  .latest {
+    @include mobile-portrait { width: 150px; }
+    @include mobile-landscape { width: 270px; }
+    @include tablet-landscape { width: 450px; }
+    .featured-topic {
+      margin: 8px 0;
+      a.last-posted-at, a.last-posted-at:visited {
+        color: lighten($primary_text_color, 50%);
+      }
+    }
+  }
+  .stats {
+    @include not-tablet-landscape { display: none; }
+    @include tablet-landscape { min-width: 80px; }
+  }
+  td.stats {
+    .unit {
+      font-size: 11px;
+    }
+  }
+  table.categoryStats {
+    td {
+      padding: 2px;
+      vertical-align: bottom;
+      line-height: 17px;
+      &.value { text-align: right; }
+      &.unit  { text-align: left; }
+    }
+  }
+}
+
 .category-list-item {
   margin-bottom: 10px;
   #topic-list tbody tr:nth-child(even) {
-    background-color: $white;
+    background-color: $primary_background_color;
   }
   .badge-category {
     float: left;
@@ -180,14 +227,14 @@
     border-top: 0;
     padding: 7px 10px;
     background-color: lighten($topic-list-th-background-color, 2%);
-    @include box-shadow(0 1px 3px rgba($black, 0.22));
+    @include box-shadow(0 1px 3px rgba($primary_shadow_color, 0.22));
     figure {
       float: left;
       margin: 3px 7px 0 0;
       color: lighten($topic-list-th-color, 5%);
       font-weight: bold;
       font-size: 12px;
-      text-shadow: 0 1px 0 $white;
+      text-shadow: 0 1px 0 $secondary_shadow_color;
     }
     figcaption {
       display: inline;
@@ -223,11 +270,11 @@
   width: 200px;
   margin: 0 auto;
   padding: 10px 0 10px 43px;
-  color: $white;
+  color: $tertiary_text_color;
   font-size: 18px;
   line-height: 25px;
   background: {
-    color: $black;
+    color: $primary_text_color;
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
     position: 10px 50%;
@@ -241,8 +288,8 @@
 
 .list-controls {
   .home {
-    color: #333;
-    background-color: #eee;
+    color: $primary_text_color;
+    background-color: lighten($secondary_background_color, 76%);
   }
 
   .badge-category {
@@ -275,7 +322,7 @@
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: lighten($red, 10%);
+    color: lighten($warning_text_color, 10%);
     font-size: 13px;
     cursor: default;
   }
@@ -308,9 +355,6 @@ span.posted {
 .dropdown {
   position: relative;
 }
-.dropdown-toggle {
-  *margin-bottom: -3px;
-}
 .dropdown-toggle:active,
 .open .dropdown-toggle {
   outline: 0;
@@ -320,7 +364,7 @@ span.posted {
   width: 0;
   height: 0;
   vertical-align: middle;
-  border-top: 4px solid #000000;
+  border-top: 4px solid $primary_text_color;
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
@@ -337,11 +381,9 @@ span.posted {
   padding: 4px 0;
   margin: 1px 0 0;
   list-style: none;
-  background-color: #ffffff;
-  border: 1px solid #ccc;
+  background-color: $primary_background_color;
+  border: 1px solid $primary_border_color;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  *border-right-width: 2px;
-  *border-bottom-width: 2px;
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
@@ -355,21 +397,18 @@ span.posted {
   clear: both;
   font-weight: normal;
   line-height: 18px;
-  color: #333333;
+  color: $primary_text_color;
 }
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  color: #ffffff;
+  color: $tertiary_text_color;
   text-decoration: none;
-  background-color: #0088cc;
-}
-.open {
-  *z-index: 1000;
+  background-color: $emphasis_text_color;
 }
 .open > .dropdown-menu {
   display: block;
-clear: both;
+  clear: both;
 }
 .fade {
   opacity: 0;
@@ -397,8 +436,8 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid #ccc;
-  background-color: white;
+  border: 1px solid $primary_border_color;
+  background-color: $primary_background_color;
   width: 200px;
   height: 200px;
   padding: 8px 5px 0 7px;
@@ -408,7 +447,7 @@ ol.category-breadcrumb {
   .badge-category {
     font-size: 13px;
     line-height: 26px;
-    padding: 0px 8px;
+    padding: 0 8px;
     float: none;
   }
 

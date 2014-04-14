@@ -21,7 +21,7 @@ module Email
       @to = to
       @opts = opts || {}
 
-      @template_args = {site_name: SiteSetting.title,
+      @template_args = {site_name: SiteSetting.email_prefix.presence || SiteSetting.title,
                         base_url: Discourse.base_url,
                         user_preferences_url: "#{Discourse.base_url}/user_preferences" }.merge!(@opts)
 
@@ -69,7 +69,7 @@ module Email
 
     def body
       body = @opts[:body]
-      body = I18n.t("#{@opts[:template]}.text_body_template", template_args) if @opts[:template]
+      body = I18n.t("#{@opts[:template]}.text_body_template", template_args).dup if @opts[:template]
 
       if @opts[:add_unsubscribe_link]
         body << "\n"

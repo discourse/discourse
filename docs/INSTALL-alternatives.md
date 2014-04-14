@@ -1,3 +1,6 @@
+> # Warning: This Guide is Deprecated
+> We only support Docker based installs now. Please see [our **official install guide**](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md) for supported install instructions.
+
 # Alternative Install Options
 
 Here lie some alternative installation options for Discourse. They're not the

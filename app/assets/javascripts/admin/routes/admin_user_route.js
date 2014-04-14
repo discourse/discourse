@@ -8,8 +8,8 @@
 **/
 Discourse.AdminUserRoute = Discourse.Route.extend({
 
-  serialize: function(params) {
-    return { username: Em.get(params, 'username').toLowerCase() };
+  serialize: function(model) {
+    return { username: model.get('username').toLowerCase() };
   },
 
   model: function(params) {
@@ -23,10 +23,16 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
   afterModel: function(adminUser) {
     var controller = this.controllerFor('adminUser');
 
-    adminUser.loadDetails().then(function () {
+    return adminUser.loadDetails().then(function () {
       adminUser.setOriginalTrustLevel();
       controller.set('model', adminUser);
-      window.scrollTo(0, 0);
+    });
+  },
+
+  setupController: function(controller, model) {
+    controller.setProperties({
+      originalPrimaryGroupId: model.get('primary_group_id'),
+      model: model
     });
   },
 
@@ -37,4 +43,10 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
     }
   }
 
+});
+
+Discourse.AdminUserIndexRoute = Discourse.Route.extend({
+  setupController: function(c) {
+    c.set('model', this.controllerFor('adminUser').get('model'));
+  }
 });

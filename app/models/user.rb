@@ -8,9 +8,11 @@ require_dependency 'post_destroyer'
 require_dependency 'user_name_suggester'
 require_dependency 'roleable'
 require_dependency 'pretty_text'
+require_dependency 'url_helper'
 
 class User < ActiveRecord::Base
   include Roleable
+  include UrlHelper
 
   has_many :posts
   has_many :notifications, dependent: :destroy
@@ -19,6 +21,7 @@ class User < ActiveRecord::Base
   has_many :user_open_ids, dependent: :destroy
   has_many :user_actions, dependent: :destroy
   has_many :post_actions, dependent: :destroy
+  has_many :user_badges, dependent: :destroy
   has_many :email_logs, dependent: :destroy
   has_many :post_timings
   has_many :topic_allowed_users, dependent: :destroy
@@ -28,15 +31,14 @@ class User < ActiveRecord::Base
   has_many :user_visits, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :topic_links, dependent: :destroy
-  has_many :uploads, dependent: :destroy
+  has_many :uploads
 
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
-  has_one :cas_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
-  has_one :lp_user_info, dependent: :destroy
   has_one :user_stat, dependent: :destroy
+  has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
 
   has_many :group_users, dependent: :destroy
@@ -47,6 +49,8 @@ class User < ActiveRecord::Base
   has_one :api_key, dependent: :destroy
 
   belongs_to :uploaded_avatar, class_name: 'Upload', dependent: :destroy
+
+  delegate :last_sent_email_address, :to => :email_logs
 
   validates_presence_of :username
   validate :username_validator
@@ -60,8 +64,10 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
   after_initialize :add_trust_level
   after_initialize :set_default_email_digest
+  after_initialize :set_default_external_links_in_new_tab
 
   after_save :update_tracked_topics
+  after_save :clear_global_notice_if_needed
 
   after_create :create_email_token
   after_create :create_user_stat
@@ -79,6 +85,7 @@ class User < ActiveRecord::Base
   attr_accessor :notification_channel_position
 
   scope :blocked, -> { where(blocked: true) } # no index
+  scope :not_blocked, -> { where(blocked: false) } # no index
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) } # no index
   scope :not_suspended, -> { where('suspended_till IS NULL') }
   # excluding fake users like the community user
@@ -89,8 +96,18 @@ class User < ActiveRecord::Base
     LAST_VISIT = -2
   end
 
+  GLOBAL_USERNAME_LENGTH_RANGE = 3..50
+
   def self.username_length
-    3..15
+    if SiteSetting.enforce_global_nicknames
+      GLOBAL_USERNAME_LENGTH_RANGE
+    else
+      SiteSetting.min_username_length.to_i..GLOBAL_USERNAME_LENGTH_RANGE.end
+    end
+  end
+
+  def custom_groups
+    groups.where(automatic: false)
   end
 
   def self.username_available?(username)
@@ -140,6 +157,7 @@ class User < ActiveRecord::Base
     where(username_lower: username.downcase).first
   end
 
+
   def enqueue_welcome_message(message_type)
     return unless SiteSetting.send_welcome_message?
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
@@ -150,7 +168,7 @@ class User < ActiveRecord::Base
     self.username = new_username
 
     if current_username.downcase != new_username.downcase && valid?
-      DiscourseHub.nickname_operation { DiscourseHub.change_nickname(current_username, new_username) }
+      DiscourseHub.username_operation { DiscourseHub.change_username(current_username, new_username) }
     end
 
     save
@@ -182,7 +200,7 @@ class User < ActiveRecord::Base
   def approve(approved_by, send_mail=true)
     self.approved = true
 
-    if Fixnum === approved_by
+    if approved_by.is_a?(Fixnum)
       self.approved_by_id = approved_by
     else
       self.approved_by = approved_by
@@ -242,9 +260,25 @@ class User < ActiveRecord::Base
     @raw_password = password unless password.blank?
   end
 
+  def password
+    '' # so that validator doesn't complain that a password attribute doesn't exist
+  end
+
   # Indicate that this is NOT a passwordless account for the purposes of validation
   def password_required!
     @password_required = true
+  end
+
+  def password_required?
+    !!@password_required
+  end
+
+  def has_password?
+    password_hash.present?
+  end
+
+  def password_validator
+    PasswordValidator.new(attributes: :password).validate_each(self, :password, @raw_password)
   end
 
   def confirm_password?(password)
@@ -260,14 +294,21 @@ class User < ActiveRecord::Base
     last_seen_at.present?
   end
 
-  def has_visit_record?(date)
+  def visit_record_for(date)
     user_visits.where(visited_at: date).first
   end
 
   def update_visit_record!(date)
-    unless has_visit_record?(date)
-      user_stat.update_column(:days_visited, user_stat.days_visited + 1)
-      user_visits.create!(visited_at: date)
+    create_visit_record!(date) unless visit_record_for(date)
+  end
+
+  def update_posts_read!(num_posts, now=Time.zone.now)
+    if user_visit = visit_record_for(now.to_date)
+      user_visit.posts_read += num_posts
+      user_visit.save
+      user_visit
+    else
+      create_visit_record!(now.to_date, num_posts)
     end
   end
 
@@ -276,7 +317,6 @@ class User < ActiveRecord::Base
       update_column(:ip_address, new_ip_address)
     end
   end
-
 
   def update_last_seen!(now=Time.zone.now)
     now_date = now.to_date
@@ -301,20 +341,20 @@ class User < ActiveRecord::Base
   #   - emails
   def small_avatar_url
     template = avatar_template
-    template.gsub("{size}", "45")
+    schemaless template.gsub("{size}", "45")
   end
 
   # the avatars might take a while to generate
   # so return the url of the original image in the meantime
   def uploaded_avatar_path
     return unless SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
-    uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
+    avatar_template = uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
+    schemaless absolute avatar_template
   end
 
   def avatar_template
-    uploaded_avatar_path || User.gravatar_template(email)
+    uploaded_avatar_path || User.gravatar_template(id != -1 ? email : "team@discourse.org")
   end
-
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
   # They might need to be denormalized
@@ -324,6 +364,10 @@ class User < ActiveRecord::Base
 
   def post_count
     posts.count
+  end
+
+  def first_post
+    posts.order('created_at ASC').first
   end
 
   def flags_given_count
@@ -336,6 +380,14 @@ class User < ActiveRecord::Base
 
   def private_topics_count
     topics_allowed.where(archetype: Archetype.private_message).count
+  end
+
+  def posted_too_much_in_topic?(topic_id)
+
+    # Does not apply to staff or your own topics
+    return false if staff? || Topic.where(id: topic_id, user_id: id).exists?
+
+    trust_level == TrustLevel.levels[:newuser] && (Post.where(topic_id: topic_id, user_id: id).count >= SiteSetting.newuser_max_replies_per_topic)
   end
 
   def bio_excerpt
@@ -384,6 +436,7 @@ class User < ActiveRecord::Base
   def change_trust_level!(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
     self.trust_level = TrustLevel.levels[level]
+    self.bio_raw_will_change! # So it can get re-cooked based on the new trust level
     transaction do
       self.save!
       Group.user_trust_level_change!(self.id, self.trust_level)
@@ -419,14 +472,14 @@ class User < ActiveRecord::Base
 
   def treat_as_new_topic_start_date
     duration = new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
-    case duration
+    [case duration
       when User::NewTopicDuration::ALWAYS
         created_at
       when User::NewTopicDuration::LAST_VISIT
-        previous_visit_at || created_at
+        previous_visit_at || user_stat.new_since
       else
         duration.minutes.ago
-    end
+    end, user_stat.new_since].max
   end
 
   def readable_name
@@ -445,7 +498,7 @@ class User < ActiveRecord::Base
 
 
   def secure_category_ids
-    cats = self.staff? ? Category.where(read_restricted: true) : secure_categories.references(:categories)
+    cats = self.admin? ? Category.where(read_restricted: true) : secure_categories.references(:categories)
     cats.pluck('categories.id').sort
   end
 
@@ -474,9 +527,9 @@ class User < ActiveRecord::Base
     created_at > 1.day.ago
   end
 
-  def update_avatar(upload)
+  def upload_avatar(avatar)
     self.uploaded_avatar_template = nil
-    self.uploaded_avatar = upload
+    self.uploaded_avatar = avatar
     self.use_uploaded_avatar = true
     self.save!
   end
@@ -494,11 +547,38 @@ class User < ActiveRecord::Base
     ApiKey.where(user_id: self.id).delete_all
   end
 
+  def find_email
+    last_sent_email_address || email
+  end
+
+  def leader_requirements
+    @lq ||= LeaderRequirements.new(self)
+  end
+
+  def should_be_redirected_to_top
+    redirected_to_top_reason.present?
+  end
+
+  def redirected_to_top_reason
+    # redirect is enabled
+    return unless SiteSetting.redirect_users_to_top_page
+    # top must be in the top_menu
+    return unless SiteSetting.top_menu =~ /top/i
+    # there should be enough topics
+    return unless SiteSetting.has_enough_topics_to_redirect_to_top
+    # new users
+    return I18n.t('redirected_to_top_reasons.new_user') if trust_level == 0 &&
+      created_at > SiteSetting.redirect_new_users_to_top_page_duration.days.ago
+    # long-time-no-see user
+    return I18n.t('redirected_to_top_reasons.not_seen_in_a_month') if last_seen_at && last_seen_at < 1.month.ago
+    nil
+  end
+
   protected
 
   def cook
     if bio_raw.present?
-      self.bio_cooked = PrettyText.cook(bio_raw) if bio_raw_changed?
+      self.bio_cooked = PrettyText.cook(bio_raw, omit_nofollow: self.has_trust_level?(:leader)) if bio_raw_changed?
     else
       self.bio_cooked = nil
     end
@@ -509,14 +589,26 @@ class User < ActiveRecord::Base
     TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
   end
 
+  def clear_global_notice_if_needed
+    if admin && SiteSetting.has_login_hint
+      SiteSetting.has_login_hint = false
+      SiteSetting.global_notice = ""
+    end
+  end
+
   def create_user_stat
-    stat = UserStat.new
+    stat = UserStat.new(new_since: Time.now)
     stat.user_id = id
     stat.save!
   end
 
   def create_email_token
     email_tokens.create(email: email)
+  end
+
+  def create_visit_record!(date, posts_read=0)
+    user_stat.update_column(:days_visited, user_stat.days_visited + 1)
+    user_visits.create!(visited_at: date, posts_read: posts_read)
   end
 
   def ensure_password_is_hashed
@@ -531,7 +623,7 @@ class User < ActiveRecord::Base
   end
 
   def add_trust_level
-    # there is a possiblity we did not load trust level column, skip it
+    # there is a possibility we did not load trust level column, skip it
     return unless has_attribute? :trust_level
     self.trust_level ||= SiteSetting.default_trust_level
   end
@@ -547,12 +639,6 @@ class User < ActiveRecord::Base
       if username_changed? && existing && existing.id != self.id
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
-    end
-  end
-
-  def password_validator
-    if (@raw_password && @raw_password.length < 6) || (@password_required && !@raw_password)
-      errors.add(:password, "must be 6 letters or longer")
     end
   end
 
@@ -575,12 +661,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  def set_default_external_links_in_new_tab
+    if has_attribute?(:external_links_in_new_tab) && self.external_links_in_new_tab.nil?
+      self.external_links_in_new_tab = !SiteSetting.default_external_links_in_new_tab.blank?
+    end
+  end
 
   private
 
   def previous_visit_at_update_required?(timestamp)
-    seen_before? &&
-      (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
+    seen_before? && (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
   end
 
   def update_previous_visit(timestamp)
@@ -598,8 +688,8 @@ end
 #
 #  id                            :integer          not null, primary key
 #  username                      :string(20)       not null
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
+#  created_at                    :datetime
+#  updated_at                    :datetime
 #  name                          :string(255)
 #  bio_raw                       :text
 #  seen_notification_id          :integer          default(0), not null
@@ -630,9 +720,9 @@ end
 #  auto_track_topics_after_msecs :integer
 #  views                         :integer          default(0), not null
 #  flag_level                    :integer          default(0), not null
-#  ip_address                    :string
+#  ip_address                    :inet
 #  new_topic_duration_minutes    :integer
-#  external_links_in_new_tab     :boolean          default(FALSE), not null
+#  external_links_in_new_tab     :boolean          not null
 #  enable_quoting                :boolean          default(TRUE), not null
 #  moderator                     :boolean          default(FALSE)
 #  blocked                       :boolean          default(FALSE)
@@ -642,6 +732,10 @@ end
 #  uploaded_avatar_template      :string(255)
 #  uploaded_avatar_id            :integer
 #  email_always                  :boolean          default(FALSE), not null
+#  mailing_list_mode             :boolean          default(FALSE), not null
+#  locale                        :string(10)
+#  primary_group_id              :integer
+#  profile_background            :string(255)
 #
 # Indexes
 #
@@ -651,4 +745,3 @@ end
 #  index_users_on_username        (username) UNIQUE
 #  index_users_on_username_lower  (username_lower) UNIQUE
 #
-

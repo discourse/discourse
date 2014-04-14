@@ -28,10 +28,6 @@ var formatDays = function(days) {
   return formatHours(days * 24);
 };
 
-var formatMonths = function(months) {
-  return formatDays(months * 30);
-};
-
 var shortDate = function(days){
   return moment().subtract('days', days).format('D MMM');
 };
@@ -44,7 +40,7 @@ test("formating medium length dates", function() {
   };
 
   var shortDateYear = function(days){
-    return moment().subtract('days', days).format('D MMM, YYYY');
+    return moment().subtract('days', days).format('D MMM YYYY');
   };
 
   leaveAgo = true;
@@ -69,7 +65,7 @@ test("formating medium length dates", function() {
   equal(strip(formatDays(4.85)), "4 days");
 
   equal(strip(formatDays(6)), shortDate(6));
-  equal(strip(formatDays(100)), shortDate(100)); // eg: 23 Jan
+  equal(strip(formatDays(100)), shortDate(100)); // eg: Jan 23
   equal(strip(formatDays(500)), shortDateYear(500));
 
   equal($(formatDays(0)).attr("title"), moment().format('MMMM D, YYYY h:mma'));
@@ -85,7 +81,7 @@ test("formating medium length dates", function() {
 
 test("formating tiny dates", function() {
   var shortDateYear = function(days){
-    return moment().subtract('days', days).format("D MMM 'YY");
+    return moment().subtract('days', days).format("MMM 'YY");
   };
 
   format = "tiny";
@@ -192,13 +188,21 @@ test("updateRelativeAge", function(){
 
 test("breakUp", function(){
 
-  var b = function(s){ return Discourse.Formatter.breakUp(s,5); };
+  var b = function(s,hint){ return Discourse.Formatter.breakUp(s,hint); };
 
   equal(b("hello"), "hello");
-  equal(b("helloworld"), "hello world");
-  equal(b("HeMans"), "He Mans");
-  equal(b("he_man"), "he_ man");
-  equal(b("he11111"), "he 11111");
-  equal(b("HRCBob"), "HRC Bob");
+  equal(b("helloworld"), "helloworld");
+  equal(b("HeMans11"), "He<wbr>&#8203;Mans<wbr>&#8203;11");
+  equal(b("he_man"), "he_<wbr>&#8203;man");
+  equal(b("he11111"), "he<wbr>&#8203;11111");
+  equal(b("HRCBob"), "HRC<wbr>&#8203;Bob");
+  equal(b("bobmarleytoo","Bob Marley Too"), "bob<wbr>&#8203;marley<wbr>&#8203;too");
 
+});
+
+test("number", function() {
+  equal(Discourse.Formatter.number(123), "123", "it returns a string version of the number");
+  equal(Discourse.Formatter.number("123"), "123", "it works with a string command");
+  equal(Discourse.Formatter.number(NaN), "0", "it reeturns 0 for NaN");
+  equal(Discourse.Formatter.number(3333), "3.3K", "it abbreviates thousands");
 });

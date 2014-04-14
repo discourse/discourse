@@ -14,7 +14,7 @@ class UploadsController < ApplicationController
     # check the file size (note: this might also be done in the web server)
     filesize = File.size(file.tempfile)
     type = SiteSetting.authorized_image?(file) ? "image" : "attachment"
-    max_size_kb = SiteSetting.send("max_#{type}_size_kb") * 1024
+    max_size_kb = SiteSetting.send("max_#{type}_size_kb").kilobytes
     return render status: 413, text: I18n.t("upload.#{type}s.too_large", max_size_kb: max_size_kb) if filesize > max_size_kb
 
     upload = Upload.create_for(current_user.id, file, filesize)
@@ -30,17 +30,21 @@ class UploadsController < ApplicationController
   end
 
   def show
-    return render nothing: true, status: 404 unless Discourse.store.internal?
+    RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
 
-    id = params[:id].to_i
-    url = request.fullpath
+      return render nothing: true, status: 404 unless Discourse.store.internal?
 
-    # the "url" parameter is here to prevent people from scanning the uploads using the id
-    upload = Upload.where(id: id, url: url).first
+      id = params[:id].to_i
+      url = request.fullpath
 
-    return render nothing: true, status: 404 unless upload
+      # the "url" parameter is here to prevent people from scanning the uploads using the id
+      upload = Upload.where(id: id, url: url).first
 
-    send_file(Discourse.store.path_for(upload), filename: upload.original_filename)
+      return render nothing: true, status: 404 unless upload
+
+      send_file(Discourse.store.path_for(upload), filename: upload.original_filename)
+
+    end
   end
 
 end

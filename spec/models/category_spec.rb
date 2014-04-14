@@ -145,30 +145,12 @@ describe Category do
     end
   end
 
-  describe 'caching' do
-    it "invalidates the site cache on creation" do
-      Site.expects(:invalidate_cache).once
-      Fabricate(:category)
-    end
-
-    it "invalidates the site cache on update" do
-      cat = Fabricate(:category)
-      Site.expects(:invalidate_cache).once
-      cat.update_attributes(name: 'new name')
-    end
-
-    it "invalidates the site cache on destroy" do
-      cat = Fabricate(:category)
-      Site.expects(:invalidate_cache).once
-      cat.destroy
-    end
-  end
-
   describe 'non-english characters' do
     let(:category) { Fabricate(:category, name: "電車男") }
 
     it "creates a blank slug, this is OK." do
       category.slug.should be_blank
+      category.slug_for_url.should == "#{category.id}-category"
     end
   end
 
@@ -177,6 +159,7 @@ describe Category do
 
     it 'creates a blank slug' do
       category.slug.should be_blank
+      category.slug_for_url.should == "#{category.id}-category"
     end
   end
 
@@ -188,8 +171,7 @@ describe Category do
 
     it 'is created correctly' do
       @category.slug.should == 'amazing-category'
-
-      @category.hotness.should == 5.0
+      @category.slug_for_url.should == @category.slug
 
       @category.description.should be_blank
 
@@ -208,11 +190,26 @@ describe Category do
       @topic.posts.count.should == 1
 
       @category.topic_url.should be_present
+
+      @category.posts_week.should  == 0
+      @category.posts_month.should == 0
+      @category.posts_year.should  == 0
+
+      @category.topics_week.should  == 0
+      @category.topics_month.should == 0
+      @category.topics_year.should  == 0
+    end
+
+    it "should not set its description topic to auto-close" do
+      category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
+      category.topic.auto_close_at.should be_nil
     end
 
     describe "creating a new category with the same slug" do
       it "should have a blank slug" do
-        Fabricate(:category, name: "Amazing Categóry").slug.should be_blank
+        category = Fabricate(:category, name: "Amazing Categóry")
+        category.slug.should be_blank
+        category.slug_for_url.should == "#{category.id}-category"
       end
     end
 
@@ -262,6 +259,7 @@ describe Category do
       category.latest_post_id.should == post3.id
       category.latest_topic_id.should == post2.topic_id
 
+      post3.reload
 
       destroyer = PostDestroyer.new(Fabricate(:admin), post3)
       destroyer.destroy
@@ -289,6 +287,9 @@ describe Category do
         @category.topics_year.should == 1
         @category.topic_count.should == 1
         @category.post_count.should == 1
+        @category.posts_year.should == 1
+        @category.posts_month.should == 1
+        @category.posts_week.should == 1
       end
 
     end
@@ -307,11 +308,47 @@ describe Category do
         @category.topics_month.should == 0
         @category.topics_year.should == 0
         @category.post_count.should == 0
+        @category.posts_year.should == 0
+        @category.posts_month.should == 0
+        @category.posts_week.should == 0
+      end
+    end
+
+    context 'with revised post' do
+      before do
+        post = create_post(user: @category.user, category: @category.name)
+
+        SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i)
+        post.revise(post.user, 'updated body', revised_at: post.updated_at + 2.minutes)
+
+        Category.update_stats
+        @category.reload
       end
 
+      it "doesn't count each version of a post" do
+        @category.post_count.should == 1
+        @category.posts_year.should == 1
+        @category.posts_month.should == 1
+        @category.posts_week.should == 1
+      end
     end
   end
 
+  describe "#url" do
+    it "builds a url for normal categories" do
+      category = Fabricate(:category, name: "cats")
+      expect(category.url).to eq "/category/cats"
+    end
+
+    describe "for subcategories" do
+      it "includes the parent category" do
+        parent_category = Fabricate(:category, name: "parent")
+        subcategory = Fabricate(:category, name: "child",
+                                parent_category_id: parent_category.id)
+        expect(subcategory.url).to eq "/category/parent/child"
+      end
+    end
+  end
 
   describe "parent categories" do
     let(:user) { Fabricate(:user) }
@@ -334,6 +371,21 @@ describe Category do
       nested_sub_category = Fabricate.build(:category, parent_category_id: sub_category.id, user: user)
       nested_sub_category.should_not be_valid
 
+    end
+
+    describe ".query_parent_category" do
+      it "should return the parent category id given a parent slug" do
+        parent_category.name = "Amazing Category"
+        parent_category.id.should == Category.query_parent_category(parent_category.slug)
+      end
+    end
+
+    describe ".query_category" do
+      it "should return the category" do
+        category = Fabricate(:category, name: "Amazing Category", parent_category_id: parent_category.id, user: user)
+        parent_category.name = "Amazing Parent Category"
+        category.should == Category.query_category(category.slug, parent_category.id)
+      end
     end
 
   end

@@ -20,6 +20,8 @@
 }(function( $, undefined ) {
 
 // jQuery 1.4+
+// See: https://github.com/blueimp/jQuery-File-Upload/issues/3013#issuecomment-37067816
+/*
 if ( $.cleanData ) {
 	var _cleanData = $.cleanData;
 	$.cleanData = function( elems ) {
@@ -49,6 +51,7 @@ if ( $.cleanData ) {
 		});
 	};
 }
+*/
 
 $.widget = function( name, base, prototype ) {
 	var namespace = name.split( "." )[ 0 ],

@@ -22,6 +22,10 @@ describe UserNameSuggester do
       UserNameSuggester.suggest("Darth%^Vader").should == 'Darth_Vader'
     end
 
+    it "transliterates some characters" do
+      UserNameSuggester.suggest("Jørn").should == 'Jorn'
+    end
+
     it 'adds 1 to an existing username' do
       user = Fabricate(:user)
       UserNameSuggester.suggest(user.username).should == "#{user.username}1"

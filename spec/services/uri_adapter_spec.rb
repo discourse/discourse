@@ -14,7 +14,7 @@ describe UriAdapter do
   describe "#initialize" do
 
     it "has a target" do
-      subject.target.should be_instance_of(URI::HTTP)
+      subject.target.should be_instance_of(Addressable::URI)
     end
 
     it "has content" do
@@ -27,6 +27,27 @@ describe UriAdapter do
 
     it "has a tempfile" do
       subject.tempfile.should be_instance_of Tempfile
+    end
+
+    describe "it handles ugly targets" do
+      let(:ugly_target) { "http://cdn.discourse.org/assets/logo with spaces.png" }
+      subject { UriAdapter.new(ugly_target) }
+
+      it "handles targets" do
+        subject.target.should be_instance_of(Addressable::URI)
+      end
+
+      it "has content" do
+        subject.content.should == response
+      end
+
+      it "has an original_filename" do
+        subject.original_filename.should == "logo with spaces.png"
+      end
+
+      it "has a tempfile" do
+        subject.tempfile.should be_instance_of Tempfile
+      end
     end
 
   end

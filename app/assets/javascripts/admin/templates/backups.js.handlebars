@@ -1,0 +1,22 @@
+<div class="admin-controls">
+  <div class="span15">
+    <ul class="nav nav-pills">
+      <li>{{#link-to "admin.backups.index"}}{{i18n admin.backups.menu.backups}}{{/link-to}}</li>
+      <li>{{#link-to "admin.backups.logs"}}{{i18n admin.backups.menu.logs}}{{/link-to}}</li>
+    </ul>
+  </div>
+  <div class="pull-right">
+    {{#if canRollback}}
+      <button {{action rollback}} class="btn btn-rollback" title="{{i18n admin.backups.operations.rollback.title}}" {{bind-attr disabled="rollbackDisabled"}}><i class="fa fa-ambulance fa-flip-horizontal"></i>{{i18n admin.backups.operations.rollback.text}}</button>
+    {{/if}}
+    {{#if isOperationRunning}}
+      <button {{action cancelOperation}} class="btn btn-danger" title="{{i18n admin.backups.operations.cancel.title}}"><i class="fa fa-times"></i>{{i18n admin.backups.operations.cancel.text}}</button>
+    {{else}}
+      <button {{action startBackup}} class="btn btn-primary" title="{{i18n admin.backups.operations.backup.title}}"><i class="fa fa-rocket"></i>{{i18n admin.backups.operations.backup.text}}</button>
+    {{/if}}
+  </div>
+</div>
+
+<div class="admin-container">
+  {{outlet}}
+</div>

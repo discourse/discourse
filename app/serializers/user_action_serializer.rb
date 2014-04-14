@@ -21,14 +21,16 @@ class UserActionSerializer < ApplicationSerializer
              :title,
              :deleted,
              :hidden,
-             :moderator_action
+             :moderator_action,
+             :edit_reason
 
   def excerpt
-    PrettyText.excerpt(object.cooked,300) if object.cooked
+    PrettyText.excerpt(object.cooked, 300) if object.cooked
   end
 
   def avatar_template
     avatar_for(
+      object.user_id,
       object.email,
       object.use_uploaded_avatar,
       object.uploaded_avatar_template,
@@ -38,11 +40,24 @@ class UserActionSerializer < ApplicationSerializer
 
   def acting_avatar_template
     avatar_for(
-                object.acting_email,
-                object.acting_use_uploaded_avatar,
-                object.acting_uploaded_avatar_template,
-                object.acting_uploaded_avatar_id
+      object.acting_user_id,
+      object.acting_email,
+      object.acting_use_uploaded_avatar,
+      object.acting_uploaded_avatar_template,
+      object.acting_uploaded_avatar_id
     )
+  end
+
+  def include_name?
+    SiteSetting.enable_names?
+  end
+
+  def include_target_name?
+    include_name?
+  end
+
+  def include_acting_name?
+    include_name?
   end
 
   def slug
@@ -53,10 +68,16 @@ class UserActionSerializer < ApplicationSerializer
     object.post_type == Post.types[:moderator_action]
   end
 
+  def edit_reason
+    object.edit_reason if object.action_type == UserAction::EDIT
+  end
+
   private
-  def avatar_for(email, use_uploaded_avatar, uploaded_avatar_template, uploaded_avatar_id)
+
+  def avatar_for(user_id, email, use_uploaded_avatar, uploaded_avatar_template, uploaded_avatar_id)
     # NOTE: id is required for cases where the template is blank (during initial population)
     User.new(
+      id: user_id,
       email: email,
       use_uploaded_avatar: use_uploaded_avatar,
       uploaded_avatar_template: uploaded_avatar_template,

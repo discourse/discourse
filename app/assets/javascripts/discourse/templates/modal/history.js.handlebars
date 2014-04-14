@@ -1,44 +1,40 @@
 <div class="modal-body">
-
-  {{#if loading}}
-    {{i18n loading}}
-  {{else}}
-    {{#if versions}}
-      <div class='span8'>
-
-        {{view Ember.Select
-          contentBinding="versions"
-          optionLabelPath="content.description"
-          optionValuePath="content.number"
-          selectionBinding="versionLeft"}}
-
-        <div class='contents'>
-          {{#if postLeft}}
-            {{{postLeft.cooked}}}
-          {{else}}
-            <div class='history-loading'>{{i18n loading}}</div>
-          {{/if}}
-        </div>
-
-      </div>
-
-      <div class='span8 offset1'>
-        {{view Ember.Select
-          contentBinding="versions"
-          optionLabelPath="content.description"
-          optionValuePath="content.number"
-          selectionBinding="versionRight"}}
-
-        <div class='contents'>
-          {{#if diff}}
-            {{{diff}}}
-          {{else}}
-            <div class='history-loading'>{{i18n loading}}</div>
-          {{/if}}
-        </div>
-
+  <div>
+    <div id="revision-controls">
+      <button title="{{i18n post.revisions.controls.first}}" {{bind-attr class=":btn :standard displayGoToFirst::invisible" disabled=loading}} {{action loadFirstVersion}}><i class="fa fa-fast-backward"></i></button>
+      <button title="{{i18n post.revisions.controls.previous}}" {{bind-attr class=":btn :standard displayGoToPrevious::invisible" disabled=loading}} {{action loadPreviousVersion}}><i class="fa fa-backward"></i></button>
+      <div id="revision-numbers" {{bind-attr class="displayRevisions::invisible"}}>{{{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="version" totalBinding="revisions_count"}}}</div>
+      <button title="{{i18n post.revisions.controls.next}}" {{bind-attr class=":btn :standard displayGoToNext::invisible" disabled=loading}} {{action loadNextVersion}}><i class="fa fa-forward"></i></button>
+      <button title="{{i18n post.revisions.controls.last}}" {{bind-attr class=":btn :standard displayGoToLast::invisible" disabled=loading}} {{action loadLastVersion}}><i class="fa fa-fast-forward"></i></button>
+    </div>
+    {{#if loading}}<div id='revision-loading'><i class='fa fa-spinner fa-spin'></i>{{i18n loading}}</div>{{/if}}
+    <div id="display-modes">
+      <button {{bind-attr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n post.revisions.displays.inline.title}}" {{action displayInline}}>{{{i18n post.revisions.displays.inline.button}}}</button>
+      {{#unless Discourse.Mobile.mobileView}}
+        <button {{bind-attr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side.title}}" {{action displaySideBySide}}>{{{i18n post.revisions.displays.side_by_side.button}}}</button>
+        <button {{bind-attr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side_markdown.title}}" {{action displaySideBySideMarkdown}}>{{{i18n post.revisions.displays.side_by_side_markdown.button}}}</button>
+      {{/unless}}
+    </div>
+  </div>
+  <div id="revision-details">
+    {{i18n post.revisions.details.edited_by}} {{boundAvatar content imageSize="small"}} {{username}} <span class="date">{{date created_at}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
+  </div>
+  <div id="revisions">
+    {{#if title_changes}}
+      <div class="row">
+        <h2>{{{title_diff}}}</h2>
       </div>
     {{/if}}
-  {{/if}}
-
+    {{#if category_changes}}
+      <div class="row">
+        {{{category_diff}}}
+      </div>
+    {{/if}}
+    {{#if user_changes}}
+      <div class="row">
+          {{boundAvatar user_changes.previous imageSize="small"}} {{user_changes.previous.username}} → {{boundAvatar user_changes.current imageSize="small"}} {{user_changes.current.username}}
+      </div>
+    {{/if}}
+    {{{body_diff}}}
+  </div>
 </div>

@@ -8,6 +8,11 @@
 #
 require_dependency 'email/renderer'
 require 'uri'
+require 'net/smtp'
+
+SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
+
+SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
 
 module Email
   class Sender
@@ -19,20 +24,24 @@ module Email
     end
 
     def send
-      return if @message.blank?
-      return if @message.to.blank?
-      return if @message.body.blank?
+      return skip(I18n.t('email_log.message_blank')) if @message.blank?
+      return skip(I18n.t('email_log.message_to_blank')) if @message.to.blank?
+
+      if @message.text_part
+        return skip(I18n.t('email_log.text_part_body_blank')) if @message.text_part.body.to_s.blank?
+      else
+        return skip(I18n.t('email_log.body_blank')) if @message.body.to_s.blank?
+      end
 
       @message.charset = 'UTF-8'
 
       opts = {}
 
-      # Only use the html template on digest emails
-      opts[:html_template] = true if (@email_type == 'digest')
-
       renderer = Email::Renderer.new(@message, opts)
 
-      unless @message.html_part
+      if @message.html_part
+        @message.html_part.body = renderer.html
+      else
         @message.html_part = Mail::Part.new do
           content_type 'text/html; charset=UTF-8'
           body renderer.html
@@ -44,8 +53,6 @@ module Email
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
 
       # Set up the email log
-      to_address = @message.to
-      to_address = to_address.first if to_address.is_a?(Array)
       email_log = EmailLog.new(email_type: @email_type,
                                to_address: to_address,
                                user_id: @user.try(:id))
@@ -75,12 +82,22 @@ module Email
       @message.header['X-Discourse-Post-Id'] = nil
       @message.header['X-Discourse-Reply-Key'] = nil
 
-      @message.deliver
+      begin
+        @message.deliver
+      rescue *SMTP_CLIENT_ERRORS => e
+        return skip(e.message)
+      end
 
       # Save and return the email log
       email_log.save!
       email_log
+    end
 
+    def to_address
+      @to_address ||= begin
+        to = @message ? @message.to : nil
+        to.is_a?(Array) ? to.first : to
+      end
     end
 
     def self.host_for(base_url)
@@ -99,12 +116,22 @@ module Email
       "\"#{site_name.gsub(/\"/, "'")}\" <discourse.forum.#{Slug.for(site_name)}.#{host}>"
     end
 
+
+
     private
 
     def header_value(name)
       header = @message.header[name]
       return nil unless header
       header.value
+    end
+
+    def skip(reason)
+      EmailLog.create(email_type: @email_type,
+                      to_address: to_address,
+                      user_id: @user.try(:id),
+                      skipped: true,
+                      skipped_reason: reason)
     end
 
   end

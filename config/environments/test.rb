@@ -37,8 +37,10 @@ Discourse::Application.configure do
   config.pbkdf2_iterations = 10
   config.ember.variant = :development
 
+  config.assets.compile = true
+  config.assets.digest = false
+
   # silence deprecation warnings in test
-  config.whiny_nils = true unless rails4?
-  config.eager_load = false if rails4?
+  config.eager_load = false
   ActiveSupport::Deprecation.silenced = true
 end

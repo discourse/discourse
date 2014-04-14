@@ -1,12 +1,9 @@
 // Styles used before the user is logged into discourse. For example, activating their
 // account or changing their email.
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 #simple-container {
   @include border-radius-all(10px);
-  background-color: white;
+  background-color: $primary_background_color;
   padding: 20px;
   width: 550px;
   margin: 0 auto;

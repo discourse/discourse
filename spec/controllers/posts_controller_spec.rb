@@ -1,112 +1,117 @@
 require 'spec_helper'
 
+shared_examples 'finding and showing post' do
+  let(:user) { log_in }
+  let(:post) { Fabricate(:post, user: user) }
+
+  it 'ensures the user can see the post' do
+    Guardian.any_instance.expects(:can_see?).with(post).returns(false)
+    xhr :get, action, params
+    response.should be_forbidden
+  end
+
+  it 'succeeds' do
+    xhr :get, action, params
+    response.should be_success
+  end
+
+  context "deleted post" do
+    before do
+      post.trash!(user)
+    end
+
+    it "can't find deleted posts as an anonymous user" do
+      xhr :get, action, params
+      response.should be_forbidden
+    end
+
+    it "can't find deleted posts as a regular user" do
+      log_in(:user)
+      xhr :get, action, params
+      response.should be_forbidden
+    end
+
+    it "can find posts as a moderator" do
+      log_in(:moderator)
+      xhr :get, action, params
+      response.should be_success
+    end
+  end
+end
+
+shared_examples 'action requires login' do |method, action, params|
+  it 'raises an exception when not logged in' do
+    lambda { xhr method, action, params }.should raise_error(Discourse::NotLoggedIn)
+  end
+end
+
 describe PostsController do
 
-
   describe 'short_link' do
+    let(:post) { Fabricate(:post) }
+
     it 'logs the incoming link once' do
       IncomingLink.expects(:add).once.returns(true)
-      p = Fabricate(:post)
-      get :short_link, post_id: p.id, user_id: 999
+      get :short_link, post_id: post.id, user_id: 999
       response.should be_redirect
     end
   end
 
   describe 'show' do
-    let(:user) { log_in }
-    let(:post) { Fabricate(:post, user: user) }
-
-    it 'ensures the user can see the post' do
-      Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-      xhr :get, :show, id: post.id
-      response.should be_forbidden
+    include_examples 'finding and showing post' do
+      let(:action) { :show }
+      let(:params) { {id: post.id} }
     end
+  end
 
-    it 'suceeds' do
-      xhr :get, :show, id: post.id
-      response.should be_success
-    end
-
-    context "deleted post" do
-
-      before do
-        post.trash!(user)
-      end
-
-      it "can't find deleted posts as an anonymous user" do
-        xhr :get, :show, id: post.id
-        response.should be_forbidden
-      end
-
-      it "can't find deleted posts as a regular user" do
-        log_in(:user)
-        xhr :get, :show, id: post.id
-        response.should be_forbidden
-      end
-
-      it "can find posts as a moderator" do
-        log_in(:moderator)
-        xhr :get, :show, id: post.id
-        response.should be_success
-      end
-
+  describe 'by_number' do
+    include_examples 'finding and showing post' do
+      let(:action) { :by_number }
+      let(:params) { {topic_id: post.topic_id, post_number: post.post_number} }
     end
   end
 
   describe 'reply_history' do
-    let(:user) { log_in }
-    let(:post) { Fabricate(:post, user: user) }
-
-    it 'ensures the user can see the post' do
-      Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-      xhr :get, :reply_history, id: post.id
-      response.should be_forbidden
+    include_examples 'finding and showing post' do
+      let(:action) { :reply_history }
+      let(:params) { {id: post.id} }
     end
 
-    it 'suceeds' do
+    it 'asks post for reply history' do
       Post.any_instance.expects(:reply_history)
       xhr :get, :reply_history, id: post.id
-      response.should be_success
     end
   end
 
-
-  describe 'versions' do
-
-    shared_examples 'posts_controller versions examples' do
-      it "raises an error if the user doesn't have permission to see the post" do
-        Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-        xhr :get, :versions, post_id: post.id
-        response.should be_forbidden
-      end
-
-      it 'renders JSON' do
-        xhr :get, :versions, post_id: post.id
-        ::JSON.parse(response.body).should be_present
-      end
+  describe 'replies' do
+    include_examples 'finding and showing post' do
+      let(:action) { :replies }
+      let(:params) { {post_id: post.id} }
     end
 
-    context 'when not logged in' do
-      let(:post) { Fabricate(:post) }
-      include_examples 'posts_controller versions examples'
+    it 'asks post for replies' do
+      Post.any_instance.expects(:replies)
+      xhr :get, :replies, post_id: post.id
     end
-
-    context 'when logged in' do
-      let(:post) { Fabricate(:post, user: log_in) }
-      include_examples 'posts_controller versions examples'
-    end
-
   end
 
   describe 'delete a post' do
-    it 'raises an exception when not logged in' do
-      lambda { xhr :delete, :destroy, id: 123 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :delete, :destroy, id: 123
 
     describe 'when logged in' do
 
       let(:user) { log_in(:moderator) }
       let(:post) { Fabricate(:post, user: user, post_number: 2) }
+
+      it 'does not allow to destroy when edit time limit expired' do
+        Guardian.any_instance.stubs(:can_delete_post?).with(post).returns(false)
+        Post.any_instance.stubs(:edit_time_limit_expired?).returns(true)
+
+        xhr :delete, :destroy, id: post.id
+
+        response.status.should == 422
+        JSON.parse(response.body)['errors'].should include(I18n.t('too_late_to_edit'))
+      end
 
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_delete?).with(post).returns(false)
@@ -125,9 +130,7 @@ describe PostsController do
   end
 
   describe 'recover a post' do
-    it 'raises an exception when not logged in' do
-      lambda { xhr :put, :recover, post_id: 123 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :put, :recover, post_id: 123
 
     describe 'when logged in' do
 
@@ -153,11 +156,8 @@ describe PostsController do
     end
   end
 
-
   describe 'destroy_many' do
-    it 'raises an exception when not logged in' do
-      lambda { xhr :delete, :destroy_many, post_ids: [123, 345] }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :delete, :destroy_many, post_ids: [123, 345]
 
     describe 'when logged in' do
 
@@ -206,24 +206,38 @@ describe PostsController do
 
   end
 
-
   describe 'edit a post' do
 
-    it 'raises an exception when not logged in' do
-      lambda { xhr :put, :update, id: 2 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :put, :update, id: 2
 
     describe 'when logged in' do
 
       let(:post) { Fabricate(:post, user: log_in) }
       let(:update_params) do
-        {id: post.id,
-         post: {raw: 'edited body'},
-         image_sizes: {'http://image.com/image.jpg' => {'width' => 123, 'height' => 456}}}
+        {
+          id: post.id,
+          post: { raw: 'edited body', edit_reason: 'typo' },
+          image_sizes: { 'http://image.com/image.jpg' => {'width' => 123, 'height' => 456} },
+        }
+      end
+
+      it 'does not allow to update when edit time limit expired' do
+        Guardian.any_instance.stubs(:can_edit?).with(post).returns(false)
+        Post.any_instance.stubs(:edit_time_limit_expired?).returns(true)
+
+        xhr :put, :update, update_params
+
+        response.status.should == 422
+        JSON.parse(response.body)['errors'].should include(I18n.t('too_late_to_edit'))
       end
 
       it 'passes the image sizes through' do
         Post.any_instance.expects(:image_sizes=)
+        xhr :put, :update, update_params
+      end
+
+      it 'passes the edit reason through' do
+        Post.any_instance.expects(:edit_reason=)
         xhr :put, :update, update_params
       end
 
@@ -235,13 +249,13 @@ describe PostsController do
       end
 
       it "raises an error when the user doesn't have permission to see the post" do
-        Guardian.any_instance.expects(:can_edit?).with(post).returns(false)
+        Guardian.any_instance.expects(:can_edit?).with(post).at_least_once.returns(false)
         xhr :put, :update, update_params
         response.should be_forbidden
       end
 
       it "calls revise with valid parameters" do
-        PostRevisor.any_instance.expects(:revise!).with(post.user, 'edited body')
+        PostRevisor.any_instance.expects(:revise!).with(post.user, 'edited body', edit_reason: 'typo')
         xhr :put, :update, update_params
       end
 
@@ -256,9 +270,7 @@ describe PostsController do
 
   describe 'bookmark a post' do
 
-    it 'raises an exception when not logged in' do
-      lambda { xhr :put, :bookmark, post_id: 2 }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :put, :bookmark, post_id: 2
 
     describe 'when logged in' do
 
@@ -286,9 +298,7 @@ describe PostsController do
 
   describe 'creating a post' do
 
-    it 'raises an exception when not logged in' do
-      lambda { xhr :post, :create }.should raise_error(Discourse::NotLoggedIn)
-    end
+    include_examples 'action requires login', :post, :create
 
     describe 'when logged in' do
 
@@ -407,4 +417,94 @@ describe PostsController do
     end
   end
 
+  describe "revisions" do
+
+    let(:post_revision) { Fabricate(:post_revision) }
+
+    it "throws an exception when revision is < 2" do
+      expect {
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: 1
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    context "when edit history is not visible to the public" do
+
+      before { SiteSetting.stubs(:edit_history_visible_to_public).returns(false) }
+
+      it "ensures anonymous cannot see the revisions" do
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_forbidden
+      end
+
+      it "ensures regular user cannot see the revisions" do
+        u = log_in(:user)
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_forbidden
+      end
+
+      it "ensures staff can see the revisions" do
+        log_in(:admin)
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_success
+      end
+
+      it "ensures poster can see the revisions" do
+        user = log_in(:active_user)
+        post = Fabricate(:post, user: user)
+        pr = Fabricate(:post_revision, user: user, post: post)
+        xhr :get, :revisions, post_id: pr.post_id, revision: pr.number
+        response.should be_success
+      end
+
+      it "ensures trust level 4 can see the revisions" do
+        log_in(:elder)
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_success
+      end
+
+    end
+
+    context "when edit history is visible to everyone" do
+
+      before { SiteSetting.stubs(:edit_history_visible_to_public).returns(true) }
+
+      it "ensures anyone can see the revisions" do
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_success
+      end
+
+    end
+
+    context "deleted post" do
+      let(:admin) { log_in(:admin) }
+      let(:deleted_post) { Fabricate(:post, user: admin) }
+      let(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
+
+      before { deleted_post.trash!(admin) }
+
+      it "also work on deleted post" do
+        xhr :get, :revisions, post_id: deleted_post_revision.post_id, revision: deleted_post_revision.number
+        response.should be_success
+      end
+    end
+
+  end
+
+  describe 'expandable embedded posts' do
+    let(:post) { Fabricate(:post) }
+
+    it "raises an error when you can't see the post" do
+      Guardian.any_instance.expects(:can_see?).with(post).returns(false)
+      xhr :get, :expand_embed, id: post.id
+      response.should_not be_success
+    end
+
+    it "retrieves the body when you can see the post" do
+      Guardian.any_instance.expects(:can_see?).with(post).returns(true)
+      TopicEmbed.expects(:expanded_for).with(post).returns("full content")
+      xhr :get, :expand_embed, id: post.id
+      response.should be_success
+      ::JSON.parse(response.body)['cooked'].should == "full content"
+    end
+  end
 end

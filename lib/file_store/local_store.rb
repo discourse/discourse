@@ -51,8 +51,12 @@ module FileStore
       "#{public_dir}#{upload.url}"
     end
 
-    def absolute_avatar_template(avatar)
-      avatar_template(avatar, absolute_base_url)
+    def avatar_template(avatar)
+      relative_avatar_template(avatar)
+    end
+
+    def purge_tombstone(grace_period)
+      `find #{tombstone_dir} -mtime +#{grace_period} -type f -delete`
     end
 
     private
@@ -81,12 +85,8 @@ module FileStore
     end
 
     def relative_avatar_template(avatar)
-      avatar_template(avatar, relative_base_url)
-    end
-
-    def avatar_template(avatar, base_url)
       File.join(
-        base_url,
+        relative_base_url,
         "avatars",
         avatar.sha1[0..2],
         avatar.sha1[3..5],
@@ -105,14 +105,16 @@ module FileStore
     def copy_file(file, path)
       FileUtils.mkdir_p(Pathname.new(path).dirname)
       # move the file to the right location
-      # not using cause mv, cause permissions are no good on move
-      File.open(path, "wb") do |f|
-        f.write(file.read)
-      end
+      # not using mv, cause permissions are no good on move
+      File.open(path, "wb") { |f| f.write(file.read) }
     end
 
     def remove_file(url)
-      File.delete("#{public_dir}#{url}") if is_relative?(url)
+      return unless is_relative?(url)
+      path = public_dir + url
+      tombstone = public_dir + url.gsub("/uploads/", "/tombstone/")
+      FileUtils.mkdir_p(Pathname.new(tombstone).dirname)
+      FileUtils.move(path, tombstone)
     rescue Errno::ENOENT
       # don't care if the file isn't there
     end
@@ -122,7 +124,7 @@ module FileStore
     end
 
     def is_local?(url)
-      absolute_url = url.start_with?("//") ? (SiteSetting.use_ssl? ? "https:" : "http:") + url : url
+      absolute_url = url.start_with?("//") ? SiteSetting.scheme + ":" + url : url
       absolute_url.start_with?(absolute_base_url) || absolute_url.start_with?(absolute_base_cdn_url)
     end
 
@@ -132,6 +134,10 @@ module FileStore
 
     def public_dir
       "#{Rails.root}/public"
+    end
+
+    def tombstone_dir
+      public_dir + relative_base_url.gsub("/uploads/", "/tombstone/")
     end
 
   end
