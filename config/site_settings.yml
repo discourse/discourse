@@ -155,7 +155,9 @@ users:
   delete_user_max_post_age:
     client: true
     default: 60
-  delete_all_posts_max: 15
+  delete_all_posts_max:
+    client: true
+    default: 15
   redirect_users_to_top_page: true
 
 posting:
