@@ -12,15 +12,17 @@ class BadgeGranter
   def grant
     return if @granted_by and !Guardian.new(@granted_by).can_grant_badges?(@user)
 
-    user_badge = nil
+    user_badge = UserBadge.find_by(badge_id: @badge.id, user_id: @user.id)
 
-    UserBadge.transaction do
-      user_badge = UserBadge.create!(badge: @badge, user: @user,
-                                     granted_by: @granted_by, granted_at: Time.now)
+    unless user_badge
+      UserBadge.transaction do
+        user_badge = UserBadge.create!(badge: @badge, user: @user,
+                                       granted_by: @granted_by, granted_at: Time.now)
 
-      Badge.increment_counter 'grant_count', @badge.id
-      if @granted_by != Discourse.system_user
-        StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
+        Badge.increment_counter 'grant_count', @badge.id
+        if @granted_by != Discourse.system_user
+          StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
+        end
       end
     end
 
