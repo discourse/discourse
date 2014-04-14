@@ -91,10 +91,11 @@
     }
 
     h2 {
-      line-height: 15px;
+      line-height: 12px;
     }
 
     .badge-section {
+      margin-top: 20px;
       h3 {
         line-height: 43px;
         color: $primary_text_color;
@@ -102,21 +103,38 @@
         margin-bottom: -8px;
       }
 
-      .badge, .more-badges {
-        font-size: 12px;
-        margin: 0;
-        line-height: 16px;
-        display: inline-block;
-      }
-
-      .badge {
-        padding: 3px 8px;
-        border: 1px solid $secondary-border-color;
-      }
-
-      .more-badges {
-        padding: 4px 8px;
-      }
     }
   }
+}
+
+.user-badge, .more-user-badges {
+  font-size: 12px;
+  margin: 0;
+  line-height: 16px;
+  display: inline-block;
+  .fa {
+    padding-right: 5px;
+    font-size: 16px;
+  }
+}
+
+.user-badge {
+  padding: 3px 8px;
+  border: 1px solid $secondary-border-color;
+}
+
+.more-user-badges {
+  padding: 4px 8px;
+}
+
+.badge-type-1 .fa-certificate {
+  color: #A67D3D;
+}
+
+.badge-type-2 .fa-certificate {
+  color: silver;
+}
+
+.badge-type-1 .fa-certificate {
+  color: gold;
 }

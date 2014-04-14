@@ -6,6 +6,17 @@
     {{#if showName}}
       <h2><a {{bind-attr href="usernameUrl"}}>{{name}}</a></h2>
     {{/if}}
+
+    {{#if showBadges}}
+      <div class="badge-section">
+        {{#each user.featured_user_badges}}
+        <span class="user-badge badge-type-{{unbound badge.badge_type_id}}"><i class='fa fa-certificate'></i> {{badge.name}}</span>
+        {{/each}}
+        {{#if showMoreBadges}}
+          <span class="btn more-user-badges">{{i18n badges.more_badges count=moreBadgesCount}}</span>
+        {{/if}}
+      </div>
+    {{/if}}
   </div>
 
   {{#if user}}
@@ -15,17 +26,6 @@
       {{groups-list groups=user.custom_groups}}
     </div>
 
-    {{#if showBadges}}
-      <div class="badge-section">
-        <h3>{{i18n badges.badge_count count=user.badge_count}}</h3>
-        {{#each user.featured_user_badges}}
-          <span class="badge">{{badge.name}}</span>
-        {{/each}}
-        {{#if showMoreBadges}}
-          <span class="btn more-badges">{{i18n badges.more_badges count=moreBadgesCount}}</span>
-        {{/if}}
-      </div>
-    {{/if}}
 
     <div class='bottom'>
       {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}
