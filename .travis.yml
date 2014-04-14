@@ -2,9 +2,12 @@ language: ruby
 rvm:
   - 2.0.0
   - 2.1.1
+# Fast fail testing for styleguide violations
 before_install:
   - npm i -g jshint
   - jshint .
+  - gem install scss-lint --no-ri --version '=0.22.0'
+  - scss-lint .
 before_script:
   - psql -c 'create database discourse_test;' -U postgres
   - export DISCOURSE_HOSTNAME=www.example.com
