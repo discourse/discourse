@@ -1,51 +1,48 @@
 # Cross-process locking using Redis.
 class DistributedMutex
-  attr_accessor :redis
-  attr_reader :got_lock
 
   def initialize(key, redis=nil)
     @key = key
     @redis = redis || $redis
-    @got_lock = false
+    @mutex = Mutex.new
   end
 
+  # NOTE wrapped in mutex to maintain its semantics
+  def synchronize
+    @mutex.lock
+    while !try_to_get_lock
+      sleep 0.001
+    end
+
+    yield
+
+  ensure
+    @redis.del @key
+    @mutex.unlock
+  end
+
+  private
+
   def try_to_get_lock
-    if redis.setnx @key, Time.now.to_i + 60
-      redis.expire @key, 60
-      @got_lock = true
+    got_lock = false
+    if @redis.setnx @key, Time.now.to_i + 60
+      @redis.expire @key, 60
+      got_lock = true
     else
       begin
-        redis.watch @key
-        time = redis.get @key
+        @redis.watch @key
+        time = @redis.get @key
         if time && time.to_i < Time.now.to_i
-          @got_lock = redis.multi do
-            redis.set @key, Time.now.to_i + 60
+          got_lock = @redis.multi do
+            @redis.set @key, Time.now.to_i + 60
           end
         end
       ensure
-        redis.unwatch
+        @redis.unwatch
       end
     end
+
+    got_lock
   end
 
-  def get_lock
-    return if @got_lock
-
-    start = Time.now
-    while !@got_lock
-      try_to_get_lock
-    end
-  end
-
-  def release_lock
-    redis.del @key
-    @got_lock = false
-  end
-
-  def synchronize
-    get_lock
-    yield
-  ensure
-    release_lock
-  end
 end
