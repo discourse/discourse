@@ -57,7 +57,10 @@ Discourse.AdminUserBadgesController = Ember.ArrayController.extend({
         self.pushObject(userBadge);
         Ember.run.next(function() {
           // Update the selected badge ID after the combobox has re-rendered.
-          self.set('selectedBadgeId', self.get('grantableBadges')[0].get('id'));
+          var newSelectedBadge = self.get('grantableBadges')[0];
+          if (newSelectedBadge) {
+            self.set('selectedBadgeId', newSelectedBadge.get('id'));
+          }
         });
       }, function() {
         // Failure

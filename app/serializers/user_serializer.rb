@@ -21,10 +21,12 @@ class UserSerializer < BasicUserSerializer
              :admin,
              :title,
              :suspend_reason,
-             :suspended_till
+             :suspended_till,
+             :badge_count
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
+  has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
 
   def self.private_attributes(*attrs)
     attributes(*attrs)
@@ -127,5 +129,14 @@ class UserSerializer < BasicUserSerializer
 
   def watched_category_ids
     CategoryUser.lookup(object, :watching).pluck(:category_id)
+  end
+
+  def badge_count
+    object.user_badges.count
+  end
+
+  def featured_user_badges
+    # The three rarest badges this user has received should be featured.
+    object.user_badges.joins(:badge).order('badges.grant_count ASC').includes(:granted_by, badge: :badge_type).limit(3)
   end
 end
