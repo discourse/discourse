@@ -67,6 +67,7 @@ module Onebox
           kickstarter.com
           kinomap.com
           liveleak.com
+          lessonplanet.com
           mashable.com
           mlb.com
           myspace.com
