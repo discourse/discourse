@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 cs:
   js:
     number:
@@ -543,6 +550,7 @@ cs:
       admin_options_title: "Volitelné administrační nastavení tématu"
       auto_close_label: "Automaticky zavřít téma:"
       auto_close_units: "(# hodin, čas, nebo datum)"
+      auto_close_examples: 'Příklady: 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Zadejte prosím platnou hodnotu."
     notifications:
       title: "oznámení o zmínkách pomocí @jméno, odpovědi na vaše příspěvky a témata, soukromé zprávy, atd."
@@ -565,6 +573,8 @@ cs:
       title_with_attachments: "Nahrát obrázek nebo soubor"
       from_my_computer: "Z mého zařízení"
       from_the_web: "Z webu"
+      remote_tip: "zadejte adresu obrázku ve formátu http://example.com/image.jpg"
+      remote_tip_with_attachments: "zadejte adresu obrázku nebo souboru ve formátu http://example.com/file.ext"
       local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení."
       local_tip_with_attachments: "klikněte sem pro výběr obrázku nebo souboru z vašeho zařízení."
       hint: "(můžete také rovnou soubor do editoru přetáhnout)"
@@ -590,6 +600,7 @@ cs:
     topics:
       bulk:
         reset_read: "reset přečteného"
+        dismiss_read: "Odbýt přečtená"
         dismiss_new: "Odbýt nová"
         toggle: "hromadný výběr témat"
         actions: "Hromadné akce"
@@ -636,7 +647,7 @@ cs:
         few: '{{count}} nepřečtená témata'
         other: '{{count}} nepřečtených témat'
       title: 'Téma'
-      loading_more: "Loading more topics..."
+      loading_more: "Nahrávám další témata..."
       loading: 'Nahrávám téma...'
       invalid_access:
         title: "Téma je soukromé"
@@ -735,6 +746,7 @@ cs:
         invisible: "Zneviditelnit téma"
         visible: "Zviditelnit"
         reset_read: "Vynulovat počet čtení"
+        multi_select: "Výběr více příspěvků"
         convert_to_topic: "Převést na běžné téma"
       reply:
         title: 'Odpovědět'
@@ -796,6 +808,8 @@ cs:
         select_replies: 'vybrat +odpovědi'
         delete: smazat označené
         cancel: zrušit označování
+        select_all: vybrat vše
+        deselect_all: zrušit výběr
         description:
           one: Máte označen <b>1</b> příspěvek.
           few: Máte označeny <b>{{count}}</b> příspěvky.
@@ -819,9 +833,9 @@ cs:
       deleted_by: "odstranil"
       expand_collapse: "rozbalit/sbalit"
       gap:
-        one: "1 post hidden"
-        few: "{{count}} posts hidden"
-        other: "{{count}} posts hidden"
+        one: "1 příspěvek schován"
+        few: "{{count}} příspěvky schovány"
+        other: "{{count}} příspěvků schováno"
       has_replies:
         one: "Odpovědět"
         few: "Odpovědi"
@@ -1059,6 +1073,15 @@ cs:
         one: "1 kliknutí"
         few: "%{count} kliknutí"
         other: "%{count} kliknutí"
+    topic_statuses:
+      locked:
+        help: "toto téma je uzavřené; další odpovědi nejsou přijímány"
+      pinned:
+        help: "toto téma je připevněné; bude se zobrazovat na vrcholu seznamu ve své kategorii"
+      archived:
+        help: "toto téma je archivováno; je zmraženo a nelze ho již měnit"
+      invisible:
+        help: "toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
     posts: "Příspěvků"
     posts_long: "v tomto tématu je {{number}} příspěvků"
     original_post: "Původní příspěvek"
@@ -1066,7 +1089,7 @@ cs:
     replies: "Odpovědi"
     views_long: "toto téma bylo zobrazeno {{number}}krát"
     activity: "Aktivita"
-    likes: "Líbí&nbsp;se"
+    likes: "Líbí se"
     likes_long: "v tomto tématu je {{number}} 'líbí se'"
     users: "Účastníci"
     category_title: "Kategorie"
@@ -1146,8 +1169,8 @@ cs:
       dashboard:
         title: "Rozcestník"
         last_updated: "Přehled naposled aktualizován:"
-        version: "Verze&nbsp;Discourse"
-        up_to_date: "Máš&nbsp;aktuální!"
+        version: "Verze Discourse"
+        up_to_date: "Máte aktuální!"
         critical_available: "Je k dispozici důležitá aktualizace."
         updates_available: "Jsou k dispozici aktualizace."
         please_upgrade: "Prosím aktualizujte!"
@@ -1155,7 +1178,7 @@ cs:
         stale_data: "V poslední době neproběhal kontrola aktualizací. Ujistěte se, že běží služby sidekiq."
         version_check_pending: "Že tys nedávno provedl aktualizaci. Báječné!"
         installed_version: "Nainstalováno"
-        latest_version: "Poslední&nbsp;verze"
+        latest_version: "Poslední verze"
         problems_found: "Byly nalezeny problémy s vaší instalací systému Discourse:"
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
@@ -1322,8 +1345,8 @@ cs:
         title: "Email"
         settings: "Nastavení"
         all: "Všechny emaily"
-        sending_test: "Sending test Email..."
-        test_error: "There was an issue sending email. Please check your settings and try again."
+        sending_test: "Zkušební email se odesílá..."
+        test_error: "Chyba při odesílání emailu. Zkontrolujte nastavení a zkuste to znovu."
         sent: "Odeslané"
         skipped: "Přeskočené"
         sent_at: "Odesláno"
@@ -1386,12 +1409,12 @@ cs:
             delete_user: "odstranit uživatele"
             change_trust_level: "z. důvěryhodnosti"
             change_site_setting: "změna nastavení"
-            change_site_customization: "změna&nbsp;přizpůsobení"
+            change_site_customization: "změna přizpůsobení"
             delete_site_customization: "odstranit přizpůsobení"
             suspend_user: "suspendovat uživatele"
             unsuspend_user: "zrušit suspendování"
-            grant_badge: "grant badge"
-            revoke_badge: "revoke badge"
+            grant_badge: "udělit odznak"
+            revoke_badge: "vzít odznak"
         screened_emails:
           title: "Filtrované emaily"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -1579,38 +1602,38 @@ cs:
           uncategorized: 'Nezařazené'
           backups: "Zálohy"
       badges:
-        title: Badges
-        new_badge: New Badge
+        title: Odznaky
+        new_badge: Nový odznak
         new: Nové
         name: Jméno
-        display_name: Display Name
+        display_name: Zobrazované jméno
         description: Popis
-        badge_type: Badge Type
-        granted_by: Granted By
-        granted_at: Granted At
+        badge_type: Typ odznaku
+        granted_by: Uděleno
+        granted_at: Uděleno v
         save: Uložit
         delete: Smazat
-        delete_confirm: Are you sure you want to delete this badge?
+        delete_confirm: Určitě chcete tento oznak smazat?
         revoke: zrušit
-        revoke_confirm: Are you sure you want to revoke this badge?
-        edit_badges: Edit Badges
-        grant_badge: Grant Badge
-        granted_badges: Granted Badges
-        grant: Grant
-        no_user_badges: "%{name} has not been granted any badges."
-        no_badges: There are no badges that can be granted.
+        revoke_confirm: Určitě chcete tento odznak odejmout?
+        edit_badges: Upravit odznaky
+        grant_badge: Udělit odznak
+        granted_badges: Udělené odznaky
+        grant: Udělit
+        no_user_badges: "%{name} nezískal žádné oznaky."
+        no_badges: Nejsou tu žádné odznaky, které by se dali rozdat.
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
       title: 'Keyboard Shortcuts (experimental)'
       jump_to:
         title: 'Jump To'
-        home: '<b>g</b>, <b>h</b> Home (Latest)'
-        latest: '<b>g</b>, <b>l</b> Latest'
-        new: '<b>g</b>, <b>n</b> New'
-        unread: '<b>g</b>, <b>u</b> Unread'
-        starred: '<b>g</b>, <b>f</b> Starred'
-        categories: '<b>g</b>, <b>c</b> Categories'
+        home: '<b>g</b> then <b>h</b> Home (Latest)'
+        latest: '<b>g</b> then <b>l</b> Latest'
+        new: '<b>g</b> then <b>n</b> New'
+        unread: '<b>g</b> then <b>u</b> Unread'
+        starred: '<b>g</b> then <b>f</b> Starred'
+        categories: '<b>g</b> then <b>c</b> Categories'
       navigation:
         title: 'Navigation'
         back: '<b>u</b> Back'
@@ -1635,11 +1658,11 @@ cs:
         bookmark: '<b>b</b> Bookmark post'
         edit: '<b>e</b> Edit post'
         delete: '<b>d</b> Delete post'
-        mark_muted: '<b>m</b>, <b>m</b> Mark topic as muted'
-        mark_regular: '<b>m</b>, <b>r</b> Mark topic as regular'
-        mark_tracking: '<b>m</b>, <b>t</b> Mark topic as tracking'
-        mark_watching: '<b>m</b>, <b>w</b> Mark topic as watching'
+        mark_muted: '<b>m</b> then <b>m</b> Mark topic as muted'
+        mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
+        mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
+        mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
     badges:
       example_badge:
-        name: Example Badge
-        description: This is a generic example badge.
+        name: Ukázkový odznak
+        description: Toto je obecná ukázka odznaku.

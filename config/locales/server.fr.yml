@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 fr:
   dates:
     short_date_no_year: "D MMM"
@@ -43,14 +50,14 @@ fr:
       other: "%{count} réponses"
   too_many_mentions:
     zero: "Désolé, vous ne pouvez pas mentionner d'utilisateur."
-    one: "Désolé, vous ne pouvez mentionner qu'un seul utilisateur dans un message."
-    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateurs dans un message."
+    one: "Désolé, vous ne pouvez mentionner qu'un seul utilisateur."
+    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateurs."
   too_many_mentions_newuser:
     zero: "Désolé, les nouveaux utilisateurs ne peuvent pas mentionner d'utilisateur."
-    one: "Désolé, les nouveaux utilisateurs ne peuvent mentionner qu'un seul utilisateur dans un message."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un message."
+    one: "Désolé, les nouveaux utilisateurs ne peuvent mentionner qu'un seul utilisateur."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs."
   too_many_images:
-    zero: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter d'image dans les messages."
+    zero: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter d'image."
     one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'une seule image."
     other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} images."
   too_many_attachments:
@@ -72,7 +79,7 @@ fr:
   by: "Par"
   topics_in_category: "Sujets dans la catégorie '%{category}'"
   rss_posts_in_topic: "Flux RSS de '%{topic}'"
-  rss_topics_in_category: "Flux RSS des sujets de la catégorie '%{category}'"
+  rss_topics_in_category: "Flux RSS des sujets dans la catégorie '%{category}'"
   author_wrote: "%{author} a écrit :"
   num_posts: "Messages :"
   num_participants: "Participants :"
@@ -138,7 +145,12 @@ fr:
       Vous pouvez utilisez vos précédentes réponses pour ajouter une citation en surlignant et en cliquant sur le bouton <b>Citer</b>.
 
       Il est plus facile pour tout le monde de lire des sujets avec peu de réponses mais traités avec profondeur que beaucoup de réponses individuelles courtes.
-    dominating_topic: "### Laisser les autres se joindre à la conversation \n\nCe sujet est évidemment important pour vous &ndash; vous avez posté plus de %{percent}% des réponses ici.\n\nÊtes-vous sûr de laissez suffisamment de temps aux autres personnes afin qu'elles partagent aussi leurs points de vue ? \n"
+    dominating_topic: |
+      ### Laisser les autres se joindre à la conversation
+
+      Ce sujet est évidemment important pour vous &ndash; vous avez posté plus de %{percent}% des réponses ici.
+
+      Êtes-vous sûr de laissez suffisamment de temps aux autres personnes afin qu'elles partagent aussi leurs points de vue?
     too_many_replies: "# # # Vous avez atteint la limite de réponse pour ce sujet\n\nNous sommes désolés, mais les nouveaux utilisateurs sont limités temporairement à %{newuser_max_replies_per_topic} réponses par sujet. \n\nAu lieu d'ajouter une autre réponse, veuillez envisager de modifier vos réponses précédentes, ou visiter d'autres sujets.\n"
     reviving_old_topic: |
       ### Déterrer ce sujet ?
@@ -149,7 +161,7 @@ fr:
   activerecord:
     attributes:
       category:
-        name: "Nom de catégorie"
+        name: "Nom de la catégorie"
       post:
         raw: "Corps"
     errors:
@@ -264,7 +276,7 @@ fr:
         one: "il y a un jour"
         other: "il y a %{count} jours"
       about_x_months:
-        one: "il y a environ 1 mois"
+        one: "il y a environ un mois"
         other: "il y a environ %{count} mois"
       x_months:
         one: "il y a un mois"
@@ -295,7 +307,7 @@ fr:
   activation:
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
     please_continue: "Votre nouveau compte est activé, et vous êtes connecté. Continuer vers %{link}"
-    welcome_to: "Bienvenue sur %{site_name}!"
+    welcome_to: "Bienvenue sur %{site_name} !"
     approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous accédiez au forum. Vous recevrez un mail lorsque que votre compte sera approuvé !"
   post_action_types:
     off_topic:
@@ -514,7 +526,7 @@ fr:
       description: "Le message qui apparaît à côté d'une case à cocher sur le formulaire d'inscription si le paramètre de site tos_accept_required est activé."
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
-    allow_user_locale: "Autoriser les utilisateurs à choisir leur langue de l'interface de préférence."
+    allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leur préférences."
     min_post_length: "Longueur minimale des messages en nombre de caractères"
     min_private_message_post_length: "Longueur minimale des messages privés en nombre de caractères"
     max_post_length: "Longueur maximale des messages en nombres de caractères"
@@ -546,8 +558,10 @@ fr:
     max_image_height: "Hauteur maximale autorisée des images dans un message"
     category_featured_topics: "Nombre de sujets affichés par catégorie sur la page /categories. Après avoir modifié cette valeur, il faut jusqu'à 15 minutes pour la page categories soit mise à jour."
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents) Modifier ceci requiert une mise à jour de tout votre markdown commande rake posts:rebake"
+    exclude_rel_nofollow_domains: "Une liste contenant les noms de domaines - séparée par des pipes | - pour lesquels l'attribut nofollow ne sera pas ajouté (tld.com autorisera sub.tld.com automatiquement)"
     post_excerpt_maxlength: "Longueur maximale d'un extrait de message"
     post_onebox_maxlength: "Longueur maximale d'un message emboîté."
+    onebox_domains_whitelist: "Liste des noms de domaines autorisés pour les 'onebox'. (Example eviltrout.com)"
     category_post_template: "Le modèle de message utilisé lorsque vous créez une nouvelle catégorie"
     logo_url: "Le logo de votre site, par exemple : http://example.com/logo.png"
     digest_logo_url: "Le logo qui sera utilisé dans les emails de votre site. Si non renseigné, alors `logo_url` sera utilisé, par exemple : http://example.com/logo.png"
@@ -699,6 +713,7 @@ fr:
     tos_url: "Si vous disposez déjà de CGV, hébergées ailleurs, que vous souhaitez utiliser, vous pouvez renseigner leur URL complète ici."
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité, hébergée ailleurs, que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
     newuser_spam_host_threshold: "Limite du nombre de liens vers un même host compris dans `newuser_spam_host_posts` qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un SPAM."
+    white_listed_spam_host_domains: "Une liste contenant les noms de domaines - séparée par des pipes | - exclus des hôtes testés comme spam, les nouveaux utilisateurs seront en mesure de créer un nombre illimité de messages avec des liens vers ce domaine"
     staff_like_weight: "Poids supplémentaire donné aux Likes du staff lors d'une recherche."
     reply_by_email_enabled: "Activer répondre aux sujets via email"
     reply_by_email_address: "Modèle pour la réponse par adresse email entrante; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
@@ -780,6 +795,8 @@ fr:
     existing_topic_moderator_post:
       one: "J'ai déplacé un message dans le sujet : %{topic_link}"
       other: "J'ai déplacé %{count} messages dans le sujet : %{topic_link}"
+  change_owner:
+    post_revision_text: "Auteur du message modifié de %{old_user} vers %{new_user}"
   topic_statuses:
     archived_enabled: "Ce sujet est maintenant archivé. Il est gelé et ne peut plus être modifié d'aucune façon."
     archived_disabled: "Ce sujet est maintenant désarchivé. Il n'est plus gelé, et peut être modifié."

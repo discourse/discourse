@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 it:
   js:
     number:
@@ -515,6 +522,7 @@ it:
       admin_options_title: "Impostazioni opzionali per questo topic"
       auto_close_label: "Momento di auto chiusura del topic:"
       auto_close_units: "(# ore, tempo, o timestamp)"
+      auto_close_examples: 'inserisci orario assoluto o numero di ore - 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Per favore immetti un valore valido."
     notifications:
       title: "notifiche di quando @name viene citato, se ci sono risposte ai tuoi post, messaggi privati ecc."
@@ -767,6 +775,7 @@ it:
         instructions:
           one: "Seleziona il nuovo proprietario del post di <b>{{old_user}}</b>."
           other: "Seleziona il nuovo proprietario dei {{count}} post di <b>{{old_user}}</b>."
+        instructions_warn: "Si badi che ogni notifica circa questo post non verrà trasferita al nuovo utente in modo retroattivo.<br>Attenzione: Al momento non è trasferito alcun dato post-dipendente al nuovo utente. Usa con cautela."
       multi_select:
         select: 'Scegli'
         selected: 'selezionati ({{count}})'
@@ -1015,6 +1024,22 @@ it:
       clicks:
         one: "1 click"
         other: "%{count} click"
+    topic_statuses:
+      locked:
+        help: "Questo topic è chiuso; non sono ammesse nuove risposte"
+      unpinned:
+        title: "Non in Evidenza"
+        help: "Questo topic non è più in evidenza; verrà mostrato nell'ordine default"
+      pinned_globally:
+        title: "In Evidenza Globalmente"
+        help: "Questo topic è in evidenza globalmente; verrà mostrato in cima ad ogni lista"
+      pinned:
+        title: "In Evidenza"
+        help: "Questo topic è in evidenza; verrà mostrato in cima alla sua categoria"
+      archived:
+        help: "Questo topic è archiviato; è bloccato e non può essere modificato"
+      invisible:
+        help: "Questo topic è invisibile; non verrà mostrato nella lista dei topic ed è possibile accedervi solo tramite link diretto"
     posts: "Post"
     posts_long: "Ci sono {{number}} post in questo topic"
     original_post: "Post originale"
@@ -1518,6 +1543,7 @@ it:
           files: 'File'
           trust: 'Livelli'
           security: 'Sicurezza'
+          onebox: "Onebox"
           seo: 'SEO'
           spam: 'Spam'
           rate_limits: 'Limiti'

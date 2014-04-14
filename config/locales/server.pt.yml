@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 pt:
   dates:
     short_date_no_year: "D MMM"
@@ -458,7 +465,6 @@ pt:
     add_rel_nofollow_to_user_content: "Adicionar rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto links internos (incluido dominios parentes) mudando isto exige uma atualização a todos os teus baked markdown"
     post_excerpt_maxlength: "Tamanho máximo em caracteres para um post."
     post_onebox_maxlength: "Tamanho máximo para um oneboxed discourse post."
-    onebox_max_chars: "Máximo número de caracteres que um onebox vai importar num único pedaço."
     logo_url: "O logo para o seu site eg: http://example.com/logo.png"
     logo_small_url: "O logo em tamanho pequeno para o seu site (aparece nas páginas dos tópicos) eg: http://example.com/logo-small.png"
     favicon_url: "Um favicon para o seu site"

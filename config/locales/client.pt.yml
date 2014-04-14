@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 pt:
   js:
     number:
@@ -810,15 +817,6 @@ pt:
     topic_map:
       title: "Sumário de Tópico"
       links_shown: "mostrar todas as {{totalLinks}} ligações..."
-    topic_statuses:
-      locked:
-        help: "este tópico está fechado; não serão aceitas mais respostas"
-      pinned:
-        help: "este tópico está fixado; irá ser mostrado no topo da sua categoria"
-      archived:
-        help: "este tópico está arquivado; está congelado e não pode ser alterado"
-      invisible:
-        help: "este tópico está invisível; não aparecerá na listagem dos tópicos, e pode apenas ser acedido por link direto"
     posts: "Mensagens"
     posts_long: "há {{number}} mensagens neste tópico"
     original_post: "Mensagem Original"

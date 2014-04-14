@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 sv:
   dates:
     short_date_no_year: "D MMM"
@@ -422,7 +429,6 @@ sv:
     add_rel_nofollow_to_user_content: "Lägg till rel nofollow på allt användargenererat innehåll, förutom interna länkar (inkluderat förälderdomäner) så kräver en ändring av detta att du uppdaterar all bakad markdown"
     post_excerpt_maxlength: "Maxlängd på ett inläggs utdrag i tecken"
     post_onebox_maxlength: "Maxlängd på ett onebox:at Discourse-inlägg"
-    onebox_max_chars: "Max antal tecken en onebox importerar från en extern sida i ett inlägg"
     logo_url: "Logotypen för din webbplats t.ex.: http://xyz.com/x.png"
     logo_small_url: "Den lilla logotypen för din webbplats som används när man bläddrar ner i trådar t.ex.: http://xyz.com/x-small.png"
     favicon_url: "En favicon för till webbplats, se http://en.wikipedia.org/wiki/Favicon"

@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 ru:
   js:
     number:
@@ -12,12 +19,20 @@ ru:
     dates:
       tiny:
         half_a_minute: "< 1мин"
+        less_than_x_seconds:
+          one: "< 1с"
+          few: "< %{count}с"
+          other: "< %{count}с"
         x_seconds:
           one: "1с"
           few: "%{count}с"
           other: "%{count}с"
         less_than_x_minutes:
           one: "< 1м"
+          few: "< %{count}м"
+          other: "< %{count}м"
+        x_minutes:
+          one: "1м"
           few: "< %{count}м"
           other: "< %{count}м"
         date_year: "MMM 'YY"
@@ -650,6 +665,7 @@ ru:
         select_replies: 'выбрать +ответы'
         delete: удалить выбранные
         cancel: отменить выделение
+        select_all: выбрать все
     post:
       reply: "Ответить на {{link}} от {{replyAvatar}} {{username}}"
       reply_topic: "Ответить на {{link}}"
@@ -961,6 +977,8 @@ ru:
         no_primary: "(нет основной группы)"
         title: "Группы"
         edit: "Изменить группы"
+        refresh: "Обновить"
+        new: "Новые"
         selector_placeholder: "добавить пользователей"
         name_placeholder: "Название группы, без пробелов, по тем же правилам, что и имя пользователя."
         about: "Здесь можно редактировать группы и имена групп"
@@ -1279,6 +1297,10 @@ ru:
           embedding: "Встраиваемая"
           legal: "Правила"
           uncategorized: 'Без категории'
+      badges:
+        delete: Удалить
+        revoke: Отозвать
+        grant: Выдать
     lightbox:
       download: "загрузить"
     keyboard_shortcuts_help:

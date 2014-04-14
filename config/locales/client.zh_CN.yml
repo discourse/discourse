@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 zh_CN:
   js:
     number:
@@ -865,8 +872,8 @@ zh_CN:
           vote:
             other: "{{count}} 人支持这个帖子"
       edits:
-        one: 一次编辑
-        other: "{{count}}次编辑"
+        one: 1 次编辑
+        other: "{{count}} 次编辑"
         zero: 未编辑
       delete:
         confirm:
@@ -1005,10 +1012,10 @@ zh_CN:
         help: "归属于不同分类的所有主题"
       unread:
         title:
-          zero: "未阅"
-          one: "1 个未阅主题"
-          other: "{{count}} 个未阅主题"
-        help: "追踪的主题中有未阅帖子的主题"
+          zero: "未读"
+          one: "1 个未读主题"
+          other: "{{count}} 个未读主题"
+        help: "追踪的主题中有未读帖子的主题"
       new:
         lower_title_with_count:
           one: "1 新"

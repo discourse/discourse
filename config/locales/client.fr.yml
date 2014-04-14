@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 fr:
   js:
     number:
@@ -142,11 +149,11 @@ fr:
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> a démarré <a href='{{topicUrl}}'>le sujet</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Vous</a> avez démarré <a href='{{topicUrl}}'>le sujet</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> à répondu à <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> a répondu à <a href='{{postUrl}}'>{{post_number}}</a>"
       you_replied_to_post: "<a href='{{userUrl}}'>Vous</a> avez répondu à <a href='{{postUrl}}'>{{post_number}}</a>"
       user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> a répondu au <a href='{{topicUrl}}'>sujet</a>"
       you_replied_to_topic: "<a href='{{userUrl}}'>Vous</a> avez répondu au <a href='{{topicUrl}}'>sujet</a>"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> à mentionné <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> a mentionné <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user2Url}}'>Vous</a> avez été mentionné par <a href='{{user1Url}}'>{{user}}</a>"
       you_mentioned_user: "<a href='{{user1Url}}'>Vous</a> avez mentionné <a href='{{user2Url}}'>{{user}}</a>"
       posted_by_user: "Rédigé par <a href='{{userUrl}}'>{{user}}</a>"
@@ -273,7 +280,7 @@ fr:
       email:
         title: "Email"
         instructions: "Votre adresse email ne sera jamais communiquée."
-        ok: "Ça à l'air bien ! On vous envoie un mail pour confirmer."
+        ok: "Cela semble correct. Un email de confirmation sera envoyé."
         invalid: "Merci de saisir une adresse email valide"
         authenticated: "Votre adresse email a été authentifiée par {{provider}}."
         frequency: "Nous vous envoyons des mails contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
@@ -355,7 +362,7 @@ fr:
         time_read: "Temps de lecture"
         days_visited: "Ratio de présence"
         account_age_days: "Âge du compte en jours"
-        create: "Inviter des amis sur ce Forum"
+        create: "Inviter des amis sur ce forum"
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
@@ -530,7 +537,7 @@ fr:
       private_message: "<i class='fa fa-envelope-o' title='message privé'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='message privé'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='a accepté votre invitation' class='fa fa-envelope-o'></i> {{username}} a accepté votre invitation"
-      moved_post: "<i title='message déplacée' class='fa fa-arrow-right'></i> {{username}} a déplacé {{link}}"
+      moved_post: "<i title='message déplacé' class='fa fa-arrow-right'></i> {{username}} a déplacé {{link}}"
       total_flagged: "Nombre total de messages signalés"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
     upload_selector:
@@ -1476,8 +1483,8 @@ fr:
         delete: "Supprimer Utilisateur"
         delete_forbidden_because_staff: "Administrateurs et modérateurs ne peuvent pas être supprimés."
         delete_forbidden:
-          one: "Les utilisateurs ne peuvent pas être effacées s'ils ont posté des messages Supprimer tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jour ne peut pas être supprimé.)"
-          other: "Les utilisateurs ne peuvent pas être effacées s'ils ont posté des messages Supprimer tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jours ne peut pas être supprimé.)"
+          one: "Les utilisateurs ne peuvent pas être supprimés s'ils ont posté des messages Supprimer tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jour ne peut pas être supprimé.)"
+          other: "Les utilisateurs ne peuvent pas être supprimés s'ils ont posté des messages Supprimer tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jours ne peut pas être supprimé.)"
         cant_delete_all_posts:
           one: "Vous ne pouvez pas supprimer tous les messages. Certains messages sont âgés de plus de %{count} jour."
           other: "Vous ne pouvez pas supprimer tous les messages. Certains messages sont âgés de plus de %{count} jours."
@@ -1607,6 +1614,12 @@ fr:
         mark_tracking: '<b>m</b> then <b>t</b> Marquer le sujet comme suivi'
         mark_watching: '<b>m</b> puis <b>w</b> Marquer le sujet comme surveillé'
     badges:
+      badge_count:
+        one: "1 badge"
+        other: "%{count} badges"
+      more_badges:
+        one: "+1 autre"
+        other: "+%{count} autres"
       example_badge:
         name: Exemple de badge
         description: Ceci est un badge d'exemple.

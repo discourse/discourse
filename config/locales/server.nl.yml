@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 nl:
   dates:
     short_date_no_year: "D MMM"
@@ -548,7 +555,6 @@ nl:
     post_excerpt_maxlength: "Maximale lengte in tekens van een uittreksel van een bericht"
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed' bericht."
     category_post_template: "De berichttemplate die gebruikt wordt als je een nieuwe categorie aanmaakt"
-    onebox_max_chars: "Het maximaal aantal tekens dat een 'onebox' zal importeren van een externe website in het bericht."
     logo_url: "Het logo van je site. Bijv: http://example.com/logo.png"
     logo_small_url: "Het kleine logo van je site (wordt weergegeven na scrollen op topic-pagina's). Bijv: http://example.com/logo-small.png"
     favicon_url: "Een favicon voor je site. Zie http://nl.wikipedia.org/wiki/Favicon"

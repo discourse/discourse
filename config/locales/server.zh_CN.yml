@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 zh_CN:
   dates:
     short_date_no_year: "MM月dd日"
@@ -9,7 +16,7 @@ zh_CN:
       short_no_year: "%B %-d"
       date_only: "%b %-d，%Y"
   title: "Discourse"
-  topics: "主题"
+  topics: "主题列表"
   posts: "帖子"
   loading: "载入中"
   powered_by_html: '源自<a href="http://www.discourse.org">论坛 - Discourse</a>，请启用 JavaScript 以获得最佳效果'
@@ -40,7 +47,7 @@ zh_CN:
       other: "%{count} 个回复"
   too_many_mentions:
     zero: "抱歉，您无法提到其他用户。"
-    one: "抱歉，您一次仅能提到 1 个其他用户。"
+    one: "抱歉，您一次仅能提到 1 个用户。"
     other: "抱歉，您一次仅能提到 %{count} 个用户。"
   too_many_mentions_newuser:
     zero: "抱歉，新用户不能提到其他用户。"

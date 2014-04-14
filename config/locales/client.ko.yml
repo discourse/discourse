@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
 ko:
   js:
     number:
@@ -41,6 +48,7 @@ ko:
           other: "%{count}시간"
         x_days:
           other: "%{count}일"
+        date_year: "YYYY D MMM"
       medium_with_ago:
         x_minutes:
           other: "%{count}분 전"
@@ -130,6 +138,11 @@ ko:
       posted_by_you: "<a href='{{userUrl}}'>당신</a> 게시함"
       sent_by_user: "<a href='{{userUrl}}'>{{user}}</a>가 보냄"
       sent_by_you: "<a href='{{userUrl}}'>당신</a>이 보냄"
+    groups:
+      title:
+        other: "그룹"
+      alias_levels:
+        everyone: "모두"
     user_action_groups:
       '1': "좋아함"
       '2': "내 글을 좋아함"
@@ -186,6 +199,8 @@ ko:
       tracked_categories_instructions: "You will automatically receive notifications for topics in these categories"
       muted_categories: "Muted"
       muted_categories_instructions: "You will automatically mute all topics in these categories"
+      unread_message_count:
+        one: "메시지 (1)"
       messages:
         all: "전체"
         mine: "내가 보낸 메세지"
@@ -217,6 +232,8 @@ ko:
         uploaded_avatar_empty: "커스텀 사진 추가"
         upload_title: "프로필 사진 업로드"
         image_is_not_a_square: "경고: 사진을 정사각형으로 수정하였습니다."
+      change_profile_background:
+        title: "프로필 배경 변경"
       email:
         title: "이메일"
         instructions: "당신의 이메일은 노출되지 않습니다."
@@ -242,6 +259,8 @@ ko:
         checking: "사용가능한지 확인 중..."
         enter_email: '사용자 이름을 찾았습니다. 일치하는 이메일을 입력해주세요.'
         prefilled: "Email matches this registered username."
+      locale:
+        title: "인터페이스 언어"
       password_confirmation:
         title: "비밀번호를 재입력해주세요."
       last_posted: "마지막글"
@@ -409,6 +428,7 @@ ko:
       cancel: "취소"
       create_topic: "토픽 만들기"
       create_pm: "개인 메시지를 작성합니다."
+      title: "혹은 Ctrl + Enter 누름"
       users_placeholder: "사용자 추가"
       title_placeholder: "여기에 제목을 입력하세요. 토픽은 무엇입니까?"
       edit_reason_placeholder: "why are you editing?"
@@ -504,6 +524,7 @@ ko:
         latest: "최신 토픽이 없습니다."
         hot: "인기있는 토픽이 없습니다."
         category: "{{category}}에 토픽이 없습니다."
+        top: "Top 토픽이 없습니다."
       bottom:
         latest: "더 이상 읽을 최신 토픽이 없습니다"
         hot: "더 이상 읽을 인기있는 토픽이 없습니다"
@@ -551,7 +572,7 @@ ko:
       read_more_MF: "이 카테고리에 { UNREAD, plural, =0 {} one { is <a href='/unread'>1개의 안 읽은</a> } other { are <a href='/unread'>#개의 안 읽은</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1개의 새로운</a> 토픽이} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># 새로운</a> 토픽이} } 남아 있고, {CATEGORY, select, true {{catLink} 토픽도 확인해보세요.} false {{latestLink}} other {}} "
       browse_all_categories: 모든 카테고리 보기
       view_latest_topics: 최신 토픽 보기
-      suggest_create_topic: 왜 토픽을 만들 수 없나요?
+      suggest_create_topic: 토픽(글)을 작성 해 보실래요?
       read_position_reset: "당신의 읽기 위치가 재설정되었습니다."
       jump_reply_up: 이전 답글로 이동
       jump_reply_down: 이후 답글로 이동
@@ -622,6 +643,10 @@ ko:
       share:
         title: '공유'
         help: '이 토픽의 링크를 공유'
+      flag_topic:
+        title: '깃발 표시'
+        help: 'privately flag this topic for attention or send a private notification about it'
+        success_message: '이 토픽에 깃발표시 하였습니다.'
       inviting: "초대 중..."
       invite_private:
         title: '개인 메시지에 초대'
@@ -653,6 +678,8 @@ ko:
         title: "이미 있는 토픽으로 옴기기"
         action: "이미 있는 토픽으로 옴기기"
         error: "이 토픽을 이동시키는데 문제가 발생하였습니다."
+      change_owner:
+        title: "글 소유자 변경"
       multi_select:
         select: '선택'
         selected: '({{count}})개가 선택됨'
@@ -707,6 +734,8 @@ ko:
           no_value: "아니오, 게시글만 삭제합니다."
       actions:
         flag: '신고'
+        clear_flags:
+          other: "깃발 표시 제거"
         it_too:
           off_topic: "Flag it too"
           spam: "Flag it too"
@@ -743,8 +772,23 @@ ko:
           like: "당신은 이 게시물을 좋아합니다."
           vote: "당신은 이 게시물을 위해 투표했습니다."
         by_you_and_others:
+          spam:
+            other: "당신과 {{count}}명의 다른 사람들이 스팸으로 지정했습니다."
+          inappropriate:
+            other: "당신과 {{count}}명의 다른 사람들이 신고했습니다."
+          notify_moderators:
+            other: "당신과 {{count}}명의 다른 사람들이 적당하다고 표시했습니다."
           notify_user:
             other: "당신과 {{count}}명의 사용자가 작성자에게 개인 메시지를 보냈습니다."
+          bookmark:
+            other: "당신과 {{count}}명의 다른 사람들이 북마크 했습니다."
+          like:
+            other: "당신과 {{count}}명의 다른 사람들이 좋아합니다."
+          vote:
+            other: "당신과 {{count}}명의 다른 사람들이 이 포스트에 투표했습니다."
+        by_others:
+          like:
+            other: "{{count}}명이 이 글을 좋아합니다."
       edits:
         one: 하나 편집
         other: "{{count}}개 편집"
@@ -829,7 +873,12 @@ ko:
     topic_statuses:
       locked:
         help: "이 토픽은 폐쇄되었습니다. 더 이상 새 답글을 받을 수 없습니다."
+      unpinned:
+        title: "핀 제거"
+      pinned_globally:
+        title: "핀 지정됨 Globally"
       pinned:
+        title: "핀 지정됨"
         help: "이 토픽은 고정되었습니다. 카테고리의 상단에 표시됩니다."
       archived:
         help: "이 토픽은 보관중입니다. 고정되어 변경이 불가능합니다."
@@ -873,6 +922,10 @@ ko:
           other: "읽지 않은 글({{count}})"
         help: "추적되었지만 읽지 않은 게시글"
       new:
+        lower_title_with_count:
+          one: "1 new"
+          other: "{{count}} new"
+        lower_title: "new"
         title:
           zero: "새로운 글"
           one: "새로운 글(1)"
@@ -992,6 +1045,8 @@ ko:
         menu:
           backups: "백업"
         none: "가능한 백업이 없습니다."
+        logs:
+          none: "아직 로그가 없어요."
         operations:
           backup:
             text: "백업"
@@ -1005,6 +1060,8 @@ ko:
           restore:
             title: "백업을 이용하여 복구"
             confirm: "정말 이 백업을 이용하여 복구할까요?"
+          rollback:
+            title: "데이터베이스를 이전 workiong state로 되돌리기"
       customize:
         title: "사용자 지정"
         long_title: "사이트 사용자 지정"
@@ -1041,6 +1098,10 @@ ko:
         text: "문장"
         last_seen_user: "마지막으로 본 사용자"
         reply_key: "답글 단축키"
+        logs:
+          none: "로그가 없습니다."
+          filters:
+            title: "필터"
       logs:
         title: "기록"
         action: "허용여부"
@@ -1199,6 +1260,10 @@ ko:
         block_explanation: "블락 사용자는 게시글을 작성하거나 토픽을 작성할 수 없습니다."
         trust_level_change_failed: "신뢰도 변경에 문제가 있습니다."
         suspend_modal_title: "Suspend User"
+        trust_level_2_users: "신뢰도 2 사용자들"
+        trust_level_3_requirements: "사용자 신뢰도 3 이상이 필요"
+        tl3_requirements:
+          table_title: "최근 100일 간:"
       site_content:
         none: "편집을 시작하려는 컨텐츠의 타입을 선택하세요."
         title: '사이트 컨텐츠'
@@ -1220,6 +1285,7 @@ ko:
           files: '파일'
           trust: '신뢰도'
           security: '보안'
+          onebox: "Onebox"
           seo: 'SEO'
           spam: '스팸'
           rate_limits: '제한'
