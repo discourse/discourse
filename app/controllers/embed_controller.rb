@@ -38,9 +38,7 @@ class EmbedController < ApplicationController
       by_url[url] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
     end
 
-    respond_to do |format|
-      format.js { render json: {counts: by_url}, callback: params[:callback] }
-    end
+    render json: {counts: by_url}, callback: params[:callback]
   end
 
   private
