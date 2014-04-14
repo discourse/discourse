@@ -14,7 +14,7 @@ function normalize(str) {
 }
 
 var md = function(input, expected, text) {
-  var result = Discourse.Markdown.cook(input, {mentionLookup: false, sanitize: true, traditional_markdown_linebreaks: true}),
+  var result = Discourse.Markdown.cook(input, {sanitize: true, traditional_markdown_linebreaks: true}),
       resultNorm = normalize(result),
       expectedNorm = normalize(expected),
       same = (result === expected) || (resultNorm === expectedNorm);

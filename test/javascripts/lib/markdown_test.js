@@ -5,7 +5,7 @@ module("Discourse.Markdown", {
 });
 
 var cooked = function(input, expected, text) {
-  var result = Discourse.Markdown.cook(input, {mentionLookup: false, sanitize: true});
+  var result = Discourse.Markdown.cook(input, {sanitize: true});
   equal(result, expected, text);
 };
 
@@ -243,7 +243,7 @@ test("Heading", function() {
 test("Oneboxing", function() {
 
   var matches = function(input, regexp) {
-    return Discourse.Markdown.cook(input, {mentionLookup: false }).match(regexp);
+    return Discourse.Markdown.cook(input).match(regexp);
   };
 
   ok(!matches("- http://www.textfiles.com/bbs/MINDVOX/FORUMS/ethics\n\n- http://drupal.org", /onebox/),

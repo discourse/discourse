@@ -157,7 +157,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
       Discourse.Onebox.load(e, refresh);
     });
     $('span.mention', $wmdPreview).each(function(i, e) {
-      Discourse.Mention.load(e, refresh);
+      Discourse.Mention.paint(e);
     });
 
     this.trigger('previewRefreshed', $wmdPreview);
