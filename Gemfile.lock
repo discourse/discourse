@@ -1,16 +1,3 @@
-GIT
-  remote: git://github.com/LessonPlanet/onebox.git
-  revision: 106c0439773b4ebe097adf372bb8e60c771dc56c
-  branch: add-lessonplanet
-  specs:
-    onebox (1.2.8)
-      hexpress (~> 1.2)
-      moneta (~> 0.7)
-      multi_json (~> 1.7)
-      mustache (~> 0.99)
-      nokogiri (~> 1.6.1)
-      opengraph_parser (~> 0.2.3)
-
 PATH
   remote: vendor/gems/discourse_plugin
   specs:
@@ -191,7 +178,7 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.8.0)
-    newrelic_rpm (3.7.2.195)
+    newrelic_rpm (3.7.3.204)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     oauth (0.4.7)
@@ -224,9 +211,12 @@ GEM
     omniauth-twitter (1.0.1)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
-    opengraph_parser (0.2.3)
-      addressable
-      nokogiri
+    onebox (1.3.1)
+      hexpress (~> 1.2)
+      moneta (~> 0.7)
+      multi_json (~> 1.7)
+      mustache (~> 0.99)
+      nokogiri (~> 1.6.1)
     openid-redis-store (0.0.2)
       redis
       ruby-openid
@@ -452,7 +442,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox!
+  onebox
   openid-redis-store
   pg (= 0.15.1)
   pry-nav
