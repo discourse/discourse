@@ -1,4 +1,4 @@
-The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. We will use [Digital Ocean][do], although these steps may work on other cloud providers.
+The [Discourse Docker Image][dd] makes it easy to set up Discourse on a cloud server. We will use [Digital Ocean][do], although these steps may work on other cloud providers that support Docker.
 
 This guide assumes that you have no knowledge of Ruby/Rails or Linux shell. 
 
@@ -10,11 +10,11 @@ Discourse requires a minimum of 1 GB RAM for small communities; we recommend 2 G
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3506/a6b550bd2b05b76b.png" width="638" height="500"> 
 
-Install Discourse on Ubuntu 12.04.3 LTS x64. We always recommend using [the current LTS distribution][lts].
+Install Discourse on Ubuntu 12.04.4 LTS x64. We always recommend using [the current LTS distribution][lts].
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3399/f3fc67ee6aa90ea4.png" width="690" height="477"> 
 
-You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you know how to use SSH keys, you may not need a password to log in.)
+You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
 # Access Your Droplet
 
@@ -28,7 +28,7 @@ Replace `192.168.1.1` with the IP address of your Droplet.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2999/0934a0158459ec3f.png" width="571" height="130"> 
 
-You will be asked for permission to connect, type `yes`, then the root password, which is in the email Digital Ocean sent you when the Droplet was set up. Enter it.
+You will be asked for permission to connect, type `yes`, then enter the root password, which is in the email Digital Ocean sent you when the Droplet was set up.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3000/8209c1e40c9d70a8.png" width="570" height="278"> 
 
@@ -85,23 +85,23 @@ Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3005/5c253f4657e2133f.png" width="571" height="56"> 
 
+# Editing Discourse Configuration
+
 Edit `app.yml`:
 
     nano containers/app.yml
 
 (We recommend Nano because it works like a typical GUI text editor, just use your arrow keys. Hit <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit. However, feel free to choose whatever text editor you like.)
 
-- Edit as desired, but at minimum you must set `DISCOURSE_DEVELOPER_EMAILS` and `DISCOURSE_HOSTNAME`. 
+- Set `DISCOURSE_DEVELOPER_EMAILS` and `DISCOURSE_HOSTNAME`. 
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 so you have more memory room.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2979/e6fedbde9b471880.png" width="565" height="172"> 
 
-If you set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want to host our instance of Discourse on `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
+If you set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want your Discourse available at `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
 
-# Mail Setup
-
-**Email is critical to notifications in Discourse. If you do not configure email before bootstrapping you will have a broken site.**
+**Email is critical to notifications in Discourse. If you do not configure email before bootstrapping you will have a broken site!**
 
 - If you already have a mail server, put your existing mail server credentials in the `app.yml` file.
 
@@ -109,9 +109,7 @@ If you set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want 
 
 - Be sure you remove the comment character and space `# ` from the beginning of these mail configuration lines!
 
-- Don't forget to set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) up for your domain name. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
-
-- The name of your droplet is your reverse PTR record; rename your droplet to `discourse.example.com` so the PTR record correctly reflects your domain name.
+- Don't forget to set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) up for your domain name. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions. Also, the name of your droplet is your reverse PTR record; rename your droplet to match your domain name `discourse.example.com`.
 
 # Bootstrap Discourse
 
