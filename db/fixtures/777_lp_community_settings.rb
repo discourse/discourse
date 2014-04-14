@@ -42,6 +42,7 @@ SiteSetting.site_contact_username             = ENV['API_USERNAME']
 SiteSetting.company_domain                    = Addressable::URI.parse(ENV['LESSON_PLANET_ROOT_URL']).host
 SiteSetting.privacy_policy_url                = "#{ENV['LESSON_PLANET_ROOT_URL'].gsub('https', 'http')}/us/privacy_policy"
 SiteSetting.tos_url                           = "#{ENV['LESSON_PLANET_ROOT_URL'].gsub('https', 'http')}/us/terms_of_use"
+SiteSetting.ga_universal_tracking_code        = 'UA-214885-13'
 
 # Rate limiting
 SiteSetting.unique_posts_mins                 = 5
