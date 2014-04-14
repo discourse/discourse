@@ -41,7 +41,7 @@
   if (countFor.length > 0) {
     // Send JSONP request for the counts
     var d = document.createElement('script');
-    d.src = discourseUrl + "embed/count?callback=discourseUpdateCounts&";
+    d.src = discourseUrl + "embed/count?callback=discourseUpdateCounts";
 
     for (var j=0; j<countFor.length; j++) {
       d.src += "&" + "embed_url[]=" + encodeURIComponent(countFor[j]);
