@@ -26,6 +26,17 @@ describe SearchController do
     xhr :get, :query, term: 'test', type_filter: 'topic'
   end
 
+  it "performs the query and returns results including blurbs" do
+    guardian = Guardian.new
+    Guardian.stubs(:new).returns(guardian)
+
+    search = mock()
+    Search.expects(:new).with('test', guardian: guardian, include_blurbs: true).returns(search)
+    search.expects(:execute)
+
+    xhr :get, :query, term: 'test', include_blurbs: 'true'
+  end
+
   context "search context" do
 
     it "raises an error with an invalid context type" do
