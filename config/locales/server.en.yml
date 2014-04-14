@@ -1444,6 +1444,7 @@ en:
     edit_reason: "We have downloaded copies of the remote images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
+    store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}%kb)."
     images:

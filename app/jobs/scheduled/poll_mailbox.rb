@@ -49,6 +49,7 @@ module Jobs
             handle_mail(mail)
           end
         end
+        pop.finish
       end
     rescue Net::POPAuthenticationError => e
       # inform admins about the error (1 message per hour to prevent too much SPAM)

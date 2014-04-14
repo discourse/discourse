@@ -527,10 +527,15 @@ class User < ActiveRecord::Base
     created_at > 1.day.ago
   end
 
-  def upload_avatar(avatar)
+  def upload_avatar(upload)
     self.uploaded_avatar_template = nil
-    self.uploaded_avatar = avatar
+    self.uploaded_avatar = upload
     self.use_uploaded_avatar = true
+    self.save!
+  end
+
+  def upload_profile_background(upload)
+    self.profile_background = upload.url
     self.save!
   end
 

@@ -105,28 +105,6 @@ describe SiteSetting do
     end
   end
 
-  describe "authorized extensions" do
-
-    describe "authorized_uploads" do
-
-      it "trims spaces and leading dots" do
-        SiteSetting.stubs(:authorized_extensions).returns(" png | .jpeg|txt|bmp | .tar.gz")
-        SiteSetting.authorized_uploads.should == ["png", "jpeg", "txt", "bmp", "tar.gz"]
-      end
-
-    end
-
-    describe "authorized_images" do
-
-      it "filters non-image out" do
-        SiteSetting.stubs(:authorized_extensions).returns(" png | .jpeg|txt|bmp")
-        SiteSetting.authorized_images.should == ["png", "jpeg", "bmp"]
-      end
-
-    end
-
-  end
-
   describe "scheme" do
 
     it "returns http when ssl is disabled" do

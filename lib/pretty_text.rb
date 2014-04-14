@@ -10,8 +10,7 @@ module PrettyText
     def t(key, opts)
       str = I18n.t("js." + key)
       if opts
-        # TODO: server localisation has no parity with client
-        # should be fixed
+        # TODO: server localisation has no parity with client should be fixed
         str = str.dup
         opts.each do |k,v|
           str.gsub!("{{#{k}}}", v)
@@ -31,7 +30,7 @@ module PrettyText
     def is_username_valid(username)
       return false unless username
       username = username.downcase
-      return User.exec_sql('select 1 from users where username_lower = ?', username).values.length == 1
+      return User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
     end
   end
 
@@ -53,12 +52,13 @@ module PrettyText
     ctx["helpers"] = Helpers.new
 
     ctx_load(ctx,
-             "vendor/assets/javascripts/md5.js",
-              "vendor/assets/javascripts/lodash.js",
-              "vendor/assets/javascripts/Markdown.Converter.js",
-              "lib/headless-ember.js",
-              "vendor/assets/javascripts/rsvp.js",
-              Rails.configuration.ember.handlebars_location)
+      "vendor/assets/javascripts/md5.js",
+      "vendor/assets/javascripts/lodash.js",
+      "vendor/assets/javascripts/Markdown.Converter.js",
+      "lib/headless-ember.js",
+      "vendor/assets/javascripts/rsvp.js",
+      Rails.configuration.ember.handlebars_location
+    )
 
     ctx.eval("var Discourse = {}; Discourse.SiteSettings = {};")
     ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
@@ -67,12 +67,13 @@ module PrettyText
     decorate_context(ctx)
 
     ctx_load(ctx,
-              "vendor/assets/javascripts/better_markdown.js",
-              "app/assets/javascripts/defer/html-sanitizer-bundle.js",
-              "app/assets/javascripts/discourse/dialects/dialect.js",
-              "app/assets/javascripts/discourse/lib/utilities.js",
-              "app/assets/javascripts/discourse/lib/html.js",
-              "app/assets/javascripts/discourse/lib/markdown.js")
+      "vendor/assets/javascripts/better_markdown.js",
+      "app/assets/javascripts/defer/html-sanitizer-bundle.js",
+      "app/assets/javascripts/discourse/dialects/dialect.js",
+      "app/assets/javascripts/discourse/lib/utilities.js",
+      "app/assets/javascripts/discourse/lib/html.js",
+      "app/assets/javascripts/discourse/lib/markdown.js"
+    )
 
     Dir["#{Rails.root}/app/assets/javascripts/discourse/dialects/**.js"].each do |dialect|
       unless dialect =~ /\/dialect\.js$/
@@ -111,6 +112,7 @@ module PrettyText
       return @ctx if @ctx
       @ctx = create_new_context
     end
+
     @ctx
   end
 

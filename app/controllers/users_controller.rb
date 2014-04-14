@@ -307,14 +307,13 @@ class UsersController < ApplicationController
     size = 128 if size > 128
     size
   end
-  
+
+  # LEGACY: used by the API
   def upload_avatar
     params[:user_image_type] = "avatar"
-    
     upload_user_image
-
   end
-  
+
   def upload_user_image
     params.require(:user_image_type)
     user = fetch_user_from_params
@@ -322,39 +321,24 @@ class UsersController < ApplicationController
 
     file = params[:file] || params[:files].first
 
-    # Only allow url uploading for API users
-    # TODO: Does not protect from huge uploads
-    # https://github.com/discourse/discourse/pull/1512
-    # check the file size (note: this might also be done in the web server)
-    img        = build_user_image_from(file)
-    upload_policy = AvatarUploadPolicy.new(img)
-
-    if upload_policy.too_big?
-      return render status: 413, text: I18n.t("upload.images.too_large",
-                                              max_size_kb: upload_policy.max_size_kb)
+    begin
+      image = build_user_image_from(file)
+    rescue Discourse::InvalidParameters
+      return render status: 422, text: I18n.t("upload.images.unknown_image_type")
     end
 
-    raise FastImage::UnknownImageType unless SiteSetting.authorized_image?(img.file)
-    
-    upload_type = params[:user_image_type]
-    
-    if upload_type == "avatar"
-      upload_avatar_for(user, img)
-    elsif upload_type == "profile_background"
-      upload_profile_background_for(user, img)
+    upload = Upload.create_for(user.id, image.file, image.filename, image.filesize)
+
+    if upload.errors.empty?
+      case params[:user_image_type]
+      when "avatar"
+        upload_avatar_for(user, upload)
+      when "profile_background"
+        upload_profile_background_for(user, upload)
+      end
     else
-      render status: 422, text: ""
+      render status: 422, text: upload.errors.full_messages
     end
-    
-
-  rescue Discourse::InvalidParameters
-    render status: 422, text: I18n.t("upload.images.unknown_image_type")
-  rescue FastImage::ImageFetchFailure
-    render status: 422, text: I18n.t("upload.images.fetch_failure")
-  rescue FastImage::UnknownImageType
-    render status: 422, text: I18n.t("upload.images.unknown_image_type")
-  rescue FastImage::SizeNotFound
-    render status: 422, text: I18n.t("upload.images.size_not_found")
   end
 
   def toggle_avatar
@@ -367,21 +351,23 @@ class UsersController < ApplicationController
 
     render nothing: true
   end
-  
+
   def clear_profile_background
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
-    
+
     user.profile_background = ""
     user.save!
-    
+
     render nothing: true
   end
-  
+
   def destroy
     @user = fetch_user_from_params
     guardian.ensure_can_delete_user!(@user)
+
     UserDestroyer.new(current_user).destroy(@user, {delete_posts: true, context: params[:context]})
+
     render json: success_json
   end
 
@@ -403,31 +389,28 @@ class UsersController < ApplicationController
 
     def build_user_image_from(file)
       source = if file.is_a?(String)
-                 is_api? ? :url : (raise FastImage::UnknownImageType)
+                 is_api? ? :url : (raise Discourse::InvalidParameters)
                else
                  :image
                end
+
       AvatarUploadService.new(file, source)
     end
 
-    def upload_avatar_for(user, avatar)
-      upload = Upload.create_for(user.id, avatar.file, avatar.filesize)
+    def upload_avatar_for(user, upload)
       user.upload_avatar(upload)
-
       Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
+
       render json: { url: upload.url, width: upload.width, height: upload.height }
     end
-    
-    def upload_profile_background_for(user, background)
-      upload = Upload.create_for(user.id, background.file, background.filesize)
-      user.profile_background = upload.url
-      user.save!
-      
-      # TODO: maybe add a resize job here
-      
+
+    def upload_profile_background_for(user, upload)
+      user.upload_profile_background(upload)
+      # TODO: add a resize job here
+
       render json: { url: upload.url, width: upload.width, height: upload.height }
     end
-    
+
     def respond_to_suspicious_request
       if suspicious?(params)
         render(

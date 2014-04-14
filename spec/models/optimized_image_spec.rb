@@ -42,10 +42,10 @@ describe OptimizedImage do
         it "works" do
           oi = OptimizedImage.create_for(upload, 100, 200)
           oi.sha1.should == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-          oi.extension.should == ".jpg"
+          oi.extension.should == ".png"
           oi.width.should == 100
           oi.height.should == 200
-          oi.url.should == "/internally/stored/optimized/image.jpg"
+          oi.url.should == "/internally/stored/optimized/image.png"
         end
 
       end
@@ -73,17 +73,17 @@ describe OptimizedImage do
 
         it "downloads a copy of the original image" do
           Tempfile.any_instance.expects(:close!).twice
-          store.expects(:download).with(upload).returns(Tempfile.new(["discourse-external", ".jpg"]))
+          store.expects(:download).with(upload).returns(Tempfile.new(["discourse-external", ".png"]))
           OptimizedImage.create_for(upload, 100, 200)
         end
 
         it "works" do
           oi = OptimizedImage.create_for(upload, 100, 200)
           oi.sha1.should == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-          oi.extension.should == ".jpg"
+          oi.extension.should == ".png"
           oi.width.should == 100
           oi.height.should == 200
-          oi.url.should == "/externally/stored/optimized/image.jpg"
+          oi.url.should == "/externally/stored/optimized/image.png"
         end
 
       end

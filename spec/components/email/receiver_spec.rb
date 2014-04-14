@@ -178,15 +178,18 @@ greatest show ever created. Everyone should watch it.
     end
 
     describe "email with attachments" do
+
       it "can find the message and create a post" do
+        user.id = -1
         User.stubs(:find_by_email).returns(user)
         EmailLog.stubs(:for).returns(email_log)
         attachment_email = File.read("#{Rails.root}/spec/fixtures/emails/attachment.eml")
         r = Email::Receiver.new(attachment_email)
-        r.expects(:create_reply)
+        r.expects(:create_post)
         expect { r.process }.to_not raise_error
-        expect(r.body).to eq("here is an image attachment")
+        expect(r.body).to match(/here is an image attachment\n<img src='\/uploads\/default\/\d+\/\w{16}\.png' width='289' height='126'>\n/)
       end
+
     end
 
   end

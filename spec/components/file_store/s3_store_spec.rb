@@ -64,7 +64,7 @@ describe FileStore::S3Store do
 
     it "returns an absolute schemaless url" do
       avatar.stubs(:id).returns(42)
-      store.store_avatar(avatar_file, avatar, 100).should == "//s3_upload_bucket.s3.amazonaws.com/avatars/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98/100.jpg"
+      store.store_avatar(avatar_file, avatar, 100).should == "//s3_upload_bucket.s3.amazonaws.com/avatars/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98/100.png"
     end
 
   end
@@ -116,7 +116,7 @@ describe FileStore::S3Store do
   describe ".avatar_template" do
 
     it "is present" do
-      store.avatar_template(avatar).should == "//s3_upload_bucket.s3.amazonaws.com/avatars/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98/{size}.jpg"
+      store.avatar_template(avatar).should == "//s3_upload_bucket.s3.amazonaws.com/avatars/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98/{size}.png"
     end
 
   end

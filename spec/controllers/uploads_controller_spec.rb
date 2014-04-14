@@ -57,7 +57,7 @@ describe UploadsController do
 
             it 'rejects the upload' do
               xhr :post, :create, file: text_file
-              response.status.should eq 413
+              response.status.should eq 422
             end
 
           end
@@ -70,7 +70,7 @@ describe UploadsController do
 
           it 'rejects the upload' do
             xhr :post, :create, file: text_file
-            response.status.should eq 415
+            response.status.should eq 422
           end
 
         end
@@ -112,9 +112,12 @@ describe UploadsController do
     end
 
     it 'uses send_file' do
-      Fabricate(:attachment)
+      upload = build(:upload)
+      Upload.expects(:where).with(id: 42, url: "/uploads/default/42/66b3ed1503efc936.zip").returns([upload])
+
       controller.stubs(:render)
       controller.expects(:send_file)
+
       get :show, site: "default", id: 42, sha: "66b3ed1503efc936", extension: "zip"
     end
 

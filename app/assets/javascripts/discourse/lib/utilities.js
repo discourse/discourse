@@ -261,15 +261,16 @@ Discourse.Utilities = {
       switch (data.jqXHR.status) {
         // cancel from the user
         case 0: return;
+
         // entity too large, usually returned from the web server
         case 413:
           var maxSizeKB = Discourse.SiteSettings.max_image_size_kb;
           bootbox.alert(I18n.t('post.errors.image_too_large', { max_size_kb: maxSizeKB }));
           return;
+
         // the error message is provided by the server
-        case 415: // media type not authorized
-        case 422: // there has been an error on the server (mostly due to FastImage)
-          bootbox.alert(data.jqXHR.responseText);
+        case 422:
+          bootbox.alert(data.jqXHR.responseJSON.join("\n"));
           return;
       }
     }
