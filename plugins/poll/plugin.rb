@@ -58,11 +58,45 @@ after_initialize do
 
         render json: poll.serialize(current_user)
       end
+
+      def toggle_close
+        post = Post.find(params[:post_id])
+        topic = post.topic
+        poll = PollPlugin::Poll.new(post)
+
+        # Make sure the user is allowed to close the poll.
+        Guardian.new(current_user).ensure_can_edit!(topic)
+
+        # Make sure this is actually a poll.
+        unless poll.has_poll_details?
+          render status: 400, json: false
+          return
+        end
+
+        # Make sure the topic is not closed.
+        if topic.closed?
+          render status: 400, json: false
+          return
+        end
+
+        # Modify topic title.
+        if topic.title =~ /^(#{I18n.t('poll.prefix').strip})\s?:/i
+          topic.title = topic.title.gsub(/^(#{I18n.t('poll.prefix').strip})\s?:/i, I18n.t('poll.closed_prefix') + ':')
+        elsif topic.title =~ /^(#{I18n.t('poll.closed_prefix').strip})\s?:/i
+          topic.title = topic.title.gsub(/^(#{I18n.t('poll.closed_prefix').strip})\s?:/i, I18n.t('poll.prefix') + ':')
+        end
+
+        topic.acting_user = current_user
+        topic.save!
+
+        render json: topic, serializer: BasicTopicSerializer
+      end
     end
   end
 
   PollPlugin::Engine.routes.draw do
     put '/' => 'poll#vote'
+    put '/toggle_close' => 'poll#toggle_close'
   end
 
   Discourse::Application.routes.append do
@@ -145,6 +179,10 @@ register_css <<CSS
 
 .poll-ui button {
   border: none;
+}
+
+.poll-ui button i.fa {
+  margin-right: 2px;
 }
 
 CSS

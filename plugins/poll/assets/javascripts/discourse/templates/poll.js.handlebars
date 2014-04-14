@@ -14,13 +14,27 @@
   {{/each}}
 </table>
 
-<button {{action toggleShowResults}}>
+<button {{action toggleShowResults}} class="btn btn-small">
   {{#if showResults}}
+    <i class="fa fa-eye-slash"></i>
     {{i18n poll.results.hide}}
   {{else}}
+    <i class="fa fa-eye"></i>
     {{i18n poll.results.show}}
   {{/if}}
 </button>
+
+{{#if controller.showToggleClosePoll}}
+  <button {{action toggleClosePoll}} class="btn btn-small">
+    {{#if poll.closed}}
+      <i class="fa fa-unlock-alt"></i>
+      {{i18n poll.open_poll}}
+    {{else}}
+      <i class="fa fa-lock"></i>
+      {{i18n poll.close_poll}}
+    {{/if}}
+  </button>
+{{/if}}
 
 {{#if loading}}
   <i class="fa fa-spin fa-spinner"></i>
