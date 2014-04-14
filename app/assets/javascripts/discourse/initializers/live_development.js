@@ -57,7 +57,8 @@ Discourse.addInitializer(function() {
 
       } else {
         $('link').each(function() {
-          if (this.href.match(me.name) && me.hash) {
+          // TODO: stop bundling css in DEV please
+          if (true || (this.href.match(me.name) && me.hash)) {
             if (!$(this).data('orig')) {
               $(this).data('orig', this.href);
             }
