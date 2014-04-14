@@ -21,3 +21,6 @@ fr:
       results:
         show: "Voir les résultats"
         hide: "Cacher les résultats"
+
+      close_poll: "Fermer le sondage"
+      open_poll: "Réouvrir le sondage"
