@@ -3,7 +3,7 @@
 #
 
 #
-# Load the latest settings
+# Load in the latest settings
 #
 SiteSetting.refresh!
 
