@@ -102,7 +102,7 @@ class User < ActiveRecord::Base
     if SiteSetting.enforce_global_nicknames
       GLOBAL_USERNAME_LENGTH_RANGE
     else
-      SiteSetting.min_username_length.to_i..GLOBAL_USERNAME_LENGTH_RANGE.end
+      SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
     end
   end
 
