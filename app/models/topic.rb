@@ -319,11 +319,12 @@ class Topic < ActiveRecord::Base
     return [] unless raw.present?
 
     # For now, we only match on title. We'll probably add body later on, hence the API hook
-    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) AS similarity", title: title]))
+    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity", title: title, raw: raw]))
                      .visible
                      .where(closed: false, archived: false)
                      .secured(Guardian.new(user))
                      .listable_topics
+                     .joins("LEFT OUTER JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
                      .limit(SiteSetting.max_similar_results)
                      .order('similarity desc')
 
