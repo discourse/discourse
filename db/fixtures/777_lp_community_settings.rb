@@ -66,7 +66,6 @@ end
 #
 # LessonPlanet API
 #
-
 User.seed(:username_lower) do |u|
   u.name                   = 'Lesson Planet'
   u.username               = ENV['API_USERNAME']
@@ -89,7 +88,26 @@ if user
   api_key.update(key: ENV['API_KEY'], created_by: user)
 end
 
+# helper method to upload an avatar for a user
+def upload_avatar(username, avatar_url)
+  user = User.find_by_username_lower(username.downcase)
+  if user.present?
+    avatar = AvatarUploadService.new(avatar_url, :url)
+    upload = Upload.create_for(user.id, avatar.file, avatar.filesize)
+    user.upload_avatar(upload)
+    Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
+  end
+end
+
+# Upload some avatars for our system and API users.
+#
+# NOTE: Uncomment and run if you need to change the avatar.
+# upload_avatar(ENV['API_USERNAME'], 'http://community.lessonplanet.com/images/lp-user-icon.png')
+# upload_avatar('system', 'http://community.lessonplanet.com/images/lp-user-icon.png')
+
+#
 # Categories
+#
 Category.find(SiteSetting.uncategorized_category_id).update_attribute :name, 'Miscellaneous'
 categories = {
     classroom_support:        { name: 'Classroom Support', color: 'BF1E2E', id: 100 },
