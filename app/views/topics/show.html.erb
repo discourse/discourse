@@ -9,7 +9,11 @@
       #<%=post.post_number%> <%= t 'by'%>: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
     </div>
     <div class='post'>
-      <%= post.cooked.html_safe %>
+      <% if post.hidden %>
+        <%= t('flagging.user_must_edit').html_safe %>
+      <% else %>
+        <%= post.cooked.html_safe %>
+      <% end %>
     </div>
     <hr/>
   <% end %>

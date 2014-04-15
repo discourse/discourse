@@ -20,7 +20,11 @@
           <% post_url = Discourse.base_url + post.url %>
           <p><%= t('author_wrote', author: link_to(post.user.name, userpage_url(post.user.username_lower))).html_safe %></p>
           <blockquote>
-            <%= post.cooked.html_safe %>
+            <% if post.hidden %>
+              <%= t('flagging.user_must_edit').html_safe %>
+            <% else %>
+              <%= post.cooked.html_safe %>
+            <% end %>
           </blockquote>
           <p><%= link_to t('read_full_topic'), post_url %></p>
         ]]></description>
