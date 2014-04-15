@@ -255,8 +255,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
 
 });
 
-Ember.Location.registerImplementation('discourse_location', Ember.DiscourseLocation);
-
 /**
   Since we're using pushState/replaceState let's add extra hooks to cloakedView to
   eject itself when the popState occurs. This results in better back button

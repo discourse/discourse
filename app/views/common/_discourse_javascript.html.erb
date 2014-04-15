@@ -35,6 +35,7 @@
   Discourse.BaseUri = '<%= Discourse::base_uri "/" %>';
   Discourse.Environment = '<%= Rails.env %>';
   Discourse.SiteSettings = PreloadStore.get('siteSettings');
+  Discourse.Router = Ember.Router.extend({ location: 'discourse-location' });
   Discourse.Router.map(function() { Discourse.routeBuilder.call(this); });
   Discourse.start();
   Discourse.set('assetVersion','<%= Discourse.assets_digest %>');

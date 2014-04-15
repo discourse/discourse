@@ -165,4 +165,9 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
 });
 
-Discourse.Router = Discourse.Router.reopen({ location: 'discourse_location' });
+Discourse.initializer({
+  name: "register-discourse-location",
+  initialize: function(container, application) {
+    application.register('location:discourse-location', Ember.DiscourseLocation);
+  }
+});
