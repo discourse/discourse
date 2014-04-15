@@ -64,10 +64,16 @@ class TopicEmbed < ActiveRecord::Base
 
     url = normalize_url(url)
     original_uri = URI.parse(url)
-    doc = Readability::Document.new(open(url).read,
-                                        tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
-                                        attributes: %w[href src],
-                                        remove_empty_nodes: false)
+    opts = {
+      tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
+      attributes: %w[href src],
+      remove_empty_nodes: false
+    }
+
+    opts[:whitelist] = SiteSetting.embed_whitelist_selector if SiteSetting.embed_whitelist_selector.present?
+    opts[:blacklist] = SiteSetting.embed_blacklist_selector if SiteSetting.embed_blacklist_selector.present?
+
+    doc = Readability::Document.new(open(url).read, opts)
 
     tags = {'img' => 'src', 'script' => 'src', 'a' => 'href'}
     title = doc.title

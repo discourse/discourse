@@ -425,6 +425,8 @@ embedding:
   embed_category: ''
   embed_post_limit: 100
   embed_truncate: false
+  embed_whitelist_selector: ''
+  embed_blacklist_selector: ''
 
 legal:
   tos_url:
