@@ -6,7 +6,7 @@ class UploadsController < ApplicationController
     file = params[:file] || params[:files].first
 
     filesize = File.size(file.tempfile)
-    upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, filesize)
+    upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, filesize, file.content_type)
 
     if upload.errors.empty?
       render_serialized(upload, UploadSerializer, root: false)

@@ -4,7 +4,7 @@ module FileStore
 
   class LocalStore < BaseStore
 
-    def store_upload(file, upload)
+    def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(file, upload)
       store_file(file, path)
     end

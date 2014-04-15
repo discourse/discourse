@@ -2,7 +2,7 @@ module FileStore
 
   class BaseStore
 
-    def store_upload(file, upload)
+    def store_upload(file, upload, content_type = nil)
     end
 
     def store_optimized_image(file, optimized_image)

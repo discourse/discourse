@@ -7,28 +7,13 @@ describe FileStore::S3Store do
   let(:store) { FileStore::S3Store.new }
 
   let(:upload) { build(:upload) }
-  let(:uploaded_file) do
-    ActionDispatch::Http::UploadedFile.new({
-      filename: 'logo.png',
-      tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo.png")
-    })
-  end
+  let(:uploaded_file) { File.new("#{Rails.root}/spec/fixtures/images/logo.png") }
 
   let(:optimized_image) { build(:optimized_image) }
-  let(:optimized_image_file) do
-    ActionDispatch::Http::UploadedFile.new({
-      filename: 'logo.png',
-      tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo.png")
-    })
-  end
+  let(:optimized_image_file) { File.new("#{Rails.root}/spec/fixtures/images/logo.png") }
 
   let(:avatar) { build(:upload) }
-  let(:avatar_file) do
-    ActionDispatch::Http::UploadedFile.new({
-      filename: 'logo-dev.png',
-      tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo-dev.png")
-    })
-  end
+  let(:avatar_file) { File.new("#{Rails.root}/spec/fixtures/images/logo-dev.png") }
 
   before(:each) do
     SiteSetting.stubs(:s3_upload_bucket).returns("S3_Upload_Bucket")
