@@ -62,14 +62,18 @@ Discourse.Badge = Discourse.Model.extend({
   **/
   updateFromJson: function(json) {
     var self = this;
-    Object.keys(json.badge).forEach(function(key) {
-      self.set(key, json.badge[key]);
-    });
-    json.badge_types.forEach(function(badgeType) {
-      if (badgeType.id === self.get('badge_type_id')) {
-        self.set('badge_type', Object.create(badgeType));
-      }
-    });
+    if (json.badge) {
+      Object.keys(json.badge).forEach(function(key) {
+        self.set(key, json.badge[key]);
+      });
+    }
+    if (json.badge_types) {
+      json.badge_types.forEach(function(badgeType) {
+        if (badgeType.id === self.get('badge_type_id')) {
+          self.set('badge_type', Object.create(badgeType));
+        }
+      });
+    }
   },
 
   /**

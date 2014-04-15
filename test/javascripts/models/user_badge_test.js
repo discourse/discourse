@@ -17,26 +17,32 @@ test('createFromJson array', function() {
   equal(userBadges[0].get('granted_by'), null, "granted_by reference is not set when null");
 });
 
-test('findByUsername', function() {
+asyncTestDiscourse('findByUsername', function() {
+  expect(2);
   this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(multipleBadgesJson));
   Discourse.UserBadge.findByUsername("anne3").then(function(badges) {
     ok(Array.isArray(badges), "returns an array");
+    start();
   });
   ok(Discourse.ajax.calledOnce, "makes an AJAX call");
 });
 
-test('findByBadgeId', function() {
+asyncTestDiscourse('findByBadgeId', function() {
+  expect(2);
   this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(multipleBadgesJson));
   Discourse.UserBadge.findByBadgeId(880).then(function(badges) {
     ok(Array.isArray(badges), "returns an array");
+    start();
   });
   ok(Discourse.ajax.calledOnce, "makes an AJAX call");
 });
 
-test('grant', function() {
+asyncTestDiscourse('grant', function() {
+  expect(2);
   this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(singleBadgeJson));
   Discourse.UserBadge.grant(1, "username").then(function(userBadge) {
     ok(!Array.isArray(userBadge), "does not return an array");
+    start();
   });
   ok(Discourse.ajax.calledOnce, "makes an AJAX call");
 });
