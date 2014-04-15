@@ -692,9 +692,9 @@ end
 # Table name: users
 #
 #  id                            :integer          not null, primary key
-#  username                      :string(20)       not null
-#  created_at                    :datetime
-#  updated_at                    :datetime
+#  username                      :string(60)       not null
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
 #  name                          :string(255)
 #  bio_raw                       :text
 #  seen_notification_id          :integer          default(0), not null
@@ -703,7 +703,7 @@ end
 #  password_hash                 :string(64)
 #  salt                          :string(32)
 #  active                        :boolean
-#  username_lower                :string(20)       not null
+#  username_lower                :string(60)       not null
 #  auth_token                    :string(32)
 #  last_seen_at                  :datetime
 #  website                       :string(255)
@@ -738,8 +738,8 @@ end
 #  uploaded_avatar_id            :integer
 #  email_always                  :boolean          default(FALSE), not null
 #  mailing_list_mode             :boolean          default(FALSE), not null
-#  locale                        :string(10)
 #  primary_group_id              :integer
+#  locale                        :string(10)
 #  profile_background            :string(255)
 #
 # Indexes

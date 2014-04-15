@@ -13,8 +13,8 @@ end
 #  user_id    :integer          not null
 #  email      :string(255)      not null
 #  url        :string(255)      not null
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #  active     :boolean          not null
 #
 # Indexes

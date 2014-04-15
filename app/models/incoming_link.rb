@@ -104,8 +104,8 @@ end
 #  domain          :string(100)
 #  topic_id        :integer
 #  post_number     :integer
-#  created_at      :datetime
-#  updated_at      :datetime
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #  user_id         :integer
 #  ip_address      :inet
 #  current_user_id :integer

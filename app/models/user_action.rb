@@ -313,12 +313,12 @@ end
 #  target_post_id  :integer
 #  target_user_id  :integer
 #  acting_user_id  :integer
-#  created_at      :datetime
-#  updated_at      :datetime
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 # Indexes
 #
-#  idx_unique_rows                                (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
-#  index_user_actions_on_acting_user_id           (acting_user_id)
-#  index_user_actions_on_user_id_and_action_type  (user_id,action_type)
+#  idx_unique_rows                           (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
+#  index_actions_on_acting_user_id           (acting_user_id)
+#  index_actions_on_user_id_and_action_type  (user_id,action_type)
 #

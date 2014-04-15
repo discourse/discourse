@@ -58,11 +58,11 @@ end
 #  id            :integer          not null, primary key
 #  topic_link_id :integer          not null
 #  user_id       :integer
-#  created_at    :datetime
-#  updated_at    :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #  ip_address    :inet             not null
 #
 # Indexes
 #
-#  by_link  (topic_link_id)
+#  index_forum_thread_link_clicks_on_forum_thread_link_id  (topic_link_id)
 #

@@ -754,8 +754,8 @@ end
 #  id                      :integer          not null, primary key
 #  title                   :string(255)      not null
 #  last_posted_at          :datetime
-#  created_at              :datetime
-#  updated_at              :datetime
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
 #  views                   :integer          default(0), not null
 #  posts_count             :integer          default(0), not null
 #  user_id                 :integer
@@ -807,6 +807,6 @@ end
 #
 #  idx_topics_front_page              (deleted_at,visible,archetype,category_id,id)
 #  idx_topics_user_id_deleted_at      (user_id)
-#  index_topics_on_bumped_at          (bumped_at)
+#  index_forum_threads_on_bumped_at   (bumped_at)
 #  index_topics_on_id_and_deleted_at  (id,deleted_at)
 #

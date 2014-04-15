@@ -33,12 +33,12 @@ end
 #  action_type   :integer          not null
 #  match_count   :integer          default(0), not null
 #  last_match_at :datetime
-#  created_at    :datetime
-#  updated_at    :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #  ip_address    :inet
 #
 # Indexes
 #
-#  index_screened_emails_on_email          (email) UNIQUE
-#  index_screened_emails_on_last_match_at  (last_match_at)
+#  index_blocked_emails_on_email          (email) UNIQUE
+#  index_blocked_emails_on_last_match_at  (last_match_at)
 #
