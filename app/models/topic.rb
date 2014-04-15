@@ -318,7 +318,6 @@ class Topic < ActiveRecord::Base
     return [] unless title.present?
     return [] unless raw.present?
 
-    # For now, we only match on title. We'll probably add body later on, hence the API hook
     similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity", title: title, raw: raw]))
                      .visible
                      .where(closed: false, archived: false)
