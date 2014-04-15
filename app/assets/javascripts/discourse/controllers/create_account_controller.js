@@ -352,7 +352,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
           }
           self.set('formSubmitted', false);
         }
-        if (result.active) {
+        if (result.active && !Discourse.SiteSettings.must_approve_users) {
           return window.location.reload();
         }
       }, function() {
