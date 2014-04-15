@@ -46,7 +46,10 @@ class Upload < ActiveRecord::Base
     File.extname(original_filename)
   end
 
-  def self.create_for(user_id, file, filename, filesize, content_type = nil, origin = nil)
+  # options
+  #   - content_type
+  #   - origin
+  def self.create_for(user_id, file, filename, filesize, options = {})
     # compute the sha
     sha1 = Digest::SHA1.file(file).hexdigest
     # check if the file has already been uploaded
@@ -67,7 +70,7 @@ class Upload < ActiveRecord::Base
         url: ""
       )
       # trim the origin if any
-      upload.origin = origin[0...1000] if origin
+      upload.origin = options[:origin][0...1000] if options[:origin]
 
       # deal with width & height for images
       if FileHelper.is_image?(filename)
@@ -93,7 +96,7 @@ class Upload < ActiveRecord::Base
       return upload unless upload.save
 
       # store the file and update its url
-      url = Discourse.store.store_upload(file, upload, content_type)
+      url = Discourse.store.store_upload(file, upload, options[:content_type])
       if url.present?
         upload.url = url
         upload.save

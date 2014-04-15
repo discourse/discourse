@@ -34,7 +34,7 @@ module Jobs
               hotlinked = FileHelper.download(src, @max_size, "discourse-hotlinked") rescue Discourse::InvalidParameters
               if hotlinked.try(:size) <= @max_size
                 filename = File.basename(URI.parse(src).path)
-                upload = Upload.create_for(post.user_id, hotlinked, filename, hotlinked.size, nil, src)
+                upload = Upload.create_for(post.user_id, hotlinked, filename, hotlinked.size, { origin: src })
                 downloaded_urls[src] = upload.url
               else
                 Rails.logger.error("Failed to pull hotlinked image: #{src} - Image is bigger than #{@max_size}")
