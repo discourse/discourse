@@ -2,7 +2,7 @@
 module CategoryGuardian
   # Creating Method
   def can_create_category?(parent)
-    is_admin?
+    is_admin? || (SiteSetting.allow_moderators_to_create_categories && is_moderator?)
   end
 
   # Editing Method
