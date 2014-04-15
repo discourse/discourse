@@ -52,7 +52,7 @@ Discourse.Route.buildRoutes(function() {
       });
       this.resource('adminUsersList', { path: '/list' }, function() {
         _.each(['active', 'new', 'pending', 'admins', 'moderators', 'blocked', 'suspended',
-                'newuser', 'basic', 'regular', 'leaders', 'elders'], function(x) {
+                'newuser', 'basicuser', 'regular', 'leaders', 'elders'], function(x) {
           this.route(x, { path: '/' + x });
         }, this);
       });
