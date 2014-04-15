@@ -116,7 +116,7 @@ module PostGuardain
 
   def can_view_post_revisions?(post)
     return false if post.nil?
-    return true if SiteSetting.edit_history_visible_to_public
+    return true if SiteSetting.edit_history_visible_to_public && !post.hidden
     authenticated? &&
       (is_staff? || @user.has_trust_level?(:elder) || @user.id == post.user_id) &&
       can_see_post?(post)

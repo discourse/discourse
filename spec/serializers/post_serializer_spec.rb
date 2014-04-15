@@ -75,4 +75,33 @@ describe PostSerializer do
     end
   end
 
+  context "a hidden post with add_raw enabled" do
+    let(:user) { Fabricate.build(:user) }
+    let(:raw)  { "Offensive stuff here!" }
+    let(:post) { Fabricate.build(:post, raw: raw, user: user, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached]) }
+
+    def serialized_post_for_user(u)
+      s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
+      s.add_raw = true
+      s.as_json
+    end
+
+    it "shows the raw post only if authorized to see it" do
+      serialized_post_for_user(user)[:raw].should == raw
+      serialized_post_for_user(nil)[:raw].should be_nil
+      serialized_post_for_user(Fabricate(:user))[:raw].should be_nil
+      serialized_post_for_user(Fabricate(:moderator))[:raw].should == raw
+      serialized_post_for_user(Fabricate(:admin))[:raw].should == raw
+    end
+
+    it "can view edit history only if authorized" do
+      serialized_post_for_user(user)[:can_view_edit_history].should == true
+      serialized_post_for_user(nil)[:can_view_edit_history].should == false
+      serialized_post_for_user(Fabricate(:user))[:can_view_edit_history].should == false
+      serialized_post_for_user(Fabricate(:moderator))[:can_view_edit_history].should == true
+      serialized_post_for_user(Fabricate(:admin))[:can_view_edit_history].should == true
+    end
+
+  end
+
 end

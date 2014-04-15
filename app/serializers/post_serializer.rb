@@ -176,7 +176,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_raw?
-    @add_raw.present?
+    @add_raw.present? && (scope.user.try(:staff?) || yours)
   end
 
   def include_link_counts?
