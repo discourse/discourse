@@ -55,7 +55,10 @@
         </tbody>
       {{/if}}
 
-      {{each topics itemController="topicListItem" itemViewClass="Discourse.TopicListItemView"}}
+      <tbody>
+        {{each topics itemController="topicListItem" itemViewClass="Discourse.TopicListItemView"}}
+      </tbody>
+
     </table>
   {{/if}}
 </div>

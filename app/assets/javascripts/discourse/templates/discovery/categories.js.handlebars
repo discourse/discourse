@@ -82,22 +82,26 @@
           </td>
           <td class='stats' {{bind-attr title="topicStatsTitle"}}>
             <table class="categoryStats">
+              <tbody>
               {{#each topicCountStats}}
                 <tr>
                   <td class="value">{{value}}</td>
                   <td class="unit">{{unit}}</td>
                 </tr>
               {{/each}}
+              </tbody>
             </table>
           </td>
           <td class='stats' {{bind-attr title="postStatsTitle"}}>
             <table class="categoryStats">
+              <tbody>
               {{#each postCountStats}}
                 <tr>
                   <td class="value">{{value}}</td>
                   <td class="unit">{{unit}}</td>
                 </tr>
               {{/each}}
+              </tbody>
             </table>
           </td>
         </tr>
