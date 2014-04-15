@@ -298,7 +298,7 @@ GEM
       rspec-mocks (~> 2.14.0)
     ruby-hmac (0.4.0)
     ruby-openid (2.5.0)
-    ruby-readability-discourse (0.6.1)
+    ruby-readability (0.6.1)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.4.2)
     sanitize (2.1.0)
@@ -457,7 +457,7 @@ DEPENDENCIES
   rinku
   rspec-given
   rspec-rails
-  ruby-readability-discourse
+  ruby-readability
   sanitize
   sass
   sass-rails (~> 4.0.2)

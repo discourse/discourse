@@ -216,9 +216,7 @@ gem 'rbtrace', require: false, platform: :mri
 
 # required for feed importing and embedding
 #
-# temporary when this is merged https://github.com/cantino/ruby-readability/pull/70
-# get rid of this
-gem 'ruby-readability-discourse', require: false
+gem 'ruby-readability', require: false
 
 gem 'simple-rss', require: false
 gem 'gctools', require: false, platform: :mri_21
