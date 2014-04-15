@@ -31,7 +31,14 @@ Discourse.URL = Em.Object.createWithMixins({
         // which triggers a replaceState even though the topic hasn't fully loaded yet!
         Em.run.next(function() {
           var location = Discourse.URL.get('router.location');
-          if (location && location.replaceURL) { location.replaceURL(path); }
+          if (location && location.replaceURL) {
+
+            if (Ember.FEATURES.isEnabled("query-params-new")) {
+              var search = Discourse.__container__.lookup('router:main').get('location.location.search') || '';
+              path += search;
+            }
+            location.replaceURL(path);
+          }
         });
     }
   },
@@ -77,13 +84,6 @@ Discourse.URL = Em.Object.createWithMixins({
 
     return this.handleURL(path);
   },
-
-  /**
-    Replaces the query parameters in the URL. Use no parameters to clear them.
-
-    @method replaceQueryParams
-  **/
-  queryParams: Em.computed.alias('router.location.queryParams'),
 
   /**
     Redirect to a URL.
@@ -174,7 +174,6 @@ Discourse.URL = Em.Object.createWithMixins({
         // Abort routing, we have replaced our state.
         return true;
       }
-      this.set('queryParams', null);
     }
 
     return false;

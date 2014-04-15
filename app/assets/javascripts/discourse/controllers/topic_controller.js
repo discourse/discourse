@@ -13,6 +13,21 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   editingTopic: false,
   selectedPosts: null,
   selectedReplies: null,
+  queryParams: ['filter', 'username_filters'],
+
+  filter: function(key, value) {
+    if (arguments.length > 1) {
+      this.set('postStream.summary', value === "summary");
+    }
+    return this.get('postStream.summary') ? "summary" : null;
+  }.property('postStream.summary'),
+
+  username_filters: function(key, value) {
+    // TODO: Ember bug? If I don't have a value parameter this does not update
+    if (value) {
+    }
+    return this.get('postStream.streamFilters.username_filters');
+  }.property("postStream.streamFilters.username_filters"),
 
   init: function() {
     this._super();

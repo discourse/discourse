@@ -118,9 +118,9 @@ Discourse.PostStream = Em.Object.extend({
     if (this.get('summary')) { result.filter = "summary"; }
 
     var userFilters = this.get('userFilters');
-    if (userFilters) {
+    if (!Em.isEmpty(userFilters)) {
       var userFiltersArray = this.get('userFilters').toArray();
-      if (userFiltersArray.length > 0) { result.username_filters = userFiltersArray; }
+      if (userFiltersArray.length > 0) { result.username_filters = userFiltersArray.join(","); }
     }
 
     return result;
@@ -189,11 +189,9 @@ Discourse.PostStream = Em.Object.extend({
     Toggle summary mode for the stream.
 
     @method toggleSummary
-    @returns {Ember.Deferred} a promise that resolves when the summary stream has loaded.
   **/
   toggleSummary: function() {
-    var userFilters = this.get('userFilters');
-    userFilters.clear();
+    this.get('userFilters').clear();
     this.toggleProperty('summary');
     return this.refresh();
   },
@@ -202,7 +200,6 @@ Discourse.PostStream = Em.Object.extend({
     Filter the stream to a particular user.
 
     @method toggleParticipant
-    @returns {Ember.Deferred} a promise that resolves when the filtered stream has loaded.
   **/
   toggleParticipant: function(username) {
     var userFilters = this.get('userFilters');
@@ -226,7 +223,6 @@ Discourse.PostStream = Em.Object.extend({
     @returns {Ember.Deferred} a promise that is resolved when the posts have been inserted into the stream.
   **/
   refresh: function(opts) {
-
     opts = opts || {};
     opts.nearPost = parseInt(opts.nearPost, 10);
 
@@ -247,8 +243,6 @@ Discourse.PostStream = Em.Object.extend({
       topic.updateFromJson(json);
       self.updateFromJson(json.post_stream);
       self.setProperties({ loadingFilter: false, loaded: true });
-
-      Discourse.URL.set('queryParams', self.get('streamFilters'));
     }).catch(function(result) {
       self.errorLoading(result);
     });

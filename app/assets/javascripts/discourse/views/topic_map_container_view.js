@@ -33,7 +33,10 @@ Discourse.TopicMapContainerView = Discourse.ContainerView.extend({
 
     // If we have a summary capability
     if (topic.get('has_summary')) {
-      container.attachViewWithArgs({ topic: topic }, Discourse.ToggleSummaryComponent);
+      container.attachViewWithArgs({
+        topic: topic,
+        filterBinding: 'controller.filter'
+      }, Discourse.ToggleSummaryComponent);
     }
 
     // If we have a private message

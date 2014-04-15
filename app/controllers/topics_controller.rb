@@ -38,7 +38,7 @@ class TopicsController < ApplicationController
     opts = params.slice(:username_filters, :filter, :page, :post_number)
     username_filters = opts[:username_filters]
 
-    opts[:username_filters] = [username_filters] if username_filters.is_a?(String)
+    opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
 
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
