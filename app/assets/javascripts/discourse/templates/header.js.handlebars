@@ -108,15 +108,15 @@
         </li>
       </ul>
 
-      {{render search}}
+      {{render "search"}}
 
-      {{render notifications notifications}}
+      {{render "notifications" notifications}}
 
       {{#if view.renderSiteMap}}
-        {{render siteMap}}
+        {{render "siteMap"}}
       {{/if}}
 
-      {{ render userDropdown }}
+      {{render "userDropdown"}}
 
     </div>
   </div>

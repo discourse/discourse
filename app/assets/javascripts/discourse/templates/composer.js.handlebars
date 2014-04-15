@@ -2,7 +2,7 @@
 
 <div class='contents'>
 
-  {{render composerMessages}}
+  {{render "composerMessages"}}
 
   <div class='control'>
     <a href='#' class='toggler' {{action toggle bubbles=false}} title='{{i18n composer.toggler}}'></a>
@@ -48,7 +48,7 @@
               {{#if model.archetype.hasOptions}}
                 <button class='btn' {{action showOptions}}>{{i18n topic.options}}</button>
               {{/if}}
-              {{render additionalComposerButtons model}}
+              {{render "additionalComposerButtons" model}}
             {{/unless}}
           </div>
         {{/if}}
