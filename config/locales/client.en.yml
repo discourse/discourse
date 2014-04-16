@@ -1445,6 +1445,21 @@ en:
         delete: "Delete"
         delete_confirm: "Delete this customization?"
         about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
+        color: "Color"
+        opacity: "Opacity"
+        copy: "Copy"
+        css_html:
+          title: "CSS, HTML"
+          long_title: "CSS and HTML Customizations"
+        colors:
+          title: "Colors"
+          long_title: "Color Schemes"
+          about: "Color schemes allow you to modify the colors used on the site without writing CSS. Choose or add one to start."
+          new_name: "New Color Scheme"
+          copy_name_prefix: "Copy of"
+          delete_confirm: "Delete this color scheme?"
+          under_construction: "NOTE: Changes made here will do nothing! This feature is under construction!"
+
 
       email:
         title: "Email"

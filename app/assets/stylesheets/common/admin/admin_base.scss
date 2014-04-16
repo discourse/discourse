@@ -421,6 +421,25 @@ section.details {
       }
     }
   }
+  .color-scheme {
+    .controls {
+      span, button, a {
+        margin-right: 10px;
+      }
+    }
+  }
+  .colors {
+    thead th       { border: none; }
+    td.hex         { width: 100px; }
+    .hex-input     { width: 80px; }
+    td.opacity     { width: 50px; }
+    .opacity-input { width: 30px; }
+    .hex, .opacity { text-align: center; }
+
+    .changed .name {
+      color: darken($highlight_text_color, 30%);
+    }
+  }
 }
 
 
@@ -790,12 +809,16 @@ table.api-keys {
     color: $primary_text_color;
     font-size: 15px;
     padding-left: 5px;
+    margin-bottom: 10px;
   }
 
   ul {
     list-style: none;
     margin: 0;
 
+    li:first-of-type {
+      border-top: 1px solid $primary_border_color;
+    }
     li {
       border-bottom: 1px solid $primary_border_color;
     }

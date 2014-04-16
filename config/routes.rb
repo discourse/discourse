@@ -84,7 +84,9 @@ Discourse::Application.routes.draw do
       resources :screened_urls,         only: [:index]
     end
 
-    get "customize" => "site_customizations#index", constraints: AdminConstraint.new
+    get "customize" => "color_schemes#index", constraints: AdminConstraint.new
+    get "customize/css_html" => "site_customizations#index", constraints: AdminConstraint.new
+    get "customize/colors" => "color_schemes#index", constraints: AdminConstraint.new
     get "flags" => "flags#index"
     get "flags/:filter" => "flags#index"
     post "flags/agree/:id" => "flags#agree"
@@ -93,6 +95,7 @@ Discourse::Application.routes.draw do
     resources :site_customizations, constraints: AdminConstraint.new
     resources :site_contents, constraints: AdminConstraint.new
     resources :site_content_types, constraints: AdminConstraint.new
+    resources :color_schemes, constraints: AdminConstraint.new
 
     get "version_check" => "versions#show"
 

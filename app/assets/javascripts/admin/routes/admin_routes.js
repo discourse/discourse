@@ -22,7 +22,10 @@ Discourse.Route.buildRoutes(function() {
       this.route('previewDigest', { path: '/preview-digest' });
     });
 
-    this.route('customize');
+    this.resource('adminCustomize', { path: '/customize' } ,function() {
+      this.route('colors');
+      this.route('css_html');
+    });
     this.route('api');
 
     this.resource('admin.backups', { path: '/backups' }, function() {

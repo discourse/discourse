@@ -1491,3 +1491,6 @@ en:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
+
+  color_schemes:
+    base_theme_name: "Base"
