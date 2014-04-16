@@ -492,6 +492,10 @@ class User < ActiveRecord::Base
     Summarize.new(bio_cooked).summary
   end
 
+  def badge_count
+    user_badges.count
+  end
+
   def featured_user_badges
     user_badges.joins(:badge).order('badges.badge_type_id ASC, badges.grant_count ASC').includes(:granted_by, badge: :badge_type).limit(3)
   end

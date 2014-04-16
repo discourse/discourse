@@ -15,7 +15,8 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_delete_all_posts,
              :can_be_deleted,
              :suspend_reason,
-             :primary_group_id
+             :primary_group_id,
+             :badge_count
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :api_key, serializer: ApiKeySerializer, embed: :objects
