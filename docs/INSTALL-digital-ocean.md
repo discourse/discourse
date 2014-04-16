@@ -83,7 +83,7 @@ Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3005/5c253f4657e2133f.png" width="571" height="56"> 
 
-# Editing Discourse Configuration
+# Edit Discourse Configuration
 
 Edit `app.yml`:
 
@@ -161,7 +161,7 @@ Commands:
     rebuild:    Rebuild a container (destroy old, bootstrap, start new)
 ```
 
-# Other Optional Stuff
+# Other Awesome Stuff
 
 Do you want...
 
@@ -171,9 +171,11 @@ Do you want...
 
 - Users to post reples via email? [Configure reply via email](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
 
-- Automatic daily backups? [Configure backups](https://meta.discourse.org/t/hot-off-the-presses-automated-backup-support/13805)
+- Automatic daily backups? [Configure backups](https://meta.discourse.org/t/hot-off-the-presses-automated-backup-support/13805).
  
-- HTTPS / SSL support? [Configure SSL](https://meta.discourse.org/t/allowing-ssl-for-your-discourse-docker-setup/13847)
+- HTTPS / SSL support? [Configure SSL](https://meta.discourse.org/t/allowing-ssl-for-your-discourse-docker-setup/13847).
+ 
+- Host multiple Discourse sites on the same server? [Configure multisite](https://meta.discourse.org/t/multisite-configuration-with-docker/14084).
 
 If anything needs to be improved in this guide, feel free to ask on [meta.discourse.org][meta], or even better, submit a pull request.
 
