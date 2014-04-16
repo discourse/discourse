@@ -1444,7 +1444,7 @@ en:
   deleted: 'deleted'
 
   upload:
-    edit_reason: "We have downloaded copies of the remote images"
+    edit_reason: "We downloaded local copies of images in this post"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
