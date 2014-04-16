@@ -3,10 +3,6 @@ require_dependency 'user_badge'
 
 describe UserBadge do
 
-  it { should belong_to :badge }
-  it { should belong_to :user }
-  it { should belong_to :granted_by }
-
   context 'validations' do
     before(:each) { BadgeGranter.grant(Fabricate(:badge), Fabricate(:user)) }
 

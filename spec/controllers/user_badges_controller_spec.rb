@@ -5,9 +5,7 @@ describe UserBadgesController do
   let(:badge) { Fabricate(:badge) }
 
   context 'index' do
-    before do
-      @user_badge = BadgeGranter.grant(badge, user)
-    end
+    let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
     it 'requires username to be specified' do
       expect { xhr :get, :index }.to raise_error
@@ -62,21 +60,19 @@ describe UserBadgesController do
   end
 
   context 'destroy' do
-    before do
-      @user_badge = BadgeGranter.grant(badge, user)
-    end
+    let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
     it 'checks that the user is authorized to revoke a badge' do
-      xhr :delete, :destroy, id: @user_badge.id
+      xhr :delete, :destroy, id: user_badge.id
       response.status.should == 403
     end
 
     it 'revokes the badge' do
       log_in :admin
       StaffActionLogger.any_instance.expects(:log_badge_revoke).once
-      xhr :delete, :destroy, id: @user_badge.id
+      xhr :delete, :destroy, id: user_badge.id
       response.status.should == 200
-      UserBadge.where(id: @user_badge.id).first.should be_nil
+      UserBadge.where(id: user_badge.id).first.should be_nil
     end
   end
 end
