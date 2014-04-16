@@ -18,17 +18,17 @@ if `which tx`.strip.empty?
 end
 
 puts "Pulling new translations...", ""
-# TODO: The following tx command may need to always use "-f" to force pull all translations.
-#       I don't understand how it decides to skip some files, but it seems to skip
-#       even when there are new translations on the server sometimes.
-Open3.popen2e('tx pull --mode=developer') do |stdin, stdout_err, wait_thr|
+
+command = "tx pull --mode=developer #{ARGV.include?('force') ? '-f' : ''}"
+
+Open3.popen2e(command) do |stdin, stdout_err, wait_thr|
   while line = stdout_err.gets
     puts line
   end
 end
 puts ""
 
-if !$?.success?
+unless $?.success?
   puts "Something failed. Check the output above.", ""
   exit $?.exitstatus
 end
