@@ -563,6 +563,8 @@ es:
     current_user: 'ir a tu página de usuario'
     starred:
       title: 'Favoritos'
+      help:
+        star: 'añadir este tema a tu lista de estrellas'
     topics:
       bulk:
         reset_read: "Restablecer leidos"
@@ -651,8 +653,10 @@ es:
         title: avances
         jump_top: saltar al primer mensaje
         jump_bottom: saltar al último mensaje
+        jump_bottom_with_number: "saltar al post %{post_number}"
         total: total
         current: mensaje actual
+        position: "post %{current} de %{total}"
       notifications:
         reasons:
           '3_2': 'Recibirás notificaciones porque estás viendo este tema.'
@@ -665,15 +669,21 @@ es:
           '1_2': 'Serás notificado solo si alguien menciona tu @nombre o responde a tu post.'
           '0': 'Estás ignorando todas las notificaciones en este tema.'
           '0_2': 'Estás ignorando todas las notificaciones en este tema.'
+        watching_pm:
+          title: "Viendo"
         watching:
           title: "Viendo"
           description: "igual que Siguiendo, además serás notificado de todos los nuevos posts."
+        tracking_pm:
+          title: "Siguiendo"
         tracking:
           title: "Siguiendo"
           description: "serás notificado de los mensajes sin leer, menciones a tu @nombre y respuestas a tus posts."
         regular:
           title: "Normal"
           description: "serás notificado solo si alguien menciona tu @nombre o responde a tus posts."
+        muted_pm:
+          title: "Silenciado"
         muted:
           title: "Silenciado"
           description: "no serás notificado de nada en este tema, y no aparecerá en tu pestaña de no leidos."
@@ -701,6 +711,8 @@ es:
       share:
         title: 'Compartir'
         help: 'comparte un link a este tema'
+      flag_topic:
+        title: 'Bandera'
       inviting: "Invitando..."
       invite_private:
         title: 'Invitar por mensaje Privado'
@@ -741,6 +753,7 @@ es:
       multi_select:
         select: 'seleccionar'
         selected: 'seleccionado ({{count}})'
+        select_replies: 'seleccionar más respuestas'
         delete: eliminar seleccionado
         cancel: cancelar selección
         select_all: seleccionar todo
@@ -752,6 +765,7 @@ es:
       reply_topic: "Responder a {{link}}"
       quote_reply: "citar respuesta"
       edit: "Edición {{link}} por {{replyAvatar}} {{username}}"
+      edit_reason: "Motivo:"
       post_number: "mensaje {{number}}"
       in_reply_to: "en respuesta a"
       last_edited_on: "post editado por última ven en"
@@ -858,6 +872,9 @@ es:
           like:
             one: "A ti y a otro usuario os ha gustado esto"
             other: "A ti y a otros {{count}} usuarios os ha gustado esto"
+          vote:
+            one: "Tú y otro usuario habéis votado este post"
+            other: "Tú y otros {{count}} habéis votado este post"
         by_others:
           off_topic:
             one: "1 usuario ha marcado esto como off-topic"
@@ -874,6 +891,9 @@ es:
           notify_user:
             one: "1 persona envió un mensaje privado a este usuario"
             other: "{{count}} envíaron un mensaje privado a este usuario"
+          bookmark:
+            one: "Una persona ha marcado este post"
+            other: "{{count}} han marcado este post"
           like:
             one: "A una persona les gusta esto"
             other: "A {{count}} personas les gusta esto"
@@ -894,6 +914,13 @@ es:
           previous: "Revisión anterior"
           next: "Siguiente revisión"
           last: "Última revisión"
+        displays:
+          inline:
+            button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "Editado por"
     category:
@@ -910,10 +937,13 @@ es:
       name: "Nombre de la categoría"
       description: "Descripción"
       topic: "categoría"
+      badge_colors: "Colores de los distintivos"
       background_color: "Color de fondo"
+      foreground_color: "Colores de primer plano"
       name_placeholder: "Debe ser corto y conciso."
       color_placeholder: "Cualquier color web"
       delete_confirm: "¿Estás seguro de que quieres eliminar esta categoría?"
+      delete_error: "Ha ocurrido un error al borrar la categoria"
       list: "Lista de categorías"
       no_description: "No existe descripción de esta categoría, editar la definición de tema."
       change_in_category_topic: "Editar descripción"
@@ -1231,6 +1261,7 @@ es:
         text: "texto"
         last_seen_user: "Último usuario visto:"
         reply_key: "Key de respuesta"
+        skipped_reason: "Saltar motivo"
         logs:
           none: "No se han encontrado registros."
           filters:
@@ -1451,9 +1482,14 @@ es:
           embedding: "Embebido"
           legal: "Legal"
           uncategorized: 'Sin clasificar'
+          backups: "Copias de seguridad"
       badges:
+        title: Distintivos
+        new_badge: Nuevo distintivo
         new: Nuevo
         name: Nombre
+        display_name: Nombre a mostrar
+        description: Descripción
         save: Guardar
         delete: Borrar
     lightbox:
@@ -1461,13 +1497,21 @@ es:
     keyboard_shortcuts_help:
       jump_to:
         title: 'Saltar a'
+        new: '<b>g</b> then <b>n</b> Nuevo'
+        unread: '<b>g</b> then <b>u</b> No leídos'
+        starred: '<b>g</b> then <b>f</b> Añadido'
+        categories: '<b>g</b> then <b>c</b> Categorias'
       navigation:
         back: '<b>u</b> Atrás'
+        next_prev: '<b>`</b>/<b>~</b> Sección siguiente/anterior'
       application:
         title: 'Aplicación'
+        create: '<b>c</b> Crear un tema nuevo'
         notifications: '<b>n</b> Abrir notificaciones'
         search: '<b>/</b> Buscar'
       actions:
+        share_topic: '<b>s</b> Compartir tema'
+        reply_topic: '<b>r</b> Responder al tema'
         like: '<b>l</b> Me gusta el post'
         flag: '<b>!</b> Marcar post con bandera'
         bookmark: '<b>b</b> Marcar post'

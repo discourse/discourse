@@ -1614,6 +1614,12 @@ it:
         mark_tracking: '<b>m</b> then <b>t</b> Contrassegna il topic come "Seguito"'
         mark_watching: '<b>m</b> quindi <b>w</b> Contrassegna il topic come "sotto osservazione"'
     badges:
+      badge_count:
+        one: "1 Targhetta"
+        other: "%{count} Targhette"
+      more_badges:
+        one: "+1 Più"
+        other: "+%{count} Più"
       example_badge:
         name: Targhetta Esempio
         description: Questa è una targhetta generica d'esempio

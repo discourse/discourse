@@ -580,6 +580,7 @@ cs:
       hint: "(můžete také rovnou soubor do editoru přetáhnout)"
       hint_for_chrome: "(můžete také rovnou obrázky do editoru přetáhnout nebo vložit)"
       uploading: "Nahrávám"
+      image_link: "adresa na kterou má váš obrázek odkazovat"
     search:
       title: "hledání témat, příspěvků, uživatelů a kategorií"
       placeholder: "zadejte hledaný výraz"
@@ -739,8 +740,9 @@ cs:
         open: "Otevřít téma"
         close: "Zavřít téma"
         auto_close: "Automaticky zavřít"
-        unpin: "Odstranit připevnění"
-        pin: "Připevnit téma"
+        unpin: "Odstranit připnutí"
+        pin: "Připnout téma"
+        pin_globally: "Připnout téma globálně"
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
         invisible: "Zneviditelnit téma"
@@ -752,8 +754,8 @@ cs:
         title: 'Odpovědět'
         help: 'začněte psát odpověď na toto téma'
       clear_pin:
-        title: "Odstranit připevnění"
-        help: "Odebere připevnění tohoto tématu, takže se již nebude zobrazovat na vrcholu seznamu témat"
+        title: "Odstranit připnutí"
+        help: "Odebere připnutí tohoto tématu, takže se již nebude zobrazovat na vrcholu seznamu témat"
       share:
         title: 'Sdílet'
         help: 'sdílet odkaz na toto téma'
@@ -802,6 +804,16 @@ cs:
           one: "Prosím, vyberte téma, do kterého chcete příspěvek přesunout."
           few: "Prosím, vyberte téma, do kterého chcete tyto <b>{{count}}</b> příspěvky přesunout."
           other: "Prosím, vyberte téma, do kterého chcete těchto <b>{{count}}</b> příspěvků přesunout."
+      change_owner:
+        title: "Změnit autora"
+        action: "změna autora"
+        error: "Chyba při měnění autora u příspevků."
+        label: "Nový autor příspěvků"
+        placeholder: "uživatelské jméno nového autora"
+        instructions:
+          one: "Vyberte prosím nového autora příspěvku od <b>{{old_user}}</b>."
+          few: "Vyberte prosím nového autora {{count}} příspěvků od <b>{{old_user}}</b>."
+          other: "Vyberte prosím nového autora {{count}} příspěvků od <b>{{old_user}}</b>."
       multi_select:
         select: 'vybrat'
         selected: 'vybráno ({{count}})'
@@ -826,6 +838,7 @@ cs:
       reply_as_new_topic: "Odpovědět přes nové téma"
       continue_discussion: "Pokračující diskuze z {{postLink}}:"
       follow_quote: "přejít na citovaný příspěvek"
+      show_full: "Zobrazit celý příspěvek"
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         few: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
@@ -1076,8 +1089,15 @@ cs:
     topic_statuses:
       locked:
         help: "toto téma je uzavřené; další odpovědi nejsou přijímány"
+      unpinned:
+        title: "Nepřipnuté"
+        help: "Toto téme není připnuté; bude se zobrazovat v běžném pořadí"
+      pinned_globally:
+        title: "Připnuté globálně"
+        help: "Toto téma je připnuto globálně, zobrazí se na vršku všech seznamů"
       pinned:
-        help: "toto téma je připevněné; bude se zobrazovat na vrcholu seznamu ve své kategorii"
+        title: "Připnuto"
+        help: "toto téma je připnuté; bude se zobrazovat na vrcholu seznamu ve své kategorii"
       archived:
         help: "toto téma je archivováno; je zmraženo a nelze ho již měnit"
       invisible:
@@ -1253,9 +1273,11 @@ cs:
         no_primary: "(žádná hlavní skupina)"
         title: "Skupiny"
         edit: "Upravit skupiny"
+        new: "Nová"
         selector_placeholder: "přidat uživatele"
         name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
         about: "Zde můžete upravit názvy skupin a členství"
+        group_members: "Členové skupiny"
         delete: "Smazat"
         delete_confirm: "Smazat toto skupiny?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
@@ -1663,6 +1685,14 @@ cs:
         mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
         mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
     badges:
+      badge_count:
+        one: "1 odznak"
+        few: "%{count} odznaky"
+        other: "%{count} odznaků"
+      more_badges:
+        one: "+1 další"
+        few: "+%{count} další"
+        other: "+%{count} dalších"
       example_badge:
         name: Ukázkový odznak
         description: Toto je obecná ukázka odznaku.

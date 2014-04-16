@@ -1245,7 +1245,7 @@ it:
     signup_form_message: 'Ho letto e accetto i <a href="/tos" target="_blank">Termini del Servizio</a>.'
   deleted: 'cancellato'
   upload:
-    edit_reason: "Abbiamo scaricato delle copie delle immagini remote."
+    edit_reason: "Abbiamo scaricato copie locali delle immagini in questo post"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
     pasted_image_filename: "Immagine incollata"
     attachments:

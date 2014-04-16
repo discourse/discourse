@@ -35,6 +35,22 @@ ru:
           one: "1м"
           few: "< %{count}м"
           other: "< %{count}м"
+        about_x_hours:
+          one: "1ч"
+          few: "%{count}ч"
+          other: "%{count}ч"
+        x_days:
+          one: "1д"
+          few: "%{count}д"
+          other: "%{count}д"
+        about_x_years:
+          one: "1г"
+          few: "%{count}г"
+          other: "%{count}л"
+        over_x_years:
+          one: "> 1г"
+          few: "> %{count}л"
+          other: "> %{count}л"
         date_year: "MMM 'YY"
       medium:
         date_year: "D MMM YYYY"
