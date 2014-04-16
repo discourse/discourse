@@ -25,6 +25,14 @@ test('findByUsername', function() {
   ok(Discourse.ajax.calledOnce, "makes an AJAX call");
 });
 
+test('findByBadgeId', function() {
+  this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(multipleBadgesJson));
+  Discourse.UserBadge.findByBadgeId(880).then(function(badges) {
+    ok(Array.isArray(badges), "returns an array");
+  });
+  ok(Discourse.ajax.calledOnce, "makes an AJAX call");
+});
+
 test('grant', function() {
   this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(singleBadgeJson));
   Discourse.UserBadge.grant(1, "username").then(function(userBadge) {

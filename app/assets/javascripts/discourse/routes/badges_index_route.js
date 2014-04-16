@@ -1,12 +1,12 @@
 /**
   Shows a list of all badges.
 
-  @class BadgesRoute
+  @class BadgesIndexRoute
   @extends Discourse.Route
   @namespace Discourse
   @module Discourse
 **/
-Discourse.BadgesRoute = Discourse.Route.extend({
+Discourse.BadgesIndexRoute = Discourse.Route.extend({
   model: function() {
     return Discourse.Badge.findAll();
   }

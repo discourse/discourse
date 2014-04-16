@@ -1,5 +1,6 @@
 .user-badge {
   padding: 3px 8px;
+  color: $primary_text_color;
   border: 1px solid $secondary-border-color;
   font-size: $base-font-size * 0.86;
   line-height: 16px;
@@ -27,7 +28,7 @@
 }
 
 table.badges-listing {
-  margin-top: 20px;
+  margin: 20px 0;
   border-bottom: 1px solid $primary-border-color;
 
   .user-badge {

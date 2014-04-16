@@ -243,6 +243,7 @@ Discourse::Application.routes.draw do
   resources :user_actions
 
   resources :badges, only: [:index]
+  get "/badges/:id(/:slug)" => "badges#show"
   resources :user_badges, only: [:index, :create, :destroy]
 
   # We've renamed popular to latest. If people access it we want a permanent redirect.

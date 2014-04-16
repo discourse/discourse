@@ -12,4 +12,13 @@ describe BadgesController do
       parsed["badges"].length.should == 1
     end
   end
+
+  context 'show' do
+    it "should return a badge" do
+      xhr :get, :show, id: badge.id
+      response.status.should == 200
+      parsed = JSON.parse(response.body)
+      parsed["badge"].should be_present
+    end
+  end
 end
