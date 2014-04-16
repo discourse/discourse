@@ -1,6 +1,6 @@
-The first paragraph of this pinned topic will be visible as an intro message to new users on the homepage. It's important!
+The first paragraph of this pinned topic will be visible as a welcome message to all new visitors on your homepage. It's important!
 
-Edit this into a brief description of your forum:
+**Edit this** into a brief description of your community:
 
 - Who is it for?
 - What can they find here?
