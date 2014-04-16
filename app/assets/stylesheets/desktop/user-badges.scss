@@ -1,0 +1,25 @@
+.user-badge {
+  padding: 3px 8px;
+  border: 1px solid $secondary-border-color;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0;
+  display: inline-block;
+
+  .fa {
+    padding-right: 5px;
+    font-size: 16px;
+  }
+
+  &.badge-type-gold .fa {
+    color: #ffd700;
+  }
+
+  &.badge-type-silver .fa {
+    color: #c0c0c0;
+  }
+
+  &.badge-type-bronze .fa {
+    color: #cd7f32;
+  }
+}

@@ -10,7 +10,7 @@
     {{#if showBadges}}
       <div class="badge-section">
         {{#each user.featured_user_badges}}
-        <span class="user-badge badge-type-{{unbound badge.badge_type_id}}"><i class='fa fa-certificate'></i> {{badge.name}}</span>
+          {{user-badge badge=badge}}
         {{/each}}
         {{#if showMoreBadges}}
           <span class="btn more-user-badges">{{i18n badges.more_badges count=moreBadgesCount}}</span>

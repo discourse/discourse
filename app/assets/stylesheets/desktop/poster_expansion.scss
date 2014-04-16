@@ -102,39 +102,12 @@
         font-size: 14px;
         margin-bottom: -8px;
       }
+    }
 
+    .more-user-badges {
+      @extend .user-badge;
+      padding: 4px 8px;
     }
   }
 }
 
-.user-badge, .more-user-badges {
-  font-size: 12px;
-  margin: 0;
-  line-height: 16px;
-  display: inline-block;
-  .fa {
-    padding-right: 5px;
-    font-size: 16px;
-  }
-}
-
-.user-badge {
-  padding: 3px 8px;
-  border: 1px solid $secondary-border-color;
-}
-
-.more-user-badges {
-  padding: 4px 8px;
-}
-
-.badge-type-1 .fa-certificate {
-  color: #A67D3D;
-}
-
-.badge-type-2 .fa-certificate {
-  color: silver;
-}
-
-.badge-type-1 .fa-certificate {
-  color: gold;
-}
