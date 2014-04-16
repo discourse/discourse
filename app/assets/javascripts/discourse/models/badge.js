@@ -164,7 +164,7 @@ Discourse.Badge.reopenClass({
     @returns {Promise} a promise that resolves to an array of `Discourse.Badge`
   **/
   findAll: function() {
-    return Discourse.ajax('/admin/badges').then(function(badgesJson) {
+    return Discourse.ajax('/badges.json').then(function(badgesJson) {
       return Discourse.Badge.createFromJson(badgesJson);
     });
   }

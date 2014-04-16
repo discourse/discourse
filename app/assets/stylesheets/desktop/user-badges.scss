@@ -1,14 +1,16 @@
 .user-badge {
   padding: 3px 8px;
   border: 1px solid $secondary-border-color;
-  font-size: 12px;
+  font-size: $base-font-size * 0.86;
   line-height: 16px;
   margin: 0;
   display: inline-block;
+  background-color: $primary_background_color;
 
   .fa {
-    padding-right: 5px;
-    font-size: 16px;
+    padding-right: 3px;
+    font-size: 1.4em;
+    vertical-align: bottom;
   }
 
   &.badge-type-gold .fa {
@@ -21,5 +23,31 @@
 
   &.badge-type-bronze .fa {
     color: #cd7f32;
+  }
+}
+
+table.badges-listing {
+  margin-top: 20px;
+  border-bottom: 1px solid $primary-border-color;
+
+  .user-badge {
+    font-size: $base-font-size;
+  }
+
+  td {
+    padding: 10px 20px;
+  }
+
+  td.grant-count {
+    font-size: 0.8em;
+    color: $secondary_text_color;
+  }
+
+  td.badge, td.grant-count {
+    white-space: nowrap;
+  }
+
+  tr {
+    border-top: 1px solid $primary-border-color;
   }
 }

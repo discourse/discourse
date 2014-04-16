@@ -94,4 +94,6 @@ Discourse.Route.buildRoutes(function() {
 
   this.route('signup', {path: '/signup'});
   this.route('login', {path: '/login'});
+
+  this.route('badges');
 });

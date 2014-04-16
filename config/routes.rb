@@ -242,6 +242,7 @@ Discourse::Application.routes.draw do
   end
   resources :user_actions
 
+  resources :badges, only: [:index]
   resources :user_badges, only: [:index, :create, :destroy]
 
   # We've renamed popular to latest. If people access it we want a permanent redirect.
