@@ -184,7 +184,7 @@ cs:
   meta_category_description: "Diskuze o fóru, organizaci, jak funguje a jak ho můžeme zlepšit."
   staff_category_name: "Štáb"
   staff_category_description: "Privátní kategorie pro diskuze štábu. Témata jsou viditelná pouze pro moderátory a správce."
-  assets_topic_body: "This is a topic to store forum assets used in the forum design. Don't delete it!"
+  assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the forum design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nAlso, if you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   category:
     topic_prefix: "Definice kategorie pro %{category}"
     replace_paragraph: "[Nahraďte tento první odstavec krátkých popisem nové kategorie. Zkuste se vejít do 200 znaků.]"
