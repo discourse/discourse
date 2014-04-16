@@ -32,25 +32,17 @@ Discourse.Route.buildRoutes(function() {
     Discourse.Site.currentProp('periods').forEach(function(period) {
       var top = 'top' + period.capitalize();
       router.route(top, { path: '/top/' + period });
-      router.route(top, { path: '/top/' + period + '/more' });
       router.route(top + 'Category', { path: '/category/:slug/l/top/' + period });
-      router.route(top + 'Category', { path: '/category/:slug/l/top/' + period + '/more' });
       router.route(top + 'CategoryNone', { path: '/category/:slug/none/l/top/' + period });
-      router.route(top + 'CategoryNone', { path: '/category/:slug/none/l/top/' + period + '/more' });
       router.route(top + 'Category', { path: '/category/:parentSlug/:slug/l/top/' + period });
-      router.route(top + 'Category', { path: '/category/:parentSlug/:slug/l/top/' + period + '/more' });
     });
 
     // filters
     Discourse.Site.currentProp('filters').forEach(function(filter) {
       router.route(filter, { path: '/' + filter });
-      router.route(filter, { path: '/' + filter + '/more' });
       router.route(filter + 'Category', { path: '/category/:slug/l/' + filter });
-      router.route(filter + 'Category', { path: '/category/:slug/l/' + filter + '/more' });
       router.route(filter + 'CategoryNone', { path: '/category/:slug/none/l/' + filter });
-      router.route(filter + 'CategoryNone', { path: '/category/:slug/none/l/' + filter + '/more' });
       router.route(filter + 'Category', { path: '/category/:parentSlug/:slug/l/' + filter });
-      router.route(filter + 'Category', { path: '/category/:parentSlug/:slug/l/' + filter + '/more' });
     });
 
     this.route('categories');

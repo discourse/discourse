@@ -41,7 +41,7 @@ Discourse.UserRoute = Discourse.Route.extend({
 
   serialize: function(model) {
     if (!model) return {};
-    return { username: model.get('username').toLowerCase() };
+    return { username: (Em.get(model, 'username') || '').toLowerCase() };
   },
 
   setupController: function(controller, user) {

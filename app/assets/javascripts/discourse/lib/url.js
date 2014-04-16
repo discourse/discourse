@@ -10,9 +10,6 @@ Discourse.URL = Em.Object.createWithMixins({
   // Used for matching a topic
   TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
 
-  // Used for matching a /more URL
-  MORE_REGEXP: /\/more$/,
-
   /**
     Browser aware replaceState. Will only be invoked if the browser supports it.
 
@@ -75,7 +72,6 @@ Discourse.URL = Em.Object.createWithMixins({
 
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path)) { return; }
-    if (this.navigatedToListMore(oldPath, path)) { return; }
     if (this.navigatedToPost(oldPath, path)) { return; }
 
     if (path.match(/^\/?users\/[^\/]+$/)) {
@@ -107,24 +103,6 @@ Discourse.URL = Em.Object.createWithMixins({
       if (url.indexOf(this.origin()) === 0) { return true; }
       if (url.replace(/^http/, 'https').indexOf(this.origin()) === 0) { return true; }
       if (url.replace(/^https/, 'http').indexOf(this.origin()) === 0) { return true; }
-    }
-    return false;
-  },
-
-
-  /**
-    @private
-
-    If we're viewing more topics, scroll to where we were previously.
-
-    @method navigatedToListMore
-    @param {String} oldPath the previous path we were on
-    @param {String} path the path we're navigating to
-  **/
-  navigatedToListMore: function(oldPath, path) {
-    // If we transition from a /more path, scroll to the top
-    if (this.MORE_REGEXP.exec(oldPath) && (oldPath.indexOf(path) === 0)) {
-      window.scrollTo(0, 0);
     }
     return false;
   },

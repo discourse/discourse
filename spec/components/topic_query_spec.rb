@@ -151,7 +151,7 @@ describe TopicQuery do
       context 'sort_order' do
 
         def ids_in_order(order, descending=true)
-          TopicQuery.new(admin, sort_order: order, sort_descending: descending ? 'true' : 'false').list_latest.topics.map(&:id)
+          TopicQuery.new(admin, order: order, ascending: descending ? 'false' : 'true').list_latest.topics.map(&:id)
         end
 
         it "returns the topics in correct order" do

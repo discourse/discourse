@@ -6,15 +6,28 @@
 **/
 function buildTopicRoute(filter) {
   return Discourse.Route.extend({
+    queryParams: {
+      sort: { replace: true },
+      ascending: { replace: true }
+    },
+
     beforeModel: function() {
       this.controllerFor('navigationDefault').set('filterMode', filter);
     },
 
-    model: function() {
+    model: function(data, transaction) {
+
+      var params = transaction.queryParams;
+
       // attempt to stop early cause we need this to be called before .sync
       Discourse.ScreenTrack.current().stop();
 
-      return Discourse.TopicList.list(filter).then(function(list) {
+      var findOpts = {};
+      if (params && params.order) { findOpts.order = params.order; }
+      if (params && params.ascending) { findOpts.ascending = params.ascending; }
+
+
+      return Discourse.TopicList.list(filter, findOpts).then(function(list) {
         var tracking = Discourse.TopicTrackingState.current();
         if (tracking) {
           tracking.sync(list, filter);
@@ -24,7 +37,13 @@ function buildTopicRoute(filter) {
       });
     },
 
-    setupController: function(controller, model) {
+    setupController: function(controller, model, trans) {
+
+      controller.setProperties({
+        order: Em.get(trans, 'queryParams.order'),
+        ascending: Em.get(trans, 'queryParams.ascending')
+      });
+
       var period = filter.indexOf('/') > 0 ? filter.split('/')[1] : '',
           filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
 
@@ -141,6 +160,7 @@ Discourse.addInitializer(function() {
   Discourse.DiscoveryCategoryNoneRoute = buildCategoryRoute('latest', {no_subcategories: true});
 
   Discourse.Site.currentProp('filters').forEach(function(filter) {
+    Discourse["Discovery" + filter.capitalize() + "Controller"] = Discourse.DiscoverySortableController.extend();
     Discourse["Discovery" + filter.capitalize() + "Route"] = buildTopicRoute(filter);
     Discourse["Discovery" + filter.capitalize() + "CategoryRoute"] = buildCategoryRoute(filter);
     Discourse["Discovery" + filter.capitalize() + "CategoryNoneRoute"] = buildCategoryRoute(filter, {no_subcategories: true});

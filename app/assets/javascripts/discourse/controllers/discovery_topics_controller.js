@@ -11,7 +11,20 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
   bulkSelectEnabled: false,
   selected: [],
 
+  order: 'default',
+  ascending: false,
+
   actions: {
+
+    changeSort: function(sortBy) {
+      if (sortBy === this.get('order')) {
+        this.toggleProperty('ascending');
+      } else {
+        this.setProperties({ order: sortBy, ascending: false });
+      }
+      this.get('model').refreshSort(sortBy, this.get('ascending'));
+    },
+
     // Show newly inserted topics
     showInserted: function() {
       var tracker = Discourse.TopicTrackingState.current();
@@ -117,11 +130,6 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
   }.property('allLoaded', 'topics.length'),
 
   loadMoreTopics: function() {
-    var topicList = this.get('model');
-    return topicList.loadMore().then(function(moreUrl) {
-      if (!Em.isEmpty(moreUrl)) {
-        Discourse.URL.replaceState(Discourse.getURL("/") + topicList.get('filter') + "/more");
-      }
-    });
+    return this.get('model').loadMore();
   }
 });

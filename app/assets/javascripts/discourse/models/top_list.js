@@ -27,7 +27,6 @@ Discourse.TopList.reopenClass({
         if (result[period]) {
           // instanciate a new topic list with no sorting
           topList.set(period, Discourse.TopicList.from(result[period]));
-          topList.set(period + ".sortOrder", undefined);
         }
       });
 

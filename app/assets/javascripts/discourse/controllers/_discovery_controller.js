@@ -25,3 +25,4 @@ Discourse.DiscoveryController = Discourse.ObjectController.extend({
   showMoreMonthlyUrl: function() { return this.showMoreUrl('monthly'); }.property('category', 'noSubcategories'),
   showMoreYearlyUrl: function() { return this.showMoreUrl('yearly'); }.property('category', 'noSubcategories')
 });
+

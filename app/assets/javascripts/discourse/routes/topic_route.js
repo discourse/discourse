@@ -10,14 +10,8 @@ Discourse.TopicRoute = Discourse.Route.extend({
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
   queryParams: {
-    filter: {
-      refreshModel: false,
-      replace: true
-    },
-    username_filters: {
-      refreshModel: false,
-      replace: true
-    }
+    filter: { replace: true },
+    username_filters: { replace: true }
   },
 
   actions: {
@@ -114,16 +108,18 @@ Discourse.TopicRoute = Discourse.Route.extend({
     return topic;
   },
 
-  model: function(params) {
+  model: function(params, transition) {
+    var queryParams = transition.queryParams;
+
     var topic = this.modelFor('topic');
     if (topic && (topic.get('id') === parseInt(params.id, 10))) {
-      this.setupParams(topic, params);
+      this.setupParams(topic, queryParams);
       // If we have the existing model, refresh it
       return topic.get('postStream').refresh().then(function() {
         return topic;
       });
     } else {
-      return this.setupParams(Discourse.Topic.create(_.omit(params, 'username_filters', 'filter')), params);
+      return this.setupParams(Discourse.Topic.create(_.omit(params, 'username_filters', 'filter')), queryParams);
     }
   },
 

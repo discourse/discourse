@@ -45,23 +45,12 @@ Discourse.TopicList = Discourse.Model.extend({
     });
   },
 
-  sortOrder: function() {
-    return Discourse.SortOrder.create();
-  }.property(),
-
-  /**
-    If the sort order changes, replace the topics in the list with the new
-    order.
-
-    @observes sortOrder
-  **/
-  _sortOrderChanged: function() {
+  refreshSort: function(order, ascending) {
     var self = this,
-        sortOrder = this.get('sortOrder'),
         params = this.get('params');
 
-    params.sort_order = sortOrder.get('order');
-    params.sort_descending = sortOrder.get('descending');
+    params.order = order;
+    params.ascending = ascending;
 
     this.set('loaded', false);
     var finder = finderFor(this.get('filter'), params);
@@ -73,8 +62,7 @@ Discourse.TopicList = Discourse.Model.extend({
       topics.pushObjects(newTopics);
       self.setProperties({ loaded: true, more_topics_url: result.topic_list.more_topics_url });
     });
-
-  }.observes('sortOrder.order', 'sortOrder.descending'),
+  },
 
   loadMore: function() {
     if (this.get('loadingMore')) { return Ember.RSVP.resolve(); }

@@ -249,7 +249,6 @@ Discourse::Application.routes.draw do
 
   # We've renamed popular to latest. If people access it we want a permanent redirect.
   get "popular" => "list#popular_redirect"
-  get "popular/more" => "list#popular_redirect"
 
   resources :categories, :except => :show
   get "category/:id/show" => "categories#show"
@@ -278,13 +277,9 @@ Discourse::Application.routes.draw do
 
   Discourse.filters.each do |filter|
     get "#{filter}" => "list##{filter}"
-    get "#{filter}/more" => "list##{filter}"
     get "category/:category/l/#{filter}" => "list#category_#{filter}", as: "category_#{filter}"
-    get "category/:category/l/#{filter}/more" => "list#category_#{filter}"
     get "category/:category/none/l/#{filter}" => "list#category_none_#{filter}", as: "category_none_#{filter}"
-    get "category/:category/none/l/#{filter}/more" => "list#category_none_#{filter}"
     get "category/:parent_category/:category/l/#{filter}" => "list#parent_category_category_#{filter}", as: "parent_category_category_#{filter}"
-    get "category/:parent_category/:category/l/#{filter}/more" => "list#parent_category_category_#{filter}"
   end
 
   get "search" => "search#query"

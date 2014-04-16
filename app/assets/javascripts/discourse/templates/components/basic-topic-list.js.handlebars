@@ -3,24 +3,24 @@
     <table id="topic-list">
       <thead>
         <tr>
-          {{#sortable-heading sortBy="default" sortOrder=sortOrder}}
+          {{#sortable-heading sortBy="default"}}
             {{i18n topic.title}}
           {{/sortable-heading}}
           {{#unless controller.hideCategory}}
-            {{#sortable-heading sortBy="category" sortOrder=sortOrder}}
+          {{#sortable-heading sortBy="category"}}
               {{i18n category_title}}
             {{/sortable-heading}}
           {{/unless}}
-          {{#sortable-heading sortBy="posts" number=true sortOrder=sortOrder}}
+          {{#sortable-heading sortBy="posts" number=true}}
             {{i18n posts}}
           {{/sortable-heading}}
-          {{#sortable-heading sortBy="likes" number=true sortOrder=sortOrder}}
+          {{#sortable-heading sortBy="likes" number=true}}
             {{i18n likes}}
           {{/sortable-heading}}
-          {{#sortable-heading sortBy="views" number=true sortOrder=sortOrder}}
+          {{#sortable-heading sortBy="views" number=true}}
             {{i18n views}}
           {{/sortable-heading}}
-          {{#sortable-heading sortBy="activity" number=true colspan="2" sortOrder=sortOrder}}
+          {{#sortable-heading sortBy="activity" number=true colspan="2"}}
             {{i18n activity}}
           {{/sortable-heading}}
         </tr>

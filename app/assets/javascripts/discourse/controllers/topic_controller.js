@@ -22,12 +22,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return this.get('postStream.summary') ? "summary" : null;
   }.property('postStream.summary'),
 
-  username_filters: function(key, value) {
-    // TODO: Ember bug? If I don't have a value parameter this does not update
-    if (value) {
-    }
-    return this.get('postStream.streamFilters.username_filters');
-  }.property("postStream.streamFilters.username_filters"),
+  username_filters: Discourse.computed.queryAlias('postStream.streamFilters.username_filters'),
 
   init: function() {
     this._super();
