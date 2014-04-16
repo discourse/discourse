@@ -78,6 +78,8 @@ Discourse.Route.buildRoutes(function() {
       });
     });
 
+    this.route('badges');
+
     this.resource('userPrivateMessages', { path: '/private-messages' }, function() {
       this.route('mine');
       this.route('unread');

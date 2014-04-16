@@ -13,6 +13,16 @@
         {{#each stat in statsExcludingPms}}
           {{discourse-activity-filter content=stat user=model userActionType=userActionType indexStream=indexStream}}
         {{/each}}
+        {{#if showBadges}}
+          {{#link-to 'user.badges' tagName="li"}}
+            {{#link-to 'user.badges'}}
+              <i class='glyph fa fa-certificate'></i>
+              {{i18n badges.title}}
+              <span class='count'>({{badge_count}})</span>
+              <span class='fa fa-chevron-right'></span>
+            {{/link-to}}
+          {{/link-to}}
+        {{/if}}
       </ul>
 
       {{#if canSeePrivateMessages}}

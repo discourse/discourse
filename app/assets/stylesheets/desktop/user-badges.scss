@@ -1,3 +1,4 @@
+/* Default badge styles. */
 .user-badge {
   padding: 3px 8px;
   color: $primary_text_color;
@@ -27,6 +28,26 @@
   }
 }
 
+/* User badge listing. */
+.user-badges-list {
+  text-align: center;
+
+  .user-badge {
+    max-width: 80px;
+    text-align: center;
+    vertical-align: top;
+    margin: 10px;
+    border: none;
+
+    .fa {
+      display: block;
+      font-size: 50px;
+      margin-bottom: 5px;
+    }
+  }
+}
+
+/* Badge listing in /badges. */
 table.badges-listing {
   margin: 20px 0;
   border-bottom: 1px solid $primary-border-color;
