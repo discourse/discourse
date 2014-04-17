@@ -13,7 +13,10 @@
       <h3><%=t 'user_notifications.digest.top_topics' %></h3>
 
       <%- @featured_topics.each_with_index do |t, i| %>
-        <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
+        <div class='featured-topic'>
+          <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
+          <%= email_category(t.category) %>
+        </div>
 
         <%- if t.best_post.present? %>
           <div class='digest-post'>
@@ -33,12 +36,8 @@
         <ul>
           <li>
             <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
-
             <span class='post-count'><%= t('user_notifications.digest.posts', count: t.posts_count) %></span>
-
-            <%- if t.category && !t.category.uncategorized? %>
-              <%- if t.category.parent_category %><span style='background-color: #<%= t.category.parent_category.color %>; font-size: 12px; padding: 4px 2px; font-weight: bold; margin: 0; width: 2px;'>&nbsp;</span><%- end %><span style='background-color: #<%= t.category.color %>; color: #<%= t.category.text_color %>; font-size: 12px; padding: 4px 6px; font-weight: bold; margin: 0;'><%= t.category.name %></span>
-            <%- end %>
+            <%= email_category(t.category) %>
           </li>
         </ul>
       <%- end -%>

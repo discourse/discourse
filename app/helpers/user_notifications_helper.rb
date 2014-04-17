@@ -68,4 +68,15 @@ module UserNotificationsHelper
   def cooked_post_for_email(post)
     PrettyText.format_for_email(post.cooked).html_safe
   end
+
+
+  def email_category(category)
+    return "" if category.blank? || category.uncategorized?
+    result = ""
+    if category.parent_category.present?
+      result << "<span style='background-color: ##{category.parent_category.color}; font-size: 12px; padding: 4px 2px; font-weight: bold; margin: 0; width: 2px;'>&nbsp;</span>"
+    end
+    result << "<span style='background-color: ##{category.color}; color: ##{category.text_color}; font-size: 12px; padding: 4px 6px; font-weight: bold; margin: 0;'>#{category.name}</span>"
+    result.html_safe
+  end
 end
