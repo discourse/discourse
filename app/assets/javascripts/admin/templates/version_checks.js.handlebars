@@ -26,7 +26,7 @@
               </td>
             {{else}}
               {{#if versionCheck.staleData}}
-                <td class="version-number">&nbsp;</td>
+                <td class="version-number">{{#if versionCheck.version_check_pending}}{{ versionCheck.installed_version }}{{/if}}</td>
                 <td class="face">
                   {{#if versionCheck.version_check_pending}}
                     <span class='icon up-to-date'>☻</span>
