@@ -1360,6 +1360,7 @@ en:
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"
+      more_topics: "Also, since we last saw you on %{last_seen_at} there have been %{new_topics_since_seen} new topics posted."
 
       posts:
         one: "1 post"

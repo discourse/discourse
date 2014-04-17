@@ -44,6 +44,10 @@
 
     <%- end -%>
 
+    <%- if @new_topics_since_seen > 0 %>
+      <p><%= t('user_notifications.digest.more_topics', last_seen_at: @last_seen_at, new_topics_since_seen: @new_topics_since_seen) %></p>
+    <%- end -%>
+
   <span class='footer-notice'>
     <%=raw(t :'user_notifications.digest.unsubscribe',
        site_link: html_site_link,
