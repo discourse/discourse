@@ -497,7 +497,7 @@ class User < ActiveRecord::Base
   end
 
   def featured_user_badges
-    user_badges.joins(:badge).order('badges.badge_type_id ASC, badges.grant_count ASC').includes(:granted_by, badge: :badge_type).limit(3)
+    user_badges.joins(:badge).order('badges.badge_type_id ASC, badges.grant_count ASC').includes(:user, :granted_by, badge: :badge_type).limit(3)
   end
 
   def self.count_by_signup_date(sinceDaysAgo=30)

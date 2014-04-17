@@ -6,8 +6,9 @@ class UserBadgesController < ApplicationController
       user_badges = user.user_badges
     else
       badge = fetch_badge_from_params
-      user_badges = badge.user_badges.order('granted_at DESC').limit(200).to_a
+      user_badges = badge.user_badges.order('granted_at DESC').limit(200)
     end
+    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type)
     render_serialized(user_badges, UserBadgeSerializer, root: "user_badges")
   end
 
