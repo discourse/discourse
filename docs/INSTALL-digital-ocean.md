@@ -4,9 +4,9 @@
 
 [Sign up for Digital Ocean][do], update billing info, then begin creating your new cloud server (Droplet).
 
-Use the URL of your new site as the Droplet hostname, e.g. `forum.example.com`. Discourse requires a minimum of **1 GB RAM** for small communities; we recommend 2 GB RAM for medium communities. 
+Use the URL of your new site as the Droplet hostname, e.g. `discourse.example.com`. Discourse requires a minimum of **1 GB RAM** for small communities; we recommend 2 GB RAM for medium communities. 
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4423/abd3e55444144ec5.png" width="670" height="478"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4425/0c25b42ee3d35636.png" width="670" height="489"> 
 
 Install Discourse on Ubuntu 14.04 LTS x64. We always recommend using [the current LTS distribution][lts].
 
