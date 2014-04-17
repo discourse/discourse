@@ -10,7 +10,7 @@ Use the URL of your new site as the Droplet hostname, e.g. `discourse.example.co
 
 Install Discourse on Ubuntu 14.04 LTS x64. We always recommend using [the current LTS distribution][lts].
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4421/a90af3a2682ed45e.png" width="675" height="597"> 
+<img src="https://meta.discourse.org/uploads/default/4426/9f3bf74726a3384f.png" width="540" height="478"> 
 
 You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
