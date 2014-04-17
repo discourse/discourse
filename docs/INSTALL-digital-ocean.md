@@ -182,7 +182,7 @@ If anything needs to be improved in this guide, feel free to ask on [meta.discou
    [dd]: https://github.com/discourse/discourse_docker
   [man]: https://mandrillapp.com
   [ssh]: https://help.github.com/articles/generating-ssh-keys
- [meta]: https://meta.discourse.org
+ [meta]: https://meta.discourse.org/t/beginners-guide-to-deploy-discourse-on-digital-ocean-using-docker/12156
    [do]: https://www.digitalocean.com/?refcode=5fa48ac82415
   [lts]: https://wiki.ubuntu.com/LTS
   [jet]: http://www.mailjet.com/pricing
