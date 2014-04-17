@@ -45,6 +45,11 @@ class Site
 
       by_id = {}
       categories.each do |category|
+        # nur wenn user gesetzt ist
+        #unless guardian.anonymous?
+          category.notification_level = CategoryUser.lookup_by_category(@guardian.user, category).pluck(:notification_level)[0]
+        #end
+
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
         by_id[category.id] = category
       end

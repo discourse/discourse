@@ -1142,6 +1142,21 @@ en:
       default_position: "Default Position"
       position_disabled: 'Categories will be displayed in order of activity. To control the order of categories in lists, enable the "fixed category positions" setting.'
       parent: "Parent Category"
+      notifications:
+        title: ''
+        reasons:
+        watching:
+          title: "Watching"
+          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
+        tracking:
+          title: "Tracking"
+          description: "You will automatically track all new topics in these categories. The count of unread and new posts will appear next to the topic's listing."
+        regular:
+          title: "Regular"
+          description: "You will be notified only if someone mentions your @name or replies to your post."
+        muted:
+          title: "Muted"
+          description: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
 
     flagging:
       title: 'Why are you privately flagging this post?'

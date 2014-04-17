@@ -7,6 +7,8 @@
   {{customHTML "extraNavItem"}}
 </ul>
 
+{{view Discourse.CategoryNotificationsButton categoryBinding="model" category=category}}
+
 {{#if canCreateTopic}}
   <button id="create-topic" class='btn btn-default' {{action createTopic}}><i class='fa fa-plus'></i>{{i18n topic.create}}</button>
 {{/if}}

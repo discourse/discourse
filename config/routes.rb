@@ -278,6 +278,7 @@ Discourse::Application.routes.draw do
   get "category/:category" => "list#category_latest"
   get "category/:category/none" => "list#category_none_latest"
   get "category/:parent_category/:category" => "list#parent_category_category_latest"
+  post "category/:category_id/notifications" => "categories#set_notifications"
 
   get "top" => "list#top"
   get "category/:category/l/top" => "list#category_top", as: "category_top"
