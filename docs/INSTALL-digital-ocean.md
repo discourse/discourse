@@ -8,9 +8,9 @@ Discourse requires a minimum of 1 GB RAM for small communities; we recommend 2 G
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3506/a6b550bd2b05b76b.png" width="638" height="500"> 
 
-Install Discourse on Ubuntu 12.04.4 LTS x64. We always recommend using [the current LTS distribution][lts].
+Install Discourse on Ubuntu 14.04 LTS x64. We always recommend using [the current LTS distribution][lts].
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3399/f3fc67ee6aa90ea4.png" width="690" height="477"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4421/a90af3a2682ed45e.png" width="675" height="597"> 
 
 You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
@@ -29,23 +29,6 @@ Replace `192.168.1.1` with the IP address of your Droplet.
 You will be asked for permission to connect, type `yes`, then enter the root password, which is in the email Digital Ocean sent you when the Droplet was set up.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3000/8209c1e40c9d70a8.png" width="570" height="278"> 
-
-# Update the kernel
-
-    apt-get update
-    apt-get install linux-image-generic-lts-raring linux-headers-generic-lts-raring
-
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3001/e94722e882f28994.png" width="566" height="339"> 
-
-Reboot the server:
-
-    reboot
-
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3003/d3cc759ced335d25.png" width="532" height="155"> 
-
-This will log you out from your SSH session, so reconnect:
-
-    ssh root@192.168.1.1
 
 # Set up Swap (if needed)
 
