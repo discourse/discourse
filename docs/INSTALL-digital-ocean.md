@@ -1,4 +1,4 @@
-**Set up Discourse on a cloud server in under 30 minutes** with zero knowledge of Ruby/Rails or Linux shell using our [Discourse Docker image][dd]. We prefer [Digital Ocean][do], although these steps may work on other cloud providers that also support Docker. Let's begin!
+**Set up Discourse on a cloud server in under 30 minutes** with zero knowledge of Ruby, Rails or Linux shell using our [Discourse Docker image][dd]. We prefer [Digital Ocean][do], although these steps may work on other cloud providers that also support Docker. Let's begin!
 
 # Create New Digital Ocean Droplet
 
@@ -8,7 +8,7 @@ Use the URL of your new site as the Droplet hostname, e.g. `discourse.example.co
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/4425/0c25b42ee3d35636.png" width="670" height="489"> 
 
-Install Discourse on Ubuntu 14.04 LTS x64. We always recommend using [the current LTS distribution][lts].
+Install Discourse on Ubuntu 14.04 LTS x64. Always select [the latest LTS distribution][lts].
 
 <img src="https://meta.discourse.org/uploads/default/4426/9f3bf74726a3384f.png" width="540" height="478"> 
 
@@ -24,13 +24,13 @@ Replace `192.168.1.1` with the IP address of your Droplet.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2999/0934a0158459ec3f.png" width="571" height="130"> 
 
-You will be asked for permission to connect, type `yes`, then enter the root password, which is in the email Digital Ocean sent you when the Droplet was set up.
+You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the Droplet was set up.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3000/8209c1e40c9d70a8.png" width="570" height="278"> 
 
 # Set up Swap (if needed)
 
-- If you're using the minimum 1 GB install, you *must* [set up a swap file](https://meta.discourse.org/t/create-a-swapfile-for-your-linux-server/13880) of 1 GB minimum. 
+- If you're using the minimum 1 GB install, you *must* [set up a swap file](https://meta.discourse.org/t/create-a-swapfile-for-your-linux-server/13880).
 
 - If you're using 2 GB+ memory, you can probably get by without a swap file.
 
@@ -46,7 +46,7 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
 # Install Discourse
 
-Create a `/var/docker` folder where all the Docker related stuff will reside:
+Create a `/var/docker` folder:
 
     mkdir /var/docker
 
@@ -70,7 +70,7 @@ Edit the Discourse configuration at `app.yml`:
 
 We recommend Nano because it works like a typical GUI text editor, just use your arrow keys.
 
-- Set `DISCOURSE_DEVELOPER_EMAILS`
+- Set `DISCOURSE_DEVELOPER_EMAILS` to your email address.
  
 - Set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want your Discourse available at `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
  
@@ -108,15 +108,15 @@ After that completes, start Discourse:
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/3008/ced00cf4782f020c.png" width="568" height="137"> 
 
-Congratulations! You now have your own instance of Discourse, accessible via the domain name you entered in `app.yml` earlier.
+Congratulations! You now have your own instance of Discourse! 
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/_optimized/f77/1a4/68503db6d2_690x280.png" width="690" height="291">
 
-You can also access it by visiting the server IP address directly, e.g. `http://192.168.1.1`.
+It should be accessible via the domain name you entered earlier, provided you configured the DNS. If not, you can also access it by visiting the server IP directly, e.g. `http://192.168.1.1`.
 
 # Log In and Become Admin
 
-Sign into your Discourse instance. There should be a reminder visible on the site about which email was used for the  `DISCOURSE_DEVELOPER_EMAILS` address. Be sure you log in with that email, and your account will be made Admin by default.
+Sign into your Discourse instance. There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; be sure you log in via one of those email addresses, and your account will automatically be made an Admin.
 
 # Post-Install Maintenance
 
