@@ -272,8 +272,9 @@ class Topic < ActiveRecord::Base
               .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
               .created_since(since)
               .listable_topics
+              .includes(:category)
               .order(TopicQuerySQL.order_top_for(score))
-              .limit(100)
+              .limit(20)
 
     # Remove category topics
     category_topic_ids = Category.pluck(:topic_id).compact!

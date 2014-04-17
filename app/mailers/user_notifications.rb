@@ -47,11 +47,7 @@ class UserNotifications < ActionMailer::Base
     if @featured_topics.present?
       @featured_topics, @new_topics = @featured_topics[0..4], @featured_topics[5..-1]
 
-      # Sort the new topics by score
-      @new_topics.sort! {|a, b| (b.score || 0) - (a.score || 0) } if @new_topics.present?
-
       @markdown_linker = MarkdownLinker.new(Discourse.base_url)
-
       build_email user.email,
                   from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
                   subject: I18n.t('user_notifications.digest.subject_template',
