@@ -5,7 +5,7 @@ class Search
       extend ActionView::Helpers::TextHelper
     end
 
-    attr_accessor :type, :id, :topic_id
+    attr_accessor :type, :id, :topic_id, :blurb
 
     # Category attributes
     attr_accessor :color, :text_color
@@ -16,7 +16,7 @@ class Search
     def initialize(row)
       row.symbolize_keys!
       @type = row[:type].to_sym
-      @url, @id, @title, @topic_id = row[:url], row[:id], row[:title], row[:topic_id]
+      @url, @id, @title, @topic_id, @blurb = row[:url], row[:id], row[:title], row[:topic_id], row[:blurb]
     end
 
     def as_json(options = nil)
@@ -24,6 +24,7 @@ class Search
       json[:avatar_template] = @avatar_template if @avatar_template.present?
       json[:color] = @color if @color.present?
       json[:text_color] = @text_color if @text_color.present?
+      json[:blurb] = @blurb if @blurb.present?
       json
     end
 
@@ -40,11 +41,11 @@ class Search
       end
     end
 
-    def self.from_topic(t, custom_title=nil)
-      SearchResult.new(type: :topic, topic_id: t.id, id: t.id, title: custom_title || t.title, url: t.relative_url)
+    def self.from_topic(t, options = {})
+      SearchResult.new(type: :topic, topic_id: t.id, id: t.id, title: options[:custom_title] || t.title, url: t.relative_url, blurb: options[:custom_blurb])
     end
 
-    def self.from_post(p, context, term)
+    def self.from_post(p, context, term, include_blurbs=false)
       custom_title =
         if context && context.id == p.topic_id
           # TODO: rewrite this
@@ -58,14 +59,18 @@ class Search
                  excerpt: excerpt
                 )
         end
-
+      if include_blurbs
+        #add a blurb from the post to the search results
+        custom_blurb = TextHelper.excerpt(p.raw, term.split(/\s+/)[0], radius: 100)
+        custom_blurb = TextHelper.truncate(p.raw, length: 200) if custom_blurb.blank?
+      end
       if p.post_number == 1
         # we want the topic link when it's the OP
-        SearchResult.from_topic(p.topic, custom_title)
+        SearchResult.from_topic(p.topic, {custom_title: custom_title, custom_blurb: custom_blurb})
       elsif context && context.id == p.topic_id
-        SearchResult.new(type: :topic, topic_id: p.topic_id, id: "_#{p.id}", title: custom_title, url: p.url)
+        SearchResult.new(type: :topic, topic_id: p.topic_id, id: "_#{p.id}", title: custom_title, url: p.url, blurb: custom_blurb)
       else
-        SearchResult.new(type: :topic, topic_id: p.topic_id, id: p.topic.id, title: p.topic.title, url: p.url)
+        SearchResult.new(type: :topic, topic_id: p.topic_id, id: p.topic.id, title: p.topic.title, url: p.url, blurb: custom_blurb)
       end
     end
 
