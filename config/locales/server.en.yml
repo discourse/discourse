@@ -1049,7 +1049,7 @@ en:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Upgrade by visiting `/admin/docker`, refreshing the page a few times, and pressing the "Upgrade Discourse" button.
+      - Upgrade by visiting [%{base_url}/admin/docker](%{base_url}/admin/docker), refreshing the page a few times, and pressing the "Upgrade Discourse" button.
 
       - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
 
@@ -1063,7 +1063,7 @@ en:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Upgrade by visiting `/admin/docker`, refreshing the page a few times, and pressing the "Upgrade Discourse" button.
+      - Upgrade by visiting [%{base_url}/admin/docker](%{base_url}/admin/docker), refreshing the page a few times, and pressing the "Upgrade Discourse" button.
 
       - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
 
