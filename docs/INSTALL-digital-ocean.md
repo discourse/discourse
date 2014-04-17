@@ -4,9 +4,9 @@
 
 [Sign up for Digital Ocean][do], update billing info, then begin creating your new cloud server (Droplet).
 
-Discourse requires a minimum of 1 GB RAM for small communities; we recommend 2 GB RAM for medium communities. We'll use "discourse" as the Hostname.
+Use the URL of your new site as the Droplet hostname, e.g. `forum.example.com`. Discourse requires a minimum of **1 GB RAM** for small communities; we recommend 2 GB RAM for medium communities. 
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3506/a6b550bd2b05b76b.png" width="638" height="500"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4423/abd3e55444144ec5.png" width="670" height="478"> 
 
 Install Discourse on Ubuntu 14.04 LTS x64. We always recommend using [the current LTS distribution][lts].
 
@@ -90,7 +90,7 @@ If you set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want 
 
 - Be sure you remove the comment character and space `# ` from the beginning of these mail configuration lines!
 
-- Don't forget to set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) up for your domain name. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions. Also, the name of your droplet is your reverse PTR record; rename your droplet to match your domain name `discourse.example.com`.
+- Don't forget to set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) up for your domain name. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
 
 # Bootstrap Discourse
 
