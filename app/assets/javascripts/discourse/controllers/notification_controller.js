@@ -8,6 +8,9 @@ Discourse.NotificationController = Discourse.ObjectController.extend({
   }.property(),
 
   link: function() {
+    if (this.get('data.badge_id')) {
+      return '<a href="/badges/' + this.get('data.badge_id') + '/' + this.get('data.badge_name').replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase() + '">' + this.get('data.badge_name') + '</a>';
+    }
     if (this.blank("data.topic_title")) {
       return "";
     }

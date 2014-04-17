@@ -54,6 +54,9 @@ Discourse.UserBadge.reopenClass({
     userBadges = userBadges.map(function(userBadgeJson) {
       var userBadge = Discourse.UserBadge.create(userBadgeJson);
       userBadge.set('badge', badges[userBadge.get('badge_id')]);
+      if (userBadge.get('user_id')) {
+        userBadge.set('user', users[userBadge.get('user_id')]);
+      }
       if (userBadge.get('granted_by_id')) {
         userBadge.set('granted_by', users[userBadge.get('granted_by_id')]);
       }
@@ -71,10 +74,24 @@ Discourse.UserBadge.reopenClass({
     Find all badges for a given username.
 
     @method findByUsername
+    @param {String} username
     @returns {Promise} a promise that resolves to an array of `Discourse.UserBadge`.
   **/
   findByUsername: function(username) {
     return Discourse.ajax("/user_badges.json?username=" + username).then(function(json) {
+      return Discourse.UserBadge.createFromJson(json);
+    });
+  },
+
+  /**
+    Find all badge grants for a given badge ID.
+
+    @method findById
+    @param {String} badgeId
+    @returns {Promise} a promise that resolves to an array of `Discourse.UserBadge`.
+  **/
+  findByBadgeId: function(badgeId) {
+    return Discourse.ajax("/user_badges.json?badge_id=" + badgeId).then(function(json) {
       return Discourse.UserBadge.createFromJson(json);
     });
   },

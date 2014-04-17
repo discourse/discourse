@@ -1,8 +1,14 @@
 class UserBadgesController < ApplicationController
   def index
-    params.require(:username)
-    user = fetch_user_from_params
-    render_serialized(user.user_badges, UserBadgeSerializer, root: "user_badges")
+    params.permit(:username)
+    if params[:username]
+      user = fetch_user_from_params
+      user_badges = user.user_badges
+    else
+      badge = fetch_badge_from_params
+      user_badges = badge.user_badges.order('granted_at DESC').limit(20).to_a
+    end
+    render_serialized(user_badges, UserBadgeSerializer, root: "user_badges")
   end
 
   def create

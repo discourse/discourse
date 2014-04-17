@@ -888,6 +888,7 @@ en:
     invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
     linked: "%{display_username} linked you in %{link}"
+    granted_badge: "You were granted the badge %{link}"
 
   search:
     within_post: "#%{post_number} by %{username}: %{excerpt}"
@@ -1474,9 +1475,3 @@ en:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
-
-  badges:
-    types:
-      gold: Gold
-      silver: Silver
-      bronze: Bronze

@@ -1,0 +1,27 @@
+<div class='container'>
+  <h1>
+    {{#link-to 'badges.index'}}{{i18n badges.title}}{{/link-to}}
+    <i class='fa fa-angle-right'></i>
+    {{name}}
+  </h1>
+
+  <table class='badges-listing'>
+    <tr>
+      <td class='badge'>{{user-badge badge=this}}</td>
+      <td class='description'>{{description}}</td>
+      <td class='grant-count'>{{i18n badges.awarded count=grant_count}}</td>
+    </tr>
+  </table>
+
+  {{#if userBadges}}
+    <h2>{{i18n users}}</h2>
+    <br>
+    {{#each userBadges}}
+      {{#link-to 'userActivity' user}}
+        {{avatar user imageSize="large"}}
+      {{/link-to}}
+    {{/each}}
+  {{else}}
+    <div class='spinner'>{{i18n loading}}</div>
+  {{/if}}
+</div>

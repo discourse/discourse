@@ -131,12 +131,4 @@ class UserSerializer < BasicUserSerializer
     CategoryUser.lookup(object, :watching).pluck(:category_id)
   end
 
-  def badge_count
-    object.user_badges.count
-  end
-
-  def featured_user_badges
-    # The three rarest badges this user has received should be featured.
-    object.user_badges.joins(:badge).order('badges.grant_count ASC').includes(:granted_by, badge: :badge_type).limit(3)
-  end
 end

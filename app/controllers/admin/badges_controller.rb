@@ -1,9 +1,4 @@
 class Admin::BadgesController < Admin::AdminController
-  def index
-    badges = Badge.all.to_a
-    render_serialized(badges, BadgeSerializer, root: "badges")
-  end
-
   def badge_types
     badge_types = BadgeType.all.to_a
     render_serialized(badge_types, BadgeTypeSerializer, root: "badge_types")

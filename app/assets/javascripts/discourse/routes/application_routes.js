@@ -78,6 +78,8 @@ Discourse.Route.buildRoutes(function() {
       });
     });
 
+    this.route('badges');
+
     this.resource('userPrivateMessages', { path: '/private-messages' }, function() {
       this.route('mine');
       this.route('unread');
@@ -94,4 +96,8 @@ Discourse.Route.buildRoutes(function() {
 
   this.route('signup', {path: '/signup'});
   this.route('login', {path: '/login'});
+
+  this.resource('badges', function() {
+    this.route('show', {path: '/:id/:slug'});
+  });
 });

@@ -5,16 +5,22 @@ describe UserBadgesController do
   let(:badge) { Fabricate(:badge) }
 
   context 'index' do
-    before do
-      @user_badge = BadgeGranter.grant(badge, user)
-    end
+    let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
-    it 'requires username to be specified' do
+    it 'requires username or badge_id to be specified' do
       expect { xhr :get, :index }.to raise_error
     end
 
-    it 'returns the user\'s badges' do
+    it 'returns user_badges for a user' do
       xhr :get, :index, username: user.username
+
+      response.status.should == 200
+      parsed = JSON.parse(response.body)
+      parsed["user_badges"].length.should == 1
+    end
+
+    it 'returns user_badges for a badge' do
+      xhr :get, :index, badge_id: badge.id
 
       response.status.should == 200
       parsed = JSON.parse(response.body)
@@ -62,21 +68,19 @@ describe UserBadgesController do
   end
 
   context 'destroy' do
-    before do
-      @user_badge = BadgeGranter.grant(badge, user)
-    end
+    let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
     it 'checks that the user is authorized to revoke a badge' do
-      xhr :delete, :destroy, id: @user_badge.id
+      xhr :delete, :destroy, id: user_badge.id
       response.status.should == 403
     end
 
     it 'revokes the badge' do
       log_in :admin
       StaffActionLogger.any_instance.expects(:log_badge_revoke).once
-      xhr :delete, :destroy, id: @user_badge.id
+      xhr :delete, :destroy, id: user_badge.id
       response.status.should == 200
-      UserBadge.where(id: @user_badge.id).first.should be_nil
+      UserBadge.where(id: user_badge.id).first.should be_nil
     end
   end
 end

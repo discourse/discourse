@@ -1,3 +1,3 @@
 class BadgeTypeSerializer < ApplicationSerializer
-  attributes :id, :name, :color_hexcode
+  attributes :id, :name
 end

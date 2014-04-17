@@ -9,18 +9,6 @@ describe Admin::BadgesController do
     let!(:user) { log_in(:admin) }
     let!(:badge) { Fabricate(:badge) }
 
-    context '.index' do
-      it 'returns success' do
-        xhr :get, :index
-        response.should be_success
-      end
-
-      it 'returns JSON' do
-        xhr :get, :index
-        ::JSON.parse(response.body)["badges"].should be_present
-      end
-    end
-
     context '.badge_types' do
       it 'returns success' do
         xhr :get, :badge_types

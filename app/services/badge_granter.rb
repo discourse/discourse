@@ -23,6 +23,10 @@ class BadgeGranter
         if @granted_by != Discourse.system_user
           StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
         end
+
+        @user.notifications.create(notification_type: Notification.types[:granted_badge],
+                                   data: { badge_id: @badge.id,
+                                           badge_name: @badge.name }.to_json)
       end
     end
 
@@ -32,10 +36,14 @@ class BadgeGranter
   def self.revoke(user_badge, options={})
     UserBadge.transaction do
       user_badge.destroy!
-      Badge.decrement_counter 'grant_count', user_badge.badge.id
+      Badge.decrement_counter 'grant_count', user_badge.badge_id
       if options[:revoked_by]
         StaffActionLogger.new(options[:revoked_by]).log_badge_revoke(user_badge)
       end
+      # Revoke badge -- This is inefficient, but not very easy to optimize unless
+      # the data hash is converted into a hstore.
+      notification = user_badge.user.notifications.where(notification_type: Notification.types[:granted_badge]).where("data LIKE ?", "%" + user_badge.badge_id.to_s + "%").select {|n| n.data_hash["badge_id"] == user_badge.badge_id }.first
+      notification && notification.destroy
     end
   end
 

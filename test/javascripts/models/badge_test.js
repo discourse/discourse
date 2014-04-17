@@ -26,7 +26,7 @@ test('translatedDescription', function() {
 });
 
 test('createFromJson array', function() {
-  var badgesJson = {"badge_types":[{"id":6,"name":"Silver 1","color_hexcode":"#c0c0c0"}],"badges":[{"id":1126,"name":"Badge 1","description":null,"badge_type_id":6}]};
+  var badgesJson = {"badge_types":[{"id":6,"name":"Silver 1"}],"badges":[{"id":1126,"name":"Badge 1","description":null,"badge_type_id":6}]};
 
   var badges = Discourse.Badge.createFromJson(badgesJson);
 
@@ -36,7 +36,7 @@ test('createFromJson array', function() {
 });
 
 test('createFromJson single', function() {
-  var badgeJson = {"badge_types":[{"id":6,"name":"Silver 1","color_hexcode":"#c0c0c0"}],"badge":{"id":1126,"name":"Badge 1","description":null,"badge_type_id":6}};
+  var badgeJson = {"badge_types":[{"id":6,"name":"Silver 1"}],"badge":{"id":1126,"name":"Badge 1","description":null,"badge_type_id":6}};
 
   var badge = Discourse.Badge.createFromJson(badgeJson);
 
@@ -44,7 +44,7 @@ test('createFromJson single', function() {
 });
 
 test('updateFromJson', function() {
-  var badgeJson = {"badge_types":[{"id":6,"name":"Silver 1","color_hexcode":"#c0c0c0"}],"badge":{"id":1126,"name":"Badge 1","description":null,"badge_type_id":6}};
+  var badgeJson = {"badge_types":[{"id":6,"name":"Silver 1"}],"badge":{"id":1126,"name":"Badge 1","description":null,"badge_type_id":6}};
   var badge = Discourse.Badge.create({name: "Badge 1"});
   badge.updateFromJson(badgeJson);
   equal(badge.get('id'), 1126, "id is set");

@@ -164,8 +164,21 @@ Discourse.Badge.reopenClass({
     @returns {Promise} a promise that resolves to an array of `Discourse.Badge`
   **/
   findAll: function() {
-    return Discourse.ajax('/admin/badges').then(function(badgesJson) {
+    return Discourse.ajax('/badges.json').then(function(badgesJson) {
       return Discourse.Badge.createFromJson(badgesJson);
+    });
+  },
+
+  /**
+    Returns a `Discourse.Badge` that has the given ID.
+
+    @method findById
+    @param {Number} id ID of the badge
+    @returns {Promise} a promise that resolves to a `Discourse.Badge`
+  **/
+  findById: function(id) {
+    return Discourse.ajax("/badges/" + id).then(function(badgeJson) {
+      return Discourse.Badge.createFromJson(badgeJson);
     });
   }
 });

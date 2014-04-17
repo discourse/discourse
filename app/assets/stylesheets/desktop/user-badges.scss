@@ -1,0 +1,75 @@
+/* Default badge styles. */
+.user-badge {
+  padding: 3px 8px;
+  color: $primary_text_color;
+  border: 1px solid $secondary-border-color;
+  font-size: $base-font-size * 0.86;
+  line-height: 16px;
+  margin: 0;
+  display: inline-block;
+  background-color: $primary_background_color;
+
+  .fa {
+    padding-right: 3px;
+    font-size: 1.4em;
+    vertical-align: bottom;
+  }
+
+  &.badge-type-gold .fa {
+    color: #ffd700;
+  }
+
+  &.badge-type-silver .fa {
+    color: #c0c0c0;
+  }
+
+  &.badge-type-bronze .fa {
+    color: #cd7f32;
+  }
+}
+
+/* User badge listing. */
+.user-badges-list {
+  text-align: center;
+
+  .user-badge {
+    max-width: 80px;
+    text-align: center;
+    vertical-align: top;
+    margin: 10px;
+    border: none;
+
+    .fa {
+      display: block;
+      font-size: 50px;
+      margin-bottom: 5px;
+    }
+  }
+}
+
+/* Badge listing in /badges. */
+table.badges-listing {
+  margin: 20px 0;
+  border-bottom: 1px solid $primary-border-color;
+
+  .user-badge {
+    font-size: $base-font-size;
+  }
+
+  td {
+    padding: 10px 20px;
+  }
+
+  td.grant-count {
+    font-size: 0.8em;
+    color: $secondary_text_color;
+  }
+
+  td.badge, td.grant-count {
+    white-space: nowrap;
+  }
+
+  tr {
+    border-top: 1px solid $primary-border-color;
+  }
+}
