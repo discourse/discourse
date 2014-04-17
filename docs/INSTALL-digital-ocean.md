@@ -64,33 +64,35 @@ Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`
 
     cp samples/standalone.yml containers/app.yml
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3005/5c253f4657e2133f.png" width="571" height="56"> 
-
 # Edit Discourse Configuration
 
-Edit `app.yml`:
+Edit the Discourse configuration at `app.yml`:
 
     nano containers/app.yml
 
-(We recommend Nano because it works like a typical GUI text editor, just use your arrow keys. Hit <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit. However, feel free to choose whatever text editor you like.)
+We recommend Nano because it works like a typical GUI text editor, just use your arrow keys.
 
-- Set `DISCOURSE_DEVELOPER_EMAILS` and `DISCOURSE_HOSTNAME`. 
+- Set `DISCOURSE_DEVELOPER_EMAILS`
+ 
+- Set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want your Discourse available at `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
+ 
+- Place your mail credentials in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 so you have more memory room.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/2979/e6fedbde9b471880.png" width="565" height="172"> 
 
-If you set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want your Discourse available at `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
+After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
+
+# Email
 
 **Email is critical to notifications in Discourse. If you do not configure email before bootstrapping you will have a broken site!**
 
-- If you already have a mail server, put your existing mail server credentials in the `app.yml` file.
+- Already have a mail server? Great. Use your existing mail server credentials.
 
-- Otherwise, create a free account on [**Mandrill**][man] (or [Mailgun][gun], or [Mailjet][jet]), and put your mail credentials (available via the Mandrill dashboard) in the `app.yml` file. The settings you want to change are `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`.
+- No existing mail server, or you don't know what it is? No problem, create a free account on [**Mandrill**][man] (or [Mailgun][gun], or [Mailjet][jet]), and use the credentials provided in the dashboard.
 
-- Be sure you remove the comment character and space `# ` from the beginning of these mail configuration lines!
-
-- Don't forget to set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) up for your domain name. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
+- For proper email deliverability, you must set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) in your DNS. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
 
 # Bootstrap Discourse
 
@@ -110,7 +112,7 @@ After that completes, start Discourse:
 
 Congratulations! You now have your own instance of Discourse, accessible via the domain name you entered in `app.yml` earlier.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3507/d01eee7415f860f2.png" width="690" height="291">
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/_optimized/f77/1a4/68503db6d2_690x280.png" width="690" height="291">
 
 You can also access it by visiting the server IP address directly, e.g. `http://192.168.1.1`.
 
