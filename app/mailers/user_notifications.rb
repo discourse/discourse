@@ -30,6 +30,7 @@ class UserNotifications < ActionMailer::Base
                  email_token: opts[:email_token])
   end
 
+
   def digest(user, opts={})
     @user = user
     @base_url = Discourse.base_url
@@ -41,18 +42,27 @@ class UserNotifications < ActionMailer::Base
     @last_seen_at = I18n.l(@user.last_seen_at || @user.created_at, format: :short)
 
     # A list of topics to show the user
-    @featured_topics = Topic.for_digest(user, min_date).to_a
+    @featured_topics = Topic.for_digest(user, min_date, limit: 20, top_order: true).to_a
 
     # Don't send email unless there is content in it
     if @featured_topics.present?
-      @new_topics_since_seen = Topic.listable_topics
-                                    .where("created_at > ?", min_date).count - @featured_topics.length
+      featured_topic_ids = @featured_topics.map(&:id)
 
-      @new_topics_since_seen = 0 if @new_topics_since_seen < 0
+      @new_topics_since_seen = Topic.new_since_last_seen(user, min_date, featured_topic_ids).count
+      if @new_topics_since_seen > 1000
+        category_counts = Topic.new_since_last_seen(user, min_date, featured_topic_ids).group(:category_id).count
+
+        @new_by_category = []
+        if category_counts.present?
+          Category.where(id: category_counts.keys).each do |c|
+            @new_by_category << [c, category_counts[c.id]]
+          end
+          @new_by_category.sort_by! {|c| -c[1]}
+        end
+      end
+
       @featured_topics, @new_topics = @featured_topics[0..4], @featured_topics[5..-1]
-
       @markdown_linker = MarkdownLinker.new(Discourse.base_url)
-
 
       build_email user.email,
                   from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),

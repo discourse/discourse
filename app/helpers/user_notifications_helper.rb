@@ -70,8 +70,15 @@ module UserNotificationsHelper
   end
 
 
-  def email_category(category)
-    return "" if category.blank? || category.uncategorized?
+  def email_category(category, opts=nil)
+    opts = opts || {}
+
+    # If there is no category, bail
+    return "" if category.blank?
+
+    # By default hide uncategorized
+    return "" if category.uncategorized? && !opts[:show_uncategorized]
+
     result = ""
     if category.parent_category.present?
       result << "<span style='background-color: ##{category.parent_category.color}; font-size: 12px; padding: 4px 2px; font-weight: bold; margin: 0; width: 2px;'>&nbsp;</span>"

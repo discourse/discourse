@@ -260,21 +260,28 @@ class Topic < ActiveRecord::Base
   end
 
   # Returns hot topics since a date for display in email digest.
-  def self.for_digest(user, since)
+  def self.for_digest(user, since, opts=nil)
+    opts = opts || {}
     score = "#{ListController.best_period_for(since)}_score"
 
     topics = Topic
               .visible
               .secured(Guardian.new(user))
-              .joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id")
               .joins("LEFT OUTER JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{user.id.to_i}")
               .where(closed: false, archived: false)
               .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
               .created_since(since)
               .listable_topics
               .includes(:category)
-              .order(TopicQuerySQL.order_top_for(score))
-              .limit(20)
+
+    if !!opts[:top_order]
+      topics = topics.joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id")
+                     .order(TopicQuerySQL.order_top_for(score))
+    end
+
+    if opts[:limit]
+      topics = topics.limit(opts[:limit])
+    end
 
     # Remove category topics
     category_topic_ids = Category.pluck(:topic_id).compact!
@@ -289,6 +296,12 @@ class Topic < ActiveRecord::Base
     end
 
     topics
+  end
+
+  # Using the digest query, figure out what's  new for a user since last seen
+  def self.new_since_last_seen(user, since, featured_topic_ids)
+    topics = Topic.for_digest(user, since)
+    topics.where("topics.id NOT IN (?)", featured_topic_ids)
   end
 
   def update_meta_data(data)

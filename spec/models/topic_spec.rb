@@ -1194,17 +1194,17 @@ describe Topic do
     let(:user) { Fabricate.build(:user) }
 
     it "returns none when there are no topics" do
-      Topic.for_digest(user, 1.year.ago).should be_blank
+      Topic.for_digest(user, 1.year.ago, top_order: true).should be_blank
     end
 
     it "doesn't return category topics" do
       Fabricate(:category)
-      Topic.for_digest(user, 1.year.ago).should be_blank
+      Topic.for_digest(user, 1.year.ago, top_order: true).should be_blank
     end
 
     it "returns regular topics" do
       topic = Fabricate(:topic)
-      Topic.for_digest(user, 1.year.ago).should == [topic]
+      Topic.for_digest(user, 1.year.ago, top_order: true).should == [topic]
     end
 
   end
