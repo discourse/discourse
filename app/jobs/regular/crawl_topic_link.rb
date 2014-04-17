@@ -83,10 +83,17 @@ module Jobs
     def execute(args)
       raise Discourse::InvalidParameters.new(:topic_link_id) unless args[:topic_link_id].present?
 
-      begin
-        topic_link = TopicLink.where(id: args[:topic_link_id], internal: false, crawled_at: nil).first
-        return if topic_link.blank?
+      topic_link = TopicLink.where(id: args[:topic_link_id], internal: false, crawled_at: nil).first
+      return if topic_link.blank?
 
+      # Look for a topic embed for the URL. If it exists, use its title and don't crawl
+      topic_embed = TopicEmbed.where(embed_url: topic_link.url).includes(:topic).references(:topic).first
+      if topic_embed.present?
+        TopicLink.where(id: topic_link.id).update_all(['title = ?, crawled_at = CURRENT_TIMESTAMP', topic_embed.topic.title[0..255]])
+        return
+      end
+
+      begin
         crawled = false
 
         # Special case: Images
