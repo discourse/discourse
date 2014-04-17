@@ -420,3 +420,13 @@ a:hover.reply-new {
     margin-top: 10px;
   }
 }
+// Article images
+article img[itemprop="image"] {
+  float: right;
+  margin: 0 5px 0 15px;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
