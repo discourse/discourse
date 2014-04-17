@@ -112,7 +112,7 @@ Congratulations! You now have your own instance of Discourse!
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/_optimized/f77/1a4/68503db6d2_690x280.png" width="690" height="291">
 
-It should be accessible via the domain name you entered earlier, provided you configured the DNS. If not, you can also access it by visiting the server IP directly, e.g. `http://192.168.1.1`.
+It should be accessible via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can also access it by visiting the server IP directly, e.g. `http://192.168.1.1`.
 
 # Log In and Become Admin
 
