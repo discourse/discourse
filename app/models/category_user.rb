@@ -6,6 +6,10 @@ class CategoryUser < ActiveRecord::Base
     self.where(user: user, notification_level: notification_levels[level])
   end
 
+  def self.lookup_by_category(user, category)
+    self.where(user: user, category: category)
+  end
+
   # same for now
   def self.notification_levels
     TopicUser.notification_levels
@@ -34,6 +38,20 @@ class CategoryUser < ActiveRecord::Base
       CategoryUser.create!(user: user, category_id: id, notification_level: notification_levels[level])
     end
   end
+
+  def self.set_notification_level_for_category(user, level, category_id)
+    record = CategoryUser.where(user: user, category_id: category_id).first
+    # oder CategoryUser.where(user: user, category_id: category_id).destroy_all
+    # und danach mir create anlegen.
+
+    if record.present?
+      record.notification_level = level
+      record.save!
+    else
+      CategoryUser.create!(user: user, category_id: category_id, notification_level: level)
+    end
+  end
+
 
   def self.auto_mute_new_topic(topic)
     apply_default_to_topic(

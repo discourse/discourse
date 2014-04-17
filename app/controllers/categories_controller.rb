@@ -72,6 +72,14 @@ class CategoriesController < ApplicationController
     }
   end
 
+  def set_notifications
+    category_id = params[:category_id].to_i
+    notification_level = params[:notification_level].to_i
+
+    CategoryUser.set_notification_level_for_category(current_user, notification_level , category_id)
+    render json: success_json
+  end
+
   def destroy
     guardian.ensure_can_delete!(@category)
     @category.destroy
