@@ -4,6 +4,7 @@ require_dependency 'auth/default_current_user_provider'
 
 module Discourse
 
+  require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
     extend Sidekiq::ExceptionHandler
   end

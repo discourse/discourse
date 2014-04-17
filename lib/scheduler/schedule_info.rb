@@ -10,7 +10,6 @@ module Scheduler
       @klass = klass
       @manager = manager
 
-      key = Manager.schedule_key(klass)
       data = nil
 
       if data = $redis.get(key)
@@ -85,7 +84,6 @@ module Scheduler
     end
 
     def write!
-      key = Manager.schedule_key(@klass)
       clear!
       redis.set key, {
         next_run: @next_run,
@@ -94,6 +92,7 @@ module Scheduler
         prev_result: @prev_result,
         current_owner: @current_owner
       }.to_json
+
       redis.zadd Manager.queue_key, @next_run , @klass
     end
 
@@ -112,9 +111,8 @@ module Scheduler
 
     private
     def clear!
-      key = Manager.schedule_key(@klass)
       redis.del key
-      redis.zrem Manager.queue_key, key
+      redis.zrem Manager.queue_key, @klass
     end
 
   end

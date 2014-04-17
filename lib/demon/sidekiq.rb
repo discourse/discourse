@@ -8,12 +8,21 @@ class Demon::Sidekiq < Demon::Base
 
   private
 
+  def suppress_stdout
+    false
+  end
+
+  def suppress_stderr
+    false
+  end
+
   def after_fork
+    STDERR.puts "Loading Sidekiq in process id #{Process.pid}"
     require 'sidekiq/cli'
-    # Reload initializer cause it needs to run after sidekiq/cli was required
-    load Rails.root + "config/initializers/sidekiq.rb"
     cli = Sidekiq::CLI.instance
     cli.parse([])
+
+    load Rails.root + "config/initializers/sidekiq.rb"
     cli.run
   rescue => e
     STDERR.puts e.message

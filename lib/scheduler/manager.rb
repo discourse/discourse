@@ -229,9 +229,17 @@ module Scheduler
 
 
     def self.discover_schedules
+      # hack for developemnt reloader is crazytown
+      # multiple classes with same name can be in
+      # object space
+      unique = Set.new
       schedules = []
       ObjectSpace.each_object(Scheduler::Schedule) do |schedule|
-        schedules << schedule if schedule.scheduled?
+        if schedule.scheduled?
+          next if unique.include?(schedule.to_s)
+          schedules << schedule
+          unique << schedule.to_s
+        end
       end
       schedules
     end

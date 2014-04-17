@@ -140,7 +140,10 @@ gem 'rinku'
 gem 'sanitize'
 gem 'sass'
 gem 'sidekiq'
-gem 'sidekiq-failures'
+
+# https://github.com/mhfs/sidekiq-failures/issues/72
+gem 'sidekiq-failures-discourse', require: 'sidekiq-failures'
+
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 

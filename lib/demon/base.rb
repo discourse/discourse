@@ -3,7 +3,7 @@ module Demon; end
 # intelligent fork based demonizer
 class Demon::Base
 
-  def self.start(count)
+  def self.start(count=1)
     @demons ||= {}
     count.times do |i|
       (@demons["#{prefix}_#{i}"] ||= new(i)).start
@@ -17,11 +17,17 @@ class Demon::Base
     end
   end
 
+  def self.ensure_running
+    @demons.values.each do |demon|
+      demon.ensure_running
+    end
+  end
+
   def initialize(index)
     @index = index
     @pid = nil
     @parent_pid = Process.pid
-    @monitor = nil
+    @started = false
   end
 
   def pid_file
@@ -29,29 +35,47 @@ class Demon::Base
   end
 
   def stop
-    if @monitor
-      @monitor.kill
-      @monitor.join
-      @monitor = nil
-    end
-
+    @started = false
     if @pid
       Process.kill("HUP",@pid)
       @pid = nil
     end
   end
 
+  def ensure_running
+    return unless @started
+
+    if !@pid
+      @started = false
+      start
+      return
+    end
+
+    dead = Process.waitpid(@pid, Process::WNOHANG) rescue -1
+    if dead
+      STDERR.puts "Detected dead worker #{@pid}, restarting..."
+      @pid = nil
+      @started = false
+      start
+    end
+  end
+
   def start
+    return if @pid || @started
+
     if existing = already_running?
       # should not happen ... so kill violently
+      STDERR.puts "Attempting to kill pid #{existing}"
       Process.kill("TERM",existing)
     end
 
-    return if @pid
+    @started = true
+    run
+  end
 
+  def run
     if @pid = fork
       write_pid_file
-      monitor_child
       return
     end
 
@@ -72,19 +96,6 @@ class Demon::Base
   end
 
   private
-
-  def monitor_child
-    @monitor ||= Thread.new do
-      while true
-        sleep 5
-        unless alive?(@pid)
-          STDERR.puts "#{@pid} died, restarting the process"
-          @pid = nil
-          start
-        end
-      end
-    end
-  end
 
   def write_pid_file
     FileUtils.mkdir_p(Rails.root + "tmp/pids")
@@ -110,11 +121,19 @@ class Demon::Base
 
   def alive?(pid)
     begin
-      Process.getpgid(pid)
+      Process.kill(0, pid)
       true
-    rescue Errno::ESRCH
+    rescue
       false
     end
+  end
+
+  def suppress_stdout
+    true
+  end
+
+  def suppress_stderr
+    true
   end
 
   def establish_app
@@ -129,8 +148,8 @@ class Demon::Base
     end
 
     # keep stuff simple for now
-    $stdout.reopen("/dev/null", "w")
-    $stderr.reopen("/dev/null", "w")
+    $stdout.reopen("/dev/null", "w") if suppress_stdout
+    $stderr.reopen("/dev/null", "w") if suppress_stderr
   end
 
   def after_fork
