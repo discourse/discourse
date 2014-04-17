@@ -41,8 +41,8 @@ class Search
       end
     end
 
-    def self.from_topic(t, custom_title=nil, custom_blurb=nil)
-      SearchResult.new(type: :topic, topic_id: t.id, id: t.id, title: custom_title || t.title, url: t.relative_url, blurb: custom_blurb)
+    def self.from_topic(t, options = {})
+      SearchResult.new(type: :topic, topic_id: t.id, id: t.id, title: options[:custom_title] || t.title, url: t.relative_url, blurb: options[:custom_blurb])
     end
 
     def self.from_post(p, context, term, include_blurbs=false)
@@ -66,7 +66,7 @@ class Search
       end
       if p.post_number == 1
         # we want the topic link when it's the OP
-        SearchResult.from_topic(p.topic, custom_title, custom_blurb)
+        SearchResult.from_topic(p.topic, {custom_title: custom_title, custom_blurb: custom_blurb})
       elsif context && context.id == p.topic_id
         SearchResult.new(type: :topic, topic_id: p.topic_id, id: "_#{p.id}", title: custom_title, url: p.url, blurb: custom_blurb)
       else
