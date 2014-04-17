@@ -19,8 +19,8 @@ Discourse.UserController = Discourse.ObjectController.extend({
   }.property('viewingSelf'),
 
   showBadges: function() {
-    return Discourse.SiteSettings.enable_badges;
-  }.property(),
+    return Discourse.SiteSettings.enable_badges && (this.get('content.badge_count') > 0);
+  }.property('content.badge_count'),
 
   privateMessageView: function() {
     return (this.get('userActionType') === Discourse.UserAction.TYPES.messages_sent) ||
