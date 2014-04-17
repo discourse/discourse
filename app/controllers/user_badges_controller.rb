@@ -6,7 +6,7 @@ class UserBadgesController < ApplicationController
       user_badges = user.user_badges
     else
       badge = fetch_badge_from_params
-      user_badges = badge.user_badges.order('granted_at DESC').limit(20).to_a
+      user_badges = badge.user_badges.order('granted_at DESC').limit(200).to_a
     end
     render_serialized(user_badges, UserBadgeSerializer, root: "user_badges")
   end
