@@ -16,11 +16,9 @@ You will receive a mail from Digital Ocean with the root password to your Drople
 
 # Access Your Droplet
 
-Connect to your Droplet via SSH:
+Connect to your Droplet via SSH, or use [Putty][put] on Windows:
 
     ssh root@192.168.1.1
-
-(Alternately, use [Putty][put] on Windows)
 
 Replace `192.168.1.1` with the IP address of your Droplet.
 
