@@ -1475,9 +1475,3 @@ en:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
-
-  badges:
-    types:
-      gold: Gold
-      silver: Silver
-      bronze: Bronze
