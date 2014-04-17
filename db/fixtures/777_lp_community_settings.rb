@@ -70,7 +70,8 @@ User.seed(:username_lower) do |u|
   u.name                   = 'Lesson Planet'
   u.username               = ENV['API_USERNAME']
   u.username_lower         = ENV['API_USERNAME'].downcase
-  u.email                  = 'MemberServices@lessonplanet.com'
+  # LP Site downcases all emails so to find by email this needs to be lowecase.
+  u.email                  = 'memberservices@lessonplanet.com'
   u.password               = SecureRandom.hex
   u.bio_raw                = 'Not a real person. A global user for system notifications and other system tasks.'
   u.active                 = true

@@ -353,7 +353,7 @@ class User < ActiveRecord::Base
   end
 
   def avatar_template
-    uploaded_avatar_path || User.gravatar_template(id != -1 ? email : "team@discourse.org")
+    uploaded_avatar_path || User.gravatar_template(id != -1 ? email : "memberservices@lessonplanet.com")
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
