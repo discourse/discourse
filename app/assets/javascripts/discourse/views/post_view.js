@@ -139,7 +139,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
         var link = $(this);
         if (link.attr('href') === lc.url) {
           // don't display badge counts on category badge
-          if (link.closest('.badge-category').length === 0 && (link.closest(".onebox-result").length === 0 || link.hasClass("track-link"))) {
+          if (link.closest('.badge-category').length === 0 && ((link.closest(".onebox-result").length === 0 && link.closest('.onebox-body').length === 0) || link.hasClass("track-link"))) {
             link.append("<span class='badge badge-notification clicks' title='" +
                         I18n.t("topic_map.clicks", {count: lc.clicks}) +
                         "'>" + Discourse.Formatter.number(lc.clicks) + "</span>");
