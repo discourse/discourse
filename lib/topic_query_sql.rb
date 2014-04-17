@@ -46,7 +46,7 @@ module TopicQuerySQL
     end
 
     def order_top_for(score)
-      "top_topics.#{score} DESC, topics.bumped_at DESC"
+      "COALESCE(top_topics.#{score}, 0) DESC, topics.bumped_at DESC"
     end
 
     def order_top_with_pinned_category_for(score)

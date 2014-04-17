@@ -261,18 +261,28 @@ class Topic < ActiveRecord::Base
 
   # Returns hot topics since a date for display in email digest.
   def self.for_digest(user, since)
+    score = "#{ListController.best_period_for(since)}_score"
+
     topics = Topic
               .visible
               .secured(Guardian.new(user))
               .where(closed: false, archived: false)
               .created_since(since)
               .listable_topics
-              .order(:percent_rank)
+              .joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id")
+              .order(TopicQuerySQL.order_top_for(score))
               .limit(100)
 
+    # Remove category topics
     category_topic_ids = Category.pluck(:topic_id).compact!
     if category_topic_ids.present?
-      topics = topics.where("id NOT IN (?)", category_topic_ids)
+      topics = topics.where("topics.id NOT IN (?)", category_topic_ids)
+    end
+
+    # Remove muted categories
+    muted_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
+    if muted_category_ids.present?
+      topics = topics.where("topics.category_id NOT IN (?)", muted_category_ids)
     end
 
     topics
