@@ -64,4 +64,8 @@ module UserNotificationsHelper
       raw Sanitize.clean(para.to_s, UserNotificationsHelper.sanitize_options)
     end
   end
+
+  def cooked_post_for_email(post)
+    PrettyText.format_for_email(post.cooked).html_safe
+  end
 end
