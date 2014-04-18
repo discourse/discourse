@@ -88,7 +88,7 @@ After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</
 
 # Email
 
-**Email is critical to notifications in Discourse. If you do not configure email before bootstrapping you will have a broken site!**
+**Email is critical for account creation and notifications in Discourse. If you do not configure email before bootstrapping you will have a broken site!**
 
 - Already have a mail server? Great. Use your existing mail server credentials.
 
