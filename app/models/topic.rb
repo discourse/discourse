@@ -65,7 +65,6 @@ class Topic < ActiveRecord::Base
 
 
   before_validation do
-    self.sanitize_title
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
   end
 
@@ -242,17 +241,21 @@ class Topic < ActiveRecord::Base
   end
 
   def fancy_title
-    return title unless SiteSetting.title_fancy_entities?
+    sanitized_title = title.gsub(/['&\"<>]/, {
+      "'" => '&#39;',
+      '&' => '&amp;',
+      '"' => '&quot;',
+      '<' => '&lt;',
+      '>' => '&gt;',
+    })
+
+    return sanitized_title unless SiteSetting.title_fancy_entities?
 
     # We don't always have to require this, if fancy is disabled
     # see: http://meta.discourse.org/t/pattern-for-defer-loading-gems-and-profiling-with-perftools-rb/4629
     require 'redcarpet' unless defined? Redcarpet
 
-    Redcarpet::Render::SmartyPants.render(title)
-  end
-
-  def sanitize_title
-    self.title = sanitize(title.to_s, tags: [], attributes: []).strip.presence
+    Redcarpet::Render::SmartyPants.render(sanitized_title)
   end
 
   def new_version_required?

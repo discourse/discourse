@@ -61,7 +61,7 @@ Handlebars.registerHelper('shorten', function(property, options) {
 **/
 Handlebars.registerHelper('topicLink', function(property, options) {
   var topic = Ember.Handlebars.get(this, property, options),
-      title = topic.get('fancy_title') || topic.get('title');
+      title = topic.get('fancy_title');
   return "<a href='" + topic.get('lastUnreadUrl') + "' class='title'>" + title + "</a>";
 });
 
