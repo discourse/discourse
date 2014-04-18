@@ -22,6 +22,8 @@
       {{/link-to}}
     {{/each}}
   {{else}}
-    <div class='spinner'>{{i18n loading}}</div>
+    {{#unless userBadgesLoaded}}
+      <div class='spinner'>{{i18n loading}}</div>
+    {{/unless}}
   {{/if}}
 </div>
