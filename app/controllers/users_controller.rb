@@ -61,6 +61,21 @@ class UsersController < ApplicationController
     render nothing: true
   end
 
+  def badge_title
+    params.require(:user_badge_id)
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    user_badge = UserBadge.find(params[:user_badge_id])
+    if user_badge.user == user && ["Gold", "Silver"].include?(user_badge.badge.badge_type.name)
+      user.title = user_badge.badge.name
+      user.save!
+    end
+
+    render nothing: true
+  end
+
   def preferences
     render nothing: true
   end

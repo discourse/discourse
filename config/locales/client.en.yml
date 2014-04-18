@@ -1779,6 +1779,7 @@ en:
       awarded:
         one:   "1 awarded"
         other: "%{count} awarded"
+      select_badge_for_title: Select a badge to use as your title
       example_badge:
         name: Example Badge
         description: This is a generic example badge.

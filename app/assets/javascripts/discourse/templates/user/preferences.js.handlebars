@@ -37,6 +37,16 @@
       </div>
     {{/if}}
 
+    {{#if canSelectTitle}}
+      <div class="control-group">
+        <label class="control-label">{{i18n user.title.title}}</label>
+        <div class="controls">
+          <span class="static">{{title}}</span>
+          {{#link-to "preferences.badgeTitle" class="btn pad-left"}}<i class="fa fa-pencil"></i>{{/link-to}}
+        </div>
+      </div>
+    {{/if}}
+
     <div class="control-group">
       <label class="control-label">{{i18n user.email.title}}</label>
       <div class="controls">

@@ -81,6 +81,7 @@ Discourse.Route.buildRoutes(function() {
       this.route('username');
       this.route('email');
       this.route('about', { path: '/about-me' });
+      this.route('badgeTitle', { path: '/badge_title' });
     });
 
     this.route('invited');
