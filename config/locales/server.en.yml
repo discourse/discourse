@@ -799,6 +799,7 @@ en:
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
+    title_sanitize: "Remove html tags from the title"
 
     topic_views_heat_low: "The number of views after which a topic's heat level is low."
     topic_views_heat_medium: "The number of views after which a topic's heat level is medium."

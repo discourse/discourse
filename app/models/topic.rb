@@ -65,6 +65,9 @@ class Topic < ActiveRecord::Base
 
 
   before_validation do
+    if SiteSetting.title_sanitize
+      self.title = sanitize(title.to_s, tags: [], attributes: []).strip.presence
+    end
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
   end
 
@@ -241,14 +244,19 @@ class Topic < ActiveRecord::Base
   end
 
   def fancy_title
-    sanitized_title = title.gsub(/['&\"<>]/, {
-      "'" => '&#39;',
-      '&' => '&amp;',
-      '"' => '&quot;',
-      '<' => '&lt;',
-      '>' => '&gt;',
-    })
+    sanitized_title = if SiteSetting.title_sanitize
+      sanitize(title.to_s, tags: [], attributes: []).strip.presence
+    else
+      title.gsub(/['&\"<>]/, {
+        "'" => '&#39;',
+        '&' => '&amp;',
+        '"' => '&quot;',
+        '<' => '&lt;',
+        '>' => '&gt;',
+      })
+    end
 
+    return unless sanitized_title
     return sanitized_title unless SiteSetting.title_fancy_entities?
 
     # We don't always have to require this, if fancy is disabled
