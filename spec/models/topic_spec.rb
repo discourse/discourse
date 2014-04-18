@@ -121,15 +121,15 @@ describe Topic do
     let(:topic_script) { build_topic_with_title("Topic with <script>alert('title')</script> script in its title" ) }
 
     it "escapes script contents" do
-      topic_script.title.should == "Topic with script in its title"
+      topic_script.fancy_title.should == "Topic with &lt;script&gt;alert(&lsquo;title&rsquo;)&lt;/script&gt; script in its title"
     end
 
     it "escapes bold contents" do
-      topic_bold.title.should == "Topic with bold text in its title"
+      topic_bold.fancy_title.should == "Topic with &lt;b&gt;bold&lt;/b&gt; text in its title"
     end
 
     it "escapes image contents" do
-      topic_image.title.should == "Topic with image in its title"
+      topic_image.fancy_title.should == "Topic with &lt;img src=&lsquo;something&rsquo;&gt; image in its title"
     end
 
   end
@@ -142,8 +142,8 @@ describe Topic do
         SiteSetting.stubs(:title_fancy_entities).returns(false)
       end
 
-      it "doesn't change the title to add entities" do
-        topic.fancy_title.should == topic.title
+      it "doesn't add entities to the title" do
+        topic.fancy_title.should == "&quot;this topic&quot; -- has ``fancy stuff&#39;&#39;"
       end
     end
 
