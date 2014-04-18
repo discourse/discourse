@@ -95,6 +95,14 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     if(this.get('loginRequired')) { route.transitionTo('login'); }
   },
 
+  externalLinksInNewTab: function() {
+    var userSetting = Discourse.User.currentProp('external_links_in_new_tab');
+    if (userSetting === undefined) { // no current user
+      return Discourse.SiteSettings.default_external_links_in_new_tab;
+    }
+    return userSetting;
+  },
+
   /**
     Add an initializer hook for after the Discourse Application starts up.
 
