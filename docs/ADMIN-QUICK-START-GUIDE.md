@@ -29,13 +29,13 @@ It's lonely at the top. You may want to grant other users staff abilities &ndash
 
 ### Private or Public?
 
-Discourse assume you want a public discussion area. If you prefer a private one, check out these settings:
+Discourse assumes you want a public discussion area. If you prefer a private one, check out these settings:
 
 - `must_approve_users`
 - `login_required`
 - `invite_only`
 
-You can also create private categories that are only visible to certain groups of users.
+If you only want some parts to be private, there is a built in Staff category, and you can create more private categories that are only visible to certain groups of users.
 
 ### Configure Login Methods
 
