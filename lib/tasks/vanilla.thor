@@ -134,26 +134,49 @@ class Vanilla < Thor
     def create_categories
       puts "creating categories..."
       categories_created = 0
+      level_1_category_ids = Set.new
 
-      @categories.each do |category|
-        next if category[:category_id].to_i == -1
-        # TODO: should not allow more than 2 levels
-        next if category[:parent_category_id].to_i != -1
+      # save some information about the root category
+      @root_category = @categories.select { |c| c[:category_id] == "-1" }.first
+      @root_category_created_at = DateTime.strptime(@root_category[:date_inserted], "%Y-%m-%d %H:%M:%S")
 
-        category[:new_id] = Category.create!(
-          name: category[:name],
-          color: "AB9364",
-          text_color: "FFF",
-          position: category[:sort].to_i,
-          user: get_user_by_previous_id(category[:insert_user_id]) || Discourse.system_user,
-          created_at: DateTime.strptime(category[:date_inserted], "%Y-%m-%d %H:%M:%S"),
-          description: category[:description]
-        ).id
+      # removes root category
+      @categories.reject! { |c| c[:category_id] == "-1" }
 
+      # adds root's child categories
+      @categories.select { |c| c[:parent_category_id] == "-1" }.each do |category|
+        level_1_category_ids << category[:category_id].to_i
+        category[:new_id] = create_category(category)
+        categories_created += 1
+      end
+
+      # adds other categories
+      @categories.select { |c| level_1_category_ids.include? c[:parent_category_id].to_i }.each do |category|
+        new_parent_category_id = @categories.select { |c| c[:category_id] == category[:parent_category_id] }.first[:new_id]
+        category[:new_id] = create_category(category, new_parent_category_id)
         categories_created += 1
       end
 
       puts "created #{categories_created} categories!"
+    end
+
+    def create_category(category, new_parent_category_id=nil)
+      new_category = Category.create!(
+        name: category[:name],
+        color: "AB9364",
+        text_color: "FFF",
+        position: category[:sort].to_i,
+        user: get_user_by_previous_id(category[:insert_user_id]) || Discourse.system_user,
+        created_at: parse_category_date(category[:date_inserted]),
+        description: category[:description].gsub("\\n", "\n"),
+        parent_category_id: new_parent_category_id
+      )
+      # return the new category id
+      new_category.id
+    end
+
+    def parse_category_date(date)
+      date == "0000-00-00 00:00:00" ? @root_category_created_at : DateTime.strptime(date, "%Y-%m-%d %H:%M:%S")
     end
 
     def create_topics
