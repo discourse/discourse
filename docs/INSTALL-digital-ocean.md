@@ -22,11 +22,11 @@ Connect to your Droplet via SSH, or use [Putty][put] on Windows:
 
 Replace `192.168.1.1` with the IP address of your Droplet.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/2999/0934a0158459ec3f.png" width="571" height="130"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4442/ab4202454828b167.png" width="586" height="128"> 
 
 You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the Droplet was set up.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3000/8209c1e40c9d70a8.png" width="570" height="278"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4443/48cc7135c89768bd.png" width="584" height="300"> 
 
 # Set up Swap (if needed)
 
@@ -38,11 +38,13 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
     apt-get install git
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3002/eafbf14df8eee832.png" width="572" height="263"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4444/fdddb36daf2e9b69.png" width="586" height="293"> 
 
 # Install Docker
 
     wget -qO- https://get.docker.io/ | sh
+
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4445/35af9b94d045c691.png" width="586" height="452"> 
 
 # Install Discourse
 
@@ -61,6 +63,8 @@ Switch to your Docker folder:
 Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`, so the path becomes `containers/app.yml`:
 
     cp samples/standalone.yml containers/app.yml
+
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4446/5f28af7f5b345823.png" width="586" height="246"> 
 
 # Edit Discourse Configuration
 
@@ -98,7 +102,7 @@ Be sure to save the `app.yml` file, and begin bootstrapping Discourse:
 
     ./launcher bootstrap app
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3007/c0596ad3d330ae71.png" width="567" height="138"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4447/b4ce4a481a3676ac.png" width="594" height="231"> 
 
 This command can take up to 8 minutes. It is automagically configuring your Discourse environment.
 
@@ -106,7 +110,7 @@ After that completes, start Discourse:
 
     ./launcher start app
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/3008/ced00cf4782f020c.png" width="568" height="137"> 
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4448/55b88822f00fa505.png" width="593" height="229"> 
 
 Congratulations! You now have your own instance of Discourse! 
 
