@@ -10,26 +10,26 @@ As an admin you have total control over this Discourse instance &mdash; and with
 
 You can also access it via the "hamburger" menu in the upper right. Admin functions are generally marked with the wrench :wrench:  icon, so look for that.
 
-Do come back and spend time exploring your admin dashboard. But first things first!
+Come back and spend time exploring your admin dashboard. But first things first!
 
 ### Enter Required Settings
 
 Go to the [Required tab](/admin/site_settings/category/required) of the site settings and enter all the required basic items. **Until you set these required values, _your Discourse is broken!_**
 
-By default you get the same standard generic "penciled in" Discourse logo everyone gets. Look for the [**assets for the forum design**](/t/assets-for-the-forum-design/5) topic; follow the instructions there to upload your logos there, and then paste the uploaded image paths into the required logo settings.
+By default you get the same standard generic "penciled in" Discourse logo everyone gets. Look for the [**assets for the forum design**](/t/assets-for-the-forum-design/5) topic; follow the instructions there to upload your logos to that topic, and then paste the uploaded image paths into the required logo settings.
 
 ### Establish Staff
 
-You are the only staff member right now. Staff members are official representatives of this community:
+You are the only staff member right now. Staff members are official representatives of this community and they come in two varieties:
 
-- **Admins**, who can do anything and configure anything on this site. 
-- **Moderators**, who can edit all posts and users, but cannot add categories or change any site settings. 
+1. **Admins**, who can do anything and configure anything on this site. 
+2. **Moderators**, who can edit all posts and users, but cannot add categories or change any site settings. 
 
-It's lonely at the top. You may want to grant other users moderator or admin &ndash; to do so click the admin button :wrench: on their user page, then look for the grant buttons.
+It's lonely at the top. You may want to grant other users staff abilities &ndash; to do so click the admin button :wrench: on their user page, then look for the grant buttons.
 
 ### Private or Public?
 
-Discourse assume you want a public discussion area. If you prefer a private one, be sure to check out these settings:
+Discourse assume you want a public discussion area. If you prefer a private one, check out these settings:
 
 - `must_approve_users`
 - `login_required`
@@ -39,7 +39,7 @@ You can also create private categories that are only visible to certain groups o
 
 ### Configure Login Methods
 
-By default, people can log in with Google, Yahoo, and traditional local username and password accounts. Want more?
+By default, users can log in with Google, Yahoo, and traditional local username and password accounts. Want more?
 
 - [Configure Twitter logins](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395)
 - [Configure Facebook logins](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)
@@ -47,13 +47,14 @@ By default, people can log in with Google, Yahoo, and traditional local username
 
 ### Test Email
 
-**Test your email to make sure it is working!** Discourse relies heavily on email to notify people about conversations happening on the forum. Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
+Discourse relies heavily on email for signups and conversation notifications. **Test your email to make sure it is working!**  Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
 
-Did it work? Great! **Read this test email closely**, it has critical email deliverability tips. If you didn't get the test email, guess what? Your users probably aren't getting any email notifications, either. That's not good.
+- You got the test email? Great! **Read that email closely**, it has important email deliverability tips. 
+- You didn't get the test email? This means your users probably aren't getting any signup or notification emails either.
 
-Email deliverability can be hard. We strongly recommend using dedicated email services like [Mandrill](http://mandrill.com), [MailGun](http://www.mailgun.com/), or [MailJet](http://www.mailjet.com/), which offer generous free plans that works fine for small forums.
+Email deliverability can be hard. We strongly recommend using dedicated email services like [Mandrill](http://mandrill.com), [MailGun](http://www.mailgun.com/), or [MailJet](http://www.mailjet.com/), which offer generous free plans that works fine for most communities.
 
-If you'd like to enable replying to topics via email, [see this howto](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
+If you'd like to enable *replying* to topics via email, [see this howto](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
 
 ### Categories
 
@@ -63,11 +64,11 @@ You have three categories out of the box:
 2. [lounge](/category/lounge) – a perk for users at trust level 3 and higher
 3. [staff](/category/staff) – visible only to staff (admins and moderators)
 
-Please **don't create too many initial categories**, as can easily overwhelm your audience. You can always add more categories later, and easily bulk recategorize topics any time. It's better to figure out organization as you go rather than assuming you'll get it all right from the beginning (hint: you won't).
+**Don't create too many initial categories**, as you can overwhelm your audience. You can always add more categories later, and easily bulk recategorize topics any time. It's better to figure out organization as you go rather than assuming you'll get it all right from the beginning (hint: you won't).
 
 To add a category, visit the [categories page](/categories), then click Create Category at the upper right. You can set security per-category so only certain groups of users can see topics in that category.
 
-Every category has an initial "About the {foo} category" topic created alongside it. This topic will be pinned to the top of the category, and the description you enter here for the category will used in a bunch of places. So edit that first post and make the category description a good one!
+Every category has an initial "About the {foo} category" topic created alongside it. This topic will be pinned to the top of the category, and the description you enter here for the category will used in a bunch of places. So edit that first post and give your new category a good, clear description!
 
 ### File Uploads
 
@@ -79,18 +80,19 @@ Basic image uploads work fine out of the box stored locally, provided you have a
 
 ### Edit the Pinned Welcome Topic
 
-One of the default topics you get is [Welcome to Discourse](/t/welcome/6). This topic is pinned globally, so it will appear on the homepage for all new users. Your welcome topic is hugely important – it tells visitors
+One of the default topics is [Welcome to Discourse](/t/welcome/6). This topic is pinned globally, so it will appear on the homepage for all new users. Your welcome topic is important because it is the first thing you visitors will see:
 
+- Where am I?
 - Who is this discussion area for? 
-- What can they find here?
-- Why should they visit here?
+- What can I [find here](https://www.youtube.com/watch?v=d0VNHe5fq30)?
+- Why should I visit here?
 
-[Edit this welcome topic](/t/welcome/6) and write a **brief introduction to your community**. What is the "elevator pitch" &ndash; how would you describe this site to a stranger on an elevator when you had about 1 minute to talk?  What in the wide, wide world of sports is [going on here](https://www.youtube.com/watch?v=d0VNHe5fq30)?
+[Edit this welcome topic](/t/welcome/6) and write a **brief introduction to your community**. Think of it as your "elevator pitch" &ndash; how would you describe this site to a stranger on an elevator when you had about 1 minute to talk?
 
 Pinning topics works a little differently in Discourse:
 
-- Users can hide pins on topics once they have read them, so they don't stay pinned forever for everyone.
-- When you pin a topic, you can choose to pin it globally to all topic lists, or just pin it within its category.
+- Users can hide pins on topics once they have read them via the controls at the bottom of the topic, so they don't stay pinned forever for everyone.
+- When you pin a topic, you can choose to pin it globally to all topic lists, or pin it only within its category.
 
 ### Customize CSS / Headers
 
@@ -124,7 +126,7 @@ Here is some example HTML that would go into the "Header" section within "Custom
 </div>
 ```
 
-### Set your Terms of Service and Content Licensing
+### User Content Licensing
 
 Out of the box, Discourse defaults to [Creative Commons licensing](https://creativecommons.org/).
 
@@ -142,14 +144,20 @@ Number 3 is the Discourse default &ndash; that's [Creative Commons BY-NC-SA 3.0]
 
 ### Maintenance
 
-- 1GB of memory, with swap, is the absolute minimum required for a small Discourse instance. If your community is expected to grow at all, have at least 2 GB of memory available. 
+- 1GB of memory, with swap, is the absolute minimum required for a small Discourse community. If your community is expected to grow, you'll want more memory.
 
-- Hopefully you are running [in our Docker container install](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md); it's the only one we can officially support. That will guarantee you have easy updates, the correct version of Ruby, and all recommended optimizations from the Discourse team.
+- Hopefully you are running [in our Docker container install](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md); it's the only one we officially support. That will guarantee easy updates, and all recommended optimizations from the Discourse team.
 
 - To upgrade your instance, visit [/admin/docker](/admin/docker). Refresh the page a few times, and you will see an <kbd>upgrade</kbd> button appear. Press it! Then wait for the updating text at the bottom of the browser to know when you're done.
 
+- Some other things you might eventually want to set up:
+   - [Automatic daily backups](https://meta.discourse.org/t/configure-automatic-backups-for-discourse/14855)
+   - [HTTPS support](https://meta.discourse.org/t/allowing-ssl-for-your-discourse-docker-setup/13847)
+   - [Content Delivery Network support](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857) 
+   -  [Multiple Discourse instances on the same server](https://meta.discourse.org/t/multisite-configuration-with-docker/14084)
+
 ### Need more Help?
 
-This guide is a [work in progress](https://github.com/discourse/discourse/blob/master/docs/ADMIN-QUICK-START-GUIDE.md) and we will be continually improving it with your feedback.
+This guide is a [work in progress](https://github.com/discourse/discourse/blob/master/docs/ADMIN-QUICK-START-GUIDE.md) and we hope to continually improve it with your feedback.
 
 For more assistance on configuring and running your Discourse forum, see [the support category](http://meta.discourse.org/category/support) or [the hosting category](http://meta.discourse.org/category/hosting) on [meta.discourse.org](http://meta.discourse.org).
