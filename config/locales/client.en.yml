@@ -1776,9 +1776,9 @@ en:
       more_badges:
         one:   "+1 More"
         other: "+%{count} More"
-      awarded:
-        one:   "1 awarded"
-        other: "%{count} awarded"
+      granted:
+        one:   "1 granted"
+        other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
       example_badge:
         name: Example Badge
