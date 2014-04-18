@@ -45,6 +45,8 @@ By default, users can log in with Google, Yahoo, and traditional local username 
 - [Configure Facebook logins](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)
 - [Configure GitHub logins](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745)
 
+If you want to get extra-fancy you can also [set up single-sign on](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045), or even [build your own oAuth 2 login](https://meta.discourse.org/t/login-to-discourse-with-custom-oauth2-provider/14717).
+
 ### Test Email
 
 Discourse relies heavily on email for signups and conversation notifications. **Test your email to make sure it is working!**  Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
