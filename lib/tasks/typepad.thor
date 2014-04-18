@@ -1,12 +1,11 @@
 require 'open-uri'
 
 class Typepad < Thor
+
   desc "import", "Imports posts from a Disqus XML export"
   method_option :file, aliases: '-f', required: true, desc: "The typepad file to import"
-  method_option :dry_run, required: false, desc: "Just output what will be imported rather than doing it"
   method_option :post_as, aliases: '-p', required: true, desc: "The Discourse username to post as"
   method_option :google_api, aliases: '-g', required: false, desc: "The google plus API key to use to fetch usernames"
-
 
   def import
     require './config/environment'
@@ -142,7 +141,7 @@ class Typepad < Thor
   end
 
   def parse_comment(section)
-    return parse_meta_data(section)
+    parse_meta_data(section)
   end
 
   def process_entry(entry)
@@ -242,5 +241,3 @@ class Typepad < Thor
   end
 
 end
-
-

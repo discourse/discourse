@@ -61,9 +61,9 @@ module PostGuardain
   # Creating Method
   def can_create_post?(parent)
     !SpamRule::AutoBlock.block?(@user) && (
-    !parent ||
-    !parent.category ||
-    Category.post_create_allowed(self).where(:id => parent.category.id).count == 1
+      !parent ||
+      !parent.category ||
+      Category.post_create_allowed(self).where(:id => parent.category.id).count == 1
     )
   end
 
