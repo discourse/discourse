@@ -63,6 +63,7 @@ table.badges-listing {
   td.grant-count {
     font-size: 0.8em;
     color: $secondary_text_color;
+    text-align: right;
   }
 
   td.badge, td.grant-count {

@@ -40,8 +40,15 @@ class BadgeGranter
       if options[:revoked_by]
         StaffActionLogger.new(options[:revoked_by]).log_badge_revoke(user_badge)
       end
-      # Revoke badge -- This is inefficient, but not very easy to optimize unless
-      # the data hash is converted into a hstore.
+
+      # If the user's title is the same as the badge name, remove their title.
+      if user_badge.user.title == user_badge.badge.name
+        user_badge.user.title = nil
+        user_badge.user.save!
+      end
+
+      # Delete notification -- This is inefficient, but not very easy to optimize
+      # unless the data hash is converted into a hstore.
       notification = user_badge.user.notifications.where(notification_type: Notification.types[:granted_badge]).where("data LIKE ?", "%" + user_badge.badge_id.to_s + "%").select {|n| n.data_hash["badge_id"] == user_badge.badge_id }.first
       notification && notification.destroy
     end

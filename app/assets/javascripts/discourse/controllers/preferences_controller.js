@@ -38,6 +38,17 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     return Discourse.SiteSettings.enable_names;
   }.property(),
 
+  canSelectTitle: function() {
+    if (!Discourse.SiteSettings.enable_badges || this.get('model.badge_count') === 0) {
+      return false;
+    }
+
+    // If the first featured badge isn't gold or silver we know the user won't have
+    // _any_ gold or silver badges.
+    var badgeType = this.get('model.featured_user_badges')[0].get('badge.badge_type.name');
+    return (badgeType === "Gold" || badgeType === "Silver");
+  }.property('model.badge_count', 'model.featured_user_badges.@each.badge.badge_type.name'),
+
   availableLocales: function() {
     return Discourse.SiteSettings.available_locales.split('|').map( function(s) {
       return {name: s, value: s};

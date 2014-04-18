@@ -44,7 +44,7 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
       user.set('avatar_template', avatarSelector.get('avatarTemplate'));
       avatarSelector.send('closeModal');
     },
-    
+
     showProfileBackgroundFileSelector: function() {
       $("#profile-background-input").click();
     },
@@ -161,3 +161,43 @@ Discourse.PreferencesUsernameRoute = Discourse.RestrictedUserRoute.extend({
     controller.setProperties({ model: user, newUsername: user.get('username') });
   }
 });
+
+/**
+  The route for updating a user's title to one of their badges
+
+  @class PreferencesBadgeTitleRoute
+  @extends Discourse.RestrictedUserRoute
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.PreferencesBadgeTitleRoute = Discourse.RestrictedUserRoute.extend({
+  model: function() {
+    return Discourse.UserBadge.findByUsername(this.modelFor('user').get('username'));
+  },
+
+  renderTemplate: function() {
+    return this.render('user/badge-title', { into: 'user', outlet: 'userOutlet' });
+  },
+
+  // A bit odd, but if we leave to /preferences we need to re-render that outlet
+  deactivate: function() {
+    this._super();
+    this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    controller.set('user', this.modelFor('user'));
+
+    model.forEach(function(userBadge) {
+      if (userBadge.get('badge.name') === controller.get('user.title')) {
+        controller.set('selectedUserBadgeId', userBadge.get('id'));
+      }
+    });
+    if (!controller.get('selectedUserBadgeId')) {
+      controller.set('selectedUserBadgeId', controller.get('selectableUserBadges')[0].get('id'));
+    }
+  }
+});
+
+
